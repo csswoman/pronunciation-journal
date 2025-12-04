@@ -104,7 +104,7 @@ export default function EntryForm({ onSave, onCancel }: EntryFormProps) {
       <div>
         <label
           htmlFor="word"
-          className="block text-sm font-medium text-gray-700 mb-1"
+          className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
         >
           Word *
         </label>
@@ -114,7 +114,7 @@ export default function EntryForm({ onSave, onCancel }: EntryFormProps) {
             id="word"
             value={word}
             onChange={(e) => setWord(e.target.value)}
-            className="flex-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-blue-500 focus:border-blue-500"
             placeholder="Enter word"
             required
           />
@@ -133,21 +133,21 @@ export default function EntryForm({ onSave, onCancel }: EntryFormProps) {
       </div>
 
       {error && (
-        <div className="p-3 bg-red-50 border border-red-200 rounded-md">
-          <p className="text-sm text-red-800">{error}</p>
+        <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md">
+          <p className="text-sm text-red-800 dark:text-red-200">{error}</p>
         </div>
       )}
 
       {success && (
-        <div className="p-3 bg-green-50 border border-green-200 rounded-md">
-          <p className="text-sm text-green-800">{success}</p>
+        <div className="p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-md">
+          <p className="text-sm text-green-800 dark:text-green-200">{success}</p>
         </div>
       )}
 
       <div>
         <label
           htmlFor="ipa"
-          className="block text-sm font-medium text-gray-700 mb-1"
+          className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
         >
           IPA
         </label>
@@ -156,7 +156,7 @@ export default function EntryForm({ onSave, onCancel }: EntryFormProps) {
           id="ipa"
           value={ipa}
           onChange={(e) => setIpa(e.target.value)}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-blue-500 focus:border-blue-500"
           placeholder="/prəˌnʌnsiˈeɪʃən/"
         />
       </div>
@@ -164,7 +164,7 @@ export default function EntryForm({ onSave, onCancel }: EntryFormProps) {
       <div>
         <label
           htmlFor="audioUrl"
-          className="block text-sm font-medium text-gray-700 mb-1"
+          className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
         >
           Audio URL
         </label>
@@ -173,7 +173,7 @@ export default function EntryForm({ onSave, onCancel }: EntryFormProps) {
           id="audioUrl"
           value={audioUrl}
           onChange={(e) => setAudioUrl(e.target.value)}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-blue-500 focus:border-blue-500"
           placeholder="https://..."
         />
       </div>
@@ -181,7 +181,7 @@ export default function EntryForm({ onSave, onCancel }: EntryFormProps) {
       <div>
         <label
           htmlFor="difficulty"
-          className="block text-sm font-medium text-gray-700 mb-1"
+          className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
         >
           Difficulty
         </label>
@@ -189,7 +189,7 @@ export default function EntryForm({ onSave, onCancel }: EntryFormProps) {
           id="difficulty"
           value={difficulty}
           onChange={(e) => setDifficulty(e.target.value as Difficulty)}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-blue-500 focus:border-blue-500"
         >
           <option value="easy">Easy</option>
           <option value="medium">Medium</option>
@@ -200,7 +200,7 @@ export default function EntryForm({ onSave, onCancel }: EntryFormProps) {
       <div>
         <label
           htmlFor="notes"
-          className="block text-sm font-medium text-gray-700 mb-1"
+          className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
         >
           Notes
         </label>
@@ -209,7 +209,7 @@ export default function EntryForm({ onSave, onCancel }: EntryFormProps) {
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
           rows={3}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-blue-500 focus:border-blue-500"
           placeholder="Add your notes here..."
         />
       </div>
@@ -217,7 +217,7 @@ export default function EntryForm({ onSave, onCancel }: EntryFormProps) {
       <div>
         <label
           htmlFor="tags"
-          className="block text-sm font-medium text-gray-700 mb-1"
+          className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
         >
           Tags (comma-separated)
         </label>
@@ -226,7 +226,7 @@ export default function EntryForm({ onSave, onCancel }: EntryFormProps) {
           id="tags"
           value={tags}
           onChange={(e) => setTags(e.target.value)}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-blue-500 focus:border-blue-500"
           placeholder="vowels, stress, greetings"
         />
       </div>
@@ -245,7 +245,7 @@ export default function EntryForm({ onSave, onCancel }: EntryFormProps) {
           <button
             type="button"
             onClick={onCancel}
-            className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors"
+            className="px-4 py-2 bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-md hover:bg-gray-400 dark:hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors"
           >
             Cancel
           </button>

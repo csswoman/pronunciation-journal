@@ -15,20 +15,20 @@ export default function EntryCard({ entry }: EntryCardProps) {
   };
 
   return (
-    <div className="border border-gray-300 rounded-lg p-6 bg-white shadow-sm hover:shadow-md transition-shadow">
+    <div className="border border-gray-300 dark:border-gray-700 rounded-lg p-6 bg-white dark:bg-gray-800 shadow-sm hover:shadow-md transition-shadow">
       <div className="flex items-start justify-between mb-2">
         <div className="flex items-center gap-3">
-          <h3 className="text-xl font-bold">{entry.word}</h3>
+          <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">{entry.word}</h3>
           {entry.audioUrl && (
             <button
               onClick={() => playAudio(entry.audioUrl!)}
-              className="p-2 bg-blue-100 hover:bg-blue-200 rounded-full transition-colors"
+              className="p-2 bg-blue-100 dark:bg-blue-900 hover:bg-blue-200 dark:hover:bg-blue-800 rounded-full transition-colors"
               title="Play pronunciation"
               aria-label="Play pronunciation"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5 text-blue-600"
+                className="h-5 w-5 text-blue-600 dark:text-blue-400"
                 viewBox="0 0 20 20"
                 fill="currentColor"
               >
@@ -44,34 +44,34 @@ export default function EntryCard({ entry }: EntryCardProps) {
         <span
           className={`px-3 py-1 rounded-full text-sm font-medium ${
             entry.difficulty === "easy"
-              ? "bg-green-100 text-green-800"
+              ? "bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200"
               : entry.difficulty === "medium"
-              ? "bg-yellow-100 text-yellow-800"
-              : "bg-red-100 text-red-800"
+              ? "bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200"
+              : "bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200"
           }`}
         >
           {entry.difficulty}
         </span>
       </div>
       {entry.ipa && (
-        <p className="text-gray-600 mb-2">IPA: {entry.ipa}</p>
+        <p className="text-gray-600 dark:text-gray-400 mb-2">IPA: {entry.ipa}</p>
       )}
       {entry.notes && (
-        <p className="text-gray-700 mb-2">Notes: {entry.notes}</p>
+        <p className="text-gray-700 dark:text-gray-300 mb-2">Notes: {entry.notes}</p>
       )}
       {entry.tags && entry.tags.length > 0 && (
         <div className="flex flex-wrap gap-2 mt-2">
           {entry.tags.map((tag, index) => (
             <span
               key={index}
-              className="px-2 py-1 bg-blue-100 text-blue-800 rounded text-sm"
+              className="px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded text-sm"
             >
               {tag}
             </span>
           ))}
         </div>
       )}
-      <p className="text-xs text-gray-500 mt-4">
+      <p className="text-xs text-gray-500 dark:text-gray-400 mt-4">
         Created: {new Date(entry.createdAt).toLocaleDateString()}
       </p>
     </div>

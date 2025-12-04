@@ -10,7 +10,7 @@ interface EntriesListProps {
 export default function EntriesList({ entries }: EntriesListProps) {
   if (entries.length === 0) {
     return (
-      <div className="text-center py-12 text-gray-500">
+      <div className="text-center py-12 text-gray-500 dark:text-gray-400">
         <p className="text-lg">No entries yet.</p>
         <p className="text-sm mt-2">
           Click "Agregar palabra" to add your first word!
