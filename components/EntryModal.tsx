@@ -17,7 +17,7 @@ export default function EntryModal({ entry, onClose }: EntryModalProps) {
 
   return (
     <div
-      className="fixed inset-y-0 right-0 left-64 bg-black bg-opacity-50 backdrop-blur-sm z-50 flex items-center justify-center m-0"
+      className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-50 flex items-center justify-center m-0"
       onClick={onClose}
     >
       <div

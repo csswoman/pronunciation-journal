@@ -70,7 +70,7 @@ export default function ApiWordModal({ word, onClose, onSave }: ApiWordModalProp
       >
         <div className="sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-6 flex justify-between items-start">
           <div className="flex items-center gap-4 flex-1">
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 capitalize">
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
               {word}
             </h2>
             {data?.audioUrl && (

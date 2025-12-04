@@ -22,6 +22,7 @@ export default function JournalContainer() {
     Difficulty | "all"
   >("all");
   const [selectedApiWord, setSelectedApiWord] = useState<string | null>(null);
+  const [isAsideCollapsed, setIsAsideCollapsed] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
@@ -67,6 +68,8 @@ export default function JournalContainer() {
         <Navbar
           activeTab={activeTab}
           onTabChange={setActiveTab}
+          isCollapsed={isAsideCollapsed}
+          onToggleCollapse={() => setIsAsideCollapsed(!isAsideCollapsed)}
         />
         <MainContent>
           {activeTab === "words" ? (
