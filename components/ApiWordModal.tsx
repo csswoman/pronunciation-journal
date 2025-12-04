@@ -131,9 +131,6 @@ export default function ApiWordModal({ word, onClose, onSave }: ApiWordModalProp
             <>
               {data.ipa && (
                 <div>
-                  <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                    IPA (International Phonetic Alphabet)
-                  </h3>
                   <p className="text-2xl text-gray-900 dark:text-gray-100 font-mono">
                     {data.ipa}
                   </p>

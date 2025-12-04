@@ -7,10 +7,26 @@ import EntryModal from "./EntryModal";
 
 interface EntriesListProps {
   entries: Entry[];
+  isSelectionMode?: boolean;
+  selectedEntries?: string[];
+  onSelectEntry?: (id: string) => void;
 }
 
-export default function EntriesList({ entries }: EntriesListProps) {
+export default function EntriesList({ 
+  entries, 
+  isSelectionMode = false,
+  selectedEntries = [],
+  onSelectEntry 
+}: EntriesListProps) {
   const [selectedEntry, setSelectedEntry] = useState<Entry | null>(null);
+
+  const handleCardClick = (entry: Entry) => {
+    if (isSelectionMode && onSelectEntry) {
+      onSelectEntry(entry.id);
+    } else {
+      setSelectedEntry(entry);
+    }
+  };
 
   if (entries.length === 0) {
     return (
@@ -27,15 +43,17 @@ export default function EntriesList({ entries }: EntriesListProps) {
     <div className="relative">
       <div className="space-y-4">
         {entries.map((entry) => (
-          <EntryCard 
-            key={entry.id} 
+          <EntryCard
+            key={entry.id}
             entry={entry}
-            onClick={() => setSelectedEntry(entry)}
+            onClick={() => handleCardClick(entry)}
+            isSelectionMode={isSelectionMode}
+            isSelected={selectedEntries.includes(entry.id)}
           />
         ))}
       </div>
-      
-      {selectedEntry && (
+
+      {selectedEntry && !isSelectionMode && (
         <EntryModal
           entry={selectedEntry}
           onClose={() => setSelectedEntry(null)}
@@ -44,4 +62,3 @@ export default function EntriesList({ entries }: EntriesListProps) {
     </div>
   );
 }
-

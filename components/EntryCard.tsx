@@ -5,10 +5,18 @@ import { Entry } from "@/lib/types";
 interface EntryCardProps {
   entry: Entry;
   onClick?: () => void;
+  isSelectionMode?: boolean;
+  isSelected?: boolean;
 }
 
-export default function EntryCard({ entry, onClick }: EntryCardProps) {
-  const playAudio = (audioUrl: string) => {
+export default function EntryCard({ 
+  entry, 
+  onClick, 
+  isSelectionMode = false,
+  isSelected = false 
+}: EntryCardProps) {
+  const playAudio = (e: React.MouseEvent, audioUrl: string) => {
+    e.stopPropagation();
     const audio = new Audio(audioUrl);
     audio.play().catch((error) => {
       console.error("Error playing audio:", error);
@@ -18,14 +26,42 @@ export default function EntryCard({ entry, onClick }: EntryCardProps) {
   return (
     <div 
       onClick={onClick}
-      className="border border-gray-300 dark:border-gray-700 rounded-lg p-6 bg-white dark:bg-gray-800 shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+      className={`border rounded-lg p-6 bg-white dark:bg-gray-800 shadow-sm hover:shadow-md transition-all cursor-pointer relative ${
+        isSelectionMode && isSelected
+          ? "border-[#5468FF] ring-2 ring-[#5468FF] ring-opacity-50"
+          : "border-gray-300 dark:border-gray-700"
+      }`}
     >
-      <div className="flex items-start justify-between mb-2">
+      {isSelectionMode && (
+        <div className="absolute top-4 left-4">
+          <div className={`w-6 h-6 rounded border-2 flex items-center justify-center transition-colors ${
+            isSelected 
+              ? "bg-[#5468FF] border-[#5468FF]" 
+              : "bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600"
+          }`}>
+            {isSelected && (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-4 w-4 text-white"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            )}
+          </div>
+        </div>
+      )}
+      <div className={`flex items-start justify-between mb-2 ${isSelectionMode ? "ml-8" : ""}`}>
         <div className="flex items-center gap-3">
           <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 capitalize">{entry.word}</h3>
-          {entry.audioUrl && (
+          {entry.audioUrl && !isSelectionMode && (
             <button
-              onClick={() => playAudio(entry.audioUrl!)}
+              onClick={(e) => playAudio(e, entry.audioUrl!)}
               className="p-2 bg-blue-100 dark:bg-blue-900 hover:bg-blue-200 dark:hover:bg-blue-800 rounded-full transition-colors"
               title="Play pronunciation"
               aria-label="Play pronunciation"
