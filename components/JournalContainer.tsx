@@ -10,6 +10,8 @@ import MainContent from "./MainContent";
 import AddWordSection from "./AddWordSection";
 import EntriesList from "./EntriesList";
 import SearchAndFilters from "./SearchAndFilters";
+import DifficultyFilters from "./DifficultyFilters";
+import ApiWordModal from "./ApiWordModal";
 
 export default function JournalContainer() {
   const [entries, setEntries] = useState<Entry[]>([]);
@@ -19,6 +21,7 @@ export default function JournalContainer() {
   const [selectedDifficulty, setSelectedDifficulty] = useState<
     Difficulty | "all"
   >("all");
+  const [selectedApiWord, setSelectedApiWord] = useState<string | null>(null);
 
   useEffect(() => {
     setIsMounted(true);
@@ -26,6 +29,14 @@ export default function JournalContainer() {
   }, []);
 
   const handleSave = (entry: Entry) => {
+    setEntries(getEntries());
+  };
+
+  const handleWordSelect = (word: string) => {
+    setSelectedApiWord(word);
+  };
+
+  const handleApiWordSave = () => {
     setEntries(getEntries());
   };
 
@@ -63,14 +74,27 @@ export default function JournalContainer() {
               <SearchAndFilters
                 searchTerm={searchTerm}
                 onSearchChange={setSearchTerm}
-                selectedDifficulty={selectedDifficulty}
-                onDifficultyChange={setSelectedDifficulty}
+                onWordSelect={handleWordSelect}
               />
               <AddWordSection onSave={handleSave} />
-              <div className="space-y-4 mt-8">
-                <h2 className="text-2xl font-semibold mb-4 text-gray-900 dark:text-gray-100">Your Entries</h2>
+              <div className="mt-8">
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">Your Entries</h2>
+                  <DifficultyFilters
+                    selectedDifficulty={selectedDifficulty}
+                    onDifficultyChange={setSelectedDifficulty}
+                  />
+                </div>
                 <EntriesList entries={filteredEntries} />
               </div>
+
+              {selectedApiWord && (
+                <ApiWordModal
+                  word={selectedApiWord}
+                  onClose={() => setSelectedApiWord(null)}
+                  onSave={handleApiWordSave}
+                />
+              )}
             </>
           ) : (
             <div className="text-center py-12">

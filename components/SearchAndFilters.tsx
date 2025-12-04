@@ -1,36 +1,67 @@
 "use client";
 
-import { Difficulty } from "@/lib/types";
+import { useState, useEffect, useRef } from "react";
+import { getWordSuggestions } from "@/lib/dictionarySearch";
 
 interface SearchAndFiltersProps {
   searchTerm: string;
   onSearchChange: (term: string) => void;
-  selectedDifficulty: Difficulty | "all";
-  onDifficultyChange: (difficulty: Difficulty | "all") => void;
+  onWordSelect: (word: string) => void;
 }
 
 export default function SearchAndFilters({
   searchTerm,
   onSearchChange,
-  selectedDifficulty,
-  onDifficultyChange,
+  onWordSelect,
 }: SearchAndFiltersProps) {
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    async function fetchSuggestions() {
+      if (searchTerm.length >= 2) {
+        const words = await getWordSuggestions(searchTerm);
+        setSuggestions(words);
+        setShowSuggestions(words.length > 0);
+      } else {
+        setSuggestions([]);
+        setShowSuggestions(false);
+      }
+    }
+    
+    // Debounce to avoid too many API calls
+    const timeoutId = setTimeout(() => {
+      fetchSuggestions();
+    }, 300);
+
+    return () => clearTimeout(timeoutId);
+  }, [searchTerm]);
+
+  const handleSuggestionClick = (word: string) => {
+    onWordSelect(word);
+    setShowSuggestions(false);
+    onSearchChange("");
+  };
+
   return (
     <div className="mb-8">
       <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-6">
         Mi vocabulario
       </h2>
       
-      <div className="mb-6">
+      <div>
         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
           Buscar
         </label>
         <div className="relative">
           <input
+            ref={inputRef}
             type="text"
             placeholder="Buscar palabra..."
             value={searchTerm}
             onChange={(e) => onSearchChange(e.target.value)}
+            onFocus={() => suggestions.length > 0 && setShowSuggestions(true)}
             className="w-full px-4 py-2 pl-10 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:border-transparent transition-colors"
             style={{ "--tw-ring-color": "#5468FF" } as React.CSSProperties & { "--tw-ring-color"?: string }}
           />
@@ -46,37 +77,26 @@ export default function SearchAndFilters({
               clipRule="evenodd"
             />
           </svg>
-        </div>
-      </div>
 
-      <div>
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
-          Dificultad
-        </label>
-        <div className="flex flex-wrap gap-2">
-          {[
-            { value: "all", label: "Todos" },
-            { value: "easy", label: "Fácil" },
-            { value: "medium", label: "Medio" },
-            { value: "hard", label: "Difícil" },
-          ].map((difficulty) => (
-            <button
-              key={difficulty.value}
-              onClick={() => onDifficultyChange(difficulty.value as Difficulty | "all")}
-              className={`px-4 py-2 rounded-lg text-sm transition-colors ${
-                selectedDifficulty === difficulty.value
-                  ? "text-white"
-                  : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 bg-gray-100 dark:bg-gray-700"
-              }`}
-              style={
-                selectedDifficulty === difficulty.value
-                  ? { backgroundColor: "#5468FF" }
-                  : {}
-              }
-            >
-              {difficulty.label}
-            </button>
-          ))}
+          {/* Suggestions dropdown */}
+          {showSuggestions && suggestions.length > 0 && (
+            <div className="absolute z-10 w-full mt-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+              {suggestions.map((word, index) => (
+                <button
+                  key={index}
+                  onClick={() => handleSuggestionClick(word)}
+                  className="w-full text-left px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors text-gray-900 dark:text-gray-100 border-b border-gray-200 dark:border-gray-600 last:border-b-0"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="font-medium">{word}</span>
+                    <span className="text-xs text-gray-500 dark:text-gray-400">
+                      Click to view
+                    </span>
+                  </div>
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>

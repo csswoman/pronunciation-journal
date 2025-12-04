@@ -22,7 +22,7 @@ export default function EntryCard({ entry, onClick }: EntryCardProps) {
     >
       <div className="flex items-start justify-between mb-2">
         <div className="flex items-center gap-3">
-          <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">{entry.word}</h3>
+          <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 capitalize">{entry.word}</h3>
           {entry.audioUrl && (
             <button
               onClick={() => playAudio(entry.audioUrl!)}
@@ -58,7 +58,7 @@ export default function EntryCard({ entry, onClick }: EntryCardProps) {
         </span>
       </div>
       {entry.ipa && (
-        <p className="text-gray-600 dark:text-gray-400 mb-2">IPA: {entry.ipa}</p>
+        <p className="text-gray-600 dark:text-gray-400 mb-2">{entry.ipa}</p>
       )}
       {entry.notes && (
         <p className="text-gray-700 dark:text-gray-300 mb-2">Notes: {entry.notes}</p>
