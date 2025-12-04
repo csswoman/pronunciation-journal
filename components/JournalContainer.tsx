@@ -9,6 +9,7 @@ import Footer from "./Footer";
 import MainContent from "./MainContent";
 import AddWordSection from "./AddWordSection";
 import EntriesList from "./EntriesList";
+import SearchAndFilters from "./SearchAndFilters";
 
 export default function JournalContainer() {
   const [entries, setEntries] = useState<Entry[]>([]);
@@ -50,23 +51,23 @@ export default function JournalContainer() {
 
   return (
     <div className="flex min-h-screen flex-col">
-      <Header
-        title="Pronunciation Journal"
-        activeTab={activeTab}
-        onTabChange={setActiveTab}
-      />
-      <div className="grid grid-cols-12">
+      <Header title="Pronunciation Journal" />
+      <div className="flex flex-1">
         <Navbar
-          searchTerm={searchTerm}
-          onSearchChange={setSearchTerm}
-          selectedDifficulty={selectedDifficulty}
-          onDifficultyChange={setSelectedDifficulty}
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
         />
         <MainContent>
           {activeTab === "words" ? (
             <>
+              <SearchAndFilters
+                searchTerm={searchTerm}
+                onSearchChange={setSearchTerm}
+                selectedDifficulty={selectedDifficulty}
+                onDifficultyChange={setSelectedDifficulty}
+              />
               <AddWordSection onSave={handleSave} />
-              <div className="space-y-4">
+              <div className="space-y-4 mt-8">
                 <h2 className="text-2xl font-semibold mb-4 text-gray-900 dark:text-gray-100">Your Entries</h2>
                 <EntriesList entries={filteredEntries} />
               </div>

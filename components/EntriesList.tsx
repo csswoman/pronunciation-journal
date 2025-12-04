@@ -1,13 +1,17 @@
 "use client";
 
+import { useState } from "react";
 import { Entry } from "@/lib/types";
 import EntryCard from "./EntryCard";
+import EntryModal from "./EntryModal";
 
 interface EntriesListProps {
   entries: Entry[];
 }
 
 export default function EntriesList({ entries }: EntriesListProps) {
+  const [selectedEntry, setSelectedEntry] = useState<Entry | null>(null);
+
   if (entries.length === 0) {
     return (
       <div className="text-center py-12 text-gray-500 dark:text-gray-400">
@@ -20,10 +24,23 @@ export default function EntriesList({ entries }: EntriesListProps) {
   }
 
   return (
-    <div className="space-y-4">
-      {entries.map((entry) => (
-        <EntryCard key={entry.id} entry={entry} />
-      ))}
+    <div className="relative">
+      <div className="space-y-4">
+        {entries.map((entry) => (
+          <EntryCard 
+            key={entry.id} 
+            entry={entry}
+            onClick={() => setSelectedEntry(entry)}
+          />
+        ))}
+      </div>
+      
+      {selectedEntry && (
+        <EntryModal
+          entry={selectedEntry}
+          onClose={() => setSelectedEntry(null)}
+        />
+      )}
     </div>
   );
 }

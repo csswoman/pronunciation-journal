@@ -4,9 +4,10 @@ import { Entry } from "@/lib/types";
 
 interface EntryCardProps {
   entry: Entry;
+  onClick?: () => void;
 }
 
-export default function EntryCard({ entry }: EntryCardProps) {
+export default function EntryCard({ entry, onClick }: EntryCardProps) {
   const playAudio = (audioUrl: string) => {
     const audio = new Audio(audioUrl);
     audio.play().catch((error) => {
@@ -15,7 +16,10 @@ export default function EntryCard({ entry }: EntryCardProps) {
   };
 
   return (
-    <div className="border border-gray-300 dark:border-gray-700 rounded-lg p-6 bg-white dark:bg-gray-800 shadow-sm hover:shadow-md transition-shadow">
+    <div 
+      onClick={onClick}
+      className="border border-gray-300 dark:border-gray-700 rounded-lg p-6 bg-white dark:bg-gray-800 shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+    >
       <div className="flex items-start justify-between mb-2">
         <div className="flex items-center gap-3">
           <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">{entry.word}</h3>

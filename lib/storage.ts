@@ -7,7 +7,6 @@ export function saveEntry(entry: Entry): void {
   const existingIndex = entries.findIndex((e) => e.id === entry.id);
 
   if (existingIndex >= 0) {
-    // Update existing entry
     entries[existingIndex] = {
       ...entry,
       updatedAt: new Date().toISOString(),

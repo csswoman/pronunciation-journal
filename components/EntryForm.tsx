@@ -17,6 +17,7 @@ export default function EntryForm({ onSave, onCancel }: EntryFormProps) {
   const [notes, setNotes] = useState("");
   const [difficulty, setDifficulty] = useState<Difficulty>("medium");
   const [tags, setTags] = useState("");
+  const [meanings, setMeanings] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -40,8 +41,11 @@ export default function EntryForm({ onSave, onCancel }: EntryFormProps) {
       if (data.audioUrl) {
         setAudioUrl(data.audioUrl);
       }
+      if (data.meanings) {
+        setMeanings(data.meanings);
+      }
 
-      if (data.ipa || data.audioUrl) {
+      if (data.ipa || data.audioUrl || data.meanings) {
         setSuccess("Pronunciation data fetched successfully!");
       } else {
         setError("No pronunciation data found for this word");
@@ -52,6 +56,7 @@ export default function EntryForm({ onSave, onCancel }: EntryFormProps) {
       setError(errorMessage);
       setIpa("");
       setAudioUrl("");
+      setMeanings(null);
     } finally {
       setIsLoading(false);
     }
@@ -78,6 +83,7 @@ export default function EntryForm({ onSave, onCancel }: EntryFormProps) {
         .split(",")
         .map((tag) => tag.trim())
         .filter((tag) => tag.length > 0),
+      meanings: meanings || undefined,
       createdAt: new Date().toISOString(),
     };
 
@@ -96,6 +102,7 @@ export default function EntryForm({ onSave, onCancel }: EntryFormProps) {
     setNotes("");
     setDifficulty("medium");
     setTags("");
+    setMeanings(null);
     setSuccess("Entry saved successfully!");
   };
 

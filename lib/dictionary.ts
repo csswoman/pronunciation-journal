@@ -1,6 +1,9 @@
+import { Meaning } from "./types";
+
 export interface PronunciationData {
   ipa?: string;
   audioUrl?: string;
+  meanings?: Meaning[];
 }
 
 export async function fetchPronunciation(
@@ -61,13 +64,28 @@ export async function fetchPronunciation(
       ipa = entry.phonetic;
     }
 
-    if (!ipa && !audioUrl) {
+    // Extract meanings
+    let meanings: Meaning[] | undefined;
+    if (entry.meanings && Array.isArray(entry.meanings)) {
+      meanings = entry.meanings.map((meaning: any) => ({
+        partOfSpeech: meaning.partOfSpeech || "",
+        definitions: (meaning.definitions || []).map((def: any) => ({
+          definition: def.definition || "",
+          example: def.example || undefined,
+          synonyms: def.synonyms && def.synonyms.length > 0 ? def.synonyms : undefined,
+          antonyms: def.antonyms && def.antonyms.length > 0 ? def.antonyms : undefined,
+        })),
+      }));
+    }
+
+    if (!ipa && !audioUrl && !meanings) {
       throw new Error("No pronunciation data available for this word");
     }
 
     return {
       ipa: ipa || undefined,
       audioUrl: audioUrl || undefined,
+      meanings: meanings || undefined,
     };
   } catch (error) {
     if (error instanceof Error) {
