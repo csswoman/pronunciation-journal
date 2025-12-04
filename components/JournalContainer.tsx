@@ -55,7 +55,7 @@ export default function JournalContainer() {
         activeTab={activeTab}
         onTabChange={setActiveTab}
       />
-      <div className="flex flex-1">
+      <div className="grid grid-cols-12">
         <Navbar
           searchTerm={searchTerm}
           onSearchChange={setSearchTerm}

@@ -16,7 +16,7 @@ export default function Navbar({
   onDifficultyChange,
 }: NavbarProps) {
   return (
-    <nav className="bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 w-64 min-h-screen py-6">
+    <nav className="bg-white col-span-3 dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 min-h-screen py-6">
       <div className="px-4">
         <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-6">
           Mi vocabulario
@@ -54,11 +54,11 @@ export default function Navbar({
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
             Dificultad
           </label>
-          <ul className="flex flex-col space-y-2">
+          <ul className="flex flex-row space-x-2">
             <li>
               <button
                 onClick={() => onDifficultyChange("all")}
-                className={`w-full text-left px-4 py-2 rounded-lg transition-colors ${
+                className={`w-full text-left text-sm px-4 py-2 rounded-lg transition-colors ${
                   selectedDifficulty === "all"
                     ? "text-white"
                     : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
@@ -75,7 +75,7 @@ export default function Navbar({
             <li>
               <button
                 onClick={() => onDifficultyChange("easy")}
-                className={`w-full text-left px-4 py-2 rounded-lg transition-colors ${
+                className={`w-full text-sm text-left px-4 py-2 rounded-lg transition-colors ${
                   selectedDifficulty === "easy"
                     ? "text-white"
                     : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
@@ -92,7 +92,7 @@ export default function Navbar({
             <li>
               <button
                 onClick={() => onDifficultyChange("medium")}
-                className={`w-full text-left px-4 py-2 rounded-lg transition-colors ${
+                className={`w-full text-sm text-left px-4 py-2 rounded-lg transition-colors ${
                   selectedDifficulty === "medium"
                     ? "text-white"
                     : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
@@ -109,7 +109,7 @@ export default function Navbar({
             <li>
               <button
                 onClick={() => onDifficultyChange("hard")}
-                className={`w-full text-left px-4 py-2 rounded-lg transition-colors ${
+                className={`w-full text-sm text-left px-4 py-2 rounded-lg transition-colors ${
                   selectedDifficulty === "hard"
                     ? "text-white"
                     : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"

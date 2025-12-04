@@ -9,55 +9,7 @@ interface HeaderProps {
 }
 
 export default function Header({ title, activeTab, onTabChange }: HeaderProps) {
-  const { isDark, toggleDarkMode, mounted } = useDarkMode();
-
-  // Prevent hydration mismatch
-  if (!mounted) {
-    return (
-      <header className="bg-white py-5 border-b border-gray-200">
-        <div className="max-w-7xl mx-auto flex justify-between items-center sm:px-6 lg:px-8">
-          <h1 className="text-xl font-bold text-gray-900 text-center">
-            {title}
-          </h1>
-          <div className="flex items-center gap-4">
-            <nav className="flex justify-center">
-              <ul className="flex space-x-1 bg-gray-100 p-1 rounded-lg">
-                <li>
-                  <button
-                    onClick={() => onTabChange("words")}
-                    className="px-6 py-2 rounded-md text-sm font-medium transition-colors"
-                  >
-                    My words
-                  </button>
-                </li>
-                <li>
-                  <button
-                    onClick={() => onTabChange("decks")}
-                    className="px-6 py-2 rounded-md text-sm font-medium transition-colors"
-                  >
-                    My decks
-                  </button>
-                </li>
-              </ul>
-            </nav>
-            <button
-              className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
-              aria-label="Toggle dark mode"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5 text-gray-600"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
-              </svg>
-            </button>
-          </div>
-        </div>
-      </header>
-    );
-  }
+  const { isDark, toggleDarkMode } = useDarkMode();
 
   return (
     <header className="bg-white dark:bg-gray-800 py-5 border-b border-gray-200 dark:border-gray-700">

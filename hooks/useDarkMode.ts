@@ -4,32 +4,26 @@ import { useState, useEffect } from "react";
 
 export function useDarkMode() {
   const [isDark, setIsDark] = useState(false);
-  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
-    // Check current state from DOM
-    const hasDarkClass = document.documentElement.classList.contains("dark");
-    setIsDark(hasDarkClass);
+    // Sync with current state
+    setIsDark(document.documentElement.classList.contains("dark"));
   }, []);
 
   const toggleDarkMode = () => {
-    const currentIsDark = document.documentElement.classList.contains("dark");
-    const newIsDark = !currentIsDark;
+    // Toggle dark class (siguiendo la documentación de Tailwind)
+    document.documentElement.classList.toggle("dark");
     
-    // Update DOM immediately
-    if (newIsDark) {
-      document.documentElement.classList.add("dark");
-      localStorage.setItem("theme", "dark");
+    // Save to localStorage
+    if (document.documentElement.classList.contains("dark")) {
+      localStorage.theme = "dark";
+      setIsDark(true);
     } else {
-      document.documentElement.classList.remove("dark");
-      localStorage.setItem("theme", "light");
+      localStorage.theme = "light";
+      setIsDark(false);
     }
-    
-    // Update state
-    setIsDark(newIsDark);
   };
 
-  return { isDark, toggleDarkMode, mounted };
+  return { isDark, toggleDarkMode };
 }
 
