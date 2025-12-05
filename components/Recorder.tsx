@@ -19,20 +19,41 @@ export default function Recorder({ onRecordingComplete, existingAudioUrl }: Reco
   } = useRecorder();
 
   const previousAudioUrlRef = useRef<string | null>(null);
+  const callbackRef = useRef(onRecordingComplete);
+
+  // Keep callback ref up to date
+  useEffect(() => {
+    callbackRef.current = onRecordingComplete;
+  }, [onRecordingComplete]);
 
   useEffect(() => {
     // Only call onRecordingComplete when audioUrl changes from null to a value
     if (audioUrl && audioUrl !== previousAudioUrlRef.current) {
       previousAudioUrlRef.current = audioUrl;
-      onRecordingComplete(audioUrl);
+      callbackRef.current(audioUrl);
     }
   }, [audioUrl]);
 
   const handlePlayAudio = (url: string) => {
-    const audio = new Audio(url);
-    audio.play().catch((error) => {
-      console.error("Error playing audio:", error);
-    });
+    try {
+      const audio = new Audio(url);
+      const playPromise = audio.play();
+      
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            // Audio started playing successfully
+          })
+          .catch((error) => {
+            // Error handling - ignore user-initiated errors
+            if (error.name !== 'AbortError' && error.name !== 'NotAllowedError') {
+              console.error("Error playing audio:", error);
+            }
+          });
+      }
+    } catch (error) {
+      console.error("Error creating audio element:", error);
+    }
   };
 
   const handleReset = () => {

@@ -53,10 +53,25 @@ export default function ApiWordModal({ word, onClose, onSave }: ApiWordModalProp
   };
 
   const playAudio = (audioUrl: string) => {
-    const audio = new Audio(audioUrl);
-    audio.play().catch((error) => {
-      console.error("Error playing audio:", error);
-    });
+    try {
+      const audio = new Audio(audioUrl);
+      const playPromise = audio.play();
+      
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            // Audio started playing successfully
+          })
+          .catch((error) => {
+            // Error handling - ignore user-initiated errors
+            if (error.name !== 'AbortError' && error.name !== 'NotAllowedError') {
+              console.error("Error playing audio:", error);
+            }
+          });
+      }
+    } catch (error) {
+      console.error("Error creating audio element:", error);
+    }
   };
 
   return (

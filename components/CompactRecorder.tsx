@@ -17,14 +17,20 @@ export default function CompactRecorder({ onRecordingComplete, existingAudioUrl 
   } = useRecorder();
 
   const previousAudioUrlRef = useRef<string | null>(null);
+  const callbackRef = useRef(onRecordingComplete);
+
+  // Keep callback ref up to date
+  useEffect(() => {
+    callbackRef.current = onRecordingComplete;
+  }, [onRecordingComplete]);
 
   useEffect(() => {
     // Only call onRecordingComplete when audioUrl changes to a new value
     if (audioUrl && audioUrl !== previousAudioUrlRef.current) {
       previousAudioUrlRef.current = audioUrl;
-      onRecordingComplete(audioUrl);
+      callbackRef.current(audioUrl);
     }
-  }, [audioUrl, onRecordingComplete]);
+  }, [audioUrl]);
 
   return (
     <div className="relative group">
