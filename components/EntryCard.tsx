@@ -17,6 +17,13 @@ export default function EntryCard({
 }: EntryCardProps) {
   const playAudio = (e: React.MouseEvent, audioUrl: string) => {
     e.stopPropagation();
+    
+    // Check if it's a blob URL (invalid after refresh)
+    if (audioUrl.startsWith('blob:')) {
+      console.error("Cannot play blob URL - audio not available");
+      return;
+    }
+    
     const audio = new Audio(audioUrl);
     audio.play().catch((error) => {
       console.error("Error playing audio:", error);

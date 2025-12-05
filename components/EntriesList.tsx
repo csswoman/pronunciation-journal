@@ -10,13 +10,15 @@ interface EntriesListProps {
   isSelectionMode?: boolean;
   selectedEntries?: string[];
   onSelectEntry?: (id: string) => void;
+  onEntryUpdated?: () => void;
 }
 
 export default function EntriesList({ 
   entries, 
   isSelectionMode = false,
   selectedEntries = [],
-  onSelectEntry 
+  onSelectEntry,
+  onEntryUpdated
 }: EntriesListProps) {
   const [selectedEntry, setSelectedEntry] = useState<Entry | null>(null);
 
@@ -57,6 +59,11 @@ export default function EntriesList({
         <EntryModal
           entry={selectedEntry}
           onClose={() => setSelectedEntry(null)}
+          onSave={() => {
+            if (onEntryUpdated) {
+              onEntryUpdated();
+            }
+          }}
         />
       )}
     </div>
