@@ -11,10 +11,11 @@ import MainContent from "./MainContent";
 import ApiWordModal from "./ApiWordModal";
 import WordsTab from "./WordsTab";
 import DecksTab from "./DecksTab";
+import IPAChart from "./IPAChart";
 
 export default function JournalContainer() {
   const [entries, setEntries] = useState<Entry[]>([]);
-  const [activeTab, setActiveTab] = useState<"words" | "decks">("words");
+  const [activeTab, setActiveTab] = useState<"words" | "decks" | "ipa">("words");
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedDifficulties, setSelectedDifficulties] = useState<Difficulty[]>([]);
   const [selectedApiWord, setSelectedApiWord] = useState<string | null>(null);
@@ -94,8 +95,10 @@ export default function JournalContainer() {
                 />
               )}
             </>
-          ) : (
+          ) : activeTab === "decks" ? (
             <DecksTab />
+          ) : (
+            <IPAChart />
           )}
         </MainContent>
       </div>
