@@ -61,14 +61,14 @@ export default function WordsTab({
 
   return (
     <>
-      <SearchAndFilters
-        searchTerm={searchTerm}
-        onSearchChange={onSearchChange}
-        onWordSelect={onWordSelect}
-      />
+      <div className="mb-8">
+        <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-6">
+          Mi vocabulario
+        </h2>
+      </div>
       <AddWordSection onSave={onSave} />
       <div className="mt-8">
-        <div className="flex justify-between items-center mb-4">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
           <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
             Your Entries
             {isSelectionMode && selectedEntries.length > 0 && (
@@ -78,7 +78,12 @@ export default function WordsTab({
               </span>
             )}
           </h2>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2 items-center w-full sm:w-auto">
+            <SearchAndFilters
+              searchTerm={searchTerm}
+              onSearchChange={onSearchChange}
+              onWordSelect={onWordSelect}
+            />
             {isSelectionMode && selectedEntries.length > 0 && (
               <button
                 onClick={onDeleteSelected}
