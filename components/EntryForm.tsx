@@ -21,6 +21,12 @@ export default function EntryForm({ onSave, onCancel }: EntryFormProps) {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  // Track which fields were set by API to avoid clearing user input
+  const [apiSetFields, setApiSetFields] = useState<{
+    ipa: boolean;
+    audioUrl: boolean;
+    meanings: boolean;
+  }>({ ipa: false, audioUrl: false, meanings: false });
 
   const handleFetchPronunciation = async () => {
     if (!word.trim()) {
@@ -32,18 +38,31 @@ export default function EntryForm({ onSave, onCancel }: EntryFormProps) {
     setError(null);
     setSuccess(null);
 
+    // Store current values before API call to detect user input
+    const previousIpa = ipa;
+    const previousAudioUrl = audioUrl;
+    const previousMeanings = meanings;
+
     try {
       const data = await fetchPronunciation(word.trim());
       
+      // Track which fields were set by API
+      const newApiSetFields = { ...apiSetFields };
+      
       if (data.ipa) {
         setIpa(data.ipa);
+        newApiSetFields.ipa = true;
       }
       if (data.audioUrl) {
         setAudioUrl(data.audioUrl);
+        newApiSetFields.audioUrl = true;
       }
       if (data.meanings) {
         setMeanings(data.meanings);
+        newApiSetFields.meanings = true;
       }
+      
+      setApiSetFields(newApiSetFields);
 
       if (data.ipa || data.audioUrl || data.meanings) {
         setSuccess("Pronunciation data fetched successfully!");
@@ -54,9 +73,20 @@ export default function EntryForm({ onSave, onCancel }: EntryFormProps) {
       const errorMessage =
         err instanceof Error ? err.message : "Failed to fetch pronunciation";
       setError(errorMessage);
-      setIpa("");
-      setAudioUrl("");
-      setMeanings(null);
+      
+      // Only clear fields that were set by the API, preserve user input
+      if (apiSetFields.ipa) {
+        setIpa("");
+      }
+      if (apiSetFields.audioUrl) {
+        setAudioUrl("");
+      }
+      if (apiSetFields.meanings) {
+        setMeanings(null);
+      }
+      
+      // Reset API tracking since we cleared API-set fields
+      setApiSetFields({ ipa: false, audioUrl: false, meanings: false });
     } finally {
       setIsLoading(false);
     }
@@ -103,6 +133,7 @@ export default function EntryForm({ onSave, onCancel }: EntryFormProps) {
     setDifficulty("medium");
     setTags("");
     setMeanings(null);
+    setApiSetFields({ ipa: false, audioUrl: false, meanings: false });
     setSuccess("Entry saved successfully!");
   };
 

@@ -56,10 +56,10 @@ export default function Recorder({ onRecordingComplete, existingAudioUrl }: Reco
     }
   };
 
-  const handleReset = () => {
-    resetRecording();
-    onRecordingComplete("");
-  };
+const handleReset = () => {
+  resetRecording();
+  callbackRef.current("");
+};
 
   const currentAudioUrl = audioUrl || existingAudioUrl;
 
