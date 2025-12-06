@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 
 const SOUNDS_BASE_URL = "/sounds";
 
@@ -156,35 +156,67 @@ const getAudioFileName = (symbol: string, type?: string): string | undefined => 
 
 export default function IPAChart() {
   const [playingSymbol, setPlayingSymbol] = useState<string | null>(null);
+  const currentAudioRef = useRef<HTMLAudioElement | null>(null);
 
-  const playSound = async (symbol: string, audioFile?: string) => {
+  // Limpiar audio cuando el componente se desmonte
+  useEffect(() => {
+    return () => {
+      if (currentAudioRef.current) {
+        currentAudioRef.current.pause();
+        currentAudioRef.current = null;
+      }
+    };
+  }, []);
+
+  const playSound = (symbol: string, audioFile?: string) => {
     const fileName = audioFile || getAudioFileName(symbol);
     if (!fileName) return;
+    
+    // Detener cualquier audio que esté reproduciéndose
+    if (currentAudioRef.current) {
+      currentAudioRef.current.pause();
+      currentAudioRef.current.currentTime = 0;
+      currentAudioRef.current = null;
+    }
     
     try {
       setPlayingSymbol(symbol);
       const audio = new Audio(`${SOUNDS_BASE_URL}/${fileName}`);
+      currentAudioRef.current = audio;
       
       // Manejar cuando el audio termina de reproducirse
       audio.onended = () => {
         setPlayingSymbol(null);
+        currentAudioRef.current = null;
       };
       
       // Manejar errores de carga del audio
       audio.onerror = (e) => {
         setPlayingSymbol(null);
+        currentAudioRef.current = null;
         console.error(`Error loading audio for ${symbol} (${fileName}):`, e);
       };
       
       // Intentar reproducir el audio
-      try {
-        await audio.play();
-      } catch (playError) {
-        setPlayingSymbol(null);
-        console.error(`Error playing sound for ${symbol}:`, playError);
+      const playPromise = audio.play();
+      
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            // Audio started playing successfully
+          })
+          .catch((playError) => {
+            setPlayingSymbol(null);
+            currentAudioRef.current = null;
+            // Ignorar errores de usuario (como cuando el usuario no ha interactuado con la página)
+            if (playError.name !== 'AbortError' && playError.name !== 'NotAllowedError') {
+              console.error(`Error playing sound for ${symbol}:`, playError);
+            }
+          });
       }
     } catch (error) {
       setPlayingSymbol(null);
+      currentAudioRef.current = null;
       console.error(`Error initializing audio for ${symbol}:`, error);
     }
   };
