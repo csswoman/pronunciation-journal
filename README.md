@@ -42,3 +42,7 @@ To learn more about Next.js, take a look at the following resources:
 - [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
 - [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
+## License and Attribution
+
+The sounds included under `public/sounds` are licensed under CC BY-SA 3.0 and are the respective works of Peter Isotalo, User:Erutoon, User:TFighterPilot and User:Adamsa123.
+
