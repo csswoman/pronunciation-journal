@@ -25,11 +25,16 @@ export default function JournalContainer() {
 
   useEffect(() => {
     cleanupBlobUrls();
-    setEntries(getEntries());
+    const loadEntries = async () => {
+      const loadedEntries = await getEntries();
+      setEntries(loadedEntries);
+    };
+    loadEntries();
   }, []);
 
-  const refreshEntries = () => {
-    setEntries(getEntries());
+  const refreshEntries = async () => {
+    const loadedEntries = await getEntries();
+    setEntries(loadedEntries);
   };
 
   const handleToggleSelectionMode = () => {
@@ -43,7 +48,7 @@ export default function JournalContainer() {
     );
   };
 
-  const handleDeleteSelected = () => {
+  const handleDeleteSelected = async () => {
     if (selectedEntries.length === 0) return;
 
     const confirmMessage = `¿Estás seguro de que quieres eliminar ${selectedEntries.length} palabra${
@@ -51,8 +56,8 @@ export default function JournalContainer() {
     }?`;
 
     if (confirm(confirmMessage)) {
-      selectedEntries.forEach(id => deleteEntry(id));
-      refreshEntries();
+      await Promise.all(selectedEntries.map(id => deleteEntry(id)));
+      await refreshEntries();
       setSelectedEntries([]);
       setIsSelectionMode(false);
     }

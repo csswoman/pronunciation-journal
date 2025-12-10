@@ -3,18 +3,14 @@
 import { useState, useEffect } from "react";
 
 export function useDarkMode() {
-  // Initialize state based on actual DOM state to prevent hydration mismatch
-  // The theme-init script runs before React hydrates, so we check the DOM directly
-  const [isDark, setIsDark] = useState(() => {
-    // Only run on client side
-    if (typeof window !== "undefined") {
-      return document.documentElement.classList.contains("dark");
-    }
-    return false;
-  });
+  // Initialize as false to match server-side render
+  // This prevents hydration mismatch
+  const [isDark, setIsDark] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    // Sync with current state after mount
+    // Only set the actual state after component mounts on client
+    setMounted(true);
     setIsDark(document.documentElement.classList.contains("dark"));
   }, []);
 
@@ -30,6 +26,6 @@ export function useDarkMode() {
     }
   };
 
-  return { isDark, toggleDarkMode };
+  return { isDark, toggleDarkMode, mounted };
 }
 

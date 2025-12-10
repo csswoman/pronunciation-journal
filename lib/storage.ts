@@ -2,8 +2,8 @@ import { Entry } from "./types";
 
 const STORAGE_KEY = "pronunciation-journal-entries";
 
-export function saveEntry(entry: Entry): void {
-  const entries = getEntries();
+export async function saveEntry(entry: Entry): Promise<void> {
+  const entries = await getEntries();
   const existingIndex = entries.findIndex((e) => e.id === entry.id);
 
   if (existingIndex >= 0) {
@@ -19,7 +19,7 @@ export function saveEntry(entry: Entry): void {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
 }
 
-export function getEntries(): Entry[] {
+export async function getEntries(): Promise<Entry[]> {
   if (typeof window === "undefined") {
     return [];
   }
@@ -36,8 +36,8 @@ export function getEntries(): Entry[] {
   }
 }
 
-export function deleteEntry(id: string): void {
-  const entries = getEntries();
+export async function deleteEntry(id: string): Promise<void> {
+  const entries = await getEntries();
   const filtered = entries.filter((e) => e.id !== id);
   localStorage.setItem(STORAGE_KEY, JSON.stringify(filtered));
 }

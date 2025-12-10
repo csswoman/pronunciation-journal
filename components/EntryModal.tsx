@@ -47,16 +47,21 @@ export default function EntryModal({ entry, onClose, onSave }: EntryModalProps) 
     }
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     const updatedEntry = {
       ...editedEntry,
       updatedAt: new Date().toISOString(),
     };
-    saveEntry(updatedEntry);
-    setCurrentEntry(updatedEntry);
-    setIsEditing(false);
-    if (onSave) {
-      onSave();
+    try {
+      await saveEntry(updatedEntry);
+      setCurrentEntry(updatedEntry);
+      setIsEditing(false);
+      if (onSave) {
+        onSave();
+      }
+    } catch (error) {
+      console.error("Error saving entry:", error);
+      alert("Error saving entry. Please try again.");
     }
   };
 
@@ -65,18 +70,23 @@ export default function EntryModal({ entry, onClose, onSave }: EntryModalProps) 
     setIsEditing(false);
   };
 
-  const handleRecordingComplete = useCallback((audioUrl: string) => {
+  const handleRecordingComplete = useCallback(async (audioUrl: string) => {
     // Immediately save the recording to the entry
     const updatedEntry = {
       ...currentEntry,
       userAudioUrl: audioUrl,
       updatedAt: new Date().toISOString(),
     };
-    saveEntry(updatedEntry);
-    setCurrentEntry(updatedEntry);
-    setEditedEntry(updatedEntry);
-    if (onSave) {
-      onSave();
+    try {
+      await saveEntry(updatedEntry);
+      setCurrentEntry(updatedEntry);
+      setEditedEntry(updatedEntry);
+      if (onSave) {
+        onSave();
+      }
+    } catch (error) {
+      console.error("Error saving recording:", error);
+      alert("Error saving recording. Please try again.");
     }
   }, [currentEntry, onSave]);
 
