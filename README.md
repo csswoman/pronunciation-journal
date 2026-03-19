@@ -26,6 +26,10 @@ pnpm dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+## Supabase (nube, opcional)
+
+Si configuras `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_ANON_KEY` en `.env.local`, los datos se guardan en Supabase; si no, solo en `localStorage`. Con Supabase activo verás una pantalla para **entrar**, **registrarte** o **continuar como invitado** antes de usar el diario. Guía: [docs/SUPABASE_DESDE_CERO.md](./docs/SUPABASE_DESDE_CERO.md).
+
 ## Project Structure
 
 - `app/` - Next.js app router pages and layouts

@@ -1,5 +1,10 @@
+import AuthProvider from "@/components/AuthProvider";
 import JournalContainer from "@/components/JournalContainer";
 
 export default function Home() {
-  return <JournalContainer />;
+  return (
+    <AuthProvider>
+      <JournalContainer />
+    </AuthProvider>
+  );
 }

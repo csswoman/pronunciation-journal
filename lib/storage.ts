@@ -1,8 +1,23 @@
 import { Entry } from "./types";
+import { isSupabaseConfigured } from "./supabase/env";
+import {
+  saveEntrySupabase,
+  getEntriesSupabase,
+  deleteEntrySupabase,
+} from "./storage/supabase";
 
 const STORAGE_KEY = "pronunciation-journal-entries";
 
+function useSupabase(): boolean {
+  return typeof window !== "undefined" && isSupabaseConfigured();
+}
+
 export async function saveEntry(entry: Entry): Promise<void> {
+  if (useSupabase()) {
+    await saveEntrySupabase(entry);
+    return;
+  }
+
   const entries = await getEntries();
   const existingIndex = entries.findIndex((e) => e.id === entry.id);
 
@@ -12,7 +27,6 @@ export async function saveEntry(entry: Entry): Promise<void> {
       updatedAt: new Date().toISOString(),
     };
   } else {
-    // Add new entry
     entries.push(entry);
   }
 
@@ -22,6 +36,15 @@ export async function saveEntry(entry: Entry): Promise<void> {
 export async function getEntries(): Promise<Entry[]> {
   if (typeof window === "undefined") {
     return [];
+  }
+
+  if (useSupabase()) {
+    try {
+      return await getEntriesSupabase();
+    } catch (e) {
+      console.error("Supabase getEntries falló, usando localStorage:", e);
+      // fallback a datos locales si la nube falla
+    }
   }
 
   const stored = localStorage.getItem(STORAGE_KEY);
@@ -37,8 +60,12 @@ export async function getEntries(): Promise<Entry[]> {
 }
 
 export async function deleteEntry(id: string): Promise<void> {
+  if (useSupabase()) {
+    await deleteEntrySupabase(id);
+    return;
+  }
+
   const entries = await getEntries();
   const filtered = entries.filter((e) => e.id !== id);
   localStorage.setItem(STORAGE_KEY, JSON.stringify(filtered));
 }
-
