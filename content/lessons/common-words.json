@@ -1,0 +1,21 @@
+{
+  "id": "common-words",
+  "title": "Common Words",
+  "description": "Frequently used English words that are often mispronounced",
+  "category": "common-words",
+  "difficulty": "medium",
+  "words": [
+    { "word": "comfortable", "ipa": "/ˈkʌmf.tər.bəl/", "hint": "Only 3 syllables: KUMF-ter-bul" },
+    { "word": "vegetable", "ipa": "/ˈvɛdʒ.tə.bəl/", "hint": "3 syllables: VEJ-tuh-bul" },
+    { "word": "interesting", "ipa": "/ˈɪn.trɪ.stɪŋ/", "hint": "3 syllables, not 4: IN-tris-ting" },
+    { "word": "different", "ipa": "/ˈdɪf.rənt/", "hint": "2 syllables: DIF-runt" },
+    { "word": "temperature", "ipa": "/ˈtɛm.prə.tʃɚ/", "hint": "3 syllables: TEM-pruh-chur" },
+    { "word": "probably", "ipa": "/ˈprɑː.bə.bli/", "hint": "3 syllables: PRAH-buh-blee" },
+    { "word": "necessary", "ipa": "/ˈnɛs.ə.sɛr.i/", "hint": "Stress on first syllable: NES-uh-ser-ee" },
+    { "word": "beautiful", "ipa": "/ˈbjuː.tɪ.fəl/", "hint": "Start with 'byoo': BYOO-tih-ful" },
+    { "word": "important", "ipa": "/ɪmˈpɔːr.tənt/", "hint": "Stress on second syllable: im-POR-tnt" },
+    { "word": "experience", "ipa": "/ɪkˈspɪr.i.əns/", "hint": "Stress: ik-SPEER-ee-uhns" },
+    { "word": "restaurant", "ipa": "/ˈrɛs.tər.ɑːnt/", "hint": "Often 2-3 syllables: RES-tront" },
+    { "word": "Wednesday", "ipa": "/ˈwɛnz.deɪ/", "hint": "Silent 'd': WENZ-day" }
+  ]
+}

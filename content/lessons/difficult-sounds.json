@@ -1,0 +1,21 @@
+{
+  "id": "difficult-sounds",
+  "title": "Difficult Sounds",
+  "description": "Words with sounds that are challenging for non-native speakers",
+  "category": "difficult-sounds",
+  "difficulty": "hard",
+  "words": [
+    { "word": "think", "ipa": "/θɪŋk/", "hint": "Voiceless 'th': tongue tip between teeth, blow air" },
+    { "word": "this", "ipa": "/ðɪs/", "hint": "Voiced 'th': tongue between teeth with vibration" },
+    { "word": "world", "ipa": "/wɝːld/", "hint": "Curl tongue back for the 'r', don't touch the roof" },
+    { "word": "girl", "ipa": "/ɡɝːl/", "hint": "The 'ir' is a single R-colored vowel" },
+    { "word": "rural", "ipa": "/ˈrʊr.əl/", "hint": "Two R sounds: ROOR-ul" },
+    { "word": "squirrel", "ipa": "/ˈskwɝː.əl/", "hint": "SKWURL, almost one syllable in fast speech" },
+    { "word": "through", "ipa": "/θruː/", "hint": "Voiceless 'th' + 'roo'" },
+    { "word": "thought", "ipa": "/θɔːt/", "hint": "Voiceless 'th' + 'awt'" },
+    { "word": "clothes", "ipa": "/kloʊðz/", "hint": "Often pronounced 'cloze', the 'th' is subtle" },
+    { "word": "months", "ipa": "/mʌnθs/", "hint": "The 'nths' cluster is tricky: munths" },
+    { "word": "sixth", "ipa": "/sɪksθ/", "hint": "End with 'ksth': keep tongue forward" },
+    { "word": "particularly", "ipa": "/pɚˈtɪk.jə.lɚ.li/", "hint": "5 syllables: per-TIK-yuh-ler-lee" }
+  ]
+}

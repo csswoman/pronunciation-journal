@@ -1,0 +1,21 @@
+{
+  "id": "basics",
+  "title": "Basic Greetings",
+  "description": "Essential greeting words and common daily expressions",
+  "category": "basics",
+  "difficulty": "easy",
+  "words": [
+    { "word": "hello", "ipa": "/həˈloʊ/", "hint": "Stress on the second syllable" },
+    { "word": "goodbye", "ipa": "/ɡʊdˈbaɪ/", "hint": "Stress on 'bye'" },
+    { "word": "please", "ipa": "/pliːz/", "hint": "Long 'ee' sound" },
+    { "word": "thank you", "ipa": "/θæŋk juː/", "hint": "The 'th' is voiceless, tongue between teeth" },
+    { "word": "sorry", "ipa": "/ˈsɑːri/", "hint": "American: 'ah' sound, not 'oh'" },
+    { "word": "excuse me", "ipa": "/ɪkˈskjuːz miː/", "hint": "Stress on 'scuse'" },
+    { "word": "welcome", "ipa": "/ˈwɛlkəm/", "hint": "Short 'e' as in 'well'" },
+    { "word": "morning", "ipa": "/ˈmɔːrnɪŋ/", "hint": "The 'ng' is a single nasal sound" },
+    { "word": "afternoon", "ipa": "/ˌæftərˈnuːn/", "hint": "Stress on the last syllable" },
+    { "word": "evening", "ipa": "/ˈiːvnɪŋ/", "hint": "Long 'ee' at the start" },
+    { "word": "night", "ipa": "/naɪt/", "hint": "The 'igh' makes an 'ai' sound" },
+    { "word": "yes", "ipa": "/jɛs/", "hint": "Short and crisp" }
+  ]
+}
