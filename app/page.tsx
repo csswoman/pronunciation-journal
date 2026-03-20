@@ -96,12 +96,12 @@ export default function HomePage() {
         </section>
 
         {/* Quick Actions */}
-        <section className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <Link
             href="/lesson"
             className="group flex items-center gap-4 p-5 bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 hover:border-indigo-300 dark:hover:border-indigo-600 hover:shadow-lg transition-all"
           >
-            <div className="w-12 h-12 rounded-xl bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+            <div className="w-12 h-12 rounded-xl bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform shadow-inner">
               🎤
             </div>
             <div>
@@ -115,10 +115,27 @@ export default function HomePage() {
           </Link>
 
           <Link
+            href="/ipa"
+            className="group flex items-center gap-4 p-5 bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 hover:border-violet-300 dark:hover:border-violet-600 hover:shadow-lg transition-all"
+          >
+            <div className="w-12 h-12 rounded-xl bg-violet-100 dark:bg-violet-900/30 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform shadow-inner">
+              🔊
+            </div>
+            <div>
+              <p className="font-semibold text-gray-900 dark:text-gray-100">
+                IPA Sounds
+              </p>
+              <p className="text-xs text-gray-500">
+                Master 100+ sounds
+              </p>
+            </div>
+          </Link>
+
+          <Link
             href="/progress"
             className="group flex items-center gap-4 p-5 bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 hover:border-green-300 dark:hover:border-green-600 hover:shadow-lg transition-all"
           >
-            <div className="w-12 h-12 rounded-xl bg-green-100 dark:bg-green-900/30 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+            <div className="w-12 h-12 rounded-xl bg-green-100 dark:bg-green-900/30 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform shadow-inner">
               📊
             </div>
             <div>
@@ -135,12 +152,12 @@ export default function HomePage() {
             href="/"
             className="group flex items-center gap-4 p-5 bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 hover:border-amber-300 dark:hover:border-amber-600 hover:shadow-lg transition-all"
           >
-            <div className="w-12 h-12 rounded-xl bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+            <div className="w-12 h-12 rounded-xl bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform shadow-inner">
               📖
             </div>
             <div>
               <p className="font-semibold text-gray-900 dark:text-gray-100">
-                Word Journal
+                Journal
               </p>
               <p className="text-xs text-gray-500">
                 Your saved words
