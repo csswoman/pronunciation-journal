@@ -48,17 +48,48 @@ export interface Lesson {
 
 export type WordStatus = "correct" | "incorrect" | "missing" | "extra";
 
+export interface PhonemeAlignment {
+  phoneme: string;                              // ARPAbet symbol (no stress digit)
+  status: "correct" | "incorrect" | "missing";  // "missing" = expected but not heard
+  got?: string;                                 // what was heard (only for "incorrect")
+}
+
+export interface PhonemeResult {
+  expected: string[];
+  got: string[];
+  tip: string | null;
+  alignment: PhonemeAlignment[];
+}
+
 export interface WordResult {
   expected: string;
   got: string;
   status: WordStatus;
+  phonemes?: PhonemeResult; // only present for status === "incorrect"
 }
 
 export interface ScoringResult {
   accuracy: number; // 0-100
   isCorrect: boolean; // accuracy >= threshold
-  transcript: string; // raw Whisper output
+  transcript: string; // raw STT output
   wordResults: WordResult[];
+}
+
+// ── Favorites Types ──
+
+export interface FavoriteWord {
+  id?: number;
+  word: string;
+  lessonId: string;
+  ipa?: string;
+  addedAt: string; // ISO date string
+}
+
+export interface NeedsPracticeWord {
+  word: string;
+  lessonId: string;
+  bestAccuracy: number;
+  attempts: number;
 }
 
 // ── SRS Types ──
