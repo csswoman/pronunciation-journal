@@ -16,19 +16,22 @@ self.onmessage = async (event: MessageEvent) => {
     try {
       self.postMessage({ type: "progress", progress: 0 });
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const pipelineOptions: any = {
+        dtype: "q8", // quantized int8 — ~40% faster inference
+        progress_callback: (progress: { progress: number }) => {
+          if (progress.progress) {
+            self.postMessage({
+              type: "progress",
+              progress: Math.round(progress.progress),
+            });
+          }
+        },
+      };
       transcriber = await pipeline(
         "automatic-speech-recognition",
         "Xenova/whisper-base.en",
-        {
-          progress_callback: (progress: { progress: number }) => {
-            if (progress.progress) {
-              self.postMessage({
-                type: "progress",
-                progress: Math.round(progress.progress),
-              });
-            }
-          },
-        }
+        pipelineOptions
       );
 
       self.postMessage({ type: "ready" });
