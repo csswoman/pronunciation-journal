@@ -1,5 +1,5 @@
 import Dexie, { type Table } from "dexie";
-import type { Attempt, DailyProgress, FavoriteWord, SRSData, UserStats } from "./types";
+import type { AIConversation, AISavedWord, Attempt, DailyProgress, FavoriteWord, SRSData, UserStats } from "./types";
 
 class PronunciationDB extends Dexie {
   attempts!: Table<Attempt, number>;
@@ -7,6 +7,8 @@ class PronunciationDB extends Dexie {
   dailyProgress!: Table<DailyProgress, number>;
   userStats!: Table<UserStats, number>;
   favorites!: Table<FavoriteWord, number>;
+  aiConversations!: Table<AIConversation, number>;
+  aiWords!: Table<AISavedWord, number>;
 
   constructor() {
     super("pronunciation-journal");
@@ -24,6 +26,16 @@ class PronunciationDB extends Dexie {
       dailyProgress: "++id, date",
       userStats: "++id",
       favorites: "++id, word, lessonId, addedAt",
+    });
+
+    this.version(3).stores({
+      attempts:        "++id, word, lessonId, timestamp",
+      srsData:         "wordId, word, nextReview",
+      dailyProgress:   "++id, date",
+      userStats:       "++id",
+      favorites:       "++id, word, lessonId, addedAt",
+      aiConversations: "++id, templateId, createdAt, updatedAt",
+      aiWords:         "++id, word, conversationId, savedAt, difficulty",
     });
   }
 }

@@ -138,6 +138,45 @@ export interface UserStats {
   lastStudyDate: string;
 }
 
+// ── AI Practice Types ──
+
+export type AITemplateId =
+  | "practice-questions"
+  | "sentence-correction"
+  | "personalized-practice"
+  | "free-conversation";
+
+export interface AIMessage {
+  role: "user" | "model";
+  content: string;
+  timestamp: string; // ISO
+}
+
+export interface AIConversation {
+  id?: number;
+  templateId: AITemplateId | "custom";
+  title: string; // first 60 chars of first user message
+  messages: AIMessage[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface AISavedWord {
+  id?: number;
+  word: string;
+  meaning: string;
+  difficulty: Difficulty;
+  context: string; // sentence the word appeared in
+  conversationId: number;
+  savedAt: string;
+}
+
+export type TemplateVars =
+  | { templateId: "practice-questions"; topic: string; userLevel: string }
+  | { templateId: "sentence-correction"; sentence: string }
+  | { templateId: "personalized-practice" }
+  | { templateId: "free-conversation"; topic: string };
+
 // ── Whisper Worker Messages ──
 
 export interface WhisperWorkerRequest {
