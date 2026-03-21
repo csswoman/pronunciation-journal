@@ -87,7 +87,7 @@ export function useWhisper(options: UseWhisperOptions = {}): UseWhisperReturn {
       }
       setIsTranscribing(true);
       setError(null);
-      workerRef.current.postMessage({ type: "transcribe", audio });
+      workerRef.current.postMessage({ type: "transcribe", audio }, [audio.buffer]);
     },
     [isModelLoaded]
   );

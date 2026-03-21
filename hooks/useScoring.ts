@@ -40,7 +40,7 @@ export function useScoring(): UseScoringReturn {
 
       try {
         // Score the pronunciation
-        const scoringResult = scorePronunciation(transcript, target);
+        const scoringResult = await scorePronunciation(transcript, target);
         setResult(scoringResult);
 
         // Calculate XP and feedback
@@ -48,31 +48,28 @@ export function useScoring(): UseScoringReturn {
         setXpEarned(xp);
         setFeedback(getFeedbackMessage(scoringResult.accuracy));
 
-        // Save attempt to IndexedDB
-        await saveAttempt({
-          word: target.toLowerCase(),
-          lessonId,
-          transcript: scoringResult.transcript,
-          accuracy: scoringResult.accuracy,
-          isCorrect: scoringResult.isCorrect,
-          timestamp: new Date().toISOString(),
-        });
-
-        // Update daily progress
-        await updateDailyProgress(scoringResult.accuracy, target.toLowerCase(), xp);
-
-        // Update user stats
-        await updateUserStats(scoringResult.accuracy, xp);
-
-        // Update SRS data
-        const wordId = `${lessonId}:${target.toLowerCase()}`;
-        let srsData = await getSRSData(wordId);
-        if (!srsData) {
-          srsData = createSRSEntry(wordId, target.toLowerCase());
-        }
-        const quality = accuracyToQuality(scoringResult.accuracy);
-        const updatedSRS = updateSRS(srsData, quality);
-        await saveSRSData(updatedSRS);
+        // Persist in background — DB failures must never block the feedback UI
+        (async () => {
+          try {
+            await saveAttempt({
+              word: target.toLowerCase(),
+              lessonId,
+              transcript: scoringResult.transcript,
+              accuracy: scoringResult.accuracy,
+              isCorrect: scoringResult.isCorrect,
+              timestamp: new Date().toISOString(),
+            });
+            await updateDailyProgress(scoringResult.accuracy, target.toLowerCase(), xp);
+            await updateUserStats(scoringResult.accuracy, xp);
+            const wordId = `${lessonId}:${target.toLowerCase()}`;
+            let srsData = await getSRSData(wordId);
+            if (!srsData) srsData = createSRSEntry(wordId, target.toLowerCase());
+            const quality = accuracyToQuality(scoringResult.accuracy);
+            await saveSRSData(updateSRS(srsData, quality));
+          } catch (err) {
+            console.warn("[DB] Persistence failed (non-critical):", err);
+          }
+        })();
 
         return scoringResult;
       } finally {

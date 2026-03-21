@@ -1,11 +1,12 @@
 import Dexie, { type Table } from "dexie";
-import type { Attempt, DailyProgress, SRSData, UserStats } from "./types";
+import type { Attempt, DailyProgress, FavoriteWord, SRSData, UserStats } from "./types";
 
 class PronunciationDB extends Dexie {
   attempts!: Table<Attempt, number>;
   srsData!: Table<SRSData, string>;
   dailyProgress!: Table<DailyProgress, number>;
   userStats!: Table<UserStats, number>;
+  favorites!: Table<FavoriteWord, number>;
 
   constructor() {
     super("pronunciation-journal");
@@ -15,6 +16,14 @@ class PronunciationDB extends Dexie {
       srsData: "wordId, word, nextReview",
       dailyProgress: "++id, date",
       userStats: "++id",
+    });
+
+    this.version(2).stores({
+      attempts: "++id, word, lessonId, timestamp",
+      srsData: "wordId, word, nextReview",
+      dailyProgress: "++id, date",
+      userStats: "++id",
+      favorites: "++id, word, lessonId, addedAt",
     });
   }
 }
@@ -165,4 +174,72 @@ export async function getProgressHistory(days = 7): Promise<DailyProgress[]> {
     .where("date")
     .aboveOrEqual(since)
     .toArray();
+}
+
+// ── Favorites Helpers ──
+
+export async function getFavorites(): Promise<FavoriteWord[]> {
+  return db.favorites.orderBy("addedAt").reverse().toArray();
+}
+
+export async function isFavorite(word: string): Promise<boolean> {
+  const count = await db.favorites.where("word").equals(word.toLowerCase()).count();
+  return count > 0;
+}
+
+export async function addFavorite(word: string, lessonId: string, ipa?: string): Promise<void> {
+  const exists = await isFavorite(word);
+  if (!exists) {
+    await db.favorites.add({
+      word: word.toLowerCase(),
+      lessonId,
+      ipa,
+      addedAt: new Date().toISOString(),
+    });
+  }
+}
+
+export async function removeFavorite(word: string): Promise<void> {
+  await db.favorites.where("word").equals(word.toLowerCase()).delete();
+}
+
+export async function toggleFavorite(word: string, lessonId: string, ipa?: string): Promise<boolean> {
+  const exists = await isFavorite(word);
+  if (exists) {
+    await removeFavorite(word);
+    return false;
+  } else {
+    await addFavorite(word, lessonId, ipa);
+    return true;
+  }
+}
+
+// ── Needs Practice Helpers ──
+// Words where the user's best attempt accuracy is below 75%
+
+export async function getNeedsPracticeWords(): Promise<{ word: string; lessonId: string; bestAccuracy: number; attempts: number }[]> {
+  const allAttempts = await db.attempts.toArray();
+
+  // Group by word
+  const map = new Map<string, { lessonId: string; bestAccuracy: number; attempts: number }>();
+  for (const a of allAttempts) {
+    const key = a.word.toLowerCase();
+    const existing = map.get(key);
+    if (!existing) {
+      map.set(key, { lessonId: a.lessonId, bestAccuracy: a.accuracy, attempts: 1 });
+    } else {
+      existing.bestAccuracy = Math.max(existing.bestAccuracy, a.accuracy);
+      existing.attempts += 1;
+    }
+  }
+
+  const result: { word: string; lessonId: string; bestAccuracy: number; attempts: number }[] = [];
+  for (const [word, data] of map.entries()) {
+    if (data.bestAccuracy < 75) {
+      result.push({ word, ...data });
+    }
+  }
+
+  // Sort by worst accuracy first
+  return result.sort((a, b) => a.bestAccuracy - b.bestAccuracy);
 }

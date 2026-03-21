@@ -6,10 +6,13 @@ import Link from "next/link";
 import { getLessonById } from "@/lib/lesson-generator";
 import { audioToFloat32, dataURLToBlob } from "@/lib/audio-utils";
 import { useWhisper } from "@/hooks/useWhisper";
+import { useWebSpeech } from "@/hooks/useWebSpeech";
 import { useScoring } from "@/hooks/useScoring";
 import { useLesson } from "@/hooks/useLesson";
 import { useRecorder } from "@/hooks/useRecorder";
 import { calculateXP } from "@/lib/scoring";
+import { fetchPronunciation } from "@/lib/dictionary";
+import { isFavorite, toggleFavorite } from "@/lib/db";
 import PronunciationFeedback from "@/components/lesson/PronunciationFeedback";
 import AudioWaveform from "@/components/lesson/AudioWaveform";
 import ScoreDisplay from "@/components/lesson/ScoreDisplay";
@@ -23,13 +26,15 @@ export default function ActiveLessonPage() {
 
   const [phase, setPhase] = useState<Phase>("ready");
   const [stream, setStream] = useState<MediaStream | null>(null);
+  const [wordAudioUrl, setWordAudioUrl] = useState<string | null>(null);
+  const [isFav, setIsFav] = useState(false);
 
   const {
     lesson,
     currentWord,
     currentIndex,
     totalWords,
-    results,
+    wordAttempts,
     sessionAccuracy,
     totalXP,
     startLesson,
@@ -48,24 +53,49 @@ export default function ActiveLessonPage() {
   useEffect(() => { phaseRef.current = phase; }, [phase]);
   const lessonIdRef = useRef(lessonId);
 
-  // Wire useWhisper with an onResult callback — no state chain!
-  const { isModelLoaded, isModelLoading, loadProgress, loadModel, transcribe, reset: resetWhisper } = useWhisper({
-    onResult: useCallback(async (text: string) => {
-      console.log(`[Transcription] Result: "${text}"`);
-      const word = currentWordRef.current;
-      if (!word) return;
+  // First engine to deliver a result wins
+  const resultDeliveredRef = useRef(false);
 
-      try {
-        const result = await scoreAndSave(text, word.word, lessonIdRef.current);
-        console.log(`[Scoring] Accuracy: ${result.accuracy}%, Correct: ${result.isCorrect}`);
-        const xp = calculateXP(result.accuracy);
-        addResult(result, xp);
-        setPhase("feedback");
-      } catch (err) {
-        console.error("Scoring error:", err);
-        setPhase("ready");
-      }
-    }, [addResult, scoreAndSave]),
+  // Shared scoring logic
+  const processSpeechResult = useCallback(async (text: string) => {
+    const word = currentWordRef.current;
+    if (!word) return;
+    try {
+      const result = await scoreAndSave(text, word.word, lessonIdRef.current);
+      console.log(`[Scoring] Accuracy: ${result.accuracy}%, Correct: ${result.isCorrect}`);
+      addResult(result, calculateXP(result.accuracy), word.word);
+      setPhase("feedback");
+    } catch (err) {
+      console.error("Scoring error:", err);
+      setPhase("ready");
+    }
+  }, [addResult, scoreAndSave]);
+
+  // Web Speech: skip empty results (Whisper will handle them as fallback)
+  const handleWebSpeechResult = useCallback(async (text: string) => {
+    if (phaseRef.current !== "processing") return;
+    if (resultDeliveredRef.current) return;
+    if (!text.trim()) return; // empty → wait for Whisper
+    resultDeliveredRef.current = true;
+    console.log(`[STT/WebSpeech] Result: "${text}"`);
+    await processSpeechResult(text);
+  }, [processSpeechResult]);
+
+  // Whisper: always proceed — it's the final fallback, empty = 0% score
+  const handleWhisperResult = useCallback(async (text: string) => {
+    if (phaseRef.current !== "processing") return;
+    if (resultDeliveredRef.current) return;
+    resultDeliveredRef.current = true;
+    console.log(`[STT/Whisper] Result: "${text}"`);
+    await processSpeechResult(text);
+  }, [processSpeechResult]);
+
+  const { isModelLoaded, isModelLoading, loadProgress, loadModel, transcribe, reset: resetWhisper } = useWhisper({
+    onResult: handleWhisperResult,
+  });
+
+  const { isSupported: isWebSpeechSupported, startListening, stopListening } = useWebSpeech({
+    onResult: handleWebSpeechResult,
   });
 
   const { isRecording, audioUrl, startRecording, stopRecording, resetRecording } = useRecorder();
@@ -73,20 +103,22 @@ export default function ActiveLessonPage() {
   // Track the last processed audioUrl so we don't process the same blob twice
   const lastProcessedUrl = useRef<string | null>(null);
 
-  // When a new audioUrl is set AND phase is "processing", start the pipeline
+  // When a new audioUrl is set AND phase is "processing", run Whisper as fallback
   useEffect(() => {
     if (phase !== "processing") return;
     if (!audioUrl) return;
     if (!isModelLoaded) return;
-    if (audioUrl === lastProcessedUrl.current) return; // already handled
+    if (audioUrl === lastProcessedUrl.current) return;
+    if (resultDeliveredRef.current) return; // Web Speech already handled this
 
     lastProcessedUrl.current = audioUrl;
 
     const runPipeline = async () => {
+      if (resultDeliveredRef.current) return; // double-check after async gap
       try {
         const blob = dataURLToBlob(audioUrl);
         const float32 = await audioToFloat32(blob);
-        transcribe(float32); // result delivered via onResult callback above
+        transcribe(float32);
       } catch (err) {
         console.error("Audio conversion error:", err);
         setPhase("ready");
@@ -95,6 +127,29 @@ export default function ActiveLessonPage() {
 
     runPipeline();
   }, [audioUrl, phase, isModelLoaded, transcribe]);
+
+  // Fetch audio + favorite state when the current word changes
+  useEffect(() => {
+    if (!currentWord) return;
+    setWordAudioUrl(currentWord.audioUrl ?? null);
+    setIsFav(false);
+
+    // Fetch audio from dictionary API if not in lesson data
+    if (!currentWord.audioUrl) {
+      fetchPronunciation(currentWord.word)
+        .then((data) => { if (data.audioUrl) setWordAudioUrl(data.audioUrl); })
+        .catch(() => {/* no audio available */});
+    }
+
+    // Load favorite state
+    isFavorite(currentWord.word).then(setIsFav);
+  }, [currentWord]);
+
+  const handleToggleFavorite = useCallback(async () => {
+    if (!currentWord) return;
+    const nowFav = await toggleFavorite(currentWord.word, lessonIdRef.current, currentWord.ipa);
+    setIsFav(nowFav);
+  }, [currentWord]);
 
   // Initialize lesson and load model
   useEffect(() => {
@@ -108,10 +163,10 @@ export default function ActiveLessonPage() {
   // ── Handlers ──────────────────────────────────────────────────────────────
 
   const handleStartRecording = useCallback(async () => {
-    if (!isModelLoaded) return;
     resetWhisper();
     resetScoring();
     resetRecording();
+    resultDeliveredRef.current = false;
     lastProcessedUrl.current = null;
 
     try {
@@ -120,23 +175,38 @@ export default function ActiveLessonPage() {
       });
       setStream(ms);
       await startRecording();
+      if (isWebSpeechSupported) startListening();
       setPhase("recording");
     } catch (err) {
       console.error("Mic error:", err);
     }
-  }, [isModelLoaded, resetWhisper, resetScoring, resetRecording, startRecording]);
+  }, [resetWhisper, resetScoring, resetRecording, startRecording, isWebSpeechSupported, startListening]);
 
   const handleStopRecording = useCallback(() => {
+    if (isWebSpeechSupported) stopListening();
     stopRecording();
     stream?.getTracks().forEach((t) => t.stop());
     setStream(null);
     setPhase("processing");
-  }, [stopRecording, stream]);
+  }, [stopRecording, stream, isWebSpeechSupported, stopListening]);
+
+  const handleCancelRecording = useCallback(() => {
+    if (isWebSpeechSupported) stopListening();
+    stopRecording();
+    stream?.getTracks().forEach((t) => t.stop());
+    setStream(null);
+    resetWhisper();
+    resetRecording();
+    resultDeliveredRef.current = false;
+    lastProcessedUrl.current = null;
+    setPhase("ready");
+  }, [stopRecording, stream, isWebSpeechSupported, stopListening, resetWhisper, resetRecording]);
 
   const handleNext = useCallback(() => {
     resetWhisper();
     resetScoring();
     resetRecording();
+    resultDeliveredRef.current = false;
     lastProcessedUrl.current = null;
     const isLast = currentIndex + 1 >= totalWords;
     if (isLast) {
@@ -151,6 +221,7 @@ export default function ActiveLessonPage() {
     resetWhisper();
     resetScoring();
     resetRecording();
+    resultDeliveredRef.current = false;
     lastProcessedUrl.current = null;
     retryWord();
     setPhase("ready");
@@ -200,28 +271,21 @@ export default function ActiveLessonPage() {
       </header>
 
       <main className="max-w-2xl mx-auto px-4 py-8">
-        {/* Model loading */}
+        {/* Whisper loading — small banner, doesn't block recording */}
         {!isModelLoaded && (
-          <div className="text-center py-12">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center">
-              <svg className="w-8 h-8 text-indigo-600 animate-spin" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-              </svg>
-            </div>
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">Loading AI Model...</h2>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">This happens once and is cached (~75MB)</p>
-            <div className="w-64 mx-auto bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-              <div className="h-full bg-indigo-500 rounded-full transition-all duration-300" style={{ width: `${loadProgress}%` }} />
-            </div>
-            <p className="text-xs text-gray-400 mt-2">{loadProgress}%</p>
+          <div className="flex items-center justify-center gap-2 mb-4 text-xs text-gray-400 dark:text-gray-500">
+            <svg className="w-3 h-3 animate-spin shrink-0" fill="none" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+            </svg>
+            <span>Loading AI fallback… {loadProgress}%</span>
           </div>
         )}
 
         {/* Complete */}
-        {isModelLoaded && phase === "complete" && (
+        {phase === "complete" && (
           <div className="space-y-6">
-            <ScoreDisplay results={results} sessionAccuracy={sessionAccuracy} totalXP={totalXP} totalWords={totalWords} />
+            <ScoreDisplay wordAttempts={wordAttempts} sessionAccuracy={sessionAccuracy} totalXP={totalXP} totalWords={totalWords} />
             <div className="flex gap-3 justify-center">
               <button
                 onClick={() => { resetLesson(); startLesson(lessonData); setPhase("ready"); }}
@@ -237,7 +301,7 @@ export default function ActiveLessonPage() {
         )}
 
         {/* Active Word */}
-        {isModelLoaded && phase !== "complete" && currentWord && (
+        {phase !== "complete" && currentWord && (
           <div className="flex flex-col items-center space-y-8">
             {/* Target */}
             <div className="text-center space-y-2">
@@ -248,18 +312,35 @@ export default function ActiveLessonPage() {
               )}
             </div>
 
-            {/* Reference audio button */}
-            {currentWord.audioUrl && (
+            {/* Reference audio + favorite buttons */}
+            <div className="flex items-center gap-2">
+              {wordAudioUrl && (
+                <button
+                  onClick={() => new Audio(wordAudioUrl).play()}
+                  className="flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-200 transition-colors"
+                >
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                  </svg>
+                  Listen
+                </button>
+              )}
               <button
-                onClick={() => new Audio(currentWord.audioUrl).play()}
-                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-200 transition-colors"
+                onClick={handleToggleFavorite}
+                aria-label={isFav ? "Remove from favorites" : "Add to favorites"}
+                className="p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
               >
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
-                </svg>
-                Listen
+                {isFav ? (
+                  <svg className="w-6 h-6 text-red-500" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                  </svg>
+                ) : (
+                  <svg className="w-6 h-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                  </svg>
+                )}
               </button>
-            )}
+            </div>
 
             {/* Waveform */}
             <div className="w-full max-w-md">
@@ -280,17 +361,29 @@ export default function ActiveLessonPage() {
               </button>
             )}
 
-            {/* Stop button */}
+            {/* Stop / Cancel buttons */}
             {phase === "recording" && (
-              <button
-                onClick={handleStopRecording}
-                className="w-20 h-20 rounded-full bg-gradient-to-br from-gray-700 to-gray-800 text-white shadow-lg hover:scale-105 transition-all flex items-center justify-center animate-pulse"
-                aria-label="Stop recording"
-              >
-                <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
-                  <rect x="6" y="6" width="12" height="12" rx="2" />
-                </svg>
-              </button>
+              <div className="flex items-center gap-4">
+                <button
+                  onClick={handleCancelRecording}
+                  aria-label="Cancel recording"
+                  className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors text-sm font-medium"
+                >
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                  Cancelar
+                </button>
+                <button
+                  onClick={handleStopRecording}
+                  className="w-20 h-20 rounded-full bg-gradient-to-br from-gray-700 to-gray-800 text-white shadow-lg hover:scale-105 transition-all flex items-center justify-center animate-pulse"
+                  aria-label="Stop recording"
+                >
+                  <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                    <rect x="6" y="6" width="12" height="12" rx="2" />
+                  </svg>
+                </button>
+              </div>
             )}
 
             {/* Processing */}

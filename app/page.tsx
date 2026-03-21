@@ -2,21 +2,30 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { getUserStats, getTodayProgress } from "@/lib/db";
+import { getUserStats, getTodayProgress, getFavorites, getNeedsPracticeWords } from "@/lib/db";
 import { getAllLessons } from "@/lib/lesson-generator";
-import type { UserStats, DailyProgress } from "@/lib/types";
+import type { UserStats, DailyProgress, FavoriteWord } from "@/lib/types";
 
 export default function HomePage() {
   const [stats, setStats] = useState<UserStats | null>(null);
   const [todayProgress, setTodayProgress] = useState<DailyProgress | null>(null);
+  const [favorites, setFavorites] = useState<FavoriteWord[]>([]);
+  const [needsPractice, setNeedsPractice] = useState<{ word: string; lessonId: string; bestAccuracy: number; attempts: number }[]>([]);
 
   const lessons = getAllLessons();
 
   useEffect(() => {
     async function load() {
-      const [s, t] = await Promise.all([getUserStats(), getTodayProgress()]);
+      const [s, t, favs, needs] = await Promise.all([
+        getUserStats(),
+        getTodayProgress(),
+        getFavorites(),
+        getNeedsPracticeWords(),
+      ]);
       setStats(s);
       setTodayProgress(t || null);
+      setFavorites(favs);
+      setNeedsPractice(needs);
     }
     load();
   }, []);
@@ -165,6 +174,63 @@ export default function HomePage() {
             </div>
           </Link>
         </section>
+
+        {/* Favorites */}
+        {favorites.length > 0 && (
+          <section>
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+              ❤️ Favorites
+            </h2>
+            <div className="flex flex-wrap gap-2">
+              {favorites.map((fav) => (
+                <Link
+                  key={fav.id}
+                  href={`/lesson/${fav.lessonId}`}
+                  className="flex items-center gap-2 px-3 py-2 bg-white dark:bg-gray-800 rounded-xl border border-red-200 dark:border-red-800 hover:border-red-400 dark:hover:border-red-600 transition-colors"
+                >
+                  <span className="font-medium text-gray-900 dark:text-gray-100">{fav.word}</span>
+                  {fav.ipa && (
+                    <span className="text-xs text-indigo-500 dark:text-indigo-400 font-mono">{fav.ipa}</span>
+                  )}
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Needs Practice */}
+        {needsPractice.length > 0 && (
+          <section>
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+              💪 Necesito practicar
+            </h2>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+              {needsPractice.slice(0, 8).map((item) => (
+                <Link
+                  key={item.word}
+                  href={`/lesson/${item.lessonId}`}
+                  className="p-3 bg-white dark:bg-gray-800 rounded-xl border border-orange-200 dark:border-orange-800 hover:border-orange-400 dark:hover:border-orange-600 transition-colors"
+                >
+                  <p className="font-medium text-gray-900 dark:text-gray-100">{item.word}</p>
+                  <div className="flex items-center justify-between mt-1">
+                    <span className="text-xs text-orange-600 dark:text-orange-400">
+                      Mejor: {item.bestAccuracy}%
+                    </span>
+                    <span className="text-xs text-gray-400">
+                      {item.attempts}x
+                    </span>
+                  </div>
+                  <div className="mt-1.5 w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1">
+                    <div
+                      className="h-full rounded-full bg-orange-400"
+                      style={{ width: `${item.bestAccuracy}%` }}
+                    />
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
 
         {/* Available Lessons Preview */}
         <section>

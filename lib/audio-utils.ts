@@ -10,26 +10,27 @@
  * suitable for Whisper inference.
  */
 export async function audioToFloat32(blob: Blob): Promise<Float32Array> {
-  // Use a default context to decode the blob at its native rate
   const audioContext = new AudioContext();
 
   try {
     const arrayBuffer = await blob.arrayBuffer();
     const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
 
-    // Ensure properly mixed stereo-to-mono instead of just taking channel 0 blindly.
-    // This fixes issues where one channel from the mic is silent.
-    let channelData: Float32Array;
-    if (audioBuffer.numberOfChannels === 1) {
-      channelData = audioBuffer.getChannelData(0);
-    } else {
-      const left = audioBuffer.getChannelData(0);
-      const right = audioBuffer.getChannelData(1);
-      channelData = new Float32Array(left.length);
-      for (let i = 0; i < left.length; i++) {
-        channelData[i] = (left[i] + right[i]) * 0.5;
-      }
-    }
+    console.log(`[AudioUtils] Decoded: ${audioBuffer.duration.toFixed(2)}s, ${audioBuffer.sampleRate}Hz, ${audioBuffer.numberOfChannels}ch`);
+
+    // Resample to 16kHz mono via OfflineAudioContext.
+    // The browser handles stereo→mono mixing and resampling natively (faster than a JS loop).
+    const targetSamples = Math.ceil(audioBuffer.duration * 16000);
+    const offlineCtx = new OfflineAudioContext(1, targetSamples, 16000);
+    const source = offlineCtx.createBufferSource();
+    source.buffer = audioBuffer;
+    source.connect(offlineCtx.destination);
+    source.start();
+    const resampled = await offlineCtx.startRendering();
+    // Copy so we can mutate in place for normalization
+    const channelData = new Float32Array(resampled.getChannelData(0));
+
+    console.log(`[AudioUtils] Resampled to 16000Hz: ${channelData.length} samples`);
 
     // Calculate RMS and Max amp for diagnostics and normalization
     let sum = 0;
@@ -41,7 +42,7 @@ export async function audioToFloat32(blob: Blob): Promise<Float32Array> {
     }
     const rms = Math.sqrt(sum / channelData.length);
 
-    console.log(`[AudioUtils] Decoded: ${audioBuffer.duration.toFixed(2)}s, ${audioBuffer.sampleRate}Hz, RMS: ${rms.toFixed(4)}, Max: ${max.toFixed(4)}`);
+    console.log(`[AudioUtils] RMS: ${rms.toFixed(4)}, Max: ${max.toFixed(4)}`);
 
     if (rms < 0.005) {
       console.warn("[AudioUtils] Very low RMS, likely pure silence or bad channel capture.");
@@ -50,44 +51,35 @@ export async function audioToFloat32(blob: Blob): Promise<Float32Array> {
     // RMS Normalization (target ~0.1 for clear speech)
     const targetRMS = 0.1;
     let gain = targetRMS / (rms + 1e-6);
-
-    // Cap gain to avoid blowing up silent background noise, and ensure a minimum gain
     gain = Math.min(Math.max(gain, 1.2), 5.0);
 
     for (let i = 0; i < channelData.length; i++) {
-      // Apply gain and hard clip to [-1, 1] to prevent distortion
       channelData[i] = Math.max(-1, Math.min(1, channelData[i] * gain));
     }
 
     console.log(`[AudioUtils] Signal normalized (RMS gain: ${gain.toFixed(2)}x)`);
 
-    // Resample to 16000Hz (Whisper requirement)
-    let finalAudio = channelData;
-    if (audioBuffer.sampleRate !== 16000) {
-      finalAudio = resampleAudio(channelData, audioBuffer.sampleRate, 16000) as any as Float32Array;
-      console.log(`[AudioUtils] Resampled to 16000Hz: ${finalAudio.length} samples`);
-    }
-
     // Add 0.4s padding of silence at both ends
     const paddingSamples = Math.floor(0.4 * 16000);
-    const paddedLength = paddingSamples + finalAudio.length + paddingSamples;
+    const paddedLength = paddingSamples + channelData.length + paddingSamples;
 
-    // Ensure it's at least 2.5 seconds total so the model doesn't drop it
-    const MIN_DURATION_SAMPLES = 2.5 * 16000;
+    // Ensure it's at least 1.5 seconds total so the model doesn't drop it
+    const MIN_DURATION_SAMPLES = 1.5 * 16000;
     const targetLength = Math.max(paddedLength, MIN_DURATION_SAMPLES);
 
-    const paddedAudio = new Float32Array(targetLength);
-    // Fill the padded audio with very low-level dither (white noise ~ -60dB)
-    for (let i = 0; i < paddedAudio.length; i++) {
+    const paddedAudio = new Float32Array(targetLength); // zero-filled by default
+    // Dither only the leading/trailing silence (avoid overwriting audio data)
+    for (let i = 0; i < paddingSamples; i++) {
       paddedAudio[i] = (Math.random() - 0.5) * 0.001;
+      paddedAudio[targetLength - 1 - i] = (Math.random() - 0.5) * 0.001;
     }
-    
-    // Centered padding: place the original audio accurately in the center of the padded sequence
+
+    // Centered padding: place the audio in the center of the padded sequence
     const extra = targetLength - paddedLength;
     const extraStart = Math.floor(extra / 2);
-    paddedAudio.set(finalAudio, paddingSamples + extraStart);
+    paddedAudio.set(channelData, paddingSamples + extraStart);
 
-    console.log(`[AudioUtils] Centered padding. Final array length: ${paddedAudio.length} (${(paddedAudio.length / 16000).toFixed(2)}s)`);
+    console.log(`[AudioUtils] Padded. Final length: ${paddedAudio.length} (${(paddedAudio.length / 16000).toFixed(2)}s)`);
 
     return paddedAudio;
   } catch (err) {
@@ -98,28 +90,6 @@ export async function audioToFloat32(blob: Blob): Promise<Float32Array> {
   }
 }
 
-/**
- * Simple linear interpolation resampling.
- */
-function resampleAudio(
-  data: Float32Array,
-  fromRate: number,
-  toRate: number
-): Float32Array {
-  const ratio = fromRate / toRate;
-  const newLength = Math.round(data.length / ratio);
-  const result = new Float32Array(newLength);
-
-  for (let i = 0; i < newLength; i++) {
-    const srcIndex = i * ratio;
-    const srcIndexFloor = Math.floor(srcIndex);
-    const srcIndexCeil = Math.min(srcIndexFloor + 1, data.length - 1);
-    const t = srcIndex - srcIndexFloor;
-    result[i] = data[srcIndexFloor] * (1 - t) + data[srcIndexCeil] * t;
-  }
-
-  return result;
-}
 
 /**
  * Convert base64 data URL to Blob.

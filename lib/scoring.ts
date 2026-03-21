@@ -1,14 +1,15 @@
 import type { ScoringResult, WordResult, WordStatus } from "./types";
+import { analyzePhonemes } from "./phonemes";
 
 /**
  * Score a pronunciation attempt by comparing the transcript
  * against the target text using word-level diff.
  */
-export function scorePronunciation(
+export async function scorePronunciation(
   transcript: string,
   target: string,
   threshold = 70
-): ScoringResult {
+): Promise<ScoringResult> {
   const normalizedTranscript = normalize(transcript);
   const normalizedTarget = normalize(target);
 
@@ -17,10 +18,42 @@ export function scorePronunciation(
 
   const wordResults = diffWords(targetWords, transcriptWords);
 
-  const correctCount = wordResults.filter((r) => r.status === "correct").length;
-  const totalExpected = targetWords.length;
-  const accuracy =
-    totalExpected === 0 ? 0 : Math.round((correctCount / totalExpected) * 100);
+  // Enrich all words (except "extra") with phoneme data in parallel
+  await Promise.all(
+    wordResults
+      .filter((r) => r.status !== "extra" && r.expected)
+      .map(async (r) => {
+        r.phonemes = await analyzePhonemes(r.expected, r.got ?? "");
+      })
+  );
+
+  // Phoneme-level accuracy: more granular than word-level binary scoring.
+  // "world" heard as "word" → W✓ ER✓ L✗ D✓ = 75%, not 100%.
+  let totalPhonemes = 0;
+  let correctPhonemes = 0;
+
+  for (const r of wordResults) {
+    if (r.status === "extra") continue;
+
+    const alignment = r.phonemes?.alignment;
+    if (!alignment || alignment.length === 0) {
+      // No phoneme data — fall back to binary word score
+      totalPhonemes += 1;
+      if (r.status === "correct") correctPhonemes += 1;
+      continue;
+    }
+
+    const wordCorrect = alignment.filter((p) => p.status === "correct").length;
+    totalPhonemes += alignment.length;
+    correctPhonemes += wordCorrect;
+
+    // Downgrade fuzzy word-matches that aren't phonemically perfect
+    if (r.status === "correct" && wordCorrect < alignment.length) {
+      r.status = "incorrect";
+    }
+  }
+
+  const accuracy = totalPhonemes === 0 ? 0 : Math.round((correctPhonemes / totalPhonemes) * 100);
 
   return {
     accuracy,
