@@ -158,18 +158,18 @@ export default function HomePage() {
           </Link>
 
           <Link
-            href="/"
-            className="group flex items-center gap-4 p-5 bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 hover:border-amber-300 dark:hover:border-amber-600 hover:shadow-lg transition-all"
+            href="/ai-practice"
+            className="group flex items-center gap-4 p-5 bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 hover:border-purple-300 dark:hover:border-purple-600 hover:shadow-lg transition-all"
           >
-            <div className="w-12 h-12 rounded-xl bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform shadow-inner">
-              📖
+            <div className="w-12 h-12 rounded-xl bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform shadow-inner">
+              🤖
             </div>
             <div>
               <p className="font-semibold text-gray-900 dark:text-gray-100">
-                Journal
+                AI Practice
               </p>
               <p className="text-xs text-gray-500">
-                Your saved words
+                Chat with your tutor
               </p>
             </div>
           </Link>
