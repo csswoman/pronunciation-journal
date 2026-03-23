@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --sidebar-width: 256px;
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -15,4 +19,11 @@
 
 .animate-fadeIn {
   animation: fadeIn 0.4s ease-out;
+}
+
+@layer components {
+  main {
+    @apply transition-all duration-300;
+    padding-left: var(--sidebar-width);
+  }
 }

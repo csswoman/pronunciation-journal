@@ -1,14 +1,8 @@
-import type { Metadata } from "next";
+"use client";
+
 import Script from "next/script";
 import "./globals.css";
-
-export const metadata: Metadata = {
-  title: "Pronunciation Journal",
-  description: "Track and improve your pronunciation",
-  icons: {
-    icon: "/icon.svg",
-  },
-};
+import Sidebar from "@/components/Sidebar";
 
 export default function RootLayout({
   children,
@@ -17,6 +11,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Pronunciation Journal</title>
+        <meta name="description" content="Track and improve your pronunciation" />
+        <link rel="icon" href="/icon.svg" />
+      </head>
       <body className="bg-white dark:bg-gray-900 transition-colors" suppressHydrationWarning>
         <Script
           id="theme-init"
@@ -30,7 +31,10 @@ export default function RootLayout({
             `,
           }}
         />
-        {children}
+        <div className="flex">
+          <Sidebar />
+          <main className="flex-1 w-full">{children}</main>
+        </div>
       </body>
     </html>
   );
