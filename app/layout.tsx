@@ -3,6 +3,8 @@
 import Script from "next/script";
 import "./globals.css";
 import Sidebar from "@/components/Sidebar";
+import AuthProvider from "@/components/AuthProvider";
+import { ThemeProvider } from "@/components/ThemeProvider";
 
 export default function RootLayout({
   children,
@@ -31,10 +33,14 @@ export default function RootLayout({
             `,
           }}
         />
-        <div className="flex">
-          <Sidebar />
-          <main className="flex-1 w-full">{children}</main>
-        </div>
+        <AuthProvider>
+          <ThemeProvider>
+            <div className="flex">
+              <Sidebar />
+              <main className="flex-1 w-full">{children}</main>
+            </div>
+          </ThemeProvider>
+        </AuthProvider>
       </body>
     </html>
   );

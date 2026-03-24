@@ -2,28 +2,113 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Default theme: Blue (light) ─────────────────────────────────────────── */
 :root {
   --sidebar-width: 256px;
+  --color-accent: #6EA8FE;
+  --color-accent-soft: #E7F0FF;
+  --color-accent-hover: #5A95F5;
+  --color-text-on-accent: #FFFFFF;
+  --color-text-primary: #1F2A44;
+  --color-text-secondary: #6B7A99;
+  /* Legacy aliases kept for backward compat */
+  --accent-hover: #5A95F5;
+  --accent-text: #FFFFFF;
+  --accent-rgb: 110, 168, 254;
 }
 
+/* ── Default theme: Blue (dark) ──────────────────────────────────────────── */
+.dark {
+  --color-accent: #6EA8FE;
+  --color-accent-soft: #1B2A4A;
+  --color-accent-hover: #8CB9FF;
+  --color-text-on-accent: #0B1220;
+  --color-text-primary: #E6ECFF;
+  --color-text-secondary: #A9B4D0;
+  --accent-hover: #8CB9FF;
+  --accent-text: #0B1220;
+  --accent-rgb: 110, 168, 254;
+}
+
+/* ── Animations ──────────────────────────────────────────────────────────── */
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 .animate-fadeIn {
   animation: fadeIn 0.4s ease-out;
 }
 
+/* ── Accent utility classes ───────────────────────────────────────────────── */
+.accent-bg {
+  background-color: var(--color-accent);
+}
+
+.accent-text {
+  color: var(--color-accent);
+}
+
+.accent-border {
+  border-color: var(--color-accent);
+}
+
+.accent-ring {
+  --tw-ring-color: var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.3);
+}
+
+.accent-button {
+  background-color: var(--color-accent);
+  color: var(--color-text-on-accent);
+  transition: all 0.2s ease;
+}
+
+.accent-button:hover {
+  background-color: var(--color-accent-hover);
+}
+
+.accent-button:active {
+  filter: brightness(0.92);
+}
+
+.accent-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.accent-nav-active {
+  background-color: rgba(var(--accent-rgb), 0.15);
+  color: var(--color-accent);
+}
+
+.dark .accent-nav-active {
+  background-color: rgba(var(--accent-rgb), 0.2);
+}
+
 @layer components {
   main {
     @apply transition-all duration-300;
     padding-left: var(--sidebar-width);
+  }
+
+  a.accent:focus-visible,
+  button:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  input:focus,
+  textarea:focus,
+  select:focus {
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.3);
+  }
+
+  .badge-accent {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-sm font-medium;
+    background-color: rgba(var(--accent-rgb), 0.1);
+    color: var(--color-accent);
+    border: 1px solid var(--color-accent);
   }
 }
