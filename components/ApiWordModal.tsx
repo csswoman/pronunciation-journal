@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Entry, Meaning } from "@/lib/types";
 import { fetchPronunciation } from "@/lib/dictionary";
 import { saveEntry } from "@/lib/storage";
+import { playAudio } from "@/lib/audio-utils";
 
 interface ApiWordModalProps {
   word: string;
@@ -58,28 +59,6 @@ export default function ApiWordModal({ word, onClose, onSave }: ApiWordModalProp
     }
   };
 
-  const playAudio = (audioUrl: string) => {
-    try {
-      const audio = new Audio(audioUrl);
-      const playPromise = audio.play();
-      
-      if (playPromise !== undefined) {
-        playPromise
-          .then(() => {
-            // Audio started playing successfully
-          })
-          .catch((error) => {
-            // Error handling - ignore user-initiated errors
-            if (error.name !== 'AbortError' && error.name !== 'NotAllowedError') {
-              console.error("Error playing audio:", error);
-            }
-          });
-      }
-    } catch (error) {
-      console.error("Error creating audio element:", error);
-    }
-  };
-
   return (
     <div
       className="fixed inset-y-0 right-0 left-64 bg-black bg-opacity-50 backdrop-blur-sm z-50 flex items-center justify-center m-0"
@@ -96,7 +75,7 @@ export default function ApiWordModal({ word, onClose, onSave }: ApiWordModalProp
             </h2>
             {data?.audioUrl && (
               <button
-                onClick={() => playAudio(data.audioUrl!)}
+                onClick={() => playAudio(data.audioUrl!, { showAlerts: false })}
                 className="p-3 bg-blue-100 dark:bg-blue-900 hover:bg-blue-200 dark:hover:bg-blue-800 rounded-full transition-colors"
                 title="Play pronunciation"
                 aria-label="Play pronunciation"
@@ -216,10 +195,7 @@ export default function ApiWordModal({ word, onClose, onSave }: ApiWordModalProp
               <div className="pt-6 border-t border-gray-200 dark:border-gray-700">
                 <button
                   onClick={handleAddWord}
-                  className="w-full px-6 py-3 text-white rounded-lg transition-colors font-medium"
-                  style={{ backgroundColor: "#5468FF" }}
-                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#4a5ae8")}
-                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#5468FF")}
+                  className="w-full px-6 py-3 rounded-lg font-medium accent-button"
                 >
                   Agregar palabra a mi vocabulario
                 </button>

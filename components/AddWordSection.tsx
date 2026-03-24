@@ -21,10 +21,7 @@ export default function AddWordSection({ onSave }: AddWordSectionProps) {
       <div className="flex justify-center mb-12">
         <button
           onClick={() => setShowForm(true)}
-          className="px-6 py-3 text-white rounded-lg transition-colors"
-          style={{ backgroundColor: "#5468FF" }}
-          onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#4a5ae8")}
-          onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#5468FF")}
+          className="px-6 py-3 rounded-lg accent-button"
         >
           Agregar palabra
         </button>

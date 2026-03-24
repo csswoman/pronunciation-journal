@@ -190,3 +190,29 @@ export interface WhisperWorkerResponse {
   error?: string;
   progress?: number;
 }
+
+// ── User Profile Types ──
+
+export type AccentType = "american" | "british" | "neutral";
+
+export interface UserPreferences {
+  id?: string;
+  user_id: string;
+  full_name?: string;
+  avatar_url?: string;
+  accent: AccentType;
+  theme_mode: "light" | "dark" | "auto";
+  accent_color: string; // theme name: "blue" | "pink" | "purple" | "green" | "yellow" | "red" | "orange" | "neutral"
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface UserProfile {
+  id: string;
+  email: string;
+  user_metadata?: {
+    full_name?: string;
+    avatar_url?: string;
+  };
+  preferences?: UserPreferences;
+}

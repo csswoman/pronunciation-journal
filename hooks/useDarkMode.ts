@@ -1,31 +1,43 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useTheme } from "@/hooks/useTheme";
 
-export function useDarkMode() {
-  // Initialize as false to match server-side render
-  // This prevents hydration mismatch
-  const [isDark, setIsDark] = useState(false);
+type DarkModeResult = {
+  isDark: boolean;
+  toggleDarkMode: () => void;
+  mounted: boolean;
+};
+
+function getPrefersDark() {
+  if (typeof window === "undefined" || !window.matchMedia) return false;
+  return window.matchMedia("(prefers-color-scheme: dark)").matches;
+}
+
+export function useDarkMode(): DarkModeResult {
+  const theme = useTheme();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    // Only set the actual state after component mounts on client
     setMounted(true);
-    setIsDark(document.documentElement.classList.contains("dark"));
   }, []);
 
-  const toggleDarkMode = () => {
-    document.documentElement.classList.toggle("dark");
-    
-    if (document.documentElement.classList.contains("dark")) {
-      localStorage.theme = "dark";
-      setIsDark(true);
-    } else {
-      localStorage.theme = "light";
-      setIsDark(false);
+  const isDark = useMemo(() => {
+    if (!mounted) return false;
+    if (theme.mode === "system") {
+      return getPrefersDark();
     }
+    return theme.mode === "dark";
+  }, [theme.mode, mounted]);
+
+  const toggleDarkMode = () => {
+    if (theme.mode === "dark") {
+      theme.setMode("light");
+      return;
+    }
+
+    theme.setMode("dark");
   };
 
   return { isDark, toggleDarkMode, mounted };
 }
-

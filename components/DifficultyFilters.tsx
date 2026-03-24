@@ -95,8 +95,8 @@ export default function DifficultyFilters({
                   type="checkbox"
                   checked={selectedDifficulties.includes(difficulty.value)}
                   onChange={() => toggleDifficulty(difficulty.value)}
-                  className="w-4 h-4 rounded border-gray-300 text-[#5468FF] focus:ring-[#5468FF] focus:ring-offset-0 cursor-pointer"
-                  style={{ accentColor: "#5468FF" }}
+                  className="w-4 h-4 rounded border-gray-300 text-accent focus:ring-accent focus:ring-offset-0 cursor-pointer"
+                  style={{ accentColor: "var(--color-accent)" }}
                 />
                 <span
                   className={`ml-3 px-3 py-1 rounded-full text-sm font-medium ${difficulty.color}`}

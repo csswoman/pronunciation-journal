@@ -71,7 +71,7 @@ export default function SearchAndFilters({
         onKeyDown={handleKeyDown}
         onFocus={() => suggestions.length > 0 && setShowSuggestions(true)}
         className="w-full sm:w-64 px-4 py-2 pl-10 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:border-transparent transition-colors text-sm"
-        style={{ "--tw-ring-color": "#5468FF" } as React.CSSProperties & { "--tw-ring-color"?: string }}
+        style={{ "--tw-ring-color": "var(--color-accent)" } as React.CSSProperties & { "--tw-ring-color"?: string }}
       />
       <svg
         xmlns="http://www.w3.org/2000/svg"

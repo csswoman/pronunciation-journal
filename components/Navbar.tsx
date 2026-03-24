@@ -131,7 +131,7 @@ export default function Navbar({
                   isCollapsed ? "justify-center px-3" : "px-4"
                 } py-2 rounded-lg text-sm font-medium transition-colors ${
                   activeTab === item.id
-                    ? "bg-[#5468FF] text-white shadow-sm"
+                    ? "bg-accent text-on-accent shadow-sm"
                     : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                 }`}
               >

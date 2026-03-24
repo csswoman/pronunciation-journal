@@ -5,6 +5,7 @@ import { Entry, Difficulty } from "@/lib/types";
 import { fetchPronunciation } from "@/lib/dictionary";
 import { saveEntry } from "@/lib/storage";
 import { getWordSuggestions, WordSuggestion } from "@/lib/dictionarySearch";
+import { playAudio } from "@/lib/audio-utils";
 
 interface EntryFormProps {
   onSave?: (entry: Entry) => void;
@@ -33,34 +34,6 @@ export default function EntryForm({ onSave, onCancel }: EntryFormProps) {
     audioUrl: boolean;
     meanings: boolean;
   }>({ ipa: false, audioUrl: false, meanings: false });
-
-  const playAudio = (audioUrl: string) => {
-    // Check if it's a blob URL (invalid after refresh)
-    if (audioUrl.startsWith('blob:')) {
-      console.error("Cannot play blob URL - audio not available");
-      return;
-    }
-    
-    try {
-      const audio = new Audio(audioUrl);
-      const playPromise = audio.play();
-      
-      if (playPromise !== undefined) {
-        playPromise
-          .then(() => {
-            // Audio started playing successfully
-          })
-          .catch((error) => {
-            // Error handling - ignore user-initiated errors
-            if (error.name !== 'AbortError' && error.name !== 'NotAllowedError') {
-              console.error("Error playing audio:", error);
-            }
-          });
-      }
-    } catch (error) {
-      console.error("Error creating audio element:", error);
-    }
-  };
 
   const handleFetchPronunciation = async (wordToFetch?: string) => {
     const wordToUse = wordToFetch || word;
@@ -247,7 +220,7 @@ export default function EntryForm({ onSave, onCancel }: EntryFormProps) {
                 // Delay hiding suggestions to allow clicking on them
                 setTimeout(() => setShowSuggestions(false), 200);
               }}
-              className="w-full px-3 py-2 pr-10 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-3 py-2 pr-10 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-accent focus:border-accent"
               placeholder="Enter word"
               required
             />
@@ -255,10 +228,7 @@ export default function EntryForm({ onSave, onCancel }: EntryFormProps) {
               type="button"
               onClick={() => handleFetchPronunciation()}
               disabled={isLoading || !word.trim()}
-              className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 text-white rounded focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-              style={{ backgroundColor: "#5468FF" }}
-              onMouseEnter={(e) => !e.currentTarget.disabled && (e.currentTarget.style.backgroundColor = "#4a5ae8")}
-              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#5468FF")}
+              className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 rounded focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed accent-button"
               title="Fetch pronunciation"
             >
               {isLoading ? (
@@ -336,14 +306,14 @@ export default function EntryForm({ onSave, onCancel }: EntryFormProps) {
                 id="ipa"
                 value={ipa}
                 onChange={(e) => setIpa(e.target.value)}
-                className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-blue-500 focus:border-blue-500 font-mono text-lg"
+                className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-accent focus:border-accent font-mono text-lg"
                 placeholder="/prəˌnʌnsiˈeɪʃən/"
               />
             )}
             {audioUrl && (
               <button
                 type="button"
-                onClick={() => playAudio(audioUrl)}
+                onClick={() => playAudio(audioUrl, { showAlerts: false })}
                 className="p-2 bg-blue-100 dark:bg-blue-900 hover:bg-blue-200 dark:hover:bg-blue-800 rounded-full transition-colors flex-shrink-0"
                 title="Play pronunciation"
                 aria-label="Play pronunciation"
@@ -441,7 +411,7 @@ export default function EntryForm({ onSave, onCancel }: EntryFormProps) {
               id="audioUrl"
               value={audioUrl}
               onChange={(e) => setAudioUrl(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-accent focus:border-accent"
               placeholder="https://..."
             />
           </div>
@@ -457,7 +427,7 @@ export default function EntryForm({ onSave, onCancel }: EntryFormProps) {
               id="difficulty"
               value={difficulty}
               onChange={(e) => setDifficulty(e.target.value as Difficulty)}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-accent focus:border-accent"
             >
               <option value="easy">Easy</option>
               <option value="medium">Medium</option>
@@ -477,7 +447,7 @@ export default function EntryForm({ onSave, onCancel }: EntryFormProps) {
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               rows={3}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-accent focus:border-accent"
               placeholder="Add your notes here..."
             />
           </div>
@@ -494,7 +464,7 @@ export default function EntryForm({ onSave, onCancel }: EntryFormProps) {
               id="tags"
               value={tags}
               onChange={(e) => setTags(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-accent focus:border-accent"
               placeholder="vowels, stress, greetings"
             />
           </div>
@@ -504,10 +474,7 @@ export default function EntryForm({ onSave, onCancel }: EntryFormProps) {
       <div className="flex gap-3 pt-4">
         <button
           type="submit"
-          className="flex-1 px-4 py-2 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors"
-          style={{ backgroundColor: "#5468FF" }}
-          onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#4a5ae8")}
-          onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#5468FF")}
+          className="flex-1 px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 accent-button"
         >
           Save Entry
         </button>

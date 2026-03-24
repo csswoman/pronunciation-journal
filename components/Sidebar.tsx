@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useDarkMode } from "@/hooks/useDarkMode";
+import { useAuth } from "./AuthProvider";
 
 interface SidebarItem {
   name: string;
@@ -15,6 +16,7 @@ export default function Sidebar() {
   const [isOpen, setIsOpen] = useState(true);
   const pathname = usePathname();
   const { isDark, toggleDarkMode, mounted } = useDarkMode();
+  const { user } = useAuth();
 
   // Store sidebar state in localStorage and update CSS variable
   useEffect(() => {
@@ -156,8 +158,8 @@ export default function Sidebar() {
         <div className="flex items-center justify-between h-20 px-4 border-b border-gray-200 dark:border-gray-700">
           {isOpen && (
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">EJ</span>
+              <div className="w-8 h-8 rounded-lg flex items-center justify-center accent-bg">
+                <span className="font-bold text-sm" style={{ color: 'var(--accent-text)' }}>EJ</span>
               </div>
               <span className="font-semibold text-gray-900 dark:text-white">Journal</span>
             </div>
@@ -209,7 +211,7 @@ export default function Sidebar() {
               href={item.href}
               className={`flex items-center gap-4 px-3 py-3 rounded-lg transition-colors ${
                 isActive(item.href)
-                  ? "bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-400"
+                  ? "accent-nav-active"
                   : "text-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700"
               }`}
               title={!isOpen ? item.name : undefined}
@@ -222,6 +224,41 @@ export default function Sidebar() {
 
         {/* Footer */}
         <div className="p-4 border-t border-gray-200 dark:border-gray-700 space-y-3">
+          {user && (
+            <Link
+              href="/profile"
+              className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${
+                isActive("/profile")
+                  ? "accent-nav-active"
+                  : "text-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700"
+              }`}
+              title={!isOpen ? "Profile" : undefined}
+            >
+              <div className="flex-shrink-0">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+                  />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                  />
+                </svg>
+              </div>
+              {isOpen && <span className="text-sm font-medium">Profile</span>}
+            </Link>
+          )}
           <button
             onClick={toggleDarkMode}
             className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
