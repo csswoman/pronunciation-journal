@@ -141,3 +141,50 @@ export function createAudioVisualizer(
     },
   };
 }
+
+/**
+ * Play audio from a URL with error handling.
+ * Shows alerts for blob URLs and playback errors if requested.
+ */
+export function playAudio(audioUrl: string, options?: { showAlerts?: boolean }): void {
+  const showAlerts = options?.showAlerts ?? false;
+
+  // Check if it's a blob URL (invalid after refresh)
+  if (audioUrl.startsWith("blob:")) {
+    const message = "This audio recording is no longer available. Please record again.";
+    console.error(message);
+    if (showAlerts) {
+      alert(message);
+    }
+    return;
+  }
+
+  try {
+    const audio = new Audio(audioUrl);
+    const playPromise = audio.play();
+
+    if (playPromise !== undefined) {
+      playPromise
+        .then(() => {
+          // Audio started playing successfully
+        })
+        .catch((error) => {
+          // Error handling - ignore user-initiated errors
+          if (
+            error.name !== "AbortError" &&
+            error.name !== "NotAllowedError"
+          ) {
+            console.error("Error playing audio:", error);
+            if (showAlerts) {
+              alert("Error playing audio. The recording may be corrupted.");
+            }
+          }
+        });
+    }
+  } catch (error) {
+    console.error("Error creating audio element:", error);
+    if (showAlerts) {
+      alert("Error playing audio. The recording may be corrupted.");
+    }
+  }
+}

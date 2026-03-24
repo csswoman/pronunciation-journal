@@ -1,6 +1,7 @@
 "use client";
 
 import { Entry } from "@/lib/types";
+import { playAudio } from "@/lib/audio-utils";
 
 interface EntryCardProps {
   entry: Entry;
@@ -15,34 +16,9 @@ export default function EntryCard({
   isSelectionMode = false,
   isSelected = false 
 }: EntryCardProps) {
-  const playAudio = (e: React.MouseEvent, audioUrl: string) => {
+  const handlePlayAudio = (e: React.MouseEvent, audioUrl: string) => {
     e.stopPropagation();
-    
-    // Check if it's a blob URL (invalid after refresh)
-    if (audioUrl.startsWith('blob:')) {
-      console.error("Cannot play blob URL - audio not available");
-      return;
-    }
-    
-    try {
-      const audio = new Audio(audioUrl);
-      const playPromise = audio.play();
-      
-      if (playPromise !== undefined) {
-        playPromise
-          .then(() => {
-            // Audio started playing successfully
-          })
-          .catch((error) => {
-            // Error handling - ignore user-initiated errors
-            if (error.name !== 'AbortError' && error.name !== 'NotAllowedError') {
-              console.error("Error playing audio:", error);
-            }
-          });
-      }
-    } catch (error) {
-      console.error("Error creating audio element:", error);
-    }
+    playAudio(audioUrl, { showAlerts: false });
   };
 
   return (
@@ -50,7 +26,7 @@ export default function EntryCard({
       onClick={onClick}
       className={`border rounded-lg p-6 bg-white dark:bg-gray-800 shadow-sm hover:shadow-md transition-all cursor-pointer relative ${
         isSelectionMode && isSelected
-          ? "border-[#5468FF] ring-2 ring-[#5468FF] ring-opacity-50"
+          ? "border-accent ring-2 ring-accent ring-opacity-50"
           : "border-gray-300 dark:border-gray-700"
       }`}
     >
@@ -58,7 +34,7 @@ export default function EntryCard({
         <div className="absolute top-4 left-4">
           <div className={`w-6 h-6 rounded border-2 flex items-center justify-center transition-colors ${
             isSelected 
-              ? "bg-[#5468FF] border-[#5468FF]" 
+              ? "bg-accent border-accent"
               : "bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600"
           }`}>
             {isSelected && (
@@ -83,7 +59,7 @@ export default function EntryCard({
           <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 capitalize">{entry.word}</h3>
           {entry.audioUrl && !isSelectionMode && (
             <button
-              onClick={(e) => playAudio(e, entry.audioUrl!)}
+              onClick={(e) => handlePlayAudio(e, entry.audioUrl!)}
               className="p-2 bg-blue-100 dark:bg-blue-900 hover:bg-blue-200 dark:hover:bg-blue-800 rounded-full transition-colors"
               title="Play pronunciation"
               aria-label="Play pronunciation"

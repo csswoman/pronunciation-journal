@@ -3,6 +3,7 @@
 import { Entry, Difficulty } from "@/lib/types";
 import { useState, useCallback } from "react";
 import { saveEntry } from "@/lib/storage";
+import { playAudio } from "@/lib/audio-utils";
 import CompactRecorder from "./CompactRecorder";
 
 interface EntryModalProps {
@@ -15,37 +16,6 @@ export default function EntryModal({ entry, onClose, onSave }: EntryModalProps) 
   const [isEditing, setIsEditing] = useState(false);
   const [editedEntry, setEditedEntry] = useState<Entry>(entry);
   const [currentEntry, setCurrentEntry] = useState<Entry>(entry);
-
-  const playAudio = (audioUrl: string) => {
-    // Check if it's a blob URL (invalid after refresh)
-    if (audioUrl.startsWith('blob:')) {
-      console.error("Cannot play blob URL - audio not available");
-      alert("This audio recording is no longer available. Please record again.");
-      return;
-    }
-    
-    try {
-      const audio = new Audio(audioUrl);
-      const playPromise = audio.play();
-      
-      if (playPromise !== undefined) {
-        playPromise
-          .then(() => {
-            // Audio started playing successfully
-          })
-          .catch((error) => {
-            // Error handling
-            if (error.name !== 'AbortError' && error.name !== 'NotAllowedError') {
-              console.error("Error playing audio:", error);
-              alert("Error playing audio. The recording may be corrupted.");
-            }
-          });
-      }
-    } catch (error) {
-      console.error("Error creating audio element:", error);
-      alert("Error playing audio. The recording may be corrupted.");
-    }
-  };
 
   const handleSave = async () => {
     const updatedEntry = {
@@ -107,7 +77,7 @@ export default function EntryModal({ entry, onClose, onSave }: EntryModalProps) 
             <div className="flex items-center gap-2">
               {currentEntry.audioUrl && (
                 <button
-                  onClick={() => playAudio(currentEntry.audioUrl!)}
+                  onClick={() => playAudio(currentEntry.audioUrl!, { showAlerts: true })}
                   className="p-3 bg-blue-100 dark:bg-blue-900 hover:bg-blue-200 dark:hover:bg-blue-800 rounded-full transition-colors"
                   title="Dictionary Pronunciation"
                   aria-label="Play dictionary pronunciation"
@@ -135,7 +105,7 @@ export default function EntryModal({ entry, onClose, onSave }: EntryModalProps) 
 
               {currentEntry.userAudioUrl && (
                 <button
-                  onClick={() => playAudio(currentEntry.userAudioUrl!)}
+                  onClick={() => playAudio(currentEntry.userAudioUrl!, { showAlerts: true })}
                   className="p-3 bg-green-100 dark:bg-green-900 hover:bg-green-200 dark:hover:bg-green-800 rounded-full transition-colors"
                   title="Your Pronunciation"
                   aria-label="Play your pronunciation"
@@ -185,10 +155,7 @@ export default function EntryModal({ entry, onClose, onSave }: EntryModalProps) 
               <>
                 <button
                   onClick={handleSave}
-                  className="px-4 py-2 text-white rounded-lg transition-colors text-sm font-medium"
-                  style={{ backgroundColor: "#5468FF" }}
-                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#4a5ae8")}
-                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#5468FF")}
+                  className="px-4 py-2 rounded-lg text-sm font-medium accent-button"
                 >
                   Save
                 </button>
@@ -256,7 +223,7 @@ export default function EntryModal({ entry, onClose, onSave }: EntryModalProps) 
                         ? "bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 hover:opacity-80"
                         : "bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 hover:opacity-80"
                     }`}
-                    style={editedEntry.difficulty === diff ? { backgroundColor: "#5468FF" } : {}}
+                    style={editedEntry.difficulty === diff ? { backgroundColor: "var(--color-accent)", color: "var(--color-text-on-accent)" } : {}}
                   >
                     {diff.charAt(0).toUpperCase() + diff.slice(1)}
                   </button>
@@ -330,7 +297,7 @@ export default function EntryModal({ entry, onClose, onSave }: EntryModalProps) 
                   value={editedEntry.notes || ""}
                   onChange={(e) => setEditedEntry({ ...editedEntry, notes: e.target.value })}
                   rows={4}
-                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#5468FF] focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
                   placeholder="Add notes about this word..."
                 />
               )}
@@ -364,7 +331,7 @@ export default function EntryModal({ entry, onClose, onSave }: EntryModalProps) 
                       tags: e.target.value.split(",").map(t => t.trim()).filter(t => t.length > 0)
                     })
                   }
-                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#5468FF] focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
                   placeholder="Add tags separated by commas (e.g., business, travel)"
                 />
               )}
