@@ -1,61 +1,65 @@
 "use client";
 
 import IPAChart from "@/components/IPAChart";
-import Link from "next/link";
+
+function WaveformSVG() {
+  const bars = [4, 8, 14, 20, 30, 22, 12, 18, 28, 36, 24, 16, 32, 40, 28, 20, 34, 44, 30, 22, 38, 48, 34, 26, 40, 50, 36, 28, 42, 32, 24, 18, 28, 38, 26, 20, 32, 42, 30, 22, 36, 46, 32, 24, 18, 28, 16, 10, 6, 4];
+  return (
+    <div className="flex items-center gap-[3px] h-20 opacity-30">
+      {bars.map((h, i) => (
+        <div
+          key={i}
+          className="w-1 rounded-full bg-purple-500"
+          style={{ height: `${h}%` }}
+        />
+      ))}
+    </div>
+  );
+}
 
 export default function IPAPage() {
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pb-20">
-      {/* Header */}
-      <header className="bg-gradient-to-br from-indigo-600 via-indigo-700 to-purple-800 text-white shadow-xl mb-12">
-        <div className="max-w-6xl mx-auto px-4 py-12">
-          <Link 
-            href="/" 
-            className="inline-flex items-center gap-2 text-indigo-100 hover:text-white mb-6 transition-colors text-sm font-medium"
-          >
-            ← Back to Home
-          </Link>
-          <h1 className="text-4xl font-black mb-3 tracking-tight">
-            IPA Sounds Library
-          </h1>
-          <p className="text-indigo-100/80 max-w-2xl text-lg leading-relaxed">
-            The International Phonetic Alphabet (IPA) is the key to perfect English pronunciation. 
-            Explore the full range of sounds and master each one through listening.
-          </p>
+    <div className="min-h-screen bg-[#F0ECFF] dark:bg-gray-950">
+      {/* Hero */}
+      <section className="bg-white dark:bg-gray-900 border-b border-purple-100 dark:border-gray-800 px-6 py-12">
+        <div className="max-w-6xl mx-auto flex items-center justify-between gap-8">
+          <div className="flex-1 max-w-lg">
+            <span className="inline-block text-xs font-bold text-purple-600 bg-purple-100 dark:bg-purple-900/40 dark:text-purple-400 px-3 py-1 rounded-full mb-5 tracking-widest uppercase">
+              Interactive Library
+            </span>
+            <h1 className="text-5xl font-black text-gray-900 dark:text-white leading-tight mb-4">
+              Master the{" "}
+              <em className="not-italic text-purple-600 dark:text-purple-400 font-black italic">
+                Geometry
+              </em>{" "}
+              of Sound.
+            </h1>
+            <p className="text-gray-500 dark:text-gray-400 mb-8 leading-relaxed text-base">
+              Explore the International Phonetic Alphabet through high-fidelity
+              audio samples and articulatory visual guides. A professional
+              sanctuary for linguists and learners.
+            </p>
+            <div className="flex gap-3 flex-wrap">
+              <button className="bg-purple-700 hover:bg-purple-800 text-white px-6 py-3 rounded-full font-semibold text-sm transition-colors shadow-md">
+                Quick Start Guide
+              </button>
+              <button className="border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-purple-400 hover:text-purple-600 dark:hover:text-purple-400 px-6 py-3 rounded-full font-semibold text-sm transition-colors">
+                View Full Chart
+              </button>
+            </div>
+          </div>
+          <div className="hidden lg:flex items-center flex-1 justify-end">
+            <div className="w-full max-w-xs">
+              <WaveformSVG />
+            </div>
+          </div>
         </div>
-      </header>
+      </section>
 
-      <main className="max-w-6xl mx-auto px-4">
-        <div className="p-1 bg-gradient-to-b from-white to-transparent dark:from-gray-800 dark:to-transparent rounded-[3rem]">
-          <div className="bg-white/40 dark:bg-gray-900/40 backdrop-blur-md rounded-[2.8rem] p-6 md:p-12 border border-white/20 dark:border-gray-700/30 shadow-2xl">
-            <IPAChart />
-          </div>
-        </div>
-        
-        {/* Help/Legend Section */}
-        <section className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-8 text-sm">
-          <div className="p-8 bg-indigo-50 dark:bg-indigo-900/10 rounded-3xl border border-indigo-100 dark:border-indigo-800/30">
-            <h3 className="font-bold text-indigo-900 dark:text-indigo-300 mb-3 flex items-center gap-2 uppercase tracking-wider text-xs">
-              <span className="w-2 h-2 rounded-full bg-indigo-500"></span>
-              About the IPA
-            </h3>
-            <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-              Standard English spelling is often misleading. The IPA provides a unique symbol for every distinct sound, 
-              allowing you to know exactly how to pronounce any word regardless of its spelling.
-            </p>
-          </div>
-          <div className="p-8 bg-purple-50 dark:bg-purple-900/10 rounded-3xl border border-purple-100 dark:border-purple-800/30">
-            <h3 className="font-bold text-purple-900 dark:text-purple-300 mb-3 flex items-center gap-2 uppercase tracking-wider text-xs">
-              <span className="w-2 h-2 rounded-full bg-purple-500"></span>
-              How to Practice
-            </h3>
-            <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-              Click each button to hear the sound. Pay close attention to the position of your tongue and lips. 
-              Try to mimic the sound immediately after hearing it to build muscle memory.
-            </p>
-          </div>
-        </section>
-      </main>
+      {/* Main Content */}
+      <div className="max-w-6xl mx-auto px-6 py-8">
+        <IPAChart />
+      </div>
     </div>
   );
 }
