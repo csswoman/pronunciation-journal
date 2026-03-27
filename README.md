@@ -7,7 +7,7 @@ A Next.js application for tracking and improving pronunciation.
 First, install the dependencies:
 
 ```bash
-npm install
+npm install 
 # or
 yarn install
 # or
