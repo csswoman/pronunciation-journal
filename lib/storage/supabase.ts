@@ -6,6 +6,9 @@ import type { Entry } from "@/lib/types";
 const AUDIO_BUCKET = "user-audio";
 const STORAGE_PATH_PREFIX = "sb:";
 
+const DIFFICULTY_TO_INT: Record<string, number> = { easy: 1, medium: 2, hard: 3 };
+const INT_TO_DIFFICULTY: Record<number, string> = { 1: "easy", 2: "medium", 3: "hard" };
+
 type EntryRow = {
   id: string;
   word: string;
@@ -13,7 +16,7 @@ type EntryRow = {
   audio_url: string | null;
   user_audio_url: string | null;
   notes: string | null;
-  difficulty: string;
+  difficulty: number;
   tags: string[] | null;
   meanings: Json | null;
   created_at: string;
@@ -116,7 +119,7 @@ function entryToInsert(entry: Entry, userId: string, userAudioValue: string | nu
     audio_url: entry.audioUrl ?? null,
     user_audio_url: userAudioValue,
     notes: entry.notes ?? null,
-    difficulty: entry.difficulty,
+    difficulty: DIFFICULTY_TO_INT[entry.difficulty] ?? 1,
     tags: entry.tags ?? null,
     meanings: (entry.meanings ?? null) as Json | null,
     created_at: entry.createdAt,
@@ -132,7 +135,7 @@ async function rowToEntry(row: EntryRow): Promise<Entry> {
     audioUrl: row.audio_url ?? undefined,
     userAudioUrl: await resolveUserAudioUrl(row.user_audio_url),
     notes: row.notes ?? undefined,
-    difficulty: row.difficulty as Entry["difficulty"],
+    difficulty: (INT_TO_DIFFICULTY[row.difficulty as unknown as number] ?? "medium") as Entry["difficulty"],
     tags: row.tags ?? undefined,
     meanings: (row.meanings as unknown as Entry["meanings"]) ?? undefined,
     createdAt: row.created_at,

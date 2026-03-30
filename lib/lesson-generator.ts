@@ -4,11 +4,13 @@ import type { Lesson } from "./types";
 import basicsData from "@/content/lessons/basics.json";
 import commonWordsData from "@/content/lessons/common-words.json";
 import difficultSoundsData from "@/content/lessons/difficult-sounds.json";
+import phonemePractice1Data from "@/content/lessons/phoneme-practice-1.json";
 
 const allLessons: Lesson[] = [
   basicsData as Lesson,
   commonWordsData as Lesson,
   difficultSoundsData as Lesson,
+  phonemePractice1Data as Lesson,
 ];
 
 /**

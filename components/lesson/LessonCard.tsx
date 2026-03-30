@@ -35,7 +35,7 @@ export default function LessonCard({ lesson }: LessonCardProps) {
   const config = difficultyConfig[lesson.difficulty];
 
   return (
-    <Link href={`/lesson/${lesson.id}`}>
+    <Link href={lesson.href ?? `/lesson/${lesson.id}`}>
       <div
         className={`
           group relative overflow-hidden rounded-2xl border border-gray-200 dark:border-gray-700
@@ -72,7 +72,9 @@ export default function LessonCard({ lesson }: LessonCardProps) {
           {/* Footer */}
           <div className="flex items-center justify-between">
             <span className="text-xs text-gray-500 dark:text-gray-500">
-              {lesson.words.length} words
+              {lesson.exerciseCount
+                ? `${lesson.exerciseCount} exercises`
+                : `${lesson.words.length} words`}
             </span>
 
             <span className="text-xs font-medium text-indigo-600 dark:text-indigo-400 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1">
