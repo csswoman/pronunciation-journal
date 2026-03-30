@@ -2,20 +2,45 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { getUserStats, getProgressHistory, getRecentAttempts } from "@/lib/db";
-import type { UserStats, DailyProgress, Attempt } from "@/lib/types";
+import { getUserStats, getProgressHistory } from "@/lib/db";
+import { getSupabaseBrowserClient } from "@/lib/supabase/client";
+import type { UserStats, DailyProgress } from "@/lib/types";
+
+interface RecentAttempt {
+  word: string
+  isCorrect: boolean
+  timestamp: string
+}
+
+async function getRecentAttemptsFromSupabase(limit: number): Promise<RecentAttempt[]> {
+  const supabase = getSupabaseBrowserClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return []
+  const { data, error } = await supabase
+    .from('answer_history')
+    .select('target_word, is_correct, answered_at')
+    .eq('user_id', user.id)
+    .order('answered_at', { ascending: false })
+    .limit(limit)
+  if (error || !data) return []
+  return data.map(r => ({
+    word: r.target_word ?? '—',
+    isCorrect: r.is_correct,
+    timestamp: r.answered_at ?? new Date().toISOString(),
+  }))
+}
 
 export default function ProgressPage() {
   const [stats, setStats] = useState<UserStats | null>(null);
   const [history, setHistory] = useState<DailyProgress[]>([]);
-  const [recentAttempts, setRecentAttempts] = useState<Attempt[]>([]);
+  const [recentAttempts, setRecentAttempts] = useState<RecentAttempt[]>([]);
 
   useEffect(() => {
     async function load() {
       const [s, h, a] = await Promise.all([
         getUserStats(),
         getProgressHistory(7),
-        getRecentAttempts(20),
+        getRecentAttemptsFromSupabase(20),
       ]);
       setStats(s);
       setHistory(h);
@@ -148,17 +173,6 @@ export default function ProgressPage() {
                       </p>
                     </div>
                   </div>
-                  <span
-                    className={`text-sm font-semibold ${
-                      attempt.accuracy >= 80
-                        ? "text-green-500"
-                        : attempt.accuracy >= 60
-                        ? "text-yellow-500"
-                        : "text-red-500"
-                    }`}
-                  >
-                    {attempt.accuracy}%
-                  </span>
                 </div>
               ))}
             </div>

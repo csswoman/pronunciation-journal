@@ -42,6 +42,8 @@ export interface Lesson {
   category: string; // "basics", "common-words", "difficult-sounds"
   words: LessonWord[];
   difficulty: Difficulty;
+  href?: string; // override link (e.g. for phoneme practice exercises)
+  exerciseCount?: number; // shown instead of word count when words is empty
 }
 
 // ── Scoring Types ──
