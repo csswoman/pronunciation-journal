@@ -2,32 +2,77 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ── Default theme: Blue (light) ─────────────────────────────────────────── */
+/* ── OKLCH Theme System ──────────────────────────────────────────────────── */
 :root {
   --sidebar-width: 256px;
-  --color-accent: #6EA8FE;
-  --color-accent-soft: #E7F0FF;
-  --color-accent-hover: #5A95F5;
-  --color-text-on-accent: #FFFFFF;
-  --color-text-primary: #1F2A44;
-  --color-text-secondary: #6B7A99;
-  /* Legacy aliases kept for backward compat */
-  --accent-hover: #5A95F5;
-  --accent-text: #FFFFFF;
-  --accent-rgb: 110, 168, 254;
+  --hue: 250;
+
+  /* Light mode (default) */
+  --bg: oklch(0.98 0.01 var(--hue));
+  --fg: oklch(0.2 0.02 var(--hue));
+  --bg-secondary: oklch(0.93 0.01 var(--hue));
+  --bg-tertiary: oklch(0.88 0.01 var(--hue));
+
+  --primary: oklch(0.65 0.15 var(--hue));
+  --primary-foreground: oklch(0.98 0.01 var(--hue));
+  --primary-hover: oklch(0.55 0.16 var(--hue));
+  --primary-soft: oklch(0.9 0.08 var(--hue));
+
+  --text-primary: oklch(0.2 0.02 var(--hue));
+  --text-secondary: oklch(0.45 0.03 var(--hue));
+  --text-tertiary: oklch(0.65 0.02 var(--hue));
+
+  --border: oklch(0.85 0.02 var(--hue));
+  --border-hover: oklch(0.75 0.03 var(--hue));
+
+  /* Backward compatibility */
+  --color-accent: oklch(0.65 0.15 var(--hue));
+  --color-accent-soft: oklch(0.9 0.08 var(--hue));
+  --color-accent-hover: oklch(0.55 0.16 var(--hue));
+  --color-text-on-accent: oklch(0.98 0.01 var(--hue));
+  --color-text-primary: oklch(0.2 0.02 var(--hue));
+  --color-text-secondary: oklch(0.45 0.03 var(--hue));
+  --accent-text: oklch(0.98 0.01 var(--hue));
+
+  /* RGB fallback for accent */
+  --accent-rgb: 166, 110, 254;
 }
 
-/* ── Default theme: Blue (dark) ──────────────────────────────────────────── */
+/* ── Dark Mode ──────────────────────────────────────────────────────────── */
 .dark {
-  --color-accent: #6EA8FE;
-  --color-accent-soft: #1B2A4A;
-  --color-accent-hover: #8CB9FF;
-  --color-text-on-accent: #0B1220;
-  --color-text-primary: #E6ECFF;
-  --color-text-secondary: #A9B4D0;
-  --accent-hover: #8CB9FF;
-  --accent-text: #0B1220;
-  --accent-rgb: 110, 168, 254;
+  --bg: oklch(0.12 0.02 var(--hue));
+  --fg: oklch(0.95 0.01 var(--hue));
+  --bg-secondary: oklch(0.16 0.02 var(--hue));
+  --bg-tertiary: oklch(0.22 0.02 var(--hue));
+
+  --primary: oklch(0.7 0.14 var(--hue));
+  --primary-foreground: oklch(0.12 0.02 var(--hue));
+  --primary-hover: oklch(0.8 0.13 var(--hue));
+  --primary-soft: oklch(0.25 0.08 var(--hue));
+
+  --text-primary: oklch(0.95 0.01 var(--hue));
+  --text-secondary: oklch(0.75 0.02 var(--hue));
+  --text-tertiary: oklch(0.55 0.02 var(--hue));
+
+  --border: oklch(0.3 0.02 var(--hue));
+  --border-hover: oklch(0.45 0.03 var(--hue));
+
+  /* Backward compatibility */
+  --color-accent: oklch(0.7 0.14 var(--hue));
+  --color-accent-soft: oklch(0.25 0.08 var(--hue));
+  --color-accent-hover: oklch(0.8 0.13 var(--hue));
+  --color-text-on-accent: oklch(0.12 0.02 var(--hue));
+  --color-text-primary: oklch(0.95 0.01 var(--hue));
+  --color-text-secondary: oklch(0.75 0.02 var(--hue));
+  --accent-text: oklch(0.12 0.02 var(--hue));
+
+  /* RGB fallback for accent */
+  --accent-rgb: 179, 179, 255;
+}
+
+/* ── Smooth Transitions ────────────────────────────────────────────────── */
+* {
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
 
 /* ── Animations ──────────────────────────────────────────────────────────── */
@@ -111,4 +156,48 @@
     color: var(--color-accent);
     border: 1px solid var(--color-accent);
   }
+}
+
+/* ── Slider Styles ─────────────────────────────────────────────────────── */
+.slider-thumb::-webkit-slider-thumb {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--primary);
+  cursor: pointer;
+  border: 2px solid var(--bg);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  transition: box-shadow 0.2s ease;
+}
+
+.slider-thumb::-webkit-slider-thumb:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.slider-thumb::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--primary);
+  cursor: pointer;
+  border: 2px solid var(--bg);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  transition: box-shadow 0.2s ease;
+}
+
+.slider-thumb::-moz-range-thumb:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.slider-thumb::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 8px;
+  border-radius: 5px;
+  background: inherit;
+}
+
+.slider-thumb::-moz-range-track {
+  background: transparent;
+  border: none;
 }

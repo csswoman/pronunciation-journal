@@ -3,9 +3,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useUserPreferences } from "@/hooks/useUserPreferences";
 import { useAuth } from "@/components/AuthProvider";
-import { useTheme } from "@/hooks/useTheme";
-import ColorPicker from "@/components/ColorPicker";
-import { type ThemeName, DEFAULT_THEME, resolveThemeName } from "@/lib/themes";
 
 type TabType = "appearance" | "security";
 
@@ -17,28 +14,17 @@ export default function ProfileSettings() {
     error,
     updateFullName,
     updateAvatar,
-    updateThemeMode,
-    updateAccentColor,
     updatePassword,
   } = useUserPreferences();
 
-  const theme = useTheme();
-
   const [activeTab, setActiveTab] = useState<TabType>("appearance");
   const [fullName, setFullName] = useState(preferences?.full_name || "");
-  const [tempThemeMode, setTempThemeMode] = useState<"light" | "dark" | "auto">(
-    preferences?.theme_mode || "auto"
-  );
-  const [tempTheme, setTempTheme] = useState<ThemeName>(
-    resolveThemeName(preferences?.accent_color ?? DEFAULT_THEME)
-  );
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isUpdatingAvatar, setIsUpdatingAvatar] = useState(false);
   const [isSavingName, setIsSavingName] = useState(false);
   const [isSavingPassword, setIsSavingPassword] = useState(false);
-  const [isSavingTheme, setIsSavingTheme] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -48,21 +34,7 @@ export default function ProfileSettings() {
     if (preferences?.full_name) {
       setFullName(preferences.full_name);
     }
-    if (preferences?.theme_mode) {
-      setTempThemeMode(preferences.theme_mode);
-      // sync global theme provider
-      try {
-        const mapped = preferences.theme_mode === "auto" ? "system" : preferences.theme_mode;
-        theme.setMode(mapped as "light" | "dark" | "system");
-      } catch (e) {}
-    }
-    if (preferences?.accent_color) {
-      setTempTheme(resolveThemeName(preferences.accent_color));
-      try {
-        theme.setTheme(resolveThemeName(preferences.accent_color));
-      } catch (e) {}
-    }
-  }, [preferences?.full_name, preferences?.theme_mode, preferences?.accent_color]);
+  }, [preferences?.full_name]);
 
   const showMessage = (message: string, isError = false) => {
     if (isError) {
@@ -123,35 +95,6 @@ export default function ProfileSettings() {
       setIsSavingName(false);
     }
   };
-
-  const handleSaveThemeSettings = async () => {
-    try {
-      setIsSavingTheme(true);
-
-      // Update theme mode
-      if (tempThemeMode !== preferences?.theme_mode) {
-        await updateThemeMode(tempThemeMode);
-      }
-
-      // Update theme
-      if (tempTheme !== resolveThemeName(preferences?.accent_color ?? DEFAULT_THEME)) {
-        await updateAccentColor(tempTheme);
-      }
-
-      showMessage("Configuración de tema guardada exitosamente");
-    } catch (err) {
-      showMessage(
-        err instanceof Error ? err.message : "Error al guardar la configuración",
-        true
-      );
-    } finally {
-      setIsSavingTheme(false);
-    }
-  };
-
-  const hasThemeChanges =
-    tempThemeMode !== preferences?.theme_mode ||
-    tempTheme !== resolveThemeName(preferences?.accent_color ?? DEFAULT_THEME);
 
   const handleSavePassword = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -325,82 +268,6 @@ export default function ProfileSettings() {
                     >
                       Seleccionar Foto
                     </button>
-                  </div>
-                </div>
-              </div>
-
-              {/* Theme Settings Section */}
-              <div className="border-t border-gray-200 dark:border-gray-700 pt-8">
-                <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">
-                  Configuración de Tema
-                </h2>
-
-                <div className="space-y-6">
-                  {/* Theme Mode */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-900 dark:text-white mb-3">
-                      Modo de Tema
-                    </label>
-                    <div className="grid grid-cols-3 gap-2">
-                      {(["light", "dark", "auto"] as const).map((mode) => (
-                        <button
-                          key={mode}
-                          onClick={() => {
-                            setTempThemeMode(mode);
-                            try {
-                              const mapped = mode === "auto" ? "system" : mode;
-                              theme.setMode(mapped as "light" | "dark" | "system");
-                            } catch (e) {}
-                          }}
-                          className={`px-4 py-2 rounded-lg font-medium transition-all ${
-                            tempThemeMode === mode
-                              ? "ring-2"
-                              : "bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600"
-                          }`}
-                          style={tempThemeMode === mode ? { backgroundColor: 'var(--color-accent)', color: 'var(--accent-text)', '--tw-ring-color': 'rgba(var(--accent-rgb), 0.4)' } as React.CSSProperties : undefined}
-                        >
-                          {mode === "light"
-                            ? "☀️ Claro"
-                            : mode === "dark"
-                              ? "🌙 Oscuro"
-                              : "🔄 Auto"}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Accent Color */}
-                  <div>
-                    <ColorPicker
-                      selectedTheme={tempTheme}
-                      onThemeChange={(t) => {
-                        setTempTheme(t);
-                        try {
-                          theme.setTheme(t);
-                        } catch (e) {}
-                      }}
-                      isLoading={false}
-                    />
-                  </div>
-
-                  {/* Save Button */}
-                  <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
-                    <button
-                      onClick={handleSaveThemeSettings}
-                      disabled={isSavingTheme || !hasThemeChanges}
-                      className={`w-full px-6 py-3 rounded-lg font-medium transition-all ${
-                        hasThemeChanges && !isSavingTheme
-                          ? "accent-button shadow-lg hover:shadow-xl"
-                          : "bg-gray-300 dark:bg-gray-600 text-gray-600 dark:text-gray-400 cursor-not-allowed"
-                      }`}
-                    >
-                      {isSavingTheme ? "Guardando..." : hasThemeChanges ? "Guardar Cambios" : "Sin cambios"}
-                    </button>
-                    {hasThemeChanges && (
-                      <p className="text-xs mt-2 text-center" style={{ color: 'var(--color-accent)' }}>
-                        Tienes cambios sin guardar
-                      </p>
-                    )}
                   </div>
                 </div>
               </div>
