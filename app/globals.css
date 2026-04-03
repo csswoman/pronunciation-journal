@@ -7,72 +7,315 @@
   --sidebar-width: 256px;
   --hue: 250;
 
-  /* Light mode (default) */
-  --bg: oklch(0.98 0.01 var(--hue));
-  --fg: oklch(0.2 0.02 var(--hue));
-  --bg-secondary: oklch(0.93 0.01 var(--hue));
-  --bg-tertiary: oklch(0.88 0.01 var(--hue));
-
-  --primary: oklch(0.65 0.15 var(--hue));
-  --primary-foreground: oklch(0.98 0.01 var(--hue));
-  --primary-hover: oklch(0.55 0.16 var(--hue));
-  --primary-soft: oklch(0.9 0.08 var(--hue));
-
-  --text-primary: oklch(0.2 0.02 var(--hue));
-  --text-secondary: oklch(0.45 0.03 var(--hue));
-  --text-tertiary: oklch(0.65 0.02 var(--hue));
-
-  --border: oklch(0.85 0.02 var(--hue));
-  --border-hover: oklch(0.75 0.03 var(--hue));
+  /* Light mode (default) - white background stays fixed */
+  --primary: oklch(.7 .14 var(--hue));
+  --page-bg: oklch(.95 .01 var(--hue));
+  --card-bg: white;
+  --btn-content: oklch(.55 .12 var(--hue));
+  --btn-regular-bg: oklch(.95 .025 var(--hue));
+  --btn-regular-bg-hover: oklch(.9 .05 var(--hue));
+  --btn-regular-bg-active: oklch(.85 .08 var(--hue));
+  --btn-plain-bg-hover: oklch(.95 .025 var(--hue));
+  --btn-plain-bg-active: oklch(.98 .01 var(--hue));
+  --btn-card-bg-hover: oklch(.98 .005 var(--hue));
+  --btn-card-bg-active: oklch(.9 .03 var(--hue));
+  --enter-btn-bg: var(--btn-regular-bg);
+  --enter-btn-bg-hover: var(--btn-regular-bg-hover);
+  --enter-btn-bg-active: var(--btn-regular-bg-active);
+  --deep-text: oklch(.25 .02 var(--hue));
+  --title-active: oklch(.6 .1 var(--hue));
+  --line-divider: rgba(0,0,0,.08);
+  --line-color: rgba(0,0,0,.1);
+  --meta-divider: rgba(0,0,0,.2);
+  --inline-code-bg: var(--btn-regular-bg);
+  --inline-code-color: var(--btn-content);
+  --selection-bg: oklch(.9 .05 var(--hue));
+  --codeblock-selection: oklch(.4 .08 var(--hue));
+  --codeblock-bg: oklch(.17 .015 var(--hue));
+  --codeblock-topbar-bg: oklch(.3 .02 var(--hue));
+  --license-block-bg: rgba(0,0,0,.03);
+  --link-underline: oklch(.93 .04 var(--hue));
+  --link-hover: oklch(.95 .025 var(--hue));
+  --link-active: oklch(.9 .05 var(--hue));
+  --float-panel-bg: white;
+  --scrollbar-bg-light: rgba(0,0,0,.4);
+  --scrollbar-bg-hover-light: rgba(0,0,0,.5);
+  --scrollbar-bg-active-light: rgba(0,0,0,.6);
+  --scrollbar-bg-dark: rgba(255,255,255,.4);
+  --scrollbar-bg-hover-dark: rgba(255,255,255,.5);
+  --scrollbar-bg-active-dark: rgba(255,255,255,.6);
+  --scrollbar-bg: var(--scrollbar-bg-light);
+  --scrollbar-bg-hover: var(--scrollbar-bg-hover-light);
+  --scrollbar-bg-active: var(--scrollbar-bg-active-light);
+  --color-selection-bar: linear-gradient(to right, oklch(.8 .1 0), oklch(.8 .1 30), oklch(.8 .1 60), oklch(.8 .1 90), oklch(.8 .1 120), oklch(.8 .1 150), oklch(.8 .1 180), oklch(.8 .1 210), oklch(.8 .1 240), oklch(.8 .1 270), oklch(.8 .1 300), oklch(.8 .1 330), oklch(.8 .1 360));
+  --display-light-icon: 1;
+  --display-dark-icon: 0;
+  --admonitions-color-tip: oklch(.7 .14 180);
+  --admonitions-color-note: oklch(.7 .14 250);
+  --admonitions-color-important: oklch(.7 .14 310);
+  --admonitions-color-warning: oklch(.7 .14 60);
+  --admonitions-color-caution: oklch(.6 .2 25);
+  --toc-badge-bg: oklch(.9 .045 var(--hue));
+  --toc-btn-hover: oklch(.92 .015 var(--hue));
+  --toc-btn-active: oklch(.9 .015 var(--hue));
+  --toc-width: calc((100vw - var(--page-width)) / 2 - 1rem);
+  --toc-item-active: oklch(.7 .13 var(--hue));
 
   /* Backward compatibility */
-  --color-accent: oklch(0.65 0.15 var(--hue));
-  --color-accent-soft: oklch(0.9 0.08 var(--hue));
-  --color-accent-hover: oklch(0.55 0.16 var(--hue));
-  --color-text-on-accent: oklch(0.98 0.01 var(--hue));
-  --color-text-primary: oklch(0.2 0.02 var(--hue));
-  --color-text-secondary: oklch(0.45 0.03 var(--hue));
-  --accent-text: oklch(0.98 0.01 var(--hue));
-
-  /* RGB fallback for accent */
+  --bg: var(--page-bg);
+  --fg: var(--deep-text);
+  --bg-secondary: white;
+  --bg-tertiary: white;
+  --primary-foreground: white;
+  --primary-hover: var(--btn-regular-bg-hover);
+  --primary-soft: var(--btn-regular-bg);
+  --secondary: var(--primary);
+  --secondary-hover: var(--btn-regular-bg-hover);
+  --secondary-soft: var(--btn-regular-bg);
+  --text-primary: var(--deep-text);
+  --text-secondary: rgba(0,0,0,.6);
+  --text-tertiary: rgba(0,0,0,.4);
+  --border: var(--line-divider);
+  --border-hover: var(--line-color);
+  --color-accent: var(--primary);
+  --color-accent-soft: var(--btn-regular-bg);
+  --color-accent-hover: var(--btn-regular-bg-hover);
+  --color-text-on-accent: white;
+  --color-text-primary: var(--deep-text);
+  --color-text-secondary: rgba(0,0,0,.6);
+  --accent-text: white;
   --accent-rgb: 166, 110, 254;
 }
 
 /* ── Dark Mode ──────────────────────────────────────────────────────────── */
 .dark {
-  --bg: oklch(0.12 0.02 var(--hue));
-  --fg: oklch(0.95 0.01 var(--hue));
-  --bg-secondary: oklch(0.16 0.02 var(--hue));
-  --bg-tertiary: oklch(0.22 0.02 var(--hue));
-
-  --primary: oklch(0.7 0.14 var(--hue));
-  --primary-foreground: oklch(0.12 0.02 var(--hue));
-  --primary-hover: oklch(0.8 0.13 var(--hue));
-  --primary-soft: oklch(0.25 0.08 var(--hue));
-
-  --text-primary: oklch(0.95 0.01 var(--hue));
-  --text-secondary: oklch(0.75 0.02 var(--hue));
-  --text-tertiary: oklch(0.55 0.02 var(--hue));
-
-  --border: oklch(0.3 0.02 var(--hue));
-  --border-hover: oklch(0.45 0.03 var(--hue));
+  --primary: oklch(.75 .14 var(--hue));
+  --page-bg: oklch(.16 .014 var(--hue));
+  --card-bg: oklch(.23 .015 var(--hue));
+  --btn-content: oklch(.75 .1 var(--hue));
+  --btn-regular-bg: oklch(.33 .035 var(--hue));
+  --btn-regular-bg-hover: oklch(.38 .04 var(--hue));
+  --btn-regular-bg-active: oklch(.43 .045 var(--hue));
+  --btn-plain-bg-hover: oklch(.3 .035 var(--hue));
+  --btn-plain-bg-active: oklch(.27 .025 var(--hue));
+  --btn-card-bg-hover: oklch(.3 .03 var(--hue));
+  --btn-card-bg-active: oklch(.35 .035 var(--hue));
+  --line-divider: rgba(255,255,255,.08);
+  --line-color: rgba(255,255,255,.1);
+  --meta-divider: rgba(255,255,255,.2);
+  --selection-bg: oklch(.4 .08 var(--hue));
+  --codeblock-bg: oklch(.17 .015 var(--hue));
+  --codeblock-topbar-bg: oklch(.12 .015 var(--hue));
+  --license-block-bg: var(--codeblock-bg);
+  --link-underline: oklch(.4 .08 var(--hue));
+  --link-hover: oklch(.4 .08 var(--hue));
+  --link-active: oklch(.35 .07 var(--hue));
+  --float-panel-bg: oklch(.19 .015 var(--hue));
+  --scrollbar-bg: var(--scrollbar-bg-dark);
+  --scrollbar-bg-hover: var(--scrollbar-bg-hover-dark);
+  --scrollbar-bg-active: var(--scrollbar-bg-active-dark);
+  --color-selection-bar: linear-gradient(to right, oklch(.7 .1 0), oklch(.7 .1 30), oklch(.7 .1 60), oklch(.7 .1 90), oklch(.7 .1 120), oklch(.7 .1 150), oklch(.7 .1 180), oklch(.7 .1 210), oklch(.7 .1 240), oklch(.7 .1 270), oklch(.7 .1 300), oklch(.7 .1 330), oklch(.7 .1 360));
+  --display-light-icon: 0;
+  --display-dark-icon: 1;
+  --admonitions-color-tip: oklch(.75 .14 180);
+  --admonitions-color-note: oklch(.75 .14 250);
+  --admonitions-color-important: oklch(.75 .14 310);
+  --admonitions-color-warning: oklch(.75 .14 60);
+  --admonitions-color-caution: oklch(.65 .2 25);
+  --toc-badge-bg: var(--btn-regular-bg);
+  --toc-btn-hover: oklch(.22 .02 var(--hue));
+  --toc-btn-active: oklch(.25 .02 var(--hue));
+  --toc-item-active: oklch(.35 .07 var(--hue));
 
   /* Backward compatibility */
-  --color-accent: oklch(0.7 0.14 var(--hue));
-  --color-accent-soft: oklch(0.25 0.08 var(--hue));
-  --color-accent-hover: oklch(0.8 0.13 var(--hue));
-  --color-text-on-accent: oklch(0.12 0.02 var(--hue));
-  --color-text-primary: oklch(0.95 0.01 var(--hue));
-  --color-text-secondary: oklch(0.75 0.02 var(--hue));
-  --accent-text: oklch(0.12 0.02 var(--hue));
-
-  /* RGB fallback for accent */
+  --bg: var(--page-bg);
+  --fg: var(--btn-content);
+  --bg-secondary: var(--card-bg);
+  --bg-tertiary: oklch(.3 .02 var(--hue));
+  --primary-foreground: var(--page-bg);
+  --primary-hover: var(--btn-regular-bg-hover);
+  --primary-soft: var(--btn-regular-bg);
+  --secondary: var(--primary);
+  --secondary-hover: var(--btn-regular-bg-hover);
+  --secondary-soft: var(--btn-regular-bg);
+  --text-primary: var(--btn-content);
+  --text-secondary: rgba(255,255,255,.6);
+  --text-tertiary: rgba(255,255,255,.4);
+  --border: var(--line-divider);
+  --border-hover: var(--line-color);
+  --color-accent: var(--primary);
+  --color-accent-soft: var(--btn-regular-bg);
+  --color-accent-hover: var(--btn-regular-bg-hover);
+  --color-text-on-accent: var(--page-bg);
+  --color-text-primary: var(--btn-content);
+  --color-text-secondary: rgba(255,255,255,.6);
+  --accent-text: var(--page-bg);
   --accent-rgb: 179, 179, 255;
+}
+
+/* ── Color Selection Gradient ───────────────────────────────────────── */
+:root {
+  --color-selection-bar: linear-gradient(to right, 
+    oklch(.8 .1 0), oklch(.8 .1 30), oklch(.8 .1 60), oklch(.8 .1 90), 
+    oklch(.8 .1 120), oklch(.8 .1 150), oklch(.8 .1 180), oklch(.8 .1 210), 
+    oklch(.8 .1 240), oklch(.8 .1 270), oklch(.8 .1 300), oklch(.8 .1 330), 
+    oklch(.8 .1 360));
 }
 
 /* ── Smooth Transitions ────────────────────────────────────────────────── */
 * {
   transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+/* ── Utility Classes ───────────────────────────────────────────────────── */
+.btn-primary {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+  transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-hover);
+}
+
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background-color: var(--secondary);
+  color: var(--primary-foreground);
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+  background-color: var(--secondary-hover);
+}
+
+.btn-secondary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-soft {
+  background-color: var(--primary-soft);
+  color: var(--primary);
+  transition: all 0.2s ease;
+}
+
+.btn-soft:hover {
+  background-color: var(--primary-hover);
+  color: var(--primary-foreground);
+}
+
+.card {
+  background-color: var(--bg-secondary);
+  border-color: var(--border);
+  color: var(--text-primary);
+}
+
+.card-dark {
+  background-color: var(--bg-tertiary);
+  border-color: var(--border);
+  color: var(--text-primary);
+}
+
+.input-themed {
+  background-color: var(--bg);
+  border-color: var(--border);
+  color: var(--text-primary);
+}
+
+.input-themed:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.1);
+}
+
+.badge-primary {
+  background-color: var(--primary-soft);
+  color: var(--primary);
+  border-color: var(--primary);
+}
+
+.badge-secondary {
+  background-color: var(--secondary-soft);
+  color: var(--secondary);
+  border-color: var(--secondary);
+}
+
+.text-accent {
+  color: var(--primary);
+}
+
+/* ── Dynamic Color Utility Classes ─────────────────────────────────────── */
+/* Text Colors */
+.text-primary { color: var(--primary); }
+.text-btn-content { color: var(--btn-content); }
+.text-deep { color: var(--deep-text); }
+.text-title-active { color: var(--title-active); }
+.text-page-bg { color: var(--page-bg); }
+
+/* Background Colors */
+.bg-primary { background-color: var(--primary); }
+.bg-page-bg { background-color: var(--page-bg); }
+.bg-card-bg { background-color: var(--card-bg); }
+.bg-btn-regular { background-color: var(--btn-regular-bg); }
+.bg-btn-plain-hover { background-color: var(--btn-plain-bg-hover); }
+.bg-btn-content { background-color: var(--btn-content); }
+.bg-selection { background-color: var(--selection-bg); }
+
+/* Hover States */
+.hover\:bg-btn-regular-hover:hover { background-color: var(--btn-regular-bg-hover); }
+.hover\:bg-btn-plain-hover:hover { background-color: var(--btn-plain-bg-hover); }
+.hover\:bg-primary:hover { background-color: var(--primary); }
+.hover\:text-title-active:hover { color: var(--title-active); }
+
+/* Active States */
+.active\:bg-btn-regular-active:active { background-color: var(--btn-regular-bg-active); }
+
+/* Border Colors */
+.border-primary { border-color: var(--primary); }
+.border-line-divider { border-color: var(--line-divider); }
+.border-line-color { border-color: var(--line-color); }
+
+/* Gradient Backgrounds for Primary */
+.bg-gradient-to-br-primary {
+  background: linear-gradient(to bottom right, var(--primary), var(--title-active));
+}
+
+/* Text on Primary Background */
+.text-on-primary { color: white; }
+
+/* Link Styles */
+.link-primary { 
+  color: var(--primary);
+  text-decoration: underline;
+}
+.link-primary:hover {
+  color: var(--btn-content);
+}
+
+/* Ring/Focus Styles */
+.focus\:ring-primary:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.3);
+}
+
+/* Semantic Color Classes (from admonitions) */
+.text-success { color: var(--admonitions-color-tip); } /* tip = success */
+.bg-success-light { background-color: oklch(.85 .08 180); } /* lightened tip */
+.text-info { color: var(--admonitions-color-note); } /* note = info */
+.bg-info-light { background-color: oklch(.85 .08 250); } /* lightened note */
+.text-warning { color: var(--admonitions-color-warning); } /* warning */
+.bg-warning-light { background-color: oklch(.9 .08 60); } /* lightened warning */
+.text-error { color: var(--admonitions-color-caution); } /* caution = error */
+.bg-error-light { background-color: oklch(.9 .12 25); } /* lightened caution */
+.text-important { color: var(--admonitions-color-important); } /* important */
+.bg-important-light { background-color: oklch(.85 .08 310); } /* lightened important */
+
+.text-accent-hover:hover {
+  color: var(--primary-hover);
 }
 
 /* ── Animations ──────────────────────────────────────────────────────────── */
@@ -199,5 +442,132 @@
 
 .slider-thumb::-moz-range-track {
   background: transparent;
+  border: none;
+}
+
+/* ── Enhanced Slider for Theme Color ─────────────────────────────────── */
+.slider-thumb-enhanced::-webkit-slider-thumb {
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: white;
+  cursor: pointer;
+  border: 3px solid #333;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4), inset 0 0 0 2px white;
+  transition: all 0.2s ease;
+}
+
+.slider-thumb-enhanced::-webkit-slider-thumb:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5), inset 0 0 0 2px white;
+  transform: scale(1.1);
+}
+
+.slider-thumb-enhanced::-webkit-slider-thumb:active {
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4), inset 0 0 0 2px white;
+  transform: scale(0.95);
+}
+
+.slider-thumb-enhanced::-moz-range-thumb {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: white;
+  cursor: pointer;
+  border: 3px solid #333;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4), inset 0 0 0 2px white;
+  transition: all 0.2s ease;
+}
+
+.slider-thumb-enhanced::-moz-range-thumb:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5), inset 0 0 0 2px white;
+  transform: scale(1.1);
+}
+
+.slider-thumb-enhanced::-moz-range-thumb:active {
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4), inset 0 0 0 2px white;
+  transform: scale(0.95);
+}
+
+.slider-thumb-enhanced::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  background: inherit;
+}
+
+.slider-thumb-enhanced::-moz-range-track {
+  background: transparent;
+  border: none;
+}
+
+/* ── Color Selection Slider (Pastel Colors) ──────────────────────────── */
+.color-selection-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 12px;
+  background: var(--color-selection-bar);
+  outline: none;
+  border-radius: 999px;
+  padding: 0;
+}
+
+.color-selection-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 28px;
+  border-radius: 6px;
+  background: var(--text-primary);
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  margin-top: -8px;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.color-selection-slider::-webkit-slider-thumb:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  transform: scaleY(1.1);
+}
+
+.color-selection-slider::-webkit-slider-thumb:active {
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  transform: scaleY(0.95);
+}
+
+.color-selection-slider::-moz-range-thumb {
+  width: 14px;
+  height: 28px;
+  border-radius: 6px;
+  background: var(--text-primary);
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.color-selection-slider::-moz-range-thumb:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  transform: scaleY(1.1);
+}
+
+.color-selection-slider::-moz-range-thumb:active {
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  transform: scaleY(0.95);
+}
+
+.color-selection-slider::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 12px;
+  background: inherit;
+  border-radius: 999px;
+}
+
+.color-selection-slider::-moz-range-track {
+  height: 12px;
+  background: var(--color-selection-bar);
+  border-radius: 999px;
   border: none;
 }
