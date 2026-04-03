@@ -78,13 +78,19 @@ export default function EntryModal({ entry, onClose, onSave }: EntryModalProps) 
               {currentEntry.audioUrl && (
                 <button
                   onClick={() => playAudio(currentEntry.audioUrl!, { showAlerts: true })}
-                  className="p-3 bg-blue-100 dark:bg-blue-900 hover:bg-blue-200 dark:hover:bg-blue-800 rounded-full transition-colors"
+                  className="p-3 rounded-full transition-colors"
+                  style={{
+                    backgroundColor: 'var(--btn-regular-bg)',
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--btn-regular-bg-hover)')}
+                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'var(--btn-regular-bg)')}
                   title="Dictionary Pronunciation"
                   aria-label="Play dictionary pronunciation"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-6 text-blue-600 dark:text-blue-400"
+                    className="h-6 w-6"
+                    style={{color: 'var(--primary)'}}
                     viewBox="0 0 20 20"
                     fill="currentColor"
                   >
@@ -106,7 +112,12 @@ export default function EntryModal({ entry, onClose, onSave }: EntryModalProps) 
               {currentEntry.userAudioUrl && (
                 <button
                   onClick={() => playAudio(currentEntry.userAudioUrl!, { showAlerts: true })}
-                  className="p-3 bg-green-100 dark:bg-green-900 hover:bg-green-200 dark:hover:bg-green-800 rounded-full transition-colors"
+                  className="p-3 rounded-full transition-colors"
+                  style={{
+                    backgroundColor: 'var(--btn-regular-bg)',
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--btn-regular-bg-hover)')}
+                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'var(--btn-regular-bg)')}
                   title="Your Pronunciation"
                   aria-label="Play your pronunciation"
                 >

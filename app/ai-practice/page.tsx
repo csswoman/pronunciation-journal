@@ -32,14 +32,17 @@ export default function AIPracticePage() {
   const [showSavedWords, setShowSavedWords] = useState(false);
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-page-bg">
       {/* Header */}
-      <header className="bg-gradient-to-br from-purple-600 via-purple-700 to-indigo-800 text-white">
+      <header className="text-white" style={{background: 'var(--card-bg)'}}>
         <div className="max-w-3xl mx-auto px-4 py-8">
           <div className="flex items-center gap-3 mb-2">
             <Link
               href="/"
-              className="text-purple-200 hover:text-white transition-colors"
+              className="transition-colors"
+              style={{color: 'rgba(255,255,255,0.8)'}}
+              onMouseEnter={(e) => (e.currentTarget.style.color = 'white')}
+              onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255,255,255,0.8)')}
               aria-label="Back to home"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -48,9 +51,9 @@ export default function AIPracticePage() {
             </Link>
             <h1 className="text-2xl font-bold">AI Practice</h1>
           </div>
-          <p className="text-purple-200 text-sm">
+            <p className="text-sm" style={{color: 'rgba(255,255,255,0.8)'}}>
             Your personal English tutor — exercises, corrections & conversation
-          </p>
+            </p>
         </div>
       </header>
 
@@ -60,7 +63,12 @@ export default function AIPracticePage() {
           <div className="flex-1 min-w-0">
             {/* Error banner */}
             {error && (
-              <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl text-sm text-red-700 dark:text-red-300 flex items-start gap-2">
+              <div className="mb-4 p-3 rounded-xl text-sm flex items-start gap-2" style={{
+                backgroundColor: 'var(--btn-regular-bg)',
+                borderColor: 'var(--admonitions-color-caution)',
+                borderWidth: '1px',
+                color: 'var(--admonitions-color-caution)',
+              }}>
                 <span>⚠️</span>
                 <span>{error}</span>
               </div>
@@ -74,10 +82,10 @@ export default function AIPracticePage() {
                 {/* Custom prompt section */}
                 <div className="space-y-3">
                   <div>
-                    <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                    <h2 className="text-lg font-semibold text-[var(--text-primary)]">
                       ✍️ Custom Prompt
                     </h2>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                    <p className="text-sm text-[var(--text-secondary)]">
                       Write your own instruction for the AI tutor.
                     </p>
                   </div>
@@ -95,7 +103,7 @@ export default function AIPracticePage() {
 
             {/* Phase: configure */}
             {phase === "configure" && selectedTemplate && (
-              <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6">
+              <div className="bg-card-bg rounded-2xl border border-line-divider p-6">
                 <TemplateInputForm
                   templateId={selectedTemplate as import("@/lib/types").AITemplateId}
                   onSubmit={submitTemplateVars}
@@ -112,20 +120,25 @@ export default function AIPracticePage() {
                 <div className="flex items-center justify-between">
                   <button
                     onClick={resetToSelect}
-                    className="text-sm text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300 font-medium flex items-center gap-1"
+                    className="text-sm font-medium flex items-center gap-1"
+                    style={{
+                      color: 'var(--primary)',
+                    }}
+                    onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--btn-regular-bg-hover)')}
+                    onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--primary)')}
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                     </svg>
                     New session
                   </button>
-                  <span className="text-xs text-gray-400">
+                  <span className="text-xs text-[var(--text-tertiary)]">
                     Select any word in a response to save it
                   </span>
                 </div>
 
                 {/* Chat messages */}
-                <div className="bg-gray-100 dark:bg-gray-800/50 rounded-2xl p-4 min-h-[300px] max-h-[500px] overflow-y-auto">
+                <div className="bg-btn-regular rounded-2xl p-4 min-h-[300px] max-h-[500px] overflow-y-auto">
                   <ChatView
                     messages={messages}
                     isStreaming={isStreaming}
@@ -145,14 +158,14 @@ export default function AIPracticePage() {
 
           {/* Sidebar: saved words */}
           <div className="lg:w-64 flex-shrink-0">
-            <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+            <div className="bg-card-bg rounded-2xl border border-line-divider overflow-hidden">
               <button
                 onClick={() => setShowSavedWords((v) => !v)}
-                className="w-full flex items-center justify-between px-4 py-3 text-sm font-semibold text-gray-900 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
+                className="w-full flex items-center justify-between px-4 py-3 text-sm font-semibold text-[var(--text-primary)] hover:bg-btn-plain-hover transition-colors"
               >
                 <span>📚 Saved Words ({savedWords.length})</span>
                 <svg
-                  className={`w-4 h-4 text-gray-400 transition-transform ${showSavedWords ? "rotate-180" : ""}`}
+                  className={`w-4 h-4 text-[var(--text-tertiary)] transition-transform ${showSavedWords ? "rotate-180" : ""}`}
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"

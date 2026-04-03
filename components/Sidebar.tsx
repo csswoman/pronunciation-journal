@@ -169,12 +169,20 @@ export default function Sidebar() {
 
   return (
     <aside
-      className={`fixed left-0 top-0 h-screen bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 transition-all duration-300 ease-in-out flex flex-col z-40 ${
+      className={`fixed left-0 top-0 h-screen border-r transition-all duration-300 ease-in-out flex flex-col z-40 ${
         isOpen ? "w-64" : "w-20"
       }`}
+      style={{
+        backgroundColor: 'var(--bg-secondary)',
+        borderColor: 'var(--border)',
+      }}
     >
         {/* Header with toggle button */}
-        <div className="flex items-center justify-between h-20 px-4 border-b border-gray-200 dark:border-gray-700">
+        <div className="flex items-center justify-between h-20 px-4 border-b transition-all" 
+          style={{
+            borderColor: 'var(--border)',
+          }}
+        >
           {isOpen && (
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-lg flex items-center justify-center accent-bg">
@@ -228,11 +236,18 @@ export default function Sidebar() {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex items-center gap-4 px-3 py-3 rounded-lg transition-colors ${
+              className={`flex items-center gap-4 px-3 py-3 rounded-lg transition-all ${
                 isActive(item.href)
                   ? "accent-nav-active"
-                  : "text-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  : "hover:bg-opacity-50 transition-colors"
               }`}
+              style={
+                !isActive(item.href)
+                  ? {
+                      color: 'var(--text-secondary)',
+                    }
+                  : {}
+              }
               title={!isOpen ? item.name : undefined}
             >
               <div className="flex-shrink-0">{item.icon}</div>

@@ -234,7 +234,7 @@ export default function ActiveLessonPage() {
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">Lesson not found</h1>
-          <Link href="/lesson" className="text-indigo-600 hover:text-indigo-700">← Back to lessons</Link>
+          <Link href="/lesson" className="" style={{color: 'var(--primary)'}} onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--btn-regular-bg-hover)')} onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--primary)')}>← Back to lessons</Link>
         </div>
       </div>
     );
@@ -262,7 +262,7 @@ export default function ActiveLessonPage() {
           {phase !== "complete" && (
             <div className="mt-3 w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
               <div
-                className="h-full bg-indigo-500 rounded-full transition-all duration-500"
+                className="h-full rounded-full transition-all duration-500" style={{backgroundColor: 'var(--primary)'}}
                 style={{ width: `${((currentIndex + (phase === "feedback" ? 1 : 0)) / totalWords) * 100}%` }}
               />
             </div>
@@ -289,7 +289,12 @@ export default function ActiveLessonPage() {
             <div className="flex gap-3 justify-center">
               <button
                 onClick={() => { resetLesson(); startLesson(lessonData); setPhase("ready"); }}
-                className="px-6 py-3 rounded-xl bg-indigo-600 text-white font-medium hover:bg-indigo-700 transition-colors"
+                className="px-6 py-3 rounded-xl text-white font-medium transition-colors"
+                style={{
+                  backgroundColor: 'var(--primary)',
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--btn-regular-bg-hover)')}
+                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'var(--primary)')}
               >
                 🔄 Retry Lesson
               </button>
@@ -306,7 +311,7 @@ export default function ActiveLessonPage() {
             {/* Target */}
             <div className="text-center space-y-2">
               <h2 className="text-4xl font-bold text-gray-900 dark:text-gray-100">{currentWord.word}</h2>
-              <p className="text-lg text-indigo-600 dark:text-indigo-400 font-mono">{currentWord.ipa}</p>
+              <p className="text-lg font-mono" style={{color: 'var(--primary)'}}>{currentWord.ipa}</p>
               {currentWord.hint && (
                 <p className="text-sm text-gray-500 dark:text-gray-400 italic max-w-md">💡 {currentWord.hint}</p>
               )}
@@ -317,7 +322,10 @@ export default function ActiveLessonPage() {
               {wordAudioUrl && (
                 <button
                   onClick={() => new Audio(wordAudioUrl).play()}
-                  className="flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-200 transition-colors"
+                  className="flex items-center gap-2 px-4 py-2 rounded-xl text-white hover:opacity-90 transition-colors"
+                  style={{
+                    backgroundColor: 'var(--primary)',
+                  }}
                 >
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
@@ -389,8 +397,8 @@ export default function ActiveLessonPage() {
             {/* Processing */}
             {phase === "processing" && (
               <div className="text-center space-y-3">
-                <div className="w-12 h-12 mx-auto rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center">
-                  <svg className="w-6 h-6 text-indigo-600 animate-spin" fill="none" viewBox="0 0 24 24">
+                <div className="w-12 h-12 mx-auto rounded-full flex items-center justify-center" style={{backgroundColor: 'var(--btn-regular-bg)'}}>
+                  <svg className="w-6 h-6 animate-spin" fill="none" viewBox="0 0 24 24" style={{color: 'var(--primary)'}}>
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                   </svg>
@@ -422,7 +430,12 @@ export default function ActiveLessonPage() {
                   </button>
                   <button
                     onClick={handleNext}
-                    className="px-5 py-2.5 rounded-xl bg-indigo-600 text-white font-medium hover:bg-indigo-700 transition-colors"
+                    className="px-5 py-2.5 rounded-xl text-white font-medium transition-colors"
+                    style={{
+                      backgroundColor: 'var(--primary)',
+                    }}
+                    onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--btn-regular-bg-hover)')}
+                    onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'var(--primary)')}
                   >
                     {currentIndex + 1 < totalWords ? "➡️ Next" : "🎉 Finish"}
                   </button>

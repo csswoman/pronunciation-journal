@@ -61,11 +61,11 @@ export default function DashboardPage() {
           <div className="text-xs text-gray-400 mt-1">Mastered</div>
         </div>
         <div className="bg-white dark:bg-gray-800 rounded-xl p-4 text-center border border-gray-100 dark:border-gray-700">
-          <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">{accuracy}%</div>
+          <div className="text-2xl font-bold" style={{color: 'var(--primary)'}}>{accuracy}%</div>
           <div className="text-xs text-gray-400 mt-1">Accuracy</div>
         </div>
         <div className="bg-white dark:bg-gray-800 rounded-xl p-4 text-center border border-gray-100 dark:border-gray-700">
-          <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">{totalAttempts}</div>
+          <div className="text-2xl font-bold" style={{color: 'var(--admonitions-color-note)'}}>{totalAttempts}</div>
           <div className="text-xs text-gray-400 mt-1">Attempts</div>
         </div>
       </div>
@@ -76,13 +76,13 @@ export default function DashboardPage() {
           <span className="w-3 h-3 rounded bg-gray-200 dark:bg-gray-700 inline-block" /> Locked
         </span>
         <span className="flex items-center gap-1.5">
-          <span className="w-3 h-3 rounded bg-blue-200 dark:bg-blue-800 inline-block" /> Available
+          <span className="w-3 h-3 rounded inline-block" style={{backgroundColor: 'var(--admonitions-color-note)', opacity: 0.3}} /> Available
         </span>
         <span className="flex items-center gap-1.5">
           <span className="w-3 h-3 rounded bg-amber-200 dark:bg-amber-700 inline-block" /> Practicing
         </span>
         <span className="flex items-center gap-1.5">
-          <span className="w-3 h-3 rounded bg-green-200 dark:bg-green-800 inline-block" /> Mastered
+          <span className="w-3 h-3 rounded inline-block" style={{backgroundColor: 'var(--admonitions-color-tip)', opacity: 0.3}} /> Mastered
         </span>
       </div>
 

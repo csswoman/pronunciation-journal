@@ -8,10 +8,10 @@ interface Props {
 }
 
 const STATUS_STYLES: Record<string, string> = {
-  locked:     'bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-600 border-gray-200 dark:border-gray-700 cursor-not-allowed',
-  available:  'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-700 hover:bg-blue-100 dark:hover:bg-blue-900/40 cursor-pointer',
-  practicing: 'bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-700 hover:bg-amber-100 dark:hover:bg-amber-900/40 cursor-pointer',
-  mastered:   'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 border-green-200 dark:border-green-700 cursor-default',
+  locked:     'bg-btn-regular text-[var(--text-tertiary)] border-line-divider cursor-not-allowed',
+  available:  'bg-info-light text-info border-[var(--admonitions-color-note)] hover:brightness-95 cursor-pointer',
+  practicing: 'bg-warning-light text-warning border-[var(--admonitions-color-warning)] hover:brightness-95 cursor-pointer',
+  mastered:   'bg-success-light text-success border-[var(--admonitions-color-tip)] cursor-default',
 }
 
 const STATUS_ICON: Record<string, string> = {

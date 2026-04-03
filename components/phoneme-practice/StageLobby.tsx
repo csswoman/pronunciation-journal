@@ -63,21 +63,21 @@ function MasteryRing({ pct, size = 36 }: { pct: number; size?: number }) {
   const circumference = 2 * Math.PI * r
   const filled = (pct / 100) * circumference
 
-  const color =
-    pct >= 80 ? '#22c55e' :
-    pct >= 50 ? '#f59e0b' :
-    pct > 0   ? '#a78bfa' :
-    '#374151'
+  const strokeColor =
+    pct >= 80 ? 'var(--admonitions-color-tip)' :
+    pct >= 50 ? 'var(--admonitions-color-warning)' :
+    pct > 0   ? 'var(--primary)' :
+    'var(--line-color)'
 
   return (
     <svg width={size} height={size} className="rotate-[-90deg]">
-      <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="#1f2937" strokeWidth={4} />
+      <circle cx={size / 2} cy={size / 2} r={r} fill="none" style={{ stroke: 'var(--btn-regular-bg)' }} strokeWidth={4} />
       <circle
         cx={size / 2} cy={size / 2} r={r}
-        fill="none" stroke={color} strokeWidth={4}
+        fill="none" style={{ stroke: strokeColor }} strokeWidth={4}
         strokeDasharray={`${filled} ${circumference}`}
         strokeLinecap="round"
-        style={{ transition: 'stroke-dasharray 0.4s ease' }}
+        className="transition-all duration-500"
       />
     </svg>
   )
@@ -96,16 +96,19 @@ export function StageLobby({ soundIpa, soundName, mastery, hasPairs, onSelectSta
   return (
     <div className="w-full max-w-md mx-auto space-y-5">
       {/* Header */}
-      <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-5 flex items-center gap-4">
+      <div className="rounded-2xl border p-5 flex items-center gap-4" style={{
+        backgroundColor: 'var(--card-bg)',
+        borderColor: 'var(--line-divider)',
+      }}>
         <div className="relative flex-shrink-0">
           <MasteryRing pct={overall} size={56} />
-          <span className="absolute inset-0 flex items-center justify-center text-xs font-bold text-gray-200">
+          <span className="absolute inset-0 flex items-center justify-center text-xs font-bold" style={{ color: 'var(--text-secondary)' }}>
             {overall}%
           </span>
         </div>
         <div className="min-w-0">
-          <div className="text-2xl font-bold font-mono text-purple-400">{soundIpa}</div>
-          <div className="text-xs text-gray-400 uppercase tracking-widest mt-0.5">
+          <div className="text-2xl font-bold font-mono" style={{ color: 'var(--primary)' }}>{soundIpa}</div>
+          <div className="text-xs uppercase tracking-widest mt-0.5" style={{ color: 'var(--text-tertiary)' }}>
             {soundName} · {visibleStages.length} stages
           </div>
         </div>
@@ -123,29 +126,37 @@ export function StageLobby({ soundIpa, soundName, mastery, hasPairs, onSelectSta
               key={stage.id}
               disabled={!unlocked}
               onClick={() => unlocked && onSelectStage(stage.id)}
-              className={`w-full text-left rounded-2xl border px-4 py-4 flex items-center gap-4 transition-colors
-                ${unlocked
-                  ? isNext
-                    ? 'bg-white dark:bg-gray-800 border-purple-500/60 dark:border-purple-500/40 shadow-sm hover:border-purple-400'
-                    : 'bg-white dark:bg-gray-800 border-gray-100 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-500'
-                  : 'bg-gray-900/40 border-gray-800 opacity-60 cursor-not-allowed'
-                }`}
+              className="w-full text-left rounded-2xl border px-4 py-4 flex items-center gap-4 transition-colors"
+              style={{
+                backgroundColor: 'var(--card-bg)',
+                borderColor: unlocked
+                  ? isNext ? 'var(--primary)' : 'var(--line-divider)'
+                  : 'var(--line-color)',
+                opacity: unlocked ? 1 : 0.5,
+                cursor: unlocked ? 'pointer' : 'not-allowed',
+                boxShadow: isNext ? '0 1px 4px rgba(0,0,0,0.08)' : 'none',
+              }}
             >
               {/* Icon */}
-              <div className={`flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center
-                ${unlocked ? 'bg-purple-900/40 text-purple-400' : 'bg-gray-800 text-gray-500'}`}>
+              <div
+                className="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center"
+                style={{
+                  backgroundColor: 'var(--btn-regular-bg)',
+                  color: unlocked ? 'var(--primary)' : 'var(--text-tertiary)',
+                }}
+              >
                 <StageIcon icon={stage.icon} />
               </div>
 
               {/* Text */}
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-gray-500">Stage {i + 1} —</span>
-                  <span className={`text-sm font-semibold ${unlocked ? 'text-gray-100' : 'text-gray-500'}`}>
+                  <span className="text-xs" style={{ color: 'var(--text-secondary)' }}>Stage {i + 1} —</span>
+                  <span className="text-sm font-semibold" style={{ color: unlocked ? 'var(--text-primary)' : 'var(--text-tertiary)' }}>
                     {stage.title}
                   </span>
                 </div>
-                <span className={`text-xs mt-0.5 ${stage.difficulty === 'Easy' ? 'text-green-500' : 'text-amber-500'}`}>
+                <span className={`text-xs mt-0.5 ${stage.difficulty === 'Easy' ? 'text-success' : 'text-warning'}`}>
                   {stage.difficulty}
                 </span>
               </div>
@@ -153,16 +164,16 @@ export function StageLobby({ soundIpa, soundName, mastery, hasPairs, onSelectSta
               {/* Right side: mastery % or lock */}
               <div className="flex-shrink-0">
                 {!unlocked ? (
-                  <span className="text-gray-600"><LockIcon /></span>
+                  <span style={{ color: 'var(--text-tertiary)' }}><LockIcon /></span>
                 ) : m.total > 0 ? (
                   <div className="relative w-9 h-9">
                     <MasteryRing pct={m.pct} size={36} />
-                    <span className="absolute inset-0 flex items-center justify-center text-[9px] font-bold text-gray-300">
+                    <span className="absolute inset-0 flex items-center justify-center text-[9px] font-bold" style={{ color: 'var(--text-secondary)' }}>
                       {m.pct}%
                     </span>
                   </div>
                 ) : (
-                  <span className="text-xs text-gray-600 font-medium">—</span>
+                  <span className="text-xs font-medium" style={{ color: 'var(--text-tertiary)' }}>—</span>
                 )}
               </div>
             </button>
@@ -174,14 +185,14 @@ export function StageLobby({ soundIpa, soundName, mastery, hasPairs, onSelectSta
       {nextUnlocked && (
         <button
           onClick={() => onSelectStage(nextUnlocked.id)}
-          className="w-full py-3.5 rounded-2xl bg-blue-500 hover:bg-blue-400 text-white font-bold text-sm transition-colors"
+          className="btn-primary w-full py-3.5 rounded-2xl font-bold text-sm"
         >
           Start Next Stage
         </button>
       )}
 
       {!nextUnlocked && (
-        <p className="text-center text-xs text-gray-500">
+        <p className="text-center text-xs" style={{ color: 'var(--text-secondary)' }}>
           All stages completed! Keep practicing to improve your score.
         </p>
       )}

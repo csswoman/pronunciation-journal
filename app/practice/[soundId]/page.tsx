@@ -170,10 +170,13 @@ export default function PracticePage() {
     return (
       <div className="min-h-screen flex items-center justify-center p-4">
         <div className="text-center space-y-3">
-          <p className="text-red-500">{error}</p>
+          <p className="text-error">{error}</p>
           <button
             onClick={() => { setError(null); loadLobby() }}
-            className="px-4 py-2 rounded-lg bg-purple-600 text-white"
+            className="px-4 py-2 rounded-lg text-white"
+            style={{
+              backgroundColor: 'var(--primary)',
+            }}
           >
             Retry
           </button>
@@ -185,7 +188,7 @@ export default function PracticePage() {
   if (!sessionData || !mastery) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-pulse text-gray-400">Loading…</div>
+        <div className="animate-pulse text-[var(--text-tertiary)]">Loading…</div>
       </div>
     )
   }
@@ -231,11 +234,11 @@ export default function PracticePage() {
     }
 
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-page-bg flex items-center justify-center p-4">
         <div className="w-full max-w-md space-y-4">
           <button
             onClick={handleBackToLobby}
-            className="text-sm text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
+            className="text-sm text-[var(--text-tertiary)] hover:text-[var(--text-primary)] transition-colors"
           >
             ← Back
           </button>
@@ -257,11 +260,11 @@ export default function PracticePage() {
 
   // Lobby view
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-page-bg flex items-center justify-center p-4">
       <div className="w-full max-w-md space-y-4">
         <button
           onClick={() => router.back()}
-          className="text-sm text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
+          className="text-sm text-[var(--text-tertiary)] hover:text-[var(--text-primary)] transition-colors"
         >
           ← Back
         </button>
