@@ -262,8 +262,8 @@ export default function ActiveLessonPage() {
           {phase !== "complete" && (
             <div className="mt-3 w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
               <div
-                className="h-full rounded-full transition-all duration-500" style={{backgroundColor: 'var(--primary)'}}
-                style={{ width: `${((currentIndex + (phase === "feedback" ? 1 : 0)) / totalWords) * 100}%` }}
+                className="h-full rounded-full transition-all duration-500"
+                style={{ backgroundColor: 'var(--primary)', width: `${((currentIndex + (phase === "feedback" ? 1 : 0)) / totalWords) * 100}%` }}
               />
             </div>
           )}
