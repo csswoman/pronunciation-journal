@@ -9,8 +9,8 @@ function WaveformSVG() {
       {bars.map((h, i) => (
         <div
           key={i}
-          className="w-1 rounded-full" style={{backgroundColor: 'var(--primary)', opacity: 0.3}}
-          style={{ height: `${h}%` }}
+          className="w-1 rounded-full"
+          style={{ backgroundColor: 'var(--primary)', opacity: 0.3, height: `${h}%` }}
         />
       ))}
     </div>
