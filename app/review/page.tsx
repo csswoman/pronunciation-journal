@@ -154,7 +154,7 @@ export default function ReviewPage() {
           <p className="text-red-500">{error}</p>
           <button
             onClick={() => { setError(null); setSessionKey(k => k + 1) }}
-            className="px-4 py-2 rounded-lg bg-purple-600 text-white"
+            className="px-4 py-2 rounded-lg text-white" style={{backgroundColor: 'var(--primary)'}}
           >
             Retry
           </button>

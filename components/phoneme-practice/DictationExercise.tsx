@@ -50,19 +50,43 @@ export function DictationExercise({ exercise, onSubmit }: Props) {
     onSubmit(correct, value.trim())
   }
 
+  const inputStyle: React.CSSProperties = submitted
+    ? isCorrect
+      ? {
+          borderColor: 'var(--admonitions-color-tip)',
+          backgroundColor: 'oklch(.93 .05 180)',
+          color: 'var(--admonitions-color-tip)',
+        }
+      : {
+          borderColor: 'var(--admonitions-color-caution)',
+          backgroundColor: 'oklch(.95 .05 25)',
+          color: 'var(--admonitions-color-caution)',
+        }
+    : {
+        borderColor: 'var(--line-divider)',
+        backgroundColor: 'var(--card-bg)',
+        color: 'var(--text-primary)',
+      }
+
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">
+        <p className="text-sm mb-3" style={{ color: 'var(--text-secondary)' }}>
           Listen and type what you hear
         </p>
         <button
           onClick={() => exercise.targetWord && speak(exercise.targetWord)}
-          className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 font-bold text-3xl hover:bg-amber-100 dark:hover:bg-amber-900/50 transition-colors"
+          className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl font-bold text-3xl transition-colors"
+          style={{
+            backgroundColor: 'var(--btn-regular-bg)',
+            color: 'var(--admonitions-color-warning)',
+          }}
+          onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--btn-regular-bg-hover)')}
+          onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'var(--btn-regular-bg)')}
         >
           🔊
         </button>
-        <p className="text-xs text-gray-400 mt-2">Tap to replay</p>
+        <p className="text-xs mt-2" style={{ color: 'var(--text-tertiary)' }}>Tap to replay</p>
       </div>
 
       <div className="space-y-3">
@@ -73,18 +97,13 @@ export function DictationExercise({ exercise, onSubmit }: Props) {
           onChange={e => !submitted && setValue(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && handleSubmit()}
           placeholder="Type the word..."
-          className={`w-full px-4 py-3 rounded-xl border-2 text-center text-lg font-medium outline-none transition-colors
-            ${submitted
-              ? isCorrect
-                ? 'border-green-500 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300'
-                : 'border-red-500 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300'
-              : 'border-gray-200 dark:border-gray-700 focus:border-amber-400 dark:focus:border-amber-500 bg-white dark:bg-gray-800'
-            }`}
+          className="w-full px-4 py-3 rounded-xl border-2 text-center text-lg font-medium outline-none transition-colors"
+          style={inputStyle}
         />
 
         {submitted && !isCorrect && (
-          <p className="text-center text-sm text-gray-500 dark:text-gray-400">
-            Correct answer: <span className="font-bold text-green-600 dark:text-green-400">{exercise.targetWord}</span>
+          <p className="text-center text-sm" style={{ color: 'var(--text-secondary)' }}>
+            Correct answer: <span className="font-bold text-success">{exercise.targetWord}</span>
           </p>
         )}
       </div>
@@ -93,7 +112,7 @@ export function DictationExercise({ exercise, onSubmit }: Props) {
         <button
           onClick={handleSubmit}
           disabled={!value.trim()}
-          className="w-full py-3 rounded-xl bg-amber-500 text-white font-semibold disabled:opacity-40 hover:bg-amber-600 transition-colors"
+          className="btn-primary w-full py-3 rounded-xl font-semibold disabled:opacity-40"
         >
           Check
         </button>

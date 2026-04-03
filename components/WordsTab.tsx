@@ -87,7 +87,12 @@ export default function WordsTab({
             {isSelectionMode && selectedEntries.length > 0 && (
               <button
                 onClick={onDeleteSelected}
-                className="flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-medium transition-colors"
+                className="flex items-center gap-2 px-4 py-2 text-white rounded-lg text-sm font-medium transition-colors"
+                style={{
+                  backgroundColor: 'var(--admonitions-color-caution)',
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.9')}
+                onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

@@ -20,16 +20,24 @@ export default function RootLayout({
         <meta name="description" content="Track and improve your pronunciation" />
         <link rel="icon" href="/icon.svg" />
       </head>
-      <body className="bg-white dark:bg-gray-900 transition-colors" suppressHydrationWarning>
+      <body className="transition-colors" style={{ backgroundColor: 'var(--bg)', color: 'var(--text-primary)' }} suppressHydrationWarning>
         <Script
           id="theme-init"
           strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
             __html: `
+              // Initialize dark mode
               document.documentElement.classList.toggle(
                 'dark',
-                localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
+                localStorage.getItem('theme-mode') === 'dark' || 
+                (!localStorage.getItem('theme-mode') && window.matchMedia('(prefers-color-scheme: dark)').matches)
               );
+              
+              // Initialize hue
+              const savedHue = localStorage.getItem('theme-hue');
+              if (savedHue) {
+                document.documentElement.style.setProperty('--hue', savedHue);
+              }
             `,
           }}
         />

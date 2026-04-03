@@ -24,44 +24,51 @@ export function ExerciseCard({ current, total, exerciseType, children, feedback,
     <div className="w-full max-w-md mx-auto space-y-4">
       {/* Progress bar */}
       <div className="space-y-1">
-        <div className="flex justify-between text-xs text-gray-400">
+        <div className="flex justify-between text-xs" style={{ color: 'var(--text-tertiary)' }}>
           <span>{TYPE_LABELS[exerciseType] ?? exerciseType}</span>
           <span>{current} / {total}</span>
         </div>
-        <div className="h-2 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
+        <div className="h-2 rounded-full overflow-hidden" style={{ backgroundColor: 'var(--btn-regular-bg)' }}>
           <div
-            className="h-full bg-purple-500 transition-all duration-300 rounded-full"
-            style={{ width: `${(current / total) * 100}%` }}
+            className="h-full transition-all duration-300 rounded-full"
+            style={{
+              width: `${(current / total) * 100}%`,
+              backgroundColor: 'var(--primary)',
+            }}
           />
         </div>
       </div>
 
       {/* Exercise content */}
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+      <div className="rounded-2xl shadow-sm border p-6" style={{
+        backgroundColor: 'var(--card-bg)',
+        borderColor: 'var(--line-divider)',
+      }}>
         {children}
       </div>
 
       {/* Feedback + Next */}
       {feedback && (
-        <div className={`rounded-xl p-4 flex items-center justify-between
-          ${feedback.isCorrect
-            ? 'bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800'
-            : 'bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800'
-          }`}
+        <div
+          className="rounded-xl p-4 flex items-center justify-between border"
+          style={{
+            backgroundColor: feedback.isCorrect ? 'oklch(.9 .06 180)' : 'oklch(.93 .06 25)',
+            borderColor: feedback.isCorrect ? 'var(--admonitions-color-tip)' : 'var(--admonitions-color-caution)',
+          }}
         >
           <div className="flex items-center gap-2">
             <span className="text-xl">{feedback.isCorrect ? '✓' : '✗'}</span>
-            <span className={`font-semibold text-sm ${feedback.isCorrect ? 'text-green-700 dark:text-green-300' : 'text-red-700 dark:text-red-300'}`}>
+            <span className={`font-semibold text-sm ${feedback.isCorrect ? 'text-success' : 'text-error'}`}>
               {feedback.isCorrect ? 'Correct!' : 'Incorrect'}
             </span>
             {feedback.message && (
-              <span className="text-xs text-gray-500 dark:text-gray-400 ml-1">{feedback.message}</span>
+              <span className="text-xs ml-1" style={{ color: 'var(--text-secondary)' }}>{feedback.message}</span>
             )}
           </div>
           {onNext && (
             <button
               onClick={onNext}
-              className="px-4 py-1.5 rounded-lg bg-gray-800 dark:bg-gray-200 text-white dark:text-gray-800 text-sm font-semibold hover:opacity-90 transition-opacity"
+              className="btn-primary px-4 py-1.5 rounded-lg text-sm font-semibold"
             >
               {finishLabel ? 'Finish ✓' : 'Next →'}
             </button>

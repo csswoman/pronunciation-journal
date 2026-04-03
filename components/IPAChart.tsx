@@ -161,10 +161,10 @@ const PHONEMES: PhonemeData[] = [
 const DEFAULT_PHONEME = PHONEMES.find((p) => p.rawSymbol === "ə")!;
 
 // ─── Type colors ──────────────────────────────────────────────────────────────
-const TYPE_PILL: Record<string, string> = {
-  vowel:      "bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300",
-  consonant:  "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300",
-  diphthong:  "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300",
+const TYPE_PILL: Record<string, Record<string, string>> = {
+  vowel:      { light: 'var(--btn-regular-bg)', text: 'var(--primary)' },
+  consonant:  { light: 'var(--btn-regular-bg)', text: 'var(--primary)' },
+  diphthong:  { light: 'var(--btn-regular-bg)', text: 'var(--primary)' },
 };
 
 type FilterType = "all" | "vowel" | "consonant" | "diphthong";
@@ -186,21 +186,26 @@ function PhonemeCard({
   return (
     <button
       onClick={onSelect}
-      className={`
-        group relative text-left rounded-2xl p-4 border transition-all duration-200
-        ${isSelected
-          ? "bg-purple-700 border-purple-700 text-white shadow-lg shadow-purple-200 dark:shadow-purple-900/40"
-          : "bg-white dark:bg-gray-800 border-gray-100 dark:border-gray-700 hover:border-purple-300 dark:hover:border-purple-600 hover:shadow-md"
-        }
-      `}
+      className="group relative text-left rounded-2xl p-4 border transition-all duration-200"
+      style={{
+        backgroundColor: isSelected ? 'var(--primary)' : 'var(--card-bg)',
+        borderColor: isSelected ? 'var(--primary)' : 'var(--line-divider)',
+        color: isSelected ? 'white' : 'var(--text-primary)',
+      }}
     >
-      <span className={`text-2xl font-bold font-serif block mb-1 ${isSelected ? "text-white" : "text-gray-900 dark:text-white"}`}>
+      <span className="text-2xl font-bold font-serif block mb-1" style={{
+        color: isSelected ? 'white' : 'var(--text-primary)',
+      }}>
         {phoneme.symbol}
       </span>
-      <span className={`text-[10px] font-bold uppercase tracking-wider block mb-2 ${isSelected ? "text-purple-200" : "text-purple-500 dark:text-purple-400"}`}>
+      <span className="text-[10px] font-bold uppercase tracking-wider block mb-2" style={{
+        color: isSelected ? 'rgba(255,255,255,0.6)' : 'var(--primary)',
+      }}>
         {phoneme.category}
       </span>
-      <span className={`text-xs font-medium ${isSelected ? "text-purple-100" : "text-gray-400 dark:text-gray-500"}`}>
+      <span className="text-xs font-medium" style={{
+        color: isSelected ? 'rgba(255,255,255,0.5)' : 'var(--text-secondary)',
+      }}>
         {phoneme.example}
       </span>
 
@@ -217,11 +222,11 @@ function PhonemeCard({
       <span
         role="button"
         onClick={onPlay}
-        className={`
-          absolute top-2 right-2 w-6 h-6 rounded-full flex items-center justify-center text-[10px]
-          transition-opacity duration-150
-          ${isSelected ? "bg-white/20 text-white opacity-0 group-hover:opacity-100" : "bg-purple-100 dark:bg-purple-900/50 text-purple-600 dark:text-purple-400 opacity-0 group-hover:opacity-100"}
-        `}
+        className="absolute top-2 right-2 w-6 h-6 rounded-full flex items-center justify-center text-[10px] transition-opacity duration-150 opacity-0 group-hover:opacity-100"
+        style={{
+          backgroundColor: isSelected ? 'rgba(255,255,255,0.2)' : 'var(--btn-regular-bg)',
+          color: isSelected ? 'white' : 'var(--primary)',
+        }}
       >
         ▶
       </span>
@@ -246,32 +251,42 @@ function PhonemeRow({
   return (
     <button
       onClick={onSelect}
-      className={`
-        w-full text-left flex items-center gap-4 px-5 py-3 rounded-2xl border transition-all duration-200
-        ${isSelected
-          ? "bg-purple-700 border-purple-700 text-white"
-          : "bg-white dark:bg-gray-800 border-gray-100 dark:border-gray-700 hover:border-purple-300 dark:hover:border-purple-600"
-        }
-      `}
+      className="w-full text-left flex items-center gap-4 px-5 py-3 rounded-2xl border transition-all duration-200"
+      style={{
+        backgroundColor: isSelected ? 'var(--primary)' : 'var(--card-bg)',
+        borderColor: isSelected ? 'var(--primary)' : 'var(--line-divider)',
+        color: isSelected ? 'white' : 'var(--text-primary)',
+      }}
     >
-      <span className={`text-2xl font-serif font-bold w-16 shrink-0 ${isSelected ? "text-white" : "text-gray-900 dark:text-white"}`}>
+      <span className="text-2xl font-serif font-bold w-16 shrink-0" style={{
+        color: isSelected ? 'white' : 'var(--text-primary)',
+      }}>
         {phoneme.symbol}
       </span>
-      <span className={`text-xs font-bold uppercase tracking-wider w-28 shrink-0 ${isSelected ? "text-purple-200" : "text-purple-500 dark:text-purple-400"}`}>
+      <span className="text-xs font-bold uppercase tracking-wider w-28 shrink-0" style={{
+        color: isSelected ? 'rgba(255,255,255,0.6)' : 'var(--primary)',
+      }}>
         {phoneme.category}
       </span>
-      <span className={`flex-1 text-sm ${isSelected ? "text-purple-100" : "text-gray-500 dark:text-gray-400"}`}>
+      <span className="flex-1 text-sm" style={{
+        color: isSelected ? 'rgba(255,255,255,0.8)' : 'var(--text-secondary)',
+      }}>
         {phoneme.name}
       </span>
-      <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${isSelected ? "bg-white/20 text-white" : TYPE_PILL[phoneme.type]}`}>
+      <span className="text-xs font-medium px-2 py-0.5 rounded-full" style={{
+        backgroundColor: isSelected ? 'rgba(255,255,255,0.2)' : 'var(--btn-regular-bg)',
+        color: isSelected ? 'white' : 'var(--primary)',
+      }}>
         {phoneme.example}
       </span>
       <span
         role="button"
         onClick={onPlay}
-        className={`w-7 h-7 rounded-full flex items-center justify-center text-[10px] shrink-0
-          ${isSelected ? "bg-white/20 text-white" : "bg-purple-100 dark:bg-purple-900/50 text-purple-600 dark:text-purple-400"}
-        `}
+        className="w-7 h-7 rounded-full flex items-center justify-center text-[10px] shrink-0"
+        style={{
+          backgroundColor: isSelected ? 'rgba(255,255,255,0.2)' : 'var(--btn-regular-bg)',
+          color: isSelected ? 'white' : 'var(--primary)',
+        }}
       >
         {isPlaying ? "■" : "▶"}
       </span>
@@ -336,13 +351,12 @@ export default function IPAChart() {
           <button
             key={tab.id}
             onClick={() => setActiveFilter(tab.id)}
-            className={`
-              flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200
-              ${activeFilter === tab.id
-                ? "bg-[#160A34] text-white shadow-md"
-                : "bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700"
-              }
-            `}
+            className="flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200"
+            style={{
+              backgroundColor: activeFilter === tab.id ? 'var(--primary)' : 'var(--card-bg)',
+              color: activeFilter === tab.id ? 'white' : 'var(--text-secondary)',
+              border: `1px solid ${activeFilter === tab.id ? 'var(--primary)' : 'var(--line-divider)'}`,
+            }}
           >
             <span>{tab.icon}</span>
             {tab.label}
@@ -357,42 +371,68 @@ export default function IPAChart() {
         <div className="space-y-4">
 
           {/* Featured Phoneme Card */}
-          <div className="bg-white dark:bg-gray-800 rounded-3xl p-6 shadow-sm border border-white/80 dark:border-gray-700">
-            <p className="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-4">
+          <div className="rounded-3xl p-6 shadow-sm border" style={{
+            backgroundColor: 'var(--card-bg)',
+            borderColor: 'var(--line-divider)',
+          }}>
+            <p className="text-[10px] font-bold uppercase tracking-widest mb-4" style={{
+              color: 'var(--text-secondary)',
+            }}>
               Featured Phoneme
             </p>
 
             <div className="flex items-center gap-4 mb-1">
-              <span className="text-6xl font-serif text-gray-900 dark:text-white leading-none">
+              <span className="text-6xl font-serif leading-none" style={{
+                color: 'var(--text-primary)',
+              }}>
                 {selectedPhoneme.symbol}
               </span>
               <button
                 onClick={() => playSound(selectedPhoneme.rawSymbol)}
                 disabled={!AUDIO_MAP[selectedPhoneme.rawSymbol]}
-                className="w-12 h-12 bg-green-500 hover:bg-green-600 disabled:opacity-40 disabled:cursor-not-allowed rounded-full flex items-center justify-center text-white text-lg shadow-md shadow-green-200 dark:shadow-green-900/40 transition-colors"
+                className="w-12 h-12 disabled:opacity-40 disabled:cursor-not-allowed rounded-full flex items-center justify-center text-white text-lg transition-colors"
+                style={{
+                  backgroundColor: 'var(--admonitions-color-tip)',
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.9')}
+                onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
               >
                 {playingSymbol === selectedPhoneme.rawSymbol ? "■" : "▶"}
               </button>
             </div>
 
-            <p className="text-gray-400 dark:text-gray-500 text-sm font-semibold mb-4">
+            <p className="text-sm font-semibold mb-4" style={{
+              color: 'var(--text-secondary)',
+            }}>
               {selectedPhoneme.name}
             </p>
 
             {/* Articulatory placeholder */}
-            <div className="bg-[#F8F4FF] dark:bg-purple-900/20 rounded-2xl h-28 flex items-center justify-center mb-4 overflow-hidden relative">
-              <span className="text-8xl font-serif text-purple-300 dark:text-purple-700 select-none leading-none">
+            <div className="rounded-2xl h-28 flex items-center justify-center mb-4 overflow-hidden relative" style={{
+              backgroundColor: 'var(--btn-regular-bg)',
+            }}>
+              <span className="text-8xl font-serif select-none leading-none" style={{
+                color: 'var(--primary)',
+                opacity: 0.3,
+              }}>
                 {selectedPhoneme.symbol}
               </span>
-              <span className={`absolute bottom-2 right-2 text-[10px] font-bold uppercase px-2 py-0.5 rounded-full ${TYPE_PILL[selectedPhoneme.type]}`}>
+              <span className="absolute bottom-2 right-2 text-[10px] font-bold uppercase px-2 py-0.5 rounded-full" style={{
+                backgroundColor: TYPE_PILL[selectedPhoneme.type].light,
+                color: TYPE_PILL[selectedPhoneme.type].text,
+              }}>
                 {selectedPhoneme.type}
               </span>
             </div>
 
             <ul className="space-y-2">
               {selectedPhoneme.tips.map((tip, i) => (
-                <li key={i} className="flex items-start gap-2 text-sm text-gray-600 dark:text-gray-400">
-                  <span className="text-green-500 mt-0.5 shrink-0">●</span>
+                <li key={i} className="flex items-start gap-2 text-sm" style={{
+                  color: 'var(--text-secondary)',
+                }}>
+                  <span className="mt-0.5 shrink-0" style={{
+                    color: 'var(--admonitions-color-tip)',
+                  }}>●</span>
                   {tip}
                 </li>
               ))}
@@ -400,12 +440,22 @@ export default function IPAChart() {
           </div>
 
           {/* Practice Mode */}
-          <div className="bg-[#160A34] rounded-3xl p-6 text-white">
+          <div className="rounded-3xl p-6 text-white" style={{
+            backgroundColor: 'var(--primary)',
+          }}>
             <h3 className="font-bold text-base mb-1">Practice Mode</h3>
-            <p className="text-white/50 text-sm leading-relaxed mb-5">
+            <p className="text-sm leading-relaxed mb-5" style={{
+              color: 'rgba(255, 255, 255, 0.7)',
+            }}>
               Compare your pronunciation with AI-powered feedback.
             </p>
-            <button className="w-full bg-white/10 hover:bg-white/20 border border-white/20 text-white rounded-2xl py-3 font-semibold text-sm transition-colors flex items-center justify-center gap-2">
+            <button className="w-full border text-white rounded-2xl py-3 font-semibold text-sm transition-colors flex items-center justify-center gap-2" style={{
+              backgroundColor: 'rgba(255,255,255,0.15)',
+              borderColor: 'rgba(255,255,255,0.3)',
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.25)')}
+            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.15)')}
+            >
               <span>🎤</span>
               Enable Microphone
             </button>
@@ -415,27 +465,32 @@ export default function IPAChart() {
         {/* ── Right Panel: Grid ── */}
         <div>
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-bold text-gray-900 dark:text-white">
+            <h2 className="text-lg font-bold" style={{
+              color: 'var(--text-primary)',
+            }}>
               IPA Symbols Grid
             </h2>
-            <div className="flex gap-1 bg-white dark:bg-gray-800 rounded-xl p-1 border border-gray-100 dark:border-gray-700">
+            <div className="flex gap-1 rounded-xl p-1 border" style={{
+              backgroundColor: 'var(--card-bg)',
+              borderColor: 'var(--line-divider)',
+            }}>
               <button
                 onClick={() => setGridView("grid")}
-                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-                  gridView === "grid"
-                    ? "bg-purple-100 dark:bg-purple-900/50 text-purple-700 dark:text-purple-300"
-                    : "text-gray-400 hover:text-gray-600"
-                }`}
+                className="px-3 py-1.5 rounded-lg text-sm font-medium transition-colors"
+                style={{
+                  backgroundColor: gridView === "grid" ? 'var(--btn-regular-bg)' : 'transparent',
+                  color: gridView === "grid" ? 'var(--primary)' : 'var(--text-secondary)',
+                }}
               >
                 ⊞
               </button>
               <button
                 onClick={() => setGridView("list")}
-                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-                  gridView === "list"
-                    ? "bg-purple-100 dark:bg-purple-900/50 text-purple-700 dark:text-purple-300"
-                    : "text-gray-400 hover:text-gray-600"
-                }`}
+                className="px-3 py-1.5 rounded-lg text-sm font-medium transition-colors"
+                style={{
+                  backgroundColor: gridView === "list" ? 'var(--btn-regular-bg)' : 'transparent',
+                  color: gridView === "list" ? 'var(--primary)' : 'var(--text-secondary)',
+                }}
               >
                 ☰
               </button>
@@ -473,7 +528,19 @@ export default function IPAChart() {
           {/* Custom Set hint */}
           {filteredPhonemes.length > 0 && (
             <div className="mt-4 flex justify-center">
-              <button className="flex items-center gap-2 text-sm text-gray-400 dark:text-gray-500 hover:text-purple-600 dark:hover:text-purple-400 transition-colors border-2 border-dashed border-gray-200 dark:border-gray-700 hover:border-purple-300 dark:hover:border-purple-600 px-6 py-3 rounded-2xl font-medium">
+              <button className="flex items-center gap-2 text-sm transition-colors px-6 py-3 rounded-2xl font-medium border-2 border-dashed" style={{
+                color: 'var(--text-secondary)',
+                borderColor: 'var(--line-divider)',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = 'var(--primary)';
+                e.currentTarget.style.borderColor = 'var(--primary)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = 'var(--text-secondary)';
+                e.currentTarget.style.borderColor = 'var(--line-divider)';
+              }}
+              >
                 <span className="text-lg">+</span>
                 Custom Set
               </button>
@@ -483,18 +550,32 @@ export default function IPAChart() {
       </div>
 
       {/* Smart Phonology AI Banner */}
-      <div className="bg-white dark:bg-gray-800 rounded-3xl p-5 flex flex-col sm:flex-row items-start sm:items-center gap-4 border border-gray-100 dark:border-gray-700 shadow-sm">
-        <div className="w-12 h-12 bg-[#160A34] dark:bg-purple-900 rounded-2xl flex items-center justify-center text-white text-xl shrink-0">
+      <div className="rounded-3xl p-5 flex flex-col sm:flex-row items-start sm:items-center gap-4 border" style={{
+        backgroundColor: 'var(--card-bg)',
+        borderColor: 'var(--line-divider)',
+      }}>
+        <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-white text-xl shrink-0" style={{
+          backgroundColor: 'var(--primary)',
+        }}>
           ✦
         </div>
         <div className="flex-1">
-          <h3 className="font-bold text-gray-900 dark:text-white mb-0.5">Smart Phonology AI</h3>
-          <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
+          <h3 className="font-bold mb-0.5" style={{color: 'var(--text-primary)'}}>
+            Smart Phonology AI
+          </h3>
+          <p className="text-sm leading-relaxed" style={{
+            color: 'var(--text-secondary)',
+          }}>
             Our AI detects nuances in your accent and suggests specific IPA targets to improve clarity.
             Click any symbol to start training.
           </p>
         </div>
-        <button className="bg-[#160A34] hover:bg-purple-900 text-white px-6 py-3 rounded-2xl font-semibold text-sm transition-colors shrink-0 whitespace-nowrap">
+        <button className="text-white px-6 py-3 rounded-2xl font-semibold text-sm transition-colors shrink-0 whitespace-nowrap" style={{
+          backgroundColor: 'var(--primary)',
+        }}
+        onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--btn-regular-bg-hover)')}
+        onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'var(--primary)')}
+        >
           Analyze Voice
         </button>
       </div>

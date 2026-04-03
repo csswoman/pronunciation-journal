@@ -29,15 +29,45 @@ export function PickSoundExercise({ exercise, onSubmit }: Props) {
     onSubmit(isCorrect, label)
   }
 
+  function getOptionStyle(id: string): React.CSSProperties {
+    const isCorrect = exercise.correctIds.includes(id)
+    if (submitted) {
+      if (isCorrect) return {
+        borderColor: 'var(--admonitions-color-tip)',
+        backgroundColor: 'oklch(.93 .05 180)',
+        color: 'var(--admonitions-color-tip)',
+      }
+      if (selected === id) return {
+        borderColor: 'var(--admonitions-color-caution)',
+        backgroundColor: 'oklch(.95 .05 25)',
+        color: 'var(--admonitions-color-caution)',
+      }
+      return {
+        borderColor: 'var(--line-divider)',
+        color: 'var(--text-tertiary)',
+      }
+    }
+    return {
+      borderColor: 'var(--line-divider)',
+      color: 'var(--text-primary)',
+    }
+  }
+
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">
+        <p className="text-sm mb-3" style={{ color: 'var(--text-secondary)' }}>
           Which sound does this word contain?
         </p>
         <button
           onClick={() => exercise.targetWord && speak(exercise.targetWord)}
-          className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 font-bold text-2xl hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors"
+          className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl font-bold text-2xl transition-colors"
+          style={{
+            backgroundColor: 'var(--btn-regular-bg)',
+            color: 'var(--primary)',
+          }}
+          onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--btn-regular-bg-hover)')}
+          onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'var(--btn-regular-bg)')}
         >
           <span>🔊</span>
           {exercise.targetWord}
@@ -45,26 +75,16 @@ export function PickSoundExercise({ exercise, onSubmit }: Props) {
       </div>
 
       <div className="grid grid-cols-2 gap-3">
-        {exercise.options.map(option => {
-          const isCorrect = exercise.correctIds.includes(option.id)
-          let cls =
-            'p-4 rounded-xl border-2 text-center font-mono text-lg font-bold transition-all cursor-pointer '
-          if (submitted) {
-            if (isCorrect)
-              cls += 'border-green-500 bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-300'
-            else if (selected === option.id)
-              cls += 'border-red-500 bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-300'
-            else
-              cls += 'border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500'
-          } else {
-            cls += 'border-gray-200 dark:border-gray-700 hover:border-blue-400 dark:hover:border-blue-500'
-          }
-          return (
-            <button key={option.id} className={cls} onClick={() => handleSelect(option.id)}>
-              {option.label}
-            </button>
-          )
-        })}
+        {exercise.options.map(option => (
+          <button
+            key={option.id}
+            className="p-4 rounded-xl border-2 text-center font-mono text-lg font-bold transition-all cursor-pointer"
+            style={getOptionStyle(option.id)}
+            onClick={() => handleSelect(option.id)}
+          >
+            {option.label}
+          </button>
+        ))}
       </div>
     </div>
   )

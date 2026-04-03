@@ -51,27 +51,30 @@ export default function ProgressPage() {
 
   if (!stats) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
-        <div className="animate-spin w-8 h-8 border-2 border-indigo-500 border-t-transparent rounded-full" />
+      <div className="min-h-screen bg-page-bg flex items-center justify-center">
+        <div className="animate-spin w-8 h-8 border-2 border-t-transparent rounded-full" style={{
+          borderColor: 'var(--line-divider)',
+          borderTopColor: 'transparent',
+        }} />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-page-bg">
       {/* Header */}
-      <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+      <header className="bg-card-bg border-b border-line-divider">
         <div className="max-w-4xl mx-auto px-4 py-6">
           <div className="flex items-center gap-3">
             <Link
               href="/"
-              className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+              className="p-2 rounded-lg hover:bg-btn-plain-hover transition-colors"
             >
-              <svg className="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="w-5 h-5 text-[var(--text-secondary)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
             </Link>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+            <h1 className="text-2xl font-bold text-[var(--text-primary)]">
               My Progress
             </h1>
           </div>
@@ -85,31 +88,31 @@ export default function ProgressPage() {
             icon="🔥"
             value={stats.currentStreak}
             label="Day Streak"
-            color="text-orange-500"
+            color="text-warning"
           />
           <StatCard
             icon="⚡"
             value={stats.totalXP}
             label="Total XP"
-            color="text-yellow-500"
+            color="text-warning"
           />
           <StatCard
             icon="🎯"
             value={`${stats.averageAccuracy}%`}
             label="Avg Accuracy"
-            color="text-green-500"
+            color="text-success"
           />
           <StatCard
             icon="📚"
             value={stats.totalAttempts}
             label="Total Attempts"
-            color="text-blue-500"
+            color="text-info"
           />
         </div>
 
         {/* Weekly Activity */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+        <div className="bg-card-bg rounded-2xl border border-line-divider p-6">
+          <h2 className="text-lg font-semibold text-[var(--text-primary)] mb-4">
             Weekly Activity
           </h2>
           <div className="flex items-end gap-2 h-32">
@@ -124,20 +127,21 @@ export default function ProgressPage() {
                 <div key={day.date} className="flex-1 flex flex-col items-center gap-1">
                   <div className="w-full flex flex-col items-center justify-end h-24">
                     {dayData && (
-                      <span className="text-xs text-gray-500 mb-1">
+                      <span className="text-xs text-[var(--text-secondary)] mb-1">
                         {dayData.totalAttempts}
                       </span>
                     )}
                     <div
-                      className={`w-full max-w-[40px] rounded-t-lg transition-all duration-500 ${
-                        dayData
-                          ? "bg-gradient-to-t from-indigo-600 to-indigo-400"
-                          : "bg-gray-200 dark:bg-gray-700"
-                      }`}
-                      style={{ height: `${height}%` }}
+                      className="w-full max-w-[40px] rounded-t-lg transition-all duration-500"
+                      style={{
+                        height: `${height}%`,
+                        background: dayData
+                          ? 'linear-gradient(to top, var(--primary), var(--title-active))'
+                          : 'var(--btn-regular-bg)',
+                      }}
                     />
                   </div>
-                  <span className="text-xs text-gray-500 dark:text-gray-400">
+                  <span className="text-xs text-[var(--text-secondary)]">
                     {day.label}
                   </span>
                 </div>
@@ -147,12 +151,12 @@ export default function ProgressPage() {
         </div>
 
         {/* Recent Attempts */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+        <div className="bg-card-bg rounded-2xl border border-line-divider p-6">
+          <h2 className="text-lg font-semibold text-[var(--text-primary)] mb-4">
             Recent Attempts
           </h2>
           {recentAttempts.length === 0 ? (
-            <p className="text-sm text-gray-500 text-center py-8">
+            <p className="text-sm text-center py-8 text-[var(--text-secondary)]">
               No attempts yet. Start a lesson to see your progress!
             </p>
           ) : (
@@ -160,15 +164,15 @@ export default function ProgressPage() {
               {recentAttempts.map((attempt, idx) => (
                 <div
                   key={idx}
-                  className="flex items-center justify-between py-2 px-3 rounded-lg bg-gray-50 dark:bg-gray-700/50"
+                  className="flex items-center justify-between py-2 px-3 rounded-lg bg-btn-regular"
                 >
                   <div className="flex items-center gap-3">
                     <span>{attempt.isCorrect ? "✅" : "❌"}</span>
                     <div>
-                      <p className="text-sm font-medium text-gray-800 dark:text-gray-200">
+                      <p className="text-sm font-medium text-[var(--text-primary)]">
                         {attempt.word}
                       </p>
-                      <p className="text-xs text-gray-400">
+                      <p className="text-xs text-[var(--text-tertiary)]">
                         {new Date(attempt.timestamp).toLocaleDateString()}
                       </p>
                     </div>
@@ -195,10 +199,10 @@ function StatCard({
   color: string;
 }) {
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-4 text-center">
+    <div className="bg-card-bg rounded-2xl border border-line-divider p-4 text-center">
       <p className="text-2xl mb-1">{icon}</p>
       <p className={`text-2xl font-bold ${color}`}>{value}</p>
-      <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{label}</p>
+      <p className="text-xs mt-1 text-[var(--text-secondary)]">{label}</p>
     </div>
   );
 }

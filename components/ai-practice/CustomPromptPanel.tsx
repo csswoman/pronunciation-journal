@@ -61,7 +61,12 @@ export default function CustomPromptPanel({
       <button
         type="submit"
         disabled={!text.trim() || isDisabled}
-        className="flex-shrink-0 w-9 h-9 rounded-xl bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-200 dark:disabled:bg-gray-700 text-white disabled:text-gray-400 transition-colors flex items-center justify-center"
+        className="flex-shrink-0 w-9 h-9 rounded-xl disabled:bg-gray-200 dark:disabled:bg-gray-700 text-white disabled:text-gray-400 transition-colors flex items-center justify-center"
+        style={{
+          backgroundColor: 'var(--primary)',
+        }}
+        onMouseEnter={(e) => !e.currentTarget.disabled && (e.currentTarget.style.backgroundColor = 'var(--btn-regular-bg-hover)')}
+        onMouseLeave={(e) => !e.currentTarget.disabled && (e.currentTarget.style.backgroundColor = 'var(--primary)')}
         aria-label="Send"
       >
         {isDisabled ? (

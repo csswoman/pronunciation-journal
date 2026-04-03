@@ -19,32 +19,32 @@ export function SessionSummary({ answers, soundIpa, nextReview, onPracticeAgain 
     ? new Intl.DateTimeFormat('en-US', { weekday: 'long', month: 'short', day: 'numeric' }).format(nextReview)
     : null
 
+  const accuracyColor =
+    accuracy >= 80 ? 'var(--admonitions-color-tip)' :
+    accuracy >= 50 ? 'var(--admonitions-color-warning)' :
+    'var(--admonitions-color-caution)'
+
   return (
     <div className="w-full max-w-md mx-auto space-y-6 text-center">
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-8 space-y-4">
-        <div className="text-6xl font-bold font-mono text-purple-600 dark:text-purple-400">
+      <div className="rounded-2xl shadow-sm border p-8 space-y-4" style={{
+        backgroundColor: 'var(--card-bg)',
+        borderColor: 'var(--line-divider)',
+      }}>
+        <div className="text-6xl font-bold font-mono" style={{ color: 'var(--primary)' }}>
           {soundIpa}
         </div>
 
-        <div
-          className={`text-5xl font-bold ${
-            accuracy >= 80
-              ? 'text-green-600 dark:text-green-400'
-              : accuracy >= 50
-              ? 'text-amber-500 dark:text-amber-400'
-              : 'text-red-500 dark:text-red-400'
-          }`}
-        >
+        <div className="text-5xl font-bold" style={{ color: accuracyColor }}>
           {accuracy}%
         </div>
 
-        <p className="text-gray-500 dark:text-gray-400 text-sm">
+        <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
           {correct} of {total} correct
         </p>
 
         {nextReviewLabel && (
-          <p className="text-xs text-gray-400 dark:text-gray-500">
-            Next review: <span className="font-medium text-gray-600 dark:text-gray-300">{nextReviewLabel}</span>
+          <p className="text-xs" style={{ color: 'var(--text-tertiary)' }}>
+            Next review: <span className="font-medium" style={{ color: 'var(--text-secondary)' }}>{nextReviewLabel}</span>
           </p>
         )}
       </div>
@@ -52,13 +52,17 @@ export function SessionSummary({ answers, soundIpa, nextReview, onPracticeAgain 
       <div className="space-y-2">
         <button
           onClick={onPracticeAgain}
-          className="w-full py-3 rounded-xl bg-purple-600 text-white font-semibold hover:bg-purple-700 transition-colors"
+          className="btn-primary w-full py-3 rounded-xl font-semibold"
         >
           Practice again
         </button>
         <Link
           href="/dashboard"
-          className="block w-full py-3 rounded-xl border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 font-semibold hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+          className="block w-full py-3 rounded-xl border font-semibold transition-colors hover:bg-btn-plain-hover"
+          style={{
+            borderColor: 'var(--line-divider)',
+            color: 'var(--text-secondary)',
+          }}
         >
           Back to dashboard
         </Link>
