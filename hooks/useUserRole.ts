@@ -19,16 +19,20 @@ export function useUserRole() {
     }
 
     const supabase = getSupabaseBrowserClient();
-    supabase
-      .from("user_profiles")
-      .select("role")
-      .eq("id", user.id)
-      .maybeSingle()
-      .then(({ data }) => {
+    (async () => {
+      try {
+        const { data } = await supabase
+          .from("user_profiles")
+          .select("role")
+          .eq("id", user.id)
+          .maybeSingle();
         setRole((data?.role as UserRole) ?? "free");
-      })
-      .catch(() => setRole("free"))
-      .finally(() => setLoading(false));
+      } catch (e) {
+        setRole("free");
+      } finally {
+        setLoading(false);
+      }
+    })();
   }, [user?.id]);
 
   return { role, loading, isPremium: role === "premium" };
