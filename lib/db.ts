@@ -1,6 +1,11 @@
 import Dexie, { type Table } from "dexie";
 import type { AIConversation, AISavedWord, Attempt, DailyProgress, FavoriteWord, SRSData, UserStats } from "./types";
 
+interface LessonSessionOffset {
+  lessonId: string; // PK
+  offset: number;   // next starting index
+}
+
 class PronunciationDB extends Dexie {
   attempts!: Table<Attempt, number>;
   srsData!: Table<SRSData, string>;
@@ -9,6 +14,7 @@ class PronunciationDB extends Dexie {
   favorites!: Table<FavoriteWord, number>;
   aiConversations!: Table<AIConversation, number>;
   aiWords!: Table<AISavedWord, number>;
+  lessonOffsets!: Table<LessonSessionOffset, string>;
 
   constructor() {
     super("pronunciation-journal");
@@ -36,6 +42,17 @@ class PronunciationDB extends Dexie {
       favorites:       "++id, word, lessonId, addedAt",
       aiConversations: "++id, templateId, createdAt, updatedAt",
       aiWords:         "++id, word, conversationId, savedAt, difficulty",
+    });
+
+    this.version(4).stores({
+      attempts:        "++id, word, lessonId, timestamp",
+      srsData:         "wordId, word, nextReview",
+      dailyProgress:   "++id, date",
+      userStats:       "++id",
+      favorites:       "++id, word, lessonId, addedAt",
+      aiConversations: "++id, templateId, createdAt, updatedAt",
+      aiWords:         "++id, word, conversationId, savedAt, difficulty",
+      lessonOffsets:   "lessonId",
     });
   }
 }
@@ -254,4 +271,25 @@ export async function getNeedsPracticeWords(): Promise<{ word: string; lessonId:
 
   // Sort by worst accuracy first
   return result.sort((a, b) => a.bestAccuracy - b.bestAccuracy);
+}
+
+// ── Lesson Session Offset Helpers ──
+// Tracks which chunk of words to show next for DB-generated lessons (10 words/session)
+
+export const LESSON_SESSION_SIZE = 10
+
+export async function getLessonOffset(lessonId: string): Promise<number> {
+  const row = await db.lessonOffsets.get(lessonId)
+  return row?.offset ?? 0
+}
+
+export async function advanceLessonOffset(lessonId: string, totalWords: number): Promise<number> {
+  const current = await getLessonOffset(lessonId)
+  const next = (current + LESSON_SESSION_SIZE) % totalWords
+  await db.lessonOffsets.put({ lessonId, offset: next })
+  return next
+}
+
+export async function resetLessonOffset(lessonId: string): Promise<void> {
+  await db.lessonOffsets.delete(lessonId)
 }

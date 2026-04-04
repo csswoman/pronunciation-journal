@@ -752,14 +752,20 @@ CREATE POLICY "Delete own prompts" ON "public"."ai_prompts" FOR DELETE TO "authe
 
 
 
-CREATE POLICY "Insert deck entry with limit" ON "public"."deck_entries" FOR INSERT TO "authenticated" WITH CHECK (((EXISTS ( SELECT 1
-   FROM "public"."decks"
-  WHERE (("decks"."id" = "deck_entries"."deck_id") AND ("decks"."user_id" = "auth"."uid"())))) AND ((( SELECT "user_profiles"."role"
-   FROM "public"."user_profiles"
-  WHERE ("user_profiles"."id" = "auth"."uid"())) = 'premium'::"text") OR (( SELECT "count"(*) AS "count"
-   FROM ("public"."deck_entries" "de"
-     JOIN "public"."decks" "d" ON (("d"."id" = "de"."deck_id")))
-  WHERE ("d"."id" = "deck_entries"."deck_id")) < 30))));
+-- Simplified insert policy for deck_entries: only allow inserting into a deck
+-- if the deck belongs to the authenticated user. The previous policy used a
+-- subquery referencing the same relation which caused "infinite recursion"
+-- errors under RLS. Enforce per-deck limits at the API layer or via a
+-- security-definer function if needed.
+CREATE POLICY "Insert deck entry owner only" ON public.deck_entries
+    FOR INSERT TO authenticated
+    WITH CHECK (
+        EXISTS (
+            SELECT 1 FROM public.decks
+            WHERE decks.id = deck_entries.deck_id
+                AND decks.user_id = auth.uid()
+        )
+    );
 
 
 

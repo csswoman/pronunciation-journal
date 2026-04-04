@@ -45,19 +45,21 @@ export function usePracticeSession(exercises: Exercise[]) {
           timestamp: Date.now(),
         },
       }
-      setState(prev => {
-        const answers = [...prev.answers, sessionAnswer]
-        const nextIndex = prev.currentIndex + 1
-        return {
-          ...prev,
-          answers,
-          currentIndex: nextIndex,
-          isComplete: nextIndex >= prev.exercises.length,
-        }
-      })
+      setState(prev => ({ ...prev, answers: [...prev.answers, sessionAnswer] }))
     },
     [currentExercise]
   )
+
+  const advance = useCallback(() => {
+    setState(prev => {
+      const nextIndex = prev.currentIndex + 1
+      return {
+        ...prev,
+        currentIndex: nextIndex,
+        isComplete: nextIndex >= prev.exercises.length,
+      }
+    })
+  }, [])
 
   const sessionAccuracy =
     state.answers.length > 0
@@ -72,5 +74,6 @@ export function usePracticeSession(exercises: Exercise[]) {
     isComplete: state.isComplete,
     sessionAccuracy,
     submitAnswer,
+    advance,
   }
 }
