@@ -18,15 +18,26 @@ export default function DashboardPage() {
 
   useEffect(() => {
     if (!user) return
-    Promise.all([
-      getAllProgress(user.id),
-      getAllSounds(),
-    ])
-      .then(([progressData, soundsData]) => {
-        setProgress(progressData)
-        setSounds(soundsData)
-      })
-      .catch(e => { console.error(e); setError('Failed to load progress.') })
+
+    function load() {
+      Promise.all([
+        getAllProgress(user!.id),
+        getAllSounds(),
+      ])
+        .then(([progressData, soundsData]) => {
+          setProgress(progressData)
+          setSounds(soundsData)
+        })
+        .catch(e => { console.error(e); setError('Failed to load progress.') })
+    }
+
+    load()
+
+    function onVisible() {
+      if (document.visibilityState === 'visible') load()
+    }
+    document.addEventListener('visibilitychange', onVisible)
+    return () => document.removeEventListener('visibilitychange', onVisible)
   }, [user])
 
   if (error) {
@@ -85,6 +96,8 @@ export default function DashboardPage() {
         sounds={sounds}
         onSelectSound={handleSelectSound}
         soundStatuses={soundStatuses}
+        dueCount={dueCount}
+        onStartReview={handleStartReview}
       />
 
       {/* Expert Insight Card */}

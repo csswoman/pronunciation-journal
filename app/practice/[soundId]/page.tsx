@@ -108,12 +108,14 @@ export default function PracticePage() {
   }
 
   async function handleNext() {
-    if (session.isComplete && user && exercises) {
+    setCurrentFeedback(null)
+    setExerciseStartedAt(Date.now())
+    const isLast = session.currentIndex + 1 >= session.total
+    session.advance()
+    if (isLast && user && exercises) {
       await finishSession()
       setView('summary')
     }
-    setCurrentFeedback(null)
-    setExerciseStartedAt(Date.now())
   }
 
   async function finishSession() {
@@ -212,7 +214,7 @@ export default function PracticePage() {
     // Don't return null until the user acknowledges the feedback.
     if (!ex && !currentFeedback) return null
 
-    const isLastExercise = session.isComplete
+    const isLastExercise = session.currentIndex + 1 >= session.total
     const displayType = ex?.type ?? session.answers[session.answers.length - 1]?.exerciseType ?? 'pick_word'
     const displayIndex = Math.min(session.currentIndex, session.total)
 
@@ -244,6 +246,7 @@ export default function PracticePage() {
           </button>
 
           <ExerciseCard
+            key={session.currentIndex}
             current={displayIndex}
             total={session.total}
             exerciseType={displayType}

@@ -93,17 +93,22 @@ export default function ReviewPage() {
 
   const session = usePracticeSession(exercises ?? [])
 
+  useEffect(() => {
+    if (session.isComplete && user) {
+      finishSession()
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [session.isComplete])
+
   async function handleAnswer(isCorrect: boolean, userAnswer: string) {
     setCurrentFeedback({ isCorrect })
     session.submitAnswer({ isCorrect, userAnswer, startedAt: exerciseStartedAt })
   }
 
   async function handleNext() {
-    if (session.isComplete && user) {
-      await finishSession()
-    }
     setCurrentFeedback(null)
     setExerciseStartedAt(Date.now())
+    session.advance()
   }
 
   async function finishSession() {
@@ -210,11 +215,12 @@ export default function ReviewPage() {
         </button>
 
         <ExerciseCard
+          key={session.currentIndex}
           current={session.currentIndex + 1}
           total={session.total}
           exerciseType={ex.type}
           feedback={currentFeedback}
-          onNext={currentFeedback ? handleNext : undefined}
+          onNext={handleNext}
         >
           {renderExercise()}
         </ExerciseCard>

@@ -11,10 +11,27 @@ interface PracticeLedgerProps {
   sounds: Sound[]
   onSelectSound: (soundId: number) => void
   soundStatuses: Record<number, SoundStatus>
+  dueCount?: number
+  onStartReview?: () => void
 }
 
-export function PracticeLedger({ sounds, onSelectSound, soundStatuses }: PracticeLedgerProps) {
-  const [selectedCategory, setSelectedCategory] = useState<Category>('consonants')
+export function PracticeLedger({ sounds, onSelectSound, soundStatuses, dueCount = 0, onStartReview }: PracticeLedgerProps) {
+  // Default to the category that has the most unlocked sounds
+  const defaultCategory = (): Category => {
+    const counts = { vowels: 0, consonants: 0, diphthongs: 0 }
+    sounds.forEach(s => {
+      const status = soundStatuses[s.id]
+      if (status && status !== 'locked') {
+        if (s.category === 'vowel') counts.vowels++
+        else if (s.category === 'consonant') counts.consonants++
+        else if (s.category === 'diphthong') counts.diphthongs++
+      }
+    })
+    if (counts.vowels >= counts.consonants && counts.vowels >= counts.diphthongs) return 'vowels'
+    if (counts.consonants >= counts.diphthongs) return 'consonants'
+    return 'diphthongs'
+  }
+  const [selectedCategory, setSelectedCategory] = useState<Category>(defaultCategory)
 
   const categories = [
     { id: 'vowels' as const, label: 'Vowels' },
@@ -72,6 +89,27 @@ export function PracticeLedger({ sounds, onSelectSound, soundStatuses }: Practic
   return (
     <div className="w-full space-y-4">
       <h2 className="text-lg font-semibold text-[var(--text-primary)]">Practice Ledger</h2>
+
+      {/* Review banner */}
+      {dueCount > 0 && onStartReview && (
+        <div className="flex items-center justify-between rounded-xl px-4 py-3 border"
+          style={{ backgroundColor: 'oklch(.9 .08 25)', borderColor: 'var(--admonitions-color-caution)' }}
+        >
+          <div>
+            <p className="text-sm font-semibold" style={{ color: 'oklch(.5 .2 25)' }}>
+              {dueCount} sound{dueCount > 1 ? 's' : ''} ready for review
+            </p>
+            <p className="text-xs" style={{ color: 'oklch(.6 .15 25)' }}>Keep your streak going!</p>
+          </div>
+          <button
+            onClick={onStartReview}
+            className="px-4 py-1.5 rounded-lg text-sm font-semibold text-white"
+            style={{ backgroundColor: 'oklch(.6 .2 25)' }}
+          >
+            Start Review →
+          </button>
+        </div>
+      )}
 
       {/* Category Filters */}
       <div className="flex gap-2 flex-wrap">
