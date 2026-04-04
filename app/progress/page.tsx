@@ -1,223 +1,95 @@
-"use client";
+'use client'
 
-import { useState, useEffect } from "react";
-import Link from "next/link";
-import { getUserStats, getProgressHistory } from "@/lib/db";
-import { getSupabaseBrowserClient } from "@/lib/supabase/client";
-import type { UserStats, DailyProgress } from "@/lib/types";
+import { useEffect, useState } from 'react'
+import { useAuth } from '@/components/AuthProvider'
+import PageHero from '@/components/layout/PageHero'
+import StatsSection from '@/components/layout/StatsSection'
+import AchievementsSection from '@/components/progress/AchievementsSection'
+import JourneyToFluiditySection from '@/components/progress/JourneyToFluiditySection'
+import type { UserStats, DailyProgress } from '@/lib/types'
 
-interface RecentAttempt {
-  word: string
-  isCorrect: boolean
-  timestamp: string
-}
-
-async function getRecentAttemptsFromSupabase(limit: number): Promise<RecentAttempt[]> {
-  const supabase = getSupabaseBrowserClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return []
-  const { data, error } = await supabase
-    .from('answer_history')
-    .select('target_word, is_correct, answered_at')
-    .eq('user_id', user.id)
-    .order('answered_at', { ascending: false })
-    .limit(limit)
-  if (error || !data) return []
-  return data.map(r => ({
-    word: r.target_word ?? '—',
-    isCorrect: r.is_correct,
-    timestamp: r.answered_at ?? new Date().toISOString(),
-  }))
-}
+const RocketIcon = () => (
+  <svg className="w-32 h-32" viewBox="0 0 128 128" fill="none">
+    <rect x="40" y="60" width="48" height="60" fill="#FFD700" rx="4" />
+    <circle cx="64" cy="40" r="20" fill="#FF6B6B" />
+    <path d="M45 75 L35 95 M83 75 L93 95" stroke="#FFD700" strokeWidth="4" />
+    <circle cx="64" cy="32" r="6" fill="#fff" />
+  </svg>
+)
 
 export default function ProgressPage() {
-  const [stats, setStats] = useState<UserStats | null>(null);
-  const [history, setHistory] = useState<DailyProgress[]>([]);
-  const [recentAttempts, setRecentAttempts] = useState<RecentAttempt[]>([]);
+  const { user } = useAuth()
+  const [stats, setStats] = useState<UserStats | null>(null)
+  const [todayProgress, setTodayProgress] = useState<DailyProgress | null>(null)
+  const [progressHistory, setProgressHistory] = useState<DailyProgress[]>([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    async function load() {
-      const [s, h, a] = await Promise.all([
-        getUserStats(),
-        getProgressHistory(7),
-        getRecentAttemptsFromSupabase(20),
-      ]);
-      setStats(s);
-      setHistory(h);
-      setRecentAttempts(a);
-    }
-    load();
-  }, []);
+    if (!user) return
 
-  if (!stats) {
+    // TODO: Fetch stats from API/Supabase
+    // Mock data for now
+    setStats({
+      currentStreak: 14,
+      longestStreak: 21,
+      totalXP: 2450,
+      totalWords: 156,
+      totalAttempts: 892,
+      averageAccuracy: 87,
+      lastStudyDate: new Date().toISOString(),
+    })
+
+    setTodayProgress({
+      date: new Date().toISOString().split('T')[0],
+      totalAttempts: 12,
+      correctAttempts: 10,
+      averageAccuracy: 89,
+      xp: 150,
+      wordsStudied: ['beautiful', 'pronunciation', 'fluency'],
+    })
+
+    setProgressHistory([
+      { date: '2026-03-29', totalAttempts: 8, correctAttempts: 7, averageAccuracy: 88, xp: 120, wordsStudied: [] },
+      { date: '2026-03-30', totalAttempts: 10, correctAttempts: 9, averageAccuracy: 90, xp: 140, wordsStudied: [] },
+      { date: '2026-03-31', totalAttempts: 0, correctAttempts: 0, averageAccuracy: 0, xp: 0, wordsStudied: [] },
+      { date: '2026-04-01', totalAttempts: 15, correctAttempts: 13, averageAccuracy: 87, xp: 180, wordsStudied: [] },
+      { date: '2026-04-02', totalAttempts: 12, correctAttempts: 11, averageAccuracy: 92, xp: 160, wordsStudied: [] },
+      { date: '2026-04-03', totalAttempts: 9, correctAttempts: 8, averageAccuracy: 85, xp: 130, wordsStudied: [] },
+      { date: '2026-04-04', totalAttempts: 12, correctAttempts: 10, averageAccuracy: 89, xp: 150, wordsStudied: [] },
+    ])
+
+    setLoading(false)
+  }, [user])
+
+  if (loading) {
     return (
-      <div className="min-h-screen bg-page-bg flex items-center justify-center">
-        <div className="animate-spin w-8 h-8 border-2 border-t-transparent rounded-full" style={{
-          borderColor: 'var(--line-divider)',
-          borderTopColor: 'transparent',
-        }} />
-      </div>
-    );
+      <div className="p-6 animate-pulse text-gray-400">Cargando…</div>
+    )
   }
 
   return (
-    <div className="min-h-screen bg-page-bg">
-      {/* Header */}
-      <header className="bg-card-bg border-b border-line-divider">
-        <div className="max-w-4xl mx-auto px-4 py-6">
-          <div className="flex items-center gap-3">
-            <Link
-              href="/"
-              className="p-2 rounded-lg hover:bg-btn-plain-hover transition-colors"
-            >
-              <svg className="w-5 h-5 text-[var(--text-secondary)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </svg>
-            </Link>
-            <h1 className="text-2xl font-bold text-[var(--text-primary)]">
-              My Progress
-            </h1>
-          </div>
-        </div>
-      </header>
+    <div className="max-w-6xl mx-auto px-4 py-8 space-y-8">
+      <PageHero
+        eyebrow="Cada día te acercas más"
+        title="Mi"
+        titleAccent="Progreso"
+        description="Cada palabra nueva es un paso más hacia tu libertad lingüística. Estás superando tus límites día tras día."
+        primaryCta={{
+          label: 'Nivel 12 • Polyglot Path',
+          onClick: () => console.log('Navigate to level'),
+        }}
+        illustration={<RocketIcon />}
+      />
 
-      <main className="max-w-4xl mx-auto px-4 py-8 space-y-6">
-        {/* Stats Cards */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <StatCard
-            icon="🔥"
-            value={stats.currentStreak}
-            label="Day Streak"
-            color="text-warning"
-          />
-          <StatCard
-            icon="⚡"
-            value={stats.totalXP}
-            label="Total XP"
-            color="text-warning"
-          />
-          <StatCard
-            icon="🎯"
-            value={`${stats.averageAccuracy}%`}
-            label="Avg Accuracy"
-            color="text-success"
-          />
-          <StatCard
-            icon="📚"
-            value={stats.totalAttempts}
-            label="Total Attempts"
-            color="text-info"
-          />
-        </div>
+      <StatsSection
+        stats={stats}
+        todayProgress={todayProgress}
+        progressHistory={progressHistory}
+      />
 
-        {/* Weekly Activity */}
-        <div className="bg-card-bg rounded-2xl border border-line-divider p-6">
-          <h2 className="text-lg font-semibold text-[var(--text-primary)] mb-4">
-            Weekly Activity
-          </h2>
-          <div className="flex items-end gap-2 h-32">
-            {getLast7Days().map((day) => {
-              const dayData = history.find((h) => h.date === day.date);
-              const maxAttempts = Math.max(...history.map((h) => h.totalAttempts), 1);
-              const height = dayData
-                ? Math.max((dayData.totalAttempts / maxAttempts) * 100, 8)
-                : 8;
+      <AchievementsSection />
 
-              return (
-                <div key={day.date} className="flex-1 flex flex-col items-center gap-1">
-                  <div className="w-full flex flex-col items-center justify-end h-24">
-                    {dayData && (
-                      <span className="text-xs text-[var(--text-secondary)] mb-1">
-                        {dayData.totalAttempts}
-                      </span>
-                    )}
-                    <div
-                      className="w-full max-w-[40px] rounded-t-lg transition-all duration-500"
-                      style={{
-                        height: `${height}%`,
-                        background: dayData
-                          ? 'linear-gradient(to top, var(--primary), var(--title-active))'
-                          : 'var(--btn-regular-bg)',
-                      }}
-                    />
-                  </div>
-                  <span className="text-xs text-[var(--text-secondary)]">
-                    {day.label}
-                  </span>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Recent Attempts */}
-        <div className="bg-card-bg rounded-2xl border border-line-divider p-6">
-          <h2 className="text-lg font-semibold text-[var(--text-primary)] mb-4">
-            Recent Attempts
-          </h2>
-          {recentAttempts.length === 0 ? (
-            <p className="text-sm text-center py-8 text-[var(--text-secondary)]">
-              No attempts yet. Start a lesson to see your progress!
-            </p>
-          ) : (
-            <div className="space-y-2 max-h-64 overflow-y-auto">
-              {recentAttempts.map((attempt, idx) => (
-                <div
-                  key={idx}
-                  className="flex items-center justify-between py-2 px-3 rounded-lg bg-btn-regular"
-                >
-                  <div className="flex items-center gap-3">
-                    <span>{attempt.isCorrect ? "✅" : "❌"}</span>
-                    <div>
-                      <p className="text-sm font-medium text-[var(--text-primary)]">
-                        {attempt.word}
-                      </p>
-                      <p className="text-xs text-[var(--text-tertiary)]">
-                        {new Date(attempt.timestamp).toLocaleDateString()}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      </main>
+      <JourneyToFluiditySection />
     </div>
-  );
-}
-
-function StatCard({
-  icon,
-  value,
-  label,
-  color,
-}: {
-  icon: string;
-  value: string | number;
-  label: string;
-  color: string;
-}) {
-  return (
-    <div className="bg-card-bg rounded-2xl border border-line-divider p-4 text-center">
-      <p className="text-2xl mb-1">{icon}</p>
-      <p className={`text-2xl font-bold ${color}`}>{value}</p>
-      <p className="text-xs mt-1 text-[var(--text-secondary)]">{label}</p>
-    </div>
-  );
-}
-
-function getLast7Days(): { date: string; label: string }[] {
-  const days = [];
-  const labels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-
-  for (let i = 6; i >= 0; i--) {
-    const d = new Date();
-    d.setDate(d.getDate() - i);
-    days.push({
-      date: d.toISOString().split("T")[0],
-      label: labels[d.getDay()],
-    });
-  }
-  return days;
+  )
 }

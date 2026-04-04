@@ -378,7 +378,6 @@
 @layer components {
   main {
     @apply transition-all duration-300;
-    padding-left: var(--sidebar-width);
   }
 
   a.accent:focus-visible,

@@ -3,11 +3,11 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { getUserStats, getTodayProgress, getFavorites, getNeedsPracticeWords } from "@/lib/db";
+import { getUserStats, getTodayProgress, getFavorites, getNeedsPracticeWords, getProgressHistory } from "@/lib/db";
 import { getAllLessons } from "@/lib/lesson-generator";
 import type { UserStats, DailyProgress, FavoriteWord } from "@/lib/types";
 import PageHero from "@/components/layout/PageHero";
-import StatCard, { STAT_CARDS } from "@/components/layout/StatCard";
+import StatsSection from "@/components/layout/StatsSection";
 import QuickActionCard, { QuickActionGrid } from "@/components/layout/QuickActionCard";
 import LessonCard from "@/components/layout/LessonCard";
 import SectionHeader from "@/components/layout/SectionHeader";
@@ -18,21 +18,24 @@ export default function HomePage() {
   const [todayProgress, setTodayProgress] = useState<DailyProgress | null>(null);
   const [favorites, setFavorites] = useState<FavoriteWord[]>([]);
   const [needsPractice, setNeedsPractice] = useState<{ word: string; lessonId: string; bestAccuracy: number; attempts: number }[]>([]);
+  const [progressHistory, setProgressHistory] = useState<DailyProgress[]>([]);
 
   const lessons = getAllLessons();
 
   useEffect(() => {
     async function load() {
-      const [s, t, favs, needs] = await Promise.all([
+      const [s, t, favs, needs, history] = await Promise.all([
         getUserStats(),
         getTodayProgress(),
         getFavorites(),
         getNeedsPracticeWords(),
+        getProgressHistory(7),
       ]);
       setStats(s);
       setTodayProgress(t || null);
       setFavorites(favs);
       setNeedsPractice(needs);
+      setProgressHistory(history);
     }
     load();
   }, []);
@@ -104,18 +107,12 @@ export default function HomePage() {
         }
       />
 
-      {/* Stats Row */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {STAT_CARDS.map((card) => {
-          let value = 0;
-          if (card.id === "streak" && stats) value = stats.currentStreak;
-          else if (card.id === "accuracy" && stats) value = stats.averageAccuracy;
-          else if (card.id === "xp" && stats) value = stats.totalXP;
-          else if (card.id === "goal" && todayProgress) value = todayProgress.totalAttempts;
-          
-          return <StatCard key={card.id} card={card} value={value} />;
-        })}
-      </div>
+      {/* Stats Section */}
+      <StatsSection
+        stats={stats}
+        todayProgress={todayProgress}
+        progressHistory={progressHistory}
+      />
 
       {/* Quick Actions */}
       <section>
