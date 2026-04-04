@@ -12,17 +12,88 @@ import { useLesson } from "@/hooks/useLesson";
 import { useRecorder } from "@/hooks/useRecorder";
 import { calculateXP } from "@/lib/scoring";
 import { fetchPronunciation } from "@/lib/dictionary";
-import { isFavorite, toggleFavorite } from "@/lib/db";
+import { isFavorite, toggleFavorite, getLessonOffset, advanceLessonOffset, LESSON_SESSION_SIZE } from "@/lib/db";
 import PronunciationFeedback from "@/components/lesson/PronunciationFeedback";
 import AudioWaveform from "@/components/lesson/AudioWaveform";
 import ScoreDisplay from "@/components/lesson/ScoreDisplay";
+import { LessonLobby, emptyLessonMastery, LESSON_STAGES } from "@/components/lesson/LessonLobby";
+import type { LessonStageId, LessonStageMasteryMap } from "@/components/lesson/LessonLobby";
+import type { Lesson } from "@/lib/types";
 
 type Phase = "ready" | "recording" | "processing" | "feedback" | "complete";
 
 export default function ActiveLessonPage() {
   const params = useParams();
   const lessonId = params.id as string;
-  const lessonData = getLessonById(lessonId);
+  const staticLesson = getLessonById(lessonId);
+  // undefined = loading, null = not found, Lesson = found
+  const isDynamic = !staticLesson && (lessonId.startsWith("pattern-") || lessonId.startsWith("sound-"));
+  const [dynamicLesson, setDynamicLesson] = useState<import("@/lib/types").Lesson | null | undefined>(
+    isDynamic ? undefined : null
+  );
+
+  useEffect(() => {
+    if (!isDynamic) return;
+    import("@/lib/lesson-generator-db").then(({ getDbLessonById }) =>
+      getDbLessonById(lessonId).then(setDynamicLesson)
+    );
+  }, [lessonId, isDynamic]);
+
+  const fullLesson = staticLesson ?? dynamicLesson;
+
+  // ── Lobby / stage state (only for dynamic lessons) ────────────────────────
+  const [view, setView] = useState<"lobby" | "session">(isDynamic ? "lobby" : "session");
+  const [activeStage, setActiveStage] = useState<LessonStageId>("guided");
+  const [stageMastery, setStageMastery] = useState<LessonStageMasteryMap>(emptyLessonMastery());
+  // The sliced lesson shown in the current session
+  const [lessonData, setLessonData] = useState<Lesson | null | undefined>(
+    isDynamic ? undefined : (fullLesson ?? null)
+  );
+  const [sessionOffset, setSessionOffset] = useState(0);
+
+  // When full lesson resolves, either set directly (static) or wait for lobby selection (dynamic)
+  useEffect(() => {
+    if (!fullLesson) return;
+    if (!isDynamic) {
+      setLessonData(fullLesson);
+      return;
+    }
+    // Load saved offset
+    getLessonOffset(lessonId).then((offset) => {
+      setSessionOffset(offset);
+      // Don't set lessonData yet — user picks stage first from the lobby
+    });
+  }, [fullLesson, isDynamic, lessonId]);
+
+  function handleSelectStage(stageId: LessonStageId) {
+    if (!fullLesson) return;
+    import("@/lib/lesson-generator-db").then(({ sliceLessonWords }) => {
+      const sliced = sliceLessonWords(fullLesson, sessionOffset, LESSON_SESSION_SIZE);
+      // Apply stage modifiers
+      const stageWords = sliced.words.map((w) => ({
+        ...w,
+        ipa: stageId === "pronunciation" || stageId === "speed" ? "" : w.ipa,
+        hint: stageId === "speed" ? undefined : w.hint,
+        audioUrl: stageId === "speed" ? undefined : w.audioUrl,
+      }));
+      setLessonData({ ...sliced, words: stageWords });
+      setActiveStage(stageId);
+      setView("session");
+    });
+  }
+
+  async function handleBackToLobby() {
+    setView("lobby");
+    setLessonData(undefined);
+    setPhase("ready");
+  }
+
+  const totalChunks = fullLesson
+    ? Math.ceil(fullLesson.words.length / LESSON_SESSION_SIZE)
+    : 1;
+  const sessionChunk = fullLesson
+    ? Math.floor(sessionOffset / LESSON_SESSION_SIZE) + 1
+    : 1;
 
   const [phase, setPhase] = useState<Phase>("ready");
   const [stream, setStream] = useState<MediaStream | null>(null);
@@ -151,10 +222,14 @@ export default function ActiveLessonPage() {
     setIsFav(nowFav);
   }, [currentWord]);
 
-  // Initialize lesson and load model
+  // Initialize (or re-initialize) lesson when lessonData changes
   useEffect(() => {
-    if (lessonData && !lesson) startLesson(lessonData);
-  }, [lessonData, lesson, startLesson]);
+    if (!lessonData) return;
+    resetLesson();
+    startLesson(lessonData);
+    setPhase("ready");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lessonData]);
 
   useEffect(() => {
     if (!isModelLoaded && !isModelLoading) loadModel();
@@ -210,12 +285,27 @@ export default function ActiveLessonPage() {
     lastProcessedUrl.current = null;
     const isLast = currentIndex + 1 >= totalWords;
     if (isLast) {
+      // Advance word chunk offset for next session (dynamic lessons only)
+      if (isDynamic && fullLesson && fullLesson.words.length > LESSON_SESSION_SIZE) {
+        advanceLessonOffset(lessonId, fullLesson.words.length).then(setSessionOffset);
+      }
+      // Update stage mastery with session accuracy
+      if (isDynamic) {
+        setStageMastery((prev) => ({
+          ...prev,
+          [activeStage]: {
+            pct: Math.round(sessionAccuracy),
+            attempts: prev[activeStage].attempts + 1,
+          },
+        }));
+      }
       setPhase("complete");
     } else {
       nextWord();
       setPhase("ready");
     }
-  }, [nextWord, resetWhisper, resetScoring, resetRecording, currentIndex, totalWords]);
+  }, [nextWord, resetWhisper, resetScoring, resetRecording, currentIndex, totalWords,
+      isDynamic, fullLesson, lessonId, activeStage, sessionAccuracy]);
 
   const handleRetry = useCallback(() => {
     resetWhisper();
@@ -228,6 +318,57 @@ export default function ActiveLessonPage() {
   }, [retryWord, resetWhisper, resetScoring, resetRecording]);
 
   // ── Render ────────────────────────────────────────────────────────────────
+
+  // Loading full lesson from DB
+  if (fullLesson === undefined) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--page-bg)' }}>
+        <svg className="w-8 h-8 animate-spin" fill="none" viewBox="0 0 24 24" style={{ color: 'var(--primary)' }}>
+          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+        </svg>
+      </div>
+    );
+  }
+
+  // Lobby view for dynamic lessons
+  if (view === "lobby" && fullLesson) {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-4" style={{ backgroundColor: 'var(--page-bg)' }}>
+        <div className="w-full max-w-md space-y-4">
+          <Link
+            href="/lesson"
+            className="text-sm transition-colors"
+            style={{ color: 'var(--text-tertiary)' }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--text-primary)')}
+            onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-tertiary)')}
+          >
+            ← Back
+          </Link>
+          <LessonLobby
+            lesson={fullLesson}
+            totalWords={fullLesson.words.length}
+            sessionChunk={sessionChunk}
+            totalChunks={totalChunks}
+            mastery={stageMastery}
+            onSelectStage={handleSelectStage}
+          />
+        </div>
+      </div>
+    );
+  }
+
+  // Session loading (after stage selected, slicing words)
+  if (lessonData === undefined) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--page-bg)' }}>
+        <svg className="w-8 h-8 animate-spin" fill="none" viewBox="0 0 24 24" style={{ color: 'var(--primary)' }}>
+          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+        </svg>
+      </div>
+    );
+  }
 
   if (!lessonData) {
     return (
@@ -246,11 +387,19 @@ export default function ActiveLessonPage() {
       <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-10">
         <div className="max-w-2xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <Link href="/lesson" className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-              <svg className="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </svg>
-            </Link>
+            {isDynamic ? (
+              <button onClick={handleBackToLobby} className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                <svg className="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+            ) : (
+              <Link href="/lesson" className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                <svg className="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+              </Link>
+            )}
             <div className="text-center">
               <h1 className="text-sm font-semibold text-gray-900 dark:text-gray-100">{lessonData.title}</h1>
               <p className="text-xs text-gray-500">
@@ -287,17 +436,27 @@ export default function ActiveLessonPage() {
           <div className="space-y-6">
             <ScoreDisplay wordAttempts={wordAttempts} sessionAccuracy={sessionAccuracy} totalXP={totalXP} totalWords={totalWords} />
             <div className="flex gap-3 justify-center">
-              <button
-                onClick={() => { resetLesson(); startLesson(lessonData); setPhase("ready"); }}
-                className="px-6 py-3 rounded-xl text-white font-medium transition-colors"
-                style={{
-                  backgroundColor: 'var(--primary)',
-                }}
-                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--btn-regular-bg-hover)')}
-                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'var(--primary)')}
-              >
-                🔄 Retry Lesson
-              </button>
+              {isDynamic ? (
+                <button
+                  onClick={handleBackToLobby}
+                  className="px-6 py-3 rounded-xl text-white font-medium transition-colors"
+                  style={{ backgroundColor: 'var(--primary)' }}
+                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--btn-regular-bg-hover)')}
+                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'var(--primary)')}
+                >
+                  ← Back to Stages
+                </button>
+              ) : (
+                <button
+                  onClick={() => { resetLesson(); startLesson(lessonData); setPhase("ready"); }}
+                  className="px-6 py-3 rounded-xl text-white font-medium transition-colors"
+                  style={{ backgroundColor: 'var(--primary)' }}
+                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--btn-regular-bg-hover)')}
+                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'var(--primary)')}
+                >
+                  🔄 Retry Lesson
+                </button>
+              )}
               <Link href="/lesson" className="px-6 py-3 rounded-xl bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-medium hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
                 ← All Lessons
               </Link>
