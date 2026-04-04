@@ -2,9 +2,28 @@
 
 import Script from "next/script";
 import "./globals.css";
+import { DM_Serif_Display, Sora, DM_Sans } from "next/font/google";
 import Sidebar from "@/components/Sidebar";
+import BottomNav from "@/components/layout/BottomNav";
 import AuthProvider from "@/components/AuthProvider";
 import { ThemeProvider } from "@/components/ThemeProvider";
+
+const dmSerif = DM_Serif_Display({
+  weight: "400",
+  subsets: ["latin"],
+  style: ["normal", "italic"],
+  variable: "--font-display",
+});
+const sora = Sora({
+  weight: ["700", "800"],
+  subsets: ["latin"],
+  variable: "--font-heading",
+});
+const dmSans = DM_Sans({
+  weight: ["400", "500", "600"],
+  subsets: ["latin"],
+  variable: "--font-sans",
+});
 
 export default function RootLayout({
   children,
@@ -12,7 +31,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${dmSerif.variable} ${sora.variable} ${dmSans.variable}`}
+    >
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -26,26 +49,26 @@ export default function RootLayout({
           strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
             __html: `
-              // Initialize dark mode
               document.documentElement.classList.toggle(
                 'dark',
-                localStorage.getItem('theme-mode') === 'dark' || 
+                localStorage.getItem('theme-mode') === 'dark' ||
                 (!localStorage.getItem('theme-mode') && window.matchMedia('(prefers-color-scheme: dark)').matches)
               );
-              
-              // Initialize hue
               const savedHue = localStorage.getItem('theme-hue');
-              if (savedHue) {
-                document.documentElement.style.setProperty('--hue', savedHue);
-              }
+              if (savedHue) document.documentElement.style.setProperty('--hue', savedHue);
             `,
           }}
         />
         <AuthProvider>
           <ThemeProvider>
-            <div className="flex">
-              <Sidebar />
-              <main className="flex-1 w-full">{children}</main>
+            <div className="flex h-screen bg-[var(--page-bg)] overflow-hidden">
+              <Sidebar className="hidden lg:flex w-64 flex-col" />
+              <main className="flex-1 overflow-y-auto pb-20 lg:pb-0">
+                <div className="max-w-screen-xl mx-auto px-6 lg:px-10 py-8 lg:py-9">
+                  {children}
+                </div>
+              </main>
+              <BottomNav className="lg:hidden" />
             </div>
           </ThemeProvider>
         </AuthProvider>

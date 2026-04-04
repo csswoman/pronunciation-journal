@@ -10,12 +10,22 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        accent: "var(--color-accent)",
+        primary:       "var(--primary)",
+        "page-bg":     "var(--page-bg)",
+        "card-bg":     "var(--card-bg)",
+        "btn-regular": "var(--btn-regular-bg)",
+        "btn-hover":   "var(--btn-regular-bg-hover)",
+        "btn-content": "var(--btn-content)",
+        "deep-text":   "var(--deep-text)",
+        "line-div":    "var(--line-divider)",
+        "line-color":  "var(--line-color)",
+        accent:        "var(--color-accent)",
         "accent-soft": "var(--color-accent-soft)",
-        "accent-hover": "var(--color-accent-hover)",
-        "on-accent": "var(--color-text-on-accent)",
-        "text-primary": "var(--color-text-primary)",
-        "text-secondary": "var(--color-text-secondary)",
+      },
+      fontFamily: {
+        display: ["var(--font-display)", "serif"],
+        heading: ["var(--font-heading)", "sans-serif"],
+        sans:    ["var(--font-sans)",    "sans-serif"],
       },
     },
   },
