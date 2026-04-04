@@ -84,7 +84,7 @@
   --color-text-primary: var(--deep-text);
   --color-text-secondary: rgba(0,0,0,.6);
   --accent-text: white;
-  --accent-rgb: 166, 110, 254;
+  --accent-rgb: 180, 180, 180;
 }
 
 /* ── Dark Mode ──────────────────────────────────────────────────────────── */
@@ -126,6 +126,7 @@
   --toc-btn-hover: oklch(.22 .02 var(--hue));
   --toc-btn-active: oklch(.25 .02 var(--hue));
   --toc-item-active: oklch(.35 .07 var(--hue));
+  --deep-text: oklch(.93 .01 var(--hue));
 
   /* Backward compatibility */
   --bg: var(--page-bg);
@@ -150,7 +151,7 @@
   --color-text-primary: var(--btn-content);
   --color-text-secondary: rgba(255,255,255,.6);
   --accent-text: var(--page-bg);
-  --accent-rgb: 179, 179, 255;
+  --accent-rgb: 200, 200, 200;
 }
 
 /* ── Color Selection Gradient ───────────────────────────────────────── */

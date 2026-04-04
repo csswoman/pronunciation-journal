@@ -1,12 +1,19 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { getUserStats, getTodayProgress, getFavorites, getNeedsPracticeWords } from "@/lib/db";
 import { getAllLessons } from "@/lib/lesson-generator";
 import type { UserStats, DailyProgress, FavoriteWord } from "@/lib/types";
+import PageHero from "@/components/layout/PageHero";
+import StatCard, { STAT_CARDS } from "@/components/layout/StatCard";
+import QuickActionCard, { QuickActionGrid } from "@/components/layout/QuickActionCard";
+import LessonCard from "@/components/layout/LessonCard";
+import SectionHeader from "@/components/layout/SectionHeader";
 
 export default function HomePage() {
+  const router = useRouter();
   const [stats, setStats] = useState<UserStats | null>(null);
   const [todayProgress, setTodayProgress] = useState<DailyProgress | null>(null);
   const [favorites, setFavorites] = useState<FavoriteWord[]>([]);
@@ -31,328 +38,157 @@ export default function HomePage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-page-bg">
-      {/* Hero Header */}
-      <header className="text-white" style={{backgroundColor: 'var(--card-bg)'}}>
-        <div className="max-w-4xl mx-auto px-4 py-10">
-          <h1 className="text-3xl font-bold mb-2">
-            Pronunciation Journal
-          </h1>
-          <p className="text-sm" style={{color: 'rgba(255,255,255,0.9)'}}>
-            Practice your English pronunciation with AI-powered feedback
-          </p>
+    <div className="space-y-8">
+      {/* Hero Section */}
+      <PageHero
+        eyebrow="AI-Powered Learning"
+        title="Speak with"
+        titleAccent="Confidence"
+        description="Train your pronunciation with real-time AI feedback. Practice daily, track your progress, and master every sound."
+        primaryCta={{
+          label: "Start Practice",
+          icon: (
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/>
+              <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+            </svg>
+          ),
+          onClick: () => router.push("/practice"),
+        }}
+        secondaryCta={{
+          label: "Continue Lesson",
+          onClick: () => router.push("/lesson"),
+        }}
+        illustration={
+          <svg viewBox="0 0 220 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="160" cy="100" r="70" fill="#F3F0FF" opacity="0.7"/>
+            <rect x="103" y="130" width="4" height="40" rx="2" fill="#1A1033" opacity="0.15"/>
+            <rect x="92" y="166" width="26" height="4" rx="2" fill="#1A1033" opacity="0.15"/>
+            <rect x="97" y="95" width="16" height="34" rx="8" fill="#1A1033" opacity="0.85"/>
+            <rect x="99" y="97" width="4" height="3" rx="1.5" fill="white" opacity="0.3"/>
+            <rect x="99" y="102" width="4" height="2" rx="1" fill="white" opacity="0.2"/>
+            <rect x="99" y="107" width="4" height="2" rx="1" fill="white" opacity="0.15"/>
+            <ellipse cx="68" cy="158" rx="30" ry="14" fill="#1A1033" opacity="0.08"/>
+            <path d="M48 120 Q38 140 40 165 Q55 170 68 168 Q82 170 96 165 Q98 140 88 120 Q78 110 68 110 Q58 110 48 120Z" fill="#1A1033" opacity="0.1"/>
+            <path d="M50 122 Q38 142 40 163 Q55 168 68 166 Q82 168 96 163 Q98 142 86 122 Q78 114 68 114 Q58 114 50 122Z" fill="#EDE9FE"/>
+            <path d="M62 114 L68 126 L74 114" stroke="#A78BFA" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
+            <path d="M86 130 Q100 122 103 115" stroke="#1A1033" strokeWidth="8" strokeLinecap="round" fill="none" opacity="0.15"/>
+            <path d="M86 130 Q100 122 103 115" stroke="#F9FAFB" strokeWidth="6" strokeLinecap="round" fill="none"/>
+            <circle cx="104" cy="113" r="5" fill="#F9FAFB"/>
+            <circle cx="104" cy="113" r="5" stroke="#1A1033" strokeWidth="1.5" opacity="0.2"/>
+            <ellipse cx="68" cy="88" rx="22" ry="24" fill="#F9FAFB"/>
+            <ellipse cx="68" cy="88" rx="22" ry="24" stroke="#1A1033" strokeWidth="1.5" opacity="0.15"/>
+            <path d="M46 82 Q48 62 68 60 Q88 62 90 80 Q85 68 68 66 Q51 68 48 80Z" fill="#1A1033" opacity="0.8"/>
+            <path d="M46 82 Q44 90 46 96" stroke="#1A1033" strokeWidth="1.5" strokeLinecap="round" opacity="0.7"/>
+            <ellipse cx="46" cy="90" rx="4" ry="5" fill="#F9FAFB" stroke="#1A1033" strokeWidth="1" opacity="0.6"/>
+            <ellipse cx="62" cy="88" rx="3" ry="3.5" fill="#1A1033" opacity="0.7"/>
+            <ellipse cx="63" cy="87" rx="1" ry="1" fill="white" opacity="0.8"/>
+            <path d="M68 93 Q70 97 67 98" stroke="#1A1033" strokeWidth="1.2" strokeLinecap="round" opacity="0.3"/>
+            <path d="M62 103 Q68 107 74 103" stroke="#1A1033" strokeWidth="1.5" strokeLinecap="round" fill="none" opacity="0.5"/>
+            <circle cx="122" cy="78" r="2.5" fill="#7C3AED" opacity="0.7"/>
+            <circle cx="132" cy="72" r="2" fill="#7C3AED" opacity="0.5"/>
+            <circle cx="140" cy="66" r="1.5" fill="#7C3AED" opacity="0.3"/>
+            <g transform="translate(125, 90)">
+              <rect x="0"  y="10" width="4" height="8"  rx="2" fill="#7C3AED" opacity="0.3"/>
+              <rect x="7"  y="4"  width="4" height="20" rx="2" fill="#7C3AED" opacity="0.6"/>
+              <rect x="14" y="0"  width="4" height="28" rx="2" fill="#7C3AED" opacity="0.9"/>
+              <rect x="21" y="6"  width="4" height="16" rx="2" fill="#7C3AED" opacity="0.7"/>
+              <rect x="28" y="10" width="4" height="8"  rx="2" fill="#7C3AED" opacity="0.4"/>
+              <rect x="35" y="4"  width="4" height="20" rx="2" fill="#7C3AED" opacity="0.6"/>
+              <rect x="42" y="8"  width="4" height="12" rx="2" fill="#7C3AED" opacity="0.35"/>
+            </g>
+            <text x="170" y="50" fontSize="12" fill="#A78BFA" opacity="0.8">✦</text>
+            <text x="188" y="130" fontSize="8" fill="#7C3AED" opacity="0.5">✦</text>
+            <text x="115" y="42" fontSize="7" fill="#A78BFA" opacity="0.6">✦</text>
+          </svg>
+        }
+      />
 
-          {/* Quick Stats */}
-          {stats && (
-            <div className="flex gap-6 mt-6">
-              <div>
-                <p className="text-2xl font-bold">{stats.currentStreak}</p>
-                <p className="text-xs" style={{color: 'rgba(255,255,255,0.8)'}}>🔥 Streak</p>
-              </div>
-              <div>
-                <p className="text-2xl font-bold">{stats.totalXP}</p>
-                <p className="text-xs" style={{color: 'rgba(255,255,255,0.8)'}}>⚡ XP</p>
-              </div>
-              <div>
-                <p className="text-2xl font-bold">{stats.averageAccuracy}%</p>
-                <p className="text-xs" style={{color: 'rgba(255,255,255,0.8)'}}>🎯 Accuracy</p>
-              </div>
-            </div>
-          )}
+      {/* Stats Row */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {STAT_CARDS.map((card) => {
+          let value = 0;
+          if (card.id === "streak" && stats) value = stats.currentStreak;
+          else if (card.id === "accuracy" && stats) value = stats.averageAccuracy;
+          else if (card.id === "xp" && stats) value = stats.totalXP;
+          else if (card.id === "goal" && todayProgress) value = todayProgress.totalAttempts;
+          
+          return <StatCard key={card.id} card={card} value={value} />;
+        })}
+      </div>
+
+      {/* Quick Actions */}
+      <section>
+        <SectionHeader title="Quick Actions" />
+        <QuickActionGrid>
+          <QuickActionCard
+            icon={
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+              </svg>
+            }
+            name="Lessons"
+            description="Practice with structured lessons"
+            onClick={() => router.push("/lesson")}
+          />
+          <QuickActionCard
+            icon={
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M9 18V5l12-2v13"/>
+                <circle cx="6" cy="18" r="3"/>
+                <circle cx="18" cy="16" r="3"/>
+              </svg>
+            }
+            name="IPA Sounds"
+            description="Master 100+ phonetic sounds"
+            onClick={() => router.push("/ipa")}
+          />
+          <QuickActionCard
+            icon={
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="18" y1="20" x2="18" y2="10"/>
+                <line x1="12" y1="20" x2="12" y2="4"/>
+                <line x1="6" y1="20" x2="6" y2="14"/>
+              </svg>
+            }
+            name="Progress"
+            description="Track your improvement"
+            onClick={() => router.push("/progress")}
+          />
+          <QuickActionCard
+            icon={
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2"/>
+                <circle cx="9" cy="9" r="2"/>
+                <path d="M21 15l-5-5L5 21"/>
+              </svg>
+            }
+            name="AI Practice"
+            description="Chat with your AI tutor"
+            onClick={() => router.push("/ai-practice")}
+          />
+        </QuickActionGrid>
+      </section>
+
+      {/* Available Lessons */}
+      <section>
+        <SectionHeader 
+          title="Available Lessons"
+          viewAll={() => router.push("/lesson")}
+        />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {lessons.slice(0, 3).map((lesson) => (
+            <LessonCard
+              key={lesson.id}
+              title={lesson.title}
+              description={lesson.description}
+              difficulty={lesson.difficulty as "easy" | "medium" | "hard"}
+              onStart={() => router.push(`/lesson/${lesson.id}`)}
+            />
+          ))}
         </div>
-      </header>
-
-      <main className="max-w-4xl mx-auto px-4 py-8 space-y-8">
-        {/* Today's Progress */}
-        <section className="bg-card-bg rounded-2xl border border-line-divider p-6">
-          <h2 className="text-lg font-semibold text-[var(--text-primary)] mb-4">
-            Today&apos;s Progress
-          </h2>
-          {todayProgress ? (
-            <div className="grid grid-cols-3 gap-4">
-              <div className="text-center">
-                <p className="text-xl font-bold" style={{color: 'var(--primary)'}}>
-                  {todayProgress.totalAttempts}
-                </p>
-                <p className="text-xs text-[var(--text-secondary)]">Attempts</p>
-              </div>
-              <div className="text-center">
-                <p className="text-xl font-bold" style={{color: 'var(--admonitions-color-tip)'}}>
-                  {todayProgress.averageAccuracy}%
-                </p>
-                <p className="text-xs text-[var(--text-secondary)]">Accuracy</p>
-              </div>
-              <div className="text-center">
-                <p className="text-xl font-bold" style={{color: 'var(--admonitions-color-warning)'}}>
-                  +{todayProgress.xp}
-                </p>
-                <p className="text-xs text-[var(--text-secondary)]">XP Earned</p>
-              </div>
-            </div>
-          ) : (
-            <div className="text-center py-4">
-              <p className="mb-3 text-[var(--text-secondary)]">
-                No practice today yet
-              </p>
-              <Link
-                href="/lesson"
-                className="inline-flex items-center gap-2 px-6 py-3 text-white rounded-xl font-medium transition-colors"
-                style={{
-                  backgroundColor: 'var(--primary)',
-                }}
-                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--btn-regular-bg-hover)')}
-                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'var(--primary)')}
-              >
-                🎤 Start Practicing
-              </Link>
-            </div>
-          )}
-        </section>
-
-        {/* Quick Actions */}
-        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <Link
-            href="/lesson"
-            className="group flex items-center gap-4 p-5 bg-card-bg rounded-2xl border hover:shadow-lg transition-all"
-            style={{
-              borderColor: 'var(--line-divider)',
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.borderColor = 'var(--admonitions-color-tip)')}
-            onMouseLeave={(e) => (e.currentTarget.style.borderColor = 'var(--line-divider)')}
-          >
-            <div className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl group-hover:scale-110 transition-transform shadow-inner" style={{
-              backgroundColor: 'var(--btn-regular-bg)',
-            }}>
-              🎤
-            </div>
-            <div>
-              <p className="font-semibold text-[var(--text-primary)]">
-                Lessons
-              </p>
-              <p className="text-xs text-[var(--text-secondary)]">
-                {lessons.length} lessons available
-              </p>
-            </div>
-          </Link>
-
-          <Link
-            href="/ipa"
-            className="group flex items-center gap-4 p-5 bg-card-bg rounded-2xl border hover:shadow-lg transition-all"
-            style={{
-              borderColor: 'var(--line-divider)',
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.borderColor = 'var(--admonitions-color-important)')}
-            onMouseLeave={(e) => (e.currentTarget.style.borderColor = 'var(--line-divider)')}
-          >
-            <div className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl group-hover:scale-110 transition-transform shadow-inner" style={{
-              backgroundColor: 'var(--btn-regular-bg)',
-            }}>
-              🔊
-            </div>
-            <div>
-              <p className="font-semibold text-[var(--text-primary)]">
-                IPA Sounds
-              </p>
-              <p className="text-xs text-[var(--text-secondary)]">
-                Master 100+ sounds
-              </p>
-            </div>
-          </Link>
-
-          <Link
-            href="/progress"
-            className="group flex items-center gap-4 p-5 bg-card-bg rounded-2xl border hover:shadow-lg transition-all"
-            style={{
-              borderColor: 'var(--line-divider)',
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.borderColor = 'var(--admonitions-color-warning)')}
-            onMouseLeave={(e) => (e.currentTarget.style.borderColor = 'var(--line-divider)')}
-          >
-            <div className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl group-hover:scale-110 transition-transform shadow-inner" style={{
-              backgroundColor: 'var(--btn-regular-bg)',
-            }}>
-              📊
-            </div>
-            <div>
-              <p className="font-semibold text-[var(--text-primary)]">
-                Progress
-              </p>
-              <p className="text-xs text-[var(--text-secondary)]">
-                Track your improvement
-              </p>
-            </div>
-          </Link>
-
-          <Link
-            href="/ai-practice"
-            className="group flex items-center gap-4 p-5 bg-card-bg rounded-2xl border hover:shadow-lg transition-all"
-            style={{
-              borderColor: 'var(--line-divider)',
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.borderColor = 'var(--admonitions-color-caution)')}
-            onMouseLeave={(e) => (e.currentTarget.style.borderColor = 'var(--line-divider)')}
-          >
-            <div className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl group-hover:scale-110 transition-transform shadow-inner" style={{
-              backgroundColor: 'var(--btn-regular-bg)',
-            }}>
-              🤖
-            </div>
-            <div>
-              <p className="font-semibold text-[var(--text-primary)]">
-                AI Practice
-              </p>
-              <p className="text-xs text-[var(--text-secondary)]">
-                Chat with your tutor
-              </p>
-            </div>
-          </Link>
-        </section>
-
-        {/* Favorites */}
-        {favorites.length > 0 && (
-          <section>
-            <h2 className="text-lg font-semibold text-[var(--text-primary)] mb-4">
-              ❤️ Favorites
-            </h2>
-            <div className="flex flex-wrap gap-2">
-              {favorites.map((fav) => (
-                <Link
-                  key={fav.id}
-                  href={`/lesson/${fav.lessonId}`}
-                  className="flex items-center gap-2 px-3 py-2 bg-card-bg rounded-xl border transition-colors"
-                  style={{
-                    borderColor: 'var(--admonitions-color-caution)',
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.8')}
-                  onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
-                >
-                  <span className="font-medium text-[var(--text-primary)]">{fav.word}</span>
-                  {fav.ipa && (
-                    <span className="text-xs font-mono" style={{color: 'var(--primary)'}}>{fav.ipa}</span>
-                  )}
-                </Link>
-              ))}
-            </div>
-          </section>
-        )}
-
-        {/* Needs Practice */}
-        {needsPractice.length > 0 && (
-          <section>
-            <h2 className="text-lg font-semibold text-[var(--text-primary)] mb-4">
-              💪 Necesito practicar
-            </h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-              {needsPractice.slice(0, 8).map((item) => (
-                <Link
-                  key={item.word}
-                  href={`/lesson/${item.lessonId}`}
-                  className="p-3 bg-card-bg rounded-xl border transition-colors"
-                  style={{
-                    borderColor: 'var(--admonitions-color-warning)',
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.8')}
-                  onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
-                >
-                  <p className="font-medium text-[var(--text-primary)]">{item.word}</p>
-                  <div className="flex items-center justify-between mt-1">
-                  <span className="text-xs" style={{color: 'var(--admonitions-color-warning)'}}>
-                      Mejor: {item.bestAccuracy}%
-                    </span>
-                    <span className="text-xs text-[var(--text-tertiary)]">
-                      {item.attempts}x
-                    </span>
-                  </div>
-                  <div className="mt-1.5 w-full bg-btn-regular rounded-full h-1">
-                    <div
-                      className="h-full rounded-full"
-                      style={{
-                        width: `${item.bestAccuracy}%`,
-                        backgroundColor: 'var(--admonitions-color-warning)',
-                      }}
-                    />
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </section>
-        )}
-
-        {/* Available Lessons Preview */}
-        <section>
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-[var(--text-primary)]">
-              Available Lessons
-            </h2>
-            <Link
-              href="/lesson"
-              className="text-sm font-medium"
-              style={{color: 'var(--primary)'}}
-            >
-              View all →
-            </Link>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {lessons.slice(0, 3).map((lesson) => (
-              <Link
-                key={lesson.id}
-                href={`/lesson/${lesson.id}`}
-                className="group p-4 bg-card-bg rounded-xl border hover:shadow-md transition-all"
-                style={{
-                  borderColor: 'var(--line-divider)',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = 'var(--primary)';
-                  e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = 'var(--line-divider)';
-                  e.currentTarget.style.boxShadow = 'none';
-                }}
-              >
-                <h3 className="font-medium text-[var(--text-primary)] transition-colors" style={{
-                  '--default-color': 'gray',
-                } as any}
-                onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--primary)')}
-                onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--deep-text)')}
-                >
-                  {lesson.title}
-                </h3>
-                <p className="text-xs text-[var(--text-secondary)] mt-1 line-clamp-1">
-                  {lesson.description}
-                </p>
-                <div className="flex items-center justify-between mt-3">
-                  <span className="text-xs text-[var(--text-tertiary)]">
-                    {lesson.words.length} words
-                  </span>
-                  <span className={`text-xs px-2 py-0.5 rounded-full ${
-                    lesson.difficulty === "easy"
-                      ? "" 
-                      : lesson.difficulty === "medium"
-                      ? ""
-                      : ""
-                  }`}
-                  style={{
-                    backgroundColor: lesson.difficulty === "easy" 
-                      ? 'var(--btn-regular-bg)'
-                      : lesson.difficulty === "medium"
-                      ? 'var(--btn-regular-bg)'
-                      : 'var(--btn-regular-bg)',
-                    color: lesson.difficulty === "easy" 
-                      ? 'var(--primary)'
-                      : lesson.difficulty === "medium"
-                      ? 'var(--primary)'
-                      : 'var(--primary)',
-                  }}
-                  >
-                    {lesson.difficulty}
-                  </span>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </section>
-      </main>
+      </section>
     </div>
   );
 }
