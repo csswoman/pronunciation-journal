@@ -138,6 +138,9 @@ export interface UserStats {
   totalAttempts: number;
   averageAccuracy: number;
   lastStudyDate: string;
+  totalDecks?: number;
+  totalDeckWords?: number;
+  deckWordsDueToday?: number;
 }
 
 // ── AI Practice Types ──

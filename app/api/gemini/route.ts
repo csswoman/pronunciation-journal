@@ -1,4 +1,4 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenAI, type Content } from "@google/genai";
 import { NextRequest, NextResponse } from "next/server";
 
 interface Message {
@@ -13,18 +13,17 @@ interface GeminiRequestBody {
 
 // Multiple free models for automatic fallback when quota is exceeded
 const FALLBACK_MODELS = [
-  "models/gemini-2.5-flash",           // Primary - newest and fastest
-  "models/gemini-2.0-flash",           // Fallback 1
-  "models/gemini-flash-latest",        // Fallback 2
-  "models/gemini-2.5-flash-lite",      // Fallback 3 - lighter version
-  "models/gemini-2.0-flash-lite",      // Fallback 4
+  "gemini-2.5-flash",           // Primary - newest and fastest
+  "gemini-2.0-flash",           // Fallback 1
+  "gemini-flash-latest",        // Fallback 2
+  "gemini-2.5-flash-lite",      // Fallback 3 - lighter version
+  "gemini-2.0-flash-lite",      // Fallback 4
 ];
 
 async function sendMessageWithFallback(
-  genAI: GoogleGenerativeAI,
-  modelName: string,
+  ai: GoogleGenAI,
   systemPrompt: string,
-  chatHistory: any[],
+  chatHistory: Content[],
   lastMessage: string
 ): Promise<string> {
   let lastError: any;
@@ -34,17 +33,20 @@ async function sendMessageWithFallback(
     try {
       console.log(`Attempting to use model: ${model}`);
       
-      const generativeModel = genAI.getGenerativeModel({
+      const chat = ai.chats.create({
         model: model,
-        systemInstruction: systemPrompt,
-      });
-
-      const chat = generativeModel.startChat({
+        config: {
+          systemInstruction: systemPrompt,
+        },
         history: chatHistory,
       });
 
-      const result = await chat.sendMessage(lastMessage);
-      const responseText = result.response.text();
+      const result = await chat.sendMessage({ message: lastMessage });
+      const responseText = result.text;
+
+      if (!responseText) {
+        throw new Error("Gemini returned an empty response");
+      }
       
       console.log(`Successfully used model: ${model}`);
       return responseText;
@@ -95,12 +97,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       parts: [{ text: m.content }],
     }));
 
-    const genAI = new GoogleGenerativeAI(apiKey);
+    const ai = new GoogleGenAI({ apiKey });
     
     // Use fallback model strategy with automatic retry
     const responseText = await sendMessageWithFallback(
-      genAI,
-      FALLBACK_MODELS[0],
+      ai,
       systemPrompt,
       chatHistory,
       lastMessage.content
