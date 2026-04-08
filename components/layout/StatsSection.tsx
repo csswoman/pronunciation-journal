@@ -57,6 +57,12 @@ export default function StatsSection({ stats, todayProgress, progressHistory }: 
     { icon: "📚", label: "Today's Words", value: todayWords, suffix: "", bg: "#FFE8EE", color: "#C0294A" },
   ];
 
+  const deckStats = [
+    { icon: "🗂️", label: "My Decks", value: stats?.totalDecks ?? 0, suffix: "", bg: "#E8F4FD", color: "#1565C0" },
+    { icon: "📖", label: "Total Words", value: stats?.totalDeckWords ?? 0, suffix: "", bg: "#F3E8FF", color: "#6B21A8" },
+    { icon: "⏰", label: "Due Today", value: stats?.deckWordsDueToday ?? 0, suffix: "", bg: "#FFF8E1", color: "#B45309" },
+  ];
+
   return (
     <div className="space-y-4">
       {/* Charts row */}
@@ -254,6 +260,44 @@ export default function StatsSection({ stats, todayProgress, progressHistory }: 
             </div>
           </div>
         ))}
+      </div>
+
+      {/* Decks stats row */}
+      <div className="space-y-2">
+        <p
+          className="text-[11px] font-semibold uppercase tracking-wider"
+          style={{ color: "var(--text-secondary)" }}
+        >
+          Decks
+        </p>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          {deckStats.map((s) => (
+            <div
+              key={s.label}
+              className="rounded-xl px-4 py-3.5 flex items-center gap-3"
+              style={{ background: s.bg }}
+            >
+              <span className="text-2xl">{s.icon}</span>
+              <div>
+                <div
+                  className="font-extrabold text-xl leading-none tracking-tight"
+                  style={{ color: s.color }}
+                >
+                  {s.value}
+                  {s.suffix && (
+                    <span className="text-sm font-semibold opacity-70">{s.suffix}</span>
+                  )}
+                </div>
+                <div
+                  className="text-[11px] font-medium mt-0.5"
+                  style={{ color: s.color, opacity: 0.72 }}
+                >
+                  {s.label}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

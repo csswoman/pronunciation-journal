@@ -1,12 +1,12 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenAI } from "@google/genai";
 import { NextRequest, NextResponse } from "next/server";
 
 const FALLBACK_MODELS = [
-  "models/gemini-2.5-flash",
-  "models/gemini-2.0-flash",
-  "models/gemini-flash-latest",
-  "models/gemini-2.5-flash-lite",
-  "models/gemini-2.0-flash-lite",
+  "gemini-2.5-flash",
+  "gemini-2.0-flash",
+  "gemini-flash-latest",
+  "gemini-2.5-flash-lite",
+  "gemini-2.0-flash-lite",
 ];
 
 const SYSTEM_PROMPT = `You are an English vocabulary coach. When given a deck name and optional description, suggest 8 relevant English words or short phrases that fit the theme. Return ONLY valid JSON with no markdown, no code fences, no extra text — just raw JSON.
@@ -15,18 +15,26 @@ Format:
 {"suggestions":[{"word":"example","meaning":"brief definition or usage context"}]}`;
 
 async function generateSuggestions(
-  genAI: GoogleGenerativeAI,
+  ai: GoogleGenAI,
   prompt: string
 ): Promise<string> {
   let lastError: unknown;
   for (const modelName of FALLBACK_MODELS) {
     try {
-      const model = genAI.getGenerativeModel({
+      const result = await ai.models.generateContent({
         model: modelName,
-        systemInstruction: SYSTEM_PROMPT,
+        contents: prompt,
+        config: {
+          systemInstruction: SYSTEM_PROMPT,
+          responseMimeType: "application/json",
+        },
       });
-      const result = await model.generateContent(prompt);
-      return result.response.text();
+
+      if (!result.text) {
+        throw new Error("Gemini returned an empty response");
+      }
+
+      return result.text;
     } catch (err: any) {
       lastError = err;
       if (err.status === 404 || err.message?.includes("not found")) continue;
@@ -60,8 +68,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     : `Deck: "${deckName}"\n\n${difficultyHint} ${seedHint}\nSuggest 8 English words or short phrases for this theme.`;
 
   try {
-    const genAI = new GoogleGenerativeAI(apiKey);
-    const raw = await generateSuggestions(genAI, prompt);
+    const ai = new GoogleGenAI({ apiKey });
+    const raw = await generateSuggestions(ai, prompt);
 
     // Strip markdown code fences if model adds them
     const cleaned = raw.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();

@@ -193,6 +193,7 @@ export type Database = {
           ipa: string | null
           meanings: Json | null
           notes: string | null
+          phrases: string[] | null
           sound_id: number | null
           tags: string[] | null
           updated_at: string | null
@@ -208,6 +209,7 @@ export type Database = {
           ipa?: string | null
           meanings?: Json | null
           notes?: string | null
+          phrases?: string[] | null
           sound_id?: number | null
           tags?: string[] | null
           updated_at?: string | null
@@ -223,6 +225,7 @@ export type Database = {
           ipa?: string | null
           meanings?: Json | null
           notes?: string | null
+          phrases?: string[] | null
           sound_id?: number | null
           tags?: string[] | null
           updated_at?: string | null

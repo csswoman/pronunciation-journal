@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useAuth } from '@/components/AuthProvider'
+import { getSupabaseBrowserClient } from '@/lib/supabase/client'
 import PageHero from '@/components/layout/PageHero'
 import StatsSection from '@/components/layout/StatsSection'
 import AchievementsSection from '@/components/progress/AchievementsSection'
@@ -27,16 +28,50 @@ export default function ProgressPage() {
   useEffect(() => {
     if (!user) return
 
+    const fetchDeckStats = async () => {
+      const supabase = getSupabaseBrowserClient()
+
+      // Total decks for user
+      const { count: deckCount } = await supabase
+        .from("decks")
+        .select("*", { count: "exact", head: true })
+        .eq("user_id", user.id)
+
+      // Total words across all decks (via join)
+      const { data: deckEntryData } = await supabase
+        .from("deck_entries")
+        .select("entry_id, decks!inner(user_id)")
+        .eq("decks.user_id", user.id)
+
+      // Words due today: sounds whose next_review <= today and status is learning/review
+      const today = new Date().toISOString().split("T")[0]
+      const { data: dueData } = await supabase
+        .from("user_sound_progress")
+        .select("id")
+        .eq("user_id", user.id)
+        .lte("next_review", today)
+        .in("status", ["learning", "review"])
+
+      return {
+        totalDecks: deckCount ?? 0,
+        totalDeckWords: deckEntryData?.length ?? 0,
+        deckWordsDueToday: dueData?.length ?? 0,
+      }
+    }
+
     // TODO: Fetch stats from API/Supabase
-    // Mock data for now
-    setStats({
-      currentStreak: 14,
-      longestStreak: 21,
-      totalXP: 2450,
-      totalWords: 156,
-      totalAttempts: 892,
-      averageAccuracy: 87,
-      lastStudyDate: new Date().toISOString(),
+    // Mock data for now, with deck stats fetched
+    fetchDeckStats().then(deckStats => {
+      setStats({
+        currentStreak: 14,
+        longestStreak: 21,
+        totalXP: 2450,
+        totalWords: 156,
+        totalAttempts: 892,
+        averageAccuracy: 87,
+        lastStudyDate: new Date().toISOString(),
+        ...deckStats,
+      })
     })
 
     setTodayProgress({
