@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState } from "react";
 
 interface BottomNavProps {
   className?: string;
@@ -44,44 +45,88 @@ const navItems = [
       </svg>
     ),
   },
-  {
-    name: "Profile",
-    href: "/profile",
-    icon: (
-      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-      </svg>
-    ),
-  },
+];
+
+const menuItems = [
+  { name: "Home", href: "/" },
+  { name: "Dashboard", href: "/dashboard" },
+  { name: "AI Practice", href: "/ai-practice" },
+  { name: "Progress", href: "/progress" },
+  { name: "Decks", href: "/decks" },
+  { name: "IPA Chart", href: "/ipa" },
+  { name: "Lessons", href: "/lesson" },
+  { name: "Profile", href: "/profile" },
 ];
 
 export default function BottomNav({ className = "" }: BottomNavProps) {
   const pathname = usePathname();
+  const [showMenu, setShowMenu] = useState(false);
 
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
 
   return (
-    <nav
-      className={`fixed bottom-0 left-0 right-0 z-50 bg-[var(--card-bg)] border-t border-[var(--line-divider)] flex items-center justify-around px-2 py-2 ${className}`}
-    >
-      {navItems.map((item) => {
-        const active = isActive(item.href);
-        return (
-          <Link
-            key={item.href}
-            href={item.href}
-            className={`flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl text-[10px] font-semibold transition-all ${
-              active
-                ? "text-[var(--primary)] bg-[var(--btn-regular-bg)]"
-                : "text-[var(--text-tertiary)]"
-            }`}
-          >
-            {item.icon}
-            {item.name}
-          </Link>
-        );
-      })}
-    </nav>
+    <>
+      {showMenu && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-40"
+          onClick={() => setShowMenu(false)}
+        />
+      )}
+      {showMenu && (
+        <div className="fixed bottom-16 left-4 right-4 bg-[var(--card-bg)] border border-[var(--line-divider)] rounded-lg shadow-lg z-50 p-4">
+          <div className="grid grid-cols-2 gap-4">
+            {menuItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={() => setShowMenu(false)}
+                className={`flex items-center gap-2 p-2 rounded-lg text-sm font-medium transition-colors ${
+                  isActive(item.href)
+                    ? "text-[var(--primary)] bg-[var(--btn-regular-bg)]"
+                    : "text-[var(--text-primary)] hover:bg-[var(--btn-hover-bg)]"
+                }`}
+              >
+                {item.name}
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+      <nav
+        className={`fixed bottom-0 left-0 right-0 z-50 bg-[var(--card-bg)] border-t border-[var(--line-divider)] flex items-center justify-around px-2 py-2 ${className}`}
+      >
+        {navItems.map((item) => {
+          const active = isActive(item.href);
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={`flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl text-[10px] font-semibold transition-all ${
+                active
+                  ? "text-[var(--primary)] bg-[var(--btn-regular-bg)]"
+                  : "text-[var(--text-tertiary)]"
+              }`}
+            >
+              {item.icon}
+              {item.name}
+            </Link>
+          );
+        })}
+        <button
+          onClick={() => setShowMenu(!showMenu)}
+          className={`flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl text-[10px] font-semibold transition-all ${
+            showMenu
+              ? "text-[var(--primary)] bg-[var(--btn-regular-bg)]"
+              : "text-[var(--text-tertiary)]"
+          }`}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+          Menu
+        </button>
+      </nav>
+    </>
   );
 }
