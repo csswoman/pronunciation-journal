@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  turbopack: {},
   webpack: (config, { isServer }) => {
     // Enable Web Workers with proper handling
     if (!isServer) {

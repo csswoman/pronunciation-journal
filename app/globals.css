@@ -1,6 +1,6 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
 
 /* ── OKLCH Theme System ──────────────────────────────────────────────────── */
 :root {
@@ -249,6 +249,14 @@
   color: var(--primary);
 }
 
+.font-display {
+  font-family: var(--font-display), serif;
+}
+
+.font-heading {
+  font-family: var(--font-heading), sans-serif;
+}
+
 /* ── Dynamic Color Utility Classes ─────────────────────────────────────── */
 /* Text Colors */
 .text-primary { color: var(--primary); }
@@ -259,6 +267,7 @@
 
 /* Background Colors */
 .bg-primary { background-color: var(--primary); }
+.bg-accent { background-color: var(--color-accent); }
 .bg-page-bg { background-color: var(--page-bg); }
 .bg-card-bg { background-color: var(--card-bg); }
 .bg-btn-regular { background-color: var(--btn-regular-bg); }
@@ -277,6 +286,7 @@
 
 /* Border Colors */
 .border-primary { border-color: var(--primary); }
+.border-accent { border-color: var(--color-accent); }
 .border-line-divider { border-color: var(--line-divider); }
 .border-line-color { border-color: var(--line-color); }
 
@@ -287,6 +297,7 @@
 
 /* Text on Primary Background */
 .text-on-primary { color: white; }
+.text-on-accent { color: var(--color-text-on-accent); }
 
 /* Link Styles */
 .link-primary { 
@@ -301,6 +312,10 @@
 .focus\:ring-primary:focus {
   outline: none;
   box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.3);
+}
+
+.focus\:ring-accent:focus {
+  --tw-ring-color: var(--color-accent);
 }
 
 /* Semantic Color Classes (from admonitions) */
