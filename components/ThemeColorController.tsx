@@ -32,13 +32,6 @@ export default function ThemeColorController({ isExpanded }: ThemeColorControlle
     }
   }, [isDragging]);
 
-  // Generate rainbow gradient for the slider
-  const rainbowGradient = Array.from({ length: 361 }, (_, i) => {
-    const h = i;
-    return `hsl(${h}, 100%, 50%)`;
-  })
-    .join(", ");
-
   return (
     <div className="px-4 py-4 space-y-4 transition-all" style={{ borderTop: '1px solid var(--border)' }}>
       {!mounted ? (

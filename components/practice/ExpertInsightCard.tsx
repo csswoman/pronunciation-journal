@@ -43,7 +43,7 @@ export function ExpertInsightCard({
           disabled={isLoading}
           className="px-6 py-2 bg-white text-[var(--primary)] font-semibold rounded-lg hover:bg-gray-100 disabled:opacity-50 transition-colors"
         >
-          {isLoading ? 'Starting...' : 'Start Review'}
+          {isLoading ? "Starting..." : `Start ${durationMinutes} min review`}
         </button>
 
         {/* Progress Circle */}

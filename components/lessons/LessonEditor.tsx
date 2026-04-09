@@ -4,6 +4,7 @@ import { useState, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import Link from "next/link";
+import Image from "next/image";
 import {
   createTheoryLesson,
   updateTheoryLesson,
@@ -204,7 +205,7 @@ export default function LessonEditor({ initialLesson }: LessonEditorProps) {
             />
             {coverUrl ? (
               <div className="relative rounded-xl overflow-hidden h-40">
-                <img src={coverUrl} alt="cover" className="w-full h-full object-cover" />
+                <Image src={coverUrl} alt="cover" fill className="object-cover" />
                 <button
                   onClick={() => setCoverUrl("")}
                   className="absolute top-2 right-2 p-1.5 rounded-lg bg-black/50 text-white hover:bg-black/70 transition-colors"

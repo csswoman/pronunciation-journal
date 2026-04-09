@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Entry, Difficulty } from "@/lib/types";
+import { Entry, Difficulty, Meaning } from "@/lib/types";
 import { fetchPronunciation } from "@/lib/dictionary";
 import { saveEntry } from "@/lib/storage";
 import { getWordSuggestions, WordSuggestion } from "@/lib/dictionarySearch";
@@ -19,7 +19,7 @@ export default function EntryForm({ onSave, onCancel }: EntryFormProps) {
   const [notes, setNotes] = useState("");
   const [difficulty, setDifficulty] = useState<Difficulty>("medium");
   const [tags, setTags] = useState("");
-  const [meanings, setMeanings] = useState<any>(null);
+  const [meanings, setMeanings] = useState<Meaning[] | null>(null);
   const [sourceUrl, setSourceUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -47,10 +47,6 @@ export default function EntryForm({ onSave, onCancel }: EntryFormProps) {
     setSuccess(null);
 
     // Store current values before API call to detect user input
-    const previousIpa = ipa;
-    const previousAudioUrl = audioUrl;
-    const previousMeanings = meanings;
-
     try {
       const data = await fetchPronunciation(wordToUse.trim());
       

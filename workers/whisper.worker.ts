@@ -9,6 +9,10 @@ type PipelineFn = (typeof import("@xenova/transformers"))["pipeline"];
 let pipelineFn: PipelineFn | null = null;
 let transcriber: Awaited<ReturnType<PipelineFn>> | null = null;
 
+interface WhisperResult {
+  text: string;
+}
+
 async function getPipelineFn(): Promise<PipelineFn> {
   if (pipelineFn) return pipelineFn;
 
@@ -31,8 +35,7 @@ self.onmessage = async (event: MessageEvent) => {
       self.postMessage({ type: "progress", progress: 0 });
       const pipeline = await getPipelineFn();
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const pipelineOptions: any = {
+      const pipelineOptions: Record<string, unknown> = {
         dtype: "q8", // quantized int8 — ~40% faster inference
         progress_callback: (progress: { progress: number }) => {
           if (progress.progress) {
@@ -81,21 +84,20 @@ self.onmessage = async (event: MessageEvent) => {
         setTimeout(() => reject(new Error("Whisper timeout after 10 seconds")), 10000)
       );
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const transcribePromise = (transcriber as any)(audio, {
+      const transcribePromise = (transcriber as unknown as (samples: Float32Array, opts: Record<string, unknown>) => Promise<unknown>)(audio, {
         language: "english",
         task: "transcribe",
         no_speech_threshold: 0.0,
         logprob_threshold: -2.0,
       });
 
-      const result: any = await Promise.race([transcribePromise, timeoutPromise]);
+      const result = (await Promise.race([transcribePromise, timeoutPromise])) as unknown;
 
       console.log(`[Worker] Pipeline result raw:`, result);
 
       const text = Array.isArray(result)
-        ? result.map((r: { text: string }) => r.text).join(" ")
-        : (result as { text: string }).text;
+        ? (result as WhisperResult[]).map((r) => r.text).join(" ")
+        : (result as WhisperResult).text;
 
       self.postMessage({
         type: "result",

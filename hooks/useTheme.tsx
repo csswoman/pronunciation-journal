@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { themes, ThemeName, DEFAULT_THEME, applyTheme, resolveThemeName } from "@/lib/themes";
+import { ThemeName, DEFAULT_THEME, applyTheme, resolveThemeName } from "@/lib/themes";
 
 type Mode = "light" | "dark" | "system";
 
@@ -23,7 +23,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     try {
       const raw = localStorage.getItem(STORAGE_THEME_KEY);
       if (raw) return resolveThemeName(raw);
-    } catch (e) {
+    } catch {
       // ignore
     }
     return DEFAULT_THEME;
@@ -33,7 +33,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     try {
       const raw = localStorage.getItem(STORAGE_MODE_KEY) as Mode | null;
       return (raw as Mode) ?? "system";
-    } catch (e) {
+    } catch {
       return "system";
     }
   });
@@ -57,7 +57,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     setCurrentTheme(name);
     try {
       localStorage.setItem(STORAGE_THEME_KEY, name);
-    } catch (e) {
+    } catch {
       // ignore
     }
   };
@@ -66,7 +66,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     setModeState(m);
     try {
       localStorage.setItem(STORAGE_MODE_KEY, m);
-    } catch (e) {
+    } catch {
       // ignore
     }
   };

@@ -41,7 +41,7 @@ export function GeminiSuggestPanel({
     setSuggestions([]);
     if (opts?.redo) setAdded(new Set());
     try {
-      const body: any = {
+      const body: { deckName: string; deckDescription: string; difficulty?: number; seed?: string | number } = {
         deckName: deck.name,
         deckDescription: deck.description ?? "",
       };
@@ -61,8 +61,8 @@ export function GeminiSuggestPanel({
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Failed to get suggestions");
       setSuggestions(data.suggestions ?? []);
-    } catch (e: any) {
-      setError(e.message);
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : "Failed to get suggestions");
     } finally {
       setLoading(false);
     }
