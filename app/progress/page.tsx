@@ -1,29 +1,22 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import Image from 'next/image'
 import { useAuth } from '@/components/AuthProvider'
 import { getSupabaseBrowserClient } from '@/lib/supabase/client'
-import PageHero from '@/components/layout/PageHero'
+import Container from '@/components/layout/Container'
+import Section from '@/components/layout/Section'
+import PageHeader from '@/components/layout/PageHeader'
 import StatsSection from '@/components/layout/StatsSection'
 import AchievementsSection from '@/components/progress/AchievementsSection'
 import JourneyToFluiditySection from '@/components/progress/JourneyToFluiditySection'
 import MasteredSection from '@/components/progress/MasteredSection'
-import ReviewReminder from '@/components/progress/ReviewReminder'
 import { useMasteredSounds } from '@/hooks/useMasteredSounds'
 import type { UserStats, DailyProgress } from '@/lib/types'
 
-const RocketIcon = () => (
-  <svg className="w-32 h-32" viewBox="0 0 128 128" fill="none">
-    <rect x="40" y="60" width="48" height="60" fill="#FFD700" rx="4" />
-    <circle cx="64" cy="40" r="20" fill="#FF6B6B" />
-    <path d="M45 75 L35 95 M83 75 L93 95" stroke="#FFD700" strokeWidth="4" />
-    <circle cx="64" cy="32" r="6" fill="#fff" />
-  </svg>
-)
-
 export default function ProgressPage() {
   const { user } = useAuth()
-  const { mastered, dueToday } = useMasteredSounds(user?.id)
+  const { mastered } = useMasteredSounds(user?.id)
   const [stats, setStats] = useState<UserStats | null>(null)
   const [todayProgress, setTodayProgress] = useState<DailyProgress | null>(null)
   const [progressHistory, setProgressHistory] = useState<DailyProgress[]>([])
@@ -107,32 +100,45 @@ export default function ProgressPage() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-8 space-y-8">
-      <PageHero
-        eyebrow="Cada día te acercas más"
-        title="Mi"
-        titleAccent="Progreso"
-        description="Cada palabra nueva es un paso más hacia tu libertad lingüística. Estás superando tus límites día tras día."
-        primaryCta={{
-          label: 'Nivel 12 • Polyglot Path',
-          onClick: () => console.log('Navigate to level'),
-        }}
-        illustration={<RocketIcon />}
-      />
+    <div className="py-8 pb-24">
+      <Container>
+        <PageHeader
+          badge="Daily Wins"
+          title="Your Progress"
+          subtitle="Keep Climbing"
+          description="See your streak, points, and momentum at a glance."
+          primaryCta={{
+            label: 'Keep Going',
+            onClick: () => console.log('Navigate to level'),
+          }}
+          illustration={
+            <Image
+              src="/illustrations/xp-points.svg"
+              alt="XP points illustration"
+              width={624}
+              height={368}
+              priority
+              className="w-[300px] xl:w-[340px] h-auto"
+            />
+          }
+        />
+      </Container>
 
-      <StatsSection
-        stats={stats}
-        todayProgress={todayProgress}
-        progressHistory={progressHistory}
-      />
+      <Container>
+        <Section spacing="lg" className="mt-8">
+          <StatsSection
+            stats={stats}
+            todayProgress={todayProgress}
+            progressHistory={progressHistory}
+          />
 
-      <ReviewReminder dueToday={dueToday} totalMastered={mastered.length} />
+          <MasteredSection mastered={mastered} />
 
-      <MasteredSection mastered={mastered} />
+          <AchievementsSection />
 
-      <AchievementsSection />
-
-      <JourneyToFluiditySection />
+          <JourneyToFluiditySection />
+        </Section>
+      </Container>
     </div>
   )
 }
