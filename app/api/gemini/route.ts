@@ -11,14 +11,53 @@ interface GeminiRequestBody {
   systemPrompt: string;
 }
 
-// Multiple free models for automatic fallback when quota is exceeded
-const FALLBACK_MODELS = [
-  "gemini-2.5-flash",           // Primary - newest and fastest
-  "gemini-2.0-flash",           // Fallback 1
-  "gemini-flash-latest",        // Fallback 2
-  "gemini-2.5-flash-lite",      // Fallback 3 - lighter version
-  "gemini-2.0-flash-lite",      // Fallback 4
-];
+const ENABLE_PREVIEW_MODELS = process.env.GEMINI_ENABLE_PREVIEW_MODELS === "true";
+const BASE_MODELS = [
+  "gemini-2.5-flash-lite",
+  "gemini-2.5-flash",
+  "gemini-flash-latest",
+] as const;
+const PREVIEW_MODELS = ["gemini-3.1-flash-lite-preview"] as const;
+const FALLBACK_MODELS = ENABLE_PREVIEW_MODELS
+  ? [...BASE_MODELS, ...PREVIEW_MODELS]
+  : [...BASE_MODELS];
+
+function getErrorStatus(err: unknown): number | undefined {
+  if (!err || typeof err !== "object") return undefined;
+  const maybe = err as { status?: unknown; statusCode?: unknown };
+  if (typeof maybe.status === "number") return maybe.status;
+  if (typeof maybe.statusCode === "number") return maybe.statusCode;
+  return undefined;
+}
+
+function shouldTryNextModel(err: unknown): boolean {
+  const status = getErrorStatus(err);
+
+  // Fatal auth/request errors: switching model will not help.
+  if (status === 400 || status === 401 || status === 403) {
+    return false;
+  }
+
+  // Common recoverable errors where trying another model is useful.
+  if (status === 404 || status === 408 || status === 409 || status === 425 || status === 429) {
+    return true;
+  }
+
+  if (typeof status === "number" && status >= 500) {
+    return true;
+  }
+
+  const message = String((err as { message?: unknown })?.message ?? "").toLowerCase();
+  return (
+    message.includes("not found") ||
+    message.includes("quota") ||
+    message.includes("rate") ||
+    message.includes("resource exhausted") ||
+    message.includes("unavailable") ||
+    message.includes("timeout") ||
+    message.includes("internal")
+  );
+}
 
 async function sendMessageWithFallback(
   ai: GoogleGenAI,
@@ -26,7 +65,7 @@ async function sendMessageWithFallback(
   chatHistory: Content[],
   lastMessage: string
 ): Promise<string> {
-  let lastError: any;
+  let lastError: unknown;
 
   // Try each model in sequence until one works
   for (const model of FALLBACK_MODELS) {
@@ -50,17 +89,13 @@ async function sendMessageWithFallback(
       
       console.log(`Successfully used model: ${model}`);
       return responseText;
-    } catch (err: any) {
+    } catch (err: unknown) {
       lastError = err;
-      console.warn(`Model ${model} failed:`, err.message);
-      
-      // Continue to next model if not a critical error
-      if (err.status === 404 || err.message?.includes("not found")) {
-        continue;
-      }
-      
-      // For other errors, rethrow immediately
-      if (err.status && err.status !== 404) {
+      const message = String((err as { message?: unknown })?.message ?? "Unknown error");
+      const status = getErrorStatus(err);
+      console.warn(`Model ${model} failed (${status ?? "no-status"}):`, message);
+
+      if (!shouldTryNextModel(err)) {
         throw err;
       }
     }
@@ -109,11 +144,13 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     return NextResponse.json({ content: responseText });
 
-  } catch (err: any) {
+  } catch (err: unknown) {
+    const status = getErrorStatus(err) ?? 500;
+    const message = String((err as { message?: unknown })?.message ?? "Error interno del servidor");
     console.error("Error en Gemini API:", err);
     return NextResponse.json(
-      { error: err.message || "Error interno del servidor" },
-      { status: err.status || 500 }
+      { error: message },
+      { status }
     );
   }
 }

@@ -4,9 +4,6 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { getLessonById } from "@/lib/lesson-generator";
-import { audioToFloat32, dataURLToBlob } from "@/lib/audio-utils";
-import { useWhisper } from "@/hooks/useWhisper";
-import { useWebSpeech } from "@/hooks/useWebSpeech";
 import { useScoring } from "@/hooks/useScoring";
 import { useLesson } from "@/hooks/useLesson";
 import { useRecorder } from "@/hooks/useRecorder";
@@ -16,11 +13,11 @@ import { isFavorite, toggleFavorite, getLessonOffset, advanceLessonOffset, LESSO
 import PronunciationFeedback from "@/components/lesson/PronunciationFeedback";
 import AudioWaveform from "@/components/lesson/AudioWaveform";
 import ScoreDisplay from "@/components/lesson/ScoreDisplay";
-import { LessonLobby, emptyLessonMastery, LESSON_STAGES } from "@/components/lesson/LessonLobby";
+import { LessonLobby, emptyLessonMastery } from "@/components/lesson/LessonLobby";
 import type { LessonStageId, LessonStageMasteryMap } from "@/components/lesson/LessonLobby";
 import type { Lesson } from "@/lib/types";
 
-type Phase = "ready" | "recording" | "processing" | "feedback" | "complete";
+type Phase = "ready" | "recording" | "processing" | "feedback" | "no-audio" | "complete";
 
 export default function ActiveLessonPage() {
   const params = useParams();
@@ -41,29 +38,37 @@ export default function ActiveLessonPage() {
 
   const fullLesson = staticLesson ?? dynamicLesson;
 
-  // ── Lobby / stage state (only for dynamic lessons) ────────────────────────
-  const [view, setView] = useState<"lobby" | "session">(isDynamic ? "lobby" : "session");
+  // ── Lobby / stage state ────────────────────────────────────────────────────
+  // Dynamic lessons: "lobby" → stage picker; static lessons: "difficulty" → easy/hard
+  const [view, setView] = useState<"lobby" | "difficulty" | "session">(
+    isDynamic ? "lobby" : "difficulty"
+  );
   const [activeStage, setActiveStage] = useState<LessonStageId>("guided");
   const [stageMastery, setStageMastery] = useState<LessonStageMasteryMap>(emptyLessonMastery());
   // The sliced lesson shown in the current session
   const [lessonData, setLessonData] = useState<Lesson | null | undefined>(
-    isDynamic ? undefined : (fullLesson ?? null)
+    isDynamic ? undefined : undefined  // wait for difficulty pick
   );
   const [sessionOffset, setSessionOffset] = useState(0);
 
-  // When full lesson resolves, either set directly (static) or wait for lobby selection (dynamic)
+  // When full lesson resolves, either wait for lobby (dynamic) or difficulty pick (static)
   useEffect(() => {
     if (!fullLesson) return;
-    if (!isDynamic) {
-      setLessonData(fullLesson);
-      return;
+    if (isDynamic) {
+      getLessonOffset(lessonId).then((offset) => {
+        setSessionOffset(offset);
+        // Don't set lessonData yet — user picks stage first from the lobby
+      });
     }
-    // Load saved offset
-    getLessonOffset(lessonId).then((offset) => {
-      setSessionOffset(offset);
-      // Don't set lessonData yet — user picks stage first from the lobby
-    });
+    // Static: stay on difficulty picker — lessonData set when user picks
   }, [fullLesson, isDynamic, lessonId]);
+
+  function handleSelectDifficulty(difficulty: "easy" | "hard") {
+    if (!fullLesson) return;
+    setScoringThreshold(difficulty === "hard" ? 85 : 65);
+    setLessonData({ ...fullLesson });
+    setView("session");
+  }
 
   function handleSelectStage(stageId: LessonStageId) {
     if (!fullLesson) return;
@@ -76,6 +81,7 @@ export default function ActiveLessonPage() {
         hint: stageId === "speed" ? undefined : w.hint,
         audioUrl: stageId === "speed" ? undefined : w.audioUrl,
       }));
+      setScoringThreshold(stageId === "speed" ? 85 : stageId === "pronunciation" ? 75 : 65);
       setLessonData({ ...sliced, words: stageWords });
       setActiveStage(stageId);
       setView("session");
@@ -83,7 +89,7 @@ export default function ActiveLessonPage() {
   }
 
   async function handleBackToLobby() {
-    setView("lobby");
+    setView(isDynamic ? "lobby" : "difficulty");
     setLessonData(undefined);
     setPhase("ready");
   }
@@ -96,12 +102,12 @@ export default function ActiveLessonPage() {
     : 1;
 
   const [phase, setPhase] = useState<Phase>("ready");
+  const [scoringThreshold, setScoringThreshold] = useState(70);
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [wordAudioUrl, setWordAudioUrl] = useState<string | null>(null);
   const [isFav, setIsFav] = useState(false);
 
   const {
-    lesson,
     currentWord,
     currentIndex,
     totalWords,
@@ -111,6 +117,8 @@ export default function ActiveLessonPage() {
     startLesson,
     addResult,
     nextWord,
+    skipWord,
+    markKnown,
     retryWord,
     resetLesson,
   } = useLesson();
@@ -123,17 +131,20 @@ export default function ActiveLessonPage() {
   const phaseRef = useRef(phase);
   useEffect(() => { phaseRef.current = phase; }, [phase]);
   const lessonIdRef = useRef(lessonId);
-
-  // First engine to deliver a result wins
-  const resultDeliveredRef = useRef(false);
+  const scoringThresholdRef = useRef(scoringThreshold);
+  useEffect(() => { scoringThresholdRef.current = scoringThreshold; }, [scoringThreshold]);
+  const geminiInFlightRef = useRef(false);
 
   // Shared scoring logic
   const processSpeechResult = useCallback(async (text: string) => {
     const word = currentWordRef.current;
     if (!word) return;
+    if (!text.trim()) {
+      setPhase("no-audio");
+      return;
+    }
     try {
-      const result = await scoreAndSave(text, word.word, lessonIdRef.current);
-      console.log(`[Scoring] Accuracy: ${result.accuracy}%, Correct: ${result.isCorrect}`);
+      const result = await scoreAndSave(text, word.word, lessonIdRef.current, scoringThresholdRef.current);
       addResult(result, calculateXP(result.accuracy), word.word);
       setPhase("feedback");
     } catch (err) {
@@ -142,62 +153,40 @@ export default function ActiveLessonPage() {
     }
   }, [addResult, scoreAndSave]);
 
-  // Web Speech: skip empty results (Whisper will handle them as fallback)
-  const handleWebSpeechResult = useCallback(async (text: string) => {
-    if (phaseRef.current !== "processing") return;
-    if (resultDeliveredRef.current) return;
-    if (!text.trim()) return; // empty → wait for Whisper
-    resultDeliveredRef.current = true;
-    console.log(`[STT/WebSpeech] Result: "${text}"`);
-    await processSpeechResult(text);
-  }, [processSpeechResult]);
-
-  // Whisper: always proceed — it's the final fallback, empty = 0% score
-  const handleWhisperResult = useCallback(async (text: string) => {
-    if (phaseRef.current !== "processing") return;
-    if (resultDeliveredRef.current) return;
-    resultDeliveredRef.current = true;
-    console.log(`[STT/Whisper] Result: "${text}"`);
-    await processSpeechResult(text);
-  }, [processSpeechResult]);
-
-  const { isModelLoaded, isModelLoading, loadProgress, loadModel, transcribe, reset: resetWhisper } = useWhisper({
-    onResult: handleWhisperResult,
-  });
-
-  const { isSupported: isWebSpeechSupported, startListening, stopListening } = useWebSpeech({
-    onResult: handleWebSpeechResult,
-  });
-
   const { isRecording, audioUrl, startRecording, stopRecording, resetRecording } = useRecorder();
 
-  // Track the last processed audioUrl so we don't process the same blob twice
-  const lastProcessedUrl = useRef<string | null>(null);
-
-  // When a new audioUrl is set AND phase is "processing", run Whisper as fallback
+  // When audioUrl is set and phase is "processing", transcribe with Gemini directly
   useEffect(() => {
     if (phase !== "processing") return;
     if (!audioUrl) return;
-    if (!isModelLoaded) return;
-    if (audioUrl === lastProcessedUrl.current) return;
-    if (resultDeliveredRef.current) return; // Web Speech already handled this
+    if (geminiInFlightRef.current) return;
 
-    lastProcessedUrl.current = audioUrl;
+    geminiInFlightRef.current = true;
 
-    const runPipeline = async () => {
-      if (resultDeliveredRef.current) return; // double-check after async gap
-      try {
-        const blob = dataURLToBlob(audioUrl);
-        const float32 = await audioToFloat32(blob);
-        transcribe(float32);
-      } catch (err) {
-        console.error("Audio conversion error:", err);
-        setPhase("ready");
-      }
-    };
+    const controller = new AbortController();
+    const timeoutId = window.setTimeout(() => controller.abort(), 10000);
+    const word = currentWordRef.current?.word ?? "";
 
-    runPipeline();
-  }, [audioUrl, phase, isModelLoaded, transcribe]);
+    fetch("/api/gemini/transcribe", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      signal: controller.signal,
+      body: JSON.stringify({ audioDataUrl: audioUrl, targetWord: word }),
+    })
+      .then((res) => res.ok ? res.json() : res.json().then((d) => Promise.reject(d.error || "transcribe failed")))
+      .then((data) => {
+        const transcript = String(data.transcript ?? "").trim();
+        return processSpeechResult(transcript);
+      })
+      .catch((err) => {
+        console.warn("[STT/Gemini] failed:", err);
+        return processSpeechResult("");
+      })
+      .finally(() => {
+        window.clearTimeout(timeoutId);
+        geminiInFlightRef.current = false;
+      });
+  }, [audioUrl, phase, processSpeechResult]);
 
   // Fetch audio + favorite state when the current word changes
   useEffect(() => {
@@ -228,21 +217,24 @@ export default function ActiveLessonPage() {
     resetLesson();
     startLesson(lessonData);
     setPhase("ready");
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lessonData]);
 
+  // Warm phoneme dictionary/cache in background to reduce scoring latency.
   useEffect(() => {
-    if (!isModelLoaded && !isModelLoading) loadModel();
-  }, [isModelLoaded, isModelLoading, loadModel]);
+    if (!lessonData) return;
+    import("@/lib/phonemes")
+      .then(({ warmupPhonemeEngine }) => warmupPhonemeEngine(lessonData.words.map((w) => w.word)))
+      .catch(() => {
+        // Non-critical: scoring still works without warmup.
+      });
+  }, [lessonData]);
 
   // ── Handlers ──────────────────────────────────────────────────────────────
 
   const handleStartRecording = useCallback(async () => {
-    resetWhisper();
     resetScoring();
     resetRecording();
-    resultDeliveredRef.current = false;
-    lastProcessedUrl.current = null;
+    geminiInFlightRef.current = false;
 
     try {
       const ms = await navigator.mediaDevices.getUserMedia({
@@ -250,39 +242,32 @@ export default function ActiveLessonPage() {
       });
       setStream(ms);
       await startRecording();
-      if (isWebSpeechSupported) startListening();
       setPhase("recording");
     } catch (err) {
       console.error("Mic error:", err);
     }
-  }, [resetWhisper, resetScoring, resetRecording, startRecording, isWebSpeechSupported, startListening]);
+  }, [resetScoring, resetRecording, startRecording]);
 
   const handleStopRecording = useCallback(() => {
-    if (isWebSpeechSupported) stopListening();
     stopRecording();
     stream?.getTracks().forEach((t) => t.stop());
     setStream(null);
     setPhase("processing");
-  }, [stopRecording, stream, isWebSpeechSupported, stopListening]);
+  }, [stopRecording, stream]);
 
   const handleCancelRecording = useCallback(() => {
-    if (isWebSpeechSupported) stopListening();
     stopRecording();
     stream?.getTracks().forEach((t) => t.stop());
     setStream(null);
-    resetWhisper();
     resetRecording();
-    resultDeliveredRef.current = false;
-    lastProcessedUrl.current = null;
+    geminiInFlightRef.current = false;
     setPhase("ready");
-  }, [stopRecording, stream, isWebSpeechSupported, stopListening, resetWhisper, resetRecording]);
+  }, [stopRecording, stream, resetRecording]);
 
   const handleNext = useCallback(() => {
-    resetWhisper();
     resetScoring();
     resetRecording();
-    resultDeliveredRef.current = false;
-    lastProcessedUrl.current = null;
+    geminiInFlightRef.current = false;
     const isLast = currentIndex + 1 >= totalWords;
     if (isLast) {
       // Advance word chunk offset for next session (dynamic lessons only)
@@ -304,18 +289,39 @@ export default function ActiveLessonPage() {
       nextWord();
       setPhase("ready");
     }
-  }, [nextWord, resetWhisper, resetScoring, resetRecording, currentIndex, totalWords,
+  }, [nextWord, resetScoring, resetRecording, currentIndex, totalWords,
       isDynamic, fullLesson, lessonId, activeStage, sessionAccuracy]);
 
   const handleRetry = useCallback(() => {
-    resetWhisper();
     resetScoring();
     resetRecording();
-    resultDeliveredRef.current = false;
-    lastProcessedUrl.current = null;
+    geminiInFlightRef.current = false;
     retryWord();
     setPhase("ready");
-  }, [retryWord, resetWhisper, resetScoring, resetRecording]);
+  }, [retryWord, resetScoring, resetRecording]);
+
+  const handleSkip = useCallback(() => {
+    if (!currentWord) return;
+    resetScoring();
+    resetRecording();
+    geminiInFlightRef.current = false;
+    const isLast = currentIndex + 1 >= totalWords;
+    skipWord(currentWord.word);
+    if (isLast) setPhase("complete");
+    else setPhase("ready");
+  }, [currentWord, currentIndex, totalWords, skipWord, resetScoring, resetRecording]);
+
+  const handleMarkKnown = useCallback(() => {
+    if (!currentWord) return;
+    resetScoring();
+    resetRecording();
+    geminiInFlightRef.current = false;
+    markKnown(currentWord.word, currentIndex);
+    // totalWords decreases by 1 after markKnown — check against updated count
+    const isLast = currentIndex >= totalWords - 1;
+    if (isLast) setPhase("complete");
+    else setPhase("ready");
+  }, [currentWord, currentIndex, totalWords, markKnown, resetScoring, resetRecording]);
 
   // ── Render ────────────────────────────────────────────────────────────────
 
@@ -327,6 +333,62 @@ export default function ActiveLessonPage() {
           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
         </svg>
+      </div>
+    );
+  }
+
+  // Difficulty picker for static lessons
+  if (view === "difficulty" && fullLesson) {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-4" style={{ backgroundColor: 'var(--page-bg)' }}>
+        <div className="w-full max-w-sm space-y-4">
+          <Link
+            href="/lesson"
+            className="text-sm transition-colors"
+            style={{ color: 'var(--text-tertiary)' }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--text-primary)')}
+            onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-tertiary)')}
+          >
+            ← Back
+          </Link>
+
+          <div className="rounded-2xl border p-5" style={{ backgroundColor: 'var(--card-bg)', borderColor: 'var(--line-divider)' }}>
+            <h1 className="text-lg font-bold mb-1" style={{ color: 'var(--text-primary)' }}>{fullLesson.title}</h1>
+            <p className="text-xs mb-5" style={{ color: 'var(--text-tertiary)' }}>{fullLesson.words.length} words</p>
+
+            <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--text-secondary)' }}>Choose difficulty</p>
+
+            <div className="space-y-3">
+              <button
+                onClick={() => handleSelectDifficulty("easy")}
+                className="w-full text-left rounded-xl border px-4 py-4 flex items-center gap-4 transition-colors"
+                style={{ backgroundColor: 'var(--btn-regular-bg)', borderColor: 'var(--admonitions-color-tip)' }}
+                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'color-mix(in srgb, var(--admonitions-color-tip) 10%, transparent)')}
+                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'var(--btn-regular-bg)')}
+              >
+                <span className="text-2xl">🎧</span>
+                <div className="flex-1">
+                  <div className="font-semibold text-sm" style={{ color: 'var(--text-primary)' }}>Chill</div>
+                  <div className="text-xs mt-0.5" style={{ color: 'var(--text-secondary)' }}>Pass at 65% · IPA shown · ×1 XP</div>
+                </div>
+              </button>
+
+              <button
+                onClick={() => handleSelectDifficulty("hard")}
+                className="w-full text-left rounded-xl border px-4 py-4 flex items-center gap-4 transition-colors"
+                style={{ backgroundColor: 'var(--btn-regular-bg)', borderColor: 'var(--admonitions-color-caution)' }}
+                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'color-mix(in srgb, var(--admonitions-color-caution) 10%, transparent)')}
+                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'var(--btn-regular-bg)')}
+              >
+                <span className="text-2xl">🎯</span>
+                <div className="flex-1">
+                  <div className="font-semibold text-sm" style={{ color: 'var(--text-primary)' }}>Master</div>
+                  <div className="text-xs mt-0.5" style={{ color: 'var(--text-secondary)' }}>Pass at 85% · IPA shown · ×1.5 XP</div>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
@@ -387,19 +449,11 @@ export default function ActiveLessonPage() {
       <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-10">
         <div className="max-w-2xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            {isDynamic ? (
-              <button onClick={handleBackToLobby} className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                <svg className="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                </svg>
-              </button>
-            ) : (
-              <Link href="/lesson" className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                <svg className="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                </svg>
-              </Link>
-            )}
+            <button onClick={handleBackToLobby} className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+              <svg className="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
             <div className="text-center">
               <h1 className="text-sm font-semibold text-gray-900 dark:text-gray-100">{lessonData.title}</h1>
               <p className="text-xs text-gray-500">
@@ -420,17 +474,6 @@ export default function ActiveLessonPage() {
       </header>
 
       <main className="max-w-2xl mx-auto px-4 py-8">
-        {/* Whisper loading — small banner, doesn't block recording */}
-        {!isModelLoaded && (
-          <div className="flex items-center justify-center gap-2 mb-4 text-xs text-gray-400 dark:text-gray-500">
-            <svg className="w-3 h-3 animate-spin shrink-0" fill="none" viewBox="0 0 24 24">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-            </svg>
-            <span>Loading AI fallback… {loadProgress}%</span>
-          </div>
-        )}
-
         {/* Complete */}
         {phase === "complete" && (
           <div className="space-y-6">
@@ -514,18 +557,40 @@ export default function ActiveLessonPage() {
               <AudioWaveform isRecording={isRecording} stream={stream} />
             </div>
 
-            {/* Record button */}
+            {/* Record button + skip/known actions */}
             {phase === "ready" && (
-              <button
-                onClick={handleStartRecording}
-                className="w-20 h-20 rounded-full bg-gradient-to-br from-red-500 to-red-600 text-white shadow-lg shadow-red-500/30 hover:shadow-red-500/50 hover:scale-105 transition-all flex items-center justify-center"
-                aria-label="Start recording"
-              >
-                <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z" />
-                  <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z" />
-                </svg>
-              </button>
+              <div className="flex flex-col items-center gap-4">
+                <button
+                  onClick={handleStartRecording}
+                  className="w-20 h-20 rounded-full bg-gradient-to-br from-red-500 to-red-600 text-white shadow-lg shadow-red-500/30 hover:shadow-red-500/50 hover:scale-105 transition-all flex items-center justify-center"
+                  aria-label="Start recording"
+                >
+                  <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z" />
+                    <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z" />
+                  </svg>
+                </button>
+                <div className="flex gap-2">
+                  <button
+                    onClick={handleSkip}
+                    className="text-xs px-3 py-1.5 rounded-lg transition-colors"
+                    style={{ color: 'var(--text-tertiary)', backgroundColor: 'var(--btn-regular-bg)' }}
+                    onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--text-secondary)')}
+                    onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-tertiary)')}
+                  >
+                    Skip →
+                  </button>
+                  <button
+                    onClick={handleMarkKnown}
+                    className="text-xs px-3 py-1.5 rounded-lg transition-colors"
+                    style={{ color: 'var(--text-tertiary)', backgroundColor: 'var(--btn-regular-bg)' }}
+                    onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--text-secondary)')}
+                    onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-tertiary)')}
+                  >
+                    I know this ✓
+                  </button>
+                </div>
+              </div>
             )}
 
             {/* Stop / Cancel buttons */}
@@ -566,6 +631,28 @@ export default function ActiveLessonPage() {
               </div>
             )}
 
+            {/* No audio detected */}
+            {phase === "no-audio" && (
+              <div className="w-full max-w-md text-center space-y-4">
+                <div className="text-4xl">🎙️</div>
+                <p className="font-semibold" style={{ color: 'var(--text-primary)' }}>
+                  I didn&apos;t catch that
+                </p>
+                <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                  Try speaking a bit louder or closer to the mic.
+                </p>
+                <button
+                  onClick={handleRetry}
+                  className="px-5 py-2.5 rounded-xl text-white font-medium transition-colors"
+                  style={{ backgroundColor: 'var(--primary)' }}
+                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--btn-regular-bg-hover)')}
+                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'var(--primary)')}
+                >
+                  Try again
+                </button>
+              </div>
+            )}
+
             {/* Feedback */}
             {phase === "feedback" && scoringResult && feedback && (
               <div className="w-full max-w-md space-y-6">
@@ -576,9 +663,7 @@ export default function ActiveLessonPage() {
                   xpEarned={xpEarned}
                 />
                 <p className="text-center text-xs text-gray-400">
-                  {scoringResult.transcript.length > 0 
-                    ? `Heard: "${scoringResult.transcript}"`
-                    : "I didn't hear anything. Try speaking louder or closer to the mic."}
+                  Heard: &ldquo;{scoringResult.transcript}&rdquo;
                 </p>
                 <div className="flex gap-3 justify-center">
                   <button

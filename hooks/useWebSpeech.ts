@@ -4,6 +4,7 @@ import { useRef, useState, useCallback, useEffect } from "react";
 
 interface UseWebSpeechOptions {
   onResult?: (text: string) => void;
+  onError?: (error: string) => void;
 }
 
 interface UseWebSpeechReturn {
@@ -13,12 +14,15 @@ interface UseWebSpeechReturn {
   stopListening: () => void;
 }
 
-export function useWebSpeech({ onResult }: UseWebSpeechOptions = {}): UseWebSpeechReturn {
+export function useWebSpeech({ onResult, onError }: UseWebSpeechOptions = {}): UseWebSpeechReturn {
   const [isListening, setIsListening] = useState(false);
   const recognitionRef = useRef<any>(null);
   const pendingRef = useRef<string>("");
+  const disabledByNetworkRef = useRef(false);
   const onResultRef = useRef(onResult);
   useEffect(() => { onResultRef.current = onResult; }, [onResult]);
+  const onErrorRef = useRef(onError);
+  useEffect(() => { onErrorRef.current = onError; }, [onError]);
 
   const isSupported =
     typeof window !== "undefined" &&
@@ -26,6 +30,7 @@ export function useWebSpeech({ onResult }: UseWebSpeechOptions = {}): UseWebSpee
 
   const startListening = useCallback(() => {
     if (!isSupported) return;
+    if (disabledByNetworkRef.current) return;
 
     const SR = (window as any).SpeechRecognition ?? (window as any).webkitSpeechRecognition;
     const rec: any = new SR();
@@ -43,7 +48,14 @@ export function useWebSpeech({ onResult }: UseWebSpeechOptions = {}): UseWebSpee
     };
 
     rec.onerror = (e: any) => {
-      if (e.error !== "no-speech") console.warn("[WebSpeech] error:", e.error);
+      const error = String(e.error || "unknown");
+      if (error === "network") {
+        console.info("[WebSpeech] network unavailable; using fallback STT");
+        disabledByNetworkRef.current = true;
+      } else if (error !== "no-speech") {
+        console.warn("[WebSpeech] error:", error);
+      }
+      onErrorRef.current?.(error);
       setIsListening(false);
       onResultRef.current?.(pendingRef.current);
       recognitionRef.current = null;
