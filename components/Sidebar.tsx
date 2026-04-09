@@ -78,8 +78,8 @@ const DecksIcon = () => (
 );
 
 const referenceNav: NavItem[] = [
-  { name: "IPA Chart",  href: "/ipa",     icon: <IpaIcon /> },
-  { name: "Lessons",    href: "/practice",  icon: <LessonsIcon /> },
+  { name: "IPA Chart",  href: "/ipa",      icon: <IpaIcon /> },
+  { name: "Lessons",    href: "/lessons",  icon: <LessonsIcon /> },
 ];
 
 const trackNav: NavItem[] = [
@@ -184,6 +184,10 @@ export default function Sidebar({ className = "" }: SidebarProps) {
             <NavLink
               item={{ name: "Seed Data", href: "/admin/seed", icon: <AdminIcon /> }}
               active={isActive("/admin/seed")}
+            />
+            <NavLink
+              item={{ name: "Manage Lessons", href: "/admin/lessons", icon: <LessonsIcon /> }}
+              active={isActive("/admin/lessons")}
             />
           </>
         )}
