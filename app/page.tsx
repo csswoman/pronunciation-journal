@@ -1,10 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { getUserStats, getTodayProgress, getProgressHistory } from "@/lib/db";
 import { getAllLessons } from "@/lib/lesson-generator";
-import type { UserStats, DailyProgress } from "@/lib/types";
 import PageHero from "@/components/layout/PageHero";
 import QuickActionCard, { QuickActionGrid } from "@/components/layout/QuickActionCard";
 import LessonCard from "@/components/layout/LessonCard";
@@ -13,36 +10,18 @@ import ConversationIllustration from "@/components/illustrations/ConversationIll
 
 export default function HomePage() {
   const router = useRouter();
-  const [stats, setStats] = useState<UserStats | null>(null);
-  const [todayProgress, setTodayProgress] = useState<DailyProgress | null>(null);
-  const [progressHistory, setProgressHistory] = useState<DailyProgress[]>([]);
-
   const lessons = getAllLessons();
-
-  useEffect(() => {
-    async function load() {
-      const [s, t, history] = await Promise.all([
-        getUserStats(),
-        getTodayProgress(),
-        getProgressHistory(7),
-      ]);
-      setStats(s);
-      setTodayProgress(t || null);
-      setProgressHistory(history);
-    }
-    load();
-  }, []);
 
   return (
     <div className="space-y-8">
       {/* Hero Section */}
       <PageHero
-        eyebrow="AI-Powered Learning"
-        title="Speak with"
-        titleAccent="Confidence"
-        description="Train your pronunciation with real-time AI feedback. Practice daily, track your progress, and master every sound."
+        eyebrow="Daily Practice"
+        title="Speak"
+        titleAccent="Confidently"
+        description="Practice fast, track progress, and improve with AI feedback."
         primaryCta={{
-          label: "Start Practice",
+          label: "Practice Now",
           icon: (
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/>
@@ -52,7 +31,7 @@ export default function HomePage() {
           onClick: () => router.push("/practice"),
         }}
         secondaryCta={{
-          label: "Continue Lesson",
+          label: "Continue",
           onClick: () => router.push("/practice"),
         }}
         illustration={

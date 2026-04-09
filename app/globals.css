@@ -47,6 +47,7 @@
   --scrollbar-bg: var(--scrollbar-bg-light);
   --scrollbar-bg-hover: var(--scrollbar-bg-hover-light);
   --scrollbar-bg-active: var(--scrollbar-bg-active-light);
+  --scrollbar-track: transparent;
   --color-selection-bar: linear-gradient(to right, oklch(.8 .1 0), oklch(.8 .1 30), oklch(.8 .1 60), oklch(.8 .1 90), oklch(.8 .1 120), oklch(.8 .1 150), oklch(.8 .1 180), oklch(.8 .1 210), oklch(.8 .1 240), oklch(.8 .1 270), oklch(.8 .1 300), oklch(.8 .1 330), oklch(.8 .1 360));
   --display-light-icon: 1;
   --display-dark-icon: 0;
@@ -114,6 +115,7 @@
   --scrollbar-bg: var(--scrollbar-bg-dark);
   --scrollbar-bg-hover: var(--scrollbar-bg-hover-dark);
   --scrollbar-bg-active: var(--scrollbar-bg-active-dark);
+  --scrollbar-track: transparent;
   --color-selection-bar: linear-gradient(to right, oklch(.7 .1 0), oklch(.7 .1 30), oklch(.7 .1 60), oklch(.7 .1 90), oklch(.7 .1 120), oklch(.7 .1 150), oklch(.7 .1 180), oklch(.7 .1 210), oklch(.7 .1 240), oklch(.7 .1 270), oklch(.7 .1 300), oklch(.7 .1 330), oklch(.7 .1 360));
   --display-light-icon: 0;
   --display-dark-icon: 1;
@@ -340,8 +342,35 @@
   to   { opacity: 1; transform: translateY(0); }
 }
 
+@keyframes statRise {
+  from { opacity: 0; transform: translateY(18px) scaleY(0.7); }
+  to   { opacity: 1; transform: translateY(0) scaleY(1); }
+}
+
+@keyframes progressRing {
+  from { stroke-dasharray: 0 999; }
+}
+
+@keyframes floatSoft {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
 .animate-fadeIn {
   animation: fadeIn 0.4s ease-out;
+}
+
+.animate-stat-rise {
+  animation: statRise 0.6s ease-out both;
+  transform-origin: bottom center;
+}
+
+.animate-progress-ring {
+  animation: progressRing 1s ease-out both;
+}
+
+.animate-float-soft {
+  animation: floatSoft 3.2s ease-in-out infinite;
 }
 
 /* ── Accent utility classes ───────────────────────────────────────────────── */
@@ -379,6 +408,65 @@
 .accent-button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+/* ── Scrollbars ───────────────────────────────────────────────────────── */
+.sidebar-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in oklab, var(--primary) 58%, var(--card-bg)) var(--scrollbar-track);
+}
+
+.sidebar-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.sidebar-scrollbar::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+
+.sidebar-scrollbar::-webkit-scrollbar-thumb {
+  background: color-mix(in oklab, var(--primary) 58%, var(--card-bg));
+  border-radius: 999px;
+  border: 1.5px solid var(--card-bg);
+  min-height: 32px;
+}
+
+.sidebar-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in oklab, var(--primary) 72%, var(--card-bg));
+}
+
+.sidebar-scrollbar::-webkit-scrollbar-thumb:active {
+  background: color-mix(in oklab, var(--primary) 82%, var(--card-bg));
+}
+
+.main-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in oklab, var(--primary) 52%, var(--page-bg)) var(--scrollbar-track);
+}
+
+.main-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.main-scrollbar::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+
+.main-scrollbar::-webkit-scrollbar-thumb {
+  background: color-mix(in oklab, var(--primary) 52%, var(--page-bg));
+  border-radius: 999px;
+  border: 1.5px solid var(--page-bg);
+  min-height: 36px;
+}
+
+.main-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in oklab, var(--primary) 68%, var(--page-bg));
+}
+
+.main-scrollbar::-webkit-scrollbar-thumb:active {
+  background: color-mix(in oklab, var(--primary) 78%, var(--page-bg));
 }
 
 .accent-nav-active {

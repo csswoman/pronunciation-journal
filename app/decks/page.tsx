@@ -1,12 +1,17 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { useAuth } from "@/components/AuthProvider";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { DeckCard } from "./components/DeckCard";
 import { StudyModal } from "./components/StudyModal";
 import { ManageDrawer } from "./components/ManageDrawer";
 import { Plus, X } from "lucide-react";
+import Container from "@/components/layout/Container";
+import Section from "@/components/layout/Section";
+import PageHeader from "@/components/layout/PageHeader";
+import Card from "@/components/layout/Card";
 import type { Tables } from "@/lib/supabase/types";
 
 type Deck = Tables<"decks">;
@@ -190,62 +195,78 @@ export default function DecksPage() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-8 space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="font-heading font-bold text-2xl text-[var(--deep-text)]">My Decks</h1>
-          <p className="text-sm text-[var(--text-secondary)] mt-0.5">
-            Organize vocabulary by topic. Study with flashcards.
-          </p>
-        </div>
-        <button
-          onClick={() => setShowCreate(true)}
-          className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold bg-[var(--primary)] text-white hover:opacity-90 transition-colors"
-        >
-          <Plus size={18} />
-          New Deck
-        </button>
-      </div>
-
-      {/* List */}
-      {loading ? (
-        <div className="grid gap-3">
-          {[1, 2, 3].map(i => (
-            <div key={i} className="h-32 rounded-2xl bg-[var(--btn-regular-bg)] animate-pulse" />
-          ))}
-        </div>
-      ) : decks.length === 0 ? (
-        <div className="text-center py-16 space-y-3">
-          <div className="w-16 h-16 rounded-2xl bg-[var(--btn-regular-bg)] mx-auto flex items-center justify-center text-[var(--text-tertiary)]">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-            </svg>
-          </div>
-          <p className="text-sm font-semibold text-[var(--deep-text)]">No decks yet</p>
-          <p className="text-xs text-[var(--text-tertiary)]">Create your first deck to organize vocabulary by theme.</p>
-          <button
-            onClick={() => setShowCreate(true)}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold bg-[var(--primary)] text-white hover:opacity-90 transition-colors"
-          >
-            <Plus size={16} />
-            Create a deck
-          </button>
-        </div>
-      ) : (
-        <div className="grid gap-3">
-          {decks.map(deck => (
-            <DeckCard
-              key={deck.id}
-              deck={deck}
-              entryCount={deckWordCounts[deck.id] ?? 0}
-              onStudy={() => setActiveStudyDeck(deck.id)}
-              onManage={() => setActiveManageDeck(deck.id)}
-              onDelete={() => handleDeleteDeck(deck.id)}
+    <div className="py-8 pb-24">
+      <Container>
+        <PageHeader
+          badge="Vocabulary Builder"
+          title="Decks"
+          subtitle="Study by Topic"
+          description="Build word sets and review them fast."
+          primaryCta={{
+            label: "New Deck",
+            icon: <Plus size={16} />,
+            onClick: () => setShowCreate(true),
+          }}
+          illustration={
+            <Image
+              src="/illustrations/options.svg"
+              alt="Deck options illustration"
+              width={643}
+              height={349}
+              priority
+              className="w-[300px] xl:w-[340px] h-auto"
             />
-          ))}
-        </div>
-      )}
+          }
+        />
+      </Container>
+
+      <Container>
+        <Section spacing="lg" className="mt-8">
+
+          {/* Loading State */}
+          {loading ? (
+            <div className="space-y-2">
+              {[1, 2, 3].map(i => (
+                <Card key={i} className="h-20 rounded-2xl animate-pulse" style={{ backgroundColor: 'var(--btn-regular-bg)' }}>
+                  <div />
+                </Card>
+              ))}
+            </div>
+          ) : decks.length === 0 ? (
+            <Card className="p-12 text-center">
+              <div className="flex flex-col items-center gap-4">
+                <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl" style={{ backgroundColor: 'var(--btn-regular-bg)' }}>
+                  📚
+                </div>
+                <div>
+                  <p className="text-sm font-semibold" style={{ color: 'var(--deep-text)' }}>No decks yet</p>
+                  <p className="text-xs mt-1" style={{ color: 'var(--text-tertiary)' }}>Create your first deck to organize vocabulary by theme.</p>
+                </div>
+                <button
+                  onClick={() => setShowCreate(true)}
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold bg-[var(--primary)] text-white hover:opacity-90 transition-colors mt-2"
+                >
+                  <Plus size={16} />
+                  Create a deck
+                </button>
+              </div>
+            </Card>
+          ) : (
+            <div className="space-y-2">
+              {decks.map(deck => (
+                <DeckCard
+                  key={deck.id}
+                  deck={deck}
+                  entryCount={deckWordCounts[deck.id] ?? 0}
+                  onStudy={() => setActiveStudyDeck(deck.id)}
+                  onManage={() => setActiveManageDeck(deck.id)}
+                  onDelete={() => handleDeleteDeck(deck.id)}
+                />
+              ))}
+            </div>
+          )}
+        </Section>
+      </Container>
 
       {/* Modals */}
       {showCreate && (

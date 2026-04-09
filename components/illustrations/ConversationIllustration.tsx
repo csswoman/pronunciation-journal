@@ -17,7 +17,7 @@ export default function ConversationIllustration({ className }: ConversationIllu
       <style jsx global>{`
         .conversation-illustration {
           display: block;
-          width: 100%;
+          width: 500px
         }
 
         .conversation-illustration .conversation-svg {

@@ -142,7 +142,7 @@ export default function Sidebar({ className = "" }: SidebarProps) {
 
   return (
     <aside
-      className={`w-64 flex-col h-full px-4 py-6 bg-[var(--card-bg)] border-r border-[var(--line-divider)] ${className}`}
+      className={`sidebar-scrollbar w-64 flex-col h-full min-h-0 overflow-y-auto px-4 py-6 bg-[var(--card-bg)] border-r border-[var(--line-divider)] ${className}`}
     >
       {/* Brand */}
       <div className="flex items-center gap-2.5 px-3 mb-6">

@@ -1,8 +1,12 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useAuth } from "@/components/AuthProvider";
+import Container from "@/components/layout/Container";
+import Section from "@/components/layout/Section";
+import PageHeader from "@/components/layout/PageHeader";
 import LessonCard from "@/components/LessonCard";
 import LessonsSidebar, { type Filters } from "@/components/LessonsSidebar";
 import {
@@ -11,6 +15,7 @@ import {
   type LessonListItem,
 } from "@/lib/groupLessonsByLevel";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
+import { Plus } from "lucide-react";
 
 type LessonsTab = "explore" | "my";
 
@@ -173,50 +178,67 @@ export default function LessonsPage() {
   ) || lessonsWithoutLevel.length > 0;
 
   return (
-    <div className="min-h-screen bg-[var(--page-bg)]">
-      <div className="mx-auto max-w-7xl px-4 py-8 lg:px-6">
-        <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
-          <div>
-            <h1 className="text-3xl font-semibold text-[var(--deep-text)]">Lessons</h1>
-            <p className="mt-1 text-sm text-[var(--text-secondary)]">
-              Explore by level or focus on your own learning library.
-            </p>
+    <div className="py-8 pb-24">
+      <Container>
+        <PageHeader
+          badge="Study Path"
+          title="Lessons"
+          subtitle="Learn by Level"
+          description="Find the right lesson and keep moving."
+          primaryCta={{
+            label: "New Lesson",
+            icon: <Plus size={16} />,
+            onClick: () => window.location.href = "/lessons/new",
+          }}
+          illustration={
+            <Image
+              src="/illustrations/exposition.svg"
+              alt="Lessons exposition illustration"
+              width={552}
+              height={348}
+              priority
+              className="w-[300px] xl:w-[340px] h-auto"
+            />
+          }
+        />
+      </Container>
+
+      <Container>
+        <Section spacing="lg" className="mt-8">
+          {/* Tabs */}
+          <div className="inline-flex rounded-xl border p-1" style={{ borderColor: 'var(--line-divider)', backgroundColor: 'var(--card-bg)' }}>
+            <button
+              type="button"
+              onClick={() => setActiveTab("explore")}
+              className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
+                activeTab === "explore"
+                  ? "text-white"
+                  : "text-[var(--text-secondary)] hover:text-[var(--deep-text)]"
+              }`}
+              style={{
+                backgroundColor: activeTab === "explore" ? 'var(--primary)' : 'transparent',
+              }}
+            >
+              Explore
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab("my")}
+              className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
+                activeTab === "my"
+                  ? "text-white"
+                  : "text-[var(--text-secondary)] hover:text-[var(--deep-text)]"
+              }`}
+              style={{
+                backgroundColor: activeTab === "my" ? 'var(--primary)' : 'transparent',
+              }}
+            >
+              My Lessons
+            </button>
           </div>
-          <Link
-            href="/lessons/new"
-            className="rounded-xl bg-[var(--primary)] px-4 py-2.5 text-sm font-semibold text-[var(--accent-text)] shadow-sm transition hover:opacity-90"
-          >
-            New lesson
-          </Link>
-        </div>
 
-        <div className="mb-6 inline-flex rounded-xl border border-[var(--line-divider)] bg-[var(--card-bg)] p-1">
-          <button
-            type="button"
-            onClick={() => setActiveTab("explore")}
-            className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
-              activeTab === "explore"
-                ? "bg-[var(--primary)] text-[var(--accent-text)]"
-                : "text-[var(--text-secondary)] hover:text-[var(--deep-text)]"
-            }`}
-          >
-            Explore
-          </button>
-          <button
-            type="button"
-            onClick={() => setActiveTab("my")}
-            className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
-              activeTab === "my"
-                ? "bg-[var(--primary)] text-[var(--accent-text)]"
-                : "text-[var(--text-secondary)] hover:text-[var(--deep-text)]"
-            }`}
-          >
-            My Lessons
-          </button>
-        </div>
-
-        <div className="flex flex-col gap-6 lg:flex-row">
-          <main className="flex-1">
+          <div className="flex flex-col gap-6 lg:flex-row mt-6">
+            <main className="flex-1">
             {loading && (
               <div className="rounded-2xl border border-[var(--line-divider)] bg-[var(--card-bg)] p-8 text-center text-sm text-[var(--text-secondary)]">
                 Loading lessons...
@@ -282,17 +304,18 @@ export default function LessonsPage() {
                 )}
               </div>
             )}
-          </main>
+            </main>
 
-          <aside className="w-full lg:w-72">
-            <LessonsSidebar
-              filters={filters}
-              categories={categories}
-              onFiltersChange={setFilters}
-            />
-          </aside>
-        </div>
-      </div>
+            <aside className="w-full lg:w-72">
+              <LessonsSidebar
+                filters={filters}
+                categories={categories}
+                onFiltersChange={setFilters}
+              />
+            </aside>
+          </div>
+        </Section>
+      </Container>
     </div>
   );
 }

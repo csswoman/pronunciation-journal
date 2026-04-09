@@ -1,10 +1,15 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import { Bell, Settings } from 'lucide-react'
 import { useAuth } from '@/components/AuthProvider'
 import LessonCard from '@/components/lesson/LessonCard'
+import Container from '@/components/layout/Container'
+import Section from '@/components/layout/Section'
+import Grid from '@/components/layout/Grid'
+import Card from '@/components/layout/Card'
+import PageHeader from '@/components/layout/PageHeader'
 import { getUserStats } from '@/lib/db'
 import { getAllLessons } from '@/lib/lesson-generator'
 import { getAllDbLessons } from '@/lib/lesson-generator-db'
@@ -138,167 +143,186 @@ export default function PracticeLessonsPage() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-8 pb-24 space-y-8">
-      <header className="space-y-3">
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <h1 className="text-4xl font-bold tracking-tight" style={{ color: 'var(--text-primary)' }}>
-              Phoneme Practice
-            </h1>
-            <p className="text-lg" style={{ color: 'var(--text-secondary)' }}>
-              Train your ear and mouth one sound at a time
-            </p>
-          </div>
-          <div className="flex items-center gap-2">
-            <button className="p-3 rounded-xl border hover:opacity-80 transition-opacity" style={{ borderColor: 'var(--line-divider)', backgroundColor: 'var(--card-bg)' }} title="Notifications">
-              <Bell size={18} style={{ color: 'var(--text-secondary)' }} />
-            </button>
-            <button className="p-3 rounded-xl border hover:opacity-80 transition-opacity" style={{ borderColor: 'var(--line-divider)', backgroundColor: 'var(--card-bg)' }} title="Settings">
-              <Settings size={18} style={{ color: 'var(--text-secondary)' }} />
-            </button>
-          </div>
-        </div>
-      </header>
-
-      <section className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="rounded-2xl p-5 border" style={{ backgroundColor: 'var(--card-bg)', borderColor: 'var(--line-divider)' }}>
-          <div className="flex items-center gap-4">
-            <div className="h-14 w-14 rounded-2xl flex items-center justify-center text-2xl" style={{ backgroundColor: 'var(--btn-regular-bg)' }}>🔥</div>
-            <div>
-              <p className="text-4xl font-bold leading-none" style={{ color: 'var(--text-primary)' }}>{dayStreak}</p>
-              <p className="text-sm mt-2" style={{ color: 'var(--text-secondary)' }}>Day Streak</p>
-            </div>
-          </div>
-        </div>
-        <div className="rounded-2xl p-5 border" style={{ backgroundColor: 'var(--card-bg)', borderColor: 'var(--line-divider)' }}>
-          <div className="flex items-center gap-4">
-            <div className="h-14 w-14 rounded-2xl flex items-center justify-center text-2xl" style={{ backgroundColor: 'var(--btn-regular-bg)' }}>🎯</div>
-            <div>
-              <p className="text-4xl font-bold leading-none" style={{ color: 'var(--text-primary)' }}>{accuracy.toFixed(1)}%</p>
-              <p className="text-sm mt-2" style={{ color: 'var(--text-secondary)' }}>Avg. Accuracy</p>
-            </div>
-          </div>
-        </div>
-        <div className="rounded-2xl p-5 border" style={{ backgroundColor: 'var(--card-bg)', borderColor: 'var(--line-divider)' }}>
-          <div className="flex items-center gap-4">
-            <div className="h-14 w-14 rounded-2xl flex items-center justify-center text-2xl" style={{ backgroundColor: 'var(--btn-regular-bg)' }}>⭐</div>
-            <div>
-              <p className="text-4xl font-bold leading-none" style={{ color: 'var(--text-primary)' }}>{masteredCount}</p>
-              <p className="text-sm mt-2" style={{ color: 'var(--text-secondary)' }}>Mastered</p>
-            </div>
-          </div>
-        </div>
-        <div className="rounded-2xl p-5 border" style={{ backgroundColor: 'var(--card-bg)', borderColor: 'var(--line-divider)' }}>
-          <div className="flex items-center gap-4">
-            <div className="h-14 w-14 rounded-2xl flex items-center justify-center text-2xl" style={{ backgroundColor: 'var(--btn-regular-bg)' }}>🔁</div>
-            <div>
-              <p className="text-4xl font-bold leading-none" style={{ color: 'var(--text-primary)' }}>{totalAttempts}</p>
-              <p className="text-sm mt-2" style={{ color: 'var(--text-secondary)' }}>Total Attempts</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="rounded-3xl p-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6" style={{ background: 'linear-gradient(135deg, #ec4899 0%, #f472b6 100%)' }}>
-        <div>
-          <p className="text-3xl font-bold text-white mb-2">Continue where you left off</p>
-          <p className="text-white/90 text-xl">
-            {recommendedLesson ? `${recommendedLesson.title} · ${Math.max(20, Math.min(90, Math.round(accuracy || 45)))}% complete` : 'Choose your next lesson to keep improving'}
-          </p>
-        </div>
-        <button
-          onClick={handleResume}
-          disabled={!recommendedLesson}
-          className="px-7 py-4 rounded-2xl font-semibold text-lg bg-white text-pink-500 hover:bg-pink-50 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
-        >
-          ▶ Resume
-        </button>
-      </section>
-
-      <section className="space-y-5">
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
-          <div className="flex gap-3 flex-wrap">
-            {FILTERS.map((chip) => (
-              <button
-                key={chip.id}
-                onClick={() => setFilter(chip.id)}
-                className="px-5 py-2.5 rounded-full text-sm font-semibold transition-colors"
-                style={{
-                  backgroundColor: filter === chip.id ? 'var(--primary)' : 'var(--surface)',
-                  color: filter === chip.id ? '#fff' : 'var(--text-secondary)',
-                }}
-              >
-                {chip.label}
-              </button>
-            ))}
-          </div>
-
-          <div className="w-full lg:w-72">
-            <input
-              type="text"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search lessons..."
-              className="w-full px-4 py-2.5 rounded-xl border text-sm outline-none focus:ring-2"
-              style={{
-                borderColor: 'var(--line-divider)',
-                backgroundColor: 'var(--card-bg)',
-                color: 'var(--text-primary)',
-              }}
+    <div className="py-8 pb-24">
+      <Container>
+        {/* Header with PageHeader component */}
+        <PageHeader
+          badge="Sound Lab"
+          title="Speak Better"
+          subtitle="One Sound at a Time"
+          description="Short drills. Clear feedback. Real progress."
+          primaryCta={{
+            label: "Continue",
+            icon: (
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/>
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+              </svg>
+            ),
+            onClick: () => recommendedLesson && router.push(recommendedLesson.href ?? `/practice/lesson/${recommendedLesson.id}`),
+          }}
+          illustration={
+            <Image
+              src="/illustrations/music.svg"
+              alt="Music illustration"
+              width={561}
+              height={367}
+              priority
+              className="w-[300px] xl:w-[340px] h-auto"
             />
-          </div>
-        </div>
+          }
+        />
+      </Container>
 
-        <p className="text-sm font-semibold tracking-[0.12em] uppercase" style={{ color: 'var(--text-secondary)' }}>
-          {filteredLessons.length} exercises available
-        </p>
+      <Container>
+        {/* Stats Section */}
+        <Section spacing="lg" className="mt-8" title="Your Progress">
 
-        {isLoadingLessons ? (
-          <div className="text-sm animate-pulse" style={{ color: 'var(--text-secondary)' }}>
-            Loading lessons...
-          </div>
-        ) : (
-          <div className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {paginatedLessons.map((lesson) => (
-                <LessonCard
-                  key={lesson.id}
-                  lesson={lesson}
-                  progressPct={
-                    lesson.id.startsWith('sound-')
-                      ? soundProgressMap.get(Number(lesson.id.replace('sound-', '')))
-                      : undefined
-                  }
-                />
+          <Grid cols="4" gap="md" responsive={true}>
+            <Card variant="stat">
+              <div className="h-14 w-14 rounded-2xl flex items-center justify-center text-2xl flex-shrink-0" style={{ backgroundColor: 'var(--btn-regular-bg)' }}>🔥</div>
+              <div>
+                <p className="text-4xl font-bold leading-none" style={{ color: 'var(--text-primary)' }}>{dayStreak}</p>
+                <p className="text-sm mt-2" style={{ color: 'var(--text-secondary)' }}>Day Streak</p>
+              </div>
+            </Card>
+            <Card variant="stat">
+              <div className="h-14 w-14 rounded-2xl flex items-center justify-center text-2xl flex-shrink-0" style={{ backgroundColor: 'var(--btn-regular-bg)' }}>🎯</div>
+              <div>
+                <p className="text-4xl font-bold leading-none" style={{ color: 'var(--text-primary)' }}>{accuracy.toFixed(1)}%</p>
+                <p className="text-sm mt-2" style={{ color: 'var(--text-secondary)' }}>Avg. Accuracy</p>
+              </div>
+            </Card>
+            <Card variant="stat">
+              <div className="h-14 w-14 rounded-2xl flex items-center justify-center text-2xl flex-shrink-0" style={{ backgroundColor: 'var(--btn-regular-bg)' }}>⭐</div>
+              <div>
+                <p className="text-4xl font-bold leading-none" style={{ color: 'var(--text-primary)' }}>{masteredCount}</p>
+                <p className="text-sm mt-2" style={{ color: 'var(--text-secondary)' }}>Mastered</p>
+              </div>
+            </Card>
+            <Card variant="stat">
+              <div className="h-14 w-14 rounded-2xl flex items-center justify-center text-2xl flex-shrink-0" style={{ backgroundColor: 'var(--btn-regular-bg)' }}>🔁</div>
+              <div>
+                <p className="text-4xl font-bold leading-none" style={{ color: 'var(--text-primary)' }}>{totalAttempts}</p>
+                <p className="text-sm mt-2" style={{ color: 'var(--text-secondary)' }}>Total Attempts</p>
+              </div>
+            </Card>
+          </Grid>
+        </Section>
+      </Container>
+
+      <Container>
+        <Section spacing="lg" className="mt-8">
+          <Card className="p-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6" style={{ background: 'linear-gradient(135deg, #ec4899 0%, #f472b6 100%)', borderColor: 'transparent' }}>
+            <div>
+              <p className="text-3xl font-bold text-white mb-2">Continue where you left off</p>
+              <p className="text-white/90 text-xl">
+                {recommendedLesson ? `${recommendedLesson.title} · ${Math.max(20, Math.min(90, Math.round(accuracy || 45)))}% complete` : 'Choose your next lesson to keep improving'}
+              </p>
+            </div>
+            <button
+              onClick={handleResume}
+              disabled={!recommendedLesson}
+              className="px-7 py-4 rounded-2xl font-semibold text-lg bg-white text-pink-500 hover:bg-pink-50 transition-colors disabled:opacity-60 disabled:cursor-not-allowed flex-shrink-0"
+            >
+              ▶ Resume
+            </button>
+          </Card>
+        </Section>
+      </Container>
+
+      <Container>
+        <Section spacing="lg" className="mt-8" title="Available Lessons">
+          {/* Filters + Search */}
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6">
+            <div className="flex gap-3 flex-wrap">
+              {FILTERS.map((chip) => (
+                <button
+                  key={chip.id}
+                  onClick={() => setFilter(chip.id)}
+                  className="px-5 py-2.5 rounded-full text-sm font-semibold transition-colors"
+                  style={{
+                    backgroundColor: filter === chip.id ? 'var(--primary)' : 'var(--surface)',
+                    color: filter === chip.id ? '#fff' : 'var(--text-secondary)',
+                  }}
+                >
+                  {chip.label}
+                </button>
               ))}
             </div>
 
-            {filteredLessons.length > PAGE_SIZE && (
-              <div className="flex items-center justify-center gap-3">
-                <button
-                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                  disabled={currentPage === 1}
-                  className="px-4 py-2 rounded-lg text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
-                  style={{ backgroundColor: 'var(--surface)', color: 'var(--text-primary)' }}
-                >
-                  Previous
-                </button>
-                <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-                  Page {currentPage} of {totalPages}
-                </span>
-                <button
-                  onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-                  disabled={currentPage === totalPages}
-                  className="px-4 py-2 rounded-lg text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
-                  style={{ backgroundColor: 'var(--surface)', color: 'var(--text-primary)' }}
-                >
-                  Next
-                </button>
-              </div>
-            )}
+            <div className="w-full lg:w-72">
+              <input
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search lessons..."
+                className="w-full px-4 py-2.5 rounded-xl border text-sm outline-none focus:ring-2"
+                style={{
+                  borderColor: 'var(--line-divider)',
+                  backgroundColor: 'var(--card-bg)',
+                  color: 'var(--text-primary)',
+                }}
+              />
+            </div>
           </div>
-        )}
-      </section>
+
+          <p className="text-sm font-semibold tracking-[0.12em] uppercase mb-6" style={{ color: 'var(--text-secondary)' }}>
+            {filteredLessons.length} exercises available
+          </p>
+
+          {/* Loading State */}
+          {isLoadingLessons ? (
+            <Card className="p-8 text-center">
+              <div className="text-sm animate-pulse" style={{ color: 'var(--text-secondary)' }}>
+                Loading lessons...
+              </div>
+            </Card>
+          ) : (
+            <>
+              {/* Lessons Grid */}
+              <Grid cols="3" gap="lg" responsive={true}>
+                {paginatedLessons.map((lesson) => (
+                  <LessonCard
+                    key={lesson.id}
+                    lesson={lesson}
+                    progressPct={
+                      lesson.id.startsWith('sound-')
+                        ? soundProgressMap.get(Number(lesson.id.replace('sound-', '')))
+                        : undefined
+                    }
+                  />
+                ))}
+              </Grid>
+
+              {/* Pagination */}
+              {filteredLessons.length > PAGE_SIZE && (
+                <div className="flex items-center justify-center gap-3 mt-8">
+                  <button
+                    onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                    disabled={currentPage === 1}
+                    className="px-4 py-2 rounded-lg text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+                    style={{ backgroundColor: 'var(--surface)', color: 'var(--text-primary)' }}
+                  >
+                    Previous
+                  </button>
+                  <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                    Page {currentPage} of {totalPages}
+                  </span>
+                  <button
+                    onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                    disabled={currentPage === totalPages}
+                    className="px-4 py-2 rounded-lg text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+                    style={{ backgroundColor: 'var(--surface)', color: 'var(--text-primary)' }}
+                  >
+                    Next
+                  </button>
+                </div>
+              )}
+            </>
+          )}
+        </Section>
+      </Container>
     </div>
   )
 }
