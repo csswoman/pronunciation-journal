@@ -67,7 +67,7 @@ const SignOutIcon = () => (
 
 const mainNav: NavItem[] = [
   { name: "Home",        href: "/",            icon: <HomeIcon /> },
-  { name: "Practice",   href: "/dashboard",   icon: <PracticeIcon /> },
+  { name: "Practice",   href: "/practice",   icon: <PracticeIcon /> },
   { name: "AI Practice",href: "/ai-practice", icon: <AiIcon /> },
 ];
 
@@ -79,7 +79,7 @@ const DecksIcon = () => (
 
 const referenceNav: NavItem[] = [
   { name: "IPA Chart",  href: "/ipa",     icon: <IpaIcon /> },
-  { name: "Lessons",    href: "/lesson",  icon: <LessonsIcon /> },
+  { name: "Lessons",    href: "/practice",  icon: <LessonsIcon /> },
 ];
 
 const trackNav: NavItem[] = [

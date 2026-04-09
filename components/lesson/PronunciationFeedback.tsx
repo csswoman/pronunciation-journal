@@ -1,6 +1,7 @@
 "use client";
 
 import type { WordResult, PhonemeAlignment } from "@/lib/types";
+import { playIpaSound } from "@/lib/ipa-audio";
 
 interface PronunciationFeedbackProps {
   wordResults: WordResult[];
@@ -9,46 +10,86 @@ interface PronunciationFeedbackProps {
   xpEarned: number;
 }
 
+// ── Phoneme chip — plays sound on hover ──────────────────────────────────────
+
+function PhonemeChip({ p }: { p: PhonemeAlignment }) {
+  const display = p.ipa ?? p.phoneme.toLowerCase();
+  const isProblematic = p.status === "incorrect" || p.status === "missing";
+
+  let bg = "color-mix(in srgb, var(--admonitions-color-tip) 20%, transparent)";
+  let border = "var(--admonitions-color-tip)";
+  let color = "var(--admonitions-color-tip)";
+
+  if (p.status === "missing") {
+    bg = "transparent";
+    border = "var(--admonitions-color-warning)";
+    color = "var(--admonitions-color-warning)";
+  } else if (p.status === "incorrect") {
+    bg = "color-mix(in srgb, var(--admonitions-color-caution) 20%, transparent)";
+    border = "var(--admonitions-color-caution)";
+    color = "var(--admonitions-color-caution)";
+  }
+
+  const tooltip =
+    p.status === "incorrect"
+      ? `heard /${p.gotIpa ?? p.got}/ — hover to hear /${display}/`
+      : p.status === "missing"
+      ? `missing /${display}/ — hover to hear it`
+      : `/${display}/ — correct`;
+
+  return (
+    <span
+      title={tooltip}
+      onMouseEnter={() => p.ipa && playIpaSound(p.ipa)}
+      className="inline-flex items-center font-mono text-xs px-1.5 py-0.5 rounded border select-none transition-opacity"
+      style={{
+        backgroundColor: bg,
+        borderColor: border,
+        color,
+        textDecoration: p.status === "missing" ? "line-through" : "none",
+        cursor: isProblematic ? "help" : "default",
+      }}
+    >
+      /{display}/
+      {isProblematic && (
+        <svg className="ml-0.5 w-2.5 h-2.5 opacity-50" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/>
+        </svg>
+      )}
+    </span>
+  );
+}
+
 function PhonemeChips({ alignment }: { alignment: PhonemeAlignment[] }) {
   if (alignment.length === 0) return null;
   return (
     <div className="flex flex-wrap gap-1 mt-2">
-      {alignment.map((p, i) => {
-        let bgColor = "var(--admonitions-color-tip)";
-        let textColor = "white";
-        let borderColor = "var(--admonitions-color-tip)";
-        let textDecoration = "none";
-
-        if (p.status === "missing") {
-          bgColor = "var(--btn-regular-bg)";
-          textColor = "var(--text-secondary)";
-          borderColor = "var(--line-divider)";
-          textDecoration = "line-through";
-        } else if (p.status === "incorrect") {
-          bgColor = "var(--admonitions-color-caution)";
-          textColor = "white";
-          borderColor = "var(--admonitions-color-caution)";
-        }
-
-        return (
-          <span
-            key={i}
-            title={p.status === "incorrect" ? `heard: ${p.got}` : p.status}
-            className="text-[10px] font-mono px-1.5 py-0.5 rounded border"
-            style={{
-              backgroundColor: bgColor,
-              color: textColor,
-              borderColor: borderColor,
-              textDecoration: textDecoration,
-            }}
-          >
-            {p.phoneme}
-          </span>
-        );
-      })}
+      {alignment.map((p, i) => <PhonemeChip key={i} p={p} />)}
     </div>
   );
 }
+
+// ── Tip builder ───────────────────────────────────────────────────────────────
+
+function buildDetailedTip(result: WordResult): string | null {
+  const alignment = result.phonemes?.alignment;
+  if (!alignment || alignment.length === 0) return result.phonemes?.tip ?? null;
+
+  const problems: string[] = [];
+  for (const p of alignment) {
+    const exp = p.ipa ?? `/${p.phoneme}/`;
+    if (p.status === "incorrect" && p.got) {
+      const got = p.gotIpa ?? `/${p.got}/`;
+      problems.push(`/${exp}/ → heard /${got}/`);
+    } else if (p.status === "missing") {
+      problems.push(`missing /${exp}/`);
+    }
+  }
+  if (problems.length === 0) return null;
+  return problems.join(" · ");
+}
+
+// ── Main component ────────────────────────────────────────────────────────────
 
 export default function PronunciationFeedback({
   wordResults,
@@ -56,113 +97,127 @@ export default function PronunciationFeedback({
   feedback,
   xpEarned,
 }: PronunciationFeedbackProps) {
+  const problemWords = wordResults.filter(
+    (r) =>
+      r.status !== "extra" &&
+      r.phonemes?.alignment?.some((p) => p.status === "incorrect" || p.status === "missing")
+  );
+
   return (
-    <div className="w-full animate-fadeIn">
-      {/* Accuracy Score */}
-      <div className="text-center mb-6">
+    <div className="w-full animate-fadeIn space-y-5">
+      {/* Score */}
+      <div className="text-center">
         <div className="text-5xl font-bold mb-1">
           <span className={feedback.color}>{accuracy}%</span>
         </div>
         <p className={`text-lg font-medium ${feedback.color}`}>
           {feedback.emoji} {feedback.message}
         </p>
-        <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>
+        <p className="text-sm mt-1" style={{ color: "var(--text-secondary)" }}>
           +{xpEarned} XP
         </p>
       </div>
 
-      {/* Accuracy Bar */}
-      <div className="w-full rounded-full h-3 mb-6 overflow-hidden" style={{
-        backgroundColor: 'var(--line-divider)',
-      }}>
+      {/* Accuracy bar */}
+      <div className="w-full rounded-full h-2 overflow-hidden" style={{ backgroundColor: "var(--line-divider)" }}>
         <div
           className="h-full rounded-full transition-all duration-1000 ease-out"
           style={{
             width: `${accuracy}%`,
-            background:
+            backgroundColor:
               accuracy >= 80
-                ? `linear-gradient(90deg, var(--admonitions-color-tip), var(--admonitions-color-tip))`
+                ? "var(--admonitions-color-tip)"
                 : accuracy >= 60
-                ? `linear-gradient(90deg, var(--admonitions-color-warning), var(--admonitions-color-warning))`
-                : `linear-gradient(90deg, var(--admonitions-color-caution), var(--admonitions-color-caution))`,
+                ? "var(--admonitions-color-warning)"
+                : "var(--admonitions-color-caution)",
           }}
         />
       </div>
 
-      {/* Word-by-word Results */}
-      <div className="flex flex-wrap gap-3 justify-center">
+      {/* Word results */}
+      <div className="space-y-2">
         {wordResults.map((result, idx) => {
-          let bgColor = "var(--btn-regular-bg)";
-          let textColor = "var(--text-secondary)";
-          let borderColor = "var(--line-divider)";
-          let opacity = "1";
-
-          if (result.status === "correct") {
-            bgColor = "var(--admonitions-color-tip)";
-            textColor = "white";
-            borderColor = "var(--admonitions-color-tip)";
-          } else if (result.status === "incorrect") {
-            bgColor = "var(--admonitions-color-caution)";
-            textColor = "white";
-            borderColor = "var(--admonitions-color-caution)";
-          } else if (result.status === "missing") {
-            bgColor = "var(--admonitions-color-warning)";
-            textColor = "white";
-            borderColor = "var(--admonitions-color-warning)";
-            opacity = "0.6";
-          } else {
-            bgColor = "var(--admonitions-color-warning)";
-            textColor = "white";
-            borderColor = "var(--admonitions-color-warning)";
-          }
+          const hasPhonemes = (result.phonemes?.alignment?.length ?? 0) > 0;
+          const tip = buildDetailedTip(result);
 
           return (
             <div
               key={idx}
-              className="px-3 py-2 rounded-lg text-sm font-medium border"
+              className="rounded-xl px-3 py-2.5 border text-sm"
               style={{
-                backgroundColor: bgColor,
-                color: textColor,
-                borderColor: borderColor,
-                opacity: opacity,
+                backgroundColor:
+                  result.status === "correct"
+                    ? "color-mix(in srgb, var(--admonitions-color-tip) 10%, transparent)"
+                    : result.status === "incorrect"
+                    ? "color-mix(in srgb, var(--admonitions-color-caution) 8%, transparent)"
+                    : "color-mix(in srgb, var(--admonitions-color-warning) 8%, transparent)",
+                borderColor:
+                  result.status === "correct"
+                    ? "color-mix(in srgb, var(--admonitions-color-tip) 25%, transparent)"
+                    : result.status === "incorrect"
+                    ? "color-mix(in srgb, var(--admonitions-color-caution) 25%, transparent)"
+                    : "color-mix(in srgb, var(--admonitions-color-warning) 25%, transparent)",
               }}
             >
-              {/* Word label */}
-              <div className="flex items-center gap-1">
-                <span>
-                  {result.status === "correct"
-                    ? "✅"
-                    : result.status === "incorrect"
-                    ? "❌"
-                    : result.status === "missing"
-                    ? "⬜"
-                    : "➕"}
-                </span>
-                <span>{result.expected || result.got}</span>
+              {/* Word row */}
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex items-center gap-1.5 font-medium" style={{ color: "var(--text-primary)" }}>
+                  <span>
+                    {result.status === "correct" ? "✅"
+                      : result.status === "incorrect" ? "❌"
+                      : result.status === "missing" ? "⬜"
+                      : "➕"}
+                  </span>
+                  <span>{result.expected || result.got}</span>
+                </div>
+                {result.status === "incorrect" && result.got && (
+                  <span className="text-xs" style={{ color: "var(--text-tertiary)" }}>
+                    heard: &ldquo;{result.got}&rdquo;
+                  </span>
+                )}
               </div>
 
               {/* Phoneme chips */}
-              {result.phonemes?.alignment && result.phonemes.alignment.length > 0 && (
-                <PhonemeChips alignment={result.phonemes.alignment} />
-              )}
+              {hasPhonemes && <PhonemeChips alignment={result.phonemes!.alignment} />}
 
-              {/* Heard word (incorrect only) */}
-              {result.status === "incorrect" && result.got && (
-                <div className="text-xs mt-1.5 opacity-75">
-                  heard: &ldquo;{result.got}&rdquo;
-                </div>
-              )}
-
-              {/* Pronunciation tip */}
-              {result.status === "incorrect" && result.phonemes?.tip && (
-                <div className="text-xs mt-1" style={{ color: 'var(--admonitions-color-caution)' }}>
-                  💡 {result.phonemes.tip}
-                </div>
+              {/* Tip */}
+              {tip && (
+                <p className="text-xs mt-2 leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+                  💡 {tip}
+                </p>
               )}
             </div>
           );
         })}
       </div>
+
+      {/* Sounds to practice */}
+      {problemWords.length > 0 && (
+        <div
+          className="rounded-xl px-4 py-3 border text-sm space-y-2"
+          style={{
+            backgroundColor: "color-mix(in srgb, var(--primary) 6%, transparent)",
+            borderColor: "color-mix(in srgb, var(--primary) 20%, transparent)",
+          }}
+        >
+          <p className="font-semibold text-xs uppercase tracking-wide" style={{ color: "var(--primary)" }}>
+            Hover to hear the correct sound
+          </p>
+          {problemWords.map((r, i) => {
+            const failed = r.phonemes!.alignment.filter(
+              (p) => p.status === "incorrect" || p.status === "missing"
+            );
+            return (
+              <div key={i} className="flex flex-wrap items-center gap-1.5">
+                <span className="text-xs" style={{ color: "var(--text-secondary)" }}>
+                  {r.expected}:
+                </span>
+                {failed.map((p, j) => <PhonemeChip key={j} p={p} />)}
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }

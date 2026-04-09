@@ -60,7 +60,7 @@ export default function HomePage() {
         }}
         secondaryCta={{
           label: "Continue Lesson",
-          onClick: () => router.push("/lesson"),
+          onClick: () => router.push("/practice"),
         }}
         illustration={
           <svg viewBox="0 0 220 200" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -127,7 +127,7 @@ export default function HomePage() {
             }
             name="Lessons"
             description="Practice with structured lessons"
-            onClick={() => router.push("/lesson")}
+            onClick={() => router.push("/practice")}
           />
           <QuickActionCard
             icon={
@@ -172,7 +172,7 @@ export default function HomePage() {
       <section>
         <SectionHeader 
           title="Available Lessons"
-          viewAll={() => router.push("/lesson")}
+          viewAll={() => router.push("/practice")}
         />
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {lessons.slice(0, 3).map((lesson) => (
@@ -181,7 +181,7 @@ export default function HomePage() {
               title={lesson.title}
               description={lesson.description}
               difficulty={lesson.difficulty as "easy" | "medium" | "hard"}
-              onStart={() => router.push(`/lesson/${lesson.id}`)}
+              onStart={() => router.push(`/practice/lesson/${lesson.id}`)}
             />
           ))}
         </div>

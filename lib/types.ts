@@ -52,8 +52,10 @@ export type WordStatus = "correct" | "incorrect" | "missing" | "extra";
 
 export interface PhonemeAlignment {
   phoneme: string;                              // ARPAbet symbol (no stress digit)
+  ipa?: string;                                 // IPA symbol for this phoneme
   status: "correct" | "incorrect" | "missing";  // "missing" = expected but not heard
   got?: string;                                 // what was heard (only for "incorrect")
+  gotIpa?: string;                              // IPA symbol for what was heard
 }
 
 export interface PhonemeResult {

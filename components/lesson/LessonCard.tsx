@@ -67,7 +67,7 @@ export default function LessonCard({ lesson, progressPct }: LessonCardProps) {
   };
 
   return (
-    <Link href={lesson.href ?? `/lesson/${lesson.id}`}>
+    <Link href={lesson.href ?? `/practice/lesson/${lesson.id}`}>
       <div
         className="group relative overflow-hidden rounded-2xl border transition-all duration-300 cursor-pointer p-6 hover:shadow-lg"
         style={{

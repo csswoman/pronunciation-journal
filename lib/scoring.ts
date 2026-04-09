@@ -1,5 +1,15 @@
-import type { ScoringResult, WordResult, WordStatus } from "./types";
+import type { ScoringResult, WordResult } from "./types";
 import { analyzePhonemes } from "./phonemes";
+
+const MAX_SCORE_CACHE_ENTRIES = 300;
+const scoreCache = new Map<string, ScoringResult>();
+
+function cloneResult(result: ScoringResult): ScoringResult {
+  if (typeof structuredClone === "function") {
+    return structuredClone(result);
+  }
+  return JSON.parse(JSON.stringify(result)) as ScoringResult;
+}
 
 /**
  * Score a pronunciation attempt by comparing the transcript
@@ -12,6 +22,12 @@ export async function scorePronunciation(
 ): Promise<ScoringResult> {
   const normalizedTranscript = normalize(transcript);
   const normalizedTarget = normalize(target);
+  const cacheKey = `${threshold}::${normalizedTarget}::${normalizedTranscript}`;
+
+  const cached = scoreCache.get(cacheKey);
+  if (cached) {
+    return cloneResult(cached);
+  }
 
   const transcriptWords = normalizedTranscript.split(/\s+/).filter(Boolean);
   const targetWords = normalizedTarget.split(/\s+/).filter(Boolean);
@@ -55,12 +71,20 @@ export async function scorePronunciation(
 
   const accuracy = totalPhonemes === 0 ? 0 : Math.round((correctPhonemes / totalPhonemes) * 100);
 
-  return {
+  const result: ScoringResult = {
     accuracy,
     isCorrect: accuracy >= threshold,
     transcript: normalizedTranscript,
     wordResults,
   };
+
+  if (scoreCache.size >= MAX_SCORE_CACHE_ENTRIES) {
+    const oldest = scoreCache.keys().next().value;
+    if (oldest) scoreCache.delete(oldest);
+  }
+  scoreCache.set(cacheKey, cloneResult(result));
+
+  return result;
 }
 
 /**
@@ -198,15 +222,23 @@ export function calculateXP(accuracy: number): number {
 }
 
 /**
- * Get a feedback message based on accuracy.
+ * Get a feedback message based on accuracy and threshold (difficulty).
+ * Hard mode (threshold >= 85) raises the bar for each tier.
  */
-export function getFeedbackMessage(accuracy: number): {
-  message: string;
-  emoji: string;
-  color: string;
-} {
-  if (accuracy >= 95) return { message: "Perfect!", emoji: "🎯", color: "text-green-500" };
-  if (accuracy >= 80) return { message: "Great job!", emoji: "🔥", color: "text-green-400" };
+export function getFeedbackMessage(
+  accuracy: number,
+  threshold = 70
+): { message: string; emoji: string; color: string } {
+  const hard = threshold >= 85;
+  if (hard) {
+    if (accuracy >= 95) return { message: "Mastered!", emoji: "🏆", color: "text-green-500" };
+    if (accuracy >= 85) return { message: "Excellent!", emoji: "🎯", color: "text-green-400" };
+    if (accuracy >= 70) return { message: "Almost there!", emoji: "💪", color: "text-yellow-500" };
+    if (accuracy >= 50) return { message: "Keep pushing!", emoji: "🔄", color: "text-orange-500" };
+    return { message: "Try again!", emoji: "❌", color: "text-red-500" };
+  }
+  if (accuracy >= 90) return { message: "Perfect!", emoji: "🎯", color: "text-green-500" };
+  if (accuracy >= 75) return { message: "Great job!", emoji: "🔥", color: "text-green-400" };
   if (accuracy >= 60) return { message: "Good effort!", emoji: "👍", color: "text-yellow-500" };
   if (accuracy >= 40) return { message: "Keep practicing!", emoji: "💪", color: "text-orange-500" };
   return { message: "Try again!", emoji: "🔄", color: "text-red-500" };

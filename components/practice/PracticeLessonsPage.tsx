@@ -134,7 +134,7 @@ export default function PracticeLessonsPage() {
 
   const handleResume = () => {
     if (!recommendedLesson) return
-    router.push(recommendedLesson.href ?? `/lesson/${recommendedLesson.id}`)
+    router.push(recommendedLesson.href ?? `/practice/lesson/${recommendedLesson.id}`)
   }
 
   return (

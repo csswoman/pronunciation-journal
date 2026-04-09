@@ -57,14 +57,14 @@ export function SessionSummary({ answers, soundIpa, nextReview, onPracticeAgain 
           Practice again
         </button>
         <Link
-          href="/dashboard"
+          href="/practice"
           className="block w-full py-3 rounded-xl border font-semibold transition-colors hover:bg-btn-plain-hover"
           style={{
             borderColor: 'var(--line-divider)',
             color: 'var(--text-secondary)',
           }}
         >
-          Back to dashboard
+          Back to practice
         </Link>
       </div>
     </div>

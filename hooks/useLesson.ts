@@ -7,6 +7,8 @@ export interface WordAttempt {
   word: string;
   attempts: number[]; // accuracy per attempt, in order
   best: number;       // highest accuracy across attempts
+  skipped?: boolean;
+  known?: boolean;
 }
 
 interface UseLessonReturn {
@@ -20,6 +22,8 @@ interface UseLessonReturn {
   startLesson: (lesson: Lesson) => void;
   addResult: (result: ScoringResult, xp: number, word: string) => void;
   nextWord: () => void;
+  skipWord: (word: string) => void;
+  markKnown: (word: string, index: number) => void;
   retryWord: () => void;
   resetLesson: () => void;
 }
@@ -34,9 +38,11 @@ export function useLesson(): UseLessonReturn {
   const totalWords = lesson?.words.length ?? 0;
 
   // Session accuracy = average of each word's best score
+  // Session accuracy only counts attempted words (not skipped/known)
+  const attempted = wordAttempts.filter((w) => !w.skipped && !w.known);
   const sessionAccuracy =
-    wordAttempts.length > 0
-      ? Math.round(wordAttempts.reduce((sum, w) => sum + w.best, 0) / wordAttempts.length)
+    attempted.length > 0
+      ? Math.round(attempted.reduce((sum, w) => sum + w.best, 0) / attempted.length)
       : 0;
 
   const startLesson = useCallback((l: Lesson) => {
@@ -69,6 +75,26 @@ export function useLesson(): UseLessonReturn {
     setCurrentIndex((prev) => prev + 1);
   }, []);
 
+  const skipWord = useCallback((word: string) => {
+    setWordAttempts((prev) => {
+      if (prev.find((w) => w.word === word)) return prev;
+      return [...prev, { word, attempts: [], best: 0, skipped: true }];
+    });
+    setCurrentIndex((ci) => ci + 1);
+  }, []);
+
+  const markKnown = useCallback((word: string, index: number) => {
+    setWordAttempts((prev) => {
+      if (prev.find((w) => w.word === word)) return prev;
+      return [...prev, { word, attempts: [], best: 100, known: true }];
+    });
+    setLesson((prev) => {
+      if (!prev) return prev;
+      return { ...prev, words: prev.words.filter((_, i) => i !== index) };
+    });
+    // index stays the same — next word slides in
+  }, []);
+
   const retryWord = useCallback(() => {
     // no-op: page manages phase, wordAttempts keeps accumulating
   }, []);
@@ -91,6 +117,8 @@ export function useLesson(): UseLessonReturn {
     startLesson,
     addResult,
     nextWord,
+    skipWord,
+    markKnown,
     retryWord,
     resetLesson,
   };

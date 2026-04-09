@@ -5,6 +5,18 @@
 
 import type { PhonemeResult, PhonemeAlignment } from "./types";
 
+// ARPAbet → IPA symbol mapping (used to link to the IPA chart)
+export const ARPABET_TO_IPA: Record<string, string> = {
+  AA: "ɑ",  AE: "æ",  AH: "ʌ",  AO: "ɔ",  AW: "aʊ",
+  AY: "aɪ", EH: "ɛ",  ER: "ɜr", EY: "eɪ", IH: "ɪ",
+  IY: "iː", OW: "oʊ", OY: "ɔɪ", UH: "ʊ",  UW: "uː",
+  B:  "b",  CH: "tʃ", D:  "d",  DH: "ð",  F:  "f",
+  G:  "ɡ",  HH: "h",  JH: "dʒ", K:  "k",  L:  "l",
+  M:  "m",  N:  "n",  NG: "ŋ",  P:  "p",  R:  "ɹ",
+  S:  "s",  SH: "ʃ",  T:  "t",  TH: "θ",  V:  "v",
+  W:  "w",  Y:  "j",  Z:  "z",  ZH: "ʒ",
+};
+
 // ARPAbet phoneme → friendly description
 const PHONEME_LABELS: Record<string, string> = {
   AA: "'a' as in father",  AE: "'a' as in cat",    AH: "'u' as in but",
@@ -32,6 +44,7 @@ function label(p: string): string {
 
 // Lazy-loaded dictionary singleton
 let dictCache: Record<string, string> | null = null;
+const phonemeCache = new Map<string, string[]>();
 
 async function getDict(): Promise<Record<string, string>> {
   if (dictCache) return dictCache;
@@ -41,24 +54,40 @@ async function getDict(): Promise<Record<string, string>> {
   return dictCache;
 }
 
+function normalizeWordForLookup(word: string): string {
+  return word.toLowerCase().replace(/[^a-z']/g, "");
+}
+
 async function phonemesFor(word: string): Promise<string[]> {
+  const normalized = normalizeWordForLookup(word);
+  if (!normalized) return [];
+
+  const cached = phonemeCache.get(normalized);
+  if (cached) return cached;
+
   const dict = await getDict();
-  const entry = dict[word.toLowerCase().replace(/[^a-z']/g, "")];
-  if (!entry) return [];
-  return entry.split(" ");
+  const entry = dict[normalized];
+  const result = entry ? entry.split(" ") : [];
+  phonemeCache.set(normalized, result);
+  return result;
+}
+
+function ipaLabel(p: string): string {
+  const ipa = ARPABET_TO_IPA[stripStress(p)];
+  return ipa ? `/${ipa}/` : label(p);
 }
 
 function buildTip(expected: string[], got: string[]): string | null {
   if (expected.length === 0) return null;
-  if (got.length === 0) return `Focus on pronouncing: ${expected.map(label).join(", ")}`;
+  if (got.length === 0) return `Focus on: ${expected.map(ipaLabel).join(" ")}`;
 
   for (let i = 0; i < Math.max(expected.length, got.length); i++) {
     const e = expected[i];
     const g = got[i];
-    if (!e) return `You added an extra sound at the end`;
-    if (!g) return `Don't drop the ${label(e)} sound at the end`;
+    if (!e) return `Extra sound at the end — stop after ${ipaLabel(expected[expected.length - 1])}`;
+    if (!g) return `Don't drop the ${ipaLabel(e)} sound`;
     if (stripStress(e) !== stripStress(g)) {
-      return `Expected ${label(e)}, but you said ${label(g)}`;
+      return `Say ${ipaLabel(e)} not ${ipaLabel(g)} — ${label(e)}`;
     }
   }
   return null;
@@ -96,17 +125,20 @@ function buildAlignment(expected: string[], got: string[]): PhonemeAlignment[] {
     if (i > 0 && j > 0) {
       const sub = stripStress(expected[i - 1]) === stripStress(got[j - 1]) ? 0 : 1;
       if (dp[i][j] === dp[i - 1][j - 1] + sub) {
+        const exp = stripStress(expected[i - 1]);
+        const g = stripStress(got[j - 1]);
         result.unshift(
           sub === 0
-            ? { phoneme: stripStress(expected[i - 1]), status: "correct" }
-            : { phoneme: stripStress(expected[i - 1]), status: "incorrect", got: stripStress(got[j - 1]) }
+            ? { phoneme: exp, ipa: ARPABET_TO_IPA[exp], status: "correct" }
+            : { phoneme: exp, ipa: ARPABET_TO_IPA[exp], status: "incorrect", got: g, gotIpa: ARPABET_TO_IPA[g] }
         );
         i--; j--;
         continue;
       }
     }
     if (i > 0 && (j === 0 || dp[i][j] === dp[i - 1][j] + 1)) {
-      result.unshift({ phoneme: stripStress(expected[i - 1]), status: "missing" });
+      const exp = stripStress(expected[i - 1]);
+      result.unshift({ phoneme: exp, ipa: ARPABET_TO_IPA[exp], status: "missing" });
       i--;
     } else {
       j--; // extra phoneme in got — omit from display
@@ -130,4 +162,10 @@ export async function analyzePhonemes(
     tip: buildTip(expected, got),
     alignment: buildAlignment(expected, got),
   };
+}
+
+export async function warmupPhonemeEngine(words: string[]): Promise<void> {
+  await getDict();
+  const uniqueWords = Array.from(new Set(words.map(normalizeWordForLookup).filter(Boolean)));
+  await Promise.all(uniqueWords.map((w) => phonemesFor(w)));
 }
