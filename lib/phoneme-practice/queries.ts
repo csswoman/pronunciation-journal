@@ -121,7 +121,7 @@ export async function updateProgress(
 ): Promise<void> {
   const { data: current, error: fetchErr } = await supabase()
     .from('user_sound_progress')
-    .select('total_attempts, correct_answers, best_streak')
+    .select('total_attempts, correct_answers, best_streak, status')
     .eq('user_id', userId)
     .eq('sound_id', soundId)
     .maybeSingle()
@@ -131,7 +131,10 @@ export async function updateProgress(
   const newCorrect = (current?.correct_answers ?? 0) + sessionCorrect
   const newBestStreak = Math.max(current?.best_streak ?? 0, sr.streak)
   const accuracy = newTotal > 0 ? newCorrect / newTotal : 0
-  const status = accuracy >= 0.5 ? 'practicing' : 'available'
+  const currentStatus = current?.status ?? 'available'
+  const status = currentStatus === 'mastered'
+    ? 'mastered'
+    : accuracy >= 0.5 ? 'practicing' : 'available'
 
   const { error } = await supabase()
     .from('user_sound_progress')
