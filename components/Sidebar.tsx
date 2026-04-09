@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "./AuthProvider";
 import { useUserRole } from "@/hooks/useUserRole";
@@ -78,8 +79,8 @@ const DecksIcon = () => (
 );
 
 const referenceNav: NavItem[] = [
-  { name: "IPA Chart",  href: "/ipa",     icon: <IpaIcon /> },
-  { name: "Lessons",    href: "/practice",  icon: <LessonsIcon /> },
+  { name: "IPA Chart",  href: "/ipa",      icon: <IpaIcon /> },
+  { name: "Lessons",    href: "/lessons",  icon: <LessonsIcon /> },
 ];
 
 const trackNav: NavItem[] = [
@@ -185,6 +186,10 @@ export default function Sidebar({ className = "" }: SidebarProps) {
               item={{ name: "Seed Data", href: "/admin/seed", icon: <AdminIcon /> }}
               active={isActive("/admin/seed")}
             />
+            <NavLink
+              item={{ name: "Manage Lessons", href: "/admin/lessons", icon: <LessonsIcon /> }}
+              active={isActive("/admin/lessons")}
+            />
           </>
         )}
       </nav>
@@ -200,11 +205,11 @@ export default function Sidebar({ className = "" }: SidebarProps) {
           }`}
         >
           <div
-            className="w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-bold overflow-hidden flex-shrink-0"
+            className="relative w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-bold overflow-hidden flex-shrink-0"
             style={{ background: "var(--btn-regular-bg)", color: "var(--btn-content)" }}
           >
             {avatarUrl ? (
-              <img src={avatarUrl} alt={displayName} className="w-full h-full object-cover" />
+              <Image src={avatarUrl} alt={displayName} fill className="object-cover" />
             ) : (
               initials
             )}

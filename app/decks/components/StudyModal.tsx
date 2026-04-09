@@ -8,6 +8,7 @@ import type { Tables } from "@/lib/supabase/types";
 
 type Deck = Tables<"decks">;
 type Entry = Tables<"entries">;
+type DeckEntryRow = { entries: Entry | null };
 
 interface StudyModalProps {
   deck: Deck;
@@ -17,7 +18,6 @@ interface StudyModalProps {
 export function StudyModal({ deck, onClose }: StudyModalProps) {
   const { user } = useAuth();
   const [phase, setPhase] = useState<"loading" | "studying" | "done">("loading");
-  const [entries, setEntries] = useState<Entry[]>([]);
   const [queue, setQueue] = useState<Entry[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
@@ -32,8 +32,7 @@ export function StudyModal({ deck, onClose }: StudyModalProps) {
         .select("entry_id, entries(*)")
         .eq("deck_id", deck.id);
 
-      const loaded = (data ?? []).map((r: any) => r.entries).filter(Boolean) as Entry[];
-      setEntries(loaded);
+      const loaded = ((data ?? []) as DeckEntryRow[]).map((r) => r.entries).filter(Boolean) as Entry[];
 
       // Shuffle queue
       const shuffled = [...loaded].sort(() => Math.random() - 0.5);
@@ -82,6 +81,18 @@ export function StudyModal({ deck, onClose }: StudyModalProps) {
     // In full implementation, use Web Audio API or TTS
     console.log("Play audio for:", currentEntry?.word);
   };
+
+  const meanings = Array.isArray(currentEntry?.meanings) ? currentEntry.meanings : [];
+  const firstMeaning = meanings[0];
+  const firstDefinition =
+    typeof firstMeaning === "object" &&
+    firstMeaning !== null &&
+    "definitions" in firstMeaning &&
+    Array.isArray(firstMeaning.definitions) &&
+    typeof firstMeaning.definitions[0] === "object" &&
+    firstMeaning.definitions[0] !== null
+      ? firstMeaning.definitions[0]
+      : null;
 
   if (phase === "loading") {
     return (
@@ -202,14 +213,14 @@ export function StudyModal({ deck, onClose }: StudyModalProps) {
                   <p className="text-sm font-medium text-[var(--text-secondary)]">{currentEntry.word}</p>
                   {currentEntry.meanings && Array.isArray(currentEntry.meanings) && currentEntry.meanings.length > 0 && (
                     <div>
-                      {typeof currentEntry.meanings[0] === "object" && currentEntry.meanings[0] !== null && "definitions" in currentEntry.meanings[0] && Array.isArray((currentEntry.meanings[0] as any).definitions) && (
+                      {firstDefinition && (
                         <>
                           <p className="text-base font-semibold text-[var(--deep-text)]">
-                            {(currentEntry.meanings[0] as any).definitions[0]?.definition || "No definition"}
+                            {"definition" in firstDefinition ? String(firstDefinition.definition ?? "No definition") : "No definition"}
                           </p>
-                          {(currentEntry.meanings[0] as any).definitions[0]?.example && (
+                          {"example" in firstDefinition && firstDefinition.example && (
                             <p className="text-xs text-[var(--text-tertiary)] mt-2 italic">
-                              "{(currentEntry.meanings[0] as any).definitions[0].example}"
+                              "{String(firstDefinition.example)}"
                             </p>
                           )}
                         </>

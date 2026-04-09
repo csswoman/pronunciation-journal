@@ -9,6 +9,7 @@ import type { Tables } from "@/lib/supabase/types";
 
 type Deck = Tables<"decks">;
 type Entry = Tables<"entries">;
+type DeckEntryRow = { entries: Entry | null };
 
 interface ManageDrawerProps {
   deck: Deck;
@@ -35,7 +36,7 @@ export function ManageDrawer({ deck, onClose, onWordCountChange }: ManageDrawerP
       .select("entry_id, entries(*)")
       .eq("deck_id", deck.id);
 
-    const loaded = (data ?? []).map((r: any) => r.entries).filter(Boolean) as Entry[];
+    const loaded = ((data ?? []) as DeckEntryRow[]).map((r) => r.entries).filter(Boolean) as Entry[];
     setEntries(loaded);
     onWordCountChange?.(loaded.length);
     setLoading(false);
@@ -99,9 +100,10 @@ export function ManageDrawer({ deck, onClose, onWordCountChange }: ManageDrawerP
         setManualPhrases("");
         await loadEntries();
       }
-    } catch (e: any) {
+    } catch (e: unknown) {
+      const message = e instanceof Error ? e.message : "Unknown error";
       console.error("Error adding word:", e);
-      alert(`Error adding word: ${e.message}`);
+      alert(`Error adding word: ${message}`);
     } finally {
       setAddingWord(false);
     }
@@ -118,9 +120,10 @@ export function ManageDrawer({ deck, onClose, onWordCountChange }: ManageDrawerP
         .eq("entry_id", entryId);
 
       await loadEntries();
-    } catch (e: any) {
+    } catch (e: unknown) {
+      const message = e instanceof Error ? e.message : "Unknown error";
       console.error("Error removing word:", e);
-      alert(`Error removing word: ${e.message}`);
+      alert(`Error removing word: ${message}`);
     }
   };
 

@@ -25,6 +25,10 @@ export default function CompactRecorder({ onRecordingComplete, existingAudioUrl 
   }, [onRecordingComplete]);
 
   useEffect(() => {
+    previousAudioUrlRef.current = existingAudioUrl ?? null;
+  }, [existingAudioUrl]);
+
+  useEffect(() => {
     // Only call onRecordingComplete when audioUrl changes to a new value
     if (audioUrl && audioUrl !== previousAudioUrlRef.current) {
       previousAudioUrlRef.current = audioUrl;

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import Image from "next/image";
 import { useUserPreferences } from "@/hooks/useUserPreferences";
 import { useAuth } from "@/components/AuthProvider";
 
@@ -69,7 +70,7 @@ export default function ProfileSettings() {
     if (fileInputRef.current) fileInputRef.current.value = "";
 
     const url = URL.createObjectURL(file);
-    const img = new Image();
+    const img = new window.Image();
     img.onload = () => {
       const scale = CROP_SIZE / Math.min(img.naturalWidth, img.naturalHeight);
       const dw = img.naturalWidth * scale;
@@ -120,7 +121,7 @@ export default function ProfileSettings() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const img = new Image();
+    const img = new window.Image();
     img.onload = async () => {
       ctx.drawImage(
         img,
@@ -248,9 +249,12 @@ export default function ProfileSettings() {
                 onPointerUp={handleCropPointerUp}
               >
                 {cropImageSrc && (
-                  <img
+                  <Image
                     src={cropImageSrc}
                     alt="Vista previa"
+                    width={cropImageDimensions.width * cropScale}
+                    height={cropImageDimensions.height * cropScale}
+                    unoptimized
                     draggable={false}
                     style={{
                       position: "absolute",
@@ -320,12 +324,12 @@ export default function ProfileSettings() {
           <div className="relative flex-shrink-0">
             <div
               onClick={() => fileInputRef.current?.click()}
-              className="w-16 h-16 rounded-full flex items-center justify-center cursor-pointer overflow-hidden hover:ring-2 transition-all"
+              className="relative w-16 h-16 rounded-full flex items-center justify-center cursor-pointer overflow-hidden hover:ring-2 transition-all"
               style={{ background: "var(--bg-tertiary)", "--tw-ring-color": "var(--color-accent)" } as React.CSSProperties}
               title="Cambiar foto"
             >
               {preferences?.avatar_url ? (
-                <img src={preferences.avatar_url} alt="Avatar" className="w-full h-full object-cover" />
+                <Image src={preferences.avatar_url} alt="Avatar" fill className="object-cover" />
               ) : (
                 <span className="text-xl font-bold" style={{ color: "var(--text-primary)" }}>{initials}</span>
               )}

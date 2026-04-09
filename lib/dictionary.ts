@@ -7,13 +7,57 @@ export interface PronunciationData {
   sourceUrl?: string;
 }
 
+interface DictionaryApiPhonetic {
+  text?: string;
+  audio?: string;
+}
+
+interface DictionaryApiDefinition {
+  definition?: string;
+  example?: string;
+  synonyms?: string[];
+  antonyms?: string[];
+}
+
+interface DictionaryApiMeaning {
+  partOfSpeech?: string;
+  definitions?: DictionaryApiDefinition[];
+}
+
+interface DictionaryApiEntry {
+  word?: string;
+  phonetic?: string;
+  phonetics?: DictionaryApiPhonetic[];
+  meanings?: DictionaryApiMeaning[];
+}
+
+interface FreeDictionarySense {
+  definition?: string;
+  examples?: string[];
+  synonyms?: string[];
+  antonyms?: string[];
+  subsenses?: FreeDictionarySense[];
+}
+
+interface FreeDictionaryEntry {
+  partOfSpeech?: string;
+  pronunciations?: Array<{ text?: string }>;
+  senses?: FreeDictionarySense[];
+}
+
+interface FreeDictionaryResponse {
+  word?: string;
+  entries?: FreeDictionaryEntry[];
+  source?: { url?: string };
+}
+
 // Parse response from dictionaryapi.dev
-function parseDictionaryApiDev(data: any[]): PronunciationData {
+function parseDictionaryApiDev(data: unknown): PronunciationData {
   if (!Array.isArray(data) || data.length === 0) {
     throw new Error("No pronunciation data found");
   }
 
-  const entry = data[0];
+  const entry = data[0] as DictionaryApiEntry;
   const normalizedWord = entry.word?.toLowerCase() || "";
 
   // Extract IPA from phonetics array
@@ -23,9 +67,9 @@ function parseDictionaryApiDev(data: any[]): PronunciationData {
   if (entry.phonetics && Array.isArray(entry.phonetics)) {
     // Find phonetic with both text and audio
     const phoneticWithAudio = entry.phonetics.find(
-      (p: any) => p.text && p.audio
+      (p: DictionaryApiPhonetic) => p.text && p.audio
     );
-    const phoneticWithText = entry.phonetics.find((p: any) => p.text);
+    const phoneticWithText = entry.phonetics.find((p: DictionaryApiPhonetic) => p.text);
 
     if (phoneticWithAudio) {
       ipa = phoneticWithAudio.text;
@@ -33,7 +77,7 @@ function parseDictionaryApiDev(data: any[]): PronunciationData {
     } else if (phoneticWithText) {
       ipa = phoneticWithText.text;
       // Try to find audio in other phonetics
-      const audioPhonetic = entry.phonetics.find((p: any) => p.audio);
+      const audioPhonetic = entry.phonetics.find((p: DictionaryApiPhonetic) => p.audio);
       if (audioPhonetic) {
         audioUrl = audioPhonetic.audio;
       }
@@ -48,9 +92,9 @@ function parseDictionaryApiDev(data: any[]): PronunciationData {
   // Extract meanings
   let meanings: Meaning[] | undefined;
   if (entry.meanings && Array.isArray(entry.meanings)) {
-    meanings = entry.meanings.map((meaning: any) => ({
+    meanings = entry.meanings.map((meaning: DictionaryApiMeaning) => ({
       partOfSpeech: meaning.partOfSpeech || "",
-      definitions: (meaning.definitions || []).map((def: any) => ({
+      definitions: (meaning.definitions || []).map((def: DictionaryApiDefinition) => ({
         definition: def.definition || "",
         example: def.example || undefined,
         synonyms: def.synonyms && def.synonyms.length > 0 ? def.synonyms : undefined,
@@ -70,21 +114,22 @@ function parseDictionaryApiDev(data: any[]): PronunciationData {
 }
 
 // Parse response from freedictionaryapi.com
-function parseFreeDictionaryApi(data: any): PronunciationData {
-  if (!data || !data.entries || !Array.isArray(data.entries) || data.entries.length === 0) {
+function parseFreeDictionaryApi(data: unknown): PronunciationData {
+  const parsed = data as FreeDictionaryResponse;
+  if (!parsed || !parsed.entries || !Array.isArray(parsed.entries) || parsed.entries.length === 0) {
     throw new Error("No pronunciation data found");
   }
 
-  const normalizedWord = data.word?.toLowerCase() || "";
+  const normalizedWord = parsed.word?.toLowerCase() || "";
   let ipa: string | undefined;
   let audioUrl: string | undefined;
   const meaningsMap = new Map<string, Meaning>();
 
   // Process all entries
-  for (const entry of data.entries) {
+  for (const entry of parsed.entries) {
     // Extract IPA from pronunciations
     if (entry.pronunciations && Array.isArray(entry.pronunciations)) {
-      const pronunciation = entry.pronunciations.find((p: any) => p.text);
+      const pronunciation = entry.pronunciations.find((p) => p.text);
       if (pronunciation && !ipa) {
         ipa = pronunciation.text;
       }
@@ -130,7 +175,7 @@ function parseFreeDictionaryApi(data: any): PronunciationData {
   }
 
   const meanings = Array.from(meaningsMap.values());
-  const sourceUrl = data.source?.url || `https://www.dictionary.com/browse/${normalizedWord}`;
+  const sourceUrl = parsed.source?.url || `https://www.dictionary.com/browse/${normalizedWord}`;
 
   return {
     ipa: ipa || undefined,
@@ -163,7 +208,7 @@ export async function fetchPronunciation(
         return result;
       }
     }
-  } catch (error) {
+  } catch {
     // Continue to try the other API
     console.log(`DictionaryAPI.dev failed for "${word}", trying Free Dictionary API...`);
   }

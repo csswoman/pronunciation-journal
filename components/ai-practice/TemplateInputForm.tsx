@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { AITemplateId, Difficulty, TemplateVars } from "@/lib/types";
+import type { AITemplateId, TemplateVars } from "@/lib/types";
 import { TEMPLATES } from "./TemplateCard";
 
 const LEVELS = ["beginner", "intermediate", "upper-intermediate", "advanced"];

@@ -27,7 +27,7 @@ export function useUserRole() {
           .eq("id", user.id)
           .maybeSingle();
         setRole((data?.role as UserRole) ?? "free");
-      } catch (e) {
+      } catch {
         setRole("free");
       } finally {
         setLoading(false);

@@ -5,6 +5,24 @@ export interface WordSuggestion {
   sourceUrl?: string;
 }
 
+interface DatamuseSuggestion {
+  word?: string;
+}
+
+interface DictionaryApiEntry {
+  phonetic?: string;
+  phonetics?: Array<{ text?: string }>;
+}
+
+interface FreeDictionaryEntry {
+  pronunciations?: Array<{ text?: string }>;
+}
+
+interface FreeDictionaryResponse {
+  entries?: FreeDictionaryEntry[];
+  source?: { url?: string };
+}
+
 // Fetch word suggestions from Datamuse API
 // This API provides word suggestions and spelling corrections
 // Then fetch IPA from dictionary API for each suggestion
@@ -29,7 +47,10 @@ export async function getWordSuggestions(query: string): Promise<WordSuggestion[
     const data = await response.json();
     
     // Datamuse returns array of objects like: [{ word: "hello", score: 1234 }]
-    const words = data.map((item: any) => item.word).slice(0, 5);
+    const words = (data as DatamuseSuggestion[])
+      .map((item) => item.word)
+      .filter((word): word is string => typeof word === "string" && word.length > 0)
+      .slice(0, 5);
     
     // Fetch IPA for each word suggestion (in parallel for better performance)
     const suggestionsWithIPA = await Promise.all(
@@ -60,12 +81,12 @@ export async function getWordSuggestions(query: string): Promise<WordSuggestion[
           
           if (dictResponse.ok) {
             const dictData = await dictResponse.json();
-            if (Array.isArray(dictData) && dictData.length > 0) {
-              const entry = dictData[0];
+              if (Array.isArray(dictData) && dictData.length > 0) {
+              const entry = dictData[0] as DictionaryApiEntry;
               
               // Extract IPA
               if (entry.phonetics && Array.isArray(entry.phonetics)) {
-                const phoneticWithText = entry.phonetics.find((p: any) => p.text);
+                const phoneticWithText = entry.phonetics.find((p) => p.text);
                 if (phoneticWithText) {
                   ipa = phoneticWithText.text;
                 }
@@ -85,7 +106,7 @@ export async function getWordSuggestions(query: string): Promise<WordSuggestion[
               }
             }
           }
-        } catch (error: any) {
+        } catch {
           if (timeoutId) clearTimeout(timeoutId);
           // Silently continue to try the other API
           // Don't log network errors, CORS errors, or timeout errors
@@ -113,12 +134,12 @@ export async function getWordSuggestions(query: string): Promise<WordSuggestion[
             if (timeoutId2) clearTimeout(timeoutId2);
             
             if (freeDictResponse.ok) {
-              const freeDictData = await freeDictResponse.json();
+              const freeDictData = (await freeDictResponse.json()) as FreeDictionaryResponse;
               if (freeDictData && freeDictData.entries && Array.isArray(freeDictData.entries)) {
                 // Extract IPA from first entry with pronunciation
                 for (const entry of freeDictData.entries) {
                   if (entry.pronunciations && Array.isArray(entry.pronunciations)) {
-                    const pronunciation = entry.pronunciations.find((p: any) => p.text);
+                    const pronunciation = entry.pronunciations.find((p) => p.text);
                     if (pronunciation) {
                       ipa = pronunciation.text;
                       break;
@@ -129,7 +150,7 @@ export async function getWordSuggestions(query: string): Promise<WordSuggestion[
                 sourceUrl = freeDictData.source?.url || `https://www.dictionary.com/browse/${normalizedWord}`;
               }
             }
-          } catch (error: any) {
+          } catch {
             if (timeoutId2) clearTimeout(timeoutId2);
             // Silently fail - this is expected if the API is unavailable or has CORS issues
             // Don't log network errors, CORS errors, or timeout errors

@@ -416,6 +416,48 @@ export type Database = {
         }
         Relationships: []
       }
+      theory_lessons: {
+        Row: {
+          category: string
+          content: string
+          cover_image_url: string | null
+          created_at: string
+          id: string
+          is_published: boolean
+          is_system: boolean
+          slug: string
+          title: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          category: string
+          content: string
+          cover_image_url?: string | null
+          created_at?: string
+          id?: string
+          is_published?: boolean
+          is_system?: boolean
+          slug: string
+          title: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          category?: string
+          content?: string
+          cover_image_url?: string | null
+          created_at?: string
+          id?: string
+          is_published?: boolean
+          is_system?: boolean
+          slug?: string
+          title?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       user_favorite_prompts: {
         Row: {
           prompt_id: string

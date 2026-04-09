@@ -150,7 +150,7 @@ export default function DecksPage() {
         .eq("decks.user_id", user.id);
 
       const counts: Record<string, number> = {};
-      (entriesData ?? []).forEach((row: any) => {
+      (entriesData ?? []).forEach((row: { deck_id: string }) => {
         counts[row.deck_id] = (counts[row.deck_id] ?? 0) + 1;
       });
 

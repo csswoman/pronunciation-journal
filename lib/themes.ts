@@ -201,7 +201,6 @@ function hexToRgb(hex: string): string {
     : "110, 168, 254";
 }
 
-const STYLE_ID = "theme-tokens";
 /**
  * Apply theme tokens directly to the documentElement for the given theme and mode.
  * Uses `document.documentElement.style.setProperty(...)` as required.

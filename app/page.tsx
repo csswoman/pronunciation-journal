@@ -2,10 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { getUserStats, getTodayProgress, getFavorites, getNeedsPracticeWords, getProgressHistory } from "@/lib/db";
+import { getUserStats, getTodayProgress, getProgressHistory } from "@/lib/db";
 import { getAllLessons } from "@/lib/lesson-generator";
-import type { UserStats, DailyProgress, FavoriteWord } from "@/lib/types";
+import type { UserStats, DailyProgress } from "@/lib/types";
 import PageHero from "@/components/layout/PageHero";
 import StatsSection from "@/components/layout/StatsSection";
 import QuickActionCard, { QuickActionGrid } from "@/components/layout/QuickActionCard";
@@ -16,25 +15,19 @@ export default function HomePage() {
   const router = useRouter();
   const [stats, setStats] = useState<UserStats | null>(null);
   const [todayProgress, setTodayProgress] = useState<DailyProgress | null>(null);
-  const [favorites, setFavorites] = useState<FavoriteWord[]>([]);
-  const [needsPractice, setNeedsPractice] = useState<{ word: string; lessonId: string; bestAccuracy: number; attempts: number }[]>([]);
   const [progressHistory, setProgressHistory] = useState<DailyProgress[]>([]);
 
   const lessons = getAllLessons();
 
   useEffect(() => {
     async function load() {
-      const [s, t, favs, needs, history] = await Promise.all([
+      const [s, t, history] = await Promise.all([
         getUserStats(),
         getTodayProgress(),
-        getFavorites(),
-        getNeedsPracticeWords(),
         getProgressHistory(7),
       ]);
       setStats(s);
       setTodayProgress(t || null);
-      setFavorites(favs);
-      setNeedsPractice(needs);
       setProgressHistory(history);
     }
     load();

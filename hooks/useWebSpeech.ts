@@ -14,9 +14,43 @@ interface UseWebSpeechReturn {
   stopListening: () => void;
 }
 
+interface SpeechRecognitionAlternativeLike {
+  transcript: string;
+}
+
+interface SpeechRecognitionResultLike {
+  [index: number]: SpeechRecognitionAlternativeLike;
+}
+
+interface SpeechRecognitionEventLike {
+  results: ArrayLike<SpeechRecognitionResultLike>;
+}
+
+interface SpeechRecognitionErrorEventLike {
+  error?: string;
+}
+
+interface SpeechRecognitionLike {
+  lang: string;
+  continuous: boolean;
+  interimResults: boolean;
+  maxAlternatives: number;
+  onresult: ((event: SpeechRecognitionEventLike) => void) | null;
+  onerror: ((event: SpeechRecognitionErrorEventLike) => void) | null;
+  onend: (() => void) | null;
+  start: () => void;
+  stop: () => void;
+}
+
+type SpeechRecognitionConstructor = new () => SpeechRecognitionLike;
+type WindowWithSpeech = Window & {
+  SpeechRecognition?: SpeechRecognitionConstructor;
+  webkitSpeechRecognition?: SpeechRecognitionConstructor;
+};
+
 export function useWebSpeech({ onResult, onError }: UseWebSpeechOptions = {}): UseWebSpeechReturn {
   const [isListening, setIsListening] = useState(false);
-  const recognitionRef = useRef<any>(null);
+  const recognitionRef = useRef<SpeechRecognitionLike | null>(null);
   const pendingRef = useRef<string>("");
   const disabledByNetworkRef = useRef(false);
   const onResultRef = useRef(onResult);
@@ -26,28 +60,29 @@ export function useWebSpeech({ onResult, onError }: UseWebSpeechOptions = {}): U
 
   const isSupported =
     typeof window !== "undefined" &&
-    !!((window as any).SpeechRecognition ?? (window as any).webkitSpeechRecognition);
+    !!((window as WindowWithSpeech).SpeechRecognition ?? (window as WindowWithSpeech).webkitSpeechRecognition);
 
   const startListening = useCallback(() => {
     if (!isSupported) return;
     if (disabledByNetworkRef.current) return;
 
-    const SR = (window as any).SpeechRecognition ?? (window as any).webkitSpeechRecognition;
-    const rec: any = new SR();
+    const SR = (window as WindowWithSpeech).SpeechRecognition ?? (window as WindowWithSpeech).webkitSpeechRecognition;
+    if (!SR) return;
+    const rec = new SR();
     rec.lang = "en-US";
     rec.continuous = true;
     rec.interimResults = false;
     rec.maxAlternatives = 1;
 
-    rec.onresult = (e: any) => {
-      pendingRef.current = Array.from(e.results as any[])
-        .map((r: any) => r[0].transcript)
+    rec.onresult = (e: SpeechRecognitionEventLike) => {
+      pendingRef.current = Array.from(e.results)
+        .map((r) => r[0]?.transcript ?? "")
         .join(" ")
         .trim();
       console.log(`[WebSpeech] Interim result: "${pendingRef.current}"`);
     };
 
-    rec.onerror = (e: any) => {
+    rec.onerror = (e: SpeechRecognitionErrorEventLike) => {
       const error = String(e.error || "unknown");
       if (error === "network") {
         console.info("[WebSpeech] network unavailable; using fallback STT");
