@@ -5,6 +5,7 @@ import type { WhisperWorkerResponse } from "@/lib/types";
 
 interface UseWhisperOptions {
   onResult?: (text: string) => void;
+  onError?: (error: string) => void;
 }
 
 interface UseWhisperReturn {
@@ -29,6 +30,8 @@ export function useWhisper(options: UseWhisperOptions = {}): UseWhisperReturn {
   // Keep onResult in a ref so we don't re-create the worker on every render
   const onResultRef = useRef(options.onResult);
   useEffect(() => { onResultRef.current = options.onResult; }, [options.onResult]);
+  const onErrorRef = useRef(options.onError);
+  useEffect(() => { onErrorRef.current = options.onError; }, [options.onError]);
 
   // Initialize worker
   useEffect(() => {
@@ -54,7 +57,11 @@ export function useWhisper(options: UseWhisperOptions = {}): UseWhisperReturn {
           }
           break;
         case "error":
-          setError(workerError || "Unknown error");
+          {
+            const message = workerError || "Unknown error";
+            setError(message);
+            onErrorRef.current?.(message);
+          }
           setIsModelLoading(false);
           setIsTranscribing(false);
           break;
@@ -64,11 +71,25 @@ export function useWhisper(options: UseWhisperOptions = {}): UseWhisperReturn {
       }
     };
 
+    workerRef.current.onerror = (event: ErrorEvent) => {
+      const message = event.message || "Worker initialization failed";
+      setError(message);
+      setIsModelLoading(false);
+      setIsTranscribing(false);
+      onErrorRef.current?.(message);
+    };
+
+    workerRef.current.onmessageerror = () => {
+      const message = "Worker message parsing error";
+      setError(message);
+      setIsModelLoading(false);
+      setIsTranscribing(false);
+      onErrorRef.current?.(message);
+    };
+
     return () => {
       workerRef.current?.terminate();
     };
-    // Only run once on mount
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const loadModel = useCallback(() => {

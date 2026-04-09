@@ -5,9 +5,23 @@
  * Whisper tiny model entirely in the browser.
  */
 
-import { pipeline } from "@xenova/transformers";
+type PipelineFn = (typeof import("@xenova/transformers"))["pipeline"];
+let pipelineFn: PipelineFn | null = null;
+let transcriber: Awaited<ReturnType<PipelineFn>> | null = null;
 
-let transcriber: Awaited<ReturnType<typeof pipeline>> | null = null;
+async function getPipelineFn(): Promise<PipelineFn> {
+  if (pipelineFn) return pipelineFn;
+
+  // Turbopack/worker dev environments may miss process/env at module-eval time.
+  // Define a minimal shim before importing transformers.
+  const g = globalThis as { process?: { env?: Record<string, string> } };
+  if (!g.process) g.process = { env: {} };
+  if (!g.process.env) g.process.env = {};
+
+  const mod = await import("@xenova/transformers");
+  pipelineFn = mod.pipeline;
+  return pipelineFn;
+}
 
 self.onmessage = async (event: MessageEvent) => {
   const { type, audio } = event.data;
@@ -15,6 +29,7 @@ self.onmessage = async (event: MessageEvent) => {
   if (type === "load") {
     try {
       self.postMessage({ type: "progress", progress: 0 });
+      const pipeline = await getPipelineFn();
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const pipelineOptions: any = {

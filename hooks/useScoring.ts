@@ -15,7 +15,8 @@ interface UseScoringReturn {
   scoreAndSave: (
     transcript: string,
     target: string,
-    lessonId: string
+    lessonId: string,
+    threshold?: number
   ) => Promise<ScoringResult>;
   reset: () => void;
 }
@@ -34,19 +35,21 @@ export function useScoring(): UseScoringReturn {
     async (
       transcript: string,
       target: string,
-      lessonId: string
+      lessonId: string,
+      threshold = 70
     ): Promise<ScoringResult> => {
       setIsProcessing(true);
 
       try {
         // Score the pronunciation
-        const scoringResult = await scorePronunciation(transcript, target);
+        const scoringResult = await scorePronunciation(transcript, target, threshold);
         setResult(scoringResult);
 
-        // Calculate XP and feedback
-        const xp = calculateXP(scoringResult.accuracy);
+        // Calculate XP and feedback — hard mode gives bonus XP
+        const xp = Math.round(calculateXP(scoringResult.accuracy) * (threshold >= 85 ? 1.5 : 1));
         setXpEarned(xp);
-        setFeedback(getFeedbackMessage(scoringResult.accuracy));
+        setFeedback(getFeedbackMessage(scoringResult.accuracy, threshold));
+
 
         // Persist in background — DB failures must never block the feedback UI
         (async () => {

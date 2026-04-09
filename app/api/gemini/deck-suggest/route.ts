@@ -1,18 +1,47 @@
 import { GoogleGenAI } from "@google/genai";
 import { NextRequest, NextResponse } from "next/server";
 
-const FALLBACK_MODELS = [
-  "gemini-2.5-flash",
-  "gemini-2.0-flash",
-  "gemini-flash-latest",
+const ENABLE_PREVIEW_MODELS = process.env.GEMINI_ENABLE_PREVIEW_MODELS === "true";
+const BASE_MODELS = [
   "gemini-2.5-flash-lite",
-  "gemini-2.0-flash-lite",
-];
+  "gemini-2.5-flash",
+  "gemini-flash-latest",
+] as const;
+const PREVIEW_MODELS = ["gemini-3.1-flash-lite-preview"] as const;
+const FALLBACK_MODELS = ENABLE_PREVIEW_MODELS
+  ? [...BASE_MODELS, ...PREVIEW_MODELS]
+  : [...BASE_MODELS];
 
 const SYSTEM_PROMPT = `You are an English vocabulary coach. When given a deck name and optional description, suggest 8 relevant English words or short phrases that fit the theme. Return ONLY valid JSON with no markdown, no code fences, no extra text — just raw JSON.
 
 Format:
 {"suggestions":[{"word":"example","meaning":"brief definition or usage context"}]}`;
+
+function getErrorStatus(err: unknown): number | undefined {
+  if (!err || typeof err !== "object") return undefined;
+  const maybe = err as { status?: unknown; statusCode?: unknown };
+  if (typeof maybe.status === "number") return maybe.status;
+  if (typeof maybe.statusCode === "number") return maybe.statusCode;
+  return undefined;
+}
+
+function shouldTryNextModel(err: unknown): boolean {
+  const status = getErrorStatus(err);
+  if (status === 400 || status === 401 || status === 403) return false;
+  if (status === 404 || status === 408 || status === 409 || status === 425 || status === 429) return true;
+  if (typeof status === "number" && status >= 500) return true;
+
+  const message = String((err as { message?: unknown })?.message ?? "").toLowerCase();
+  return (
+    message.includes("not found") ||
+    message.includes("quota") ||
+    message.includes("rate") ||
+    message.includes("resource exhausted") ||
+    message.includes("unavailable") ||
+    message.includes("timeout") ||
+    message.includes("internal")
+  );
+}
 
 async function generateSuggestions(
   ai: GoogleGenAI,
@@ -35,10 +64,9 @@ async function generateSuggestions(
       }
 
       return result.text;
-    } catch (err: any) {
+    } catch (err: unknown) {
       lastError = err;
-      if (err.status === 404 || err.message?.includes("not found")) continue;
-      throw err;
+      if (!shouldTryNextModel(err)) throw err;
     }
   }
   throw lastError ?? new Error("All fallback models failed");
@@ -76,11 +104,13 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const parsed = JSON.parse(cleaned);
 
     return NextResponse.json(parsed);
-  } catch (err: any) {
+  } catch (err: unknown) {
+    const status = getErrorStatus(err) ?? 500;
+    const message = String((err as { message?: unknown })?.message ?? "Internal server error");
     console.error("deck-suggest error:", err);
     return NextResponse.json(
-      { error: err.message ?? "Internal server error" },
-      { status: 500 }
+      { error: message },
+      { status }
     );
   }
 }

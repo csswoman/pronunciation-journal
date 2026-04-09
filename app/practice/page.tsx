@@ -1,5 +1,5 @@
 import PracticeLessonsPage from '@/components/practice/PracticeLessonsPage'
 
-export default function DashboardPage() {
+export default function PracticePage() {
   return <PracticeLessonsPage />
 }

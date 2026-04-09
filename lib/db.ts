@@ -73,6 +73,10 @@ export async function getRecentAttempts(limit = 50): Promise<Attempt[]> {
   return db.attempts.orderBy("timestamp").reverse().limit(limit).toArray();
 }
 
+export async function getAttemptsByLessonId(lessonId: string): Promise<Attempt[]> {
+  return db.attempts.where("lessonId").equals(lessonId).toArray();
+}
+
 // ── SRS Helpers ──
 
 export async function getSRSData(wordId: string): Promise<SRSData | undefined> {

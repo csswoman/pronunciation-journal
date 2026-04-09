@@ -343,7 +343,7 @@ export default function ActiveLessonPage() {
       <div className="min-h-screen flex items-center justify-center p-4" style={{ backgroundColor: 'var(--page-bg)' }}>
         <div className="w-full max-w-sm space-y-4">
           <Link
-            href="/lesson"
+            href="/practice"
             className="text-sm transition-colors"
             style={{ color: 'var(--text-tertiary)' }}
             onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--text-primary)')}
@@ -399,7 +399,7 @@ export default function ActiveLessonPage() {
       <div className="min-h-screen flex items-center justify-center p-4" style={{ backgroundColor: 'var(--page-bg)' }}>
         <div className="w-full max-w-md space-y-4">
           <Link
-            href="/lesson"
+            href="/practice"
             className="text-sm transition-colors"
             style={{ color: 'var(--text-tertiary)' }}
             onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--text-primary)')}
@@ -437,7 +437,7 @@ export default function ActiveLessonPage() {
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">Lesson not found</h1>
-          <Link href="/lesson" className="" style={{color: 'var(--primary)'}} onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--btn-regular-bg-hover)')} onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--primary)')}>← Back to lessons</Link>
+          <Link href="/practice" className="" style={{color: 'var(--primary)'}} onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--btn-regular-bg-hover)')} onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--primary)')}>← Back to practice</Link>
         </div>
       </div>
     );
@@ -500,7 +500,7 @@ export default function ActiveLessonPage() {
                   🔄 Retry Lesson
                 </button>
               )}
-              <Link href="/lesson" className="px-6 py-3 rounded-xl bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-medium hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
+              <Link href="/practice" className="px-6 py-3 rounded-xl bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-medium hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
                 ← All Lessons
               </Link>
             </div>

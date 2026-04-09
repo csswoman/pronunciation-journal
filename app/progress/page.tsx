@@ -7,6 +7,9 @@ import PageHero from '@/components/layout/PageHero'
 import StatsSection from '@/components/layout/StatsSection'
 import AchievementsSection from '@/components/progress/AchievementsSection'
 import JourneyToFluiditySection from '@/components/progress/JourneyToFluiditySection'
+import MasteredSection from '@/components/progress/MasteredSection'
+import ReviewReminder from '@/components/progress/ReviewReminder'
+import { useMasteredSounds } from '@/hooks/useMasteredSounds'
 import type { UserStats, DailyProgress } from '@/lib/types'
 
 const RocketIcon = () => (
@@ -20,6 +23,7 @@ const RocketIcon = () => (
 
 export default function ProgressPage() {
   const { user } = useAuth()
+  const { mastered, dueToday } = useMasteredSounds(user?.id)
   const [stats, setStats] = useState<UserStats | null>(null)
   const [todayProgress, setTodayProgress] = useState<DailyProgress | null>(null)
   const [progressHistory, setProgressHistory] = useState<DailyProgress[]>([])
@@ -121,6 +125,10 @@ export default function ProgressPage() {
         todayProgress={todayProgress}
         progressHistory={progressHistory}
       />
+
+      <ReviewReminder dueToday={dueToday} totalMastered={mastered.length} />
+
+      <MasteredSection mastered={mastered} />
 
       <AchievementsSection />
 
