@@ -1,0 +1,197 @@
+import { isValidElement, type ReactNode } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+
+type AdmonitionTone = "info" | "warning" | "highlight";
+
+type AdmonitionMeta = {
+  title: string;
+  icon: string;
+  classes: string;
+};
+
+const ADMONITION_MAP: Record<AdmonitionTone, AdmonitionMeta> = {
+  info: {
+    title: "Info",
+    icon: "i",
+    classes:
+      "border-[color:color-mix(in_srgb,var(--admonitions-color-note)_35%,transparent)] bg-[color:color-mix(in_srgb,var(--admonitions-color-note)_12%,transparent)]",
+  },
+  warning: {
+    title: "Warning",
+    icon: "!",
+    classes:
+      "border-[color:color-mix(in_srgb,var(--admonitions-color-warning)_35%,transparent)] bg-[color:color-mix(in_srgb,var(--admonitions-color-warning)_14%,transparent)]",
+  },
+  highlight: {
+    title: "Highlight",
+    icon: "*",
+    classes:
+      "border-[color:color-mix(in_srgb,var(--admonitions-color-important)_35%,transparent)] bg-[color:color-mix(in_srgb,var(--admonitions-color-important)_13%,transparent)]",
+  },
+};
+
+const ADMONITION_ALIASES: Record<string, AdmonitionTone> = {
+  info: "info",
+  note: "info",
+  warning: "warning",
+  caution: "warning",
+  highlight: "highlight",
+  tip: "highlight",
+  important: "highlight",
+};
+
+function preprocessAdmonitions(markdown: string): string {
+  const lines = markdown.replace(/\r\n/g, "\n").split("\n");
+  const output: string[] = [];
+
+  for (let i = 0; i < lines.length; i += 1) {
+    const startMatch = lines[i].match(/^:::\s*([a-zA-Z]+)\s*$/);
+    const tone = startMatch ? ADMONITION_ALIASES[startMatch[1].toLowerCase()] : undefined;
+
+    if (!tone) {
+      output.push(lines[i]);
+      continue;
+    }
+
+    const body: string[] = [];
+    i += 1;
+
+    while (i < lines.length && !/^:::\s*$/.test(lines[i])) {
+      body.push(lines[i]);
+      i += 1;
+    }
+
+    output.push(`> [!${tone.toUpperCase()}]`);
+    if (body.length === 0) {
+      output.push("> ");
+      continue;
+    }
+
+    for (const bodyLine of body) {
+      output.push(bodyLine.trim().length > 0 ? `> ${bodyLine}` : "> ");
+    }
+  }
+
+  return output.join("\n");
+}
+
+function flattenText(node: ReactNode): string {
+  if (typeof node === "string" || typeof node === "number") {
+    return String(node);
+  }
+
+  if (Array.isArray(node)) {
+    return node.map(flattenText).join("");
+  }
+
+  if (isValidElement<{ children?: ReactNode }>(node)) {
+    return flattenText(node.props.children ?? null);
+  }
+
+  return "";
+}
+
+function getAdmonitionToneFromChildren(children: ReactNode): AdmonitionTone | null {
+  const text = flattenText(children).trim();
+  const match = text.match(/^\[!(INFO|WARNING|HIGHLIGHT)\]/i);
+  if (!match) return null;
+
+  const normalized = match[1].toLowerCase();
+  if (normalized === "info") return "info";
+  if (normalized === "warning") return "warning";
+  return "highlight";
+}
+
+function isAdmonitionMarker(children: ReactNode): boolean {
+  return /^\[!(INFO|WARNING|HIGHLIGHT)\]$/i.test(flattenText(children).trim());
+}
+
+export default function LessonMarkdown({ content }: { content: string }) {
+  const markdown = preprocessAdmonitions(content || "This lesson has no content yet.");
+
+  return (
+    <div className="prose prose-neutral max-w-none prose-h2:mb-4 prose-h2:border-b-0 prose-h2:pb-0 prose-hr:hidden dark:prose-invert">
+      <ReactMarkdown
+        remarkPlugins={[remarkGfm]}
+        components={{
+          h2: ({ children }) => (
+            <h2 className="mt-10 mb-4 text-2xl font-bold text-neutral-900 dark:text-[var(--deep-text)]">
+              {children}
+            </h2>
+          ),
+          h3: ({ children }) => (
+            <h3 className="mt-8 mb-3 text-xl font-semibold text-neutral-900 dark:text-[var(--deep-text)]">
+              {children}
+            </h3>
+          ),
+          p: ({ children }) => {
+            if (isAdmonitionMarker(children)) return null;
+            return (
+              <p className="text-base leading-relaxed text-gray-700 dark:text-[var(--text-secondary)]">
+                {children}
+              </p>
+            );
+          },
+          ul: ({ children }) => (
+            <ul className="my-5 list-disc space-y-2 pl-6 marker:text-[var(--primary)]">{children}</ul>
+          ),
+          ol: ({ children }) => <ol className="my-5 list-decimal space-y-2 pl-6">{children}</ol>,
+          li: ({ children }) => (
+            <li className="text-base leading-relaxed text-gray-700 dark:text-[var(--text-secondary)]">
+              {children}
+            </li>
+          ),
+          blockquote: ({ children }) => {
+            const tone = getAdmonitionToneFromChildren(children);
+            if (!tone) {
+              return (
+                <blockquote className="my-6 rounded-xl border-l-4 border-[var(--primary)] bg-neutral-100 px-5 py-4 text-gray-700 dark:bg-[var(--btn-regular-bg)] dark:text-[var(--text-secondary)]">
+                  {children}
+                </blockquote>
+              );
+            }
+
+            const meta = ADMONITION_MAP[tone];
+            return (
+              <aside className={`my-6 rounded-xl border px-4 py-3 ${meta.classes}`}>
+                <div className="mb-1.5 flex items-center gap-2 text-sm font-semibold text-[var(--deep-text)] dark:text-[var(--deep-text)]">
+                  <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-black/10 text-xs dark:bg-white/10">
+                    {meta.icon}
+                  </span>
+                  <span>{meta.title}</span>
+                </div>
+                <div className="space-y-2">{children}</div>
+              </aside>
+            );
+          },
+          pre: ({ children }) => (
+            <pre className="my-6 overflow-x-auto rounded-xl bg-zinc-900 p-4 text-white">{children}</pre>
+          ),
+          code: ({ children, className }) => {
+            const isBlock = Boolean(className && className.includes("language-"));
+            if (isBlock) {
+              return <code className={className}>{children}</code>;
+            }
+            return (
+              <code className="rounded bg-zinc-100 px-1 py-0.5 text-sm text-zinc-800 dark:bg-zinc-800/80 dark:text-zinc-100">
+                {children}
+              </code>
+            );
+          },
+          a: ({ href, children }) => (
+            <a
+              href={href}
+              className="font-medium text-[var(--primary)] underline decoration-[color:color-mix(in_srgb,var(--primary)_40%,transparent)] underline-offset-4 transition-colors hover:text-[var(--btn-content)]"
+            >
+              {children}
+            </a>
+          ),
+          hr: () => null,
+        }}
+      >
+        {markdown}
+      </ReactMarkdown>
+    </div>
+  );
+}

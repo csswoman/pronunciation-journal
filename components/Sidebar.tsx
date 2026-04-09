@@ -209,7 +209,13 @@ export default function Sidebar({ className = "" }: SidebarProps) {
             style={{ background: "var(--btn-regular-bg)", color: "var(--btn-content)" }}
           >
             {avatarUrl ? (
-              <Image src={avatarUrl} alt={displayName} fill className="object-cover" />
+              <Image
+                src={avatarUrl}
+                alt={displayName}
+                fill
+                sizes="20px"
+                className="object-cover"
+              />
             ) : (
               initials
             )}
