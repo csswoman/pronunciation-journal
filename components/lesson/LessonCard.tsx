@@ -1,10 +1,13 @@
 "use client";
 
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import type { Lesson } from "@/lib/types";
+import { getAttemptsByLessonId } from "@/lib/db";
 
 interface LessonCardProps {
   lesson: Lesson;
+  progressPct?: number;
 }
 
 const difficultyConfig = {
@@ -25,8 +28,31 @@ const difficultyConfig = {
   },
 };
 
-export default function LessonCard({ lesson }: LessonCardProps) {
+export default function LessonCard({ lesson, progressPct }: LessonCardProps) {
   const config = difficultyConfig[lesson.difficulty];
+  const [derivedProgress, setDerivedProgress] = useState(0);
+
+  useEffect(() => {
+    if (progressPct != null) return;
+
+    getAttemptsByLessonId(lesson.id)
+      .then((attempts) => {
+        if (lesson.words.length === 0) {
+          setDerivedProgress(attempts.length > 0 ? 100 : 0);
+          return;
+        }
+
+        const uniqueWords = new Set(attempts.map((a) => a.word.toLowerCase())).size;
+        const pct = Math.round((uniqueWords / lesson.words.length) * 100);
+        setDerivedProgress(Math.max(0, Math.min(100, pct)));
+      })
+      .catch(() => setDerivedProgress(0));
+  }, [lesson.id, lesson.words.length, progressPct]);
+
+  const barProgress = useMemo(() => {
+    const value = progressPct ?? derivedProgress;
+    return Math.max(0, Math.min(100, Math.round(value)));
+  }, [progressPct, derivedProgress]);
 
   // Generate an icon based on lesson title
   const getIcon = () => {
@@ -103,7 +129,7 @@ export default function LessonCard({ lesson }: LessonCardProps) {
               className="h-full rounded-full"
               style={{
                 backgroundColor: config.bgColor,
-                width: '45%',
+                width: `${barProgress}%`,
               }}
             />
           </div>
