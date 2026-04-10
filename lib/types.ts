@@ -178,6 +178,40 @@ export interface AISavedWord {
   savedAt: string;
 }
 
+// ── AI Learning Session (structured workspace) ──
+
+export type StepExerciseFormat = "fill_blank" | "multiple_choice" | "speaking" | "checklist";
+
+export type LearningStep =
+  | { type: "explanation"; content: string }
+  | {
+      type: "exercise";
+      format: "fill_blank";
+      data: { sentence: string; answer: string; hint?: string };
+    }
+  | {
+      type: "exercise";
+      format: "multiple_choice";
+      data: { question: string; options: string[]; correct: number };
+    }
+  | {
+      type: "exercise";
+      format: "speaking";
+      data: { prompt: string; target: string };
+    }
+  | {
+      type: "exercise";
+      format: "checklist";
+      data: { items: string[] };
+    }
+  | { type: "checklist"; items: string[] };
+
+export interface LearningSession {
+  title: string;
+  summary: string; // short AI message shown in chat
+  steps: LearningStep[];
+}
+
 export type TemplateVars =
   | { templateId: "practice-questions"; topic: string; userLevel: string }
   | { templateId: "sentence-correction"; sentence: string }
