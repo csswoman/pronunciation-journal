@@ -25,6 +25,8 @@ import {
   accuracyToLevel,
 } from "@/lib/ai-prompts";
 import { getUserStats, getFavorites, getNeedsPracticeWords } from "@/lib/db";
+import { parseSession, extractChatText } from "@/lib/parse-session";
+import type { LearningSession } from "@/lib/types";
 
 export type Phase = "select" | "configure" | "chat";
 
@@ -45,6 +47,8 @@ interface UseAIPracticeState {
   conversationId: number | null;
   wordToSave: { word: string; context: string } | null;
   savedWords: AISavedWord[];
+  /** Latest parsed LearningSession from the most recent AI response */
+  activeSession: LearningSession | null;
 }
 
 interface UseAIPracticeReturn extends UseAIPracticeState {
@@ -57,6 +61,7 @@ interface UseAIPracticeReturn extends UseAIPracticeState {
   deleteSavedWord: (id: number) => Promise<void>;
   resetToSelect: () => void;
   loadSavedWords: () => Promise<void>;
+  clearSession: () => void;
 }
 
 export function useAIPractice(): UseAIPracticeReturn {
@@ -69,6 +74,7 @@ export function useAIPractice(): UseAIPracticeReturn {
   const [conversationId, setConversationId] = useState<number | null>(null);
   const [wordToSave, setWordToSave] = useState<{ word: string; context: string } | null>(null);
   const [savedWords, setSavedWords] = useState<AISavedWord[]>([]);
+  const [activeSession, setActiveSession] = useState<LearningSession | null>(null);
 
   // Keep a ref to the latest messages for async callbacks
   const messagesRef = useRef<AIMessage[]>([]);
@@ -172,9 +178,14 @@ export function useAIPractice(): UseAIPracticeReturn {
 
       const responseText = await callGemini(initialMessages, sysPrompt);
 
+      // Extract structured session and strip JSON block from chat display
+      const session = parseSession(responseText);
+      const chatContent = session ? extractChatText(responseText) : responseText;
+      if (session) setActiveSession(session);
+
       const modelMsg: AIMessage = {
         role: "model",
-        content: responseText,
+        content: chatContent,
         timestamp: new Date().toISOString(),
       };
 
@@ -219,9 +230,13 @@ export function useAIPractice(): UseAIPracticeReturn {
       try {
         const responseText = await callGemini(updatedMessages, systemPrompt);
 
+        const session = parseSession(responseText);
+        const chatContent = session ? extractChatText(responseText) : responseText;
+        if (session) setActiveSession(session);
+
         const modelMsg: AIMessage = {
           role: "model",
-          content: responseText,
+          content: chatContent,
           timestamp: new Date().toISOString(),
         };
 
@@ -277,6 +292,10 @@ export function useAIPractice(): UseAIPracticeReturn {
     setSavedWords((prev) => prev.filter((w) => w.id !== id));
   }, []);
 
+  const clearSession = useCallback(() => {
+    setActiveSession(null);
+  }, []);
+
   const resetToSelect = useCallback(() => {
     setPhase("select");
     setSelectedTemplate(null);
@@ -285,6 +304,7 @@ export function useAIPractice(): UseAIPracticeReturn {
     setConversationId(null);
     setError(null);
     setWordToSave(null);
+    setActiveSession(null);
   }, []);
 
   return {
@@ -297,6 +317,7 @@ export function useAIPractice(): UseAIPracticeReturn {
     conversationId,
     wordToSave,
     savedWords,
+    activeSession,
     selectTemplate,
     submitTemplateVars,
     sendMessage,
@@ -306,5 +327,6 @@ export function useAIPractice(): UseAIPracticeReturn {
     deleteSavedWord,
     resetToSelect,
     loadSavedWords,
+    clearSession,
   };
 }

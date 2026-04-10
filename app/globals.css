@@ -674,3 +674,20 @@
   border-radius: 999px;
   border: none;
 }
+
+
+/* ── Lesson grid page transition ──────────────────────────────────────── */
+@keyframes grid-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-grid-in {
+  animation: grid-in 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}

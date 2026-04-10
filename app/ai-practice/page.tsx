@@ -4,16 +4,45 @@ import { useState } from "react";
 import Image from "next/image";
 import { useAIPractice } from "@/hooks/useAIPractice";
 import Container from "@/components/layout/Container";
-import Section from "@/components/layout/Section";
-import Grid from "@/components/layout/Grid";
-import Card from "@/components/layout/Card";
 import PageHeader from "@/components/layout/PageHeader";
+import Card from "@/components/layout/Card";
+import Section from "@/components/layout/Section";
 import TemplateGrid from "@/components/ai-practice/TemplateGrid";
 import TemplateInputForm from "@/components/ai-practice/TemplateInputForm";
 import ChatView from "@/components/ai-practice/ChatView";
+import WorkspacePanel from "@/components/ai-practice/WorkspacePanel";
 import CustomPromptPanel from "@/components/ai-practice/CustomPromptPanel";
+import InlineChatPreview from "@/components/ai-practice/InlineChatPreview";
 import SaveWordModal from "@/components/ai-practice/SaveWordModal";
 import SavedAIWords from "@/components/ai-practice/SavedAIWords";
+import type { AITemplateId } from "@/lib/types";
+
+const QUICK_ACTIONS = [
+  {
+    label: "Free conversation",
+    icon: "💬",
+    prefill: "Let's have a free conversation in English. You start!",
+    instant: false,
+  },
+  {
+    label: "Correct my sentence",
+    icon: "✏️",
+    prefill: 'Please correct this sentence: "',
+    instant: false,
+  },
+  {
+    label: "Practice questions",
+    icon: "📝",
+    prefill: "I want to practice questions about: ",
+    instant: false,
+  },
+  {
+    label: "Personalized practice",
+    icon: "🎯",
+    prefill: null,
+    instant: true,
+  },
+] as const;
 
 export default function AIPracticePage() {
   const {
@@ -24,6 +53,7 @@ export default function AIPracticePage() {
     error,
     wordToSave,
     savedWords,
+    activeSession,
     selectTemplate,
     submitTemplateVars,
     sendMessage,
@@ -31,15 +61,60 @@ export default function AIPracticePage() {
     closeSaveWordModal,
     confirmSaveWord,
     deleteSavedWord,
-    resetToSelect, 
+    resetToSelect,
+    clearSession,
   } = useAIPractice();
 
   const [showSavedWords, setShowSavedWords] = useState(false);
+  const [showTemplates, setShowTemplates] = useState(false);
+  const [heroPrefill, setHeroPrefill] = useState<string | undefined>(undefined);
+  const [workspaceOpen, setWorkspaceOpen] = useState(false);
+
+  // Auto-open workspace when a new session arrives
+  const [lastSessionTitle, setLastSessionTitle] = useState<string | null>(null);
+  if (activeSession && activeSession.title !== lastSessionTitle) {
+    setLastSessionTitle(activeSession.title);
+    setWorkspaceOpen(true);
+  }
+
+  type PreviewMessage = { role: "ai" | "user"; content: string };
+  const [previewMessages, setPreviewMessages] = useState<PreviewMessage[]>([
+    { role: "ai", content: "Hi! What do you want to practice today?" },
+  ]);
+  const [previewLoading, setPreviewLoading] = useState(false);
+
+  const handleHeroSubmit = (text: string) => {
+    setPreviewMessages((prev) => [...prev, { role: "user", content: text }]);
+    setPreviewLoading(true);
+    setTimeout(() => {
+      setPreviewLoading(false);
+      setPreviewMessages((prev) => [
+        ...prev,
+        { role: "ai", content: "Great! Starting your session now..." },
+      ]);
+      setTimeout(() => {
+        submitTemplateVars({ templateId: "free-conversation", topic: text });
+      }, 600);
+    }, 900);
+  };
+
+  const handleQuickAction = (action: (typeof QUICK_ACTIONS)[number]) => {
+    if (action.instant) {
+      submitTemplateVars({ templateId: "personalized-practice" });
+    } else if (action.prefill) {
+      setHeroPrefill(action.prefill);
+    }
+  };
+
+  const handleCloseWorkspace = () => {
+    setWorkspaceOpen(false);
+    clearSession();
+  };
 
   return (
     <div className="min-h-screen bg-page-bg">
-      {/* Replace hero banner with PageHeader */}
-      <div style={{background: 'linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%)'}}>
+      {/* Header */}
+      <div>
         <Container>
           <PageHeader
             badge="AI Tutor"
@@ -61,180 +136,293 @@ export default function AIPracticePage() {
         </Container>
       </div>
 
-      <main className="py-12">
-        {/* Stats Section */}
-        {phase === "select" && (
-          <Container>
-            <Section spacing="lg" className="mb-12">
-              <Grid cols="3" gap="md" responsive={true}>
-                <Card variant="stat">
-                  <span className="text-2xl">📚</span>
-                  <div>
-                    <span className="text-2xl font-bold text-[var(--text-primary)]">{savedWords.length}</span>
-                    <p className="text-sm text-[var(--text-secondary)]">Saved Words</p>
-                  </div>
-                </Card>
-
-                <Card variant="stat">
-                  <span className="text-2xl">✨</span>
-                  <div>
-                    <span className="text-2xl font-bold" style={{color: 'var(--primary)'}}>3</span>
-                    <p className="text-sm text-[var(--text-secondary)]">Practice Tools</p>
-                  </div>
-                </Card>
-
-                <Card variant="stat">
-                  <span className="text-2xl">⚡</span>
-                  <div>
-                    <span className="text-2xl font-bold" style={{color: 'var(--admonitions-color-tip)'}}>Today</span>
-                    <p className="text-sm text-[var(--text-secondary)]">Session Status</p>
-                  </div>
-                </Card>
-              </Grid>
-            </Section>
-          </Container>
-        )}
-
+      <main className="py-10">
         <Container>
+          {/* Error banner */}
+          {error && (
+            <div
+              className="mb-6 p-4 text-sm flex items-start gap-3 rounded-xl border-l-4"
+              style={{
+                backgroundColor: "var(--btn-regular-bg)",
+                borderColor: "var(--admonitions-color-caution)",
+                color: "var(--admonitions-color-caution)",
+              }}
+            >
+              <span className="text-lg">⚠️</span>
+              <span>{error}</span>
+            </div>
+          )}
+
           <div className="flex flex-col lg:flex-row gap-8">
-            {/* Main content */}
+            {/* ── Main content ─────────────────────────────── */}
             <div className="flex-1 min-w-0">
-              {/* Error banner */}
-              {error && (
-                <Card className="mb-6 p-4 text-sm flex items-start gap-3 border-l-4" style={{
-                  backgroundColor: 'var(--btn-regular-bg)',
-                  borderColor: 'var(--admonitions-color-caution)',
-                  color: 'var(--admonitions-color-caution)',
-                  borderLeftWidth: '4px',
-                }}>
-                  <span className="text-lg">⚠️</span>
-                  <span>{error}</span>
-                </Card>
+
+              {/* ── Phase: select ── */}
+              {phase === "select" && (
+                <div className="space-y-6">
+                  <div>
+                    <h2
+                      className="text-2xl font-bold tracking-tight"
+                      style={{ color: "var(--text-primary)" }}
+                    >
+                      What do you want to practice?
+                    </h2>
+                    <p className="text-sm mt-1" style={{ color: "var(--text-secondary)" }}>
+                      Ask a question, share a sentence, or just start a conversation.
+                    </p>
+                  </div>
+
+                  <InlineChatPreview messages={previewMessages} isLoading={previewLoading} />
+
+                  <CustomPromptPanel
+                    onSubmit={handleHeroSubmit}
+                    isDisabled={isStreaming}
+                    variant="hero"
+                    placeholder="Write a sentence, ask a question, or start a conversation..."
+                    helperText="Enter to send · Shift+Enter for new line"
+                    prefill={heroPrefill}
+                    onPrefillConsumed={() => setHeroPrefill(undefined)}
+                  />
+
+                  <div>
+                    <p
+                      className="text-xs font-medium uppercase tracking-widest mb-3"
+                      style={{ color: "var(--text-tertiary)" }}
+                    >
+                      Quick start
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      {QUICK_ACTIONS.map((action) => (
+                        <button
+                          key={action.label}
+                          onClick={() => handleQuickAction(action)}
+                          disabled={isStreaming}
+                          className="flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium border transition-all disabled:opacity-40"
+                          style={{
+                            backgroundColor: "var(--btn-regular-bg)",
+                            borderColor: "var(--line-divider)",
+                            color: "var(--text-secondary)",
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.backgroundColor = "var(--btn-regular-bg-hover)";
+                            e.currentTarget.style.color = "var(--text-primary)";
+                            e.currentTarget.style.borderColor = "var(--primary)";
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.backgroundColor = "var(--btn-regular-bg)";
+                            e.currentTarget.style.color = "var(--text-secondary)";
+                            e.currentTarget.style.borderColor = "var(--line-divider)";
+                          }}
+                        >
+                          <span className="text-base">{action.icon}</span>
+                          {action.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="pt-2 border-t" style={{ borderColor: "var(--line-divider)" }}>
+                    <button
+                      onClick={() => setShowTemplates((v) => !v)}
+                      className="flex items-center gap-2 text-sm transition-colors"
+                      style={{ color: "var(--text-tertiary)" }}
+                      onMouseEnter={(e) => (e.currentTarget.style.color = "var(--text-secondary)")}
+                      onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-tertiary)")}
+                    >
+                      <svg
+                        className={`w-3.5 h-3.5 transition-transform ${showTemplates ? "rotate-90" : ""}`}
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                      Browse all practice modes
+                    </button>
+
+                    {showTemplates && (
+                      <div className="mt-4">
+                        <TemplateGrid onSelect={selectTemplate} />
+                      </div>
+                    )}
+                  </div>
+
+                  <div
+                    className="flex items-center gap-6 text-xs"
+                    style={{ color: "var(--text-tertiary)" }}
+                  >
+                    <span>
+                      <span className="font-semibold" style={{ color: "var(--text-secondary)" }}>
+                        {savedWords.length}
+                      </span>{" "}
+                      saved words
+                    </span>
+                    <span style={{ color: "var(--primary)" }}>Active today</span>
+                  </div>
+                </div>
               )}
 
-              {/* Phase: select */}
-              {phase === "select" && (
-                <div className="space-y-12">
-                {/* Practice Modes */}
-                <Section spacing="lg" title="Practice Modes" description="Choose how you want to learn today">
-                  <TemplateGrid onSelect={selectTemplate} />
-                </Section>
-
-                {/* Custom prompt section */}
+              {/* ── Phase: configure ── */}
+              {phase === "configure" && selectedTemplate && (
                 <Section spacing="lg">
-                  <div className="flex items-center gap-2 mb-4">
-                    <svg className="w-6 h-6" style={{color: 'var(--primary)'}} fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/>
-                    </svg>
-                    <h3 className="text-xl font-bold text-[var(--text-primary)]">
-                      Custom AI Instruction
-                    </h3>
+                  <div className="flex items-center gap-3 mb-6">
+                    <button
+                      onClick={resetToSelect}
+                      className="p-2 rounded-lg transition-colors"
+                      style={{ color: "var(--primary)" }}
+                      onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "var(--btn-regular-bg)")}
+                      onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
+                      aria-label="Go back"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                      </svg>
+                    </button>
+                    <h2 className="text-xl font-bold" style={{ color: "var(--text-primary)" }}>
+                      Set up your session
+                    </h2>
                   </div>
-                  <p className="text-base text-[var(--text-secondary)] mb-6">
-                    Tell the AI what you'd like to practice. It adapts to your needs.
-                  </p>
-                  <CustomPromptPanel
-                    onSubmit={(text) => {
-                      submitTemplateVars({ templateId: "practice-questions", topic: text, userLevel: "intermediate" });
-                    }}
-                    isDisabled={isStreaming}
-                    placeholder="e.g. Explain the difference between 'since' and 'for' using travel examples"
-                  />
+                  <Card className="p-8">
+                    <TemplateInputForm
+                      templateId={selectedTemplate as AITemplateId}
+                      onSubmit={submitTemplateVars}
+                      onBack={resetToSelect}
+                      isLoading={isStreaming}
+                    />
+                  </Card>
                 </Section>
-              </div>
-            )}
+              )}
 
-            {/* Phase: configure */}
-            {phase === "configure" && selectedTemplate && (
-              <Section spacing="lg">
-                <div className="flex items-center gap-3 mb-6">
-                  <button
-                    onClick={resetToSelect}
-                    className="p-2 rounded-lg transition-colors hover:bg-btn-plain-hover"
-                    aria-label="Go back"
-                  >
-                    <svg className="w-5 h-5" style={{color: 'var(--primary)'}} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                    </svg>
-                  </button>
-                  <h2 className="text-2xl font-bold text-[var(--text-primary)]">Set up your session</h2>
+              {/* ── Phase: chat ── */}
+              {phase === "chat" && (
+                <div className="flex flex-col gap-4">
+                  {/* Chat header */}
+                  <div className="flex items-center justify-between">
+                    <button
+                      onClick={resetToSelect}
+                      className="flex items-center gap-1.5 text-sm font-medium transition-colors px-3 py-1.5 rounded-lg"
+                      style={{ color: "var(--text-tertiary)" }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.color = "var(--text-primary)";
+                        e.currentTarget.style.backgroundColor = "var(--btn-regular-bg)";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.color = "var(--text-tertiary)";
+                        e.currentTarget.style.backgroundColor = "transparent";
+                      }}
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                      </svg>
+                      New session
+                    </button>
+
+                    <div className="flex items-center gap-2">
+                      {activeSession && !workspaceOpen && (
+                        <button
+                          onClick={() => setWorkspaceOpen(true)}
+                          className="flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full border transition-all"
+                          style={{
+                            backgroundColor: "var(--btn-regular-bg)",
+                            borderColor: "var(--primary)",
+                            color: "var(--primary)",
+                          }}
+                          onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "var(--btn-regular-bg-hover)")}
+                          onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "var(--btn-regular-bg)")}
+                        >
+                          <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                          </svg>
+                          Open practice
+                        </button>
+                      )}
+                      <span
+                        className="text-xs px-3 py-1 rounded-full"
+                        style={{
+                          backgroundColor: "var(--btn-regular-bg)",
+                          color: "var(--text-tertiary)",
+                        }}
+                      >
+                        Select any word to save it
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Chat + Workspace split */}
+                  <div className={`flex gap-4 ${workspaceOpen ? "flex-col lg:flex-row" : ""}`}>
+                    {/* Chat panel */}
+                    <div className={workspaceOpen ? "lg:w-[45%] flex-shrink-0" : "w-full"}>
+                      <div
+                        className="rounded-2xl overflow-hidden border"
+                        style={{ borderColor: "var(--line-divider)" }}
+                      >
+                        <div
+                          className="min-h-[380px] max-h-[520px] overflow-y-auto px-5 py-4"
+                          style={{ backgroundColor: "var(--card-bg)" }}
+                        >
+                          <ChatView
+                            messages={messages}
+                            isStreaming={isStreaming}
+                            onSaveWord={openSaveWordModal}
+                            hasActiveSession={!!activeSession && !workspaceOpen}
+                            onOpenWorkspace={() => setWorkspaceOpen(true)}
+                          />
+                        </div>
+                      </div>
+
+                      {/* Reply input */}
+                      <div className="mt-3">
+                        <CustomPromptPanel
+                          onSubmit={sendMessage}
+                          isDisabled={isStreaming}
+                          variant="chat"
+                          placeholder="Reply… (Enter to send)"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Workspace panel */}
+                    {workspaceOpen && activeSession && (
+                      <div className="flex-1 min-w-0">
+                        <WorkspacePanel
+                          session={activeSession}
+                          onClose={handleCloseWorkspace}
+                        />
+                      </div>
+                    )}
+                  </div>
                 </div>
-                <Card className="p-8">
-                  <TemplateInputForm
-                    templateId={selectedTemplate as import("@/lib/types").AITemplateId}
-                    onSubmit={submitTemplateVars}
-                    onBack={resetToSelect}
-                    isLoading={isStreaming}
-                  />
-                </Card>
-              </Section>
-            )}
-
-            {/* Phase: chat */}
-            {phase === "chat" && (
-              <Section spacing="lg">
-                {/* Back + new session button */}
-                <div className="flex items-center justify-between gap-4 mb-6">
-                  <button
-                    onClick={resetToSelect}
-                    className="flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors"
-                    style={{
-                      color: 'var(--primary)',
-                    }}
-                    onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--btn-plain-hover)')}
-                    onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                    </svg>
-                    Back to Select
-                  </button>
-                  <span className="text-xs text-[var(--text-tertiary)] bg-btn-regular px-3 py-1 rounded-full">
-                    💡 Select any word to save it
-                  </span>
-                </div>
-
-                {/* Chat Messages */}
-                <Card className="min-h-[400px] max-h-[600px] overflow-y-auto p-6" style={{maxWidth: '100%'}}>
-                  <ChatView
-                    messages={messages}
-                    isStreaming={isStreaming}
-                    onSaveWord={openSaveWordModal}
-                  />
-                </Card>
-
-                {/* Input */}
-                <div className="sticky bottom-0 mt-6">
-                  <CustomPromptPanel
-                    onSubmit={sendMessage}
-                    isDisabled={isStreaming}
-                    placeholder="Reply to your tutor... (Enter to send, Shift+Enter for new line)"
-                  />
-                </div>
-              </Section>
-            )}
+              )}
             </div>
 
-            {/* Sidebar: saved words */}
-            <div className="lg:w-72 flex-shrink-0">
+            {/* ── Sidebar ───────────────────────────────────── */}
+            <div className="lg:w-60 flex-shrink-0">
               <Card className="sticky top-20 p-0 overflow-hidden">
-                {/* Header */}
                 <button
                   onClick={() => setShowSavedWords((v) => !v)}
-                  className="w-full flex items-center justify-between px-6 py-4 font-semibold text-[var(--text-primary)] hover:bg-btn-plain-hover transition-colors border-b border-[var(--line-divider)]"
+                  className="w-full flex items-center justify-between px-5 py-4 transition-colors border-b"
+                  style={{
+                    color: "var(--text-primary)",
+                    borderColor: "var(--line-divider)",
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "var(--btn-regular-bg)")}
+                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
                 >
                   <div className="flex items-center gap-2">
-                    <span className="text-xl">📚</span>
-                    <span>Saved Words</span>
-                    <span className="ml-1 px-2.5 py-0.5 text-xs font-bold rounded-full" style={{
-                      background: 'var(--primary)',
-                      color: 'white'
-                    }}>
-                      {savedWords.length}
-                    </span>
+                    <span className="text-base">📚</span>
+                    <span className="text-sm font-medium">Saved Words</span>
+                    {savedWords.length > 0 && (
+                      <span
+                        className="px-1.5 py-0.5 text-[10px] font-bold rounded-full"
+                        style={{ background: "var(--primary)", color: "white" }}
+                      >
+                        {savedWords.length}
+                      </span>
+                    )}
                   </div>
                   <svg
-                    className={`w-5 h-5 text-[var(--text-tertiary)] transition-transform ${showSavedWords ? "rotate-180" : ""}`}
+                    className={`w-4 h-4 transition-transform ${showSavedWords ? "rotate-180" : ""}`}
+                    style={{ color: "var(--text-tertiary)" }}
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -243,12 +431,11 @@ export default function AIPracticePage() {
                   </svg>
                 </button>
 
-                {/* Content */}
                 <div className={`${showSavedWords ? "block" : "hidden"} lg:block`}>
                   {savedWords.length === 0 ? (
-                    <div className="p-6 text-center">
-                      <div className="text-4xl mb-3">✨</div>
-                      <p className="text-sm text-[var(--text-secondary)]">
+                    <div className="p-5 text-center">
+                      <div className="text-2xl mb-2 opacity-30">✨</div>
+                      <p className="text-xs leading-relaxed" style={{ color: "var(--text-tertiary)" }}>
                         Words you save during practice will appear here
                       </p>
                     </div>
@@ -260,24 +447,29 @@ export default function AIPracticePage() {
                 </div>
               </Card>
 
-              {/* Tutor's Tip */}
-              <Card className="mt-6 p-6">
-                <div className="flex items-start gap-3">
-                  <span className="text-2xl">💡</span>
-                  <div>
-                    <h3 className="font-semibold text-[var(--text-primary)] mb-1">Tutor's Tip</h3>
-                    <p className="text-xs text-[var(--text-secondary)]">
-                      "Try practicing 'ineffable' in a sentence today to move it from your weak words to your mastered list."
-                    </p>
+              {phase === "select" && (
+                <Card className="mt-4 p-4">
+                  <div className="flex items-start gap-2.5">
+                    <span className="text-base opacity-60 mt-0.5">💡</span>
+                    <div>
+                      <h3
+                        className="text-xs font-semibold mb-1"
+                        style={{ color: "var(--text-primary)" }}
+                      >
+                        Tip
+                      </h3>
+                      <p className="text-xs leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+                        Try practicing a new word in a sentence to move it to your mastered list.
+                      </p>
+                    </div>
                   </div>
-                </div>
-              </Card>
+                </Card>
+              )}
             </div>
           </div>
         </Container>
       </main>
 
-      {/* Save word modal */}
       {wordToSave && (
         <SaveWordModal
           word={wordToSave.word}
