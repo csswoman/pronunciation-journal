@@ -1,5 +1,6 @@
 import Dexie, { type Table } from "dexie";
 import type { AIConversation, AISavedWord, Attempt, DailyProgress, FavoriteWord, SRSData, UserStats } from "./types";
+import type { SyncOutboxEntry } from "./sync/types";
 
 interface LessonSessionOffset {
   lessonId: string; // PK
@@ -15,6 +16,7 @@ class PronunciationDB extends Dexie {
   aiConversations!: Table<AIConversation, number>;
   aiWords!: Table<AISavedWord, number>;
   lessonOffsets!: Table<LessonSessionOffset, string>;
+  syncOutbox!: Table<SyncOutboxEntry, number>;
 
   constructor() {
     super("pronunciation-journal");
@@ -53,6 +55,37 @@ class PronunciationDB extends Dexie {
       aiConversations: "++id, templateId, createdAt, updatedAt",
       aiWords:         "++id, word, conversationId, savedAt, difficulty",
       lessonOffsets:   "lessonId",
+    });
+
+    // v5: offline-first sync queue (Outbox Pattern)
+    this.version(5).stores({
+      attempts:        "++id, word, lessonId, timestamp",
+      srsData:         "wordId, word, nextReview",
+      dailyProgress:   "++id, date",
+      userStats:       "++id",
+      favorites:       "++id, word, lessonId, addedAt",
+      aiConversations: "++id, templateId, createdAt, updatedAt",
+      aiWords:         "++id, word, conversationId, savedAt, difficulty",
+      lessonOffsets:   "lessonId",
+      // Indexed by status+createdAt to efficiently query pending entries in order
+      syncOutbox:      "++id, status, createdAt, [status+createdAt]",
+    });
+
+    // v6: local cache mirrors for offline reads (user_sound_progress, answer_history)
+    this.version(6).stores({
+      attempts:             "++id, word, lessonId, timestamp",
+      srsData:              "wordId, word, nextReview",
+      dailyProgress:        "++id, date",
+      userStats:            "++id",
+      favorites:            "++id, word, lessonId, addedAt",
+      aiConversations:      "++id, templateId, createdAt, updatedAt",
+      aiWords:              "++id, word, conversationId, savedAt, difficulty",
+      lessonOffsets:        "lessonId",
+      syncOutbox:           "++id, status, createdAt, [status+createdAt]",
+      // localKey = `${userId}:${soundId}` — mirrors user_sound_progress
+      localSoundProgress:   "localKey, userId, soundId, nextReview",
+      // mirrors answer_history rows before they are confirmed by Supabase
+      localAnswerHistory:   "++id, userId, soundId, answeredAt, synced",
     });
   }
 }

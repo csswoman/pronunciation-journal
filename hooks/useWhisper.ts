@@ -15,7 +15,7 @@ interface UseWhisperReturn {
   loadProgress: number;
   error: string | null;
   loadModel: () => void;
-  transcribe: (audio: Float32Array) => void;
+  transcribeBlob: (blob: Blob) => void;
   reset: () => void;
 }
 
@@ -100,15 +100,18 @@ export function useWhisper(options: UseWhisperOptions = {}): UseWhisperReturn {
     workerRef.current.postMessage({ type: "load" });
   }, [isModelLoaded, isModelLoading]);
 
-  const transcribe = useCallback(
-    (audio: Float32Array) => {
+  const transcribeBlob = useCallback(
+    (blob: Blob) => {
       if (!workerRef.current || !isModelLoaded) {
         setError("Model not loaded yet");
         return;
       }
       setIsTranscribing(true);
       setError(null);
-      workerRef.current.postMessage({ type: "transcribe", audio }, [audio.buffer]);
+      // arrayBuffer() is near-instant (no decoding) — safe on the main thread
+      blob.arrayBuffer().then((buffer) => {
+        workerRef.current?.postMessage({ type: "transcribe", buffer }, [buffer]);
+      });
     },
     [isModelLoaded]
   );
@@ -125,7 +128,7 @@ export function useWhisper(options: UseWhisperOptions = {}): UseWhisperReturn {
     loadProgress,
     error,
     loadModel,
-    transcribe,
+    transcribeBlob,
     reset,
   };
 }

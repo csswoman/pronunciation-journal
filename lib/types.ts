@@ -222,7 +222,8 @@ export type TemplateVars =
 
 export interface WhisperWorkerRequest {
   type: "load" | "transcribe";
-  audio?: Float32Array;
+  /** Raw encoded audio (webm, ogg, etc.) — decoded inside the worker */
+  buffer?: ArrayBuffer;
 }
 
 export interface WhisperWorkerResponse {
