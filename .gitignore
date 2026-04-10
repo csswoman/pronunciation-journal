@@ -20,6 +20,7 @@
 *.pem
 .claude/
 CLAUDE.md
+/docs/
 
 # debug
 npm-debug.log*
