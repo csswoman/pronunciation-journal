@@ -11,6 +11,7 @@
   "dependencies": {
     "@ai-sdk/google": "^3.0.60",
     "@google/genai": "^1.48.0",
+    "@supabase/ssr": "^0.10.2",
     "@supabase/supabase-js": "^2.102.1",
     "@tailwindcss/postcss": "^4.2.2",
     "@uiw/react-md-editor": "^4.1.0",

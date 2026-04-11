@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useOKLCHTheme } from "@/hooks/useOKLCHTheme";
 
-export default function ThemeControl() {
+export default function ThemeControl({ iconOnly = false }: { iconOnly?: boolean }) {
   const { hue, setHue, resetHue, mode, toggleMode, mounted } = useOKLCHTheme();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -26,16 +26,19 @@ export default function ThemeControl() {
       {/* Trigger */}
       <button
         onClick={() => setOpen((v) => !v)}
-        className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium transition-colors duration-150 hover:bg-[var(--btn-plain-bg-hover)]"
+        className={`flex items-center gap-2 rounded-lg text-xs font-medium transition-colors duration-150 hover:bg-[var(--btn-plain-bg-hover)] ${iconOnly ? "w-full justify-center h-9 px-0" : "w-full px-3 py-2"}`}
         style={{ color: "var(--text-secondary)" }}
+        title={`Theme · ${hue}°`}
       >
         <span
           className="w-3.5 h-3.5 rounded-full flex-shrink-0 ring-1 ring-black/10 dark:ring-white/10"
           style={{ background: `oklch(0.65 0.15 ${hue})` }}
         />
-        <span>
-          Theme&nbsp;·&nbsp;{hue}°
-        </span>
+        {!iconOnly && (
+          <span>
+            Theme&nbsp;·&nbsp;{hue}°
+          </span>
+        )}
       </button>
 
       {/* Popover */}

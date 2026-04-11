@@ -643,6 +643,10 @@ export type Database = {
         Args: { p_is_correct: boolean; p_sound_id: number }
         Returns: undefined
       }
+      get_skill_profile: {
+        Args: { p_user_id: string }
+        Returns: Json
+      }
     }
     Enums: {
       [_ in never]: never

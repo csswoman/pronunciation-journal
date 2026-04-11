@@ -10,7 +10,6 @@ import AchievementsSection from '@/components/progress/AchievementsSection'
 import JourneyToFluiditySection from '@/components/progress/JourneyToFluiditySection'
 import MasteredSection from '@/components/progress/MasteredSection'
 import SkillRadar from '@/components/skill-profile/SkillRadar'
-import SkillInsightCard from '@/components/skill-profile/SkillInsightCard'
 import type { UserStats, DailyProgress } from '@/lib/types'
 import type { MasteredSoundInfo } from '@/hooks/useMasteredSounds'
 
@@ -104,10 +103,6 @@ export default async function ProgressPage() {
           title="Your Progress"
           subtitle="Keep Climbing"
           description="See your streak, points, and momentum at a glance."
-          primaryCta={{
-            label: 'Keep Going',
-            onClick: () => console.log('Navigate to level'),
-          }}
           illustration={
             <Image
               src="/illustrations/xp-points.svg"
@@ -123,13 +118,10 @@ export default async function ProgressPage() {
 
       <Container>
         <Section spacing="lg" className="mt-8">
-          {/* NEW: Skill Radar Chart */}
-          <div className="h-96 w-full mb-8">
-            <SkillRadar scores={profile.skills} />
+          {/* Skill Radar + Insight */}
+          <div className="w-full mb-8">
+            <SkillRadar profile={profile} />
           </div>
-
-          {/* NEW: Insight Card */}
-          <SkillInsightCard profile={profile} />
 
           {/* Existing sections */}
           <StatsSection

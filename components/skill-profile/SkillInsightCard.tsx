@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { generateSkillInsight, getNextAction } from '@/lib/skill-profile/queries'
+import { generateSkillInsight, getNextAction } from '@/lib/skill-profile/utils'
 import type { SkillProfile } from '@/lib/skill-profile/types'
 
 interface SkillInsightCardProps {
