@@ -1,9 +1,7 @@
-'use client'
-
-import { useEffect, useState } from 'react'
 import Image from 'next/image'
-import { useAuth } from '@/components/AuthProvider'
-import { getSupabaseBrowserClient } from '@/lib/supabase/client'
+import { getUser } from '@/lib/supabase/getUser'
+import { getSkillProfile } from '@/lib/skill-profile/queries'
+import { createServerSupabaseClient } from '@/lib/supabase/getUser'
 import Container from '@/components/layout/Container'
 import Section from '@/components/layout/Section'
 import PageHeader from '@/components/layout/PageHeader'
@@ -11,93 +9,92 @@ import StatsSection from '@/components/layout/StatsSection'
 import AchievementsSection from '@/components/progress/AchievementsSection'
 import JourneyToFluiditySection from '@/components/progress/JourneyToFluiditySection'
 import MasteredSection from '@/components/progress/MasteredSection'
-import { useMasteredSounds } from '@/hooks/useMasteredSounds'
+import SkillRadar from '@/components/skill-profile/SkillRadar'
+import SkillInsightCard from '@/components/skill-profile/SkillInsightCard'
 import type { UserStats, DailyProgress } from '@/lib/types'
+import type { MasteredSoundInfo } from '@/hooks/useMasteredSounds'
 
-export default function ProgressPage() {
-  const { user } = useAuth()
-  const { mastered } = useMasteredSounds(user?.id)
-  const [stats, setStats] = useState<UserStats | null>(null)
-  const [todayProgress, setTodayProgress] = useState<DailyProgress | null>(null)
-  const [progressHistory, setProgressHistory] = useState<DailyProgress[]>([])
-  const [loading, setLoading] = useState(true)
+export default async function ProgressPage() {
+  const user = await getUser()
 
-  useEffect(() => {
-    if (!user) return
-
-    const fetchDeckStats = async () => {
-      const supabase = getSupabaseBrowserClient()
-
-      // Total decks for user
-      const { count: deckCount } = await supabase
-        .from("decks")
-        .select("*", { count: "exact", head: true })
-        .eq("user_id", user.id)
-
-      // Total words across all decks (via join)
-      const { data: deckEntryData } = await supabase
-        .from("deck_entries")
-        .select("entry_id, decks!inner(user_id)")
-        .eq("decks.user_id", user.id)
-
-      // Words due today: sounds whose next_review <= today and status is learning/review
-      const today = new Date().toISOString().split("T")[0]
-      const { data: dueData } = await supabase
-        .from("user_sound_progress")
-        .select("id")
-        .eq("user_id", user.id)
-        .lte("next_review", today)
-        .in("status", ["learning", "review"])
-
-      return {
-        totalDecks: deckCount ?? 0,
-        totalDeckWords: deckEntryData?.length ?? 0,
-        deckWordsDueToday: dueData?.length ?? 0,
-      }
-    }
-
-    // TODO: Fetch stats from API/Supabase
-    // Mock data for now, with deck stats fetched
-    fetchDeckStats().then(deckStats => {
-      setStats({
-        currentStreak: 14,
-        longestStreak: 21,
-        totalXP: 2450,
-        totalWords: 156,
-        totalAttempts: 892,
-        averageAccuracy: 87,
-        lastStudyDate: new Date().toISOString(),
-        ...deckStats,
-      })
-    })
-
-    setTodayProgress({
-      date: new Date().toISOString().split('T')[0],
-      totalAttempts: 12,
-      correctAttempts: 10,
-      averageAccuracy: 89,
-      xp: 150,
-      wordsStudied: ['beautiful', 'pronunciation', 'fluency'],
-    })
-
-    setProgressHistory([
-      { date: '2026-03-29', totalAttempts: 8, correctAttempts: 7, averageAccuracy: 88, xp: 120, wordsStudied: [] },
-      { date: '2026-03-30', totalAttempts: 10, correctAttempts: 9, averageAccuracy: 90, xp: 140, wordsStudied: [] },
-      { date: '2026-03-31', totalAttempts: 0, correctAttempts: 0, averageAccuracy: 0, xp: 0, wordsStudied: [] },
-      { date: '2026-04-01', totalAttempts: 15, correctAttempts: 13, averageAccuracy: 87, xp: 180, wordsStudied: [] },
-      { date: '2026-04-02', totalAttempts: 12, correctAttempts: 11, averageAccuracy: 92, xp: 160, wordsStudied: [] },
-      { date: '2026-04-03', totalAttempts: 9, correctAttempts: 8, averageAccuracy: 85, xp: 130, wordsStudied: [] },
-      { date: '2026-04-04', totalAttempts: 12, correctAttempts: 10, averageAccuracy: 89, xp: 150, wordsStudied: [] },
-    ])
-
-    setLoading(false)
-  }, [user])
-
-  if (loading) {
+  if (!user) {
     return (
-      <div className="p-6 animate-pulse text-gray-400">Cargando…</div>
+      <div className="p-6 text-gray-400">
+        <p>Please log in to view your progress.</p>
+      </div>
     )
   }
+
+  const profile = await getSkillProfile(user.id)
+
+  // Fetch mastered sounds for the section
+  const supabase = await createServerSupabaseClient()
+  const { data: masteredData } = await supabase
+    .from('user_sound_progress')
+    .select('*, sounds(*)')
+    .eq('user_id', user.id)
+    .eq('status', 'mastered')
+    .order('last_practiced', { ascending: false })
+
+  const now = new Date()
+  const mastered: MasteredSoundInfo[] = (masteredData ?? []).map((p: any) => {
+    const total = p.total_attempts ?? 0
+    const correct = p.correct_answers ?? 0
+    const accuracy = total > 0 ? Math.round((correct / total) * 100) : 0
+    const nextReviewDate = p.next_review ? new Date(p.next_review) : null
+    const dueForReview = nextReviewDate ? nextReviewDate <= now : true
+
+    function intervalLabel(nextReview: string | null): string {
+      if (!nextReview) return 'Pendiente'
+      const diffDays = Math.ceil((new Date(nextReview).getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
+      if (diffDays <= 0) return 'Hoy'
+      if (diffDays === 1) return 'Mañana'
+      if (diffDays < 7) return `En ${diffDays} días`
+      if (diffDays < 14) return 'En 1 semana'
+      if (diffDays < 31) return `En ${Math.ceil(diffDays / 7)} semanas`
+      return 'En 1 mes+'
+    }
+
+    return {
+      ...p,
+      accuracy,
+      dueForReview,
+      nextReviewDate,
+      intervalLabel: intervalLabel(p.next_review),
+    }
+  })
+
+  // Map Skill Profile → UserStats
+  const stats: UserStats = {
+    currentStreak: profile.streak.current,
+    longestStreak: profile.streak.best,
+    totalAttempts: profile.skills.pronunciation.attempts + profile.skills.listening.attempts,
+    averageAccuracy: profile.overallScore,
+    totalDecks: 0, // Keep as is or fetch separately
+    totalDeckWords: 0,
+    deckWordsDueToday: profile.soundsDueToday,
+    totalXP: 0, // Not in Skill Profile yet
+    totalWords: profile.streak.totalSounds,
+    lastStudyDate: new Date().toISOString(),
+  }
+
+  const todayProgress: DailyProgress = {
+    date: new Date().toISOString().split('T')[0],
+    totalAttempts: profile.today.attempts,
+    correctAttempts: profile.today.correct,
+    averageAccuracy: profile.today.accuracy,
+    xp: 0, // Not tracked yet
+    wordsStudied: [],
+  }
+
+  const progressHistory: DailyProgress[] = profile.trend7d.map(t => ({
+    date: t.date,
+    totalAttempts: t.attempts,
+    correctAttempts: Math.round((t.accuracy / 100) * t.attempts),
+    averageAccuracy: t.accuracy,
+    xp: 0,
+    wordsStudied: [],
+  }))
 
   return (
     <div className="py-8 pb-24">
@@ -126,6 +123,15 @@ export default function ProgressPage() {
 
       <Container>
         <Section spacing="lg" className="mt-8">
+          {/* NEW: Skill Radar Chart */}
+          <div className="h-96 w-full mb-8">
+            <SkillRadar scores={profile.skills} />
+          </div>
+
+          {/* NEW: Insight Card */}
+          <SkillInsightCard profile={profile} />
+
+          {/* Existing sections */}
           <StatsSection
             stats={stats}
             todayProgress={todayProgress}
