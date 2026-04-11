@@ -7,6 +7,7 @@ import QuickActionCard, { QuickActionGrid } from "@/components/layout/QuickActio
 import LessonCard from "@/components/layout/LessonCard";
 import SectionHeader from "@/components/layout/SectionHeader";
 import ConversationIllustration from "@/components/illustrations/ConversationIllustration";
+import DailyQuests from "@/components/home/DailyQuests";
 
 export default function HomePage() {
   const router = useRouter();
@@ -92,6 +93,9 @@ export default function HomePage() {
           />
         </QuickActionGrid>
       </section>
+
+      {/* Daily Quests */}
+      <DailyQuests />
 
       {/* Available Lessons */}
       <section>
