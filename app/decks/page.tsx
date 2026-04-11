@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useAuth } from "@/components/AuthProvider";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
-import { DeckCard } from "./components/DeckCard";
+import { DeckCard, DECK_ICONS, DECK_PATTERNS, type DeckPattern } from "./components/DeckCard";
 import { StudyModal } from "./components/StudyModal";
 import { ManageDrawer } from "./components/ManageDrawer";
 import { Plus, X } from "lucide-react";
@@ -22,7 +22,33 @@ const COLORS = [
   "#3b82f6", "#06b6d4",
 ];
 
+const PATTERN_LABELS: Record<DeckPattern, string> = {
+  none: "None",
+  dots: "Dots",
+  grid: "Grid",
+  waves: "Waves",
+  diagonal: "Lines",
+};
+
 // ── Create Deck Modal ──────────────────────────────────────────────────────────
+
+const BG_PATTERNS_PREVIEW: Record<DeckPattern, string> = {
+  none: "",
+  dots: `url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='2' cy='2' r='1.5' fill='white' fill-opacity='0.15'/%3E%3C/svg%3E")`,
+  grid: `url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M 20 0 L 0 0 0 20' fill='none' stroke='white' stroke-opacity='0.12' stroke-width='1'/%3E%3C/svg%3E")`,
+  waves: `url("data:image/svg+xml,%3Csvg width='40' height='20' viewBox='0 0 40 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 10 C10 0, 30 0, 40 10 C30 20, 10 20, 0 10Z' fill='white' fill-opacity='0.08'/%3E%3C/svg%3E")`,
+  diagonal: `url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cline x1='0' y1='20' x2='20' y2='0' stroke='white' stroke-opacity='0.12' stroke-width='1.5'/%3E%3C/svg%3E")`,
+};
+
+function buildDescription(icon: string, pattern: DeckPattern, description: string): string | null {
+  const hasIcon = DECK_ICONS.includes(icon);
+  const hasPattern = pattern !== "none";
+  const hasDesc = description.trim() !== "";
+  if (!hasIcon && !hasPattern && !hasDesc) return null;
+  if (!hasIcon && !hasPattern) return description.trim();
+  const meta = `__meta:icon=${icon},pattern=${pattern}__`;
+  return hasDesc ? `${meta}|${description.trim()}` : meta;
+}
 
 function CreateDeckModal({
   onClose,
@@ -35,6 +61,8 @@ function CreateDeckModal({
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [color, setColor] = useState(COLORS[0]);
+  const [icon, setIcon] = useState(DECK_ICONS[0]);
+  const [pattern, setPattern] = useState<DeckPattern>("none");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
@@ -43,9 +71,10 @@ function CreateDeckModal({
     setSaving(true);
     setError("");
     const supabase = getSupabaseBrowserClient();
+    const encodedDescription = buildDescription(icon, pattern, description);
     const { data, error: err } = await supabase
       .from("decks")
-      .insert({ name: name.trim(), description: description.trim() || null, color, user_id: user.id })
+      .insert({ name: name.trim(), description: encodedDescription, color, user_id: user.id })
       .select()
       .single();
     setSaving(false);
@@ -54,67 +83,125 @@ function CreateDeckModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
-      <div className="w-full max-w-md mx-4 bg-[var(--card-bg)] rounded-2xl border border-[var(--line-divider)] shadow-xl p-6 space-y-4">
-        <div className="flex items-center justify-between">
-          <h2 className="font-heading font-bold text-lg text-[var(--deep-text)]">New Deck</h2>
-          <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-[var(--btn-plain-bg-hover)] text-[var(--text-tertiary)]">
-            <X size={20} />
-          </button>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
+      <div className="w-full max-w-md bg-[var(--card-bg)] rounded-2xl border border-[var(--line-divider)] shadow-xl overflow-hidden">
+
+        {/* Preview header */}
+        <div
+          className="h-20 flex items-end px-4 pb-3 relative"
+          style={{ background: color, backgroundImage: BG_PATTERNS_PREVIEW[pattern] }}
+        >
+          <div className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center text-2xl leading-none">
+            {icon}
+          </div>
+          <span className="ml-3 font-semibold text-white text-base truncate flex-1">
+            {name || "Deck name…"}
+          </span>
         </div>
 
-        <div className="space-y-3">
-          <div>
-            <label className="text-xs font-medium text-[var(--text-secondary)] uppercase tracking-wide">Name</label>
-            <input
-              autoFocus
-              value={name}
-              onChange={e => setName(e.target.value)}
-              onKeyDown={e => e.key === "Enter" && handleCreate()}
-              placeholder="e.g. Travel Vocabulary"
-              className="mt-1 w-full px-3 py-2 rounded-xl bg-[var(--btn-regular-bg)] border border-[var(--line-divider)] text-sm text-[var(--deep-text)] placeholder:text-[var(--text-tertiary)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/40"
-            />
+        <div className="p-5 space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="font-heading font-bold text-base text-[var(--deep-text)]">New Deck</h2>
+            <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-[var(--btn-plain-bg-hover)] text-[var(--text-tertiary)]">
+              <X size={18} />
+            </button>
           </div>
 
-          <div>
-            <label className="text-xs font-medium text-[var(--text-secondary)] uppercase tracking-wide">Description (optional)</label>
-            <textarea
-              value={description}
-              onChange={e => setDescription(e.target.value)}
-              rows={2}
-              placeholder="What is this deck about?"
-              className="mt-1 w-full px-3 py-2 rounded-xl bg-[var(--btn-regular-bg)] border border-[var(--line-divider)] text-sm text-[var(--deep-text)] placeholder:text-[var(--text-tertiary)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/40 resize-none"
-            />
-          </div>
+          <div className="space-y-3">
+            {/* Name */}
+            <div>
+              <label className="text-[10px] font-semibold text-[var(--text-secondary)] uppercase tracking-widest">Name</label>
+              <input
+                autoFocus
+                value={name}
+                onChange={e => setName(e.target.value)}
+                onKeyDown={e => e.key === "Enter" && handleCreate()}
+                placeholder="e.g. Travel Vocabulary"
+                className="mt-1 w-full px-3 py-2 rounded-xl bg-[var(--btn-regular-bg)] border border-[var(--line-divider)] text-sm text-[var(--deep-text)] placeholder:text-[var(--text-tertiary)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/40"
+              />
+            </div>
 
-          <div>
-            <label className="text-xs font-medium text-[var(--text-secondary)] uppercase tracking-wide mb-2 block">Color</label>
-            <div className="flex gap-2 flex-wrap">
-              {COLORS.map(c => (
-                <button
-                  key={c}
-                  onClick={() => setColor(c)}
-                  className={`w-7 h-7 rounded-full transition-transform ${color === c ? "ring-2 ring-offset-2 ring-[var(--primary)] scale-110" : "hover:scale-105"}`}
-                  style={{ background: c }}
-                />
-              ))}
+            {/* Description */}
+            <div>
+              <label className="text-[10px] font-semibold text-[var(--text-secondary)] uppercase tracking-widest">Description (optional)</label>
+              <input
+                value={description}
+                onChange={e => setDescription(e.target.value)}
+                placeholder="What is this deck about?"
+                className="mt-1 w-full px-3 py-2 rounded-xl bg-[var(--btn-regular-bg)] border border-[var(--line-divider)] text-sm text-[var(--deep-text)] placeholder:text-[var(--text-tertiary)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/40"
+              />
+            </div>
+
+            {/* Icon */}
+            <div>
+              <label className="text-[10px] font-semibold text-[var(--text-secondary)] uppercase tracking-widest mb-2 block">Icon</label>
+              <div className="flex gap-1.5 flex-wrap">
+                {DECK_ICONS.map(ic => (
+                  <button
+                    key={ic}
+                    onClick={() => setIcon(ic)}
+                    className={`w-9 h-9 rounded-xl text-lg flex items-center justify-center transition-all ${
+                      icon === ic
+                        ? "ring-2 ring-[var(--primary)] bg-[var(--btn-plain-bg-hover)] scale-110"
+                        : "hover:bg-[var(--btn-plain-bg-hover)] hover:scale-105"
+                    }`}
+                  >
+                    {ic}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Color */}
+            <div>
+              <label className="text-[10px] font-semibold text-[var(--text-secondary)] uppercase tracking-widest mb-2 block">Color</label>
+              <div className="flex gap-2 flex-wrap">
+                {COLORS.map(c => (
+                  <button
+                    key={c}
+                    onClick={() => setColor(c)}
+                    className={`w-7 h-7 rounded-full transition-transform ${color === c ? "ring-2 ring-offset-2 ring-[var(--primary)] scale-110" : "hover:scale-105"}`}
+                    style={{ background: c }}
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* Pattern */}
+            <div>
+              <label className="text-[10px] font-semibold text-[var(--text-secondary)] uppercase tracking-widest mb-2 block">Background</label>
+              <div className="flex gap-2 flex-wrap">
+                {DECK_PATTERNS.map(p => (
+                  <button
+                    key={p}
+                    onClick={() => setPattern(p)}
+                    className={`px-3 py-1.5 rounded-xl text-xs font-medium transition-all ${
+                      pattern === p
+                        ? "bg-[var(--primary)] text-white"
+                        : "bg-[var(--btn-regular-bg)] text-[var(--text-secondary)] hover:bg-[var(--btn-plain-bg-hover)]"
+                    }`}
+                  >
+                    {PATTERN_LABELS[p]}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
 
-        {error && <p className="text-xs text-red-500">{error}</p>}
+          {error && <p className="text-xs text-red-500">{error}</p>}
 
-        <div className="flex gap-2 pt-1">
-          <button onClick={onClose} className="flex-1 px-4 py-2 rounded-xl text-sm font-medium text-[var(--deep-text)] bg-[var(--btn-regular-bg)] hover:bg-[var(--btn-plain-bg-hover)] transition-colors">
-            Cancel
-          </button>
-          <button
-            onClick={handleCreate}
-            disabled={!name.trim() || saving}
-            className="flex-1 px-4 py-2 rounded-xl text-sm font-semibold bg-[var(--primary)] text-white hover:opacity-90 disabled:opacity-50 transition-colors"
-          >
-            {saving ? "Creating…" : "Create"}
-          </button>
+          <div className="flex gap-2 pt-1">
+            <button onClick={onClose} className="flex-1 px-4 py-2 rounded-xl text-sm font-medium text-[var(--deep-text)] bg-[var(--btn-regular-bg)] hover:bg-[var(--btn-plain-bg-hover)] transition-colors">
+              Cancel
+            </button>
+            <button
+              onClick={handleCreate}
+              disabled={!name.trim() || saving}
+              className="flex-1 px-4 py-2 rounded-xl text-sm font-semibold bg-[var(--primary)] text-white hover:opacity-90 disabled:opacity-50 transition-colors"
+            >
+              {saving ? "Creating…" : "Create"}
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -225,9 +312,9 @@ export default function DecksPage() {
 
           {/* Loading State */}
           {loading ? (
-            <div className="space-y-2">
-              {[1, 2, 3].map(i => (
-                <Card key={i} className="h-20 rounded-2xl animate-pulse" style={{ backgroundColor: 'var(--btn-regular-bg)' }}>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
+              {[1, 2, 3, 4, 5, 6].map(i => (
+                <Card key={i} className="h-36 rounded-2xl animate-pulse" style={{ backgroundColor: 'var(--btn-regular-bg)' }}>
                   <div />
                 </Card>
               ))}
@@ -252,7 +339,7 @@ export default function DecksPage() {
               </div>
             </Card>
           ) : (
-            <div className="space-y-2">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
               {decks.map(deck => (
                 <DeckCard
                   key={deck.id}

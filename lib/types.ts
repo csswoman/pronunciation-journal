@@ -171,9 +171,11 @@ export interface AIConversation {
 export interface AISavedWord {
   id?: number;
   word: string;
-  meaning: string;
+  translation?: string; // native-language translation
+  meaning: string;      // English definition
   difficulty: Difficulty;
-  context: string; // sentence the word appeared in
+  context: string;      // sentence the word appeared in
+  tags?: string[];      // CEFR level or custom labels, e.g. ["B1", "verb"]
   conversationId: number;
   savedAt: string;
 }
