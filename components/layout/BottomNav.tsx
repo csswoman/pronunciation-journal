@@ -52,6 +52,7 @@ const menuItems = [
   { name: "Practice", href: "/practice" },
   { name: "AI Practice", href: "/ai-practice" },
   { name: "Progress", href: "/progress" },
+  { name: "Saved Words", href: "/saved-words" },
   { name: "Decks", href: "/decks" },
   { name: "IPA Chart", href: "/ipa" },
   { name: "Lessons", href: "/lessons" },

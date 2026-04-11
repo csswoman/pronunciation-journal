@@ -3,6 +3,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
+import { useState, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import { useAuth } from "./AuthProvider";
 import { useUserRole } from "@/hooks/useUserRole";
 import ThemeControl from "./ThemeControl";
@@ -64,6 +66,18 @@ const SignOutIcon = () => (
   </svg>
 );
 
+const BookmarkIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+  </svg>
+);
+
+const CollapseIcon = ({ collapsed }: { collapsed: boolean }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} style={{ transform: collapsed ? "rotate(180deg)" : "rotate(0deg)" }}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
+  </svg>
+);
+
 // ── Nav config ─────────────────────────────────────────────────────────────
 
 interface NavItem {
@@ -98,7 +112,8 @@ const learningNav: NavSection = {
 const trackingNav: NavSection = {
   label: "Tracking",
   items: [
-    { name: "Progress", href: "/progress", icon: <ProgressIcon /> },
+    { name: "Progress",     href: "/progress",     icon: <ProgressIcon /> },
+    { name: "Saved Words",  href: "/saved-words",  icon: <BookmarkIcon /> },
   ],
 };
 
@@ -110,9 +125,47 @@ const adminNav: NavSection = {
   ],
 };
 
+// ── Tooltip ────────────────────────────────────────────────────────────────
+
+function TooltipItem({ label }: { label: string }) {
+  const [pos, setPos] = useState<{ top: number; left: number } | null>(null);
+  const triggerRef = useRef<HTMLSpanElement>(null);
+
+  const show = () => {
+    if (!triggerRef.current) return;
+    const rect = triggerRef.current.getBoundingClientRect();
+    setPos({ top: rect.top + rect.height / 2, left: rect.right + 10 });
+  };
+  const hide = () => setPos(null);
+
+  return (
+    <span ref={triggerRef} className="absolute inset-0" onMouseEnter={show} onMouseLeave={hide}>
+      {pos && createPortal(
+        <span
+          className="fixed px-2.5 py-1 rounded-md text-xs font-medium whitespace-nowrap pointer-events-none z-[9999] -translate-y-1/2"
+          style={{
+            top: pos.top,
+            left: pos.left,
+            background: "var(--float-panel-bg)",
+            color: "var(--deep-text)",
+            boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
+            border: "1px solid var(--line-divider)",
+          }}
+        >
+          {label}
+        </span>,
+        document.body
+      )}
+    </span>
+  );
+}
+
 // ── Sub-components ─────────────────────────────────────────────────────────
 
-function SectionLabel({ label }: { label: string }) {
+function SectionLabel({ label, collapsed }: { label: string; collapsed: boolean }) {
+  if (collapsed) {
+    return <div className="pt-3 pb-1 px-3"><div className="h-px" style={{ background: "var(--line-divider)" }} /></div>;
+  }
   return (
     <p className="px-3 pt-4 pb-1 text-[10px] font-semibold uppercase tracking-widest"
        style={{ color: "var(--text-tertiary)" }}>
@@ -121,16 +174,20 @@ function SectionLabel({ label }: { label: string }) {
   );
 }
 
-function NavLink({ item, active }: { item: NavItem; active: boolean }) {
+function NavLink({ item, active, collapsed }: { item: NavItem; active: boolean; collapsed: boolean }) {
   return (
     <Link
       href={item.href}
-      className="relative flex items-center gap-2.5 px-3 h-9 rounded-lg text-sm font-medium transition-all duration-150 group"
-      style={
-        active
+      className="relative flex items-center gap-2.5 h-9 rounded-lg text-sm font-medium transition-all duration-150 group"
+      style={{
+        ...(active
           ? { background: "var(--btn-regular-bg)", color: "var(--primary)" }
-          : { color: "var(--text-secondary)" }
-      }
+          : { color: "var(--text-secondary)" }),
+        padding: collapsed ? "0" : undefined,
+        justifyContent: collapsed ? "center" : undefined,
+        paddingLeft: collapsed ? "0" : "0.75rem",
+        paddingRight: collapsed ? "0" : "0.75rem",
+      }}
     >
       {/* Active indicator bar */}
       {active && (
@@ -154,21 +211,26 @@ function NavLink({ item, active }: { item: NavItem; active: boolean }) {
         {item.icon}
       </span>
 
-      {/* Label */}
-      <span className={`relative ${active ? "font-semibold" : "group-hover:text-[var(--deep-text)] transition-colors duration-150"}`}>
-        {item.name}
-      </span>
+      {/* Label — hidden when collapsed */}
+      {!collapsed && (
+        <span className={`relative ${active ? "font-semibold" : "group-hover:text-[var(--deep-text)] transition-colors duration-150"}`}>
+          {item.name}
+        </span>
+      )}
+
+      {/* Tooltip — shown on hover when collapsed */}
+      {collapsed && <TooltipItem label={item.name} />}
     </Link>
   );
 }
 
-function NavSection({ section, isActive }: { section: NavSection; isActive: (href: string) => boolean }) {
+function NavSectionGroup({ section, isActive, collapsed }: { section: NavSection; isActive: (href: string) => boolean; collapsed: boolean }) {
   return (
     <div>
-      {section.label && <SectionLabel label={section.label} />}
+      {section.label && <SectionLabel label={section.label} collapsed={collapsed} />}
       <div className="space-y-0.5">
         {section.items.map((item) => (
-          <NavLink key={item.href} item={item} active={isActive(item.href)} />
+          <NavLink key={item.href} item={item} active={isActive(item.href)} collapsed={collapsed} />
         ))}
       </div>
     </div>
@@ -186,6 +248,20 @@ export default function Sidebar({ className = "" }: SidebarProps) {
   const router = useRouter();
   const { user, signOutUser } = useAuth();
   const { isPremium } = useUserRole();
+  const [collapsed, setCollapsed] = useState(false);
+
+  // Persist collapsed state
+  useEffect(() => {
+    const saved = localStorage.getItem("sidebar-collapsed");
+    if (saved === "true") setCollapsed(true);
+  }, []);
+
+  const toggleCollapsed = () => {
+    setCollapsed((v) => {
+      localStorage.setItem("sidebar-collapsed", String(!v));
+      return !v;
+    });
+  };
 
   const displayName =
     user?.user_metadata?.full_name ||
@@ -212,51 +288,69 @@ export default function Sidebar({ className = "" }: SidebarProps) {
 
   return (
     <aside
-      className={`sidebar-scrollbar w-64 flex flex-col h-full min-h-0 overflow-y-auto bg-[var(--card-bg)] border-r border-[var(--line-divider)] ${className}`}
+      className={`sidebar-scrollbar flex flex-col h-full min-h-0 overflow-y-auto bg-[var(--card-bg)] border-r border-[var(--line-divider)] transition-all duration-200 ${className}`}
+      style={{ width: collapsed ? "3.5rem" : "16rem" }}
     >
-      {/* Brand */}
-      <div className="flex items-center gap-2.5 px-5 py-5 flex-shrink-0">
+      {/* Brand + collapse toggle */}
+      <div className={`flex items-center flex-shrink-0 ${collapsed ? "justify-center px-0 py-5" : "gap-2.5 px-5 py-5"}`}>
         <div
-          className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0"
+          className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 cursor-pointer"
           style={{ background: "var(--primary)" }}
+          onClick={toggleCollapsed}
+          title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
         >
           <span className="font-bold text-xs" style={{ color: "var(--accent-text)" }}>EJ</span>
         </div>
-        <span className="font-heading font-semibold text-sm" style={{ color: "var(--deep-text)" }}>
-          English Journal
-        </span>
+        {!collapsed && (
+          <>
+            <span className="font-heading font-semibold text-sm flex-1" style={{ color: "var(--deep-text)" }}>
+              English Journal
+            </span>
+            <button
+              onClick={toggleCollapsed}
+              className="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-md transition-colors hover:bg-[var(--btn-plain-bg-hover)]"
+              style={{ color: "var(--text-tertiary)" }}
+              title="Collapse sidebar"
+            >
+              <CollapseIcon collapsed={false} />
+            </button>
+          </>
+        )}
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 px-3 pb-4 space-y-0.5 overflow-y-auto">
+      <nav className={`flex-1 pb-4 space-y-0.5 overflow-y-auto ${collapsed ? "px-1.5" : "px-3"}`}>
         <div className="space-y-0.5">
           {coreNav.items.map((item) => (
-            <NavLink key={item.href} item={item} active={isActive(item.href)} />
+            <NavLink key={item.href} item={item} active={isActive(item.href)} collapsed={collapsed} />
           ))}
         </div>
 
-        <NavSection section={learningNav} isActive={isActive} />
-        <NavSection section={trackingNav} isActive={isActive} />
+        <NavSectionGroup section={learningNav} isActive={isActive} collapsed={collapsed} />
+        <NavSectionGroup section={trackingNav} isActive={isActive} collapsed={collapsed} />
 
         {isPremium && (
-          <NavSection section={adminNav} isActive={isActive} />
+          <NavSectionGroup section={adminNav} isActive={isActive} collapsed={collapsed} />
         )}
       </nav>
 
       {/* Footer */}
       <div
-        className="flex-shrink-0 border-t px-3 pt-3 pb-4 space-y-0.5"
+        className={`flex-shrink-0 border-t pt-3 pb-4 space-y-0.5 ${collapsed ? "px-1.5" : "px-3"}`}
         style={{ borderColor: "var(--line-divider)" }}
       >
         {/* User profile link */}
         <Link
           href="/profile"
-          className="relative flex items-center gap-2.5 px-3 h-9 rounded-lg text-sm font-medium transition-all duration-150 group"
-          style={
-            isActive("/profile")
+          className="relative flex items-center gap-2.5 h-9 rounded-lg text-sm font-medium transition-all duration-150 group"
+          style={{
+            ...(isActive("/profile")
               ? { background: "var(--btn-regular-bg)", color: "var(--primary)" }
-              : { color: "var(--text-secondary)" }
-          }
+              : { color: "var(--text-secondary)" }),
+            justifyContent: collapsed ? "center" : undefined,
+            paddingLeft: collapsed ? "0" : "0.75rem",
+            paddingRight: collapsed ? "0" : "0.75rem",
+          }}
         >
           {isActive("/profile") && (
             <span
@@ -284,24 +378,41 @@ export default function Sidebar({ className = "" }: SidebarProps) {
             )}
           </div>
 
-          <span className="relative truncate text-sm font-medium">{displayName}</span>
+          {!collapsed && (
+            <span className="relative truncate text-sm font-medium">{displayName}</span>
+          )}
+          {collapsed && <TooltipItem label={displayName} />}
         </Link>
 
-        {/* Theme control */}
-        <ThemeControl />
+        {/* Theme control — icon-only button when collapsed */}
+        {collapsed ? (
+          <div className="relative group">
+            <ThemeControl iconOnly />
+          </div>
+        ) : (
+          <ThemeControl />
+        )}
 
         {/* Sign out */}
         <button
           onClick={handleSignOut}
-          className="relative w-full flex items-center gap-2.5 px-3 h-9 rounded-lg text-sm font-medium transition-all duration-150 group text-left"
-          style={{ color: "var(--text-secondary)" }}
+          className="relative w-full flex items-center gap-2.5 h-9 rounded-lg text-sm font-medium transition-all duration-150 group text-left"
+          style={{
+            color: "var(--text-secondary)",
+            justifyContent: collapsed ? "center" : undefined,
+            paddingLeft: collapsed ? "0" : "0.75rem",
+            paddingRight: collapsed ? "0" : "0.75rem",
+          }}
         >
           <span className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-150 -z-10"
                 style={{ background: "var(--btn-plain-bg-hover)" }} />
           <span className="relative flex-shrink-0 opacity-50 group-hover:opacity-100 transition-opacity duration-150">
             <SignOutIcon />
           </span>
-          <span className="relative group-hover:text-[var(--deep-text)] transition-colors duration-150">Sign out</span>
+          {!collapsed && (
+            <span className="relative group-hover:text-[var(--deep-text)] transition-colors duration-150">Sign out</span>
+          )}
+          {collapsed && <TooltipItem label="Sign out" />}
         </button>
       </div>
     </aside>
