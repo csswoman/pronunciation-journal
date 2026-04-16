@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { useAuth } from "@/components/AuthProvider";
 
-export type UserRole = "free" | "premium";
+export type UserRole = "free" | "premium" | "admin";
 
 export function useUserRole() {
   const { user } = useAuth();
