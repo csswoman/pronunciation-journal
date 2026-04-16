@@ -8,7 +8,7 @@ function renderRichText(richText: any[]): string {
   return (richText || []).map((t: any) => t.plain_text || t.text?.content || "").join("");
 }
 
-function NotionBlockRenderer({ block }: { block: NotionBlock }) {
+export function NotionBlockRenderer({ block }: { block: NotionBlock }) {
   const [open, setOpen] = useState(false);
 
   switch (block.type) {

@@ -310,17 +310,12 @@ Deno.serve(async (req: Request) => {
       const coverUrl = getCoverUrl(page);
       const notionLastEdited = page.last_edited_time;
 
-      // Check if already synced and up to date
+      // Check if already exists (always update, don't skip based on timestamp)
       const { data: existing } = await supabase
         .from("theory_lessons")
-        .select("id, notion_last_edited")
+        .select("id")
         .eq("notion_page_id", page.id)
         .maybeSingle();
-
-      if (existing?.notion_last_edited === notionLastEdited) {
-        skipped++;
-        continue;
-      }
 
       // Fetch page content and convert to Markdown
       const blocks = await getBlocks(page.id, notionApiKey);

@@ -1,6 +1,7 @@
 'use client';
 
 import { isValidElement, type ReactNode } from "react";
+import Image from "next/image";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import 'react-notion-x/src/styles.css'
@@ -232,13 +233,19 @@ export default function LessonMarkdown({ content }: { content: string }) {
               {children}
             </a>
           ),
-          img: ({ src, alt }) => (
-            <img
-              src={src}
-              alt={alt}
-              className="my-6 max-w-full rounded-xl shadow-md dark:shadow-xl"
-            />
-          ),
+          img: ({ src, alt }) => {
+            if (typeof src !== "string" || src.length === 0) return null;
+
+            return (
+              <Image
+                src={src}
+                alt={typeof alt === "string" ? alt : ""}
+                className="my-6 max-w-full rounded-xl shadow-md dark:shadow-xl"
+                width={400}
+                height={200}
+              />
+            );
+          },
           hr: () => <hr className="my-8 border-[var(--line-divider)]" />,
         }}
       >

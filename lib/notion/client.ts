@@ -186,6 +186,17 @@ class NotionClient {
   }
 
   /**
+   * Query a Notion database and return its pages.
+   */
+  async queryDatabase(databaseId: string): Promise<NotionPage[]> {
+    const response = await this.fetch(
+      `${NOTION_BASE_URL}/databases/${databaseId}/query`,
+      { method: "POST", body: JSON.stringify({}) },
+    );
+    return response.results as NotionPage[];
+  }
+
+  /**
    * Get a single lesson and its sub-lessons
    */
   async getLessonTopic(pageId: string): Promise<LessonTopic> {

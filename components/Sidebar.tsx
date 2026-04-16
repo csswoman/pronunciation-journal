@@ -90,7 +90,7 @@ const learningNav: NavSection = {
   label: "Learning",
   items: [
     { name: "Decks",      href: "/decks",    icon: <DecksIcon /> },
-    { name: "Lessons",    href: "/lessons",  icon: <LessonsIcon /> },
+    { name: "Courses",    href: "/courses",  icon: <LessonsIcon /> },
     { name: "IPA Chart",  href: "/ipa",      icon: <IpaIcon /> },
   ],
 };

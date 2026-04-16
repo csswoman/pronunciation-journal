@@ -91,3 +91,20 @@ export interface LessonTopic {
   subLessons: SubLesson[];
   notionUrl: string;
 }
+
+export interface Course {
+  id: string;
+  title: string;
+  slug: string;
+  description?: string;
+  coverImageUrl?: string;
+  lessonCount: number;
+  notionPageId: string;
+  notionUrl: string;
+  level?: string;
+  updatedAt: Date;
+}
+
+export interface CourseWithLessons extends Course {
+  lessons: SubLesson[];
+}
