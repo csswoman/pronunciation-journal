@@ -11,10 +11,13 @@ import {
 } from "@/lib/theory-lessons/queries";
 import LessonsSidebar, { type Filters } from "@/components/LessonsSidebar";
 import LessonMarkdown from "@/components/lessons/LessonMarkdown";
+import NotionToggleList from "@/components/lessons/NotionToggleList";
 import { useScrollProgress } from "@/hooks/useScrollProgress";
+import type { SubLesson } from "@/lib/notion/types";
 import { LESSON_CATEGORIES } from "@/lib/types";
 import type { TheoryLesson } from "@/lib/types";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
+import "@/styles/notion-custom.css";
 
 const LEVEL_SET = new Set(["A1", "A2", "B1", "B2", "C1"]);
 
@@ -52,6 +55,8 @@ export default function LessonReaderPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isOwner, setIsOwner] = useState(false);
+  const [notionSubLessons, setNotionSubLessons] = useState<SubLesson[]>([]);
+  const [notionLoading, setNotionLoading] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [allLessons, setAllLessons] = useState<TheoryLesson[]>([]);
@@ -65,10 +70,17 @@ export default function LessonReaderPage() {
         if (!data) { setError("Lesson not found"); return; }
         setLesson(data);
         setAllLessons(list);
-        // check ownership
         const supabase = getSupabaseBrowserClient();
         const { data: { user } } = await supabase.auth.getUser();
         if (user && data.user_id === user.id) setIsOwner(true);
+        if (data.notion_page_id) {
+          setNotionLoading(true);
+          fetch(`/api/notion/lessons?pageId=${data.notion_page_id}`)
+            .then((r) => r.json())
+            .then(({ data: subLessons }) => setNotionSubLessons(subLessons ?? []))
+            .catch(() => {})
+            .finally(() => setNotionLoading(false));
+        }
       })
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false));
@@ -198,14 +210,26 @@ export default function LessonReaderPage() {
         <div className="flex flex-col gap-8 lg:flex-row">
           <main className="min-w-0 flex-1 space-y-8">
             <div className="space-y-6">
-              {lessonSections.map((section, index) => (
-                <section
-                  key={`${index}-${section.slice(0, 24)}`}
-                  className="rounded-xl bg-white p-6 shadow-sm dark:bg-[var(--card-bg)] sm:p-8"
-                >
-                  <LessonMarkdown content={section} />
+              {lesson.notion_page_id ? (
+                <section className="rounded-xl bg-white p-6 shadow-sm dark:bg-[var(--card-bg)] sm:p-8">
+                  {notionLoading ? (
+                    <div className="flex justify-center py-8">
+                      <div className="w-5 h-5 border-2 border-[var(--primary)] border-t-transparent rounded-full animate-spin" />
+                    </div>
+                  ) : (
+                    <NotionToggleList subLessons={notionSubLessons} />
+                  )}
                 </section>
-              ))}
+              ) : (
+                lessonSections.map((section, index) => (
+                  <section
+                    key={`${index}-${section.slice(0, 24)}`}
+                    className="rounded-xl bg-white p-6 shadow-sm dark:bg-[var(--card-bg)] sm:p-8"
+                  >
+                    <LessonMarkdown content={section} />
+                  </section>
+                ))
+              )}
             </div>
 
             {/* Owner actions */}
