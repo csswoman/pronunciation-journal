@@ -217,7 +217,9 @@ export default function LessonReaderPage() {
                       <div className="w-5 h-5 border-2 border-[var(--primary)] border-t-transparent rounded-full animate-spin" />
                     </div>
                   ) : (
-                    <NotionBlockContent subLessons={notionSubLessons} />
+                    <div className="space-y-6">
+                      <NotionBlockContent subLessons={notionSubLessons} />
+                    </div>
                   )}
                 </section>
               ) : (

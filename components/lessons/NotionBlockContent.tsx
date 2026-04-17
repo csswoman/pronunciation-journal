@@ -28,24 +28,35 @@ type NotionAnnotations = {
 };
 
 const NOTION_COLOR_MAP: Record<string, string> = {
-  gray: "text-gray-500",
-  brown: "text-amber-800",
-  orange: "text-orange-500",
-  yellow: "text-yellow-500",
-  green: "text-green-600",
-  blue: "text-blue-500",
-  purple: "text-purple-500",
-  pink: "text-pink-500",
-  red: "text-red-500",
-  gray_background: "bg-gray-100 dark:bg-gray-800",
-  brown_background: "bg-amber-100 dark:bg-amber-900/30",
-  orange_background: "bg-orange-100 dark:bg-orange-900/30",
-  yellow_background: "bg-yellow-100 dark:bg-yellow-900/30",
-  green_background: "bg-green-100 dark:bg-green-900/30",
-  blue_background: "bg-blue-100 dark:bg-blue-900/30",
-  purple_background: "bg-purple-100 dark:bg-purple-900/30",
-  pink_background: "bg-pink-100 dark:bg-pink-900/30",
-  red_background: "bg-red-100 dark:bg-red-900/30",
+  gray: "md-text-gray",
+  brown: "md-text-brown",
+  orange: "md-text-orange",
+  yellow: "md-text-yellow",
+  green: "md-text-green",
+  blue: "md-text-blue",
+  purple: "md-text-purple",
+  pink: "md-text-pink",
+  red: "md-text-red",
+  gray_background: "md-bg-gray",
+  brown_background: "md-bg-brown",
+  orange_background: "md-bg-orange",
+  yellow_background: "md-bg-yellow",
+  green_background: "md-bg-green",
+  blue_background: "md-bg-blue",
+  purple_background: "md-bg-purple",
+  pink_background: "md-bg-pink",
+  red_background: "md-bg-red",
+};
+
+const CALLOUT_EMOJI_VARIANT: Record<string, string> = {
+  "💡": "tip",
+  "✅": "success",
+  "✔️": "success",
+  "⚠️": "warning",
+  "🚨": "warning",
+  "📌": "info",
+  "📝": "info",
+  "ℹ️": "info",
 };
 
 function renderRichText(richText: NotionRichText[] | undefined): React.ReactNode {
@@ -63,14 +74,19 @@ function renderRichText(richText: NotionRichText[] | undefined): React.ReactNode
       ann.italic ? "italic" : "",
       ann.strikethrough ? "line-through" : "",
       ann.underline ? "underline" : "",
-      ann.code ? "font-mono bg-neutral-100 dark:bg-neutral-800 px-1 py-0.5 rounded text-sm" : "",
+      ann.code ? "md-inline-code" : "",
       colorClass,
-      colorClass.includes("bg-") ? "px-1 py-0.5 rounded" : "",
+      colorClass.startsWith("md-bg-") ? "md-color-bg" : "",
     ].filter(Boolean).join(" ");
 
     return <span key={i} className={classes}>{text}</span>;
   });
   return <>{nodes}</>;
+}
+
+function renderListChildren(children: NotionBlock[] | undefined) {
+  if (!children || children.length === 0) return null;
+  return <BlockList blocks={children} />;
 }
 
 export function NotionBlockRenderer({ block }: { block: NotionBlock }) {
@@ -80,55 +96,55 @@ export function NotionBlockRenderer({ block }: { block: NotionBlock }) {
     case "paragraph": {
       const text = renderRichText(getBlockVariant(block, "paragraph")?.rich_text);
       if (!text) return null;
-      return <p className="text-base leading-relaxed text-gray-700 dark:text-[var(--text-secondary)] mb-3">{text}</p>;
+      return <p className="md-paragraph">{text}</p>;
     }
     case "heading_1": {
       const text = renderRichText(getBlockVariant(block, "heading_1")?.rich_text);
-      return <h1 className="text-2xl font-bold text-neutral-900 dark:text-[var(--deep-text)] mt-6 mb-3">{text}</h1>;
+      return <h1 className="md-heading md-heading-1">{text}</h1>;
     }
     case "heading_2": {
       const text = renderRichText(getBlockVariant(block, "heading_2")?.rich_text);
-      return <h2 className="text-xl font-bold text-neutral-900 dark:text-[var(--deep-text)] mt-5 mb-2">{text}</h2>;
+      return <h2 className="md-heading md-heading-2">{text}</h2>;
     }
     case "heading_3": {
       const heading = getBlockVariant(block, "heading_3");
       const text = renderRichText(heading?.rich_text);
       if (heading?.is_toggleable) {
         const children: NotionBlock[] = heading.children || [];
-        return (
-          <div className="mb-2">
-            <button
-              onClick={() => setOpen((o) => !o)}
-              className="flex items-center gap-2 w-full text-left text-lg font-semibold text-neutral-900 dark:text-[var(--deep-text)] hover:text-[var(--primary)] transition-colors"
+      return (
+        <div>
+          <button
+            onClick={() => setOpen((o) => !o)}
+            className="md-toggle-button md-heading md-heading-3"
             >
-              <span className={`transition-transform duration-200 ${open ? "rotate-90" : ""}`}>▶</span>
+              <span className={`md-toggle-caret ${open ? "md-toggle-caret-open" : ""}`}>▶</span>
               {text}
             </button>
             {open && children.length > 0 && (
-              <div className="mt-2 ml-5 space-y-1">
+              <div className="md-toggle-children">
                 {children.map((child) => <NotionBlockRenderer key={child.id} block={child} />)}
               </div>
             )}
           </div>
         );
       }
-      return <h3 className="text-lg font-semibold text-neutral-900 dark:text-[var(--deep-text)] mt-4 mb-2">{text}</h3>;
+      return <h3 className="md-heading md-heading-3">{text}</h3>;
     }
     case "toggle": {
       const toggle = getBlockVariant(block, "toggle");
       const text = renderRichText(toggle?.rich_text);
       const children: NotionBlock[] = toggle?.children || [];
       return (
-        <div className="mb-2">
+        <div>
           <button
             onClick={() => setOpen((o) => !o)}
-            className="flex items-center gap-2 w-full text-left font-medium text-neutral-900 dark:text-[var(--deep-text)] hover:text-[var(--primary)] transition-colors"
+            className="md-toggle-button md-toggle-button-compact"
           >
-            <span className={`transition-transform duration-200 text-sm ${open ? "rotate-90" : ""}`}>▶</span>
+            <span className={`md-toggle-caret md-toggle-caret-small ${open ? "md-toggle-caret-open" : ""}`}>▶</span>
             {text}
           </button>
           {open && children.length > 0 && (
-            <div className="mt-2 ml-5 space-y-1">
+            <div className="md-toggle-children md-toggle-children-compact">
               {children.map((child) => <NotionBlockRenderer key={child.id} block={child} />)}
             </div>
           )}
@@ -140,37 +156,48 @@ export function NotionBlockRenderer({ block }: { block: NotionBlock }) {
       const text = renderRichText(item?.rich_text);
       const children: NotionBlock[] = item?.children || [];
       return (
-        <li className="flex gap-2.5 text-base leading-relaxed text-gray-700 dark:text-[var(--text-secondary)] list-none">
-          <span className="mt-[0.45em] h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--primary)] opacity-80" aria-hidden />
-          <span>
-            {text}
-            {children.length > 0 && (
-              <ul className="mt-1.5 space-y-1.5 pl-0">
-                {children.map((c) => <NotionBlockRenderer key={c.id} block={c} />)}
-              </ul>
-            )}
-          </span>
+        <li className="md-li md-li-bullet">
+          <div className="md-li-content">
+            <div className="md-li-text">{text}</div>
+            {renderListChildren(children)}
+          </div>
         </li>
       );
     }
     case "numbered_list_item": {
-      const text = renderRichText(getBlockVariant(block, "numbered_list_item")?.rich_text);
-      return <li className="text-base leading-relaxed text-gray-700 dark:text-[var(--text-secondary)]">{text}</li>;
+      const item = getBlockVariant(block, "numbered_list_item");
+      const text = renderRichText(item?.rich_text);
+      const children: NotionBlock[] = item?.children || [];
+      return (
+        <li className="md-li md-li-numbered">
+          <div className="md-li-content">
+            <div className="md-li-text">{text}</div>
+            {renderListChildren(children)}
+          </div>
+        </li>
+      );
     }
     case "code": {
       const code = getBlockVariant(block, "code");
       const text = renderRichText(code?.rich_text);
       return (
-        <pre className="my-4 overflow-x-auto rounded-xl bg-zinc-900 p-4 text-sm text-white dark:bg-zinc-950">
+        <pre className="md-code">
           <code>{text}</code>
         </pre>
       );
     }
     case "quote": {
-      const text = renderRichText(getBlockVariant(block, "quote")?.rich_text);
+      const quote = getBlockVariant(block, "quote");
+      const text = renderRichText(quote?.rich_text);
+      const children: NotionBlock[] = quote?.children || [];
       return (
-        <blockquote className="my-4 rounded-xl border-l-4 border-[var(--primary)] bg-neutral-100 px-5 py-4 text-gray-700 dark:bg-[var(--btn-regular-bg)] dark:text-[var(--text-secondary)]">
-          {text}
+        <blockquote className="md-blockquote">
+          {text && <p>{text}</p>}
+          {children.length > 0 && (
+            <div className="md-quote-children">
+              {children.map((child) => <NotionBlockRenderer key={child.id} block={child} />)}
+            </div>
+          )}
         </blockquote>
       );
     }
@@ -181,26 +208,26 @@ export function NotionBlockRenderer({ block }: { block: NotionBlock }) {
       const captionText = (image?.caption || []).map((t) => t.plain_text || "").join("");
       if (!url) return null;
       return (
-        <figure className="my-6">
+        <figure>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={url} alt={captionText || "lesson image"} className="rounded-xl w-full object-contain" />
-          {caption && <figcaption className="mt-2 text-center text-sm text-[var(--text-secondary)]">{caption}</figcaption>}
+          <img src={url} alt={captionText || "lesson image"} className="md-image" />
+          {caption && <figcaption className="md-figcaption">{caption}</figcaption>}
         </figure>
       );
     }
     case "table": {
       const table = block["table"] as { has_column_header?: boolean; has_row_header?: boolean; children?: NotionBlock[] } | undefined;
       const rows = table?.children || [];
-if (rows.length === 0) return null;
+      if (rows.length === 0) return null;
       const hasColHeader = table?.has_column_header ?? false;
       return (
-        <div className="my-4 overflow-x-auto rounded-xl border border-[var(--line-divider)]">
-          <table className="w-full text-sm">
+        <div className="md-table-wrap">
+          <table className="md-table">
             {hasColHeader && rows[0] && (
-              <thead className="bg-neutral-100 dark:bg-[var(--btn-plain-bg)]">
+              <thead className="md-table-head">
                 <tr>
                   {((rows[0]["table_row"] as { cells?: NotionRichText[][] } | undefined)?.cells || []).map((cell, ci) => (
-                    <th key={ci} className="px-4 py-2 text-left font-semibold text-neutral-900 dark:text-[var(--deep-text)] border-b border-[var(--line-divider)]">
+                    <th key={ci} className="md-table-th">
                       {renderRichText(cell)}
                     </th>
                   ))}
@@ -211,9 +238,9 @@ if (rows.length === 0) return null;
               {(hasColHeader ? rows.slice(1) : rows).map((row, ri) => {
                 const cells = (row["table_row"] as { cells?: NotionRichText[][] } | undefined)?.cells || [];
                 return (
-                  <tr key={ri} className="border-b border-[var(--line-divider)] last:border-0 odd:bg-white even:bg-neutral-50 dark:odd:bg-transparent dark:even:bg-[var(--btn-plain-bg)]">
+                  <tr key={ri} className="md-table-row">
                     {cells.map((cell, ci) => (
-                      <td key={ci} className="px-4 py-2 text-gray-700 dark:text-[var(--text-secondary)]">
+                      <td key={ci} className="md-table-td">
                         {renderRichText(cell)}
                       </td>
                     ))}
@@ -229,11 +256,11 @@ if (rows.length === 0) return null;
       const columns = (block["column_list"] as { children?: NotionBlock[] } | undefined)?.children || [];
       if (columns.length === 0) return null;
       return (
-        <div className="my-4 grid gap-4" style={{ gridTemplateColumns: `repeat(${columns.length}, 1fr)` }}>
+        <div className="md-column-list" style={{ gridTemplateColumns: `repeat(${columns.length}, 1fr)` }}>
           {columns.map((col) => {
             const colBlocks = (col["column"] as { children?: NotionBlock[] } | undefined)?.children || [];
             return (
-              <div key={col.id} className="min-w-0">
+              <div key={col.id} className="md-column">
                 {colBlocks.map((b) => <NotionBlockRenderer key={b.id} block={b} />)}
               </div>
             );
@@ -246,15 +273,24 @@ if (rows.length === 0) return null;
     case "table_row":
       return null;
     case "divider":
-      return <hr className="my-6 border-[var(--line-divider)]" />;
+      return <hr className="md-divider" />;
     case "callout": {
       const callout = getBlockVariant(block, "callout");
       const text = renderRichText(callout?.rich_text);
+      const children: NotionBlock[] = callout?.children || [];
       const emoji = callout?.icon?.emoji || "💡";
+      const variant = CALLOUT_EMOJI_VARIANT[emoji] ?? "info";
       return (
-        <div className="my-4 flex gap-3 rounded-xl border border-[var(--line-divider)] bg-[var(--btn-plain-bg)] px-4 py-3">
-          <span>{emoji}</span>
-          <p className="text-sm text-[var(--text-secondary)]">{text}</p>
+        <div className={`callout ${variant} md-callout-legacy`}>
+          <span className="callout-icon md-callout-icon">{emoji}</span>
+          <div className="callout-content md-callout-content">
+            {text && <p>{text}</p>}
+            {children.length > 0 && (
+              <div className="md-callout-children">
+                {children.map((child) => <NotionBlockRenderer key={child.id} block={child} />)}
+              </div>
+            )}
+          </div>
         </div>
       );
     }
@@ -287,20 +323,22 @@ function groupListItems(blocks: NotionBlock[]) {
 function BlockList({ blocks }: { blocks: NotionBlock[] }) {
   const groups = groupListItems(blocks);
   return (
-    <>
+    <div className="md-list-group">
       {groups.map((group, idx) => {
         if (group.type === "list") {
           const isBulleted = group.blocks[0].type === "bulleted_list_item";
           const Tag = isBulleted ? "ul" : "ol";
           return (
-            <Tag key={idx} className={`my-4 ${isBulleted ? "pl-0 space-y-1.5 list-none" : "pl-6 space-y-1.5 list-decimal marker:text-[var(--primary)] marker:font-semibold"}`}>
+            <Tag key={idx} className={`md-list ${isBulleted ? "md-list-ul" : "md-list-ol"}`}>
               {group.blocks.map((b) => <NotionBlockRenderer key={b.id} block={b} />)}
             </Tag>
           );
         }
-        return <NotionBlockRenderer key={group.blocks[0].id} block={group.blocks[0]} />;
+        return (
+          <NotionBlockRenderer key={group.blocks[0].id} block={group.blocks[0]} />
+        );
       })}
-    </>
+    </div>
   );
 }
 
@@ -357,7 +395,7 @@ export default function NotionBlockContent({ subLessons }: NotionBlockContentPro
   }
 
   return (
-    <div className="space-y-3">
+    <div>
       {subLessons.map((lesson, i) => (
         <NotionToggleItem key={lesson.id} lesson={lesson} defaultOpen={i === 0} />
       ))}

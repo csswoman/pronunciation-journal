@@ -297,11 +297,13 @@ Deno.serve(async (req: Request) => {
 
   let created = 0;
   let updated = 0;
+  let deleted = 0;
   const skipped = 0;
   let errorMessage: string | null = null;
 
   try {
     const pages = await queryDatabase(notionDatabaseId, notionApiKey);
+    const notionPageIds = pages.map((p) => p.id);
 
     for (const page of pages) {
       const title = getTitle(page);
@@ -350,6 +352,33 @@ Deno.serve(async (req: Request) => {
         created++;
       }
     }
+
+    // Delete lessons that no longer exist in Notion
+    if (notionPageIds.length > 0) {
+      const { data: toDelete } = await supabase
+        .from("theory_lessons")
+        .select("id")
+        .eq("source", "notion")
+        .not("notion_page_id", "in", `(${notionPageIds.map((id) => `"${id}"`).join(",")})`);
+
+      if (toDelete && toDelete.length > 0) {
+        const idsToDelete = toDelete.map((r: { id: string }) => r.id);
+        await supabase.from("theory_lessons").delete().in("id", idsToDelete);
+        deleted = idsToDelete.length;
+      }
+    } else {
+      // No pages in Notion — delete all notion-sourced lessons
+      const { data: toDelete } = await supabase
+        .from("theory_lessons")
+        .select("id")
+        .eq("source", "notion");
+
+      if (toDelete && toDelete.length > 0) {
+        const idsToDelete = toDelete.map((r: { id: string }) => r.id);
+        await supabase.from("theory_lessons").delete().in("id", idsToDelete);
+        deleted = idsToDelete.length;
+      }
+    }
   } catch (err) {
     errorMessage = err instanceof Error ? err.message : String(err);
     console.error("sync-notion-lessons error:", errorMessage);
@@ -377,11 +406,12 @@ Deno.serve(async (req: Request) => {
         lessons_created: created,
         lessons_updated: updated,
         lessons_skipped: skipped,
+        lessons_deleted: deleted,
       })
       .eq("id", logId);
   }
 
-  const result = { created, updated, skipped };
+  const result = { created, updated, skipped, deleted };
   console.log("sync-notion-lessons result:", JSON.stringify(result));
 
   return new Response(JSON.stringify(result), {

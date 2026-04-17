@@ -17,7 +17,7 @@ export default function AdminLessonsPage() {
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [togglingId, setTogglingId] = useState<string | null>(null);
   const [syncStatus, setSyncStatus] = useState<SyncStatus>("idle");
-  const [syncResult, setSyncResult] = useState<{ created: number; updated: number; skipped: number } | null>(null);
+  const [syncResult, setSyncResult] = useState<{ created: number; updated: number; skipped: number; deleted: number } | null>(null);
 
   const load = () => {
     setLoading(true);
@@ -33,7 +33,22 @@ export default function AdminLessonsPage() {
     if (!confirm(`Delete "${lesson.title}"? This cannot be undone.`)) return;
     setDeletingId(lesson.id);
     try {
-      await deleteTheoryLesson(lesson.id);
+      if (lesson.is_system) {
+        // System lessons need service-role bypass via API route
+        const supabase = getSupabaseBrowserClient();
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session) throw new Error("Not authenticated");
+        const res = await fetch(`/api/lessons/${lesson.id}`, {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${session.access_token}` },
+        });
+        if (!res.ok) {
+          const body = await res.json();
+          throw new Error(body.error ?? "Delete failed");
+        }
+      } else {
+        await deleteTheoryLesson(lesson.id);
+      }
       setLessons((prev) => prev.filter((l) => l.id !== lesson.id));
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : "Delete failed");
@@ -135,7 +150,7 @@ export default function AdminLessonsPage() {
         {syncStatus === "success" && syncResult && (
           <div className="rounded-xl p-3 mb-6 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 text-sm flex items-center justify-between">
             <span>
-              Notion sync complete — {syncResult.created} created, {syncResult.updated} updated, {syncResult.skipped} skipped
+              Notion sync complete — {syncResult.created} created, {syncResult.updated} updated, {syncResult.deleted} deleted, {syncResult.skipped} skipped
             </span>
             <button onClick={() => setSyncStatus("idle")} className="ml-4 opacity-60 hover:opacity-100 text-lg leading-none">×</button>
           </div>

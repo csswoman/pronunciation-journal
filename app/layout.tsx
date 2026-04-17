@@ -2,6 +2,7 @@
 
 import Script from "next/script";
 import "./globals.css";
+import "./markdown.css";
 import { Plus_Jakarta_Sans, DM_Sans } from "next/font/google";
 import Sidebar from "@/components/Sidebar";
 import BottomNav from "@/components/layout/BottomNav";

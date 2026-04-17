@@ -117,67 +117,47 @@ export default function LessonMarkdown({ content }: { content: string }) {
   const markdown = preprocessAdmonitions(content || "This lesson has no content yet.");
 
   return (
-    <div className="notion-renderer prose prose-neutral max-w-none prose-h2:mb-4 prose-h2:border-b-0 prose-h2:pb-0 prose-hr:hidden dark:prose-invert">
+    <div className="markdown">
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         components={{
           h1: ({ children }) => (
-            <h1 className="mt-12 mb-6 text-3xl font-bold text-neutral-900 dark:text-[var(--deep-text)]">
-              {children}
-            </h1>
+            <h1 className="md-h1">{children}</h1>
           ),
           h2: ({ children }) => (
-            <h2 className="mt-10 mb-4 text-2xl font-bold text-neutral-900 dark:text-[var(--deep-text)]">
-              {children}
-            </h2>
+            <h2 className="md-h2">{children}</h2>
           ),
           h3: ({ children }) => (
-            <h3 className="mt-8 mb-3 text-xl font-semibold text-neutral-900 dark:text-[var(--deep-text)]">
-              {children}
-            </h3>
+            <h3 className="md-h3">{children}</h3>
           ),
           h4: ({ children }) => (
-            <h4 className="mt-6 mb-2 text-lg font-semibold text-neutral-900 dark:text-[var(--deep-text)]">
-              {children}
-            </h4>
+            <h4 className="md-h4">{children}</h4>
           ),
           p: ({ children }) => {
             if (isAdmonitionMarker(children)) return null;
-            return (
-              <p className="text-base leading-relaxed text-gray-700 dark:text-[var(--text-secondary)]">
-                {children}
-              </p>
-            );
+            return <p className="md-p">{children}</p>;
           },
           ul: ({ children }) => (
-            <ul className="my-5 list-disc space-y-2 pl-6 marker:text-[var(--primary)]">{children}</ul>
+            <ul className="md-list md-list-ul">{children}</ul>
           ),
-          ol: ({ children }) => <ol className="my-5 list-decimal space-y-2 pl-6">{children}</ol>,
+          ol: ({ children }) => <ol className="md-list md-list-ol">{children}</ol>,
           li: ({ children }) => (
-            <li className="text-base leading-relaxed text-gray-700 dark:text-[var(--text-secondary)]">
-              {children}
-            </li>
+            <li className="md-li">{children}</li>
           ),
           blockquote: ({ children }) => {
             const tone = getAdmonitionToneFromChildren(children);
             if (!tone) {
-              return (
-                <blockquote className="my-6 rounded-xl border-l-4 border-[var(--primary)] bg-neutral-100 px-5 py-4 text-gray-700 dark:bg-[var(--btn-regular-bg)] dark:text-[var(--text-secondary)]">
-                  {children}
-                </blockquote>
-              );
+              return <blockquote className="md-blockquote">{children}</blockquote>;
             }
 
             const meta = ADMONITION_MAP[tone];
             return (
-              <aside className={`my-6 rounded-xl border px-4 py-3 ${meta.classes}`}>
-                <div className="mb-1.5 flex items-center gap-2 text-sm font-semibold text-[var(--deep-text)] dark:text-[var(--deep-text)]">
-                  <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-black/10 text-xs dark:bg-white/10">
-                    {meta.icon}
-                  </span>
+              <aside className={`md-callout ${tone} ${meta.classes}`}>
+                <div className="md-callout-label">
+                  <span className="md-callout-badge">{meta.icon}</span>
                   <span>{meta.title}</span>
                 </div>
-                <div className="space-y-2">{children}</div>
+                <div className="md-callout-body">{children}</div>
               </aside>
             );
           },
