@@ -1,31 +1,33 @@
-import { getCoursesWithLessonCount } from "@/lib/notion/courses";
 import SectionHeader from "@/components/layout/SectionHeader";
-import CourseCard from "@/components/courses/CourseCard";
-import HomeHero from "@/components/layout/HomeHero";
+import HomeHeader from "@/components/home/HomeHeader";
 import PageLayout from "@/components/layout/PageLayout";
+import HomeStreakCard from "@/components/home/HomeStreakCard";
+import HomeAchievementsCard from "@/components/home/HomeAchievementsCard";
+import HomeProgressCard from "@/components/home/HomeProgressCard";
+import HomePracticeCard from "@/components/home/HomePracticeCard";
+import HomeCoursesSection from "@/components/home/HomeCoursesSection";
 
-export const revalidate = 3600;
+// Placeholder streak data — replace with real Supabase/Dexie data when available
+const STREAK = 7;
+const ACTIVE_DAYS = [true, true, true, true, true, true, false];
 
-export default async function HomePage() {
-  const courses = await getCoursesWithLessonCount();
-
+export default function HomePage() {
   return (
-    <PageLayout hero={<HomeHero />}>
-      <section>
-        <SectionHeader
-          title="Courses"
-          viewAllHref="/courses"
-        />
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {courses.length > 0 ? (
-            courses.map((course) => (
-              <CourseCard key={course.id} course={course} priority={false} />
-            ))
-          ) : (
-            <p className="text-[var(--text-secondary)]">No courses available yet.</p>
-          )}
+    <PageLayout hero={<HomeHeader />}>
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-6">
+        <div className="flex flex-col gap-6">
+          <section>
+            <SectionHeader title="Your Courses" viewAllHref="/courses" />
+            <HomeCoursesSection />
+          </section>
+          <HomePracticeCard />
         </div>
-      </section>
+        <div className="flex flex-col gap-4">
+          <HomeStreakCard streak={STREAK} activeDays={ACTIVE_DAYS} />
+          <HomeAchievementsCard />
+          <HomeProgressCard lessonsThisWeek={8} weeklyChange={2} />
+        </div>
+      </div>
     </PageLayout>
   );
 }

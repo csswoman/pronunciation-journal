@@ -1,6 +1,6 @@
 import { getNotionClient } from "./client";
 import { notionCache, cacheKeys } from "./cache";
-import { Course, CourseWithLessons, SubLesson } from "./types";
+import { Course, CourseWithLessons, NotionPage, NotionProperty, SubLesson } from "./types";
 
 const COURSES_DB_ID = process.env.NOTION_DATABASE_ID!;
 
@@ -16,14 +16,14 @@ export async function getCourses(): Promise<Course[]> {
   const client = getNotionClient();
   const pages = await client.queryDatabase(COURSES_DB_ID);
 
-  const courses: Course[] = pages.map((page: any) => {
+  const courses: Course[] = pages.map((page: NotionPage) => {
     const title = extractPageTitle(page);
     return {
       id: page.id,
       title,
       slug: generateSlug(title),
       description: extractRichText(page.properties?.Description?.rich_text),
-      coverImageUrl: page.cover?.external?.url ?? page.cover?.file?.url,
+      coverImageUrl: (page.cover as any)?.external?.url ?? (page.cover as any)?.file?.url,
       lessonCount: 0,
       notionPageId: page.id,
       notionUrl: page.url,
@@ -112,20 +112,20 @@ export async function getLessonInCourse(
   };
 }
 
-function extractPageTitle(page: any): string {
-  const titleProp = Object.values(page.properties as Record<string, any>).find(
-    (p: any) => p.type === "title",
+function extractPageTitle(page: NotionPage): string {
+  const titleProp = Object.values(page.properties).find(
+    (p: NotionProperty) => p.type === "title",
   );
   if (!titleProp) return "Untitled";
-  return ((titleProp as any).title as any[])
-    .map((t: any) => t.plain_text || "")
+  return (titleProp.title ?? [])
+    .map((t) => t.plain_text || "")
     .join("")
     .trim();
 }
 
-function extractRichText(richText: any[] | undefined): string | undefined {
+function extractRichText(richText: NotionProperty["rich_text"] | undefined): string | undefined {
   if (!richText?.length) return undefined;
-  return richText.map((t: any) => t.plain_text || "").join("").trim() || undefined;
+  return richText.map((t) => t.plain_text || "").join("").trim() || undefined;
 }
 
 const LEVEL_MAP: Record<string, string> = {

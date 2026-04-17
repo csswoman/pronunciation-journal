@@ -1,11 +1,25 @@
 "use client";
 
 import { useState } from "react";
-import { SubLesson } from "@/lib/notion/types";
-import { NotionBlock } from "@/lib/notion/types";
+import { NotionBlock, NotionRichText, SubLesson } from "@/lib/notion/types";
 
-function renderRichText(richText: any[]): string {
-  return (richText || []).map((t: any) => t.plain_text || t.text?.content || "").join("");
+type NotionBlockVariant = {
+  rich_text?: NotionRichText[];
+  children?: NotionBlock[];
+  is_toggleable?: boolean;
+  icon?: { emoji?: string };
+  type?: "external" | "file";
+  external?: { url?: string };
+  file?: { url?: string };
+  caption?: NotionRichText[];
+};
+
+function getBlockVariant(block: NotionBlock, key: string): NotionBlockVariant | undefined {
+  return block[key] as NotionBlockVariant | undefined;
+}
+
+function renderRichText(richText: NotionRichText[] | undefined): string {
+  return (richText || []).map((t) => t.plain_text || t.text?.content || "").join("");
 }
 
 export function NotionBlockRenderer({ block }: { block: NotionBlock }) {
@@ -13,23 +27,23 @@ export function NotionBlockRenderer({ block }: { block: NotionBlock }) {
 
   switch (block.type) {
     case "paragraph": {
-      const text = renderRichText((block.paragraph as any)?.rich_text || []);
+      const text = renderRichText(getBlockVariant(block, "paragraph")?.rich_text);
       if (!text) return null;
       return <p className="text-base leading-relaxed text-gray-700 dark:text-[var(--text-secondary)] mb-3">{text}</p>;
     }
     case "heading_1": {
-      const text = renderRichText((block.heading_1 as any)?.rich_text || []);
+      const text = renderRichText(getBlockVariant(block, "heading_1")?.rich_text);
       return <h1 className="text-2xl font-bold text-neutral-900 dark:text-[var(--deep-text)] mt-6 mb-3">{text}</h1>;
     }
     case "heading_2": {
-      const text = renderRichText((block.heading_2 as any)?.rich_text || []);
+      const text = renderRichText(getBlockVariant(block, "heading_2")?.rich_text);
       return <h2 className="text-xl font-bold text-neutral-900 dark:text-[var(--deep-text)] mt-5 mb-2">{text}</h2>;
     }
     case "heading_3": {
-      const heading = block.heading_3 as any;
-      const text = renderRichText(heading?.rich_text || []);
+      const heading = getBlockVariant(block, "heading_3");
+      const text = renderRichText(heading?.rich_text);
       if (heading?.is_toggleable) {
-        const children: NotionBlock[] = heading?.children || [];
+        const children: NotionBlock[] = heading.children || [];
         return (
           <div className="mb-2">
             <button
@@ -50,8 +64,8 @@ export function NotionBlockRenderer({ block }: { block: NotionBlock }) {
       return <h3 className="text-lg font-semibold text-neutral-900 dark:text-[var(--deep-text)] mt-4 mb-2">{text}</h3>;
     }
     case "toggle": {
-      const toggle = block.toggle as any;
-      const text = renderRichText(toggle?.rich_text || []);
+      const toggle = getBlockVariant(block, "toggle");
+      const text = renderRichText(toggle?.rich_text);
       const children: NotionBlock[] = toggle?.children || [];
       return (
         <div className="mb-2">
@@ -71,8 +85,9 @@ export function NotionBlockRenderer({ block }: { block: NotionBlock }) {
       );
     }
     case "bulleted_list_item": {
-      const text = renderRichText((block.bulleted_list_item as any)?.rich_text || []);
-      const children: NotionBlock[] = (block.bulleted_list_item as any)?.children || [];
+      const item = getBlockVariant(block, "bulleted_list_item");
+      const text = renderRichText(item?.rich_text);
+      const children: NotionBlock[] = item?.children || [];
       return (
         <li className="text-base leading-relaxed text-gray-700 dark:text-[var(--text-secondary)]">
           {text}
@@ -85,12 +100,12 @@ export function NotionBlockRenderer({ block }: { block: NotionBlock }) {
       );
     }
     case "numbered_list_item": {
-      const text = renderRichText((block.numbered_list_item as any)?.rich_text || []);
+      const text = renderRichText(getBlockVariant(block, "numbered_list_item")?.rich_text);
       return <li className="text-base leading-relaxed text-gray-700 dark:text-[var(--text-secondary)]">{text}</li>;
     }
     case "code": {
-      const code = block.code as any;
-      const text = renderRichText(code?.rich_text || []);
+      const code = getBlockVariant(block, "code");
+      const text = renderRichText(code?.rich_text);
       return (
         <pre className="my-4 overflow-x-auto rounded-xl bg-zinc-900 p-4 text-sm text-white dark:bg-zinc-950">
           <code>{text}</code>
@@ -98,7 +113,7 @@ export function NotionBlockRenderer({ block }: { block: NotionBlock }) {
       );
     }
     case "quote": {
-      const text = renderRichText((block.quote as any)?.rich_text || []);
+      const text = renderRichText(getBlockVariant(block, "quote")?.rich_text);
       return (
         <blockquote className="my-4 rounded-xl border-l-4 border-[var(--primary)] bg-neutral-100 px-5 py-4 text-gray-700 dark:bg-[var(--btn-regular-bg)] dark:text-[var(--text-secondary)]">
           {text}
@@ -106,9 +121,9 @@ export function NotionBlockRenderer({ block }: { block: NotionBlock }) {
       );
     }
     case "image": {
-      const image = block.image as any;
+      const image = getBlockVariant(block, "image");
       const url = image?.type === "external" ? image.external?.url : image?.file?.url;
-      const caption = renderRichText(image?.caption || []);
+      const caption = renderRichText(image?.caption);
       if (!url) return null;
       return (
         <figure className="my-6">
@@ -121,8 +136,8 @@ export function NotionBlockRenderer({ block }: { block: NotionBlock }) {
     case "divider":
       return <hr className="my-6 border-[var(--line-divider)]" />;
     case "callout": {
-      const callout = block.callout as any;
-      const text = renderRichText(callout?.rich_text || []);
+      const callout = getBlockVariant(block, "callout");
+      const text = renderRichText(callout?.rich_text);
       const emoji = callout?.icon?.emoji || "💡";
       return (
         <div className="my-4 flex gap-3 rounded-xl border border-[var(--line-divider)] bg-[var(--btn-plain-bg)] px-4 py-3">

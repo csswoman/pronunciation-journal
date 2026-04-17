@@ -13,17 +13,18 @@ type CourseListItem = Course & {
   completedLessons?: number;
 };
 
-type CoursesClientProps = {
-  courses: CourseListItem[];
-};
-
-export default function CoursesClient({ courses }: CoursesClientProps) {
+export default function CoursesClient() {
+  const [courses, setCourses] = useState<CourseListItem[]>([]);
+  const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
   const [level, setLevel] = useState<CourseLevel>("all");
   const filtersRef = useRef<HTMLDivElement | null>(null);
   const [completedCounts, setCompletedCounts] = useState<Record<string, number>>({});
 
   useEffect(() => {
+    fetch("/api/notion/courses")
+      .then((r) => r.json())
+      .then((data) => { setCourses(data); setLoading(false); });
     getCompletedCountByCourse().then(setCompletedCounts);
   }, []);
 
@@ -79,7 +80,15 @@ return courses.filter((course) => {
         )}
 
         <div>
-          {filteredCourses.length === 0 ? (
+          {loading ? (
+            <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <div key={i} className="rounded-2xl border border-[var(--line-divider)] bg-[var(--card-bg)] h-48 overflow-hidden relative">
+                  <div className="absolute inset-0 -translate-x-full animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+                </div>
+              ))}
+            </div>
+          ) : filteredCourses.length === 0 ? (
             <div className="flex min-h-[280px] items-center justify-center rounded-2xl border border-dashed border-[var(--line-divider)] bg-[var(--card-bg)] px-8 text-center">
               <div>
                 <p className="text-[15px] font-semibold text-[var(--deep-text)]">No courses found</p>

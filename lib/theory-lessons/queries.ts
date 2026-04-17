@@ -2,6 +2,10 @@ import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import type { TheoryLesson, TheoryLessonDraft } from "@/lib/types";
 
 const TABLE = "theory_lessons";
+type TheoryLessonInsert = Omit<TheoryLessonDraft, "id" | "created_at" | "updated_at">;
+type TheoryLessonUpdate = Partial<
+  Omit<TheoryLesson, "id" | "user_id" | "is_system" | "created_at" | "updated_at">
+>;
 
 // ── Read ──────────────────────────────────────────────────────────────────────
 
@@ -78,7 +82,7 @@ export async function createTheoryLesson(
       ...draft,
       user_id: user.id,
       is_system: false,
-    })
+    } satisfies TheoryLessonInsert)
     .select()
     .single();
 
@@ -88,7 +92,7 @@ export async function createTheoryLesson(
 
 export async function updateTheoryLesson(
   id: string,
-  patch: Partial<Omit<TheoryLesson, "id" | "user_id" | "is_system" | "created_at" | "updated_at">>
+  patch: TheoryLessonUpdate
 ): Promise<TheoryLesson> {
   const supabase = getSupabaseBrowserClient();
   const { data, error } = await supabase

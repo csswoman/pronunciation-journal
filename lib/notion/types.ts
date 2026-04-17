@@ -48,7 +48,7 @@ export interface NotionPage {
   last_edited_time: string;
   created_by: { object: string; id: string };
   last_edited_by: { object: string; id: string };
-  cover: unknown;
+  cover: { type: 'external'; external: { url: string } } | { type: 'file'; file: { url: string } } | null;
   icon: unknown;
   parent: { type: string; page_id?: string; database_id?: string };
   archived: boolean;
@@ -60,15 +60,10 @@ export interface NotionPage {
 export interface NotionProperty {
   id: string;
   type: string;
-  title?: NotionPropertyTitle;
+  title?: NotionRichText[];
   rich_text?: NotionRichText[];
+  multi_select?: { id: string; name: string; color: string }[];
   [key: string]: unknown;
-}
-
-export interface NotionPropertyTitle {
-  id: string;
-  type: "title";
-  title: NotionRichText[];
 }
 
 // Transformed types for your app

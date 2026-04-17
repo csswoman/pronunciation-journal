@@ -425,7 +425,11 @@ export type Database = {
           id: string
           is_published: boolean
           is_system: boolean
+          notion_last_edited: string | null
+          notion_page_id: string | null
+          notion_synced_at: string | null
           slug: string
+          source: string
           title: string
           updated_at: string
           user_id: string | null
@@ -438,7 +442,11 @@ export type Database = {
           id?: string
           is_published?: boolean
           is_system?: boolean
+          notion_last_edited?: string | null
+          notion_page_id?: string | null
+          notion_synced_at?: string | null
           slug: string
+          source?: string
           title: string
           updated_at?: string
           user_id?: string | null
@@ -451,7 +459,11 @@ export type Database = {
           id?: string
           is_published?: boolean
           is_system?: boolean
+          notion_last_edited?: string | null
+          notion_page_id?: string | null
+          notion_synced_at?: string | null
           slug?: string
+          source?: string
           title?: string
           updated_at?: string
           user_id?: string | null

@@ -1,5 +1,3 @@
-import type { SubLesson, LessonTopic } from "./types";
-
 const CACHE_DURATION_MS = 1000 * 60 * 60; // 1 hour
 
 interface CacheEntry<T> {
@@ -9,7 +7,7 @@ interface CacheEntry<T> {
 
 class NotionCache {
   private static instance: NotionCache;
-  private cache: Map<string, CacheEntry<any>> = new Map();
+  private cache: Map<string, CacheEntry<unknown>> = new Map();
 
   static getInstance(): NotionCache {
     if (!NotionCache.instance) {

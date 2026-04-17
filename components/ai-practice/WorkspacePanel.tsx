@@ -107,7 +107,7 @@ export default function WorkspacePanel({ session, onClose }: WorkspacePanelProps
           <FinishedState title={session.title} total={total} onClose={onClose} />
         ) : (
           <div key={currentStep}>
-            <StepLabel step={currentStep} type={session.steps[currentStep].type} format={
+            <StepLabel type={session.steps[currentStep].type} format={
               session.steps[currentStep].type === "exercise"
                 ? (session.steps[currentStep] as { format: string }).format
                 : undefined
@@ -128,7 +128,7 @@ export default function WorkspacePanel({ session, onClose }: WorkspacePanelProps
 
 // ── Step label ───────────────────────────────────────────────────────────────
 
-function StepLabel({ step, type, format }: { step: number; type: string; format?: string }) {
+function StepLabel({ type, format }: { type: string; format?: string }) {
   const labels: Record<string, string> = {
     explanation: "Read",
     "exercise:multiple_choice": "Choose",

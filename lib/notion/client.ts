@@ -1,4 +1,4 @@
-import { NotionBlock, NotionPage, SubLesson, LessonTopic } from "./types";
+import { NotionBlock, NotionPage, NotionRichText, SubLesson, LessonTopic } from "./types";
 
 const NOTION_API_VERSION = "2022-06-28";
 const NOTION_BASE_URL = "https://api.notion.com/v1";
@@ -88,11 +88,11 @@ class NotionClient {
     return withChildren;
   }
 
-  private getToggleRichText(block: NotionBlock): any[] {
+  private getToggleRichText(block: NotionBlock): NotionRichText[] {
     if (block.type === "toggle") return block.toggle?.rich_text || [];
     const headingTypes = ["heading_1", "heading_2", "heading_3"] as const;
     for (const h of headingTypes) {
-      const heading = block[h] as any;
+      const heading = block[h] as { is_toggleable?: boolean; rich_text?: NotionRichText[] } | undefined;
       if (heading?.is_toggleable) return heading.rich_text || [];
     }
     return [];
@@ -102,7 +102,7 @@ class NotionClient {
     if (block.type === "toggle") return block.toggle?.children || [];
     const headingTypes = ["heading_1", "heading_2", "heading_3"] as const;
     for (const h of headingTypes) {
-      const heading = block[h] as any;
+      const heading = block[h] as { is_toggleable?: boolean; children?: NotionBlock[] } | undefined;
       if (heading?.is_toggleable) return heading.children || [];
     }
     return [];
@@ -111,7 +111,10 @@ class NotionClient {
   private isToggleBlock(block: NotionBlock): boolean {
     if (block.type === "toggle") return true;
     const headingTypes = ["heading_1", "heading_2", "heading_3"] as const;
-    return headingTypes.some((h) => (block[h] as any)?.is_toggleable);
+    return headingTypes.some((h) => {
+      const heading = block[h] as { is_toggleable?: boolean } | undefined;
+      return heading?.is_toggleable ?? false;
+    });
   }
 
   /**
@@ -122,17 +125,7 @@ class NotionClient {
       const page = await this.getPageById(pageId);
       const blocks = await this.getBlockChildrenRecursive(pageId);
 
-      console.log(`[Notion] pageId=${pageId} — total blocks: ${blocks.length}`);
-      console.log(`[Notion] block types:`, blocks.map((b) => ({
-        type: b.type,
-        has_children: b.has_children,
-        id: b.id.slice(0, 8),
-        is_toggleable: (b[b.type] as any)?.is_toggleable ?? undefined,
-        text: (b[b.type] as any)?.rich_text?.[0]?.plain_text?.slice(0, 40) ?? "",
-      })));
-
       const toggles = blocks.filter((block) => this.isToggleBlock(block));
-      console.log(`[Notion] toggles found: ${toggles.length}`);
 
       // If there are no toggles, treat the whole page as a single lesson
       if (toggles.length === 0) {
@@ -240,7 +233,7 @@ class NotionClient {
   }
 
   // Helper methods
-  private extractPlainText(richText: any[]): string {
+  private extractPlainText(richText: NotionRichText[]): string {
     return richText
       .map((item) => item.plain_text || item.text?.content || "")
       .join("");
@@ -250,8 +243,8 @@ class NotionClient {
     const titleProperty = Object.values(page.properties).find(
       (prop) => prop.type === "title",
     );
-    if (titleProperty && "title" in titleProperty) {
-      return this.extractPlainText((titleProperty as any).title);
+    if (titleProperty?.title) {
+      return this.extractPlainText(titleProperty.title);
     }
     return "Untitled";
   }

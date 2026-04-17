@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { NotionRenderer } from "react-notion-x";
+import type { ExtendedRecordMap } from "notion-types";
 import { SubLesson } from "@/lib/notion/types";
 import "@/styles/notion-custom.css";
 
@@ -123,6 +124,11 @@ export default function SubLessonPage() {
         <article className="prose prose-invert max-w-none mb-12">
           <NotionRenderer
             recordMap={{
+              collection: {},
+              collection_view: {},
+              notion_user: {},
+              collection_query: {},
+              signed_urls: {},
               block: {
                 [subLesson.id]: {
                   role: "reader",
@@ -144,10 +150,10 @@ export default function SubLessonPage() {
                     };
                     return acc;
                   },
-                  {} as Record<string, any>,
+                  {} as Record<string, { role: "reader"; value: unknown }>,
                 ),
               },
-            }}
+            } as unknown as ExtendedRecordMap}
             rootPageId={subLesson.id}
           />
         </article>
