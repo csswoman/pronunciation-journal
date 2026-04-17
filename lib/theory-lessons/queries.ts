@@ -70,7 +70,7 @@ export async function getMyTheoryLessons(): Promise<TheoryLesson[]> {
 // ── Write ─────────────────────────────────────────────────────────────────────
 
 export async function createTheoryLesson(
-  draft: Omit<TheoryLessonDraft, "user_id" | "is_system">
+  draft: Omit<TheoryLessonDraft, "user_id" | "is_system" | "source" | "notion_page_id" | "notion_last_edited" | "notion_synced_at"> & Partial<Pick<TheoryLessonDraft, "source" | "notion_page_id" | "notion_last_edited" | "notion_synced_at">>
 ): Promise<TheoryLesson> {
   const supabase = getSupabaseBrowserClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -79,6 +79,10 @@ export async function createTheoryLesson(
   const { data, error } = await supabase
     .from(TABLE)
     .insert({
+      source: "manual",
+      notion_page_id: null,
+      notion_last_edited: null,
+      notion_synced_at: null,
       ...draft,
       user_id: user.id,
       is_system: false,
