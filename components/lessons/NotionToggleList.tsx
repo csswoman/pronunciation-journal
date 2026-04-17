@@ -89,13 +89,16 @@ export function NotionBlockRenderer({ block }: { block: NotionBlock }) {
       const text = renderRichText(item?.rich_text);
       const children: NotionBlock[] = item?.children || [];
       return (
-        <li className="text-base leading-relaxed text-gray-700 dark:text-[var(--text-secondary)]">
-          {text}
-          {children.length > 0 && (
-            <ul className="list-disc pl-5 mt-1 space-y-1">
-              {children.map((c) => <NotionBlockRenderer key={c.id} block={c} />)}
-            </ul>
-          )}
+        <li className="flex gap-2.5 text-base leading-relaxed text-gray-700 dark:text-[var(--text-secondary)] list-none">
+          <span className="mt-[0.45em] h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--primary)] opacity-80" aria-hidden />
+          <span>
+            {text}
+            {children.length > 0 && (
+              <ul className="mt-1.5 space-y-1.5 pl-0">
+                {children.map((c) => <NotionBlockRenderer key={c.id} block={c} />)}
+              </ul>
+            )}
+          </span>
         </li>
       );
     }
@@ -181,7 +184,7 @@ function BlockList({ blocks }: { blocks: NotionBlock[] }) {
           const isBulleted = group.blocks[0].type === "bulleted_list_item";
           const Tag = isBulleted ? "ul" : "ol";
           return (
-            <Tag key={idx} className={`my-4 pl-6 space-y-1 ${isBulleted ? "list-disc" : "list-decimal"} marker:text-[var(--primary)]`}>
+            <Tag key={idx} className={`my-4 ${isBulleted ? "pl-0 space-y-1.5 list-none" : "pl-6 space-y-1.5 list-decimal marker:text-[var(--primary)] marker:font-semibold"}`}>
               {group.blocks.map((b) => <NotionBlockRenderer key={b.id} block={b} />)}
             </Tag>
           );
