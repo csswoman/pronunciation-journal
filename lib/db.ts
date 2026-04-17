@@ -7,6 +7,14 @@ interface LessonSessionOffset {
   offset: number;   // next starting index
 }
 
+export interface CompletedCourseLesson {
+  // PK: `${courseSlug}:${lessonSlug}`
+  key: string;
+  courseSlug: string;
+  lessonSlug: string;
+  completedAt: string; // ISO
+}
+
 class PronunciationDB extends Dexie {
   attempts!: Table<Attempt, number>;
   srsData!: Table<SRSData, string>;
@@ -17,6 +25,7 @@ class PronunciationDB extends Dexie {
   aiWords!: Table<AISavedWord, number>;
   lessonOffsets!: Table<LessonSessionOffset, string>;
   syncOutbox!: Table<SyncOutboxEntry, number>;
+  completedLessons!: Table<CompletedCourseLesson, string>;
 
   constructor() {
     super("pronunciation-journal");
@@ -86,6 +95,22 @@ class PronunciationDB extends Dexie {
       localSoundProgress:   "localKey, userId, soundId, nextReview",
       // mirrors answer_history rows before they are confirmed by Supabase
       localAnswerHistory:   "++id, userId, soundId, answeredAt, synced",
+    });
+
+    // v7: course lesson completion tracking (offline-first)
+    this.version(7).stores({
+      attempts:             "++id, word, lessonId, timestamp",
+      srsData:              "wordId, word, nextReview",
+      dailyProgress:        "++id, date",
+      userStats:            "++id",
+      favorites:            "++id, word, lessonId, addedAt",
+      aiConversations:      "++id, templateId, createdAt, updatedAt",
+      aiWords:              "++id, word, conversationId, savedAt, difficulty",
+      lessonOffsets:        "lessonId",
+      syncOutbox:           "++id, status, createdAt, [status+createdAt]",
+      localSoundProgress:   "localKey, userId, soundId, nextReview",
+      localAnswerHistory:   "++id, userId, soundId, answeredAt, synced",
+      completedLessons:     "key, courseSlug, completedAt",
     });
   }
 }
@@ -329,4 +354,34 @@ export async function advanceLessonOffset(lessonId: string, totalWords: number):
 
 export async function resetLessonOffset(lessonId: string): Promise<void> {
   await db.lessonOffsets.delete(lessonId)
+}
+
+// ── Course Lesson Completion Helpers ──
+
+export async function markLessonComplete(courseSlug: string, lessonSlug: string): Promise<void> {
+  const key = `${courseSlug}:${lessonSlug}`;
+  await db.completedLessons.put({ key, courseSlug, lessonSlug, completedAt: new Date().toISOString() });
+}
+
+export async function markLessonIncomplete(courseSlug: string, lessonSlug: string): Promise<void> {
+  await db.completedLessons.delete(`${courseSlug}:${lessonSlug}`);
+}
+
+export async function isLessonComplete(courseSlug: string, lessonSlug: string): Promise<boolean> {
+  const row = await db.completedLessons.get(`${courseSlug}:${lessonSlug}`);
+  return !!row;
+}
+
+export async function getCompletedLessonSlugs(courseSlug: string): Promise<string[]> {
+  const rows = await db.completedLessons.where("courseSlug").equals(courseSlug).toArray();
+  return rows.map((r) => r.lessonSlug);
+}
+
+export async function getCompletedCountByCourse(): Promise<Record<string, number>> {
+  const all = await db.completedLessons.toArray();
+  const counts: Record<string, number> = {};
+  for (const row of all) {
+    counts[row.courseSlug] = (counts[row.courseSlug] ?? 0) + 1;
+  }
+  return counts;
 }

@@ -1,14 +1,14 @@
 "use client";
 
 import Image from "next/image";
-import Container from "@/components/layout/Container";
 import PageHeader from "@/components/layout/PageHeader";
+import PageLayout from "@/components/layout/PageLayout";
 import IPAChart from "@/components/IPAChart";
 
 export default function IPAPage() {
   return (
-    <div className="py-8 pb-24">
-      <Container>
+    <PageLayout
+      hero={
         <PageHeader
           badge="Sound Map"
           title="Hear Every Sound"
@@ -29,13 +29,11 @@ export default function IPAPage() {
             />
           }
         />
-      </Container>
-
-      <Container>
-        <div id="ipa-chart" className="mt-8">
-          <IPAChart />
-        </div>
-      </Container>
-    </div>
+      }
+    >
+      <div id="ipa-chart">
+        <IPAChart />
+      </div>
+    </PageLayout>
   );
 }

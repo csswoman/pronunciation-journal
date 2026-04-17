@@ -2,22 +2,31 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getLessonInCourse, getCourses, getCourseWithLessons } from "@/lib/notion/courses";
 import { NotionBlockRenderer } from "@/components/lessons/NotionToggleList";
+import LessonCompleteButton from "@/components/courses/LessonCompleteButton";
 
 export const revalidate = 3600;
 
 export async function generateStaticParams() {
-  const courses = await getCourses();
-  const params: { courseSlug: string; lessonSlug: string }[] = [];
+  try {
+    const courses = await getCourses();
+    const params: { courseSlug: string; lessonSlug: string }[] = [];
 
-  for (const course of courses) {
-    const full = await getCourseWithLessons(course.slug);
-    if (!full) continue;
-    for (const lesson of full.lessons) {
-      params.push({ courseSlug: course.slug, lessonSlug: lesson.slug });
+    for (const course of courses) {
+      try {
+        const full = await getCourseWithLessons(course.slug);
+        if (!full) continue;
+        for (const lesson of full.lessons) {
+          params.push({ courseSlug: course.slug, lessonSlug: lesson.slug });
+        }
+      } catch {
+        // Skip courses that fail to load — pages will render on-demand
+      }
     }
-  }
 
-  return params;
+    return params;
+  } catch {
+    return [];
+  }
 }
 
 interface Props {
@@ -69,6 +78,10 @@ export default async function LessonPage({ params }: Props) {
             </p>
           )}
         </article>
+
+        <div className="flex justify-end mb-6">
+          <LessonCompleteButton courseSlug={courseSlug} lessonSlug={lessonSlug} />
+        </div>
 
         <nav className="flex items-stretch gap-4 border-t border-[var(--line-divider)] pt-8">
           {prev ? (

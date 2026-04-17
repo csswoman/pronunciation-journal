@@ -2,20 +2,14 @@
 
 import Script from "next/script";
 import "./globals.css";
-import { DM_Serif_Display, Sora, DM_Sans } from "next/font/google";
+import { Plus_Jakarta_Sans, DM_Sans } from "next/font/google";
 import Sidebar from "@/components/Sidebar";
 import BottomNav from "@/components/layout/BottomNav";
 import AuthProvider from "@/components/AuthProvider";
 import { ThemeProvider } from "@/components/ThemeProvider";
 
-const dmSerif = DM_Serif_Display({
-  weight: "400",
-  subsets: ["latin"],
-  style: ["normal", "italic"],
-  variable: "--font-display",
-});
-const sora = Sora({
-  weight: ["700", "800"],
+const plusJakarta = Plus_Jakarta_Sans({
+  weight: ["400", "500", "600", "700", "800"],
   subsets: ["latin"],
   variable: "--font-heading",
 });
@@ -34,7 +28,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${dmSerif.variable} ${sora.variable} ${dmSans.variable}`}
+      className={`${plusJakarta.variable} ${dmSans.variable}`}
     >
       <head>
         <meta charSet="utf-8" />
@@ -64,7 +58,7 @@ export default function RootLayout({
             <div className="flex h-screen bg-[var(--page-bg)] overflow-hidden">
               <Sidebar className="hidden lg:flex w-64 flex-col" />
               <main className="main-scrollbar flex-1 overflow-y-auto pb-20 lg:pb-0">
-                <div className="max-w-screen-xl mx-auto px-6 lg:px-10 py-8 lg:py-9">
+                <div className="max-w-screen-xl mx-auto px-6 lg:px-10 py-8 lg:py-9 bg-[var(--card-bg)] rounded-[15px] my-10 !p-0">
                   {children}
                 </div>
               </main>

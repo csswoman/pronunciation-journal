@@ -1,10 +1,12 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { Course } from "@/lib/notion/types";
 import PageHeader from "@/components/layout/PageHeader";
+import PageLayout from "@/components/layout/PageLayout";
 import CourseCard from "@/components/courses/CourseCard";
 import CourseFilters from "@/components/courses/CourseFilters";
+import { getCompletedCountByCourse } from "@/lib/db";
 
 type CourseLevel = "all" | "basic" | "intermediate" | "advanced";
 type CourseListItem = Course & {
@@ -19,10 +21,15 @@ export default function CoursesClient({ courses }: CoursesClientProps) {
   const [query, setQuery] = useState("");
   const [level, setLevel] = useState<CourseLevel>("all");
   const filtersRef = useRef<HTMLDivElement | null>(null);
+  const [completedCounts, setCompletedCounts] = useState<Record<string, number>>({});
+
+  useEffect(() => {
+    getCompletedCountByCourse().then(setCompletedCounts);
+  }, []);
 
   const filteredCourses = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
-    return courses.filter((course) => {
+return courses.filter((course) => {
       const matchesQuery =
         normalizedQuery.length === 0 ||
         course.title.toLowerCase().includes(normalizedQuery);
@@ -33,8 +40,8 @@ export default function CoursesClient({ courses }: CoursesClientProps) {
   }, [courses, level, query]);
 
   return (
-    <div className="min-h-screen" style={{ background: "var(--page-bg)" }}>
-      <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
+    <PageLayout
+      hero={
         <PageHeader
           badge="Courses"
           title="Continue your"
@@ -43,16 +50,14 @@ export default function CoursesClient({ courses }: CoursesClientProps) {
           primaryCta={{
             label: "Browse courses",
             onClick: () => {
-              filtersRef.current?.scrollIntoView({
-                behavior: "smooth",
-                block: "start",
-              });
+              filtersRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
             },
           }}
           variant="compact"
         />
-
-        {/* Filters bar */}
+      }
+    >
+      <div className="space-y-6">
         <div
           ref={filtersRef}
           className="rounded-2xl border border-[var(--line-divider)] bg-[var(--card-bg)] px-4 py-3 shadow-[0_1px_3px_var(--line-divider)]"
@@ -65,23 +70,19 @@ export default function CoursesClient({ courses }: CoursesClientProps) {
           />
         </div>
 
-        {/* Results label */}
         {(query || level !== "all") && (
-          <p className="mt-5 text-[13px] text-[var(--text-tertiary)]">
+          <p className="text-[13px] text-[var(--text-tertiary)]">
             {filteredCourses.length === 0
               ? "No courses match your filters."
               : `${filteredCourses.length} course${filteredCourses.length === 1 ? "" : "s"} found`}
           </p>
         )}
 
-        {/* Grid */}
-        <div className="mt-6">
+        <div>
           {filteredCourses.length === 0 ? (
             <div className="flex min-h-[280px] items-center justify-center rounded-2xl border border-dashed border-[var(--line-divider)] bg-[var(--card-bg)] px-8 text-center">
               <div>
-                <p className="text-[15px] font-semibold text-[var(--deep-text)]">
-                  No courses found
-                </p>
+                <p className="text-[15px] font-semibold text-[var(--deep-text)]">No courses found</p>
                 <p className="mt-2 text-[13px] text-[var(--text-secondary)]">
                   Try a different search term or clear the level filter.
                 </p>
@@ -96,13 +97,13 @@ export default function CoursesClient({ courses }: CoursesClientProps) {
             </div>
           ) : (
             <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-              {filteredCourses.map((course) => (
-                <CourseCard key={course.id} course={course} />
+              {filteredCourses.map((course, i) => (
+                <CourseCard key={course.id} course={{ ...course, completedLessons: completedCounts[course.slug] ?? 0 }} priority={i === 0} />
               ))}
             </div>
           )}
         </div>
       </div>
-    </div>
+    </PageLayout>
   );
 }

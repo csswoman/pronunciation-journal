@@ -13,23 +13,31 @@ class NotionClient {
     this.token = token;
   }
 
-  private async fetch(url: string, options: RequestInit = {}) {
-    const response = await fetch(url, {
-      ...options,
-      headers: {
-        Authorization: `Bearer ${this.token}`,
-        "Notion-Version": NOTION_API_VERSION,
-        "Content-Type": "application/json",
-        ...options.headers,
-      },
-    });
+  private async fetch(url: string, options: RequestInit = {}, retries = 3) {
+    for (let attempt = 0; attempt <= retries; attempt++) {
+      const response = await fetch(url, {
+        ...options,
+        headers: {
+          Authorization: `Bearer ${this.token}`,
+          "Notion-Version": NOTION_API_VERSION,
+          "Content-Type": "application/json",
+          ...options.headers,
+        },
+      });
 
-    if (!response.ok) {
+      if (response.ok) return response.json();
+
+      // Retry on 502/503/504 gateway errors
+      const isRetryable = [429, 502, 503, 504].includes(response.status);
+      if (isRetryable && attempt < retries) {
+        const delay = Math.min(1000 * 2 ** attempt, 8000);
+        await new Promise((r) => setTimeout(r, delay));
+        continue;
+      }
+
       const error = await response.text();
       throw new Error(`Notion API error: ${response.status} - ${error}`);
     }
-
-    return response.json();
   }
 
   async getPageById(pageId: string): Promise<NotionPage> {
@@ -125,6 +133,23 @@ class NotionClient {
 
       const toggles = blocks.filter((block) => this.isToggleBlock(block));
       console.log(`[Notion] toggles found: ${toggles.length}`);
+
+      // If there are no toggles, treat the whole page as a single lesson
+      if (toggles.length === 0) {
+        const pageTitle = this.extractPageTitle(page);
+        return [
+          {
+            id: pageId,
+            title: pageTitle || "Lesson",
+            slug: this.generateSlug(pageTitle || "lesson"),
+            content: blocks,
+            parentPageId: pageId,
+            notionUrl: page.url,
+            createdAt: new Date(page.created_time),
+            updatedAt: new Date(page.last_edited_time),
+          },
+        ];
+      }
 
       const subLessons: SubLesson[] = toggles.map((toggle, index) => {
         const title = this.extractPlainText(

@@ -4,9 +4,9 @@ import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import { useAuth } from '@/components/AuthProvider'
 import { getSupabaseBrowserClient } from '@/lib/supabase/client'
-import Container from '@/components/layout/Container'
 import Section from '@/components/layout/Section'
 import PageHeader from '@/components/layout/PageHeader'
+import PageLayout from '@/components/layout/PageLayout'
 import StatsSection from '@/components/layout/StatsSection'
 import AchievementsSection from '@/components/progress/AchievementsSection'
 import JourneyToFluiditySection from '@/components/progress/JourneyToFluiditySection'
@@ -100,8 +100,8 @@ export default function ProgressPage() {
   }
 
   return (
-    <div className="py-8 pb-24">
-      <Container>
+    <PageLayout
+      hero={
         <PageHeader
           badge="Daily Wins"
           title="Your Progress"
@@ -122,23 +122,18 @@ export default function ProgressPage() {
             />
           }
         />
-      </Container>
-
-      <Container>
-        <Section spacing="lg" className="mt-8">
-          <StatsSection
-            stats={stats}
-            todayProgress={todayProgress}
-            progressHistory={progressHistory}
-          />
-
-          <MasteredSection mastered={mastered} />
-
-          <AchievementsSection />
-
-          <JourneyToFluiditySection />
-        </Section>
-      </Container>
-    </div>
+      }
+    >
+      <Section spacing="lg">
+        <StatsSection
+          stats={stats}
+          todayProgress={todayProgress}
+          progressHistory={progressHistory}
+        />
+        <MasteredSection mastered={mastered} />
+        <AchievementsSection />
+        <JourneyToFluiditySection />
+      </Section>
+    </PageLayout>
   )
 }

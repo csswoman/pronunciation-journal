@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getCourseWithLessons, getCourses } from "@/lib/notion/courses";
 import type { SubLesson } from "@/lib/notion/types";
+import { LessonNumber } from "@/components/courses/LessonNumber";
 
 export const revalidate = 3600;
 
@@ -43,7 +44,7 @@ export default async function CourseIndexPage({ params }: Props) {
             <p className="text-[var(--text-secondary)]">{course.description}</p>
           )}
           <p className="text-sm text-[var(--text-tertiary)] mt-2">
-            {course.lessons.length} lessons
+            {course.lessons.length} {course.lessons.length === 1 ? "lesson" : "lessons"}
           </p>
         </header>
 
@@ -77,9 +78,7 @@ function LessonRow({
         href={`/courses/${courseSlug}/lesson/${lesson.slug}`}
         className="group flex items-center gap-4 p-4 rounded-xl border border-[var(--line-divider)] bg-[var(--card-bg)] hover:border-[var(--primary)] hover:shadow-sm transition-all duration-150"
       >
-        <span className="w-8 h-8 flex-shrink-0 flex items-center justify-center rounded-full border border-[var(--line-divider)] text-sm font-bold text-[var(--text-tertiary)] group-hover:border-[var(--primary)] group-hover:text-[var(--primary)] transition-colors">
-          {index + 1}
-        </span>
+        <LessonNumber courseSlug={courseSlug} lessonSlug={lesson.slug} index={index} />
         <span className="flex-1 font-medium text-[var(--deep-text)] group-hover:text-[var(--primary)] transition-colors">
           {lesson.title}
         </span>

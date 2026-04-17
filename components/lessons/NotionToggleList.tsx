@@ -105,6 +105,19 @@ export function NotionBlockRenderer({ block }: { block: NotionBlock }) {
         </blockquote>
       );
     }
+    case "image": {
+      const image = block.image as any;
+      const url = image?.type === "external" ? image.external?.url : image?.file?.url;
+      const caption = renderRichText(image?.caption || []);
+      if (!url) return null;
+      return (
+        <figure className="my-6">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={url} alt={caption || "lesson image"} className="rounded-xl w-full object-contain" />
+          {caption && <figcaption className="mt-2 text-center text-sm text-[var(--text-secondary)]">{caption}</figcaption>}
+        </figure>
+      );
+    }
     case "divider":
       return <hr className="my-6 border-[var(--line-divider)]" />;
     case "callout": {
