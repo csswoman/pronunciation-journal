@@ -1,6 +1,6 @@
 import { getNotionClient } from "./client";
 import { notionCache, cacheKeys } from "./cache";
-import { Course, CourseWithLessons, SubLesson, NotionPage } from "./types";
+import { Course, CourseWithLessons, SubLesson } from "./types";
 
 const COURSES_DB_ID = process.env.NOTION_DATABASE_ID!;
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import Link from "next/link";
 import { NotionRenderer } from "react-notion-x";
 import { SubLesson } from "@/lib/notion/types";

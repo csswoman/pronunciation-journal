@@ -9,7 +9,7 @@ interface StepRendererProps {
   onComplete: () => void;
 }
 
-export default function StepRenderer({ step, stepIndex, onComplete }: StepRendererProps) {
+export default function StepRenderer({ step, onComplete }: StepRendererProps) {
   if (step.type === "explanation") {
     return <ExplanationStep content={step.content} onComplete={onComplete} />;
   }

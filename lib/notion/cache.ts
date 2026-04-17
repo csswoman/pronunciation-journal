@@ -1,4 +1,4 @@
-import { SubLesson, LessonTopic } from "./types";
+import type { SubLesson, LessonTopic } from "./types";
 
 const CACHE_DURATION_MS = 1000 * 60 * 60; // 1 hour
 

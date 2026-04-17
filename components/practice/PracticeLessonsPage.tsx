@@ -52,7 +52,7 @@ export default function PracticeLessonsPage() {
   const [dbLessons, setDbLessons] = useState<Lesson[]>([])
   const [isLoadingLessons, setIsLoadingLessons] = useState(true)
   const [progress, setProgress] = useState<UserSoundProgressWithSound[] | null>(null)
-  const [dayStreak, setDayStreak] = useState(0)
+  const [, setDayStreak] = useState(0)
   const [heroLesson, setHeroLesson] = useState<HeroLessonState>({ lesson: null, progress: 0 })
   const [gridKey, setGridKey] = useState(0)
 
@@ -134,10 +134,6 @@ export default function PracticeLessonsPage() {
     }
   }, [currentPage, totalPages])
 
-  const masteredCount = progress?.filter((p) => p.status === 'mastered').length ?? 0
-  const totalAttempts = progress?.reduce((sum, p) => sum + p.total_attempts, 0) ?? 0
-  const totalCorrect = progress?.reduce((sum, p) => sum + p.correct_answers, 0) ?? 0
-  const accuracy = totalAttempts > 0 ? (totalCorrect / totalAttempts) * 100 : 0
   const soundProgressMap = useMemo(() => {
     const map = new Map<number, number>()
     if (!progress) return map
