@@ -7,8 +7,12 @@ import { LessonNumber } from "@/components/courses/LessonNumber";
 export const revalidate = 3600;
 
 export async function generateStaticParams() {
-  const courses = await getCourses();
-  return courses.map((c) => ({ courseSlug: c.slug }));
+  try {
+    const courses = await getCourses();
+    return courses.map((c) => ({ courseSlug: c.slug }));
+  } catch {
+    return [];
+  }
 }
 
 interface Props {
