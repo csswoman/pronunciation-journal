@@ -3,7 +3,7 @@ import Link from "next/link";
 import { BookOpen } from "lucide-react";
 import { notFound } from "next/navigation";
 import { getCourseWithLessons, getCourses } from "@/lib/notion/courses";
-import type { SubLesson } from "@/lib/notion/types";
+import type { CourseSection, SubLesson } from "@/lib/notion/types";
 import { LessonNumber } from "@/components/courses/LessonNumber";
 import CourseHeroProgress from "@/components/courses/CourseHeroProgress";
 
@@ -111,18 +111,73 @@ export default async function CourseIndexPage({ params }: Props) {
           )}
         </header>
 
-        <ol className="divide-y divide-[var(--line-divider)]">
-          {course.lessons.map((lesson, index) => (
-            <LessonRow
-              key={lesson.id}
-              lesson={lesson}
-              index={index}
-              courseSlug={courseSlug}
-            />
-          ))}
-        </ol>
+        {course.sections.length > 0 ? (
+          <div className="divide-y divide-[var(--line-divider)]">
+            {course.sections.map((section) => (
+              <SectionGroup
+                key={section.id}
+                section={section}
+                courseSlug={courseSlug}
+                allLessons={course.lessons}
+              />
+            ))}
+          </div>
+        ) : (
+          <ol className="divide-y divide-[var(--line-divider)]">
+            {course.lessons.map((lesson, index) => (
+              <LessonRow
+                key={lesson.id}
+                lesson={lesson}
+                index={index}
+                courseSlug={courseSlug}
+              />
+            ))}
+          </ol>
+        )}
         </div>
       </div>
+    </div>
+  );
+}
+
+function SectionGroup({
+  section,
+  courseSlug,
+  allLessons,
+}: {
+  section: CourseSection;
+  courseSlug: string;
+  allLessons: SubLesson[];
+}) {
+  const lessonIdSet = new Set(section.lessonIds);
+  const sectionLessons = allLessons.filter((l) => lessonIdSet.has(l.id));
+  const globalOffset = allLessons.findIndex((l) => l.id === sectionLessons[0]?.id);
+
+  return (
+    <div>
+      {section.title && (
+        <div className="px-5 pt-5 pb-3">
+          {section.headingLevel === 1 ? (
+            <h2 className="text-base font-semibold text-[var(--deep-text)] tracking-tight">
+              {section.title}
+            </h2>
+          ) : (
+            <h3 className="text-sm font-medium text-[var(--text-secondary)] uppercase tracking-wider">
+              {section.title}
+            </h3>
+          )}
+        </div>
+      )}
+      <ol className="divide-y divide-[var(--line-divider)]">
+        {sectionLessons.map((lesson, i) => (
+          <LessonRow
+            key={lesson.id}
+            lesson={lesson}
+            index={globalOffset + i}
+            courseSlug={courseSlug}
+          />
+        ))}
+      </ol>
     </div>
   );
 }

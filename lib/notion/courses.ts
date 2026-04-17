@@ -67,8 +67,12 @@ async function fetchCourseWithLessons(slug: string): Promise<CourseWithLessons |
   if (!course) return null;
 
   const client = getNotionClient();
-  const lessons = await client.extractSubLessonsFromPage(course.notionPageId);
-  return { ...course, lessonCount: lessons.length, lessons };
+  const blocks = await client.getBlockChildrenRecursive(course.notionPageId);
+  const lessons = await client.extractSubLessonsFromPage(course.notionPageId, blocks);
+  const lessonIds = new Set(lessons.map((l) => l.id));
+  const sections = client.groupBlocksByHeading(blocks, lessonIds);
+
+  return { ...course, lessonCount: lessons.length, lessons, sections };
 }
 
 export const getCourseWithLessons = unstable_cache(

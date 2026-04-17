@@ -1,4 +1,4 @@
-import { NotionBlock, NotionPage, NotionRichText, SubLesson, LessonTopic } from "./types";
+import { CourseSection, NotionBlock, NotionPage, NotionRichText, SubLesson, LessonTopic } from "./types";
 
 const NOTION_API_VERSION = "2022-06-28";
 const NOTION_BASE_URL = "https://api.notion.com/v1";
@@ -120,12 +120,50 @@ class NotionClient {
   }
 
   /**
-   * Extract toggles from a Notion page and transform them into sub-lessons
+   * Groups raw blocks by nearest heading_1/heading_2, returning sections with
+   * their toggle-based sub-lessons. Headings without toggles create empty sections.
    */
-  async extractSubLessonsFromPage(pageId: string): Promise<SubLesson[]> {
+  groupBlocksByHeading(blocks: NotionBlock[], lessonIds: Set<string>): CourseSection[] {
+    const sections: CourseSection[] = [];
+    let current: CourseSection | null = null;
+
+    for (const block of blocks) {
+      const isH1 = block.type === "heading_1";
+      const isH2 = block.type === "heading_2";
+
+      if (isH1 || isH2) {
+        if (current) sections.push(current);
+        const richText = (block[block.type] as { rich_text?: NotionRichText[] })?.rich_text ?? [];
+        const title = richText.map((t) => t.plain_text || "").join("").trim();
+        current = {
+          id: block.id,
+          title: title || (isH1 ? "Section" : "Subsection"),
+          headingLevel: isH1 ? 1 : 2,
+          lessonIds: [],
+        };
+        continue;
+      }
+
+      if (this.isToggleBlock(block) && lessonIds.has(block.id)) {
+        if (!current) {
+          current = { id: "ungrouped", title: "", headingLevel: 1, lessonIds: [] };
+        }
+        current.lessonIds.push(block.id);
+      }
+    }
+
+    if (current) sections.push(current);
+    return sections;
+  }
+
+  /**
+   * Extract toggles from a Notion page and transform them into sub-lessons.
+   * Pass pre-fetched `blocks` to avoid a redundant API call.
+   */
+  async extractSubLessonsFromPage(pageId: string, preloadedBlocks?: NotionBlock[]): Promise<SubLesson[]> {
     try {
       const page = await this.getPageById(pageId);
-      const blocks = await this.getBlockChildrenRecursive(pageId);
+      const blocks = preloadedBlocks ?? await this.getBlockChildrenRecursive(pageId);
 
       const toggles = blocks.filter((block) => this.isToggleBlock(block));
 
