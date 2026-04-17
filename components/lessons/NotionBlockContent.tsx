@@ -61,13 +61,15 @@ const CALLOUT_EMOJI_VARIANT: Record<string, string> = {
 
 function renderRichText(richText: NotionRichText[] | undefined): React.ReactNode {
   if (!richText || richText.length === 0) return null;
+
+  const isIpaText = (text: string) =>
+    /^\/.*\/$/.test(text.trim()) && /[ɑɐɒæɜəɪʊʌθðŋʃʒʧʤˈˌːˑ]/.test(text);
+
   const nodes = richText.map((t, i) => {
     const text = t.plain_text || t.text?.content || "";
     if (!text) return null;
     const ann = (t.annotations || {}) as NotionAnnotations;
     const hasStyle = ann.bold || ann.italic || ann.strikethrough || ann.underline || ann.code || (ann.color && ann.color !== "default");
-    if (!hasStyle) return text;
-
     const colorClass = ann.color && ann.color !== "default" ? NOTION_COLOR_MAP[ann.color] || "" : "";
     const classes = [
       ann.bold ? "font-semibold" : "",
@@ -75,9 +77,12 @@ function renderRichText(richText: NotionRichText[] | undefined): React.ReactNode
       ann.strikethrough ? "line-through" : "",
       ann.underline ? "underline" : "",
       ann.code ? "md-inline-code" : "",
+      isIpaText(text) ? "md-ipa" : "",
       colorClass,
       colorClass.startsWith("md-bg-") ? "md-color-bg" : "",
     ].filter(Boolean).join(" ");
+
+    if (!hasStyle && !isIpaText(text)) return text;
 
     return <span key={i} className={classes}>{text}</span>;
   });
