@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getLessonInCourse, getCourses, getCourseWithLessons } from "@/lib/notion/courses";
-import { NotionBlockRenderer } from "@/components/lessons/NotionToggleList";
+import { NotionBlockRenderer } from "@/components/lessons/NotionBlockContent";
 import LessonCompleteButton from "@/components/courses/LessonCompleteButton";
 
 const illustrationFiles = [
