@@ -260,16 +260,22 @@ export const LESSON_CATEGORIES: { value: LessonCategory; label: string }[] = [
   { value: "general",    label: "General" },
 ];
 
+export type LessonSource = "manual" | "notion";
+
 export interface TheoryLesson {
   id: string;
-  user_id: string | null;       // null = system lesson
+  user_id: string | null;
   title: string;
   slug: string;
-  content: string;              // markdown
+  content: string;
   category: LessonCategory;
   cover_image_url: string | null;
   is_published: boolean;
   is_system: boolean;
+  source: LessonSource;
+  notion_page_id: string | null;
+  notion_last_edited: string | null;
+  notion_synced_at: string | null;
   created_at: string;
   updated_at: string;
 }

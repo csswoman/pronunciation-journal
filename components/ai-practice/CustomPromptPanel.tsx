@@ -39,7 +39,6 @@ export default function CustomPromptPanel({
       el.style.height = "auto";
       el.style.height = Math.min(el.scrollHeight, variant === "hero" ? 200 : 160) + "px";
     });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [prefill]);
 
   const handleSubmit = (e?: React.FormEvent) => {

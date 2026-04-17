@@ -54,7 +54,7 @@ const menuItems = [
   { name: "Progress", href: "/progress" },
   { name: "Decks", href: "/decks" },
   { name: "IPA Chart", href: "/ipa" },
-  { name: "Lessons", href: "/lessons" },
+  { name: "Courses", href: "/courses" },
   { name: "Profile", href: "/profile" },
 ];
 

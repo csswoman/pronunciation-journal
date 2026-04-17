@@ -48,8 +48,7 @@ const phonemeCache = new Map<string, string[]>();
 
 async function getDict(): Promise<Record<string, string>> {
   if (dictCache) return dictCache;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const mod: any = await import("cmu-pronouncing-dictionary");
+  const mod: { dictionary?: Record<string, string>; default?: Record<string, string> } = await import("cmu-pronouncing-dictionary");
   dictCache = (mod.dictionary ?? mod.default ?? mod) as Record<string, string>;
   return dictCache;
 }

@@ -3,8 +3,8 @@
 import { useState } from "react";
 import Image from "next/image";
 import { useAIPractice } from "@/hooks/useAIPractice";
-import Container from "@/components/layout/Container";
 import PageHeader from "@/components/layout/PageHeader";
+import PageLayout from "@/components/layout/PageLayout";
 import Card from "@/components/layout/Card";
 import Section from "@/components/layout/Section";
 import TemplateGrid from "@/components/ai-practice/TemplateGrid";
@@ -112,32 +112,29 @@ export default function AIPracticePage() {
   };
 
   return (
-    <div className="min-h-screen bg-page-bg">
-      {/* Header */}
+    <>
+    <PageLayout
+      hero={
+        <PageHeader
+          badge="AI Tutor"
+          title="Practice with"
+          subtitle="your AI coach"
+          description="Chat, learn, and get instant help in English."
+          variant="default"
+          illustration={
+            <Image
+              src="/illustrations/chat-ai.svg"
+              alt="AI chat illustration"
+              width={613}
+              height={349}
+              priority
+              className="w-[300px] xl:w-[340px] h-auto"
+            />
+          }
+        />
+      }
+    >
       <div>
-        <Container>
-          <PageHeader
-            badge="AI Tutor"
-            title="Practice with"
-            subtitle="your AI coach"
-            description="Chat, learn, and get instant help in English."
-            variant="default"
-            illustration={
-              <Image
-                src="/illustrations/chat-ai.svg"
-                alt="AI chat illustration"
-                width={613}
-                height={349}
-                priority
-                className="w-[300px] xl:w-[340px] h-auto"
-              />
-            }
-          />
-        </Container>
-      </div>
-
-      <main className="py-10">
-        <Container>
           {/* Error banner */}
           {error && (
             <div
@@ -467,17 +464,17 @@ export default function AIPracticePage() {
               )}
             </div>
           </div>
-        </Container>
-      </main>
+        </div>
+    </PageLayout>
 
-      {wordToSave && (
-        <SaveWordModal
-          word={wordToSave.word}
-          context={wordToSave.context}
-          onConfirm={confirmSaveWord}
-          onClose={closeSaveWordModal}
-        />
-      )}
-    </div>
+    {wordToSave && (
+      <SaveWordModal
+        word={wordToSave.word}
+        context={wordToSave.context}
+        onConfirm={confirmSaveWord}
+        onClose={closeSaveWordModal}
+      />
+    )}
+    </>
   );
 }

@@ -1,6 +1,12 @@
+'use client';
+
 import { isValidElement, type ReactNode } from "react";
+import Image from "next/image";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import 'react-notion-x/src/styles.css'
+import 'prismjs'
+import 'prismjs/themes/prism-tomorrow.css'
 
 type AdmonitionTone = "info" | "warning" | "highlight";
 
@@ -111,10 +117,15 @@ export default function LessonMarkdown({ content }: { content: string }) {
   const markdown = preprocessAdmonitions(content || "This lesson has no content yet.");
 
   return (
-    <div className="prose prose-neutral max-w-none prose-h2:mb-4 prose-h2:border-b-0 prose-h2:pb-0 prose-hr:hidden dark:prose-invert">
+    <div className="notion-renderer prose prose-neutral max-w-none prose-h2:mb-4 prose-h2:border-b-0 prose-h2:pb-0 prose-hr:hidden dark:prose-invert">
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         components={{
+          h1: ({ children }) => (
+            <h1 className="mt-12 mb-6 text-3xl font-bold text-neutral-900 dark:text-[var(--deep-text)]">
+              {children}
+            </h1>
+          ),
           h2: ({ children }) => (
             <h2 className="mt-10 mb-4 text-2xl font-bold text-neutral-900 dark:text-[var(--deep-text)]">
               {children}
@@ -124,6 +135,11 @@ export default function LessonMarkdown({ content }: { content: string }) {
             <h3 className="mt-8 mb-3 text-xl font-semibold text-neutral-900 dark:text-[var(--deep-text)]">
               {children}
             </h3>
+          ),
+          h4: ({ children }) => (
+            <h4 className="mt-6 mb-2 text-lg font-semibold text-neutral-900 dark:text-[var(--deep-text)]">
+              {children}
+            </h4>
           ),
           p: ({ children }) => {
             if (isAdmonitionMarker(children)) return null;
@@ -165,16 +181,44 @@ export default function LessonMarkdown({ content }: { content: string }) {
               </aside>
             );
           },
+          table: ({ children }) => (
+            <div className="my-6 overflow-x-auto rounded-xl border border-[var(--line-divider)]">
+              <table className="w-full text-sm">
+                {children}
+              </table>
+            </div>
+          ),
+          thead: ({ children }) => (
+            <thead className="bg-[var(--btn-plain-bg)] dark:bg-[var(--btn-regular-bg)]">
+              {children}
+            </thead>
+          ),
+          th: ({ children }) => (
+            <th className="border-b border-[var(--line-divider)] px-4 py-3 text-left font-semibold text-[var(--deep-text)]">
+              {children}
+            </th>
+          ),
+          td: ({ children }) => (
+            <td className="border-b border-[var(--line-divider)] px-4 py-3 text-[var(--text-secondary)]">
+              {children}
+            </td>
+          ),
           pre: ({ children }) => (
-            <pre className="my-6 overflow-x-auto rounded-xl bg-zinc-900 p-4 text-white">{children}</pre>
+            <pre className="my-6 overflow-x-auto rounded-xl bg-zinc-900 p-4 text-white dark:bg-zinc-950">
+              {children}
+            </pre>
           ),
           code: ({ children, className }) => {
             const isBlock = Boolean(className && className.includes("language-"));
             if (isBlock) {
-              return <code className={className}>{children}</code>;
+              return (
+                <code className="text-sm font-mono text-zinc-100">
+                  {children}
+                </code>
+              );
             }
             return (
-              <code className="rounded bg-zinc-100 px-1 py-0.5 text-sm text-zinc-800 dark:bg-zinc-800/80 dark:text-zinc-100">
+              <code className="rounded bg-zinc-100 px-1.5 py-0.5 text-sm text-zinc-800 dark:bg-zinc-800/80 dark:text-zinc-100">
                 {children}
               </code>
             );
@@ -183,11 +227,26 @@ export default function LessonMarkdown({ content }: { content: string }) {
             <a
               href={href}
               className="font-medium text-[var(--primary)] underline decoration-[color:color-mix(in_srgb,var(--primary)_40%,transparent)] underline-offset-4 transition-colors hover:text-[var(--btn-content)]"
+              target="_blank"
+              rel="noopener noreferrer"
             >
               {children}
             </a>
           ),
-          hr: () => null,
+          img: ({ src, alt }) => {
+            if (typeof src !== "string" || src.length === 0) return null;
+
+            return (
+              <Image
+                src={src}
+                alt={typeof alt === "string" ? alt : ""}
+                className="my-6 max-w-full rounded-xl shadow-md dark:shadow-xl"
+                width={400}
+                height={200}
+              />
+            );
+          },
+          hr: () => <hr className="my-8 border-[var(--line-divider)]" />,
         }}
       >
         {markdown}

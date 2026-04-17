@@ -1,0 +1,197 @@
+/* react-notion-x custom styles */
+
+.notion-renderer {
+  --notion-max-width: 100%;
+  --notion-font-size: 16px;
+  --notion-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+}
+
+/* Typography refinements */
+.notion-renderer h1,
+.notion-renderer h2,
+.notion-renderer h3,
+.notion-renderer h4,
+.notion-renderer h5,
+.notion-renderer h6 {
+  font-weight: 700;
+  line-height: 1.3;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+}
+
+.notion-renderer h1 {
+  font-size: 2em;
+}
+
+.notion-renderer h2 {
+  font-size: 1.75em;
+  border-bottom: 2px solid var(--line-divider);
+  padding-bottom: 0.5em;
+}
+
+.notion-renderer h3 {
+  font-size: 1.5em;
+}
+
+/* Paragraph spacing */
+.notion-renderer p {
+  margin: 1em 0;
+  line-height: 1.7;
+}
+
+/* List improvements */
+.notion-renderer ul,
+.notion-renderer ol {
+  margin: 1em 0;
+  padding-left: 2em;
+}
+
+.notion-renderer li {
+  margin: 0.5em 0;
+  line-height: 1.6;
+}
+
+.notion-renderer ul li:before {
+  color: var(--primary);
+  font-weight: 600;
+}
+
+/* Code blocks */
+.notion-renderer pre {
+  background: var(--card-bg);
+  border: 1px solid var(--line-divider);
+  border-radius: 0.5em;
+  padding: 1em;
+  overflow-x: auto;
+  line-height: 1.5;
+}
+
+.notion-renderer code {
+  font-family: 'Fira Code', 'Monaco', 'Courier New', monospace;
+  font-size: 0.9em;
+}
+
+.notion-renderer pre code {
+  background: none;
+  padding: 0;
+}
+
+/* Blockquotes and callouts */
+.notion-renderer blockquote {
+  border-left: 4px solid var(--primary);
+  padding-left: 1em;
+  margin: 1.5em 0;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+/* Tables */
+.notion-renderer table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5em 0;
+}
+
+.notion-renderer th {
+  background-color: var(--btn-regular-bg);
+  padding: 0.75em;
+  text-align: left;
+  font-weight: 600;
+  border-bottom: 2px solid var(--line-divider);
+}
+
+.notion-renderer td {
+  padding: 0.75em;
+  border-bottom: 1px solid var(--line-divider);
+}
+
+.notion-renderer tr:hover {
+  background-color: var(--btn-plain-bg-hover);
+}
+
+/* Links */
+.notion-renderer a {
+  color: var(--primary);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s ease;
+}
+
+.notion-renderer a:hover {
+  border-bottom-color: var(--primary);
+}
+
+/* Images */
+.notion-renderer img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5em;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.dark .notion-renderer img {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Horizontal rule */
+.notion-renderer hr {
+  border: none;
+  border-top: 2px solid var(--line-divider);
+  margin: 2em 0;
+}
+
+/* Admonitions/Callouts */
+.notion-renderer .admonition {
+  padding: 1em;
+  border-radius: 0.5em;
+  border-left: 4px solid;
+  margin: 1.5em 0;
+}
+
+.notion-renderer .admonition-note {
+  background-color: var(--btn-plain-bg);
+  border-left-color: var(--primary);
+}
+
+.notion-renderer .admonition-warning {
+  background-color: rgba(251, 146, 60, 0.1);
+  border-left-color: #f97316;
+}
+
+.notion-renderer .admonition-danger {
+  background-color: rgba(239, 68, 68, 0.1);
+  border-left-color: #ef4444;
+}
+
+.notion-renderer .admonition-success {
+  background-color: rgba(34, 197, 94, 0.1);
+  border-left-color: #22c55e;
+}
+
+/* Dark mode adjustments */
+.dark .notion-renderer {
+  color: var(--text-secondary);
+}
+
+.dark .notion-renderer h1,
+.dark .notion-renderer h2,
+.dark .notion-renderer h3,
+.dark .notion-renderer h4,
+.dark .notion-renderer h5,
+.dark .notion-renderer h6 {
+  color: var(--deep-text);
+}
+
+.dark .notion-renderer a:hover {
+  color: var(--btn-content);
+}
+
+.dark .notion-renderer table th {
+  background-color: var(--btn-regular-bg);
+  color: var(--deep-text);
+}
+
+.dark .notion-renderer code {
+  background-color: var(--btn-regular-bg);
+  color: var(--text-secondary);
+}

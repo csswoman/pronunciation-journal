@@ -368,6 +368,9 @@ deno_version = 2
 # [edge_runtime.secrets]
 # secret_key = "env(SECRET_VALUE)"
 
+[functions.sync-notion-lessons]
+verify_jwt = false
+
 [analytics]
 enabled = true
 port = 54327

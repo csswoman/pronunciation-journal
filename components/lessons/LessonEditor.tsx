@@ -93,6 +93,10 @@ export default function LessonEditor({ initialLesson }: LessonEditorProps) {
           content,
           cover_image_url: coverUrl || null,
           is_published: isPublished,
+          source: "manual",
+          notion_page_id: null,
+          notion_last_edited: null,
+          notion_synced_at: null,
         });
         router.push(`/lessons/${created.slug}`);
       }

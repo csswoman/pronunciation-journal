@@ -2,6 +2,10 @@ import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import type { TheoryLesson, TheoryLessonDraft } from "@/lib/types";
 
 const TABLE = "theory_lessons";
+type TheoryLessonInsert = Omit<TheoryLessonDraft, "id" | "created_at" | "updated_at">;
+type TheoryLessonUpdate = Partial<
+  Omit<TheoryLesson, "id" | "user_id" | "is_system" | "created_at" | "updated_at">
+>;
 
 // ── Read ──────────────────────────────────────────────────────────────────────
 
@@ -66,7 +70,7 @@ export async function getMyTheoryLessons(): Promise<TheoryLesson[]> {
 // ── Write ─────────────────────────────────────────────────────────────────────
 
 export async function createTheoryLesson(
-  draft: Omit<TheoryLessonDraft, "user_id" | "is_system">
+  draft: Omit<TheoryLessonDraft, "user_id" | "is_system" | "source" | "notion_page_id" | "notion_last_edited" | "notion_synced_at"> & Partial<Pick<TheoryLessonDraft, "source" | "notion_page_id" | "notion_last_edited" | "notion_synced_at">>
 ): Promise<TheoryLesson> {
   const supabase = getSupabaseBrowserClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -75,10 +79,14 @@ export async function createTheoryLesson(
   const { data, error } = await supabase
     .from(TABLE)
     .insert({
+      source: "manual",
+      notion_page_id: null,
+      notion_last_edited: null,
+      notion_synced_at: null,
       ...draft,
       user_id: user.id,
       is_system: false,
-    })
+    } satisfies TheoryLessonInsert)
     .select()
     .single();
 
@@ -88,7 +96,7 @@ export async function createTheoryLesson(
 
 export async function updateTheoryLesson(
   id: string,
-  patch: Partial<Omit<TheoryLesson, "id" | "user_id" | "is_system" | "created_at" | "updated_at">>
+  patch: TheoryLessonUpdate
 ): Promise<TheoryLesson> {
   const supabase = getSupabaseBrowserClient();
   const { data, error } = await supabase

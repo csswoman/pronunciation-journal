@@ -5,11 +5,11 @@ import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/components/AuthProvider'
 import LessonCard from '@/components/lesson/LessonCard'
-import Container from '@/components/layout/Container'
 import Section from '@/components/layout/Section'
+import PageLayout from '@/components/layout/PageLayout'
 import Grid from '@/components/layout/Grid'
 import Card from '@/components/layout/Card'
-import HeroHeader from '@/components/layout/HeroHeader'
+import PageHeader from '@/components/layout/PageHeader'
 import { getAttemptsByLessonId, getRecentAttempts, getUserStats } from '@/lib/db'
 import { getAllLessons } from '@/lib/lesson-generator'
 import { getAllDbLessons } from '@/lib/lesson-generator-db'
@@ -52,7 +52,7 @@ export default function PracticeLessonsPage() {
   const [dbLessons, setDbLessons] = useState<Lesson[]>([])
   const [isLoadingLessons, setIsLoadingLessons] = useState(true)
   const [progress, setProgress] = useState<UserSoundProgressWithSound[] | null>(null)
-  const [dayStreak, setDayStreak] = useState(0)
+  const [, setDayStreak] = useState(0)
   const [heroLesson, setHeroLesson] = useState<HeroLessonState>({ lesson: null, progress: 0 })
   const [gridKey, setGridKey] = useState(0)
 
@@ -134,10 +134,6 @@ export default function PracticeLessonsPage() {
     }
   }, [currentPage, totalPages])
 
-  const masteredCount = progress?.filter((p) => p.status === 'mastered').length ?? 0
-  const totalAttempts = progress?.reduce((sum, p) => sum + p.total_attempts, 0) ?? 0
-  const totalCorrect = progress?.reduce((sum, p) => sum + p.correct_answers, 0) ?? 0
-  const accuracy = totalAttempts > 0 ? (totalCorrect / totalAttempts) * 100 : 0
   const soundProgressMap = useMemo(() => {
     const map = new Map<number, number>()
     if (!progress) return map
@@ -236,11 +232,13 @@ export default function PracticeLessonsPage() {
   }
 
   return (
-    <div className="py-8 pb-24">
-      <Container>
-        <HeroHeader
+    <PageLayout
+      hero={
+        <PageHeader
+          badge="Sound Lab"
           title="Speak Better"
           subtitle="One Sound at a Time"
+          description="Short drills. Clear feedback. Real progress."
           progress={heroLesson.progress}
           lessonTitle={heroLesson.lesson?.title ?? 'Basic Greetings'}
           onContinue={handleResume}
@@ -255,10 +253,9 @@ export default function PracticeLessonsPage() {
             />
           }
         />
-      </Container>
-
-      <Container>
-        <Section spacing="lg" className="mt-8" title="Available Lessons">
+      }
+    >
+      <Section spacing="lg" title="Available Lessons">
           {/* Filters + Search */}
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6">
             <div className="flex gap-3 flex-wrap">
@@ -353,7 +350,6 @@ export default function PracticeLessonsPage() {
             </>
           )}
         </Section>
-      </Container>
-    </div>
+    </PageLayout>
   )
 }

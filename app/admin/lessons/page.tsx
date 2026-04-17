@@ -6,6 +6,9 @@ import Image from "next/image";
 import { getAllTheoryLessons, deleteTheoryLesson, updateTheoryLesson } from "@/lib/theory-lessons/queries";
 import { LESSON_CATEGORIES } from "@/lib/types";
 import type { TheoryLesson } from "@/lib/types";
+import { getSupabaseBrowserClient } from "@/lib/supabase/client";
+
+type SyncStatus = "idle" | "syncing" | "success" | "error";
 
 export default function AdminLessonsPage() {
   const [lessons, setLessons] = useState<TheoryLesson[]>([]);
@@ -13,6 +16,8 @@ export default function AdminLessonsPage() {
   const [error, setError] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [togglingId, setTogglingId] = useState<string | null>(null);
+  const [syncStatus, setSyncStatus] = useState<SyncStatus>("idle");
+  const [syncResult, setSyncResult] = useState<{ created: number; updated: number; skipped: number } | null>(null);
 
   const load = () => {
     setLoading(true);
@@ -51,6 +56,30 @@ export default function AdminLessonsPage() {
     }
   };
 
+  const handleNotionSync = async () => {
+    setSyncStatus("syncing");
+    setSyncResult(null);
+    try {
+      const supabase = getSupabaseBrowserClient();
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) throw new Error("Not authenticated");
+
+      const res = await fetch("/api/notion/sync", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${session.access_token}` },
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? "Sync failed");
+
+      setSyncResult(data);
+      setSyncStatus("success");
+      load();
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : "Notion sync failed");
+      setSyncStatus("error");
+    }
+  };
+
   const system = lessons.filter((l) => l.is_system);
   const user   = lessons.filter((l) => !l.is_system);
 
@@ -67,21 +96,48 @@ export default function AdminLessonsPage() {
               Manage system and user theory lessons
             </p>
           </div>
-          <Link
-            href="/lessons/new"
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-semibold"
-            style={{ background: "var(--primary)", color: "var(--accent-text)" }}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-            </svg>
-            New lesson
-          </Link>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleNotionSync}
+              disabled={syncStatus === "syncing"}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-semibold border border-[var(--line-divider)] transition-colors disabled:opacity-50"
+              style={{ background: "var(--card-bg)", color: "var(--deep-text)" }}
+              title="Sync lessons from Notion"
+            >
+              {syncStatus === "syncing" ? (
+                <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+              ) : (
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+              )}
+              {syncStatus === "syncing" ? "Syncing…" : "Sync Notion"}
+            </button>
+            <Link
+              href="/lessons/new"
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-semibold"
+              style={{ background: "var(--primary)", color: "var(--accent-text)" }}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+              </svg>
+              New lesson
+            </Link>
+          </div>
         </div>
 
         {error && (
-          <div className="rounded-xl p-3 mb-6 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 text-sm">
+          <div className="rounded-xl p-3 mb-4 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 text-sm">
             {error}
+          </div>
+        )}
+
+        {syncStatus === "success" && syncResult && (
+          <div className="rounded-xl p-3 mb-6 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 text-sm flex items-center justify-between">
+            <span>
+              Notion sync complete — {syncResult.created} created, {syncResult.updated} updated, {syncResult.skipped} skipped
+            </span>
+            <button onClick={() => setSyncStatus("idle")} className="ml-4 opacity-60 hover:opacity-100 text-lg leading-none">×</button>
           </div>
         )}
 
@@ -151,7 +207,7 @@ function LessonTable({
                 {/* Cover thumbnail */}
                 <div className="w-10 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-[var(--btn-regular-bg)] flex items-center justify-center relative">
                   {lesson.cover_image_url ? (
-                    <Image src={lesson.cover_image_url} alt="" fill className="object-cover" />
+                    <Image src={lesson.cover_image_url} alt="" fill sizes="40px" className="object-cover" />
                   ) : (
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 opacity-30" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.253v13m0-13C10.832 5.477 9.206 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.794 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.794 5 16.5 5s3.332.477 4.5 1.253v13C19.832 18.477 18.206 18 16.5 18s-3.332.477-4.5 1.253" />
@@ -163,8 +219,13 @@ function LessonTable({
                   <p className="text-sm font-semibold truncate" style={{ color: "var(--deep-text)" }}>
                     {lesson.title}
                   </p>
-                  <p className="text-xs" style={{ color: "var(--text-tertiary)" }}>
+                  <p className="text-xs flex items-center gap-1.5" style={{ color: "var(--text-tertiary)" }}>
                     {cat?.label ?? lesson.category} · /lessons/{lesson.slug}
+                    {lesson.source === "notion" && (
+                      <span className="inline-flex items-center gap-0.5 rounded px-1 py-0.5 text-[10px] font-semibold bg-neutral-100 dark:bg-neutral-800 text-neutral-500">
+                        N Notion
+                      </span>
+                    )}
                   </p>
                 </div>
 

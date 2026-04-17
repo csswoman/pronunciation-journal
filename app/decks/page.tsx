@@ -8,9 +8,9 @@ import { DeckCard } from "./components/DeckCard";
 import { StudyModal } from "./components/StudyModal";
 import { ManageDrawer } from "./components/ManageDrawer";
 import { Plus, X } from "lucide-react";
-import Container from "@/components/layout/Container";
 import Section from "@/components/layout/Section";
 import PageHeader from "@/components/layout/PageHeader";
+import PageLayout from "@/components/layout/PageLayout";
 import Card from "@/components/layout/Card";
 import type { Tables } from "@/lib/supabase/types";
 
@@ -195,8 +195,9 @@ export default function DecksPage() {
   };
 
   return (
-    <div className="py-8 pb-24">
-      <Container>
+    <>
+    <PageLayout
+      hero={
         <PageHeader
           badge="Vocabulary Builder"
           title="Decks"
@@ -218,10 +219,9 @@ export default function DecksPage() {
             />
           }
         />
-      </Container>
-
-      <Container>
-        <Section spacing="lg" className="mt-8">
+      }
+    >
+      <Section spacing="lg">
 
           {/* Loading State */}
           {loading ? (
@@ -266,27 +266,27 @@ export default function DecksPage() {
             </div>
           )}
         </Section>
-      </Container>
+    </PageLayout>
 
-      {/* Modals */}
-      {showCreate && (
-        <CreateDeckModal onClose={() => setShowCreate(false)} onCreated={handleCreated} />
-      )}
+    {/* Modals */}
+    {showCreate && (
+      <CreateDeckModal onClose={() => setShowCreate(false)} onCreated={handleCreated} />
+    )}
 
-      {activeStudyDeck && (
-        <StudyModal
-          deck={decks.find(d => d.id === activeStudyDeck)!}
-          onClose={() => setActiveStudyDeck(null)}
-        />
-      )}
+    {activeStudyDeck && (
+      <StudyModal
+        deck={decks.find(d => d.id === activeStudyDeck)!}
+        onClose={() => setActiveStudyDeck(null)}
+      />
+    )}
 
-      {activeManageDeck && (
-        <ManageDrawer
-          deck={decks.find(d => d.id === activeManageDeck)!}
-          onClose={() => setActiveManageDeck(null)}
-          onWordCountChange={count => handleWordCountChange(activeManageDeck, count)}
-        />
-      )}
-    </div>
+    {activeManageDeck && (
+      <ManageDrawer
+        deck={decks.find(d => d.id === activeManageDeck)!}
+        onClose={() => setActiveManageDeck(null)}
+        onWordCountChange={count => handleWordCountChange(activeManageDeck, count)}
+      />
+    )}
+    </>
   );
 }
