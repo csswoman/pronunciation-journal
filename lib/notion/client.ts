@@ -13,7 +13,7 @@ class NotionClient {
     this.token = token;
   }
 
-  private async fetch(url: string, options: RequestInit = {}, retries = 3) {
+  private async fetch(url: string, options: RequestInit = {}, retries = 5) {
     for (let attempt = 0; attempt <= retries; attempt++) {
       const response = await fetch(url, {
         ...options,
@@ -27,10 +27,12 @@ class NotionClient {
 
       if (response.ok) return response.json();
 
-      // Retry on 502/503/504 gateway errors
       const isRetryable = [429, 502, 503, 504].includes(response.status);
       if (isRetryable && attempt < retries) {
-        const delay = Math.min(1000 * 2 ** attempt, 8000);
+        const retryAfter = response.headers.get("Retry-After");
+        const delay = retryAfter
+          ? parseInt(retryAfter, 10) * 1000
+          : Math.min(1000 * 2 ** attempt, 8000);
         await new Promise((r) => setTimeout(r, delay));
         continue;
       }

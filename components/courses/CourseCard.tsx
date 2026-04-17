@@ -22,6 +22,20 @@ const levelConfig: Record<string, { label: string }> = {
 
 const coverHues = [250, 180, 310, 60, 25];
 
+const illustrationFiles = [
+  "/illustrations/lesson/brain.svg",
+  "/illustrations/lesson/headset.svg",
+  "/illustrations/lesson/jigsaw.svg",
+  "/illustrations/lesson/mic.svg",
+  "/illustrations/lesson/paper.svg",
+  "/illustrations/lesson/sound.svg",
+  "/illustrations/lesson/voice.svg",
+];
+
+function getCourseIllustration(title: string) {
+  return illustrationFiles[title.length % illustrationFiles.length];
+}
+
 function getProgress(totalLessons: number, completedLessons: number) {
   if (totalLessons <= 0) return 0;
   return Math.min(100, Math.round((completedLessons / totalLessons) * 100));
@@ -45,6 +59,7 @@ export default function CourseCard({ course, priority = false }: CourseCardProps
   const levelKey = (course.level ?? "basic").toLowerCase();
   const level = levelConfig[levelKey] ?? levelConfig.basic;
   const coverHue = getCoverHue(course.title);
+  const illustration = getCourseIllustration(course.title);
   const isCompleted = ctaLabel === "Completed";
   const isInProgress = completedLessons > 0 && !isCompleted;
 
@@ -70,7 +85,18 @@ export default function CourseCard({ course, priority = false }: CourseCardProps
             sizes="(max-width: 768px) 100vw, 33vw"
           />
         ) : (
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.12),transparent_60%)]" />
+          <>
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.12),transparent_60%)]" />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <Image
+                src={illustration}
+                alt=""
+                width={80}
+                height={80}
+                className="opacity-90 drop-shadow-sm transition-transform duration-300 group-hover:scale-105"
+              />
+            </div>
+          </>
         )}
       </div>
 
