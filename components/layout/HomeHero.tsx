@@ -10,7 +10,7 @@ export default function HomeHero() {
   return (
     <div
       className="bg-gradient-to-br from-[var(--card-bg)] to-[var(--btn-regular-bg)]
-        rounded-[20px_20px_0_0] px-8 lg:px-10 py-8
+        rounded-[15px_15px_0_0] px-8 lg:px-10 py-8
         grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-8 items-center"
     >
       <div>

@@ -26,7 +26,7 @@ export function SoundGrid({ progressList }: Props) {
 
   function handleClick(p: UserSoundProgressWithSound) {
     if (p.status === 'locked' || p.status === 'mastered') return
-    router.push(`/practice/${p.sound_id}`)
+    router.push(`/practice/sound/${p.sound_id}`)
   }
 
   return (

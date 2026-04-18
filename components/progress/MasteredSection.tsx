@@ -156,7 +156,7 @@ export default function MasteredSection({ mastered }: MasteredSectionProps) {
             {/* Boton repasar si toca */}
             {sound.dueForReview && (
               <Link
-                href={`/practice/${sound.sound_id}`}
+                href={`/practice/sound/${sound.sound_id}`}
                 className="flex-shrink-0 p-2 rounded-xl transition-opacity hover:opacity-70"
                 style={{
                   background: 'color-mix(in oklch, var(--primary) 15%, transparent)',
