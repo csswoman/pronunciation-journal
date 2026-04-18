@@ -304,7 +304,7 @@ export default function SoundPracticePage() {
       <SoundLobby
         soundIpa={sessionData.sound.ipa}
         soundName={sessionData.sound.example ?? sessionData.sound.ipa}
-        soundType={sessionData.sound.type}
+        soundType={sessionData.sound.type ?? undefined}
         mastery={mastery}
         hasPairs={sessionData.pairs.length > 0}
         onSelectStage={handleSelectStage}

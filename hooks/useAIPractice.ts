@@ -65,7 +65,7 @@ interface UseAIPracticeReturn extends UseAIPracticeState {
 }
 
 export function useAIPractice(): UseAIPracticeReturn {
-  const [phase, setPhase] = useState<Phase>("select");
+  const [phase, setPhase] = useState<Phase>("chat");
   const [selectedTemplate, setSelectedTemplate] = useState<AITemplateId | "custom" | null>(null);
   const [systemPrompt, setSystemPrompt] = useState("");
   const [messages, setMessages] = useState<AIMessage[]>([]);
@@ -297,7 +297,7 @@ export function useAIPractice(): UseAIPracticeReturn {
   }, []);
 
   const resetToSelect = useCallback(() => {
-    setPhase("select");
+    setPhase("chat");
     setSelectedTemplate(null);
     setMessages([]);
     setSystemPrompt("");
