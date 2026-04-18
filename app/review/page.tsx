@@ -1,5 +1,6 @@
 'use client'
 
+import Button from "@/components/ui/Button";
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/components/AuthProvider'
@@ -157,12 +158,12 @@ export default function ReviewPage() {
       <div className="min-h-screen flex items-center justify-center p-4">
         <div className="text-center space-y-3">
           <p className="text-red-500">{error}</p>
-          <button
+          <Button
             onClick={() => { setError(null); setSessionKey(k => k + 1) }}
             className="px-4 py-2 rounded-lg text-white" style={{backgroundColor: 'var(--primary)'}}
           >
             Retry
-          </button>
+          </Button>
         </div>
       </div>
     )
@@ -207,12 +208,12 @@ export default function ReviewPage() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center p-4">
       <div className="w-full max-w-md space-y-4">
-        <button
+        <Button
           onClick={() => router.back()}
           className="text-sm text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
         >
           ← Back
-        </button>
+        </Button>
 
         <ExerciseCard
           key={session.currentIndex}
@@ -228,3 +229,4 @@ export default function ReviewPage() {
     </div>
   )
 }
+

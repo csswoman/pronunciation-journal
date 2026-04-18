@@ -1,5 +1,6 @@
 'use client'
 
+import Button from "@/components/ui/Button";
 import { ChevronRight, Filter } from 'lucide-react'
 
 interface Exercise {
@@ -48,7 +49,7 @@ export default function JourneyToFluiditySection() {
         >
           Viaje a la fluidez
         </h2>
-        <button
+        <Button
           className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium"
           style={{
             background: 'var(--card-bg)',
@@ -58,12 +59,12 @@ export default function JourneyToFluiditySection() {
         >
           <Filter size={16} />
           Filtrar
-        </button>
+        </Button>
       </div>
 
       <div className="space-y-3">
         {exercises.map((exercise) => (
-          <button
+          <Button
             key={exercise.id}
             className="w-full rounded-2xl p-5 flex items-center justify-between group hover:shadow-md transition-shadow"
             style={{
@@ -138,9 +139,10 @@ export default function JourneyToFluiditySection() {
                 style={{ color: 'var(--text-secondary)' }}
               />
             </div>
-          </button>
+          </Button>
         ))}
       </div>
     </div>
   )
 }
+

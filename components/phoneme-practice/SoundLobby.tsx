@@ -1,4 +1,5 @@
 "use client";
+import Button from "@/components/ui/Button";
 
 import Link from "next/link";
 import Image from "next/image";
@@ -167,7 +168,7 @@ export function SoundLobby({
             const isNext = nextUnlocked?.id === stage.id;
 
             return (
-              <button
+              <Button
                 key={stage.id}
                 disabled={!unlocked}
                 onClick={() => unlocked && onSelectStage(stage.id)}
@@ -237,18 +238,18 @@ export function SoundLobby({
                 <p className="mt-2 text-[12px] font-medium text-[var(--text-tertiary)]">
                   {m.total === 0 ? "Not started" : `${m.pct}% mastery`}
                 </p>
-              </button>
+              </Button>
             );
           })}
         </div>
 
         {nextUnlocked ? (
-          <button
+          <Button
             onClick={() => onSelectStage(nextUnlocked.id)}
             className="btn-primary w-full rounded-[18px] px-5 py-4 text-[15px] font-semibold shadow-lg shadow-[color-mix(in_oklch,var(--primary)_18%,transparent)] transition-all duration-200 hover:-translate-y-0.5"
           >
             Continue — {nextUnlocked.title}
-          </button>
+          </Button>
         ) : overall >= 80 ? (
           <div className="rounded-[18px] border border-[color-mix(in_oklch,var(--admonitions-color-tip)_20%,transparent)] bg-[color-mix(in_oklch,var(--admonitions-color-tip)_8%,transparent)] px-4 py-4 text-center">
             <p className="text-[15px] font-semibold text-[var(--admonitions-color-tip)]">
@@ -259,12 +260,12 @@ export function SoundLobby({
             </p>
           </div>
         ) : (
-          <button
+          <Button
             onClick={() => onSelectStage("recognition")}
             className="btn-primary w-full rounded-[18px] px-5 py-4 text-[15px] font-semibold shadow-lg shadow-[color-mix(in_oklch,var(--primary)_18%,transparent)] transition-all duration-200 hover:-translate-y-0.5"
           >
             Start practice · Stage 1
-          </button>
+          </Button>
         )}
       </div>
     </section>
@@ -313,3 +314,4 @@ function LockIcon() {
     </svg>
   );
 }
+

@@ -1,3 +1,4 @@
+import Button from "@/components/ui/Button";
 import Link from "next/link";
 
 interface SectionHeaderProps {
@@ -17,8 +18,9 @@ export default function SectionHeader({ title, viewAll, viewAllHref }: SectionHe
       {viewAllHref ? (
         <Link href={viewAllHref} className={linkClass}>View all →</Link>
       ) : viewAll ? (
-        <button onClick={viewAll} className={linkClass}>View all →</button>
+        <Button onClick={viewAll} className={linkClass}>View all →</Button>
       ) : null}
     </div>
   );
 }
+

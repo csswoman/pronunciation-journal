@@ -1,5 +1,6 @@
 'use client'
 
+import Button from "@/components/ui/Button";
 import { useState } from 'react'
 import type { Exercise } from '@/lib/phoneme-practice/types'
 
@@ -80,26 +81,27 @@ export function PickWordExercise({ exercise, onSubmit }: Props) {
 
       <div className="grid grid-cols-2 gap-3">
         {exercise.options.map(option => (
-          <button
+          <Button
             key={option.id}
             className="p-4 rounded-xl border-2 text-center font-medium transition-all cursor-pointer select-none"
             style={getOptionStyle(option.id)}
             onClick={() => toggle(option.id)}
           >
             {option.label}
-          </button>
+          </Button>
         ))}
       </div>
 
       {!submitted && (
-        <button
+        <Button
           onClick={handleSubmit}
           disabled={selected.size === 0}
           className="btn-primary w-full py-3 rounded-xl font-semibold disabled:opacity-40"
         >
           Check
-        </button>
+        </Button>
       )}
     </div>
   )
 }
+

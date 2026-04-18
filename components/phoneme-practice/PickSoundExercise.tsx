@@ -1,5 +1,6 @@
 'use client'
 
+import Button from "@/components/ui/Button";
 import { useEffect, useState } from 'react'
 import { speak } from '@/lib/phoneme-practice/tts'
 import type { Exercise } from '@/lib/phoneme-practice/types'
@@ -59,7 +60,7 @@ export function PickSoundExercise({ exercise, onSubmit }: Props) {
         <p className="text-sm mb-3" style={{ color: 'var(--text-secondary)' }}>
           Which sound does this word contain?
         </p>
-        <button
+        <Button
           onClick={() => exercise.targetWord && speak(exercise.targetWord)}
           className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl font-bold text-2xl transition-colors"
           style={{
@@ -71,21 +72,22 @@ export function PickSoundExercise({ exercise, onSubmit }: Props) {
         >
           <span>🔊</span>
           {exercise.targetWord}
-        </button>
+        </Button>
       </div>
 
       <div className="grid grid-cols-2 gap-3">
         {exercise.options.map(option => (
-          <button
+          <Button
             key={option.id}
             className="p-4 rounded-xl border-2 text-center font-mono text-lg font-bold transition-all cursor-pointer"
             style={getOptionStyle(option.id)}
             onClick={() => handleSelect(option.id)}
           >
             {option.label}
-          </button>
+          </Button>
         ))}
       </div>
     </div>
   )
 }
+

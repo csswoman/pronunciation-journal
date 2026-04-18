@@ -1,5 +1,6 @@
 'use client'
 
+import Button from "@/components/ui/Button";
 import { useEffect, useRef, useState } from 'react'
 import { speak } from '@/lib/phoneme-practice/tts'
 import type { Exercise } from '@/lib/phoneme-practice/types'
@@ -74,7 +75,7 @@ export function DictationExercise({ exercise, onSubmit }: Props) {
         <p className="text-sm mb-3" style={{ color: 'var(--text-secondary)' }}>
           Listen and type what you hear
         </p>
-        <button
+        <Button
           onClick={() => exercise.targetWord && speak(exercise.targetWord)}
           className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl font-bold text-3xl transition-colors"
           style={{
@@ -85,7 +86,7 @@ export function DictationExercise({ exercise, onSubmit }: Props) {
           onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'var(--btn-regular-bg)')}
         >
           🔊
-        </button>
+        </Button>
         <p className="text-xs mt-2" style={{ color: 'var(--text-tertiary)' }}>Tap to replay</p>
       </div>
 
@@ -109,14 +110,15 @@ export function DictationExercise({ exercise, onSubmit }: Props) {
       </div>
 
       {!submitted && (
-        <button
+        <Button
           onClick={handleSubmit}
           disabled={!value.trim()}
           className="btn-primary w-full py-3 rounded-xl font-semibold disabled:opacity-40"
         >
           Check
-        </button>
+        </Button>
       )}
     </div>
   )
 }
+

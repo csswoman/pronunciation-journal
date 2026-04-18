@@ -1,4 +1,5 @@
 "use client";
+import Button from "@/components/ui/Button";
 
 import type { AITemplateId } from "@/lib/types";
 
@@ -73,7 +74,7 @@ export default function TemplateCard({ template, onSelect }: TemplateCardProps) 
   const ac = ACCENT_CLASSES[template.accent] ?? ACCENT_CLASSES.indigo;
 
   return (
-    <button
+    <Button
       onClick={() => onSelect(template.id)}
       className={`group w-full text-left p-5 bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 ${ac.border} hover:shadow-lg transition-all`}
     >
@@ -88,6 +89,7 @@ export default function TemplateCard({ template, onSelect }: TemplateCardProps) 
       <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
         {template.description}
       </p>
-    </button>
+    </Button>
   );
 }
+

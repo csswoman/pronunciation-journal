@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import ConversationIllustration from "@/components/illustrations/ConversationIllustration";
 import { Play, Sparkles } from "lucide-react";
+import Button from "@/components/ui/Button";
 
 export default function HomeHero() {
   const router = useRouter();
@@ -21,30 +22,22 @@ export default function HomeHero() {
           Keep going! You&apos;re doing great with your English journey.
         </p>
         <div className="flex items-center gap-3 flex-wrap">
-          <button
+          <Button
             onClick={() => router.push("/courses")}
-            className="inline-flex items-center gap-2 px-5 py-3 rounded-xl
-              text-sm font-semibold
-              bg-[var(--primary)] text-[var(--accent-text)]
-              hover:opacity-90 hover:-translate-y-px
-              shadow-[0_4px_16px_color-mix(in_oklch,var(--primary)_30%,transparent)]
-              transition-all duration-200"
+            size="lg"
+            className="shadow-[0_4px_16px_color-mix(in_oklch,var(--primary)_30%,transparent)]"
+            icon={<Play size={14} className="fill-current" />}
           >
-            <Play size={14} className="fill-current" />
             Continue Learning
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={() => router.push("/ai-practice")}
-            className="inline-flex items-center gap-2 px-5 py-3 rounded-xl
-              text-sm font-medium
-              bg-[var(--card-bg)] text-[var(--deep-text)]
-              border border-[var(--line-color)]
-              hover:bg-[var(--btn-plain-bg-hover)] hover:text-[var(--primary)]
-              transition-all duration-200"
+            variant="secondary"
+            size="lg"
+            icon={<Sparkles size={14} />}
           >
-            <Sparkles size={14} />
             Practice with AI
-          </button>
+          </Button>
         </div>
       </div>
 

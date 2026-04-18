@@ -1,4 +1,5 @@
 "use client";
+import Button from "@/components/ui/Button";
 
 import { useOKLCHTheme } from "@/hooks/useOKLCHTheme";
 import { useEffect, useState } from "react";
@@ -46,7 +47,7 @@ export default function ThemeColorController({ isExpanded }: ThemeColorControlle
                   Theme Color
                 </span>
               )}
-              <button
+              <Button
                 onClick={resetHue}
                 className="w-6 h-6 flex items-center justify-center rounded-md transition-all hover:opacity-80"
                 style={{ backgroundColor: 'var(--bg-tertiary)' }}
@@ -54,7 +55,7 @@ export default function ThemeColorController({ isExpanded }: ThemeColorControlle
                 aria-label="Reset theme color"
               >
                 <span style={{ color: 'var(--text-primary)', fontSize: '14px' }}>↺</span>
-              </button>
+              </Button>
             </div>
             {isExpanded && (
               <div
@@ -79,7 +80,7 @@ export default function ThemeColorController({ isExpanded }: ThemeColorControlle
           />
 
           {/* Dark Mode Toggle */}
-          <button
+          <Button
             onClick={toggleMode}
             className="w-full p-2 rounded-md transition-all hover:opacity-80"
             style={{ backgroundColor: 'var(--bg-tertiary)' }}
@@ -113,7 +114,7 @@ export default function ThemeColorController({ isExpanded }: ThemeColorControlle
                 <path strokeLinecap="round" strokeLinejoin="round" d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z" />
               </svg>
             )}
-          </button>
+          </Button>
 
           {/* Collapsed View - Just show color dot */}
           {!isExpanded && (
@@ -134,3 +135,4 @@ export default function ThemeColorController({ isExpanded }: ThemeColorControlle
     </div>
   );
 }
+

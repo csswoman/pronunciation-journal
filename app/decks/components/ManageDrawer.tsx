@@ -1,4 +1,5 @@
 "use client";
+import Button from "@/components/ui/Button";
 
 import { useEffect, useState, useCallback } from "react";
 import { X, Trash2, Plus, Settings2 } from "lucide-react";
@@ -176,12 +177,12 @@ export function ManageDrawer({ deck, onClose, onWordCountChange }: ManageDrawerP
         {/* Header */}
         <div className="sticky top-0 z-10 flex items-center justify-between px-4 py-3 border-b border-[var(--line-divider)] bg-[var(--card-bg)]">
           <h2 className="font-semibold text-[var(--deep-text)]">Manage Deck</h2>
-          <button
+          <Button
             onClick={onClose}
             className="p-1.5 rounded-lg hover:bg-[var(--btn-plain-bg-hover)] text-[var(--text-tertiary)] transition-colors"
           >
             <X size={20} />
-          </button>
+          </Button>
         </div>
 
         <div className="p-4 space-y-4">
@@ -237,19 +238,19 @@ export function ManageDrawer({ deck, onClose, onWordCountChange }: ManageDrawerP
                       )}
                     </div>
                     <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <button
+                      <Button
                         onClick={() => handleEditEntry(entry)}
                         className="p-1.5 rounded-lg text-[var(--text-tertiary)] hover:text-[var(--primary)] hover:bg-[var(--btn-plain-bg-hover)] transition-colors"
                         title="Edit phrases"
                       >
                         <Settings2 size={16} />
-                      </button>
-                      <button
+                      </Button>
+                      <Button
                         onClick={() => handleRemoveWord(entry.id)}
                         className="p-1.5 rounded-lg text-[var(--text-tertiary)] hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
                       >
                         <Trash2 size={16} />
-                      </button>
+                      </Button>
                     </div>
                   </div>
                 ))}
@@ -273,24 +274,24 @@ export function ManageDrawer({ deck, onClose, onWordCountChange }: ManageDrawerP
               rows={2}
               className="w-full px-3 py-2 rounded-xl bg-[var(--btn-regular-bg)] border border-[var(--line-divider)] text-sm text-[var(--deep-text)] placeholder:text-[var(--text-tertiary)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/40 resize-none"
             />
-            <button
+            <Button
               onClick={handleAddWord}
               disabled={!manualWord.trim() || addingWord}
               className="w-full px-3 py-2 rounded-xl text-sm font-semibold bg-[var(--primary)] text-white hover:opacity-90 disabled:opacity-50 transition-colors flex items-center justify-center gap-1"
             >
               <Plus size={16} />
               Add
-            </button>
+            </Button>
           </div>
 
           {/* AI Suggestions */}
           <div className="pt-2">
-            <button
+            <Button
               onClick={() => setShowSuggest(!showSuggest)}
               className="text-xs font-semibold text-[var(--primary)] hover:opacity-80 transition-opacity"
             >
               {showSuggest ? "Hide" : "Show"} AI suggestions
-            </button>
+            </Button>
             {showSuggest && (
               <div className="mt-3">
                 <GeminiSuggestPanel
@@ -318,18 +319,18 @@ export function ManageDrawer({ deck, onClose, onWordCountChange }: ManageDrawerP
               className="w-full px-3 py-2 rounded-xl bg-[var(--btn-regular-bg)] border border-[var(--line-divider)] text-sm text-[var(--deep-text)] placeholder:text-[var(--text-tertiary)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/40 resize-none mb-4"
             />
             <div className="flex gap-2 justify-end">
-              <button
+              <Button
                 onClick={handleCancelEdit}
                 className="px-4 py-2 rounded-xl text-sm font-semibold text-[var(--text-secondary)] hover:bg-[var(--btn-plain-bg-hover)] transition-colors"
               >
                 Cancel
-              </button>
-              <button
+              </Button>
+              <Button
                 onClick={handleSaveEdit}
                 className="px-4 py-2 rounded-xl text-sm font-semibold bg-[var(--primary)] text-white hover:opacity-90 transition-colors"
               >
                 Save
-              </button>
+              </Button>
             </div>
           </div>
         </div>
@@ -337,3 +338,4 @@ export function ManageDrawer({ deck, onClose, onWordCountChange }: ManageDrawerP
     </>
   );
 }
+

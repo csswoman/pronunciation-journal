@@ -1,4 +1,5 @@
 "use client";
+import Button from "@/components/ui/Button";
 
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
@@ -269,18 +270,18 @@ export default function ProfileSettings() {
               </div>
             </div>
             <div className="flex gap-3">
-              <button
+              <Button
                 onClick={handleCropCancel}
                 className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-sm"
               >
                 Cancelar
-              </button>
-              <button
+              </Button>
+              <Button
                 onClick={handleCropConfirm}
                 className="flex-1 px-4 py-2 rounded-lg font-medium accent-button transition-colors text-sm"
               >
                 Guardar
-              </button>
+              </Button>
             </div>
           </div>
         </div>
@@ -308,7 +309,7 @@ export default function ProfileSettings() {
           <span className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">
             Perfil
           </span>
-          <button
+          <Button
             onClick={() => setIsEditingName((v) => !v)}
             className="flex items-center gap-1.5 text-sm px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
           >
@@ -316,7 +317,7 @@ export default function ProfileSettings() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
             </svg>
             Editar
-          </button>
+          </Button>
         </div>
 
         {/* Avatar + info */}
@@ -363,20 +364,20 @@ export default function ProfileSettings() {
                 autoFocus
                 className="flex-1 px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:outline-none"
               />
-              <button
+              <Button
                 type="submit"
                 disabled={isSavingName}
                 className="px-4 py-2 text-sm rounded-lg font-medium accent-button transition-colors"
               >
                 {isSavingName ? "..." : "Guardar"}
-              </button>
-              <button
+              </Button>
+              <Button
                 type="button"
                 onClick={handleCancelName}
                 className="px-3 py-2 text-sm rounded-lg border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
               >
                 Cancelar
-              </button>
+              </Button>
             </div>
           </form>
         )}
@@ -389,7 +390,7 @@ export default function ProfileSettings() {
             Contraseña
           </span>
           {!isEditingPassword && (
-            <button
+            <Button
               onClick={() => setIsEditingPassword(true)}
               className="flex items-center gap-1.5 text-sm px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
             >
@@ -397,7 +398,7 @@ export default function ProfileSettings() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
               </svg>
               Editar
-            </button>
+            </Button>
           )}
         </div>
 
@@ -431,20 +432,20 @@ export default function ProfileSettings() {
               />
             </div>
             <div className="flex gap-2 pt-1">
-              <button
+              <Button
                 type="submit"
                 disabled={isSavingPassword}
                 className="flex-1 px-4 py-2 text-sm rounded-lg font-medium accent-button transition-colors"
               >
                 {isSavingPassword ? "Guardando..." : "Cambiar contraseña"}
-              </button>
-              <button
+              </Button>
+              <Button
                 type="button"
                 onClick={handleCancelPassword}
                 className="px-3 py-2 text-sm rounded-lg border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
               >
                 Cancelar
-              </button>
+              </Button>
             </div>
           </form>
         )}
@@ -452,3 +453,4 @@ export default function ProfileSettings() {
     </div>
   );
 }
+

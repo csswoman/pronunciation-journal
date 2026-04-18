@@ -1,4 +1,5 @@
 "use client";
+import Button from "@/components/ui/Button";
 
 import { useState, useEffect, useRef } from "react";
 import { Entry, Difficulty, Meaning } from "@/lib/types";
@@ -220,7 +221,7 @@ export default function EntryForm({ onSave, onCancel }: EntryFormProps) {
               placeholder="Enter word"
               required
             />
-            <button
+            <Button
               type="button"
               onClick={() => handleFetchPronunciation()}
               disabled={isLoading || !word.trim()}
@@ -237,13 +238,13 @@ export default function EntryForm({ onSave, onCancel }: EntryFormProps) {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
               )}
-            </button>
+            </Button>
             
             {/* Suggestions dropdown */}
             {showSuggestions && suggestions.length > 0 && (
               <div className="absolute z-10 w-full mt-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg max-h-60 overflow-y-auto">
                 {suggestions.map((suggestion, index) => (
-                  <button
+                  <Button
                     key={index}
                     type="button"
                     onClick={() => handleSuggestionClick(suggestion)}
@@ -278,7 +279,7 @@ export default function EntryForm({ onSave, onCancel }: EntryFormProps) {
                         </span>
                       )}
                     </div>
-                  </button>
+                  </Button>
                 ))}
               </div>
             )}
@@ -307,7 +308,7 @@ export default function EntryForm({ onSave, onCancel }: EntryFormProps) {
               />
             )}
             {audioUrl && (
-              <button
+              <Button
                 type="button"
                 onClick={() => playAudio(audioUrl, { showAlerts: false })}
                 className="p-2 bg-blue-100 dark:bg-blue-900 hover:bg-blue-200 dark:hover:bg-blue-800 rounded-full transition-colors flex-shrink-0"
@@ -326,7 +327,7 @@ export default function EntryForm({ onSave, onCancel }: EntryFormProps) {
                     clipRule="evenodd"
                   />
                 </svg>
-              </button>
+              </Button>
             )}
           </div>
         </div>
@@ -371,21 +372,21 @@ export default function EntryForm({ onSave, onCancel }: EntryFormProps) {
       )}
 
       <div className="flex items-center gap-2">
-        <button
+        <Button
           type="button"
           onClick={() => setShowDetails(!showDetails)}
           className="px-4 py-2 text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-700 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors"
         >
           {showDetails ? "Hide details" : "Add details"}
-        </button>
+        </Button>
         <div className="relative group">
-          <button
+          <Button
             type="button"
             className="w-6 h-6 rounded-full bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-200 text-xs font-bold hover:bg-gray-400 dark:hover:bg-gray-500 focus:outline-none transition-colors flex items-center justify-center"
             aria-label="Help"
           >
             ?
-          </button>
+          </Button>
           <div className="absolute left-0 top-full mt-2 w-64 p-2 bg-gray-800 dark:bg-gray-900 text-white text-xs rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
             Aquí se puede añadir notas de tus palabras
             <div className="absolute bottom-full left-4 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-800 dark:border-t-gray-900"></div>
@@ -468,23 +469,24 @@ export default function EntryForm({ onSave, onCancel }: EntryFormProps) {
       )}
 
       <div className="flex gap-3 pt-4">
-        <button
+        <Button
           type="submit"
           className="flex-1 px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 accent-button"
         >
           Save Entry
-        </button>
+        </Button>
         {onCancel && (
-          <button
+          <Button
             type="button"
             onClick={onCancel}
             className="px-4 py-2 bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-md hover:bg-gray-400 dark:hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors"
           >
             Cancel
-          </button>
+          </Button>
         )}
       </div>
     </form>
   );
 }
+
 

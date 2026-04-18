@@ -1,4 +1,5 @@
 "use client";
+import Button from "@/components/ui/Button";
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
@@ -202,11 +203,11 @@ function SoundsTab({ form, setForm }: { form: SoundForm; setForm: (f: SoundForm)
           { value: "1", label: "1 — Easy" }, { value: "2", label: "2 — Medium" }, { value: "3", label: "3 — Hard" },
         ]} />
         <div className="col-span-full flex items-center gap-4">
-          <button type="submit" disabled={saving || !form.ipa.trim()}
+          <Button type="submit" disabled={saving || !form.ipa.trim()}
             className="px-4 py-2 rounded-lg text-sm font-medium disabled:opacity-50"
             style={{ backgroundColor: "var(--primary)", color: "var(--accent-text)" }}>
             {saving ? "Saving…" : "Add sound"}
-          </button>
+          </Button>
           {status && <StatusBadge ok={status.ok} message={status.msg} />}
         </div>
       </form>
@@ -276,11 +277,11 @@ function WordsTab({ form, setForm }: { form: WordForm; setForm: (f: WordForm) =>
           { value: "1", label: "1 — Easy" }, { value: "2", label: "2 — Medium" }, { value: "3", label: "3 — Hard" },
         ]} />
         <div className="col-span-full flex items-center gap-4">
-          <button type="submit" disabled={saving || !form.word.trim()}
+          <Button type="submit" disabled={saving || !form.word.trim()}
             className="px-4 py-2 rounded-lg text-sm font-medium disabled:opacity-50"
             style={{ backgroundColor: "var(--primary)", color: "var(--accent-text)" }}>
             {saving ? "Saving…" : "Add word"}
-          </button>
+          </Button>
           {status && <StatusBadge ok={status.ok} message={status.msg} />}
         </div>
       </form>
@@ -381,11 +382,11 @@ function PatternsTab({
         ]} />
         <Input label="Sound focus (IPA)" value={patternForm.focus} onChange={(v) => setPatternForm({ ...patternForm, focus: v })} placeholder="oʊ" />
         <div className="col-span-full flex items-center gap-4">
-          <button type="submit" disabled={pSaving || !patternForm.pattern.trim()}
+          <Button type="submit" disabled={pSaving || !patternForm.pattern.trim()}
             className="px-4 py-2 rounded-lg text-sm font-medium disabled:opacity-50"
             style={{ backgroundColor: "var(--primary)", color: "var(--accent-text)" }}>
             {pSaving ? "Saving…" : "Add pattern"}
-          </button>
+          </Button>
           {pStatus && <StatusBadge ok={pStatus.ok} message={pStatus.msg} />}
         </div>
       </form>
@@ -396,11 +397,11 @@ function PatternsTab({
         <Input label="Word" value={patternWordForm.word} onChange={(v) => setPatternWordForm({ ...patternWordForm, word: v })} placeholder="though" required />
         <Input label="IPA" value={patternWordForm.ipa} onChange={(v) => setPatternWordForm({ ...patternWordForm, ipa: v })} placeholder="/ðoʊ/" />
         <div className="col-span-full flex items-center gap-4">
-          <button type="submit" disabled={pwSaving || !patternWordForm.patternId || !patternWordForm.word.trim()}
+          <Button type="submit" disabled={pwSaving || !patternWordForm.patternId || !patternWordForm.word.trim()}
             className="px-4 py-2 rounded-lg text-sm font-medium disabled:opacity-50"
             style={{ backgroundColor: "var(--primary)", color: "var(--accent-text)" }}>
             {pwSaving ? "Saving…" : "Add word"}
-          </button>
+          </Button>
           {pwStatus && <StatusBadge ok={pwStatus.ok} message={pwStatus.msg} />}
         </div>
       </form>
@@ -491,11 +492,11 @@ function MinimalPairsTab({ form, setForm }: { form: MinimalPairForm; setForm: (f
         <Input label="Contrast IPA A" value={form.contrastIpaA} onChange={(v) => setForm({ ...form, contrastIpaA: v })} placeholder="θ" />
         <Input label="Contrast IPA B" value={form.contrastIpaB} onChange={(v) => setForm({ ...form, contrastIpaB: v })} placeholder="s" />
         <div className="col-span-full flex items-center gap-4">
-          <button type="submit" disabled={saving || !form.wordA.trim() || !form.wordB.trim()}
+          <Button type="submit" disabled={saving || !form.wordA.trim() || !form.wordB.trim()}
             className="px-4 py-2 rounded-lg text-sm font-medium disabled:opacity-50"
             style={{ backgroundColor: "var(--primary)", color: "var(--accent-text)" }}>
             {saving ? "Saving…" : "Add pair"}
-          </button>
+          </Button>
           <p className="text-xs" style={{ color: "var(--text-tertiary)" }}>★ Required for exercises</p>
           {status && <StatusBadge ok={status.ok} message={status.msg} />}
         </div>
@@ -635,13 +636,13 @@ Keep responses concise. You can suggest multiple items, each in its own \`\`\`ap
             <pre className="text-xs overflow-x-auto" style={{ color: "var(--text-primary)" }}>
               {JSON.stringify(block.data, null, 2)}
             </pre>
-            <button
+            <Button
               onClick={() => onApply(block)}
               className="self-start px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors"
               style={{ backgroundColor: "var(--primary)", color: "var(--accent-text)" }}
             >
               Apply to form
-            </button>
+            </Button>
           </div>
         ))}
       </div>
@@ -651,7 +652,7 @@ Keep responses concise. You can suggest multiple items, each in its own \`\`\`ap
   return (
     <>
       {/* Floating button */}
-      <button
+      <Button
         onClick={() => setOpen((v) => !v)}
         className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full shadow-lg flex items-center justify-center transition-transform hover:scale-105"
         style={{ backgroundColor: "var(--primary)", color: "var(--accent-text)" }}
@@ -666,7 +667,7 @@ Keep responses concise. You can suggest multiple items, each in its own \`\`\`ap
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
           </svg>
         )}
-      </button>
+      </Button>
 
       {/* Chat panel */}
       {open && (
@@ -716,14 +717,14 @@ Keep responses concise. You can suggest multiple items, each in its own \`\`\`ap
               className="flex-1 px-3 py-2 rounded-lg text-sm border focus:outline-none focus:ring-2"
               style={{ backgroundColor: "var(--surface)", borderColor: "var(--border)", color: "var(--text-primary)" }}
             />
-            <button
+            <Button
               onClick={send}
               disabled={loading || !input.trim()}
               className="px-3 py-2 rounded-lg text-sm font-medium disabled:opacity-40"
               style={{ backgroundColor: "var(--primary)", color: "var(--accent-text)" }}
             >
               Send
-            </button>
+            </Button>
           </div>
         </div>
       )}
@@ -795,14 +796,14 @@ export default function SeedPage() {
       <main className="max-w-5xl mx-auto px-4 pb-16">
         <div className="flex gap-1 mb-8 border-b" style={{ borderColor: "var(--border)" }}>
           {TABS.map((t) => (
-            <button key={t.id} onClick={() => setTab(t.id)}
+            <Button key={t.id} onClick={() => setTab(t.id)}
               className="px-4 py-2.5 text-sm font-medium transition-colors relative"
               style={{
                 color: tab === t.id ? "var(--primary)" : "var(--text-secondary)",
                 borderBottom: tab === t.id ? "2px solid var(--primary)" : "2px solid transparent",
               }}>
               {t.label}
-            </button>
+            </Button>
           ))}
         </div>
 
@@ -816,3 +817,4 @@ export default function SeedPage() {
     </div>
   );
 }
+

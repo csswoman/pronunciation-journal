@@ -1,4 +1,5 @@
 "use client";
+import Button from "@/components/ui/Button";
 
 import { useState, useEffect } from "react";
 import { Entry, Meaning } from "@/lib/types";
@@ -74,7 +75,7 @@ export default function ApiWordModal({ word, onClose, onSave }: ApiWordModalProp
               {word}
             </h2>
             {data?.audioUrl && (
-              <button
+              <Button
                 onClick={() => playAudio(data.audioUrl!, { showAlerts: false })}
                 className="p-3 bg-blue-100 dark:bg-blue-900 hover:bg-blue-200 dark:hover:bg-blue-800 rounded-full transition-colors"
                 title="Play pronunciation"
@@ -92,10 +93,10 @@ export default function ApiWordModal({ word, onClose, onSave }: ApiWordModalProp
                     clipRule="evenodd"
                   />
                 </svg>
-              </button>
+              </Button>
             )}
           </div>
-          <button
+          <Button
             onClick={onClose}
             className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
             aria-label="Close"
@@ -114,7 +115,7 @@ export default function ApiWordModal({ word, onClose, onSave }: ApiWordModalProp
                 d="M6 18L18 6M6 6l12 12"
               />
             </svg>
-          </button>
+          </Button>
         </div>
 
         <div className="p-6 space-y-6">
@@ -193,12 +194,12 @@ export default function ApiWordModal({ word, onClose, onSave }: ApiWordModalProp
 
               {/* Add word button */}
               <div className="pt-6 border-t border-gray-200 dark:border-gray-700">
-                <button
+                <Button
                   onClick={handleAddWord}
                   className="w-full px-6 py-3 rounded-lg font-medium accent-button"
                 >
                   Agregar palabra a mi vocabulario
-                </button>
+                </Button>
               </div>
             </>
           ) : null}
@@ -207,4 +208,5 @@ export default function ApiWordModal({ word, onClose, onSave }: ApiWordModalProp
     </div>
   );
 }
+
 

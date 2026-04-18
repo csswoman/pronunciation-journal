@@ -2,6 +2,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import type { Lesson } from '@/lib/types'
 import type { DifficultyMode } from './lesson-lobby-types'
+import Button from '@/components/ui/Button'
 
 interface Props {
   lesson: Lesson
@@ -28,12 +29,7 @@ export function LessonHero({ lesson, totalWords, chunkLabel, overall, diffMode, 
             {backHref && (
               <Link
                 href={backHref}
-                className="flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-[13px] font-medium transition-all duration-200 hover:-translate-x-0.5"
-                style={{
-                  borderColor: 'var(--line-divider)',
-                  color: 'var(--text-secondary)',
-                  background: 'color-mix(in_oklch,var(--card-bg)_80%,transparent)',
-                }}
+                className="inline-flex items-center gap-1.5 rounded-lg border border-[var(--line-divider)] bg-[var(--btn-regular-bg)] px-3 py-1.5 text-[13px] font-medium text-[var(--text-secondary)] transition-all duration-200 hover:-translate-x-0.5 hover:bg-[var(--btn-plain-bg-hover)]"
               >
                 <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
                   <path d="M10 12L6 8l4-4" />
@@ -157,26 +153,20 @@ function DifficultyToggle({ value, onChange }: DifficultyToggleProps) {
         Difficulty
       </p>
       <div className="inline-flex rounded-2xl border border-[var(--line-divider)] bg-[color-mix(in_oklch,var(--card-bg)_70%,transparent)] p-1 text-sm font-semibold shadow-sm backdrop-blur-sm">
-        <button
+        <Button
           onClick={() => onChange('chill')}
-          className="rounded-xl px-4 py-2 transition-all duration-200"
-          style={{
-            background: value === 'chill' ? 'var(--btn-regular-bg)' : 'transparent',
-            color: value === 'chill' ? 'var(--deep-text)' : 'var(--text-secondary)',
-          }}
+          variant={value === 'chill' ? 'secondary' : 'ghost'}
+          size="sm"
         >
           Chill
-        </button>
-        <button
+        </Button>
+        <Button
           onClick={() => onChange('master')}
-          className="rounded-xl px-4 py-2 transition-all duration-200"
-          style={{
-            background: value === 'master' ? 'var(--primary)' : 'transparent',
-            color: value === 'master' ? 'var(--accent-text)' : 'var(--text-secondary)',
-          }}
+          variant={value === 'master' ? 'primary' : 'ghost'}
+          size="sm"
         >
           Master
-        </button>
+        </Button>
       </div>
     </div>
   )

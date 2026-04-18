@@ -1,4 +1,5 @@
 "use client";
+import Button from "@/components/ui/Button";
 
 import { useState, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
@@ -210,17 +211,17 @@ export default function LessonEditor({ initialLesson }: LessonEditorProps) {
             {coverUrl ? (
               <div className="relative rounded-xl overflow-hidden h-40">
                 <Image src={coverUrl} alt="cover" fill className="object-cover" />
-                <button
+                <Button
                   onClick={() => setCoverUrl("")}
                   className="absolute top-2 right-2 p-1.5 rounded-lg bg-black/50 text-white hover:bg-black/70 transition-colors"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                   </svg>
-                </button>
+                </Button>
               </div>
             ) : (
-              <button
+              <Button
                 onClick={() => fileInputRef.current?.click()}
                 disabled={uploadingCover}
                 className="w-full h-28 rounded-xl border-2 border-dashed border-[var(--line-divider)] flex flex-col items-center justify-center gap-2 text-sm hover:border-[var(--primary)] transition-colors disabled:opacity-50"
@@ -236,7 +237,7 @@ export default function LessonEditor({ initialLesson }: LessonEditorProps) {
                     <span>Click to upload cover</span>
                   </>
                 )}
-              </button>
+              </Button>
             )}
           </div>
 
@@ -264,14 +265,14 @@ export default function LessonEditor({ initialLesson }: LessonEditorProps) {
 
           {/* Actions */}
           <div className="flex items-center gap-3 pt-2">
-            <button
+            <Button
               onClick={handleSave}
               disabled={saving || uploadingCover}
               className="px-6 py-2.5 rounded-xl text-sm font-semibold transition-colors disabled:opacity-50"
               style={{ background: "var(--primary)", color: "var(--accent-text)" }}
             >
               {saving ? "Saving…" : isEdit ? "Save changes" : "Create lesson"}
-            </button>
+            </Button>
             <Link
               href={isEdit ? `/lessons/${initialLesson?.slug}` : "/lessons"}
               className="px-4 py-2.5 rounded-xl text-sm font-medium border border-[var(--line-divider)] hover:bg-[var(--btn-plain-bg-hover)] transition-colors"
@@ -285,3 +286,4 @@ export default function LessonEditor({ initialLesson }: LessonEditorProps) {
     </div>
   );
 }
+

@@ -1,4 +1,5 @@
 "use client";
+import Button from "@/components/ui/Button";
 
 import { useState } from "react";
 import type { LearningSession } from "@/lib/types";
@@ -59,7 +60,7 @@ export default function WorkspacePanel({ session, onClose }: WorkspacePanelProps
             </p>
           </div>
         </div>
-        <button
+        <Button
           onClick={onClose}
           className="flex-shrink-0 p-1.5 rounded-lg transition-colors"
           style={{ color: "var(--text-tertiary)" }}
@@ -70,7 +71,7 @@ export default function WorkspacePanel({ session, onClose }: WorkspacePanelProps
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
           </svg>
-        </button>
+        </Button>
       </div>
 
       {/* Progress bar */}
@@ -84,7 +85,7 @@ export default function WorkspacePanel({ session, onClose }: WorkspacePanelProps
       {/* Step nav pills */}
       <div className="flex gap-1.5 px-5 pt-4">
         {session.steps.map((_, i) => (
-          <button
+          <Button
             key={i}
             onClick={() => !finished && setCurrentStep(i)}
             className="flex-1 h-1 rounded-full transition-all"
@@ -177,7 +178,7 @@ function FinishedState({
           {total} step{total !== 1 ? "s" : ""} completed · {title}
         </p>
       </div>
-      <button
+      <Button
         onClick={onClose}
         className="text-xs px-4 py-2 rounded-xl transition-colors"
         style={{ backgroundColor: "var(--btn-regular-bg)", color: "var(--text-secondary)" }}
@@ -185,7 +186,8 @@ function FinishedState({
         onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "var(--btn-regular-bg)")}
       >
         Back to chat
-      </button>
+      </Button>
     </div>
   );
 }
+

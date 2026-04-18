@@ -1,4 +1,5 @@
 "use client";
+import Button from "@/components/ui/Button";
 
 import { Settings2, Play, Trash2 } from "lucide-react";
 import type { Tables } from "@/lib/supabase/types";
@@ -40,13 +41,13 @@ export function DeckCard({ deck, entryCount, onStudy, onManage, onDelete }: Deck
           </div>
 
           {/* Manage button */}
-          <button
+          <Button
             onClick={onManage}
             title="Edit deck"
             className="p-2 rounded-xl text-[var(--text-tertiary)] hover:bg-[var(--btn-plain-bg-hover)] transition-colors flex-shrink-0"
           >
             <Settings2 size={18} />
-          </button>
+          </Button>
         </div>
 
         {/* Stats row */}
@@ -55,7 +56,7 @@ export function DeckCard({ deck, entryCount, onStudy, onManage, onDelete }: Deck
         </div>
 
         {/* Study button */}
-        <button
+        <Button
           onClick={onStudy}
           disabled={!canStudy}
           title={!canStudy ? "Add words to study" : ""}
@@ -67,18 +68,19 @@ export function DeckCard({ deck, entryCount, onStudy, onManage, onDelete }: Deck
         >
           <Play size={16} className="fill-current" />
           Study
-        </button>
+        </Button>
 
         {/* Delete button (compact, hidden by default) */}
-        <button
+        <Button
           onClick={onDelete}
           title="Delete deck"
           className="w-full py-1.5 text-xs font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors opacity-0 group-hover:opacity-100"
         >
           <Trash2 size={14} className="inline mr-1" />
           Delete
-        </button>
+        </Button>
       </div>
     </div>
   );
 }
+

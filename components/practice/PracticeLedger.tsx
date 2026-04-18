@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Button from '@/components/ui/Button'
 import type { Sound } from '@/lib/phoneme-practice/types'
 
 type Category = 'all' | 'vowels' | 'consonants' | 'diphthongs'
@@ -101,30 +102,33 @@ export function PracticeLedger({ sounds, onSelectSound, soundStatuses, dueCount 
             </p>
             <p className="text-xs" style={{ color: 'oklch(.6 .15 25)' }}>Keep your streak going!</p>
           </div>
-          <button
+          <Button
+            type="button"
             onClick={onStartReview}
-            className="px-4 py-1.5 rounded-lg text-sm font-semibold text-white"
+            variant="primary"
+            size="sm"
+            className="rounded-lg px-4 py-1.5 text-sm font-semibold text-white"
             style={{ backgroundColor: 'oklch(.6 .2 25)' }}
           >
             Start Review →
-          </button>
+          </Button>
         </div>
       )}
 
       {/* Category Filters */}
       <div className="flex gap-2 flex-wrap">
         {categories.map(cat => (
-          <button
+          <Button
             key={cat.id}
+            type="button"
             onClick={() => setSelectedCategory(cat.id)}
-            className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
-              selectedCategory === cat.id
-                ? 'bg-[var(--primary)] text-white'
-                : 'bg-[var(--btn-regular-bg)] text-[var(--text-primary)] hover:bg-[var(--btn-regular-bg-hover)]'
-            }`}
+            variant="chip"
+            size="sm"
+            selected={selectedCategory === cat.id}
+            className="rounded-full px-4 py-2 text-sm font-medium"
           >
             {cat.label}
-          </button>
+          </Button>
         ))}
       </div>
 
@@ -135,11 +139,13 @@ export function PracticeLedger({ sounds, onSelectSound, soundStatuses, dueCount 
           const isLocked = status === 'locked'
 
           return (
-            <button
+            <Button
               key={sound.id}
+              type="button"
               onClick={() => !isLocked && onSelectSound(sound.id)}
               disabled={isLocked}
-              className={`relative p-4 rounded-lg border-2 transition-all ${
+              variant="outline"
+              className={`relative flex h-full min-h-24 w-full flex-col items-stretch justify-start p-4 rounded-lg border-2 text-left transition-all ${
                 isLocked
                   ? 'cursor-not-allowed opacity-50'
                   : 'hover:shadow-lg active:scale-95'
@@ -154,7 +160,7 @@ export function PracticeLedger({ sounds, onSelectSound, soundStatuses, dueCount 
               <div className="absolute top-2 right-2 text-lg" title={getStatusBadge(status)}>
                 {getStatusIcon(status)}
               </div>
-            </button>
+            </Button>
           )
         })}
       </div>

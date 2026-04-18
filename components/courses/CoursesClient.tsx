@@ -1,4 +1,5 @@
 "use client";
+import Button from "@/components/ui/Button";
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { Course } from "@/lib/notion/types";
@@ -96,13 +97,13 @@ return courses.filter((course) => {
                 <p className="mt-2 text-[13px] text-[var(--text-secondary)]">
                   Try a different search term or clear the level filter.
                 </p>
-                <button
+                <Button
                   onClick={() => { setQuery(""); setLevel("all"); }}
                   className="mt-4 rounded-lg px-4 py-2 text-[13px] font-medium transition-colors"
                   style={{ background: "var(--btn-regular-bg)", color: "var(--text-secondary)" }}
                 >
                   Clear filters
-                </button>
+                </Button>
               </div>
             </div>
           ) : (
@@ -117,3 +118,4 @@ return courses.filter((course) => {
     </PageLayout>
   );
 }
+

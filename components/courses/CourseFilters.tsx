@@ -1,4 +1,5 @@
 "use client";
+import Button from "@/components/ui/Button";
 
 type CourseLevel = "all" | "basic" | "intermediate" | "advanced";
 
@@ -54,7 +55,7 @@ export default function CourseFilters({
         {levelTabs.map((tab) => {
           const active = level === tab.value;
           return (
-            <button
+            <Button
               key={tab.value}
               type="button"
               onClick={() => onLevelChange(tab.value)}
@@ -73,10 +74,11 @@ export default function CourseFilters({
               }
             >
               {tab.label}
-            </button>
+            </Button>
           );
         })}
       </div>
     </div>
   );
 }
+

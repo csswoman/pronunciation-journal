@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Entry } from "@/lib/types";
 import EntryForm from "./EntryForm";
+import Button from "@/components/ui/Button";
 
 interface AddWordSectionProps {
   onSave: (entry: Entry) => void;
@@ -19,12 +20,13 @@ export default function AddWordSection({ onSave }: AddWordSectionProps) {
   if (!showForm) {
     return (
       <div className="flex justify-center mb-12">
-        <button
+        <Button
           onClick={() => setShowForm(true)}
-          className="px-6 py-3 rounded-lg accent-button"
+          variant="primary"
+          size="lg"
         >
           Agregar palabra
-        </button>
+        </Button>
       </div>
     );
   }

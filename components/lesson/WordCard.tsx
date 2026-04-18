@@ -1,4 +1,5 @@
 "use client";
+import Button from "@/components/ui/Button";
 
 interface Props {
   word: string;
@@ -22,7 +23,7 @@ export default function WordCard({ word, ipa, hint, audioUrl, isFav, onToggleFav
 
       <div className="flex items-center gap-3">
         {audioUrl && (
-          <button
+          <Button
             onClick={() => new Audio(audioUrl).play()}
             className="flex items-center gap-2 px-5 py-3 rounded-xl text-white hover:opacity-90 transition-colors text-base"
             style={{ backgroundColor: 'var(--primary)' }}
@@ -31,9 +32,9 @@ export default function WordCard({ word, ipa, hint, audioUrl, isFav, onToggleFav
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
             </svg>
             Listen
-          </button>
+          </Button>
         )}
-        <button
+        <Button
           onClick={onToggleFavorite}
           aria-label={isFav ? "Remove from favorites" : "Add to favorites"}
           className="p-3 rounded-xl transition-colors"
@@ -48,8 +49,9 @@ export default function WordCard({ word, ipa, hint, audioUrl, isFav, onToggleFav
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
             </svg>
           )}
-        </button>
+        </Button>
       </div>
     </>
   );
 }
+

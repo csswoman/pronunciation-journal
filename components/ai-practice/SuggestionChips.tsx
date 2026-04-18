@@ -1,3 +1,4 @@
+import Button from "@/components/ui/Button";
 interface SuggestionChip {
   label: string;
   prompt: string;
@@ -12,7 +13,7 @@ export default function SuggestionChips({ suggestions, onSelect }: SuggestionChi
   return (
     <div className="flex flex-wrap gap-2">
       {suggestions.map((s) => (
-        <button
+        <Button
           key={s.label}
           onClick={() => onSelect(s.prompt)}
           className="text-xs px-3 py-1.5 rounded-full border transition-colors"
@@ -31,8 +32,9 @@ export default function SuggestionChips({ suggestions, onSelect }: SuggestionChi
           }}
         >
           {s.label}
-        </button>
+        </Button>
       ))}
     </div>
   );
 }
+

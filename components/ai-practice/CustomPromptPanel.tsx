@@ -1,4 +1,5 @@
 "use client";
+import Button from "@/components/ui/Button";
 
 import { useState, useRef, useEffect } from "react";
 
@@ -100,7 +101,7 @@ export default function CustomPromptPanel({
               {helperText}
             </p>
           )}
-          <button
+          <Button
             type="submit"
             disabled={!text.trim() || isDisabled}
             className="ml-auto flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold transition-colors disabled:opacity-40"
@@ -117,7 +118,7 @@ export default function CustomPromptPanel({
               </svg>
             )}
             Send
-          </button>
+          </Button>
         </div>
       </form>
     );
@@ -149,7 +150,7 @@ export default function CustomPromptPanel({
         className="flex-1 resize-none bg-transparent text-sm leading-relaxed focus:outline-none max-h-40 py-1"
         style={{ color: "var(--text-primary)" }}
       />
-      <button
+      <Button
         type="submit"
         disabled={!text.trim() || isDisabled}
         className="flex-shrink-0 w-9 h-9 rounded-lg text-white transition-colors flex items-center justify-center disabled:opacity-40"
@@ -171,7 +172,8 @@ export default function CustomPromptPanel({
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14M12 5l7 7-7 7" />
           </svg>
         )}
-      </button>
+      </Button>
     </form>
   );
 }
+

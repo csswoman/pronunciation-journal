@@ -1,6 +1,7 @@
 "use client";
 
 import { useAuth } from "./AuthProvider";
+import Button from "@/components/ui/Button";
 
 interface HeaderProps {
   title: string;
@@ -36,18 +37,15 @@ export default function Header({ title }: HeaderProps) {
               >
                 {accountLabel}
               </span>
-              <button
+              <Button
                 type="button"
                 onClick={() => signOutUser()}
-                className="text-sm px-3 py-1.5 rounded-lg border transition-all"
-                style={{
-                  borderColor: 'var(--border)',
-                  color: 'var(--text-primary)',
-                  backgroundColor: 'var(--bg)',
-                }}
+                variant="secondary"
+                size="sm"
+                className="text-[var(--text-primary)]"
               >
                 Salir
-              </button>
+              </Button>
             </>
           )}
         </div>

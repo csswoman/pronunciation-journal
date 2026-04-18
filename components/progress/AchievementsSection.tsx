@@ -1,5 +1,6 @@
 'use client'
 
+import Button from "@/components/ui/Button";
 interface Achievement {
   id: string
   icon: string
@@ -43,12 +44,12 @@ export default function AchievementsSection() {
         >
           Recent Achievements
         </h2>
-        <button
+        <Button
           className="text-sm font-medium"
           style={{ color: 'var(--primary)' }}
         >
           Ver todos
-        </button>
+        </Button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -96,3 +97,4 @@ export default function AchievementsSection() {
     </div>
   )
 }
+
