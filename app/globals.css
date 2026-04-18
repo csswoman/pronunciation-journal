@@ -68,7 +68,7 @@
   --bg-secondary: white;
   --bg-tertiary: white;
   --primary-foreground: white;
-  --primary-hover: var(--btn-regular-bg-hover);
+  --primary-hover: oklch(.62 .14 var(--hue));
   --primary-soft: var(--btn-regular-bg);
   --secondary: var(--primary);
   --secondary-hover: var(--btn-regular-bg-hover);
@@ -136,7 +136,7 @@
   --bg-secondary: var(--card-bg);
   --bg-tertiary: oklch(.3 .02 var(--hue));
   --primary-foreground: var(--page-bg);
-  --primary-hover: var(--btn-regular-bg-hover);
+  --primary-hover: oklch(.68 .14 var(--hue));
   --primary-soft: var(--btn-regular-bg);
   --secondary: var(--primary);
   --secondary-hover: var(--btn-regular-bg-hover);

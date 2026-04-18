@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import type { Lesson } from '@/lib/types'
 import type { DifficultyMode } from './lesson-lobby-types'
 
@@ -51,13 +52,24 @@ export function LessonHero({ lesson, totalWords, chunkLabel, overall, diffMode, 
           <DifficultyToggle value={diffMode} onChange={onDiffChange} />
         </div>
 
-        <div className="p-8 md:p-10 max-w-2xl space-y-3">
-          <h1 className="font-display text-[28px] font-semibold leading-[1.08] tracking-tight text-[var(--deep-text)] lg:text-[34px]">
-            {lesson.title}
-          </h1>
-          <p className="max-w-xl text-[15px] leading-6 text-[var(--text-secondary)]">
-            Pick a practice mode that matches your energy — start easy, build confidence, then push your limits.
-          </p>
+        <div className="flex items-center justify-between">
+          <div className="p-8 md:p-10 max-w-2xl space-y-3">
+            <h1 className="font-display text-[28px] font-semibold leading-[1.08] tracking-tight text-[var(--deep-text)] lg:text-[34px]">
+              {lesson.title}
+            </h1>
+            <p className="max-w-xl text-[15px] leading-6 text-[var(--text-secondary)]">
+              Pick a practice mode that matches your energy — start easy, build confidence, then push your limits.
+            </p>
+          </div>
+          <div className="hidden md:block flex-shrink-0 pr-8">
+            <Image
+              src="/illustrations/exposition.svg"
+              alt=""
+              width={320}
+              height={320}
+              className="opacity-90"
+            />
+          </div>
         </div>
 
         <div

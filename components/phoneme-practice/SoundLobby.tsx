@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { STAGES, isStageUnlocked, overallMastery } from "@/lib/phoneme-practice/stages";
 import type { StageId, StageMasteryMap } from "@/lib/phoneme-practice/stages";
 
@@ -35,18 +36,18 @@ export function SoundLobby({
   return (
     <section>
       {/* Hero */}
-      <div className="relative overflow-hidden rounded-t-[28px] bg-gradient-to-br from-[var(--card-bg)] to-[var(--btn-regular-bg)] p-6 lg:p-8 shadow-[0_16px_40px_rgba(15,23,42,0.06)]">
+      <div className="relative overflow-hidden rounded-t-[15px] bg-gradient-to-br from-[var(--card-bg)] to-[var(--btn-regular-bg)] shadow-[0_16px_40px_rgba(15,23,42,0.06)]">
         <div className="relative space-y-6">
-          <div className="flex items-center justify-between">
+          {/* Navbar row */}
+          <div className="flex items-center justify-between px-4 py-2.5 border-b border-[var(--line-divider)]">
             <div className="flex items-center gap-3">
               <Link
                 href={backHref}
                 className="flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-[13px] font-medium transition-all duration-200 hover:-translate-x-0.5"
                 style={{
-                  borderColor: "color-mix(in_oklch,var(--primary)_25%,var(--line-divider))",
+                  borderColor: "var(--line-divider)",
                   color: "var(--text-secondary)",
                   background: "color-mix(in_oklch,var(--card-bg)_80%,transparent)",
-                  backdropFilter: "blur(6px)",
                 }}
               >
                 <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
@@ -61,40 +62,81 @@ export function SoundLobby({
                 </span>
               </div>
             </div>
-
-            {overall > 0 && (
-              <span
-                className="rounded-full border px-3 py-1 text-[13px] font-medium"
-                style={{ borderColor: "var(--line-divider)", color: "var(--text-secondary)" }}
-              >
-                {overall}% mastered
-              </span>
-            )}
           </div>
 
-          <div className="max-w-2xl space-y-3">
-            <div className="flex items-baseline gap-4">
-              <h1 className="font-mono text-[48px] font-bold leading-none text-[var(--primary)] lg:text-[60px]">
-                {soundIpa}
-              </h1>
-              {soundType && (
-                <span className="text-[13px] font-medium uppercase tracking-widest text-[var(--text-tertiary)]">
-                  {soundType}
-                </span>
-              )}
+          {/* Title + illustration */}
+          <div className="flex items-center justify-between">
+            <div className="p-8 md:p-10 max-w-2xl space-y-3">
+              <div className="flex items-baseline gap-4">
+                <h1 className="font-mono text-[48px] font-bold leading-none text-[var(--primary)] lg:text-[60px]">
+                  {soundIpa}
+                </h1>
+                {soundType && (
+                  <span className="text-[13px] font-medium uppercase tracking-widest text-[var(--text-tertiary)]">
+                    {soundType}
+                  </span>
+                )}
+              </div>
+              <p className="text-[17px] font-semibold text-[var(--deep-text)]">{soundName}</p>
+              <p className="max-w-xl text-[15px] leading-6 text-[var(--text-secondary)]">
+                Work through each stage to master this sound — start with recognition, then challenge yourself with minimal pairs and dictation.
+              </p>
             </div>
-            <p className="text-[17px] font-semibold text-[var(--deep-text)]">{soundName}</p>
-            <p className="max-w-xl text-[15px] leading-6 text-[var(--text-secondary)]">
-              Work through each stage to master this sound — start with recognition, then challenge yourself with minimal pairs and dictation.
-            </p>
+            <div className="hidden md:block flex-shrink-0 pr-8">
+              <Image
+                src="/illustrations/exposition.svg"
+                alt=""
+                width={280}
+                height={280}
+                className="opacity-90"
+              />
+            </div>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2">
-            <MetaPill icon="🎯">{visibleStages.length} stages</MetaPill>
-            {completedCount > 0 && (
-              <MetaPill icon="✅">{completedCount} of {visibleStages.length} complete</MetaPill>
+          {/* Meta bar */}
+          <div
+            className="flex flex-wrap items-center gap-x-4 gap-y-2 px-8 md:px-10 py-3 text-[13px] font-medium"
+            style={{ borderTop: "1px solid var(--line-divider)", color: "var(--text-secondary)" }}
+          >
+            <span className="flex items-center gap-1.5">
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
+                <path d="M2 4h12M2 8h8M2 12h5" />
+              </svg>
+              {visibleStages.length} stages
+            </span>
+
+            <span style={{ color: "var(--line-divider)" }}>|</span>
+
+            <span className="flex items-center gap-1.5">
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
+                <path d="M8 2l1.8 3.6L14 6.3l-3 2.9.7 4.1L8 11.4l-3.7 1.9.7-4.1-3-2.9 4.2-.7z" />
+              </svg>
+              {completedCount} of {visibleStages.length} complete
+            </span>
+
+            {overall >= 80 && (
+              <>
+                <span style={{ color: "var(--line-divider)" }}>|</span>
+                <span className="flex items-center gap-1.5" style={{ color: "var(--primary)" }}>
+                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M8 2l1.8 3.6L14 6.3l-3 2.9.7 4.1L8 11.4l-3.7 1.9.7-4.1-3-2.9 4.2-.7z" />
+                  </svg>
+                  Sound mastered
+                </span>
+              </>
             )}
-            {overall >= 80 && <MetaPill icon="🏆" accent>Sound mastered</MetaPill>}
+            {overall > 0 && overall < 80 && (
+              <>
+                <span style={{ color: "var(--line-divider)" }}>|</span>
+                <span className="flex items-center gap-1.5" style={{ color: "var(--primary)" }}>
+                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="8" cy="8" r="6" />
+                    <path d="M8 5v3" /><circle cx="8" cy="11" r="0.5" fill="currentColor" />
+                  </svg>
+                  {overall}% mastered
+                </span>
+              </>
+            )}
           </div>
         </div>
       </div>
@@ -107,13 +149,15 @@ export function SoundLobby({
           <InfoPill icon="🎙️" label="Stage 3" value="Dictation — hear and type" accent="#2ec4b6" />
         </div>
 
-        <div className="mb-2">
-          <p className="text-[11px] font-semibold uppercase tracking-[.18em] text-[var(--text-tertiary)]">
-            Practice stages
-          </p>
-          <h2 className="mt-1 mb-6 text-[18px] font-semibold tracking-tight text-[var(--deep-text)]">
-            Choose a stage to practice
-          </h2>
+        <div className="flex items-end justify-between gap-4 pt-2">
+          <div>
+            <p className="text-[11px] font-semibold uppercase tracking-[.18em] text-[var(--text-tertiary)]">
+              Practice stages
+            </p>
+            <h2 className="mt-1 mb-6 text-[18px] font-semibold tracking-tight text-[var(--deep-text)]">
+              Choose a stage to practice
+            </h2>
+          </div>
         </div>
 
         <div className="grid gap-4 sm:grid-cols-3 mb-8">
@@ -267,21 +311,5 @@ function LockIcon() {
       <rect x="3" y="11" width="18" height="11" rx="2" />
       <path d="M7 11V7a5 5 0 0 1 10 0v4" />
     </svg>
-  );
-}
-
-function MetaPill({ children, accent = false, icon }: { children: React.ReactNode; accent?: boolean; icon?: string }) {
-  return (
-    <span
-      className="inline-flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-[13px] font-medium"
-      style={{
-        borderColor: accent ? "color-mix(in_oklch,var(--primary)_35%,transparent)" : "var(--line-divider)",
-        color: accent ? "var(--primary)" : "var(--text-secondary)",
-        background: accent ? "color-mix(in_oklch,var(--primary)_10%,transparent)" : "color-mix(in_oklch,var(--card-bg)_60%,transparent)",
-      }}
-    >
-      {icon && <span className="text-[12px] leading-none">{icon}</span>}
-      {children}
-    </span>
   );
 }
