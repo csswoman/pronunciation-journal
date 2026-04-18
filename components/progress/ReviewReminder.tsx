@@ -74,7 +74,7 @@ export default function ReviewReminder({ dueToday, totalMastered }: ReviewRemind
           {dueToday.slice(0, 4).map(sound => (
             <Link
               key={sound.sound_id}
-              href={`/practice/${sound.sound_id}`}
+              href={`/practice/sound/${sound.sound_id}`}
               className="flex items-center justify-between px-3 py-2 rounded-xl transition-colors hover:opacity-80"
               style={{ background: 'var(--line-divider)' }}
             >

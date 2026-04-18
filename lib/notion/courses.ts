@@ -1,5 +1,6 @@
+import { unstable_cache } from "next/cache";
 import { getNotionClient } from "./client";
-import { notionCache, cacheKeys } from "./cache";
+import { notionCache } from "./cache";
 import { Course, CourseWithLessons, NotionPage, NotionProperty, SubLesson } from "./types";
 
 const COURSES_DB_ID = process.env.NOTION_DATABASE_ID!;
@@ -8,15 +9,11 @@ const COURSES_DB_ID = process.env.NOTION_DATABASE_ID!;
  * Obtiene todos los cursos desde la Notion database.
  * Cada página de la database = un curso.
  */
-export async function getCourses(): Promise<Course[]> {
-  const cacheKey = `notion:courses:${COURSES_DB_ID}`;
-  const cached = notionCache.get<Course[]>(cacheKey);
-  if (cached) return cached;
-
+async function fetchCourses(): Promise<Course[]> {
   const client = getNotionClient();
   const pages = await client.queryDatabase(COURSES_DB_ID);
 
-  const courses: Course[] = pages.map((page: NotionPage) => {
+  return pages.map((page: NotionPage) => {
     const title = extractPageTitle(page);
     return {
       id: page.id,
@@ -31,59 +28,58 @@ export async function getCourses(): Promise<Course[]> {
       updatedAt: new Date(page.last_edited_time),
     };
   });
-
-  notionCache.set(cacheKey, courses);
-  return courses;
 }
+
+export const getCourses = unstable_cache(fetchCourses, ["notion-courses"], {
+  revalidate: 3600,
+  tags: ["notion-courses"],
+});
 
 /**
  * Obtiene todos los cursos con lessonCount calculado (fetches en paralelo, con caché).
  */
-export async function getCoursesWithLessonCount(): Promise<Course[]> {
+async function fetchCoursesWithLessonCount(): Promise<Course[]> {
   const courses = await getCourses();
   const client = getNotionClient();
 
-  return Promise.all(
-    courses.map(async (course) => {
-      const cacheKey = cacheKeys.subLessonsFromPage(course.notionPageId);
-      const cached = notionCache.get<SubLesson[]>(cacheKey);
-      if (cached) return { ...course, lessonCount: cached.length };
-
-      try {
-        const lessons = await client.extractSubLessonsFromPage(course.notionPageId);
-        notionCache.set(cacheKey, lessons);
-        return { ...course, lessonCount: lessons.length };
-      } catch {
-        return course;
-      }
-    }),
-  );
+  const results: Course[] = [];
+  for (const course of courses) {
+    try {
+      const lessons = await client.extractSubLessonsFromPage(course.notionPageId);
+      results.push({ ...course, lessonCount: lessons.length });
+      await new Promise((r) => setTimeout(r, 350));
+    } catch {
+      results.push(course);
+    }
+  }
+  return results;
 }
 
-/**
- * Obtiene un curso por slug junto con sus lecciones (toggles de Notion).
- */
-export async function getCourseWithLessons(
-  slug: string,
-): Promise<CourseWithLessons | null> {
+export const getCoursesWithLessonCount = unstable_cache(
+  fetchCoursesWithLessonCount,
+  ["notion-courses-with-count"],
+  { revalidate: 3600, tags: ["notion-courses"] },
+);
+
+async function fetchCourseWithLessons(slug: string): Promise<CourseWithLessons | null> {
   const courses = await getCourses();
   const course = courses.find((c) => c.slug === slug);
   if (!course) return null;
 
-  const cacheKey = cacheKeys.subLessonsFromPage(course.notionPageId);
-  const cached = notionCache.get<SubLesson[]>(cacheKey);
+  const client = getNotionClient();
+  const blocks = await client.getBlockChildrenRecursive(course.notionPageId);
+  const lessons = await client.extractSubLessonsFromPage(course.notionPageId, blocks);
+  const lessonIds = new Set(lessons.map((l) => l.id));
+  const sections = client.groupBlocksByHeading(blocks, lessonIds);
 
-  let lessons: SubLesson[];
-  if (cached) {
-    lessons = cached;
-  } else {
-    const client = getNotionClient();
-    lessons = await client.extractSubLessonsFromPage(course.notionPageId);
-    notionCache.set(cacheKey, lessons);
-  }
-
-  return { ...course, lessonCount: lessons.length, lessons };
+  return { ...course, lessonCount: lessons.length, lessons, sections };
 }
+
+export const getCourseWithLessons = unstable_cache(
+  fetchCourseWithLessons,
+  ["notion-course-with-lessons"],
+  { revalidate: 3600, tags: ["notion-courses"] },
+);
 
 /**
  * Obtiene una lección específica dentro de un curso con navegación prev/next.

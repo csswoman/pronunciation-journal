@@ -102,4 +102,12 @@ export interface Course {
 
 export interface CourseWithLessons extends Course {
   lessons: SubLesson[];
+  sections: CourseSection[];
+}
+
+export interface CourseSection {
+  id: string;
+  title: string;
+  headingLevel: 1 | 2;
+  lessonIds: string[]; // only IDs — content lives in lessons[] to avoid duplication
 }

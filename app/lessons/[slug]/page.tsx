@@ -11,7 +11,7 @@ import {
 } from "@/lib/theory-lessons/queries";
 import LessonsSidebar, { type Filters } from "@/components/LessonsSidebar";
 import LessonMarkdown from "@/components/lessons/LessonMarkdown";
-import NotionToggleList from "@/components/lessons/NotionToggleList";
+import NotionBlockContent from "@/components/lessons/NotionBlockContent";
 import { useScrollProgress } from "@/hooks/useScrollProgress";
 import type { SubLesson } from "@/lib/notion/types";
 import { LESSON_CATEGORIES } from "@/lib/types";
@@ -217,7 +217,9 @@ export default function LessonReaderPage() {
                       <div className="w-5 h-5 border-2 border-[var(--primary)] border-t-transparent rounded-full animate-spin" />
                     </div>
                   ) : (
-                    <NotionToggleList subLessons={notionSubLessons} />
+                    <div className="space-y-6">
+                      <NotionBlockContent subLessons={notionSubLessons} />
+                    </div>
                   )}
                 </section>
               ) : (

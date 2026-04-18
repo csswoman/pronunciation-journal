@@ -71,11 +71,10 @@ export default function CustomPromptPanel({
     return (
       <form
         onSubmit={handleSubmit}
-        className="flex flex-col gap-3 p-4 rounded-2xl border transition-all focus-within:shadow-lg"
+        className="flex flex-col gap-4 p-5 rounded-xl border-2 transition-all"
         style={{
           backgroundColor: "var(--card-bg)",
           borderColor: "var(--line-divider)",
-          boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
         }}
         onFocus={(e) => (e.currentTarget.style.borderColor = "var(--primary)")}
         onBlur={(e) => {
@@ -90,7 +89,7 @@ export default function CustomPromptPanel({
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
           disabled={isDisabled}
-          rows={3}
+          rows={4}
           autoFocus
           className="w-full resize-none bg-transparent text-base leading-relaxed focus:outline-none max-h-48"
           style={{ color: "var(--text-primary)" }}
@@ -104,18 +103,10 @@ export default function CustomPromptPanel({
           <button
             type="submit"
             disabled={!text.trim() || isDisabled}
-            className="ml-auto flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-semibold transition-colors disabled:opacity-40"
+            className="ml-auto flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold transition-colors disabled:opacity-40"
             style={{
               backgroundColor: "var(--primary)",
               color: "var(--primary-foreground)",
-            }}
-            onMouseEnter={(e) => {
-              if (!e.currentTarget.disabled)
-                e.currentTarget.style.backgroundColor = "var(--btn-regular-bg-hover)";
-            }}
-            onMouseLeave={(e) => {
-              if (!e.currentTarget.disabled)
-                e.currentTarget.style.backgroundColor = "var(--primary)";
             }}
           >
             {isDisabled ? (
@@ -136,7 +127,7 @@ export default function CustomPromptPanel({
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex items-end gap-2 p-3 rounded-2xl border transition-all focus-within:shadow-md"
+      className="flex items-end gap-2 p-3 rounded-xl border transition-all focus-within:shadow-md"
       style={{
         backgroundColor: "var(--card-bg)",
         borderColor: "var(--line-divider)",
@@ -161,7 +152,7 @@ export default function CustomPromptPanel({
       <button
         type="submit"
         disabled={!text.trim() || isDisabled}
-        className="flex-shrink-0 w-9 h-9 rounded-xl text-white transition-colors flex items-center justify-center disabled:opacity-40"
+        className="flex-shrink-0 w-9 h-9 rounded-lg text-white transition-colors flex items-center justify-center disabled:opacity-40"
         style={{ backgroundColor: "var(--primary)" }}
         onMouseEnter={(e) => {
           if (!e.currentTarget.disabled)

@@ -24,7 +24,8 @@ export default function CoursesClient() {
   useEffect(() => {
     fetch("/api/notion/courses")
       .then((r) => r.json())
-      .then((data) => { setCourses(data); setLoading(false); });
+      .then((data) => { setCourses(Array.isArray(data) ? data : []); setLoading(false); })
+      .catch(() => setLoading(false));
     getCompletedCountByCourse().then(setCompletedCounts);
   }, []);
 
@@ -83,8 +84,8 @@ return courses.filter((course) => {
           {loading ? (
             <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
               {Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="rounded-2xl border border-[var(--line-divider)] bg-[var(--card-bg)] h-48 overflow-hidden relative">
-                  <div className="absolute inset-0 -translate-x-full animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+                <div key={i} className="rounded-2xl border border-[var(--line-divider)] h-48 overflow-hidden relative" style={{ background: "var(--btn-regular-bg)" }}>
+                  <div className="absolute inset-0 -translate-x-full animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-white/20 to-transparent" />
                 </div>
               ))}
             </div>

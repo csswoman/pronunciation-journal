@@ -2,7 +2,8 @@
 
 import Script from "next/script";
 import "./globals.css";
-import { Plus_Jakarta_Sans, DM_Sans } from "next/font/google";
+import "./markdown.css";
+import { Plus_Jakarta_Sans, Noto_Sans } from "next/font/google";
 import Sidebar from "@/components/Sidebar";
 import BottomNav from "@/components/layout/BottomNav";
 import AuthProvider from "@/components/AuthProvider";
@@ -13,7 +14,7 @@ const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
   variable: "--font-heading",
 });
-const dmSans = DM_Sans({
+const notoSans = Noto_Sans({
   weight: ["400", "500", "600"],
   subsets: ["latin"],
   variable: "--font-sans",
@@ -28,7 +29,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${plusJakarta.variable} ${dmSans.variable}`}
+      className={`${plusJakarta.variable} ${notoSans.variable}`}
     >
       <head>
         <meta charSet="utf-8" />
