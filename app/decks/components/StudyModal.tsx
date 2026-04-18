@@ -1,4 +1,5 @@
 "use client";
+import Button from "@/components/ui/Button";
 
 import { useEffect, useState, useCallback } from "react";
 import { X, ChevronLeft, Volume2 } from "lucide-react";
@@ -114,7 +115,7 @@ export function StudyModal({ deck, onClose }: StudyModalProps) {
             You studied {total} word{total !== 1 ? "s" : ""} from <strong>{deck.name}</strong>
           </p>
           <div className="flex gap-2 pt-2">
-            <button
+            <Button
               onClick={() => {
                 setCurrentIndex(0);
                 setFlipped(false);
@@ -123,13 +124,13 @@ export function StudyModal({ deck, onClose }: StudyModalProps) {
               className="flex-1 py-2.5 bg-[var(--primary)] text-white font-semibold rounded-xl hover:opacity-90 transition-colors"
             >
               Study Again
-            </button>
-            <button
+            </Button>
+            <Button
               onClick={onClose}
               className="flex-1 py-2.5 bg-[var(--btn-regular-bg)] text-[var(--deep-text)] font-semibold rounded-xl hover:bg-[var(--btn-plain-bg-hover)] transition-colors"
             >
               Done
-            </button>
+            </Button>
           </div>
         </div>
       </div>
@@ -140,24 +141,24 @@ export function StudyModal({ deck, onClose }: StudyModalProps) {
     <div className="fixed inset-0 z-50 bg-[var(--page-bg)] flex flex-col">
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-[var(--line-divider)]">
-        <button
+        <Button
           onClick={onClose}
           className="p-2 rounded-lg text-[var(--text-tertiary)] hover:bg-[var(--btn-plain-bg-hover)] transition-colors"
         >
           <ChevronLeft size={20} />
-        </button>
+        </Button>
         <div className="text-center">
           <p className="text-sm font-semibold text-[var(--deep-text)]">{deck.name}</p>
           <p className="text-xs text-[var(--text-tertiary)]">
             {progress} / {total}
           </p>
         </div>
-        <button
+        <Button
           onClick={onClose}
           className="p-2 rounded-lg text-[var(--text-tertiary)] hover:bg-[var(--btn-plain-bg-hover)] transition-colors"
         >
           <X size={20} />
-        </button>
+        </Button>
       </div>
 
       {/* Progress bar */}
@@ -194,7 +195,7 @@ export function StudyModal({ deck, onClose }: StudyModalProps) {
                       <p className="text-lg text-[var(--text-secondary)]">/{currentEntry.ipa}/</p>
                     )}
                   </div>
-                  <button
+                  <Button
                     onClick={(e) => {
                       e.stopPropagation();
                       handlePlayAudio();
@@ -202,7 +203,7 @@ export function StudyModal({ deck, onClose }: StudyModalProps) {
                     className="p-3 rounded-full bg-[var(--btn-regular-bg)] text-[var(--primary)] hover:bg-[var(--btn-plain-bg-hover)] transition-colors"
                   >
                     <Volume2 size={24} />
-                  </button>
+                  </Button>
                   <p className="text-xs text-[var(--text-tertiary)] mt-2">Click to reveal meaning</p>
                 </div>
               )}
@@ -254,31 +255,32 @@ export function StudyModal({ deck, onClose }: StudyModalProps) {
 
       {/* Difficulty buttons */}
       <div className="px-4 py-4 border-t border-[var(--line-divider)] flex gap-2">
-        <button
+        <Button
           onClick={() => handleDifficulty("again")}
           className="flex-1 py-2.5 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 font-semibold rounded-xl hover:opacity-90 transition-colors text-sm"
         >
           Again
-        </button>
-        <button
+        </Button>
+        <Button
           onClick={() => handleDifficulty("hard")}
           className="flex-1 py-2.5 bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 font-semibold rounded-xl hover:opacity-90 transition-colors text-sm"
         >
           Hard
-        </button>
-        <button
+        </Button>
+        <Button
           onClick={() => handleDifficulty("good")}
           className="flex-1 py-2.5 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 font-semibold rounded-xl hover:opacity-90 transition-colors text-sm"
         >
           Good
-        </button>
-        <button
+        </Button>
+        <Button
           onClick={() => handleDifficulty("easy")}
           className="flex-1 py-2.5 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 font-semibold rounded-xl hover:opacity-90 transition-colors text-sm"
         >
           Easy
-        </button>
+        </Button>
       </div>
     </div>
   );
 }
+

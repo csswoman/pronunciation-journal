@@ -9,6 +9,7 @@ import Section from "@/components/layout/Section";
 import PageHeader from "@/components/layout/PageHeader";
 import LessonCard from "@/components/LessonCard";
 import LessonsSidebar, { type Filters } from "@/components/LessonsSidebar";
+import Button from "@/components/ui/Button";
 import {
   groupLessonsByLevel,
   LEVEL_ORDER,
@@ -207,34 +208,26 @@ export default function LessonsPage() {
         <Section spacing="lg" className="mt-8">
           {/* Tabs */}
           <div className="inline-flex rounded-xl border p-1" style={{ borderColor: 'var(--line-divider)', backgroundColor: 'var(--card-bg)' }}>
-            <button
+            <Button
               type="button"
               onClick={() => setActiveTab("explore")}
-              className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
-                activeTab === "explore"
-                  ? "text-white"
-                  : "text-[var(--text-secondary)] hover:text-[var(--deep-text)]"
-              }`}
-              style={{
-                backgroundColor: activeTab === "explore" ? 'var(--primary)' : 'transparent',
-              }}
+              variant="segmented"
+              size="sm"
+              selected={activeTab === "explore"}
+              className="rounded-lg px-4 py-2 text-sm font-medium"
             >
               Explore
-            </button>
-            <button
+            </Button>
+            <Button
               type="button"
               onClick={() => setActiveTab("my")}
-              className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
-                activeTab === "my"
-                  ? "text-white"
-                  : "text-[var(--text-secondary)] hover:text-[var(--deep-text)]"
-              }`}
-              style={{
-                backgroundColor: activeTab === "my" ? 'var(--primary)' : 'transparent',
-              }}
+              variant="segmented"
+              size="sm"
+              selected={activeTab === "my"}
+              className="rounded-lg px-4 py-2 text-sm font-medium"
             >
               My Lessons
-            </button>
+            </Button>
           </div>
 
           <div className="flex flex-col gap-6 lg:flex-row mt-6">

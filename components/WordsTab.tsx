@@ -1,4 +1,5 @@
 "use client";
+import Button from "@/components/ui/Button";
 
 import { useMemo } from "react";
 import { Entry, Difficulty } from "@/lib/types";
@@ -85,7 +86,7 @@ export default function WordsTab({
               onWordSelect={onWordSelect}
             />
             {isSelectionMode && selectedEntries.length > 0 && (
-              <button
+              <Button
                 onClick={onDeleteSelected}
                 className="flex items-center gap-2 px-4 py-2 text-white rounded-lg text-sm font-medium transition-colors"
                 style={{
@@ -107,9 +108,9 @@ export default function WordsTab({
                   />
                 </svg>
                 Eliminar
-              </button>
+              </Button>
             )}
-            <button
+            <Button
               onClick={onToggleSelectionMode}
               className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                 isSelectionMode
@@ -150,7 +151,7 @@ export default function WordsTab({
                   Seleccionar
                 </>
               )}
-            </button>
+            </Button>
             <DifficultyFilters
               selectedDifficulties={selectedDifficulties}
               onDifficultyChange={onDifficultyChange}
@@ -168,4 +169,5 @@ export default function WordsTab({
     </>
   );
 }
+
 

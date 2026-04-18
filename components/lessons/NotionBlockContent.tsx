@@ -1,4 +1,5 @@
 "use client";
+import Button from "@/components/ui/Button";
 
 import { useState } from "react";
 import { NotionBlock, NotionRichText, SubLesson } from "@/lib/notion/types";
@@ -118,13 +119,13 @@ export function NotionBlockRenderer({ block }: { block: NotionBlock }) {
         const children: NotionBlock[] = heading.children || [];
       return (
         <div>
-          <button
+          <Button
             onClick={() => setOpen((o) => !o)}
             className="md-toggle-button md-heading md-heading-3"
             >
               <span className={`md-toggle-caret ${open ? "md-toggle-caret-open" : ""}`}>▶</span>
               {text}
-            </button>
+            </Button>
             {open && children.length > 0 && (
               <div className="md-toggle-children">
                 {children.map((child) => <NotionBlockRenderer key={child.id} block={child} />)}
@@ -141,13 +142,13 @@ export function NotionBlockRenderer({ block }: { block: NotionBlock }) {
       const children: NotionBlock[] = toggle?.children || [];
       return (
         <div>
-          <button
+          <Button
             onClick={() => setOpen((o) => !o)}
             className="md-toggle-button md-toggle-button-compact"
           >
             <span className={`md-toggle-caret md-toggle-caret-small ${open ? "md-toggle-caret-open" : ""}`}>▶</span>
             {text}
-          </button>
+          </Button>
           {open && children.length > 0 && (
             <div className="md-toggle-children md-toggle-children-compact">
               {children.map((child) => <NotionBlockRenderer key={child.id} block={child} />)}
@@ -357,7 +358,7 @@ function NotionToggleItem({ lesson, defaultOpen = false }: NotionToggleItemProps
 
   return (
     <div className="rounded-xl border border-[var(--line-divider)] bg-white dark:bg-[var(--card-bg)] overflow-hidden">
-      <button
+      <Button
         onClick={() => setOpen((o) => !o)}
         className="flex w-full items-center justify-between gap-4 px-6 py-4 text-left transition-colors hover:bg-neutral-50 dark:hover:bg-[var(--btn-plain-bg-hover)]"
       >
@@ -373,7 +374,7 @@ function NotionToggleItem({ lesson, defaultOpen = false }: NotionToggleItemProps
         >
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
         </svg>
-      </button>
+      </Button>
 
       {open && (
         <div className="border-t border-[var(--line-divider)] px-6 py-5">
@@ -407,3 +408,4 @@ export default function NotionBlockContent({ subLessons }: NotionBlockContentPro
     </div>
   );
 }
+

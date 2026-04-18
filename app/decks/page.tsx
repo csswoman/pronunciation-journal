@@ -1,4 +1,5 @@
 "use client";
+import Button from "@/components/ui/Button";
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
@@ -58,9 +59,9 @@ function CreateDeckModal({
       <div className="w-full max-w-md mx-4 bg-[var(--card-bg)] rounded-2xl border border-[var(--line-divider)] shadow-xl p-6 space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="font-heading font-bold text-lg text-[var(--deep-text)]">New Deck</h2>
-          <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-[var(--btn-plain-bg-hover)] text-[var(--text-tertiary)]">
+          <Button onClick={onClose} className="p-1.5 rounded-lg hover:bg-[var(--btn-plain-bg-hover)] text-[var(--text-tertiary)]">
             <X size={20} />
-          </button>
+          </Button>
         </div>
 
         <div className="space-y-3">
@@ -91,7 +92,7 @@ function CreateDeckModal({
             <label className="text-xs font-medium text-[var(--text-secondary)] uppercase tracking-wide mb-2 block">Color</label>
             <div className="flex gap-2 flex-wrap">
               {COLORS.map(c => (
-                <button
+                <Button
                   key={c}
                   onClick={() => setColor(c)}
                   className={`w-7 h-7 rounded-full transition-transform ${color === c ? "ring-2 ring-offset-2 ring-[var(--primary)] scale-110" : "hover:scale-105"}`}
@@ -105,16 +106,16 @@ function CreateDeckModal({
         {error && <p className="text-xs text-red-500">{error}</p>}
 
         <div className="flex gap-2 pt-1">
-          <button onClick={onClose} className="flex-1 px-4 py-2 rounded-xl text-sm font-medium text-[var(--deep-text)] bg-[var(--btn-regular-bg)] hover:bg-[var(--btn-plain-bg-hover)] transition-colors">
+          <Button onClick={onClose} className="flex-1 px-4 py-2 rounded-xl text-sm font-medium text-[var(--deep-text)] bg-[var(--btn-regular-bg)] hover:bg-[var(--btn-plain-bg-hover)] transition-colors">
             Cancel
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={handleCreate}
             disabled={!name.trim() || saving}
             className="flex-1 px-4 py-2 rounded-xl text-sm font-semibold bg-[var(--primary)] text-white hover:opacity-90 disabled:opacity-50 transition-colors"
           >
             {saving ? "Creating…" : "Create"}
-          </button>
+          </Button>
         </div>
       </div>
     </div>
@@ -242,13 +243,13 @@ export default function DecksPage() {
                   <p className="text-sm font-semibold" style={{ color: 'var(--deep-text)' }}>No decks yet</p>
                   <p className="text-xs mt-1" style={{ color: 'var(--text-tertiary)' }}>Create your first deck to organize vocabulary by theme.</p>
                 </div>
-                <button
+                <Button
                   onClick={() => setShowCreate(true)}
                   className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold bg-[var(--primary)] text-white hover:opacity-90 transition-colors mt-2"
                 >
                   <Plus size={16} />
                   Create a deck
-                </button>
+                </Button>
               </div>
             </Card>
           ) : (
@@ -290,3 +291,4 @@ export default function DecksPage() {
     </>
   );
 }
+

@@ -2,6 +2,7 @@
 
 import { type ReactNode } from "react";
 import { Play } from "lucide-react";
+import Button from "@/components/ui/Button";
 
 interface CTAButton {
   label: string;
@@ -94,45 +95,38 @@ export default function PageHeader({
                 />
               </div>
             </div>
-            <button
+            <Button
               type="button"
               onClick={onContinue}
-              className="inline-flex items-center gap-2 rounded-2xl bg-[var(--primary)] px-5 py-3 text-sm font-semibold text-[var(--accent-text)] shadow-[0_12px_30px_color-mix(in_oklch,var(--primary)_28%,transparent)] transition-all duration-200 hover:-translate-y-0.5 hover:opacity-90"
+              size="lg"
+              className="shadow-[0_12px_30px_color-mix(in_oklch,var(--primary)_28%,transparent)]"
+              icon={<Play size={16} className="fill-current" />}
             >
-              <Play size={16} className="fill-current" />
               Resume Lesson
-            </button>
+            </Button>
           </div>
         ) : (
           (primaryCta || secondaryCta) && (
             <div className="flex items-center gap-3 flex-wrap">
               {primaryCta && (
-                <button
+                <Button
                   onClick={primaryCta.onClick}
-                  className="inline-flex items-center gap-2 px-5 py-3 rounded-xl
-                    text-sm font-semibold
-                    bg-[var(--primary)] text-[var(--accent-text)]
-                    hover:opacity-90 hover:-translate-y-px
-                    shadow-[0_4px_16px_color-mix(in_oklch,var(--primary)_30%,transparent)]
-                    transition-all duration-200"
+                  size="lg"
+                  className="shadow-[0_4px_16px_color-mix(in_oklch,var(--primary)_30%,transparent)]"
+                  icon={primaryCta.icon}
                 >
-                  {primaryCta.icon}
                   {primaryCta.label}
-                </button>
+                </Button>
               )}
               {secondaryCta && (
-                <button
+                <Button
                   onClick={secondaryCta.onClick}
-                  className="inline-flex items-center gap-2 px-5 py-3 rounded-xl
-                    text-sm font-medium
-                    bg-[var(--card-bg)] text-[var(--deep-text)]
-                    border border-[var(--line-color)]
-                    hover:bg-[var(--btn-plain-bg-hover)] hover:text-[var(--primary)]
-                    transition-all duration-200"
+                  variant="secondary"
+                  size="lg"
+                  icon={secondaryCta.icon}
                 >
-                  {secondaryCta.icon}
                   {secondaryCta.label}
-                </button>
+                </Button>
               )}
             </div>
           )

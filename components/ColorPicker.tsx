@@ -1,4 +1,5 @@
 "use client";
+import Button from "@/components/ui/Button";
 
 import { type ThemeName, THEME_NAMES, themes, injectTheme } from "@/lib/themes";
 
@@ -32,7 +33,7 @@ export default function ColorPicker({
           const isSelected = name === selectedTheme;
 
           return (
-            <button
+            <Button
               key={name}
               onClick={() => handleSelect(name)}
               disabled={isLoading}
@@ -70,7 +71,7 @@ export default function ColorPicker({
               <span className="text-xs font-medium text-gray-700 dark:text-gray-300">
                 {theme.label}
               </span>
-            </button>
+            </Button>
           );
         })}
       </div>
@@ -105,13 +106,14 @@ export default function ColorPicker({
         </div>
 
         {/* Primary button — accent default, accent-hover on hover */}
-        <button
+        <Button
           tabIndex={-1}
           className="w-full py-2 rounded-xl text-sm font-semibold shadow-sm accent-button"
         >
           Guardar cambios
-        </button>
+        </Button>
       </div>
     </div>
   );
 }
+

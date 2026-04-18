@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Button from "@/components/ui/Button";
 
 interface NavbarProps {
   activeTab: "words" | "decks" | "ipa";
@@ -93,29 +94,33 @@ export default function Navbar({
             Welcome!
           </h2>
         )}
-        <button
+        <Button
           onClick={onToggleCollapse}
-          className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+          variant="ghost"
+          size="icon"
           aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
           title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+          className="rounded-lg"
+          icon={
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className={`h-5 w-5 text-gray-600 dark:text-gray-400 transition-transform ${
+                isCollapsed ? "rotate-180" : ""
+              }`}
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M11 19l-7-7 7-7m8 14l-7-7 7-7"
+              />
+            </svg>
+          }
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className={`h-5 w-5 text-gray-600 dark:text-gray-400 transition-transform ${
-              isCollapsed ? "rotate-180" : ""
-            }`}
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M11 19l-7-7 7-7m8 14l-7-7 7-7"
-            />
-          </svg>
-        </button>
+        </Button>
       </div>
 
       {/* Navigation */}
@@ -123,21 +128,19 @@ export default function Navbar({
         <ul className="flex flex-col space-y-2">
           {navItems.map((item) => (
             <li key={item.id} className="relative">
-              <button
+              <Button
                 onClick={() => onTabChange(item.id as "words" | "decks" | "ipa")}
                 onMouseEnter={() => setHoveredItem(item.id)}
                 onMouseLeave={() => setHoveredItem(null)}
-                className={`flex items-center w-full ${
+                variant={activeTab === item.id ? "primary" : "ghost"}
+                size="md"
+                className={`w-full justify-start ${
                   isCollapsed ? "justify-center px-3" : "px-4"
-                } py-2 rounded-lg text-sm font-medium transition-colors ${
-                  activeTab === item.id
-                    ? "bg-accent text-on-accent shadow-sm"
-                    : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-                }`}
+                } ${activeTab === item.id ? "shadow-sm" : "text-gray-700 dark:text-gray-300"}`}
+                icon={<span className={isCollapsed ? "" : "mr-3"}>{item.icon}</span>}
               >
-                <span className={isCollapsed ? "" : "mr-3"}>{item.icon}</span>
                 {!isCollapsed && <span>{item.label}</span>}
-              </button>
+              </Button>
 
               {/* Tooltip for collapsed state */}
               {isCollapsed && hoveredItem === item.id && (

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Button from "@/components/ui/Button";
 import { LessonHero } from "./LessonHero";
 import { StageCard } from "./StageCard";
 import {
@@ -124,12 +125,14 @@ export function LessonLobby({
         </div>
 
         {nextUnlocked ? (
-          <button
+          <Button
             onClick={() => onSelectStage(nextUnlocked.id, diffMode)}
-            className="btn-primary w-full rounded-[18px] px-5 py-4 text-[15px] font-semibold shadow-lg shadow-[color-mix(in_oklch,var(--primary)_18%,transparent)] transition-all duration-200 hover:-translate-y-0.5"
+            fullWidth
+            size="lg"
+            className="shadow-lg shadow-[color-mix(in_oklch,var(--primary)_18%,transparent)]"
           >
             Continue — {nextUnlocked.title}
-          </button>
+          </Button>
         ) : overall >= 80 ? (
           <div className="rounded-[18px] border border-[color-mix(in_oklch,var(--admonitions-color-tip)_20%,transparent)] bg-[color-mix(in_oklch,var(--admonitions-color-tip)_8%,transparent)] px-4 py-4 text-center">
             <p className="text-[15px] font-semibold text-[var(--admonitions-color-tip)]">
@@ -140,12 +143,14 @@ export function LessonLobby({
             </p>
           </div>
         ) : (
-          <button
+          <Button
             onClick={() => onSelectStage("guided", diffMode)}
-            className="btn-primary w-full rounded-[18px] px-5 py-4 text-[15px] font-semibold shadow-lg shadow-[color-mix(in_oklch,var(--primary)_18%,transparent)] transition-all duration-200 hover:-translate-y-0.5"
+            fullWidth
+            size="lg"
+            className="shadow-lg shadow-[color-mix(in_oklch,var(--primary)_18%,transparent)]"
           >
             Start practice · ~3 min
-          </button>
+          </Button>
         )}
       </div>
     </section>

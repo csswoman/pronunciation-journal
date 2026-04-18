@@ -1,4 +1,5 @@
 "use client";
+import Button from "@/components/ui/Button";
 
 import type { Phase } from "./ActiveLessonPage";
 
@@ -22,7 +23,7 @@ export default function SessionHeader({ title, currentIndex, totalWords, phase, 
     >
       <div className="px-6 py-4 lg:px-8">
         <div className="flex items-center justify-between gap-4">
-          <button
+          <Button
             onClick={onBack}
             className="rounded-xl p-2.5 transition-colors"
             style={{ color: 'var(--text-secondary)' }}
@@ -32,7 +33,7 @@ export default function SessionHeader({ title, currentIndex, totalWords, phase, 
             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
-          </button>
+          </Button>
           <div className="text-center">
             <h1 className="text-[18px] font-semibold leading-tight tracking-tight" style={{ color: 'var(--deep-text)' }}>{title}</h1>
             <p className="text-[13px] leading-5" style={{ color: 'var(--text-secondary)' }}>
@@ -53,3 +54,4 @@ export default function SessionHeader({ title, currentIndex, totalWords, phase, 
     </header>
   );
 }
+

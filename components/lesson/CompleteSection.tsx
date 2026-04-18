@@ -1,4 +1,5 @@
 "use client";
+import Button from "@/components/ui/Button";
 
 import Link from "next/link";
 import ScoreDisplay from "./ScoreDisplay";
@@ -31,7 +32,7 @@ export default function CompleteSection({
       <ScoreDisplay wordAttempts={wordAttempts} sessionAccuracy={sessionAccuracy} totalXP={totalXP} totalWords={totalWords} />
       <div className="flex gap-3 justify-center">
         {isDynamic ? (
-          <button
+          <Button
             onClick={onBackToLobby}
             className="px-6 py-3 rounded-xl text-white font-medium transition-colors"
             style={{ backgroundColor: 'var(--primary)' }}
@@ -39,9 +40,9 @@ export default function CompleteSection({
             onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'var(--primary)')}
           >
             ← Back to Stages
-          </button>
+          </Button>
         ) : (
-          <button
+          <Button
             onClick={onRetryLesson}
             className="px-6 py-3 rounded-xl text-white font-medium transition-colors"
             style={{ backgroundColor: 'var(--primary)' }}
@@ -49,7 +50,7 @@ export default function CompleteSection({
             onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'var(--primary)')}
           >
             🔄 Retry Lesson
-          </button>
+          </Button>
         )}
         <Link href={backHref} className="px-6 py-3 rounded-xl bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-medium hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
           ← All Lessons
@@ -58,3 +59,4 @@ export default function CompleteSection({
     </div>
   );
 }
+

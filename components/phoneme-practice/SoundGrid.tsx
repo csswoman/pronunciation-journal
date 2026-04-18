@@ -1,5 +1,6 @@
 'use client'
 
+import Button from "@/components/ui/Button";
 import { useRouter } from 'next/navigation'
 import type { UserSoundProgressWithSound } from '@/lib/phoneme-practice/types'
 
@@ -32,7 +33,7 @@ export function SoundGrid({ progressList }: Props) {
   return (
     <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2">
       {progressList.map(p => (
-        <button
+        <Button
           key={p.sound_id}
           onClick={() => handleClick(p)}
           title={`${p.sounds.example ?? p.sounds.ipa} — ${p.status}`}
@@ -43,8 +44,9 @@ export function SoundGrid({ progressList }: Props) {
           {STATUS_ICON[p.status] && (
             <span className="absolute top-1 right-1 text-[10px]">{STATUS_ICON[p.status]}</span>
           )}
-        </button>
+        </Button>
       ))}
     </div>
   )
 }
+

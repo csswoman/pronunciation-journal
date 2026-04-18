@@ -17,6 +17,7 @@ import type { SubLesson } from "@/lib/notion/types";
 import { LESSON_CATEGORIES } from "@/lib/types";
 import type { TheoryLesson } from "@/lib/types";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
+import Button from "@/components/ui/Button";
 import "@/styles/notion-custom.css";
 
 const LEVEL_SET = new Set(["A1", "A2", "B1", "B2", "C1"]);
@@ -245,29 +246,37 @@ export default function LessonReaderPage() {
                 </Link>
 
                 {!confirmDelete ? (
-                  <button
+                  <Button
+                    type="button"
                     onClick={() => setConfirmDelete(true)}
-                    className="rounded-xl px-4 py-2 text-sm font-semibold text-red-600 transition-all duration-200 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20"
+                    variant="danger"
+                    size="sm"
+                    className="rounded-xl px-4 py-2 text-sm font-semibold"
                   >
                     Delete
-                  </button>
+                  </Button>
                 ) : (
                   <div className="flex items-center gap-2">
                     <span className="text-xs" style={{ color: "var(--text-secondary)" }}>Are you sure?</span>
-                    <button
+                    <Button
+                      type="button"
                       onClick={handleDelete}
                       disabled={deleting}
-                      className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-red-600 text-white disabled:opacity-50"
+                      variant="danger"
+                      size="sm"
+                      className="rounded-lg px-3 py-1.5 text-xs font-semibold"
                     >
                       {deleting ? "Deleting…" : "Yes, delete"}
-                    </button>
-                    <button
+                    </Button>
+                    <Button
+                      type="button"
                       onClick={() => setConfirmDelete(false)}
-                      className="rounded-lg border border-[var(--line-divider)] px-3 py-1.5 text-xs font-semibold"
-                      style={{ color: "var(--deep-text)" }}
+                      variant="outline"
+                      size="sm"
+                      className="rounded-lg px-3 py-1.5 text-xs font-semibold"
                     >
                       Cancel
-                    </button>
+                    </Button>
                   </div>
                 )}
               </div>

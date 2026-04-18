@@ -1,4 +1,5 @@
 "use client";
+import Button from "@/components/ui/Button";
 
 import PronunciationFeedback from "./PronunciationFeedback";
 import type { ScoringResult } from "@/lib/types";
@@ -34,14 +35,14 @@ export default function FeedbackSection({
         Heard: &ldquo;{scoringResult.transcript}&rdquo;
       </p>
       <div className="flex gap-4 justify-center">
-        <button
+        <Button
           onClick={onRetry}
           className="px-6 py-3 rounded-xl font-medium transition-colors"
           style={{ backgroundColor: 'var(--btn-regular-bg)', color: 'var(--text-primary)' }}
         >
           🔄 Retry
-        </button>
-        <button
+        </Button>
+        <Button
           onClick={onNext}
           className="px-6 py-3 rounded-xl text-white font-medium transition-colors"
           style={{ backgroundColor: 'var(--primary)' }}
@@ -49,8 +50,9 @@ export default function FeedbackSection({
           onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'var(--primary)')}
         >
           {currentIndex + 1 < totalWords ? "➡️ Next" : "🎉 Finish"}
-        </button>
+        </Button>
       </div>
     </div>
   );
 }
+

@@ -1,6 +1,7 @@
 'use client'
 
 import { Mic } from 'lucide-react'
+import Button from '@/components/ui/Button'
 
 interface ExpertInsightCardProps {
   title: string
@@ -29,22 +30,25 @@ export function ExpertInsightCard({
           <div className="text-xs font-semibold opacity-90 tracking-widest">EXPERT INSIGHT</div>
           <h3 className="text-xl font-bold leading-tight">{title}</h3>
         </div>
-        <button className="p-3 rounded-full bg-white/20 hover:bg-white/30 transition-colors">
+        <Button type="button" variant="ghost" size="icon" className="rounded-full bg-white/20 text-white hover:bg-white/30">
           <Mic size={20} className="text-white" />
-        </button>
+        </Button>
       </div>
 
       <p className="text-sm leading-relaxed opacity-95">{description}</p>
 
       {/* Content Split: Left text, Right progress circle */}
       <div className="flex items-end justify-between gap-4">
-        <button
+        <Button
+          type="button"
           onClick={onStartReview}
           disabled={isLoading}
-          className="px-6 py-2 bg-white text-[var(--primary)] font-semibold rounded-lg hover:bg-gray-100 disabled:opacity-50 transition-colors"
+          variant="secondary"
+          size="sm"
+          className="rounded-lg px-6 py-2 bg-white text-[var(--primary)] font-semibold hover:bg-gray-100 disabled:opacity-50 transition-colors"
         >
           {isLoading ? "Starting..." : `Start ${durationMinutes} min review`}
-        </button>
+        </Button>
 
         {/* Progress Circle */}
         <div className="flex flex-col items-center">

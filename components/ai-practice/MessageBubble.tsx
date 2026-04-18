@@ -1,4 +1,5 @@
 "use client";
+import Button from "@/components/ui/Button";
 
 import type { AIMessage } from "@/lib/types";
 import AIAvatar from "./AIAvatar";
@@ -215,7 +216,7 @@ function WordsSection({ items, onSaveWord, fullContent }: WordsProps) {
         const word = item.replace(/^[-•*]\s*/, "").trim();
         if (!word) return null;
         return (
-          <button
+          <Button
             key={i}
             onClick={() => onSaveWord(word, extractSentenceContext(fullContent, word))}
             className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium border transition-all"
@@ -235,7 +236,7 @@ function WordsSection({ items, onSaveWord, fullContent }: WordsProps) {
           >
             <span style={{ color: "var(--text-primary)" }}>{word}</span>
             <span className="opacity-50">+ save</span>
-          </button>
+          </Button>
         );
       })}
     </div>
@@ -367,3 +368,4 @@ export default function MessageBubble({ message, onSaveWord, onSuggestionClick }
 
   return <AIBubble message={message} onSaveWord={onSaveWord} onSuggestionClick={onSuggestionClick} />;
 }
+

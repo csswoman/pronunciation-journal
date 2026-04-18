@@ -1,5 +1,6 @@
 'use client'
 
+import Button from "@/components/ui/Button";
 import type { ReactNode } from 'react'
 
 interface Props {
@@ -66,15 +67,16 @@ export function ExerciseCard({ current, total, exerciseType, children, feedback,
             )}
           </div>
           {onNext && (
-            <button
+            <Button
               onClick={onNext}
               className="btn-primary px-4 py-1.5 rounded-lg text-sm font-semibold"
             >
               {finishLabel ? 'Finish ✓' : 'Next →'}
-            </button>
+            </Button>
           )}
         </div>
       )}
     </div>
   )
 }
+

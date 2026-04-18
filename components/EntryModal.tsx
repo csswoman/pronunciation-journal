@@ -1,4 +1,5 @@
 "use client";
+import Button from "@/components/ui/Button";
 
 import { Entry, Difficulty } from "@/lib/types";
 import { useState, useCallback } from "react";
@@ -76,7 +77,7 @@ export default function EntryModal({ entry, onClose, onSave }: EntryModalProps) 
             </h2>
             <div className="flex items-center gap-2">
               {currentEntry.audioUrl && (
-                <button
+                <Button
                   onClick={() => playAudio(currentEntry.audioUrl!, { showAlerts: true })}
                   className="p-3 rounded-full transition-colors"
                   style={{
@@ -100,7 +101,7 @@ export default function EntryModal({ entry, onClose, onSave }: EntryModalProps) 
                       clipRule="evenodd"
                     />
                   </svg>
-                </button>
+                </Button>
               )}
               
               {/* Compact Recorder - Always visible */}
@@ -110,7 +111,7 @@ export default function EntryModal({ entry, onClose, onSave }: EntryModalProps) 
               />
 
               {currentEntry.userAudioUrl && (
-                <button
+                <Button
                   onClick={() => playAudio(currentEntry.userAudioUrl!, { showAlerts: true })}
                   className="p-3 rounded-full transition-colors"
                   style={{
@@ -135,13 +136,13 @@ export default function EntryModal({ entry, onClose, onSave }: EntryModalProps) 
                     <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3v5z" />
                     <path d="M3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3v5z" />
                   </svg>
-                </button>
+                </Button>
               )}
             </div>
           </div>
           <div className="flex gap-2">
             {!isEditing ? (
-              <button
+              <Button
                 onClick={() => setIsEditing(true)}
                 className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
                 aria-label="Edit"
@@ -161,24 +162,24 @@ export default function EntryModal({ entry, onClose, onSave }: EntryModalProps) 
                     d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
                   />
                 </svg>
-              </button>
+              </Button>
             ) : (
               <>
-                <button
+                <Button
                   onClick={handleSave}
                   className="px-4 py-2 rounded-lg text-sm font-medium accent-button"
                 >
                   Save
-                </button>
-                <button
+                </Button>
+                <Button
                   onClick={handleCancel}
                   className="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg transition-colors text-sm font-medium"
                 >
                   Cancel
-                </button>
+                </Button>
               </>
             )}
-            <button
+            <Button
               onClick={onClose}
               className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
               aria-label="Close"
@@ -197,7 +198,7 @@ export default function EntryModal({ entry, onClose, onSave }: EntryModalProps) 
                   d="M6 18L18 6M6 6l12 12"
                 />
               </svg>
-              </button>
+              </Button>
           </div>
         </div>
 
@@ -222,7 +223,7 @@ export default function EntryModal({ entry, onClose, onSave }: EntryModalProps) 
             ) : (
               <div className="flex gap-2">
                 {(["easy", "medium", "hard"] as Difficulty[]).map((diff) => (
-                  <button
+                  <Button
                     key={diff}
                     onClick={() => setEditedEntry({ ...editedEntry, difficulty: diff })}
                     className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
@@ -237,7 +238,7 @@ export default function EntryModal({ entry, onClose, onSave }: EntryModalProps) 
                     style={editedEntry.difficulty === diff ? { backgroundColor: "var(--color-accent)", color: "var(--color-text-on-accent)" } : {}}
                   >
                     {diff.charAt(0).toUpperCase() + diff.slice(1)}
-                  </button>
+                  </Button>
                 ))}
               </div>
             )}
@@ -369,4 +370,5 @@ export default function EntryModal({ entry, onClose, onSave }: EntryModalProps) 
     </div>
   );
 }
+
 

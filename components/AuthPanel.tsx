@@ -1,4 +1,5 @@
 "use client";
+import Button from "@/components/ui/Button";
 
 import { useState } from "react";
 import {
@@ -98,7 +99,7 @@ export default function AuthPanel() {
 
         {mode !== "reset" && (
           <div className="flex rounded-lg bg-gray-100 dark:bg-gray-700 p-1">
-            <button
+            <Button
               type="button"
               onClick={() => {
                 setMode("login");
@@ -111,8 +112,8 @@ export default function AuthPanel() {
               }`}
             >
               Entrar
-            </button>
-            <button
+            </Button>
+            <Button
               type="button"
               onClick={() => {
                 setMode("register");
@@ -125,7 +126,7 @@ export default function AuthPanel() {
               }`}
             >
               Registrarse
-            </button>
+            </Button>
           </div>
         )}
 
@@ -162,14 +163,14 @@ export default function AuthPanel() {
                 className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-accent focus:border-transparent"
               />
             </div>
-            <button
+            <Button
               type="submit"
               disabled={pending}
               className="w-full py-2.5 rounded-lg font-medium accent-button disabled:opacity-50"
             >
               {pending ? "Enviando…" : "Enviar enlace"}
-            </button>
-            <button
+            </Button>
+            <Button
               type="button"
               onClick={() => {
                 setMode("login");
@@ -178,7 +179,7 @@ export default function AuthPanel() {
               className="w-full text-sm text-accent hover:underline"
             >
               Volver a entrar
-            </button>
+            </Button>
           </form>
         ) : (
           <form
@@ -221,7 +222,7 @@ export default function AuthPanel() {
               />
             </div>
             {mode === "login" && (
-              <button
+              <Button
                 type="button"
                 onClick={() => {
                   setMode("reset");
@@ -230,9 +231,9 @@ export default function AuthPanel() {
                 className="text-sm text-accent hover:underline"
               >
                 ¿Olvidaste tu contraseña?
-              </button>
+              </Button>
             )}
-            <button
+            <Button
               type="submit"
               disabled={pending}
               className="w-full py-2.5 rounded-lg font-medium accent-button disabled:opacity-50"
@@ -242,7 +243,7 @@ export default function AuthPanel() {
                 : mode === "login"
                   ? "Entrar"
                   : "Crear cuenta"}
-            </button>
+            </Button>
           </form>
         )}
 
@@ -258,14 +259,14 @@ export default function AuthPanel() {
                 </span>
               </div>
             </div>
-            <button
+            <Button
               type="button"
               onClick={handleGuest}
               disabled={pending}
               className="w-full py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 font-medium hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50"
             >
               Continuar como invitado
-            </button>
+            </Button>
             <p className="text-xs text-center text-gray-500 dark:text-gray-400">
               La cuenta de invitado guarda datos en la nube en este navegador; para recuperar
               sesión en otro dispositivo, usa correo y contraseña.
@@ -276,3 +277,4 @@ export default function AuthPanel() {
     </div>
   );
 }
+

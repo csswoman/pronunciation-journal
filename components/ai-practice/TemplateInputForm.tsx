@@ -1,4 +1,5 @@
 "use client";
+import Button from "@/components/ui/Button";
 
 import { useState } from "react";
 import type { AITemplateId, TemplateVars } from "@/lib/types";
@@ -50,7 +51,7 @@ export default function TemplateInputForm({
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3">
-        <button
+        <Button
           onClick={onBack}
           className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
           aria-label="Back"
@@ -58,7 +59,7 @@ export default function TemplateInputForm({
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
-        </button>
+        </Button>
         <div>
           <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
             {template?.icon} {template?.title}
@@ -95,7 +96,7 @@ export default function TemplateInputForm({
             </label>
             <div className="flex flex-wrap gap-2">
               {LEVELS.map((lvl) => (
-                <button
+                <Button
                   key={lvl}
                   type="button"
                   onClick={() => setUserLevel(lvl)}
@@ -107,7 +108,7 @@ export default function TemplateInputForm({
                   disabled={isLoading}
                 >
                   {lvl}
-                </button>
+                </Button>
               ))}
             </div>
           </div>
@@ -137,7 +138,7 @@ export default function TemplateInputForm({
           </div>
         )}
 
-        <button
+        <Button
           type="submit"
           disabled={!isValid() || isLoading}
           className="w-full py-3 px-6 bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-300 dark:disabled:bg-gray-700 text-white disabled:text-gray-400 rounded-xl font-medium transition-colors flex items-center justify-center gap-2"
@@ -150,8 +151,9 @@ export default function TemplateInputForm({
           ) : (
             "Start Session →"
           )}
-        </button>
+        </Button>
       </form>
     </div>
   );
 }
+

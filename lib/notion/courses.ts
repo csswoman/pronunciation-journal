@@ -1,6 +1,5 @@
 import { unstable_cache } from "next/cache";
 import { getNotionClient } from "./client";
-import { notionCache } from "./cache";
 import { Course, CourseWithLessons, NotionPage, NotionProperty, SubLesson } from "./types";
 
 const COURSES_DB_ID = process.env.NOTION_DATABASE_ID!;
@@ -15,12 +14,19 @@ async function fetchCourses(): Promise<Course[]> {
 
   return pages.map((page: NotionPage) => {
     const title = extractPageTitle(page);
+    const coverImageUrl =
+      page.cover?.type === "external"
+        ? page.cover.external.url
+        : page.cover?.type === "file"
+          ? page.cover.file.url
+          : undefined;
+
     return {
       id: page.id,
       title,
       slug: generateSlug(title),
       description: extractRichText(page.properties?.Description?.rich_text),
-      coverImageUrl: (page.cover as any)?.external?.url ?? (page.cover as any)?.file?.url,
+      coverImageUrl,
       lessonCount: 0,
       notionPageId: page.id,
       notionUrl: page.url,

@@ -1,3 +1,4 @@
+import Button from "@/components/ui/Button";
 interface ChatHeaderProps {
   hasMessages: boolean;
   onReset: () => void;
@@ -10,7 +11,7 @@ export default function ChatHeader({ hasMessages, onReset }: ChatHeaderProps) {
       style={{ borderColor: "var(--line-divider)" }}
     >
       {hasMessages ? (
-        <button
+        <Button
           onClick={onReset}
           className="flex items-center gap-1.5 text-sm transition-colors px-3 py-1.5 rounded-lg"
           style={{ color: "var(--text-tertiary)" }}
@@ -27,7 +28,7 @@ export default function ChatHeader({ hasMessages, onReset }: ChatHeaderProps) {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
           New session
-        </button>
+        </Button>
       ) : (
         <p className="text-sm font-medium px-1" style={{ color: "var(--text-tertiary)" }}>
           AI Coach
@@ -36,3 +37,4 @@ export default function ChatHeader({ hasMessages, onReset }: ChatHeaderProps) {
     </div>
   );
 }
+

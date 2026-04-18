@@ -1,4 +1,5 @@
 "use client";
+import Button from "@/components/ui/Button";
 
 import { useState } from "react";
 import type { Tables } from "@/lib/supabase/types";
@@ -81,22 +82,22 @@ export function GeminiSuggestPanel({
           <span className="text-sm font-semibold text-[var(--deep-text)]">Gemini Suggestions</span>
         </div>
         <div className="flex items-center gap-2">
-          <button
+          <Button
             onClick={() => fetchSuggestions({ difficulty })}
             disabled={loading}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-[var(--primary)] text-white hover:opacity-90 disabled:opacity-50 transition-colors"
           >
             {loading ? "Thinking…" : "Suggest words"}
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={() => fetchSuggestions({ difficulty, redo: true })}
             disabled={loading}
             title="Get a different set of suggestions"
             className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-[var(--btn-regular-bg)] text-[var(--deep-text)] hover:bg-[var(--btn-plain-bg-hover)] transition-colors"
           >
             Re-do
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={() => {
               const next = Math.min(3, difficulty + 1);
               setDifficulty(next);
@@ -107,7 +108,7 @@ export function GeminiSuggestPanel({
             className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-[var(--btn-regular-bg)] text-[var(--deep-text)] hover:bg-[var(--btn-plain-bg-hover)] transition-colors"
           >
             Harder
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -116,7 +117,7 @@ export function GeminiSuggestPanel({
       {suggestions.length > 0 && (
         <div className="space-y-2">
           <div className="flex items-center justify-end gap-2">
-            <button
+            <Button
               onClick={async () => {
                 // Save all suggestions not yet added
                 const toAdd = suggestions.map(s => s.word).filter(w => !added.has(w));
@@ -128,7 +129,7 @@ export function GeminiSuggestPanel({
               className="px-3 py-1 rounded-xl text-xs font-semibold bg-[var(--primary)] text-white hover:opacity-90 transition-colors"
             >
               Save all
-            </button>
+            </Button>
           </div>
           {suggestions.map(s => (
             <div key={s.word} className="flex items-start gap-3 p-3 rounded-xl bg-[var(--card-bg)] border border-[var(--line-divider)]">
@@ -136,7 +137,7 @@ export function GeminiSuggestPanel({
                 <p className="text-sm font-semibold text-[var(--deep-text)]">{s.word}</p>
                 <p className="text-xs text-[var(--text-secondary)] leading-relaxed">{s.meaning}</p>
               </div>
-              <button
+              <Button
                 onClick={() => handleAdd(s.word)}
                 disabled={added.has(s.word)}
                 className={`flex-shrink-0 flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-medium transition-colors ${
@@ -146,7 +147,7 @@ export function GeminiSuggestPanel({
                 }`}
               >
                 {added.has(s.word) ? "Added" : <><PlusIcon /> Add</>}
-              </button>
+              </Button>
             </div>
           ))}
         </div>
@@ -160,3 +161,4 @@ export function GeminiSuggestPanel({
     </div>
   );
 }
+

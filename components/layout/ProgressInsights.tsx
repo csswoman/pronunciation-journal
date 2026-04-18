@@ -1,4 +1,5 @@
 "use client";
+import Button from "@/components/ui/Button";
 
 import { useState } from "react";
 import {
@@ -179,7 +180,7 @@ export default function ProgressInsights({
             const active = tab.id === activeTab;
 
             return (
-              <button
+              <Button
                 key={tab.id}
                 type="button"
                 onClick={() => setActiveTab(tab.id)}
@@ -192,7 +193,7 @@ export default function ProgressInsights({
               >
                 {tab.icon}
                 {tab.label}
-              </button>
+              </Button>
             );
           })}
         </div>
@@ -287,3 +288,4 @@ export default function ProgressInsights({
     </div>
   );
 }
+

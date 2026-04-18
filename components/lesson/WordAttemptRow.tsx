@@ -1,4 +1,5 @@
 "use client";
+import Button from "@/components/ui/Button";
 
 import { useState } from "react";
 import type { WordAttempt } from "@/hooks/useLesson";
@@ -65,7 +66,7 @@ export default function WordAttemptRow({ wordAttempt }: { wordAttempt: WordAttem
     <div className="rounded-lg overflow-hidden" style={{
       backgroundColor: "var(--btn-regular-bg)",
     }}>
-      <button
+      <Button
         onClick={() => hasRetries && setOpen((o) => !o)}
         className={`w-full flex items-center justify-between py-2 px-3 text-left ${hasRetries ? "cursor-pointer" : "cursor-default"} transition-colors`}
         style={{ color: "var(--text-primary)" }}
@@ -93,7 +94,7 @@ export default function WordAttemptRow({ wordAttempt }: { wordAttempt: WordAttem
             </svg>
           )}
         </div>
-      </button>
+      </Button>
 
       {open && hasRetries && (
         <div className="px-3 pb-3 flex flex-wrap gap-1.5">
@@ -110,3 +111,4 @@ export default function WordAttemptRow({ wordAttempt }: { wordAttempt: WordAttem
     </div>
   );
 }
+

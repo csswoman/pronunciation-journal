@@ -1,4 +1,5 @@
 "use client";
+import Button from "@/components/ui/Button";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -113,7 +114,7 @@ export default function BottomNav({ className = "" }: BottomNavProps) {
             </Link>
           );
         })}
-        <button
+        <Button
           onClick={() => setShowMenu(!showMenu)}
           className={`flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl text-[10px] font-semibold transition-all ${
             showMenu
@@ -125,8 +126,9 @@ export default function BottomNav({ className = "" }: BottomNavProps) {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
           </svg>
           Menu
-        </button>
+        </Button>
       </nav>
     </>
   );
 }
+

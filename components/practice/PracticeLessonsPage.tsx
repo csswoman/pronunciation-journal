@@ -16,6 +16,7 @@ import { getAllDbLessons } from '@/lib/lesson-generator-db'
 import { getAllProgress } from '@/lib/phoneme-practice/queries'
 import type { Lesson } from '@/lib/types'
 import type { UserSoundProgressWithSound } from '@/lib/phoneme-practice/types'
+import Button from '@/components/ui/Button'
 
 type PracticeFilter = 'all' | 'basics' | 'vowels' | 'consonants' | 'diphthongs'
 
@@ -260,17 +261,17 @@ export default function PracticeLessonsPage() {
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6">
             <div className="flex gap-3 flex-wrap">
               {FILTERS.map((chip) => (
-                <button
+                <Button
                   key={chip.id}
+                  type="button"
                   onClick={() => setFilter(chip.id)}
-                  className="px-5 py-2.5 rounded-full text-sm font-semibold transition-colors"
-                  style={{
-                    backgroundColor: filter === chip.id ? 'var(--primary)' : 'var(--surface)',
-                    color: filter === chip.id ? '#fff' : 'var(--text-secondary)',
-                  }}
+                  variant="chip"
+                  size="sm"
+                  selected={filter === chip.id}
+                  className="rounded-full px-5 py-2.5 text-sm font-semibold"
                 >
                   {chip.label}
-                </button>
+                </Button>
               ))}
             </div>
 
@@ -326,25 +327,29 @@ export default function PracticeLessonsPage() {
               {/* Pagination */}
               {filteredLessons.length > PAGE_SIZE && (
                 <div className="flex items-center justify-center gap-3 mt-8">
-                  <button
+                  <Button
+                    type="button"
                     onClick={() => { setCurrentPage((p) => Math.max(1, p - 1)); setGridKey((k) => k + 1) }}
                     disabled={currentPage === 1}
-                    className="px-4 py-2 rounded-lg text-sm font-semibold transition-opacity duration-150 disabled:opacity-30 disabled:cursor-not-allowed"
-                    style={{ backgroundColor: 'var(--color-accent-soft)', color: 'var(--text-secondary)' }}
+                    variant="secondary"
+                    size="sm"
+                    className="rounded-lg px-4 py-2 text-sm font-semibold transition-opacity duration-150 disabled:opacity-30 disabled:cursor-not-allowed"
                   >
                     Previous
-                  </button>
+                  </Button>
                   <span className="text-sm tabular-nums" style={{ color: 'var(--text-tertiary)' }}>
                     {currentPage} / {totalPages}
                   </span>
-                  <button
+                  <Button
+                    type="button"
                     onClick={() => { setCurrentPage((p) => Math.min(totalPages, p + 1)); setGridKey((k) => k + 1) }}
                     disabled={currentPage === totalPages}
-                    className="px-4 py-2 rounded-lg text-sm font-semibold transition-opacity duration-150 disabled:opacity-30 disabled:cursor-not-allowed"
-                    style={{ backgroundColor: 'var(--color-accent-soft)', color: 'var(--text-secondary)' }}
+                    variant="secondary"
+                    size="sm"
+                    className="rounded-lg px-4 py-2 text-sm font-semibold transition-opacity duration-150 disabled:opacity-30 disabled:cursor-not-allowed"
                   >
                     Next
-                  </button>
+                  </Button>
                 </div>
               )}
             </>

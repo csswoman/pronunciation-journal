@@ -1,4 +1,5 @@
 "use client";
+import Button from "@/components/ui/Button";
 
 import type { ReactNode } from "react";
 import type { LessonLevel } from "@/lib/groupLessonsByLevel";
@@ -111,7 +112,7 @@ export default function LessonsSidebar({
             Source
           </p>
           <div className="grid grid-cols-3 gap-1 rounded-xl bg-[var(--btn-regular-bg)] p-1">
-            <button
+            <Button
               type="button"
               onClick={() => onFiltersChange({ ...filters, source: "all" })}
               className={`rounded-lg px-2 py-1.5 text-xs font-medium transition ${
@@ -121,8 +122,8 @@ export default function LessonsSidebar({
               }`}
             >
               All
-            </button>
-            <button
+            </Button>
+            <Button
               type="button"
               onClick={() => onFiltersChange({ ...filters, source: "system" })}
               className={`rounded-lg px-2 py-1.5 text-xs font-medium transition ${
@@ -132,8 +133,8 @@ export default function LessonsSidebar({
               }`}
             >
               System
-            </button>
-            <button
+            </Button>
+            <Button
               type="button"
               onClick={() => onFiltersChange({ ...filters, source: "mine" })}
               className={`rounded-lg px-2 py-1.5 text-xs font-medium transition ${
@@ -143,7 +144,7 @@ export default function LessonsSidebar({
               }`}
             >
               Mine
-            </button>
+            </Button>
           </div>
         </div>
       </div>
@@ -156,3 +157,4 @@ export default function LessonsSidebar({
     </div>
   );
 }
+

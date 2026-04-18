@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import Button from "@/components/ui/Button";
 
 type Difficulty = "easy" | "medium" | "hard";
 
@@ -60,15 +61,13 @@ export default function LessonCard({
         <span className="text-xs text-[var(--text-tertiary)]">
           {difficulty === "easy" ? "Beginner" : difficulty === "medium" ? "Intermediate" : "Advanced"}
         </span>
-        <button
+        <Button
           onClick={onStart}
-          className="text-xs font-semibold text-[var(--primary)]
-            bg-[var(--btn-regular-bg)] rounded-lg px-3 py-1.5
-            hover:bg-[var(--primary)] hover:text-[var(--accent-text)]
-            transition-all"
+          variant="secondary"
+          size="sm"
         >
-          Start →
-        </button>
+          Start
+        </Button>
       </div>
     </div>
   );

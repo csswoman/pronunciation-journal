@@ -1,5 +1,6 @@
 'use client'
 
+import Button from "@/components/ui/Button";
 import { useState } from 'react'
 import { speak } from '@/lib/phoneme-practice/tts'
 import type { Exercise } from '@/lib/phoneme-practice/types'
@@ -60,7 +61,7 @@ export function MinimalPairExercise({ exercise, onSubmit }: Props) {
 
       <div className="grid grid-cols-2 gap-4">
         {exercise.options.map(option => (
-          <button
+          <Button
             key={option.id}
             className="p-5 rounded-2xl border-2 text-center font-bold text-xl transition-all cursor-pointer"
             style={getOptionStyle(option.id)}
@@ -69,9 +70,10 @@ export function MinimalPairExercise({ exercise, onSubmit }: Props) {
           >
             <div>{option.label}</div>
             <div className="text-xs font-normal mt-1 opacity-60">🔊 hover to hear</div>
-          </button>
+          </Button>
         ))}
       </div>
     </div>
   )
 }
+

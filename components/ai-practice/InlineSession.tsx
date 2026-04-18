@@ -1,4 +1,5 @@
 "use client";
+import Button from "@/components/ui/Button";
 
 import { useState } from "react";
 import type { LearningSession } from "@/lib/types";
@@ -76,7 +77,7 @@ export default function InlineSession({ session }: { session: LearningSession })
       {/* Step dots */}
       <div className="flex gap-1 px-4 pt-3">
         {session.steps.map((_, i) => (
-          <button
+          <Button
             key={i}
             onClick={() => !finished && setCurrentStep(i)}
             className="flex-1 h-1 rounded-full transition-all"
@@ -127,3 +128,4 @@ export default function InlineSession({ session }: { session: LearningSession })
     </div>
   );
 }
+

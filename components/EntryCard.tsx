@@ -1,4 +1,5 @@
 "use client";
+import Button from "@/components/ui/Button";
 
 import { Entry } from "@/lib/types";
 import { playAudio } from "@/lib/audio-utils";
@@ -58,7 +59,7 @@ export default function EntryCard({
         <div className="flex items-center gap-3">
           <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 capitalize">{entry.word}</h3>
           {entry.audioUrl && !isSelectionMode && (
-            <button
+            <Button
               onClick={(e) => handlePlayAudio(e, entry.audioUrl!)}
               className="p-2 bg-blue-100 dark:bg-blue-900 hover:bg-blue-200 dark:hover:bg-blue-800 rounded-full transition-colors"
               title="Play pronunciation"
@@ -76,7 +77,7 @@ export default function EntryCard({
                   clipRule="evenodd"
                 />
               </svg>
-            </button>
+            </Button>
           )}
         </div>
         <span
@@ -115,4 +116,5 @@ export default function EntryCard({
     </div>
   );
 }
+
 

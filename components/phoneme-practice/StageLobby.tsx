@@ -1,5 +1,6 @@
 'use client'
 
+import Button from "@/components/ui/Button";
 import { STAGES, isStageUnlocked, overallMastery } from '@/lib/phoneme-practice/stages'
 import type { StageDef, StageMasteryMap, StageId } from '@/lib/phoneme-practice/stages'
 
@@ -122,7 +123,7 @@ export function StageLobby({ soundIpa, soundName, mastery, hasPairs, onSelectSta
           const isNext = nextUnlocked?.id === stage.id
 
           return (
-            <button
+            <Button
               key={stage.id}
               disabled={!unlocked}
               onClick={() => unlocked && onSelectStage(stage.id)}
@@ -176,19 +177,19 @@ export function StageLobby({ soundIpa, soundName, mastery, hasPairs, onSelectSta
                   <span className="text-xs font-medium" style={{ color: 'var(--text-tertiary)' }}>—</span>
                 )}
               </div>
-            </button>
+            </Button>
           )
         })}
       </div>
 
       {/* CTA */}
       {nextUnlocked && (
-        <button
+        <Button
           onClick={() => onSelectStage(nextUnlocked.id)}
           className="btn-primary w-full py-3.5 rounded-2xl font-bold text-sm"
         >
           Start Next Stage
-        </button>
+        </Button>
       )}
 
       {!nextUnlocked && (
@@ -199,3 +200,4 @@ export function StageLobby({ soundIpa, soundName, mastery, hasPairs, onSelectSta
     </div>
   )
 }
+

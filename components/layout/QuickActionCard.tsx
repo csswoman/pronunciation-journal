@@ -1,3 +1,4 @@
+import Button from "@/components/ui/Button";
 import { ReactNode } from "react";
 
 interface QuickActionCardProps {
@@ -14,7 +15,7 @@ export default function QuickActionCard({
   onClick,
 }: QuickActionCardProps) {
   return (
-    <button
+    <Button
       onClick={onClick}
       className="group relative bg-[var(--card-bg)]
         border border-[var(--line-divider)] rounded-xl p-5
@@ -42,7 +43,7 @@ export default function QuickActionCard({
       {/* Text */}
       <p className="font-heading text-sm font-bold text-[var(--deep-text)] mb-1">{name}</p>
       <p className="text-xs text-[var(--text-tertiary)] leading-relaxed">{description}</p>
-    </button>
+    </Button>
   );
 }
 
@@ -55,3 +56,4 @@ export function QuickActionGrid({ children }: QuickActionGridProps) {
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">{children}</div>
   );
 }
+

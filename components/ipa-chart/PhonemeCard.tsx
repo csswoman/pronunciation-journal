@@ -1,0 +1,63 @@
+"use client";
+
+import type { MouseEvent } from "react";
+import Button from "@/components/ui/Button";
+import type { PhonemeData } from "./data";
+
+export default function PhonemeCard({
+  phoneme,
+  isPlaying,
+  isSelected,
+  onPlay,
+  onSelect,
+}: {
+  phoneme: PhonemeData;
+  isPlaying: boolean;
+  isSelected: boolean;
+  onPlay: (event: MouseEvent) => void;
+  onSelect: () => void;
+}) {
+  return (
+    <Button
+      type="button"
+      onClick={onSelect}
+      variant="outline"
+      className="group relative w-full items-start justify-start text-left rounded-2xl p-4 border transition-all duration-200"
+      style={{
+        backgroundColor: isSelected ? "var(--primary)" : "var(--card-bg)",
+        borderColor: isSelected ? "var(--primary)" : "var(--line-divider)",
+        color: isSelected ? "white" : "var(--text-primary)",
+      }}
+    >
+      <span className="text-2xl font-bold font-serif block mb-1" style={{ color: isSelected ? "white" : "var(--text-primary)" }}>
+        {phoneme.symbol}
+      </span>
+      <span className="text-[10px] font-bold uppercase tracking-wider block mb-2" style={{ color: isSelected ? "rgba(255,255,255,0.6)" : "var(--primary)" }}>
+        {phoneme.category}
+      </span>
+      <span className="text-xs font-medium" style={{ color: isSelected ? "rgba(255,255,255,0.5)" : "var(--text-secondary)" }}>
+        {phoneme.example}
+      </span>
+
+      {isPlaying && (
+        <span className="absolute bottom-2 right-2 flex gap-0.5 items-end">
+          <span className="w-0.5 h-2 rounded-full animate-bounce bg-current" style={{ animationDelay: "0ms" }} />
+          <span className="w-0.5 h-3 rounded-full animate-bounce bg-current" style={{ animationDelay: "100ms" }} />
+          <span className="w-0.5 h-2 rounded-full animate-bounce bg-current" style={{ animationDelay: "200ms" }} />
+        </span>
+      )}
+
+      <span
+        role="button"
+        onClick={onPlay}
+        className="absolute top-2 right-2 w-6 h-6 rounded-full flex items-center justify-center text-[10px] transition-opacity duration-150 opacity-0 group-hover:opacity-100"
+        style={{
+          backgroundColor: isSelected ? "rgba(255,255,255,0.2)" : "var(--btn-regular-bg)",
+          color: isSelected ? "white" : "var(--primary)",
+        }}
+      >
+        ▶
+      </span>
+    </Button>
+  );
+}

@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState, useCallback } from 'react'
-import { useParams, useRouter } from 'next/navigation'
+import { useParams } from 'next/navigation'
 import { useAuth } from '@/components/AuthProvider'
 import { ExerciseCard } from '@/components/phoneme-practice/ExerciseCard'
 import { PickWordExercise } from '@/components/phoneme-practice/PickWordExercise'
@@ -28,6 +28,7 @@ import { updateSR } from '@/lib/phoneme-practice/sr'
 import { isMastered, getNextUnlockedSoundId } from '@/lib/phoneme-practice/mastery'
 import { computeStageMastery } from '@/lib/phoneme-practice/stages'
 import PageLayout from '@/components/layout/PageLayout'
+import Button from '@/components/ui/Button'
 import type { StageId, StageMasteryMap } from '@/lib/phoneme-practice/stages'
 import type { Exercise, UserSoundProgress, Sound, SoundWord, MinimalPair } from '@/lib/phoneme-practice/types'
 
@@ -45,7 +46,6 @@ export default function SoundPracticePage() {
   const params = useParams()
   const soundId = Number(params.soundId)
   const { user } = useAuth()
-  const router = useRouter()
 
   const [view, setView] = useState<View>('lobby')
   const [, setActiveStage] = useState<StageId | null>(null)
@@ -174,13 +174,15 @@ export default function SoundPracticePage() {
       <div className="min-h-screen flex items-center justify-center p-4">
         <div className="text-center space-y-3">
           <p className="text-error">{error}</p>
-          <button
+          <Button
+            type="button"
             onClick={() => { setError(null); loadLobby() }}
-            className="px-4 py-2 rounded-lg text-white"
-            style={{ backgroundColor: 'var(--primary)' }}
+            variant="primary"
+            size="sm"
+            className="rounded-lg px-4 py-2 text-white"
           >
             Retry
-          </button>
+          </Button>
         </div>
       </div>
     )
@@ -243,17 +245,17 @@ export default function SoundPracticePage() {
       >
         <div className="px-6 py-4 lg:px-8">
           <div className="flex items-center justify-between gap-4">
-            <button
+            <Button
+              type="button"
               onClick={handleBackToLobby}
-              className="rounded-xl p-2.5 transition-colors"
-              style={{ color: 'var(--text-secondary)' }}
-              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--btn-regular-bg)')}
-              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
+              variant="ghost"
+              size="icon"
+              className="rounded-xl"
             >
               <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
-            </button>
+            </Button>
             <div className="text-center">
               <h1 className="text-[18px] font-semibold leading-tight tracking-tight font-mono" style={{ color: 'var(--primary)' }}>
                 {sessionData.sound.ipa}

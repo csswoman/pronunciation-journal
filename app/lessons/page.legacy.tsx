@@ -7,6 +7,7 @@ import { getAllTheoryLessons } from "@/lib/theory-lessons/queries";
 import { LESSON_CATEGORIES } from "@/lib/types";
 import type { TheoryLesson, LessonCategory } from "@/lib/types";
 import { useUserRole } from "@/hooks/useUserRole";
+import Button from "@/components/ui/Button";
 
 const CATEGORY_ALL = "all";
 
@@ -135,28 +136,28 @@ export default function LessonsPage() {
 
         {/* Category tabs */}
         <div className="flex gap-2 flex-wrap mb-8">
-          <button
+          <Button
+            type="button"
             onClick={() => setActiveCategory(CATEGORY_ALL)}
-            className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${
-              activeCategory === CATEGORY_ALL
-                ? "bg-[var(--primary)] text-[var(--accent-text)]"
-                : "bg-[var(--btn-regular-bg)] text-[var(--deep-text)] hover:bg-[var(--btn-plain-bg-hover)]"
-            }`}
+            variant="chip"
+            size="sm"
+            selected={activeCategory === CATEGORY_ALL}
+            className="rounded-full px-3 py-1.5 text-xs font-semibold"
           >
             All
-          </button>
+          </Button>
           {LESSON_CATEGORIES.map((cat) => (
-            <button
+            <Button
               key={cat.value}
+              type="button"
               onClick={() => setActiveCategory(cat.value)}
-              className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${
-                activeCategory === cat.value
-                  ? "bg-[var(--primary)] text-[var(--accent-text)]"
-                  : "bg-[var(--btn-regular-bg)] text-[var(--deep-text)] hover:bg-[var(--btn-plain-bg-hover)]"
-              }`}
+              variant="chip"
+              size="sm"
+              selected={activeCategory === cat.value}
+              className="rounded-full px-3 py-1.5 text-xs font-semibold"
             >
               {cat.label}
-            </button>
+            </Button>
           ))}
         </div>
 

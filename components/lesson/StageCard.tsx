@@ -1,3 +1,4 @@
+import Button from "@/components/ui/Button";
 import type { LessonStageDef, LessonStageMastery, DifficultyMode } from './lesson-lobby-types'
 
 interface Props {
@@ -11,7 +12,7 @@ interface Props {
 
 export function StageCard({ stage, mastery, isNext, unlocked, diffMode, onSelect }: Props) {
   return (
-    <button
+    <Button
       disabled={!unlocked}
       onClick={() => unlocked && onSelect(diffMode)}
       className="group text-left rounded-xl border p-5 transition-all duration-200 relative overflow-hidden hover:-translate-y-1 hover:shadow-xl hover:shadow-black/5"
@@ -61,7 +62,7 @@ export function StageCard({ stage, mastery, isNext, unlocked, diffMode, onSelect
       <p className="mt-2 text-[12px] font-medium text-[var(--text-tertiary)]">
         {mastery.attempts === 0 ? 'Not started' : `${mastery.pct}% mastery`}
       </p>
-    </button>
+    </Button>
   )
 }
 
@@ -104,3 +105,4 @@ function LockIcon() {
     </svg>
   )
 }
+

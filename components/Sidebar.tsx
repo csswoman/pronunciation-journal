@@ -1,4 +1,5 @@
 "use client";
+import Button from "@/components/ui/Button";
 
 import Link from "next/link";
 import Image from "next/image";
@@ -291,7 +292,7 @@ export default function Sidebar({ className = "" }: SidebarProps) {
         <ThemeControl />
 
         {/* Sign out */}
-        <button
+        <Button
           onClick={handleSignOut}
           className="relative w-full flex items-center gap-2.5 px-3 h-9 rounded-lg text-sm font-medium transition-all duration-150 group text-left"
           style={{ color: "var(--text-secondary)" }}
@@ -302,8 +303,9 @@ export default function Sidebar({ className = "" }: SidebarProps) {
             <SignOutIcon />
           </span>
           <span className="relative group-hover:text-[var(--deep-text)] transition-colors duration-150">Sign out</span>
-        </button>
+        </Button>
       </div>
     </aside>
   );
 }
+

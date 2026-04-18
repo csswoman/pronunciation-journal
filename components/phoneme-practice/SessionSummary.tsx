@@ -1,5 +1,6 @@
 'use client'
 
+import Button from "@/components/ui/Button";
 import Link from 'next/link'
 import type { SessionAnswer } from '@/lib/phoneme-practice/types'
 
@@ -50,12 +51,12 @@ export function SessionSummary({ answers, soundIpa, nextReview, onPracticeAgain 
       </div>
 
       <div className="space-y-2">
-        <button
+        <Button
           onClick={onPracticeAgain}
           className="btn-primary w-full py-3 rounded-xl font-semibold"
         >
           Practice again
-        </button>
+        </Button>
         <Link
           href="/practice"
           className="block w-full py-3 rounded-xl border font-semibold transition-colors hover:bg-btn-plain-hover"
@@ -70,3 +71,4 @@ export function SessionSummary({ answers, soundIpa, nextReview, onPracticeAgain 
     </div>
   )
 }
+

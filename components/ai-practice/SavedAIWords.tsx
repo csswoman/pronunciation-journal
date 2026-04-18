@@ -1,4 +1,5 @@
 "use client";
+import Button from "@/components/ui/Button";
 
 import type { AISavedWord, Difficulty } from "@/lib/types";
 
@@ -51,7 +52,7 @@ export default function SavedAIWords({ words, onDelete }: SavedAIWordsProps) {
               </p>
             )}
           </div>
-          <button
+          <Button
             onClick={() => w.id && onDelete(w.id)}
             className="flex-shrink-0 text-gray-300 hover:text-red-400 transition-colors mt-0.5"
             aria-label="Delete word"
@@ -59,9 +60,10 @@ export default function SavedAIWords({ words, onDelete }: SavedAIWordsProps) {
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
-          </button>
+          </Button>
         </div>
       ))}
     </div>
   );
 }
+

@@ -1,4 +1,5 @@
 "use client";
+import Button from "@/components/ui/Button";
 
 import { useState, useEffect, useRef } from "react";
 import { getWordSuggestions, WordSuggestion } from "@/lib/dictionarySearch";
@@ -90,7 +91,7 @@ export default function SearchAndFilters({
       {showSuggestions && suggestions.length > 0 && (
         <div className="absolute z-10 w-full sm:w-64 mt-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg max-h-60 overflow-y-auto">
           {suggestions.map((suggestion, index) => (
-            <button
+            <Button
               key={index}
               onClick={() => handleSuggestionClick(suggestion)}
               className="w-full text-left px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors text-gray-900 dark:text-gray-100 border-b border-gray-200 dark:border-gray-600 last:border-b-0"
@@ -124,11 +125,12 @@ export default function SearchAndFilters({
                   </span>
                 )}
               </div>
-            </button>
+            </Button>
           ))}
         </div>
       )}
     </div>
   );
 }
+
 

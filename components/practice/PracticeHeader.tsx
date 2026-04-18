@@ -1,6 +1,7 @@
 'use client'
 
 import { Bell, Settings } from 'lucide-react'
+import Button from '@/components/ui/Button'
 
 interface PracticeHeaderProps {
   masteredCount: number
@@ -22,16 +23,16 @@ export function PracticeHeader({
         <h1 className="text-2xl font-bold text-[var(--text-primary)]">Phoneme Practice</h1>
         <div className="flex items-center gap-2">
           {dueForReview > 0 && (
-            <button className="px-3 py-1 rounded-full text-sm font-medium bg-[oklch(.9_.08_25)] text-[oklch(.6_.2_25)] flex items-center gap-1">
+            <Button type="button" variant="chip" size="sm" className="rounded-full px-3 py-1 text-sm font-medium bg-[oklch(.9_.08_25)] text-[oklch(.6_.2_25)] flex items-center gap-1">
               ⚠ Due for review
-            </button>
+            </Button>
           )}
-          <button className="p-2 hover:bg-[var(--btn-regular-bg)] rounded-lg transition-colors" title="Notifications">
+          <Button type="button" variant="ghost" size="icon" className="rounded-lg" title="Notifications">
             <Bell size={20} className="text-[var(--text-primary)]" />
-          </button>
-          <button className="p-2 hover:bg-[var(--btn-regular-bg)] rounded-lg transition-colors" title="Settings">
+          </Button>
+          <Button type="button" variant="ghost" size="icon" className="rounded-lg" title="Settings">
             <Settings size={20} className="text-[var(--text-primary)]" />
-          </button>
+          </Button>
         </div>
       </div>
 

@@ -1,4 +1,5 @@
 "use client";
+import Button from "@/components/ui/Button";
 
 import { useState } from "react";
 import type { LearningStep } from "@/lib/types";
@@ -88,7 +89,7 @@ function MultipleChoiceStep({
           }
 
           return (
-            <button
+            <Button
               key={i}
               disabled={answered}
               onClick={() => setSelected(i)}
@@ -99,7 +100,7 @@ function MultipleChoiceStep({
                 {String.fromCharCode(65 + i)}.
               </span>
               {opt}
-            </button>
+            </Button>
           );
         })}
       </div>
@@ -185,14 +186,14 @@ function FillBlankStep({
       )}
 
       {!submitted ? (
-        <button
+        <Button
           onClick={handleSubmit}
           disabled={!value.trim()}
           className="px-4 py-2 rounded-xl text-sm font-semibold transition-colors disabled:opacity-40"
           style={{ backgroundColor: "var(--primary)", color: "var(--primary-foreground)" }}
         >
           Check
-        </button>
+        </Button>
       ) : (
         <div className="space-y-3">
           <p
@@ -237,14 +238,14 @@ function SpeakingStep({
       </div>
 
       {!done ? (
-        <button
+        <Button
           onClick={() => setDone(true)}
           className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-colors"
           style={{ backgroundColor: "var(--primary)", color: "var(--primary-foreground)" }}
         >
           <span className="w-2 h-2 rounded-full bg-current animate-pulse" />
           I said it
-        </button>
+        </Button>
       ) : (
         <div className="space-y-3">
           <p className="text-sm" style={{ color: "oklch(.55 .18 145)" }}>
@@ -277,7 +278,7 @@ function ChecklistStep({ items, onComplete }: { items: string[]; onComplete: () 
       <ul className="space-y-2">
         {items.map((item, i) => (
           <li key={i}>
-            <button
+            <Button
               onClick={() => toggle(i)}
               className="w-full flex items-start gap-3 p-3 rounded-xl border text-left transition-all text-sm"
               style={{
@@ -300,7 +301,7 @@ function ChecklistStep({ items, onComplete }: { items: string[]; onComplete: () 
                 )}
               </span>
               {item}
-            </button>
+            </Button>
           </li>
         ))}
       </ul>
@@ -314,7 +315,7 @@ function ChecklistStep({ items, onComplete }: { items: string[]; onComplete: () 
 
 function NextButton({ onClick, label }: { onClick: () => void; label: string }) {
   return (
-    <button
+    <Button
       onClick={onClick}
       className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-opacity"
       style={{ backgroundColor: "var(--primary)", color: "var(--primary-foreground)" }}
@@ -323,6 +324,7 @@ function NextButton({ onClick, label }: { onClick: () => void; label: string }) 
       <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
       </svg>
-    </button>
+    </Button>
   );
 }
+
