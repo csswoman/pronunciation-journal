@@ -1,15 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { useAIPractice } from "@/hooks/useAIPractice";
 import PageLayout from "@/components/layout/PageLayout";
 import PageHeader from "@/components/layout/PageHeader";
-import ChatView from "@/components/ai-practice/ChatView";
-import CustomPromptPanel from "@/components/ai-practice/CustomPromptPanel";
+import ChatArea from "@/components/ai-practice/ChatArea";
 import SaveWordModal from "@/components/ai-practice/SaveWordModal";
-import ChatHeader from "@/components/ai-practice/ChatHeader";
-import ErrorBanner from "@/components/ai-practice/ErrorBanner";
+import AIPracticeSidebar from "@/components/ai-practice/AIPracticeSidebar";
+import AIVocabPanel from "@/components/ai-practice/AIVocabPanel";
+import { getRecentConversations } from "@/lib/ai-db";
+import { groupConversationsByDate } from "@/lib/group-by-date";
+import type { AIConversation } from "@/lib/types";
 
 export default function AIPracticePage() {
   const {
@@ -18,17 +20,24 @@ export default function AIPracticePage() {
     error,
     wordToSave,
     activeSession,
+    savedWords,
     submitTemplateVars,
     sendMessage,
     openSaveWordModal,
     closeSaveWordModal,
     confirmSaveWord,
+    deleteSavedWord,
     resetToSelect,
   } = useAIPractice();
 
   const [inputPrefill, setInputPrefill] = useState<string | undefined>(undefined);
+  const [conversations, setConversations] = useState<AIConversation[]>([]);
 
   const hasMessages = messages.length > 0;
+
+  useEffect(() => {
+    getRecentConversations(30).then(setConversations);
+  }, [messages.length]);
 
   const handleSubmit = (text: string) => {
     if (!hasMessages) {
@@ -61,38 +70,42 @@ export default function AIPracticePage() {
           />
         }
       >
-      <div className="max-w-2xl mx-auto w-full">
         <div
-          className="flex flex-col rounded-2xl overflow-hidden border"
-          style={{ borderColor: "var(--line-divider)", backgroundColor: "var(--card-bg)" }}
+          className="flex rounded-2xl overflow-hidden border"
+          style={{
+            borderColor: "var(--line-divider)",
+            backgroundColor: "var(--card-bg)",
+            height: "min(680px, 72vh)",
+          }}
         >
-        <ChatHeader hasMessages={hasMessages} onReset={resetToSelect} />
-        {error && <ErrorBanner message={error} />}
+          <AIPracticeSidebar
+            grouped={groupConversationsByDate(conversations)}
+            onNewSession={resetToSelect}
+            activeConversationId={null}
+          />
 
-        {/* Message list */}
-        <div className="px-2">
-          <ChatView
+          <ChatArea
             messages={messages}
             isStreaming={isStreaming}
+            error={error}
+            activeSession={activeSession}
             onSaveWord={openSaveWordModal}
             onSuggestionClick={(text) => setInputPrefill(text)}
-            activeSession={activeSession}
-          />
-        </div>
-
-        {/* Input */}
-        <div className="p-3 border-t" style={{ borderColor: "var(--line-divider)" }}>
-          <CustomPromptPanel
             onSubmit={handleSubmit}
-            isDisabled={isStreaming}
-            variant="chat"
-            placeholder="Type in English… (Enter to send)"
-            prefill={inputPrefill}
+            inputPrefill={inputPrefill}
             onPrefillConsumed={() => setInputPrefill(undefined)}
           />
+
+          <AIVocabPanel
+            words={savedWords}
+            onDelete={deleteSavedWord}
+            onGeneratePractice={() => submitTemplateVars({ templateId: "personalized-practice" })}
+            onGenerateWithWords={() => {
+              const wordList = savedWords.slice(0, 8).map((w) => w.word).join(", ");
+              if (wordList) sendMessage(`Let's practice with these words: ${wordList}`);
+            }}
+          />
         </div>
-        </div>
-      </div>
       </PageLayout>
 
       {wordToSave && (

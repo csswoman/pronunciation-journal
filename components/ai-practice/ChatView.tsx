@@ -5,8 +5,6 @@ import type { AIMessage, LearningSession } from "@/lib/types";
 import MessageBubble from "./MessageBubble";
 import WelcomeScreen from "./WelcomeScreen";
 import TypingIndicator from "./TypingIndicator";
-import InlineSession from "./InlineSession";
-
 interface ChatViewProps {
   messages: AIMessage[];
   isStreaming: boolean;
@@ -53,12 +51,6 @@ export default function ChatView({
           onSuggestionClick={onSuggestionClick}
         />
       ))}
-
-      {activeSession && !isStreaming && (
-        <div className="pl-9">
-          <InlineSession session={activeSession} />
-        </div>
-      )}
 
       {isStreaming && <TypingIndicator />}
 
