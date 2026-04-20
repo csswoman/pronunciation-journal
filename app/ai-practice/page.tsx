@@ -19,33 +19,22 @@ export default function AIPracticePage() {
     isStreaming,
     error,
     wordToSave,
-    activeSession,
     savedWords,
-    submitTemplateVars,
     sendMessage,
+    answerToolCall,
     openSaveWordModal,
     closeSaveWordModal,
     confirmSaveWord,
     deleteSavedWord,
-    resetToSelect,
+    resetSession,
   } = useAIPractice();
 
   const [inputPrefill, setInputPrefill] = useState<string | undefined>(undefined);
   const [conversations, setConversations] = useState<AIConversation[]>([]);
 
-  const hasMessages = messages.length > 0;
-
   useEffect(() => {
     getRecentConversations(30).then(setConversations);
   }, [messages.length]);
-
-  const handleSubmit = (text: string) => {
-    if (!hasMessages) {
-      submitTemplateVars({ templateId: "free-conversation", topic: text });
-    } else {
-      sendMessage(text);
-    }
-  };
 
   return (
     <>
@@ -80,7 +69,7 @@ export default function AIPracticePage() {
         >
           <AIPracticeSidebar
             grouped={groupConversationsByDate(conversations)}
-            onNewSession={resetToSelect}
+            onNewSession={resetSession}
             activeConversationId={null}
           />
 
@@ -88,10 +77,10 @@ export default function AIPracticePage() {
             messages={messages}
             isStreaming={isStreaming}
             error={error}
-            activeSession={activeSession}
             onSaveWord={openSaveWordModal}
             onSuggestionClick={(text) => setInputPrefill(text)}
-            onSubmit={handleSubmit}
+            onToolAnswer={answerToolCall}
+            onSubmit={sendMessage}
             inputPrefill={inputPrefill}
             onPrefillConsumed={() => setInputPrefill(undefined)}
           />
@@ -99,7 +88,7 @@ export default function AIPracticePage() {
           <AIVocabPanel
             words={savedWords}
             onDelete={deleteSavedWord}
-            onGeneratePractice={() => submitTemplateVars({ templateId: "personalized-practice" })}
+            onGeneratePractice={() => sendMessage("Give me a personalized practice exercise")}
             onGenerateWithWords={() => {
               const wordList = savedWords.slice(0, 8).map((w) => w.word).join(", ");
               if (wordList) sendMessage(`Let's practice with these words: ${wordList}`);

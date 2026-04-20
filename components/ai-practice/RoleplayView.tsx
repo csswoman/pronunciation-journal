@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { AIMessage } from "@/lib/types";
+import type { AIMessage, ExerciseResult } from "@/lib/ai-practice/types";
 import MessageBubble from "./MessageBubble";
 import TypingIndicator from "./TypingIndicator";
 import CustomPromptPanel from "./CustomPromptPanel";
@@ -32,6 +32,7 @@ interface RoleplayViewProps {
   onSubmit: (text: string) => void;
   inputPrefill?: string;
   onPrefillConsumed: () => void;
+  onToolAnswer?: (callId: string, result: ExerciseResult) => void;
 }
 
 export default function RoleplayView({
@@ -42,18 +43,12 @@ export default function RoleplayView({
   onSubmit,
   inputPrefill,
   onPrefillConsumed,
+  onToolAnswer,
 }: RoleplayViewProps) {
   const [activeScenario, setActiveScenario] = useState<ScenarioId>("interview");
   const [showScenarioPicker, setShowScenarioPicker] = useState(false);
 
-  const visibleMessages = messages.filter((msg, i, arr) => {
-    if (i === 0 && msg.role === "user" && msg.content.length > 200) return false;
-    if (i === 1 && msg.role === "model") {
-      const first = arr[0];
-      if (first && first.role === "user" && first.content.length > 200) return false;
-    }
-    return true;
-  });
+  const visibleMessages = messages.filter(m => m.role !== "tool");
 
   const activeLabel = SCENARIO_LABELS[activeScenario];
   const activeEmoji = SCENARIOS.find((s) => s.id === activeScenario)?.emoji ?? "🎭";
@@ -135,6 +130,7 @@ export default function RoleplayView({
               message={msg}
               onSaveWord={onSaveWord}
               onSuggestionClick={onSuggestionClick}
+              onToolAnswer={onToolAnswer ?? (() => {})}
             />
           ))}
 

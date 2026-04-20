@@ -1,34 +1,18 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
-import type {
-  AIConversation,
-  AIMessage,
-  AISavedWord,
-  AITemplateId,
-  Difficulty,
-  TemplateVars,
-} from "@/lib/types";
-import {
-  saveConversation,
-  updateConversation,
-  saveAIWord,
-  getAIWords,
-  deleteAIWord,
-} from "@/lib/ai-db";
-import {
-  SYSTEM_PROMPTS,
-  buildPracticeQuestionsPrompt,
-  buildSentenceCorrectionPrompt,
-  buildPersonalizedPracticePrompt,
-  buildFreeConversationPrompt,
-  accuracyToLevel,
-} from "@/lib/ai-prompts";
-import { getUserStats, getFavorites, getNeedsPracticeWords } from "@/lib/db";
-import { parseSession, extractChatText } from "@/lib/parse-session";
-import type { LearningSession } from "@/lib/types";
+import type { AIMessage, ToolCall, ContentPart, StreamChunk, ExerciseResult } from "@/lib/ai-practice/types";
+import { serializeMessage, deserializeMessage } from "@/lib/ai-practice/types";
+import { BASE_TUTOR_PROMPT } from "@/lib/ai-practice/prompts";
+import { detectIntent, intentToToolConfig } from "@/lib/ai-practice/intent-detection";
+import { isValidToolName, parseToolArgs, isExerciseTool } from "@/lib/ai-practice/tools/registry";
+import { getUserLearningState } from "@/lib/ai-practice/load-state";
+import { compactState, applyExerciseResult, type UserLearningState } from "@/lib/ai-practice/learning-state";
+import { saveConversation, updateConversation, saveAIWord, getAIWords, deleteAIWord } from "@/lib/ai-db";
+import type { AISavedWord, Difficulty } from "@/lib/types";
+import { useAuth } from "@/components/AuthProvider";
 
-export type Phase = "select" | "configure" | "chat";
+// ── Types ─────────────────────────────────────────────────────────────────────
 
 interface SaveWordData {
   word: string;
@@ -37,296 +21,368 @@ interface SaveWordData {
   context: string;
 }
 
-interface UseAIPracticeState {
-  phase: Phase;
-  selectedTemplate: AITemplateId | "custom" | null;
-  systemPrompt: string;
+interface UseAIPracticeReturn {
   messages: AIMessage[];
   isStreaming: boolean;
   error: string | null;
-  conversationId: number | null;
-  wordToSave: { word: string; context: string } | null;
   savedWords: AISavedWord[];
-  /** Latest parsed LearningSession from the most recent AI response */
-  activeSession: LearningSession | null;
-}
-
-interface UseAIPracticeReturn extends UseAIPracticeState {
-  selectTemplate: (id: AITemplateId) => void;
-  submitTemplateVars: (vars: TemplateVars) => Promise<void>;
+  wordToSave: { word: string; context: string } | null;
   sendMessage: (text: string) => Promise<void>;
+  answerToolCall: (callId: string, result: ExerciseResult) => void;
   openSaveWordModal: (word: string, context: string) => void;
   closeSaveWordModal: () => void;
   confirmSaveWord: (data: SaveWordData) => Promise<void>;
   deleteSavedWord: (id: number) => Promise<void>;
-  resetToSelect: () => void;
   loadSavedWords: () => Promise<void>;
-  clearSession: () => void;
+  resetSession: () => void;
 }
 
+// ── Helpers ───────────────────────────────────────────────────────────────────
+
+function buildSystemPrompt(learningState: UserLearningState | null): string {
+  if (!learningState) return BASE_TUTOR_PROMPT;
+  return `${BASE_TUTOR_PROMPT}\n\n${compactState(learningState)}`;
+}
+
+function lastModelHadExercise(messages: AIMessage[]): boolean {
+  for (let i = messages.length - 1; i >= 0; i--) {
+    const msg = messages[i];
+    if (msg.role === "model") {
+      return msg.toolCalls.size > 0 && [...msg.toolCalls.values()].some(tc => isExerciseTool(tc.name as never));
+    }
+  }
+  return false;
+}
+
+// Convert AIMessage[] to the wire format the API expects
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function messagesToWire(messages: AIMessage[]): any[] {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return messages.map((m): any => {
+    if (m.role === "user") return { role: "user", content: m.content };
+    if (m.role === "tool") {
+      return { role: "tool", toolCallId: m.toolCallId, name: m.name, result: m.result };
+    }
+    // model — convert contentParts + toolCalls to parts array
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const parts: any[] = [];
+    for (const part of m.contentParts) {
+      if (part.type === "text") {
+        parts.push({ text: part.text });
+      } else {
+        const tc = m.toolCalls.get(part.callId);
+        if (tc) {
+          parts.push({ functionCall: { name: tc.name, args: tc.args } });
+        }
+      }
+    }
+    return { role: "model", parts };
+  });
+}
+
+// ── Hook ──────────────────────────────────────────────────────────────────────
+
 export function useAIPractice(): UseAIPracticeReturn {
-  const [phase, setPhase] = useState<Phase>("chat");
-  const [selectedTemplate, setSelectedTemplate] = useState<AITemplateId | "custom" | null>(null);
-  const [systemPrompt, setSystemPrompt] = useState("");
+  const { user } = useAuth();
+
   const [messages, setMessages] = useState<AIMessage[]>([]);
   const [isStreaming, setIsStreaming] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [conversationId, setConversationId] = useState<number | null>(null);
-  const [wordToSave, setWordToSave] = useState<{ word: string; context: string } | null>(null);
   const [savedWords, setSavedWords] = useState<AISavedWord[]>([]);
-  const [activeSession, setActiveSession] = useState<LearningSession | null>(null);
+  const [wordToSave, setWordToSave] = useState<{ word: string; context: string } | null>(null);
+  const [conversationId, setConversationId] = useState<number | null>(null);
+  const [learningState, setLearningState] = useState<UserLearningState | null>(null);
 
-  // Keep a ref to the latest messages for async callbacks
   const messagesRef = useRef<AIMessage[]>([]);
   messagesRef.current = messages;
 
+  const abortRef = useRef<AbortController | null>(null);
+  const streamIdRef = useRef(0);
+
+  // Load learning state + saved words on mount
   useEffect(() => {
     loadSavedWords();
-  }, []);
+    if (user?.id) {
+      getUserLearningState(user.id).then(setLearningState).catch(() => {});
+    }
+  }, [user?.id]);
 
   const loadSavedWords = useCallback(async () => {
     const words = await getAIWords();
     setSavedWords(words);
   }, []);
 
-  const selectTemplate = useCallback((id: AITemplateId) => {
-    setSelectedTemplate(id);
-    setPhase("configure");
+  // ── Streaming send ──────────────────────────────────────────────────────────
+
+  const sendMessage = useCallback(async (text: string) => {
+    if (!text.trim() || isStreaming) return;
     setError(null);
-  }, []);
 
-  const resolveTemplateContext = async (
-    vars: TemplateVars
-  ): Promise<{ prompt: string; sysPrompt: string }> => {
-    const stats = await getUserStats();
-    const computedLevel = accuracyToLevel(stats.averageAccuracy);
+    const userMsg: AIMessage = { role: "user", content: text.trim(), timestamp: new Date().toISOString() };
+    const nextMessages = [...messagesRef.current, userMsg];
+    setMessages(nextMessages);
 
-    switch (vars.templateId) {
-      case "practice-questions":
-        return {
-          sysPrompt: SYSTEM_PROMPTS["practice-questions"],
-          prompt: buildPracticeQuestionsPrompt(vars.topic, vars.userLevel || computedLevel),
-        };
+    abortRef.current?.abort();
+    const controller = new AbortController();
+    abortRef.current = controller;
+    const thisId = ++streamIdRef.current;
 
-      case "sentence-correction":
-        return {
-          sysPrompt: SYSTEM_PROMPTS["sentence-correction"],
-          prompt: buildSentenceCorrectionPrompt(vars.sentence),
-        };
-
-      case "personalized-practice": {
-        const [practiceWords, favorites] = await Promise.all([
-          getNeedsPracticeWords(),
-          getFavorites(),
-        ]);
-        return {
-          sysPrompt: SYSTEM_PROMPTS["personalized-practice"],
-          prompt: buildPersonalizedPracticePrompt(practiceWords, favorites, computedLevel),
-        };
-      }
-
-      case "free-conversation":
-        return {
-          sysPrompt: SYSTEM_PROMPTS["free-conversation"],
-          prompt: buildFreeConversationPrompt(vars.topic),
-        };
-
-      default:
-        return { sysPrompt: "", prompt: "" };
-    }
-  };
-
-  const callGemini = async (
-    msgs: AIMessage[],
-    sysPrompt: string
-  ): Promise<string> => {
-    const res = await fetch("/api/gemini", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ messages: msgs, systemPrompt: sysPrompt }),
-    });
-
-    if (!res.ok) {
-      const data = await res.json().catch(() => ({}));
-      if (res.status === 429) {
-        throw new Error("Rate limit reached. Please wait a moment and try again.");
-      }
-      throw new Error(data.error || "Failed to get a response from the AI.");
-    }
-
-    const data = await res.json();
-    return data.content as string;
-  };
-
-  const submitTemplateVars = useCallback(async (vars: TemplateVars) => {
-    setError(null);
     setIsStreaming(true);
 
+    // Detect intent → tool config
+    const intent = detectIntent(text, lastModelHadExercise(messagesRef.current));
+    const { toolChoice, allowedTools } = intentToToolConfig(intent);
+    const systemPrompt = buildSystemPrompt(learningState);
+
+    // Optimistic model message
+    const modelMsg: AIMessage = {
+      role: "model",
+      contentParts: [],
+      toolCalls: new Map(),
+      timestamp: new Date().toISOString(),
+    };
+    setMessages([...nextMessages, modelMsg]);
+
     try {
-      const { prompt, sysPrompt } = await resolveTemplateContext(vars);
-      setSystemPrompt(sysPrompt);
+      const res = await fetch("/api/gemini", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          messages: messagesToWire(nextMessages),
+          systemPrompt,
+          toolChoice,
+          allowedTools,
+          stream: true,
+        }),
+        signal: controller.signal,
+      });
 
-      const userMsg: AIMessage = {
-        role: "user",
-        content: prompt,
-        timestamp: new Date().toISOString(),
-      };
-
-      const initialMessages = [userMsg];
-      setMessages(initialMessages);
-      setPhase("chat");
-
-      const responseText = await callGemini(initialMessages, sysPrompt);
-
-      // Extract structured session and strip JSON block from chat display
-      const session = parseSession(responseText);
-      const chatContent = session ? extractChatText(responseText) : responseText;
-      if (session) setActiveSession(session);
-
-      const modelMsg: AIMessage = {
-        role: "model",
-        content: chatContent,
-        timestamp: new Date().toISOString(),
-      };
-
-      const updatedMessages = [...initialMessages, modelMsg];
-      setMessages(updatedMessages);
-
-      // Persist conversation
-      const title = prompt.slice(0, 60);
-      const now = new Date().toISOString();
-      const conv: Omit<AIConversation, "id"> = {
-        templateId: vars.templateId,
-        title,
-        messages: updatedMessages,
-        createdAt: now,
-        updatedAt: now,
-      };
-      const id = await saveConversation(conv);
-      setConversationId(id);
-    } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "An error occurred.");
-      setPhase("configure");
-    } finally {
-      setIsStreaming(false);
-    }
-  }, []);
-
-  const sendMessage = useCallback(
-    async (text: string) => {
-      if (!text.trim() || isStreaming) return;
-      setError(null);
-
-      const userMsg: AIMessage = {
-        role: "user",
-        content: text.trim(),
-        timestamp: new Date().toISOString(),
-      };
-
-      const updatedMessages = [...messagesRef.current, userMsg];
-      setMessages(updatedMessages);
-      setIsStreaming(true);
-
-      try {
-        const responseText = await callGemini(updatedMessages, systemPrompt);
-
-        const session = parseSession(responseText);
-        const chatContent = session ? extractChatText(responseText) : responseText;
-        if (session) setActiveSession(session);
-
-        const modelMsg: AIMessage = {
-          role: "model",
-          content: chatContent,
-          timestamp: new Date().toISOString(),
-        };
-
-        const finalMessages = [...updatedMessages, modelMsg];
-        setMessages(finalMessages);
-
-        // Persist
-        const now = new Date().toISOString();
-        if (conversationId) {
-          await updateConversation(conversationId, {
-            messages: finalMessages,
-            updatedAt: now,
-          });
-        }
-      } catch (err: unknown) {
-        setError(err instanceof Error ? err.message : "An error occurred.");
-        // Remove the user message we optimistically added
-        setMessages(messagesRef.current.slice(0, -1));
-      } finally {
-        setIsStreaming(false);
+      if (!res.ok || !res.body) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error ?? "Failed to get AI response");
       }
-    },
-    [isStreaming, systemPrompt, conversationId]
-  );
+
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let buf = "";
+
+      // Mutable working copy — we'll flush to React state incrementally
+      let workingParts: ContentPart[] = [];
+      const workingCalls = new Map<string, ToolCall>();
+      const argsAccum = new Map<string, string>();
+
+      const flushToState = () => {
+        if (streamIdRef.current !== thisId) return;
+        setMessages(prev => {
+          const copy = [...prev];
+          copy[copy.length - 1] = {
+            ...(copy[copy.length - 1] as Extract<AIMessage, { role: "model" }>),
+            contentParts: [...workingParts],
+            toolCalls: new Map(workingCalls),
+          };
+          return copy;
+        });
+      };
+
+      outer: while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        if (streamIdRef.current !== thisId) break;
+
+        buf += decoder.decode(value, { stream: true });
+        const lines = buf.split("\n");
+        buf = lines.pop() ?? "";
+
+        for (const line of lines) {
+          if (!line.startsWith("data: ")) continue;
+          const raw = line.slice(6).trim();
+          if (!raw) continue;
+
+          let chunk: StreamChunk;
+          try { chunk = JSON.parse(raw); } catch { continue; }
+
+          switch (chunk.type) {
+            case "text_delta": {
+              const lastPart = workingParts[workingParts.length - 1];
+              if (lastPart?.type === "text") {
+                (lastPart as { type: "text"; text: string }).text += chunk.delta;
+              } else {
+                workingParts = [...workingParts, { type: "text", text: chunk.delta }];
+              }
+              flushToState();
+              break;
+            }
+            case "tool_call_start": {
+              workingCalls.set(chunk.id, {
+                id: chunk.id,
+                name: chunk.name,
+                args: {},
+                status: "pending",
+              });
+              argsAccum.set(chunk.id, "");
+              workingParts = [...workingParts, { type: "tool_call", callId: chunk.id }];
+              flushToState();
+              break;
+            }
+            case "tool_call_args_delta": {
+              argsAccum.set(chunk.id, (argsAccum.get(chunk.id) ?? "") + chunk.delta);
+              break;
+            }
+            case "tool_call_end": {
+              const accum = argsAccum.get(chunk.id) ?? "{}";
+              const tc = workingCalls.get(chunk.id);
+              if (tc && isValidToolName(tc.name)) {
+                try {
+                  const rawArgs = JSON.parse(accum);
+                  const args = parseToolArgs(tc.name, rawArgs);
+                  workingCalls.set(chunk.id, { ...tc, args, status: "rendered" });
+                } catch (err) {
+                  const errorId = crypto.randomUUID();
+                  console.error({ errorId, tool: tc.name, error: (err as Error).message });
+                  workingCalls.set(chunk.id, { ...tc, status: "error", error: (err as Error).message, errorId });
+                }
+              } else if (tc) {
+                const errorId = crypto.randomUUID();
+                workingCalls.set(chunk.id, { ...tc, status: "error", error: `Unknown tool: ${tc.name}`, errorId });
+              }
+              flushToState();
+              break;
+            }
+            case "done":
+              break outer;
+          }
+        }
+      }
+
+      if (streamIdRef.current !== thisId) return;
+
+      // Final committed model message
+      const finalModelMsg: AIMessage = {
+        role: "model",
+        contentParts: workingParts,
+        toolCalls: workingCalls,
+        timestamp: modelMsg.timestamp,
+      };
+
+      const finalMessages = [...nextMessages, finalModelMsg];
+      setMessages(finalMessages);
+
+      // Persist
+      const now = new Date().toISOString();
+      if (conversationId) {
+        await updateConversation(conversationId, {
+          messages: finalMessages.map(m =>
+            m.role === "model" ? serializeMessage(m) : m
+          ) as never,
+          updatedAt: now,
+        });
+      } else {
+        const title = text.slice(0, 60);
+        const id = await saveConversation({
+          templateId: "free-conversation",
+          title,
+          messages: finalMessages.map(m =>
+            m.role === "model" ? serializeMessage(m) : m
+          ) as never,
+          createdAt: now,
+          updatedAt: now,
+        });
+        setConversationId(id);
+      }
+    } catch (err: unknown) {
+      if ((err as Error).name === "AbortError") return;
+      setError(err instanceof Error ? err.message : "An error occurred.");
+      // Remove optimistic messages
+      setMessages(messagesRef.current.slice(0, -2));
+    } finally {
+      if (streamIdRef.current === thisId) setIsStreaming(false);
+    }
+  }, [isStreaming, learningState, conversationId]);
+
+  // ── Tool answer ─────────────────────────────────────────────────────────────
+
+  const answerToolCall = useCallback((callId: string, result: ExerciseResult) => {
+    setMessages(prev => {
+      const copy = [...prev];
+      // Update the tool call status in the last model message
+      for (let i = copy.length - 1; i >= 0; i--) {
+        const msg = copy[i];
+        if (msg.role === "model" && msg.toolCalls.has(callId)) {
+          const newCalls = new Map(msg.toolCalls);
+          const tc = newCalls.get(callId)!;
+          newCalls.set(callId, { ...tc, status: "answered", result });
+          copy[i] = { ...msg, toolCalls: newCalls };
+          break;
+        }
+      }
+      return copy;
+    });
+
+    // Append tool result message for the model's context
+    const toolMsg: AIMessage = {
+      role: "tool",
+      toolCallId: callId,
+      name: "exercise_result",
+      result,
+      timestamp: new Date().toISOString(),
+    };
+    setMessages(prev => [...prev, toolMsg]);
+
+    // Update learning state
+    if (learningState) {
+      const newState = applyExerciseResult(learningState, result);
+      setLearningState(newState);
+    }
+  }, [learningState]);
+
+  // ── Save word ───────────────────────────────────────────────────────────────
 
   const openSaveWordModal = useCallback((word: string, context: string) => {
     setWordToSave({ word, context });
   }, []);
 
-  const closeSaveWordModal = useCallback(() => {
-    setWordToSave(null);
-  }, []);
+  const closeSaveWordModal = useCallback(() => setWordToSave(null), []);
 
-  const confirmSaveWord = useCallback(
-    async (data: SaveWordData) => {
-      const wordData: Omit<AISavedWord, "id"> = {
-        word: data.word.toLowerCase().trim(),
-        meaning: data.meaning,
-        difficulty: data.difficulty,
-        context: data.context,
-        conversationId: conversationId ?? 0,
-        savedAt: new Date().toISOString(),
-      };
-      const id = await saveAIWord(wordData);
-      setSavedWords((prev) => [{ ...wordData, id }, ...prev]);
-      setWordToSave(null);
-    },
-    [conversationId]
-  );
+  const confirmSaveWord = useCallback(async (data: SaveWordData) => {
+    const wordData: Omit<AISavedWord, "id"> = {
+      word: data.word.toLowerCase().trim(),
+      meaning: data.meaning,
+      difficulty: data.difficulty,
+      context: data.context,
+      conversationId: conversationId ?? 0,
+      savedAt: new Date().toISOString(),
+    };
+    const id = await saveAIWord(wordData);
+    setSavedWords(prev => [{ ...wordData, id }, ...prev]);
+    setWordToSave(null);
+  }, [conversationId]);
 
   const deleteSavedWord = useCallback(async (id: number) => {
     await deleteAIWord(id);
-    setSavedWords((prev) => prev.filter((w) => w.id !== id));
+    setSavedWords(prev => prev.filter(w => w.id !== id));
   }, []);
 
-  const clearSession = useCallback(() => {
-    setActiveSession(null);
-  }, []);
-
-  const resetToSelect = useCallback(() => {
-    setPhase("chat");
-    setSelectedTemplate(null);
+  const resetSession = useCallback(() => {
+    abortRef.current?.abort();
     setMessages([]);
-    setSystemPrompt("");
     setConversationId(null);
     setError(null);
     setWordToSave(null);
-    setActiveSession(null);
   }, []);
 
   return {
-    phase,
-    selectedTemplate,
-    systemPrompt,
     messages,
     isStreaming,
     error,
-    conversationId,
-    wordToSave,
     savedWords,
-    activeSession,
-    selectTemplate,
-    submitTemplateVars,
+    wordToSave,
     sendMessage,
+    answerToolCall,
     openSaveWordModal,
     closeSaveWordModal,
     confirmSaveWord,
     deleteSavedWord,
-    resetToSelect,
     loadSavedWords,
-    clearSession,
+    resetSession,
   };
 }
