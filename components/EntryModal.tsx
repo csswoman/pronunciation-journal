@@ -1,11 +1,11 @@
 "use client";
-import Button from "@/components/ui/Button";
 
-import { Entry, Difficulty } from "@/lib/types";
-import { useState, useCallback } from "react";
-import { saveEntry } from "@/lib/storage";
-import { playAudio } from "@/lib/audio-utils";
-import CompactRecorder from "./CompactRecorder";
+import { Entry } from "@/lib/types";
+import { useEntryModal } from "@/hooks/useEntryModal";
+import EntryHeader from "./EntryHeader";
+import EntryDifficulty from "./EntryDifficulty";
+import EntryNotes from "./EntryNotes";
+import EntryTags from "./EntryTags";
 
 interface EntryModalProps {
   entry: Entry;
@@ -14,52 +14,17 @@ interface EntryModalProps {
 }
 
 export default function EntryModal({ entry, onClose, onSave }: EntryModalProps) {
-  const [isEditing, setIsEditing] = useState(false);
-  const [editedEntry, setEditedEntry] = useState<Entry>(entry);
-  const [currentEntry, setCurrentEntry] = useState<Entry>(entry);
-
-  const handleSave = async () => {
-    const updatedEntry = {
-      ...editedEntry,
-      updatedAt: new Date().toISOString(),
-    };
-    try {
-      await saveEntry(updatedEntry);
-      setCurrentEntry(updatedEntry);
-      setIsEditing(false);
-      if (onSave) {
-        onSave();
-      }
-    } catch (error) {
-      console.error("Error saving entry:", error);
-      alert("Error saving entry. Please try again.");
-    }
-  };
-
-  const handleCancel = () => {
-    setEditedEntry(currentEntry);
-    setIsEditing(false);
-  };
-
-  const handleRecordingComplete = useCallback(async (audioUrl: string) => {
-    // Immediately save the recording to the entry
-    const updatedEntry = {
-      ...currentEntry,
-      userAudioUrl: audioUrl,
-      updatedAt: new Date().toISOString(),
-    };
-    try {
-      await saveEntry(updatedEntry);
-      setCurrentEntry(updatedEntry);
-      setEditedEntry(updatedEntry);
-      if (onSave) {
-        onSave();
-      }
-    } catch (error) {
-      console.error("Error saving recording:", error);
-      alert("Error saving recording. Please try again.");
-    }
-  }, [currentEntry, onSave]);
+  const {
+    isEditing,
+    setIsEditing,
+    editedEntry,
+    setEditedEntry,
+    currentEntry,
+    handleSave,
+    handleCancel,
+    handleRecordingComplete,
+    handleTagsChange,
+  } = useEntryModal({ entry, onSave });
 
   return (
     <div
@@ -70,179 +35,23 @@ export default function EntryModal({ entry, onClose, onSave }: EntryModalProps) 
         className="bg-white dark:bg-gray-800 rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-6 flex justify-between items-start">
-          <div className="flex items-center gap-3 flex-1">
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 capitalize">
-              {currentEntry.word}
-            </h2>
-            <div className="flex items-center gap-2">
-              {currentEntry.audioUrl && (
-                <Button
-                  onClick={() => playAudio(currentEntry.audioUrl!, { showAlerts: true })}
-                  className="p-3 rounded-full transition-colors"
-                  style={{
-                    backgroundColor: 'var(--btn-regular-bg)',
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--btn-regular-bg-hover)')}
-                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'var(--btn-regular-bg)')}
-                  title="Dictionary Pronunciation"
-                  aria-label="Play dictionary pronunciation"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-6"
-                    style={{color: 'var(--primary)'}}
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </Button>
-              )}
-              
-              {/* Compact Recorder - Always visible */}
-              <CompactRecorder
-                onRecordingComplete={handleRecordingComplete}
-                existingAudioUrl={currentEntry.userAudioUrl}
-              />
-
-              {currentEntry.userAudioUrl && (
-                <Button
-                  onClick={() => playAudio(currentEntry.userAudioUrl!, { showAlerts: true })}
-                  className="p-3 rounded-full transition-colors"
-                  style={{
-                    backgroundColor: 'var(--btn-regular-bg)',
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--btn-regular-bg-hover)')}
-                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'var(--btn-regular-bg)')}
-                  title="Your Pronunciation"
-                  aria-label="Play your pronunciation"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-6 text-green-600 dark:text-green-400"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M3 18v-6a9 9 0 0 1 18 0v6" />
-                    <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3v5z" />
-                    <path d="M3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3v5z" />
-                  </svg>
-                </Button>
-              )}
-            </div>
-          </div>
-          <div className="flex gap-2">
-            {!isEditing ? (
-              <Button
-                onClick={() => setIsEditing(true)}
-                className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
-                aria-label="Edit"
-                title="Edit"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6 text-gray-500 dark:text-gray-400"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                  />
-                </svg>
-              </Button>
-            ) : (
-              <>
-                <Button
-                  onClick={handleSave}
-                  className="px-4 py-2 rounded-lg text-sm font-medium accent-button"
-                >
-                  Save
-                </Button>
-                <Button
-                  onClick={handleCancel}
-                  className="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg transition-colors text-sm font-medium"
-                >
-                  Cancel
-                </Button>
-              </>
-            )}
-            <Button
-              onClick={onClose}
-              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
-              aria-label="Close"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6 text-gray-500 dark:text-gray-400"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-              </Button>
-          </div>
-        </div>
+        <EntryHeader
+          currentEntry={currentEntry}
+          isEditing={isEditing}
+          onRecordingComplete={handleRecordingComplete}
+          onEditStart={() => setIsEditing(true)}
+          onSave={handleSave}
+          onCancel={handleCancel}
+          onClose={onClose}
+        />
 
         <div className="p-6 space-y-6">
-          {/* Difficulty - Always show current entry, edit mode allows changes */}
-          <div>
-            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-              Difficulty:
-            </label>
-            {!isEditing ? (
-              <span
-                className={`inline-block px-4 py-2 rounded-full text-sm font-medium ${
-                  currentEntry.difficulty === "easy"
-                    ? "bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200"
-                    : currentEntry.difficulty === "medium"
-                    ? "bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200"
-                    : "bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200"
-                }`}
-              >
-                {currentEntry.difficulty}
-              </span>
-            ) : (
-              <div className="flex gap-2">
-                {(["easy", "medium", "hard"] as Difficulty[]).map((diff) => (
-                  <Button
-                    key={diff}
-                    onClick={() => setEditedEntry({ ...editedEntry, difficulty: diff })}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                      editedEntry.difficulty === diff
-                        ? "text-white"
-                        : diff === "easy"
-                        ? "bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 hover:opacity-80"
-                        : diff === "medium"
-                        ? "bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 hover:opacity-80"
-                        : "bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 hover:opacity-80"
-                    }`}
-                    style={editedEntry.difficulty === diff ? { backgroundColor: "var(--color-accent)", color: "var(--color-text-on-accent)" } : {}}
-                  >
-                    {diff.charAt(0).toUpperCase() + diff.slice(1)}
-                  </Button>
-                ))}
-              </div>
-            )}
-          </div>
+          <EntryDifficulty
+            isEditing={isEditing}
+            currentDifficulty={currentEntry.difficulty}
+            editedDifficulty={editedEntry.difficulty}
+            onDifficultyChange={(diff) => setEditedEntry({ ...editedEntry, difficulty: diff })}
+          />
 
           {currentEntry.ipa && (
             <div>
@@ -294,62 +103,19 @@ export default function EntryModal({ entry, onClose, onSave }: EntryModalProps) 
             </div>
           )}
 
-          {/* Notes */}
-          {((!isEditing && currentEntry.notes) || isEditing) && (
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                Notes
-              </label>
-              {!isEditing ? (
-                <p className="text-gray-900 dark:text-gray-100 whitespace-pre-wrap">
-                  {currentEntry.notes}
-                </p>
-              ) : (
-                <textarea
-                  value={editedEntry.notes || ""}
-                  onChange={(e) => setEditedEntry({ ...editedEntry, notes: e.target.value })}
-                  rows={4}
-                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
-                  placeholder="Add notes about this word..."
-                />
-              )}
-            </div>
-          )}
+          <EntryNotes
+            isEditing={isEditing}
+            currentNotes={currentEntry.notes}
+            editedNotes={editedEntry.notes}
+            onNotesChange={(value) => setEditedEntry({ ...editedEntry, notes: value })}
+          />
 
-          {/* Tags */}
-          {((!isEditing && currentEntry.tags && currentEntry.tags.length > 0) || isEditing) && (
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                Tags
-              </label>
-              {!isEditing ? (
-                <div className="flex flex-wrap gap-2">
-                  {currentEntry.tags?.map((tag, index) => (
-                    <span
-                      key={index}
-                      className="px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-lg text-sm"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              ) : (
-                <input
-                  type="text"
-                  value={editedEntry.tags?.join(", ") || ""}
-                  onChange={(e) => 
-                    setEditedEntry({ 
-                      ...editedEntry, 
-                      tags: e.target.value.split(",").map(t => t.trim()).filter(t => t.length > 0)
-                    })
-                  }
-                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
-                  placeholder="Add tags separated by commas (e.g., business, travel)"
-                />
-              )}
-            </div>
-          )}
-
+          <EntryTags
+            isEditing={isEditing}
+            currentTags={currentEntry.tags}
+            editedTags={editedEntry.tags}
+            onTagsChange={handleTagsChange}
+          />
 
           <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
             <div className="flex flex-col gap-2 text-sm text-gray-500 dark:text-gray-400">
@@ -370,5 +136,3 @@ export default function EntryModal({ entry, onClose, onSave }: EntryModalProps) 
     </div>
   );
 }
-
-
