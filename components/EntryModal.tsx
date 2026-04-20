@@ -16,10 +16,11 @@ interface EntryModalProps {
 export default function EntryModal({ entry, onClose, onSave }: EntryModalProps) {
   const {
     isEditing,
-    setIsEditing,
     editedEntry,
-    setEditedEntry,
     currentEntry,
+    startEditing,
+    handleDifficultyChange,
+    handleNotesChange,
     handleSave,
     handleCancel,
     handleRecordingComplete,
@@ -39,7 +40,7 @@ export default function EntryModal({ entry, onClose, onSave }: EntryModalProps) 
           currentEntry={currentEntry}
           isEditing={isEditing}
           onRecordingComplete={handleRecordingComplete}
-          onEditStart={() => setIsEditing(true)}
+          onEditStart={startEditing}
           onSave={handleSave}
           onCancel={handleCancel}
           onClose={onClose}
@@ -50,7 +51,7 @@ export default function EntryModal({ entry, onClose, onSave }: EntryModalProps) 
             isEditing={isEditing}
             currentDifficulty={currentEntry.difficulty}
             editedDifficulty={editedEntry.difficulty}
-            onDifficultyChange={(diff) => setEditedEntry({ ...editedEntry, difficulty: diff })}
+            onDifficultyChange={handleDifficultyChange}
           />
 
           {currentEntry.ipa && (
@@ -107,7 +108,7 @@ export default function EntryModal({ entry, onClose, onSave }: EntryModalProps) 
             isEditing={isEditing}
             currentNotes={currentEntry.notes}
             editedNotes={editedEntry.notes}
-            onNotesChange={(value) => setEditedEntry({ ...editedEntry, notes: value })}
+            onNotesChange={handleNotesChange}
           />
 
           <EntryTags

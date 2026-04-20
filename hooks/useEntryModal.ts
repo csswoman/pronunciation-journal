@@ -14,27 +14,20 @@ export function useEntryModal({ entry, onSave }: UseEntryModalProps) {
   const [currentEntry, setCurrentEntry] = useState<Entry>(entry);
   const [draftEntry, setDraftEntry] = useState<Entry | null>(null);
 
-  const isEditing = isEditingState;
   const editedEntry = draftEntry ?? currentEntry;
 
-  const setIsEditing = useCallback(
-    (value: boolean) => {
-      setIsEditingState(value);
-      if (value) {
-        setDraftEntry(currentEntry);
-      } else {
-        setDraftEntry(null);
-      }
-    },
-    [currentEntry]
-  );
+  const startEditing = useCallback(() => {
+    setIsEditingState(true);
+    setDraftEntry(currentEntry);
+  }, [currentEntry]);
 
-  const setEditedEntry = useCallback(
-    (value: Entry) => {
-      setDraftEntry(value);
-    },
-    []
-  );
+  const handleDifficultyChange = useCallback((difficulty: Entry["difficulty"]) => {
+    setDraftEntry((d) => ({ ...(d ?? currentEntry), difficulty }));
+  }, [currentEntry]);
+
+  const handleNotesChange = useCallback((notes: string) => {
+    setDraftEntry((d) => ({ ...(d ?? currentEntry), notes }));
+  }, [currentEntry]);
 
   const handleSave = async () => {
     const updatedEntry = {
@@ -85,23 +78,24 @@ export function useEntryModal({ entry, onSave }: UseEntryModalProps) {
 
   const handleTagsChange = useCallback(
     (value: string) => {
-      setDraftEntry({
-        ...(draftEntry ?? currentEntry),
+      setDraftEntry((d) => ({
+        ...(d ?? currentEntry),
         tags: value
           .split(",")
           .map((t) => t.trim())
           .filter((t) => t.length > 0),
-      });
+      }));
     },
-    [draftEntry, currentEntry]
+    [currentEntry]
   );
 
   return {
-    isEditing,
-    setIsEditing,
+    isEditing: isEditingState,
     editedEntry,
-    setEditedEntry,
     currentEntry,
+    startEditing,
+    handleDifficultyChange,
+    handleNotesChange,
     handleSave,
     handleCancel,
     handleRecordingComplete,
