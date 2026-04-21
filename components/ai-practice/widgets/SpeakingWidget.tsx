@@ -1,0 +1,102 @@
+"use client";
+
+import { useState } from "react";
+import { Mic, MicOff, Loader2 } from "lucide-react";
+import type { SpeakingArgs } from "@/lib/ai-practice/tools/registry";
+import type { ExerciseResult } from "@/lib/ai-practice/types";
+import { useRecorder } from "@/hooks/useRecorder";
+
+interface Props {
+  args: SpeakingArgs;
+  status: "pending" | "rendered" | "answered" | "error";
+  onAnswer: (result: ExerciseResult) => void;
+}
+
+export default function SpeakingWidget({ args, status, onAnswer }: Props) {
+  const { startRecording, stopRecording, isRecording, audioUrl, resetRecording } = useRecorder();
+  const [transcribing, setTranscribing] = useState(false);
+  const [transcript, setTranscript] = useState<string | null>(null);
+  const answered = status === "answered";
+
+  async function handleStop() {
+    stopRecording();
+    // Short delay for recorder to finalize blob
+    await new Promise(r => setTimeout(r, 300));
+    if (!audioUrl) return;
+
+    setTranscribing(true);
+    try {
+      const res = await fetch("/api/gemini/transcribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ audioUrl, target: args.target }),
+      });
+      const data = await res.json();
+      const text: string = data.transcript ?? "";
+      setTranscript(text);
+      // Speaking exercises are graded by model — emit with score placeholder
+      onAnswer({ correct: true, score: data.score ?? 0.5, topic: args.target, gradedBy: "model" });
+    } catch {
+      onAnswer({ correct: false, topic: args.target, gradedBy: "model" });
+    } finally {
+      setTranscribing(false);
+    }
+  }
+
+  return (
+    <div
+      className="rounded-xl border p-4 space-y-3"
+      style={{ borderColor: "var(--line-divider)", backgroundColor: "var(--btn-regular-bg)" }}
+    >
+      <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
+        {args.prompt}
+      </p>
+      <div className="flex items-center gap-3">
+        <p className="text-lg font-semibold" style={{ color: "var(--text-primary)" }}>
+          {args.target}
+        </p>
+        {args.ipa && (
+          <span className="text-sm font-mono" style={{ color: "var(--text-tertiary)" }}>
+            /{args.ipa}/
+          </span>
+        )}
+      </div>
+
+      {!answered && (
+        <div className="flex items-center gap-3">
+          {!isRecording && !transcribing && !transcript && (
+            <button
+              onClick={startRecording}
+              className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm"
+              style={{ backgroundColor: "var(--primary)", color: "var(--primary-fg, #fff)" }}
+            >
+              <Mic className="w-4 h-4" />
+              Record
+            </button>
+          )}
+          {isRecording && (
+            <button
+              onClick={handleStop}
+              className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm animate-pulse"
+              style={{ backgroundColor: "#ef4444", color: "#fff" }}
+            >
+              <MicOff className="w-4 h-4" />
+              Stop
+            </button>
+          )}
+          {transcribing && (
+            <span className="flex items-center gap-2 text-sm" style={{ color: "var(--text-tertiary)" }}>
+              <Loader2 className="w-4 h-4 animate-spin" /> Analyzing…
+            </span>
+          )}
+        </div>
+      )}
+
+      {transcript && (
+        <p className="text-sm italic" style={{ color: "var(--text-secondary)" }}>
+          You said: &ldquo;{transcript}&rdquo;
+        </p>
+      )}
+    </div>
+  );
+}

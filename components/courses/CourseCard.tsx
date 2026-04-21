@@ -81,6 +81,7 @@ export default function CourseCard({ course, priority = false }: CourseCardProps
             alt=""
             fill
             priority={priority}
+            unoptimized
             className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
             sizes="(max-width: 768px) 100vw, 33vw"
           />

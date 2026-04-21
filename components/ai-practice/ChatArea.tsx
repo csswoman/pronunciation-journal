@@ -1,12 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import type { AIMessage, LearningSession } from "@/lib/types";
+import type { AIMessage, ExerciseResult } from "@/lib/ai-practice/types";
 import ChatTabs, { type TabId } from "./ChatTabs";
 import ChatView from "./ChatView";
 import RoleplayView from "./RoleplayView";
 import PronunciationView from "./PronunciationView";
-import InlineSession from "./InlineSession";
 import CustomPromptPanel from "./CustomPromptPanel";
 import ErrorBanner from "./ErrorBanner";
 
@@ -14,9 +13,9 @@ interface ChatAreaProps {
   messages: AIMessage[];
   isStreaming: boolean;
   error: string | null;
-  activeSession: LearningSession | null;
   onSaveWord: (word: string, context: string) => void;
   onSuggestionClick: (text: string) => void;
+  onToolAnswer: (callId: string, result: ExerciseResult) => void;
   onSubmit: (text: string) => void;
   inputPrefill?: string;
   onPrefillConsumed: () => void;
@@ -26,9 +25,9 @@ export default function ChatArea({
   messages,
   isStreaming,
   error,
-  activeSession,
   onSaveWord,
   onSuggestionClick,
+  onToolAnswer,
   onSubmit,
   inputPrefill,
   onPrefillConsumed,
@@ -63,7 +62,7 @@ export default function ChatArea({
               isStreaming={isStreaming}
               onSaveWord={onSaveWord}
               onSuggestionClick={onSuggestionClick}
-              activeSession={activeSession}
+              onToolAnswer={onToolAnswer}
             />
           </div>
 
@@ -80,13 +79,6 @@ export default function ChatArea({
               onPrefillConsumed={onPrefillConsumed}
             />
           </div>
-
-          {activeSession && !isStreaming && (
-            <InlineSession
-              session={activeSession}
-              onExit={() => onSubmit("")}
-            />
-          )}
         </div>
       )}
     </div>

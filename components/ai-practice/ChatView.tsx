@@ -1,25 +1,17 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import type { AIMessage, LearningSession } from "@/lib/types";
+import type { AIMessage, ExerciseResult } from "@/lib/ai-practice/types";
 import MessageBubble from "./MessageBubble";
 import WelcomeScreen from "./WelcomeScreen";
 import TypingIndicator from "./TypingIndicator";
+
 interface ChatViewProps {
   messages: AIMessage[];
   isStreaming: boolean;
   onSaveWord: (word: string, context: string) => void;
   onSuggestionClick: (text: string) => void;
-  activeSession?: LearningSession | null;
-}
-
-function isSystemMessage(msg: AIMessage, index: number, all: AIMessage[]): boolean {
-  if (index === 0 && msg.role === "user" && msg.content.length > 200) return true;
-  if (index === 1 && msg.role === "model") {
-    const firstUser = all[0];
-    if (firstUser && firstUser.role === "user" && firstUser.content.length > 200) return true;
-  }
-  return false;
+  onToolAnswer: (callId: string, result: ExerciseResult) => void;
 }
 
 export default function ChatView({
@@ -27,7 +19,7 @@ export default function ChatView({
   isStreaming,
   onSaveWord,
   onSuggestionClick,
-  activeSession,
+  onToolAnswer,
 }: ChatViewProps) {
   const bottomRef = useRef<HTMLDivElement>(null);
 
@@ -35,7 +27,8 @@ export default function ChatView({
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isStreaming]);
 
-  const visibleMessages = messages.filter((msg, i, arr) => !isSystemMessage(msg, i, arr));
+  // Hide tool messages from UI
+  const visibleMessages = messages.filter(m => m.role !== "tool");
 
   if (visibleMessages.length === 0 && !isStreaming) {
     return <WelcomeScreen onSuggestionClick={onSuggestionClick} />;
@@ -49,6 +42,7 @@ export default function ChatView({
           message={msg}
           onSaveWord={onSaveWord}
           onSuggestionClick={onSuggestionClick}
+          onToolAnswer={onToolAnswer}
         />
       ))}
 
