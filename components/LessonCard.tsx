@@ -19,7 +19,7 @@ export default function LessonCard({ lesson }: LessonCardProps) {
       href={href}
       className="group overflow-hidden rounded-xl border border-[var(--line-divider)] bg-[var(--card-bg)] shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-lg"
     >
-      <LessonCover imageUrl={lesson.image_url} title={lesson.title} />
+      <LessonCover imageUrl={lesson.image_url ?? null} title={lesson.title} />
 
       <div className="space-y-3 p-4">
         <LessonTitle title={lesson.title} />
