@@ -131,6 +131,7 @@ export default function RoleplayView({
               onSaveWord={onSaveWord}
               onSuggestionClick={onSuggestionClick}
               onToolAnswer={onToolAnswer ?? (() => {})}
+              onNext={() => {}}
             />
           ))}
 
