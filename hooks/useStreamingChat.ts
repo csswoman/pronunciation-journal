@@ -9,8 +9,19 @@ import { saveConversation, updateConversation } from "@/lib/ai-db";
 import { buildSystemPrompt, lastModelHadExercise, messagesToWire } from "@/lib/ai-practice/wire";
 import { makeStreamState, processChunk } from "@/lib/ai-practice/stream-processor";
 import type { StartRoleplayArgs } from "@/lib/ai-practice/tools/registry";
+import type { AIConversationMode } from "@/lib/types";
+
+function getOrCreateDeviceId(): string {
+  const key = "ai_practice_device_id";
+  let id = localStorage.getItem(key);
+  if (!id) { id = crypto.randomUUID(); localStorage.setItem(key, id); }
+  return id;
+}
 
 interface UseStreamingChatOptions {
+  mode: AIConversationMode;
+  conversationId: number | null;
+  onConversationCreated: (id: number) => void;
   learningState: UserLearningState | null;
   setLearningState: (s: UserLearningState) => void;
   onSaveWord: (word: string, context: string) => void;
@@ -18,6 +29,9 @@ interface UseStreamingChatOptions {
 }
 
 export function useStreamingChat({
+  mode,
+  conversationId,
+  onConversationCreated,
   learningState,
   setLearningState,
   onSaveWord,
@@ -26,7 +40,6 @@ export function useStreamingChat({
   const [messages, setMessages] = useState<AIMessage[]>([]);
   const [isStreaming, setIsStreaming] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [conversationId, setConversationId] = useState<number | null>(null);
 
   const messagesRef = useRef<AIMessage[]>([]);
   messagesRef.current = messages;
@@ -136,8 +149,16 @@ export function useStreamingChat({
       if (conversationId) {
         await updateConversation(conversationId, { messages: serialized, updatedAt: now });
       } else {
-        const id = await saveConversation({ templateId: "free-conversation", title: text.slice(0, 60), messages: serialized, createdAt: now, updatedAt: now });
-        setConversationId(id);
+        const id = await saveConversation({
+          templateId: "free-conversation",
+          mode,
+          title: text.slice(0, 60),
+          messages: serialized,
+          deviceId: getOrCreateDeviceId(),
+          createdAt: now,
+          updatedAt: now,
+        });
+        onConversationCreated(id);
       }
     } catch (err: unknown) {
       if ((err as Error).name === "AbortError") return;
@@ -146,7 +167,7 @@ export function useStreamingChat({
     } finally {
       if (streamIdRef.current === thisId) setIsStreaming(false);
     }
-  }, [isStreaming, learningState, conversationId, onSaveWord, onStartRoleplay]);
+  }, [isStreaming, mode, conversationId, learningState, onSaveWord, onStartRoleplay, onConversationCreated]);
 
   const answerToolCall = useCallback((callId: string, result: ExerciseResult) => {
     let toolName = "exercise_result";
@@ -172,9 +193,12 @@ export function useStreamingChat({
   const resetChat = useCallback(() => {
     abortRef.current?.abort();
     setMessages([]);
-    setConversationId(null);
     setError(null);
   }, []);
 
-  return { messages, isStreaming, error, sendMessage, answerToolCall, resetChat };
+  const loadMessages = useCallback((msgs: AIMessage[]) => {
+    setMessages(msgs);
+  }, []);
+
+  return { messages, isStreaming, error, sendMessage, answerToolCall, resetChat, loadMessages };
 }

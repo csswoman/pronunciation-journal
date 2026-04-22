@@ -1,20 +1,24 @@
 import AIAvatar from "./AIAvatar";
-import SuggestionChips from "./SuggestionChips";
-
-const DEFAULT_SUGGESTIONS = [
-  { label: "Free conversation", prompt: "Let's have a free conversation in English. You can correct my mistakes and help me improve." },
-  { label: "Correct my sentence", prompt: "Please correct this sentence and explain why: I didn't went to the store yesterday." },
-  { label: "Practice questions", prompt: "Ask me 5 practice questions to improve my English grammar and vocabulary." },
-  { label: "Personalized practice", prompt: "Give me a personalized practice session focused on common English mistakes." },
-];
+import TemplateCard, { TEMPLATES } from "./TemplateCard";
+import type { AITemplateId } from "@/lib/types";
 
 interface WelcomeScreenProps {
   onSuggestionClick: (text: string) => void;
+  onTemplateSelect?: (id: AITemplateId) => void;
 }
 
-export default function WelcomeScreen({ onSuggestionClick }: WelcomeScreenProps) {
+export default function WelcomeScreen({ onSuggestionClick, onTemplateSelect }: WelcomeScreenProps) {
+  const handleSelect = (id: AITemplateId) => {
+    if (onTemplateSelect) {
+      onTemplateSelect(id);
+    } else {
+      const t = TEMPLATES.find(t => t.id === id);
+      if (t) onSuggestionClick(t.description);
+    }
+  };
+
   return (
-    <div className="flex flex-col gap-5 py-4">
+    <div className="flex flex-col gap-4 py-4">
       <div className="flex justify-start gap-3">
         <AIAvatar />
         <div
@@ -27,8 +31,10 @@ export default function WelcomeScreen({ onSuggestionClick }: WelcomeScreenProps)
         </div>
       </div>
 
-      <div className="pl-9">
-        <SuggestionChips suggestions={DEFAULT_SUGGESTIONS} onSelect={onSuggestionClick} />
+      <div className="pl-9 grid grid-cols-2 gap-3">
+        {TEMPLATES.map(t => (
+          <TemplateCard key={t.id} template={t} onSelect={handleSelect} />
+        ))}
       </div>
     </div>
   );

@@ -5,6 +5,8 @@ import type { AIMessage, ExerciseResult } from "@/lib/ai-practice/types";
 import MessageBubble from "./MessageBubble";
 import WelcomeScreen from "./WelcomeScreen";
 import TypingIndicator from "./TypingIndicator";
+import { TEMPLATES } from "./TemplateCard";
+import type { AITemplateId } from "@/lib/types";
 
 interface ChatViewProps {
   messages: AIMessage[];
@@ -12,6 +14,7 @@ interface ChatViewProps {
   onSaveWord: (word: string, context: string) => void;
   onSuggestionClick: (text: string) => void;
   onToolAnswer: (callId: string, result: ExerciseResult) => void;
+  onSendMessage?: (text: string) => void;
 }
 
 export default function ChatView({
@@ -20,6 +23,7 @@ export default function ChatView({
   onSaveWord,
   onSuggestionClick,
   onToolAnswer,
+  onSendMessage,
 }: ChatViewProps) {
   const bottomRef = useRef<HTMLDivElement>(null);
 
@@ -31,7 +35,19 @@ export default function ChatView({
   const visibleMessages = messages.filter(m => m.role !== "tool");
 
   if (visibleMessages.length === 0 && !isStreaming) {
-    return <WelcomeScreen onSuggestionClick={onSuggestionClick} />;
+    const handleTemplateSelect = onSendMessage
+      ? (id: AITemplateId) => {
+          const t = TEMPLATES.find(t => t.id === id);
+          if (t) onSendMessage(t.description);
+        }
+      : undefined;
+
+    return (
+      <WelcomeScreen
+        onSuggestionClick={onSuggestionClick}
+        onTemplateSelect={handleTemplateSelect}
+      />
+    );
   }
 
   return (
