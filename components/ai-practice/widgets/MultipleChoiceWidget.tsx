@@ -10,9 +10,10 @@ interface Props {
   status: "pending" | "rendered" | "answered" | "error";
   onAnswer: (result: ExerciseResult) => void;
   onNext?: () => void;
+  onRetry?: () => void;
 }
 
-export default function MultipleChoiceWidget({ args, status, onAnswer, onNext }: Props) {
+export default function MultipleChoiceWidget({ args, status, onAnswer, onNext, onRetry }: Props) {
   const [selected, setSelected] = useState<number | null>(null);
   const answered = status === "answered";
 
@@ -32,6 +33,7 @@ export default function MultipleChoiceWidget({ args, status, onAnswer, onNext }:
 
   function handleRetry() {
     setSelected(null);
+    onRetry?.();
   }
 
   return (

@@ -87,6 +87,7 @@ export default function ChatArea({
               onSuggestionClick={onSuggestionClick}
               onToolAnswer={onToolAnswer}
               onSendMessage={onSubmit}
+              onNext={() => onSubmit("next")}
             />
           </div>
 

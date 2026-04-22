@@ -10,13 +10,14 @@ interface Props {
   status: "pending" | "rendered" | "answered" | "error";
   onAnswer: (result: ExerciseResult) => void;
   onNext?: () => void;
+  onRetry?: () => void;
 }
 
 function normalize(s: string) {
   return s.trim().toLowerCase().replace(/[.,!?;:'"]/g, "");
 }
 
-export default function FillBlankWidget({ args, status, onAnswer, onNext }: Props) {
+export default function FillBlankWidget({ args, status, onAnswer, onNext, onRetry }: Props) {
   const [value, setValue] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -39,6 +40,7 @@ export default function FillBlankWidget({ args, status, onAnswer, onNext }: Prop
   function handleRetry() {
     setValue("");
     setSubmitted(false);
+    onRetry?.();
   }
 
   const parts = args.sentence.split("___");

@@ -7,6 +7,7 @@ import {
   Flame,
   Sparkles,
 } from "lucide-react";
+import AIEngagementWidget from "@/components/practice/AIEngagementWidget";
 
 export interface ProgressDay {
   date: string;
@@ -302,6 +303,8 @@ export default function ProgressOverview({
             </div>
           </div>
         </div>
+
+        <AIEngagementWidget />
       </div>
     </div>
   );

@@ -1,11 +1,36 @@
 import type { AIMessage } from "./types";
 import { BASE_TUTOR_PROMPT } from "./prompts";
-import { compactState, type UserLearningState } from "./learning-state";
+import { compactState, selectNextExerciseTopic, type UserLearningState } from "./learning-state";
 import { isExerciseTool } from "./tools/registry";
 
-export function buildSystemPrompt(learningState: UserLearningState | null): string {
+/** Returns the topic of the most recently answered exercise in the message list. */
+export function extractLastTopic(messages: AIMessage[]): string | undefined {
+  for (let i = messages.length - 1; i >= 0; i--) {
+    const msg = messages[i];
+    if (msg.role === "model") {
+      for (const tc of msg.toolCalls.values()) {
+        if (tc.status === "answered" && tc.result?.topic) return tc.result.topic;
+      }
+    }
+  }
+  return undefined;
+}
+
+export function buildSystemPrompt(
+  learningState: UserLearningState | null,
+  lastTopic?: string,
+): string {
   if (!learningState) return BASE_TUTOR_PROMPT;
-  return `${BASE_TUTOR_PROMPT}\n\n${compactState(learningState)}`;
+
+  const stateHint = compactState(learningState);
+  const knownTopics = learningState.grammar.weakTopics.map(t => t.topic);
+  const { topic, isNew } = selectNextExerciseTopic(learningState, knownTopics, lastTopic);
+
+  const nextHint = isNew
+    ? `Next exercise: introduce a NEW topic — "${topic}". Do not repeat the last topic.`
+    : `Next exercise: focus on "${topic}" (student has struggled here). Do not repeat the last topic.`;
+
+  return `${BASE_TUTOR_PROMPT}\n\n${stateHint}\n\n${nextHint}`;
 }
 
 export function lastModelHadExercise(messages: AIMessage[]): boolean {

@@ -12,9 +12,10 @@ interface Props {
   status: "pending" | "rendered" | "answered" | "error";
   onAnswer: (result: ExerciseResult) => void;
   onNext?: () => void;
+  onRetry?: () => void;
 }
 
-export default function SpeakingWidget({ args, status, onAnswer, onNext }: Props) {
+export default function SpeakingWidget({ args, status, onAnswer, onNext, onRetry }: Props) {
   const { startRecording, stopRecording, isRecording, audioUrl, resetRecording } = useRecorder();
   const [transcribing, setTranscribing] = useState(false);
   const [transcript, setTranscript] = useState<string | null>(null);
@@ -108,7 +109,7 @@ export default function SpeakingWidget({ args, status, onAnswer, onNext }: Props
           explanation={score < 0.6 ? "Keep practicing — try to match the target pronunciation closely." : undefined}
           topic={args.target}
           onNext={score >= 0.6 ? onNext : undefined}
-          onRetry={score < 0.6 ? () => { setTranscript(null); setScore(null); resetRecording(); } : undefined}
+          onRetry={score < 0.6 ? () => { setTranscript(null); setScore(null); resetRecording(); onRetry?.(); } : undefined}
         />
       )}
     </div>

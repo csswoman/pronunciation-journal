@@ -10,6 +10,26 @@ interface StoredLearningState {
   syncedAt?: string;
 }
 
+export type AnalyticsEventName =
+  | "exercise_shown"
+  | "exercise_answered"
+  | "exercise_correct"
+  | "next_clicked"
+  | "retry_clicked"
+  | "exercise_abandoned"
+  | "auto_next_triggered"
+  | "time_to_first_exercise"
+  | "session_started"
+  | "session_ended";
+
+export interface AnalyticsEvent {
+  id?: number;
+  name: AnalyticsEventName;
+  payload: Record<string, unknown>;
+  timestamp: string;
+  synced: 0 | 1;
+}
+
 interface LessonSessionOffset {
   lessonId: string; // PK
   offset: number;   // next starting index
@@ -35,6 +55,7 @@ class PronunciationDB extends Dexie {
   syncOutbox!: Table<SyncOutboxEntry, number>;
   completedLessons!: Table<CompletedCourseLesson, string>;
   learningState!: Table<StoredLearningState, string>;
+  analyticsEvents!: Table<AnalyticsEvent, number>;
 
   constructor() {
     super("pronunciation-journal");
@@ -120,6 +141,24 @@ class PronunciationDB extends Dexie {
       localSoundProgress:   "localKey, userId, soundId, nextReview",
       localAnswerHistory:   "++id, userId, soundId, answeredAt, synced",
       completedLessons:     "key, courseSlug, completedAt",
+    });
+
+    // v9: analytics events (local + optional Supabase batch sync)
+    this.version(9).stores({
+      attempts:             "++id, word, lessonId, timestamp",
+      srsData:              "wordId, word, nextReview",
+      dailyProgress:        "++id, date",
+      userStats:            "++id",
+      favorites:            "++id, word, lessonId, addedAt",
+      aiConversations:      "++id, templateId, mode, createdAt, updatedAt",
+      aiWords:              "++id, word, conversationId, savedAt, difficulty",
+      lessonOffsets:        "lessonId",
+      syncOutbox:           "++id, status, createdAt, [status+createdAt]",
+      localSoundProgress:   "localKey, userId, soundId, nextReview",
+      localAnswerHistory:   "++id, userId, soundId, answeredAt, synced",
+      completedLessons:     "key, courseSlug, completedAt",
+      learningState:        "userId, updatedAt",
+      analyticsEvents:      "++id, name, timestamp, synced",
     });
 
     // v8: mode field on aiConversations + learningState store
