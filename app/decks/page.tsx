@@ -213,10 +213,9 @@ export default function DecksPage() {
             <Image
               src="/illustrations/options.svg"
               alt="Deck options illustration"
-              width={643}
-              height={349}
+              width={560}
+              height={360}
               priority
-              className="w-[300px] xl:w-[340px] h-auto"
             />
           }
         />

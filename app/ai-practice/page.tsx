@@ -53,10 +53,9 @@ export default function AIPracticePage() {
               <Image
                 src="/illustrations/chat-ai.svg"
                 alt="AI chat illustration"
-                width={613}
-                height={349}
+                width={560}
+                height={360}
                 priority
-                className="w-[300px] xl:w-[340px] h-auto"
               />
             }
           />

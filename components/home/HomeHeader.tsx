@@ -24,7 +24,7 @@ export default function HomeHeader() {
         icon: <Sparkles size={14} />,
         onClick: () => router.push("/ai-practice"),
       }}
-      illustration={<ConversationIllustration className="w-[300px] xl:w-[340px]" />}
+      illustration={<ConversationIllustration />}
     />
   );
 }

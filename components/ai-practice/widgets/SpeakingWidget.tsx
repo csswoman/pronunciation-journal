@@ -5,17 +5,21 @@ import { Mic, MicOff, Loader2 } from "lucide-react";
 import type { SpeakingArgs } from "@/lib/ai-practice/tools/registry";
 import type { ExerciseResult } from "@/lib/ai-practice/types";
 import { useRecorder } from "@/hooks/useRecorder";
+import ExerciseFeedback from "./ExerciseFeedback";
 
 interface Props {
   args: SpeakingArgs;
   status: "pending" | "rendered" | "answered" | "error";
   onAnswer: (result: ExerciseResult) => void;
+  onNext?: () => void;
+  onRetry?: () => void;
 }
 
-export default function SpeakingWidget({ args, status, onAnswer }: Props) {
+export default function SpeakingWidget({ args, status, onAnswer, onNext, onRetry }: Props) {
   const { startRecording, stopRecording, isRecording, audioUrl, resetRecording } = useRecorder();
   const [transcribing, setTranscribing] = useState(false);
   const [transcript, setTranscript] = useState<string | null>(null);
+  const [score, setScore] = useState<number | null>(null);
   const answered = status === "answered";
 
   async function handleStop() {
@@ -33,9 +37,10 @@ export default function SpeakingWidget({ args, status, onAnswer }: Props) {
       });
       const data = await res.json();
       const text: string = data.transcript ?? "";
+      const s: number = data.score ?? 0.5;
       setTranscript(text);
-      // Speaking exercises are graded by model — emit with score placeholder
-      onAnswer({ correct: true, score: data.score ?? 0.5, topic: args.target, gradedBy: "model" });
+      setScore(s);
+      onAnswer({ correct: s >= 0.6, score: s, topic: args.target, gradedBy: "model" });
     } catch {
       onAnswer({ correct: false, topic: args.target, gradedBy: "model" });
     } finally {
@@ -96,6 +101,16 @@ export default function SpeakingWidget({ args, status, onAnswer }: Props) {
         <p className="text-sm italic" style={{ color: "var(--text-secondary)" }}>
           You said: &ldquo;{transcript}&rdquo;
         </p>
+      )}
+
+      {answered && score !== null && (
+        <ExerciseFeedback
+          correct={score >= 0.6}
+          explanation={score < 0.6 ? "Keep practicing — try to match the target pronunciation closely." : undefined}
+          topic={args.target}
+          onNext={score >= 0.6 ? onNext : undefined}
+          onRetry={score < 0.6 ? () => { setTranscript(null); setScore(null); resetRecording(); onRetry?.(); } : undefined}
+        />
       )}
     </div>
   );

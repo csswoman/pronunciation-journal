@@ -86,9 +86,10 @@ interface AIBubbleProps {
   onSaveWord: (word: string, context: string) => void;
   onSuggestionClick: (text: string) => void;
   onToolAnswer: (callId: string, result: ExerciseResult) => void;
+  onNext: () => void;
 }
 
-function AIBubble({ message, onSaveWord, onSuggestionClick, onToolAnswer }: AIBubbleProps) {
+function AIBubble({ message, onSaveWord, onSuggestionClick, onToolAnswer, onNext }: AIBubbleProps) {
   // Build full text for context (word selection)
   const fullText = message.contentParts
     .filter((p): p is { type: "text"; text: string } => p.type === "text")
@@ -133,6 +134,7 @@ function AIBubble({ message, onSaveWord, onSuggestionClick, onToolAnswer }: AIBu
               key={i}
               toolCall={tc}
               onAnswer={onToolAnswer}
+              onNext={onNext}
             />
           );
         })}
@@ -165,9 +167,10 @@ interface MessageBubbleProps {
   onSaveWord: (word: string, context: string) => void;
   onSuggestionClick: (text: string) => void;
   onToolAnswer: (callId: string, result: ExerciseResult) => void;
+  onNext: () => void;
 }
 
-export default function MessageBubble({ message, onSaveWord, onSuggestionClick, onToolAnswer }: MessageBubbleProps) {
+export default function MessageBubble({ message, onSaveWord, onSuggestionClick, onToolAnswer, onNext }: MessageBubbleProps) {
   if (message.role === "user") {
     return (
       <div className="flex justify-end">
@@ -189,6 +192,7 @@ export default function MessageBubble({ message, onSaveWord, onSuggestionClick, 
       onSaveWord={onSaveWord}
       onSuggestionClick={onSuggestionClick}
       onToolAnswer={onToolAnswer}
+      onNext={onNext}
     />
   );
 }

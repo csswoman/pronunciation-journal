@@ -6,7 +6,8 @@ import { serializeMessage } from "@/lib/ai-practice/types";
 import { detectIntent, intentToToolConfig } from "@/lib/ai-practice/intent-detection";
 import { applyExerciseResult, type UserLearningState } from "@/lib/ai-practice/learning-state";
 import { saveConversation, updateConversation } from "@/lib/ai-db";
-import { buildSystemPrompt, lastModelHadExercise, messagesToWire } from "@/lib/ai-practice/wire";
+import { buildSystemPrompt, lastModelHadExercise, messagesToWire, extractLastTopic } from "@/lib/ai-practice/wire";
+import { logEvent } from "@/lib/ai-practice/events";
 import { makeStreamState, processChunk } from "@/lib/ai-practice/stream-processor";
 import type { StartRoleplayArgs } from "@/lib/ai-practice/tools/registry";
 import type { AIConversationMode } from "@/lib/types";
@@ -45,10 +46,22 @@ export function useStreamingChat({
   messagesRef.current = messages;
   const abortRef = useRef<AbortController | null>(null);
   const streamIdRef = useRef(0);
+  const lastTopicRef = useRef<string | undefined>(undefined);
+  const sessionStartedRef = useRef(false);
+  const sessionStartAtRef = useRef(0);
+  const exercisesCompletedRef = useRef(0);
+  const correctCountRef = useRef(0);
+  const firstExerciseLoggedRef = useRef(false);
 
   const sendMessage = useCallback(async (text: string) => {
     if (!text.trim() || isStreaming) return;
     setError(null);
+
+    if (!sessionStartedRef.current) {
+      sessionStartedRef.current = true;
+      sessionStartAtRef.current = Date.now();
+      logEvent("session_started", { mode, conversationId: conversationId ?? undefined }).catch(() => {});
+    }
 
     const userMsg: AIMessage = { role: "user", content: text.trim(), timestamp: new Date().toISOString() };
     const nextMessages = [...messagesRef.current, userMsg];
@@ -72,7 +85,7 @@ export function useStreamingChat({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           messages: messagesToWire(nextMessages),
-          systemPrompt: buildSystemPrompt(learningState),
+          systemPrompt: buildSystemPrompt(learningState, lastTopicRef.current),
           toolChoice,
           allowedTools,
           stream: true,
@@ -144,6 +157,15 @@ export function useStreamingChat({
       const finalMessages = [...nextMessages, finalModelMsg];
       setMessages(finalMessages);
 
+      if (!firstExerciseLoggedRef.current && state.calls.size > 0) {
+        const { isExerciseTool } = await import("@/lib/ai-practice/tools/registry");
+        const hasExercise = [...state.calls.values()].some(tc => isExerciseTool(tc.name as never));
+        if (hasExercise) {
+          firstExerciseLoggedRef.current = true;
+          logEvent("time_to_first_exercise", { timeMs: Date.now() - sessionStartAtRef.current }).catch(() => {});
+        }
+      }
+
       const now = new Date().toISOString();
       const serialized = finalMessages.map(m => m.role === "model" ? serializeMessage(m) : m) as never;
       if (conversationId) {
@@ -187,14 +209,30 @@ export function useStreamingChat({
       return copy;
     });
     setMessages(prev => [...prev, { role: "tool" as const, toolCallId: callId, name: toolName, result, timestamp: new Date().toISOString() }]);
+    if (result.topic) lastTopicRef.current = result.topic;
+    exercisesCompletedRef.current += 1;
+    if (result.correct) correctCountRef.current += 1;
     if (learningState) setLearningState(applyExerciseResult(learningState, result));
   }, [learningState, setLearningState]);
 
   const resetChat = useCallback(() => {
     abortRef.current?.abort();
+    if (sessionStartedRef.current) {
+      const completed = exercisesCompletedRef.current;
+      logEvent("session_ended", {
+        mode,
+        exercisesCompleted: completed,
+        correctRate: completed > 0 ? correctCountRef.current / completed : 0,
+        durationMs: Date.now() - sessionStartAtRef.current,
+      }).catch(() => {});
+      sessionStartedRef.current = false;
+      exercisesCompletedRef.current = 0;
+      correctCountRef.current = 0;
+      firstExerciseLoggedRef.current = false;
+    }
     setMessages([]);
     setError(null);
-  }, []);
+  }, [mode]);
 
   const loadMessages = useCallback((msgs: AIMessage[]) => {
     setMessages(msgs);

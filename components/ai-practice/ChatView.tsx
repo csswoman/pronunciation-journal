@@ -15,6 +15,7 @@ interface ChatViewProps {
   onSuggestionClick: (text: string) => void;
   onToolAnswer: (callId: string, result: ExerciseResult) => void;
   onSendMessage?: (text: string) => void;
+  onNext: () => void;
 }
 
 export default function ChatView({
@@ -24,6 +25,7 @@ export default function ChatView({
   onSuggestionClick,
   onToolAnswer,
   onSendMessage,
+  onNext,
 }: ChatViewProps) {
   const bottomRef = useRef<HTMLDivElement>(null);
 
@@ -59,6 +61,7 @@ export default function ChatView({
           onSaveWord={onSaveWord}
           onSuggestionClick={onSuggestionClick}
           onToolAnswer={onToolAnswer}
+          onNext={onNext}
         />
       ))}
 

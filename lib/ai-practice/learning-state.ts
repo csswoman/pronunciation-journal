@@ -133,6 +133,73 @@ export function applyExerciseResult(
   };
 }
 
+// ── Adaptive exercise selection ───────────────────────────────────────────────
+
+export interface TopicSelection {
+  topic: string;
+  isNew: boolean;
+}
+
+/**
+ * Picks the next exercise topic using a weighted priority score:
+ *   errorRate * 0.6 + recencyDecay * 0.3 + jitter * 0.1
+ *
+ * 70% of picks come from known weak topics; 30% force a brand-new topic.
+ * The topic most recently practiced is excluded to prevent consecutive repetition.
+ */
+export function selectNextExerciseTopic(
+  state: UserLearningState,
+  candidateTopics: string[],   // all available topics for this session
+  lastTopic?: string,          // the immediately previous exercise topic
+): TopicSelection {
+  const now = Date.now();
+  const weakTopics = state.grammar.weakTopics;
+
+  // Seeded jitter so different calls still diverge
+  const jitter = () => Math.random();
+
+  // Recency decay: how long ago this topic was last practiced (normalised to ~7 days)
+  function recencyDecay(lastCoveredAt: string): number {
+    const ageMs = now - new Date(lastCoveredAt).getTime();
+    const ageDays = ageMs / (1000 * 60 * 60 * 24);
+    return Math.min(ageDays / 7, 1); // 0 = just practiced, 1 = ≥ 7 days ago
+  }
+
+  function score(topic: { topic: string; errorRate: number; lastCoveredAt: string }): number {
+    return topic.errorRate * 0.6 + recencyDecay(topic.lastCoveredAt) * 0.3 + jitter() * 0.1;
+  }
+
+  // Eligible weak topics: exclude the immediately previous topic
+  const eligible = weakTopics.filter(
+    t => t.topic !== lastTopic && t.sampleCount > 0,
+  );
+
+  // New topics = candidates not yet in weakTopics
+  const knownTopicSet = new Set(weakTopics.map(t => t.topic));
+  const newTopics = candidateTopics.filter(t => t !== lastTopic && !knownTopicSet.has(t));
+
+  const forceNew = Math.random() < 0.3 || eligible.length === 0;
+
+  if (forceNew && newTopics.length > 0) {
+    const idx = Math.floor(Math.random() * newTopics.length);
+    return { topic: newTopics[idx], isNew: true };
+  }
+
+  if (eligible.length > 0) {
+    const best = eligible.reduce((a, b) => (score(a) >= score(b) ? a : b));
+    return { topic: best.topic, isNew: false };
+  }
+
+  // Fallback: any candidate not equal to lastTopic
+  const fallbacks = candidateTopics.filter(t => t !== lastTopic);
+  if (fallbacks.length > 0) {
+    return { topic: fallbacks[Math.floor(Math.random() * fallbacks.length)], isNew: true };
+  }
+
+  // Last resort: repeat last topic
+  return { topic: candidateTopics[0] ?? "general", isNew: true };
+}
+
 export function createEmptyState(userId: string, deviceId: string): UserLearningState {
   return {
     userId,

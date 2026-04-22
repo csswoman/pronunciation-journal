@@ -85,10 +85,9 @@ export default function PracticeLessonsPage() {
             <Image
               src="/illustrations/music.svg"
               alt="Music illustration"
-              width={561}
-              height={367}
+              width={560}
+              height={360}
               priority
-              className="h-auto w-full max-w-[300px] xl:max-w-[340px]"
             />
           }
         />

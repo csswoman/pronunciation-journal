@@ -3,18 +3,21 @@
 import { useState, useRef } from "react";
 import type { FillBlankArgs } from "@/lib/ai-practice/tools/registry";
 import type { ExerciseResult } from "@/lib/ai-practice/types";
+import ExerciseFeedback from "./ExerciseFeedback";
 
 interface Props {
   args: FillBlankArgs;
   status: "pending" | "rendered" | "answered" | "error";
   onAnswer: (result: ExerciseResult) => void;
+  onNext?: () => void;
+  onRetry?: () => void;
 }
 
 function normalize(s: string) {
   return s.trim().toLowerCase().replace(/[.,!?;:'"]/g, "");
 }
 
-export default function FillBlankWidget({ args, status, onAnswer }: Props) {
+export default function FillBlankWidget({ args, status, onAnswer, onNext, onRetry }: Props) {
   const [value, setValue] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -32,6 +35,12 @@ export default function FillBlankWidget({ args, status, onAnswer }: Props) {
       normalize(value) === normalize(args.answer) ||
       (args.acceptableAnswers ?? []).some(a => normalize(value) === normalize(a));
     onAnswer({ correct: isCorrect, topic: args.topic, gradedBy: "client" });
+  }
+
+  function handleRetry() {
+    setValue("");
+    setSubmitted(false);
+    onRetry?.();
   }
 
   const parts = args.sentence.split("___");
@@ -68,13 +77,14 @@ export default function FillBlankWidget({ args, status, onAnswer }: Props) {
         {parts[1] && <span>{parts[1]}</span>}
       </div>
 
-      {submitted && (
-        <p
-          className="text-xs"
-          style={{ color: correct ? "var(--success, #22c55e)" : "#ef4444" }}
-        >
-          {correct ? "Correct!" : `Answer: ${args.answer}`}
-        </p>
+      {answered && (
+        <ExerciseFeedback
+          correct={correct}
+          explanation={!correct ? `Answer: ${args.answer}` : undefined}
+          topic={args.topic}
+          onNext={correct ? onNext : undefined}
+          onRetry={!correct ? handleRetry : undefined}
+        />
       )}
 
       {!answered && (

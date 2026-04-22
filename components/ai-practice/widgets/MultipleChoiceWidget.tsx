@@ -3,16 +3,21 @@
 import { useState } from "react";
 import type { MultipleChoiceArgs } from "@/lib/ai-practice/tools/registry";
 import type { ExerciseResult } from "@/lib/ai-practice/types";
+import ExerciseFeedback from "./ExerciseFeedback";
 
 interface Props {
   args: MultipleChoiceArgs;
   status: "pending" | "rendered" | "answered" | "error";
   onAnswer: (result: ExerciseResult) => void;
+  onNext?: () => void;
+  onRetry?: () => void;
 }
 
-export default function MultipleChoiceWidget({ args, status, onAnswer }: Props) {
+export default function MultipleChoiceWidget({ args, status, onAnswer, onNext, onRetry }: Props) {
   const [selected, setSelected] = useState<number | null>(null);
   const answered = status === "answered";
+
+  const wasCorrect = selected !== null && selected === args.correctIndex;
 
   function handleSelect(idx: number) {
     if (answered) return;
@@ -24,6 +29,11 @@ export default function MultipleChoiceWidget({ args, status, onAnswer }: Props) 
       gradedBy: "client",
       latencyMs: undefined,
     });
+  }
+
+  function handleRetry() {
+    setSelected(null);
+    onRetry?.();
   }
 
   return (
@@ -65,10 +75,14 @@ export default function MultipleChoiceWidget({ args, status, onAnswer }: Props) 
           );
         })}
       </div>
-      {answered && args.explanation && (
-        <p className="text-xs pt-1" style={{ color: "var(--text-tertiary)" }}>
-          {args.explanation}
-        </p>
+      {answered && (
+        <ExerciseFeedback
+          correct={wasCorrect}
+          explanation={args.explanation}
+          topic={args.topic}
+          onNext={wasCorrect ? onNext : undefined}
+          onRetry={!wasCorrect ? handleRetry : undefined}
+        />
       )}
     </div>
   );

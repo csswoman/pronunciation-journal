@@ -195,10 +195,9 @@ export default function LessonsPage() {
             <Image
               src="/illustrations/exposition.svg"
               alt="Lessons exposition illustration"
-              width={552}
-              height={348}
+              width={560}
+              height={360}
               priority
-              className="w-[300px] xl:w-[340px] h-auto"
             />
           }
         />

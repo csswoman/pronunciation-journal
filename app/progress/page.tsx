@@ -10,13 +10,10 @@ import PageLayout from '@/components/layout/PageLayout'
 import StatsSection from '@/components/layout/StatsSection'
 import AchievementsSection from '@/components/progress/AchievementsSection'
 import JourneyToFluiditySection from '@/components/progress/JourneyToFluiditySection'
-import MasteredSection from '@/components/progress/MasteredSection'
-import { useMasteredSounds } from '@/hooks/useMasteredSounds'
 import type { UserStats, DailyProgress } from '@/lib/types'
 
 export default function ProgressPage() {
   const { user } = useAuth()
-  const { mastered } = useMasteredSounds(user?.id)
   const [stats, setStats] = useState<UserStats | null>(null)
   const [todayProgress, setTodayProgress] = useState<DailyProgress | null>(null)
   const [progressHistory, setProgressHistory] = useState<DailyProgress[]>([])
@@ -115,10 +112,9 @@ export default function ProgressPage() {
             <Image
               src="/illustrations/xp-points.svg"
               alt="XP points illustration"
-              width={624}
-              height={368}
+              width={560}
+              height={360}
               priority
-              className="w-[300px] xl:w-[340px] h-auto"
             />
           }
         />
@@ -129,8 +125,8 @@ export default function ProgressPage() {
           stats={stats}
           todayProgress={todayProgress}
           progressHistory={progressHistory}
+          userId={user?.id}
         />
-        <MasteredSection mastered={mastered} />
         <AchievementsSection />
         <JourneyToFluiditySection />
       </Section>
