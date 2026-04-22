@@ -159,13 +159,26 @@ export interface AIMessage {
   timestamp: string; // ISO
 }
 
+export type AIConversationMode =
+  | "chat"
+  | "roleplay:interview"
+  | "roleplay:cafe"
+  | "roleplay:airport"
+  | "roleplay:doctor"
+  | "roleplay:store"
+  | "pronunciation"
+  | "lesson";
+
 export interface AIConversation {
   id?: number;
   templateId: AITemplateId | "custom";
+  mode: AIConversationMode;
   title: string; // first 60 chars of first user message
   messages: AIMessage[];
+  deviceId: string;
   createdAt: string;
   updatedAt: string;
+  syncedAt?: string;
 }
 
 export interface AISavedWord {

@@ -1,10 +1,10 @@
 "use client";
 
-import { MessageCircle, Theater, Mic } from "lucide-react";
+import { MessageCircle, UserRound, Mic } from "lucide-react";
 
 export const TABS = [
   { id: "chat", label: "Chat", icon: MessageCircle },
-  { id: "roleplay", label: "Roleplay", icon: Theater },
+  { id: "roleplay", label: "Roleplay", icon: UserRound },
   { id: "pronunciation", label: "Pronunciation", icon: Mic },
 ] as const;
 
@@ -18,7 +18,7 @@ interface ChatTabsProps {
 export default function ChatTabs({ active, onChange }: ChatTabsProps) {
   return (
     <div
-      className="flex items-center gap-1 px-3 py-2 border-b flex-shrink-0"
+      className="flex items-center gap-0.5 px-3 border-b flex-shrink-0"
       style={{ borderColor: "var(--line-divider)" }}
     >
       {TABS.map(({ id, label, icon: Icon }) => {
@@ -27,20 +27,23 @@ export default function ChatTabs({ active, onChange }: ChatTabsProps) {
           <button
             key={id}
             onClick={() => onChange(id)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all"
-            style={{
-              backgroundColor: isActive ? "var(--btn-regular-bg-active)" : "transparent",
-              color: isActive ? "var(--text-primary)" : "var(--text-tertiary)",
-            }}
+            className="relative flex items-center gap-1.5 px-3 py-2.5 text-sm font-medium transition-all"
+            style={{ color: isActive ? "var(--primary)" : "var(--text-tertiary)" }}
             onMouseEnter={(e) => {
-              if (!isActive) e.currentTarget.style.backgroundColor = "var(--btn-regular-bg)";
+              if (!isActive) e.currentTarget.style.color = "var(--text-secondary)";
             }}
             onMouseLeave={(e) => {
-              if (!isActive) e.currentTarget.style.backgroundColor = "transparent";
+              if (!isActive) e.currentTarget.style.color = "var(--text-tertiary)";
             }}
           >
-            <Icon size={14} />
+            <Icon size={14} strokeWidth={isActive ? 2.2 : 1.8} />
             {label}
+            {isActive && (
+              <span
+                className="absolute bottom-0 left-0 right-0 h-0.5 rounded-full"
+                style={{ backgroundColor: "var(--primary)" }}
+              />
+            )}
           </button>
         );
       })}

@@ -5,10 +5,11 @@ import type { ExerciseResult } from "@/lib/ai-practice/types";
 import type { StartRoleplayArgs } from "@/lib/ai-practice/tools/registry";
 import { getUserLearningState } from "@/lib/ai-practice/load-state";
 import type { UserLearningState } from "@/lib/ai-practice/learning-state";
-import type { AISavedWord } from "@/lib/types";
+import type { AISavedWord, AIConversationMode } from "@/lib/types";
 import { useAuth } from "@/components/AuthProvider";
 import { useStreamingChat } from "./useStreamingChat";
 import { useSavedWords, type SaveWordData } from "./useSavedWords";
+import { switchMode } from "@/lib/ai-practice/conversation-mode";
 
 export type { SaveWordData };
 
@@ -19,6 +20,8 @@ interface UseAIPracticeReturn {
   savedWords: AISavedWord[];
   wordToSave: { word: string; context: string } | null;
   activeRoleplay: StartRoleplayArgs["scenario"] | null;
+  mode: AIConversationMode;
+  conversationId: number | null;
   sendMessage: (text: string) => Promise<void>;
   answerToolCall: (callId: string, result: ExerciseResult) => void;
   openSaveWordModal: (word: string, context: string) => void;
@@ -27,17 +30,22 @@ interface UseAIPracticeReturn {
   deleteSavedWord: (id: number) => Promise<void>;
   loadSavedWords: () => Promise<void>;
   resetSession: () => void;
+  changeMode: (next: AIConversationMode) => Promise<void>;
 }
 
 export function useAIPractice(): UseAIPracticeReturn {
   const { user } = useAuth();
   const [learningState, setLearningState] = useState<UserLearningState | null>(null);
   const [activeRoleplay, setActiveRoleplay] = useState<StartRoleplayArgs["scenario"] | null>(null);
+  const [mode, setMode] = useState<AIConversationMode>("chat");
   const [conversationId, setConversationId] = useState<number | null>(null);
 
   const words = useSavedWords(conversationId);
 
   const chat = useStreamingChat({
+    mode,
+    conversationId,
+    onConversationCreated: setConversationId,
     learningState,
     setLearningState,
     onSaveWord: words.openSaveWordModal,
@@ -49,11 +57,33 @@ export function useAIPractice(): UseAIPracticeReturn {
     if (user?.id) {
       getUserLearningState(user.id).then(setLearningState).catch(() => {});
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id]);
 
-  // Keep conversationId in sync after chat persists a new conversation.
-  // useStreamingChat manages its own conversationId internally; we expose
-  // resetSession here to coordinate both sub-hooks.
+  // On mount: resume last chat conversation (if any)
+  useEffect(() => {
+    switchMode("chat").then(({ conversationId: id }) => setConversationId(id)).catch(() => {});
+  }, []);
+
+  const changeMode = useCallback(async (next: AIConversationMode) => {
+    chat.resetChat();
+    setActiveRoleplay(null);
+    words.setWordToSave(null);
+    setMode(next);
+    const { conversationId: id, conversation } = await switchMode(next);
+    setConversationId(id);
+
+    // Restore messages from the existing conversation (if any)
+    if (conversation.messages.length > 0) {
+      chat.loadMessages(conversation.messages as never);
+    }
+
+    // Track active roleplay scenario from mode string
+    if (next.startsWith("roleplay:")) {
+      setActiveRoleplay(next.slice("roleplay:".length) as StartRoleplayArgs["scenario"]);
+    }
+  }, [chat, words]);
+
   const resetSession = useCallback(() => {
     chat.resetChat();
     setConversationId(null);
@@ -68,6 +98,8 @@ export function useAIPractice(): UseAIPracticeReturn {
     savedWords: words.savedWords,
     wordToSave: words.wordToSave,
     activeRoleplay,
+    mode,
+    conversationId,
     sendMessage: chat.sendMessage,
     answerToolCall: chat.answerToolCall,
     openSaveWordModal: words.openSaveWordModal,
@@ -76,5 +108,6 @@ export function useAIPractice(): UseAIPracticeReturn {
     deleteSavedWord: words.deleteSavedWord,
     loadSavedWords: words.loadSavedWords,
     resetSession,
+    changeMode,
   };
 }

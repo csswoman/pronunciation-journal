@@ -3,9 +3,7 @@
 import { useCallback } from "react";
 import type { ExerciseResult } from "@/lib/ai-practice/types";
 import { applyExerciseResult, type UserLearningState } from "@/lib/ai-practice/learning-state";
-
-// Persists ExerciseResult → updates UserLearningState via reducer → saves to Dexie.
-// Supabase sync is out of scope for Semana 2.
+import { persistLearningState } from "@/lib/ai-practice/persist-state";
 
 interface UseToolRegistryOptions {
   learningState: UserLearningState | null;
@@ -18,7 +16,7 @@ export function useToolRegistry({ learningState, onStateUpdate }: UseToolRegistr
       if (!learningState) return;
       const next = applyExerciseResult(learningState, result);
       onStateUpdate(next);
-      // Dexie persistence deferred to Semana 4 sync layer
+      persistLearningState(next).catch(console.error);
     },
     [learningState, onStateUpdate]
   );

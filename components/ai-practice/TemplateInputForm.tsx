@@ -62,7 +62,7 @@ export default function TemplateInputForm({
         </Button>
         <div>
           <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
-            {template?.icon} {template?.title}
+            {template?.Icon && <template.Icon size={20} className="inline mr-1" />} {template?.title}
           </h2>
           <p className="text-sm text-gray-500 dark:text-gray-400">{template?.description}</p>
         </div>

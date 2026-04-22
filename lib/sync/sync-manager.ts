@@ -47,7 +47,11 @@ function isPermanentError(message: string, code?: string): boolean {
 
 async function flushEntry(entry: SyncOutboxEntry): Promise<void> {
   const supabase = getSupabaseBrowserClient()
-  const { table, operation, payload, matchKey } = entry
+  const { operation, payload, matchKey } = entry
+  // Cast table to any — SyncTable may include tables not yet in the generated types
+  // (e.g. ai_conversations, user_learning_state pending migration).
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const table = entry.table as any
 
   let error: { message: string; code?: string } | null = null
 
@@ -64,21 +68,23 @@ async function flushEntry(entry: SyncOutboxEntry): Promise<void> {
     }
     case 'update': {
       if (!matchKey) throw new Error('update operation requires matchKey')
-      let query = supabase.from(table).update(payload as never)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      let query: any = supabase.from(table).update(payload as never)
       for (const [col, val] of Object.entries(matchKey)) {
-        query = (query as ReturnType<typeof query.eq>).eq(col, val as never)
+        query = query.eq(col, val)
       }
-      const res = await (query as ReturnType<typeof query.eq>)
+      const res = await query
       error = res.error
       break
     }
     case 'delete': {
       if (!matchKey) throw new Error('delete operation requires matchKey')
-      let query = supabase.from(table).delete()
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      let query: any = supabase.from(table).delete()
       for (const [col, val] of Object.entries(matchKey)) {
-        query = (query as ReturnType<typeof query.eq>).eq(col, val as never)
+        query = query.eq(col, val)
       }
-      const res = await (query as ReturnType<typeof query.eq>)
+      const res = await query
       error = res.error
       break
     }

@@ -1,6 +1,6 @@
 "use client";
 
-import { Volume2, Check, Sparkles, BookOpen } from "lucide-react";
+import { Volume2, Check, Sparkles, BookOpen, NotebookPen } from "lucide-react";
 import Button from "@/components/ui/Button";
 import type { AISavedWord } from "@/lib/types";
 
@@ -60,9 +60,17 @@ function VocabHeader({ count }: { count: number }) {
 
 function VocabEmpty() {
   return (
-    <p className="text-xs text-center pt-6" style={{ color: "var(--text-tertiary)" }}>
-      Select words from the chat to save them here.
-    </p>
+    <div className="flex flex-col items-center gap-3 pt-8 px-2 text-center">
+      <div
+        className="w-10 h-10 rounded-xl flex items-center justify-center"
+        style={{ backgroundColor: "var(--btn-regular-bg)" }}
+      >
+        <NotebookPen size={18} strokeWidth={1.5} style={{ color: "var(--text-tertiary)" }} />
+      </div>
+      <p className="text-xs leading-relaxed" style={{ color: "var(--text-tertiary)" }}>
+        Select words from the chat to save them here.
+      </p>
+    </div>
   );
 }
 

@@ -20,6 +20,8 @@ export default function AIPracticePage() {
     error,
     wordToSave,
     savedWords,
+    mode,
+    conversationId,
     sendMessage,
     answerToolCall,
     openSaveWordModal,
@@ -27,6 +29,7 @@ export default function AIPracticePage() {
     confirmSaveWord,
     deleteSavedWord,
     resetSession,
+    changeMode,
   } = useAIPractice();
 
   const [inputPrefill, setInputPrefill] = useState<string | undefined>(undefined);
@@ -70,13 +73,15 @@ export default function AIPracticePage() {
           <AIPracticeSidebar
             grouped={groupConversationsByDate(conversations)}
             onNewSession={resetSession}
-            activeConversationId={null}
+            activeConversationId={conversationId}
           />
 
           <ChatArea
             messages={messages}
             isStreaming={isStreaming}
             error={error}
+            mode={mode}
+            onChangeMode={changeMode}
             onSaveWord={openSaveWordModal}
             onSuggestionClick={(text) => setInputPrefill(text)}
             onToolAnswer={answerToolCall}

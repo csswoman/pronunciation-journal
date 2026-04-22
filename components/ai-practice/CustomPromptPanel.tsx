@@ -1,6 +1,6 @@
 "use client";
 import Button from "@/components/ui/Button";
-
+import { SendHorizonal } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 
 interface CustomPromptPanelProps {
@@ -113,9 +113,7 @@ export default function CustomPromptPanel({
             {isDisabled ? (
               <span className="w-3.5 h-3.5 border-2 border-current border-t-transparent rounded-full animate-spin" />
             ) : (
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14M12 5l7 7-7 7" />
-              </svg>
+              <SendHorizonal size={15} strokeWidth={2} />
             )}
             Send
           </Button>

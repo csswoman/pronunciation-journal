@@ -1,6 +1,14 @@
 import Dexie, { type Table } from "dexie";
 import type { AIConversation, AISavedWord, Attempt, DailyProgress, FavoriteWord, SRSData, UserStats } from "./types";
 import type { SyncOutboxEntry } from "./sync/types";
+import type { UserLearningState } from "./ai-practice/learning-state";
+
+interface StoredLearningState {
+  userId: string; // PK
+  state: UserLearningState;
+  updatedAt: string;
+  syncedAt?: string;
+}
 
 interface LessonSessionOffset {
   lessonId: string; // PK
@@ -26,6 +34,7 @@ class PronunciationDB extends Dexie {
   lessonOffsets!: Table<LessonSessionOffset, string>;
   syncOutbox!: Table<SyncOutboxEntry, number>;
   completedLessons!: Table<CompletedCourseLesson, string>;
+  learningState!: Table<StoredLearningState, string>;
 
   constructor() {
     super("pronunciation-journal");
@@ -111,6 +120,23 @@ class PronunciationDB extends Dexie {
       localSoundProgress:   "localKey, userId, soundId, nextReview",
       localAnswerHistory:   "++id, userId, soundId, answeredAt, synced",
       completedLessons:     "key, courseSlug, completedAt",
+    });
+
+    // v8: mode field on aiConversations + learningState store
+    this.version(8).stores({
+      attempts:             "++id, word, lessonId, timestamp",
+      srsData:              "wordId, word, nextReview",
+      dailyProgress:        "++id, date",
+      userStats:            "++id",
+      favorites:            "++id, word, lessonId, addedAt",
+      aiConversations:      "++id, templateId, mode, createdAt, updatedAt",
+      aiWords:              "++id, word, conversationId, savedAt, difficulty",
+      lessonOffsets:        "lessonId",
+      syncOutbox:           "++id, status, createdAt, [status+createdAt]",
+      localSoundProgress:   "localKey, userId, soundId, nextReview",
+      localAnswerHistory:   "++id, userId, soundId, answeredAt, synced",
+      completedLessons:     "key, courseSlug, completedAt",
+      learningState:        "userId, updatedAt",
     });
   }
 }

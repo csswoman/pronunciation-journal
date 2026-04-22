@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { Plus, Search, X } from "lucide-react";
+import { Plus, Search, X, MessageCircle, UserRound, Mic, BookOpen } from "lucide-react";
 import Button from "@/components/ui/Button";
-import type { AIConversation } from "@/lib/types";
+import type { AIConversation, AIConversationMode } from "@/lib/types";
 
 export type ConvGroupLabel = "TODAY" | "YESTERDAY" | "7 DAYS" | "OLDER";
 
@@ -14,6 +14,14 @@ interface AIPracticeSidebarProps {
 }
 
 const GROUP_ORDER: ConvGroupLabel[] = ["TODAY", "YESTERDAY", "7 DAYS", "OLDER"];
+
+function modeIcon(mode: AIConversationMode | undefined) {
+  if (!mode || mode === "chat") return MessageCircle;
+  if (mode === "pronunciation") return Mic;
+  if (mode === "lesson") return BookOpen;
+  if (mode.startsWith("roleplay:")) return UserRound;
+  return MessageCircle;
+}
 
 export default function AIPracticeSidebar({
   grouped,
@@ -115,6 +123,7 @@ function ConvGroup({ label, children }: { label: string; children: React.ReactNo
 }
 
 function ConvItem({ conv, isActive }: { conv: AIConversation; isActive: boolean }) {
+  const Icon = modeIcon(conv.mode);
   return (
     <div
       className="group flex items-center justify-between px-2 py-1.5 rounded-lg cursor-pointer transition-colors"
@@ -126,6 +135,7 @@ function ConvItem({ conv, isActive }: { conv: AIConversation; isActive: boolean 
         if (!isActive) e.currentTarget.style.backgroundColor = "transparent";
       }}
     >
+      <Icon size={12} className="flex-shrink-0 mr-1.5" style={{ color: "var(--text-tertiary)" }} />
       <span className="text-xs truncate flex-1" style={{ color: "var(--text-secondary)" }}>
         {conv.title || "Untitled"}
       </span>
