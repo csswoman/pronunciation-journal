@@ -112,10 +112,9 @@ export default function ProgressPage() {
             <Image
               src="/illustrations/xp-points.svg"
               alt="XP points illustration"
-              width={624}
-              height={368}
+              width={560}
+              height={360}
               priority
-              className="w-[300px] xl:w-[340px] h-auto"
             />
           }
         />

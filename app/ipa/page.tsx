@@ -22,10 +22,9 @@ export default function IPAPage() {
             <Image
               src="/illustrations/ipa-chart.svg"
               alt="IPA chart illustration"
-              width={566}
-              height={340}
+              width={560}
+              height={360}
               priority
-              className="w-[300px] xl:w-[340px] h-auto"
             />
           }
         />
