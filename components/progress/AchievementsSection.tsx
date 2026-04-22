@@ -1,94 +1,158 @@
 'use client'
 
-import Button from "@/components/ui/Button";
 interface Achievement {
   id: string
   icon: string
   title: string
   description: string
   xp: number
-  date?: string
+  unlocked?: boolean
 }
 
 const achievements: Achievement[] = [
   {
     id: '1',
     icon: '🌙',
-    title: 'Poliglota Nocturno',
-    description: 'Estudia 5 días seguidos después de las 10 PM',
+    title: 'Night Polyglot',
+    description: 'Study 5 days in a row after 10 PM',
     xp: 250,
+    unlocked: true,
   },
   {
     id: '2',
     icon: '👑',
-    title: 'Maestro de Tiempos',
-    description: 'Completa una lección de gramática en errores',
+    title: 'Grammar Master',
+    description: 'Complete a grammar lesson with zero errors',
     xp: 400,
+    unlocked: true,
   },
   {
     id: '3',
     icon: '💬',
-    title: 'Conversador Fluido',
-    description: 'Mantén una charla de 5 min con la IA',
+    title: 'Fluent Speaker',
+    description: 'Hold a 5-minute AI conversation',
     xp: 500,
+    unlocked: true,
+  },
+  {
+    id: '4',
+    icon: '🔥',
+    title: '7-Day Streak',
+    description: 'Practice every day for a full week',
+    xp: 300,
+    unlocked: false,
+  },
+  {
+    id: '5',
+    icon: '🎯',
+    title: 'Sharp Ear',
+    description: 'Score 90%+ on 10 pronunciation exercises',
+    xp: 350,
+    unlocked: false,
+  },
+  {
+    id: '6',
+    icon: '📚',
+    title: 'Word Collector',
+    description: 'Save 100 words to your vocabulary',
+    xp: 200,
+    unlocked: false,
   },
 ]
 
 export default function AchievementsSection() {
+  const unlocked = achievements.filter(a => a.unlocked)
+  const locked   = achievements.filter(a => !a.unlocked)
+
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h2
-          className="text-xl font-bold"
-          style={{ color: 'var(--deep-text)' }}
-        >
-          Recent Achievements
-        </h2>
-        <Button
-          className="text-sm font-medium"
-          style={{ color: 'var(--primary)' }}
-        >
-          Ver todos
-        </Button>
+    <div className="space-y-5">
+      {/* Header */}
+      <div className="flex items-end justify-between gap-3">
+        <div>
+          <p className="text-[10px] font-bold uppercase tracking-[0.24em]" style={{ color: 'var(--text-tertiary)' }}>
+            ACHIEVEMENTS
+          </p>
+          <h2 className="mt-0.5 text-xl font-black tracking-tight" style={{ color: 'var(--deep-text)' }}>
+            {unlocked.length} earned · {locked.length} remaining
+          </h2>
+        </div>
+        <button className="text-xs font-semibold shrink-0" style={{ color: 'var(--primary)' }}>
+          View all
+        </button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {achievements.map((achievement) => (
+      {/* Unlocked grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        {unlocked.map((a) => (
           <div
-            key={achievement.id}
-            className="rounded-2xl p-5 flex items-start gap-4"
+            key={a.id}
+            className="rounded-[22px] p-4 flex items-start gap-3 animate-fadeIn"
             style={{
               background: 'var(--card-bg)',
-              boxShadow: '0 1px 3px var(--line-divider), 0 4px 12px var(--line-divider)',
+              border: '1px solid var(--line-divider)',
+              boxShadow: '0 1px 3px var(--line-divider), 0 6px 16px var(--line-divider)',
             }}
           >
             <div
-              className="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0 text-2xl"
-              style={{ background: 'var(--line-divider)' }}
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl text-2xl"
+              style={{ background: 'color-mix(in oklch, var(--primary) 10%, var(--btn-regular-bg))' }}
             >
-              {achievement.icon}
+              {a.icon}
             </div>
-            <div className="flex-1">
-              <h3
-                className="font-semibold text-sm leading-tight"
-                style={{ color: 'var(--deep-text)' }}
-              >
-                {achievement.title}
-              </h3>
-              <p
-                className="text-xs mt-1 leading-relaxed"
-                style={{ color: 'var(--text-secondary)' }}
-              >
-                {achievement.description}
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-bold leading-tight" style={{ color: 'var(--deep-text)' }}>
+                {a.title}
+              </p>
+              <p className="mt-0.5 text-xs leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                {a.description}
               </p>
               <span
-                className="inline-block text-xs font-semibold mt-2 px-2 py-1 rounded-md"
+                className="mt-2 inline-block rounded-lg px-2 py-0.5 text-[11px] font-bold"
                 style={{
-                  background: 'color-mix(in oklch, var(--primary) 15%, transparent)',
+                  background: 'color-mix(in oklch, var(--primary) 14%, transparent)',
                   color: 'var(--primary)',
                 }}
               >
-                +{achievement.xp} XP
+                +{a.xp} XP
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Locked row */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        {locked.map((a) => (
+          <div
+            key={a.id}
+            className="rounded-[22px] p-4 flex items-start gap-3"
+            style={{
+              background: 'var(--btn-regular-bg)',
+              border: '1px solid var(--line-divider)',
+              opacity: 0.6,
+            }}
+          >
+            <div
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl text-2xl grayscale"
+              style={{ background: 'var(--line-divider)' }}
+            >
+              {a.icon}
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-bold leading-tight" style={{ color: 'var(--deep-text)' }}>
+                {a.title}
+              </p>
+              <p className="mt-0.5 text-xs leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                {a.description}
+              </p>
+              <span
+                className="mt-2 inline-block rounded-lg px-2 py-0.5 text-[11px] font-bold"
+                style={{
+                  background: 'var(--line-divider)',
+                  color: 'var(--text-tertiary)',
+                }}
+              >
+                +{a.xp} XP
               </span>
             </div>
           </div>
@@ -97,4 +161,3 @@ export default function AchievementsSection() {
     </div>
   )
 }
-

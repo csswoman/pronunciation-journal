@@ -1,148 +1,175 @@
 'use client'
 
-import Button from "@/components/ui/Button";
-import { ChevronRight, Filter } from 'lucide-react'
+import { ChevronRight, Mic, BookOpen, Brain, Pencil, Headphones, MessageSquare } from 'lucide-react'
+
+type Category = 'pronunciation' | 'vocabulary' | 'srs' | 'writing' | 'listening' | 'conversation'
 
 interface Exercise {
   id: string
+  icon: React.ReactNode
   title: string
   category: string
   time: string
   accuracy: number
-  icon: string
+  type: Category
+}
+
+const CATEGORY_LABEL: Record<Category, string> = {
+  pronunciation: 'Pronunciation',
+  vocabulary:    'Vocabulary',
+  srs:           'Spaced Repetition',
+  writing:       'Writing',
+  listening:     'Listening',
+  conversation:  'Conversation',
+}
+
+function accuracyColor(v: number): string {
+  if (v >= 85) return 'oklch(0.62 0.17 145)'
+  if (v >= 65) return 'oklch(0.68 0.16 70)'
+  return 'oklch(0.62 0.18 30)'
 }
 
 const exercises: Exercise[] = [
   {
     id: '1',
-    icon: '🎤',
-    title: 'Práctica de Pronunciación',
-    category: 'vocabulo abiertos en francés',
-    time: 'Hay, 10:24 AM',
+    icon: <Mic size={18} />,
+    title: 'Pronunciation Practice',
+    category: 'Open vocabulary · French',
+    time: 'Today, 10:24 AM',
     accuracy: 98,
+    type: 'pronunciation',
   },
   {
     id: '2',
-    icon: '📖',
-    title: 'Traducción Contextual',
-    category: 'Modismos de negocios',
-    time: 'Ayer, 4:15 PM',
+    icon: <BookOpen size={18} />,
+    title: 'Contextual Translation',
+    category: 'Business idioms',
+    time: 'Yesterday, 4:15 PM',
     accuracy: 85,
+    type: 'vocabulary',
   },
   {
     id: '3',
-    icon: '🧠',
-    title: 'Repaso Inteligente (SRS)',
-    category: 'Docis 50 palabras core',
-    time: '12 Oct, 2025',
+    icon: <Brain size={18} />,
+    title: 'Smart Review (SRS)',
+    category: 'Core 50 words deck',
+    time: 'Oct 12, 2025',
     accuracy: 72,
+    type: 'srs',
   },
 ]
 
 export default function JourneyToFluiditySection() {
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h2
-          className="text-xl font-bold"
-          style={{ color: 'var(--deep-text)' }}
-        >
-          Viaje a la fluidez
-        </h2>
-        <Button
-          className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium"
+    <div className="space-y-5">
+      {/* Header */}
+      <div className="flex items-end justify-between gap-3">
+        <div>
+          <p className="text-[10px] font-bold uppercase tracking-[0.24em]" style={{ color: 'var(--text-tertiary)' }}>
+            ACTIVITY LOG
+          </p>
+          <h2 className="mt-0.5 text-xl font-black tracking-tight" style={{ color: 'var(--deep-text)' }}>
+            Journey to fluency
+          </h2>
+        </div>
+        <button
+          className="inline-flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-semibold transition-opacity hover:opacity-70"
           style={{
-            background: 'var(--card-bg)',
-            color: 'var(--text-secondary)',
+            background: 'var(--btn-regular-bg)',
             border: '1px solid var(--line-divider)',
+            color: 'var(--text-secondary)',
           }}
         >
-          <Filter size={16} />
-          Filtrar
-        </Button>
+          Filter
+        </button>
       </div>
 
-      <div className="space-y-3">
-        {exercises.map((exercise) => (
-          <Button
-            key={exercise.id}
-            className="w-full rounded-2xl p-5 flex items-center justify-between group hover:shadow-md transition-shadow"
-            style={{
-              background: 'var(--card-bg)',
-              boxShadow: '0 1px 3px var(--line-divider), 0 4px 12px var(--line-divider)',
-            }}
-          >
-            <div className="flex items-center gap-4 flex-1 text-left">
-              <div
-                className="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0 text-2xl"
-                style={{ background: 'var(--line-divider)' }}
-              >
-                {exercise.icon}
-              </div>
-              <div>
-                <h3
-                  className="font-semibold text-sm"
-                  style={{ color: 'var(--deep-text)' }}
-                >
-                  {exercise.title}
-                </h3>
-                <p
-                  className="text-xs mt-0.5"
-                  style={{ color: 'var(--text-secondary)' }}
-                >
-                  {exercise.category}
-                </p>
-                <p
-                  className="text-xs mt-1"
-                  style={{ color: 'var(--text-tertiary)' }}
-                >
-                  {exercise.time}
-                </p>
-              </div>
-            </div>
+      {/* List */}
+      <div
+        className="overflow-hidden rounded-[22px]"
+        style={{
+          background: 'var(--card-bg)',
+          border: '1px solid var(--line-divider)',
+          boxShadow: '0 1px 3px var(--line-divider), 0 8px 20px var(--line-divider)',
+        }}
+      >
+        {exercises.map((ex, i) => {
+          const color = accuracyColor(ex.accuracy)
+          const isLast = i === exercises.length - 1
 
-            <div className="flex items-center gap-4">
-              <div className="text-right">
-                <div
-                  className="text-lg font-bold"
-                  style={{ color: 'var(--deep-text)' }}
-                >
-                  {exercise.accuracy}%
-                </div>
-                <div
-                  className="text-[10px] font-medium"
-                  style={{ color: 'var(--text-secondary)' }}
-                >
-                  Precisión
-                </div>
-              </div>
-
+          return (
+            <button
+              key={ex.id}
+              className="group w-full flex items-center gap-4 px-5 py-4 text-left transition-colors hover:bg-[color:color-mix(in_oklch,var(--primary)_4%,transparent)]"
+              style={{
+                borderBottom: isLast ? 'none' : '1px solid var(--line-divider)',
+              }}
+            >
+              {/* Icon */}
               <div
-                className="w-12 h-1 rounded-full"
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl"
                 style={{
-                  background: 'var(--line-divider)',
-                  overflow: 'hidden',
+                  background: 'color-mix(in oklch, var(--primary) 10%, var(--btn-regular-bg))',
+                  color: 'var(--primary)',
                 }}
               >
-                <div
-                  className="h-full rounded-full transition-all"
-                  style={{
-                    width: `${exercise.accuracy}%`,
-                    background: `oklch(.65 .15 ${120 + (exercise.accuracy * 2)}deg)`,
-                  }}
-                />
+                {ex.icon}
               </div>
 
-              <ChevronRight
-                size={20}
-                className="flex-shrink-0 opacity-50 group-hover:opacity-100 group-hover:translate-x-1 transition-all"
-                style={{ color: 'var(--text-secondary)' }}
-              />
-            </div>
-          </Button>
-        ))}
+              {/* Info */}
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-semibold truncate" style={{ color: 'var(--deep-text)' }}>
+                  {ex.title}
+                </p>
+                <p className="text-xs mt-0.5 truncate" style={{ color: 'var(--text-secondary)' }}>
+                  {ex.category}
+                </p>
+                <div className="mt-1 flex items-center gap-2">
+                  <span
+                    className="rounded-full px-2 py-0.5 text-[10px] font-semibold"
+                    style={{
+                      background: 'color-mix(in oklch, var(--primary) 10%, transparent)',
+                      color: 'var(--primary)',
+                    }}
+                  >
+                    {CATEGORY_LABEL[ex.type]}
+                  </span>
+                  <span className="text-[11px]" style={{ color: 'var(--text-tertiary)' }}>
+                    {ex.time}
+                  </span>
+                </div>
+              </div>
+
+              {/* Accuracy */}
+              <div className="shrink-0 flex items-center gap-3">
+                <div className="text-right">
+                  <p className="text-base font-black tabular-nums" style={{ color }}>
+                    {ex.accuracy}%
+                  </p>
+                  <p className="text-[10px]" style={{ color: 'var(--text-tertiary)' }}>accuracy</p>
+                </div>
+
+                {/* Mini bar */}
+                <div
+                  className="hidden sm:block w-14 h-1.5 rounded-full overflow-hidden"
+                  style={{ background: 'var(--line-divider)' }}
+                >
+                  <div
+                    className="h-full rounded-full"
+                    style={{ width: `${ex.accuracy}%`, background: color }}
+                  />
+                </div>
+
+                <ChevronRight
+                  size={16}
+                  className="opacity-30 transition-all group-hover:opacity-80 group-hover:translate-x-0.5"
+                  style={{ color: 'var(--text-secondary)' }}
+                />
+              </div>
+            </button>
+          )
+        })}
       </div>
     </div>
   )
 }
-
