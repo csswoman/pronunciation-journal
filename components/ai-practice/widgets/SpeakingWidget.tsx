@@ -4,8 +4,28 @@ import { useState } from "react";
 import { Mic, MicOff, Loader2 } from "lucide-react";
 import type { SpeakingArgs } from "@/lib/ai-practice/tools/registry";
 import type { ExerciseResult } from "@/lib/ai-practice/types";
+import type { EvaluationResult } from "@/lib/exercise/design";
 import { useRecorder } from "@/hooks/useRecorder";
 import ExerciseFeedback from "./ExerciseFeedback";
+
+function buildSpeakingResult(target: string, transcript: string, score: number): EvaluationResult {
+  const correct = score >= 0.6;
+  return {
+    correct,
+    category: correct ? "correct" : "incorrect_form",
+    userAnswer: transcript,
+    expectedAnswer: target,
+    feedback: {
+      immediate: correct ? "Great pronunciation!" : "Close — keep practicing.",
+      explanation: correct
+        ? `You said: "${transcript}" (score ${Math.round(score * 100)}%).`
+        : `You said: "${transcript}" (score ${Math.round(score * 100)}%). Try to match the target more closely.`,
+      tip: correct ? undefined : `Target: "${target}"`,
+    },
+    score: Math.round(score * 100),
+    gradedBy: "model",
+  };
+}
 
 interface Props {
   args: SpeakingArgs;
@@ -97,19 +117,20 @@ export default function SpeakingWidget({ args, status, onAnswer, onNext, onRetry
         </div>
       )}
 
-      {transcript && (
-        <p className="text-sm italic" style={{ color: "var(--text-secondary)" }}>
-          You said: &ldquo;{transcript}&rdquo;
-        </p>
-      )}
-
-      {answered && score !== null && (
+      {transcript && score !== null && (
         <ExerciseFeedback
-          correct={score >= 0.6}
-          explanation={score < 0.6 ? "Keep practicing — try to match the target pronunciation closely." : undefined}
-          topic={args.target}
+          result={buildSpeakingResult(args.target, transcript, score)}
           onNext={score >= 0.6 ? onNext : undefined}
-          onRetry={score < 0.6 ? () => { setTranscript(null); setScore(null); resetRecording(); onRetry?.(); } : undefined}
+          onRetry={
+            score < 0.6
+              ? () => {
+                  setTranscript(null);
+                  setScore(null);
+                  resetRecording();
+                  onRetry?.();
+                }
+              : undefined
+          }
         />
       )}
     </div>

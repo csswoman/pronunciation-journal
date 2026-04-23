@@ -1,59 +1,15 @@
 "use client";
 
+import type { EvaluationResult } from "@/lib/exercise/design";
+
 export type ExerciseFeedbackProps = {
-  correct: boolean;
-  explanation?: string;
-  topic: string;
-  attempts?: number;
+  result: EvaluationResult;
   onNext?: () => void;
   onRetry?: () => void;
 };
 
-function getShortExplanation(text?: string): string {
-  if (!text) return "";
-  const clean = text.trim();
-  if (clean.length <= 120) return clean;
-  const trimmed = clean.slice(0, 120);
-  const lastSpace = trimmed.lastIndexOf(" ");
-  return trimmed.slice(0, lastSpace) + "...";
-}
-
-function getTip(explanation?: string): string {
-  if (!explanation || explanation.trim().length < 20) return "";
-  const clean = explanation.trim();
-  // Extract first sentence as tip, max 80 chars
-  const firstDot = clean.search(/[.!?]/);
-  const sentence = firstDot > 0 ? clean.slice(0, firstDot + 1) : clean;
-  if (sentence.length > 80) {
-    const cut = sentence.slice(0, 80);
-    const lastSpace = cut.lastIndexOf(" ");
-    return cut.slice(0, lastSpace) + "...";
-  }
-  return sentence;
-}
-
-export default function ExerciseFeedback({
-  correct,
-  explanation,
-  onNext,
-  onRetry,
-}: ExerciseFeedbackProps) {
-  const shortExplanation = getShortExplanation(explanation);
-  const hasExplanation = !!explanation && explanation.trim().length > 0;
-
-  const title = correct ? "Correct!" : "Not quite";
-  const message = correct
-    ? hasExplanation
-      ? `Nice job — ${shortExplanation}`
-      : "Nice job!"
-    : hasExplanation
-    ? `Almost — ${shortExplanation}`
-    : "Try again — focus on the correct form.";
-
-  const tip = getTip(explanation);
-  // Avoid showing tip if it's identical to the message content
-  const showTip = tip.length > 0 && !message.includes(tip.replace(/\.$/, ""));
-
+export default function ExerciseFeedback({ result, onNext, onRetry }: ExerciseFeedbackProps) {
+  const { correct, feedback } = result;
   const accentColor = correct ? "var(--success, #22c55e)" : "#ef4444";
   const icon = correct ? "✅" : "❌";
 
@@ -77,31 +33,36 @@ export default function ExerciseFeedback({
         }
       `}</style>
 
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex-1 space-y-1">
-          <p
-            className="font-semibold leading-snug"
-            style={{ color: accentColor }}
-          >
-            {icon} {title}
+      <div className="flex flex-col gap-2.5">
+        <div className="space-y-1">
+          <p className="font-semibold leading-snug" style={{ color: accentColor }}>
+            {icon} {feedback.immediate}
           </p>
           <p
-            className="text-xs leading-relaxed"
+            className="text-xs leading-relaxed whitespace-pre-wrap"
             style={{ color: "var(--text-secondary)" }}
           >
-            {message}
+            {feedback.explanation}
           </p>
-          {showTip && (
+          {feedback.example && (
             <p
-              className="text-xs leading-relaxed"
+              className="text-xs leading-relaxed whitespace-pre-wrap font-mono"
+              style={{ color: "var(--text-tertiary)" }}
+            >
+              {feedback.example}
+            </p>
+          )}
+          {feedback.tip && (
+            <p
+              className="text-xs leading-relaxed whitespace-pre-wrap"
               style={{ color: "var(--text-muted, var(--text-secondary))", opacity: 0.8 }}
             >
-              💡 Tip: {tip}
+              💡 {feedback.tip}
             </p>
           )}
         </div>
 
-        <div className="shrink-0 flex flex-col gap-1.5">
+        <div className="flex flex-col gap-1.5">
           {correct && onNext && (
             <button
               onClick={onNext}

@@ -1,20 +1,35 @@
 // Tool registry — one tool per exercise format, no generics.
 // Validation is done manually (no Zod dependency).
 
+// Shared pedagogical fields (see lib/exercise/design.ts).
+// Optional so legacy tool calls keep working; when present they flow into
+// the evaluator for richer feedback.
+export type CommonWrongAnswer = { value: string; feedback: string };
+export type AcceptableAlternative = { value: string; reason: string };
+export type ProgressiveHint = { level1: string; level2: string; level3?: string };
+
 export type MultipleChoiceArgs = {
   question: string;
   options: string[];
   correctIndex: number;
   explanation?: string;
   topic: string;
+  instruction?: string;
+  learningGoal?: string;
+  commonWrongAnswers?: CommonWrongAnswer[];
+  hint?: ProgressiveHint;
 };
 
 export type FillBlankArgs = {
   sentence: string;
   answer: string;
   acceptableAnswers?: string[];
-  hint?: string;
+  hint?: string | ProgressiveHint;
   topic: string;
+  instruction?: string;
+  learningGoal?: string;
+  acceptableAlternatives?: AcceptableAlternative[];
+  commonWrongAnswers?: CommonWrongAnswer[];
 };
 
 export type SpeakingArgs = {
@@ -65,22 +80,39 @@ export const ACTION_TOOL_NAMES: ActionToolName[] = ["save_word", "start_roleplay
 export const TOOL_DECLARATIONS = [
   {
     name: "render_multiple_choice",
-    description: "Show a single-answer multiple choice question inline.",
+    description:
+      "Show a single-answer multiple choice question inline. Include commonWrongAnswers with pedagogical feedback for the distractors whenever possible.",
     parameters: {
       type: "object",
       properties: {
-        question:     { type: "string" },
-        options:      { type: "array", items: { type: "string" }, minItems: 2, maxItems: 5 },
-        correctIndex: { type: "integer" },
-        explanation:  { type: "string" },
-        topic:        { type: "string" },
+        question:      { type: "string" },
+        options:       { type: "array", items: { type: "string" }, minItems: 2, maxItems: 5 },
+        correctIndex:  { type: "integer" },
+        explanation:   { type: "string" },
+        topic:         { type: "string" },
+        instruction:   { type: "string" },
+        learningGoal:  { type: "string" },
+        commonWrongAnswers: {
+          type: "array",
+          items: {
+            type: "object",
+            properties: { value: { type: "string" }, feedback: { type: "string" } },
+            required: ["value", "feedback"],
+          },
+        },
+        hint: {
+          type: "object",
+          properties: { level1: { type: "string" }, level2: { type: "string" }, level3: { type: "string" } },
+          required: ["level1", "level2"],
+        },
       },
       required: ["question", "options", "correctIndex", "topic"],
     },
   },
   {
     name: "render_fill_blank",
-    description: "Show a sentence with a blank to fill. The sentence must contain '___'.",
+    description:
+      "Show a sentence with a blank to fill. The sentence must contain '___'. Include commonWrongAnswers with pedagogical feedback for typical student errors.",
     parameters: {
       type: "object",
       properties: {
@@ -89,6 +121,24 @@ export const TOOL_DECLARATIONS = [
         acceptableAnswers: { type: "array", items: { type: "string" } },
         hint:              { type: "string" },
         topic:             { type: "string" },
+        instruction:       { type: "string" },
+        learningGoal:      { type: "string" },
+        acceptableAlternatives: {
+          type: "array",
+          items: {
+            type: "object",
+            properties: { value: { type: "string" }, reason: { type: "string" } },
+            required: ["value", "reason"],
+          },
+        },
+        commonWrongAnswers: {
+          type: "array",
+          items: {
+            type: "object",
+            properties: { value: { type: "string" }, feedback: { type: "string" } },
+            required: ["value", "feedback"],
+          },
+        },
       },
       required: ["sentence", "answer", "topic"],
     },
@@ -172,6 +222,45 @@ function assertStringArray(val: unknown, field: string): string[] {
   return val as string[];
 }
 
+function parseCommonWrongAnswers(val: unknown): CommonWrongAnswer[] | undefined {
+  if (!Array.isArray(val)) return undefined;
+  const out: CommonWrongAnswer[] = [];
+  for (const item of val) {
+    if (item && typeof item === "object") {
+      const o = item as Record<string, unknown>;
+      if (typeof o.value === "string" && typeof o.feedback === "string") {
+        out.push({ value: o.value, feedback: o.feedback });
+      }
+    }
+  }
+  return out.length ? out : undefined;
+}
+
+function parseAcceptableAlternatives(val: unknown): AcceptableAlternative[] | undefined {
+  if (!Array.isArray(val)) return undefined;
+  const out: AcceptableAlternative[] = [];
+  for (const item of val) {
+    if (item && typeof item === "object") {
+      const o = item as Record<string, unknown>;
+      if (typeof o.value === "string" && typeof o.reason === "string") {
+        out.push({ value: o.value, reason: o.reason });
+      }
+    }
+  }
+  return out.length ? out : undefined;
+}
+
+function parseProgressiveHint(val: unknown): ProgressiveHint | undefined {
+  if (!val || typeof val !== "object") return undefined;
+  const o = val as Record<string, unknown>;
+  if (typeof o.level1 !== "string" || typeof o.level2 !== "string") return undefined;
+  return {
+    level1: o.level1,
+    level2: o.level2,
+    level3: typeof o.level3 === "string" ? o.level3 : undefined,
+  };
+}
+
 export function parseToolArgs(name: ToolName, raw: unknown): ToolArgs["args"] {
   const obj = raw as Record<string, unknown>;
 
@@ -185,6 +274,10 @@ export function parseToolArgs(name: ToolName, raw: unknown): ToolArgs["args"] {
         correctIndex: assertInt(obj.correctIndex, "correctIndex"),
         explanation: typeof obj.explanation === "string" ? obj.explanation : undefined,
         topic: assertString(obj.topic, "topic"),
+        instruction: typeof obj.instruction === "string" ? obj.instruction : undefined,
+        learningGoal: typeof obj.learningGoal === "string" ? obj.learningGoal : undefined,
+        commonWrongAnswers: parseCommonWrongAnswers(obj.commonWrongAnswers),
+        hint: parseProgressiveHint(obj.hint),
       } satisfies MultipleChoiceArgs;
     }
     case "render_fill_blank":
@@ -194,8 +287,12 @@ export function parseToolArgs(name: ToolName, raw: unknown): ToolArgs["args"] {
         acceptableAnswers: Array.isArray(obj.acceptableAnswers)
           ? assertStringArray(obj.acceptableAnswers, "acceptableAnswers")
           : undefined,
-        hint: typeof obj.hint === "string" ? obj.hint : undefined,
+        hint: typeof obj.hint === "string" ? obj.hint : parseProgressiveHint(obj.hint),
         topic: assertString(obj.topic, "topic"),
+        instruction: typeof obj.instruction === "string" ? obj.instruction : undefined,
+        learningGoal: typeof obj.learningGoal === "string" ? obj.learningGoal : undefined,
+        acceptableAlternatives: parseAcceptableAlternatives(obj.acceptableAlternatives),
+        commonWrongAnswers: parseCommonWrongAnswers(obj.commonWrongAnswers),
       } satisfies FillBlankArgs;
     case "render_speaking":
       return {
