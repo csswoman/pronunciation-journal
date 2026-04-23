@@ -1,5 +1,4 @@
 "use client";
-import Button from "@/components/ui/Button";
 
 import { useState } from "react";
 import {
@@ -8,13 +7,23 @@ import {
   signInAsGuest,
   resetPasswordForEmail,
 } from "@/lib/supabase/auth-actions";
+import { AuthCard } from "@/components/auth/AuthCard";
+import { AuthTabs } from "@/components/auth/AuthTabs";
+import { AuthFeedback } from "@/components/auth/AuthFeedback";
+import { AuthInput } from "@/components/auth/AuthInput";
+import { AuthButton } from "@/components/auth/AuthButton";
+import { AuthCheckbox } from "@/components/auth/AuthCheckbox";
+import { AuthGuestButton } from "@/components/auth/AuthGuestButton";
+import { AuthTrustBar } from "@/components/auth/AuthTrustBar";
 
 type Mode = "login" | "register" | "reset";
 
 export default function AuthPanel() {
   const [mode, setMode] = useState<Mode>("login");
   const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
   const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(true);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
@@ -46,9 +55,7 @@ export default function AuthPanel() {
         setError(err.message);
         return;
       }
-      setMessage(
-        "Si tu proyecto exige confirmar el correo, revisa tu bandeja de entrada."
-      );
+      setMessage("Revisa tu bandeja de entrada para confirmar tu correo.");
     } finally {
       setPending(false);
     }
@@ -86,195 +93,158 @@ export default function AuthPanel() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 dark:bg-gray-900 px-4 py-12">
-      <div className="w-full max-w-md rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-lg p-8 space-y-6">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-            Pronunciation Journal
-          </h1>
-          <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-            Inicia sesión para sincronizar tus palabras con la nube.
-          </p>
-        </div>
+    <div
+      className="min-h-screen flex flex-col items-center justify-center px-4 py-6"
+      style={{ background: "#0d0f14", fontFamily: "'DM Sans', sans-serif" }}
+    >
+      {/* Ambient glow */}
+      <div
+        className="fixed pointer-events-none"
+        style={{
+          top: "-120px",
+          left: "50%",
+          transform: "translateX(-50%)",
+          width: "600px",
+          height: "400px",
+          background: "radial-gradient(ellipse, color-mix(in srgb, var(--color-accent) 9%, transparent) 0%, transparent 70%)",
+        }}
+      />
 
+      <AuthCard>
         {mode !== "reset" && (
-          <div className="flex rounded-lg bg-gray-100 dark:bg-gray-700 p-1">
-            <Button
-              type="button"
-              onClick={() => {
-                setMode("login");
-                clearFeedback();
-              }}
-              className={`flex-1 py-2 text-sm font-medium rounded-md transition-colors ${
-                mode === "login"
-                  ? "bg-white dark:bg-gray-600 text-gray-900 dark:text-white shadow"
-                  : "text-gray-600 dark:text-gray-300"
-              }`}
-            >
-              Entrar
-            </Button>
-            <Button
-              type="button"
-              onClick={() => {
-                setMode("register");
-                clearFeedback();
-              }}
-              className={`flex-1 py-2 text-sm font-medium rounded-md transition-colors ${
-                mode === "register"
-                  ? "bg-white dark:bg-gray-600 text-gray-900 dark:text-white shadow"
-                  : "text-gray-600 dark:text-gray-300"
-              }`}
-            >
-              Registrarse
-            </Button>
-          </div>
+          <AuthTabs
+            mode={mode}
+            onModeChange={(newMode) => {
+              setMode(newMode);
+              clearFeedback();
+            }}
+          />
         )}
 
-        {error && (
-          <div
-            className="rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 px-3 py-2 text-sm text-red-700 dark:text-red-300"
-            role="alert"
-          >
-            {error}
-          </div>
-        )}
-        {message && (
-          <div className="rounded-lg bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 px-3 py-2 text-sm text-green-700 dark:text-green-300">
-            {message}
-          </div>
-        )}
+        <AuthFeedback error={error} message={message} />
 
         {mode === "reset" ? (
           <form onSubmit={handleReset} className="space-y-4">
-            <div>
-              <label
-                htmlFor="auth-email-reset"
-                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-              >
-                Correo
-              </label>
-              <input
-                id="auth-email-reset"
-                type="email"
-                autoComplete="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-accent focus:border-transparent"
-              />
-            </div>
-            <Button
-              type="submit"
-              disabled={pending}
-              className="w-full py-2.5 rounded-lg font-medium accent-button disabled:opacity-50"
-            >
-              {pending ? "Enviando…" : "Enviar enlace"}
-            </Button>
-            <Button
+            <AuthInput
+              type="email"
+              label="Correo electrónico"
+              placeholder="tu@correo.com"
+              value={email}
+              onChange={setEmail}
+              required
+              autoComplete="email"
+            />
+            <AuthButton label="Enviar enlace" pending={pending} />
+            <AuthButton
+              label="Volver a entrar"
+              pending={pending}
               type="button"
+              variant="secondary"
               onClick={() => {
                 setMode("login");
                 clearFeedback();
               }}
-              className="w-full text-sm text-accent hover:underline"
-            >
-              Volver a entrar
-            </Button>
+            />
           </form>
-        ) : (
-          <form
-            onSubmit={mode === "login" ? handleLogin : handleRegister}
-            className="space-y-4"
-          >
-            <div>
-              <label
-                htmlFor="auth-email"
-                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-              >
-                Correo
-              </label>
-              <input
-                id="auth-email"
-                type="email"
-                autoComplete="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-accent focus:border-transparent"
+        ) : mode === "login" ? (
+          <form onSubmit={handleLogin} className="space-y-4">
+            <AuthInput
+              type="email"
+              label="Correo electrónico"
+              placeholder="tu@correo.com"
+              value={email}
+              onChange={setEmail}
+              required
+              autoComplete="email"
+            />
+
+            <AuthInput
+              type="password"
+              label="Contraseña"
+              placeholder="········"
+              value={password}
+              onChange={setPassword}
+              required
+              autoComplete="current-password"
+              minLength={6}
+            />
+
+            <div className="flex items-center justify-between">
+              <AuthCheckbox
+                label="Recordarme"
+                checked={rememberMe}
+                onChange={setRememberMe}
               />
-            </div>
-            <div>
-              <label
-                htmlFor="auth-password"
-                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-              >
-                Contraseña
-              </label>
-              <input
-                id="auth-password"
-                type="password"
-                autoComplete={mode === "login" ? "current-password" : "new-password"}
-                required
-                minLength={6}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-accent focus:border-transparent"
-              />
-            </div>
-            {mode === "login" && (
-              <Button
+              <AuthButton
+                label="¿Olvidaste tu contraseña?"
+                pending={false}
                 type="button"
+                variant="secondary"
                 onClick={() => {
                   setMode("reset");
                   clearFeedback();
                 }}
-                className="text-sm text-accent hover:underline"
-              >
-                ¿Olvidaste tu contraseña?
-              </Button>
-            )}
-            <Button
-              type="submit"
-              disabled={pending}
-              className="w-full py-2.5 rounded-lg font-medium accent-button disabled:opacity-50"
-            >
-              {pending
-                ? "Espera…"
-                : mode === "login"
-                  ? "Entrar"
-                  : "Crear cuenta"}
-            </Button>
+              />
+            </div>
+
+            <AuthButton label="Entrar" pending={pending} />
+
+            <div className="flex items-center gap-3 my-5 text-[11.5px] uppercase tracking-[0.6px]" style={{ color: "#4a5070" }}>
+              <div className="flex-1 h-px" style={{ background: "#1e2330" }} />
+              O continúa con
+              <div className="flex-1 h-px" style={{ background: "#1e2330" }} />
+            </div>
+
+            <AuthGuestButton onClick={handleGuest} pending={pending} />
+
+            <AuthTrustBar />
+          </form>
+        ) : (
+          <form onSubmit={handleRegister} className="space-y-4">
+            <AuthInput
+              type="text"
+              label="Nombre"
+              placeholder="Tu nombre"
+              value={name}
+              onChange={setName}
+              autoComplete="name"
+            />
+
+            <AuthInput
+              type="email"
+              label="Correo electrónico"
+              placeholder="tu@correo.com"
+              value={email}
+              onChange={setEmail}
+              required
+              autoComplete="email"
+            />
+
+            <AuthInput
+              type="password"
+              label="Contraseña"
+              placeholder="Mínimo 6 caracteres"
+              value={password}
+              onChange={setPassword}
+              required
+              autoComplete="new-password"
+              minLength={6}
+            />
+
+            <AuthButton label="Crear cuenta" pending={pending} />
+
+            <div className="flex items-center gap-3 my-5 text-[11.5px] uppercase tracking-[0.6px]" style={{ color: "#4a5070" }}>
+              <div className="flex-1 h-px" style={{ background: "#1e2330" }} />
+              O continúa con
+              <div className="flex-1 h-px" style={{ background: "#1e2330" }} />
+            </div>
+
+            <AuthGuestButton onClick={handleGuest} pending={pending} />
+
+            <AuthTrustBar />
           </form>
         )}
-
-        {mode !== "reset" && (
-          <>
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-200 dark:border-gray-600" />
-              </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-white dark:bg-gray-800 px-2 text-gray-500">
-                  o
-                </span>
-              </div>
-            </div>
-            <Button
-              type="button"
-              onClick={handleGuest}
-              disabled={pending}
-              className="w-full py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 font-medium hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50"
-            >
-              Continuar como invitado
-            </Button>
-            <p className="text-xs text-center text-gray-500 dark:text-gray-400">
-              La cuenta de invitado guarda datos en la nube en este navegador; para recuperar
-              sesión en otro dispositivo, usa correo y contraseña.
-            </p>
-          </>
-        )}
-      </div>
+      </AuthCard>
     </div>
   );
 }
-
