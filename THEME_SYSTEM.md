@@ -1,155 +1,149 @@
 # OKLCH Dynamic Theme System
 
-## Overview
-We've implemented a Fuwari-inspired theme system where a single hue value (0-360) controls the entire accent color palette using OKLCH color space.
-
 ## Architecture
 
-### 1. Core Hook: `useOKLCHTheme.ts`
-Manages all theme logic:
-- **Hue State** (0-360): Controls accent color
-- **Mode State** (light/dark): Controls color scheme
-- **Persistence**: Stores in localStorage as `theme-hue` and `theme-mode`
-- **Initialization**: Reads from localStorage on client-side mount, falls back to system preference
+3-layer system. Each layer has a different role:
 
-### 2. CSS Variable System: `globals.css`
+```
+1. Primary Scale  — dynamic hue, full 50–800 range (brand identity)
+2. Neutral System — chroma 0, colorless (layout structure)
+3. Semantic Colors — fixed hues, independent of user hue (feedback)
+```
+
+---
+
+## Layer 1: Primary Scale (Dynamic Identity)
+
+A full scale derived from the single `--hue` variable (0–360). Hue persists in `localStorage` as `theme-hue`.
+
 ```css
-:root {
-  --hue: 250; /* Default hue */
-  
-  /* Light mode */
-  --bg: oklch(0.98 0.01 var(--hue));
-  --fg: oklch(0.2 0.02 var(--hue));
-  --primary: oklch(0.65 0.15 var(--hue));
-  --primary-soft: oklch(0.9 0.08 var(--hue));
-  /* ... more variables */
-}
-
-.dark {
-  --bg: oklch(0.12 0.02 var(--hue));
-  --fg: oklch(0.95 0.01 var(--hue));
-  --primary: oklch(0.7 0.14 var(--hue));
-  /* ... dark mode adjustments */
-}
+--primary-50  → oklch(0.97 0.02 var(--hue))   /* lightest tint */
+--primary-100 → oklch(0.93 0.04 var(--hue))
+--primary-200 → oklch(0.88 0.06 var(--hue))
+--primary-300 → oklch(0.80 0.10 var(--hue))
+--primary-400 → oklch(0.72 0.13 var(--hue))
+--primary-500 → oklch(0.65 0.15 var(--hue))   /* --primary (base) */
+--primary-600 → oklch(0.58 0.16 var(--hue))   /* --primary-hover */
+--primary-700 → oklch(0.50 0.17 var(--hue))
+--primary-800 → oklch(0.42 0.15 var(--hue))   /* darkest */
 ```
 
-### 3. UI Component: `ThemeColorController.tsx`
-Located in the sidebar with:
-- **Hue Slider** (0-360) with rainbow gradient background
-- **Color Preview**: Shows accent color in both light and dark modes
-- **Dark Mode Toggle**: Sun/moon icon button
-- **Reset Button**: Returns hue to default (250)
-- **Responsive Display**: 
-  - Expanded (sidebar open): Full controls
-  - Collapsed (sidebar closed): Just color dot indicator
+**Accent variations** (derived from hue):
 
-### 4. Theme Initialization: `layout.tsx`
-Inline script runs before React hydration:
-```javascript
-// Set dark mode from localStorage before page renders
-document.documentElement.classList.toggle(
-  'dark',
-  localStorage.getItem('theme-mode') === 'dark' || 
-  (!localStorage.getItem('theme-mode') && window.matchMedia(...).matches)
-);
+| Token | Formula | Use |
+|-------|---------|-----|
+| `--accent-analog-1` | `hue + 20` | AI features, secondary highlights |
+| `--accent-analog-2` | `hue - 20` | Subtle variation |
+| `--accent-complement` | `hue + 180` | High-contrast contrast elements |
+| `--gradient-primary` | 135deg, hue → hue+30 | CTA buttons, hero sections |
 
-// Set hue before page renders
-const savedHue = localStorage.getItem('theme-hue');
-if (savedHue) {
-  document.documentElement.style.setProperty('--hue', savedHue);
-}
+---
+
+## Layer 2: Neutral System (Colorless Structure)
+
+Chroma is 0 — neutrals never tint. Stable across all hue values.
+
+| Token | Light | Dark |
+|-------|-------|------|
+| `--bg` | `oklch(0.98 0 0)` | `oklch(0.12 0 0)` |
+| `--bg-secondary` | `oklch(0.96 0 0)` | `oklch(0.17 0 0)` |
+| `--bg-tertiary` | `oklch(0.93 0 0)` | `oklch(0.22 0 0)` |
+| `--fg` | `oklch(0.20 0 0)` | `oklch(0.95 0 0)` |
+| `--text-primary` | `oklch(0.20 0 0)` | `oklch(0.92 0 0)` |
+| `--text-secondary` | `oklch(0.45 0 0)` | `oklch(0.65 0 0)` |
+| `--text-tertiary` | `oklch(0.65 0 0)` | `oklch(0.48 0 0)` |
+| `--border` | `oklch(0.88 0 0)` | `oklch(0.28 0 0)` |
+| `--border-hover` | `oklch(0.78 0 0)` | `oklch(0.38 0 0)` |
+
+---
+
+## Layer 3: Semantic Colors (Fixed Hues)
+
+These never change with user hue. Convey meaning, not identity.
+
+| Token | Hue | Light value | Use |
+|-------|-----|-------------|-----|
+| `--success` | 145 | `oklch(0.70 0.16 145)` | Progress, correct answers, streaks |
+| `--success-soft` | 145 | `oklch(0.92 0.05 145)` | Success backgrounds |
+| `--warning` | 85 | `oklch(0.78 0.17 85)` | Caution, energy low |
+| `--warning-soft` | 85 | `oklch(0.95 0.05 85)` | Warning backgrounds |
+| `--error` | 25 | `oklch(0.65 0.20 25)` | Wrong answers, errors |
+| `--error-soft` | 25 | `oklch(0.93 0.05 25)` | Error backgrounds |
+| `--info` | 230 | `oklch(0.70 0.12 230)` | Neutral info, tips |
+| `--info-soft` | 230 | `oklch(0.93 0.04 230)` | Info backgrounds |
+
+---
+
+## Color Role Mapping
+
+| UI Element | Token |
+|-----------|-------|
+| Primary Button | `--primary` (`--primary-500`) |
+| Button hover | `--primary-hover` (`--primary-600`) |
+| Button active | `--primary-active` |
+| Soft badge / pill | `--primary-soft` (`--primary-100`) |
+| Progress bars | `--success` |
+| Streak / energy | `--warning` |
+| Errors, wrong answers | `--error` |
+| AI features | `--accent-analog-1` |
+| Hero / CTA gradient | `--gradient-primary` |
+| Disabled | neutral (`--text-tertiary`) |
+| Focus ring | `--focus-ring` |
+
+---
+
+## Interaction States
+
+```css
+--primary-hover:  oklch(0.58 0.16 var(--hue))   /* primary-600 */
+--primary-active: oklch(0.55 0.17 var(--hue))
+--focus-ring:     oklch(0.75 0.12 var(--hue) / 0.4)
 ```
 
-## Usage
+---
 
-### For Users
-1. Open the app (theme loads from localStorage automatically)
-2. Expand the sidebar
-3. Use the hue slider to change the accent color (real-time update)
-4. Click the sun/moon icon to toggle dark mode
-5. Click the refresh icon to reset to default hue (250)
+## Utility Classes
 
-### For Developers
+### Semantic
+```
+.text-success / .bg-success / .bg-success-light
+.text-warning / .bg-warning / .bg-warning-light
+.text-error   / .bg-error   / .bg-error-light
+.text-info    / .bg-info    / .bg-info-light
+```
+
+### Primary / Accent
+```
+.bg-gradient-primary       → var(--gradient-primary)
+.text-accent-analog        → var(--accent-analog-1)
+.bg-accent-analog          → var(--accent-analog-1)
+.text-accent-complement    → var(--accent-complement)
+```
+
+### Legacy (still valid)
+```
+.btn-primary / .btn-secondary / .btn-soft
+.badge-primary / .badge-secondary / .badge-accent
+.accent-button / .accent-bg / .accent-text / .accent-border / .accent-ring
+.card / .card-dark / .input-themed
+```
+
+---
+
+## Hook: `useOKLCHTheme`
+
 ```typescript
 import { useOKLCHTheme } from "@/hooks/useOKLCHTheme";
 
-export default function MyComponent() {
-  const { hue, setHue, resetHue, mode, toggleMode } = useOKLCHTheme();
-  
-  // Use in your component
-  return (
-    <div>
-      <p>Current hue: {hue}°</p>
-      <p>Mode: {mode}</p>
-    </div>
-  );
-}
+const { hue, setHue, resetHue, mode, toggleMode } = useOKLCHTheme();
 ```
 
-## CSS Variables Available
+Persists `theme-hue` (0–360) and `theme-mode` (`"light"` | `"dark"`) in localStorage. Inline script in `layout.tsx` applies both before hydration to prevent flash.
 
-### Color Variables
-- `--bg`: Background color
-- `--fg`: Foreground color  
-- `--bg-secondary`, `--bg-tertiary`: Secondary backgrounds
-- `--primary`: Main accent color
-- `--primary-foreground`: Text on primary
-- `--primary-hover`: Hover state accent
-- `--primary-soft`: Soft background with accent tint
-- `--text-primary`, `--text-secondary`, `--text-tertiary`: Text colors
-- `--border`, `--border-hover`: Border colors
-
-### Layout Variables
-- `--sidebar-width`: Sidebar width (256px or 80px)
-
-### Backward Compatibility
-- `--color-accent`: Same as `--primary`
-- `--color-accent-soft`: Same as `--primary-soft`
-- `--accent-rgb`: RGB values for rgba fallback
-
-## Smooth Transitions
-All color transitions animate smoothly (0.2s ease) thanks to global CSS:
-```css
-* {
-  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
-}
-```
-
-## Customization
-
-### Change Default Hue
-Edit `useOKLCHTheme.ts`:
-```typescript
-const DEFAULT_HUE = 250; // Change this value
-```
-
-### Adjust Chroma/Lightness
-Edit `globals.css` OKLCH values. Examples:
-```css
-/* More saturated */
---primary: oklch(0.65 0.20 var(--hue)); /* was 0.15 */
-
-/* Brighter */
---primary: oklch(0.75 0.15 var(--hue)); /* was 0.65 */
-```
-
-### Storage Keys
-- `theme-hue`: Stores hue value (0-360)
-- `theme-mode`: Stores mode ("light" or "dark")
+---
 
 ## Browser Compatibility
-- ✅ OKLCH color space: Chrome 111+, Firefox 113+, Safari 16.4+
-- ✅ CSS variables: All modern browsers
-- ✅ LocalStorage: All modern browsers
-- ✅ Fallback: CSS variable support required (no fallback colors needed in this setup)
 
-## Performance
-- **No Libraries**: Pure React + CSS
-- **Client-Side**: All color calculations done via CSS, zero JS runtime overhead
-- **Persistence**: Single localStorage call on mount
-- **Smooth**: 60fps transitions via CSS
-
-## Known Limitations
-- Hue must be 0-360 (no saturation/lightness customization in UI)
-- OKLCH requires modern browser support
-- Theme persists per device (no cloud sync)
+- OKLCH: Chrome 111+, Firefox 113+, Safari 16.4+
+- CSS variables: all modern browsers
+- `oklch(L C H / alpha)` syntax: same support as OKLCH
