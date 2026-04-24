@@ -1,8 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import type { MultipleChoiceArgs } from "@/lib/ai-practice/tools/registry";
 import type { ExerciseResult } from "@/lib/ai-practice/types";
+import type { EvaluationResult } from "@/lib/exercise/design";
+import { evaluateExercise } from "@/lib/exercise/evaluator";
+import { multipleChoiceToDesign } from "@/lib/ai-practice/tools/to-design";
 import ExerciseFeedback from "./ExerciseFeedback";
 
 interface Props {
@@ -15,24 +18,26 @@ interface Props {
 
 export default function MultipleChoiceWidget({ args, status, onAnswer, onNext, onRetry }: Props) {
   const [selected, setSelected] = useState<number | null>(null);
+  const [evaluation, setEvaluation] = useState<EvaluationResult | null>(null);
   const answered = status === "answered";
 
-  const wasCorrect = selected !== null && selected === args.correctIndex;
+  const design = useMemo(() => multipleChoiceToDesign(args), [args]);
 
   function handleSelect(idx: number) {
     if (answered) return;
     setSelected(idx);
-    const correct = idx === args.correctIndex;
-    onAnswer({
-      correct,
-      topic: args.topic,
-      gradedBy: "client",
-      latencyMs: undefined,
-    });
+    const result = evaluateExercise(args.options[idx], design);
+    // Fall back to the model-provided explanation when the design doesn't carry pedagogical data.
+    if (!result.correct && args.explanation && !design.commonWrongAnswers?.length) {
+      result.feedback.explanation = args.explanation;
+    }
+    setEvaluation(result);
+    onAnswer({ correct: result.correct, topic: args.topic, gradedBy: "client" });
   }
 
   function handleRetry() {
     setSelected(null);
+    setEvaluation(null);
     onRetry?.();
   }
 
@@ -50,7 +55,7 @@ export default function MultipleChoiceWidget({ args, status, onAnswer, onNext, o
           let border = "var(--line-divider)";
           let color = "var(--text-secondary)";
 
-          if (answered) {
+          if (answered || evaluation) {
             if (idx === args.correctIndex) {
               bg = "color-mix(in oklch, var(--success, #22c55e) 15%, transparent)";
               border = "var(--success, #22c55e)";
@@ -65,7 +70,7 @@ export default function MultipleChoiceWidget({ args, status, onAnswer, onNext, o
           return (
             <button
               key={idx}
-              disabled={answered}
+              disabled={answered || evaluation !== null}
               onClick={() => handleSelect(idx)}
               className="w-full text-left px-3 py-2 rounded-lg border text-sm transition-colors"
               style={{ backgroundColor: bg, borderColor: border, color }}
@@ -75,13 +80,11 @@ export default function MultipleChoiceWidget({ args, status, onAnswer, onNext, o
           );
         })}
       </div>
-      {answered && (
+      {evaluation && (
         <ExerciseFeedback
-          correct={wasCorrect}
-          explanation={args.explanation}
-          topic={args.topic}
-          onNext={wasCorrect ? onNext : undefined}
-          onRetry={!wasCorrect ? handleRetry : undefined}
+          result={evaluation}
+          onNext={evaluation.correct ? onNext : undefined}
+          onRetry={!evaluation.correct ? handleRetry : undefined}
         />
       )}
     </div>

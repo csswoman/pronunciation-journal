@@ -2,31 +2,17 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { BookOpen, Mic, Volume2, Brain, Zap, Music, Headphones, Speaker, Radio, Waves, MessageCircle, Lightbulb, Target, Award } from "lucide-react";
 import type { Lesson } from "@/lib/types";
 import { getAttemptsByLessonId } from "@/lib/db";
+import DifficultyPill from "@/components/ui/DifficultyPill";
 
 interface LessonCardProps {
   lesson: Lesson;
   progressPct?: number;
+  isFeatured?: boolean;
 }
 
-const difficultyConfig = {
-  easy: {
-    label: "Easy",
-    borderColor: "color-mix(in oklch, var(--admonitions-color-tip) 22%, var(--line-divider) 78%)",
-    textColor: "var(--text-tertiary)",
-  },
-  medium: {
-    label: "Mid",
-    borderColor: "color-mix(in oklch, var(--admonitions-color-warning) 22%, var(--line-divider) 78%)",
-    textColor: "var(--text-tertiary)",
-  },
-  hard: {
-    label: "Hard",
-    borderColor: "color-mix(in oklch, var(--admonitions-color-caution) 22%, var(--line-divider) 78%)",
-    textColor: "var(--text-tertiary)",
-  },
-};
 
 type LessonVisualFamily =
   | "basics"
@@ -37,24 +23,18 @@ type LessonVisualFamily =
   | "vocabulary"
   | "general";
 
-const lessonIconMap: Record<LessonVisualFamily, string[]> = {
-  basics: ["paper", "headset", "voice"],
-  vowels: ["ae", "ab", "voice"],
-  consonants: ["mic", "sound", "headset"],
-  diphthongs: ["ae", "voice", "sound"],
-  phoneme: ["sound", "mic", "voice"],
-  vocabulary: ["brain", "jigsaw", "paper"],
-  general: ["paper", "headset", "brain"],
+const lessonIconMap: Record<LessonVisualFamily, React.ElementType[]> = {
+  basics: [BookOpen, Volume2, Mic, Headphones, MessageCircle, Target],
+  vowels: [Volume2, Music, Mic, Waves, Radio, Speaker],
+  consonants: [Mic, Volume2, Speaker, Radio, Headphones, Waves],
+  diphthongs: [Volume2, Mic, Music, Waves, Radio, Lightbulb],
+  phoneme: [Music, Mic, Volume2, Headphones, Speaker, Award],
+  vocabulary: [Brain, BookOpen, Volume2, Lightbulb, Target, Award],
+  general: [BookOpen, Volume2, Brain, Headphones, MessageCircle, Lightbulb],
 };
 
 const iconSizes = [72, 80, 88] as const;
 const iconRotations = [-24, -16, -10, 8] as const;
-
-const pillStyle = {
-  color: "var(--text-tertiary)",
-  borderColor: "var(--line-divider)",
-  backgroundColor: "color-mix(in oklch, var(--text-primary) 3%, transparent)",
-} as const;
 
 function hashString(value: string): number {
   let hash = 0;
@@ -108,19 +88,8 @@ function deriveLessonDescription(title: string, category: string): string {
   return "Practice this lesson with clear, focused repetition";
 }
 
-function MetadataPill({ children }: { children: React.ReactNode }) {
-  return (
-    <span
-      className="flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-medium border"
-      style={pillStyle}
-    >
-      {children}
-    </span>
-  );
-}
 
-export default function LessonCard({ lesson, progressPct }: LessonCardProps) {
-  const config = difficultyConfig[lesson.difficulty];
+export default function LessonCard({ lesson, progressPct, isFeatured }: LessonCardProps) {
   const [derivedProgress, setDerivedProgress] = useState(0);
 
   useEffect(() => {
@@ -161,12 +130,12 @@ export default function LessonCard({ lesson, progressPct }: LessonCardProps) {
     const family = detectLessonVisualFamily(lesson);
     const seed = hashString(`${lesson.id}-${lesson.title}`);
     const icons = lessonIconMap[family];
-    const iconName = icons[seed % icons.length];
-    const iconName2 = icons[(seed + 1) % icons.length];
+    const IconComponent = icons[seed % icons.length];
+    const IconComponent2 = icons[(seed + 1) % icons.length];
 
     return {
-      iconSrc: `/illustrations/lesson/${iconName}.svg`,
-      iconSrc2: `/illustrations/lesson/${iconName2}.svg`,
+      IconComponent,
+      IconComponent2,
       size: iconSizes[seed % iconSizes.length] + 96,
       size2: iconSizes[(seed + 1) % iconSizes.length] + 48,
       rotation: iconRotations[seed % iconRotations.length],
@@ -177,12 +146,16 @@ export default function LessonCard({ lesson, progressPct }: LessonCardProps) {
   return (
     <Link href={lesson.href ?? `/practice/lesson/${lesson.id}`}>
       <div
-        className="group relative cursor-pointer overflow-hidden rounded-[28px] border p-7 transition-[transform,box-shadow] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1"
+        className={`group relative cursor-pointer overflow-hidden rounded-[28px] border p-7 transition-[transform,box-shadow] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1 ${
+          isFeatured ? "lg:col-span-1 lg:row-span-1" : ""
+        }`}
         style={{
-          backgroundColor: "var(--card-bg)",
-          borderColor: "var(--line-divider)",
+          backgroundColor: isFeatured ? "color-mix(in oklch, var(--color-accent) 8%, var(--card-bg) 92%)" : "var(--card-bg)",
+          borderColor: isFeatured ? "color-mix(in oklch, var(--color-accent) 28%, var(--line-divider) 72%)" : "var(--line-divider)",
           minHeight: "260px",
-          boxShadow: "0 2px 12px color-mix(in oklch, var(--text-primary) 3%, transparent)",
+          boxShadow: isFeatured
+            ? "0 0 0 1px color-mix(in oklch, var(--color-accent) 15%, transparent), 0 8px 24px color-mix(in oklch, var(--color-accent) 12%, transparent)"
+            : "0 2px 12px color-mix(in oklch, var(--text-primary) 3%, transparent)",
         }}
       >
         <div
@@ -204,65 +177,42 @@ export default function LessonCard({ lesson, progressPct }: LessonCardProps) {
 
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute -right-14 -top-6 z-0 transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:-translate-y-1.5"
+          className="pointer-events-none absolute -right-14 -top-6 z-0 transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:-translate-y-1.5 flex items-center justify-center"
           style={{
             width: `${iconVisual.size2}px`,
             height: `${iconVisual.size2}px`,
-            opacity: 0.03,
+            opacity: 0.04,
             transform: `rotate(${iconVisual.rotation2}deg)`,
-            backgroundColor: "var(--color-accent)",
-            WebkitMaskImage: `url(${iconVisual.iconSrc2})`,
-            WebkitMaskRepeat: "no-repeat",
-            WebkitMaskPosition: "center",
-            WebkitMaskSize: "contain",
-            maskImage: `url(${iconVisual.iconSrc2})`,
-            maskRepeat: "no-repeat",
-            maskPosition: "center",
-            maskSize: "contain",
+            color: "var(--color-accent)",
           }}
-        />
+        >
+          {<iconVisual.IconComponent2 size={iconVisual.size2} strokeWidth={1.5} />}
+        </div>
 
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute -right-6 -bottom-4 z-0 transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:-translate-y-2 group-hover:opacity-[0.10]"
+          className="pointer-events-none absolute -right-6 -bottom-4 z-0 transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:-translate-y-2 group-hover:opacity-[0.10] flex items-center justify-center"
           style={{
             width: `${iconVisual.size}px`,
             height: `${iconVisual.size}px`,
             opacity: 0.07,
             transform: `rotate(${iconVisual.rotation}deg)`,
-            backgroundColor: "var(--color-accent)",
-            WebkitMaskImage: `url(${iconVisual.iconSrc})`,
-            WebkitMaskRepeat: "no-repeat",
-            WebkitMaskPosition: "center",
-            WebkitMaskSize: "contain",
-            maskImage: `url(${iconVisual.iconSrc})`,
-            maskRepeat: "no-repeat",
-            maskPosition: "center",
-            maskSize: "contain",
+            color: "var(--color-accent)",
           }}
-        />
+        >
+          {<iconVisual.IconComponent size={iconVisual.size} strokeWidth={1.5} />}
+        </div>
 
         <div className="relative z-10 flex flex-col h-full">
           <div className="mb-5 flex items-center justify-between gap-4">
-            <span
-              className="rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] border"
-              style={{
-                backgroundColor: "transparent",
-                color: config.textColor,
-                borderColor: config.borderColor,
-              }}
-            >
-              {config.label}
-            </span>
+            <DifficultyPill difficulty={lesson.difficulty} />
 
             {lessonState === "completed" && (
               <span
                 className="flex items-center gap-1 text-[11px] font-medium"
-                style={{ color: "var(--text-tertiary)" }}
+                style={{ color: "var(--success)" }}
               >
-                <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
+                <Zap className="w-3.5 h-3.5" />
                 Done
               </span>
             )}
@@ -282,35 +232,31 @@ export default function LessonCard({ lesson, progressPct }: LessonCardProps) {
             {description}
           </p>
 
-          <div className="flex items-center gap-2 mb-6">
-            <MetadataPill>
-              <svg className="w-2.5 h-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-              </svg>
+          <div className="flex items-center gap-4 mb-6 text-xs font-medium">
+            <div className="flex items-center gap-1.5" style={{ color: 'var(--text-tertiary)' }}>
+              <BookOpen className="w-4 h-4" style={{ color: 'var(--color-accent)' }} />
               {lesson.words.length} words
-            </MetadataPill>
-            <MetadataPill>
-              <svg className="w-2.5 h-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
+            </div>
+            <div className="flex items-center gap-1.5" style={{ color: 'var(--text-tertiary)' }}>
+              <Zap className="w-4 h-4" style={{ color: 'var(--color-accent)' }} />
               {durationLabel}
-            </MetadataPill>
+            </div>
           </div>
 
           <div className="mb-5">
-            <div className="flex items-center justify-between mb-1.5">
+            <div className="flex items-center justify-between gap-2 mb-2">
               <span
-                className="text-[11px] font-medium tracking-[0.06em]"
+                className="text-xs font-medium"
                 style={{ color: "var(--text-tertiary)" }}
               >
-                {lessonState === "not-started" ? "Not started" : "Progress"}
+                {lessonState === "not-started" ? "Not started" : "Your progress"}
               </span>
               {lessonState !== "not-started" && (
                 <span
-                  className="text-[11px] font-semibold tabular-nums"
+                  className="text-xs font-semibold tabular-nums"
                   style={{ color: "var(--color-accent)" }}
                 >
-                  {barProgress}%
+                  {barProgress} / {lesson.words.length} words
                 </span>
               )}
             </div>
@@ -321,9 +267,9 @@ export default function LessonCard({ lesson, progressPct }: LessonCardProps) {
               <div
                 className="h-full rounded-full transition-all duration-700 ease-out"
                 style={{
-                  backgroundColor: "var(--color-accent)",
+                  backgroundColor: "var(--success)",
                   width: `${barProgress}%`,
-                  boxShadow: barProgress > 0 ? "0 0 8px color-mix(in oklch, var(--color-accent) 50%, transparent)" : "none",
+                  boxShadow: barProgress > 0 ? "0 0 8px color-mix(in oklch, var(--success) 50%, transparent)" : "none",
                 }}
               />
             </div>
@@ -342,10 +288,12 @@ export default function LessonCard({ lesson, progressPct }: LessonCardProps) {
             </span>
 
             <span
-              className="flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-semibold transition-[background-color,opacity] duration-200"
+              className={`flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-semibold transition-[background-color,opacity] duration-200 ${
+                isFeatured ? "px-6 py-2 text-sm" : ""
+              }`}
               style={{
-                backgroundColor: "var(--color-accent)",
-                color: "var(--color-text-on-accent)",
+                backgroundColor: isFeatured ? "var(--color-accent)" : "color-mix(in oklch, var(--color-accent) 20%, transparent)",
+                color: isFeatured ? "var(--color-text-on-accent)" : "var(--color-accent)",
               }}
             >
               {ctaLabel}

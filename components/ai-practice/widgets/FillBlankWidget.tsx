@@ -1,8 +1,11 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useMemo, useRef, useState } from "react";
 import type { FillBlankArgs } from "@/lib/ai-practice/tools/registry";
 import type { ExerciseResult } from "@/lib/ai-practice/types";
+import type { EvaluationResult } from "@/lib/exercise/design";
+import { evaluateExercise } from "@/lib/exercise/evaluator";
+import { fillBlankToDesign } from "@/lib/ai-practice/tools/to-design";
 import ExerciseFeedback from "./ExerciseFeedback";
 
 interface Props {
@@ -13,81 +16,69 @@ interface Props {
   onRetry?: () => void;
 }
 
-function normalize(s: string) {
-  return s.trim().toLowerCase().replace(/[.,!?;:'"]/g, "");
-}
-
 export default function FillBlankWidget({ args, status, onAnswer, onNext, onRetry }: Props) {
   const [value, setValue] = useState("");
-  const [submitted, setSubmitted] = useState(false);
+  const [evaluation, setEvaluation] = useState<EvaluationResult | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const answered = status === "answered";
 
-  const correct =
-    submitted &&
-    (normalize(value) === normalize(args.answer) ||
-      (args.acceptableAnswers ?? []).some(a => normalize(value) === normalize(a)));
+  const design = useMemo(() => fillBlankToDesign(args), [args]);
+  const hintText = typeof args.hint === "string" ? args.hint : args.hint?.level1;
 
   function handleSubmit() {
     if (!value.trim() || answered) return;
-    setSubmitted(true);
-    const isCorrect =
-      normalize(value) === normalize(args.answer) ||
-      (args.acceptableAnswers ?? []).some(a => normalize(value) === normalize(a));
-    onAnswer({ correct: isCorrect, topic: args.topic, gradedBy: "client" });
+    const result = evaluateExercise(value, design);
+    setEvaluation(result);
+    onAnswer({ correct: result.correct, topic: args.topic, gradedBy: "client" });
   }
 
   function handleRetry() {
     setValue("");
-    setSubmitted(false);
+    setEvaluation(null);
     onRetry?.();
   }
 
   const parts = args.sentence.split("___");
+  const borderColor = !evaluation
+    ? "var(--primary)"
+    : evaluation.correct
+    ? "var(--success, #22c55e)"
+    : "#ef4444";
 
   return (
     <div
       className="rounded-xl border p-4 space-y-3"
       style={{ borderColor: "var(--line-divider)", backgroundColor: "var(--btn-regular-bg)" }}
     >
-      {args.hint && (
+      {hintText && (
         <p className="text-xs" style={{ color: "var(--text-tertiary)" }}>
-          Hint: {args.hint}
+          Hint: {hintText}
         </p>
       )}
       <div className="flex flex-wrap items-center gap-1 text-sm" style={{ color: "var(--text-primary)" }}>
         <span>{parts[0]}</span>
         <input
           ref={inputRef}
-          value={answered ? (submitted ? value : args.answer) : value}
+          value={answered && evaluation && !evaluation.correct ? args.answer : value}
           onChange={e => setValue(e.target.value)}
           onKeyDown={e => e.key === "Enter" && handleSubmit()}
           disabled={answered}
           placeholder="…"
           className="border-b outline-none bg-transparent text-center min-w-[80px] px-1"
-          style={{
-            borderColor: !submitted
-              ? "var(--primary)"
-              : correct
-              ? "var(--success, #22c55e)"
-              : "#ef4444",
-            color: "var(--text-primary)",
-          }}
+          style={{ borderColor, color: "var(--text-primary)" }}
         />
         {parts[1] && <span>{parts[1]}</span>}
       </div>
 
-      {answered && (
+      {evaluation && (
         <ExerciseFeedback
-          correct={correct}
-          explanation={!correct ? `Answer: ${args.answer}` : undefined}
-          topic={args.topic}
-          onNext={correct ? onNext : undefined}
-          onRetry={!correct ? handleRetry : undefined}
+          result={evaluation}
+          onNext={evaluation.correct ? onNext : undefined}
+          onRetry={!evaluation.correct ? handleRetry : undefined}
         />
       )}
 
-      {!answered && (
+      {!answered && !evaluation && (
         <button
           onClick={handleSubmit}
           disabled={!value.trim()}

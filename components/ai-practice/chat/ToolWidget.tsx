@@ -36,7 +36,6 @@ export default function ToolWidget({ toolCall, onAnswer, onNext, onRetry, onFirs
   const shownAtRef   = useRef(0);
   const answeredRef  = useRef(false);
   const attemptsRef  = useRef(0);
-  const autoNextRef  = useRef(false);
 
   // ── exercise_shown + abandonment timer ───────────────────────────────────
   useEffect(() => {
@@ -79,19 +78,8 @@ export default function ToolWidget({ toolCall, onAnswer, onNext, onRetry, onFirs
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [toolCall.status]);
 
-  // ── auto_next_triggered (correct answer → auto-advance) ──────────────────
-  useEffect(() => {
-    if (toolCall.status !== "answered" || toolCall.result?.correct !== true || autoNextRef.current) return;
-    autoNextRef.current = true;
-
-    const t = setTimeout(() => {
-      logEvent("auto_next_triggered", { topic, delayMs: AUTO_NEXT_DELAY_MS }).catch(() => {});
-      onNext();
-    }, AUTO_NEXT_DELAY_MS);
-
-    return () => clearTimeout(t);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [toolCall.status, toolCall.result?.correct]);
+  // ── auto_next_triggered disabled (user must click Next manually) ───────────
+  // Removed auto-advance on correct answer; user must explicitly click Next
 
   // ── handlers ─────────────────────────────────────────────────────────────
 

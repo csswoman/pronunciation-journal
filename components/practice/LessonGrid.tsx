@@ -44,19 +44,24 @@ export default function LessonGrid({
   return (
     <>
       <div key={gridKey} className="animate-grid-in">
-        <Grid cols="3" gap="lg" responsive={true}>
-          {lessons.map((lesson) => (
-            <LessonCard
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {lessons.map((lesson, index) => (
+            <div
               key={lesson.id}
-              lesson={lesson}
-              progressPct={
-                lesson.id.startsWith('sound-')
-                  ? soundProgressMap.get(Number(lesson.id.replace('sound-', '')))
-                  : undefined
-              }
-            />
+              className={index === 0 ? "lg:col-span-1" : ""}
+            >
+              <LessonCard
+                lesson={lesson}
+                progressPct={
+                  lesson.id.startsWith('sound-')
+                    ? soundProgressMap.get(Number(lesson.id.replace('sound-', '')))
+                    : undefined
+                }
+                isFeatured={index === 0}
+              />
+            </div>
           ))}
-        </Grid>
+        </div>
       </div>
 
       {totalCount > PAGE_SIZE && (
