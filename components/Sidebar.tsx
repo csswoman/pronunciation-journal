@@ -46,6 +46,12 @@ const IpaIcon = () => (
   </svg>
 );
 
+const WordBankIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v3m0 0a3 3 0 100 6 3 3 0 000-6zm-7 7l1.5 1.5M19 11l-1.5 1.5M5 17h14M7 21h10" />
+  </svg>
+);
+
 const ProgressIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
     <path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
@@ -90,6 +96,7 @@ const coreNav: NavSection = {
 const learningNav: NavSection = {
   label: "Learning",
   items: [
+    { name: "Word Bank",  href: "/words",    icon: <WordBankIcon /> },
     { name: "Decks",      href: "/decks",    icon: <DecksIcon /> },
     { name: "Courses",    href: "/courses",  icon: <LessonsIcon /> },
     { name: "IPA Chart",  href: "/ipa",      icon: <IpaIcon /> },

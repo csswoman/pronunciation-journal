@@ -579,6 +579,66 @@ export type Database = {
           },
         ]
       }
+        word_bank: {
+          Row: {
+            context: string | null
+            created_at: string
+            difficulty: number
+            error_reason: string | null
+            example: string | null
+            id: string
+            image_prompt: string | null
+            ipa: string | null
+            meaning: string | null
+            next_review_at: string | null
+            review_count: number
+            status: string
+            synonyms: string[] | null
+            text: string
+            translation: string | null
+            updated_at: string
+          user_id: string
+        }
+        Insert: {
+            context?: string | null
+            created_at?: string
+            difficulty?: number
+            error_reason?: string | null
+            example?: string | null
+            id?: string
+            image_prompt?: string | null
+            ipa?: string | null
+            meaning?: string | null
+            next_review_at?: string | null
+            review_count?: number
+            status?: string
+            synonyms?: string[] | null
+            text: string
+            translation?: string | null
+            updated_at?: string
+          user_id: string
+        }
+        Update: {
+            context?: string | null
+            created_at?: string
+            difficulty?: number
+            error_reason?: string | null
+            example?: string | null
+            id?: string
+            image_prompt?: string | null
+            ipa?: string | null
+            meaning?: string | null
+            next_review_at?: string | null
+            review_count?: number
+            status?: string
+            synonyms?: string[] | null
+            text?: string
+            translation?: string | null
+            updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       words: {
         Row: {
           audio_url: string | null
