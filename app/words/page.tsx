@@ -22,6 +22,7 @@ export default function WordsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [filterType, setFilterType] = useState<FilterType>("all");
   const [currentPage, setCurrentPage] = useState(1);
+  const [initialWordText, setInitialWordText] = useState("");
 
   useEffect(() => {
     if (!actionError) return;
@@ -207,6 +208,22 @@ export default function WordsPage() {
                 placeholder="Search by word, translation, or meaning..."
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
+                onKeyDown={e => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    const query = searchQuery.trim();
+                    if (query) {
+                      const wordExists = words.some(w =>
+                        w.text.toLowerCase() === query.toLowerCase()
+                      );
+                      if (!wordExists) {
+                        setInitialWordText(query);
+                        setSearchQuery("");
+                        setShowAdd(true);
+                      }
+                    }
+                  }
+                }}
                 className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-[var(--line-divider)] bg-[var(--card-bg)] text-sm text-[var(--deep-text)] placeholder-[var(--text-tertiary)] focus:outline-none focus:border-[var(--primary)] focus:ring-2 focus:ring-[color-mix(in_oklch,var(--primary)_20%,transparent)]"
               />
               {searchQuery && (
@@ -306,8 +323,12 @@ export default function WordsPage() {
 
       <QuickAddModal
         open={showAdd}
-        onClose={() => setShowAdd(false)}
+        onClose={() => {
+          setShowAdd(false);
+          setInitialWordText("");
+        }}
         onSubmit={handleAdd}
+        initialText={initialWordText}
       />
     </>
   );

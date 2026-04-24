@@ -1,6 +1,6 @@
 "use client";
 
-import { Flame, Loader2, RefreshCcw, Trash2, Volume2 } from "lucide-react";
+import { Flame, Loader2, RefreshCcw, Trash2, Volume2, Snail } from "lucide-react";
 import type { WordBankEntry } from "@/lib/types";
 import { useAudioPlayback } from "@/hooks/useAudioPlayback";
 
@@ -66,7 +66,7 @@ export function WordCard({ word, onMarkDifficult, onRetry, onDelete }: WordCardP
                     : "text-[var(--text-tertiary)] hover:bg-[var(--bg-secondary)] hover:text-[var(--primary)]"
                 }`}
               >
-                🐢
+                <Snail size={14} />
               </button>
             </div>
             {word.difficulty > 0 && (

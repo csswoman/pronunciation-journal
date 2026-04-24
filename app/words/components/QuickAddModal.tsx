@@ -8,9 +8,10 @@ interface QuickAddModalProps {
   open: boolean;
   onClose: () => void;
   onSubmit: (input: { text: string; context?: string | null }) => Promise<void> | void;
+  initialText?: string;
 }
 
-export function QuickAddModal({ open, onClose, onSubmit }: QuickAddModalProps) {
+export function QuickAddModal({ open, onClose, onSubmit, initialText = "" }: QuickAddModalProps) {
   const [text, setText] = useState("");
   const [context, setContext] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
@@ -18,12 +19,12 @@ export function QuickAddModal({ open, onClose, onSubmit }: QuickAddModalProps) {
   // Reset + autofocus when opened.
   useEffect(() => {
     if (!open) return;
-    setText("");
+    setText(initialText);
     setContext("");
     // Defer to ensure the modal is mounted before focusing.
     const t = setTimeout(() => inputRef.current?.focus(), 30);
     return () => clearTimeout(t);
-  }, [open]);
+  }, [open, initialText]);
 
   // Esc to close.
   useEffect(() => {
