@@ -320,3 +320,40 @@ export interface UserProfile {
   };
   preferences?: UserPreferences;
 }
+
+// ── Word Bank Types ──
+
+export type WordBankStatus = "processing" | "ready" | "failed";
+
+export interface WordBankEntry {
+  id: string;
+  user_id: string;
+  text: string;
+  context: string | null;
+
+  meaning: string | null;
+  translation: string | null;
+  ipa: string | null;
+  example: string | null;
+  synonyms: string[] | null;
+  image_prompt: string | null;
+  audio_url: string | null;
+
+  status: WordBankStatus;
+  difficulty: number;
+  error_reason: "parse_error" | "api_error" | "timeout" | null;
+  next_review_at: string | null;
+  review_count: number;
+
+  created_at: string;
+  updated_at: string;
+}
+
+export interface WordEnrichment {
+  meaning: string;
+  translation: string;
+  ipa: string;
+  example: string;
+  synonyms: string[];
+  image_prompt: string;
+}

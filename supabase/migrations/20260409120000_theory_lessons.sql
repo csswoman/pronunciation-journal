@@ -21,14 +21,23 @@ CREATE TABLE IF NOT EXISTS "public"."theory_lessons" (
 
 ALTER TABLE "public"."theory_lessons" OWNER TO "postgres";
 
--- updated_at trigger (reuses the existing function)
+-- ── Trigger (idempotent) ──────────────────────────────────────────────────────
+DROP TRIGGER IF EXISTS "theory_lessons_updated_at" ON "public"."theory_lessons";
+
 CREATE TRIGGER "theory_lessons_updated_at"
     BEFORE UPDATE ON "public"."theory_lessons"
-    FOR EACH ROW EXECUTE FUNCTION "public"."update_updated_at"();
+    FOR EACH ROW
+    EXECUTE FUNCTION "public"."update_updated_at"();
 
 -- ── RLS ───────────────────────────────────────────────────────────────────────
 
 ALTER TABLE "public"."theory_lessons" ENABLE ROW LEVEL SECURITY;
+
+-- Drop policies if they already exist (idempotent)
+DROP POLICY IF EXISTS "theory_lessons_select" ON "public"."theory_lessons";
+DROP POLICY IF EXISTS "theory_lessons_insert" ON "public"."theory_lessons";
+DROP POLICY IF EXISTS "theory_lessons_update" ON "public"."theory_lessons";
+DROP POLICY IF EXISTS "theory_lessons_delete" ON "public"."theory_lessons";
 
 -- Read: own lessons + all published system lessons
 CREATE POLICY "theory_lessons_select" ON "public"."theory_lessons"
@@ -59,6 +68,11 @@ CREATE POLICY "theory_lessons_delete" ON "public"."theory_lessons"
 -- INSERT INTO storage.buckets (id, name, public) VALUES ('lesson-covers', 'lesson-covers', true);
 
 -- Storage RLS for lesson-covers bucket
+
+DROP POLICY IF EXISTS "lesson_covers_insert" ON storage.objects;
+DROP POLICY IF EXISTS "lesson_covers_select" ON storage.objects;
+DROP POLICY IF EXISTS "lesson_covers_delete" ON storage.objects;
+
 -- Allow authenticated users to upload to their own folder
 CREATE POLICY "lesson_covers_insert" ON storage.objects
     FOR INSERT WITH CHECK (
