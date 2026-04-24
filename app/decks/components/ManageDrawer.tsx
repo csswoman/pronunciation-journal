@@ -161,9 +161,10 @@ export function ManageDrawer({ deck, onClose, onWordCountChange }: ManageDrawerP
 
   return (
     <>
-      <div className="fixed inset-0 z-30 bg-black/20 transition-opacity" onClick={onClose} />
+      <div className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm" onClick={onClose} />
 
-      <div className="fixed inset-y-0 right-0 z-40 w-full max-w-sm bg-[var(--card-bg)] border-l border-[var(--line-divider)] shadow-2xl overflow-y-auto">
+      <div className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none">
+        <div className="w-full max-w-md mx-4 max-h-[85vh] bg-[var(--card-bg)] rounded-2xl border border-[var(--line-divider)] shadow-2xl overflow-y-auto pointer-events-auto">
         <DrawerHeader onClose={onClose} />
 
         <div className="p-4 space-y-4">
@@ -198,6 +199,7 @@ export function ManageDrawer({ deck, onClose, onWordCountChange }: ManageDrawerP
               </div>
             )}
           </div>
+        </div>
         </div>
       </div>
 
