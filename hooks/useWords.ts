@@ -189,6 +189,7 @@ export function useWords(): UseWordsState {
         example: null,
         synonyms: null,
         image_prompt: null,
+        audio_url: null,
         status: "processing",
         difficulty: 0,
         error_reason: null,
@@ -254,22 +255,31 @@ export function useWords(): UseWordsState {
     const target = words.find(w => w.id === id);
     if (!target) return;
 
-    // Delete the failed row and re-add it fresh — same path as a new word,
-    // so enrichment runs through the proven POST /api/words flow.
-    setWords(prev => prev.filter(w => w.id !== id));
-    processingSinceRef.current.delete(id);
+    // Mark as processing and clear error, then trigger enrichment.
+    const processing: WordBankEntry = { ...target, status: "processing", error_reason: null };
+    setWords(prev => prev.map(w => (w.id === id ? processing : w)));
+    processingSinceRef.current.set(id, Date.now());
 
     try {
-      await apiDeleteWord(id);
-    } catch {
-      // If delete fails, restore and bail.
-      setWords(prev => [target, ...prev.filter(w => w.id !== id)]);
-      return;
-    }
+      const res = await fetch("/api/words", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, text: target.text, context: target.context }),
+      });
 
-    // Re-add using the same addWord flow (optimistic insert + POST /api/words).
-    await addWord({ text: target.text, context: target.context });
-  }, [words, addWord]);
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || "Failed to retry");
+      }
+    } catch (err) {
+      setWords(prev => prev.map(w =>
+        w.id === id
+          ? { ...target, error_reason: "api_error" }
+          : w
+      ));
+      throw err;
+    }
+  }, [words]);
 
   return { words, loading, error, addWord, removeWord, markDifficult, retry, refresh };
 }

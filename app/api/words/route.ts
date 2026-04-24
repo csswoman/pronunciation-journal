@@ -26,7 +26,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  let body: { text?: unknown; context?: unknown };
+  let body: { text?: unknown; context?: unknown; id?: unknown };
   try {
     body = await req.json();
   } catch {
@@ -46,12 +46,39 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       ? body.context.trim().slice(0, 1000)
       : null;
 
-  // Insert through a user-scoped client so RLS applies and user_id is enforced.
+  const id = typeof body.id === "string" ? body.id : null;
+
+  // User-scoped client so RLS applies and user_id is enforced.
   const userClient = createClient<Database>(supabaseUrl, anonKey, {
     auth: { persistSession: false },
     global: { headers: { Authorization: `Bearer ${token}` } },
   });
 
+  // If retrying an existing word, update it instead of inserting.
+  if (id) {
+    const { data: word, error: updateErr } = await userClient
+      .from("word_bank")
+      .update({
+        status: "processing",
+        error_reason: null,
+      })
+      .eq("id", id)
+      .select()
+      .single();
+
+    if (updateErr || !word) {
+      console.error("[POST /api/words] retry update failed:", updateErr);
+      return NextResponse.json(
+        { error: updateErr?.message ?? "Failed to retry word" },
+        { status: 500 }
+      );
+    }
+
+    void enrichWord(word.id);
+    return NextResponse.json({ word }, { status: 200 });
+  }
+
+  // Create new word.
   const { data: word, error: insertErr } = await userClient
     .from("word_bank")
     .insert({
@@ -71,9 +98,6 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     );
   }
 
-  // Fire enrichment in background — client gets the row immediately and
-  // receives the update via the realtime subscription when Gemini finishes.
   void enrichWord(word.id);
-
   return NextResponse.json({ word }, { status: 201 });
 }

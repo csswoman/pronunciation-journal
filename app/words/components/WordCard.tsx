@@ -1,7 +1,8 @@
 "use client";
 
-import { Flame, Loader2, RefreshCcw, Trash2 } from "lucide-react";
+import { Flame, Loader2, RefreshCcw, Trash2, Volume2 } from "lucide-react";
 import type { WordBankEntry } from "@/lib/types";
+import { useAudioPlayback } from "@/hooks/useAudioPlayback";
 
 interface WordCardProps {
   word: WordBankEntry;
@@ -11,6 +12,8 @@ interface WordCardProps {
 }
 
 export function WordCard({ word, onMarkDifficult, onRetry, onDelete }: WordCardProps) {
+  const { currentSpeed, play } = useAudioPlayback(word.audio_url, word.text);
+
   if (word.status === "processing") {
     return (
       <WordCardProcessing
@@ -38,6 +41,34 @@ export function WordCard({ word, onMarkDifficult, onRetry, onDelete }: WordCardP
                 /{word.ipa.replace(/^\/|\/$/g, "")}/
               </span>
             )}
+            <div className="flex gap-1">
+              <button
+                onClick={() => void play("normal")}
+                disabled={currentSpeed === "normal"}
+                aria-label={currentSpeed === "normal" ? "Playing..." : "Play pronunciation"}
+                title="Play (normal speed)"
+                className={`p-1.5 rounded-lg transition-colors ${
+                  currentSpeed === "normal"
+                    ? "bg-[color-mix(in_oklch,var(--primary)_25%,var(--bg-secondary))] text-[var(--primary)]"
+                    : "text-[var(--text-tertiary)] hover:bg-[var(--bg-secondary)] hover:text-[var(--primary)]"
+                }`}
+              >
+                <Volume2 size={14} />
+              </button>
+              <button
+                onClick={() => void play("slow")}
+                disabled={currentSpeed === "slow"}
+                aria-label={currentSpeed === "slow" ? "Playing..." : "Play slow pronunciation"}
+                title="Play (slow: 0.75x)"
+                className={`px-2 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                  currentSpeed === "slow"
+                    ? "bg-[color-mix(in_oklch,var(--primary)_25%,var(--bg-secondary))] text-[var(--primary)]"
+                    : "text-[var(--text-tertiary)] hover:bg-[var(--bg-secondary)] hover:text-[var(--primary)]"
+                }`}
+              >
+                🐢
+              </button>
+            </div>
             {word.difficulty > 0 && (
               <span
                 className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-[10px] font-semibold"

@@ -581,11 +581,14 @@ export type Database = {
       }
         word_bank: {
           Row: {
+            audio_fetch_attempts: number
+            audio_url: string | null
             context: string | null
             created_at: string
             difficulty: number
             error_reason: string | null
             example: string | null
+            has_audio: boolean | null
             id: string
             image_prompt: string | null
             ipa: string | null
@@ -600,11 +603,14 @@ export type Database = {
           user_id: string
         }
         Insert: {
+            audio_fetch_attempts?: number
+            audio_url?: string | null
             context?: string | null
             created_at?: string
             difficulty?: number
             error_reason?: string | null
             example?: string | null
+            has_audio?: boolean | null
             id?: string
             image_prompt?: string | null
             ipa?: string | null
@@ -619,11 +625,14 @@ export type Database = {
           user_id: string
         }
         Update: {
+            audio_fetch_attempts?: number
+            audio_url?: string | null
             context?: string | null
             created_at?: string
             difficulty?: number
             error_reason?: string | null
             example?: string | null
+            has_audio?: boolean | null
             id?: string
             image_prompt?: string | null
             ipa?: string | null

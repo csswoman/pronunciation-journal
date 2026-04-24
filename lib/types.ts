@@ -337,6 +337,7 @@ export interface WordBankEntry {
   example: string | null;
   synonyms: string[] | null;
   image_prompt: string | null;
+  audio_url: string | null;
 
   status: WordBankStatus;
   difficulty: number;

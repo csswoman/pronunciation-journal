@@ -1,6 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import type { Database } from "@/lib/supabase/types";
 import { enrichWithGemini } from "./gemini";
+import { getWordAudio } from "./audio";
 
 const ENRICH_TIMEOUT_MS = 45_000;
 
@@ -60,6 +61,8 @@ export async function enrichWord(wordId: string): Promise<void> {
   try {
     const enriched = await withTimeout(enrichWithGemini(row.text, row.context), ENRICH_TIMEOUT_MS);
 
+    const audioResult = await getWordAudio(row.text);
+
     const { error: updateErr } = await supabase
       .from("word_bank")
       .update({
@@ -69,6 +72,7 @@ export async function enrichWord(wordId: string): Promise<void> {
         example: enriched.example || null,
         synonyms: enriched.synonyms.length ? enriched.synonyms : null,
         image_prompt: enriched.image_prompt || null,
+        audio_url: audioResult.url,
         status: "ready",
         error_reason: null,
       })
