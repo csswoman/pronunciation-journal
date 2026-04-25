@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { Play, Sparkles } from "lucide-react";
-import { useAuth } from "@/components/AuthProvider";
+import { useAuth } from "@/components/auth/AuthProvider";
 import { useSoundProgress } from "@/hooks/useSoundProgress";
 import ConversationIllustration from "@/components/illustrations/ConversationIllustration";
 import PageHeader from "@/components/layout/PageHeader";

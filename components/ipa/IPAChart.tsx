@@ -10,12 +10,12 @@ import {
   TYPE_PILL,
   type FilterType,
   type PhonemeData,
-} from "./ipa-chart/data";
-import FeaturedPhonemePanel from "./ipa-chart/FeaturedPhonemePanel";
-import FilterTabs from "./ipa-chart/FilterTabs";
-import PhonemeCard from "./ipa-chart/PhonemeCard";
-import PhonemeRow from "./ipa-chart/PhonemeRow";
-import ViewToggle from "./ipa-chart/ViewToggle";
+} from "@/components/ipa-chart/data";
+import FeaturedPhonemePanel from "@/components/ipa-chart/FeaturedPhonemePanel";
+import FilterTabs from "@/components/ipa-chart/FilterTabs";
+import PhonemeCard from "@/components/ipa-chart/PhonemeCard";
+import PhonemeRow from "@/components/ipa-chart/PhonemeRow";
+import ViewToggle from "@/components/ipa-chart/ViewToggle";
 
 export default function IPAChart() {
   const [activeFilter, setActiveFilter] = useState<FilterType>("all");

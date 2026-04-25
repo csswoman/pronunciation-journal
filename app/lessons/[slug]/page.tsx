@@ -9,7 +9,7 @@ import {
   deleteTheoryLesson,
   getAllTheoryLessons,
 } from "@/lib/theory-lessons/queries";
-import LessonsSidebar, { type Filters } from "@/components/LessonsSidebar";
+import LessonsSidebar, { type Filters } from "@/components/layout/LessonsSidebar";
 import LessonMarkdown from "@/components/lessons/LessonMarkdown";
 import NotionBlockContent from "@/components/lessons/NotionBlockContent";
 import { useScrollProgress } from "@/hooks/useScrollProgress";

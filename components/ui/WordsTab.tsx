@@ -3,10 +3,10 @@ import Button from "@/components/ui/Button";
 
 import { useMemo } from "react";
 import { Entry, Difficulty } from "@/lib/types";
-import SearchAndFilters from "./SearchAndFilters";
-import AddWordSection from "./AddWordSection";
-import DifficultyFilters from "./DifficultyFilters";
-import EntriesList from "./EntriesList";
+import SearchAndFilters from "@/components/ui/SearchAndFilters";
+import AddWordSection from "@/components/entries/AddWordSection";
+import DifficultyFilters from "@/components/ui/DifficultyFilters";
+import EntriesList from "@/components/entries/EntriesList";
 
 interface WordsTabProps {
   entries: Entry[];

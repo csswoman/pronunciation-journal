@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
-import { useAuth } from "@/components/AuthProvider";
+import { useAuth } from "@/components/auth/AuthProvider";
 
 export type UserRole = "free" | "premium" | "admin";
 

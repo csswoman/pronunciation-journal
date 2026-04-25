@@ -4,14 +4,14 @@ import { useState, useEffect } from "react";
 import { Entry, Difficulty } from "@/lib/types";
 import { getEntries, deleteEntry } from "@/lib/storage";
 import { cleanupBlobUrls } from "@/lib/cleanupStorage";
-import Navbar from "./Navbar";
-import Header from "./Header";
-import Footer from "./Footer";
-import MainContent from "./MainContent";
-import ApiWordModal from "./ApiWordModal";
-import WordsTab from "./WordsTab";
-import DecksTab from "./DecksTab";
-import IPAChart from "./IPAChart";
+import Navbar from "@/components/layout/Navbar";
+import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
+import MainContent from "@/components/layout/MainContent";
+import ApiWordModal from "@/components/entries/ApiWordModal";
+import WordsTab from "@/components/ui/WordsTab";
+import DecksTab from "@/components/decks/DecksTab";
+import IPAChart from "@/components/ipa/IPAChart";
 
 export default function JournalContainer() {
   const [entries, setEntries] = useState<Entry[]>([]);

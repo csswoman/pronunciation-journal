@@ -1,4 +1,4 @@
-import ProfileSettings from "@/components/ProfileSettings";
+import ProfileSettings from "@/components/ui/ProfileSettings";
 
 export const metadata = {
   title: "Profile Settings - Pronunciation Journal",

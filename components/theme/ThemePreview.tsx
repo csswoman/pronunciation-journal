@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import ThemedButton from "./ThemedButton";
+import ThemedButton from "@/components/ui/ThemedButton";
 
 export default function ThemePreview({ name }: { name?: string }) {
   return (

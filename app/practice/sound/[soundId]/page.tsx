@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react'
 import { useParams } from 'next/navigation'
-import { useAuth } from '@/components/AuthProvider'
+import { useAuth } from "@/components/auth/AuthProvider"
 import { ExerciseCard } from '@/components/phoneme-practice/ExerciseCard'
 import { PickWordExercise } from '@/components/phoneme-practice/PickWordExercise'
 import { PickSoundExercise } from '@/components/phoneme-practice/PickSoundExercise'

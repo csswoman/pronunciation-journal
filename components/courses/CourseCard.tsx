@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { BookOpen } from "lucide-react";
 import type { Course } from "@/lib/notion/types";
+import ProgressBar from "@/components/ui/ProgressBar";
 
 type CourseCardModel = Course & {
   completedLessons?: number;
@@ -117,24 +118,13 @@ export default function CourseCard({ course, priority = false }: CourseCardProps
 
         {/* Progress bar + percentage — only when in progress or completed */}
         {totalLessons > 0 && (isInProgress || isCompleted) && (
-          <div className="space-y-1 pt-1">
-            <div className="flex items-center gap-2">
-              <div className="h-1 flex-1 overflow-hidden rounded-full bg-[var(--btn-regular-bg)]">
-                <div
-                  className="h-full rounded-full transition-all duration-700 ease-out"
-                  style={{
-                    width: `${progress}%`,
-                    background: isCompleted ? `oklch(.65 .14 150)` : `var(--primary)`,
-                  }}
-                />
-              </div>
-              <span
-                className="text-[10px] tabular-nums font-medium"
-                style={{ color: isCompleted ? `oklch(.6 .13 150)` : `var(--primary)` }}
-              >
-                {progress}%
-              </span>
-            </div>
+          <div className="pt-1">
+            <ProgressBar
+              value={progress}
+              color={isCompleted ? "oklch(.65 .14 150)" : "var(--primary)"}
+              height="xs"
+              showLabel
+            />
           </div>
         )}
 

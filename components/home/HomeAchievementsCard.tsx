@@ -2,6 +2,9 @@
 
 import Link from "next/link";
 import { Trophy, Check, ChevronRight } from "lucide-react";
+import Card from "@/components/layout/Card";
+import CardHeader from "@/components/ui/CardHeader";
+import ProgressBar from "@/components/ui/ProgressBar";
 import type { Achievement } from "@/lib/home-stats";
 
 interface HomeAchievementsCardProps {
@@ -11,17 +14,16 @@ interface HomeAchievementsCardProps {
 export default function HomeAchievementsCard({ achievements = [] }: HomeAchievementsCardProps) {
   const displayAchievements = achievements.slice(0, 3);
   return (
-    <div className="rounded-2xl border border-[var(--line-divider)] bg-[var(--card-bg)] p-5 flex flex-col gap-4">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Trophy size={17} className="text-amber-400" />
-          <span className="text-base font-semibold text-[var(--deep-text)]">Achievements</span>
-        </div>
-        <Link href="/progress" className="text-sm font-medium text-[var(--primary)] hover:underline">
-          View all
-        </Link>
-      </div>
+    <Card variant="compact" className="gap-4">
+      <CardHeader
+        icon={<Trophy size={17} className="text-amber-400" />}
+        title="Achievements"
+        right={
+          <Link href="/progress" className="text-sm font-medium text-[var(--primary)] hover:underline">
+            View all
+          </Link>
+        }
+      />
 
       {/* List */}
       <div className="flex flex-col gap-4">
@@ -44,12 +46,7 @@ export default function HomeAchievementsCard({ achievements = [] }: HomeAchievem
                   <p className="text-xs text-[var(--text-tertiary)] mt-0.5">{a.description}</p>
                   {!isUnlocked && a.progress !== undefined && a.target && (
                     <div className="mt-2 flex items-center gap-2">
-                      <div className="h-1.5 flex-1 rounded-full bg-[var(--btn-regular-bg)] overflow-hidden">
-                        <div
-                          className="h-full rounded-full bg-[var(--primary)] transition-all duration-700"
-                          style={{ width: `${Math.round(progressPercent)}%` }}
-                        />
-                      </div>
+                      <ProgressBar value={progressPercent} height="xs" className="flex-1" />
                       <span className="text-[11px] tabular-nums font-medium text-[var(--text-tertiary)]">
                         {a.progress}/{a.target}
                       </span>
@@ -80,6 +77,6 @@ export default function HomeAchievementsCard({ achievements = [] }: HomeAchievem
           <ChevronRight size={15} />
         </Link>
       )}
-    </div>
+    </Card>
   );
 }

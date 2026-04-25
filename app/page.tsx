@@ -7,7 +7,7 @@ import HomeProgressCard from "@/components/home/HomeProgressCard";
 import HomePracticeCard from "@/components/home/HomePracticeCard";
 import HomeCoursesSection from "@/components/home/HomeCoursesSection";
 import { getWeeklyProgress, getStreakData, getAchievements, type Achievement } from "@/lib/home-stats";
-import { getSupabaseUserId } from "@/lib/supabase/session";
+import { getSupabaseServerUserId } from "@/lib/supabase/session";
 
 export default async function HomePage() {
   let userId: string | null = null;
@@ -15,15 +15,17 @@ export default async function HomePage() {
   let streakData = { currentStreak: 0, activeDays: [false, false, false, false, false, false, false] };
   let achievements: Achievement[] = [];
 
-  try {
-    userId = await getSupabaseUserId();
-    [weeklyProgress, streakData, achievements] = await Promise.all([
-      getWeeklyProgress(userId),
-      getStreakData(userId),
-      getAchievements(userId),
-    ]);
-  } catch (error) {
-    console.error("Error loading home stats:", error);
+  userId = await getSupabaseServerUserId();
+  if (userId) {
+    try {
+      [weeklyProgress, streakData, achievements] = await Promise.all([
+        getWeeklyProgress(userId),
+        getStreakData(userId),
+        getAchievements(userId),
+      ]);
+    } catch (error) {
+      console.error("Error loading home stats:", error);
+    }
   }
 
   return (

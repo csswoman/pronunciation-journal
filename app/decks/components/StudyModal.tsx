@@ -4,7 +4,7 @@ import Button from "@/components/ui/Button";
 import { useEffect, useState, useCallback } from "react";
 import { X, ChevronLeft, Volume2 } from "lucide-react";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
-import { useAuth } from "@/components/AuthProvider";
+import { useAuth } from "@/components/auth/AuthProvider";
 import type { Tables } from "@/lib/supabase/types";
 
 type Deck = Tables<"decks">;

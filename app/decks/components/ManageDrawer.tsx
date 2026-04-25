@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState, useCallback } from "react";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
-import { useAuth } from "@/components/AuthProvider";
+import { useAuth } from "@/components/auth/AuthProvider";
 import { GeminiSuggestPanel } from "./GeminiSuggestPanel";
 import { DrawerHeader } from "./DrawerHeader";
 import { EntryList } from "./EntryList";

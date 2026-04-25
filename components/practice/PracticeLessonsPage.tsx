@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import { useAuth } from '@/components/AuthProvider'
+import { useAuth } from "@/components/auth/AuthProvider"
 import Section from '@/components/layout/Section'
 import PageLayout from '@/components/layout/PageLayout'
 import PageHeader from '@/components/layout/PageHeader'

@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { BarChart2, ArrowUpRight } from "lucide-react";
+import Card from "@/components/layout/Card";
+import CardHeader from "@/components/ui/CardHeader";
 
 const DAYS = ["M", "T", "W", "T", "F", "S", "S"];
 
@@ -19,17 +21,16 @@ export default function HomeProgressCard({
   const isPositive = weeklyChange >= 0;
 
   return (
-    <div className="rounded-2xl border border-[var(--line-divider)] bg-[var(--card-bg)] p-5 flex flex-col gap-4">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <BarChart2 size={17} className="text-[var(--primary)]" />
-          <span className="text-base font-semibold text-[var(--deep-text)]">Your Progress</span>
-        </div>
-        <Link href="/progress" className="text-sm font-medium text-[var(--text-tertiary)] hover:text-[var(--primary)] transition-colors">
-          This week
-        </Link>
-      </div>
+    <Card variant="compact" className="gap-4">
+      <CardHeader
+        icon={<BarChart2 size={17} className="text-[var(--primary)]" />}
+        title="Your Progress"
+        right={
+          <Link href="/progress" className="text-sm font-medium text-[var(--text-tertiary)] hover:text-[var(--primary)] transition-colors">
+            This week
+          </Link>
+        }
+      />
 
       <div className="flex items-end gap-5">
         {/* Count */}
@@ -62,6 +63,6 @@ export default function HomeProgressCard({
           ))}
         </div>
       </div>
-    </div>
+    </Card>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import Button from "@/components/ui/Button";
-import SuggestionsDropdown from "@/components/SuggestionsDropdown";
+import SuggestionsDropdown from "@/components/ui/SuggestionsDropdown";
 import { WordSuggestion } from "@/lib/dictionarySearch";
 import { RefObject } from "react";
 
