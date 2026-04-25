@@ -1,12 +1,41 @@
 import { createHash } from "crypto";
 import { GoogleGenAI } from "@google/genai";
-import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
+import { requireUser, rateLimit, validateBody } from "@/lib/api/guards";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 
-interface TranscribeBody {
-  audioDataUrl?: string;
-  targetWord?: string;
-}
+// ---------------------------------------------------------------------------
+// Request schema
+// ---------------------------------------------------------------------------
+
+const ALLOWED_AUDIO_MIME_TYPES = new Set([
+  "audio/webm",
+  "audio/ogg",
+  "audio/wav",
+  "audio/mp4",
+  "audio/mpeg",
+  "audio/aac",
+  "audio/flac",
+  "audio/opus",
+  "audio/webm;codecs=opus",
+  "audio/ogg;codecs=opus",
+]);
+
+const TranscribeSchema = z.object({
+  audioDataUrl: z
+    .string()
+    .min(1)
+    .max(2_000_000, "Audio payload too large") // ~1.5 MB base64
+    .refine((v) => v.startsWith("data:audio/"), {
+      message: "audioDataUrl must be an audio data URI",
+    }),
+  targetWord: z.string().max(100).optional(),
+});
+
+// ---------------------------------------------------------------------------
+// Model configuration
+// ---------------------------------------------------------------------------
 
 const ENABLE_PREVIEW_MODELS = process.env.GEMINI_ENABLE_PREVIEW_MODELS === "true";
 const BASE_MODELS = [
@@ -19,9 +48,14 @@ const FALLBACK_MODELS = ENABLE_PREVIEW_MODELS
   ? [...BASE_MODELS, ...PREVIEW_MODELS]
   : [...BASE_MODELS];
 
+// ---------------------------------------------------------------------------
+// In-memory cache (L1)
+// ---------------------------------------------------------------------------
+
 const TRANSCRIBE_CACHE_TTL_MS = 1000 * 60 * 60 * 6;
 const MAX_TRANSCRIBE_CACHE_ENTRIES = 400;
 const transcribeCache = new Map<string, { transcript: string; createdAt: number }>();
+
 const SUPABASE_STT_CACHE_TABLE = "stt_transcription_cache";
 
 type SttCacheRow = {
@@ -30,12 +64,12 @@ type SttCacheRow = {
   mime_type: string;
   transcript: string;
   payload_size: number;
-  hit_count: number;
-  created_at: string;
   updated_at: string;
 };
 
-let supabaseAdminClient: SupabaseClient | null = null;
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
 
 function getErrorStatus(err: unknown): number | undefined {
   if (!err || typeof err !== "object") return undefined;
@@ -50,7 +84,6 @@ function shouldTryNextModel(err: unknown): boolean {
   if (status === 400 || status === 401 || status === 403) return false;
   if (status === 404 || status === 408 || status === 409 || status === 425 || status === 429) return true;
   if (typeof status === "number" && status >= 500) return true;
-
   const message = String((err as { message?: unknown })?.message ?? "").toLowerCase();
   return (
     message.includes("not found") ||
@@ -64,24 +97,23 @@ function shouldTryNextModel(err: unknown): boolean {
 }
 
 function parseDataUrl(dataUrl: string): { mimeType: string; base64Data: string } {
-  const match = dataUrl.match(/^data:([^;]+);base64,(.+)$/);
-  if (!match) {
-    throw new Error("Invalid audio data URL");
+  const match = dataUrl.match(/^data:([^;,]+(?:;[^,]+)?);base64,(.+)$/);
+  if (!match) throw new Error("Invalid audio data URL");
+  const mimeType = match[1].toLowerCase();
+  if (!ALLOWED_AUDIO_MIME_TYPES.has(mimeType)) {
+    throw new Error(`Unsupported audio format: ${mimeType}`);
   }
-  return {
-    mimeType: match[1],
-    base64Data: match[2],
-  };
+  return { mimeType, base64Data: match[2] };
 }
 
-function buildTranscribeCacheKey(targetWord: string | undefined, mimeType: string, base64Data: string): string {
+function buildCacheKey(targetWord: string | undefined, mimeType: string, base64Data: string): string {
   return createHash("sha256")
     .update(`${targetWord ?? ""}|${mimeType}|`)
     .update(base64Data)
     .digest("hex");
 }
 
-function getCachedTranscription(key: string): string | null {
+function getL1Cached(key: string): string | null {
   const cached = transcribeCache.get(key);
   if (!cached) return null;
   if (Date.now() - cached.createdAt > TRANSCRIBE_CACHE_TTL_MS) {
@@ -91,7 +123,7 @@ function getCachedTranscription(key: string): string | null {
   return cached.transcript;
 }
 
-function setCachedTranscription(key: string, transcript: string): void {
+function setL1Cache(key: string, transcript: string): void {
   if (transcribeCache.size >= MAX_TRANSCRIBE_CACHE_ENTRIES) {
     const oldest = transcribeCache.keys().next().value;
     if (oldest) transcribeCache.delete(oldest);
@@ -99,73 +131,64 @@ function setCachedTranscription(key: string, transcript: string): void {
   transcribeCache.set(key, { transcript, createdAt: Date.now() });
 }
 
-function getSupabaseAdminClient(): SupabaseClient | null {
-  if (supabaseAdminClient) return supabaseAdminClient;
+// ---------------------------------------------------------------------------
+// Supabase STT cache — uses the user's session client (RLS enforced)
+// ---------------------------------------------------------------------------
 
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceRole = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!url || !serviceRole) {
+async function getL2Cached(key: string): Promise<string | null> {
+  try {
+    const supabase = await createSupabaseServerClient();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const db = supabase as any;
+    const { data, error } = await db
+      .from(SUPABASE_STT_CACHE_TABLE)
+      .select("transcript, updated_at")
+      .eq("cache_key", key)
+      .maybeSingle() as { data: Pick<SttCacheRow, "transcript" | "updated_at"> | null; error: unknown };
+
+    if (error || !data) return null;
+
+    const ageMs = Date.now() - new Date(data.updated_at).getTime();
+    if (Number.isFinite(ageMs) && ageMs > TRANSCRIBE_CACHE_TTL_MS) {
+      void db.from(SUPABASE_STT_CACHE_TABLE).delete().eq("cache_key", key);
+      return null;
+    }
+
+    return data.transcript;
+  } catch {
     return null;
   }
-
-  supabaseAdminClient = createClient(url, serviceRole, {
-    auth: { persistSession: false, autoRefreshToken: false },
-  });
-  return supabaseAdminClient;
 }
 
-async function getCachedTranscriptionFromSupabase(key: string): Promise<string | null> {
-  const supabase = getSupabaseAdminClient();
-  if (!supabase) return null;
-
-  const { data, error } = await supabase
-    .from(SUPABASE_STT_CACHE_TABLE)
-    .select("cache_key, transcript, updated_at")
-    .eq("cache_key", key)
-    .maybeSingle<Pick<SttCacheRow, "cache_key" | "transcript" | "updated_at">>();
-
-  if (error) {
-    console.warn("[STT cache] Supabase read failed:", error.message);
-    return null;
-  }
-  if (!data) return null;
-
-  const ageMs = Date.now() - new Date(data.updated_at).getTime();
-  if (Number.isFinite(ageMs) && ageMs > TRANSCRIBE_CACHE_TTL_MS) {
-    // Fire-and-forget cleanup for expired rows.
-    void supabase.from(SUPABASE_STT_CACHE_TABLE).delete().eq("cache_key", key);
-    return null;
-  }
-
-  return data.transcript;
-}
-
-async function saveCachedTranscriptionToSupabase(
+async function setL2Cache(
   key: string,
   transcript: string,
   targetWord: string | undefined,
   mimeType: string,
   payloadSize: number
 ): Promise<void> {
-  const supabase = getSupabaseAdminClient();
-  if (!supabase) return;
-
-  const { error } = await supabase.from(SUPABASE_STT_CACHE_TABLE).upsert(
-    {
-      cache_key: key,
-      target_word: targetWord ?? null,
-      mime_type: mimeType,
-      transcript,
-      payload_size: payloadSize,
-      updated_at: new Date().toISOString(),
-    },
-    { onConflict: "cache_key" }
-  );
-
-  if (error) {
-    console.warn("[STT cache] Supabase write failed:", error.message);
+  try {
+    const supabase = await createSupabaseServerClient();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await (supabase as any).from(SUPABASE_STT_CACHE_TABLE).upsert(
+      {
+        cache_key: key,
+        target_word: targetWord ?? null,
+        mime_type: mimeType,
+        transcript,
+        payload_size: payloadSize,
+        updated_at: new Date().toISOString(),
+      },
+      { onConflict: "cache_key" }
+    );
+  } catch {
+    // Cache write is non-critical; ignore failures silently
   }
 }
+
+// ---------------------------------------------------------------------------
+// Transcription
+// ---------------------------------------------------------------------------
 
 async function transcribeWithFallback(
   ai: GoogleGenAI,
@@ -184,19 +207,10 @@ async function transcribeWithFallback(
         model: modelName,
         contents: [
           { text: prompt },
-          {
-            inlineData: {
-              mimeType,
-              data: base64Data,
-            },
-          },
+          { inlineData: { mimeType, data: base64Data } },
         ],
-        config: {
-          temperature: 0,
-          maxOutputTokens: 24,
-        },
+        config: { temperature: 0, maxOutputTokens: 24 },
       });
-
       return (result.text ?? "").trim();
     } catch (err: unknown) {
       lastError = err;
@@ -207,41 +221,54 @@ async function transcribeWithFallback(
   throw lastError ?? new Error("All fallback models failed");
 }
 
+// ---------------------------------------------------------------------------
+// Route handler
+// ---------------------------------------------------------------------------
+
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  // 1. Auth
+  const { user, error: authError } = await requireUser();
+  if (authError) return authError as NextResponse;
+
+  // 2. Rate limit — tighter for transcription (costs more per call)
+  const { limited, error: rateLimitError } = rateLimit(`/api/gemini/transcribe:${user.id}`, {
+    max: 20,
+    windowMs: 60_000,
+    meta: { endpoint: "/api/gemini/transcribe", userId: user.id },
+  });
+  if (limited) return rateLimitError as NextResponse;
+
+  // 3. Validate body
+  const { data: body, error: validationError } = await validateBody(request, TranscribeSchema);
+  if (validationError) return validationError as NextResponse;
+
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
-    return NextResponse.json({ error: "API key not configured" }, { status: 500 });
+    return NextResponse.json({ error: "AI service unavailable" }, { status: 503 });
   }
 
   try {
-    const body: TranscribeBody = await request.json();
-    if (!body.audioDataUrl) {
-      return NextResponse.json({ error: "audioDataUrl is required" }, { status: 400 });
-    }
-
     const { mimeType, base64Data } = parseDataUrl(body.audioDataUrl);
-    const cacheKey = buildTranscribeCacheKey(body.targetWord, mimeType, base64Data);
-    const cached = getCachedTranscription(cacheKey);
-    if (cached !== null) {
-      return NextResponse.json({ transcript: cached, cached: true });
+    const cacheKey = buildCacheKey(body.targetWord, mimeType, base64Data);
+
+    // L1 in-memory cache
+    const l1 = getL1Cached(cacheKey);
+    if (l1 !== null) return NextResponse.json({ transcript: l1, cached: true });
+
+    // L2 Supabase cache
+    const l2 = await getL2Cached(cacheKey);
+    if (l2 !== null) {
+      setL1Cache(cacheKey, l2);
+      return NextResponse.json({ transcript: l2, cached: true, source: "supabase" });
     }
 
-    const cachedFromSupabase = await getCachedTranscriptionFromSupabase(cacheKey);
-    if (cachedFromSupabase !== null) {
-      setCachedTranscription(cacheKey, cachedFromSupabase);
-      return NextResponse.json({ transcript: cachedFromSupabase, cached: true, source: "supabase" });
-    }
-
+    // Call Gemini
     const ai = new GoogleGenAI({ apiKey });
     const transcript = await transcribeWithFallback(ai, mimeType, base64Data, body.targetWord);
-    setCachedTranscription(cacheKey, transcript);
-    await saveCachedTranscriptionToSupabase(
-      cacheKey,
-      transcript,
-      body.targetWord,
-      mimeType,
-      base64Data.length
-    );
+
+    setL1Cache(cacheKey, transcript);
+    void setL2Cache(cacheKey, transcript, body.targetWord, mimeType, base64Data.length);
+
     return NextResponse.json({ transcript });
   } catch (err: unknown) {
     const status = getErrorStatus(err) ?? 500;
