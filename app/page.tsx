@@ -6,12 +6,26 @@ import HomeAchievementsCard from "@/components/home/HomeAchievementsCard";
 import HomeProgressCard from "@/components/home/HomeProgressCard";
 import HomePracticeCard from "@/components/home/HomePracticeCard";
 import HomeCoursesSection from "@/components/home/HomeCoursesSection";
+import { getWeeklyProgress, getStreakData, getAchievements, type Achievement } from "@/lib/home-stats";
+import { getSupabaseUserId } from "@/lib/supabase/session";
 
-// Placeholder streak data — replace with real Supabase/Dexie data when available
-const STREAK = 7;
-const ACTIVE_DAYS = [true, true, true, true, true, true, false];
+export default async function HomePage() {
+  let userId: string | null = null;
+  let weeklyProgress = { lessonsThisWeek: 0, weeklyChange: 0, barData: [0, 0, 0, 0, 0, 0, 0] };
+  let streakData = { currentStreak: 0, activeDays: [false, false, false, false, false, false, false] };
+  let achievements: Achievement[] = [];
 
-export default function HomePage() {
+  try {
+    userId = await getSupabaseUserId();
+    [weeklyProgress, streakData, achievements] = await Promise.all([
+      getWeeklyProgress(userId),
+      getStreakData(userId),
+      getAchievements(userId),
+    ]);
+  } catch (error) {
+    console.error("Error loading home stats:", error);
+  }
+
   return (
     <PageLayout hero={<HomeHeader />}>
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-6">
@@ -23,9 +37,9 @@ export default function HomePage() {
           <HomePracticeCard />
         </div>
         <div className="flex flex-col gap-4">
-          <HomeStreakCard streak={STREAK} activeDays={ACTIVE_DAYS} />
-          <HomeAchievementsCard />
-          <HomeProgressCard lessonsThisWeek={8} weeklyChange={2} />
+          <HomeStreakCard streak={streakData.currentStreak} activeDays={streakData.activeDays} />
+          <HomeAchievementsCard achievements={achievements} />
+          <HomeProgressCard lessonsThisWeek={weeklyProgress.lessonsThisWeek} weeklyChange={weeklyProgress.weeklyChange} barData={weeklyProgress.barData} />
         </div>
       </div>
     </PageLayout>
