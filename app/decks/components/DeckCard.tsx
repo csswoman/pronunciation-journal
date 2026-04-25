@@ -2,6 +2,7 @@
 import { Play, Clock, Settings2, BookOpen } from "lucide-react";
 import Button from "@/components/ui/Button";
 import type { Tables } from "@/lib/supabase/types";
+import ProgressBar from "@/components/ui/ProgressBar";
 
 type Deck = Tables<"decks">;
 
@@ -69,12 +70,7 @@ export function DeckCard({
               <span className="text-[var(--text-secondary)]">Progress</span>
               <span className="text-[var(--text-tertiary)]">{progressPercent}%</span>
             </div>
-            <div className="w-full bg-[var(--btn-regular-bg)] rounded-full h-2 overflow-hidden">
-              <div
-                className="h-full transition-all duration-300 rounded-full"
-                style={{ width: `${progressPercent}%`, background: deck.color ?? "var(--primary)" }}
-              />
-            </div>
+            <ProgressBar value={progressPercent} color={deck.color ?? "var(--primary)"} height="md" />
           </div>
         )}
 

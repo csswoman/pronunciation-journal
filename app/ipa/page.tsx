@@ -3,7 +3,7 @@
 import Image from "next/image";
 import PageHeader from "@/components/layout/PageHeader";
 import PageLayout from "@/components/layout/PageLayout";
-import IPAChart from "@/components/IPAChart";
+import IPAChart from "@/components/ipa/IPAChart";
 
 export default function IPAPage() {
   return (

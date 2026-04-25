@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useEffect } from "react";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
-import { useAuth } from "@/components/AuthProvider";
+import { useAuth } from "@/components/auth/AuthProvider";
 
 export interface UserPreferencesData {
   full_name?: string;

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Image from 'next/image'
-import { useAuth } from '@/components/AuthProvider'
+import { useAuth } from "@/components/auth/AuthProvider"
 import { getSupabaseBrowserClient } from '@/lib/supabase/client'
 import Section from '@/components/layout/Section'
 import PageHeader from '@/components/layout/PageHeader'

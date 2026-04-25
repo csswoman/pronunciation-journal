@@ -1,6 +1,6 @@
 import { ReactNode, ComponentPropsWithoutRef } from "react";
 
-type CardVariant = "default" | "interactive" | "lesson" | "stat";
+type CardVariant = "default" | "interactive" | "lesson" | "stat" | "compact";
 
 interface CardProps extends ComponentPropsWithoutRef<"div"> {
   children: ReactNode;
@@ -28,6 +28,7 @@ export default function Card({
     lesson:
       "p-5 hover:shadow-md hover:translate-y-[-2px] cursor-pointer relative overflow-hidden",
     stat: "p-6 flex items-center gap-4",
+    compact: "p-5 flex flex-col",
   };
 
   const hoverClass = hoverable

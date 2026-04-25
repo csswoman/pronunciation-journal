@@ -1,6 +1,6 @@
 "use client";
 
-import { useAuth } from "./AuthProvider";
+import { useAuth } from "@/components/auth/AuthProvider";
 import Button from "@/components/ui/Button";
 
 interface HeaderProps {

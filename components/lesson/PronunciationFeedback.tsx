@@ -2,6 +2,7 @@
 
 import type { WordResult, PhonemeAlignment } from "@/lib/types";
 import { playIpaSound } from "@/lib/ipa-audio";
+import ProgressBar from "@/components/ui/ProgressBar";
 
 interface PronunciationFeedbackProps {
   wordResults: WordResult[];
@@ -119,20 +120,17 @@ export default function PronunciationFeedback({
       </div>
 
       {/* Accuracy bar */}
-      <div className="w-full rounded-full h-2 overflow-hidden" style={{ backgroundColor: "var(--line-divider)" }}>
-        <div
-          className="h-full rounded-full transition-all duration-1000 ease-out"
-          style={{
-            width: `${accuracy}%`,
-            backgroundColor:
-              accuracy >= 80
-                ? "var(--admonitions-color-tip)"
-                : accuracy >= 60
-                ? "var(--admonitions-color-warning)"
-                : "var(--admonitions-color-caution)",
-          }}
-        />
-      </div>
+      <ProgressBar
+        value={accuracy}
+        height="md"
+        color={
+          accuracy >= 80
+            ? "var(--admonitions-color-tip)"
+            : accuracy >= 60
+            ? "var(--admonitions-color-warning)"
+            : "var(--admonitions-color-caution)"
+        }
+      />
 
       {/* Word results */}
       <div className="space-y-2">

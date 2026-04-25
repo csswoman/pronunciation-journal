@@ -1,11 +1,11 @@
 "use client";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { useAuth } from "./AuthProvider";
+import { useAuth } from "@/components/auth/AuthProvider";
 import { useUserRole } from "@/hooks/useUserRole";
-import ThemeControl from "./ThemeControl";
+import ThemeControl from "@/components/theme/ThemeControl";
 import { LogOut } from "lucide-react";
-import { NavSection, NavButton, NavLink, coreNav, learningNav, trackingNav, adminNav } from "./sidebar/index";
+import { NavSection, NavButton, NavLink, coreNav, learningNav, trackingNav, adminNav } from "../sidebar/index";
 
 interface SidebarProps {
   className?: string;

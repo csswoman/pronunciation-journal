@@ -4,7 +4,7 @@ import Button from "@/components/ui/Button";
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { useUserPreferences } from "@/hooks/useUserPreferences";
-import { useAuth } from "@/components/AuthProvider";
+import { useAuth } from "@/components/auth/AuthProvider";
 
 const CROP_SIZE = 250;
 

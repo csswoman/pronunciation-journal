@@ -1,11 +1,11 @@
 "use client";
 
-import EntryDetails from "@/components/EntryDetails";
-import EntryFeedback from "@/components/EntryFeedback";
-import EntryFormActions from "@/components/EntryFormActions";
-import EntryFormControls from "@/components/EntryFormControls";
-import EntryIpaField from "@/components/EntryIpaField";
-import EntryWordField from "@/components/EntryWordField";
+import EntryDetails from "@/components/entries/EntryDetails";
+import EntryFeedback from "@/components/entries/EntryFeedback";
+import EntryFormActions from "@/components/entries/EntryFormActions";
+import EntryFormControls from "@/components/entries/EntryFormControls";
+import EntryIpaField from "@/components/entries/EntryIpaField";
+import EntryWordField from "@/components/entries/EntryWordField";
 import { useEntryForm } from "@/hooks/useEntryForm";
 import { Entry } from "@/lib/types";
 

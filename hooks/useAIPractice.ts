@@ -6,7 +6,7 @@ import type { StartRoleplayArgs } from "@/lib/ai-practice/tools/registry";
 import { getUserLearningState } from "@/lib/ai-practice/load-state";
 import type { UserLearningState } from "@/lib/ai-practice/learning-state";
 import type { AISavedWord, AIConversationMode } from "@/lib/types";
-import { useAuth } from "@/components/AuthProvider";
+import { useAuth } from "@/components/auth/AuthProvider";
 import { useStreamingChat } from "./useStreamingChat";
 import { useSavedWords, type SaveWordData } from "./useSavedWords";
 import { switchMode } from "@/lib/ai-practice/conversation-mode";

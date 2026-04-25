@@ -2,8 +2,8 @@
 
 import Button from "@/components/ui/Button";
 import { Entry } from "@/lib/types";
-import CompactRecorder from "./CompactRecorder";
-import AudioButton from "./AudioButton";
+import CompactRecorder from "@/components/ui/CompactRecorder";
+import AudioButton from "@/components/ui/AudioButton";
 
 export interface EntryHeaderProps {
   currentEntry: Entry;

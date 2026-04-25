@@ -3,12 +3,12 @@
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useAuth } from "@/components/AuthProvider";
+import { useAuth } from "@/components/auth/AuthProvider";
 import Container from "@/components/layout/Container";
 import Section from "@/components/layout/Section";
 import PageHeader from "@/components/layout/PageHeader";
-import LessonCard from "@/components/LessonCard";
-import LessonsSidebar, { type Filters } from "@/components/LessonsSidebar";
+import LessonCard from "@/components/lessons/LessonCard";
+import LessonsSidebar, { type Filters } from "@/components/layout/LessonsSidebar";
 import Button from "@/components/ui/Button";
 import {
   groupLessonsByLevel,

@@ -4,10 +4,10 @@ import Script from "next/script";
 import "./globals.css";
 import "./markdown.css";
 import { Plus_Jakarta_Sans, Noto_Sans } from "next/font/google";
-import Sidebar from "@/components/Sidebar";
+import Sidebar from "@/components/layout/Sidebar";
 import BottomNav from "@/components/layout/BottomNav";
-import AuthProvider from "@/components/AuthProvider";
-import { ThemeProvider } from "@/components/ThemeProvider";
+import AuthProvider from "@/components/auth/AuthProvider";
+import { ThemeProvider } from "@/components/theme/ThemeProvider";
 
 const plusJakarta = Plus_Jakarta_Sans({
   weight: ["400", "500", "600", "700", "800"],
