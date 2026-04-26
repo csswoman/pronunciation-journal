@@ -5,11 +5,12 @@ import type { ExerciseResult } from "@/lib/ai-practice/types";
 import type { StartRoleplayArgs } from "@/lib/ai-practice/tools/registry";
 import { getUserLearningState } from "@/lib/ai-practice/load-state";
 import type { UserLearningState } from "@/lib/ai-practice/learning-state";
-import type { AISavedWord, AIConversationMode } from "@/lib/types";
+import type { AISavedWord, AIConversation, AIConversationMode } from "@/lib/types";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { useStreamingChat } from "./useStreamingChat";
 import { useSavedWords, type SaveWordData } from "./useSavedWords";
 import { switchMode } from "@/lib/ai-practice/conversation-mode";
+import { deleteConversation } from "@/lib/ai-db";
 
 export type { SaveWordData };
 
@@ -31,6 +32,8 @@ interface UseAIPracticeReturn {
   loadSavedWords: () => Promise<void>;
   resetSession: () => void;
   changeMode: (next: AIConversationMode) => Promise<void>;
+  loadConversation: (conv: AIConversation) => void;
+  removeConversation: (id: number) => Promise<void>;
 }
 
 export function useAIPractice(): UseAIPracticeReturn {
@@ -91,6 +94,26 @@ export function useAIPractice(): UseAIPracticeReturn {
     words.setWordToSave(null);
   }, [chat, words]);
 
+  const loadConversation = useCallback((conv: AIConversation) => {
+    chat.resetChat();
+    words.setWordToSave(null);
+    setMode(conv.mode ?? "chat");
+    setConversationId(conv.id ?? null);
+    if (conv.mode?.startsWith("roleplay:")) {
+      setActiveRoleplay(conv.mode.slice("roleplay:".length) as StartRoleplayArgs["scenario"]);
+    } else {
+      setActiveRoleplay(null);
+    }
+    if (conv.messages.length > 0) {
+      chat.loadMessages(conv.messages as never);
+    }
+  }, [chat, words]);
+
+  const removeConversation = useCallback(async (id: number) => {
+    await deleteConversation(id);
+    if (conversationId === id) resetSession();
+  }, [conversationId, resetSession]);
+
   return {
     messages: chat.messages,
     isStreaming: chat.isStreaming,
@@ -109,5 +132,7 @@ export function useAIPractice(): UseAIPracticeReturn {
     loadSavedWords: words.loadSavedWords,
     resetSession,
     changeMode,
+    loadConversation,
+    removeConversation,
   };
 }
