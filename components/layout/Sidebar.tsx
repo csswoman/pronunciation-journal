@@ -1,11 +1,8 @@
 "use client";
-import Image from "next/image";
-import { usePathname, useRouter } from "next/navigation";
-import { useAuth } from "@/components/auth/AuthProvider";
+import { usePathname } from "next/navigation";
 import { useUserRole } from "@/hooks/useUserRole";
-import ThemeControl from "@/components/theme/ThemeControl";
-import { LogOut } from "lucide-react";
-import { NavSection, NavButton, NavLink, coreNav, learningNav, trackingNav, adminNav } from "../sidebar/index";
+import SidebarFooter from "./SidebarFooter";
+import { NavSection, NavLink, coreNav, learningNav, trackingNav, adminNav } from "../sidebar/index";
 
 interface SidebarProps {
   className?: string;
@@ -13,29 +10,7 @@ interface SidebarProps {
 
 export default function Sidebar({ className = "" }: SidebarProps) {
   const pathname = usePathname();
-  const router = useRouter();
-  const { user, signOutUser } = useAuth();
   const { isPremium } = useUserRole();
-
-  const displayName =
-    user?.user_metadata?.full_name ||
-    user?.user_metadata?.name ||
-    user?.email?.split("@")[0] ||
-    "Usuario";
-
-  const avatarUrl = user?.user_metadata?.avatar_url as string | undefined;
-
-  const initials = displayName
-    .split(" ")
-    .slice(0, 2)
-    .map((w: string) => w[0])
-    .join("")
-    .toUpperCase();
-
-  const handleSignOut = async () => {
-    await signOutUser();
-    router.push("/");
-  };
 
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
@@ -73,38 +48,7 @@ export default function Sidebar({ className = "" }: SidebarProps) {
         )}
       </nav>
 
-      {/* Footer */}
-      <div
-        className="flex-shrink-0 border-t px-3 pt-3 pb-4 space-y-0.5"
-        style={{ borderColor: "var(--line-divider)" }}
-      >
-        <NavButton active={isActive("/profile")} as="link" href="/profile">
-          <div
-            className="relative w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-bold overflow-hidden flex-shrink-0 ring-1"
-            style={{
-              background: "var(--btn-regular-bg)",
-              color: "var(--btn-content)",
-            }}
-          >
-            {avatarUrl ? (
-              <Image src={avatarUrl} alt={displayName} fill sizes="20px" className="object-cover" />
-            ) : (
-              initials
-            )}
-          </div>
-          <span className="relative truncate text-sm font-medium">{displayName}</span>
-        </NavButton>
-
-        <ThemeControl />
-
-        <NavButton active={false} onClick={handleSignOut}>
-          <span className="relative flex-shrink-0 opacity-50 group-hover:opacity-100 transition-opacity duration-150">
-            <LogOut className="h-4 w-4" />
-          </span>
-          <span className="relative group-hover:text-[var(--deep-text)] transition-colors duration-150">Sign out</span>
-        </NavButton>
-      </div>
+      <SidebarFooter />
     </aside>
   );
 }
-

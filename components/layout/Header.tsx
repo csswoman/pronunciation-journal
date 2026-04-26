@@ -12,8 +12,8 @@ export default function Header({ title }: HeaderProps) {
 
   const accountLabel = user
     ? (user as { is_anonymous?: boolean }).is_anonymous
-      ? "Invitado"
-      : user.email ?? "Usuario"
+      ? "Guest"
+      : user.email ?? "User"
     : "";
 
   return (
