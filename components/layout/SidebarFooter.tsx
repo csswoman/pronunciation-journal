@@ -7,15 +7,16 @@ import { createPortal } from "react-dom";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { useOKLCHTheme } from "@/hooks/useOKLCHTheme";
 import { LogOut, User } from "lucide-react";
+import { useSidebar } from "@/components/sidebar/SidebarContext";
 
 export default function SidebarFooter() {
   const router = useRouter();
   const { user, signOutUser } = useAuth();
+  const { collapsed } = useSidebar();
   const [open, setOpen] = useState(false);
   const [panelPos, setPanelPos] = useState({ top: 0, left: 0 });
   const footerRef = useRef<HTMLDivElement>(null);
   const leaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-
   const displayName =
     user?.user_metadata?.full_name ||
     user?.user_metadata?.name ||
@@ -73,7 +74,7 @@ export default function SidebarFooter() {
     >
       {/* User row */}
       <button
-        className="flex items-center gap-2.5 px-3 h-9 w-full rounded-lg text-sm font-medium transition-all duration-150 text-[var(--text-primary)]"
+        className={`flex items-center ${collapsed ? "justify-center w-9 h-9 mx-auto" : "gap-2.5 px-3 w-full h-9"} rounded-lg text-sm font-medium transition-all duration-200 text-[var(--text-primary)] group relative`}
         style={{ background: open ? "var(--btn-regular-bg-hover)" : undefined }}
       >
         <div
@@ -90,7 +91,7 @@ export default function SidebarFooter() {
             initials
           )}
         </div>
-        <span className="truncate text-sm font-medium">{displayName}</span>
+        {!collapsed && <span className="truncate text-sm font-medium">{displayName}</span>}
       </button>
 
       {/* Portal panel */}
