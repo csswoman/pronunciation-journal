@@ -281,6 +281,10 @@
   font-family: var(--font-heading), sans-serif;
 }
 
+.font-ipa {
+  font-family: var(--font-ipa), "Noto Serif", serif;
+}
+
 /* ── Dynamic Color Utility Classes ─────────────────────────────────────── */
 /* Text Colors */
 .text-primary { color: var(--primary); }

@@ -3,22 +3,27 @@
 import Script from "next/script";
 import "./globals.css";
 import "./markdown.css";
-import { Plus_Jakarta_Sans, Noto_Sans } from "next/font/google";
+import { Noto_Sans, Noto_Serif } from "next/font/google";
 import { usePathname } from "next/navigation";
 import Sidebar from "@/components/layout/Sidebar";
 import BottomNav from "@/components/layout/BottomNav";
 import AuthProvider from "@/components/auth/AuthProvider";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
 
-const plusJakarta = Plus_Jakarta_Sans({
+const notoSans = Noto_Sans({
+  weight: ["400", "500", "600", "700", "800"],
+  subsets: ["latin"],
+  variable: "--font-sans",
+});
+const notoHeading = Noto_Sans({
   weight: ["400", "500", "600", "700", "800"],
   subsets: ["latin"],
   variable: "--font-heading",
 });
-const notoSans = Noto_Sans({
-  weight: ["400", "500", "600"],
+const notoSerif = Noto_Serif({
+  weight: ["400", "700"],
   subsets: ["latin"],
-  variable: "--font-sans",
+  variable: "--font-ipa",
 });
 
 function AppShell({ children }: { children: React.ReactNode }) {
@@ -49,7 +54,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${plusJakarta.variable} ${notoSans.variable}`}
+      className={`${notoHeading.variable} ${notoSans.variable} ${notoSerif.variable}`}
     >
       <head>
         <meta charSet="utf-8" />
