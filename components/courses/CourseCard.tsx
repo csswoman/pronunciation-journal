@@ -67,7 +67,7 @@ export default function CourseCard({ course, priority = false }: CourseCardProps
   return (
     <Link
       href={`/courses/${course.slug}`}
-      className="group flex flex-col rounded-xl border border-[var(--line-divider)] bg-[var(--card-bg)] overflow-hidden transition-all duration-200 hover:shadow-sm hover:border-[var(--line-color)] hover:-translate-y-px"
+      className="group flex flex-col h-full w-full rounded-xl border border-[var(--line-divider)] bg-[var(--card-bg)] overflow-hidden transition-all duration-200 hover:shadow-sm hover:border-[var(--line-color)] hover:-translate-y-px"
     >
       {/* Cover — decorative only */}
       <div

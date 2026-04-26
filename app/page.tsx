@@ -30,18 +30,21 @@ export default async function HomePage() {
 
   return (
     <PageLayout hero={<HomeHeader />}>
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-6">
-        <div className="flex flex-col gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-8 items-start">
+        {/* Main column */}
+        <div className="flex flex-col gap-6 min-w-0">
           <section>
             <SectionHeader title="Your Courses" viewAllHref="/courses" />
             <HomeCoursesSection />
           </section>
           <HomePracticeCard />
         </div>
+
+        {/* Sidebar */}
         <div className="flex flex-col gap-4">
           <HomeStreakCard streak={streakData.currentStreak} activeDays={streakData.activeDays} />
-          <HomeAchievementsCard achievements={achievements} />
           <HomeProgressCard lessonsThisWeek={weeklyProgress.lessonsThisWeek} weeklyChange={weeklyProgress.weeklyChange} barData={weeklyProgress.barData} />
+          <HomeAchievementsCard achievements={achievements} />
         </div>
       </div>
     </PageLayout>

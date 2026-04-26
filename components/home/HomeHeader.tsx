@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { Play, Sparkles } from "lucide-react";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { useSoundProgress } from "@/hooks/useSoundProgress";
+import { useUserPreferences } from "@/hooks/useUserPreferences";
 import ConversationIllustration from "@/components/illustrations/ConversationIllustration";
 import PageHeader from "@/components/layout/PageHeader";
 
@@ -11,8 +12,10 @@ export default function HomeHeader() {
   const router = useRouter();
   const { user } = useAuth();
   const { progressList } = useSoundProgress(user?.id);
+  const { preferences } = useUserPreferences();
 
-  const userName = user?.user_metadata?.display_name || user?.email?.split("@")[0] || "Guest";
+  const fullName = preferences?.full_name || user?.email?.split("@")[0] || "Guest";
+  const userName = fullName.split(" ")[0];
   const hasStartedLearning = progressList.length > 0;
 
   return (
