@@ -31,6 +31,7 @@ const variantStyles: Record<ButtonVariant, string> = {
     bg-[var(--primary-500)]
     text-[var(--on-primary)]
     border border-transparent
+    shadow-sm hover:shadow-md
     hover:bg-[var(--primary-600)]
     focus:ring-[var(--primary-400)]
   `,
@@ -39,19 +40,23 @@ const variantStyles: Record<ButtonVariant, string> = {
     bg-[var(--bg-secondary)]
     text-[var(--text-primary)]
     border border-[var(--border)]
+    shadow-sm hover:shadow-md
     hover:bg-[var(--bg-tertiary)]
   `,
 
   ghost: `
     bg-transparent
     text-[var(--text-secondary)]
+    shadow-none
     hover:bg-[var(--bg-secondary)]
+    hover:text-[var(--text-primary)]
   `,
 
   danger: `
     bg-[var(--error)]
     text-[var(--on-primary)]
     border border-transparent
+    shadow-sm hover:shadow-md
     hover:brightness-105
     focus:ring-[var(--error)]
   `,
@@ -60,6 +65,7 @@ const variantStyles: Record<ButtonVariant, string> = {
     bg-[var(--success)]
     text-[var(--on-primary)]
     border border-transparent
+    shadow-sm hover:shadow-md
     hover:brightness-105
     focus:ring-[var(--success)]
   `,
@@ -68,6 +74,7 @@ const variantStyles: Record<ButtonVariant, string> = {
     bg-transparent
     text-[var(--text-primary)]
     border border-[var(--border)]
+    shadow-sm hover:shadow-md
     hover:bg-[var(--bg-secondary)]
   `,
 
@@ -75,6 +82,7 @@ const variantStyles: Record<ButtonVariant, string> = {
     bg-transparent
     text-[var(--text-secondary)]
     border-2 border-dashed border-[var(--border)]
+    shadow-none
     hover:border-[var(--primary-500)]
     hover:text-[var(--primary-500)]
   `,
@@ -83,12 +91,14 @@ const variantStyles: Record<ButtonVariant, string> = {
     bg-[var(--bg-secondary)]
     text-[var(--text-secondary)]
     border border-transparent
+    shadow-none
     hover:bg-[var(--bg-tertiary)]
   `,
 
   segmented: `
     bg-transparent
     text-[var(--text-secondary)]
+    shadow-none
     hover:bg-[var(--bg-secondary)]
   `,
 
@@ -130,21 +140,19 @@ export default function Button({
   type = "button",
   ...props
 }: ButtonProps) {
-  const isIconOnly = size === "icon" || size === "iconLg";
-
   const base = [
     "inline-flex items-center justify-center font-medium",
     "transition-all duration-200 ease-out",
     "focus:outline-none focus:ring-4 focus:ring-opacity-30",
     "active:scale-[0.97] active:brightness-95",
-    "shadow-sm hover:shadow-md",
 
-    disabled
-      ? "bg-[var(--bg-secondary)] text-[var(--text-tertiary)] border border-[var(--border)] cursor-not-allowed pointer-events-none"
-      : "hover:-translate-y-0.5",
+    !disabled && "hover:-translate-y-0.5",
 
     variantStyles[variant],
     sizeStyles[size],
+
+    disabled &&
+      "!bg-[var(--bg-secondary)] !text-[var(--text-tertiary)] !border !border-[var(--border)] cursor-not-allowed pointer-events-none opacity-60",
     fullWidth ? "w-full" : "",
     selected && selectedStyles[variant] ? selectedStyles[variant] : "",
   ]
@@ -162,7 +170,7 @@ export default function Button({
         <span className="shrink-0 text-current opacity-90">{icon}</span>
       )}
 
-      {!isIconOnly && children}
+      {children}
 
       {icon && iconPosition === "right" && (
         <span className="shrink-0 text-current opacity-90">{icon}</span>

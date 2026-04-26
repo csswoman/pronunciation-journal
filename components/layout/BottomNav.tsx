@@ -1,6 +1,4 @@
 "use client";
-import Button from "@/components/ui/Button";
-
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
@@ -104,7 +102,7 @@ export default function BottomNav({ className = "" }: BottomNavProps) {
         />
       )}
       {showMenu && (
-        <div className="fixed bottom-16 left-4 right-4 bg-[var(--card-bg)]/90 backdrop-blur-md border border-[var(--line-divider)] rounded-2xl shadow-xl z-50 p-3">
+        <div className="fixed bottom-20 left-4 right-4 bg-[var(--card-bg)]/90 backdrop-blur-md border border-[var(--line-divider)] rounded-2xl shadow-xl z-50 p-3">
           <div className="grid grid-cols-2 gap-1.5">
             {menuItems.map((item) => (
               <Link
@@ -146,7 +144,7 @@ export default function BottomNav({ className = "" }: BottomNavProps) {
             </Link>
           );
         })}
-        <Button
+        <button
           onClick={() => setShowMenu(!showMenu)}
           className={`flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl text-[10px] font-semibold transition-all ${
             showMenu
@@ -158,7 +156,7 @@ export default function BottomNav({ className = "" }: BottomNavProps) {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
           </svg>
           Menu
-        </Button>
+        </button>
       </nav>
     </>
   );
