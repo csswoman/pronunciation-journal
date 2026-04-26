@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import { Sparkles, Users, TrendingUp, Heart } from "lucide-react";
 import { useAIPractice } from "@/hooks/useAIPractice";
 import PageLayout from "@/components/layout/PageLayout";
 import PageHeader from "@/components/layout/PageHeader";
@@ -30,6 +31,8 @@ export default function AIPracticePage() {
     deleteSavedWord,
     resetSession,
     changeMode,
+    loadConversation,
+    removeConversation,
   } = useAIPractice();
 
   const [inputPrefill, setInputPrefill] = useState<string | undefined>(undefined);
@@ -37,7 +40,7 @@ export default function AIPracticePage() {
 
   useEffect(() => {
     getRecentConversations(30).then(setConversations);
-  }, [messages.length]);
+  }, [messages.length, conversationId]);
 
   return (
     <>
@@ -62,16 +65,22 @@ export default function AIPracticePage() {
         }
       >
         <div
-          className="flex rounded-2xl overflow-hidden border"
+          className="flex flex-col gap-0 rounded-2xl overflow-hidden border"
           style={{
             borderColor: "var(--line-divider)",
             backgroundColor: "var(--card-bg)",
-            height: "min(680px, 72vh)",
+            height: "min(720px, 76vh)",
           }}
         >
+        <div className="flex flex-1 min-h-0">
           <AIPracticeSidebar
             grouped={groupConversationsByDate(conversations)}
             onNewSession={resetSession}
+            onSelectConversation={loadConversation}
+            onDeleteConversation={async (id) => {
+              await removeConversation(id);
+              setConversations((prev) => prev.filter((c) => c.id !== id));
+            }}
             activeConversationId={conversationId}
           />
 
@@ -99,9 +108,13 @@ export default function AIPracticePage() {
             }}
           />
         </div>
+
+        <FeatureFooter />
+        </div>
       </PageLayout>
 
       {wordToSave && (
+
         <SaveWordModal
           word={wordToSave.word}
           context={wordToSave.context}
@@ -110,5 +123,28 @@ export default function AIPracticePage() {
         />
       )}
     </>
+  );
+}
+
+const FEATURES = [
+  { icon: Sparkles, label: "AI-powered feedback" },
+  { icon: Users, label: "Personalized practice" },
+  { icon: TrendingUp, label: "Track your progress" },
+  { icon: Heart, label: "Improve every day" },
+];
+
+function FeatureFooter() {
+  return (
+    <div
+      className="flex items-center justify-center gap-6 px-4 py-2.5 border-t flex-shrink-0"
+      style={{ borderColor: "var(--line-divider)" }}
+    >
+      {FEATURES.map(({ icon: Icon, label }, i) => (
+        <div key={i} className="flex items-center gap-1.5">
+          <Icon size={12} style={{ color: "var(--primary)" }} />
+          <span className="text-[11px]" style={{ color: "var(--text-tertiary)" }}>{label}</span>
+        </div>
+      ))}
+    </div>
   );
 }

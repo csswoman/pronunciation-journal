@@ -1,6 +1,6 @@
 "use client";
 import Button from "@/components/ui/Button";
-import { SendHorizonal } from "lucide-react";
+import { SendHorizonal, Paperclip, Mic, Sparkles } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 
 interface CustomPromptPanelProps {
@@ -126,7 +126,7 @@ export default function CustomPromptPanel({
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex items-end gap-2 p-3 rounded-xl border transition-all focus-within:shadow-md"
+      className="flex flex-col gap-2 p-3 rounded-xl border transition-all focus-within:shadow-md"
       style={{
         backgroundColor: "var(--card-bg)",
         borderColor: "var(--line-divider)",
@@ -148,29 +148,44 @@ export default function CustomPromptPanel({
         className="flex-1 resize-none bg-transparent text-sm leading-relaxed focus:outline-none max-h-40 py-1"
         style={{ color: "var(--text-primary)" }}
       />
-      <Button
-        type="submit"
-        disabled={!text.trim() || isDisabled}
-        className="flex-shrink-0 w-9 h-9 rounded-lg text-white transition-colors flex items-center justify-center disabled:opacity-40"
-        style={{ backgroundColor: "var(--primary)" }}
-        onMouseEnter={(e) => {
-          if (!e.currentTarget.disabled)
-            e.currentTarget.style.backgroundColor = "var(--btn-regular-bg-hover)";
-        }}
-        onMouseLeave={(e) => {
-          if (!e.currentTarget.disabled)
-            e.currentTarget.style.backgroundColor = "var(--primary)";
-        }}
-        aria-label="Send"
-      >
-        {isDisabled ? (
-          <span className="w-3.5 h-3.5 border-2 border-current border-t-transparent rounded-full animate-spin" />
-        ) : (
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14M12 5l7 7-7 7" />
-          </svg>
-        )}
-      </Button>
+
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-1">
+          {[Paperclip, Mic, Sparkles].map((Icon, i) => (
+            <button
+              key={i}
+              type="button"
+              className="w-7 h-7 flex items-center justify-center rounded-lg transition-colors"
+              style={{ color: "var(--text-tertiary)" }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = "var(--text-secondary)")}
+              onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-tertiary)")}
+            >
+              <Icon size={15} strokeWidth={1.8} />
+            </button>
+          ))}
+        </div>
+
+        <div className="flex items-center gap-2">
+          {!text.trim() && (
+            <span className="text-[11px]" style={{ color: "var(--text-tertiary)" }}>
+              Enter ↵
+            </span>
+          )}
+          <Button
+            type="submit"
+            disabled={!text.trim() || isDisabled}
+            className="w-8 h-8 rounded-full text-white transition-colors flex items-center justify-center disabled:opacity-40"
+            style={{ backgroundColor: "var(--primary)" }}
+            aria-label="Send"
+          >
+            {isDisabled ? (
+              <span className="w-3.5 h-3.5 border-2 border-current border-t-transparent rounded-full animate-spin" />
+            ) : (
+              <SendHorizonal size={14} strokeWidth={2} />
+            )}
+          </Button>
+        </div>
+      </div>
     </form>
   );
 }

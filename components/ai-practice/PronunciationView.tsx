@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
-import { Mic, Play, Turtle, CheckCircle } from "lucide-react";
+import { Mic, Play, Turtle, CheckCircle, Sparkles, Trophy } from "lucide-react";
 import { useRecorder } from "@/hooks/useRecorder";
 import { analyzePhonemes, ARPABET_TO_IPA } from "@/lib/phonemes";
 import { saveAIWord } from "@/lib/ai-db";
@@ -11,13 +11,81 @@ import CoachPanel from "./pronunciation/CoachPanel";
 import WaveformIdle from "./pronunciation/WaveformIdle";
 import type { WordIPA, SoundProgress } from "./pronunciation/types";
 
+// ---------------------------------------------------------------------------
+// Phrase pool
+// ---------------------------------------------------------------------------
+
 const DEFAULT_PHRASES = [
   "I would appreciate the opportunity",
   "Could you please repeat that?",
   "I'm looking forward to working with you",
   "That sounds like a great idea",
   "I completely understand your point",
+  "Would you mind helping me with this?",
+  "Let me think about that for a moment",
+  "I really enjoyed our conversation today",
+  "The weather has been wonderful lately",
+  "She works really hard every single day",
+  "They were thrilled with the results",
+  "We should probably leave a little earlier",
+  "I thought the presentation went really well",
+  "He finally finished the project last Thursday",
+  "This is exactly what I was looking for",
+  "I appreciate you taking the time to explain",
+  "Would you rather meet in the morning?",
+  "The third Thursday of the month works for me",
+  "I've been practicing every day this week",
+  "Nothing worthwhile ever comes without effort",
 ];
+
+// ---------------------------------------------------------------------------
+// LocalStorage helpers
+// ---------------------------------------------------------------------------
+
+const LS_QUEUE = "pronunciation_queue";
+const LS_MASTERED = "pronunciation_mastered";
+const LS_SEEN = "pronunciation_seen";
+
+function shuffle<T>(arr: T[]): T[] {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function loadQueue(): string[] {
+  try { return JSON.parse(localStorage.getItem(LS_QUEUE) ?? "[]"); } catch { return []; }
+}
+function saveQueue(q: string[]) {
+  localStorage.setItem(LS_QUEUE, JSON.stringify(q));
+}
+function loadMastered(): Set<string> {
+  try { return new Set(JSON.parse(localStorage.getItem(LS_MASTERED) ?? "[]")); } catch { return new Set(); }
+}
+function saveMastered(s: Set<string>) {
+  localStorage.setItem(LS_MASTERED, JSON.stringify([...s]));
+}
+function loadSeen(): Set<string> {
+  try { return new Set(JSON.parse(localStorage.getItem(LS_SEEN) ?? "[]")); } catch { return new Set(); }
+}
+function saveSeen(s: Set<string>) {
+  localStorage.setItem(LS_SEEN, JSON.stringify([...s]));
+}
+
+function initQueue(): string[] {
+  const stored = loadQueue();
+  if (stored.length > 0) return stored;
+  const mastered = loadMastered();
+  const fresh = shuffle(DEFAULT_PHRASES.filter(p => !mastered.has(p)));
+  saveQueue(fresh);
+  return fresh;
+}
+
+// ---------------------------------------------------------------------------
+// Phoneme tips
+// ---------------------------------------------------------------------------
 
 const PHONEME_TIPS: Record<string, string> = {
   DH: "Vibrate your tongue lightly between your teeth — it should buzz.",
@@ -37,6 +105,10 @@ const PHONEME_TIPS: Record<string, string> = {
   AO: "Round your lips slightly. Longer and more open than 'AH'.",
 };
 
+// ---------------------------------------------------------------------------
+// IPA fetch
+// ---------------------------------------------------------------------------
+
 async function fetchWordIPA(word: string): Promise<string | null> {
   try {
     const res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
@@ -46,9 +118,7 @@ async function fetchWordIPA(word: string): Promise<string | null> {
     const phonetics = (data[0] as { phonetics?: Array<{ text?: string; audio?: string }> }).phonetics ?? [];
     const raw = pickUSPhonetic(phonetics);
     return raw ? stripIPASlashes(raw) : null;
-  } catch {
-    return null;
-  }
+  } catch { return null; }
 }
 
 function firstBadPhoneme(wordIPAs: WordIPA[]) {
@@ -67,31 +137,70 @@ function firstBadPhoneme(wordIPAs: WordIPA[]) {
   return null;
 }
 
+// ---------------------------------------------------------------------------
+// Component
+// ---------------------------------------------------------------------------
+
 interface PronunciationViewProps {
   onSubmit?: (audioUrl: string, phrase: string) => void;
 }
 
 export default function PronunciationView({ onSubmit }: PronunciationViewProps) {
-  const [phraseIndex, setPhraseIndex] = useState(0);
+  const [queue, setQueue] = useState<string[]>([]);
+  const [mastered, setMastered] = useState<Set<string>>(new Set());
+  const [seen, setSeen] = useState<Set<string>>(new Set());
   const [customPhrase, setCustomPhrase] = useState("");
   const [inputValue, setInputValue] = useState("");
+  const [fetchingPhrases, setFetchingPhrases] = useState(false);
+
   const { startRecording, stopRecording, audioUrl, isRecording, resetRecording } = useRecorder();
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  const activePhrase = customPhrase || DEFAULT_PHRASES[phraseIndex];
+  // Hydrate from localStorage on mount
+  useEffect(() => {
+    setQueue(initQueue());
+    setMastered(loadMastered());
+    setSeen(loadSeen());
+  }, []);
+
+  const activePhrase = customPhrase || queue[0] || "";
 
   const [wordIPAs, setWordIPAs] = useState<WordIPA[]>([]);
   const [ipaLoading, setIpaLoading] = useState(false);
   const [analyzing, setAnalyzing] = useState(false);
   const [soundProgress, setSoundProgress] = useState<SoundProgress>({});
   const [savedWords, setSavedWords] = useState<Set<string>>(new Set());
+  const [justMastered, setJustMastered] = useState(false);
 
+  // Fetch new phrases from Gemini when queue is empty
+  const fetchNewPhrases = useCallback(async (currentSeen: Set<string>) => {
+    setFetchingPhrases(true);
+    try {
+      const res = await fetch("/api/gemini/phrases", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ exclude: [...currentSeen].slice(-30) }),
+      });
+      if (!res.ok) return;
+      const { phrases } = await res.json() as { phrases?: string[] };
+      if (!Array.isArray(phrases) || phrases.length === 0) return;
+      const newQueue = shuffle(phrases);
+      setQueue(newQueue);
+      saveQueue(newQueue);
+    } catch {
+      // non-critical — user can still type custom phrases
+    } finally {
+      setFetchingPhrases(false);
+    }
+  }, []);
+
+  // Fetch IPA for active phrase
   useEffect(() => {
+    if (!activePhrase) return;
     setWordIPAs([]);
     setIpaLoading(true);
     const words = activePhrase.split(/\s+/).filter(Boolean);
     const clean = (w: string) => w.replace(/[^a-zA-Z']/g, "").toLowerCase();
-
     Promise.all(words.map(w => fetchWordIPA(clean(w)))).then(ipas => {
       setWordIPAs(words.map((w, i) => ({ word: w, ipa: ipas[i], alignment: null })));
       setIpaLoading(false);
@@ -100,6 +209,7 @@ export default function PronunciationView({ onSubmit }: PronunciationViewProps) 
 
   const analyzeRecording = useCallback(async (url: string) => {
     setAnalyzing(true);
+    setJustMastered(false);
     try {
       const res = await fetch("/api/gemini/transcribe", {
         method: "POST",
@@ -112,7 +222,6 @@ export default function PronunciationView({ onSubmit }: PronunciationViewProps) 
 
       const phraseWords = activePhrase.split(/\s+/).filter(Boolean);
       const transcriptWords = transcript.trim().split(/\s+/).filter(Boolean);
-
       const results = await Promise.all(
         phraseWords.map((w, i) => analyzePhonemes(w, transcriptWords[i] ?? ""))
       );
@@ -133,23 +242,56 @@ export default function PronunciationView({ onSubmit }: PronunciationViewProps) 
         }
         return next;
       });
+
+      // Mastery: all phonemes correct
+      const allCorrect = results.every(r => r.alignment.every(a => a.status === "correct"));
+      if (allCorrect && !customPhrase && activePhrase) {
+        setJustMastered(true);
+        setMastered(prev => {
+          const next = new Set(prev).add(activePhrase);
+          saveMastered(next);
+          return next;
+        });
+      }
     } catch {
       // non-critical
     } finally {
       setAnalyzing(false);
     }
-  }, [activePhrase]);
+  }, [activePhrase, customPhrase]);
 
   useEffect(() => {
     if (audioUrl) analyzeRecording(audioUrl);
   }, [audioUrl, analyzeRecording]);
+
+  const advanceQueue = useCallback(() => {
+    if (customPhrase) {
+      setCustomPhrase("");
+      return;
+    }
+    setQueue(prev => {
+      const next = prev.slice(1);
+      saveQueue(next);
+      if (next.length === 0) {
+        // All local phrases done — fetch new ones from AI
+        fetchNewPhrases(seen);
+      }
+      return next;
+    });
+    setSeen(prev => {
+      const next = new Set(prev).add(activePhrase);
+      saveSeen(next);
+      return next;
+    });
+  }, [customPhrase, activePhrase, seen, fetchNewPhrases]);
 
   const handleSend = () => {
     if (!audioUrl) return;
     onSubmit?.(audioUrl, activePhrase);
     resetRecording();
     setWordIPAs(prev => prev.map(e => ({ ...e, alignment: null })));
-    if (!customPhrase) setPhraseIndex((i) => (i + 1) % DEFAULT_PHRASES.length);
+    setJustMastered(false);
+    advanceQueue();
   };
 
   const handleCustomSubmit = (e: React.FormEvent) => {
@@ -158,6 +300,8 @@ export default function PronunciationView({ onSubmit }: PronunciationViewProps) 
     setCustomPhrase(inputValue.trim());
     setInputValue("");
     resetRecording();
+    setWordIPAs([]);
+    setJustMastered(false);
   };
 
   const handleMicClick = () => {
@@ -166,6 +310,7 @@ export default function PronunciationView({ onSubmit }: PronunciationViewProps) 
     } else {
       resetRecording();
       setWordIPAs(prev => prev.map(e => ({ ...e, alignment: null })));
+      setJustMastered(false);
       startRecording();
     }
   };
@@ -200,15 +345,56 @@ export default function PronunciationView({ onSubmit }: PronunciationViewProps) 
     ? Math.round((focusProgress.correct / focusProgress.total) * 100)
     : null;
 
+  const totalSeen = seen.size;
+  const totalMastered = mastered.size;
+  const remaining = queue.length;
+
   return (
     <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
       <div className="flex-1 flex flex-col items-center justify-center gap-5 px-6 py-8">
-        <p
-          className="text-[10px] font-semibold uppercase tracking-widest"
-          style={{ color: "var(--text-tertiary)" }}
-        >
-          Active pronunciation
-        </p>
+
+        {/* Counter bar */}
+        <div className="w-full max-w-sm flex items-center justify-between">
+          <p
+            className="text-[10px] font-semibold uppercase tracking-widest"
+            style={{ color: "var(--text-tertiary)" }}
+          >
+            Active pronunciation
+          </p>
+          <div className="flex items-center gap-3">
+            <span className="flex items-center gap-1 text-[10px] font-medium" style={{ color: "var(--text-tertiary)" }}>
+              <Trophy size={10} />
+              {totalMastered} mastered
+            </span>
+            <span className="text-[10px]" style={{ color: "var(--text-tertiary)" }}>
+              {totalSeen} seen
+            </span>
+            {remaining > 0 && (
+              <span className="text-[10px]" style={{ color: "var(--text-tertiary)" }}>
+                {remaining} left
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* Fetching new phrases state */}
+        {fetchingPhrases && (
+          <div className="flex items-center gap-2 text-xs" style={{ color: "var(--text-tertiary)" }}>
+            <Sparkles size={12} className="animate-pulse" />
+            Generating new phrases...
+          </div>
+        )}
+
+        {/* Mastered banner */}
+        {justMastered && !analyzing && (
+          <div
+            className="w-full max-w-sm flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium"
+            style={{ backgroundColor: "color-mix(in oklch, var(--primary) 12%, transparent)", color: "var(--primary)" }}
+          >
+            <Trophy size={14} />
+            Phrase mastered! Send to move to the next one.
+          </div>
+        )}
 
         <PhraseCard
           phrase={activePhrase}

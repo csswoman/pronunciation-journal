@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Plus, Search, X, MessageCircle, UserRound, Mic, BookOpen } from "lucide-react";
+import { Plus, Search, X, MessageCircle, UserRound, Mic, BookOpen, Target, Flame } from "lucide-react";
 import Button from "@/components/ui/Button";
 import type { AIConversation, AIConversationMode } from "@/lib/types";
 
@@ -10,6 +10,8 @@ export type ConvGroupLabel = "TODAY" | "YESTERDAY" | "7 DAYS" | "OLDER";
 interface AIPracticeSidebarProps {
   grouped: Record<ConvGroupLabel, AIConversation[]>;
   onNewSession: () => void;
+  onSelectConversation: (conv: AIConversation) => void;
+  onDeleteConversation: (id: number) => void;
   activeConversationId: number | null;
 }
 
@@ -26,6 +28,8 @@ function modeIcon(mode: AIConversationMode | undefined) {
 export default function AIPracticeSidebar({
   grouped,
   onNewSession,
+  onSelectConversation,
+  onDeleteConversation,
   activeConversationId,
 }: AIPracticeSidebarProps) {
   const [search, setSearch] = useState("");
@@ -72,6 +76,8 @@ export default function AIPracticeSidebar({
                     key={conv.id}
                     conv={conv}
                     isActive={conv.id === activeConversationId}
+                    onSelect={onSelectConversation}
+                    onDelete={onDeleteConversation}
                   />
                 ))}
               </ConvGroup>
@@ -79,6 +85,8 @@ export default function AIPracticeSidebar({
           })
         )}
       </div>
+
+      <CoachFooter />
     </aside>
   );
 }
@@ -122,12 +130,23 @@ function ConvGroup({ label, children }: { label: string; children: React.ReactNo
   );
 }
 
-function ConvItem({ conv, isActive }: { conv: AIConversation; isActive: boolean }) {
+function ConvItem({
+  conv,
+  isActive,
+  onSelect,
+  onDelete,
+}: {
+  conv: AIConversation;
+  isActive: boolean;
+  onSelect: (conv: AIConversation) => void;
+  onDelete: (id: number) => void;
+}) {
   const Icon = modeIcon(conv.mode);
   return (
     <div
       className="group flex items-center justify-between px-2 py-1.5 rounded-lg cursor-pointer transition-colors"
       style={{ backgroundColor: isActive ? "var(--btn-regular-bg-active)" : "transparent" }}
+      onClick={() => onSelect(conv)}
       onMouseEnter={(e) => {
         if (!isActive) e.currentTarget.style.backgroundColor = "var(--btn-regular-bg)";
       }}
@@ -142,12 +161,58 @@ function ConvItem({ conv, isActive }: { conv: AIConversation; isActive: boolean 
       <button
         className="opacity-0 group-hover:opacity-100 transition-opacity ml-1 flex-shrink-0 p-0.5 rounded"
         style={{ color: "var(--text-tertiary)" }}
+        onClick={(e) => { e.stopPropagation(); if (conv.id != null) onDelete(conv.id); }}
         onMouseEnter={(e) => (e.currentTarget.style.color = "var(--text-primary)")}
         onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-tertiary)")}
         aria-label="Delete conversation"
       >
         <X size={12} />
       </button>
+    </div>
+  );
+}
+
+function CoachFooter() {
+  return (
+    <div
+      className="flex-shrink-0 border-t px-3 py-3 space-y-3"
+      style={{ borderColor: "var(--line-divider)" }}
+    >
+      <div className="flex items-center gap-2">
+        <div
+          className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
+          style={{ backgroundColor: "var(--accent-subtle, var(--btn-regular-bg))", color: "var(--primary)" }}
+        >
+          <UserRound size={15} strokeWidth={1.8} />
+        </div>
+        <div className="min-w-0">
+          <p className="text-xs font-semibold truncate" style={{ color: "var(--text-primary)" }}>Your Coach</p>
+          <p className="text-[10px]" style={{ color: "var(--text-tertiary)" }}>English Coach</p>
+        </div>
+      </div>
+
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-1.5">
+          <Flame size={13} style={{ color: "var(--primary)" }} />
+          <span className="text-xs font-semibold" style={{ color: "var(--text-primary)" }}>7</span>
+          <span className="text-[10px]" style={{ color: "var(--text-tertiary)" }}>day streak</span>
+        </div>
+        <div className="flex items-center gap-1.5">
+          <Target size={13} style={{ color: "var(--text-tertiary)" }} />
+          <span className="text-xs font-semibold" style={{ color: "var(--text-primary)" }}>12/20</span>
+          <span className="text-[10px]" style={{ color: "var(--text-tertiary)" }}>goal</span>
+        </div>
+      </div>
+
+      <div
+        className="w-full h-1 rounded-full overflow-hidden"
+        style={{ backgroundColor: "var(--btn-regular-bg)" }}
+      >
+        <div
+          className="h-full rounded-full"
+          style={{ width: "60%", backgroundColor: "var(--primary)" }}
+        />
+      </div>
     </div>
   );
 }
