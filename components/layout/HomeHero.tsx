@@ -4,9 +4,15 @@ import { useRouter } from "next/navigation";
 import ConversationIllustration from "@/components/illustrations/ConversationIllustration";
 import { Play, Sparkles } from "lucide-react";
 import Button from "@/components/ui/Button";
+import { useAuth } from "@/components/auth/AuthProvider";
 
 export default function HomeHero() {
   const router = useRouter();
+  const { user } = useAuth();
+  const isGuest =
+    !user ||
+    user.is_anonymous === true ||
+    !user.email;
 
   return (
     <div
@@ -28,7 +34,7 @@ export default function HomeHero() {
             className="shadow-[0_4px_16px_color-mix(in_oklch,var(--primary)_30%,transparent)]"
             icon={<Play size={14} className="fill-current" />}
           >
-            Continue Learning
+            {isGuest ? "Start Learning" : "Continue Learning"}
           </Button>
           <Button
             onClick={() => router.push("/ai-practice")}
