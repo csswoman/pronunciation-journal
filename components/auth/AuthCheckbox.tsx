@@ -8,7 +8,7 @@ interface AuthCheckboxProps {
 
 export function AuthCheckbox({ label, checked, onChange }: AuthCheckboxProps) {
   return (
-    <label className="flex items-center gap-2 cursor-pointer select-none" onClick={() => onChange(!checked)}>
+    <label className="flex items-center gap-2 cursor-pointer select-none w-full" onClick={() => onChange(!checked)}>
       <div
         className="w-[17px] h-[17px] rounded-[5px] flex items-center justify-center shrink-0 transition-all"
         style={{

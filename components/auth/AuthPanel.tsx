@@ -15,6 +15,7 @@ import { AuthButton } from "@/components/auth/AuthButton";
 import { AuthCheckbox } from "@/components/auth/AuthCheckbox";
 import { AuthGuestButton } from "@/components/auth/AuthGuestButton";
 import { AuthTrustBar } from "@/components/auth/AuthTrustBar";
+import { AuthBackground } from "@/components/auth/AuthBackground";
 
 type Mode = "login" | "register" | "reset";
 
@@ -28,10 +29,7 @@ export default function AuthPanel() {
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
 
-  const clearFeedback = () => {
-    setError(null);
-    setMessage(null);
-  };
+  const clearFeedback = () => { setError(null); setMessage(null); };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -51,11 +49,8 @@ export default function AuthPanel() {
     setPending(true);
     try {
       const { error: err } = await signUpWithEmail(email.trim(), password);
-      if (err) {
-        setError(err.message);
-        return;
-      }
-      setMessage("Revisa tu bandeja de entrada para confirmar tu correo.");
+      if (err) { setError(err.message); return; }
+      setMessage("Check your inbox to confirm your email address.");
     } finally {
       setPending(false);
     }
@@ -66,11 +61,7 @@ export default function AuthPanel() {
     setPending(true);
     try {
       const { error: err } = await signInAsGuest();
-      if (err) {
-        setError(
-          `${err.message} Activa "Anonymous" en Supabase → Authentication → Providers.`
-        );
-      }
+      if (err) setError(`${err.message} Enable "Anonymous" in Supabase → Authentication → Providers.`);
     } finally {
       setPending(false);
     }
@@ -82,11 +73,8 @@ export default function AuthPanel() {
     setPending(true);
     try {
       const { error: err } = await resetPasswordForEmail(email.trim());
-      if (err) {
-        setError(err.message);
-        return;
-      }
-      setMessage("Si el correo existe, recibirás un enlace para restablecer la contraseña.");
+      if (err) { setError(err.message); return; }
+      setMessage("If that email exists, you'll receive a password reset link.");
     } finally {
       setPending(false);
     }
@@ -94,30 +82,16 @@ export default function AuthPanel() {
 
   return (
     <div
-      className="min-h-screen flex flex-col items-center justify-center px-4 py-6"
+      className="min-h-screen flex flex-col items-center justify-center px-4 py-6 relative"
       style={{ background: "#0d0f14", fontFamily: "'DM Sans', sans-serif" }}
     >
-      {/* Ambient glow */}
-      <div
-        className="fixed pointer-events-none"
-        style={{
-          top: "-120px",
-          left: "50%",
-          transform: "translateX(-50%)",
-          width: "600px",
-          height: "400px",
-          background: "radial-gradient(ellipse, color-mix(in srgb, var(--color-accent) 9%, transparent) 0%, transparent 70%)",
-        }}
-      />
+      <AuthBackground />
 
       <AuthCard>
         {mode !== "reset" && (
           <AuthTabs
             mode={mode}
-            onModeChange={(newMode) => {
-              setMode(newMode);
-              clearFeedback();
-            }}
+            onModeChange={(newMode) => { setMode(newMode); clearFeedback(); }}
           />
         )}
 
@@ -127,40 +101,36 @@ export default function AuthPanel() {
           <form onSubmit={handleReset} className="space-y-4">
             <AuthInput
               type="email"
-              label="Correo electrónico"
-              placeholder="tu@correo.com"
+              label="Email address"
+              placeholder="you@example.com"
               value={email}
               onChange={setEmail}
               required
               autoComplete="email"
             />
-            <AuthButton label="Enviar enlace" pending={pending} />
+            <AuthButton label="Send reset link" pending={pending} />
             <AuthButton
-              label="Volver a entrar"
+              label="Back to sign in"
               pending={pending}
               type="button"
               variant="secondary"
-              onClick={() => {
-                setMode("login");
-                clearFeedback();
-              }}
+              onClick={() => { setMode("login"); clearFeedback(); }}
             />
           </form>
         ) : mode === "login" ? (
           <form onSubmit={handleLogin} className="space-y-4">
             <AuthInput
               type="email"
-              label="Correo electrónico"
-              placeholder="tu@correo.com"
+              label="Email address"
+              placeholder="you@example.com"
               value={email}
               onChange={setEmail}
               required
               autoComplete="email"
             />
-
             <AuthInput
               type="password"
-              label="Contraseña"
+              label="Password"
               placeholder="········"
               value={password}
               onChange={setPassword}
@@ -170,60 +140,50 @@ export default function AuthPanel() {
             />
 
             <div className="flex items-center justify-between">
-              <AuthCheckbox
-                label="Recordarme"
-                checked={rememberMe}
-                onChange={setRememberMe}
-              />
+              <AuthCheckbox label="Remember me" checked={rememberMe} onChange={setRememberMe} />
               <AuthButton
-                label="¿Olvidaste tu contraseña?"
+                label="Forgot password?"
                 pending={false}
                 type="button"
                 variant="secondary"
-                onClick={() => {
-                  setMode("reset");
-                  clearFeedback();
-                }}
+                onClick={() => { setMode("reset"); clearFeedback(); }}
               />
             </div>
 
-            <AuthButton label="Entrar" pending={pending} />
+            <AuthButton label="Sign in" pending={pending} />
 
             <div className="flex items-center gap-3 my-5 text-[11.5px] uppercase tracking-[0.6px]" style={{ color: "#4a5070" }}>
               <div className="flex-1 h-px" style={{ background: "#1e2330" }} />
-              O continúa con
+              or continue with
               <div className="flex-1 h-px" style={{ background: "#1e2330" }} />
             </div>
 
             <AuthGuestButton onClick={handleGuest} pending={pending} />
-
             <AuthTrustBar />
           </form>
         ) : (
           <form onSubmit={handleRegister} className="space-y-4">
             <AuthInput
               type="text"
-              label="Nombre"
-              placeholder="Tu nombre"
+              label="Full name"
+              placeholder="Your name"
               value={name}
               onChange={setName}
               autoComplete="name"
             />
-
             <AuthInput
               type="email"
-              label="Correo electrónico"
-              placeholder="tu@correo.com"
+              label="Email address"
+              placeholder="you@example.com"
               value={email}
               onChange={setEmail}
               required
               autoComplete="email"
             />
-
             <AuthInput
               type="password"
-              label="Contraseña"
-              placeholder="Mínimo 6 caracteres"
+              label="Password"
+              placeholder="At least 6 characters"
               value={password}
               onChange={setPassword}
               required
@@ -231,16 +191,15 @@ export default function AuthPanel() {
               minLength={6}
             />
 
-            <AuthButton label="Crear cuenta" pending={pending} />
+            <AuthButton label="Create account" pending={pending} />
 
             <div className="flex items-center gap-3 my-5 text-[11.5px] uppercase tracking-[0.6px]" style={{ color: "#4a5070" }}>
               <div className="flex-1 h-px" style={{ background: "#1e2330" }} />
-              O continúa con
+              or continue with
               <div className="flex-1 h-px" style={{ background: "#1e2330" }} />
             </div>
 
             <AuthGuestButton onClick={handleGuest} pending={pending} />
-
             <AuthTrustBar />
           </form>
         )}

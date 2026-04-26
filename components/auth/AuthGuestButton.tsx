@@ -32,10 +32,10 @@ export function AuthGuestButton({ onClick, pending }: AuthGuestButtonProps) {
       </div>
       <div className="flex-1">
         <p className="text-[14px] font-semibold" style={{ color: "#eef0f7" }}>
-          Continuar como invitado
+          Continue as guest
         </p>
         <p className="text-[12.5px]" style={{ color: "#6b7191" }}>
-          Explora la app sin crear una cuenta
+          Explore the app without an account
         </p>
       </div>
       <ArrowRight className="w-4 h-4 transition-colors" style={{ color: "#4a5070" }} />

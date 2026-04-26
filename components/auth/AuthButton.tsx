@@ -17,7 +17,7 @@ export function AuthButton({ label, pending, type = "submit", variant = "primary
         type={type}
         onClick={onClick}
         className="w-full text-[13px] font-medium bg-transparent border-none cursor-pointer transition-opacity hover:opacity-70"
-        style={{ color: "color-mix(in srgb, var(--color-accent) 80%, white)" }}
+        style={{ color: "var(--color-accent)" }}
       >
         {label}
       </button>
@@ -29,14 +29,13 @@ export function AuthButton({ label, pending, type = "submit", variant = "primary
       type={type}
       onClick={onClick}
       disabled={pending}
-      className="w-full flex items-center justify-center gap-2 py-[15px] rounded-[10px] text-[15px] font-semibold text-white disabled:opacity-50 transition-all hover:-translate-y-px group"
+      className="w-full flex items-center justify-center gap-2 py-[14px] rounded-[10px] text-[15px] font-semibold text-white disabled:opacity-50 transition-all hover:-translate-y-px active:translate-y-0 group"
       style={{
         background: "var(--color-accent)",
-        boxShadow: "0 8px 24px color-mix(in srgb, var(--color-accent) 35%, transparent)",
         fontFamily: "'Sora', sans-serif",
       }}
     >
-      {pending ? "Espera…" : label}
+      {pending ? "Please wait…" : label}
       {!pending && <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />}
     </button>
   );
