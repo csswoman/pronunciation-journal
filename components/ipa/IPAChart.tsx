@@ -31,17 +31,30 @@ export default function IPAChart() {
     };
   }, []);
 
-  const playSound = (rawSymbol: string) => {
+  const speakExample = (word: string) => {
+    if (typeof window === "undefined" || !window.speechSynthesis) return;
+    window.speechSynthesis.cancel();
+    const utter = new SpeechSynthesisUtterance(word);
+    utter.lang = "en-US";
+    utter.rate = 0.85;
+    window.speechSynthesis.speak(utter);
+  };
+
+  const playSound = (rawSymbol: string, example?: string) => {
     const fileName = IPA_AUDIO_MAP[rawSymbol];
     if (!fileName) return;
 
     currentAudioRef.current?.pause();
+    window.speechSynthesis?.cancel();
 
     try {
       setPlayingSymbol(rawSymbol);
       const audio = new Audio(`${SOUNDS_BASE_URL}/${fileName}`);
       currentAudioRef.current = audio;
-      audio.onended = () => setPlayingSymbol(null);
+      audio.onended = () => {
+        setPlayingSymbol(null);
+        if (example) speakExample(example);
+      };
       audio.onerror = () => setPlayingSymbol(null);
       audio.play().catch((err) => {
         if (err.name !== "AbortError" && err.name !== "NotAllowedError") {
@@ -72,7 +85,7 @@ export default function IPAChart() {
           <FeaturedPhonemePanel
             phoneme={selectedPhoneme}
             isPlaying={playingSymbol === selectedPhoneme.rawSymbol}
-            onPlay={() => playSound(selectedPhoneme.rawSymbol)}
+            onPlay={() => playSound(selectedPhoneme.rawSymbol, selectedPhoneme.example)}
             typeMeta={TYPE_PILL[selectedPhoneme.type]}
           />
 
@@ -114,7 +127,7 @@ export default function IPAChart() {
                   isSelected={selectedPhoneme.symbol === phoneme.symbol}
                   onPlay={(event) => {
                     event.stopPropagation();
-                    playSound(phoneme.rawSymbol);
+                    playSound(phoneme.rawSymbol, phoneme.example);
                   }}
                   onSelect={() => setSelectedPhoneme(phoneme)}
                 />
@@ -130,7 +143,7 @@ export default function IPAChart() {
                   isSelected={selectedPhoneme.symbol === phoneme.symbol}
                   onPlay={(event) => {
                     event.stopPropagation();
-                    playSound(phoneme.rawSymbol);
+                    playSound(phoneme.rawSymbol, phoneme.example);
                   }}
                   onSelect={() => setSelectedPhoneme(phoneme)}
                 />

@@ -1,7 +1,6 @@
 "use client";
 
 import type { MouseEvent } from "react";
-import Button from "@/components/ui/Button";
 import type { PhonemeData } from "./data";
 
 export default function PhonemeCard({
@@ -18,11 +17,10 @@ export default function PhonemeCard({
   onSelect: () => void;
 }) {
   return (
-    <Button
+    <button
       type="button"
       onClick={onSelect}
-      variant="outline"
-      className="group relative w-full items-start justify-start text-left rounded-2xl p-4 border transition-all duration-200"
+      className="group relative w-full text-left rounded-2xl p-4 border transition-all duration-200 hover:scale-[1.02] focus:outline-none"
       style={{
         backgroundColor: isSelected ? "var(--primary)" : "var(--card-bg)",
         borderColor: isSelected ? "var(--primary)" : "var(--line-divider)",
@@ -49,6 +47,7 @@ export default function PhonemeCard({
 
       <span
         role="button"
+        aria-label={`Hear "${phoneme.example}"`}
         onClick={onPlay}
         className="absolute top-2 right-2 w-6 h-6 rounded-full flex items-center justify-center text-[10px] transition-opacity duration-150 opacity-0 group-hover:opacity-100"
         style={{
@@ -58,6 +57,6 @@ export default function PhonemeCard({
       >
         ▶
       </span>
-    </Button>
+    </button>
   );
 }

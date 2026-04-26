@@ -6,7 +6,7 @@ import { useRef, useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { useOKLCHTheme } from "@/hooks/useOKLCHTheme";
-import { LogOut, User } from "lucide-react";
+import { LogOut, LogIn, User } from "lucide-react";
 import { useSidebar } from "@/components/sidebar/SidebarContext";
 
 export default function SidebarFooter() {
@@ -131,13 +131,17 @@ export default function SidebarFooter() {
           <div className="h-px my-1.5" style={{ background: "var(--border)" }} />
 
           <button
-            onClick={handleSignOut}
+            onClick={user ? handleSignOut : () => router.push("/login")}
             className="flex items-center gap-2.5 px-3 h-9 w-full rounded-lg text-sm font-medium
               transition-all duration-150 group
               text-[var(--text-secondary)] hover:text-[var(--primary)] hover:bg-[var(--primary-soft)]"
           >
-            <LogOut className="h-4 w-4 flex-shrink-0 opacity-60 group-hover:opacity-100 transition-opacity" />
-            <span>Sign out</span>
+            {user ? (
+              <LogOut className="h-4 w-4 flex-shrink-0 opacity-60 group-hover:opacity-100 transition-opacity" />
+            ) : (
+              <LogIn className="h-4 w-4 flex-shrink-0 opacity-60 group-hover:opacity-100 transition-opacity" />
+            )}
+            <span>{user ? "Sign out" : "Login"}</span>
           </button>
         </div>,
         document.body
