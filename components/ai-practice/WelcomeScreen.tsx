@@ -18,7 +18,7 @@ export default function WelcomeScreen({ onSuggestionClick, onTemplateSelect }: W
   };
 
   return (
-    <div className="flex flex-col gap-4 py-4">
+    <div className="flex flex-col gap-5 py-4">
       <div className="flex justify-start gap-3">
         <AIAvatar />
         <div
@@ -31,10 +31,21 @@ export default function WelcomeScreen({ onSuggestionClick, onTemplateSelect }: W
         </div>
       </div>
 
-      <div className="pl-9 grid grid-cols-2 gap-3">
-        {TEMPLATES.map(t => (
-          <TemplateCard key={t.id} template={t} onSelect={handleSelect} />
-        ))}
+      <div className="flex flex-col gap-3">
+        <div className="pl-9">
+          <p className="text-sm font-semibold" style={{ color: "var(--text-primary)" }}>
+            Choose how you want to practice
+          </p>
+          <p className="text-xs mt-0.5" style={{ color: "var(--text-tertiary)" }}>
+            Pick an option or write your own message.
+          </p>
+        </div>
+
+        <div className="pl-9 grid grid-cols-2 gap-3">
+          {TEMPLATES.map(t => (
+            <TemplateCard key={t.id} template={t} onSelect={handleSelect} recommended={t.id === "free-conversation"} />
+          ))}
+        </div>
       </div>
     </div>
   );

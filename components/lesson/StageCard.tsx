@@ -1,105 +1,122 @@
-import Button from "@/components/ui/Button";
+import { Ear, Mic, Zap, type LucideIcon } from 'lucide-react'
 import type { LessonStageDef, LessonStageMastery, DifficultyMode } from './lesson-lobby-types'
 
 interface Props {
   stage: LessonStageDef
   mastery: LessonStageMastery
-  isNext: boolean
+  index: number
   unlocked: boolean
   diffMode: DifficultyMode
   onSelect: (diffMode: DifficultyMode) => void
 }
 
-export function StageCard({ stage, mastery, isNext, unlocked, diffMode, onSelect }: Props) {
+const CARD_COLORS = [
+  { bg: '#e8eaf6', label: '#5c6bc0' },
+  { bg: '#ede7f6', label: '#7e57c2' },
+  { bg: '#fef9c3', label: '#ca8a04' },
+]
+
+const STAGE_ICONS: Record<string, LucideIcon> = {
+  ear: Ear,
+  mic: Mic,
+  zap: Zap,
+}
+
+const STAGE_LABELS: Record<string, string> = {
+  guided: 'Guided',
+  pronunciation: 'Pronunciation',
+  speed: 'Speed',
+}
+
+const STAGE_TIMES: Record<string, string> = {
+  guided: '5 min',
+  pronunciation: '5 min',
+  speed: '3 min',
+}
+
+export function StageCard({ stage, mastery, index, unlocked, diffMode, onSelect }: Props) {
+  const color = CARD_COLORS[index % CARD_COLORS.length]
+  const num = String(index + 1).padStart(2, '0')
+  const Icon = STAGE_ICONS[stage.icon] ?? Mic
+
   return (
-    <Button
+    <button
       disabled={!unlocked}
       onClick={() => unlocked && onSelect(diffMode)}
-      className="group text-left rounded-xl border p-5 transition-all duration-200 relative overflow-hidden hover:-translate-y-1 hover:shadow-xl hover:shadow-black/5"
+      className="group text-left rounded-3xl p-6 flex flex-col transition-all duration-200 relative overflow-hidden hover:-translate-y-1 hover:shadow-lg"
       style={{
-        backgroundColor: isNext
-          ? 'color-mix(in_oklch,var(--primary)_7%,var(--card-bg))'
-          : 'var(--card-bg)',
-        borderColor: isNext ? 'var(--primary)' : 'var(--line-divider)',
-        opacity: unlocked ? 1 : 0.45,
+        backgroundColor: color.bg,
+        opacity: unlocked ? 1 : 0.5,
         cursor: unlocked ? 'pointer' : 'not-allowed',
-        boxShadow: isNext ? '0 0 0 1px var(--primary), 0 12px 30px rgba(0,0,0,0.06)' : '0 1px 3px var(--line-divider)',
+        minHeight: '280px',
       }}
     >
-      {stage.recommended && mastery.attempts === 0 && (
-        <span
-          className="absolute right-4 top-4 text-[11px] font-semibold px-2.5 py-1 rounded-full uppercase"
-          style={{ background: 'var(--primary)', color: 'white' }}
-        >
-          recommended
-        </span>
-      )}
-
-      {!unlocked && (
-        <span className="absolute right-4 top-4 flex items-center gap-1 text-[11px] text-[var(--text-tertiary)]">
-          <LockIcon />
-        </span>
-      )}
-
-      <div className="mb-3 flex items-center gap-3">
-        <span className="grid h-10 w-10 place-items-center rounded-2xl text-xl" style={{ background: 'var(--btn-regular-bg)' }}>
-          {stage.emoji}
+      {/* Top row: number + icon */}
+      <div className="flex items-start justify-between mb-4">
+        <span className="text-5xl font-bold leading-none" style={{ color: `${color.label}55` }}>
+          {num}
         </span>
         <span
-          className="text-[17px] font-semibold leading-tight"
-          style={{ color: unlocked ? 'var(--deep-text)' : 'var(--text-tertiary)' }}
+          className="w-10 h-10 rounded-2xl flex items-center justify-center"
+          style={{ background: `${color.label}18`, color: color.label }}
         >
-          {stage.title}
+          <Icon size={20} strokeWidth={1.75} />
         </span>
       </div>
 
-      <p className="text-[14px] leading-6 mb-4 text-[var(--text-secondary)]">
+      {/* Category badge */}
+      <span
+        className="self-start text-[11px] font-bold tracking-widest uppercase px-3 py-1 rounded-full mb-4 border"
+        style={{ color: color.label, borderColor: `${color.label}44`, background: `${color.label}12` }}
+      >
+        {STAGE_LABELS[stage.id] ?? stage.title}
+      </span>
+
+      {/* Title */}
+      <h3 className="text-[22px] font-bold leading-tight mb-2" style={{ color: '#1a1a2e' }}>
+        {stage.title}
+      </h3>
+
+      {/* Description */}
+      <p className="text-[14px] leading-relaxed flex-1" style={{ color: '#555577' }}>
         {stage.subtitle}
       </p>
 
-      <StageProgressBar pct={mastery.pct} attempts={mastery.attempts} color={stage.barColor} />
+      {/* Bottom row: time + arrow */}
+      <div className="flex items-center justify-between mt-6">
+        <span className="text-[13px] font-medium" style={{ color: '#888899' }}>
+          {mastery.attempts > 0 ? `${mastery.pct}% mastery` : (STAGE_TIMES[stage.id] ?? '5 min')}
+        </span>
+        <span
+          className="w-10 h-10 rounded-full flex items-center justify-center transition-transform group-hover:translate-x-0.5"
+          style={{ background: '#1a1a2e', color: 'white' }}
+        >
+          <ArrowIcon />
+        </span>
+      </div>
 
-      <p className="mt-2 text-[12px] font-medium text-[var(--text-tertiary)]">
-        {mastery.attempts === 0 ? 'Not started' : `${mastery.pct}% mastery`}
-      </p>
-    </Button>
-  )
-}
-
-function StageProgressBar({ pct, attempts, color }: { pct: number; attempts: number; color: string }) {
-  return (
-    <div className="w-full h-3 rounded-full overflow-hidden" style={{ background: 'var(--btn-regular-bg)' }}>
-      {attempts === 0 ? (
-        <div className="h-full w-1/5 rounded-full overflow-hidden">
-          <DiagonalStripes color={color} />
-        </div>
-      ) : (
-        <div
-          className="h-full rounded-full transition-all duration-700"
-          style={{ width: `${pct}%`, background: color }}
-        />
+      {!unlocked && (
+        <span className="absolute inset-0 flex items-center justify-center">
+          <LockIcon />
+        </span>
       )}
-    </div>
+    </button>
   )
 }
 
-function DiagonalStripes({ color }: { color: string }) {
+function ArrowIcon() {
   return (
-    <div className="w-full h-full relative overflow-hidden rounded-full">
-      <div
-        className="absolute inset-0"
-        style={{
-          background: `${color}`,
-        }}
-      />
-    </div>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}
+      strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+      <path d="M5 12h14M12 5l7 7-7 7" />
+    </svg>
   )
 }
 
 function LockIcon() {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}
-      strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
+      strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8 opacity-30">
       <rect x="3" y="11" width="18" height="11" rx="2" />
       <path d="M7 11V7a5 5 0 0 1 10 0v4" />
     </svg>

@@ -41,15 +41,16 @@ export const TEMPLATES: TemplateDefinition[] = [
 interface TemplateCardProps {
   template: TemplateDefinition;
   onSelect: (id: AITemplateId) => void;
+  recommended?: boolean;
 }
 
-export default function TemplateCard({ template, onSelect }: TemplateCardProps) {
+export default function TemplateCard({ template, onSelect, recommended }: TemplateCardProps) {
   const { Icon } = template;
 
   return (
     <button
       onClick={() => onSelect(template.id)}
-      className="group flex flex-col items-center gap-3 p-4 rounded-2xl border transition-all hover:shadow-md hover:-translate-y-0.5 text-center cursor-pointer"
+      className="group relative flex flex-col items-center gap-2.5 p-4 rounded-2xl border transition-all hover:shadow-md hover:-translate-y-0.5 text-center cursor-pointer"
       style={{
         backgroundColor: "var(--card-bg)",
         borderColor: "var(--line-divider)",
@@ -61,6 +62,15 @@ export default function TemplateCard({ template, onSelect }: TemplateCardProps) 
         (e.currentTarget as HTMLElement).style.borderColor = "var(--line-divider)";
       }}
     >
+      {recommended && (
+        <span
+          className="absolute -top-2 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded-full text-[10px] font-semibold whitespace-nowrap"
+          style={{ backgroundColor: "var(--primary)", color: "var(--primary-foreground)" }}
+        >
+          Recommended
+        </span>
+      )}
+
       <div
         className="w-10 h-10 rounded-full flex items-center justify-center transition-transform group-hover:scale-110"
         style={{ backgroundColor: "var(--accent-subtle, var(--btn-regular-bg))", color: "var(--primary)" }}
@@ -68,12 +78,17 @@ export default function TemplateCard({ template, onSelect }: TemplateCardProps) 
         <Icon size={18} strokeWidth={1.8} />
       </div>
 
-      <p className="text-sm font-medium leading-tight" style={{ color: "var(--text-primary)" }}>
-        {template.title}
-      </p>
+      <div className="flex flex-col gap-1">
+        <p className="text-sm font-semibold leading-tight" style={{ color: "var(--text-primary)" }}>
+          {template.title}
+        </p>
+        <p className="text-xs leading-snug" style={{ color: "var(--text-tertiary)" }}>
+          {template.description}
+        </p>
+      </div>
 
       <div
-        className="w-6 h-6 rounded-full flex items-center justify-center transition-colors"
+        className="w-6 h-6 rounded-full flex items-center justify-center transition-colors mt-auto"
         style={{ backgroundColor: "var(--btn-regular-bg)", color: "var(--primary)" }}
       >
         <ArrowRight size={12} />

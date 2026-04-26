@@ -111,12 +111,12 @@ export function LessonLobby({
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 mb-8">
-          {LESSON_STAGES.map((stage) => (
+          {LESSON_STAGES.map((stage, i) => (
             <StageCard
               key={stage.id}
+              index={i}
               stage={stage}
               mastery={mastery[stage.id]}
-              isNext={nextUnlocked?.id === stage.id}
               unlocked={isLessonStageUnlocked(stage.id, mastery)}
               diffMode={diffMode}
               onSelect={(diff) => onSelectStage(stage.id, diff)}

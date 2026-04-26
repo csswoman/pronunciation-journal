@@ -187,10 +187,7 @@ export function ManageDrawer({ deck, onClose, onWordCountChange }: ManageDrawerP
           />
 
           <div className="pt-2">
-            <Button
-              onClick={() => state.setShowSuggest(!state.showSuggest)}
-              className="text-xs font-semibold text-[var(--primary)] hover:opacity-80 transition-opacity"
-            >
+            <Button variant="outline" size="sm" onClick={() => state.setShowSuggest(!state.showSuggest)}>
               {state.showSuggest ? "Hide" : "Show"} AI suggestions
             </Button>
             {state.showSuggest && (

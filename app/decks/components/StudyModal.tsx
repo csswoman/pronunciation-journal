@@ -116,19 +116,13 @@ export function StudyModal({ deck, onClose }: StudyModalProps) {
           </p>
           <div className="flex gap-2 pt-2">
             <Button
-              onClick={() => {
-                setCurrentIndex(0);
-                setFlipped(false);
-                setPhase("studying");
-              }}
-              className="flex-1 py-2.5 bg-[var(--primary)] text-white font-semibold rounded-xl hover:opacity-90 transition-colors"
+              variant="primary"
+              fullWidth
+              onClick={() => { setCurrentIndex(0); setFlipped(false); setPhase("studying"); }}
             >
               Study Again
             </Button>
-            <Button
-              onClick={onClose}
-              className="flex-1 py-2.5 bg-[var(--btn-regular-bg)] text-[var(--deep-text)] font-semibold rounded-xl hover:bg-[var(--btn-plain-bg-hover)] transition-colors"
-            >
+            <Button variant="secondary" fullWidth onClick={onClose}>
               Done
             </Button>
           </div>
@@ -141,10 +135,7 @@ export function StudyModal({ deck, onClose }: StudyModalProps) {
     <div className="fixed inset-0 z-50 bg-[var(--page-bg)] flex flex-col">
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-[var(--line-divider)]">
-        <Button
-          onClick={onClose}
-          className="p-2 rounded-lg text-[var(--text-tertiary)] hover:bg-[var(--btn-plain-bg-hover)] transition-colors"
-        >
+        <Button variant="ghost" size="icon" onClick={onClose}>
           <ChevronLeft size={20} />
         </Button>
         <div className="text-center">
@@ -153,10 +144,7 @@ export function StudyModal({ deck, onClose }: StudyModalProps) {
             {progress} / {total}
           </p>
         </div>
-        <Button
-          onClick={onClose}
-          className="p-2 rounded-lg text-[var(--text-tertiary)] hover:bg-[var(--btn-plain-bg-hover)] transition-colors"
-        >
+        <Button variant="ghost" size="icon" onClick={onClose}>
           <X size={20} />
         </Button>
       </div>
@@ -196,11 +184,9 @@ export function StudyModal({ deck, onClose }: StudyModalProps) {
                     )}
                   </div>
                   <Button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handlePlayAudio();
-                    }}
-                    className="p-3 rounded-full bg-[var(--btn-regular-bg)] text-[var(--primary)] hover:bg-[var(--btn-plain-bg-hover)] transition-colors"
+                    variant="ghost"
+                    size="iconLg"
+                    onClick={(e) => { e.stopPropagation(); handlePlayAudio(); }}
                   >
                     <Volume2 size={24} />
                   </Button>
@@ -254,31 +240,19 @@ export function StudyModal({ deck, onClose }: StudyModalProps) {
       </div>
 
       {/* Difficulty buttons */}
-      <div className="px-4 py-4 border-t border-[var(--line-divider)] flex gap-2">
-        <Button
-          onClick={() => handleDifficulty("again")}
-          className="flex-1 py-2.5 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 font-semibold rounded-xl hover:opacity-90 transition-colors text-sm"
-        >
+      <div className="px-4 pt-4 pb-24 lg:pb-4 border-t border-[var(--line-divider)] flex gap-2">
+        <button onClick={() => handleDifficulty("again")} className="flex-1 py-2.5 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 font-semibold rounded-xl hover:opacity-90 transition-opacity text-sm">
           Again
-        </Button>
-        <Button
-          onClick={() => handleDifficulty("hard")}
-          className="flex-1 py-2.5 bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 font-semibold rounded-xl hover:opacity-90 transition-colors text-sm"
-        >
+        </button>
+        <button onClick={() => handleDifficulty("hard")} className="flex-1 py-2.5 bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 font-semibold rounded-xl hover:opacity-90 transition-opacity text-sm">
           Hard
-        </Button>
-        <Button
-          onClick={() => handleDifficulty("good")}
-          className="flex-1 py-2.5 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 font-semibold rounded-xl hover:opacity-90 transition-colors text-sm"
-        >
+        </button>
+        <button onClick={() => handleDifficulty("good")} className="flex-1 py-2.5 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 font-semibold rounded-xl hover:opacity-90 transition-opacity text-sm">
           Good
-        </Button>
-        <Button
-          onClick={() => handleDifficulty("easy")}
-          className="flex-1 py-2.5 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 font-semibold rounded-xl hover:opacity-90 transition-colors text-sm"
-        >
+        </button>
+        <button onClick={() => handleDifficulty("easy")} className="flex-1 py-2.5 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 font-semibold rounded-xl hover:opacity-90 transition-opacity text-sm">
           Easy
-        </Button>
+        </button>
       </div>
     </div>
   );

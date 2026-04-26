@@ -8,8 +8,7 @@ export interface LessonStageDef {
   subtitle: string
   description: string
   difficulty: 'Easy' | 'Medium' | 'Hard'
-  icon: 'ear' | 'mic' | 'bolt'
-  emoji: string
+  icon: 'ear' | 'mic' | 'zap'
   recommended?: boolean
   barColor: string
 }
@@ -18,32 +17,29 @@ export const LESSON_STAGES: LessonStageDef[] = [
   {
     id: 'guided',
     title: 'Listen & Repeat',
-    subtitle: 'Hear the word, say it back. Mic scored.',
+    subtitle: 'Hear the word clearly, then record yourself saying it back.',
     description: 'Hear each word, then record yourself',
     difficulty: 'Easy',
     icon: 'ear',
-    emoji: '🎧',
     recommended: true,
     barColor: 'var(--primary)',
   },
   {
     id: 'pronunciation',
     title: 'Speak Free',
-    subtitle: 'Use words in your own sentences.',
+    subtitle: 'No hints this time — say each word from memory and get scored.',
     description: 'Pronounce each word without the IPA hint',
     difficulty: 'Medium',
     icon: 'mic',
-    emoji: '💬',
     barColor: '#2ec4b6',
   },
   {
     id: 'speed',
     title: 'Quick Quiz',
-    subtitle: '5-question check-in.',
+    subtitle: 'Five rapid-fire questions to lock in what you practiced.',
     description: 'Go through all words as fast as you can',
     difficulty: 'Hard',
-    icon: 'bolt',
-    emoji: '📝',
+    icon: 'zap',
     barColor: '#f4a261',
   },
 ]

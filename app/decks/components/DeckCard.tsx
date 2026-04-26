@@ -46,18 +46,10 @@ export function DeckCard({
             <p className="text-xs text-[var(--text-tertiary)] mt-0.5">{deck.description || "Vocabulary set"}</p>
           </div>
           <div className="flex items-center gap-1 flex-shrink-0">
-            <Button
-              onClick={onManage}
-              title="Manage words"
-              className="p-1.5 rounded-lg text-[var(--text-tertiary)] hover:bg-[var(--btn-plain-bg-hover)] hover:text-[var(--deep-text)] transition-colors"
-            >
+            <Button variant="ghost" size="icon" onClick={onManage} title="Manage words">
               <BookOpen size={16} />
             </Button>
-            <Button
-              onClick={onEdit}
-              title="Edit deck"
-              className="p-1.5 rounded-lg text-[var(--text-tertiary)] hover:bg-[var(--btn-plain-bg-hover)] hover:text-[var(--deep-text)] transition-colors"
-            >
+            <Button variant="ghost" size="icon" onClick={onEdit} title="Edit deck">
               <Settings2 size={16} />
             </Button>
           </div>

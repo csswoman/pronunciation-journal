@@ -40,16 +40,16 @@
   /* Gradient */
   --gradient-primary: linear-gradient(135deg, oklch(0.70 0.15 var(--hue)), oklch(0.65 0.15 calc(var(--hue) + 30)));
 
-  /* ── 2. Neutral System (subtle tint keeps surfaces in harmony with hue) ─ */
-  --bg:            oklch(0.985 0.005 var(--hue));
-  --bg-secondary:  oklch(0.965 0.006 var(--hue));
-  --bg-tertiary:   oklch(0.940 0.008 var(--hue));
-  --fg:            oklch(0.18 0.01 var(--hue));
-  --text-primary:  oklch(0.18 0.01 var(--hue));
-  --text-secondary: oklch(0.46 0.01 var(--hue));
-  --text-tertiary: oklch(0.62 0.008 var(--hue));
-  --border:        oklch(0.875 0.008 var(--hue));
-  --border-hover:  oklch(0.770 0.012 var(--hue));
+  /* ── 2. Neutral System (near-zero chroma keeps surfaces clean/white) ─── */
+  --bg:            oklch(0.985 0 0);
+  --bg-secondary:  oklch(0.965 0 0);
+  --bg-tertiary:   oklch(0.940 0 0);
+  --fg:            oklch(0.18 0.008 var(--hue));
+  --text-primary:  oklch(0.18 0.008 var(--hue));
+  --text-secondary: oklch(0.46 0.006 var(--hue));
+  --text-tertiary: oklch(0.62 0.004 var(--hue));
+  --border:        oklch(0.875 0 0);
+  --border-hover:  oklch(0.770 0 0);
 
   /* ── 3. Semantic Colors (fixed, independent of hue) ──────────────────── */
   --success:       oklch(0.70 0.16 145);
@@ -123,16 +123,16 @@
   /* Gradient */
   --gradient-primary: linear-gradient(135deg, oklch(0.72 0.15 var(--hue)), oklch(0.67 0.15 calc(var(--hue) + 30)));
 
-  /* Neutral system — dark with subtle hue tint */
-  --bg:            oklch(0.120 0.008 var(--hue));
-  --bg-secondary:  oklch(0.165 0.009 var(--hue));
-  --bg-tertiary:   oklch(0.210 0.010 var(--hue));
-  --fg:            oklch(0.95 0.005 var(--hue));
-  --text-primary:  oklch(0.93 0.006 var(--hue));
-  --text-secondary: oklch(0.65 0.008 var(--hue));
-  --text-tertiary: oklch(0.48 0.006 var(--hue));
-  --border:        oklch(0.275 0.010 var(--hue));
-  --border-hover:  oklch(0.375 0.012 var(--hue));
+  /* Neutral system — near-zero chroma keeps dark surfaces clean */
+  --bg:            oklch(0.120 0.003 var(--hue));
+  --bg-secondary:  oklch(0.165 0.003 var(--hue));
+  --bg-tertiary:   oklch(0.210 0.004 var(--hue));
+  --fg:            oklch(0.95 0.003 var(--hue));
+  --text-primary:  oklch(0.93 0.004 var(--hue));
+  --text-secondary: oklch(0.65 0.004 var(--hue));
+  --text-tertiary: oklch(0.48 0.003 var(--hue));
+  --border:        oklch(0.275 0 0);
+  --border-hover:  oklch(0.375 0 0);
 
   /* Semantic colors — slightly brighter in dark mode */
   --success:       oklch(0.74 0.16 145);
@@ -279,6 +279,10 @@
 
 .font-heading {
   font-family: var(--font-heading), sans-serif;
+}
+
+.font-ipa {
+  font-family: var(--font-ipa), "Noto Serif", serif;
 }
 
 /* ── Dynamic Color Utility Classes ─────────────────────────────────────── */
