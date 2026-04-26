@@ -54,7 +54,7 @@ export function CreateDeckModal({
       <div className="w-full max-w-md mx-4 bg-[var(--card-bg)] rounded-2xl border border-[var(--line-divider)] shadow-xl p-6 space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="font-heading font-bold text-lg text-[var(--deep-text)]">New Deck</h2>
-          <Button onClick={onClose} className="p-1.5 rounded-lg hover:bg-[var(--btn-plain-bg-hover)] text-[var(--text-tertiary)]">
+          <Button variant="ghost" size="icon" onClick={onClose}>
             <X size={20} />
           </Button>
         </div>
@@ -136,14 +136,10 @@ export function CreateDeckModal({
         {error && <p className="text-xs text-red-500">{error}</p>}
 
         <div className="flex gap-2 pt-1">
-          <Button onClick={onClose} className="flex-1 px-4 py-2 rounded-xl text-sm font-medium text-[var(--deep-text)] bg-[var(--btn-regular-bg)] hover:bg-[var(--btn-plain-bg-hover)] transition-colors">
+          <Button variant="secondary" size="sm" fullWidth onClick={onClose}>
             Cancel
           </Button>
-          <Button
-            onClick={handleCreate}
-            disabled={!name.trim() || saving}
-            className="flex-1 px-4 py-2 rounded-xl text-sm font-semibold bg-[var(--primary)] text-white hover:opacity-90 disabled:opacity-50 transition-colors"
-          >
+          <Button variant="primary" size="sm" fullWidth onClick={handleCreate} disabled={!name.trim() || saving}>
             {saving ? "Creating…" : "Create"}
           </Button>
         </div>

@@ -27,17 +27,10 @@ function EntryRow({ entry, onEdit, onRemove }: { entry: Entry; onEdit: (e: Entry
         )}
       </div>
       <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-        <Button
-          onClick={() => onEdit(entry)}
-          className="p-1.5 rounded-lg text-[var(--text-tertiary)] hover:text-[var(--primary)] hover:bg-[var(--btn-plain-bg-hover)] transition-colors"
-          title="Edit phrases"
-        >
+        <Button variant="ghost" size="icon" onClick={() => onEdit(entry)} title="Edit phrases">
           <Settings2 size={16} />
         </Button>
-        <Button
-          onClick={() => onRemove(entry.id)}
-          className="p-1.5 rounded-lg text-[var(--text-tertiary)] hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
-        >
+        <Button variant="ghost" size="icon" onClick={() => onRemove(entry.id)}>
           <Trash2 size={16} />
         </Button>
       </div>

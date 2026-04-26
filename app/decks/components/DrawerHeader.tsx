@@ -10,10 +10,7 @@ export function DrawerHeader({ onClose }: DrawerHeaderProps) {
   return (
     <div className="sticky top-0 z-10 flex items-center justify-between px-4 py-3 border-b border-[var(--line-divider)] bg-[var(--card-bg)]">
       <h2 className="font-semibold text-[var(--deep-text)]">Manage Deck</h2>
-      <Button
-        onClick={onClose}
-        className="p-1.5 rounded-lg hover:bg-[var(--btn-plain-bg-hover)] text-[var(--text-tertiary)] transition-colors"
-      >
+      <Button variant="ghost" size="icon" onClick={onClose}>
         <X size={20} />
       </Button>
     </div>
