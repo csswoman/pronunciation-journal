@@ -4,6 +4,7 @@ import Script from "next/script";
 import "./globals.css";
 import "./markdown.css";
 import { Plus_Jakarta_Sans, Noto_Sans } from "next/font/google";
+import { usePathname } from "next/navigation";
 import Sidebar from "@/components/layout/Sidebar";
 import BottomNav from "@/components/layout/BottomNav";
 import AuthProvider from "@/components/auth/AuthProvider";
@@ -19,6 +20,25 @@ const notoSans = Noto_Sans({
   subsets: ["latin"],
   variable: "--font-sans",
 });
+
+function AppShell({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+  const isAuthPage = pathname.startsWith("/login");
+
+  if (isAuthPage) return <>{children}</>;
+
+  return (
+    <div className="flex h-screen bg-[var(--page-bg)] overflow-hidden">
+      <Sidebar className="hidden lg:flex w-64 flex-col" />
+      <main className="main-scrollbar flex-1 overflow-y-auto pb-20 lg:pb-0">
+        <div className="max-w-screen-xl mx-auto px-6 lg:px-10 py-8 lg:py-9 bg-[var(--card-bg)] rounded-[15px] my-10 !p-0">
+          {children}
+        </div>
+      </main>
+      <BottomNav className="lg:hidden" />
+    </div>
+  );
+}
 
 export default function RootLayout({
   children,
@@ -56,15 +76,7 @@ export default function RootLayout({
         />
         <AuthProvider>
           <ThemeProvider>
-            <div className="flex h-screen bg-[var(--page-bg)] overflow-hidden">
-              <Sidebar className="hidden lg:flex w-64 flex-col" />
-              <main className="main-scrollbar flex-1 overflow-y-auto pb-20 lg:pb-0">
-                <div className="max-w-screen-xl mx-auto px-6 lg:px-10 py-8 lg:py-9 bg-[var(--card-bg)] rounded-[15px] my-10 !p-0">
-                  {children}
-                </div>
-              </main>
-              <BottomNav className="lg:hidden" />
-            </div>
+            <AppShell>{children}</AppShell>
           </ThemeProvider>
         </AuthProvider>
       </body>

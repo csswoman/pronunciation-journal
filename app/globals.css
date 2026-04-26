@@ -29,6 +29,7 @@
   --primary-active: oklch(0.55 0.17 var(--hue));
   --primary-soft: var(--primary-100);
   --primary-foreground: oklch(1 0 0);
+  --on-primary: oklch(1 0 0);
   --focus-ring: oklch(0.75 0.12 var(--hue) / 0.4);
 
   /* Accent variations */
@@ -39,16 +40,16 @@
   /* Gradient */
   --gradient-primary: linear-gradient(135deg, oklch(0.70 0.15 var(--hue)), oklch(0.65 0.15 calc(var(--hue) + 30)));
 
-  /* ── 2. Neutral System (colorless structure) ──────────────────────────── */
-  --bg:            oklch(0.98 0 0);
-  --bg-secondary:  oklch(0.96 0 0);
-  --bg-tertiary:   oklch(0.93 0 0);
-  --fg:            oklch(0.20 0 0);
-  --text-primary:  oklch(0.20 0 0);
-  --text-secondary: oklch(0.45 0 0);
-  --text-tertiary: oklch(0.65 0 0);
-  --border:        oklch(0.88 0 0);
-  --border-hover:  oklch(0.78 0 0);
+  /* ── 2. Neutral System (subtle tint keeps surfaces in harmony with hue) ─ */
+  --bg:            oklch(0.985 0.005 var(--hue));
+  --bg-secondary:  oklch(0.965 0.006 var(--hue));
+  --bg-tertiary:   oklch(0.940 0.008 var(--hue));
+  --fg:            oklch(0.18 0.01 var(--hue));
+  --text-primary:  oklch(0.18 0.01 var(--hue));
+  --text-secondary: oklch(0.46 0.01 var(--hue));
+  --text-tertiary: oklch(0.62 0.008 var(--hue));
+  --border:        oklch(0.875 0.008 var(--hue));
+  --border-hover:  oklch(0.770 0.012 var(--hue));
 
   /* ── 3. Semantic Colors (fixed, independent of hue) ──────────────────── */
   --success:       oklch(0.70 0.16 145);
@@ -60,72 +61,37 @@
   --info:          oklch(0.70 0.12 230);
   --info-soft:     oklch(0.93 0.04 230);
 
-  /* ── Fuwari / legacy tokens (kept for Fuwari components) ─────────────── */
-  --page-bg: var(--bg);
-  --card-bg: var(--bg-secondary);
-  --deep-text: var(--fg);
-  --title-active: oklch(0.60 0.10 var(--hue));
-  --btn-content: oklch(0.55 0.12 var(--hue));
-  --btn-regular-bg: var(--primary-100);
-  --btn-regular-bg-hover: var(--primary-200);
-  --btn-regular-bg-active: var(--primary-300);
-  --btn-plain-bg-hover: var(--primary-50);
-  --btn-plain-bg-active: oklch(0.98 0.01 var(--hue));
-  --btn-card-bg-hover: oklch(0.98 0.005 var(--hue));
-  --btn-card-bg-active: var(--primary-100);
-  --enter-btn-bg: var(--btn-regular-bg);
-  --enter-btn-bg-hover: var(--btn-regular-bg-hover);
-  --enter-btn-bg-active: var(--btn-regular-bg-active);
-  --line-divider: oklch(0.88 0 0);
-  --line-color:   oklch(0.82 0 0);
-  --meta-divider: oklch(0.70 0 0);
-  --inline-code-bg: var(--btn-regular-bg);
-  --inline-code-color: var(--btn-content);
-  --selection-bg: var(--primary-100);
-  --codeblock-selection: oklch(0.40 0.08 var(--hue));
-  --codeblock-bg: oklch(0.17 0.015 var(--hue));
-  --codeblock-topbar-bg: oklch(0.30 0.02 var(--hue));
-  --license-block-bg: oklch(0.96 0 0);
-  --link-underline: var(--primary-100);
-  --link-hover: var(--primary-50);
-  --link-active: var(--primary-100);
-  --float-panel-bg: oklch(1 0 0);
-  --scrollbar-bg-light: rgba(0,0,0,.4);
-  --scrollbar-bg-hover-light: rgba(0,0,0,.5);
-  --scrollbar-bg-active-light: rgba(0,0,0,.6);
-  --scrollbar-bg-dark: rgba(255,255,255,.4);
-  --scrollbar-bg-hover-dark: rgba(255,255,255,.5);
-  --scrollbar-bg-active-dark: rgba(255,255,255,.6);
-  --scrollbar-bg: var(--scrollbar-bg-light);
-  --scrollbar-bg-hover: var(--scrollbar-bg-hover-light);
-  --scrollbar-bg-active: var(--scrollbar-bg-active-light);
-  --scrollbar-track: transparent;
-  --color-selection-bar: linear-gradient(to right, oklch(.8 .1 0), oklch(.8 .1 30), oklch(.8 .1 60), oklch(.8 .1 90), oklch(.8 .1 120), oklch(.8 .1 150), oklch(.8 .1 180), oklch(.8 .1 210), oklch(.8 .1 240), oklch(.8 .1 270), oklch(.8 .1 300), oklch(.8 .1 330), oklch(.8 .1 360));
-  --display-light-icon: 1;
-  --display-dark-icon: 0;
-  --admonitions-color-tip: var(--success);
-  --admonitions-color-note: var(--info);
-  --admonitions-color-important: oklch(0.70 0.14 310);
-  --admonitions-color-warning: var(--warning);
-  --admonitions-color-caution: var(--error);
-  --toc-badge-bg: var(--primary-100);
-  --toc-btn-hover: oklch(0.92 0 0);
-  --toc-btn-active: oklch(0.90 0 0);
-  --toc-width: calc((100vw - var(--page-width)) / 2 - 1rem);
-  --toc-item-active: var(--primary-500);
+  /* ── Structure aliases (maps abstract names to the neutral system) ───── */
+  --page-bg:           var(--bg);
+  --card-bg:           var(--bg-secondary);
+  --scrollbar-track:   var(--bg-secondary);
+  --line-divider:      var(--border);
+  --line-color:        var(--border);
+  --deep-text:         var(--text-primary);
+  --title-active:      var(--primary);
+  --btn-content:       var(--text-primary);
+  --selection-bg:      var(--primary-soft);
+
+  /* ── Button component tokens ─────────────────────────────────────────── */
+  --btn-regular-bg:        var(--bg-secondary);
+  --btn-regular-bg-hover:  var(--bg-tertiary);
+  --btn-regular-bg-active: var(--border);
+  --btn-plain-bg-hover:    var(--bg-secondary);
 
   /* ── Backward compatibility aliases ──────────────────────────────────── */
-  --secondary: var(--primary);
-  --secondary-hover: var(--btn-regular-bg-hover);
-  --secondary-soft: var(--btn-regular-bg);
-  --color-accent: var(--primary);
-  --color-accent-soft: var(--primary-soft);
-  --color-accent-hover: var(--primary-hover);
+  --secondary:       var(--primary);
+  --secondary-hover: var(--primary-hover);
+  --secondary-soft:  var(--primary-soft);
+  --color-accent:        var(--primary);
+  --color-accent-soft:   var(--primary-soft);
+  --color-accent-hover:  var(--primary-hover);
   --color-text-on-accent: oklch(1 0 0);
-  --color-text-primary: var(--text-primary);
+  --color-text-primary:   var(--text-primary);
   --color-text-secondary: var(--text-secondary);
   --accent-text: oklch(1 0 0);
-  --accent-rgb: 180, 180, 180;
+
+  /* ── Focus / ring helper (oklch alpha, no rgba needed) ───────────────── */
+  --focus-color: color-mix(in oklch, var(--primary) 35%, transparent);
 }
 
 /* ── Dark Mode ──────────────────────────────────────────────────────────── */
@@ -145,7 +111,8 @@
   --primary-hover: oklch(0.63 0.15 var(--hue));
   --primary-active: oklch(0.58 0.16 var(--hue));
   --primary-soft: var(--primary-100);
-  --primary-foreground: oklch(0.12 0 0);
+  --primary-foreground: oklch(0.10 0 0);
+  --on-primary: oklch(0.10 0 0);
   --focus-ring: oklch(0.75 0.12 var(--hue) / 0.35);
 
   /* Accent variations */
@@ -156,16 +123,16 @@
   /* Gradient */
   --gradient-primary: linear-gradient(135deg, oklch(0.72 0.15 var(--hue)), oklch(0.67 0.15 calc(var(--hue) + 30)));
 
-  /* Neutral system — colorless dark */
-  --bg:            oklch(0.12 0 0);
-  --bg-secondary:  oklch(0.17 0 0);
-  --bg-tertiary:   oklch(0.22 0 0);
-  --fg:            oklch(0.95 0 0);
-  --text-primary:  oklch(0.92 0 0);
-  --text-secondary: oklch(0.65 0 0);
-  --text-tertiary: oklch(0.48 0 0);
-  --border:        oklch(0.28 0 0);
-  --border-hover:  oklch(0.38 0 0);
+  /* Neutral system — dark with subtle hue tint */
+  --bg:            oklch(0.120 0.008 var(--hue));
+  --bg-secondary:  oklch(0.165 0.009 var(--hue));
+  --bg-tertiary:   oklch(0.210 0.010 var(--hue));
+  --fg:            oklch(0.95 0.005 var(--hue));
+  --text-primary:  oklch(0.93 0.006 var(--hue));
+  --text-secondary: oklch(0.65 0.008 var(--hue));
+  --text-tertiary: oklch(0.48 0.006 var(--hue));
+  --border:        oklch(0.275 0.010 var(--hue));
+  --border-hover:  oklch(0.375 0.012 var(--hue));
 
   /* Semantic colors — slightly brighter in dark mode */
   --success:       oklch(0.74 0.16 145);
@@ -177,59 +144,36 @@
   --info:          oklch(0.74 0.12 230);
   --info-soft:     oklch(0.20 0.05 230);
 
-  /* Fuwari / legacy tokens */
-  --page-bg: var(--bg);
-  --card-bg: var(--bg-secondary);
-  --deep-text: var(--fg);
-  --title-active: var(--primary-400);
-  --btn-content: oklch(0.75 0.10 var(--hue));
-  --btn-regular-bg: var(--primary-100);
-  --btn-regular-bg-hover: var(--primary-200);
-  --btn-regular-bg-active: var(--primary-300);
-  --btn-plain-bg-hover: oklch(0.20 0.03 var(--hue));
-  --btn-plain-bg-active: oklch(0.17 0.02 var(--hue));
-  --btn-card-bg-hover: oklch(0.20 0.02 var(--hue));
-  --btn-card-bg-active: oklch(0.24 0.03 var(--hue));
-  --line-divider: oklch(0.28 0 0);
-  --line-color:   oklch(0.33 0 0);
-  --meta-divider: oklch(0.42 0 0);
-  --selection-bg: var(--primary-100);
-  --codeblock-bg: oklch(0.17 0.015 var(--hue));
-  --codeblock-topbar-bg: oklch(0.12 0.015 var(--hue));
-  --license-block-bg: var(--codeblock-bg);
-  --link-underline: var(--primary-200);
-  --link-hover: var(--primary-100);
-  --link-active: var(--primary-200);
-  --float-panel-bg: oklch(0.19 0 0);
-  --scrollbar-bg: var(--scrollbar-bg-dark);
-  --scrollbar-bg-hover: var(--scrollbar-bg-hover-dark);
-  --scrollbar-bg-active: var(--scrollbar-bg-active-dark);
-  --scrollbar-track: transparent;
-  --color-selection-bar: linear-gradient(to right, oklch(.7 .1 0), oklch(.7 .1 30), oklch(.7 .1 60), oklch(.7 .1 90), oklch(.7 .1 120), oklch(.7 .1 150), oklch(.7 .1 180), oklch(.7 .1 210), oklch(.7 .1 240), oklch(.7 .1 270), oklch(.7 .1 300), oklch(.7 .1 330), oklch(.7 .1 360));
-  --display-light-icon: 0;
-  --display-dark-icon: 1;
-  --admonitions-color-tip: var(--success);
-  --admonitions-color-note: var(--info);
-  --admonitions-color-important: oklch(0.75 0.14 310);
-  --admonitions-color-warning: var(--warning);
-  --admonitions-color-caution: var(--error);
-  --toc-badge-bg: var(--primary-100);
-  --toc-btn-hover: oklch(0.20 0 0);
-  --toc-btn-active: oklch(0.23 0 0);
-  --toc-item-active: var(--primary-400);
+  /* ── Structure aliases ───────────────────────────────────────────────── */
+  --page-bg:           var(--bg);
+  --card-bg:           var(--bg-secondary);
+  --scrollbar-track:   var(--bg-tertiary);
+  --line-divider:      var(--border);
+  --line-color:        var(--border);
+  --deep-text:         var(--text-primary);
+  --title-active:      var(--primary);
+  --btn-content:       var(--text-primary);
+  --selection-bg:      var(--primary-soft);
+
+  /* ── Button component tokens ─────────────────────────────────────────── */
+  --btn-regular-bg:        var(--bg-secondary);
+  --btn-regular-bg-hover:  var(--bg-tertiary);
+  --btn-regular-bg-active: var(--border);
+  --btn-plain-bg-hover:    var(--bg-tertiary);
 
   /* Backward compatibility aliases */
-  --secondary: var(--primary);
-  --secondary-hover: var(--btn-regular-bg-hover);
-  --secondary-soft: var(--btn-regular-bg);
-  --color-accent: var(--primary);
-  --color-accent-soft: var(--primary-soft);
-  --color-accent-hover: var(--primary-hover);
+  --secondary:       var(--primary);
+  --secondary-hover: var(--primary-hover);
+  --secondary-soft:  var(--primary-soft);
+  --color-accent:        var(--primary);
+  --color-accent-soft:   var(--primary-soft);
+  --color-accent-hover:  var(--primary-hover);
   --color-text-on-accent: oklch(0.12 0 0);
-  --color-text-primary: var(--text-primary);
+  --color-text-primary:   var(--text-primary);
   --color-text-secondary: var(--text-secondary);
   --accent-text: oklch(0.12 0 0);
-  --accent-rgb: 200, 200, 200;
+
+  --focus-color: color-mix(in oklch, var(--primary) 35%, transparent);
 }
 
 /* ── Color Selection Gradient ───────────────────────────────────────── */
@@ -263,13 +207,15 @@
 }
 
 .btn-secondary {
-  background-color: var(--secondary);
-  color: var(--primary-foreground);
+  background-color: var(--btn-regular-bg);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
   transition: all 0.2s ease;
 }
 
 .btn-secondary:hover {
-  background-color: var(--secondary-hover);
+  background-color: var(--btn-regular-bg-hover);
+  border-color: var(--border-hover);
 }
 
 .btn-secondary:disabled {
@@ -308,7 +254,7 @@
 
 .input-themed:focus {
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.1);
+  box-shadow: 0 0 0 3px var(--focus-color);
 }
 
 .badge-primary {
@@ -389,7 +335,7 @@
 /* Ring/Focus Styles */
 .focus\:ring-primary:focus {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.3);
+  box-shadow: 0 0 0 3px var(--focus-color);
 }
 
 .focus\:ring-accent:focus {
@@ -484,7 +430,7 @@
 
 .accent-ring {
   --tw-ring-color: var(--color-accent);
-  box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.3);
+  box-shadow: 0 0 0 3px var(--focus-color);
 }
 
 .accent-button {
@@ -566,12 +512,12 @@
 }
 
 .accent-nav-active {
-  background-color: rgba(var(--accent-rgb), 0.15);
+  background-color: color-mix(in oklch, var(--primary) 15%, transparent);
   color: var(--color-accent);
 }
 
 .dark .accent-nav-active {
-  background-color: rgba(var(--accent-rgb), 0.2);
+  background-color: color-mix(in oklch, var(--primary) 20%, transparent);
 }
 
 @layer components {
@@ -589,12 +535,12 @@
   textarea:focus,
   select:focus {
     border-color: var(--color-accent);
-    box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.3);
+    box-shadow: 0 0 0 3px var(--focus-color);
   }
 
   .badge-accent {
     @apply inline-flex items-center px-3 py-1 rounded-full text-sm font-medium;
-    background-color: rgba(var(--accent-rgb), 0.1);
+    background-color: color-mix(in oklch, var(--primary) 12%, transparent);
     color: var(--color-accent);
     border: 1px solid var(--color-accent);
   }

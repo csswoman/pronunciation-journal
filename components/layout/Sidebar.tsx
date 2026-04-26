@@ -1,11 +1,11 @@
 "use client";
-import Image from "next/image";
-import { usePathname, useRouter } from "next/navigation";
-import { useAuth } from "@/components/auth/AuthProvider";
+import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
+import { PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import { useUserRole } from "@/hooks/useUserRole";
-import ThemeControl from "@/components/theme/ThemeControl";
-import { LogOut } from "lucide-react";
-import { NavSection, NavButton, NavLink, coreNav, learningNav, trackingNav, adminNav } from "../sidebar/index";
+import SidebarFooter from "./SidebarFooter";
+import { NavSection, NavLink, coreNav, learningNav, trackingNav, adminNav } from "../sidebar/index";
+import { SidebarContext } from "../sidebar/SidebarContext";
 
 interface SidebarProps {
   className?: string;
@@ -13,98 +13,71 @@ interface SidebarProps {
 
 export default function Sidebar({ className = "" }: SidebarProps) {
   const pathname = usePathname();
-  const router = useRouter();
-  const { user, signOutUser } = useAuth();
   const { isPremium } = useUserRole();
+  const [collapsed, setCollapsed] = useState(false);
 
-  const displayName =
-    user?.user_metadata?.full_name ||
-    user?.user_metadata?.name ||
-    user?.email?.split("@")[0] ||
-    "Usuario";
+  useEffect(() => {
+    const saved = localStorage.getItem("sidebar-collapsed");
+    if (saved === "true") setCollapsed(true);
+  }, []);
 
-  const avatarUrl = user?.user_metadata?.avatar_url as string | undefined;
-
-  const initials = displayName
-    .split(" ")
-    .slice(0, 2)
-    .map((w: string) => w[0])
-    .join("")
-    .toUpperCase();
-
-  const handleSignOut = async () => {
-    await signOutUser();
-    router.push("/");
+  const toggle = () => {
+    setCollapsed((prev) => {
+      localStorage.setItem("sidebar-collapsed", String(!prev));
+      return !prev;
+    });
   };
 
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
 
   return (
-    <aside
-      className={`sidebar-scrollbar w-64 flex flex-col h-full min-h-0 overflow-y-auto bg-[var(--card-bg)] border-r border-[var(--line-divider)] ${className}`}
-    >
-      {/* Brand */}
-      <div className="flex items-center gap-2.5 px-5 py-5 flex-shrink-0">
-        <div
-          className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0"
-          style={{ background: "var(--primary)" }}
-        >
-          <span className="font-bold text-xs" style={{ color: "var(--accent-text)" }}>EJ</span>
-        </div>
-        <span className="font-heading font-semibold text-sm" style={{ color: "var(--deep-text)" }}>
-          English Journal
-        </span>
-      </div>
-
-      {/* Navigation */}
-      <nav className="flex-1 px-3 pb-4 space-y-0.5 overflow-y-auto">
-        <div className="space-y-0.5">
-          {coreNav.items.map((item) => (
-            <NavLink key={item.href} item={item} active={isActive(item.href)} />
-          ))}
-        </div>
-
-        <NavSection section={learningNav} isActive={isActive} />
-        <NavSection section={trackingNav} isActive={isActive} />
-
-        {isPremium && (
-          <NavSection section={adminNav} isActive={isActive} />
-        )}
-      </nav>
-
-      {/* Footer */}
-      <div
-        className="flex-shrink-0 border-t px-3 pt-3 pb-4 space-y-0.5"
-        style={{ borderColor: "var(--line-divider)" }}
+    <SidebarContext.Provider value={{ collapsed }}>
+      <aside
+        className={`sidebar-scrollbar flex flex-col h-full min-h-0 overflow-y-auto bg-[var(--card-bg)] border-r border-[var(--line-divider)] transition-all duration-200 ${collapsed ? "w-[60px]" : "w-64"} ${className}`}
       >
-        <NavButton active={isActive("/profile")} as="link" href="/profile">
-          <div
-            className="relative w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-bold overflow-hidden flex-shrink-0 ring-1"
-            style={{
-              background: "var(--btn-regular-bg)",
-              color: "var(--btn-content)",
-            }}
+        {/* Brand + toggle */}
+        <div className={`flex items-center ${collapsed ? "justify-center px-2" : "justify-between px-5"} py-5 flex-shrink-0`}>
+          {!collapsed && (
+            <div className="flex items-center gap-2.5">
+              <div
+                className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0"
+                style={{ background: "var(--primary)" }}
+              >
+                <span className="font-bold text-xs" style={{ color: "var(--accent-text)" }}>EJ</span>
+              </div>
+              <span className="font-heading font-semibold text-sm" style={{ color: "var(--deep-text)" }}>
+                English Journal
+              </span>
+            </div>
+          )}
+          <button
+            onClick={toggle}
+            className="p-1.5 rounded-lg transition-colors hover:bg-[var(--btn-plain-bg-hover)] text-[var(--text-tertiary)] hover:text-[var(--text-primary)] flex-shrink-0"
+            title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
-            {avatarUrl ? (
-              <Image src={avatarUrl} alt={displayName} fill sizes="20px" className="object-cover" />
-            ) : (
-              initials
-            )}
+            {collapsed ? <PanelLeftOpen className="w-4 h-4" /> : <PanelLeftClose className="w-4 h-4" />}
+          </button>
+        </div>
+
+        {/* Navigation */}
+        <nav className={`flex-1 ${collapsed ? "px-1.5" : "px-3"} pb-4 space-y-0.5 overflow-y-auto`}>
+          <div className="space-y-0.5">
+            {coreNav.items.map((item) => (
+              <NavLink key={item.href} item={item} active={isActive(item.href)} />
+            ))}
           </div>
-          <span className="relative truncate text-sm font-medium">{displayName}</span>
-        </NavButton>
 
-        <ThemeControl />
+          <NavSection section={learningNav} isActive={isActive} />
+          <NavSection section={trackingNav} isActive={isActive} />
 
-        <NavButton active={false} onClick={handleSignOut}>
-          <span className="relative flex-shrink-0 opacity-50 group-hover:opacity-100 transition-opacity duration-150">
-            <LogOut className="h-4 w-4" />
-          </span>
-          <span className="relative group-hover:text-[var(--deep-text)] transition-colors duration-150">Sign out</span>
-        </NavButton>
-      </div>
-    </aside>
+          {isPremium && (
+            <NavSection section={adminNav} isActive={isActive} />
+          )}
+        </nav>
+
+        <SidebarFooter />
+      </aside>
+    </SidebarContext.Provider>
   );
 }
-

@@ -24,32 +24,15 @@ export function GeminiChat({
     if (open) bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, open]);
 
-  const soundsContext =
-    sounds.length > 0
-      ? `\nAvailable sounds in the database (use these exact IDs for soundId / soundAId / soundBId / contrastAId / contrastBId fields):\n${sounds
-          .map((s) => `  id=${s.id}  /${s.ipa}/  ${s.type}  ${s.category ?? ""}  example: ${s.example ?? "—"}`)
-          .join("\n")}\n`
-      : "\nNo sounds in the database yet.\n";
-
-  const systemPrompt = `You are an assistant for a language learning app called English Journal.
-The admin is currently on the "${TAB_LABEL[activeTab]}" tab of the seed data page.
-Your job is to suggest data to insert into the database tables: sounds, words, patterns, pattern_words, and minimal_pairs.
-${soundsContext}
-When the admin asks for suggestions, respond with a clear explanation AND one or more JSON blocks they can apply.
-Each JSON block must be wrapped in a \`\`\`apply\`\`\` code fence with this structure:
-\`\`\`apply
-{ "tab": "${activeTab}", "data": { ...fields } }
-\`\`\`
-
-Field reference:
-- sounds: ipa (string), type ("vowel"|"consonant"|"diphthong"), category (string), example (string), difficulty ("1"|"2"|"3")
-- words: word (string), ipa (string), soundId (string id from the list above), soundFocus (string ipa), difficulty ("1"|"2"|"3")
-- patterns: pattern (string), type ("vowel"|"consonant"|"digraph"|"silent"|"blend"|"diphthong"), focus (string ipa)
-- pattern_words: patternId (string id), word (string), ipa (string)
-- minimal_pairs: wordA, wordB, ipaA, ipaB, soundGroup, soundAId, soundBId, contrastAId, contrastBId, contrastIpaA, contrastIpaB (all strings)
-
-For minimal_pairs: contrastAId = the ID of the sound present in wordA, contrastBId = the ID of the sound present in wordB. These are the most important fields — always fill them using the sound IDs from the list above.
-Keep responses concise. You can suggest multiple items, each in its own \`\`\`apply\`\`\` block.`;
+  // Sounds are passed to the server for prompt assembly — server validates and builds the prompt.
+  // Raw systemPrompt strings are never sent from the client.
+  const soundsForServer = sounds.map((s) => ({
+    id: String(s.id),
+    ipa: s.ipa,
+    type: s.type,
+    category: s.category,
+    example: s.example,
+  }));
 
   async function send() {
     const text = input.trim();
@@ -62,7 +45,12 @@ Keep responses concise. You can suggest multiple items, each in its own \`\`\`ap
       const res = await fetch("/api/gemini", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: newMessages, systemPrompt }),
+        body: JSON.stringify({
+            messages: newMessages,
+            promptKey: "admin-seed",
+            activeTab: TAB_LABEL[activeTab],
+            sounds: soundsForServer,
+          }),
       });
       const json = await res.json();
       setMessages((prev) => [
