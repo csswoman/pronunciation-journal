@@ -27,7 +27,7 @@ export default function PhonemeCard({
         color: isSelected ? "white" : "var(--text-primary)",
       }}
     >
-      <span className="text-2xl font-bold font-serif block mb-1" style={{ color: isSelected ? "white" : "var(--text-primary)" }}>
+      <span className="text-2xl font-bold font-ipa block mb-1" style={{ color: isSelected ? "white" : "var(--text-primary)" }}>
         {phoneme.symbol}
       </span>
       <span className="text-[10px] font-bold uppercase tracking-wider block mb-2" style={{ color: isSelected ? "rgba(255,255,255,0.6)" : "var(--primary)" }}>

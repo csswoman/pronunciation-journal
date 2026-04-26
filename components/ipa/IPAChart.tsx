@@ -1,13 +1,13 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import Button from "@/components/ui/Button";
+import { MessageCircle, Target } from "lucide-react";
 import { IPA_AUDIO_MAP, SOUNDS_BASE_URL } from "@/lib/ipa-audio";
 import {
-  DEFAULT_PHONEME,
   FILTER_TABS,
   PHONEMES,
-  TYPE_PILL,
   type FilterType,
   type PhonemeData,
 } from "@/components/ipa-chart/data";
@@ -19,8 +19,9 @@ import ViewToggle from "@/components/ipa-chart/ViewToggle";
 
 export default function IPAChart() {
   const [activeFilter, setActiveFilter] = useState<FilterType>("all");
-  const [selectedPhoneme, setSelectedPhoneme] =
-    useState<PhonemeData>(DEFAULT_PHONEME);
+  const [selectedPhoneme, setSelectedPhoneme] = useState<PhonemeData>(
+    () => PHONEMES[Math.floor(Math.random() * PHONEMES.length)]
+  );
   const [playingSymbol, setPlayingSymbol] = useState<string | null>(null);
   const [gridView, setGridView] = useState<"grid" | "list">("grid");
   const currentAudioRef = useRef<HTMLAudioElement | null>(null);
@@ -72,12 +73,20 @@ export default function IPAChart() {
       ? PHONEMES
       : PHONEMES.filter((phoneme) => phoneme.type === activeFilter);
 
+  const phonemeCounts = {
+    all: PHONEMES.length,
+    vowel: PHONEMES.filter((p) => p.type === "vowel").length,
+    consonant: PHONEMES.filter((p) => p.type === "consonant").length,
+    diphthong: PHONEMES.filter((p) => p.type === "diphthong").length,
+  };
+
   return (
     <div className="space-y-6 animate-fadeIn">
       <FilterTabs
         tabs={FILTER_TABS}
         activeTab={activeFilter}
         onChange={setActiveFilter}
+        counts={phonemeCounts}
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-6">
@@ -86,26 +95,30 @@ export default function IPAChart() {
             phoneme={selectedPhoneme}
             isPlaying={playingSymbol === selectedPhoneme.rawSymbol}
             onPlay={() => playSound(selectedPhoneme.rawSymbol, selectedPhoneme.example)}
-            typeMeta={TYPE_PILL[selectedPhoneme.type]}
+
           />
 
           <div className="rounded-3xl p-6 text-white" style={{ backgroundColor: "var(--primary)" }}>
-            <h3 className="font-bold text-base mb-1">Practice Mode</h3>
+            <h3 className="font-bold text-base mb-1">
+              Practice {selectedPhoneme.symbol}
+            </h3>
             <p
               className="text-sm leading-relaxed mb-5"
               style={{ color: "rgba(255, 255, 255, 0.7)" }}
             >
-              Compare your pronunciation with AI-powered feedback.
+              Drill this sound with targeted exercises and track your progress in the practice area.
             </p>
-            <Button
-              variant="outline"
-              size="lg"
-              fullWidth
-              className="border-white/30 bg-white/15 text-white hover:bg-white/25 hover:text-white"
-            >
-              <span>🎤</span>
-              Enable Microphone
-            </Button>
+            <Link href="/practice">
+              <Button
+                variant="outline"
+                size="lg"
+                fullWidth
+                className="border-white/30 bg-white/15 text-white hover:bg-white/25 hover:text-white"
+              >
+                <Target size={16} />
+                Go to Practice
+              </Button>
+            </Link>
           </div>
         </div>
 
@@ -129,7 +142,10 @@ export default function IPAChart() {
                     event.stopPropagation();
                     playSound(phoneme.rawSymbol, phoneme.example);
                   }}
-                  onSelect={() => setSelectedPhoneme(phoneme)}
+                  onSelect={() => {
+                    setSelectedPhoneme(phoneme);
+                    playSound(phoneme.rawSymbol, phoneme.example);
+                  }}
                 />
               ))}
             </div>
@@ -145,7 +161,10 @@ export default function IPAChart() {
                     event.stopPropagation();
                     playSound(phoneme.rawSymbol, phoneme.example);
                   }}
-                  onSelect={() => setSelectedPhoneme(phoneme)}
+                  onSelect={() => {
+                    setSelectedPhoneme(phoneme);
+                    playSound(phoneme.rawSymbol, phoneme.example);
+                  }}
                 />
               ))}
             </div>
@@ -177,20 +196,22 @@ export default function IPAChart() {
           className="w-12 h-12 rounded-2xl flex items-center justify-center text-white text-xl shrink-0"
           style={{ backgroundColor: "var(--primary)" }}
         >
-          ✦
+          💬
         </div>
         <div className="flex-1">
           <h3 className="font-bold mb-0.5" style={{ color: "var(--text-primary)" }}>
-            Smart Phonology AI
+            Practice with AI
           </h3>
           <p className="text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>
-            Our AI detects nuances in your accent and suggests specific IPA targets to improve
-            clarity. Click any symbol to start training.
+            Have real conversations with Gemini-powered AI and get pronunciation feedback on the sounds you just explored.
           </p>
         </div>
-        <Button variant="primary" size="lg" className="shrink-0 whitespace-nowrap">
-          Analyze Voice
-        </Button>
+        <Link href="/ai-practice">
+          <Button variant="primary" size="lg" className="shrink-0 whitespace-nowrap">
+            <MessageCircle size={16} />
+            Start Session
+          </Button>
+        </Link>
       </div>
     </div>
   );
