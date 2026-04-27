@@ -1,16 +1,15 @@
 "use client";
+
 import Button from "@/components/ui/Button";
-import { SendHorizonal, Paperclip, Mic, Sparkles } from "lucide-react";
+import { SendHorizonal, Mic } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 
 interface CustomPromptPanelProps {
   onSubmit: (text: string) => void;
   isDisabled: boolean;
   placeholder?: string;
-  /** "hero" = large elevated input on select screen; "chat" = compact sticky reply bar */
   variant?: "hero" | "chat";
   helperText?: string;
-  /** Controlled prefill value — when set, replaces input content and focuses */
   prefill?: string;
   onPrefillConsumed?: () => void;
 }
@@ -25,9 +24,9 @@ export default function CustomPromptPanel({
   onPrefillConsumed,
 }: CustomPromptPanelProps) {
   const [text, setText] = useState("");
+  const [focused, setFocused] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  // When a prefill arrives, set the text and move cursor to end
   useEffect(() => {
     if (prefill === undefined) return;
     setText(prefill);
@@ -42,14 +41,12 @@ export default function CustomPromptPanel({
     });
   }, [prefill]);
 
-  const handleSubmit = (e?: React.FormEvent) => {
+  const handleSubmit = (e?: React.SyntheticEvent) => {
     e?.preventDefault();
     if (!text.trim() || isDisabled) return;
     onSubmit(text.trim());
     setText("");
-    if (textareaRef.current) {
-      textareaRef.current.style.height = "auto";
-    }
+    if (textareaRef.current) textareaRef.current.style.height = "auto";
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -73,12 +70,9 @@ export default function CustomPromptPanel({
       <form
         onSubmit={handleSubmit}
         className="flex flex-col gap-4 p-5 rounded-xl border-2 transition-all"
-        style={{
-          backgroundColor: "var(--card-bg)",
-          borderColor: "var(--line-divider)",
-        }}
-        onFocus={(e) => (e.currentTarget.style.borderColor = "var(--primary)")}
-        onBlur={(e) => {
+        style={{ backgroundColor: "var(--card-bg)", borderColor: "var(--line-divider)" }}
+        onFocus={e => (e.currentTarget.style.borderColor = "var(--primary)")}
+        onBlur={e => {
           if (!e.currentTarget.contains(e.relatedTarget))
             e.currentTarget.style.borderColor = "var(--line-divider)";
         }}
@@ -97,24 +91,17 @@ export default function CustomPromptPanel({
         />
         <div className="flex items-center justify-between gap-3">
           {helperText && (
-            <p className="text-xs" style={{ color: "var(--text-tertiary)" }}>
-              {helperText}
-            </p>
+            <p className="text-xs" style={{ color: "var(--text-tertiary)" }}>{helperText}</p>
           )}
           <Button
             type="submit"
             disabled={!text.trim() || isDisabled}
             className="ml-auto flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold transition-colors disabled:opacity-40"
-            style={{
-              backgroundColor: "var(--primary)",
-              color: "var(--primary-foreground)",
-            }}
+            style={{ backgroundColor: "var(--primary)", color: "var(--primary-foreground)" }}
           >
-            {isDisabled ? (
-              <span className="w-3.5 h-3.5 border-2 border-current border-t-transparent rounded-full animate-spin" />
-            ) : (
-              <SendHorizonal size={15} strokeWidth={2} />
-            )}
+            {isDisabled
+              ? <span className="w-3.5 h-3.5 border-2 border-current border-t-transparent rounded-full animate-spin" />
+              : <SendHorizonal size={15} strokeWidth={2} />}
             Send
           </Button>
         </div>
@@ -123,70 +110,80 @@ export default function CustomPromptPanel({
   }
 
   // variant === "chat"
+  const hasText = text.trim().length > 0;
+
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="flex flex-col gap-2 p-3 rounded-xl border transition-all focus-within:shadow-md"
-      style={{
-        backgroundColor: "var(--card-bg)",
-        borderColor: "var(--line-divider)",
-      }}
-      onFocus={(e) => (e.currentTarget.style.borderColor = "var(--primary)")}
-      onBlur={(e) => {
-        if (!e.currentTarget.contains(e.relatedTarget))
-          e.currentTarget.style.borderColor = "var(--line-divider)";
-      }}
-    >
-      <textarea
-        ref={textareaRef}
-        value={text}
-        onChange={handleInput}
-        onKeyDown={handleKeyDown}
-        placeholder={placeholder}
-        disabled={isDisabled}
-        rows={1}
-        className="flex-1 resize-none bg-transparent text-sm leading-relaxed focus:outline-none max-h-40 py-1"
-        style={{ color: "var(--text-primary)" }}
-      />
+    <div className="flex flex-col gap-1.5">
+      {/* Input card */}
+      <div
+        className="flex items-end gap-2 px-3 py-2 rounded-2xl border transition-colors"
+        style={{
+          backgroundColor: "var(--card-bg)",
+          borderColor: focused ? "var(--primary)" : "var(--line-divider)",
+          boxShadow: focused
+            ? "0 0 0 3px color-mix(in oklch, var(--primary) 18%, transparent)"
+            : "none",
+        }}
+      >
+        <textarea
+          ref={textareaRef}
+          value={text}
+          onChange={handleInput}
+          onKeyDown={handleKeyDown}
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
+          placeholder={placeholder}
+          disabled={isDisabled}
+          rows={1}
+          className="flex-1 resize-none bg-transparent text-sm leading-relaxed focus:outline-none max-h-40 px-1 py-1.5"
+          style={{ color: "var(--text-primary)" }}
+        />
 
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-1">
-          {[Paperclip, Mic, Sparkles].map((Icon, i) => (
-            <button
-              key={i}
-              type="button"
-              className="w-7 h-7 flex items-center justify-center rounded-lg transition-colors"
-              style={{ color: "var(--text-tertiary)" }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = "var(--text-secondary)")}
-              onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-tertiary)")}
-            >
-              <Icon size={15} strokeWidth={1.8} />
-            </button>
-          ))}
-        </div>
+        {/* Mic / Send button */}
+        <Button
+          type="button"
+          onClick={handleSubmit}
+          disabled={isDisabled && !hasText}
+          aria-label={hasText ? "Send" : "Hold to speak"}
+          className="w-9 h-9 rounded-xl flex-shrink-0 flex items-center justify-center transition-colors disabled:opacity-60"
+          style={{ backgroundColor: "var(--primary)", color: "var(--primary-foreground)" }}
+        >
+          {isDisabled
+            ? <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+            : hasText
+              ? <SendHorizonal size={15} strokeWidth={2} />
+              : <Mic size={16} strokeWidth={2} />}
+        </Button>
+      </div>
 
-        <div className="flex items-center gap-2">
-          {!text.trim() && (
-            <span className="text-[11px]" style={{ color: "var(--text-tertiary)" }}>
-              Enter ↵
-            </span>
-          )}
-          <Button
-            type="submit"
-            disabled={!text.trim() || isDisabled}
-            className="w-8 h-8 rounded-full text-white transition-colors flex items-center justify-center disabled:opacity-40"
-            style={{ backgroundColor: "var(--primary)" }}
-            aria-label="Send"
+      {/* Hint bar */}
+      <div className="flex items-center justify-between px-1">
+        <p className="text-[11px]" style={{ color: "var(--text-tertiary)" }}>
+          <kbd
+            className="px-1 py-px rounded text-[10px] font-mono"
+            style={{ backgroundColor: "var(--btn-regular-bg)", color: "var(--text-secondary)" }}
           >
-            {isDisabled ? (
-              <span className="w-3.5 h-3.5 border-2 border-current border-t-transparent rounded-full animate-spin" />
-            ) : (
-              <SendHorizonal size={14} strokeWidth={2} />
-            )}
-          </Button>
+            ↵
+          </kbd>
+          {" "}to send ·{" "}
+          <kbd
+            className="px-1 py-px rounded text-[10px] font-mono"
+            style={{ backgroundColor: "var(--btn-regular-bg)", color: "var(--text-secondary)" }}
+          >
+            Shift + ↵
+          </kbd>
+          {" "}for new line
+        </p>
+        <div className="flex items-center gap-1.5">
+          <span
+            className="w-1.5 h-1.5 rounded-full"
+            style={{ backgroundColor: "var(--primary)" }}
+          />
+          <span className="text-[11px]" style={{ color: "var(--text-tertiary)" }}>
+            AI feedback on
+          </span>
         </div>
       </div>
-    </form>
+    </div>
   );
 }
-

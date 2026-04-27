@@ -1,7 +1,7 @@
 "use client";
 
 import type { AITemplateId } from "@/lib/types";
-import { MessageCircle, ClipboardList, Star, ArrowRight, CheckCheck } from "lucide-react";
+import { MessageCircle, ClipboardList, Star, CheckCheck } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 export interface TemplateDefinition {
@@ -9,32 +9,42 @@ export interface TemplateDefinition {
   title: string;
   description: string;
   Icon: LucideIcon;
+  iconColor: string;
+  iconBg: string;
 }
 
 export const TEMPLATES: TemplateDefinition[] = [
   {
     id: "free-conversation",
     title: "Free conversation",
-    description: "Chat on any topic with gentle corrections along the way",
+    description: "Talk freely about any topic and improve naturally.",
     Icon: MessageCircle,
+    iconColor: "#7C6FF7",
+    iconBg: "#EEF0FF",
   },
   {
     id: "sentence-correction",
-    title: "Correct my sentence",
-    description: "Write a sentence and get a correction, explanation & improved version",
+    title: "Correct my sentences",
+    description: "Write and get corrections with explanations.",
     Icon: CheckCheck,
+    iconColor: "#22C55E",
+    iconBg: "#DCFCE7",
   },
   {
     id: "practice-questions",
     title: "Practice questions",
-    description: "Questions, sentence exercises & a correction drill on any topic",
+    description: "Answer questions and expand your thinking.",
     Icon: ClipboardList,
+    iconColor: "#F97316",
+    iconBg: "#FFEDD5",
   },
   {
     id: "personalized-practice",
-    title: "Personalized practice",
-    description: "Exercises built from your struggling words and favorites",
+    title: "Personalized",
+    description: "Practice based on your goals and level.",
     Icon: Star,
+    iconColor: "#6366F1",
+    iconBg: "#EEF2FF",
   },
 ];
 
@@ -45,7 +55,7 @@ interface TemplateCardProps {
 }
 
 export default function TemplateCard({ template, onSelect, recommended }: TemplateCardProps) {
-  const { Icon } = template;
+  const { Icon, iconColor, iconBg } = template;
 
   return (
     <button
@@ -64,7 +74,7 @@ export default function TemplateCard({ template, onSelect, recommended }: Templa
     >
       {recommended && (
         <span
-          className="absolute -top-2 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded-full text-[10px] font-semibold whitespace-nowrap"
+          className="absolute -top-2.5 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded-full text-[9px] font-bold tracking-wide uppercase whitespace-nowrap"
           style={{ backgroundColor: "var(--primary)", color: "var(--primary-foreground)" }}
         >
           Recommended
@@ -72,10 +82,10 @@ export default function TemplateCard({ template, onSelect, recommended }: Templa
       )}
 
       <div
-        className="w-10 h-10 rounded-full flex items-center justify-center transition-transform group-hover:scale-110"
-        style={{ backgroundColor: "var(--accent-subtle, var(--btn-regular-bg))", color: "var(--primary)" }}
+        className="w-11 h-11 rounded-full flex items-center justify-center transition-transform group-hover:scale-110"
+        style={{ backgroundColor: iconBg, color: iconColor }}
       >
-        <Icon size={18} strokeWidth={1.8} />
+        <Icon size={20} strokeWidth={1.8} />
       </div>
 
       <div className="flex flex-col gap-1">
@@ -86,14 +96,6 @@ export default function TemplateCard({ template, onSelect, recommended }: Templa
           {template.description}
         </p>
       </div>
-
-      <div
-        className="w-6 h-6 rounded-full flex items-center justify-center transition-colors mt-auto"
-        style={{ backgroundColor: "var(--btn-regular-bg)", color: "var(--primary)" }}
-      >
-        <ArrowRight size={12} />
-      </div>
     </button>
   );
 }
-

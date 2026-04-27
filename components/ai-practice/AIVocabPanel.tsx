@@ -8,6 +8,7 @@ interface AIVocabPanelProps {
   onDelete: (id: number) => void;
   onGeneratePractice: () => void;
   onGenerateWithWords: () => void;
+  collapsed?: boolean;
 }
 
 export default function AIVocabPanel({
@@ -15,11 +16,12 @@ export default function AIVocabPanel({
   onDelete,
   onGeneratePractice,
   onGenerateWithWords,
+  collapsed = false,
 }: AIVocabPanelProps) {
   return (
     <aside
-      className="hidden lg:flex flex-col w-56 flex-shrink-0 overflow-hidden"
-      style={{ backgroundColor: "var(--card-bg)" }}
+      className={`flex-col w-56 flex-shrink-0 overflow-hidden border-l transition-all duration-200 ${collapsed ? "hidden" : "hidden lg:flex"}`}
+      style={{ borderColor: "var(--line-divider)", backgroundColor: "var(--card-bg)" }}
     >
       <VocabHeader count={words.length} />
 
