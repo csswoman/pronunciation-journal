@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import Sidebar from "./Sidebar";
 import BottomNav from "./BottomNav";
+import { WordBankFAB } from "@/components/word-bank/WordBankFAB";
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -19,6 +20,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         </div>
       </main>
       <BottomNav className="lg:hidden" />
+      <WordBankFAB />
     </div>
   );
 }
