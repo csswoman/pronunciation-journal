@@ -13,6 +13,7 @@ interface AIPracticeSidebarProps {
   onSelectConversation: (conv: AIConversation) => void;
   onDeleteConversation: (id: number) => void;
   activeConversationId: number | null;
+  collapsed?: boolean;
 }
 
 const GROUP_ORDER: ConvGroupLabel[] = ["TODAY", "YESTERDAY", "7 DAYS", "OLDER"];
@@ -31,6 +32,7 @@ export default function AIPracticeSidebar({
   onSelectConversation,
   onDeleteConversation,
   activeConversationId,
+  collapsed = false,
 }: AIPracticeSidebarProps) {
   const [search, setSearch] = useState("");
   const query = search.toLowerCase();
@@ -39,8 +41,8 @@ export default function AIPracticeSidebar({
 
   return (
     <aside
-      className="hidden md:flex flex-col w-52 flex-shrink-0 overflow-hidden"
-      style={{ backgroundColor: "var(--card-bg)" }}
+      className={`flex-col w-52 flex-shrink-0 overflow-hidden border-r transition-all duration-200 ${collapsed ? "hidden" : "hidden md:flex"}`}
+      style={{ borderColor: "var(--line-divider)", backgroundColor: "var(--card-bg)" }}
     >
       <div className="p-3 flex-shrink-0">
         <Button

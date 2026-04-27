@@ -37,6 +37,8 @@ export default function AIPracticePage() {
 
   const [inputPrefill, setInputPrefill] = useState<string | undefined>(undefined);
   const [conversations, setConversations] = useState<AIConversation[]>([]);
+  const [sessionsCollapsed, setSessionsCollapsed] = useState(false);
+  const [vocabCollapsed, setVocabCollapsed] = useState(false);
 
   useEffect(() => {
     getRecentConversations(30).then(setConversations);
@@ -82,6 +84,7 @@ export default function AIPracticePage() {
               setConversations((prev) => prev.filter((c) => c.id !== id));
             }}
             activeConversationId={conversationId}
+            collapsed={sessionsCollapsed}
           />
 
           <ChatArea
@@ -96,6 +99,11 @@ export default function AIPracticePage() {
             onSubmit={sendMessage}
             inputPrefill={inputPrefill}
             onPrefillConsumed={() => setInputPrefill(undefined)}
+            vocabCount={savedWords.length}
+            sessionsCollapsed={sessionsCollapsed}
+            vocabCollapsed={vocabCollapsed}
+            onToggleSessions={() => setSessionsCollapsed(v => !v)}
+            onToggleVocab={() => setVocabCollapsed(v => !v)}
           />
 
           <AIVocabPanel
@@ -106,6 +114,7 @@ export default function AIPracticePage() {
               const wordList = savedWords.slice(0, 8).map((w) => w.word).join(", ");
               if (wordList) sendMessage(`Let's practice with these words: ${wordList}`);
             }}
+            collapsed={vocabCollapsed}
           />
         </div>
 

@@ -1,5 +1,6 @@
 "use client";
 
+import { CheckCheck } from "lucide-react";
 import type { AIMessage, ExerciseResult } from "@/lib/ai-practice/types";
 import AIAvatar from "./AIAvatar";
 import SuggestionChips from "./SuggestionChips";
@@ -24,8 +25,6 @@ function renderInline(text: string): React.ReactNode {
     return part;
   });
 }
-
-// ── Prose renderer ────────────────────────────────────────────────────────────
 
 function renderProse(lines: string[]) {
   const elements: React.ReactNode[] = [];
@@ -71,12 +70,25 @@ function renderProse(lines: string[]) {
   return elements;
 }
 
-// ── Text extraction helper ────────────────────────────────────────────────────
+function formatTime(date: Date | string | undefined): string {
+  if (!date) return "";
+  const d = typeof date === "string" ? new Date(date) : date;
+  return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+}
 
 function extractSentenceContext(fullText: string, selected: string): string {
   const sentences = fullText.split(/(?<=[.!?])\s+/);
   const match = sentences.find(s => s.toLowerCase().includes(selected.toLowerCase()));
   return match?.trim() || selected;
+}
+
+function extractSuggestions(text: string): string[] {
+  const match = text.match(/suggestions?:\s*([\s\S]*?)(?:\n\n|$)/i);
+  if (!match) return [];
+  return match[1]
+    .split("\n")
+    .map(l => l.replace(/^[-•*]\s*/, "").trim())
+    .filter(Boolean);
 }
 
 // ── AI bubble ─────────────────────────────────────────────────────────────────
@@ -90,11 +102,14 @@ interface AIBubbleProps {
 }
 
 function AIBubble({ message, onSaveWord, onSuggestionClick, onToolAnswer, onNext }: AIBubbleProps) {
-  // Build full text for context (word selection)
   const fullText = message.contentParts
     .filter((p): p is { type: "text"; text: string } => p.type === "text")
     .map(p => p.text)
     .join("\n");
+
+  const hasSuggestions = message.contentParts.some(
+    p => p.type === "text" && /^suggestions?:/im.test(p.text)
+  );
 
   const handleMouseUp = () => {
     const selected = window.getSelection()?.toString().trim();
@@ -104,43 +119,42 @@ function AIBubble({ message, onSaveWord, onSuggestionClick, onToolAnswer, onNext
   };
 
   return (
-    <div className="flex justify-start gap-3">
+    <div className="flex justify-start gap-2.5 group/msg">
       <AIAvatar />
-      <div className="flex-1 min-w-0 max-w-[85%] flex flex-col gap-3">
-        {message.contentParts.map((part, i) => {
-          if (part.type === "text") {
-            const lines = part.text.split("\n");
-            return (
-              <div
-                key={i}
-                className="space-y-1.5 text-sm cursor-text select-text"
-                style={{ color: "var(--text-secondary)" }}
-                onMouseUp={handleMouseUp}
-              >
-                {renderProse(lines)}
-              </div>
-            );
-          }
+      <div className="flex flex-col gap-2 flex-1 min-w-0 max-w-[85%]">
+        <div
+          className="px-4 py-3 rounded-2xl rounded-tl-md border"
+          style={{
+            backgroundColor: "var(--card-bg)",
+            borderColor: "var(--line-divider)",
+          }}
+        >
+          <div
+            className="space-y-1.5 text-[14px] leading-relaxed cursor-text select-text"
+            style={{ color: "var(--text-secondary)" }}
+            onMouseUp={handleMouseUp}
+          >
+            {message.contentParts.map((part, i) => {
+              if (part.type === "text") {
+                return <div key={i}>{renderProse(part.text.split("\n"))}</div>;
+              }
+              const tc = message.toolCalls.get(part.callId);
+              if (!tc || tc.name === "suggestions") return null;
+              return (
+                <ToolWidget key={i} toolCall={tc} onAnswer={onToolAnswer} onNext={onNext} />
+              );
+            })}
+          </div>
+        </div>
 
-          // tool_call part
-          const tc = message.toolCalls.get(part.callId);
-          if (!tc) return null;
+        <p
+          className="text-[10px] pl-1 opacity-0 group-hover/msg:opacity-100 transition-opacity"
+          style={{ color: "var(--text-tertiary)" }}
+        >
+          {formatTime((message as { createdAt?: Date }).createdAt)}
+        </p>
 
-          // Suggestion chips rendered as prose, not a widget
-          if (tc.name === "suggestions") return null;
-
-          return (
-            <ToolWidget
-              key={i}
-              toolCall={tc}
-              onAnswer={onToolAnswer}
-              onNext={onNext}
-            />
-          );
-        })}
-
-        {/* Suggestion chips from last text part (if any "Suggestions:" content) */}
-        {message.contentParts.some(p => p.type === "text" && /^suggestions?:/im.test(p.text)) && (
+        {hasSuggestions && (
           <SuggestionChips
             suggestions={extractSuggestions(fullText).map(s => ({ label: s, prompt: s }))}
             onSelect={onSuggestionClick}
@@ -149,15 +163,6 @@ function AIBubble({ message, onSaveWord, onSuggestionClick, onToolAnswer, onNext
       </div>
     </div>
   );
-}
-
-function extractSuggestions(text: string): string[] {
-  const match = text.match(/suggestions?:\s*([\s\S]*?)(?:\n\n|$)/i);
-  if (!match) return [];
-  return match[1]
-    .split("\n")
-    .map(l => l.replace(/^[-•*]\s*/, "").trim())
-    .filter(Boolean);
 }
 
 // ── Public component ──────────────────────────────────────────────────────────
@@ -173,12 +178,23 @@ interface MessageBubbleProps {
 export default function MessageBubble({ message, onSaveWord, onSuggestionClick, onToolAnswer, onNext }: MessageBubbleProps) {
   if (message.role === "user") {
     return (
-      <div className="flex justify-end">
-        <div
-          className="max-w-[78%] px-4 py-2.5 rounded-xl rounded-tr-none text-sm leading-relaxed"
-          style={{ backgroundColor: "var(--btn-regular-bg-active)", color: "var(--text-primary)" }}
-        >
-          {message.content}
+      <div className="flex justify-end group/msg">
+        <div className="flex flex-col items-end gap-1.5 max-w-[78%]">
+          <div
+            className="px-4 py-2.5 rounded-2xl rounded-tr-md text-[14px] leading-relaxed whitespace-pre-wrap break-words"
+            style={{
+              backgroundColor: "color-mix(in oklch, var(--primary) 12%, var(--card-bg))",
+              color: "var(--text-primary)",
+            }}
+          >
+            {message.content}
+          </div>
+          <div className="flex items-center gap-1 pr-1 opacity-0 group-hover/msg:opacity-100 transition-opacity">
+            <span className="text-[10px]" style={{ color: "var(--text-tertiary)" }}>
+              {formatTime((message as { createdAt?: Date }).createdAt)}
+            </span>
+            <CheckCheck size={11} style={{ color: "var(--primary)" }} />
+          </div>
         </div>
       </div>
     );

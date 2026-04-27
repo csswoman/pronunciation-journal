@@ -1,10 +1,10 @@
 "use client";
 
-import { MessageCircle, UserRound, Mic } from "lucide-react";
+import { MessageCircle, Theater, Mic } from "lucide-react";
 
 export const TABS = [
   { id: "chat", label: "Chat", icon: MessageCircle },
-  { id: "roleplay", label: "Roleplay", icon: UserRound },
+  { id: "roleplay", label: "Roleplay", icon: Theater },
   { id: "pronunciation", label: "Pronunciation", icon: Mic },
 ] as const;
 
@@ -18,8 +18,8 @@ interface ChatTabsProps {
 export default function ChatTabs({ active, onChange }: ChatTabsProps) {
   return (
     <div
-      className="flex items-center gap-0.5 px-3 border-b flex-shrink-0"
-      style={{ borderColor: "var(--line-divider)" }}
+      className="inline-flex items-center gap-0.5 p-0.5 rounded-xl"
+      style={{ backgroundColor: "var(--btn-regular-bg)" }}
     >
       {TABS.map(({ id, label, icon: Icon }) => {
         const isActive = active === id;
@@ -27,23 +27,20 @@ export default function ChatTabs({ active, onChange }: ChatTabsProps) {
           <button
             key={id}
             onClick={() => onChange(id)}
-            className="relative flex items-center gap-1.5 px-3 py-2.5 text-sm font-medium transition-all"
-            style={{ color: isActive ? "var(--primary)" : "var(--text-tertiary)" }}
-            onMouseEnter={(e) => {
+            className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-lg transition-colors"
+            style={{
+              color: isActive ? "var(--text-primary)" : "var(--text-tertiary)",
+              backgroundColor: isActive ? "var(--card-bg)" : "transparent",
+            }}
+            onMouseEnter={e => {
               if (!isActive) e.currentTarget.style.color = "var(--text-secondary)";
             }}
-            onMouseLeave={(e) => {
+            onMouseLeave={e => {
               if (!isActive) e.currentTarget.style.color = "var(--text-tertiary)";
             }}
           >
-            <Icon size={14} strokeWidth={isActive ? 2.2 : 1.8} />
+            <Icon size={13} strokeWidth={isActive ? 2.2 : 1.8} />
             {label}
-            {isActive && (
-              <span
-                className="absolute bottom-0 left-0 right-0 h-0.5 rounded-full"
-                style={{ backgroundColor: "var(--primary)" }}
-              />
-            )}
           </button>
         );
       })}

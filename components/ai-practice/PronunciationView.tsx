@@ -351,33 +351,40 @@ export default function PronunciationView({ onSubmit }: PronunciationViewProps) 
 
   return (
     <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-      <div className="flex-1 flex flex-col items-center justify-center gap-5 px-6 py-8">
+      <div className="flex-1 overflow-y-auto flex flex-col items-center gap-5 px-6 py-6">
 
         {/* Counter bar */}
-        <div className="w-full max-w-sm flex items-center justify-between">
-          <p
-            className="text-[10px] font-semibold uppercase tracking-widest"
-            style={{ color: "var(--text-tertiary)" }}
-          >
-            Active pronunciation
-          </p>
-          <div className="flex items-center gap-3">
-            <span className="flex items-center gap-1 text-[10px] font-medium" style={{ color: "var(--text-tertiary)" }}>
-              <Trophy size={10} />
-              {totalMastered} mastered
+        <div className="w-full max-w-lg flex items-center justify-between">
+          <div className="flex items-center gap-1.5">
+            <Sparkles size={13} style={{ color: "var(--primary)" }} />
+            <p className="text-[11px] font-bold uppercase tracking-widest" style={{ color: "var(--primary)" }}>
+              Active Pronunciation
+            </p>
+          </div>
+          <div className="flex items-center gap-2">
+            <span
+              className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-medium"
+              style={{ backgroundColor: "var(--btn-regular-bg)", color: "var(--text-secondary)" }}
+            >
+              <Trophy size={10} /> {totalMastered} mastered
             </span>
-            <span className="text-[10px]" style={{ color: "var(--text-tertiary)" }}>
-              {totalSeen} seen
+            <span
+              className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-medium"
+              style={{ backgroundColor: "var(--btn-regular-bg)", color: "var(--text-secondary)" }}
+            >
+              👁 {totalSeen} seen
             </span>
             {remaining > 0 && (
-              <span className="text-[10px]" style={{ color: "var(--text-tertiary)" }}>
+              <span
+                className="px-2.5 py-1 rounded-full text-[11px] font-medium"
+                style={{ backgroundColor: "var(--btn-regular-bg)", color: "var(--text-secondary)" }}
+              >
                 {remaining} left
               </span>
             )}
           </div>
         </div>
 
-        {/* Fetching new phrases state */}
         {fetchingPhrases && (
           <div className="flex items-center gap-2 text-xs" style={{ color: "var(--text-tertiary)" }}>
             <Sparkles size={12} className="animate-pulse" />
@@ -385,14 +392,13 @@ export default function PronunciationView({ onSubmit }: PronunciationViewProps) 
           </div>
         )}
 
-        {/* Mastered banner */}
         {justMastered && !analyzing && (
           <div
-            className="w-full max-w-sm flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium"
-            style={{ backgroundColor: "color-mix(in oklch, var(--primary) 12%, transparent)", color: "var(--primary)" }}
+            className="w-full max-w-lg flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium"
+            style={{ backgroundColor: "color-mix(in oklch, var(--primary) 10%, transparent)", color: "var(--primary)" }}
           >
             <Trophy size={14} />
-            Phrase mastered! Send to move to the next one.
+            Phrase mastered! Tap the mic to continue.
           </div>
         )}
 
@@ -405,6 +411,56 @@ export default function PronunciationView({ onSubmit }: PronunciationViewProps) 
           hasMistakes={hasMistakes}
         />
 
+        {/* Mic button with pulse rings */}
+        <div className="relative flex items-center justify-center my-1">
+          {isRecording && (
+            <>
+              <span
+                className="absolute rounded-full animate-ping"
+                style={{
+                  width: 80, height: 80,
+                  backgroundColor: "var(--primary)",
+                  opacity: 0.15,
+                }}
+              />
+              <span
+                className="absolute rounded-full"
+                style={{
+                  width: 68, height: 68,
+                  backgroundColor: "var(--primary)",
+                  opacity: 0.12,
+                }}
+              />
+            </>
+          )}
+          <button
+            onClick={handleMicClick}
+            className="relative w-14 h-14 rounded-full flex items-center justify-center transition-all focus:outline-none"
+            style={{
+              backgroundColor: isRecording ? "#ef4444" : "var(--primary)",
+              boxShadow: isRecording
+                ? "0 0 0 8px rgba(239,68,68,0.12)"
+                : "0 4px 16px color-mix(in oklch, var(--primary) 40%, transparent)",
+            }}
+            aria-label={isRecording ? "Stop recording" : "Start recording"}
+          >
+            <Mic size={20} color="#fff" />
+          </button>
+        </div>
+
+        {/* Waveform / audio player */}
+        <div
+          className="w-full max-w-lg h-16 rounded-2xl border flex items-center overflow-hidden"
+          style={{ borderColor: "var(--line-divider)", backgroundColor: "var(--btn-regular-bg)" }}
+        >
+          {audioUrl ? (
+            <audio ref={audioRef} src={audioUrl} controls className="w-full h-full opacity-80" />
+          ) : (
+            <WaveformIdle isRecording={isRecording} />
+          )}
+        </div>
+
+        {/* Coach panel */}
         {focus && !analyzing && (
           <CoachPanel
             focus={focus}
@@ -416,78 +472,52 @@ export default function PronunciationView({ onSubmit }: PronunciationViewProps) 
           />
         )}
 
-        <button
-          onClick={handleMicClick}
-          className="w-16 h-16 rounded-full flex items-center justify-center transition-all focus:outline-none"
-          style={{
-            backgroundColor: isRecording ? "transparent" : "var(--card-bg)",
-            border: `3px solid ${isRecording ? "#ef4444" : "var(--line-divider)"}`,
-            boxShadow: isRecording
-              ? "0 0 0 6px rgba(239,68,68,0.15), 0 0 0 12px rgba(239,68,68,0.06)"
-              : "0 2px 8px rgba(0,0,0,0.08)",
-          }}
-          aria-label={isRecording ? "Stop recording" : "Start recording"}
-        >
-          <Mic size={22} style={{ color: isRecording ? "#ef4444" : "var(--text-secondary)" }} />
-        </button>
-
-        <div
-          className="w-full max-w-sm h-14 rounded-xl border flex items-center justify-center overflow-hidden"
-          style={{ borderColor: "var(--line-divider)", backgroundColor: "var(--btn-regular-bg)" }}
-        >
-          {audioUrl ? (
-            <audio ref={audioRef} src={audioUrl} controls className="w-full h-full opacity-80" />
-          ) : (
-            <WaveformIdle isRecording={isRecording} />
-          )}
-        </div>
-
+        {/* Action buttons */}
         <div className="flex items-center gap-3 flex-wrap justify-center">
           <button
             onClick={() => handleListenModel()}
-            className="flex items-center gap-1.5 px-4 py-2 rounded-full border text-xs font-medium transition-all hover:opacity-80"
-            style={{ borderColor: "var(--line-divider)", color: "var(--text-secondary)" }}
+            className="flex items-center gap-1.5 px-5 py-2.5 rounded-full border text-sm font-medium transition-all hover:opacity-80"
+            style={{ borderColor: "var(--line-divider)", color: "var(--text-secondary)", backgroundColor: "var(--card-bg)" }}
           >
-            <Play size={12} />
+            <Play size={13} />
             Listen
           </button>
-
           <button
             onClick={() => handleListenModel(0.55)}
-            className="flex items-center gap-1.5 px-4 py-2 rounded-full border text-xs font-medium transition-all hover:opacity-80"
-            style={{ borderColor: "var(--line-divider)", color: "var(--text-secondary)" }}
+            className="flex items-center gap-1.5 px-5 py-2.5 rounded-full border text-sm font-medium transition-all hover:opacity-80"
+            style={{ borderColor: "var(--line-divider)", color: "var(--text-secondary)", backgroundColor: "var(--card-bg)" }}
           >
-            <Turtle size={12} />
+            <Turtle size={13} />
             Slow
           </button>
-
           {audioUrl && (
             <button
               onClick={handleSend}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-full border text-xs font-medium transition-all hover:opacity-80"
-              style={{ borderColor: "var(--primary)", color: "var(--primary)" }}
+              className="flex items-center gap-1.5 px-5 py-2.5 rounded-full text-sm font-medium transition-all hover:opacity-80"
+              style={{ backgroundColor: "var(--primary)", color: "#fff" }}
             >
-              <CheckCircle size={12} />
+              <CheckCircle size={13} />
               Send recording
             </button>
           )}
         </div>
       </div>
 
-      <div className="flex-shrink-0 p-3 border-t" style={{ borderColor: "var(--line-divider)" }}>
+      {/* Bottom input */}
+      <div className="flex-shrink-0 px-4 pb-4 pt-2 border-t" style={{ borderColor: "var(--line-divider)" }}>
         <form
           onSubmit={handleCustomSubmit}
-          className="flex items-center gap-2 p-3 rounded-xl border transition-all focus-within:shadow-md"
+          className="flex items-center gap-3 px-4 py-3 rounded-2xl border-2 transition-all"
           style={{ backgroundColor: "var(--card-bg)", borderColor: "var(--line-divider)" }}
-          onFocus={(e) => (e.currentTarget.style.borderColor = "var(--primary)")}
-          onBlur={(e) => {
+          onFocus={e => (e.currentTarget.style.borderColor = "var(--primary)")}
+          onBlur={e => {
             if (!e.currentTarget.contains(e.relatedTarget))
               e.currentTarget.style.borderColor = "var(--line-divider)";
           }}
         >
           <input
             value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
+            onChange={e => setInputValue(e.target.value)}
             placeholder="or type the phrase to practice..."
             className="flex-1 bg-transparent text-sm focus:outline-none"
             style={{ color: "var(--text-primary)" }}
@@ -495,8 +525,8 @@ export default function PronunciationView({ onSubmit }: PronunciationViewProps) 
           <button
             type="submit"
             disabled={!inputValue.trim()}
-            className="flex-shrink-0 w-9 h-9 rounded-lg text-white transition-colors flex items-center justify-center disabled:opacity-40"
-            style={{ backgroundColor: "var(--primary)" }}
+            className="flex-shrink-0 w-9 h-9 rounded-xl flex items-center justify-center transition-colors disabled:opacity-40"
+            style={{ backgroundColor: "var(--primary)", color: "#fff" }}
             aria-label="Practice phrase"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
