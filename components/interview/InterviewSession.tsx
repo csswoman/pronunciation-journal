@@ -65,13 +65,13 @@ const outlineBtn: React.CSSProperties = {
 // ─── Word chip with tooltip ───────────────────────────────────────────────────
 function WordChip({ word, status, tip, onPlay }: {
   word: string;
-  status: "correct" | "incorrect" | "missing";
+  status: "correct" | "incorrect" | "missing" | "extra";
   tip?: string;
   onPlay?: () => void;
 }) {
   const [show, setShow] = useState(false);
-  const colors = { correct: "#16a34a", incorrect: "#dc2626", missing: "#d97706" };
-  const bgs    = { correct: "#16a34a18", incorrect: "#dc262618", missing: "#d9770618" };
+  const colors = { correct: "#16a34a", incorrect: "#dc2626", missing: "#d97706", extra: "#6b7280" };
+  const bgs    = { correct: "#16a34a18", incorrect: "#dc262618", missing: "#d9770618", extra: "#6b728018" };
   const isPlayable = onPlay && (status === "incorrect" || status === "missing");
 
   const handlePlay = (e: React.MouseEvent) => {

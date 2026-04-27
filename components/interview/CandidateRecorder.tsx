@@ -51,12 +51,13 @@ function AccuracyRing({ accuracy }: { accuracy: number }) {
   );
 }
 
-function WordChip({ word, status, tip }: { word: string; status: "correct" | "incorrect" | "missing"; tip?: string }) {
+function WordChip({ word, status, tip }: { word: string; status: "correct" | "incorrect" | "missing" | "extra"; tip?: string }) {
   const [showTip, setShowTip] = useState(false);
   const bg: Record<typeof status, string> = {
     correct: "bg-green-500/10 text-green-700 dark:text-green-400",
     incorrect: "bg-red-500/10 text-red-600",
     missing: "bg-amber-500/10 text-amber-600 line-through",
+    extra: "bg-gray-500/10 text-gray-500",
   };
 
   return (
