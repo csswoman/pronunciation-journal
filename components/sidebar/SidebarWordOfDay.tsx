@@ -193,7 +193,9 @@ export default function SidebarWordOfDay() {
                 style={{ backgroundColor: "var(--bg-tertiary)", border: "1px solid var(--border)" }}
               >
                 <p className="text-[11px] leading-snug" style={{ color: "var(--text-secondary)" }}>{word.definition}</p>
-                <p className="text-[10px] italic leading-snug" style={{ color: "var(--text-tertiary)" }}>"{word.example_sentence}"</p>
+                {word.example_sentence && (
+                  <p className="text-[10px] italic leading-snug" style={{ color: "var(--text-tertiary)" }}>"{word.example_sentence}"</p>
+                )}
               </div>
             )}
           </div>
