@@ -2,6 +2,7 @@ import { GoogleGenAI } from "@google/genai";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { requireUser, rateLimit, validateBody } from "@/lib/api/guards";
+import { createClient } from "@/lib/supabase/server";
 
 // ---------------------------------------------------------------------------
 // Request schema
@@ -12,6 +13,7 @@ const DeckSuggestSchema = z.object({
   deckDescription: z.string().max(500).optional(),
   difficulty: z.number().int().min(0).max(3).optional(),
   seed: z.string().max(100).optional(),
+  existingWords: z.array(z.string().max(100)).max(200).optional(),
 });
 
 // ---------------------------------------------------------------------------
@@ -37,6 +39,40 @@ const PREVIEW_MODELS = ["gemini-3.1-flash-lite-preview"] as const;
 const FALLBACK_MODELS = ENABLE_PREVIEW_MODELS
   ? [...BASE_MODELS, ...PREVIEW_MODELS]
   : [...BASE_MODELS];
+
+// Cache TTL: 7 days (suggestions for a given deck theme don't change often)
+const CACHE_TTL_DAYS = 7;
+
+// ---------------------------------------------------------------------------
+// Cache helpers
+// ---------------------------------------------------------------------------
+
+function buildCacheKey(deckName: string, description: string, difficulty: number): string {
+  const normalized = `${deckName.toLowerCase().trim()}|${description.toLowerCase().trim()}|${difficulty}`;
+  return normalized;
+}
+
+type Suggestion = { word: string; meaning: string };
+
+async function getCached(key: string): Promise<Suggestion[] | null> {
+  const supabase = await createClient();
+  const cutoff = new Date(Date.now() - CACHE_TTL_DAYS * 24 * 60 * 60 * 1000).toISOString();
+  const { data } = await supabase
+    .from("deck_suggestions_cache")
+    .select("suggestions")
+    .eq("cache_key", key)
+    .gte("created_at", cutoff)
+    .single();
+  if (!data) return null;
+  return data.suggestions as Suggestion[];
+}
+
+async function setCached(key: string, suggestions: Suggestion[]): Promise<void> {
+  const supabase = await createClient();
+  await supabase
+    .from("deck_suggestions_cache")
+    .upsert({ cache_key: key, suggestions, created_at: new Date().toISOString() }, { onConflict: "cache_key" });
+}
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -111,12 +147,25 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const { data: body, error: validationError } = await validateBody(request, DeckSuggestSchema);
   if (validationError) return validationError as NextResponse;
 
+  const difficulty = body.difficulty ?? 1;
+  const description = body.deckDescription ?? "";
+
+  // 4. Check cache (skip when seed or existingWords are present — those need fresh/varied results)
+  const hasVariance = !!body.seed || (body.existingWords && body.existingWords.length > 0);
+  if (!hasVariance) {
+    const cacheKey = buildCacheKey(body.deckName, description, difficulty);
+    const cached = await getCached(cacheKey);
+    if (cached) {
+      return NextResponse.json({ suggestions: cached, cached: true });
+    }
+  }
+
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
     return NextResponse.json({ error: "AI service unavailable" }, { status: 503 });
   }
 
-  // 4. Build prompt server-side from validated fields only
+  // 5. Build prompt server-side from validated fields only
   const difficultyHint =
     typeof body.difficulty === "number" && body.difficulty >= 2
       ? "Use more advanced / less common vocabulary appropriate for an intermediate to advanced learner."
@@ -124,15 +173,27 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
   const seedHint = body.seed ? `Use this seed to vary results: ${body.seed}.` : "";
 
-  const prompt = body.deckDescription
-    ? `Deck: "${body.deckName}"\nDescription: "${body.deckDescription}"\n\n${difficultyHint} ${seedHint}\nSuggest 8 English words or short phrases for this theme.`
-    : `Deck: "${body.deckName}"\n\n${difficultyHint} ${seedHint}\nSuggest 8 English words or short phrases for this theme.`;
+  const existingHint =
+    body.existingWords && body.existingWords.length > 0
+      ? `\nThe user already has these words in the deck — do NOT suggest any of them: ${body.existingWords.join(", ")}.`
+      : "";
+
+  const prompt = description
+    ? `Deck: "${body.deckName}"\nDescription: "${description}"\n\n${difficultyHint} ${seedHint}${existingHint}\nSuggest 8 English words or short phrases for this theme.`
+    : `Deck: "${body.deckName}"\n\n${difficultyHint} ${seedHint}${existingHint}\nSuggest 8 English words or short phrases for this theme.`;
 
   try {
     const ai = new GoogleGenAI({ apiKey });
     const raw = await generateSuggestions(ai, prompt);
     const cleaned = raw.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
     const parsed = JSON.parse(cleaned);
+
+    // 6. Store in cache (only when no variance factors — seed/existingWords make results specific)
+    if (!hasVariance && parsed.suggestions) {
+      const cacheKey = buildCacheKey(body.deckName, description, difficulty);
+      setCached(cacheKey, parsed.suggestions).catch(() => {});
+    }
+
     return NextResponse.json(parsed);
   } catch (err: unknown) {
     const status = getErrorStatus(err) ?? 500;
