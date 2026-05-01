@@ -1,7 +1,20 @@
 "use client";
 
 import type { MouseEvent } from "react";
+import { IPA_EXTRA } from "@/lib/ipa-data";
 import type { PhonemeData } from "./data";
+
+const DIFFICULTY_COLOR: Record<string, string> = {
+  easy: "#22c55e",
+  medium: "#eab308",
+  hard: "#ef4444",
+};
+
+const TYPE_BADGE: Record<PhonemeData["type"], { bg: string; label: string }> = {
+  vowel: { bg: "#3b82f6", label: "VOWEL" },
+  consonant: { bg: "#8b5cf6", label: "CONSONANT" },
+  diphthong: { bg: "#10b981", label: "DIPHTHONG" },
+};
 
 export default function PhonemeCard({
   phoneme,
@@ -16,6 +29,10 @@ export default function PhonemeCard({
   onPlay: (event: MouseEvent) => void;
   onSelect: () => void;
 }) {
+  const extra = IPA_EXTRA[phoneme.symbol];
+  const difficultyColor = extra ? DIFFICULTY_COLOR[extra.difficulty] : "#22c55e";
+  const typeBadge = TYPE_BADGE[phoneme.type];
+
   return (
     <button
       type="button"
@@ -27,6 +44,22 @@ export default function PhonemeCard({
         color: isSelected ? "white" : "var(--text-primary)",
       }}
     >
+      <span
+        className="absolute top-2 left-2 w-2 h-2 rounded-full"
+        style={{ backgroundColor: difficultyColor, opacity: isSelected ? 0.75 : 1 }}
+      />
+
+      <span
+        className="text-[8px] uppercase font-bold px-1.5 py-0.5 rounded-full block w-fit mb-1"
+        style={
+          isSelected
+            ? { backgroundColor: "rgba(255,255,255,0.2)", color: "white" }
+            : { backgroundColor: typeBadge.bg, color: "white" }
+        }
+      >
+        {typeBadge.label}
+      </span>
+
       <span className="text-2xl font-bold font-ipa block mb-1" style={{ color: isSelected ? "white" : "var(--text-primary)" }}>
         {phoneme.symbol}
       </span>

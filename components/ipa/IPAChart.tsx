@@ -11,6 +11,7 @@ import {
   type FilterType,
   type PhonemeData,
 } from "@/components/ipa-chart/data";
+import { HARD_FOR_SPANISH_SPEAKERS } from "@/lib/ipa-data";
 import FeaturedPhonemePanel from "@/components/ipa-chart/FeaturedPhonemePanel";
 import FilterTabs from "@/components/ipa-chart/FilterTabs";
 import PhonemeCard from "@/components/ipa-chart/PhonemeCard";
@@ -167,6 +168,74 @@ export default function IPAChart() {
                   }}
                 />
               ))}
+            </div>
+          )}
+
+          <div className="mt-5 flex items-center gap-4 flex-wrap">
+            <span className="text-xs font-semibold" style={{ color: "var(--text-secondary)" }}>
+              Difficulty for Spanish speakers:
+            </span>
+            {[
+              { color: "#22c55e", label: "Easy" },
+              { color: "#eab308", label: "Moderate" },
+              { color: "#ef4444", label: "Hard" },
+            ].map(({ color, label }) => (
+              <span key={label} className="flex items-center gap-1.5 text-xs" style={{ color: "var(--text-secondary)" }}>
+                <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: color }} />
+                {label}
+              </span>
+            ))}
+          </div>
+
+          {activeFilter === "all" && (
+            <div
+              className="mt-4 rounded-3xl p-5 border"
+              style={{ backgroundColor: "var(--card-bg)", borderColor: "var(--line-divider)" }}
+            >
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-base">🔥</span>
+                <h3 className="font-bold text-sm" style={{ color: "var(--text-primary)" }}>
+                  Difíciles para hispanohablantes
+                </h3>
+              </div>
+              <p className="text-xs mb-4" style={{ color: "var(--text-secondary)" }}>
+                Estos sonidos no existen en español — requieren práctica específica
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {HARD_FOR_SPANISH_SPEAKERS.map((symbol) => {
+                  const phoneme = PHONEMES.find((p) => p.symbol === symbol);
+                  if (!phoneme) return null;
+                  const isActive = selectedPhoneme.symbol === symbol;
+                  return (
+                    <button
+                      key={symbol}
+                      type="button"
+                      onClick={() => {
+                        setSelectedPhoneme(phoneme);
+                        playSound(phoneme.rawSymbol, phoneme.example);
+                      }}
+                      className="group relative text-left rounded-2xl px-3 py-2 border transition-all duration-150 hover:scale-[1.04] focus:outline-none"
+                      style={{
+                        backgroundColor: isActive ? "var(--primary)" : "var(--btn-regular-bg)",
+                        borderColor: isActive ? "var(--primary)" : "var(--line-divider)",
+                      }}
+                    >
+                      <span
+                        className="text-base font-bold font-ipa block leading-none"
+                        style={{ color: isActive ? "white" : "var(--text-primary)" }}
+                      >
+                        {symbol}
+                      </span>
+                      <span
+                        className="text-[9px] block mt-0.5"
+                        style={{ color: isActive ? "rgba(255,255,255,0.65)" : "var(--text-secondary)" }}
+                      >
+                        {phoneme.example}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           )}
 
