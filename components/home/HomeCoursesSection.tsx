@@ -15,8 +15,12 @@ export default function HomeCoursesSection() {
 
   useEffect(() => {
     fetch("/api/notion/courses")
-      .then((r) => r.json())
-      .then((data) => { setCourses(data); setLoading(false); });
+      .then((r) => {
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        return r.json();
+      })
+      .then((data) => { setCourses(data); setLoading(false); })
+      .catch(() => setLoading(false));
   }, []);
 
   const maxIndex = Math.max(0, courses.length - VISIBLE);

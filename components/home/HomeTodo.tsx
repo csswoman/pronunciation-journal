@@ -1,25 +1,26 @@
 "use client";
 
-import { Check, ArrowRight, ClipboardList } from "lucide-react";
+import { Check, ArrowRight, ClipboardList, Zap } from "lucide-react";
 import Card from "@/components/layout/Card";
 import CardHeader from "@/components/ui/CardHeader";
+import Badge, { type BadgeVariant } from "@/components/ui/Badge";
 
 interface TodoItem {
   id: number;
   label: string;
   tag: string;
-  tagColor: string;
+  tagVariant: BadgeVariant;
   minutes: number;
   done: boolean;
-  icon?: string;
+  featured?: boolean;
 }
 
 const TODO_ITEMS: TodoItem[] = [
-  { id: 1, label: "Vowel sounds: /ɪ/ vs /iː/", tag: "Pronunciation", tagColor: "bg-green-100 text-green-700", minutes: 8, done: true },
-  { id: 2, label: "Present Perfect vs Past Simple", tag: "Theory", tagColor: "bg-purple-100 text-purple-700", minutes: 12, done: true },
-  { id: 3, label: 'Tongue twister: "She sells seashells"', tag: "Shadowing", tagColor: "bg-blue-100 text-blue-700", minutes: 6, done: false, icon: "✏️" },
-  { id: 4, label: "Review 12 words (SRS)", tag: "Word Bank", tagColor: "bg-yellow-100 text-yellow-700", minutes: 5, done: false },
-  { id: 5, label: "Audio of the day · BBC clip", tag: "Listening", tagColor: "bg-orange-100 text-orange-700", minutes: 10, done: false },
+  { id: 1, label: "Vowel sounds: /ɪ/ vs /iː/",            tag: "Pronunciation", tagVariant: "success", minutes: 8,  done: true  },
+  { id: 2, label: "Present Perfect vs Past Simple",        tag: "Theory",        tagVariant: "default", minutes: 12, done: true  },
+  { id: 3, label: 'Tongue twister: "She sells seashells"', tag: "Shadowing",     tagVariant: "info",    minutes: 6,  done: false, featured: true },
+  { id: 4, label: "Review 12 words (SRS)",                 tag: "Word Bank",     tagVariant: "warning", minutes: 5,  done: false },
+  { id: 5, label: "Audio of the day · BBC clip",           tag: "Listening",     tagVariant: "error",   minutes: 10, done: false },
 ];
 
 const completed = TODO_ITEMS.filter((t) => t.done).length;
@@ -34,74 +35,85 @@ export default function HomeTodo() {
         icon={<ClipboardList size={18} className="text-[var(--primary)]" />}
         title="Today's plan"
         right={
-          <span className="text-xs text-[var(--text-tertiary)]">
-            {completed}/{total} complete
+          <span className="text-xs font-medium text-[var(--text-tertiary)]">
+            {completed}/{total} done
           </span>
         }
       />
 
       {/* Progress bar */}
-      <div className="flex items-center gap-3">
-        <div className="flex-1 h-1.5 rounded-full bg-[var(--btn-regular-bg)] overflow-hidden">
+      <div className="flex flex-col gap-1.5">
+        <div className="h-1.5 rounded-full bg-[var(--bg-tertiary)] overflow-hidden">
           <div
-            className="h-full rounded-full bg-[var(--primary)] transition-all duration-500"
+            className="h-full rounded-full bg-[var(--primary)] transition-all duration-700"
             style={{ width: `${progress}%` }}
           />
         </div>
-        <span className="text-xs text-[var(--text-tertiary)] shrink-0">~{remaining} min left</span>
+        <div className="flex justify-between text-[11px] text-[var(--text-tertiary)]">
+          <span>{progress}% complete</span>
+          <span>~{remaining} min left</span>
+        </div>
       </div>
 
       {/* Items */}
-      <div className="flex flex-col divide-y divide-[var(--border-light)]">
-        {TODO_ITEMS.map((item, i) => (
+      <div className="flex flex-col gap-1">
+        {TODO_ITEMS.map((item) => (
           <div
             key={item.id}
-            className={`flex items-center gap-3 py-3 ${item.done ? "opacity-50" : ""}`}
+            className={[
+              "group flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors",
+              item.done
+                ? "opacity-50"
+                : item.featured
+                  ? "bg-[color-mix(in_oklch,var(--primary)_6%,transparent)] hover:bg-[color-mix(in_oklch,var(--primary)_10%,transparent)]"
+                  : "hover:bg-[var(--bg-tertiary)]",
+            ].filter(Boolean).join(" ")}
           >
-            {/* Status indicator */}
+            {/* Status dot */}
             <div
-              className={`shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-sm font-semibold
-                ${item.done
-                  ? "bg-[var(--primary)] text-white"
-                  : item.icon
-                    ? "bg-[var(--primary)] text-white"
-                    : "bg-[var(--btn-regular-bg)] text-[var(--text-tertiary)]"
-                }`}
+              className="shrink-0 w-6 h-6 rounded-full flex items-center justify-center"
+              style={
+                item.done
+                  ? { backgroundColor: "var(--success-soft)", color: "var(--success)" }
+                  : item.featured
+                    ? { backgroundColor: "color-mix(in oklch, var(--primary) 18%, transparent)", color: "var(--primary)" }
+                    : { backgroundColor: "var(--bg-tertiary)", color: "var(--text-tertiary)" }
+              }
             >
               {item.done ? (
-                <Check size={14} strokeWidth={3} />
-              ) : item.icon ? (
-                <span className="text-base leading-none">{item.icon}</span>
+                <Check size={12} strokeWidth={3} />
+              ) : item.featured ? (
+                <Zap size={11} />
               ) : (
-                <span>{i + 1}</span>
+                <span className="text-[10px] font-semibold leading-none">·</span>
               )}
             </div>
 
             {/* Content */}
             <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-1.5 mb-0.5">
-                <span className={`text-[11px] font-medium px-1.5 py-0.5 rounded-full ${item.tagColor}`}>
-                  {item.tag}
-                </span>
-                <span className="text-[11px] text-[var(--text-tertiary)]">· {item.minutes} min</span>
-              </div>
-              <p className={`text-sm text-[var(--deep-text)] truncate ${item.done ? "line-through" : ""}`}>
+              <p className={[
+                "text-sm font-medium leading-snug truncate",
+                item.done ? "line-through text-[var(--text-secondary)]" : "text-[var(--text-primary)]",
+              ].join(" ")}>
                 {item.label}
               </p>
+              <div className="flex items-center gap-1.5 mt-0.5">
+                <Badge label={item.tag} variant={item.tagVariant} />
+                <span className="text-[11px] text-[var(--text-tertiary)]">{item.minutes} min</span>
+              </div>
             </div>
 
             {/* Action */}
             {!item.done && (
-              <button className={`shrink-0 flex items-center gap-1 text-xs font-medium px-3 py-1.5 rounded-lg transition-colors
-                ${item.icon
-                  ? "bg-[var(--primary)] text-white hover:opacity-90"
-                  : "text-[var(--text-tertiary)]"
-                }`}>
-                {item.icon ? (
-                  <>Start <ArrowRight size={12} /></>
-                ) : (
-                  <ArrowRight size={14} />
-                )}
+              <button
+                className={[
+                  "shrink-0 flex items-center gap-1 text-[11px] font-semibold px-2.5 py-1 rounded-lg transition-all",
+                  item.featured
+                    ? "bg-[var(--primary)] text-[var(--primary-foreground)] hover:bg-[var(--primary-hover)]"
+                    : "text-[var(--text-tertiary)] opacity-0 group-hover:opacity-100 hover:text-[var(--text-primary)]",
+                ].join(" ")}
+              >
+                {item.featured ? <>Start <ArrowRight size={11} /></> : <ArrowRight size={13} />}
               </button>
             )}
           </div>

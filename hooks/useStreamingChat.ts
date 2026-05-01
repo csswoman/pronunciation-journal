@@ -40,6 +40,7 @@ export function useStreamingChat({
   const [messages, setMessages] = useState<AIMessage[]>([]);
   const [isStreaming, setIsStreaming] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [quotaExhausted, setQuotaExhausted] = useState(false);
 
   const messagesRef = useRef<AIMessage[]>([]);
   messagesRef.current = messages;
@@ -52,9 +53,21 @@ export function useStreamingChat({
   const correctCountRef = useRef(0);
   const firstExerciseLoggedRef = useRef(false);
 
+  function isQuotaError(message: string): boolean {
+    const lower = message.toLowerCase();
+    return (
+      lower.includes("quota") ||
+      lower.includes("resource exhausted") ||
+      lower.includes("rate limit") ||
+      lower.includes("429") ||
+      lower.includes("too many requests")
+    );
+  }
+
   const sendMessage = useCallback(async (text: string) => {
     if (!text.trim() || isStreaming) return;
     setError(null);
+    setQuotaExhausted(false);
 
     if (!sessionStartedRef.current) {
       sessionStartedRef.current = true;
@@ -88,7 +101,13 @@ export function useStreamingChat({
 
       if (!res.ok || !res.body) {
         const data = await res.json().catch(() => ({}));
-        throw new Error(data.error ?? "Failed to get AI response");
+        const errMsg: string = data.error ?? "Failed to get AI response";
+        if (res.status === 429 || isQuotaError(errMsg)) {
+          setQuotaExhausted(true);
+          setMessages(messagesRef.current.slice(0, -1));
+          return;
+        }
+        throw new Error(errMsg);
       }
 
       const reader = res.body.getReader();
@@ -140,6 +159,18 @@ export function useStreamingChat({
           });
 
           if (result === "done") break outer;
+          if (typeof result === "object" && "error" in result) {
+            // Stream-level error from the server (e.g. quota exhausted after all fallbacks)
+            if (isQuotaError(result.error)) {
+              setQuotaExhausted(true);
+              // Remove the empty model placeholder; keep prior conversation
+              setMessages(prev => prev.slice(0, -1));
+            } else {
+              setError(result.error);
+              setMessages(messagesRef.current.slice(0, -2));
+            }
+            break outer;
+          }
           if (result === "flush") flush();
         }
       }
@@ -225,11 +256,12 @@ export function useStreamingChat({
     }
     setMessages([]);
     setError(null);
+    setQuotaExhausted(false);
   }, [mode]);
 
   const loadMessages = useCallback((msgs: AIMessage[]) => {
     setMessages(msgs);
   }, []);
 
-  return { messages, isStreaming, error, sendMessage, answerToolCall, resetChat, loadMessages };
+  return { messages, isStreaming, error, quotaExhausted, sendMessage, answerToolCall, resetChat, loadMessages };
 }

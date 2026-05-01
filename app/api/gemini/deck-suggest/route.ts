@@ -2,7 +2,7 @@ import { GoogleGenAI } from "@google/genai";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { requireUser, rateLimit, validateBody } from "@/lib/api/guards";
-import { createClient } from "@/lib/supabase/server";
+import { createSupabaseServerClient as createClient } from "@/lib/supabase/server";
 
 // ---------------------------------------------------------------------------
 // Request schema

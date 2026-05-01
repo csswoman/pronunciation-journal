@@ -9,6 +9,7 @@ import RoleplayView from "./RoleplayView";
 import PronunciationView from "./PronunciationView";
 import CustomPromptPanel from "./CustomPromptPanel";
 import ErrorBanner from "./ErrorBanner";
+import QuotaExhaustedCard from "./QuotaExhaustedCard";
 
 const TAB_TO_MODE: Record<TabId, AIConversationMode> = {
   chat: "chat",
@@ -27,12 +28,14 @@ interface ChatAreaProps {
   messages: AIMessage[];
   isStreaming: boolean;
   error: string | null;
+  quotaExhausted?: boolean;
   mode: AIConversationMode;
   onChangeMode: (mode: AIConversationMode) => Promise<void>;
   onSaveWord: (word: string, context: string) => void;
   onSuggestionClick: (text: string) => void;
   onToolAnswer: (callId: string, result: ExerciseResult) => void;
   onSubmit: (text: string) => void;
+  onNewSession?: () => void;
   inputPrefill?: string;
   onPrefillConsumed: () => void;
   vocabCount?: number;
@@ -46,12 +49,14 @@ export default function ChatArea({
   messages,
   isStreaming,
   error,
+  quotaExhausted = false,
   mode,
   onChangeMode,
   onSaveWord,
   onSuggestionClick,
   onToolAnswer,
   onSubmit,
+  onNewSession,
   inputPrefill,
   onPrefillConsumed,
   vocabCount = 0,
@@ -149,16 +154,23 @@ export default function ChatArea({
             />
           </div>
 
-          <div className="flex-shrink-0 px-4 pb-3 pt-2">
-            <CustomPromptPanel
-              onSubmit={onSubmit}
-              isDisabled={isStreaming}
-              variant="chat"
-              placeholder="Write in English... or hold mic to speak"
-              prefill={inputPrefill}
-              onPrefillConsumed={onPrefillConsumed}
+          {quotaExhausted ? (
+            <QuotaExhaustedCard
+              messages={messages}
+              onNewSession={onNewSession ?? (() => {})}
             />
-          </div>
+          ) : (
+            <div className="flex-shrink-0 px-4 pb-3 pt-2">
+              <CustomPromptPanel
+                onSubmit={onSubmit}
+                isDisabled={isStreaming}
+                variant="chat"
+                placeholder="Write in English... or hold mic to speak"
+                prefill={inputPrefill}
+                onPrefillConsumed={onPrefillConsumed}
+              />
+            </div>
+          )}
         </div>
       )}
     </div>
