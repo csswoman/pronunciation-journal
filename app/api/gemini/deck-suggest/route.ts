@@ -57,7 +57,8 @@ type Suggestion = { word: string; meaning: string };
 async function getCached(key: string): Promise<Suggestion[] | null> {
   const supabase = await createClient();
   const cutoff = new Date(Date.now() - CACHE_TTL_DAYS * 24 * 60 * 60 * 1000).toISOString();
-  const { data } = await supabase
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data } = await (supabase as any)
     .from("deck_suggestions_cache")
     .select("suggestions")
     .eq("cache_key", key)
@@ -69,7 +70,8 @@ async function getCached(key: string): Promise<Suggestion[] | null> {
 
 async function setCached(key: string, suggestions: Suggestion[]): Promise<void> {
   const supabase = await createClient();
-  await supabase
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  await (supabase as any)
     .from("deck_suggestions_cache")
     .upsert({ cache_key: key, suggestions, created_at: new Date().toISOString() }, { onConflict: "cache_key" });
 }

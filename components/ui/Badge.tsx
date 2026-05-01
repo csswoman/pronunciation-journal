@@ -27,7 +27,7 @@ export default function Badge({ label, variant = "default", size = "sm", dot = f
 
   const style = isNeutral ? undefined : {
     backgroundColor: `color-mix(in oklch, ${color} 14%, var(--bg-tertiary) 86%)`,
-    color,
+    color: color ?? undefined,
     border: `1px solid color-mix(in oklch, ${color} 22%, transparent)`,
   };
 
