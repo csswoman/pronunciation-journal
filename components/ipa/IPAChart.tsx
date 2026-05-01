@@ -12,6 +12,7 @@ import {
   type PhonemeData,
 } from "@/components/ipa-chart/data";
 import { HARD_FOR_SPANISH_SPEAKERS } from "@/lib/ipa-data";
+import DifficultyPill from "@/components/ipa-chart/DifficultyPill";
 import FeaturedPhonemePanel from "@/components/ipa-chart/FeaturedPhonemePanel";
 import FilterTabs from "@/components/ipa-chart/FilterTabs";
 import PhonemeCard from "@/components/ipa-chart/PhonemeCard";
@@ -171,20 +172,13 @@ export default function IPAChart() {
             </div>
           )}
 
-          <div className="mt-5 flex items-center gap-4 flex-wrap">
+          <div className="mt-5 flex items-center gap-3 flex-wrap">
             <span className="text-xs font-semibold" style={{ color: "var(--text-secondary)" }}>
-              Difficulty for Spanish speakers:
+              Badge color:
             </span>
-            {[
-              { color: "#22c55e", label: "Easy" },
-              { color: "#eab308", label: "Moderate" },
-              { color: "#ef4444", label: "Hard" },
-            ].map(({ color, label }) => (
-              <span key={label} className="flex items-center gap-1.5 text-xs" style={{ color: "var(--text-secondary)" }}>
-                <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: color }} />
-                {label}
-              </span>
-            ))}
+            <DifficultyPill difficulty="easy" label="Easy" />
+            <DifficultyPill difficulty="medium" label="Mid" />
+            <DifficultyPill difficulty="hard" label="Hard" />
           </div>
 
           {activeFilter === "all" && (
