@@ -1,7 +1,15 @@
 "use client";
 
 import type { MouseEvent } from "react";
+import { IPA_EXTRA } from "@/lib/ipa-data";
 import type { PhonemeData } from "./data";
+import DifficultyPill from "./DifficultyPill";
+
+const TYPE_LABEL: Record<PhonemeData["type"], string> = {
+  vowel: "VOWEL",
+  consonant: "CONSONANT",
+  diphthong: "DIPHTHONG",
+};
 
 export default function PhonemeCard({
   phoneme,
@@ -16,6 +24,8 @@ export default function PhonemeCard({
   onPlay: (event: MouseEvent) => void;
   onSelect: () => void;
 }) {
+  const extra = IPA_EXTRA[phoneme.symbol];
+
   return (
     <button
       type="button"
@@ -27,6 +37,23 @@ export default function PhonemeCard({
         color: isSelected ? "white" : "var(--text-primary)",
       }}
     >
+      <span className="block w-fit mb-1">
+        {extra ? (
+          <DifficultyPill
+            difficulty={extra.difficulty}
+            label={TYPE_LABEL[phoneme.type]}
+            muted={isSelected}
+          />
+        ) : (
+          <span
+            className="text-[8px] uppercase font-bold px-1.5 py-0.5 rounded-full"
+            style={{ backgroundColor: "rgba(255,255,255,0.2)", color: "white" }}
+          >
+            {TYPE_LABEL[phoneme.type]}
+          </span>
+        )}
+      </span>
+
       <span className="text-2xl font-bold font-ipa block mb-1" style={{ color: isSelected ? "white" : "var(--text-primary)" }}>
         {phoneme.symbol}
       </span>

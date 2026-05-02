@@ -34,6 +34,21 @@ export default function DecksPage() {
     setEditDeckId(null);
   };
 
+  if (studyDeck) {
+    return (
+      <>
+        <StudyModal deck={studyDeck} onClose={() => setStudyDeckId(null)} />
+        {manageDeck && (
+          <ManageDrawer
+            deck={manageDeck}
+            onClose={() => setManageDeckId(null)}
+            onWordCountChange={count => setWordCount(manageDeckId!, count)}
+          />
+        )}
+      </>
+    );
+  }
+
   return (
     <>
       <PageLayout
@@ -96,9 +111,6 @@ export default function DecksPage() {
           onUpdated={deck => { updateDeck(deck); setEditDeckId(null); }}
           onDelete={() => handleDelete(editDeck.id)}
         />
-      )}
-      {studyDeck && (
-        <StudyModal deck={studyDeck} onClose={() => setStudyDeckId(null)} />
       )}
       {manageDeck && (
         <ManageDrawer

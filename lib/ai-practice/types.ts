@@ -24,7 +24,8 @@ export type StreamChunk =
   | { type: "tool_call_start"; id: string; name: string }
   | { type: "tool_call_args_delta"; id: string; delta: string }
   | { type: "tool_call_end"; id: string }
-  | { type: "done" };
+  | { type: "done" }
+  | { type: "error"; message: string };
 
 export type StreamBuffer = {
   textParts: Array<{ insertIndex: number; text: string }>;

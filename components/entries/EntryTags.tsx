@@ -1,5 +1,7 @@
 "use client";
 
+import Badge from "@/components/ui/Badge";
+
 export interface EntryTagsProps {
   isEditing: boolean;
   currentTags?: string[];
@@ -17,18 +19,13 @@ export default function EntryTags({
 
   return (
     <div>
-      <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+      <label className="block text-sm font-semibold text-[var(--text-secondary)] mb-2">
         Tags
       </label>
       {!isEditing ? (
         <div className="flex flex-wrap gap-2">
           {currentTags?.map((tag, index) => (
-            <span
-              key={index}
-              className="px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-lg text-sm"
-            >
-              {tag}
-            </span>
+            <Badge key={index} label={tag} variant="info" />
           ))}
         </div>
       ) : (

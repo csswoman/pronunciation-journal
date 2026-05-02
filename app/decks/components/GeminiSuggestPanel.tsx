@@ -1,33 +1,25 @@
 "use client";
-import Button from "@/components/ui/Button";
 
 import { useState } from "react";
+import { Sparkles, RefreshCw, Plus, Check, ChevronRight } from "lucide-react";
 import type { Tables } from "@/lib/supabase/types";
 
 type Deck = Tables<"decks">;
 
-function SparkleIcon() {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3l1.5 4.5L11 9l-4.5 1.5L5 15l-1.5-4.5L-1 9l4.5-1.5L5 3zM19 13l1 3 3 1-3 1-1 3-1-3-3-1 3-1 1-3z" />
-    </svg>
-  );
-}
-
-function PlusIcon() {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-    </svg>
-  );
-}
+const DIFFICULTY_LEVELS = [
+  { value: 1, label: "A1–A2", desc: "Beginner" },
+  { value: 2, label: "B1–B2", desc: "Intermediate" },
+  { value: 3, label: "C1–C2", desc: "Advanced" },
+];
 
 export function GeminiSuggestPanel({
   deck,
+  existingWords,
   onAddEntry,
 }: {
   deck: Deck;
-  onAddEntry: (word: string) => Promise<void>;
+  existingWords?: string[];
+  onAddEntry: (word: string, meaning?: string) => Promise<void>;
 }) {
   const [loading, setLoading] = useState(false);
   const [suggestions, setSuggestions] = useState<{ word: string; meaning: string }[]>([]);
@@ -35,6 +27,7 @@ export function GeminiSuggestPanel({
   const [added, setAdded] = useState<Set<string>>(new Set());
   const [difficulty, setDifficulty] = useState<number>(1);
   const [seed, setSeed] = useState<string | number | null>(null);
+  const [savingAll, setSavingAll] = useState(false);
 
   const fetchSuggestions = async (opts?: { difficulty?: number; redo?: boolean }) => {
     setLoading(true);
@@ -42,18 +35,17 @@ export function GeminiSuggestPanel({
     setSuggestions([]);
     if (opts?.redo) setAdded(new Set());
     try {
-      const body: { deckName: string; deckDescription: string; difficulty?: number; seed?: string | number } = {
+      const body: { deckName: string; deckDescription: string; difficulty?: number; seed?: string | number; existingWords?: string[] } = {
         deckName: deck.name,
         deckDescription: deck.description ?? "",
+        existingWords: existingWords && existingWords.length > 0 ? existingWords : undefined,
       };
-      if (typeof opts?.difficulty === "number") body.difficulty = opts?.difficulty;
-      // provide a seed to encourage variation when redoing
-      const localSeed = opts?.redo ? (Math.random().toString(36).slice(2, 9)) : seed ?? undefined;
+      if (typeof opts?.difficulty === "number") body.difficulty = opts.difficulty;
+      const localSeed = opts?.redo ? Math.random().toString(36).slice(2, 9) : seed ?? undefined;
       if (localSeed) {
         body.seed = localSeed;
         setSeed(localSeed);
       }
-
       const res = await fetch("/api/gemini/deck-suggest", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -69,96 +61,138 @@ export function GeminiSuggestPanel({
     }
   };
 
-  const handleAdd = (word: string) => {
-    onAddEntry(word);
+  const handleAdd = (word: string, meaning: string) => {
+    onAddEntry(word, meaning);
     setAdded(prev => new Set([...prev, word]));
   };
 
+  const handleSaveAll = async () => {
+    setSavingAll(true);
+    const toAdd = suggestions.filter(s => !added.has(s.word));
+    for (const s of toAdd) await onAddEntry(s.word, s.meaning);
+    setAdded(prev => new Set([...Array.from(prev), ...toAdd.map(s => s.word)]));
+    setSavingAll(false);
+  };
+
+  const allAdded = suggestions.length > 0 && suggestions.every(s => added.has(s.word));
+
   return (
-    <div className="bg-[var(--btn-regular-bg)] rounded-2xl border border-[var(--line-divider)] p-4 space-y-3">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <span className="text-[var(--primary)]"><SparkleIcon /></span>
-          <span className="text-sm font-semibold text-[var(--deep-text)]">Gemini Suggestions</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <Button
-            onClick={() => fetchSuggestions({ difficulty })}
-            disabled={loading}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-[var(--primary)] text-white hover:opacity-90 disabled:opacity-50 transition-colors"
-          >
-            {loading ? "Thinking…" : "Suggest words"}
-          </Button>
-          <Button
-            onClick={() => fetchSuggestions({ difficulty, redo: true })}
-            disabled={loading}
-            title="Get a different set of suggestions"
-            className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-[var(--btn-regular-bg)] text-[var(--deep-text)] hover:bg-[var(--btn-plain-bg-hover)] transition-colors"
-          >
-            Re-do
-          </Button>
-          <Button
-            onClick={() => {
-              const next = Math.min(3, difficulty + 1);
-              setDifficulty(next);
-              fetchSuggestions({ difficulty: next });
-            }}
-            disabled={loading}
-            title="Suggest more difficult words"
-            className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-[var(--btn-regular-bg)] text-[var(--deep-text)] hover:bg-[var(--btn-plain-bg-hover)] transition-colors"
-          >
-            Harder
-          </Button>
+    <div className="space-y-4">
+      {/* Difficulty selector */}
+      <div>
+        <p className="text-[10px] font-semibold uppercase tracking-widest text-[var(--text-tertiary)] mb-2">
+          Difficulty level
+        </p>
+        <div className="grid grid-cols-3 gap-1.5 p-1 bg-[var(--btn-regular-bg)] rounded-xl border border-[var(--line-divider)]">
+          {DIFFICULTY_LEVELS.map(lvl => (
+            <button
+              key={lvl.value}
+              onClick={() => setDifficulty(lvl.value)}
+              className={`py-2 px-1 rounded-lg text-center transition-all ${
+                difficulty === lvl.value
+                  ? "bg-[var(--card-bg)] shadow-sm border border-[var(--line-divider)] text-[var(--deep-text)]"
+                  : "text-[var(--text-secondary)] hover:text-[var(--deep-text)]"
+              }`}
+            >
+              <p className="text-xs font-semibold">{lvl.label}</p>
+              <p className="text-[10px] opacity-70">{lvl.desc}</p>
+            </button>
+          ))}
         </div>
       </div>
 
-      {error && <p className="text-xs text-red-500">{error}</p>}
+      {/* Action row */}
+      <div className="flex gap-2">
+        <button
+          onClick={() => fetchSuggestions({ difficulty })}
+          disabled={loading}
+          className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl bg-[var(--primary)] text-white text-sm font-semibold hover:opacity-90 disabled:opacity-50 transition-opacity"
+        >
+          {loading ? (
+            <>
+              <RefreshCw size={14} className="animate-spin" />
+              Thinking…
+            </>
+          ) : (
+            <>
+              <Sparkles size={14} />
+              Suggest words
+            </>
+          )}
+        </button>
+        {suggestions.length > 0 && (
+          <button
+            onClick={() => fetchSuggestions({ difficulty, redo: true })}
+            disabled={loading}
+            title="Get a different set"
+            className="px-3 py-2.5 rounded-xl border border-[var(--line-divider)] text-[var(--text-secondary)] hover:bg-[var(--btn-regular-bg)] hover:text-[var(--deep-text)] transition-colors"
+          >
+            <RefreshCw size={14} />
+          </button>
+        )}
+      </div>
 
+      {error && (
+        <p className="text-xs text-red-500 bg-red-50 dark:bg-red-900/20 rounded-lg px-3 py-2">{error}</p>
+      )}
+
+      {/* Suggestions list */}
       {suggestions.length > 0 && (
         <div className="space-y-2">
-          <div className="flex items-center justify-end gap-2">
-            <Button
-              onClick={async () => {
-                // Save all suggestions not yet added
-                const toAdd = suggestions.map(s => s.word).filter(w => !added.has(w));
-                for (const w of toAdd) {
-                  await onAddEntry(w);
-                }
-                setAdded(prev => new Set([...Array.from(prev), ...toAdd]));
-              }}
-              className="px-3 py-1 rounded-xl text-xs font-semibold bg-[var(--primary)] text-white hover:opacity-90 transition-colors"
-            >
-              Save all
-            </Button>
+          {/* Save all bar */}
+          <div className="flex items-center justify-between">
+            <p className="text-[10px] font-semibold uppercase tracking-widest text-[var(--text-tertiary)]">
+              {suggestions.length} suggestions
+            </p>
+            {!allAdded && (
+              <button
+                onClick={handleSaveAll}
+                disabled={savingAll}
+                className="flex items-center gap-1.5 text-xs font-semibold text-[var(--primary)] hover:opacity-70 transition-opacity disabled:opacity-50"
+              >
+                {savingAll ? <RefreshCw size={11} className="animate-spin" /> : <ChevronRight size={11} />}
+                Add all
+              </button>
+            )}
+            {allAdded && (
+              <span className="flex items-center gap-1 text-xs font-semibold text-green-600 dark:text-green-400">
+                <Check size={11} /> All added
+              </span>
+            )}
           </div>
-          {suggestions.map(s => (
-            <div key={s.word} className="flex items-start gap-3 p-3 rounded-xl bg-[var(--card-bg)] border border-[var(--line-divider)]">
+
+          {suggestions.map((s, i) => (
+            <div
+              key={s.word}
+              className="flex items-center gap-3 p-3 rounded-xl bg-[var(--card-bg)] border border-[var(--line-divider)] group"
+              style={{ animationDelay: `${i * 40}ms` }}
+            >
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-semibold text-[var(--deep-text)]">{s.word}</p>
-                <p className="text-xs text-[var(--text-secondary)] leading-relaxed">{s.meaning}</p>
+                <p className="text-xs text-[var(--text-secondary)] leading-relaxed line-clamp-2">{s.meaning}</p>
               </div>
-              <Button
-                onClick={() => handleAdd(s.word)}
+              <button
+                onClick={() => handleAdd(s.word, s.meaning)}
                 disabled={added.has(s.word)}
-                className={`flex-shrink-0 flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-medium transition-colors ${
+                className={`flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-lg transition-all ${
                   added.has(s.word)
-                    ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400"
-                    : "bg-[var(--primary)] text-white hover:opacity-90"
+                    ? "bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400"
+                    : "bg-[var(--primary)] text-white hover:opacity-80"
                 }`}
               >
-                {added.has(s.word) ? "Added" : <><PlusIcon /> Add</>}
-              </Button>
+                {added.has(s.word) ? <Check size={14} /> : <Plus size={14} />}
+              </button>
             </div>
           ))}
         </div>
       )}
 
       {!loading && suggestions.length === 0 && (
-        <p className="text-xs text-[var(--text-tertiary)] text-center py-2">
-          Click "Suggest words" to get AI-powered vocabulary for this deck's theme.
-        </p>
+        <div className="text-center py-8 space-y-1">
+          <p className="text-sm text-[var(--text-secondary)]">No suggestions yet</p>
+          <p className="text-xs text-[var(--text-tertiary)]">Pick a level and click "Suggest words"</p>
+        </div>
       )}
     </div>
   );
 }
-

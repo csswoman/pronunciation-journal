@@ -18,6 +18,7 @@ interface UseAIPracticeReturn {
   messages: ReturnType<typeof useStreamingChat>["messages"];
   isStreaming: boolean;
   error: string | null;
+  quotaExhausted: boolean;
   savedWords: AISavedWord[];
   wordToSave: { word: string; context: string } | null;
   activeRoleplay: StartRoleplayArgs["scenario"] | null;
@@ -118,6 +119,7 @@ export function useAIPractice(): UseAIPracticeReturn {
     messages: chat.messages,
     isStreaming: chat.isStreaming,
     error: chat.error,
+    quotaExhausted: chat.quotaExhausted,
     savedWords: words.savedWords,
     wordToSave: words.wordToSave,
     activeRoleplay,

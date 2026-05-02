@@ -19,6 +19,7 @@ export default function AIPracticePage() {
     messages,
     isStreaming,
     error,
+    quotaExhausted,
     wordToSave,
     savedWords,
     mode,
@@ -91,6 +92,8 @@ export default function AIPracticePage() {
             messages={messages}
             isStreaming={isStreaming}
             error={error}
+            quotaExhausted={quotaExhausted}
+            onNewSession={resetSession}
             mode={mode}
             onChangeMode={changeMode}
             onSaveWord={openSaveWordModal}

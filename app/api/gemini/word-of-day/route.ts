@@ -1,121 +1,157 @@
-import { GoogleGenAI } from "@google/genai";
 import { NextRequest, NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
 
-const FALLBACK_MODELS = ["gemini-2.5-flash-lite", "gemini-2.5-flash", "gemini-flash-latest"] as const;
+// Curated list of interesting English words for learners (B1–C1 range)
+const WORD_LIST = [
+  "ambiguous", "resilient", "eloquent", "meticulous", "benevolent",
+  "ephemeral", "tenacious", "lucid", "pragmatic", "whimsical",
+  "melancholy", "vivid", "serendipity", "aberrant", "candid",
+  "diligent", "empathy", "facetious", "gregarious", "harbinger",
+  "idyllic", "jubilant", "kinetic", "languid", "magnanimous",
+  "nostalgia", "obstinate", "pensive", "querulous", "reverence",
+  "stoic", "taciturn", "ubiquitous", "verbose", "wistful",
+  "zealous", "aloof", "blithe", "candor", "dauntless",
+  "eccentric", "fervent", "guileless", "hapless", "impetuous",
+  "jovial", "keen", "loquacious", "mellow", "nonchalant",
+  "opulent", "placid", "quaint", "radiant", "serene",
+  "tenuous", "urbane", "vivacious", "whimsy", "xenial",
+  "yearning", "zeal", "ardent", "bliss", "clarity",
+  "deft", "elusive", "flair", "gracious", "humble",
+  "inquisitive", "jovial", "keen", "lucid", "muse",
+  "nimble", "overt", "poise", "quell", "robust",
+  "steadfast", "tranquil", "upbeat", "valor", "witty",
+  "astute", "buoyant", "compassion", "discern", "enigma",
+  "flourish", "grit", "harmony", "integrity", "joyful",
+  "kindle", "linger", "mindful", "nuance", "optimism",
+  "persevere", "quest", "radiance", "solace", "thrive",
+  "unravel", "venture", "wisdom", "yearn", "zest",
+  "amiable", "brevity", "courageous", "devoted", "earnest",
+  "forthright", "generous", "heartfelt", "innocent", "jubilee",
+  "knack", "lavish", "meander", "nurture", "outgoing",
+  "patience", "quirky", "resolute", "sincere", "thoughtful",
+  "uplifting", "vibrant", "warmth", "exquisite", "youthful",
+];
 
-const SYSTEM_PROMPT = `You are an English vocabulary coach. Generate a single interesting English word suitable for language learners. Return ONLY valid JSON with no markdown, no code fences, no extra text.
+// Difficulty mapping based on word complexity (rough heuristic)
+const ADVANCED_WORDS = new Set([
+  "aberrant", "querulous", "taciturn", "languid", "magnanimous",
+  "guileless", "impetuous", "loquacious", "hapless", "nonchalant",
+  "opulent", "facetious", "gregarious", "harbinger", "obstinate",
+  "ephemeral", "meticulous", "eloquent", "serendipity", "ubiquitous",
+]);
+const BEGINNER_WORDS = new Set([
+  "vivid", "keen", "bliss", "grit", "bold", "calm", "poise",
+  "witty", "zest", "quest", "valor", "thrive", "muse", "flair",
+]);
 
-Format:
-{"word":"example","ipa":"/ɪɡˈzæm.pəl/","definition":"a brief, clear definition","example_sentence":"A short example sentence using the word.","difficulty":"intermediate"}
+function getDifficulty(word: string): "beginner" | "intermediate" | "advanced" {
+  if (BEGINNER_WORDS.has(word)) return "beginner";
+  if (ADVANCED_WORDS.has(word)) return "advanced";
+  return "intermediate";
+}
 
-difficulty must be one of: beginner, intermediate, advanced`;
+interface DictionaryApiEntry {
+  word?: string;
+  phonetic?: string;
+  phonetics?: Array<{ text?: string; audio?: string }>;
+  meanings?: Array<{
+    partOfSpeech?: string;
+    definitions?: Array<{ definition?: string; example?: string }>;
+  }>;
+}
+
+async function fetchWordData(word: string): Promise<{
+  word: string;
+  ipa: string;
+  definition: string;
+  example_sentence: string;
+  difficulty: "beginner" | "intermediate" | "advanced";
+} | null> {
+  const res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`, {
+    next: { revalidate: 86400 },
+  });
+  if (!res.ok) return null;
+
+  const data: DictionaryApiEntry[] = await res.json();
+  const entry = data[0];
+  if (!entry) return null;
+
+  // IPA
+  const phonetic =
+    entry.phonetics?.find(p => p.text)?.text ??
+    entry.phonetic ??
+    "";
+
+  // First definition + example
+  const firstMeaning = entry.meanings?.[0];
+  const firstDef = firstMeaning?.definitions?.[0];
+  if (!firstDef?.definition) return null;
+
+  return {
+    word,
+    ipa: phonetic,
+    definition: firstDef.definition,
+    example_sentence: firstDef.example ?? "",
+    difficulty: getDifficulty(word),
+  };
+}
+
+// In-memory cache — resets on cold start, fine for serverless
+let cachedDate = "";
+let cachedWord: object | null = null;
 
 function getDateSeed(): string {
   const d = new Date();
   return `${d.getUTCFullYear()}-${d.getUTCMonth() + 1}-${d.getUTCDate()}`;
 }
 
-function getErrorStatus(err: unknown): number | undefined {
-  if (!err || typeof err !== "object") return undefined;
-  const maybe = err as { status?: unknown; statusCode?: unknown };
-  if (typeof maybe.status === "number") return maybe.status;
-  if (typeof maybe.statusCode === "number") return maybe.statusCode;
-  return undefined;
-}
-
-function shouldTryNextModel(err: unknown): boolean {
-  const status = getErrorStatus(err);
-  if (status === 400 || status === 401 || status === 403) return false;
-  if (status === 404 || status === 408 || status === 429) return true;
-  if (typeof status === "number" && status >= 500) return true;
-  const message = String((err as { message?: unknown })?.message ?? "").toLowerCase();
-  return message.includes("quota") || message.includes("rate") || message.includes("unavailable");
-}
-
-const THEMES = [
-  "nature", "emotions", "science", "art", "travel", "food", "technology",
-  "philosophy", "music", "history", "sports", "architecture", "literature",
-  "medicine", "business", "law", "psychology", "astronomy", "politics", "fashion",
-];
-
-function pickTheme(seed: string): string {
+function pickWord(seed: string): string {
   let hash = 0;
   for (let i = 0; i < seed.length; i++) hash = (hash * 31 + seed.charCodeAt(i)) >>> 0;
-  return THEMES[hash % THEMES.length];
+  return WORD_LIST[hash % WORD_LIST.length];
 }
-
-async function generateWord(ai: GoogleGenAI, seed: string): Promise<string> {
-  const theme = pickTheme(seed);
-  let lastError: unknown;
-  for (const modelName of FALLBACK_MODELS) {
-    try {
-      const result = await ai.models.generateContent({
-        model: modelName,
-        contents: `Generate one interesting English word related to the theme "${theme}". Seed: ${seed}. Pick a word that is specific and useful for language learners — avoid very common words.`,
-        config: {
-          systemInstruction: SYSTEM_PROMPT,
-          responseMimeType: "application/json",
-        },
-      });
-      if (!result.text) throw new Error("Empty response from AI");
-      return result.text;
-    } catch (err: unknown) {
-      lastError = err;
-      if (!shouldTryNextModel(err)) throw err;
-    }
-  }
-  throw lastError ?? new Error("All fallback models failed");
-}
-
-// Cache in-memory per process (resets on cold start, good enough for edge/serverless)
-let cachedDate = "";
-let cachedWord: object | null = null;
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
-  const apiKey = process.env.GEMINI_API_KEY;
-  if (!apiKey) {
-    return NextResponse.json({ error: "AI service unavailable" }, { status: 503 });
-  }
-
   const { searchParams } = new URL(request.url);
   const forceRefresh = searchParams.get("refresh") === "1";
-  const seed = forceRefresh
-    ? `${getDateSeed()}-${Date.now()}`
-    : getDateSeed();
+  const dateSeed = getDateSeed();
+  const seed = forceRefresh ? `${dateSeed}-${Date.now()}` : dateSeed;
 
-  if (!forceRefresh && cachedDate === seed && cachedWord) {
+  if (!forceRefresh && cachedDate === dateSeed && cachedWord) {
     return NextResponse.json(cachedWord, {
       headers: { "Cache-Control": "public, max-age=3600" },
     });
   }
 
-  try {
-    const ai = new GoogleGenAI({ apiKey });
-    const raw = await generateWord(ai, seed);
-    const cleaned = raw.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
+  // Try up to 3 random words in case the dictionary API doesn't have one
+  const attempts = forceRefresh ? 3 : 1;
+  let result = null;
 
-    let parsed: object;
-    try {
-      parsed = JSON.parse(cleaned);
-    } catch {
-      console.error("word-of-day JSON parse failed. Raw response:", raw);
-      return NextResponse.json({ error: "Invalid response from AI" }, { status: 502 });
-    }
-
-    if (!forceRefresh) {
-      cachedDate = getDateSeed();
-      cachedWord = parsed;
-    }
-
-    return NextResponse.json(parsed, {
-      headers: { "Cache-Control": forceRefresh ? "no-store" : "public, max-age=3600" },
-    });
-  } catch (err: unknown) {
-    const status = getErrorStatus(err) ?? 500;
-    const message = String((err as { message?: unknown })?.message ?? "Internal server error");
-    console.error("word-of-day error:", { status, message, err });
-    return NextResponse.json({ error: message }, { status });
+  for (let i = 0; i < attempts; i++) {
+    const word = pickWord(i === 0 ? seed : `${seed}-retry-${i}`);
+    result = await fetchWordData(word).catch(() => null);
+    if (result) break;
   }
+
+  // Last resort: pick any word from the list that the API knows
+  if (!result) {
+    const fallbackWord = pickWord(dateSeed);
+    result = {
+      word: fallbackWord,
+      ipa: "",
+      definition: "Look this word up in a dictionary to learn its meaning.",
+      example_sentence: "",
+      difficulty: getDifficulty(fallbackWord) as "beginner" | "intermediate" | "advanced",
+    };
+  }
+
+  if (!forceRefresh) {
+    cachedDate = dateSeed;
+    cachedWord = result;
+  }
+
+  return NextResponse.json(result, {
+    headers: { "Cache-Control": forceRefresh ? "no-store" : "public, max-age=3600" },
+  });
 }

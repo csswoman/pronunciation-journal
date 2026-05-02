@@ -151,6 +151,56 @@ export type Database = {
           },
         ]
       }
+      deck_entry_progress: {
+        Row: {
+          id: string
+          user_id: string
+          entry_id: string
+          ease_factor: number
+          interval_days: number
+          repetitions: number
+          next_review_at: string
+          status: 'new' | 'learning' | 'review' | 'mastered'
+          last_reviewed_at: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          entry_id: string
+          ease_factor?: number
+          interval_days?: number
+          repetitions?: number
+          next_review_at?: string
+          status?: 'new' | 'learning' | 'review' | 'mastered'
+          last_reviewed_at?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          entry_id?: string
+          ease_factor?: number
+          interval_days?: number
+          repetitions?: number
+          next_review_at?: string
+          status?: 'new' | 'learning' | 'review' | 'mastered'
+          last_reviewed_at?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "deck_entry_progress_entry_id_fkey"
+            columns: ["entry_id"]
+            isOneToOne: false
+            referencedRelation: "entries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       decks: {
         Row: {
           color: string | null
@@ -193,6 +243,7 @@ export type Database = {
           created_at: string
           difficulty: number
           id: string
+          image_url: string | null
           ipa: string | null
           meanings: Json | null
           notes: string | null
@@ -209,6 +260,7 @@ export type Database = {
           created_at?: string
           difficulty: number
           id: string
+          image_url?: string | null
           ipa?: string | null
           meanings?: Json | null
           notes?: string | null
@@ -225,6 +277,7 @@ export type Database = {
           created_at?: string
           difficulty?: number
           id?: string
+          image_url?: string | null
           ipa?: string | null
           meanings?: Json | null
           notes?: string | null

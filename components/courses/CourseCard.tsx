@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useState } from "react";
 import Link from "next/link";
 import { BookOpen } from "lucide-react";
 import type { Course } from "@/lib/notion/types";
@@ -53,6 +54,7 @@ function getCoverHue(title: string) {
 }
 
 export default function CourseCard({ course, priority = false }: CourseCardProps) {
+  const [coverFailed, setCoverFailed] = useState(false);
   const totalLessons = course.lessonCount ?? 0;
   const completedLessons = course.completedLessons ?? 0;
   const progress = getProgress(totalLessons, completedLessons);
@@ -76,13 +78,14 @@ export default function CourseCard({ course, priority = false }: CourseCardProps
           background: `linear-gradient(135deg, oklch(.55 .18 ${coverHue}) 0%, oklch(.65 .14 ${(coverHue + 40) % 360}) 100%)`,
         }}
       >
-        {course.coverImageUrl ? (
+        {course.coverImageUrl && !coverFailed ? (
           <Image
             src={course.coverImageUrl}
             alt=""
             fill
             priority={priority}
             unoptimized
+            onError={() => setCoverFailed(true)}
             className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
             sizes="(max-width: 768px) 100vw, 33vw"
           />

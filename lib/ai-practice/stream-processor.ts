@@ -23,7 +23,7 @@ export function processChunk(
   chunk: StreamChunk,
   state: StreamState,
   handlers: ActionHandlers,
-): "flush" | "no-flush" | "done" {
+): "flush" | "no-flush" | "done" | { error: string } {
   switch (chunk.type) {
     case "text_delta": {
       const last = state.parts[state.parts.length - 1];
@@ -75,5 +75,7 @@ export function processChunk(
     }
     case "done":
       return "done";
+    case "error":
+      return { error: chunk.message };
   }
 }
