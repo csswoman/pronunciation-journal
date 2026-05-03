@@ -45,7 +45,7 @@ export default function HomeWordsToReview({
         <span className="font-semibold text-[var(--primary)]">{dueCount} cards</span>
       </p>
 
-      <div className="flex flex-col divide-y divide-[var(--border-light)]">
+      <div className="flex flex-col divide-y divide-[var(--border)]">
         {words.map((w) => (
           <div key={w.word} className="flex items-center gap-3 py-2.5">
             <button

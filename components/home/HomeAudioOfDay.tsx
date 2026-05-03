@@ -36,7 +36,7 @@ export default function HomeAudioOfDay({
   const BAR_HEIGHTS = [8, 14, 20, 16, 26, 20, 30, 24, 18, 28, 22, 34, 28, 20, 14, 22, 30, 24, 18, 12, 20, 26, 18, 14, 10];
 
   return (
-    <Card variant="compact" className="gap-5 !bg-[#0f172a] border-[#1e293b]">
+    <Card variant="compact" className="gap-5 !bg-[oklch(0.14_0.02_var(--hue))] border-[oklch(0.20_0.02_var(--hue))]">
       <div className="flex items-center gap-2">
         <Headphones size={14} className="text-cyan-400" />
         <span className="text-[10px] font-bold tracking-widest text-cyan-400 uppercase">
@@ -46,7 +46,7 @@ export default function HomeAudioOfDay({
 
       <div>
         <p className="text-base font-bold text-white leading-snug">{title}</p>
-        <p className="text-xs text-slate-400 mt-1">
+        <p className="text-xs text-[oklch(0.65_0.03_var(--hue))] mt-1">
           {source} · {duration} · {level}
         </p>
       </div>
@@ -79,8 +79,8 @@ export default function HomeAudioOfDay({
           )}
         </button>
         <div>
-          <p className="text-xs text-slate-300 font-medium">With transcript</p>
-          <p className="text-xs text-slate-500">+ vocabulary helper</p>
+          <p className="text-xs text-[oklch(0.80_0.03_var(--hue))] font-medium">With transcript</p>
+          <p className="text-xs text-[oklch(0.55_0.02_var(--hue))]">+ vocabulary helper</p>
         </div>
       </div>
     </Card>

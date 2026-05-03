@@ -12,7 +12,7 @@ const MODES = [
 
 export default function HomePracticeCard() {
   return (
-    <div className="rounded-2xl border border-[var(--line-divider)] bg-[var(--card-bg)] p-5 flex flex-col gap-5">
+    <div className="rounded-2xl border border-[var(--border)] bg-[var(--card-bg)] p-5 flex flex-col gap-5">
       {/* Header */}
       <div className="flex items-start justify-between gap-4">
         <div>
