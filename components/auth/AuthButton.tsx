@@ -1,7 +1,5 @@
 "use client";
 
-import { ArrowRight } from "lucide-react";
-
 interface AuthButtonProps {
   label: string;
   pending: boolean;
@@ -16,8 +14,8 @@ export function AuthButton({ label, pending, type = "submit", variant = "primary
       <button
         type={type}
         onClick={onClick}
-        className="w-full text-[13px] font-medium bg-transparent border-none cursor-pointer transition-opacity hover:opacity-70"
-        style={{ color: "var(--color-accent)" }}
+        className="text-caption font-medium bg-transparent border-none cursor-pointer transition-all hover:underline"
+        style={{ color: "var(--primary)", font: "var(--font-body-sm)" }}
       >
         {label}
       </button>
@@ -29,14 +27,24 @@ export function AuthButton({ label, pending, type = "submit", variant = "primary
       type={type}
       onClick={onClick}
       disabled={pending}
-      className="w-full flex items-center justify-center gap-2 py-[14px] rounded-[10px] text-[15px] font-semibold text-white disabled:opacity-50 transition-all hover:-translate-y-px active:translate-y-0 group"
+      className="auth-primary-btn w-full disabled:opacity-50 transition-all"
       style={{
-        background: "var(--color-accent)",
-        fontFamily: "'Sora', sans-serif",
+        background: "var(--primary)",
+        color: "var(--on-primary)",
+        border: "none",
+        padding: "var(--space-3) var(--space-6)",
+        borderRadius: "var(--radius-md)",
+        font: "var(--font-body)",
+        fontWeight: 600,
+        transition: "all var(--transition-base)",
       }}
     >
-      {pending ? "Please wait…" : label}
-      {!pending && <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />}
+      {pending ? "Please wait…" : `${label} →`}
+      <style>{`
+        .auth-primary-btn:hover { background: var(--primary-hover); cursor: pointer; }
+        .auth-primary-btn:active { transform: scale(0.98); }
+        .auth-primary-btn:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+      `}</style>
     </button>
   );
 }

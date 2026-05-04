@@ -23,15 +23,15 @@ export function ExpertInsightCard({
   isLoading = false,
 }: ExpertInsightCardProps) {
   return (
-    <div className="w-full bg-gradient-to-br from-[var(--primary)] to-[oklch(.6_.1_var(--hue))] rounded-2xl p-6 text-white space-y-4">
+    <div className="w-full bg-gradient-to-br from-[var(--primary)] to-[oklch(.6_.1_var(--hue))] rounded-2xl p-6 text-on-primary space-y-4">
       {/* Header */}
       <div className="flex items-start justify-between">
         <div className="space-y-1">
           <div className="text-xs font-semibold opacity-90 tracking-widest">EXPERT INSIGHT</div>
           <h3 className="text-xl font-bold leading-tight">{title}</h3>
         </div>
-        <Button type="button" variant="ghost" size="icon" className="rounded-full bg-white/20 text-white hover:bg-white/30">
-          <Mic size={20} className="text-white" />
+        <Button type="button" variant="ghost" size="icon" className="rounded-full bg-overlay-light text-on-primary hover:bg-overlay-medium">
+          <Mic size={20} className="text-on-primary" />
         </Button>
       </div>
 
@@ -45,7 +45,7 @@ export function ExpertInsightCard({
           disabled={isLoading}
           variant="secondary"
           size="sm"
-          className="rounded-lg px-6 py-2 bg-white text-[var(--primary)] font-semibold hover:bg-gray-100 disabled:opacity-50 transition-colors"
+          className="rounded-lg px-6 py-2 bg-surface-raised text-[var(--primary)] font-semibold hover:bg-surface-sunken disabled:opacity-50 transition-colors"
         >
           {isLoading ? "Starting..." : `Start ${durationMinutes} min review`}
         </Button>
@@ -60,7 +60,7 @@ export function ExpertInsightCard({
                 cx="50"
                 cy="50"
                 r="40"
-                stroke="rgba(255,255,255,0.2)"
+                stroke="var(--overlay-light)"
                 strokeWidth="4"
                 fill="none"
               />

@@ -3,43 +3,43 @@ export const STAT_CARDS = [
     id: "streak",
     icon: "🔥",
     label: "Day Streak",
-    bg: "#EEE8FF",
-    deco: "#C4B0FF",
-    iconBg: "#DDD0FF",
-    valueColor: "#6B3FD4",
-    labelColor: "#8B6ED8",
+    bg: "var(--primary-soft)",
+    deco: "var(--primary-200)",
+    iconBg: "var(--primary-100)",
+    valueColor: "var(--primary-700)",
+    labelColor: "var(--primary)",
   },
   {
     id: "accuracy",
     icon: "🎯",
     label: "Accuracy",
     suffix: "%",
-    bg: "#E0F5EE",
-    deco: "#9EE8C8",
-    iconBg: "#C2EDD9",
-    valueColor: "#0F7A56",
-    labelColor: "#2E9A71",
+    bg: "var(--success-soft)",
+    deco: "var(--success-deco)",
+    iconBg: "var(--success-icon-bg)",
+    valueColor: "var(--success-value)",
+    labelColor: "var(--success)",
   },
   {
     id: "xp",
     icon: "⚡",
     label: "XP Earned",
-    bg: "#FFF3E0",
-    deco: "#FFCC80",
-    iconBg: "#FFE0B0",
-    valueColor: "#C07800",
-    labelColor: "#C88D00",
+    bg: "var(--warning-soft)",
+    deco: "var(--warning-deco)",
+    iconBg: "var(--warning-icon-bg)",
+    valueColor: "var(--warning-value)",
+    labelColor: "var(--warning)",
   },
   {
     id: "goal",
     icon: "📅",
     label: "Weekly Goal",
     suffix: "/5",
-    bg: "#FFE8EE",
-    deco: "#FFB3C6",
-    iconBg: "#FFD0DC",
-    valueColor: "#C0294A",
-    labelColor: "#C94067",
+    bg: "var(--error-soft)",
+    deco: "var(--error-deco)",
+    iconBg: "var(--error-icon-bg)",
+    valueColor: "var(--error-value)",
+    labelColor: "var(--error)",
   },
 ] as const;
 
@@ -99,7 +99,7 @@ export default function StatCard({ card, value }: StatCardProps) {
 
       {/* Label */}
       <p
-        className="relative z-10 text-[11px] font-semibold uppercase tracking-wider"
+        className="relative z-10 text-tiny font-semibold uppercase tracking-wider"
         style={{ color: card.labelColor }}
       >
         {card.label}
@@ -125,3 +125,4 @@ export function StatGrid({ streak, accuracy, xp, goal }: StatGridProps) {
     </div>
   );
 }
+

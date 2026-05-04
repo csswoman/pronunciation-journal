@@ -32,7 +32,7 @@ export default function EntriesList({
 
   if (entries.length === 0) {
     return (
-      <div className="text-center py-12 text-gray-500 dark:text-gray-400">
+      <div className="text-center py-12 text-fg-subtle">
         <p className="text-lg">No entries yet.</p>
         <p className="text-sm mt-2">
           Click "Agregar palabra" to add your first word!

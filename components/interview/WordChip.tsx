@@ -3,8 +3,8 @@
 import { useState } from "react";
 import { Volume2 } from "lucide-react";
 
-const colors = { correct: "#16a34a", incorrect: "#dc2626", missing: "#d97706", extra: "#6b7280" };
-const bgs    = { correct: "#16a34a18", incorrect: "#dc262618", missing: "#d9770618", extra: "#6b728018" };
+const colors = { correct: "var(--word-correct)", incorrect: "var(--word-incorrect)", missing: "var(--word-missing)", extra: "var(--word-extra)" };
+const bgs    = { correct: "var(--word-correct-bg)", incorrect: "var(--word-incorrect-bg)", missing: "var(--word-missing-bg)", extra: "var(--word-extra-bg)" };
 
 interface Props {
   word: string;

@@ -126,10 +126,10 @@ export default function ReviewReminder({ dueToday, totalMastered }: ReviewRemind
                   className="w-2 h-2 rounded-full"
                   style={{ background: 'var(--primary)', opacity: 0.4 + i * 0.2 }}
                 />
-                <span className="text-[10px] font-semibold" style={{ color: 'var(--deep-text)' }}>
+                <span className="text-tiny font-semibold" style={{ color: 'var(--deep-text)' }}>
                   {interval.label}
                 </span>
-                <span className="text-[9px] text-center leading-tight" style={{ color: 'var(--text-tertiary)' }}>
+                <span className="text-tiny text-center leading-tight" style={{ color: 'var(--text-tertiary)' }}>
                   {interval.description}
                 </span>
               </div>
@@ -146,3 +146,4 @@ export default function ReviewReminder({ dueToday, totalMastered }: ReviewRemind
     </div>
   )
 }
+

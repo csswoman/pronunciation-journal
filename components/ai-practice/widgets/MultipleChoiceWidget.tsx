@@ -57,12 +57,12 @@ export default function MultipleChoiceWidget({ args, status, onAnswer, onNext, o
 
           if (answered || evaluation) {
             if (idx === args.correctIndex) {
-              bg = "color-mix(in oklch, var(--success, #22c55e) 15%, transparent)";
-              border = "var(--success, #22c55e)";
+              bg = "color-mix(in oklch, var(--score-excellent) 15%, transparent)";
+              border = "var(--score-excellent)";
               color = "var(--text-primary)";
             } else if (idx === selected && selected !== args.correctIndex) {
-              bg = "color-mix(in oklch, #ef4444 12%, transparent)";
-              border = "#ef4444";
+              bg = "color-mix(in oklch, var(--score-poor) 12%, transparent)";
+              border = "var(--score-poor)";
               color = "var(--text-secondary)";
             }
           }

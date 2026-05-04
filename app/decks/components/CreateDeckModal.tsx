@@ -133,7 +133,7 @@ export function CreateDeckModal({
           </div>
         </div>
 
-        {error && <p className="text-xs text-red-500">{error}</p>}
+        {error && <p className="text-xs text-error">{error}</p>}
 
         <div className="flex gap-2 pt-1">
           <Button variant="secondary" size="sm" fullWidth onClick={onClose}>
@@ -147,3 +147,4 @@ export function CreateDeckModal({
     </div>
   );
 }
+

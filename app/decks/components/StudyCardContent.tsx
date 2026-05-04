@@ -47,7 +47,8 @@ export function StudyCardContent({ entry, flipped, showAllMeanings, onToggleAllM
             </span>
           )}
           {difficultyLabel && (
-            <span className="px-2.5 py-0.5 rounded-full border border-amber-300 dark:border-amber-700 bg-amber-50 dark:bg-amber-900/20 text-xs font-medium text-amber-700 dark:text-amber-400">
+            <span className="badge">
+              <span className="dot-info" />
               {difficultyLabel}
             </span>
           )}
@@ -102,7 +103,7 @@ export function StudyCardContent({ entry, flipped, showAllMeanings, onToggleAllM
 
           {firstDefinition?.example && (
             <div className="rounded-xl border border-dashed border-[var(--line-divider)] p-3">
-              <p className="text-[10px] font-semibold text-[var(--text-tertiary)] uppercase tracking-widest mb-1">Example</p>
+              <p className="text-tiny font-semibold text-[var(--text-tertiary)] uppercase tracking-widest mb-1">Example</p>
               <p className="text-sm italic text-[var(--text-secondary)] leading-relaxed">
                 "{firstDefinition.example}"
               </p>
@@ -113,7 +114,7 @@ export function StudyCardContent({ entry, flipped, showAllMeanings, onToggleAllM
         <div className="flex-1 flex flex-col justify-end">
           {firstDefinition?.example && (
             <div className="rounded-xl border border-dashed border-[var(--line-divider)] p-3 mb-3">
-              <p className="text-[10px] font-semibold text-[var(--text-tertiary)] uppercase tracking-widest mb-1">Fill in the blank</p>
+              <p className="text-tiny font-semibold text-[var(--text-tertiary)] uppercase tracking-widest mb-1">Fill in the blank</p>
               <p className="text-sm italic text-[var(--text-secondary)] leading-relaxed">
                 "{blankOutWord(firstDefinition.example, entry.word ?? "")}"
               </p>
@@ -121,7 +122,7 @@ export function StudyCardContent({ entry, flipped, showAllMeanings, onToggleAllM
           )}
           <p className="text-xs text-[var(--text-tertiary)]">
             press{" "}
-            <kbd className="px-1.5 py-0.5 rounded border border-[var(--line-divider)] bg-[var(--btn-regular-bg)] text-[10px] font-mono">space</kbd>
+            <kbd className="px-1.5 py-0.5 rounded border border-[var(--line-divider)] bg-[var(--btn-regular-bg)] text-tiny font-mono">space</kbd>
             {" "}to reveal answer
           </p>
         </div>

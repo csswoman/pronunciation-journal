@@ -2,6 +2,156 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* ── Tailwind v4 design-token utilities ──────────────────────────────────── */
+/*
+  @theme inline — generates utility classes WITHOUT re-emitting CSS variables.
+  Values using var() resolve at runtime, so dynamic tokens (--primary, --hue)
+  work correctly. All these CSS vars are defined in :root / .dark below.
+
+  Generated utility patterns:
+    --color-*       → bg-*, text-*, border-*, ring-*, fill-*, stroke-*
+    --spacing-*     → p-*, m-*, gap-*, w-*, h-*, inset-*, translate-*
+    --radius-*      → rounded-*   (overrides Tailwind defaults with design-system scale)
+    --text-*        → text-*      (font-size + optional line-height, weight, tracking)
+    --shadow-*      → shadow-*
+
+  Border utility naming:  border-border-subtle, border-border-default, etc.
+  Text color naming:      text-fg, text-fg-muted, text-fg-subtle
+*/
+@theme inline {
+  /* ── Surfaces ──────────────────────────────────────────────────────────── */
+  --color-surface-base:    var(--surface-base);
+  --color-surface-raised:  var(--surface-raised);
+  --color-surface-sunken:  var(--surface-sunken);
+  --color-surface-overlay: var(--surface-overlay);
+
+  /* ── Primary (dynamic — driven by --hue at runtime) ───────────────────── */
+  --color-primary:         var(--primary);
+  --color-primary-soft:    var(--primary-soft);
+  --color-primary-hover:   var(--primary-hover);
+  --color-on-primary:      var(--on-primary);
+  --color-primary-50:      var(--primary-50);
+  --color-primary-100:     var(--primary-100);
+  --color-primary-200:     var(--primary-200);
+  --color-primary-300:     var(--primary-300);
+
+  /* ── Foreground / text ─────────────────────────────────────────────────── */
+  /* Named fg-* to avoid clashing with Tailwind's text-base font-size utility */
+  --color-fg:              var(--text-primary);
+  --color-fg-muted:        var(--text-secondary);
+  --color-fg-subtle:       var(--text-tertiary);
+  --color-fg-disabled:     var(--text-disabled);
+  --color-fg-placeholder:  var(--text-placeholder);
+
+  /* ── Borders ───────────────────────────────────────────────────────────── */
+  --color-border-subtle:  var(--border-subtle);
+  --color-border-default: var(--border-default);
+  --color-border-strong:  var(--border-strong);
+  --color-border-focus:   var(--border-focus);
+
+  /* ── Overlays / Transparency (white with opacity) ──────────────────────── */
+  --color-overlay-subtle:  var(--overlay-subtle);
+  --color-overlay-weak:    var(--overlay-weak);
+  --color-overlay-light:   var(--overlay-light);
+  --color-overlay-medium:  var(--overlay-medium);
+  --color-overlay-strong:  var(--overlay-strong);
+  --color-overlay-darker:  var(--overlay-darker);
+
+  /* ── Semantic ──────────────────────────────────────────────────────────── */
+  --color-success:        var(--success);
+  --color-success-soft:   var(--success-soft);
+  --color-success-border: var(--success-border);
+  --color-warning:        var(--warning);
+  --color-warning-soft:   var(--warning-soft);
+  --color-warning-border: var(--warning-border);
+  --color-error:          var(--error);
+  --color-error-soft:     var(--error-soft);
+  --color-error-border:   var(--error-border);
+  --color-info:           var(--info);
+  --color-info-soft:      var(--info-soft);
+  --color-info-border:    var(--info-border);
+
+  /* ── Scoring / Word chip ────────────────────────────────────────────── */
+  --color-score-excellent:     var(--score-excellent);
+  --color-score-excellent-bg:  var(--score-excellent-bg);
+  --color-score-acceptable:    var(--score-acceptable);
+  --color-score-acceptable-bg: var(--score-acceptable-bg);
+  --color-score-poor:          var(--score-poor);
+  --color-score-poor-bg:       var(--score-poor-bg);
+  --color-word-correct:        var(--word-correct);
+  --color-word-correct-bg:     var(--word-correct-bg);
+  --color-word-incorrect:      var(--word-incorrect);
+  --color-word-incorrect-bg:   var(--word-incorrect-bg);
+  --color-word-missing:        var(--word-missing);
+  --color-word-missing-bg:     var(--word-missing-bg);
+  --color-word-extra:          var(--word-extra);
+  --color-word-extra-bg:       var(--word-extra-bg);
+
+  /* ── Spacing — p-space-4, gap-space-6, m-space-2, w-space-8, etc. ──────── */
+  --spacing-space-1:  0.25rem;   /*  4px */
+  --spacing-space-2:  0.5rem;    /*  8px */
+  --spacing-space-3:  0.75rem;   /* 12px */
+  --spacing-space-4:  1rem;      /* 16px */
+  --spacing-space-5:  1.25rem;   /* 20px */
+  --spacing-space-6:  1.5rem;    /* 24px */
+  --spacing-space-8:  2rem;      /* 32px */
+  --spacing-space-10: 2.5rem;    /* 40px */
+  --spacing-space-12: 3rem;      /* 48px */
+  --spacing-space-16: 4rem;      /* 64px */
+  --spacing-space-20: 5rem;      /* 80px */
+
+  /* ── Border radius — rounded-sm…rounded-full ───────────────────────────── */
+  /* Overrides Tailwind's default scale with the design-system values.        */
+  --radius-xs:   4px;
+  --radius-sm:   8px;
+  --radius-md:   12px;
+  --radius-lg:   16px;
+  --radius-xl:   20px;
+  --radius-2xl:  24px;
+  --radius-3xl:  32px;
+  --radius-full: 9999px;
+
+  /* ── Typography — text-h1…text-tiny ────────────────────────────────────── */
+  /* text-* sets font-size + line-height. Weight/tracking via companion vars.  */
+  --text-h1: 2.625rem;
+  --text-h1--line-height: 1.2;
+  --text-h1--font-weight: 700;
+  --text-h1--letter-spacing: -0.02em;
+
+  --text-h2: 2rem;
+  --text-h2--line-height: 1.3;
+  --text-h2--font-weight: 700;
+  --text-h2--letter-spacing: -0.01em;
+
+  --text-h3: 1.5rem;
+  --text-h3--line-height: 1.4;
+  --text-h3--font-weight: 600;
+  --text-h3--letter-spacing: -0.005em;
+
+  --text-h4: 1.25rem;
+  --text-h4--line-height: 1.4;
+  --text-h4--font-weight: 600;
+
+  --text-body-lg: 1.125rem;
+  --text-body-lg--line-height: 1.6;
+
+  --text-body-sm: 0.875rem;
+  --text-body-sm--line-height: 1.5;
+
+  --text-caption: 0.75rem;
+  --text-caption--line-height: 1.5;
+
+  --text-tiny: 0.6875rem;
+  --text-tiny--line-height: 1.4;
+  --text-tiny--font-weight: 500;
+
+  /* ── Shadows — shadow-sm…shadow-xl ─────────────────────────────────────── */
+  --shadow-sm: 0 1px 2px  oklch(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px  oklch(0 0 0 / 0.07);
+  --shadow-lg: 0 10px 15px oklch(0 0 0 / 0.10);
+  --shadow-xl: 0 20px 25px oklch(0 0 0 / 0.10);
+}
+
 /* ── OKLCH Dynamic Theme System ──────────────────────────────────────────── */
 /* Architecture: 3 layers
    1. Primary Scale  — dynamic hue, full 50–800 scale
@@ -40,26 +190,137 @@
   /* Gradient */
   --gradient-primary: linear-gradient(135deg, oklch(0.70 0.15 var(--hue)), oklch(0.65 0.15 calc(var(--hue) + 30)));
 
-  /* ── 2. Neutral System (near-zero chroma keeps surfaces clean/white) ─── */
-  --bg:            oklch(0.985 0 0);
-  --bg-secondary:  oklch(0.965 0 0);
-  --bg-tertiary:   oklch(0.940 0 0);
+  /* ── 2. Neutral System ───────────────────────────────────────────────── */
+  /* --bg uses a warm off-white (#FAF9F7 ≈ oklch(0.979 0.004 80)) instead   */
+  /* of chroma-0 white, so the page feels warm without being yellowed.       */
+  --bg:            #FAF9F7;   /* #FAF9F7 warm off-white */
+  --bg-secondary:  oklch(0.962 0.003 80);   /* cards — slightly warmer than bg */
+  --bg-tertiary:   oklch(0.938 0.004 80);   /* inputs, code blocks, inset areas */
   --fg:            oklch(0.18 0.008 var(--hue));
-  --text-primary:  oklch(0.18 0.008 var(--hue));
-  --text-secondary: oklch(0.46 0.006 var(--hue));
-  --text-tertiary: oklch(0.62 0.004 var(--hue));
-  --border:        oklch(0.875 0 0);
+  --text-primary:      oklch(0.18 0.008 var(--hue));
+  --text-secondary:    oklch(0.46 0.006 var(--hue));
+  --text-tertiary:     oklch(0.62 0.004 var(--hue));
+  --text-disabled:     oklch(0.75 0.002 var(--hue));
+  --text-placeholder:  oklch(0.75 0.002 var(--hue));
+  --border:            oklch(0.875 0 0);
   --border-hover:  oklch(0.770 0 0);
 
   /* ── 3. Semantic Colors (fixed, independent of hue) ──────────────────── */
   --success:       oklch(0.70 0.16 145);
   --success-soft:  oklch(0.92 0.05 145);
+  --success-deco:  oklch(0.80 0.10 145);
+  --success-icon-bg: oklch(0.86 0.07 145);
+  --success-value: oklch(0.42 0.14 145);
+
   --warning:       oklch(0.78 0.17 85);
   --warning-soft:  oklch(0.95 0.05 85);
+  --warning-deco:  oklch(0.84 0.12 85);
+  --warning-icon-bg: oklch(0.90 0.08 85);
+  --warning-value: oklch(0.46 0.15 85);
+
   --error:         oklch(0.65 0.20 25);
   --error-soft:    oklch(0.93 0.05 25);
+  --error-deco:    oklch(0.82 0.12 25);
+  --error-icon-bg: oklch(0.88 0.08 25);
+  --error-value:   oklch(0.42 0.18 25);
+
   --info:          oklch(0.70 0.12 230);
   --info-soft:     oklch(0.93 0.04 230);
+
+  /* ── 4. Surfaces — semantic elevation names ──────────────────────────── */
+  /* Maps to the neutral system; use these in components, not --bg-* directly */
+  --surface-base:    var(--bg);           /* page background */
+  --surface-raised:  var(--bg-secondary); /* cards, panels, sidebars */
+  --surface-sunken:  var(--bg-tertiary);  /* inputs, code blocks, inset areas */
+  --surface-overlay: oklch(1 0 0 / 0.92); /* modals, popovers (light bg + alpha) */
+
+  /* ── 5. Borders — semantic strength names ────────────────────────────── */
+  --border-subtle:  oklch(0.925 0 0);     /* dividers, faint separators */
+  --border-default: var(--border);        /* standard card/input borders */
+  --border-strong:  oklch(0.720 0 0);     /* emphasized borders, active states */
+  --border-focus:   var(--primary);       /* focus outlines */
+
+  /* ── Scoring / Accuracy aliases (interview & pronunciation feedback) ──── */
+  --score-excellent:    var(--success);
+  --score-excellent-bg: var(--success-soft);
+  --score-acceptable:   var(--warning);
+  --score-acceptable-bg: var(--warning-soft);
+  --score-poor:         var(--error);
+  --score-poor-bg:      var(--error-soft);
+
+  /* Word chip status colors */
+  --word-correct:       var(--success);
+  --word-correct-bg:    var(--success-soft);
+  --word-incorrect:     var(--error);
+  --word-incorrect-bg:  var(--error-soft);
+  --word-missing:       var(--warning);
+  --word-missing-bg:    var(--warning-soft);
+  --word-extra:         var(--text-tertiary);
+  --word-extra-bg:      color-mix(in oklch, var(--text-tertiary) 12%, transparent);
+
+  /* ── 6. Semantic color borders ───────────────────────────────────────── */
+  --success-border: oklch(0.60 0.14 145);
+  --warning-border: oklch(0.68 0.15 85);
+  --error-border:   oklch(0.55 0.18 25);
+  --info-border:    oklch(0.60 0.10 230);
+
+  /* ── 7. Admonition colors (fix: referenced in markdown.css but missing) */
+  --admonitions-color-tip:       oklch(0.70 0.16 145); /* green — same as success */
+  --admonitions-color-warning:   oklch(0.78 0.17 85);  /* amber — same as warning */
+  --admonitions-color-important: oklch(0.62 0.18 310); /* purple */
+
+  /* ── 7a. Overlay / Transparency tokens — white overlays for any background ── */
+  --overlay-subtle:   oklch(1 0 0 / 0.05);  /* very faint overlay */
+  --overlay-weak:     oklch(1 0 0 / 0.15);  /* faint (muted states) */
+  --overlay-light:    oklch(1 0 0 / 0.20);  /* light (badges, pills) */
+  --overlay-medium:   oklch(1 0 0 / 0.50);  /* medium (text on selected) */
+  --overlay-strong:   oklch(1 0 0 / 0.60);  /* strong (category labels) */
+  --overlay-darker:   oklch(1 0 0 / 0.80);  /* darker overlay */
+
+  /* ── 8. Spacing scale (8pt) ──────────────────────────────────────────── */
+  --space-1:  0.25rem;  /*  4px */
+  --space-2:  0.5rem;   /*  8px */
+  --space-3:  0.75rem;  /* 12px */
+  --space-4:  1rem;     /* 16px */
+  --space-5:  1.25rem;  /* 20px */
+  --space-6:  1.5rem;   /* 24px */
+  --space-8:  2rem;     /* 32px */
+  --space-10: 2.5rem;   /* 40px */
+  --space-12: 3rem;     /* 48px */
+  --space-16: 4rem;     /* 64px */
+  --space-20: 5rem;     /* 80px */
+
+  /* ── 9. Border radius scale ──────────────────────────────────────────── */
+  --radius-sm:   8px;
+  --radius-md:   12px;
+  --radius-lg:   16px;
+  --radius-xl:   20px;
+  --radius-2xl:  24px;
+  --radius-3xl:  32px;
+  --radius-full: 9999px;
+
+  /* ── 10. Typography scale ────────────────────────────────────────────── */
+  --font-display:  var(--font-heading), sans-serif; /* fix: was referenced but undefined */
+  --font-h1: 700 clamp(1.875rem, 4vw, 2.625rem) / 1.2 var(--font-heading), sans-serif;
+  --font-h2: 700 clamp(1.5rem, 3vw, 2rem) / 1.3 var(--font-heading), sans-serif;
+  --font-h3: 600 clamp(1.25rem, 2.5vw, 1.5rem) / 1.4 var(--font-heading), sans-serif;
+  --font-h4: 600 1.25rem / 1.4 var(--font-heading), sans-serif;
+  --font-body:     400 1rem / 1.6 var(--font-sans), sans-serif;
+  --font-body-sm:  400 0.875rem / 1.5 var(--font-sans), sans-serif;
+  --font-caption:  400 0.75rem / 1.5 var(--font-sans), sans-serif;
+  --font-tiny:     500 0.6875rem / 1.4 var(--font-sans), sans-serif; /* 11px */
+  --font-mono:     400 0.875rem / 1.6 ui-monospace, "Fira Code", monospace;
+
+  /* ── 11. Transitions ─────────────────────────────────────────────────── */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* ── 12. Shadows ─────────────────────────────────────────────────────── */
+  --shadow-sm: 0 1px 2px  oklch(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px  oklch(0 0 0 / 0.07);
+  --shadow-lg: 0 10px 15px oklch(0 0 0 / 0.10);
+  --shadow-xl: 0 20px 25px oklch(0 0 0 / 0.10);
 
   /* ── Structure aliases (maps abstract names to the neutral system) ───── */
   --page-bg:           var(--bg);
@@ -71,6 +332,7 @@
   --title-active:      var(--primary);
   --btn-content:       var(--text-primary);
   --selection-bg:      var(--primary-soft);
+  --btn-plain-bg:      var(--bg-secondary); /* fix: referenced in markdown.css */
 
   /* ── Button component tokens ─────────────────────────────────────────── */
   --btn-regular-bg:        var(--bg-secondary);
@@ -128,21 +390,66 @@
   --bg-secondary:  oklch(0.165 0.003 var(--hue));
   --bg-tertiary:   oklch(0.210 0.004 var(--hue));
   --fg:            oklch(0.95 0.003 var(--hue));
-  --text-primary:  oklch(0.93 0.004 var(--hue));
-  --text-secondary: oklch(0.65 0.004 var(--hue));
-  --text-tertiary: oklch(0.48 0.003 var(--hue));
-  --border:        oklch(0.275 0 0);
+  --text-primary:     oklch(0.93 0.004 var(--hue));
+  --text-secondary:   oklch(0.65 0.004 var(--hue));
+  --text-tertiary:    oklch(0.48 0.003 var(--hue));
+  --text-disabled:    oklch(0.38 0.003 var(--hue));
+  --text-placeholder: oklch(0.38 0.003 var(--hue));
+  --border:           oklch(0.275 0 0);
   --border-hover:  oklch(0.375 0 0);
 
   /* Semantic colors — slightly brighter in dark mode */
   --success:       oklch(0.74 0.16 145);
   --success-soft:  oklch(0.20 0.06 145);
+  --success-deco:  oklch(0.45 0.12 145);
+  --success-icon-bg: oklch(0.30 0.08 145);
+  --success-value: oklch(0.65 0.16 145);
+
   --warning:       oklch(0.82 0.17 85);
   --warning-soft:  oklch(0.20 0.06 85);
+  --warning-deco:  oklch(0.48 0.14 85);
+  --warning-icon-bg: oklch(0.32 0.10 85);
+  --warning-value: oklch(0.68 0.17 85);
+
   --error:         oklch(0.70 0.20 25);
   --error-soft:    oklch(0.20 0.07 25);
+  --error-deco:    oklch(0.45 0.16 25);
+  --error-icon-bg: oklch(0.30 0.12 25);
+  --error-value:   oklch(0.62 0.20 25);
+
   --info:          oklch(0.74 0.12 230);
   --info-soft:     oklch(0.20 0.05 230);
+
+  /* ── Surfaces — dark overrides ──────────────────────────────────────── */
+  --surface-base:    var(--bg);
+  --surface-raised:  var(--bg-secondary);
+  --surface-sunken:  var(--bg-tertiary);
+  --surface-overlay: oklch(0.165 0.003 var(--hue) / 0.96);
+
+  /* ── Borders — dark overrides ────────────────────────────────────────── */
+  --border-subtle:  oklch(0.220 0 0);
+  --border-default: var(--border);
+  --border-strong:  oklch(0.440 0 0);
+  --border-focus:   var(--primary);
+
+  /* ── Semantic color borders — dark ───────────────────────────────────── */
+  --success-border: oklch(0.55 0.14 145);
+  --warning-border: oklch(0.65 0.15 85);
+  --error-border:   oklch(0.55 0.18 25);
+  --info-border:    oklch(0.55 0.10 230);
+
+  /* ── Admonition colors — dark ────────────────────────────────────────── */
+  --admonitions-color-tip:       oklch(0.74 0.16 145);
+  --admonitions-color-warning:   oklch(0.82 0.17 85);
+  --admonitions-color-important: oklch(0.68 0.18 310);
+
+  /* ── Overlay / Transparency tokens — dark (same as light, works on dark bg) ── */
+  --overlay-subtle:   oklch(1 0 0 / 0.05);
+  --overlay-weak:     oklch(1 0 0 / 0.15);
+  --overlay-light:    oklch(1 0 0 / 0.20);
+  --overlay-medium:   oklch(1 0 0 / 0.50);
+  --overlay-strong:   oklch(1 0 0 / 0.60);
+  --overlay-darker:   oklch(1 0 0 / 0.80);
 
   /* ── Structure aliases ───────────────────────────────────────────────── */
   --page-bg:           var(--bg);
@@ -154,6 +461,7 @@
   --title-active:      var(--primary);
   --btn-content:       var(--text-primary);
   --selection-bg:      var(--primary-soft);
+  --btn-plain-bg:      var(--bg-tertiary);
 
   /* ── Button component tokens ─────────────────────────────────────────── */
   --btn-regular-bg:        var(--bg-secondary);
@@ -737,3 +1045,30 @@
 .animate-grid-in {
   animation: grid-in 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-3);
+  background: var(--surface-sunken);
+  color: var(--text-secondary);
+  border-radius: var(--radius-md);
+  font: var(--font-caption);
+  font-weight: 500;
+}
+
+.dot-warning,
+.dot-success,
+.dot-danger,
+.dot-info {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.dot-warning { background: var(--warning); }
+.dot-success { background: var(--success); }
+.dot-danger { background: var(--error); }
+.dot-info { background: var(--info); }

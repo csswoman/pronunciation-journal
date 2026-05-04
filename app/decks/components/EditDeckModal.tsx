@@ -131,7 +131,7 @@ export function EditDeckModal({ deck, onClose, onUpdated, onDelete }: EditDeckMo
           </div>
         </div>
 
-        {error && <p className="text-xs text-red-500">{error}</p>}
+        {error && <p className="text-xs text-error">{error}</p>}
 
         <div className="flex gap-2 pt-1">
           <Button variant="danger" size="sm" onClick={onDelete}>
@@ -154,3 +154,4 @@ export function EditDeckModal({ deck, onClose, onUpdated, onDelete }: EditDeckMo
     </div>
   );
 }
+

@@ -33,7 +33,7 @@ export function GuestBanner() {
         <button
           onClick={() => router.push("/auth/login")}
           className="flex items-center gap-2 rounded-xl px-6 py-3 text-sm font-bold transition-opacity hover:opacity-80"
-          style={{ background: "var(--primary)", color: "white" }}
+          style={{ background: "var(--primary)", color: "var(--on-primary)" }}
         >
           <LogIn size={16} />
           Sign in to get started
@@ -50,7 +50,7 @@ export function GuestBanner() {
           >
             <div className="h-9 w-9 rounded-xl" style={{ background: "var(--line-divider)" }} />
             <div className="space-y-1">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.2em]" style={{ color: "var(--text-secondary)" }}>{label}</p>
+              <p className="text-tiny font-semibold uppercase tracking-[0.2em]" style={{ color: "var(--text-secondary)" }}>{label}</p>
               <p className="text-2xl font-black" style={{ color: "var(--deep-text)" }}>—</p>
             </div>
           </div>
@@ -66,3 +66,4 @@ export function GuestBanner() {
     </div>
   );
 }
+

@@ -29,7 +29,7 @@ export function StudyLeftPanel({
 
       {/* Reference image */}
       <div>
-        <p className="text-[10px] font-semibold tracking-widest uppercase mb-2"
+        <p className="text-tiny font-semibold tracking-widest uppercase mb-2"
           style={{ color: "var(--text-tertiary)" }}>Reference</p>
         <input
           ref={fileInputRef}
@@ -46,11 +46,11 @@ export function StudyLeftPanel({
               <img src={imageUrl} alt={word} className="w-full h-full object-cover" />
               <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                 <button onClick={() => fileInputRef.current?.click()}
-                  className="px-2 py-1 rounded-lg bg-white/90 text-[10px] font-semibold text-gray-800 hover:bg-white">
+                  className="px-2 py-1 rounded-lg bg-overlay-darker text-tiny font-semibold text-fg hover:bg-surface-raised">
                   Change
                 </button>
                 <button onClick={onRemoveImage}
-                  className="px-2 py-1 rounded-lg bg-white/90 text-[10px] font-semibold text-red-600 hover:bg-white">
+                  className="px-2 py-1 rounded-lg bg-overlay-darker text-tiny font-semibold text-error hover:bg-surface-raised">
                   Remove
                 </button>
               </div>
@@ -59,7 +59,7 @@ export function StudyLeftPanel({
             <div className="flex flex-col items-center gap-2" style={{ color: "var(--text-tertiary)" }}>
               <div className="w-6 h-6 rounded-full border-2 border-t-transparent animate-spin"
                 style={{ borderColor: "var(--primary)", borderTopColor: "transparent" }} />
-              <p className="text-[10px]">Uploading…</p>
+              <p className="text-tiny">Uploading…</p>
             </div>
           ) : (
             <button onClick={() => fileInputRef.current?.click()}
@@ -68,7 +68,7 @@ export function StudyLeftPanel({
               onMouseEnter={e => (e.currentTarget.style.color = "var(--deep-text)")}
               onMouseLeave={e => (e.currentTarget.style.color = "var(--text-tertiary)")}>
               <ImagePlus size={22} className="opacity-40" />
-              <p className="text-[11px] text-center">Add reference<br />image</p>
+              <p className="text-tiny text-center">Add reference<br />image</p>
             </button>
           )}
         </div>
@@ -76,12 +76,12 @@ export function StudyLeftPanel({
 
       {/* Details */}
       <div>
-        <p className="text-[10px] font-semibold tracking-widest uppercase mb-3"
+        <p className="text-tiny font-semibold tracking-widest uppercase mb-3"
           style={{ color: "var(--text-tertiary)" }}>Details</p>
         <div className="space-y-3">
           {levelLabel && (
             <div>
-              <p className="text-[10px] mb-1" style={{ color: "var(--text-tertiary)" }}>Level</p>
+              <p className="text-tiny mb-1" style={{ color: "var(--text-tertiary)" }}>Level</p>
               <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-xs font-semibold"
                 style={{ borderColor: "var(--warning)", backgroundColor: "var(--warning-soft)", color: "var(--warning)" }}>
                 {levelLabel} · {LEVEL_NAMES[levelLabel] ?? ""}
@@ -90,13 +90,13 @@ export function StudyLeftPanel({
           )}
           {tags && tags.length > 0 && (
             <div>
-              <p className="text-[10px] mb-1" style={{ color: "var(--text-tertiary)" }}>Category</p>
+              <p className="text-tiny mb-1" style={{ color: "var(--text-tertiary)" }}>Category</p>
               <p className="text-sm font-semibold" style={{ color: "var(--deep-text)" }}>{tags[0]}</p>
             </div>
           )}
           {partOfSpeech && (
             <div>
-              <p className="text-[10px] mb-1" style={{ color: "var(--text-tertiary)" }}>Part of speech</p>
+              <p className="text-tiny mb-1" style={{ color: "var(--text-tertiary)" }}>Part of speech</p>
               <p className="text-sm font-semibold capitalize" style={{ color: "var(--deep-text)" }}>{partOfSpeech}</p>
             </div>
           )}
@@ -123,3 +123,4 @@ export function StudyLeftPanel({
     </div>
   );
 }
+

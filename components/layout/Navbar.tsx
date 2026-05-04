@@ -83,14 +83,14 @@ export default function Navbar({
 
   return (
     <aside 
-      className={`bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 min-h-screen py-6 flex flex-col transition-all duration-300 ${
+      className={`bg-surface-raised border-r border-border-subtle min-h-screen py-6 flex flex-col transition-all duration-300 ${
         isCollapsed ? "w-20" : "w-64"
       }`}
     >
       {/* Header with toggle button */}
       <div className={`px-4 mb-6 flex items-center ${isCollapsed ? "justify-center" : "justify-between"}`}>
         {!isCollapsed && (
-          <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
+          <h2 className="text-xl font-bold text-fg">
             Welcome!
           </h2>
         )}
@@ -104,7 +104,7 @@ export default function Navbar({
           icon={
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className={`h-5 w-5 text-gray-600 dark:text-gray-400 transition-transform ${
+              className={`h-5 w-5 text-fg-muted transition-transform ${
                 isCollapsed ? "rotate-180" : ""
               }`}
               fill="none"
@@ -136,7 +136,7 @@ export default function Navbar({
                 size="md"
                 className={`w-full justify-start ${
                   isCollapsed ? "justify-center px-3" : "px-4"
-                } ${activeTab === item.id ? "shadow-sm" : "text-gray-700 dark:text-gray-300"}`}
+                } ${activeTab === item.id ? "shadow-sm" : "text-fg-muted"}`}
                 icon={<span className={isCollapsed ? "" : "mr-3"}>{item.icon}</span>}
               >
                 {!isCollapsed && <span>{item.label}</span>}
@@ -144,7 +144,7 @@ export default function Navbar({
 
               {/* Tooltip for collapsed state */}
               {isCollapsed && hoveredItem === item.id && (
-                <div className="absolute left-full ml-2 top-1/2 -translate-y-1/2 z-50 px-3 py-2 bg-gray-900 dark:bg-gray-700 text-white text-sm rounded-lg shadow-lg whitespace-nowrap pointer-events-none">
+                <div className="absolute left-full ml-2 top-1/2 -translate-y-1/2 z-50 px-3 py-2 bg-gray-900 dark:bg-gray-700 text-on-primary text-sm rounded-lg shadow-lg whitespace-nowrap pointer-events-none">
                   {item.label}
                   <div className="absolute right-full top-1/2 -translate-y-1/2 border-4 border-transparent border-r-gray-900 dark:border-r-gray-700"></div>
                 </div>

@@ -65,7 +65,7 @@ export default function JourneyToFluiditySection() {
       {/* Header */}
       <div className="flex items-end justify-between gap-3">
         <div>
-          <p className="text-[10px] font-bold uppercase tracking-[0.24em]" style={{ color: 'var(--text-tertiary)' }}>
+          <p className="text-tiny font-bold uppercase tracking-[0.24em]" style={{ color: 'var(--text-tertiary)' }}>
             ACTIVITY LOG
           </p>
           <h2 className="mt-0.5 text-xl font-black tracking-tight" style={{ color: 'var(--deep-text)' }}>
@@ -126,7 +126,7 @@ export default function JourneyToFluiditySection() {
                 </p>
                 <div className="mt-1 flex items-center gap-2">
                   <span
-                    className="rounded-full px-2 py-0.5 text-[10px] font-semibold"
+                    className="rounded-full px-2 py-0.5 text-tiny font-semibold"
                     style={{
                       background: 'color-mix(in oklch, var(--primary) 10%, transparent)',
                       color: 'var(--primary)',
@@ -134,7 +134,7 @@ export default function JourneyToFluiditySection() {
                   >
                     {CATEGORY_LABEL[ex.type]}
                   </span>
-                  <span className="text-[11px]" style={{ color: 'var(--text-tertiary)' }}>
+                  <span className="text-tiny" style={{ color: 'var(--text-tertiary)' }}>
                     {ex.time}
                   </span>
                 </div>
@@ -146,7 +146,7 @@ export default function JourneyToFluiditySection() {
                   <p className="text-base font-black tabular-nums" style={{ color }}>
                     {ex.accuracy}%
                   </p>
-                  <p className="text-[10px]" style={{ color: 'var(--text-tertiary)' }}>accuracy</p>
+                  <p className="text-tiny" style={{ color: 'var(--text-tertiary)' }}>accuracy</p>
                 </div>
 
                 {/* Mini bar */}
@@ -173,3 +173,4 @@ export default function JourneyToFluiditySection() {
     </div>
   )
 }
+

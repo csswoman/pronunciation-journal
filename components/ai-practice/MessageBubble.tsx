@@ -130,7 +130,7 @@ function AIBubble({ message, onSaveWord, onSuggestionClick, onToolAnswer, onNext
           }}
         >
           <div
-            className="space-y-1.5 text-[14px] leading-relaxed cursor-text select-text"
+            className="space-y-1.5 text-body-sm leading-relaxed cursor-text select-text"
             style={{ color: "var(--text-secondary)" }}
             onMouseUp={handleMouseUp}
           >
@@ -148,7 +148,7 @@ function AIBubble({ message, onSaveWord, onSuggestionClick, onToolAnswer, onNext
         </div>
 
         <p
-          className="text-[10px] pl-1 opacity-0 group-hover/msg:opacity-100 transition-opacity"
+          className="text-tiny pl-1 opacity-0 group-hover/msg:opacity-100 transition-opacity"
           style={{ color: "var(--text-tertiary)" }}
         >
           {formatTime((message as { createdAt?: Date }).createdAt)}
@@ -181,7 +181,7 @@ export default function MessageBubble({ message, onSaveWord, onSuggestionClick, 
       <div className="flex justify-end group/msg">
         <div className="flex flex-col items-end gap-1.5 max-w-[78%]">
           <div
-            className="px-4 py-2.5 rounded-2xl rounded-tr-md text-[14px] leading-relaxed whitespace-pre-wrap break-words"
+            className="px-4 py-2.5 rounded-2xl rounded-tr-md text-body-sm leading-relaxed whitespace-pre-wrap break-words"
             style={{
               backgroundColor: "color-mix(in oklch, var(--primary) 12%, var(--card-bg))",
               color: "var(--text-primary)",
@@ -190,7 +190,7 @@ export default function MessageBubble({ message, onSaveWord, onSuggestionClick, 
             {message.content}
           </div>
           <div className="flex items-center gap-1 pr-1 opacity-0 group-hover/msg:opacity-100 transition-opacity">
-            <span className="text-[10px]" style={{ color: "var(--text-tertiary)" }}>
+            <span className="text-tiny" style={{ color: "var(--text-tertiary)" }}>
               {formatTime((message as { createdAt?: Date }).createdAt)}
             </span>
             <CheckCheck size={11} style={{ color: "var(--primary)" }} />

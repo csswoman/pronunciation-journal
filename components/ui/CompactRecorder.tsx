@@ -46,7 +46,7 @@ export default function CompactRecorder({ onRecordingComplete, existingAudioUrl 
           size="icon"
           title="Record Your Pronunciation"
           aria-label="Record your pronunciation"
-          className="bg-red-100 dark:bg-red-900 hover:bg-red-200 dark:hover:bg-red-800 text-red-600 dark:text-red-400"
+          className="bg-warning-soft hover:bg-warning-soft text-warning"
           icon={
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -74,7 +74,7 @@ export default function CompactRecorder({ onRecordingComplete, existingAudioUrl 
           icon={
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6 text-white"
+              className="h-6 w-6 text-on-primary"
               viewBox="0 0 20 20"
               fill="currentColor"
             >
@@ -91,11 +91,14 @@ export default function CompactRecorder({ onRecordingComplete, existingAudioUrl 
       
       {/* Tooltip */}
       {!isRecording && (
-        <span className="absolute left-1/2 -translate-x-1/2 top-full mt-2 z-10 px-3 py-1 bg-gray-800 text-white text-xs rounded-md whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+        <span className="absolute left-1/2 -translate-x-1/2 top-full mt-2 z-10 px-3 py-1 bg-gray-800 text-on-primary text-xs rounded-md whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
           Record pronunciation
         </span>
       )}
     </div>
   );
 }
+
+
+
 

@@ -26,28 +26,28 @@ export default function PhonemeRow({
       style={{
         backgroundColor: isSelected ? "var(--primary)" : "var(--card-bg)",
         borderColor: isSelected ? "var(--primary)" : "var(--line-divider)",
-        color: isSelected ? "white" : "var(--text-primary)",
+        color: isSelected ? "var(--on-primary)" : "var(--text-primary)",
       }}
     >
-      <span className="text-2xl font-serif font-bold w-16 shrink-0" style={{ color: isSelected ? "white" : "var(--text-primary)" }}>
+      <span className="text-2xl font-serif font-bold w-16 shrink-0" style={{ color: isSelected ? "var(--on-primary)" : "var(--text-primary)" }}>
         {phoneme.symbol}
       </span>
-      <span className="text-xs font-bold uppercase tracking-wider w-28 shrink-0" style={{ color: isSelected ? "rgba(255,255,255,0.6)" : "var(--primary)" }}>
+      <span className="text-xs font-bold uppercase tracking-wider w-28 shrink-0" style={{ color: isSelected ? "var(--overlay-strong)" : "var(--primary)" }}>
         {phoneme.category}
       </span>
-      <span className="flex-1 text-sm" style={{ color: isSelected ? "rgba(255,255,255,0.8)" : "var(--text-secondary)" }}>
+      <span className="flex-1 text-sm" style={{ color: isSelected ? "var(--overlay-darker)" : "var(--text-secondary)" }}>
         {phoneme.name}
       </span>
-      <span className="text-xs font-medium px-2 py-0.5 rounded-full" style={{ backgroundColor: isSelected ? "rgba(255,255,255,0.2)" : "var(--btn-regular-bg)", color: isSelected ? "white" : "var(--primary)" }}>
+      <span className="text-xs font-medium px-2 py-0.5 rounded-full" style={{ backgroundColor: isSelected ? "var(--overlay-light)" : "var(--btn-regular-bg)", color: isSelected ? "var(--on-primary)" : "var(--primary)" }}>
         {phoneme.example}
       </span>
       <span
         role="button"
         onClick={onPlay}
-        className="w-7 h-7 rounded-full flex items-center justify-center text-[10px] shrink-0"
+        className="w-7 h-7 rounded-full flex items-center justify-center text-tiny shrink-0"
         style={{
-          backgroundColor: isSelected ? "rgba(255,255,255,0.2)" : "var(--btn-regular-bg)",
-          color: isSelected ? "white" : "var(--primary)",
+          backgroundColor: isSelected ? "var(--overlay-light)" : "var(--btn-regular-bg)",
+          color: isSelected ? "var(--on-primary)" : "var(--primary)",
         }}
       >
         {isPlaying ? "■" : "▶"}

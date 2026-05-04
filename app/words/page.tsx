@@ -146,7 +146,7 @@ export default function WordsPage() {
                 onClick={() => setFilterType("all")}
                 className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
                   filterType === "all"
-                    ? "bg-[var(--primary)] text-white border-[var(--primary)]"
+                    ? "bg-[var(--primary)] text-on-primary border-[var(--primary)]"
                     : "border-[var(--line-divider)] bg-[var(--card-bg)] text-[var(--text-secondary)] hover:border-[var(--primary)]"
                 }`}
               >
@@ -158,7 +158,7 @@ export default function WordsPage() {
                 onClick={() => setFilterType("ready")}
                 className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
                   filterType === "ready"
-                    ? "bg-[var(--primary)] text-white border-[var(--primary)]"
+                    ? "bg-[var(--primary)] text-on-primary border-[var(--primary)]"
                     : "border-[var(--line-divider)] bg-[var(--card-bg)] text-[var(--text-secondary)] hover:border-[var(--primary)]"
                 }`}
               >
@@ -171,7 +171,7 @@ export default function WordsPage() {
                   onClick={() => setFilterType("processing")}
                   className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
                     filterType === "processing"
-                      ? "bg-[color-mix(in_oklch,var(--primary)_100%,transparent)] text-white border-[var(--primary)]"
+                      ? "bg-[color-mix(in_oklch,var(--primary)_100%,transparent)] text-on-primary border-[var(--primary)]"
                       : "border-[color-mix(in_oklch,var(--primary)_35%,transparent)] bg-[color-mix(in_oklch,var(--primary)_10%,transparent)] text-[var(--primary)] hover:border-[var(--primary)]"
                   }`}
                 >
@@ -185,7 +185,7 @@ export default function WordsPage() {
                   onClick={() => setFilterType("difficult")}
                   className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
                     filterType === "difficult"
-                      ? "bg-[var(--primary)] text-white border-[var(--primary)]"
+                      ? "bg-[var(--primary)] text-on-primary border-[var(--primary)]"
                       : "border-[var(--line-divider)] bg-[var(--card-bg)] text-[var(--text-secondary)] hover:border-[var(--primary)]"
                   }`}
                 >
@@ -396,7 +396,7 @@ function EmptyState({ onAdd }: { onAdd: () => void }) {
         <Button onClick={onAdd} icon={<Plus size={16} />}>
           Add your first word
         </Button>
-        <p className="text-[10px] uppercase tracking-widest text-[var(--text-tertiary)]">
+        <p className="text-tiny uppercase tracking-widest text-[var(--text-tertiary)]">
           Tip: press <kbd className="px-1.5 py-0.5 rounded bg-[var(--btn-regular-bg)] font-mono">N</kbd> anywhere
         </p>
       </div>

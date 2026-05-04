@@ -41,8 +41,8 @@ export default function HomeCoursesSection() {
     return (
       <div className="grid grid-cols-2 gap-4">
         {Array.from({ length: 2 }).map((_, i) => (
-          <div key={i} className="rounded-2xl border border-[var(--line-divider)] bg-[var(--card-bg)] h-40 overflow-hidden relative">
-            <div className="absolute inset-0 -translate-x-full animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+          <div key={i} className="rounded-lg border border-border-subtle bg-surface-raised h-40 overflow-hidden relative">
+            <div className="absolute inset-0 -translate-x-full animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-overlay-weak to-transparent" />
           </div>
         ))}
       </div>
@@ -94,7 +94,7 @@ export default function HomeCoursesSection() {
             <button
               onClick={prev}
               disabled={index === 0}
-              className="flex items-center justify-center w-7 h-7 rounded-full border border-[var(--line-divider)] bg-[var(--card-bg)] text-[var(--text-secondary)] hover:text-[var(--deep-text)] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+              className="flex items-center justify-center w-7 h-7 rounded-full border border-border-subtle bg-surface-raised text-fg-muted hover:text-fg disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
               aria-label="Previous"
             >
               <ChevronLeft size={14} />
@@ -102,7 +102,7 @@ export default function HomeCoursesSection() {
             <button
               onClick={next}
               disabled={index >= maxIndex}
-              className="flex items-center justify-center w-7 h-7 rounded-full border border-[var(--line-divider)] bg-[var(--card-bg)] text-[var(--text-secondary)] hover:text-[var(--deep-text)] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+              className="flex items-center justify-center w-7 h-7 rounded-full border border-border-subtle bg-surface-raised text-fg-muted hover:text-fg disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
               aria-label="Next"
             >
               <ChevronRight size={14} />

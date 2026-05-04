@@ -31,7 +31,7 @@ export function AddWordForm({ word, phrases, adding, onWordChange, onPhrasesChan
       <Button
         onClick={onSubmit}
         disabled={!word.trim() || adding}
-        className="w-full px-3 py-2 rounded-xl text-sm font-semibold bg-[var(--primary)] text-white hover:opacity-90 disabled:opacity-50 transition-colors flex items-center justify-center gap-1"
+        className="w-full px-3 py-2 rounded-xl text-sm font-semibold bg-[var(--primary)] text-on-primary hover:opacity-90 disabled:opacity-50 transition-colors flex items-center justify-center gap-1"
       >
         <Plus size={16} />
         Add

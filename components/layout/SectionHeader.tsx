@@ -8,7 +8,7 @@ interface SectionHeaderProps {
 }
 
 export default function SectionHeader({ title, viewAll, viewAllHref }: SectionHeaderProps) {
-  const linkClass = "text-[13px] font-semibold text-[var(--primary)] flex items-center gap-1 transition-[gap] duration-200 hover:gap-2";
+  const linkClass = "text-caption font-semibold text-[var(--primary)] flex items-center gap-1 transition-[gap] duration-200 hover:gap-2";
 
   return (
     <div className="flex items-center justify-between mb-4">
@@ -23,4 +23,5 @@ export default function SectionHeader({ title, viewAll, viewAllHref }: SectionHe
     </div>
   );
 }
+
 

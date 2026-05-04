@@ -22,7 +22,7 @@ export default function ColorPicker({
 
   return (
     <div className="space-y-5">
-      <label className="text-sm font-medium text-gray-900 dark:text-white">
+      <label className="text-sm font-medium text-fg">
         Tema de la Aplicación
       </label>
 
@@ -43,7 +43,7 @@ export default function ColorPicker({
                 isLoading ? "opacity-50 cursor-not-allowed" : "cursor-pointer",
                 isSelected
                   ? "border-transparent ring-2 ring-accent shadow-md scale-[1.04]"
-                  : "border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-500 hover:scale-[1.03]",
+                  : "border-border-subtle hover:border-border-default hover:scale-[1.03]",
               ].join(" ")}
             >
               {/* Accent swatch */}
@@ -68,7 +68,7 @@ export default function ColorPicker({
               </div>
 
               {/* Theme name */}
-              <span className="text-xs font-medium text-gray-700 dark:text-gray-300">
+              <span className="text-xs font-medium text-fg-muted">
                 {theme.label}
               </span>
             </Button>
@@ -77,17 +77,17 @@ export default function ColorPicker({
       </div>
 
       {/* Live preview */}
-      <div className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4 space-y-3 transition-colors duration-300">
-        <p className="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">
+      <div className="rounded-2xl border border-border-subtle bg-surface-raised p-4 space-y-3 transition-colors duration-300">
+        <p className="text-xs font-semibold uppercase tracking-wider text-fg-subtle">
           Vista previa
         </p>
 
         {/* Card — neutral surface, accent only on interactive elements */}
-        <div className="p-3 rounded-xl bg-gray-50 dark:bg-gray-900 space-y-2.5">
-          <p className="text-sm font-semibold text-gray-900 dark:text-white">
+        <div className="p-3 rounded-xl bg-surface-sunken space-y-2.5">
+          <p className="text-sm font-semibold text-fg">
             Pronunciation Journal
           </p>
-          <p className="text-xs text-gray-500 dark:text-gray-400">
+          <p className="text-xs text-fg-subtle">
             Practica tu pronunciación cada día
           </p>
 

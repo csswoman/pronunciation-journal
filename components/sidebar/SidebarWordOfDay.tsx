@@ -138,7 +138,7 @@ export default function SidebarWordOfDay() {
     >
       <div className="flex items-center justify-between">
         <span
-          className="text-[10px] font-bold tracking-widest uppercase border rounded-full px-2 py-0.5"
+          className="text-tiny font-bold tracking-widest uppercase border rounded-full px-2 py-0.5"
           style={difficultyStyle}
         >
           Word of the day
@@ -192,9 +192,9 @@ export default function SidebarWordOfDay() {
                 className="mt-1 rounded-xl px-3 py-2.5 flex flex-col gap-1.5"
                 style={{ backgroundColor: "var(--bg-tertiary)", border: "1px solid var(--border)" }}
               >
-                <p className="text-[11px] leading-snug" style={{ color: "var(--text-secondary)" }}>{word.definition}</p>
+                <p className="text-tiny leading-snug" style={{ color: "var(--text-secondary)" }}>{word.definition}</p>
                 {word.example_sentence && (
-                  <p className="text-[10px] italic leading-snug" style={{ color: "var(--text-tertiary)" }}>"{word.example_sentence}"</p>
+                  <p className="text-tiny italic leading-snug" style={{ color: "var(--text-tertiary)" }}>"{word.example_sentence}"</p>
                 )}
               </div>
             )}

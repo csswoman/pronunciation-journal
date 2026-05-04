@@ -88,8 +88,8 @@ export default function AuthProvider({
   if (loading) {
     return (
       <AuthContext.Provider value={value}>
-        <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900">
-          <p className="text-gray-600 dark:text-gray-400">Loading session…</p>
+        <div className="min-h-screen flex items-center justify-center bg-surface-base">
+          <p className="text-fg-muted">Loading session…</p>
         </div>
       </AuthContext.Provider>
     );

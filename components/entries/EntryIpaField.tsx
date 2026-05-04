@@ -24,13 +24,13 @@ export default function EntryIpaField({
     <div>
       <label
         htmlFor="ipa"
-        className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+        className="block text-sm font-medium text-fg-muted mb-1"
       >
         IPA
       </label>
       <div className="flex items-center gap-2">
         {ipa && apiSetFields.ipa ? (
-          <p className="flex-1 px-3 py-2 bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md text-gray-900 dark:text-gray-100 font-mono text-lg">
+          <p className="flex-1 px-3 py-2 bg-surface-sunken border border-border-default rounded-md text-fg font-mono text-lg">
             {ipa}
           </p>
         ) : (
@@ -39,7 +39,7 @@ export default function EntryIpaField({
             id="ipa"
             value={ipa}
             onChange={(e) => setIpa(e.target.value)}
-            className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-accent focus:border-accent font-mono text-lg"
+            className="flex-1 px-3 py-2 border border-border-default rounded-md shadow-sm bg-surface-sunken text-fg focus:ring-accent focus:border-accent font-mono text-lg"
             placeholder="/prəˌnʌnsiˈeɪʃən/"
           />
         )}
@@ -47,13 +47,13 @@ export default function EntryIpaField({
           <Button
             type="button"
             onClick={() => playAudio(audioUrl, { showAlerts: false })}
-            className="p-2 bg-blue-100 dark:bg-blue-900 hover:bg-blue-200 dark:hover:bg-blue-800 rounded-full transition-colors flex-shrink-0"
+            className="p-2 bg-info-soft hover:bg-info-soft rounded-full transition-colors flex-shrink-0"
             title="Play pronunciation"
             aria-label="Play pronunciation"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5 text-blue-600 dark:text-blue-400"
+              className="h-5 w-5 text-info"
               viewBox="0 0 20 20"
               fill="currentColor"
             >

@@ -27,14 +27,14 @@ const DIFFICULTIES: { id: ExerciseDifficulty; label: string; tag: string; tagCol
     id: "guided",
     label: "Guided",
     tag: "Easier",
-    tagColor: "#16a34a",
+    tagColor: "var(--word-correct)",
     description: "Lenient scoring — small pronunciation errors are OK. Best for building confidence.",
   },
   {
     id: "challenge",
     label: "Challenge",
     tag: "Harder",
-    tagColor: "#d97706",
+    tagColor: "var(--word-missing)",
     description: "Strict scoring — near-perfect pronunciation required. Push your limits.",
   },
 ];
@@ -151,7 +151,7 @@ export default function ScenarioPicker({ onStart, loading }: Props) {
                   <p className="text-sm font-semibold" style={{ color: "var(--deep-text)" }}>{d.label}</p>
                   <span
                     className="text-xs px-2 py-0.5 rounded-full font-medium"
-                    style={{ background: `${d.tagColor}20`, color: d.tagColor }}
+                    style={{ background: `color-mix(in oklch, ${d.tagColor} 14%, transparent)`, color: d.tagColor }}
                   >
                     {d.tag}
                   </span>

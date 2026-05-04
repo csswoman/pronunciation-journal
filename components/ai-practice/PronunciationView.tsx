@@ -357,26 +357,26 @@ export default function PronunciationView({ onSubmit }: PronunciationViewProps) 
         <div className="w-full max-w-lg flex items-center justify-between">
           <div className="flex items-center gap-1.5">
             <Sparkles size={13} style={{ color: "var(--primary)" }} />
-            <p className="text-[11px] font-bold uppercase tracking-widest" style={{ color: "var(--primary)" }}>
+            <p className="text-tiny font-bold uppercase tracking-widest" style={{ color: "var(--primary)" }}>
               Active Pronunciation
             </p>
           </div>
           <div className="flex items-center gap-2">
             <span
-              className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-medium"
+              className="flex items-center gap-1 px-2.5 py-1 rounded-full text-tiny font-medium"
               style={{ backgroundColor: "var(--btn-regular-bg)", color: "var(--text-secondary)" }}
             >
               <Trophy size={10} /> {totalMastered} mastered
             </span>
             <span
-              className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-medium"
+              className="flex items-center gap-1 px-2.5 py-1 rounded-full text-tiny font-medium"
               style={{ backgroundColor: "var(--btn-regular-bg)", color: "var(--text-secondary)" }}
             >
               👁 {totalSeen} seen
             </span>
             {remaining > 0 && (
               <span
-                className="px-2.5 py-1 rounded-full text-[11px] font-medium"
+                className="px-2.5 py-1 rounded-full text-tiny font-medium"
                 style={{ backgroundColor: "var(--btn-regular-bg)", color: "var(--text-secondary)" }}
               >
                 {remaining} left
@@ -437,14 +437,14 @@ export default function PronunciationView({ onSubmit }: PronunciationViewProps) 
             onClick={handleMicClick}
             className="relative w-14 h-14 rounded-full flex items-center justify-center transition-all focus:outline-none"
             style={{
-              backgroundColor: isRecording ? "#ef4444" : "var(--primary)",
+              backgroundColor: isRecording ? "var(--score-poor)" : "var(--primary)",
               boxShadow: isRecording
-                ? "0 0 0 8px rgba(239,68,68,0.12)"
+                ? "0 0 0 8px color-mix(in oklch, var(--score-poor) 12%, transparent)"
                 : "0 4px 16px color-mix(in oklch, var(--primary) 40%, transparent)",
             }}
             aria-label={isRecording ? "Stop recording" : "Start recording"}
           >
-            <Mic size={20} color="#fff" />
+            <Mic size={20} color="var(--on-primary)" />
           </button>
         </div>
 
@@ -494,7 +494,7 @@ export default function PronunciationView({ onSubmit }: PronunciationViewProps) 
             <button
               onClick={handleSend}
               className="flex items-center gap-1.5 px-5 py-2.5 rounded-full text-sm font-medium transition-all hover:opacity-80"
-              style={{ backgroundColor: "var(--primary)", color: "#fff" }}
+              style={{ backgroundColor: "var(--primary)", color: "var(--on-primary)" }}
             >
               <CheckCircle size={13} />
               Send recording
@@ -526,7 +526,7 @@ export default function PronunciationView({ onSubmit }: PronunciationViewProps) 
             type="submit"
             disabled={!inputValue.trim()}
             className="flex-shrink-0 w-9 h-9 rounded-xl flex items-center justify-center transition-colors disabled:opacity-40"
-            style={{ backgroundColor: "var(--primary)", color: "#fff" }}
+            style={{ backgroundColor: "var(--primary)", color: "var(--on-primary)" }}
             aria-label="Practice phrase"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

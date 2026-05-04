@@ -36,7 +36,7 @@ export function SoundGrid({ progressList }: Props) {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-[10px] font-bold uppercase tracking-[0.24em]" style={{ color: 'var(--text-tertiary)' }}>
+          <p className="text-tiny font-bold uppercase tracking-[0.24em]" style={{ color: 'var(--text-tertiary)' }}>
             SOUNDS
           </p>
           <p className="text-sm font-semibold mt-0.5" style={{ color: 'var(--deep-text)' }}>
@@ -86,7 +86,7 @@ export function SoundGrid({ progressList }: Props) {
             : 'var(--line-divider)'
 
           const ipaColor = isMastered
-            ? 'white'
+            ? 'var(--on-primary)'
             : isPracticing
             ? 'var(--primary)'
             : isAvailable
@@ -94,7 +94,7 @@ export function SoundGrid({ progressList }: Props) {
             : 'var(--text-tertiary)'
 
           const subColor = isMastered
-            ? 'rgba(255,255,255,0.65)'
+            ? 'rgba(var(--on-primary), 0.65)'
             : isPracticing && score !== null
             ? scoreColor(score)
             : 'var(--text-tertiary)'
@@ -133,7 +133,7 @@ export function SoundGrid({ progressList }: Props) {
                 {p.sounds.ipa}
               </span>
               <span
-                className="mt-1 text-[10px] font-semibold tabular-nums leading-none"
+                className="mt-1 text-tiny font-semibold tabular-nums leading-none"
                 style={{ color: subColor }}
               >
                 {subText}
@@ -152,7 +152,7 @@ export function SoundGrid({ progressList }: Props) {
         ].map(({ label, bg, border }) => (
           <div key={label} className="flex items-center gap-1.5">
             <div className="h-3 w-3 rounded-[4px]" style={{ background: bg, border: `1px solid ${border}` }} />
-            <span className="text-[11px]" style={{ color: 'var(--text-secondary)' }}>{label}</span>
+            <span className="text-tiny" style={{ color: 'var(--text-secondary)' }}>{label}</span>
           </div>
         ))}
       </div>

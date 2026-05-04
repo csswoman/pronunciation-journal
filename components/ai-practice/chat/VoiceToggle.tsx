@@ -37,7 +37,7 @@ export default function VoiceToggle({
         className="rounded-full p-2 transition-colors"
         style={{
           backgroundColor: voiceEnabled ? "var(--primary)" : "var(--btn-regular-bg)",
-          color: voiceEnabled ? "var(--primary-fg, #fff)" : "var(--text-secondary)",
+          color: voiceEnabled ? "var(--on-primary)" : "var(--text-secondary)",
         }}
       >
         <Volume2 className="w-4 h-4" />
@@ -56,11 +56,11 @@ export default function VoiceToggle({
           className="flex items-center gap-1.5 rounded-full px-3 py-2 text-xs font-medium transition-all select-none"
           style={{
             backgroundColor: isRecording
-              ? "#ef4444"
+              ? "var(--score-poor)"
               : isBusy
               ? "var(--btn-regular-bg)"
               : "var(--primary)",
-            color: isBusy ? "var(--text-tertiary)" : "var(--primary-fg, #fff)",
+            color: isBusy ? "var(--text-tertiary)" : "var(--on-primary)",
             cursor: isBusy ? "not-allowed" : "pointer",
             animation: isRecording ? "pulse 1.5s ease-in-out infinite" : undefined,
           }}

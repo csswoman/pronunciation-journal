@@ -69,7 +69,7 @@ export default function AchievementsSection() {
       {/* Header */}
       <div className="flex items-end justify-between gap-3">
         <div>
-          <p className="text-[10px] font-bold uppercase tracking-[0.24em]" style={{ color: 'var(--text-tertiary)' }}>
+          <p className="text-tiny font-bold uppercase tracking-[0.24em]" style={{ color: 'var(--text-tertiary)' }}>
             ACHIEVEMENTS
           </p>
           <h2 className="mt-0.5 text-xl font-black tracking-tight" style={{ color: 'var(--deep-text)' }}>
@@ -107,7 +107,7 @@ export default function AchievementsSection() {
                 {a.description}
               </p>
               <span
-                className="mt-2 inline-block rounded-lg px-2 py-0.5 text-[11px] font-bold"
+                className="mt-2 inline-block rounded-lg px-2 py-0.5 text-tiny font-bold"
                 style={{
                   background: 'color-mix(in oklch, var(--primary) 14%, transparent)',
                   color: 'var(--primary)',
@@ -146,7 +146,7 @@ export default function AchievementsSection() {
                 {a.description}
               </p>
               <span
-                className="mt-2 inline-block rounded-lg px-2 py-0.5 text-[11px] font-bold"
+                className="mt-2 inline-block rounded-lg px-2 py-0.5 text-tiny font-bold"
                 style={{
                   background: 'var(--line-divider)',
                   color: 'var(--text-tertiary)',
@@ -161,3 +161,4 @@ export default function AchievementsSection() {
     </div>
   )
 }
+

@@ -63,17 +63,17 @@ export default function WordsTab({
   return (
     <>
       <div className="mb-8">
-        <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-6">
+        <h2 className="text-xl font-bold text-fg mb-6">
           Mi vocabulario
         </h2>
       </div>
       <AddWordSection onSave={onSave} />
       <div className="mt-8">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
-          <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
+          <h2 className="text-2xl font-semibold text-fg">
             Your Entries
             {isSelectionMode && selectedEntries.length > 0 && (
-              <span className="ml-3 text-base font-normal text-gray-600 dark:text-gray-400">
+              <span className="ml-3 text-base font-normal text-fg-muted">
                 ({selectedEntries.length} seleccionada
                 {selectedEntries.length > 1 ? "s" : ""})
               </span>
@@ -88,7 +88,7 @@ export default function WordsTab({
             {isSelectionMode && selectedEntries.length > 0 && (
               <Button
                 onClick={onDeleteSelected}
-                className="flex items-center gap-2 px-4 py-2 text-white rounded-lg text-sm font-medium transition-colors"
+                className="flex items-center gap-2 px-4 py-2 text-on-primary rounded-lg text-sm font-medium transition-colors"
                 style={{
                   backgroundColor: 'var(--admonitions-color-caution)',
                 }}
@@ -114,8 +114,8 @@ export default function WordsTab({
               onClick={onToggleSelectionMode}
               className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                 isSelectionMode
-                  ? "bg-gray-600 hover:bg-gray-700 text-white"
-                  : "bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600"
+                  ? "bg-surface-sunken hover:bg-border-subtle text-fg"
+                  : "bg-surface-raised border border-border-default text-fg-muted hover:bg-surface-sunken"
               }`}
             >
               {isSelectionMode ? (

@@ -29,7 +29,7 @@ export default function QuickActionCard({
         className="absolute top-4 right-4 w-6 h-6 rounded-lg
           bg-[var(--page-bg)] text-[var(--text-tertiary)] text-xs
           flex items-center justify-center
-          group-hover:bg-[var(--primary)] group-hover:text-white transition-all"
+          group-hover:bg-[var(--primary)] group-hover:text-on-primary transition-all"
         aria-hidden="true"
       >
         →

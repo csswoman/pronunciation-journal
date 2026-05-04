@@ -14,10 +14,10 @@ interface HomeWordsToReviewProps {
   words?: ReviewWord[];
 }
 
-const DIFFICULTY_STYLES: Record<ReviewWord["difficulty"], string> = {
-  easy: "text-green-600 bg-green-50 dark:bg-green-950/30",
-  med: "text-yellow-600 bg-yellow-50 dark:bg-yellow-950/30",
-  hard: "text-red-500 bg-red-50 dark:bg-red-950/20",
+const DIFFICULTY_DOT: Record<ReviewWord["difficulty"], string> = {
+  easy: "dot-success",
+  med: "dot-warning",
+  hard: "dot-warning",
 };
 
 export default function HomeWordsToReview({
@@ -32,7 +32,7 @@ export default function HomeWordsToReview({
     <Card variant="compact" className="gap-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <span className="text-lg">🟩</span>
+          <span className="inline-block w-3 h-3 rounded bg-success"></span>
           <span className="text-sm font-semibold text-[var(--deep-text)]">Words to review</span>
         </div>
         <Link href="/review" className="text-sm font-medium text-[var(--primary)] hover:underline">
@@ -60,7 +60,8 @@ export default function HomeWordsToReview({
                 {w.ipa} · {w.translation}
               </p>
             </div>
-            <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${DIFFICULTY_STYLES[w.difficulty]}`}>
+            <span className="badge">
+              <span className={DIFFICULTY_DOT[w.difficulty]} />
               {w.difficulty}
             </span>
           </div>

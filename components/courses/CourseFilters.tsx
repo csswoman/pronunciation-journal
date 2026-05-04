@@ -59,12 +59,12 @@ export default function CourseFilters({
               key={tab.value}
               type="button"
               onClick={() => onLevelChange(tab.value)}
-              className="rounded-lg px-3.5 py-1.5 text-[13px] font-medium transition-all duration-150"
+              className="rounded-lg px-3.5 py-1.5 text-caption font-medium transition-all duration-150"
               style={
                 active
                   ? {
                       background: "var(--primary)",
-                      color: "white",
+                      color: "var(--on-primary)",
                       boxShadow: "0 2px 8px color-mix(in oklch, var(--primary) 30%, transparent)",
                     }
                   : {

@@ -24,16 +24,16 @@ export default function CourseHeroProgress({ courseSlug, totalLessons }: Props) 
 
   return (
     <div className="flex items-center gap-3 mt-2">
-      <div className="flex-1 h-1 rounded-full bg-white/20 overflow-hidden">
+      <div className="flex-1 h-1 rounded-full bg-overlay-light overflow-hidden">
         <div
           className="h-full rounded-full transition-all duration-700 ease-out"
           style={{
             width: `${progress}%`,
-            background: isCompleted ? `oklch(.75 .18 150)` : `rgba(255,255,255,0.85)`,
+            background: isCompleted ? `oklch(.75 .18 150)` : `var(--overlay-darker)`,
           }}
         />
       </div>
-      <span className="text-[11px] tabular-nums text-white/70 shrink-0">
+      <span className="text-tiny tabular-nums text-on-primary/70 shrink-0">
         {completed}/{totalLessons}
       </span>
     </div>

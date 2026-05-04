@@ -29,7 +29,7 @@ export function StudyRightPanel({ stats, upcomingCards }: StudyRightPanelProps) 
 
       {/* Today's progress */}
       <div>
-        <p className="text-[10px] font-semibold tracking-widest uppercase mb-2"
+        <p className="text-tiny font-semibold tracking-widest uppercase mb-2"
           style={{ color: "var(--text-tertiary)" }}>Today's progress</p>
         <div className="grid grid-cols-2 gap-2">
           {[
@@ -41,7 +41,7 @@ export function StudyRightPanel({ stats, upcomingCards }: StudyRightPanelProps) 
             <div key={label} className="rounded-xl border p-3 text-center"
               style={{ borderColor: "var(--line-divider)", backgroundColor: "var(--card-bg)" }}>
               <p className="text-xl font-bold" style={{ color }}>{val}</p>
-              <p className="text-[10px] mt-0.5" style={{ color: "var(--text-tertiary)" }}>{label}</p>
+              <p className="text-tiny mt-0.5" style={{ color: "var(--text-tertiary)" }}>{label}</p>
             </div>
           ))}
         </div>
@@ -50,7 +50,7 @@ export function StudyRightPanel({ stats, upcomingCards }: StudyRightPanelProps) 
       {/* Upcoming cards */}
       {upcomingCards.length > 0 && (
         <div>
-          <p className="text-[10px] font-semibold tracking-widest uppercase mb-2"
+          <p className="text-tiny font-semibold tracking-widest uppercase mb-2"
             style={{ color: "var(--text-tertiary)" }}>Upcoming cards</p>
           <div className="space-y-1.5">
             {upcomingCards.map((card, i) => {
@@ -67,12 +67,12 @@ export function StudyRightPanel({ stats, upcomingCards }: StudyRightPanelProps) 
                       {card.word}
                     </p>
                     {cardLevel && (
-                      <p className="text-[10px]" style={{ color: "var(--text-tertiary)" }}>
+                      <p className="text-tiny" style={{ color: "var(--text-tertiary)" }}>
                         {cardLevel} · {LEVEL_NAMES[cardLevel]}
                       </p>
                     )}
                   </div>
-                  <span className="text-[10px] shrink-0" style={{ color: "var(--text-tertiary)" }}>
+                  <span className="text-tiny shrink-0" style={{ color: "var(--text-tertiary)" }}>
                     {timeUntil(card.progress?.next_review_at)}
                   </span>
                 </div>

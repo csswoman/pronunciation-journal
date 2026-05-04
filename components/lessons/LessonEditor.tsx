@@ -85,7 +85,7 @@ export default function LessonEditor({ initialLesson }: LessonEditorProps) {
           cover_image_url: coverUrl || null,
           is_published: isPublished,
         });
-        router.push(`/lessons/${slug}`);
+        router.push(`/courses`);
       } else {
         const created = await createTheoryLesson({
           title,
@@ -99,7 +99,7 @@ export default function LessonEditor({ initialLesson }: LessonEditorProps) {
           notion_last_edited: null,
           notion_synced_at: null,
         });
-        router.push(`/lessons/${created.slug}`);
+        router.push(`/courses`);
       }
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : "Could not save lesson");
@@ -113,7 +113,7 @@ export default function LessonEditor({ initialLesson }: LessonEditorProps) {
         {/* Header */}
         <div className="flex items-center gap-3 mb-8">
           <Link
-            href={isEdit ? `/lessons/${initialLesson?.slug}` : "/lessons"}
+            href="/courses"
             className="p-2 rounded-xl hover:bg-[var(--btn-plain-bg-hover)] transition-colors"
             style={{ color: "var(--text-secondary)" }}
           >
@@ -148,7 +148,7 @@ export default function LessonEditor({ initialLesson }: LessonEditorProps) {
               Slug (URL)
             </label>
             <div className="flex items-center gap-2">
-              <span className="text-xs px-2" style={{ color: "var(--text-tertiary)" }}>/lessons/</span>
+              <span className="text-xs px-2" style={{ color: "var(--text-tertiary)" }}>/courses/</span>
               <input
                 type="text"
                 value={slug}
@@ -184,7 +184,7 @@ export default function LessonEditor({ initialLesson }: LessonEditorProps) {
                   onClick={() => setIsPublished((v) => !v)}
                   className={`w-9 h-5 rounded-full transition-colors relative ${isPublished ? "bg-[var(--primary)]" : "bg-[var(--btn-plain-bg-hover)]"}`}
                 >
-                  <div className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white shadow transition-transform ${isPublished ? "translate-x-4" : ""}`} />
+                  <div className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-surface-raised shadow transition-transform ${isPublished ? "translate-x-4" : ""}`} />
                 </div>
                 <span className="text-sm font-medium" style={{ color: "var(--deep-text)" }}>
                   {isPublished ? "Published" : "Draft"}
@@ -213,7 +213,7 @@ export default function LessonEditor({ initialLesson }: LessonEditorProps) {
                 <Image src={coverUrl} alt="cover" fill className="object-cover" />
                 <Button
                   onClick={() => setCoverUrl("")}
-                  className="absolute top-2 right-2 p-1.5 rounded-lg bg-black/50 text-white hover:bg-black/70 transition-colors"
+                  className="absolute top-2 right-2 p-1.5 rounded-lg bg-black/50 text-on-primary hover:bg-black/70 transition-colors"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -258,7 +258,7 @@ export default function LessonEditor({ initialLesson }: LessonEditorProps) {
 
           {/* Error */}
           {error && (
-            <div className="rounded-xl p-3 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 text-sm">
+            <div className="rounded-xl p-3 bg-error-soft text-error text-sm">
               {error}
             </div>
           )}
@@ -274,7 +274,7 @@ export default function LessonEditor({ initialLesson }: LessonEditorProps) {
               {saving ? "Saving…" : isEdit ? "Save changes" : "Create lesson"}
             </Button>
             <Link
-              href={isEdit ? `/lessons/${initialLesson?.slug}` : "/lessons"}
+              href="/courses"
               className="px-4 py-2.5 rounded-xl text-sm font-medium border border-[var(--line-divider)] hover:bg-[var(--btn-plain-bg-hover)] transition-colors"
               style={{ color: "var(--deep-text)" }}
             >
@@ -286,4 +286,7 @@ export default function LessonEditor({ initialLesson }: LessonEditorProps) {
     </div>
   );
 }
+
+
+
 

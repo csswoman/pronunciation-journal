@@ -184,7 +184,7 @@ export default function LessonMarkdown({ content }: { content: string }) {
             </td>
           ),
           pre: ({ children }) => (
-            <pre className="my-6 overflow-x-auto rounded-xl bg-zinc-900 p-4 text-white dark:bg-zinc-950">
+            <pre className="my-6 overflow-x-auto rounded-xl bg-zinc-900 p-4 text-on-primary dark:bg-zinc-950">
               {children}
             </pre>
           ),

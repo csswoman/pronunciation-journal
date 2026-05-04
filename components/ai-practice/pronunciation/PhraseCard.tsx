@@ -68,8 +68,8 @@ export default function PhraseCard({
                 className="text-sm font-mono transition-colors"
                 style={{
                   color: hasAnalysis
-                    ? hasError ? "#ef4444"
-                    : allCorrect ? "#22c55e"
+                    ? hasError ? "var(--score-poor)"
+                    : allCorrect ? "var(--score-excellent)"
                     : "var(--text-tertiary)"
                     : "var(--text-tertiary)",
                 }}
@@ -89,7 +89,7 @@ export default function PhraseCard({
       )}
 
       {hasAnalysis && !hasMistakes && (
-        <p className="mt-3 text-sm font-semibold" style={{ color: "#22c55e" }}>
+        <p className="mt-3 text-sm font-semibold" style={{ color: "var(--score-excellent)" }}>
           Perfect! 🎉
         </p>
       )}

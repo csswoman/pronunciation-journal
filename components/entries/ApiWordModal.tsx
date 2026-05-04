@@ -66,24 +66,24 @@ export default function ApiWordModal({ word, onClose, onSave }: ApiWordModalProp
       onClick={onClose}
     >
       <div
-        className="bg-white dark:bg-gray-800 rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl"
+        className="bg-surface-raised rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-6 flex justify-between items-start">
+        <div className="sticky top-0 bg-surface-raised border-b border-border-subtle p-6 flex justify-between items-start">
           <div className="flex items-center gap-4 flex-1">
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
+            <h2 className="text-3xl font-bold text-fg">
               {word}
             </h2>
             {data?.audioUrl && (
               <Button
                 onClick={() => playAudio(data.audioUrl!, { showAlerts: false })}
-                className="p-3 bg-blue-100 dark:bg-blue-900 hover:bg-blue-200 dark:hover:bg-blue-800 rounded-full transition-colors"
+                className="p-3 bg-info-soft hover:bg-info-soft rounded-full transition-colors"
                 title="Play pronunciation"
                 aria-label="Play pronunciation"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6 text-blue-600 dark:text-blue-400"
+                  className="h-6 w-6 text-info"
                   viewBox="0 0 20 20"
                   fill="currentColor"
                 >
@@ -98,12 +98,12 @@ export default function ApiWordModal({ word, onClose, onSave }: ApiWordModalProp
           </div>
           <Button
             onClick={onClose}
-            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+            className="p-2 hover:bg-surface-sunken rounded-lg transition-colors"
             aria-label="Close"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6 text-gray-500 dark:text-gray-400"
+              className="h-6 w-6 text-fg-subtle"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -121,21 +121,21 @@ export default function ApiWordModal({ word, onClose, onSave }: ApiWordModalProp
         <div className="p-6 space-y-6">
           {loading ? (
             <div className="text-center py-12">
-              <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 dark:border-gray-100"></div>
-              <p className="mt-4 text-gray-600 dark:text-gray-400">Loading word data...</p>
+              <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-fg"></div>
+              <p className="mt-4 text-fg-muted">Loading word data...</p>
             </div>
           ) : error ? (
             <div className="text-center py-12">
-              <p className="text-red-600 dark:text-red-400">{error}</p>
+              <p className="text-error">{error}</p>
             </div>
           ) : data ? (
             <>
               {data.ipa && (
                 <div className="mb-4">
-                  <p className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                  <p className="text-sm font-semibold text-fg-muted mb-2">
                     Pronunciación (IPA)
                   </p>
-                  <p className="text-2xl text-gray-900 dark:text-gray-100 font-mono">
+                  <p className="text-2xl text-fg font-mono">
                     {data.ipa}
                   </p>
                 </div>
@@ -147,7 +147,7 @@ export default function ApiWordModal({ word, onClose, onSave }: ApiWordModalProp
                     href={data.sourceUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors"
+                    className="inline-flex items-center gap-2 text-info hover:text-info transition-colors"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -165,21 +165,21 @@ export default function ApiWordModal({ word, onClose, onSave }: ApiWordModalProp
 
               {data.meanings && data.meanings.length > 0 && (
                 <div>
-                  <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
+                  <h3 className="text-sm font-semibold text-fg-muted mb-3">
                     Meanings
                   </h3>
                   <div className="space-y-4">
                     {data.meanings.map((meaning, meaningIndex) => (
-                      <div key={meaningIndex} className="border-l-4 border-blue-500 pl-4">
-                        <h4 className="text-sm font-semibold text-blue-600 dark:text-blue-400 mb-2 italic">
+                      <div key={meaningIndex} className="border-l-4 border-info pl-4">
+                        <h4 className="text-sm font-semibold text-info mb-2 italic">
                           {meaning.partOfSpeech}
                         </h4>
                         <ol className="list-decimal list-inside space-y-3">
                           {meaning.definitions.map((def, defIndex) => (
-                            <li key={defIndex} className="text-gray-900 dark:text-gray-100">
+                            <li key={defIndex} className="text-fg">
                               <span className="ml-2">{def.definition}</span>
                               {def.example && (
-                                <p className="ml-6 mt-1 text-sm text-gray-600 dark:text-gray-400 italic">
+                                <p className="ml-6 mt-1 text-sm text-fg-muted italic">
                                   Example: "{def.example}"
                                 </p>
                               )}
@@ -193,7 +193,7 @@ export default function ApiWordModal({ word, onClose, onSave }: ApiWordModalProp
               )}
 
               {/* Add word button */}
-              <div className="pt-6 border-t border-gray-200 dark:border-gray-700">
+              <div className="pt-6 border-t border-border-subtle">
                 <Button
                   onClick={handleAddWord}
                   className="w-full px-6 py-3 rounded-lg font-medium accent-button"

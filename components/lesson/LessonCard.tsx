@@ -209,7 +209,7 @@ export default function LessonCard({ lesson, progressPct, isFeatured }: LessonCa
 
             {lessonState === "completed" && (
               <span
-                className="flex items-center gap-1 text-[11px] font-medium"
+                className="flex items-center gap-1 text-tiny font-medium"
                 style={{ color: "var(--success)" }}
               >
                 <Zap className="w-3.5 h-3.5" />
@@ -277,7 +277,7 @@ export default function LessonCard({ lesson, progressPct, isFeatured }: LessonCa
 
           <div className="flex items-center justify-between mt-auto">
             <span
-              className="text-[11px] font-medium"
+              className="text-tiny font-medium"
               style={{ color: "var(--text-tertiary)" }}
             >
               {lessonState === "completed"

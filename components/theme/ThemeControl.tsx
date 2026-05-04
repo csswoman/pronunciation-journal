@@ -32,7 +32,7 @@ export default function ThemeControl() {
         className="w-full justify-start text-xs text-[var(--text-secondary)]"
         icon={
           <span
-            className="w-3.5 h-3.5 rounded-full flex-shrink-0 ring-1 ring-black/10 dark:ring-white/10"
+            className="w-3.5 h-3.5 rounded-full flex-shrink-0 ring-1 ring-black/10 dark:ring-overlay-weak"
             style={{ background: `oklch(0.65 0.15 ${hue})` }}
           />
         }

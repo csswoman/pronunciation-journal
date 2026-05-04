@@ -18,7 +18,7 @@ export function LessonNumber({ courseSlug, lessonSlug, index }: Props) {
 
   if (completed) {
     return (
-      <span className="w-8 h-8 flex-shrink-0 flex items-center justify-center rounded-full bg-[var(--primary)] text-white text-sm font-bold transition-colors">
+      <span className="w-8 h-8 flex-shrink-0 flex items-center justify-center rounded-full bg-[var(--primary)] text-on-primary text-sm font-bold transition-colors">
         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
         </svg>

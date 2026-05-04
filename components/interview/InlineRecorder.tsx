@@ -109,7 +109,7 @@ export function InlineRecorder({ targetText, difficulty, level, onDone, onListen
 
   return (
     <div className="flex items-center gap-2 mt-3 pt-3 flex-wrap" style={{ borderTop: "1px solid var(--line-divider)" }}>
-      {(error || recError) && <p className="w-full text-xs text-red-500 mb-1">{error ?? recError}</p>}
+      {(error || recError) && <p className="w-full text-xs text-error mb-1">{error ?? recError}</p>}
 
       <button
         onClick={onListen}
@@ -123,7 +123,7 @@ export function InlineRecorder({ targetText, difficulty, level, onDone, onListen
       <button
         onClick={handleToggle}
         className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold transition-all ${isRecording ? "animate-pulse" : ""}`}
-        style={isRecording ? { background: "#ef4444", color: "white" } : primaryBtn}
+        style={isRecording ? { background: "var(--score-poor)", color: "var(--on-primary)" } : primaryBtn}
       >
         {isRecording ? <><MicOff size={13} /> Stop recording</> : <><Mic size={13} /> Record</>}
       </button>
@@ -134,3 +134,5 @@ export function InlineRecorder({ targetText, difficulty, level, onDone, onListen
     </div>
   );
 }
+
+

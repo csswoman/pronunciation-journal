@@ -78,7 +78,7 @@ export default function SidebarFooter() {
         style={{ background: open ? "var(--btn-regular-bg-hover)" : undefined }}
       >
         <div
-          className="relative w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold overflow-hidden flex-shrink-0"
+          className="relative w-6 h-6 rounded-full flex items-center justify-center text-tiny font-bold overflow-hidden flex-shrink-0"
           style={{
             background: "var(--primary-soft)",
             color: "var(--primary)",
@@ -122,7 +122,7 @@ export default function SidebarFooter() {
           <div className="h-px my-1.5" style={{ background: "var(--border)" }} />
 
           <div className="px-2 py-1">
-            <p className="text-[11px] font-medium mb-2" style={{ color: "var(--text-tertiary)" }}>
+            <p className="text-tiny font-medium mb-2" style={{ color: "var(--text-tertiary)" }}>
               Theme
             </p>
             <ThemeInline />
@@ -204,3 +204,4 @@ function ThemeInline() {
     </div>
   );
 }
+

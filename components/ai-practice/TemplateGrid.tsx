@@ -11,10 +11,10 @@ export default function TemplateGrid({ onSelect }: TemplateGridProps) {
   return (
     <div className="space-y-4">
       <div>
-        <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
+        <h2 className="text-xl font-bold text-fg">
           Choose a Practice Mode
         </h2>
-        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+        <p className="text-sm text-fg-subtle mt-1">
           Select a template to start your session, or scroll down to write your own prompt.
         </p>
       </div>

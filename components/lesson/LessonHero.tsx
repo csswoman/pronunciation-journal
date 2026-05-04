@@ -29,7 +29,7 @@ export function LessonHero({ lesson, totalWords, chunkLabel, overall, diffMode, 
             {backHref && (
               <Link
                 href={backHref}
-                className="inline-flex items-center gap-1.5 rounded-lg border border-[var(--line-divider)] bg-[var(--btn-regular-bg)] px-3 py-1.5 text-[13px] font-medium text-[var(--text-secondary)] transition-all duration-200 hover:-translate-x-0.5 hover:bg-[var(--btn-plain-bg-hover)]"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-[var(--line-divider)] bg-[var(--btn-regular-bg)] px-3 py-1.5 text-caption font-medium text-[var(--text-secondary)] transition-all duration-200 hover:-translate-x-0.5 hover:bg-[var(--btn-plain-bg-hover)]"
               >
                 <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
                   <path d="M10 12L6 8l4-4" />
@@ -39,7 +39,7 @@ export function LessonHero({ lesson, totalWords, chunkLabel, overall, diffMode, 
             )}
             <div className="flex items-center gap-2">
               <span className="h-2 w-2 rounded-full bg-[var(--primary)]" />
-              <span className="text-[12px] font-semibold uppercase tracking-[0.18em] text-[var(--primary)]">
+              <span className="text-caption font-semibold uppercase tracking-[0.18em] text-[var(--primary)]">
                 Lesson{chunkLabel && <> · {chunkLabel}</>}
               </span>
             </div>
@@ -53,7 +53,7 @@ export function LessonHero({ lesson, totalWords, chunkLabel, overall, diffMode, 
             <h1 className="font-display text-[28px] font-semibold leading-[1.08] tracking-tight text-[var(--deep-text)] lg:text-[34px]">
               {lesson.title}
             </h1>
-            <p className="max-w-xl text-[15px] leading-6 text-[var(--text-secondary)]">
+            <p className="max-w-xl text-body leading-6 text-[var(--text-secondary)]">
               Pick a practice mode that matches your energy — start easy, build confidence, then push your limits.
             </p>
           </div>
@@ -69,7 +69,7 @@ export function LessonHero({ lesson, totalWords, chunkLabel, overall, diffMode, 
         </div>
 
         <div
-          className="flex flex-wrap items-center gap-x-4 gap-y-2 px-8 px-10 py-3 text-[13px] font-medium"
+          className="flex flex-wrap items-center gap-x-4 gap-y-2 px-8 px-10 py-3 text-caption font-medium"
           style={{
             border: '1px solid var(--line-divider)',
             color: 'var(--text-secondary)',
@@ -149,7 +149,7 @@ interface DifficultyToggleProps {
 function DifficultyToggle({ value, onChange }: DifficultyToggleProps) {
   return (
     <div className="flex items-center gap-3 flex-shrink-0">
-      <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-tertiary)]">
+      <p className="text-tiny font-semibold uppercase tracking-[0.18em] text-[var(--text-tertiary)]">
         Difficulty
       </p>
       <div className="inline-flex rounded-2xl border border-[var(--line-divider)] bg-[color-mix(in_oklch,var(--card-bg)_70%,transparent)] p-1 text-sm font-semibold shadow-sm backdrop-blur-sm">

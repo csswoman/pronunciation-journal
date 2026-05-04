@@ -35,7 +35,7 @@ export default function Sidebar({ className = "" }: SidebarProps) {
   return (
     <SidebarContext.Provider value={{ collapsed }}>
       <aside
-        className={`sidebar-scrollbar flex flex-col h-full min-h-0 overflow-y-auto bg-[var(--card-bg)] border-r border-[var(--line-divider)] transition-all duration-200 ${collapsed ? "w-[60px]" : "w-64"} ${className}`}
+        className={`sidebar-scrollbar flex flex-col h-full min-h-0 overflow-y-auto bg-surface-raised border-r border-border-subtle transition-all duration-200 ${collapsed ? "w-[60px]" : "w-64"} ${className}`}
       >
         {/* Brand + toggle */}
         <div className={`flex items-center ${collapsed ? "justify-center px-2" : "justify-between px-5"} py-5 flex-shrink-0`}>

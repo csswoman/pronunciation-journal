@@ -16,7 +16,7 @@ export default function HomeAchievementsCard({ achievements = [] }: HomeAchievem
   return (
     <Card variant="compact" className="gap-4">
       <CardHeader
-        icon={<Trophy size={17} className="text-amber-400" />}
+        icon={<Trophy size={17} className="text-warning" />}
         title="Achievements"
         right={
           <Link href="/progress" className="text-sm font-medium text-[var(--primary)] hover:underline">
@@ -47,7 +47,7 @@ export default function HomeAchievementsCard({ achievements = [] }: HomeAchievem
                   {!isUnlocked && a.progress !== undefined && a.target && (
                     <div className="mt-2 flex items-center gap-2">
                       <ProgressBar value={progressPercent} height="xs" className="flex-1" />
-                      <span className="text-[11px] tabular-nums font-medium text-[var(--text-tertiary)]">
+                      <span className="text-tiny tabular-nums font-medium text-[var(--text-tertiary)]">
                         {a.progress}/{a.target}
                       </span>
                     </div>
@@ -55,7 +55,7 @@ export default function HomeAchievementsCard({ achievements = [] }: HomeAchievem
                 </div>
                 {isUnlocked && (
                   <div className="w-6 h-6 rounded-full flex items-center justify-center bg-[var(--primary)] shrink-0">
-                    <Check size={12} strokeWidth={3} className="text-white" />
+                    <Check size={12} strokeWidth={3} className="text-on-primary" />
                   </div>
                 )}
               </div>
@@ -80,3 +80,4 @@ export default function HomeAchievementsCard({ achievements = [] }: HomeAchievem
     </Card>
   );
 }
+

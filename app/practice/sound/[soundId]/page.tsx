@@ -179,7 +179,7 @@ export default function SoundPracticePage() {
             onClick={() => { setError(null); loadLobby() }}
             variant="primary"
             size="sm"
-            className="rounded-lg px-4 py-2 text-white"
+            className="rounded-lg px-4 py-2 text-on-primary"
           >
             Retry
           </Button>
@@ -238,7 +238,7 @@ export default function SoundPracticePage() {
       <header
         className="sticky top-0 z-10 border-b"
         style={{
-          background: 'linear-gradient(180deg, color-mix(in_oklch,var(--card-bg)_92%,white), var(--card-bg))',
+          background: 'linear-gradient(180deg, color-mix(in_oklch,var(--card-bg)_92%,var(--on-primary)), var(--card-bg))',
           borderColor: 'var(--line-divider)',
           backdropFilter: 'blur(10px)',
         }}
@@ -260,7 +260,7 @@ export default function SoundPracticePage() {
               <h1 className="text-[18px] font-semibold leading-tight tracking-tight font-mono" style={{ color: 'var(--primary)' }}>
                 {sessionData.sound.ipa}
               </h1>
-              <p className="text-[13px] leading-5" style={{ color: 'var(--text-secondary)' }}>
+              <p className="text-caption leading-5" style={{ color: 'var(--text-secondary)' }}>
                 {displayIndex + 1} / {session.total}
               </p>
             </div>

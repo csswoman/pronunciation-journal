@@ -1,6 +1,6 @@
 "use client";
 
-import { Mail, Lock, User, Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 
 type InputType = "email" | "password" | "text";
@@ -28,25 +28,18 @@ export function AuthInput({
 }: AuthInputProps) {
   const [showPassword, setShowPassword] = useState(false);
 
-  const icons = {
-    email: <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors" style={{ color: "#4a5070" }} />,
-    password: <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: "#4a5070" }} />,
-    text: <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: "#4a5070" }} />,
-  };
-
   const inputClass =
-    "w-full bg-[#181b25] border border-[#252a3a] rounded-[10px] text-[#eef0f7] text-[14.5px] py-3.5 pl-[42px] pr-4 outline-none transition-all placeholder:text-[#4a5070] focus:border-[var(--color-accent)] focus:shadow-[0_0_0_3px_color-mix(in_srgb,var(--color-accent)_15%,transparent)]";
+    "w-full bg-[var(--surface-sunken)] border border-[var(--border-default)] rounded-[var(--radius-md)] text-[var(--text-primary)] px-[var(--space-4)] py-[var(--space-3)] outline-none transition-all placeholder:text-[var(--text-tertiary)]";
 
   const isPasswordField = type === "password";
   const inputType = isPasswordField ? (showPassword ? "text" : "password") : type;
 
   return (
     <div>
-      <label className="block text-[11px] font-medium uppercase tracking-[0.6px] mb-1.5" style={{ color: "#6b7191" }}>
+      <label className="block mb-[var(--space-2)]" style={{ font: "var(--font-tiny)", letterSpacing: "0.05em", fontWeight: 600, color: "var(--text-secondary)", textTransform: "uppercase" }}>
         {label}
       </label>
       <div className="relative">
-        {icons[type]}
         <input
           type={inputType}
           autoComplete={autoComplete}
@@ -55,20 +48,30 @@ export function AuthInput({
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
-          className={isPasswordField ? `${inputClass} pr-10` : inputClass}
+          className={`${isPasswordField ? `${inputClass} pr-10` : inputClass} auth-input`}
         />
         {isPasswordField && (
           <button
             type="button"
-            tabIndex={-1}
             onClick={() => setShowPassword((v) => !v)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-md transition-colors"
-            style={{ color: "#4a5070" }}
+            className="absolute right-[var(--space-3)] top-1/2 -translate-y-1/2 p-1 rounded-md transition-all text-[var(--text-tertiary)] hover:text-[var(--text-secondary)]"
+            aria-label={showPassword ? "Hide password" : "Show password"}
           >
-            {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+            {showPassword ? <EyeOff className="w-[18px] h-[18px]" /> : <Eye className="w-[18px] h-[18px]" />}
           </button>
         )}
       </div>
+      <style>{`
+        .auth-input:focus {
+          border: 2px solid var(--primary);
+          background: var(--surface-raised);
+          outline: none;
+        }
+        .auth-input:focus-visible {
+          outline: 2px solid var(--primary);
+          outline-offset: 2px;
+        }
+      `}</style>
     </div>
   );
 }

@@ -33,7 +33,7 @@ export default function EntryModal({ entry, onClose, onSave }: EntryModalProps) 
       onClick={onClose}
     >
       <div
-        className="bg-white dark:bg-gray-800 rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl"
+        className="bg-surface-raised rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         <EntryHeader
@@ -56,10 +56,10 @@ export default function EntryModal({ entry, onClose, onSave }: EntryModalProps) 
 
           {currentEntry.ipa && (
             <div>
-              <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+              <h3 className="text-sm font-semibold text-fg-muted mb-2">
                 IPA (International Phonetic Alphabet)
               </h3>
-              <p className="text-2xl text-gray-900 dark:text-gray-100 font-mono">
+              <p className="text-2xl text-fg font-mono">
                 {currentEntry.ipa}
               </p>
             </div>
@@ -67,31 +67,31 @@ export default function EntryModal({ entry, onClose, onSave }: EntryModalProps) 
 
           {currentEntry.meanings && currentEntry.meanings.length > 0 && (
             <div>
-              <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
+              <h3 className="text-sm font-semibold text-fg-muted mb-3">
                 Meanings
               </h3>
               <div className="space-y-4">
                 {currentEntry.meanings.map((meaning, meaningIndex) => (
-                  <div key={meaningIndex} className="border-l-4 border-blue-500 pl-4">
-                    <h4 className="text-sm font-semibold text-blue-600 dark:text-blue-400 mb-2 italic">
+                  <div key={meaningIndex} className="border-l-4 border-info pl-4">
+                    <h4 className="text-sm font-semibold text-info dark:text-info mb-2 italic">
                       {meaning.partOfSpeech}
                     </h4>
                     <ol className="list-decimal list-inside space-y-3">
                       {meaning.definitions.map((def, defIndex) => (
-                        <li key={defIndex} className="text-gray-900 dark:text-gray-100">
+                        <li key={defIndex} className="text-fg">
                           <span className="ml-2">{def.definition}</span>
                           {def.example && (
-                            <p className="ml-6 mt-1 text-sm text-gray-600 dark:text-gray-400 italic">
+                            <p className="ml-6 mt-1 text-sm text-fg-muted italic">
                               Example: "{def.example}"
                             </p>
                           )}
                           {def.synonyms && def.synonyms.length > 0 && (
-                            <p className="ml-6 mt-1 text-sm text-gray-600 dark:text-gray-400">
+                            <p className="ml-6 mt-1 text-sm text-fg-muted">
                               <span className="font-medium">Synonyms:</span> {def.synonyms.join(", ")}
                             </p>
                           )}
                           {def.antonyms && def.antonyms.length > 0 && (
-                            <p className="ml-6 mt-1 text-sm text-gray-600 dark:text-gray-400">
+                            <p className="ml-6 mt-1 text-sm text-fg-muted">
                               <span className="font-medium">Antonyms:</span> {def.antonyms.join(", ")}
                             </p>
                           )}
@@ -118,8 +118,8 @@ export default function EntryModal({ entry, onClose, onSave }: EntryModalProps) 
             onTagsChange={handleTagsChange}
           />
 
-          <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
-            <div className="flex flex-col gap-2 text-sm text-gray-500 dark:text-gray-400">
+          <div className="pt-4 border-t border-border-subtle">
+            <div className="flex flex-col gap-2 text-sm text-fg-subtle">
               <p>
                 Created: {new Date(currentEntry.createdAt).toLocaleDateString()} at{" "}
                 {new Date(currentEntry.createdAt).toLocaleTimeString()}
@@ -137,3 +137,5 @@ export default function EntryModal({ entry, onClose, onSave }: EntryModalProps) 
     </div>
   );
 }
+
+

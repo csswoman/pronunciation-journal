@@ -40,7 +40,7 @@ export default function RootLayout({
         <meta name="description" content="Track and improve your pronunciation" />
         <link rel="icon" href="/icon.svg" />
       </head>
-      <body className="transition-colors" style={{ backgroundColor: 'var(--bg)', color: 'var(--text-primary)' }} suppressHydrationWarning>
+      <body className="bg-surface-base text-fg transition-colors" suppressHydrationWarning>
         <Script
           id="theme-init"
           strategy="beforeInteractive"

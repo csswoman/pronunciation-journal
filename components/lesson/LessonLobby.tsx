@@ -90,16 +90,16 @@ export function LessonLobby({
 
         <div className="flex items-end justify-between gap-4 pt-2">
           <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[.18em] text-[var(--text-tertiary)] mt-6">
+            <p className="text-tiny font-semibold uppercase tracking-[.18em] text-[var(--text-tertiary)] mt-6">
               Practice modes
             </p>
-            <h2 className="mb-6 text-[18px] font-semibold tracking-tight text-[var(--deep-text)]">
+            <h2 className="mb-6 text-body-lg font-semibold tracking-tight text-[var(--deep-text)]">
               How do you want to practice?
             </h2>
           </div>
           {overall > 0 && (
             <span
-              className="rounded-full border px-3 py-1 text-[13px] font-medium"
+              className="rounded-full border px-3 py-1 text-caption font-medium"
               style={{
                 borderColor: "var(--line-divider)",
                 color: "var(--text-secondary)",
@@ -135,10 +135,10 @@ export function LessonLobby({
           </Button>
         ) : overall >= 80 ? (
           <div className="rounded-[18px] border border-[color-mix(in_oklch,var(--admonitions-color-tip)_20%,transparent)] bg-[color-mix(in_oklch,var(--admonitions-color-tip)_8%,transparent)] px-4 py-4 text-center">
-            <p className="text-[15px] font-semibold text-[var(--admonitions-color-tip)]">
+            <p className="text-body font-semibold text-[var(--admonitions-color-tip)]">
               🎉 All stages mastered — great work!
             </p>
-            <p className="mt-1 text-[13px] text-[var(--text-secondary)]">
+            <p className="mt-1 text-caption text-[var(--text-secondary)]">
               Keep practicing to maintain your streak.
             </p>
           </div>
@@ -178,8 +178,8 @@ function InfoPill({
       }}
     >
       <div className="flex items-center gap-2">
-        <span className="text-[16px] leading-none">{icon}</span>
-        <p className="text-[11px] font-semibold uppercase tracking-[.14em] text-[var(--text-tertiary)]">
+        <span className="text-body-sm leading-none">{icon}</span>
+        <p className="text-tiny font-semibold uppercase tracking-[.14em] text-[var(--text-tertiary)]">
           {label}
         </p>
       </div>
@@ -188,7 +188,7 @@ function InfoPill({
           className="mt-1.5 h-2 w-2 flex-shrink-0 rounded-full"
           style={{ backgroundColor: accent }}
         />
-        <p className="text-[13px] font-medium leading-snug text-[var(--deep-text)]">
+        <p className="text-caption font-medium leading-snug text-[var(--deep-text)]">
           {value}
         </p>
       </div>

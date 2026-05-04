@@ -80,7 +80,7 @@ export function GeminiSuggestPanel({
     <div className="space-y-4">
       {/* Difficulty selector */}
       <div>
-        <p className="text-[10px] font-semibold uppercase tracking-widest text-[var(--text-tertiary)] mb-2">
+        <p className="text-tiny font-semibold uppercase tracking-widest text-[var(--text-tertiary)] mb-2">
           Difficulty level
         </p>
         <div className="grid grid-cols-3 gap-1.5 p-1 bg-[var(--btn-regular-bg)] rounded-xl border border-[var(--line-divider)]">
@@ -95,7 +95,7 @@ export function GeminiSuggestPanel({
               }`}
             >
               <p className="text-xs font-semibold">{lvl.label}</p>
-              <p className="text-[10px] opacity-70">{lvl.desc}</p>
+              <p className="text-tiny opacity-70">{lvl.desc}</p>
             </button>
           ))}
         </div>
@@ -106,7 +106,7 @@ export function GeminiSuggestPanel({
         <button
           onClick={() => fetchSuggestions({ difficulty })}
           disabled={loading}
-          className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl bg-[var(--primary)] text-white text-sm font-semibold hover:opacity-90 disabled:opacity-50 transition-opacity"
+          className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl bg-[var(--primary)] text-on-primary text-sm font-semibold hover:opacity-90 disabled:opacity-50 transition-opacity"
         >
           {loading ? (
             <>
@@ -133,7 +133,7 @@ export function GeminiSuggestPanel({
       </div>
 
       {error && (
-        <p className="text-xs text-red-500 bg-red-50 dark:bg-red-900/20 rounded-lg px-3 py-2">{error}</p>
+        <p className="text-xs text-error bg-error-soft rounded-lg px-3 py-2">{error}</p>
       )}
 
       {/* Suggestions list */}
@@ -141,7 +141,7 @@ export function GeminiSuggestPanel({
         <div className="space-y-2">
           {/* Save all bar */}
           <div className="flex items-center justify-between">
-            <p className="text-[10px] font-semibold uppercase tracking-widest text-[var(--text-tertiary)]">
+            <p className="text-tiny font-semibold uppercase tracking-widest text-[var(--text-tertiary)]">
               {suggestions.length} suggestions
             </p>
             {!allAdded && (
@@ -155,7 +155,7 @@ export function GeminiSuggestPanel({
               </button>
             )}
             {allAdded && (
-              <span className="flex items-center gap-1 text-xs font-semibold text-green-600 dark:text-green-400">
+              <span className="flex items-center gap-1 text-xs font-semibold text-success">
                 <Check size={11} /> All added
               </span>
             )}
@@ -176,8 +176,8 @@ export function GeminiSuggestPanel({
                 disabled={added.has(s.word)}
                 className={`flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-lg transition-all ${
                   added.has(s.word)
-                    ? "bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400"
-                    : "bg-[var(--primary)] text-white hover:opacity-80"
+                    ? "bg-success-soft text-success"
+                    : "bg-[var(--primary)] text-on-primary hover:opacity-80"
                 }`}
               >
                 {added.has(s.word) ? <Check size={14} /> : <Plus size={14} />}

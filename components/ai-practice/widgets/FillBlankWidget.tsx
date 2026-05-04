@@ -42,8 +42,8 @@ export default function FillBlankWidget({ args, status, onAnswer, onNext, onRetr
   const borderColor = !evaluation
     ? "var(--primary)"
     : evaluation.correct
-    ? "var(--success, #22c55e)"
-    : "#ef4444";
+    ? "var(--score-excellent)"
+    : "var(--score-poor)";
 
   return (
     <div
@@ -83,7 +83,7 @@ export default function FillBlankWidget({ args, status, onAnswer, onNext, onRetr
           onClick={handleSubmit}
           disabled={!value.trim()}
           className="text-xs px-3 py-1 rounded-lg transition-opacity disabled:opacity-40"
-          style={{ backgroundColor: "var(--primary)", color: "var(--primary-fg, #fff)" }}
+          style={{ backgroundColor: "var(--primary)", color: "var(--on-primary)" }}
         >
           Check
         </button>

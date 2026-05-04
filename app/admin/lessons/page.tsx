@@ -130,7 +130,7 @@ export default function AdminLessonsPage() {
               {syncStatus === "syncing" ? "Syncing…" : "Sync Notion"}
             </Button>
             <Link
-              href="/lessons/new"
+              href="/courses"
               className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-semibold"
               style={{ background: "var(--primary)", color: "var(--accent-text)" }}
             >
@@ -143,13 +143,13 @@ export default function AdminLessonsPage() {
         </div>
 
         {error && (
-          <div className="rounded-xl p-3 mb-4 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 text-sm">
+          <div className="rounded-xl p-3 mb-4 bg-error-soft text-error text-sm">
             {error}
           </div>
         )}
 
         {syncStatus === "success" && syncResult && (
-          <div className="rounded-xl p-3 mb-6 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 text-sm flex items-center justify-between">
+          <div className="rounded-xl p-3 mb-6 bg-success-soft text-success text-sm flex items-center justify-between">
             <span>
               Notion sync complete — {syncResult.created} created, {syncResult.updated} updated, {syncResult.deleted} deleted, {syncResult.skipped} skipped
             </span>
@@ -238,7 +238,7 @@ function LessonTable({
                   <p className="text-xs flex items-center gap-1.5" style={{ color: "var(--text-tertiary)" }}>
                     {cat?.label ?? lesson.category} · /lessons/{lesson.slug}
                     {lesson.source === "notion" && (
-                      <span className="inline-flex items-center gap-0.5 rounded px-1 py-0.5 text-[10px] font-semibold bg-neutral-100 dark:bg-neutral-800 text-neutral-500">
+                      <span className="inline-flex items-center gap-0.5 rounded px-1 py-0.5 text-tiny font-semibold bg-neutral-100 dark:bg-neutral-800 text-fg-subtle">
                         N Notion
                       </span>
                     )}
@@ -246,7 +246,7 @@ function LessonTable({
                 </div>
 
                 {/* Published badge */}
-                <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full flex-shrink-0 ${lesson.is_published ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400" : "bg-[var(--btn-regular-bg)] text-[var(--text-tertiary)]"}`}>
+                <span className={`text-tiny font-semibold px-2 py-0.5 rounded-full flex-shrink-0 ${lesson.is_published ? "bg-success-soft text-success" : "bg-[var(--btn-regular-bg)] text-[var(--text-tertiary)]"}`}>
                   {lesson.is_published ? "Published" : "Draft"}
                 </span>
 
@@ -276,7 +276,7 @@ function LessonTable({
                   )}
 
                   <Link
-                    href={`/lessons/${lesson.slug}/edit`}
+                    href="/courses"
                     className="p-1.5 rounded-lg hover:bg-[var(--btn-plain-bg-hover)] transition-colors"
                     style={{ color: "var(--text-secondary)" }}
                     title="Edit"
@@ -289,7 +289,7 @@ function LessonTable({
                   <Button
                     onClick={() => onDelete(lesson)}
                     disabled={deletingId === lesson.id}
-                    className="p-1.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors disabled:opacity-50 text-red-500"
+                    className="p-1.5 rounded-lg hover:bg-error-soft transition-colors disabled:opacity-50 text-error"
                     title="Delete"
                   >
                     {deletingId === lesson.id ? (
@@ -309,4 +309,5 @@ function LessonTable({
     </section>
   );
 }
+
 

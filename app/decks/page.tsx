@@ -82,7 +82,7 @@ export default function DecksPage() {
                   <p className="text-sm font-semibold" style={{ color: "var(--deep-text)" }}>No decks yet</p>
                   <p className="text-xs mt-1" style={{ color: "var(--text-tertiary)" }}>Create your first deck to organize vocabulary by theme.</p>
                 </div>
-                <Button onClick={() => setShowCreate(true)} className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold bg-[var(--primary)] text-white hover:opacity-90 transition-colors mt-2">
+                <Button onClick={() => setShowCreate(true)} className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold bg-[var(--primary)] text-on-primary hover:opacity-90 transition-colors mt-2">
                   <Plus size={16} /> Create a deck
                 </Button>
               </div>

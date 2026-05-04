@@ -110,7 +110,7 @@ export function QuickAddModal({ open, onClose, onSubmit, initialText = "" }: Qui
         </div>
 
         <div className="flex items-center justify-between gap-3 pt-1">
-          <span className="text-[10px] uppercase tracking-widest text-[var(--text-tertiary)]">
+          <span className="text-tiny uppercase tracking-widest text-[var(--text-tertiary)]">
             Enter to save
           </span>
           <Button

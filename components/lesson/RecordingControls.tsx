@@ -31,7 +31,8 @@ export default function RecordingControls({
           onClick={onStart}
           variant="danger"
           size="iconLg"
-          className="w-28 h-28 shadow-lg shadow-red-500/30 hover:shadow-red-500/50"
+          className="w-28 h-28 shadow-lg"
+          style={{ boxShadow: "0 10px 24px color-mix(in oklch, var(--error) 35%, transparent)" }}
           aria-label="Start recording"
           icon={
             <svg className="w-12 h-12" fill="currentColor" viewBox="0 0 24 24">
@@ -81,7 +82,8 @@ export default function RecordingControls({
           onClick={onStop}
           variant="ghost"
           size="iconLg"
-          className="w-28 h-28 bg-gradient-to-br from-gray-700 to-gray-800 text-white shadow-lg hover:scale-105 animate-pulse"
+          className="w-28 h-28 text-[var(--on-primary)] shadow-lg hover:scale-105 animate-pulse"
+          style={{ background: "linear-gradient(135deg, var(--primary-hover), var(--primary))" }}
           aria-label="Stop recording"
           icon={
             <svg className="w-12 h-12" fill="currentColor" viewBox="0 0 24 24">

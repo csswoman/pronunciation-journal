@@ -53,11 +53,11 @@ export function PracticeLedger({ sounds, onSelectSound, soundStatuses, dueCount 
       case 'locked':
         return 'bg-[var(--btn-regular-bg)] text-[var(--text-tertiary)]'
       case 'available':
-        return 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border border-blue-300 dark:border-blue-700'
+        return 'bg-info-soft text-info border border-info'
       case 'practicing':
-        return 'bg-[var(--primary)] text-white border border-[var(--primary)]'
+        return 'bg-[var(--primary)] text-on-primary border border-[var(--primary)]'
       case 'mastered':
-        return 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 border border-green-300 dark:border-green-700'
+        return 'bg-success-soft text-success border border-success'
     }
   }
 
@@ -107,7 +107,7 @@ export function PracticeLedger({ sounds, onSelectSound, soundStatuses, dueCount 
             onClick={onStartReview}
             variant="primary"
             size="sm"
-            className="rounded-lg px-4 py-1.5 text-sm font-semibold text-white"
+            className="rounded-lg px-4 py-1.5 text-sm font-semibold text-on-primary"
             style={{ backgroundColor: 'oklch(.6 .2 25)' }}
           >
             Start Review →
@@ -167,3 +167,5 @@ export function PracticeLedger({ sounds, onSelectSound, soundStatuses, dueCount 
     </div>
   )
 }
+
+

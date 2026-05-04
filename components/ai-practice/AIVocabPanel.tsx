@@ -52,7 +52,7 @@ function VocabHeader({ count }: { count: number }) {
       <div className="flex items-center gap-2 px-4 pt-3 pb-2">
         <BookOpen size={12} style={{ color: "var(--text-tertiary)" }} />
         <p
-          className="text-[10px] font-semibold uppercase tracking-widest"
+          className="text-tiny font-semibold uppercase tracking-widest"
           style={{ color: "var(--text-tertiary)" }}
         >
           Vocab · {count} {count === 1 ? "word" : "words"}
@@ -61,7 +61,7 @@ function VocabHeader({ count }: { count: number }) {
 
       <div className="px-4 pb-3">
         <p className="text-xs font-medium" style={{ color: "var(--text-secondary)" }}>Words collected</p>
-        <p className="text-[10px] mt-0.5" style={{ color: "var(--text-tertiary)" }}>Words you&apos;ve saved</p>
+        <p className="text-tiny mt-0.5" style={{ color: "var(--text-tertiary)" }}>Words you&apos;ve saved</p>
         <p className="text-2xl font-bold mt-1" style={{ color: "var(--text-primary)" }}>{count}</p>
       </div>
     </div>
@@ -115,7 +115,7 @@ function VocabItem({ word }: { word: AISavedWord; onDelete: (id: number) => void
             {word.word}
           </p>
           {word.meaning && (
-            <p className="text-[10px] truncate" style={{ color: "var(--text-tertiary)" }}>
+            <p className="text-tiny truncate" style={{ color: "var(--text-tertiary)" }}>
               {word.meaning}
             </p>
           )}
@@ -123,7 +123,7 @@ function VocabItem({ word }: { word: AISavedWord; onDelete: (id: number) => void
       </div>
 
       <div className="flex items-center gap-1.5 ml-2 flex-shrink-0">
-        <span className="text-[10px] font-semibold" style={{ color: "var(--text-tertiary)" }}>
+        <span className="text-tiny font-semibold" style={{ color: "var(--text-tertiary)" }}>
           {cefrLevel}
         </span>
         <button onClick={speakWord} aria-label="Speak word" className="opacity-0 group-hover:opacity-100 transition-opacity">
@@ -173,7 +173,7 @@ function AutoSaveInfo() {
         <ShieldCheck size={14} className="mt-0.5 flex-shrink-0" style={{ color: "var(--primary)" }} />
         <div className="min-w-0">
           <p className="text-xs font-semibold" style={{ color: "var(--text-primary)" }}>Auto-save</p>
-          <p className="text-[10px] leading-snug mt-0.5" style={{ color: "var(--text-tertiary)" }}>
+          <p className="text-tiny leading-snug mt-0.5" style={{ color: "var(--text-tertiary)" }}>
             New words from the chat are saved automatically.
           </p>
         </div>

@@ -122,7 +122,7 @@ function ConvGroup({ label, children }: { label: string; children: React.ReactNo
   return (
     <div className="mb-3">
       <p
-        className="px-2 py-1 text-[10px] font-semibold uppercase tracking-widest"
+        className="px-2 py-1 text-tiny font-semibold uppercase tracking-widest"
         style={{ color: "var(--text-tertiary)" }}
       >
         {label}
@@ -189,7 +189,7 @@ function CoachFooter() {
         </div>
         <div className="min-w-0">
           <p className="text-xs font-semibold truncate" style={{ color: "var(--text-primary)" }}>Your Coach</p>
-          <p className="text-[10px]" style={{ color: "var(--text-tertiary)" }}>English Coach</p>
+          <p className="text-tiny" style={{ color: "var(--text-tertiary)" }}>English Coach</p>
         </div>
       </div>
 
@@ -197,12 +197,12 @@ function CoachFooter() {
         <div className="flex items-center gap-1.5">
           <Flame size={13} style={{ color: "var(--primary)" }} />
           <span className="text-xs font-semibold" style={{ color: "var(--text-primary)" }}>7</span>
-          <span className="text-[10px]" style={{ color: "var(--text-tertiary)" }}>day streak</span>
+          <span className="text-tiny" style={{ color: "var(--text-tertiary)" }}>day streak</span>
         </div>
         <div className="flex items-center gap-1.5">
           <Target size={13} style={{ color: "var(--text-tertiary)" }} />
           <span className="text-xs font-semibold" style={{ color: "var(--text-primary)" }}>12/20</span>
-          <span className="text-[10px]" style={{ color: "var(--text-tertiary)" }}>goal</span>
+          <span className="text-tiny" style={{ color: "var(--text-tertiary)" }}>goal</span>
         </div>
       </div>
 

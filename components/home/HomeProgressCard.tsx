@@ -58,7 +58,7 @@ export default function HomeProgressCard({
                   opacity: v === 0 ? 0.3 : 1,
                 }}
               />
-              <span className="text-[10px] text-[var(--text-tertiary)]">{DAYS[i]}</span>
+              <span className="text-tiny text-[var(--text-tertiary)]">{DAYS[i]}</span>
             </div>
           ))}
         </div>

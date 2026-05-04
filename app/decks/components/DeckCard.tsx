@@ -36,7 +36,7 @@ export function DeckCard({
         {/* Header */}
         <div className="flex items-start gap-3">
           <div
-            className={`w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 font-bold ${deck.icon ? "text-xl" : "text-base text-white"}`}
+            className={`w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 font-bold ${deck.icon ? "text-xl" : "text-base text-on-primary"}`}
             style={{ background: deck.color ?? "var(--primary)" }}
           >
             {deck.icon ?? deck.name[0].toUpperCase()}
@@ -75,9 +75,9 @@ export function DeckCard({
           {dueCount > 0 && (
             <>
               <span className="text-[var(--line-divider)]">|</span>
-              <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-red-50 dark:bg-red-950/30">
-                <Clock size={12} className="text-red-500" />
-                <span className="text-red-600 dark:text-red-400 font-semibold">{dueCount} due today</span>
+              <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-warning-soft">
+                <Clock size={12} className="text-warning" />
+                <span className="text-warning font-semibold">{dueCount} due today</span>
               </div>
             </>
           )}
@@ -90,7 +90,7 @@ export function DeckCard({
           title={!canStudy ? "Add words to study" : ""}
           className={`w-full py-3 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 transition-all mt-auto ${
             canStudy
-              ? "bg-[var(--primary)] text-white hover:opacity-90 hover:shadow-md"
+              ? "bg-[var(--primary)] text-on-primary hover:opacity-90 hover:shadow-md"
               : "bg-[var(--btn-regular-bg)] text-[var(--text-tertiary)] cursor-not-allowed opacity-50"
           }`}
         >

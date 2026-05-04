@@ -131,7 +131,7 @@ export function StudyCard({
             {firstDef?.example ? (
               <div className="rounded-xl border border-dashed p-3 w-full text-left"
                 style={{ borderColor: "var(--line-divider)" }}>
-                <p className="text-[10px] font-semibold uppercase tracking-widest mb-1"
+                <p className="text-tiny font-semibold uppercase tracking-widest mb-1"
                   style={{ color: "var(--text-tertiary)" }}>Fill in the blank</p>
                 <p className="text-xs italic leading-relaxed" style={{ color: "var(--text-secondary)" }}>
                   "{blankOutWord(firstDef.example, word)}"
@@ -157,7 +157,7 @@ export function StudyCard({
               )}
               {firstDef?.example && (
                 <div className="rounded-xl border border-dashed p-3" style={{ borderColor: "var(--line-divider)" }}>
-                  <p className="text-[10px] font-semibold uppercase tracking-widest mb-1"
+                  <p className="text-tiny font-semibold uppercase tracking-widest mb-1"
                     style={{ color: "var(--text-tertiary)" }}>Example</p>
                   <p className="text-xs italic leading-relaxed" style={{ color: "var(--text-secondary)" }}>
                     "{firstDef.example}"

@@ -37,7 +37,7 @@ export default function CoachPanel({
       className="w-full max-w-sm rounded-2xl px-5 py-4 space-y-3"
       style={{ backgroundColor: "var(--card-bg)", border: "1px solid var(--line-divider)" }}
     >
-      <p className="text-[10px] font-semibold uppercase tracking-widest" style={{ color: "var(--text-tertiary)" }}>
+      <p className="text-tiny font-semibold uppercase tracking-widest" style={{ color: "var(--text-tertiary)" }}>
         Let&apos;s fix one thing
       </p>
 
@@ -66,7 +66,7 @@ export default function CoachPanel({
           className="flex-shrink-0 flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-medium transition-all disabled:opacity-60"
           style={{
             backgroundColor: isSaved ? "var(--btn-regular-bg)" : "var(--primary)",
-            color: isSaved ? "var(--text-tertiary)" : "var(--primary-fg, #fff)",
+            color: isSaved ? "var(--text-tertiary)" : "var(--on-primary)",
           }}
         >
           {isSaved ? <><Check size={11} /> Saved</> : <><BookmarkPlus size={11} /> Practice later</>}
@@ -76,10 +76,10 @@ export default function CoachPanel({
       {focusProgress && focusProgress.total > 0 && (
         <div className="space-y-1">
           <div className="flex items-center justify-between">
-            <p className="text-[10px] uppercase tracking-widest font-semibold" style={{ color: "var(--text-tertiary)" }}>
+            <p className="text-tiny uppercase tracking-widest font-semibold" style={{ color: "var(--text-tertiary)" }}>
               /{focus.ipa}/ this session
             </p>
-            <p className="text-[10px] font-mono" style={{ color: "var(--text-secondary)" }}>
+            <p className="text-tiny font-mono" style={{ color: "var(--text-secondary)" }}>
               {focusPct}%
             </p>
           </div>
@@ -89,12 +89,12 @@ export default function CoachPanel({
               style={{
                 width: `${focusPct}%`,
                 backgroundColor:
-                  (focusPct ?? 0) >= 80 ? "#22c55e" :
-                  (focusPct ?? 0) >= 50 ? "var(--primary)" : "#f97316",
+                  (focusPct ?? 0) >= 80 ? "var(--score-excellent)" :
+                  (focusPct ?? 0) >= 50 ? "var(--primary)" : "var(--score-acceptable)",
               }}
             />
           </div>
-          <p className="text-[10px]" style={{ color: "var(--text-tertiary)" }}>
+          <p className="text-tiny" style={{ color: "var(--text-tertiary)" }}>
             {focusProgress.correct} correct out of {focusProgress.total} attempts
           </p>
         </div>
