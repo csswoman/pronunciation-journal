@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Sparkles, RefreshCw, Plus, Check, ChevronRight } from "lucide-react";
+import Button from "@/components/ui/Button";
 import type { Tables } from "@/lib/supabase/types";
 
 type Deck = Tables<"decks">;
@@ -103,32 +104,25 @@ export function GeminiSuggestPanel({
 
       {/* Action row */}
       <div className="flex gap-2">
-        <button
-          onClick={() => fetchSuggestions({ difficulty })}
+        <Button
+          variant="primary"
           disabled={loading}
-          className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl bg-[var(--primary)] text-on-primary text-sm font-semibold hover:opacity-90 disabled:opacity-50 transition-opacity"
+          onClick={() => fetchSuggestions({ difficulty })}
+          icon={loading ? <RefreshCw size={14} className="animate-spin" /> : <Sparkles size={14} />}
+          className="flex-1 py-2.5"
         >
-          {loading ? (
-            <>
-              <RefreshCw size={14} className="animate-spin" />
-              Thinking…
-            </>
-          ) : (
-            <>
-              <Sparkles size={14} />
-              Suggest words
-            </>
-          )}
-        </button>
+          {loading ? "Thinking…" : "Suggest words"}
+        </Button>
         {suggestions.length > 0 && (
-          <button
-            onClick={() => fetchSuggestions({ difficulty, redo: true })}
+          <Button
+            variant="outline"
+            size="icon"
             disabled={loading}
             title="Get a different set"
-            className="px-3 py-2.5 rounded-xl border border-[var(--line-divider)] text-[var(--text-secondary)] hover:bg-[var(--btn-regular-bg)] hover:text-[var(--deep-text)] transition-colors"
+            onClick={() => fetchSuggestions({ difficulty, redo: true })}
           >
             <RefreshCw size={14} />
-          </button>
+          </Button>
         )}
       </div>
 
@@ -145,14 +139,16 @@ export function GeminiSuggestPanel({
               {suggestions.length} suggestions
             </p>
             {!allAdded && (
-              <button
-                onClick={handleSaveAll}
+              <Button
+                variant="ghost"
+                size="sm"
                 disabled={savingAll}
-                className="flex items-center gap-1.5 text-xs font-semibold text-[var(--primary)] hover:opacity-70 transition-opacity disabled:opacity-50"
+                onClick={handleSaveAll}
+                icon={savingAll ? <RefreshCw size={11} className="animate-spin" /> : <ChevronRight size={11} />}
+                className="text-xs text-[var(--primary)]"
               >
-                {savingAll ? <RefreshCw size={11} className="animate-spin" /> : <ChevronRight size={11} />}
                 Add all
-              </button>
+              </Button>
             )}
             {allAdded && (
               <span className="flex items-center gap-1 text-xs font-semibold text-success">

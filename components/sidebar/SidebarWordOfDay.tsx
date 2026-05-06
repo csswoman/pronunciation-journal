@@ -201,11 +201,11 @@ export default function SidebarWordOfDay() {
           </div>
 
           {/* Waveform */}
-          <div className="flex items-center gap-[3px] h-7">
+          <div className="flex items-center gap-0.5 h-7">
             {BAR_HEIGHTS.map((h, i) => (
               <span
                 key={i}
-                className={`block w-[3px] rounded-full transition-opacity ${speaking || isRecording ? "opacity-100 animate-pulse" : "opacity-40"}`}
+                className={`block w-1 rounded-full transition-opacity ${speaking || isRecording ? "opacity-100 animate-pulse" : "opacity-40"}`}
                 style={{ height: `${h}px`, backgroundColor: `oklch(0.70 0.15 calc(var(--hue) + ${i * 4}))` }}
               />
             ))}

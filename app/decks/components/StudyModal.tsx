@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState, useCallback } from "react";
 import { ChevronLeft, Lightbulb } from "lucide-react";
+import Button from "@/components/ui/Button";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { useAuth } from "@/components/auth/AuthProvider";
 import type { Tables } from "@/lib/supabase/types";
@@ -190,11 +191,7 @@ export function StudyModal({ deck, onClose }: StudyModalProps) {
         <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
           No cards due in <strong>{deck.name}</strong>.
         </p>
-        <button onClick={onClose}
-          className="w-full py-2.5 rounded-xl font-semibold text-sm hover:opacity-90 transition-opacity"
-          style={{ backgroundColor: "var(--primary)", color: "var(--on-primary)" }}>
-          Done
-        </button>
+        <Button variant="primary" fullWidth onClick={onClose}>Done</Button>
       </div>
     );
   }
@@ -229,19 +226,11 @@ export function StudyModal({ deck, onClose }: StudyModalProps) {
           </p>
         )}
         <div className="flex gap-2">
-          <button
-            onClick={() => { setCurrentIndex(0); setFlipped(false); setStats(EMPTY_STATS); setPhase("studying"); }}
-            className="flex-1 py-2.5 rounded-xl font-semibold text-sm hover:opacity-90 transition-opacity"
-            style={{ backgroundColor: "var(--primary)", color: "var(--on-primary)" }}>
+          <Button variant="primary" className="flex-1 py-2.5"
+            onClick={() => { setCurrentIndex(0); setFlipped(false); setStats(EMPTY_STATS); setPhase("studying"); }}>
             Study again
-          </button>
-          <button onClick={onClose}
-            className="flex-1 py-2.5 rounded-xl font-semibold text-sm transition-colors"
-            style={{ border: "1px solid var(--line-divider)", color: "var(--deep-text)", backgroundColor: "transparent" }}
-            onMouseEnter={e => (e.currentTarget.style.backgroundColor = "var(--btn-regular-bg)")}
-            onMouseLeave={e => (e.currentTarget.style.backgroundColor = "transparent")}>
-            Done
-          </button>
+          </Button>
+          <Button variant="outline" className="flex-1 py-2.5" onClick={onClose}>Done</Button>
         </div>
       </div>
     );
@@ -252,16 +241,9 @@ export function StudyModal({ deck, onClose }: StudyModalProps) {
 
       {/* Header */}
       <div className="flex items-center gap-3 px-4 pt-3 pb-2">
-        <button
-          onClick={onClose}
-          className="p-1.5 rounded-lg transition-colors"
-          style={{ color: "var(--text-secondary)" }}
-          onMouseEnter={e => (e.currentTarget.style.backgroundColor = "var(--btn-regular-bg)")}
-          onMouseLeave={e => (e.currentTarget.style.backgroundColor = "transparent")}
-          title="Back"
-        >
+        <Button variant="ghost" size="icon" onClick={onClose} title="Back">
           <ChevronLeft size={20} />
-        </button>
+        </Button>
         <span className="font-semibold text-sm shrink-0" style={{ color: "var(--deep-text)" }}>
           {deck.name}
         </span>
@@ -272,16 +254,10 @@ export function StudyModal({ deck, onClose }: StudyModalProps) {
         <span className="text-xs font-mono shrink-0" style={{ color: "var(--text-tertiary)" }}>
           {currentIndex + 1}/{queue.length}
         </span>
-        <button
-          onClick={() => setShowTip((v) => !v)}
-          className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-semibold transition-colors shrink-0"
-          style={{ borderColor: "var(--line-divider)", color: "var(--text-secondary)" }}
-          onMouseEnter={e => (e.currentTarget.style.backgroundColor = "var(--btn-regular-bg)")}
-          onMouseLeave={e => (e.currentTarget.style.backgroundColor = "transparent")}
-        >
-          <Lightbulb size={13} />
+        <Button variant="outline" size="sm" icon={<Lightbulb size={13} />}
+          onClick={() => setShowTip((v) => !v)} className="hidden lg:flex shrink-0">
           {showTip ? "Hide tip" : "View tip"}
-        </button>
+        </Button>
       </div>
 
       {/* Body */}

@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { LogIn, Sparkles } from "lucide-react";
+import Button from "@/components/ui/Button";
 
 export function GuestBanner() {
   const router = useRouter();
@@ -30,14 +31,14 @@ export function GuestBanner() {
             Sign in to see your streaks, XP, weekly charts, pronunciation accuracy, and personalized insights.
           </p>
         </div>
-        <button
+        <Button
+          variant="primary"
+          icon={<LogIn size={16} />}
           onClick={() => router.push("/auth/login")}
-          className="flex items-center gap-2 rounded-xl px-6 py-3 text-sm font-bold transition-opacity hover:opacity-80"
-          style={{ background: "var(--primary)", color: "var(--on-primary)" }}
+          className="font-bold px-6 py-3"
         >
-          <LogIn size={16} />
           Sign in to get started
-        </button>
+        </Button>
       </div>
 
       {/* Preview tiles — blurred placeholders */}

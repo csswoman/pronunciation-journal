@@ -1,12 +1,13 @@
 "use client";
 
 import { RotateCcw, ChevronRight } from "lucide-react";
+import Button from "@/components/ui/Button";
 import type { ScoringResult } from "@/lib/types";
 import type { ExerciseDifficulty, Level } from "./CandidateRecorder";
 import { AccuracyRing } from "./AccuracyRing";
 import { WordChip } from "./WordChip";
 import { InlineRecorder } from "./InlineRecorder";
-import { getThreshold, outlineBtn, primaryBtn } from "./interview-utils";
+import { getThreshold } from "./interview-utils";
 import { speakPromise } from "./interview-utils";
 
 interface TurnResult {
@@ -46,13 +47,7 @@ export function CandidateBubble({
           <span className="text-xs font-medium" style={{ color: "var(--muted-text)" }}>You</span>
           {isActive && !turnResult && (
             <span className="relative group">
-              <button
-                onClick={onNext}
-                className="flex items-center gap-1 px-2 py-0.5 rounded-lg text-xs transition-all"
-                style={outlineBtn}
-              >
-                Skip
-              </button>
+              <Button variant="outline" size="sm" onClick={onNext}>Skip</Button>
               <span className="absolute bottom-full right-0 mb-1.5 px-2 py-1 rounded-lg text-xs whitespace-nowrap pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity z-20 shadow-lg"
                 style={{ background: "var(--card-bg)", border: "1px solid var(--line-divider)", color: "var(--body-text)" }}>
                 Skip this line
@@ -97,21 +92,12 @@ export function CandidateBubble({
                 <p className="text-xs" style={{ color: "var(--muted-text)" }}>Hover underlined words for tips.</p>
               )}
               <div className="flex gap-2">
-                <button
-                  onClick={onRetry}
-                  className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium"
-                  style={outlineBtn}
-                >
-                  <RotateCcw size={11} /> Retry
-                </button>
+                <Button variant="outline" size="sm" icon={<RotateCcw size={11} />} onClick={onRetry}>Retry</Button>
                 {isActive && (
-                  <button
-                    onClick={onNext}
-                    className="flex-1 flex items-center justify-center gap-1 py-1.5 rounded-lg text-xs font-semibold"
-                    style={primaryBtn}
-                  >
-                    {isDone ? "Finish" : <>Next <ChevronRight size={12} /></>}
-                  </button>
+                  <Button variant="primary" size="sm" onClick={onNext} className="flex-1"
+                    icon={!isDone ? <ChevronRight size={12} /> : undefined} iconPosition="right">
+                    {isDone ? "Finish" : "Next"}
+                  </Button>
                 )}
               </div>
             </div>

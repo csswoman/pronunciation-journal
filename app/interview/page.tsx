@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Button from "@/components/ui/Button";
 import ScenarioPicker, { type Scenario, type Level, type ExerciseDifficulty } from "@/components/interview/ScenarioPicker";
 import InterviewSession, { type InterviewTurn } from "@/components/interview/InterviewSession";
 
@@ -48,13 +49,7 @@ export default function InterviewPage() {
       <div className="max-w-2xl mx-auto px-4 py-10 flex flex-col gap-4 items-center text-center">
         <p className="text-2xl">⚠️</p>
         <p className="text-sm" style={{ color: "var(--muted-text)" }}>{error}</p>
-        <button
-          onClick={handleReset}
-          className="px-4 py-2 rounded-xl text-sm font-medium"
-          style={{ background: "var(--accent)", color: "var(--accent-text)" }}
-        >
-          Try again
-        </button>
+        <Button variant="primary" onClick={handleReset}>Try again</Button>
       </div>
     );
   }

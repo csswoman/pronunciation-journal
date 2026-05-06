@@ -9,6 +9,7 @@ import {
   X, Pencil, Trash2, Volume2, Plus, Search, Sparkles, BookOpen,
   Check, ChevronDown, ChevronUp, Square, CheckSquare, Minus,
 } from "lucide-react";
+import Button from "@/components/ui/Button";
 
 type Deck = Tables<"decks">;
 type Entry = Tables<"entries">;
@@ -191,19 +192,12 @@ function EntryRow({
             />
           </div>
           <div className="flex gap-2 justify-end">
-            <button
-              onClick={() => setExpanded(false)}
-              className="px-3 py-1.5 rounded-lg text-xs font-medium text-[var(--text-secondary)] hover:bg-[var(--btn-regular-bg)] transition-colors"
-            >
+            <Button variant="ghost" size="sm" onClick={() => setExpanded(false)}>
               Cancel
-            </button>
-            <button
-              onClick={handleSave}
-              disabled={saving}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-[var(--primary)] text-on-primary hover:opacity-90 disabled:opacity-50 transition-opacity"
-            >
-              {saving ? "Saving…" : <><Check size={12} /> Save</>}
-            </button>
+            </Button>
+            <Button variant="primary" size="sm" onClick={handleSave} disabled={saving} icon={saving ? undefined : <Check size={12} />}>
+              {saving ? "Saving…" : "Save"}
+            </Button>
           </div>
         </div>
       )}
@@ -362,12 +356,9 @@ export function ManageDrawer({ deck, onClose, onWordCountChange }: ManageDrawerP
               {loading ? "…" : `${entries.length} word${entries.length !== 1 ? "s" : ""}`}
             </p>
           </div>
-          <button
-            onClick={onClose}
-            className="p-2 rounded-xl text-[var(--text-secondary)] hover:bg-[var(--btn-regular-bg)] transition-colors mt-0.5"
-          >
+          <Button variant="ghost" size="icon" onClick={onClose} className="mt-0.5">
             <X size={18} />
-          </button>
+          </Button>
         </div>
 
         {/* Tabs */}
@@ -449,12 +440,8 @@ export function ManageDrawer({ deck, onClose, onWordCountChange }: ManageDrawerP
                     <p className="text-xs text-[var(--text-tertiary)] mt-1">Add words manually or use AI suggestions</p>
                   </div>
                   <div className="flex gap-2">
-                    <button onClick={() => setTab("add")} className="text-xs px-3 py-1.5 rounded-lg bg-[var(--primary)] text-on-primary font-medium hover:opacity-90">
-                      Add word
-                    </button>
-                    <button onClick={() => setTab("ai")} className="text-xs px-3 py-1.5 rounded-lg border border-[var(--line-divider)] text-[var(--deep-text)] font-medium hover:bg-[var(--btn-regular-bg)]">
-                      AI Suggest
-                    </button>
+                    <Button variant="primary" size="sm" onClick={() => setTab("add")}>Add word</Button>
+                    <Button variant="outline" size="sm" onClick={() => setTab("ai")}>AI Suggest</Button>
                   </div>
                 </div>
               ) : filtered.length === 0 ? (
@@ -493,13 +480,15 @@ export function ManageDrawer({ deck, onClose, onWordCountChange }: ManageDrawerP
               </div>
 
               <div>
-                <button
+                <Button
+                  variant="ghost"
+                  size="sm"
                   onClick={() => setShowPhrases(p => !p)}
-                  className="flex items-center gap-1 text-xs text-[var(--text-tertiary)] hover:text-[var(--deep-text)] transition-colors mb-2"
+                  icon={showPhrases ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
+                  className="text-xs text-[var(--text-tertiary)] mb-2"
                 >
-                  {showPhrases ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
                   {showPhrases ? "Hide phrases" : "Add phrases (optional)"}
-                </button>
+                </Button>
                 {showPhrases && (
                   <textarea
                     value={manualPhrases}
@@ -511,14 +500,15 @@ export function ManageDrawer({ deck, onClose, onWordCountChange }: ManageDrawerP
                 )}
               </div>
 
-              <button
-                onClick={() => handleAddWord()}
+              <Button
+                variant="primary"
+                fullWidth
                 disabled={!manualWord.trim() || addingWord}
-                className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-[var(--primary)] text-on-primary text-sm font-semibold hover:opacity-90 disabled:opacity-40 transition-opacity"
+                icon={<Plus size={16} />}
+                onClick={() => handleAddWord()}
               >
-                <Plus size={16} />
                 {addingWord ? "Adding…" : "Add Word"}
-              </button>
+              </Button>
 
               {entries.length > 0 && (
                 <div className="pt-2 border-t border-[var(--line-divider)]">

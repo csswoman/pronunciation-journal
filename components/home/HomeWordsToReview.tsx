@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Volume2 } from "lucide-react";
 import Card from "@/components/layout/Card";
+import Button from "@/components/ui/Button";
 
 interface ReviewWord {
   word: string;
@@ -48,12 +49,14 @@ export default function HomeWordsToReview({
       <div className="flex flex-col divide-y divide-[var(--border-light)]">
         {words.map((w) => (
           <div key={w.word} className="flex items-center gap-3 py-2.5">
-            <button
+            <Button
+              variant="ghost"
+              size="icon"
               aria-label={`Play ${w.word}`}
-              className="shrink-0 w-8 h-8 rounded-lg flex items-center justify-center bg-[var(--btn-regular-bg)] text-[var(--text-tertiary)] hover:text-[var(--primary)] transition-colors"
+              className="shrink-0 w-8 h-8 rounded-lg"
             >
               <Volume2 size={14} />
-            </button>
+            </Button>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-semibold text-[var(--deep-text)] leading-tight">{w.word}</p>
               <p className="text-xs text-[var(--text-tertiary)] font-mono truncate">

@@ -6,7 +6,8 @@ import { useRecorder } from "@/hooks/useRecorder";
 import { scorePronunciation } from "@/lib/scoring";
 import type { ScoringResult } from "@/lib/types";
 import type { ExerciseDifficulty, Level } from "./CandidateRecorder";
-import { getThreshold, primaryBtn, ghostBtn, outlineBtn } from "./interview-utils";
+import { getThreshold } from "./interview-utils";
+import Button from "@/components/ui/Button";
 
 type RecPhase = "idle" | "recording" | "review" | "transcribing";
 
@@ -83,21 +84,11 @@ export function InlineRecorder({ targetText, difficulty, level, onDone, onListen
     return (
       <div className="flex items-center gap-2 mt-3 pt-3" style={{ borderTop: "1px solid var(--line-divider)" }}>
         <span className="text-xs" style={{ color: "var(--muted-text)" }}>Recording ready</span>
-        <button
-          onClick={() => setPhase("transcribing")}
-          className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold transition-all"
-          style={primaryBtn}
-        >
-          <ChevronRight size={13} /> Send
-        </button>
+        <Button variant="primary" size="sm" icon={<ChevronRight size={13} />} onClick={() => setPhase("transcribing")}>Send</Button>
         <span className="relative group ml-auto">
-          <button
-            onClick={handleReRecord}
-            className="flex items-center justify-center w-8 h-8 rounded-xl transition-all"
-            style={outlineBtn}
-          >
+          <Button variant="outline" size="icon" onClick={handleReRecord} className="!rounded-xl w-8 h-8">
             <RotateCcw size={14} />
-          </button>
+          </Button>
           <span className="absolute bottom-full right-0 mb-1.5 px-2 py-1 rounded-lg text-xs whitespace-nowrap pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity z-20 shadow-lg"
             style={{ background: "var(--card-bg)", border: "1px solid var(--line-divider)", color: "var(--body-text)" }}>
             Re-record
@@ -111,22 +102,25 @@ export function InlineRecorder({ targetText, difficulty, level, onDone, onListen
     <div className="flex items-center gap-2 mt-3 pt-3 flex-wrap" style={{ borderTop: "1px solid var(--line-divider)" }}>
       {(error || recError) && <p className="w-full text-xs text-error mb-1">{error ?? recError}</p>}
 
-      <button
+      <Button
+        variant={isListening ? "primary" : "ghost"}
+        size="sm"
+        icon={isListening ? <Pause size={13} /> : <Volume2 size={13} />}
         onClick={onListen}
-        className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium transition-all"
-        style={isListening ? { background: "var(--color-accent)", color: "var(--color-text-on-accent)" } : ghostBtn}
         title="Hear how this should sound"
       >
-        {isListening ? <><Pause size={13} /> Pause</> : <><Volume2 size={13} /> Listen</>}
-      </button>
+        {isListening ? "Pause" : "Listen"}
+      </Button>
 
-      <button
+      <Button
+        variant={isRecording ? "danger" : "primary"}
+        size="sm"
+        icon={isRecording ? <MicOff size={13} /> : <Mic size={13} />}
         onClick={handleToggle}
-        className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold transition-all ${isRecording ? "animate-pulse" : ""}`}
-        style={isRecording ? { background: "var(--score-poor)", color: "var(--on-primary)" } : primaryBtn}
+        className={isRecording ? "animate-pulse" : ""}
       >
-        {isRecording ? <><MicOff size={13} /> Stop recording</> : <><Mic size={13} /> Record</>}
-      </button>
+        {isRecording ? "Stop recording" : "Record"}
+      </Button>
 
       {phase === "idle" && !isRecording && (
         <span className="text-xs" style={{ color: "var(--muted-text)" }}>Say the text above</span>

@@ -1,7 +1,7 @@
 "use client";
 
 import { Pause, Play, ChevronRight } from "lucide-react";
-import { ghostBtn, primaryBtn } from "./interview-utils";
+import Button from "@/components/ui/Button";
 
 interface Props {
   text: string;
@@ -25,13 +25,14 @@ export function InterviewerBubble({ text, isActive, isPlaying, hasNextCandidate,
           style={{ background: "var(--card-bg)", border: "1px solid var(--line-divider)" }}>
           <p className="text-sm leading-relaxed" style={{ color: "var(--body-text)" }}>{text}</p>
           <div className="flex items-center gap-2 mt-3 pt-3" style={{ borderTop: "1px solid var(--line-divider)" }}>
-            <button
+            <Button
+              variant={isPlaying ? "primary" : "ghost"}
+              size="sm"
+              icon={isPlaying ? <Pause size={12} /> : <Play size={12} />}
               onClick={onListen}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all"
-              style={isPlaying ? { background: "var(--color-accent)", color: "var(--color-text-on-accent)" } : ghostBtn}
             >
-              {isPlaying ? <><Pause size={12} /> Pause</> : <><Play size={12} /> Listen</>}
-            </button>
+              {isPlaying ? "Pause" : "Listen"}
+            </Button>
             {isPlaying && (
               <span className="flex gap-0.5 items-end h-3.5">
                 {[1, 2, 3].map((i) => (
@@ -41,13 +42,9 @@ export function InterviewerBubble({ text, isActive, isPlaying, hasNextCandidate,
               </span>
             )}
             {isActive && hasNextCandidate && (
-              <button
-                onClick={onRevealNext}
-                className="ml-auto flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all"
-                style={primaryBtn}
-              >
-                Answer <ChevronRight size={12} />
-              </button>
+              <Button variant="primary" size="sm" icon={<ChevronRight size={12} />} iconPosition="right" onClick={onRevealNext} className="ml-auto">
+                Answer
+              </Button>
             )}
           </div>
         </div>

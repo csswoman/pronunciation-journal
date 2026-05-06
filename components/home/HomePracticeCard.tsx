@@ -25,8 +25,7 @@ export default function HomePracticeCard() {
         </div>
         <Link
           href="/ai-practice"
-          className="shrink-0 px-5 py-2.5 rounded-xl text-sm font-semibold text-on-primary transition-opacity hover:opacity-90"
-          style={{ background: "var(--primary)" }}
+          className="shrink-0 px-5 py-2.5 rounded-xl text-sm font-semibold text-[var(--primary)] border border-[var(--primary)] transition-colors hover:bg-[color-mix(in_oklch,var(--primary)_8%,transparent)]"
         >
           Start Practice
         </Link>

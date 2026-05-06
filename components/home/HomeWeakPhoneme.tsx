@@ -17,7 +17,7 @@ export default function HomeWeakPhoneme({
   exampleMistake = { target: "think", heard: "sink" },
 }: HomeWeakPhonemeProps) {
   return (
-    <Card variant="compact" className="gap-4 border-l-[3px]" style={{ background: "var(--surface-raised)", borderLeftColor: "var(--warning)" }}>
+    <Card variant="compact" className="gap-4 border-l-2" style={{ background: "var(--surface-raised)", borderLeftColor: "var(--warning)" }}>
       <div className="flex items-center justify-between">
         <span className="text-tiny font-bold tracking-widest text-warning uppercase">Needs Practice</span>
         <span className="text-xs text-[var(--text-tertiary)]">{accuracy}% accuracy</span>
@@ -31,11 +31,11 @@ export default function HomeWeakPhoneme({
           <p className="text-xs text-[var(--text-secondary)] mt-1">{label}</p>
         </div>
         {/* Waveform decoration */}
-        <div className="flex items-center gap-[3px]">
+        <div className="flex items-center gap-0.5">
           {[10, 18, 28, 22, 34, 26, 38, 30, 22, 16, 10].map((h, i) => (
             <span
               key={i}
-              className="block w-[3px] rounded-full opacity-80"
+              className="block w-1 rounded-full opacity-80"
               style={{ height: `${h}px`, background: "var(--warning)" }}
             />
           ))}

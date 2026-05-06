@@ -3,7 +3,7 @@
 export default function WaveformIdle({ isRecording }: { isRecording: boolean }) {
   const bars = Array.from({ length: 36 });
   return (
-    <div className="flex items-center justify-center gap-[3px] px-6 w-full h-full">
+    <div className="flex items-center justify-center gap-0.5 px-6 w-full h-full">
       {bars.map((_, i) => {
         const baseH = 6 + Math.abs(Math.sin(i * 0.55)) * 22;
         return (

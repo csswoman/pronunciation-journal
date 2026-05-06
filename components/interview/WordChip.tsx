@@ -41,9 +41,9 @@ export function WordChip({ word, status, tip, onPlay }: Props) {
           style={{ background: "var(--card-bg)", border: "1px solid var(--line-divider)", color: "var(--body-text)" }}
         >
           {tip}
-          <span className="absolute top-full left-1/2 -translate-x-1/2 border-[5px] border-transparent"
+          <span className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent"
             style={{ borderTopColor: "var(--line-divider)" }} />
-          <span className="absolute top-full left-1/2 -translate-x-1/2 mt-px border-[4px] border-transparent"
+          <span className="absolute top-full left-1/2 -translate-x-1/2 mt-px border-4 border-transparent"
             style={{ borderTopColor: "var(--card-bg)" }} />
         </span>
       )}
