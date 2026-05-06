@@ -35,6 +35,7 @@ export default function HomeHeader() {
         onClick: () => router.push("/ai-practice"),
       }}
       illustration={<ConversationIllustration />}
+      variant="hero-compact"
     />
   );
 }

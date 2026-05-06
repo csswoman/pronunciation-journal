@@ -3,6 +3,7 @@
 import { Flame, Loader2, RefreshCcw, Trash2, Volume2, Snail } from "lucide-react";
 import type { WordBankEntry } from "@/lib/types";
 import { useAudioPlayback } from "@/hooks/useAudioPlayback";
+import Button from "@/components/ui/Button";
 
 interface WordCardProps {
   word: WordBankEntry;
@@ -42,32 +43,24 @@ export function WordCard({ word, onMarkDifficult, onRetry, onDelete }: WordCardP
               </span>
             )}
             <div className="flex gap-1">
-              <button
-                onClick={() => void play("normal")}
-                disabled={currentSpeed === "normal"}
+              <Button
+                variant={currentSpeed === "normal" ? "soft" : "ghost"}
                 aria-label={currentSpeed === "normal" ? "Playing..." : "Play pronunciation"}
                 title="Play (normal speed)"
-                className={`p-1.5 rounded-lg transition-colors ${
-                  currentSpeed === "normal"
-                    ? "bg-[color-mix(in_oklch,var(--primary)_25%,var(--bg-secondary))] text-[var(--primary)]"
-                    : "text-[var(--text-tertiary)] hover:bg-[var(--bg-secondary)] hover:text-[var(--primary)]"
-                }`}
+                onClick={() => void play("normal")}
+                className="!p-1.5 !rounded-lg"
               >
                 <Volume2 size={14} />
-              </button>
-              <button
-                onClick={() => void play("slow")}
-                disabled={currentSpeed === "slow"}
+              </Button>
+              <Button
+                variant={currentSpeed === "slow" ? "soft" : "ghost"}
                 aria-label={currentSpeed === "slow" ? "Playing..." : "Play slow pronunciation"}
                 title="Play (slow: 0.75x)"
-                className={`px-2 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-                  currentSpeed === "slow"
-                    ? "bg-[color-mix(in_oklch,var(--primary)_25%,var(--bg-secondary))] text-[var(--primary)]"
-                    : "text-[var(--text-tertiary)] hover:bg-[var(--bg-secondary)] hover:text-[var(--primary)]"
-                }`}
+                onClick={() => void play("slow")}
+                className="!p-1.5 !rounded-lg"
               >
                 <Snail size={14} />
-              </button>
+              </Button>
             </div>
             {word.difficulty > 0 && (
               <span
@@ -104,26 +97,26 @@ export function WordCard({ word, onMarkDifficult, onRetry, onDelete }: WordCardP
         </div>
 
         <div className="flex flex-col items-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-          <button
+          <Button
+            variant={word.difficulty > 0 ? "soft" : "ghost"}
+            size="icon"
             onClick={() => onMarkDifficult(word.id)}
             aria-label={word.difficulty > 0 ? "Remove difficult" : "Mark difficult"}
             title={word.difficulty > 0 ? "Remove difficult" : "Mark as difficult"}
-            className={`p-2 rounded-lg transition-colors ${
-              word.difficulty > 0
-                ? "bg-[color-mix(in_oklch,var(--primary)_20%,var(--bg-secondary))] text-[var(--primary)]"
-                : "bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:bg-[color-mix(in_oklch,var(--primary)_20%,var(--bg-secondary))] hover:text-[var(--primary)]"
-            }`}
+            className="!rounded-lg"
           >
             <Flame size={16} fill={word.difficulty > 0 ? "currentColor" : "none"} />
-          </button>
-          <button
+          </Button>
+          <Button
+            variant="ghost-danger"
+            size="icon"
             onClick={() => onDelete(word.id)}
             aria-label="Delete"
             title="Delete word"
-            className="p-2 rounded-lg bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:bg-[var(--error)] hover:text-on-primary transition-colors"
+            className="!rounded-lg"
           >
             <Trash2 size={16} />
-          </button>
+          </Button>
         </div>
       </div>
     </article>
@@ -171,22 +164,12 @@ function WordCardProcessing({
         </div>
 
         <div className="flex items-center gap-1 shrink-0">
-          <button
-            onClick={() => onRetry(wordId)}
-            aria-label="Retry enrichment"
-            title="Retry enrichment"
-            className="p-2 rounded-lg bg-[color-mix(in_oklch,var(--primary)_15%,var(--bg-secondary))] text-[var(--primary)] hover:bg-[color-mix(in_oklch,var(--primary)_25%,var(--bg-secondary))] transition-colors"
-          >
+          <Button variant="soft" size="icon" onClick={() => onRetry(wordId)} aria-label="Retry enrichment" title="Retry enrichment" className="!rounded-lg">
             <RefreshCcw size={16} />
-          </button>
-          <button
-            onClick={() => onDelete(wordId)}
-            aria-label="Delete word"
-            title="Delete word"
-            className="p-2 rounded-lg bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:bg-[var(--error)] hover:text-on-primary transition-colors"
-          >
+          </Button>
+          <Button variant="ghost-danger" size="icon" onClick={() => onDelete(wordId)} aria-label="Delete word" title="Delete word" className="!rounded-lg">
             <Trash2 size={16} />
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -250,22 +233,12 @@ function WordCardFailed({
         </div>
 
         <div className="flex items-center gap-1">
-          <button
-            onClick={() => onRetry(word.id)}
-            aria-label="Retry enrichment"
-            title="Retry"
-            className="p-2 rounded-lg bg-[color-mix(in_oklch,var(--primary)_15%,var(--bg-secondary))] text-[var(--primary)] hover:bg-[color-mix(in_oklch,var(--primary)_25%,var(--bg-secondary))] transition-colors"
-          >
+          <Button variant="soft" size="icon" onClick={() => onRetry(word.id)} aria-label="Retry enrichment" title="Retry" className="!rounded-lg">
             <RefreshCcw size={16} />
-          </button>
-          <button
-            onClick={() => onDelete(word.id)}
-            aria-label="Delete"
-            title="Delete"
-            className="p-2 rounded-lg bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:bg-[var(--error)] hover:text-on-primary transition-colors"
-          >
+          </Button>
+          <Button variant="ghost-danger" size="icon" onClick={() => onDelete(word.id)} aria-label="Delete" title="Delete" className="!rounded-lg">
             <Trash2 size={16} />
-          </button>
+          </Button>
         </div>
       </div>
     </article>

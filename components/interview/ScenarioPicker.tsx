@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Check } from "lucide-react";
+import { Check, Loader2 } from "lucide-react";
+import Button from "@/components/ui/Button";
 import type { ExerciseDifficulty } from "./CandidateRecorder";
 
 export type Scenario = "hr" | "frontend" | "system-design" | "behavioral" | "product";
@@ -170,21 +171,16 @@ export default function ScenarioPicker({ onStart, loading }: Props) {
       </section>
 
       {/* CTA */}
-      <button
-        onClick={() => onStart(scenario, level, difficulty)}
+      <Button
+        variant="primary"
+        fullWidth
         disabled={loading}
-        className="w-full py-4 rounded-2xl font-semibold text-base transition-all disabled:opacity-60 disabled:cursor-not-allowed"
-        style={{ background: "var(--color-accent)", color: "var(--color-text-on-accent)" }}
+        onClick={() => onStart(scenario, level, difficulty)}
+        icon={loading ? <Loader2 size={16} className="animate-spin" /> : undefined}
+        className="py-4 rounded-2xl text-base"
       >
-        {loading ? (
-          <span className="flex items-center justify-center gap-2">
-            <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
-            Generating script…
-          </span>
-        ) : (
-          "Start Interview →"
-        )}
-      </button>
+        {loading ? "Generating script…" : "Start Interview →"}
+      </Button>
 
     </div>
   );

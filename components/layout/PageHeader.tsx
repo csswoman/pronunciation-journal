@@ -33,7 +33,7 @@ interface PageHeaderProps {
   primaryCta?: CTAButton;
   secondaryCta?: CTAButton;
   illustration?: ReactNode;
-  variant?: "default" | "compact";
+  variant?: "default" | "compact" | "hero-compact";
   progress?: number;
   lessonTitle?: string;
   onContinue?: () => void;
@@ -243,6 +243,7 @@ export default function PageHeader({
   onContinue,
 }: PageHeaderProps) {
   const isCompact = variant === "compact";
+  const isHeroCompact = variant === "hero-compact";
   const hasProgress = progress !== undefined && lessonTitle && onContinue;
   const safeProgress = hasProgress
     ? Math.max(0, Math.min(100, Math.round(progress!)))
@@ -261,8 +262,8 @@ export default function PageHeader({
         relative overflow-hidden
         bg-gradient-to-br from-[var(--card-bg)] to-[var(--btn-regular-bg)]
         rounded-[15px_15px_0_0]
-        ${isCompact ? "p-6 lg:p-8" : "p-8 lg:p-12"}
-        grid grid-cols-1 lg:grid-cols-2 gap-10 items-center
+        ${isHeroCompact ? "p-5 lg:p-6" : isCompact ? "p-6 lg:p-8" : "p-8 lg:p-12"}
+        grid grid-cols-1 lg:grid-cols-2 ${isHeroCompact ? "gap-6" : "gap-10"} items-center
       `}
     >
       {/* DECORATIVE BACKGROUND */}
@@ -273,15 +274,24 @@ export default function PageHeader({
       {/* LEFT */}
       <div className="relative z-10 max-w-xl">
         {badge && (
-          <div className="inline-flex items-center gap-2 mb-5 px-3 py-1.5 rounded-full bg-[color-mix(in_oklch,var(--primary)_12%,transparent)] border border-[color-mix(in_oklch,var(--primary)_20%,transparent)]">
+          <div className={`inline-flex items-center gap-2 ${isHeroCompact ? "mb-3 py-1" : "mb-5 py-1.5"} px-3 rounded-full bg-[color-mix(in_oklch,var(--primary)_12%,transparent)] border border-[color-mix(in_oklch,var(--primary)_20%,transparent)]`}>
             <span className="w-1.5 h-1.5 rounded-full bg-[var(--primary)]" />
-            <span className="text-xs font-semibold uppercase tracking-widest text-[var(--primary)]">
-              {badge}
-            </span>
+            {isHeroCompact ? (
+              <span className="font-semibold uppercase text-[var(--primary)]" style={{ fontSize: "var(--font-tiny)", letterSpacing: "0.05em" }}>
+                {badge}
+              </span>
+            ) : (
+              <span className="text-xs font-semibold uppercase tracking-widest text-[var(--primary)]">
+                {badge}
+              </span>
+            )}
           </div>
         )}
 
-        <h1 className="font-display text-4xl lg:text-5xl leading-[1.1] tracking-tight text-[var(--deep-text)]">
+        <h1
+          className={`font-display leading-[1.1] tracking-tight text-[var(--deep-text)] ${!isHeroCompact ? "text-4xl lg:text-5xl" : ""}`}
+          style={isHeroCompact ? { fontSize: "var(--font-h1)" } : undefined}
+        >
           <span className="font-semibold">{title}</span>
           {subtitle && (
             <>
@@ -292,13 +302,13 @@ export default function PageHeader({
         </h1>
 
         {description && (
-          <p className="mt-4 text-base text-[var(--text-secondary)] leading-relaxed">
+          <p className={`${isHeroCompact ? "mt-2 text-sm" : "mt-4 text-base"} text-[var(--text-secondary)] leading-relaxed`}>
             {description}
           </p>
         )}
 
         {hasProgress ? (
-          <div className="mt-8 space-y-4">
+          <div className={`${isHeroCompact ? "mt-4 space-y-3" : "mt-8 space-y-4"}`}>
             <div>
               <div className="flex items-center gap-2 text-sm mb-2">
                 <span className="font-medium text-[var(--deep-text)]">{lessonTitle}</span>
@@ -313,21 +323,27 @@ export default function PageHeader({
             </div>
             <Button
               onClick={onContinue}
-              size="lg"
-              className="shadow-[0_12px_30px_color-mix(in_oklch,var(--primary)_30%,transparent)] hover:translate-y-[-1px] transition-all"
-              icon={<Play size={16} />}
+              size={isHeroCompact ? "sm" : "lg"}
+              className={isHeroCompact
+                ? "shadow-[0_4px_16px_color-mix(in_oklch,var(--primary)_30%,transparent)]"
+                : "shadow-[0_12px_30px_color-mix(in_oklch,var(--primary)_30%,transparent)] hover:translate-y-[-1px] transition-all"}
+              style={isHeroCompact ? { padding: "var(--space-2) var(--space-4)" } : undefined}
+              icon={<Play size={isHeroCompact ? 14 : 16} />}
             >
               Resume Lesson
             </Button>
           </div>
         ) : (
           (primaryCta || secondaryCta) && (
-            <div className="mt-8 flex gap-4 flex-wrap">
+            <div className={`${isHeroCompact ? "mt-4 flex gap-3" : "mt-8 flex gap-4"} flex-wrap`}>
               {primaryCta && (
                 <Button
                   onClick={primaryCta.onClick}
-                  size="lg"
-                  className="shadow-[0_10px_28px_color-mix(in_oklch,var(--primary)_35%,transparent)] hover:translate-y-[-1px] transition-all"
+                  size={isHeroCompact ? "sm" : "lg"}
+                  className={isHeroCompact
+                    ? "shadow-[0_4px_16px_color-mix(in_oklch,var(--primary)_35%,transparent)]"
+                    : "shadow-[0_10px_28px_color-mix(in_oklch,var(--primary)_35%,transparent)] hover:translate-y-[-1px] transition-all"}
+                  style={isHeroCompact ? { padding: "var(--space-2) var(--space-4)" } : undefined}
                   icon={primaryCta.icon}
                 >
                   {primaryCta.label}
@@ -337,7 +353,8 @@ export default function PageHeader({
                 <Button
                   onClick={secondaryCta.onClick}
                   variant="secondary"
-                  size="lg"
+                  size={isHeroCompact ? "sm" : "lg"}
+                  style={isHeroCompact ? { padding: "var(--space-2) var(--space-4)" } : undefined}
                   icon={secondaryCta.icon}
                 >
                   {secondaryCta.label}
@@ -350,9 +367,9 @@ export default function PageHeader({
 
       {/* RIGHT — illustration */}
       {illustration && (
-        <div className="relative z-10 flex items-center justify-center min-h-[260px]">
+        <div className={`relative z-10 flex items-center justify-center ${isHeroCompact ? "min-h-[140px] max-h-[200px]" : "min-h-[260px]"}`}>
           <Frame />
-          <div className="relative w-full max-w-[420px] animate-[float_6s_ease-in-out_infinite] [&_img]:w-full [&_img]:h-auto [&_svg]:w-full [&_svg]:h-auto drop-shadow-xl">
+          <div className={`relative w-full ${isHeroCompact ? "max-w-[220px]" : "max-w-[420px]"} animate-[float_6s_ease-in-out_infinite] [&_img]:w-full [&_img]:h-auto [&_svg]:w-full [&_svg]:h-auto drop-shadow-xl`}>
             {illustration}
           </div>
         </div>

@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { Mic, MicOff, Loader2, RotateCcw } from "lucide-react";
+import Button from "@/components/ui/Button";
 import { useRecorder } from "@/hooks/useRecorder";
 import { scorePronunciation } from "@/lib/scoring";
 import type { ScoringResult } from "@/lib/types";
@@ -239,21 +240,8 @@ export default function CandidateRecorder({ targetText, difficulty, level, onDon
       )}
 
       <div className="flex gap-2">
-        <button
-          onClick={handleRetry}
-          className="flex items-center gap-1.5 px-3 py-2 rounded-xl border text-sm"
-          style={{ borderColor: "var(--line-divider)", color: "var(--muted-text)" }}
-        >
-          <RotateCcw size={13} />
-          Try again
-        </button>
-        <button
-          onClick={onDone}
-          className="flex-1 py-2 rounded-xl text-sm font-medium"
-          style={{ background: "var(--accent)", color: "var(--accent-text)" }}
-        >
-          Next →
-        </button>
+        <Button variant="outline" icon={<RotateCcw size={13} />} onClick={handleRetry}>Try again</Button>
+        <Button variant="primary" onClick={onDone} className="flex-1 py-2">Next →</Button>
       </div>
     </div>
   );

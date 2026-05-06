@@ -85,16 +85,14 @@ export function DeckCard({
 
         {/* CTA */}
         <Button
+          variant="primary"
           onClick={onStudy}
           disabled={!canStudy}
           title={!canStudy ? "Add words to study" : ""}
-          className={`w-full py-3 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 transition-all mt-auto ${
-            canStudy
-              ? "bg-[var(--primary)] text-on-primary hover:opacity-90 hover:shadow-md"
-              : "bg-[var(--btn-regular-bg)] text-[var(--text-tertiary)] cursor-not-allowed opacity-50"
-          }`}
+          icon={<Play size={15} className="fill-current" />}
+          fullWidth
+          className="mt-auto py-3"
         >
-          <Play size={15} className="fill-current" />
           {dueCount > 0 ? `Review (${dueCount} due)` : "Study"}
         </Button>
       </div>

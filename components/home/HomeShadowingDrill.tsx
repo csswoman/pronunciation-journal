@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Volume2, Mic } from "lucide-react";
 import Card from "@/components/layout/Card";
+import Button from "@/components/ui/Button";
 
 interface HomeShadowingDrillProps {
   text?: string;
@@ -38,13 +39,12 @@ export default function HomeShadowingDrill({
       </div>
 
       <div className="flex gap-2">
-        <button className="flex-1 flex items-center justify-center gap-1.5 text-sm font-semibold text-fg border border-border-subtle rounded-lg py-2.5 hover:bg-surface-sunken transition-colors">
-          <Volume2 size={14} />
+        <Button variant="outline" icon={<Volume2 size={14} />} className="flex-1 py-2.5 rounded-lg text-sm">
           Listen
-        </button>
+        </Button>
         <Link
           href="/practice"
-          className="flex-1 flex items-center justify-center gap-1.5 text-sm font-semibold text-[var(--on-primary)] bg-[var(--warning)] hover:opacity-90 rounded-lg py-2.5 transition-colors"
+          className="flex-1 flex items-center justify-center gap-1.5 text-sm font-semibold text-[var(--primary)] border border-[var(--primary)] rounded-lg py-2.5 hover:bg-[color-mix(in_oklch,var(--primary)_8%,transparent)] transition-colors"
         >
           <Mic size={14} />
           Try

@@ -1,6 +1,7 @@
 "use client";
 
 import { Bookmark, SkipForward, Volume2 } from "lucide-react";
+import Button from "@/components/ui/Button";
 import { blankOutWord, speakWord } from "./study-utils";
 
 interface Meaning {
@@ -38,25 +39,12 @@ export function StudyCard({
 
   const headerActions = (
     <div className="flex items-center gap-1.5">
-      <button
-        onClick={(e) => { e.stopPropagation(); onSkip(); }}
-        className="p-1.5 rounded-lg border transition-colors"
-        style={{ borderColor: "var(--line-divider)", color: "var(--text-tertiary)" }}
-        onMouseEnter={e => (e.currentTarget.style.backgroundColor = "var(--btn-regular-bg)")}
-        onMouseLeave={e => (e.currentTarget.style.backgroundColor = "transparent")}
-        title="Skip"
-      >
+      <Button variant="outline" size="icon" onClick={(e) => { e.stopPropagation(); onSkip(); }} title="Skip" className="!p-1.5 !rounded-lg">
         <SkipForward size={13} />
-      </button>
-      <button
-        onClick={(e) => e.stopPropagation()}
-        className="p-1.5 rounded-lg border transition-colors"
-        style={{ borderColor: "var(--line-divider)", color: "var(--text-tertiary)" }}
-        onMouseEnter={e => (e.currentTarget.style.backgroundColor = "var(--btn-regular-bg)")}
-        onMouseLeave={e => (e.currentTarget.style.backgroundColor = "transparent")}
-      >
+      </Button>
+      <Button variant="outline" size="icon" onClick={(e) => e.stopPropagation()} className="!p-1.5 !rounded-lg">
         <Bookmark size={13} />
-      </button>
+      </Button>
     </div>
   );
 
@@ -69,15 +57,9 @@ export function StudyCard({
       {ipa && (
         <div className="flex items-center gap-2 justify-center">
           <span className="text-base" style={{ color: "var(--text-secondary)" }}>/{ipa}/</span>
-          <button
-            onClick={(e) => { e.stopPropagation(); speakWord(word); }}
-            className="p-1.5 rounded-full border transition-colors"
-            style={{ borderColor: "var(--line-divider)", color: "var(--text-secondary)" }}
-            onMouseEnter={e => (e.currentTarget.style.backgroundColor = "var(--btn-regular-bg)")}
-            onMouseLeave={e => (e.currentTarget.style.backgroundColor = "transparent")}
-          >
+          <Button variant="outline" size="icon" onClick={(e) => { e.stopPropagation(); speakWord(word); }} className="!p-1.5">
             <Volume2 size={13} />
-          </button>
+          </Button>
         </div>
       )}
       <div className="w-full border-t border-dashed" style={{ borderColor: "var(--line-divider)" }} />

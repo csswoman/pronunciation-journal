@@ -4,6 +4,7 @@ import { Check, ArrowRight, ClipboardList, Zap } from "lucide-react";
 import Card from "@/components/layout/Card";
 import CardHeader from "@/components/ui/CardHeader";
 import Badge, { type BadgeVariant } from "@/components/ui/Badge";
+import Button from "@/components/ui/Button";
 
 interface TodoItem {
   id: number;
@@ -105,16 +106,18 @@ export default function HomeTodo() {
 
             {/* Action */}
             {!item.done && (
-              <button
+              <Button
+                variant={item.featured ? "secondary" : "ghost"}
+                size="sm"
                 className={[
-                  "shrink-0 flex items-center gap-1 text-tiny font-semibold px-2.5 py-1 rounded-lg transition-all",
-                  item.featured
-                    ? "bg-[var(--primary)] text-[var(--primary-foreground)] hover:bg-[var(--primary-hover)]"
-                    : "text-[var(--text-tertiary)] opacity-0 group-hover:opacity-100 hover:text-[var(--text-primary)]",
-                ].join(" ")}
+                  "shrink-0 text-tiny",
+                  !item.featured && "opacity-0 group-hover:opacity-100",
+                ].filter(Boolean).join(" ")}
+                icon={<ArrowRight size={item.featured ? 11 : 13} />}
+                iconPosition="right"
               >
-                {item.featured ? <>Start <ArrowRight size={11} /></> : <ArrowRight size={13} />}
-              </button>
+                {item.featured ? "Start" : ""}
+              </Button>
             )}
           </div>
         ))}

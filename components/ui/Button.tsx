@@ -6,13 +6,15 @@ type ButtonVariant =
   | "primary"
   | "secondary"
   | "ghost"
+  | "ghost-danger"
   | "danger"
   | "success"
   | "outline"
   | "dashed"
   | "chip"
   | "segmented"
-  | "elevated";
+  | "elevated"
+  | "soft";
 
 type ButtonSize = "sm" | "md" | "lg" | "icon" | "iconLg";
 type IconPosition = "left" | "right";
@@ -110,6 +112,23 @@ const variantStyles: Record<ButtonVariant, string> = {
     hover:shadow-xl
     hover:-translate-y-1
     hover:bg-[var(--primary-600)]
+  `,
+
+  soft: `
+    bg-[color-mix(in_oklch,var(--primary)_15%,var(--bg-secondary))]
+    text-[var(--primary)]
+    border border-transparent
+    shadow-none
+    hover:bg-[color-mix(in_oklch,var(--primary)_25%,var(--bg-secondary))]
+  `,
+
+  "ghost-danger": `
+    bg-[var(--bg-secondary)]
+    text-[var(--text-secondary)]
+    border border-transparent
+    shadow-none
+    hover:bg-[var(--error)]
+    hover:text-[var(--on-primary)]
   `,
 };
 

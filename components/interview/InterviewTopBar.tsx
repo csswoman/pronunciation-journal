@@ -1,7 +1,7 @@
 "use client";
 
 import { RotateCcw, Square, Volume2 } from "lucide-react";
-import { outlineBtn } from "./interview-utils";
+import Button from "@/components/ui/Button";
 
 interface Props {
   title: string;
@@ -40,23 +40,18 @@ export function InterviewTopBar({
 
       <div className="flex items-center gap-1.5 flex-shrink-0">
         {speechSupported && (
-          <button
+          <Button
+            variant={isPlayingAll ? "soft" : "outline"}
+            size="sm"
+            icon={isPlayingAll ? <Square size={11} /> : <Volume2 size={11} />}
             onClick={onPlayAll}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium border transition-all"
-            style={isPlayingAll
-              ? { borderColor: "var(--color-accent)", color: "var(--color-accent)", background: "color-mix(in oklch, var(--color-accent) 10%, transparent)" }
-              : outlineBtn}
           >
-            {isPlayingAll ? <><Square size={11} /> Stop</> : <><Volume2 size={11} /> Preview</>}
-          </button>
+            {isPlayingAll ? "Stop" : "Preview"}
+          </Button>
         )}
-        <button
-          onClick={onReset}
-          className="flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-medium border transition-all"
-          style={outlineBtn}
-        >
-          <RotateCcw size={11} /> New
-        </button>
+        <Button variant="outline" size="sm" icon={<RotateCcw size={11} />} onClick={onReset}>
+          New
+        </Button>
       </div>
     </div>
   );

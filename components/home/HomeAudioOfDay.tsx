@@ -52,11 +52,11 @@ export default function HomeAudioOfDay({
       </div>
 
       {/* Waveform */}
-      <div className="flex items-center gap-[3px] h-10">
+      <div className="flex items-center gap-0.5 h-10">
         {BAR_HEIGHTS.map((h, i) => (
           <span
             key={i}
-            className={`block w-[4px] rounded-full transition-opacity ${playing ? "opacity-100" : "opacity-60"}`}
+            className={`block w-1 rounded-full transition-opacity ${playing ? "opacity-100" : "opacity-60"}`}
             style={{
               height: `${h}px`,
               background: `hsl(${185 + i * 2}, 80%, 60%)`,

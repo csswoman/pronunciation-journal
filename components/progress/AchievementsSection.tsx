@@ -1,5 +1,7 @@
 'use client'
 
+import Button from "@/components/ui/Button";
+
 interface Achievement {
   id: string
   icon: string
@@ -76,9 +78,9 @@ export default function AchievementsSection() {
             {unlocked.length} earned · {locked.length} remaining
           </h2>
         </div>
-        <button className="text-xs font-semibold shrink-0" style={{ color: 'var(--primary)' }}>
+        <Button variant="ghost" size="sm" className="text-xs font-semibold shrink-0 text-[var(--primary)]">
           View all
-        </button>
+        </Button>
       </div>
 
       {/* Unlocked grid */}

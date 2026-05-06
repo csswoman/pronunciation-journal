@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import { Mic, Play, Turtle, CheckCircle, Sparkles, Trophy } from "lucide-react";
+import Button from "@/components/ui/Button";
 import { useRecorder } from "@/hooks/useRecorder";
 import { analyzePhonemes, ARPABET_TO_IPA } from "@/lib/phonemes";
 import { saveAIWord } from "@/lib/ai-db";
@@ -474,31 +475,16 @@ export default function PronunciationView({ onSubmit }: PronunciationViewProps) 
 
         {/* Action buttons */}
         <div className="flex items-center gap-3 flex-wrap justify-center">
-          <button
-            onClick={() => handleListenModel()}
-            className="flex items-center gap-1.5 px-5 py-2.5 rounded-full border text-sm font-medium transition-all hover:opacity-80"
-            style={{ borderColor: "var(--line-divider)", color: "var(--text-secondary)", backgroundColor: "var(--card-bg)" }}
-          >
-            <Play size={13} />
+          <Button variant="outline" icon={<Play size={13} />} onClick={() => handleListenModel()} className="rounded-full px-5 py-2.5">
             Listen
-          </button>
-          <button
-            onClick={() => handleListenModel(0.55)}
-            className="flex items-center gap-1.5 px-5 py-2.5 rounded-full border text-sm font-medium transition-all hover:opacity-80"
-            style={{ borderColor: "var(--line-divider)", color: "var(--text-secondary)", backgroundColor: "var(--card-bg)" }}
-          >
-            <Turtle size={13} />
+          </Button>
+          <Button variant="outline" icon={<Turtle size={13} />} onClick={() => handleListenModel(0.55)} className="rounded-full px-5 py-2.5">
             Slow
-          </button>
+          </Button>
           {audioUrl && (
-            <button
-              onClick={handleSend}
-              className="flex items-center gap-1.5 px-5 py-2.5 rounded-full text-sm font-medium transition-all hover:opacity-80"
-              style={{ backgroundColor: "var(--primary)", color: "var(--on-primary)" }}
-            >
-              <CheckCircle size={13} />
+            <Button variant="primary" icon={<CheckCircle size={13} />} onClick={handleSend} className="rounded-full px-5 py-2.5">
               Send recording
-            </button>
+            </Button>
           )}
         </div>
       </div>
@@ -522,17 +508,18 @@ export default function PronunciationView({ onSubmit }: PronunciationViewProps) 
             className="flex-1 bg-transparent text-sm focus:outline-none"
             style={{ color: "var(--text-primary)" }}
           />
-          <button
+          <Button
             type="submit"
+            variant="primary"
+            size="icon"
             disabled={!inputValue.trim()}
-            className="flex-shrink-0 w-9 h-9 rounded-xl flex items-center justify-center transition-colors disabled:opacity-40"
-            style={{ backgroundColor: "var(--primary)", color: "var(--on-primary)" }}
             aria-label="Practice phrase"
+            className="flex-shrink-0 !rounded-xl w-9 h-9"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14M12 5l7 7-7 7" />
             </svg>
-          </button>
+          </Button>
         </form>
       </div>
     </div>

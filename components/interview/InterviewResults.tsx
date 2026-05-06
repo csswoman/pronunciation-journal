@@ -2,11 +2,12 @@
 
 import { useEffect, useRef } from "react";
 import { RotateCcw, TrendingUp, AlertCircle, CheckCircle2 } from "lucide-react";
+import Button from "@/components/ui/Button";
 import confetti from "canvas-confetti";
 import type { ScoringResult } from "@/lib/types";
 import type { InterviewTurn } from "./InterviewSession";
 import { AccuracyRing } from "./AccuracyRing";
-import { primaryBtn, outlineBtn, getThreshold } from "./interview-utils";
+import { getThreshold } from "./interview-utils";
 import type { ExerciseDifficulty, Level } from "./CandidateRecorder";
 
 interface TurnResult {
@@ -100,13 +101,7 @@ export function InterviewResults({ title, turns, results, difficulty, level, onR
         style={{ borderColor: "var(--line-divider)", background: "var(--card-bg)" }}
       >
         <p className="text-sm font-semibold truncate" style={{ color: "var(--deep-text)" }}>{title}</p>
-        <button
-          onClick={onReset}
-          className="flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-medium border transition-all"
-          style={outlineBtn}
-        >
-          <RotateCcw size={11} /> New
-        </button>
+        <Button variant="outline" size="sm" icon={<RotateCcw size={11} />} onClick={onReset}>New</Button>
       </div>
 
       {/* Body */}
@@ -227,13 +222,7 @@ export function InterviewResults({ title, turns, results, difficulty, level, onR
         )}
 
         {/* CTA */}
-        <button
-          onClick={onReset}
-          className="w-full py-3 rounded-2xl text-sm font-semibold transition-all"
-          style={primaryBtn}
-        >
-          Practice again
-        </button>
+        <Button variant="primary" fullWidth onClick={onReset}>Practice again</Button>
       </div>
     </div>
   );

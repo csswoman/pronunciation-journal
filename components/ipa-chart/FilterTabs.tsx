@@ -28,7 +28,7 @@ export default function FilterTabs({
         <Button
           key={tab.id}
           onClick={() => onChange(tab.id)}
-          variant={activeTab === tab.id ? "primary" : "chip"}
+          variant="chip"
           size="sm"
           selected={activeTab === tab.id}
           className="rounded-full"

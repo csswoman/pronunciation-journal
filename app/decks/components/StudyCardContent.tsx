@@ -1,6 +1,7 @@
 "use client";
 
 import { Volume2 } from "lucide-react";
+import Button from "@/components/ui/Button";
 import type { Tables } from "@/lib/supabase/types";
 
 type Entry = Tables<"entries">;
@@ -54,12 +55,10 @@ export function StudyCardContent({ entry, flipped, showAllMeanings, onToggleAllM
           )}
         </div>
         {flipped && extraMeaningsCount > 0 && (
-          <button
-            onClick={onToggleAllMeanings}
-            className="text-xs text-[var(--text-tertiary)] hover:text-[var(--deep-text)] whitespace-nowrap shrink-0 transition-colors"
-          >
+          <Button variant="ghost" size="sm" onClick={onToggleAllMeanings}
+            className="text-xs text-[var(--text-tertiary)] whitespace-nowrap shrink-0">
             {showAllMeanings ? "less ←" : `${extraMeaningsCount} more →`}
-          </button>
+          </Button>
         )}
       </div>
 
@@ -72,12 +71,9 @@ export function StudyCardContent({ entry, flipped, showAllMeanings, onToggleAllM
           {flipped && entry.ipa && (
             <span className="text-base text-[var(--text-secondary)]">/{entry.ipa}/</span>
           )}
-          <button
-            onClick={(e) => { e.stopPropagation(); speakWord(); }}
-            className="p-1.5 rounded-lg border border-[var(--line-divider)] text-[var(--text-secondary)] hover:bg-[var(--btn-regular-bg)] transition-colors"
-          >
+          <Button variant="outline" size="icon" onClick={(e) => { e.stopPropagation(); speakWord(); }} className="!rounded-lg !p-1.5">
             <Volume2 size={14} />
-          </button>
+          </Button>
         </div>
       </div>
 
