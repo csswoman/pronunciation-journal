@@ -124,7 +124,7 @@ export default function MasteredSection({ mastered }: MasteredSectionProps) {
                 {sound.sounds.ipa}
               </span>
               <span
-                className="text-[9px] font-semibold px-1.5 py-0.5 rounded-full"
+                className="text-tiny font-semibold px-1.5 py-0.5 rounded-full"
                 style={{
                   background: 'color-mix(in oklch, oklch(.65 .18 145) 20%, transparent)',
                   color: 'oklch(.5 .18 145)',
@@ -173,3 +173,4 @@ export default function MasteredSection({ mastered }: MasteredSectionProps) {
     </div>
   )
 }
+

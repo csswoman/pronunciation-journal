@@ -16,10 +16,10 @@ export default function DifficultyFilters({
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const difficulties: { value: Difficulty; label: string; color: string }[] = [
-    { value: "easy", label: "Fácil", color: "bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200" },
-    { value: "medium", label: "Medio", color: "bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200" },
-    { value: "hard", label: "Difícil", color: "bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200" },
+  const difficulties: { value: Difficulty; label: string; dot: string }[] = [
+    { value: "easy", label: "Fácil", dot: "dot-success" },
+    { value: "medium", label: "Medio", dot: "dot-warning" },
+    { value: "hard", label: "Difícil", dot: "dot-warning" },
   ];
 
   useEffect(() => {
@@ -57,7 +57,7 @@ export default function DifficultyFilters({
         onClick={() => setIsOpen(!isOpen)}
         variant="secondary"
         size="md"
-        className="text-gray-700 dark:text-gray-300"
+        className="text-fg-muted"
         icon={
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -89,23 +89,22 @@ export default function DifficultyFilters({
       </Button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg z-50">
+        <div className="absolute right-0 mt-2 w-56 bg-surface-raised border border-border-default rounded-lg shadow-lg z-50">
           <div className="py-2">
             {difficulties.map((difficulty) => (
               <label
                 key={difficulty.value}
-                className="flex items-center px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-600 cursor-pointer transition-colors"
+                className="flex items-center px-4 py-2 hover:bg-surface-sunken cursor-pointer transition-colors"
               >
                 <input
                   type="checkbox"
                   checked={selectedDifficulties.includes(difficulty.value)}
                   onChange={() => toggleDifficulty(difficulty.value)}
-                  className="w-4 h-4 rounded border-gray-300 text-accent focus:ring-accent focus:ring-offset-0 cursor-pointer"
+                  className="w-4 h-4 rounded border-border-default text-accent focus:ring-accent focus:ring-offset-0 cursor-pointer"
                   style={{ accentColor: "var(--color-accent)" }}
                 />
-                <span
-                  className={`ml-3 px-3 py-1 rounded-full text-sm font-medium ${difficulty.color}`}
-                >
+                <span className="ml-3 badge">
+                  <span className={difficulty.dot} />
                   {difficulty.label}
                 </span>
               </label>
@@ -116,4 +115,7 @@ export default function DifficultyFilters({
     </div>
   );
 }
+
+
+
 

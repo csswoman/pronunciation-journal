@@ -158,16 +158,16 @@ export default function CustomPromptPanel({
 
       {/* Hint bar */}
       <div className="flex items-center justify-between px-1">
-        <p className="text-[11px]" style={{ color: "var(--text-tertiary)" }}>
+        <p className="text-tiny" style={{ color: "var(--text-tertiary)" }}>
           <kbd
-            className="px-1 py-px rounded text-[10px] font-mono"
+            className="px-1 py-px rounded text-tiny font-mono"
             style={{ backgroundColor: "var(--btn-regular-bg)", color: "var(--text-secondary)" }}
           >
             ↵
           </kbd>
           {" "}to send ·{" "}
           <kbd
-            className="px-1 py-px rounded text-[10px] font-mono"
+            className="px-1 py-px rounded text-tiny font-mono"
             style={{ backgroundColor: "var(--btn-regular-bg)", color: "var(--text-secondary)" }}
           >
             Shift + ↵
@@ -179,7 +179,7 @@ export default function CustomPromptPanel({
             className="w-1.5 h-1.5 rounded-full"
             style={{ backgroundColor: "var(--primary)" }}
           />
-          <span className="text-[11px]" style={{ color: "var(--text-tertiary)" }}>
+          <span className="text-tiny" style={{ color: "var(--text-tertiary)" }}>
             AI feedback on
           </span>
         </div>

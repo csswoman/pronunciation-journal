@@ -25,9 +25,9 @@ export default function EntryHeader({
   onClose,
 }: EntryHeaderProps) {
   return (
-    <div className="sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-6 flex justify-between items-start">
+    <div className="sticky top-0 bg-surface-raised border-b border-border-subtle p-6 flex justify-between items-start">
       <div className="flex items-center gap-3 flex-1">
-        <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 capitalize">
+        <h2 className="text-3xl font-bold text-fg capitalize">
           {currentEntry.word}
         </h2>
         <div className="flex items-center gap-2">
@@ -47,13 +47,13 @@ export default function EntryHeader({
         {!isEditing ? (
           <Button
             onClick={onEditStart}
-            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+            className="p-2 hover:bg-surface-sunken rounded-lg transition-colors"
             aria-label="Edit"
             title="Edit"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6 text-gray-500 dark:text-gray-400"
+              className="h-6 w-6 text-fg-subtle"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -76,7 +76,7 @@ export default function EntryHeader({
             </Button>
             <Button
               onClick={onCancel}
-              className="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg transition-colors text-sm font-medium"
+              className="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-on-primary rounded-lg transition-colors text-sm font-medium"
             >
               Cancel
             </Button>
@@ -84,12 +84,12 @@ export default function EntryHeader({
         )}
         <Button
           onClick={onClose}
-          className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+          className="p-2 hover:bg-surface-sunken rounded-lg transition-colors"
           aria-label="Close"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="h-6 w-6 text-gray-500 dark:text-gray-400"
+            className="h-6 w-6 text-fg-subtle"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"

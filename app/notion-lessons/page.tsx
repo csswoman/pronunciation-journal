@@ -52,7 +52,7 @@ export default function NotionLessonsIndexPage() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[var(--page-bg)]">
         <div className="text-center">
-          <p className="text-red-600 mb-4">{error}</p>
+          <p className="text-error mb-4">{error}</p>
           <Link href="/" className="text-[var(--primary)] font-semibold">
             Back to home
           </Link>
@@ -99,3 +99,4 @@ export default function NotionLessonsIndexPage() {
     </div>
   );
 }
+

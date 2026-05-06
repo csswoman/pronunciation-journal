@@ -74,8 +74,8 @@ export function CandidateBubble({
                 <AccuracyRing accuracy={turnResult.score.accuracy} />
                 <div className="min-w-0">
                   <p className="text-xs font-semibold" style={{
-                    color: turnResult.score.accuracy >= threshold ? "#22c55e"
-                      : turnResult.score.accuracy >= threshold * 0.75 ? "#f59e0b" : "#ef4444",
+                    color: turnResult.score.accuracy >= threshold ? "var(--score-excellent)"
+                      : turnResult.score.accuracy >= threshold * 0.75 ? "var(--score-acceptable)" : "var(--score-poor)",
                   }}>
                     {turnResult.score.accuracy >= 90 ? "Excellent!" :
                       turnResult.score.accuracy >= threshold ? "Meets the bar." :

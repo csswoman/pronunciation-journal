@@ -114,7 +114,7 @@ function EntryRow({
           <div className="flex items-center gap-2 flex-wrap">
             <span className="text-sm font-semibold text-[var(--deep-text)]">{entry.word}</span>
             {pos && (
-              <span className="text-[10px] px-1.5 py-0.5 rounded-full border border-[var(--line-divider)] text-[var(--text-tertiary)] font-medium">
+              <span className="text-tiny px-1.5 py-0.5 rounded-full border border-[var(--line-divider)] text-[var(--text-tertiary)] font-medium">
                 {pos}
               </span>
             )}
@@ -154,7 +154,7 @@ function EntryRow({
           </button>
           <button
             onClick={() => onRemove(entry.id)}
-            className="p-1.5 rounded-lg text-[var(--text-tertiary)] hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+            className="p-1.5 rounded-lg text-[var(--text-tertiary)] hover:text-error hover:bg-error-soft transition-colors"
             title="Remove"
           >
             <Trash2 size={13} />
@@ -166,7 +166,7 @@ function EntryRow({
       {expanded && (
         <div className="px-3 pb-3 space-y-3 border-t border-[var(--line-divider)] pt-3 mx-1">
           <div>
-            <p className="text-[10px] font-semibold uppercase tracking-widest text-[var(--text-tertiary)] mb-1.5">
+            <p className="text-tiny font-semibold uppercase tracking-widest text-[var(--text-tertiary)] mb-1.5">
               Meaning / definition
             </p>
             <textarea
@@ -179,7 +179,7 @@ function EntryRow({
             />
           </div>
           <div>
-            <p className="text-[10px] font-semibold uppercase tracking-widest text-[var(--text-tertiary)] mb-1.5">
+            <p className="text-tiny font-semibold uppercase tracking-widest text-[var(--text-tertiary)] mb-1.5">
               Phrases / examples
             </p>
             <textarea
@@ -200,7 +200,7 @@ function EntryRow({
             <button
               onClick={handleSave}
               disabled={saving}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-[var(--primary)] text-white hover:opacity-90 disabled:opacity-50 transition-opacity"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-[var(--primary)] text-on-primary hover:opacity-90 disabled:opacity-50 transition-opacity"
             >
               {saving ? "Saving…" : <><Check size={12} /> Save</>}
             </button>
@@ -424,7 +424,7 @@ export function ManageDrawer({ deck, onClose, onWordCountChange }: ManageDrawerP
                   {selected.size > 0 && (
                     <button
                       onClick={handleBulkRemove}
-                      className="ml-auto flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors"
+                      className="ml-auto flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold text-warning bg-warning-soft hover:bg-warning-soft transition-colors"
                     >
                       <Trash2 size={12} />
                       Remove {selected.size}
@@ -449,7 +449,7 @@ export function ManageDrawer({ deck, onClose, onWordCountChange }: ManageDrawerP
                     <p className="text-xs text-[var(--text-tertiary)] mt-1">Add words manually or use AI suggestions</p>
                   </div>
                   <div className="flex gap-2">
-                    <button onClick={() => setTab("add")} className="text-xs px-3 py-1.5 rounded-lg bg-[var(--primary)] text-white font-medium hover:opacity-90">
+                    <button onClick={() => setTab("add")} className="text-xs px-3 py-1.5 rounded-lg bg-[var(--primary)] text-on-primary font-medium hover:opacity-90">
                       Add word
                     </button>
                     <button onClick={() => setTab("ai")} className="text-xs px-3 py-1.5 rounded-lg border border-[var(--line-divider)] text-[var(--deep-text)] font-medium hover:bg-[var(--btn-regular-bg)]">
@@ -481,7 +481,7 @@ export function ManageDrawer({ deck, onClose, onWordCountChange }: ManageDrawerP
           {tab === "add" && (
             <div className="p-4 space-y-4">
               <div>
-                <label className="text-[10px] font-semibold uppercase tracking-widest text-[var(--text-tertiary)] block mb-1.5">Word</label>
+                <label className="text-tiny font-semibold uppercase tracking-widest text-[var(--text-tertiary)] block mb-1.5">Word</label>
                 <input
                   value={manualWord}
                   onChange={e => setManualWord(e.target.value)}
@@ -514,7 +514,7 @@ export function ManageDrawer({ deck, onClose, onWordCountChange }: ManageDrawerP
               <button
                 onClick={() => handleAddWord()}
                 disabled={!manualWord.trim() || addingWord}
-                className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-[var(--primary)] text-white text-sm font-semibold hover:opacity-90 disabled:opacity-40 transition-opacity"
+                className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-[var(--primary)] text-on-primary text-sm font-semibold hover:opacity-90 disabled:opacity-40 transition-opacity"
               >
                 <Plus size={16} />
                 {addingWord ? "Adding…" : "Add Word"}
@@ -522,7 +522,7 @@ export function ManageDrawer({ deck, onClose, onWordCountChange }: ManageDrawerP
 
               {entries.length > 0 && (
                 <div className="pt-2 border-t border-[var(--line-divider)]">
-                  <p className="text-[10px] font-semibold uppercase tracking-widest text-[var(--text-tertiary)] mb-2">Recently added</p>
+                  <p className="text-tiny font-semibold uppercase tracking-widest text-[var(--text-tertiary)] mb-2">Recently added</p>
                   <div className="space-y-0.5">
                     {entries.slice(-3).reverse().map(entry => (
                       <div key={entry.id} className="flex items-center gap-2 px-2 py-1.5 rounded-lg">

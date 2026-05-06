@@ -20,7 +20,7 @@ export default function Card({
   ...rest
 }: CardProps) {
   const baseClasses =
-    "rounded-2xl border border-[var(--line-divider)] bg-[var(--card-bg)] transition-all duration-200";
+    "rounded-lg border border-border-subtle bg-surface-raised transition-all duration-200";
 
   const variantMap = {
     default: "p-6",

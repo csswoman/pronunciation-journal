@@ -14,20 +14,20 @@ function getChipStyle(acc: number, isBest: boolean): React.CSSProperties {
   if (isBest) {
     return {
       backgroundColor: "var(--admonitions-color-tip)",
-      color: "white",
+      color: "var(--on-primary)",
       borderColor: "var(--admonitions-color-tip)",
     };
   }
   if (acc >= 60) {
     return {
       backgroundColor: "var(--admonitions-color-warning)",
-      color: "white",
+      color: "var(--on-primary)",
       borderColor: "var(--admonitions-color-warning)",
     };
   }
   return {
     backgroundColor: "var(--admonitions-color-caution)",
-    color: "white",
+    color: "var(--on-primary)",
     borderColor: "var(--admonitions-color-caution)",
   };
 }

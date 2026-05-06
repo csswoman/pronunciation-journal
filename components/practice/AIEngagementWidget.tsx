@@ -95,10 +95,10 @@ interface TileConfig {
 }
 
 function statusColor(value: number, invert: boolean): string {
-  const good    = "var(--success, #22c55e)";
+  const good    = "var(--score-excellent)";
   const neutral = "var(--primary)";
-  const warn    = "#f59e0b";
-  const bad     = "#ef4444";
+  const warn    = "var(--score-acceptable)";
+  const bad     = "var(--score-poor)";
 
   if (!invert) {
     if (value >= 70) return good;
@@ -134,7 +134,7 @@ function Tile({ label, value, unit, invert, empty, hint }: TileConfig) {
       }}
     >
       <p
-        className="text-[10px] font-bold uppercase tracking-[0.2em] truncate"
+        className="text-tiny font-bold uppercase tracking-[0.2em] truncate"
         style={{ color: "var(--text-tertiary)" }}
       >
         {label}
@@ -159,7 +159,7 @@ function Tile({ label, value, unit, invert, empty, hint }: TileConfig) {
       </div>
 
       <p
-        className="text-[11px] leading-snug"
+        className="text-tiny leading-snug"
         style={{ color: "var(--text-secondary)" }}
       >
         {hasData ? hint(value!) : empty}
@@ -206,7 +206,7 @@ export default function AIEngagementWidget() {
       label:    "Actual difficulty",
       value:    metrics.difficulty,
       unit:     "%",
-      barColor: "#f59e0b",
+      barColor: "var(--score-acceptable)",
       invert:   true,
       empty:    "Answer an exercise to see this",
       hint:     v => v <= 10 ? "Low — exercises feel well-calibrated" : v <= 30 ? "Medium — some topics need reinforcement" : "High — content may be too hard right now",
@@ -215,7 +215,7 @@ export default function AIEngagementWidget() {
       label:    "Friction",
       value:    metrics.friction,
       unit:     "%",
-      barColor: "#ef4444",
+      barColor: "var(--score-poor)",
       invert:   true,
       empty:    "No exercises shown yet",
       hint:     v => v <= 10 ? "Low — you're engaging with exercises" : v <= 30 ? "Some exercises go unanswered" : "High — many exercises are being skipped",
@@ -224,7 +224,7 @@ export default function AIEngagementWidget() {
       label:    "Natural flow",
       value:    metrics.naturalFlow,
       unit:     "%",
-      barColor: "var(--success, #22c55e)",
+      barColor: "var(--score-excellent)",
       invert:   false,
       empty:    "No next events yet",
       hint:     v => v >= 70 ? "Strong — sessions flow automatically" : v >= 40 ? "Mixed — auto-next and manual are balanced" : "Low — you're advancing manually most of the time",
@@ -250,7 +250,7 @@ export default function AIEngagementWidget() {
     >
       <div className="mb-4">
         <p
-          className="text-[10px] font-bold uppercase tracking-[0.24em]"
+          className="text-tiny font-bold uppercase tracking-[0.24em]"
           style={{ color: "var(--primary)" }}
         >
           AI Practice

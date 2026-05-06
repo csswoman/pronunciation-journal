@@ -24,7 +24,7 @@ export default function HomeHero() {
         <h1 className="font-display text-3xl lg:text-4xl leading-tight tracking-tight text-[var(--deep-text)] mb-1">
           Welcome back, <em className="not-italic text-[var(--primary)]">Karla!</em> 👋
         </h1>
-        <p className="text-[15px] text-[var(--text-secondary)] mb-6 leading-relaxed">
+        <p className="text-body text-[var(--text-secondary)] mb-6 leading-relaxed">
           Keep going! You&apos;re doing great with your English journey.
         </p>
         <div className="flex items-center gap-3 flex-wrap">
@@ -53,3 +53,4 @@ export default function HomeHero() {
     </div>
   );
 }
+

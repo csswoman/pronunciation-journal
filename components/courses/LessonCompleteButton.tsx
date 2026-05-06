@@ -20,8 +20,8 @@ export default function LessonCompleteButton({ courseSlug, lessonSlug }: Props) 
       size="md"
       icon={
         <span
-          className="flex h-4 w-4 items-center justify-center rounded-full text-[10px] transition-all duration-200"
-          style={completed ? { background: "rgba(255,255,255,0.2)", color: "white" } : { background: "var(--line-divider)", color: "transparent" }}
+          className="flex h-4 w-4 items-center justify-center rounded-full text-tiny transition-all duration-200"
+          style={completed ? { background: "var(--overlay-light)", color: "var(--on-primary)" } : { background: "var(--line-divider)", color: "transparent" }}
         >
           ✓
         </span>

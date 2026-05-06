@@ -1,17 +1,16 @@
-import Badge from "@/components/ui/Badge";
 import type { Difficulty } from "@/lib/types";
 
-const variantMap = {
-  easy:   "success",
-  medium: "warning",
-  hard:   "error",
-} as const;
+const dotClass: Record<Difficulty, string> = {
+  easy:   "dot-success",
+  medium: "dot-warning",
+  hard:   "dot-danger",
+};
 
-const labelMap = {
+const labelMap: Record<Difficulty, string> = {
   easy:   "Easy",
   medium: "Mid",
   hard:   "Hard",
-} as const;
+};
 
 interface DifficultyPillProps {
   difficulty: Difficulty;
@@ -20,11 +19,9 @@ interface DifficultyPillProps {
 
 export default function DifficultyPill({ difficulty, className }: DifficultyPillProps) {
   return (
-    <Badge
-      label={labelMap[difficulty]}
-      variant={variantMap[difficulty]}
-      dot
-      className={className}
-    />
+    <span className={["badge", className].filter(Boolean).join(" ")}>
+      <span className={dotClass[difficulty]} />
+      {labelMap[difficulty]}
+    </span>
   );
 }

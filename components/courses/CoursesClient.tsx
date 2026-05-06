@@ -77,7 +77,7 @@ return courses.filter((course) => {
         {/* Results count */}
         {(query || level !== "all") && (
           <div className="px-4 pt-3 -mb-1">
-            <p className="text-[13px] text-[var(--text-tertiary)]">
+            <p className="text-caption text-[var(--text-tertiary)]">
               {filteredCourses.length === 0
                 ? "No courses match your filters."
                 : `${filteredCourses.length} course${filteredCourses.length === 1 ? "" : "s"} found`}
@@ -91,20 +91,20 @@ return courses.filter((course) => {
             <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
               {Array.from({ length: 6 }).map((_, i) => (
                 <div key={i} className="rounded-xl border border-[var(--line-divider)] h-48 overflow-hidden relative" style={{ background: "var(--btn-regular-bg)" }}>
-                  <div className="absolute inset-0 -translate-x-full animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+                  <div className="absolute inset-0 -translate-x-full animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-overlay-light to-transparent" />
                 </div>
               ))}
             </div>
           ) : filteredCourses.length === 0 ? (
             <div className="flex min-h-[240px] items-center justify-center rounded-xl border border-dashed border-[var(--line-divider)] px-8 text-center">
               <div>
-                <p className="text-[15px] font-semibold text-[var(--deep-text)]">No courses found</p>
-                <p className="mt-2 text-[13px] text-[var(--text-secondary)]">
+                <p className="text-body-sm font-semibold text-[var(--deep-text)]">No courses found</p>
+                <p className="mt-2 text-caption text-[var(--text-secondary)]">
                   Try a different search term or clear the level filter.
                 </p>
                 <Button
                   onClick={() => { setQuery(""); setLevel("all"); }}
-                  className="mt-4 rounded-lg px-4 py-2 text-[13px] font-medium transition-colors"
+                  className="mt-4 rounded-lg px-4 py-2 text-caption font-medium transition-colors"
                   style={{ background: "var(--btn-regular-bg)", color: "var(--text-secondary)" }}
                 >
                   Clear filters

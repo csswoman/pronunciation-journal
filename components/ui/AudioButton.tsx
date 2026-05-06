@@ -40,7 +40,7 @@ export default function AudioButton({ audioUrl, variant }: AudioButtonProps) {
       ) : (
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          className="h-6 w-6 text-green-600 dark:text-green-400"
+          className="h-6 w-6 text-success dark:text-success"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
@@ -56,3 +56,5 @@ export default function AudioButton({ audioUrl, variant }: AudioButtonProps) {
     </Button>
   );
 }
+
+

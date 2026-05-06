@@ -6,7 +6,7 @@ interface Props {
 export function AccuracyRing({ accuracy, size = 56 }: Props) {
   const r = (size - 8) / 2;
   const circ = 2 * Math.PI * r;
-  const color = accuracy >= 80 ? "#22c55e" : accuracy >= 55 ? "#f59e0b" : "#ef4444";
+  const color = accuracy >= 80 ? "var(--score-excellent)" : accuracy >= 55 ? "var(--score-acceptable)" : "var(--score-poor)";
 
   return (
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="flex-shrink-0">

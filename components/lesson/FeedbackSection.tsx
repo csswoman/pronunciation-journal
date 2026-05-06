@@ -44,7 +44,7 @@ export default function FeedbackSection({
         </Button>
         <Button
           onClick={onNext}
-          className="px-6 py-3 rounded-xl text-white font-medium transition-colors"
+          className="px-6 py-3 rounded-xl text-on-primary font-medium transition-colors"
           style={{ backgroundColor: 'var(--primary)' }}
           onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--btn-regular-bg-hover)')}
           onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'var(--primary)')}

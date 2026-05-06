@@ -133,7 +133,7 @@ export default function BottomNav({ className = "" }: BottomNavProps) {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl text-[10px] font-semibold transition-all ${
+              className={`flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl text-tiny font-semibold transition-all ${
                 active
                   ? "text-[var(--primary)] bg-[var(--btn-regular-bg)]"
                   : "text-[var(--text-tertiary)]"
@@ -146,7 +146,7 @@ export default function BottomNav({ className = "" }: BottomNavProps) {
         })}
         <button
           onClick={() => setShowMenu(!showMenu)}
-          className={`flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl text-[10px] font-semibold transition-all ${
+          className={`flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl text-tiny font-semibold transition-all ${
             showMenu
               ? "text-[var(--primary)] bg-[var(--btn-regular-bg)]"
               : "text-[var(--text-tertiary)]"
@@ -161,4 +161,5 @@ export default function BottomNav({ className = "" }: BottomNavProps) {
     </>
   );
 }
+
 

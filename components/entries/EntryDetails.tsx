@@ -30,11 +30,11 @@ export default function EntryDetails({
   }
 
   return (
-    <div className="space-y-4 border-t border-gray-200 dark:border-gray-700 pt-4">
+    <div className="space-y-4 border-t border-border-subtle pt-4">
       <div>
         <label
           htmlFor="audioUrl"
-          className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+          className="block text-sm font-medium text-fg-muted mb-1"
         >
           Audio URL
         </label>
@@ -43,7 +43,7 @@ export default function EntryDetails({
           id="audioUrl"
           value={audioUrl}
           onChange={(e) => setAudioUrl(e.target.value)}
-          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-accent focus:border-accent"
+          className="w-full px-3 py-2 border border-border-default rounded-md shadow-sm bg-surface-sunken text-fg focus:ring-accent focus:border-accent"
           placeholder="https://..."
         />
       </div>
@@ -51,7 +51,7 @@ export default function EntryDetails({
       <div>
         <label
           htmlFor="difficulty"
-          className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+          className="block text-sm font-medium text-fg-muted mb-1"
         >
           Difficulty
         </label>
@@ -59,7 +59,7 @@ export default function EntryDetails({
           id="difficulty"
           value={difficulty}
           onChange={(e) => setDifficulty(e.target.value as Difficulty)}
-          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-accent focus:border-accent"
+          className="w-full px-3 py-2 border border-border-default rounded-md shadow-sm bg-surface-sunken text-fg focus:ring-accent focus:border-accent"
         >
           <option value="easy">Easy</option>
           <option value="medium">Medium</option>
@@ -70,7 +70,7 @@ export default function EntryDetails({
       <div>
         <label
           htmlFor="notes"
-          className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+          className="block text-sm font-medium text-fg-muted mb-1"
         >
           Notes
         </label>
@@ -79,7 +79,7 @@ export default function EntryDetails({
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
           rows={3}
-          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-accent focus:border-accent"
+          className="w-full px-3 py-2 border border-border-default rounded-md shadow-sm bg-surface-sunken text-fg focus:ring-accent focus:border-accent"
           placeholder="Add your notes here..."
         />
       </div>
@@ -87,7 +87,7 @@ export default function EntryDetails({
       <div>
         <label
           htmlFor="tags"
-          className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+          className="block text-sm font-medium text-fg-muted mb-1"
         >
           Tags (comma-separated)
         </label>
@@ -96,7 +96,7 @@ export default function EntryDetails({
           id="tags"
           value={tags}
           onChange={(e) => setTags(e.target.value)}
-          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-accent focus:border-accent"
+          className="w-full px-3 py-2 border border-border-default rounded-md shadow-sm bg-surface-sunken text-fg focus:ring-accent focus:border-accent"
           placeholder="vowels, stress, greetings"
         />
       </div>

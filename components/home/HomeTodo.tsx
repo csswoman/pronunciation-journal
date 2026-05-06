@@ -49,7 +49,7 @@ export default function HomeTodo() {
             style={{ width: `${progress}%` }}
           />
         </div>
-        <div className="flex justify-between text-[11px] text-[var(--text-tertiary)]">
+        <div className="flex justify-between text-tiny text-[var(--text-tertiary)]">
           <span>{progress}% complete</span>
           <span>~{remaining} min left</span>
         </div>
@@ -85,7 +85,7 @@ export default function HomeTodo() {
               ) : item.featured ? (
                 <Zap size={11} />
               ) : (
-                <span className="text-[10px] font-semibold leading-none">·</span>
+                <span className="text-tiny font-semibold leading-none">·</span>
               )}
             </div>
 
@@ -99,7 +99,7 @@ export default function HomeTodo() {
               </p>
               <div className="flex items-center gap-1.5 mt-0.5">
                 <Badge label={item.tag} variant={item.tagVariant} />
-                <span className="text-[11px] text-[var(--text-tertiary)]">{item.minutes} min</span>
+                <span className="text-tiny text-[var(--text-tertiary)]">{item.minutes} min</span>
               </div>
             </div>
 
@@ -107,7 +107,7 @@ export default function HomeTodo() {
             {!item.done && (
               <button
                 className={[
-                  "shrink-0 flex items-center gap-1 text-[11px] font-semibold px-2.5 py-1 rounded-lg transition-all",
+                  "shrink-0 flex items-center gap-1 text-tiny font-semibold px-2.5 py-1 rounded-lg transition-all",
                   item.featured
                     ? "bg-[var(--primary)] text-[var(--primary-foreground)] hover:bg-[var(--primary-hover)]"
                     : "text-[var(--text-tertiary)] opacity-0 group-hover:opacity-100 hover:text-[var(--text-primary)]",

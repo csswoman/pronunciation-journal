@@ -44,7 +44,7 @@ function StatTile({
         {icon}
       </div>
       <div>
-        <p className="text-[11px] font-semibold uppercase tracking-[0.2em]" style={{ color: "var(--text-secondary)" }}>
+        <p className="text-tiny font-semibold uppercase tracking-[0.2em]" style={{ color: "var(--text-secondary)" }}>
           {label}
         </p>
         <p className="mt-0.5 text-2xl font-black tracking-tight" style={{ color: "var(--deep-text)" }}>
@@ -131,3 +131,4 @@ export function StatTiles({ stats, consistencyScore, weeklyAccuracy, weeklyXp, n
     </div>
   );
 }
+

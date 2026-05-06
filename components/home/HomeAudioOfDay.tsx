@@ -36,17 +36,17 @@ export default function HomeAudioOfDay({
   const BAR_HEIGHTS = [8, 14, 20, 16, 26, 20, 30, 24, 18, 28, 22, 34, 28, 20, 14, 22, 30, 24, 18, 12, 20, 26, 18, 14, 10];
 
   return (
-    <Card variant="compact" className="gap-5 !bg-[#0f172a] border-[#1e293b]">
+    <Card variant="compact" className="gap-5">
       <div className="flex items-center gap-2">
-        <Headphones size={14} className="text-cyan-400" />
-        <span className="text-[10px] font-bold tracking-widest text-cyan-400 uppercase">
+        <Headphones size={14} className="text-[var(--primary)]" />
+        <span className="text-tiny font-bold tracking-widest text-[var(--primary)] uppercase">
           Audio of the day
         </span>
       </div>
 
       <div>
-        <p className="text-base font-bold text-white leading-snug">{title}</p>
-        <p className="text-xs text-slate-400 mt-1">
+        <p className="text-base font-bold text-fg leading-snug">{title}</p>
+        <p className="text-xs text-fg-subtle mt-1">
           {source} · {duration} · {level}
         </p>
       </div>
@@ -69,18 +69,18 @@ export default function HomeAudioOfDay({
       <div className="flex items-center gap-4">
         <button
           onClick={toggle}
-          className="w-11 h-11 rounded-full bg-cyan-400 hover:bg-cyan-300 flex items-center justify-center transition-colors shrink-0"
+          className="w-11 h-11 rounded-full bg-[var(--primary)] hover:opacity-90 flex items-center justify-center transition-colors shrink-0"
           aria-label={playing ? "Pause" : "Play"}
         >
           {playing ? (
-            <Pause size={18} className="text-slate-900" fill="currentColor" />
+            <Pause size={18} className="text-on-primary" fill="currentColor" />
           ) : (
-            <Play size={18} className="text-slate-900 ml-0.5" fill="currentColor" />
+            <Play size={18} className="text-on-primary ml-0.5" fill="currentColor" />
           )}
         </button>
         <div>
-          <p className="text-xs text-slate-300 font-medium">With transcript</p>
-          <p className="text-xs text-slate-500">+ vocabulary helper</p>
+          <p className="text-xs text-fg font-medium">With transcript</p>
+          <p className="text-xs text-fg-muted">+ vocabulary helper</p>
         </div>
       </div>
     </Card>

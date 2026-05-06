@@ -83,8 +83,8 @@ export function TodayActivity({ todayProgress }: Props) {
             </svg>
             <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
               <span className="text-xl font-black" style={{ color: "var(--deep-text)" }}>{totalAttempts}</span>
-              <span className="text-[10px] font-semibold" style={{ color: "var(--text-secondary)" }}>Attempts</span>
-              <span className="text-[10px]" style={{ color: "var(--text-tertiary)" }}>{accuracy}% acc</span>
+              <span className="text-tiny font-semibold" style={{ color: "var(--text-secondary)" }}>Attempts</span>
+              <span className="text-tiny" style={{ color: "var(--text-tertiary)" }}>{accuracy}% acc</span>
             </div>
           </div>
 
@@ -130,3 +130,4 @@ export function TodayActivity({ todayProgress }: Props) {
     </div>
   );
 }
+

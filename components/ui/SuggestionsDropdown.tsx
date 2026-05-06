@@ -19,13 +19,13 @@ export default function SuggestionsDropdown({
   }
 
   return (
-    <div className="absolute z-10 w-full mt-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+    <div className="absolute z-10 w-full mt-1 bg-surface-raised border border-border-default rounded-lg shadow-lg max-h-60 overflow-y-auto">
       {suggestions.map((suggestion, index) => (
         <Button
           key={index}
           type="button"
           onClick={() => onSuggestionClick(suggestion)}
-          className="w-full text-left px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors text-gray-900 dark:text-gray-100 border-b border-gray-200 dark:border-gray-600 last:border-b-0"
+          className="w-full text-left px-4 py-3 hover:bg-surface-sunken transition-colors text-fg border-b border-border-subtle last:border-b-0"
         >
           <div className="flex flex-col gap-1">
             <div className="flex items-center justify-between">
@@ -36,7 +36,7 @@ export default function SuggestionsDropdown({
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={(e) => e.stopPropagation()}
-                  className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300"
+                  className="text-info hover:text-info"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -51,7 +51,7 @@ export default function SuggestionsDropdown({
               )}
             </div>
             {suggestion.ipa && (
-              <span className="text-xs text-gray-600 dark:text-gray-400 font-mono">
+              <span className="text-xs text-fg-muted font-mono">
                 {suggestion.ipa}
               </span>
             )}
@@ -61,3 +61,5 @@ export default function SuggestionsDropdown({
     </div>
   );
 }
+
+

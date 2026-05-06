@@ -34,7 +34,7 @@ export default function PhonemeCard({
       style={{
         backgroundColor: isSelected ? "var(--primary)" : "var(--card-bg)",
         borderColor: isSelected ? "var(--primary)" : "var(--line-divider)",
-        color: isSelected ? "white" : "var(--text-primary)",
+        color: isSelected ? "var(--on-primary)" : "var(--text-primary)",
       }}
     >
       <span className="block w-fit mb-1">
@@ -46,21 +46,21 @@ export default function PhonemeCard({
           />
         ) : (
           <span
-            className="text-[8px] uppercase font-bold px-1.5 py-0.5 rounded-full"
-            style={{ backgroundColor: "rgba(255,255,255,0.2)", color: "white" }}
+            className="text-tiny uppercase font-bold px-1.5 py-0.5 rounded-full"
+            style={{ backgroundColor: "var(--overlay-light)", color: "var(--on-primary)" }}
           >
             {TYPE_LABEL[phoneme.type]}
           </span>
         )}
       </span>
 
-      <span className="text-2xl font-bold font-ipa block mb-1" style={{ color: isSelected ? "white" : "var(--text-primary)" }}>
+      <span className="text-2xl font-bold font-ipa block mb-1" style={{ color: isSelected ? "var(--on-primary)" : "var(--text-primary)" }}>
         {phoneme.symbol}
       </span>
-      <span className="text-[10px] font-bold uppercase tracking-wider block mb-2" style={{ color: isSelected ? "rgba(255,255,255,0.6)" : "var(--primary)" }}>
+      <span className="text-tiny font-bold uppercase tracking-wider block mb-2" style={{ color: isSelected ? "var(--overlay-strong)" : "var(--primary)" }}>
         {phoneme.category}
       </span>
-      <span className="text-xs font-medium" style={{ color: isSelected ? "rgba(255,255,255,0.5)" : "var(--text-secondary)" }}>
+      <span className="text-xs font-medium" style={{ color: isSelected ? "var(--overlay-medium)" : "var(--text-secondary)" }}>
         {phoneme.example}
       </span>
 
@@ -76,10 +76,10 @@ export default function PhonemeCard({
         role="button"
         aria-label={`Hear "${phoneme.example}"`}
         onClick={onPlay}
-        className="absolute top-2 right-2 w-6 h-6 rounded-full flex items-center justify-center text-[10px] transition-opacity duration-150 opacity-0 group-hover:opacity-100"
+        className="absolute top-2 right-2 w-6 h-6 rounded-full flex items-center justify-center text-tiny transition-opacity duration-150 opacity-0 group-hover:opacity-100"
         style={{
-          backgroundColor: isSelected ? "rgba(255,255,255,0.2)" : "var(--btn-regular-bg)",
-          color: isSelected ? "white" : "var(--primary)",
+          backgroundColor: isSelected ? "var(--overlay-light)" : "var(--btn-regular-bg)",
+          color: isSelected ? "var(--on-primary)" : "var(--primary)",
         }}
       >
         ▶

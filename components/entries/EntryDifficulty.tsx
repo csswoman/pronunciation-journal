@@ -10,10 +10,10 @@ export interface EntryDifficultyProps {
   onDifficultyChange: (difficulty: Difficulty) => void;
 }
 
-const DIFFICULTY_STYLES: Record<Difficulty, string> = {
-  easy: "bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200",
-  medium: "bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200",
-  hard: "bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200",
+const DIFFICULTY_DOTS: Record<Difficulty, string> = {
+  easy: "dot-success",
+  medium: "dot-warning",
+  hard: "dot-warning",
 };
 
 export default function EntryDifficulty({
@@ -24,13 +24,12 @@ export default function EntryDifficulty({
 }: EntryDifficultyProps) {
   return (
     <div>
-      <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+      <label className="block text-sm font-semibold text-fg-muted mb-2">
         Difficulty:
       </label>
       {!isEditing ? (
-        <span
-          className={`inline-block px-4 py-2 rounded-full text-sm font-medium ${DIFFICULTY_STYLES[currentDifficulty]}`}
-        >
+        <span className="badge">
+          <span className={DIFFICULTY_DOTS[currentDifficulty]} />
           {currentDifficulty}
         </span>
       ) : (
@@ -40,7 +39,7 @@ export default function EntryDifficulty({
               key={diff}
               onClick={() => onDifficultyChange(diff)}
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                editedDifficulty === diff ? "text-white" : `${DIFFICULTY_STYLES[diff]} hover:opacity-80`
+                editedDifficulty === diff ? "text-on-primary" : "badge hover:opacity-80"
               }`}
               style={
                 editedDifficulty === diff
@@ -48,6 +47,7 @@ export default function EntryDifficulty({
                   : {}
               }
             >
+              {editedDifficulty !== diff && <span className={DIFFICULTY_DOTS[diff]} />}
               {diff.charAt(0).toUpperCase() + diff.slice(1)}
             </Button>
           ))}

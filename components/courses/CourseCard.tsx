@@ -69,7 +69,7 @@ export default function CourseCard({ course, priority = false }: CourseCardProps
   return (
     <Link
       href={`/courses/${course.slug}`}
-      className="group flex flex-col h-full w-full rounded-xl border border-[var(--line-divider)] bg-[var(--card-bg)] overflow-hidden transition-all duration-200 hover:shadow-sm hover:border-[var(--line-color)] hover:-translate-y-px"
+      className="group flex flex-col h-full w-full rounded-lg border border-border-subtle bg-surface-raised overflow-hidden transition-all duration-200 hover:border-border-default hover:-translate-y-px"
     >
       {/* Cover — decorative only */}
       <div
@@ -91,7 +91,7 @@ export default function CourseCard({ course, priority = false }: CourseCardProps
           />
         ) : (
           <>
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.12),transparent_60%)]" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,oklch(1_0_0_/_0.12),transparent_60%)]" />
             <div className="absolute inset-0 flex items-center justify-center">
               <Image
                 src={illustration}
@@ -108,13 +108,13 @@ export default function CourseCard({ course, priority = false }: CourseCardProps
       {/* Body */}
       <div className="flex flex-1 flex-col p-4 gap-2">
         {/* Title */}
-        <h4 className="text-[15px] font-semibold leading-snug text-[var(--deep-text)] mb-0">
+        <h4 className="text-body font-semibold leading-snug text-[var(--deep-text)] mb-0">
           {course.title}
         </h4>
 
         {/* Description */}
         {course.description && (
-          <p className="line-clamp-2 text-[13px] leading-5 text-[var(--text-secondary)]">
+          <p className="line-clamp-2 text-caption leading-5 text-[var(--text-secondary)]">
             {course.description}
           </p>
         )}
@@ -124,7 +124,7 @@ export default function CourseCard({ course, priority = false }: CourseCardProps
           <div className="pt-1">
             <ProgressBar
               value={progress}
-              color={isCompleted ? "oklch(.65 .14 150)" : "var(--primary)"}
+              color={isCompleted ? "var(--success)" : "var(--primary)"}
               height="xs"
               showLabel
             />
@@ -134,8 +134,8 @@ export default function CourseCard({ course, priority = false }: CourseCardProps
         {/* Footer: metadata left, CTA right */}
         <div className="mt-auto flex items-center justify-between gap-2 pt-3">
           {/* Metadata: badge + lessons */}
-          <div className="flex items-center gap-2 text-[11px] text-[var(--text-tertiary)]">
-            <span className="rounded px-1.5 py-0.5 bg-[var(--btn-regular-bg)] font-medium tracking-wide">
+          <div className="flex items-center gap-2 text-tiny text-[var(--text-tertiary)]">
+            <span className="rounded px-1.5 py-0.5 bg-surface-sunken font-medium tracking-wide">
               {level.label}
             </span>
             {totalLessons > 0 && (
@@ -151,9 +151,9 @@ export default function CourseCard({ course, priority = false }: CourseCardProps
 
           {/* CTA */}
           <span
-            className="flex items-center gap-1 text-[12px] font-semibold transition-all duration-150 group-hover:gap-1.5"
+            className="flex items-center gap-1 text-caption font-semibold transition-all duration-150 group-hover:gap-1.5"
             style={{
-              color: isCompleted ? `oklch(.6 .13 150)` : `var(--primary)`,
+              color: isCompleted ? `var(--success)` : `var(--primary)`,
             }}
           >
             {ctaLabel}

@@ -157,10 +157,10 @@ export default function ReviewPage() {
     return (
       <div className="min-h-screen flex items-center justify-center p-4">
         <div className="text-center space-y-3">
-          <p className="text-red-500">{error}</p>
+          <p className="text-error">{error}</p>
           <Button
             onClick={() => { setError(null); setSessionKey(k => k + 1) }}
-            className="px-4 py-2 rounded-lg text-white" style={{backgroundColor: 'var(--primary)'}}
+            className="px-4 py-2 rounded-lg text-on-primary" style={{backgroundColor: 'var(--primary)'}}
           >
             Retry
           </Button>
@@ -172,7 +172,7 @@ export default function ReviewPage() {
   if (!exercises) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-pulse text-gray-400">Loading review…</div>
+        <div className="animate-pulse text-fg-subtle">Loading review…</div>
       </div>
     )
   }
@@ -206,11 +206,11 @@ export default function ReviewPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-surface-base flex items-center justify-center p-4">
       <div className="w-full max-w-md space-y-4">
         <Button
           onClick={() => router.back()}
-          className="text-sm text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
+          className="text-sm text-fg-subtle hover:text-fg-muted transition-colors"
         >
           ← Back
         </Button>
@@ -229,4 +229,5 @@ export default function ReviewPage() {
     </div>
   )
 }
+
 

@@ -15,10 +15,10 @@ export function AuthForm({ onSubmit, children, isResetMode }: AuthFormProps) {
       {children}
       {!isResetMode && (
         <>
-          <div className="flex items-center gap-3 my-5 text-[11.5px] uppercase tracking-[0.6px]" style={{ color: "#4a5070" }}>
-            <div className="flex-1 h-px" style={{ background: "#1e2330" }} />
+          <div className="flex items-center gap-3 my-5 text-[11.5px] uppercase tracking-[0.6px]" style={{ color: "var(--text-secondary)" }}>
+            <div className="flex-1 h-px" style={{ background: "var(--border-default)" }} />
             O continúa con
-            <div className="flex-1 h-px" style={{ background: "#1e2330" }} />
+            <div className="flex-1 h-px" style={{ background: "var(--border-default)" }} />
           </div>
         </>
       )}

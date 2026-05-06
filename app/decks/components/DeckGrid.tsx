@@ -46,7 +46,7 @@ export function DeckGrid({ decks, counts, onStudy, onManage, onEdit, onDelete, o
             </svg>
           </div>
           <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-[var(--primary)] flex items-center justify-center">
-            <Plus size={14} className="text-white" />
+            <Plus size={14} className="text-on-primary" />
           </div>
         </div>
         <div>

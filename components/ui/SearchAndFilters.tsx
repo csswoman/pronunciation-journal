@@ -71,12 +71,12 @@ export default function SearchAndFilters({
         onChange={(e) => onSearchChange(e.target.value)}
         onKeyDown={handleKeyDown}
         onFocus={() => suggestions.length > 0 && setShowSuggestions(true)}
-        className="w-full sm:w-64 px-4 py-2 pl-10 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:border-transparent transition-colors text-sm"
+        className="w-full sm:w-64 px-4 py-2 pl-10 border border-border-default rounded-lg bg-surface-sunken text-fg placeholder:text-fg-placeholder focus:outline-none focus:ring-2 focus:ring-offset-0 focus:border-transparent transition-colors text-sm"
         style={{ "--tw-ring-color": "var(--color-accent)" } as React.CSSProperties & { "--tw-ring-color"?: string }}
       />
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        className="h-4 w-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500"
+        className="h-4 w-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-fg-subtle"
         viewBox="0 0 20 20"
         fill="currentColor"
       >
@@ -89,12 +89,12 @@ export default function SearchAndFilters({
 
       {/* Suggestions dropdown */}
       {showSuggestions && suggestions.length > 0 && (
-        <div className="absolute z-10 w-full sm:w-64 mt-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+        <div className="absolute z-10 w-full sm:w-64 mt-1 bg-surface-raised border border-border-default rounded-lg shadow-lg max-h-60 overflow-y-auto">
           {suggestions.map((suggestion, index) => (
             <Button
               key={index}
               onClick={() => handleSuggestionClick(suggestion)}
-              className="w-full text-left px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors text-gray-900 dark:text-gray-100 border-b border-gray-200 dark:border-gray-600 last:border-b-0"
+              className="w-full text-left px-4 py-3 hover:bg-surface-sunken transition-colors text-fg border-b border-border-subtle last:border-b-0"
             >
               <div className="flex flex-col gap-1">
                 <div className="flex items-center justify-between">
@@ -105,7 +105,7 @@ export default function SearchAndFilters({
                       target="_blank"
                       rel="noopener noreferrer"
                       onClick={(e) => e.stopPropagation()}
-                      className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300"
+                      className="text-info hover:text-info"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -120,7 +120,7 @@ export default function SearchAndFilters({
                   )}
                 </div>
                 {suggestion.ipa && (
-                  <span className="text-xs text-gray-600 dark:text-gray-400 font-mono">
+                  <span className="text-xs text-fg-muted font-mono">
                     {suggestion.ipa}
                   </span>
                 )}
@@ -132,5 +132,7 @@ export default function SearchAndFilters({
     </div>
   );
 }
+
+
 
 

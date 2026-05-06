@@ -29,7 +29,7 @@ function AccuracyRing({ accuracy }: { accuracy: number }) {
   const r = 28;
   const circ = 2 * Math.PI * r;
   const dash = (accuracy / 100) * circ;
-  const color = accuracy >= 80 ? "var(--accent)" : accuracy >= 55 ? "#f59e0b" : "#ef4444";
+  const color = accuracy >= 80 ? "var(--score-excellent)" : accuracy >= 55 ? "var(--score-acceptable)" : "var(--score-poor)";
 
   return (
     <svg width="80" height="80" viewBox="0 0 80 80">
@@ -54,10 +54,10 @@ function AccuracyRing({ accuracy }: { accuracy: number }) {
 function WordChip({ word, status, tip }: { word: string; status: "correct" | "incorrect" | "missing" | "extra"; tip?: string }) {
   const [showTip, setShowTip] = useState(false);
   const bg: Record<typeof status, string> = {
-    correct: "bg-green-500/10 text-green-700 dark:text-green-400",
-    incorrect: "bg-red-500/10 text-red-600",
-    missing: "bg-amber-500/10 text-amber-600 line-through",
-    extra: "bg-gray-500/10 text-gray-500",
+    correct: "bg-success/10 text-success dark:text-success",
+    incorrect: "bg-warning-soft text-warning",
+    missing: "bg-warning/10 text-warning line-through",
+    extra: "bg-gray-500/10 text-fg-subtle",
   };
 
   return (
@@ -169,11 +169,11 @@ export default function CandidateRecorder({ targetText, difficulty, level, onDon
   if (phase === "idle" || phase === "recording") {
     return (
       <div className="flex flex-col items-center gap-4 py-4">
-        {(error || recError) && <p className="text-xs text-red-500">{error ?? recError}</p>}
+        {(error || recError) && <p className="text-xs text-error">{error ?? recError}</p>}
         <button
           onClick={handleToggleRecording}
           className={`w-16 h-16 rounded-full flex items-center justify-center transition-all shadow-lg ${
-            isRecording ? "bg-red-500 scale-110 animate-pulse" : "hover:scale-105"
+            isRecording ? "bg-warning scale-110 animate-pulse" : "hover:scale-105"
           }`}
           style={!isRecording ? { background: "var(--accent)" } : {}}
         >
@@ -198,7 +198,7 @@ export default function CandidateRecorder({ targetText, difficulty, level, onDon
   if (!result) return null;
 
   const threshold = getThreshold(level, difficulty);
-  const feedbackColor = result.accuracy >= threshold ? "#22c55e" : result.accuracy >= threshold * 0.75 ? "#f59e0b" : "#ef4444";
+  const feedbackColor = result.accuracy >= threshold ? "var(--score-excellent)" : result.accuracy >= threshold * 0.75 ? "var(--score-acceptable)" : "var(--score-poor)";
   const feedbackMsg =
     result.accuracy >= 90 ? "Excellent! Nearly perfect." :
     result.accuracy >= threshold ? "Good — meets the bar for this level." :
@@ -258,3 +258,7 @@ export default function CandidateRecorder({ targetText, difficulty, level, onDon
     </div>
   );
 }
+
+
+
+

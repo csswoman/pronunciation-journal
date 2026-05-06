@@ -88,9 +88,9 @@ export function InterviewResults({ title, turns, results, difficulty, level, onR
     "Keep practicing!";
 
   const gradeColor =
-    totalAccuracy >= 90 ? "#22c55e" :
-    totalAccuracy >= 75 ? "#10b981" :
-    totalAccuracy >= threshold ? "#f59e0b" : "#ef4444";
+    totalAccuracy >= 90 ? "var(--score-excellent)" :
+    totalAccuracy >= 75 ? "var(--score-excellent)" :
+    totalAccuracy >= threshold ? "var(--score-acceptable)" : "var(--score-poor)";
 
   return (
     <div className="flex flex-col h-full max-w-2xl mx-auto w-full">
@@ -130,13 +130,13 @@ export function InterviewResults({ title, turns, results, difficulty, level, onR
           {/* Stats row */}
           <div className="flex gap-6 mt-1">
             <div className="flex flex-col items-center gap-0.5">
-              <CheckCircle2 size={16} style={{ color: "#22c55e" }} />
+              <CheckCircle2 size={16} style={{ color: "var(--score-excellent)" }} />
               <span className="text-lg font-bold" style={{ color: "var(--deep-text)" }}>{passed}</span>
               <span className="text-xs" style={{ color: "var(--muted-text)" }}>Passed</span>
             </div>
             <div className="w-px" style={{ background: "var(--line-divider)" }} />
             <div className="flex flex-col items-center gap-0.5">
-              <AlertCircle size={16} style={{ color: "#ef4444" }} />
+              <AlertCircle size={16} style={{ color: "var(--score-poor)" }} />
               <span className="text-lg font-bold" style={{ color: "var(--deep-text)" }}>{failed}</span>
               <span className="text-xs" style={{ color: "var(--muted-text)" }}>To improve</span>
             </div>
@@ -175,8 +175,8 @@ export function InterviewResults({ title, turns, results, difficulty, level, onR
                     <span
                       className="flex-shrink-0 text-xs font-bold px-2 py-0.5 rounded-lg"
                       style={{
-                        background: ok ? "color-mix(in oklch, #22c55e 15%, transparent)" : "color-mix(in oklch, #ef4444 15%, transparent)",
-                        color: ok ? "#22c55e" : "#ef4444",
+                        background: ok ? "color-mix(in oklch, var(--score-excellent) 15%, transparent)" : "color-mix(in oklch, var(--score-poor) 15%, transparent)",
+                        color: ok ? "var(--score-excellent)" : "var(--score-poor)",
                       }}
                     >
                       {acc}%
@@ -205,9 +205,9 @@ export function InterviewResults({ title, turns, results, difficulty, level, onR
                   key={i}
                   className="relative group px-3 py-1 rounded-full text-xs font-medium"
                   style={{
-                    background: "color-mix(in oklch, #ef4444 12%, transparent)",
-                    color: "#ef4444",
-                    border: "1px solid color-mix(in oklch, #ef4444 25%, transparent)",
+                    background: "color-mix(in oklch, var(--score-poor) 12%, transparent)",
+                    color: "var(--score-poor)",
+                    border: "1px solid color-mix(in oklch, var(--score-poor) 25%, transparent)",
                     ...(tip ? { textDecoration: "underline dotted", textUnderlineOffset: "3px" } : {}),
                   }}
                 >

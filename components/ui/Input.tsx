@@ -19,7 +19,7 @@ export default function Input({
     <div className="flex flex-col gap-1">
       <label className="text-xs font-medium" style={{ color: "var(--text-secondary)" }}>
         {label}
-        {required && <span className="text-red-400 ml-0.5">*</span>}
+        {required && <span className="text-error ml-0.5">*</span>}
       </label>
       <input
         type={type}
@@ -32,3 +32,4 @@ export default function Input({
     </div>
   );
 }
+

@@ -81,7 +81,7 @@ export default function ChatArea({
         <button
           onClick={onToggleSessions}
           aria-label={sessionsCollapsed ? "Show sessions" : "Hide sessions"}
-          className="flex items-center gap-1.5 text-[13px] font-medium px-2 py-1.5 rounded-lg transition-colors"
+          className="flex items-center gap-1.5 text-caption font-medium px-2 py-1.5 rounded-lg transition-colors"
           style={{ color: "var(--text-tertiary)" }}
           onMouseEnter={e => {
             e.currentTarget.style.backgroundColor = "var(--btn-regular-bg)";
@@ -101,7 +101,7 @@ export default function ChatArea({
         <button
           onClick={onToggleVocab}
           aria-label={vocabCollapsed ? "Show vocab" : "Hide vocab"}
-          className="flex items-center gap-1.5 text-[13px] font-medium px-2 py-1.5 rounded-lg transition-colors"
+          className="flex items-center gap-1.5 text-caption font-medium px-2 py-1.5 rounded-lg transition-colors"
           style={{ color: "var(--text-tertiary)" }}
           onMouseEnter={e => {
             e.currentTarget.style.backgroundColor = "var(--btn-regular-bg)";
@@ -114,7 +114,7 @@ export default function ChatArea({
         >
           Vocab
           <span
-            className="inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 rounded-full text-[10px] font-semibold"
+            className="inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 rounded-full text-tiny font-semibold"
             style={{
               backgroundColor: vocabCount > 0 ? "color-mix(in oklch, var(--primary) 14%, transparent)" : "var(--btn-regular-bg)",
               color: vocabCount > 0 ? "var(--primary)" : "var(--text-tertiary)",

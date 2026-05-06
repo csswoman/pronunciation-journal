@@ -14,7 +14,6 @@ import { AuthInput } from "@/components/auth/AuthInput";
 import { AuthButton } from "@/components/auth/AuthButton";
 import { AuthCheckbox } from "@/components/auth/AuthCheckbox";
 import { AuthGuestButton } from "@/components/auth/AuthGuestButton";
-import { AuthTrustBar } from "@/components/auth/AuthTrustBar";
 import { AuthBackground } from "@/components/auth/AuthBackground";
 
 type Mode = "login" | "register" | "reset";
@@ -83,7 +82,7 @@ export default function AuthPanel() {
   return (
     <div
       className="min-h-screen flex flex-col items-center justify-center px-4 py-6 relative"
-      style={{ background: "#0d0f14", fontFamily: "'DM Sans', sans-serif" }}
+      style={{ background: "var(--surface-base)", fontFamily: "'DM Sans', sans-serif" }}
     >
       <AuthBackground />
 
@@ -118,7 +117,7 @@ export default function AuthPanel() {
             />
           </form>
         ) : mode === "login" ? (
-          <form onSubmit={handleLogin} className="space-y-4">
+          <form onSubmit={handleLogin}>
             <AuthInput
               type="email"
               label="Email address"
@@ -139,7 +138,7 @@ export default function AuthPanel() {
               minLength={6}
             />
 
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between my-[var(--space-4)]">
               <AuthCheckbox label="Remember me" checked={rememberMe} onChange={setRememberMe} />
               <AuthButton
                 label="Forgot password?"
@@ -152,17 +151,16 @@ export default function AuthPanel() {
 
             <AuthButton label="Sign in" pending={pending} />
 
-            <div className="flex items-center gap-3 my-5 text-[11.5px] uppercase tracking-[0.6px]" style={{ color: "#4a5070" }}>
-              <div className="flex-1 h-px" style={{ background: "#1e2330" }} />
+            <div className="flex items-center gap-[var(--space-4)] my-[var(--space-6)]" style={{ color: "var(--text-tertiary)" }}>
+              <div className="flex-1 border-t" style={{ borderTopColor: "var(--border-subtle)" }} />
               or continue with
-              <div className="flex-1 h-px" style={{ background: "#1e2330" }} />
+              <div className="flex-1 border-t" style={{ borderTopColor: "var(--border-subtle)" }} />
             </div>
 
             <AuthGuestButton onClick={handleGuest} pending={pending} />
-            <AuthTrustBar />
           </form>
         ) : (
-          <form onSubmit={handleRegister} className="space-y-4">
+          <form onSubmit={handleRegister}>
             <AuthInput
               type="text"
               label="Full name"
@@ -193,17 +191,25 @@ export default function AuthPanel() {
 
             <AuthButton label="Create account" pending={pending} />
 
-            <div className="flex items-center gap-3 my-5 text-[11.5px] uppercase tracking-[0.6px]" style={{ color: "#4a5070" }}>
-              <div className="flex-1 h-px" style={{ background: "#1e2330" }} />
+            <div className="flex items-center gap-[var(--space-4)] my-[var(--space-6)]" style={{ color: "var(--text-tertiary)" }}>
+              <div className="flex-1 border-t" style={{ borderTopColor: "var(--border-subtle)" }} />
               or continue with
-              <div className="flex-1 h-px" style={{ background: "#1e2330" }} />
+              <div className="flex-1 border-t" style={{ borderTopColor: "var(--border-subtle)" }} />
             </div>
 
             <AuthGuestButton onClick={handleGuest} pending={pending} />
-            <AuthTrustBar />
           </form>
         )}
       </AuthCard>
+      <style>{`
+        form > div + div { margin-top: var(--space-4); }
+        form > button:first-of-type { margin-top: var(--space-6); }
+        form > .flex.items-center.gap-\\[var\\(--space-4\\)\\] { font: var(--font-tiny); letter-spacing: 0.05em; font-weight: 600; text-transform: uppercase; }
+        input, button, a, [role="tab"], [type="checkbox"] { transition: all var(--transition-fast); }
+        @media (max-width: 479px) {
+          .max-w-\\[400px\\] { width: 100%; padding: var(--space-6) var(--space-4); }
+        }
+      `}</style>
     </div>
   );
 }

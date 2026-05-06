@@ -317,7 +317,7 @@ export function StudyModal({ deck, onClose }: StudyModalProps) {
           {!flipped && (
             <p className="mt-3 text-xs" style={{ color: "var(--text-tertiary)" }}>
               Hint: Press{" "}
-              <kbd className="px-1.5 py-0.5 rounded border text-[10px] font-mono"
+              <kbd className="px-1.5 py-0.5 rounded border text-tiny font-mono"
                 style={{ borderColor: "var(--line-divider)", backgroundColor: "var(--btn-regular-bg)" }}>
                 SPACE
               </kbd>

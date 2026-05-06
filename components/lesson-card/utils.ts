@@ -8,5 +8,5 @@ export function toLabel(value: string | null): string {
 }
 
 export function getLessonHref(lesson: LessonListItem): string {
-  return lesson.slug ? `/lessons/${lesson.slug}` : `/lesson/${lesson.id}`;
+  return lesson.slug ? `/courses` : `/lesson/${lesson.id}`;
 }

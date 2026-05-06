@@ -12,20 +12,20 @@ const MODES = [
 
 export default function HomePracticeCard() {
   return (
-    <div className="rounded-2xl border border-[var(--line-divider)] bg-[var(--card-bg)] p-5 flex flex-col gap-5">
+    <div className="rounded-lg border border-border-subtle bg-surface-raised p-5 flex flex-col gap-5">
       {/* Header */}
       <div className="flex items-start justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 mb-1">
             <Sparkles size={17} className="text-[var(--primary)]" />
             <span className="text-base font-semibold text-[var(--deep-text)]">Practice with AI</span>
-            <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-[var(--primary)] text-white">Beta</span>
+            <span className="text-tiny font-semibold px-2 py-0.5 rounded-full bg-[var(--primary)] text-on-primary">Beta</span>
           </div>
           <p className="text-sm text-[var(--text-secondary)]">Improve your speaking and writing with AI feedback.</p>
         </div>
         <Link
           href="/ai-practice"
-          className="shrink-0 px-5 py-2.5 rounded-xl text-sm font-semibold text-white transition-opacity hover:opacity-90"
+          className="shrink-0 px-5 py-2.5 rounded-xl text-sm font-semibold text-on-primary transition-opacity hover:opacity-90"
           style={{ background: "var(--primary)" }}
         >
           Start Practice

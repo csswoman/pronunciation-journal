@@ -71,7 +71,7 @@ export function WordCard({ word, onMarkDifficult, onRetry, onDelete }: WordCardP
             </div>
             {word.difficulty > 0 && (
               <span
-                className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-[10px] font-semibold"
+                className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-tiny font-semibold"
                 style={{
                   background: "color-mix(in oklch, var(--primary) 14%, transparent)",
                   color: "var(--primary)",
@@ -120,7 +120,7 @@ export function WordCard({ word, onMarkDifficult, onRetry, onDelete }: WordCardP
             onClick={() => onDelete(word.id)}
             aria-label="Delete"
             title="Delete word"
-            className="p-2 rounded-lg bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:bg-[var(--error)] hover:text-white transition-colors"
+            className="p-2 rounded-lg bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:bg-[var(--error)] hover:text-on-primary transition-colors"
           >
             <Trash2 size={16} />
           </button>
@@ -157,7 +157,7 @@ function WordCardProcessing({
               {text}
             </h3>
             <span
-              className="text-[10px] uppercase tracking-widest"
+              className="text-tiny uppercase tracking-widest"
               style={{ color: "var(--primary)" }}
             >
               Enriching…
@@ -183,7 +183,7 @@ function WordCardProcessing({
             onClick={() => onDelete(wordId)}
             aria-label="Delete word"
             title="Delete word"
-            className="p-2 rounded-lg bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:bg-[var(--error)] hover:text-white transition-colors"
+            className="p-2 rounded-lg bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:bg-[var(--error)] hover:text-on-primary transition-colors"
           >
             <Trash2 size={16} />
           </button>
@@ -235,7 +235,7 @@ function WordCardFailed({
             <h3 className="font-heading font-semibold text-lg text-[var(--deep-text)] truncate">
               {word.text}
             </h3>
-            <span className="text-[10px] uppercase tracking-widest text-[var(--error)]">
+            <span className="text-tiny uppercase tracking-widest text-[var(--error)]">
               Enrichment failed
             </span>
           </div>
@@ -243,7 +243,7 @@ function WordCardFailed({
             We couldn’t fetch the AI details. Try again.
           </p>
           {word.error_reason && (
-            <p className="mt-1 text-[10px] uppercase tracking-widest text-[var(--text-tertiary)]">
+            <p className="mt-1 text-tiny uppercase tracking-widest text-[var(--text-tertiary)]">
               {word.error_reason.replace("_", " ")}
             </p>
           )}
@@ -262,7 +262,7 @@ function WordCardFailed({
             onClick={() => onDelete(word.id)}
             aria-label="Delete"
             title="Delete"
-            className="p-2 rounded-lg bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:bg-[var(--error)] hover:text-white transition-colors"
+            className="p-2 rounded-lg bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:bg-[var(--error)] hover:text-on-primary transition-colors"
           >
             <Trash2 size={16} />
           </button>

@@ -51,7 +51,7 @@ export default function WordsToday({ words, newCount, reviewCount }: WordsTodayP
       {/* Header */}
       <div className="flex items-start justify-between gap-3">
         <div>
-          <p className="text-[10px] font-bold uppercase tracking-[0.24em]" style={{ color: 'var(--text-tertiary)' }}>
+          <p className="text-tiny font-bold uppercase tracking-[0.24em]" style={{ color: 'var(--text-tertiary)' }}>
             WORDS TODAY
           </p>
           {entries.length > 0 ? (
@@ -99,7 +99,7 @@ export default function WordsToday({ words, newCount, reviewCount }: WordsTodayP
                   </span>
                 )}
                 <span
-                  className="text-[10px] font-bold uppercase tracking-wide"
+                  className="text-tiny font-bold uppercase tracking-wide"
                   style={{
                     color: entry.isNew
                       ? 'var(--primary)'
@@ -135,3 +135,4 @@ export default function WordsToday({ words, newCount, reviewCount }: WordsTodayP
     </div>
   )
 }
+

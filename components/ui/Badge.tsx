@@ -23,7 +23,7 @@ export default function Badge({ label, variant = "default", size = "sm", dot = f
 
   const sizeClasses = size === "md"
     ? "text-sm px-3 py-2 rounded-lg"
-    : "text-[11px] px-2 py-0.5 rounded-full";
+    : "text-tiny px-2 py-0.5 rounded-full";
 
   const style = isNeutral ? undefined : {
     backgroundColor: `color-mix(in oklch, ${color} 14%, var(--bg-tertiary) 86%)`,

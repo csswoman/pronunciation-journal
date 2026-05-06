@@ -16,7 +16,7 @@ export default function SessionHeader({ title, currentIndex, totalWords, phase, 
     <header
       className="sticky top-0 z-10 border-b"
       style={{
-        background: 'linear-gradient(180deg, color-mix(in_oklch,var(--card-bg)_92%,white), var(--card-bg))',
+        background: 'linear-gradient(180deg, color-mix(in_oklch,var(--card-bg)_92%,var(--on-primary)), var(--card-bg))',
         borderColor: 'var(--line-divider)',
         backdropFilter: 'blur(10px)',
       }}
@@ -35,8 +35,8 @@ export default function SessionHeader({ title, currentIndex, totalWords, phase, 
             </svg>
           </Button>
           <div className="text-center">
-            <h1 className="text-[18px] font-semibold leading-tight tracking-tight" style={{ color: 'var(--deep-text)' }}>{title}</h1>
-            <p className="text-[13px] leading-5" style={{ color: 'var(--text-secondary)' }}>
+            <h1 className="text-body-lg font-semibold leading-tight tracking-tight" style={{ color: 'var(--deep-text)' }}>{title}</h1>
+            <p className="text-caption leading-5" style={{ color: 'var(--text-secondary)' }}>
               {phase !== "complete" ? `${currentIndex + 1} / ${totalWords}` : "Complete"}
             </p>
           </div>

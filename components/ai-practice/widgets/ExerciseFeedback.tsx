@@ -10,7 +10,7 @@ export type ExerciseFeedbackProps = {
 
 export default function ExerciseFeedback({ result, onNext, onRetry }: ExerciseFeedbackProps) {
   const { correct, feedback } = result;
-  const accentColor = correct ? "var(--success, #22c55e)" : "#ef4444";
+  const accentColor = correct ? "var(--score-excellent)" : "var(--score-poor)";
   const icon = correct ? "✅" : "❌";
 
   return (
@@ -18,8 +18,8 @@ export default function ExerciseFeedback({ result, onNext, onRetry }: ExerciseFe
       className="rounded-lg px-3 py-2.5 space-y-2 text-sm animate-feedback-in"
       style={{
         backgroundColor: correct
-          ? "color-mix(in oklch, var(--success, #22c55e) 12%, transparent)"
-          : "color-mix(in oklch, #ef4444 10%, transparent)",
+          ? "color-mix(in oklch, var(--score-excellent) 12%, transparent)"
+          : "color-mix(in oklch, var(--score-poor) 10%, transparent)",
         borderLeft: `3px solid ${accentColor}`,
       }}
     >
@@ -67,7 +67,7 @@ export default function ExerciseFeedback({ result, onNext, onRetry }: ExerciseFe
             <button
               onClick={onNext}
               className="text-xs px-3 py-1 rounded-lg font-medium transition-opacity hover:opacity-80"
-              style={{ backgroundColor: accentColor, color: "#fff" }}
+              style={{ backgroundColor: accentColor, color: "var(--on-primary)" }}
             >
               Next →
             </button>

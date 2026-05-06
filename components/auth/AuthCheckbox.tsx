@@ -8,12 +8,12 @@ interface AuthCheckboxProps {
 
 export function AuthCheckbox({ label, checked, onChange }: AuthCheckboxProps) {
   return (
-    <label className="flex items-center gap-2 cursor-pointer select-none w-full" onClick={() => onChange(!checked)}>
+    <label className="flex items-center gap-2 cursor-pointer select-none" onClick={() => onChange(!checked)}>
       <div
-        className="w-[17px] h-[17px] rounded-[5px] flex items-center justify-center shrink-0 transition-all"
+        className="w-[18px] h-[18px] rounded-[4px] flex items-center justify-center shrink-0 transition-all"
         style={{
-          background: checked ? "var(--color-accent)" : "#181b25",
-          border: `1.5px solid ${checked ? "var(--color-accent)" : "#252a3a"}`,
+          background: checked ? "var(--primary)" : "transparent",
+          border: `1.5px solid ${checked ? "var(--primary)" : "var(--border-default)"}`,
         }}
       >
         {checked && (
@@ -22,7 +22,7 @@ export function AuthCheckbox({ label, checked, onChange }: AuthCheckboxProps) {
           </svg>
         )}
       </div>
-      <span className="text-[13.5px]" style={{ color: "#6b7191" }}>
+      <span style={{ font: "var(--font-body-sm)", color: "var(--text-secondary)" }}>
         {label}
       </span>
     </label>

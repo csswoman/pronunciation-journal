@@ -9,8 +9,21 @@ export interface TemplateDefinition {
   title: string;
   description: string;
   Icon: LucideIcon;
-  iconColor: string;
-  iconBg: string;
+  hue: number;
+}
+
+const templateHues: Record<AITemplateId, number> = {
+  "free-conversation": 270,
+  "sentence-correction": 150,
+  "practice-questions": 30,
+  "personalized-practice": 260,
+};
+
+export function getTemplateColors(hue: number) {
+  return {
+    iconColor: `oklch(0.65 0.18 ${hue})`,
+    iconBg: `oklch(0.96 0.04 ${hue})`,
+  };
 }
 
 export const TEMPLATES: TemplateDefinition[] = [
@@ -19,32 +32,28 @@ export const TEMPLATES: TemplateDefinition[] = [
     title: "Free conversation",
     description: "Talk freely about any topic and improve naturally.",
     Icon: MessageCircle,
-    iconColor: "#7C6FF7",
-    iconBg: "#EEF0FF",
+    hue: templateHues["free-conversation"],
   },
   {
     id: "sentence-correction",
     title: "Correct my sentences",
     description: "Write and get corrections with explanations.",
     Icon: CheckCheck,
-    iconColor: "#22C55E",
-    iconBg: "#DCFCE7",
+    hue: templateHues["sentence-correction"],
   },
   {
     id: "practice-questions",
     title: "Practice questions",
     description: "Answer questions and expand your thinking.",
     Icon: ClipboardList,
-    iconColor: "#F97316",
-    iconBg: "#FFEDD5",
+    hue: templateHues["practice-questions"],
   },
   {
     id: "personalized-practice",
     title: "Personalized",
     description: "Practice based on your goals and level.",
     Icon: Star,
-    iconColor: "#6366F1",
-    iconBg: "#EEF2FF",
+    hue: templateHues["personalized-practice"],
   },
 ];
 
@@ -55,7 +64,8 @@ interface TemplateCardProps {
 }
 
 export default function TemplateCard({ template, onSelect, recommended }: TemplateCardProps) {
-  const { Icon, iconColor, iconBg } = template;
+  const { Icon, hue } = template;
+  const { iconColor, iconBg } = getTemplateColors(hue);
 
   return (
     <button
@@ -74,7 +84,7 @@ export default function TemplateCard({ template, onSelect, recommended }: Templa
     >
       {recommended && (
         <span
-          className="absolute -top-2.5 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded-full text-[9px] font-bold tracking-wide uppercase whitespace-nowrap"
+          className="absolute -top-2.5 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded-full text-tiny font-bold tracking-wide uppercase whitespace-nowrap"
           style={{ backgroundColor: "var(--primary)", color: "var(--primary-foreground)" }}
         >
           Recommended

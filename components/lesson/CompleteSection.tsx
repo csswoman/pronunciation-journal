@@ -34,7 +34,7 @@ export default function CompleteSection({
         {isDynamic ? (
           <Button
             onClick={onBackToLobby}
-            className="px-6 py-3 rounded-xl text-white font-medium transition-colors"
+            className="px-6 py-3 rounded-xl text-on-primary font-medium transition-colors"
             style={{ backgroundColor: 'var(--primary)' }}
             onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--btn-regular-bg-hover)')}
             onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'var(--primary)')}
@@ -44,7 +44,7 @@ export default function CompleteSection({
         ) : (
           <Button
             onClick={onRetryLesson}
-            className="px-6 py-3 rounded-xl text-white font-medium transition-colors"
+            className="px-6 py-3 rounded-xl text-on-primary font-medium transition-colors"
             style={{ backgroundColor: 'var(--primary)' }}
             onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--btn-regular-bg-hover)')}
             onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'var(--primary)')}
@@ -52,7 +52,7 @@ export default function CompleteSection({
             🔄 Retry Lesson
           </Button>
         )}
-        <Link href={backHref} className="px-6 py-3 rounded-xl bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-medium hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
+        <Link href={backHref} className="px-6 py-3 rounded-xl bg-surface-sunken text-fg font-medium hover:bg-border-subtle transition-colors">
           ← All Lessons
         </Link>
       </div>

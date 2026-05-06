@@ -95,7 +95,7 @@ export default async function LessonPage({ params }: Props) {
                 />
               ) : (
                 <>
-                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.12),transparent_60%)]" />
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(var(--on-primary),0.12),transparent_60%)]" />
                   <Image
                     src={getCourseIllustration(course.title)}
                     alt=""
@@ -108,14 +108,14 @@ export default async function LessonPage({ params }: Props) {
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
               <div className="relative z-10 px-5 pb-4">
                 {course.level && (
-                  <span className="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-white/20 text-white/90 mb-2 inline-block backdrop-blur-sm">
+                  <span className="text-tiny font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-overlay-light text-[color-mix(in_oklch,var(--on-primary)_90%,transparent)] mb-2 inline-block backdrop-blur-sm">
                     {course.level}
                   </span>
                 )}
-                <h1 className="text-2xl font-bold text-white leading-tight">
+                <h1 className="text-2xl font-bold text-on-primary leading-tight">
                   {lesson.title}
                 </h1>
-                <p className="text-xs text-white/60 mt-1">
+                <p className="text-xs text-[color-mix(in_oklch,var(--on-primary)_60%,transparent)] mt-1">
                   {course.title} · Updated {new Date(lesson.updatedAt).toLocaleDateString()}
                 </p>
               </div>

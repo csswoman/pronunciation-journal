@@ -13,32 +13,22 @@ export function AuthGuestButton({ onClick, pending }: AuthGuestButtonProps) {
       type="button"
       onClick={onClick}
       disabled={pending}
-      className="w-full flex items-center gap-3.5 px-4 py-3.5 rounded-[10px] text-left transition-all disabled:opacity-50 mb-6 group"
-      style={{ background: "rgba(32,36,51,0.5)", border: "1px solid #1e2330" }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.background = "#1e2233";
-        e.currentTarget.style.borderColor = "#2e3450";
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.background = "rgba(32,36,51,0.5)";
-        e.currentTarget.style.borderColor = "#1e2330";
-      }}
+      className="auth-guest-btn w-full flex items-center justify-between px-[var(--space-4)] py-[var(--space-3)] rounded-[var(--radius-md)] text-left transition-all disabled:opacity-50"
+      style={{ background: "transparent", border: "1px solid var(--border-default)", color: "var(--text-secondary)" }}
     >
-      <div
-        className="w-[38px] h-[38px] rounded-[10px] flex items-center justify-center shrink-0"
-        style={{ background: "#1a1d27" }}
-      >
-        <User className="w-[18px] h-[18px]" style={{ color: "#6b7191" }} />
+      <div className="flex items-center gap-[var(--space-3)]">
+        <User className="w-[18px] h-[18px] text-[var(--text-tertiary)]" />
+        <p style={{ font: "var(--font-body-sm)", fontWeight: 500 }}>Continue as guest</p>
       </div>
-      <div className="flex-1">
-        <p className="text-[14px] font-semibold" style={{ color: "#eef0f7" }}>
-          Continue as guest
-        </p>
-        <p className="text-[12.5px]" style={{ color: "#6b7191" }}>
-          Explore the app without an account
-        </p>
-      </div>
-      <ArrowRight className="w-4 h-4 transition-colors" style={{ color: "#4a5070" }} />
+      <ArrowRight className="w-[18px] h-[18px] text-[var(--text-tertiary)]" />
+      <style>{`
+        .auth-guest-btn:hover {
+          background: var(--surface-sunken);
+          border-color: var(--border-strong);
+          color: var(--text-primary);
+        }
+        .auth-guest-btn:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+      `}</style>
     </button>
   );
 }

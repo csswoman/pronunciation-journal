@@ -12,10 +12,10 @@ interface LessonCardProps {
   onStart: () => void;
 }
 
-const difficultyClasses: Record<Difficulty, string> = {
-  easy:   "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400",
-  medium: "bg-amber-100   text-amber-800   dark:bg-amber-900/30   dark:text-amber-400",
-  hard:   "bg-red-100     text-red-800     dark:bg-red-900/30     dark:text-red-400",
+const difficultyDot: Record<Difficulty, string> = {
+  easy: "dot-success",
+  medium: "dot-warning",
+  hard: "dot-warning",
 };
 
 export default function LessonCard({
@@ -44,11 +44,12 @@ export default function LessonCard({
 
       {/* Tags row */}
       <div className="flex items-center gap-2 mb-2">
-        <span className={`text-[10px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded-md ${difficultyClasses[difficulty]}`}>
+        <span className="badge">
+          <span className={difficultyDot[difficulty]} />
           {difficulty}
         </span>
         {duration && (
-          <span className="text-[10px] font-medium text-[var(--text-tertiary)]">{duration}</span>
+          <span className="text-tiny font-medium text-[var(--text-tertiary)]">{duration}</span>
         )}
       </div>
 
@@ -82,3 +83,7 @@ export function LessonGrid({ children }: LessonGridProps) {
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">{children}</div>
   );
 }
+
+
+
+

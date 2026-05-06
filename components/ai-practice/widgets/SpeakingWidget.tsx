@@ -93,7 +93,7 @@ export default function SpeakingWidget({ args, status, onAnswer, onNext, onRetry
             <button
               onClick={startRecording}
               className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm"
-              style={{ backgroundColor: "var(--primary)", color: "var(--primary-fg, #fff)" }}
+              style={{ backgroundColor: "var(--primary)", color: "var(--on-primary)" }}
             >
               <Mic className="w-4 h-4" />
               Record
@@ -103,7 +103,7 @@ export default function SpeakingWidget({ args, status, onAnswer, onNext, onRetry
             <button
               onClick={handleStop}
               className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm animate-pulse"
-              style={{ backgroundColor: "#ef4444", color: "#fff" }}
+              style={{ backgroundColor: "var(--score-poor)", color: "var(--on-primary)" }}
             >
               <MicOff className="w-4 h-4" />
               Stop

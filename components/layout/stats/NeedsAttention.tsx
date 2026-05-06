@@ -46,7 +46,7 @@ function AttentionItem({
       </div>
       <div className="flex items-center gap-2 shrink-0">
         <span
-          className="rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide"
+          className="rounded-full px-2 py-0.5 text-tiny font-bold uppercase tracking-wide"
           style={{ background: `color-mix(in oklch, ${color} 15%, transparent)`, color }}
         >
           {priority}
@@ -85,10 +85,10 @@ export function NeedsAttention({ progressList, weeklyAccuracy }: Props) {
         boxShadow: "0 1px 3px var(--line-divider), 0 8px 20px var(--line-divider)",
       }}
     >
-      <p className="text-[10px] font-bold uppercase tracking-[0.26em]" style={{ color: "var(--primary)" }}>
+      <p className="text-tiny font-bold uppercase tracking-[0.26em]" style={{ color: "var(--primary)" }}>
         ✦ Needs Your Attention
       </p>
-      <p className="text-[10px] mt-0.5" style={{ color: "var(--text-tertiary)" }}>
+      <p className="text-tiny mt-0.5" style={{ color: "var(--text-tertiary)" }}>
         {hasData ? "Based on your sound practice history" : "Practice sounds to see insights here"}
       </p>
       <h3 className="mt-3 text-lg font-black" style={{ color: "var(--deep-text)" }}>
@@ -125,3 +125,4 @@ export function NeedsAttention({ progressList, weeklyAccuracy }: Props) {
     </div>
   );
 }
+

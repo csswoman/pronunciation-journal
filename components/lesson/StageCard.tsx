@@ -16,6 +16,15 @@ const CARD_COLORS = [
   { bg: '#fef9c3', label: '#ca8a04' },
 ]
 
+// Blue-tinted text palette for pastel card backgrounds above.
+// NOT generic grays — chosen for contrast on these specific backgrounds.
+const CARD_TEXT = {
+  title:    '#1a1a2e',  // blue-black for h3 titles
+  subtitle: '#555577',  // blue-gray for descriptions
+  meta:     '#888899',  // light blue-gray for metadata / timestamps
+  cta:      '#1a1a2e',  // same deep blue for the arrow button bg
+}
+
 const STAGE_ICONS: Record<string, LucideIcon> = {
   ear: Ear,
   mic: Mic,
@@ -66,30 +75,30 @@ export function StageCard({ stage, mastery, index, unlocked, diffMode, onSelect 
 
       {/* Category badge */}
       <span
-        className="self-start text-[11px] font-bold tracking-widest uppercase px-3 py-1 rounded-full mb-4 border"
+        className="self-start text-tiny font-bold tracking-widest uppercase px-3 py-1 rounded-full mb-4 border"
         style={{ color: color.label, borderColor: `${color.label}44`, background: `${color.label}12` }}
       >
         {STAGE_LABELS[stage.id] ?? stage.title}
       </span>
 
       {/* Title */}
-      <h3 className="text-[22px] font-bold leading-tight mb-2" style={{ color: '#1a1a2e' }}>
+      <h3 className="text-[22px] font-bold leading-tight mb-2" style={{ color: CARD_TEXT.title }}>
         {stage.title}
       </h3>
 
       {/* Description */}
-      <p className="text-[14px] leading-relaxed flex-1" style={{ color: '#555577' }}>
+      <p className="text-caption leading-relaxed flex-1" style={{ color: CARD_TEXT.subtitle }}>
         {stage.subtitle}
       </p>
 
       {/* Bottom row: time + arrow */}
       <div className="flex items-center justify-between mt-6">
-        <span className="text-[13px] font-medium" style={{ color: '#888899' }}>
+        <span className="text-caption font-medium" style={{ color: CARD_TEXT.meta }}>
           {mastery.attempts > 0 ? `${mastery.pct}% mastery` : (STAGE_TIMES[stage.id] ?? '5 min')}
         </span>
         <span
           className="w-10 h-10 rounded-full flex items-center justify-center transition-transform group-hover:translate-x-0.5"
-          style={{ background: '#1a1a2e', color: 'white' }}
+          style={{ background: CARD_TEXT.cta, color: 'var(--on-primary)' }}
         >
           <ArrowIcon />
         </span>

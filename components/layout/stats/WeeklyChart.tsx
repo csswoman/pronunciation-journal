@@ -114,7 +114,7 @@ export function WeeklyChart({ progressHistory }: Props) {
               const barH = val > 0 ? Math.max((val / maxMetric) * 96, 12) : 6;
               return (
                 <div key={day.date} className="flex flex-col items-center gap-1">
-                  <span className="text-[10px] font-semibold tabular-nums" style={{ color: day.isToday ? "var(--primary)" : "var(--text-tertiary)" }}>
+                  <span className="text-tiny font-semibold tabular-nums" style={{ color: day.isToday ? "var(--primary)" : "var(--text-tertiary)" }}>
                     {val > 0 ? (chartMetric === "accuracy" ? `${val}%` : val) : ""}
                   </span>
                   <div className="w-full flex items-end" style={{ height: 96 }}>
@@ -125,7 +125,7 @@ export function WeeklyChart({ progressHistory }: Props) {
                         animationDelay: `${i * 60}ms`,
                         background: val > 0
                           ? day.isToday
-                            ? "linear-gradient(180deg, color-mix(in oklch, var(--primary) 70%, white), var(--primary))"
+                            ? "linear-gradient(180deg, color-mix(in oklch, var(--primary) 70%, var(--on-primary)), var(--primary))"
                             : "color-mix(in oklch, var(--primary) 35%, transparent)"
                           : "var(--line-divider)",
                         boxShadow: day.isToday && val > 0 ? "0 4px 14px color-mix(in oklch, var(--primary) 28%, transparent)" : "none",
@@ -141,10 +141,10 @@ export function WeeklyChart({ progressHistory }: Props) {
           <div className="mt-2 grid grid-cols-7 gap-2">
             {barData.map((day) => (
               <div key={day.date} className="flex flex-col items-center">
-                <span className="text-[11px] font-semibold" style={{ color: day.isToday ? "var(--primary)" : "var(--text-secondary)" }}>
+                <span className="text-tiny font-semibold" style={{ color: day.isToday ? "var(--primary)" : "var(--text-secondary)" }}>
                   {day.label}
                 </span>
-                <span className="text-[10px]" style={{ color: "var(--text-tertiary)" }}>
+                <span className="text-tiny" style={{ color: "var(--text-tertiary)" }}>
                   {day.dayNum}
                 </span>
               </div>
@@ -165,7 +165,7 @@ export function WeeklyChart({ progressHistory }: Props) {
           { label: "Weekly XP", value: weeklyXp ? formatCompact(weeklyXp) : "—" },
         ].map(({ label, value }) => (
           <div key={label} className="flex flex-col items-center py-3 px-2" style={{ borderColor: "var(--line-divider)" }}>
-            <span className="text-[10px] font-medium text-center" style={{ color: "var(--text-secondary)" }}>{label}</span>
+            <span className="text-tiny font-medium text-center" style={{ color: "var(--text-secondary)" }}>{label}</span>
             <span className="text-base font-black mt-0.5" style={{ color: "var(--deep-text)" }}>{value}</span>
           </div>
         ))}
@@ -218,3 +218,4 @@ export function deriveWeeklySummary(progressHistory: DailyProgress[]) {
 
   return { barData, daysPracticed, weeklyAttempts, weeklyXp, weeklyAccuracy, consistencyScore };
 }
+

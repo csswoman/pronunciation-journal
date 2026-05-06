@@ -22,7 +22,7 @@ export default function HomeTheoryOfDay({
   return (
     <Card variant="compact" className="gap-4">
       <div className="flex items-center gap-2">
-        <span className="text-[10px] font-bold tracking-widest text-[var(--primary)] uppercase border border-[var(--primary)] rounded-full px-2 py-0.5">
+        <span className="text-tiny font-bold tracking-widest text-[var(--primary)] uppercase border border-[var(--primary)] rounded-full px-2 py-0.5">
           Mini Lesson · {duration} min
         </span>
       </div>
@@ -43,7 +43,7 @@ export default function HomeTheoryOfDay({
       </div>
 
       <Link
-        href={`/lessons/${slug}`}
+        href="/courses"
         className="block text-center text-sm font-medium text-[var(--deep-text)] border border-[var(--line-divider)] rounded-xl py-2.5 hover:bg-[var(--btn-regular-bg)] transition-colors"
       >
         Read full lesson →

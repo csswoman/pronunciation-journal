@@ -33,7 +33,7 @@ export default function EntryTags({
           type="text"
           value={editedTags?.join(", ") || ""}
           onChange={(e) => onTagsChange(e.target.value)}
-          className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
+          className="w-full px-4 py-2 border border-border-default rounded-lg bg-surface-sunken text-fg focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
           placeholder="Add tags separated by commas (e.g., business, travel)"
         />
       )}

@@ -53,7 +53,7 @@ export default function TemplateInputForm({
       <div className="flex items-center gap-3">
         <Button
           onClick={onBack}
-          className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
+          className="text-fg-subtle hover:text-fg-muted transition-colors"
           aria-label="Back"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -61,17 +61,17 @@ export default function TemplateInputForm({
           </svg>
         </Button>
         <div>
-          <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
+          <h2 className="text-xl font-bold text-fg">
             {template?.Icon && <template.Icon size={20} className="inline mr-1" />} {template?.title}
           </h2>
-          <p className="text-sm text-gray-500 dark:text-gray-400">{template?.description}</p>
+          <p className="text-sm text-fg-subtle">{template?.description}</p>
         </div>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         {(templateId === "practice-questions" || templateId === "free-conversation") && (
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <label className="block text-sm font-medium text-fg-muted mb-1">
               Topic
             </label>
             <input
@@ -83,7 +83,7 @@ export default function TemplateInputForm({
                   ? "e.g. travel, food, job interviews..."
                   : "e.g. movies, hobbies, daily routine..."
               }
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-4 py-3 rounded-xl border border-border-subtle bg-surface-sunken text-fg placeholder:text-fg-placeholder focus:outline-none focus:ring-2 focus:ring-accent"
               disabled={isLoading}
             />
           </div>
@@ -91,7 +91,7 @@ export default function TemplateInputForm({
 
         {templateId === "practice-questions" && (
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <label className="block text-sm font-medium text-fg-muted mb-1">
               Your Level
             </label>
             <div className="flex flex-wrap gap-2">
@@ -102,8 +102,8 @@ export default function TemplateInputForm({
                   onClick={() => setUserLevel(lvl)}
                   className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
                     userLevel === lvl
-                      ? "bg-indigo-600 text-white"
-                      : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
+                      ? "bg-accent text-on-primary"
+                      : "bg-surface-sunken text-fg-muted hover:bg-border-subtle"
                   }`}
                   disabled={isLoading}
                 >
@@ -116,7 +116,7 @@ export default function TemplateInputForm({
 
         {templateId === "sentence-correction" && (
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <label className="block text-sm font-medium text-fg-muted mb-1">
               Your sentence
             </label>
             <textarea
@@ -124,15 +124,15 @@ export default function TemplateInputForm({
               onChange={(e) => setSentence(e.target.value)}
               placeholder="Type the sentence you want corrected..."
               rows={3}
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-amber-500 resize-none"
+              className="w-full px-4 py-3 rounded-xl border border-border-subtle bg-surface-sunken text-fg placeholder:text-fg-placeholder focus:outline-none focus:ring-2 focus:ring-accent resize-none"
               disabled={isLoading}
             />
           </div>
         )}
 
         {templateId === "personalized-practice" && (
-          <div className="p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl border border-emerald-200 dark:border-emerald-800">
-            <p className="text-sm text-emerald-800 dark:text-emerald-300">
+          <div className="p-4 bg-success-soft rounded-xl border border-success-border">
+            <p className="text-sm text-success">
               This session will be built from your pronunciation history — words you struggle with and your saved favorites. Just click Start!
             </p>
           </div>
@@ -141,11 +141,11 @@ export default function TemplateInputForm({
         <Button
           type="submit"
           disabled={!isValid() || isLoading}
-          className="w-full py-3 px-6 bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-300 dark:disabled:bg-gray-700 text-white disabled:text-gray-400 rounded-xl font-medium transition-colors flex items-center justify-center gap-2"
+          className="w-full py-3 px-6 bg-accent hover:bg-accent-hover disabled:bg-surface-sunken text-on-primary disabled:text-fg-disabled rounded-xl font-medium transition-colors flex items-center justify-center gap-2"
         >
           {isLoading ? (
             <>
-              <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              <span className="w-4 h-4 border-2 border-[var(--overlay-light)] border-t-on-primary rounded-full animate-spin" />
               Preparing your session...
             </>
           ) : (
@@ -156,4 +156,3 @@ export default function TemplateInputForm({
     </div>
   );
 }
-

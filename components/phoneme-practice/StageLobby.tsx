@@ -157,7 +157,8 @@ export function StageLobby({ soundIpa, soundName, mastery, hasPairs, onSelectSta
                     {stage.title}
                   </span>
                 </div>
-                <span className={`text-xs mt-0.5 ${stage.difficulty === 'Easy' ? 'text-success' : 'text-warning'}`}>
+                <span className="badge">
+                  <span className={stage.difficulty === 'Easy' ? 'dot-success' : 'dot-warning'} />
                   {stage.difficulty}
                 </span>
               </div>
@@ -169,7 +170,7 @@ export function StageLobby({ soundIpa, soundName, mastery, hasPairs, onSelectSta
                 ) : m.total > 0 ? (
                   <div className="relative w-9 h-9">
                     <MasteryRing pct={m.pct} size={36} />
-                    <span className="absolute inset-0 flex items-center justify-center text-[9px] font-bold" style={{ color: 'var(--text-secondary)' }}>
+                    <span className="absolute inset-0 flex items-center justify-center text-tiny font-bold" style={{ color: 'var(--text-secondary)' }}>
                       {m.pct}%
                     </span>
                   </div>

@@ -112,13 +112,13 @@ export default function ProgressOverview({
       <div className="space-y-5">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="max-w-xl">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.28em]" style={{ color: "var(--primary)" }}>
+            <p className="text-tiny font-semibold uppercase tracking-[0.28em]" style={{ color: "var(--primary)" }}>
               Progress Snapshot
             </p>
             <h2 className="mt-2 text-3xl font-black tracking-tight sm:text-4xl" style={{ color: "var(--deep-text)" }}>
               Clear momentum, less noise.
             </h2>
-            <p className="mt-3 max-w-lg text-sm leading-7 sm:text-[15px]" style={{ color: "var(--text-secondary)" }}>
+            <p className="mt-3 max-w-lg text-sm leading-7 sm:text-body" style={{ color: "var(--text-secondary)" }}>
               Your progress now highlights rhythm, quality, and study load without repeating the same numbers in every block.
             </p>
           </div>
@@ -202,7 +202,7 @@ export default function ProgressOverview({
                 return (
                   <div key={day.date} className="flex min-w-0 flex-col items-center gap-2">
                     <span
-                      className="text-[10px] font-semibold"
+                      className="text-tiny font-semibold"
                       style={{ color: day.isToday ? "var(--primary)" : "var(--text-tertiary)" }}
                     >
                       {day.attempts > 0 ? day.attempts : ""}
@@ -221,8 +221,8 @@ export default function ProgressOverview({
                           animationDelay: `${index * 70}ms`,
                           background: day.attempts > 0
                             ? day.isToday
-                              ? "linear-gradient(180deg, color-mix(in oklch, var(--primary) 72%, white), var(--primary))"
-                              : "linear-gradient(180deg, color-mix(in oklch, var(--primary) 38%, white), color-mix(in oklch, var(--primary) 72%, transparent))"
+                              ? "linear-gradient(180deg, color-mix(in oklch, var(--primary) 72%, var(--on-primary)), var(--primary))"
+                              : "linear-gradient(180deg, color-mix(in oklch, var(--primary) 38%, var(--on-primary)), color-mix(in oklch, var(--primary) 72%, transparent))"
                             : "var(--line-divider)",
                           boxShadow: day.isToday
                             ? "0 10px 22px color-mix(in oklch, var(--primary) 18%, transparent)"
@@ -232,7 +232,7 @@ export default function ProgressOverview({
                       />
                     </div>
                     <span
-                      className="text-[11px] font-semibold"
+                      className="text-tiny font-semibold"
                       style={{ color: day.isToday ? "var(--primary)" : "var(--text-secondary)" }}
                     >
                       {day.label}
@@ -309,3 +309,4 @@ export default function ProgressOverview({
     </div>
   );
 }
+

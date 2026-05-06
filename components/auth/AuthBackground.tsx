@@ -53,7 +53,7 @@ export function AuthBackground() {
         return (
           <div
             key={i}
-            className="absolute text-white"
+            className="absolute text-on-primary"
             style={{
               top: pos.top,
               left: pos.left,

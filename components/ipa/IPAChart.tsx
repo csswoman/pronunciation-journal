@@ -100,13 +100,13 @@ export default function IPAChart() {
 
           />
 
-          <div className="rounded-3xl p-6 text-white" style={{ backgroundColor: "var(--primary)" }}>
+          <div className="rounded-3xl p-6 text-on-primary" style={{ backgroundColor: "var(--primary)" }}>
             <h3 className="font-bold text-base mb-1">
               Practice {selectedPhoneme.symbol}
             </h3>
             <p
               className="text-sm leading-relaxed mb-5"
-              style={{ color: "rgba(255, 255, 255, 0.7)" }}
+              style={{ color: "rgba(var(--on-primary), 0.7)" }}
             >
               Drill this sound with targeted exercises and track your progress in the practice area.
             </p>
@@ -115,7 +115,7 @@ export default function IPAChart() {
                 variant="outline"
                 size="lg"
                 fullWidth
-                className="border-white/30 bg-white/15 text-white hover:bg-white/25 hover:text-white"
+                className="border-[var(--overlay-light)] bg-overlay-weak text-on-primary hover:bg-overlay-light hover:text-on-primary"
               >
                 <Target size={16} />
                 Go to Practice
@@ -216,13 +216,13 @@ export default function IPAChart() {
                     >
                       <span
                         className="text-base font-bold font-ipa block leading-none"
-                        style={{ color: isActive ? "white" : "var(--text-primary)" }}
+                        style={{ color: isActive ? "var(--on-primary)" : "var(--text-primary)" }}
                       >
                         {symbol}
                       </span>
                       <span
-                        className="text-[9px] block mt-0.5"
-                        style={{ color: isActive ? "rgba(255,255,255,0.65)" : "var(--text-secondary)" }}
+                        className="text-tiny block mt-0.5"
+                        style={{ color: isActive ? "rgba(var(--on-primary), 0.65)" : "var(--text-secondary)" }}
                       >
                         {phoneme.example}
                       </span>
@@ -256,7 +256,7 @@ export default function IPAChart() {
         }}
       >
         <div
-          className="w-12 h-12 rounded-2xl flex items-center justify-center text-white text-xl shrink-0"
+          className="w-12 h-12 rounded-2xl flex items-center justify-center text-on-primary text-xl shrink-0"
           style={{ backgroundColor: "var(--primary)" }}
         >
           💬

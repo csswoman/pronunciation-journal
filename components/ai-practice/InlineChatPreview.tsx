@@ -29,7 +29,7 @@ export default function InlineChatPreview({ messages, isLoading }: InlineChatPre
           msg.role === "ai" ? (
             <div key={i} className="flex items-start gap-2.5">
               <div
-                className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold mt-0.5"
+                className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-tiny font-bold mt-0.5"
                 style={{ backgroundColor: "var(--btn-regular-bg)", color: "var(--primary)" }}
               >
                 AI
@@ -56,7 +56,7 @@ export default function InlineChatPreview({ messages, isLoading }: InlineChatPre
         {isLoading && (
           <div className="flex items-start gap-2.5">
             <div
-              className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold"
+              className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-tiny font-bold"
               style={{ backgroundColor: "var(--btn-regular-bg)", color: "var(--primary)" }}
             >
               AI

@@ -32,7 +32,7 @@ export default function EntryWordField({
     <div>
       <label
         htmlFor="word"
-        className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+        className="block text-sm font-medium text-fg-muted mb-1"
       >
         Word *
       </label>
@@ -59,7 +59,7 @@ export default function EntryWordField({
           onBlur={() => {
             setTimeout(() => setShowSuggestions(false), 200);
           }}
-          className="w-full px-3 py-2 pr-10 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-accent focus:border-accent"
+          className="w-full px-3 py-2 pr-10 border border-border-default rounded-md shadow-sm bg-surface-sunken text-fg focus:ring-accent focus:border-accent"
           placeholder="Enter word"
           required
         />

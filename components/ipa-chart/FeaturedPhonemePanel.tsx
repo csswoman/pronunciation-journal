@@ -6,9 +6,9 @@ import { IPA_EXTRA } from "@/lib/ipa-data";
 import type { PhonemeData } from "./data";
 
 const DIFFICULTY_CONFIG = {
-  easy:   { label: "Easy",   color: "#22c55e", filled: 2 },
-  medium: { label: "Moderate", color: "#eab308", filled: 3 },
-  hard:   { label: "Hard",   color: "#ef4444", filled: 5 },
+  easy:   { label: "Easy",   color: "var(--success)", filled: 2 },
+  medium: { label: "Moderate", color: "var(--warning)", filled: 3 },
+  hard:   { label: "Hard",   color: "var(--error)", filled: 5 },
 };
 
 export default function FeaturedPhonemePanel({
@@ -33,11 +33,11 @@ export default function FeaturedPhonemePanel({
       }}
     >
       <div className="flex items-center justify-between mb-3">
-        <p className="text-[10px] font-bold uppercase tracking-widest" style={{ color: "var(--text-secondary)" }}>
+        <p className="text-tiny font-bold uppercase tracking-widest" style={{ color: "var(--text-secondary)" }}>
           Selected Phoneme
         </p>
         <span
-          className="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full"
+          className="text-tiny font-bold uppercase px-2 py-0.5 rounded-full"
           style={{ backgroundColor: "var(--btn-regular-bg)", color: "var(--primary)" }}
         >
           {phoneme.type}
@@ -54,7 +54,7 @@ export default function FeaturedPhonemePanel({
           variant="primary"
           size="iconLg"
           icon={isPlaying ? <Square size={14} /> : <Play size={14} />}
-          className="w-10 h-10 text-white"
+          className="w-10 h-10 text-on-primary"
         />
       </div>
 
@@ -70,7 +70,7 @@ export default function FeaturedPhonemePanel({
         className="rounded-2xl p-3 mb-1"
         style={{ backgroundColor: "var(--btn-regular-bg)" }}
       >
-        <p className="text-[10px] font-bold uppercase tracking-widest mb-2" style={{ color: "var(--text-secondary)" }}>
+        <p className="text-tiny font-bold uppercase tracking-widest mb-2" style={{ color: "var(--text-secondary)" }}>
           Example word
         </p>
         <p className="text-base font-bold" style={{ color: "var(--text-primary)" }}>
@@ -92,10 +92,10 @@ export default function FeaturedPhonemePanel({
       {diffConfig && (
         <div className="mt-4 pt-4 border-t" style={{ borderColor: "var(--line-divider)" }}>
           <div className="flex items-center justify-between mb-1.5">
-            <p className="text-[10px] font-bold uppercase tracking-widest" style={{ color: "var(--text-secondary)" }}>
+            <p className="text-tiny font-bold uppercase tracking-widest" style={{ color: "var(--text-secondary)" }}>
               Difficulty
             </p>
-            <span className="text-[10px] font-bold uppercase" style={{ color: diffConfig.color }}>
+            <span className="text-tiny font-bold uppercase" style={{ color: diffConfig.color }}>
               {diffConfig.label}
             </span>
           </div>
@@ -115,7 +115,7 @@ export default function FeaturedPhonemePanel({
 
       {extra?.articulation && extra.articulation.length > 0 && (
         <div className="mt-4 pt-4 border-t" style={{ borderColor: "var(--line-divider)" }}>
-          <p className="text-[10px] font-bold uppercase tracking-widest mb-2" style={{ color: "var(--text-secondary)" }}>
+          <p className="text-tiny font-bold uppercase tracking-widest mb-2" style={{ color: "var(--text-secondary)" }}>
             Articulation
           </p>
           <ul className="space-y-1.5">
@@ -131,7 +131,7 @@ export default function FeaturedPhonemePanel({
 
       {extra?.minimalPairs && extra.minimalPairs.length > 0 && (
         <div className="mt-4 pt-4 border-t" style={{ borderColor: "var(--line-divider)" }}>
-          <p className="text-[10px] font-bold uppercase tracking-widest mb-2" style={{ color: "var(--text-secondary)" }}>
+          <p className="text-tiny font-bold uppercase tracking-widest mb-2" style={{ color: "var(--text-secondary)" }}>
             Minimal Pairs
           </p>
           <ul className="space-y-1.5">
@@ -154,7 +154,7 @@ export default function FeaturedPhonemePanel({
         >
           <span className="text-lg shrink-0 mt-0.5">💡</span>
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-widest mb-1.5" style={{ color: "#eab308" }}>
+            <p className="text-tiny font-bold uppercase tracking-widest mb-1.5" style={{ color: "var(--warning)" }}>
               Para hispanohablantes
             </p>
             <p className="text-xs leading-relaxed" style={{ color: "var(--text-secondary)" }}>

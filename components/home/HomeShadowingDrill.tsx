@@ -14,18 +14,18 @@ export default function HomeShadowingDrill({
   speedWpm = 120,
 }: HomeShadowingDrillProps) {
   return (
-    <Card variant="compact" className="gap-4 border-l-4 border-l-orange-400">
+    <Card variant="compact" className="gap-4 border-l-[3px] border-l-warning">
       <div className="flex items-center gap-2">
         <span className="text-base">🌀</span>
-        <span className="text-[10px] font-bold tracking-widest text-orange-500 uppercase">
+        <span className="text-tiny font-bold tracking-widest text-warning uppercase">
           Shadowing Drill
         </span>
       </div>
 
       <p className="text-sm font-semibold text-[var(--deep-text)] -mt-1">Tongue twister</p>
 
-      <div className="rounded-xl bg-orange-50 dark:bg-orange-950/20 px-4 py-3">
-        <p className="text-base font-semibold italic text-orange-500 leading-relaxed">
+      <div className="rounded-lg bg-surface-sunken px-4 py-3">
+        <p className="text-base font-semibold italic text-[var(--warning)] leading-relaxed">
           {text}
         </p>
       </div>
@@ -38,13 +38,13 @@ export default function HomeShadowingDrill({
       </div>
 
       <div className="flex gap-2">
-        <button className="flex-1 flex items-center justify-center gap-1.5 text-sm font-semibold text-[var(--deep-text)] border border-[var(--line-divider)] rounded-xl py-2.5 hover:bg-[var(--btn-regular-bg)] transition-colors">
+        <button className="flex-1 flex items-center justify-center gap-1.5 text-sm font-semibold text-fg border border-border-subtle rounded-lg py-2.5 hover:bg-surface-sunken transition-colors">
           <Volume2 size={14} />
           Listen
         </button>
         <Link
           href="/practice"
-          className="flex-1 flex items-center justify-center gap-1.5 text-sm font-semibold text-white bg-orange-500 hover:bg-orange-400 rounded-xl py-2.5 transition-colors"
+          className="flex-1 flex items-center justify-center gap-1.5 text-sm font-semibold text-[var(--on-primary)] bg-[var(--warning)] hover:opacity-90 rounded-lg py-2.5 transition-colors"
         >
           <Mic size={14} />
           Try

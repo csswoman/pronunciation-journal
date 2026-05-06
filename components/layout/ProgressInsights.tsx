@@ -51,7 +51,7 @@ function CircleMeter({ value, label, hint }: { value: number; label: string; hin
       <svg width="132" height="132" viewBox="0 0 132 132" className="-rotate-90">
         <defs>
           <linearGradient id="insight-ring" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="color-mix(in oklch, var(--primary) 70%, white)" />
+            <stop offset="0%" stopColor="color-mix(in oklch, var(--primary) 70%, var(--on-primary))" />
             <stop offset="100%" stopColor="var(--primary)" />
           </linearGradient>
         </defs>
@@ -72,10 +72,10 @@ function CircleMeter({ value, label, hint }: { value: number; label: string; hin
         <span className="text-3xl font-black tracking-tight" style={{ color: "var(--deep-text)" }}>
           {Math.round(value)}%
         </span>
-        <span className="text-[11px] font-semibold uppercase tracking-[0.22em]" style={{ color: "var(--text-secondary)" }}>
+        <span className="text-tiny font-semibold uppercase tracking-[0.22em]" style={{ color: "var(--text-secondary)" }}>
           {label}
         </span>
-        <span className="mt-1 text-[11px]" style={{ color: "var(--text-tertiary)" }}>
+        <span className="mt-1 text-tiny" style={{ color: "var(--text-tertiary)" }}>
           {hint}
         </span>
       </div>
@@ -164,7 +164,7 @@ export default function ProgressInsights({
     >
       <div className="flex flex-col gap-4 border-b pb-5 sm:flex-row sm:items-center sm:justify-between" style={{ borderColor: "var(--line-divider)" }}>
         <div>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.24em]" style={{ color: "var(--primary)" }}>
+          <p className="text-tiny font-semibold uppercase tracking-[0.24em]" style={{ color: "var(--primary)" }}>
             Insight Panels
           </p>
           <h3 className="mt-2 text-2xl font-black tracking-tight" style={{ color: "var(--deep-text)" }}>
@@ -288,4 +288,5 @@ export default function ProgressInsights({
     </div>
   );
 }
+
 

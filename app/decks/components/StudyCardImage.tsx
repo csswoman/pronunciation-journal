@@ -32,13 +32,13 @@ export function StudyCardImage({ imageUrl, imageLoading, word, fileInputRef, onU
           <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
             <button
               onClick={() => fileInputRef.current?.click()}
-              className="px-3 py-1.5 rounded-lg bg-white/90 text-xs font-semibold text-gray-800 hover:bg-white transition-colors"
+              className="px-3 py-1.5 rounded-lg bg-overlay-darker text-xs font-semibold text-fg hover:bg-surface-raised transition-colors"
             >
               Change
             </button>
             <button
               onClick={onRemove}
-              className="px-3 py-1.5 rounded-lg bg-white/90 text-xs font-semibold text-red-600 hover:bg-white transition-colors"
+              className="px-3 py-1.5 rounded-lg bg-overlay-darker text-xs font-semibold text-error hover:bg-surface-raised transition-colors"
             >
               Remove
             </button>
@@ -61,3 +61,4 @@ export function StudyCardImage({ imageUrl, imageLoading, word, fileInputRef, onU
     </div>
   );
 }
+
