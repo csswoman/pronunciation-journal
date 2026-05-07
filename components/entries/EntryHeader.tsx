@@ -76,7 +76,7 @@ export default function EntryHeader({
             </Button>
             <Button
               onClick={onCancel}
-              className="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-on-primary rounded-lg transition-colors text-sm font-medium"
+              className="px-4 py-2 bg-surface-sunken hover:bg-border-default text-fg rounded-lg transition-colors text-sm font-medium"
             >
               Cancel
             </Button>

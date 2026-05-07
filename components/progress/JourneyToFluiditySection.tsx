@@ -86,7 +86,7 @@ export default function JourneyToFluiditySection() {
 
       {/* List */}
       <div
-        className="overflow-hidden rounded-[22px]"
+        className="overflow-hidden rounded-3xl"
         style={{
           background: 'var(--card-bg)',
           border: '1px solid var(--line-divider)',

@@ -37,7 +37,7 @@ export function SoundLobby({
   return (
     <section>
       {/* Hero */}
-      <div className="relative overflow-hidden rounded-t-[15px] bg-gradient-to-br from-[var(--card-bg)] to-[var(--btn-regular-bg)] shadow-[0_16px_40px_rgba(15,23,42,0.06)]">
+      <div className="relative overflow-hidden rounded-t-2xl bg-gradient-to-br from-[var(--card-bg)] to-[var(--btn-regular-bg)] shadow-[0_16px_40px_rgba(15,23,42,0.06)]">
         <div className="relative space-y-6">
           {/* Navbar row */}
           <div className="flex items-center justify-between px-4 py-2.5 border-b border-[var(--line-divider)]">
@@ -69,7 +69,7 @@ export function SoundLobby({
           <div className="flex items-center justify-between">
             <div className="p-8 md:p-10 max-w-2xl space-y-3">
               <div className="flex items-baseline gap-4">
-                <h1 className="font-mono text-[48px] font-bold leading-none text-[var(--primary)] lg:text-[60px]">
+                <h1 className="font-mono text-5xl font-bold leading-none text-[var(--primary)] lg:text-6xl">
                   {soundIpa}
                 </h1>
                 {soundType && (
@@ -146,8 +146,8 @@ export function SoundLobby({
       <div className="px-6 lg:px-10 py-8 pb-14">
         <div className="grid gap-3 sm:grid-cols-3 mb-8">
           <InfoPill icon="👂" label="Stage 1" value="Identify words with this sound" accent="var(--primary)" />
-          <InfoPill icon="🔄" label="Stage 2" value={hasPairs ? "Distinguish minimal pairs" : "Locked — no pairs for this sound"} accent="#f4a261" />
-          <InfoPill icon="🎙️" label="Stage 3" value="Dictation — hear and type" accent="#2ec4b6" />
+          <InfoPill icon="🔄" label="Stage 2" value={hasPairs ? "Distinguish minimal pairs" : "Locked — no pairs for this sound"} accent="var(--stage-pairs)" />
+          <InfoPill icon="🎙️" label="Stage 3" value="Dictation — hear and type" accent="var(--stage-dictation)" />
         </div>
 
         <div className="flex items-end justify-between gap-4 pt-2">
@@ -246,12 +246,12 @@ export function SoundLobby({
         {nextUnlocked ? (
           <Button
             onClick={() => onSelectStage(nextUnlocked.id)}
-            className="btn-primary w-full rounded-[18px] px-5 py-4 text-body-sm font-semibold shadow-lg shadow-[color-mix(in_oklch,var(--primary)_18%,transparent)] transition-all duration-200 hover:-translate-y-0.5"
+            className="btn-primary w-full rounded-2xl px-5 py-4 text-body-sm font-semibold shadow-lg shadow-[color-mix(in_oklch,var(--primary)_18%,transparent)] transition-all duration-200 hover:-translate-y-0.5"
           >
             Continue — {nextUnlocked.title}
           </Button>
         ) : overall >= 80 ? (
-          <div className="rounded-[18px] border border-[color-mix(in_oklch,var(--admonitions-color-tip)_20%,transparent)] bg-[color-mix(in_oklch,var(--admonitions-color-tip)_8%,transparent)] px-4 py-4 text-center">
+          <div className="rounded-2xl border border-[color-mix(in_oklch,var(--admonitions-color-tip)_20%,transparent)] bg-[color-mix(in_oklch,var(--admonitions-color-tip)_8%,transparent)] px-4 py-4 text-center">
             <p className="text-body-sm font-semibold text-[var(--admonitions-color-tip)]">
               🎉 All stages mastered — great work!
             </p>
@@ -262,7 +262,7 @@ export function SoundLobby({
         ) : (
           <Button
             onClick={() => onSelectStage("recognition")}
-            className="btn-primary w-full rounded-[18px] px-5 py-4 text-body-sm font-semibold shadow-lg shadow-[color-mix(in_oklch,var(--primary)_18%,transparent)] transition-all duration-200 hover:-translate-y-0.5"
+            className="btn-primary w-full rounded-2xl px-5 py-4 text-body-sm font-semibold shadow-lg shadow-[color-mix(in_oklch,var(--primary)_18%,transparent)] transition-all duration-200 hover:-translate-y-0.5"
           >
             Start practice · Stage 1
           </Button>
@@ -283,8 +283,8 @@ function StageEmoji({ id }: { id: StageId }) {
 function stageColor(id: StageId): string {
   switch (id) {
     case "recognition": return "var(--primary)"
-    case "pairs":       return "#f4a261"
-    case "dictation":   return "#2ec4b6"
+    case "pairs":       return "var(--stage-pairs)"
+    case "dictation":   return "var(--stage-dictation)"
   }
 }
 
@@ -295,7 +295,7 @@ function InfoPill({ icon, label, value, accent }: { icon: string; label: string;
       style={{ background: "var(--card-bg)", borderColor: "var(--line-divider)", boxShadow: "0 1px 3px rgba(0,0,0,0.04)" }}
     >
       <div className="flex items-center gap-2">
-        <span className="text-[16px] leading-none">{icon}</span>
+        <span className="text-base leading-none">{icon}</span>
         <p className="text-tiny font-semibold uppercase tracking-[.14em] text-[var(--text-tertiary)]">{label}</p>
       </div>
       <div className="flex items-start gap-2.5">

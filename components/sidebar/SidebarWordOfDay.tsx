@@ -133,8 +133,11 @@ export default function SidebarWordOfDay() {
 
   return (
     <div
-      className="mx-3 mb-3 rounded-2xl overflow-hidden p-4 flex flex-col gap-3"
-      style={{ backgroundColor: "var(--bg-secondary)", border: "1px solid var(--border)" }}
+      className="flex flex-col gap-3 overflow-hidden"
+      style={{
+        borderTop: "1px solid var(--border-subtle)",
+        padding: "var(--space-4)",
+      }}
     >
       <div className="flex items-center justify-between">
         <span
@@ -172,7 +175,7 @@ export default function SidebarWordOfDay() {
         <>
           <div>
             <div className="flex items-center gap-1.5">
-              <p className="text-xl font-bold leading-tight" style={{ color: "var(--text-primary)" }}>{word.word}</p>
+              <p className="font-bold leading-tight" style={{ font: "var(--font-h4)", color: "var(--text-primary)" }}>{word.word}</p>
               <button
                 onClick={() => setDefinitionOpen((o) => !o)}
                 className="hover:opacity-70 transition-opacity mt-0.5"
@@ -185,7 +188,7 @@ export default function SidebarWordOfDay() {
                 />
               </button>
             </div>
-            <p className="text-sm font-mono mt-0.5" style={{ color: "var(--primary)" }}>{word.ipa}</p>
+            <p className="font-ipa mt-0.5" style={{ font: "var(--font-caption)", color: "var(--primary)" }}>{word.ipa}</p>
 
             {definitionOpen && (
               <div
@@ -216,8 +219,8 @@ export default function SidebarWordOfDay() {
             <button
               onClick={speak}
               disabled={speaking}
-              className="flex-1 flex items-center justify-center gap-1.5 text-xs font-semibold rounded-xl py-2 transition-colors disabled:opacity-50"
-              style={{ color: "var(--text-primary)", border: "1px solid var(--border)", backgroundColor: "var(--btn-regular-bg)" }}
+              className="flex-1 flex items-center justify-center gap-1.5 text-xs font-semibold rounded-xl transition-colors disabled:opacity-50"
+              style={{ color: "var(--text-primary)", border: "1px solid var(--border)", backgroundColor: "var(--btn-regular-bg)", padding: "var(--space-1) var(--space-3)" }}
             >
               <Volume2 size={13} />
               {speaking ? "Playing…" : "Listen"}
@@ -226,7 +229,8 @@ export default function SidebarWordOfDay() {
             {!isRecording ? (
               <button
                 onClick={startRecording}
-                className="flex-1 flex items-center justify-center gap-1.5 text-xs font-semibold rounded-xl py-2 transition-colors accent-button"
+                className="flex-1 flex items-center justify-center gap-1.5 text-xs font-semibold rounded-xl transition-colors accent-button"
+                style={{ padding: "var(--space-1) var(--space-3)" }}
               >
                 <Mic size={13} />
                 Record
@@ -234,8 +238,8 @@ export default function SidebarWordOfDay() {
             ) : (
               <button
                 onClick={stopRecording}
-                className="flex-1 flex items-center justify-center gap-1.5 text-xs font-semibold rounded-xl py-2 transition-colors"
-                style={{ backgroundColor: "var(--error)", color: "oklch(1 0 0)" }}
+                className="flex-1 flex items-center justify-center gap-1.5 text-xs font-semibold rounded-xl transition-colors"
+                style={{ backgroundColor: "var(--error)", color: "oklch(1 0 0)", padding: "var(--space-1) var(--space-3)" }}
               >
                 <Square size={13} />
                 Stop

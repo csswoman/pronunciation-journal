@@ -257,7 +257,7 @@ export default function SoundPracticePage() {
               </svg>
             </Button>
             <div className="text-center">
-              <h1 className="text-[18px] font-semibold leading-tight tracking-tight font-mono" style={{ color: 'var(--primary)' }}>
+              <h1 className="text-lg font-semibold leading-tight tracking-tight font-mono" style={{ color: 'var(--primary)' }}>
                 {sessionData.sound.ipa}
               </h1>
               <p className="text-caption leading-5" style={{ color: 'var(--text-secondary)' }}>

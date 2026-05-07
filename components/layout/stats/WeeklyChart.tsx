@@ -63,7 +63,7 @@ export function WeeklyChart({ progressHistory }: Props) {
 
   return (
     <div
-      className="rounded-[26px] p-5"
+      className="rounded-3xl p-5"
       style={{
         background: "var(--card-bg)",
         border: "1px solid var(--line-divider)",
@@ -119,7 +119,7 @@ export function WeeklyChart({ progressHistory }: Props) {
                   </span>
                   <div className="w-full flex items-end" style={{ height: 96 }}>
                     <div
-                      className="w-full rounded-[10px] animate-stat-rise"
+                      className="w-full rounded-xl animate-stat-rise"
                       style={{
                         height: barH,
                         animationDelay: `${i * 60}ms`,

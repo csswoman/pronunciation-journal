@@ -24,6 +24,8 @@
   --color-surface-raised:  var(--surface-raised);
   --color-surface-sunken:  var(--surface-sunken);
   --color-surface-overlay: var(--surface-overlay);
+  --color-surface-tooltip: var(--surface-tooltip);
+  --color-surface-code:    var(--surface-code);
 
   /* ── Primary (dynamic — driven by --hue at runtime) ───────────────────── */
   --color-primary:         var(--primary);
@@ -227,6 +229,14 @@
   --info:          oklch(0.70 0.12 230);
   --info-soft:     oklch(0.93 0.04 230);
 
+  /* ── Stage accent colors ─────────────────────────────────────────────── */
+  --stage-pairs:     oklch(0.74 0.14 55);   /* warm orange, phoneme pairs stage */
+  --stage-dictation: oklch(0.73 0.12 185);  /* teal, dictation stage */
+
+  /* ── Tooltip & code block surfaces ───────────────────────────────────── */
+  --surface-tooltip: oklch(0.17 0.006 var(--hue)); /* always-dark for tooltip bg */
+  --surface-code:    oklch(0.14 0.005 var(--hue)); /* always-dark for code blocks */
+
   /* ── 4. Surfaces — semantic elevation names ──────────────────────────── */
   /* Maps to the neutral system; use these in components, not --bg-* directly */
   --surface-base:    var(--bg);           /* page background */
@@ -239,6 +249,10 @@
   --border-default: var(--border);        /* standard card/input borders */
   --border-strong:  oklch(0.720 0 0);     /* emphasized borders, active states */
   --border-focus:   var(--primary);       /* focus outlines */
+
+  /* ── Stage accent colors (fixed hues, not dynamic) ──────────────────── */
+  --color-stage-pairs:     var(--stage-pairs);
+  --color-stage-dictation: var(--stage-dictation);
 
   /* ── Scoring / Accuracy aliases (interview & pronunciation feedback) ──── */
   --score-excellent:    var(--success);
@@ -419,6 +433,10 @@
 
   --info:          oklch(0.74 0.12 230);
   --info-soft:     oklch(0.20 0.05 230);
+
+  /* ── Tooltip & code — dark overrides ───────────────────────────────── */
+  --surface-tooltip: oklch(0.24 0.006 var(--hue));
+  --surface-code:    oklch(0.10 0.003 var(--hue));
 
   /* ── Surfaces — dark overrides ──────────────────────────────────────── */
   --surface-base:    var(--bg);
@@ -645,7 +663,7 @@
 }
 
 /* Ring/Focus Styles */
-.focus\:ring-primary:focus {
+.focus\:ring-primary:focus-visible {
   outline: none;
   box-shadow: 0 0 0 3px var(--focus-color);
 }
@@ -967,6 +985,11 @@
   background: var(--color-selection-bar);
   outline: none;
   border-radius: 999px;
+}
+
+.color-selection-slider:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
   padding: 0;
 }
 
@@ -1072,3 +1095,29 @@
 .dot-success { background: var(--success); }
 .dot-danger { background: var(--error); }
 .dot-info { background: var(--info); }
+
+/* ── Global Focus Visibility ──────────────────────────────────────────── */
+*:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* ── Reduced Motion ───────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

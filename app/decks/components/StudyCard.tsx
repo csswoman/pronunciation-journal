@@ -98,7 +98,13 @@ export function StudyCard({
   );
 
   return (
-    <div style={{ perspective: "1000px" }} className="w-full max-w-sm cursor-pointer select-none" onClick={onFlip}>
+    <button
+      type="button"
+      style={{ perspective: "1000px" }}
+      className="w-full max-w-sm cursor-pointer select-none text-left"
+      onClick={onFlip}
+      aria-label={flipped ? "Flip card to front" : "Flip card to see answer"}
+    >
       <div style={{
         transformStyle: "preserve-3d",
         transition: "transform 0.55s cubic-bezier(0.4, 0, 0.2, 1)",
@@ -151,6 +157,6 @@ export function StudyCard({
           true
         )}
       </div>
-    </div>
+    </button>
   );
 }

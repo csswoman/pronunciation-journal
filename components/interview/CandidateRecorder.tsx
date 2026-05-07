@@ -58,7 +58,7 @@ function WordChip({ word, status, tip }: { word: string; status: "correct" | "in
     correct: "bg-success/10 text-success dark:text-success",
     incorrect: "bg-warning-soft text-warning",
     missing: "bg-warning/10 text-warning line-through",
-    extra: "bg-gray-500/10 text-fg-subtle",
+    extra: "bg-surface-sunken text-fg-subtle",
   };
 
   return (

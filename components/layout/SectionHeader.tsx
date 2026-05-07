@@ -8,11 +8,11 @@ interface SectionHeaderProps {
 }
 
 export default function SectionHeader({ title, viewAll, viewAllHref }: SectionHeaderProps) {
-  const linkClass = "text-caption font-semibold text-[var(--primary)] flex items-center gap-1 transition-[gap] duration-200 hover:gap-2";
+  const linkClass = "text-caption font-semibold text-[var(--primary)] flex items-center gap-1 [transition:gap_var(--transition-fast,150ms_ease),color_var(--transition-fast,150ms_ease)] hover:gap-2 hover:text-[var(--primary)]";
 
   return (
     <div className="flex items-center justify-between mb-4">
-      <h2 className="font-heading text-lg font-bold text-[var(--deep-text)] tracking-tight">
+      <h2 className="text-[var(--font-h2)]" style={{ fontWeight: 600 }}>
         {title}
       </h2>
       {viewAllHref ? (

@@ -41,7 +41,7 @@ export default function WordsToday({ words, newCount, reviewCount }: WordsTodayP
 
   return (
     <div
-      className="rounded-[26px] p-5"
+      className="rounded-3xl p-5"
       style={{
         background: 'var(--card-bg)',
         border: '1px solid var(--line-divider)',

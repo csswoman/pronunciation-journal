@@ -57,7 +57,7 @@ export function AuthInput({
             className="absolute right-[var(--space-3)] top-1/2 -translate-y-1/2 p-1 rounded-md transition-all text-[var(--text-tertiary)] hover:text-[var(--text-secondary)]"
             aria-label={showPassword ? "Hide password" : "Show password"}
           >
-            {showPassword ? <EyeOff className="w-[18px] h-[18px]" /> : <Eye className="w-[18px] h-[18px]" />}
+            {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
           </button>
         )}
       </div>

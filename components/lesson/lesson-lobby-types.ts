@@ -31,7 +31,7 @@ export const LESSON_STAGES: LessonStageDef[] = [
     description: 'Pronounce each word without the IPA hint',
     difficulty: 'Medium',
     icon: 'mic',
-    barColor: '#2ec4b6',
+    barColor: 'var(--stage-dictation)',
   },
   {
     id: 'speed',
@@ -40,7 +40,7 @@ export const LESSON_STAGES: LessonStageDef[] = [
     description: 'Go through all words as fast as you can',
     difficulty: 'Hard',
     icon: 'zap',
-    barColor: '#f4a261',
+    barColor: 'var(--stage-pairs)',
   },
 ]
 

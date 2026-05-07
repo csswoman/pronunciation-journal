@@ -11,7 +11,7 @@ export function GuestBanner() {
     <div className="space-y-4">
       {/* Hero empty state */}
       <div
-        className="rounded-[26px] p-8 flex flex-col items-center text-center gap-4"
+        className="rounded-3xl p-8 flex flex-col items-center text-center gap-4"
         style={{
           background: "linear-gradient(145deg, color-mix(in oklch, var(--primary) 10%, var(--card-bg)), var(--card-bg))",
           border: "1px solid color-mix(in oklch, var(--primary) 16%, var(--line-divider))",
@@ -46,7 +46,7 @@ export function GuestBanner() {
         {["Consistency Score", "Current Streak", "Weekly Accuracy", "XP This Week", "Total Words"].map((label) => (
           <div
             key={label}
-            className="flex flex-col gap-2 rounded-[22px] p-4"
+            className="flex flex-col gap-2 rounded-3xl p-4"
             style={{ background: "var(--card-bg)", border: "1px solid var(--line-divider)" }}
           >
             <div className="h-9 w-9 rounded-xl" style={{ background: "var(--line-divider)" }} />
@@ -59,7 +59,7 @@ export function GuestBanner() {
       </div>
 
       <div
-        className="rounded-[26px] p-8 flex flex-col items-center text-center gap-2 opacity-40 pointer-events-none select-none blur-[2px]"
+        className="rounded-3xl p-8 flex flex-col items-center text-center gap-2 opacity-40 pointer-events-none select-none blur-[2px]"
         style={{ background: "var(--card-bg)", border: "1px solid var(--line-divider)", height: 200 }}
       >
         <p className="text-base font-bold" style={{ color: "var(--deep-text)" }}>Weekly progress chart</p>

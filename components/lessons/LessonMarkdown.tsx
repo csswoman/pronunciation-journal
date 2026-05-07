@@ -184,7 +184,7 @@ export default function LessonMarkdown({ content }: { content: string }) {
             </td>
           ),
           pre: ({ children }) => (
-            <pre className="my-6 overflow-x-auto rounded-xl bg-zinc-900 p-4 text-on-primary dark:bg-zinc-950">
+            <pre className="my-6 overflow-x-auto rounded-xl bg-surface-code p-4 text-on-primary">
               {children}
             </pre>
           ),
@@ -192,13 +192,13 @@ export default function LessonMarkdown({ content }: { content: string }) {
             const isBlock = Boolean(className && className.includes("language-"));
             if (isBlock) {
               return (
-                <code className="text-sm font-mono text-zinc-100">
+                <code className="text-sm font-mono text-on-primary">
                   {children}
                 </code>
               );
             }
             return (
-              <code className="rounded bg-zinc-100 px-1.5 py-0.5 text-sm text-zinc-800 dark:bg-zinc-800/80 dark:text-zinc-100">
+              <code className="rounded bg-surface-sunken px-1.5 py-0.5 text-sm text-fg">
                 {children}
               </code>
             );

@@ -64,8 +64,8 @@ export default function RoleplayView({
         <span
           className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium"
           style={{
-            backgroundColor: "var(--accent-subtle, #e0edff)",
-            color: "var(--accent, #3b82f6)",
+            backgroundColor: "var(--primary-soft)",
+            color: "var(--primary)",
           }}
         >
           {activeEmoji} {activeLabel}
@@ -96,9 +96,9 @@ export default function RoleplayView({
               className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium border transition-all"
               style={{
                 borderColor:
-                  activeScenario === s.id ? "var(--accent, #3b82f6)" : "var(--line-divider)",
+                  activeScenario === s.id ? "var(--primary)" : "var(--line-divider)",
                 color:
-                  activeScenario === s.id ? "var(--accent, #3b82f6)" : "var(--text-secondary)",
+                  activeScenario === s.id ? "var(--primary)" : "var(--text-secondary)",
                 backgroundColor: "transparent",
               }}
             >

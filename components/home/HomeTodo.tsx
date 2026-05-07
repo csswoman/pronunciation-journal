@@ -35,25 +35,23 @@ export default function HomeTodo() {
       <CardHeader
         icon={<ClipboardList size={18} className="text-[var(--primary)]" />}
         title="Today's plan"
-        right={
-          <span className="text-xs font-medium text-[var(--text-tertiary)]">
-            {completed}/{total} done
-          </span>
-        }
       />
 
-      {/* Progress bar */}
-      <div className="flex flex-col gap-1.5">
-        <div className="h-1.5 rounded-full bg-[var(--bg-tertiary)] overflow-hidden">
-          <div
-            className="h-full rounded-full bg-[var(--primary)] transition-all duration-700"
-            style={{ width: `${progress}%` }}
-          />
+      {/* Dot progress indicator */}
+      <div className="flex flex-col gap-1">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-1.5">
+            {TODO_ITEMS.map((item) => (
+              <span
+                key={item.id}
+                className="inline-block w-2 h-2 rounded-full"
+                style={{ background: item.done ? "var(--primary)" : "var(--border-default)" }}
+              />
+            ))}
+          </div>
+          <span className="text-xs font-medium text-[var(--text-tertiary)]">{completed}/{total} done</span>
         </div>
-        <div className="flex justify-between text-tiny text-[var(--text-tertiary)]">
-          <span>{progress}% complete</span>
-          <span>~{remaining} min left</span>
-        </div>
+        <span style={{ font: "var(--font-caption)", color: "var(--text-tertiary)" }}>~{remaining} min left</span>
       </div>
 
       {/* Items */}

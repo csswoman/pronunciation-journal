@@ -144,9 +144,9 @@ export default function Navbar({
 
               {/* Tooltip for collapsed state */}
               {isCollapsed && hoveredItem === item.id && (
-                <div className="absolute left-full ml-2 top-1/2 -translate-y-1/2 z-50 px-3 py-2 bg-gray-900 dark:bg-gray-700 text-on-primary text-sm rounded-lg shadow-lg whitespace-nowrap pointer-events-none">
+                <div className="absolute left-full ml-2 top-1/2 -translate-y-1/2 z-50 px-3 py-2 bg-surface-tooltip text-on-primary text-sm rounded-lg shadow-lg whitespace-nowrap pointer-events-none">
                   {item.label}
-                  <div className="absolute right-full top-1/2 -translate-y-1/2 border-4 border-transparent border-r-gray-900 dark:border-r-gray-700"></div>
+                  <div className="absolute right-full top-1/2 -translate-y-1/2 border-4 border-transparent border-r-surface-tooltip"></div>
                 </div>
               )}
             </li>

@@ -22,7 +22,7 @@ export default function PageLayout({ hero, children, className = "", variant = "
   return (
     <div className="space-y-0">
       {hero}
-      <div className={`px-6 lg:px-10 py-8 pb-14 ${className}`}>
+      <div className={`px-6 lg:px-10 py-12 pb-14 ${className}`}>
         {children}
       </div>
     </div>

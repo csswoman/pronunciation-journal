@@ -11,18 +11,37 @@ interface Props {
 }
 
 const CARD_COLORS = [
-  { bg: '#e8eaf6', label: '#5c6bc0' },
-  { bg: '#ede7f6', label: '#7e57c2' },
-  { bg: '#fef9c3', label: '#ca8a04' },
+  {
+    bg:          'var(--primary-soft)',
+    label:       'var(--primary)',
+    labelFaint:  'color-mix(in oklch, var(--primary) 33%, transparent)',
+    labelSubtle: 'color-mix(in oklch, var(--primary) 10%, transparent)',
+    labelBorder: 'color-mix(in oklch, var(--primary) 27%, transparent)',
+    labelBadge:  'color-mix(in oklch, var(--primary) 8%, transparent)',
+  },
+  {
+    bg:          'color-mix(in oklch, var(--accent-analog-1) 12%, var(--surface-raised))',
+    label:       'var(--accent-analog-1)',
+    labelFaint:  'color-mix(in oklch, var(--accent-analog-1) 33%, transparent)',
+    labelSubtle: 'color-mix(in oklch, var(--accent-analog-1) 10%, transparent)',
+    labelBorder: 'color-mix(in oklch, var(--accent-analog-1) 27%, transparent)',
+    labelBadge:  'color-mix(in oklch, var(--accent-analog-1) 8%, transparent)',
+  },
+  {
+    bg:          'var(--warning-soft)',
+    label:       'var(--warning-value)',
+    labelFaint:  'color-mix(in oklch, var(--warning-value) 33%, transparent)',
+    labelSubtle: 'color-mix(in oklch, var(--warning-value) 10%, transparent)',
+    labelBorder: 'color-mix(in oklch, var(--warning-value) 27%, transparent)',
+    labelBadge:  'color-mix(in oklch, var(--warning-value) 8%, transparent)',
+  },
 ]
 
-// Blue-tinted text palette for pastel card backgrounds above.
-// NOT generic grays — chosen for contrast on these specific backgrounds.
 const CARD_TEXT = {
-  title:    '#1a1a2e',  // blue-black for h3 titles
-  subtitle: '#555577',  // blue-gray for descriptions
-  meta:     '#888899',  // light blue-gray for metadata / timestamps
-  cta:      '#1a1a2e',  // same deep blue for the arrow button bg
+  title:    'var(--text-primary)',
+  subtitle: 'var(--text-secondary)',
+  meta:     'var(--text-tertiary)',
+  cta:      'var(--text-primary)',
 }
 
 const STAGE_ICONS: Record<string, LucideIcon> = {
@@ -62,12 +81,12 @@ export function StageCard({ stage, mastery, index, unlocked, diffMode, onSelect 
     >
       {/* Top row: number + icon */}
       <div className="flex items-start justify-between mb-4">
-        <span className="text-5xl font-bold leading-none" style={{ color: `${color.label}55` }}>
+        <span className="text-5xl font-bold leading-none" style={{ color: color.labelFaint }}>
           {num}
         </span>
         <span
           className="w-10 h-10 rounded-2xl flex items-center justify-center"
-          style={{ background: `${color.label}18`, color: color.label }}
+          style={{ background: color.labelSubtle, color: color.label }}
         >
           <Icon size={20} strokeWidth={1.75} />
         </span>
@@ -76,13 +95,13 @@ export function StageCard({ stage, mastery, index, unlocked, diffMode, onSelect 
       {/* Category badge */}
       <span
         className="self-start text-tiny font-bold tracking-widest uppercase px-3 py-1 rounded-full mb-4 border"
-        style={{ color: color.label, borderColor: `${color.label}44`, background: `${color.label}12` }}
+        style={{ color: color.label, borderColor: color.labelBorder, background: color.labelBadge }}
       >
         {STAGE_LABELS[stage.id] ?? stage.title}
       </span>
 
       {/* Title */}
-      <h3 className="text-[22px] font-bold leading-tight mb-2" style={{ color: CARD_TEXT.title }}>
+      <h3 className="text-2xl font-bold leading-tight mb-2" style={{ color: CARD_TEXT.title }}>
         {stage.title}
       </h3>
 

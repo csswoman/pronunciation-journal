@@ -100,11 +100,13 @@ function SearchInput({ value, onChange }: { value: string; onChange: (v: string)
         size={12}
         className="absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none"
         style={{ color: "var(--text-tertiary)" }}
+        aria-hidden="true"
       />
       <input
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder="Search chats..."
+        aria-label="Search chats"
         className="w-full pl-7 pr-3 py-1.5 text-xs rounded-lg border focus:outline-none transition-colors"
         style={{
           backgroundColor: "var(--btn-regular-bg)",

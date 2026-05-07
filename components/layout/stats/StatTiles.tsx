@@ -25,7 +25,7 @@ function StatTile({
 }) {
   return (
     <div
-      className="flex flex-col gap-2 rounded-[22px] p-4"
+      className="flex flex-col gap-2 rounded-3xl p-4"
       style={{
         background: accent
           ? "linear-gradient(145deg, color-mix(in oklch, var(--primary) 18%, var(--card-bg)), var(--card-bg))"
@@ -61,7 +61,7 @@ function StatTile({
 function StatTileSkeleton() {
   return (
     <div
-      className="flex flex-col gap-2 rounded-[22px] p-4"
+      className="flex flex-col gap-2 rounded-3xl p-4"
       style={{ background: "var(--card-bg)", border: "1px solid var(--line-divider)" }}
     >
       <div className="h-9 w-9 rounded-xl animate-pulse" style={{ background: "var(--line-divider)" }} />

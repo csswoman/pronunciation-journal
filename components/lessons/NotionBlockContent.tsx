@@ -18,7 +18,7 @@ function NotionToggleItem({ lesson, defaultOpen = false }: NotionToggleItemProps
     <div className="rounded-xl border border-[var(--line-divider)] bg-surface-raised dark:bg-[var(--card-bg)] overflow-hidden">
       <Button
         onClick={() => setOpen((o) => !o)}
-        className="flex w-full items-center justify-between gap-4 px-6 py-4 text-left transition-colors hover:bg-neutral-50 dark:hover:bg-[var(--btn-plain-bg-hover)]"
+        className="flex w-full items-center justify-between gap-4 px-6 py-4 text-left transition-colors hover:bg-surface-raised"
       >
         <span className="text-base font-semibold text-fg">
           {lesson.title}

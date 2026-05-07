@@ -33,13 +33,13 @@ export default function HomeCoursesSection() {
     if (!track) return;
     const card = track.children[0] as HTMLElement | undefined;
     if (!card) return;
-    const step = card.offsetWidth + 16;
+    const step = card.offsetWidth + 24;
     track.scrollTo({ left: index * step, behavior: "smooth" });
   }, [index]);
 
   if (loading) {
     return (
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-6">
         {Array.from({ length: 2 }).map((_, i) => (
           <div key={i} className="rounded-lg border border-border-subtle bg-surface-raised h-40 overflow-hidden relative">
             <div className="absolute inset-0 -translate-x-full animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-overlay-weak to-transparent" />
@@ -56,10 +56,12 @@ export default function HomeCoursesSection() {
   return (
     <div className="flex flex-col gap-3">
       {/* overflow-hidden on THIS div clips the track without affecting page layout */}
-      <div className="overflow-hidden rounded-xl">
+      <div className="relative overflow-hidden rounded-xl">
+        {/* fade gradient indicating more content to the right */}
+        <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-20 z-10 bg-gradient-to-r from-transparent to-[var(--surface-base)]" />
         <div
           ref={trackRef}
-          className="flex gap-4 overflow-x-scroll [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          className="flex gap-6 overflow-x-scroll [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           style={{ scrollSnapType: "x mandatory" }}
         >
           {courses.map((course, i) => (

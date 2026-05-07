@@ -242,7 +242,7 @@ export default function AIEngagementWidget() {
 
   return (
     <div
-      className="rounded-[26px] p-5"
+      className="rounded-3xl p-5"
       style={{
         background: "var(--card-bg)",
         boxShadow: "0 1px 3px var(--line-divider), 0 6px 20px var(--line-divider)",

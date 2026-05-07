@@ -96,7 +96,7 @@ function MetricCard({
 }) {
   return (
     <div
-      className="rounded-[22px] p-4"
+      className="rounded-3xl p-4"
       style={{
         background:
           "linear-gradient(180deg, color-mix(in oklch, var(--btn-regular-bg) 82%, var(--card-bg)), var(--card-bg))",
@@ -156,7 +156,7 @@ export default function ProgressInsights({
 
   return (
     <div
-      className="rounded-[30px] p-5 sm:p-6"
+      className="rounded-3xl p-5 sm:p-6"
       style={{
         background: "var(--card-bg)",
         boxShadow: "0 1px 3px var(--line-divider), 0 10px 24px var(--line-divider)",
@@ -225,7 +225,7 @@ export default function ProgressInsights({
       {activeTab === "performance" && (
         <div className="grid gap-5 pt-5 lg:grid-cols-[0.85fr_1.15fr] animate-fadeIn">
           <div
-            className="rounded-[26px] p-5"
+            className="rounded-3xl p-5"
             style={{
               background: "linear-gradient(180deg, color-mix(in oklch, var(--primary) 10%, transparent), transparent)",
               border: "1px solid var(--line-divider)",

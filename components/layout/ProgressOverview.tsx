@@ -53,7 +53,7 @@ function MetricCard({
 }) {
   return (
     <div
-      className="rounded-[22px] p-4"
+      className="rounded-3xl p-4"
       style={{
         background:
           "linear-gradient(180deg, color-mix(in oklch, var(--btn-regular-bg) 82%, var(--card-bg)), var(--card-bg))",
@@ -102,7 +102,7 @@ export default function ProgressOverview({
 }: ProgressOverviewProps) {
   return (
     <div
-      className="overflow-hidden rounded-[30px] p-5 sm:p-6 lg:p-7"
+      className="overflow-hidden rounded-3xl p-5 sm:p-6 lg:p-7"
       style={{
         background:
           "radial-gradient(circle at top right, color-mix(in oklch, var(--primary) 14%, transparent), transparent 34%), linear-gradient(180deg, var(--card-bg), color-mix(in oklch, var(--btn-regular-bg) 72%, var(--card-bg)))",
@@ -124,7 +124,7 @@ export default function ProgressOverview({
           </div>
 
           <div
-            className="min-w-[210px] rounded-[26px] p-4 animate-fadeIn"
+            className="min-w-[210px] rounded-3xl p-4 animate-fadeIn"
             style={{
               background: "color-mix(in oklch, var(--primary) 10%, transparent)",
               border: "1px solid color-mix(in oklch, var(--primary) 18%, var(--line-divider))",
@@ -168,7 +168,7 @@ export default function ProgressOverview({
 
         <div className="grid gap-5 lg:grid-cols-[1.15fr_0.85fr]">
           <div
-            className="rounded-[26px] p-4 sm:p-5"
+            className="rounded-3xl p-4 sm:p-5"
             style={{
               background: "color-mix(in oklch, var(--card-bg) 92%, var(--btn-regular-bg))",
               border: "1px solid var(--line-divider)",
@@ -208,14 +208,14 @@ export default function ProgressOverview({
                       {day.attempts > 0 ? day.attempts : ""}
                     </span>
                     <div
-                      className="flex w-full items-end rounded-[18px] px-1.5 py-1"
+                      className="flex w-full items-end rounded-2xl px-1.5 py-1"
                       style={{
                         height: 140,
                         background: "linear-gradient(180deg, transparent, color-mix(in oklch, var(--primary) 4%, transparent))",
                       }}
                     >
                       <div
-                        className="w-full rounded-[14px] animate-stat-rise"
+                        className="w-full rounded-2xl animate-stat-rise"
                         style={{
                           height: `${barHeight}px`,
                           animationDelay: `${index * 70}ms`,
@@ -245,7 +245,7 @@ export default function ProgressOverview({
 
           <div className="space-y-4">
             <div
-              className="rounded-[26px] p-5"
+              className="rounded-3xl p-5"
               style={{
                 background: "var(--card-bg)",
                 border: "1px solid var(--line-divider)",

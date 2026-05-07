@@ -341,7 +341,13 @@ export function ManageDrawer({ deck, onClose, onWordCountChange }: ManageDrawerP
 
   return (
     <>
-      <div className="fixed inset-0 z-40 bg-black/30 backdrop-blur-sm" onClick={onClose} />
+      <button
+        type="button"
+        className="fixed inset-0 z-40 bg-black/30 backdrop-blur-sm cursor-default"
+        onClick={onClose}
+        aria-label="Close drawer"
+        tabIndex={-1}
+      />
 
       <div className="fixed right-0 top-0 bottom-0 z-50 w-full max-w-md flex flex-col bg-[var(--card-bg)] border-l border-[var(--line-divider)] shadow-2xl">
 

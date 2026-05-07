@@ -30,25 +30,25 @@ export default function HomeWordsToReview({
   ],
 }: HomeWordsToReviewProps) {
   return (
-    <Card variant="compact" className="gap-4">
+    <Card variant="compact" className="gap-4 p-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <span className="inline-block w-3 h-3 rounded bg-success"></span>
-          <span className="text-sm font-semibold text-[var(--deep-text)]">Words to review</span>
+          <h2 className="text-[var(--deep-text)]" style={{ font: "var(--font-h2)", fontWeight: 600 }}>Words to review</h2>
         </div>
-        <Link href="/review" className="text-sm font-medium text-[var(--primary)] hover:underline">
+        <Link href="/review" className="text-sm font-medium text-[var(--primary)] [transition:color_var(--transition-fast,150ms_ease)] hover:opacity-80">
           Open Word Bank →
         </Link>
       </div>
 
-      <p className="text-xs text-[var(--text-secondary)] -mt-1">
+      <p className="-mt-1" style={{ font: "var(--font-body-sm)", color: "var(--text-secondary)" }}>
         SRS due today:{" "}
         <span className="font-semibold text-[var(--primary)]">{dueCount} cards</span>
       </p>
 
       <div className="flex flex-col divide-y divide-[var(--border-light)]">
         {words.map((w) => (
-          <div key={w.word} className="flex items-center gap-3 py-2.5">
+          <div key={w.word} className="flex items-center gap-3 py-2">
             <Button
               variant="ghost"
               size="icon"

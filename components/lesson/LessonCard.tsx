@@ -146,7 +146,7 @@ export default function LessonCard({ lesson, progressPct, isFeatured }: LessonCa
   return (
     <Link href={lesson.href ?? `/practice/lesson/${lesson.id}`}>
       <div
-        className={`group relative cursor-pointer overflow-hidden rounded-[28px] border p-7 transition-[transform,box-shadow] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1 ${
+        className={`group relative cursor-pointer overflow-hidden rounded-3xl border p-7 transition-[transform,box-shadow] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1 ${
           isFeatured ? "lg:col-span-1 lg:row-span-1" : ""
         }`}
         style={{
@@ -159,7 +159,7 @@ export default function LessonCard({ lesson, progressPct, isFeatured }: LessonCa
         }}
       >
         <div
-          className="pointer-events-none absolute inset-0 rounded-[28px] opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+          className="pointer-events-none absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"
           style={{
             boxShadow: "0 0 0 1px color-mix(in oklch, var(--color-accent) 25%, transparent), 0 12px 32px color-mix(in oklch, var(--color-accent) 7%, transparent)",
           }}
@@ -219,7 +219,7 @@ export default function LessonCard({ lesson, progressPct, isFeatured }: LessonCa
           </div>
 
           <h3
-            className="mb-2 text-[1.2rem] font-bold leading-snug tracking-[-0.025em]"
+            className="mb-2 text-xl font-bold leading-snug tracking-[-0.025em]"
             style={{ color: "var(--text-primary)" }}
           >
             {lesson.title}

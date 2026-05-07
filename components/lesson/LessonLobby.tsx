@@ -78,13 +78,13 @@ export function LessonLobby({
                 ? `${completedCount} of ${LESSON_STAGES.length} complete`
                 : "None yet — start below"
             }
-            accent="#f4a261"
+            accent="var(--stage-pairs)"
           />
           <InfoPill
             icon="🤖"
             label="AI scoring"
             value="Live mic feedback on every attempt"
-            accent="#2ec4b6"
+            accent="var(--stage-dictation)"
           />
         </div>
 
@@ -134,7 +134,7 @@ export function LessonLobby({
             Continue — {nextUnlocked.title}
           </Button>
         ) : overall >= 80 ? (
-          <div className="rounded-[18px] border border-[color-mix(in_oklch,var(--admonitions-color-tip)_20%,transparent)] bg-[color-mix(in_oklch,var(--admonitions-color-tip)_8%,transparent)] px-4 py-4 text-center">
+          <div className="rounded-2xl border border-[color-mix(in_oklch,var(--admonitions-color-tip)_20%,transparent)] bg-[color-mix(in_oklch,var(--admonitions-color-tip)_8%,transparent)] px-4 py-4 text-center">
             <p className="text-body font-semibold text-[var(--admonitions-color-tip)]">
               🎉 All stages mastered — great work!
             </p>

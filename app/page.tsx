@@ -31,23 +31,27 @@ export default async function HomePage() {
     <PageLayout hero={<HomeHeader />}>
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-8 items-start">
         {/* Main column */}
-        <div className="flex flex-col gap-6 min-w-0">
+        <div className="flex flex-col gap-8 min-w-0">
+          <HomeTodo />
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <HomeWeakPhoneme />
+            <HomeTheoryOfDay />
+          </div>
+
+          <HomeWordsToReview />
+
           <section>
             <SectionHeader title="Your Courses" viewAllHref="/courses" />
             <HomeCoursesSection />
           </section>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <HomeWeakPhoneme />
-            <HomeTheoryOfDay />
-            <HomeWordsToReview />
-            <HomeAudioOfDay />
-          </div>
+
           <HomePracticeCard />
         </div>
 
         {/* Sidebar */}
         <div className="flex flex-col gap-4">
-          <HomeTodo />
+          <HomeAudioOfDay />
           <HomeMinimalPairs />
           <HomeShadowingDrill />
           <HomeAchievementsCard achievements={achievements} />

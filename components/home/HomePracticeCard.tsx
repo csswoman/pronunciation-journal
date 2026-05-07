@@ -12,7 +12,7 @@ const MODES = [
 
 export default function HomePracticeCard() {
   return (
-    <div className="rounded-lg border border-border-subtle bg-surface-raised p-5 flex flex-col gap-5">
+    <div className="rounded-lg border border-border-subtle bg-surface-raised p-6 flex flex-col gap-5">
       {/* Header */}
       <div className="flex items-start justify-between gap-4">
         <div>
@@ -25,7 +25,7 @@ export default function HomePracticeCard() {
         </div>
         <Link
           href="/ai-practice"
-          className="shrink-0 px-5 py-2.5 rounded-xl text-sm font-semibold text-[var(--primary)] border border-[var(--primary)] transition-colors hover:bg-[color-mix(in_oklch,var(--primary)_8%,transparent)]"
+          className="shrink-0 px-5 py-3 rounded-xl text-sm font-semibold text-[var(--primary)] border border-[var(--primary)] transition-colors hover:bg-[color-mix(in_oklch,var(--primary)_8%,transparent)]"
         >
           Start Practice
         </Link>

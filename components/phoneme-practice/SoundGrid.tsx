@@ -151,7 +151,7 @@ export function SoundGrid({ progressList }: Props) {
           { label: 'Untouched',   bg: 'var(--card-bg)',                                              border: 'var(--line-divider)' },
         ].map(({ label, bg, border }) => (
           <div key={label} className="flex items-center gap-1.5">
-            <div className="h-3 w-3 rounded-[4px]" style={{ background: bg, border: `1px solid ${border}` }} />
+            <div className="h-3 w-3 rounded" style={{ background: bg, border: `1px solid ${border}` }} />
             <span className="text-tiny" style={{ color: 'var(--text-secondary)' }}>{label}</span>
           </div>
         ))}

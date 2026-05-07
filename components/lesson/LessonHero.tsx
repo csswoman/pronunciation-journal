@@ -20,7 +20,7 @@ export function LessonHero({ lesson, totalWords, chunkLabel, overall, diffMode, 
   const estMin = Math.max(3, Math.ceil(totalWords * 0.4))
 
   return (
-    <div className="relative overflow-hidden rounded-t-[15px] bg-gradient-to-br from-[var(--card-bg)] to-[var(--btn-regular-bg)] shadow-[0_16px_40px_rgba(15,23,42,0.06)]">
+    <div className="relative overflow-hidden rounded-t-2xl bg-gradient-to-br from-[var(--card-bg)] to-[var(--btn-regular-bg)] shadow-[0_16px_40px_rgba(15,23,42,0.06)]">
       <div className="relative space-y-6">
         <div
           className="flex items-center justify-between px-4 py-2.5 border border-b border-[var(--line-divider)]"
@@ -50,7 +50,7 @@ export function LessonHero({ lesson, totalWords, chunkLabel, overall, diffMode, 
 
         <div className="flex items-center justify-between">
           <div className="p-8 md:p-10 max-w-2xl space-y-3">
-            <h1 className="font-display text-[28px] font-semibold leading-[1.08] tracking-tight text-[var(--deep-text)] lg:text-[34px]">
+            <h1 className="font-display text-3xl font-semibold leading-[1.08] tracking-tight text-[var(--deep-text)] lg:text-4xl">
               {lesson.title}
             </h1>
             <p className="max-w-xl text-body leading-6 text-[var(--text-secondary)]">

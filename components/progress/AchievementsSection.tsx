@@ -88,7 +88,7 @@ export default function AchievementsSection() {
         {unlocked.map((a) => (
           <div
             key={a.id}
-            className="rounded-[22px] p-4 flex items-start gap-3 animate-fadeIn"
+            className="rounded-3xl p-4 flex items-start gap-3 animate-fadeIn"
             style={{
               background: 'var(--card-bg)',
               border: '1px solid var(--line-divider)',
@@ -127,7 +127,7 @@ export default function AchievementsSection() {
         {locked.map((a) => (
           <div
             key={a.id}
-            className="rounded-[22px] p-4 flex items-start gap-3"
+            className="rounded-3xl p-4 flex items-start gap-3"
             style={{
               background: 'var(--btn-regular-bg)',
               border: '1px solid var(--line-divider)',

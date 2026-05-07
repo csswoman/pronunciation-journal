@@ -150,7 +150,7 @@ export default function FeaturedPhonemePanel({
       {extra?.spanishTip && (
         <div
           className="mt-4 rounded-2xl p-4 flex gap-3"
-          style={{ backgroundColor: "var(--admonitions-color-tip-bg, rgba(234,179,8,0.1))" }}
+          style={{ backgroundColor: "var(--warning-soft)" }}
         >
           <span className="text-lg shrink-0 mt-0.5">💡</span>
           <div>

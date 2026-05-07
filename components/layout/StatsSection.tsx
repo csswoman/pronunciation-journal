@@ -58,7 +58,7 @@ export default function StatsSection({ stats, todayProgress, progressHistory, us
         <div className="grid gap-4 lg:grid-cols-2">
           {progressList.length > 0 && (
             <div
-              className="rounded-[26px] p-5"
+              className="rounded-3xl p-5"
               style={{
                 background: "var(--card-bg)",
                 border: "1px solid var(--line-divider)",
@@ -109,7 +109,7 @@ function TipBanner({
 
   return (
     <div
-      className="flex items-center justify-between gap-4 rounded-[22px] px-5 py-4"
+      className="flex items-center justify-between gap-4 rounded-3xl px-5 py-4"
       style={{
         background: "linear-gradient(135deg, color-mix(in oklch, var(--primary) 12%, var(--card-bg)), var(--card-bg))",
         border: "1px solid color-mix(in oklch, var(--primary) 16%, var(--line-divider))",

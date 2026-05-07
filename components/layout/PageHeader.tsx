@@ -289,8 +289,8 @@ export default function PageHeader({
         )}
 
         <h1
-          className={`font-display leading-[1.1] tracking-tight text-[var(--deep-text)] ${!isHeroCompact ? "text-4xl lg:text-5xl" : ""}`}
-          style={isHeroCompact ? { fontSize: "var(--font-h1)" } : undefined}
+          className="text-[var(--deep-text)]"
+          style={isHeroCompact ? { font: "var(--font-h1)" } : { font: "var(--font-h2)" }}
         >
           <span className="font-semibold">{title}</span>
           {subtitle && (

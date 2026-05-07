@@ -114,7 +114,7 @@ export default function ChatArea({
         >
           Vocab
           <span
-            className="inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 rounded-full text-tiny font-semibold"
+            className="inline-flex items-center justify-center min-w-5 h-5 px-1 rounded-full text-tiny font-semibold"
             style={{
               backgroundColor: vocabCount > 0 ? "color-mix(in oklch, var(--primary) 14%, transparent)" : "var(--btn-regular-bg)",
               color: vocabCount > 0 ? "var(--primary)" : "var(--text-tertiary)",
