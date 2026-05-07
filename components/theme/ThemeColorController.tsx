@@ -104,12 +104,11 @@ export default function ThemeColorController({ isExpanded }: ThemeColorControlle
               /* Moon icon — visible in light mode, click to go dark */
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5 mx-auto"
+                className="h-5 w-5 mx-auto text-fg"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
                 strokeWidth={1.5}
-                className="text-fg"
               >
                 <path strokeLinecap="round" strokeLinejoin="round" d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z" />
               </svg>
