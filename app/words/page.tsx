@@ -88,7 +88,7 @@ export default function WordsPage() {
     setCurrentPage(1);
   }, [filterType, searchQuery]);
 
-  const handleAdd = async (input: { text: string; context?: string | null }) => {
+  const handleAdd = async (input: { text: string; context?: string | null; deckId?: string | null }) => {
     try {
       await addWord(input);
     } catch (err) {
