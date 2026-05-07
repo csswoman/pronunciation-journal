@@ -62,7 +62,7 @@ export default function AIPracticeSidebar({
 
       <div className="flex-1 overflow-y-auto px-2 pb-4">
         {isEmpty ? (
-          <p className="text-xs px-2 pt-4 text-center" style={{ color: "var(--text-tertiary)" }}>
+          <p className="text-xs px-2 pt-4 text-center text-fg-subtle">
             No chats yet.
           </p>
         ) : (
@@ -98,8 +98,7 @@ function SearchInput({ value, onChange }: { value: string; onChange: (v: string)
     <div className="relative">
       <Search
         size={12}
-        className="absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none"
-        style={{ color: "var(--text-tertiary)" }}
+        className="absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-fg-subtle"
         aria-hidden="true"
       />
       <input
@@ -124,8 +123,7 @@ function ConvGroup({ label, children }: { label: string; children: React.ReactNo
   return (
     <div className="mb-3">
       <p
-        className="px-2 py-1 text-tiny font-semibold uppercase tracking-widest"
-        style={{ color: "var(--text-tertiary)" }}
+        className="px-2 py-1 text-tiny font-semibold uppercase tracking-widest text-fg-subtle"
       >
         {label}
       </p>
@@ -158,13 +156,12 @@ function ConvItem({
         if (!isActive) e.currentTarget.style.backgroundColor = "transparent";
       }}
     >
-      <Icon size={12} className="flex-shrink-0 mr-1.5" style={{ color: "var(--text-tertiary)" }} />
-      <span className="text-xs truncate flex-1" style={{ color: "var(--text-secondary)" }}>
+      <Icon size={12} className="flex-shrink-0 mr-1.5 text-fg-subtle" />
+      <span className="text-xs truncate flex-1 text-fg-muted">
         {conv.title || "Untitled"}
       </span>
       <button
-        className="opacity-0 group-hover:opacity-100 transition-opacity ml-1 flex-shrink-0 p-0.5 rounded"
-        style={{ color: "var(--text-tertiary)" }}
+        className="opacity-0 group-hover:opacity-100 transition-opacity ml-1 flex-shrink-0 p-0.5 rounded text-fg-subtle"
         onClick={(e) => { e.stopPropagation(); if (conv.id != null) onDelete(conv.id); }}
         onMouseEnter={(e) => (e.currentTarget.style.color = "var(--text-primary)")}
         onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-tertiary)")}
@@ -190,21 +187,21 @@ function CoachFooter() {
           <UserRound size={15} strokeWidth={1.8} />
         </div>
         <div className="min-w-0">
-          <p className="text-xs font-semibold truncate" style={{ color: "var(--text-primary)" }}>Your Coach</p>
-          <p className="text-tiny" style={{ color: "var(--text-tertiary)" }}>English Coach</p>
+          <p className="text-xs font-semibold truncate text-fg">Your Coach</p>
+          <p className="text-tiny text-fg-subtle">English Coach</p>
         </div>
       </div>
 
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-1.5">
           <Flame size={13} style={{ color: "var(--primary)" }} />
-          <span className="text-xs font-semibold" style={{ color: "var(--text-primary)" }}>7</span>
-          <span className="text-tiny" style={{ color: "var(--text-tertiary)" }}>day streak</span>
+          <span className="text-xs font-semibold text-fg">7</span>
+          <span className="text-tiny text-fg-subtle">day streak</span>
         </div>
         <div className="flex items-center gap-1.5">
-          <Target size={13} style={{ color: "var(--text-tertiary)" }} />
-          <span className="text-xs font-semibold" style={{ color: "var(--text-primary)" }}>12/20</span>
-          <span className="text-tiny" style={{ color: "var(--text-tertiary)" }}>goal</span>
+          <Target size={13} className="text-fg-subtle" />
+          <span className="text-xs font-semibold text-fg">12/20</span>
+          <span className="text-tiny text-fg-subtle">goal</span>
         </div>
       </div>
 

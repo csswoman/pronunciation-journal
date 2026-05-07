@@ -13,8 +13,7 @@ export default function ChatHeader({ hasMessages, onReset }: ChatHeaderProps) {
       {hasMessages ? (
         <Button
           onClick={onReset}
-          className="flex items-center gap-1.5 text-sm transition-colors px-3 py-1.5 rounded-lg"
-          style={{ color: "var(--text-tertiary)" }}
+          className="flex items-center gap-1.5 text-sm transition-colors px-3 py-1.5 rounded-lg text-fg-subtle"
           onMouseEnter={(e) => {
             e.currentTarget.style.color = "var(--text-primary)";
             e.currentTarget.style.backgroundColor = "var(--btn-regular-bg)";
@@ -30,7 +29,7 @@ export default function ChatHeader({ hasMessages, onReset }: ChatHeaderProps) {
           New session
         </Button>
       ) : (
-        <p className="text-sm font-medium px-1" style={{ color: "var(--text-tertiary)" }}>
+        <p className="text-sm font-medium px-1 text-fg-subtle">
           AI Coach
         </p>
       )}

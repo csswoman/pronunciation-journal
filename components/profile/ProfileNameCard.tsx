@@ -38,7 +38,7 @@ export default function ProfileNameCard({ currentName, onSave }: Props) {
   return (
     <div>
       <div className="flex items-center justify-between mb-1">
-        <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: "var(--text-tertiary)" }}>
+        <span className="text-xs font-semibold uppercase tracking-widest text-fg-subtle">
           Display name
         </span>
         {!isEditing && (
@@ -49,8 +49,8 @@ export default function ProfileNameCard({ currentName, onSave }: Props) {
       </div>
 
       {!isEditing ? (
-        <p className="text-sm font-medium py-1" style={{ color: "var(--text-primary)" }}>
-          {currentName || <span style={{ color: "var(--text-tertiary)" }}>Not set</span>}
+        <p className="text-sm font-medium py-1 text-fg">
+          {currentName || <span className="text-fg-subtle">Not set</span>}
         </p>
       ) : (
         <form onSubmit={handleSave} className="mt-2 space-y-2">

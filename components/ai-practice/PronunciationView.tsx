@@ -387,7 +387,7 @@ export default function PronunciationView({ onSubmit }: PronunciationViewProps) 
         </div>
 
         {fetchingPhrases && (
-          <div className="flex items-center gap-2 text-xs" style={{ color: "var(--text-tertiary)" }}>
+          <div className="flex items-center gap-2 text-xs text-fg-subtle">
             <Sparkles size={12} className="animate-pulse" />
             Generating new phrases...
           </div>
@@ -505,8 +505,7 @@ export default function PronunciationView({ onSubmit }: PronunciationViewProps) 
             value={inputValue}
             onChange={e => setInputValue(e.target.value)}
             placeholder="or type the phrase to practice..."
-            className="flex-1 bg-transparent text-sm focus:outline-none"
-            style={{ color: "var(--text-primary)" }}
+            className="flex-1 bg-transparent text-sm focus:outline-none text-fg"
           />
           <Button
             type="submit"

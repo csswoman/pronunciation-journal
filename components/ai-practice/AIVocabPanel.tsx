@@ -50,19 +50,18 @@ function VocabHeader({ count }: { count: number }) {
       style={{ borderColor: "var(--line-divider)" }}
     >
       <div className="flex items-center gap-2 px-4 pt-3 pb-2">
-        <BookOpen size={12} style={{ color: "var(--text-tertiary)" }} />
+        <BookOpen size={12} className="text-fg-subtle" />
         <p
-          className="text-tiny font-semibold uppercase tracking-widest"
-          style={{ color: "var(--text-tertiary)" }}
+          className="text-tiny font-semibold uppercase tracking-widest text-fg-subtle"
         >
           Vocab · {count} {count === 1 ? "word" : "words"}
         </p>
       </div>
 
       <div className="px-4 pb-3">
-        <p className="text-xs font-medium" style={{ color: "var(--text-secondary)" }}>Words collected</p>
-        <p className="text-tiny mt-0.5" style={{ color: "var(--text-tertiary)" }}>Words you&apos;ve saved</p>
-        <p className="text-2xl font-bold mt-1" style={{ color: "var(--text-primary)" }}>{count}</p>
+        <p className="text-xs font-medium text-fg-muted">Words collected</p>
+        <p className="text-tiny mt-0.5 text-fg-subtle">Words you&apos;ve saved</p>
+        <p className="text-2xl font-bold mt-1 text-fg">{count}</p>
       </div>
     </div>
   );
@@ -75,9 +74,9 @@ function VocabEmpty() {
         className="w-10 h-10 rounded-xl flex items-center justify-center"
         style={{ backgroundColor: "var(--btn-regular-bg)" }}
       >
-        <NotebookPen size={18} strokeWidth={1.5} style={{ color: "var(--text-tertiary)" }} />
+        <NotebookPen size={18} strokeWidth={1.5} className="text-fg-subtle" />
       </div>
-      <p className="text-xs leading-relaxed" style={{ color: "var(--text-tertiary)" }}>
+      <p className="text-xs leading-relaxed text-fg-subtle">
         Select words from the chat to save them here.
       </p>
     </div>
@@ -109,13 +108,13 @@ function VocabItem({ word }: { word: AISavedWord; onDelete: (id: number) => void
       onMouseLeave={(e) => (e.currentTarget.style.borderColor = "var(--line-divider)")}
     >
       <div className="flex items-center gap-2 min-w-0 flex-1">
-        <BookOpen size={12} className="flex-shrink-0" style={{ color: "var(--text-tertiary)" }} />
+        <BookOpen size={12} className="flex-shrink-0 text-fg-subtle" />
         <div className="min-w-0">
-          <p className="text-xs font-semibold truncate" style={{ color: "var(--text-primary)" }}>
+          <p className="text-xs font-semibold truncate text-fg">
             {word.word}
           </p>
           {word.meaning && (
-            <p className="text-tiny truncate" style={{ color: "var(--text-tertiary)" }}>
+            <p className="text-tiny truncate text-fg-subtle">
               {word.meaning}
             </p>
           )}
@@ -123,11 +122,11 @@ function VocabItem({ word }: { word: AISavedWord; onDelete: (id: number) => void
       </div>
 
       <div className="flex items-center gap-1.5 ml-2 flex-shrink-0">
-        <span className="text-tiny font-semibold" style={{ color: "var(--text-tertiary)" }}>
+        <span className="text-tiny font-semibold text-fg-subtle">
           {cefrLevel}
         </span>
         <button onClick={speakWord} aria-label="Speak word" className="opacity-0 group-hover:opacity-100 transition-opacity">
-          <Volume2 size={12} style={{ color: "var(--text-tertiary)" }} />
+          <Volume2 size={12} className="text-fg-subtle" />
         </button>
       </div>
     </div>
@@ -172,8 +171,8 @@ function AutoSaveInfo() {
       >
         <ShieldCheck size={14} className="mt-0.5 flex-shrink-0" style={{ color: "var(--primary)" }} />
         <div className="min-w-0">
-          <p className="text-xs font-semibold" style={{ color: "var(--text-primary)" }}>Auto-save</p>
-          <p className="text-tiny leading-snug mt-0.5" style={{ color: "var(--text-tertiary)" }}>
+          <p className="text-xs font-semibold text-fg">Auto-save</p>
+          <p className="text-tiny leading-snug mt-0.5 text-fg-subtle">
             New words from the chat are saved automatically.
           </p>
         </div>

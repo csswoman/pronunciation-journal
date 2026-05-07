@@ -48,7 +48,7 @@ export default function LessonFilters({
         </div>
 
         <div className="w-full lg:w-72 relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: 'var(--text-tertiary)' }} />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-fg-subtle" />
           <input
             type="text"
             value={search}
@@ -65,8 +65,7 @@ export default function LessonFilters({
       </div>
 
       <p
-        className="text-sm font-semibold tracking-[0.12em] uppercase mb-6"
-        style={{ color: 'var(--text-secondary)' }}
+        className="text-sm font-semibold tracking-[0.12em] uppercase mb-6 text-fg-muted"
       >
         {resultCount} exercises available
       </p>

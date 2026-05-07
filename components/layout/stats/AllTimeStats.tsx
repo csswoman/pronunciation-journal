@@ -1,5 +1,3 @@
-"use client";
-
 import type { UserStats } from "@/lib/types";
 
 function formatCompact(value: number) {
@@ -12,10 +10,10 @@ function formatCompact(value: number) {
 function MetricRow({ label, value, colored, highlight }: { label: string; value: string; colored?: boolean; highlight?: boolean }) {
   return (
     <div className="flex items-center justify-between py-2.5" style={{ borderBottom: "1px solid var(--line-divider)" }}>
-      <span className="text-sm" style={{ color: "var(--text-secondary)" }}>{label}</span>
+      <span className="text-sm text-fg-muted">{label}</span>
       <span
         className="text-sm font-bold"
-        style={{ color: highlight ? "oklch(0.65 0.18 30)" : colored ? "var(--primary)" : "var(--deep-text)" }}
+        style={{ color: highlight ? "oklch(0.65 0.18 30)" : colored ? "var(--primary)" : "var(--text-primary)" }}
       >
         {value}
       </span>
@@ -48,10 +46,10 @@ export function AllTimeStats({ stats }: Props) {
         boxShadow: "0 1px 3px var(--line-divider), 0 8px 20px var(--line-divider)",
       }}
     >
-      <p className="text-base font-bold mb-1" style={{ color: "var(--deep-text)" }}>All-time stats</p>
+      <p className="text-base font-bold mb-1 text-fg">All-time stats</p>
 
       {isEmpty ? (
-        <p className="text-sm mt-3" style={{ color: "var(--text-secondary)" }}>
+        <p className="text-sm mt-3 text-fg-muted">
           Your stats will appear here after your first practice session.
         </p>
       ) : (
@@ -64,10 +62,10 @@ export function AllTimeStats({ stats }: Props) {
           <MetricRow label="Decks" value={String(totalDecks)} />
           <MetricRow label="Words in Decks" value={formatCompact(totalDeckWords)} />
           <div className="flex items-center justify-between pt-2.5">
-            <span className="text-sm" style={{ color: "var(--text-secondary)" }}>Words Due Today</span>
+            <span className="text-sm text-fg-muted">Words Due Today</span>
             <span
               className="text-sm font-bold"
-              style={{ color: dueToday > 0 ? "oklch(0.65 0.18 30)" : "var(--deep-text)" }}
+              style={{ color: dueToday > 0 ? "oklch(0.65 0.18 30)" : "var(--text-primary)" }}
             >
               {dueToday}
             </span>

@@ -97,7 +97,7 @@ export function GeminiChat({
             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" style={{ color: "var(--primary)" }}>
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
             </svg>
-            <span className="text-sm font-semibold" style={{ color: "var(--text-primary)" }}>
+            <span className="text-sm font-semibold text-fg">
               AI Seed Assistant
             </span>
             <span

@@ -61,7 +61,7 @@ export default function TemplateInputForm({
           </svg>
         </Button>
         <div>
-          <h2 className="text-xl font-bold text-fg">
+          <h2 className="text-h4 text-fg">
             {template?.Icon && <template.Icon size={20} className="inline mr-1" />} {template?.title}
           </h2>
           <p className="text-sm text-fg-subtle">{template?.description}</p>

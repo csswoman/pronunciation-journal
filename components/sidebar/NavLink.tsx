@@ -22,7 +22,7 @@ export function NavLink({ item, active }: NavLinkProps) {
         <IconComponent className="h-5 w-5" />
       </span>
       {!collapsed && (
-        <span className="relative group-hover:text-[var(--text-primary)] transition-colors duration-[var(--transition-fast)]">
+        <span className="relative group-hover:text-fg transition-colors duration-[var(--transition-fast)]">
           {item.name}
         </span>
       )}

@@ -29,8 +29,7 @@ export function StudyLeftPanel({
 
       {/* Reference image */}
       <div>
-        <p className="text-tiny font-semibold tracking-widest uppercase mb-2"
-          style={{ color: "var(--text-tertiary)" }}>Reference</p>
+        <p className="text-tiny font-semibold tracking-widest uppercase mb-2 text-fg-subtle">Reference</p>
         <input
           ref={fileInputRef}
           type="file"
@@ -56,16 +55,15 @@ export function StudyLeftPanel({
               </div>
             </>
           ) : imageLoading ? (
-            <div className="flex flex-col items-center gap-2" style={{ color: "var(--text-tertiary)" }}>
+            <div className="flex flex-col items-center gap-2 text-fg-subtle">
               <div className="w-6 h-6 rounded-full border-2 border-t-transparent animate-spin"
                 style={{ borderColor: "var(--primary)", borderTopColor: "transparent" }} />
               <p className="text-tiny">Uploading…</p>
             </div>
           ) : (
             <button onClick={() => fileInputRef.current?.click()}
-              className="flex flex-col items-center gap-2 p-4 w-full h-full justify-center transition-colors"
-              style={{ color: "var(--text-tertiary)" }}
-              onMouseEnter={e => (e.currentTarget.style.color = "var(--deep-text)")}
+              className="flex flex-col items-center gap-2 p-4 w-full h-full justify-center transition-colors text-fg-subtle"
+              onMouseEnter={e => (e.currentTarget.style.color = "var(--text-primary)")}
               onMouseLeave={e => (e.currentTarget.style.color = "var(--text-tertiary)")}>
               <ImagePlus size={22} className="opacity-40" />
               <p className="text-tiny text-center">Add reference<br />image</p>
@@ -76,12 +74,11 @@ export function StudyLeftPanel({
 
       {/* Details */}
       <div>
-        <p className="text-tiny font-semibold tracking-widest uppercase mb-3"
-          style={{ color: "var(--text-tertiary)" }}>Details</p>
+        <p className="text-tiny font-semibold tracking-widest uppercase mb-3 text-fg-subtle">Details</p>
         <div className="space-y-3">
           {levelLabel && (
             <div>
-              <p className="text-tiny mb-1" style={{ color: "var(--text-tertiary)" }}>Level</p>
+              <p className="text-tiny mb-1 text-fg-subtle">Level</p>
               <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-xs font-semibold"
                 style={{ borderColor: "var(--warning)", backgroundColor: "var(--warning-soft)", color: "var(--warning)" }}>
                 {levelLabel} · {LEVEL_NAMES[levelLabel] ?? ""}
@@ -90,14 +87,14 @@ export function StudyLeftPanel({
           )}
           {tags && tags.length > 0 && (
             <div>
-              <p className="text-tiny mb-1" style={{ color: "var(--text-tertiary)" }}>Category</p>
-              <p className="text-sm font-semibold" style={{ color: "var(--deep-text)" }}>{tags[0]}</p>
+              <p className="text-tiny mb-1 text-fg-subtle">Category</p>
+              <p className="text-sm font-semibold text-fg">{tags[0]}</p>
             </div>
           )}
           {partOfSpeech && (
             <div>
-              <p className="text-tiny mb-1" style={{ color: "var(--text-tertiary)" }}>Part of speech</p>
-              <p className="text-sm font-semibold capitalize" style={{ color: "var(--deep-text)" }}>{partOfSpeech}</p>
+              <p className="text-tiny mb-1 text-fg-subtle">Part of speech</p>
+              <p className="text-sm font-semibold capitalize text-fg">{partOfSpeech}</p>
             </div>
           )}
         </div>
@@ -112,11 +109,11 @@ export function StudyLeftPanel({
             onMouseEnter={e => (e.currentTarget.style.backgroundColor = "var(--btn-regular-bg)")}
             onMouseLeave={e => (e.currentTarget.style.backgroundColor = "transparent")}
           >
-            <span className="text-xs font-semibold" style={{ color: "var(--deep-text)" }}>Tip</span>
-            <ChevronDown size={14} style={{ color: "var(--text-tertiary)" }} />
+            <span className="text-xs font-semibold text-fg">Tip</span>
+            <ChevronDown size={14} className="text-fg-subtle" />
           </button>
           <div className="px-3 pb-3">
-            <p className="text-xs leading-relaxed" style={{ color: "var(--text-secondary)" }}>{STUDY_TIPS[tipIndex]}</p>
+            <p className="text-xs leading-relaxed text-fg-muted">{STUDY_TIPS[tipIndex]}</p>
           </div>
         </div>
       )}

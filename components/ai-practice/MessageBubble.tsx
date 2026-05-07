@@ -12,7 +12,7 @@ function renderInline(text: string): React.ReactNode {
   const parts = text.split(/(\*\*[^*]+\*\*|__[^_]+__|`[^`]+`)/g);
   return parts.map((part, i) => {
     if ((part.startsWith("**") && part.endsWith("**")) || (part.startsWith("__") && part.endsWith("__"))) {
-      return <strong key={i} style={{ color: "var(--text-primary)" }}>{part.slice(2, -2)}</strong>;
+      return <strong key={i} className="text-fg">{part.slice(2, -2)}</strong>;
     }
     if (part.startsWith("`") && part.endsWith("`") && part.length > 2) {
       return (
@@ -54,7 +54,7 @@ function renderProse(lines: string[]) {
 
     if (/^#{1,3}\s+/.test(line)) {
       elements.push(
-        <p key={`h-${i}`} className="text-xs font-semibold uppercase tracking-wider mt-2" style={{ color: "var(--text-tertiary)" }}>
+        <p key={`h-${i}`} className="text-xs font-semibold uppercase tracking-wider mt-2 text-fg-subtle">
           {renderInline(line.replace(/^#{1,3}\s+/, ""))}
         </p>
       );
@@ -130,8 +130,7 @@ function AIBubble({ message, onSaveWord, onSuggestionClick, onToolAnswer, onNext
           }}
         >
           <div
-            className="space-y-1.5 text-body-sm leading-relaxed cursor-text select-text"
-            style={{ color: "var(--text-secondary)" }}
+            className="space-y-1.5 text-body-sm leading-relaxed cursor-text select-text text-fg-muted"
             onMouseUp={handleMouseUp}
           >
             {message.contentParts.map((part, i) => {
@@ -148,8 +147,7 @@ function AIBubble({ message, onSaveWord, onSuggestionClick, onToolAnswer, onNext
         </div>
 
         <p
-          className="text-tiny pl-1 opacity-0 group-hover/msg:opacity-100 transition-opacity"
-          style={{ color: "var(--text-tertiary)" }}
+          className="text-tiny pl-1 opacity-0 group-hover/msg:opacity-100 transition-opacity text-fg-subtle"
         >
           {formatTime((message as { createdAt?: Date }).createdAt)}
         </p>
@@ -190,7 +188,7 @@ export default function MessageBubble({ message, onSaveWord, onSuggestionClick, 
             {message.content}
           </div>
           <div className="flex items-center gap-1 pr-1 opacity-0 group-hover/msg:opacity-100 transition-opacity">
-            <span className="text-tiny" style={{ color: "var(--text-tertiary)" }}>
+            <span className="text-tiny text-fg-subtle">
               {formatTime((message as { createdAt?: Date }).createdAt)}
             </span>
             <CheckCheck size={11} style={{ color: "var(--primary)" }} />

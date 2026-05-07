@@ -69,9 +69,21 @@
   --color-error:          var(--error);
   --color-error-soft:     var(--error-soft);
   --color-error-border:   var(--error-border);
-  --color-info:           var(--info);
-  --color-info-soft:      var(--info-soft);
-  --color-info-border:    var(--info-border);
+  --color-success-deco:    var(--success-deco);
+  --color-success-icon-bg: var(--success-icon-bg);
+  --color-success-value:   var(--success-value);
+  --color-warning-deco:    var(--warning-deco);
+  --color-warning-icon-bg: var(--warning-icon-bg);
+  --color-warning-value:   var(--warning-value);
+  --color-error-deco:      var(--error-deco);
+  --color-error-icon-bg:   var(--error-icon-bg);
+  --color-error-value:     var(--error-value);
+  --color-info:            var(--info);
+  --color-info-soft:       var(--info-soft);
+  --color-info-border:     var(--info-border);
+  --color-info-deco:       var(--info-deco);
+  --color-info-icon-bg:    var(--info-icon-bg);
+  --color-info-value:      var(--info-value);
 
   /* ── Scoring / Word chip ────────────────────────────────────────────── */
   --color-score-excellent:     var(--score-excellent);
@@ -228,6 +240,9 @@
 
   --info:          oklch(0.70 0.12 230);
   --info-soft:     oklch(0.93 0.04 230);
+  --info-deco:     oklch(0.78 0.08 230);
+  --info-icon-bg:  oklch(0.84 0.06 230);
+  --info-value:    oklch(0.42 0.12 230);
 
   /* ── Stage accent colors ─────────────────────────────────────────────── */
   --stage-pairs:     oklch(0.74 0.14 55);   /* warm orange, phoneme pairs stage */
@@ -433,6 +448,9 @@
 
   --info:          oklch(0.74 0.12 230);
   --info-soft:     oklch(0.20 0.05 230);
+  --info-deco:     oklch(0.48 0.10 230);
+  --info-icon-bg:  oklch(0.32 0.08 230);
+  --info-value:    oklch(0.65 0.12 230);
 
   /* ── Tooltip & code — dark overrides ───────────────────────────────── */
   --surface-tooltip: oklch(0.24 0.006 var(--hue));

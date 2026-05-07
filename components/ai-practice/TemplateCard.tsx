@@ -99,10 +99,10 @@ export default function TemplateCard({ template, onSelect, recommended }: Templa
       </div>
 
       <div className="flex flex-col gap-1">
-        <p className="text-sm font-semibold leading-tight" style={{ color: "var(--text-primary)" }}>
+        <p className="text-sm font-semibold leading-tight text-fg">
           {template.title}
         </p>
-        <p className="text-xs leading-snug" style={{ color: "var(--text-tertiary)" }}>
+        <p className="text-xs leading-snug text-fg-subtle">
           {template.description}
         </p>
       </div>

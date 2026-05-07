@@ -151,7 +151,7 @@ export default function AuthPanel() {
 
             <AuthButton label="Sign in" pending={pending} />
 
-            <div className="flex items-center gap-[var(--space-4)] my-[var(--space-6)]" style={{ color: "var(--text-tertiary)" }}>
+            <div className="flex items-center gap-[var(--space-4)] my-[var(--space-6)] text-fg-subtle">
               <div className="flex-1 border-t" style={{ borderTopColor: "var(--border-subtle)" }} />
               or continue with
               <div className="flex-1 border-t" style={{ borderTopColor: "var(--border-subtle)" }} />
@@ -191,7 +191,7 @@ export default function AuthPanel() {
 
             <AuthButton label="Create account" pending={pending} />
 
-            <div className="flex items-center gap-[var(--space-4)] my-[var(--space-6)]" style={{ color: "var(--text-tertiary)" }}>
+            <div className="flex items-center gap-[var(--space-4)] my-[var(--space-6)] text-fg-subtle">
               <div className="flex-1 border-t" style={{ borderTopColor: "var(--border-subtle)" }} />
               or continue with
               <div className="flex-1 border-t" style={{ borderTopColor: "var(--border-subtle)" }} />

@@ -90,7 +90,7 @@ export default function Navbar({
       {/* Header with toggle button */}
       <div className={`px-4 mb-6 flex items-center ${isCollapsed ? "justify-center" : "justify-between"}`}>
         {!isCollapsed && (
-          <h2 className="text-xl font-bold text-fg">
+          <h2 className="text-h4 text-fg">
             Welcome!
           </h2>
         )}

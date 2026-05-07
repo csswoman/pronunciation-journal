@@ -55,7 +55,7 @@ export default function ScenarioPicker({ onStart, loading }: Props) {
 
       {/* Hero */}
       <div>
-        <h1 className="font-heading text-3xl font-bold mb-2" style={{ color: "var(--deep-text)" }}>
+        <h1 className="font-heading text-h1 mb-2 text-fg">
           Interview Practice
         </h1>
         <p className="text-sm leading-relaxed" style={{ color: "var(--muted-text)" }}>
@@ -84,7 +84,7 @@ export default function ScenarioPicker({ onStart, loading }: Props) {
               >
                 <span className="text-2xl flex-shrink-0">{s.emoji}</span>
                 <div className="min-w-0">
-                  <p className="text-sm font-semibold truncate" style={{ color: active ? "var(--color-text-on-accent)" : "var(--deep-text)" }}>
+                  <p className="text-sm font-semibold truncate" style={{ color: active ? "var(--color-text-on-accent)" : "var(--text-primary)" }}>
                     {s.label}
                   </p>
                   <p className="text-xs mt-0.5 truncate" style={{ color: active ? "var(--color-text-on-accent)" : "var(--muted-text)", opacity: active ? 0.85 : 1 }}>
@@ -117,7 +117,7 @@ export default function ScenarioPicker({ onStart, loading }: Props) {
                   boxShadow: active ? "0 0 0 1px var(--color-accent)" : undefined,
                 }}
               >
-                <span className="text-sm font-semibold" style={{ color: active ? "var(--color-text-on-accent)" : "var(--deep-text)" }}>
+                <span className="text-sm font-semibold" style={{ color: active ? "var(--color-text-on-accent)" : "var(--text-primary)" }}>
                   {l.label}
                 </span>
                 <span className="text-xs" style={{ color: active ? "var(--color-text-on-accent)" : "var(--muted-text)", opacity: active ? 0.8 : 1 }}>
@@ -149,7 +149,7 @@ export default function ScenarioPicker({ onStart, loading }: Props) {
                 }}
               >
                 <div className="flex items-center justify-between">
-                  <p className="text-sm font-semibold" style={{ color: "var(--deep-text)" }}>{d.label}</p>
+                  <p className="text-sm font-semibold text-fg">{d.label}</p>
                   <span
                     className="text-xs px-2 py-0.5 rounded-full font-medium"
                     style={{ background: `color-mix(in oklch, ${d.tagColor} 14%, transparent)`, color: d.tagColor }}

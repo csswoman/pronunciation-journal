@@ -43,8 +43,8 @@ export default function MasteredSection({ mastered }: MasteredSectionProps) {
     return (
       <div className="space-y-3">
         <div className="flex items-center gap-2">
-          <Trophy size={18} style={{ color: 'var(--text-secondary)' }} />
-          <h2 className="text-xl font-bold" style={{ color: 'var(--deep-text)' }}>
+          <Trophy size={18} className="text-fg-muted" />
+          <h2 className="text-h4 text-fg">
             Sonidos Dominados
           </h2>
         </div>
@@ -56,10 +56,10 @@ export default function MasteredSection({ mastered }: MasteredSectionProps) {
           }}
         >
           <p className="text-3xl mb-3">🎯</p>
-          <p className="font-semibold text-sm" style={{ color: 'var(--deep-text)' }}>
+          <p className="font-semibold text-sm text-fg">
             Aun no dominas ningun sonido
           </p>
-          <p className="text-xs mt-1" style={{ color: 'var(--text-secondary)' }}>
+          <p className="text-xs mt-1 text-fg-muted">
             Necesitas 15+ intentos, 85% de precision y una racha de 5 correctas.
           </p>
           <Link
@@ -82,7 +82,7 @@ export default function MasteredSection({ mastered }: MasteredSectionProps) {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Trophy size={18} style={{ color: 'oklch(.7 .18 85)' }} />
-          <h2 className="text-xl font-bold" style={{ color: 'var(--deep-text)' }}>
+          <h2 className="text-h4 text-fg">
             Sonidos Dominados
           </h2>
           <span
@@ -97,8 +97,7 @@ export default function MasteredSection({ mastered }: MasteredSectionProps) {
         </div>
         <Link
           href="/practice"
-          className="text-xs font-medium"
-          style={{ color: 'var(--text-secondary)' }}
+          className="text-xs font-medium text-fg-muted"
         >
           Ver todos
         </Link>
@@ -136,10 +135,10 @@ export default function MasteredSection({ mastered }: MasteredSectionProps) {
 
             {/* Info */}
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium truncate" style={{ color: 'var(--deep-text)' }}>
+              <p className="text-sm font-medium truncate text-fg">
                 {sound.sounds.example ?? ''}
               </p>
-              <p className="text-xs mt-0.5" style={{ color: 'var(--text-secondary)' }}>
+              <p className="text-xs mt-0.5 text-fg-muted">
                 Racha: {sound.streak} • {sound.total_attempts} intentos
               </p>
               <p

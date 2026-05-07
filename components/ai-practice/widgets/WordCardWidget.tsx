@@ -13,20 +13,20 @@ export default function WordCardWidget({ args }: Props) {
       style={{ borderColor: "var(--line-divider)", backgroundColor: "var(--btn-regular-bg)" }}
     >
       <div className="flex items-baseline gap-2">
-        <span className="text-base font-semibold" style={{ color: "var(--text-primary)" }}>
+        <span className="text-base font-semibold text-fg">
           {args.word}
         </span>
         {args.ipa && (
-          <span className="text-sm font-mono" style={{ color: "var(--text-tertiary)" }}>
+          <span className="text-sm font-mono text-fg-subtle">
             /{args.ipa}/
           </span>
         )}
       </div>
-      <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
+      <p className="text-sm text-fg-muted">
         {args.meaning}
       </p>
       {args.example && (
-        <p className="text-sm italic" style={{ color: "var(--text-tertiary)" }}>
+        <p className="text-sm italic text-fg-subtle">
           &ldquo;{args.example}&rdquo;
         </p>
       )}

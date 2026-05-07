@@ -12,7 +12,7 @@ export default function Table({ headers, rows }: TableProps) {
         <thead>
           <tr style={{ backgroundColor: "var(--surface)", borderBottom: "1px solid var(--border)" }}>
             {headers.map((h) => (
-              <th key={h} className="px-3 py-2 text-left text-xs font-semibold" style={{ color: "var(--text-secondary)" }}>
+              <th key={h} className="px-3 py-2 text-left text-xs font-semibold text-fg-muted">
                 {h}
               </th>
             ))}
@@ -26,15 +26,15 @@ export default function Table({ headers, rows }: TableProps) {
               style={{ borderColor: "var(--border)", backgroundColor: i % 2 === 0 ? "transparent" : "var(--surface)" }}
             >
               {row.map((cell, j) => (
-                <td key={j} className="px-3 py-2" style={{ color: "var(--text-primary)" }}>
-                  {cell ?? <span style={{ color: "var(--text-tertiary)" }}>—</span>}
+                <td key={j} className="px-3 py-2 text-fg">
+                  {cell ?? <span className="text-fg-subtle">—</span>}
                 </td>
               ))}
             </tr>
           ))}
           {rows.length === 0 && (
             <tr>
-              <td colSpan={headers.length} className="px-3 py-4 text-center text-sm" style={{ color: "var(--text-tertiary)" }}>
+              <td colSpan={headers.length} className="px-3 py-4 text-center text-sm text-fg-subtle">
                 No records yet
               </td>
             </tr>

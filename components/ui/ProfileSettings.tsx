@@ -86,7 +86,7 @@ export default function ProfileSettings() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[40vh]">
-        <div className="flex items-center gap-3" style={{ color: "var(--text-secondary)" }}>
+        <div className="flex items-center gap-3 text-fg-muted">
           <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
           <span className="text-sm">Loading profile…</span>
         </div>
@@ -107,15 +107,15 @@ export default function ProfileSettings() {
             className="w-16 h-16 rounded-full flex items-center justify-center"
             style={{ background: "var(--bg-tertiary)" }}
           >
-            <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{ color: "var(--text-tertiary)" }}>
+            <svg className="w-8 h-8 text-fg-subtle" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
             </svg>
           </div>
           <div>
-            <h2 className="text-base font-semibold" style={{ color: "var(--text-primary)" }}>
+            <h2 className="text-base font-semibold text-fg">
               You&apos;re not signed in
             </h2>
-            <p className="text-sm mt-1" style={{ color: "var(--text-secondary)" }}>
+            <p className="text-sm mt-1 text-fg-muted">
               Sign in to view and edit your profile
             </p>
           </div>
@@ -138,8 +138,8 @@ export default function ProfileSettings() {
     <div className="max-w-lg mx-auto py-8 px-4 space-y-5">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold" style={{ color: "var(--text-primary)" }}>Profile</h1>
-        <p className="text-sm mt-0.5" style={{ color: "var(--text-secondary)" }}>
+        <h1 className="text-h2 text-fg">Profile</h1>
+        <p className="text-sm mt-0.5 text-fg-muted">
           Manage your account information and preferences
         </p>
       </div>
@@ -167,10 +167,10 @@ export default function ProfileSettings() {
       {/* Security card */}
       <SectionCard>
         <div className="flex items-center gap-2 mb-1">
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{ color: "var(--text-tertiary)" }}>
+          <svg className="w-4 h-4 text-fg-subtle" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
           </svg>
-          <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: "var(--text-tertiary)" }}>Security</span>
+          <span className="text-xs font-semibold uppercase tracking-widest text-fg-subtle">Security</span>
         </div>
         <ProfilePasswordCard onSave={handlePasswordSave} />
       </SectionCard>
@@ -178,19 +178,19 @@ export default function ProfileSettings() {
       {/* Account info */}
       <SectionCard>
         <div className="flex items-center gap-2 mb-3">
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{ color: "var(--text-tertiary)" }}>
+          <svg className="w-4 h-4 text-fg-subtle" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
           </svg>
-          <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: "var(--text-tertiary)" }}>Account</span>
+          <span className="text-xs font-semibold uppercase tracking-widest text-fg-subtle">Account</span>
         </div>
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <span className="text-sm" style={{ color: "var(--text-secondary)" }}>Email</span>
-            <span className="text-sm font-medium" style={{ color: "var(--text-primary)" }}>{user?.email}</span>
+            <span className="text-sm text-fg-muted">Email</span>
+            <span className="text-sm font-medium text-fg">{user?.email}</span>
           </div>
           <div className="flex items-center justify-between">
-            <span className="text-sm" style={{ color: "var(--text-secondary)" }}>Account ID</span>
-            <span className="text-xs font-mono" style={{ color: "var(--text-tertiary)" }}>
+            <span className="text-sm text-fg-muted">Account ID</span>
+            <span className="text-xs font-mono text-fg-subtle">
               {user?.id?.slice(0, 8)}…
             </span>
           </div>

@@ -62,7 +62,7 @@ export function LessonLobby({
         backHref={backHref}
       />
 
-      <div className="px-6 lg:px-10 py-8 pb-14 ">
+      <div className="px-6 lg:px-10 py-8 pb-14">
         <div className="grid gap-3 sm:grid-cols-3">
           <InfoPill
             icon="🎯"
@@ -90,10 +90,10 @@ export function LessonLobby({
 
         <div className="flex items-end justify-between gap-4 pt-2">
           <div>
-            <p className="text-tiny font-semibold uppercase tracking-[.18em] text-[var(--text-tertiary)] mt-6">
+            <p className="text-tiny font-semibold uppercase tracking-[.18em] text-fg-subtle mt-6">
               Practice modes
             </p>
-            <h2 className="mb-6 text-body-lg font-semibold tracking-tight text-[var(--deep-text)]">
+            <h2 className="mb-6 text-body-lg font-semibold tracking-tight text-fg">
               How do you want to practice?
             </h2>
           </div>
@@ -138,7 +138,7 @@ export function LessonLobby({
             <p className="text-body font-semibold text-[var(--admonitions-color-tip)]">
               🎉 All stages mastered — great work!
             </p>
-            <p className="mt-1 text-caption text-[var(--text-secondary)]">
+            <p className="mt-1 text-caption text-fg-muted">
               Keep practicing to maintain your streak.
             </p>
           </div>
@@ -179,7 +179,7 @@ function InfoPill({
     >
       <div className="flex items-center gap-2">
         <span className="text-body-sm leading-none">{icon}</span>
-        <p className="text-tiny font-semibold uppercase tracking-[.14em] text-[var(--text-tertiary)]">
+        <p className="text-tiny font-semibold uppercase tracking-[.14em] text-fg-subtle">
           {label}
         </p>
       </div>
@@ -188,7 +188,7 @@ function InfoPill({
           className="mt-1.5 h-2 w-2 flex-shrink-0 rounded-full"
           style={{ backgroundColor: accent }}
         />
-        <p className="text-caption font-medium leading-snug text-[var(--deep-text)]">
+        <p className="text-caption font-medium leading-snug text-fg">
           {value}
         </p>
       </div>

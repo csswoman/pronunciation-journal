@@ -72,8 +72,7 @@ export default function RoleplayView({
         </span>
         <button
           onClick={() => setShowScenarioPicker((v) => !v)}
-          className="ml-1 text-xs transition-opacity hover:opacity-70"
-          style={{ color: "var(--text-tertiary)" }}
+          className="ml-1 text-xs transition-opacity hover:opacity-70 text-fg-subtle"
         >
           change +
         </button>
@@ -113,8 +112,7 @@ export default function RoleplayView({
         <div className="flex flex-col gap-5 py-4">
           {visibleMessages.length === 0 && !isStreaming && (
             <div
-              className="flex flex-col items-center justify-center h-40 gap-2"
-              style={{ color: "var(--text-tertiary)" }}
+              className="flex flex-col items-center justify-center h-40 gap-2 text-fg-subtle"
             >
               <span className="text-3xl">{activeEmoji}</span>
               <p className="text-sm">

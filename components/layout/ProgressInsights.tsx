@@ -69,13 +69,13 @@ function CircleMeter({ value, label, hint }: { value: number; label: string; hin
         />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-        <span className="text-3xl font-black tracking-tight" style={{ color: "var(--deep-text)" }}>
+        <span className="text-3xl font-black tracking-tight text-fg">
           {Math.round(value)}%
         </span>
-        <span className="text-tiny font-semibold uppercase tracking-[0.22em]" style={{ color: "var(--text-secondary)" }}>
+        <span className="text-tiny font-semibold uppercase tracking-[0.22em] text-fg-muted">
           {label}
         </span>
-        <span className="mt-1 text-tiny" style={{ color: "var(--text-tertiary)" }}>
+        <span className="mt-1 text-tiny text-fg-subtle">
           {hint}
         </span>
       </div>
@@ -114,15 +114,15 @@ function MetricCard({
           {icon}
         </div>
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: "var(--text-secondary)" }}>
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-fg-muted">
             {label}
           </p>
-          <p className="text-2xl font-black tracking-tight" style={{ color: "var(--deep-text)" }}>
+          <p className="text-2xl font-black tracking-tight text-fg">
             {value}
           </p>
         </div>
       </div>
-      <p className="mt-3 text-sm leading-6" style={{ color: "var(--text-secondary)" }}>
+      <p className="mt-3 text-sm leading-6 text-fg-muted">
         {helper}
       </p>
     </div>
@@ -167,7 +167,7 @@ export default function ProgressInsights({
           <p className="text-tiny font-semibold uppercase tracking-[0.24em]" style={{ color: "var(--primary)" }}>
             Insight Panels
           </p>
-          <h3 className="mt-2 text-2xl font-black tracking-tight" style={{ color: "var(--deep-text)" }}>
+          <h3 className="mt-2 text-h3 text-fg">
             One card, three ways to read your progress
           </h3>
         </div>
@@ -187,7 +187,7 @@ export default function ProgressInsights({
                 className="inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition-all duration-200"
                 style={{
                   background: active ? "var(--card-bg)" : "transparent",
-                  color: active ? "var(--deep-text)" : "var(--text-secondary)",
+                  color: active ? "var(--text-primary)" : "var(--text-secondary)",
                   boxShadow: active ? "0 1px 3px var(--line-divider)" : "none",
                 }}
               >

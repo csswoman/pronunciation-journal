@@ -39,15 +39,13 @@ export default function ExerciseFeedback({ result, onNext, onRetry }: ExerciseFe
             {icon} {feedback.immediate}
           </p>
           <p
-            className="text-xs leading-relaxed whitespace-pre-wrap"
-            style={{ color: "var(--text-secondary)" }}
+            className="text-xs leading-relaxed whitespace-pre-wrap text-fg-muted"
           >
             {feedback.explanation}
           </p>
           {feedback.example && (
             <p
-              className="text-xs leading-relaxed whitespace-pre-wrap font-mono"
-              style={{ color: "var(--text-tertiary)" }}
+              className="text-xs leading-relaxed whitespace-pre-wrap font-mono text-fg-subtle"
             >
               {feedback.example}
             </p>

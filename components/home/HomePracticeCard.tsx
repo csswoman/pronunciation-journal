@@ -18,10 +18,10 @@ export default function HomePracticeCard() {
         <div>
           <div className="flex items-center gap-2 mb-1">
             <Sparkles size={17} className="text-[var(--primary)]" />
-            <span className="text-base font-semibold text-[var(--deep-text)]">Practice with AI</span>
+            <span className="text-base font-semibold text-fg">Practice with AI</span>
             <span className="text-tiny font-semibold px-2 py-0.5 rounded-full bg-[var(--primary)] text-on-primary">Beta</span>
           </div>
-          <p className="text-sm text-[var(--text-secondary)]">Improve your speaking and writing with AI feedback.</p>
+          <p className="text-sm text-fg-muted">Improve your speaking and writing with AI feedback.</p>
         </div>
         <Link
           href="/ai-practice"
@@ -40,8 +40,8 @@ export default function HomePracticeCard() {
             className="flex flex-col gap-2 p-4 rounded-xl bg-[var(--btn-regular-bg)] hover:bg-[var(--line-divider)] transition-colors"
           >
             <Icon size={18} className="text-[var(--primary)]" />
-            <span className="text-sm font-semibold text-[var(--deep-text)]">{label}</span>
-            <span className="text-xs text-[var(--text-tertiary)] leading-snug">{sub}</span>
+            <span className="text-sm font-semibold text-fg">{label}</span>
+            <span className="text-xs text-fg-subtle leading-snug">{sub}</span>
           </Link>
         ))}
       </div>

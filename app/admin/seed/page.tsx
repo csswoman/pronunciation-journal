@@ -34,9 +34,9 @@ export default function SeedPage() {
             <span className="text-xs font-semibold px-2 py-0.5 rounded-full" style={{ backgroundColor: "var(--btn-regular-bg)", color: "var(--primary)" }}>
               Admin
             </span>
-            <h1 className="text-3xl font-bold" style={{ color: "var(--text-primary)" }}>Seed Data</h1>
+            <h1 className="text-h1 text-fg">Seed Data</h1>
           </div>
-          <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
+          <p className="text-sm text-fg-muted">
             Manage system content — sounds, words, patterns, and minimal pairs used in exercises.
           </p>
         </div>

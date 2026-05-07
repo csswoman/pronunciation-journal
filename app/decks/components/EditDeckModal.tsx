@@ -53,7 +53,7 @@ export function EditDeckModal({ deck, onClose, onUpdated, onDelete }: EditDeckMo
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
       <div className="w-full max-w-md mx-4 bg-[var(--card-bg)] rounded-2xl border border-[var(--line-divider)] shadow-xl p-6 space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="font-heading font-bold text-lg text-[var(--deep-text)]">Edit Deck</h2>
+          <h2 className="font-heading font-bold text-lg text-fg">Edit Deck</h2>
           <Button variant="ghost" size="icon" onClick={onClose}>
             <X size={20} />
           </Button>
@@ -68,35 +68,35 @@ export function EditDeckModal({ deck, onClose, onUpdated, onDelete }: EditDeckMo
             {icon}
           </div>
           <div className="min-w-0">
-            <p className="font-semibold text-sm text-[var(--deep-text)] truncate">{name || "Deck name"}</p>
-            <p className="text-xs text-[var(--text-tertiary)] truncate">{description || "Description"}</p>
+            <p className="font-semibold text-sm text-fg truncate">{name || "Deck name"}</p>
+            <p className="text-xs text-fg-subtle truncate">{description || "Description"}</p>
           </div>
         </div>
 
         <div className="space-y-3">
           <div>
-            <label className="text-xs font-medium text-[var(--text-secondary)] uppercase tracking-wide">Name</label>
+            <label className="text-xs font-medium text-fg-muted uppercase tracking-wide">Name</label>
             <input
               autoFocus
               value={name}
               onChange={e => setName(e.target.value)}
               onKeyDown={e => e.key === "Enter" && handleSave()}
-              className="mt-1 w-full px-3 py-2 rounded-xl bg-[var(--btn-regular-bg)] border border-[var(--line-divider)] text-sm text-[var(--deep-text)] placeholder:text-[var(--text-tertiary)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/40"
+              className="mt-1 w-full px-3 py-2 rounded-xl bg-[var(--btn-regular-bg)] border border-[var(--line-divider)] text-sm text-fg placeholder:text-fg-subtle focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/40"
             />
           </div>
 
           <div>
-            <label className="text-xs font-medium text-[var(--text-secondary)] uppercase tracking-wide">Description (optional)</label>
+            <label className="text-xs font-medium text-fg-muted uppercase tracking-wide">Description (optional)</label>
             <textarea
               value={description}
               onChange={e => setDescription(e.target.value)}
               rows={2}
-              className="mt-1 w-full px-3 py-2 rounded-xl bg-[var(--btn-regular-bg)] border border-[var(--line-divider)] text-sm text-[var(--deep-text)] placeholder:text-[var(--text-tertiary)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/40 resize-none"
+              className="mt-1 w-full px-3 py-2 rounded-xl bg-[var(--btn-regular-bg)] border border-[var(--line-divider)] text-sm text-fg placeholder:text-fg-subtle focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/40 resize-none"
             />
           </div>
 
           <div>
-            <label className="text-xs font-medium text-[var(--text-secondary)] uppercase tracking-wide mb-2 block">Icon</label>
+            <label className="text-xs font-medium text-fg-muted uppercase tracking-wide mb-2 block">Icon</label>
             <div className="flex gap-1.5 flex-wrap">
               {ICONS.map(i => (
                 <button
@@ -116,7 +116,7 @@ export function EditDeckModal({ deck, onClose, onUpdated, onDelete }: EditDeckMo
           </div>
 
           <div>
-            <label className="text-xs font-medium text-[var(--text-secondary)] uppercase tracking-wide mb-2 block">Color</label>
+            <label className="text-xs font-medium text-fg-muted uppercase tracking-wide mb-2 block">Color</label>
             <div className="flex gap-2 flex-wrap">
               {COLORS.map(c => (
                 <button

@@ -42,7 +42,7 @@ export default function QuotaExhaustedCard({ messages, onNewSession }: QuotaExha
         >
           <Zap size={14} style={{ color: "var(--primary)" }} />
         </span>
-        <p className="text-sm font-semibold" style={{ color: "var(--deep-text)" }}>
+        <p className="text-sm font-semibold text-fg">
           {hasConversation ? "Session ended" : "AI unavailable right now"}
         </p>
       </div>
@@ -53,10 +53,10 @@ export default function QuotaExhaustedCard({ messages, onNewSession }: QuotaExha
           style={{ backgroundColor: "var(--card-bg)", border: "1px solid var(--line-divider)" }}
         >
           <div>
-            <p className="text-xs font-medium" style={{ color: "var(--text-secondary)" }}>
+            <p className="text-xs font-medium text-fg-muted">
               Exercises completed
             </p>
-            <p className="text-lg font-bold mt-0.5" style={{ color: "var(--deep-text)" }}>
+            <p className="text-lg font-bold mt-0.5 text-fg">
               {correct} / {total}
             </p>
           </div>
@@ -77,7 +77,7 @@ export default function QuotaExhaustedCard({ messages, onNewSession }: QuotaExha
         </div>
       )}
 
-      <p className="text-xs leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+      <p className="text-xs leading-relaxed text-fg-muted">
         The daily AI quota has been reached. Your conversation is saved — you can continue when the quota resets (usually within 24 hours).
       </p>
 

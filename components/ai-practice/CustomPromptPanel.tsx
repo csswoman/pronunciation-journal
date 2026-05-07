@@ -86,12 +86,11 @@ export default function CustomPromptPanel({
           disabled={isDisabled}
           rows={4}
           autoFocus
-          className="w-full resize-none bg-transparent text-base leading-relaxed focus:outline-none max-h-48"
-          style={{ color: "var(--text-primary)" }}
+          className="w-full resize-none bg-transparent text-base leading-relaxed focus:outline-none max-h-48 text-fg"
         />
         <div className="flex items-center justify-between gap-3">
           {helperText && (
-            <p className="text-xs" style={{ color: "var(--text-tertiary)" }}>{helperText}</p>
+            <p className="text-xs text-fg-subtle">{helperText}</p>
           )}
           <Button
             type="submit"
@@ -135,8 +134,7 @@ export default function CustomPromptPanel({
           placeholder={placeholder}
           disabled={isDisabled}
           rows={1}
-          className="flex-1 resize-none bg-transparent text-sm leading-relaxed focus:outline-none max-h-40 px-1 py-1.5"
-          style={{ color: "var(--text-primary)" }}
+          className="flex-1 resize-none bg-transparent text-sm leading-relaxed focus:outline-none max-h-40 px-1 py-1.5 text-fg"
         />
 
         {/* Mic / Send button */}
@@ -158,7 +156,7 @@ export default function CustomPromptPanel({
 
       {/* Hint bar */}
       <div className="flex items-center justify-between px-1">
-        <p className="text-tiny" style={{ color: "var(--text-tertiary)" }}>
+        <p className="text-tiny text-fg-subtle">
           <kbd
             className="px-1 py-px rounded text-tiny font-mono"
             style={{ backgroundColor: "var(--btn-regular-bg)", color: "var(--text-secondary)" }}
@@ -179,7 +177,7 @@ export default function CustomPromptPanel({
             className="w-1.5 h-1.5 rounded-full"
             style={{ backgroundColor: "var(--primary)" }}
           />
-          <span className="text-tiny" style={{ color: "var(--text-tertiary)" }}>
+          <span className="text-tiny text-fg-subtle">
             AI feedback on
           </span>
         </div>

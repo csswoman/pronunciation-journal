@@ -71,10 +71,10 @@ export default function AchievementsSection() {
       {/* Header */}
       <div className="flex items-end justify-between gap-3">
         <div>
-          <p className="text-tiny font-bold uppercase tracking-[0.24em]" style={{ color: 'var(--text-tertiary)' }}>
+          <p className="text-tiny font-bold uppercase tracking-[0.24em] text-fg-subtle">
             ACHIEVEMENTS
           </p>
-          <h2 className="mt-0.5 text-xl font-black tracking-tight" style={{ color: 'var(--deep-text)' }}>
+          <h2 className="mt-0.5 text-h4 text-fg">
             {unlocked.length} earned · {locked.length} remaining
           </h2>
         </div>
@@ -102,10 +102,10 @@ export default function AchievementsSection() {
               {a.icon}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-bold leading-tight" style={{ color: 'var(--deep-text)' }}>
+              <p className="text-sm font-bold leading-tight text-fg">
                 {a.title}
               </p>
-              <p className="mt-0.5 text-xs leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+              <p className="mt-0.5 text-xs leading-relaxed text-fg-muted">
                 {a.description}
               </p>
               <span
@@ -141,10 +141,10 @@ export default function AchievementsSection() {
               {a.icon}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-bold leading-tight" style={{ color: 'var(--deep-text)' }}>
+              <p className="text-sm font-bold leading-tight text-fg">
                 {a.title}
               </p>
-              <p className="mt-0.5 text-xs leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+              <p className="mt-0.5 text-xs leading-relaxed text-fg-muted">
                 {a.description}
               </p>
               <span

@@ -81,8 +81,7 @@ export default function ChatArea({
         <button
           onClick={onToggleSessions}
           aria-label={sessionsCollapsed ? "Show sessions" : "Hide sessions"}
-          className="flex items-center gap-1.5 text-caption font-medium px-2 py-1.5 rounded-lg transition-colors"
-          style={{ color: "var(--text-tertiary)" }}
+          className="flex items-center gap-1.5 text-caption font-medium px-2 py-1.5 rounded-lg transition-colors text-fg-subtle"
           onMouseEnter={e => {
             e.currentTarget.style.backgroundColor = "var(--btn-regular-bg)";
             e.currentTarget.style.color = "var(--text-secondary)";
@@ -101,8 +100,7 @@ export default function ChatArea({
         <button
           onClick={onToggleVocab}
           aria-label={vocabCollapsed ? "Show vocab" : "Hide vocab"}
-          className="flex items-center gap-1.5 text-caption font-medium px-2 py-1.5 rounded-lg transition-colors"
-          style={{ color: "var(--text-tertiary)" }}
+          className="flex items-center gap-1.5 text-caption font-medium px-2 py-1.5 rounded-lg transition-colors text-fg-subtle"
           onMouseEnter={e => {
             e.currentTarget.style.backgroundColor = "var(--btn-regular-bg)";
             e.currentTarget.style.color = "var(--text-secondary)";

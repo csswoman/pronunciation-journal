@@ -42,8 +42,8 @@ export function DeckCard({
             {deck.icon ?? deck.name[0].toUpperCase()}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="font-semibold text-base text-[var(--deep-text)] truncate leading-tight">{deck.name}</p>
-            <p className="text-xs text-[var(--text-tertiary)] mt-0.5">{deck.description || "Vocabulary set"}</p>
+            <p className="font-semibold text-base text-fg truncate leading-tight">{deck.name}</p>
+            <p className="text-xs text-fg-subtle mt-0.5">{deck.description || "Vocabulary set"}</p>
           </div>
           <div className="flex items-center gap-1 flex-shrink-0">
             <Button variant="ghost" size="icon" onClick={onManage} title="Manage words">
@@ -59,8 +59,8 @@ export function DeckCard({
         {entryCount > 0 && (
           <div className="space-y-1.5">
             <div className="flex items-center justify-between text-xs font-medium">
-              <span className="text-[var(--text-secondary)]">Progress</span>
-              <span className="text-[var(--text-tertiary)]">{progressPercent}%</span>
+              <span className="text-fg-muted">Progress</span>
+              <span className="text-fg-subtle">{progressPercent}%</span>
             </div>
             <ProgressBar value={progressPercent} color={deck.color ?? "var(--primary)"} height="md" />
           </div>
@@ -68,7 +68,7 @@ export function DeckCard({
 
         {/* Stats */}
         <div className="flex items-center gap-3 text-xs font-medium">
-          <div className="flex items-center gap-1 text-[var(--text-secondary)]">
+          <div className="flex items-center gap-1 text-fg-muted">
             <Clock size={13} />
             <span>{entryCount} word{entryCount !== 1 ? "s" : ""}</span>
           </div>

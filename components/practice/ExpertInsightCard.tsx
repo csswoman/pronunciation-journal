@@ -28,7 +28,7 @@ export function ExpertInsightCard({
       <div className="flex items-start justify-between">
         <div className="space-y-1">
           <div className="text-xs font-semibold opacity-90 tracking-widest">EXPERT INSIGHT</div>
-          <h3 className="text-xl font-bold leading-tight">{title}</h3>
+          <h3 className="text-h3">{title}</h3>
         </div>
         <Button type="button" variant="ghost" size="icon" className="rounded-full bg-overlay-light text-on-primary hover:bg-overlay-medium">
           <Mic size={20} className="text-on-primary" />

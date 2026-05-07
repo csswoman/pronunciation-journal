@@ -24,15 +24,14 @@ export default function Header({ title }: HeaderProps) {
       }}
     >
       <div className="max-w-7xl mx-auto flex justify-between items-center px-4 sm:px-6 lg:px-8 gap-4">
-        <h1 className="text-xl font-bold" style={{ color: 'var(--text-primary)' }}>
+        <h1 className="text-xl font-bold text-fg">
           {title}
         </h1>
         <div className="flex items-center gap-3 shrink-0">
           {supabaseEnabled && user && (
             <>
               <span
-                className="hidden sm:inline text-sm truncate max-w-[200px]"
-                style={{ color: 'var(--text-secondary)' }}
+                className="hidden sm:inline text-sm truncate max-w-[200px] text-fg-muted"
                 title={user.email ?? undefined}
               >
                 {accountLabel}
@@ -42,7 +41,7 @@ export default function Header({ title }: HeaderProps) {
                 onClick={() => signOutUser()}
                 variant="secondary"
                 size="sm"
-                className="text-[var(--text-primary)]"
+                className="text-fg"
               >
                 Salir
               </Button>

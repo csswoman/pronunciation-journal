@@ -174,12 +174,12 @@ export default function LessonMarkdown({ content }: { content: string }) {
             </thead>
           ),
           th: ({ children }) => (
-            <th className="border-b border-[var(--line-divider)] px-4 py-3 text-left font-semibold text-[var(--deep-text)]">
+            <th className="border-b border-[var(--line-divider)] px-4 py-3 text-left font-semibold text-fg">
               {children}
             </th>
           ),
           td: ({ children }) => (
-            <td className="border-b border-[var(--line-divider)] px-4 py-3 text-[var(--text-secondary)]">
+            <td className="border-b border-[var(--line-divider)] px-4 py-3 text-fg-muted">
               {children}
             </td>
           ),

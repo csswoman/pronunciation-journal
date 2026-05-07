@@ -55,7 +55,7 @@ export default function PhraseCard({
 
       {ipaLoading ? (
         <div className="mt-4 flex justify-center">
-          <Loader2 size={13} className="animate-spin" style={{ color: "var(--text-tertiary)" }} />
+          <Loader2 size={13} className="animate-spin text-fg-subtle" />
         </div>
       ) : wordIPAs.length > 0 && (
         <div className="mt-4 flex flex-wrap justify-center gap-x-2 gap-y-1">
@@ -82,7 +82,7 @@ export default function PhraseCard({
       )}
 
       {analyzing && (
-        <div className="mt-3 flex items-center justify-center gap-1.5" style={{ color: "var(--text-tertiary)" }}>
+        <div className="mt-3 flex items-center justify-center gap-1.5 text-fg-subtle">
           <Loader2 size={12} className="animate-spin" />
           <span className="text-xs">Analyzing…</span>
         </div>

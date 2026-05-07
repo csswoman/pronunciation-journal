@@ -103,13 +103,13 @@ export function StageLobby({ soundIpa, soundName, mastery, hasPairs, onSelectSta
       }}>
         <div className="relative flex-shrink-0">
           <MasteryRing pct={overall} size={56} />
-          <span className="absolute inset-0 flex items-center justify-center text-xs font-bold" style={{ color: 'var(--text-secondary)' }}>
+          <span className="absolute inset-0 flex items-center justify-center text-xs font-bold text-fg-muted">
             {overall}%
           </span>
         </div>
         <div className="min-w-0">
           <div className="text-2xl font-bold font-mono" style={{ color: 'var(--primary)' }}>{soundIpa}</div>
-          <div className="text-xs uppercase tracking-widest mt-0.5" style={{ color: 'var(--text-tertiary)' }}>
+          <div className="text-xs uppercase tracking-widest mt-0.5 text-fg-subtle">
             {soundName} · {visibleStages.length} stages
           </div>
         </div>
@@ -152,7 +152,7 @@ export function StageLobby({ soundIpa, soundName, mastery, hasPairs, onSelectSta
               {/* Text */}
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
-                  <span className="text-xs" style={{ color: 'var(--text-secondary)' }}>Stage {i + 1} —</span>
+                  <span className="text-xs text-fg-muted">Stage {i + 1} —</span>
                   <span className="text-sm font-semibold" style={{ color: unlocked ? 'var(--text-primary)' : 'var(--text-tertiary)' }}>
                     {stage.title}
                   </span>
@@ -166,16 +166,16 @@ export function StageLobby({ soundIpa, soundName, mastery, hasPairs, onSelectSta
               {/* Right side: mastery % or lock */}
               <div className="flex-shrink-0">
                 {!unlocked ? (
-                  <span style={{ color: 'var(--text-tertiary)' }}><LockIcon /></span>
+                  <span className="text-fg-subtle"><LockIcon /></span>
                 ) : m.total > 0 ? (
                   <div className="relative w-9 h-9">
                     <MasteryRing pct={m.pct} size={36} />
-                    <span className="absolute inset-0 flex items-center justify-center text-tiny font-bold" style={{ color: 'var(--text-secondary)' }}>
+                    <span className="absolute inset-0 flex items-center justify-center text-tiny font-bold text-fg-muted">
                       {m.pct}%
                     </span>
                   </div>
                 ) : (
-                  <span className="text-xs font-medium" style={{ color: 'var(--text-tertiary)' }}>—</span>
+                  <span className="text-xs font-medium text-fg-subtle">—</span>
                 )}
               </div>
             </Button>
@@ -194,7 +194,7 @@ export function StageLobby({ soundIpa, soundName, mastery, hasPairs, onSelectSta
       )}
 
       {!nextUnlocked && (
-        <p className="text-center text-xs" style={{ color: 'var(--text-secondary)' }}>
+        <p className="text-center text-xs text-fg-muted">
           All stages completed! Keep practicing to improve your score.
         </p>
       )}

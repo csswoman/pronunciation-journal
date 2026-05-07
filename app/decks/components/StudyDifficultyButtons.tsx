@@ -19,7 +19,7 @@ export function StudyDifficultyButtons({ onDifficulty, visible = true }: StudyDi
   if (!visible) {
     return (
       <div className="px-4 pb-24 lg:pb-4">
-        <p className="text-center text-sm text-[var(--text-tertiary)] py-3">
+        <p className="text-center text-sm text-fg-subtle py-3">
           Tap the card to reveal the answer
         </p>
       </div>

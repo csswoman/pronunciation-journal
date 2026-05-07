@@ -15,7 +15,7 @@ export function AuthForm({ onSubmit, children, isResetMode }: AuthFormProps) {
       {children}
       {!isResetMode && (
         <>
-          <div className="flex items-center gap-3 my-5 text-xs uppercase tracking-[0.6px]" style={{ color: "var(--text-secondary)" }}>
+          <div className="flex items-center gap-3 my-5 text-xs uppercase tracking-[0.6px] text-fg-muted">
             <div className="flex-1 h-px" style={{ background: "var(--border-default)" }} />
             O continúa con
             <div className="flex-1 h-px" style={{ background: "var(--border-default)" }} />

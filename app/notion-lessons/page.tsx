@@ -64,10 +64,10 @@ export default function NotionLessonsIndexPage() {
   return (
     <div className="min-h-screen bg-[var(--page-bg)]">
       <div className="max-w-5xl mx-auto px-4 py-12">
-        <h1 className="text-4xl font-bold mb-2 text-[var(--deep-text)]">
+        <h1 className="text-h1 mb-2 text-fg">
           Lessons
         </h1>
-        <p className="text-[var(--text-secondary)] mb-12">
+        <p className="text-fg-muted mb-12">
           Learn by exploring each lesson topic
         </p>
 
@@ -78,10 +78,10 @@ export default function NotionLessonsIndexPage() {
               href={`/notion-lessons/${lesson.slug}`}
               className="group block p-6 rounded-xl border border-[var(--line-divider)] bg-[var(--card-bg)] hover:border-[var(--primary)] transition-all duration-200 hover:shadow-md"
             >
-              <h2 className="text-lg font-semibold text-[var(--deep-text)] group-hover:text-[var(--primary)] transition-colors">
+              <h2 className="text-lg font-semibold text-fg group-hover:text-[var(--primary)] transition-colors">
                 {lesson.title}
               </h2>
-              <p className="text-sm text-[var(--text-secondary)] mt-2">
+              <p className="text-sm text-fg-muted mt-2">
                 View lesson →
               </p>
             </Link>
@@ -90,7 +90,7 @@ export default function NotionLessonsIndexPage() {
 
         {subLessons.length === 0 && (
           <div className="text-center py-12">
-            <p className="text-[var(--text-secondary)]">
+            <p className="text-fg-muted">
               No lessons found yet
             </p>
           </div>

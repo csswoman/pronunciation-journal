@@ -46,7 +46,7 @@ export default function MultipleChoiceWidget({ args, status, onAnswer, onNext, o
       className="rounded-xl border p-4 space-y-3"
       style={{ borderColor: "var(--line-divider)", backgroundColor: "var(--btn-regular-bg)" }}
     >
-      <p className="text-sm font-medium" style={{ color: "var(--text-primary)" }}>
+      <p className="text-sm font-medium text-fg">
         {args.question}
       </p>
       <div className="space-y-2">

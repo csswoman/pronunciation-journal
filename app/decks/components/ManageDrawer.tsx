@@ -106,28 +106,28 @@ function EntryRow({
         >
           {selected
             ? <CheckSquare size={16} className="text-[var(--primary)]" />
-            : <Square size={16} className="text-[var(--text-tertiary)]" />
+            : <Square size={16} className="text-fg-subtle" />
           }
         </button>
 
         {/* Info */}
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-sm font-semibold text-[var(--deep-text)]">{entry.word}</span>
+            <span className="text-sm font-semibold text-fg">{entry.word}</span>
             {pos && (
-              <span className="text-tiny px-1.5 py-0.5 rounded-full border border-[var(--line-divider)] text-[var(--text-tertiary)] font-medium">
+              <span className="text-tiny px-1.5 py-0.5 rounded-full border border-[var(--line-divider)] text-fg-subtle font-medium">
                 {pos}
               </span>
             )}
           </div>
           {entry.ipa && (
-            <p className="text-xs text-[var(--text-tertiary)] mt-0.5">/{entry.ipa}/</p>
+            <p className="text-xs text-fg-subtle mt-0.5">/{entry.ipa}/</p>
           )}
           {!expanded && currentDefinition && (
-            <p className="text-xs text-[var(--text-secondary)] truncate mt-0.5">{currentDefinition}</p>
+            <p className="text-xs text-fg-muted truncate mt-0.5">{currentDefinition}</p>
           )}
           {!expanded && entry.phrases && entry.phrases.length > 0 && (
-            <p className="text-xs text-[var(--text-secondary)] truncate mt-0.5 italic">
+            <p className="text-xs text-fg-muted truncate mt-0.5 italic">
               "{entry.phrases[0]}"{entry.phrases.length > 1 ? ` +${entry.phrases.length - 1}` : ""}
             </p>
           )}
@@ -137,7 +137,7 @@ function EntryRow({
         <div className="flex items-center gap-0.5 shrink-0">
           <button
             onClick={() => speak(entry.word)}
-            className="p-1.5 rounded-lg text-[var(--text-tertiary)] hover:text-[var(--deep-text)] hover:bg-[var(--btn-regular-bg)] transition-colors"
+            className="p-1.5 rounded-lg text-fg-subtle hover:text-fg hover:bg-[var(--btn-regular-bg)] transition-colors"
             title="Pronounce"
           >
             <Volume2 size={13} />
@@ -147,7 +147,7 @@ function EntryRow({
             className={`p-1.5 rounded-lg transition-colors ${
               expanded
                 ? "text-[var(--primary)] bg-[var(--primary)]/10"
-                : "text-[var(--text-tertiary)] hover:text-[var(--deep-text)] hover:bg-[var(--btn-regular-bg)]"
+                : "text-fg-subtle hover:text-fg hover:bg-[var(--btn-regular-bg)]"
             }`}
             title="Edit phrases"
           >
@@ -155,7 +155,7 @@ function EntryRow({
           </button>
           <button
             onClick={() => onRemove(entry.id)}
-            className="p-1.5 rounded-lg text-[var(--text-tertiary)] hover:text-error hover:bg-error-soft transition-colors"
+            className="p-1.5 rounded-lg text-fg-subtle hover:text-error hover:bg-error-soft transition-colors"
             title="Remove"
           >
             <Trash2 size={13} />
@@ -167,7 +167,7 @@ function EntryRow({
       {expanded && (
         <div className="px-3 pb-3 space-y-3 border-t border-[var(--line-divider)] pt-3 mx-1">
           <div>
-            <p className="text-tiny font-semibold uppercase tracking-widest text-[var(--text-tertiary)] mb-1.5">
+            <p className="text-tiny font-semibold uppercase tracking-widest text-fg-subtle mb-1.5">
               Meaning / definition
             </p>
             <textarea
@@ -176,11 +176,11 @@ function EntryRow({
               onChange={e => setEditingMeaning(e.target.value)}
               placeholder="e.g. the occurrence of events by chance in a happy way"
               rows={2}
-              className="w-full px-3 py-2 rounded-lg bg-[var(--btn-regular-bg)] border border-[var(--line-divider)] text-sm text-[var(--deep-text)] placeholder:text-[var(--text-tertiary)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/30 resize-none"
+              className="w-full px-3 py-2 rounded-lg bg-[var(--btn-regular-bg)] border border-[var(--line-divider)] text-sm text-fg placeholder:text-fg-subtle focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/30 resize-none"
             />
           </div>
           <div>
-            <p className="text-tiny font-semibold uppercase tracking-widest text-[var(--text-tertiary)] mb-1.5">
+            <p className="text-tiny font-semibold uppercase tracking-widest text-fg-subtle mb-1.5">
               Phrases / examples
             </p>
             <textarea
@@ -188,7 +188,7 @@ function EntryRow({
               onChange={e => setEditingPhrases(e.target.value)}
               placeholder={"One phrase per line…\ne.g. a serendipitous meeting"}
               rows={2}
-              className="w-full px-3 py-2 rounded-lg bg-[var(--btn-regular-bg)] border border-[var(--line-divider)] text-sm text-[var(--deep-text)] placeholder:text-[var(--text-tertiary)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/30 resize-none"
+              className="w-full px-3 py-2 rounded-lg bg-[var(--btn-regular-bg)] border border-[var(--line-divider)] text-sm text-fg placeholder:text-fg-subtle focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/30 resize-none"
             />
           </div>
           <div className="flex gap-2 justify-end">
@@ -354,11 +354,11 @@ export function ManageDrawer({ deck, onClose, onWordCountChange }: ManageDrawerP
         {/* Header */}
         <div className="flex items-start justify-between px-5 pt-5 pb-4 border-b border-[var(--line-divider)]">
           <div>
-            <h2 className="font-bold text-lg text-[var(--deep-text)] leading-tight">{deck.name}</h2>
+            <h2 className="font-bold text-lg text-fg leading-tight">{deck.name}</h2>
             {deck.description && (
-              <p className="text-xs text-[var(--text-secondary)] mt-0.5 line-clamp-1">{deck.description}</p>
+              <p className="text-xs text-fg-muted mt-0.5 line-clamp-1">{deck.description}</p>
             )}
-            <p className="text-xs text-[var(--text-tertiary)] mt-1">
+            <p className="text-xs text-fg-subtle mt-1">
               {loading ? "…" : `${entries.length} word${entries.length !== 1 ? "s" : ""}`}
             </p>
           </div>
@@ -376,7 +376,7 @@ export function ManageDrawer({ deck, onClose, onWordCountChange }: ManageDrawerP
               className={`flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-t-lg border-b-2 transition-colors -mb-px ${
                 tab === t.id
                   ? "border-[var(--primary)] text-[var(--primary)]"
-                  : "border-transparent text-[var(--text-secondary)] hover:text-[var(--deep-text)]"
+                  : "border-transparent text-fg-muted hover:text-fg"
               }`}
             >
               {t.icon}
@@ -393,12 +393,12 @@ export function ManageDrawer({ deck, onClose, onWordCountChange }: ManageDrawerP
             <div className="p-4 space-y-3">
               {/* Search */}
               <div className="relative">
-                <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-tertiary)]" />
+                <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-fg-subtle" />
                 <input
                   value={filter}
                   onChange={e => setFilter(e.target.value)}
                   placeholder="Search words…"
-                  className="w-full pl-8 pr-3 py-2 rounded-xl bg-[var(--btn-regular-bg)] border border-[var(--line-divider)] text-sm text-[var(--deep-text)] placeholder:text-[var(--text-tertiary)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/30"
+                  className="w-full pl-8 pr-3 py-2 rounded-xl bg-[var(--btn-regular-bg)] border border-[var(--line-divider)] text-sm text-fg placeholder:text-fg-subtle focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/30"
                 />
               </div>
 
@@ -407,12 +407,12 @@ export function ManageDrawer({ deck, onClose, onWordCountChange }: ManageDrawerP
                 <div className="flex items-center gap-2">
                   <button
                     onClick={toggleSelectAll}
-                    className="flex items-center gap-1.5 text-xs text-[var(--text-secondary)] hover:text-[var(--deep-text)] transition-colors"
+                    className="flex items-center gap-1.5 text-xs text-fg-muted hover:text-fg transition-colors"
                   >
                     {allFilteredSelected
                       ? <CheckSquare size={14} className="text-[var(--primary)]" />
                       : selected.size > 0
-                        ? <Minus size={14} className="text-[var(--text-tertiary)]" />
+                        ? <Minus size={14} className="text-fg-subtle" />
                         : <Square size={14} />
                     }
                     {allFilteredSelected ? "Deselect all" : "Select all"}
@@ -439,11 +439,11 @@ export function ManageDrawer({ deck, onClose, onWordCountChange }: ManageDrawerP
               ) : filtered.length === 0 && entries.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-16 gap-3 text-center">
                   <div className="w-12 h-12 rounded-full bg-[var(--btn-regular-bg)] flex items-center justify-center">
-                    <BookOpen size={20} className="text-[var(--text-tertiary)]" />
+                    <BookOpen size={20} className="text-fg-subtle" />
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-[var(--deep-text)]">No words yet</p>
-                    <p className="text-xs text-[var(--text-tertiary)] mt-1">Add words manually or use AI suggestions</p>
+                    <p className="text-sm font-medium text-fg">No words yet</p>
+                    <p className="text-xs text-fg-subtle mt-1">Add words manually or use AI suggestions</p>
                   </div>
                   <div className="flex gap-2">
                     <Button variant="primary" size="sm" onClick={() => setTab("add")}>Add word</Button>
@@ -451,7 +451,7 @@ export function ManageDrawer({ deck, onClose, onWordCountChange }: ManageDrawerP
                   </div>
                 </div>
               ) : filtered.length === 0 ? (
-                <p className="text-center text-xs text-[var(--text-tertiary)] py-8">No matching words</p>
+                <p className="text-center text-xs text-fg-subtle py-8">No matching words</p>
               ) : (
                 <div className="space-y-1">
                   {filtered.map(entry => (
@@ -474,14 +474,14 @@ export function ManageDrawer({ deck, onClose, onWordCountChange }: ManageDrawerP
           {tab === "add" && (
             <div className="p-4 space-y-4">
               <div>
-                <label className="text-tiny font-semibold uppercase tracking-widest text-[var(--text-tertiary)] block mb-1.5">Word</label>
+                <label className="text-tiny font-semibold uppercase tracking-widest text-fg-subtle block mb-1.5">Word</label>
                 <input
                   value={manualWord}
                   onChange={e => setManualWord(e.target.value)}
                   onKeyDown={e => e.key === "Enter" && !e.shiftKey && handleAddWord()}
                   placeholder="e.g. serendipity"
                   autoFocus
-                  className="w-full px-3 py-2.5 rounded-xl bg-[var(--btn-regular-bg)] border border-[var(--line-divider)] text-sm text-[var(--deep-text)] placeholder:text-[var(--text-tertiary)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/30"
+                  className="w-full px-3 py-2.5 rounded-xl bg-[var(--btn-regular-bg)] border border-[var(--line-divider)] text-sm text-fg placeholder:text-fg-subtle focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/30"
                 />
               </div>
 
@@ -491,7 +491,7 @@ export function ManageDrawer({ deck, onClose, onWordCountChange }: ManageDrawerP
                   size="sm"
                   onClick={() => setShowPhrases(p => !p)}
                   icon={showPhrases ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
-                  className="text-xs text-[var(--text-tertiary)] mb-2"
+                  className="text-xs text-fg-subtle mb-2"
                 >
                   {showPhrases ? "Hide phrases" : "Add phrases (optional)"}
                 </Button>
@@ -501,7 +501,7 @@ export function ManageDrawer({ deck, onClose, onWordCountChange }: ManageDrawerP
                     onChange={e => setManualPhrases(e.target.value)}
                     placeholder={"One phrase per line…\ne.g. a serendipitous encounter"}
                     rows={3}
-                    className="w-full px-3 py-2.5 rounded-xl bg-[var(--btn-regular-bg)] border border-[var(--line-divider)] text-sm text-[var(--deep-text)] placeholder:text-[var(--text-tertiary)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/30 resize-none"
+                    className="w-full px-3 py-2.5 rounded-xl bg-[var(--btn-regular-bg)] border border-[var(--line-divider)] text-sm text-fg placeholder:text-fg-subtle focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/30 resize-none"
                   />
                 )}
               </div>
@@ -518,12 +518,12 @@ export function ManageDrawer({ deck, onClose, onWordCountChange }: ManageDrawerP
 
               {entries.length > 0 && (
                 <div className="pt-2 border-t border-[var(--line-divider)]">
-                  <p className="text-tiny font-semibold uppercase tracking-widest text-[var(--text-tertiary)] mb-2">Recently added</p>
+                  <p className="text-tiny font-semibold uppercase tracking-widest text-fg-subtle mb-2">Recently added</p>
                   <div className="space-y-0.5">
                     {entries.slice(-3).reverse().map(entry => (
                       <div key={entry.id} className="flex items-center gap-2 px-2 py-1.5 rounded-lg">
-                        <span className="text-sm text-[var(--deep-text)] font-medium">{entry.word}</span>
-                        {entry.ipa && <span className="text-xs text-[var(--text-tertiary)]">/{entry.ipa}/</span>}
+                        <span className="text-sm text-fg font-medium">{entry.word}</span>
+                        {entry.ipa && <span className="text-xs text-fg-subtle">/{entry.ipa}/</span>}
                       </div>
                     ))}
                   </div>

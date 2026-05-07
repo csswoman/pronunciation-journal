@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 
 type ButtonVariant =
@@ -40,7 +38,7 @@ const variantStyles: Record<ButtonVariant, string> = {
 
   secondary: `
     bg-[var(--bg-secondary)]
-    text-[var(--text-primary)]
+    text-fg
     border border-[var(--border)]
     shadow-sm hover:shadow-md
     hover:bg-[var(--bg-tertiary)]
@@ -48,10 +46,10 @@ const variantStyles: Record<ButtonVariant, string> = {
 
   ghost: `
     bg-transparent
-    text-[var(--text-secondary)]
+    text-fg-muted
     shadow-none
     hover:bg-[var(--bg-secondary)]
-    hover:text-[var(--text-primary)]
+    hover:text-fg
   `,
 
   danger: `
@@ -74,7 +72,7 @@ const variantStyles: Record<ButtonVariant, string> = {
 
   outline: `
     bg-transparent
-    text-[var(--text-primary)]
+    text-fg
     border border-[var(--border)]
     shadow-sm hover:shadow-md
     hover:bg-[var(--bg-secondary)]
@@ -82,7 +80,7 @@ const variantStyles: Record<ButtonVariant, string> = {
 
   dashed: `
     bg-transparent
-    text-[var(--text-secondary)]
+    text-fg-muted
     border-2 border-dashed border-[var(--border)]
     shadow-none
     hover:border-[var(--primary-500)]
@@ -91,7 +89,7 @@ const variantStyles: Record<ButtonVariant, string> = {
 
   chip: `
     bg-[var(--bg-secondary)]
-    text-[var(--text-secondary)]
+    text-fg-muted
     border border-transparent
     shadow-none
     hover:bg-[var(--bg-tertiary)]
@@ -99,7 +97,7 @@ const variantStyles: Record<ButtonVariant, string> = {
 
   segmented: `
     bg-transparent
-    text-[var(--text-secondary)]
+    text-fg-muted
     shadow-none
     hover:bg-[var(--bg-secondary)]
   `,
@@ -124,7 +122,7 @@ const variantStyles: Record<ButtonVariant, string> = {
 
   "ghost-danger": `
     bg-[var(--bg-secondary)]
-    text-[var(--text-secondary)]
+    text-fg-muted
     border border-transparent
     shadow-none
     hover:bg-[var(--error)]
@@ -171,7 +169,7 @@ export default function Button({
     sizeStyles[size],
 
     disabled &&
-      "!bg-[var(--bg-secondary)] !text-[var(--text-tertiary)] !border !border-[var(--border)] cursor-not-allowed pointer-events-none opacity-60",
+      "!bg-[var(--bg-secondary)] !text-fg-subtle !border !border-[var(--border)] cursor-not-allowed pointer-events-none opacity-60",
     fullWidth ? "w-full" : "",
     selected && selectedStyles[variant] ? selectedStyles[variant] : "",
   ]

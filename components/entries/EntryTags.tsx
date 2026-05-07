@@ -19,7 +19,7 @@ export default function EntryTags({
 
   return (
     <div>
-      <label className="block text-sm font-semibold text-[var(--text-secondary)] mb-2">
+      <label className="block text-sm font-semibold text-fg-muted mb-2">
         Tags
       </label>
       {!isEditing ? (

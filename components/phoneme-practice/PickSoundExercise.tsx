@@ -57,7 +57,7 @@ export function PickSoundExercise({ exercise, onSubmit }: Props) {
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <p className="text-sm mb-3" style={{ color: 'var(--text-secondary)' }}>
+        <p className="text-sm mb-3 text-fg-muted">
           Which sound does this word contain?
         </p>
         <Button

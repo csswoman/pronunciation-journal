@@ -219,25 +219,23 @@ export default function LessonCard({ lesson, progressPct, isFeatured }: LessonCa
           </div>
 
           <h3
-            className="mb-2 text-xl font-bold leading-snug tracking-[-0.025em]"
-            style={{ color: "var(--text-primary)" }}
+            className="mb-2 text-h3 tracking-[-0.025em] text-fg"
           >
             {lesson.title}
           </h3>
 
           <p
-            className="mb-5 max-w-[22ch] text-sm leading-relaxed line-clamp-2"
-            style={{ color: "var(--text-secondary)" }}
+            className="mb-5 max-w-[22ch] text-sm leading-relaxed line-clamp-2 text-fg-muted"
           >
             {description}
           </p>
 
           <div className="flex items-center gap-4 mb-6 text-xs font-medium">
-            <div className="flex items-center gap-1.5" style={{ color: 'var(--text-tertiary)' }}>
+            <div className="flex items-center gap-1.5 text-fg-subtle">
               <BookOpen className="w-4 h-4" style={{ color: 'var(--color-accent)' }} />
               {lesson.words.length} words
             </div>
-            <div className="flex items-center gap-1.5" style={{ color: 'var(--text-tertiary)' }}>
+            <div className="flex items-center gap-1.5 text-fg-subtle">
               <Zap className="w-4 h-4" style={{ color: 'var(--color-accent)' }} />
               {durationLabel}
             </div>
@@ -246,8 +244,7 @@ export default function LessonCard({ lesson, progressPct, isFeatured }: LessonCa
           <div className="mb-5">
             <div className="flex items-center justify-between gap-2 mb-2">
               <span
-                className="text-xs font-medium"
-                style={{ color: "var(--text-tertiary)" }}
+                className="text-xs font-medium text-fg-subtle"
               >
                 {lessonState === "not-started" ? "Not started" : "Your progress"}
               </span>
@@ -277,8 +274,7 @@ export default function LessonCard({ lesson, progressPct, isFeatured }: LessonCa
 
           <div className="flex items-center justify-between mt-auto">
             <span
-              className="text-tiny font-medium"
-              style={{ color: "var(--text-tertiary)" }}
+              className="text-tiny font-medium text-fg-subtle"
             >
               {lessonState === "completed"
                 ? "Keep it fresh"

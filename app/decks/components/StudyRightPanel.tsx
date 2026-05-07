@@ -1,5 +1,3 @@
-"use client";
-
 import { DOT_COLORS, LEVEL_LABELS, LEVEL_NAMES, timeUntil } from "./study-utils";
 import type { Tables } from "@/lib/supabase/types";
 
@@ -29,19 +27,18 @@ export function StudyRightPanel({ stats, upcomingCards }: StudyRightPanelProps) 
 
       {/* Today's progress */}
       <div>
-        <p className="text-tiny font-semibold tracking-widest uppercase mb-2"
-          style={{ color: "var(--text-tertiary)" }}>Today's progress</p>
+        <p className="text-tiny font-semibold tracking-widest uppercase mb-2 text-fg-subtle">Today's progress</p>
         <div className="grid grid-cols-2 gap-2">
           {[
             { val: stats.easy,  label: "easy",       color: "var(--success)" },
             { val: stats.again, label: "hard",        color: "var(--error)" },
             { val: stats.hard,  label: "medium",      color: "var(--warning)" },
-            { val: stats.seen,  label: "total seen",  color: "var(--deep-text)" },
+            { val: stats.seen,  label: "total seen",  color: "var(--text-primary)" },
           ].map(({ val, label, color }) => (
             <div key={label} className="rounded-xl border p-3 text-center"
               style={{ borderColor: "var(--line-divider)", backgroundColor: "var(--card-bg)" }}>
               <p className="text-xl font-bold" style={{ color }}>{val}</p>
-              <p className="text-tiny mt-0.5" style={{ color: "var(--text-tertiary)" }}>{label}</p>
+              <p className="text-tiny mt-0.5 text-fg-subtle">{label}</p>
             </div>
           ))}
         </div>
@@ -50,8 +47,7 @@ export function StudyRightPanel({ stats, upcomingCards }: StudyRightPanelProps) 
       {/* Upcoming cards */}
       {upcomingCards.length > 0 && (
         <div>
-          <p className="text-tiny font-semibold tracking-widest uppercase mb-2"
-            style={{ color: "var(--text-tertiary)" }}>Upcoming cards</p>
+          <p className="text-tiny font-semibold tracking-widest uppercase mb-2 text-fg-subtle">Upcoming cards</p>
           <div className="space-y-1.5">
             {upcomingCards.map((card, i) => {
               const cardLevel = card.difficulty
@@ -63,16 +59,16 @@ export function StudyRightPanel({ stats, upcomingCards }: StudyRightPanelProps) 
                   <div className="w-2 h-2 rounded-full shrink-0"
                     style={{ backgroundColor: DOT_COLORS[i % DOT_COLORS.length] }} />
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold truncate" style={{ color: "var(--deep-text)" }}>
+                    <p className="text-sm font-semibold truncate text-fg">
                       {card.word}
                     </p>
                     {cardLevel && (
-                      <p className="text-tiny" style={{ color: "var(--text-tertiary)" }}>
+                      <p className="text-tiny text-fg-subtle">
                         {cardLevel} · {LEVEL_NAMES[cardLevel]}
                       </p>
                     )}
                   </div>
-                  <span className="text-tiny shrink-0" style={{ color: "var(--text-tertiary)" }}>
+                  <span className="text-tiny shrink-0 text-fg-subtle">
                     {timeUntil(card.progress?.next_review_at)}
                   </span>
                 </div>

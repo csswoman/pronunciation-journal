@@ -21,7 +21,7 @@ export default function ScoreDisplay({
       backgroundColor: 'var(--card-bg)',
       borderColor: 'var(--line-divider)',
     }}>
-      <h3 className="text-xl font-bold mb-4 text-center" style={{
+      <h3 className="text-h3 mb-4 text-center" style={{
         color: 'var(--text-primary)',
       }}>
         🎉 Lesson Complete!

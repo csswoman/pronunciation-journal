@@ -101,7 +101,7 @@ export function StageCard({ stage, mastery, index, unlocked, diffMode, onSelect 
       </span>
 
       {/* Title */}
-      <h3 className="text-2xl font-bold leading-tight mb-2" style={{ color: CARD_TEXT.title }}>
+      <h3 className="text-h3 mb-2" style={{ color: CARD_TEXT.title }}>
         {stage.title}
       </h3>
 

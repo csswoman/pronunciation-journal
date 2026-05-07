@@ -72,8 +72,8 @@ export function WeeklyChart({ progressHistory }: Props) {
     >
       <div className="flex items-center justify-between gap-3 flex-wrap">
         <div>
-          <p className="text-base font-bold" style={{ color: "var(--deep-text)" }}>Your weekly progress</p>
-          <p className="text-xs mt-0.5" style={{ color: "var(--text-secondary)" }}>
+          <p className="text-base font-bold text-fg">Your weekly progress</p>
+          <p className="text-xs mt-0.5 text-fg-muted">
             {chartMetric === "attempts" ? "Attempts per day" : chartMetric === "accuracy" ? "Accuracy % per day" : "XP per day"}
           </p>
         </div>
@@ -88,7 +88,7 @@ export function WeeklyChart({ progressHistory }: Props) {
               className="rounded-lg px-3 py-1.5 text-xs font-semibold capitalize transition-all"
               style={{
                 background: chartMetric === m ? "var(--card-bg)" : "transparent",
-                color: chartMetric === m ? "var(--deep-text)" : "var(--text-secondary)",
+                color: chartMetric === m ? "var(--text-primary)" : "var(--text-secondary)",
                 boxShadow: chartMetric === m ? "0 1px 3px var(--line-divider)" : "none",
               }}
             >
@@ -100,8 +100,8 @@ export function WeeklyChart({ progressHistory }: Props) {
 
       {isEmpty ? (
         <div className="mt-5 flex flex-col items-center justify-center py-10 text-center gap-2">
-          <p className="text-sm font-semibold" style={{ color: "var(--deep-text)" }}>No practice this week yet</p>
-          <p className="text-xs" style={{ color: "var(--text-secondary)" }}>
+          <p className="text-sm font-semibold text-fg">No practice this week yet</p>
+          <p className="text-xs text-fg-muted">
             Complete a lesson or phoneme exercise to see your chart.
           </p>
         </div>
@@ -144,7 +144,7 @@ export function WeeklyChart({ progressHistory }: Props) {
                 <span className="text-tiny font-semibold" style={{ color: day.isToday ? "var(--primary)" : "var(--text-secondary)" }}>
                   {day.label}
                 </span>
-                <span className="text-tiny" style={{ color: "var(--text-tertiary)" }}>
+                <span className="text-tiny text-fg-subtle">
                   {day.dayNum}
                 </span>
               </div>
@@ -165,8 +165,8 @@ export function WeeklyChart({ progressHistory }: Props) {
           { label: "Weekly XP", value: weeklyXp ? formatCompact(weeklyXp) : "—" },
         ].map(({ label, value }) => (
           <div key={label} className="flex flex-col items-center py-3 px-2" style={{ borderColor: "var(--line-divider)" }}>
-            <span className="text-tiny font-medium text-center" style={{ color: "var(--text-secondary)" }}>{label}</span>
-            <span className="text-base font-black mt-0.5" style={{ color: "var(--deep-text)" }}>{value}</span>
+            <span className="text-tiny font-medium text-center text-fg-muted">{label}</span>
+            <span className="text-base font-black mt-0.5 text-fg">{value}</span>
           </div>
         ))}
       </div>

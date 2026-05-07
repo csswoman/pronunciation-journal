@@ -50,8 +50,8 @@ export function DeckGrid({ decks, counts, onStudy, onManage, onEdit, onDelete, o
           </div>
         </div>
         <div>
-          <p className="font-semibold text-sm text-[var(--deep-text)]">Create your next deck</p>
-          <p className="text-xs text-[var(--text-tertiary)] mt-1">Collect new words and start learning.</p>
+          <p className="font-semibold text-sm text-fg">Create your next deck</p>
+          <p className="text-xs text-fg-subtle mt-1">Collect new words and start learning.</p>
         </div>
         <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-medium text-[var(--primary)] bg-[var(--primary)]/10 group-hover:bg-[var(--primary)]/15 transition-colors">
           <Plus size={14} />

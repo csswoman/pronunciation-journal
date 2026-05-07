@@ -17,7 +17,7 @@ export default function LessonCover({ imageUrl, title }: LessonCoverProps) {
   }
 
   return (
-    <div className="flex h-36 items-center justify-center bg-[var(--btn-regular-bg)] text-[var(--text-tertiary)]">
+    <div className="flex h-36 items-center justify-center bg-[var(--btn-regular-bg)] text-fg-subtle">
       <span className="text-xs font-medium">No cover</span>
     </div>
   );

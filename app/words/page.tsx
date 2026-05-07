@@ -147,7 +147,7 @@ export default function WordsPage() {
                 className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
                   filterType === "all"
                     ? "bg-[var(--primary)] text-on-primary border-[var(--primary)]"
-                    : "border-[var(--line-divider)] bg-[var(--card-bg)] text-[var(--text-secondary)] hover:border-[var(--primary)]"
+                    : "border-[var(--line-divider)] bg-[var(--card-bg)] text-fg-muted hover:border-[var(--primary)]"
                 }`}
               >
                 <span className="font-semibold tabular-nums">{stats.total}</span>
@@ -159,7 +159,7 @@ export default function WordsPage() {
                 className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
                   filterType === "ready"
                     ? "bg-[var(--primary)] text-on-primary border-[var(--primary)]"
-                    : "border-[var(--line-divider)] bg-[var(--card-bg)] text-[var(--text-secondary)] hover:border-[var(--primary)]"
+                    : "border-[var(--line-divider)] bg-[var(--card-bg)] text-fg-muted hover:border-[var(--primary)]"
                 }`}
               >
                 <span className="font-semibold tabular-nums">{stats.ready}</span>
@@ -186,7 +186,7 @@ export default function WordsPage() {
                   className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
                     filterType === "difficult"
                       ? "bg-[var(--primary)] text-on-primary border-[var(--primary)]"
-                      : "border-[var(--line-divider)] bg-[var(--card-bg)] text-[var(--text-secondary)] hover:border-[var(--primary)]"
+                      : "border-[var(--line-divider)] bg-[var(--card-bg)] text-fg-muted hover:border-[var(--primary)]"
                   }`}
                 >
                   <span className="font-semibold tabular-nums">{stats.difficult}</span>
@@ -201,7 +201,7 @@ export default function WordsPage() {
             <div className="relative">
               <Search
                 size={16}
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-tertiary)]"
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-fg-subtle"
               />
               <input
                 type="text"
@@ -224,7 +224,7 @@ export default function WordsPage() {
                     }
                   }
                 }}
-                className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-[var(--line-divider)] bg-[var(--card-bg)] text-sm text-[var(--deep-text)] placeholder-[var(--text-tertiary)] focus:outline-none focus:border-[var(--primary)] focus:ring-2 focus:ring-[color-mix(in_oklch,var(--primary)_20%,transparent)]"
+                className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-[var(--line-divider)] bg-[var(--card-bg)] text-sm text-fg placeholder-[var(--text-tertiary)] focus:outline-none focus:border-[var(--primary)] focus:ring-2 focus:ring-[color-mix(in_oklch,var(--primary)_20%,transparent)]"
               />
               {searchQuery && (
                 <Button variant="ghost" size="icon" onClick={() => setSearchQuery("")}
@@ -261,7 +261,7 @@ export default function WordsPage() {
             <EmptyState onAdd={() => setShowAdd(true)} />
           ) : filteredWords.length === 0 ? (
             <Card className="p-8 text-center">
-              <p className="text-sm text-[var(--text-secondary)]">
+              <p className="text-sm text-fg-muted">
                 No words found matching your search or filter.
               </p>
             </Card>
@@ -282,7 +282,7 @@ export default function WordsPage() {
               {/* Pagination */}
               {totalPages > 1 && (
                 <div className="flex items-center justify-between mt-6">
-                  <p className="text-sm text-[var(--text-secondary)]">
+                  <p className="text-sm text-fg-muted">
                     Page <span className="font-semibold">{currentPage}</span> of{" "}
                     <span className="font-semibold">{totalPages}</span> ({filteredWords.length} total)
                   </p>
@@ -372,12 +372,11 @@ function EmptyState({ onAdd }: { onAdd: () => void }) {
           <Sparkles size={28} />
         </div>
         <div>
-          <p className="text-sm font-semibold" style={{ color: "var(--deep-text)" }}>
+          <p className="text-sm font-semibold text-fg">
             Your word bank is empty
           </p>
           <p
-            className="text-xs mt-1 max-w-sm"
-            style={{ color: "var(--text-tertiary)" }}
+            className="text-xs mt-1 max-w-sm text-fg-subtle"
           >
             Add a word while you read or watch — Gemini will add meaning,
             translation, IPA and an example automatically.
@@ -386,7 +385,7 @@ function EmptyState({ onAdd }: { onAdd: () => void }) {
         <Button onClick={onAdd} icon={<Plus size={16} />}>
           Add your first word
         </Button>
-        <p className="text-tiny uppercase tracking-widest text-[var(--text-tertiary)]">
+        <p className="text-tiny uppercase tracking-widest text-fg-subtle">
           Tip: press <kbd className="px-1.5 py-0.5 rounded bg-[var(--btn-regular-bg)] font-mono">N</kbd> anywhere
         </p>
       </div>

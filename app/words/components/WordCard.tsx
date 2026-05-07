@@ -34,11 +34,11 @@ export function WordCard({ word, onMarkDifficult, onRetry, onDelete }: WordCardP
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
           <div className="flex items-baseline gap-2 flex-wrap">
-            <h3 className="font-heading font-semibold text-lg text-[var(--deep-text)] truncate">
+            <h3 className="font-heading font-semibold text-lg text-fg truncate">
               {word.text}
             </h3>
             {word.ipa && (
-              <span className="text-xs font-mono text-[var(--text-tertiary)]">
+              <span className="text-xs font-mono text-fg-subtle">
                 /{word.ipa.replace(/^\/|\/$/g, "")}/
               </span>
             )}
@@ -78,19 +78,19 @@ export function WordCard({ word, onMarkDifficult, onRetry, onDelete }: WordCardP
           </div>
 
           {word.translation && (
-            <p className="mt-1 text-sm text-[var(--text-secondary)]">
+            <p className="mt-1 text-sm text-fg-muted">
               {word.translation}
             </p>
           )}
 
           {word.example && (
-            <p className="mt-2 text-sm italic text-[var(--text-tertiary)] line-clamp-1">
+            <p className="mt-2 text-sm italic text-fg-subtle line-clamp-1">
               “{word.example}”
             </p>
           )}
 
           {word.meaning && (
-            <p className="mt-2 text-xs text-[var(--text-tertiary)] line-clamp-2">
+            <p className="mt-2 text-xs text-fg-subtle line-clamp-2">
               {word.meaning}
             </p>
           )}
@@ -146,7 +146,7 @@ function WordCardProcessing({
               className="animate-spin shrink-0"
               style={{ color: "var(--primary)" }}
             />
-            <h3 className="font-heading font-semibold text-lg text-[var(--deep-text)] truncate">
+            <h3 className="font-heading font-semibold text-lg text-fg truncate">
               {text}
             </h3>
             <span
@@ -215,18 +215,18 @@ function WordCardFailed({
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
           <div className="flex items-baseline gap-2">
-            <h3 className="font-heading font-semibold text-lg text-[var(--deep-text)] truncate">
+            <h3 className="font-heading font-semibold text-lg text-fg truncate">
               {word.text}
             </h3>
             <span className="text-tiny uppercase tracking-widest text-[var(--error)]">
               Enrichment failed
             </span>
           </div>
-          <p className="mt-1 text-xs text-[var(--text-tertiary)]">
+          <p className="mt-1 text-xs text-fg-subtle">
             We couldn’t fetch the AI details. Try again.
           </p>
           {word.error_reason && (
-            <p className="mt-1 text-tiny uppercase tracking-widest text-[var(--text-tertiary)]">
+            <p className="mt-1 text-tiny uppercase tracking-widest text-fg-subtle">
               {word.error_reason.replace("_", " ")}
             </p>
           )}

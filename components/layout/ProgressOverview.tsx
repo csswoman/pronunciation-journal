@@ -71,15 +71,15 @@ function MetricCard({
           {icon}
         </div>
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: "var(--text-secondary)" }}>
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-fg-muted">
             {label}
           </p>
-          <p className="text-2xl font-black tracking-tight" style={{ color: "var(--deep-text)" }}>
+          <p className="text-2xl font-black tracking-tight text-fg">
             {value}
           </p>
         </div>
       </div>
-      <p className="mt-3 text-sm leading-6" style={{ color: "var(--text-secondary)" }}>
+      <p className="mt-3 text-sm leading-6 text-fg-muted">
         {helper}
       </p>
     </div>
@@ -115,10 +115,10 @@ export default function ProgressOverview({
             <p className="text-tiny font-semibold uppercase tracking-[0.28em]" style={{ color: "var(--primary)" }}>
               Progress Snapshot
             </p>
-            <h2 className="mt-2 text-3xl font-black tracking-tight sm:text-4xl" style={{ color: "var(--deep-text)" }}>
+            <h2 className="mt-2 text-h2 sm:text-4xl text-fg">
               Clear momentum, less noise.
             </h2>
-            <p className="mt-3 max-w-lg text-sm leading-7 sm:text-body" style={{ color: "var(--text-secondary)" }}>
+            <p className="mt-3 max-w-lg text-sm leading-7 sm:text-body text-fg-muted">
               Your progress now highlights rhythm, quality, and study load without repeating the same numbers in every block.
             </p>
           </div>
@@ -136,10 +136,10 @@ export default function ProgressOverview({
                 Focus Today
               </span>
             </div>
-            <p className="mt-3 text-3xl font-black tracking-tight" style={{ color: "var(--deep-text)" }}>
+            <p className="mt-3 text-3xl font-black tracking-tight text-fg">
               {consistencyScore}
             </p>
-            <p className="mt-1 text-sm leading-6" style={{ color: "var(--text-secondary)" }}>
+            <p className="mt-1 text-sm leading-6 text-fg-muted">
               Consistency score based on active days and weekly accuracy.
             </p>
           </div>
@@ -176,18 +176,18 @@ export default function ProgressOverview({
           >
             <div className="flex flex-wrap items-end justify-between gap-3">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: "var(--text-secondary)" }}>
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-fg-muted">
                   Weekly Activity
                 </p>
-                <p className="mt-1 text-sm" style={{ color: "var(--text-secondary)" }}>
+                <p className="mt-1 text-sm text-fg-muted">
                   Attempts over the last 7 days
                 </p>
               </div>
               <div className="text-right">
-                <p className="text-2xl font-black tracking-tight" style={{ color: "var(--deep-text)" }}>
+                <p className="text-2xl font-black tracking-tight text-fg">
                   {weeklyAttempts}
                 </p>
-                <p className="text-xs" style={{ color: "var(--text-tertiary)" }}>
+                <p className="text-xs text-fg-subtle">
                   weekly attempts
                 </p>
               </div>
@@ -254,10 +254,10 @@ export default function ProgressOverview({
             >
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: "var(--text-secondary)" }}>
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-fg-muted">
                     Today's Vocabulary
                   </p>
-                  <p className="mt-1 text-sm leading-6" style={{ color: "var(--text-secondary)" }}>
+                  <p className="mt-1 text-sm leading-6 text-fg-muted">
                     Quick glance at the words you touched today.
                   </p>
                 </div>
@@ -281,7 +281,7 @@ export default function ProgressOverview({
                       style={{
                         animationDelay: `${index * 80}ms`,
                         background: "color-mix(in oklch, var(--primary) 10%, transparent)",
-                        color: "var(--deep-text)",
+                        color: "var(--text-primary)",
                         border: "1px solid color-mix(in oklch, var(--primary) 12%, var(--line-divider))",
                       }}
                     >

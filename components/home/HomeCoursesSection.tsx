@@ -50,7 +50,7 @@ export default function HomeCoursesSection() {
   }
 
   if (courses.length === 0) {
-    return <p className="text-[var(--text-secondary)] text-sm">No courses available yet.</p>;
+    return <p className="text-fg-muted text-sm">No courses available yet.</p>;
   }
 
   return (

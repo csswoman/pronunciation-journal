@@ -73,15 +73,15 @@ export default function SpeakingWidget({ args, status, onAnswer, onNext, onRetry
       className="rounded-xl border p-4 space-y-3"
       style={{ borderColor: "var(--line-divider)", backgroundColor: "var(--btn-regular-bg)" }}
     >
-      <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
+      <p className="text-sm text-fg-muted">
         {args.prompt}
       </p>
       <div className="flex items-center gap-3">
-        <p className="text-lg font-semibold" style={{ color: "var(--text-primary)" }}>
+        <p className="text-lg font-semibold text-fg">
           {args.target}
         </p>
         {args.ipa && (
-          <span className="text-sm font-mono" style={{ color: "var(--text-tertiary)" }}>
+          <span className="text-sm font-mono text-fg-subtle">
             /{args.ipa}/
           </span>
         )}
@@ -110,7 +110,7 @@ export default function SpeakingWidget({ args, status, onAnswer, onNext, onRetry
             </button>
           )}
           {transcribing && (
-            <span className="flex items-center gap-2 text-sm" style={{ color: "var(--text-tertiary)" }}>
+            <span className="flex items-center gap-2 text-sm text-fg-subtle">
               <Loader2 className="w-4 h-4 animate-spin" /> Analyzing…
             </span>
           )}

@@ -74,7 +74,7 @@ export default function SidebarFooter() {
     >
       {/* User row */}
       <button
-        className={`flex items-center ${collapsed ? "justify-center w-9 h-9 mx-auto" : "gap-2.5 px-3 w-full h-9"} rounded-lg text-sm font-medium transition-all duration-200 text-[var(--text-primary)] group relative`}
+        className={`flex items-center ${collapsed ? "justify-center w-9 h-9 mx-auto" : "gap-2.5 px-3 w-full h-9"} rounded-lg text-sm font-medium transition-all duration-200 text-fg group relative`}
         style={{ background: open ? "var(--btn-regular-bg-hover)" : undefined }}
       >
         <div
@@ -98,7 +98,7 @@ export default function SidebarFooter() {
       {open && typeof document !== "undefined" && createPortal(
         <div
           className="fixed z-[9999] w-56 rounded-xl p-2 shadow-xl border
-            animate-in fade-in zoom-in-95 duration-150 origin-bottom-left"
+ animate-in fade-in zoom-in-95 duration-150 origin-bottom-left"
           style={{
             top: panelPos.top - 8,
             left: panelPos.left,
@@ -112,8 +112,8 @@ export default function SidebarFooter() {
           <button
             onClick={() => { setOpen(false); router.push("/profile"); }}
             className="flex items-center gap-2.5 px-3 h-9 w-full rounded-lg text-sm font-medium
-              transition-all duration-150 group
-              text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-tertiary)]"
+ transition-all duration-150 group
+ text-fg-muted hover:text-fg hover:bg-[var(--bg-tertiary)]"
           >
             <User className="h-4 w-4 flex-shrink-0 opacity-60 group-hover:opacity-100 transition-opacity" />
             <span>Profile</span>
@@ -122,7 +122,7 @@ export default function SidebarFooter() {
           <div className="h-px my-1.5" style={{ background: "var(--border)" }} />
 
           <div className="px-2 py-1">
-            <p className="text-tiny font-medium mb-2" style={{ color: "var(--text-tertiary)" }}>
+            <p className="text-tiny font-medium mb-2 text-fg-subtle">
               Theme
             </p>
             <ThemeInline />
@@ -133,8 +133,8 @@ export default function SidebarFooter() {
           <button
             onClick={user ? handleSignOut : () => router.push("/login")}
             className="flex items-center gap-2.5 px-3 h-9 w-full rounded-lg text-sm font-medium
-              transition-all duration-150 group
-              text-[var(--text-secondary)] hover:text-[var(--primary)] hover:bg-[var(--primary-soft)]"
+ transition-all duration-150 group
+ text-fg-muted hover:text-[var(--primary)] hover:bg-[var(--primary-soft)]"
           >
             {user ? (
               <LogOut className="h-4 w-4 flex-shrink-0 opacity-60 group-hover:opacity-100 transition-opacity" />
@@ -177,7 +177,7 @@ function ThemeInline() {
           <button
             onClick={resetHue}
             title="Reset color"
-            className="p-1.5 rounded-lg transition-colors hover:bg-[var(--bg-tertiary)] text-[var(--text-tertiary)] hover:text-[var(--text-primary)]"
+            className="p-1.5 rounded-lg transition-colors hover:bg-[var(--bg-tertiary)] text-fg-subtle hover:text-fg"
           >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
               <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
@@ -187,7 +187,7 @@ function ThemeInline() {
           <button
             onClick={toggleMode}
             title={`Switch to ${mode === "dark" ? "light" : "dark"} mode`}
-            className="p-1.5 rounded-lg transition-colors hover:bg-[var(--bg-tertiary)] text-[var(--text-tertiary)] hover:text-[var(--text-primary)]"
+            className="p-1.5 rounded-lg transition-colors hover:bg-[var(--bg-tertiary)] text-fg-subtle hover:text-fg"
           >
             {mode === "dark" ? (
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="w-3.5 h-3.5">

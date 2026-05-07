@@ -61,10 +61,10 @@ export function QuickAddModal({ open, onClose, onSubmit, initialText = "" }: Qui
       >
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="font-heading font-bold text-base text-[var(--deep-text)]">
+            <h2 className="font-heading font-bold text-base text-fg">
               Save a word
             </h2>
-            <p className="text-xs text-[var(--text-tertiary)] mt-0.5">
+            <p className="text-xs text-fg-subtle mt-0.5">
               Capture now, AI enriches in the background.
             </p>
           </div>
@@ -91,7 +91,7 @@ export function QuickAddModal({ open, onClose, onSubmit, initialText = "" }: Qui
               }
             }}
             placeholder="Word or phrase…"
-            className="w-full px-3 py-2.5 rounded-xl bg-[var(--btn-regular-bg)] border border-[var(--line-divider)] text-base text-[var(--deep-text)] placeholder:text-[var(--text-tertiary)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/40"
+            className="w-full px-3 py-2.5 rounded-xl bg-[var(--btn-regular-bg)] border border-[var(--line-divider)] text-base text-fg placeholder:text-fg-subtle focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/40"
           />
 
           <textarea
@@ -105,12 +105,12 @@ export function QuickAddModal({ open, onClose, onSubmit, initialText = "" }: Qui
             }}
             rows={2}
             placeholder="Context (optional) — sentence where you saw it"
-            className="w-full px-3 py-2 rounded-xl bg-[var(--btn-regular-bg)] border border-[var(--line-divider)] text-sm text-[var(--deep-text)] placeholder:text-[var(--text-tertiary)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/40 resize-none"
+            className="w-full px-3 py-2 rounded-xl bg-[var(--btn-regular-bg)] border border-[var(--line-divider)] text-sm text-fg placeholder:text-fg-subtle focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/40 resize-none"
           />
         </div>
 
         <div className="flex items-center justify-between gap-3 pt-1">
-          <span className="text-tiny uppercase tracking-widest text-[var(--text-tertiary)]">
+          <span className="text-tiny uppercase tracking-widest text-fg-subtle">
             Enter to save
           </span>
           <Button

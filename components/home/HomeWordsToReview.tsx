@@ -34,7 +34,7 @@ export default function HomeWordsToReview({
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <span className="inline-block w-3 h-3 rounded bg-success"></span>
-          <h2 className="text-[var(--deep-text)]" style={{ font: "var(--font-h2)", fontWeight: 600 }}>Words to review</h2>
+          <h2 className="text-fg" style={{ font: "var(--font-h2)", fontWeight: 600 }}>Words to review</h2>
         </div>
         <Link href="/review" className="text-sm font-medium text-[var(--primary)] [transition:color_var(--transition-fast,150ms_ease)] hover:opacity-80">
           Open Word Bank →
@@ -58,8 +58,8 @@ export default function HomeWordsToReview({
               <Volume2 size={14} />
             </Button>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold text-[var(--deep-text)] leading-tight">{w.word}</p>
-              <p className="text-xs text-[var(--text-tertiary)] font-mono truncate">
+              <p className="text-sm font-semibold text-fg leading-tight">{w.word}</p>
+              <p className="text-xs text-fg-subtle font-mono truncate">
                 {w.ipa} · {w.translation}
               </p>
             </div>

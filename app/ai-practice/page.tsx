@@ -154,7 +154,7 @@ function FeatureFooter() {
       {FEATURES.map(({ icon: Icon, label }, i) => (
         <div key={i} className="flex items-center gap-1.5">
           <Icon size={12} style={{ color: "var(--primary)" }} />
-          <span className="text-tiny" style={{ color: "var(--text-tertiary)" }}>{label}</span>
+          <span className="text-tiny text-fg-subtle">{label}</span>
         </div>
       ))}
     </div>

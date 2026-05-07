@@ -71,7 +71,7 @@ export default function ApiWordModal({ word, onClose, onSave }: ApiWordModalProp
       >
         <div className="sticky top-0 bg-surface-raised border-b border-border-subtle p-6 flex justify-between items-start">
           <div className="flex items-center gap-4 flex-1">
-            <h2 className="text-3xl font-bold text-fg">
+            <h2 className="text-h2 text-fg">
               {word}
             </h2>
             {data?.audioUrl && (

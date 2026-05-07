@@ -16,7 +16,7 @@ export function EditEntryModal({ entry, phrases, onPhrasesChange, onSave, onCanc
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
       <div className="bg-[var(--card-bg)] rounded-2xl p-6 w-full max-w-md mx-4">
-        <h3 className="text-lg font-semibold text-[var(--deep-text)] mb-4">
+        <h3 className="text-lg font-semibold text-fg mb-4">
           Edit phrases for "{entry.word}"
         </h3>
         <textarea
@@ -24,12 +24,12 @@ export function EditEntryModal({ entry, phrases, onPhrasesChange, onSave, onCanc
           onChange={e => onPhrasesChange(e.target.value)}
           placeholder="Enter phrases, one per line…"
           rows={4}
-          className="w-full px-3 py-2 rounded-xl bg-[var(--btn-regular-bg)] border border-[var(--line-divider)] text-sm text-[var(--deep-text)] placeholder:text-[var(--text-tertiary)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/40 resize-none mb-4"
+          className="w-full px-3 py-2 rounded-xl bg-[var(--btn-regular-bg)] border border-[var(--line-divider)] text-sm text-fg placeholder:text-fg-subtle focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/40 resize-none mb-4"
         />
         <div className="flex gap-2 justify-end">
           <Button
             onClick={onCancel}
-            className="px-4 py-2 rounded-xl text-sm font-semibold text-[var(--text-secondary)] hover:bg-[var(--btn-plain-bg-hover)] transition-colors"
+            className="px-4 py-2 rounded-xl text-sm font-semibold text-fg-muted hover:bg-[var(--btn-plain-bg-hover)] transition-colors"
           >
             Cancel
           </Button>

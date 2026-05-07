@@ -108,13 +108,13 @@ export default function CourseCard({ course, priority = false }: CourseCardProps
       {/* Body */}
       <div className="flex flex-1 flex-col p-4 gap-2">
         {/* Title */}
-        <h4 className="text-body font-semibold leading-snug text-[var(--deep-text)] mb-0">
+        <h4 className="text-body font-semibold leading-snug text-fg mb-0">
           {course.title}
         </h4>
 
         {/* Description */}
         {course.description && (
-          <p className="line-clamp-2 text-caption leading-5 text-[var(--text-secondary)]">
+          <p className="line-clamp-2 text-caption leading-5 text-fg-muted">
             {course.description}
           </p>
         )}
@@ -134,7 +134,7 @@ export default function CourseCard({ course, priority = false }: CourseCardProps
         {/* Footer: metadata left, CTA right */}
         <div className="mt-auto flex items-center justify-between gap-2 pt-3">
           {/* Metadata: badge + lessons */}
-          <div className="flex items-center gap-2 text-tiny text-[var(--text-tertiary)]">
+          <div className="flex items-center gap-2 text-tiny text-fg-subtle">
             <span className="rounded px-1.5 py-0.5 bg-surface-sunken font-medium tracking-wide">
               {level.label}
             </span>

@@ -191,7 +191,7 @@ export default function SoundPracticePage() {
   if (!sessionData || !mastery) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-pulse text-[var(--text-tertiary)]">Loading…</div>
+        <div className="animate-pulse text-fg-subtle">Loading…</div>
       </div>
     )
   }
@@ -260,7 +260,7 @@ export default function SoundPracticePage() {
               <h1 className="text-lg font-semibold leading-tight tracking-tight font-mono" style={{ color: 'var(--primary)' }}>
                 {sessionData.sound.ipa}
               </h1>
-              <p className="text-caption leading-5" style={{ color: 'var(--text-secondary)' }}>
+              <p className="text-caption leading-5 text-fg-muted">
                 {displayIndex + 1} / {session.total}
               </p>
             </div>

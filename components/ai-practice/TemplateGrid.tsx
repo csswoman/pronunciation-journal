@@ -11,7 +11,7 @@ export default function TemplateGrid({ onSelect }: TemplateGridProps) {
   return (
     <div className="space-y-4">
       <div>
-        <h2 className="text-xl font-bold text-fg">
+        <h2 className="text-h4 text-fg">
           Choose a Practice Mode
         </h2>
         <p className="text-sm text-fg-subtle mt-1">

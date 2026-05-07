@@ -51,11 +51,11 @@ export default function FillBlankWidget({ args, status, onAnswer, onNext, onRetr
       style={{ borderColor: "var(--line-divider)", backgroundColor: "var(--btn-regular-bg)" }}
     >
       {hintText && (
-        <p className="text-xs" style={{ color: "var(--text-tertiary)" }}>
+        <p className="text-xs text-fg-subtle">
           Hint: {hintText}
         </p>
       )}
-      <div className="flex flex-wrap items-center gap-1 text-sm" style={{ color: "var(--text-primary)" }}>
+      <div className="flex flex-wrap items-center gap-1 text-sm text-fg">
         <span>{parts[0]}</span>
         <input
           ref={inputRef}

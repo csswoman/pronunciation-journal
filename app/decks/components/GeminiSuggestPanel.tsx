@@ -81,7 +81,7 @@ export function GeminiSuggestPanel({
     <div className="space-y-4">
       {/* Difficulty selector */}
       <div>
-        <p className="text-tiny font-semibold uppercase tracking-widest text-[var(--text-tertiary)] mb-2">
+        <p className="text-tiny font-semibold uppercase tracking-widest text-fg-subtle mb-2">
           Difficulty level
         </p>
         <div className="grid grid-cols-3 gap-1.5 p-1 bg-[var(--btn-regular-bg)] rounded-xl border border-[var(--line-divider)]">
@@ -91,8 +91,8 @@ export function GeminiSuggestPanel({
               onClick={() => setDifficulty(lvl.value)}
               className={`py-2 px-1 rounded-lg text-center transition-all ${
                 difficulty === lvl.value
-                  ? "bg-[var(--card-bg)] shadow-sm border border-[var(--line-divider)] text-[var(--deep-text)]"
-                  : "text-[var(--text-secondary)] hover:text-[var(--deep-text)]"
+                  ? "bg-[var(--card-bg)] shadow-sm border border-[var(--line-divider)] text-fg"
+                  : "text-fg-muted hover:text-fg"
               }`}
             >
               <p className="text-xs font-semibold">{lvl.label}</p>
@@ -135,7 +135,7 @@ export function GeminiSuggestPanel({
         <div className="space-y-2">
           {/* Save all bar */}
           <div className="flex items-center justify-between">
-            <p className="text-tiny font-semibold uppercase tracking-widest text-[var(--text-tertiary)]">
+            <p className="text-tiny font-semibold uppercase tracking-widest text-fg-subtle">
               {suggestions.length} suggestions
             </p>
             {!allAdded && (
@@ -164,8 +164,8 @@ export function GeminiSuggestPanel({
               style={{ animationDelay: `${i * 40}ms` }}
             >
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-[var(--deep-text)]">{s.word}</p>
-                <p className="text-xs text-[var(--text-secondary)] leading-relaxed line-clamp-2">{s.meaning}</p>
+                <p className="text-sm font-semibold text-fg">{s.word}</p>
+                <p className="text-xs text-fg-muted leading-relaxed line-clamp-2">{s.meaning}</p>
               </div>
               <button
                 onClick={() => handleAdd(s.word, s.meaning)}
@@ -185,8 +185,8 @@ export function GeminiSuggestPanel({
 
       {!loading && suggestions.length === 0 && (
         <div className="text-center py-8 space-y-1">
-          <p className="text-sm text-[var(--text-secondary)]">No suggestions yet</p>
-          <p className="text-xs text-[var(--text-tertiary)]">Pick a level and click "Suggest words"</p>
+          <p className="text-sm text-fg-muted">No suggestions yet</p>
+          <p className="text-xs text-fg-subtle">Pick a level and click "Suggest words"</p>
         </div>
       )}
     </div>

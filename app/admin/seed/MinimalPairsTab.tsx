@@ -14,13 +14,13 @@ export function MinimalPairsTab({ form, setForm }: { form: MinimalPairForm; setF
   return (
     <div className="space-y-6">
       <div className="p-3 rounded-lg text-sm" style={{ backgroundColor: "var(--surface)", color: "var(--text-secondary)" }}>
-        <strong style={{ color: "var(--text-primary)" }}>How minimal pairs work in exercises:</strong>{" "}
+        <strong className="text-fg">How minimal pairs work in exercises:</strong>{" "}
         The exercise shows both words and asks the user to pick the one containing the <em>target sound</em>.
         Set <code>contrast_sound_a_id</code> = sound present in word A, and <code>contrast_sound_b_id</code> = sound present in word B.
       </div>
 
       <form onSubmit={handleSubmit} className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 rounded-xl border" style={{ borderColor: "var(--border)", backgroundColor: "var(--card-bg)" }}>
-        <h3 className="col-span-full text-sm font-semibold" style={{ color: "var(--text-primary)" }}>Add Minimal Pair</h3>
+        <h3 className="col-span-full text-sm font-semibold text-fg">Add Minimal Pair</h3>
         <Input label="Word A" value={form.wordA} onChange={(v) => setForm({ ...form, wordA: v })} placeholder="think" required />
         <Input label="Word B" value={form.wordB} onChange={(v) => setForm({ ...form, wordB: v })} placeholder="sink" required />
         <Input label="IPA A" value={form.ipaA} onChange={(v) => setForm({ ...form, ipaA: v })} placeholder="/θɪŋk/" />
@@ -39,13 +39,13 @@ export function MinimalPairsTab({ form, setForm }: { form: MinimalPairForm; setF
             style={{ backgroundColor: "var(--primary)", color: "var(--accent-text)" }}>
             {saving ? "Saving…" : "Add pair"}
           </Button>
-          <p className="text-xs" style={{ color: "var(--text-tertiary)" }}>★ Required for exercises</p>
+          <p className="text-xs text-fg-subtle">★ Required for exercises</p>
           {status && <StatusBadge ok={status.ok} message={status.msg} />}
         </div>
       </form>
 
       <div>
-        <p className="text-xs font-semibold mb-2" style={{ color: "var(--text-secondary)" }}>{pairs.length} minimal pairs in DB</p>
+        <p className="text-xs font-semibold mb-2 text-fg-muted">{pairs.length} minimal pairs in DB</p>
         <Table headers={["ID", "Word A", "Word B", "IPA A", "IPA B", "Group", "Contrast A id", "Contrast B id"]}
           rows={pairs.map((p) => [p.id, p.word_a, p.word_b, p.ipa_a, p.ipa_b, p.sound_group, p.contrast_sound_a_id, p.contrast_sound_b_id])} />
       </div>

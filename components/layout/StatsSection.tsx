@@ -117,8 +117,8 @@ function TipBanner({
     >
       <div className="flex items-center gap-3">
         <span style={{ color: "var(--primary)" }}>✦</span>
-        <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
-          <span className="font-semibold" style={{ color: "var(--deep-text)" }}>Tip for you: </span>
+        <p className="text-sm text-fg-muted">
+          <span className="font-semibold text-fg">Tip for you: </span>
           {tipText}
         </p>
       </div>

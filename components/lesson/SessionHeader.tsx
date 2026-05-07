@@ -25,8 +25,7 @@ export default function SessionHeader({ title, currentIndex, totalWords, phase, 
         <div className="flex items-center justify-between gap-4">
           <Button
             onClick={onBack}
-            className="rounded-xl p-2.5 transition-colors"
-            style={{ color: 'var(--text-secondary)' }}
+            className="rounded-xl p-2.5 transition-colors text-fg-muted"
             onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--btn-regular-bg)')}
             onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
           >
@@ -35,8 +34,8 @@ export default function SessionHeader({ title, currentIndex, totalWords, phase, 
             </svg>
           </Button>
           <div className="text-center">
-            <h1 className="text-body-lg font-semibold leading-tight tracking-tight" style={{ color: 'var(--deep-text)' }}>{title}</h1>
-            <p className="text-caption leading-5" style={{ color: 'var(--text-secondary)' }}>
+            <h1 className="text-body-lg font-semibold leading-tight tracking-tight text-fg">{title}</h1>
+            <p className="text-caption leading-5 text-fg-muted">
               {phase !== "complete" ? `${currentIndex + 1} / ${totalWords}` : "Complete"}
             </p>
           </div>

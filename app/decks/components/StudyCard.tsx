@@ -51,12 +51,12 @@ export function StudyCard({
   const wordDisplay = (
     <>
       <h2 className="text-5xl font-bold italic leading-none"
-        style={{ fontFamily: "var(--font-serif, serif)", color: "var(--deep-text)" }}>
+        style={{ fontFamily: "var(--font-serif, serif)", color: "var(--text-primary)" }}>
         {word}
       </h2>
       {ipa && (
         <div className="flex items-center gap-2 justify-center">
-          <span className="text-base" style={{ color: "var(--text-secondary)" }}>/{ipa}/</span>
+          <span className="text-base text-fg-muted">/{ipa}/</span>
           <Button variant="outline" size="icon" onClick={(e) => { e.stopPropagation(); speakWord(word); }} className="!p-1.5">
             <Volume2 size={13} />
           </Button>
@@ -119,14 +119,13 @@ export function StudyCard({
             {firstDef?.example ? (
               <div className="rounded-xl border border-dashed p-3 w-full text-left"
                 style={{ borderColor: "var(--line-divider)" }}>
-                <p className="text-tiny font-semibold uppercase tracking-widest mb-1"
-                  style={{ color: "var(--text-tertiary)" }}>Fill in the blank</p>
-                <p className="text-xs italic leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+                <p className="text-tiny font-semibold uppercase tracking-widest mb-1 text-fg-subtle">Fill in the blank</p>
+                <p className="text-xs italic leading-relaxed text-fg-muted">
                   "{blankOutWord(firstDef.example, word)}"
                 </p>
               </div>
             ) : (
-              <p className="text-sm italic" style={{ color: "var(--text-tertiary)" }}>
+              <p className="text-sm italic text-fg-subtle">
                 Think of the meaning before flipping
               </p>
             )}
@@ -139,15 +138,14 @@ export function StudyCard({
             {wordDisplay}
             <div className="w-full space-y-3 text-left">
               {firstDef?.definition && (
-                <p className="text-sm leading-snug" style={{ color: "var(--text-primary)" }}>
+                <p className="text-sm leading-snug text-fg">
                   {firstDef.definition}
                 </p>
               )}
               {firstDef?.example && (
                 <div className="rounded-xl border border-dashed p-3" style={{ borderColor: "var(--line-divider)" }}>
-                  <p className="text-tiny font-semibold uppercase tracking-widest mb-1"
-                    style={{ color: "var(--text-tertiary)" }}>Example</p>
-                  <p className="text-xs italic leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+                  <p className="text-tiny font-semibold uppercase tracking-widest mb-1 text-fg-subtle">Example</p>
+                  <p className="text-xs italic leading-relaxed text-fg-muted">
                     "{firstDef.example}"
                   </p>
                 </div>

@@ -77,7 +77,7 @@ return courses.filter((course) => {
         {/* Results count */}
         {(query || level !== "all") && (
           <div className="px-4 pt-3 -mb-1">
-            <p className="text-caption text-[var(--text-tertiary)]">
+            <p className="text-caption text-fg-subtle">
               {filteredCourses.length === 0
                 ? "No courses match your filters."
                 : `${filteredCourses.length} course${filteredCourses.length === 1 ? "" : "s"} found`}
@@ -98,8 +98,8 @@ return courses.filter((course) => {
           ) : filteredCourses.length === 0 ? (
             <div className="flex min-h-[240px] items-center justify-center rounded-xl border border-dashed border-[var(--line-divider)] px-8 text-center">
               <div>
-                <p className="text-body-sm font-semibold text-[var(--deep-text)]">No courses found</p>
-                <p className="mt-2 text-caption text-[var(--text-secondary)]">
+                <p className="text-body-sm font-semibold text-fg">No courses found</p>
+                <p className="mt-2 text-caption text-fg-muted">
                   Try a different search term or clear the level filter.
                 </p>
                 <Button

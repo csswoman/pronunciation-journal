@@ -17,14 +17,14 @@ export default function HomeHero() {
   return (
     <div
       className="bg-gradient-to-br from-[var(--card-bg)] to-[var(--btn-regular-bg)]
-        rounded-[15px_15px_0_0] px-8 lg:px-10 py-8
-        grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-8 items-center"
+ rounded-[15px_15px_0_0] px-8 lg:px-10 py-8
+ grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-8 items-center"
     >
       <div>
-        <h1 className="font-display text-3xl lg:text-4xl leading-tight tracking-tight text-[var(--deep-text)] mb-1">
+        <h1 className="font-display text-h1 lg:text-h1 text-fg mb-1">
           Welcome back, <em className="not-italic text-[var(--primary)]">Karla!</em> 👋
         </h1>
-        <p className="text-body text-[var(--text-secondary)] mb-6 leading-relaxed">
+        <p className="text-body text-fg-muted mb-6 leading-relaxed">
           Keep going! You&apos;re doing great with your English journey.
         </p>
         <div className="flex items-center gap-3 flex-wrap">

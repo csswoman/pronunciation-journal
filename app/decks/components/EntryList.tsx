@@ -18,10 +18,10 @@ function EntryRow({ entry, onEdit, onRemove }: { entry: Entry; onEdit: (e: Entry
   return (
     <div className="flex items-center justify-between gap-2 p-2 rounded-lg hover:bg-[var(--btn-plain-bg-hover)] group transition-colors">
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-[var(--deep-text)] truncate">{entry.word}</p>
-        {entry.ipa && <p className="text-xs text-[var(--text-tertiary)]">/{entry.ipa}/</p>}
+        <p className="text-sm font-medium text-fg truncate">{entry.word}</p>
+        {entry.ipa && <p className="text-xs text-fg-subtle">/{entry.ipa}/</p>}
         {entry.phrases && entry.phrases.length > 0 && (
-          <p className="text-xs text-[var(--text-secondary)] truncate">
+          <p className="text-xs text-fg-muted truncate">
             {entry.phrases[0]}{entry.phrases.length > 1 ? ` (+${entry.phrases.length - 1})` : ""}
           </p>
         )}
@@ -47,10 +47,10 @@ export function EntryList({ entries, loading, filter, onFilterChange, onEdit, on
         value={filter}
         onChange={e => onFilterChange(e.target.value)}
         placeholder="Filter words…"
-        className="w-full px-3 py-2 rounded-xl bg-[var(--btn-regular-bg)] border border-[var(--line-divider)] text-sm text-[var(--deep-text)] placeholder:text-[var(--text-tertiary)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/40 mb-3"
+        className="w-full px-3 py-2 rounded-xl bg-[var(--btn-regular-bg)] border border-[var(--line-divider)] text-sm text-fg placeholder:text-fg-subtle focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/40 mb-3"
       />
 
-      <p className="text-tiny font-semibold uppercase tracking-widest text-[var(--text-tertiary)] mb-2">
+      <p className="text-tiny font-semibold uppercase tracking-widest text-fg-subtle mb-2">
         Words ({loading ? "…" : filtered.length})
       </p>
 
@@ -61,12 +61,12 @@ export function EntryList({ entries, loading, filter, onFilterChange, onEdit, on
           ))}
         </div>
       ) : filtered.length === 0 && entries.length === 0 ? (
-        <div className="text-center py-6 text-xs text-[var(--text-tertiary)]">
+        <div className="text-center py-6 text-xs text-fg-subtle">
           <p>No words yet</p>
           <p className="mt-1">Add words manually or use AI suggestions</p>
         </div>
       ) : filtered.length === 0 ? (
-        <div className="text-center py-4 text-xs text-[var(--text-tertiary)]">No matching words</div>
+        <div className="text-center py-4 text-xs text-fg-subtle">No matching words</div>
       ) : (
         <div className="space-y-1">
           {filtered.map(entry => (

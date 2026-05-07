@@ -43,7 +43,7 @@ export function PatternsTab({
         className="grid grid-cols-2 md:grid-cols-3 gap-4 p-4 rounded-xl border"
         style={{ borderColor: "var(--border)", backgroundColor: "var(--card-bg)" }}
       >
-        <h3 className="col-span-full text-sm font-semibold" style={{ color: "var(--text-primary)" }}>
+        <h3 className="col-span-full text-sm font-semibold text-fg">
           Add Pattern
         </h3>
         <Input
@@ -90,7 +90,7 @@ export function PatternsTab({
         className="grid grid-cols-2 md:grid-cols-3 gap-4 p-4 rounded-xl border"
         style={{ borderColor: "var(--border)", backgroundColor: "var(--card-bg)" }}
       >
-        <h3 className="col-span-full text-sm font-semibold" style={{ color: "var(--text-primary)" }}>
+        <h3 className="col-span-full text-sm font-semibold text-fg">
           Add Word to Pattern
         </h3>
         <Select
@@ -127,7 +127,7 @@ export function PatternsTab({
       </form>
 
       <div className="space-y-4">
-        <p className="text-xs font-semibold" style={{ color: "var(--text-secondary)" }}>
+        <p className="text-xs font-semibold text-fg-muted">
           {patterns.length} patterns — {patternWords.length} pattern words
         </p>
         <Table

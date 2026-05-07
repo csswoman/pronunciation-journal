@@ -114,7 +114,7 @@ export default function PronunciationFeedback({
         <p className={`text-lg font-medium ${feedback.color}`}>
           {feedback.emoji} {feedback.message}
         </p>
-        <p className="text-sm mt-1" style={{ color: "var(--text-secondary)" }}>
+        <p className="text-sm mt-1 text-fg-muted">
           +{xpEarned} XP
         </p>
       </div>
@@ -159,7 +159,7 @@ export default function PronunciationFeedback({
             >
               {/* Word row */}
               <div className="flex items-center justify-between gap-2">
-                <div className="flex items-center gap-1.5 font-medium" style={{ color: "var(--text-primary)" }}>
+                <div className="flex items-center gap-1.5 font-medium text-fg">
                   <span>
                     {result.status === "correct" ? "✅"
                       : result.status === "incorrect" ? "❌"
@@ -169,7 +169,7 @@ export default function PronunciationFeedback({
                   <span>{result.expected || result.got}</span>
                 </div>
                 {result.status === "incorrect" && result.got && (
-                  <span className="text-xs" style={{ color: "var(--text-tertiary)" }}>
+                  <span className="text-xs text-fg-subtle">
                     heard: &ldquo;{result.got}&rdquo;
                   </span>
                 )}
@@ -180,7 +180,7 @@ export default function PronunciationFeedback({
 
               {/* Tip */}
               {tip && (
-                <p className="text-xs mt-2 leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+                <p className="text-xs mt-2 leading-relaxed text-fg-muted">
                   💡 {tip}
                 </p>
               )}
@@ -207,7 +207,7 @@ export default function PronunciationFeedback({
             );
             return (
               <div key={i} className="flex flex-wrap items-center gap-1.5">
-                <span className="text-xs" style={{ color: "var(--text-secondary)" }}>
+                <span className="text-xs text-fg-muted">
                   {r.expected}:
                 </span>
                 {failed.map((p, j) => <PhonemeChip key={j} p={p} />)}

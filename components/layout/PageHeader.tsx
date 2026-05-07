@@ -289,7 +289,7 @@ export default function PageHeader({
         )}
 
         <h1
-          className="text-[var(--deep-text)]"
+          className="text-fg"
           style={isHeroCompact ? { font: "var(--font-h1)" } : { font: "var(--font-h2)" }}
         >
           <span className="font-semibold">{title}</span>
@@ -302,7 +302,7 @@ export default function PageHeader({
         </h1>
 
         {description && (
-          <p className={`${isHeroCompact ? "mt-2 text-sm" : "mt-4 text-base"} text-[var(--text-secondary)] leading-relaxed`}>
+          <p className={`${isHeroCompact ? "mt-2 text-sm" : "mt-4 text-base"} text-fg-muted leading-relaxed`}>
             {description}
           </p>
         )}
@@ -311,8 +311,8 @@ export default function PageHeader({
           <div className={`${isHeroCompact ? "mt-4 space-y-3" : "mt-8 space-y-4"}`}>
             <div>
               <div className="flex items-center gap-2 text-sm mb-2">
-                <span className="font-medium text-[var(--deep-text)]">{lessonTitle}</span>
-                <span className="text-[var(--text-secondary)]">{safeProgress}%</span>
+                <span className="font-medium text-fg">{lessonTitle}</span>
+                <span className="text-fg-muted">{safeProgress}%</span>
               </div>
               <div className="h-2 rounded-full bg-[var(--line-divider)] overflow-hidden">
                 <div

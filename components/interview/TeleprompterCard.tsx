@@ -1,5 +1,3 @@
-"use client";
-
 interface Props {
   text: string;
   isActive: boolean;
@@ -16,7 +14,7 @@ export default function TeleprompterCard({ text, isActive }: Props) {
           Your turn — read aloud
         </span>
       </div>
-      <p className="text-lg leading-relaxed font-medium" style={{ color: "var(--deep-text)", fontFamily: "var(--font-body)" }}>
+      <p className="text-lg leading-relaxed font-medium" style={{ color: "var(--text-primary)", fontFamily: "var(--font-body)" }}>
         {text}
       </p>
     </div>

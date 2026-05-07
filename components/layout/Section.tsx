@@ -31,11 +31,11 @@ export default function Section({
       {/* Optional header */}
       {title && (
         <div className="mb-6">
-          <h2 className="text-2xl font-bold tracking-tight text-[var(--deep-text)] mb-2">
+          <h2 className="text-h2 text-fg mb-2">
             {title}
           </h2>
           {description && (
-            <p className="text-base text-[var(--text-secondary)]">
+            <p className="text-base text-fg-muted">
               {description}
             </p>
           )}

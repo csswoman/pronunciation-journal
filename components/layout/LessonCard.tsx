@@ -29,10 +29,10 @@ export default function LessonCard({
   return (
     <div
       className="bg-[var(--card-bg)] border border-[var(--line-divider)]
-        rounded-2xl p-6 flex flex-col cursor-pointer
-        transition-all duration-200
-        hover:bg-[var(--btn-card-bg-hover)]
-        hover:border-[var(--line-color)] hover:-translate-y-0.5"
+ rounded-2xl p-6 flex flex-col cursor-pointer
+ transition-all duration-200
+ hover:bg-[var(--btn-card-bg-hover)]
+ hover:border-[var(--line-color)] hover:-translate-y-0.5"
       style={{ boxShadow: "0 1px 3px var(--line-divider), 0 4px 12px var(--line-divider)" }}
     >
       {/* Illustration area */}
@@ -49,17 +49,17 @@ export default function LessonCard({
           {difficulty}
         </span>
         {duration && (
-          <span className="text-tiny font-medium text-[var(--text-tertiary)]">{duration}</span>
+          <span className="text-tiny font-medium text-fg-subtle">{duration}</span>
         )}
       </div>
 
       {/* Text */}
-      <h3 className="font-heading text-sm font-bold text-[var(--deep-text)] mb-1">{title}</h3>
-      <p className="text-xs text-[var(--text-tertiary)] leading-relaxed flex-1">{description}</p>
+      <h3 className="font-heading text-sm font-bold text-fg mb-1">{title}</h3>
+      <p className="text-xs text-fg-subtle leading-relaxed flex-1">{description}</p>
 
       {/* Footer */}
       <div className="flex items-center justify-between mt-4 pt-3.5 border-t border-[var(--line-divider)]">
-        <span className="text-xs text-[var(--text-tertiary)]">
+        <span className="text-xs text-fg-subtle">
           {difficulty === "easy" ? "Beginner" : difficulty === "medium" ? "Intermediate" : "Advanced"}
         </span>
         <Button

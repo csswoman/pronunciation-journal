@@ -49,7 +49,7 @@ export default function HomeTodo() {
               />
             ))}
           </div>
-          <span className="text-xs font-medium text-[var(--text-tertiary)]">{completed}/{total} done</span>
+          <span className="text-xs font-medium text-fg-subtle">{completed}/{total} done</span>
         </div>
         <span style={{ font: "var(--font-caption)", color: "var(--text-tertiary)" }}>~{remaining} min left</span>
       </div>
@@ -92,13 +92,13 @@ export default function HomeTodo() {
             <div className="flex-1 min-w-0">
               <p className={[
                 "text-sm font-medium leading-snug truncate",
-                item.done ? "line-through text-[var(--text-secondary)]" : "text-[var(--text-primary)]",
+                item.done ? "line-through text-fg-muted" : "text-fg",
               ].join(" ")}>
                 {item.label}
               </p>
               <div className="flex items-center gap-1.5 mt-0.5">
                 <Badge label={item.tag} variant={item.tagVariant} />
-                <span className="text-tiny text-[var(--text-tertiary)]">{item.minutes} min</span>
+                <span className="text-tiny text-fg-subtle">{item.minutes} min</span>
               </div>
             </div>
 

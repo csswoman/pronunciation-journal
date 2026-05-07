@@ -45,14 +45,14 @@ export function StudyCardImage({ imageUrl, imageLoading, word, fileInputRef, onU
           </div>
         </>
       ) : imageLoading ? (
-        <div className="flex flex-col items-center gap-3 text-[var(--text-tertiary)]">
+        <div className="flex flex-col items-center gap-3 text-fg-subtle">
           <div className="w-8 h-8 rounded-full border-2 border-[var(--primary)] border-t-transparent animate-spin" />
           <p className="text-xs">Uploading…</p>
         </div>
       ) : (
         <button
           onClick={() => fileInputRef.current?.click()}
-          className="flex flex-col items-center gap-2 p-6 text-center text-[var(--text-tertiary)] hover:text-[var(--deep-text)] transition-colors"
+          className="flex flex-col items-center gap-2 p-6 text-center text-fg-subtle hover:text-fg transition-colors"
         >
           <ImagePlus size={28} className="opacity-40" />
           <p className="text-xs">Add image</p>

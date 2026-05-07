@@ -149,8 +149,7 @@ export default function SidebarWordOfDay() {
         {!loading && (
           <button
             onClick={() => fetchWord(true)}
-            className="transition-colors"
-            style={{ color: "var(--text-tertiary)" }}
+            className="transition-colors text-fg-subtle"
             onMouseEnter={e => (e.currentTarget.style.color = "var(--text-secondary)")}
             onMouseLeave={e => (e.currentTarget.style.color = "var(--text-tertiary)")}
             title="Refresh"
@@ -161,7 +160,7 @@ export default function SidebarWordOfDay() {
       </div>
 
       {loading && (
-        <div className="flex items-center gap-2 text-xs py-2" style={{ color: "var(--text-secondary)" }}>
+        <div className="flex items-center gap-2 text-xs py-2 text-fg-muted">
           <Loader2 size={13} className="animate-spin" />
           Loading word…
         </div>
@@ -195,9 +194,9 @@ export default function SidebarWordOfDay() {
                 className="mt-1 rounded-xl px-3 py-2.5 flex flex-col gap-1.5"
                 style={{ backgroundColor: "var(--bg-tertiary)", border: "1px solid var(--border)" }}
               >
-                <p className="text-tiny leading-snug" style={{ color: "var(--text-secondary)" }}>{word.definition}</p>
+                <p className="text-tiny leading-snug text-fg-muted">{word.definition}</p>
                 {word.example_sentence && (
-                  <p className="text-tiny italic leading-snug" style={{ color: "var(--text-tertiary)" }}>"{word.example_sentence}"</p>
+                  <p className="text-tiny italic leading-snug text-fg-subtle">"{word.example_sentence}"</p>
                 )}
               </div>
             )}

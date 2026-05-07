@@ -20,7 +20,7 @@ export default function Select({
 }: SelectProps) {
   return (
     <div className="flex flex-col gap-1">
-      <label className="text-xs font-medium" style={{ color: "var(--text-secondary)" }}>
+      <label className="text-xs font-medium text-fg-muted">
         {label}
         {required && <span className="text-error ml-0.5">*</span>}
       </label>

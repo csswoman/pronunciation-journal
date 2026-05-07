@@ -105,10 +105,10 @@ export default function AdminLessonsPage() {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-2xl font-bold" style={{ color: "var(--deep-text)" }}>
+            <h1 className="text-h2 text-fg">
               Lesson Manager
             </h1>
-            <p className="text-sm mt-0.5" style={{ color: "var(--text-secondary)" }}>
+            <p className="text-sm mt-0.5 text-fg-muted">
               Manage system and user theory lessons
             </p>
           </div>
@@ -117,7 +117,7 @@ export default function AdminLessonsPage() {
               onClick={handleNotionSync}
               disabled={syncStatus === "syncing"}
               className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-semibold border border-[var(--line-divider)] transition-colors disabled:opacity-50"
-              style={{ background: "var(--card-bg)", color: "var(--deep-text)" }}
+              style={{ background: "var(--card-bg)", color: "var(--text-primary)" }}
               title="Sync lessons from Notion"
             >
               {syncStatus === "syncing" ? (
@@ -206,11 +206,11 @@ function LessonTable({
 }) {
   return (
     <section className="mb-10">
-      <h2 className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: "var(--text-tertiary)" }}>
+      <h2 className="text-xs font-semibold uppercase tracking-widest mb-3 text-fg-subtle">
         {title} ({lessons.length})
       </h2>
       {lessons.length === 0 ? (
-        <p className="text-sm py-4" style={{ color: "var(--text-tertiary)" }}>None yet.</p>
+        <p className="text-sm py-4 text-fg-subtle">None yet.</p>
       ) : (
         <div className="rounded-2xl border border-[var(--line-divider)] overflow-hidden">
           {lessons.map((lesson, idx) => {
@@ -232,10 +232,10 @@ function LessonTable({
                 </div>
 
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold truncate" style={{ color: "var(--deep-text)" }}>
+                  <p className="text-sm font-semibold truncate text-fg">
                     {lesson.title}
                   </p>
-                  <p className="text-xs flex items-center gap-1.5" style={{ color: "var(--text-tertiary)" }}>
+                  <p className="text-xs flex items-center gap-1.5 text-fg-subtle">
                     {cat?.label ?? lesson.category} · /lessons/{lesson.slug}
                     {lesson.source === "notion" && (
                       <span className="inline-flex items-center gap-0.5 rounded px-1 py-0.5 text-tiny font-semibold bg-neutral-100 dark:bg-neutral-800 text-fg-subtle">
@@ -246,7 +246,7 @@ function LessonTable({
                 </div>
 
                 {/* Published badge */}
-                <span className={`text-tiny font-semibold px-2 py-0.5 rounded-full flex-shrink-0 ${lesson.is_published ? "bg-success-soft text-success" : "bg-[var(--btn-regular-bg)] text-[var(--text-tertiary)]"}`}>
+                <span className={`text-tiny font-semibold px-2 py-0.5 rounded-full flex-shrink-0 ${lesson.is_published ? "bg-success-soft text-success" : "bg-[var(--btn-regular-bg)] text-fg-subtle"}`}>
                   {lesson.is_published ? "Published" : "Draft"}
                 </span>
 
@@ -256,9 +256,8 @@ function LessonTable({
                     <Button
                       onClick={() => onTogglePublish(lesson)}
                       disabled={togglingId === lesson.id}
-                      className="p-1.5 rounded-lg hover:bg-[var(--btn-plain-bg-hover)] transition-colors disabled:opacity-50"
                       title={lesson.is_published ? "Unpublish" : "Publish"}
-                      style={{ color: "var(--text-secondary)" }}
+                      className="p-1.5 rounded-lg hover:bg-[var(--btn-plain-bg-hover)] transition-colors disabled:opacity-50 text-fg-muted"
                     >
                       {togglingId === lesson.id ? (
                         <div className="w-4 h-4 border border-current border-t-transparent rounded-full animate-spin" />
@@ -277,8 +276,7 @@ function LessonTable({
 
                   <Link
                     href="/courses"
-                    className="p-1.5 rounded-lg hover:bg-[var(--btn-plain-bg-hover)] transition-colors"
-                    style={{ color: "var(--text-secondary)" }}
+                    className="p-1.5 rounded-lg hover:bg-[var(--btn-plain-bg-hover)] transition-colors text-fg-muted"
                     title="Edit"
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">

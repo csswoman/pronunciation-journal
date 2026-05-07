@@ -20,7 +20,7 @@ export function PracticeHeader({
     <div className="w-full space-y-6 pb-4">
       {/* Title and Actions */}
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-[var(--text-primary)]">Phoneme Practice</h1>
+        <h1 className="text-h2 text-fg">Phoneme Practice</h1>
         <div className="flex items-center gap-2">
           {dueForReview > 0 && (
             <Button type="button" variant="chip" size="sm" className="rounded-full px-3 py-1 text-sm font-medium bg-[oklch(.9_.08_25)] text-[oklch(.6_.2_25)] flex items-center gap-1">
@@ -28,10 +28,10 @@ export function PracticeHeader({
             </Button>
           )}
           <Button type="button" variant="ghost" size="icon" className="rounded-lg" title="Notifications">
-            <Bell size={20} className="text-[var(--text-primary)]" />
+            <Bell size={20} className="text-fg" />
           </Button>
           <Button type="button" variant="ghost" size="icon" className="rounded-lg" title="Settings">
-            <Settings size={20} className="text-[var(--text-primary)]" />
+            <Settings size={20} className="text-fg" />
           </Button>
         </div>
       </div>
@@ -43,8 +43,8 @@ export function PracticeHeader({
           <div className="flex items-center justify-center mb-1">
             <span className="text-base">🎖</span>
           </div>
-          <div className="text-xl font-bold text-[var(--text-primary)]">{masteredCount}</div>
-          <div className="text-xs text-[var(--text-tertiary)]">Mastered<br/>Phonemes</div>
+          <div className="text-xl font-bold text-fg">{masteredCount}</div>
+          <div className="text-xs text-fg-subtle">Mastered<br/>Phonemes</div>
         </div>
 
         {/* Accuracy */}
@@ -52,8 +52,8 @@ export function PracticeHeader({
           <div className="flex items-center justify-center mb-1">
             <span className="text-base">🎯</span>
           </div>
-          <div className="text-xl font-bold text-[var(--text-primary)]">{accuracy.toFixed(1)}%</div>
-          <div className="text-xs text-[var(--text-tertiary)]">Avg. Accuracy</div>
+          <div className="text-xl font-bold text-fg">{accuracy.toFixed(1)}%</div>
+          <div className="text-xs text-fg-subtle">Avg. Accuracy</div>
         </div>
 
         {/* Total Attempts */}
@@ -61,8 +61,8 @@ export function PracticeHeader({
           <div className="flex items-center justify-center mb-1">
             <span className="text-base">⏱</span>
           </div>
-          <div className="text-xl font-bold text-[var(--text-primary)]">{totalAttempts.toLocaleString()}</div>
-          <div className="text-xs text-[var(--text-tertiary)]">Total Attempts</div>
+          <div className="text-xl font-bold text-fg">{totalAttempts.toLocaleString()}</div>
+          <div className="text-xs text-fg-subtle">Total Attempts</div>
         </div>
       </div>
     </div>

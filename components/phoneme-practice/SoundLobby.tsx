@@ -73,13 +73,13 @@ export function SoundLobby({
                   {soundIpa}
                 </h1>
                 {soundType && (
-                  <span className="text-caption font-medium uppercase tracking-widest text-[var(--text-tertiary)]">
+                  <span className="text-caption font-medium uppercase tracking-widest text-fg-subtle">
                     {soundType}
                   </span>
                 )}
               </div>
-              <p className="text-body-sm font-semibold text-[var(--deep-text)]">{soundName}</p>
-              <p className="max-w-xl text-body-sm leading-6 text-[var(--text-secondary)]">
+              <p className="text-body-sm font-semibold text-fg">{soundName}</p>
+              <p className="max-w-xl text-body-sm leading-6 text-fg-muted">
                 Work through each stage to master this sound — start with recognition, then challenge yourself with minimal pairs and dictation.
               </p>
             </div>
@@ -152,10 +152,10 @@ export function SoundLobby({
 
         <div className="flex items-end justify-between gap-4 pt-2">
           <div>
-            <p className="text-tiny font-semibold uppercase tracking-[.18em] text-[var(--text-tertiary)]">
+            <p className="text-tiny font-semibold uppercase tracking-[.18em] text-fg-subtle">
               Practice stages
             </p>
-            <h2 className="mt-1 mb-6 text-body-lg font-semibold tracking-tight text-[var(--deep-text)]">
+            <h2 className="mt-1 mb-6 text-body-lg font-semibold tracking-tight text-fg">
               Choose a stage to practice
             </h2>
           </div>
@@ -194,7 +194,7 @@ export function SoundLobby({
                   </span>
                 )}
                 {!unlocked && (
-                  <span className="absolute right-4 top-4 flex items-center gap-1 text-tiny text-[var(--text-tertiary)]">
+                  <span className="absolute right-4 top-4 flex items-center gap-1 text-tiny text-fg-subtle">
                     <LockIcon />
                   </span>
                 )}
@@ -208,13 +208,13 @@ export function SoundLobby({
                   </span>
                   <span
                     className="text-body-sm font-semibold leading-tight"
-                    style={{ color: unlocked ? "var(--deep-text)" : "var(--text-tertiary)" }}
+                    style={{ color: unlocked ? "var(--text-primary)" : "var(--text-tertiary)" }}
                   >
                     {stage.title}
                   </span>
                 </div>
 
-                <p className="text-body-sm leading-6 mb-4 text-[var(--text-secondary)]">
+                <p className="text-body-sm leading-6 mb-4 text-fg-muted">
                   {stage.difficulty} · Stage {i + 1}
                 </p>
 
@@ -235,7 +235,7 @@ export function SoundLobby({
                   )}
                 </div>
 
-                <p className="mt-2 text-caption font-medium text-[var(--text-tertiary)]">
+                <p className="mt-2 text-caption font-medium text-fg-subtle">
                   {m.total === 0 ? "Not started" : `${m.pct}% mastery`}
                 </p>
               </Button>
@@ -255,7 +255,7 @@ export function SoundLobby({
             <p className="text-body-sm font-semibold text-[var(--admonitions-color-tip)]">
               🎉 All stages mastered — great work!
             </p>
-            <p className="mt-1 text-caption text-[var(--text-secondary)]">
+            <p className="mt-1 text-caption text-fg-muted">
               Keep practicing to maintain your score.
             </p>
           </div>
@@ -296,11 +296,11 @@ function InfoPill({ icon, label, value, accent }: { icon: string; label: string;
     >
       <div className="flex items-center gap-2">
         <span className="text-base leading-none">{icon}</span>
-        <p className="text-tiny font-semibold uppercase tracking-[.14em] text-[var(--text-tertiary)]">{label}</p>
+        <p className="text-tiny font-semibold uppercase tracking-[.14em] text-fg-subtle">{label}</p>
       </div>
       <div className="flex items-start gap-2.5">
         <span className="mt-1.5 h-2 w-2 flex-shrink-0 rounded-full" style={{ backgroundColor: accent }} />
-        <p className="text-caption font-medium leading-snug text-[var(--deep-text)]">{value}</p>
+        <p className="text-caption font-medium leading-snug text-fg">{value}</p>
       </div>
     </div>
   );

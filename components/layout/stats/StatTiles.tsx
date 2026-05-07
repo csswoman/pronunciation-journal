@@ -44,10 +44,10 @@ function StatTile({
         {icon}
       </div>
       <div>
-        <p className="text-tiny font-semibold uppercase tracking-[0.2em]" style={{ color: "var(--text-secondary)" }}>
+        <p className="text-tiny font-semibold uppercase tracking-[0.2em] text-fg-muted">
           {label}
         </p>
-        <p className="mt-0.5 text-2xl font-black tracking-tight" style={{ color: "var(--deep-text)" }}>
+        <p className="mt-0.5 text-2xl font-black tracking-tight text-fg">
           {value}
         </p>
       </div>

@@ -34,7 +34,7 @@ export default function LessonGrid({
   if (isLoading) {
     return (
       <Card className="p-8 text-center">
-        <div className="text-sm animate-pulse" style={{ color: 'var(--text-secondary)' }}>
+        <div className="text-sm animate-pulse text-fg-muted">
           Loading lessons...
         </div>
       </Card>
@@ -76,7 +76,7 @@ export default function LessonGrid({
           >
             Previous
           </Button>
-          <span className="text-sm tabular-nums" style={{ color: 'var(--text-tertiary)' }}>
+          <span className="text-sm tabular-nums text-fg-subtle">
             {currentPage} / {totalPages}
           </span>
           <Button

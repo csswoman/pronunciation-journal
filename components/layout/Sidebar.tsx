@@ -47,14 +47,14 @@ export default function Sidebar({ className = "" }: SidebarProps) {
               >
                 <span className="font-bold text-xs" style={{ color: "var(--accent-text)" }}>EJ</span>
               </div>
-              <span className="font-heading font-semibold text-sm" style={{ color: "var(--deep-text)" }}>
+              <span className="font-heading font-semibold text-sm text-fg">
                 English Journal
               </span>
             </div>
           )}
           <button
             onClick={toggle}
-            className="p-1.5 rounded-lg transition-colors hover:bg-[var(--btn-plain-bg-hover)] text-[var(--text-tertiary)] hover:text-[var(--text-primary)] flex-shrink-0"
+            className="p-1.5 rounded-lg transition-colors hover:bg-[var(--btn-plain-bg-hover)] text-fg-subtle hover:text-fg flex-shrink-0"
             title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
             {collapsed ? <PanelLeftOpen className="w-4 h-4" /> : <PanelLeftClose className="w-4 h-4" />}

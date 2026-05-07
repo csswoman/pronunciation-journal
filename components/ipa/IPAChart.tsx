@@ -126,7 +126,7 @@ export default function IPAChart() {
 
         <div>
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-bold" style={{ color: "var(--text-primary)" }}>
+            <h2 className="text-lg font-bold text-fg">
               IPA Symbols Grid
             </h2>
             <ViewToggle view={gridView} onChange={setGridView} />
@@ -173,7 +173,7 @@ export default function IPAChart() {
           )}
 
           <div className="mt-5 flex items-center gap-3 flex-wrap">
-            <span className="text-xs font-semibold" style={{ color: "var(--text-secondary)" }}>
+            <span className="text-xs font-semibold text-fg-muted">
               Badge color:
             </span>
             <DifficultyPill difficulty="easy" label="Easy" />
@@ -188,11 +188,11 @@ export default function IPAChart() {
             >
               <div className="flex items-center gap-2 mb-1">
                 <span className="text-base">🔥</span>
-                <h3 className="font-bold text-sm" style={{ color: "var(--text-primary)" }}>
+                <h3 className="font-bold text-sm text-fg">
                   Difíciles para hispanohablantes
                 </h3>
               </div>
-              <p className="text-xs mb-4" style={{ color: "var(--text-secondary)" }}>
+              <p className="text-xs mb-4 text-fg-muted">
                 Estos sonidos no existen en español — requieren práctica específica
               </p>
               <div className="flex flex-wrap gap-2">
@@ -238,7 +238,7 @@ export default function IPAChart() {
               <Button
                 variant="dashed"
                 size="lg"
-                className="border-[var(--line-divider)] text-[var(--text-secondary)] hover:text-[var(--primary)] hover:border-[var(--primary)]"
+                className="border-[var(--line-divider)] text-fg-muted hover:text-[var(--primary)] hover:border-[var(--primary)]"
               >
                 <span className="text-lg">+</span>
                 Custom Set
@@ -262,10 +262,10 @@ export default function IPAChart() {
           💬
         </div>
         <div className="flex-1">
-          <h3 className="font-bold mb-0.5" style={{ color: "var(--text-primary)" }}>
+          <h3 className="font-bold mb-0.5 text-fg">
             Practice with AI
           </h3>
-          <p className="text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+          <p className="text-sm leading-relaxed text-fg-muted">
             Have real conversations with Gemini-powered AI and get pronunciation feedback on the sounds you just explored.
           </p>
         </div>

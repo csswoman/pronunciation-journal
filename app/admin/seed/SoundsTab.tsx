@@ -24,7 +24,7 @@ export function SoundsTab({
         className="grid grid-cols-2 md:grid-cols-3 gap-4 p-4 rounded-xl border"
         style={{ borderColor: "var(--border)", backgroundColor: "var(--card-bg)" }}
       >
-        <h3 className="col-span-full text-sm font-semibold" style={{ color: "var(--text-primary)" }}>
+        <h3 className="col-span-full text-sm font-semibold text-fg">
           Add Sound
         </h3>
         <Input label="IPA symbol" value={form.ipa} onChange={(v) => setForm({ ...form, ipa: v })} placeholder="æ" required />
@@ -64,7 +64,7 @@ export function SoundsTab({
         </div>
       </form>
       <div>
-        <p className="text-xs font-semibold mb-2" style={{ color: "var(--text-secondary)" }}>
+        <p className="text-xs font-semibold mb-2 text-fg-muted">
           {sounds.length} sounds in DB
         </p>
         <Table

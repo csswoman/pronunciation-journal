@@ -66,7 +66,7 @@ export default function SubLessonPage() {
   if (error || !subLesson) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-[var(--page-bg)] gap-4">
-        <p className="text-[var(--text-secondary)]">
+        <p className="text-fg-muted">
           {error ?? "Lesson not found"}
         </p>
         <Link href="/notion-lessons" className="text-[var(--primary)] font-semibold">
@@ -91,7 +91,7 @@ export default function SubLessonPage() {
         {/* Back link */}
         <Link
           href="/notion-lessons"
-          className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--deep-text)] transition-colors mb-6"
+          className="inline-flex items-center gap-1.5 text-sm font-medium text-fg-muted hover:text-fg transition-colors mb-6"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -112,10 +112,10 @@ export default function SubLessonPage() {
 
         {/* Header */}
         <header className="mb-12 border-b border-[var(--line-divider)] pb-8">
-          <h1 className="text-4xl font-bold text-[var(--deep-text)] mb-2">
+          <h1 className="text-h1 text-fg mb-2">
             {subLesson.title}
           </h1>
-          <p className="text-sm text-[var(--text-secondary)]">
+          <p className="text-sm text-fg-muted">
             Updated {new Date(subLesson.updatedAt).toLocaleDateString()}
           </p>
         </header>
@@ -163,9 +163,9 @@ export default function SubLessonPage() {
           {prevLesson ? (
             <Link
               href={`/notion-lessons/${prevLesson.slug}`}
-              className="flex-1 px-4 py-3 rounded-lg border border-[var(--line-divider)] text-sm font-medium text-[var(--text-secondary)] hover:bg-[var(--btn-plain-bg-hover)] transition-colors text-left"
+              className="flex-1 px-4 py-3 rounded-lg border border-[var(--line-divider)] text-sm font-medium text-fg-muted hover:bg-[var(--btn-plain-bg-hover)] transition-colors text-left"
             >
-              <span className="text-xs text-[var(--text-tertiary)] block mb-1">
+              <span className="text-xs text-fg-subtle block mb-1">
                 Previous
               </span>
               {prevLesson.title}
@@ -177,9 +177,9 @@ export default function SubLessonPage() {
           {nextLesson ? (
             <Link
               href={`/notion-lessons/${nextLesson.slug}`}
-              className="flex-1 px-4 py-3 rounded-lg border border-[var(--line-divider)] text-sm font-medium text-[var(--text-secondary)] hover:bg-[var(--btn-plain-bg-hover)] transition-colors text-right"
+              className="flex-1 px-4 py-3 rounded-lg border border-[var(--line-divider)] text-sm font-medium text-fg-muted hover:bg-[var(--btn-plain-bg-hover)] transition-colors text-right"
             >
-              <span className="text-xs text-[var(--text-tertiary)] block mb-1">
+              <span className="text-xs text-fg-subtle block mb-1">
                 Next
               </span>
               {nextLesson.title}

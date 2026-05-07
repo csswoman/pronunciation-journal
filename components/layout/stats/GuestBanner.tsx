@@ -24,10 +24,10 @@ export function GuestBanner() {
           <Sparkles size={28} />
         </div>
         <div>
-          <h2 className="text-xl font-black" style={{ color: "var(--deep-text)" }}>
+          <h2 className="text-h4 text-fg">
             Track your English journey
           </h2>
-          <p className="mt-2 text-sm max-w-sm mx-auto" style={{ color: "var(--text-secondary)" }}>
+          <p className="mt-2 text-sm max-w-sm mx-auto text-fg-muted">
             Sign in to see your streaks, XP, weekly charts, pronunciation accuracy, and personalized insights.
           </p>
         </div>
@@ -51,8 +51,8 @@ export function GuestBanner() {
           >
             <div className="h-9 w-9 rounded-xl" style={{ background: "var(--line-divider)" }} />
             <div className="space-y-1">
-              <p className="text-tiny font-semibold uppercase tracking-[0.2em]" style={{ color: "var(--text-secondary)" }}>{label}</p>
-              <p className="text-2xl font-black" style={{ color: "var(--deep-text)" }}>—</p>
+              <p className="text-tiny font-semibold uppercase tracking-[0.2em] text-fg-muted">{label}</p>
+              <p className="text-2xl font-black text-fg">—</p>
             </div>
           </div>
         ))}
@@ -62,7 +62,7 @@ export function GuestBanner() {
         className="rounded-3xl p-8 flex flex-col items-center text-center gap-2 opacity-40 pointer-events-none select-none blur-[2px]"
         style={{ background: "var(--card-bg)", border: "1px solid var(--line-divider)", height: 200 }}
       >
-        <p className="text-base font-bold" style={{ color: "var(--deep-text)" }}>Weekly progress chart</p>
+        <p className="text-base font-bold text-fg">Weekly progress chart</p>
       </div>
     </div>
   );

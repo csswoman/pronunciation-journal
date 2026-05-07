@@ -23,7 +23,7 @@ export default function HomeShadowingDrill({
         </span>
       </div>
 
-      <p className="text-sm font-semibold text-[var(--deep-text)] -mt-1">Tongue twister</p>
+      <p className="text-sm font-semibold text-fg -mt-1">Tongue twister</p>
 
       <div className="rounded-lg bg-surface-sunken px-4 py-3">
         <p className="text-base font-semibold italic text-[var(--warning)] leading-relaxed">
@@ -31,9 +31,9 @@ export default function HomeShadowingDrill({
         </p>
       </div>
 
-      <div className="flex items-center gap-2 text-xs text-[var(--text-tertiary)]">
+      <div className="flex items-center gap-2 text-xs text-fg-subtle">
         <span className="text-base">🎯</span>
-        <span className="font-mono text-[var(--text-secondary)]">{sounds}</span>
+        <span className="font-mono text-fg-muted">{sounds}</span>
         <span>·</span>
         <span>Speed: {speedWpm} wpm</span>
       </div>

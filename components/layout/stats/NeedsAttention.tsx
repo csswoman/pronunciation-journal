@@ -37,12 +37,12 @@ function AttentionItem({
   const color = PRIORITY_COLORS[priority];
   return (
     <div className="flex items-start gap-3 py-3" style={{ borderBottom: "1px solid var(--line-divider)" }}>
-      <span className="mt-0.5 w-5 shrink-0 text-xs font-bold tabular-nums" style={{ color: "var(--text-tertiary)" }}>
+      <span className="mt-0.5 w-5 shrink-0 text-xs font-bold tabular-nums text-fg-subtle">
         {String(rank).padStart(2, "0")}
       </span>
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-semibold" style={{ color: "var(--deep-text)" }}>{title}</p>
-        <p className="text-xs mt-0.5" style={{ color: "var(--text-secondary)" }}>{sub}</p>
+        <p className="text-sm font-semibold text-fg">{title}</p>
+        <p className="text-xs mt-0.5 text-fg-muted">{sub}</p>
       </div>
       <div className="flex items-center gap-2 shrink-0">
         <span
@@ -51,8 +51,8 @@ function AttentionItem({
         >
           {priority}
         </span>
-        <span className="text-xs" style={{ color: "var(--text-tertiary)" }}>{minutes} min</span>
-        <ArrowRight size={14} style={{ color: "var(--text-tertiary)" }} />
+        <span className="text-xs text-fg-subtle">{minutes} min</span>
+        <ArrowRight size={14} className="text-fg-subtle" />
       </div>
     </div>
   );
@@ -88,10 +88,10 @@ export function NeedsAttention({ progressList, weeklyAccuracy }: Props) {
       <p className="text-tiny font-bold uppercase tracking-[0.26em]" style={{ color: "var(--primary)" }}>
         ✦ Needs Your Attention
       </p>
-      <p className="text-tiny mt-0.5" style={{ color: "var(--text-tertiary)" }}>
+      <p className="text-tiny mt-0.5 text-fg-subtle">
         {hasData ? "Based on your sound practice history" : "Practice sounds to see insights here"}
       </p>
-      <h3 className="mt-3 text-lg font-black" style={{ color: "var(--deep-text)" }}>
+      <h3 className="mt-3 text-lg font-black text-fg">
         {!hasData
           ? "Nothing to review yet."
           : weeklyAccuracy < 70
@@ -117,7 +117,7 @@ export function NeedsAttention({ progressList, weeklyAccuracy }: Props) {
         </div>
       ) : (
         <div className="mt-4 flex flex-col gap-2">
-          <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
+          <p className="text-sm text-fg-muted">
             Complete phoneme exercises to get personalized attention items based on your weak spots.
           </p>
         </div>

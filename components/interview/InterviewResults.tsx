@@ -100,7 +100,7 @@ export function InterviewResults({ title, turns, results, difficulty, level, onR
         className="flex-shrink-0 px-4 pt-4 pb-3 flex items-center justify-between gap-3 border-b"
         style={{ borderColor: "var(--line-divider)", background: "var(--card-bg)" }}
       >
-        <p className="text-sm font-semibold truncate" style={{ color: "var(--deep-text)" }}>{title}</p>
+        <p className="text-sm font-semibold truncate text-fg">{title}</p>
         <Button variant="outline" size="sm" icon={<RotateCcw size={11} />} onClick={onReset}>New</Button>
       </div>
 
@@ -126,19 +126,19 @@ export function InterviewResults({ title, turns, results, difficulty, level, onR
           <div className="flex gap-6 mt-1">
             <div className="flex flex-col items-center gap-0.5">
               <CheckCircle2 size={16} style={{ color: "var(--score-excellent)" }} />
-              <span className="text-lg font-bold" style={{ color: "var(--deep-text)" }}>{passed}</span>
+              <span className="text-lg font-bold text-fg">{passed}</span>
               <span className="text-xs" style={{ color: "var(--muted-text)" }}>Passed</span>
             </div>
             <div className="w-px" style={{ background: "var(--line-divider)" }} />
             <div className="flex flex-col items-center gap-0.5">
               <AlertCircle size={16} style={{ color: "var(--score-poor)" }} />
-              <span className="text-lg font-bold" style={{ color: "var(--deep-text)" }}>{failed}</span>
+              <span className="text-lg font-bold text-fg">{failed}</span>
               <span className="text-xs" style={{ color: "var(--muted-text)" }}>To improve</span>
             </div>
             <div className="w-px" style={{ background: "var(--line-divider)" }} />
             <div className="flex flex-col items-center gap-0.5">
               <TrendingUp size={16} style={{ color: "var(--color-accent)" }} />
-              <span className="text-lg font-bold" style={{ color: "var(--deep-text)" }}>{scores.length}</span>
+              <span className="text-lg font-bold text-fg">{scores.length}</span>
               <span className="text-xs" style={{ color: "var(--muted-text)" }}>Turns</span>
             </div>
           </div>

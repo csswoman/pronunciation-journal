@@ -28,23 +28,23 @@ export default function HomeTheoryOfDay({
       </div>
 
       <div>
-        <p className="text-xs text-[var(--text-tertiary)] mb-1">Theory of the day</p>
-        <p className="text-lg font-bold text-[var(--deep-text)] leading-snug">{title}</p>
+        <p className="text-xs text-fg-subtle mb-1">Theory of the day</p>
+        <p className="text-lg font-bold text-fg leading-snug">{title}</p>
       </div>
 
-      <p className="text-sm text-[var(--text-secondary)] leading-relaxed">{description}</p>
+      <p className="text-sm text-fg-muted leading-relaxed">{description}</p>
 
       <div className="rounded-xl bg-[var(--btn-regular-bg)] px-4 py-3 flex flex-col gap-1.5">
         {examples.map(({ word, ipa }) => (
           <p key={word} className="text-sm font-mono text-[var(--primary)]">
-            {word} · <span className="text-[var(--text-secondary)]">{ipa}</span>
+            {word} · <span className="text-fg-muted">{ipa}</span>
           </p>
         ))}
       </div>
 
       <Link
         href="/courses"
-        className="block text-center text-sm font-medium text-[var(--deep-text)] border border-[var(--line-divider)] rounded-xl py-2.5 hover:bg-[var(--btn-regular-bg)] transition-colors"
+        className="block text-center text-sm font-medium text-fg border border-[var(--line-divider)] rounded-xl py-2.5 hover:bg-[var(--btn-regular-bg)] transition-colors"
       >
         Read full lesson →
       </Link>

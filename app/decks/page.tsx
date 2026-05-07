@@ -79,8 +79,8 @@ export default function DecksPage() {
               <div className="flex flex-col items-center gap-4">
                 <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl" style={{ backgroundColor: "var(--btn-regular-bg)" }}>📚</div>
                 <div>
-                  <p className="text-sm font-semibold" style={{ color: "var(--deep-text)" }}>No decks yet</p>
-                  <p className="text-xs mt-1" style={{ color: "var(--text-tertiary)" }}>Create your first deck to organize vocabulary by theme.</p>
+                  <p className="text-sm font-semibold text-fg">No decks yet</p>
+                  <p className="text-xs mt-1 text-fg-subtle">Create your first deck to organize vocabulary by theme.</p>
                 </div>
                 <Button variant="primary" icon={<Plus size={16} />} onClick={() => setShowCreate(true)} className="mt-2">
                   Create a deck

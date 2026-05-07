@@ -36,14 +36,14 @@ export function SoundGrid({ progressList }: Props) {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-tiny font-bold uppercase tracking-[0.24em]" style={{ color: 'var(--text-tertiary)' }}>
+          <p className="text-tiny font-bold uppercase tracking-[0.24em] text-fg-subtle">
             SOUNDS
           </p>
-          <p className="text-sm font-semibold mt-0.5" style={{ color: 'var(--deep-text)' }}>
+          <p className="text-sm font-semibold mt-0.5 text-fg">
             {mastered} mastered · {inProgress} within reach
           </p>
         </div>
-        <span className="text-xs" style={{ color: 'var(--text-tertiary)' }}>
+        <span className="text-xs text-fg-subtle">
           {progressList.length} total phonemes
         </span>
       </div>
@@ -90,7 +90,7 @@ export function SoundGrid({ progressList }: Props) {
             : isPracticing
             ? 'var(--primary)'
             : isAvailable
-            ? 'var(--deep-text)'
+            ? 'var(--text-primary)'
             : 'var(--text-tertiary)'
 
           const subColor = isMastered
@@ -152,7 +152,7 @@ export function SoundGrid({ progressList }: Props) {
         ].map(({ label, bg, border }) => (
           <div key={label} className="flex items-center gap-1.5">
             <div className="h-3 w-3 rounded" style={{ background: bg, border: `1px solid ${border}` }} />
-            <span className="text-tiny" style={{ color: 'var(--text-secondary)' }}>{label}</span>
+            <span className="text-tiny text-fg-muted">{label}</span>
           </div>
         ))}
       </div>

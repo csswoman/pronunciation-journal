@@ -187,8 +187,8 @@ export function StudyModal({ deck, onClose }: StudyModalProps) {
       <div className="max-w-sm w-full rounded-2xl border p-8 text-center space-y-5"
         style={{ backgroundColor: "var(--card-bg)", borderColor: "var(--line-divider)" }}>
         <div className="text-5xl">🎉</div>
-        <h2 className="text-xl font-bold" style={{ color: "var(--deep-text)" }}>All caught up!</h2>
-        <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
+        <h2 className="text-h4 text-fg">All caught up!</h2>
+        <p className="text-sm text-fg-muted">
           No cards due in <strong>{deck.name}</strong>.
         </p>
         <Button variant="primary" fullWidth onClick={onClose}>Done</Button>
@@ -202,8 +202,8 @@ export function StudyModal({ deck, onClose }: StudyModalProps) {
         style={{ backgroundColor: "var(--card-bg)", borderColor: "var(--line-divider)" }}>
         <div className="text-5xl">🎉</div>
         <div>
-          <h2 className="text-2xl font-bold" style={{ color: "var(--deep-text)" }}>Session complete!</h2>
-          <p className="text-sm mt-1" style={{ color: "var(--text-secondary)" }}>
+          <h2 className="text-h2 text-fg">Session complete!</h2>
+          <p className="text-sm mt-1 text-fg-muted">
             You reviewed <strong>{stats.seen}</strong> card{stats.seen !== 1 ? "s" : ""} from <strong>{deck.name}</strong>
           </p>
         </div>
@@ -221,7 +221,7 @@ export function StudyModal({ deck, onClose }: StudyModalProps) {
           ))}
         </div>
         {stats.newlyMastered > 0 && (
-          <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
+          <p className="text-sm text-fg-muted">
             ⭐ {stats.newlyMastered} card{stats.newlyMastered !== 1 ? "s" : ""} mastered
           </p>
         )}
@@ -244,14 +244,14 @@ export function StudyModal({ deck, onClose }: StudyModalProps) {
         <Button variant="ghost" size="icon" onClick={onClose} title="Back">
           <ChevronLeft size={20} />
         </Button>
-        <span className="font-semibold text-sm shrink-0" style={{ color: "var(--deep-text)" }}>
+        <span className="font-semibold text-sm shrink-0 text-fg">
           {deck.name}
         </span>
         <div className="flex-1 h-2 rounded-full overflow-hidden" style={{ backgroundColor: "var(--btn-regular-bg)" }}>
           <div className="h-full rounded-full transition-all duration-500"
             style={{ width: `${progress}%`, backgroundColor: "var(--warning)" }} />
         </div>
-        <span className="text-xs font-mono shrink-0" style={{ color: "var(--text-tertiary)" }}>
+        <span className="text-xs font-mono shrink-0 text-fg-subtle">
           {currentIndex + 1}/{queue.length}
         </span>
         <Button variant="outline" size="sm" icon={<Lightbulb size={13} />}
@@ -291,7 +291,7 @@ export function StudyModal({ deck, onClose }: StudyModalProps) {
             />
           )}
           {!flipped && (
-            <p className="mt-3 text-xs" style={{ color: "var(--text-tertiary)" }}>
+            <p className="mt-3 text-xs text-fg-subtle">
               Hint: Press{" "}
               <kbd className="px-1.5 py-0.5 rounded border text-tiny font-mono"
                 style={{ borderColor: "var(--line-divider)", backgroundColor: "var(--btn-regular-bg)" }}>

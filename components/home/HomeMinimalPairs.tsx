@@ -30,10 +30,10 @@ export default function HomeMinimalPairs({
       </span>
 
       <div>
-        <p className="text-base font-bold text-[var(--deep-text)] leading-snug">
+        <p className="text-base font-bold text-fg leading-snug">
           Can you hear the difference?
         </p>
-        <p className="text-xs text-[var(--text-tertiary)] mt-0.5">
+        <p className="text-xs text-fg-subtle mt-0.5">
           {soundA} vs {soundB} · today's pair
         </p>
       </div>
@@ -42,13 +42,13 @@ export default function HomeMinimalPairs({
         {pairs.map(({ a, b }) => (
           <div key={a.word} className="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
             <div className="flex flex-col items-center text-center px-3 py-2.5 rounded-xl bg-[var(--btn-regular-bg)]">
-              <span className="text-sm font-bold text-[var(--deep-text)]">{a.word}</span>
-              <span className="text-tiny font-mono text-[var(--text-tertiary)]">{a.ipa}</span>
+              <span className="text-sm font-bold text-fg">{a.word}</span>
+              <span className="text-tiny font-mono text-fg-subtle">{a.ipa}</span>
             </div>
-            <span className="text-xs text-[var(--text-tertiary)]">vs</span>
+            <span className="text-xs text-fg-subtle">vs</span>
             <div className="flex flex-col items-center text-center px-3 py-2.5 rounded-xl bg-[var(--btn-regular-bg)]">
-              <span className="text-sm font-bold text-[var(--deep-text)]">{b.word}</span>
-              <span className="text-tiny font-mono text-[var(--text-tertiary)]">{b.ipa}</span>
+              <span className="text-sm font-bold text-fg">{b.word}</span>
+              <span className="text-tiny font-mono text-fg-subtle">{b.ipa}</span>
             </div>
           </div>
         ))}

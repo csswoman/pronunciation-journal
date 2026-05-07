@@ -73,7 +73,7 @@ export default function ActiveLessonPage({ backHref }: Props) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: "var(--page-bg)" }}>
         <div className="text-center">
-          <h1 className="text-2xl font-bold mb-2" style={{ color: "var(--deep-text)" }}>Lesson not found</h1>
+          <h1 className="text-h2 mb-2 text-fg">Lesson not found</h1>
           <a href={backHref} style={{ color: "var(--primary)" }}>← Back</a>
         </div>
       </div>

@@ -19,14 +19,14 @@ export function AddWordForm({ word, phrases, adding, onWordChange, onPhrasesChan
         onChange={e => onWordChange(e.target.value)}
         onKeyDown={e => e.key === "Enter" && onSubmit()}
         placeholder="Add word…"
-        className="w-full px-3 py-2 rounded-xl bg-[var(--btn-regular-bg)] border border-[var(--line-divider)] text-sm text-[var(--deep-text)] placeholder:text-[var(--text-tertiary)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/40"
+        className="w-full px-3 py-2 rounded-xl bg-[var(--btn-regular-bg)] border border-[var(--line-divider)] text-sm text-fg placeholder:text-fg-subtle focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/40"
       />
       <textarea
         value={phrases}
         onChange={e => onPhrasesChange(e.target.value)}
         placeholder="Add phrases (one per line, optional)…"
         rows={2}
-        className="w-full px-3 py-2 rounded-xl bg-[var(--btn-regular-bg)] border border-[var(--line-divider)] text-sm text-[var(--deep-text)] placeholder:text-[var(--text-tertiary)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/40 resize-none"
+        className="w-full px-3 py-2 rounded-xl bg-[var(--btn-regular-bg)] border border-[var(--line-divider)] text-sm text-fg placeholder:text-fg-subtle focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/40 resize-none"
       />
       <Button
         onClick={onSubmit}
