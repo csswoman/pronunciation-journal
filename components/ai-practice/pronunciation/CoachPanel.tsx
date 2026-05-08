@@ -43,7 +43,7 @@ export default function CoachPanel({
 
   return (
     <div
-      className="py-3 space-y-3 pl-[14px] mx-5"
+      className="py-3 space-y-3 pl-4 mx-5"
       style={{ borderLeft: "3px solid var(--primary)" }}
     >
       <p className="text-tiny font-semibold uppercase tracking-widest text-fg-subtle">

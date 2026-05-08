@@ -76,14 +76,14 @@ export default function PhraseCard({
       <div className="flex justify-center gap-2 mt-5">
         <button
           onClick={onListen}
-          className="flex items-center gap-1.5 bg-primary text-on-primary font-medium text-sm rounded-[10px] px-5 py-2 hover:brightness-110 transition-[filter] cursor-pointer border-none"
+          className="flex items-center gap-1.5 bg-primary text-on-primary font-medium text-sm rounded-xl px-5 py-2 hover:brightness-110 transition-[filter] cursor-pointer border-none"
         >
           <Play size={14} />
           Listen
         </button>
         <button
           onClick={onSlow}
-          className="flex items-center gap-1.5 bg-surface-raised text-fg-muted font-medium text-sm rounded-[10px] px-5 py-2 hover:text-primary transition-colors cursor-pointer border-none"
+          className="flex items-center gap-1.5 bg-surface-raised text-fg-muted font-medium text-sm rounded-xl px-5 py-2 hover:text-primary transition-colors cursor-pointer border-none"
         >
           <Turtle size={14} />
           Slow

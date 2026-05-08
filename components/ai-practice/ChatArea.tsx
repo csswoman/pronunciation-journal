@@ -13,14 +13,14 @@ import QuotaExhaustedCard from "./QuotaExhaustedCard";
 
 const TAB_TO_MODE: Record<TabId, AIConversationMode> = {
   chat: "chat",
-  roleplay: "roleplay:cafe",
+  interview: "roleplay:interview",
   pronunciation: "pronunciation",
 };
 
 function modeToTab(mode: AIConversationMode): TabId {
   if (mode === "chat") return "chat";
   if (mode === "pronunciation") return "pronunciation";
-  if (mode.startsWith("roleplay:")) return "roleplay";
+  if (mode.startsWith("roleplay:")) return "interview";
   return "chat";
 }
 
@@ -125,7 +125,7 @@ export default function ChatArea({
       </div>
 
       {/* Content */}
-      {activeTab === "roleplay" ? (
+      {activeTab === "interview" ? (
         <RoleplayView
           messages={messages}
           isStreaming={isStreaming}

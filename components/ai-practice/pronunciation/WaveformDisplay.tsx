@@ -4,7 +4,7 @@ const BAR_COUNT = 20;
 
 export default function WaveformDisplay({ isRecording }: { isRecording: boolean }) {
   return (
-    <div className="w-full h-12 flex items-center justify-center gap-[3px] px-4 overflow-hidden">
+    <div className="w-full h-12 flex items-center justify-center gap-px px-4 overflow-hidden">
       <style>{`
         @keyframes waveBarAnim {
           0%, 100% { transform: scaleY(0.3); }
@@ -14,7 +14,7 @@ export default function WaveformDisplay({ isRecording }: { isRecording: boolean 
       {Array.from({ length: BAR_COUNT }).map((_, i) => (
         <span
           key={i}
-          className="inline-block w-[3px] rounded-[2px] transition-colors duration-200"
+          className="inline-block w-px rounded-sm transition-colors duration-200"
           style={{
             height: isRecording ? 36 : 6,
             backgroundColor: isRecording ? "var(--primary)" : "var(--border)",
