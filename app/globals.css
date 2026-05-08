@@ -383,6 +383,10 @@
 
   /* ── Focus / ring helper (oklch alpha, no rgba needed) ───────────────── */
   --focus-color: color-mix(in oklch, var(--primary) 35%, transparent);
+
+  /* ── Accent tint helpers ─────────────────────────────────────────────── */
+  --accent-dim:    color-mix(in oklch, var(--primary) 10%, transparent);
+  --accent-border: color-mix(in oklch, var(--primary) 22%, transparent);
 }
 
 /* ── Dark Mode ──────────────────────────────────────────────────────────── */
@@ -518,6 +522,10 @@
   --accent-text: oklch(0.12 0 0);
 
   --focus-color: color-mix(in oklch, var(--primary) 35%, transparent);
+
+  /* ── Accent tint helpers ─────────────────────────────────────────────── */
+  --accent-dim:    color-mix(in oklch, var(--primary) 14%, transparent);
+  --accent-border: color-mix(in oklch, var(--primary) 30%, transparent);
 }
 
 /* ── Color Selection Gradient ───────────────────────────────────────── */

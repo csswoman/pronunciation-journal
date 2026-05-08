@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Button from "@/components/ui/Button";
 import ScenarioPicker, { type Scenario, type Level, type ExerciseDifficulty } from "@/components/interview/ScenarioPicker";
 import InterviewSession, { type InterviewTurn } from "@/components/interview/InterviewSession";
@@ -41,6 +41,19 @@ export default function InterviewPage() {
       setLoading(false);
     }
   };
+
+  // Auto-start when navigating from the AI Coach panel
+  useEffect(() => {
+    const stored = sessionStorage.getItem("interviewConfig");
+    if (!stored) return;
+    sessionStorage.removeItem("interviewConfig");
+    try {
+      const { scenario, level, difficulty } = JSON.parse(stored);
+      handleStart(scenario, level, difficulty);
+    } catch {
+      // ignore malformed data
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleReset = () => setScript(null);
 

@@ -137,21 +137,48 @@ export default function CustomPromptPanel({
           className="flex-1 resize-none bg-transparent text-sm leading-relaxed focus:outline-none max-h-40 px-1 py-1.5 text-fg"
         />
 
-        {/* Mic / Send button */}
-        <Button
+        {/* Mic button */}
+        <button
+          type="button"
+          aria-label="Voice input"
+          className="w-9 h-9 rounded-xl flex-shrink-0 flex items-center justify-center transition-colors border"
+          style={{
+            backgroundColor: "var(--surface2, var(--btn-regular-bg))",
+            borderColor: "var(--line-divider)",
+            color: "var(--text-tertiary)",
+          }}
+        >
+          <Mic size={15} strokeWidth={2} />
+        </button>
+
+        {/* Send button */}
+        <button
           type="button"
           onClick={handleSubmit}
-          disabled={isDisabled && !hasText}
-          aria-label={hasText ? "Send" : "Hold to speak"}
-          className="w-9 h-9 rounded-xl flex-shrink-0 flex items-center justify-center transition-colors disabled:opacity-60"
-          style={{ backgroundColor: "var(--primary)", color: "var(--primary-foreground)" }}
+          disabled={(!hasText && !isDisabled) || (isDisabled && !hasText)}
+          aria-label="Send"
+          className="flex-shrink-0 flex items-center justify-center transition-all disabled:opacity-40"
+          style={{
+            minWidth: 36,
+            minHeight: 36,
+            borderRadius: 12,
+            backgroundColor: "#c4a8ff",
+            color: "#1a0a2e",
+            border: "none",
+          }}
+          onMouseEnter={e => {
+            (e.currentTarget as HTMLElement).style.backgroundColor = "#d4beff";
+            (e.currentTarget as HTMLElement).style.transform = "scale(1.05)";
+          }}
+          onMouseLeave={e => {
+            (e.currentTarget as HTMLElement).style.backgroundColor = "#c4a8ff";
+            (e.currentTarget as HTMLElement).style.transform = "scale(1)";
+          }}
         >
           {isDisabled
             ? <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
-            : hasText
-              ? <SendHorizonal size={15} strokeWidth={2} />
-              : <Mic size={16} strokeWidth={2} />}
-        </Button>
+            : <SendHorizonal size={15} strokeWidth={2} />}
+        </button>
       </div>
 
       {/* Hint bar */}
@@ -173,13 +200,8 @@ export default function CustomPromptPanel({
           {" "}for new line
         </p>
         <div className="flex items-center gap-1.5">
-          <span
-            className="w-1.5 h-1.5 rounded-full"
-            style={{ backgroundColor: "var(--primary)" }}
-          />
-          <span className="text-tiny text-fg-subtle">
-            AI feedback on
-          </span>
+          <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: "#22c55e" }} />
+          <span className="text-tiny text-fg-subtle">AI feedback on</span>
         </div>
       </div>
     </div>

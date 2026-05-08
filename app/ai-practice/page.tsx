@@ -13,7 +13,6 @@ import AIVocabPanel from "@/components/ai-practice/AIVocabPanel";
 import { getRecentConversations } from "@/lib/ai-db";
 import { groupConversationsByDate } from "@/lib/group-by-date";
 import type { AIConversation } from "@/lib/types";
-
 export default function AIPracticePage() {
   const {
     messages,

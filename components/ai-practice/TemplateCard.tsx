@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import type { AITemplateId } from "@/lib/types";
 import { MessageCircle, ClipboardList, Star, CheckCheck } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
@@ -9,21 +10,8 @@ export interface TemplateDefinition {
   title: string;
   description: string;
   Icon: LucideIcon;
-  hue: number;
-}
-
-const templateHues: Record<AITemplateId, number> = {
-  "free-conversation": 270,
-  "sentence-correction": 150,
-  "practice-questions": 30,
-  "personalized-practice": 260,
-};
-
-export function getTemplateColors(hue: number) {
-  return {
-    iconColor: `oklch(0.65 0.18 ${hue})`,
-    iconBg: `oklch(0.96 0.04 ${hue})`,
-  };
+  color: string;
+  colorBg: string;
 }
 
 export const TEMPLATES: TemplateDefinition[] = [
@@ -32,28 +20,32 @@ export const TEMPLATES: TemplateDefinition[] = [
     title: "Free conversation",
     description: "Talk freely about any topic and improve naturally.",
     Icon: MessageCircle,
-    hue: templateHues["free-conversation"],
+    color: "#c4a8ff",
+    colorBg: "rgba(196, 168, 255, 0.1)",
   },
   {
     id: "sentence-correction",
     title: "Correct my sentences",
     description: "Write and get corrections with explanations.",
     Icon: CheckCheck,
-    hue: templateHues["sentence-correction"],
+    color: "#6ee7b7",
+    colorBg: "rgba(110, 231, 183, 0.1)",
   },
   {
     id: "practice-questions",
     title: "Practice questions",
     description: "Answer questions and expand your thinking.",
     Icon: ClipboardList,
-    hue: templateHues["practice-questions"],
+    color: "#fda4af",
+    colorBg: "rgba(253, 164, 175, 0.1)",
   },
   {
     id: "personalized-practice",
     title: "Personalized",
     description: "Practice based on your goals and level.",
     Icon: Star,
-    hue: templateHues["personalized-practice"],
+    color: "#fcd34d",
+    colorBg: "rgba(252, 211, 77, 0.1)",
   },
 ];
 
@@ -63,37 +55,28 @@ interface TemplateCardProps {
   recommended?: boolean;
 }
 
-export default function TemplateCard({ template, onSelect, recommended }: TemplateCardProps) {
-  const { Icon, hue } = template;
-  const { iconColor, iconBg } = getTemplateColors(hue);
+export default function TemplateCard({ template, onSelect }: TemplateCardProps) {
+  const { Icon, color, colorBg } = template;
+  const [hovered, setHovered] = useState(false);
 
   return (
     <button
       onClick={() => onSelect(template.id)}
-      className="group relative flex flex-col items-center gap-2.5 p-4 rounded-2xl border transition-all hover:shadow-md hover:-translate-y-0.5 text-center cursor-pointer"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      className="flex flex-col items-center gap-2.5 p-4 rounded-2xl transition-all hover:shadow-md text-center cursor-pointer"
       style={{
         backgroundColor: "var(--card-bg)",
-        borderColor: "var(--line-divider)",
-      }}
-      onMouseEnter={e => {
-        (e.currentTarget as HTMLElement).style.borderColor = "var(--primary)";
-      }}
-      onMouseLeave={e => {
-        (e.currentTarget as HTMLElement).style.borderColor = "var(--line-divider)";
+        borderLeft: "1px solid var(--line-divider)",
+        borderRight: "1px solid var(--line-divider)",
+        borderBottom: "1px solid var(--line-divider)",
+        borderTop: hovered ? `2px solid ${color}` : "2px solid transparent",
+        transform: hovered ? "translateY(-1px)" : "none",
       }}
     >
-      {recommended && (
-        <span
-          className="absolute -top-2.5 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded-full text-tiny font-bold tracking-wide uppercase whitespace-nowrap"
-          style={{ backgroundColor: "var(--primary)", color: "var(--primary-foreground)" }}
-        >
-          Recommended
-        </span>
-      )}
-
       <div
-        className="w-11 h-11 rounded-full flex items-center justify-center transition-transform group-hover:scale-110"
-        style={{ backgroundColor: iconBg, color: iconColor }}
+        className="w-11 h-11 rounded-full flex items-center justify-center"
+        style={{ backgroundColor: colorBg, color }}
       >
         <Icon size={20} strokeWidth={1.8} />
       </div>

@@ -1,15 +1,15 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
-import { Mic, Play, Turtle, CheckCircle, Sparkles, Trophy } from "lucide-react";
-import Button from "@/components/ui/Button";
+import { Sparkles } from "lucide-react";
 import { useRecorder } from "@/hooks/useRecorder";
 import { analyzePhonemes, ARPABET_TO_IPA } from "@/lib/phonemes";
 import { saveAIWord } from "@/lib/ai-db";
 import { pickUSPhonetic, stripIPASlashes } from "@/lib/ai-practice/modes/pronunciation";
+import ProgressBar from "./pronunciation/ProgressBar";
 import PhraseCard from "./pronunciation/PhraseCard";
+import RecordingControls from "./pronunciation/RecordingControls";
 import CoachPanel from "./pronunciation/CoachPanel";
-import WaveformIdle from "./pronunciation/WaveformIdle";
 import type { WordIPA, SoundProgress } from "./pronunciation/types";
 
 // ---------------------------------------------------------------------------
@@ -43,9 +43,9 @@ const DEFAULT_PHRASES = [
 // LocalStorage helpers
 // ---------------------------------------------------------------------------
 
-const LS_QUEUE = "pronunciation_queue";
+const LS_QUEUE    = "pronunciation_queue";
 const LS_MASTERED = "pronunciation_mastered";
-const LS_SEEN = "pronunciation_seen";
+const LS_SEEN     = "pronunciation_seen";
 
 function shuffle<T>(arr: T[]): T[] {
   const a = [...arr];
@@ -59,21 +59,15 @@ function shuffle<T>(arr: T[]): T[] {
 function loadQueue(): string[] {
   try { return JSON.parse(localStorage.getItem(LS_QUEUE) ?? "[]"); } catch { return []; }
 }
-function saveQueue(q: string[]) {
-  localStorage.setItem(LS_QUEUE, JSON.stringify(q));
-}
+function saveQueue(q: string[]) { localStorage.setItem(LS_QUEUE, JSON.stringify(q)); }
 function loadMastered(): Set<string> {
   try { return new Set(JSON.parse(localStorage.getItem(LS_MASTERED) ?? "[]")); } catch { return new Set(); }
 }
-function saveMastered(s: Set<string>) {
-  localStorage.setItem(LS_MASTERED, JSON.stringify([...s]));
-}
+function saveMastered(s: Set<string>) { localStorage.setItem(LS_MASTERED, JSON.stringify([...s])); }
 function loadSeen(): Set<string> {
   try { return new Set(JSON.parse(localStorage.getItem(LS_SEEN) ?? "[]")); } catch { return new Set(); }
 }
-function saveSeen(s: Set<string>) {
-  localStorage.setItem(LS_SEEN, JSON.stringify([...s]));
-}
+function saveSeen(s: Set<string>) { localStorage.setItem(LS_SEEN, JSON.stringify([...s])); }
 
 function initQueue(): string[] {
   const stored = loadQueue();
@@ -142,38 +136,29 @@ function firstBadPhoneme(wordIPAs: WordIPA[]) {
 // Component
 // ---------------------------------------------------------------------------
 
-interface PronunciationViewProps {
-  onSubmit?: (audioUrl: string, phrase: string) => void;
-}
-
-export default function PronunciationView({ onSubmit }: PronunciationViewProps) {
-  const [queue, setQueue] = useState<string[]>([]);
+export default function PronunciationView() {
+  const [queue, setQueue]       = useState<string[]>([]);
   const [mastered, setMastered] = useState<Set<string>>(new Set());
-  const [seen, setSeen] = useState<Set<string>>(new Set());
-  const [customPhrase, setCustomPhrase] = useState("");
-  const [inputValue, setInputValue] = useState("");
+  const [seen, setSeen]         = useState<Set<string>>(new Set());
   const [fetchingPhrases, setFetchingPhrases] = useState(false);
 
   const { startRecording, stopRecording, audioUrl, isRecording, resetRecording } = useRecorder();
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  // Hydrate from localStorage on mount
   useEffect(() => {
     setQueue(initQueue());
     setMastered(loadMastered());
     setSeen(loadSeen());
   }, []);
 
-  const activePhrase = customPhrase || queue[0] || "";
+  const activePhrase = queue[0] || "";
 
-  const [wordIPAs, setWordIPAs] = useState<WordIPA[]>([]);
-  const [ipaLoading, setIpaLoading] = useState(false);
-  const [analyzing, setAnalyzing] = useState(false);
+  const [wordIPAs, setWordIPAs]           = useState<WordIPA[]>([]);
+  const [ipaLoading, setIpaLoading]       = useState(false);
+  const [analyzing, setAnalyzing]         = useState(false);
   const [soundProgress, setSoundProgress] = useState<SoundProgress>({});
-  const [savedWords, setSavedWords] = useState<Set<string>>(new Set());
-  const [justMastered, setJustMastered] = useState(false);
+  const [savedWords, setSavedWords]       = useState<Set<string>>(new Set());
 
-  // Fetch new phrases from Gemini when queue is empty
   const fetchNewPhrases = useCallback(async (currentSeen: Set<string>) => {
     setFetchingPhrases(true);
     try {
@@ -189,7 +174,7 @@ export default function PronunciationView({ onSubmit }: PronunciationViewProps) 
       setQueue(newQueue);
       saveQueue(newQueue);
     } catch {
-      // non-critical — user can still type custom phrases
+      // non-critical
     } finally {
       setFetchingPhrases(false);
     }
@@ -210,7 +195,6 @@ export default function PronunciationView({ onSubmit }: PronunciationViewProps) 
 
   const analyzeRecording = useCallback(async (url: string) => {
     setAnalyzing(true);
-    setJustMastered(false);
     try {
       const res = await fetch("/api/gemini/transcribe", {
         method: "POST",
@@ -221,7 +205,7 @@ export default function PronunciationView({ onSubmit }: PronunciationViewProps) 
       const { transcript } = await res.json() as { transcript?: string };
       if (!transcript) return;
 
-      const phraseWords = activePhrase.split(/\s+/).filter(Boolean);
+      const phraseWords     = activePhrase.split(/\s+/).filter(Boolean);
       const transcriptWords = transcript.trim().split(/\s+/).filter(Boolean);
       const results = await Promise.all(
         phraseWords.map((w, i) => analyzePhonemes(w, transcriptWords[i] ?? ""))
@@ -244,10 +228,8 @@ export default function PronunciationView({ onSubmit }: PronunciationViewProps) 
         return next;
       });
 
-      // Mastery: all phonemes correct
       const allCorrect = results.every(r => r.alignment.every(a => a.status === "correct"));
-      if (allCorrect && !customPhrase && activePhrase) {
-        setJustMastered(true);
+      if (allCorrect && activePhrase) {
         setMastered(prev => {
           const next = new Set(prev).add(activePhrase);
           saveMastered(next);
@@ -259,24 +241,17 @@ export default function PronunciationView({ onSubmit }: PronunciationViewProps) 
     } finally {
       setAnalyzing(false);
     }
-  }, [activePhrase, customPhrase]);
+  }, [activePhrase]);
 
   useEffect(() => {
     if (audioUrl) analyzeRecording(audioUrl);
   }, [audioUrl, analyzeRecording]);
 
   const advanceQueue = useCallback(() => {
-    if (customPhrase) {
-      setCustomPhrase("");
-      return;
-    }
     setQueue(prev => {
       const next = prev.slice(1);
       saveQueue(next);
-      if (next.length === 0) {
-        // All local phrases done — fetch new ones from AI
-        fetchNewPhrases(seen);
-      }
+      if (next.length === 0) fetchNewPhrases(seen);
       return next;
     });
     setSeen(prev => {
@@ -284,26 +259,9 @@ export default function PronunciationView({ onSubmit }: PronunciationViewProps) 
       saveSeen(next);
       return next;
     });
-  }, [customPhrase, activePhrase, seen, fetchNewPhrases]);
-
-  const handleSend = () => {
-    if (!audioUrl) return;
-    onSubmit?.(audioUrl, activePhrase);
-    resetRecording();
-    setWordIPAs(prev => prev.map(e => ({ ...e, alignment: null })));
-    setJustMastered(false);
-    advanceQueue();
-  };
-
-  const handleCustomSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!inputValue.trim()) return;
-    setCustomPhrase(inputValue.trim());
-    setInputValue("");
     resetRecording();
     setWordIPAs([]);
-    setJustMastered(false);
-  };
+  }, [activePhrase, seen, fetchNewPhrases, resetRecording]);
 
   const handleMicClick = () => {
     if (isRecording) {
@@ -311,7 +269,6 @@ export default function PronunciationView({ onSubmit }: PronunciationViewProps) 
     } else {
       resetRecording();
       setWordIPAs(prev => prev.map(e => ({ ...e, alignment: null })));
-      setJustMastered(false);
       startRecording();
     }
   };
@@ -337,72 +294,38 @@ export default function PronunciationView({ onSubmit }: PronunciationViewProps) 
     setSavedWords(prev => new Set(prev).add(word.toLowerCase()));
   };
 
-  const hasAnalysis = wordIPAs.some(w => w.alignment !== null);
-  const hasMistakes = wordIPAs.some(w => w.alignment?.some(a => a.status !== "correct"));
-  const focus = hasAnalysis && hasMistakes ? firstBadPhoneme(wordIPAs) : null;
-  const focusTip = focus ? PHONEME_TIPS[focus.phoneme] ?? null : null;
+  const hasAnalysis   = wordIPAs.some(w => w.alignment !== null);
+  const hasMistakes   = wordIPAs.some(w => w.alignment?.some(a => a.status !== "correct"));
+  const focus         = hasAnalysis && hasMistakes ? firstBadPhoneme(wordIPAs) : null;
+  const focusTip      = focus ? PHONEME_TIPS[focus.phoneme] ?? null : null;
   const focusProgress = focus ? soundProgress[focus.phoneme] ?? null : null;
-  const focusPct = focusProgress && focusProgress.total > 0
+  const focusPct      = focusProgress && focusProgress.total > 0
     ? Math.round((focusProgress.correct / focusProgress.total) * 100)
     : null;
 
-  const totalSeen = seen.size;
-  const totalMastered = mastered.size;
-  const remaining = queue.length;
+  const totalMastered     = mastered.size;
+  const totalPhrasesKnown = Math.max(seen.size + queue.length, DEFAULT_PHRASES.length);
+  const currentIndex      = seen.size + 1;
+  const progressPct       = (totalMastered / totalPhrasesKnown) * 100;
 
   return (
-    <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-      <div className="flex-1 overflow-y-auto flex flex-col items-center gap-5 px-6 py-6">
+    <div className="flex flex-col h-full overflow-hidden py-5">
 
-        {/* Counter bar */}
-        <div className="w-full max-w-lg flex items-center justify-between">
-          <div className="flex items-center gap-1.5">
-            <Sparkles size={13} style={{ color: "var(--primary)" }} />
-            <p className="text-tiny font-bold uppercase tracking-widest" style={{ color: "var(--primary)" }}>
-              Active Pronunciation
-            </p>
-          </div>
-          <div className="flex items-center gap-2">
-            <span
-              className="flex items-center gap-1 px-2.5 py-1 rounded-full text-tiny font-medium"
-              style={{ backgroundColor: "var(--btn-regular-bg)", color: "var(--text-secondary)" }}
-            >
-              <Trophy size={10} /> {totalMastered} mastered
-            </span>
-            <span
-              className="flex items-center gap-1 px-2.5 py-1 rounded-full text-tiny font-medium"
-              style={{ backgroundColor: "var(--btn-regular-bg)", color: "var(--text-secondary)" }}
-            >
-              👁 {totalSeen} seen
-            </span>
-            {remaining > 0 && (
-              <span
-                className="px-2.5 py-1 rounded-full text-tiny font-medium"
-                style={{ backgroundColor: "var(--btn-regular-bg)", color: "var(--text-secondary)" }}
-              >
-                {remaining} left
-              </span>
-            )}
-          </div>
+      <ProgressBar
+        current={currentIndex}
+        total={totalPhrasesKnown}
+        mastered={totalMastered}
+        pct={progressPct}
+      />
+
+      {fetchingPhrases && (
+        <div className="flex items-center justify-center gap-1.5 text-caption text-fg-subtle py-1 shrink-0">
+          <Sparkles size={12} className="animate-pulse" />
+          Generating new phrases…
         </div>
+      )}
 
-        {fetchingPhrases && (
-          <div className="flex items-center gap-2 text-xs text-fg-subtle">
-            <Sparkles size={12} className="animate-pulse" />
-            Generating new phrases...
-          </div>
-        )}
-
-        {justMastered && !analyzing && (
-          <div
-            className="w-full max-w-lg flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium"
-            style={{ backgroundColor: "color-mix(in oklch, var(--primary) 10%, transparent)", color: "var(--primary)" }}
-          >
-            <Trophy size={14} />
-            Phrase mastered! Tap the mic to continue.
-          </div>
-        )}
-
+      <div className="flex flex-col flex-1 pt-3 min-h-0">
         <PhraseCard
           phrase={activePhrase}
           wordIPAs={wordIPAs}
@@ -410,59 +333,13 @@ export default function PronunciationView({ onSubmit }: PronunciationViewProps) 
           analyzing={analyzing}
           hasAnalysis={hasAnalysis}
           hasMistakes={hasMistakes}
+          onListen={() => handleListenModel()}
+          onSlow={() => handleListenModel(0.55)}
         />
+      </div>
 
-        {/* Mic button with pulse rings */}
-        <div className="relative flex items-center justify-center my-1">
-          {isRecording && (
-            <>
-              <span
-                className="absolute rounded-full animate-ping"
-                style={{
-                  width: 80, height: 80,
-                  backgroundColor: "var(--primary)",
-                  opacity: 0.15,
-                }}
-              />
-              <span
-                className="absolute rounded-full"
-                style={{
-                  width: 68, height: 68,
-                  backgroundColor: "var(--primary)",
-                  opacity: 0.12,
-                }}
-              />
-            </>
-          )}
-          <button
-            onClick={handleMicClick}
-            className="relative w-14 h-14 rounded-full flex items-center justify-center transition-all focus:outline-none"
-            style={{
-              backgroundColor: isRecording ? "var(--score-poor)" : "var(--primary)",
-              boxShadow: isRecording
-                ? "0 0 0 8px color-mix(in oklch, var(--score-poor) 12%, transparent)"
-                : "0 4px 16px color-mix(in oklch, var(--primary) 40%, transparent)",
-            }}
-            aria-label={isRecording ? "Stop recording" : "Start recording"}
-          >
-            <Mic size={20} color="var(--on-primary)" />
-          </button>
-        </div>
-
-        {/* Waveform / audio player */}
-        <div
-          className="w-full max-w-lg h-16 rounded-2xl border flex items-center overflow-hidden"
-          style={{ borderColor: "var(--line-divider)", backgroundColor: "var(--btn-regular-bg)" }}
-        >
-          {audioUrl ? (
-            <audio ref={audioRef} src={audioUrl} controls className="w-full h-full opacity-80" />
-          ) : (
-            <WaveformIdle isRecording={isRecording} />
-          )}
-        </div>
-
-        {/* Coach panel */}
-        {focus && !analyzing && (
+      {focus && !analyzing && (
+        <div className="px-5 pt-2 shrink-0">
           <CoachPanel
             focus={focus}
             focusTip={focusTip}
@@ -471,56 +348,16 @@ export default function PronunciationView({ onSubmit }: PronunciationViewProps) 
             savedWords={savedWords}
             onSave={handleSavePractice}
           />
-        )}
-
-        {/* Action buttons */}
-        <div className="flex items-center gap-3 flex-wrap justify-center">
-          <Button variant="outline" icon={<Play size={13} />} onClick={() => handleListenModel()} className="rounded-full px-5 py-2.5">
-            Listen
-          </Button>
-          <Button variant="outline" icon={<Turtle size={13} />} onClick={() => handleListenModel(0.55)} className="rounded-full px-5 py-2.5">
-            Slow
-          </Button>
-          {audioUrl && (
-            <Button variant="primary" icon={<CheckCircle size={13} />} onClick={handleSend} className="rounded-full px-5 py-2.5">
-              Send recording
-            </Button>
-          )}
         </div>
-      </div>
+      )}
 
-      {/* Bottom input */}
-      <div className="flex-shrink-0 px-4 pb-4 pt-2 border-t" style={{ borderColor: "var(--line-divider)" }}>
-        <form
-          onSubmit={handleCustomSubmit}
-          className="flex items-center gap-3 px-4 py-3 rounded-2xl border-2 transition-all"
-          style={{ backgroundColor: "var(--card-bg)", borderColor: "var(--line-divider)" }}
-          onFocus={e => (e.currentTarget.style.borderColor = "var(--primary)")}
-          onBlur={e => {
-            if (!e.currentTarget.contains(e.relatedTarget))
-              e.currentTarget.style.borderColor = "var(--line-divider)";
-          }}
-        >
-          <input
-            value={inputValue}
-            onChange={e => setInputValue(e.target.value)}
-            placeholder="or type the phrase to practice..."
-            className="flex-1 bg-transparent text-sm focus:outline-none text-fg"
-          />
-          <Button
-            type="submit"
-            variant="primary"
-            size="icon"
-            disabled={!inputValue.trim()}
-            aria-label="Practice phrase"
-            className="flex-shrink-0 !rounded-xl w-9 h-9"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14M12 5l7 7-7 7" />
-            </svg>
-          </Button>
-        </form>
-      </div>
+      <RecordingControls
+        isRecording={isRecording}
+        onMicClick={handleMicClick}
+        onSkip={advanceQueue}
+      />
+
+      <audio ref={audioRef} className="hidden" />
     </div>
   );
 }

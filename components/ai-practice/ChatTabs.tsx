@@ -1,10 +1,11 @@
 "use client";
 
-import { MessageCircle, Theater, Mic } from "lucide-react";
+import { MessageCircle, BriefcaseBusiness, Mic } from "lucide-react";
+import s from "./ChatTabs.module.css";
 
 export const TABS = [
   { id: "chat", label: "Chat", icon: MessageCircle },
-  { id: "roleplay", label: "Roleplay", icon: Theater },
+  { id: "interview", label: "Interview", icon: BriefcaseBusiness },
   { id: "pronunciation", label: "Pronunciation", icon: Mic },
 ] as const;
 
@@ -17,30 +18,17 @@ interface ChatTabsProps {
 
 export default function ChatTabs({ active, onChange }: ChatTabsProps) {
   return (
-    <div
-      className="inline-flex items-center gap-0.5 p-0.5 rounded-xl"
-      style={{ backgroundColor: "var(--btn-regular-bg)" }}
-    >
+    <div className={s.tabs}>
       {TABS.map(({ id, label, icon: Icon }) => {
         const isActive = active === id;
         return (
           <button
             key={id}
             onClick={() => onChange(id)}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-lg transition-colors"
-            style={{
-              color: isActive ? "var(--text-primary)" : "var(--text-tertiary)",
-              backgroundColor: isActive ? "var(--card-bg)" : "transparent",
-            }}
-            onMouseEnter={e => {
-              if (!isActive) e.currentTarget.style.color = "var(--text-secondary)";
-            }}
-            onMouseLeave={e => {
-              if (!isActive) e.currentTarget.style.color = "var(--text-tertiary)";
-            }}
+            className={`${s.tab} ${isActive ? s.tabActive : ""}`}
           >
-            <Icon size={13} strokeWidth={isActive ? 2.2 : 1.8} />
-            {label}
+            <Icon size={16} strokeWidth={isActive ? 2 : 1.6} />
+            <span>{label}</span>
           </button>
         );
       })}

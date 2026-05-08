@@ -1,15 +1,17 @@
 "use client";
 
-import { Loader2 } from "lucide-react";
+import { Loader2, Play, Turtle } from "lucide-react";
 import type { WordIPA } from "./types";
 
-interface PhraseCardProps {
+interface Props {
   phrase: string;
   wordIPAs: WordIPA[];
   ipaLoading: boolean;
   analyzing: boolean;
   hasAnalysis: boolean;
   hasMistakes: boolean;
+  onListen: () => void;
+  onSlow: () => void;
 }
 
 export default function PhraseCard({
@@ -19,59 +21,37 @@ export default function PhraseCard({
   analyzing,
   hasAnalysis,
   hasMistakes,
-}: PhraseCardProps) {
+  onListen,
+  onSlow,
+}: Props) {
   return (
-    <div
-      className="w-full max-w-lg px-10 py-8 rounded-3xl text-center"
-      style={{
-        backgroundColor: "var(--card-bg)",
-        boxShadow: "0 2px 16px rgba(0,0,0,0.06)",
-        border: "1px solid var(--line-divider)",
-      }}
-    >
-      {/* Decorative opening quote */}
-      <div
-        className="text-5xl font-serif leading-none mb-2 text-left"
-        style={{ color: "var(--primary)", opacity: 0.7, fontFamily: "Georgia, serif" }}
-      >
-        &ldquo;
-      </div>
+    <div className="flex-1 mx-5 flex flex-col justify-center min-h-0 py-6">
 
-      <p
-        className="text-2xl leading-snug font-semibold"
-        style={{
-          fontFamily: "var(--font-serif, 'DM Serif Display', serif)",
-          color: "var(--text-primary)",
-        }}
-      >
+      {/* Phrase */}
+      <p className="text-center font-bold leading-snug text-fg" style={{ fontSize: "clamp(22px, 5vw, 28px)" }}>
         {phrase}
-        <span
-          className="ml-1 text-5xl font-serif leading-none align-bottom"
-          style={{ color: "var(--primary)", opacity: 0.7, fontFamily: "Georgia, serif" }}
-        >
-          &rdquo;
-        </span>
       </p>
 
+      {/* Phonetics */}
       {ipaLoading ? (
-        <div className="mt-4 flex justify-center">
+        <div className="flex justify-center mt-4">
           <Loader2 size={13} className="animate-spin text-fg-subtle" />
         </div>
-      ) : wordIPAs.length > 0 && (
-        <div className="mt-4 flex flex-wrap justify-center gap-x-2 gap-y-1">
+      ) : wordIPAs.length > 0 ? (
+        <div className="flex flex-wrap justify-center gap-x-2 gap-y-1 mt-4">
           {wordIPAs.map((entry, i) => {
             const hasError = entry.alignment?.some(a => a.status !== "correct");
             const allCorrect = hasAnalysis && entry.alignment?.every(a => a.status === "correct");
             return (
               <span
                 key={i}
-                className="text-sm font-mono transition-colors"
+                className="text-sm font-mono tracking-wide transition-colors"
                 style={{
                   color: hasAnalysis
                     ? hasError ? "var(--score-poor)"
                     : allCorrect ? "var(--score-excellent)"
-                    : "var(--text-tertiary)"
-                    : "var(--text-tertiary)",
+                    : "var(--text-secondary)"
+                    : "var(--text-secondary)",
                 }}
               >
                 {entry.ipa ? `/${entry.ipa}/` : entry.word}
@@ -79,20 +59,36 @@ export default function PhraseCard({
             );
           })}
         </div>
-      )}
+      ) : null}
 
       {analyzing && (
-        <div className="mt-3 flex items-center justify-center gap-1.5 text-fg-subtle">
+        <div className="flex items-center justify-center gap-1.5 text-fg-subtle mt-3">
           <Loader2 size={12} className="animate-spin" />
-          <span className="text-xs">Analyzing…</span>
+          <span className="text-caption">Analyzing…</span>
         </div>
       )}
 
-      {hasAnalysis && !hasMistakes && (
-        <p className="mt-3 text-sm font-semibold" style={{ color: "var(--score-excellent)" }}>
-          Perfect! 🎉
-        </p>
+      {hasAnalysis && !hasMistakes && !analyzing && (
+        <p className="text-center text-sm font-semibold text-score-excellent mt-3">Perfect! 🎉</p>
       )}
+
+      {/* Listen / Slow */}
+      <div className="flex justify-center gap-2 mt-5">
+        <button
+          onClick={onListen}
+          className="flex items-center gap-1.5 bg-primary text-on-primary font-medium text-sm rounded-[10px] px-5 py-2 hover:brightness-110 transition-[filter] cursor-pointer border-none"
+        >
+          <Play size={14} />
+          Listen
+        </button>
+        <button
+          onClick={onSlow}
+          className="flex items-center gap-1.5 bg-surface-raised text-fg-muted font-medium text-sm rounded-[10px] px-5 py-2 hover:text-primary transition-colors cursor-pointer border-none"
+        >
+          <Turtle size={14} />
+          Slow
+        </button>
+      </div>
     </div>
   );
 }

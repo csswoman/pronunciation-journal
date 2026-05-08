@@ -7,6 +7,9 @@ import BottomNav from "./BottomNav";
 import { QuickAddModal } from "@/app/words/components/QuickAddModal";
 import { quickAddWord } from "@/lib/word-bank/queries";
 import { useAuth } from "@/components/auth/AuthProvider";
+import { useAICoachStore } from "@/lib/stores/aiCoachStore";
+import AICoachPanel from "@/components/ai-coach/AICoachPanel";
+import AICoachTrigger from "@/components/ai-coach/AICoachTrigger";
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -15,6 +18,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
   const openModal = useCallback(() => setOpen(true), []);
   const closeModal = useCallback(() => setOpen(false), []);
+  const { isOpen: isPanelOpen, isFullscreen, panelWidth } = useAICoachStore();
 
   useEffect(() => {
     if (!user) return;
@@ -37,10 +41,20 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 
   if (isAuthPage) return <>{children}</>;
 
+  // When panel is open and not fullscreen, compress main content on desktop
+  const mainMarginRight =
+    isPanelOpen && !isFullscreen ? `${panelWidth}px` : "0px";
+
   return (
     <div className="flex h-screen bg-[var(--page-bg)] overflow-hidden">
       <Sidebar className="hidden lg:flex w-64 flex-col" />
-      <main className="main-scrollbar flex-1 overflow-y-auto pb-20 lg:pb-0">
+      <main
+        className="main-scrollbar flex-1 overflow-y-auto pb-20 lg:pb-0"
+        style={{
+          marginRight: mainMarginRight,
+          transition: "margin-right 0.25s ease",
+        }}
+      >
         <div className="max-w-screen-xl mx-auto px-6 lg:px-10 py-8 lg:py-9 bg-[var(--card-bg)] rounded-2xl my-10 !p-0">
           {children}
         </div>
@@ -52,6 +66,12 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           onClose={closeModal}
           onSubmit={handleSubmit}
         />
+      )}
+      {user && (
+        <>
+          <AICoachPanel />
+          <AICoachTrigger />
+        </>
       )}
     </div>
   );

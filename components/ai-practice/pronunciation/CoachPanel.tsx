@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { BookmarkPlus, Check } from "lucide-react";
 
 interface FocusPhoneme {
@@ -31,11 +32,19 @@ export default function CoachPanel({
   onSave,
 }: CoachPanelProps) {
   const isSaved = savedWords.has(focus.word.toLowerCase());
+  const [justSaved, setJustSaved] = useState(false);
+
+  const handleSave = () => {
+    if (isSaved) return;
+    onSave(focus.word);
+    setJustSaved(true);
+    setTimeout(() => setJustSaved(false), 1500);
+  };
 
   return (
     <div
-      className="w-full max-w-sm rounded-2xl px-5 py-4 space-y-3"
-      style={{ backgroundColor: "var(--card-bg)", border: "1px solid var(--line-divider)" }}
+      className="py-3 space-y-3 pl-[14px] mx-5"
+      style={{ borderLeft: "3px solid var(--primary)" }}
     >
       <p className="text-tiny font-semibold uppercase tracking-widest text-fg-subtle">
         Let&apos;s fix one thing
@@ -60,17 +69,32 @@ export default function CoachPanel({
           )}
         </div>
 
-        <button
-          onClick={() => onSave(focus.word)}
-          disabled={isSaved}
-          className="flex-shrink-0 flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-medium transition-all disabled:opacity-60"
-          style={{
-            backgroundColor: isSaved ? "var(--btn-regular-bg)" : "var(--primary)",
-            color: isSaved ? "var(--text-tertiary)" : "var(--on-primary)",
-          }}
-        >
-          {isSaved ? <><Check size={11} /> Saved</> : <><BookmarkPlus size={11} /> Practice later</>}
-        </button>
+        {/* Save button — icon only with tooltip */}
+        <div className="relative group flex-shrink-0 ml-3">
+          <button
+            onClick={handleSave}
+            disabled={isSaved}
+            aria-label="Practice later"
+            className="w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 disabled:cursor-default"
+            style={{
+              backgroundColor: isSaved
+                ? "var(--btn-regular-bg)"
+                : "var(--primary)",
+              color: isSaved ? "var(--text-tertiary)" : "var(--on-primary)",
+              transform: justSaved ? "scale(1.25)" : "scale(1)",
+            }}
+          >
+            {isSaved
+              ? <Check size={13} className={justSaved ? "animate-bounce" : ""} />
+              : <BookmarkPlus size={13} />
+            }
+          </button>
+
+          {/* Tooltip */}
+          <div className="pointer-events-none absolute bottom-full right-0 mb-1.5 px-2 py-1 rounded-md text-[11px] font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-150 bg-surface-tooltip text-white/80">
+            {isSaved ? "Saved" : "Practice later"}
+          </div>
+        </div>
       </div>
 
       {focusProgress && focusProgress.total > 0 && (
