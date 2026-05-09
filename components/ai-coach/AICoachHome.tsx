@@ -1,13 +1,14 @@
 "use client";
 
-import { useRef, useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
-  User, MessageCircle, Mic, SendHorizonal,
-  BriefcaseBusiness, CheckCheck, ClipboardList,
+  User, MessageCircle,
+  CheckCheck, ClipboardList,
   Star, Laptop, Layers,
 } from "lucide-react";
 import type { TabId } from "@/components/ai-practice/ChatTabs";
+import CustomPromptPanel from "@/components/ai-practice/CustomPromptPanel";
 import s from "./AICoachHome.module.css";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
@@ -105,8 +106,7 @@ export default function AICoachHome({
 }: AICoachHomeProps) {
   const router = useRouter();
 
-  const [text, setText] = useState("");
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [chipPrefill, setChipPrefill] = useState<string | undefined>(undefined);
 
   const [scenario, setScenario] = useState<Scenario>("hr");
   const [level, setLevel] = useState<Level>("intermediate");
@@ -114,60 +114,10 @@ export default function AICoachHome({
 
   const isInterview = activeTab === "interview";
 
-  useEffect(() => {
-    if (prefill === undefined) return;
-    setText(prefill);
-    onPrefillConsumed?.();
-    requestAnimationFrame(() => {
-      const el = textareaRef.current;
-      if (!el) return;
-      el.focus();
-      el.setSelectionRange(el.value.length, el.value.length);
-      resize(el);
-    });
-  }, [prefill]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  function resize(el: HTMLTextAreaElement) {
-    el.style.height = "auto";
-    el.style.height = Math.min(el.scrollHeight, 80) + "px";
-  }
-
-  function handleInput(e: React.ChangeEvent<HTMLTextAreaElement>) {
-    setText(e.target.value);
-    resize(e.target);
-  }
-
-  function handleKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      submit();
-    }
-  }
-
-  function submit() {
-    const trimmed = text.trim();
-    if (!trimmed || isStreaming) return;
-    onSendMessage(trimmed);
-    setText("");
-    if (textareaRef.current) textareaRef.current.style.height = "auto";
-  }
-
-  function fillChip(prompt: string) {
-    setText(prompt);
-    requestAnimationFrame(() => {
-      const el = textareaRef.current;
-      if (!el) return;
-      el.focus();
-      resize(el);
-    });
-  }
-
   function startInterview() {
     sessionStorage.setItem("interviewConfig", JSON.stringify({ scenario, level, difficulty }));
     router.push("/interview");
   }
-
-  const hasText = text.trim().length > 0;
 
   return (
     <div className={s.root}>
@@ -272,7 +222,7 @@ export default function AICoachHome({
             {/* Suggestion chips */}
             <div className={s.chips}>
               {SUGGESTION_CHIPS.map(({ label, prompt }) => (
-                <button key={label} onClick={() => fillChip(prompt)} className={s.chip}>
+                <button key={label} onClick={() => setChipPrefill(prompt)} className={s.chip}>
                   {label}
                 </button>
               ))}
@@ -290,37 +240,14 @@ export default function AICoachHome({
         </div>
       ) : (
         <div className={s.inputArea}>
-          <div className={s.inputWrap}>
-            <textarea
-              ref={textareaRef}
-              value={text}
-              onChange={handleInput}
-              onKeyDown={handleKeyDown}
-              placeholder="Ask your English Coach..."
-              disabled={isStreaming}
-              rows={1}
-              className={s.textarea}
-            />
-            <button type="button" aria-label="Voice input" className={s.micBtn}>
-              <Mic size={14} strokeWidth={2} />
-            </button>
-            <button
-              type="button"
-              onClick={submit}
-              disabled={!hasText || isStreaming}
-              aria-label="Send"
-              className={s.sendBtn}
-            >
-              {isStreaming
-                ? <span style={{ width: 14, height: 14, border: "2px solid currentColor", borderTopColor: "transparent", borderRadius: "50%", display: "inline-block", animation: "spin 0.7s linear infinite" }} />
-                : <SendHorizonal size={15} strokeWidth={2.5} />}
-            </button>
-          </div>
-          <p className={s.hint}>
-            <span>↵ send · Shift+↵ new line ·</span>
-            <span className={s.hintDot} />
-            <span>AI feedback on</span>
-          </p>
+          <CustomPromptPanel
+            onSubmit={onSendMessage}
+            isDisabled={isStreaming}
+            variant="chat"
+            placeholder="Ask your English Coach..."
+            prefill={chipPrefill ?? prefill}
+            onPrefillConsumed={() => { setChipPrefill(undefined); onPrefillConsumed?.(); }}
+          />
         </div>
       )}
     </div>

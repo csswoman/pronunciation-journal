@@ -162,16 +162,16 @@ export default function CustomPromptPanel({
             minWidth: 36,
             minHeight: 36,
             borderRadius: 12,
-            backgroundColor: "#c4a8ff",
-            color: "#1a0a2e",
+            backgroundColor: "var(--accent)",
+            color: "var(--accent-foreground)",
             border: "none",
           }}
           onMouseEnter={e => {
-            (e.currentTarget as HTMLElement).style.backgroundColor = "#d4beff";
+            (e.currentTarget as HTMLElement).style.filter = "brightness(1.1)";
             (e.currentTarget as HTMLElement).style.transform = "scale(1.05)";
           }}
           onMouseLeave={e => {
-            (e.currentTarget as HTMLElement).style.backgroundColor = "#c4a8ff";
+            (e.currentTarget as HTMLElement).style.filter = "none";
             (e.currentTarget as HTMLElement).style.transform = "scale(1)";
           }}
         >

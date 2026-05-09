@@ -151,7 +151,6 @@ export default function ChatArea({
               onNext={() => onSubmit("next")}
             />
           </div>
-
           {quotaExhausted ? (
             <QuotaExhaustedCard
               messages={messages}

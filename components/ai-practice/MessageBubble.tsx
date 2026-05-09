@@ -5,6 +5,8 @@ import type { AIMessage, ExerciseResult } from "@/lib/ai-practice/types";
 import AIAvatar from "./AIAvatar";
 import SuggestionChips from "./SuggestionChips";
 import ToolWidget from "./chat/ToolWidget";
+import PracticeSession from "./PracticeSession";
+import { isExerciseTool } from "@/lib/ai-practice/tools/registry";
 
 // ── Inline markdown renderer ──────────────────────────────────────────────────
 
@@ -16,8 +18,7 @@ function renderInline(text: string): React.ReactNode {
     }
     if (part.startsWith("`") && part.endsWith("`") && part.length > 2) {
       return (
-        <code key={i} className="px-1 py-0.5 rounded text-xs font-mono"
-          style={{ backgroundColor: "var(--btn-regular-bg)", color: "var(--text-primary)" }}>
+        <code key={i} className="px-1 py-0.5 rounded text-xs font-mono bg-surface-sunken text-fg">
           {part.slice(1, -1)}
         </code>
       );
@@ -123,26 +124,43 @@ function AIBubble({ message, onSaveWord, onSuggestionClick, onToolAnswer, onNext
       <AIAvatar />
       <div className="flex flex-col gap-2 flex-1 min-w-0 max-w-[85%]">
         <div
-          className="px-4 py-3 rounded-2xl rounded-tl-md border"
-          style={{
-            backgroundColor: "var(--card-bg)",
-            borderColor: "var(--line-divider)",
-          }}
+          className="px-4 py-3 rounded-2xl rounded-tl-md bg-surface-raised shadow-sm"
         >
           <div
             className="space-y-1.5 text-body-sm leading-relaxed cursor-text select-text text-fg-muted"
             onMouseUp={handleMouseUp}
           >
-            {message.contentParts.map((part, i) => {
-              if (part.type === "text") {
-                return <div key={i}>{renderProse(part.text.split("\n"))}</div>;
-              }
-              const tc = message.toolCalls.get(part.callId);
-              if (!tc || tc.name === "suggestions") return null;
+            {(() => {
+              // Collect exercise tool calls for a single PracticeSession
+              const exerciseCalls = message.contentParts
+                .filter(p => p.type === "tool_call")
+                .map(p => message.toolCalls.get(p.callId))
+                .filter((tc): tc is NonNullable<typeof tc> =>
+                  tc != null && isExerciseTool(tc.name as never) && tc.status !== "error"
+                );
+
               return (
-                <ToolWidget key={i} toolCall={tc} onAnswer={onToolAnswer} onNext={onNext} />
+                <>
+                  {message.contentParts.map((part, i) => {
+                    if (part.type === "text") {
+                      return <div key={i}>{renderProse(part.text.split("\n"))}</div>;
+                    }
+                    const tc = message.toolCalls.get(part.callId);
+                    if (!tc || tc.name === "suggestions") return null;
+                    // Exercise tools are rendered via PracticeSession below
+                    if (isExerciseTool(tc.name as never)) return null;
+                    return <ToolWidget key={i} toolCall={tc} onAnswer={onToolAnswer} onNext={onNext} />;
+                  })}
+                  {exerciseCalls.length > 0 && (
+                    <PracticeSession
+                      key={exerciseCalls[0].id}
+                      initialExercises={exerciseCalls}
+                      onAnswer={onToolAnswer}
+                    />
+                  )}
+                </>
               );
-            })}
+            })()}
           </div>
         </div>
 
@@ -179,11 +197,7 @@ export default function MessageBubble({ message, onSaveWord, onSuggestionClick, 
       <div className="flex justify-end group/msg">
         <div className="flex flex-col items-end gap-1.5 max-w-[78%]">
           <div
-            className="px-4 py-2.5 rounded-2xl rounded-tr-md text-body-sm leading-relaxed whitespace-pre-wrap break-words"
-            style={{
-              backgroundColor: "color-mix(in oklch, var(--primary) 12%, var(--card-bg))",
-              color: "var(--text-primary)",
-            }}
+            className="px-4 py-2.5 rounded-2xl rounded-tr-sm text-body-sm leading-relaxed whitespace-pre-wrap break-words bg-primary-100 text-fg"
           >
             {message.content}
           </div>

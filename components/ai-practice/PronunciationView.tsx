@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
-import { Sparkles } from "lucide-react";
+import { Sparkles, RotateCcw } from "lucide-react";
 import { useRecorder } from "@/hooks/useRecorder";
 import { analyzePhonemes, ARPABET_TO_IPA } from "@/lib/phonemes";
 import { saveAIWord } from "@/lib/ai-db";
@@ -39,6 +39,8 @@ const DEFAULT_PHRASES = [
   "Nothing worthwhile ever comes without effort",
 ];
 
+const BATCH_SIZE = 5;
+
 // ---------------------------------------------------------------------------
 // LocalStorage helpers
 // ---------------------------------------------------------------------------
@@ -69,13 +71,18 @@ function loadSeen(): Set<string> {
 }
 function saveSeen(s: Set<string>) { localStorage.setItem(LS_SEEN, JSON.stringify([...s])); }
 
+function pickBatch(exclude: Set<string>): string[] {
+  const pool = shuffle(DEFAULT_PHRASES.filter(p => !exclude.has(p)));
+  return pool.slice(0, BATCH_SIZE);
+}
+
 function initQueue(): string[] {
   const stored = loadQueue();
   if (stored.length > 0) return stored;
   const mastered = loadMastered();
-  const fresh = shuffle(DEFAULT_PHRASES.filter(p => !mastered.has(p)));
-  saveQueue(fresh);
-  return fresh;
+  const batch = pickBatch(mastered);
+  saveQueue(batch);
+  return batch;
 }
 
 // ---------------------------------------------------------------------------
@@ -133,6 +140,64 @@ function firstBadPhoneme(wordIPAs: WordIPA[]) {
 }
 
 // ---------------------------------------------------------------------------
+// Session complete screen
+// ---------------------------------------------------------------------------
+
+function SessionComplete({
+  mastered,
+  batchSize,
+  onMore,
+  onMoreAI,
+  loadingMore,
+}: {
+  mastered: number;
+  batchSize: number;
+  onMore: () => void;
+  onMoreAI: () => void;
+  loadingMore: boolean;
+}) {
+  return (
+    <div className="flex-1 flex flex-col items-center justify-center gap-6 px-6 text-center">
+      <div
+        className="w-12 h-12 rounded-full flex items-center justify-center"
+        style={{ backgroundColor: "color-mix(in oklch, var(--score-excellent) 15%, transparent)" }}
+      >
+        <RotateCcw size={20} style={{ color: "var(--score-excellent)" }} />
+      </div>
+      <div>
+        <p className="text-base font-semibold mb-1" style={{ color: "var(--fg)" }}>
+          Session complete
+        </p>
+        <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
+          {batchSize} phrases done · {mastered} mastered total
+        </p>
+      </div>
+      <div className="flex flex-col gap-2 w-full max-w-[220px]">
+        <button
+          onClick={onMoreAI}
+          disabled={loadingMore}
+          className="flex items-center justify-center gap-2 w-full rounded-xl py-2.5 text-sm font-medium transition-colors cursor-pointer border-none disabled:opacity-60"
+          style={{ backgroundColor: "var(--primary)", color: "var(--primary-foreground)" }}
+        >
+          {loadingMore
+            ? <><Sparkles size={13} className="animate-pulse" /> Generating…</>
+            : <><Sparkles size={13} /> 5 more with AI</>
+          }
+        </button>
+        <button
+          onClick={onMore}
+          disabled={loadingMore}
+          className="flex items-center justify-center w-full rounded-xl py-2.5 text-sm font-medium transition-colors cursor-pointer border-none disabled:opacity-60"
+          style={{ backgroundColor: "var(--btn-regular-bg)", color: "var(--text-secondary)" }}
+        >
+          5 more phrases
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
 // Component
 // ---------------------------------------------------------------------------
 
@@ -140,18 +205,22 @@ export default function PronunciationView() {
   const [queue, setQueue]       = useState<string[]>([]);
   const [mastered, setMastered] = useState<Set<string>>(new Set());
   const [seen, setSeen]         = useState<Set<string>>(new Set());
+  const [batchCount, setBatchCount] = useState(0);
   const [fetchingPhrases, setFetchingPhrases] = useState(false);
 
   const { startRecording, stopRecording, audioUrl, isRecording, resetRecording } = useRecorder();
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
-    setQueue(initQueue());
+    const q = initQueue();
+    setQueue(q);
     setMastered(loadMastered());
     setSeen(loadSeen());
+    setBatchCount(q.length);
   }, []);
 
-  const activePhrase = queue[0] || "";
+  const activePhrase = queue[0] ?? "";
+  const sessionDone  = queue.length === 0;
 
   const [wordIPAs, setWordIPAs]           = useState<WordIPA[]>([]);
   const [ipaLoading, setIpaLoading]       = useState(false);
@@ -159,26 +228,40 @@ export default function PronunciationView() {
   const [soundProgress, setSoundProgress] = useState<SoundProgress>({});
   const [savedWords, setSavedWords]       = useState<Set<string>>(new Set());
 
-  const fetchNewPhrases = useCallback(async (currentSeen: Set<string>) => {
+  const loadMoreFromPool = useCallback((currentSeen: Set<string>, currentMastered: Set<string>) => {
+    const exclude = new Set([...currentSeen, ...currentMastered]);
+    const batch = pickBatch(exclude);
+    const fallback = batch.length === 0 ? pickBatch(currentMastered) : batch;
+    setQueue(fallback);
+    saveQueue(fallback);
+    setBatchCount(fallback.length);
+    resetRecording();
+    setWordIPAs([]);
+  }, [resetRecording]);
+
+  const fetchMoreWithAI = useCallback(async (currentSeen: Set<string>) => {
     setFetchingPhrases(true);
     try {
       const res = await fetch("/api/gemini/phrases", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ exclude: [...currentSeen].slice(-30) }),
+        body: JSON.stringify({ exclude: [...currentSeen].slice(-30), count: BATCH_SIZE }),
       });
-      if (!res.ok) return;
+      if (!res.ok) { loadMoreFromPool(currentSeen, mastered); return; }
       const { phrases } = await res.json() as { phrases?: string[] };
-      if (!Array.isArray(phrases) || phrases.length === 0) return;
-      const newQueue = shuffle(phrases);
-      setQueue(newQueue);
-      saveQueue(newQueue);
+      if (!Array.isArray(phrases) || phrases.length === 0) { loadMoreFromPool(currentSeen, mastered); return; }
+      const batch = shuffle(phrases).slice(0, BATCH_SIZE);
+      setQueue(batch);
+      saveQueue(batch);
+      setBatchCount(batch.length);
+      resetRecording();
+      setWordIPAs([]);
     } catch {
-      // non-critical
+      loadMoreFromPool(currentSeen, mastered);
     } finally {
       setFetchingPhrases(false);
     }
-  }, []);
+  }, [mastered, loadMoreFromPool, resetRecording]);
 
   // Fetch IPA for active phrase
   useEffect(() => {
@@ -248,20 +331,19 @@ export default function PronunciationView() {
   }, [audioUrl, analyzeRecording]);
 
   const advanceQueue = useCallback(() => {
-    setQueue(prev => {
-      const next = prev.slice(1);
-      saveQueue(next);
-      if (next.length === 0) fetchNewPhrases(seen);
-      return next;
-    });
     setSeen(prev => {
       const next = new Set(prev).add(activePhrase);
       saveSeen(next);
       return next;
     });
+    setQueue(prev => {
+      const next = prev.slice(1);
+      saveQueue(next);
+      return next;
+    });
     resetRecording();
     setWordIPAs([]);
-  }, [activePhrase, seen, fetchNewPhrases, resetRecording]);
+  }, [activePhrase, resetRecording]);
 
   const handleMicClick = () => {
     if (isRecording) {
@@ -299,63 +381,62 @@ export default function PronunciationView() {
   const focus         = hasAnalysis && hasMistakes ? firstBadPhoneme(wordIPAs) : null;
   const focusTip      = focus ? PHONEME_TIPS[focus.phoneme] ?? null : null;
   const focusProgress = focus ? soundProgress[focus.phoneme] ?? null : null;
-  const focusPct      = focusProgress && focusProgress.total > 0
-    ? Math.round((focusProgress.correct / focusProgress.total) * 100)
-    : null;
 
-  const totalMastered     = mastered.size;
-  const totalPhrasesKnown = Math.max(seen.size + queue.length, DEFAULT_PHRASES.length);
-  const currentIndex      = seen.size + 1;
-  const progressPct       = (totalMastered / totalPhrasesKnown) * 100;
+  const doneInBatch   = batchCount - queue.length;
+  const progressPct   = batchCount > 0 ? (doneInBatch / batchCount) * 100 : 0;
 
   return (
-    <div className="flex flex-col h-full overflow-hidden py-5">
+    <div className="flex flex-col h-full overflow-hidden">
 
       <ProgressBar
-        current={currentIndex}
-        total={totalPhrasesKnown}
-        mastered={totalMastered}
+        current={doneInBatch}
+        total={batchCount}
+        mastered={mastered.size}
         pct={progressPct}
       />
 
-      {fetchingPhrases && (
-        <div className="flex items-center justify-center gap-1.5 text-caption text-fg-subtle py-1 shrink-0">
-          <Sparkles size={12} className="animate-pulse" />
-          Generating new phrases…
-        </div>
-      )}
-
-      <div className="flex flex-col flex-1 pt-3 min-h-0">
-        <PhraseCard
-          phrase={activePhrase}
-          wordIPAs={wordIPAs}
-          ipaLoading={ipaLoading}
-          analyzing={analyzing}
-          hasAnalysis={hasAnalysis}
-          hasMistakes={hasMistakes}
-          onListen={() => handleListenModel()}
-          onSlow={() => handleListenModel(0.55)}
+      {sessionDone ? (
+        <SessionComplete
+          mastered={mastered.size}
+          batchSize={batchCount}
+          onMore={() => loadMoreFromPool(seen, mastered)}
+          onMoreAI={() => fetchMoreWithAI(seen)}
+          loadingMore={fetchingPhrases}
         />
-      </div>
-
-      {focus && !analyzing && (
-        <div className="px-5 pt-2 shrink-0">
-          <CoachPanel
-            focus={focus}
-            focusTip={focusTip}
-            focusProgress={focusProgress}
-            focusPct={focusPct}
-            savedWords={savedWords}
-            onSave={handleSavePractice}
+      ) : (
+        <div className="flex-1 flex flex-col min-h-0 overflow-y-auto">
+          <PhraseCard
+            phrase={activePhrase}
+            wordIPAs={wordIPAs}
+            ipaLoading={ipaLoading}
+            analyzing={analyzing}
+            hasAnalysis={hasAnalysis}
+            hasMistakes={hasMistakes}
+            onListen={() => handleListenModel()}
+            onSlow={() => handleListenModel(0.55)}
           />
+
+          {focus && !analyzing && (
+            <div className="px-4 pb-4 shrink-0">
+              <CoachPanel
+                focus={focus}
+                focusTip={focusTip}
+                focusProgress={focusProgress}
+                savedWords={savedWords}
+                onSave={handleSavePractice}
+              />
+            </div>
+          )}
         </div>
       )}
 
-      <RecordingControls
-        isRecording={isRecording}
-        onMicClick={handleMicClick}
-        onSkip={advanceQueue}
-      />
+      {!sessionDone && (
+        <RecordingControls
+          isRecording={isRecording}
+          onMicClick={handleMicClick}
+          onSkip={advanceQueue}
+        />
+      )}
 
       <audio ref={audioRef} className="hidden" />
     </div>

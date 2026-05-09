@@ -1,7 +1,6 @@
 "use client";
 
 import { Mic, ChevronRight } from "lucide-react";
-import WaveformDisplay from "./WaveformDisplay";
 
 interface Props {
   isRecording: boolean;
@@ -9,64 +8,86 @@ interface Props {
   onSkip: () => void;
 }
 
-const HINT: Record<"idle" | "recording" | "done", string> = {
-  idle:      "Tap to record",
-  recording: "Recording… tap to stop",
-  done:      "Recording saved — tap to try again",
-};
+const WAVE_HEIGHTS = [30, 50, 70, 45, 80, 60, 35, 55, 75, 40, 65, 90, 50, 30, 70, 45, 60, 35, 55, 80, 50, 40, 65, 30];
 
 export default function RecordingControls({ isRecording, onMicClick, onSkip }: Props) {
-  const hint = isRecording ? HINT.recording : HINT.idle;
+  const hint = isRecording ? "Recording… tap to stop" : "Tap to record";
 
   return (
-    <div className="shrink-0 pt-3">
-      <div className="border-t border-border-default mx-5" />
-      <div className="pt-3">
-        <WaveformDisplay isRecording={isRecording} />
+    <div className="shrink-0 flex flex-col items-center gap-3 pt-4 pb-6 relative">
+      <style>{`
+        @keyframes waveBarPulse {
+          0%, 100% { transform: scaleY(0.4); opacity: 0.25; }
+          50%       { transform: scaleY(1);   opacity: 0.65; }
+        }
+        @keyframes waveBarIdle {
+          0%, 100% { transform: scaleY(0.35); opacity: 0.35; }
+          50%       { transform: scaleY(0.8);  opacity: 0.5; }
+        }
+      `}</style>
+
+      {/* Waveform */}
+      <div
+        className="flex items-center justify-center gap-[3px]"
+        style={{ height: 40, width: "100%", maxWidth: 280 }}
+        aria-hidden="true"
+      >
+        {WAVE_HEIGHTS.map((h, i) => (
+          <span
+            key={i}
+            className="inline-block rounded-sm"
+            style={{
+              width: 3,
+              height: `${h}%`,
+              backgroundColor: "var(--primary)",
+              transformOrigin: "center",
+              animation: isRecording
+                ? `waveBarPulse 1.4s ease-in-out ${i * 0.05}s infinite`
+                : `waveBarIdle 1.8s ease-in-out ${i * 0.06}s infinite`,
+            }}
+          />
+        ))}
       </div>
 
-      <div className="relative flex items-center justify-center mt-3">
+      {/* Record button + skip */}
+      <div className="relative flex items-center justify-center w-full">
+        <button
+          onClick={onMicClick}
+          aria-label={isRecording ? "Stop recording" : "Start recording"}
+          className="w-[72px] h-[72px] rounded-full flex items-center justify-center border-none cursor-pointer transition-all duration-200 active:scale-95 hover:scale-[1.04]"
+          style={{
+            backgroundColor: isRecording ? "var(--error)" : "var(--primary)",
+            color: "white",
+            boxShadow: isRecording
+              ? "0 0 0 12px color-mix(in oklch, var(--error) 20%, transparent)"
+              : "0 0 0 0 color-mix(in oklch, var(--primary) 25%, transparent)",
+          }}
+        >
+          <Mic size={26} />
+        </button>
 
-        {/* Mic — centered */}
-        <div className="relative flex items-center justify-center">
-          {isRecording && (
-            <span
-              className="absolute w-20 h-20 rounded-full animate-ping"
-              style={{ backgroundColor: "var(--error)", opacity: 0.15 }}
-            />
-          )}
-          <button
-            onClick={onMicClick}
-            aria-label={isRecording ? "Stop recording" : "Start recording"}
-            className="relative w-16 h-16 rounded-full flex items-center justify-center border-none cursor-pointer transition-transform active:scale-95"
-            style={{
-              backgroundColor: isRecording ? "var(--error)" : "var(--primary)",
-              boxShadow: isRecording
-                ? "0 0 0 8px color-mix(in oklch, var(--error) 15%, transparent)"
-                : "0 4px 16px color-mix(in oklch, var(--primary) 40%, transparent)",
-            }}
-          >
-            <Mic size={24} color="white" />
-          </button>
-        </div>
-
-        {/* Skip — absolutely positioned to the right, with tooltip */}
         <div className="absolute right-8 group">
           <button
             onClick={onSkip}
             aria-label="Skip phrase"
-            className="w-8 h-8 rounded-full bg-surface-raised flex items-center justify-center text-fg-subtle hover:bg-surface-sunken transition-colors cursor-pointer"
+            className="w-9 h-9 rounded-full flex items-center justify-center border cursor-pointer transition-all duration-150 hover:translate-x-0.5"
+            style={{
+              backgroundColor: "var(--btn-regular-bg)",
+              borderColor: "var(--line-divider)",
+              color: "var(--text-secondary)",
+            }}
           >
             <ChevronRight size={16} />
           </button>
-          <div className="pointer-events-none absolute bottom-full right-0 mb-1.5 px-2 py-1 rounded-md text-[11px] font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-150 bg-surface-tooltip text-white/80">
+          <div className="pointer-events-none absolute bottom-full right-0 mb-1.5 px-2 py-1 rounded-md text-[11px] font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity bg-surface-tooltip text-white/80">
             Skip
           </div>
         </div>
-
       </div>
 
-      <p className="text-center text-[11px] text-fg-muted mt-2.5">{hint}</p>
+      <p className="text-[13px] font-medium tracking-wide" style={{ color: "var(--text-tertiary)" }}>
+        {hint}
+      </p>
     </div>
   );
 }

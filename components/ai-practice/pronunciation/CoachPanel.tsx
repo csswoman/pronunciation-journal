@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { BookmarkPlus, Check } from "lucide-react";
+import { Volume2, BookmarkPlus, Check, Circle, Lightbulb } from "lucide-react";
 
 interface FocusPhoneme {
   word: string;
@@ -18,7 +18,6 @@ interface CoachPanelProps {
   focus: FocusPhoneme;
   focusTip: string | null;
   focusProgress: FocusProgress | null;
-  focusPct: number | null;
   savedWords: Set<string>;
   onSave: (word: string) => void;
 }
@@ -27,7 +26,6 @@ export default function CoachPanel({
   focus,
   focusTip,
   focusProgress,
-  focusPct,
   savedWords,
   onSave,
 }: CoachPanelProps) {
@@ -41,88 +39,115 @@ export default function CoachPanel({
     setTimeout(() => setJustSaved(false), 1500);
   };
 
+  const attempts = (focusProgress?.total ?? 0);
+
   return (
     <div
-      className="py-3 space-y-3 pl-4 mx-5"
-      style={{ borderLeft: "3px solid var(--primary)" }}
+      className="rounded-xl p-4"
+      style={{
+        backgroundColor: "var(--card-bg)",
+        border: "1px solid var(--line-divider)",
+        borderLeft: "3px solid var(--primary)",
+      }}
     >
-      <p className="text-tiny font-semibold uppercase tracking-widest text-fg-subtle">
-        Let&apos;s fix one thing
-      </p>
-
-      <div className="flex items-center justify-between">
+      {/* Header */}
+      <div className="flex items-start justify-between gap-3 mb-2">
         <div>
-          <p className="text-sm text-fg-muted">
-            Try{" "}
-            <span className="font-semibold text-fg">
-              &ldquo;{focus.word}&rdquo;
-            </span>
-            {" → "}
-            <span className="font-mono font-semibold" style={{ color: "var(--primary)" }}>
+          <p className="text-xs font-medium mb-1.5" style={{ color: "var(--text-tertiary)" }}>
+            Let&apos;s fix one thing
+          </p>
+          <div
+            className="text-lg font-medium leading-snug"
+            style={{ fontFamily: "'Georgia', serif", letterSpacing: "-0.01em", color: "var(--fg)" }}
+          >
+            <span>&ldquo;{focus.word}&rdquo;</span>
+            <span className="mx-1.5" style={{ color: "var(--text-tertiary)" }}>→</span>
+            <span
+              className="font-mono font-medium rounded px-2 py-0.5 text-base"
+              style={{
+                color: "var(--primary)",
+                backgroundColor: "color-mix(in oklch, var(--primary) 12%, transparent)",
+              }}
+            >
               /{focus.ipa}/
             </span>
-          </p>
-          {focusTip && (
-            <p className="mt-1 text-xs leading-snug text-fg-subtle">
-              💡 {focusTip}
-            </p>
-          )}
+          </div>
         </div>
 
-        {/* Save button — icon only with tooltip */}
-        <div className="relative group flex-shrink-0 ml-3">
-          <button
-            onClick={handleSave}
-            disabled={isSaved}
-            aria-label="Practice later"
-            className="w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 disabled:cursor-default"
-            style={{
-              backgroundColor: isSaved
-                ? "var(--btn-regular-bg)"
-                : "var(--primary)",
-              color: isSaved ? "var(--text-tertiary)" : "var(--on-primary)",
-              transform: justSaved ? "scale(1.25)" : "scale(1)",
-            }}
-          >
+        <div className="flex gap-1 shrink-0">
+          <IconBtn title="Listen to this sound">
+            <Volume2 size={13} />
+          </IconBtn>
+          <IconBtn title={isSaved ? "Saved" : "Save for practice"} onClick={handleSave} disabled={isSaved}>
             {isSaved
               ? <Check size={13} className={justSaved ? "animate-bounce" : ""} />
               : <BookmarkPlus size={13} />
             }
-          </button>
-
-          {/* Tooltip */}
-          <div className="pointer-events-none absolute bottom-full right-0 mb-1.5 px-2 py-1 rounded-md text-[11px] font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-150 bg-surface-tooltip text-white/80">
-            {isSaved ? "Saved" : "Practice later"}
-          </div>
+          </IconBtn>
         </div>
       </div>
 
+      {/* Tip */}
+      {focusTip && (
+        <div
+          className="flex items-start gap-2.5 rounded-lg px-3 py-2.5 mt-2 text-sm leading-relaxed"
+          style={{ backgroundColor: "var(--btn-regular-bg)", color: "var(--text-secondary)" }}
+        >
+          <Lightbulb size={14} className="shrink-0 mt-px" style={{ color: "var(--warning)" }} />
+          <span>{focusTip}</span>
+        </div>
+      )}
+
+      {/* Stats footer */}
       {focusProgress && focusProgress.total > 0 && (
-        <div className="space-y-1">
-          <div className="flex items-center justify-between">
-            <p className="text-tiny uppercase tracking-widest font-semibold text-fg-subtle">
-              /{focus.ipa}/ this session
-            </p>
-            <p className="text-tiny font-mono text-fg-muted">
-              {focusPct}%
-            </p>
-          </div>
-          <div className="h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: "var(--btn-regular-bg)" }}>
-            <div
-              className="h-full rounded-full transition-all duration-500"
-              style={{
-                width: `${focusPct}%`,
-                backgroundColor:
-                  (focusPct ?? 0) >= 80 ? "var(--score-excellent)" :
-                  (focusPct ?? 0) >= 50 ? "var(--primary)" : "var(--score-acceptable)",
-              }}
-            />
-          </div>
-          <p className="text-tiny text-fg-subtle">
-            {focusProgress.correct} correct out of {focusProgress.total} attempts
-          </p>
+        <div
+          className="flex items-center justify-between mt-3 pt-3 text-xs"
+          style={{ borderTop: "1px solid var(--line-divider)", color: "var(--text-tertiary)" }}
+        >
+          <span className="tabular-nums">
+            {attempts} attempt{attempts !== 1 ? "s" : ""} this session
+          </span>
+          <span
+            className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full font-medium"
+            style={{ backgroundColor: "var(--btn-regular-bg)", color: "var(--text-secondary)" }}
+          >
+            <Circle size={8} fill="currentColor" />
+            /{focus.ipa}/ in focus
+          </span>
         </div>
       )}
     </div>
+  );
+}
+
+function IconBtn({
+  title, onClick, disabled, children,
+}: {
+  title: string;
+  onClick?: () => void;
+  disabled?: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      title={title}
+      aria-label={title}
+      onClick={onClick}
+      disabled={disabled}
+      className="w-7 h-7 rounded-md flex items-center justify-center transition-colors cursor-pointer border-none disabled:cursor-default"
+      style={{ color: "var(--text-tertiary)", backgroundColor: "transparent" }}
+      onMouseEnter={e => {
+        if (!disabled) {
+          e.currentTarget.style.backgroundColor = "var(--btn-regular-bg)";
+          e.currentTarget.style.color = "var(--fg)";
+        }
+      }}
+      onMouseLeave={e => {
+        e.currentTarget.style.backgroundColor = "transparent";
+        e.currentTarget.style.color = "var(--text-tertiary)";
+      }}
+    >
+      {children}
+    </button>
   );
 }

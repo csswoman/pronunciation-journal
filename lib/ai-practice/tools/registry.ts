@@ -112,7 +112,7 @@ export const TOOL_DECLARATIONS = [
   {
     name: "render_fill_blank",
     description:
-      "Show a sentence with a blank to fill. The sentence must contain '___'. Include commonWrongAnswers with pedagogical feedback for typical student errors.",
+      "Show a sentence with exactly ONE blank to fill, marked with '___'. Never use more than one '___' in the sentence. Include commonWrongAnswers with pedagogical feedback for typical student errors.",
     parameters: {
       type: "object",
       properties: {

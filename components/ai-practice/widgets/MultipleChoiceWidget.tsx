@@ -42,29 +42,23 @@ export default function MultipleChoiceWidget({ args, status, onAnswer, onNext, o
   }
 
   return (
-    <div
-      className="rounded-xl border p-4 space-y-3"
-      style={{ borderColor: "var(--line-divider)", backgroundColor: "var(--btn-regular-bg)" }}
-    >
-      <p className="text-sm font-medium text-fg">
+    <div className="rounded-xl bg-surface-sunken p-4 space-y-3">
+      <p className="text-lg font-semibold text-fg leading-snug">
         {args.question}
       </p>
       <div className="space-y-2">
         {args.options.map((opt, idx) => {
-          let bg = "var(--bg-surface)";
-          let border = "var(--line-divider)";
-          let color = "var(--text-secondary)";
+          const isCorrect = answered && idx === args.correctIndex;
+          const isWrong = answered && idx === selected && selected !== args.correctIndex;
 
-          if (answered || evaluation) {
-            if (idx === args.correctIndex) {
-              bg = "color-mix(in oklch, var(--score-excellent) 15%, transparent)";
-              border = "var(--score-excellent)";
-              color = "var(--text-primary)";
-            } else if (idx === selected && selected !== args.correctIndex) {
-              bg = "color-mix(in oklch, var(--score-poor) 12%, transparent)";
-              border = "var(--score-poor)";
-              color = "var(--text-secondary)";
-            }
+          let cls = "w-full text-left px-5 py-3.5 rounded-xl text-sm text-fg transition-colors cursor-pointer ";
+
+          if (isCorrect) {
+            cls += "bg-success-soft border border-success-border";
+          } else if (isWrong) {
+            cls += "bg-error-soft border border-error-border";
+          } else {
+            cls += "bg-surface-sunken hover:bg-surface-raised";
           }
 
           return (
@@ -72,8 +66,7 @@ export default function MultipleChoiceWidget({ args, status, onAnswer, onNext, o
               key={idx}
               disabled={answered || evaluation !== null}
               onClick={() => handleSelect(idx)}
-              className="w-full text-left px-3 py-2 rounded-lg border text-sm transition-colors"
-              style={{ backgroundColor: bg, borderColor: border, color }}
+              className={cls}
             >
               {opt}
             </button>

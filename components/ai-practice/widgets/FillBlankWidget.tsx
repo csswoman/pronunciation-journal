@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { Fragment, useMemo, useState } from "react";
 import type { FillBlankArgs } from "@/lib/ai-practice/tools/registry";
 import type { ExerciseResult } from "@/lib/ai-practice/types";
 import type { EvaluationResult } from "@/lib/exercise/design";
@@ -17,57 +17,74 @@ interface Props {
 }
 
 export default function FillBlankWidget({ args, status, onAnswer, onNext, onRetry }: Props) {
-  const [value, setValue] = useState("");
-  const [evaluation, setEvaluation] = useState<EvaluationResult | null>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const answered = status === "answered";
+  const parts = args.sentence.split("___");
+  const blankCount = parts.length - 1;
 
+  const [values, setValues] = useState<string[]>(() => Array(blankCount).fill(""));
+  const [evaluation, setEvaluation] = useState<EvaluationResult | null>(null);
+  // Track retry locally — status prop stays "answered" even after retry
+  const [retried, setRetried] = useState(false);
+
+  const answered = status === "answered" && !retried;
   const design = useMemo(() => fillBlankToDesign(args), [args]);
   const hintText = typeof args.hint === "string" ? args.hint : args.hint?.level1;
 
+  const combinedValue = values.join(" ").trim();
+
   function handleSubmit() {
-    if (!value.trim() || answered) return;
-    const result = evaluateExercise(value, design);
+    if (!combinedValue || answered) return;
+    const result = evaluateExercise(combinedValue, design);
     setEvaluation(result);
     onAnswer({ correct: result.correct, topic: args.topic, gradedBy: "client" });
   }
 
   function handleRetry() {
-    setValue("");
+    setValues(Array(blankCount).fill(""));
     setEvaluation(null);
+    setRetried(true);
     onRetry?.();
   }
 
-  const parts = args.sentence.split("___");
   const borderColor = !evaluation
     ? "var(--primary)"
     : evaluation.correct
     ? "var(--score-excellent)"
     : "var(--score-poor)";
 
+  // When answered wrong, show correct answer split across blanks
+  const displayValues = answered && evaluation && !evaluation.correct
+    ? args.answer.split(/\s+/)
+    : values;
+
   return (
-    <div
-      className="rounded-xl border p-4 space-y-3"
-      style={{ borderColor: "var(--line-divider)", backgroundColor: "var(--btn-regular-bg)" }}
-    >
+    <div className="rounded-xl bg-surface-sunken p-4 space-y-3">
       {hintText && (
         <p className="text-xs text-fg-subtle">
           Hint: {hintText}
         </p>
       )}
       <div className="flex flex-wrap items-center gap-1 text-sm text-fg">
-        <span>{parts[0]}</span>
-        <input
-          ref={inputRef}
-          value={answered && evaluation && !evaluation.correct ? args.answer : value}
-          onChange={e => setValue(e.target.value)}
-          onKeyDown={e => e.key === "Enter" && handleSubmit()}
-          disabled={answered}
-          placeholder="…"
-          className="border-b outline-none bg-transparent text-center min-w-[80px] px-1"
-          style={{ borderColor, color: "var(--text-primary)" }}
-        />
-        {parts[1] && <span>{parts[1]}</span>}
+        {parts.map((part, i) => (
+          <Fragment key={i}>
+            {part && <span>{part}</span>}
+            {i < blankCount && (
+              <input
+                value={displayValues[i] ?? ""}
+                onChange={e => {
+                  const next = [...values];
+                  next[i] = e.target.value;
+                  setValues(next);
+                }}
+                onKeyDown={e => e.key === "Enter" && handleSubmit()}
+                disabled={answered}
+                placeholder="…"
+                size={Math.max(6, args.answer.length + 2)}
+                className="border-b outline-none bg-transparent text-center px-1 w-auto"
+                style={{ borderColor, color: "var(--text-primary)" }}
+              />
+            )}
+          </Fragment>
+        ))}
       </div>
 
       {evaluation && (
@@ -78,16 +95,6 @@ export default function FillBlankWidget({ args, status, onAnswer, onNext, onRetr
         />
       )}
 
-      {!answered && !evaluation && (
-        <button
-          onClick={handleSubmit}
-          disabled={!value.trim()}
-          className="text-xs px-3 py-1 rounded-lg transition-opacity disabled:opacity-40"
-          style={{ backgroundColor: "var(--primary)", color: "var(--on-primary)" }}
-        >
-          Check
-        </button>
-      )}
     </div>
   );
 }

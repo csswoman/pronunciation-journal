@@ -33,8 +33,15 @@ export default function ChatView({
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isStreaming]);
 
-  // Hide tool messages from UI
-  const visibleMessages = messages.filter(m => m.role !== "tool");
+  // Hide tool messages from UI; also hide last model message if empty while streaming
+  const visibleMessages = messages.filter((m, i) => {
+    if (m.role === "tool") return false;
+    if (isStreaming && i === messages.length - 1 && m.role === "model") {
+      const hasText = m.contentParts.some(p => p.type === "text" && p.text.trim().length > 0);
+      return hasText;
+    }
+    return true;
+  });
 
   if (visibleMessages.length === 0 && !isStreaming) {
     const handleTemplateSelect = onSendMessage
@@ -53,7 +60,7 @@ export default function ChatView({
   }
 
   return (
-    <div className="flex flex-col gap-5 py-4">
+    <div className="chat-messages-container flex flex-col justify-end h-full gap-5 py-4">
       {visibleMessages.map((msg, i) => (
         <MessageBubble
           key={i}

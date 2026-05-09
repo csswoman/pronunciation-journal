@@ -32,21 +32,14 @@ export default function SuggestionChips({ suggestions, onSelect }: SuggestionChi
           <button
             key={s.label}
             onClick={() => onSelect(s.prompt)}
-            className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full border transition-colors"
-            style={{
-              borderColor: "var(--line-divider)",
-              color: "var(--text-secondary)",
-              backgroundColor: "var(--card-bg)",
-            }}
+            className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full transition-colors bg-surface-sunken text-fg-muted"
             onMouseEnter={e => {
-              e.currentTarget.style.borderColor = "color-mix(in oklch, var(--primary) 35%, var(--line-divider))";
-              e.currentTarget.style.backgroundColor = "color-mix(in oklch, var(--primary) 8%, var(--card-bg))";
+              e.currentTarget.style.backgroundColor = "var(--primary-100)";
               e.currentTarget.style.color = "var(--primary)";
             }}
             onMouseLeave={e => {
-              e.currentTarget.style.borderColor = "var(--line-divider)";
-              e.currentTarget.style.backgroundColor = "var(--card-bg)";
-              e.currentTarget.style.color = "var(--text-secondary)";
+              e.currentTarget.style.backgroundColor = "";
+              e.currentTarget.style.color = "";
             }}
           >
             <Icon size={12} strokeWidth={1.8} />
