@@ -14,11 +14,11 @@ function renderInline(text: string): React.ReactNode {
   const parts = text.split(/(\*\*[^*]+\*\*|__[^_]+__|`[^`]+`)/g);
   return parts.map((part, i) => {
     if ((part.startsWith("**") && part.endsWith("**")) || (part.startsWith("__") && part.endsWith("__"))) {
-      return <strong key={i} className="text-fg">{part.slice(2, -2)}</strong>;
+      return <strong key={i} style={{ color: "var(--text-primary)", fontWeight: 600 }}>{part.slice(2, -2)}</strong>;
     }
     if (part.startsWith("`") && part.endsWith("`") && part.length > 2) {
       return (
-        <code key={i} className="px-1 py-0.5 rounded text-xs font-mono bg-surface-sunken text-fg">
+        <code key={i} className="px-1.5 py-0.5 rounded text-xs font-mono" style={{ background: "oklch(0 0 0 / 0.25)", color: "var(--primary)" }}>
           {part.slice(1, -1)}
         </code>
       );
@@ -41,10 +41,10 @@ function renderProse(lines: string[]) {
         i++;
       }
       elements.push(
-        <ul key={`ul-${i}`} className="space-y-0.5 pl-3">
+        <ul key={`ul-${i}`} className="space-y-1 pl-3 my-1">
           {items.map((item, j) => (
-            <li key={j} className="flex gap-2 text-sm leading-relaxed">
-              <span className="mt-2 w-1 h-1 rounded-full flex-shrink-0" style={{ backgroundColor: "var(--text-tertiary)" }} />
+            <li key={j} className="flex gap-2 leading-relaxed" style={{ fontSize: "15px" }}>
+              <span className="mt-[9px] w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: "var(--primary)", opacity: 0.7 }} />
               <span>{renderInline(item)}</span>
             </li>
           ))}
@@ -55,7 +55,7 @@ function renderProse(lines: string[]) {
 
     if (/^#{1,3}\s+/.test(line)) {
       elements.push(
-        <p key={`h-${i}`} className="text-xs font-semibold uppercase tracking-wider mt-2 text-fg-subtle">
+        <p key={`h-${i}`} className="text-xs font-semibold uppercase tracking-widest mt-3 mb-1" style={{ color: "var(--primary)", opacity: 0.8 }}>
           {renderInline(line.replace(/^#{1,3}\s+/, ""))}
         </p>
       );
@@ -64,7 +64,7 @@ function renderProse(lines: string[]) {
     }
 
     elements.push(
-      <p key={`p-${i}`} className="text-sm leading-relaxed">{renderInline(line)}</p>
+      <p key={`p-${i}`} className="leading-relaxed" style={{ fontSize: "15px" }}>{renderInline(line)}</p>
     );
     i++;
   }
@@ -96,13 +96,14 @@ function extractSuggestions(text: string): string[] {
 
 interface AIBubbleProps {
   message: Extract<AIMessage, { role: "model" }>;
+  showAvatar: boolean;
   onSaveWord: (word: string, context: string) => void;
   onSuggestionClick: (text: string) => void;
   onToolAnswer: (callId: string, result: ExerciseResult) => void;
   onNext: () => void;
 }
 
-function AIBubble({ message, onSaveWord, onSuggestionClick, onToolAnswer, onNext }: AIBubbleProps) {
+function AIBubble({ message, showAvatar, onSaveWord, onSuggestionClick, onToolAnswer, onNext }: AIBubbleProps) {
   const fullText = message.contentParts
     .filter((p): p is { type: "text"; text: string } => p.type === "text")
     .map(p => p.text)
@@ -120,18 +121,25 @@ function AIBubble({ message, onSaveWord, onSuggestionClick, onToolAnswer, onNext
   };
 
   return (
-    <div className="flex justify-start gap-2.5 group/msg">
-      <AIAvatar />
-      <div className="flex flex-col gap-2 flex-1 min-w-0 max-w-[85%]">
+    <div className="flex items-end justify-start gap-3 group/msg">
+      {/* Avatar slot — always 28px wide */}
+      <div className="flex-shrink-0 w-7 h-7">
+        {showAvatar && <AIAvatar />}
+      </div>
+
+      <div className="flex flex-col gap-1.5 min-w-0 max-w-[82%]">
         <div
-          className="px-4 py-3 rounded-2xl rounded-tl-md bg-surface-raised shadow-sm"
+          className="px-4 py-3 rounded-2xl rounded-tl-sm cursor-text select-text"
+          style={{
+            background: "linear-gradient(135deg, oklch(0.21 0.018 var(--hue)), oklch(0.18 0.012 var(--hue)))",
+            borderLeft: "3px solid var(--primary)",
+            boxShadow: "0 1px 3px oklch(0 0 0 / 0.3), inset 0 0 0 1px oklch(1 0 0 / 0.04)",
+            color: "var(--text-secondary)",
+          }}
+          onMouseUp={handleMouseUp}
         >
-          <div
-            className="space-y-1.5 text-body-sm leading-relaxed cursor-text select-text text-fg-muted"
-            onMouseUp={handleMouseUp}
-          >
+          <div className="space-y-1.5">
             {(() => {
-              // Collect exercise tool calls for a single PracticeSession
               const exerciseCalls = message.contentParts
                 .filter(p => p.type === "tool_call")
                 .map(p => message.toolCalls.get(p.callId))
@@ -147,7 +155,6 @@ function AIBubble({ message, onSaveWord, onSuggestionClick, onToolAnswer, onNext
                     }
                     const tc = message.toolCalls.get(part.callId);
                     if (!tc || tc.name === "suggestions") return null;
-                    // Exercise tools are rendered via PracticeSession below
                     if (isExerciseTool(tc.name as never)) return null;
                     return <ToolWidget key={i} toolCall={tc} onAnswer={onToolAnswer} onNext={onNext} />;
                   })}
@@ -164,9 +171,7 @@ function AIBubble({ message, onSaveWord, onSuggestionClick, onToolAnswer, onNext
           </div>
         </div>
 
-        <p
-          className="text-tiny pl-1 opacity-0 group-hover/msg:opacity-100 transition-opacity text-fg-subtle"
-        >
+        <p className="text-tiny pl-1 opacity-0 group-hover/msg:opacity-100 transition-opacity" style={{ color: "var(--text-tertiary)" }}>
           {formatTime((message as { createdAt?: Date }).createdAt)}
         </p>
 
@@ -185,24 +190,38 @@ function AIBubble({ message, onSaveWord, onSuggestionClick, onToolAnswer, onNext
 
 interface MessageBubbleProps {
   message: AIMessage;
+  showAvatar?: boolean;
   onSaveWord: (word: string, context: string) => void;
   onSuggestionClick: (text: string) => void;
   onToolAnswer: (callId: string, result: ExerciseResult) => void;
   onNext: () => void;
 }
 
-export default function MessageBubble({ message, onSaveWord, onSuggestionClick, onToolAnswer, onNext }: MessageBubbleProps) {
+export default function MessageBubble({
+  message,
+  showAvatar = true,
+  onSaveWord,
+  onSuggestionClick,
+  onToolAnswer,
+  onNext,
+}: MessageBubbleProps) {
   if (message.role === "user") {
     return (
       <div className="flex justify-end group/msg">
-        <div className="flex flex-col items-end gap-1.5 max-w-[78%]">
+        <div className="flex flex-col items-end gap-1.5 ml-auto max-w-[75%]">
           <div
-            className="px-4 py-2.5 rounded-2xl rounded-tr-sm text-body-sm leading-relaxed whitespace-pre-wrap break-words bg-primary-100 text-fg"
+            className="px-4 py-3 rounded-2xl rounded-tr-sm leading-relaxed whitespace-pre-wrap break-words"
+            style={{
+              fontSize: "15px",
+              background: "var(--primary)",
+              color: "oklch(0.96 0.008 var(--hue))",
+              boxShadow: "0 2px 12px color-mix(in oklch, var(--primary) 35%, transparent)",
+            }}
           >
             {message.content}
           </div>
           <div className="flex items-center gap-1 pr-1 opacity-0 group-hover/msg:opacity-100 transition-opacity">
-            <span className="text-tiny text-fg-subtle">
+            <span className="text-tiny" style={{ color: "var(--text-tertiary)" }}>
               {formatTime((message as { createdAt?: Date }).createdAt)}
             </span>
             <CheckCheck size={11} style={{ color: "var(--primary)" }} />
@@ -217,6 +236,7 @@ export default function MessageBubble({ message, onSaveWord, onSuggestionClick, 
   return (
     <AIBubble
       message={message}
+      showAvatar={showAvatar}
       onSaveWord={onSaveWord}
       onSuggestionClick={onSuggestionClick}
       onToolAnswer={onToolAnswer}

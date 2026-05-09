@@ -138,8 +138,25 @@ export default function ChatArea({
       ) : activeTab === "pronunciation" ? (
         <PronunciationView />
       ) : (
-        <div className="relative flex-1 flex flex-col min-h-0 overflow-hidden">
-          <div className="flex-1 overflow-y-auto px-4 py-4">
+        <div
+          className="relative flex-1 flex flex-col min-h-0 overflow-hidden"
+          style={{
+            background: "oklch(0.11 0.005 var(--hue))",
+            backgroundImage: `
+              radial-gradient(ellipse 90% 40% at 50% 0%,
+                color-mix(in oklch, var(--primary) 22%, transparent),
+                transparent 65%
+              ),
+              radial-gradient(ellipse 50% 30% at 90% 80%,
+                color-mix(in oklch, var(--primary) 8%, transparent),
+                transparent 60%
+              ),
+              url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Ccircle cx='12' cy='12' r='1.2' fill='oklch(1 0 0 / 0.055)'/%3E%3C/svg%3E")
+            `,
+            backgroundSize: "cover, cover, 24px 24px",
+          }}
+        >
+          <div className="flex-1 overflow-y-auto px-5 py-4">
             {error && <ErrorBanner message={error} />}
             <ChatView
               messages={messages}
@@ -157,7 +174,13 @@ export default function ChatArea({
               onNewSession={onNewSession ?? (() => {})}
             />
           ) : (
-            <div className="flex-shrink-0 px-4 pb-3 pt-2">
+            <div
+              className="flex-shrink-0 px-5 pb-3 pt-2 backdrop-blur-md"
+              style={{
+                borderTop: "1px solid oklch(1 0 0 / 0.08)",
+                background: "oklch(0.14 0.008 var(--hue) / 0.85)",
+              }}
+            >
               <CustomPromptPanel
                 onSubmit={onSubmit}
                 isDisabled={isStreaming}
