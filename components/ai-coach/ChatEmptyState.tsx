@@ -66,7 +66,7 @@ export default function ChatEmptyState({ onSendMessage, onChipSelect }: ChatEmpt
       {/* Hero */}
       <div className="flex flex-col items-center gap-4 text-center mb-6">
         <div className="relative shrink-0">
-          <div className="size-12 rounded-[14px] bg-[var(--gradient-primary)] flex items-center justify-center">
+          <div className="size-12 rounded-2xl bg-[var(--gradient-primary)] flex items-center justify-center">
             <User size={22} strokeWidth={1.8} color="white" />
           </div>
           <span className="absolute -bottom-0.5 -right-0.5 size-2 rounded-full bg-[var(--success)] border-2 border-[var(--card-bg)]" />
@@ -81,16 +81,16 @@ export default function ChatEmptyState({ onSendMessage, onChipSelect }: ChatEmpt
       </div>
 
       {/* Quick-start cards */}
-      <div className="grid grid-cols-2 gap-[10px] w-full mb-3">
+      <div className="grid grid-cols-2 gap-2 w-full mb-3">
         {CARDS.map(({ id, title, desc, colorVar, hoverBorder, Icon, prompt }) => (
           <button
             key={id}
             onClick={() => onSendMessage(prompt)}
-            className={`p-[14px] rounded-[14px] bg-[var(--surface-raised)] border border-[var(--border-subtle)] text-left cursor-pointer transition-[transform,border-color] duration-150 flex flex-col items-start hover:-translate-y-px ${hoverBorder}`}
+            className={`p-3 rounded-2xl bg-[var(--surface-raised)] border border-[var(--border-subtle)] text-left cursor-pointer transition-[transform,border-color] duration-150 flex flex-col items-start hover:-translate-y-px ${hoverBorder}`}
           >
             <Icon size={18} strokeWidth={1.8} style={{ color: colorVar }} />
-            <span className="text-[13px] font-medium text-[var(--text-primary)] mt-2 leading-[1.3]">{title}</span>
-            <span className="text-[11px] text-[var(--text-tertiary)] mt-0.5 leading-[1.4]">{desc}</span>
+            <span className="text-body-sm font-medium text-[var(--text-primary)] mt-2 leading-[1.3]">{title}</span>
+            <span className="text-caption text-[var(--text-tertiary)] mt-0.5">{desc}</span>
           </button>
         ))}
       </div>
@@ -101,7 +101,7 @@ export default function ChatEmptyState({ onSendMessage, onChipSelect }: ChatEmpt
           <button
             key={label}
             onClick={() => onChipSelect(prompt)}
-            className="shrink-0 px-3 py-1.5 rounded-full bg-[var(--surface-raised)] border border-[var(--border-subtle)] text-xs text-[var(--text-tertiary)] whitespace-nowrap cursor-pointer transition-[border-color,color,background] duration-150 hover:border-[var(--accent-border)] hover:text-[var(--primary)] hover:bg-[var(--accent-dim)]"
+            className="shrink-0 px-3 py-1.5 rounded-full bg-[var(--surface-raised)] border border-[var(--border-subtle)] text-caption text-[var(--text-tertiary)] whitespace-nowrap cursor-pointer transition-[border-color,color,background] duration-150 hover:border-[var(--accent-border)] hover:text-[var(--primary)] hover:bg-[var(--accent-dim)]"
           >
             {label}
           </button>

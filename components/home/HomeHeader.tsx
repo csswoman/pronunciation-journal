@@ -32,7 +32,7 @@ export default function HomeHeader() {
       secondaryCta={{
         label: "Practice with AI",
         icon: <Sparkles size={14} />,
-        onClick: () => router.push("/ai-practice"),
+        onClick: () => router.push("/practice"),
       }}
       illustration={<ConversationIllustration />}
       variant="hero-compact"

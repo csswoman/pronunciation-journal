@@ -4,8 +4,8 @@ import Link from "next/link";
 import { MessageCircle, PenLine, Headphones, BookOpen, Sparkles } from "lucide-react";
 
 const MODES = [
-  { icon: MessageCircle, label: "Speak", sub: "Practice conversations", href: "/ai-practice" },
-  { icon: PenLine, label: "Write", sub: "Get feedback on writing", href: "/ai-practice" },
+  { icon: MessageCircle, label: "Speak", sub: "Practice conversations", href: "/practice" },
+  { icon: PenLine, label: "Write", sub: "Get feedback on writing", href: "/practice" },
   { icon: Headphones, label: "Listen", sub: "Improve listening skills", href: "/practice" },
   { icon: BookOpen, label: "Vocabulary", sub: "Expand your words", href: "/decks" },
 ];
@@ -24,7 +24,7 @@ export default function HomePracticeCard() {
           <p className="text-sm text-fg-muted">Improve your speaking and writing with AI feedback.</p>
         </div>
         <Link
-          href="/ai-practice"
+          href="/practice"
           className="shrink-0 px-5 py-3 rounded-xl text-sm font-semibold text-[var(--primary)] border border-[var(--primary)] transition-colors hover:bg-[color-mix(in_oklch,var(--primary)_8%,transparent)]"
         >
           Start Practice

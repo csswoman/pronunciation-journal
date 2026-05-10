@@ -28,7 +28,7 @@ export default function RecordingControls({ isRecording, onMicClick, onSkip }: P
 
       {/* Waveform */}
       <div
-        className="flex items-center justify-center gap-[3px]"
+        className="flex items-center justify-center gap-1"
         style={{ height: 40, width: "100%", maxWidth: 280 }}
         aria-hidden="true"
       >

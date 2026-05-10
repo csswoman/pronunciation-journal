@@ -37,7 +37,7 @@ export default function HomeHero() {
             {isGuest ? "Start Learning" : "Continue Learning"}
           </Button>
           <Button
-            onClick={() => router.push("/ai-practice")}
+            onClick={() => router.push("/practice")}
             variant="secondary"
             size="lg"
             icon={<Sparkles size={14} />}

@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { Mic, MicOff, Loader2 } from "lucide-react";
+import { useState, useCallback } from "react";
+import { Mic, MicOff, Loader2, Volume2 } from "lucide-react";
 import type { SpeakingArgs } from "@/lib/ai-practice/tools/registry";
 import type { ExerciseResult } from "@/lib/ai-practice/types";
 import type { EvaluationResult } from "@/lib/exercise/design";
@@ -35,6 +35,18 @@ interface Props {
   onRetry?: () => void;
 }
 
+function scoreTranscript(transcript: string, target: string): number {
+  const normalize = (s: string) => s.toLowerCase().replace(/[^a-z0-9\s]/g, "").trim();
+  const t = normalize(transcript);
+  const g = normalize(target);
+  if (t === g) return 1;
+  if (t.includes(g) || g.includes(t)) return 0.8;
+  const tWords = new Set(t.split(/\s+/));
+  const gWords = g.split(/\s+/);
+  const matches = gWords.filter(w => tWords.has(w)).length;
+  return gWords.length > 0 ? matches / gWords.length : 0;
+}
+
 export default function SpeakingWidget({ args, status, onAnswer, onNext, onRetry }: Props) {
   const { startRecording, stopRecording, isRecording, audioUrl, resetRecording } = useRecorder();
   const [transcribing, setTranscribing] = useState(false);
@@ -42,9 +54,17 @@ export default function SpeakingWidget({ args, status, onAnswer, onNext, onRetry
   const [score, setScore] = useState<number | null>(null);
   const answered = status === "answered";
 
+  const speakTarget = useCallback(() => {
+    if (typeof window === "undefined" || !window.speechSynthesis) return;
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(args.target);
+    utterance.lang = "en-US";
+    utterance.rate = 0.85;
+    window.speechSynthesis.speak(utterance);
+  }, [args.target]);
+
   async function handleStop() {
     stopRecording();
-    // Short delay for recorder to finalize blob
     await new Promise(r => setTimeout(r, 300));
     if (!audioUrl) return;
 
@@ -53,11 +73,11 @@ export default function SpeakingWidget({ args, status, onAnswer, onNext, onRetry
       const res = await fetch("/api/gemini/transcribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ audioUrl, target: args.target }),
+        body: JSON.stringify({ audioDataUrl: audioUrl, targetWord: args.target }),
       });
       const data = await res.json();
       const text: string = data.transcript ?? "";
-      const s: number = data.score ?? 0.5;
+      const s: number = scoreTranscript(text, args.target);
       setTranscript(text);
       setScore(s);
       onAnswer({ correct: s >= 0.6, score: s, topic: args.target, gradedBy: "model" });
@@ -76,7 +96,7 @@ export default function SpeakingWidget({ args, status, onAnswer, onNext, onRetry
       <p className="text-sm text-fg-muted">
         {args.prompt}
       </p>
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3 flex-wrap">
         <p className="text-lg font-semibold text-fg">
           {args.target}
         </p>
@@ -85,6 +105,15 @@ export default function SpeakingWidget({ args, status, onAnswer, onNext, onRetry
             /{args.ipa}/
           </span>
         )}
+        <button
+          onClick={speakTarget}
+          className="flex items-center gap-1 px-2 py-1 rounded-lg text-xs"
+          style={{ backgroundColor: "var(--surface-sunken)", color: "var(--fg-muted)" }}
+          title="Listen to pronunciation"
+        >
+          <Volume2 className="w-3.5 h-3.5" />
+          Listen
+        </button>
       </div>
 
       {!answered && (

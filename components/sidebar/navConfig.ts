@@ -1,7 +1,6 @@
 import {
   Home,
   MicVocal,
-  Bot,
   BookMarked,
   BookOpen,
   Radio,
@@ -17,8 +16,7 @@ export const coreNav: NavSectionType = {
   items: [
     { name: "Home", href: "/", icon: Home },
     { name: "Practice", href: "/practice", icon: MicVocal },
-    { name: "AI Practice", href: "/ai-practice", icon: Bot },
-    { name: "Interview", href: "/interview", icon: BriefcaseBusiness },
+{ name: "Interview", href: "/interview", icon: BriefcaseBusiness },
   ],
 };
 

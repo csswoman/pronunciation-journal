@@ -73,7 +73,7 @@ export default function InterviewConfig({
 
       {/* Interview Type */}
       <div className="flex flex-col gap-2.5">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.1em] text-[var(--text-tertiary)]">
+        <p className="text-tiny font-semibold uppercase tracking-[0.1em] text-[var(--text-tertiary)]">
           Interview Type
         </p>
         <div className="grid grid-cols-2 gap-2">
@@ -88,8 +88,8 @@ export default function InterviewConfig({
                 strokeWidth={1.8}
                 style={{ color: scenario === id ? "var(--primary)" : "var(--text-tertiary)" }}
               />
-              <span className="text-xs font-semibold text-[var(--text-primary)] leading-[1.2]">{label}</span>
-              <span className="text-[10px] text-[var(--text-tertiary)] leading-[1.4]">{sub}</span>
+              <span className="text-caption font-semibold text-[var(--text-primary)] leading-[1.2]">{label}</span>
+              <span className="text-tiny text-[var(--text-tertiary)]">{sub}</span>
             </button>
           ))}
         </div>
@@ -97,7 +97,7 @@ export default function InterviewConfig({
 
       {/* Level */}
       <div className="flex flex-col gap-2.5">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.1em] text-[var(--text-tertiary)]">
+        <p className="text-tiny font-semibold uppercase tracking-[0.1em] text-[var(--text-tertiary)]">
           Your English Level
         </p>
         <div className="flex gap-2">
@@ -105,16 +105,16 @@ export default function InterviewConfig({
             <button
               key={id}
               onClick={() => onLevelChange(id)}
-              className={`flex-1 flex flex-col items-center gap-[3px] py-2.5 px-2 rounded-[10px] border cursor-pointer transition-[background,border-color] duration-150 ${
+              className={`flex-1 flex flex-col items-center gap-1 py-2.5 px-2 rounded-xl border cursor-pointer transition-[background,border-color] duration-150 ${
                 level === id
                   ? "bg-[var(--accent-dim)] border-[var(--accent-border)]"
                   : "bg-[var(--surface-raised)] border-[var(--border-subtle)] hover:bg-[var(--surface-sunken)]"
               }`}
             >
-              <span className={`text-xs font-semibold leading-none ${level === id ? "text-[var(--primary)]" : "text-[var(--text-primary)]"}`}>
+              <span className={`text-caption font-semibold leading-none ${level === id ? "text-[var(--primary)]" : "text-[var(--text-primary)]"}`}>
                 {label}
               </span>
-              <span className="text-[9px] text-[var(--text-tertiary)] text-center leading-[1.3]">{sub}</span>
+              <span className="text-tiny text-[var(--text-tertiary)] text-center">{sub}</span>
             </button>
           ))}
         </div>
@@ -122,7 +122,7 @@ export default function InterviewConfig({
 
       {/* Scoring Mode */}
       <div className="flex flex-col gap-2.5">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.1em] text-[var(--text-tertiary)]">
+        <p className="text-tiny font-semibold uppercase tracking-[0.1em] text-[var(--text-tertiary)]">
           Scoring Mode
         </p>
         <div className="grid grid-cols-2 gap-2">
@@ -133,12 +133,12 @@ export default function InterviewConfig({
               className={`${cardBase} ${difficulty === id ? cardActive : cardInactive}`}
             >
               <div className="flex items-center justify-between gap-1.5">
-                <span className="text-xs font-semibold text-[var(--text-primary)] leading-[1.2]">{label}</span>
-                <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full whitespace-nowrap shrink-0 ${badgeStyle}`}>
+                <span className="text-caption font-semibold text-[var(--text-primary)] leading-[1.2]">{label}</span>
+                <span className={`text-tiny font-bold px-1.5 py-0.5 rounded-full whitespace-nowrap shrink-0 ${badgeStyle}`}>
                   {badge}
                 </span>
               </div>
-              <span className="text-[10px] text-[var(--text-tertiary)] leading-[1.4]">{sub}</span>
+              <span className="text-tiny text-[var(--text-tertiary)]">{sub}</span>
             </button>
           ))}
         </div>

@@ -44,7 +44,7 @@ function renderProse(lines: string[]) {
         <ul key={`ul-${i}`} className="space-y-1 pl-3 my-1">
           {items.map((item, j) => (
             <li key={j} className="flex gap-2 leading-relaxed" style={{ fontSize: "15px" }}>
-              <span className="mt-[9px] w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: "var(--primary)", opacity: 0.7 }} />
+              <span className="mt-2 w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: "var(--primary)", opacity: 0.7 }} />
               <span>{renderInline(item)}</span>
             </li>
           ))}
@@ -131,9 +131,8 @@ function AIBubble({ message, showAvatar, onSaveWord, onSuggestionClick, onToolAn
         <div
           className="px-4 py-3 rounded-2xl rounded-tl-sm cursor-text select-text"
           style={{
-            background: "linear-gradient(135deg, oklch(0.21 0.018 var(--hue)), oklch(0.18 0.012 var(--hue)))",
+            background: "linear-gradient(135deg, var(--surface-raised), var(--surface-base))",
             borderLeft: "3px solid var(--primary)",
-            boxShadow: "0 1px 3px oklch(0 0 0 / 0.3), inset 0 0 0 1px oklch(1 0 0 / 0.04)",
             color: "var(--text-secondary)",
           }}
           onMouseUp={handleMouseUp}

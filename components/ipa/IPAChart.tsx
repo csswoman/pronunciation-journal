@@ -269,7 +269,7 @@ export default function IPAChart() {
             Have real conversations with Gemini-powered AI and get pronunciation feedback on the sounds you just explored.
           </p>
         </div>
-        <Link href="/ai-practice">
+        <Link href="/practice">
           <Button variant="primary" size="lg" className="shrink-0 whitespace-nowrap">
             <MessageCircle size={16} />
             Start Session

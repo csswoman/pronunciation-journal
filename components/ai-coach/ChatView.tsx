@@ -72,7 +72,7 @@ export default function ChatView({
 
   return (
     <div className="chat-messages-container flex flex-col justify-end h-full py-4">
-      <div className="mt-auto flex flex-col">
+      <div className="mt-auto flex flex-col mx-5">
         {visibleMessages.map((msg, i) => (
           <div key={i} className={gapBefore[i] ? "mt-4" : "mt-1"}>
             <MessageBubble

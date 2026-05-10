@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import type { TabId } from "@/components/ai-practice/ChatTabs";
-import CustomPromptPanel from "@/components/ai-practice/CustomPromptPanel";
+import type { TabId } from "@/components/ai-coach/ChatTabs";
+import CustomPromptPanel from "@/components/ai-coach/CustomPromptPanel";
 import ChatEmptyState from "./ChatEmptyState";
 import InterviewConfig, { type Scenario, type Level, type Difficulty } from "./InterviewConfig";
 
@@ -68,7 +68,7 @@ export default function AICoachHome({
         <div className="px-4 pt-2 pb-4 shrink-0">
           <button
             onClick={startInterview}
-            className="w-full py-[14px] rounded-[14px] bg-[var(--primary)] border-none text-sm font-semibold text-[var(--on-primary)] cursor-pointer transition-[opacity,transform] duration-150 hover:opacity-90 hover:-translate-y-px"
+            className="w-full py-3 rounded-2xl bg-[var(--primary)] border-none text-sm font-semibold text-[var(--on-primary)] cursor-pointer transition-[opacity,transform] duration-150 hover:opacity-90 hover:-translate-y-px"
           >
             Start Interview →
           </button>
