@@ -7,7 +7,6 @@ import {
   Folder,
   TrendingUp,
   Settings,
-  BriefcaseBusiness,
 } from "lucide-react";
 import { NavSectionType } from "./NavSection";
 
@@ -16,7 +15,6 @@ export const coreNav: NavSectionType = {
   items: [
     { name: "Home", href: "/", icon: Home },
     { name: "Practice", href: "/practice", icon: MicVocal },
-{ name: "Interview", href: "/interview", icon: BriefcaseBusiness },
   ],
 };
 

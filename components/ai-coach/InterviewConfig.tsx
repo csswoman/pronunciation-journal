@@ -43,9 +43,13 @@ const SCORING: { id: Difficulty; label: string; badge: string; badgeStyle: strin
 // ── Shared class strings ──────────────────────────────────────────────────────
 
 const cardBase =
-  "p-3 rounded-xl bg-[var(--surface-raised)] border border-[var(--border-subtle)] text-left cursor-pointer transition-[border-color,background] duration-150 flex flex-col gap-1.5";
-const cardInactive = "hover:border-[var(--border-default)]";
-const cardActive   = "bg-[var(--accent-dim)] border-[var(--accent-border)]";
+  "p-3 rounded-xl border text-left cursor-pointer transition-[border-color,background] duration-150 flex flex-col gap-1.5";
+
+function cardCls(active: boolean) {
+  return active
+    ? `${cardBase} bg-[var(--accent-dim)] border-[var(--accent-border)]`
+    : `${cardBase} bg-[var(--surface-raised)] border-[var(--border-subtle)] hover:border-[var(--border-default)]`;
+}
 
 // ── Props ─────────────────────────────────────────────────────────────────────
 
@@ -81,7 +85,7 @@ export default function InterviewConfig({
             <button
               key={id}
               onClick={() => onScenarioChange(id)}
-              className={`${cardBase} ${scenario === id ? cardActive : cardInactive}`}
+              className={cardCls(scenario === id)}
             >
               <Icon
                 size={16}
@@ -130,7 +134,7 @@ export default function InterviewConfig({
             <button
               key={id}
               onClick={() => onDifficultyChange(id)}
-              className={`${cardBase} ${difficulty === id ? cardActive : cardInactive}`}
+              className={cardCls(difficulty === id)}
             >
               <div className="flex items-center justify-between gap-1.5">
                 <span className="text-caption font-semibold text-[var(--text-primary)] leading-[1.2]">{label}</span>
