@@ -1,12 +1,11 @@
 import {
   Home,
   MicVocal,
-  BookMarked,
   BookOpen,
   Radio,
-  Folder,
   TrendingUp,
   Settings,
+  LibraryBig,
 } from "lucide-react";
 import { NavSectionType } from "./NavSection";
 
@@ -21,8 +20,7 @@ export const coreNav: NavSectionType = {
 export const learningNav: NavSectionType = {
   label: "Learning",
   items: [
-    { name: "Word Bank", href: "/words", icon: BookMarked },
-    { name: "Decks", href: "/decks", icon: Folder },
+    { name: "Vocabulary", href: "/vocabulary", icon: LibraryBig },
     { name: "Courses", href: "/courses", icon: BookOpen },
     { name: "IPA Chart", href: "/ipa", icon: Radio },
   ],

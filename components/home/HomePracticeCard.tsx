@@ -13,7 +13,7 @@ const MODES: { icon: LucideIcon; label: string }[] = [
 
 export default function HomePracticeCard() {
   return (
-    <div className="rounded-2xl bg-[#111] p-6 flex items-center justify-between gap-6">
+    <div className="rounded-2xl bg-surface-tooltip p-6 flex items-center justify-between gap-6">
       <div className="flex flex-col gap-3">
         <div className="flex items-center gap-2">
           <Sparkles size={13} className="text-[var(--primary)]" />

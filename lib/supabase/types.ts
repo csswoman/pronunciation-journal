@@ -642,15 +642,20 @@ export type Database = {
             context: string | null
             created_at: string
             difficulty: number
+            ease_factor: number
             error_reason: string | null
             example: string | null
             has_audio: boolean | null
             id: string
             image_prompt: string | null
+            interval_days: number
             ipa: string | null
+            last_reviewed_at: string | null
             meaning: string | null
             next_review_at: string | null
+            repetitions: number
             review_count: number
+            srs_status: 'new' | 'learning' | 'review' | 'mastered'
             status: string
             synonyms: string[] | null
             text: string
@@ -664,15 +669,20 @@ export type Database = {
             context?: string | null
             created_at?: string
             difficulty?: number
+            ease_factor?: number
             error_reason?: string | null
             example?: string | null
             has_audio?: boolean | null
             id?: string
             image_prompt?: string | null
+            interval_days?: number
             ipa?: string | null
+            last_reviewed_at?: string | null
             meaning?: string | null
             next_review_at?: string | null
+            repetitions?: number
             review_count?: number
+            srs_status?: 'new' | 'learning' | 'review' | 'mastered'
             status?: string
             synonyms?: string[] | null
             text: string
@@ -686,15 +696,20 @@ export type Database = {
             context?: string | null
             created_at?: string
             difficulty?: number
+            ease_factor?: number
             error_reason?: string | null
             example?: string | null
             has_audio?: boolean | null
             id?: string
             image_prompt?: string | null
+            interval_days?: number
             ipa?: string | null
+            last_reviewed_at?: string | null
             meaning?: string | null
             next_review_at?: string | null
+            repetitions?: number
             review_count?: number
+            srs_status?: 'new' | 'learning' | 'review' | 'mastered'
             status?: string
             synonyms?: string[] | null
             text?: string
@@ -703,6 +718,39 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      word_bank_decks: {
+        Row: {
+          added_at: string
+          deck_id: string
+          word_id: string
+        }
+        Insert: {
+          added_at?: string
+          deck_id: string
+          word_id: string
+        }
+        Update: {
+          added_at?: string
+          deck_id?: string
+          word_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "word_bank_decks_deck_id_fkey"
+            columns: ["deck_id"]
+            isOneToOne: false
+            referencedRelation: "decks"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "word_bank_decks_word_id_fkey"
+            columns: ["word_id"]
+            isOneToOne: false
+            referencedRelation: "word_bank"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       words: {
         Row: {

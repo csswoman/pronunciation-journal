@@ -325,6 +325,8 @@ export interface UserProfile {
 
 export type WordBankStatus = "processing" | "ready" | "failed";
 
+export type WordBankSrsStatus = "new" | "learning" | "review" | "mastered";
+
 export interface WordBankEntry {
   id: string;
   user_id: string;
@@ -342,7 +344,14 @@ export interface WordBankEntry {
   status: WordBankStatus;
   difficulty: number;
   error_reason: "parse_error" | "api_error" | "timeout" | null;
+
+  // SM-2 spaced repetition state
+  ease_factor: number;
+  interval_days: number;
+  repetitions: number;
+  srs_status: WordBankSrsStatus;
   next_review_at: string | null;
+  last_reviewed_at: string | null;
   review_count: number;
 
   created_at: string;

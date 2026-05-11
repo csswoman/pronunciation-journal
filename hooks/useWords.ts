@@ -15,7 +15,7 @@ interface UseWordsState {
   words: WordBankEntry[];
   loading: boolean;
   error: string | null;
-  addWord: (input: { text: string; context?: string | null }) => Promise<void>;
+  addWord: (input: { text: string; context?: string | null; deckId?: string | null }) => Promise<void>;
   removeWord: (id: string) => Promise<void>;
   markDifficult: (id: string) => Promise<void>;
   retry: (id: string) => Promise<void>;
@@ -168,7 +168,7 @@ export function useWords(): UseWordsState {
   }, [words, user, refresh]);
 
   const addWord = useCallback(
-    async (input: { text: string; context?: string | null }) => {
+    async (input: { text: string; context?: string | null; deckId?: string | null }) => {
       if (!user) throw new Error("Not authenticated");
 
       const text = input.text.trim();
@@ -193,7 +193,12 @@ export function useWords(): UseWordsState {
         status: "processing",
         difficulty: 0,
         error_reason: null,
+        ease_factor: 2.5,
+        interval_days: 1,
+        repetitions: 0,
+        srs_status: "new",
         next_review_at: null,
+        last_reviewed_at: null,
         review_count: 0,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
@@ -201,7 +206,7 @@ export function useWords(): UseWordsState {
       setWords(prev => [optimistic, ...prev]);
 
       try {
-        const real = await apiQuickAddWord({ text, context: input.context });
+        const real = await apiQuickAddWord({ text, context: input.context, deckId: input.deckId });
         pendingAddRef.current.delete(pendingKey);
         // Swap optimistic row for the real one.
         setWords(prev => {

@@ -19,6 +19,7 @@ export async function getMyWords(): Promise<WordBankEntry[]> {
 export async function quickAddWord(input: {
   text: string;
   context?: string | null;
+  deckId?: string | null;
 }): Promise<WordBankEntry> {
   const supabase = getSupabaseBrowserClient();
   const { data: { session } } = await supabase.auth.getSession();
@@ -33,6 +34,7 @@ export async function quickAddWord(input: {
     body: JSON.stringify({
       text: input.text,
       context: input.context ?? null,
+      deckId: input.deckId ?? null,
     }),
   });
 

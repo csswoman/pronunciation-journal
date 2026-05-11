@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import Sidebar from "./Sidebar";
 import BottomNav from "./BottomNav";
-import { QuickAddModal } from "@/app/words/components/QuickAddModal";
+import { QuickAddModal } from "@/components/vocabulary/words/QuickAddModal";
 import { quickAddWord } from "@/lib/word-bank/queries";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { useAICoachStore } from "@/lib/stores/aiCoachStore";
