@@ -19,7 +19,7 @@ export function SmartDeckCard({ count, onStudy }: SmartDeckCardProps) {
         background: "color-mix(in oklch, var(--primary) 4%, var(--card-bg))",
       }}
     >
-      <div className="px-4 py-[14px] flex items-center gap-4">
+      <div className="px-4 py-3 flex items-center gap-4">
         <div className="flex items-start gap-3 min-w-0 flex-1">
           <div
             className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 text-xl"
@@ -62,7 +62,7 @@ export function SmartDeckCard({ count, onStudy }: SmartDeckCardProps) {
           variant="primary"
           onClick={onStudy}
           icon={<Play size={15} className="fill-current" />}
-          className="px-[14px] py-1.5 !text-[13px] !rounded-[var(--radius-sm)]"
+          className="px-3 py-1.5 !text-[13px] !rounded-[var(--radius-sm)]"
         >
           Study
         </Button>

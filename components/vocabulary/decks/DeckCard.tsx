@@ -31,7 +31,7 @@ export function DeckCard({
 
   return (
     <div className="bg-[var(--card-bg)] rounded-[var(--radius-lg)] border border-[var(--line-divider)] overflow-hidden transition-all hover:shadow-lg hover:border-[var(--primary)] flex flex-col">
-      <div className="px-4 py-[14px] flex flex-col gap-[10px]">
+      <div className="px-4 py-3 flex flex-col gap-3">
 
         {/* Header */}
         <div className="flex items-start gap-3">
@@ -75,7 +75,7 @@ export function DeckCard({
           disabled={!canStudy}
           title={!canStudy ? "Add words to study" : ""}
           icon={<Play size={15} className="fill-current" />}
-          className="px-[14px] py-1.5 ml-auto !text-[13px] !rounded-[var(--radius-sm)]"
+          className="px-3 py-1.5 ml-auto !text-[13px] !rounded-[var(--radius-sm)]"
         >
           Study
         </Button>

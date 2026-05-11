@@ -252,7 +252,7 @@ export default function VocabularyPage() {
                       <button
                         key={f}
                         onClick={() => setFilterType(f)}
-                        className={`inline-flex items-center gap-1 px-[10px] py-1 rounded-full text-xs font-medium border transition-colors ${
+                        className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium border transition-colors ${
                           filterType === f
                             ? "bg-[var(--primary)] text-on-primary border-[var(--primary)]"
                             : "border-[var(--line-divider)] bg-[var(--card-bg)] text-fg-muted hover:border-[var(--primary)]"

@@ -75,7 +75,7 @@ export function WordCard({ word, onMarkDifficult, onRetry, onDelete, selected, o
         )}
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2.5">
-            <H4 as="h3" className="truncate text-fg font-bold text-[20px] leading-[1.2]">
+            <H4 as="h3" className="truncate text-fg font-bold text-h4 leading-[1.2]">
               {word.text}
             </H4>
             {word.ipa && (

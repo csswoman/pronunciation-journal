@@ -35,7 +35,7 @@ export function DeckGrid({ decks, counts, onStudy, onManage, onEdit, onDelete, o
 
       <button
         onClick={onCreateNew}
-        className="flex flex-col items-center justify-center gap-3 rounded-[var(--radius-lg)] border-2 border-dashed border-[color-mix(in_oklch,var(--primary)_30%,var(--line-divider))] bg-[var(--card-bg)] px-4 py-[14px] text-center transition-all hover:border-[var(--primary)] hover:bg-[color-mix(in_oklch,var(--primary)_5%,var(--card-bg))] group"
+        className="flex flex-col items-center justify-center gap-3 rounded-[var(--radius-lg)] border-2 border-dashed border-[color-mix(in_oklch,var(--primary)_30%,var(--line-divider))] bg-[var(--card-bg)] px-4 py-3 text-center transition-all hover:border-[var(--primary)] hover:bg-[color-mix(in_oklch,var(--primary)_5%,var(--card-bg))] group"
       >
         <div className="w-10 h-10 rounded-full border border-[var(--line-divider)] bg-[var(--surface-sunken)] flex items-center justify-center">
           <Plus size={16} className="text-fg-subtle" />
