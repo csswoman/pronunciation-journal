@@ -2,6 +2,7 @@
 
 import { Bell, Settings } from 'lucide-react'
 import Button from '@/components/ui/Button'
+import { H1 } from '@/components/ui/Typography'
 
 interface PracticeHeaderProps {
   masteredCount: number
@@ -20,7 +21,7 @@ export function PracticeHeader({
     <div className="w-full space-y-6 pb-4">
       {/* Title and Actions */}
       <div className="flex items-center justify-between">
-        <h1 className="text-h2 text-fg">Phoneme Practice</h1>
+        <H1 className="text-h2">Phoneme Practice</H1>
         <div className="flex items-center gap-2">
           {dueForReview > 0 && (
             <Button type="button" variant="chip" size="sm" className="rounded-full px-3 py-1 text-sm font-medium bg-[oklch(.9_.08_25)] text-[oklch(.6_.2_25)] flex items-center gap-1">

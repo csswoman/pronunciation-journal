@@ -8,6 +8,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import AIEngagementWidget from "@/components/practice/AIEngagementWidget";
+import { H2 } from "@/components/ui/Typography";
 
 export interface ProgressDay {
   date: string;
@@ -115,9 +116,9 @@ export default function ProgressOverview({
             <p className="text-tiny font-semibold uppercase tracking-[0.28em]" style={{ color: "var(--primary)" }}>
               Progress Snapshot
             </p>
-            <h2 className="mt-2 text-h2 sm:text-4xl text-fg">
+            <H2 className="mt-2 text-h2 sm:text-4xl">
               Clear momentum, less noise.
-            </h2>
+            </H2>
             <p className="mt-3 max-w-lg text-sm leading-7 sm:text-body text-fg-muted">
               Your progress now highlights rhythm, quality, and study load without repeating the same numbers in every block.
             </p>

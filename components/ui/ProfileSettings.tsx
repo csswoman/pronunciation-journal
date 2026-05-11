@@ -6,6 +6,7 @@ import { useAuth } from "@/components/auth/AuthProvider";
 import ProfileAvatarCard from "@/components/profile/ProfileAvatarCard";
 import ProfileNameCard from "@/components/profile/ProfileNameCard";
 import ProfilePasswordCard from "@/components/profile/ProfilePasswordCard";
+import { H1, H2 } from "@/components/ui/Typography";
 
 function Toast({ message, type }: { message: string; type: "success" | "error" }) {
   return (
@@ -112,9 +113,9 @@ export default function ProfileSettings() {
             </svg>
           </div>
           <div>
-            <h2 className="text-base font-semibold text-fg">
+            <H2 className="text-base font-semibold">
               You&apos;re not signed in
-            </h2>
+            </H2>
             <p className="text-sm mt-1 text-fg-muted">
               Sign in to view and edit your profile
             </p>
@@ -138,7 +139,7 @@ export default function ProfileSettings() {
     <div className="max-w-lg mx-auto py-8 px-4 space-y-5">
       {/* Header */}
       <div>
-        <h1 className="text-h2 text-fg">Profile</h1>
+        <H1 className="text-h2">Profile</H1>
         <p className="text-sm mt-0.5 text-fg-muted">
           Manage your account information and preferences
         </p>

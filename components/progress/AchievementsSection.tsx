@@ -1,6 +1,7 @@
 'use client'
 
 import Button from "@/components/ui/Button";
+import { H2 } from '@/components/ui/Typography';
 
 interface Achievement {
   id: string
@@ -74,9 +75,9 @@ export default function AchievementsSection() {
           <p className="text-tiny font-bold uppercase tracking-[0.24em] text-fg-subtle">
             ACHIEVEMENTS
           </p>
-          <h2 className="mt-0.5 text-h4 text-fg">
+          <H2 className="mt-0.5 text-h4">
             {unlocked.length} earned · {locked.length} remaining
-          </h2>
+          </H2>
         </div>
         <Button variant="ghost" size="sm" className="text-xs font-semibold shrink-0 text-[var(--primary)]">
           View all

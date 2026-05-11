@@ -1,5 +1,6 @@
 "use client";
 import Button from "@/components/ui/Button";
+import { H3 } from "@/components/ui/Typography";
 
 import { useState } from "react";
 import {
@@ -167,9 +168,9 @@ export default function ProgressInsights({
           <p className="text-tiny font-semibold uppercase tracking-[0.24em]" style={{ color: "var(--primary)" }}>
             Insight Panels
           </p>
-          <h3 className="mt-2 text-h3 text-fg">
+          <H3 className="mt-2 text-h3">
             One card, three ways to read your progress
-          </h3>
+          </H3>
         </div>
 
         <div

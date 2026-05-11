@@ -55,7 +55,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           transition: "margin-right 0.25s ease",
         }}
       >
-        <div className="max-w-screen-xl mx-auto px-6 lg:px-10 py-8 lg:py-9 bg-[var(--card-bg)] rounded-2xl my-10 !p-0">
+        <div className="max-w-screen-xl mx-auto">
           {children}
         </div>
       </main>

@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { getLessonInCourse, getCourses, getCourseWithLessons } from "@/lib/notion/courses";
 import { NotionBlockRenderer } from "@/components/lessons/NotionBlockContent";
 import LessonCompleteButton from "@/components/courses/LessonCompleteButton";
+import { H1 } from "@/components/ui/Typography";
 
 const illustrationFiles = [
   "/illustrations/lesson/brain.svg",
@@ -112,9 +113,9 @@ export default async function LessonPage({ params }: Props) {
                     {course.level}
                   </span>
                 )}
-                <h1 className="text-h2 text-on-primary">
+                <H1 className="text-h2 text-on-primary">
                   {lesson.title}
-                </h1>
+                </H1>
                 <p className="text-xs text-[color-mix(in_oklch,var(--on-primary)_60%,transparent)] mt-1">
                   {course.title} · Updated {new Date(lesson.updatedAt).toLocaleDateString()}
                 </p>

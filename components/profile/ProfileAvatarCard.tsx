@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import Image from "next/image";
 import Button from "@/components/ui/Button";
+import { H3 } from "@/components/ui/Typography";
 
 const CROP_SIZE = 250;
 
@@ -118,9 +119,9 @@ export default function ProfileAvatarCard({
             className="rounded-2xl p-6 max-w-sm w-full mx-4 shadow-2xl"
             style={{ background: "var(--bg-secondary)", border: "1px solid var(--border)" }}
           >
-            <h3 className="text-base font-semibold mb-1 text-fg">
+            <H3 className="text-base font-semibold mb-1">
               Adjust profile photo
-            </h3>
+            </H3>
             <p className="text-sm mb-5 text-fg-muted">
               Drag to position your photo
             </p>

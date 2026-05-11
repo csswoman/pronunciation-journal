@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { Volume2, Mic, Square, Play, Loader2, RotateCcw, ChevronDown } from "lucide-react";
-import { useSidebar } from "@/components/sidebar/SidebarContext";
+import Card from "@/components/layout/Card";
+import Button from "@/components/ui/Button";
 
 interface WordOfDay {
   word: string;
@@ -18,20 +19,15 @@ const DIFFICULTY_STYLE: Record<string, React.CSSProperties> = {
   advanced:     { color: "var(--warning)",  borderColor: "color-mix(in oklch, var(--warning) 40%, transparent)" },
 };
 
-const BAR_HEIGHTS = [6, 10, 16, 12, 20, 14, 24, 18, 14, 20, 12, 16, 10, 6, 12, 18, 14, 8];
+const BAR_HEIGHTS = [6, 10, 16, 12, 20, 16, 24, 18, 14, 22, 16, 28, 22, 16, 10, 16, 22, 18, 12, 8, 14, 20, 14, 10, 6];
 
-export default function SidebarWordOfDay() {
-  const { collapsed } = useSidebar();
-
+export default function HomeWordOfDay() {
   const [word, setWord] = useState<WordOfDay | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [definitionOpen, setDefinitionOpen] = useState(false);
 
-  // TTS
   const [speaking, setSpeaking] = useState(false);
-
-  // Recording
   const [isRecording, setIsRecording] = useState(false);
   const [recordedUrl, setRecordedUrl] = useState<string | null>(null);
   const [playingRecording, setPlayingRecording] = useState(false);
@@ -41,7 +37,6 @@ export default function SidebarWordOfDay() {
   const streamRef = useRef<MediaStream | null>(null);
 
   useEffect(() => {
-    if (collapsed) return;
     const cached = sessionStorage.getItem("wod");
     const cachedDate = sessionStorage.getItem("wod_date");
     const today = new Date().toISOString().slice(0, 10);
@@ -50,7 +45,7 @@ export default function SidebarWordOfDay() {
       return;
     }
     fetchWord();
-  }, [collapsed]);
+  }, []);
 
   async function fetchWord(forceRefresh = false) {
     setLoading(true);
@@ -125,20 +120,12 @@ export default function SidebarWordOfDay() {
     audio.play();
   }
 
-  if (collapsed) return null;
-
   const difficultyStyle = word
     ? (DIFFICULTY_STYLE[word.difficulty] ?? DIFFICULTY_STYLE.intermediate)
     : DIFFICULTY_STYLE.intermediate;
 
   return (
-    <div
-      className="flex flex-col gap-3 overflow-hidden"
-      style={{
-        borderTop: "1px solid var(--border-subtle)",
-        padding: "var(--space-4)",
-      }}
-    >
+    <Card variant="compact" className="gap-4">
       <div className="flex items-center justify-between">
         <span
           className="text-tiny font-bold tracking-widest uppercase border rounded-full px-2 py-0.5"
@@ -149,12 +136,10 @@ export default function SidebarWordOfDay() {
         {!loading && (
           <button
             onClick={() => fetchWord(true)}
-            className="transition-colors text-fg-subtle"
-            onMouseEnter={e => (e.currentTarget.style.color = "var(--text-secondary)")}
-            onMouseLeave={e => (e.currentTarget.style.color = "var(--text-tertiary)")}
+            className="transition-colors text-fg-subtle hover:text-fg-muted"
             title="Refresh"
           >
-            <RotateCcw size={12} />
+            <RotateCcw size={13} />
           </button>
         )}
       </div>
@@ -174,7 +159,7 @@ export default function SidebarWordOfDay() {
         <>
           <div>
             <div className="flex items-center gap-1.5">
-              <p className="font-bold leading-tight" style={{ font: "var(--font-h4)", color: "var(--text-primary)" }}>{word.word}</p>
+              <p className="text-2xl font-medium text-[var(--text-primary)] leading-none">{word.word}</p>
               <button
                 onClick={() => setDefinitionOpen((o) => !o)}
                 className="hover:opacity-70 transition-opacity mt-0.5"
@@ -187,23 +172,23 @@ export default function SidebarWordOfDay() {
                 />
               </button>
             </div>
-            <p className="font-ipa mt-0.5" style={{ font: "var(--font-caption)", color: "var(--primary)" }}>{word.ipa}</p>
+            <p className="font-ipa text-xs font-mono mt-1" style={{ color: "var(--primary)" }}>{word.ipa}</p>
 
             {definitionOpen && (
               <div
-                className="mt-1 rounded-xl px-3 py-2.5 flex flex-col gap-1.5"
+                className="mt-2 rounded-xl px-3 py-2.5 flex flex-col gap-1.5"
                 style={{ backgroundColor: "var(--bg-tertiary)", border: "1px solid var(--border)" }}
               >
-                <p className="text-tiny leading-snug text-fg-muted">{word.definition}</p>
+                <p className="text-xs leading-relaxed text-[var(--text-secondary)]">{word.definition}</p>
                 {word.example_sentence && (
-                  <p className="text-tiny italic leading-snug text-fg-subtle">"{word.example_sentence}"</p>
+                  <p className="text-xs italic leading-snug text-[var(--text-tertiary)]">"{word.example_sentence}"</p>
                 )}
               </div>
             )}
           </div>
 
           {/* Waveform */}
-          <div className="flex items-center gap-0.5 h-7">
+          <div className="flex items-center gap-0.5 h-8">
             {BAR_HEIGHTS.map((h, i) => (
               <span
                 key={i}
@@ -213,53 +198,50 @@ export default function SidebarWordOfDay() {
             ))}
           </div>
 
-          {/* Buttons */}
           <div className="flex gap-2">
-            <button
+            <Button
+              variant="outline"
+              icon={<Volume2 size={14} />}
+              className="flex-1"
               onClick={speak}
               disabled={speaking}
-              className="flex-1 flex items-center justify-center gap-1.5 text-xs font-semibold rounded-xl transition-colors disabled:opacity-50"
-              style={{ color: "var(--text-primary)", border: "1px solid var(--border)", backgroundColor: "var(--btn-regular-bg)", padding: "var(--space-1) var(--space-3)" }}
             >
-              <Volume2 size={13} />
               {speaking ? "Playing…" : "Listen"}
-            </button>
+            </Button>
 
             {!isRecording ? (
-              <button
+              <Button
+                icon={<Mic size={14} />}
+                className="flex-1"
                 onClick={startRecording}
-                className="flex-1 flex items-center justify-center gap-1.5 text-xs font-semibold rounded-xl transition-colors accent-button"
-                style={{ padding: "var(--space-1) var(--space-3)" }}
+                variant="primary"
               >
-                <Mic size={13} />
                 Record
-              </button>
+              </Button>
             ) : (
-              <button
+              <Button
+                icon={<Square size={14} />}
+                className="flex-1"
                 onClick={stopRecording}
-                className="flex-1 flex items-center justify-center gap-1.5 text-xs font-semibold rounded-xl transition-colors"
-                style={{ backgroundColor: "var(--error)", color: "oklch(1 0 0)", padding: "var(--space-1) var(--space-3)" }}
+                variant="primary"
               >
-                <Square size={13} />
                 Stop
-              </button>
+              </Button>
             )}
           </div>
 
-          {/* Playback row */}
           {recordedUrl && (
-            <button
+            <Button
+              variant="outline"
+              icon={<Play size={14} />}
               onClick={playRecording}
               disabled={playingRecording}
-              className="flex items-center justify-center gap-1.5 text-xs font-semibold rounded-xl py-2 transition-colors disabled:opacity-50"
-              style={{ color: "var(--text-secondary)", border: "1px solid var(--border)", backgroundColor: "var(--btn-regular-bg)" }}
             >
-              <Play size={13} />
               {playingRecording ? "Playing…" : "Play my recording"}
-            </button>
+            </Button>
           )}
         </>
       )}
-    </div>
+    </Card>
   );
 }

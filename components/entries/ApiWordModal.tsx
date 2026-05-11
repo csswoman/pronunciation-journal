@@ -1,5 +1,6 @@
 "use client";
 import Button from "@/components/ui/Button";
+import { H2, H3, H4 } from "@/components/ui/Typography";
 
 import { useState, useEffect } from "react";
 import { Entry, Meaning } from "@/lib/types";
@@ -71,9 +72,9 @@ export default function ApiWordModal({ word, onClose, onSave }: ApiWordModalProp
       >
         <div className="sticky top-0 bg-surface-raised border-b border-border-subtle p-6 flex justify-between items-start">
           <div className="flex items-center gap-4 flex-1">
-            <h2 className="text-h2 text-fg">
+            <H2 className="text-h2">
               {word}
-            </h2>
+            </H2>
             {data?.audioUrl && (
               <Button
                 onClick={() => playAudio(data.audioUrl!, { showAlerts: false })}
@@ -165,15 +166,15 @@ export default function ApiWordModal({ word, onClose, onSave }: ApiWordModalProp
 
               {data.meanings && data.meanings.length > 0 && (
                 <div>
-                  <h3 className="text-sm font-semibold text-fg-muted mb-3">
+                  <H3 className="text-sm font-semibold text-fg-muted mb-3">
                     Meanings
-                  </h3>
+                  </H3>
                   <div className="space-y-4">
                     {data.meanings.map((meaning, meaningIndex) => (
                       <div key={meaningIndex} className="border-l-4 border-info pl-4">
-                        <h4 className="text-sm font-semibold text-info mb-2 italic">
+                        <H4 className="text-sm font-semibold text-info mb-2 italic">
                           {meaning.partOfSpeech}
-                        </h4>
+                        </H4>
                         <ol className="list-decimal list-inside space-y-3">
                           {meaning.definitions.map((def, defIndex) => (
                             <li key={defIndex} className="text-fg">

@@ -7,6 +7,7 @@ import StatusBadge from "@/components/ui/StatusBadge";
 import Table from "@/components/ui/Table";
 import { useMinimalPairsTab } from "@/app/admin/seed/useMinimalPairsTab";
 import type { MinimalPairForm } from "@/lib/admin/seed/types";
+import { H3 } from "@/components/ui/Typography";
 
 export function MinimalPairsTab({ form, setForm }: { form: MinimalPairForm; setForm: (f: MinimalPairForm) => void }) {
   const { pairs, status, saving, soundOptions, handleSubmit } = useMinimalPairsTab({ form, setForm });
@@ -20,7 +21,7 @@ export function MinimalPairsTab({ form, setForm }: { form: MinimalPairForm; setF
       </div>
 
       <form onSubmit={handleSubmit} className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 rounded-xl border" style={{ borderColor: "var(--border)", backgroundColor: "var(--card-bg)" }}>
-        <h3 className="col-span-full text-sm font-semibold text-fg">Add Minimal Pair</h3>
+        <H3 className="col-span-full text-sm font-semibold">Add Minimal Pair</H3>
         <Input label="Word A" value={form.wordA} onChange={(v) => setForm({ ...form, wordA: v })} placeholder="think" required />
         <Input label="Word B" value={form.wordB} onChange={(v) => setForm({ ...form, wordB: v })} placeholder="sink" required />
         <Input label="IPA A" value={form.ipaA} onChange={(v) => setForm({ ...form, ipaA: v })} placeholder="/θɪŋk/" />

@@ -10,6 +10,7 @@ import {
   Check, ChevronDown, ChevronUp, Square, CheckSquare, Minus,
 } from "lucide-react";
 import Button from "@/components/ui/Button";
+import { H2 } from "@/components/ui/Typography";
 
 type Deck = Tables<"decks">;
 type Entry = Tables<"entries">;
@@ -354,7 +355,7 @@ export function ManageDrawer({ deck, onClose, onWordCountChange }: ManageDrawerP
         {/* Header */}
         <div className="flex items-start justify-between px-5 pt-5 pb-4 border-b border-[var(--line-divider)]">
           <div>
-            <h2 className="font-bold text-lg text-fg leading-tight">{deck.name}</h2>
+            <H2 className="font-bold text-lg leading-tight">{deck.name}</H2>
             {deck.description && (
               <p className="text-xs text-fg-muted mt-0.5 line-clamp-1">{deck.description}</p>
             )}

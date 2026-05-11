@@ -2,6 +2,7 @@
 
 import { Mic } from 'lucide-react'
 import Button from '@/components/ui/Button'
+import { H3 } from '@/components/ui/Typography'
 
 interface ExpertInsightCardProps {
   title: string
@@ -28,7 +29,7 @@ export function ExpertInsightCard({
       <div className="flex items-start justify-between">
         <div className="space-y-1">
           <div className="text-xs font-semibold opacity-90 tracking-widest">EXPERT INSIGHT</div>
-          <h3 className="text-h3">{title}</h3>
+          <H3 className="text-h3 text-on-primary">{title}</H3>
         </div>
         <Button type="button" variant="ghost" size="icon" className="rounded-full bg-overlay-light text-on-primary hover:bg-overlay-medium">
           <Mic size={20} className="text-on-primary" />

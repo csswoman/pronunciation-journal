@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Button from '@/components/ui/Button'
 import type { Sound } from '@/lib/phoneme-practice/types'
+import { H2 } from '@/components/ui/Typography'
 
 type Category = 'all' | 'vowels' | 'consonants' | 'diphthongs'
 
@@ -89,7 +90,7 @@ export function PracticeLedger({ sounds, onSelectSound, soundStatuses, dueCount 
 
   return (
     <div className="w-full space-y-4">
-      <h2 className="text-lg font-semibold text-fg">Practice Ledger</h2>
+      <H2 className="text-lg font-semibold">Practice Ledger</H2>
 
       {/* Review banner */}
       {dueCount > 0 && onStartReview && (

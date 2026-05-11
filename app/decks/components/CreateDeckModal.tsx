@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { X } from "lucide-react";
 import Button from "@/components/ui/Button";
+import { H2 } from "@/components/ui/Typography";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import type { Tables } from "@/lib/supabase/types";
@@ -53,7 +54,7 @@ export function CreateDeckModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
       <div className="w-full max-w-md mx-4 bg-[var(--card-bg)] rounded-2xl border border-[var(--line-divider)] shadow-xl p-6 space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="font-heading font-bold text-lg text-fg">New Deck</h2>
+          <H2 className="font-heading font-bold text-lg">New Deck</H2>
           <Button variant="ghost" size="icon" onClick={onClose}>
             <X size={20} />
           </Button>

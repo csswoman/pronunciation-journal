@@ -2,6 +2,7 @@
 
 import { Mic } from "lucide-react";
 import { ReactNode } from "react";
+import { H1 } from "@/components/ui/Typography";
 
 interface AuthCardProps {
   children: ReactNode;
@@ -23,9 +24,9 @@ export function AuthCard({ children }: AuthCardProps) {
         >
           <Mic className="w-6 h-6" style={{ color: "var(--on-primary)" }} />
         </div>
-        <h1 className="mt-[var(--space-3)]" style={{ font: "var(--font-h2)", color: "var(--text-primary)", fontWeight: 600 }}>
+        <H1 className="mt-[var(--space-3)]" style={{ font: "var(--font-h2)", color: "var(--text-primary)", fontWeight: 600 }}>
           English Journal
-        </h1>
+        </H1>
         <p className="mt-[var(--space-2)]" style={{ font: "var(--font-body-sm)", color: "var(--text-secondary)" }}>
           Practice pronunciation. Track your progress.
         </p>

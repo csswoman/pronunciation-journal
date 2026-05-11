@@ -5,6 +5,7 @@ import ConversationIllustration from "@/components/illustrations/ConversationIll
 import { Play, Sparkles } from "lucide-react";
 import Button from "@/components/ui/Button";
 import { useAuth } from "@/components/auth/AuthProvider";
+import { H1 } from "@/components/ui/Typography";
 
 export default function HomeHero() {
   const router = useRouter();
@@ -21,9 +22,9 @@ export default function HomeHero() {
  grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-8 items-center"
     >
       <div>
-        <h1 className="font-display text-h1 lg:text-h1 text-fg mb-1">
+        <H1 className="font-display text-h1 lg:text-h1 mb-1">
           Welcome back, <em className="not-italic text-[var(--primary)]">Karla!</em> 👋
-        </h1>
+        </H1>
         <p className="text-body text-fg-muted mb-6 leading-relaxed">
           Keep going! You&apos;re doing great with your English journey.
         </p>

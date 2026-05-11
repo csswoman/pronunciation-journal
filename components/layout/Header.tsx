@@ -2,6 +2,7 @@
 
 import { useAuth } from "@/components/auth/AuthProvider";
 import Button from "@/components/ui/Button";
+import { H1 } from "@/components/ui/Typography";
 
 interface HeaderProps {
   title: string;
@@ -24,9 +25,9 @@ export default function Header({ title }: HeaderProps) {
       }}
     >
       <div className="max-w-7xl mx-auto flex justify-between items-center px-4 sm:px-6 lg:px-8 gap-4">
-        <h1 className="text-xl font-bold text-fg">
+        <H1 className="text-xl font-bold">
           {title}
-        </h1>
+        </H1>
         <div className="flex items-center gap-3 shrink-0">
           {supabaseEnabled && user && (
             <>

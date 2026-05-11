@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { Trophy, RotateCcw } from 'lucide-react'
 import type { MasteredSoundInfo } from '@/hooks/useMasteredSounds'
+import { H2 } from '@/components/ui/Typography'
 
 interface MasteredSectionProps {
   mastered: MasteredSoundInfo[]
@@ -44,9 +45,9 @@ export default function MasteredSection({ mastered }: MasteredSectionProps) {
       <div className="space-y-3">
         <div className="flex items-center gap-2">
           <Trophy size={18} className="text-fg-muted" />
-          <h2 className="text-h4 text-fg">
+          <H2 className="text-h4">
             Sonidos Dominados
-          </h2>
+          </H2>
         </div>
         <div
           className="rounded-2xl p-8 text-center"
@@ -82,9 +83,9 @@ export default function MasteredSection({ mastered }: MasteredSectionProps) {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Trophy size={18} style={{ color: 'oklch(.7 .18 85)' }} />
-          <h2 className="text-h4 text-fg">
+          <H2 className="text-h4">
             Sonidos Dominados
-          </h2>
+          </H2>
           <span
             className="text-xs font-bold px-2 py-0.5 rounded-full"
             style={{

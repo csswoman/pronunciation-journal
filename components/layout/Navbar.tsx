@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Button from "@/components/ui/Button";
+import { H2 } from "@/components/ui/Typography";
 
 interface NavbarProps {
   activeTab: "words" | "decks" | "ipa";
@@ -90,9 +91,9 @@ export default function Navbar({
       {/* Header with toggle button */}
       <div className={`px-4 mb-6 flex items-center ${isCollapsed ? "justify-center" : "justify-between"}`}>
         {!isCollapsed && (
-          <h2 className="text-h4 text-fg">
+          <H2 className="text-h4">
             Welcome!
-          </h2>
+          </H2>
         )}
         <Button
           onClick={onToggleCollapse}

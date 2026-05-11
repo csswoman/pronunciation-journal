@@ -1,9 +1,10 @@
 import type { LessonTitleProps } from "./types";
+import { H3 } from "@/components/ui/Typography";
 
 export default function LessonTitle({ title }: LessonTitleProps) {
   return (
-    <h3 className="line-clamp-2 text-base font-semibold text-fg transition group-hover:text-[var(--primary)]">
+    <H3 className="line-clamp-2 text-base font-semibold transition group-hover:text-[var(--primary)]">
       {title}
-    </h3>
+    </H3>
   );
 }

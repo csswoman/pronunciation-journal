@@ -2,6 +2,7 @@
 
 import { ArrowRight } from "lucide-react";
 import type { UserSoundProgressWithSound } from "@/lib/phoneme-practice/types";
+import { H3 } from "@/components/ui/Typography";
 
 type Priority = "HIGH" | "MED" | "LOW";
 
@@ -91,13 +92,13 @@ export function NeedsAttention({ progressList, weeklyAccuracy }: Props) {
       <p className="text-tiny mt-0.5 text-fg-subtle">
         {hasData ? "Based on your sound practice history" : "Practice sounds to see insights here"}
       </p>
-      <h3 className="mt-3 text-lg font-black text-fg">
+      <H3 className="mt-3 text-lg font-black">
         {!hasData
           ? "Nothing to review yet."
           : weeklyAccuracy < 70
           ? "A few sounds are slowing you down."
           : "You're on the right track!"}
-      </h3>
+      </H3>
 
       {hasData ? (
         <div className="mt-1">

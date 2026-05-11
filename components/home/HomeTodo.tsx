@@ -3,25 +3,33 @@
 import { Check, ArrowRight, ClipboardList, Zap } from "lucide-react";
 import Card from "@/components/layout/Card";
 import CardHeader from "@/components/ui/CardHeader";
-import Badge, { type BadgeVariant } from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
+
+type ActivityType = "Pronunciation" | "Theory" | "Shadowing" | "Word Bank" | "Listening";
 
 interface TodoItem {
   id: number;
   label: string;
-  tag: string;
-  tagVariant: BadgeVariant;
+  tag: ActivityType;
   minutes: number;
   done: boolean;
   featured?: boolean;
 }
 
+const TAG_STYLE: Record<ActivityType, { className: string }> = {
+  Pronunciation: { className: "bg-sky-900/40 text-sky-300 border-sky-700/40" },
+  Theory:        { className: "bg-violet-900/40 text-violet-300 border-violet-700/40" },
+  Shadowing:     { className: "bg-teal-900/40 text-teal-300 border-teal-700/40" },
+  "Word Bank":   { className: "bg-emerald-900/40 text-emerald-300 border-emerald-700/40" },
+  Listening:     { className: "bg-amber-900/40 text-amber-300 border-amber-700/40" },
+};
+
 const TODO_ITEMS: TodoItem[] = [
-  { id: 1, label: "Vowel sounds: /ɪ/ vs /iː/",            tag: "Pronunciation", tagVariant: "success", minutes: 8,  done: true  },
-  { id: 2, label: "Present Perfect vs Past Simple",        tag: "Theory",        tagVariant: "default", minutes: 12, done: true  },
-  { id: 3, label: 'Tongue twister: "She sells seashells"', tag: "Shadowing",     tagVariant: "info",    minutes: 6,  done: false, featured: true },
-  { id: 4, label: "Review 12 words (SRS)",                 tag: "Word Bank",     tagVariant: "warning", minutes: 5,  done: false },
-  { id: 5, label: "Audio of the day · BBC clip",           tag: "Listening",     tagVariant: "error",   minutes: 10, done: false },
+  { id: 1, label: "Vowel sounds: /ɪ/ vs /iː/",            tag: "Pronunciation", minutes: 8,  done: true  },
+  { id: 2, label: "Present Perfect vs Past Simple",        tag: "Theory",        minutes: 12, done: true  },
+  { id: 3, label: 'Tongue twister: "She sells seashells"', tag: "Shadowing",     minutes: 6,  done: false, featured: true },
+  { id: 4, label: "Review 12 words (SRS)",                 tag: "Word Bank",     minutes: 5,  done: false },
+  { id: 5, label: "Audio of the day · BBC clip",           tag: "Listening",     minutes: 10, done: false },
 ];
 
 const completed = TODO_ITEMS.filter((t) => t.done).length;
@@ -32,40 +40,47 @@ const progress = Math.round((completed / total) * 100);
 export default function HomeTodo() {
   return (
     <Card variant="compact" className="gap-4">
-      <CardHeader
-        icon={<ClipboardList size={18} className="text-[var(--primary)]" />}
-        title="Today's plan"
-      />
+      <div className="flex items-center justify-between">
+        <CardHeader
+          icon={<ClipboardList size={18} className="text-[var(--primary)]" />}
+          title="Today's plan"
+        />
+        <span className="text-xs px-2 py-0.5 rounded-full bg-white/5 text-[var(--text-tertiary)]">{remaining} min left</span>
+      </div>
 
-      {/* Dot progress indicator */}
-      <div className="flex flex-col gap-1">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-1.5">
-            {TODO_ITEMS.map((item) => (
-              <span
-                key={item.id}
-                className="inline-block w-2 h-2 rounded-full"
-                style={{ background: item.done ? "var(--primary)" : "var(--border-default)" }}
-              />
-            ))}
-          </div>
-          <span className="text-xs font-medium text-fg-subtle">{completed}/{total} done</span>
-        </div>
-        <span style={{ font: "var(--font-caption)", color: "var(--text-tertiary)" }}>~{remaining} min left</span>
+      {/* Segmented progress bar */}
+      <div className="flex gap-1.5">
+        {TODO_ITEMS.map((item, i) => {
+          const isNext = !item.done && TODO_ITEMS.slice(0, i).every((t) => t.done);
+          return (
+            <div
+              key={item.id}
+              className="flex-1 h-1.5 rounded-full"
+              style={{
+                background: item.done
+                  ? "var(--success)"
+                  : isNext
+                  ? "var(--primary)"
+                  : "var(--border-default)",
+              }}
+            />
+          );
+        })}
       </div>
 
       {/* Items */}
-      <div className="flex flex-col gap-1">
-        {TODO_ITEMS.map((item) => (
+      <div className="flex flex-col">
+        {TODO_ITEMS.map((item, idx) => (
           <div
             key={item.id}
             className={[
-              "group flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors",
-              item.done
-                ? "opacity-50"
-                : item.featured
-                  ? "bg-[color-mix(in_oklch,var(--primary)_6%,transparent)] hover:bg-[color-mix(in_oklch,var(--primary)_10%,transparent)]"
-                  : "hover:bg-[var(--bg-tertiary)]",
+              "group flex items-center gap-3 px-3 py-3 transition-colors",
+              idx < TODO_ITEMS.length - 1 ? "border-b border-border-subtle" : "",
+              !item.done && item.featured
+                ? "bg-[color-mix(in_oklch,var(--primary)_6%,transparent)] hover:bg-[color-mix(in_oklch,var(--primary)_10%,transparent)]"
+                : !item.done
+                  ? "hover:bg-[var(--bg-tertiary)]"
+                  : "",
             ].filter(Boolean).join(" ")}
           >
             {/* Status dot */}
@@ -92,13 +107,15 @@ export default function HomeTodo() {
             <div className="flex-1 min-w-0">
               <p className={[
                 "text-sm font-medium leading-snug truncate",
-                item.done ? "line-through text-fg-muted" : "text-fg",
+                item.done ? "text-[var(--text-tertiary)]" : "text-[var(--text-primary)]",
               ].join(" ")}>
                 {item.label}
               </p>
               <div className="flex items-center gap-1.5 mt-0.5">
-                <Badge label={item.tag} variant={item.tagVariant} />
-                <span className="text-tiny text-fg-subtle">{item.minutes} min</span>
+                <span className={`inline-flex items-center text-xs font-medium px-2 py-0.5 rounded-full border ${TAG_STYLE[item.tag].className}`}>
+                  {item.tag}
+                </span>
+                <span className="text-xs text-[var(--text-tertiary)]">· {item.minutes} min</span>
               </div>
             </div>
 

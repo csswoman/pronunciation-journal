@@ -12,6 +12,7 @@ import { StudyCard } from "./StudyCard";
 import { StudyLeftPanel } from "./StudyLeftPanel";
 import { StudyRightPanel } from "./StudyRightPanel";
 import { StudyRatingBar } from "./StudyRatingBar";
+import { H2 } from "@/components/ui/Typography";
 
 type Deck = Tables<"decks">;
 type Entry = Tables<"entries">;
@@ -187,7 +188,7 @@ export function StudyModal({ deck, onClose }: StudyModalProps) {
       <div className="max-w-sm w-full rounded-2xl border p-8 text-center space-y-5"
         style={{ backgroundColor: "var(--card-bg)", borderColor: "var(--line-divider)" }}>
         <div className="text-5xl">🎉</div>
-        <h2 className="text-h4 text-fg">All caught up!</h2>
+        <H2 className="text-h4">All caught up!</H2>
         <p className="text-sm text-fg-muted">
           No cards due in <strong>{deck.name}</strong>.
         </p>
@@ -202,7 +203,7 @@ export function StudyModal({ deck, onClose }: StudyModalProps) {
         style={{ backgroundColor: "var(--card-bg)", borderColor: "var(--line-divider)" }}>
         <div className="text-5xl">🎉</div>
         <div>
-          <h2 className="text-h2 text-fg">Session complete!</h2>
+          <H2 className="text-h2">Session complete!</H2>
           <p className="text-sm mt-1 text-fg-muted">
             You reviewed <strong>{stats.seen}</strong> card{stats.seen !== 1 ? "s" : ""} from <strong>{deck.name}</strong>
           </p>

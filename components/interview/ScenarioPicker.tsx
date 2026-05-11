@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Check, Loader2 } from "lucide-react";
 import Button from "@/components/ui/Button";
+import { H1 } from "@/components/ui/Typography";
 import type { ExerciseDifficulty } from "./CandidateRecorder";
 
 export type Scenario = "hr" | "frontend" | "system-design" | "behavioral" | "product";
@@ -55,9 +56,9 @@ export default function ScenarioPicker({ onStart, loading }: Props) {
 
       {/* Hero */}
       <div>
-        <h1 className="font-heading text-h1 mb-2 text-fg">
+        <H1 className="font-heading text-h1 mb-2">
           Interview Practice
-        </h1>
+        </H1>
         <p className="text-sm leading-relaxed" style={{ color: "var(--muted-text)" }}>
           Gemini generates a realistic interview script. You listen to the interviewer, read the candidate lines aloud, and get instant pronunciation feedback.
         </p>

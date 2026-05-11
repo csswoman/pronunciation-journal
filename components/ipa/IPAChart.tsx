@@ -18,6 +18,7 @@ import FilterTabs from "@/components/ipa-chart/FilterTabs";
 import PhonemeCard from "@/components/ipa-chart/PhonemeCard";
 import PhonemeRow from "@/components/ipa-chart/PhonemeRow";
 import ViewToggle from "@/components/ipa-chart/ViewToggle";
+import { H2, H3 } from "@/components/ui/Typography";
 
 export default function IPAChart() {
   const [activeFilter, setActiveFilter] = useState<FilterType>("all");
@@ -101,9 +102,9 @@ export default function IPAChart() {
           />
 
           <div className="rounded-3xl p-6 text-on-primary" style={{ backgroundColor: "var(--primary)" }}>
-            <h3 className="font-bold text-base mb-1">
+            <H3 className="font-bold text-base mb-1 text-on-primary">
               Practice {selectedPhoneme.symbol}
-            </h3>
+            </H3>
             <p
               className="text-sm leading-relaxed mb-5"
               style={{ color: "rgba(var(--on-primary), 0.7)" }}
@@ -126,9 +127,9 @@ export default function IPAChart() {
 
         <div>
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-bold text-fg">
+            <H2 className="text-lg font-bold">
               IPA Symbols Grid
-            </h2>
+            </H2>
             <ViewToggle view={gridView} onChange={setGridView} />
           </div>
 
@@ -188,9 +189,9 @@ export default function IPAChart() {
             >
               <div className="flex items-center gap-2 mb-1">
                 <span className="text-base">🔥</span>
-                <h3 className="font-bold text-sm text-fg">
+                <H3 className="font-bold text-sm">
                   Difíciles para hispanohablantes
-                </h3>
+                </H3>
               </div>
               <p className="text-xs mb-4 text-fg-muted">
                 Estos sonidos no existen en español — requieren práctica específica
@@ -262,9 +263,9 @@ export default function IPAChart() {
           💬
         </div>
         <div className="flex-1">
-          <h3 className="font-bold mb-0.5 text-fg">
+          <H3 className="font-bold mb-0.5">
             Practice with AI
-          </h3>
+          </H3>
           <p className="text-sm leading-relaxed text-fg-muted">
             Have real conversations with Gemini-powered AI and get pronunciation feedback on the sounds you just explored.
           </p>

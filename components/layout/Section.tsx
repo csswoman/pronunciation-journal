@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import { H2 } from "@/components/ui/Typography";
 
 interface SectionProps {
   children: ReactNode;
@@ -31,9 +32,9 @@ export default function Section({
       {/* Optional header */}
       {title && (
         <div className="mb-6">
-          <h2 className="text-h2 text-fg mb-2">
+          <H2 className="text-h2 mb-2">
             {title}
-          </h2>
+          </H2>
           {description && (
             <p className="text-base text-fg-muted">
               {description}

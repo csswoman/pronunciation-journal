@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { Bell, ChevronRight, CheckCircle2 } from 'lucide-react'
 import type { MasteredSoundInfo } from '@/hooks/useMasteredSounds'
+import { H3 } from '@/components/ui/Typography'
 
 // Intervalos del sistema Leitner / SM-2: 1 → 3 → 7 → 30 días
 const SRS_INTERVALS = [
@@ -32,9 +33,9 @@ export default function ReviewReminder({ dueToday, totalMastered }: ReviewRemind
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Bell size={18} style={{ color: hasDue ? 'var(--primary)' : 'var(--text-secondary)' }} />
-          <h3 className="font-semibold text-sm text-fg">
+          <H3 className="font-semibold text-sm">
             Repasos del día
-          </h3>
+          </H3>
           {hasDue && (
             <span
               className="text-xs font-bold px-2 py-0.5 rounded-full"

@@ -1,5 +1,6 @@
 import { Ear, Mic, Zap, type LucideIcon } from 'lucide-react'
 import type { LessonStageDef, LessonStageMastery, DifficultyMode } from './lesson-lobby-types'
+import { H3 } from '@/components/ui/Typography'
 
 interface Props {
   stage: LessonStageDef
@@ -101,9 +102,9 @@ export function StageCard({ stage, mastery, index, unlocked, diffMode, onSelect 
       </span>
 
       {/* Title */}
-      <h3 className="text-h3 mb-2" style={{ color: CARD_TEXT.title }}>
+      <H3 className="text-h3 mb-2" style={{ color: CARD_TEXT.title }}>
         {stage.title}
-      </h3>
+      </H3>
 
       {/* Description */}
       <p className="text-caption leading-relaxed flex-1" style={{ color: CARD_TEXT.subtitle }}>

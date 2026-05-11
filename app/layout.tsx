@@ -11,8 +11,8 @@ const notoSans = Noto_Sans({
   subsets: ["latin"],
   variable: "--font-sans",
 });
-const notoHeading = Noto_Sans({
-  weight: ["400", "500", "600", "700", "800"],
+const notoHeading = Noto_Serif({
+  weight: ["400", "700"],
   subsets: ["latin"],
   variable: "--font-heading",
 });

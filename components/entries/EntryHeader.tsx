@@ -1,6 +1,7 @@
 "use client";
 
 import Button from "@/components/ui/Button";
+import { H2 } from "@/components/ui/Typography";
 import { Entry } from "@/lib/types";
 import CompactRecorder from "@/components/ui/CompactRecorder";
 import AudioButton from "@/components/ui/AudioButton";
@@ -27,9 +28,9 @@ export default function EntryHeader({
   return (
     <div className="sticky top-0 bg-surface-raised border-b border-border-subtle p-6 flex justify-between items-start">
       <div className="flex items-center gap-3 flex-1">
-        <h2 className="text-h2 text-fg capitalize">
+        <H2 className="text-h2 capitalize">
           {currentEntry.word}
-        </h2>
+        </H2>
         <div className="flex items-center gap-2">
           {currentEntry.audioUrl && (
             <AudioButton audioUrl={currentEntry.audioUrl} variant="dictionary" />

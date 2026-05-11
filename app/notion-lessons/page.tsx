@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { SubLesson } from "@/lib/notion/types";
+import { H1, H2 } from "@/components/ui/Typography";
 
 export default function NotionLessonsIndexPage() {
   const [subLessons, setSubLessons] = useState<SubLesson[]>([]);
@@ -64,9 +65,9 @@ export default function NotionLessonsIndexPage() {
   return (
     <div className="min-h-screen bg-[var(--page-bg)]">
       <div className="max-w-5xl mx-auto px-4 py-12">
-        <h1 className="text-h1 mb-2 text-fg">
+        <H1 className="text-h1 mb-2">
           Lessons
-        </h1>
+        </H1>
         <p className="text-fg-muted mb-12">
           Learn by exploring each lesson topic
         </p>
@@ -78,9 +79,9 @@ export default function NotionLessonsIndexPage() {
               href={`/notion-lessons/${lesson.slug}`}
               className="group block p-6 rounded-xl border border-[var(--line-divider)] bg-[var(--card-bg)] hover:border-[var(--primary)] transition-all duration-200 hover:shadow-md"
             >
-              <h2 className="text-lg font-semibold text-fg group-hover:text-[var(--primary)] transition-colors">
+              <H2 className="text-lg font-semibold group-hover:text-[var(--primary)] transition-colors">
                 {lesson.title}
-              </h2>
+              </H2>
               <p className="text-sm text-fg-muted mt-2">
                 View lesson →
               </p>

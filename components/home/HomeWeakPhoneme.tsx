@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Card from "@/components/layout/Card";
 
 const PRACTICE_WORDS = ["three", "thank", "thumb", "breath", "mouth", "teeth"];
 
@@ -17,34 +16,35 @@ export default function HomeWeakPhoneme({
   exampleMistake = { target: "think", heard: "sink" },
 }: HomeWeakPhonemeProps) {
   return (
-    <Card variant="compact" className="gap-4 border-l-2" style={{ background: "var(--surface-raised)", borderLeftColor: "var(--warning)" }}>
+    <div className="rounded-xl border border-border-subtle bg-surface-raised p-4 flex flex-col gap-4">
       <div className="flex items-center justify-between">
-        <span className="text-warning" style={{ font: "var(--font-tiny)", letterSpacing: "0.05em", fontWeight: 600 }}>Needs Practice</span>
-        <span className="text-xs text-fg-subtle">{accuracy}% accuracy</span>
+        <span className="text-xs font-medium text-amber-300">Needs Practice</span>
+        <span className="text-xs text-[var(--text-tertiary)]">{accuracy}% accuracy</span>
       </div>
 
-      <h3 className="text-fg -mt-1" style={{ font: "var(--font-h3)", fontWeight: 500 }}>Recommended for you</h3>
+      <p className="text-sm font-semibold text-[var(--text-primary)] -mt-1">Recommended for you</p>
 
       <div className="rounded-lg bg-surface-sunken px-4 py-3 flex items-center justify-between gap-3">
         <div>
-          <p className="text-4xl font-bold text-warning leading-none" style={{ font: "var(--font-mono)" }}>{phoneme}</p>
-          <p className="text-xs text-fg-muted mt-1">{label}</p>
+          <p className="text-4xl font-bold leading-none" style={{ fontFamily: "var(--font-mono, monospace)", color: "var(--primary)" }}>
+            {phoneme}
+          </p>
+          <p className="text-xs text-[var(--text-tertiary)] mt-1">{label}</p>
         </div>
-        {/* Waveform decoration */}
         <div className="flex items-center gap-0.5">
           {[10, 18, 28, 22, 34, 26, 38, 30, 22, 16, 10].map((h, i) => (
             <span
               key={i}
               className="block w-1 rounded-full opacity-80"
-              style={{ height: `${h}px`, background: "var(--warning)" }}
+              style={{ height: `${h}px`, background: "var(--primary)" }}
             />
           ))}
         </div>
       </div>
 
-      <p style={{ font: "var(--font-body-sm)", color: "var(--text-secondary)" }}>
-        You often pronounce <strong className="text-fg">{exampleMistake.target}</strong> as{" "}
-        <em className="text-warning">"{exampleMistake.heard}"</em>. Try these:
+      <p className="text-sm leading-relaxed text-[var(--text-secondary)]">
+        You often pronounce <strong className="text-[var(--text-primary)]">{exampleMistake.target}</strong> as{" "}
+        <em style={{ color: "var(--primary)" }}>"{exampleMistake.heard}"</em>. Try these:
       </p>
 
       <div className="flex flex-wrap gap-2">
@@ -52,13 +52,12 @@ export default function HomeWeakPhoneme({
           <Link
             key={w}
             href="/practice"
-            className="cursor-pointer text-xs px-[var(--space-3)] min-h-[44px] flex items-center rounded-[var(--radius-md)] border border-[var(--border-default)] bg-[var(--surface-sunken)] text-fg-muted [transition:all_var(--transition-fast,150ms_ease)] hover:bg-[var(--primary-soft)] hover:text-[var(--primary)]"
+            className="text-xs px-3 h-9 flex items-center rounded-lg border border-[var(--border-default)] bg-surface-sunken text-[var(--text-secondary)] transition-colors duration-150 hover:bg-white/8 hover:text-[var(--primary)] hover:border-[var(--primary)]"
           >
             {w}
           </Link>
         ))}
       </div>
-    </Card>
+    </div>
   );
 }
-

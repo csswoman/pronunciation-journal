@@ -1,6 +1,7 @@
 'use client'
 
 import { ChevronRight, Mic, BookOpen, Brain, Pencil, Headphones, MessageSquare } from 'lucide-react'
+import { H2 } from '@/components/ui/Typography'
 
 type Category = 'pronunciation' | 'vocabulary' | 'srs' | 'writing' | 'listening' | 'conversation'
 
@@ -68,9 +69,9 @@ export default function JourneyToFluiditySection() {
           <p className="text-tiny font-bold uppercase tracking-[0.24em] text-fg-subtle">
             ACTIVITY LOG
           </p>
-          <h2 className="mt-0.5 text-h4 text-fg">
+          <H2 className="mt-0.5 text-h4">
             Journey to fluency
-          </h2>
+          </H2>
         </div>
         <button
           className="inline-flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-semibold transition-opacity hover:opacity-70"

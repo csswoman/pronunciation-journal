@@ -7,6 +7,7 @@ import StatusBadge from "@/components/ui/StatusBadge";
 import Table from "@/components/ui/Table";
 import { usePatternsTab } from "@/app/admin/seed/usePatternsTab";
 import type { PatternForm, PatternWordForm } from "@/lib/admin/seed/types";
+import { H3 } from "@/components/ui/Typography";
 
 export function PatternsTab({
   patternForm,
@@ -43,9 +44,9 @@ export function PatternsTab({
         className="grid grid-cols-2 md:grid-cols-3 gap-4 p-4 rounded-xl border"
         style={{ borderColor: "var(--border)", backgroundColor: "var(--card-bg)" }}
       >
-        <h3 className="col-span-full text-sm font-semibold text-fg">
+        <H3 className="col-span-full text-sm font-semibold">
           Add Pattern
-        </h3>
+        </H3>
         <Input
           label="Pattern string"
           value={patternForm.pattern}
@@ -90,9 +91,9 @@ export function PatternsTab({
         className="grid grid-cols-2 md:grid-cols-3 gap-4 p-4 rounded-xl border"
         style={{ borderColor: "var(--border)", backgroundColor: "var(--card-bg)" }}
       >
-        <h3 className="col-span-full text-sm font-semibold text-fg">
+        <H3 className="col-span-full text-sm font-semibold">
           Add Word to Pattern
-        </h3>
+        </H3>
         <Select
           label="Pattern"
           value={patternWordForm.patternId}

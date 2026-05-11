@@ -2,6 +2,7 @@
 
 import { Volume2 } from "lucide-react";
 import Button from "@/components/ui/Button";
+import { H2 } from "@/components/ui/Typography";
 import type { Tables } from "@/lib/supabase/types";
 
 type Entry = Tables<"entries">;
@@ -65,9 +66,9 @@ export function StudyCardContent({ entry, flipped, showAllMeanings, onToggleAllM
       {/* Word + IPA */}
       <div className="mb-4">
         <div className="flex items-baseline gap-3 flex-wrap">
-          <h2 className="text-4xl md:text-5xl font-bold italic text-fg leading-none" style={{ fontFamily: "var(--font-serif, serif)" }}>
+          <H2 className="text-4xl md:text-5xl font-bold italic leading-none" style={{ fontFamily: "var(--font-serif, serif)" }}>
             {entry.word}
-          </h2>
+          </H2>
           {flipped && entry.ipa && (
             <span className="text-base text-fg-muted">/{entry.ipa}/</span>
           )}

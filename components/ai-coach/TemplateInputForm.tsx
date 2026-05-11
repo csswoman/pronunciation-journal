@@ -1,5 +1,6 @@
 "use client";
 import Button from "@/components/ui/Button";
+import { H2 } from "@/components/ui/Typography";
 
 import { useState } from "react";
 import type { AITemplateId, TemplateVars } from "@/lib/types";
@@ -61,9 +62,9 @@ export default function TemplateInputForm({
           </svg>
         </Button>
         <div>
-          <h2 className="text-h4 text-fg">
+          <H2 className="text-h4">
             {template?.Icon && <template.Icon size={20} className="inline mr-1" />} {template?.title}
-          </h2>
+          </H2>
           <p className="text-sm text-fg-subtle">{template?.description}</p>
         </div>
       </div>

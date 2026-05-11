@@ -1,13 +1,15 @@
 "use client";
 
+import { H1 } from "@/components/ui/Typography";
+
 export default function LessonsTitlePage() {
   return (
     <div className="min-h-screen" style={{ backgroundColor: 'var(--page-bg)' }}>
       <header style={{ backgroundColor: 'var(--page-bg)' }}>
         <div className="max-w-6xl mx-auto px-4 py-8">
-          <h1 className="text-h1 text-fg">
+          <H1 className="text-h1">
             Lessons
-          </h1>
+          </H1>
         </div>
       </header>
     </div>

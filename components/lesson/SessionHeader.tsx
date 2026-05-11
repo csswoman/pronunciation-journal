@@ -1,6 +1,6 @@
 "use client";
 import Button from "@/components/ui/Button";
-
+import { H1 } from "@/components/ui/Typography";
 import type { Phase } from "./ActiveLessonPage";
 
 interface Props {
@@ -34,7 +34,7 @@ export default function SessionHeader({ title, currentIndex, totalWords, phase, 
             </svg>
           </Button>
           <div className="text-center">
-            <h1 className="text-body-lg font-semibold leading-tight tracking-tight text-fg">{title}</h1>
+            <H1 className="text-body-lg font-semibold leading-tight tracking-tight">{title}</H1>
             <p className="text-caption leading-5 text-fg-muted">
               {phase !== "complete" ? `${currentIndex + 1} / ${totalWords}` : "Complete"}
             </p>

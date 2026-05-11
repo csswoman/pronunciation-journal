@@ -6,6 +6,7 @@ import { getCourseWithLessons, getCourses } from "@/lib/notion/courses";
 import type { CourseSection, SubLesson } from "@/lib/notion/types";
 import { LessonNumber } from "@/components/courses/LessonNumber";
 import CourseHeroProgress from "@/components/courses/CourseHeroProgress";
+import { H1, H2, H3 } from "@/components/ui/Typography";
 
 const illustrationFiles = [
   "/illustrations/lesson/brain.svg",
@@ -93,9 +94,9 @@ export default async function CourseIndexPage({ params }: Props) {
                   {course.level}
                 </span>
               )}
-              <h1 className="text-h2 text-on-primary">
+              <H1 className="text-h2 text-on-primary">
                 {course.title}
-              </h1>
+              </H1>
               <p className="flex items-center gap-1.5 text-xs text-[color-mix(in_oklch,var(--on-primary)_70%,transparent)] mt-1">
                 <BookOpen size={11} className="opacity-80" />
                 {course.lessons.length} {course.lessons.length === 1 ? "lesson" : "lessons"}
@@ -158,13 +159,13 @@ function SectionGroup({
       {section.title && (
         <div className="px-5 pt-5 pb-3">
           {section.headingLevel === 1 ? (
-            <h2 className="text-base font-semibold text-fg tracking-tight">
+            <H2 className="text-base font-semibold tracking-tight">
               {section.title}
-            </h2>
+            </H2>
           ) : (
-            <h3 className="text-sm font-medium text-fg-muted uppercase tracking-wider">
+            <H3 className="text-sm font-medium text-fg-muted uppercase tracking-wider">
               {section.title}
-            </h3>
+            </H3>
           )}
         </div>
       )}

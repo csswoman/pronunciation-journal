@@ -7,6 +7,7 @@ import StatusBadge from "@/components/ui/StatusBadge";
 import Table from "@/components/ui/Table";
 import { useWordsTab } from "@/app/admin/seed/useWordsTab";
 import type { WordForm } from "@/lib/admin/seed/types";
+import { H3 } from "@/components/ui/Typography";
 
 export function WordsTab({ form, setForm }: { form: WordForm; setForm: (f: WordForm) => void }) {
   const { sounds, words, filterSound, setFilterSound, status, saving, displayed, soundOptions, handleSubmit } = useWordsTab({ form, setForm });
@@ -14,7 +15,7 @@ export function WordsTab({ form, setForm }: { form: WordForm; setForm: (f: WordF
   return (
     <div className="space-y-6">
       <form onSubmit={handleSubmit} className="grid grid-cols-2 md:grid-cols-3 gap-4 p-4 rounded-xl border" style={{ borderColor: "var(--border)", backgroundColor: "var(--card-bg)" }}>
-        <h3 className="col-span-full text-sm font-semibold text-fg">Add Word</h3>
+        <H3 className="col-span-full text-sm font-semibold">Add Word</H3>
         <Input label="Word" value={form.word} onChange={(v) => setForm({ ...form, word: v })} placeholder="cat" required />
         <Input label="IPA" value={form.ipa} onChange={(v) => setForm({ ...form, ipa: v })} placeholder="/kæt/" />
         <Select label="Linked sound" value={form.soundId} onChange={(v) => setForm({ ...form, soundId: v })} options={soundOptions} />

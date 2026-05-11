@@ -1,5 +1,6 @@
 "use client";
 import Button from "@/components/ui/Button";
+import { H1, H2 } from "@/components/ui/Typography";
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
@@ -105,9 +106,9 @@ export default function AdminLessonsPage() {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-h2 text-fg">
+            <H1 className="text-h2">
               Lesson Manager
-            </h1>
+            </H1>
             <p className="text-sm mt-0.5 text-fg-muted">
               Manage system and user theory lessons
             </p>
@@ -206,9 +207,9 @@ function LessonTable({
 }) {
   return (
     <section className="mb-10">
-      <h2 className="text-xs font-semibold uppercase tracking-widest mb-3 text-fg-subtle">
+      <H2 className="text-xs font-semibold uppercase tracking-widest mb-3 text-fg-subtle">
         {title} ({lessons.length})
-      </h2>
+      </H2>
       {lessons.length === 0 ? (
         <p className="text-sm py-4 text-fg-subtle">None yet.</p>
       ) : (

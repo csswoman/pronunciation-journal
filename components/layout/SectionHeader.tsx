@@ -1,5 +1,6 @@
 import Button from "@/components/ui/Button";
 import Link from "next/link";
+import { H2 } from "@/components/ui/Typography";
 
 interface SectionHeaderProps {
   title: string;
@@ -12,7 +13,7 @@ export default function SectionHeader({ title, viewAll, viewAllHref }: SectionHe
 
   return (
     <div className="flex items-center justify-between mb-4">
-      <h2 className="text-[var(--font-h2)]" style={{ fontWeight: 600 }}>
+      <h2 className="text-xl font-semibold tracking-tight text-[var(--text-primary)]">
         {title}
       </h2>
       {viewAllHref ? (

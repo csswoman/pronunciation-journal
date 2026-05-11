@@ -3,6 +3,7 @@
 import { Bookmark, SkipForward, Volume2 } from "lucide-react";
 import Button from "@/components/ui/Button";
 import { blankOutWord, speakWord } from "./study-utils";
+import { H2 } from "@/components/ui/Typography";
 
 interface Meaning {
   partOfSpeech?: string;
@@ -50,10 +51,10 @@ export function StudyCard({
 
   const wordDisplay = (
     <>
-      <h2 className="text-5xl font-bold italic leading-none"
+      <H2 className="text-5xl font-bold italic leading-none"
         style={{ fontFamily: "var(--font-serif, serif)", color: "var(--text-primary)" }}>
         {word}
-      </h2>
+      </H2>
       {ipa && (
         <div className="flex items-center gap-2 justify-center">
           <span className="text-base text-fg-muted">/{ipa}/</span>

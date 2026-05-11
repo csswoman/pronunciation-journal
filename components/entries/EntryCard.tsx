@@ -1,5 +1,6 @@
 "use client";
 import Button from "@/components/ui/Button";
+import { H3 } from "@/components/ui/Typography";
 
 import { Entry } from "@/lib/types";
 import { playAudio } from "@/lib/audio-utils";
@@ -57,7 +58,7 @@ export default function EntryCard({
       )}
       <div className={`flex items-start justify-between mb-2 ${isSelectionMode ? "ml-8" : ""}`}>
         <div className="flex items-center gap-3">
-          <h3 className="text-h3 text-fg capitalize">{entry.word}</h3>
+          <H3 className="text-h3 capitalize">{entry.word}</H3>
           {entry.audioUrl && !isSelectionMode && (
             <Button
               onClick={(e) => handlePlayAudio(e, entry.audioUrl!)}

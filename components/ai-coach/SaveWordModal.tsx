@@ -3,6 +3,7 @@
 import { useState } from "react";
 import type { Difficulty } from "@/lib/types";
 import Button from "@/components/ui/Button";
+import { H3 } from "@/components/ui/Typography";
 
 interface SaveWordData {
   word: string;
@@ -40,9 +41,9 @@ export default function SaveWordModal({ word, context, onConfirm, onClose }: Sav
     >
       <div className="w-full max-w-md bg-surface-raised rounded-2xl shadow-xl p-6 space-y-4">
         <div className="flex items-center justify-between">
-          <h3 className="text-lg font-bold text-fg">
+          <H3 className="text-lg font-bold">
             Save Vocabulary
-          </h3>
+          </H3>
           <Button
             onClick={onClose}
             variant="ghost"

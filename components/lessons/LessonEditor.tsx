@@ -1,5 +1,6 @@
 "use client";
 import Button from "@/components/ui/Button";
+import { H1 } from "@/components/ui/Typography";
 
 import { useState, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
@@ -120,9 +121,9 @@ export default function LessonEditor({ initialLesson }: LessonEditorProps) {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
           </Link>
-          <h1 className="text-xl font-bold text-fg">
+          <H1 className="text-xl font-bold">
             {isEdit ? "Edit lesson" : "New lesson"}
-          </h1>
+          </H1>
         </div>
 
         <div className="flex flex-col gap-6">

@@ -1,5 +1,6 @@
 "use client";
 import Button from "@/components/ui/Button";
+import { H1, H2 } from "@/components/ui/Typography";
 
 import Link from "next/link";
 import Image from "next/image";
@@ -69,9 +70,9 @@ export function SoundLobby({
           <div className="flex items-center justify-between">
             <div className="p-8 md:p-10 max-w-2xl space-y-3">
               <div className="flex items-baseline gap-4">
-                <h1 className="font-mono text-5xl font-bold leading-none text-[var(--primary)] lg:text-6xl">
+                <H1 className="font-mono text-5xl font-bold leading-none text-[var(--primary)] lg:text-6xl">
                   {soundIpa}
-                </h1>
+                </H1>
                 {soundType && (
                   <span className="text-caption font-medium uppercase tracking-widest text-fg-subtle">
                     {soundType}
@@ -155,9 +156,9 @@ export function SoundLobby({
             <p className="text-tiny font-semibold uppercase tracking-[.18em] text-fg-subtle">
               Practice stages
             </p>
-            <h2 className="mt-1 mb-6 text-body-lg font-semibold tracking-tight text-fg">
+            <H2 className="mt-1 mb-6 text-body-lg font-semibold tracking-tight">
               Choose a stage to practice
-            </h2>
+            </H2>
           </div>
         </div>
 

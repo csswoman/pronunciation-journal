@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { NotionRenderer } from "react-notion-x";
+import { H1 } from "@/components/ui/Typography";
 import type { ExtendedRecordMap } from "notion-types";
 import { SubLesson } from "@/lib/notion/types";
 import "@/styles/notion-custom.css";
@@ -112,9 +113,9 @@ export default function SubLessonPage() {
 
         {/* Header */}
         <header className="mb-12 border-b border-[var(--line-divider)] pb-8">
-          <h1 className="text-h1 text-fg mb-2">
+          <H1 className="text-h1 mb-2">
             {subLesson.title}
-          </h1>
+          </H1>
           <p className="text-sm text-fg-muted">
             Updated {new Date(subLesson.updatedAt).toLocaleDateString()}
           </p>

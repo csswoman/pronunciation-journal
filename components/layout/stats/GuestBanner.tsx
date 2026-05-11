@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { LogIn, Sparkles } from "lucide-react";
 import Button from "@/components/ui/Button";
+import { H2 } from "@/components/ui/Typography";
 
 export function GuestBanner() {
   const router = useRouter();
@@ -24,9 +25,9 @@ export function GuestBanner() {
           <Sparkles size={28} />
         </div>
         <div>
-          <h2 className="text-h4 text-fg">
+          <H2 className="text-h4">
             Track your English journey
-          </h2>
+          </H2>
           <p className="mt-2 text-sm max-w-sm mx-auto text-fg-muted">
             Sign in to see your streaks, XP, weekly charts, pronunciation accuracy, and personalized insights.
           </p>

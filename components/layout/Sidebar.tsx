@@ -4,7 +4,6 @@ import { usePathname } from "next/navigation";
 import { PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import { useUserRole } from "@/hooks/useUserRole";
 import SidebarFooter from "./SidebarFooter";
-import SidebarWordOfDay from "@/components/sidebar/SidebarWordOfDay";
 import { NavSection, NavLink, coreNav, learningNav, trackingNav, adminNav } from "../sidebar/index";
 import { SidebarContext } from "../sidebar/SidebarContext";
 
@@ -77,7 +76,6 @@ export default function Sidebar({ className = "" }: SidebarProps) {
           )}
         </nav>
 
-        <SidebarWordOfDay />
         <SidebarFooter />
       </aside>
     </SidebarContext.Provider>

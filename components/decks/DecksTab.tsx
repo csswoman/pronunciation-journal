@@ -1,11 +1,13 @@
 "use client";
 
+import { H2 } from "@/components/ui/Typography";
+
 export default function DecksTab() {
   return (
     <div className="text-center py-12">
-      <h2 className="text-h2 mb-4 text-fg">
+      <H2 className="text-h2 mb-4">
         My Decks
-      </h2>
+      </H2>
       <p className="text-fg-subtle">
         Decks functionality coming soon...
       </p>

@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import Button from "@/components/ui/Button";
+import { H3 } from "@/components/ui/Typography";
 
 type Difficulty = "easy" | "medium" | "hard";
 
@@ -54,7 +55,7 @@ export default function LessonCard({
       </div>
 
       {/* Text */}
-      <h3 className="font-heading text-sm font-bold text-fg mb-1">{title}</h3>
+      <H3 className="font-heading text-sm font-bold mb-1">{title}</H3>
       <p className="text-xs text-fg-subtle leading-relaxed flex-1">{description}</p>
 
       {/* Footer */}

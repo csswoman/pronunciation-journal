@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { X, Sparkles, BookMarked, ChevronDown, Check, CornerDownLeft } from "lucide-react";
+import { H2 } from "@/components/ui/Typography";
 import Button from "@/components/ui/Button";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
@@ -166,16 +167,15 @@ export function QuickAddModal({ open, onClose, onSubmit, initialText = "" }: Qui
               <div style={{ padding: "18px 20px 16px", borderBottom: "1px solid var(--border)" }}>
                 <div className="flex items-start justify-between gap-3">
                   <div>
-                    <h2 style={{
+                    <H2 style={{
                       fontFamily: "var(--font-display), serif",
                       fontWeight: 700,
                       fontSize: "1.0625rem",
-                      color: "var(--fg)",
                       margin: "0 0 6px",
                       lineHeight: 1.2,
                     }}>
                       Save a word
-                    </h2>
+                    </H2>
                     {/* AI enrichment hint — redesigned as inline row, not a badge box */}
                     <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
                       <Sparkles size={11} style={{ color: "var(--primary)", flexShrink: 0 }} />

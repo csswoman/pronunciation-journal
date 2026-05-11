@@ -1,5 +1,6 @@
 import TemplateCard, { TEMPLATES } from "./TemplateCard";
 import type { AITemplateId } from "@/lib/types";
+import { H1 } from "@/components/ui/Typography";
 
 interface WelcomeScreenProps {
   onSuggestionClick: (text: string) => void;
@@ -19,10 +20,10 @@ export default function WelcomeScreen({ onSuggestionClick, onTemplateSelect }: W
   return (
     <div className="flex flex-col items-center gap-8 py-10 px-4">
       <div className="text-center">
-        <h1 className="text-h1 text-fg">
+        <H1 className="text-h1">
           Hi! I&apos;m your English coach.{" "}
           <span role="img" aria-label="wave">👋</span>
-        </h1>
+        </H1>
         <p className="mt-2 text-base text-fg-subtle">
           What would you like to practice today?
         </p>

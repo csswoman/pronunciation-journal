@@ -2,6 +2,7 @@
 
 import type { AITemplateId } from "@/lib/types";
 import TemplateCard, { TEMPLATES } from "./TemplateCard";
+import { H2 } from "@/components/ui/Typography";
 
 interface TemplateGridProps {
   onSelect: (id: AITemplateId) => void;
@@ -11,9 +12,9 @@ export default function TemplateGrid({ onSelect }: TemplateGridProps) {
   return (
     <div className="space-y-4">
       <div>
-        <h2 className="text-h4 text-fg">
+        <H2 className="text-h4">
           Choose a Practice Mode
-        </h2>
+        </H2>
         <p className="text-sm text-fg-subtle mt-1">
           Select a template to start your session, or scroll down to write your own prompt.
         </p>

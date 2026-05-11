@@ -88,7 +88,7 @@ export default function StatCard({ card, value }: StatCardProps) {
 
       {/* Value */}
       <div
-        className="relative z-10 font-heading text-3xl font-extrabold tracking-tight leading-none mb-1"
+        className="relative z-10 font-h2 tracking-tight mb-1"
         style={{ color: card.valueColor }}
       >
         {value}

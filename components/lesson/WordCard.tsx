@@ -1,5 +1,6 @@
 "use client";
 import Button from "@/components/ui/Button";
+import { H2 } from "@/components/ui/Typography";
 
 interface Props {
   word: string;
@@ -14,7 +15,7 @@ export default function WordCard({ word, ipa, hint, audioUrl, isFav, onToggleFav
   return (
     <>
       <div className="text-center space-y-4">
-        <h2 className="text-[clamp(2.8rem,8vw,4.25rem)] font-semibold leading-none tracking-tight text-fg">{word}</h2>
+        <H2 className="text-[clamp(2.8rem,8vw,4.25rem)] font-semibold leading-none tracking-tight">{word}</H2>
         <p className="text-[clamp(1.25rem,3vw,1.75rem)] font-mono" style={{ color: 'var(--primary)' }}>{ipa}</p>
         {hint && (
           <p className="mx-auto max-w-lg text-body leading-6 italic text-fg-muted">💡 {hint}</p>

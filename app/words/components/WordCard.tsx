@@ -4,6 +4,7 @@ import { Flame, Loader2, RefreshCcw, Trash2, Volume2, Snail } from "lucide-react
 import type { WordBankEntry } from "@/lib/types";
 import { useAudioPlayback } from "@/hooks/useAudioPlayback";
 import Button from "@/components/ui/Button";
+import { H4 } from "@/components/ui/Typography";
 
 interface WordCardProps {
   word: WordBankEntry;
@@ -34,9 +35,9 @@ export function WordCard({ word, onMarkDifficult, onRetry, onDelete }: WordCardP
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
           <div className="flex items-baseline gap-2 flex-wrap">
-            <h3 className="font-heading font-semibold text-lg text-fg truncate">
+            <H4 as="h3" className="truncate">
               {word.text}
-            </h3>
+            </H4>
             {word.ipa && (
               <span className="text-xs font-mono text-fg-subtle">
                 /{word.ipa.replace(/^\/|\/$/g, "")}/
@@ -146,9 +147,9 @@ function WordCardProcessing({
               className="animate-spin shrink-0"
               style={{ color: "var(--primary)" }}
             />
-            <h3 className="font-heading font-semibold text-lg text-fg truncate">
+            <H4 as="h3" className="truncate">
               {text}
-            </h3>
+            </H4>
             <span
               className="text-tiny uppercase tracking-widest"
               style={{ color: "var(--primary)" }}
@@ -215,9 +216,9 @@ function WordCardFailed({
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
           <div className="flex items-baseline gap-2">
-            <h3 className="font-heading font-semibold text-lg text-fg truncate">
+            <H4 as="h3" className="truncate">
               {word.text}
-            </h3>
+            </H4>
             <span className="text-tiny uppercase tracking-widest text-[var(--error)]">
               Enrichment failed
             </span>

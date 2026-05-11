@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Button from "@/components/ui/Button";
+import { H2 } from "@/components/ui/Typography";
 import { LessonHero } from "./LessonHero";
 import { StageCard } from "./StageCard";
 import {
@@ -93,9 +94,9 @@ export function LessonLobby({
             <p className="text-tiny font-semibold uppercase tracking-[.18em] text-fg-subtle mt-6">
               Practice modes
             </p>
-            <h2 className="mb-6 text-body-lg font-semibold tracking-tight text-fg">
+            <H2 className="mb-6 text-body-lg font-semibold tracking-tight">
               How do you want to practice?
-            </h2>
+            </H2>
           </div>
           {overall > 0 && (
             <span

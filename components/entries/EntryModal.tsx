@@ -6,6 +6,7 @@ import EntryHeader from "./EntryHeader";
 import EntryDifficulty from "./EntryDifficulty";
 import EntryNotes from "./EntryNotes";
 import EntryTags from "./EntryTags";
+import { H3, H4 } from "@/components/ui/Typography";
 
 interface EntryModalProps {
   entry: Entry;
@@ -56,9 +57,9 @@ export default function EntryModal({ entry, onClose, onSave }: EntryModalProps) 
 
           {currentEntry.ipa && (
             <div>
-              <h3 className="text-sm font-semibold text-fg-muted mb-2">
+              <H3 className="text-sm font-semibold text-fg-muted mb-2">
                 IPA (International Phonetic Alphabet)
-              </h3>
+              </H3>
               <p className="text-2xl text-fg font-mono">
                 {currentEntry.ipa}
               </p>
@@ -67,15 +68,15 @@ export default function EntryModal({ entry, onClose, onSave }: EntryModalProps) 
 
           {currentEntry.meanings && currentEntry.meanings.length > 0 && (
             <div>
-              <h3 className="text-sm font-semibold text-fg-muted mb-3">
+              <H3 className="text-sm font-semibold text-fg-muted mb-3">
                 Meanings
-              </h3>
+              </H3>
               <div className="space-y-4">
                 {currentEntry.meanings.map((meaning, meaningIndex) => (
                   <div key={meaningIndex} className="border-l-4 border-info pl-4">
-                    <h4 className="text-sm font-semibold text-info dark:text-info mb-2 italic">
+                    <H4 className="text-sm font-semibold text-info mb-2 italic">
                       {meaning.partOfSpeech}
-                    </h4>
+                    </H4>
                     <ol className="list-decimal list-inside space-y-3">
                       {meaning.definitions.map((def, defIndex) => (
                         <li key={defIndex} className="text-fg">

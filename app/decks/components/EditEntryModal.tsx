@@ -1,5 +1,6 @@
 "use client";
 import Button from "@/components/ui/Button";
+import { H3 } from "@/components/ui/Typography";
 import type { Tables } from "@/lib/supabase/types";
 
 type Entry = Tables<"entries">;
@@ -16,9 +17,9 @@ export function EditEntryModal({ entry, phrases, onPhrasesChange, onSave, onCanc
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
       <div className="bg-[var(--card-bg)] rounded-2xl p-6 w-full max-w-md mx-4">
-        <h3 className="text-lg font-semibold text-fg mb-4">
+        <H3 className="text-lg font-semibold mb-4">
           Edit phrases for "{entry.word}"
-        </h3>
+        </H3>
         <textarea
           value={phrases}
           onChange={e => onPhrasesChange(e.target.value)}

@@ -11,7 +11,7 @@ export default function CardHeader({ icon, title, right }: CardHeaderProps) {
     <div className="flex items-center justify-between">
       <div className="flex items-center gap-2">
         {icon}
-        <span className="text-base font-semibold text-fg">{title}</span>
+        <span className="text-xl font-semibold tracking-tight text-[var(--text-primary)]">{title}</span>
       </div>
       {right}
     </div>
