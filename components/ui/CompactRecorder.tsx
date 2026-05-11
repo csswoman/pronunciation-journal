@@ -91,7 +91,7 @@ export default function CompactRecorder({ onRecordingComplete, existingAudioUrl 
       
       {/* Tooltip */}
       {!isRecording && (
-        <span className="absolute left-1/2 -translate-x-1/2 top-full mt-2 z-10 px-3 py-1 bg-gray-800 text-on-primary text-xs rounded-md whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+        <span className="absolute left-1/2 -translate-x-1/2 top-full mt-2 z-10 px-3 py-1 bg-surface-tooltip text-on-primary text-xs rounded-md whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
           Record pronunciation
         </span>
       )}

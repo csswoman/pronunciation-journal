@@ -31,7 +31,7 @@ export default function FeedbackSection({
         feedback={feedback}
         xpEarned={xpEarned}
       />
-      <p className="text-center text-sm" style={{ color: 'var(--text-tertiary)' }}>
+      <p className="text-center text-sm text-fg-subtle">
         Heard: &ldquo;{scoringResult.transcript}&rdquo;
       </p>
       <div className="flex gap-4 justify-center">

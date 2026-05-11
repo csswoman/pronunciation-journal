@@ -25,7 +25,7 @@ export function ExerciseCard({ current, total, exerciseType, children, feedback,
     <div className="w-full max-w-md mx-auto space-y-4">
       {/* Progress bar */}
       <div className="space-y-1">
-        <div className="flex justify-between text-xs" style={{ color: 'var(--text-tertiary)' }}>
+        <div className="flex justify-between text-xs text-fg-subtle">
           <span>{TYPE_LABELS[exerciseType] ?? exerciseType}</span>
           <span>{current} / {total}</span>
         </div>
@@ -63,7 +63,7 @@ export function ExerciseCard({ current, total, exerciseType, children, feedback,
               {feedback.isCorrect ? 'Correct!' : 'Incorrect'}
             </span>
             {feedback.message && (
-              <span className="text-xs ml-1" style={{ color: 'var(--text-secondary)' }}>{feedback.message}</span>
+              <span className="text-xs ml-1 text-fg-muted">{feedback.message}</span>
             )}
           </div>
           {onNext && (

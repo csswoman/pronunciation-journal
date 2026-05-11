@@ -18,18 +18,18 @@ export default function QuickActionCard({
     <Button
       onClick={onClick}
       className="group relative bg-[var(--card-bg)]
-        border border-[var(--line-divider)] rounded-xl p-5
-        cursor-pointer transition-all duration-200 text-left w-full
-        hover:bg-[var(--btn-card-bg-hover)]
-        hover:border-[var(--line-color)] hover:-translate-y-0.5"
+ border border-[var(--line-divider)] rounded-xl p-5
+ cursor-pointer transition-all duration-200 text-left w-full
+ hover:bg-[var(--btn-card-bg-hover)]
+ hover:border-[var(--line-color)] hover:-translate-y-0.5"
       style={{ boxShadow: "0 1px 3px var(--line-divider), 0 4px 12px var(--line-divider)" }}
     >
       {/* Arrow badge */}
       <span
         className="absolute top-4 right-4 w-6 h-6 rounded-lg
-          bg-[var(--page-bg)] text-[var(--text-tertiary)] text-xs
-          flex items-center justify-center
-          group-hover:bg-[var(--primary)] group-hover:text-on-primary transition-all"
+ bg-[var(--page-bg)] text-fg-subtle text-xs
+ flex items-center justify-center
+ group-hover:bg-[var(--primary)] group-hover:text-on-primary transition-all"
         aria-hidden="true"
       >
         →
@@ -41,8 +41,8 @@ export default function QuickActionCard({
       </div>
 
       {/* Text */}
-      <p className="font-heading text-sm font-bold text-[var(--deep-text)] mb-1">{name}</p>
-      <p className="text-xs text-[var(--text-tertiary)] leading-relaxed">{description}</p>
+      <p className="font-heading text-sm font-bold text-fg mb-1">{name}</p>
+      <p className="text-xs text-fg-subtle leading-relaxed">{description}</p>
     </Button>
   );
 }

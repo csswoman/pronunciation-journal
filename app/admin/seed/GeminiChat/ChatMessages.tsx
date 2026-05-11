@@ -50,13 +50,13 @@ export function ChatMessages({
             className="max-w-[90%] rounded-xl border p-3 flex flex-col gap-2"
             style={{ borderColor: "var(--border)", backgroundColor: "var(--card-bg)" }}
           >
-            <p className="text-xs font-semibold" style={{ color: "var(--text-secondary)" }}>
+            <p className="text-xs font-semibold text-fg-muted">
               Suggestion for{" "}
               <span style={{ color: "var(--primary)" }}>
                 {TAB_LABEL[block.tab as Tab] ?? block.tab}
               </span>
             </p>
-            <pre className="text-xs overflow-x-auto" style={{ color: "var(--text-primary)" }}>
+            <pre className="text-xs overflow-x-auto text-fg">
               {JSON.stringify(block.data, null, 2)}
             </pre>
             <Button
@@ -75,7 +75,7 @@ export function ChatMessages({
   return (
     <div className="flex-1 overflow-y-auto p-4 space-y-3">
       {messages.length === 0 && (
-        <div className="text-sm text-center mt-8" style={{ color: "var(--text-tertiary)" }}>
+        <div className="text-sm text-center mt-8 text-fg-subtle">
           <p className="mb-1">
             Ask me to suggest data for the <strong>{TAB_LABEL[activeTab]}</strong> tab.
           </p>
@@ -84,7 +84,7 @@ export function ChatMessages({
       )}
       {messages.map((m, i) => renderMessage(m, i))}
       {loading && (
-        <div className="flex items-center gap-2 text-sm" style={{ color: "var(--text-tertiary)" }}>
+        <div className="flex items-center gap-2 text-sm text-fg-subtle">
           <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />

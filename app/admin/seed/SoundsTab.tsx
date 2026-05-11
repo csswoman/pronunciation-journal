@@ -7,6 +7,7 @@ import StatusBadge from "@/components/ui/StatusBadge";
 import Table from "@/components/ui/Table";
 import type { SoundForm } from "@/lib/admin/seed/types";
 import { useSoundsTab } from "@/app/admin/seed/useSoundsTab";
+import { H3 } from "@/components/ui/Typography";
 
 export function SoundsTab({
   form,
@@ -24,9 +25,9 @@ export function SoundsTab({
         className="grid grid-cols-2 md:grid-cols-3 gap-4 p-4 rounded-xl border"
         style={{ borderColor: "var(--border)", backgroundColor: "var(--card-bg)" }}
       >
-        <h3 className="col-span-full text-sm font-semibold" style={{ color: "var(--text-primary)" }}>
+        <H3 className="col-span-full text-sm font-semibold">
           Add Sound
-        </h3>
+        </H3>
         <Input label="IPA symbol" value={form.ipa} onChange={(v) => setForm({ ...form, ipa: v })} placeholder="æ" required />
         <Select
           label="Type"
@@ -64,7 +65,7 @@ export function SoundsTab({
         </div>
       </form>
       <div>
-        <p className="text-xs font-semibold mb-2" style={{ color: "var(--text-secondary)" }}>
+        <p className="text-xs font-semibold mb-2 text-fg-muted">
           {sounds.length} sounds in DB
         </p>
         <Table

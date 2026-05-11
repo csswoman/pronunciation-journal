@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { getLessonInCourse, getCourses, getCourseWithLessons } from "@/lib/notion/courses";
 import { NotionBlockRenderer } from "@/components/lessons/NotionBlockContent";
 import LessonCompleteButton from "@/components/courses/LessonCompleteButton";
+import { H1 } from "@/components/ui/Typography";
 
 const illustrationFiles = [
   "/illustrations/lesson/brain.svg",
@@ -61,19 +62,19 @@ export default async function LessonPage({ params }: Props) {
         <nav className="flex items-center gap-1.5 text-sm mb-8 pt-10">
           <Link
             href="/courses"
-            className="text-[var(--text-secondary)] hover:text-[var(--deep-text)] underline-offset-2 hover:underline transition-colors duration-150 active:opacity-60"
+            className="text-fg-muted hover:text-fg underline-offset-2 hover:underline transition-colors duration-150 active:opacity-60"
           >
             Courses
           </Link>
-          <span className="text-[var(--text-tertiary)] select-none">›</span>
+          <span className="text-fg-subtle select-none">›</span>
           <Link
             href={`/courses/${courseSlug}`}
-            className="text-[var(--text-secondary)] hover:text-[var(--deep-text)] underline-offset-2 hover:underline transition-colors duration-150 active:opacity-60 truncate max-w-[160px]"
+            className="text-fg-muted hover:text-fg underline-offset-2 hover:underline transition-colors duration-150 active:opacity-60 truncate max-w-[160px]"
           >
             {course.title}
           </Link>
-          <span className="text-[var(--text-tertiary)] select-none">›</span>
-          <span className="text-[var(--deep-text)] font-medium truncate">{lesson.title}</span>
+          <span className="text-fg-subtle select-none">›</span>
+          <span className="text-fg font-medium truncate">{lesson.title}</span>
         </nav>
 
         <div className="rounded-2xl border border-[var(--line-divider)] bg-[var(--card-bg)] overflow-hidden shadow-[0_1px_3px_var(--line-divider)] mb-10">
@@ -112,9 +113,9 @@ export default async function LessonPage({ params }: Props) {
                     {course.level}
                   </span>
                 )}
-                <h1 className="text-2xl font-bold text-on-primary leading-tight">
+                <H1 className="text-h2 text-on-primary">
                   {lesson.title}
-                </h1>
+                </H1>
                 <p className="text-xs text-[color-mix(in_oklch,var(--on-primary)_60%,transparent)] mt-1">
                   {course.title} · Updated {new Date(lesson.updatedAt).toLocaleDateString()}
                 </p>
@@ -128,7 +129,7 @@ export default async function LessonPage({ params }: Props) {
                 <NotionBlockRenderer key={block.id} block={block} />
               ))
             ) : (
-              <p className="text-[var(--text-secondary)]">
+              <p className="text-fg-muted">
                 This lesson has no content yet.
               </p>
             )}
@@ -145,10 +146,10 @@ export default async function LessonPage({ params }: Props) {
               href={`/courses/${courseSlug}/lesson/${prev.slug}`}
               className="flex-1 flex flex-col gap-1 p-4 rounded-xl border border-[var(--line-divider)] bg-[var(--card-bg)] hover:border-[var(--primary)] hover:bg-[var(--btn-plain-bg-hover)] transition-all text-left group"
             >
-              <span className="text-xs text-[var(--text-tertiary)] uppercase tracking-wide">
+              <span className="text-xs text-fg-subtle uppercase tracking-wide">
                 ← Previous
               </span>
-              <span className="text-sm font-medium text-[var(--deep-text)] group-hover:text-[var(--primary)] transition-colors">
+              <span className="text-sm font-medium text-fg group-hover:text-[var(--primary)] transition-colors">
                 {prev.title}
               </span>
             </Link>
@@ -161,10 +162,10 @@ export default async function LessonPage({ params }: Props) {
               href={`/courses/${courseSlug}/lesson/${next.slug}`}
               className="flex-1 flex flex-col gap-1 p-4 rounded-xl border border-[var(--line-divider)] bg-[var(--card-bg)] hover:border-[var(--primary)] hover:bg-[var(--btn-plain-bg-hover)] transition-all text-right group"
             >
-              <span className="text-xs text-[var(--text-tertiary)] uppercase tracking-wide">
+              <span className="text-xs text-fg-subtle uppercase tracking-wide">
                 Next →
               </span>
-              <span className="text-sm font-medium text-[var(--deep-text)] group-hover:text-[var(--primary)] transition-colors">
+              <span className="text-sm font-medium text-fg group-hover:text-[var(--primary)] transition-colors">
                 {next.title}
               </span>
             </Link>

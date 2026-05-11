@@ -8,6 +8,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import AIEngagementWidget from "@/components/practice/AIEngagementWidget";
+import { H2 } from "@/components/ui/Typography";
 
 export interface ProgressDay {
   date: string;
@@ -53,7 +54,7 @@ function MetricCard({
 }) {
   return (
     <div
-      className="rounded-[22px] p-4"
+      className="rounded-3xl p-4"
       style={{
         background:
           "linear-gradient(180deg, color-mix(in oklch, var(--btn-regular-bg) 82%, var(--card-bg)), var(--card-bg))",
@@ -71,15 +72,15 @@ function MetricCard({
           {icon}
         </div>
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: "var(--text-secondary)" }}>
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-fg-muted">
             {label}
           </p>
-          <p className="text-2xl font-black tracking-tight" style={{ color: "var(--deep-text)" }}>
+          <p className="text-2xl font-black tracking-tight text-fg">
             {value}
           </p>
         </div>
       </div>
-      <p className="mt-3 text-sm leading-6" style={{ color: "var(--text-secondary)" }}>
+      <p className="mt-3 text-sm leading-6 text-fg-muted">
         {helper}
       </p>
     </div>
@@ -102,7 +103,7 @@ export default function ProgressOverview({
 }: ProgressOverviewProps) {
   return (
     <div
-      className="overflow-hidden rounded-[30px] p-5 sm:p-6 lg:p-7"
+      className="overflow-hidden rounded-3xl p-5 sm:p-6 lg:p-7"
       style={{
         background:
           "radial-gradient(circle at top right, color-mix(in oklch, var(--primary) 14%, transparent), transparent 34%), linear-gradient(180deg, var(--card-bg), color-mix(in oklch, var(--btn-regular-bg) 72%, var(--card-bg)))",
@@ -115,16 +116,16 @@ export default function ProgressOverview({
             <p className="text-tiny font-semibold uppercase tracking-[0.28em]" style={{ color: "var(--primary)" }}>
               Progress Snapshot
             </p>
-            <h2 className="mt-2 text-3xl font-black tracking-tight sm:text-4xl" style={{ color: "var(--deep-text)" }}>
+            <H2 className="mt-2 text-h2 sm:text-4xl">
               Clear momentum, less noise.
-            </h2>
-            <p className="mt-3 max-w-lg text-sm leading-7 sm:text-body" style={{ color: "var(--text-secondary)" }}>
+            </H2>
+            <p className="mt-3 max-w-lg text-sm leading-7 sm:text-body text-fg-muted">
               Your progress now highlights rhythm, quality, and study load without repeating the same numbers in every block.
             </p>
           </div>
 
           <div
-            className="min-w-[210px] rounded-[26px] p-4 animate-fadeIn"
+            className="min-w-[210px] rounded-3xl p-4 animate-fadeIn"
             style={{
               background: "color-mix(in oklch, var(--primary) 10%, transparent)",
               border: "1px solid color-mix(in oklch, var(--primary) 18%, var(--line-divider))",
@@ -136,10 +137,10 @@ export default function ProgressOverview({
                 Focus Today
               </span>
             </div>
-            <p className="mt-3 text-3xl font-black tracking-tight" style={{ color: "var(--deep-text)" }}>
+            <p className="mt-3 text-3xl font-black tracking-tight text-fg">
               {consistencyScore}
             </p>
-            <p className="mt-1 text-sm leading-6" style={{ color: "var(--text-secondary)" }}>
+            <p className="mt-1 text-sm leading-6 text-fg-muted">
               Consistency score based on active days and weekly accuracy.
             </p>
           </div>
@@ -168,7 +169,7 @@ export default function ProgressOverview({
 
         <div className="grid gap-5 lg:grid-cols-[1.15fr_0.85fr]">
           <div
-            className="rounded-[26px] p-4 sm:p-5"
+            className="rounded-3xl p-4 sm:p-5"
             style={{
               background: "color-mix(in oklch, var(--card-bg) 92%, var(--btn-regular-bg))",
               border: "1px solid var(--line-divider)",
@@ -176,18 +177,18 @@ export default function ProgressOverview({
           >
             <div className="flex flex-wrap items-end justify-between gap-3">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: "var(--text-secondary)" }}>
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-fg-muted">
                   Weekly Activity
                 </p>
-                <p className="mt-1 text-sm" style={{ color: "var(--text-secondary)" }}>
+                <p className="mt-1 text-sm text-fg-muted">
                   Attempts over the last 7 days
                 </p>
               </div>
               <div className="text-right">
-                <p className="text-2xl font-black tracking-tight" style={{ color: "var(--deep-text)" }}>
+                <p className="text-2xl font-black tracking-tight text-fg">
                   {weeklyAttempts}
                 </p>
-                <p className="text-xs" style={{ color: "var(--text-tertiary)" }}>
+                <p className="text-xs text-fg-subtle">
                   weekly attempts
                 </p>
               </div>
@@ -208,14 +209,14 @@ export default function ProgressOverview({
                       {day.attempts > 0 ? day.attempts : ""}
                     </span>
                     <div
-                      className="flex w-full items-end rounded-[18px] px-1.5 py-1"
+                      className="flex w-full items-end rounded-2xl px-1.5 py-1"
                       style={{
                         height: 140,
                         background: "linear-gradient(180deg, transparent, color-mix(in oklch, var(--primary) 4%, transparent))",
                       }}
                     >
                       <div
-                        className="w-full rounded-[14px] animate-stat-rise"
+                        className="w-full rounded-2xl animate-stat-rise"
                         style={{
                           height: `${barHeight}px`,
                           animationDelay: `${index * 70}ms`,
@@ -245,7 +246,7 @@ export default function ProgressOverview({
 
           <div className="space-y-4">
             <div
-              className="rounded-[26px] p-5"
+              className="rounded-3xl p-5"
               style={{
                 background: "var(--card-bg)",
                 border: "1px solid var(--line-divider)",
@@ -254,10 +255,10 @@ export default function ProgressOverview({
             >
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: "var(--text-secondary)" }}>
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-fg-muted">
                     Today's Vocabulary
                   </p>
-                  <p className="mt-1 text-sm leading-6" style={{ color: "var(--text-secondary)" }}>
+                  <p className="mt-1 text-sm leading-6 text-fg-muted">
                     Quick glance at the words you touched today.
                   </p>
                 </div>
@@ -281,7 +282,7 @@ export default function ProgressOverview({
                       style={{
                         animationDelay: `${index * 80}ms`,
                         background: "color-mix(in oklch, var(--primary) 10%, transparent)",
-                        color: "var(--deep-text)",
+                        color: "var(--text-primary)",
                         border: "1px solid color-mix(in oklch, var(--primary) 12%, var(--line-divider))",
                       }}
                     >

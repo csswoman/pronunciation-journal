@@ -27,15 +27,6 @@ const navItems = [
     ),
   },
   {
-    name: "AI",
-    href: "/ai-practice",
-    icon: (
-      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-      </svg>
-    ),
-  },
-  {
     name: "Progress",
     href: "/progress",
     icon: (
@@ -112,10 +103,10 @@ export default function BottomNav({ className = "" }: BottomNavProps) {
                 className={`flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors ${
                   isActive(item.href)
                     ? "text-[var(--primary)] bg-[var(--btn-regular-bg)]"
-                    : "text-[var(--text-secondary)] hover:bg-[var(--btn-hover-bg)] hover:text-[var(--text-primary)]"
+                    : "text-fg-muted hover:bg-[var(--btn-hover-bg)] hover:text-fg"
                 }`}
               >
-                <span className={isActive(item.href) ? "text-[var(--primary)]" : "text-[var(--text-tertiary)]"}>
+                <span className={isActive(item.href) ? "text-[var(--primary)]" : "text-fg-subtle"}>
                   {item.icon}
                 </span>
                 {item.name}
@@ -136,7 +127,7 @@ export default function BottomNav({ className = "" }: BottomNavProps) {
               className={`flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl text-tiny font-semibold transition-all ${
                 active
                   ? "text-[var(--primary)] bg-[var(--btn-regular-bg)]"
-                  : "text-[var(--text-tertiary)]"
+                  : "text-fg-subtle"
               }`}
             >
               {item.icon}
@@ -149,7 +140,7 @@ export default function BottomNav({ className = "" }: BottomNavProps) {
           className={`flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl text-tiny font-semibold transition-all ${
             showMenu
               ? "text-[var(--primary)] bg-[var(--btn-regular-bg)]"
-              : "text-[var(--text-tertiary)]"
+              : "text-fg-subtle"
           }`}
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

@@ -1,5 +1,6 @@
 "use client";
 import Button from "@/components/ui/Button";
+import { H1 } from "@/components/ui/Typography";
 
 import { useState, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
@@ -114,22 +115,21 @@ export default function LessonEditor({ initialLesson }: LessonEditorProps) {
         <div className="flex items-center gap-3 mb-8">
           <Link
             href="/courses"
-            className="p-2 rounded-xl hover:bg-[var(--btn-plain-bg-hover)] transition-colors"
-            style={{ color: "var(--text-secondary)" }}
+            className="p-2 rounded-xl hover:bg-[var(--btn-plain-bg-hover)] transition-colors text-fg-muted"
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
           </Link>
-          <h1 className="text-xl font-bold" style={{ color: "var(--deep-text)" }}>
+          <H1 className="text-xl font-bold">
             {isEdit ? "Edit lesson" : "New lesson"}
-          </h1>
+          </H1>
         </div>
 
         <div className="flex flex-col gap-6">
           {/* Title */}
           <div>
-            <label className="block text-xs font-semibold mb-1.5 uppercase tracking-wider" style={{ color: "var(--text-secondary)" }}>
+            <label className="block text-xs font-semibold mb-1.5 uppercase tracking-wider text-fg-muted">
               Title
             </label>
             <input
@@ -137,25 +137,23 @@ export default function LessonEditor({ initialLesson }: LessonEditorProps) {
               value={title}
               onChange={(e) => handleTitleChange(e.target.value)}
               placeholder="e.g. Introduction to Vowel Sounds"
-              className="w-full px-4 py-2.5 rounded-xl border border-[var(--line-divider)] bg-[var(--card-bg)] text-sm focus:outline-none focus:border-[var(--primary)]"
-              style={{ color: "var(--deep-text)" }}
+              className="w-full px-4 py-2.5 rounded-xl border border-[var(--line-divider)] bg-[var(--card-bg)] text-sm focus:outline-none focus:border-[var(--primary)] text-fg"
             />
           </div>
 
           {/* Slug */}
           <div>
-            <label className="block text-xs font-semibold mb-1.5 uppercase tracking-wider" style={{ color: "var(--text-secondary)" }}>
+            <label className="block text-xs font-semibold mb-1.5 uppercase tracking-wider text-fg-muted">
               Slug (URL)
             </label>
             <div className="flex items-center gap-2">
-              <span className="text-xs px-2" style={{ color: "var(--text-tertiary)" }}>/courses/</span>
+              <span className="text-xs px-2 text-fg-subtle">/courses/</span>
               <input
                 type="text"
                 value={slug}
                 onChange={(e) => handleSlugChange(e.target.value)}
                 placeholder="intro-vowel-sounds"
-                className="flex-1 px-4 py-2.5 rounded-xl border border-[var(--line-divider)] bg-[var(--card-bg)] text-sm focus:outline-none focus:border-[var(--primary)]"
-                style={{ color: "var(--deep-text)" }}
+                className="flex-1 px-4 py-2.5 rounded-xl border border-[var(--line-divider)] bg-[var(--card-bg)] text-sm focus:outline-none focus:border-[var(--primary)] text-fg"
               />
             </div>
           </div>
@@ -163,14 +161,13 @@ export default function LessonEditor({ initialLesson }: LessonEditorProps) {
           {/* Category + Published row */}
           <div className="flex gap-4 flex-wrap">
             <div className="flex-1 min-w-[180px]">
-              <label className="block text-xs font-semibold mb-1.5 uppercase tracking-wider" style={{ color: "var(--text-secondary)" }}>
+              <label className="block text-xs font-semibold mb-1.5 uppercase tracking-wider text-fg-muted">
                 Category
               </label>
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value as LessonCategory)}
-                className="w-full px-4 py-2.5 rounded-xl border border-[var(--line-divider)] bg-[var(--card-bg)] text-sm focus:outline-none focus:border-[var(--primary)]"
-                style={{ color: "var(--deep-text)" }}
+                className="w-full px-4 py-2.5 rounded-xl border border-[var(--line-divider)] bg-[var(--card-bg)] text-sm focus:outline-none focus:border-[var(--primary)] text-fg"
               >
                 {LESSON_CATEGORIES.map((c) => (
                   <option key={c.value} value={c.value}>{c.label}</option>
@@ -186,7 +183,7 @@ export default function LessonEditor({ initialLesson }: LessonEditorProps) {
                 >
                   <div className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-surface-raised shadow transition-transform ${isPublished ? "translate-x-4" : ""}`} />
                 </div>
-                <span className="text-sm font-medium" style={{ color: "var(--deep-text)" }}>
+                <span className="text-sm font-medium text-fg">
                   {isPublished ? "Published" : "Draft"}
                 </span>
               </label>
@@ -195,7 +192,7 @@ export default function LessonEditor({ initialLesson }: LessonEditorProps) {
 
           {/* Cover image */}
           <div>
-            <label className="block text-xs font-semibold mb-1.5 uppercase tracking-wider" style={{ color: "var(--text-secondary)" }}>
+            <label className="block text-xs font-semibold mb-1.5 uppercase tracking-wider text-fg-muted">
               Cover image
             </label>
             <input
@@ -224,8 +221,7 @@ export default function LessonEditor({ initialLesson }: LessonEditorProps) {
               <Button
                 onClick={() => fileInputRef.current?.click()}
                 disabled={uploadingCover}
-                className="w-full h-28 rounded-xl border-2 border-dashed border-[var(--line-divider)] flex flex-col items-center justify-center gap-2 text-sm hover:border-[var(--primary)] transition-colors disabled:opacity-50"
-                style={{ color: "var(--text-tertiary)" }}
+                className="w-full h-28 rounded-xl border-2 border-dashed border-[var(--line-divider)] flex flex-col items-center justify-center gap-2 text-sm hover:border-[var(--primary)] transition-colors disabled:opacity-50 text-fg-subtle"
               >
                 {uploadingCover ? (
                   <div className="w-5 h-5 border-2 border-[var(--primary)] border-t-transparent rounded-full animate-spin" />
@@ -243,7 +239,7 @@ export default function LessonEditor({ initialLesson }: LessonEditorProps) {
 
           {/* Markdown editor */}
           <div>
-            <label className="block text-xs font-semibold mb-1.5 uppercase tracking-wider" style={{ color: "var(--text-secondary)" }}>
+            <label className="block text-xs font-semibold mb-1.5 uppercase tracking-wider text-fg-muted">
               Content (Markdown)
             </label>
             <div data-color-mode="auto">
@@ -275,8 +271,7 @@ export default function LessonEditor({ initialLesson }: LessonEditorProps) {
             </Button>
             <Link
               href="/courses"
-              className="px-4 py-2.5 rounded-xl text-sm font-medium border border-[var(--line-divider)] hover:bg-[var(--btn-plain-bg-hover)] transition-colors"
-              style={{ color: "var(--deep-text)" }}
+              className="px-4 py-2.5 rounded-xl text-sm font-medium border border-[var(--line-divider)] hover:bg-[var(--btn-plain-bg-hover)] transition-colors text-fg"
             >
               Cancel
             </Link>

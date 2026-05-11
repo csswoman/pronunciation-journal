@@ -70,13 +70,13 @@ export function PickWordExercise({ exercise, onSubmit }: Props) {
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <p className="text-sm mb-2" style={{ color: 'var(--text-secondary)' }}>
+        <p className="text-sm mb-2 text-fg-muted">
           Which words contain this sound?
         </p>
         <span className="text-5xl font-bold font-mono" style={{ color: 'var(--primary)' }}>
           {exercise.ipa}
         </span>
-        <p className="text-xs mt-1" style={{ color: 'var(--text-tertiary)' }}>Select all that apply</p>
+        <p className="text-xs mt-1 text-fg-subtle">Select all that apply</p>
       </div>
 
       <div className="grid grid-cols-2 gap-3">

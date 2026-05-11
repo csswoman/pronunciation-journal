@@ -1,10 +1,8 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
-import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useAuth } from "@/components/auth/AuthProvider"
-import Section from '@/components/layout/Section'
 import PageLayout from '@/components/layout/PageLayout'
 import PageHeader from '@/components/layout/PageHeader'
 import { getUserStats } from '@/lib/db'
@@ -17,6 +15,16 @@ import LessonFilters from './LessonFilters'
 import LessonGrid from './LessonGrid'
 import { useLessonFilters } from '@/hooks/useLessonFilters'
 import { useHeroLesson } from '@/hooks/useHeroLesson'
+
+const statCard = {
+  background: "var(--surface-raised)",
+  border: "1px solid var(--border-subtle)",
+  borderRadius: "var(--radius-lg)",
+  padding: "var(--space-4) var(--space-5)",
+  display: "flex",
+  flexDirection: "column" as const,
+  gap: "var(--space-1)",
+}
 
 export default function PracticeLessonsPage() {
   const router = useRouter()
@@ -57,6 +65,18 @@ export default function PracticeLessonsPage() {
     return map
   }, [progress])
 
+  const completedCount = useMemo(() => {
+    let n = 0
+    soundProgressMap.forEach((v) => { if (v === 100) n++ })
+    return n
+  }, [soundProgressMap])
+
+  const inProgressCount = useMemo(() => {
+    let n = 0
+    soundProgressMap.forEach((v) => { if (v > 0 && v < 100) n++ })
+    return n
+  }, [soundProgressMap])
+
   const heroLesson = useHeroLesson(allLessons, progress, soundProgressMap)
 
   const {
@@ -65,6 +85,17 @@ export default function PracticeLessonsPage() {
     setFilter, setSearch, handlePageChange,
   } = useLessonFilters(allLessons)
 
+  const heroPhoneme = useMemo(() => {
+    const title = heroLesson.lesson?.title ?? ''
+    const match = title.match(/\/([^/]+)\//)
+    return match ? `/${match[1]}/` : null
+  }, [heroLesson.lesson?.title])
+
+  const heroLessonName = useMemo(() => {
+    const title = heroLesson.lesson?.title ?? 'Basic Greetings'
+    return title.replace(/^\/[^/]+\/\s*[—–-]\s*/, '')
+  }, [heroLesson.lesson?.title])
+
   const handleResume = () => {
     if (!heroLesson.lesson) return
     router.push(heroLesson.lesson.href ?? `/practice/lesson/${heroLesson.lesson.id}`)
@@ -72,46 +103,78 @@ export default function PracticeLessonsPage() {
 
   return (
     <PageLayout
+      contentStyle={{ padding: "var(--space-6) var(--space-8) 3.5rem" }}
       hero={
         <PageHeader
+          variant="hero-compact"
           badge="Sound Lab"
           title="Speak Better"
           subtitle="One Sound at a Time"
-          description="Short drills. Clear feedback. Real progress."
           progress={heroLesson.progress}
-          lessonTitle={heroLesson.lesson?.title ?? 'Basic Greetings'}
+          lessonTitle={heroLessonName}
+          phonemeLabel={heroPhoneme ?? undefined}
           onContinue={handleResume}
-          illustration={
-            <Image
-              src="/illustrations/music.svg"
-              alt="Music illustration"
-              width={560}
-              height={360}
-              priority
-            />
-          }
         />
       }
     >
-      <Section spacing="lg" title="Available Lessons">
-        <LessonFilters
-          filter={filter}
-          search={search}
-          resultCount={filteredLessons.length}
-          onFilterChange={setFilter}
-          onSearchChange={setSearch}
-        />
-        <LessonGrid
-          lessons={paginatedLessons}
-          totalCount={filteredLessons.length}
-          currentPage={currentPage}
-          totalPages={totalPages}
-          gridKey={gridKey}
-          soundProgressMap={soundProgressMap}
-          isLoading={isLoadingLessons}
-          onPageChange={handlePageChange}
-        />
-      </Section>
+      {/* Stats row */}
+      <div
+        className="grid grid-cols-4"
+        style={{ gap: "var(--space-4)", marginBottom: "var(--space-8)" }}
+      >
+        <div style={statCard}>
+          <span style={{ font: "var(--font-h3)", color: "var(--text-primary)", lineHeight: 1 }}>
+            {allLessons.length}
+          </span>
+          <span style={{ font: "var(--font-tiny)", color: "var(--text-tertiary)", textTransform: "uppercase", letterSpacing: "0.08em" }}>
+            Exercises
+          </span>
+        </div>
+        <div style={statCard}>
+          <span style={{ font: "var(--font-h3)", color: "var(--text-primary)", lineHeight: 1 }}>
+            <span>{currentPage}</span>
+            <span style={{ color: "var(--primary)" }}>/{totalPages}</span>
+          </span>
+          <span style={{ font: "var(--font-tiny)", color: "var(--text-tertiary)", textTransform: "uppercase", letterSpacing: "0.08em" }}>
+            Page
+          </span>
+        </div>
+        <div style={statCard}>
+          <span style={{ font: "var(--font-h3)", color: "var(--primary)", lineHeight: 1 }}>
+            {completedCount}
+          </span>
+          <span style={{ font: "var(--font-tiny)", color: "var(--text-tertiary)", textTransform: "uppercase", letterSpacing: "0.08em" }}>
+            Completed
+          </span>
+        </div>
+        <div style={statCard}>
+          <span style={{ font: "var(--font-h3)", color: "var(--warning)", lineHeight: 1 }}>
+            {inProgressCount}
+          </span>
+          <span style={{ font: "var(--font-tiny)", color: "var(--text-tertiary)", textTransform: "uppercase", letterSpacing: "0.08em" }}>
+            In Progress
+          </span>
+        </div>
+      </div>
+
+      {/* Lessons section */}
+      <LessonFilters
+        filter={filter}
+        search={search}
+        resultCount={filteredLessons.length}
+        onFilterChange={setFilter}
+        onSearchChange={setSearch}
+      />
+      <LessonGrid
+        lessons={paginatedLessons}
+        totalCount={filteredLessons.length}
+        currentPage={currentPage}
+        totalPages={totalPages}
+        gridKey={gridKey}
+        soundProgressMap={soundProgressMap}
+        isLoading={isLoadingLessons}
+        onPageChange={handlePageChange}
+      />
     </PageLayout>
   )
 }

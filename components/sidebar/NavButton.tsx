@@ -16,22 +16,17 @@ export function NavButton({ active, onClick, children, as = "button", href, tool
   const { collapsed } = useSidebar();
   const { ref, tip, show, hide } = useSidebarTooltip();
 
-  const baseClasses = `relative flex items-center ${collapsed ? "justify-center w-9 h-9 mx-auto" : "gap-2.5 px-3 w-full h-9"} rounded-lg text-sm font-medium transition-all duration-200 group`;
+  const baseClasses = `relative flex items-center ${collapsed ? "justify-center w-11 h-11 mx-auto" : "gap-2.5 w-full"} rounded-[var(--radius-md)] text-sm transition-all duration-[var(--transition-fast)] group`
+    + (collapsed ? "" : " px-[var(--space-3)] py-[var(--space-2)]");
   const baseStyle = active
-    ? { background: "var(--btn-regular-bg)", color: "var(--primary)" }
+    ? { background: "var(--primary-soft)", color: "var(--primary)", fontWeight: 600 }
     : { color: "var(--text-secondary)" };
 
   const inner = (
     <>
-      {active && !collapsed && (
-        <span
-          className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-5 rounded-r-full"
-          style={{ background: "var(--primary)" }}
-        />
-      )}
       {!active && (
-        <span className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-150 -z-10"
-              style={{ background: "var(--btn-plain-bg-hover)" }} />
+        <span className="absolute inset-0 rounded-[var(--radius-md)] opacity-0 group-hover:opacity-100 transition-opacity duration-[var(--transition-fast)] -z-10"
+              style={{ background: "var(--surface-sunken)" }} />
       )}
       {children}
       {collapsed && tooltip && (

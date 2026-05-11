@@ -1,5 +1,6 @@
 "use client";
 import Button from "@/components/ui/Button";
+import { H2 } from "@/components/ui/Typography";
 
 import { useMemo } from "react";
 import { Entry, Difficulty } from "@/lib/types";
@@ -63,14 +64,14 @@ export default function WordsTab({
   return (
     <>
       <div className="mb-8">
-        <h2 className="text-xl font-bold text-fg mb-6">
+        <H2 className="text-h4 mb-6">
           Mi vocabulario
-        </h2>
+        </H2>
       </div>
       <AddWordSection onSave={onSave} />
       <div className="mt-8">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
-          <h2 className="text-2xl font-semibold text-fg">
+          <H2 className="text-h2">
             Your Entries
             {isSelectionMode && selectedEntries.length > 0 && (
               <span className="ml-3 text-base font-normal text-fg-muted">
@@ -78,7 +79,7 @@ export default function WordsTab({
                 {selectedEntries.length > 1 ? "s" : ""})
               </span>
             )}
-          </h2>
+          </H2>
           <div className="flex flex-wrap gap-2 items-center w-full sm:w-auto">
             <SearchAndFilters
               searchTerm={searchTerm}

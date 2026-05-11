@@ -51,7 +51,7 @@ export default function ProfilePasswordCard({ onSave }: Props) {
   return (
     <div>
       <div className="flex items-center justify-between mb-1">
-        <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: "var(--text-tertiary)" }}>
+        <span className="text-xs font-semibold uppercase tracking-widest text-fg-subtle">
           Password
         </span>
         {!isEditing && (
@@ -62,7 +62,7 @@ export default function ProfilePasswordCard({ onSave }: Props) {
       </div>
 
       {!isEditing ? (
-        <p className="text-sm tracking-[0.2em] py-1" style={{ color: "var(--text-tertiary)" }}>••••••••</p>
+        <p className="text-sm tracking-[0.2em] py-1 text-fg-subtle">••••••••</p>
       ) : (
         <form onSubmit={handleSave} className="mt-2 space-y-2">
           <input

@@ -24,7 +24,7 @@ export function InterviewTopBar({
       style={{ borderColor: "var(--line-divider)", background: "var(--card-bg)" }}
     >
       <div className="min-w-0 flex-1">
-        <p className="text-sm font-semibold truncate" style={{ color: "var(--deep-text)" }}>{title}</p>
+        <p className="text-sm font-semibold truncate text-fg">{title}</p>
         <div className="flex items-center gap-2 mt-1.5">
           <div className="flex-1 h-1.5 rounded-full" style={{ background: "var(--line-divider)" }}>
             <div

@@ -26,7 +26,7 @@ export default function HomeProgressCard({
         icon={<BarChart2 size={17} className="text-[var(--primary)]" />}
         title="Your Progress"
         right={
-          <Link href="/progress" className="text-sm font-medium text-[var(--text-tertiary)] hover:text-[var(--primary)] transition-colors">
+          <Link href="/progress" className="text-sm font-medium text-fg-subtle hover:text-[var(--primary)] transition-colors">
             This week
           </Link>
         }
@@ -35,8 +35,8 @@ export default function HomeProgressCard({
       <div className="flex items-end gap-5">
         {/* Count */}
         <div className="shrink-0">
-          <p className="text-xs text-[var(--text-tertiary)] mb-1">Lessons Completed</p>
-          <p className="text-4xl font-bold text-[var(--deep-text)] leading-none">{lessonsThisWeek}</p>
+          <p className="text-xs text-fg-subtle mb-1">Lessons Completed</p>
+          <p className="text-4xl font-bold text-fg leading-none">{lessonsThisWeek}</p>
           <div
             className="flex items-center gap-1 mt-1.5 text-sm font-medium"
             style={{ color: isPositive ? "oklch(.6 .15 150)" : "oklch(.55 .18 25)" }}
@@ -58,7 +58,7 @@ export default function HomeProgressCard({
                   opacity: v === 0 ? 0.3 : 1,
                 }}
               />
-              <span className="text-tiny text-[var(--text-tertiary)]">{DAYS[i]}</span>
+              <span className="text-tiny text-fg-subtle">{DAYS[i]}</span>
             </div>
           ))}
         </div>

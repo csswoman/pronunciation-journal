@@ -10,7 +10,7 @@ export function AuthTrustBar() {
         { icon: <Lock className="w-3 h-3" />,       label: "Private & secure" },
         { icon: <Activity className="w-3 h-3" />,   label: "Track progress" },
       ].map(({ icon, label }) => (
-        <div key={label} className="flex items-center gap-1.5 text-[11.5px]" style={{ color: "var(--text-secondary)" }}>
+        <div key={label} className="flex items-center gap-1.5 text-xs text-fg-muted">
           {icon}
           {label}
         </div>

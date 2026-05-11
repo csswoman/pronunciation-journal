@@ -1,10 +1,12 @@
 import { ReactNode } from "react";
+import { H2 } from "@/components/ui/Typography";
 
 interface SectionProps {
   children: ReactNode;
   className?: string;
   spacing?: "sm" | "md" | "lg" | "xl";
   title?: string;
+  titleSize?: "h2" | "h3" | "h4";
   description?: string;
 }
 
@@ -17,6 +19,7 @@ export default function Section({
   className = "",
   spacing = "lg",
   title,
+  titleSize = "h2",
   description,
 }: SectionProps) {
   const spacingMap = {
@@ -31,11 +34,11 @@ export default function Section({
       {/* Optional header */}
       {title && (
         <div className="mb-6">
-          <h2 className="text-2xl font-bold tracking-tight text-[var(--deep-text)] mb-2">
+          <H2 className={`${titleSize === "h4" ? "text-h4 tracking-[-0.01em]" : titleSize === "h3" ? "text-h3" : "text-h2"} mb-2`}>
             {title}
-          </h2>
+          </H2>
           {description && (
-            <p className="text-base text-[var(--text-secondary)]">
+            <p className="text-base text-fg-muted">
               {description}
             </p>
           )}

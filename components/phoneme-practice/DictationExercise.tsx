@@ -72,7 +72,7 @@ export function DictationExercise({ exercise, onSubmit }: Props) {
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <p className="text-sm mb-3" style={{ color: 'var(--text-secondary)' }}>
+        <p className="text-sm mb-3 text-fg-muted">
           Listen and type what you hear
         </p>
         <Button
@@ -87,7 +87,7 @@ export function DictationExercise({ exercise, onSubmit }: Props) {
         >
           🔊
         </Button>
-        <p className="text-xs mt-2" style={{ color: 'var(--text-tertiary)' }}>Tap to replay</p>
+        <p className="text-xs mt-2 text-fg-subtle">Tap to replay</p>
       </div>
 
       <div className="space-y-3">
@@ -103,7 +103,7 @@ export function DictationExercise({ exercise, onSubmit }: Props) {
         />
 
         {submitted && !isCorrect && (
-          <p className="text-center text-sm" style={{ color: 'var(--text-secondary)' }}>
+          <p className="text-center text-sm text-fg-muted">
             Correct answer: <span className="font-bold text-success">{exercise.targetWord}</span>
           </p>
         )}

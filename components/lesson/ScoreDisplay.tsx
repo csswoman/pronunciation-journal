@@ -2,6 +2,7 @@
 
 import type { WordAttempt } from "@/hooks/useLesson";
 import WordAttemptRow from "./WordAttemptRow";
+import { H3, H4 } from "@/components/ui/Typography";
 
 interface ScoreDisplayProps {
   wordAttempts: WordAttempt[];
@@ -21,11 +22,11 @@ export default function ScoreDisplay({
       backgroundColor: 'var(--card-bg)',
       borderColor: 'var(--line-divider)',
     }}>
-      <h3 className="text-xl font-bold mb-4 text-center" style={{
+      <H3 className="text-h3 mb-4 text-center" style={{
         color: 'var(--text-primary)',
       }}>
         🎉 Lesson Complete!
-      </h3>
+      </H3>
 
       {/* Stats Grid */}
       <div className="grid grid-cols-3 gap-4 mb-6">
@@ -63,11 +64,11 @@ export default function ScoreDisplay({
 
       {/* Per-word breakdown */}
       <div className="space-y-2">
-        <h4 className="text-sm font-medium mb-2" style={{
+        <H4 className="text-sm font-medium mb-2" style={{
           color: 'var(--text-primary)',
         }}>
           Word Breakdown
-        </h4>
+        </H4>
         {wordAttempts.map((wa) => (
           <WordAttemptRow key={wa.word} wordAttempt={wa} />
         ))}

@@ -16,10 +16,10 @@ type CourseCardProps = {
   priority?: boolean;
 };
 
-const levelConfig: Record<string, { label: string }> = {
-  basic: { label: "Basic" },
-  intermediate: { label: "Intermediate" },
-  advanced: { label: "Advanced" },
+const levelBadge: Record<string, { label: string; className: string }> = {
+  basic:        { label: "Basic",        className: "bg-emerald-900/40 text-emerald-300 border-emerald-700/40" },
+  intermediate: { label: "Intermediate", className: "bg-amber-900/40 text-amber-300 border-amber-700/40" },
+  advanced:     { label: "Advanced",     className: "bg-red-900/40 text-red-300 border-red-700/40" },
 };
 
 const coverHues = [250, 180, 310, 60, 25];
@@ -60,7 +60,7 @@ export default function CourseCard({ course, priority = false }: CourseCardProps
   const progress = getProgress(totalLessons, completedLessons);
   const ctaLabel = getCtaLabel(totalLessons, completedLessons);
   const levelKey = (course.level ?? "basic").toLowerCase();
-  const level = levelConfig[levelKey] ?? levelConfig.basic;
+  const level = levelBadge[levelKey] ?? levelBadge.basic;
   const coverHue = getCoverHue(course.title);
   const illustration = getCourseIllustration(course.title);
   const isCompleted = ctaLabel === "Completed";
@@ -69,15 +69,20 @@ export default function CourseCard({ course, priority = false }: CourseCardProps
   return (
     <Link
       href={`/courses/${course.slug}`}
-      className="group flex flex-col h-full w-full rounded-lg border border-border-subtle bg-surface-raised overflow-hidden transition-all duration-200 hover:border-border-default hover:-translate-y-px"
+      className="group flex flex-col h-full w-full rounded-xl border border-border-subtle bg-surface-raised overflow-hidden transition-all duration-200 hover:border-border-default hover:-translate-y-px"
     >
-      {/* Cover — decorative only */}
+      {/* Cover */}
       <div
-        className="relative h-36 w-full overflow-hidden"
+        className="relative h-36 w-full overflow-hidden shrink-0"
         style={{
           background: `linear-gradient(135deg, oklch(.55 .18 ${coverHue}) 0%, oklch(.65 .14 ${(coverHue + 40) % 360}) 100%)`,
         }}
       >
+        {/* Level badge */}
+        <span className={`absolute top-2 left-2 z-10 text-xs px-2 py-0.5 rounded-full font-medium border ${level.className}`}>
+          {level.label}
+        </span>
+
         {course.coverImageUrl && !coverFailed ? (
           <Image
             src={course.coverImageUrl}
@@ -106,22 +111,19 @@ export default function CourseCard({ course, priority = false }: CourseCardProps
       </div>
 
       {/* Body */}
-      <div className="flex flex-1 flex-col p-4 gap-2">
-        {/* Title */}
-        <h4 className="text-body font-semibold leading-snug text-[var(--deep-text)] mb-0">
+      <div className="flex flex-1 flex-col">
+        <p className="font-semibold text-sm text-[var(--text-primary)] mt-3 px-3 leading-snug">
           {course.title}
-        </h4>
+        </p>
 
-        {/* Description */}
         {course.description && (
-          <p className="line-clamp-2 text-caption leading-5 text-[var(--text-secondary)]">
+          <p className="text-xs text-[var(--text-secondary)] leading-relaxed px-3 mt-1 line-clamp-2">
             {course.description}
           </p>
         )}
 
-        {/* Progress bar + percentage — only when in progress or completed */}
         {totalLessons > 0 && (isInProgress || isCompleted) && (
-          <div className="pt-1">
+          <div className="px-3 mt-2">
             <ProgressBar
               value={progress}
               color={isCompleted ? "var(--success)" : "var(--primary)"}
@@ -131,35 +133,18 @@ export default function CourseCard({ course, priority = false }: CourseCardProps
           </div>
         )}
 
-        {/* Footer: metadata left, CTA right */}
-        <div className="mt-auto flex items-center justify-between gap-2 pt-3">
-          {/* Metadata: badge + lessons */}
-          <div className="flex items-center gap-2 text-tiny text-[var(--text-tertiary)]">
-            <span className="rounded px-1.5 py-0.5 bg-surface-sunken font-medium tracking-wide">
-              {level.label}
-            </span>
-            {totalLessons > 0 && (
-              <>
-                <span className="opacity-40">·</span>
-                <span className="flex items-center gap-1">
-                  <BookOpen size={11} className="opacity-70" />
-                  {totalLessons} lessons
-                </span>
-              </>
-            )}
-          </div>
+        <p className="text-xs text-[var(--text-tertiary)] px-3 mt-auto pt-2 pb-1 flex items-center gap-1">
+          <BookOpen size={11} className="opacity-70 shrink-0" />
+          {totalLessons} lessons
+        </p>
 
-          {/* CTA */}
-          <span
-            className="flex items-center gap-1 text-caption font-semibold transition-all duration-150 group-hover:gap-1.5"
-            style={{
-              color: isCompleted ? `var(--success)` : `var(--primary)`,
-            }}
-          >
-            {ctaLabel}
-            <span className="transition-transform duration-200 group-hover:translate-x-0.5">→</span>
-          </span>
-        </div>
+        <span
+          className="text-xs font-medium px-3 pb-3 transition-all duration-150 group-hover:gap-1.5 inline-flex items-center gap-1"
+          style={{ color: isCompleted ? "var(--success)" : "var(--primary)" }}
+        >
+          {ctaLabel}
+          <span className="transition-transform duration-200 group-hover:translate-x-0.5">→</span>
+        </span>
       </div>
     </Link>
   );

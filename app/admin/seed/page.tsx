@@ -1,5 +1,6 @@
 "use client";
 import Button from "@/components/ui/Button";
+import { H1 } from "@/components/ui/Typography";
 import type { Tab } from "@/lib/admin/seed/types";
 import { GeminiChat } from "@/app/admin/seed/GeminiChat/GeminiChat";
 import { SoundsTab } from "@/app/admin/seed/SoundsTab";
@@ -34,9 +35,9 @@ export default function SeedPage() {
             <span className="text-xs font-semibold px-2 py-0.5 rounded-full" style={{ backgroundColor: "var(--btn-regular-bg)", color: "var(--primary)" }}>
               Admin
             </span>
-            <h1 className="text-3xl font-bold" style={{ color: "var(--text-primary)" }}>Seed Data</h1>
+            <H1 className="text-h1">Seed Data</H1>
           </div>
-          <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
+          <p className="text-sm text-fg-muted">
             Manage system content — sounds, words, patterns, and minimal pairs used in exercises.
           </p>
         </div>

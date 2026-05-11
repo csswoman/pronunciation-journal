@@ -6,6 +6,7 @@ import { getCourseWithLessons, getCourses } from "@/lib/notion/courses";
 import type { CourseSection, SubLesson } from "@/lib/notion/types";
 import { LessonNumber } from "@/components/courses/LessonNumber";
 import CourseHeroProgress from "@/components/courses/CourseHeroProgress";
+import { H1, H2, H3 } from "@/components/ui/Typography";
 
 const illustrationFiles = [
   "/illustrations/lesson/brain.svg",
@@ -47,12 +48,12 @@ export default async function CourseIndexPage({ params }: Props) {
         <nav className="flex items-center gap-1.5 text-sm mb-8">
           <Link
             href="/courses"
-            className="text-[var(--text-secondary)] hover:text-[var(--deep-text)] underline-offset-2 hover:underline transition-colors duration-150 active:opacity-60"
+            className="text-fg-muted hover:text-fg underline-offset-2 hover:underline transition-colors duration-150 active:opacity-60"
           >
             Courses
           </Link>
-          <span className="text-[var(--text-tertiary)] select-none">›</span>
-          <span className="text-[var(--deep-text)] font-medium truncate">{course.title}</span>
+          <span className="text-fg-subtle select-none">›</span>
+          <span className="text-fg font-medium truncate">{course.title}</span>
         </nav>
 
         <div className="rounded-2xl border border-[var(--line-divider)] bg-[var(--card-bg)] overflow-hidden shadow-[0_1px_3px_var(--line-divider)]">
@@ -93,9 +94,9 @@ export default async function CourseIndexPage({ params }: Props) {
                   {course.level}
                 </span>
               )}
-              <h1 className="text-2xl font-bold text-on-primary leading-tight">
+              <H1 className="text-h2 text-on-primary">
                 {course.title}
-              </h1>
+              </H1>
               <p className="flex items-center gap-1.5 text-xs text-[color-mix(in_oklch,var(--on-primary)_70%,transparent)] mt-1">
                 <BookOpen size={11} className="opacity-80" />
                 {course.lessons.length} {course.lessons.length === 1 ? "lesson" : "lessons"}
@@ -105,7 +106,7 @@ export default async function CourseIndexPage({ params }: Props) {
           </div>
 
           {course.description && (
-            <p className="text-sm text-[var(--text-secondary)] px-5 pt-4 pb-5 border-b border-[var(--line-divider)]">
+            <p className="text-sm text-fg-muted px-5 pt-4 pb-5 border-b border-[var(--line-divider)]">
               {course.description}
             </p>
           )}
@@ -158,13 +159,13 @@ function SectionGroup({
       {section.title && (
         <div className="px-5 pt-5 pb-3">
           {section.headingLevel === 1 ? (
-            <h2 className="text-base font-semibold text-[var(--deep-text)] tracking-tight">
+            <H2 className="text-base font-semibold tracking-tight">
               {section.title}
-            </h2>
+            </H2>
           ) : (
-            <h3 className="text-sm font-medium text-[var(--text-secondary)] uppercase tracking-wider">
+            <H3 className="text-sm font-medium text-fg-muted uppercase tracking-wider">
               {section.title}
-            </h3>
+            </H3>
           )}
         </div>
       )}
@@ -198,11 +199,11 @@ function LessonRow({
         className="group flex items-center gap-4 px-5 py-4 hover:bg-[var(--btn-regular-bg)] transition-colors duration-150"
       >
         <LessonNumber courseSlug={courseSlug} lessonSlug={lesson.slug} index={index} />
-        <span className="flex-1 font-medium text-[var(--deep-text)] group-hover:text-[var(--primary)] transition-colors">
+        <span className="flex-1 font-medium text-fg group-hover:text-[var(--primary)] transition-colors">
           {lesson.title}
         </span>
         <svg
-          className="w-4 h-4 text-[var(--text-tertiary)] group-hover:text-[var(--primary)] transition-colors flex-shrink-0"
+          className="w-4 h-4 text-fg-subtle group-hover:text-[var(--primary)] transition-colors flex-shrink-0"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"

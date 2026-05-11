@@ -32,7 +32,7 @@ export default function CourseFilters({
           aria-hidden="true"
           viewBox="0 0 24 24"
           fill="none"
-          className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--text-tertiary)]"
+          className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-fg-subtle"
         >
           <path
             d="M21 21l-4.3-4.3m1.8-5.2a7.5 7.5 0 11-15 0 7.5 7.5 0 0115 0z"
@@ -46,7 +46,7 @@ export default function CourseFilters({
           value={query}
           onChange={(e) => onQueryChange(e.target.value)}
           placeholder="Search courses…"
-          className="h-10 w-full rounded-xl border border-[var(--line-divider)] bg-[var(--card-bg)] pl-10 pr-4 text-sm text-[var(--deep-text)] placeholder:text-[var(--text-tertiary)] outline-none transition focus:border-[var(--primary)] focus:ring-2 focus:ring-[color-mix(in_oklch,var(--primary)_20%,transparent)]"
+          className="h-10 w-full rounded-xl border border-[var(--line-divider)] bg-[var(--card-bg)] pl-10 pr-4 text-sm text-fg placeholder:text-fg-subtle outline-none transition focus:border-[var(--primary)] focus:ring-2 focus:ring-[color-mix(in_oklch,var(--primary)_20%,transparent)]"
         />
       </label>
 

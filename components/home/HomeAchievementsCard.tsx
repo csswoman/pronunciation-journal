@@ -42,12 +42,12 @@ export default function HomeAchievementsCard({ achievements = [] }: HomeAchievem
                   {a.icon}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold text-[var(--deep-text)]">{a.name}</p>
-                  <p className="text-xs text-[var(--text-tertiary)] mt-0.5">{a.description}</p>
+                  <p className="text-sm font-semibold text-fg">{a.name}</p>
+                  <p className="text-xs text-fg-subtle mt-0.5">{a.description}</p>
                   {!isUnlocked && a.progress !== undefined && a.target && (
                     <div className="mt-2 flex items-center gap-2">
                       <ProgressBar value={progressPercent} height="xs" className="flex-1" />
-                      <span className="text-tiny tabular-nums font-medium text-[var(--text-tertiary)]">
+                      <span className="text-tiny tabular-nums font-medium text-fg-subtle">
                         {a.progress}/{a.target}
                       </span>
                     </div>
@@ -62,7 +62,7 @@ export default function HomeAchievementsCard({ achievements = [] }: HomeAchievem
             );
           })
         ) : (
-          <p className="text-sm text-[var(--text-tertiary)] text-center py-4">
+          <p className="text-sm text-fg-subtle text-center py-4">
             Start learning to unlock achievements!
           </p>
         )}
@@ -71,7 +71,7 @@ export default function HomeAchievementsCard({ achievements = [] }: HomeAchievem
       {achievements.length > 3 && (
         <Link
           href="/progress"
-          className="flex items-center justify-between text-sm text-[var(--text-secondary)] hover:text-[var(--primary)] transition-colors border-t border-[var(--line-divider)] pt-3"
+          className="flex items-center justify-between text-sm text-fg-muted hover:text-[var(--primary)] transition-colors border-t border-[var(--line-divider)] pt-3"
         >
           <span>+{achievements.length - 3} more achievements</span>
           <ChevronRight size={15} />

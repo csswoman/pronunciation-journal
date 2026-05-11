@@ -1,5 +1,6 @@
 "use client";
 import Button from "@/components/ui/Button";
+import { H1, H2 } from "@/components/ui/Typography";
 
 import Link from "next/link";
 import Image from "next/image";
@@ -37,7 +38,7 @@ export function SoundLobby({
   return (
     <section>
       {/* Hero */}
-      <div className="relative overflow-hidden rounded-t-[15px] bg-gradient-to-br from-[var(--card-bg)] to-[var(--btn-regular-bg)] shadow-[0_16px_40px_rgba(15,23,42,0.06)]">
+      <div className="relative overflow-hidden rounded-t-2xl bg-gradient-to-br from-[var(--card-bg)] to-[var(--btn-regular-bg)] shadow-[0_16px_40px_rgba(15,23,42,0.06)]">
         <div className="relative space-y-6">
           {/* Navbar row */}
           <div className="flex items-center justify-between px-4 py-2.5 border-b border-[var(--line-divider)]">
@@ -69,17 +70,17 @@ export function SoundLobby({
           <div className="flex items-center justify-between">
             <div className="p-8 md:p-10 max-w-2xl space-y-3">
               <div className="flex items-baseline gap-4">
-                <h1 className="font-mono text-[48px] font-bold leading-none text-[var(--primary)] lg:text-[60px]">
+                <H1 className="font-mono text-5xl font-bold leading-none text-[var(--primary)] lg:text-6xl">
                   {soundIpa}
-                </h1>
+                </H1>
                 {soundType && (
-                  <span className="text-caption font-medium uppercase tracking-widest text-[var(--text-tertiary)]">
+                  <span className="text-caption font-medium uppercase tracking-widest text-fg-subtle">
                     {soundType}
                   </span>
                 )}
               </div>
-              <p className="text-body-sm font-semibold text-[var(--deep-text)]">{soundName}</p>
-              <p className="max-w-xl text-body-sm leading-6 text-[var(--text-secondary)]">
+              <p className="text-body-sm font-semibold text-fg">{soundName}</p>
+              <p className="max-w-xl text-body-sm leading-6 text-fg-muted">
                 Work through each stage to master this sound — start with recognition, then challenge yourself with minimal pairs and dictation.
               </p>
             </div>
@@ -146,18 +147,18 @@ export function SoundLobby({
       <div className="px-6 lg:px-10 py-8 pb-14">
         <div className="grid gap-3 sm:grid-cols-3 mb-8">
           <InfoPill icon="👂" label="Stage 1" value="Identify words with this sound" accent="var(--primary)" />
-          <InfoPill icon="🔄" label="Stage 2" value={hasPairs ? "Distinguish minimal pairs" : "Locked — no pairs for this sound"} accent="#f4a261" />
-          <InfoPill icon="🎙️" label="Stage 3" value="Dictation — hear and type" accent="#2ec4b6" />
+          <InfoPill icon="🔄" label="Stage 2" value={hasPairs ? "Distinguish minimal pairs" : "Locked — no pairs for this sound"} accent="var(--stage-pairs)" />
+          <InfoPill icon="🎙️" label="Stage 3" value="Dictation — hear and type" accent="var(--stage-dictation)" />
         </div>
 
         <div className="flex items-end justify-between gap-4 pt-2">
           <div>
-            <p className="text-tiny font-semibold uppercase tracking-[.18em] text-[var(--text-tertiary)]">
+            <p className="text-tiny font-semibold uppercase tracking-[.18em] text-fg-subtle">
               Practice stages
             </p>
-            <h2 className="mt-1 mb-6 text-body-lg font-semibold tracking-tight text-[var(--deep-text)]">
+            <H2 className="mt-1 mb-6 text-body-lg font-semibold tracking-tight">
               Choose a stage to practice
-            </h2>
+            </H2>
           </div>
         </div>
 
@@ -194,7 +195,7 @@ export function SoundLobby({
                   </span>
                 )}
                 {!unlocked && (
-                  <span className="absolute right-4 top-4 flex items-center gap-1 text-tiny text-[var(--text-tertiary)]">
+                  <span className="absolute right-4 top-4 flex items-center gap-1 text-tiny text-fg-subtle">
                     <LockIcon />
                   </span>
                 )}
@@ -208,13 +209,13 @@ export function SoundLobby({
                   </span>
                   <span
                     className="text-body-sm font-semibold leading-tight"
-                    style={{ color: unlocked ? "var(--deep-text)" : "var(--text-tertiary)" }}
+                    style={{ color: unlocked ? "var(--text-primary)" : "var(--text-tertiary)" }}
                   >
                     {stage.title}
                   </span>
                 </div>
 
-                <p className="text-body-sm leading-6 mb-4 text-[var(--text-secondary)]">
+                <p className="text-body-sm leading-6 mb-4 text-fg-muted">
                   {stage.difficulty} · Stage {i + 1}
                 </p>
 
@@ -235,7 +236,7 @@ export function SoundLobby({
                   )}
                 </div>
 
-                <p className="mt-2 text-caption font-medium text-[var(--text-tertiary)]">
+                <p className="mt-2 text-caption font-medium text-fg-subtle">
                   {m.total === 0 ? "Not started" : `${m.pct}% mastery`}
                 </p>
               </Button>
@@ -246,23 +247,23 @@ export function SoundLobby({
         {nextUnlocked ? (
           <Button
             onClick={() => onSelectStage(nextUnlocked.id)}
-            className="btn-primary w-full rounded-[18px] px-5 py-4 text-body-sm font-semibold shadow-lg shadow-[color-mix(in_oklch,var(--primary)_18%,transparent)] transition-all duration-200 hover:-translate-y-0.5"
+            className="btn-primary w-full rounded-2xl px-5 py-4 text-body-sm font-semibold shadow-lg shadow-[color-mix(in_oklch,var(--primary)_18%,transparent)] transition-all duration-200 hover:-translate-y-0.5"
           >
             Continue — {nextUnlocked.title}
           </Button>
         ) : overall >= 80 ? (
-          <div className="rounded-[18px] border border-[color-mix(in_oklch,var(--admonitions-color-tip)_20%,transparent)] bg-[color-mix(in_oklch,var(--admonitions-color-tip)_8%,transparent)] px-4 py-4 text-center">
+          <div className="rounded-2xl border border-[color-mix(in_oklch,var(--admonitions-color-tip)_20%,transparent)] bg-[color-mix(in_oklch,var(--admonitions-color-tip)_8%,transparent)] px-4 py-4 text-center">
             <p className="text-body-sm font-semibold text-[var(--admonitions-color-tip)]">
               🎉 All stages mastered — great work!
             </p>
-            <p className="mt-1 text-caption text-[var(--text-secondary)]">
+            <p className="mt-1 text-caption text-fg-muted">
               Keep practicing to maintain your score.
             </p>
           </div>
         ) : (
           <Button
             onClick={() => onSelectStage("recognition")}
-            className="btn-primary w-full rounded-[18px] px-5 py-4 text-body-sm font-semibold shadow-lg shadow-[color-mix(in_oklch,var(--primary)_18%,transparent)] transition-all duration-200 hover:-translate-y-0.5"
+            className="btn-primary w-full rounded-2xl px-5 py-4 text-body-sm font-semibold shadow-lg shadow-[color-mix(in_oklch,var(--primary)_18%,transparent)] transition-all duration-200 hover:-translate-y-0.5"
           >
             Start practice · Stage 1
           </Button>
@@ -283,8 +284,8 @@ function StageEmoji({ id }: { id: StageId }) {
 function stageColor(id: StageId): string {
   switch (id) {
     case "recognition": return "var(--primary)"
-    case "pairs":       return "#f4a261"
-    case "dictation":   return "#2ec4b6"
+    case "pairs":       return "var(--stage-pairs)"
+    case "dictation":   return "var(--stage-dictation)"
   }
 }
 
@@ -295,12 +296,12 @@ function InfoPill({ icon, label, value, accent }: { icon: string; label: string;
       style={{ background: "var(--card-bg)", borderColor: "var(--line-divider)", boxShadow: "0 1px 3px rgba(0,0,0,0.04)" }}
     >
       <div className="flex items-center gap-2">
-        <span className="text-[16px] leading-none">{icon}</span>
-        <p className="text-tiny font-semibold uppercase tracking-[.14em] text-[var(--text-tertiary)]">{label}</p>
+        <span className="text-base leading-none">{icon}</span>
+        <p className="text-tiny font-semibold uppercase tracking-[.14em] text-fg-subtle">{label}</p>
       </div>
       <div className="flex items-start gap-2.5">
         <span className="mt-1.5 h-2 w-2 flex-shrink-0 rounded-full" style={{ backgroundColor: accent }} />
-        <p className="text-caption font-medium leading-snug text-[var(--deep-text)]">{value}</p>
+        <p className="text-caption font-medium leading-snug text-fg">{value}</p>
       </div>
     </div>
   );

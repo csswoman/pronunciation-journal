@@ -1,0 +1,423 @@
+/* ── Root ──────────────────────────────────────────────────────────────── */
+
+.root {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* Scrollable area — everything above the bottom bar */
+.content {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+/* ── Chat empty state — centered ──────────────────────────────────────── */
+
+.chatEmpty {
+  flex: 1;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 24px 16px;
+  gap: 0;
+}
+
+/* Avatar + heading block */
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.avatar {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.avatarGradient {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: var(--gradient-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.statusDot {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--success);
+  border: 2px solid var(--card-bg);
+}
+
+.coachHeading {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.3;
+  margin: 0;
+}
+
+.coachAccent {
+  font-style: italic;
+  color: var(--primary);
+}
+
+.coachSub {
+  font-size: 14px;
+  color: var(--text-tertiary);
+  margin-top: 4px;
+}
+
+/* 2×2 quick-start grid */
+.cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  width: 100%;
+  margin-bottom: 12px;
+}
+
+.card {
+  padding: 14px;
+  border-radius: 14px;
+  background: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
+  text-align: left;
+  cursor: pointer;
+  transition: transform 0.15s ease, border-color 0.15s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.card:hover {
+  transform: translateY(-1px);
+}
+
+.cardPurple:hover { border-color: var(--primary); }
+.cardGreen:hover  { border-color: var(--success); }
+.cardRose:hover   { border-color: var(--error); }
+.cardAmber:hover  { border-color: var(--warning); }
+
+.cardTitle {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-top: 8px;
+  line-height: 1.3;
+}
+
+.cardDesc {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  margin-top: 2px;
+  line-height: 1.4;
+}
+
+/* Chips row */
+.chips {
+  width: 100%;
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding-bottom: 4px;
+}
+
+.chips::-webkit-scrollbar {
+  display: none;
+}
+
+.chip {
+  flex-shrink: 0;
+  padding: 6px 12px;
+  border-radius: var(--radius-full);
+  background: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
+  font-size: 12px;
+  color: var(--text-tertiary);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+
+.chip:hover {
+  border-color: var(--accent-border);
+  color: var(--primary);
+  background: var(--accent-dim);
+}
+
+/* ── Interview config ──────────────────────────────────────────────────── */
+
+.interviewConfig {
+  padding: 16px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.interviewSection {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sectionLabel {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-tertiary);
+}
+
+.interviewCards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.interviewCard {
+  padding: 12px;
+  border-radius: 12px;
+  background: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.interviewCard:hover:not(.interviewCardActive) {
+  border-color: var(--border-default);
+}
+
+.interviewCardActive {
+  background: var(--accent-dim);
+  border-color: var(--accent-border);
+}
+
+.interviewCardRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.interviewCardLabel {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.interviewCardSub {
+  font-size: 10px;
+  color: var(--text-tertiary);
+  line-height: 1.4;
+}
+
+.interviewBadge {
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.badgeGreen {
+  background: color-mix(in oklch, var(--success) 15%, transparent);
+  color: var(--success);
+}
+
+.badgeAmber {
+  background: color-mix(in oklch, var(--warning) 15%, transparent);
+  color: var(--warning);
+}
+
+/* Level pills */
+.levelPills {
+  display: flex;
+  gap: 8px;
+}
+
+.levelPill {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 10px 8px;
+  border-radius: 10px;
+  border: 1px solid var(--border-subtle);
+  background: var(--surface-raised);
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.levelPill:hover:not(.levelPillActive) {
+  background: var(--surface-sunken);
+}
+
+.levelPillActive {
+  background: var(--accent-dim);
+  border-color: var(--accent-border);
+}
+
+.levelPillLabel {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1;
+}
+
+.levelPillActive .levelPillLabel {
+  color: var(--primary);
+}
+
+.levelPillSub {
+  font-size: 9px;
+  color: var(--text-tertiary);
+  text-align: center;
+  line-height: 1.3;
+}
+
+/* ── CTA (Start Interview) ─────────────────────────────────────────────── */
+
+.ctaWrap {
+  padding: 8px 16px 16px;
+  flex-shrink: 0;
+}
+
+.ctaBtn {
+  width: 100%;
+  padding: 14px;
+  border-radius: 14px;
+  background: var(--primary);
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--on-primary);
+  cursor: pointer;
+  transition: opacity 0.15s, transform 0.15s;
+}
+
+.ctaBtn:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+/* ── Input area ────────────────────────────────────────────────────────── */
+
+.inputArea {
+  flex-shrink: 0;
+  padding: 12px 16px 20px;
+}
+
+.inputWrap {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  background: var(--surface-raised);
+  border: 1px solid var(--accent-border);
+  border-radius: 18px;
+  padding: 10px 10px 10px 16px;
+  box-shadow: 0 0 0 3px var(--accent-dim);
+}
+
+.textarea {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 14px;
+  color: var(--text-primary);
+  resize: none;
+  max-height: 80px;
+  line-height: 1.5;
+  font-family: inherit;
+  padding: 0;
+}
+
+.textarea::placeholder {
+  color: var(--text-tertiary);
+}
+
+.micBtn {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  background: var(--surface-sunken);
+  border: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--text-tertiary);
+  flex-shrink: 0;
+}
+
+.sendBtn {
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  background: var(--primary);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--on-primary);
+  flex-shrink: 0;
+  transition: transform 0.15s, background 0.15s, opacity 0.15s;
+}
+
+.sendBtn:hover:not(:disabled) {
+  background: var(--primary-hover);
+  transform: scale(1.05);
+}
+
+.sendBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.hint {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  font-size: 10px;
+  color: var(--text-tertiary);
+  margin-top: 8px;
+  opacity: 0.7;
+}
+
+.hintDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--success);
+  flex-shrink: 0;
+}

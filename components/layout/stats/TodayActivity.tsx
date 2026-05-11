@@ -1,13 +1,11 @@
-"use client";
-
 import { ArrowRight } from "lucide-react";
 import type { DailyProgress } from "@/lib/types";
 
 function MetricRow({ label, value, colored }: { label: string; value: string; colored?: boolean }) {
   return (
     <div className="flex items-center justify-between py-2.5" style={{ borderBottom: "1px solid var(--line-divider)" }}>
-      <span className="text-sm" style={{ color: "var(--text-secondary)" }}>{label}</span>
-      <span className="text-sm font-bold" style={{ color: colored ? "var(--primary)" : "var(--deep-text)" }}>
+      <span className="text-sm text-fg-muted">{label}</span>
+      <span className="text-sm font-bold" style={{ color: colored ? "var(--primary)" : "var(--text-primary)" }}>
         {value}
       </span>
     </div>
@@ -41,7 +39,7 @@ export function TodayActivity({ todayProgress }: Props) {
 
   return (
     <div
-      className="rounded-[26px] p-5"
+      className="rounded-3xl p-5"
       style={{
         background: "var(--card-bg)",
         border: "1px solid var(--line-divider)",
@@ -50,8 +48,8 @@ export function TodayActivity({ todayProgress }: Props) {
     >
       <div className="flex items-start justify-between gap-3">
         <div>
-          <p className="text-base font-bold" style={{ color: "var(--deep-text)" }}>Today&apos;s activity</p>
-          <p className="text-xs mt-0.5" style={{ color: "var(--text-secondary)" }}>{todayLabel}</p>
+          <p className="text-base font-bold text-fg">Today&apos;s activity</p>
+          <p className="text-xs mt-0.5 text-fg-muted">{todayLabel}</p>
         </div>
       </div>
 
@@ -60,10 +58,10 @@ export function TodayActivity({ todayProgress }: Props) {
           <svg width={72} height={72} viewBox="0 0 108 108" className="-rotate-90 opacity-30">
             <circle cx={54} cy={54} r={donutRadius} fill="none" stroke="var(--line-divider)" strokeWidth={10} />
           </svg>
-          <p className="text-sm font-semibold -mt-14" style={{ color: "var(--text-secondary)" }}>
+          <p className="text-sm font-semibold -mt-14 text-fg-muted">
             No activity yet
           </p>
-          <p className="text-xs" style={{ color: "var(--text-tertiary)" }}>
+          <p className="text-xs text-fg-subtle">
             Complete a lesson or phoneme exercise to track today's progress.
           </p>
         </div>
@@ -82,9 +80,9 @@ export function TodayActivity({ todayProgress }: Props) {
               />
             </svg>
             <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-              <span className="text-xl font-black" style={{ color: "var(--deep-text)" }}>{totalAttempts}</span>
-              <span className="text-tiny font-semibold" style={{ color: "var(--text-secondary)" }}>Attempts</span>
-              <span className="text-tiny" style={{ color: "var(--text-tertiary)" }}>{accuracy}% acc</span>
+              <span className="text-xl font-black text-fg">{totalAttempts}</span>
+              <span className="text-tiny font-semibold text-fg-muted">Attempts</span>
+              <span className="text-tiny text-fg-subtle">{accuracy}% acc</span>
             </div>
           </div>
 
@@ -94,9 +92,9 @@ export function TodayActivity({ todayProgress }: Props) {
             <MetricRow label="Incorrect" value={String(incorrect)} />
             <MetricRow label="XP Earned" value={`+${xp}`} colored />
             <div className="flex items-center justify-between pt-2.5">
-              <span className="text-sm" style={{ color: "var(--text-secondary)" }}>Words Studied</span>
+              <span className="text-sm text-fg-muted">Words Studied</span>
               <div className="flex items-center gap-1">
-                <span className="text-sm font-bold" style={{ color: "var(--deep-text)" }}>{words.length}</span>
+                <span className="text-sm font-bold text-fg">{words.length}</span>
                 {words.length > 0 && (
                   <span style={{ color: "var(--primary)" }}>
                     <ArrowRight size={14} />
@@ -118,7 +116,7 @@ export function TodayActivity({ todayProgress }: Props) {
               style={{
                 animationDelay: `${i * 60}ms`,
                 background: "color-mix(in oklch, var(--primary) 10%, transparent)",
-                color: "var(--deep-text)",
+                color: "var(--text-primary)",
                 border: "1px solid color-mix(in oklch, var(--primary) 12%, var(--line-divider))",
               }}
             >

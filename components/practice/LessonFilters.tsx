@@ -1,7 +1,6 @@
 'use client'
 
 import { Search } from 'lucide-react'
-import Button from '@/components/ui/Button'
 
 export type PracticeFilter = 'all' | 'basics' | 'vowels' | 'consonants' | 'diphthongs'
 
@@ -29,47 +28,111 @@ export default function LessonFilters({
   onSearchChange,
 }: LessonFiltersProps) {
   return (
-    <>
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6">
-        <div className="flex gap-3 flex-wrap">
-          {FILTERS.map((chip) => (
-            <Button
-              key={chip.id}
-              type="button"
-              onClick={() => onFilterChange(chip.id)}
-              variant="chip"
-              size="sm"
-              selected={filter === chip.id}
-              className="rounded-full px-5 py-2.5 text-sm font-semibold"
-            >
-              {chip.label}
-            </Button>
-          ))}
-        </div>
+    <div
+      className="flex items-start justify-between"
+      style={{ gap: "var(--space-6)", marginBottom: "var(--space-5)" }}
+    >
+      {/* Left: heading + count */}
+      <div className="flex flex-col" style={{ gap: "2px" }}>
+        <h2 style={{ font: "var(--font-h4)", color: "var(--text-primary)", letterSpacing: "-0.01em", margin: 0 }}>
+          Available Lessons
+        </h2>
+        <span
+          style={{
+            font: "var(--font-tiny)",
+            color: "var(--text-tertiary)",
+            textTransform: "uppercase",
+            letterSpacing: "0.08em",
+          }}
+        >
+          {resultCount} exercises available
+        </span>
+      </div>
 
-        <div className="w-full lg:w-72 relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: 'var(--text-tertiary)' }} />
+      {/* Right: search + pill tabs */}
+      <div className="flex items-center shrink-0" style={{ gap: "var(--space-3)" }}>
+        {/* Search */}
+        <div className="relative" style={{ width: "200px" }}>
+          <Search
+            size={13}
+            className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
+            style={{ color: "var(--text-tertiary)" }}
+          />
           <input
             type="text"
             value={search}
             onChange={(e) => onSearchChange(e.target.value)}
-            placeholder="Search lessons..."
-            className="w-full pl-10 pr-4 py-2.5 rounded-xl border text-sm outline-none focus:ring-2"
+            placeholder="Search lessons…"
             style={{
-              borderColor: 'var(--line-divider)',
-              backgroundColor: 'var(--card-bg)',
-              color: 'var(--text-primary)',
+              width: "100%",
+              paddingLeft: "2rem",
+              paddingRight: "var(--space-3)",
+              height: "32px",
+              background: "var(--surface-sunken)",
+              border: "1px solid var(--border-subtle)",
+              borderRadius: "var(--radius-md)",
+              color: "var(--text-primary)",
+              font: "var(--font-body-sm)",
+              outline: "none",
+              transition: `border-color var(--transition-fast)`,
             }}
+            onFocus={(e) => (e.currentTarget.style.borderColor = "var(--border-focus)")}
+            onBlur={(e) => (e.currentTarget.style.borderColor = "var(--border-subtle)")}
           />
         </div>
-      </div>
 
-      <p
-        className="text-sm font-semibold tracking-[0.12em] uppercase mb-6"
-        style={{ color: 'var(--text-secondary)' }}
-      >
-        {resultCount} exercises available
-      </p>
-    </>
+        {/* Filter tabs */}
+        <div className="flex items-center" style={{ gap: "var(--space-1)" }}>
+          {FILTERS.map((tab) => {
+            const isActive = filter === tab.id
+            return (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => onFilterChange(tab.id)}
+                style={
+                  isActive
+                    ? {
+                        background: "var(--primary)",
+                        color: "var(--on-primary)",
+                        border: "1px solid var(--primary)",
+                        borderRadius: "var(--radius-full)",
+                        font: "var(--font-caption)",
+                        fontWeight: 500,
+                        padding: "4px var(--space-3)",
+                        cursor: "pointer",
+                        transition: `all var(--transition-fast)`,
+                      }
+                    : {
+                        background: "transparent",
+                        color: "var(--text-secondary)",
+                        border: "1px solid var(--border-subtle)",
+                        borderRadius: "var(--radius-full)",
+                        font: "var(--font-caption)",
+                        padding: "4px var(--space-3)",
+                        cursor: "pointer",
+                        transition: `all var(--transition-fast)`,
+                      }
+                }
+                onMouseEnter={(e) => {
+                  if (!isActive) {
+                    e.currentTarget.style.color = "var(--text-primary)"
+                    e.currentTarget.style.borderColor = "var(--border-default)"
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isActive) {
+                    e.currentTarget.style.color = "var(--text-secondary)"
+                    e.currentTarget.style.borderColor = "var(--border-subtle)"
+                  }
+                }}
+              >
+                {tab.label}
+              </button>
+            )
+          })}
+        </div>
+      </div>
+    </div>
   )
 }

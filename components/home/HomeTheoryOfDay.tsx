@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Card from "@/components/layout/Card";
 
 interface HomeTheoryOfDayProps {
   slug?: string;
@@ -20,34 +19,41 @@ export default function HomeTheoryOfDay({
   ],
 }: HomeTheoryOfDayProps) {
   return (
-    <Card variant="compact" className="gap-4">
+    <div className="rounded-xl border border-border-subtle bg-surface-raised p-4 flex flex-col gap-4">
       <div className="flex items-center gap-2">
-        <span className="text-tiny font-bold tracking-widest text-[var(--primary)] uppercase border border-[var(--primary)] rounded-full px-2 py-0.5">
+        <span
+          className="text-tiny font-semibold tracking-widest uppercase rounded-full px-2 py-0.5"
+          style={{
+            color: "color-mix(in oklch, var(--primary) 80%, var(--text-secondary))",
+            border: "1px solid color-mix(in oklch, var(--primary) 35%, transparent)",
+            background: "transparent",
+          }}
+        >
           Mini Lesson · {duration} min
         </span>
       </div>
 
       <div>
         <p className="text-xs text-[var(--text-tertiary)] mb-1">Theory of the day</p>
-        <p className="text-lg font-bold text-[var(--deep-text)] leading-snug">{title}</p>
+        <p className="text-base font-medium text-[var(--text-primary)] leading-snug">{title}</p>
       </div>
 
-      <p className="text-sm text-[var(--text-secondary)] leading-relaxed">{description}</p>
+      <p className="text-sm leading-relaxed text-[var(--text-secondary)]">{description}</p>
 
       <div className="rounded-xl bg-[var(--btn-regular-bg)] px-4 py-3 flex flex-col gap-1.5">
         {examples.map(({ word, ipa }) => (
           <p key={word} className="text-sm font-mono text-[var(--primary)]">
-            {word} · <span className="text-[var(--text-secondary)]">{ipa}</span>
+            {word} · <span className="text-fg-muted">{ipa}</span>
           </p>
         ))}
       </div>
 
       <Link
         href="/courses"
-        className="block text-center text-sm font-medium text-[var(--deep-text)] border border-[var(--line-divider)] rounded-xl py-2.5 hover:bg-[var(--btn-regular-bg)] transition-colors"
+        className="block text-center text-sm font-medium text-fg border border-[var(--line-divider)] rounded-xl py-2.5 hover:bg-[var(--btn-regular-bg)] transition-colors"
       >
         Read full lesson →
       </Link>
-    </Card>
+    </div>
   );
 }

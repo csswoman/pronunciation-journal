@@ -33,7 +33,7 @@ export default function FeaturedPhonemePanel({
       }}
     >
       <div className="flex items-center justify-between mb-3">
-        <p className="text-tiny font-bold uppercase tracking-widest" style={{ color: "var(--text-secondary)" }}>
+        <p className="text-tiny font-bold uppercase tracking-widest text-fg-muted">
           Selected Phoneme
         </p>
         <span
@@ -45,7 +45,7 @@ export default function FeaturedPhonemePanel({
       </div>
 
       <div className="flex items-center gap-3 mb-1">
-        <span className="text-5xl font-serif leading-none" style={{ color: "var(--text-primary)" }}>
+        <span className="text-5xl font-serif leading-none text-fg">
           {phoneme.symbol}
         </span>
         <Button
@@ -62,7 +62,7 @@ export default function FeaturedPhonemePanel({
         {phoneme.name} · {phoneme.category}
       </p>
 
-      <p className="text-sm leading-relaxed mb-4" style={{ color: "var(--text-secondary)" }}>
+      <p className="text-sm leading-relaxed mb-4 text-fg-muted">
         {phoneme.description}
       </p>
 
@@ -70,17 +70,17 @@ export default function FeaturedPhonemePanel({
         className="rounded-2xl p-3 mb-1"
         style={{ backgroundColor: "var(--btn-regular-bg)" }}
       >
-        <p className="text-tiny font-bold uppercase tracking-widest mb-2" style={{ color: "var(--text-secondary)" }}>
+        <p className="text-tiny font-bold uppercase tracking-widest mb-2 text-fg-muted">
           Example word
         </p>
-        <p className="text-base font-bold" style={{ color: "var(--text-primary)" }}>
+        <p className="text-base font-bold text-fg">
           "{phoneme.example}"
         </p>
       </div>
 
       <ul className="mt-3 space-y-1.5">
         {phoneme.tips.map((tip, index) => (
-          <li key={index} className="flex items-start gap-2 text-xs" style={{ color: "var(--text-secondary)" }}>
+          <li key={index} className="flex items-start gap-2 text-xs text-fg-muted">
             <span className="mt-0.5 shrink-0" style={{ color: "var(--admonitions-color-tip)" }}>
               ●
             </span>
@@ -92,7 +92,7 @@ export default function FeaturedPhonemePanel({
       {diffConfig && (
         <div className="mt-4 pt-4 border-t" style={{ borderColor: "var(--line-divider)" }}>
           <div className="flex items-center justify-between mb-1.5">
-            <p className="text-tiny font-bold uppercase tracking-widest" style={{ color: "var(--text-secondary)" }}>
+            <p className="text-tiny font-bold uppercase tracking-widest text-fg-muted">
               Difficulty
             </p>
             <span className="text-tiny font-bold uppercase" style={{ color: diffConfig.color }}>
@@ -115,12 +115,12 @@ export default function FeaturedPhonemePanel({
 
       {extra?.articulation && extra.articulation.length > 0 && (
         <div className="mt-4 pt-4 border-t" style={{ borderColor: "var(--line-divider)" }}>
-          <p className="text-tiny font-bold uppercase tracking-widest mb-2" style={{ color: "var(--text-secondary)" }}>
+          <p className="text-tiny font-bold uppercase tracking-widest mb-2 text-fg-muted">
             Articulation
           </p>
           <ul className="space-y-1.5">
             {extra.articulation.map((point, i) => (
-              <li key={i} className="flex items-start gap-2 text-xs" style={{ color: "var(--text-secondary)" }}>
+              <li key={i} className="flex items-start gap-2 text-xs text-fg-muted">
                 <span className="mt-0.5 shrink-0" style={{ color: "var(--primary)" }}>▸</span>
                 {point}
               </li>
@@ -131,15 +131,15 @@ export default function FeaturedPhonemePanel({
 
       {extra?.minimalPairs && extra.minimalPairs.length > 0 && (
         <div className="mt-4 pt-4 border-t" style={{ borderColor: "var(--line-divider)" }}>
-          <p className="text-tiny font-bold uppercase tracking-widest mb-2" style={{ color: "var(--text-secondary)" }}>
+          <p className="text-tiny font-bold uppercase tracking-widest mb-2 text-fg-muted">
             Minimal Pairs
           </p>
           <ul className="space-y-1.5">
             {extra.minimalPairs.map((pair, i) => (
-              <li key={i} className="text-xs" style={{ color: "var(--text-secondary)" }}>
-                <span className="font-semibold" style={{ color: "var(--text-primary)" }}>{pair.wordA}</span>
+              <li key={i} className="text-xs text-fg-muted">
+                <span className="font-semibold text-fg">{pair.wordA}</span>
                 <span className="mx-1">vs</span>
-                <span className="font-semibold" style={{ color: "var(--text-primary)" }}>{pair.wordB}</span>
+                <span className="font-semibold text-fg">{pair.wordB}</span>
                 <span className="ml-1 opacity-60">({pair.phonemeA} vs {pair.phonemeB})</span>
               </li>
             ))}
@@ -150,14 +150,14 @@ export default function FeaturedPhonemePanel({
       {extra?.spanishTip && (
         <div
           className="mt-4 rounded-2xl p-4 flex gap-3"
-          style={{ backgroundColor: "var(--admonitions-color-tip-bg, rgba(234,179,8,0.1))" }}
+          style={{ backgroundColor: "var(--warning-soft)" }}
         >
           <span className="text-lg shrink-0 mt-0.5">💡</span>
           <div>
             <p className="text-tiny font-bold uppercase tracking-widest mb-1.5" style={{ color: "var(--warning)" }}>
               Para hispanohablantes
             </p>
-            <p className="text-xs leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+            <p className="text-xs leading-relaxed text-fg-muted">
               {extra.spanishTip}
             </p>
           </div>

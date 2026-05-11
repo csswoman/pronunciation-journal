@@ -27,7 +27,7 @@ export function LessonNumber({ courseSlug, lessonSlug, index }: Props) {
   }
 
   return (
-    <span className="w-8 h-8 flex-shrink-0 flex items-center justify-center rounded-full border border-[var(--line-divider)] text-sm font-bold text-[var(--text-tertiary)] group-hover:border-[var(--primary)] group-hover:text-[var(--primary)] transition-colors">
+    <span className="w-8 h-8 flex-shrink-0 flex items-center justify-center rounded-full border border-[var(--line-divider)] text-sm font-bold text-fg-subtle group-hover:border-[var(--primary)] group-hover:text-[var(--primary)] transition-colors">
       {index + 1}
     </span>
   );

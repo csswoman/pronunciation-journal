@@ -61,7 +61,7 @@ export function CandidateBubble({
             background: "var(--card-bg)",
             border: `1.5px solid ${isActive && !turnResult ? "var(--color-accent)" : "var(--line-divider)"}`,
           }}>
-          <p className="text-sm leading-relaxed font-medium" style={{ color: "var(--deep-text)" }}>{text}</p>
+          <p className="text-sm leading-relaxed font-medium text-fg">{text}</p>
 
           {turnResult && (
             <div className="mt-3 pt-3 flex flex-col gap-3" style={{ borderTop: "1px solid var(--line-divider)" }}>

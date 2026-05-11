@@ -17,10 +17,10 @@ export function AuthGuestButton({ onClick, pending }: AuthGuestButtonProps) {
       style={{ background: "transparent", border: "1px solid var(--border-default)", color: "var(--text-secondary)" }}
     >
       <div className="flex items-center gap-[var(--space-3)]">
-        <User className="w-[18px] h-[18px] text-[var(--text-tertiary)]" />
+        <User className="w-5 h-5 text-fg-subtle" />
         <p style={{ font: "var(--font-body-sm)", fontWeight: 500 }}>Continue as guest</p>
       </div>
-      <ArrowRight className="w-[18px] h-[18px] text-[var(--text-tertiary)]" />
+      <ArrowRight className="w-5 h-5 text-fg-subtle" />
       <style>{`
         .auth-guest-btn:hover {
           background: var(--surface-sunken);

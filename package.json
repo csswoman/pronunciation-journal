@@ -4,9 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "npm run lint:design-tokens && next build",
     "start": "next start",
     "lint": "eslint .",
+    "lint:design-tokens": "node scripts/lint-design-tokens.mjs",
     "test": "vitest run",
     "test:watch": "vitest"
   },

@@ -29,7 +29,7 @@ export default function ThemeControl() {
         onClick={() => setOpen((v) => !v)}
         variant="ghost"
         size="sm"
-        className="w-full justify-start text-xs text-[var(--text-secondary)]"
+        className="w-full justify-start text-xs text-fg-muted"
         icon={
           <span
             className="w-3.5 h-3.5 rounded-full flex-shrink-0 ring-1 ring-black/10 dark:ring-overlay-weak"
@@ -46,7 +46,7 @@ export default function ThemeControl() {
       {open && (
         <div
           className="absolute bottom-full left-0 mb-2 w-56 rounded-xl p-4 shadow-lg border z-50
-                     animate-in fade-in zoom-in-95 duration-150 origin-bottom-left"
+ animate-in fade-in zoom-in-95 duration-150 origin-bottom-left"
           style={{
             background: "var(--float-panel-bg)",
             borderColor: "var(--line-divider)",
@@ -84,7 +84,7 @@ export default function ThemeControl() {
                 size="icon"
                 title="Reset hue"
                 aria-label="Reset theme color"
-                className="text-[var(--text-secondary)]"
+                className="text-fg-muted"
                 icon={
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
                     <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
@@ -101,7 +101,7 @@ export default function ThemeControl() {
                 size="icon"
                 title={`Switch to ${mode === "dark" ? "light" : "dark"} mode`}
                 aria-label="Toggle dark mode"
-                className="text-[var(--text-secondary)]"
+                className="text-fg-muted"
                 icon={
                   mode === "dark" ? (
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="w-3.5 h-3.5">

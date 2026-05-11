@@ -1,7 +1,5 @@
 import Link from "next/link";
 import { Volume2 } from "lucide-react";
-import Card from "@/components/layout/Card";
-import Button from "@/components/ui/Button";
 
 interface ReviewWord {
   word: string;
@@ -15,61 +13,77 @@ interface HomeWordsToReviewProps {
   words?: ReviewWord[];
 }
 
-const DIFFICULTY_DOT: Record<ReviewWord["difficulty"], string> = {
-  easy: "dot-success",
-  med: "dot-warning",
-  hard: "dot-warning",
+const DIFFICULTY_STYLE: Record<ReviewWord["difficulty"], string> = {
+  hard: "bg-red-900/30 text-red-300 border-red-700/30",
+  med:  "bg-amber-900/30 text-amber-300 border-amber-700/30",
+  easy: "bg-emerald-900/30 text-emerald-300 border-emerald-700/30",
+};
+
+const DIFFICULTY_LABEL: Record<ReviewWord["difficulty"], string> = {
+  hard: "Hard",
+  med:  "Med",
+  easy: "Easy",
 };
 
 export default function HomeWordsToReview({
   dueCount = 12,
   words = [
-    { word: "thorough", ipa: "/ˈθʌrə/", translation: "completo", difficulty: "hard" },
-    { word: "awkward", ipa: "/ˈɔː.kwəd/", translation: "incómodo", difficulty: "med" },
+    { word: "thorough",     ipa: "/ˈθʌrə/",          translation: "completo",        difficulty: "hard" },
+    { word: "awkward",      ipa: "/ˈɔː.kwəd/",        translation: "incómodo",        difficulty: "med"  },
     { word: "particularly", ipa: "/pəˈtɪk.jə.lə.li/", translation: "particularmente", difficulty: "hard" },
   ],
 }: HomeWordsToReviewProps) {
   return (
-    <Card variant="compact" className="gap-4">
+    <div className="rounded-xl border border-border-subtle bg-surface-raised p-5 flex flex-col gap-4">
+      {/* Header */}
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <span className="inline-block w-3 h-3 rounded bg-success"></span>
-          <span className="text-sm font-semibold text-[var(--deep-text)]">Words to review</span>
-        </div>
-        <Link href="/review" className="text-sm font-medium text-[var(--primary)] hover:underline">
+        <h2 className="text-xl font-semibold tracking-tight text-[var(--text-primary)]">Words to review</h2>
+        <Link
+          href="/review"
+          className="text-sm font-medium text-[var(--primary)] hover:opacity-80 transition-opacity"
+        >
           Open Word Bank →
         </Link>
       </div>
 
-      <p className="text-xs text-[var(--text-secondary)] -mt-1">
-        SRS due today:{" "}
-        <span className="font-semibold text-[var(--primary)]">{dueCount} cards</span>
+      {/* Subline */}
+      <p className="text-xs text-[var(--text-tertiary)] -mt-2">
+        Due today · {dueCount} words
       </p>
 
-      <div className="flex flex-col divide-y divide-[var(--border-light)]">
-        {words.map((w) => (
-          <div key={w.word} className="flex items-center gap-3 py-2.5">
-            <Button
-              variant="ghost"
-              size="icon"
+      {/* Word rows */}
+      <div className="flex flex-col">
+        {words.map((w, idx) => (
+          <div
+            key={w.word}
+            className={[
+              "flex items-center gap-3 py-3",
+              idx < words.length - 1 ? "border-b border-border-subtle" : "",
+            ].join(" ")}
+          >
+            {/* Audio icon */}
+            <button
               aria-label={`Play ${w.word}`}
-              className="shrink-0 w-8 h-8 rounded-lg"
+              className="shrink-0 w-8 flex items-center justify-center text-[var(--text-tertiary)] hover:text-[var(--text-primary)] transition-colors"
             >
-              <Volume2 size={14} />
-            </Button>
+              <Volume2 size={15} />
+            </button>
+
+            {/* Word + phonetic */}
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold text-[var(--deep-text)] leading-tight">{w.word}</p>
-              <p className="text-xs text-[var(--text-tertiary)] font-mono truncate">
+              <p className="text-sm font-medium text-[var(--text-primary)] leading-tight">{w.word}</p>
+              <p className="text-xs text-[var(--text-tertiary)] mt-0.5 truncate">
                 {w.ipa} · {w.translation}
               </p>
             </div>
-            <span className="badge">
-              <span className={DIFFICULTY_DOT[w.difficulty]} />
-              {w.difficulty}
+
+            {/* Difficulty badge */}
+            <span className={`inline-flex items-center text-xs font-medium px-2 py-0.5 rounded-full border ${DIFFICULTY_STYLE[w.difficulty]}`}>
+              {DIFFICULTY_LABEL[w.difficulty]}
             </span>
           </div>
         ))}
       </div>
-    </Card>
+    </div>
   );
 }

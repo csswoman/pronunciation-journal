@@ -36,7 +36,7 @@ export default function Badge({ label, variant = "default", size = "sm", dot = f
       className={[
         "inline-flex items-center gap-1.5 font-semibold",
         sizeClasses,
-        isNeutral ? "bg-[var(--btn-regular-bg)] text-[var(--text-secondary)]" : "",
+        isNeutral ? "bg-[var(--btn-regular-bg)] text-fg-muted" : "",
         className,
       ].filter(Boolean).join(" ")}
       style={style}

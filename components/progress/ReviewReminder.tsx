@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { Bell, ChevronRight, CheckCircle2 } from 'lucide-react'
 import type { MasteredSoundInfo } from '@/hooks/useMasteredSounds'
+import { H3 } from '@/components/ui/Typography'
 
 // Intervalos del sistema Leitner / SM-2: 1 → 3 → 7 → 30 días
 const SRS_INTERVALS = [
@@ -32,9 +33,9 @@ export default function ReviewReminder({ dueToday, totalMastered }: ReviewRemind
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Bell size={18} style={{ color: hasDue ? 'var(--primary)' : 'var(--text-secondary)' }} />
-          <h3 className="font-semibold text-sm" style={{ color: 'var(--deep-text)' }}>
+          <H3 className="font-semibold text-sm">
             Repasos del día
-          </h3>
+          </H3>
           {hasDue && (
             <span
               className="text-xs font-bold px-2 py-0.5 rounded-full"
@@ -62,7 +63,7 @@ export default function ReviewReminder({ dueToday, totalMastered }: ReviewRemind
       {!hasDue && totalMastered > 0 && (
         <div className="flex items-center gap-3 py-2">
           <CheckCircle2 size={20} style={{ color: 'oklch(.65 .15 145)' }} />
-          <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+          <p className="text-sm text-fg-muted">
             Todo al dia. El sistema te avisara cuando sea hora de repasar.
           </p>
         </div>
@@ -86,10 +87,10 @@ export default function ReviewReminder({ dueToday, totalMastered }: ReviewRemind
                   {sound.sounds.ipa}
                 </span>
                 <div>
-                  <p className="text-xs font-medium" style={{ color: 'var(--deep-text)' }}>
+                  <p className="text-xs font-medium text-fg">
                     {sound.sounds.example ?? ''}
                   </p>
-                  <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>
+                  <p className="text-xs text-fg-muted">
                     Precisión: {sound.accuracy}%
                   </p>
                 </div>
@@ -106,7 +107,7 @@ export default function ReviewReminder({ dueToday, totalMastered }: ReviewRemind
             </Link>
           ))}
           {dueToday.length > 4 && (
-            <p className="text-xs text-center pt-1" style={{ color: 'var(--text-secondary)' }}>
+            <p className="text-xs text-center pt-1 text-fg-muted">
               +{dueToday.length - 4} más pendientes
             </p>
           )}
@@ -115,7 +116,7 @@ export default function ReviewReminder({ dueToday, totalMastered }: ReviewRemind
 
       {/* Línea de tiempo SRS */}
       <div className="pt-2 border-t" style={{ borderColor: 'var(--line-divider)' }}>
-        <p className="text-xs font-medium mb-3" style={{ color: 'var(--text-secondary)' }}>
+        <p className="text-xs font-medium mb-3 text-fg-muted">
           Como funciona la repeticion espaciada
         </p>
         <div className="flex items-center gap-1">
@@ -126,10 +127,10 @@ export default function ReviewReminder({ dueToday, totalMastered }: ReviewRemind
                   className="w-2 h-2 rounded-full"
                   style={{ background: 'var(--primary)', opacity: 0.4 + i * 0.2 }}
                 />
-                <span className="text-tiny font-semibold" style={{ color: 'var(--deep-text)' }}>
+                <span className="text-tiny font-semibold text-fg">
                   {interval.label}
                 </span>
-                <span className="text-tiny text-center leading-tight" style={{ color: 'var(--text-tertiary)' }}>
+                <span className="text-tiny text-center leading-tight text-fg-subtle">
                   {interval.description}
                 </span>
               </div>

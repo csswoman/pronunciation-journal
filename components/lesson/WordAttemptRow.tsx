@@ -43,9 +43,9 @@ export default function WordAttemptRow({ wordAttempt }: { wordAttempt: WordAttem
       <div className="rounded-lg flex items-center justify-between py-2 px-3" style={{ backgroundColor: "var(--btn-regular-bg)" }}>
         <div className="flex items-center gap-2">
           <span>⏭️</span>
-          <span className="text-sm font-medium" style={{ color: "var(--text-primary)" }}>{word}</span>
+          <span className="text-sm font-medium text-fg">{word}</span>
         </div>
-        <span className="text-xs" style={{ color: "var(--text-tertiary)" }}>skipped</span>
+        <span className="text-xs text-fg-subtle">skipped</span>
       </div>
     );
   }
@@ -55,7 +55,7 @@ export default function WordAttemptRow({ wordAttempt }: { wordAttempt: WordAttem
       <div className="rounded-lg flex items-center justify-between py-2 px-3" style={{ backgroundColor: "var(--btn-regular-bg)" }}>
         <div className="flex items-center gap-2">
           <span>✓</span>
-          <span className="text-sm font-medium" style={{ color: "var(--text-primary)" }}>{word}</span>
+          <span className="text-sm font-medium text-fg">{word}</span>
         </div>
         <span className="text-xs" style={{ color: "var(--admonitions-color-tip)" }}>I know this</span>
       </div>
@@ -68,14 +68,13 @@ export default function WordAttemptRow({ wordAttempt }: { wordAttempt: WordAttem
     }}>
       <Button
         onClick={() => hasRetries && setOpen((o) => !o)}
-        className={`w-full flex items-center justify-between py-2 px-3 text-left ${hasRetries ? "cursor-pointer" : "cursor-default"} transition-colors`}
-        style={{ color: "var(--text-primary)" }}
+        className={`w-full flex items-center justify-between py-2 px-3 text-left ${hasRetries ? "cursor-pointer" : "cursor-default"} transition-colors text-fg`}
       >
         <div className="flex items-center gap-2">
           <span>{passed ? "✅" : "❌"}</span>
           <span className="text-sm font-medium">{word}</span>
           {hasRetries && (
-            <span className="text-xs" style={{ color: "var(--text-secondary)" }}>
+            <span className="text-xs text-fg-muted">
               {attempts.length} intentos
             </span>
           )}

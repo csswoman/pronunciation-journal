@@ -39,13 +39,13 @@ export function SessionSummary({ answers, soundIpa, nextReview, onPracticeAgain 
           {accuracy}%
         </div>
 
-        <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+        <p className="text-sm text-fg-muted">
           {correct} of {total} correct
         </p>
 
         {nextReviewLabel && (
-          <p className="text-xs" style={{ color: 'var(--text-tertiary)' }}>
-            Next review: <span className="font-medium" style={{ color: 'var(--text-secondary)' }}>{nextReviewLabel}</span>
+          <p className="text-xs text-fg-subtle">
+            Next review: <span className="font-medium text-fg-muted">{nextReviewLabel}</span>
           </p>
         )}
       </div>

@@ -26,7 +26,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  let body: { text?: unknown; context?: unknown; id?: unknown };
+  let body: { text?: unknown; context?: unknown; id?: unknown; deckId?: unknown };
   try {
     body = await req.json();
   } catch {
@@ -47,6 +47,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       : null;
 
   const id = typeof body.id === "string" ? body.id : null;
+  const deckId = typeof body.deckId === "string" && body.deckId.trim() ? body.deckId.trim() : null;
 
   // User-scoped client so RLS applies and user_id is enforced.
   const userClient = createClient<Database>(supabaseUrl, anonKey, {
@@ -96,6 +97,20 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       { error: insertErr?.message ?? "Failed to create word" },
       { status: 500 }
     );
+  }
+
+  if (deckId) {
+    // Verify deck belongs to this user before linking.
+    const { data: deck } = await userClient
+      .from("decks")
+      .select("id")
+      .eq("id", deckId)
+      .eq("user_id", user.id)
+      .single();
+
+    if (deck) {
+      await userClient.from("word_bank_decks").insert({ word_id: word.id, deck_id: deckId });
+    }
   }
 
   void enrichWord(word.id);

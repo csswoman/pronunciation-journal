@@ -3,6 +3,7 @@ import Image from 'next/image'
 import type { Lesson } from '@/lib/types'
 import type { DifficultyMode } from './lesson-lobby-types'
 import Button from '@/components/ui/Button'
+import { H1 } from '@/components/ui/Typography'
 
 interface Props {
   lesson: Lesson
@@ -20,7 +21,7 @@ export function LessonHero({ lesson, totalWords, chunkLabel, overall, diffMode, 
   const estMin = Math.max(3, Math.ceil(totalWords * 0.4))
 
   return (
-    <div className="relative overflow-hidden rounded-t-[15px] bg-gradient-to-br from-[var(--card-bg)] to-[var(--btn-regular-bg)] shadow-[0_16px_40px_rgba(15,23,42,0.06)]">
+    <div className="relative overflow-hidden rounded-t-2xl bg-gradient-to-br from-[var(--card-bg)] to-[var(--btn-regular-bg)] shadow-[0_16px_40px_rgba(15,23,42,0.06)]">
       <div className="relative space-y-6">
         <div
           className="flex items-center justify-between px-4 py-2.5 border border-b border-[var(--line-divider)]"
@@ -29,7 +30,7 @@ export function LessonHero({ lesson, totalWords, chunkLabel, overall, diffMode, 
             {backHref && (
               <Link
                 href={backHref}
-                className="inline-flex items-center gap-1.5 rounded-lg border border-[var(--line-divider)] bg-[var(--btn-regular-bg)] px-3 py-1.5 text-caption font-medium text-[var(--text-secondary)] transition-all duration-200 hover:-translate-x-0.5 hover:bg-[var(--btn-plain-bg-hover)]"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-[var(--line-divider)] bg-[var(--btn-regular-bg)] px-3 py-1.5 text-caption font-medium text-fg-muted transition-all duration-200 hover:-translate-x-0.5 hover:bg-[var(--btn-plain-bg-hover)]"
               >
                 <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
                   <path d="M10 12L6 8l4-4" />
@@ -50,10 +51,10 @@ export function LessonHero({ lesson, totalWords, chunkLabel, overall, diffMode, 
 
         <div className="flex items-center justify-between">
           <div className="p-8 md:p-10 max-w-2xl space-y-3">
-            <h1 className="font-display text-[28px] font-semibold leading-[1.08] tracking-tight text-[var(--deep-text)] lg:text-[34px]">
+            <H1 className="font-display text-h1 leading-[1.08] lg:text-h1">
               {lesson.title}
-            </h1>
-            <p className="max-w-xl text-body leading-6 text-[var(--text-secondary)]">
+            </H1>
+            <p className="max-w-xl text-body leading-6 text-fg-muted">
               Pick a practice mode that matches your energy — start easy, build confidence, then push your limits.
             </p>
           </div>
@@ -98,7 +99,7 @@ export function LessonHero({ lesson, totalWords, chunkLabel, overall, diffMode, 
             <span className="flex flex-wrap items-center gap-x-1 gap-y-0.5">
               {visibleWords.map((w, i) => (
                 <span key={w.word} className="flex items-center gap-1">
-                  <span className="hover:text-[var(--deep-text)] transition-colors cursor-pointer">{w.word}</span>
+                  <span className="hover:text-fg transition-colors cursor-pointer">{w.word}</span>
                   {(i < visibleWords.length - 1 || extraCount > 0) && (
                     <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor" style={{ color: 'var(--text-tertiary)', opacity: 0.5 }}>
                       <circle cx="6" cy="6" r="1.8" />
@@ -107,7 +108,7 @@ export function LessonHero({ lesson, totalWords, chunkLabel, overall, diffMode, 
                 </span>
               ))}
               {extraCount > 0 && (
-                <span style={{ color: 'var(--text-tertiary)' }}>+{extraCount} more</span>
+                <span className="text-fg-subtle">+{extraCount} more</span>
               )}
             </span>
           )}
@@ -149,7 +150,7 @@ interface DifficultyToggleProps {
 function DifficultyToggle({ value, onChange }: DifficultyToggleProps) {
   return (
     <div className="flex items-center gap-3 flex-shrink-0">
-      <p className="text-tiny font-semibold uppercase tracking-[0.18em] text-[var(--text-tertiary)]">
+      <p className="text-tiny font-semibold uppercase tracking-[0.18em] text-fg-subtle">
         Difficulty
       </p>
       <div className="inline-flex rounded-2xl border border-[var(--line-divider)] bg-[color-mix(in_oklch,var(--card-bg)_70%,transparent)] p-1 text-sm font-semibold shadow-sm backdrop-blur-sm">

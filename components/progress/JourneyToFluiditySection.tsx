@@ -1,6 +1,7 @@
 'use client'
 
 import { ChevronRight, Mic, BookOpen, Brain, Pencil, Headphones, MessageSquare } from 'lucide-react'
+import { H2 } from '@/components/ui/Typography'
 
 type Category = 'pronunciation' | 'vocabulary' | 'srs' | 'writing' | 'listening' | 'conversation'
 
@@ -65,12 +66,12 @@ export default function JourneyToFluiditySection() {
       {/* Header */}
       <div className="flex items-end justify-between gap-3">
         <div>
-          <p className="text-tiny font-bold uppercase tracking-[0.24em]" style={{ color: 'var(--text-tertiary)' }}>
+          <p className="text-tiny font-bold uppercase tracking-[0.24em] text-fg-subtle">
             ACTIVITY LOG
           </p>
-          <h2 className="mt-0.5 text-xl font-black tracking-tight" style={{ color: 'var(--deep-text)' }}>
+          <H2 className="mt-0.5 text-h4">
             Journey to fluency
-          </h2>
+          </H2>
         </div>
         <button
           className="inline-flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-semibold transition-opacity hover:opacity-70"
@@ -86,7 +87,7 @@ export default function JourneyToFluiditySection() {
 
       {/* List */}
       <div
-        className="overflow-hidden rounded-[22px]"
+        className="overflow-hidden rounded-3xl"
         style={{
           background: 'var(--card-bg)',
           border: '1px solid var(--line-divider)',
@@ -118,10 +119,10 @@ export default function JourneyToFluiditySection() {
 
               {/* Info */}
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold truncate" style={{ color: 'var(--deep-text)' }}>
+                <p className="text-sm font-semibold truncate text-fg">
                   {ex.title}
                 </p>
-                <p className="text-xs mt-0.5 truncate" style={{ color: 'var(--text-secondary)' }}>
+                <p className="text-xs mt-0.5 truncate text-fg-muted">
                   {ex.category}
                 </p>
                 <div className="mt-1 flex items-center gap-2">
@@ -134,7 +135,7 @@ export default function JourneyToFluiditySection() {
                   >
                     {CATEGORY_LABEL[ex.type]}
                   </span>
-                  <span className="text-tiny" style={{ color: 'var(--text-tertiary)' }}>
+                  <span className="text-tiny text-fg-subtle">
                     {ex.time}
                   </span>
                 </div>
@@ -146,7 +147,7 @@ export default function JourneyToFluiditySection() {
                   <p className="text-base font-black tabular-nums" style={{ color }}>
                     {ex.accuracy}%
                   </p>
-                  <p className="text-tiny" style={{ color: 'var(--text-tertiary)' }}>accuracy</p>
+                  <p className="text-tiny text-fg-subtle">accuracy</p>
                 </div>
 
                 {/* Mini bar */}
@@ -162,8 +163,7 @@ export default function JourneyToFluiditySection() {
 
                 <ChevronRight
                   size={16}
-                  className="opacity-30 transition-all group-hover:opacity-80 group-hover:translate-x-0.5"
-                  style={{ color: 'var(--text-secondary)' }}
+                  className="opacity-30 transition-all group-hover:opacity-80 group-hover:translate-x-0.5 text-fg-muted"
                 />
               </div>
             </button>

@@ -25,7 +25,7 @@ function StatTile({
 }) {
   return (
     <div
-      className="flex flex-col gap-2 rounded-[22px] p-4"
+      className="flex flex-col gap-2 rounded-3xl p-4"
       style={{
         background: accent
           ? "linear-gradient(145deg, color-mix(in oklch, var(--primary) 18%, var(--card-bg)), var(--card-bg))"
@@ -44,10 +44,10 @@ function StatTile({
         {icon}
       </div>
       <div>
-        <p className="text-tiny font-semibold uppercase tracking-[0.2em]" style={{ color: "var(--text-secondary)" }}>
+        <p className="text-tiny font-semibold uppercase tracking-[0.2em] text-fg-muted">
           {label}
         </p>
-        <p className="mt-0.5 text-2xl font-black tracking-tight" style={{ color: "var(--deep-text)" }}>
+        <p className="mt-0.5 text-2xl font-black tracking-tight text-fg">
           {value}
         </p>
       </div>
@@ -61,7 +61,7 @@ function StatTile({
 function StatTileSkeleton() {
   return (
     <div
-      className="flex flex-col gap-2 rounded-[22px] p-4"
+      className="flex flex-col gap-2 rounded-3xl p-4"
       style={{ background: "var(--card-bg)", border: "1px solid var(--line-divider)" }}
     >
       <div className="h-9 w-9 rounded-xl animate-pulse" style={{ background: "var(--line-divider)" }} />

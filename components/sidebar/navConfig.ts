@@ -1,14 +1,11 @@
 import {
   Home,
   MicVocal,
-  Bot,
-  BookMarked,
   BookOpen,
   Radio,
-  Folder,
   TrendingUp,
   Settings,
-  BriefcaseBusiness,
+  LibraryBig,
 } from "lucide-react";
 import { NavSectionType } from "./NavSection";
 
@@ -17,16 +14,13 @@ export const coreNav: NavSectionType = {
   items: [
     { name: "Home", href: "/", icon: Home },
     { name: "Practice", href: "/practice", icon: MicVocal },
-    { name: "AI Practice", href: "/ai-practice", icon: Bot },
-    { name: "Interview", href: "/interview", icon: BriefcaseBusiness },
   ],
 };
 
 export const learningNav: NavSectionType = {
   label: "Learning",
   items: [
-    { name: "Word Bank", href: "/words", icon: BookMarked },
-    { name: "Decks", href: "/decks", icon: Folder },
+    { name: "Vocabulary", href: "/vocabulary", icon: LibraryBig },
     { name: "Courses", href: "/courses", icon: BookOpen },
     { name: "IPA Chart", href: "/ipa", icon: Radio },
   ],

@@ -18,14 +18,14 @@ function NotionToggleItem({ lesson, defaultOpen = false }: NotionToggleItemProps
     <div className="rounded-xl border border-[var(--line-divider)] bg-surface-raised dark:bg-[var(--card-bg)] overflow-hidden">
       <Button
         onClick={() => setOpen((o) => !o)}
-        className="flex w-full items-center justify-between gap-4 px-6 py-4 text-left transition-colors hover:bg-neutral-50 dark:hover:bg-[var(--btn-plain-bg-hover)]"
+        className="flex w-full items-center justify-between gap-4 px-6 py-4 text-left transition-colors hover:bg-surface-raised"
       >
         <span className="text-base font-semibold text-fg">
           {lesson.title}
         </span>
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          className={`h-4 w-4 shrink-0 text-[var(--text-secondary)] transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+          className={`h-4 w-4 shrink-0 text-fg-muted transition-transform duration-200 ${open ? "rotate-180" : ""}`}
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -37,7 +37,7 @@ function NotionToggleItem({ lesson, defaultOpen = false }: NotionToggleItemProps
       {open && (
         <div className="border-t border-[var(--line-divider)] px-6 py-5">
           {lesson.content.length === 0 ? (
-            <p className="text-sm text-[var(--text-secondary)]">No content</p>
+            <p className="text-sm text-fg-muted">No content</p>
           ) : (
             <BlockList blocks={lesson.content} />
           )}
@@ -54,7 +54,7 @@ interface NotionBlockContentProps {
 export default function NotionBlockContent({ subLessons }: NotionBlockContentProps) {
   if (subLessons.length === 0) {
     return (
-      <p className="text-sm text-[var(--text-secondary)]">No sections found in this Notion page.</p>
+      <p className="text-sm text-fg-muted">No sections found in this Notion page.</p>
     );
   }
 

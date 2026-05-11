@@ -105,7 +105,7 @@ export default function RecordingControls({
             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
           </svg>
         </div>
-        <p className="text-base" style={{ color: 'var(--text-secondary)' }}>Analyzing pronunciation...</p>
+        <p className="text-base text-fg-muted">Analyzing pronunciation...</p>
       </div>
     );
   }
@@ -114,8 +114,8 @@ export default function RecordingControls({
     return (
       <div className="w-full text-center space-y-5">
         <div className="text-5xl">🎙️</div>
-        <p className="text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>I didn&apos;t catch that</p>
-        <p className="text-base" style={{ color: 'var(--text-secondary)' }}>
+        <p className="text-lg font-semibold text-fg">I didn&apos;t catch that</p>
+        <p className="text-base text-fg-muted">
           Try speaking a bit louder or closer to the mic.
         </p>
         <Button

@@ -29,6 +29,7 @@ import { isMastered, getNextUnlockedSoundId } from '@/lib/phoneme-practice/maste
 import { computeStageMastery } from '@/lib/phoneme-practice/stages'
 import PageLayout from '@/components/layout/PageLayout'
 import Button from '@/components/ui/Button'
+import { H1 } from '@/components/ui/Typography'
 import type { StageId, StageMasteryMap } from '@/lib/phoneme-practice/stages'
 import type { Exercise, UserSoundProgress, Sound, SoundWord, MinimalPair } from '@/lib/phoneme-practice/types'
 
@@ -191,7 +192,7 @@ export default function SoundPracticePage() {
   if (!sessionData || !mastery) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-pulse text-[var(--text-tertiary)]">Loading…</div>
+        <div className="animate-pulse text-fg-subtle">Loading…</div>
       </div>
     )
   }
@@ -257,10 +258,10 @@ export default function SoundPracticePage() {
               </svg>
             </Button>
             <div className="text-center">
-              <h1 className="text-[18px] font-semibold leading-tight tracking-tight font-mono" style={{ color: 'var(--primary)' }}>
+              <H1 className="text-lg font-semibold leading-tight tracking-tight font-mono text-[var(--primary)]">
                 {sessionData.sound.ipa}
-              </h1>
-              <p className="text-caption leading-5" style={{ color: 'var(--text-secondary)' }}>
+              </H1>
+              <p className="text-caption leading-5 text-fg-muted">
                 {displayIndex + 1} / {session.total}
               </p>
             </div>

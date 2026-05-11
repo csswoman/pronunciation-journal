@@ -20,19 +20,19 @@ export default function Card({
   ...rest
 }: CardProps) {
   const baseClasses =
-    "rounded-lg border border-border-subtle bg-surface-raised transition-all duration-200";
+    "rounded-lg border border-border-subtle bg-surface-raised [transition:all_var(--transition-base,200ms_ease)]";
 
   const variantMap = {
     default: "p-6",
-    interactive: "p-6 cursor-pointer hover:shadow-lg hover:border-[var(--primary)]",
+    interactive: "p-6 cursor-pointer hover:shadow-lg hover:border-[var(--border-default)] hover:-translate-y-px",
     lesson:
-      "p-5 hover:shadow-md hover:translate-y-[-2px] cursor-pointer relative overflow-hidden",
+      "p-5 hover:shadow-md hover:-translate-y-px hover:border-[var(--border-default)] cursor-pointer relative overflow-hidden",
     stat: "p-6 flex items-center gap-4",
-    compact: "p-5 flex flex-col",
+    compact: "p-4 flex flex-col",
   };
 
   const hoverClass = hoverable
-    ? "hover:shadow-lg hover:-translate-y-[2px]"
+    ? "hover:shadow-lg hover:-translate-y-px hover:border-[var(--border-default)]"
     : "";
 
   return (

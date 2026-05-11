@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Button from "@/components/ui/Button";
+import { H2 } from "@/components/ui/Typography";
 import { LessonHero } from "./LessonHero";
 import { StageCard } from "./StageCard";
 import {
@@ -62,7 +63,7 @@ export function LessonLobby({
         backHref={backHref}
       />
 
-      <div className="px-6 lg:px-10 py-8 pb-14 ">
+      <div className="px-6 lg:px-10 py-8 pb-14">
         <div className="grid gap-3 sm:grid-cols-3">
           <InfoPill
             icon="🎯"
@@ -78,24 +79,24 @@ export function LessonLobby({
                 ? `${completedCount} of ${LESSON_STAGES.length} complete`
                 : "None yet — start below"
             }
-            accent="#f4a261"
+            accent="var(--stage-pairs)"
           />
           <InfoPill
             icon="🤖"
             label="AI scoring"
             value="Live mic feedback on every attempt"
-            accent="#2ec4b6"
+            accent="var(--stage-dictation)"
           />
         </div>
 
         <div className="flex items-end justify-between gap-4 pt-2">
           <div>
-            <p className="text-tiny font-semibold uppercase tracking-[.18em] text-[var(--text-tertiary)] mt-6">
+            <p className="text-tiny font-semibold uppercase tracking-[.18em] text-fg-subtle mt-6">
               Practice modes
             </p>
-            <h2 className="mb-6 text-body-lg font-semibold tracking-tight text-[var(--deep-text)]">
+            <H2 className="mb-6 text-body-lg font-semibold tracking-tight">
               How do you want to practice?
-            </h2>
+            </H2>
           </div>
           {overall > 0 && (
             <span
@@ -134,11 +135,11 @@ export function LessonLobby({
             Continue — {nextUnlocked.title}
           </Button>
         ) : overall >= 80 ? (
-          <div className="rounded-[18px] border border-[color-mix(in_oklch,var(--admonitions-color-tip)_20%,transparent)] bg-[color-mix(in_oklch,var(--admonitions-color-tip)_8%,transparent)] px-4 py-4 text-center">
+          <div className="rounded-2xl border border-[color-mix(in_oklch,var(--admonitions-color-tip)_20%,transparent)] bg-[color-mix(in_oklch,var(--admonitions-color-tip)_8%,transparent)] px-4 py-4 text-center">
             <p className="text-body font-semibold text-[var(--admonitions-color-tip)]">
               🎉 All stages mastered — great work!
             </p>
-            <p className="mt-1 text-caption text-[var(--text-secondary)]">
+            <p className="mt-1 text-caption text-fg-muted">
               Keep practicing to maintain your streak.
             </p>
           </div>
@@ -179,7 +180,7 @@ function InfoPill({
     >
       <div className="flex items-center gap-2">
         <span className="text-body-sm leading-none">{icon}</span>
-        <p className="text-tiny font-semibold uppercase tracking-[.14em] text-[var(--text-tertiary)]">
+        <p className="text-tiny font-semibold uppercase tracking-[.14em] text-fg-subtle">
           {label}
         </p>
       </div>
@@ -188,7 +189,7 @@ function InfoPill({
           className="mt-1.5 h-2 w-2 flex-shrink-0 rounded-full"
           style={{ backgroundColor: accent }}
         />
-        <p className="text-caption font-medium leading-snug text-[var(--deep-text)]">
+        <p className="text-caption font-medium leading-snug text-fg">
           {value}
         </p>
       </div>

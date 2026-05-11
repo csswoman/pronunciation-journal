@@ -134,8 +134,7 @@ function Tile({ label, value, unit, invert, empty, hint }: TileConfig) {
       }}
     >
       <p
-        className="text-tiny font-bold uppercase tracking-[0.2em] truncate"
-        style={{ color: "var(--text-tertiary)" }}
+        className="text-tiny font-bold uppercase tracking-[0.2em] truncate text-fg-subtle"
       >
         {label}
       </p>
@@ -159,8 +158,7 @@ function Tile({ label, value, unit, invert, empty, hint }: TileConfig) {
       </div>
 
       <p
-        className="text-tiny leading-snug"
-        style={{ color: "var(--text-secondary)" }}
+        className="text-tiny leading-snug text-fg-muted"
       >
         {hasData ? hint(value!) : empty}
       </p>
@@ -242,7 +240,7 @@ export default function AIEngagementWidget() {
 
   return (
     <div
-      className="rounded-[26px] p-5"
+      className="rounded-3xl p-5"
       style={{
         background: "var(--card-bg)",
         boxShadow: "0 1px 3px var(--line-divider), 0 6px 20px var(--line-divider)",
@@ -256,8 +254,7 @@ export default function AIEngagementWidget() {
           AI Practice
         </p>
         <h3
-          className="mt-1 text-lg font-black tracking-tight"
-          style={{ color: "var(--deep-text)" }}
+          className="mt-1 text-lg font-black tracking-tight text-fg"
         >
           Engagement signals
         </h3>

@@ -1,5 +1,6 @@
 "use client";
 import Button from "@/components/ui/Button";
+import { H3 } from "@/components/ui/Typography";
 
 import { useState } from "react";
 import {
@@ -69,13 +70,13 @@ function CircleMeter({ value, label, hint }: { value: number; label: string; hin
         />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-        <span className="text-3xl font-black tracking-tight" style={{ color: "var(--deep-text)" }}>
+        <span className="text-3xl font-black tracking-tight text-fg">
           {Math.round(value)}%
         </span>
-        <span className="text-tiny font-semibold uppercase tracking-[0.22em]" style={{ color: "var(--text-secondary)" }}>
+        <span className="text-tiny font-semibold uppercase tracking-[0.22em] text-fg-muted">
           {label}
         </span>
-        <span className="mt-1 text-tiny" style={{ color: "var(--text-tertiary)" }}>
+        <span className="mt-1 text-tiny text-fg-subtle">
           {hint}
         </span>
       </div>
@@ -96,7 +97,7 @@ function MetricCard({
 }) {
   return (
     <div
-      className="rounded-[22px] p-4"
+      className="rounded-3xl p-4"
       style={{
         background:
           "linear-gradient(180deg, color-mix(in oklch, var(--btn-regular-bg) 82%, var(--card-bg)), var(--card-bg))",
@@ -114,15 +115,15 @@ function MetricCard({
           {icon}
         </div>
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: "var(--text-secondary)" }}>
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-fg-muted">
             {label}
           </p>
-          <p className="text-2xl font-black tracking-tight" style={{ color: "var(--deep-text)" }}>
+          <p className="text-2xl font-black tracking-tight text-fg">
             {value}
           </p>
         </div>
       </div>
-      <p className="mt-3 text-sm leading-6" style={{ color: "var(--text-secondary)" }}>
+      <p className="mt-3 text-sm leading-6 text-fg-muted">
         {helper}
       </p>
     </div>
@@ -156,7 +157,7 @@ export default function ProgressInsights({
 
   return (
     <div
-      className="rounded-[30px] p-5 sm:p-6"
+      className="rounded-3xl p-5 sm:p-6"
       style={{
         background: "var(--card-bg)",
         boxShadow: "0 1px 3px var(--line-divider), 0 10px 24px var(--line-divider)",
@@ -167,9 +168,9 @@ export default function ProgressInsights({
           <p className="text-tiny font-semibold uppercase tracking-[0.24em]" style={{ color: "var(--primary)" }}>
             Insight Panels
           </p>
-          <h3 className="mt-2 text-2xl font-black tracking-tight" style={{ color: "var(--deep-text)" }}>
+          <H3 className="mt-2 text-h3">
             One card, three ways to read your progress
-          </h3>
+          </H3>
         </div>
 
         <div
@@ -187,7 +188,7 @@ export default function ProgressInsights({
                 className="inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition-all duration-200"
                 style={{
                   background: active ? "var(--card-bg)" : "transparent",
-                  color: active ? "var(--deep-text)" : "var(--text-secondary)",
+                  color: active ? "var(--text-primary)" : "var(--text-secondary)",
                   boxShadow: active ? "0 1px 3px var(--line-divider)" : "none",
                 }}
               >
@@ -225,7 +226,7 @@ export default function ProgressInsights({
       {activeTab === "performance" && (
         <div className="grid gap-5 pt-5 lg:grid-cols-[0.85fr_1.15fr] animate-fadeIn">
           <div
-            className="rounded-[26px] p-5"
+            className="rounded-3xl p-5"
             style={{
               background: "linear-gradient(180deg, color-mix(in oklch, var(--primary) 10%, transparent), transparent)",
               border: "1px solid var(--line-divider)",

@@ -41,7 +41,7 @@ export default function WordsToday({ words, newCount, reviewCount }: WordsTodayP
 
   return (
     <div
-      className="rounded-[26px] p-5"
+      className="rounded-3xl p-5"
       style={{
         background: 'var(--card-bg)',
         border: '1px solid var(--line-divider)',
@@ -51,17 +51,17 @@ export default function WordsToday({ words, newCount, reviewCount }: WordsTodayP
       {/* Header */}
       <div className="flex items-start justify-between gap-3">
         <div>
-          <p className="text-tiny font-bold uppercase tracking-[0.24em]" style={{ color: 'var(--text-tertiary)' }}>
+          <p className="text-tiny font-bold uppercase tracking-[0.24em] text-fg-subtle">
             WORDS TODAY
           </p>
           {entries.length > 0 ? (
-            <p className="text-sm font-semibold mt-0.5" style={{ color: 'var(--deep-text)' }}>
+            <p className="text-sm font-semibold mt-0.5 text-fg">
               {derivedNew > 0 && <span>{derivedNew} new · </span>}
               {derivedReview > 0 && <span>{derivedReview} reviewed</span>}
               {derivedNew === 0 && derivedReview === 0 && `${entries.length} studied`}
             </p>
           ) : (
-            <p className="text-sm font-semibold mt-0.5" style={{ color: 'var(--text-secondary)' }}>
+            <p className="text-sm font-semibold mt-0.5 text-fg-muted">
               No words yet today
             </p>
           )}
@@ -87,14 +87,13 @@ export default function WordsToday({ words, newCount, reviewCount }: WordsTodayP
               }}
             >
               <span
-                className="text-sm font-medium"
-                style={{ color: 'var(--deep-text)' }}
+                className="text-sm font-medium text-fg"
               >
                 {entry.word}
               </span>
               <div className="flex items-center gap-3 shrink-0">
                 {entry.partOfSpeech && (
-                  <span className="text-xs" style={{ color: 'var(--text-tertiary)' }}>
+                  <span className="text-xs text-fg-subtle">
                     {POS_ABBR[entry.partOfSpeech] ?? entry.partOfSpeech}
                   </span>
                 )}
@@ -117,7 +116,7 @@ export default function WordsToday({ words, newCount, reviewCount }: WordsTodayP
           className="mt-4 rounded-2xl p-4 text-center"
           style={{ background: 'var(--btn-regular-bg)' }}
         >
-          <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+          <p className="text-sm text-fg-muted">
             Start a practice or review session and your studied words will appear here.
           </p>
           <Link
