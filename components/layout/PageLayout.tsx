@@ -1,15 +1,11 @@
-import { ReactNode } from "react";
+import { CSSProperties, ReactNode } from "react";
 
 interface PageLayoutProps {
   hero?: ReactNode;
   children: ReactNode;
   className?: string;
+  contentStyle?: CSSProperties;
   variant?: "default" | "lesson";
-  /**
-   * When true (default when hero is present), wraps hero + content in a
-   * white card (bg-card, rounded-2xl). Set to false for pages where each
-   * section manages its own card background.
-   */
   cardWrapper?: boolean;
 }
 
@@ -17,6 +13,7 @@ export default function PageLayout({
   hero,
   children,
   className = "",
+  contentStyle,
   variant = "default",
   cardWrapper,
 }: PageLayoutProps) {
@@ -35,7 +32,7 @@ export default function PageLayout({
     return (
       <div className="bg-[var(--card-bg)] rounded-2xl my-10 mx-6 lg:mx-10 overflow-hidden">
         {hero}
-        <div className={`px-6 lg:px-10 py-8 pb-14 ${className}`}>
+        <div className={`px-6 lg:px-10 py-8 pb-14 ${className}`} style={contentStyle}>
           {children}
         </div>
       </div>

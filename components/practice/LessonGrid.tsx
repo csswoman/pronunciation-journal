@@ -1,9 +1,6 @@
 'use client'
 
 import LessonCard from '@/components/lesson/LessonCard'
-import Grid from '@/components/layout/Grid'
-import Card from '@/components/layout/Card'
-import Button from '@/components/ui/Button'
 import type { Lesson } from '@/lib/types'
 
 const PAGE_SIZE = 6
@@ -33,62 +30,143 @@ export default function LessonGrid({
 }: LessonGridProps) {
   if (isLoading) {
     return (
-      <Card className="p-8 text-center">
-        <div className="text-sm animate-pulse text-fg-muted">
-          Loading lessons...
-        </div>
-      </Card>
+      <div
+        className="p-8 text-center"
+        style={{
+          background: "var(--surface-raised)",
+          border: "1px solid var(--border-subtle)",
+          borderRadius: "var(--radius-lg)",
+        }}
+      >
+        <span
+          className="animate-pulse"
+          style={{ font: "var(--font-body-sm)", color: "var(--text-tertiary)" }}
+        >
+          Loading lessons…
+        </span>
+      </div>
     )
   }
+
+  function getProgress(lesson: Lesson) {
+    return lesson.id.startsWith('sound-')
+      ? soundProgressMap.get(Number(lesson.id.replace('sound-', '')))
+      : undefined
+  }
+
+  // Bento: 6-col grid on page 1 with enough lessons
+  const useBento = currentPage === 1 && lessons.length >= 3
 
   return (
     <>
       <div key={gridKey} className="animate-grid-in">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {lessons.map((lesson, index) => (
-            <div
-              key={lesson.id}
-              className={index === 0 ? "lg:col-span-1" : ""}
-            >
+        {useBento ? (
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(6, 1fr)",
+              gap: "var(--space-3)",
+            }}
+          >
+            {/* Featured: col-span-3, row-span-2 */}
+            <div style={{ gridColumn: "span 3", gridRow: "span 2" }}>
               <LessonCard
-                lesson={lesson}
-                progressPct={
-                  lesson.id.startsWith('sound-')
-                    ? soundProgressMap.get(Number(lesson.id.replace('sound-', '')))
-                    : undefined
-                }
-                isFeatured={index === 0}
+                lesson={lessons[0]}
+                progressPct={getProgress(lessons[0])}
+                isFeatured
               />
             </div>
-          ))}
-        </div>
+
+            {/* Wide: col-span-3, rows 1 & 2 */}
+            {lessons.slice(1, 3).map((lesson) => (
+              <div key={lesson.id} style={{ gridColumn: "span 3" }}>
+                <LessonCard lesson={lesson} progressPct={getProgress(lesson)} />
+              </div>
+            ))}
+
+            {/* Normal: col-span-2, row 3 */}
+            {lessons.slice(3).map((lesson) => (
+              <div key={lesson.id} style={{ gridColumn: "span 2" }}>
+                <LessonCard lesson={lesson} progressPct={getProgress(lesson)} />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+            style={{ gap: "var(--space-3)" }}
+          >
+            {lessons.map((lesson) => (
+              <LessonCard
+                key={lesson.id}
+                lesson={lesson}
+                progressPct={getProgress(lesson)}
+              />
+            ))}
+          </div>
+        )}
       </div>
 
       {totalCount > PAGE_SIZE && (
-        <div className="flex items-center justify-center gap-3 mt-8">
-          <Button
+        <div
+          className="flex items-center justify-center"
+          style={{ gap: "var(--space-4)", marginTop: "var(--space-6)" }}
+        >
+          <button
             type="button"
             onClick={() => onPageChange(Math.max(1, currentPage - 1))}
             disabled={currentPage === 1}
-            variant="secondary"
-            size="sm"
-            className="rounded-lg px-4 py-2 text-sm font-semibold transition-opacity duration-150 disabled:opacity-30 disabled:cursor-not-allowed"
+            style={{
+              font: "var(--font-body-sm)",
+              color: "var(--text-secondary)",
+              border: "1px solid var(--border-subtle)",
+              borderRadius: "var(--radius-md)",
+              padding: "var(--space-2) var(--space-4)",
+              background: "var(--surface-raised)",
+              cursor: "pointer",
+              transition: `all var(--transition-fast)`,
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.color = "var(--text-primary)";
+              e.currentTarget.style.borderColor = "var(--border-default)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.color = "var(--text-secondary)";
+              e.currentTarget.style.borderColor = "var(--border-subtle)";
+            }}
           >
-            Previous
-          </Button>
-          <span className="text-sm tabular-nums text-fg-subtle">
+            ← Previous
+          </button>
+
+          <span style={{ font: "var(--font-caption)", color: "var(--text-tertiary)" }}>
             {currentPage} / {totalPages}
           </span>
-          <Button
+
+          <button
             type="button"
             onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
             disabled={currentPage === totalPages}
-            variant="secondary"
-            size="sm"
-            className="rounded-lg px-4 py-2 text-sm font-semibold transition-opacity duration-150 disabled:opacity-30 disabled:cursor-not-allowed"
+            style={{
+              font: "var(--font-body-sm)",
+              color: "var(--text-secondary)",
+              border: "1px solid var(--border-subtle)",
+              borderRadius: "var(--radius-md)",
+              padding: "var(--space-2) var(--space-4)",
+              background: "var(--surface-raised)",
+              cursor: "pointer",
+              transition: `all var(--transition-fast)`,
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.color = "var(--text-primary)";
+              e.currentTarget.style.borderColor = "var(--border-default)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.color = "var(--text-secondary)";
+              e.currentTarget.style.borderColor = "var(--border-subtle)";
+            }}
           >
-            Next
-          </Button>
+            Next →
+          </button>
         </div>
       )}
     </>

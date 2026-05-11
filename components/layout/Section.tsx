@@ -6,6 +6,7 @@ interface SectionProps {
   className?: string;
   spacing?: "sm" | "md" | "lg" | "xl";
   title?: string;
+  titleSize?: "h2" | "h3" | "h4";
   description?: string;
 }
 
@@ -18,6 +19,7 @@ export default function Section({
   className = "",
   spacing = "lg",
   title,
+  titleSize = "h2",
   description,
 }: SectionProps) {
   const spacingMap = {
@@ -32,7 +34,7 @@ export default function Section({
       {/* Optional header */}
       {title && (
         <div className="mb-6">
-          <H2 className="text-h2 mb-2">
+          <H2 className={`${titleSize === "h4" ? "text-h4 tracking-[-0.01em]" : titleSize === "h3" ? "text-h3" : "text-h2"} mb-2`}>
             {title}
           </H2>
           {description && (
