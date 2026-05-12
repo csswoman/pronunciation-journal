@@ -3,7 +3,7 @@ import type { DailyProgress } from "@/lib/types";
 
 function MetricRow({ label, value, colored }: { label: string; value: string; colored?: boolean }) {
   return (
-    <div className="flex items-center justify-between py-2.5" style={{ borderBottom: "1px solid var(--line-divider)" }}>
+    <div className="flex items-center justify-between py-2.5 border-b border-border-subtle">
       <span className="text-sm text-fg-muted">{label}</span>
       <span className="text-sm font-bold" style={{ color: colored ? "var(--primary)" : "var(--text-primary)" }}>
         {value}
@@ -39,12 +39,7 @@ export function TodayActivity({ todayProgress }: Props) {
 
   return (
     <div
-      className="rounded-3xl p-5"
-      style={{
-        background: "var(--card-bg)",
-        border: "1px solid var(--line-divider)",
-        boxShadow: "0 1px 3px var(--line-divider), 0 8px 20px var(--line-divider)",
-      }}
+      className="rounded-3xl p-5 bg-surface-raised border border-border-subtle shadow-card"
     >
       <div className="flex items-start justify-between gap-3">
         <div>
@@ -96,7 +91,7 @@ export function TodayActivity({ todayProgress }: Props) {
               <div className="flex items-center gap-1">
                 <span className="text-sm font-bold text-fg">{words.length}</span>
                 {words.length > 0 && (
-                  <span style={{ color: "var(--primary)" }}>
+                  <span className="text-primary">
                     <ArrowRight size={14} />
                   </span>
                 )}

@@ -19,8 +19,7 @@ export default function ProgressBar({
   return (
     <div className={`flex items-center gap-2 ${className}`}>
       <div
-        className={`flex-1 ${heightMap[height]} rounded-full overflow-hidden border border-[var(--line-divider)]`}
-        style={{ background: "var(--surface-sunken)" }}
+        className={`flex-1 ${heightMap[height]} rounded-full overflow-hidden border border-[var(--line-divider)] bg-surface-sunken`}
       >
         <div
           className="h-full rounded-full transition-all duration-700 ease-out"

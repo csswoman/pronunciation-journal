@@ -75,7 +75,7 @@ export function ExpertInsightCard({
                 fill="none"
                 strokeDasharray={`${(currentProgress / 100) * 251.2} 251.2`}
                 strokeLinecap="round"
-                style={{ transform: 'rotate(-90deg)', transformOrigin: '50% 50%' }}
+                className="-rotate-90 origin-center"
               />
             </svg>
 

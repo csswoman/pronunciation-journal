@@ -62,13 +62,7 @@ export function PickSoundExercise({ exercise, onSubmit }: Props) {
         </p>
         <Button
           onClick={() => exercise.targetWord && speak(exercise.targetWord)}
-          className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl font-bold text-2xl transition-colors"
-          style={{
-            backgroundColor: 'var(--btn-regular-bg)',
-            color: 'var(--primary)',
-          }}
-          onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--btn-regular-bg-hover)')}
-          onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'var(--btn-regular-bg)')}
+          className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl font-bold text-2xl transition-colors bg-surface-raised text-primary hover:bg-surface-sunken"
         >
           <span>🔊</span>
           {exercise.targetWord}

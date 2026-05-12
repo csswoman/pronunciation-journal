@@ -75,7 +75,7 @@ export function DeckCard({
           disabled={!canStudy}
           title={!canStudy ? "Add words to study" : ""}
           icon={<Play size={15} className="fill-current" />}
-          className="px-3 py-1.5 ml-auto !text-[13px] !rounded-[var(--radius-sm)]"
+          className="ml-auto px-3 py-1.5 !text-[13px] !rounded-[var(--radius-sm)]"
         >
           Study
         </Button>

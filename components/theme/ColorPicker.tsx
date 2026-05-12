@@ -94,11 +94,7 @@ export default function ColorPicker({
           <div className="flex items-center gap-2 pt-0.5">
             {/* Accent-soft badge — small highlight only */}
             <span
-              className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
-              style={{
-                backgroundColor: "var(--color-accent-soft)",
-                color: "var(--color-accent)",
-              }}
+              className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-soft text-primary"
             >
               {themes[selectedTheme].label}
             </span>

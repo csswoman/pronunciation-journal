@@ -26,7 +26,7 @@ export function NavButton({ active, onClick, children, as = "button", href, tool
     <>
       {!active && (
         <span className="absolute inset-0 rounded-[var(--radius-md)] opacity-0 group-hover:opacity-100 transition-opacity duration-[var(--transition-fast)] -z-10"
-              style={{ background: "var(--surface-sunken)" }} />
+              className="bg-surface-sunken" />
       )}
       {children}
       {collapsed && tooltip && (

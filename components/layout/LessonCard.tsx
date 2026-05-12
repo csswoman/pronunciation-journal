@@ -34,7 +34,7 @@ export default function LessonCard({
  transition-all duration-200
  hover:bg-[var(--btn-card-bg-hover)]
  hover:border-[var(--line-color)] hover:-translate-y-0.5"
-      style={{ boxShadow: "0 1px 3px var(--line-divider), 0 4px 12px var(--line-divider)" }}
+      className="shadow-card"
     >
       {/* Illustration area */}
       <div className="w-full h-[120px] rounded-xl bg-[var(--page-bg)] mb-5 flex items-center justify-center overflow-hidden">

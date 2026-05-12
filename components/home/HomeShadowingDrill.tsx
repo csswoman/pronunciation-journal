@@ -41,8 +41,7 @@ export default function HomeShadowingDrill({
         </button>
         <Link
           href="/practice"
-          className="flex-1 h-9 flex items-center justify-center gap-1.5 text-xs font-semibold rounded-lg transition-opacity hover:opacity-90"
-          style={{ background: "var(--primary)", color: "var(--on-primary, #fff)" }}
+          className="flex-1 h-9 flex items-center justify-center gap-1.5 text-xs font-semibold rounded-lg transition-opacity hover:opacity-90 bg-primary text-on-primary"
         >
           <Mic size={14} />
           Try

@@ -1,5 +1,6 @@
 "use client";
 import Button from "@/components/ui/Button";
+import { ExternalLink, Search } from "lucide-react";
 
 import { useState, useEffect, useRef } from "react";
 import { getWordSuggestions, WordSuggestion } from "@/lib/dictionarySearch";
@@ -71,21 +72,9 @@ export default function SearchAndFilters({
         onChange={(e) => onSearchChange(e.target.value)}
         onKeyDown={handleKeyDown}
         onFocus={() => suggestions.length > 0 && setShowSuggestions(true)}
-        className="w-full sm:w-64 px-4 py-2 pl-10 border border-border-default rounded-lg bg-surface-sunken text-fg placeholder:text-fg-placeholder focus:outline-none focus:ring-2 focus:ring-offset-0 focus:border-transparent transition-colors text-sm"
-        style={{ "--tw-ring-color": "var(--color-accent)" } as React.CSSProperties & { "--tw-ring-color"?: string }}
+        className="w-full sm:w-64 rounded-lg border border-border-default bg-surface-sunken px-4 py-2 pl-10 text-sm text-fg placeholder:text-fg-placeholder transition-colors focus:border-transparent focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] focus:ring-offset-0"
       />
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        className="h-4 w-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-fg-subtle"
-        viewBox="0 0 20 20"
-        fill="currentColor"
-      >
-        <path
-          fillRule="evenodd"
-          d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-          clipRule="evenodd"
-        />
-      </svg>
+      <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-fg-subtle" />
 
       {/* Suggestions dropdown */}
       {showSuggestions && suggestions.length > 0 && (
@@ -107,15 +96,7 @@ export default function SearchAndFilters({
                       onClick={(e) => e.stopPropagation()}
                       className="text-info hover:text-info"
                     >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-3 w-3"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                      >
-                        <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z" />
-                        <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z" />
-                      </svg>
+                      <ExternalLink className="h-3 w-3" />
                     </a>
                   )}
                 </div>

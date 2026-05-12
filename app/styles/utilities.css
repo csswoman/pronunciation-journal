@@ -1,0 +1,230 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Utilities — reusable class-based design system helpers
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Shadows ─────────────────────────────────────────────────────────────── */
+.shadow-card {
+  box-shadow: 0 1px 3px var(--border-default), 0 4px 12px var(--border-default);
+}
+
+/* ── Buttons ─────────────────────────────────────────────────────────────── */
+.btn-primary {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+  transition: all 0.2s ease;
+}
+.btn-primary:hover    { background-color: var(--primary-hover); }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.btn-secondary {
+  background-color: var(--btn-regular-bg);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  transition: all 0.2s ease;
+}
+.btn-secondary:hover {
+  background-color: var(--btn-regular-bg-hover);
+  border-color: var(--border-hover);
+}
+.btn-secondary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.btn-soft {
+  background-color: var(--primary-soft);
+  color: var(--primary);
+  transition: all 0.2s ease;
+}
+.btn-soft:hover {
+  background-color: var(--primary-hover);
+  color: var(--primary-foreground);
+}
+
+.accent-button {
+  background-color: var(--color-accent);
+  color: var(--color-text-on-accent);
+  transition: all 0.2s ease;
+}
+.accent-button:hover   { background-color: var(--color-accent-hover); }
+.accent-button:active  { filter: brightness(0.92); }
+.accent-button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ── Cards ───────────────────────────────────────────────────────────────── */
+.card {
+  background-color: var(--bg-secondary);
+  border-color: var(--border);
+  color: var(--text-primary);
+}
+
+.card-dark {
+  background-color: var(--bg-tertiary);
+  border-color: var(--border);
+  color: var(--text-primary);
+}
+
+/* ── Inputs ──────────────────────────────────────────────────────────────── */
+.input-themed {
+  background-color: var(--bg);
+  border-color: var(--border);
+  color: var(--text-primary);
+}
+.input-themed:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--focus-color);
+}
+
+/* ── Badges ──────────────────────────────────────────────────────────────── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-3);
+  background: var(--surface-sunken);
+  color: var(--text-secondary);
+  border-radius: var(--radius-md);
+  font: var(--font-caption);
+  font-weight: 500;
+}
+
+.badge-primary {
+  background-color: var(--primary-soft);
+  color: var(--primary);
+  border-color: var(--primary);
+}
+
+.badge-secondary {
+  background-color: var(--secondary-soft);
+  color: var(--secondary);
+  border-color: var(--secondary);
+}
+
+@layer components {
+  .badge-accent {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-sm font-medium;
+    background-color: color-mix(in oklch, var(--primary) 12%, transparent);
+    color: var(--color-accent);
+    border: 1px solid var(--color-accent);
+  }
+}
+
+/* ── Status dots ─────────────────────────────────────────────────────────── */
+.dot-warning,
+.dot-success,
+.dot-danger,
+.dot-info {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.dot-warning { background: var(--warning); }
+.dot-success { background: var(--success); }
+.dot-danger  { background: var(--error); }
+.dot-info    { background: var(--info); }
+
+/* ── Typography helpers ──────────────────────────────────────────────────── */
+.font-display  { font-family: var(--font-display), serif; }
+.font-h1       { font: var(--font-h1); }
+.font-h2       { font: var(--font-h2); }
+.font-h3       { font: var(--font-h3); }
+.font-h4       { font: var(--font-h4); }
+.font-heading  { font-family: var(--font-heading), serif; }
+.font-ipa {
+  font-family: var(--font-ipa), "Noto Serif", serif;
+  font-size: 15px;
+  letter-spacing: 0.03em;
+  color: var(--primary);
+  font-style: normal;
+}
+
+/* ── Text colors ─────────────────────────────────────────────────────────── */
+.text-accent         { color: var(--primary); }
+.text-primary        { color: var(--primary); }
+.text-btn-content    { color: var(--btn-content); }
+.text-deep           { color: var(--deep-text); }
+.text-title-active   { color: var(--title-active); }
+.text-page-bg        { color: var(--page-bg); }
+.text-on-primary     { color: var(--on-primary); }
+.text-on-accent      { color: var(--color-text-on-accent); }
+.text-accent-analog  { color: var(--accent-analog-1); }
+.text-accent-complement { color: var(--accent-complement); }
+.text-accent-hover:hover { color: var(--primary-hover); }
+
+.text-success  { color: var(--success); }
+.text-warning  { color: var(--warning); }
+.text-error    { color: var(--error); }
+.text-info     { color: var(--info); }
+.text-important { color: var(--admonitions-color-important); }
+
+/* ── Background colors ───────────────────────────────────────────────────── */
+.bg-primary          { background-color: var(--primary); }
+.bg-accent           { background-color: var(--color-accent); }
+.bg-accent-analog    { background-color: var(--accent-analog-1); }
+.bg-page-bg          { background-color: var(--page-bg); }
+.bg-card-bg          { background-color: var(--card-bg); }
+.bg-btn-regular      { background-color: var(--btn-regular-bg); }
+.bg-btn-plain-hover  { background-color: var(--btn-plain-bg-hover); }
+.bg-btn-content      { background-color: var(--btn-content); }
+.bg-selection        { background-color: var(--selection-bg); }
+
+.bg-success        { background-color: var(--success-soft); }
+.bg-warning        { background-color: var(--warning-soft); }
+.bg-error          { background-color: var(--error-soft); }
+.bg-info           { background-color: var(--info-soft); }
+.bg-important      { background-color: var(--admonitions-color-important-soft); }
+
+/* Legacy aliases */
+.bg-success-light   { background-color: var(--success-soft); }
+.bg-info-light      { background-color: var(--info-soft); }
+.bg-warning-light   { background-color: var(--warning-soft); }
+.bg-error-light     { background-color: var(--error-soft); }
+.bg-important-light { background-color: var(--admonitions-color-important-soft); }
+
+/* ── Gradients ───────────────────────────────────────────────────────────── */
+.bg-gradient-primary      { background: var(--gradient-primary); }
+.bg-gradient-to-br-primary { background: var(--gradient-primary); }
+
+/* ── Borders ─────────────────────────────────────────────────────────────── */
+.border-primary      { border-color: var(--primary); }
+.border-accent       { border-color: var(--color-accent); }
+.border-line-divider { border-color: var(--line-divider); }
+.border-line-color   { border-color: var(--line-color); }
+
+/* ── Accent helpers ──────────────────────────────────────────────────────── */
+.accent-bg     { background-color: var(--color-accent); }
+.accent-text   { color: var(--color-accent); }
+.accent-border { border-color: var(--color-accent); }
+.accent-ring {
+  --tw-ring-color: var(--color-accent);
+  box-shadow: 0 0 0 3px var(--focus-color);
+}
+
+/* ── Nav active state ────────────────────────────────────────────────────── */
+.accent-nav-active {
+  background-color: color-mix(in oklch, var(--primary) 15%, transparent);
+  color: var(--color-accent);
+}
+.dark .accent-nav-active {
+  background-color: color-mix(in oklch, var(--primary) 20%, transparent);
+}
+
+/* ── Hover / active state helpers ────────────────────────────────────────── */
+.hover\:bg-btn-regular-hover:hover  { background-color: var(--btn-regular-bg-hover); }
+.hover\:bg-btn-plain-hover:hover    { background-color: var(--btn-plain-bg-hover); }
+.hover\:bg-primary:hover            { background-color: var(--primary); }
+.hover\:text-title-active:hover     { color: var(--title-active); }
+.active\:bg-btn-regular-active:active { background-color: var(--btn-regular-bg-active); }
+
+/* ── Focus ring helpers ──────────────────────────────────────────────────── */
+.focus\:ring-primary:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--focus-color);
+}
+.focus\:ring-accent:focus {
+  --tw-ring-color: var(--color-accent);
+}
+
+/* ── Link styles ─────────────────────────────────────────────────────────── */
+.link-primary {
+  color: var(--primary);
+  text-decoration: underline;
+}
+.link-primary:hover { color: var(--btn-content); }

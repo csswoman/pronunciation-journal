@@ -61,8 +61,7 @@ export default function HomeHeader() {
 
   return (
     <div
-      className="relative overflow-hidden rounded-2xl p-5 grid grid-cols-1 lg:grid-cols-2 gap-6 items-center"
-      style={{ background: "linear-gradient(135deg, var(--surface-raised), var(--surface-sunken))" }}
+      className="relative overflow-hidden rounded-2xl p-5 grid grid-cols-1 lg:grid-cols-2 gap-6 items-center bg-gradient-to-br from-surface-raised to-surface-sunken"
     >
       {/* LEFT */}
       <div className="relative z-10 flex flex-col gap-4">

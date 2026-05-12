@@ -34,10 +34,11 @@ export default function HomeAchievementsCard({ achievements = [] }: HomeAchievem
             return (
               <div key={a.id} className="flex items-center gap-3">
                 <div
-                  className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 text-lg"
-                  style={{
-                    background: isUnlocked ? "color-mix(in oklch, var(--primary) 15%, transparent)" : "var(--btn-regular-bg)",
-                  }}
+                  className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-lg ${
+                    isUnlocked
+                      ? "bg-[color-mix(in_oklch,var(--primary)_15%,transparent)]"
+                      : "bg-[var(--btn-regular-bg)]"
+                  }`}
                 >
                   {a.icon}
                 </div>

@@ -8,12 +8,11 @@ export function SectionLabel({ label }: SectionLabelProps) {
   const { collapsed } = useSidebar();
 
   if (collapsed) {
-    return <div className="pt-3 pb-1 mx-3 border-t" style={{ borderColor: "var(--line-divider)" }} />;
+    return <div className="pt-3 pb-1 mx-3 border-t border-border-subtle" />;
   }
 
   return (
-    <p className="px-3 pt-4 pb-1 uppercase mb-0"
-       style={{ color: "var(--text-tertiary)", fontSize: "10px", fontWeight: 500, lineHeight: 1.2, letterSpacing: "0.08em", opacity: 0.7 }}>
+    <p className="px-3 pt-4 pb-1 uppercase mb-0 text-[10px] font-medium leading-tight tracking-[0.08em] opacity-70 text-fg-subtle">
       {label}
     </p>
   );

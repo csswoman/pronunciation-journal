@@ -19,7 +19,7 @@ export default function DifficultyPill({
 }) {
   if (muted) {
     return (
-      <span className="inline-flex items-center gap-1.5 text-tiny font-semibold px-2 py-0.5 rounded-full" style={{ backgroundColor: "var(--overlay-weak)", color: "var(--on-primary)" }}>
+      <span className="inline-flex items-center gap-1.5 text-tiny font-semibold px-2 py-0.5 rounded-full bg-overlay-weak text-on-primary">
         <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${dotClass[difficulty]}`} />
         {label ?? difficulty}
       </span>

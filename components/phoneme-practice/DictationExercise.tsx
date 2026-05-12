@@ -77,13 +77,7 @@ export function DictationExercise({ exercise, onSubmit }: Props) {
         </p>
         <Button
           onClick={() => exercise.targetWord && speak(exercise.targetWord)}
-          className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl font-bold text-3xl transition-colors"
-          style={{
-            backgroundColor: 'var(--btn-regular-bg)',
-            color: 'var(--admonitions-color-warning)',
-          }}
-          onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--btn-regular-bg-hover)')}
-          onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'var(--btn-regular-bg)')}
+          className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl font-bold text-3xl transition-colors bg-surface-raised text-warning hover:bg-surface-sunken"
         >
           🔊
         </Button>

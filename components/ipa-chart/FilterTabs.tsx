@@ -37,11 +37,11 @@ export default function FilterTabs({
           {tab.label}
           {counts?.[tab.id] !== undefined && (
             <span
-              className="ml-1 text-tiny font-bold px-1.5 py-0.5 rounded-full leading-none"
-              style={{
-                backgroundColor: activeTab === tab.id ? "var(--overlay-light)" : "var(--btn-regular-bg)",
-                color: activeTab === tab.id ? "var(--on-primary)" : "var(--text-secondary)",
-              }}
+              className={`ml-1 rounded-full px-1.5 py-0.5 text-tiny font-bold leading-none ${
+                activeTab === tab.id
+                  ? "bg-[var(--overlay-light)] text-[var(--on-primary)]"
+                  : "bg-[var(--btn-regular-bg)] text-[var(--text-secondary)]"
+              }`}
             >
               {counts[tab.id]}
             </span>

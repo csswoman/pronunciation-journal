@@ -4,7 +4,7 @@ import { TrendingUp, Lock, Activity } from "lucide-react";
 
 export function AuthTrustBar() {
   return (
-    <div className="flex justify-center gap-5 pt-4 flex-wrap" style={{ borderTop: "1px solid var(--border-default)" }}>
+    <div className="flex justify-center gap-5 pt-4 flex-wrap border-t border-border-default">
       {[
         { icon: <TrendingUp className="w-3 h-3" />, label: "Cloud sync" },
         { icon: <Lock className="w-3 h-3" />,       label: "Private & secure" },

@@ -14,20 +14,14 @@ interface Props {
 export default function SessionHeader({ title, currentIndex, totalWords, phase, onBack }: Props) {
   return (
     <header
-      className="sticky top-0 z-10 border-b"
-      style={{
-        background: 'linear-gradient(180deg, color-mix(in_oklch,var(--card-bg)_92%,var(--on-primary)), var(--card-bg))',
-        borderColor: 'var(--line-divider)',
-        backdropFilter: 'blur(10px)',
-      }}
+      className="sticky top-0 z-10 border-b border-border-subtle backdrop-blur-md"
+      style={{ background: 'linear-gradient(180deg, color-mix(in_oklch,var(--card-bg)_92%,var(--on-primary)), var(--card-bg))' }}
     >
       <div className="px-6 py-4 lg:px-8">
         <div className="flex items-center justify-between gap-4">
           <Button
             onClick={onBack}
-            className="rounded-xl p-2.5 transition-colors text-fg-muted"
-            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--btn-regular-bg)')}
-            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
+            className="rounded-xl p-2.5 transition-colors text-fg-muted hover:bg-surface-sunken"
           >
             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -42,10 +36,10 @@ export default function SessionHeader({ title, currentIndex, totalWords, phase, 
           <div className="w-10" />
         </div>
         {phase !== "complete" && (
-          <div className="mt-4 w-full rounded-full h-3 overflow-hidden" style={{ backgroundColor: 'var(--line-divider)' }}>
+          <div className="mt-4 w-full rounded-full h-3 overflow-hidden bg-border-subtle">
             <div
-              className="h-full rounded-full transition-all duration-500"
-              style={{ backgroundColor: 'var(--primary)', width: `${((currentIndex + (phase === "feedback" ? 1 : 0)) / totalWords) * 100}%` }}
+              className="h-full rounded-full transition-all duration-500 bg-primary"
+              style={{ width: `${((currentIndex + (phase === "feedback" ? 1 : 0)) / totalWords) * 100}%` }}
             />
           </div>
         )}

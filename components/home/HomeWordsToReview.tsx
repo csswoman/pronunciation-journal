@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Volume2 } from "lucide-react";
+import Badge, { BadgeColor } from "@/components/ui/Badge";
 
 interface ReviewWord {
   word: string;
@@ -13,10 +14,10 @@ interface HomeWordsToReviewProps {
   words?: ReviewWord[];
 }
 
-const DIFFICULTY_STYLE: Record<ReviewWord["difficulty"], string> = {
-  hard: "bg-red-900/30 text-red-300 border-red-700/30",
-  med:  "bg-amber-900/30 text-amber-300 border-amber-700/30",
-  easy: "bg-emerald-900/30 text-emerald-300 border-emerald-700/30",
+const DIFFICULTY_COLOR: Record<ReviewWord["difficulty"], BadgeColor> = {
+  hard: "red",
+  med:  "amber",
+  easy: "emerald",
 };
 
 const DIFFICULTY_LABEL: Record<ReviewWord["difficulty"], string> = {
@@ -78,9 +79,7 @@ export default function HomeWordsToReview({
             </div>
 
             {/* Difficulty badge */}
-            <span className={`inline-flex items-center text-xs font-medium px-2 py-0.5 rounded-full border ${DIFFICULTY_STYLE[w.difficulty]}`}>
-              {DIFFICULTY_LABEL[w.difficulty]}
-            </span>
+            <Badge label={DIFFICULTY_LABEL[w.difficulty]} color={DIFFICULTY_COLOR[w.difficulty]} />
           </div>
         ))}
       </div>

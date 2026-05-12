@@ -1,13 +1,14 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { Volume2, Mic, Square, Play, Loader2, RotateCcw, ChevronDown } from "lucide-react";
+import { Volume2, Mic, Square, Play, Loader2, RotateCcw } from "lucide-react";
 import Card from "@/components/layout/Card";
 import Button from "@/components/ui/Button";
 
 interface WordOfDay {
   word: string;
   ipa: string;
+  part_of_speech?: string;
   definition: string;
   example_sentence: string;
   difficulty: "beginner" | "intermediate" | "advanced";
@@ -25,7 +26,6 @@ export default function HomeWordOfDay() {
   const [word, setWord] = useState<WordOfDay | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [definitionOpen, setDefinitionOpen] = useState(false);
 
   const [speaking, setSpeaking] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
@@ -152,39 +152,27 @@ export default function HomeWordOfDay() {
       )}
 
       {error && (
-        <p className="text-xs" style={{ color: "var(--error)" }}>{error}</p>
+        <p className="text-xs text-error">{error}</p>
       )}
 
       {word && !loading && (
         <>
           <div>
-            <div className="flex items-center gap-1.5">
-              <p className="text-2xl font-medium text-[var(--text-primary)] leading-none">{word.word}</p>
-              <button
-                onClick={() => setDefinitionOpen((o) => !o)}
-                className="hover:opacity-70 transition-opacity mt-0.5"
-                style={{ color: "var(--primary)" }}
-                title={definitionOpen ? "Hide meaning" : "Show meaning"}
-              >
-                <ChevronDown
-                  size={16}
-                  className={`transition-transform duration-200 ${definitionOpen ? "rotate-180" : ""}`}
-                />
-              </button>
+            <p className="text-2xl font-bold text-[var(--text-primary)] leading-none">{word.word}</p>
+            <div className="flex items-center gap-2 mt-1">
+              <p className="font-ipa">{word.ipa}</p>
+              {word.part_of_speech && (
+                <span className="text-tiny font-medium px-1.5 py-0.5 rounded bg-surface-sunken border border-border-default text-fg-muted">
+                  {word.part_of_speech}
+                </span>
+              )}
             </div>
-            <p className="font-ipa text-xs font-mono mt-1" style={{ color: "var(--primary)" }}>{word.ipa}</p>
-
-            {definitionOpen && (
-              <div
-                className="mt-2 rounded-xl px-3 py-2.5 flex flex-col gap-1.5"
-                style={{ backgroundColor: "var(--bg-tertiary)", border: "1px solid var(--border)" }}
-              >
-                <p className="text-xs leading-relaxed text-[var(--text-secondary)]">{word.definition}</p>
-                {word.example_sentence && (
-                  <p className="text-xs italic leading-snug text-[var(--text-tertiary)]">"{word.example_sentence}"</p>
-                )}
-              </div>
-            )}
+            <div className="mt-2 border-l-2 border-primary pl-3 flex flex-col gap-1">
+              <p className="text-xs italic leading-relaxed text-[var(--text-secondary)]">{word.definition}</p>
+              {word.example_sentence && (
+                <p className="text-xs italic leading-snug text-[var(--text-tertiary)]">"{word.example_sentence}"</p>
+              )}
+            </div>
           </div>
 
           {/* Waveform */}
@@ -192,8 +180,19 @@ export default function HomeWordOfDay() {
             {BAR_HEIGHTS.map((h, i) => (
               <span
                 key={i}
-                className={`block w-1 rounded-full transition-opacity ${speaking || isRecording ? "opacity-100 animate-pulse" : "opacity-40"}`}
-                style={{ height: `${h}px`, backgroundColor: `oklch(0.70 0.15 calc(var(--hue) + ${i * 4}))` }}
+                className="block w-1 rounded-full"
+                style={{
+                  height: `${h}px`,
+                  backgroundColor: `oklch(0.70 0.15 calc(var(--hue) + ${i * 4}))`,
+                  opacity: speaking || isRecording || playingRecording ? 1 : 0.4,
+                  animation: speaking || playingRecording
+                    ? `waveBar 0.8s ease-in-out infinite alternate`
+                    : isRecording
+                    ? `wavePulse 1.2s ease-in-out infinite`
+                    : "none",
+                  animationDelay: speaking || playingRecording ? `${(i % 8) * 0.09}s` : `${(i % 5) * 0.15}s`,
+                  transformOrigin: "center",
+                }}
               />
             ))}
           </div>

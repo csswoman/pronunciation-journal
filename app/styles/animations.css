@@ -1,0 +1,65 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Animations — keyframes and animation utility classes
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes statRise {
+  from { opacity: 0; transform: translateY(18px) scaleY(0.7); }
+  to   { opacity: 1; transform: translateY(0) scaleY(1); }
+}
+
+@keyframes progressRing {
+  from { stroke-dasharray: 0 999; }
+}
+
+@keyframes floatSoft {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-4px); }
+}
+
+@keyframes shimmer {
+  100% { transform: translateX(200%); }
+}
+
+@keyframes grid-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes drift1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%       { transform: translate(60px, 80px) scale(1.1); }
+  66%       { transform: translate(-20px, 120px) scale(0.95); }
+}
+
+@keyframes drift2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%       { transform: translate(-50px, 60px) scale(1.08); }
+  66%       { transform: translate(20px, -40px) scale(1.15); }
+}
+
+@keyframes drift3 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50%       { transform: translate(80px, -50px) scale(1.2); }
+}
+
+@keyframes waveBar {
+  0%   { transform: scaleY(0.35); }
+  100% { transform: scaleY(1); }
+}
+
+@keyframes wavePulse {
+  0%, 100% { transform: scaleY(1);    opacity: 1; }
+  50%       { transform: scaleY(0.2); opacity: 0.4; }
+}
+
+/* ── Animation utility classes ───────────────────────────────────────────── */
+.animate-fadeIn       { animation: fadeIn 0.4s ease-out; }
+.animate-stat-rise    { animation: statRise 0.6s ease-out both; transform-origin: bottom center; }
+.animate-progress-ring { animation: progressRing 1s ease-out both; }
+.animate-float-soft   { animation: floatSoft 3.2s ease-in-out infinite; }
+.animate-grid-in      { animation: grid-in 0.35s cubic-bezier(0.22, 1, 0.36, 1) both; }

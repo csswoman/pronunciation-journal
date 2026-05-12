@@ -22,7 +22,7 @@ export default function QuickActionCard({
  cursor-pointer transition-all duration-200 text-left w-full
  hover:bg-[var(--btn-card-bg-hover)]
  hover:border-[var(--line-color)] hover:-translate-y-0.5"
-      style={{ boxShadow: "0 1px 3px var(--line-divider), 0 4px 12px var(--line-divider)" }}
+      className="shadow-card"
     >
       {/* Arrow badge */}
       <span

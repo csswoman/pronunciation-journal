@@ -37,7 +37,7 @@ function AttentionItem({
 }) {
   const color = PRIORITY_COLORS[priority];
   return (
-    <div className="flex items-start gap-3 py-3" style={{ borderBottom: "1px solid var(--line-divider)" }}>
+    <div className="flex items-start gap-3 py-3 border-b border-border-subtle">
       <span className="mt-0.5 w-5 shrink-0 text-xs font-bold tabular-nums text-fg-subtle">
         {String(rank).padStart(2, "0")}
       </span>
@@ -79,14 +79,9 @@ export function NeedsAttention({ progressList, weeklyAccuracy }: Props) {
 
   return (
     <div
-      className="rounded-3xl p-5"
-      style={{
-        background: "var(--card-bg)",
-        border: "1px solid var(--line-divider)",
-        boxShadow: "0 1px 3px var(--line-divider), 0 8px 20px var(--line-divider)",
-      }}
+      className="rounded-3xl p-5 bg-surface-raised border border-border-subtle shadow-card"
     >
-      <p className="text-tiny font-bold uppercase tracking-[0.26em]" style={{ color: "var(--primary)" }}>
+      <p className="text-tiny font-bold uppercase tracking-[0.26em] text-primary">
         ✦ Needs Your Attention
       </p>
       <p className="text-tiny mt-0.5 text-fg-subtle">

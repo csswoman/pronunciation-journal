@@ -4,6 +4,7 @@ import { Check, ArrowRight, ClipboardList, Zap } from "lucide-react";
 import Card from "@/components/layout/Card";
 import CardHeader from "@/components/ui/CardHeader";
 import Button from "@/components/ui/Button";
+import Badge, { BadgeColor } from "@/components/ui/Badge";
 
 type ActivityType = "Pronunciation" | "Theory" | "Shadowing" | "Word Bank" | "Listening";
 
@@ -16,12 +17,12 @@ interface TodoItem {
   featured?: boolean;
 }
 
-const TAG_STYLE: Record<ActivityType, { className: string }> = {
-  Pronunciation: { className: "bg-sky-900/40 text-sky-300 border-sky-700/40" },
-  Theory:        { className: "bg-violet-900/40 text-violet-300 border-violet-700/40" },
-  Shadowing:     { className: "bg-teal-900/40 text-teal-300 border-teal-700/40" },
-  "Word Bank":   { className: "bg-emerald-900/40 text-emerald-300 border-emerald-700/40" },
-  Listening:     { className: "bg-amber-900/40 text-amber-300 border-amber-700/40" },
+const TAG_COLOR: Record<ActivityType, BadgeColor> = {
+  Pronunciation: "sky",
+  Theory:        "violet",
+  Shadowing:     "teal",
+  "Word Bank":   "emerald",
+  Listening:     "amber",
 };
 
 const TODO_ITEMS: TodoItem[] = [
@@ -52,17 +53,15 @@ export default function HomeTodo() {
       <div className="flex gap-1.5">
         {TODO_ITEMS.map((item, i) => {
           const isNext = !item.done && TODO_ITEMS.slice(0, i).every((t) => t.done);
+          const segmentClass = item.done
+            ? "bg-[var(--success)]"
+            : isNext
+              ? "bg-[var(--primary)]"
+              : "bg-border-default";
           return (
             <div
               key={item.id}
-              className="flex-1 h-1.5 rounded-full"
-              style={{
-                background: item.done
-                  ? "var(--success)"
-                  : isNext
-                  ? "var(--primary)"
-                  : "var(--border-default)",
-              }}
+              className={`h-1.5 flex-1 rounded-full ${segmentClass}`}
             />
           );
         })}
@@ -84,16 +83,14 @@ export default function HomeTodo() {
             ].filter(Boolean).join(" ")}
           >
             {/* Status dot */}
-            <div
-              className="shrink-0 w-6 h-6 rounded-full flex items-center justify-center"
-              style={
-                item.done
-                  ? { backgroundColor: "var(--success-soft)", color: "var(--success)" }
-                  : item.featured
-                    ? { backgroundColor: "color-mix(in oklch, var(--primary) 18%, transparent)", color: "var(--primary)" }
-                    : { backgroundColor: "var(--bg-tertiary)", color: "var(--text-tertiary)" }
-              }
-            >
+            <div className={[
+              "flex h-6 w-6 shrink-0 items-center justify-center rounded-full",
+              item.done
+                ? "bg-[var(--success-soft)] text-[var(--success)]"
+                : item.featured
+                  ? "bg-[color-mix(in_oklch,var(--primary)_18%,transparent)] text-[var(--primary)]"
+                  : "bg-[var(--bg-tertiary)] text-[var(--text-tertiary)]",
+            ].join(" ")}>
               {item.done ? (
                 <Check size={12} strokeWidth={3} />
               ) : item.featured ? (
@@ -112,9 +109,7 @@ export default function HomeTodo() {
                 {item.label}
               </p>
               <div className="flex items-center gap-1.5 mt-0.5">
-                <span className={`inline-flex items-center text-xs font-medium px-2 py-0.5 rounded-full border ${TAG_STYLE[item.tag].className}`}>
-                  {item.tag}
-                </span>
+                <Badge label={item.tag} color={TAG_COLOR[item.tag]} />
                 <span className="text-xs text-[var(--text-tertiary)]">· {item.minutes} min</span>
               </div>
             </div>

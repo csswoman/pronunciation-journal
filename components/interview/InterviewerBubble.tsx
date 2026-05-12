@@ -15,16 +15,14 @@ interface Props {
 export function InterviewerBubble({ text, isActive, isPlaying, hasNextCandidate, onListen, onRevealNext }: Props) {
   return (
     <div className="flex items-start gap-3 max-w-[85%]">
-      <div className="w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center text-sm mt-1"
-        style={{ background: "var(--line-divider)" }}>
+      <div className="mt-1 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-[var(--line-divider)] text-sm">
         🎙️
       </div>
       <div className="flex flex-col gap-1.5 flex-1">
-        <span className="text-xs font-medium ml-1" style={{ color: "var(--muted-text)" }}>Interviewer</span>
-        <div className="rounded-2xl rounded-tl-sm px-4 py-3"
-          style={{ background: "var(--card-bg)", border: "1px solid var(--line-divider)" }}>
-          <p className="text-sm leading-relaxed" style={{ color: "var(--body-text)" }}>{text}</p>
-          <div className="flex items-center gap-2 mt-3 pt-3" style={{ borderTop: "1px solid var(--line-divider)" }}>
+        <span className="ml-1 text-xs font-medium text-[var(--muted-text)]">Interviewer</span>
+        <div className="rounded-2xl rounded-tl-sm border border-[var(--line-divider)] bg-[var(--card-bg)] px-4 py-3">
+          <p className="text-sm leading-relaxed text-[var(--body-text)]">{text}</p>
+          <div className="mt-3 flex items-center gap-2 border-t border-[var(--line-divider)] pt-3">
             <Button
               variant={isPlaying ? "primary" : "ghost"}
               size="sm"

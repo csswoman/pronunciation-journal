@@ -2,6 +2,7 @@
 
 import { Difficulty } from "@/lib/types";
 import { useState, useRef, useEffect } from "react";
+import { ChevronDown, Filter } from "lucide-react";
 import Button from "@/components/ui/Button";
 
 interface DifficultyFiltersProps {
@@ -59,33 +60,11 @@ export default function DifficultyFilters({
         size="md"
         className="text-fg-muted"
         icon={
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-4 w-4"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-          >
-            <path
-              fillRule="evenodd"
-              d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z"
-              clipRule="evenodd"
-            />
-          </svg>
+          <Filter className="h-4 w-4" />
         }
       >
         {getButtonLabel()}
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className={`h-4 w-4 transition-transform ${isOpen ? "rotate-180" : ""}`}
-          viewBox="0 0 20 20"
-          fill="currentColor"
-        >
-          <path
-            fillRule="evenodd"
-            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-            clipRule="evenodd"
-          />
-        </svg>
+        <ChevronDown className={`h-4 w-4 transition-transform ${isOpen ? "rotate-180" : ""}`} />
       </Button>
 
       {isOpen && (
@@ -100,8 +79,7 @@ export default function DifficultyFilters({
                   type="checkbox"
                   checked={selectedDifficulties.includes(difficulty.value)}
                   onChange={() => toggleDifficulty(difficulty.value)}
-                  className="w-4 h-4 rounded border-border-default text-accent focus:ring-accent focus:ring-offset-0 cursor-pointer"
-                  style={{ accentColor: "var(--color-accent)" }}
+                  className="h-4 w-4 cursor-pointer rounded border-border-default text-accent accent-[var(--color-accent)] focus:ring-accent focus:ring-offset-0"
                 />
                 <span className="ml-3 badge">
                   <span className={difficulty.dot} />

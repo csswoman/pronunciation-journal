@@ -79,7 +79,7 @@ export default function InterviewView() {
 
       <div className="px-4 pt-2 pb-4 shrink-0">
         {phase === "error" && errorMsg && (
-          <p className="text-tiny text-center mb-2" style={{ color: "var(--error)" }}>
+          <p className="text-tiny text-center mb-2 text-error">
             {errorMsg}
           </p>
         )}

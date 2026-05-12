@@ -64,6 +64,7 @@ interface DictionaryApiEntry {
 async function fetchWordData(word: string): Promise<{
   word: string;
   ipa: string;
+  part_of_speech: string;
   definition: string;
   example_sentence: string;
   difficulty: "beginner" | "intermediate" | "advanced";
@@ -91,6 +92,7 @@ async function fetchWordData(word: string): Promise<{
   return {
     word,
     ipa: phonetic,
+    part_of_speech: firstMeaning?.partOfSpeech ?? "",
     definition: firstDef.definition,
     example_sentence: firstDef.example ?? "",
     difficulty: getDifficulty(word),

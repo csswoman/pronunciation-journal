@@ -119,8 +119,7 @@ export default function InterviewSession({ title, turns, difficulty, level, onRe
         onReset={handleReset}
       />
 
-      <div className="flex-1 overflow-y-auto px-4 py-5 flex flex-col gap-4"
-        style={{ background: "var(--muted-bg)" }}>
+      <div className="flex-1 overflow-y-auto px-4 py-5 flex flex-col gap-4 bg-surface-base">
 
         {turns.slice(0, visibleCount).map((turn, idx) => {
           const isActive = idx === currentIdx;
@@ -177,8 +176,7 @@ export default function InterviewSession({ title, turns, difficulty, level, onRe
       </div>
 
       {!speechSupported && (
-        <div className="flex-shrink-0 px-4 py-2 text-center text-xs"
-          style={{ color: "var(--muted-text)", background: "var(--card-bg)", borderTop: "1px solid var(--line-divider)" }}>
+        <div className="flex-shrink-0 px-4 py-2 text-center text-xs text-fg-muted bg-surface-raised border-t border-border-subtle">
           Speech synthesis not supported — audio playback is disabled.
         </div>
       )}

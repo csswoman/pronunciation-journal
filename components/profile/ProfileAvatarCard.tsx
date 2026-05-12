@@ -116,8 +116,7 @@ export default function ProfileAvatarCard({
       {cropModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
           <div
-            className="rounded-2xl p-6 max-w-sm w-full mx-4 shadow-2xl"
-            style={{ background: "var(--bg-secondary)", border: "1px solid var(--border)" }}
+            className="rounded-2xl p-6 max-w-sm w-full mx-4 shadow-2xl bg-surface-raised border border-border-default"
           >
             <H3 className="text-base font-semibold mb-1">
               Adjust profile photo
@@ -127,13 +126,7 @@ export default function ProfileAvatarCard({
             </p>
             <div className="flex justify-center mb-6">
               <div
-                className="relative overflow-hidden rounded-full cursor-grab active:cursor-grabbing select-none"
-                style={{
-                  width: CROP_SIZE,
-                  height: CROP_SIZE,
-                  outline: "3px solid var(--primary)",
-                  outlineOffset: "2px",
-                }}
+                className="relative overflow-hidden rounded-full cursor-grab active:cursor-grabbing select-none w-[250px] h-[250px] outline outline-[3px] outline-primary outline-offset-2"
                 onPointerDown={handlePointerDown}
                 onPointerMove={handlePointerMove}
                 onPointerUp={handlePointerUp}
@@ -171,8 +164,7 @@ export default function ProfileAvatarCard({
         <div className="relative flex-shrink-0">
           <button
             onClick={() => fileInputRef.current?.click()}
-            className="relative w-16 h-16 rounded-full overflow-hidden transition-all focus:outline-none group"
-            style={{ background: "var(--bg-tertiary)" }}
+            className="relative w-16 h-16 rounded-full overflow-hidden transition-all focus:outline-none group bg-surface-sunken"
             title="Change photo"
             type="button"
           >
@@ -203,8 +195,7 @@ export default function ProfileAvatarCard({
           <p className="text-sm truncate text-fg-muted">{email}</p>
           <button
             onClick={() => fileInputRef.current?.click()}
-            className="mt-1 text-xs font-medium transition-colors"
-            style={{ color: "var(--primary)" }}
+            className="mt-1 text-xs font-medium transition-colors text-primary"
             type="button"
           >
             Change photo

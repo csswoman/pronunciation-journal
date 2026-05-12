@@ -11,11 +11,7 @@ export default function ViewToggle({
 }) {
   return (
     <div
-      className="flex gap-1 rounded-xl p-1 border"
-      style={{
-        backgroundColor: "var(--card-bg)",
-        borderColor: "var(--line-divider)",
-      }}
+      className="flex gap-1 rounded-xl p-1 border bg-surface-raised border-border-default"
     >
       <Button onClick={() => onChange("grid")} variant="segmented" size="sm" selected={view === "grid"}>
         ⊞

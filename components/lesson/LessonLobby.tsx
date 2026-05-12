@@ -100,11 +100,7 @@ export function LessonLobby({
           </div>
           {overall > 0 && (
             <span
-              className="rounded-full border px-3 py-1 text-caption font-medium"
-              style={{
-                borderColor: "var(--line-divider)",
-                color: "var(--text-secondary)",
-              }}
+              className="rounded-full border border-border-subtle px-3 py-1 text-caption font-medium text-fg-muted"
             >
               {overall}% mastered
             </span>
@@ -171,12 +167,7 @@ function InfoPill({
 }) {
   return (
     <div
-      className="rounded-2xl border p-4 space-y-2"
-      style={{
-        background: "var(--card-bg)",
-        borderColor: "var(--line-divider)",
-        boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
-      }}
+      className="rounded-2xl border border-border-subtle p-4 space-y-2 bg-surface-raised shadow-card"
     >
       <div className="flex items-center gap-2">
         <span className="text-body-sm leading-none">{icon}</span>

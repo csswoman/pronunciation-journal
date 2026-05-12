@@ -1,0 +1,64 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Base — global element styles, typography, focus, reduced motion
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Typography ──────────────────────────────────────────────────────────── */
+html {
+  font-size: 94%; /* ~15px — scales the entire rem system down slightly */
+}
+
+body {
+  font-size: 15.5px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+/* ── Smooth theme transitions ────────────────────────────────────────────── */
+* {
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+/* ── Global focus visibility ─────────────────────────────────────────────── */
+*:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+@layer components {
+  main {
+    @apply transition-all duration-300;
+  }
+
+  a.accent:focus-visible,
+  button:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  input:focus,
+  textarea:focus,
+  select:focus {
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px var(--focus-color);
+  }
+}
+
+/* ── Reduced motion ──────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

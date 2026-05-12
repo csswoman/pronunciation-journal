@@ -81,8 +81,8 @@ export default function AuthPanel() {
 
   return (
     <div
-      className="min-h-screen flex flex-col items-center justify-center px-4 py-6 relative"
-      style={{ background: "var(--surface-base)", fontFamily: "'DM Sans', sans-serif" }}
+      className="min-h-screen flex flex-col items-center justify-center px-4 py-6 relative bg-surface-base"
+      style={{ fontFamily: "'DM Sans', sans-serif" }}
     >
       <AuthBackground />
 
@@ -152,9 +152,9 @@ export default function AuthPanel() {
             <AuthButton label="Sign in" pending={pending} />
 
             <div className="flex items-center gap-[var(--space-4)] my-[var(--space-6)] text-fg-subtle">
-              <div className="flex-1 border-t" style={{ borderTopColor: "var(--border-subtle)" }} />
+              <div className="flex-1 border-t border-border-subtle" />
               or continue with
-              <div className="flex-1 border-t" style={{ borderTopColor: "var(--border-subtle)" }} />
+              <div className="flex-1 border-t border-border-subtle" />
             </div>
 
             <AuthGuestButton onClick={handleGuest} pending={pending} />
@@ -192,9 +192,9 @@ export default function AuthPanel() {
             <AuthButton label="Create account" pending={pending} />
 
             <div className="flex items-center gap-[var(--space-4)] my-[var(--space-6)] text-fg-subtle">
-              <div className="flex-1 border-t" style={{ borderTopColor: "var(--border-subtle)" }} />
+              <div className="flex-1 border-t border-border-subtle" />
               or continue with
-              <div className="flex-1 border-t" style={{ borderTopColor: "var(--border-subtle)" }} />
+              <div className="flex-1 border-t border-border-subtle" />
             </div>
 
             <AuthGuestButton onClick={handleGuest} pending={pending} />

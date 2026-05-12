@@ -22,33 +22,28 @@ export default function PhonemeRow({
       type="button"
       onClick={onSelect}
       variant="outline"
-      className="w-full justify-start items-center gap-4 px-5 py-3 rounded-2xl border text-left transition-all duration-200"
-      style={{
-        backgroundColor: isSelected ? "var(--primary)" : "var(--card-bg)",
-        borderColor: isSelected ? "var(--primary)" : "var(--line-divider)",
-        color: isSelected ? "var(--on-primary)" : "var(--text-primary)",
-      }}
+      className={`w-full items-center justify-start gap-4 rounded-2xl border px-5 py-3 text-left transition-all duration-200 ${
+        isSelected
+          ? "border-[var(--primary)] bg-[var(--primary)] text-[var(--on-primary)]"
+          : "border-[var(--line-divider)] bg-[var(--card-bg)] text-[var(--text-primary)]"
+      }`}
     >
-      <span className="text-2xl font-serif font-bold w-16 shrink-0" style={{ color: isSelected ? "var(--on-primary)" : "var(--text-primary)" }}>
+      <span className="w-16 shrink-0 text-2xl font-serif font-bold">
         {phoneme.symbol}
       </span>
-      <span className="text-xs font-bold uppercase tracking-wider w-28 shrink-0" style={{ color: isSelected ? "var(--overlay-strong)" : "var(--primary)" }}>
+      <span className={`w-28 shrink-0 text-xs font-bold uppercase tracking-wider ${isSelected ? "text-[var(--overlay-strong)]" : "text-[var(--primary)]"}`}>
         {phoneme.category}
       </span>
-      <span className="flex-1 text-sm" style={{ color: isSelected ? "var(--overlay-darker)" : "var(--text-secondary)" }}>
+      <span className={`flex-1 text-sm ${isSelected ? "text-[var(--overlay-darker)]" : "text-[var(--text-secondary)]"}`}>
         {phoneme.name}
       </span>
-      <span className="text-xs font-medium px-2 py-0.5 rounded-full" style={{ backgroundColor: isSelected ? "var(--overlay-light)" : "var(--btn-regular-bg)", color: isSelected ? "var(--on-primary)" : "var(--primary)" }}>
+      <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${isSelected ? "bg-[var(--overlay-light)] text-[var(--on-primary)]" : "bg-[var(--btn-regular-bg)] text-[var(--primary)]"}`}>
         {phoneme.example}
       </span>
       <span
         role="button"
         onClick={onPlay}
-        className="w-7 h-7 rounded-full flex items-center justify-center text-tiny shrink-0"
-        style={{
-          backgroundColor: isSelected ? "var(--overlay-light)" : "var(--btn-regular-bg)",
-          color: isSelected ? "var(--on-primary)" : "var(--primary)",
-        }}
+        className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-tiny ${isSelected ? "bg-[var(--overlay-light)] text-[var(--on-primary)]" : "bg-[var(--btn-regular-bg)] text-[var(--primary)]"}`}
       >
         {isPlaying ? "■" : "▶"}
       </span>

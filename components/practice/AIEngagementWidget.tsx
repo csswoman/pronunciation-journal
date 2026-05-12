@@ -126,13 +126,7 @@ function Tile({ label, value, unit, invert, empty, hint }: TileConfig) {
     : 0;
 
   return (
-    <div
-      className="flex flex-col gap-2 rounded-2xl p-4 min-w-0"
-      style={{
-        background: "color-mix(in oklch, var(--btn-regular-bg) 60%, var(--card-bg))",
-        border: "1px solid var(--line-divider)",
-      }}
-    >
+    <div className="min-w-0 rounded-2xl border border-[var(--line-divider)] bg-[color-mix(in_oklch,var(--btn-regular-bg)_60%,var(--card-bg))] p-4">
       <p
         className="text-tiny font-bold uppercase tracking-[0.2em] truncate text-fg-subtle"
       >
@@ -147,10 +141,7 @@ function Tile({ label, value, unit, invert, empty, hint }: TileConfig) {
       </p>
 
       {/* Ratio bar */}
-      <div
-        className="h-1 w-full rounded-full overflow-hidden"
-        style={{ background: "var(--line-divider)" }}
-      >
+      <div className="h-1 w-full overflow-hidden rounded-full bg-[var(--line-divider)]">
         <div
           className="h-full rounded-full transition-all duration-700"
           style={{ width: `${barFill}%`, background: color }}
@@ -239,18 +230,9 @@ export default function AIEngagementWidget() {
   ];
 
   return (
-    <div
-      className="rounded-3xl p-5"
-      style={{
-        background: "var(--card-bg)",
-        boxShadow: "0 1px 3px var(--line-divider), 0 6px 20px var(--line-divider)",
-      }}
-    >
+    <div className="rounded-3xl bg-[var(--card-bg)] p-5 shadow-[0_1px_3px_var(--line-divider),0_6px_20px_var(--line-divider)]">
       <div className="mb-4">
-        <p
-          className="text-tiny font-bold uppercase tracking-[0.24em]"
-          style={{ color: "var(--primary)" }}
-        >
+        <p className="text-tiny font-bold uppercase tracking-[0.24em] text-[var(--primary)]">
           AI Practice
         </p>
         <h3

@@ -5,7 +5,7 @@ import ThemedButton from "@/components/ui/ThemedButton";
 
 export default function ThemePreview({ name }: { name?: string }) {
   return (
-    <div className="p-4 rounded-md border" style={{ background: "var(--color-accent-soft)" }}>
+    <div className="p-4 rounded-md border bg-primary-soft">
       <div className="mb-3">
         <div className="text-[var(--color-text-primary)] font-semibold">Preview</div>
         <div className="text-sm text-[var(--color-text-secondary)]">

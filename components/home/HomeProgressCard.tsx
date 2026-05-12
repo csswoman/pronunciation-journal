@@ -41,7 +41,7 @@ export default function HomeProgressCard({
             className="flex items-center gap-1 mt-1.5 text-sm font-medium"
             style={{ color: isPositive ? "oklch(.6 .15 150)" : "oklch(.55 .18 25)" }}
           >
-            <ArrowUpRight size={13} style={{ transform: isPositive ? "none" : "rotate(90deg)" }} />
+            <ArrowUpRight size={13} className={isPositive ? "" : "rotate-90"} />
             {isPositive ? `+${weeklyChange}` : weeklyChange} from last week
           </div>
         </div>

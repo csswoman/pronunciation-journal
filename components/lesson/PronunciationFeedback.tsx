@@ -198,7 +198,7 @@ export default function PronunciationFeedback({
             borderColor: "color-mix(in srgb, var(--primary) 20%, transparent)",
           }}
         >
-          <p className="font-semibold text-xs uppercase tracking-wide" style={{ color: "var(--primary)" }}>
+          <p className="font-semibold text-xs uppercase tracking-wide text-primary">
             Hover to hear the correct sound
           </p>
           {problemWords.map((r, i) => {

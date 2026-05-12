@@ -26,7 +26,7 @@ export default function HomeWeakPhoneme({
 
       <div className="rounded-lg bg-surface-sunken px-4 py-3 flex items-center justify-between gap-3">
         <div>
-          <p className="text-4xl font-bold leading-none" style={{ fontFamily: "var(--font-mono, monospace)", color: "var(--primary)" }}>
+          <p className="text-4xl font-bold leading-none font-mono text-primary">
             {phoneme}
           </p>
           <p className="text-xs text-[var(--text-tertiary)] mt-1">{label}</p>
@@ -35,8 +35,8 @@ export default function HomeWeakPhoneme({
           {[10, 18, 28, 22, 34, 26, 38, 30, 22, 16, 10].map((h, i) => (
             <span
               key={i}
-              className="block w-1 rounded-full opacity-80"
-              style={{ height: `${h}px`, background: "var(--primary)" }}
+              className="block w-1 rounded-full opacity-80 bg-primary"
+              style={{ height: `${h}px` }}
             />
           ))}
         </div>
@@ -44,7 +44,7 @@ export default function HomeWeakPhoneme({
 
       <p className="text-sm leading-relaxed text-[var(--text-secondary)]">
         You often pronounce <strong className="text-[var(--text-primary)]">{exampleMistake.target}</strong> as{" "}
-        <em style={{ color: "var(--primary)" }}>"{exampleMistake.heard}"</em>. Try these:
+        <em className="text-primary">"{exampleMistake.heard}"</em>. Try these:
       </p>
 
       <div className="flex flex-wrap gap-2">

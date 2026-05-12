@@ -109,7 +109,7 @@ export default function LessonEditor({ initialLesson }: LessonEditorProps) {
   };
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: "var(--page-bg)" }}>
+    <div className="min-h-screen bg-surface-base">
       <div className="max-w-4xl mx-auto px-4 py-8">
         {/* Header */}
         <div className="flex items-center gap-3 mb-8">
@@ -264,8 +264,7 @@ export default function LessonEditor({ initialLesson }: LessonEditorProps) {
             <Button
               onClick={handleSave}
               disabled={saving || uploadingCover}
-              className="px-6 py-2.5 rounded-xl text-sm font-semibold transition-colors disabled:opacity-50"
-              style={{ background: "var(--primary)", color: "var(--accent-text)" }}
+              className="px-6 py-2.5 rounded-xl text-sm font-semibold transition-colors disabled:opacity-50 bg-primary text-on-primary"
             >
               {saving ? "Saving…" : isEdit ? "Save changes" : "Create lesson"}
             </Button>

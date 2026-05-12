@@ -60,15 +60,9 @@ export default function ProfileNameCard({ currentName, onSave }: Props) {
             onChange={(e) => setValue(e.target.value)}
             placeholder="Your full name"
             autoFocus
-            className="w-full px-3 py-2 text-sm rounded-xl focus:outline-none focus:ring-2 transition-all"
-            style={{
-              background: "var(--bg-tertiary)",
-              border: "1px solid var(--border)",
-              color: "var(--text-primary)",
-              "--tw-ring-color": "var(--primary)",
-            } as React.CSSProperties}
+            className="w-full px-3 py-2 text-sm rounded-xl focus:outline-none focus:ring-2 focus:ring-primary transition-all bg-surface-sunken border border-border-default text-fg"
           />
-          {error && <p className="text-xs" style={{ color: "var(--error)" }}>{error}</p>}
+          {error && <p className="text-xs text-error">{error}</p>}
           <div className="flex gap-2">
             <Button type="submit" variant="primary" size="sm" disabled={isSaving}>
               {isSaving ? "Saving…" : "Save"}

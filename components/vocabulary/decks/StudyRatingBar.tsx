@@ -15,7 +15,7 @@ interface StudyRatingBarProps {
 
 export function StudyRatingBar({ flipped, progress, onRate }: StudyRatingBarProps) {
   return (
-    <div className="border-t px-4 py-3" style={{ borderColor: "var(--line-divider)" }}>
+    <div className="border-t border-border-subtle px-4 py-3">
       {!flipped && (
         <p className="text-center text-xs mb-3 text-fg-subtle">
           Rate after seeing the answer

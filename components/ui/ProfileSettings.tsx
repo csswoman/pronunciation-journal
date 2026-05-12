@@ -10,14 +10,11 @@ import { H1, H2 } from "@/components/ui/Typography";
 
 function Toast({ message, type }: { message: string; type: "success" | "error" }) {
   return (
-    <div
-      className="flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-medium shadow-lg"
-      style={{
-        background: type === "success" ? "var(--success-soft)" : "var(--error-soft)",
-        border: `1px solid ${type === "success" ? "var(--success)" : "var(--error)"}`,
-        color: type === "success" ? "var(--success)" : "var(--error)",
-      }}
-    >
+    <div className={`flex items-center gap-2 rounded-xl border px-4 py-3 text-sm font-medium shadow-lg ${
+      type === "success"
+        ? "border-[var(--success)] bg-[var(--success-soft)] text-[var(--success)]"
+        : "border-[var(--error)] bg-[var(--error-soft)] text-[var(--error)]"
+    }`}>
       {type === "success" ? (
         <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -34,10 +31,7 @@ function Toast({ message, type }: { message: string; type: "success" | "error" }
 
 function SectionCard({ children }: { children: React.ReactNode }) {
   return (
-    <div
-      className="rounded-2xl p-5 space-y-4"
-      style={{ background: "var(--bg-secondary)", border: "1px solid var(--border)" }}
-    >
+    <div className="space-y-4 rounded-2xl border border-[var(--border)] bg-[var(--bg-secondary)] p-5">
       {children}
     </div>
   );
@@ -100,14 +94,8 @@ export default function ProfileSettings() {
   if (isGuest) {
     return (
       <div className="max-w-lg mx-auto py-8 px-4">
-        <div
-          className="rounded-2xl p-8 flex flex-col items-center text-center gap-4"
-          style={{ background: "var(--bg-secondary)", border: "1px solid var(--border)" }}
-        >
-          <div
-            className="w-16 h-16 rounded-full flex items-center justify-center"
-            style={{ background: "var(--bg-tertiary)" }}
-          >
+        <div className="flex flex-col items-center gap-4 rounded-2xl border border-[var(--border)] bg-[var(--bg-secondary)] p-8 text-center">
+          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[var(--bg-tertiary)]">
             <svg className="w-8 h-8 text-fg-subtle" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
             </svg>
@@ -122,11 +110,7 @@ export default function ProfileSettings() {
           </div>
           <a
             href="/login"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium transition-all hover:-translate-y-0.5"
-            style={{
-              background: "var(--primary)",
-              color: "var(--on-primary)",
-            }}
+            className="inline-flex items-center gap-2 rounded-xl bg-[var(--primary)] px-5 py-2.5 text-sm font-medium text-[var(--on-primary)] transition-all hover:-translate-y-0.5"
           >
             Sign in
           </a>
@@ -157,7 +141,7 @@ export default function ProfileSettings() {
           email={user?.email}
           onAvatarUpdate={handleAvatarUpdate}
         />
-        <div style={{ borderTop: "1px solid var(--border)", paddingTop: "1rem" }}>
+        <div className="border-t border-[var(--border)] pt-4">
           <ProfileNameCard
             currentName={preferences?.full_name || ""}
             onSave={handleNameSave}

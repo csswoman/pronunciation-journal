@@ -57,16 +57,11 @@ export default function RoleplayView({
     <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
       {/* Active scenario bar */}
       <div
-        className="flex items-center gap-2 px-4 py-2 border-b text-xs flex-shrink-0"
-        style={{ borderColor: "var(--line-divider)", color: "var(--text-tertiary)" }}
+        className="flex items-center gap-2 px-4 py-2 border-b text-xs flex-shrink-0 border-border-subtle text-fg-subtle"
       >
         <span className="uppercase tracking-widest font-medium">Active scenario:</span>
         <span
-          className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium"
-          style={{
-            backgroundColor: "var(--primary-soft)",
-            color: "var(--primary)",
-          }}
+          className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-primary-soft text-primary"
         >
           {activeEmoji} {activeLabel}
         </span>
@@ -81,8 +76,7 @@ export default function RoleplayView({
       {/* Scenario picker */}
       {showScenarioPicker && (
         <div
-          className="flex items-center gap-2 px-4 py-2 border-b flex-shrink-0 flex-wrap"
-          style={{ borderColor: "var(--line-divider)", color: "var(--text-tertiary)" }}
+          className="flex items-center gap-2 px-4 py-2 border-b flex-shrink-0 flex-wrap border-border-subtle text-fg-subtle"
         >
           <span className="uppercase tracking-widest font-medium text-xs">Scenario:</span>
           {SCENARIOS.map((s) => (
@@ -139,8 +133,7 @@ export default function RoleplayView({
 
       {/* Input */}
       <div
-        className="flex-shrink-0 p-3 border-t"
-        style={{ borderColor: "var(--line-divider)" }}
+        className="flex-shrink-0 p-3 border-t border-border-subtle"
       >
         <CustomPromptPanel
           onSubmit={onSubmit}
