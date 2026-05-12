@@ -66,7 +66,6 @@ export default function HomeCoursesSection() {
           {courses.map((course, i) => (
             <div
               key={course.id}
-              className="shrink-0"
               className="max-w-[320px] min-w-[280px] w-[45vw] shrink-0 [scroll-snap-align:start]"
             >
               <CourseCard course={course} priority={i < 2} />

@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Volume2, Mic, Square, Play, Loader2, RotateCcw } from "lucide-react";
 import Card from "@/components/layout/Card";
 import Button from "@/components/ui/Button";
+import { SyllableWord } from "@/components/ui/SyllableWord";
 
 interface WordOfDay {
   word: string;
@@ -158,7 +159,7 @@ export default function HomeWordOfDay() {
       {word && !loading && (
         <>
           <div>
-            <p className="text-2xl font-bold text-[var(--text-primary)] leading-none">{word.word}</p>
+            <p className="text-2xl font-bold text-[var(--text-primary)] leading-none"><SyllableWord word={word.word} /></p>
             <div className="flex items-center gap-2 mt-1">
               <p className="font-ipa">{word.ipa}</p>
               {word.part_of_speech && (
