@@ -42,7 +42,7 @@
   /* --bg uses a warm off-white so the page feels warm without being yellowed */
   --bg:           oklch(93% 0.012 var(--hue));   /* gris con tinte */
   --bg-secondary: oklch(99% 0.003 var(--hue));   /* casi blanco → cards */
-  --bg-tertiary:  oklch(89% 0.01  var(--hue));   /* más oscuro → inputs sunken */
+  --bg-tertiary:  oklch(94% 0.01  var(--hue));   /* más oscuro → inputs sunken */
   --fg:               oklch(0.18 0.008 var(--hue));
   --text-primary:     oklch(0.18 0.008 var(--hue));
   --text-secondary:   oklch(0.46 0.006 var(--hue));
