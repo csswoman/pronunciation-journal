@@ -1,31 +1,27 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
-import { Volume2, Mic, Square, Play, Loader2, RotateCcw, ChevronDown } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { Volume2, Mic, Square, Play, Loader2, RotateCcw } from "lucide-react";
 import Card from "@/components/layout/Card";
 import Button from "@/components/ui/Button";
+import { SyllableWord } from "@/components/ui/SyllableWord";
+import { CardBadge } from "@/components/ui/CardBadge";
+import { WaveformVisualizer } from "@/components/ui/WaveformVisualizer";
 
 interface WordOfDay {
   word: string;
   ipa: string;
+  part_of_speech?: string;
   definition: string;
   example_sentence: string;
   difficulty: "beginner" | "intermediate" | "advanced";
 }
 
-const DIFFICULTY_STYLE: Record<string, React.CSSProperties> = {
-  beginner:     { color: "var(--success)",  borderColor: "color-mix(in oklch, var(--success) 40%, transparent)" },
-  intermediate: { color: "var(--primary)",  borderColor: "color-mix(in oklch, var(--primary) 40%, transparent)" },
-  advanced:     { color: "var(--warning)",  borderColor: "color-mix(in oklch, var(--warning) 40%, transparent)" },
-};
-
-const BAR_HEIGHTS = [6, 10, 16, 12, 20, 16, 24, 18, 14, 22, 16, 28, 22, 16, 10, 16, 22, 18, 12, 8, 14, 20, 14, 10, 6];
 
 export default function HomeWordOfDay() {
   const [word, setWord] = useState<WordOfDay | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [definitionOpen, setDefinitionOpen] = useState(false);
 
   const [speaking, setSpeaking] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
@@ -120,19 +116,12 @@ export default function HomeWordOfDay() {
     audio.play();
   }
 
-  const difficultyStyle = word
-    ? (DIFFICULTY_STYLE[word.difficulty] ?? DIFFICULTY_STYLE.intermediate)
-    : DIFFICULTY_STYLE.intermediate;
-
   return (
     <Card variant="compact" className="gap-4">
       <div className="flex items-center justify-between">
-        <span
-          className="text-tiny font-bold tracking-widest uppercase border rounded-full px-2 py-0.5"
-          style={difficultyStyle}
-        >
+        <CardBadge color={word?.difficulty === "beginner" ? "success" : word?.difficulty === "advanced" ? "warning" : "primary"}>
           Word of the day
-        </span>
+        </CardBadge>
         {!loading && (
           <button
             onClick={() => fetchWord(true)}
@@ -152,51 +141,36 @@ export default function HomeWordOfDay() {
       )}
 
       {error && (
-        <p className="text-xs" style={{ color: "var(--error)" }}>{error}</p>
+        <p className="text-xs text-error">{error}</p>
       )}
 
       {word && !loading && (
         <>
           <div>
-            <div className="flex items-center gap-1.5">
-              <p className="text-2xl font-medium text-[var(--text-primary)] leading-none">{word.word}</p>
-              <button
-                onClick={() => setDefinitionOpen((o) => !o)}
-                className="hover:opacity-70 transition-opacity mt-0.5"
-                style={{ color: "var(--primary)" }}
-                title={definitionOpen ? "Hide meaning" : "Show meaning"}
-              >
-                <ChevronDown
-                  size={16}
-                  className={`transition-transform duration-200 ${definitionOpen ? "rotate-180" : ""}`}
-                />
-              </button>
+            <p className="text-2xl font-bold text-[var(--text-primary)] leading-none"><SyllableWord word={word.word} /></p>
+            <div className="flex items-center gap-2 mt-1">
+              <p className="font-ipa">{word.ipa}</p>
+              {word.part_of_speech && (
+                <span className="text-tiny font-medium px-1.5 py-0.5 rounded bg-surface-sunken border border-border-default text-fg-muted">
+                  {word.part_of_speech}
+                </span>
+              )}
             </div>
-            <p className="font-ipa text-xs font-mono mt-1" style={{ color: "var(--primary)" }}>{word.ipa}</p>
-
-            {definitionOpen && (
-              <div
-                className="mt-2 rounded-xl px-3 py-2.5 flex flex-col gap-1.5"
-                style={{ backgroundColor: "var(--bg-tertiary)", border: "1px solid var(--border)" }}
-              >
-                <p className="text-xs leading-relaxed text-[var(--text-secondary)]">{word.definition}</p>
-                {word.example_sentence && (
-                  <p className="text-xs italic leading-snug text-[var(--text-tertiary)]">"{word.example_sentence}"</p>
-                )}
-              </div>
-            )}
+            <div className="mt-2 border-l-2 border-primary pl-3 flex flex-col gap-1">
+              <p className="text-xs italic leading-relaxed text-[var(--text-secondary)]">{word.definition}</p>
+              {word.example_sentence && (
+                <p className="text-xs italic leading-snug text-[var(--text-tertiary)]">"{word.example_sentence}"</p>
+              )}
+            </div>
           </div>
 
           {/* Waveform */}
-          <div className="flex items-center gap-0.5 h-8">
-            {BAR_HEIGHTS.map((h, i) => (
-              <span
-                key={i}
-                className={`block w-1 rounded-full transition-opacity ${speaking || isRecording ? "opacity-100 animate-pulse" : "opacity-40"}`}
-                style={{ height: `${h}px`, backgroundColor: `oklch(0.70 0.15 calc(var(--hue) + ${i * 4}))` }}
-              />
-            ))}
-          </div>
+          <WaveformVisualizer
+            isActive={speaking || playingRecording}
+            isRecording={isRecording}
+            color="gradient"
+            className="h-8"
+          />
 
           <div className="flex gap-2">
             <Button

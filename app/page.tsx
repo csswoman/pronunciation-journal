@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import SectionHeader from "@/components/layout/SectionHeader";
 import HomeHeader from "@/components/home/HomeHeader";
 import PageLayout from "@/components/layout/PageLayout";
@@ -12,18 +14,24 @@ import HomeWordsToReview from "@/components/home/HomeWordsToReview";
 import HomeWordOfDay from "@/components/home/HomeWordOfDay";
 import { getAchievements, type Achievement } from "@/lib/home-stats";
 import { getSupabaseServerUserId } from "@/lib/supabase/session";
+import { getWordsDueForReview } from "@/lib/word-bank/server-queries";
+import type { WordBankEntry } from "@/lib/types";
 
 export default async function HomePage() {
   let userId: string | null = null;
   let achievements: Achievement[] = [];
+  let dueWords: WordBankEntry[] = [];
 
   userId = await getSupabaseServerUserId();
-  if (userId) {
-    try {
-      achievements = await getAchievements(userId);
-    } catch (error) {
-      console.error("Error loading home stats:", error);
-    }
+  try {
+    const [ach, words] = await Promise.all([
+      userId ? getAchievements(userId) : Promise.resolve([]),
+      getWordsDueForReview(5),
+    ]);
+    achievements = ach;
+    dueWords = words;
+  } catch (error) {
+    console.error("Error loading home stats:", error);
   }
 
   return (
@@ -33,7 +41,7 @@ export default async function HomePage() {
         <div className="flex flex-col gap-6 min-w-0">
           <HomeHeader />
           <HomeTodo />
-          <HomeWordsToReview />
+          <HomeWordsToReview words={dueWords} dueCount={dueWords.length} />
 
           <section className="flex flex-col gap-3">
             <SectionHeader title="Your Courses" viewAllHref="/courses" />

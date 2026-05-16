@@ -37,8 +37,7 @@ export function StudyLeftPanel({
           className="hidden"
           onChange={(e) => { const f = e.target.files?.[0]; if (f) onUpload(f); e.target.value = ""; }}
         />
-        <div className="rounded-xl border border-dashed aspect-[4/3] flex items-center justify-center overflow-hidden relative group"
-          style={{ borderColor: "var(--line-divider)", backgroundColor: "var(--btn-regular-bg)" }}>
+        <div className="rounded-xl border border-dashed border-border-subtle aspect-[4/3] flex items-center justify-center overflow-hidden relative group bg-surface-sunken">
           {imageUrl ? (
             <>
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -56,15 +55,12 @@ export function StudyLeftPanel({
             </>
           ) : imageLoading ? (
             <div className="flex flex-col items-center gap-2 text-fg-subtle">
-              <div className="w-6 h-6 rounded-full border-2 border-t-transparent animate-spin"
-                style={{ borderColor: "var(--primary)", borderTopColor: "transparent" }} />
+              <div className="w-6 h-6 rounded-full border-2 border-t-transparent animate-spin" />
               <p className="text-tiny">Uploading…</p>
             </div>
           ) : (
             <button onClick={() => fileInputRef.current?.click()}
-              className="flex flex-col items-center gap-2 p-4 w-full h-full justify-center transition-colors text-fg-subtle"
-              onMouseEnter={e => (e.currentTarget.style.color = "var(--text-primary)")}
-              onMouseLeave={e => (e.currentTarget.style.color = "var(--text-tertiary)")}>
+              className="flex flex-col items-center gap-2 p-4 w-full h-full justify-center transition-colors text-fg-subtle hover:text-fg">
               <ImagePlus size={22} className="opacity-40" />
               <p className="text-tiny text-center">Add reference<br />image</p>
             </button>
@@ -79,8 +75,7 @@ export function StudyLeftPanel({
           {levelLabel && (
             <div>
               <p className="text-tiny mb-1 text-fg-subtle">Level</p>
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-xs font-semibold"
-                style={{ borderColor: "var(--warning)", backgroundColor: "var(--warning-soft)", color: "var(--warning)" }}>
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-warning bg-warning-soft text-warning text-xs font-semibold">
                 {levelLabel} · {LEVEL_NAMES[levelLabel] ?? ""}
               </span>
             </div>
@@ -102,12 +97,10 @@ export function StudyLeftPanel({
 
       {/* Tip */}
       {showTip && (
-        <div className="rounded-xl border overflow-hidden" style={{ borderColor: "var(--line-divider)" }}>
+        <div className="rounded-xl border border-border-subtle overflow-hidden">
           <button
             onClick={onToggleTip}
-            className="w-full flex items-center justify-between px-3 py-2.5 text-left transition-colors"
-            onMouseEnter={e => (e.currentTarget.style.backgroundColor = "var(--btn-regular-bg)")}
-            onMouseLeave={e => (e.currentTarget.style.backgroundColor = "transparent")}
+            className="w-full flex items-center justify-between px-3 py-2.5 text-left transition-colors hover:bg-surface-sunken"
           >
             <span className="text-xs font-semibold text-fg">Tip</span>
             <ChevronDown size={14} className="text-fg-subtle" />

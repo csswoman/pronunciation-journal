@@ -40,14 +40,7 @@ export default function WordsToday({ words, newCount, reviewCount }: WordsTodayP
   const derivedReview = reviewCount ?? entries.filter((e) => !e.isNew).length
 
   return (
-    <div
-      className="rounded-3xl p-5"
-      style={{
-        background: 'var(--card-bg)',
-        border: '1px solid var(--line-divider)',
-        boxShadow: '0 1px 3px var(--line-divider), 0 8px 20px var(--line-divider)',
-      }}
-    >
+    <div className="rounded-3xl border border-[var(--line-divider)] bg-[var(--card-bg)] p-5 shadow-[0_1px_3px_var(--line-divider),0_8px_20px_var(--line-divider)]">
       {/* Header */}
       <div className="flex items-start justify-between gap-3">
         <div>
@@ -68,8 +61,7 @@ export default function WordsToday({ words, newCount, reviewCount }: WordsTodayP
         </div>
         <Link
           href="/decks"
-          className="text-xs font-semibold transition-opacity hover:opacity-70 shrink-0"
-          style={{ color: 'var(--primary)' }}
+          className="shrink-0 text-xs font-semibold text-[var(--primary)] transition-opacity hover:opacity-70"
         >
           Vocabulary →
         </Link>
@@ -79,13 +71,7 @@ export default function WordsToday({ words, newCount, reviewCount }: WordsTodayP
       {entries.length > 0 ? (
         <div className="mt-4 space-y-0">
           {entries.map((entry, i) => (
-            <div
-              key={`${entry.word}-${i}`}
-              className="flex items-center justify-between py-2"
-              style={{
-                borderBottom: i < entries.length - 1 ? '1px solid var(--line-divider)' : 'none',
-              }}
-            >
+            <div key={`${entry.word}-${i}`} className={`flex items-center justify-between py-2 ${i < entries.length - 1 ? "border-b border-[var(--line-divider)]" : ""}`}>
               <span
                 className="text-sm font-medium text-fg"
               >
@@ -97,14 +83,7 @@ export default function WordsToday({ words, newCount, reviewCount }: WordsTodayP
                     {POS_ABBR[entry.partOfSpeech] ?? entry.partOfSpeech}
                   </span>
                 )}
-                <span
-                  className="text-tiny font-bold uppercase tracking-wide"
-                  style={{
-                    color: entry.isNew
-                      ? 'var(--primary)'
-                      : 'var(--text-tertiary)',
-                  }}
-                >
+                <span className={`text-tiny font-bold uppercase tracking-wide ${entry.isNew ? "text-[var(--primary)]" : "text-[var(--text-tertiary)]"}`}>
                   {entry.isNew ? 'NEW' : 'REVIEW'}
                 </span>
               </div>
@@ -112,20 +91,13 @@ export default function WordsToday({ words, newCount, reviewCount }: WordsTodayP
           ))}
         </div>
       ) : (
-        <div
-          className="mt-4 rounded-2xl p-4 text-center"
-          style={{ background: 'var(--btn-regular-bg)' }}
-        >
+        <div className="mt-4 rounded-2xl bg-[var(--btn-regular-bg)] p-4 text-center">
           <p className="text-sm text-fg-muted">
             Start a practice or review session and your studied words will appear here.
           </p>
           <Link
             href="/practice"
-            className="inline-block mt-3 px-4 py-2 rounded-xl text-xs font-semibold transition-opacity hover:opacity-80"
-            style={{
-              background: 'color-mix(in oklch, var(--primary) 15%, transparent)',
-              color: 'var(--primary)',
-            }}
+            className="mt-3 inline-block rounded-xl bg-[color-mix(in_oklch,var(--primary)_15%,transparent)] px-4 py-2 text-xs font-semibold text-[var(--primary)] transition-opacity hover:opacity-80"
           >
             Go to practice
           </Link>
@@ -134,4 +106,3 @@ export default function WordsToday({ words, newCount, reviewCount }: WordsTodayP
     </div>
   )
 }
-

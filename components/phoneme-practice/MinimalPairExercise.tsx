@@ -53,7 +53,7 @@ export function MinimalPairExercise({ exercise, onSubmit }: Props) {
         <p className="text-sm mb-1 text-fg-muted">
           Which word contains
         </p>
-        <span className="text-3xl font-bold font-mono" style={{ color: 'var(--primary)' }}>
+        <span className="text-3xl font-bold font-mono text-primary">
           {exercise.ipa}
         </span>
         <p className="text-xs mt-1 text-fg-subtle">Tap a word to hear it, then select</p>

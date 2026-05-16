@@ -1,0 +1,194 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Components — styles for specific UI patterns that can't live in Tailwind
+   (scrollbars, sliders, chat backgrounds, decorative blobs)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Scrollbars ──────────────────────────────────────────────────────────── */
+.sidebar-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in oklab, var(--primary) 58%, var(--card-bg)) var(--scrollbar-track);
+}
+.sidebar-scrollbar::-webkit-scrollbar        { width: 6px; height: 6px; }
+.sidebar-scrollbar::-webkit-scrollbar-track  { background: var(--scrollbar-track); }
+.sidebar-scrollbar::-webkit-scrollbar-thumb  {
+  background: color-mix(in oklab, var(--primary) 58%, var(--card-bg));
+  border-radius: 999px;
+  border: 1.5px solid var(--card-bg);
+  min-height: 32px;
+}
+.sidebar-scrollbar::-webkit-scrollbar-thumb:hover  { background: color-mix(in oklab, var(--primary) 72%, var(--card-bg)); }
+.sidebar-scrollbar::-webkit-scrollbar-thumb:active { background: color-mix(in oklab, var(--primary) 82%, var(--card-bg)); }
+
+.main-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in oklab, var(--primary) 52%, var(--page-bg)) var(--scrollbar-track);
+}
+.main-scrollbar::-webkit-scrollbar        { width: 6px; height: 6px; }
+.main-scrollbar::-webkit-scrollbar-track  { background: var(--scrollbar-track); }
+.main-scrollbar::-webkit-scrollbar-thumb  {
+  background: color-mix(in oklab, var(--primary) 52%, var(--page-bg));
+  border-radius: 999px;
+  border: 1.5px solid var(--page-bg);
+  min-height: 36px;
+}
+.main-scrollbar::-webkit-scrollbar-thumb:hover  { background: color-mix(in oklab, var(--primary) 68%, var(--page-bg)); }
+.main-scrollbar::-webkit-scrollbar-thumb:active { background: color-mix(in oklab, var(--primary) 78%, var(--page-bg)); }
+
+/* ── Sliders ─────────────────────────────────────────────────────────────── */
+.slider-thumb::-webkit-slider-thumb {
+  appearance: none;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: var(--primary);
+  cursor: pointer;
+  border: 2px solid var(--bg);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  transition: box-shadow 0.2s ease;
+}
+.slider-thumb::-webkit-slider-thumb:hover { box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3); }
+.slider-thumb::-moz-range-thumb {
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: var(--primary);
+  cursor: pointer;
+  border: 2px solid var(--bg);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  transition: box-shadow 0.2s ease;
+}
+.slider-thumb::-moz-range-thumb:hover          { box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3); }
+.slider-thumb::-webkit-slider-runnable-track   { width: 100%; height: 8px; border-radius: 5px; background: inherit; }
+.slider-thumb::-moz-range-track                { background: transparent; border: none; }
+
+/* Enhanced slider (theme color picker) */
+.slider-thumb-enhanced::-webkit-slider-thumb {
+  appearance: none;
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  background: white;
+  cursor: pointer;
+  border: 3px solid #333;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4), inset 0 0 0 2px white;
+  transition: all 0.2s ease;
+}
+.slider-thumb-enhanced::-webkit-slider-thumb:hover  { box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5), inset 0 0 0 2px white; transform: scale(1.1); }
+.slider-thumb-enhanced::-webkit-slider-thumb:active { box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4), inset 0 0 0 2px white; transform: scale(0.95); }
+.slider-thumb-enhanced::-moz-range-thumb {
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  background: white;
+  cursor: pointer;
+  border: 3px solid #333;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4), inset 0 0 0 2px white;
+  transition: all 0.2s ease;
+}
+.slider-thumb-enhanced::-moz-range-thumb:hover  { box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5), inset 0 0 0 2px white; transform: scale(1.1); }
+.slider-thumb-enhanced::-moz-range-thumb:active { box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4), inset 0 0 0 2px white; transform: scale(0.95); }
+.slider-thumb-enhanced::-webkit-slider-runnable-track { width: 100%; height: 6px; border-radius: 3px; background: inherit; }
+.slider-thumb-enhanced::-moz-range-track              { background: transparent; border: none; }
+
+/* Color selection slider */
+.color-selection-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 8px;
+  background: var(--color-selection-bar);
+  outline: none;
+  border-radius: 999px;
+}
+.color-selection-slider:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+  padding: 0;
+}
+.color-selection-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px; height: 28px;
+  border-radius: 6px;
+  background: var(--primary);
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  margin-top: -8px;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+.color-selection-slider::-webkit-slider-thumb:hover  { box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5); transform: scaleY(1.1); }
+.color-selection-slider::-webkit-slider-thumb:active { box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3); transform: scaleY(0.95); }
+.color-selection-slider::-moz-range-thumb {
+  width: 14px; height: 28px;
+  border-radius: 6px;
+  background: var(--primary);
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+.color-selection-slider::-moz-range-thumb:hover  { box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5); transform: scaleY(1.1); }
+.color-selection-slider::-moz-range-thumb:active { box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3); transform: scaleY(0.95); }
+.color-selection-slider::-webkit-slider-runnable-track { width: 100%; height: 12px; background: inherit; border-radius: 999px; }
+.color-selection-slider::-moz-range-track              { height: 12px; background: var(--color-selection-bar); border-radius: 999px; border: none; }
+
+/* ── Chat backgrounds ────────────────────────────────────────────────────── */
+.chat-messages-container {
+  background-color: var(--surface-base);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Ccircle cx='12' cy='12' r='1.5' fill='oklch(0 0 0 / 0.07)'/%3E%3C/svg%3E");
+  background-size: 24px 24px;
+  background-repeat: repeat;
+}
+.dark .chat-messages-container {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Ccircle cx='12' cy='12' r='1.5' fill='oklch(1 0 0 / 0.06)'/%3E%3C/svg%3E");
+}
+
+.chat-bg {
+  position: relative;
+  overflow: hidden;
+  background: color-mix(in oklch, var(--primary) 4%, var(--bg));
+}
+.chat-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 50% at 20% 0%,   color-mix(in oklch, var(--primary)           18%, transparent) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 40% at 90% 20%,  color-mix(in oklch, var(--accent-analog-1)   14%, transparent) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 35% at 10% 80%,  color-mix(in oklch, var(--accent-analog-2)   10%, transparent) 0%, transparent 70%),
+    radial-gradient(ellipse 70% 50% at 70% 100%, color-mix(in oklch, var(--accent-complement)  8%, transparent) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* ── Decorative blobs ────────────────────────────────────────────────────── */
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(70px);
+  pointer-events: none;
+}
+.blob-1 {
+  width: 360px; height: 360px;
+  background: radial-gradient(circle, color-mix(in oklch, var(--primary) 55%, transparent) 0%, transparent 70%);
+  top: -100px; left: -100px;
+  opacity: 0.45;
+  animation: drift1 18s ease-in-out infinite;
+}
+.blob-2 {
+  width: 280px; height: 280px;
+  background: radial-gradient(circle, color-mix(in oklch, var(--accent-analog-1) 50%, transparent) 0%, transparent 70%);
+  top: 40px; right: -80px;
+  opacity: 0.4;
+  animation: drift2 22s ease-in-out infinite;
+}
+.blob-3 {
+  width: 240px; height: 240px;
+  background: radial-gradient(circle, color-mix(in oklch, var(--accent-analog-2) 45%, transparent) 0%, transparent 70%);
+  top: 300px; left: 20px;
+  opacity: 0.3;
+  animation: drift3 16s ease-in-out infinite;
+}
+.blob-4 {
+  width: 200px; height: 200px;
+  background: radial-gradient(circle, color-mix(in oklch, var(--accent-complement) 35%, transparent) 0%, transparent 70%);
+  bottom: -60px; right: 10%;
+  opacity: 0.25;
+  animation: drift2 26s ease-in-out infinite reverse;
+}

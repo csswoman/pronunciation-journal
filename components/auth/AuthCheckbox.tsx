@@ -10,11 +10,9 @@ export function AuthCheckbox({ label, checked, onChange }: AuthCheckboxProps) {
   return (
     <label className="flex items-center gap-2 cursor-pointer select-none" onClick={() => onChange(!checked)}>
       <div
-        className="w-5 h-5 rounded flex items-center justify-center shrink-0 transition-all"
-        style={{
-          background: checked ? "var(--primary)" : "transparent",
-          border: `1.5px solid ${checked ? "var(--primary)" : "var(--border-default)"}`,
-        }}
+        className={`flex h-5 w-5 shrink-0 items-center justify-center rounded border-[1.5px] transition-all ${
+          checked ? "border-[var(--primary)] bg-[var(--primary)]" : "border-[var(--border-default)] bg-transparent"
+        }`}
       >
         {checked && (
           <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3.5">
@@ -22,7 +20,7 @@ export function AuthCheckbox({ label, checked, onChange }: AuthCheckboxProps) {
           </svg>
         )}
       </div>
-      <span style={{ font: "var(--font-body-sm)", color: "var(--text-secondary)" }}>
+      <span className="text-sm text-[var(--text-secondary)]">
         {label}
       </span>
     </label>

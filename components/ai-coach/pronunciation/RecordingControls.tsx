@@ -28,8 +28,7 @@ export default function RecordingControls({ isRecording, onMicClick, onSkip }: P
 
       {/* Waveform */}
       <div
-        className="flex items-center justify-center gap-1"
-        style={{ height: 40, width: "100%", maxWidth: 280 }}
+        className="flex items-center justify-center gap-1 h-10 w-full max-w-[280px]"
         aria-hidden="true"
       >
         {WAVE_HEIGHTS.map((h, i) => (
@@ -70,12 +69,7 @@ export default function RecordingControls({ isRecording, onMicClick, onSkip }: P
           <button
             onClick={onSkip}
             aria-label="Skip phrase"
-            className="w-9 h-9 rounded-full flex items-center justify-center border cursor-pointer transition-all duration-150 hover:translate-x-0.5"
-            style={{
-              backgroundColor: "var(--btn-regular-bg)",
-              borderColor: "var(--line-divider)",
-              color: "var(--text-secondary)",
-            }}
+            className="w-9 h-9 rounded-full flex items-center justify-center border cursor-pointer transition-all duration-150 hover:translate-x-0.5 bg-surface-sunken border-border-subtle text-fg-muted"
           >
             <ChevronRight size={16} />
           </button>
@@ -85,7 +79,7 @@ export default function RecordingControls({ isRecording, onMicClick, onSkip }: P
         </div>
       </div>
 
-      <p className="text-[13px] font-medium tracking-wide" style={{ color: "var(--text-tertiary)" }}>
+      <p className="text-[13px] font-medium tracking-wide text-fg-subtle">
         {hint}
       </p>
     </div>

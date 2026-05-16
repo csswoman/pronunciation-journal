@@ -90,7 +90,7 @@ return courses.filter((course) => {
           {loading ? (
             <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
               {Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="rounded-xl border border-[var(--line-divider)] h-48 overflow-hidden relative" style={{ background: "var(--btn-regular-bg)" }}>
+                <div key={i} className="rounded-xl border border-[var(--line-divider)] h-48 overflow-hidden relative bg-surface-sunken">
                   <div className="absolute inset-0 -translate-x-full animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-overlay-light to-transparent" />
                 </div>
               ))}
@@ -104,8 +104,7 @@ return courses.filter((course) => {
                 </p>
                 <Button
                   onClick={() => { setQuery(""); setLevel("all"); }}
-                  className="mt-4 rounded-lg px-4 py-2 text-caption font-medium transition-colors"
-                  style={{ background: "var(--btn-regular-bg)", color: "var(--text-secondary)" }}
+                  className="mt-4 rounded-lg px-4 py-2 text-caption font-medium transition-colors bg-surface-sunken text-fg-muted"
                 >
                   Clear filters
                 </Button>

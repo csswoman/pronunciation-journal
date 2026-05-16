@@ -12,28 +12,11 @@ interface WordSelectionBarProps {
 
 export function WordSelectionBar({ count, onClear, onCreateDeck, onAddToExistingDeck }: WordSelectionBarProps) {
   return (
-    <div
-      style={{
-        position: "fixed",
-        bottom: 24,
-        left: "50%",
-        transform: "translateX(-50%)",
-        zIndex: 50,
-        background: "var(--card-bg)",
-        border: "1px solid var(--line-divider)",
-        borderRadius: "var(--radius-lg)",
-        boxShadow: "0 8px 32px rgba(0,0,0,0.16), 0 2px 8px rgba(0,0,0,0.08)",
-        display: "flex",
-        alignItems: "center",
-        gap: 8,
-        padding: "10px 14px",
-        whiteSpace: "nowrap",
-      }}
-    >
-      <span style={{ fontSize: 13, fontWeight: 600, color: "var(--fg)", minWidth: 60 }}>
+    <div className="fixed bottom-6 left-1/2 z-50 flex -translate-x-1/2 items-center gap-2 whitespace-nowrap rounded-[var(--radius-lg)] border border-[var(--line-divider)] bg-[var(--card-bg)] px-4 py-3 shadow-[0_8px_32px_rgba(0,0,0,0.16),0_2px_8px_rgba(0,0,0,0.08)]">
+      <span className="min-w-[60px] text-[13px] font-semibold text-[var(--fg)]">
         {count} selected
       </span>
-      <div style={{ width: 1, height: 20, background: "var(--line-divider)" }} />
+      <div className="h-5 w-px bg-[var(--line-divider)]" />
       <Button
         variant="ghost"
         size="sm"
@@ -55,16 +38,7 @@ export function WordSelectionBar({ count, onClear, onCreateDeck, onAddToExisting
       <button
         onClick={onClear}
         aria-label="Clear selection"
-        style={{
-          background: "none",
-          border: "none",
-          cursor: "pointer",
-          color: "var(--text-tertiary)",
-          padding: 4,
-          lineHeight: 0,
-          borderRadius: "var(--radius-sm)",
-          marginLeft: 2,
-        }}
+        className="ml-0.5 cursor-pointer rounded-[var(--radius-sm)] p-1 leading-none text-[var(--text-tertiary)]"
       >
         <X size={15} />
       </button>

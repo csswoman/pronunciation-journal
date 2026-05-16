@@ -29,22 +29,16 @@ export function ExerciseCard({ current, total, exerciseType, children, feedback,
           <span>{TYPE_LABELS[exerciseType] ?? exerciseType}</span>
           <span>{current} / {total}</span>
         </div>
-        <div className="h-2 rounded-full overflow-hidden" style={{ backgroundColor: 'var(--btn-regular-bg)' }}>
+        <div className="h-2 rounded-full overflow-hidden bg-surface-sunken">
           <div
-            className="h-full transition-all duration-300 rounded-full"
-            style={{
-              width: `${(current / total) * 100}%`,
-              backgroundColor: 'var(--primary)',
-            }}
+            className="h-full transition-all duration-300 rounded-full bg-primary"
+            style={{ width: `${(current / total) * 100}%` }}
           />
         </div>
       </div>
 
       {/* Exercise content */}
-      <div className="rounded-2xl shadow-sm border p-6" style={{
-        backgroundColor: 'var(--card-bg)',
-        borderColor: 'var(--line-divider)',
-      }}>
+      <div className="rounded-2xl shadow-sm border border-border-subtle p-6 bg-surface-raised">
         {children}
       </div>
 

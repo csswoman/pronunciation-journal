@@ -6,7 +6,6 @@ import { useAuth } from "@/components/auth/AuthProvider"
 import PageLayout from '@/components/layout/PageLayout'
 import PageHeader from '@/components/layout/PageHeader'
 import { getUserStats } from '@/lib/db'
-import { getAllLessons } from '@/lib/lesson-generator'
 import { getAllDbLessons } from '@/lib/lesson-generator-db'
 import { getAllProgress } from '@/lib/phoneme-practice/queries'
 import type { Lesson } from '@/lib/types'
@@ -52,7 +51,7 @@ export default function PracticeLessonsPage() {
       .catch((err) => { console.error('Failed to load progress:', err); setProgress([]) })
   }, [user])
 
-  const allLessons = useMemo(() => [...getAllLessons(), ...dbLessons], [dbLessons])
+  const allLessons = useMemo(() => dbLessons, [dbLessons])
 
   const soundProgressMap = useMemo(() => {
     const map = new Map<number, number>()

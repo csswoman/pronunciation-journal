@@ -90,8 +90,7 @@ export default function SpeakingWidget({ args, status, onAnswer, onNext, onRetry
 
   return (
     <div
-      className="rounded-xl border p-4 space-y-3"
-      style={{ borderColor: "var(--line-divider)", backgroundColor: "var(--btn-regular-bg)" }}
+      className="rounded-xl border border-border-subtle p-4 space-y-3 bg-surface-sunken"
     >
       <p className="text-sm text-fg-muted">
         {args.prompt}
@@ -107,8 +106,7 @@ export default function SpeakingWidget({ args, status, onAnswer, onNext, onRetry
         )}
         <button
           onClick={speakTarget}
-          className="flex items-center gap-1 px-2 py-1 rounded-lg text-xs"
-          style={{ backgroundColor: "var(--surface-sunken)", color: "var(--fg-muted)" }}
+          className="flex items-center gap-1 px-2 py-1 rounded-lg text-xs bg-surface-sunken text-fg-muted"
           title="Listen to pronunciation"
         >
           <Volume2 className="w-3.5 h-3.5" />
@@ -121,8 +119,7 @@ export default function SpeakingWidget({ args, status, onAnswer, onNext, onRetry
           {!isRecording && !transcribing && !transcript && (
             <button
               onClick={startRecording}
-              className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm"
-              style={{ backgroundColor: "var(--primary)", color: "var(--on-primary)" }}
+              className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm bg-primary text-on-primary"
             >
               <Mic className="w-4 h-4" />
               Record
@@ -131,8 +128,7 @@ export default function SpeakingWidget({ args, status, onAnswer, onNext, onRetry
           {isRecording && (
             <button
               onClick={handleStop}
-              className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm animate-pulse"
-              style={{ backgroundColor: "var(--score-poor)", color: "var(--on-primary)" }}
+              className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm animate-pulse bg-error text-on-primary"
             >
               <MicOff className="w-4 h-4" />
               Stop

@@ -67,11 +67,7 @@ export default function ThemeControl() {
           {/* Controls row */}
           <div className="flex items-center justify-between">
             <span
-              className="text-xs font-mono font-semibold px-2 py-0.5 rounded-md"
-              style={{
-                background: "var(--btn-regular-bg)",
-                color: "var(--btn-content)",
-              }}
+              className="text-xs font-mono font-semibold px-2 py-0.5 rounded-md bg-surface-sunken text-fg"
             >
               {hue}°
             </span>

@@ -1,9 +1,9 @@
 import type { Difficulty } from "@/lib/types";
 
-const pillStyle: Record<Difficulty, React.CSSProperties> = {
-  easy:   { background: "var(--success-soft)",  color: "var(--success)",  border: "1px solid var(--success-border)" },
-  medium: { background: "var(--warning-soft)",  color: "var(--warning)",  border: "1px solid var(--warning-border)" },
-  hard:   { background: "var(--error-soft)",    color: "var(--error)",    border: "1px solid var(--error-border)" },
+const pillClass: Record<Difficulty, string> = {
+  easy: "bg-[var(--success-soft)] text-[var(--success)] border-[var(--success-border)]",
+  medium: "bg-[var(--warning-soft)] text-[var(--warning)] border-[var(--warning-border)]",
+  hard: "bg-[var(--error-soft)] text-[var(--error)] border-[var(--error-border)]",
 };
 
 const labelMap: Record<Difficulty, string> = {
@@ -20,17 +20,7 @@ interface DifficultyPillProps {
 export default function DifficultyPill({ difficulty, className }: DifficultyPillProps) {
   return (
     <span
-      className={className}
-      style={{
-        ...pillStyle[difficulty],
-        borderRadius: "var(--radius-full)",
-        fontSize: "11px",
-        fontWeight: 500,
-        padding: "2px 8px",
-        display: "inline-block",
-        width: "fit-content",
-        lineHeight: 1.4,
-      }}
+      className={`inline-block w-fit rounded-full border px-2 py-0.5 text-[11px] font-medium leading-[1.4] ${pillClass[difficulty]} ${className ?? ""}`}
     >
       {labelMap[difficulty]}
     </span>

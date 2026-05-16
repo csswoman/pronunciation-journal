@@ -14,20 +14,14 @@ export default function AudioButton({ audioUrl, variant }: AudioButtonProps) {
   return (
     <Button
       onClick={() => playAudio(audioUrl, { showAlerts: true })}
-      className="p-3 rounded-full transition-colors"
-      style={{
-        backgroundColor: "var(--btn-regular-bg)",
-      }}
-      onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "var(--btn-regular-bg-hover)")}
-      onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "var(--btn-regular-bg)")}
+      className="p-3 rounded-full transition-colors bg-surface-sunken hover:bg-surface-raised"
       title={isDictionary ? "Dictionary Pronunciation" : "Your Pronunciation"}
       aria-label={isDictionary ? "Play dictionary pronunciation" : "Play your pronunciation"}
     >
       {isDictionary ? (
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          className="h-6 w-6"
-          style={{ color: "var(--primary)" }}
+          className="h-6 w-6 text-primary"
           viewBox="0 0 20 20"
           fill="currentColor"
         >

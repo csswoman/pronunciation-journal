@@ -1,48 +1,32 @@
 import Link from "next/link";
-import { Volume2 } from "lucide-react";
-
-interface ReviewWord {
-  word: string;
-  ipa: string;
-  translation: string;
-  difficulty: "easy" | "med" | "hard";
-}
+import { Volume2, LibraryBig, ArrowRight } from "lucide-react";
+import type { WordBankEntry } from "@/lib/types";
+import { getWordStrength } from "@/lib/word-bank/strength";
+import { WordStrengthBars } from "@/components/vocabulary/words/WordStrengthBars";
 
 interface HomeWordsToReviewProps {
   dueCount?: number;
-  words?: ReviewWord[];
+  words?: WordBankEntry[];
 }
 
-const DIFFICULTY_STYLE: Record<ReviewWord["difficulty"], string> = {
-  hard: "bg-red-900/30 text-red-300 border-red-700/30",
-  med:  "bg-amber-900/30 text-amber-300 border-amber-700/30",
-  easy: "bg-emerald-900/30 text-emerald-300 border-emerald-700/30",
-};
-
-const DIFFICULTY_LABEL: Record<ReviewWord["difficulty"], string> = {
-  hard: "Hard",
-  med:  "Med",
-  easy: "Easy",
-};
-
 export default function HomeWordsToReview({
-  dueCount = 12,
-  words = [
-    { word: "thorough",     ipa: "/ˈθʌrə/",          translation: "completo",        difficulty: "hard" },
-    { word: "awkward",      ipa: "/ˈɔː.kwəd/",        translation: "incómodo",        difficulty: "med"  },
-    { word: "particularly", ipa: "/pəˈtɪk.jə.lə.li/", translation: "particularmente", difficulty: "hard" },
-  ],
+  dueCount = 0,
+  words = [],
 }: HomeWordsToReviewProps) {
   return (
     <div className="rounded-xl border border-border-subtle bg-surface-raised p-5 flex flex-col gap-4">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold tracking-tight text-[var(--text-primary)]">Words to review</h2>
+        <div className="flex items-center gap-2">
+          <LibraryBig size={18} className="text-[var(--primary)]" />
+          <h2 className="text-xl font-semibold tracking-tight text-[var(--text-primary)]">Words to review</h2>
+        </div>
         <Link
-          href="/review"
-          className="text-sm font-medium text-[var(--primary)] hover:opacity-80 transition-opacity"
+          href="/vocabulary"
+          className="text-[var(--primary)] hover:opacity-80 transition-opacity flex text-xs gap-1 font-medium items-center hover:underline"
+          aria-label="Open Vocabulary"
         >
-          Open Word Bank →
+          Open Vocabulary <ArrowRight size={14} />
         </Link>
       </div>
 
@@ -53,9 +37,12 @@ export default function HomeWordsToReview({
 
       {/* Word rows */}
       <div className="flex flex-col">
+        {words.length === 0 && (
+          <p className="text-sm text-[var(--text-tertiary)] py-2">No words due yet — check back later.</p>
+        )}
         {words.map((w, idx) => (
           <div
-            key={w.word}
+            key={w.id}
             className={[
               "flex items-center gap-3 py-3",
               idx < words.length - 1 ? "border-b border-border-subtle" : "",
@@ -63,7 +50,7 @@ export default function HomeWordsToReview({
           >
             {/* Audio icon */}
             <button
-              aria-label={`Play ${w.word}`}
+              aria-label={`Play ${w.text}`}
               className="shrink-0 w-8 flex items-center justify-center text-[var(--text-tertiary)] hover:text-[var(--text-primary)] transition-colors"
             >
               <Volume2 size={15} />
@@ -71,16 +58,16 @@ export default function HomeWordsToReview({
 
             {/* Word + phonetic */}
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-[var(--text-primary)] leading-tight">{w.word}</p>
+              <p className="text-sm font-medium text-[var(--text-primary)] leading-tight">{w.text}</p>
               <p className="text-xs text-[var(--text-tertiary)] mt-0.5 truncate">
-                {w.ipa} · {w.translation}
+                {w.ipa ? `/${w.ipa.replace(/^\/|\/$/g, "")}/` : ""}
+                {w.ipa && w.translation ? " · " : ""}
+                {w.translation ?? ""}
               </p>
             </div>
 
-            {/* Difficulty badge */}
-            <span className={`inline-flex items-center text-xs font-medium px-2 py-0.5 rounded-full border ${DIFFICULTY_STYLE[w.difficulty]}`}>
-              {DIFFICULTY_LABEL[w.difficulty]}
-            </span>
+            {/* Strength bars */}
+            <WordStrengthBars strength={getWordStrength(w)} size={14} />
           </div>
         ))}
       </div>

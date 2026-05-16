@@ -89,17 +89,9 @@ export default function AchievementsSection() {
         {unlocked.map((a) => (
           <div
             key={a.id}
-            className="rounded-3xl p-4 flex items-start gap-3 animate-fadeIn"
-            style={{
-              background: 'var(--card-bg)',
-              border: '1px solid var(--line-divider)',
-              boxShadow: '0 1px 3px var(--line-divider), 0 6px 16px var(--line-divider)',
-            }}
+            className="flex animate-fadeIn items-start gap-3 rounded-3xl border border-[var(--line-divider)] bg-[var(--card-bg)] p-4 shadow-[0_1px_3px_var(--line-divider),0_6px_16px_var(--line-divider)]"
           >
-            <div
-              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl text-2xl"
-              style={{ background: 'color-mix(in oklch, var(--primary) 10%, var(--btn-regular-bg))' }}
-            >
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[color-mix(in_oklch,var(--primary)_10%,var(--btn-regular-bg))] text-2xl">
               {a.icon}
             </div>
             <div className="flex-1 min-w-0">
@@ -109,13 +101,7 @@ export default function AchievementsSection() {
               <p className="mt-0.5 text-xs leading-relaxed text-fg-muted">
                 {a.description}
               </p>
-              <span
-                className="mt-2 inline-block rounded-lg px-2 py-0.5 text-tiny font-bold"
-                style={{
-                  background: 'color-mix(in oklch, var(--primary) 14%, transparent)',
-                  color: 'var(--primary)',
-                }}
-              >
+              <span className="mt-2 inline-block rounded-lg bg-[color-mix(in_oklch,var(--primary)_14%,transparent)] px-2 py-0.5 text-tiny font-bold text-[var(--primary)]">
                 +{a.xp} XP
               </span>
             </div>
@@ -128,17 +114,9 @@ export default function AchievementsSection() {
         {locked.map((a) => (
           <div
             key={a.id}
-            className="rounded-3xl p-4 flex items-start gap-3"
-            style={{
-              background: 'var(--btn-regular-bg)',
-              border: '1px solid var(--line-divider)',
-              opacity: 0.6,
-            }}
+            className="flex items-start gap-3 rounded-3xl border border-[var(--line-divider)] bg-[var(--btn-regular-bg)] p-4 opacity-60"
           >
-            <div
-              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl text-2xl grayscale"
-              style={{ background: 'var(--line-divider)' }}
-            >
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[var(--line-divider)] text-2xl grayscale">
               {a.icon}
             </div>
             <div className="flex-1 min-w-0">
@@ -148,13 +126,7 @@ export default function AchievementsSection() {
               <p className="mt-0.5 text-xs leading-relaxed text-fg-muted">
                 {a.description}
               </p>
-              <span
-                className="mt-2 inline-block rounded-lg px-2 py-0.5 text-tiny font-bold"
-                style={{
-                  background: 'var(--line-divider)',
-                  color: 'var(--text-tertiary)',
-                }}
-              >
+              <span className="mt-2 inline-block rounded-lg bg-[var(--line-divider)] px-2 py-0.5 text-tiny font-bold text-[var(--text-tertiary)]">
                 +{a.xp} XP
               </span>
             </div>
@@ -164,4 +136,3 @@ export default function AchievementsSection() {
     </div>
   )
 }
-

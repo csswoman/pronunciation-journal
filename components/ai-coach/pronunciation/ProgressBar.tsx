@@ -11,18 +11,17 @@ export default function ProgressBar({ current, total, mastered, pct }: Props) {
   return (
     <div className="shrink-0 px-5 pt-3 pb-2">
       <div className="flex items-center justify-between mb-1.5">
-        <span className="text-[11px] font-medium tabular-nums" style={{ color: "var(--text-tertiary)" }}>
+        <span className="text-[11px] font-medium tabular-nums text-fg-subtle">
           Phrase {current} / {total}
         </span>
         {mastered > 0 && (
-          <span className="text-[11px] font-medium" style={{ color: "var(--score-excellent)" }}>
+          <span className="text-[11px] font-medium text-success">
             {mastered} mastered
           </span>
         )}
       </div>
       <div
-        className="relative w-full rounded-full overflow-hidden"
-        style={{ height: 4, backgroundColor: "var(--btn-regular-bg)" }}
+        className="relative w-full h-1 rounded-full overflow-hidden bg-surface-sunken"
       >
         <div
           className="h-full rounded-full transition-all duration-500"

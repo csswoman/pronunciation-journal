@@ -40,11 +40,8 @@ export default function Sidebar({ className = "" }: SidebarProps) {
         <div className={`flex items-center ${collapsed ? "justify-center px-2" : "justify-between px-5"} py-5 flex-shrink-0`}>
           {!collapsed && (
             <div className="flex items-center gap-2.5">
-              <div
-                className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0"
-                style={{ background: "var(--primary)" }}
-              >
-                <span className="font-bold text-xs" style={{ color: "var(--accent-text)" }}>EJ</span>
+              <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 bg-primary">
+                <span className="font-bold text-xs text-on-primary">EJ</span>
               </div>
               <span className="font-heading font-semibold text-sm text-fg">
                 English Journal

@@ -18,12 +18,7 @@ export default function Header({ title }: HeaderProps) {
     : "";
 
   return (
-    <header className="py-5 border-b transition-colors" 
-      style={{
-        backgroundColor: 'var(--bg-secondary)',
-        borderColor: 'var(--border)',
-      }}
-    >
+    <header className="py-5 border-b border-border-default bg-surface-raised transition-colors">
       <div className="max-w-7xl mx-auto flex justify-between items-center px-4 sm:px-6 lg:px-8 gap-4">
         <H1 className="text-xl font-bold">
           {title}

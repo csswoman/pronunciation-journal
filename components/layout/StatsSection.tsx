@@ -57,14 +57,7 @@ export default function StatsSection({ stats, todayProgress, progressHistory, us
       {(progressList.length > 0 || words.length > 0) && (
         <div className="grid gap-4 lg:grid-cols-2">
           {progressList.length > 0 && (
-            <div
-              className="rounded-3xl p-5"
-              style={{
-                background: "var(--card-bg)",
-                border: "1px solid var(--line-divider)",
-                boxShadow: "0 1px 3px var(--line-divider), 0 8px 20px var(--line-divider)",
-              }}
-            >
+            <div className="rounded-3xl p-5 bg-surface-raised border border-border-subtle shadow-card">
               <SoundGrid progressList={progressList} />
             </div>
           )}
@@ -116,7 +109,7 @@ function TipBanner({
       }}
     >
       <div className="flex items-center gap-3">
-        <span style={{ color: "var(--primary)" }}>✦</span>
+        <span className="text-primary">✦</span>
         <p className="text-sm text-fg-muted">
           <span className="font-semibold text-fg">Tip for you: </span>
           {tipText}

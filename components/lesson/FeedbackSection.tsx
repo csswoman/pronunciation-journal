@@ -37,17 +37,13 @@ export default function FeedbackSection({
       <div className="flex gap-4 justify-center">
         <Button
           onClick={onRetry}
-          className="px-6 py-3 rounded-xl font-medium transition-colors"
-          style={{ backgroundColor: 'var(--btn-regular-bg)', color: 'var(--text-primary)' }}
+          className="px-6 py-3 rounded-xl font-medium transition-colors bg-surface-sunken text-fg"
         >
           🔄 Retry
         </Button>
         <Button
           onClick={onNext}
-          className="px-6 py-3 rounded-xl text-on-primary font-medium transition-colors"
-          style={{ backgroundColor: 'var(--primary)' }}
-          onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--btn-regular-bg-hover)')}
-          onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'var(--primary)')}
+          className="px-6 py-3 rounded-xl bg-primary text-on-primary font-medium transition-colors hover:opacity-90"
         >
           {currentIndex + 1 < totalWords ? "➡️ Next" : "🎉 Finish"}
         </Button>

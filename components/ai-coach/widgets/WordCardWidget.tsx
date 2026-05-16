@@ -9,8 +9,7 @@ interface Props {
 export default function WordCardWidget({ args }: Props) {
   return (
     <div
-      className="rounded-xl border p-4 space-y-1.5"
-      style={{ borderColor: "var(--line-divider)", backgroundColor: "var(--btn-regular-bg)" }}
+      className="rounded-xl border border-border-default bg-surface-raised p-4 space-y-1.5"
     >
       <div className="flex items-baseline gap-2">
         <span className="text-base font-semibold text-fg">

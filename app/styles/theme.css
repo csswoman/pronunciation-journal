@@ -1,0 +1,166 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Theme — Tailwind v4 token mappings
+   @theme inline generates utility classes (bg-*, text-*, border-*, etc.)
+   without re-emitting CSS variables. Values using var() resolve at runtime
+   so dynamic tokens (--primary, --hue) work correctly.
+
+   Generated utility patterns:
+     --color-*    → bg-*, text-*, border-*, ring-*, fill-*, stroke-*
+     --spacing-*  → p-*, m-*, gap-*, w-*, h-*, inset-*, translate-*
+     --radius-*   → rounded-*  (overrides Tailwind defaults)
+     --text-*     → text-*     (font-size + optional line-height, weight, tracking)
+     --shadow-*   → shadow-*
+
+   Naming conventions:
+     border-border-subtle, border-border-default …
+     text-fg, text-fg-muted, text-fg-subtle
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@theme inline {
+  /* ── Surfaces ──────────────────────────────────────────────────────────── */
+  --color-surface-base:    var(--surface-base);
+  --color-surface-raised:  var(--surface-raised);
+  --color-surface-sunken:  var(--surface-sunken);
+  --color-surface-overlay: var(--surface-overlay);
+  --color-surface-tooltip: var(--surface-tooltip);
+  --color-surface-code:    var(--surface-code);
+
+  /* ── Primary (dynamic — driven by --hue at runtime) ───────────────────── */
+  --color-primary:       var(--primary);
+  --color-primary-soft:  var(--primary-soft);
+  --color-primary-hover: var(--primary-hover);
+  --color-on-primary:    var(--on-primary);
+  --color-primary-50:    var(--primary-50);
+  --color-primary-100:   var(--primary-100);
+  --color-primary-200:   var(--primary-200);
+  --color-primary-300:   var(--primary-300);
+
+  /* ── Foreground / text ─────────────────────────────────────────────────── */
+  /* Named fg-* to avoid clashing with Tailwind's text-base font-size utility */
+  --color-fg:             var(--text-primary);
+  --color-fg-muted:       var(--text-secondary);
+  --color-fg-subtle:      var(--text-tertiary);
+  --color-fg-disabled:    var(--text-disabled);
+  --color-fg-placeholder: var(--text-placeholder);
+
+  /* ── Borders ───────────────────────────────────────────────────────────── */
+  --color-border-subtle:  var(--border-subtle);
+  --color-border-default: var(--border-default);
+  --color-border-strong:  var(--border-strong);
+  --color-border-focus:   var(--border-focus);
+
+  /* ── Overlays ──────────────────────────────────────────────────────────── */
+  --color-overlay-subtle: var(--overlay-subtle);
+  --color-overlay-weak:   var(--overlay-weak);
+  --color-overlay-light:  var(--overlay-light);
+  --color-overlay-medium: var(--overlay-medium);
+  --color-overlay-strong: var(--overlay-strong);
+  --color-overlay-darker: var(--overlay-darker);
+
+  /* ── Semantic ──────────────────────────────────────────────────────────── */
+  --color-success:         var(--success);
+  --color-success-soft:    var(--success-soft);
+  --color-success-border:  var(--success-border);
+  --color-success-deco:    var(--success-deco);
+  --color-success-icon-bg: var(--success-icon-bg);
+  --color-success-value:   var(--success-value);
+
+  --color-warning:         var(--warning);
+  --color-warning-soft:    var(--warning-soft);
+  --color-warning-border:  var(--warning-border);
+  --color-warning-deco:    var(--warning-deco);
+  --color-warning-icon-bg: var(--warning-icon-bg);
+  --color-warning-value:   var(--warning-value);
+
+  --color-error:         var(--error);
+  --color-error-soft:    var(--error-soft);
+  --color-error-border:  var(--error-border);
+  --color-error-deco:    var(--error-deco);
+  --color-error-icon-bg: var(--error-icon-bg);
+  --color-error-value:   var(--error-value);
+
+  --color-info:         var(--info);
+  --color-info-soft:    var(--info-soft);
+  --color-info-border:  var(--info-border);
+  --color-info-deco:    var(--info-deco);
+  --color-info-icon-bg: var(--info-icon-bg);
+  --color-info-value:   var(--info-value);
+
+  /* ── Scoring / Word chip ────────────────────────────────────────────── */
+  --color-score-excellent:     var(--score-excellent);
+  --color-score-excellent-bg:  var(--score-excellent-bg);
+  --color-score-acceptable:    var(--score-acceptable);
+  --color-score-acceptable-bg: var(--score-acceptable-bg);
+  --color-score-poor:          var(--score-poor);
+  --color-score-poor-bg:       var(--score-poor-bg);
+  --color-word-correct:        var(--word-correct);
+  --color-word-correct-bg:     var(--word-correct-bg);
+  --color-word-incorrect:      var(--word-incorrect);
+  --color-word-incorrect-bg:   var(--word-incorrect-bg);
+  --color-word-missing:        var(--word-missing);
+  --color-word-missing-bg:     var(--word-missing-bg);
+  --color-word-extra:          var(--word-extra);
+  --color-word-extra-bg:       var(--word-extra-bg);
+
+  /* ── Spacing — p-space-4, gap-space-6, m-space-2, w-space-8, etc. ──────── */
+  --spacing-space-1:  0.25rem;
+  --spacing-space-2:  0.5rem;
+  --spacing-space-3:  0.75rem;
+  --spacing-space-4:  1rem;
+  --spacing-space-5:  1.25rem;
+  --spacing-space-6:  1.5rem;
+  --spacing-space-8:  2rem;
+  --spacing-space-10: 2.5rem;
+  --spacing-space-12: 3rem;
+  --spacing-space-16: 4rem;
+  --spacing-space-20: 5rem;
+
+  /* ── Border radius — rounded-xs…rounded-full ───────────────────────────── */
+  --radius-xs:   4px;
+  --radius-sm:   8px;
+  --radius-md:   12px;
+  --radius-lg:   16px;
+  --radius-xl:   20px;
+  --radius-2xl:  24px;
+  --radius-3xl:  32px;
+  --radius-full: 9999px;
+
+  /* ── Typography — text-h1…text-tiny ────────────────────────────────────── */
+  --text-h1: 2.625rem;
+  --text-h1--line-height: 1.2;
+  --text-h1--font-weight: 700;
+  --text-h1--letter-spacing: -0.02em;
+
+  --text-h2: 2rem;
+  --text-h2--line-height: 1.3;
+  --text-h2--font-weight: 700;
+  --text-h2--letter-spacing: -0.01em;
+
+  --text-h3: 1.5rem;
+  --text-h3--line-height: 1.4;
+  --text-h3--font-weight: 600;
+  --text-h3--letter-spacing: -0.005em;
+
+  --text-h4: 1.25rem;
+  --text-h4--line-height: 1.4;
+  --text-h4--font-weight: 600;
+
+  --text-body-lg: 1.125rem;
+  --text-body-lg--line-height: 1.6;
+
+  --text-body-sm: 0.875rem;
+  --text-body-sm--line-height: 1.5;
+
+  --text-caption: 0.75rem;
+  --text-caption--line-height: 1.5;
+
+  --text-tiny: 0.6875rem;
+  --text-tiny--line-height: 1.4;
+  --text-tiny--font-weight: 500;
+
+  /* ── Shadows — shadow-sm…shadow-xl ─────────────────────────────────────── */
+  --shadow-sm: 0 1px 2px   oklch(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px   oklch(0 0 0 / 0.07);
+  --shadow-lg: 0 10px 15px oklch(0 0 0 / 0.10);
+  --shadow-xl: 0 20px 25px oklch(0 0 0 / 0.10);
+}

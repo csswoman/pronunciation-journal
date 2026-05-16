@@ -37,8 +37,7 @@ export function WordChip({ word, status, tip, onPlay }: Props) {
       </span>
       {show && tip && (
         <span
-          className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2.5 py-1.5 rounded-lg text-xs whitespace-nowrap z-30 shadow-xl pointer-events-none"
-          style={{ background: "var(--card-bg)", border: "1px solid var(--line-divider)", color: "var(--body-text)" }}
+          className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2.5 py-1.5 rounded-lg text-xs whitespace-nowrap z-30 shadow-xl pointer-events-none bg-surface-raised border border-border-subtle text-fg"
         >
           {tip}
           <span className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent"

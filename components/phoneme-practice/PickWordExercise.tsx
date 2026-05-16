@@ -73,7 +73,7 @@ export function PickWordExercise({ exercise, onSubmit }: Props) {
         <p className="text-sm mb-2 text-fg-muted">
           Which words contain this sound?
         </p>
-        <span className="text-5xl font-bold font-mono" style={{ color: 'var(--primary)' }}>
+        <span className="text-5xl font-bold font-mono text-primary">
           {exercise.ipa}
         </span>
         <p className="text-xs mt-1 text-fg-subtle">Select all that apply</p>

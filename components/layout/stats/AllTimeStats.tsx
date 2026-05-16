@@ -9,7 +9,7 @@ function formatCompact(value: number) {
 
 function MetricRow({ label, value, colored, highlight }: { label: string; value: string; colored?: boolean; highlight?: boolean }) {
   return (
-    <div className="flex items-center justify-between py-2.5" style={{ borderBottom: "1px solid var(--line-divider)" }}>
+    <div className="flex items-center justify-between py-2.5 border-b border-border-subtle">
       <span className="text-sm text-fg-muted">{label}</span>
       <span
         className="text-sm font-bold"
@@ -39,12 +39,7 @@ export function AllTimeStats({ stats }: Props) {
 
   return (
     <div
-      className="rounded-3xl p-5"
-      style={{
-        background: "var(--card-bg)",
-        border: "1px solid var(--line-divider)",
-        boxShadow: "0 1px 3px var(--line-divider), 0 8px 20px var(--line-divider)",
-      }}
+      className="rounded-3xl p-5 bg-surface-raised border border-border-subtle shadow-card"
     >
       <p className="text-base font-bold mb-1 text-fg">All-time stats</p>
 

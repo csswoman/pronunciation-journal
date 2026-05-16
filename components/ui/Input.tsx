@@ -26,8 +26,7 @@ export default function Input({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="px-3 py-2 rounded-lg text-sm border focus:outline-none focus:ring-2"
-        style={{ backgroundColor: "var(--surface)", borderColor: "var(--border)", color: "var(--text-primary)" }}
+        className="px-3 py-2 rounded-lg text-sm border border-border-default bg-surface-sunken text-fg focus:outline-none focus:ring-2"
       />
     </div>
   );

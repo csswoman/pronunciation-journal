@@ -47,10 +47,9 @@ export function GuestBanner() {
         {["Consistency Score", "Current Streak", "Weekly Accuracy", "XP This Week", "Total Words"].map((label) => (
           <div
             key={label}
-            className="flex flex-col gap-2 rounded-3xl p-4"
-            style={{ background: "var(--card-bg)", border: "1px solid var(--line-divider)" }}
+            className="flex flex-col gap-2 rounded-3xl p-4 bg-surface-raised border border-border-subtle"
           >
-            <div className="h-9 w-9 rounded-xl" style={{ background: "var(--line-divider)" }} />
+            <div className="h-9 w-9 rounded-xl bg-border-subtle" />
             <div className="space-y-1">
               <p className="text-tiny font-semibold uppercase tracking-[0.2em] text-fg-muted">{label}</p>
               <p className="text-2xl font-black text-fg">—</p>
@@ -60,8 +59,7 @@ export function GuestBanner() {
       </div>
 
       <div
-        className="rounded-3xl p-8 flex flex-col items-center text-center gap-2 opacity-40 pointer-events-none select-none blur-[2px]"
-        style={{ background: "var(--card-bg)", border: "1px solid var(--line-divider)", height: 200 }}
+        className="rounded-3xl p-8 flex flex-col items-center text-center gap-2 opacity-40 pointer-events-none select-none blur-[2px] bg-surface-raised border border-border-subtle h-[200px]"
       >
         <p className="text-base font-bold text-fg">Weekly progress chart</p>
       </div>

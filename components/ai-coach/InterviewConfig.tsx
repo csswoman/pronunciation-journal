@@ -90,7 +90,7 @@ export default function InterviewConfig({
               <Icon
                 size={16}
                 strokeWidth={1.8}
-                style={{ color: scenario === id ? "var(--primary)" : "var(--text-tertiary)" }}
+                className={scenario === id ? "text-[var(--primary)]" : "text-[var(--text-tertiary)]"}
               />
               <span className="text-caption font-semibold text-[var(--text-primary)] leading-[1.2]">{label}</span>
               <span className="text-tiny text-[var(--text-tertiary)]">{sub}</span>

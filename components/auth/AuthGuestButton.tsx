@@ -13,22 +13,13 @@ export function AuthGuestButton({ onClick, pending }: AuthGuestButtonProps) {
       type="button"
       onClick={onClick}
       disabled={pending}
-      className="auth-guest-btn w-full flex items-center justify-between px-[var(--space-4)] py-[var(--space-3)] rounded-[var(--radius-md)] text-left transition-all disabled:opacity-50"
-      style={{ background: "transparent", border: "1px solid var(--border-default)", color: "var(--text-secondary)" }}
+      className="w-full flex items-center justify-between px-[var(--space-4)] py-[var(--space-3)] rounded-[var(--radius-md)] text-left transition-all disabled:opacity-50 border border-border-default text-fg-muted hover:bg-surface-sunken hover:border-border-strong hover:text-fg focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
     >
       <div className="flex items-center gap-[var(--space-3)]">
         <User className="w-5 h-5 text-fg-subtle" />
-        <p style={{ font: "var(--font-body-sm)", fontWeight: 500 }}>Continue as guest</p>
+        <p className="text-sm font-medium">Continue as guest</p>
       </div>
       <ArrowRight className="w-5 h-5 text-fg-subtle" />
-      <style>{`
-        .auth-guest-btn:hover {
-          background: var(--surface-sunken);
-          border-color: var(--border-strong);
-          color: var(--text-primary);
-        }
-        .auth-guest-btn:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
-      `}</style>
     </button>
   );
 }

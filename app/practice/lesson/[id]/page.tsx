@@ -1,5 +1,5 @@
-import ActiveLessonPage from "@/components/lesson/ActiveLessonPage";
+import PronunciationExercise from "@/components/lesson/pronunciation-exercise/PronunciationExercise";
 
 export default function Page() {
-  return <ActiveLessonPage backHref="/practice" />;
+  return <PronunciationExercise />;
 }

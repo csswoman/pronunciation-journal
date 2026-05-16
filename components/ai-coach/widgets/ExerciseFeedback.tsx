@@ -52,8 +52,7 @@ export default function ExerciseFeedback({ result, onNext, onRetry }: ExerciseFe
           )}
           {feedback.tip && (
             <p
-              className="text-xs leading-relaxed whitespace-pre-wrap"
-              style={{ color: "var(--text-muted, var(--text-secondary))", opacity: 0.8 }}
+              className="text-xs leading-relaxed whitespace-pre-wrap text-fg-muted opacity-80"
             >
               💡 {feedback.tip}
             </p>
@@ -73,12 +72,7 @@ export default function ExerciseFeedback({ result, onNext, onRetry }: ExerciseFe
           {!correct && onRetry && (
             <button
               onClick={onRetry}
-              className="text-xs px-3 py-1 rounded-lg font-medium transition-opacity hover:opacity-80"
-              style={{
-                backgroundColor: "var(--btn-regular-bg)",
-                color: "var(--text-primary)",
-                border: "1px solid var(--line-divider)",
-              }}
+              className="text-xs px-3 py-1 rounded-lg font-medium transition-opacity hover:opacity-80 bg-surface-sunken text-fg border border-border-subtle"
             >
               Try again
             </button>

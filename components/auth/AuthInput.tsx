@@ -36,7 +36,7 @@ export function AuthInput({
 
   return (
     <div>
-      <label className="block mb-[var(--space-2)]" style={{ font: "var(--font-tiny)", letterSpacing: "0.05em", fontWeight: 600, color: "var(--text-secondary)", textTransform: "uppercase" }}>
+      <label className="block mb-[var(--space-2)] text-tiny font-semibold tracking-widest uppercase text-fg-muted">
         {label}
       </label>
       <div className="relative">

@@ -35,8 +35,7 @@ export function StudyRightPanel({ stats, upcomingCards }: StudyRightPanelProps) 
             { val: stats.hard,  label: "medium",      color: "var(--warning)" },
             { val: stats.seen,  label: "total seen",  color: "var(--text-primary)" },
           ].map(({ val, label, color }) => (
-            <div key={label} className="rounded-xl border p-3 text-center"
-              style={{ borderColor: "var(--line-divider)", backgroundColor: "var(--card-bg)" }}>
+            <div key={label} className="rounded-xl border border-border-subtle bg-surface-raised p-3 text-center">
               <p className="text-xl font-bold" style={{ color }}>{val}</p>
               <p className="text-tiny mt-0.5 text-fg-subtle">{label}</p>
             </div>
@@ -54,8 +53,7 @@ export function StudyRightPanel({ stats, upcomingCards }: StudyRightPanelProps) 
                 ? LEVEL_LABELS[Math.min((card.difficulty ?? 1) - 1, 5)]
                 : null;
               return (
-                <div key={card.id} className="flex items-center gap-2.5 px-3 py-2 rounded-xl border"
-                  style={{ borderColor: "var(--line-divider)", backgroundColor: "var(--card-bg)" }}>
+                <div key={card.id} className="flex items-center gap-2.5 px-3 py-2 rounded-xl border border-border-subtle bg-surface-raised">
                   <div className="w-2 h-2 rounded-full shrink-0"
                     style={{ backgroundColor: DOT_COLORS[i % DOT_COLORS.length] }} />
                   <div className="flex-1 min-w-0">

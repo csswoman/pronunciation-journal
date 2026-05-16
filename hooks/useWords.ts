@@ -266,9 +266,16 @@ export function useWords(): UseWordsState {
     processingSinceRef.current.set(id, Date.now());
 
     try {
+      const supabase = getSupabaseBrowserClient();
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) throw new Error("Not authenticated");
+
       const res = await fetch("/api/words", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session.access_token}`,
+        },
         body: JSON.stringify({ id, text: target.text, context: target.context }),
       });
 

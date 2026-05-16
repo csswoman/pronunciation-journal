@@ -61,14 +61,12 @@ export default function HomeCoursesSection() {
         <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-20 z-10 bg-gradient-to-r from-transparent to-[var(--surface-base)]" />
         <div
           ref={trackRef}
-          className="flex gap-6 overflow-x-scroll [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-          style={{ scrollSnapType: "x mandatory" }}
+          className="flex gap-6 overflow-x-scroll [scrollbar-width:none] [&::-webkit-scrollbar]:hidden [scroll-snap-type:x_mandatory]"
         >
           {courses.map((course, i) => (
             <div
               key={course.id}
-              className="shrink-0"
-              style={{ maxWidth: "320px", minWidth: "280px", width: "45vw", flexShrink: 0, scrollSnapAlign: "start" }}
+              className="max-w-[320px] min-w-[280px] w-[45vw] shrink-0 [scroll-snap-align:start]"
             >
               <CourseCard course={course} priority={i < 2} />
             </div>

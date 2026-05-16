@@ -66,7 +66,7 @@ export function StudyCardContent({ entry, flipped, showAllMeanings, onToggleAllM
       {/* Word + IPA */}
       <div className="mb-4">
         <div className="flex items-baseline gap-3 flex-wrap">
-          <H2 className="text-4xl md:text-5xl font-bold italic leading-none" style={{ fontFamily: "var(--font-serif, serif)" }}>
+          <H2 className="text-4xl md:text-5xl font-bold italic leading-none font-serif">
             {entry.word}
           </H2>
           {flipped && entry.ipa && (

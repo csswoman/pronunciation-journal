@@ -6,6 +6,7 @@ import Link from "next/link";
 import { BookOpen } from "lucide-react";
 import type { Course } from "@/lib/notion/types";
 import ProgressBar from "@/components/ui/ProgressBar";
+import Badge, { BadgeColor } from "@/components/ui/Badge";
 
 type CourseCardModel = Course & {
   completedLessons?: number;
@@ -16,10 +17,10 @@ type CourseCardProps = {
   priority?: boolean;
 };
 
-const levelBadge: Record<string, { label: string; className: string }> = {
-  basic:        { label: "Basic",        className: "bg-emerald-900/40 text-emerald-300 border-emerald-700/40" },
-  intermediate: { label: "Intermediate", className: "bg-amber-900/40 text-amber-300 border-amber-700/40" },
-  advanced:     { label: "Advanced",     className: "bg-red-900/40 text-red-300 border-red-700/40" },
+const levelBadge: Record<string, { label: string; color: BadgeColor }> = {
+  basic:        { label: "Basic",        color: "emerald" },
+  intermediate: { label: "Intermediate", color: "amber"   },
+  advanced:     { label: "Advanced",     color: "red"     },
 };
 
 const coverHues = [250, 180, 310, 60, 25];
@@ -79,9 +80,7 @@ export default function CourseCard({ course, priority = false }: CourseCardProps
         }}
       >
         {/* Level badge */}
-        <span className={`absolute top-2 left-2 z-10 text-xs px-2 py-0.5 rounded-full font-medium border ${level.className}`}>
-          {level.label}
-        </span>
+        <Badge label={level.label} color={level.color} className="absolute top-2 left-2 z-10" />
 
         {course.coverImageUrl && !coverFailed ? (
           <Image
@@ -112,12 +111,12 @@ export default function CourseCard({ course, priority = false }: CourseCardProps
 
       {/* Body */}
       <div className="flex flex-1 flex-col">
-        <p className="font-semibold text-sm text-[var(--text-primary)] mt-3 px-3 leading-snug">
+        <p className="font-semibold text-sm text-fg mt-3 px-3 leading-snug">
           {course.title}
         </p>
 
         {course.description && (
-          <p className="text-xs text-[var(--text-secondary)] leading-relaxed px-3 mt-1 line-clamp-2">
+          <p className="text-xs text-fg-muted leading-relaxed px-3 mt-1 line-clamp-2">
             {course.description}
           </p>
         )}
@@ -133,7 +132,7 @@ export default function CourseCard({ course, priority = false }: CourseCardProps
           </div>
         )}
 
-        <p className="text-xs text-[var(--text-tertiary)] px-3 mt-auto pt-2 pb-1 flex items-center gap-1">
+        <p className="text-xs text-fg-subtle px-3 mt-auto pt-2 pb-1 flex items-center gap-1">
           <BookOpen size={11} className="opacity-70 shrink-0" />
           {totalLessons} lessons
         </p>

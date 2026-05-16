@@ -12,32 +12,16 @@ interface SmartDeckCardProps {
 export function SmartDeckCard({ count, onStudy }: SmartDeckCardProps) {
   const progressPercent = count > 0 ? Math.max(8, Math.min(100, Math.round((1 / (count + 1)) * 100))) : 0;
   return (
-    <div
-      className="rounded-[var(--radius-lg)] overflow-hidden transition-all hover:shadow-lg"
-      style={{
-        border: "1.5px dashed color-mix(in oklch, var(--primary) 50%, var(--line-divider))",
-        background: "color-mix(in oklch, var(--primary) 4%, var(--card-bg))",
-      }}
-    >
+    <div className="overflow-hidden rounded-[var(--radius-lg)] border-[1.5px] border-dashed border-[color-mix(in_oklch,var(--primary)_50%,var(--line-divider))] bg-[color-mix(in_oklch,var(--primary)_4%,var(--card-bg))] transition-all hover:shadow-lg">
       <div className="px-4 py-3 flex items-center gap-4">
         <div className="flex items-start gap-3 min-w-0 flex-1">
-          <div
-            className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 text-xl"
-            style={{ background: "color-mix(in oklch, var(--primary) 15%, var(--card-bg))" }}
-          >
+          <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-[color-mix(in_oklch,var(--primary)_15%,var(--card-bg))] text-xl">
             🔥
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2">
               <p className="font-semibold text-base text-fg leading-tight">Difficult words</p>
-              <span
-                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold"
-                style={{
-                  background: "color-mix(in oklch, var(--primary) 12%, transparent)",
-                  color: "var(--primary)",
-                  border: "1px solid color-mix(in oklch, var(--primary) 30%, transparent)",
-                }}
-              >
+              <span className="inline-flex items-center gap-1 rounded-full border border-[color-mix(in_oklch,var(--primary)_30%,transparent)] bg-[color-mix(in_oklch,var(--primary)_12%,transparent)] px-2 py-0.5 text-xs font-bold text-[var(--primary)]">
                 <Zap size={10} strokeWidth={2.5} />
                 Smart
               </span>

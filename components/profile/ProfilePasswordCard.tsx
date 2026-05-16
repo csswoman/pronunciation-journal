@@ -82,7 +82,7 @@ export default function ProfilePasswordCard({ onSave }: Props) {
             className={inputClass}
             style={inputStyle}
           />
-          {error && <p className="text-xs" style={{ color: "var(--error)" }}>{error}</p>}
+          {error && <p className="text-xs text-error">{error}</p>}
           <div className="flex gap-2">
             <Button type="submit" variant="primary" size="sm" disabled={isSaving}>
               {isSaving ? "Saving…" : "Update password"}

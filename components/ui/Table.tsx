@@ -7,10 +7,10 @@ interface TableProps {
 
 export default function Table({ headers, rows }: TableProps) {
   return (
-    <div className="overflow-x-auto rounded-lg border" style={{ borderColor: "var(--border)" }}>
+    <div className="overflow-x-auto rounded-lg border border-border-default">
       <table className="w-full text-sm">
         <thead>
-          <tr style={{ backgroundColor: "var(--surface)", borderBottom: "1px solid var(--border)" }}>
+          <tr className="bg-surface-raised border-b border-border-default">
             {headers.map((h) => (
               <th key={h} className="px-3 py-2 text-left text-xs font-semibold text-fg-muted">
                 {h}
@@ -22,8 +22,7 @@ export default function Table({ headers, rows }: TableProps) {
           {rows.map((row, i) => (
             <tr
               key={i}
-              className="border-t"
-              style={{ borderColor: "var(--border)", backgroundColor: i % 2 === 0 ? "transparent" : "var(--surface)" }}
+              className={`border-t border-border-default ${i % 2 !== 0 ? "bg-surface-raised" : ""}`}
             >
               {row.map((cell, j) => (
                 <td key={j} className="px-3 py-2 text-fg">

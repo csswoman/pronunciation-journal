@@ -27,8 +27,7 @@ export default function Select({
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="px-3 py-2 rounded-lg text-sm border focus:outline-none focus:ring-2"
-        style={{ backgroundColor: "var(--surface)", borderColor: "var(--border)", color: "var(--text-primary)" }}
+        className="px-3 py-2 rounded-lg text-sm border border-border-default bg-surface-sunken text-fg focus:outline-none focus:ring-2"
       >
         {options.map((o) => (
           <option key={o.value} value={o.value}>

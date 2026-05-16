@@ -70,7 +70,7 @@ export function AddToExistingDeckModal({ wordIds, decks, onClose, onAdded }: Add
                 </div>
                 <span className="text-sm font-medium text-fg flex-1 truncate">{deck.name}</span>
                 {selectedDeckId === deck.id && (
-                  <Check size={16} style={{ color: "var(--primary)", flexShrink: 0 }} />
+                  <Check size={16} className="text-primary shrink-0" />
                 )}
               </button>
             ))}

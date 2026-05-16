@@ -34,20 +34,14 @@ export default function CompleteSection({
         {isDynamic ? (
           <Button
             onClick={onBackToLobby}
-            className="px-6 py-3 rounded-xl text-on-primary font-medium transition-colors"
-            style={{ backgroundColor: 'var(--primary)' }}
-            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--btn-regular-bg-hover)')}
-            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'var(--primary)')}
+            className="px-6 py-3 rounded-xl bg-primary text-on-primary font-medium transition-colors hover:opacity-90"
           >
             ← Back to Stages
           </Button>
         ) : (
           <Button
             onClick={onRetryLesson}
-            className="px-6 py-3 rounded-xl text-on-primary font-medium transition-colors"
-            style={{ backgroundColor: 'var(--primary)' }}
-            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--btn-regular-bg-hover)')}
-            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'var(--primary)')}
+            className="px-6 py-3 rounded-xl bg-primary text-on-primary font-medium transition-colors hover:opacity-90"
           >
             🔄 Retry Lesson
           </Button>

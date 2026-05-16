@@ -6,6 +6,8 @@ import { useAudioPlayback } from "@/hooks/useAudioPlayback";
 import Button from "@/components/ui/Button";
 import { H4 } from "@/components/ui/Typography";
 import PronunciationBadge from "@/components/vocabulary/PronunciationBadge";
+import { WordStrengthBars } from "@/components/vocabulary/words/WordStrengthBars";
+import { getWordStrength } from "@/lib/word-bank/strength";
 
 interface WordCardProps {
   word: WordBankEntry;
@@ -33,18 +35,23 @@ export function WordCard({ word, onMarkDifficult, onRetry, onDelete, selected, o
     return <WordCardFailed word={word} onRetry={onRetry} onDelete={onDelete} />;
   }
 
+  const strength = getWordStrength(word);
+  const strengthColor = strength === "strong" ? "var(--success)" : strength === "medium" ? "var(--warning)" : "var(--error)";
+
   return (
     <article
-      className="group relative rounded-2xl border bg-[var(--card-bg)] px-4 py-3 transition-all duration-150 hover:shadow-md cursor-pointer hover:-translate-y-px hover:border-[var(--primary)] focus-within:border-[var(--primary)]"
+      className="group relative rounded-2xl border bg-[var(--card-bg)] pl-4 pr-5 py-4 shadow-sm transition-all duration-150 hover:shadow-md cursor-pointer hover:-translate-y-px hover:border-[var(--primary)] focus-within:border-[var(--primary)] overflow-hidden"
       style={{
-        borderColor: selected
-          ? "var(--primary)"
-          : "var(--line-divider)",
-        background: selected
-          ? "color-mix(in oklch, var(--primary) 5%, var(--card-bg))"
-          : "var(--card-bg)",
+        borderColor: selected ? "var(--primary)" : "var(--line-divider)",
+        background: selected ? "color-mix(in oklch, var(--primary) 5%, var(--card-bg))" : "var(--card-bg)",
       }}
     >
+      {/* Strength accent border */}
+      <div
+        aria-hidden
+        className="absolute left-0 top-0 bottom-0 w-[4px] rounded-l-2xl"
+        style={{ background: strengthColor, opacity: 0.7 }}
+      />
       <div className="flex items-start justify-between gap-3">
         {onSelect && (
           <button
@@ -78,6 +85,7 @@ export function WordCard({ word, onMarkDifficult, onRetry, onDelete, selected, o
             <H4 as="h3" className="truncate text-fg font-bold text-h4 leading-[1.2]">
               {word.text}
             </H4>
+            <WordStrengthBars strength={strength} size={13} />
             {word.ipa && (
               <PronunciationBadge
                 ipa={`/${word.ipa.replace(/^\/|\/$/g, "")}/`}
