@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Volume2, Mic, Square, Play, Loader2, RotateCcw } from "lucide-react";
 import Card from "@/components/layout/Card";
 import Button from "@/components/ui/Button";
 import { SyllableWord } from "@/components/ui/SyllableWord";
+import { CardBadge } from "@/components/ui/CardBadge";
 
 interface WordOfDay {
   word: string;
@@ -14,12 +15,6 @@ interface WordOfDay {
   example_sentence: string;
   difficulty: "beginner" | "intermediate" | "advanced";
 }
-
-const DIFFICULTY_STYLE: Record<string, React.CSSProperties> = {
-  beginner:     { color: "var(--success)",  borderColor: "color-mix(in oklch, var(--success) 40%, transparent)" },
-  intermediate: { color: "var(--primary)",  borderColor: "color-mix(in oklch, var(--primary) 40%, transparent)" },
-  advanced:     { color: "var(--warning)",  borderColor: "color-mix(in oklch, var(--warning) 40%, transparent)" },
-};
 
 const BAR_HEIGHTS = [6, 10, 16, 12, 20, 16, 24, 18, 14, 22, 16, 28, 22, 16, 10, 16, 22, 18, 12, 8, 14, 20, 14, 10, 6];
 
@@ -121,19 +116,12 @@ export default function HomeWordOfDay() {
     audio.play();
   }
 
-  const difficultyStyle = word
-    ? (DIFFICULTY_STYLE[word.difficulty] ?? DIFFICULTY_STYLE.intermediate)
-    : DIFFICULTY_STYLE.intermediate;
-
   return (
     <Card variant="compact" className="gap-4">
       <div className="flex items-center justify-between">
-        <span
-          className="text-tiny font-bold tracking-widest uppercase border rounded-full px-2 py-0.5"
-          style={difficultyStyle}
-        >
+        <CardBadge color={word?.difficulty === "beginner" ? "success" : word?.difficulty === "advanced" ? "warning" : "primary"}>
           Word of the day
-        </span>
+        </CardBadge>
         {!loading && (
           <button
             onClick={() => fetchWord(true)}
