@@ -1,6 +1,20 @@
-export type ExerciseType = 'pick_word' | 'pick_sound' | 'minimal_pair' | 'dictation'
+import type { CEFRLevel } from './cefr'
+
+export type ExerciseType = 'pick_word' | 'pick_sound' | 'minimal_pair' | 'dictation' | 'speak_word'
 
 export type SoundStatus = 'locked' | 'available' | 'practicing' | 'mastered'
+
+/**
+ * Options passed to exercise generators to control difficulty and variety.
+ */
+export interface ExerciseOptions {
+  /** Cap word difficulty to this CEFR level. Undefined = no cap. */
+  maxLevel?: CEFRLevel
+  /** Number of correct options (pick_word). Default 2. */
+  correctCount?: number
+  /** Number of distractor options. Default 2 for pick_word, 3 for pick_sound. */
+  distractorCount?: number
+}
 
 export interface Sound {
   id: number
@@ -48,6 +62,10 @@ export interface Exercise {
   targetWord?: string
   options: Option[]
   correctIds: string[]
+  /** CEFR level of the target word, when known. */
+  level?: CEFRLevel
+  /** True when the exercise was built from local fallback data (no DB pair). */
+  synthetic?: boolean
 }
 
 export interface UserSoundProgress {

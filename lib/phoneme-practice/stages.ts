@@ -1,6 +1,6 @@
 import type { ExerciseType } from './types'
 
-export type StageId = 'recognition' | 'pairs' | 'dictation'
+export type StageId = 'recognition' | 'pairs' | 'dictation' | 'speaking'
 
 export interface StageDef {
   id: StageId
@@ -32,6 +32,13 @@ export const STAGES: StageDef[] = [
     difficulty: 'Medium',
     icon: 'mic',
   },
+  {
+    id: 'speaking',
+    title: 'Speak It',
+    exerciseTypes: ['speak_word'],
+    difficulty: 'Medium',
+    icon: 'mic',
+  },
 ]
 
 export interface StageMastery {
@@ -42,6 +49,8 @@ export interface StageMastery {
 
 export type StageMasteryMap = Record<StageId, StageMastery>
 
+
+
 export function computeStageMastery(
   history: { exercise_type: string; is_correct: boolean }[]
 ): StageMasteryMap {
@@ -50,6 +59,7 @@ export function computeStageMastery(
     recognition: blank(),
     pairs: blank(),
     dictation: blank(),
+    speaking: blank(),
   }
 
   for (const row of history) {
@@ -71,6 +81,7 @@ function typeToStage(type: string): StageId | null {
   if (type === 'pick_word' || type === 'pick_sound') return 'recognition'
   if (type === 'minimal_pair') return 'pairs'
   if (type === 'dictation') return 'dictation'
+  if (type === 'speak_word') return 'speaking'
   return null
 }
 
@@ -87,11 +98,15 @@ export function isStageUnlocked(
     case 'dictation':
       if (!hasPairs) return mastery.recognition.total >= 8
       return mastery.pairs.total >= 4
+    case 'speaking':
+      return mastery.dictation.total >= 4
   }
 }
 
 export function overallMastery(mastery: StageMasteryMap, hasPairs: boolean): number {
-  const stages: StageId[] = hasPairs ? ['recognition', 'pairs', 'dictation'] : ['recognition', 'dictation']
+  const stages: StageId[] = hasPairs
+    ? ['recognition', 'pairs', 'dictation', 'speaking']
+    : ['recognition', 'dictation', 'speaking']
   const relevant = stages.map(id => mastery[id])
   const totalAttempts = relevant.reduce((sum, s) => sum + s.total, 0)
   const totalCorrect = relevant.reduce((sum, s) => sum + s.correct, 0)
