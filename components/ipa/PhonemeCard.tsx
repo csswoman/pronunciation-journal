@@ -61,7 +61,7 @@ export default function PhonemeCard({
         {phoneme.category}
       </span>
       <span className="text-xs font-medium" style={{ color: isSelected ? "var(--overlay-medium)" : "var(--text-secondary)" }}>
-        {phoneme.example}
+        {phoneme.examples[0]}
       </span>
 
       {isPlaying && (
@@ -74,7 +74,7 @@ export default function PhonemeCard({
 
       <span
         role="button"
-        aria-label={`Hear "${phoneme.example}"`}
+        aria-label={`Hear "${phoneme.examples[0]}"`}
         onClick={onPlay}
         className="absolute top-2 right-2 w-6 h-6 rounded-full flex items-center justify-center text-tiny transition-opacity duration-150 opacity-0 group-hover:opacity-100"
         style={{

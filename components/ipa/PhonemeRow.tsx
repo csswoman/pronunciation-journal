@@ -38,7 +38,7 @@ export default function PhonemeRow({
         {phoneme.name}
       </span>
       <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${isSelected ? "bg-[var(--overlay-light)] text-[var(--on-primary)]" : "bg-[var(--btn-regular-bg)] text-[var(--primary)]"}`}>
-        {phoneme.example}
+        {phoneme.examples[0]}
       </span>
       <span
         role="button"

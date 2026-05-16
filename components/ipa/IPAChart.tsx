@@ -10,14 +10,14 @@ import {
   PHONEMES,
   type FilterType,
   type PhonemeData,
-} from "@/components/ipa-chart/data";
+} from "./data";
 import { HARD_FOR_SPANISH_SPEAKERS } from "@/lib/ipa-data";
-import DifficultyPill from "@/components/ipa-chart/DifficultyPill";
-import FeaturedPhonemePanel from "@/components/ipa-chart/FeaturedPhonemePanel";
-import FilterTabs from "@/components/ipa-chart/FilterTabs";
-import PhonemeCard from "@/components/ipa-chart/PhonemeCard";
-import PhonemeRow from "@/components/ipa-chart/PhonemeRow";
-import ViewToggle from "@/components/ipa-chart/ViewToggle";
+import DifficultyPill from "./DifficultyPill";
+import FeaturedPhonemePanel from "./FeaturedPhonemePanel";
+import FilterTabs from "./FilterTabs";
+import PhonemeCard from "./PhonemeCard";
+import PhonemeRow from "./PhonemeRow";
+import ViewToggle from "./ViewToggle";
 import { H2, H3 } from "@/components/ui/Typography";
 
 export default function IPAChart() {
@@ -45,7 +45,7 @@ export default function IPAChart() {
   };
 
   const playSound = (rawSymbol: string, example?: string) => {
-    const fileName = IPA_AUDIO_MAP[rawSymbol];
+    const fileName = IPA_AUDIO_MAP[rawSymbol] ?? IPA_AUDIO_MAP[rawSymbol[0]];
     if (!fileName) return;
 
     currentAudioRef.current?.pause();
@@ -97,8 +97,8 @@ export default function IPAChart() {
           <FeaturedPhonemePanel
             phoneme={selectedPhoneme}
             isPlaying={playingSymbol === selectedPhoneme.rawSymbol}
-            onPlay={() => playSound(selectedPhoneme.rawSymbol, selectedPhoneme.example)}
-
+            onPlay={() => playSound(selectedPhoneme.rawSymbol, selectedPhoneme.examples[0])}
+            onSpeakExample={speakExample}
           />
 
           <div className="rounded-3xl p-6 text-on-primary" style={{ backgroundColor: "var(--primary)" }}>
@@ -143,11 +143,11 @@ export default function IPAChart() {
                   isSelected={selectedPhoneme.symbol === phoneme.symbol}
                   onPlay={(event) => {
                     event.stopPropagation();
-                    playSound(phoneme.rawSymbol, phoneme.example);
+                    playSound(phoneme.rawSymbol, phoneme.examples[0]);
                   }}
                   onSelect={() => {
                     setSelectedPhoneme(phoneme);
-                    playSound(phoneme.rawSymbol, phoneme.example);
+                    playSound(phoneme.rawSymbol, phoneme.examples[0]);
                   }}
                 />
               ))}
@@ -162,11 +162,11 @@ export default function IPAChart() {
                   isSelected={selectedPhoneme.symbol === phoneme.symbol}
                   onPlay={(event) => {
                     event.stopPropagation();
-                    playSound(phoneme.rawSymbol, phoneme.example);
+                    playSound(phoneme.rawSymbol, phoneme.examples[0]);
                   }}
                   onSelect={() => {
                     setSelectedPhoneme(phoneme);
-                    playSound(phoneme.rawSymbol, phoneme.example);
+                    playSound(phoneme.rawSymbol, phoneme.examples[0]);
                   }}
                 />
               ))}
@@ -207,7 +207,7 @@ export default function IPAChart() {
                       type="button"
                       onClick={() => {
                         setSelectedPhoneme(phoneme);
-                        playSound(phoneme.rawSymbol, phoneme.example);
+                        playSound(phoneme.rawSymbol, phoneme.examples[0]);
                       }}
                       className="group relative text-left rounded-2xl px-3 py-2 border transition-all duration-150 hover:scale-[1.04] focus:outline-none"
                       style={{
@@ -225,7 +225,7 @@ export default function IPAChart() {
                         className="text-tiny block mt-0.5"
                         style={{ color: isActive ? "rgba(var(--on-primary), 0.65)" : "var(--text-secondary)" }}
                       >
-                        {phoneme.example}
+                        {phoneme.examples[0]}
                       </span>
                     </button>
                   );

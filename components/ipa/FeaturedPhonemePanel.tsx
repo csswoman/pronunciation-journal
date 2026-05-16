@@ -15,10 +15,12 @@ export default function FeaturedPhonemePanel({
   phoneme,
   isPlaying,
   onPlay,
+  onSpeakExample,
 }: {
   phoneme: PhonemeData;
   isPlaying: boolean;
   onPlay: () => void;
+  onSpeakExample?: (word: string) => void;
   typeMeta?: { light: string; text: string };
 }) {
   const extra = IPA_EXTRA[phoneme.symbol];
@@ -71,11 +73,25 @@ export default function FeaturedPhonemePanel({
         style={{ backgroundColor: "var(--btn-regular-bg)" }}
       >
         <p className="text-tiny font-bold uppercase tracking-widest mb-2 text-fg-muted">
-          Example word
+          Example words
         </p>
-        <p className="text-base font-bold text-fg">
-          "{phoneme.example}"
-        </p>
+        <div className="flex flex-wrap gap-1.5">
+          {phoneme.examples.map((word) => (
+            <button
+              key={word}
+              type="button"
+              onClick={() => onSpeakExample?.(word)}
+              className="px-2.5 py-1 rounded-full text-sm font-semibold border transition-all duration-150 hover:scale-[1.04] focus:outline-none"
+              style={{
+                backgroundColor: "var(--card-bg)",
+                borderColor: "var(--line-divider)",
+                color: "var(--text-primary)",
+              }}
+            >
+              {word}
+            </button>
+          ))}
+        </div>
       </div>
 
       <ul className="mt-3 space-y-1.5">
