@@ -60,7 +60,7 @@ function patternToLesson(pattern: DbPattern, words: DbPatternWord[], soundId?: n
     difficulty,
     words: lessonWords,
     // If we can resolve the sound, redirect to the full phoneme practice page
-    href: soundId != null ? `/practice/${soundId}` : undefined,
+    href: soundId != null ? `/practice/sound/${soundId}` : undefined,
   }
 }
 
@@ -84,7 +84,7 @@ function soundToLesson(sound: DbSound, words: DbWord[]): Lesson {
     difficulty: difficultyFromNumber(sound.difficulty),
     words: lessonWords,
     // Redirect to the existing phoneme practice page which already has 3 stages
-    href: `/practice/${sound.id}`,
+    href: `/practice/sound/${sound.id}`,
   }
 }
 

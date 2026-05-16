@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { getLessonById } from "@/lib/lesson-generator";
 import { getLessonOffset, advanceLessonOffset, LESSON_SESSION_SIZE } from "@/lib/db";
 import { emptyLessonMastery } from "@/components/lesson/LessonLobby";
 import type { LessonStageId, LessonStageMasteryMap, DifficultyMode } from "@/components/lesson/LessonLobby";
@@ -34,8 +33,7 @@ export function useActiveLessonSetup(
 ): UseActiveLessonSetupReturn {
   const params = useParams();
   const lessonId = params.id as string;
-  const staticLesson = getLessonById(lessonId);
-  const isDynamic = !staticLesson && (lessonId.startsWith("pattern-") || lessonId.startsWith("sound-"));
+  const isDynamic = lessonId.startsWith("pattern-") || lessonId.startsWith("sound-");
 
   const [dynamicLesson, setDynamicLesson] = useState<Lesson | null | undefined>(
     isDynamic ? undefined : null
@@ -46,7 +44,7 @@ export function useActiveLessonSetup(
   const [lessonData, setLessonData] = useState<Lesson | null | undefined>(undefined);
   const [sessionOffset, setSessionOffset] = useState(0);
 
-  const fullLesson = staticLesson ?? dynamicLesson;
+  const fullLesson = dynamicLesson;
 
   useEffect(() => {
     if (!isDynamic) return;
