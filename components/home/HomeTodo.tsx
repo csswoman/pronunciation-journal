@@ -1,6 +1,14 @@
 "use client";
 
-import { Check, Play, Timer } from "lucide-react";
+import { Check, Clock, Play, FileText, Mic2, BookOpen, Headphones, BookMarked, type LucideIcon } from "lucide-react";
+
+const TAG_ICON: Record<string, LucideIcon> = {
+  Pronunciation: Mic2,
+  Theory:        BookOpen,
+  Shadowing:     Headphones,
+  "Word bank":   BookMarked,
+  Listening:     Headphones,
+};
 import Card from "@/components/layout/Card";
 import CardHeader from "@/components/ui/CardHeader";
 import Button from "@/components/ui/Button";
@@ -42,11 +50,12 @@ export default function HomeTodo() {
     <Card variant="compact" className="gap-4">
       <div className="flex items-center justify-between">
         <CardHeader
-          icon={<Timer size={18} className="text-[var(--primary)]" />}
+          icon={<FileText size={18} className="text-[var(--primary)]" />}
           title="Today's plan"
         />
-        <span className="text-xs px-2 py-0.5 rounded-full bg-white/5 text-[var(--text-tertiary)]">
-          ⏱ {remaining} min left
+        <span className="flex items-center gap-1.5 text-xs px-3 py-1 rounded-full bg-[var(--bg-tertiary)] text-[var(--text-secondary)]">
+           <Clock size={12} />
+           {remaining} min left
         </span>
       </div>
 
@@ -75,14 +84,13 @@ export default function HomeTodo() {
 
       {/* Items */}
       <div className="flex flex-col">
-        {TODO_ITEMS.map((item, idx) => (
+        {TODO_ITEMS.map((item) => (
           <div
             key={item.id}
             className={[
-              "group relative flex items-center gap-3 px-3 py-3 transition-colors",
-              idx < TODO_ITEMS.length - 1 ? "border-b border-[var(--border-subtle)]" : "",
+              "group relative flex items-center gap-3 px-3 py-3 transition-colors rounded-lg",
               item.featured
-                ? "bg-[color-mix(in_oklch,var(--primary)_6%,transparent)] hover:bg-[color-mix(in_oklch,var(--primary)_10%,transparent)]"
+                ? "bg-[var(--accent-dim)] hover:bg-[var(--accent-border)]"
                 : !item.done
                   ? "hover:bg-[var(--bg-tertiary)]"
                   : "",
@@ -90,24 +98,24 @@ export default function HomeTodo() {
           >
             {/* Left accent for featured */}
             {item.featured && (
-              <div className="absolute left-0 top-2 bottom-2 w-0.5 rounded-full bg-[var(--primary)]" />
+              <div className="w-0.5 rounded-full bg-[var(--primary)]" />
             )}
 
             {/* Status icon */}
             <div className={[
-              "flex h-6 w-6 shrink-0 items-center justify-center rounded-full",
+              "flex h-8 w-8 shrink-0 items-center justify-center rounded-full",
               item.done
                 ? "bg-[var(--success-soft)] text-[var(--success)]"
                 : item.featured
-                  ? "bg-[color-mix(in_oklch,var(--primary)_18%,transparent)] text-[var(--primary)]"
+                  ? "bg-[var(--accent-border)] text-[var(--primary)]"
                   : "bg-[var(--bg-tertiary)] text-[var(--text-tertiary)]",
             ].join(" ")}>
               {item.done ? (
-                <Check size={12} strokeWidth={3} />
+                <Check size={15} strokeWidth={2.5} />
               ) : item.featured ? (
-                <Play size={10} fill="currentColor" />
+                <Play size={13} fill="currentColor" />
               ) : (
-                <span className="h-1.5 w-1.5 rounded-full bg-current opacity-40" />
+                (() => { const Icon = TAG_ICON[item.tag]; return Icon ? <Icon size={14} /> : null; })()
               )}
             </div>
 
@@ -117,7 +125,7 @@ export default function HomeTodo() {
                 "text-sm font-medium leading-snug truncate",
                 item.done
                   ? "line-through text-[var(--text-tertiary)]"
-                  : "text-[var(--text-primary)]",
+                  : "text-[var(--text-secondary)]",
               ].join(" ")}>
                 {item.label}
               </p>
@@ -130,9 +138,9 @@ export default function HomeTodo() {
             {/* Action */}
             {item.featured && (
               <Button
-                variant="ghost"
+                variant="outline"
                 size="sm"
-                className="shrink-0 text-[var(--text-secondary)]"
+                className="shrink-0 border-[var(--primary)] !text-[var(--primary)] hover:bg-[var(--primary)] hover:!text-[var(--on-primary)] hover:border-[var(--primary)]"
                 icon={<Play size={11} fill="currentColor" />}
               >
                 Start

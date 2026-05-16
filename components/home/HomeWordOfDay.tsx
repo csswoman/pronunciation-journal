@@ -6,6 +6,7 @@ import Card from "@/components/layout/Card";
 import Button from "@/components/ui/Button";
 import { SyllableWord } from "@/components/ui/SyllableWord";
 import { CardBadge } from "@/components/ui/CardBadge";
+import { WaveformVisualizer } from "@/components/ui/WaveformVisualizer";
 
 interface WordOfDay {
   word: string;
@@ -16,7 +17,6 @@ interface WordOfDay {
   difficulty: "beginner" | "intermediate" | "advanced";
 }
 
-const BAR_HEIGHTS = [6, 10, 16, 12, 20, 16, 24, 18, 14, 22, 16, 28, 22, 16, 10, 16, 22, 18, 12, 8, 14, 20, 14, 10, 6];
 
 export default function HomeWordOfDay() {
   const [word, setWord] = useState<WordOfDay | null>(null);
@@ -165,26 +165,12 @@ export default function HomeWordOfDay() {
           </div>
 
           {/* Waveform */}
-          <div className="flex items-center gap-0.5 h-8">
-            {BAR_HEIGHTS.map((h, i) => (
-              <span
-                key={i}
-                className="block w-1 rounded-full"
-                style={{
-                  height: `${h}px`,
-                  backgroundColor: `oklch(0.70 0.15 calc(var(--hue) + ${i * 4}))`,
-                  opacity: speaking || isRecording || playingRecording ? 1 : 0.4,
-                  animation: speaking || playingRecording
-                    ? `waveBar 0.8s ease-in-out infinite alternate`
-                    : isRecording
-                    ? `wavePulse 1.2s ease-in-out infinite`
-                    : "none",
-                  animationDelay: speaking || playingRecording ? `${(i % 8) * 0.09}s` : `${(i % 5) * 0.15}s`,
-                  transformOrigin: "center",
-                }}
-              />
-            ))}
-          </div>
+          <WaveformVisualizer
+            isActive={speaking || playingRecording}
+            isRecording={isRecording}
+            color="gradient"
+            className="h-8"
+          />
 
           <div className="flex gap-2">
             <Button

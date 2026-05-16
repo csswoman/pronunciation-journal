@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { CardBadge } from "@/components/ui/CardBadge";
 
 interface HomeTheoryOfDayProps {
   slug?: string;
@@ -21,16 +22,7 @@ export default function HomeTheoryOfDay({
   return (
     <div className="rounded-xl border border-border-subtle bg-surface-raised p-4 flex flex-col gap-4">
       <div className="flex items-center gap-2">
-        <span
-          className="text-tiny font-semibold tracking-widest uppercase rounded-full px-2 py-0.5"
-          style={{
-            color: "color-mix(in oklch, var(--primary) 80%, var(--text-secondary))",
-            border: "1px solid color-mix(in oklch, var(--primary) 35%, transparent)",
-            background: "transparent",
-          }}
-        >
-          Mini Lesson · {duration} min
-        </span>
+        <CardBadge color="primary">Mini Lesson · {duration} min</CardBadge>
       </div>
 
       <div>

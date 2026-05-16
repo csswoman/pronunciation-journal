@@ -33,8 +33,7 @@ export default function LessonCard({
  rounded-2xl p-6 flex flex-col cursor-pointer
  transition-all duration-200
  hover:bg-[var(--btn-card-bg-hover)]
- hover:border-[var(--line-color)] hover:-translate-y-0.5"
-      className="shadow-card"
+ hover:border-[var(--line-color)] hover:-translate-y-0.5 shadow-card"
     >
       {/* Illustration area */}
       <div className="w-full h-[120px] rounded-xl bg-[var(--page-bg)] mb-5 flex items-center justify-center overflow-hidden">

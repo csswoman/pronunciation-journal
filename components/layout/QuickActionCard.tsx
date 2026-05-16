@@ -21,8 +21,7 @@ export default function QuickActionCard({
  border border-[var(--line-divider)] rounded-xl p-5
  cursor-pointer transition-all duration-200 text-left w-full
  hover:bg-[var(--btn-card-bg-hover)]
- hover:border-[var(--line-color)] hover:-translate-y-0.5"
-      className="shadow-card"
+ hover:border-[var(--line-color)] hover:-translate-y-0.5 shadow-card"
     >
       {/* Arrow badge */}
       <span
