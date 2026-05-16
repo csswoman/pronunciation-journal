@@ -52,9 +52,29 @@
   100% { transform: scaleY(1); }
 }
 
+@keyframes weakPulse {
+  0%, 100% { transform: scale(1);   opacity: 1; }
+  50%       { transform: scale(1.3); opacity: 0.6; }
+}
+
 @keyframes wavePulse {
   0%, 100% { transform: scaleY(1);    opacity: 1; }
   50%       { transform: scaleY(0.2); opacity: 0.4; }
+}
+
+@keyframes mic-breathe {
+  0%, 100% { transform: scale(1); }
+  50%       { transform: scale(1.02); }
+}
+
+@keyframes mic-ring {
+  from { transform: scale(1); opacity: 0.4; }
+  to   { transform: scale(1.5); opacity: 0; }
+}
+
+@keyframes chip-appear {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 /* ── Animation utility classes ───────────────────────────────────────────── */
@@ -63,3 +83,7 @@
 .animate-progress-ring { animation: progressRing 1s ease-out both; }
 .animate-float-soft   { animation: floatSoft 3.2s ease-in-out infinite; }
 .animate-grid-in      { animation: grid-in 0.35s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.animate-weak-pulse   { animation: weakPulse 1.5s ease-in-out infinite; }
+.animate-mic-breathe  { animation: mic-breathe 1.8s ease-in-out infinite; }
+.animate-mic-ring     { animation: mic-ring 0.8s ease-out infinite; }
+.animate-chip-appear  { animation: chip-appear 0.3s ease-out both; }

@@ -4,7 +4,7 @@ const BAR_COUNT = 20;
 
 export default function WaveformIdle({ isRecording }: { isRecording: boolean }) {
   return (
-    <div className="w-full h-12 rounded-xl bg-surface-sunken border border-border-default flex items-center justify-center gap-[3px] px-4 overflow-hidden">
+    <div className="w-full h-12 rounded-xl bg-surface-sunken border border-border-default flex items-center justify-center gap-1 px-4 overflow-hidden">
       <style>{`
         @keyframes waveBarAnim {
           0%, 100% { transform: scaleY(0.3); }

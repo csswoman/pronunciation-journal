@@ -90,7 +90,6 @@ export default function SpeakingWidget({ args, status, onAnswer, onNext, onRetry
 
   return (
     <div
-      className="rounded-xl border p-4 space-y-3"
       className="rounded-xl border border-border-subtle p-4 space-y-3 bg-surface-sunken"
     >
       <p className="text-sm text-fg-muted">
