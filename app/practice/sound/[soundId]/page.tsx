@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { useAuth } from "@/components/auth/AuthProvider"
 import { ExerciseCard } from '@/components/phoneme-practice/ExerciseCard'
@@ -9,29 +9,18 @@ import { PickSoundExercise } from '@/components/phoneme-practice/PickSoundExerci
 import { MinimalPairExercise } from '@/components/phoneme-practice/MinimalPairExercise'
 import { DictationExercise } from '@/components/phoneme-practice/DictationExercise'
 import { SpeakExercise } from '@/components/phoneme-practice/SpeakExercise'
+import { MatchPairsExercise } from '@/components/exercises/MatchPairsExercise'
 import { SessionSummary } from '@/components/phoneme-practice/SessionSummary'
-import { usePracticeSession } from '@/hooks/usePracticeSession'
-import { buildStageSession } from '@/lib/phoneme-practice/exercises'
-import { STAGES, isStageUnlocked, computeStageMastery } from '@/lib/phoneme-practice/stages'
 import {
   getAllSounds, getAllWords, getMinimalPairs, getSoundById,
-  saveAnswers, updateProgress, markMastered, unlockNextSound,
-  getAllProgress, getAnswerHistoryForSound,
+  saveAnswers, updateProgress, markMastered, unlockNextSound, getAllProgress,
 } from '@/lib/phoneme-practice/queries'
 import { updateSR } from '@/lib/phoneme-practice/sr'
 import { isMastered, getNextUnlockedSoundId } from '@/lib/phoneme-practice/mastery'
+import { buildMixedSession, type MixedExercise } from '@/lib/phoneme-practice/mixed-session'
 import PageLayout from '@/components/layout/PageLayout'
 import Button from '@/components/ui/Button'
-import type { StageId, StageMasteryMap } from '@/lib/phoneme-practice/stages'
-import type { Exercise, UserSoundProgress, Sound, SoundWord, MinimalPair } from '@/lib/phoneme-practice/types'
-
-interface SessionData {
-  sound: Sound
-  allSounds: Sound[]
-  allWordsBySoundId: Map<number, SoundWord[]>
-  targetWords: SoundWord[]
-  pairs: MinimalPair[]
-}
+import type { SessionAnswer, UserSoundProgress } from '@/lib/phoneme-practice/types'
 
 const EXERCISE_LABELS: Record<string, string> = {
   pick_word:    'Pick the Word',
@@ -39,11 +28,7 @@ const EXERCISE_LABELS: Record<string, string> = {
   minimal_pair: 'Minimal Pairs',
   dictation:    'Dictation',
   speak_word:   'Speak It',
-}
-
-function pickStartStage(mastery: StageMasteryMap, hasPairs: boolean): StageId {
-  const visible = hasPairs ? STAGES : STAGES.filter(s => s.id !== 'pairs')
-  return visible.find(s => isStageUnlocked(s.id, mastery, hasPairs) && mastery[s.id].pct < 80)?.id ?? 'recognition'
+  match_pairs:  'Match Pairs',
 }
 
 export default function SoundPracticePage() {
@@ -52,93 +37,102 @@ export default function SoundPracticePage() {
   const router = useRouter()
   const { user } = useAuth()
 
-  const [sessionData, setSessionData] = useState<SessionData | null>(null)
-  const [exercises, setExercises] = useState<Exercise[] | null>(null)
+  const [soundIpa, setSoundIpa] = useState('')
+  const [exercises, setExercises] = useState<MixedExercise[]>([])
+  const [index, setIndex] = useState(0)
+  const [answers, setAnswers] = useState<SessionAnswer[]>([])
+  const [feedback, setFeedback] = useState<{ isCorrect: boolean } | null>(null)
   const [showSummary, setShowSummary] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [currentFeedback, setCurrentFeedback] = useState<{ isCorrect: boolean } | null>(null)
-  const [exerciseStartedAt, setExerciseStartedAt] = useState(Date.now())
   const [nextReview, setNextReview] = useState<Date | null>(null)
-  const [currentProgress, setCurrentProgress] = useState<UserSoundProgress | null>(null)
+  const [error, setError] = useState<string | null>(null)
+  const [loading, setLoading] = useState(true)
+  const startedAt = useRef(Date.now())
+  const progressRef = useRef<UserSoundProgress | null>(null)
 
   const loadAndStart = useCallback(async () => {
     if (!user) return
+    setLoading(true)
     setShowSummary(false)
-    setExercises(null)
-    setCurrentFeedback(null)
+    setIndex(0)
+    setAnswers([])
+    setFeedback(null)
+    setError(null)
     try {
-      const [sound, allSounds, allWords, pairs, history] = await Promise.all([
+      const [sound, allSounds, allWords, pairs, allProgress] = await Promise.all([
         getSoundById(soundId), getAllSounds(), getAllWords(),
-        getMinimalPairs(soundId), getAnswerHistoryForSound(user.id, soundId),
+        getMinimalPairs(soundId), getAllProgress(user.id),
       ])
+      setSoundIpa(sound.ipa)
+      progressRef.current = allProgress.find(p => p.sound_id === soundId) ?? null
+
       const targetWords = allWords.filter(w => w.sound_id === soundId)
-      const allWordsBySoundId = new Map(allSounds.map(s => [s.id, allWords.filter(w => w.sound_id === s.id)]))
-      const data: SessionData = { sound, allSounds, allWordsBySoundId, targetWords, pairs }
-      setSessionData(data)
-
-      const mastery = computeStageMastery(history)
-      const stage = pickStartStage(mastery, pairs.length > 0)
-      const exs = buildStageSession(stage, sound, targetWords, allSounds, allWordsBySoundId, pairs)
-      setExercises(exs.length > 0 ? exs : null)
-      setExerciseStartedAt(Date.now())
-
-      const progress = await getAllProgress(user.id)
-      setCurrentProgress(progress.find(r => r.sound_id === soundId) ?? null)
+      const allWordsBySoundId = new Map(
+        allSounds.map(s => [s.id, allWords.filter(w => w.sound_id === s.id)])
+      )
+      setExercises(buildMixedSession(sound, targetWords, allSounds, allWordsBySoundId, pairs))
+      startedAt.current = Date.now()
     } catch {
       setError('Failed to load. Please try again.')
+    } finally {
+      setLoading(false)
     }
   }, [soundId, user])
 
   useEffect(() => { loadAndStart() }, [loadAndStart])
 
-  const session = usePracticeSession(exercises ?? [])
-
-  async function handleAnswer(isCorrect: boolean, userAnswer: string) {
-    setCurrentFeedback({ isCorrect })
-    session.submitAnswer({ isCorrect, userAnswer, startedAt: exerciseStartedAt })
-  }
-
-  async function handleNext() {
-    setCurrentFeedback(null)
-    setExerciseStartedAt(Date.now())
-    const isLast = session.currentQueuePos + 1 >= session.queueLength
-    session.advance()
-    if (isLast && user && exercises) {
-      await finishSession()
-      setShowSummary(true)
+  function handleSubmit(isCorrect: boolean, userAnswer: string) {
+    setFeedback({ isCorrect })
+    const current = exercises[index]
+    if (current.kind === 'phoneme') {
+      setAnswers(prev => [...prev, {
+        soundId,
+        exerciseType: current.data.type,
+        isCorrect,
+        userAnswer,
+        targetWord: current.data.targetWord,
+        timeMs: Date.now() - startedAt.current,
+        exercisePayload: { type: current.data.type, soundId, options: current.data.options },
+      }])
     }
   }
 
+  async function advance() {
+    setFeedback(null)
+    startedAt.current = Date.now()
+    if (index + 1 >= exercises.length) {
+      setShowSummary(true)
+      await finishSession()
+    } else {
+      setIndex(i => i + 1)
+    }
+  }
+
+  async function handleNext() { await advance() }
   async function handleSkip() {
-    if (currentFeedback) { handleNext(); return }
-    setCurrentFeedback(null)
-    setExerciseStartedAt(Date.now())
-    const isLast = session.currentQueuePos + 1 >= session.queueLength
-    session.advance()
-    if (isLast && user && exercises) {
-      await finishSession()
-      setShowSummary(true)
-    }
+    if (feedback) { await advance(); return }
+    await advance()
   }
 
   async function finishSession() {
-    if (!user) return
-    await saveAnswers(user.id, session.answers)
+    if (!user || answers.length === 0) return
+    await saveAnswers(user.id, answers)
 
-    const scoreCorrect = session.scoreableCorrect
-    const total = session.originalTotal
-    const base: UserSoundProgress = currentProgress ?? {
+    const correct = answers.filter(a => a.isCorrect).length
+    const total = answers.length
+    const base: UserSoundProgress = progressRef.current ?? {
       id: '', user_id: user.id, sound_id: soundId, status: 'available',
       total_attempts: 0, correct_answers: 0, streak: 0, best_streak: 0,
       last_practiced: null, next_review: null, ease_factor: 2.5, interval_days: 1,
     }
-    const sr = updateSR(base, scoreCorrect >= Math.ceil(total / 2))
+    const sr = updateSR(base, correct >= Math.ceil(total / 2))
     setNextReview(sr.next_review)
-    await updateProgress(user.id, soundId, scoreCorrect, total, sr)
+    await updateProgress(user.id, soundId, correct, total, sr)
 
     const updated: UserSoundProgress = {
-      ...base, total_attempts: base.total_attempts + total,
-      correct_answers: base.correct_answers + scoreCorrect, streak: sr.streak,
+      ...base,
+      total_attempts: base.total_attempts + total,
+      correct_answers: base.correct_answers + correct,
+      streak: sr.streak,
     }
     if (isMastered(updated)) {
       await markMastered(user.id, soundId)
@@ -152,12 +146,12 @@ export default function SoundPracticePage() {
     <div className="flex min-h-screen items-center justify-center p-4">
       <div className="space-y-3 text-center">
         <p className="text-error">{error}</p>
-        <Button type="button" onClick={() => { setError(null); loadAndStart() }} variant="primary" size="sm">Retry</Button>
+        <Button type="button" onClick={loadAndStart} variant="primary" size="sm">Retry</Button>
       </div>
     </div>
   )
 
-  if (!sessionData || !exercises) return (
+  if (loading || exercises.length === 0) return (
     <div className="flex min-h-screen items-center justify-center">
       <div className="animate-pulse text-fg-subtle">Loading…</div>
     </div>
@@ -166,29 +160,34 @@ export default function SoundPracticePage() {
   if (showSummary) return (
     <div className="flex min-h-screen items-center justify-center p-4">
       <SessionSummary
-        soundIpa={sessionData.sound.ipa}
-        scoreableCorrect={session.scoreableCorrect}
-        originalTotal={session.originalTotal}
+        soundIpa={soundIpa}
+        scoreableCorrect={answers.filter(a => a.isCorrect).length}
+        originalTotal={answers.length}
         nextReview={nextReview}
         onPracticeAgain={loadAndStart}
       />
     </div>
   )
 
-  const ex = session.currentExercise
-  const isLast = session.currentQueuePos + 1 >= session.queueLength
-  const displayType = ex?.type ?? session.answers[session.answers.length - 1]?.exerciseType ?? 'pick_word'
-  const pct = session.originalTotal > 0 ? (session.completedCount / session.originalTotal) * 100 : 0
+  const current = exercises[index]
+  const isLast = index + 1 >= exercises.length
+  const pct = exercises.length > 0 ? (index / exercises.length) * 100 : 0
+  const displayLabel = current.kind === 'match_pairs'
+    ? 'Match Pairs'
+    : (EXERCISE_LABELS[current.data.type] ?? current.data.type)
 
   function renderExercise() {
-    if (!ex) return null
-    const submit = (ok: boolean, ans: string) => handleAnswer(ok, ans)
+    const submit = (ok: boolean, ans: string) => handleSubmit(ok, ans)
+    if (current.kind === 'match_pairs') {
+      return <MatchPairsExercise key={index} exercise={current.data} onSubmit={submit} />
+    }
+    const ex = current.data
     switch (ex.type) {
-      case 'pick_word':    return <PickWordExercise    key={session.currentQueuePos} exercise={ex} onSubmit={submit} />
-      case 'pick_sound':   return <PickSoundExercise   key={session.currentQueuePos} exercise={ex} onSubmit={submit} />
-      case 'minimal_pair': return <MinimalPairExercise key={session.currentQueuePos} exercise={ex} onSubmit={submit} />
-      case 'dictation':    return <DictationExercise   key={session.currentQueuePos} exercise={ex} onSubmit={submit} />
-      case 'speak_word':   return <SpeakExercise       key={session.currentQueuePos} exercise={ex} onSubmit={submit} />
+      case 'pick_word':    return <PickWordExercise    key={index} exercise={ex} onSubmit={submit} />
+      case 'pick_sound':   return <PickSoundExercise   key={index} exercise={ex} onSubmit={submit} />
+      case 'minimal_pair': return <MinimalPairExercise key={index} exercise={ex} onSubmit={submit} />
+      case 'dictation':    return <DictationExercise   key={index} exercise={ex} onSubmit={submit} />
+      case 'speak_word':   return <SpeakExercise       key={index} exercise={ex} onSubmit={submit} />
     }
   }
 
@@ -207,10 +206,10 @@ export default function SoundPracticePage() {
         </button>
         <div style={{ textAlign: 'center' }}>
           <div style={{ fontFamily: 'var(--font-phoneme), serif', fontSize: 30, fontWeight: 700, color: 'var(--primary)', letterSpacing: '-0.5px', lineHeight: 1 }}>
-            {sessionData.sound.ipa}
+            {soundIpa}
           </div>
           <p style={{ fontSize: 12, color: 'var(--text-tertiary)', marginTop: 2 }}>
-            {session.completedCount} / {session.originalTotal}
+            {index} / {exercises.length}
           </p>
         </div>
         <div style={{
@@ -218,13 +217,11 @@ export default function SoundPracticePage() {
           background: 'var(--accent-dim)', color: 'var(--primary)',
           borderRadius: 'var(--radius-full)', padding: '5px 14px',
         }}>
-          {EXERCISE_LABELS[displayType] ?? displayType}
+          {displayLabel}
         </div>
       </div>
       <div style={{ height: 3, background: 'var(--border-subtle)', margin: '18px 40px 12px', borderRadius: 99, overflow: 'hidden' }}>
-        <div
-          style={{ height: '100%', borderRadius: 99, background: 'var(--gradient-primary)', width: `${pct}%`, transition: 'width .4s ease' }}
-        />
+        <div style={{ height: '100%', borderRadius: 99, background: 'var(--gradient-primary)', width: `${pct}%`, transition: 'width .4s ease' }} />
       </div>
     </header>
   )
@@ -232,15 +229,15 @@ export default function SoundPracticePage() {
   return (
     <PageLayout variant="lesson" hero={header}>
       <main
-        key={session.currentQueuePos}
+        key={index}
         className="animate-fadeIn flex w-full items-center justify-center"
         style={{ padding: '40px 40px 24px' }}
       >
         <div className="w-full max-w-md">
           <ExerciseCard
-            exerciseType={displayType}
-            feedback={currentFeedback}
-            onNext={currentFeedback ? handleNext : undefined}
+            exerciseType={current.kind === 'match_pairs' ? 'match_pairs' : current.data.type}
+            feedback={feedback}
+            onNext={feedback ? handleNext : undefined}
             finishLabel={isLast}
           >
             {renderExercise()}
@@ -257,20 +254,16 @@ export default function SoundPracticePage() {
           Skip
         </button>
         <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-          {Array.from({ length: Math.min(session.originalTotal, 12) }).map((_, i) => {
-            const done = i < session.completedCount
-            const active = i === session.completedCount
+          {Array.from({ length: Math.min(exercises.length, 12) }).map((_, i) => {
+            const done = i < index
+            const active = i === index
             return (
-              <div
-                key={i}
-                style={{
-                  width: active ? 20 : 7,
-                  height: 7,
-                  borderRadius: 'var(--radius-full)',
-                  background: done ? 'var(--success)' : active ? 'var(--primary)' : 'var(--border-subtle)',
-                  transition: 'all .3s ease',
-                }}
-              />
+              <div key={i} style={{
+                width: active ? 20 : 7, height: 7,
+                borderRadius: 'var(--radius-full)',
+                background: done ? 'var(--success)' : active ? 'var(--primary)' : 'var(--border-subtle)',
+                transition: 'all .3s ease',
+              }} />
             )
           })}
         </div>
