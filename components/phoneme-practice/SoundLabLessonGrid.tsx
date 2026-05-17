@@ -19,30 +19,6 @@ function getProgress(lesson: Lesson, map: Map<number, number>): number | undefin
   return map.get(Number(lesson.id.replace("sound-", "")));
 }
 
-function SectionHeader({
-  section,
-  soundProgressMap,
-}: {
-  section: LessonSection;
-  soundProgressMap: Map<number, number>;
-}) {
-  const masteredCount = section.lessons.filter(
-    (l) => getProgress(l, soundProgressMap) === 100
-  ).length;
-
-  return (
-    <div className="mb-space-6">
-      <div className="flex items-baseline gap-space-4">
-        <h2 className="text-h4 text-fg whitespace-nowrap">{section.title}</h2>
-        <span className="h-px flex-1 bg-border-subtle" />
-      </div>
-      <p className="mt-1 text-caption text-fg-subtle">
-        {section.lessons.length} {section.lessons.length === 1 ? "lesson" : "lessons"}
-        {masteredCount > 0 && ` · ${masteredCount} mastered`}
-      </p>
-    </div>
-  );
-}
 
 function LoadingSkeleton() {
   return (
@@ -90,7 +66,6 @@ export function SoundLabLessonGrid({
     <div className="space-y-space-10">
       {sections.map((section) => (
         <section key={section.id}>
-          <SectionHeader section={section} soundProgressMap={soundProgressMap} />
           {/* Table-style grid: container owns border-t + border-l; each cell owns border-b + border-r */}
           <div className="grid grid-cols-2 border-l border-t border-border-subtle sm:grid-cols-3 lg:grid-cols-4">
             {section.lessons.map((lesson) => {

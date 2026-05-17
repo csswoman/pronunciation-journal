@@ -111,7 +111,7 @@ export function SoundLabLessonCard({ lesson, progressPct, isContinuing, isWeak }
         {/* Row 3: Example words */}
         <p className="truncate text-caption text-fg-muted">{preview}</p>
 
-        {/* Row 4: Meta + status */}
+        {/* Row 4: Meta + Train button */}
         <div className="flex items-center gap-space-3 text-caption text-fg-subtle">
           {wordCount > 0 && (
             <>
