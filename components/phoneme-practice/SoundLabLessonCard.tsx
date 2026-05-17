@@ -53,7 +53,7 @@ export function SoundLabLessonCard({ lesson, progressPct, isContinuing, isWeak }
   const minutes = Math.max(2, Math.ceil(wordCount / 3));
   const isInProgress = progressPct !== undefined && progressPct > 0 && progressPct < 100;
   const isCompleted = progressPct === 100;
-  const linkHref = href ?? `/practice/lesson/${id}`;
+  const linkHref = href ?? `/practice/sound/${id.replace("sound-", "")}`;
   const preview = buildPreview(lesson);
   const showProgressBar = isInProgress || (isContinuing && progressPct !== undefined && progressPct > 0);
 

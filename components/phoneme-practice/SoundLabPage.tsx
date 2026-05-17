@@ -1,11 +1,3 @@
-// Planned structure:
-// <SoundLabPage>
-//   Page bg #EEF3F8
-//   Zone 1 — Hero (white card, rounded-md): SoundLabHeader, SoundLabContinuingBar, SoundLabStatsStrip
-//   Zone 2 — Gap (transparent, h-6)
-//   Zone 3 — Lessons (white card, rounded-md): SoundLabFilterRow, SoundLabLessonGrid
-// </SoundLabPage>
-
 "use client";
 
 import { useMemo, useState } from "react";
@@ -25,15 +17,11 @@ const IPA_VOWEL_RE = /[aeiouæɑɒɔɛɜɪɐəʌʊ]/;
 const SECTION_DEFS: { id: string; title: string }[] = [
   { id: "vowels", title: "Vowel Sounds" },
   { id: "consonants", title: "Consonant Sounds" },
-  { id: "patterns", title: "Spelling Patterns" },
 ];
 
 function getLessonSectionId(lesson: Lesson): string {
   const ipaMatch = lesson.title.match(/^\/([^/]+)\//);
-  if (ipaMatch) {
-    return IPA_VOWEL_RE.test(ipaMatch[1]) ? "vowels" : "consonants";
-  }
-  return "patterns";
+  return ipaMatch && IPA_VOWEL_RE.test(ipaMatch[1]) ? "vowels" : "consonants";
 }
 
 function categorizLesson(lesson: Lesson, soundProgressMap: Map<number, number>): SoundLabChip[] {
@@ -87,9 +75,8 @@ export default function SoundLabPage() {
   }, [filtered]);
 
   function handleResume() {
-    if (!heroLesson.lesson) return;
-    const dest = heroLesson.lesson.href ?? `/practice/lesson/${heroLesson.lesson.id}`;
-    router.push(dest);
+    if (!heroLesson.lesson?.href) return;
+    router.push(heroLesson.lesson.href);
   }
 
   return (
