@@ -144,7 +144,7 @@ export function SoundLabContinuingBar({ lesson, progress, onResume }: Props) {
         </button>
 
         {/* Bars */}
-        <div className="flex flex-1 items-center justify-start gap-[3px]" style={{ height: 56 }}>
+        <div className="flex flex-1 items-center justify-start gap-1" style={{ height: 56 }}>
           {displayHeights.map((h, i) => {
             const played = i <= nowBarIndex;
             const distanceAfter = i - nowBarIndex;

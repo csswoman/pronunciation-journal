@@ -48,7 +48,7 @@ export function SoundLabFilterRow({ activeChip, search, lessonCount, onChipChang
             placeholder="Search sounds…"
             value={search}
             onChange={(e) => onSearchChange(e.target.value)}
-            className="w-full rounded-full border border-border-subtle bg-surface-sunken py-[6px] pl-9 pr-4 text-body-sm text-fg outline-none placeholder:text-fg-subtle transition-colors focus:border-border-focus"
+            className="w-full rounded-full border border-border-subtle bg-surface-sunken py-1 pl-9 pr-4 text-body-sm text-fg outline-none placeholder:text-fg-subtle transition-colors focus:border-border-focus"
           />
         </div>
 

@@ -77,7 +77,7 @@ export function SoundLabLessonCard({ lesson, progressPct, isContinuing, isWeak }
       >
         {/* Continuing left accent stripe */}
         {isContinuing && (
-          <span className="pointer-events-none absolute bottom-0 left-0 top-0 w-[3px] bg-primary" />
+          <span className="pointer-events-none absolute bottom-0 left-0 top-0 w-1 bg-primary" />
         )}
 
         {/* Weak dot */}
@@ -91,7 +91,7 @@ export function SoundLabLessonCard({ lesson, progressPct, isContinuing, isWeak }
         {/* Row 1: Difficulty badge + IPA glyph */}
         <div className="flex items-start justify-between gap-space-2">
           <span
-            className={`rounded-full px-[8px] py-[2px] text-[10px] font-medium ${DIFFICULTY_CLASSES[difficulty] ?? "bg-surface-sunken text-fg-muted"}`}
+            className={`rounded-full px-[8px] py-1 text-[10px] font-medium ${DIFFICULTY_CLASSES[difficulty] ?? "bg-surface-sunken text-fg-muted"}`}
           >
             {DIFFICULTY_LABEL[difficulty] ?? difficulty}
           </span>
@@ -143,10 +143,10 @@ export function SoundLabLessonCard({ lesson, progressPct, isContinuing, isWeak }
         {/* In-progress bottom strip: track + fill */}
         {showProgressBar && (
           <>
-            <span aria-hidden className="absolute bottom-0 left-0 right-0 h-[3px] bg-primary/10" />
+            <span aria-hidden className="absolute bottom-0 left-0 right-0 h-1 bg-primary/10" />
             <span
               aria-hidden
-              className="absolute bottom-0 left-0 h-[3px] bg-primary"
+              className="absolute bottom-0 left-0 h-1 bg-primary"
               style={{ width: `${progressPct}%` }}
             />
           </>
