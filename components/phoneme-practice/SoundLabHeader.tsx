@@ -8,25 +8,35 @@ interface Props {
 
 export function SoundLabHeader({ onResume }: Props) {
   return (
-    <header className="mb-space-8 flex items-start justify-between gap-space-8">
+    <header className="flex items-start justify-between gap-space-8">
+      {/* Left: badge + headline */}
       <div>
-        <p className="mb-space-2 text-tiny uppercase tracking-widest text-fg-subtle">
-          Sound Lab
-        </p>
-        <h1 className="font-heading text-h1 text-fg">
-          Speak better,{" "}
-          <span className="text-primary">one sound</span>{" "}
-          at a time
+        <div className="mb-space-3 flex items-center gap-space-2">
+          <span className="relative flex h-2 w-2">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-60" />
+            <span className="relative inline-flex h-2 w-2 rounded-full bg-primary" />
+          </span>
+          <span className="text-tiny font-medium uppercase tracking-widest text-fg-subtle">
+            Sound Lab · Live
+          </span>
+        </div>
+
+        <h1 className="font-heading text-h1 leading-tight">
+          <span className="font-light text-fg">Speak </span>
+          <span className="font-black text-fg">better,</span>
+          <br />
+          <em className="font-normal text-primary" style={{ fontStyle: "italic" }}>one sound</em>
+          <span className="font-light text-fg"> at a time.</span>
         </h1>
       </div>
 
+      {/* Right: Resume CTA */}
       <button
         type="button"
         onClick={onResume}
         disabled={!onResume}
-        className="relative mt-space-4 flex flex-shrink-0 items-center gap-space-2 overflow-hidden rounded-full bg-primary px-space-6 py-space-3 text-body-sm font-medium text-on-primary transition-all duration-200 hover:shadow-md active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed"
+        className="relative flex flex-shrink-0 items-center gap-space-2 overflow-hidden rounded-full bg-primary px-space-6 py-space-3 text-body-sm font-medium text-on-primary transition-all duration-200 hover:shadow-md active:scale-95 disabled:cursor-not-allowed disabled:opacity-40"
       >
-        {/* inner top highlight for energy feel */}
         <span
           aria-hidden
           className="pointer-events-none absolute inset-x-0 top-0 h-px"

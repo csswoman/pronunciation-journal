@@ -4,8 +4,6 @@ import { useEffect, useRef, useState } from "react";
 
 interface Props {
   totalCount: number;
-  currentPage: number;
-  totalPages: number;
   completedCount: number;
   inProgressCount: number;
 }
@@ -30,12 +28,24 @@ function useCountUp(target: number, duration = 600) {
   return value;
 }
 
-function StatCell({ value, label }: { value: number; label: string }) {
+function StatCell({
+  value,
+  label,
+  accent,
+}: {
+  value: number;
+  label: string;
+  accent?: boolean;
+}) {
   const displayed = useCountUp(value);
   return (
-    <div className="flex items-baseline gap-space-2 px-space-6">
-      <span className="font-heading text-h4 text-fg">{displayed}</span>
-      <span className="text-tiny uppercase tracking-wider text-fg-muted">{label}</span>
+    <div className="flex items-baseline gap-space-2">
+      <span className={`font-heading text-h4 ${accent ? "text-primary" : "text-fg"}`}>
+        {displayed}
+      </span>
+      <span className={`text-tiny uppercase tracking-wider ${accent ? "text-primary/70" : "text-fg-muted"}`}>
+        {label}
+      </span>
     </div>
   );
 }
@@ -44,24 +54,14 @@ function Divider() {
   return <div className="h-5 w-px flex-shrink-0 bg-border-subtle" />;
 }
 
-export function SoundLabStatsStrip({ totalCount, currentPage, totalPages, completedCount, inProgressCount }: Props) {
-  const displayedPage = useCountUp(currentPage);
-  const displayedTotal = useCountUp(totalPages);
-
+export function SoundLabStatsStrip({ totalCount, completedCount, inProgressCount }: Props) {
   return (
-    <div className="mb-space-8 flex items-center overflow-x-auto rounded-lg bg-surface-sunken py-space-4">
-      <StatCell value={totalCount} label="exercises" />
-      <Divider />
-      <div className="flex items-baseline gap-space-2 px-space-6">
-        <span className="font-heading text-h4 text-fg">{displayedPage}</span>
-        <span className="text-tiny uppercase tracking-wider text-fg-muted">/</span>
-        <span className="font-heading text-h4 text-fg">{displayedTotal}</span>
-        <span className="text-tiny uppercase tracking-wider text-fg-muted">pages</span>
-      </div>
+    <div className="flex items-center gap-space-5">
+      <StatCell value={totalCount} label="lessons" />
       <Divider />
       <StatCell value={completedCount} label="completed" />
       <Divider />
-      <StatCell value={inProgressCount} label="in progress" />
+      <StatCell value={inProgressCount} label="in progress" accent />
     </div>
   );
 }

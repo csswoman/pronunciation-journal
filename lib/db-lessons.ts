@@ -1,19 +1,5 @@
 import { getSupabaseBrowserClient } from '@/lib/supabase/client'
 
-export interface DbPattern {
-  id: number
-  pattern: string
-  type: string | null
-  sound_focus: string | null
-}
-
-export interface DbPatternWord {
-  id: number
-  pattern_id: number
-  word: string
-  ipa: string | null
-}
-
 export interface DbSound {
   id: number
   ipa: string
@@ -35,44 +21,6 @@ export interface DbWord {
 
 function supabase() {
   return getSupabaseBrowserClient()
-}
-
-export async function getAllPatterns(): Promise<DbPattern[]> {
-  const { data, error } = await supabase()
-    .from('patterns')
-    .select('*')
-    .order('id')
-  if (error) throw error
-  return data as DbPattern[]
-}
-
-/** Returns a map from IPA string to sound id, used to link patterns to practice pages */
-export async function getSoundIdsByIpa(): Promise<Record<string, number>> {
-  const { data, error } = await supabase().from('sounds').select('id, ipa')
-  if (error) throw error
-  return Object.fromEntries((data as { id: number; ipa: string }[]).map(s => [s.ipa, s.id]))
-}
-
-export async function getPatternWords(patternId: number): Promise<DbPatternWord[]> {
-  const { data, error } = await supabase()
-    .from('pattern_words')
-    .select('*')
-    .eq('pattern_id', patternId)
-  if (error) throw error
-  return data as DbPatternWord[]
-}
-
-export async function getAllPatternWordsGrouped(): Promise<Record<number, DbPatternWord[]>> {
-  const { data, error } = await supabase()
-    .from('pattern_words')
-    .select('*')
-  if (error) throw error
-  const grouped: Record<number, DbPatternWord[]> = {}
-  for (const row of data as DbPatternWord[]) {
-    if (!grouped[row.pattern_id]) grouped[row.pattern_id] = []
-    grouped[row.pattern_id].push(row)
-  }
-  return grouped
 }
 
 export async function getAllSoundsWithWords(): Promise<{ sound: DbSound; words: DbWord[] }[]> {

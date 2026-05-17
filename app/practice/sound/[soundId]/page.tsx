@@ -22,7 +22,6 @@ import { updateSR } from '@/lib/phoneme-practice/sr'
 import { isMastered, getNextUnlockedSoundId } from '@/lib/phoneme-practice/mastery'
 import PageLayout from '@/components/layout/PageLayout'
 import Button from '@/components/ui/Button'
-import { H1 } from '@/components/ui/Typography'
 import type { StageId, StageMasteryMap } from '@/lib/phoneme-practice/stages'
 import type { Exercise, UserSoundProgress, Sound, SoundWord, MinimalPair } from '@/lib/phoneme-practice/types'
 
@@ -32,6 +31,14 @@ interface SessionData {
   allWordsBySoundId: Map<number, SoundWord[]>
   targetWords: SoundWord[]
   pairs: MinimalPair[]
+}
+
+const EXERCISE_LABELS: Record<string, string> = {
+  pick_word:    'Pick the Word',
+  pick_sound:   'Pick the Sound',
+  minimal_pair: 'Minimal Pairs',
+  dictation:    'Dictation',
+  speak_word:   'Speak It',
 }
 
 function pickStartStage(mastery: StageMasteryMap, hasPairs: boolean): StageId {
@@ -94,7 +101,19 @@ export default function SoundPracticePage() {
   async function handleNext() {
     setCurrentFeedback(null)
     setExerciseStartedAt(Date.now())
-    const isLast = session.currentIndex + 1 >= session.total
+    const isLast = session.currentQueuePos + 1 >= session.queueLength
+    session.advance()
+    if (isLast && user && exercises) {
+      await finishSession()
+      setShowSummary(true)
+    }
+  }
+
+  async function handleSkip() {
+    if (currentFeedback) { handleNext(); return }
+    setCurrentFeedback(null)
+    setExerciseStartedAt(Date.now())
+    const isLast = session.currentQueuePos + 1 >= session.queueLength
     session.advance()
     if (isLast && user && exercises) {
       await finishSession()
@@ -104,22 +123,22 @@ export default function SoundPracticePage() {
 
   async function finishSession() {
     if (!user) return
-    const answers = session.answers
-    const correct = answers.filter(a => a.isCorrect).length
-    await saveAnswers(user.id, answers)
+    await saveAnswers(user.id, session.answers)
 
+    const scoreCorrect = session.scoreableCorrect
+    const total = session.originalTotal
     const base: UserSoundProgress = currentProgress ?? {
       id: '', user_id: user.id, sound_id: soundId, status: 'available',
       total_attempts: 0, correct_answers: 0, streak: 0, best_streak: 0,
       last_practiced: null, next_review: null, ease_factor: 2.5, interval_days: 1,
     }
-    const sr = updateSR(base, correct >= Math.ceil(answers.length / 2))
+    const sr = updateSR(base, scoreCorrect >= Math.ceil(total / 2))
     setNextReview(sr.next_review)
-    await updateProgress(user.id, soundId, correct, answers.length, sr)
+    await updateProgress(user.id, soundId, scoreCorrect, total, sr)
 
     const updated: UserSoundProgress = {
-      ...base, total_attempts: base.total_attempts + answers.length,
-      correct_answers: base.correct_answers + correct, streak: sr.streak,
+      ...base, total_attempts: base.total_attempts + total,
+      correct_answers: base.correct_answers + scoreCorrect, streak: sr.streak,
     }
     if (isMastered(updated)) {
       await markMastered(user.id, soundId)
@@ -147,8 +166,9 @@ export default function SoundPracticePage() {
   if (showSummary) return (
     <div className="flex min-h-screen items-center justify-center p-4">
       <SessionSummary
-        answers={session.answers}
         soundIpa={sessionData.sound.ipa}
+        scoreableCorrect={session.scoreableCorrect}
+        originalTotal={session.originalTotal}
         nextReview={nextReview}
         onPracticeAgain={loadAndStart}
       />
@@ -156,57 +176,68 @@ export default function SoundPracticePage() {
   )
 
   const ex = session.currentExercise
-  const isLast = session.currentIndex + 1 >= session.total
+  const isLast = session.currentQueuePos + 1 >= session.queueLength
   const displayType = ex?.type ?? session.answers[session.answers.length - 1]?.exerciseType ?? 'pick_word'
-  const displayIndex = Math.min(session.currentIndex, session.total)
+  const pct = session.originalTotal > 0 ? (session.completedCount / session.originalTotal) * 100 : 0
 
   function renderExercise() {
     if (!ex) return null
     const submit = (ok: boolean, ans: string) => handleAnswer(ok, ans)
     switch (ex.type) {
-      case 'pick_word':    return <PickWordExercise    key={session.currentIndex} exercise={ex} onSubmit={submit} />
-      case 'pick_sound':   return <PickSoundExercise   key={session.currentIndex} exercise={ex} onSubmit={submit} />
-      case 'minimal_pair': return <MinimalPairExercise key={session.currentIndex} exercise={ex} onSubmit={submit} />
-      case 'dictation':    return <DictationExercise   key={session.currentIndex} exercise={ex} onSubmit={submit} />
-      case 'speak_word':   return <SpeakExercise       key={session.currentIndex} exercise={ex} onSubmit={submit} />
+      case 'pick_word':    return <PickWordExercise    key={session.currentQueuePos} exercise={ex} onSubmit={submit} />
+      case 'pick_sound':   return <PickSoundExercise   key={session.currentQueuePos} exercise={ex} onSubmit={submit} />
+      case 'minimal_pair': return <MinimalPairExercise key={session.currentQueuePos} exercise={ex} onSubmit={submit} />
+      case 'dictation':    return <DictationExercise   key={session.currentQueuePos} exercise={ex} onSubmit={submit} />
+      case 'speak_word':   return <SpeakExercise       key={session.currentQueuePos} exercise={ex} onSubmit={submit} />
     }
   }
 
   const header = (
-    <header className="sticky top-0 z-10 border-b border-border-subtle bg-surface-raised">
-      <div className="px-6 py-4 lg:px-8">
-        <div className="flex items-center justify-between gap-4">
-          <Button type="button" onClick={() => router.push('/practice')} variant="ghost" size="icon" className="rounded-xl">
-            <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-          </Button>
-          <div className="text-center">
-            <H1 className="font-heading text-lg font-semibold leading-tight tracking-tight text-primary">
-              {sessionData.sound.ipa}
-            </H1>
-            <p className="text-caption leading-5 text-fg-muted">{displayIndex + 1} / {session.total}</p>
+    <header
+      className="sticky top-0 z-10 border-b"
+      style={{ borderColor: 'var(--border-subtle)', background: 'var(--surface-base)' }}
+    >
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '24px 40px 0' }}>
+        <button
+          type="button"
+          onClick={() => router.push('/practice')}
+          style={{ background: 'none', border: 'none', color: 'var(--text-tertiary)', fontSize: 22, cursor: 'pointer', lineHeight: 1, padding: 4 }}
+        >
+          ←
+        </button>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontFamily: 'var(--font-phoneme), serif', fontSize: 30, fontWeight: 700, color: 'var(--primary)', letterSpacing: '-0.5px', lineHeight: 1 }}>
+            {sessionData.sound.ipa}
           </div>
-          <div className="w-10" />
+          <p style={{ fontSize: 12, color: 'var(--text-tertiary)', marginTop: 2 }}>
+            {session.completedCount} / {session.originalTotal}
+          </p>
         </div>
-        <div className="mt-4 h-3 w-full overflow-hidden rounded-full bg-surface-sunken">
-          <div
-            className="h-full rounded-full bg-primary transition-all duration-500"
-            style={{ width: `${((displayIndex + (currentFeedback ? 1 : 0)) / session.total) * 100}%` }}
-          />
+        <div style={{
+          fontSize: 11, fontWeight: 600, letterSpacing: '.08em', textTransform: 'uppercase' as const,
+          background: 'var(--accent-dim)', color: 'var(--primary)',
+          borderRadius: 'var(--radius-full)', padding: '5px 14px',
+        }}>
+          {EXERCISE_LABELS[displayType] ?? displayType}
         </div>
+      </div>
+      <div style={{ height: 3, background: 'var(--border-subtle)', margin: '18px 40px 12px', borderRadius: 99, overflow: 'hidden' }}>
+        <div
+          style={{ height: '100%', borderRadius: 99, background: 'var(--gradient-primary)', width: `${pct}%`, transition: 'width .4s ease' }}
+        />
       </div>
     </header>
   )
 
   return (
     <PageLayout variant="lesson" hero={header}>
-      <main className="flex w-full items-center justify-center px-6 py-10 lg:px-8">
-        <div className="w-full max-w-md space-y-4">
+      <main
+        key={session.currentQueuePos}
+        className="animate-fadeIn flex w-full items-center justify-center"
+        style={{ padding: '40px 40px 24px' }}
+      >
+        <div className="w-full max-w-md">
           <ExerciseCard
-            key={session.currentIndex}
-            current={displayIndex}
-            total={session.total}
             exerciseType={displayType}
             feedback={currentFeedback}
             onNext={currentFeedback ? handleNext : undefined}
@@ -216,6 +247,41 @@ export default function SoundPracticePage() {
           </ExerciseCard>
         </div>
       </main>
+
+      <footer style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 40px 32px' }}>
+        <button
+          type="button"
+          onClick={handleSkip}
+          style={{ background: 'none', border: 'none', color: 'var(--text-tertiary)', fontSize: 13, cursor: 'pointer', letterSpacing: '.03em', fontFamily: 'inherit' }}
+        >
+          Skip
+        </button>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          {Array.from({ length: Math.min(session.originalTotal, 12) }).map((_, i) => {
+            const done = i < session.completedCount
+            const active = i === session.completedCount
+            return (
+              <div
+                key={i}
+                style={{
+                  width: active ? 20 : 7,
+                  height: 7,
+                  borderRadius: 'var(--radius-full)',
+                  background: done ? 'var(--success)' : active ? 'var(--primary)' : 'var(--border-subtle)',
+                  transition: 'all .3s ease',
+                }}
+              />
+            )
+          })}
+        </div>
+        <button
+          type="button"
+          onClick={handleSkip}
+          style={{ background: 'none', border: 'none', color: 'var(--text-tertiary)', fontSize: 13, cursor: 'pointer', letterSpacing: '.03em', fontFamily: 'inherit' }}
+        >
+          I know this →
+        </button>
+      </footer>
     </PageLayout>
   )
 }

@@ -21,48 +21,54 @@ const CHIPS: { id: SoundLabChip; label: string }[] = [
   { id: "weak", label: "Weak for you" },
 ];
 
+function chipClass(id: SoundLabChip, activeChip: SoundLabChip): string {
+  if (activeChip === id) return "bg-primary text-on-primary border border-primary";
+  if (id === "weak") return "border border-error-deco bg-error-soft text-error-value hover:border-error-border";
+  return "border border-border-default bg-transparent text-fg-muted hover:border-border-strong";
+}
+
 export function SoundLabFilterRow({ activeChip, search, lessonCount, onChipChange, onSearchChange }: Props) {
   return (
-    <div className="mb-space-8 flex flex-wrap items-end justify-between gap-space-6">
-      {/* Left */}
+    <div className="mb-space-6 flex flex-wrap items-start gap-space-4">
+      {/* Left: heading + count */}
       <div>
-        <h2 className="font-heading text-h2 text-fg leading-tight">Available lessons</h2>
-        <p className="mt-1 text-caption text-fg-subtle">
-          {lessonCount} {lessonCount === 1 ? "lesson" : "lessons"} available
-        </p>
+        <h2 className="text-h3 text-fg whitespace-nowrap leading-tight">Available lessons</h2>
+        <span className="text-caption text-fg-subtle">
+          {lessonCount} {lessonCount === 1 ? "lesson" : "lessons"}
+        </span>
       </div>
 
-      {/* Right: search + chips */}
-      <div className="flex flex-wrap items-center gap-space-4">
-        {/* Bottom-border-only search */}
-        <div className="relative flex items-center">
-          <Search className="pointer-events-none absolute left-1 h-4 w-4 text-fg-subtle" />
+      {/* Right: search (above) + filter chips (below) */}
+      <div className="ml-auto flex flex-col items-end gap-space-2">
+        {/* Search with filled background */}
+        <div className="relative w-52">
+          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-fg-subtle" />
           <input
             type="text"
             placeholder="Search sounds…"
             value={search}
             onChange={(e) => onSearchChange(e.target.value)}
-            className="w-40 bg-transparent pb-1 pl-6 pr-2 text-body-sm text-fg outline-none placeholder:text-fg-subtle
-              border-0 border-b border-border-subtle focus:border-border-focus transition-colors"
+            className="w-full rounded-full border border-border-subtle bg-surface-sunken py-1 pl-9 pr-4 text-body-sm text-fg outline-none placeholder:text-fg-subtle transition-colors focus:border-border-focus"
           />
         </div>
 
         {/* Filter chips */}
-        <div className="flex flex-wrap items-center gap-space-2">
+        <div className="flex flex-wrap justify-end gap-space-2">
           {CHIPS.map((chip) => (
             <button
               key={chip.id}
               type="button"
               onClick={() => onChipChange(chip.id)}
               className={[
-                "flex items-center gap-1.5 rounded-full px-space-4 py-space-2 text-body-sm transition-all duration-150",
-                activeChip === chip.id
-                  ? "bg-primary text-on-primary"
-                  : "border border-border-default bg-transparent text-fg-muted hover:border-border-strong",
+                "flex items-center gap-1.5 rounded-full px-space-3 py-space-1 text-body-sm transition-all duration-150",
+                chipClass(chip.id, activeChip),
               ].join(" ")}
             >
-              {chip.id === "weak" && (
-                <span className="h-1.5 w-1.5 flex-shrink-0 rounded-full bg-error animate-weak-pulse" />
+              {chip.id === "weak" && activeChip !== "weak" && (
+                <span className="h-1.5 w-1.5 flex-shrink-0 rounded-full bg-error-value" />
+              )}
+              {chip.id === "weak" && activeChip === "weak" && (
+                <span className="h-1.5 w-1.5 flex-shrink-0 rounded-full bg-on-primary" />
               )}
               {chip.label}
             </button>

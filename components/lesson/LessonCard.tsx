@@ -72,7 +72,7 @@ export default function LessonCard({ lesson, progressPct, isFeatured = false }: 
 
   if (isFeatured) {
     return (
-      <Link href={lesson.href ?? `/practice/lesson/${lesson.id}`} className="block h-full">
+      <Link href={lesson.href ?? `/practice/sound/${lesson.id.replace("sound-", "")}`} className="block h-full">
         <div
           className="group flex flex-col h-full cursor-pointer"
           style={{
@@ -185,7 +185,7 @@ export default function LessonCard({ lesson, progressPct, isFeatured = false }: 
   }
 
   return (
-    <Link href={lesson.href ?? `/practice/lesson/${lesson.id}`} className="block h-full">
+    <Link href={lesson.href ?? `/practice/sound/${lesson.id.replace("sound-", "")}`} className="block h-full">
       <div
         className="group flex flex-col h-full cursor-pointer"
         style={{

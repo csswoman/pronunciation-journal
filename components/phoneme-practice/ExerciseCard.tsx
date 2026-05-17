@@ -1,11 +1,8 @@
 'use client'
 
-import Button from "@/components/ui/Button";
 import type { ReactNode } from 'react'
 
 interface Props {
-  current: number
-  total: number
   exerciseType: string
   children: ReactNode
   feedback?: { isCorrect: boolean; message?: string } | null
@@ -13,64 +10,44 @@ interface Props {
   finishLabel?: boolean
 }
 
-const TYPE_LABELS: Record<string, string> = {
-  pick_word: 'Pick the Word',
-  pick_sound: 'Pick the Sound',
-  minimal_pair: 'Minimal Pair',
-  dictation: 'Dictation',
-}
-
-export function ExerciseCard({ current, total, exerciseType, children, feedback, onNext, finishLabel }: Props) {
+export function ExerciseCard({ children, feedback, onNext, finishLabel }: Props) {
   return (
-    <div className="w-full max-w-md mx-auto space-y-4">
-      {/* Progress bar */}
-      <div className="space-y-1">
-        <div className="flex justify-between text-xs text-fg-subtle">
-          <span>{TYPE_LABELS[exerciseType] ?? exerciseType}</span>
-          <span>{current} / {total}</span>
-        </div>
-        <div className="h-2 rounded-full overflow-hidden bg-surface-sunken">
-          <div
-            className="h-full transition-all duration-300 rounded-full bg-primary"
-            style={{ width: `${(current / total) * 100}%` }}
-          />
-        </div>
-      </div>
+    <div className="w-full max-w-[520px] mx-auto flex flex-col gap-4">
+      {children}
 
-      {/* Exercise content */}
-      <div className="rounded-2xl shadow-sm border border-border-subtle p-6 bg-surface-raised">
-        {children}
-      </div>
-
-      {/* Feedback + Next */}
       {feedback && (
         <div
-          className="rounded-xl p-4 flex items-center justify-between border"
-          style={{
-            backgroundColor: feedback.isCorrect ? 'oklch(.9 .06 180)' : 'oklch(.93 .06 25)',
-            borderColor: feedback.isCorrect ? 'var(--admonitions-color-tip)' : 'var(--admonitions-color-caution)',
-          }}
+          className={[
+            'rounded-[var(--radius-lg)] px-5 py-4 flex items-center justify-between',
+            feedback.isCorrect
+              ? 'border-[1.5px] border-[var(--success-border)] bg-[var(--success-soft)]'
+              : 'border-[1.5px] border-[var(--error-border)] bg-[var(--error-soft)]',
+          ].join(' ')}
         >
           <div className="flex items-center gap-2">
-            <span className="text-xl">{feedback.isCorrect ? '✓' : '✗'}</span>
-            <span className={`font-semibold text-sm ${feedback.isCorrect ? 'text-success' : 'text-error'}`}>
+            <span className="text-lg">{feedback.isCorrect ? '✓' : '✗'}</span>
+            <span
+              className={`font-semibold text-sm ${feedback.isCorrect ? 'text-[var(--success)]' : 'text-[var(--error)]'}`}
+            >
               {feedback.isCorrect ? 'Correct!' : 'Incorrect'}
             </span>
             {feedback.message && (
-              <span className="text-xs ml-1 text-fg-muted">{feedback.message}</span>
+              <span className="text-xs text-[var(--text-secondary)] ml-1">
+                {feedback.message}
+              </span>
             )}
           </div>
           {onNext && (
-            <Button
+            <button
+              type="button"
               onClick={onNext}
-              className="btn-primary px-4 py-1.5 rounded-lg text-sm font-semibold"
+              className="bg-[var(--gradient-primary)] text-white border-none rounded-[var(--radius-full)] px-5 py-2 text-[13px] font-semibold cursor-pointer font-inherit"
             >
               {finishLabel ? 'Finish ✓' : 'Next →'}
-            </Button>
+            </button>
           )}
         </div>
       )}
     </div>
   )
 }
-

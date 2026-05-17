@@ -33,7 +33,7 @@ export function useActiveLessonSetup(
 ): UseActiveLessonSetupReturn {
   const params = useParams();
   const lessonId = params.id as string;
-  const isDynamic = lessonId.startsWith("pattern-") || lessonId.startsWith("sound-");
+  const isDynamic = lessonId.startsWith("sound-");
 
   const [dynamicLesson, setDynamicLesson] = useState<Lesson | null | undefined>(
     isDynamic ? undefined : null

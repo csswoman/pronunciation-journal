@@ -96,8 +96,8 @@ export default function PracticeLessonsPage() {
   }, [heroLesson.lesson?.title])
 
   const handleResume = () => {
-    if (!heroLesson.lesson) return
-    router.push(heroLesson.lesson.href ?? `/practice/lesson/${heroLesson.lesson.id}`)
+    if (!heroLesson.lesson?.href) return
+    router.push(heroLesson.lesson.href)
   }
 
   return (

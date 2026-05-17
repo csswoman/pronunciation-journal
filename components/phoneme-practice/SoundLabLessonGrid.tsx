@@ -1,14 +1,17 @@
 import { SoundLabLessonCard } from "./SoundLabLessonCard";
 import type { Lesson } from "@/lib/types";
 
-interface Props {
+export interface LessonSection {
+  id: string;
+  title: string;
   lessons: Lesson[];
+}
+
+interface Props {
+  sections: LessonSection[];
+  heroLessonId: string | undefined;
   soundProgressMap: Map<number, number>;
-  totalCount: number;
-  currentPage: number;
-  totalPages: number;
   isLoading: boolean;
-  onPageChange: (page: number) => void;
 }
 
 function getProgress(lesson: Lesson, map: Map<number, number>): number | undefined {
@@ -16,18 +19,66 @@ function getProgress(lesson: Lesson, map: Map<number, number>): number | undefin
   return map.get(Number(lesson.id.replace("sound-", "")));
 }
 
-export function SoundLabLessonGrid({ lessons, soundProgressMap, totalCount, currentPage, totalPages, isLoading, onPageChange }: Props) {
-  if (isLoading) {
-    return (
-      <div className="grid grid-cols-1 gap-space-6 sm:grid-cols-2 lg:grid-cols-3">
-        {Array.from({ length: 6 }).map((_, i) => (
-          <div key={i} className="h-[280px] animate-pulse rounded-lg bg-surface-raised" />
-        ))}
-      </div>
-    );
-  }
+function SectionHeader({
+  section,
+  soundProgressMap,
+}: {
+  section: LessonSection;
+  soundProgressMap: Map<number, number>;
+}) {
+  const masteredCount = section.lessons.filter(
+    (l) => getProgress(l, soundProgressMap) === 100
+  ).length;
 
-  if (lessons.length === 0) {
+  return (
+    <div className="mb-space-6">
+      <div className="flex items-baseline gap-space-4">
+        <h2 className="text-h4 text-fg whitespace-nowrap">{section.title}</h2>
+        <span className="h-px flex-1 bg-border-subtle" />
+      </div>
+      <p className="mt-1 text-caption text-fg-subtle">
+        {section.lessons.length} {section.lessons.length === 1 ? "lesson" : "lessons"}
+        {masteredCount > 0 && ` · ${masteredCount} mastered`}
+      </p>
+    </div>
+  );
+}
+
+function LoadingSkeleton() {
+  return (
+    <div className="space-y-space-10">
+      {[1, 2].map((s) => (
+        <div key={s}>
+          <div className="mb-space-6 h-5 w-36 animate-pulse rounded bg-border-subtle" />
+          <div className="grid grid-cols-2 border-l border-t border-border-subtle sm:grid-cols-3 lg:grid-cols-4">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="h-[168px] border-b border-r border-border-subtle p-space-5">
+                <div className="mb-space-3 flex justify-between">
+                  <div className="h-4 w-10 animate-pulse rounded-full bg-border-subtle" />
+                  <div className="h-7 w-8 animate-pulse rounded bg-border-subtle" />
+                </div>
+                <div className="mb-space-2 h-4 w-3/4 animate-pulse rounded bg-border-subtle" />
+                <div className="h-3 w-full animate-pulse rounded bg-border-subtle" />
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+export function SoundLabLessonGrid({
+  sections,
+  heroLessonId,
+  soundProgressMap,
+  isLoading,
+}: Props) {
+  if (isLoading) return <LoadingSkeleton />;
+
+  const totalLessons = sections.reduce((n, s) => n + s.lessons.length, 0);
+
+  if (totalLessons === 0) {
     return (
       <p className="py-space-16 text-center text-body-sm text-fg-muted">
         No lessons match this filter.
@@ -36,40 +87,29 @@ export function SoundLabLessonGrid({ lessons, soundProgressMap, totalCount, curr
   }
 
   return (
-    <>
-      <div className="grid grid-cols-1 gap-space-6 sm:grid-cols-2 lg:grid-cols-3">
-        {lessons.map((lesson) => (
-          <SoundLabLessonCard
-            key={lesson.id}
-            lesson={lesson}
-            progressPct={getProgress(lesson, soundProgressMap)}
-          />
-        ))}
-      </div>
-
-      {totalCount > lessons.length && (
-        <div className="mt-space-8 flex items-center justify-center gap-space-4">
-          <button
-            type="button"
-            onClick={() => onPageChange(Math.max(1, currentPage - 1))}
-            disabled={currentPage === 1}
-            className="rounded-md border border-border-subtle bg-surface-raised px-space-4 py-space-2 text-body-sm text-fg-muted transition-all hover:border-border-default hover:text-fg disabled:opacity-40"
-          >
-            ← Previous
-          </button>
-          <span className="text-caption text-fg-subtle">
-            {currentPage} / {totalPages}
-          </span>
-          <button
-            type="button"
-            onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
-            disabled={currentPage === totalPages}
-            className="rounded-md border border-border-subtle bg-surface-raised px-space-4 py-space-2 text-body-sm text-fg-muted transition-all hover:border-border-default hover:text-fg disabled:opacity-40"
-          >
-            Next →
-          </button>
-        </div>
-      )}
-    </>
+    <div className="space-y-space-10">
+      {sections.map((section) => (
+        <section key={section.id}>
+          <SectionHeader section={section} soundProgressMap={soundProgressMap} />
+          {/* Table-style grid: container owns border-t + border-l; each cell owns border-b + border-r */}
+          <div className="grid grid-cols-2 border-l border-t border-border-subtle sm:grid-cols-3 lg:grid-cols-4">
+            {section.lessons.map((lesson) => {
+              const progressPct = getProgress(lesson, soundProgressMap);
+              const isWeak =
+                progressPct !== undefined && progressPct > 0 && progressPct < 60;
+              return (
+                <SoundLabLessonCard
+                  key={lesson.id}
+                  lesson={lesson}
+                  progressPct={progressPct}
+                  isContinuing={lesson.id === heroLessonId}
+                  isWeak={isWeak}
+                />
+              );
+            })}
+          </div>
+        </section>
+      ))}
+    </div>
   );
 }

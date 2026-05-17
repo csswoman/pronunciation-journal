@@ -1,7 +1,7 @@
 import Script from "next/script";
 import "./globals.css";
 import "./markdown.css";
-import { Noto_Sans, Noto_Serif } from "next/font/google";
+import { Noto_Sans, Noto_Serif, Fraunces } from "next/font/google";
 import AuthProvider from "@/components/auth/AuthProvider";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
 import AppShell from "@/components/layout/AppShell";
@@ -21,6 +21,12 @@ const notoSerif = Noto_Serif({
   subsets: ["latin"],
   variable: "--font-ipa",
 });
+const fraunces = Fraunces({
+  weight: ["700"],
+  style: ["normal", "italic"],
+  subsets: ["latin"],
+  variable: "--font-phoneme",
+});
 
 export default function RootLayout({
   children,
@@ -31,7 +37,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${notoHeading.variable} ${notoSans.variable} ${notoSerif.variable}`}
+      className={`${notoHeading.variable} ${notoSans.variable} ${notoSerif.variable} ${fraunces.variable}`}
     >
       <head>
         <meta charSet="utf-8" />
