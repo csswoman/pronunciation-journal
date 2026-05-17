@@ -1,5 +1,4 @@
 import type { Exercise, ExerciseOptions, Option, Sound, SoundWord, MinimalPair } from './types'
-import type { StageId } from './stages'
 import { filterByCEFR, numericToCEFR } from './cefr'
 import { pickConfusableIpas } from './phoneme-similarity'
 import { IPA_EXTRA } from '@/lib/ipa-data'
@@ -237,80 +236,3 @@ export function generateDictation(
   }
 }
 
-/**
- * Build a session for a specific stage only.
- * recognition: 3 pick_word + 3 pick_sound (shuffled)
- * pairs: up to 6 minimal_pair exercises
- * dictation: 6 dictation exercises
- */
-export function buildStageSession(
-  stageId: StageId,
-  targetSound: Sound,
-  targetWords: SoundWord[],
-  allSounds: Sound[],
-  allWordsBySoundId: Map<number, SoundWord[]>,
-  pairs: MinimalPair[],
-  opts?: ExerciseOptions
-): Exercise[] {
-  switch (stageId) {
-    case 'speaking': {
-      const exs: Exercise[] = []
-      for (let i = 0; i < 6; i++) exs.push(generateSpeakWord(targetSound, targetWords, opts))
-      return exs
-    }
-    case 'recognition': {
-      const exs: Exercise[] = []
-      for (let i = 0; i < 3; i++) exs.push(generatePickWord(targetSound, targetWords, allSounds, allWordsBySoundId, opts))
-      for (let i = 0; i < 3; i++) exs.push(generatePickSound(targetSound, targetWords, allSounds, opts))
-      return shuffle(exs)
-    }
-    case 'pairs': {
-      const exs: Exercise[] = []
-      for (let i = 0; i < 6; i++) {
-        const ex = generateMinimalPair(targetSound, pairs)
-        if (ex.options.length > 0) exs.push(ex)
-      }
-      return exs
-    }
-    case 'dictation': {
-      const exs: Exercise[] = []
-      for (let i = 0; i < 6; i++) exs.push(generateDictation(targetSound, targetWords, opts))
-      return exs
-    }
-  }
-}
-
-/**
- * Build a full session: 2 pick_word + 2 pick_sound + 2 minimal_pair + 2 dictation.
- * Falls back to pick_word when minimal_pair has no data even after synthesis.
- */
-export function buildSession(
-  targetSound: Sound,
-  targetWords: SoundWord[],
-  allSounds: Sound[],
-  allWordsBySoundId: Map<number, SoundWord[]>,
-  pairs: MinimalPair[],
-  opts?: ExerciseOptions
-): Exercise[] {
-  const exercises: Exercise[] = []
-
-  for (let i = 0; i < 2; i++) {
-    exercises.push(generatePickWord(targetSound, targetWords, allSounds, allWordsBySoundId, opts))
-  }
-  for (let i = 0; i < 2; i++) {
-    exercises.push(generatePickSound(targetSound, targetWords, allSounds, opts))
-  }
-  for (let i = 0; i < 2; i++) {
-    const ex = generateMinimalPair(targetSound, pairs)
-    exercises.push(
-      ex.options.length > 0
-        ? ex
-        : generatePickWord(targetSound, targetWords, allSounds, allWordsBySoundId, opts)
-    )
-  }
-  for (let i = 0; i < 2; i++) {
-    exercises.push(generateDictation(targetSound, targetWords, opts))
-  }
-
-  return exercises
-}
