@@ -2,7 +2,6 @@
 
 import { useEffect } from 'react'
 import { Mic, MicOff, RotateCcw } from 'lucide-react'
-import Button from '@/components/ui/Button'
 import { useSpeechRecognition } from '@/hooks/useSpeechRecognition'
 import { speak } from '@/lib/phoneme-practice/tts'
 import type { Exercise } from '@/lib/phoneme-practice/types'
@@ -34,7 +33,6 @@ function isMatch(transcript: string, target: string): boolean {
 export function SpeakExercise({ exercise, onSubmit }: Props) {
   const { status, result, isSupported, start, stop, reset } = useSpeechRecognition()
 
-  // Play model pronunciation on mount
   useEffect(() => {
     if (exercise.targetWord) {
       const t = setTimeout(() => speak(exercise.targetWord!), 400)
@@ -42,7 +40,6 @@ export function SpeakExercise({ exercise, onSubmit }: Props) {
     }
   }, [exercise.targetWord])
 
-  // Auto-evaluate when recognition finishes
   useEffect(() => {
     if (status === 'done' && result && exercise.targetWord) {
       const correct = isMatch(result.transcript, exercise.targetWord)
@@ -52,10 +49,9 @@ export function SpeakExercise({ exercise, onSubmit }: Props) {
 
   if (!isSupported) {
     return (
-      <div className="text-center space-y-3 py-4">
-        <p className="text-sm text-fg-muted">
-          Speech recognition is not supported in this browser.
-          Try Chrome or Edge.
+      <div className="text-center py-4">
+        <p className="text-sm text-[var(--text-secondary)]">
+          Speech recognition not supported. Try Chrome or Edge.
         </p>
       </div>
     )
@@ -66,71 +62,61 @@ export function SpeakExercise({ exercise, onSubmit }: Props) {
   const isError = status === 'error'
 
   return (
-    <div className="space-y-6">
-      <div className="text-center space-y-1">
-        <p className="text-xs font-bold uppercase tracking-widest text-fg-muted">
-          Pronounce this word
-        </p>
-        <p className="text-4xl font-bold tracking-tight" style={{ color: 'var(--text-primary)' }}>
-          {exercise.targetWord ?? '—'}
-        </p>
-        <p className="text-sm font-mono" style={{ color: 'var(--primary)' }}>
-          {exercise.ipa}
-        </p>
+    <div className="flex flex-col items-center gap-5 w-full">
+      <p className="text-xs font-semibold uppercase tracking-[.08em] text-[var(--text-tertiary)] m-0">
+        Pronounce this word
+      </p>
+      <div className="[font-family:var(--font-phoneme),serif] text-5xl font-bold text-[var(--text-primary)] tracking-[-1px] leading-none">
+        {exercise.targetWord ?? '—'}
+      </div>
+      <div className="[font-family:var(--font-ipa),monospace] text-base text-[var(--primary)]">
+        {exercise.ipa}
       </div>
 
-      {/* Replay model + mic button */}
-      <div className="flex flex-col items-center gap-3">
-        <button
-          type="button"
-          onClick={() => exercise.targetWord && speak(exercise.targetWord)}
-          className="text-xs font-medium px-3 py-1.5 rounded-full border transition-colors hover:border-[var(--primary)] hover:text-[var(--primary)]"
-          style={{ borderColor: 'var(--line-divider)', color: 'var(--fg-muted)' }}
-        >
-          🔊 Hear model
-        </button>
+      <button
+        type="button"
+        onClick={() => exercise.targetWord && speak(exercise.targetWord)}
+        className="text-xs font-medium py-2 px-4 rounded-[var(--radius-full)] border border-[var(--border-subtle)] bg-transparent text-[var(--text-secondary)] cursor-pointer [font-family:inherit]"
+      >
+        🔊 Hear model
+      </button>
 
-        <button
-          type="button"
-          onClick={isListening ? stop : start}
-          aria-label={isListening ? 'Stop recording' : 'Start recording'}
-          className="w-20 h-20 rounded-full flex items-center justify-center transition-all duration-200 active:scale-95 hover:scale-[1.04]"
-          style={{
-            backgroundColor: isListening ? 'var(--error)' : 'var(--primary)',
-            color: 'white',
-            boxShadow: isListening
-              ? '0 0 0 14px color-mix(in oklch, var(--error) 18%, transparent)'
-              : '0 4px 16px color-mix(in oklch, var(--primary) 35%, transparent)',
-          }}
-        >
-          {isListening ? <MicOff size={28} /> : <Mic size={28} />}
-        </button>
+      <button
+        type="button"
+        onClick={isListening ? stop : start}
+        aria-label={isListening ? 'Stop recording' : 'Start recording'}
+        className={[
+          'w-20 h-20 rounded-full border-none flex items-center justify-center cursor-pointer transition-all text-white',
+          isListening
+            ? 'bg-[var(--error)] shadow-[0_0_0_14px_color-mix(in_oklch,var(--error)_18%,transparent)]'
+            : 'bg-[var(--primary)] shadow-[0_4px_16px_color-mix(in_oklch,var(--primary)_35%,transparent)]',
+        ].join(' ')}
+      >
+        {isListening ? <MicOff size={28} /> : <Mic size={28} />}
+      </button>
 
-        <p className="text-xs font-medium tracking-wide text-fg-muted">
-          {isListening ? 'Recording… tap to stop' : 'Tap to speak'}
-        </p>
-      </div>
+      <p className="text-xs text-[var(--text-tertiary)] tracking-[.05em]">
+        {isListening ? 'Recording… tap to stop' : 'Tap to speak'}
+      </p>
 
-      {/* Result or error state */}
       {isDone && result && (
-        <div className="text-center text-sm text-fg-muted">
-          You said: <span className="font-semibold text-fg">{result.transcript}</span>
-        </div>
+        <p className="text-sm text-[var(--text-secondary)] text-center">
+          You said: <strong className="text-[var(--text-primary)]">{result.transcript}</strong>
+        </p>
       )}
 
       {isError && (
         <div className="flex flex-col items-center gap-2">
-          <p className="text-xs text-error text-center">
+          <p className="text-xs text-[var(--error)] text-center">
             Could not hear anything. Make sure your microphone is allowed.
           </p>
-          <Button
+          <button
+            type="button"
             onClick={reset}
-            variant="ghost"
-            size="sm"
-            className="gap-1 text-xs"
+            className="inline-flex items-center gap-1 text-xs py-1 px-3 rounded-[var(--radius-full)] border border-[var(--border-subtle)] bg-transparent text-[var(--text-secondary)] cursor-pointer [font-family:inherit]"
           >
             <RotateCcw size={13} /> Try again
-          </Button>
+          </button>
         </div>
       )}
     </div>

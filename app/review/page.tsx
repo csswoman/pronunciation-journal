@@ -181,8 +181,9 @@ export default function ReviewPage() {
     return (
       <div className="min-h-screen flex items-center justify-center p-4">
         <SessionSummary
-          answers={session.answers}
           soundIpa="Review"
+          scoreableCorrect={session.scoreableCorrect}
+          originalTotal={session.originalTotal}
           nextReview={null}
           onPracticeAgain={() => { setExercises(null); setSessionKey(k => k + 1) }}
         />
@@ -216,9 +217,7 @@ export default function ReviewPage() {
         </Button>
 
         <ExerciseCard
-          key={session.currentIndex}
-          current={session.currentIndex + 1}
-          total={session.total}
+          key={session.currentQueuePos}
           exerciseType={ex.type}
           feedback={currentFeedback}
           onNext={handleNext}

@@ -1,5 +1,5 @@
-import PronunciationExercise from "@/components/lesson/pronunciation-exercise/PronunciationExercise";
+import PronunciationLessonPage from '@/components/phoneme-practice/PronunciationLessonPage'
 
 export default function Page() {
-  return <PronunciationExercise />;
+  return <PronunciationLessonPage />
 }

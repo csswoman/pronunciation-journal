@@ -1,6 +1,5 @@
 'use client'
 
-import Button from "@/components/ui/Button";
 import { useState } from 'react'
 import type { Exercise } from '@/lib/phoneme-practice/types'
 
@@ -8,6 +7,8 @@ interface Props {
   exercise: Exercise
   onSubmit: (isCorrect: boolean, userAnswer: string) => void
 }
+
+const BASE_OPT = 'rounded-[var(--radius-full)] py-4 px-3 text-[15px] font-medium cursor-pointer transition-all w-full [font-family:inherit] border-[1.5px]'
 
 export function PickWordExercise({ exercise, onSubmit }: Props) {
   const [selected, setSelected] = useState<Set<string>>(new Set())
@@ -37,71 +38,50 @@ export function PickWordExercise({ exercise, onSubmit }: Props) {
     onSubmit(isCorrect, userAnswer)
   }
 
-  function getOptionStyle(id: string): React.CSSProperties {
-    const isSelected = selected.has(id)
+  function getClass(id: string): string {
+    const isSel = selected.has(id)
     const isCorrect = exercise.correctIds.includes(id)
     if (submitted) {
-      if (isCorrect) return {
-        borderColor: 'var(--admonitions-color-tip)',
-        backgroundColor: 'oklch(.93 .05 180)',
-        color: 'var(--admonitions-color-tip)',
-      }
-      if (isSelected) return {
-        borderColor: 'var(--admonitions-color-caution)',
-        backgroundColor: 'oklch(.95 .05 25)',
-        color: 'var(--admonitions-color-caution)',
-      }
-      return {
-        borderColor: 'var(--line-divider)',
-        color: 'var(--text-tertiary)',
-      }
+      if (isCorrect) return `${BASE_OPT} bg-[var(--success-soft)] border-[var(--success-border)] text-[var(--success)]`
+      if (isSel)     return `${BASE_OPT} bg-[var(--error-soft)] border-[var(--error-border)] text-[var(--error)]`
+      return `${BASE_OPT} bg-[var(--surface-raised)] border-[var(--border-subtle)] text-[var(--text-primary)] opacity-[0.45]`
     }
-    if (isSelected) return {
-      borderColor: 'var(--primary)',
-      backgroundColor: 'var(--selection-bg)',
-      color: 'var(--primary)',
-    }
-    return {
-      borderColor: 'var(--line-divider)',
-      color: 'var(--text-primary)',
-    }
+    if (isSel) return `${BASE_OPT} bg-[var(--selection-bg)] border-[var(--primary)] text-[var(--primary)]`
+    return `${BASE_OPT} bg-[var(--surface-raised)] border-[var(--border-subtle)] text-[var(--text-primary)]`
   }
 
-  return (
-    <div className="space-y-6">
-      <div className="text-center">
-        <p className="text-sm mb-2 text-fg-muted">
-          Which words contain this sound?
-        </p>
-        <span className="text-5xl font-bold font-mono text-primary">
-          {exercise.ipa}
-        </span>
-        <p className="text-xs mt-1 text-fg-subtle">Select all that apply</p>
-      </div>
+  const canCheck = selected.size > 0 && !submitted
 
-      <div className="grid grid-cols-2 gap-3">
-        {exercise.options.map(option => (
-          <Button
-            key={option.id}
-            className="p-4 rounded-xl border-2 text-center font-medium transition-all cursor-pointer select-none"
-            style={getOptionStyle(option.id)}
-            onClick={() => toggle(option.id)}
-          >
-            {option.label}
-          </Button>
+  return (
+    <div className="flex flex-col items-center gap-5 w-full">
+      <p className="text-[15px] text-[var(--text-secondary)] text-center m-0">
+        Which words contain this sound?
+      </p>
+      <p className="text-xs text-[var(--text-tertiary)] text-center tracking-[.05em] m-0">
+        Select all that apply
+      </p>
+
+      <div className="grid grid-cols-2 gap-3 w-full">
+        {exercise.options.map(opt => (
+          <button key={opt.id} type="button" onClick={() => toggle(opt.id)} className={getClass(opt.id)}>
+            {opt.label}
+          </button>
         ))}
       </div>
 
-      {!submitted && (
-        <Button
-          onClick={handleSubmit}
-          disabled={selected.size === 0}
-          className="btn-primary w-full py-3 rounded-xl font-semibold disabled:opacity-40"
-        >
-          Check
-        </Button>
-      )}
+      <button
+        type="button"
+        onClick={handleSubmit}
+        disabled={!canCheck}
+        className={[
+          'w-full p-4 rounded-[var(--radius-md)] border-none [font-family:inherit] text-[15px] font-semibold transition-all',
+          canCheck
+            ? 'cursor-pointer bg-[var(--gradient-primary)] text-white shadow-[0_4px_20px_color-mix(in_oklch,var(--primary)_30%,transparent)]'
+            : 'cursor-not-allowed bg-[var(--surface-raised)] text-[var(--text-tertiary)]',
+        ].join(' ')}
+      >
+        Check
+      </button>
     </div>
   )
 }
-

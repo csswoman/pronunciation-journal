@@ -1,6 +1,5 @@
 'use client'
 
-import Button from "@/components/ui/Button";
 import { useEffect, useRef, useState } from 'react'
 import { speak } from '@/lib/phoneme-practice/tts'
 import type { Exercise } from '@/lib/phoneme-practice/types'
@@ -28,6 +27,7 @@ export function DictationExercise({ exercise, onSubmit }: Props) {
   const [value, setValue] = useState('')
   const [submitted, setSubmitted] = useState(false)
   const [isCorrect, setIsCorrect] = useState(false)
+  const [played, setPlayed] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
@@ -37,9 +37,7 @@ export function DictationExercise({ exercise, onSubmit }: Props) {
     }
   }, [exercise.targetWord])
 
-  useEffect(() => {
-    inputRef.current?.focus()
-  }, [])
+  useEffect(() => { inputRef.current?.focus() }, [])
 
   function handleSubmit() {
     if (submitted || !value.trim()) return
@@ -51,68 +49,70 @@ export function DictationExercise({ exercise, onSubmit }: Props) {
     onSubmit(correct, value.trim())
   }
 
-  const inputStyle: React.CSSProperties = submitted
-    ? isCorrect
-      ? {
-          borderColor: 'var(--admonitions-color-tip)',
-          backgroundColor: 'oklch(.93 .05 180)',
-          color: 'var(--admonitions-color-tip)',
-        }
-      : {
-          borderColor: 'var(--admonitions-color-caution)',
-          backgroundColor: 'oklch(.95 .05 25)',
-          color: 'var(--admonitions-color-caution)',
-        }
-    : {
-        borderColor: 'var(--line-divider)',
-        backgroundColor: 'var(--card-bg)',
-        color: 'var(--text-primary)',
-      }
+  function handlePlay() {
+    setPlayed(true)
+    if (exercise.targetWord) speak(exercise.targetWord)
+  }
+
+  const canCheck = value.trim().length > 0 && !submitted
 
   return (
-    <div className="space-y-6">
-      <div className="text-center">
-        <p className="text-sm mb-3 text-fg-muted">
-          Listen and type what you hear
+    <div className="flex flex-col items-center gap-4 w-full">
+      <p className="text-[15px] text-(--text-secondary) text-center m-0">
+        Listen and write what you hear
+      </p>
+
+      <button
+        type="button"
+        onClick={handlePlay}
+        className={[
+          'inline-flex items-center justify-center gap-2 rounded-full py-3 px-7 text-[15px] font-semibold cursor-pointer w-full transition-all duration-200',
+          played
+            ? 'bg-(--surface-raised) border border-[1.5px] border-solid border-(--border-subtle) text-(--text-primary)'
+            : 'bg-[var(--gradient-primary)] border-0 text-white',
+        ].join(' ')}
+      >
+        🔊 {played ? 'Play again' : 'Play audio'}
+      </button>
+
+      <input
+        ref={inputRef}
+        type="text"
+        value={value}
+        onChange={e => !submitted && setValue(e.target.value)}
+        onKeyDown={e => e.key === 'Enter' && handleSubmit()}
+        placeholder="Type the word…"
+        className={[
+          'w-full rounded-(--radius-md) text-base py-4 px-4 text-center border border-[1.5px] border-solid outline-none transition-[border-color] duration-200',
+          submitted
+            ? isCorrect
+              ? 'bg-(--success-soft) border-(--success-border) text-(--success)'
+              : 'bg-(--error-soft) border-(--error-border) text-(--error)'
+            : 'bg-(--surface-raised) border-(--border-subtle) text-(--text-primary)',
+        ].join(' ')}
+      />
+
+      {submitted && !isCorrect && (
+        <p className="text-[13px] text-(--text-tertiary) text-center m-0">
+          Answer: <strong className="text-(--text-primary)">{exercise.targetWord}</strong>
         </p>
-        <Button
-          onClick={() => exercise.targetWord && speak(exercise.targetWord)}
-          className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl font-bold text-3xl transition-colors bg-surface-raised text-warning hover:bg-surface-sunken"
-        >
-          🔊
-        </Button>
-        <p className="text-xs mt-2 text-fg-subtle">Tap to replay</p>
-      </div>
-
-      <div className="space-y-3">
-        <input
-          ref={inputRef}
-          type="text"
-          value={value}
-          onChange={e => !submitted && setValue(e.target.value)}
-          onKeyDown={e => e.key === 'Enter' && handleSubmit()}
-          placeholder="Type the word..."
-          className="w-full px-4 py-3 rounded-xl border-2 text-center text-lg font-medium outline-none transition-colors"
-          style={inputStyle}
-        />
-
-        {submitted && !isCorrect && (
-          <p className="text-center text-sm text-fg-muted">
-            Correct answer: <span className="font-bold text-success">{exercise.targetWord}</span>
-          </p>
-        )}
-      </div>
+      )}
 
       {!submitted && (
-        <Button
+        <button
+          type="button"
           onClick={handleSubmit}
-          disabled={!value.trim()}
-          className="btn-primary w-full py-3 rounded-xl font-semibold disabled:opacity-40"
+          disabled={!canCheck}
+          className={[
+            'w-full py-4 rounded-(--radius-md) border-0 text-[15px] font-semibold transition-all duration-[250ms]',
+            canCheck
+              ? 'cursor-pointer bg-[var(--gradient-primary)] text-white shadow-[0_4px_20px_color-mix(in_oklch,var(--primary)_30%,transparent)]'
+              : 'cursor-not-allowed bg-(--surface-raised) text-(--text-tertiary)',
+          ].join(' ')}
         >
           Check
-        </Button>
+        </button>
       )}
     </div>
   )
 }
-
