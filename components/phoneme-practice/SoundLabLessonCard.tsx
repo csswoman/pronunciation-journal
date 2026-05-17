@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { BookOpen, Zap } from "lucide-react";
+import { RotateCw, Clock } from "lucide-react";
 import type { Lesson } from "@/lib/types";
 
 interface Props {
@@ -9,6 +9,7 @@ interface Props {
   progressPct?: number;
   isContinuing?: boolean;
   isWeak?: boolean;
+  category?: string;
 }
 
 const DIFFICULTY_CLASSES: Record<string, string> = {
@@ -24,7 +25,7 @@ const DIFFICULTY_LABEL: Record<string, string> = {
 };
 
 function extractIpa(title: string): string | null {
-  const m = title.match(/^(\/[^/]+\/)/);
+  const m = title.match(/^\/([^/]+)\//);
   return m ? m[1] : null;
 }
 
@@ -39,15 +40,9 @@ function buildPreview(lesson: Lesson): string {
   return lesson.description;
 }
 
-function cellBg(isContinuing: boolean, isInProgress: boolean): string {
-  if (isContinuing) return "bg-primary-100";
-  if (isInProgress) return "bg-primary-50 hover:bg-primary-100";
-  return "hover:bg-primary-50";
-}
-
-export function SoundLabLessonCard({ lesson, progressPct, isContinuing, isWeak }: Props) {
+export function SoundLabLessonCard({ lesson, progressPct, isContinuing, isWeak, category }: Props) {
   const { id, title, difficulty, words, exerciseCount, href } = lesson;
-  const ipa = extractIpa(title);
+  const ipaSymbol = extractIpa(title);
   const label = displayTitle(title);
   const wordCount = words.length > 0 ? words.length : (exerciseCount ?? 0);
   const minutes = Math.max(2, Math.ceil(wordCount / 3));
@@ -67,19 +62,12 @@ export function SoundLabLessonCard({ lesson, progressPct, isContinuing, isWeak }
     >
       <article
         className={[
-          "relative flex flex-col gap-space-2 overflow-hidden",
-          "border-b border-r border-border-subtle",
-          "cursor-pointer transition-colors duration-[150ms] ease-out",
-          isInProgress ? "shadow-[inset_0_0_0_1.5px_var(--color-primary-200)]" : "",
-          cellBg(!!isContinuing, isInProgress),
+          "relative flex flex-col gap-space-3 overflow-hidden rounded-xl p-space-5",
+          "bg-surface border border-border-subtle",
+          "shadow-sm cursor-pointer transition-shadow duration-[150ms] ease-out hover:shadow-md",
+          isContinuing ? "ring-2 ring-primary ring-offset-1" : "",
         ].join(" ")}
-        style={{ padding: "14px 16px" }}
       >
-        {/* Continuing left accent stripe */}
-        {isContinuing && (
-          <span className="pointer-events-none absolute bottom-0 left-0 top-0 w-1 bg-primary" />
-        )}
-
         {/* Weak dot */}
         {isWeak && !isContinuing && (
           <span
@@ -88,65 +76,69 @@ export function SoundLabLessonCard({ lesson, progressPct, isContinuing, isWeak }
           />
         )}
 
-        {/* Row 1: Difficulty badge + IPA glyph */}
-        <div className="flex items-start justify-between gap-space-2">
+        {/* Row 1: Difficulty badge */}
+        <div>
           <span
-            className={`rounded-full px-[8px] py-1 text-[10px] font-medium ${DIFFICULTY_CLASSES[difficulty] ?? "bg-surface-sunken text-fg-muted"}`}
+            className={`inline-block rounded-md px-[8px] py-[3px] text-[10px] font-semibold uppercase tracking-wider ${DIFFICULTY_CLASSES[difficulty] ?? "bg-surface-sunken text-fg-muted"}`}
           >
             {DIFFICULTY_LABEL[difficulty] ?? difficulty}
           </span>
-          {ipa && (
-            <span
+        </div>
+
+        {/* Row 2: IPA glyph with thin slashes + category label */}
+        <div className="flex flex-col gap-[2px]">
+          {ipaSymbol && (
+            <p
               aria-hidden
-              className="font-heading text-h2 leading-none text-primary opacity-60 transition-all duration-[150ms] ease-out group-hover:scale-[1.05] group-hover:opacity-100"
+              className="flex items-baseline gap-[2px] leading-none transition-transform duration-[150ms] ease-out group-hover:scale-[1.04]"
             >
-              {ipa}
-            </span>
+              <span className="font-serif text-[1rem] font-light text-fg/30">/</span>
+              <span className="font-serif text-[2.25rem] font-normal text-fg">{ipaSymbol}</span>
+              <span className="font-serif text-[1rem] font-light text-fg/30">/</span>
+            </p>
+          )}
+          {category && (
+            <p className="text-[11px] text-fg-muted">{category}</p>
           )}
         </div>
 
-        {/* Row 2: Title */}
-        <h3 className="line-clamp-1 text-h4 leading-tight text-fg">{label}</h3>
+        {/* Row 3: Title */}
+        <h3 className="text-body font-semibold leading-tight text-fg">{label}</h3>
 
-        {/* Row 3: Example words */}
+        {/* Row 4: Example words */}
         <p className="truncate text-caption text-fg-muted">{preview}</p>
 
-        {/* Row 4: Meta + Train button */}
+        {/* Row 5: Meta */}
         <div className="flex items-center gap-space-3 text-caption text-fg-subtle">
           {wordCount > 0 && (
             <>
               <span className="flex items-center gap-1">
-                <BookOpen className="h-3 w-3 flex-shrink-0" />
+                <RotateCw className="h-3 w-3 flex-shrink-0" />
                 {wordCount}
               </span>
               <span className="flex items-center gap-1">
-                <Zap className="h-3 w-3 flex-shrink-0" />
+                <Clock className="h-3 w-3 flex-shrink-0" />
                 {minutes}m
               </span>
             </>
           )}
-          <span className="ml-auto">
-            {isCompleted ? (
-              <span className="rounded-full bg-success-soft px-space-2 py-0.5 text-tiny text-success">
-                Done
-              </span>
-            ) : isInProgress ? (
-              <span className="rounded-full bg-primary-100 px-space-2 py-0.5 text-tiny text-primary">
-                {progressPct}%
-              </span>
-            ) : (
-              <span className="h-1.5 w-1.5 rounded-full bg-border-subtle" />
-            )}
-          </span>
+          {isInProgress && (
+            <span className="ml-auto text-caption font-medium text-primary">
+              {progressPct}%
+            </span>
+          )}
+          {isCompleted && (
+            <span className="ml-auto text-tiny font-medium text-success">Done</span>
+          )}
         </div>
 
-        {/* In-progress bottom strip: track + fill */}
+        {/* Progress bar at bottom */}
         {showProgressBar && (
           <>
-            <span aria-hidden className="absolute bottom-0 left-0 right-0 h-1 bg-primary/10" />
+            <span aria-hidden className="absolute bottom-0 left-0 right-0 h-[3px] bg-primary/10" />
             <span
               aria-hidden
-              className="absolute bottom-0 left-0 h-1 bg-primary"
+              className="absolute bottom-0 left-0 h-[3px] rounded-full bg-primary"
               style={{ width: `${progressPct}%` }}
             />
           </>

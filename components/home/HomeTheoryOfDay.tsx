@@ -1,50 +1,72 @@
 import Link from "next/link";
+import { BookOpen, Clock, Sparkles } from "lucide-react";
 import { CardBadge } from "@/components/ui/CardBadge";
+import { getTodaysLesson } from "@/lib/mini-lessons";
 
 interface HomeTheoryOfDayProps {
-  slug?: string;
-  duration?: number;
-  title?: string;
-  description?: string;
-  examples?: { word: string; ipa: string }[];
+  lesson?: ReturnType<typeof getTodaysLesson>;
 }
 
-export default function HomeTheoryOfDay({
-  slug = "#",
-  duration = 5,
-  title = "When to use the schwa /ə/",
-  description = "The most common vowel sound in English. It appears in unstressed syllables — and mastering it is the single biggest unlock for sounding natural.",
-  examples = [
-    { word: "banana", ipa: "/bəˈnɑː.nə/" },
-    { word: "about", ipa: "/əˈbaʊt/" },
-  ],
-}: HomeTheoryOfDayProps) {
+export default function HomeTheoryOfDay({ lesson }: HomeTheoryOfDayProps) {
+  const todaysLesson = lesson ?? getTodaysLesson();
+
   return (
-    <div className="rounded-xl border border-border-subtle bg-surface-raised p-4 flex flex-col gap-4">
-      <div className="flex items-center gap-2">
-        <CardBadge color="primary">Mini Lesson · {duration} min</CardBadge>
+    <div className="rounded-xl border border-border-subtle bg-surface-raised p-4 flex flex-col gap-3">
+
+      {/* Badge */}
+      <CardBadge color="primary" icon={<BookOpen size={12} />}>
+        Mini Lesson
+      </CardBadge>
+
+      {/* Meta */}
+      <div className="flex items-center gap-1.5 text-xs text-fg-subtle mb-2">
+        <Clock size={12} className="shrink-0" />
+        <span>{todaysLesson.duration} min · {todaysLesson.subtitle}</span>
       </div>
 
-      <div>
-        <p className="text-xs text-[var(--text-tertiary)] mb-1">Theory of the day</p>
-        <p className="text-base font-medium text-[var(--text-primary)] leading-snug">{title}</p>
+      {/* Title */}
+      <div className="-mt-3">
+        <p className="text-2xl font-bold text-fg leading-tight">{todaysLesson.title}</p>
       </div>
 
-      <p className="text-sm leading-relaxed text-[var(--text-secondary)]">{description}</p>
+      {/* Body */}
+      <p className="text-sm leading-relaxed text-fg-muted">{todaysLesson.body}</p>
 
-      <div className="rounded-xl bg-[var(--btn-regular-bg)] px-4 py-3 flex flex-col gap-1.5">
-        {examples.map(({ word, ipa }) => (
-          <p key={word} className="text-sm font-mono text-[var(--primary)]">
-            {word} · <span className="text-fg-muted">{ipa}</span>
+      {/* Examples */}
+      {todaysLesson.examples.length > 0 && (
+        <div className="rounded-xl border border-border-subtle border-l-2 border-l-primary bg-[var(--accent-dim)] px-4 py-3 flex flex-col gap-2">
+          <p className="flex items-center gap-1.5 text-xs font-semibold tracking-widest uppercase text-primary">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L9.5 9.5 2 12l7.5 2.5L12 22l2.5-7.5L22 12l-7.5-2.5z"></path></svg>
+            Examples
           </p>
-        ))}
-      </div>
+          {todaysLesson.examples.map(({ word, ipa, translation }, i) => (
+            <div key={i} className="flex flex-col gap-0.5">
+              {i > 0 && <hr className="border-border-subtle mb-1" />}
+              <p className="text-sm italic font-medium text-primary leading-snug">{word}</p>
+              {(ipa || translation) && (
+                <p className="text-xs text-fg-subtle font-mono">
+                  {ipa}{ipa && translation ? " · " : ""}{translation}
+                </p>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
 
+      {/* Tip */}
+      {todaysLesson.tip && (
+        <p className="text-xs italic text-fg-subtle px-3 py-2 border-l-2 border-primary">
+          💡 {todaysLesson.tip}
+        </p>
+      )}
+
+      {/* CTA */}
       <Link
-        href="/courses"
-        className="block text-center text-sm font-medium text-fg border border-[var(--line-divider)] rounded-xl py-2.5 hover:bg-[var(--btn-regular-bg)] transition-colors"
+        href={`/courses/mini-lessons/${todaysLesson.slug}`}
+        className="flex items-center justify-between bg-fg text-surface-raised text-sm font-medium rounded-xl px-5 py-3.5 hover:opacity-90 transition-opacity"
       >
-        Read full lesson →
+        <span>Read full lesson</span>
+        <span>→</span>
       </Link>
     </div>
   );

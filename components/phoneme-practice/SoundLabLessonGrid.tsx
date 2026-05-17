@@ -4,6 +4,9 @@ import type { Lesson } from "@/lib/types";
 export interface LessonSection {
   id: string;
   title: string;
+  subtitle?: string;
+  count?: number;
+  category?: string;
   lessons: Lesson[];
 }
 
@@ -25,14 +28,12 @@ function LoadingSkeleton() {
     <div className="space-y-space-10">
       {[1, 2].map((s) => (
         <div key={s}>
-          <div className="mb-space-6 h-5 w-36 animate-pulse rounded bg-border-subtle" />
-          <div className="grid grid-cols-2 border-l border-t border-border-subtle sm:grid-cols-3 lg:grid-cols-4">
+          <div className="mb-space-4 h-5 w-36 animate-pulse rounded bg-border-subtle" />
+          <div className="grid grid-cols-2 gap-space-4 sm:grid-cols-3 lg:grid-cols-4">
             {Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="h-[168px] border-b border-r border-border-subtle p-space-5">
-                <div className="mb-space-3 flex justify-between">
-                  <div className="h-4 w-10 animate-pulse rounded-full bg-border-subtle" />
-                  <div className="h-7 w-8 animate-pulse rounded bg-border-subtle" />
-                </div>
+              <div key={i} className="h-[168px] rounded-xl border border-border-subtle bg-surface p-space-5 shadow-sm">
+                <div className="mb-space-3 h-4 w-10 animate-pulse rounded-md bg-border-subtle" />
+                <div className="mb-space-3 h-8 w-12 animate-pulse rounded bg-border-subtle" />
                 <div className="mb-space-2 h-4 w-3/4 animate-pulse rounded bg-border-subtle" />
                 <div className="h-3 w-full animate-pulse rounded bg-border-subtle" />
               </div>
@@ -66,8 +67,19 @@ export function SoundLabLessonGrid({
     <div className="space-y-space-10">
       {sections.map((section) => (
         <section key={section.id}>
-          {/* Table-style grid: container owns border-t + border-l; each cell owns border-b + border-r */}
-          <div className="grid grid-cols-2 border-l border-t border-border-subtle sm:grid-cols-3 lg:grid-cols-4">
+          {/* Section header */}
+          <div className="mb-space-4 flex items-baseline justify-between">
+            <div className="flex items-baseline gap-space-3">
+              <h2 className="text-h3 text-fg">{section.title}</h2>
+              {section.count !== undefined && (
+                <span className="text-body-sm text-fg-muted">{section.count} sounds</span>
+              )}
+            </div>
+            {section.subtitle && (
+              <span className="text-body-sm text-fg-subtle">{section.subtitle}</span>
+            )}
+          </div>
+          <div className="grid grid-cols-2 gap-space-4 sm:grid-cols-3 lg:grid-cols-5">
             {section.lessons.map((lesson) => {
               const progressPct = getProgress(lesson, soundProgressMap);
               const isWeak =
@@ -79,6 +91,7 @@ export function SoundLabLessonGrid({
                   progressPct={progressPct}
                   isContinuing={lesson.id === heroLessonId}
                   isWeak={isWeak}
+                  category={section.category}
                 />
               );
             })}
