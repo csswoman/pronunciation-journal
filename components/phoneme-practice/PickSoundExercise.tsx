@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { speak } from '@/lib/phoneme-practice/tts'
+import { playIpaSound } from '@/lib/ipa-audio'
 import type { Exercise } from '@/lib/phoneme-practice/types'
 
 interface Props {
@@ -22,12 +23,17 @@ export function PickSoundExercise({ exercise, onSubmit }: Props) {
     }
   }, [exercise.targetWord])
 
-  function handleSelect(id: string) {
+  function handleSelect(id: string, label: string) {
     if (submitted) return
+    playIpaSound(label.replace(/[/\[\]]/g, '').trim())
     setSelected(id)
+  }
+
+  function handleSubmit() {
+    if (!selected || submitted) return
     setSubmitted(true)
-    const isCorrect = exercise.correctIds.includes(id)
-    const label = exercise.options.find(o => o.id === id)?.label ?? ''
+    const isCorrect = exercise.correctIds.includes(selected)
+    const label = exercise.options.find(o => o.id === selected)?.label ?? ''
     onSubmit(isCorrect, label)
   }
 
@@ -57,11 +63,25 @@ export function PickSoundExercise({ exercise, onSubmit }: Props) {
 
       <div className="grid grid-cols-2 gap-3 w-full">
         {exercise.options.map(opt => (
-          <button key={opt.id} type="button" onClick={() => handleSelect(opt.id)} className={getClass(opt.id)}>
+          <button key={opt.id} type="button" onClick={() => handleSelect(opt.id, opt.label)} className={getClass(opt.id)}>
             {opt.label}
           </button>
         ))}
       </div>
+
+      <button
+        type="button"
+        onClick={handleSubmit}
+        disabled={!selected || submitted}
+        className={[
+          'w-full p-4 rounded-[var(--radius-md)] border-none [font-family:inherit] text-[15px] font-semibold transition-all',
+          selected && !submitted
+            ? 'cursor-pointer bg-[var(--gradient-primary)] text-white shadow-[0_4px_20px_color-mix(in_oklch,var(--primary)_30%,transparent)]'
+            : 'cursor-not-allowed bg-[var(--surface-raised)] text-[var(--text-tertiary)]',
+        ].join(' ')}
+      >
+        Check
+      </button>
     </div>
   )
 }

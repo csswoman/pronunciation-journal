@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import type { Exercise } from '@/lib/phoneme-practice/types'
+import { playIpaSound } from '@/lib/ipa-audio'
 
 interface Props {
   exercise: Exercise
@@ -10,11 +11,22 @@ interface Props {
 
 const BASE_OPT = 'rounded-[var(--radius-full)] py-4 px-3 text-[15px] font-medium cursor-pointer transition-all w-full [font-family:inherit] border-[1.5px]'
 
+function speak(text: string) {
+  if (typeof window === 'undefined' || !window.speechSynthesis) return
+  window.speechSynthesis.cancel()
+  const utt = new SpeechSynthesisUtterance(text)
+  utt.lang = 'en-US'
+  utt.rate = 0.85
+  window.speechSynthesis.speak(utt)
+}
+
+
 export function PickWordExercise({ exercise, onSubmit }: Props) {
   const [selected, setSelected] = useState<Set<string>>(new Set())
   const [submitted, setSubmitted] = useState(false)
 
-  function toggle(id: string) {
+  function toggle(id: string, label: string) {
+    speak(label)
     if (submitted) return
     setSelected(prev => {
       const next = new Set(prev)
@@ -54,16 +66,27 @@ export function PickWordExercise({ exercise, onSubmit }: Props) {
 
   return (
     <div className="flex flex-col items-center gap-5 w-full">
-      <p className="text-[15px] text-[var(--text-secondary)] text-center m-0">
-        Which words contain this sound?
-      </p>
+      <div className="flex flex-col items-center gap-2">
+        <button
+          type="button"
+          onClick={() => playIpaSound(exercise.ipa.replace(/[/\[\]]/g, '').trim())}
+          aria-label={`Pronounce ${exercise.ipa}`}
+          className="flex items-center gap-2 px-4 py-2 rounded-[var(--radius-full)] border border-[var(--border-subtle)] bg-[var(--surface-raised)] text-[var(--text-primary)] text-[15px] font-mono hover:border-[var(--primary)] hover:text-[var(--primary)] transition-colors cursor-pointer [font-family:inherit]"
+        >
+          <span className="text-[11px] text-[var(--text-tertiary)]" aria-hidden>🔊</span>
+          {exercise.ipa}
+        </button>
+        <p className="text-[15px] text-[var(--text-secondary)] text-center m-0">
+          Which words contain this sound?
+        </p>
+      </div>
       <p className="text-xs text-[var(--text-tertiary)] text-center tracking-[.05em] m-0">
         Select all that apply
       </p>
 
       <div className="grid grid-cols-2 gap-3 w-full">
         {exercise.options.map(opt => (
-          <button key={opt.id} type="button" onClick={() => toggle(opt.id)} className={getClass(opt.id)}>
+          <button key={opt.id} type="button" onClick={() => toggle(opt.id, opt.label)} className={getClass(opt.id)}>
             {opt.label}
           </button>
         ))}
