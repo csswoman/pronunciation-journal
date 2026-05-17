@@ -18,6 +18,7 @@ const TYPE_LABELS: Record<string, string> = {
   pick_sound: 'Pick the Sound',
   minimal_pair: 'Minimal Pair',
   dictation: 'Dictation',
+  speak_word: 'Speak It',
 }
 
 export function ExerciseCard({ current, total, exerciseType, children, feedback, onNext, finishLabel }: Props) {
