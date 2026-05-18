@@ -1,0 +1,20 @@
+{
+  "id": "system-design-beginner",
+  "title": "System Design — Beginner",
+  "scenario": "system-design",
+  "level": "beginner",
+  "turns": [
+    { "role": "interviewer", "text": "Let's keep things simple today. Can you explain what an API is in your own words?" },
+    { "role": "candidate", "text": "Yes. An API is a way for two programs to talk to each other. For example, a weather app uses an API to get the weather data from another service." },
+    { "role": "interviewer", "text": "Good example. What is a database? Why do we need one?" },
+    { "role": "candidate", "text": "A database is a place where we save information. We need it so the data does not disappear when the app closes. For example, we save user accounts in a database." },
+    { "role": "interviewer", "text": "Imagine you have a website. Many people use it at the same time. What can be a problem?" },
+    { "role": "candidate", "text": "The website can be very slow if too many people use it at the same time. The server has too much work to do." },
+    { "role": "interviewer", "text": "Good. How could you fix that problem?" },
+    { "role": "candidate", "text": "You can use more than one server. If you have two or three servers, they share the work. The website becomes faster." },
+    { "role": "interviewer", "text": "That's called load balancing. Have you heard of caching? What do you think it means?" },
+    { "role": "candidate", "text": "I think caching means saving a copy of something so you do not need to get it again. For example, if many people ask for the same data, you save it and send the copy. It is faster." },
+    { "role": "interviewer", "text": "Exactly right. Do you have any questions for me?" },
+    { "role": "candidate", "text": "Yes. Are these concepts important for a frontend developer? Do I need to know a lot about servers?" }
+  ]
+}

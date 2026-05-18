@@ -1,0 +1,20 @@
+{
+  "id": "hr-beginner",
+  "title": "About Me — Beginner",
+  "scenario": "hr",
+  "level": "beginner",
+  "turns": [
+    { "role": "interviewer", "text": "Hello! Thank you for coming today. Can you tell me your name and where you are from?" },
+    { "role": "candidate", "text": "Hello! My name is Ana. I am from Mexico City. Nice to meet you." },
+    { "role": "interviewer", "text": "Nice to meet you too. What is your job? What do you do every day?" },
+    { "role": "candidate", "text": "I am a web developer. Every day I write code and fix problems on websites. I like my job." },
+    { "role": "interviewer", "text": "Good. Why do you want to work here?" },
+    { "role": "candidate", "text": "I want to work here because this company is very good. I want to learn new things and grow." },
+    { "role": "interviewer", "text": "What is something you are good at?" },
+    { "role": "candidate", "text": "I am good at solving problems. When something does not work, I try different ways to fix it." },
+    { "role": "interviewer", "text": "And what is something you need to improve?" },
+    { "role": "candidate", "text": "I need to improve my English. I am learning every day and I practice a lot." },
+    { "role": "interviewer", "text": "That is great. Do you have any questions for me?" },
+    { "role": "candidate", "text": "Yes. Can you tell me about the team? How many people work here?" }
+  ]
+}

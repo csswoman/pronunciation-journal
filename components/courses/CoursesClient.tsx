@@ -1,52 +1,21 @@
 "use client";
-import Button from "@/components/ui/Button";
 
-import { useEffect, useMemo, useRef, useState } from "react";
-import type { Course } from "@/lib/notion/types";
+import { useRef, useState } from "react";
 import PageHeader from "@/components/layout/PageHeader";
 import PageLayout from "@/components/layout/PageLayout";
-import CourseCard from "@/components/courses/CourseCard";
-import CourseFilters from "@/components/courses/CourseFilters";
 import MiniLessonsGrid from "@/components/courses/MiniLessonsGrid";
-import { getCompletedCountByCourse } from "@/lib/db";
+import LibraryGrid from "@/components/courses/LibraryGrid";
 
-type CourseLevel = "all" | "basic" | "intermediate" | "advanced";
-type CourseListItem = Course & { completedLessons?: number };
-type ActiveTab = "courses" | "mini-lessons";
+type ActiveTab = "library" | "mini-lessons";
 
 const tabs: { value: ActiveTab; label: string }[] = [
-  { value: "courses",      label: "Courses"      },
+  { value: "library",      label: "Library"      },
   { value: "mini-lessons", label: "Mini Lessons" },
 ];
 
 export default function CoursesClient() {
-  const [activeTab, setActiveTab] = useState<ActiveTab>("courses");
-  const [courses, setCourses] = useState<CourseListItem[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [query, setQuery] = useState("");
-  const [level, setLevel] = useState<CourseLevel>("all");
-  const filtersRef = useRef<HTMLDivElement | null>(null);
-  const [completedCounts, setCompletedCounts] = useState<Record<string, number>>({});
-
-  useEffect(() => {
-    fetch("/api/notion/courses")
-      .then((r) => r.json())
-      .then((data) => { setCourses(Array.isArray(data) ? data : []); setLoading(false); })
-      .catch(() => setLoading(false));
-    getCompletedCountByCourse().then(setCompletedCounts);
-  }, []);
-
-  const filteredCourses = useMemo(() => {
-    const normalizedQuery = query.trim().toLowerCase();
-    return courses.filter((course) => {
-      const matchesQuery =
-        normalizedQuery.length === 0 ||
-        course.title.toLowerCase().includes(normalizedQuery);
-      const matchesLevel =
-        level === "all" || (course.level ?? "").toLowerCase() === level;
-      return matchesQuery && matchesLevel;
-    });
-  }, [courses, level, query]);
+  const [activeTab, setActiveTab] = useState<ActiveTab>("library");
+  const sectionRef = useRef<HTMLDivElement | null>(null);
 
   return (
     <PageLayout
@@ -55,11 +24,11 @@ export default function CoursesClient() {
           badge="Courses"
           title="Continue your"
           subtitle="learning path"
-          description="Filter by level or search by title to find the right course."
+          description="Your synced Notion notes, curated courses, and quick mini lessons."
           primaryCta={{
-            label: "Browse courses",
+            label: "Browse lessons",
             onClick: () => {
-              filtersRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+              sectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
             },
           }}
           variant="compact"
@@ -67,7 +36,7 @@ export default function CoursesClient() {
       }
     >
       <div
-        ref={filtersRef}
+        ref={sectionRef}
         className="rounded-2xl border border-[var(--line-divider)] bg-[var(--card-bg)] shadow-[0_1px_3px_var(--line-divider)] overflow-hidden"
       >
         {/* Tab selector */}
@@ -91,62 +60,8 @@ export default function CoursesClient() {
           })}
         </div>
 
-        {/* Courses tab */}
-        {activeTab === "courses" && (
-          <>
-            <div className="px-4 py-3 border-b border-[var(--line-divider)]">
-              <CourseFilters
-                query={query}
-                level={level}
-                onQueryChange={setQuery}
-                onLevelChange={setLevel}
-              />
-            </div>
-
-            {(query || level !== "all") && (
-              <div className="px-4 pt-3 -mb-1">
-                <p className="text-caption text-fg-subtle">
-                  {filteredCourses.length === 0
-                    ? "No courses match your filters."
-                    : `${filteredCourses.length} course${filteredCourses.length === 1 ? "" : "s"} found`}
-                </p>
-              </div>
-            )}
-
-            <div className="p-4">
-              {loading ? (
-                <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-                  {Array.from({ length: 6 }).map((_, i) => (
-                    <div key={i} className="rounded-xl border border-[var(--line-divider)] h-48 overflow-hidden relative bg-surface-sunken">
-                      <div className="absolute inset-0 -translate-x-full animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-overlay-light to-transparent" />
-                    </div>
-                  ))}
-                </div>
-              ) : filteredCourses.length === 0 ? (
-                <div className="flex min-h-[240px] items-center justify-center rounded-xl border border-dashed border-[var(--line-divider)] px-8 text-center">
-                  <div>
-                    <p className="text-body-sm font-semibold text-fg">No courses found</p>
-                    <p className="mt-2 text-caption text-fg-muted">
-                      Try a different search term or clear the level filter.
-                    </p>
-                    <Button
-                      onClick={() => { setQuery(""); setLevel("all"); }}
-                      className="mt-4 rounded-lg px-4 py-2 text-caption font-medium transition-colors bg-surface-sunken text-fg-muted"
-                    >
-                      Clear filters
-                    </Button>
-                  </div>
-                </div>
-              ) : (
-                <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-                  {filteredCourses.map((course, i) => (
-                    <CourseCard key={course.id} course={{ ...course, completedLessons: completedCounts[course.slug] ?? 0 }} priority={i === 0} />
-                  ))}
-                </div>
-              )}
-            </div>
-          </>
-        )}
+        {/* Library tab — theory_lessons (Notion notes + manual courses) */}
+        {activeTab === "library" && <LibraryGrid />}
 
         {/* Mini Lessons tab */}
         {activeTab === "mini-lessons" && <MiniLessonsGrid />}
@@ -154,4 +69,3 @@ export default function CoursesClient() {
     </PageLayout>
   );
 }
-

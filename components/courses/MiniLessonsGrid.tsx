@@ -1,98 +1,79 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { miniLessons, LessonLevel, LessonCategory } from "@/lib/mini-lessons";
+import { miniLessons, LessonLevel } from "@/lib/mini-lessons";
 import MiniLessonCard from "@/components/courses/MiniLessonCard";
 import Button from "@/components/ui/Button";
 
 type LevelFilter = "all" | LessonLevel;
-type CategoryFilter = "all" | LessonCategory;
-
-const levelTabs: { value: LevelFilter; label: string }[] = [
-  { value: "all",          label: "All levels"    },
-  { value: "basic",        label: "Basic"         },
-  { value: "intermediate", label: "Intermediate"  },
-  { value: "advanced",     label: "Advanced"      },
-];
-
-const categoryTabs: { value: CategoryFilter; label: string }[] = [
-  { value: "all",           label: "All"          },
-  { value: "pronunciation", label: "Pronunciation"},
-  { value: "grammar",       label: "Grammar"      },
-  { value: "vocabulary",    label: "Vocabulary"   },
-  { value: "listening",     label: "Listening"    },
-  { value: "speaking",      label: "Speaking"     },
-  { value: "writing",       label: "Writing"      },
-  { value: "idioms",        label: "Idioms"       },
-  { value: "collocations",  label: "Collocations" },
-];
-
-const activeStyle = {
-  background: "var(--primary)",
-  color: "var(--on-primary)",
-  boxShadow: "0 2px 8px color-mix(in oklch, var(--primary) 30%, transparent)",
-};
-
-const idleStyle = {
-  background: "var(--btn-regular-bg)",
-  color: "var(--text-secondary)",
-};
 
 export default function MiniLessonsGrid() {
+  const [query, setQuery] = useState("");
   const [level, setLevel] = useState<LevelFilter>("all");
-  const [category, setCategory] = useState<CategoryFilter>("all");
 
   const filtered = useMemo(
     () =>
-      miniLessons.filter(
-        (l) =>
-          (level === "all"    || l.level    === level) &&
-          (category === "all" || l.category === category)
-      ),
-    [level, category]
+      miniLessons.filter((l) => {
+        const matchLevel = level === "all" || l.level === level;
+        const q = query.trim().toLowerCase();
+        const matchQuery =
+          !q ||
+          l.title.toLowerCase().includes(q) ||
+          l.body.toLowerCase().includes(q) ||
+          l.category.toLowerCase().includes(q);
+        return matchLevel && matchQuery;
+      }),
+    [query, level]
   );
+
+  const isFiltered = query.trim() !== "" || level !== "all";
 
   return (
     <div>
-      {/* Filters */}
-      <div className="px-4 py-3 border-b border-[var(--line-divider)] flex flex-col gap-3">
-        {/* Level */}
-        <div className="flex flex-wrap gap-1.5">
-          {levelTabs.map((tab) => (
-            <Button
-              key={tab.value}
-              type="button"
-              onClick={() => setLevel(tab.value)}
-              className="rounded-lg px-3.5 py-1.5 text-caption font-medium transition-all duration-150"
-              style={level === tab.value ? activeStyle : idleStyle}
-            >
-              {tab.label}
-            </Button>
-          ))}
-        </div>
-
-        {/* Category */}
-        <div className="flex flex-wrap gap-1.5">
-          {categoryTabs.map((tab) => (
-            <Button
-              key={tab.value}
-              type="button"
-              onClick={() => setCategory(tab.value)}
-              className="rounded-lg px-3.5 py-1.5 text-caption font-medium transition-all duration-150"
-              style={category === tab.value ? activeStyle : idleStyle}
-            >
-              {tab.label}
-            </Button>
-          ))}
-        </div>
+      {/* Search + level filter */}
+      <div className="px-4 py-3 border-b border-border-subtle flex flex-col sm:flex-row gap-2">
+        <label className="relative flex-1">
+          <span className="sr-only">Search lessons</span>
+          <svg
+            aria-hidden="true"
+            viewBox="0 0 24 24"
+            fill="none"
+            className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-fg-subtle"
+          >
+            <path
+              d="M21 21l-4.3-4.3m1.8-5.2a7.5 7.5 0 11-15 0 7.5 7.5 0 0115 0z"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+          <input
+            type="search"
+            placeholder="Search lessons…"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            className="w-full rounded-lg border border-border-subtle bg-surface-raised pl-9 pr-3 py-2 text-sm text-fg placeholder:text-fg-muted focus:outline-none focus:border-primary transition-colors"
+          />
+        </label>
+        <select
+          value={level}
+          onChange={(e) => setLevel(e.target.value as LevelFilter)}
+          className="rounded-lg border border-border-subtle bg-surface-raised px-3 py-2 text-sm text-fg focus:outline-none focus:border-primary transition-colors"
+        >
+          <option value="all">All levels</option>
+          <option value="basic">Basic</option>
+          <option value="intermediate">Intermediate</option>
+          <option value="advanced">Advanced</option>
+        </select>
       </div>
 
       {/* Count */}
-      {(level !== "all" || category !== "all") && (
+      {isFiltered && (
         <div className="px-4 pt-3 -mb-1">
-          <p className="text-caption text-fg-subtle">
+          <p className="text-xs text-fg-subtle">
             {filtered.length === 0
-              ? "No lessons match your filters."
+              ? "No lessons match your search."
               : `${filtered.length} lesson${filtered.length === 1 ? "" : "s"} found`}
           </p>
         </div>
@@ -101,13 +82,13 @@ export default function MiniLessonsGrid() {
       {/* Grid */}
       <div className="p-4">
         {filtered.length === 0 ? (
-          <div className="flex min-h-[240px] items-center justify-center rounded-xl border border-dashed border-[var(--line-divider)] px-8 text-center">
+          <div className="flex min-h-[240px] items-center justify-center rounded-xl border border-dashed border-border-subtle px-8 text-center">
             <div>
-              <p className="text-body-sm font-semibold text-fg">No lessons found</p>
-              <p className="mt-2 text-caption text-fg-muted">Try clearing the filters.</p>
+              <p className="text-sm font-semibold text-fg">No lessons found</p>
+              <p className="mt-2 text-xs text-fg-muted">Try a different search or level.</p>
               <Button
-                onClick={() => { setLevel("all"); setCategory("all"); }}
-                className="mt-4 rounded-lg px-4 py-2 text-caption font-medium transition-colors bg-surface-sunken text-fg-muted"
+                onClick={() => { setQuery(""); setLevel("all"); }}
+                className="mt-4 rounded-lg px-4 py-2 text-xs font-medium transition-colors bg-surface-sunken text-fg-muted"
               >
                 Clear filters
               </Button>

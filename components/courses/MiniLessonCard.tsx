@@ -24,46 +24,13 @@ export default function MiniLessonCard({ lesson }: { lesson: MiniLesson }) {
       className="group flex flex-col h-full w-full rounded-xl border border-border-subtle bg-surface-raised p-4 gap-3 transition-all duration-200 hover:border-border-default hover:-translate-y-px"
     >
       {/* Header */}
-      <div className="flex items-center justify-between gap-2">
-        <p className="text-xs font-semibold tracking-widest uppercase text-primary">
-          {lesson.subtitle}
-          <span className="font-normal text-fg-subtle normal-case tracking-normal">
-            {" "}· {lesson.duration} min
-          </span>
-        </p>
+      <div className="flex items-start justify-between gap-2">
+        <p className="font-bold text-base text-fg leading-snug">{lesson.title}</p>
         <Badge label={level.label} color={level.color} />
       </div>
 
-      {/* Title */}
-      <p className="font-bold text-base text-fg leading-snug">{lesson.title}</p>
-
-      {/* Body */}
-      <p className="text-sm text-fg-muted leading-relaxed">{lesson.body}</p>
-
-      {/* Examples */}
-      {lesson.examples.length > 0 && (
-        <ul className="flex flex-col gap-1.5">
-          {lesson.examples.map((ex, i) => (
-            <li key={i} className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
-              <span className="text-sm font-semibold text-fg">{ex.word}</span>
-              {ex.ipa && (
-                <span className="font-mono text-xs text-primary">{ex.ipa}</span>
-              )}
-              {ex.translation && (
-                <span className="text-xs italic text-fg-subtle">{ex.translation}</span>
-              )}
-            </li>
-          ))}
-        </ul>
-      )}
-
-      {/* Tip */}
-      {lesson.tip && (
-        <div className="flex items-start gap-2 rounded-lg bg-primary-soft px-3 py-2">
-          <span className="text-base leading-none mt-px shrink-0">💡</span>
-          <p className="text-xs text-fg-muted leading-relaxed">{lesson.tip}</p>
-        </div>
-      )}
+      {/* Description */}
+      <p className="text-sm text-fg-muted leading-relaxed line-clamp-3">{lesson.body}</p>
 
       {/* Footer */}
       <span

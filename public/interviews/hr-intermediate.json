@@ -1,0 +1,20 @@
+{
+  "id": "hr-intermediate",
+  "title": "About Me — Intermediate",
+  "scenario": "hr",
+  "level": "intermediate",
+  "turns": [
+    { "role": "interviewer", "text": "Good morning! Thanks for taking the time to meet with us. Could you start by telling me a little about yourself?" },
+    { "role": "candidate", "text": "Of course. I'm a frontend developer with about three years of experience. I've been working mostly with React and TypeScript, building user-facing features for web applications. I'm really passionate about creating clean, accessible interfaces." },
+    { "role": "interviewer", "text": "Great background. What made you decide to apply for this position specifically?" },
+    { "role": "candidate", "text": "I've been following your company for a while and I really admire the product you're building. I feel like my skills in React and design systems would be a strong match, and I'm excited about the opportunity to work on something with real impact." },
+    { "role": "interviewer", "text": "Can you describe one of your biggest professional strengths?" },
+    { "role": "candidate", "text": "I'd say my strongest skill is breaking down complex problems into smaller, manageable pieces. When I face something unclear, I tend to ask the right questions first and then work through it step by step." },
+    { "role": "interviewer", "text": "What about a weakness? Is there something you're actively working on improving?" },
+    { "role": "candidate", "text": "Honestly, I used to struggle with saying no when I had too much on my plate. I've been working on setting clearer boundaries and communicating early when deadlines are at risk. It's made a big difference in my productivity." },
+    { "role": "interviewer", "text": "Where do you see yourself in two or three years?" },
+    { "role": "candidate", "text": "I'd love to grow into a senior developer role and eventually take ownership of a product area. I'm also interested in mentoring junior developers — I think teaching is one of the best ways to solidify your own knowledge." },
+    { "role": "interviewer", "text": "That sounds like a solid plan. Do you have any questions for us?" },
+    { "role": "candidate", "text": "Yes, actually. I'd love to understand how the engineering team collaborates with design. Is there a process in place, or is it still evolving?" }
+  ]
+}

@@ -2,34 +2,12 @@ import { GoogleGenAI } from "@google/genai";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { requireUser, rateLimit, validateBody } from "@/lib/api/guards";
+import { INTERVIEW_SYSTEM_PROMPT, buildInterviewPrompt } from "@/lib/ai-prompts";
 
 const InterviewSchema = z.object({
-  scenario: z.enum(["hr", "frontend", "system-design", "behavioral", "product"]),
+  scenario: z.enum(["hr", "frontend", "system-design", "behavioral", "product", "ai-developer"]),
   level: z.enum(["beginner", "intermediate", "advanced"]),
 });
-
-const SYSTEM_PROMPT = `You are an interview script generator for English language learners. Generate a realistic mock interview script with 6 rounds (question + model answer).
-
-Rules:
-- Interviewer questions must be natural and conversational
-- Candidate answers must be in natural spoken English (not written/formal)
-- Adjust vocabulary complexity to the requested level
-- beginner: simple sentences, common words, short answers
-- intermediate: clear professional language, moderate complexity
-- advanced: idiomatic expressions, nuanced vocabulary, longer answers
-- Return ONLY valid JSON, no markdown, no code fences
-
-Format:
-{
-  "title": "Interview title",
-  "turns": [
-    {"role": "interviewer", "text": "..."},
-    {"role": "candidate", "text": "..."},
-    ...
-  ]
-}
-
-Include exactly 12 turns (6 interviewer + 6 candidate, alternating, starting with interviewer).`;
 
 const ENABLE_PREVIEW_MODELS = process.env.GEMINI_ENABLE_PREVIEW_MODELS === "true";
 const BASE_MODELS = ["gemini-2.5-flash-lite", "gemini-2.5-flash", "gemini-flash-latest"] as const;
@@ -60,7 +38,7 @@ async function generateScript(ai: GoogleGenAI, prompt: string): Promise<string> 
       const result = await ai.models.generateContent({
         model: modelName,
         contents: prompt,
-        config: { systemInstruction: SYSTEM_PROMPT, responseMimeType: "application/json" },
+        config: { systemInstruction: INTERVIEW_SYSTEM_PROMPT, responseMimeType: "application/json" },
       });
       if (!result.text) throw new Error("Empty response from AI");
       return result.text;
@@ -71,14 +49,6 @@ async function generateScript(ai: GoogleGenAI, prompt: string): Promise<string> 
   }
   throw lastError ?? new Error("All fallback models failed");
 }
-
-const SCENARIO_LABELS: Record<string, string> = {
-  hr: "HR / General Interview",
-  frontend: "Frontend Developer Interview",
-  "system-design": "System Design Interview",
-  behavioral: "Behavioral Interview (STAR method)",
-  product: "Product Manager Interview",
-};
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
   const { user, error: authError } = await requireUser();
@@ -97,7 +67,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) return NextResponse.json({ error: "AI service unavailable" }, { status: 503 });
 
-  const prompt = `Generate a ${SCENARIO_LABELS[body.scenario]} script for a ${body.level} English learner. Make the interviewer professional and the candidate responses natural spoken English at ${body.level} level.`;
+  const prompt = buildInterviewPrompt(body.scenario, body.level);
 
   try {
     const ai = new GoogleGenAI({ apiKey });

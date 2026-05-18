@@ -1,0 +1,20 @@
+{
+  "id": "frontend-intermediate",
+  "title": "Frontend Developer — Intermediate",
+  "scenario": "frontend",
+  "level": "intermediate",
+  "turns": [
+    { "role": "interviewer", "text": "Let's dive right in. Can you explain the difference between controlled and uncontrolled components in React?" },
+    { "role": "candidate", "text": "Sure. A controlled component is one where React manages the form state — the input value comes from state and updates through an onChange handler. An uncontrolled component lets the DOM handle the state directly, and you read the value using a ref when you need it. I generally prefer controlled components because they're more predictable." },
+    { "role": "interviewer", "text": "Good explanation. How do you approach performance optimization in a React application?" },
+    { "role": "candidate", "text": "I usually start by identifying what's actually slow before optimizing anything. I use the React DevTools profiler to find unnecessary re-renders. Common fixes include memoizing expensive calculations with useMemo, wrapping stable callbacks with useCallback, and code-splitting with lazy loading so you only load what's needed." },
+    { "role": "interviewer", "text": "How do you handle CSS in your projects — do you have a preferred approach?" },
+    { "role": "candidate", "text": "It depends on the project, but lately I've been using Tailwind CSS. I like that it keeps styles close to the markup and avoids the naming problem you get with custom classes. For more complex component libraries I've also worked with CSS Modules to avoid style leaking." },
+    { "role": "interviewer", "text": "Can you walk me through what happens when a user types a URL in the browser and hits enter?" },
+    { "role": "candidate", "text": "The browser first does a DNS lookup to resolve the domain to an IP address. Then it opens a TCP connection — with HTTPS, there's also a TLS handshake. It sends an HTTP request, the server responds with HTML, and the browser starts parsing it. As it parses, it discovers CSS and JavaScript files, fetches those, builds the DOM and CSSOM, and finally renders the page." },
+    { "role": "interviewer", "text": "Nice. Have you worked with any state management libraries?" },
+    { "role": "candidate", "text": "Yes, I've used Zustand and Redux Toolkit. I prefer Zustand for most projects — it's much lighter and the API feels more natural. I reach for Redux when the app has very complex state interactions or needs strong DevTools support for debugging." },
+    { "role": "interviewer", "text": "Great. Any questions for me before we wrap up?" },
+    { "role": "candidate", "text": "Yes — how does the team handle technical debt? Is there dedicated time for refactoring, or does it get folded into feature work?" }
+  ]
+}

@@ -16,19 +16,16 @@ const filters: { id: FilterId; label: string }[] = [
 
 export function LexiconFilters({ active, onChange }: LexiconFiltersProps) {
   return (
-    <div className="flex gap-3 mb-6 flex-wrap">
+    <div className="flex gap-2 flex-wrap">
       {filters.map((filter) => (
         <button
           key={filter.id}
           onClick={() => onChange(filter.id)}
-          className={[
-            "px-4 py-2 rounded-full text-sm font-medium transition-colors",
+          className={
             active === filter.id
-              ? "bg-fg text-on-fg"
-              : "bg-surface-raised border border-border-subtle text-fg-muted hover:text-fg hover:border-border-default",
-          ]
-            .filter(Boolean)
-            .join(" ")}
+              ? "px-4 py-1.5 rounded-full text-sm font-medium bg-primary text-on-primary transition-colors"
+              : "px-4 py-1.5 rounded-full text-sm font-medium border border-border-subtle text-fg-muted bg-transparent hover:text-fg hover:border-border-default transition-colors"
+          }
         >
           {filter.label}
         </button>
