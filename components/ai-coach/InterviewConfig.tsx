@@ -1,12 +1,14 @@
 "use client";
 
-import { User, Laptop, Layers, Star } from "lucide-react";
+import { User, Laptop, Layers, Star, BrainCircuit } from "lucide-react";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
-export type Scenario = "hr" | "frontend" | "system-design" | "behavioral";
+export type Scenario = "hr" | "frontend" | "system-design" | "behavioral" | "ai-developer";
 export type Level = "beginner" | "intermediate" | "advanced";
 export type Difficulty = "guided" | "challenge";
+
+export const CURATED_SCENARIOS = new Set<Scenario>(["hr", "frontend", "system-design", "ai-developer"]);
 
 // ── Data ──────────────────────────────────────────────────────────────────────
 
@@ -15,6 +17,7 @@ const INTERVIEW_TYPES: { id: Scenario; label: string; sub: string; Icon: React.E
   { id: "frontend",      label: "Frontend Dev",  sub: "React, CSS, JS concepts",  Icon: Laptop },
   { id: "system-design", label: "System Design", sub: "Architecture, trade-offs", Icon: Layers },
   { id: "behavioral",    label: "Behavioral",    sub: "STAR method",              Icon: Star },
+  { id: "ai-developer",  label: "AI Developer",  sub: "LLMs, agents, evals",      Icon: BrainCircuit },
 ];
 
 const LEVELS: { id: Level; label: string; sub: string }[] = [

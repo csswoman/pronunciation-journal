@@ -1,0 +1,22 @@
+{
+  "id": "ai-developer-intermediate",
+  "title": "AI Developer — Intermediate",
+  "scenario": "ai-developer",
+  "level": "intermediate",
+  "turns": [
+    { "role": "interviewer", "text": "Let's start with something practical. How do you approach prompt engineering when integrating an LLM into a product?" },
+    { "role": "candidate", "text": "I treat prompts like code — they need to be version-controlled, tested, and iterated on. I usually start with a clear system prompt that defines the model's role and constraints, then structure the user input in a way that gives the model the context it needs. I also think about edge cases: what happens if the user sends something unexpected? I try to make the prompt robust to that." },
+    { "role": "interviewer", "text": "How do you evaluate whether an LLM integration is working well?" },
+    { "role": "candidate", "text": "I build an eval dataset of representative inputs with expected outputs, then run the model against it whenever I change the prompt. For open-ended tasks it's harder — I sometimes use a second LLM as a judge, or define specific criteria like 'does it stay on topic' or 'does it answer the question.' Tracking hallucination rate and latency are also important metrics in production." },
+    { "role": "interviewer", "text": "Have you worked with retrieval-augmented generation — RAG? Can you explain the concept?" },
+    { "role": "candidate", "text": "Yes. RAG is a pattern where instead of relying on the model's training data alone, you retrieve relevant documents at query time and inject them into the prompt as context. It's great for use cases where you need up-to-date or private information — things the model couldn't have been trained on. The retrieval step typically uses vector embeddings and a similarity search." },
+    { "role": "interviewer", "text": "What are the main challenges you've faced when working with LLM APIs in production?" },
+    { "role": "candidate", "text": "Three main ones: latency, cost, and reliability. LLMs are slow compared to traditional APIs, so I think carefully about what needs to be synchronous versus what can be async. Cost adds up quickly at scale, so I cache responses where it makes sense and choose smaller models for simpler tasks. And for reliability, I always build a fallback — if the primary model fails or hits a rate limit, I retry with a backup model rather than returning an error to the user." },
+    { "role": "interviewer", "text": "How do you handle sensitive data when using third-party AI APIs?" },
+    { "role": "candidate", "text": "I try to minimize what gets sent to the API in the first place. I strip or anonymize PII before it hits the prompt. I also check the provider's data usage policy — some models are trained on API inputs by default, which is a problem for confidential data. For sensitive use cases, I look into on-premise or private deployment options." },
+    { "role": "interviewer", "text": "What's a project where you integrated AI and it didn't go as planned? What did you learn?" },
+    { "role": "candidate", "text": "I built a feature that used an LLM to classify user feedback into categories. In testing it looked great, but in production the outputs were too inconsistent — the same input sometimes got different labels. I learned that for classification tasks, LLMs need very precise prompts with few-shot examples, and you often get better consistency with a fine-tuned smaller model than a large general-purpose one." },
+    { "role": "interviewer", "text": "Good lessons. Any questions for us?" },
+    { "role": "candidate", "text": "Yes — how does your team decide when to use an off-the-shelf model versus fine-tuning or training your own?" }
+  ]
+}

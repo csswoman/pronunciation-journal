@@ -1,0 +1,20 @@
+{
+  "id": "system-design-intermediate",
+  "title": "System Design — Intermediate",
+  "scenario": "system-design",
+  "level": "intermediate",
+  "turns": [
+    { "role": "interviewer", "text": "Let's do a classic one. How would you design a URL shortener like Bit.ly?" },
+    { "role": "candidate", "text": "I'd start by clarifying the scale — how many URLs per day, expected read versus write ratio. For the core feature, you need an API that takes a long URL and returns a short code, then stores that mapping in a database. When someone visits the short URL, you look up the code and redirect them. The short code can be generated with a hash or a base-62 encoding of an auto-incremented ID." },
+    { "role": "interviewer", "text": "Good start. Where would you store the URL mappings?" },
+    { "role": "candidate", "text": "A relational database like Postgres works well for this — the schema is simple: short code, original URL, creation date, maybe a click counter. But since reads will far outnumber writes, I'd add a caching layer with Redis to store the most popular short codes in memory. That way you avoid hitting the database for every redirect." },
+    { "role": "interviewer", "text": "What happens if the service gets very popular and traffic spikes?" },
+    { "role": "candidate", "text": "You'd want to scale horizontally — run multiple instances of the application behind a load balancer. The stateless nature of the service makes that straightforward. The database could become a bottleneck, so you might shard it by short code range or use a read replica to offload read traffic." },
+    { "role": "interviewer", "text": "What about availability? What if one of your servers goes down?" },
+    { "role": "candidate", "text": "The load balancer handles that — it does health checks and routes traffic away from failed instances. For the database, you'd want a primary-replica setup so there's automatic failover. And since the Redis cache is in front, even a brief database issue wouldn't take down the redirect service for cached URLs." },
+    { "role": "interviewer", "text": "Nice. How would you handle analytics — tracking how many times each link was clicked?" },
+    { "role": "candidate", "text": "I wouldn't do it synchronously in the redirect path — that would add latency. Instead, I'd publish a click event to a message queue like Kafka or SQS, and have a separate consumer process that writes to an analytics database asynchronously. That keeps redirects fast and decouples the analytics from the core service." },
+    { "role": "interviewer", "text": "Great thinking. Any questions for me?" },
+    { "role": "candidate", "text": "Yes — at your current scale, what's the biggest infrastructure challenge the team is dealing with?" }
+  ]
+}

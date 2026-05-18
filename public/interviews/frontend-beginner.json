@@ -1,0 +1,20 @@
+{
+  "id": "frontend-beginner",
+  "title": "Frontend Developer — Beginner",
+  "scenario": "frontend",
+  "level": "beginner",
+  "turns": [
+    { "role": "interviewer", "text": "Hi! Let's start simple. Do you know what HTML is?" },
+    { "role": "candidate", "text": "Yes. HTML is the language we use to make web pages. We use it to add text, images, and buttons to a page." },
+    { "role": "interviewer", "text": "Good. And what is CSS used for?" },
+    { "role": "candidate", "text": "CSS makes the page look nice. We use it to add colors, change the size of text, and put things in the right place." },
+    { "role": "interviewer", "text": "Have you used JavaScript before? Can you tell me something it does?" },
+    { "role": "candidate", "text": "Yes. JavaScript makes the page work. For example, when you click a button and something changes, that is JavaScript." },
+    { "role": "interviewer", "text": "Have you used React?" },
+    { "role": "candidate", "text": "Yes, a little. React helps you build parts of a page called components. You can use the same component many times. It is faster to build with React." },
+    { "role": "interviewer", "text": "What do you do when your code does not work?" },
+    { "role": "candidate", "text": "First I read the error message. Then I check my code. I also use the browser console to find the problem. Sometimes I search on the internet for help." },
+    { "role": "interviewer", "text": "Good approach! Do you have any questions for me?" },
+    { "role": "candidate", "text": "Yes. What tools does the team use? And do you use React in your projects?" }
+  ]
+}

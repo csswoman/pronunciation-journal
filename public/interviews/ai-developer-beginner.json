@@ -1,0 +1,20 @@
+{
+  "id": "ai-developer-beginner",
+  "title": "AI Developer — Beginner",
+  "scenario": "ai-developer",
+  "level": "beginner",
+  "turns": [
+    { "role": "interviewer", "text": "Hi! Let's start easy. Have you used any AI tools in your work? Can you give an example?" },
+    { "role": "candidate", "text": "Yes. I use ChatGPT to help me write code. I ask it questions and it gives me examples. I also use GitHub Copilot to write code faster." },
+    { "role": "interviewer", "text": "Good. Do you know what an API is? Have you used an AI API?" },
+    { "role": "candidate", "text": "Yes. An API is a way to use a service from my code. I have used the OpenAI API. You send a message and get an answer back. It is not very hard." },
+    { "role": "interviewer", "text": "What is a prompt? Why is it important?" },
+    { "role": "candidate", "text": "A prompt is the message you send to the AI. It is important because if you write a good prompt, you get a better answer. A bad prompt gives a bad answer." },
+    { "role": "interviewer", "text": "Have you heard of tokens in the context of AI?" },
+    { "role": "candidate", "text": "Yes, a little. Tokens are like small pieces of words. The AI reads and writes tokens. More tokens cost more money. So you want to use fewer tokens if possible." },
+    { "role": "interviewer", "text": "Good. If an AI gives a wrong answer, what do you do?" },
+    { "role": "candidate", "text": "I try to change my prompt. I add more information or I ask in a different way. Sometimes I tell the AI what was wrong and ask it to try again." },
+    { "role": "interviewer", "text": "That makes sense. Do you have any questions for me?" },
+    { "role": "candidate", "text": "Yes. What AI models does your team use? Do you use OpenAI, Google, or something else?" }
+  ]
+}

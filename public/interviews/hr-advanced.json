@@ -1,0 +1,20 @@
+{
+  "id": "hr-advanced",
+  "title": "About Me — Advanced",
+  "scenario": "hr",
+  "level": "advanced",
+  "turns": [
+    { "role": "interviewer", "text": "Welcome — really glad you could make it. Let's start with a broad question: how would you describe your professional journey so far?" },
+    { "role": "candidate", "text": "It's been a deliberate progression, honestly. I started out doing full-stack work, which gave me a solid appreciation for the backend constraints that frontend developers often overlook. Over time I gravitated toward the UI layer — not just because I enjoy it, but because I realized that's where most of the complexity around state, performance, and user perception actually lives." },
+    { "role": "interviewer", "text": "Interesting framing. What's driven your decisions when choosing which companies or teams to join?" },
+    { "role": "candidate", "text": "A few things, but mostly the quality of the engineering culture and the problem space. I've turned down higher salaries because the codebase was a liability or the team had no appetite for improvement. I'd rather work somewhere where technical decisions are taken seriously and there's genuine room to push things forward." },
+    { "role": "interviewer", "text": "That's a strong stance. What would you say is your most significant professional blind spot?" },
+    { "role": "candidate", "text": "I tend to over-engineer early if I'm not careful — I can see five directions a system might evolve and want to account for all of them upfront. I've learned to actively fight that instinct: defer abstraction until the pattern repeats, ship the simple thing first, refactor with evidence rather than intuition." },
+    { "role": "interviewer", "text": "How do you handle disagreement with a technical lead or a stakeholder?" },
+    { "role": "candidate", "text": "I try to separate the idea from the person and focus on making the tradeoffs explicit. If I disagree, I'll say so directly — but I'll frame it as 'here's what we'd gain, here's what we'd give up,' rather than 'I think you're wrong.' Most people respond well to that. And if I'm outvoted after a good-faith discussion, I commit fully — I don't relitigate it." },
+    { "role": "interviewer", "text": "What kind of environment brings out your best work?" },
+    { "role": "candidate", "text": "I do my best work when there's a high level of trust and autonomy, paired with strong feedback loops. I don't need a lot of process, but I do need clarity on the goal and honest signals about whether I'm hitting the mark. I also thrive when the team isn't afraid to challenge each other's assumptions." },
+    { "role": "interviewer", "text": "Last one — what would make this role the wrong fit for you?" },
+    { "role": "candidate", "text": "If the role is primarily execution without any room for influence on direction or architecture, that would wear on me over time. I'm not looking to be the decision-maker on everything, but I need to feel like my perspective shapes the outcome in some meaningful way. If that's not part of the culture here, it's worth knowing early." }
+  ]
+}
