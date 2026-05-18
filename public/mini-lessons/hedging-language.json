@@ -1,0 +1,23 @@
+{
+  "id": 33,
+  "slug": "hedging-language",
+  "level": "intermediate",
+  "category": "writing",
+  "duration": 5,
+  "title": "Hedging — how to sound less absolute",
+  "subtitle": "Writing of the day",
+  "body": "Academic and professional English avoids strong claims. Hedging language makes your writing sound more credible and careful.",
+  "examples": [
+    {
+      "word": "This suggests that…",
+      "translation": "más débil que 'this proves'"
+    },
+    {
+      "word": "It seems likely that…"
+    },
+    {
+      "word": "The data tend to indicate…"
+    }
+  ],
+  "href": "/courses/hedging"
+}

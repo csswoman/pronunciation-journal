@@ -1,0 +1,21 @@
+{
+  "id": 49,
+  "slug": "discourse-analysis",
+  "level": "advanced",
+  "category": "listening",
+  "duration": 8,
+  "title": "How to follow complex spoken discourse",
+  "subtitle": "Listening of the day",
+  "body": "At advanced level, the challenge isn't words — it's tracking the argument structure across a long audio. These strategies help.",
+  "examples": [
+    {
+      "word": "'On the one hand… on the other…'",
+      "translation": "señal de contraste que viene"
+    },
+    {
+      "word": "'What I'm really trying to say is…'",
+      "translation": "señal de resumen / clarificación"
+    }
+  ],
+  "href": "/courses/discourse-analysis"
+}

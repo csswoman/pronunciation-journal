@@ -1,0 +1,21 @@
+{
+  "id": 4,
+  "slug": "articles-a-an-the",
+  "level": "basic",
+  "category": "grammar",
+  "duration": 5,
+  "title": "A, An, The — when to use each",
+  "subtitle": "Grammar of the day",
+  "body": "Use 'a/an' when introducing something for the first time or when it's one of many. Use 'the' when both speaker and listener know which one you mean.",
+  "examples": [
+    {
+      "word": "I saw a dog. The dog was huge.",
+      "translation": "primera mención → referencia conocida"
+    },
+    {
+      "word": "She's a doctor.",
+      "translation": "profesión — no usamos 'the'"
+    }
+  ],
+  "href": "/courses/articles"
+}

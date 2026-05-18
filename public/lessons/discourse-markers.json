@@ -1,0 +1,58 @@
+{
+  "slug": "discourse-markers",
+  "sections": [
+    {
+      "heading": "What discourse markers do",
+      "body": "Discourse markers organize spoken and written language. They signal what comes next: a contrast, an example, a conclusion, a new point, a clarification. Using them makes you sound fluent and coherent rather than halting."
+    },
+    {
+      "heading": "For contrast and concession",
+      "body": "'Having said that' / 'That said' — acknowledge a point then introduce a qualification. 'Even so' — despite what was just said. 'Be that as it may' — formal, accepting a point but not letting it change your argument."
+    },
+    {
+      "heading": "For adding and emphasizing",
+      "body": "'As a matter of fact' — introduces a surprising or strong supporting fact. 'Come to think of it' — something you've just remembered or realized. 'Not to mention' — adds a powerful extra point."
+    }
+  ],
+  "examples": [
+    {
+      "english": "The project was difficult. Having said that, the results were impressive.",
+      "note": "Introduces a qualification"
+    },
+    {
+      "english": "As a matter of fact, I've been here three times.",
+      "note": "Introduces a surprising supporting detail"
+    },
+    {
+      "english": "Come to think of it, I left my keys inside.",
+      "note": "Something just remembered"
+    },
+    {
+      "english": "The food was excellent, not to mention the service.",
+      "note": "Adds extra emphasis"
+    }
+  ],
+  "exercises": [
+    {
+      "instruction": "Insert a discourse marker from the lesson.",
+      "items": [
+        "The movie was too long. ___, the acting was superb.",
+        "I've never been to Tokyo. ___, I'd love to go.",
+        "She's experienced. ___, she's also brilliant under pressure."
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "question": "'Having said that' is used to:",
+      "options": [
+        "Introduce a supporting point",
+        "Introduce a contrast or qualification after acknowledging something",
+        "Change the subject",
+        "Summarize what was said"
+      ],
+      "correct": 1,
+      "explanation": "'Having said that' acknowledges the previous point but then introduces something that qualifies or contrasts with it."
+    }
+  ]
+}

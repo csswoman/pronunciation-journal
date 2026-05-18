@@ -1,0 +1,65 @@
+{
+  "slug": "reported-speech",
+  "sections": [
+    {
+      "heading": "Backshifting",
+      "body": "When you report what someone said, you shift verbs one tense back: present simple → past simple, present continuous → past continuous, past simple → past perfect, will → would, can → could, may → might."
+    },
+    {
+      "heading": "Other changes",
+      "body": "Pronouns change to match the new perspective. Time and place expressions often change: now → then, today → that day, yesterday → the day before, here → there, this → that."
+    },
+    {
+      "heading": "When NOT to backshift",
+      "body": "Don't backshift if the statement is still true at the time of reporting: 'She said she lives in Madrid' (still true now). Also, statements about general truths or scientific facts don't need backshifting."
+    }
+  ],
+  "examples": [
+    {
+      "english": "'I am tired.' → She said she was tired.",
+      "note": "am → was"
+    },
+    {
+      "english": "'I will call you.' → He said he would call me.",
+      "note": "will → would"
+    },
+    {
+      "english": "'I've finished.' → She said she had finished.",
+      "note": "present perfect → past perfect"
+    },
+    {
+      "english": "'I can help.' → He said he could help.",
+      "note": "can → could"
+    }
+  ],
+  "exercises": [
+    {
+      "instruction": "Report each sentence using 'said'.",
+      "items": [
+        "'I'm leaving tomorrow.' (she)",
+        "'We have already eaten.' (they)",
+        "'I'll meet you at noon.' (he)",
+        "'I can't find my keys.' (she)"
+      ],
+      "answers": [
+        "She said she was leaving the next day.",
+        "They said they had already eaten.",
+        "He said he would meet me at noon.",
+        "She said she couldn't find her keys."
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "question": "You report: 'He said, \"I work at Google.\"' Which is correct?",
+      "options": [
+        "He said he works at Google.",
+        "He said he worked at Google.",
+        "He said he has worked at Google.",
+        "He said I work at Google."
+      ],
+      "correct": 1,
+      "explanation": "Backshift: works → worked. (Unless Google is clearly his current employer and you're reporting it as still true.)"
+    }
+  ]
+}

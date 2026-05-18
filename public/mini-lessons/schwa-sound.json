@@ -1,0 +1,24 @@
+{
+  "id": 1,
+  "slug": "schwa-sound",
+  "level": "basic",
+  "category": "pronunciation",
+  "duration": 5,
+  "title": "When to use the schwa /ə/",
+  "subtitle": "Theory of the day",
+  "body": "The most common vowel sound in English. It appears in unstressed syllables — mastering it is the single biggest unlock for sounding natural.",
+  "examples": [
+    {
+      "word": "banana",
+      "ipa": "/bəˈnɑː.nə/",
+      "translation": "plátano"
+    },
+    {
+      "word": "about",
+      "ipa": "/əˈbaʊt/",
+      "translation": "sobre, acerca de"
+    }
+  ],
+  "tip": "If a syllable isn't stressed, try replacing its vowel with /ə/ — you'll often be right.",
+  "href": "/courses/schwa-sound"
+}

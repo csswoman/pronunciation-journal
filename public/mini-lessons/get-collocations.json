@@ -1,0 +1,29 @@
+{
+  "id": 26,
+  "slug": "get-collocations",
+  "level": "intermediate",
+  "category": "collocations",
+  "duration": 5,
+  "title": "'Get' — the most versatile word in English",
+  "subtitle": "Vocabulary of the day",
+  "body": "'Get' has over 20 distinct meanings in common use. These are the ones you need first.",
+  "examples": [
+    {
+      "word": "get tired",
+      "translation": "volverse / llegar a un estado"
+    },
+    {
+      "word": "get a job",
+      "translation": "obtener"
+    },
+    {
+      "word": "get home",
+      "translation": "llegar"
+    },
+    {
+      "word": "get the joke",
+      "translation": "entender"
+    }
+  ],
+  "href": "/courses/get-collocations"
+}

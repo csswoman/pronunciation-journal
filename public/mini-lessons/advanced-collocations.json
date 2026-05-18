@@ -1,0 +1,21 @@
+{
+  "id": 42,
+  "slug": "advanced-collocations",
+  "level": "advanced",
+  "category": "collocations",
+  "duration": 6,
+  "title": "Collocations with 'raise' and 'rise'",
+  "subtitle": "Collocations of the day",
+  "body": "'Raise' is transitive — it needs an object. 'Rise' is intransitive — it never takes an object. This distinction trips up advanced learners.",
+  "examples": [
+    {
+      "word": "raise a question · raise awareness · raise funds",
+      "translation": "raise + objeto"
+    },
+    {
+      "word": "prices rise · temperatures rise · he rose to fame",
+      "translation": "rise — sin objeto"
+    }
+  ],
+  "href": "/courses/raise-rise"
+}

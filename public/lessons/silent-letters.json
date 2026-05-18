@@ -1,0 +1,98 @@
+{
+  "slug": "silent-letters",
+  "sections": [
+    {
+      "heading": "Why does English have silent letters?",
+      "body": "English spelling was largely fixed in the 15th century, but pronunciation kept evolving. Silent letters are relics — sounds that were once pronounced but disappeared over centuries of language change."
+    },
+    {
+      "heading": "Common silent letter patterns",
+      "body": "**Silent K:** always before 'n' at the start of a word (know, knife, kneel, knock). **Silent W:** before 'r' at the start of a word (write, wrong, wrap, wrist). **Silent G:** before 'n' at the start or end (gnat, gnaw, sign, foreign). **Silent B:** after 'm' at the end (bomb, comb, lamb, thumb). **Silent H:** in many common words (hour, honest, heir, ghost)."
+    },
+    {
+      "heading": "Silent letters in the middle",
+      "body": "Many common words have silent letters in the middle that trip up even advanced learners: 'Wednesday' /ˈwɛnzdeɪ/, 'February' /ˈfɛbruɛri/ → often /ˈfɛbjuɛri/, 'comfortable' /ˈkʌmftəbəl/, 'vegetable' /ˈvɛdʒtəbəl/."
+    }
+  ],
+  "examples": [
+    {
+      "english": "knife",
+      "ipa": "/naɪf/",
+      "translation": "K is silent"
+    },
+    {
+      "english": "island",
+      "ipa": "/ˈaɪlənd/",
+      "translation": "S is silent"
+    },
+    {
+      "english": "castle",
+      "ipa": "/ˈkæsəl/",
+      "translation": "T is silent"
+    },
+    {
+      "english": "receipt",
+      "ipa": "/rɪˈsiːt/",
+      "translation": "P is silent"
+    },
+    {
+      "english": "psychology",
+      "ipa": "/saɪˈkɒlədʒi/",
+      "translation": "P is silent"
+    },
+    {
+      "english": "subtle",
+      "ipa": "/ˈsʌtəl/",
+      "translation": "B is silent"
+    }
+  ],
+  "exercises": [
+    {
+      "instruction": "Cross out the silent letter(s) in each word.",
+      "items": [
+        "knight",
+        "wrap",
+        "gnome",
+        "lamb",
+        "honest",
+        "daughter",
+        "foreign",
+        "Wednesday"
+      ],
+      "answers": [
+        "k-night",
+        "w-rap",
+        "g-nome",
+        "lam-b",
+        "h-onest",
+        "daugh-ter",
+        "forei-gn",
+        "Wed-nes-day"
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Which word has a silent 'p'?",
+      "options": [
+        "spin",
+        "pneumonia",
+        "plus",
+        "upon"
+      ],
+      "correct": 1,
+      "explanation": "'Pneumonia' is pronounced /njuːˈmoʊniə/ — the P is completely silent."
+    },
+    {
+      "question": "The word 'castle' is pronounced:",
+      "options": [
+        "/ˈkæstəl/",
+        "/ˈkæsəl/",
+        "/ˈkɑːstəl/",
+        "/ˈkæsl/"
+      ],
+      "correct": 1,
+      "explanation": "The T in 'castle' is silent: /ˈkæsəl/ (British English)."
+    }
+  ]
+}

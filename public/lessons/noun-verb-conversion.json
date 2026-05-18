@@ -1,0 +1,59 @@
+{
+  "slug": "noun-verb-conversion",
+  "sections": [
+    {
+      "heading": "Conversion in English",
+      "body": "English allows many words to shift grammatical category without any change in form. This process — called conversion or zero derivation — is more common in English than in most languages. When a noun becomes a verb, it typically gains the meaning 'to act as a [noun]' or 'to use a [noun]'."
+    },
+    {
+      "heading": "Stress as the signal",
+      "body": "For two-syllable noun/verb pairs, stress is the only phonetic signal. REcord (noun) / reCORD (verb). PROtest / proTEST. PERmit / perMIT. PROgress / proGRESS. REfund / reFUND."
+    }
+  ],
+  "examples": [
+    {
+      "english": "a REcord (n.) / to reCORD (v.)",
+      "note": "Stress shift signals the category"
+    },
+    {
+      "english": "to email someone",
+      "note": "Noun 'email' converted to verb"
+    },
+    {
+      "english": "to Google something",
+      "note": "Proper noun → verb"
+    },
+    {
+      "english": "to text someone",
+      "note": "Noun → verb — now standard"
+    },
+    {
+      "english": "to shortlist candidates",
+      "note": "Compound noun → verb"
+    }
+  ],
+  "exercises": [
+    {
+      "instruction": "Use each word as both a noun and a verb in two sentences.",
+      "items": [
+        "email",
+        "water",
+        "book",
+        "police"
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "question": "In 'We need to progress faster', 'progress' is:",
+      "options": [
+        "A noun stressed on the first syllable",
+        "A verb stressed on the second syllable",
+        "An adjective",
+        "An adverb"
+      ],
+      "correct": 1,
+      "explanation": "When 'progress' is a verb, stress falls on the second syllable: proGRESS."
+    }
+  ]
+}

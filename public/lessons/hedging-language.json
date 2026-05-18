@@ -1,0 +1,65 @@
+{
+  "slug": "hedging-language",
+  "sections": [
+    {
+      "heading": "Why hedge?",
+      "body": "Hedging is not weakness — it's intellectual honesty and rhetorical strategy. Absolute claims are easy to disprove. Hedged claims are more defensible. In academic and professional English, strong claims without hedging signal overconfidence or naivety."
+    },
+    {
+      "heading": "Modal hedges",
+      "body": "Modals for hedging: may, might, could, should. 'This may suggest...', 'The results could indicate...', 'There might be a connection...' Note: 'should' in academic writing sometimes means 'logically ought to be the case'."
+    },
+    {
+      "heading": "Lexical hedges",
+      "body": "Verbs: suggest, indicate, appear, seem, tend to, point to. Adjectives/adverbs: possible, probable, likely, relatively, generally, broadly, approximately. Phrases: 'it is worth noting that', 'the evidence tends to suggest'."
+    }
+  ],
+  "examples": [
+    {
+      "english": "This suggests a link between X and Y.",
+      "note": "'Suggests' — not 'proves'"
+    },
+    {
+      "english": "It seems likely that the trend will continue.",
+      "note": "'Seems' + 'likely' — double hedge"
+    },
+    {
+      "english": "The data tend to indicate a correlation.",
+      "note": "'Tend to indicate' — not 'show'"
+    },
+    {
+      "english": "Approximately 60% of participants...",
+      "note": "'Approximately' — not '60%' with false precision"
+    }
+  ],
+  "exercises": [
+    {
+      "instruction": "Soften each claim using hedging language.",
+      "items": [
+        "Climate change causes more extreme weather.",
+        "Social media makes teenagers depressed.",
+        "The new policy will reduce crime.",
+        "People who exercise live longer."
+      ],
+      "answers": [
+        "Climate change may contribute to more extreme weather.",
+        "Social media might be linked to increased depression in teenagers.",
+        "The new policy could help reduce crime.",
+        "Evidence suggests that people who exercise tend to live longer."
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Which sentence uses the STRONGEST hedge?",
+      "options": [
+        "This proves a link.",
+        "This suggests a link.",
+        "This may suggest a possible link.",
+        "This indicates a link."
+      ],
+      "correct": 2,
+      "explanation": "'May suggest a possible link' contains multiple hedges — modal 'may' + verb 'suggest' + adjective 'possible'. It's the most cautious formulation."
+    }
+  ]
+}

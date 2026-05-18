@@ -1,0 +1,86 @@
+{
+  "slug": "present-simple-vs-continuous",
+  "sections": [
+    {
+      "heading": "The core distinction",
+      "body": "Present Simple describes what is generally true: habits, facts, schedules, and states. Present Continuous describes what is happening at or around the moment of speaking — actions in progress or temporary situations."
+    },
+    {
+      "heading": "Signal words",
+      "body": "Present Simple often appears with: always, usually, often, sometimes, never, every day/week/year, on Mondays. Present Continuous often appears with: now, right now, at the moment, currently, today, this week."
+    },
+    {
+      "heading": "Stative verbs — the exception",
+      "body": "Some verbs describe states, not actions, and almost never appear in continuous form even when you're talking about right now. These are called stative verbs: know, believe, understand, want, need, prefer, love, hate, seem, appear, contain, belong."
+    },
+    {
+      "heading": "Changing meaning",
+      "body": "A few verbs change meaning depending on which form you use. 'I think you're right' expresses an opinion (stative). 'I'm thinking about the problem' describes a mental process in progress (dynamic). Same verb, very different meaning."
+    }
+  ],
+  "examples": [
+    {
+      "english": "She works at a hospital.",
+      "note": "Habit / general fact — Present Simple"
+    },
+    {
+      "english": "She's working from home this week.",
+      "note": "Temporary situation — Present Continuous"
+    },
+    {
+      "english": "Water boils at 100°C.",
+      "note": "Scientific fact — always Present Simple"
+    },
+    {
+      "english": "I'm thinking about quitting.",
+      "note": "'Think' used dynamically — Continuous OK"
+    },
+    {
+      "english": "I think that's wrong.",
+      "note": "'Think' as opinion — Continuous NOT OK"
+    }
+  ],
+  "exercises": [
+    {
+      "instruction": "Choose the correct form: Present Simple or Present Continuous.",
+      "items": [
+        "I ___ (study) Japanese right now.",
+        "She ___ (drink) coffee every morning.",
+        "They ___ (not / understand) the question.",
+        "We ___ (visit) my parents this weekend.",
+        "He ___ (seem) tired lately."
+      ],
+      "answers": [
+        "am studying",
+        "drinks",
+        "don't understand",
+        "are visiting",
+        "seems"
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Which sentence is correct?",
+      "options": [
+        "I am knowing the answer.",
+        "I know the answer.",
+        "I am knowing the answer right now.",
+        "I do know the answer at the moment."
+      ],
+      "correct": 1,
+      "explanation": "'Know' is a stative verb and doesn't take the continuous form."
+    },
+    {
+      "question": "'She is always losing her keys.' This use of Present Continuous expresses:",
+      "options": [
+        "A habit",
+        "An annoying repeated behavior",
+        "A scheduled future event",
+        "A permanent fact"
+      ],
+      "correct": 1,
+      "explanation": "Present Continuous + always expresses an annoying or surprising repeated behavior — often with an emotional tone."
+    }
+  ]
+}

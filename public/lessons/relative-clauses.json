@@ -1,0 +1,55 @@
+{
+  "slug": "relative-clauses",
+  "sections": [
+    {
+      "heading": "Defining relative clauses",
+      "body": "A defining relative clause identifies which person or thing you mean. Without it, the sentence loses its meaning or becomes too vague. No commas. Can use 'that' instead of 'who/which'. The relative pronoun can be omitted if it's the object: 'The book (that) I bought was excellent.'"
+    },
+    {
+      "heading": "Non-defining relative clauses",
+      "body": "A non-defining relative clause adds extra, non-essential information about a noun already identified. Always use commas. Cannot use 'that'. Cannot omit the relative pronoun. 'My sister, who lives in London, is visiting.' — remove the clause and the sentence still makes sense."
+    }
+  ],
+  "examples": [
+    {
+      "english": "The woman who called is my manager.",
+      "note": "Defining — tells us which woman"
+    },
+    {
+      "english": "My manager, who called earlier, wants to meet.",
+      "note": "Non-defining — manager already identified"
+    },
+    {
+      "english": "The film (that) I recommended was great.",
+      "note": "Object relative pronoun — can be omitted"
+    },
+    {
+      "english": "Shakespeare, whose plays are still performed, was born in 1564.",
+      "note": "Non-defining with 'whose'"
+    }
+  ],
+  "exercises": [
+    {
+      "instruction": "Add commas if the clause is non-defining. Write 'D' or 'ND'.",
+      "items": [
+        "The house where I grew up has been demolished.",
+        "My father who is a doctor works at the local hospital.",
+        "The report that you submitted had several errors.",
+        "Lima which is the capital of Peru is a fascinating city."
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Which sentence uses a non-defining relative clause correctly?",
+      "options": [
+        "The car that is red is mine.",
+        "My car, which is red, is mine.",
+        "My car which is red is mine.",
+        "The car, that is red, is mine."
+      ],
+      "correct": 1,
+      "explanation": "Non-defining clauses: commas required, 'which' not 'that', pronoun cannot be omitted."
+    }
+  ]
+}

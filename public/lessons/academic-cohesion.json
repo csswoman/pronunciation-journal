@@ -1,0 +1,54 @@
+{
+  "slug": "academic-cohesion",
+  "sections": [
+    {
+      "heading": "Cohesion vs. coherence",
+      "body": "Coherence is about ideas making logical sense together. Cohesion is the linguistic glue — the specific words and structures that link sentences and paragraphs. You can have coherent ideas with poor cohesion (choppy, disconnected sentences), or good cohesion with incoherent ideas (linked but pointless)."
+    },
+    {
+      "heading": "Lexical cohesion",
+      "body": "Lexical chains use related words across a text to maintain topic unity: 'climate → temperature → warming → heat → emissions'. Synonyms and near-synonyms reduce repetition while maintaining connection. Collocation patterns reinforce domain."
+    },
+    {
+      "heading": "Grammatical cohesion",
+      "body": "Reference: using pronouns and determiners to point back to earlier nouns ('this finding', 'such data', 'the aforementioned'). Conjunction: using connectors to show logical relationships. Substitution and ellipsis (as covered separately)."
+    }
+  ],
+  "examples": [
+    {
+      "english": "water → liquid → fluid → H₂O → hydration",
+      "note": "Lexical chain — keeps topic unified"
+    },
+    {
+      "english": "'This approach... Such methods... These findings...'",
+      "note": "Anaphoric reference — points back"
+    },
+    {
+      "english": "'The results were significant. Moreover, they were reproducible.'",
+      "note": "Additive conjunction"
+    }
+  ],
+  "exercises": [
+    {
+      "instruction": "Identify the cohesive device in each pair.",
+      "items": [
+        "'She submitted the report. It was well-received.'",
+        "'The experiment failed. Nevertheless, the team persisted.'",
+        "'Water levels rose. Sea temperatures also increased.'"
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "question": "'This suggests that...' — what cohesive device is 'this'?",
+      "options": [
+        "Conjunction",
+        "Lexical repetition",
+        "Anaphoric reference",
+        "Substitution"
+      ],
+      "correct": 2,
+      "explanation": "'This' is a demonstrative pronoun that points back (anaphorically) to previously mentioned content."
+    }
+  ]
+}

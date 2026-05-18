@@ -1,0 +1,63 @@
+{
+  "slug": "participle-clauses",
+  "sections": [
+    {
+      "heading": "What they are",
+      "body": "Participle clauses replace a subordinate clause with a condensed form using a participle (-ing, past participle, or having + past participle). They're common in formal and academic writing because they're concise and elegant."
+    },
+    {
+      "heading": "Present participle (-ing)",
+      "body": "The -ing clause typically shows that two actions happen simultaneously or that the participle action explains the main action: 'Feeling tired, she went to bed.' 'Knowing the risks, he proceeded anyway.'"
+    },
+    {
+      "heading": "Past participle",
+      "body": "Past participle clauses are often passive in meaning: 'Written in 1851, Moby Dick was initially a commercial failure.' 'Disappointed by the results, the team requested a review.'"
+    },
+    {
+      "heading": "Perfect participle (having + pp)",
+      "body": "'Having finished the report, she sent it immediately.' The perfect participle emphasizes that the first action was completed before the second began."
+    }
+  ],
+  "examples": [
+    {
+      "english": "Having studied all night, she felt confident.",
+      "note": "Perfect participle — before the main action"
+    },
+    {
+      "english": "Exhausted by the journey, they went straight to bed.",
+      "note": "Past participle — passive meaning"
+    },
+    {
+      "english": "Not knowing what to say, he remained silent.",
+      "note": "Negative present participle"
+    },
+    {
+      "english": "Built in 1920, the bridge still stands.",
+      "note": "Past participle — describes subject"
+    }
+  ],
+  "exercises": [
+    {
+      "instruction": "Combine the sentences using a participle clause.",
+      "items": [
+        "She had finished her work. She left the office.",
+        "The report was written in English. It was difficult to translate.",
+        "He didn't know the answer. He stayed quiet.",
+        "After she had waited for an hour, she left."
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "question": "'Having reviewed the data, the team presented their findings.' The participle clause tells us:",
+      "options": [
+        "The team reviewed data at the same time as presenting",
+        "The review was completed before the presentation",
+        "The data reviewed itself",
+        "The findings caused the review"
+      ],
+      "correct": 1,
+      "explanation": "Perfect participle (having + pp) signals that the participle action was completed before the main clause action."
+    }
+  ]
+}

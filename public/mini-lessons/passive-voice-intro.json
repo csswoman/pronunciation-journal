@@ -1,0 +1,25 @@
+{
+  "id": 23,
+  "slug": "passive-voice-intro",
+  "level": "intermediate",
+  "category": "grammar",
+  "duration": 6,
+  "title": "The passive voice — when and why",
+  "subtitle": "Grammar of the day",
+  "body": "Use passive when the action is more important than who did it, or when the agent is unknown or obvious.",
+  "examples": [
+    {
+      "word": "The report was written by Ana.",
+      "translation": "pasiva con agente"
+    },
+    {
+      "word": "My phone was stolen.",
+      "translation": "agente desconocido"
+    },
+    {
+      "word": "English is spoken worldwide.",
+      "translation": "agente obvio"
+    }
+  ],
+  "href": "/courses/passive-voice"
+}

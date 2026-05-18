@@ -1,0 +1,65 @@
+{
+  "slug": "some-any",
+  "sections": [
+    {
+      "heading": "The basic rule",
+      "body": "'Some' goes in affirmative sentences. 'Any' goes in negative sentences and most questions. This holds for both countable plurals and uncountable nouns."
+    },
+    {
+      "heading": "Exceptions worth knowing",
+      "body": "Use 'some' in questions when you're making an offer or request — you expect the answer to be yes. 'Would you like some coffee?' / 'Could I have some help?' Using 'any' in these would sound cold or indifferent."
+    },
+    {
+      "heading": "Any in affirmative sentences",
+      "body": "'Any' in a positive sentence means 'it doesn't matter which one': 'Take any seat you like.' 'Call me any time.' This use expresses unlimited choice, not just negation."
+    }
+  ],
+  "examples": [
+    {
+      "english": "I have some questions.",
+      "note": "Affirmative → some"
+    },
+    {
+      "english": "I don't have any questions.",
+      "note": "Negative → any"
+    },
+    {
+      "english": "Would you like some tea?",
+      "note": "Offer → some (expecting yes)"
+    },
+    {
+      "english": "Any student can join the club.",
+      "note": "Affirmative any = 'whichever'"
+    }
+  ],
+  "exercises": [
+    {
+      "instruction": "Choose some or any.",
+      "items": [
+        "There aren't ___ tickets left.",
+        "Can I have ___ water?",
+        "She didn't eat ___ breakfast.",
+        "Take ___ book from the shelf."
+      ],
+      "answers": [
+        "any",
+        "some",
+        "any",
+        "any"
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "question": "'Would you like ___ help?' — which word fits best?",
+      "options": [
+        "any",
+        "some",
+        "no",
+        "many"
+      ],
+      "correct": 1,
+      "explanation": "Offers use 'some' because the speaker expects or hopes for a positive response."
+    }
+  ]
+}

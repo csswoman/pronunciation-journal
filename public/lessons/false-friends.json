@@ -1,0 +1,59 @@
+{
+  "slug": "false-friends",
+  "sections": [
+    {
+      "heading": "What are false friends?",
+      "body": "False friends (or false cognates) are words in two languages that look or sound similar but have different meanings. Spanish and English share many Latin roots, which means there are hundreds of false friends waiting to trip you up."
+    },
+    {
+      "heading": "The most embarrassing ones",
+      "body": "'Embarrassed' does not mean embarazada (pregnant) — it means ashamed or awkward. 'Actually' does not mean actualmente (currently/nowadays) — it means in fact / in reality. 'Eventually' does not mean eventualmente (possibly) — it means in the end / sooner or later."
+    },
+    {
+      "heading": "More common false friends",
+      "body": "'Library' = biblioteca (not librería). 'Sensible' = sensato/a (not sensible). 'Sympathetic' = compasivo/a (not simpático/a). 'Lecture' = clase magistral / conferencia (not lectura). 'Success' = éxito (not suceso)."
+    }
+  ],
+  "examples": [
+    {
+      "english": "I was so embarrassed.",
+      "translation": "Estaba muy avergonzada — NOT 'embarazada'"
+    },
+    {
+      "english": "Actually, I agree with you.",
+      "translation": "En realidad / De hecho — NOT 'actualmente'"
+    },
+    {
+      "english": "She was very sympathetic.",
+      "translation": "Era muy comprensiva / compasiva — NOT 'simpática'"
+    },
+    {
+      "english": "He's a sensible person.",
+      "translation": "Es una persona sensata — NOT 'sensible'"
+    }
+  ],
+  "exercises": [
+    {
+      "instruction": "Translate these sentences, avoiding false friends.",
+      "items": [
+        "The conference was a great success.",
+        "I attend a lecture every Monday.",
+        "She finally introduced herself — she seemed quite sympathetic.",
+        "He eventually admitted his mistake."
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "question": "'Eventually' in English means:",
+      "options": [
+        "Sometimes / possibly",
+        "Currently / nowadays",
+        "In the end / sooner or later",
+        "Actually / in reality"
+      ],
+      "correct": 2,
+      "explanation": "'Eventually' means 'in the end' or 'after a long time'. It does NOT mean 'possibly' like Spanish 'eventualmente'."
+    }
+  ]
+}

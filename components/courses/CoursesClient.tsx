@@ -5,6 +5,7 @@ import PageHeader from "@/components/layout/PageHeader";
 import PageLayout from "@/components/layout/PageLayout";
 import MiniLessonsGrid from "@/components/courses/MiniLessonsGrid";
 import LibraryGrid from "@/components/courses/LibraryGrid";
+import type { MiniLesson } from "@/lib/content/schemas";
 
 type ActiveTab = "library" | "mini-lessons";
 
@@ -13,7 +14,7 @@ const tabs: { value: ActiveTab; label: string }[] = [
   { value: "mini-lessons", label: "Mini Lessons" },
 ];
 
-export default function CoursesClient() {
+export default function CoursesClient({ miniLessons }: { miniLessons: MiniLesson[] }) {
   const [activeTab, setActiveTab] = useState<ActiveTab>("library");
   const sectionRef = useRef<HTMLDivElement | null>(null);
 
@@ -64,7 +65,7 @@ export default function CoursesClient() {
         {activeTab === "library" && <LibraryGrid />}
 
         {/* Mini Lessons tab */}
-        {activeTab === "mini-lessons" && <MiniLessonsGrid />}
+        {activeTab === "mini-lessons" && <MiniLessonsGrid lessons={miniLessons} />}
       </div>
     </PageLayout>
   );

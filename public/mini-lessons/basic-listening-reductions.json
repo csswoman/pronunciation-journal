@@ -1,0 +1,23 @@
+{
+  "id": 18,
+  "slug": "basic-listening-reductions",
+  "level": "basic",
+  "category": "listening",
+  "duration": 5,
+  "title": "Why you can't understand fast English",
+  "subtitle": "Listening of the day",
+  "body": "Native speakers reduce, link, and swallow sounds in speech. The written word looks nothing like what's actually said.",
+  "examples": [
+    {
+      "word": "'What are you doing?' sounds like →",
+      "ipa": "/wʌd͡ʒə ˈduːɪŋ/",
+      "translation": "whadja doing?"
+    },
+    {
+      "word": "'I don't know' sounds like →",
+      "ipa": "/aɪ doʊnə/",
+      "translation": "I dunno"
+    }
+  ],
+  "href": "/courses/listening-reductions"
+}

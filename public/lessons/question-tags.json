@@ -1,0 +1,75 @@
+{
+  "slug": "question-tags",
+  "sections": [
+    {
+      "heading": "What are question tags?",
+      "body": "Question tags are short question forms appended to the end of a statement. They invite the listener to confirm or agree. They're extremely common in spoken British English and appear in all varieties of English."
+    },
+    {
+      "heading": "The main rule",
+      "body": "Positive statement → negative tag. Negative statement → positive tag. The tag uses the same auxiliary verb as the main clause. If there's no auxiliary, use do/does/did."
+    },
+    {
+      "heading": "Intonation matters",
+      "body": "Rising intonation on the tag ↗ means you're genuinely asking — you're not sure of the answer. Falling intonation ↘ means you're almost certain and just confirming, or inviting agreement. This is a crucial distinction."
+    },
+    {
+      "heading": "Tricky cases",
+      "body": "'I am right, aren't I?' — not 'amn't I' (non-standard) or 'am I not?' (very formal). 'Let's go, shall we?' — 'shall' is the tag for 'let's'. 'This is Tom, isn't it?' — use 'it' for introductions with 'this'."
+    }
+  ],
+  "examples": [
+    {
+      "english": "It's cold today, isn't it?",
+      "note": "Positive → negative tag. Confirming."
+    },
+    {
+      "english": "You haven't met her, have you?",
+      "note": "Negative → positive tag."
+    },
+    {
+      "english": "She works here, doesn't she?",
+      "note": "No auxiliary → use 'do' in tag."
+    },
+    {
+      "english": "Let's take a break, shall we?",
+      "note": "Special case: 'let's' → 'shall we'"
+    },
+    {
+      "english": "I'm late, aren't I?",
+      "note": "Special case: 'am' → 'aren't'"
+    }
+  ],
+  "exercises": [
+    {
+      "instruction": "Add the correct question tag to each sentence.",
+      "items": [
+        "You can drive, ___?",
+        "She didn't call, ___?",
+        "They've been here before, ___?",
+        "It's not going to rain, ___?",
+        "Let's start, ___?"
+      ],
+      "answers": [
+        "can't you",
+        "did she",
+        "haven't they",
+        "is it",
+        "shall we"
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "question": "What's the correct tag for 'I am your neighbor, ___'?",
+      "options": [
+        "am I not?",
+        "aren't I?",
+        "isn't I?",
+        "amn't I?"
+      ],
+      "correct": 1,
+      "explanation": "'Aren't I?' is the standard question tag for 'I am' in British English."
+    }
+  ]
+}

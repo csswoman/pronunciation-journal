@@ -1,0 +1,58 @@
+{
+  "slug": "pragmatics",
+  "sections": [
+    {
+      "heading": "What is pragmatics?",
+      "body": "Pragmatics is the study of how context shapes meaning — what speakers imply, presuppose, and perform with language beyond its literal meaning. At advanced level, understanding pragmatics separates fluent speakers from truly proficient ones."
+    },
+    {
+      "heading": "Indirectness in English",
+      "body": "English speakers (particularly British English) rely heavily on indirectness to be polite, face-saving, or diplomatic. A direct refusal ('No, I won't do that') can seem rude. An indirect one ('I'm not sure I'll have time for that') conveys the same message more tactfully."
+    },
+    {
+      "heading": "Implicature",
+      "body": "Grice's maxims describe how we imply things beyond our words. 'Can you pass the salt?' is literally a yes/no question about ability — but pragmatically it's a request. 'The food was edible' implies it wasn't good (otherwise you'd say 'delicious')."
+    }
+  ],
+  "examples": [
+    {
+      "english": "'It's a bit warm in here...'",
+      "note": "Implies: please open a window / turn on the AC"
+    },
+    {
+      "english": "'That's an interesting idea.'",
+      "note": "Often implies: I have reservations about this"
+    },
+    {
+      "english": "'I'm sure you did your best.'",
+      "note": "Can imply: the result wasn't great"
+    },
+    {
+      "english": "'We should catch up sometime.'",
+      "note": "May be a social formula, not a real plan"
+    }
+  ],
+  "exercises": [
+    {
+      "instruction": "What does each utterance imply in context? Write a more direct version.",
+      "items": [
+        "'I might be able to make it.' (to an invitation)",
+        "'Your first draft shows real effort.' (on written work)",
+        "'This neighborhood has changed a lot.' (said by a longtime resident)"
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Someone says 'I don't disagree with you.' This most likely means:",
+      "options": [
+        "Complete agreement",
+        "Partial agreement or reluctant agreement",
+        "Strong disagreement",
+        "No opinion"
+      ],
+      "correct": 1,
+      "explanation": "Double negation ('don't disagree') implies reluctant or partial agreement — the speaker doesn't want to fully commit."
+    }
+  ]
+}

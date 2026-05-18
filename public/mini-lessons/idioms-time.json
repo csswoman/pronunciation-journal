@@ -1,0 +1,25 @@
+{
+  "id": 36,
+  "slug": "idioms-time",
+  "level": "intermediate",
+  "category": "idioms",
+  "duration": 5,
+  "title": "Time idioms every intermediate speaker should know",
+  "subtitle": "Idioms of the day",
+  "body": "These idioms about time appear constantly in everyday speech, podcasts, and writing.",
+  "examples": [
+    {
+      "word": "in the nick of time",
+      "translation": "justo a tiempo"
+    },
+    {
+      "word": "once in a blue moon",
+      "translation": "muy raramente"
+    },
+    {
+      "word": "against the clock",
+      "translation": "con prisa, con el tiempo encima"
+    }
+  ],
+  "href": "/courses/idioms-time"
+}

@@ -1,0 +1,59 @@
+{
+  "slug": "ellipsis",
+  "sections": [
+    {
+      "heading": "Ellipsis — omitting what's recoverable",
+      "body": "Ellipsis removes words that can be understood from context, making speech and writing more fluent. It's extremely common in dialogue. The omitted words can always be mentally restored: 'Are you coming?' '[I'm] coming [right now].'"
+    },
+    {
+      "heading": "Substitution — replacing with a shorter form",
+      "body": "Substitution replaces a word or phrase with a pro-form (one, so, do so, not, such). 'Would you like a coffee?' 'I'd love one.' [one = a coffee]. 'Will she come?' 'I think so.' [so = she will come]."
+    },
+    {
+      "heading": "So and not as substitutes",
+      "body": "'I think so / I hope so / I'm afraid so' use 'so' to substitute a whole proposition. 'I think not / I hope not / I'm afraid not' use 'not' for the negative. These are fixed, natural patterns."
+    }
+  ],
+  "examples": [
+    {
+      "english": "'Can you drive?' 'I might [be able to].'",
+      "note": "Ellipsis: omit recoverable words"
+    },
+    {
+      "english": "'I want a biscuit.' 'Take one.'",
+      "note": "Substitution: one = a biscuit"
+    },
+    {
+      "english": "'Is she coming?' 'I think so.'",
+      "note": "so = she is coming"
+    },
+    {
+      "english": "'Was it difficult?' 'Very [difficult].'",
+      "note": "Ellipsis after degree adverb"
+    }
+  ],
+  "exercises": [
+    {
+      "instruction": "Identify: ellipsis (E) or substitution (S)?",
+      "items": [
+        "'Do you like jazz?' 'I do.'",
+        "'Is it going to rain?' 'I hope not.'",
+        "'Are you ready?' 'Almost [ready].'",
+        "'I need a pen.' 'Here's one.'"
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "question": "'Will they agree?' 'I think so.' What does 'so' replace?",
+      "options": [
+        "'they'",
+        "'will agree'",
+        "the whole proposition 'they will agree'",
+        "'I think'"
+      ],
+      "correct": 2,
+      "explanation": "'So' substitutes the entire proposition — it means 'I think [that they will agree]'."
+    }
+  ]
+}

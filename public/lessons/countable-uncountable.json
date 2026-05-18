@@ -1,0 +1,85 @@
+{
+  "slug": "countable-uncountable",
+  "sections": [
+    {
+      "heading": "The core distinction",
+      "body": "Countable nouns can be counted as individual units and have both singular and plural forms: one apple, two apples. Uncountable nouns (also called mass nouns) refer to things seen as a continuous mass or concept — they have no natural plural and take singular verbs."
+    },
+    {
+      "heading": "Common uncountable nouns that surprise learners",
+      "body": "Many nouns that have natural equivalents in Spanish are uncountable in English: advice (not 'advices'), information (not 'informations'), furniture (not 'furnitures'), luggage, homework, research, news, weather, traffic, money, time, work, knowledge."
+    },
+    {
+      "heading": "Quantifiers",
+      "body": "Use different quantifiers depending on count status. Countable: many, few, a few, a number of, several. Uncountable: much, little, a little, a great deal of, an amount of. Both: some, any, a lot of, plenty of, most."
+    },
+    {
+      "heading": "Making uncountable nouns countable",
+      "body": "You can make an uncountable noun countable by adding a container or unit: 'a piece of advice', 'a piece of information', 'two items of furniture', 'three pieces of luggage', 'a bit of research'. This is how native speakers quantify them."
+    }
+  ],
+  "examples": [
+    {
+      "english": "Can you give me some advice?",
+      "note": "Not 'an advice' or 'some advices'"
+    },
+    {
+      "english": "I need more information.",
+      "note": "Not 'more informations'"
+    },
+    {
+      "english": "a piece of furniture",
+      "note": "Container word makes it countable"
+    },
+    {
+      "english": "two loaves of bread",
+      "note": "'Loaves' is the container for 'bread'"
+    },
+    {
+      "english": "There's a lot of traffic today.",
+      "note": "'Traffic' is uncountable"
+    }
+  ],
+  "exercises": [
+    {
+      "instruction": "Are these nouns countable (C) or uncountable (U)? Then use them in a short sentence.",
+      "items": [
+        "luggage",
+        "suitcase",
+        "knowledge",
+        "fact",
+        "weather",
+        "cloud",
+        "homework",
+        "assignment"
+      ],
+      "answers": [
+        "U, C, U, C, U, C, U, C"
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Which sentence is correct?",
+      "options": [
+        "She gave me a good advice.",
+        "She gave me some good advices.",
+        "She gave me a good piece of advice.",
+        "She gave me good advices."
+      ],
+      "correct": 2,
+      "explanation": "'Advice' is uncountable. To refer to one item, use 'a piece of advice'."
+    },
+    {
+      "question": "Which quantifier can be used with BOTH countable and uncountable nouns?",
+      "options": [
+        "many",
+        "few",
+        "a lot of",
+        "several"
+      ],
+      "correct": 2,
+      "explanation": "'A lot of' works with both: 'a lot of apples' (C) and 'a lot of water' (U)."
+    }
+  ]
+}

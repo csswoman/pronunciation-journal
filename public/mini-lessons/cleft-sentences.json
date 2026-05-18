@@ -1,0 +1,21 @@
+{
+  "id": 40,
+  "slug": "cleft-sentences",
+  "level": "advanced",
+  "category": "grammar",
+  "duration": 7,
+  "title": "Cleft sentences for focus",
+  "subtitle": "Grammar of the day",
+  "body": "Cleft sentences split a simple sentence to highlight one element. 'It was X that…' and 'What I want is…' are the two main types.",
+  "examples": [
+    {
+      "word": "It was Maria who called.",
+      "translation": "énfasis en María, no en otra persona"
+    },
+    {
+      "word": "What I need is more time.",
+      "translation": "énfasis en 'más tiempo'"
+    }
+  ],
+  "href": "/courses/cleft-sentences"
+}

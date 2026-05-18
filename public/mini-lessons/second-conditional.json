@@ -1,0 +1,21 @@
+{
+  "id": 27,
+  "slug": "second-conditional",
+  "level": "intermediate",
+  "category": "grammar",
+  "duration": 6,
+  "title": "Second Conditional — hypothetical present",
+  "subtitle": "Grammar of the day",
+  "body": "Use the second conditional for imaginary or unlikely situations in the present or future. The key: past tense in the if-clause, would in the result.",
+  "examples": [
+    {
+      "word": "If I had a million dollars, I'd travel the world.",
+      "translation": "irreal — no tengo un millón"
+    },
+    {
+      "word": "If I were you, I'd apologize.",
+      "translation": "consejo — nota: 'were' para todas las personas"
+    }
+  ],
+  "href": "/courses/second-conditional"
+}

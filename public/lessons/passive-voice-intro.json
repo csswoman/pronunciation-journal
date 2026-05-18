@@ -1,0 +1,65 @@
+{
+  "slug": "passive-voice-intro",
+  "sections": [
+    {
+      "heading": "When to use passive",
+      "body": "Use passive voice when: (1) the action is more important than the agent, (2) the agent is unknown or obvious, (3) you want to avoid mentioning the agent (tactful or formal writing)."
+    },
+    {
+      "heading": "How to form it",
+      "body": "Subject + be (conjugated) + past participle. The tense of 'be' determines the tense: 'is written' (present simple passive), 'was written' (past simple passive), 'has been written' (present perfect passive)."
+    },
+    {
+      "heading": "By-phrase",
+      "body": "Add 'by + agent' only when the agent is new information worth mentioning. 'The Mona Lisa was painted by Leonardo da Vinci.' — here the agent matters. 'My bike was stolen.' — no agent because it's unknown."
+    }
+  ],
+  "examples": [
+    {
+      "english": "The contract was signed yesterday.",
+      "note": "Agent unknown or irrelevant"
+    },
+    {
+      "english": "English is spoken in over 50 countries.",
+      "note": "Agent obvious"
+    },
+    {
+      "english": "The company has been sold.",
+      "note": "Present perfect passive"
+    },
+    {
+      "english": "She was awarded the Nobel Prize.",
+      "note": "Agent could be added: '...by the committee'"
+    }
+  ],
+  "exercises": [
+    {
+      "instruction": "Rewrite in passive voice.",
+      "items": [
+        "Someone broke the window.",
+        "They manufacture these cars in Germany.",
+        "The manager will announce the results.",
+        "People speak French in Quebec."
+      ],
+      "answers": [
+        "The window was broken.",
+        "These cars are manufactured in Germany.",
+        "The results will be announced.",
+        "French is spoken in Quebec."
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "question": "When should you NOT include 'by + agent' in a passive sentence?",
+      "options": [
+        "When the agent is famous",
+        "When the agent is unknown or obvious",
+        "Always — passive never uses 'by'",
+        "When the sentence is in present tense"
+      ],
+      "correct": 1,
+      "explanation": "Add 'by + agent' only when the agent provides meaningful new information. Omit it when the agent is unknown or obvious."
+    }
+  ]
+}

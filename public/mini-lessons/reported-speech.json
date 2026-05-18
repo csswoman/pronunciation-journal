@@ -1,0 +1,21 @@
+{
+  "id": 25,
+  "slug": "reported-speech",
+  "level": "intermediate",
+  "category": "grammar",
+  "duration": 6,
+  "title": "Reported speech: backshifting tenses",
+  "subtitle": "Grammar of the day",
+  "body": "When reporting what someone said, verbs shift one tense back in time. This is called backshifting.",
+  "examples": [
+    {
+      "word": "'I am tired.' → She said she was tired.",
+      "translation": "am → was"
+    },
+    {
+      "word": "'I will call you.' → He said he would call me.",
+      "translation": "will → would"
+    }
+  ],
+  "href": "/courses/reported-speech"
+}

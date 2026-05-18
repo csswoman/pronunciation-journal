@@ -1,0 +1,67 @@
+{
+  "slug": "raise-rise",
+  "sections": [
+    {
+      "heading": "The core distinction",
+      "body": "'Raise' is a transitive verb — it always needs an object. Something or someone raises something else. 'Rise' is intransitive — it never takes an object. Things rise by themselves."
+    },
+    {
+      "heading": "Raise collocations",
+      "body": "Raise a question, raise awareness, raise funds, raise concerns, raise an objection, raise one's voice, raise the bar, raise a child, raise an army, raise prices (if someone is doing it deliberately)."
+    },
+    {
+      "heading": "Rise collocations",
+      "body": "Prices rise, temperatures rise, the sun rises, sea levels rise, crime rises, expectations rise, he rose to fame, she rose through the ranks, costs rise (if they go up naturally/without an agent)."
+    }
+  ],
+  "examples": [
+    {
+      "english": "The government raised taxes.",
+      "note": "Raise + object (transitive)"
+    },
+    {
+      "english": "Taxes rose by 3%.",
+      "note": "Rise — no object (intransitive)"
+    },
+    {
+      "english": "She raised a valid point.",
+      "note": "Transitive — raise + object"
+    },
+    {
+      "english": "He rose to become CEO.",
+      "note": "Intransitive — no object"
+    }
+  ],
+  "exercises": [
+    {
+      "instruction": "Raise or rise (in the correct form)?",
+      "items": [
+        "The board ___ salaries last year.",
+        "Temperatures ___ sharply in summer.",
+        "She ___ her hand to ask a question.",
+        "The company's profits ___ by 15%.",
+        "They hope to ___ awareness about climate change."
+      ],
+      "answers": [
+        "raised",
+        "rise",
+        "raised",
+        "rose",
+        "raise"
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Which sentence is grammatically correct?",
+      "options": [
+        "The sun raises every morning.",
+        "They rose the flag.",
+        "She raised her concerns at the meeting.",
+        "Prices have raised dramatically."
+      ],
+      "correct": 2,
+      "explanation": "'Raise her concerns' — transitive with object. 'The sun rises', 'they raised the flag', 'prices have risen'."
+    }
+  ]
+}

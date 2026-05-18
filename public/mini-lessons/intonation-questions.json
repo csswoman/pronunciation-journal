@@ -1,0 +1,25 @@
+{
+  "id": 24,
+  "slug": "intonation-questions",
+  "level": "intermediate",
+  "category": "pronunciation",
+  "duration": 5,
+  "title": "Rising vs. falling intonation",
+  "subtitle": "Pronunciation of the day",
+  "body": "Intonation patterns signal whether you're asking, concluding, or leaving something open. Getting it wrong can make you sound rude.",
+  "examples": [
+    {
+      "word": "Yes/No questions → rising ↗",
+      "translation": "'Are you coming?'"
+    },
+    {
+      "word": "Wh- questions → falling ↘",
+      "translation": "'Where are you going?'"
+    },
+    {
+      "word": "Lists → rising until last item ↘",
+      "translation": "'Coffee, tea, or water?'"
+    }
+  ],
+  "href": "/courses/intonation"
+}

@@ -1,0 +1,63 @@
+{
+  "slug": "style-voice",
+  "sections": [
+    {
+      "heading": "What is voice?",
+      "body": "Voice is the consistent set of stylistic choices that makes writing recognizably yours: sentence rhythm, the vocabulary you gravitate toward, the way you structure arguments, your relationship with the reader. It's distinct from grammar — you can be grammatically flawless and still have no voice."
+    },
+    {
+      "heading": "Rhythm and sentence length",
+      "body": "Sentence length creates rhythm. Short sentences have impact. They stop the reader. Longer sentences, by contrast, can carry the reader across ideas with a more flowing, deliberate pace, subordinating detail and expanding the space a thought occupies. Varying length is more powerful than either alone."
+    },
+    {
+      "heading": "Diction — choosing words",
+      "body": "Every word choice is a voice decision. 'He walked quickly' vs. 'he strode' vs. 'he rushed'. Precision in verbs creates a more vivid and specific voice. Avoiding nominalization ('make a decision' → 'decide') creates energy. Preferring Anglo-Saxon words over Latinate ones often creates warmth."
+    },
+    {
+      "heading": "Developing your voice in a second language",
+      "body": "Voice in L2 takes longer to develop than accuracy because it requires confidence — the willingness to be deliberately stylistic, not just correct. Read English writers you admire. Notice what they do. Imitate them consciously. Then break away."
+    }
+  ],
+  "examples": [
+    {
+      "english": "Short sentences create urgency.",
+      "note": "Impact through brevity"
+    },
+    {
+      "english": "Longer sentences, by contrast, allow ideas to unfold at a more deliberate pace.",
+      "note": "Elaboration through extension"
+    },
+    {
+      "english": "'decide' > 'make a decision'",
+      "note": "Prefer verbs over nominalized phrases"
+    },
+    {
+      "english": "'strode' vs. 'walked quickly'",
+      "note": "Precise verbs vs. verb + adverb"
+    }
+  ],
+  "exercises": [
+    {
+      "instruction": "Revise each sentence to make it more vivid or energetic.",
+      "items": [
+        "She made the decision to leave the company.",
+        "He walked in a slow and careful manner.",
+        "There was a feeling of excitement among the team.",
+        "The report was written by the committee."
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "question": "What distinguishes 'voice' from 'grammar'?",
+      "options": [
+        "Voice is only about vocabulary; grammar is about structure",
+        "Voice refers to passive/active constructions only",
+        "Voice is the consistent stylistic identity of a writer — it's about choices, not correctness",
+        "Voice is less important than grammar for advanced writers"
+      ],
+      "correct": 2,
+      "explanation": "Voice is the sum of deliberate stylistic choices that make writing recognizably belong to one writer. Grammar is a prerequisite — but voice is what makes writing memorable."
+    }
+  ]
+}

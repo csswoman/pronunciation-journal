@@ -1,0 +1,63 @@
+{
+  "slug": "third-conditional",
+  "sections": [
+    {
+      "heading": "Third conditional structure",
+      "body": "If + past perfect, would have + past participle. This structure describes imaginary situations in the past — things that didn't happen, and their hypothetical consequences. It's the tense of regret and retrospective speculation."
+    },
+    {
+      "heading": "Mixed conditionals",
+      "body": "Mixed conditionals combine time frames. Past → present: 'If I had studied medicine (past unreal), I would be a doctor now (present).' Present → past: 'If I were more careful (present unreal state), I wouldn't have made that mistake (past consequence).'"
+    },
+    {
+      "heading": "Contracted and reduced forms",
+      "body": "In natural speech, third conditionals are heavily contracted: 'If I'd known, I'd've told you' /aɪd noʊn, aɪdəv/. The double contraction 'I'd've' is extremely common in speech even if rarely written."
+    }
+  ],
+  "examples": [
+    {
+      "english": "If she had studied, she would have passed.",
+      "note": "Past unreal — she didn't study"
+    },
+    {
+      "english": "If I hadn't slept, I'd be exhausted now.",
+      "note": "Mixed: past condition → present result"
+    },
+    {
+      "english": "If I were more organized, I wouldn't have lost that file.",
+      "note": "Mixed: present state → past consequence"
+    },
+    {
+      "english": "I'd've come if I'd known.",
+      "note": "Natural contracted speech form"
+    }
+  ],
+  "exercises": [
+    {
+      "instruction": "Complete with third conditional or mixed conditional.",
+      "items": [
+        "If she ___ (tell) me earlier, I ___ (help) her.",
+        "If I ___ (be) braver, I ___ (ask) him out last year.",
+        "He ___ (not / miss) the flight if he ___ (leave) on time."
+      ],
+      "answers": [
+        "had told / would have helped",
+        "were / would have asked",
+        "would not have missed / had left"
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "question": "'If I had taken that job, I would be living in Tokyo now.' This is:",
+      "options": [
+        "First conditional",
+        "Second conditional",
+        "Third conditional",
+        "A mixed conditional"
+      ],
+      "correct": 3,
+      "explanation": "Past condition (had taken) + present result (would be living) = mixed conditional."
+    }
+  ]
+}

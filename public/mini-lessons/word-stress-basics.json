@@ -1,0 +1,21 @@
+{
+  "id": 10,
+  "slug": "word-stress-basics",
+  "level": "basic",
+  "category": "pronunciation",
+  "duration": 5,
+  "title": "Word stress: which syllable is louder?",
+  "subtitle": "Pronunciation of the day",
+  "body": "English is a stress-timed language. Getting word stress wrong can make you harder to understand, even if every sound is correct.",
+  "examples": [
+    {
+      "word": "PHOtograph · phoTOgraphy · photoGRAPHic",
+      "ipa": "el acento cambia con el sufijo"
+    },
+    {
+      "word": "PREsent (n.) · preSENT (v.)",
+      "translation": "mismo spelling, diferente significado"
+    }
+  ],
+  "href": "/courses/word-stress"
+}

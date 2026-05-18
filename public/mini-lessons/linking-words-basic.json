@@ -1,0 +1,21 @@
+{
+  "id": 8,
+  "slug": "linking-words-basic",
+  "level": "basic",
+  "category": "writing",
+  "duration": 4,
+  "title": "Linking words: and, but, so, because",
+  "subtitle": "Writing of the day",
+  "body": "These four connectors are the backbone of basic English sentences. Knowing when to use each prevents run-ons and choppy writing.",
+  "examples": [
+    {
+      "word": "I was tired, but I finished the task.",
+      "translation": "contraste"
+    },
+    {
+      "word": "It rained, so we stayed inside.",
+      "translation": "resultado"
+    }
+  ],
+  "href": "/courses/linking-words-basic"
+}

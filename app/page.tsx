@@ -15,21 +15,26 @@ import HomeWordOfDay from "@/components/home/HomeWordOfDay";
 import { getAchievements, type Achievement } from "@/lib/home-stats";
 import { getSupabaseServerUserId } from "@/lib/supabase/session";
 import { getWordsDueForReview } from "@/lib/word-bank/server-queries";
+import { getTodaysMiniLesson } from "@/lib/content/lessons";
+import type { MiniLesson } from "@/lib/content/schemas";
 import type { WordBankEntry } from "@/lib/types";
 
 export default async function HomePage() {
   let userId: string | null = null;
   let achievements: Achievement[] = [];
   let dueWords: WordBankEntry[] = [];
+  let todaysLesson: MiniLesson | null = null;
 
   userId = await getSupabaseServerUserId();
   try {
-    const [ach, words] = await Promise.all([
+    const [ach, words, lesson] = await Promise.all([
       userId ? getAchievements(userId) : Promise.resolve([]),
       getWordsDueForReview(5),
+      getTodaysMiniLesson(),
     ]);
     achievements = ach;
     dueWords = words;
+    todaysLesson = lesson;
   } catch (error) {
     console.error("Error loading home stats:", error);
   }
@@ -55,7 +60,7 @@ export default async function HomePage() {
         <div className="flex flex-col gap-4">
           <HomeWordOfDay />
           <HomeWeakPhoneme />
-          <HomeTheoryOfDay />
+          <HomeTheoryOfDay lesson={todaysLesson} />
           <HomeShadowingDrill />
           <HomeAchievementsCard achievements={achievements} />
         </div>

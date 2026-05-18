@@ -1,0 +1,61 @@
+{
+  "slug": "frequency-adverbs",
+  "sections": [
+    {
+      "heading": "Position rules",
+      "body": "Adverbs of frequency go: after 'be' ('She is always late'), before the main verb ('I usually walk to work'), after the first auxiliary ('She has never been to Japan'). This is different from Spanish, where placement is more flexible."
+    },
+    {
+      "heading": "Meaning and nuance",
+      "body": "The scale: always (100%) → usually/generally (80–90%) → often/frequently (60–70%) → sometimes/occasionally (30–50%) → rarely/seldom (10–20%) → never (0%). 'Hardly ever' is close to 'rarely' and very natural in speech."
+    }
+  ],
+  "examples": [
+    {
+      "english": "I always drink coffee in the morning.",
+      "note": "Before main verb"
+    },
+    {
+      "english": "She is usually on time.",
+      "note": "After 'be'"
+    },
+    {
+      "english": "He has never visited Peru.",
+      "note": "After first auxiliary"
+    },
+    {
+      "english": "I hardly ever watch TV.",
+      "note": "Natural conversational alternative to 'rarely'"
+    }
+  ],
+  "exercises": [
+    {
+      "instruction": "Place the adverb in the correct position.",
+      "items": [
+        "I go to the gym. (sometimes)",
+        "She is late for meetings. (never)",
+        "They have eaten sushi. (rarely)",
+        "He takes the bus. (usually)"
+      ],
+      "answers": [
+        "I sometimes go to the gym.",
+        "She is never late for meetings.",
+        "They have rarely eaten sushi.",
+        "He usually takes the bus."
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Where does 'always' go in 'She takes a walk in the evening'?",
+      "options": [
+        "Always she takes...",
+        "She always takes...",
+        "She takes always...",
+        "She takes a always walk..."
+      ],
+      "correct": 1,
+      "explanation": "Adverbs of frequency go before the main verb (and after the subject)."
+    }
+  ]
+}

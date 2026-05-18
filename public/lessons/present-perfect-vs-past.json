@@ -1,0 +1,65 @@
+{
+  "slug": "present-perfect-vs-past",
+  "sections": [
+    {
+      "heading": "The Spanish interference problem",
+      "body": "Spanish uses preterite for both functions. 'He visto esa película' can mean both 'I saw that film' (specific past event) and 'I have seen that film' (life experience). English separates these into two tenses with strict rules."
+    },
+    {
+      "heading": "Present Perfect: connection to now",
+      "body": "Use Present Perfect when the time of the action is unspecified, irrelevant, or still connected to the present. Three main uses: experience ('I've been to Japan'), recent past with present result ('She's broken her arm'), and continuing situations ('I've worked here for 5 years')."
+    },
+    {
+      "heading": "Past Simple: completed in the past",
+      "body": "Use Past Simple when the action is complete and the time is specified or implied to be a finished period: 'yesterday', 'last week', 'in 2019', 'when I was a child', 'after dinner'."
+    }
+  ],
+  "examples": [
+    {
+      "english": "I've seen that film.",
+      "note": "Experience — when is irrelevant"
+    },
+    {
+      "english": "I saw that film last Friday.",
+      "note": "Specific time → Past Simple"
+    },
+    {
+      "english": "She's lost her keys.",
+      "note": "Recent past with present result: she still doesn't have them"
+    },
+    {
+      "english": "She lost her keys yesterday.",
+      "note": "Specific time → Past Simple"
+    }
+  ],
+  "exercises": [
+    {
+      "instruction": "Present Perfect or Simple Past?",
+      "items": [
+        "I ___ (never / try) sushi. Do you recommend it?",
+        "We ___ (meet) at a conference in 2021.",
+        "She ___ (just / finish) the report.",
+        "___ you ever ___ (be) to Ireland?"
+      ],
+      "answers": [
+        "have never tried",
+        "met",
+        "has just finished",
+        "Have you ever been"
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Which sentence is correct?",
+      "options": [
+        "Did you ever eat fugu?",
+        "Have you ever eaten fugu?",
+        "Have you ever ate fugu?",
+        "Did you eat ever fugu?"
+      ],
+      "correct": 1,
+      "explanation": "'Ever' in a general life-experience question uses Present Perfect: 'Have you ever eaten...?'"
+    }
+  ]
+}

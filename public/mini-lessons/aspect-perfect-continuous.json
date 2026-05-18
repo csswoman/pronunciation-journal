@@ -1,0 +1,21 @@
+{
+  "id": 35,
+  "slug": "aspect-perfect-continuous",
+  "level": "intermediate",
+  "category": "grammar",
+  "duration": 6,
+  "title": "Present Perfect Continuous",
+  "subtitle": "Grammar of the day",
+  "body": "Use this tense for actions that started in the past and are still ongoing — especially when you want to emphasize the duration or a visible result.",
+  "examples": [
+    {
+      "word": "I've been studying for 3 hours.",
+      "translation": "énfasis en la duración"
+    },
+    {
+      "word": "She's been crying.",
+      "translation": "resultado visible — ojos rojos"
+    }
+  ],
+  "href": "/courses/present-perfect-continuous"
+}

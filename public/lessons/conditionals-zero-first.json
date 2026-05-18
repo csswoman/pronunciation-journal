@@ -1,0 +1,63 @@
+{
+  "slug": "conditionals-zero-first",
+  "sections": [
+    {
+      "heading": "Zero conditional",
+      "body": "Structure: If + present simple, present simple. Used for universal truths, scientific facts, and things that always happen as a consequence of something else. 'If' can be replaced with 'when' without changing meaning."
+    },
+    {
+      "heading": "First conditional",
+      "body": "Structure: If + present simple, will + infinitive. Used for real, likely situations in the present or future. The 'if' clause sets up a realistic condition; the main clause states its probable result."
+    },
+    {
+      "heading": "Other modals in first conditional",
+      "body": "The main clause doesn't have to use 'will'. You can use: might (less certain), can (ability), should (advice), imperative: 'If you're hungry, help yourself.'"
+    }
+  ],
+  "examples": [
+    {
+      "english": "If you heat ice, it melts.",
+      "note": "Zero — always true"
+    },
+    {
+      "english": "If it rains tomorrow, I'll stay home.",
+      "note": "First — likely future"
+    },
+    {
+      "english": "If you see her, tell her I called.",
+      "note": "First — imperative in main clause"
+    },
+    {
+      "english": "If you're tired, you might want to rest.",
+      "note": "First — 'might' for less certain result"
+    }
+  ],
+  "exercises": [
+    {
+      "instruction": "Complete with the correct form.",
+      "items": [
+        "If you ___ (mix) red and blue, you ___ (get) purple.",
+        "If she ___ (study) harder, she ___ (pass) the exam.",
+        "Water ___ (boil) if you ___ (heat) it to 100°C."
+      ],
+      "answers": [
+        "mix / get",
+        "studies / will pass",
+        "boils / heat"
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Which conditional is used for real, likely future situations?",
+      "options": [
+        "Zero",
+        "First",
+        "Second",
+        "Third"
+      ],
+      "correct": 1,
+      "explanation": "First conditional (if + present simple, will + infinitive) describes real, probable future situations."
+    }
+  ]
+}

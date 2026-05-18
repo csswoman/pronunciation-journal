@@ -1,0 +1,69 @@
+{
+  "slug": "get-collocations",
+  "sections": [
+    {
+      "heading": "'Get' as become",
+      "body": "'Get' + adjective means to become: get tired, get angry, get better, get worse, get married, get dressed, get lost, get stuck. This is extremely common and more natural than 'become' in spoken English."
+    },
+    {
+      "heading": "'Get' as obtain/receive",
+      "body": "'Get' + noun can mean receive or obtain: get a call, get a message, get a raise, get a job, get the point, get a degree, get permission."
+    },
+    {
+      "heading": "'Get' as arrive/reach",
+      "body": "'Get' + place or 'get to' + place means arrive: 'When did you get home?' 'I got to the office late.' 'Get there early.'"
+    }
+  ],
+  "examples": [
+    {
+      "english": "I'm getting tired.",
+      "translation": "me estoy cansando"
+    },
+    {
+      "english": "She got a promotion last month.",
+      "translation": "recibió / consiguió"
+    },
+    {
+      "english": "What time did you get home?",
+      "translation": "llegaste a casa"
+    },
+    {
+      "english": "I don't get it.",
+      "translation": "no lo entiendo"
+    },
+    {
+      "english": "Get well soon.",
+      "translation": "expresión fija: mejórate pronto"
+    }
+  ],
+  "exercises": [
+    {
+      "instruction": "Replace the underlined word with the correct form of 'get'.",
+      "items": [
+        "She became very angry.",
+        "I received your email.",
+        "He arrived home late.",
+        "I don't understand the joke."
+      ],
+      "answers": [
+        "got",
+        "got",
+        "got",
+        "get"
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "question": "'Get' + adjective most closely means:",
+      "options": [
+        "to have",
+        "to become",
+        "to give",
+        "to find"
+      ],
+      "correct": 1,
+      "explanation": "'Get' + adjective describes a transition into a new state — it means 'become'."
+    }
+  ]
+}

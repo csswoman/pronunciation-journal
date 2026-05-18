@@ -1,0 +1,69 @@
+{
+  "slug": "collocations-make-do",
+  "sections": [
+    {
+      "heading": "The rough rule",
+      "body": "'Make' tends to involve creating, producing, or causing something to come into existence. 'Do' tends to involve activities, tasks, and processes — things you perform or carry out."
+    },
+    {
+      "heading": "Make collocations",
+      "body": "make a decision, make a mistake, make money, make a suggestion, make progress, make an effort, make a phone call, make a reservation, make friends, make sense, make a noise, make an excuse."
+    },
+    {
+      "heading": "Do collocations",
+      "body": "do homework, do research, do your best, do exercise, do the dishes, do someone a favor, do damage, do business, do your hair, do a course, do well/badly, do without."
+    }
+  ],
+  "examples": [
+    {
+      "english": "She made an important decision.",
+      "note": "Not 'did a decision'"
+    },
+    {
+      "english": "He does research at a university.",
+      "note": "Not 'makes research'"
+    },
+    {
+      "english": "You made a mistake.",
+      "note": "Not 'did a mistake'"
+    },
+    {
+      "english": "I'll do my best.",
+      "note": "Fixed expression with 'do'"
+    }
+  ],
+  "exercises": [
+    {
+      "instruction": "Make or do?",
+      "items": [
+        "___ a suggestion",
+        "___ the laundry",
+        "___ progress",
+        "___ someone a favor",
+        "___ a profit",
+        "___ exercise"
+      ],
+      "answers": [
+        "make",
+        "do",
+        "make",
+        "do",
+        "make",
+        "do"
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Which sentence is correct?",
+      "options": [
+        "I did a mistake.",
+        "I made a mistake.",
+        "I made the dishes.",
+        "I did a suggestion."
+      ],
+      "correct": 1,
+      "explanation": "'Make a mistake' is a fixed collocation. 'Do' is used with 'the dishes' and 'do' activities."
+    }
+  ]
+}

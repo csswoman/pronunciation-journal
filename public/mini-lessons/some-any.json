@@ -1,0 +1,25 @@
+{
+  "id": 13,
+  "slug": "some-any",
+  "level": "basic",
+  "category": "grammar",
+  "duration": 4,
+  "title": "Some vs. Any",
+  "subtitle": "Grammar of the day",
+  "body": "Use 'some' in affirmative sentences and offers. Use 'any' in questions and negatives — though there are exceptions worth knowing.",
+  "examples": [
+    {
+      "word": "I have some milk.",
+      "translation": "afirmativo"
+    },
+    {
+      "word": "Do you have any questions?",
+      "translation": "pregunta"
+    },
+    {
+      "word": "Would you like some coffee?",
+      "translation": "oferta — usamos 'some'"
+    }
+  ],
+  "href": "/courses/some-any"
+}

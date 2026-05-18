@@ -1,0 +1,25 @@
+{
+  "id": 15,
+  "slug": "modal-verbs-ability",
+  "level": "basic",
+  "category": "grammar",
+  "duration": 5,
+  "title": "Can, Could, Be able to — expressing ability",
+  "subtitle": "Grammar of the day",
+  "body": "All three express ability, but each has specific uses based on tense and formality.",
+  "examples": [
+    {
+      "word": "I can swim.",
+      "translation": "habilidad presente"
+    },
+    {
+      "word": "I could swim when I was 5.",
+      "translation": "habilidad pasada"
+    },
+    {
+      "word": "I was able to finish on time.",
+      "translation": "habilidad pasada — logro específico"
+    }
+  ],
+  "href": "/courses/modal-ability"
+}

@@ -1,0 +1,22 @@
+{
+  "id": 50,
+  "slug": "style-voice",
+  "level": "advanced",
+  "category": "writing",
+  "duration": 8,
+  "title": "Developing your voice in English",
+  "subtitle": "Writing of the day",
+  "body": "Fluency is more than accuracy. Voice is the consistent set of choices — rhythm, diction, sentence length — that make your writing recognizably yours.",
+  "examples": [
+    {
+      "word": "short sentences create urgency.",
+      "translation": "impacto"
+    },
+    {
+      "word": "longer sentences, by contrast, allow ideas to unfold at a more deliberate pace.",
+      "translation": "elaboración"
+    }
+  ],
+  "tip": "Read one paragraph aloud. Does it sound like you? That's the test.",
+  "href": "/courses/writing-voice"
+}

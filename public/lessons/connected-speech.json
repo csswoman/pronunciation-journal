@@ -1,0 +1,63 @@
+{
+  "slug": "connected-speech",
+  "sections": [
+    {
+      "heading": "Linking",
+      "body": "When a word ends in a consonant and the next begins with a vowel, they link together as if part of the same word: 'an apple' → /ə ˈnæp.əl/, 'turn it off' → /ˈtɜː.nɪt ɒf/. This is the most frequent connected speech process."
+    },
+    {
+      "heading": "Elision",
+      "body": "Elision is the disappearance of a sound. The most common: /t/ and /d/ between two consonants ('last night' → /læs naɪt/, 'next door' → /nɛks dɔːr/), and the /h/ in unstressed pronouns ('tell him' → /ˈtɛl ɪm/)."
+    },
+    {
+      "heading": "Assimilation",
+      "body": "Assimilation is when one sound changes to become more like an adjacent sound. 'Ten boys' → /ˈtem bɔɪz/ (n → m before a bilabial). 'That person' → /ˈðæp ˈpɜːsən/ (t → p before bilabial). This happens automatically in fast speech."
+    }
+  ],
+  "examples": [
+    {
+      "english": "an apple",
+      "ipa": "/ə ˈnæp.əl/",
+      "note": "Linking: n + vowel"
+    },
+    {
+      "english": "next day",
+      "ipa": "/nɛks deɪ/",
+      "note": "Elision: /t/ disappears"
+    },
+    {
+      "english": "ten boys",
+      "ipa": "/ˈtem bɔɪz/",
+      "note": "Assimilation: /n/ → /m/ before /b/"
+    },
+    {
+      "english": "give me",
+      "ipa": "/ˈɡɪmi/",
+      "note": "Linking and reduction together"
+    }
+  ],
+  "exercises": [
+    {
+      "instruction": "Identify which process (linking, elision, or assimilation) applies to each phrase.",
+      "items": [
+        "in an hour",
+        "good boy",
+        "last chance",
+        "pick it up"
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "question": "In 'that person', the /t/ at the end of 'that' changes to /p/ because:",
+      "options": [
+        "The speaker is being lazy",
+        "Assimilation: the /t/ anticipates the bilabial /p/ that follows",
+        "Elision removes the sound entirely",
+        "Linking joins the two words"
+      ],
+      "correct": 1,
+      "explanation": "This is anticipatory (regressive) assimilation — the place of articulation of /t/ shifts to match the following /p/."
+    }
+  ]
+}

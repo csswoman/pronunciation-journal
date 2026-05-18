@@ -1,0 +1,21 @@
+{
+  "id": 37,
+  "slug": "third-conditional",
+  "level": "advanced",
+  "category": "grammar",
+  "duration": 7,
+  "title": "Third Conditional & mixed conditionals",
+  "subtitle": "Grammar of the day",
+  "body": "Third conditional expresses regret about the past. Mixed conditionals combine time frames — a mark of truly fluent English.",
+  "examples": [
+    {
+      "word": "If I had studied, I would have passed.",
+      "translation": "past unreal — arrepentimiento"
+    },
+    {
+      "word": "If I had slept, I wouldn't be tired now.",
+      "translation": "mixed: pasado → presente"
+    }
+  ],
+  "href": "/courses/third-conditional"
+}

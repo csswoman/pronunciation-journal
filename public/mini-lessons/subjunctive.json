@@ -1,0 +1,25 @@
+{
+  "id": 44,
+  "slug": "subjunctive",
+  "level": "advanced",
+  "category": "grammar",
+  "duration": 7,
+  "title": "The subjunctive in English",
+  "subtitle": "Grammar of the day",
+  "body": "The English subjunctive is subtle and mostly appears in formal writing. It uses the base form of the verb regardless of subject.",
+  "examples": [
+    {
+      "word": "I suggest that she be promoted.",
+      "translation": "formal — no 'is'"
+    },
+    {
+      "word": "It's vital that he attend the meeting.",
+      "translation": "no 'attends'"
+    },
+    {
+      "word": "If I were taller… (were, not was)",
+      "translation": "subjunctive en condicionales"
+    }
+  ],
+  "href": "/courses/subjunctive"
+}

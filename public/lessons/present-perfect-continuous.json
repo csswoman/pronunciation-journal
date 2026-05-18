@@ -1,0 +1,59 @@
+{
+  "slug": "present-perfect-continuous",
+  "sections": [
+    {
+      "heading": "Form",
+      "body": "Have/has + been + verb-ing. This tense combines the Present Perfect (connection to now) with the Continuous (ongoing process), emphasizing the duration or the recent activity that produced a visible result."
+    },
+    {
+      "heading": "Duration vs. result",
+      "body": "'I've been running' can emphasize how long you've been doing it ('for 2 hours') or explain a visible result ('I'm sweaty and out of breath'). Both meanings coexist in the same form."
+    },
+    {
+      "heading": "Vs. Present Perfect Simple",
+      "body": "Simple ('I've read 50 pages') emphasizes what has been accomplished — a result or quantity. Continuous ('I've been reading') emphasizes the ongoing activity. With 'for' and 'since', both can work — but Continuous often feels more natural for ongoing activities."
+    }
+  ],
+  "examples": [
+    {
+      "english": "I've been studying for three hours.",
+      "note": "Duration emphasized"
+    },
+    {
+      "english": "She's been crying — her eyes are red.",
+      "note": "Visible result of recent activity"
+    },
+    {
+      "english": "They've been arguing all morning.",
+      "note": "Ongoing, irritating activity"
+    },
+    {
+      "english": "How long have you been waiting?",
+      "note": "Duration question — always Continuous"
+    }
+  ],
+  "exercises": [
+    {
+      "instruction": "Present Perfect Simple or Continuous?",
+      "items": [
+        "I ___ (write) 5 emails today. (completed quantity)",
+        "She ___ (learn) Japanese for two years. (ongoing)",
+        "He ___ (work) all night — he looks exhausted. (visible result)",
+        "How many pages ___ you ___ (read)? (completed quantity)"
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "question": "'I've been cooking.' What does this sentence emphasize?",
+      "options": [
+        "The number of dishes cooked",
+        "The completed result",
+        "The ongoing activity and/or its duration",
+        "A general ability"
+      ],
+      "correct": 2,
+      "explanation": "Present Perfect Continuous emphasizes the activity as ongoing or recently completed, often with a visible result or duration in focus."
+    }
+  ]
+}

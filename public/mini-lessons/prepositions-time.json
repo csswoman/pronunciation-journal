@@ -1,0 +1,25 @@
+{
+  "id": 12,
+  "slug": "prepositions-time",
+  "level": "basic",
+  "category": "grammar",
+  "duration": 4,
+  "title": "In, On, At — prepositions of time",
+  "subtitle": "Grammar of the day",
+  "body": "These three prepositions follow a simple rule based on how specific the time reference is.",
+  "examples": [
+    {
+      "word": "in 2024 · in March · in the morning",
+      "translation": "períodos largos"
+    },
+    {
+      "word": "on Monday · on my birthday",
+      "translation": "días y fechas específicas"
+    },
+    {
+      "word": "at 3pm · at midnight · at noon",
+      "translation": "horas exactas"
+    }
+  ],
+  "href": "/courses/prepositions-time"
+}

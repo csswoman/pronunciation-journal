@@ -1,0 +1,57 @@
+{
+  "slug": "vowel-length",
+  "sections": [
+    {
+      "heading": "Vowel length as a phoneme",
+      "body": "In English, vowel length — how long you hold a vowel sound — is phonemically meaningful. Changing the length changes the word. This is different from Spanish, where vowel length isn't distinctive."
+    },
+    {
+      "heading": "The key pairs",
+      "body": "The most important pairs: /ɪ/ (short) vs. /iː/ (long): ship/sheep, bit/beat, fit/feet, filled/field. /ʊ/ (short) vs. /uː/ (long): full/fool, pull/pool, look/Luke."
+    }
+  ],
+  "examples": [
+    {
+      "english": "ship / sheep",
+      "ipa": "/ʃɪp/ · /ʃiːp/"
+    },
+    {
+      "english": "bit / beat",
+      "ipa": "/bɪt/ · /biːt/"
+    },
+    {
+      "english": "full / fool",
+      "ipa": "/fʊl/ · /fuːl/"
+    },
+    {
+      "english": "pull / pool",
+      "ipa": "/pʊl/ · /puːl/"
+    }
+  ],
+  "exercises": [
+    {
+      "instruction": "Listen (or say aloud) and identify: short /ɪ/ or long /iː/?",
+      "items": [
+        "live (verb)",
+        "leave",
+        "itch",
+        "each",
+        "hit",
+        "heat"
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Which pair are minimal pairs (same except for vowel length)?",
+      "options": [
+        "ship / chip",
+        "bit / bite",
+        "sheep / ship",
+        "fill / file"
+      ],
+      "correct": 2,
+      "explanation": "'Sheep' /ʃiːp/ and 'ship' /ʃɪp/ differ only in vowel length — a minimal pair."
+    }
+  ]
+}

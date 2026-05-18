@@ -1,0 +1,21 @@
+{
+  "id": 31,
+  "slug": "relative-clauses",
+  "level": "intermediate",
+  "category": "grammar",
+  "duration": 6,
+  "title": "Defining vs. non-defining relative clauses",
+  "subtitle": "Grammar of the day",
+  "body": "Both use who/which/that, but non-defining clauses add extra info that can be removed — shown by commas.",
+  "examples": [
+    {
+      "word": "The book that changed my life is long.",
+      "translation": "defining — sin comas, necesaria"
+    },
+    {
+      "word": "My sister, who lives in London, is visiting.",
+      "translation": "non-defining — con comas, extra info"
+    }
+  ],
+  "href": "/courses/relative-clauses"
+}
