@@ -1,0 +1,666 @@
+[
+  {
+    "id": "actionable",
+    "word": "actionable",
+    "pos": "adjective",
+    "definition": "Feedback or information specific enough to act on immediately without further clarification.",
+    "difficulty": 1,
+    "tags": ["feedback", "communication", "meetings"]
+  },
+  {
+    "id": "alignment",
+    "word": "alignment",
+    "pos": "noun",
+    "definition": "Shared understanding and agreement among team members on goals, priorities, or direction.",
+    "difficulty": 1,
+    "tags": ["collaboration", "meetings", "fundamentals"]
+  },
+  {
+    "id": "ambiguity",
+    "word": "ambiguity",
+    "pos": "noun",
+    "definition": "Unclear requirements or situations where multiple interpretations are possible.",
+    "difficulty": 2,
+    "tags": ["process", "communication", "fundamentals"]
+  },
+  {
+    "id": "async-communication",
+    "word": "async communication",
+    "pos": "noun phrase",
+    "definition": "Exchanging information without expecting an immediate response, common in remote teams.",
+    "difficulty": 1,
+    "tags": ["remote", "collaboration", "communication"]
+  },
+  {
+    "id": "bandwidth",
+    "word": "bandwidth",
+    "pos": "noun",
+    "definition": "A person's available time and mental capacity to take on additional work.",
+    "difficulty": 1,
+    "tags": ["workload", "communication", "meetings"]
+  },
+  {
+    "id": "bike-shedding",
+    "word": "bike-shedding",
+    "pos": "noun",
+    "definition": "Spending disproportionate time debating trivial details while ignoring more important decisions.",
+    "difficulty": 3,
+    "tags": ["meetings", "anti-patterns", "process"]
+  },
+  {
+    "id": "blocker",
+    "word": "blocker",
+    "pos": "noun",
+    "definition": "An obstacle preventing progress on a task that requires external resolution to move forward.",
+    "difficulty": 1,
+    "tags": ["process", "agile", "communication"]
+  },
+  {
+    "id": "boilerplate",
+    "word": "boilerplate",
+    "pos": "noun",
+    "definition": "Standardized, reusable text or code used repeatedly with little or no modification.",
+    "difficulty": 1,
+    "tags": ["documentation", "writing", "dev"]
+  },
+  {
+    "id": "bottleneck",
+    "word": "bottleneck",
+    "pos": "noun",
+    "definition": "A point in a workflow where progress slows because demand exceeds capacity.",
+    "difficulty": 1,
+    "tags": ["process", "performance", "strategy"]
+  },
+  {
+    "id": "buy-in",
+    "word": "buy-in",
+    "pos": "noun",
+    "definition": "Genuine support and commitment from stakeholders or team members for a decision or initiative.",
+    "difficulty": 2,
+    "tags": ["strategy", "stakeholders", "leadership"]
+  },
+  {
+    "id": "cadence",
+    "word": "cadence",
+    "pos": "noun",
+    "definition": "The regular rhythm of recurring meetings, releases, or communication cycles in a team.",
+    "difficulty": 2,
+    "tags": ["process", "agile", "meetings"]
+  },
+  {
+    "id": "capacity",
+    "word": "capacity",
+    "pos": "noun",
+    "definition": "The total amount of work a team or individual can realistically handle in a given period.",
+    "difficulty": 1,
+    "tags": ["planning", "workload", "agile"]
+  },
+  {
+    "id": "caveat",
+    "word": "caveat",
+    "pos": "noun",
+    "definition": "A warning or qualification that limits or conditions a statement or decision.",
+    "difficulty": 2,
+    "tags": ["communication", "writing", "nuance"]
+  },
+  {
+    "id": "changelog",
+    "word": "changelog",
+    "pos": "noun",
+    "definition": "A curated log documenting notable changes, fixes, and new features across product versions.",
+    "difficulty": 1,
+    "tags": ["documentation", "process", "versioning"]
+  },
+  {
+    "id": "clarity",
+    "word": "clarity",
+    "pos": "noun",
+    "definition": "The quality of communication that leaves no room for misinterpretation or confusion.",
+    "difficulty": 1,
+    "tags": ["communication", "writing", "fundamentals"]
+  },
+  {
+    "id": "confluence",
+    "word": "confluence",
+    "pos": "noun",
+    "definition": "The meeting point of multiple ideas, teams, or processes — also a common team wiki tool.",
+    "difficulty": 2,
+    "tags": ["collaboration", "documentation", "tooling"]
+  },
+  {
+    "id": "consensus",
+    "word": "consensus",
+    "pos": "noun",
+    "definition": "General agreement reached by a group, though not necessarily unanimous approval.",
+    "difficulty": 2,
+    "tags": ["meetings", "collaboration", "decisions"]
+  },
+  {
+    "id": "context-switching",
+    "word": "context switching",
+    "pos": "noun phrase",
+    "definition": "Shifting mental focus between different tasks or projects, which reduces deep work quality.",
+    "difficulty": 2,
+    "tags": ["productivity", "focus", "workload"]
+  },
+  {
+    "id": "cross-functional",
+    "word": "cross-functional",
+    "pos": "adjective",
+    "definition": "Involving members from different disciplines — design, engineering, product — working together.",
+    "difficulty": 1,
+    "tags": ["collaboration", "teams", "fundamentals"]
+  },
+  {
+    "id": "deliverable",
+    "word": "deliverable",
+    "pos": "noun",
+    "definition": "A tangible output — a design, document, or feature — produced for a project or client.",
+    "difficulty": 1,
+    "tags": ["process", "project-management", "fundamentals"]
+  },
+  {
+    "id": "delta",
+    "word": "delta",
+    "pos": "noun",
+    "definition": "The measurable difference or change between two states, versions, or data points.",
+    "difficulty": 2,
+    "tags": ["data", "communication", "technical"]
+  },
+  {
+    "id": "dependency",
+    "word": "dependency",
+    "pos": "noun",
+    "definition": "A task, team, or system that another piece of work relies on before it can proceed.",
+    "difficulty": 1,
+    "tags": ["process", "planning", "fundamentals"]
+  },
+  {
+    "id": "discovery",
+    "word": "discovery",
+    "pos": "noun",
+    "definition": "A research phase aimed at understanding user needs and constraints before designing solutions.",
+    "difficulty": 1,
+    "tags": ["ux", "process", "research"]
+  },
+  {
+    "id": "dog-fooding",
+    "word": "dog-fooding",
+    "pos": "noun",
+    "definition": "Using your own product internally before releasing it to identify issues firsthand.",
+    "difficulty": 3,
+    "tags": ["process", "testing", "culture"]
+  },
+  {
+    "id": "escalate",
+    "word": "escalate",
+    "pos": "verb",
+    "definition": "Raising an unresolved issue to a higher authority when it cannot be solved at the current level.",
+    "difficulty": 2,
+    "tags": ["communication", "process", "leadership"]
+  },
+  {
+    "id": "exec",
+    "word": "exec",
+    "pos": "noun",
+    "definition": "An executive or senior leader — often the audience for high-level presentations and summaries.",
+    "difficulty": 1,
+    "tags": ["leadership", "communication", "organization"]
+  },
+  {
+    "id": "footprint",
+    "word": "footprint",
+    "pos": "noun",
+    "definition": "The scope or impact of a system, feature, or team within an organization or codebase.",
+    "difficulty": 2,
+    "tags": ["architecture", "strategy", "technical"]
+  },
+  {
+    "id": "friction",
+    "word": "friction",
+    "pos": "noun",
+    "definition": "Unnecessary resistance in a process, workflow, or user experience that slows progress.",
+    "difficulty": 1,
+    "tags": ["ux", "process", "fundamentals"]
+  },
+  {
+    "id": "gap-analysis",
+    "word": "gap analysis",
+    "pos": "noun phrase",
+    "definition": "Comparing the current state to the desired state to identify what needs to change.",
+    "difficulty": 2,
+    "tags": ["strategy", "planning", "audit"]
+  },
+  {
+    "id": "garnered",
+    "word": "garner",
+    "pos": "verb",
+    "definition": "To gather or accumulate something over time, such as feedback, support, or data.",
+    "difficulty": 3,
+    "tags": ["writing", "communication", "formal"]
+  },
+  {
+    "id": "glanceable",
+    "word": "glanceable",
+    "pos": "adjective",
+    "definition": "Designed to be understood at a quick look without sustained attention or reading.",
+    "difficulty": 2,
+    "tags": ["ux", "design", "communication"]
+  },
+  {
+    "id": "granular",
+    "word": "granular",
+    "pos": "adjective",
+    "definition": "Broken into fine, detailed levels of control or specificity rather than broad categories.",
+    "difficulty": 2,
+    "tags": ["communication", "technical", "nuance"]
+  },
+  {
+    "id": "guardrail",
+    "word": "guardrail",
+    "pos": "noun",
+    "definition": "A rule or constraint put in place to prevent teams from making harmful or inconsistent decisions.",
+    "difficulty": 2,
+    "tags": ["governance", "process", "strategy"]
+  },
+  {
+    "id": "hardcoded",
+    "word": "hardcoded",
+    "pos": "adjective",
+    "definition": "A value embedded directly in code or a design rather than stored in a configurable token or variable.",
+    "difficulty": 1,
+    "tags": ["dev", "design-systems", "anti-patterns"]
+  },
+  {
+    "id": "heads-up",
+    "word": "heads-up",
+    "pos": "noun",
+    "definition": "An informal advance warning given to someone before something happens.",
+    "difficulty": 1,
+    "tags": ["communication", "informal", "email"]
+  },
+  {
+    "id": "high-level",
+    "word": "high-level",
+    "pos": "adjective",
+    "definition": "Describing a broad overview of something without going into implementation details.",
+    "difficulty": 1,
+    "tags": ["communication", "planning", "fundamentals"]
+  },
+  {
+    "id": "impact",
+    "word": "impact",
+    "pos": "noun",
+    "definition": "The measurable effect a decision, feature, or change has on users or business outcomes.",
+    "difficulty": 1,
+    "tags": ["strategy", "metrics", "fundamentals"]
+  },
+  {
+    "id": "implication",
+    "word": "implication",
+    "pos": "noun",
+    "definition": "A consequence or indirect effect that follows from a decision without being explicitly stated.",
+    "difficulty": 2,
+    "tags": ["communication", "writing", "nuance"]
+  },
+  {
+    "id": "in-the-weeds",
+    "word": "in the weeds",
+    "pos": "idiom",
+    "definition": "Focused on excessive detail at the expense of the bigger picture or strategic thinking.",
+    "difficulty": 2,
+    "tags": ["idioms", "meetings", "communication"]
+  },
+  {
+    "id": "intake",
+    "word": "intake",
+    "pos": "noun",
+    "definition": "A structured process for receiving, reviewing, and triaging new requests or projects.",
+    "difficulty": 2,
+    "tags": ["process", "project-management", "workflow"]
+  },
+  {
+    "id": "jargon",
+    "word": "jargon",
+    "pos": "noun",
+    "definition": "Specialized terminology used within a field that may be unclear to outsiders.",
+    "difficulty": 1,
+    "tags": ["communication", "writing", "awareness"]
+  },
+  {
+    "id": "kick-off",
+    "word": "kick-off",
+    "pos": "noun",
+    "definition": "The initial meeting that formally starts a project, aligning the team on goals and expectations.",
+    "difficulty": 1,
+    "tags": ["meetings", "process", "project-management"]
+  },
+  {
+    "id": "leverage-verb",
+    "word": "leverage",
+    "pos": "verb",
+    "definition": "To use an existing resource, system, or advantage strategically to maximize output.",
+    "difficulty": 1,
+    "tags": ["strategy", "communication", "business"]
+  },
+  {
+    "id": "low-hanging-fruit",
+    "word": "low-hanging fruit",
+    "pos": "idiom",
+    "definition": "Easy wins requiring minimal effort that can be completed quickly for fast visible impact.",
+    "difficulty": 1,
+    "tags": ["strategy", "idioms", "prioritization"]
+  },
+  {
+    "id": "milestone",
+    "word": "milestone",
+    "pos": "noun",
+    "definition": "A significant checkpoint in a project timeline marking the completion of a key phase.",
+    "difficulty": 1,
+    "tags": ["planning", "project-management", "fundamentals"]
+  },
+  {
+    "id": "nitpick",
+    "word": "nitpick",
+    "pos": "verb",
+    "definition": "To point out very minor issues in code or design, often during review — sometimes labeled as such.",
+    "difficulty": 1,
+    "tags": ["feedback", "code-review", "communication"]
+  },
+  {
+    "id": "north-star",
+    "word": "north star",
+    "pos": "noun phrase",
+    "definition": "A guiding metric or vision that defines long-term success for a product or team.",
+    "difficulty": 2,
+    "tags": ["strategy", "product", "vision"]
+  },
+  {
+    "id": "open-loop",
+    "word": "open loop",
+    "pos": "noun phrase",
+    "definition": "An unresolved question or task that was raised but never followed up on or closed.",
+    "difficulty": 2,
+    "tags": ["process", "meetings", "communication"]
+  },
+  {
+    "id": "opinionated",
+    "word": "opinionated",
+    "pos": "adjective",
+    "definition": "A tool or system that enforces specific conventions and limits how much users can customize.",
+    "difficulty": 2,
+    "tags": ["tooling", "architecture", "technical"]
+  },
+  {
+    "id": "overhead",
+    "word": "overhead",
+    "pos": "noun",
+    "definition": "Extra work, time, or cost required beyond the core task — often from process or tooling.",
+    "difficulty": 1,
+    "tags": ["process", "performance", "fundamentals"]
+  },
+  {
+    "id": "own",
+    "word": "own",
+    "pos": "verb",
+    "definition": "To take full responsibility for a task, decision, or outcome within a team context.",
+    "difficulty": 1,
+    "tags": ["accountability", "communication", "leadership"]
+  },
+  {
+    "id": "pain-point-pro",
+    "word": "pain point",
+    "pos": "noun phrase",
+    "definition": "A recurring problem experienced by a user, customer, or team that drives the need for a solution.",
+    "difficulty": 1,
+    "tags": ["ux", "communication", "strategy"]
+  },
+  {
+    "id": "paper-trail",
+    "word": "paper trail",
+    "pos": "noun phrase",
+    "definition": "A documented record of decisions, communications, or changes kept for reference or accountability.",
+    "difficulty": 2,
+    "tags": ["documentation", "process", "communication"]
+  },
+  {
+    "id": "parking-lot",
+    "word": "parking lot",
+    "pos": "noun phrase",
+    "definition": "A list of topics raised in a meeting that are deferred to be discussed later.",
+    "difficulty": 2,
+    "tags": ["meetings", "process", "facilitation"]
+  },
+  {
+    "id": "pivot",
+    "word": "pivot",
+    "pos": "verb",
+    "definition": "To make a significant strategic change in direction in response to new information or constraints.",
+    "difficulty": 1,
+    "tags": ["strategy", "product", "process"]
+  },
+  {
+    "id": "postmortem",
+    "word": "postmortem",
+    "pos": "noun",
+    "definition": "A retrospective analysis of a project, incident, or failure to extract learnings without blame.",
+    "difficulty": 2,
+    "tags": ["process", "retrospective", "quality"]
+  },
+  {
+    "id": "pre-mortem",
+    "word": "pre-mortem",
+    "pos": "noun",
+    "definition": "A planning exercise imagining a project has failed to identify risks before they occur.",
+    "difficulty": 3,
+    "tags": ["planning", "risk", "process"]
+  },
+  {
+    "id": "pushback",
+    "word": "pushback",
+    "pos": "noun",
+    "definition": "Resistance or disagreement expressed in response to a proposal or decision.",
+    "difficulty": 1,
+    "tags": ["communication", "feedback", "collaboration"]
+  },
+  {
+    "id": "rabbit-hole",
+    "word": "rabbit hole",
+    "pos": "idiom",
+    "definition": "A tangent or deeply nested problem that consumes time without advancing the main goal.",
+    "difficulty": 1,
+    "tags": ["idioms", "process", "focus"]
+  },
+  {
+    "id": "ramp-up",
+    "word": "ramp-up",
+    "pos": "noun phrase",
+    "definition": "The period during which a new team member or system gradually reaches full productivity.",
+    "difficulty": 2,
+    "tags": ["onboarding", "process", "teams"]
+  },
+  {
+    "id": "rationale",
+    "word": "rationale",
+    "pos": "noun",
+    "definition": "The reasoning or justification behind a design decision, technical choice, or strategy.",
+    "difficulty": 2,
+    "tags": ["documentation", "communication", "design"]
+  },
+  {
+    "id": "refine",
+    "word": "refine",
+    "pos": "verb",
+    "definition": "To improve something incrementally by removing rough edges or adjusting based on feedback.",
+    "difficulty": 1,
+    "tags": ["process", "iteration", "fundamentals"]
+  },
+  {
+    "id": "retrospective",
+    "word": "retrospective",
+    "pos": "noun",
+    "definition": "A recurring team meeting reflecting on what went well, what didn't, and what to improve next.",
+    "difficulty": 1,
+    "tags": ["agile", "process", "meetings"]
+  },
+  {
+    "id": "roadblock",
+    "word": "roadblock",
+    "pos": "noun",
+    "definition": "A significant obstacle preventing a team from moving forward on a project or goal.",
+    "difficulty": 1,
+    "tags": ["process", "communication", "planning"]
+  },
+  {
+    "id": "rollout",
+    "word": "rollout",
+    "pos": "noun",
+    "definition": "The staged or full release of a feature or system to users or internal teams.",
+    "difficulty": 1,
+    "tags": ["deployment", "process", "product"]
+  },
+  {
+    "id": "rubber-duck",
+    "word": "rubber duck debugging",
+    "pos": "noun phrase",
+    "definition": "Explaining a problem aloud to an object or person to clarify your own thinking and find the solution.",
+    "difficulty": 2,
+    "tags": ["debugging", "culture", "dev"]
+  },
+  {
+    "id": "sanity-check",
+    "word": "sanity check",
+    "pos": "noun phrase",
+    "definition": "A quick informal verification that something makes sense before committing further resources.",
+    "difficulty": 1,
+    "tags": ["process", "communication", "review"]
+  },
+  {
+    "id": "scope-creep",
+    "word": "scope creep",
+    "pos": "noun phrase",
+    "definition": "The gradual, uncontrolled expansion of a project's requirements beyond its original boundaries.",
+    "difficulty": 2,
+    "tags": ["project-management", "process", "planning"]
+  },
+  {
+    "id": "sign-off",
+    "word": "sign-off",
+    "pos": "noun",
+    "definition": "Formal approval from a stakeholder or decision-maker to proceed with a design or plan.",
+    "difficulty": 1,
+    "tags": ["process", "stakeholders", "approval"]
+  },
+  {
+    "id": "spike",
+    "word": "spike",
+    "pos": "noun",
+    "definition": "A time-boxed research task undertaken to reduce uncertainty before committing to a solution.",
+    "difficulty": 2,
+    "tags": ["agile", "process", "research"]
+  },
+  {
+    "id": "surface-verb",
+    "word": "surface",
+    "pos": "verb",
+    "definition": "To bring a hidden issue, insight, or risk into visibility so the team can address it.",
+    "difficulty": 2,
+    "tags": ["communication", "meetings", "nuance"]
+  },
+  {
+    "id": "tactful",
+    "word": "tactful",
+    "pos": "adjective",
+    "definition": "Communicating difficult feedback or disagreement with sensitivity and awareness of others' feelings.",
+    "difficulty": 2,
+    "tags": ["communication", "feedback", "interpersonal"]
+  },
+  {
+    "id": "technical-debt",
+    "word": "technical debt",
+    "pos": "noun phrase",
+    "definition": "Accumulated shortcuts or suboptimal code decisions that will require future rework.",
+    "difficulty": 1,
+    "tags": ["dev", "process", "quality"]
+  },
+  {
+    "id": "time-box",
+    "word": "time-box",
+    "pos": "verb",
+    "definition": "To set a fixed maximum duration for a task or discussion to prevent it from overrunning.",
+    "difficulty": 2,
+    "tags": ["process", "meetings", "agile"]
+  },
+  {
+    "id": "traction",
+    "word": "traction",
+    "pos": "noun",
+    "definition": "Early evidence that a product, feature, or initiative is gaining real user adoption or momentum.",
+    "difficulty": 2,
+    "tags": ["product", "strategy", "metrics"]
+  },
+  {
+    "id": "trade-off",
+    "word": "trade-off",
+    "pos": "noun",
+    "definition": "A situation where gaining one benefit requires accepting a cost or limitation elsewhere.",
+    "difficulty": 1,
+    "tags": ["decision-making", "fundamentals", "strategy"]
+  },
+  {
+    "id": "triage",
+    "word": "triage",
+    "pos": "verb",
+    "definition": "To prioritize a list of bugs, tasks, or requests by urgency and impact to decide what to tackle first.",
+    "difficulty": 2,
+    "tags": ["process", "prioritization", "agile"]
+  },
+  {
+    "id": "turnover",
+    "word": "turnover",
+    "pos": "noun",
+    "definition": "The rate at which team members leave and are replaced, affecting knowledge continuity.",
+    "difficulty": 2,
+    "tags": ["teams", "organization", "hr"]
+  },
+  {
+    "id": "unblock",
+    "word": "unblock",
+    "pos": "verb",
+    "definition": "To resolve whatever is preventing a teammate or task from moving forward.",
+    "difficulty": 1,
+    "tags": ["collaboration", "communication", "process"]
+  },
+  {
+    "id": "verbosity",
+    "word": "verbosity",
+    "pos": "noun",
+    "definition": "Using more words than necessary — a quality to avoid in both writing and code.",
+    "difficulty": 2,
+    "tags": ["writing", "communication", "code"]
+  },
+  {
+    "id": "visibility",
+    "word": "visibility",
+    "pos": "noun",
+    "definition": "How transparent or accessible the status of a project, decision, or metric is to the team.",
+    "difficulty": 1,
+    "tags": ["communication", "process", "transparency"]
+  },
+  {
+    "id": "workaround",
+    "word": "workaround",
+    "pos": "noun",
+    "definition": "A temporary solution that bypasses a problem without permanently fixing the root cause.",
+    "difficulty": 1,
+    "tags": ["process", "dev", "problem-solving"]
+  },
+  {
+    "id": "yak-shaving",
+    "word": "yak shaving",
+    "pos": "idiom",
+    "definition": "Doing a chain of seemingly necessary but tangential tasks before reaching the original goal.",
+    "difficulty": 3,
+    "tags": ["idioms", "dev", "productivity"]
+  }
+]

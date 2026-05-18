@@ -1,0 +1,658 @@
+[
+  {
+    "id": "aggregation",
+    "word": "aggregation",
+    "pos": "noun",
+    "definition": "Combining multiple data points into a single summary value such as a sum, mean, or count.",
+    "difficulty": 1,
+    "tags": ["data", "sql", "fundamentals"]
+  },
+  {
+    "id": "anomaly-detection",
+    "word": "anomaly detection",
+    "pos": "noun phrase",
+    "definition": "Identifying data points that deviate significantly from expected patterns or distributions.",
+    "difficulty": 2,
+    "tags": ["ml", "statistics", "patterns"]
+  },
+  {
+    "id": "array",
+    "word": "array",
+    "pos": "noun",
+    "definition": "An ordered collection of elements of the same type, foundational to numerical computing.",
+    "difficulty": 1,
+    "tags": ["fundamentals", "numpy", "data-structures"]
+  },
+  {
+    "id": "average",
+    "word": "arithmetic mean",
+    "pos": "noun phrase",
+    "definition": "The sum of all values in a dataset divided by the count of those values.",
+    "difficulty": 1,
+    "tags": ["statistics", "fundamentals", "descriptive"]
+  },
+  {
+    "id": "backpropagation",
+    "word": "backpropagation",
+    "pos": "noun",
+    "definition": "An algorithm computing gradients through a neural network to update weights during training.",
+    "difficulty": 3,
+    "tags": ["deep-learning", "neural-networks", "training"]
+  },
+  {
+    "id": "baseline",
+    "word": "baseline",
+    "pos": "noun",
+    "definition": "A simple reference model used to measure whether a more complex model adds real value.",
+    "difficulty": 1,
+    "tags": ["ml", "evaluation", "fundamentals"]
+  },
+  {
+    "id": "batch",
+    "word": "batch",
+    "pos": "noun",
+    "definition": "A subset of training data processed together in one forward and backward pass of a model.",
+    "difficulty": 2,
+    "tags": ["training", "deep-learning", "ml"]
+  },
+  {
+    "id": "bayesian-inference",
+    "word": "Bayesian inference",
+    "pos": "noun phrase",
+    "definition": "Updating the probability of a hypothesis as new evidence is incorporated using Bayes' theorem.",
+    "difficulty": 3,
+    "tags": ["statistics", "probability", "advanced"]
+  },
+  {
+    "id": "bias",
+    "word": "bias",
+    "pos": "noun",
+    "definition": "Systematic error in a model that causes it to consistently miss the true value in one direction.",
+    "difficulty": 2,
+    "tags": ["ml", "statistics", "evaluation"]
+  },
+  {
+    "id": "binary-classification",
+    "word": "binary classification",
+    "pos": "noun phrase",
+    "definition": "A prediction task with exactly two possible output categories, such as spam or not spam.",
+    "difficulty": 1,
+    "tags": ["ml", "classification", "fundamentals"]
+  },
+  {
+    "id": "categorical-variable",
+    "word": "categorical variable",
+    "pos": "noun phrase",
+    "definition": "A variable representing discrete groups or labels rather than continuous numeric values.",
+    "difficulty": 1,
+    "tags": ["data", "statistics", "fundamentals"]
+  },
+  {
+    "id": "centroid",
+    "word": "centroid",
+    "pos": "noun",
+    "definition": "The geometric center of a cluster, used as a reference point in algorithms like k-means.",
+    "difficulty": 2,
+    "tags": ["clustering", "ml", "geometry"]
+  },
+  {
+    "id": "class-imbalance",
+    "word": "class imbalance",
+    "pos": "noun phrase",
+    "definition": "A dataset condition where one category has significantly more samples than others.",
+    "difficulty": 2,
+    "tags": ["data", "ml", "classification"]
+  },
+  {
+    "id": "classification",
+    "word": "classification",
+    "pos": "noun",
+    "definition": "A supervised learning task that predicts which category a new observation belongs to.",
+    "difficulty": 1,
+    "tags": ["ml", "fundamentals", "supervised"]
+  },
+  {
+    "id": "clustering",
+    "word": "clustering",
+    "pos": "noun",
+    "definition": "An unsupervised method grouping similar data points together without predefined labels.",
+    "difficulty": 1,
+    "tags": ["ml", "unsupervised", "fundamentals"]
+  },
+  {
+    "id": "confusion-matrix",
+    "word": "confusion matrix",
+    "pos": "noun phrase",
+    "definition": "A table comparing predicted vs actual class labels to evaluate a classification model.",
+    "difficulty": 2,
+    "tags": ["evaluation", "classification", "ml"]
+  },
+  {
+    "id": "continuous-variable",
+    "word": "continuous variable",
+    "pos": "noun phrase",
+    "definition": "A numeric variable that can take any value within a range, such as height or temperature.",
+    "difficulty": 1,
+    "tags": ["statistics", "data", "fundamentals"]
+  },
+  {
+    "id": "correlation",
+    "word": "correlation",
+    "pos": "noun",
+    "definition": "A statistical measure of how strongly two variables move together, ranging from -1 to 1.",
+    "difficulty": 1,
+    "tags": ["statistics", "eda", "fundamentals"]
+  },
+  {
+    "id": "cross-validation",
+    "word": "cross-validation",
+    "pos": "noun phrase",
+    "definition": "A technique splitting data into multiple train-test folds to produce a more reliable evaluation.",
+    "difficulty": 2,
+    "tags": ["ml", "evaluation", "methodology"]
+  },
+  {
+    "id": "csv",
+    "word": "CSV",
+    "pos": "proper noun",
+    "definition": "Comma-Separated Values — a plain text format for storing tabular data, one row per line.",
+    "difficulty": 1,
+    "tags": ["data", "formats", "fundamentals"]
+  },
+  {
+    "id": "data-cleaning",
+    "word": "data cleaning",
+    "pos": "noun phrase",
+    "definition": "The process of detecting and correcting errors, inconsistencies, and missing values in a dataset.",
+    "difficulty": 1,
+    "tags": ["data", "process", "fundamentals"]
+  },
+  {
+    "id": "data-drift",
+    "word": "data drift",
+    "pos": "noun phrase",
+    "definition": "The gradual change in input data distribution over time that degrades model performance.",
+    "difficulty": 3,
+    "tags": ["ml", "production", "monitoring"]
+  },
+  {
+    "id": "data-lake",
+    "word": "data lake",
+    "pos": "noun phrase",
+    "definition": "A centralized repository storing raw, unstructured data at scale for future processing.",
+    "difficulty": 2,
+    "tags": ["infrastructure", "data", "storage"]
+  },
+  {
+    "id": "data-pipeline",
+    "word": "data pipeline",
+    "pos": "noun phrase",
+    "definition": "An automated sequence of steps that ingests, transforms, and loads data from source to destination.",
+    "difficulty": 2,
+    "tags": ["infrastructure", "etl", "data"]
+  },
+  {
+    "id": "data-warehouse",
+    "word": "data warehouse",
+    "pos": "noun phrase",
+    "definition": "A structured storage system optimized for querying and analyzing large volumes of historical data.",
+    "difficulty": 2,
+    "tags": ["infrastructure", "data", "sql"]
+  },
+  {
+    "id": "dataframe",
+    "word": "DataFrame",
+    "pos": "proper noun",
+    "definition": "A two-dimensional, labeled data structure with columns of potentially different types, as in pandas.",
+    "difficulty": 1,
+    "tags": ["python", "pandas", "data-structures"]
+  },
+  {
+    "id": "decision-tree",
+    "word": "decision tree",
+    "pos": "noun phrase",
+    "definition": "A flowchart-like model that splits data based on feature conditions to make predictions.",
+    "difficulty": 1,
+    "tags": ["ml", "classification", "interpretability"]
+  },
+  {
+    "id": "dimensionality-reduction",
+    "word": "dimensionality reduction",
+    "pos": "noun phrase",
+    "definition": "Reducing the number of features in a dataset while preserving as much information as possible.",
+    "difficulty": 3,
+    "tags": ["ml", "preprocessing", "advanced"]
+  },
+  {
+    "id": "distribution",
+    "word": "distribution",
+    "pos": "noun",
+    "definition": "A function describing the frequency of values across all possible outcomes in a dataset.",
+    "difficulty": 1,
+    "tags": ["statistics", "fundamentals", "probability"]
+  },
+  {
+    "id": "eda",
+    "word": "EDA",
+    "pos": "proper noun",
+    "definition": "Exploratory Data Analysis — the initial investigation of data using statistics and visualizations.",
+    "difficulty": 1,
+    "tags": ["process", "fundamentals", "visualization"]
+  },
+  {
+    "id": "epoch",
+    "word": "epoch",
+    "pos": "noun",
+    "definition": "One complete pass of the entire training dataset through a machine learning model.",
+    "difficulty": 2,
+    "tags": ["training", "deep-learning", "ml"]
+  },
+  {
+    "id": "etl",
+    "word": "ETL",
+    "pos": "proper noun",
+    "definition": "Extract, Transform, Load — the process of moving and reshaping data between systems.",
+    "difficulty": 1,
+    "tags": ["data", "infrastructure", "process"]
+  },
+  {
+    "id": "evaluation-metric",
+    "word": "evaluation metric",
+    "pos": "noun phrase",
+    "definition": "A quantitative measure used to assess how well a model performs on a given task.",
+    "difficulty": 1,
+    "tags": ["ml", "evaluation", "fundamentals"]
+  },
+  {
+    "id": "f1-score",
+    "word": "F1 score",
+    "pos": "noun phrase",
+    "definition": "The harmonic mean of precision and recall, balancing both in a single performance metric.",
+    "difficulty": 2,
+    "tags": ["evaluation", "classification", "metrics"]
+  },
+  {
+    "id": "feature",
+    "word": "feature",
+    "pos": "noun",
+    "definition": "An individual measurable variable used as input to a machine learning model.",
+    "difficulty": 1,
+    "tags": ["ml", "fundamentals", "data"]
+  },
+  {
+    "id": "feature-engineering",
+    "word": "feature engineering",
+    "pos": "noun phrase",
+    "definition": "Creating or transforming input variables to improve a model's predictive power.",
+    "difficulty": 2,
+    "tags": ["ml", "preprocessing", "process"]
+  },
+  {
+    "id": "feature-importance",
+    "word": "feature importance",
+    "pos": "noun phrase",
+    "definition": "A score indicating how much each input variable contributed to a model's predictions.",
+    "difficulty": 2,
+    "tags": ["ml", "interpretability", "evaluation"]
+  },
+  {
+    "id": "gradient-descent",
+    "word": "gradient descent",
+    "pos": "noun phrase",
+    "definition": "An optimization algorithm iteratively adjusting model parameters to minimize a loss function.",
+    "difficulty": 3,
+    "tags": ["training", "optimization", "ml"]
+  },
+  {
+    "id": "ground-truth",
+    "word": "ground truth",
+    "pos": "noun phrase",
+    "definition": "The verified correct labels or values used to train and evaluate a machine learning model.",
+    "difficulty": 1,
+    "tags": ["ml", "labeling", "fundamentals"]
+  },
+  {
+    "id": "holdout-set",
+    "word": "holdout set",
+    "pos": "noun phrase",
+    "definition": "A portion of data withheld from training and used only for final model evaluation.",
+    "difficulty": 2,
+    "tags": ["ml", "evaluation", "methodology"]
+  },
+  {
+    "id": "hyperparameter",
+    "word": "hyperparameter",
+    "pos": "noun",
+    "definition": "A configuration value set before training that controls how a model learns, not what it learns.",
+    "difficulty": 2,
+    "tags": ["ml", "training", "tuning"]
+  },
+  {
+    "id": "hypothesis-testing",
+    "word": "hypothesis testing",
+    "pos": "noun phrase",
+    "definition": "A statistical method determining whether observed data provides evidence against a null assumption.",
+    "difficulty": 2,
+    "tags": ["statistics", "experimentation", "fundamentals"]
+  },
+  {
+    "id": "imputation",
+    "word": "imputation",
+    "pos": "noun",
+    "definition": "Filling in missing values in a dataset using statistical estimates like the mean or median.",
+    "difficulty": 2,
+    "tags": ["data-cleaning", "preprocessing", "statistics"]
+  },
+  {
+    "id": "inference",
+    "word": "inference",
+    "pos": "noun",
+    "definition": "The phase where a trained model generates predictions on new, unseen input data.",
+    "difficulty": 1,
+    "tags": ["ml", "production", "fundamentals"]
+  },
+  {
+    "id": "interquartile-range",
+    "word": "interquartile range",
+    "pos": "noun phrase",
+    "definition": "The difference between the 75th and 25th percentile, measuring statistical spread robustly.",
+    "difficulty": 2,
+    "tags": ["statistics", "descriptive", "eda"]
+  },
+  {
+    "id": "label",
+    "word": "label",
+    "pos": "noun",
+    "definition": "The target output value a supervised learning model is trained to predict.",
+    "difficulty": 1,
+    "tags": ["ml", "fundamentals", "supervised"]
+  },
+  {
+    "id": "learning-rate",
+    "word": "learning rate",
+    "pos": "noun phrase",
+    "definition": "A hyperparameter controlling how large each step is during gradient descent optimization.",
+    "difficulty": 2,
+    "tags": ["training", "optimization", "hyperparameters"]
+  },
+  {
+    "id": "loss-function",
+    "word": "loss function",
+    "pos": "noun phrase",
+    "definition": "A function measuring the difference between predicted and actual values during model training.",
+    "difficulty": 2,
+    "tags": ["training", "optimization", "fundamentals"]
+  },
+  {
+    "id": "median",
+    "word": "median",
+    "pos": "noun",
+    "definition": "The middle value in an ordered dataset, robust to outliers unlike the arithmetic mean.",
+    "difficulty": 1,
+    "tags": ["statistics", "descriptive", "fundamentals"]
+  },
+  {
+    "id": "missing-value",
+    "word": "missing value",
+    "pos": "noun phrase",
+    "definition": "An absent data point in a dataset, represented as null or NaN, requiring handling before modeling.",
+    "difficulty": 1,
+    "tags": ["data-cleaning", "fundamentals", "data"]
+  },
+  {
+    "id": "model",
+    "word": "model",
+    "pos": "noun",
+    "definition": "A mathematical function learned from data that maps inputs to predicted outputs.",
+    "difficulty": 1,
+    "tags": ["ml", "fundamentals"]
+  },
+  {
+    "id": "multicollinearity",
+    "word": "multicollinearity",
+    "pos": "noun",
+    "definition": "A condition where two or more input features are highly correlated, distorting model coefficients.",
+    "difficulty": 3,
+    "tags": ["statistics", "regression", "advanced"]
+  },
+  {
+    "id": "normal-distribution",
+    "word": "normal distribution",
+    "pos": "noun phrase",
+    "definition": "A symmetric, bell-shaped probability distribution where most values cluster around the mean.",
+    "difficulty": 1,
+    "tags": ["statistics", "probability", "fundamentals"]
+  },
+  {
+    "id": "normalization",
+    "word": "normalization",
+    "pos": "noun",
+    "definition": "Rescaling feature values to a standard range — typically 0 to 1 — before model training.",
+    "difficulty": 2,
+    "tags": ["preprocessing", "ml", "fundamentals"]
+  },
+  {
+    "id": "null-hypothesis",
+    "word": "null hypothesis",
+    "pos": "noun phrase",
+    "definition": "The default assumption of no effect or no difference that a statistical test attempts to reject.",
+    "difficulty": 2,
+    "tags": ["statistics", "hypothesis-testing", "fundamentals"]
+  },
+  {
+    "id": "outlier",
+    "word": "outlier",
+    "pos": "noun",
+    "definition": "A data point that differs markedly from other observations and may indicate noise or a real anomaly.",
+    "difficulty": 1,
+    "tags": ["statistics", "eda", "data-cleaning"]
+  },
+  {
+    "id": "overfitting",
+    "word": "overfitting",
+    "pos": "noun",
+    "definition": "When a model learns the training data too precisely, performing poorly on new unseen data.",
+    "difficulty": 1,
+    "tags": ["ml", "evaluation", "fundamentals"]
+  },
+  {
+    "id": "p-value",
+    "word": "p-value",
+    "pos": "noun phrase",
+    "definition": "The probability of observing results at least as extreme as those seen, assuming the null hypothesis is true.",
+    "difficulty": 2,
+    "tags": ["statistics", "hypothesis-testing", "fundamentals"]
+  },
+  {
+    "id": "pandas",
+    "word": "pandas",
+    "pos": "proper noun",
+    "definition": "A Python library providing DataFrame structures for data manipulation and analysis.",
+    "difficulty": 1,
+    "tags": ["python", "tooling", "data"]
+  },
+  {
+    "id": "percentile",
+    "word": "percentile",
+    "pos": "noun",
+    "definition": "The value below which a given percentage of observations in a dataset fall.",
+    "difficulty": 1,
+    "tags": ["statistics", "descriptive", "fundamentals"]
+  },
+  {
+    "id": "pipeline-ml",
+    "word": "ML pipeline",
+    "pos": "noun phrase",
+    "definition": "A chained sequence of preprocessing and modeling steps that can be fit and applied as a unit.",
+    "difficulty": 2,
+    "tags": ["ml", "process", "automation"]
+  },
+  {
+    "id": "precision",
+    "word": "precision",
+    "pos": "noun",
+    "definition": "The proportion of positive predictions that were actually correct out of all positive predictions made.",
+    "difficulty": 2,
+    "tags": ["evaluation", "classification", "metrics"]
+  },
+  {
+    "id": "prediction",
+    "word": "prediction",
+    "pos": "noun",
+    "definition": "The output a trained model generates when given a new input it has not seen before.",
+    "difficulty": 1,
+    "tags": ["ml", "fundamentals", "inference"]
+  },
+  {
+    "id": "preprocessing",
+    "word": "preprocessing",
+    "pos": "noun",
+    "definition": "All data transformation steps applied before feeding data into a machine learning model.",
+    "difficulty": 1,
+    "tags": ["ml", "process", "fundamentals"]
+  },
+  {
+    "id": "random-forest",
+    "word": "random forest",
+    "pos": "noun phrase",
+    "definition": "An ensemble model combining many decision trees to improve accuracy and reduce overfitting.",
+    "difficulty": 2,
+    "tags": ["ml", "ensemble", "classification"]
+  },
+  {
+    "id": "recall",
+    "word": "recall",
+    "pos": "noun",
+    "definition": "The proportion of actual positives that a model correctly identified out of all real positives.",
+    "difficulty": 2,
+    "tags": ["evaluation", "classification", "metrics"]
+  },
+  {
+    "id": "regression",
+    "word": "regression",
+    "pos": "noun",
+    "definition": "A supervised learning task predicting a continuous numeric output from input features.",
+    "difficulty": 1,
+    "tags": ["ml", "fundamentals", "supervised"]
+  },
+  {
+    "id": "regularization",
+    "word": "regularization",
+    "pos": "noun",
+    "definition": "A technique penalizing model complexity during training to reduce overfitting.",
+    "difficulty": 3,
+    "tags": ["ml", "training", "advanced"]
+  },
+  {
+    "id": "sample",
+    "word": "sample",
+    "pos": "noun",
+    "definition": "A subset of observations drawn from a larger population for analysis or model training.",
+    "difficulty": 1,
+    "tags": ["statistics", "fundamentals", "data"]
+  },
+  {
+    "id": "sampling-bias",
+    "word": "sampling bias",
+    "pos": "noun phrase",
+    "definition": "A systematic error occurring when the collected data does not represent the full population.",
+    "difficulty": 2,
+    "tags": ["statistics", "data", "methodology"]
+  },
+  {
+    "id": "skewness",
+    "word": "skewness",
+    "pos": "noun",
+    "definition": "A measure of the asymmetry of a distribution — positive skew has a longer right tail.",
+    "difficulty": 2,
+    "tags": ["statistics", "descriptive", "eda"]
+  },
+  {
+    "id": "split",
+    "word": "train-test split",
+    "pos": "noun phrase",
+    "definition": "Dividing a dataset into separate portions for training a model and evaluating its performance.",
+    "difficulty": 1,
+    "tags": ["ml", "methodology", "fundamentals"]
+  },
+  {
+    "id": "standard-deviation",
+    "word": "standard deviation",
+    "pos": "noun phrase",
+    "definition": "A measure of how spread out values are relative to the mean in a dataset.",
+    "difficulty": 1,
+    "tags": ["statistics", "descriptive", "fundamentals"]
+  },
+  {
+    "id": "supervised-learning",
+    "word": "supervised learning",
+    "pos": "noun phrase",
+    "definition": "Training a model on labeled data where the correct output is known for each input.",
+    "difficulty": 1,
+    "tags": ["ml", "fundamentals", "paradigm"]
+  },
+  {
+    "id": "target-variable",
+    "word": "target variable",
+    "pos": "noun phrase",
+    "definition": "The output column a model is trained to predict, also called the dependent variable.",
+    "difficulty": 1,
+    "tags": ["ml", "fundamentals", "data"]
+  },
+  {
+    "id": "training-data",
+    "word": "training data",
+    "pos": "noun phrase",
+    "definition": "The labeled dataset used to fit a machine learning model's parameters.",
+    "difficulty": 1,
+    "tags": ["ml", "data", "fundamentals"]
+  },
+  {
+    "id": "underfitting",
+    "word": "underfitting",
+    "pos": "noun",
+    "definition": "When a model is too simple to capture patterns in the data, performing poorly on both train and test sets.",
+    "difficulty": 1,
+    "tags": ["ml", "evaluation", "fundamentals"]
+  },
+  {
+    "id": "unsupervised-learning",
+    "word": "unsupervised learning",
+    "pos": "noun phrase",
+    "definition": "Training a model on unlabeled data to discover hidden structure or patterns without guidance.",
+    "difficulty": 1,
+    "tags": ["ml", "fundamentals", "paradigm"]
+  },
+  {
+    "id": "variance",
+    "word": "variance",
+    "pos": "noun",
+    "definition": "A model's sensitivity to fluctuations in training data — high variance models tend to overfit.",
+    "difficulty": 2,
+    "tags": ["ml", "statistics", "evaluation"]
+  },
+  {
+    "id": "vector",
+    "word": "vector",
+    "pos": "noun",
+    "definition": "A one-dimensional array of numbers representing a data point or feature set in a model.",
+    "difficulty": 1,
+    "tags": ["mathematics", "ml", "fundamentals"]
+  },
+  {
+    "id": "visualization",
+    "word": "data visualization",
+    "pos": "noun phrase",
+    "definition": "Representing data graphically to reveal patterns, trends, and outliers at a glance.",
+    "difficulty": 1,
+    "tags": ["eda", "communication", "fundamentals"]
+  },
+  {
+    "id": "weight",
+    "word": "weight",
+    "pos": "noun",
+    "definition": "A learned parameter in a model that scales the importance of an input feature.",
+    "difficulty": 1,
+    "tags": ["ml", "neural-networks", "fundamentals"]
+  }
+]

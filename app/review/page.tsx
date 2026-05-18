@@ -11,7 +11,7 @@ import { MinimalPairExercise } from '@/components/phoneme-practice/MinimalPairEx
 import { DictationExercise } from '@/components/phoneme-practice/DictationExercise'
 import { SessionSummary } from '@/components/phoneme-practice/SessionSummary'
 import { usePracticeSession } from '@/hooks/usePracticeSession'
-import { buildSession } from '@/lib/phoneme-practice/exercises'
+import { buildMixedSession } from '@/lib/phoneme-practice/mixed-session'
 import {
   getAllSounds,
   getAllWords,
@@ -69,13 +69,8 @@ export default function ReviewPage() {
         if (allExercises.length >= MAX_EXERCISES) break
         const pairs = await getMinimalPairs(p.sound_id)
         const targetWords = allWords.filter(w => w.sound_id === p.sound_id)
-        const session = buildSession(
-          p.sounds,
-          targetWords,
-          allSounds,
-          wordsBySoundId,
-          pairs
-        )
+        const mixed = buildMixedSession(p.sounds, targetWords, allSounds, wordsBySoundId, pairs)
+        const session = mixed.filter(e => e.kind === 'phoneme').map(e => e.data)
         const remaining = MAX_EXERCISES - allExercises.length
         allExercises.push(...session.slice(0, remaining))
       }

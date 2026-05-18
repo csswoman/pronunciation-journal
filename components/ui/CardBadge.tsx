@@ -38,7 +38,7 @@ const COLOR_STYLES: Record<NonNullable<CardBadgeProps["color"]>, React.CSSProper
 export function CardBadge({ children, color = "primary", icon, className = "" }: CardBadgeProps) {
   return (
     <span
-      className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-tiny font-semibold tracking-widest uppercase ${className}`}
+      className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-tiny font-semibold tracking-widest w-fit uppercase ${className}`}
       style={COLOR_STYLES[color]}
     >
       {icon}

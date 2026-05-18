@@ -6,6 +6,7 @@ import {
   TrendingUp,
   Settings,
   LibraryBig,
+  BookMarked,
 } from "lucide-react";
 import { NavSectionType } from "./NavSection";
 
@@ -21,6 +22,7 @@ export const learningNav: NavSectionType = {
   label: "Learning",
   items: [
     { name: "Vocabulary", href: "/vocabulary", icon: LibraryBig },
+    { name: "Lexicon", href: "/lexicon", icon: BookMarked },
     { name: "Courses", href: "/courses", icon: BookOpen },
     { name: "IPA Chart", href: "/ipa", icon: Radio },
   ],

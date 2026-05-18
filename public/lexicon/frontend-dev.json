@@ -1,0 +1,650 @@
+[
+  {
+    "id": "abstraction",
+    "word": "abstraction",
+    "pos": "noun",
+    "definition": "Hiding implementation complexity behind a simpler interface to reduce cognitive overhead.",
+    "difficulty": 2,
+    "tags": ["architecture", "fundamentals", "patterns"]
+  },
+  {
+    "id": "api",
+    "word": "API",
+    "pos": "proper noun",
+    "definition": "Application Programming Interface — a contract defining how software components communicate.",
+    "difficulty": 1,
+    "tags": ["fundamentals", "communication", "integration"]
+  },
+  {
+    "id": "async",
+    "word": "asynchronous",
+    "pos": "adjective",
+    "definition": "Operations that run independently without blocking the main thread while waiting to complete.",
+    "difficulty": 2,
+    "tags": ["javascript", "fundamentals", "performance"]
+  },
+  {
+    "id": "bundle",
+    "word": "bundle",
+    "pos": "noun",
+    "definition": "A single output file combining multiple source modules for efficient browser delivery.",
+    "difficulty": 1,
+    "tags": ["build", "tooling", "performance"]
+  },
+  {
+    "id": "bundler",
+    "word": "bundler",
+    "pos": "noun",
+    "definition": "A tool that compiles and combines source files into optimized assets for production.",
+    "difficulty": 1,
+    "tags": ["tooling", "build", "webpack"]
+  },
+  {
+    "id": "cache",
+    "word": "cache",
+    "pos": "noun",
+    "definition": "A layer that stores frequently accessed data to reduce redundant fetching or computation.",
+    "difficulty": 1,
+    "tags": ["performance", "fundamentals", "browser"]
+  },
+  {
+    "id": "callback",
+    "word": "callback",
+    "pos": "noun",
+    "definition": "A function passed as an argument to another function, invoked after an operation completes.",
+    "difficulty": 2,
+    "tags": ["javascript", "async", "fundamentals"]
+  },
+  {
+    "id": "cdn",
+    "word": "CDN",
+    "pos": "proper noun",
+    "definition": "Content Delivery Network — a distributed server system delivering assets from locations near the user.",
+    "difficulty": 1,
+    "tags": ["performance", "infrastructure", "deployment"]
+  },
+  {
+    "id": "client-side",
+    "word": "client-side",
+    "pos": "adjective",
+    "definition": "Code or logic that executes in the user's browser rather than on the server.",
+    "difficulty": 1,
+    "tags": ["fundamentals", "rendering", "architecture"]
+  },
+  {
+    "id": "closure",
+    "word": "closure",
+    "pos": "noun",
+    "definition": "A function that retains access to its outer scope's variables even after that scope has returned.",
+    "difficulty": 3,
+    "tags": ["javascript", "scope", "advanced"]
+  },
+  {
+    "id": "code-splitting",
+    "word": "code splitting",
+    "pos": "noun phrase",
+    "definition": "Dividing a bundle into smaller chunks loaded on demand to improve initial load time.",
+    "difficulty": 2,
+    "tags": ["performance", "build", "lazy-loading"]
+  },
+  {
+    "id": "component",
+    "word": "component",
+    "pos": "noun",
+    "definition": "A self-contained, reusable piece of UI that manages its own structure, style, and behavior.",
+    "difficulty": 1,
+    "tags": ["react", "fundamentals", "architecture"]
+  },
+  {
+    "id": "controlled-component",
+    "word": "controlled component",
+    "pos": "noun phrase",
+    "definition": "A React component whose input value is driven entirely by state rather than the DOM.",
+    "difficulty": 2,
+    "tags": ["react", "forms", "state"]
+  },
+  {
+    "id": "cors",
+    "word": "CORS",
+    "pos": "proper noun",
+    "definition": "Cross-Origin Resource Sharing — a browser security mechanism controlling cross-domain requests.",
+    "difficulty": 2,
+    "tags": ["security", "browser", "api"]
+  },
+  {
+    "id": "css-cascade",
+    "word": "cascade",
+    "pos": "noun",
+    "definition": "The algorithm CSS uses to resolve which styles apply when multiple rules target the same element.",
+    "difficulty": 2,
+    "tags": ["css", "fundamentals", "specificity"]
+  },
+  {
+    "id": "custom-hook",
+    "word": "custom hook",
+    "pos": "noun phrase",
+    "definition": "A reusable React function prefixed with 'use' that encapsulates stateful logic for sharing.",
+    "difficulty": 2,
+    "tags": ["react", "hooks", "reusability"]
+  },
+  {
+    "id": "debounce",
+    "word": "debounce",
+    "pos": "verb",
+    "definition": "Delaying a function's execution until a specified time has passed since its last invocation.",
+    "difficulty": 2,
+    "tags": ["performance", "javascript", "events"]
+  },
+  {
+    "id": "declarative",
+    "word": "declarative",
+    "pos": "adjective",
+    "definition": "A programming style that describes what the UI should look like rather than how to build it.",
+    "difficulty": 2,
+    "tags": ["react", "paradigm", "fundamentals"]
+  },
+  {
+    "id": "dependency-array",
+    "word": "dependency array",
+    "pos": "noun phrase",
+    "definition": "The second argument to React hooks that controls when an effect or memo should re-run.",
+    "difficulty": 2,
+    "tags": ["react", "hooks", "performance"]
+  },
+  {
+    "id": "derived-state",
+    "word": "derived state",
+    "pos": "noun phrase",
+    "definition": "A value computed from existing state rather than stored independently in the state tree.",
+    "difficulty": 3,
+    "tags": ["react", "state", "architecture"]
+  },
+  {
+    "id": "dom",
+    "word": "DOM",
+    "pos": "proper noun",
+    "definition": "Document Object Model — the tree structure browsers use to represent and manipulate HTML.",
+    "difficulty": 1,
+    "tags": ["browser", "fundamentals", "javascript"]
+  },
+  {
+    "id": "dry",
+    "word": "DRY",
+    "pos": "proper noun",
+    "definition": "Don't Repeat Yourself — a principle advocating for eliminating code duplication through abstraction.",
+    "difficulty": 1,
+    "tags": ["principles", "architecture", "fundamentals"]
+  },
+  {
+    "id": "dynamic-import",
+    "word": "dynamic import",
+    "pos": "noun phrase",
+    "definition": "Loading a JavaScript module on demand at runtime rather than at initial bundle load.",
+    "difficulty": 2,
+    "tags": ["javascript", "performance", "lazy-loading"]
+  },
+  {
+    "id": "end-to-end-test",
+    "word": "end-to-end test",
+    "pos": "noun phrase",
+    "definition": "An automated test that simulates real user scenarios across the full application stack.",
+    "difficulty": 2,
+    "tags": ["testing", "quality", "automation"]
+  },
+  {
+    "id": "event-delegation",
+    "word": "event delegation",
+    "pos": "noun phrase",
+    "definition": "Attaching a single event listener to a parent element to handle events from its children.",
+    "difficulty": 3,
+    "tags": ["javascript", "events", "performance"]
+  },
+  {
+    "id": "event-loop",
+    "word": "event loop",
+    "pos": "noun phrase",
+    "definition": "The JavaScript runtime mechanism that processes the call stack and task queue sequentially.",
+    "difficulty": 3,
+    "tags": ["javascript", "runtime", "async"]
+  },
+  {
+    "id": "fallback",
+    "word": "fallback",
+    "pos": "noun",
+    "definition": "An alternative value, component, or behavior used when the primary option fails or is unavailable.",
+    "difficulty": 1,
+    "tags": ["resilience", "fundamentals", "patterns"]
+  },
+  {
+    "id": "feature-flag",
+    "word": "feature flag",
+    "pos": "noun phrase",
+    "definition": "A toggle that enables or disables a feature at runtime without deploying new code.",
+    "difficulty": 2,
+    "tags": ["deployment", "process", "experimentation"]
+  },
+  {
+    "id": "forking",
+    "word": "forking",
+    "pos": "noun",
+    "definition": "Creating a personal copy of a repository to develop independently from the original source.",
+    "difficulty": 1,
+    "tags": ["git", "collaboration", "open-source"]
+  },
+  {
+    "id": "generic-type",
+    "word": "generic type",
+    "pos": "noun phrase",
+    "definition": "A reusable type definition in TypeScript that works with multiple types via a type parameter.",
+    "difficulty": 3,
+    "tags": ["typescript", "types", "advanced"]
+  },
+  {
+    "id": "hot-reload",
+    "word": "hot reload",
+    "pos": "noun phrase",
+    "definition": "Automatically updating the browser with code changes without a full page refresh.",
+    "difficulty": 1,
+    "tags": ["tooling", "dx", "development"]
+  },
+  {
+    "id": "hydration",
+    "word": "hydration",
+    "pos": "noun",
+    "definition": "Attaching React event listeners to server-rendered HTML to make it interactive on the client.",
+    "difficulty": 3,
+    "tags": ["ssr", "react", "rendering"]
+  },
+  {
+    "id": "idempotent",
+    "word": "idempotent",
+    "pos": "adjective",
+    "definition": "An operation that produces the same result regardless of how many times it is executed.",
+    "difficulty": 3,
+    "tags": ["api", "fundamentals", "advanced"]
+  },
+  {
+    "id": "immutability",
+    "word": "immutability",
+    "pos": "noun",
+    "definition": "A pattern where data is never modified in place — changes produce new copies instead.",
+    "difficulty": 2,
+    "tags": ["state", "javascript", "patterns"]
+  },
+  {
+    "id": "intersection-observer",
+    "word": "Intersection Observer",
+    "pos": "proper noun",
+    "definition": "A browser API that efficiently detects when elements enter or leave the viewport.",
+    "difficulty": 2,
+    "tags": ["browser", "api", "performance"]
+  },
+  {
+    "id": "lazy-loading",
+    "word": "lazy loading",
+    "pos": "noun phrase",
+    "definition": "Deferring the load of non-critical resources until they are actually needed by the user.",
+    "difficulty": 1,
+    "tags": ["performance", "fundamentals", "images"]
+  },
+  {
+    "id": "lifting-state",
+    "word": "lifting state",
+    "pos": "noun phrase",
+    "definition": "Moving shared state up to the nearest common ancestor component so siblings can access it.",
+    "difficulty": 2,
+    "tags": ["react", "state", "architecture"]
+  },
+  {
+    "id": "linting",
+    "word": "linting",
+    "pos": "noun",
+    "definition": "Automated static analysis that flags code style issues, errors, and anti-patterns.",
+    "difficulty": 1,
+    "tags": ["tooling", "quality", "dx"]
+  },
+  {
+    "id": "media-query",
+    "word": "media query",
+    "pos": "noun phrase",
+    "definition": "A CSS rule that applies styles conditionally based on device characteristics like screen width.",
+    "difficulty": 1,
+    "tags": ["css", "responsive", "fundamentals"]
+  },
+  {
+    "id": "memoization",
+    "word": "memoization",
+    "pos": "noun",
+    "definition": "Caching the result of a function call so repeated calls with the same input skip recomputation.",
+    "difficulty": 2,
+    "tags": ["performance", "react", "javascript"]
+  },
+  {
+    "id": "middleware",
+    "word": "middleware",
+    "pos": "noun",
+    "definition": "A function that intercepts and transforms requests or actions before they reach their destination.",
+    "difficulty": 2,
+    "tags": ["architecture", "patterns", "state"]
+  },
+  {
+    "id": "mock",
+    "word": "mock",
+    "pos": "noun",
+    "definition": "A simulated object or function that replaces a real dependency during testing.",
+    "difficulty": 1,
+    "tags": ["testing", "fundamentals"]
+  },
+  {
+    "id": "monorepo",
+    "word": "monorepo",
+    "pos": "noun",
+    "definition": "A single repository containing multiple related projects or packages managed together.",
+    "difficulty": 2,
+    "tags": ["architecture", "tooling", "collaboration"]
+  },
+  {
+    "id": "mutation",
+    "word": "mutation",
+    "pos": "noun",
+    "definition": "Directly modifying existing data in memory rather than creating a new copy of it.",
+    "difficulty": 2,
+    "tags": ["javascript", "state", "fundamentals"]
+  },
+  {
+    "id": "nullish-coalescing",
+    "word": "nullish coalescing",
+    "pos": "noun phrase",
+    "definition": "The ?? operator that returns the right-hand value only when the left is null or undefined.",
+    "difficulty": 2,
+    "tags": ["javascript", "operators", "syntax"]
+  },
+  {
+    "id": "optional-chaining",
+    "word": "optional chaining",
+    "pos": "noun phrase",
+    "definition": "The ?. operator that safely accesses nested properties without throwing if one is undefined.",
+    "difficulty": 2,
+    "tags": ["javascript", "syntax", "operators"]
+  },
+  {
+    "id": "pagination",
+    "word": "pagination",
+    "pos": "noun",
+    "definition": "Dividing a large dataset into discrete pages to reduce load time and improve usability.",
+    "difficulty": 1,
+    "tags": ["patterns", "api", "performance"]
+  },
+  {
+    "id": "polyfill",
+    "word": "polyfill",
+    "pos": "noun",
+    "definition": "Code that implements a modern feature in browsers that do not natively support it.",
+    "difficulty": 2,
+    "tags": ["browser", "compatibility", "javascript"]
+  },
+  {
+    "id": "portals",
+    "word": "portal",
+    "pos": "noun",
+    "definition": "A React feature that renders a child component into a DOM node outside the parent tree.",
+    "difficulty": 3,
+    "tags": ["react", "dom", "advanced"]
+  },
+  {
+    "id": "prop-drilling",
+    "word": "prop drilling",
+    "pos": "noun phrase",
+    "definition": "Passing data through multiple component layers that don't use it to reach a deep child.",
+    "difficulty": 2,
+    "tags": ["react", "architecture", "anti-patterns"]
+  },
+  {
+    "id": "pure-function",
+    "word": "pure function",
+    "pos": "noun phrase",
+    "definition": "A function with no side effects that always returns the same output for the same input.",
+    "difficulty": 2,
+    "tags": ["javascript", "functional", "fundamentals"]
+  },
+  {
+    "id": "race-condition",
+    "word": "race condition",
+    "pos": "noun phrase",
+    "definition": "A bug where the outcome depends on the unpredictable timing of concurrent operations.",
+    "difficulty": 3,
+    "tags": ["bugs", "async", "advanced"]
+  },
+  {
+    "id": "reconciliation",
+    "word": "reconciliation",
+    "pos": "noun",
+    "definition": "React's algorithm for comparing virtual DOM trees to determine the minimal DOM updates needed.",
+    "difficulty": 3,
+    "tags": ["react", "rendering", "advanced"]
+  },
+  {
+    "id": "refactoring",
+    "word": "refactoring",
+    "pos": "noun",
+    "definition": "Restructuring existing code to improve readability or structure without changing its behavior.",
+    "difficulty": 1,
+    "tags": ["process", "quality", "fundamentals"]
+  },
+  {
+    "id": "render-prop",
+    "word": "render prop",
+    "pos": "noun phrase",
+    "definition": "A React pattern where a component shares logic by accepting a function as a prop.",
+    "difficulty": 3,
+    "tags": ["react", "patterns", "advanced"]
+  },
+  {
+    "id": "rerender",
+    "word": "re-render",
+    "pos": "noun",
+    "definition": "A React component updating its output in response to state or prop changes.",
+    "difficulty": 1,
+    "tags": ["react", "performance", "fundamentals"]
+  },
+  {
+    "id": "rest-spread",
+    "word": "rest / spread",
+    "pos": "noun phrase",
+    "definition": "JavaScript syntax using ... to collect remaining values into an array or expand iterables.",
+    "difficulty": 1,
+    "tags": ["javascript", "syntax", "fundamentals"]
+  },
+  {
+    "id": "scope",
+    "word": "scope",
+    "pos": "noun",
+    "definition": "The context that determines where variables are accessible within a program.",
+    "difficulty": 1,
+    "tags": ["javascript", "fundamentals", "variables"]
+  },
+  {
+    "id": "serialization",
+    "word": "serialization",
+    "pos": "noun",
+    "definition": "Converting a data structure into a format like JSON for storage or network transmission.",
+    "difficulty": 2,
+    "tags": ["data", "api", "javascript"]
+  },
+  {
+    "id": "server-side-rendering",
+    "word": "server-side rendering",
+    "pos": "noun phrase",
+    "definition": "Generating full HTML on the server per request, improving initial load and SEO.",
+    "difficulty": 2,
+    "tags": ["rendering", "nextjs", "performance"]
+  },
+  {
+    "id": "side-effect",
+    "word": "side effect",
+    "pos": "noun phrase",
+    "definition": "Any operation a function performs beyond returning a value, such as a fetch or DOM mutation.",
+    "difficulty": 2,
+    "tags": ["react", "javascript", "fundamentals"]
+  },
+  {
+    "id": "single-source-of-truth",
+    "word": "single source of truth",
+    "pos": "noun phrase",
+    "definition": "Storing a piece of data in one place so all parts of the app read from the same state.",
+    "difficulty": 2,
+    "tags": ["state", "architecture", "patterns"]
+  },
+  {
+    "id": "specificity",
+    "word": "specificity",
+    "pos": "noun",
+    "definition": "A CSS scoring system that determines which rule takes priority when multiple rules conflict.",
+    "difficulty": 2,
+    "tags": ["css", "fundamentals", "cascade"]
+  },
+  {
+    "id": "static-site-generation",
+    "word": "static site generation",
+    "pos": "noun phrase",
+    "definition": "Pre-rendering pages to static HTML at build time for fast delivery without a server.",
+    "difficulty": 2,
+    "tags": ["rendering", "nextjs", "performance"]
+  },
+  {
+    "id": "storybook",
+    "word": "Storybook",
+    "pos": "proper noun",
+    "definition": "A tool for developing and documenting UI components in isolation outside the main app.",
+    "difficulty": 1,
+    "tags": ["tooling", "components", "documentation"]
+  },
+  {
+    "id": "strict-mode",
+    "word": "strict mode",
+    "pos": "noun phrase",
+    "definition": "A React wrapper that intentionally double-invokes functions to surface side effect bugs.",
+    "difficulty": 2,
+    "tags": ["react", "debugging", "development"]
+  },
+  {
+    "id": "throttle",
+    "word": "throttle",
+    "pos": "verb",
+    "definition": "Limiting a function to execute at most once per defined time interval regardless of calls.",
+    "difficulty": 2,
+    "tags": ["performance", "javascript", "events"]
+  },
+  {
+    "id": "tree-shaking",
+    "word": "tree shaking",
+    "pos": "noun phrase",
+    "definition": "A build optimization that removes unused exported code from the final bundle.",
+    "difficulty": 2,
+    "tags": ["build", "performance", "tooling"]
+  },
+  {
+    "id": "type-narrowing",
+    "word": "type narrowing",
+    "pos": "noun phrase",
+    "definition": "TypeScript's ability to refine a broad type to a more specific one within a conditional block.",
+    "difficulty": 3,
+    "tags": ["typescript", "types", "advanced"]
+  },
+  {
+    "id": "union-type",
+    "word": "union type",
+    "pos": "noun phrase",
+    "definition": "A TypeScript type representing a value that can be one of several specified types.",
+    "difficulty": 2,
+    "tags": ["typescript", "types", "fundamentals"]
+  },
+  {
+    "id": "uncontrolled-component",
+    "word": "uncontrolled component",
+    "pos": "noun phrase",
+    "definition": "A React form element whose value is managed by the DOM rather than component state.",
+    "difficulty": 2,
+    "tags": ["react", "forms", "dom"]
+  },
+  {
+    "id": "virtual-dom",
+    "word": "virtual DOM",
+    "pos": "noun phrase",
+    "definition": "An in-memory representation of the UI that React diffs against the real DOM before updating.",
+    "difficulty": 2,
+    "tags": ["react", "rendering", "fundamentals"]
+  },
+  {
+    "id": "waterfall",
+    "word": "waterfall",
+    "pos": "noun",
+    "definition": "A sequential chain of network requests where each one waits for the previous to complete.",
+    "difficulty": 2,
+    "tags": ["performance", "network", "anti-patterns"]
+  },
+  {
+    "id": "web-vitals",
+    "word": "Web Vitals",
+    "pos": "proper noun",
+    "definition": "Google's set of metrics measuring real-world user experience: LCP, INP, and CLS.",
+    "difficulty": 2,
+    "tags": ["performance", "metrics", "seo"]
+  },
+  {
+    "id": "zustand",
+    "word": "Zustand",
+    "pos": "proper noun",
+    "definition": "A minimal React state management library using a hook-based store without boilerplate.",
+    "difficulty": 1,
+    "tags": ["state", "react", "libraries"]
+  },
+  {
+    "id": "compound-component",
+    "word": "compound component",
+    "pos": "noun phrase",
+    "definition": "A React pattern where multiple components share implicit state to form a cohesive unit.",
+    "difficulty": 3,
+    "tags": ["react", "patterns", "advanced"]
+  },
+  {
+    "id": "context-api",
+    "word": "Context API",
+    "pos": "proper noun",
+    "definition": "React's built-in mechanism for passing data through the component tree without prop drilling.",
+    "difficulty": 2,
+    "tags": ["react", "state", "fundamentals"]
+  },
+  {
+    "id": "error-boundary",
+    "word": "error boundary",
+    "pos": "noun phrase",
+    "definition": "A React component that catches JavaScript errors in its subtree and renders a fallback UI.",
+    "difficulty": 2,
+    "tags": ["react", "resilience", "patterns"]
+  },
+  {
+    "id": "stale-closure",
+    "word": "stale closure",
+    "pos": "noun phrase",
+    "definition": "A bug where a function captures an outdated variable value from a previous render.",
+    "difficulty": 3,
+    "tags": ["react", "bugs", "hooks"]
+  },
+  {
+    "id": "accessibility-tree",
+    "word": "accessibility tree",
+    "pos": "noun phrase",
+    "definition": "A parallel DOM representation that assistive technologies use to interpret the interface.",
+    "difficulty": 3,
+    "tags": ["a11y", "browser", "semantics"]
+  },
+  {
+    "id": "semantic-html",
+    "word": "semantic HTML",
+    "pos": "noun phrase",
+    "definition": "Using HTML elements that convey meaning about content structure rather than just appearance.",
+    "difficulty": 1,
+    "tags": ["html", "a11y", "fundamentals"]
+  }
+]

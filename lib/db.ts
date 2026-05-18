@@ -2,6 +2,17 @@ import Dexie, { type Table } from "dexie";
 import type { AIConversation, AISavedWord, Attempt, DailyProgress, FavoriteWord, SRSData, UserStats } from "./types";
 import type { SyncOutboxEntry } from "./sync/types";
 import type { UserLearningState } from "./ai-practice/learning-state";
+import type { GenericExercise, GenericExerciseType, ExerciseSource } from "./exercises/types";
+
+export interface CachedExercise {
+  /** Same deterministic id as GenericExercise.id. */
+  id: string
+  type: GenericExerciseType
+  source: ExerciseSource
+  /** ISO timestamp — used to invalidate stale cache entries. */
+  generatedAt: string
+  exercise: GenericExercise
+}
 
 interface StoredLearningState {
   userId: string; // PK
@@ -56,6 +67,7 @@ class PronunciationDB extends Dexie {
   completedLessons!: Table<CompletedCourseLesson, string>;
   learningState!: Table<StoredLearningState, string>;
   analyticsEvents!: Table<AnalyticsEvent, number>;
+  generatedExercises!: Table<CachedExercise, string>;
 
   constructor() {
     super("pronunciation-journal");
@@ -141,6 +153,25 @@ class PronunciationDB extends Dexie {
       localSoundProgress:   "localKey, userId, soundId, nextReview",
       localAnswerHistory:   "++id, userId, soundId, answeredAt, synced",
       completedLessons:     "key, courseSlug, completedAt",
+    });
+
+    // v10: generic exercise cache (fill_blank, sentence_dictation, match_pairs, reorder_words)
+    this.version(10).stores({
+      attempts:             "++id, word, lessonId, timestamp",
+      srsData:              "wordId, word, nextReview",
+      dailyProgress:        "++id, date",
+      userStats:            "++id",
+      favorites:            "++id, word, lessonId, addedAt",
+      aiConversations:      "++id, templateId, mode, createdAt, updatedAt",
+      aiWords:              "++id, word, conversationId, savedAt, difficulty",
+      lessonOffsets:        "lessonId",
+      syncOutbox:           "++id, status, createdAt, [status+createdAt]",
+      localSoundProgress:   "localKey, userId, soundId, nextReview",
+      localAnswerHistory:   "++id, userId, soundId, answeredAt, synced",
+      completedLessons:     "key, courseSlug, completedAt",
+      learningState:        "userId, updatedAt",
+      analyticsEvents:      "++id, name, timestamp, synced",
+      generatedExercises:   "id, type, source, generatedAt",
     });
 
     // v9: analytics events (local + optional Supabase batch sync)

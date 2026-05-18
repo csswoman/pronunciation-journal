@@ -27,7 +27,7 @@ export default function HomeHeader() {
   const dateLabel = now.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" });
 
   return (
-    <div className="relative overflow-hidden rounded-2xl p-5 grid grid-cols-1 lg:grid-cols-2 gap-6 items-center bg-gradient-to-br from-surface-raised to-surface-sunken">
+    <div className="relative overflow-hidden rounded-2xl p-6 grid grid-cols-1 lg:grid-cols-2 gap-6 items-center bg-gradient-to-br from-surface-raised to-surface-sunken">
       <div className="relative z-10 flex flex-col gap-4">
         <HomeHeaderGreeting userName={userName} dateLabel={dateLabel} />
         <HomeHeaderActions hasStartedLearning={hasStartedLearning} />

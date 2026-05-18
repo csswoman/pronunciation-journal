@@ -1,13 +1,16 @@
 "use client";
 import Button from "@/components/ui/Button";
+import { LessonCategory } from "@/lib/mini-lessons";
 
 type CourseLevel = "all" | "basic" | "intermediate" | "advanced";
 
 type CourseFiltersProps = {
   query: string;
   level: CourseLevel;
+  category?: LessonCategory | "all";
   onQueryChange: (value: string) => void;
   onLevelChange: (value: CourseLevel) => void;
+  onCategoryChange?: (value: LessonCategory | "all") => void;
 };
 
 const levelTabs: { value: CourseLevel; label: string }[] = [
@@ -17,16 +20,30 @@ const levelTabs: { value: CourseLevel; label: string }[] = [
   { value: "advanced", label: "Advanced" },
 ];
 
+const categoryTabs: { value: LessonCategory | "all"; label: string }[] = [
+  { value: "all", label: "All categories" },
+  { value: "pronunciation", label: "Pronunciation" },
+  { value: "grammar", label: "Grammar" },
+  { value: "vocabulary", label: "Vocabulary" },
+  { value: "listening", label: "Listening" },
+  { value: "speaking", label: "Speaking" },
+  { value: "writing", label: "Writing" },
+  { value: "idioms", label: "Idioms" },
+  { value: "collocations", label: "Collocations" },
+];
+
 export default function CourseFilters({
   query,
   level,
+  category = "all",
   onQueryChange,
   onLevelChange,
+  onCategoryChange,
 }: CourseFiltersProps) {
   return (
-    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
+    <div className="flex flex-col gap-4">
       {/* Search */}
-      <label className="relative flex-1">
+      <label className="relative">
         <span className="sr-only">Search courses</span>
         <svg
           aria-hidden="true"
@@ -51,33 +68,70 @@ export default function CourseFilters({
       </label>
 
       {/* Level pills */}
-      <div className="flex flex-wrap gap-1.5">
-        {levelTabs.map((tab) => {
-          const active = level === tab.value;
-          return (
-            <Button
-              key={tab.value}
-              type="button"
-              onClick={() => onLevelChange(tab.value)}
-              className="rounded-lg px-3.5 py-1.5 text-caption font-medium transition-all duration-150"
-              style={
-                active
-                  ? {
-                      background: "var(--primary)",
-                      color: "var(--on-primary)",
-                      boxShadow: "0 2px 8px color-mix(in oklch, var(--primary) 30%, transparent)",
-                    }
-                  : {
-                      background: "var(--btn-regular-bg)",
-                      color: "var(--text-secondary)",
-                    }
-              }
-            >
-              {tab.label}
-            </Button>
-          );
-        })}
+      <div>
+        <p className="text-xs font-medium text-[var(--text-tertiary)] mb-2">Level</p>
+        <div className="flex flex-wrap gap-1.5">
+          {levelTabs.map((tab) => {
+            const active = level === tab.value;
+            return (
+              <Button
+                key={tab.value}
+                type="button"
+                onClick={() => onLevelChange(tab.value)}
+                className="rounded-lg px-3.5 py-1.5 text-caption font-medium transition-all duration-150"
+                style={
+                  active
+                    ? {
+                        background: "var(--primary)",
+                        color: "var(--on-primary)",
+                        boxShadow: "0 2px 8px color-mix(in oklch, var(--primary) 30%, transparent)",
+                      }
+                    : {
+                        background: "var(--btn-regular-bg)",
+                        color: "var(--text-secondary)",
+                      }
+                }
+              >
+                {tab.label}
+              </Button>
+            );
+          })}
+        </div>
       </div>
+
+      {/* Category pills */}
+      {onCategoryChange && (
+        <div>
+          <p className="text-xs font-medium text-[var(--text-tertiary)] mb-2">Category</p>
+          <div className="flex flex-wrap gap-1.5">
+            {categoryTabs.map((tab) => {
+              const active = category === tab.value;
+              return (
+                <Button
+                  key={tab.value}
+                  type="button"
+                  onClick={() => onCategoryChange(tab.value)}
+                  className="rounded-lg px-3.5 py-1.5 text-caption font-medium transition-all duration-150"
+                  style={
+                    active
+                      ? {
+                          background: "var(--primary)",
+                          color: "var(--on-primary)",
+                          boxShadow: "0 2px 8px color-mix(in oklch, var(--primary) 30%, transparent)",
+                        }
+                      : {
+                          background: "var(--btn-regular-bg)",
+                          color: "var(--text-secondary)",
+                        }
+                  }
+                >
+                  {tab.label}
+                </Button>
+              );
+            })}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

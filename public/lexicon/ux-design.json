@@ -1,0 +1,650 @@
+[
+  {
+    "id": "affordance",
+    "word": "affordance",
+    "pos": "noun",
+    "definition": "A property of an object that signals how it can be interacted with.",
+    "difficulty": 2,
+    "tags": ["interaction", "perception", "fundamentals"]
+  },
+  {
+    "id": "anatomy",
+    "word": "anatomy",
+    "pos": "noun",
+    "definition": "The structural breakdown of a UI component into its named constituent parts.",
+    "difficulty": 1,
+    "tags": ["components", "documentation"]
+  },
+  {
+    "id": "annotation",
+    "word": "annotation",
+    "pos": "noun",
+    "definition": "Notes added to design files to explain decisions or specs for developer handoff.",
+    "difficulty": 1,
+    "tags": ["handoff", "documentation"]
+  },
+  {
+    "id": "accessibility",
+    "word": "accessibility",
+    "pos": "noun",
+    "definition": "Design practice ensuring products are usable by people with a range of disabilities.",
+    "difficulty": 1,
+    "tags": ["a11y", "inclusion", "fundamentals"]
+  },
+  {
+    "id": "affordance-map",
+    "word": "affordance map",
+    "pos": "noun phrase",
+    "definition": "A visual audit listing all interactive elements and their intended perceived actions.",
+    "difficulty": 3,
+    "tags": ["interaction", "research", "audit"]
+  },
+  {
+    "id": "card-sorting",
+    "word": "card sorting",
+    "pos": "noun phrase",
+    "definition": "A research method where users group topics into categories that feel logical to them.",
+    "difficulty": 2,
+    "tags": ["research", "information-architecture"]
+  },
+  {
+    "id": "chunking",
+    "word": "chunking",
+    "pos": "noun",
+    "definition": "Grouping related content together so users can process information more efficiently.",
+    "difficulty": 2,
+    "tags": ["cognitive", "layout", "fundamentals"]
+  },
+  {
+    "id": "cognitive-load",
+    "word": "cognitive load",
+    "pos": "noun phrase",
+    "definition": "The total mental effort required to process and interact with a user interface.",
+    "difficulty": 2,
+    "tags": ["cognitive", "psychology", "fundamentals"]
+  },
+  {
+    "id": "contrast-ratio",
+    "word": "contrast ratio",
+    "pos": "noun phrase",
+    "definition": "The measured difference in luminance between two colors, used to evaluate accessibility.",
+    "difficulty": 2,
+    "tags": ["a11y", "color", "wcag"]
+  },
+  {
+    "id": "content-hierarchy",
+    "word": "content hierarchy",
+    "pos": "noun phrase",
+    "definition": "The order in which information is presented to guide user attention and comprehension.",
+    "difficulty": 1,
+    "tags": ["layout", "typography", "fundamentals"]
+  },
+  {
+    "id": "desirability-testing",
+    "word": "desirability testing",
+    "pos": "noun phrase",
+    "definition": "A research method measuring emotional and aesthetic reactions to a design.",
+    "difficulty": 3,
+    "tags": ["research", "emotion", "testing"]
+  },
+  {
+    "id": "design-debt",
+    "word": "design debt",
+    "pos": "noun phrase",
+    "definition": "Accumulated inconsistencies or shortcuts in a design that need future correction.",
+    "difficulty": 2,
+    "tags": ["process", "systems", "quality"]
+  },
+  {
+    "id": "design-handoff",
+    "word": "design handoff",
+    "pos": "noun phrase",
+    "definition": "The process of transferring finalized designs and specs from designer to developer.",
+    "difficulty": 1,
+    "tags": ["process", "collaboration", "handoff"]
+  },
+  {
+    "id": "design-critique",
+    "word": "design critique",
+    "pos": "noun phrase",
+    "definition": "A structured session where designers give and receive specific, constructive feedback.",
+    "difficulty": 2,
+    "tags": ["process", "collaboration", "feedback"]
+  },
+  {
+    "id": "discoverability",
+    "word": "discoverability",
+    "pos": "noun",
+    "definition": "The ease with which users can find features or content they did not know existed.",
+    "difficulty": 2,
+    "tags": ["navigation", "interaction", "fundamentals"]
+  },
+  {
+    "id": "edge-case",
+    "word": "edge case",
+    "pos": "noun phrase",
+    "definition": "An unusual or extreme scenario that falls outside typical user behavior patterns.",
+    "difficulty": 1,
+    "tags": ["testing", "process", "fundamentals"]
+  },
+  {
+    "id": "empty-state",
+    "word": "empty state",
+    "pos": "noun phrase",
+    "definition": "The UI state shown when there is no content to display, often used to guide users.",
+    "difficulty": 1,
+    "tags": ["ui-patterns", "onboarding"]
+  },
+  {
+    "id": "error-state",
+    "word": "error state",
+    "pos": "noun phrase",
+    "definition": "A UI condition that communicates something went wrong and guides the user to recover.",
+    "difficulty": 1,
+    "tags": ["ui-patterns", "feedback"]
+  },
+  {
+    "id": "fidelity",
+    "word": "fidelity",
+    "pos": "noun",
+    "definition": "The level of detail and realism of a prototype, ranging from low to high.",
+    "difficulty": 1,
+    "tags": ["prototyping", "process"]
+  },
+  {
+    "id": "fitts-law",
+    "word": "Fitts's law",
+    "pos": "proper noun",
+    "definition": "A model predicting that target acquisition time depends on the target's size and distance.",
+    "difficulty": 3,
+    "tags": ["interaction", "psychology", "motor"]
+  },
+  {
+    "id": "flow",
+    "word": "flow",
+    "pos": "noun",
+    "definition": "The sequence of steps a user takes to complete a task within a product.",
+    "difficulty": 1,
+    "tags": ["interaction", "fundamentals", "navigation"]
+  },
+  {
+    "id": "gestalt",
+    "word": "gestalt",
+    "pos": "noun",
+    "definition": "Perceptual principles describing how the brain organizes visual elements into unified wholes.",
+    "difficulty": 3,
+    "tags": ["psychology", "visual", "perception"]
+  },
+  {
+    "id": "ghost-button",
+    "word": "ghost button",
+    "pos": "noun phrase",
+    "definition": "A button with a transparent fill and only an outline border, typically a secondary action.",
+    "difficulty": 1,
+    "tags": ["ui-patterns", "components"]
+  },
+  {
+    "id": "golden-ratio",
+    "word": "golden ratio",
+    "pos": "noun phrase",
+    "definition": "A mathematical proportion (~1.618) applied in design to achieve visually balanced layouts.",
+    "difficulty": 2,
+    "tags": ["visual", "layout", "proportion"]
+  },
+  {
+    "id": "grid-system",
+    "word": "grid system",
+    "pos": "noun phrase",
+    "definition": "A structure of columns, rows, and gutters used to align and organize interface elements.",
+    "difficulty": 1,
+    "tags": ["layout", "fundamentals"]
+  },
+  {
+    "id": "guerrilla-testing",
+    "word": "guerrilla testing",
+    "pos": "noun phrase",
+    "definition": "Informal usability testing conducted quickly in public spaces with random participants.",
+    "difficulty": 2,
+    "tags": ["research", "testing", "methods"]
+  },
+  {
+    "id": "heuristic",
+    "word": "heuristic",
+    "pos": "noun",
+    "definition": "A practical usability principle used to evaluate and identify interface problems.",
+    "difficulty": 2,
+    "tags": ["evaluation", "fundamentals", "nielsen"]
+  },
+  {
+    "id": "heuristic-evaluation",
+    "word": "heuristic evaluation",
+    "pos": "noun phrase",
+    "definition": "An expert review of a UI measured against established usability principles.",
+    "difficulty": 2,
+    "tags": ["evaluation", "research", "methods"]
+  },
+  {
+    "id": "hierarchy",
+    "word": "hierarchy",
+    "pos": "noun",
+    "definition": "Visual structure that signals the relative importance of elements to guide user attention.",
+    "difficulty": 1,
+    "tags": ["visual", "layout", "fundamentals"]
+  },
+  {
+    "id": "hotspot",
+    "word": "hotspot",
+    "pos": "noun",
+    "definition": "A defined clickable area in a prototype that triggers navigation or an interaction.",
+    "difficulty": 1,
+    "tags": ["prototyping", "interaction"]
+  },
+  {
+    "id": "information-architecture",
+    "word": "information architecture",
+    "pos": "noun phrase",
+    "definition": "The structural design of shared information environments to support usability and findability.",
+    "difficulty": 2,
+    "tags": ["ia", "navigation", "fundamentals"]
+  },
+  {
+    "id": "interaction-design",
+    "word": "interaction design",
+    "pos": "noun phrase",
+    "definition": "The practice of designing how users interact with digital products over time.",
+    "difficulty": 1,
+    "tags": ["fundamentals", "discipline"]
+  },
+  {
+    "id": "iterative-design",
+    "word": "iterative design",
+    "pos": "noun phrase",
+    "definition": "A cyclic design process of prototyping, testing, and refining based on user feedback.",
+    "difficulty": 1,
+    "tags": ["process", "fundamentals"]
+  },
+  {
+    "id": "jobs-to-be-done",
+    "word": "jobs to be done",
+    "pos": "noun phrase",
+    "definition": "A framework focusing on the underlying goal a user is trying to accomplish with a product.",
+    "difficulty": 2,
+    "tags": ["strategy", "research", "frameworks"]
+  },
+  {
+    "id": "journey-map",
+    "word": "journey map",
+    "pos": "noun phrase",
+    "definition": "A visualization of the end-to-end experience a user has with a product over time.",
+    "difficulty": 2,
+    "tags": ["research", "strategy", "documentation"]
+  },
+  {
+    "id": "learnability",
+    "word": "learnability",
+    "pos": "noun",
+    "definition": "How quickly a new user can become proficient at using an interface.",
+    "difficulty": 2,
+    "tags": ["usability", "onboarding", "fundamentals"]
+  },
+  {
+    "id": "mental-model",
+    "word": "mental model",
+    "pos": "noun phrase",
+    "definition": "A user's internal representation of how a system works based on prior experience.",
+    "difficulty": 2,
+    "tags": ["psychology", "cognition", "fundamentals"]
+  },
+  {
+    "id": "microinteraction",
+    "word": "microinteraction",
+    "pos": "noun",
+    "definition": "A small, contained product moment that accomplishes a single task with user feedback.",
+    "difficulty": 2,
+    "tags": ["interaction", "animation", "detail"]
+  },
+  {
+    "id": "modal",
+    "word": "modal",
+    "pos": "noun",
+    "definition": "A dialog overlay that requires user interaction before returning to the main interface.",
+    "difficulty": 1,
+    "tags": ["ui-patterns", "components"]
+  },
+  {
+    "id": "mvp",
+    "word": "MVP",
+    "pos": "noun",
+    "definition": "Minimum Viable Product — a version with just enough features to test a core hypothesis.",
+    "difficulty": 1,
+    "tags": ["process", "strategy", "product"]
+  },
+  {
+    "id": "navigation-pattern",
+    "word": "navigation pattern",
+    "pos": "noun phrase",
+    "definition": "A reusable structural approach for helping users move through an interface.",
+    "difficulty": 1,
+    "tags": ["navigation", "ui-patterns"]
+  },
+  {
+    "id": "onboarding",
+    "word": "onboarding",
+    "pos": "noun",
+    "definition": "The process of guiding new users to understand and adopt a product's core value.",
+    "difficulty": 1,
+    "tags": ["ux-patterns", "retention", "first-use"]
+  },
+  {
+    "id": "pain-point",
+    "word": "pain point",
+    "pos": "noun phrase",
+    "definition": "A specific problem or frustration a user experiences when interacting with a product.",
+    "difficulty": 1,
+    "tags": ["research", "fundamentals"]
+  },
+  {
+    "id": "participatory-design",
+    "word": "participatory design",
+    "pos": "noun phrase",
+    "definition": "A design approach that actively involves users as co-creators in the design process.",
+    "difficulty": 3,
+    "tags": ["research", "methods", "collaboration"]
+  },
+  {
+    "id": "persona",
+    "word": "persona",
+    "pos": "noun",
+    "definition": "A fictional but research-based character representing a key user segment of a product.",
+    "difficulty": 1,
+    "tags": ["research", "fundamentals", "strategy"]
+  },
+  {
+    "id": "progressive-disclosure",
+    "word": "progressive disclosure",
+    "pos": "noun phrase",
+    "definition": "Revealing information gradually to reduce complexity and avoid overwhelming the user.",
+    "difficulty": 2,
+    "tags": ["interaction", "cognitive", "ui-patterns"]
+  },
+  {
+    "id": "prototype",
+    "word": "prototype",
+    "pos": "noun",
+    "definition": "A simulation of a product used to test ideas before committing to development.",
+    "difficulty": 1,
+    "tags": ["process", "fundamentals", "testing"]
+  },
+  {
+    "id": "proximity",
+    "word": "proximity",
+    "pos": "noun",
+    "definition": "A gestalt principle stating that elements placed close together are perceived as related.",
+    "difficulty": 2,
+    "tags": ["gestalt", "visual", "layout"]
+  },
+  {
+    "id": "red-route",
+    "word": "red route",
+    "pos": "noun phrase",
+    "definition": "The critical tasks users perform most frequently that must work flawlessly in a product.",
+    "difficulty": 3,
+    "tags": ["strategy", "prioritization", "ux"]
+  },
+  {
+    "id": "responsive-design",
+    "word": "responsive design",
+    "pos": "noun phrase",
+    "definition": "A design approach where layouts adapt fluidly to different screen sizes and devices.",
+    "difficulty": 1,
+    "tags": ["layout", "fundamentals", "mobile"]
+  },
+  {
+    "id": "scaffold",
+    "word": "scaffold",
+    "pos": "noun",
+    "definition": "Temporary UI support structures that guide users until they no longer need assistance.",
+    "difficulty": 2,
+    "tags": ["onboarding", "patterns", "cognitive"]
+  },
+  {
+    "id": "scannability",
+    "word": "scannability",
+    "pos": "noun",
+    "definition": "The ease with which users can quickly read and extract key information from a page.",
+    "difficulty": 2,
+    "tags": ["readability", "layout", "content"]
+  },
+  {
+    "id": "serviceability",
+    "word": "serviceability",
+    "pos": "noun",
+    "definition": "How easily a product can be maintained, updated, or corrected after deployment.",
+    "difficulty": 3,
+    "tags": ["quality", "maintenance", "product"]
+  },
+  {
+    "id": "signifier",
+    "word": "signifier",
+    "pos": "noun",
+    "definition": "A visual or auditory cue that communicates how an object or element should be used.",
+    "difficulty": 3,
+    "tags": ["interaction", "perception", "don-norman"]
+  },
+  {
+    "id": "skeleton-screen",
+    "word": "skeleton screen",
+    "pos": "noun phrase",
+    "definition": "A placeholder UI that mimics the layout of content while data is loading.",
+    "difficulty": 2,
+    "tags": ["ui-patterns", "loading", "performance"]
+  },
+  {
+    "id": "skeuomorphism",
+    "word": "skeuomorphism",
+    "pos": "noun",
+    "definition": "A design style where digital elements mimic the appearance of real-world counterparts.",
+    "difficulty": 3,
+    "tags": ["visual", "style", "history"]
+  },
+  {
+    "id": "sticky-element",
+    "word": "sticky element",
+    "pos": "noun phrase",
+    "definition": "A UI element that remains fixed in the viewport as the user scrolls the page.",
+    "difficulty": 1,
+    "tags": ["navigation", "layout", "ui-patterns"]
+  },
+  {
+    "id": "task-flow",
+    "word": "task flow",
+    "pos": "noun phrase",
+    "definition": "A linear sequence of steps a user follows to complete one specific task.",
+    "difficulty": 1,
+    "tags": ["interaction", "ia", "fundamentals"]
+  },
+  {
+    "id": "think-aloud",
+    "word": "think-aloud protocol",
+    "pos": "noun phrase",
+    "definition": "A usability method where participants verbalize their thoughts while using a product.",
+    "difficulty": 2,
+    "tags": ["research", "testing", "methods"]
+  },
+  {
+    "id": "toast",
+    "word": "toast",
+    "pos": "noun",
+    "definition": "A brief, non-blocking notification that appears temporarily to confirm an action.",
+    "difficulty": 1,
+    "tags": ["ui-patterns", "feedback", "components"]
+  },
+  {
+    "id": "tooltip",
+    "word": "tooltip",
+    "pos": "noun",
+    "definition": "A small label that appears on hover to provide additional context for an element.",
+    "difficulty": 1,
+    "tags": ["ui-patterns", "components", "feedback"]
+  },
+  {
+    "id": "tree-testing",
+    "word": "tree testing",
+    "pos": "noun phrase",
+    "definition": "A research method evaluating how easily users find items within a navigation structure.",
+    "difficulty": 2,
+    "tags": ["research", "ia", "navigation"]
+  },
+  {
+    "id": "usability-testing",
+    "word": "usability testing",
+    "pos": "noun phrase",
+    "definition": "Observing real users attempting tasks to identify friction points in a product.",
+    "difficulty": 1,
+    "tags": ["research", "testing", "fundamentals"]
+  },
+  {
+    "id": "user-flow",
+    "word": "user flow",
+    "pos": "noun phrase",
+    "definition": "A diagram showing all possible paths a user can take through a product.",
+    "difficulty": 1,
+    "tags": ["ia", "interaction", "fundamentals"]
+  },
+  {
+    "id": "user-story",
+    "word": "user story",
+    "pos": "noun phrase",
+    "definition": "A short description of a feature from the user's perspective: As a… I want… So that…",
+    "difficulty": 1,
+    "tags": ["process", "agile", "product"]
+  },
+  {
+    "id": "utility",
+    "word": "utility",
+    "pos": "noun",
+    "definition": "The degree to which a product provides features that fulfill real user needs.",
+    "difficulty": 2,
+    "tags": ["fundamentals", "strategy", "value"]
+  },
+  {
+    "id": "validation",
+    "word": "validation",
+    "pos": "noun",
+    "definition": "Real-time feedback confirming that a user's input meets the required format or criteria.",
+    "difficulty": 1,
+    "tags": ["forms", "feedback", "ui-patterns"]
+  },
+  {
+    "id": "visual-weight",
+    "word": "visual weight",
+    "pos": "noun phrase",
+    "definition": "The perceived heaviness of a design element based on size, color, contrast, and position.",
+    "difficulty": 2,
+    "tags": ["visual", "layout", "composition"]
+  },
+  {
+    "id": "wayfinding",
+    "word": "wayfinding",
+    "pos": "noun",
+    "definition": "Design strategies that help users understand where they are and how to navigate a system.",
+    "difficulty": 2,
+    "tags": ["navigation", "ia", "spatial"]
+  },
+  {
+    "id": "wcag",
+    "word": "WCAG",
+    "pos": "proper noun",
+    "definition": "Web Content Accessibility Guidelines — international standards for accessible digital content.",
+    "difficulty": 2,
+    "tags": ["a11y", "standards", "wcag"]
+  },
+  {
+    "id": "whitespace",
+    "word": "whitespace",
+    "pos": "noun",
+    "definition": "Empty space in a layout used intentionally to improve readability and visual balance.",
+    "difficulty": 1,
+    "tags": ["layout", "visual", "fundamentals"]
+  },
+  {
+    "id": "wireframe",
+    "word": "wireframe",
+    "pos": "noun",
+    "definition": "A low-fidelity schematic showing the structure and layout of a screen without visual design.",
+    "difficulty": 1,
+    "tags": ["process", "prototyping", "fundamentals"]
+  },
+  {
+    "id": "wizard",
+    "word": "wizard",
+    "pos": "noun",
+    "definition": "A multi-step UI pattern that breaks a complex task into sequential, manageable steps.",
+    "difficulty": 2,
+    "tags": ["ui-patterns", "onboarding", "forms"]
+  },
+  {
+    "id": "zero-state",
+    "word": "zero state",
+    "pos": "noun phrase",
+    "definition": "The first-time experience when a user has no data yet — often an onboarding opportunity.",
+    "difficulty": 2,
+    "tags": ["onboarding", "ui-patterns", "first-use"]
+  },
+  {
+    "id": "z-pattern",
+    "word": "Z-pattern",
+    "pos": "noun phrase",
+    "definition": "A reading pattern where eyes scan across the top, diagonally down, then across the bottom.",
+    "difficulty": 2,
+    "tags": ["visual", "reading", "layout"]
+  },
+  {
+    "id": "f-pattern",
+    "word": "F-pattern",
+    "pos": "noun phrase",
+    "definition": "A common reading pattern where users scan horizontally at top, then skim down the left side.",
+    "difficulty": 2,
+    "tags": ["visual", "reading", "research"]
+  },
+  {
+    "id": "above-the-fold",
+    "word": "above the fold",
+    "pos": "noun phrase",
+    "definition": "The portion of a webpage visible without scrolling, considered prime real estate.",
+    "difficulty": 1,
+    "tags": ["layout", "strategy", "content"]
+  },
+  {
+    "id": "breadcrumb",
+    "word": "breadcrumb",
+    "pos": "noun",
+    "definition": "A secondary navigation trail showing the user's current location within a site hierarchy.",
+    "difficulty": 1,
+    "tags": ["navigation", "ui-patterns", "ia"]
+  },
+  {
+    "id": "call-to-action",
+    "word": "call to action",
+    "pos": "noun phrase",
+    "definition": "A UI element that prompts users to take a specific desired action, often a button.",
+    "difficulty": 1,
+    "tags": ["ui-patterns", "conversion", "content"]
+  },
+  {
+    "id": "dark-pattern",
+    "word": "dark pattern",
+    "pos": "noun phrase",
+    "definition": "A deceptive UI design that tricks users into actions they did not intend to take.",
+    "difficulty": 2,
+    "tags": ["ethics", "patterns", "manipulation"]
+  },
+  {
+    "id": "feedback-loop",
+    "word": "feedback loop",
+    "pos": "noun phrase",
+    "definition": "A cycle where system responses to user actions inform and shape subsequent behavior.",
+    "difficulty": 2,
+    "tags": ["interaction", "systems", "fundamentals"]
+  }
+]
