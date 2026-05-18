@@ -4,7 +4,7 @@ import { useState, useCallback } from "react";
 import { Mic, MicOff, Loader2, Volume2 } from "lucide-react";
 import type { SpeakingArgs } from "@/lib/ai-practice/tools/registry";
 import type { ExerciseResult } from "@/lib/ai-practice/types";
-import type { EvaluationResult } from "@/lib/exercise/design";
+import type { EvaluationResult } from "@/lib/exercises/design";
 import { useRecorder } from "@/hooks/useRecorder";
 import ExerciseFeedback from "./ExerciseFeedback";
 

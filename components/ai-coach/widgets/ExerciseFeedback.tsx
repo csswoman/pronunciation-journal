@@ -1,6 +1,6 @@
 "use client";
 
-import type { EvaluationResult } from "@/lib/exercise/design";
+import type { EvaluationResult } from "@/lib/exercises/design";
 
 export type ExerciseFeedbackProps = {
   result: EvaluationResult;
