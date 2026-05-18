@@ -1,0 +1,22 @@
+{
+  "id": 2,
+  "slug": "present-simple-vs-continuous",
+  "level": "basic",
+  "category": "grammar",
+  "duration": 5,
+  "title": "Present Simple vs. Present Continuous",
+  "subtitle": "Grammar of the day",
+  "body": "Use Present Simple for habits and facts. Use Present Continuous for actions happening right now or temporary situations.",
+  "examples": [
+    {
+      "word": "I drink coffee every morning.",
+      "translation": "hábito"
+    },
+    {
+      "word": "I'm drinking coffee right now.",
+      "translation": "en este momento"
+    }
+  ],
+  "tip": "Stative verbs (know, like, believe) almost never use the continuous form.",
+  "href": "/courses/present-simple-continuous"
+}

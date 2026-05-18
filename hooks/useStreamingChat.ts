@@ -4,7 +4,7 @@ import { useState, useCallback, useRef } from "react";
 import type { AIMessage, StreamChunk, ExerciseResult } from "@/lib/ai-practice/types";
 import { serializeMessage } from "@/lib/ai-practice/types";
 import { applyExerciseResult, type UserLearningState } from "@/lib/ai-practice/learning-state";
-import { saveConversation, updateConversation } from "@/lib/ai-db";
+import { saveConversation, updateConversation } from "@/lib/db/ai";
 import { messagesToWire, extractLastTopic } from "@/lib/ai-practice/wire";
 import { logEvent } from "@/lib/ai-practice/events";
 import { makeStreamState, processChunk } from "@/lib/ai-practice/stream-processor";

@@ -1,0 +1,58 @@
+{
+  "slug": "phonemic-pairs",
+  "sections": [
+    {
+      "heading": "Beyond basics",
+      "body": "At advanced level, the phonemic challenge shifts from obvious errors (like TH sounds) to subtle distinctions that even intermediate learners collapse: vowel pairs in specific phonological environments, distinctions that vary by dialect, and perception vs. production gaps."
+    },
+    {
+      "heading": "The cot/caught merger",
+      "body": "In many American English dialects, /ɒ/ (cot) and /ɔː/ (caught) have merged — speakers say them identically. In other dialects (British, some American), they remain distinct. Knowing this variation helps you understand different speakers."
+    },
+    {
+      "heading": "Perception first",
+      "body": "Research shows that you can't reliably produce a distinction you can't reliably perceive. Ear training — deliberately listening for minimal pairs and categorizing them — must come before production training. Apps like Sounds Right or minimal pair exercises are effective."
+    }
+  ],
+  "examples": [
+    {
+      "english": "collar / caller",
+      "ipa": "/ˈkɒl.ər/ · /ˈkɔː.lər/",
+      "note": "Distinct in British English"
+    },
+    {
+      "english": "cot / caught",
+      "ipa": "/kɒt/ · /kɔːt/",
+      "note": "Merged in much of American English"
+    },
+    {
+      "english": "pin / pen",
+      "ipa": "/pɪn/ · /pɛn/",
+      "note": "Merged in Southern American English"
+    }
+  ],
+  "exercises": [
+    {
+      "instruction": "For each pair, note: are they distinct in your target accent (British RP / General American)?",
+      "items": [
+        "horse / hoarse",
+        "marry / merry / Mary",
+        "which / witch",
+        "cot / caught"
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Why is dialect awareness important for advanced pronunciation?",
+      "options": [
+        "To eliminate all accents",
+        "To understand that distinctions vary by accent — what's a minimal pair in one dialect may not be in another",
+        "To sound like a native speaker from one specific region",
+        "To avoid regional vocabulary"
+      ],
+      "correct": 1,
+      "explanation": "Sound distinctions are dialect-relative. Advanced learners need to understand variation, not just a single 'correct' system."
+    }
+  ]
+}

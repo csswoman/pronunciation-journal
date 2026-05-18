@@ -1,0 +1,33 @@
+{
+  "id": 14,
+  "slug": "basic-phrasal-verbs",
+  "level": "basic",
+  "category": "vocabulary",
+  "duration": 5,
+  "title": "5 essential phrasal verbs",
+  "subtitle": "Vocabulary of the day",
+  "body": "Phrasal verbs are verb + particle combinations that mean something different from the literal words. These 5 appear every day.",
+  "examples": [
+    {
+      "word": "give up",
+      "translation": "rendirse"
+    },
+    {
+      "word": "find out",
+      "translation": "descubrir"
+    },
+    {
+      "word": "look up",
+      "translation": "buscar (en diccionario/internet)"
+    },
+    {
+      "word": "turn off",
+      "translation": "apagar"
+    },
+    {
+      "word": "run out of",
+      "translation": "quedarse sin algo"
+    }
+  ],
+  "href": "/courses/basic-phrasal-verbs"
+}

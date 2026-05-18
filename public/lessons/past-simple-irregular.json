@@ -1,0 +1,74 @@
+{
+  "slug": "past-simple-irregular",
+  "sections": [
+    {
+      "heading": "Why irregular verbs exist",
+      "body": "Most English irregular past tense forms are descendants of Old English and Germanic strong verbs, which changed their internal vowel to mark tense (called ablaut). Regular '-ed' endings came later and became the default for new verbs. Irregular verbs survive because they're the most commonly used."
+    },
+    {
+      "heading": "The main patterns",
+      "body": "**Vowel change (ablaut):** sing/sang/sung, drink/drank/drunk, swim/swam/swum. **-ought group:** buy/bought, think/thought, bring/brought, catch/caught, teach/taught. **Same form all three:** put/put/put, cut/cut/cut, hit/hit/hit, let/let/let. **Totally unpredictable:** go/went (from a different Old English word), be/was/were/been."
+    },
+    {
+      "heading": "The top 20 you must know",
+      "body": "be, have, do, go, say, get, make, know, think, take, come, see, want, look, use, find, give, tell, become, show — all irregular. These 20 verbs account for a huge proportion of all English usage."
+    }
+  ],
+  "examples": [
+    {
+      "english": "go → went",
+      "note": "Suppletion — completely different root"
+    },
+    {
+      "english": "buy → bought",
+      "ipa": "/baɪ/ → /bɔːt/",
+      "note": "-ought group"
+    },
+    {
+      "english": "sing → sang → sung",
+      "note": "Ablaut — vowel change pattern"
+    },
+    {
+      "english": "put → put → put",
+      "note": "Same form in all three"
+    }
+  ],
+  "exercises": [
+    {
+      "instruction": "Write the simple past of each verb.",
+      "items": [
+        "fly",
+        "break",
+        "steal",
+        "freeze",
+        "choose",
+        "speak",
+        "hide",
+        "bite"
+      ],
+      "answers": [
+        "flew",
+        "broke",
+        "stole",
+        "froze",
+        "chose",
+        "spoke",
+        "hid",
+        "bit"
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Which verb follows the same vowel-change pattern as 'sing/sang/sung'?",
+      "options": [
+        "buy",
+        "ring",
+        "put",
+        "tell"
+      ],
+      "correct": 1,
+      "explanation": "'Ring/rang/rung' follows the exact same ablaut pattern as 'sing/sang/sung'."
+    }
+  ]
+}

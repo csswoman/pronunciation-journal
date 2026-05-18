@@ -1,0 +1,21 @@
+{
+  "id": 43,
+  "slug": "pragmatics-politeness",
+  "level": "advanced",
+  "category": "speaking",
+  "duration": 7,
+  "title": "Pragmatics: what English speakers really mean",
+  "subtitle": "Speaking of the day",
+  "body": "Advanced fluency requires understanding pragmatic meaning — what's implied, not just what's said. English often relies on indirectness.",
+  "examples": [
+    {
+      "word": "'It's a bit warm in here…'",
+      "translation": "implicación: ¿puedes abrir la ventana?"
+    },
+    {
+      "word": "'That's an interesting idea.'",
+      "translation": "puede significar: no estoy convencido"
+    }
+  ],
+  "href": "/courses/pragmatics"
+}

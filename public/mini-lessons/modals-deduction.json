@@ -1,0 +1,25 @@
+{
+  "id": 30,
+  "slug": "modals-deduction",
+  "level": "intermediate",
+  "category": "grammar",
+  "duration": 6,
+  "title": "Modals for deduction: must, might, can't",
+  "subtitle": "Grammar of the day",
+  "body": "These modals express how certain you are about something in the present. They're essential for natural-sounding speculation.",
+  "examples": [
+    {
+      "word": "She must be exhausted.",
+      "translation": "casi seguro — lógico concluirlo"
+    },
+    {
+      "word": "He might be at the gym.",
+      "translation": "posible — no estás seguro"
+    },
+    {
+      "word": "That can't be right.",
+      "translation": "imposible — contradice la evidencia"
+    }
+  ],
+  "href": "/courses/modals-deduction"
+}

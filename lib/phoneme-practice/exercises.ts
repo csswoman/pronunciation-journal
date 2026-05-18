@@ -1,7 +1,7 @@
 import type { Exercise, ExerciseOptions, Option, Sound, SoundWord, MinimalPair } from './types'
 import { filterByCEFR, numericToCEFR } from './cefr'
 import { pickConfusableIpas } from './phoneme-similarity'
-import { IPA_EXTRA } from '@/lib/ipa-data'
+import { IPA_EXTRA } from '@/lib/pronunciation/ipa-data'
 
 function shuffle<T>(arr: T[]): T[] {
   const a = [...arr]

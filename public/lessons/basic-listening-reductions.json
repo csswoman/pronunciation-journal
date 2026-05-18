@@ -1,0 +1,71 @@
+{
+  "slug": "basic-listening-reductions",
+  "sections": [
+    {
+      "heading": "Why fast English sounds different",
+      "body": "The English you hear in conversation is not the English you read. Native speakers apply a set of systematic reductions to unstressed and frequent words, making speech faster and more rhythmic. These aren't mistakes — they're features of natural spoken English."
+    },
+    {
+      "heading": "The most common reductions",
+      "body": "'Want to' → 'wanna'. 'Going to' → 'gonna'. 'Have to' → 'hafta'. 'Don't know' → 'dunno'. 'Kind of' → 'kinda'. 'Out of' → 'outta'. 'Them' → 'em'. 'Him' → \"'im\". These are not informal — they happen automatically in normal speech."
+    },
+    {
+      "heading": "Strategy for learners",
+      "body": "You don't need to produce these reductions — but you must be able to hear and decode them. Practice by listening to authentic audio (podcasts, YouTube) and pausing to identify what was actually said. Shadow the speaker to train your ear and mouth together."
+    }
+  ],
+  "examples": [
+    {
+      "english": "What are you doing?",
+      "ipa": "/wʌd͡ʒə ˈduːɪŋ/",
+      "note": "whadja doing?"
+    },
+    {
+      "english": "I don't know",
+      "ipa": "/aɪ ˈdoʊnə/",
+      "note": "I dunno"
+    },
+    {
+      "english": "I'm going to eat",
+      "ipa": "/aɪm ˈɡʌnə iːt/",
+      "note": "gonna"
+    },
+    {
+      "english": "Give it to me",
+      "ipa": "/ɡɪvɪtə miː/",
+      "note": "All words link together"
+    }
+  ],
+  "exercises": [
+    {
+      "instruction": "Write the full, careful pronunciation of each reduced form.",
+      "items": [
+        "wanna",
+        "hafta",
+        "kinda",
+        "gonna",
+        "outta"
+      ],
+      "answers": [
+        "want to",
+        "have to",
+        "kind of",
+        "going to",
+        "out of"
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Why do native speakers use reductions?",
+      "options": [
+        "To be rude or lazy",
+        "Because they don't know the full forms",
+        "Because English is stress-timed and reductions create natural rhythm",
+        "To confuse learners"
+      ],
+      "correct": 2,
+      "explanation": "Reductions are a natural feature of English rhythm. Stress-timed language compresses unstressed syllables — reductions are the result."
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "id": 39,
+  "slug": "register-formal-informal",
+  "level": "advanced",
+  "category": "writing",
+  "duration": 7,
+  "title": "Register: choosing the right level of formality",
+  "subtitle": "Writing of the day",
+  "body": "The same idea can be expressed at every register. Advanced speakers switch fluidly — this is what separates B2 from C1.",
+  "examples": [
+    {
+      "word": "Can you help me? (informal)",
+      "translation": "conversacional"
+    },
+    {
+      "word": "I was wondering if you could assist me. (formal)"
+    },
+    {
+      "word": "I would be grateful if you could provide assistance. (very formal)"
+    }
+  ],
+  "href": "/courses/register"
+}

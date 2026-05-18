@@ -1,0 +1,111 @@
+{
+  "slug": "schwa-sound",
+  "sections": [
+    {
+      "heading": "What is the schwa?",
+      "body": "The schwa /ə/ is the most common vowel sound in English — and also the most ignored. It's the lazy, neutral sound your mouth makes when a vowel is unstressed: somewhere between 'uh' and 'eh', produced with a relaxed jaw and tongue in the center of the mouth."
+    },
+    {
+      "heading": "Why it matters",
+      "body": "Spanish is a full-vowel language: every vowel sounds the way it's spelled. English is not. In English, unstressed vowels collapse into /ə/ regardless of how they're written. If you pronounce every vowel fully, you'll sound robotic — and harder to understand, not easier."
+    },
+    {
+      "heading": "Where to find it",
+      "body": "The schwa appears in unstressed syllables of almost any word with two or more syllables. It also appears in function words (articles, prepositions, conjunctions) that aren't stressed in natural speech: 'a', 'the', 'to', 'of', 'and', 'but', 'for'."
+    },
+    {
+      "heading": "How to practice",
+      "body": "Take any multi-syllable word and say it out loud. Find the stressed syllable — it's the one you say louder and longer. Every other vowel? Try replacing it with /ə/ and listen. Chances are that's how native speakers say it."
+    }
+  ],
+  "examples": [
+    {
+      "english": "banana",
+      "ipa": "/bəˈnɑː.nə/",
+      "translation": "First and last 'a' are schwas — only the middle is stressed."
+    },
+    {
+      "english": "about",
+      "ipa": "/əˈbaʊt/",
+      "translation": "The 'a' at the start is a schwa."
+    },
+    {
+      "english": "photograph",
+      "ipa": "/ˈfoʊ.tə.ɡræf/",
+      "translation": "The 'o' in the middle collapses to /ə/."
+    },
+    {
+      "english": "the book",
+      "ipa": "/ðə bʊk/",
+      "translation": "'The' before a consonant is always /ðə/."
+    },
+    {
+      "english": "a cat",
+      "ipa": "/ə kæt/",
+      "translation": "The article 'a' is always a schwa in natural speech."
+    }
+  ],
+  "exercises": [
+    {
+      "instruction": "Find the schwa in each word. How many schwas does each word contain?",
+      "items": [
+        "family",
+        "information",
+        "comfortable",
+        "different",
+        "yesterday"
+      ],
+      "answers": [
+        "fam-uh-lee (2)",
+        "in-fuh-MAY-shun (2)",
+        "COMF-tuh-bul (2)",
+        "DIF-runt (1)",
+        "YES-tuh-day (1)"
+      ]
+    },
+    {
+      "instruction": "Say these function words naturally in a sentence. Notice how 'of', 'to', 'and' reduce to /ə/, /tə/, /ən/.",
+      "items": [
+        "a cup of tea",
+        "I want to go",
+        "fish and chips",
+        "out of the question"
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Which syllable in 'banana' is NOT a schwa?",
+      "options": [
+        "The first 'a'",
+        "The second 'a' (stressed)",
+        "The third 'a'",
+        "None — all are schwas"
+      ],
+      "correct": 1,
+      "explanation": "Only the stressed middle syllable /ˈnɑː/ is a full vowel. The first and last 'a' are both /ə/."
+    },
+    {
+      "question": "Why do native English speakers use the schwa so much?",
+      "options": [
+        "They're being lazy and sloppy",
+        "English is stress-timed, so unstressed syllables naturally reduce",
+        "It's a regional accent feature",
+        "Only British speakers use it"
+      ],
+      "correct": 1,
+      "explanation": "English is a stress-timed language. Reducing unstressed syllables to /ə/ is a feature of the rhythm, not a mistake."
+    },
+    {
+      "question": "How is 'the' pronounced before a consonant?",
+      "options": [
+        "/ðiː/",
+        "/ðeɪ/",
+        "/ðə/",
+        "/ðɪ/"
+      ],
+      "correct": 2,
+      "explanation": "'The' is /ðə/ before consonants and /ðɪ/ before vowels. The schwa form is far more common."
+    }
+  ]
+}

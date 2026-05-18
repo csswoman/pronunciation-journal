@@ -1,0 +1,59 @@
+{
+  "slug": "advanced-idioms",
+  "sections": [
+    {
+      "heading": "What makes an idiom 'advanced'?",
+      "body": "Advanced idioms are less frequent than basics, more metaphorically opaque (harder to guess from the parts), and more contextually restricted. They tend to appear in journalism, literature, and professional conversation — not everyday small talk."
+    },
+    {
+      "heading": "Risk and decision idioms",
+      "body": "'Bite the bullet' — endure something painful or difficult. 'Throw caution to the wind' — take a risk by ignoring warnings. 'Hedge your bets' — cover multiple possibilities to reduce risk. 'Be on the fence' — be undecided."
+    },
+    {
+      "heading": "Communication and truth idioms",
+      "body": "'Beat around the bush' — avoid getting to the point. 'Call a spade a spade' — say things directly without softening. 'Read between the lines' — perceive hidden meaning. 'Take something with a grain of salt' — be skeptical."
+    }
+  ],
+  "examples": [
+    {
+      "english": "She bit the bullet and had the surgery.",
+      "translation": "aguantó / se armó de valor"
+    },
+    {
+      "english": "He threw caution to the wind and quit his job.",
+      "translation": "se arriesgó sin precaución"
+    },
+    {
+      "english": "I'm still on the fence about the proposal.",
+      "translation": "indeciso/a"
+    },
+    {
+      "english": "Stop beating around the bush — just say it.",
+      "translation": "andarse con rodeos"
+    }
+  ],
+  "exercises": [
+    {
+      "instruction": "Match the idiom to its use in context.",
+      "items": [
+        "The consultant recommended hedging our bets.",
+        "The article was biased — take it with a grain of salt.",
+        "She read between the lines and realized he was unhappy.",
+        "Let's call a spade a spade: the project failed."
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "question": "'Take something with a grain of salt' means:",
+      "options": [
+        "Accept something completely",
+        "Add salt to food",
+        "Be skeptical or not take something too seriously",
+        "Offer something generously"
+      ],
+      "correct": 2,
+      "explanation": "To take something with a grain of salt means to be skeptical — to not accept it as fully true or reliable."
+    }
+  ]
+}

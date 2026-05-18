@@ -1,0 +1,65 @@
+{
+  "slug": "subjunctive",
+  "sections": [
+    {
+      "heading": "What is the English subjunctive?",
+      "body": "The English subjunctive uses the base form of the verb (infinitive without 'to') regardless of subject and tense. It's most visible when it contrasts with a form you'd normally expect: 'It's vital that he attend' (not 'attends')."
+    },
+    {
+      "heading": "When it appears",
+      "body": "After verbs of demand/suggestion/recommendation + that: insist, suggest, recommend, demand, request, propose, ask, require, urge. After adjectives of importance or necessity + that: vital, essential, important, necessary, critical, imperative."
+    },
+    {
+      "heading": "Were-subjunctive",
+      "body": "In conditional sentences expressing hypothetical or contrary-to-fact situations, formal English uses 'were' for all persons: 'If I were you...', 'If she were here...', 'Were I in your position...'. This is the were-subjunctive, also called the past subjunctive."
+    }
+  ],
+  "examples": [
+    {
+      "english": "I suggest that she be promoted.",
+      "note": "Not 'is' — base form after 'suggest'"
+    },
+    {
+      "english": "It is vital that he attend the meeting.",
+      "note": "Not 'attends'"
+    },
+    {
+      "english": "They demanded that the report be submitted immediately.",
+      "note": "Passive subjunctive"
+    },
+    {
+      "english": "If I were taller, I'd play basketball.",
+      "note": "Were-subjunctive in condition"
+    }
+  ],
+  "exercises": [
+    {
+      "instruction": "Correct the verb form if necessary.",
+      "items": [
+        "It's essential that every student submits the form.",
+        "I recommend that he takes the earlier flight.",
+        "If I was you, I'd reconsider.",
+        "The committee insisted that she is present."
+      ],
+      "answers": [
+        "submit",
+        "take",
+        "were",
+        "be present"
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Which sentence uses the subjunctive correctly?",
+      "options": [
+        "She insisted that he leaves.",
+        "She insisted that he leave.",
+        "She insisted that he is leaving.",
+        "She insisted that he left."
+      ],
+      "correct": 1,
+      "explanation": "After 'insist that', the subjunctive requires the base form: 'leave', not 'leaves'."
+    }
+  ]
+}

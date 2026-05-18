@@ -1,0 +1,65 @@
+{
+  "slug": "second-conditional",
+  "sections": [
+    {
+      "heading": "Structure and meaning",
+      "body": "If + past simple, would + infinitive. The second conditional describes unreal or unlikely situations in the present or future. The past tense in the if-clause doesn't refer to the past — it creates 'distance' from reality."
+    },
+    {
+      "heading": "Were, not was",
+      "body": "In formal English and in careful speech, use 'were' for all persons in second conditional if-clauses: 'If I were you...', 'If she were here...', 'If it were possible...'. 'Was' is increasingly accepted informally, but 'were' is the safe choice."
+    },
+    {
+      "heading": "Giving advice",
+      "body": "'If I were you, I would...' is the standard structure for advice. It's extremely common and useful in both professional and personal contexts."
+    }
+  ],
+  "examples": [
+    {
+      "english": "If I had more time, I'd learn the piano.",
+      "note": "Unreal present — I don't have more time"
+    },
+    {
+      "english": "If she were taller, she could be a model.",
+      "note": "Formal 'were' for all persons"
+    },
+    {
+      "english": "If I were you, I'd apologize immediately.",
+      "note": "Advice formula"
+    },
+    {
+      "english": "What would you do if you won the lottery?",
+      "note": "Unlikely hypothetical"
+    }
+  ],
+  "exercises": [
+    {
+      "instruction": "Complete with second conditional.",
+      "items": [
+        "If I ___ (be) you, I ___ (tell) him the truth.",
+        "She ___ (travel) more if she ___ (have) money.",
+        "If he ___ (study) medicine, he ___ (become) a doctor.",
+        "What ___ you ___ (do) if you ___ (lose) your job?"
+      ],
+      "answers": [
+        "were / would tell",
+        "would travel / had",
+        "would have become / had studied",
+        "would you do / lost"
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "question": "The second conditional describes:",
+      "options": [
+        "Real, likely future situations",
+        "Unreal or hypothetical present/future situations",
+        "Past regrets",
+        "Permanent universal truths"
+      ],
+      "correct": 1,
+      "explanation": "Second conditional = imaginary or unlikely present/future. The past form in the if-clause signals distance from reality."
+    }
+  ]
+}

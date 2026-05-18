@@ -1,0 +1,55 @@
+{
+  "slug": "modals-deduction",
+  "sections": [
+    {
+      "heading": "Degrees of certainty",
+      "body": "Must (95%+): logical conclusion from evidence. Might/may/could (30–60%): possibility, not certain. Can't/couldn't (near 0%): logical impossibility — contradicts evidence."
+    },
+    {
+      "heading": "Past deduction",
+      "body": "Add 'have + past participle' for deduction about the past: 'She must have forgotten.' 'He might have left already.' 'That can't have been her — she was abroad.'"
+    }
+  ],
+  "examples": [
+    {
+      "english": "She must be exhausted — she's been awake for 30 hours.",
+      "note": "Strong logical conclusion"
+    },
+    {
+      "english": "He might be in a meeting.",
+      "note": "Possibility — you're not sure"
+    },
+    {
+      "english": "That can't be right — I checked the figures myself.",
+      "note": "Logical impossibility"
+    },
+    {
+      "english": "She must have missed the train.",
+      "note": "Past deduction"
+    }
+  ],
+  "exercises": [
+    {
+      "instruction": "Use must, might, or can't to react to each situation.",
+      "items": [
+        "The light is on and music is playing. (someone is home)",
+        "She's not answering her phone. (busy / asleep / out)",
+        "He says he's 7 feet tall. (impossible / unlikely)",
+        "She got 100% on every test. (very intelligent)"
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "question": "'That can't be Tom — he moved to Australia.' 'Can't' here expresses:",
+      "options": [
+        "Inability",
+        "Permission denied",
+        "Logical impossibility",
+        "A request"
+      ],
+      "correct": 2,
+      "explanation": "'Can't be' expresses logical impossibility based on evidence — equivalent to 'it's impossible that it is Tom'."
+    }
+  ]
+}

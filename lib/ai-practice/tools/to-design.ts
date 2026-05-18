@@ -1,4 +1,4 @@
-import type { ExerciseDesign, ProgressiveHint as DesignHint } from "@/lib/exercise/design";
+import type { ExerciseDesign, ProgressiveHint as DesignHint } from "@/lib/exercises/design";
 import type { FillBlankArgs, MultipleChoiceArgs, ProgressiveHint } from "./registry";
 
 function normalizeHint(hint: string | ProgressiveHint | undefined): DesignHint | undefined {

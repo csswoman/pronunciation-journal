@@ -8,12 +8,6 @@ import HomeHeaderActions from "@/components/home/HomeHeaderActions";
 import CardsDueWidget from "@/components/home/CardsDueWidget";
 import TaskProgressRing from "@/components/home/TaskProgressRing";
 
-// TODO: replace with real data from hooks
-const CARDS_DUE = 12;
-const CARDS_DONE = 4;
-const TASKS_COMPLETED = 2;
-const TASKS_TOTAL = 5;
-
 export default function HomeHeader() {
   const { user } = useAuth();
   const { progressList } = useSoundProgress(user?.id);
@@ -34,8 +28,8 @@ export default function HomeHeader() {
       </div>
 
       <div className="relative z-10 flex items-center justify-end gap-4">
-        <CardsDueWidget due={CARDS_DUE} done={CARDS_DONE} />
-        <TaskProgressRing completed={TASKS_COMPLETED} total={TASKS_TOTAL} />
+        <CardsDueWidget />
+        <TaskProgressRing />
       </div>
     </div>
   );

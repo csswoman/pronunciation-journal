@@ -1,0 +1,59 @@
+{
+  "slug": "register",
+  "sections": [
+    {
+      "heading": "What is register?",
+      "body": "Register is the variety of language suited to a particular social situation. English has a wider range of register variation than most languages — from deeply informal slang to highly formal legal and academic prose. C1 speakers switch fluently between them."
+    },
+    {
+      "heading": "Markers of formal register",
+      "body": "Formal: longer words (often Latinate), passive voice, no contractions, impersonal constructions ('It is suggested that...'), complex sentence structure, hedging, precise vocabulary."
+    },
+    {
+      "heading": "Markers of informal register",
+      "body": "Informal: shorter words (often Germanic), active voice, contractions, direct address, phrasal verbs instead of single verbs, fillers, ellipsis, colloquialisms."
+    }
+  ],
+  "examples": [
+    {
+      "english": "Can you help? → I was wondering if you'd be able to assist.",
+      "note": "Informal → Formal"
+    },
+    {
+      "english": "get in touch → contact",
+      "note": "Phrasal verb → single verb (more formal)"
+    },
+    {
+      "english": "So → Therefore / Consequently",
+      "note": "Informal connector → formal connector"
+    },
+    {
+      "english": "need → require",
+      "note": "Germanic → Latinate (more formal)"
+    }
+  ],
+  "exercises": [
+    {
+      "instruction": "Rewrite each sentence in the register indicated.",
+      "items": [
+        "I wanna ask you something. (formal)",
+        "We request that you vacate the premises. (informal)",
+        "She's been fired. (formal)",
+        "We regret to inform you that your application was unsuccessful. (neutral)"
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Which of these is a marker of formal register?",
+      "options": [
+        "Contractions",
+        "Phrasal verbs",
+        "Passive voice",
+        "Colloquialisms"
+      ],
+      "correct": 2,
+      "explanation": "Passive voice is associated with formal register because it creates distance, removes personal agency, and sounds more objective."
+    }
+  ]
+}

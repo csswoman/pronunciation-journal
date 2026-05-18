@@ -1,0 +1,77 @@
+{
+  "slug": "linking-words-basic",
+  "sections": [
+    {
+      "heading": "Why linking words matter",
+      "body": "Without connectors, ideas sit next to each other with no clear relationship. Linking words show the reader how ideas connect — whether one causes another, contrasts with it, or adds to it."
+    },
+    {
+      "heading": "And — addition",
+      "body": "'And' adds information of equal weight. It joins clauses, phrases, and single words. Don't start every sentence with 'and' in formal writing, but it's natural and effective in speech."
+    },
+    {
+      "heading": "But — contrast",
+      "body": "'But' introduces a contrast or unexpected result. It's the most common adversative connector in English. 'However' is its formal equivalent when starting a sentence."
+    },
+    {
+      "heading": "So — result",
+      "body": "'So' introduces a result or consequence. 'Therefore' and 'as a result' are its formal equivalents. Note: 'so' in conversation often functions as a discourse marker too."
+    },
+    {
+      "heading": "Because — reason",
+      "body": "'Because' introduces the reason for something. It answers 'why?' It must connect two clauses. 'Because of' is followed by a noun phrase: 'because of the rain' (not 'because the rain')."
+    }
+  ],
+  "examples": [
+    {
+      "english": "I was tired, but I finished the report.",
+      "note": "Contrast — unexpected result"
+    },
+    {
+      "english": "It rained, so we cancelled the trip.",
+      "note": "Result"
+    },
+    {
+      "english": "She studied hard because she wanted to pass.",
+      "note": "Reason"
+    },
+    {
+      "english": "I like tea and coffee.",
+      "note": "Addition of equal items"
+    },
+    {
+      "english": "We stayed in because of the weather.",
+      "note": "'Because of' + noun phrase"
+    }
+  ],
+  "exercises": [
+    {
+      "instruction": "Connect the two sentences using and, but, so, or because.",
+      "items": [
+        "I was hungry. I made a sandwich.",
+        "She likes jazz. She doesn't like classical music.",
+        "He forgot his wallet. He couldn't pay.",
+        "We left early. We wanted to avoid traffic."
+      ],
+      "answers": [
+        "I was hungry, so I made a sandwich.",
+        "She likes jazz but she doesn't like classical music.",
+        "He forgot his wallet, so he couldn't pay.",
+        "We left early because we wanted to avoid traffic."
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Which sentence uses 'because' correctly?",
+      "options": [
+        "I stayed home because of I was sick.",
+        "I stayed home because the rain.",
+        "I stayed home because I was sick.",
+        "I stayed home because of I felt ill."
+      ],
+      "correct": 2,
+      "explanation": "'Because' is followed by a full clause (subject + verb). 'Because of' is followed by a noun phrase."
+    }
+  ]
+}

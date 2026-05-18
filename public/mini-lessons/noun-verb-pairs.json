@@ -1,0 +1,21 @@
+{
+  "id": 29,
+  "slug": "noun-verb-pairs",
+  "level": "intermediate",
+  "category": "vocabulary",
+  "duration": 5,
+  "title": "Nouns that become verbs — and vice versa",
+  "subtitle": "Vocabulary of the day",
+  "body": "English is unusually flexible: many words can be both nouns and verbs without any change in form. Context and stress are the only signals.",
+  "examples": [
+    {
+      "word": "a REcord (n.) · to reCORD (v.)",
+      "translation": "stress shift"
+    },
+    {
+      "word": "to email · to Google · to text",
+      "translation": "nouns converted to verbs"
+    }
+  ],
+  "href": "/courses/noun-verb-conversion"
+}

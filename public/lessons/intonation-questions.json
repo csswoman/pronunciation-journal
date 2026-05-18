@@ -1,0 +1,60 @@
+{
+  "slug": "intonation-questions",
+  "sections": [
+    {
+      "heading": "Rising intonation ↗",
+      "body": "Rising intonation signals that something is open, unfinished, or invites a response. Yes/No questions rise at the end because the speaker doesn't know the answer. Also used in lists (except the final item) and in question tags when genuinely asking."
+    },
+    {
+      "heading": "Falling intonation ↘",
+      "body": "Falling intonation signals completion, certainty, or conclusion. Wh- questions (who, what, where, when, why, how) fall — the speaker expects information, not just yes/no. Statements also fall when the speaker is confident."
+    },
+    {
+      "heading": "Intonation and attitude",
+      "body": "The same words with different intonation can convey very different attitudes. A flat or falling 'really?' sounds skeptical or uninterested. A rising 'really?' sounds surprised and engaged. Intonation carries enormous pragmatic weight in English."
+    }
+  ],
+  "examples": [
+    {
+      "english": "Are you coming? ↗",
+      "note": "Yes/no question — rising"
+    },
+    {
+      "english": "Where are you going? ↘",
+      "note": "Wh- question — falling"
+    },
+    {
+      "english": "Coffee, tea, ↗ or water? ↘",
+      "note": "List: rise on each item, fall on last"
+    },
+    {
+      "english": "It's cold today, isn't it? ↘",
+      "note": "Tag question confirming — falling"
+    }
+  ],
+  "exercises": [
+    {
+      "instruction": "Mark each with ↗ (rising) or ↘ (falling).",
+      "items": [
+        "What time does it start?",
+        "Is this seat taken?",
+        "Who called?",
+        "Did you enjoy the film?",
+        "How do you spell that?"
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "question": "A rising intonation on a question tag means:",
+      "options": [
+        "You're certain of the answer",
+        "You're genuinely asking and not sure of the answer",
+        "You're being sarcastic",
+        "You're annoyed"
+      ],
+      "correct": 1,
+      "explanation": "Rising intonation on a question tag signals genuine uncertainty — you really want confirmation."
+    }
+  ]
+}

@@ -4,15 +4,15 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import Button from "@/components/ui/Button";
 import { MessageCircle, Target } from "lucide-react";
-import { IPA_AUDIO_MAP, SOUNDS_BASE_URL } from "@/lib/ipa-audio";
+import { IPA_AUDIO_MAP, SOUNDS_BASE_URL } from "@/lib/pronunciation/ipa-audio";
 import {
   FILTER_TABS,
   PHONEMES,
   type FilterType,
   type PhonemeData,
 } from "./data";
-import { HARD_FOR_SPANISH_SPEAKERS } from "@/lib/ipa-data";
-import DifficultyPill from "./DifficultyPill";
+import { HARD_FOR_SPANISH_SPEAKERS } from "@/lib/pronunciation/ipa-data";
+import DifficultyPill from "@/components/ui/DifficultyPill";
 import FeaturedPhonemePanel from "./FeaturedPhonemePanel";
 import FilterTabs from "./FilterTabs";
 import PhonemeCard from "./PhonemeCard";
@@ -177,9 +177,9 @@ export default function IPAChart() {
             <span className="text-xs font-semibold text-fg-muted">
               Badge color:
             </span>
-            <DifficultyPill difficulty="easy" label="Easy" />
-            <DifficultyPill difficulty="medium" label="Mid" />
-            <DifficultyPill difficulty="hard" label="Hard" />
+            <DifficultyPill difficulty="easy" label="Easy" variant="badge" />
+            <DifficultyPill difficulty="medium" label="Mid" variant="badge" />
+            <DifficultyPill difficulty="hard" label="Hard" variant="badge" />
           </div>
 
           {activeFilter === "all" && (

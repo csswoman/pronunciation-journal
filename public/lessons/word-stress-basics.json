@@ -1,0 +1,75 @@
+{
+  "slug": "word-stress-basics",
+  "sections": [
+    {
+      "heading": "What is word stress?",
+      "body": "Word stress is the emphasis placed on one syllable of a multi-syllable word. The stressed syllable is louder, longer, and at a slightly higher pitch than the others. In English, stress placement is unpredictable from spelling alone — you need to learn it word by word, or by recognizing patterns."
+    },
+    {
+      "heading": "Why stress placement matters",
+      "body": "Misplaced stress is one of the leading causes of misunderstanding in English — even when all the sounds are correct. 'DEsert' (dry land) vs. 'desSERT' (sweet course) are understood differently not because the vowels are different, but because the stress is."
+    },
+    {
+      "heading": "Stress shift with suffixes",
+      "body": "Adding certain suffixes causes the stress to shift: -tion, -sion, -ity, -ic push the stress to the syllable immediately before them. PHOtograph → phoTOgraphy → phoTOgraphic → photoGRAPHer. Learning these patterns saves time."
+    },
+    {
+      "heading": "Noun vs. verb pairs",
+      "body": "Many two-syllable words in English use stress to distinguish nouns from verbs. Nouns are usually stressed on the first syllable; verbs on the second. REcord (n.) / reCORD (v.). PROtest (n.) / proTEST (v.). PERmit (n.) / perMIT (v.)."
+    }
+  ],
+  "examples": [
+    {
+      "english": "PHOtograph / phoTOgraphy / photoGRAPHic",
+      "note": "Stress shifts with each suffix"
+    },
+    {
+      "english": "PREsent (n.) / preSENT (v.)",
+      "note": "Noun vs. verb stress pair"
+    },
+    {
+      "english": "OBject (n.) / obJECT (v.)",
+      "note": "Same pattern"
+    },
+    {
+      "english": "INcrease (n.) / inCREASE (v.)",
+      "note": "Same pattern"
+    },
+    {
+      "english": "naTION / naTIONal / naTIONality",
+      "note": "-ity pushes stress back"
+    }
+  ],
+  "exercises": [
+    {
+      "instruction": "Mark the stressed syllable in each word (write the stressed syllable in CAPS).",
+      "items": [
+        "information",
+        "comfortable",
+        "necessary",
+        "economy",
+        "opportunity"
+      ],
+      "answers": [
+        "inforMAtion",
+        "COMfortable",
+        "NECessary",
+        "eCONomy",
+        "opporTUnity"
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "question": "In the sentence 'I need to record the record,' the two words 'record' are:",
+      "options": [
+        "Both nouns",
+        "Both verbs",
+        "First a verb, then a noun",
+        "First a noun, then a verb"
+      ],
+      "correct": 2,
+      "explanation": "'To reCORD' is the verb (stress on second syllable). 'The RECord' is the noun (stress on first syllable)."
+    }
+  ]
+}

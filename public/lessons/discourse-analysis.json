@@ -1,0 +1,59 @@
+{
+  "slug": "discourse-analysis",
+  "sections": [
+    {
+      "heading": "The challenge of complex spoken discourse",
+      "body": "At advanced level, listening difficulty is rarely about individual words — it's about tracking the macro-structure: what is the speaker's main point, how are they building their argument, where are the pivots, what is implied vs. stated?"
+    },
+    {
+      "heading": "Signpost language",
+      "body": "Speakers signal their discourse structure explicitly. 'On the one hand... on the other' = contrast coming. 'What I'm really trying to say is...' = simplification/summary. 'Having said that...' = qualification. 'Let me step back...' = perspective shift. These are the structural 'headers' of spoken argument."
+    },
+    {
+      "heading": "Active listening strategies",
+      "body": "Top-down processing: use your knowledge of the topic to predict what's coming. Bottom-up: focus on key stressed words and discourse markers. Selective attention: don't try to catch every word — identify the main point and the structure."
+    }
+  ],
+  "examples": [
+    {
+      "english": "'What I'm really trying to say is...'",
+      "note": "Signal: rephrasing/clarification of the core point"
+    },
+    {
+      "english": "'That said...' / 'Having said that...'",
+      "note": "Signal: a qualification is coming"
+    },
+    {
+      "english": "'To put it another way...'",
+      "note": "Signal: a reformulation for clarity"
+    },
+    {
+      "english": "'The bottom line is...'",
+      "note": "Signal: conclusion / most important point"
+    }
+  ],
+  "exercises": [
+    {
+      "instruction": "What discourse function does each phrase signal?",
+      "items": [
+        "'Let me give you an example...'",
+        "'To return to my earlier point...'",
+        "'This brings me to my main argument...'",
+        "'In other words...'"
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "question": "When a speaker says 'The bottom line is...', what are they signaling?",
+      "options": [
+        "A financial topic",
+        "An introductory remark",
+        "The most important conclusion or key point",
+        "A transition to a new topic"
+      ],
+      "correct": 2,
+      "explanation": "'The bottom line is' signals the speaker is about to state the most essential point — their core conclusion."
+    }
+  ]
+}

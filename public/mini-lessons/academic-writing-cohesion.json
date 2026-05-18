@@ -1,0 +1,21 @@
+{
+  "id": 47,
+  "slug": "academic-writing-cohesion",
+  "level": "advanced",
+  "category": "writing",
+  "duration": 8,
+  "title": "Cohesion devices in academic writing",
+  "subtitle": "Writing of the day",
+  "body": "Cohesion is how sentences and paragraphs connect to form a unified text. It's the difference between a list of ideas and an argument.",
+  "examples": [
+    {
+      "word": "lexical chains: water → liquid → fluid → hydration",
+      "translation": "variación semántica"
+    },
+    {
+      "word": "reference: 'this phenomenon' / 'such findings'",
+      "translation": "referencia anafórica"
+    }
+  ],
+  "href": "/courses/academic-cohesion"
+}

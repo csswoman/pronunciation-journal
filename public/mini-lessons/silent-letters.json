@@ -1,0 +1,28 @@
+{
+  "id": 3,
+  "slug": "silent-letters",
+  "level": "basic",
+  "category": "pronunciation",
+  "duration": 4,
+  "title": "Silent letters you're probably pronouncing",
+  "subtitle": "Pronunciation of the day",
+  "body": "English is full of letters that are written but never spoken. These silent letters are relics of older pronunciations.",
+  "examples": [
+    {
+      "word": "knife",
+      "ipa": "/naɪf/",
+      "translation": "cuchillo — la K es muda"
+    },
+    {
+      "word": "island",
+      "ipa": "/ˈaɪ.lənd/",
+      "translation": "isla — la S es muda"
+    },
+    {
+      "word": "know",
+      "ipa": "/noʊ/",
+      "translation": "saber — la K es muda"
+    }
+  ],
+  "href": "/courses/silent-letters"
+}

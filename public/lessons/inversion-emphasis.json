@@ -1,0 +1,63 @@
+{
+  "slug": "inversion-emphasis",
+  "sections": [
+    {
+      "heading": "What is inversion?",
+      "body": "Inversion places the auxiliary verb (or 'be') before the subject, creating emphasis and a formal or dramatic tone. It's triggered by negative or restrictive adverbials at the beginning of a sentence."
+    },
+    {
+      "heading": "Common inversion triggers",
+      "body": "Never, rarely, seldom, hardly, scarcely, barely, no sooner, not only, not until, on no account, in no way, under no circumstances, little (= not much), only + time expression."
+    },
+    {
+      "heading": "Structure",
+      "body": "Trigger + auxiliary + subject + main verb. 'Never have I seen such courage.' 'Not only did she win, but she also broke the record.' 'Rarely does he make a mistake.' Compare normal order: 'He rarely makes a mistake.'"
+    }
+  ],
+  "examples": [
+    {
+      "english": "Never have I seen such dedication.",
+      "note": "Normal: I have never seen..."
+    },
+    {
+      "english": "Not only did she win, she broke a world record.",
+      "note": "Not only... but also"
+    },
+    {
+      "english": "Rarely does he lose his temper.",
+      "note": "Formal/literary tone"
+    },
+    {
+      "english": "Only after the meeting did I understand the plan.",
+      "note": "Only + time expression"
+    },
+    {
+      "english": "Under no circumstances should you share this.",
+      "note": "Imperative-like with inversion"
+    }
+  ],
+  "exercises": [
+    {
+      "instruction": "Rewrite using inversion for emphasis.",
+      "items": [
+        "I have never heard such nonsense.",
+        "She not only apologized but also sent flowers.",
+        "He had barely arrived when the trouble started.",
+        "You should under no circumstances open that file."
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Which sentence uses inversion correctly?",
+      "options": [
+        "Never I have seen that.",
+        "Never have I seen that.",
+        "Never have seen I that.",
+        "Never that I have seen."
+      ],
+      "correct": 1,
+      "explanation": "Inversion structure: negative trigger + auxiliary + subject + main verb: 'Never have I seen'."
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "id": 41,
+  "slug": "participle-clauses",
+  "level": "advanced",
+  "category": "grammar",
+  "duration": 7,
+  "title": "Participle clauses",
+  "subtitle": "Grammar of the day",
+  "body": "Participle clauses condense two sentences into one, showing the relationship between actions without repeating the subject.",
+  "examples": [
+    {
+      "word": "Having finished the report, she left.",
+      "translation": "acción completada antes que la principal"
+    },
+    {
+      "word": "Written in 1984, the book still feels relevant.",
+      "translation": "pasado — describe el sujeto"
+    }
+  ],
+  "href": "/courses/participle-clauses"
+}

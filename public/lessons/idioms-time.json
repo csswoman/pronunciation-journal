@@ -1,0 +1,59 @@
+{
+  "slug": "idioms-time",
+  "sections": [
+    {
+      "heading": "Why idioms about time?",
+      "body": "Time is one of the most common conceptual domains in any language. English has an unusually rich set of idioms for time — many come from sailing, agriculture, and the rhythms of pre-industrial life."
+    },
+    {
+      "heading": "The most useful ones",
+      "body": "'In the nick of time' — just before it's too late. 'Once in a blue moon' — very rarely (blue moons are rare astronomical events). 'Against the clock' — rushing because of a deadline. 'Around the clock' — continuously, 24 hours. 'In no time (at all)' — very quickly."
+    }
+  ],
+  "examples": [
+    {
+      "english": "We caught the last train in the nick of time.",
+      "translation": "justo a tiempo — por muy poco"
+    },
+    {
+      "english": "She calls her parents once in a blue moon.",
+      "translation": "muy raramente"
+    },
+    {
+      "english": "The team was working against the clock.",
+      "translation": "corriendo contra el tiempo"
+    },
+    {
+      "english": "The hospital is staffed around the clock.",
+      "translation": "las 24 horas"
+    },
+    {
+      "english": "Don't worry, I'll finish it in no time.",
+      "translation": "en un momento / muy rápido"
+    }
+  ],
+  "exercises": [
+    {
+      "instruction": "Replace the underlined words with a time idiom.",
+      "items": [
+        "She arrived just before the meeting started.",
+        "He exercises very rarely.",
+        "They finished the report very quickly.",
+        "The servers run continuously."
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "question": "'Once in a blue moon' means:",
+      "options": [
+        "Every month",
+        "Every night",
+        "Very rarely",
+        "At midnight"
+      ],
+      "correct": 2,
+      "explanation": "A blue moon is a rare astronomical event — the idiom means something happens very infrequently."
+    }
+  ]
+}

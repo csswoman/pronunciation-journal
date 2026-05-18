@@ -1,0 +1,23 @@
+{
+  "id": 17,
+  "slug": "frequency-adverbs",
+  "level": "basic",
+  "category": "grammar",
+  "duration": 4,
+  "title": "Adverbs of frequency",
+  "subtitle": "Grammar of the day",
+  "body": "These adverbs tell how often something happens. Their position in the sentence is fixed — a common mistake for Spanish speakers.",
+  "examples": [
+    {
+      "word": "I always drink coffee. ✓",
+      "translation": "va después del sujeto, antes del verbo"
+    },
+    {
+      "word": "I drink always coffee. ✗"
+    },
+    {
+      "word": "always → usually → often → sometimes → rarely → never"
+    }
+  ],
+  "href": "/courses/frequency-adverbs"
+}

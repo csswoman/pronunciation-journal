@@ -1,0 +1,54 @@
+{
+  "slug": "sentence-stress",
+  "sections": [
+    {
+      "heading": "Content words vs. function words",
+      "body": "In natural English, content words (nouns, main verbs, adjectives, adverbs) are stressed. Function words (articles, prepositions, pronouns, auxiliary verbs, conjunctions) are unstressed and often reduced. This creates the characteristic rhythm of English."
+    },
+    {
+      "heading": "Contrastive stress",
+      "body": "When you want to contrast or correct something, you shift stress deliberately: 'I said I LIKE him, not that I LOVE him.' The stressed word is the one that carries the contrast. This is one of the most expressive tools in spoken English."
+    }
+  ],
+  "examples": [
+    {
+      "english": "I didn't say SHE stole the money.",
+      "note": "Implies: someone else did"
+    },
+    {
+      "english": "I didn't say she STOLE the money.",
+      "note": "Implies: she did something else with it"
+    },
+    {
+      "english": "I didn't SAY she stole the money.",
+      "note": "Implies: I wrote it / implied it"
+    },
+    {
+      "english": "I DIDN'T say she stole the money.",
+      "note": "Implies: someone else said it"
+    }
+  ],
+  "exercises": [
+    {
+      "instruction": "Underline the word you'd stress to convey the meaning in parentheses.",
+      "items": [
+        "He drives a red car. (not a blue one)",
+        "She plays piano. (not guitar)",
+        "I want coffee. (not tea)"
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "question": "In stress-timed English, which words are typically unstressed?",
+      "options": [
+        "Nouns and adjectives",
+        "Main verbs and adverbs",
+        "Prepositions and articles",
+        "All words equally"
+      ],
+      "correct": 2,
+      "explanation": "Function words (prepositions, articles, pronouns, auxiliaries) are typically unstressed and reduced in natural speech."
+    }
+  ]
+}

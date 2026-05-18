@@ -1,0 +1,25 @@
+{
+  "id": 32,
+  "slug": "connected-speech",
+  "level": "intermediate",
+  "category": "pronunciation",
+  "duration": 6,
+  "title": "Connected speech: linking, elision, assimilation",
+  "subtitle": "Pronunciation of the day",
+  "body": "Words in a sentence don't sound isolated — they flow together. Three processes shape how native English actually sounds.",
+  "examples": [
+    {
+      "word": "linking: 'an apple' → /ə ˈnæp.əl/",
+      "translation": "consonant + vowel se unen"
+    },
+    {
+      "word": "elision: 'next day' → /nɛks deɪ/",
+      "translation": "sonido desaparece"
+    },
+    {
+      "word": "assimilation: 'ten boys' → /ˈtem bɔɪz/",
+      "translation": "/n/ se convierte en /m/"
+    }
+  ],
+  "href": "/courses/connected-speech"
+}

@@ -3,8 +3,8 @@
 import { Fragment, useMemo, useState } from "react";
 import type { FillBlankArgs } from "@/lib/ai-practice/tools/registry";
 import type { ExerciseResult } from "@/lib/ai-practice/types";
-import type { EvaluationResult } from "@/lib/exercise/design";
-import { evaluateExercise } from "@/lib/exercise/evaluator";
+import type { EvaluationResult } from "@/lib/exercises/design";
+import { evaluateExercise } from "@/lib/exercises/evaluator";
 import { fillBlankToDesign } from "@/lib/ai-practice/tools/to-design";
 import ExerciseFeedback from "./ExerciseFeedback";
 

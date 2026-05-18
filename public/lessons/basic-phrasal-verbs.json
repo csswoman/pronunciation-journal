@@ -1,0 +1,65 @@
+{
+  "slug": "basic-phrasal-verbs",
+  "sections": [
+    {
+      "heading": "What makes phrasal verbs hard",
+      "body": "Phrasal verbs combine a verb with one or two particles (prepositions or adverbs) to create a meaning that can't be predicted from the parts. 'Give up' has nothing to do with giving or with upward direction — it means 'stop trying'."
+    },
+    {
+      "heading": "Separable vs. inseparable",
+      "body": "Separable phrasal verbs allow the object to go between the verb and particle: 'Turn off the TV' / 'Turn the TV off'. With pronouns, separation is obligatory: 'Turn it off' (not 'Turn off it'). Inseparable phrasal verbs keep the particle attached: 'run into someone' — never 'run someone into'."
+    }
+  ],
+  "examples": [
+    {
+      "english": "give up",
+      "translation": "rendirse / dejar de intentar"
+    },
+    {
+      "english": "find out",
+      "translation": "descubrir / enterarse de"
+    },
+    {
+      "english": "look up",
+      "translation": "buscar (en diccionario o internet)"
+    },
+    {
+      "english": "turn off / turn it off",
+      "translation": "apagar — separable"
+    },
+    {
+      "english": "run out of",
+      "translation": "quedarse sin algo — inseparable"
+    }
+  ],
+  "exercises": [
+    {
+      "instruction": "Replace the underlined words with a phrasal verb from the lesson.",
+      "items": [
+        "I need to search for this word in the dictionary.",
+        "She stopped trying after the third attempt.",
+        "We've exhausted our supply of coffee.",
+        "Can you switch off the light?"
+      ],
+      "answers": [
+        "look up",
+        "gave up",
+        "run out of",
+        "turn off"
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Which sentence uses a phrasal verb correctly?",
+      "options": [
+        "She gave the challenge up.",
+        "She gave up the challenge.",
+        "She gave up it.",
+        "She up gave the challenge."
+      ],
+      "correct": 1,
+      "explanation": "'Give up' + noun object can go either side. But with a pronoun, you MUST separate: 'gave it up'."
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "id": 16,
+  "slug": "vowel-length",
+  "level": "basic",
+  "category": "pronunciation",
+  "duration": 4,
+  "title": "Short vs. long vowels",
+  "subtitle": "Pronunciation of the day",
+  "body": "English distinguishes words purely by vowel length. Getting this wrong changes the word entirely.",
+  "examples": [
+    {
+      "word": "ship / sheep",
+      "ipa": "/ʃɪp/ · /ʃiːp/"
+    },
+    {
+      "word": "full / fool",
+      "ipa": "/fʊl/ · /fuːl/"
+    },
+    {
+      "word": "bit / beat",
+      "ipa": "/bɪt/ · /biːt/"
+    }
+  ],
+  "href": "/courses/vowel-length"
+}

@@ -1,0 +1,21 @@
+{
+  "id": 21,
+  "slug": "conditionals-zero-first",
+  "level": "intermediate",
+  "category": "grammar",
+  "duration": 6,
+  "title": "Zero & First Conditionals",
+  "subtitle": "Grammar of the day",
+  "body": "Zero conditional is for universal truths. First conditional is for real, likely future situations.",
+  "examples": [
+    {
+      "word": "If you heat water to 100°C, it boils.",
+      "translation": "zero conditional — verdad científica"
+    },
+    {
+      "word": "If it rains, I'll stay home.",
+      "translation": "first conditional — situación probable"
+    }
+  ],
+  "href": "/courses/conditionals-zero-first"
+}

@@ -1,0 +1,59 @@
+{
+  "slug": "cleft-sentences",
+  "sections": [
+    {
+      "heading": "What cleft sentences do",
+      "body": "Cleft sentences split a simple sentence into two clauses to throw emphasis onto one element. They answer the implied question: 'Which one? / What exactly? / Who specifically?' They're especially useful in writing and in speech when you need to correct a misunderstanding."
+    },
+    {
+      "heading": "It-clefts",
+      "body": "Structure: It + be + focused element + relative clause. 'Maria called.' → 'It was Maria who called.' (emphasizes Maria, not someone else). 'It's the design that needs changing, not the content.'"
+    },
+    {
+      "heading": "Wh-clefts (pseudo-clefts)",
+      "body": "Structure: What + clause + be + focused element. 'What I need is more time.' 'What surprised me was her reaction.' Often used to introduce or conclude a key point formally."
+    }
+  ],
+  "examples": [
+    {
+      "english": "It was the manager who approved it.",
+      "note": "It-cleft: emphasizes the manager"
+    },
+    {
+      "english": "It's the deadline that worries me.",
+      "note": "It-cleft: clarifies what specifically"
+    },
+    {
+      "english": "What I want is a clear explanation.",
+      "note": "Wh-cleft: emphatic subject"
+    },
+    {
+      "english": "What she did was remarkable.",
+      "note": "Wh-cleft: emphasizes the action"
+    }
+  ],
+  "exercises": [
+    {
+      "instruction": "Rewrite using a cleft sentence to emphasize the underlined element.",
+      "items": [
+        "She appreciated the honesty.",
+        "He failed because of poor planning.",
+        "The noise woke me up.",
+        "I need your full attention right now."
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "question": "'What I enjoy most is the process.' This is a:",
+      "options": [
+        "It-cleft",
+        "Wh-cleft (pseudo-cleft)",
+        "Non-defining relative clause",
+        "Reported speech structure"
+      ],
+      "correct": 1,
+      "explanation": "Wh-clefts start with 'What + clause + be + focused element'. It-clefts start with 'It + be + focused element + relative clause'."
+    }
+  ]
+}

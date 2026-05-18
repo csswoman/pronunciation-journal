@@ -1,0 +1,25 @@
+{
+  "id": 5,
+  "slug": "common-contractions",
+  "level": "basic",
+  "category": "speaking",
+  "duration": 4,
+  "title": "Contractions: sound more natural instantly",
+  "subtitle": "Speaking of the day",
+  "body": "Native speakers almost always use contractions in spoken English. Avoiding them makes you sound stiff or overly formal.",
+  "examples": [
+    {
+      "word": "I am → I'm",
+      "ipa": "/aɪm/"
+    },
+    {
+      "word": "do not → don't",
+      "ipa": "/doʊnt/"
+    },
+    {
+      "word": "they are → they're",
+      "ipa": "/ðɛr/"
+    }
+  ],
+  "href": "/courses/contractions"
+}

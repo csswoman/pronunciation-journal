@@ -10,7 +10,7 @@ import { useAuth } from "@/components/auth/AuthProvider";
 import { useStreamingChat } from "./useStreamingChat";
 import { useSavedWords, type SaveWordData } from "./useSavedWords";
 import { switchMode } from "@/lib/ai-practice/conversation-mode";
-import { deleteConversation } from "@/lib/ai-db";
+import { deleteConversation } from "@/lib/db/ai";
 
 export type { SaveWordData };
 

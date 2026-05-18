@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import type { Exercise } from '@/lib/phoneme-practice/types'
-import { playIpaSound } from '@/lib/ipa-audio'
+import { playIpaSound } from '@/lib/pronunciation/ipa-audio'
 
 interface Props {
   exercise: Exercise

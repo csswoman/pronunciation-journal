@@ -1,0 +1,25 @@
+{
+  "id": 46,
+  "slug": "advanced-idioms",
+  "level": "advanced",
+  "category": "idioms",
+  "duration": 6,
+  "title": "Idioms that sound native at C1",
+  "subtitle": "Idioms of the day",
+  "body": "These idioms are less common than basics but mark a speaker as genuinely fluent — they appear in journalism, literature, and conversation.",
+  "examples": [
+    {
+      "word": "to bite the bullet",
+      "translation": "aguantar algo difícil"
+    },
+    {
+      "word": "to throw caution to the wind",
+      "translation": "arriesgarse sin precaución"
+    },
+    {
+      "word": "to be on the fence",
+      "translation": "estar indeciso"
+    }
+  ],
+  "href": "/courses/advanced-idioms"
+}

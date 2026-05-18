@@ -1,7 +1,10 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { miniLessons } from "@/lib/mini-lessons";
-import { lessonContent } from "@/lib/lesson-content";
+import {
+  getLessonBySlug,
+  getMiniLessonBySlug,
+  getAllLessonSlugs,
+} from "@/lib/content/lessons";
 
 interface MiniLessonPageProps {
   params: Promise<{ slug: string }>;
@@ -10,8 +13,10 @@ interface MiniLessonPageProps {
 export default async function MiniLessonPage({ params }: MiniLessonPageProps) {
   const { slug } = await params;
 
-  const lesson = miniLessons.find((l) => l.slug === slug);
-  const content = lessonContent.find((c) => c.slug === slug);
+  const [lesson, content] = await Promise.all([
+    getMiniLessonBySlug(slug),
+    getLessonBySlug(slug),
+  ]);
 
   if (!lesson || !content) {
     notFound();
@@ -145,7 +150,6 @@ export default async function MiniLessonPage({ params }: MiniLessonPageProps) {
 }
 
 export async function generateStaticParams() {
-  return miniLessons.map((lesson) => ({
-    slug: lesson.slug,
-  }));
+  const slugs = await getAllLessonSlugs();
+  return slugs.map((slug) => ({ slug }));
 }

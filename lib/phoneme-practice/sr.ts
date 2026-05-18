@@ -1,5 +1,6 @@
 import type { UserSoundProgress, SRResult } from './types'
 
+// Algoritmo binario intencionalmente separado de lib/srs/schedule.ts. No unificar.
 export function updateSR(current: UserSoundProgress, isCorrect: boolean): SRResult {
   let { ease_factor, interval_days, streak } = current
 

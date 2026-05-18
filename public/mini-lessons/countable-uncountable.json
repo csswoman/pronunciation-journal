@@ -1,0 +1,22 @@
+{
+  "id": 7,
+  "slug": "countable-uncountable",
+  "level": "basic",
+  "category": "grammar",
+  "duration": 5,
+  "title": "Countable vs. uncountable nouns",
+  "subtitle": "Grammar of the day",
+  "body": "Countable nouns can be counted and have a plural form. Uncountable nouns are treated as a mass and take singular verbs.",
+  "examples": [
+    {
+      "word": "apple → apples",
+      "translation": "contable"
+    },
+    {
+      "word": "water, information, advice",
+      "translation": "incontable — no decimos 'an advice'"
+    }
+  ],
+  "tip": "When in doubt, ask: can I say 'one ___'? If yes, it's countable.",
+  "href": "/courses/countable-uncountable"
+}

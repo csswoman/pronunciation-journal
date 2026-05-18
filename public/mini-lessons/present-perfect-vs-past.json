@@ -1,0 +1,22 @@
+{
+  "id": 19,
+  "slug": "present-perfect-vs-past",
+  "level": "intermediate",
+  "category": "grammar",
+  "duration": 6,
+  "title": "Present Perfect vs. Simple Past",
+  "subtitle": "Grammar of the day",
+  "body": "This is one of the most common mistakes Spanish speakers make. The key is whether the time is specified or still relevant to now.",
+  "examples": [
+    {
+      "word": "I've seen that movie.",
+      "translation": "experiencia de vida — tiempo no importa"
+    },
+    {
+      "word": "I saw that movie last Friday.",
+      "translation": "tiempo específico → past simple"
+    }
+  ],
+  "tip": "If you can answer 'when?', use Simple Past. If 'when?' is irrelevant, use Present Perfect.",
+  "href": "/courses/present-perfect-past"
+}

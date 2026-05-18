@@ -1,0 +1,25 @@
+{
+  "id": 28,
+  "slug": "discourse-markers",
+  "level": "intermediate",
+  "category": "speaking",
+  "duration": 5,
+  "title": "Discourse markers that buy you time",
+  "subtitle": "Speaking of the day",
+  "body": "Native speakers use these phrases constantly to organize their thoughts, signal transitions, and avoid awkward silence.",
+  "examples": [
+    {
+      "word": "Having said that…",
+      "translation": "introduce un contraste"
+    },
+    {
+      "word": "As a matter of fact…",
+      "translation": "introduce información sorprendente"
+    },
+    {
+      "word": "Come to think of it…",
+      "translation": "algo que acabas de recordar"
+    }
+  ],
+  "href": "/courses/discourse-markers"
+}

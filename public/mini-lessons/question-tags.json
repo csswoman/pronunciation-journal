@@ -1,0 +1,22 @@
+{
+  "id": 9,
+  "slug": "question-tags",
+  "level": "basic",
+  "category": "speaking",
+  "duration": 5,
+  "title": "Question tags: isn't it? didn't you?",
+  "subtitle": "Speaking of the day",
+  "body": "Question tags are mini questions added to the end of a statement to confirm or check information. They're extremely common in British English.",
+  "examples": [
+    {
+      "word": "It's cold, isn't it?",
+      "translation": "confirmar algo que crees que es verdad"
+    },
+    {
+      "word": "You didn't call, did you?",
+      "translation": "confirmar algo negativo"
+    }
+  ],
+  "tip": "Positive statement → negative tag. Negative statement → positive tag.",
+  "href": "/courses/question-tags"
+}

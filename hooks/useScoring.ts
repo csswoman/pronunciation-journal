@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { scorePronunciation, calculateXP, getFeedbackMessage } from "@/lib/scoring";
+import { scorePronunciation, calculateXP, getFeedbackMessage } from "@/lib/pronunciation/scoring";
 import { saveAttempt, updateDailyProgress, updateUserStats } from "@/lib/db";
 import { updateSRS, accuracyToQuality, createSRSEntry } from "@/lib/srs";
 import { saveSRSData, getSRSData } from "@/lib/db";

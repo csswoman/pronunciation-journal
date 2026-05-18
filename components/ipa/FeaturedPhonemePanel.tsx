@@ -2,7 +2,7 @@
 
 import Button from "@/components/ui/Button";
 import { Play, Square } from "lucide-react";
-import { IPA_EXTRA } from "@/lib/ipa-data";
+import { IPA_EXTRA } from "@/lib/pronunciation/ipa-data";
 import type { PhonemeData } from "./data";
 
 const DIFFICULTY_CONFIG = {

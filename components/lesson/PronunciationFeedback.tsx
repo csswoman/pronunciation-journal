@@ -1,7 +1,7 @@
 "use client";
 
 import type { WordResult, PhonemeAlignment } from "@/lib/types";
-import { playIpaSound } from "@/lib/ipa-audio";
+import { playIpaSound } from "@/lib/pronunciation/ipa-audio";
 import ProgressBar from "@/components/ui/ProgressBar";
 
 interface PronunciationFeedbackProps {

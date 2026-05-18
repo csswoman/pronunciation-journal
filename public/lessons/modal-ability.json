@@ -1,0 +1,65 @@
+{
+  "slug": "modal-ability",
+  "sections": [
+    {
+      "heading": "Can — present ability",
+      "body": "'Can' expresses general ability in the present or future. It's also used for permission (informal) and possibility. It's the most versatile and common modal."
+    },
+    {
+      "heading": "Could — past ability and more",
+      "body": "'Could' expresses general ability in the past. Importantly, for a specific achievement in the past — something you managed to do on one particular occasion — use 'was/were able to', not 'could'. 'I could swim at age 5' (general). 'I was able to swim to the shore' (specific achievement)."
+    },
+    {
+      "heading": "Be able to — formal and all tenses",
+      "body": "'Be able to' can appear in any tense, making it more flexible than 'can' or 'could'. It's also more formal and is the only option after other modals: 'You might be able to get a refund.'"
+    }
+  ],
+  "examples": [
+    {
+      "english": "I can speak three languages.",
+      "note": "General present ability"
+    },
+    {
+      "english": "She could read at age 4.",
+      "note": "General past ability"
+    },
+    {
+      "english": "I was able to finish the race despite the injury.",
+      "note": "Specific past achievement — NOT 'could'"
+    },
+    {
+      "english": "You might be able to catch an earlier train.",
+      "note": "After another modal → 'be able to'"
+    }
+  ],
+  "exercises": [
+    {
+      "instruction": "Can, could, or was/were able to?",
+      "items": [
+        "He ___ run very fast when he was young.",
+        "After hours of trying, she ___ solve the puzzle.",
+        "I ___ help you tomorrow if you need.",
+        "___ you swim before you took lessons?"
+      ],
+      "answers": [
+        "could",
+        "was able to",
+        "can",
+        "Could"
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Why is 'could' wrong in this sentence? 'The firefighters could rescue all the trapped people.'",
+      "options": [
+        "'Could' can only refer to the future",
+        "'Could' is wrong in positive sentences about past achievement",
+        "'Could' can't follow 'the'",
+        "'Could' requires 'have'"
+      ],
+      "correct": 1,
+      "explanation": "For a specific past achievement, 'was/were able to' is correct. 'Could' implies general ability, not a one-time success."
+    }
+  ]
+}

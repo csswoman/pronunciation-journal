@@ -1,0 +1,91 @@
+{
+  "slug": "th-sounds",
+  "sections": [
+    {
+      "heading": "Two sounds, one spelling",
+      "body": "The letters 'th' represent two distinct phonemes in English: the voiceless /θ/ (as in 'think') and the voiced /ð/ (as in 'this'). Both require the same mouth position — tongue near or between the upper and lower front teeth — but only /ð/ involves vocal cord vibration."
+    },
+    {
+      "heading": "How to produce them",
+      "body": "Place the tip of your tongue lightly against the back of your upper front teeth (interdental position). For /θ/: push air out without voicing — like a sustained 's' but with the tongue forward. For /ð/: add voicing — you should feel vibration in your throat and tongue."
+    },
+    {
+      "heading": "Which words use which?",
+      "body": "**Voiceless /θ/:** think, thank, through, three, throw, tooth, bath, math, cloth, both, truth. **Voiced /ð/:** this, that, the, these, those, there, then, though, with, bathe, breathe, smooth. A useful shortcut: most function words (the, this, that, they, them, their, there, then, though) use voiced /ð/."
+    },
+    {
+      "heading": "Common substitutions and why they cause problems",
+      "body": "Spanish speakers often substitute /t/ or /d/ for the TH sounds, producing 'tink' for 'think' or 'dis' for 'this'. These are intelligible but noticeable. The substitution of /f/ or /v/ (common in some English dialects: 'fink', 'bruvver') also exists natively but may not be the target for learners."
+    }
+  ],
+  "examples": [
+    {
+      "english": "think / this",
+      "ipa": "/θɪŋk/ · /ðɪs/",
+      "note": "Minimal pair for the two TH sounds"
+    },
+    {
+      "english": "bath / bathe",
+      "ipa": "/bæθ/ · /beɪð/",
+      "note": "Noun vs. verb — voiceless vs. voiced"
+    },
+    {
+      "english": "teeth / teethe",
+      "ipa": "/tiːθ/ · /tiːð/",
+      "note": "Same pattern: noun voiceless, verb voiced"
+    },
+    {
+      "english": "three",
+      "ipa": "/θriː/",
+      "note": "Voiceless — content word"
+    },
+    {
+      "english": "the",
+      "ipa": "/ðə/",
+      "note": "Voiced — function word"
+    }
+  ],
+  "exercises": [
+    {
+      "instruction": "Sort these words into /θ/ (voiceless) or /ð/ (voiced).",
+      "items": [
+        "though",
+        "thunder",
+        "throw",
+        "those",
+        "thank",
+        "breathe",
+        "math",
+        "with"
+      ],
+      "answers": [
+        "/θ/: thunder, throw, thank, math",
+        "/ð/: though, those, breathe, with"
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "question": "The /ð/ sound is called 'voiced' because:",
+      "options": [
+        "It's louder than /θ/",
+        "Your vocal cords vibrate when producing it",
+        "It appears more often in English",
+        "It's used in content words"
+      ],
+      "correct": 1,
+      "explanation": "'Voiced' means the vocal cords vibrate. You can test this by placing a finger on your throat — you'll feel vibration for /ð/ but not for /θ/."
+    },
+    {
+      "question": "Which group of words almost always uses voiced /ð/?",
+      "options": [
+        "Nouns and adjectives",
+        "Function words (the, this, that, they)",
+        "Words ending in -th",
+        "Words starting with thr-"
+      ],
+      "correct": 1,
+      "explanation": "Function words like 'the', 'this', 'that', 'they', 'them', 'there' consistently use voiced /ð/."
+    }
+  ]
+}

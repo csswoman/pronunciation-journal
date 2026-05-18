@@ -1,0 +1,21 @@
+{
+  "id": 45,
+  "slug": "ellipsis-substitution",
+  "level": "advanced",
+  "category": "grammar",
+  "duration": 6,
+  "title": "Ellipsis and substitution",
+  "subtitle": "Grammar of the day",
+  "body": "Native speakers omit predictable words (ellipsis) and replace repeated phrases with shorter ones (substitution) to avoid repetition.",
+  "examples": [
+    {
+      "word": "'Can you come?' 'I might [be able to come].'",
+      "translation": "ellipsis — omisión"
+    },
+    {
+      "word": "'I want a coffee.' 'So do I.'",
+      "translation": "substitution con 'so'"
+    }
+  ],
+  "href": "/courses/ellipsis"
+}

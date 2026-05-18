@@ -1,14 +1,15 @@
 import Link from "next/link";
-import { BookOpen, Clock, Sparkles } from "lucide-react";
+import { BookOpen, Clock } from "lucide-react";
 import { CardBadge } from "@/components/ui/CardBadge";
-import { getTodaysLesson } from "@/lib/mini-lessons";
+import type { MiniLesson } from "@/lib/content/schemas";
 
 interface HomeTheoryOfDayProps {
-  lesson?: ReturnType<typeof getTodaysLesson>;
+  lesson: MiniLesson | null;
 }
 
 export default function HomeTheoryOfDay({ lesson }: HomeTheoryOfDayProps) {
-  const todaysLesson = lesson ?? getTodaysLesson();
+  const todaysLesson = lesson;
+  if (!todaysLesson) return null;
 
   return (
     <div className="rounded-xl border border-border-subtle bg-surface-raised p-4 flex flex-col gap-3">

@@ -1,0 +1,25 @@
+{
+  "id": 38,
+  "slug": "inversion-emphasis",
+  "level": "advanced",
+  "category": "grammar",
+  "duration": 7,
+  "title": "Inversion for emphasis",
+  "subtitle": "Grammar of the day",
+  "body": "Inversion — placing the auxiliary before the subject — creates strong emphasis and is common in formal writing and dramatic speech.",
+  "examples": [
+    {
+      "word": "Never have I seen such bravery.",
+      "translation": "negativo al inicio → inversión"
+    },
+    {
+      "word": "Not only did she win, she broke a record.",
+      "translation": "'not only' al inicio"
+    },
+    {
+      "word": "Rarely does he make mistakes.",
+      "translation": "adverbio negativo al inicio"
+    }
+  ],
+  "href": "/courses/inversion"
+}

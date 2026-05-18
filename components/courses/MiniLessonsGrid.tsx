@@ -1,19 +1,19 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { miniLessons, LessonLevel } from "@/lib/mini-lessons";
+import type { LessonLevel, MiniLesson } from "@/lib/content/schemas";
 import MiniLessonCard from "@/components/courses/MiniLessonCard";
 import Button from "@/components/ui/Button";
 
 type LevelFilter = "all" | LessonLevel;
 
-export default function MiniLessonsGrid() {
+export default function MiniLessonsGrid({ lessons }: { lessons: MiniLesson[] }) {
   const [query, setQuery] = useState("");
   const [level, setLevel] = useState<LevelFilter>("all");
 
   const filtered = useMemo(
     () =>
-      miniLessons.filter((l) => {
+      lessons.filter((l) => {
         const matchLevel = level === "all" || l.level === level;
         const q = query.trim().toLowerCase();
         const matchQuery =
@@ -23,7 +23,7 @@ export default function MiniLessonsGrid() {
           l.category.toLowerCase().includes(q);
         return matchLevel && matchQuery;
       }),
-    [query, level]
+    [lessons, query, level]
   );
 
   const isFiltered = query.trim() !== "" || level !== "all";

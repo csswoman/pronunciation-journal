@@ -1,0 +1,25 @@
+{
+  "id": 20,
+  "slug": "sentence-stress",
+  "level": "intermediate",
+  "category": "pronunciation",
+  "duration": 5,
+  "title": "Sentence stress changes meaning",
+  "subtitle": "Pronunciation of the day",
+  "body": "In English, shifting stress to a different word in the same sentence creates a completely different implication.",
+  "examples": [
+    {
+      "word": "I didn't say she stole the money.",
+      "translation": "7 meanings — one per stressed word"
+    },
+    {
+      "word": "I DIDN'T say she stole the money.",
+      "translation": "alguien más lo dijo"
+    },
+    {
+      "word": "I didn't say SHE stole the money.",
+      "translation": "alguien más lo robó"
+    }
+  ],
+  "href": "/courses/sentence-stress"
+}

@@ -1,0 +1,65 @@
+{
+  "slug": "prepositions-time",
+  "sections": [
+    {
+      "heading": "The size rule",
+      "body": "Think of time references as containers of different sizes. 'In' holds the largest containers: years, months, seasons, decades, centuries, parts of the day. 'On' holds medium containers: days and dates. 'At' holds the smallest, most precise containers: clock times and fixed points."
+    },
+    {
+      "heading": "Fixed expressions",
+      "body": "Some time expressions take no preposition at all: last week, next year, this morning, yesterday, today, tomorrow, every day. Don't add 'on' or 'in' before these — a very common error."
+    }
+  ],
+  "examples": [
+    {
+      "english": "in 2024 · in March · in the morning · in spring",
+      "note": "Periods"
+    },
+    {
+      "english": "on Monday · on 15 March · on my birthday",
+      "note": "Days and dates"
+    },
+    {
+      "english": "at 3pm · at midnight · at noon · at night",
+      "note": "Clock times and fixed points"
+    },
+    {
+      "english": "I'll see you next Friday.",
+      "note": "No preposition before 'next'"
+    }
+  ],
+  "exercises": [
+    {
+      "instruction": "Fill in with in, on, at, or — (no preposition).",
+      "items": [
+        "___ the weekend",
+        "___ Friday morning",
+        "___ 2010",
+        "___ Christmas Day",
+        "___ last night",
+        "___ noon"
+      ],
+      "answers": [
+        "at/on (both used regionally)",
+        "on",
+        "in",
+        "on",
+        "—",
+        "at"
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Which is correct?",
+      "options": [
+        "I was born in 15 March.",
+        "I was born on 15 March.",
+        "I was born at 15 March.",
+        "I was born at March 15."
+      ],
+      "correct": 1,
+      "explanation": "Specific dates use 'on'."
+    }
+  ]
+}

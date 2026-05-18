@@ -6,7 +6,7 @@
 // </MiniLessonCard>
 
 import Link from "next/link";
-import type { MiniLesson } from "@/lib/mini-lessons";
+import type { MiniLesson } from "@/lib/content/schemas";
 import Badge, { BadgeColor } from "@/components/ui/Badge";
 
 const levelBadge: Record<string, { label: string; color: BadgeColor }> = {

@@ -1,4 +1,5 @@
 import type { Tables } from "@/lib/supabase/types";
+import { scheduleNextReview } from "@/lib/srs/schedule";
 
 export type Progress = Tables<"deck_entry_progress">;
 
@@ -42,31 +43,31 @@ export const RATING_CONFIG = {
   },
 } as const;
 
+// SM-2 mapping layer: deck_entry_progress row <-> shared scheduleNextReview.
+// Migrated to lib/srs/schedule.ts in May 2026. Pre-migration this used a
+// non-canonical order (ease updated before interval). Canonical SM-2 order
+// adopted; reviews with reps>=2 and grade>=3 shift by ~1-2 days.
 export function sm2(
   progress: Progress,
   q: number
 ): Omit<Progress, "id" | "user_id" | "entry_id" | "created_at"> {
-  const now = new Date().toISOString();
-  let { ease_factor, interval_days, repetitions } = progress;
-  if (q < 3) {
-    repetitions = 0;
-    interval_days = 1;
-  } else {
-    ease_factor = Math.max(1.3, ease_factor + (0.1 - (5 - q) * (0.08 + (5 - q) * 0.02)));
-    if (repetitions === 0) interval_days = 1;
-    else if (repetitions === 1) interval_days = 6;
-    else interval_days = Math.round(interval_days * ease_factor);
-    repetitions += 1;
-  }
-  const nextReview = new Date();
-  nextReview.setDate(nextReview.getDate() + interval_days);
+  const nowDate = new Date();
+  const now = nowDate.toISOString();
+  const next = scheduleNextReview({
+    ease: progress.ease_factor,
+    interval: progress.interval_days,
+    repetitions: progress.repetitions,
+    grade: q,
+    now: nowDate,
+    updateEaseOnLapse: false,
+  });
   const status: Progress["status"] =
-    interval_days > 21 ? "mastered" : repetitions > 0 ? "review" : "learning";
+    next.interval > 21 ? "mastered" : next.repetitions > 0 ? "review" : "learning";
   return {
-    ease_factor: Math.round(ease_factor * 100) / 100,
-    interval_days,
-    repetitions,
-    next_review_at: nextReview.toISOString(),
+    ease_factor: next.ease,
+    interval_days: next.interval,
+    repetitions: next.repetitions,
+    next_review_at: next.nextReviewAt.toISOString(),
     status,
     last_reviewed_at: now,
     updated_at: now,
@@ -75,16 +76,16 @@ export function sm2(
 
 export function previewInterval(progress: Progress | null, q: number): string {
   if (q < 3) return "in 10 min";
-  let ease_factor = progress?.ease_factor ?? 2.5;
-  let interval_days = progress?.interval_days ?? 1;
-  const repetitions = progress?.repetitions ?? 0;
-  ease_factor = Math.max(1.3, ease_factor + (0.1 - (5 - q) * (0.08 + (5 - q) * 0.02)));
-  if (repetitions === 0) interval_days = 1;
-  else if (repetitions === 1) interval_days = 6;
-  else interval_days = Math.round(interval_days * ease_factor);
-  if (interval_days <= 1) return "in 1 day";
-  if (interval_days < 7) return `in ${interval_days} days`;
-  const weeks = Math.round(interval_days / 7);
+  const { interval } = scheduleNextReview({
+    ease: progress?.ease_factor ?? 2.5,
+    interval: progress?.interval_days ?? 1,
+    repetitions: progress?.repetitions ?? 0,
+    grade: q,
+    updateEaseOnLapse: false,
+  });
+  if (interval <= 1) return "in 1 day";
+  if (interval < 7) return `in ${interval} days`;
+  const weeks = Math.round(interval / 7);
   return weeks === 1 ? "in 1 week" : `in ${weeks} weeks`;
 }
 

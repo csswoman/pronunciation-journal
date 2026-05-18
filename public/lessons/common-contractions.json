@@ -1,0 +1,86 @@
+{
+  "slug": "common-contractions",
+  "sections": [
+    {
+      "heading": "Why contractions matter",
+      "body": "Contractions aren't informal slang — they're the natural default in spoken English and most written English outside formal documents. Avoiding them makes you sound stiff and unnaturally precise, which can actually make you harder to understand because listeners expect the contracted rhythm."
+    },
+    {
+      "heading": "Negative contractions",
+      "body": "Negative contractions are especially important because they change the rhythm of the sentence significantly. 'I do not know' sounds formal or emphatic. 'I don't know' is neutral. Both are correct — but only one sounds natural in casual speech."
+    },
+    {
+      "heading": "Weak forms and contractions together",
+      "body": "Contractions often combine with the weak (unstressed) forms of auxiliary verbs. In fast speech, 'I would have known' becomes 'I'd've known' /aɪdəv noʊn/. These double contractions are common in speech even if rarely written."
+    },
+    {
+      "heading": "When NOT to contract",
+      "body": "Avoid contractions in formal writing (academic papers, legal documents, official letters). Also avoid them when you want to add emphasis: 'No, I am NOT going' — the stress falls on 'am' and 'not', which a contraction would eliminate."
+    }
+  ],
+  "examples": [
+    {
+      "english": "I am → I'm",
+      "ipa": "/aɪm/"
+    },
+    {
+      "english": "they are → they're",
+      "ipa": "/ðɛr/",
+      "note": "Often confused with 'there' and 'their'"
+    },
+    {
+      "english": "would not → wouldn't",
+      "ipa": "/ˈwʊdənt/"
+    },
+    {
+      "english": "I would have → I'd've",
+      "ipa": "/ˈaɪdəv/",
+      "note": "Double contraction — common in speech"
+    },
+    {
+      "english": "let us → let's",
+      "ipa": "/lɛts/"
+    }
+  ],
+  "exercises": [
+    {
+      "instruction": "Rewrite each sentence using contractions where possible.",
+      "items": [
+        "I am not sure what you are talking about.",
+        "She would not have done it if she had known.",
+        "They are going to be late, are they not?",
+        "It is not as difficult as it looks."
+      ],
+      "answers": [
+        "I'm not sure what you're talking about.",
+        "She wouldn't have done it if she'd known.",
+        "They're going to be late, aren't they?",
+        "It's not as difficult as it looks."
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Which contraction is grammatically incorrect?",
+      "options": [
+        "she's",
+        "they're",
+        "amn't",
+        "we've"
+      ],
+      "correct": 2,
+      "explanation": "'Amn't' exists in some dialects (Scottish, Irish English) but is not standard. The standard form is 'aren't I' in questions, or simply avoid the contraction."
+    },
+    {
+      "question": "When should you AVOID contractions?",
+      "options": [
+        "In casual conversation with friends",
+        "In text messages",
+        "In a formal academic essay",
+        "When speaking to someone you just met"
+      ],
+      "correct": 2,
+      "explanation": "Formal academic writing generally avoids contractions to maintain a professional, objective tone."
+    }
+  ]
+}
