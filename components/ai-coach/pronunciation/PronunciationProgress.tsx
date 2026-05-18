@@ -5,7 +5,7 @@ interface Props {
   pct: number;
 }
 
-export default function ProgressBar({ current, total, mastered, pct }: Props) {
+export default function PronunciationProgress({ current, total, mastered, pct }: Props) {
   const safePct = Math.min(Math.max(pct, 0), 100);
 
   return (

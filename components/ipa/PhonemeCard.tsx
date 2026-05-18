@@ -3,7 +3,7 @@
 import type { MouseEvent } from "react";
 import { IPA_EXTRA } from "@/lib/ipa-data";
 import type { PhonemeData } from "./data";
-import DifficultyPill from "./DifficultyPill";
+import DifficultyPill from "@/components/ui/DifficultyPill";
 
 const TYPE_LABEL: Record<PhonemeData["type"], string> = {
   vowel: "VOWEL",
@@ -40,6 +40,7 @@ export default function PhonemeCard({
       <span className="block w-fit mb-1">
         {extra ? (
           <DifficultyPill
+            variant="badge"
             difficulty={extra.difficulty}
             label={TYPE_LABEL[phoneme.type]}
             muted={isSelected}

@@ -6,7 +6,7 @@ import { useRecorder } from "@/hooks/useRecorder";
 import { analyzePhonemes, ARPABET_TO_IPA } from "@/lib/phonemes";
 import { saveAIWord } from "@/lib/ai-db";
 import { pickUSPhonetic, stripIPASlashes } from "@/lib/ai-practice/modes/pronunciation";
-import ProgressBar from "./pronunciation/ProgressBar";
+import PronunciationProgress from "./pronunciation/PronunciationProgress";
 import PhraseCard from "./pronunciation/PhraseCard";
 import RecordingControls from "./pronunciation/RecordingControls";
 import CoachPanel from "./pronunciation/CoachPanel";
@@ -388,7 +388,7 @@ export default function PronunciationView() {
   return (
     <div className="flex flex-col h-full overflow-hidden">
 
-      <ProgressBar
+      <PronunciationProgress
         current={doneInBatch}
         total={batchCount}
         mastered={mastered.size}
