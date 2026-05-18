@@ -1,4 +1,5 @@
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
+import { scheduleNextReview } from "@/lib/srs/schedule";
 import type { WordBankEntry } from "@/lib/types";
 
 // ── Shared SM-2 state shape ──────────────────────────────────────────────────
@@ -32,37 +33,31 @@ export interface StudySource {
   saveProgress(cardId: string, q: number, current: SM2Progress | null): Promise<SM2Progress>;
 }
 
-// ── SM-2 algorithm (generic, operates on SM2Progress) ───────────────────────
-
+// ── SM-2 mapping layer: SM2Progress <-> shared scheduleNextReview ────────────
+// Migrated to lib/srs/schedule.ts in May 2026. Pre-migration this used a
+// non-canonical order (ease updated before interval). Canonical SM-2 order
+// adopted; reviews with reps>=2 and grade>=3 shift by ~1-2 days.
 export function computeSM2(current: SM2Progress | null, q: number): SM2Progress {
-  const now = new Date().toISOString();
-  let ease_factor = current?.ease_factor ?? 2.5;
-  let interval_days = current?.interval_days ?? 1;
-  let repetitions = current?.repetitions ?? 0;
+  const now = new Date();
+  const next = scheduleNextReview({
+    ease: current?.ease_factor ?? 2.5,
+    interval: current?.interval_days ?? 1,
+    repetitions: current?.repetitions ?? 0,
+    grade: q,
+    now,
+    updateEaseOnLapse: false,
+  });
 
-  if (q < 3) {
-    repetitions = 0;
-    interval_days = 1;
-  } else {
-    ease_factor = Math.max(1.3, ease_factor + (0.1 - (5 - q) * (0.08 + (5 - q) * 0.02)));
-    if (repetitions === 0) interval_days = 1;
-    else if (repetitions === 1) interval_days = 6;
-    else interval_days = Math.round(interval_days * ease_factor);
-    repetitions += 1;
-  }
-
-  const nextReview = new Date();
-  nextReview.setDate(nextReview.getDate() + interval_days);
   const status: SM2Progress["status"] =
-    interval_days > 21 ? "mastered" : repetitions > 0 ? "review" : "learning";
+    next.interval > 21 ? "mastered" : next.repetitions > 0 ? "review" : "learning";
 
   return {
-    ease_factor: Math.round(ease_factor * 100) / 100,
-    interval_days,
-    repetitions,
-    next_review_at: nextReview.toISOString(),
+    ease_factor: next.ease,
+    interval_days: next.interval,
+    repetitions: next.repetitions,
+    next_review_at: next.nextReviewAt.toISOString(),
     status,
-    last_reviewed_at: now,
+    last_reviewed_at: now.toISOString(),
   };
 }
 

@@ -1,7 +1,8 @@
 import type { SRSData } from "./types";
+import { scheduleNextReview } from "./srs/schedule";
 
 /**
- * SM-2 algorithm (simplified) for spaced repetition.
+ * Update SRS state for a word after a review.
  *
  * quality: 0-5 rating
  *   5 - Perfect response (accuracy >= 95%)
@@ -10,45 +11,28 @@ import type { SRSData } from "./types";
  *   2 - Incorrect but close (40-59%)
  *   1 - Incorrect (20-39%)
  *   0 - Complete failure (<20%)
+ *
+ * Mapping layer over the shared SM-2 scheduler: SRSData updates ease on every
+ * review (including lapses), hence `updateEaseOnLapse: true`.
  */
 export function updateSRS(current: SRSData, quality: number): SRSData {
-  const q = Math.max(0, Math.min(5, Math.round(quality)));
-  const now = new Date().toISOString();
-
-  let { ease, interval, repetitions } = current;
-
-  if (q >= 3) {
-    // Correct response
-    if (repetitions === 0) {
-      interval = 1;
-    } else if (repetitions === 1) {
-      interval = 6;
-    } else {
-      interval = Math.round(interval * ease);
-    }
-    repetitions += 1;
-  } else {
-    // Incorrect response — reset
-    repetitions = 0;
-    interval = 1;
-  }
-
-  // Update easiness factor
-  ease = Math.max(
-    1.3,
-    ease + (0.1 - (5 - q) * (0.08 + (5 - q) * 0.02))
-  );
-
-  const nextReviewDate = new Date();
-  nextReviewDate.setDate(nextReviewDate.getDate() + interval);
+  const now = new Date();
+  const next = scheduleNextReview({
+    ease: current.ease,
+    interval: current.interval,
+    repetitions: current.repetitions,
+    grade: quality,
+    now,
+    updateEaseOnLapse: true,
+  });
 
   return {
     ...current,
-    ease: Math.round(ease * 100) / 100,
-    interval,
-    repetitions,
-    nextReview: nextReviewDate.toISOString(),
-    lastReview: now,
+    ease: next.ease,
+    interval: next.interval,
+    repetitions: next.repetitions,
+    nextReview: next.nextReviewAt.toISOString(),
+    lastReview: now.toISOString(),
   };
 }
 
