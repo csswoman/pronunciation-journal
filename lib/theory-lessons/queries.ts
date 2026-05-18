@@ -51,6 +51,21 @@ export async function getTheoryLessonBySlug(
   return data as TheoryLesson | null;
 }
 
+/** Single lesson by id — RLS ensures user can only see allowed lessons */
+export async function getTheoryLessonById(
+  id: string
+): Promise<TheoryLesson | null> {
+  const supabase = getSupabaseBrowserClient();
+  const { data, error } = await supabase
+    .from(TABLE)
+    .select("*")
+    .eq("id", id)
+    .maybeSingle();
+
+  if (error) throw error;
+  return data as TheoryLesson | null;
+}
+
 /** Only the current user's own lessons */
 export async function getMyTheoryLessons(): Promise<TheoryLesson[]> {
   const supabase = getSupabaseBrowserClient();

@@ -1,173 +1,108 @@
 "use client";
-import Button from "@/components/ui/Button";
-import { H1 } from "@/components/ui/Typography";
-
-import { useState, useCallback, useRef } from "react";
-import { useRouter } from "next/navigation";
+// Planned structure:
+// <LessonEditor>
+//   <EditorHeader />        (back, title, save)
+//   <LessonAIPanel />       (AI draft generation)
+//   <DetailsCard />         (title, page link, category, publish, cover)
+//   <ContentCard />         (markdown editor)
+//   <EditorActions />
+// </LessonEditor>
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import Image from "next/image";
-import {
-  createTheoryLesson,
-  updateTheoryLesson,
-  uploadLessonCover,
-  slugify,
-} from "@/lib/theory-lessons/queries";
+import Button from "@/components/ui/Button";
+import { H1 } from "@/components/ui/Typography";
+import LessonAIPanel from "@/components/lessons/editor/LessonAIPanel";
+import LessonCoverField from "@/components/lessons/editor/LessonCoverField";
+import { useLessonEditor } from "@/hooks/useLessonEditor";
 import { LESSON_CATEGORIES } from "@/lib/types";
 import type { TheoryLesson, LessonCategory } from "@/lib/types";
-import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 
 const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
+
+const fieldClass =
+  "w-full px-4 py-2.5 rounded-xl border border-[var(--line-divider)] bg-[var(--card-bg)] text-sm focus:outline-none focus:border-[var(--primary)] text-fg";
+const labelClass =
+  "block text-xs font-semibold mb-1.5 uppercase tracking-wider text-fg-muted";
 
 interface LessonEditorProps {
   initialLesson?: TheoryLesson;
 }
 
 export default function LessonEditor({ initialLesson }: LessonEditorProps) {
-  const router = useRouter();
-  const isEdit = !!initialLesson;
-
-  const [title, setTitle] = useState(initialLesson?.title ?? "");
-  const [slug, setSlug] = useState(initialLesson?.slug ?? "");
-  const [slugEdited, setSlugEdited] = useState(isEdit);
-  const [category, setCategory] = useState<LessonCategory>(
-    (initialLesson?.category as LessonCategory) ?? "general"
-  );
-  const [content, setContent] = useState(initialLesson?.content ?? "");
-  const [coverUrl, setCoverUrl] = useState(initialLesson?.cover_image_url ?? "");
-  const [isPublished, setIsPublished] = useState(initialLesson?.is_published ?? false);
-
-  const [saving, setSaving] = useState(false);
-  const [uploadingCover, setUploadingCover] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const handleTitleChange = (val: string) => {
-    setTitle(val);
-    if (!slugEdited) setSlug(slugify(val));
-  };
-
-  const handleSlugChange = (val: string) => {
-    setSlug(slugify(val));
-    setSlugEdited(true);
-  };
-
-  const handleCoverUpload = useCallback(async (file: File) => {
-    setUploadingCover(true);
-    setError(null);
-    try {
-      const supabase = getSupabaseBrowserClient();
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error("Not authenticated");
-      const url = await uploadLessonCover(user.id, file);
-      setCoverUrl(url);
-    } catch (e: unknown) {
-      setError(e instanceof Error ? e.message : "Upload failed");
-    } finally {
-      setUploadingCover(false);
-    }
-  }, []);
-
-  const handleSave = async () => {
-    if (!title.trim()) { setError("Title is required"); return; }
-    if (!slug.trim())  { setError("Slug is required"); return; }
-    if (!content.trim()) { setError("Content cannot be empty"); return; }
-
-    setSaving(true);
-    setError(null);
-    try {
-      if (isEdit && initialLesson) {
-        await updateTheoryLesson(initialLesson.id, {
-          title,
-          slug,
-          category,
-          content,
-          cover_image_url: coverUrl || null,
-          is_published: isPublished,
-        });
-        router.push(`/courses`);
-      } else {
-        const created = await createTheoryLesson({
-          title,
-          slug,
-          category,
-          content,
-          cover_image_url: coverUrl || null,
-          is_published: isPublished,
-          source: "manual",
-          notion_page_id: null,
-          notion_last_edited: null,
-          notion_synced_at: null,
-        });
-        router.push(`/courses`);
-      }
-    } catch (e: unknown) {
-      setError(e instanceof Error ? e.message : "Could not save lesson");
-      setSaving(false);
-    }
-  };
+  const ed = useLessonEditor(initialLesson);
 
   return (
     <div className="min-h-screen bg-surface-base">
-      <div className="max-w-4xl mx-auto px-4 py-8">
+      <div className="max-w-3xl mx-auto px-4 py-8 flex flex-col gap-6">
         {/* Header */}
-        <div className="flex items-center gap-3 mb-8">
+        <div className="flex items-center gap-3">
           <Link
-            href="/courses"
+            href="/admin/lessons"
             className="p-2 rounded-xl hover:bg-[var(--btn-plain-bg-hover)] transition-colors text-fg-muted"
+            aria-label="Back to Lesson Manager"
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
           </Link>
-          <H1 className="text-xl font-bold">
-            {isEdit ? "Edit lesson" : "New lesson"}
+          <H1 className="text-xl font-bold flex-1">
+            {ed.isEdit ? "Edit lesson" : "New lesson"}
           </H1>
+          <Button
+            onClick={ed.save}
+            disabled={ed.saving || ed.uploadingCover}
+            className="px-5 py-2 rounded-xl text-sm font-semibold bg-primary text-on-primary disabled:opacity-50"
+          >
+            {ed.saving ? "Saving…" : ed.isEdit ? "Save changes" : "Create lesson"}
+          </Button>
         </div>
 
-        <div className="flex flex-col gap-6">
-          {/* Title */}
+        <LessonAIPanel
+          hasContent={ed.content.trim().length > 0}
+          onGenerated={ed.applyAIDraft}
+        />
+
+        {/* Lesson details */}
+        <div className="rounded-2xl border border-[var(--line-divider)] bg-[var(--card-bg)] p-5 flex flex-col gap-5">
+          <p className="text-xs font-semibold uppercase tracking-widest text-fg-subtle">
+            Lesson details
+          </p>
+
           <div>
-            <label className="block text-xs font-semibold mb-1.5 uppercase tracking-wider text-fg-muted">
-              Title
-            </label>
+            <label className={labelClass}>Title</label>
             <input
               type="text"
-              value={title}
-              onChange={(e) => handleTitleChange(e.target.value)}
+              value={ed.title}
+              onChange={(e) => ed.handleTitleChange(e.target.value)}
               placeholder="e.g. Introduction to Vowel Sounds"
-              className="w-full px-4 py-2.5 rounded-xl border border-[var(--line-divider)] bg-[var(--card-bg)] text-sm focus:outline-none focus:border-[var(--primary)] text-fg"
+              className={fieldClass}
             />
           </div>
 
-          {/* Slug */}
           <div>
-            <label className="block text-xs font-semibold mb-1.5 uppercase tracking-wider text-fg-muted">
-              Slug (URL)
-            </label>
+            <label className={labelClass}>Page link</label>
+            <p className="text-xs mb-1.5 text-fg-subtle">
+              Created automatically from the title — only change it if you need a custom web address.
+            </p>
             <div className="flex items-center gap-2">
-              <span className="text-xs px-2 text-fg-subtle">/courses/</span>
+              <span className="text-xs px-2 text-fg-subtle">/courses/library/</span>
               <input
                 type="text"
-                value={slug}
-                onChange={(e) => handleSlugChange(e.target.value)}
+                value={ed.slug}
+                onChange={(e) => ed.handleSlugChange(e.target.value)}
                 placeholder="intro-vowel-sounds"
-                className="flex-1 px-4 py-2.5 rounded-xl border border-[var(--line-divider)] bg-[var(--card-bg)] text-sm focus:outline-none focus:border-[var(--primary)] text-fg"
+                className={`flex-1 ${fieldClass}`}
               />
             </div>
           </div>
 
-          {/* Category + Published row */}
           <div className="flex gap-4 flex-wrap">
             <div className="flex-1 min-w-[180px]">
-              <label className="block text-xs font-semibold mb-1.5 uppercase tracking-wider text-fg-muted">
-                Category
-              </label>
+              <label className={labelClass}>Category</label>
               <select
-                value={category}
-                onChange={(e) => setCategory(e.target.value as LessonCategory)}
-                className="w-full px-4 py-2.5 rounded-xl border border-[var(--line-divider)] bg-[var(--card-bg)] text-sm focus:outline-none focus:border-[var(--primary)] text-fg"
+                value={ed.category}
+                onChange={(e) => ed.setCategory(e.target.value as LessonCategory)}
+                className={fieldClass}
               >
                 {LESSON_CATEGORIES.map((c) => (
                   <option key={c.value} value={c.value}>{c.label}</option>
@@ -178,109 +113,65 @@ export default function LessonEditor({ initialLesson }: LessonEditorProps) {
             <div className="flex items-end pb-0.5">
               <label className="flex items-center gap-2.5 cursor-pointer select-none">
                 <div
-                  onClick={() => setIsPublished((v) => !v)}
-                  className={`w-9 h-5 rounded-full transition-colors relative ${isPublished ? "bg-[var(--primary)]" : "bg-[var(--btn-plain-bg-hover)]"}`}
+                  onClick={() => ed.setIsPublished(!ed.isPublished)}
+                  className={`w-9 h-5 rounded-full transition-colors relative ${ed.isPublished ? "bg-[var(--primary)]" : "bg-[var(--btn-plain-bg-hover)]"}`}
                 >
-                  <div className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-surface-raised shadow transition-transform ${isPublished ? "translate-x-4" : ""}`} />
+                  <div className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-surface-raised shadow transition-transform ${ed.isPublished ? "translate-x-4" : ""}`} />
                 </div>
                 <span className="text-sm font-medium text-fg">
-                  {isPublished ? "Published" : "Draft"}
+                  {ed.isPublished ? "Published" : "Draft"}
                 </span>
               </label>
             </div>
           </div>
 
-          {/* Cover image */}
-          <div>
-            <label className="block text-xs font-semibold mb-1.5 uppercase tracking-wider text-fg-muted">
-              Cover image
-            </label>
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/*"
-              className="hidden"
-              onChange={(e) => {
-                const file = e.target.files?.[0];
-                if (file) handleCoverUpload(file);
-              }}
+          <LessonCoverField
+            coverUrl={ed.coverUrl}
+            uploading={ed.uploadingCover}
+            onUpload={ed.handleCoverUpload}
+            onClear={() => ed.setCoverUrl("")}
+          />
+        </div>
+
+        {/* Content */}
+        <div className="rounded-2xl border border-[var(--line-divider)] bg-[var(--card-bg)] p-5">
+          <label className={labelClass}>Lesson content</label>
+          <p className="text-xs mb-2.5 text-fg-subtle">
+            Use the toolbar to add headings, bold text, lists and images. The right panel shows a live preview.
+          </p>
+          <div data-color-mode="auto">
+            <MDEditor
+              value={ed.content}
+              onChange={(val) => ed.setContent(val ?? "")}
+              height={480}
+              preview="live"
             />
-            {coverUrl ? (
-              <div className="relative rounded-xl overflow-hidden h-40">
-                <Image src={coverUrl} alt="cover" fill className="object-cover" />
-                <Button
-                  onClick={() => setCoverUrl("")}
-                  className="absolute top-2 right-2 p-1.5 rounded-lg bg-black/50 text-on-primary hover:bg-black/70 transition-colors"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </Button>
-              </div>
-            ) : (
-              <Button
-                onClick={() => fileInputRef.current?.click()}
-                disabled={uploadingCover}
-                className="w-full h-28 rounded-xl border-2 border-dashed border-[var(--line-divider)] flex flex-col items-center justify-center gap-2 text-sm hover:border-[var(--primary)] transition-colors disabled:opacity-50 text-fg-subtle"
-              >
-                {uploadingCover ? (
-                  <div className="w-5 h-5 border-2 border-[var(--primary)] border-t-transparent rounded-full animate-spin" />
-                ) : (
-                  <>
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
-                    <span>Click to upload cover</span>
-                  </>
-                )}
-              </Button>
-            )}
           </div>
+        </div>
 
-          {/* Markdown editor */}
-          <div>
-            <label className="block text-xs font-semibold mb-1.5 uppercase tracking-wider text-fg-muted">
-              Content (Markdown)
-            </label>
-            <div data-color-mode="auto">
-              <MDEditor
-                value={content}
-                onChange={(val) => setContent(val ?? "")}
-                height={480}
-                preview="live"
-              />
-            </div>
+        {ed.error && (
+          <div className="rounded-xl p-3 bg-error-soft text-error text-sm">
+            {ed.error}
           </div>
+        )}
 
-          {/* Error */}
-          {error && (
-            <div className="rounded-xl p-3 bg-error-soft text-error text-sm">
-              {error}
-            </div>
-          )}
-
-          {/* Actions */}
-          <div className="flex items-center gap-3 pt-2">
-            <Button
-              onClick={handleSave}
-              disabled={saving || uploadingCover}
-              className="px-6 py-2.5 rounded-xl text-sm font-semibold transition-colors disabled:opacity-50 bg-primary text-on-primary"
-            >
-              {saving ? "Saving…" : isEdit ? "Save changes" : "Create lesson"}
-            </Button>
-            <Link
-              href="/courses"
-              className="px-4 py-2.5 rounded-xl text-sm font-medium border border-[var(--line-divider)] hover:bg-[var(--btn-plain-bg-hover)] transition-colors text-fg"
-            >
-              Cancel
-            </Link>
-          </div>
+        {/* Actions */}
+        <div className="flex items-center gap-3">
+          <Button
+            onClick={ed.save}
+            disabled={ed.saving || ed.uploadingCover}
+            className="px-6 py-2.5 rounded-xl text-sm font-semibold bg-primary text-on-primary disabled:opacity-50"
+          >
+            {ed.saving ? "Saving…" : ed.isEdit ? "Save changes" : "Create lesson"}
+          </Button>
+          <Link
+            href="/admin/lessons"
+            className="px-4 py-2.5 rounded-xl text-sm font-medium border border-[var(--line-divider)] hover:bg-[var(--btn-plain-bg-hover)] transition-colors text-fg"
+          >
+            Cancel
+          </Link>
         </div>
       </div>
     </div>
   );
 }
-
-
-
-
