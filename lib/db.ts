@@ -72,141 +72,67 @@ class PronunciationDB extends Dexie {
   constructor() {
     super("pronunciation-journal");
 
+    // Dexie merges schemas forward: each version() lists ONLY the stores that
+    // change relative to the previous version. Read top-to-bottom for the
+    // schema's history. The effective schema is the union of all blocks.
+
+    // v1: initial schema
     this.version(1).stores({
-      attempts: "++id, word, lessonId, timestamp",
-      srsData: "wordId, word, nextReview",
+      attempts:      "++id, word, lessonId, timestamp",
+      srsData:       "wordId, word, nextReview",
       dailyProgress: "++id, date",
-      userStats: "++id",
+      userStats:     "++id",
     });
 
+    // v2: favorite words
     this.version(2).stores({
-      attempts: "++id, word, lessonId, timestamp",
-      srsData: "wordId, word, nextReview",
-      dailyProgress: "++id, date",
-      userStats: "++id",
       favorites: "++id, word, lessonId, addedAt",
     });
 
+    // v3: AI conversations + saved words
     this.version(3).stores({
-      attempts:        "++id, word, lessonId, timestamp",
-      srsData:         "wordId, word, nextReview",
-      dailyProgress:   "++id, date",
-      userStats:       "++id",
-      favorites:       "++id, word, lessonId, addedAt",
       aiConversations: "++id, templateId, createdAt, updatedAt",
       aiWords:         "++id, word, conversationId, savedAt, difficulty",
     });
 
+    // v4: lesson session offsets
     this.version(4).stores({
-      attempts:        "++id, word, lessonId, timestamp",
-      srsData:         "wordId, word, nextReview",
-      dailyProgress:   "++id, date",
-      userStats:       "++id",
-      favorites:       "++id, word, lessonId, addedAt",
-      aiConversations: "++id, templateId, createdAt, updatedAt",
-      aiWords:         "++id, word, conversationId, savedAt, difficulty",
-      lessonOffsets:   "lessonId",
+      lessonOffsets: "lessonId",
     });
 
-    // v5: offline-first sync queue (Outbox Pattern)
+    // v5: offline-first sync queue (Outbox Pattern).
+    // Indexed by status+createdAt to efficiently query pending entries in order
     this.version(5).stores({
-      attempts:        "++id, word, lessonId, timestamp",
-      srsData:         "wordId, word, nextReview",
-      dailyProgress:   "++id, date",
-      userStats:       "++id",
-      favorites:       "++id, word, lessonId, addedAt",
-      aiConversations: "++id, templateId, createdAt, updatedAt",
-      aiWords:         "++id, word, conversationId, savedAt, difficulty",
-      lessonOffsets:   "lessonId",
-      // Indexed by status+createdAt to efficiently query pending entries in order
-      syncOutbox:      "++id, status, createdAt, [status+createdAt]",
+      syncOutbox: "++id, status, createdAt, [status+createdAt]",
     });
 
     // v6: local cache mirrors for offline reads (user_sound_progress, answer_history)
     this.version(6).stores({
-      attempts:             "++id, word, lessonId, timestamp",
-      srsData:              "wordId, word, nextReview",
-      dailyProgress:        "++id, date",
-      userStats:            "++id",
-      favorites:            "++id, word, lessonId, addedAt",
-      aiConversations:      "++id, templateId, createdAt, updatedAt",
-      aiWords:              "++id, word, conversationId, savedAt, difficulty",
-      lessonOffsets:        "lessonId",
-      syncOutbox:           "++id, status, createdAt, [status+createdAt]",
       // localKey = `${userId}:${soundId}` — mirrors user_sound_progress
-      localSoundProgress:   "localKey, userId, soundId, nextReview",
+      localSoundProgress: "localKey, userId, soundId, nextReview",
       // mirrors answer_history rows before they are confirmed by Supabase
-      localAnswerHistory:   "++id, userId, soundId, answeredAt, synced",
+      localAnswerHistory: "++id, userId, soundId, answeredAt, synced",
     });
 
     // v7: course lesson completion tracking (offline-first)
     this.version(7).stores({
-      attempts:             "++id, word, lessonId, timestamp",
-      srsData:              "wordId, word, nextReview",
-      dailyProgress:        "++id, date",
-      userStats:            "++id",
-      favorites:            "++id, word, lessonId, addedAt",
-      aiConversations:      "++id, templateId, createdAt, updatedAt",
-      aiWords:              "++id, word, conversationId, savedAt, difficulty",
-      lessonOffsets:        "lessonId",
-      syncOutbox:           "++id, status, createdAt, [status+createdAt]",
-      localSoundProgress:   "localKey, userId, soundId, nextReview",
-      localAnswerHistory:   "++id, userId, soundId, answeredAt, synced",
-      completedLessons:     "key, courseSlug, completedAt",
+      completedLessons: "key, courseSlug, completedAt",
     });
 
-    // v10: generic exercise cache (fill_blank, sentence_dictation, match_pairs, reorder_words)
-    this.version(10).stores({
-      attempts:             "++id, word, lessonId, timestamp",
-      srsData:              "wordId, word, nextReview",
-      dailyProgress:        "++id, date",
-      userStats:            "++id",
-      favorites:            "++id, word, lessonId, addedAt",
-      aiConversations:      "++id, templateId, mode, createdAt, updatedAt",
-      aiWords:              "++id, word, conversationId, savedAt, difficulty",
-      lessonOffsets:        "lessonId",
-      syncOutbox:           "++id, status, createdAt, [status+createdAt]",
-      localSoundProgress:   "localKey, userId, soundId, nextReview",
-      localAnswerHistory:   "++id, userId, soundId, answeredAt, synced",
-      completedLessons:     "key, courseSlug, completedAt",
-      learningState:        "userId, updatedAt",
-      analyticsEvents:      "++id, name, timestamp, synced",
-      generatedExercises:   "id, type, source, generatedAt",
+    // v8: mode index on aiConversations + learningState store
+    this.version(8).stores({
+      aiConversations: "++id, templateId, mode, createdAt, updatedAt",
+      learningState:   "userId, updatedAt",
     });
 
     // v9: analytics events (local + optional Supabase batch sync)
     this.version(9).stores({
-      attempts:             "++id, word, lessonId, timestamp",
-      srsData:              "wordId, word, nextReview",
-      dailyProgress:        "++id, date",
-      userStats:            "++id",
-      favorites:            "++id, word, lessonId, addedAt",
-      aiConversations:      "++id, templateId, mode, createdAt, updatedAt",
-      aiWords:              "++id, word, conversationId, savedAt, difficulty",
-      lessonOffsets:        "lessonId",
-      syncOutbox:           "++id, status, createdAt, [status+createdAt]",
-      localSoundProgress:   "localKey, userId, soundId, nextReview",
-      localAnswerHistory:   "++id, userId, soundId, answeredAt, synced",
-      completedLessons:     "key, courseSlug, completedAt",
-      learningState:        "userId, updatedAt",
-      analyticsEvents:      "++id, name, timestamp, synced",
+      analyticsEvents: "++id, name, timestamp, synced",
     });
 
-    // v8: mode field on aiConversations + learningState store
-    this.version(8).stores({
-      attempts:             "++id, word, lessonId, timestamp",
-      srsData:              "wordId, word, nextReview",
-      dailyProgress:        "++id, date",
-      userStats:            "++id",
-      favorites:            "++id, word, lessonId, addedAt",
-      aiConversations:      "++id, templateId, mode, createdAt, updatedAt",
-      aiWords:              "++id, word, conversationId, savedAt, difficulty",
-      lessonOffsets:        "lessonId",
-      syncOutbox:           "++id, status, createdAt, [status+createdAt]",
-      localSoundProgress:   "localKey, userId, soundId, nextReview",
-      localAnswerHistory:   "++id, userId, soundId, answeredAt, synced",
-      completedLessons:     "key, courseSlug, completedAt",
-      learningState:        "userId, updatedAt",
+    // v10: generic exercise cache (fill_blank, sentence_dictation, match_pairs, reorder_words)
+    this.version(10).stores({
+      generatedExercises: "id, type, source, generatedAt",
     });
   }
 }
