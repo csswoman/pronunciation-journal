@@ -1,9 +1,11 @@
 "use client";
-import Link from "next/link";
+import { useMemo, useState } from "react";
 import Button from "@/components/ui/Button";
-import { H1 } from "@/components/ui/Typography";
+import LessonManagerHeader from "@/components/admin/LessonManagerHeader";
+import LessonToolbar, { type LessonFilter } from "@/components/admin/LessonToolbar";
 import LessonTable from "@/components/admin/LessonTable";
 import { useLessonManager } from "@/hooks/useLessonManager";
+import type { TheoryLesson } from "@/lib/types";
 
 export default function AdminLessonsPage() {
   const {
@@ -20,90 +22,105 @@ export default function AdminLessonsPage() {
     dismissSync,
   } = useLessonManager();
 
-  const handleDelete = (lesson: (typeof lessons)[number]) => {
+  const [query, setQuery] = useState("");
+  const [filter, setFilter] = useState<LessonFilter>("all");
+
+  const handleDelete = (lesson: TheoryLesson) => {
     if (!confirm(`Delete "${lesson.title}"? This cannot be undone.`)) return;
     deleteLesson(lesson);
   };
 
-  const system = lessons.filter((l) => l.is_system);
-  const user = lessons.filter((l) => !l.is_system);
+  const counts = useMemo(() => ({
+    all: lessons.length,
+    system: lessons.filter((l) => l.is_system).length,
+    user: lessons.filter((l) => !l.is_system).length,
+    drafts: lessons.filter((l) => !l.is_published).length,
+  }), [lessons]);
+
+  const lastSyncedAt = useMemo(() => {
+    const stamps = lessons.map((l) => l.notion_synced_at).filter(Boolean) as string[];
+    return stamps.length ? stamps.sort().at(-1)! : null;
+  }, [lessons]);
+
+  const { system, user, showSystem, showUser } = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    const visible = lessons.filter((l) => {
+      const matchesQuery = !q || l.title.toLowerCase().includes(q) || l.slug.toLowerCase().includes(q);
+      const matchesDrafts = filter !== "drafts" || !l.is_published;
+      return matchesQuery && matchesDrafts;
+    });
+    return {
+      system: visible.filter((l) => l.is_system),
+      user: visible.filter((l) => !l.is_system),
+      showSystem: filter !== "user",
+      showUser: filter !== "system",
+    };
+  }, [lessons, query, filter]);
 
   return (
     <div className="min-h-screen bg-page-bg">
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <H1 className="text-h2">Lesson Manager</H1>
-            <p className="text-sm mt-0.5 text-fg-muted">
-              Create, edit and publish theory lessons
-            </p>
-          </div>
-          <div className="flex items-center gap-2">
-            <Button
-              onClick={syncNotion}
-              disabled={syncStatus === "syncing"}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-semibold border border-line-divider bg-card-bg text-fg transition-colors disabled:opacity-50"
-              title="Sync lessons from Notion"
-            >
-              {syncStatus === "syncing" ? (
-                <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
-              ) : (
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                </svg>
-              )}
-              {syncStatus === "syncing" ? "Syncing…" : "Sync Notion"}
-            </Button>
-            <Link
-              href="/admin/lessons/new"
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-semibold bg-primary text-on-primary"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-              </svg>
-              New lesson
-            </Link>
-          </div>
-        </div>
+      <LessonManagerHeader
+        total={counts.all}
+        published={counts.all - counts.drafts}
+        drafts={counts.drafts}
+        syncStatus={syncStatus}
+        lastSyncedAt={lastSyncedAt}
+        onSync={syncNotion}
+      />
+
+      <div className="max-w-5xl mx-auto px-space-6 py-space-8">
+        <LessonToolbar
+          query={query}
+          onQueryChange={setQuery}
+          filter={filter}
+          onFilterChange={setFilter}
+          counts={counts}
+        />
 
         {error && (
-          <div className="rounded-xl p-3 mb-4 bg-error-soft text-error text-sm">
+          <div className="rounded-xl p-space-3 mb-space-4 bg-error-soft text-error text-body-sm">
             {error}
           </div>
         )}
 
         {syncStatus === "success" && syncResult && (
-          <div className="rounded-xl p-3 mb-6 bg-success-soft text-success text-sm flex items-center justify-between">
+          <div className="rounded-xl p-space-3 mb-space-6 bg-success-soft text-success text-body-sm flex items-center justify-between">
             <span>
               Notion sync complete — {syncResult.created} created, {syncResult.updated} updated, {syncResult.deleted} deleted, {syncResult.skipped} skipped
             </span>
-            <Button onClick={dismissSync} className="ml-4 opacity-60 hover:opacity-100 text-lg leading-none">×</Button>
+            <Button onClick={dismissSync} className="ml-space-4 opacity-60 hover:opacity-100 text-lg leading-none">×</Button>
           </div>
         )}
 
         {loading ? (
-          <div className="flex items-center justify-center py-20">
-            <div className="w-6 h-6 border-2 border-[var(--primary)] border-t-transparent rounded-full animate-spin" />
+          <div className="flex items-center justify-center py-space-20">
+            <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
           </div>
         ) : (
           <>
-            <LessonTable
-              title="System lessons"
-              lessons={system}
-              deletingId={deletingId}
-              togglingId={togglingId}
-              onDelete={handleDelete}
-              onTogglePublish={togglePublish}
-              showPublishControl
-            />
-            <LessonTable
-              title="User lessons"
-              lessons={user}
-              deletingId={deletingId}
-              togglingId={togglingId}
-              onDelete={handleDelete}
-              onTogglePublish={togglePublish}
-            />
+            {showSystem && (
+              <LessonTable
+                label="System"
+                note="Synced from Notion · read-only origin"
+                lessons={system}
+                deletingId={deletingId}
+                togglingId={togglingId}
+                onDelete={handleDelete}
+                onTogglePublish={togglePublish}
+                showPublishControl
+              />
+            )}
+            {showUser && (
+              <LessonTable
+                label="User"
+                note="Created by you · editable"
+                lessons={user}
+                deletingId={deletingId}
+                togglingId={togglingId}
+                onDelete={handleDelete}
+                onTogglePublish={togglePublish}
+              />
+            )}
           </>
         )}
       </div>
