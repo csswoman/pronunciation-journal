@@ -1,8 +1,8 @@
 import Dexie, { type Table } from "dexie";
-import type { AIConversation, AISavedWord, Attempt, DailyProgress, FavoriteWord, SRSData, UserStats } from "./types";
-import type { SyncOutboxEntry } from "./sync/types";
-import type { UserLearningState } from "./ai-practice/learning-state";
-import type { GenericExercise, GenericExerciseType, ExerciseSource } from "./exercises/types";
+import type { AIConversation, AISavedWord, Attempt, DailyProgress, FavoriteWord, SRSData, UserStats } from "../types";
+import type { SyncOutboxEntry } from "../sync/types";
+import type { UserLearningState } from "../ai-practice/learning-state";
+import type { GenericExercise, GenericExerciseType, ExerciseSource } from "../exercises/types";
 
 export interface CachedExercise {
   /** Same deterministic id as GenericExercise.id. */

@@ -4,14 +4,14 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import Button from "@/components/ui/Button";
 import { MessageCircle, Target } from "lucide-react";
-import { IPA_AUDIO_MAP, SOUNDS_BASE_URL } from "@/lib/ipa-audio";
+import { IPA_AUDIO_MAP, SOUNDS_BASE_URL } from "@/lib/pronunciation/ipa-audio";
 import {
   FILTER_TABS,
   PHONEMES,
   type FilterType,
   type PhonemeData,
 } from "./data";
-import { HARD_FOR_SPANISH_SPEAKERS } from "@/lib/ipa-data";
+import { HARD_FOR_SPANISH_SPEAKERS } from "@/lib/pronunciation/ipa-data";
 import DifficultyPill from "@/components/ui/DifficultyPill";
 import FeaturedPhonemePanel from "./FeaturedPhonemePanel";
 import FilterTabs from "./FilterTabs";

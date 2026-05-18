@@ -6,7 +6,7 @@ import { useAuth } from "@/components/auth/AuthProvider"
 import PageLayout from '@/components/layout/PageLayout'
 import PageHeader from '@/components/layout/PageHeader'
 import { getUserStats } from '@/lib/db'
-import { getAllDbLessons } from '@/lib/lesson-generator-db'
+import { getAllDbLessons } from '@/lib/db/lesson-generator'
 import { getAllProgress } from '@/lib/phoneme-practice/queries'
 import type { Lesson } from '@/lib/types'
 import type { UserSoundProgressWithSound } from '@/lib/phoneme-practice/types'

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { saveAIWord, getAIWords, deleteAIWord } from "@/lib/ai-db";
+import { saveAIWord, getAIWords, deleteAIWord } from "@/lib/db/ai";
 import type { AISavedWord, Difficulty } from "@/lib/types";
 
 export interface SaveWordData {

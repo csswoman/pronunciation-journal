@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { Mic, MicOff, Loader2, RotateCcw } from "lucide-react";
 import Button from "@/components/ui/Button";
 import { useRecorder } from "@/hooks/useRecorder";
-import { scorePronunciation } from "@/lib/scoring";
+import { scorePronunciation } from "@/lib/pronunciation/scoring";
 import type { ScoringResult } from "@/lib/types";
 
 export type ExerciseDifficulty = "guided" | "challenge";

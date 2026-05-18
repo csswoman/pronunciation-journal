@@ -3,7 +3,7 @@ import {
   getAllSoundsWithWords,
   type DbSound,
   type DbWord,
-} from '@/lib/db-lessons'
+} from '@/lib/db/lessons'
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 

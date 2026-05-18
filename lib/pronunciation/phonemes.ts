@@ -3,7 +3,7 @@
  * Dynamic import keeps the ~3.5MB dictionary out of the initial JS bundle.
  */
 
-import type { PhonemeResult, PhonemeAlignment } from "./types";
+import type { PhonemeResult, PhonemeAlignment } from "../types";
 
 // ARPAbet → IPA symbol mapping (used to link to the IPA chart)
 export const ARPABET_TO_IPA: Record<string, string> = {

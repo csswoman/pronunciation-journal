@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useAuth } from '@/components/auth/AuthProvider'
-import { getAllDbLessons } from '@/lib/lesson-generator-db'
+import { getAllDbLessons } from '@/lib/db/lesson-generator'
 import { getAllProgress } from '@/lib/phoneme-practice/queries'
 import { useHeroLesson } from './useHeroLesson'
 import type { Lesson } from '@/lib/types'

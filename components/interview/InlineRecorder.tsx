@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Mic, MicOff, RotateCcw, Volume2, ChevronRight, Loader2, Pause } from "lucide-react";
 import { useRecorder } from "@/hooks/useRecorder";
-import { scorePronunciation } from "@/lib/scoring";
+import { scorePronunciation } from "@/lib/pronunciation/scoring";
 import type { ScoringResult } from "@/lib/types";
 import type { ExerciseDifficulty, Level } from "./CandidateRecorder";
 import { getThreshold } from "./interview-utils";

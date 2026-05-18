@@ -1,5 +1,5 @@
-import type { SRSData } from "./types";
-import { scheduleNextReview } from "./srs/schedule";
+import type { SRSData } from "../types";
+import { scheduleNextReview } from "./schedule";
 
 /**
  * Update SRS state for a word after a review.

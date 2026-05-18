@@ -12,7 +12,7 @@ import AICoachHome from "@/components/ai-coach/AICoachHome";
 import SaveWordModal from "@/components/ai-coach/SaveWordModal";
 import ErrorBanner from "@/components/ai-coach/ErrorBanner";
 import QuotaExhaustedCard from "@/components/ai-coach/QuotaExhaustedCard";
-import { getRecentConversations } from "@/lib/ai-db";
+import { getRecentConversations } from "@/lib/db/ai";
 import type { AIConversation } from "@/lib/types";
 import { getPageContext } from "./page-context";
 import { usePanelResize } from "./usePanelResize";

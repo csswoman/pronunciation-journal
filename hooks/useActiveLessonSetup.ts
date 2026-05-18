@@ -48,7 +48,7 @@ export function useActiveLessonSetup(
 
   useEffect(() => {
     if (!isDynamic) return;
-    import("@/lib/lesson-generator-db").then(({ getDbLessonById }) =>
+    import("@/lib/db/lesson-generator").then(({ getDbLessonById }) =>
       getDbLessonById(lessonId).then(setDynamicLesson)
     );
   }, [lessonId, isDynamic]);
@@ -65,7 +65,7 @@ export function useActiveLessonSetup(
     if (!fullLesson) return;
     const baseThreshold = stageId === "speed" ? 85 : stageId === "pronunciation" ? 75 : 65;
     setScoringThreshold(diff === "master" ? Math.min(baseThreshold + 15, 95) : baseThreshold);
-    import("@/lib/lesson-generator-db").then(({ sliceLessonWords }) => {
+    import("@/lib/db/lesson-generator").then(({ sliceLessonWords }) => {
       const sliced = sliceLessonWords(fullLesson, sessionOffset, LESSON_SESSION_SIZE);
       const stageWords = sliced.words.map((w) => ({
         ...w,

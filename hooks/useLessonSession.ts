@@ -5,8 +5,8 @@ import { useScoring } from "@/hooks/useScoring";
 import { useLesson } from "@/hooks/useLesson";
 import { useRecorder } from "@/hooks/useRecorder";
 import { useTranscription } from "@/hooks/useTranscription";
-import { calculateXP } from "@/lib/scoring";
-import { fetchPronunciation } from "@/lib/dictionary";
+import { calculateXP } from "@/lib/pronunciation/scoring";
+import { fetchPronunciation } from "@/lib/pronunciation/dictionary";
 import { isFavorite, toggleFavorite } from "@/lib/db";
 import type { Lesson, LessonWord } from "@/lib/types";
 import type { Phase } from "@/components/lesson/ActiveLessonPage";
@@ -121,7 +121,7 @@ export function useLessonSession({
 
   useEffect(() => {
     if (!lessonData) return;
-    import("@/lib/phonemes")
+    import("@/lib/pronunciation/phonemes")
       .then(({ warmupPhonemeEngine }) => warmupPhonemeEngine(lessonData.words.map((w) => w.word)))
       .catch(() => {});
   }, [lessonData]);

@@ -2,8 +2,8 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRecorder } from "@/hooks/useRecorder";
-import { analyzePhonemes, ARPABET_TO_IPA } from "@/lib/phonemes";
-import { saveAIWord } from "@/lib/ai-db";
+import { analyzePhonemes, ARPABET_TO_IPA } from "@/lib/pronunciation/phonemes";
+import { saveAIWord } from "@/lib/db/ai";
 import PronunciationProgress from "./pronunciation/PronunciationProgress";
 import PhraseCard from "./pronunciation/PhraseCard";
 import RecordingControls from "./pronunciation/RecordingControls";

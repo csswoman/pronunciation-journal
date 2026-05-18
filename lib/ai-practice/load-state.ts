@@ -1,7 +1,7 @@
 "use client";
 
 import { getUserStats, getFavorites, getNeedsPracticeWords } from "@/lib/db";
-import { getAIWords } from "@/lib/ai-db";
+import { getAIWords } from "@/lib/db/ai";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { createEmptyState, type UserLearningState } from "./learning-state";
 

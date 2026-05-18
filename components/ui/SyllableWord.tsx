@@ -1,7 +1,7 @@
 "use client";
 
 import { memo, useEffect, useState } from "react";
-import { resolveSyllableWord, splitBySyllableSeparator, SYLLABLE_SEPARATOR } from "@/lib/syllable-separation";
+import { resolveSyllableWord, splitBySyllableSeparator, SYLLABLE_SEPARATOR } from "@/lib/pronunciation/syllable-separation";
 
 interface SyllableWordProps {
   word: string;

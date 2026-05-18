@@ -1,4 +1,4 @@
-import type { ScoringResult, WordResult } from "./types";
+import type { ScoringResult, WordResult } from "../types";
 import { analyzePhonemes } from "./phonemes";
 
 const MAX_SCORE_CACHE_ENTRIES = 300;

@@ -1,7 +1,7 @@
 "use client";
 
 import type { MouseEvent } from "react";
-import { IPA_EXTRA } from "@/lib/ipa-data";
+import { IPA_EXTRA } from "@/lib/pronunciation/ipa-data";
 import type { PhonemeData } from "./data";
 import DifficultyPill from "@/components/ui/DifficultyPill";
 

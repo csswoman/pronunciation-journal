@@ -1,5 +1,5 @@
-import { db } from "./db";
-import type { AIConversation, AISavedWord } from "./types";
+import { db } from ".";
+import type { AIConversation, AISavedWord } from "../types";
 
 // ── Conversation Helpers ──
 

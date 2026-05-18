@@ -12,7 +12,7 @@ import HomeWeakPhoneme from "@/components/home/HomeWeakPhoneme";
 import HomeTheoryOfDay from "@/components/home/HomeTheoryOfDay";
 import HomeWordsToReview from "@/components/home/HomeWordsToReview";
 import HomeWordOfDay from "@/components/home/HomeWordOfDay";
-import { getAchievements, type Achievement } from "@/lib/home-stats";
+import { getAchievements, type Achievement } from "@/lib/home/stats";
 import { getSupabaseServerUserId } from "@/lib/supabase/session";
 import { getWordsDueForReview } from "@/lib/word-bank/server-queries";
 import { getTodaysMiniLesson } from "@/lib/content/lessons";

@@ -5,7 +5,7 @@ import { Trophy, Check, ChevronRight } from "lucide-react";
 import Card from "@/components/layout/Card";
 import CardHeader from "@/components/ui/CardHeader";
 import ProgressBar from "@/components/ui/ProgressBar";
-import type { Achievement } from "@/lib/home-stats";
+import type { Achievement } from "@/lib/home/stats";
 
 interface HomeAchievementsCardProps {
   achievements?: Achievement[];

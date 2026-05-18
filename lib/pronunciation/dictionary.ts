@@ -1,4 +1,4 @@
-import { Meaning } from "./types";
+import { Meaning } from "../types";
 
 export interface PronunciationData {
   ipa?: string;
