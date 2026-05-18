@@ -7,30 +7,10 @@ export type Json =
   | Json[]
 
 export type Database = {
-  graphql_public: {
-    Tables: {
-      [_ in never]: never
-    }
-    Views: {
-      [_ in never]: never
-    }
-    Functions: {
-      graphql: {
-        Args: {
-          extensions?: Json
-          operationName?: string
-          query?: string
-          variables?: Json
-        }
-        Returns: Json
-      }
-    }
-    Enums: {
-      [_ in never]: never
-    }
-    CompositeTypes: {
-      [_ in never]: never
-    }
+  // Allows to automatically instantiate createClient with right options
+  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
+  __InternalSupabase: {
+    PostgrestVersion: "14.4"
   }
   public: {
     Tables: {
@@ -153,43 +133,43 @@ export type Database = {
       }
       deck_entry_progress: {
         Row: {
-          id: string
-          user_id: string
-          entry_id: string
-          ease_factor: number
-          interval_days: number
-          repetitions: number
-          next_review_at: string
-          status: 'new' | 'learning' | 'review' | 'mastered'
-          last_reviewed_at: string | null
           created_at: string
+          ease_factor: number
+          entry_id: string
+          id: string
+          interval_days: number
+          last_reviewed_at: string | null
+          next_review_at: string
+          repetitions: number
+          status: string
           updated_at: string
+          user_id: string
         }
         Insert: {
-          id?: string
-          user_id: string
-          entry_id: string
-          ease_factor?: number
-          interval_days?: number
-          repetitions?: number
-          next_review_at?: string
-          status?: 'new' | 'learning' | 'review' | 'mastered'
-          last_reviewed_at?: string | null
           created_at?: string
+          ease_factor?: number
+          entry_id: string
+          id?: string
+          interval_days?: number
+          last_reviewed_at?: string | null
+          next_review_at?: string
+          repetitions?: number
+          status?: string
           updated_at?: string
+          user_id: string
         }
         Update: {
-          id?: string
-          user_id?: string
-          entry_id?: string
-          ease_factor?: number
-          interval_days?: number
-          repetitions?: number
-          next_review_at?: string
-          status?: 'new' | 'learning' | 'review' | 'mastered'
-          last_reviewed_at?: string | null
           created_at?: string
+          ease_factor?: number
+          entry_id?: string
+          id?: string
+          interval_days?: number
+          last_reviewed_at?: string | null
+          next_review_at?: string
+          repetitions?: number
+          status?: string
           updated_at?: string
+          user_id?: string
         }
         Relationships: [
           {
@@ -200,6 +180,27 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      deck_suggestions_cache: {
+        Row: {
+          cache_key: string
+          created_at: string
+          id: string
+          suggestions: Json
+        }
+        Insert: {
+          cache_key: string
+          created_at?: string
+          id?: string
+          suggestions: Json
+        }
+        Update: {
+          cache_key?: string
+          created_at?: string
+          id?: string
+          suggestions?: Json
+        }
+        Relationships: []
       }
       decks: {
         Row: {
@@ -245,6 +246,7 @@ export type Database = {
           id: string
           image_url: string | null
           ipa: string | null
+          keep_permanent: boolean
           meanings: Json | null
           notes: string | null
           phrases: string[] | null
@@ -262,6 +264,7 @@ export type Database = {
           id: string
           image_url?: string | null
           ipa?: string | null
+          keep_permanent?: boolean
           meanings?: Json | null
           notes?: string | null
           phrases?: string[] | null
@@ -279,6 +282,7 @@ export type Database = {
           id?: string
           image_url?: string | null
           ipa?: string | null
+          keep_permanent?: boolean
           meanings?: Json | null
           notes?: string | null
           phrases?: string[] | null
@@ -362,6 +366,39 @@ export type Database = {
         }
         Relationships: []
       }
+      notion_sync_log: {
+        Row: {
+          error_message: string | null
+          finished_at: string | null
+          id: string
+          lessons_created: number
+          lessons_skipped: number
+          lessons_updated: number
+          started_at: string
+          status: string
+        }
+        Insert: {
+          error_message?: string | null
+          finished_at?: string | null
+          id?: string
+          lessons_created?: number
+          lessons_skipped?: number
+          lessons_updated?: number
+          started_at?: string
+          status: string
+        }
+        Update: {
+          error_message?: string | null
+          finished_at?: string | null
+          id?: string
+          lessons_created?: number
+          lessons_skipped?: number
+          lessons_updated?: number
+          started_at?: string
+          status?: string
+        }
+        Relationships: []
+      }
       pattern_words: {
         Row: {
           id: number
@@ -439,6 +476,39 @@ export type Database = {
         }
         Relationships: []
       }
+      stt_transcription_cache: {
+        Row: {
+          cache_key: string
+          created_at: string
+          hit_count: number
+          mime_type: string
+          payload_size: number
+          target_word: string | null
+          transcript: string
+          updated_at: string
+        }
+        Insert: {
+          cache_key: string
+          created_at?: string
+          hit_count?: number
+          mime_type: string
+          payload_size?: number
+          target_word?: string | null
+          transcript: string
+          updated_at?: string
+        }
+        Update: {
+          cache_key?: string
+          created_at?: string
+          hit_count?: number
+          mime_type?: string
+          payload_size?: number
+          target_word?: string | null
+          transcript?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       text_fragments: {
         Row: {
           audio_url: string | null
@@ -491,8 +561,8 @@ export type Database = {
           user_id: string | null
         }
         Insert: {
-          category: string
-          content: string
+          category?: string
+          content?: string
           cover_image_url?: string | null
           created_at?: string
           id?: string
@@ -635,86 +705,125 @@ export type Database = {
           },
         ]
       }
-        word_bank: {
-          Row: {
-            audio_fetch_attempts: number
-            audio_url: string | null
-            context: string | null
-            created_at: string
-            difficulty: number
-            ease_factor: number
-            error_reason: string | null
-            example: string | null
-            has_audio: boolean | null
-            id: string
-            image_prompt: string | null
-            interval_days: number
-            ipa: string | null
-            last_reviewed_at: string | null
-            meaning: string | null
-            next_review_at: string | null
-            repetitions: number
-            review_count: number
-            srs_status: 'new' | 'learning' | 'review' | 'mastered'
-            status: string
-            synonyms: string[] | null
-            text: string
-            translation: string | null
-            updated_at: string
+      user_word_progress: {
+        Row: {
+          added_to_word_bank: boolean | null
+          category_id: string
+          created_at: string | null
+          id: string
+          last_seen_at: string | null
+          next_review_at: string | null
+          srs_level: number | null
+          status: string | null
+          user_id: string
+          word_id: string
+        }
+        Insert: {
+          added_to_word_bank?: boolean | null
+          category_id: string
+          created_at?: string | null
+          id?: string
+          last_seen_at?: string | null
+          next_review_at?: string | null
+          srs_level?: number | null
+          status?: string | null
+          user_id: string
+          word_id: string
+        }
+        Update: {
+          added_to_word_bank?: boolean | null
+          category_id?: string
+          created_at?: string | null
+          id?: string
+          last_seen_at?: string | null
+          next_review_at?: string | null
+          srs_level?: number | null
+          status?: string | null
+          user_id?: string
+          word_id?: string
+        }
+        Relationships: []
+      }
+      word_bank: {
+        Row: {
+          audio_fetch_attempts: number
+          audio_url: string | null
+          context: string | null
+          created_at: string
+          difficulty: number
+          ease_factor: number
+          error_reason: string | null
+          example: string | null
+          has_audio: boolean | null
+          id: string
+          image_prompt: string | null
+          interval_days: number
+          ipa: string | null
+          last_reviewed_at: string | null
+          meaning: string | null
+          next_review_at: string | null
+          repetitions: number
+          review_count: number
+          srs_status: string
+          status: string
+          synonyms: string[] | null
+          text: string
+          translation: string | null
+          updated_at: string
           user_id: string
         }
         Insert: {
-            audio_fetch_attempts?: number
-            audio_url?: string | null
-            context?: string | null
-            created_at?: string
-            difficulty?: number
-            ease_factor?: number
-            error_reason?: string | null
-            example?: string | null
-            has_audio?: boolean | null
-            id?: string
-            image_prompt?: string | null
-            interval_days?: number
-            ipa?: string | null
-            last_reviewed_at?: string | null
-            meaning?: string | null
-            next_review_at?: string | null
-            repetitions?: number
-            review_count?: number
-            srs_status?: 'new' | 'learning' | 'review' | 'mastered'
-            status?: string
-            synonyms?: string[] | null
-            text: string
-            translation?: string | null
-            updated_at?: string
+          audio_fetch_attempts?: number
+          audio_url?: string | null
+          context?: string | null
+          created_at?: string
+          difficulty?: number
+          ease_factor?: number
+          error_reason?: string | null
+          example?: string | null
+          has_audio?: boolean | null
+          id?: string
+          image_prompt?: string | null
+          interval_days?: number
+          ipa?: string | null
+          last_reviewed_at?: string | null
+          meaning?: string | null
+          next_review_at?: string | null
+          repetitions?: number
+          review_count?: number
+          srs_status?: string
+          status?: string
+          synonyms?: string[] | null
+          text: string
+          translation?: string | null
+          updated_at?: string
           user_id: string
         }
         Update: {
-            audio_fetch_attempts?: number
-            audio_url?: string | null
-            context?: string | null
-            created_at?: string
-            difficulty?: number
-            ease_factor?: number
-            error_reason?: string | null
-            example?: string | null
-            has_audio?: boolean | null
-            id?: string
-            image_prompt?: string | null
-            interval_days?: number
-            ipa?: string | null
-            last_reviewed_at?: string | null
-            meaning?: string | null
-            next_review_at?: string | null
-            repetitions?: number
-            review_count?: number
-            srs_status?: 'new' | 'learning' | 'review' | 'mastered'
-            status?: string
-            synonyms?: string[] | null
-            text?: string
-            translation?: string | null
-            updated_at?: string
+          audio_fetch_attempts?: number
+          audio_url?: string | null
+          context?: string | null
+          created_at?: string
+          difficulty?: number
+          ease_factor?: number
+          error_reason?: string | null
+          example?: string | null
+          has_audio?: boolean | null
+          id?: string
+          image_prompt?: string | null
+          interval_days?: number
+          ipa?: string | null
+          last_reviewed_at?: string | null
+          meaning?: string | null
+          next_review_at?: string | null
+          repetitions?: number
+          review_count?: number
+          srs_status?: string
+          status?: string
+          synonyms?: string[] | null
+          text?: string
+          translation?: string | null
+          updated_at?: string
           user_id?: string
         }
         Relationships: []
@@ -824,6 +933,8 @@ export type Database = {
           isSetofReturn: true
         }
       }
+      get_skill_profile: { Args: { p_user_id: string }; Returns: Json }
+      is_admin: { Args: never; Returns: boolean }
       update_progress: {
         Args: { p_is_correct: boolean; p_sound_id: number }
         Returns: undefined
@@ -956,11 +1067,7 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
-  graphql_public: {
-    Enums: {},
-  },
   public: {
     Enums: {},
   },
 } as const
-

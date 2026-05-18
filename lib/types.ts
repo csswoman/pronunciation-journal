@@ -1,3 +1,5 @@
+import type { Tables } from "@/lib/supabase/types";
+
 export type Difficulty = "easy" | "medium" | "hard";
 
 export interface Definition {
@@ -327,36 +329,16 @@ export type WordBankStatus = "processing" | "ready" | "failed";
 
 export type WordBankSrsStatus = "new" | "learning" | "review" | "mastered";
 
-export interface WordBankEntry {
-  id: string;
-  user_id: string;
-  text: string;
-  context: string | null;
-
-  meaning: string | null;
-  translation: string | null;
-  ipa: string | null;
-  example: string | null;
-  synonyms: string[] | null;
-  image_prompt: string | null;
-  audio_url: string | null;
-
-  status: WordBankStatus;
-  difficulty: number;
-  error_reason: "parse_error" | "api_error" | "timeout" | null;
-
-  // SM-2 spaced repetition state
-  ease_factor: number;
-  interval_days: number;
-  repetitions: number;
-  srs_status: WordBankSrsStatus;
-  next_review_at: string | null;
-  last_reviewed_at: string | null;
-  review_count: number;
-
-  created_at: string;
-  updated_at: string;
-}
+/**
+ * Word bank row. Sourced directly from the generated Supabase types so the
+ * shape never drifts from the `word_bank` table — regenerate `lib/supabase/types.ts`
+ * to pick up schema changes.
+ *
+ * Note: `status`, `srs_status` and `error_reason` are `string` here because
+ * Postgres CHECK constraints are not reflected in generated types. Use the
+ * `WordBankStatus` / `WordBankSrsStatus` unions when a narrowed value is needed.
+ */
+export type WordBankEntry = Tables<"word_bank">;
 
 export interface WordEnrichment {
   meaning: string;

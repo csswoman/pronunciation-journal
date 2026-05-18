@@ -193,6 +193,8 @@ export function useWords(): UseWordsState {
         status: "processing",
         difficulty: 0,
         error_reason: null,
+        audio_fetch_attempts: 0,
+        has_audio: null,
         ease_factor: 2.5,
         interval_days: 1,
         repetitions: 0,

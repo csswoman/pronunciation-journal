@@ -126,7 +126,7 @@ export function wordBankSource(opts: {
             interval_days: w.interval_days,
             repetitions: w.repetitions,
             next_review_at: w.next_review_at,
-            status: w.srs_status,
+            status: w.srs_status as SM2Progress["status"],
             last_reviewed_at: w.last_reviewed_at,
           } : null,
         }));
