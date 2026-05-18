@@ -1,55 +1,30 @@
 "use client";
-import Button from "@/components/ui/Button";
-import { LessonCategory } from "@/lib/mini-lessons";
 
 type CourseLevel = "all" | "basic" | "intermediate" | "advanced";
 
 type CourseFiltersProps = {
   query: string;
   level: CourseLevel;
-  category?: LessonCategory | "all";
   onQueryChange: (value: string) => void;
   onLevelChange: (value: CourseLevel) => void;
-  onCategoryChange?: (value: LessonCategory | "all") => void;
 };
-
-const levelTabs: { value: CourseLevel; label: string }[] = [
-  { value: "all", label: "All levels" },
-  { value: "basic", label: "Basic" },
-  { value: "intermediate", label: "Intermediate" },
-  { value: "advanced", label: "Advanced" },
-];
-
-const categoryTabs: { value: LessonCategory | "all"; label: string }[] = [
-  { value: "all", label: "All categories" },
-  { value: "pronunciation", label: "Pronunciation" },
-  { value: "grammar", label: "Grammar" },
-  { value: "vocabulary", label: "Vocabulary" },
-  { value: "listening", label: "Listening" },
-  { value: "speaking", label: "Speaking" },
-  { value: "writing", label: "Writing" },
-  { value: "idioms", label: "Idioms" },
-  { value: "collocations", label: "Collocations" },
-];
 
 export default function CourseFilters({
   query,
   level,
-  category = "all",
   onQueryChange,
   onLevelChange,
-  onCategoryChange,
 }: CourseFiltersProps) {
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col sm:flex-row gap-2">
       {/* Search */}
-      <label className="relative">
+      <label className="relative flex-1">
         <span className="sr-only">Search courses</span>
         <svg
           aria-hidden="true"
           viewBox="0 0 24 24"
           fill="none"
-          className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-fg-subtle"
+          className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-fg-subtle"
         >
           <path
             d="M21 21l-4.3-4.3m1.8-5.2a7.5 7.5 0 11-15 0 7.5 7.5 0 0115 0z"
@@ -63,76 +38,21 @@ export default function CourseFilters({
           value={query}
           onChange={(e) => onQueryChange(e.target.value)}
           placeholder="Search courses…"
-          className="h-10 w-full rounded-xl border border-[var(--line-divider)] bg-[var(--card-bg)] pl-10 pr-4 text-sm text-fg placeholder:text-fg-subtle outline-none transition focus:border-[var(--primary)] focus:ring-2 focus:ring-[color-mix(in_oklch,var(--primary)_20%,transparent)]"
+          className="w-full rounded-lg border border-border-subtle bg-surface-raised pl-9 pr-3 py-2 text-sm text-fg placeholder:text-fg-muted focus:outline-none focus:border-primary transition-colors"
         />
       </label>
 
-      {/* Level pills */}
-      <div>
-        <p className="text-xs font-medium text-[var(--text-tertiary)] mb-2">Level</p>
-        <div className="flex flex-wrap gap-1.5">
-          {levelTabs.map((tab) => {
-            const active = level === tab.value;
-            return (
-              <Button
-                key={tab.value}
-                type="button"
-                onClick={() => onLevelChange(tab.value)}
-                className="rounded-lg px-3.5 py-1.5 text-caption font-medium transition-all duration-150"
-                style={
-                  active
-                    ? {
-                        background: "var(--primary)",
-                        color: "var(--on-primary)",
-                        boxShadow: "0 2px 8px color-mix(in oklch, var(--primary) 30%, transparent)",
-                      }
-                    : {
-                        background: "var(--btn-regular-bg)",
-                        color: "var(--text-secondary)",
-                      }
-                }
-              >
-                {tab.label}
-              </Button>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Category pills */}
-      {onCategoryChange && (
-        <div>
-          <p className="text-xs font-medium text-[var(--text-tertiary)] mb-2">Category</p>
-          <div className="flex flex-wrap gap-1.5">
-            {categoryTabs.map((tab) => {
-              const active = category === tab.value;
-              return (
-                <Button
-                  key={tab.value}
-                  type="button"
-                  onClick={() => onCategoryChange(tab.value)}
-                  className="rounded-lg px-3.5 py-1.5 text-caption font-medium transition-all duration-150"
-                  style={
-                    active
-                      ? {
-                          background: "var(--primary)",
-                          color: "var(--on-primary)",
-                          boxShadow: "0 2px 8px color-mix(in oklch, var(--primary) 30%, transparent)",
-                        }
-                      : {
-                          background: "var(--btn-regular-bg)",
-                          color: "var(--text-secondary)",
-                        }
-                  }
-                >
-                  {tab.label}
-                </Button>
-              );
-            })}
-          </div>
-        </div>
-      )}
+      {/* Level select */}
+      <select
+        value={level}
+        onChange={(e) => onLevelChange(e.target.value as CourseLevel)}
+        className="rounded-lg border border-border-subtle bg-surface-raised px-3 py-2 text-sm text-fg focus:outline-none focus:border-primary transition-colors"
+      >
+        <option value="all">All levels</option>
+        <option value="basic">Basic</option>
+        <option value="intermediate">Intermediate</option>
+        <option value="advanced">Advanced</option>
+      </select>
     </div>
   );
 }
-
