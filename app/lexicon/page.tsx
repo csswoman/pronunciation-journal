@@ -1,128 +1,37 @@
-"use client";
-
-import { useState, useMemo } from "react";
-import {
-  Sparkles,
-  Zap,
-  Briefcase,
-  Square,
-  Grid3x3,
-  PenTool,
-} from "lucide-react";
 import PageLayout from "@/components/layout/PageLayout";
 import Section from "@/components/layout/Section";
-import {
-  LexiconHeader,
-  LexiconFilters,
-  LexiconSearchBar,
-  LessonGrid,
-} from "@/components/lexicon";
-import type { FilterId, Lesson } from "@/components/lexicon";
+import { LexiconHeader } from "@/components/lexicon";
+import { LexiconContent } from "@/components/lexicon/LexiconContent";
+import { getCategories, getPreviewTags } from "@/lib/lexicon/categories";
+import { getCategoryProgress } from "@/lib/lexicon/queries";
+import type { LessonViewModel } from "@/lib/lexicon/types";
 
-const LESSONS: Lesson[] = [
-  {
-    id: "ux-design",
-    icon: Sparkles,
-    title: "UX / UI Design",
-    wordsCompleted: 200,
-    totalWords: 500,
-    progress: 40,
-    tags: ["affordance", "wireframe", "heuristic", "gestalt", "skeuomorph", "wayfinding", "hierarchy"],
-    accentColor: "primary",
-  },
-  {
-    id: "frontend-dev",
-    icon: Zap,
-    title: "Frontend Dev",
-    wordsCompleted: 180,
-    totalWords: 800,
-    progress: 20,
-    tags: ["debounce", "memoize", "hydration", "idempotent", "serialization", "middleware"],
-    accentColor: "success",
-  },
-  {
-    id: "professional",
-    icon: Briefcase,
-    title: "Professional",
-    wordsCompleted: 175,
-    totalWords: 350,
-    progress: 50,
-    tags: ["stakeholder", "bandwidth", "leverage", "granular", "cadence", "iterate"],
-    accentColor: "warning",
-  },
-  {
-    id: "design-systems",
-    icon: Square,
-    title: "Design Systems",
-    wordsCompleted: 120,
-    totalWords: 400,
-    progress: 30,
-    tags: ["token", "atomic design", "variant", "composability", "theming", "breakpoint", "abstraction"],
-    accentColor: "primary",
-  },
-  {
-    id: "technical-writing",
-    icon: PenTool,
-    title: "Technical Writing",
-    wordsCompleted: 35,
-    totalWords: 300,
-    progress: 10,
-    tags: ["deprecate", "caveat", "verbosity", "scaffold", "preamble"],
-    accentColor: "success",
-  },
-  {
-    id: "data-science",
-    icon: Grid3x3,
-    title: "Data Science",
-    wordsCompleted: 45,
-    totalWords: 250,
-    progress: 18,
-    tags: ["algorithm", "normalization", "clustering", "regression", "correlation", "inference"],
-    accentColor: "warning",
-  },
-];
+export default async function LexiconPage() {
+  const [categories, progressList] = await Promise.all([
+    Promise.resolve(getCategories()),
+    getCategoryProgress(),
+  ]);
 
-export default function LexiconPage() {
-  const [activeFilter, setActiveFilter] = useState<FilterId>("all");
-  const [searchQuery, setSearchQuery] = useState("");
+  const progressMap = new Map(progressList.map((p) => [p.category_id, p.learned_count]));
 
-  const totalWordsLearned = LESSONS.reduce((sum, l) => sum + l.wordsCompleted, 0);
-  const totalWords = 10000;
-  const percentageDone = (totalWordsLearned / totalWords) * 100;
+  const lessons: LessonViewModel[] = categories.map((cat) => {
+    const wordsCompleted = progressMap.get(cat.id) ?? 0;
+    const progress = cat.total > 0 ? Math.round((wordsCompleted / cat.total) * 100) : 0;
+    return {
+      id: cat.id,
+      icon: cat.icon,
+      title: cat.name,
+      color: cat.color,
+      totalWords: cat.total,
+      wordsCompleted,
+      progress,
+      tags: getPreviewTags(cat.id),
+    };
+  });
 
-  const filteredLessons = useMemo(() => {
-    let filtered = LESSONS;
-
-    // Apply filter
-    if (activeFilter === "in-progress") {
-      filtered = filtered.filter((l) => l.progress > 0 && l.progress < 100);
-    } else if (activeFilter === "not-started") {
-      filtered = filtered.filter((l) => l.progress === 0);
-    } else if (activeFilter !== "all") {
-      // Category filters (tech, design, professional)
-      const categoryMap: Record<FilterId, string[]> = {
-        tech: ["ux-design", "frontend-dev", "technical-writing", "data-science"],
-        design: ["ux-design", "design-systems"],
-        professional: ["professional"],
-        all: [],
-        "in-progress": [],
-        "not-started": [],
-      };
-      filtered = filtered.filter((l) => categoryMap[activeFilter]?.includes(l.id));
-    }
-
-    // Apply search
-    if (searchQuery.trim()) {
-      const query = searchQuery.toLowerCase();
-      filtered = filtered.filter(
-        (lesson) =>
-          lesson.title.toLowerCase().includes(query) ||
-          lesson.tags.some((tag) => tag.toLowerCase().includes(query))
-      );
-    }
-
-    return filtered;
-  }, [activeFilter, searchQuery]);
+  const totalWordsLearned = lessons.reduce((sum, l) => sum + l.wordsCompleted, 0);
+  const totalWords = lessons.reduce((sum, l) => sum + l.totalWords, 0);
+  const percentageDone = totalWords > 0 ? (totalWordsLearned / totalWords) * 100 : 0;
 
   return (
     <PageLayout cardWrapper={false}>
@@ -132,21 +41,8 @@ export default function LexiconPage() {
           totalWords={totalWords}
           percentageDone={percentageDone}
         />
-
-        <div className="space-y-6">
-          <LexiconFilters active={activeFilter} onChange={setActiveFilter} />
-
-          <LexiconSearchBar value={searchQuery} onChange={setSearchQuery} />
-
-          <LessonGrid
-            lessons={filteredLessons}
-            onLessonClick={(lessonId) => {
-              // TODO: Navigate to lesson detail page
-              console.log("Clicked lesson:", lessonId);
-            }}
-          />
-        </div>
-      </Section>
+        <LexiconContent lessons={lessons} />
+       </Section>
     </PageLayout>
   );
 }

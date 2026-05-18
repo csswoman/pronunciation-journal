@@ -1,0 +1,8 @@
+[
+  { "id": "ux-design", "name": "UX / UI Design", "color": "#6B9FC4", "icon": "✦", "total": 500 },
+  { "id": "frontend-dev", "name": "Frontend Dev", "color": "#65A87A", "icon": "⌥", "total": 800 },
+  { "id": "design-systems", "name": "Design Systems", "color": "#9B8EC4", "icon": "◻", "total": 400 },
+  { "id": "professional", "name": "Professional English", "color": "#C4846B", "icon": "◈", "total": 350 },
+  { "id": "technical-writing", "name": "Technical Writing", "color": "#5BA8A0", "icon": "∂", "total": 300 },
+  { "id": "backend-infra", "name": "Backend & Infra", "color": "#D97706", "icon": "⬡", "total": 700 }
+]

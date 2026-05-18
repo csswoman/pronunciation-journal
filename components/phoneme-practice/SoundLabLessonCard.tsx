@@ -79,22 +79,22 @@ export function SoundLabLessonCard({ lesson, progressPct, isContinuing, isWeak, 
         {/* Row 1: Difficulty badge */}
         <div>
           <span
-            className={`inline-block rounded-md px-[8px] py-[3px] text-[10px] font-semibold uppercase tracking-wider ${DIFFICULTY_CLASSES[difficulty] ?? "bg-surface-sunken text-fg-muted"}`}
+            className={`inline-block rounded-md px-[8px] py-space-1 text-[10px] font-semibold uppercase tracking-wider ${DIFFICULTY_CLASSES[difficulty] ?? "bg-surface-sunken text-fg-muted"}`}
           >
             {DIFFICULTY_LABEL[difficulty] ?? difficulty}
           </span>
         </div>
 
         {/* Row 2: IPA glyph with thin slashes + category label */}
-        <div className="flex flex-col gap-[2px]">
+        <div className="flex flex-col gap-space-1">
           {ipaSymbol && (
             <p
               aria-hidden
-              className="flex items-baseline gap-[2px] leading-none transition-transform duration-[150ms] ease-out group-hover:scale-[1.04]"
+              className="flex items-baseline gap-space-1 leading-none transition-transform duration-[150ms] ease-out group-hover:scale-[1.04]"
             >
-              <span className="font-serif text-[1rem] font-light text-fg/30">/</span>
-              <span className="font-serif text-[2.25rem] font-normal text-fg">{ipaSymbol}</span>
-              <span className="font-serif text-[1rem] font-light text-fg/30">/</span>
+              <span className="font-serif text-base font-light text-fg/30">/</span>
+              <span className="font-serif text-4xl font-normal text-fg">{ipaSymbol}</span>
+              <span className="font-serif text-base font-light text-fg/30">/</span>
             </p>
           )}
           {category && (
@@ -135,10 +135,10 @@ export function SoundLabLessonCard({ lesson, progressPct, isContinuing, isWeak, 
         {/* Progress bar at bottom */}
         {showProgressBar && (
           <>
-            <span aria-hidden className="absolute bottom-0 left-0 right-0 h-[3px] bg-primary/10" />
+            <span aria-hidden className="absolute bottom-0 left-0 right-0 h-1 bg-primary/10" />
             <span
               aria-hidden
-              className="absolute bottom-0 left-0 h-[3px] rounded-full bg-primary"
+              className="absolute bottom-0 left-0 h-1 rounded-full bg-primary"
               style={{ width: `${progressPct}%` }}
             />
           </>

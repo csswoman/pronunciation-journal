@@ -1,41 +1,26 @@
-import { LucideIcon } from "lucide-react";
-
 interface LessonCardProps {
   id: string;
-  icon: LucideIcon;
+  icon: string;
   title: string;
+  color: string;
   wordsCompleted: number;
   totalWords: number;
   progress: number;
   tags: string[];
-  accentColor: "primary" | "success" | "warning";
   onClick?: (id: string) => void;
 }
 
-const colorScheme = {
-  primary: {
-    variable: "--primary",
-  },
-  success: {
-    variable: "--success",
-  },
-  warning: {
-    variable: "--warning",
-  },
-};
-
 export function LessonCard({
   id,
-  icon: Icon,
+  icon,
   title,
+  color,
   wordsCompleted,
   totalWords,
   progress,
   tags,
-  accentColor,
   onClick,
 }: LessonCardProps) {
-  const colors = colorScheme[accentColor];
   const displayTags = tags.slice(0, 3);
   const remainingCount = tags.length - displayTags.length;
 
@@ -43,14 +28,13 @@ export function LessonCard({
     <button
       onClick={() => onClick?.(id)}
       style={{
-        borderColor: `var(${colors.variable})`,
-        backgroundColor: `color-mix(in srgb, var(${colors.variable}) 8%, var(--surface-raised))`,
+        borderColor: color,
+        backgroundColor: `color-mix(in srgb, ${color} 8%, var(--surface-raised))`,
       }}
-      className="flex flex-col gap-3 p-5 rounded-xl border-2 transition-all hover:shadow-md"
+      className="flex flex-col gap-3 p-5 rounded-xl border-2 transition-all hover:shadow-md text-left w-full"
     >
-      {/* Header with icon and progress */}
       <div className="flex items-start justify-between">
-        <Icon className="w-6 h-6 text-fg flex-shrink-0" />
+        <span className="text-2xl leading-none">{icon}</span>
         <div className="relative w-16 h-16 flex-shrink-0">
           <svg className="w-full h-full" viewBox="0 0 60 60">
             <circle
@@ -66,7 +50,7 @@ export function LessonCard({
               cy="30"
               r="25"
               fill="none"
-              stroke={`var(${colors.variable})`}
+              stroke={color}
               strokeWidth="3"
               strokeDasharray={`${progress * 1.57} 157`}
               strokeLinecap="round"
@@ -79,15 +63,13 @@ export function LessonCard({
         </div>
       </div>
 
-      {/* Title and word count */}
-      <div className="text-left">
+      <div>
         <h3 className="text-lg font-semibold text-fg">{title}</h3>
         <p className="text-sm text-fg-muted mt-0.5">
           {wordsCompleted} / {totalWords} words
         </p>
       </div>
 
-      {/* Tags */}
       <div className="flex flex-wrap gap-2">
         {displayTags.map((tag) => (
           <span

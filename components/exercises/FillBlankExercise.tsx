@@ -40,7 +40,7 @@ export function FillBlankExercise({ exercise, onSubmit }: Props) {
       </p>
 
       {/* Sentence with blank */}
-      <div className="text-[17px] text-[var(--text-primary)] text-center leading-relaxed px-2">
+      <div className="text-body-lg text-[var(--text-primary)] text-center leading-relaxed px-2">
         {sentenceParts[0]}
         <span className="inline-block min-w-[80px] border-b-2 border-solid border-[var(--primary)] mx-1 text-center font-semibold text-[var(--primary)]">
           {submitted ? exercise.answer : selected ?? ' '}

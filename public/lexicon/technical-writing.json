@@ -1,0 +1,506 @@
+[
+  {
+    "id": "active-voice",
+    "word": "active voice",
+    "pos": "noun phrase",
+    "definition": "A sentence structure where the subject performs the action, making writing clearer and more direct.",
+    "difficulty": 1,
+    "tags": ["writing", "style", "fundamentals"]
+  },
+  {
+    "id": "admonition",
+    "word": "admonition",
+    "pos": "noun",
+    "definition": "A callout block — note, warning, tip — that draws attention to important supplementary information.",
+    "difficulty": 3,
+    "tags": ["documentation", "formatting", "structure"]
+  },
+  {
+    "id": "anchoring",
+    "word": "anchoring",
+    "pos": "noun",
+    "definition": "Linking to a specific section within a document using a URL fragment identifier.",
+    "difficulty": 2,
+    "tags": ["documentation", "html", "navigation"]
+  },
+  {
+    "id": "api-reference",
+    "word": "API reference",
+    "pos": "noun phrase",
+    "definition": "Documentation describing every endpoint, parameter, and response of an API exhaustively.",
+    "difficulty": 1,
+    "tags": ["documentation", "api", "reference"]
+  },
+  {
+    "id": "audience-awareness",
+    "word": "audience awareness",
+    "pos": "noun phrase",
+    "definition": "Tailoring technical content to the specific knowledge level and goals of its intended readers.",
+    "difficulty": 2,
+    "tags": ["writing", "strategy", "fundamentals"]
+  },
+  {
+    "id": "callout",
+    "word": "callout",
+    "pos": "noun",
+    "definition": "A visually distinct block highlighting critical information separate from the main body text.",
+    "difficulty": 1,
+    "tags": ["formatting", "documentation", "structure"]
+  },
+  {
+    "id": "changelog-entry",
+    "word": "changelog entry",
+    "pos": "noun phrase",
+    "definition": "A single versioned record describing what changed, was fixed, or was added in a release.",
+    "difficulty": 1,
+    "tags": ["documentation", "versioning", "process"]
+  },
+  {
+    "id": "code-comment",
+    "word": "code comment",
+    "pos": "noun phrase",
+    "definition": "Inline text within source code explaining why something is done, not just what it does.",
+    "difficulty": 1,
+    "tags": ["dev", "documentation", "fundamentals"]
+  },
+  {
+    "id": "code-fence",
+    "word": "code fence",
+    "pos": "noun phrase",
+    "definition": "Triple backticks in Markdown that wrap a code block and optionally declare its language.",
+    "difficulty": 1,
+    "tags": ["markdown", "formatting", "documentation"]
+  },
+  {
+    "id": "colloquialism",
+    "word": "colloquialism",
+    "pos": "noun",
+    "definition": "Informal or conversational language that may be unclear or culturally specific to some readers.",
+    "difficulty": 3,
+    "tags": ["writing", "style", "localization"]
+  },
+  {
+    "id": "conciseness",
+    "word": "conciseness",
+    "pos": "noun",
+    "definition": "Expressing information using the fewest words necessary without losing meaning or accuracy.",
+    "difficulty": 2,
+    "tags": ["writing", "style", "fundamentals"]
+  },
+  {
+    "id": "content-type",
+    "word": "content type",
+    "pos": "noun phrase",
+    "definition": "A defined category of documentation — tutorial, how-to, reference, explanation — each with a distinct purpose.",
+    "difficulty": 2,
+    "tags": ["documentation", "structure", "diataxis"]
+  },
+  {
+    "id": "cross-reference",
+    "word": "cross-reference",
+    "pos": "noun",
+    "definition": "A link or pointer directing readers to related content in another section or document.",
+    "difficulty": 2,
+    "tags": ["documentation", "navigation", "structure"]
+  },
+  {
+    "id": "deprecation-notice",
+    "word": "deprecation notice",
+    "pos": "noun phrase",
+    "definition": "A documented warning that a feature or API will be removed in a future version.",
+    "difficulty": 2,
+    "tags": ["documentation", "api", "versioning"]
+  },
+  {
+    "id": "diataxis",
+    "word": "Diátaxis",
+    "pos": "proper noun",
+    "definition": "A documentation framework organizing content into tutorials, how-tos, references, and explanations.",
+    "difficulty": 3,
+    "tags": ["documentation", "frameworks", "structure"]
+  },
+  {
+    "id": "disambiguation",
+    "word": "disambiguation",
+    "pos": "noun",
+    "definition": "Clarifying which of multiple possible meanings or uses of a term is intended in a given context.",
+    "difficulty": 3,
+    "tags": ["writing", "terminology", "clarity"]
+  },
+  {
+    "id": "docstring",
+    "word": "docstring",
+    "pos": "noun",
+    "definition": "A structured comment inside a function or class that describes its purpose, parameters, and return value.",
+    "difficulty": 2,
+    "tags": ["dev", "documentation", "code"]
+  },
+  {
+    "id": "docs-as-code",
+    "word": "docs-as-code",
+    "pos": "noun phrase",
+    "definition": "Treating documentation like source code — versioned in Git, reviewed via PRs, and built automatically.",
+    "difficulty": 2,
+    "tags": ["documentation", "process", "tooling"]
+  },
+  {
+    "id": "edge-case-doc",
+    "word": "edge case documentation",
+    "pos": "noun phrase",
+    "definition": "Explicit documentation of unusual or boundary scenarios a system handles or intentionally excludes.",
+    "difficulty": 2,
+    "tags": ["documentation", "quality", "reference"]
+  },
+  {
+    "id": "evergreen",
+    "word": "evergreen",
+    "pos": "adjective",
+    "definition": "Documentation written to remain accurate over time without frequent updates tied to a specific version.",
+    "difficulty": 2,
+    "tags": ["documentation", "strategy", "maintenance"]
+  },
+  {
+    "id": "explainer",
+    "word": "explainer",
+    "pos": "noun",
+    "definition": "A piece of documentation focused on building conceptual understanding rather than guiding a task.",
+    "difficulty": 1,
+    "tags": ["documentation", "content-type", "diataxis"]
+  },
+  {
+    "id": "frontmatter",
+    "word": "front matter",
+    "pos": "noun phrase",
+    "definition": "Metadata at the top of a Markdown file — title, date, tags — parsed by static site generators.",
+    "difficulty": 2,
+    "tags": ["markdown", "tooling", "documentation"]
+  },
+  {
+    "id": "glossary",
+    "word": "glossary",
+    "pos": "noun",
+    "definition": "An alphabetical list of domain-specific terms with their definitions within a documentation site.",
+    "difficulty": 1,
+    "tags": ["documentation", "terminology", "reference"]
+  },
+  {
+    "id": "how-to-guide",
+    "word": "how-to guide",
+    "pos": "noun phrase",
+    "definition": "A goal-oriented document walking a competent user through steps to complete a specific task.",
+    "difficulty": 1,
+    "tags": ["documentation", "content-type", "diataxis"]
+  },
+  {
+    "id": "imperative-mood",
+    "word": "imperative mood",
+    "pos": "noun phrase",
+    "definition": "A writing style using command verbs — click, open, run — standard in step-by-step instructions.",
+    "difficulty": 2,
+    "tags": ["writing", "style", "tutorials"]
+  },
+  {
+    "id": "information-scent",
+    "word": "information scent",
+    "pos": "noun phrase",
+    "definition": "The cues — links, headings, labels — that help readers predict whether following a path will pay off.",
+    "difficulty": 3,
+    "tags": ["navigation", "ia", "documentation"]
+  },
+  {
+    "id": "inline-code",
+    "word": "inline code",
+    "pos": "noun phrase",
+    "definition": "Monospace-formatted text within a sentence used to reference code values, filenames, or commands.",
+    "difficulty": 1,
+    "tags": ["markdown", "formatting", "fundamentals"]
+  },
+  {
+    "id": "jsdoc",
+    "word": "JSDoc",
+    "pos": "proper noun",
+    "definition": "A JavaScript documentation standard using tagged comments to describe functions and types.",
+    "difficulty": 2,
+    "tags": ["dev", "documentation", "javascript"]
+  },
+  {
+    "id": "knowledge-base",
+    "word": "knowledge base",
+    "pos": "noun phrase",
+    "definition": "A searchable collection of articles and guides helping users solve problems independently.",
+    "difficulty": 1,
+    "tags": ["documentation", "support", "strategy"]
+  },
+  {
+    "id": "localization",
+    "word": "localization",
+    "pos": "noun",
+    "definition": "Adapting content for a specific locale — language, date formats, cultural references — beyond translation.",
+    "difficulty": 2,
+    "tags": ["writing", "i18n", "strategy"]
+  },
+  {
+    "id": "lede",
+    "word": "lede",
+    "pos": "noun",
+    "definition": "The opening sentence that summarizes the most critical information, front-loading the key point.",
+    "difficulty": 3,
+    "tags": ["writing", "journalism", "style"]
+  },
+  {
+    "id": "markdown",
+    "word": "Markdown",
+    "pos": "proper noun",
+    "definition": "A lightweight markup language using plain-text syntax to produce formatted HTML documents.",
+    "difficulty": 1,
+    "tags": ["formatting", "fundamentals", "tooling"]
+  },
+  {
+    "id": "mdx",
+    "word": "MDX",
+    "pos": "proper noun",
+    "definition": "An extension of Markdown that allows embedding React components directly inside documentation files.",
+    "difficulty": 2,
+    "tags": ["markdown", "react", "tooling"]
+  },
+  {
+    "id": "microcopy",
+    "word": "microcopy",
+    "pos": "noun",
+    "definition": "Short UI text — labels, error messages, tooltips, placeholders — that guides users through an interface.",
+    "difficulty": 2,
+    "tags": ["ux-writing", "ui", "content"]
+  },
+  {
+    "id": "navigational-label",
+    "word": "navigational label",
+    "pos": "noun phrase",
+    "definition": "The visible text of a link or menu item that sets reader expectations about the destination.",
+    "difficulty": 2,
+    "tags": ["navigation", "ux-writing", "ia"]
+  },
+  {
+    "id": "noun-pile",
+    "word": "noun pile",
+    "pos": "noun phrase",
+    "definition": "A string of multiple nouns used as modifiers that creates ambiguous, hard-to-parse phrases.",
+    "difficulty": 3,
+    "tags": ["writing", "anti-patterns", "clarity"]
+  },
+  {
+    "id": "onboarding-doc",
+    "word": "onboarding documentation",
+    "pos": "noun phrase",
+    "definition": "Guides designed to help new users or developers reach their first success as quickly as possible.",
+    "difficulty": 1,
+    "tags": ["documentation", "onboarding", "strategy"]
+  },
+  {
+    "id": "openapi",
+    "word": "OpenAPI",
+    "pos": "proper noun",
+    "definition": "A specification format for describing REST APIs in a machine-readable YAML or JSON file.",
+    "difficulty": 2,
+    "tags": ["api", "documentation", "tooling"]
+  },
+  {
+    "id": "passive-voice",
+    "word": "passive voice",
+    "pos": "noun phrase",
+    "definition": "A sentence structure where the subject receives the action — often vaguer and harder to follow.",
+    "difficulty": 1,
+    "tags": ["writing", "style", "fundamentals"]
+  },
+  {
+    "id": "plain-language",
+    "word": "plain language",
+    "pos": "noun phrase",
+    "definition": "Writing that communicates clearly to its intended audience without unnecessary complexity.",
+    "difficulty": 1,
+    "tags": ["writing", "fundamentals", "accessibility"]
+  },
+  {
+    "id": "prerequisite",
+    "word": "prerequisite",
+    "pos": "noun",
+    "definition": "A condition or setup step that must be completed before following a guide or tutorial.",
+    "difficulty": 1,
+    "tags": ["documentation", "tutorials", "structure"]
+  },
+  {
+    "id": "progressive-disclosure-doc",
+    "word": "progressive disclosure",
+    "pos": "noun phrase",
+    "definition": "Structuring documentation to reveal complexity gradually as the reader advances.",
+    "difficulty": 2,
+    "tags": ["documentation", "structure", "strategy"]
+  },
+  {
+    "id": "prose",
+    "word": "prose",
+    "pos": "noun",
+    "definition": "Ordinary written language as opposed to structured formats like bullet lists or tables.",
+    "difficulty": 1,
+    "tags": ["writing", "style", "fundamentals"]
+  },
+  {
+    "id": "readme",
+    "word": "README",
+    "pos": "proper noun",
+    "definition": "The entry-point document of a repository describing its purpose, setup, and usage.",
+    "difficulty": 1,
+    "tags": ["documentation", "git", "fundamentals"]
+  },
+  {
+    "id": "release-notes",
+    "word": "release notes",
+    "pos": "noun phrase",
+    "definition": "User-facing documentation summarizing what changed, improved, or was fixed in a product release.",
+    "difficulty": 1,
+    "tags": ["documentation", "versioning", "communication"]
+  },
+  {
+    "id": "runbook",
+    "word": "runbook",
+    "pos": "noun",
+    "definition": "A step-by-step operational guide for handling a specific incident or routine system procedure.",
+    "difficulty": 2,
+    "tags": ["devops", "documentation", "operations"]
+  },
+  {
+    "id": "scannability-doc",
+    "word": "scannability",
+    "pos": "noun",
+    "definition": "The ease with which a reader can skim a document and extract the most relevant information.",
+    "difficulty": 1,
+    "tags": ["writing", "layout", "fundamentals"]
+  },
+  {
+    "id": "single-sourcing",
+    "word": "single sourcing",
+    "pos": "noun phrase",
+    "definition": "Writing content once and reusing it across multiple documents or output formats.",
+    "difficulty": 3,
+    "tags": ["documentation", "strategy", "efficiency"]
+  },
+  {
+    "id": "snippet",
+    "word": "snippet",
+    "pos": "noun",
+    "definition": "A short, self-contained code example illustrating a specific concept or API usage.",
+    "difficulty": 1,
+    "tags": ["documentation", "code", "examples"]
+  },
+  {
+    "id": "spec-doc",
+    "word": "spec",
+    "pos": "noun",
+    "definition": "A written document detailing the requirements, behavior, and constraints of a feature or system.",
+    "difficulty": 1,
+    "tags": ["process", "documentation", "planning"]
+  },
+  {
+    "id": "style-guide-writing",
+    "word": "style guide",
+    "pos": "noun phrase",
+    "definition": "A document defining writing conventions — voice, tone, terminology — for consistent communication.",
+    "difficulty": 1,
+    "tags": ["writing", "governance", "documentation"]
+  },
+  {
+    "id": "table-of-contents",
+    "word": "table of contents",
+    "pos": "noun phrase",
+    "definition": "A navigational list of headings linking to sections within a long document.",
+    "difficulty": 1,
+    "tags": ["documentation", "navigation", "structure"]
+  },
+  {
+    "id": "technical-accuracy",
+    "word": "technical accuracy",
+    "pos": "noun phrase",
+    "definition": "The degree to which documentation correctly reflects the actual behavior of a system.",
+    "difficulty": 2,
+    "tags": ["quality", "documentation", "fundamentals"]
+  },
+  {
+    "id": "terminology",
+    "word": "terminology",
+    "pos": "noun",
+    "definition": "The specific set of terms defined and used consistently across a product and its documentation.",
+    "difficulty": 1,
+    "tags": ["writing", "glossary", "fundamentals"]
+  },
+  {
+    "id": "toc",
+    "word": "TOC",
+    "pos": "proper noun",
+    "definition": "Abbreviation for table of contents — often auto-generated from document headings in doc tools.",
+    "difficulty": 1,
+    "tags": ["documentation", "abbreviations", "navigation"]
+  },
+  {
+    "id": "tone-of-voice",
+    "word": "tone of voice",
+    "pos": "noun phrase",
+    "definition": "The personality and attitude expressed through writing — formal, friendly, direct, empathetic.",
+    "difficulty": 1,
+    "tags": ["writing", "brand", "style"]
+  },
+  {
+    "id": "tutorial",
+    "word": "tutorial",
+    "pos": "noun",
+    "definition": "A learning-oriented document guiding a beginner through a complete working example step by step.",
+    "difficulty": 1,
+    "tags": ["documentation", "content-type", "diataxis"]
+  },
+  {
+    "id": "ux-writing",
+    "word": "UX writing",
+    "pos": "noun phrase",
+    "definition": "The practice of crafting all interface text — labels, errors, onboarding — to guide user behavior.",
+    "difficulty": 1,
+    "tags": ["ux-writing", "content", "design"]
+  },
+  {
+    "id": "versioned-docs",
+    "word": "versioned documentation",
+    "pos": "noun phrase",
+    "definition": "Maintaining separate documentation sets for each major release of a product or API.",
+    "difficulty": 2,
+    "tags": ["documentation", "versioning", "strategy"]
+  },
+  {
+    "id": "voice",
+    "word": "voice",
+    "pos": "noun",
+    "definition": "The consistent personality and character expressed across all written content for a product or brand.",
+    "difficulty": 1,
+    "tags": ["writing", "brand", "style"]
+  },
+  {
+    "id": "walkthrough",
+    "word": "walkthrough",
+    "pos": "noun",
+    "definition": "A guided explanation of a process or codebase, often used in reviews or onboarding sessions.",
+    "difficulty": 1,
+    "tags": ["documentation", "process", "collaboration"]
+  },
+  {
+    "id": "weasel-word",
+    "word": "weasel word",
+    "pos": "noun phrase",
+    "definition": "A vague qualifier — easily, simply, just — that implies something is straightforward when it may not be.",
+    "difficulty": 3,
+    "tags": ["writing", "anti-patterns", "clarity"]
+  },
+  {
+    "id": "word-count",
+    "word": "word economy",
+    "pos": "noun phrase",
+    "definition": "The deliberate discipline of achieving maximum clarity with the minimum number of words.",
+    "difficulty": 2,
+    "tags": ["writing", "style", "fundamentals"]
+  }
+]
