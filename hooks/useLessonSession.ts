@@ -9,6 +9,9 @@ import { useTranscription } from "@/hooks/useTranscription";
 import { calculateXP } from "@/lib/pronunciation/scoring";
 import { fetchPronunciation } from "@/lib/pronunciation/dictionary";
 import { isFavorite, toggleFavorite } from "@/lib/db";
+import { db } from "@/lib/db";
+import { getSupabaseBrowserClient } from "@/lib/supabase/client";
+import { getUserLearningState } from "@/lib/ai-practice/load-state";
 import type { Lesson, LessonWord } from "@/lib/types";
 import type { Phase } from "@/components/lesson/ActiveLessonPage";
 import type { LessonStageId, LessonStageMasteryMap } from "@/components/lesson/LessonLobby";
@@ -60,6 +63,30 @@ export function useLessonSession({
   setStageMastery,
   advanceOffset,
 }: UseLessonSessionOptions): UseLessonSessionReturn {
+  const syncCEFRAtSessionEnd = useCallback(async () => {
+    try {
+      const supabase = getSupabaseBrowserClient();
+      const { data: { session } } = await supabase.auth.getSession();
+      const userId = session?.user?.id;
+      if (!userId) return;
+      const localRow = await db.learningState.get(userId);
+      const localState = localRow?.state ?? await getUserLearningState(userId);
+      const cefrEstimate = localState.level.cefrEstimate;
+      const { data: previous } = await supabase
+        .from("user_profiles" as never)
+        .select("cefr_level")
+        .eq("id", userId)
+        .maybeSingle();
+      const previousProfile = previous as { cefr_level?: string } | null;
+      if (previousProfile?.cefr_level === cefrEstimate) return;
+      const { error } = await supabase
+        .from("user_profiles" as never)
+        .upsert({ id: userId, cefr_level: cefrEstimate } as never, { onConflict: "id" });
+      if (error) console.error("Failed to sync cefr_level:", error);
+    } catch (error) {
+      console.error("Failed to sync cefr_level:", error);
+    }
+  }, []);
   const [phase, setPhase] = useState<Phase>("ready");
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [wordAudioUrl, setWordAudioUrl] = useState<string | null>(null);
@@ -174,11 +201,12 @@ export function useLessonSession({
         }));
       }
       setPhase("complete");
+      void syncCEFRAtSessionEnd();
     } else {
       nextWord();
       setPhase("ready");
     }
-  }, [resetForNext, nextWord, currentIndex, totalWords, isDynamic, activeStage, sessionAccuracy, advanceOffset, setStageMastery]);
+  }, [resetForNext, nextWord, currentIndex, totalWords, isDynamic, activeStage, sessionAccuracy, advanceOffset, setStageMastery, syncCEFRAtSessionEnd]);
 
   const handleRetry = useCallback(() => {
     resetForNext();
@@ -190,17 +218,23 @@ export function useLessonSession({
     if (!currentWord) return;
     resetForNext();
     skipWord(currentWord.word);
-    if (currentIndex + 1 >= totalWords) setPhase("complete");
+    if (currentIndex + 1 >= totalWords) {
+      setPhase("complete");
+      void syncCEFRAtSessionEnd();
+    }
     else setPhase("ready");
-  }, [resetForNext, currentWord, currentIndex, totalWords, skipWord]);
+  }, [resetForNext, currentWord, currentIndex, totalWords, skipWord, syncCEFRAtSessionEnd]);
 
   const handleMarkKnown = useCallback(() => {
     if (!currentWord) return;
     resetForNext();
     markKnown(currentWord.word, currentIndex);
-    if (currentIndex >= totalWords - 1) setPhase("complete");
+    if (currentIndex >= totalWords - 1) {
+      setPhase("complete");
+      void syncCEFRAtSessionEnd();
+    }
     else setPhase("ready");
-  }, [resetForNext, currentWord, currentIndex, totalWords, markKnown]);
+  }, [resetForNext, currentWord, currentIndex, totalWords, markKnown, syncCEFRAtSessionEnd]);
 
   const handleToggleFavorite = useCallback(async () => {
     if (!currentWord) return;

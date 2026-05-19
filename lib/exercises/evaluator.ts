@@ -8,6 +8,7 @@
 
 import type { ExerciseDesign, EvaluationResult, AnswerCategory } from "./design";
 import type { ExerciseMode } from "./taxonomy";
+import { CEFRLevel, normalizeCEFR, cefrDistance, cefrToNumber } from "./cefr";
 
 /**
  * Normalize answer for comparison:
@@ -54,7 +55,8 @@ function resolveMode(design: ExerciseDesign): ExerciseMode | null {
  */
 export function evaluateExercise(
   userAnswer: string,
-  design: ExerciseDesign
+  design: ExerciseDesign,
+  userLevel?: CEFRLevel
 ): EvaluationResult {
   const normalized = normalizeAnswer(userAnswer);
   const expectedNormalized = normalizeAnswer(design.correctAnswer);
@@ -107,7 +109,7 @@ export function evaluateExercise(
 
   // 1. Exact match
   if (normalized === expectedNormalized) {
-    return correctResult(userAnswer, design, "Exact match");
+    return correctResult(userAnswer, design, "Exact match", userLevel);
   }
 
   // 2. Check acceptable variants
@@ -131,7 +133,7 @@ export function evaluateExercise(
   }
 
   // 4. Generic wrong answer
-  return genericWrongResult(userAnswer, design);
+  return genericWrongResult(userAnswer, design, userLevel);
 }
 
 /**
@@ -140,8 +142,17 @@ export function evaluateExercise(
 function correctResult(
   userAnswer: string,
   design: ExerciseDesign,
-  matchReason: string
+  matchReason: string,
+  userLevel?: CEFRLevel
 ): EvaluationResult {
+  const exerciseLevel = design.difficulty ? normalizeCEFR(design.difficulty) : (userLevel ?? "B1");
+  const distance = userLevel ? cefrDistance(userLevel, exerciseLevel) : 0;
+  const tip =
+    distance < -1
+      ? `You got this easily — ${design.learningGoal}. Try a harder challenge next.`
+      : distance > 1
+      ? `Great effort on a tough one! ${design.learningGoal}`
+      : `Learning goal: ${design.learningGoal}`;
   return {
     correct: true,
     category: "correct",
@@ -152,7 +163,7 @@ function correctResult(
       explanation: matchReason === "Exact match"
         ? `Well done! "${userAnswer}" is correct.`
         : `Perfect! "${userAnswer}" ${matchReason}`,
-      tip: `Learning goal: ${design.learningGoal}`,
+      tip,
     },
     score: 100,
     gradedBy: "client",
@@ -189,9 +200,11 @@ function wrongResult(
  */
 function genericWrongResult(
   userAnswer: string,
-  design: ExerciseDesign
+  design: ExerciseDesign,
+  userLevel?: CEFRLevel
 ): EvaluationResult {
   const levelOfWrongness = analyzeWrongness(userAnswer, design);
+  const isEarlyLearner = !userLevel || cefrToNumber(userLevel) <= 2;
 
   return {
     correct: false,
@@ -199,11 +212,15 @@ function genericWrongResult(
     userAnswer,
     expectedAnswer: design.correctAnswer,
     feedback: {
-      immediate: "Not quite.",
+      immediate: isEarlyLearner ? "Almost!" : "Not quite.",
       explanation:
         levelOfWrongness === "form_error"
-          ? `That doesn't look right. The answer should be: "${design.correctAnswer}"`
-          : `That's not the word we're looking for. Try: "${design.correctAnswer}"`,
+          ? isEarlyLearner
+            ? `Check the ending — the answer is "${design.correctAnswer}".`
+            : `Watch the verb form — "${design.correctAnswer}" is the correct inflection here.`
+          : isEarlyLearner
+            ? `Not this one. The answer is "${design.correctAnswer}".`
+            : `That's not the target structure. The answer is "${design.correctAnswer}".`,
       tip: design.hint?.level1 || "Try again.",
       example: design.sentence
         ? `Example: "${design.sentence.replace("___", `"${design.correctAnswer}"`)}"`

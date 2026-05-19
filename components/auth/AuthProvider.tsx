@@ -11,6 +11,9 @@ import {
 import type { Session, User } from "@supabase/supabase-js";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
+import { db } from "@/lib/db";
+import { getUserLearningState } from "@/lib/ai-practice/load-state";
+import { normalizeCEFR } from "@/lib/exercises/cefr";
 import AuthPanel from "./AuthPanel";
 
 export type AuthContextValue = {
@@ -53,9 +56,37 @@ export default function AuthProvider({
     }
 
     const supabase = getSupabaseBrowserClient();
+    const hydrateCEFR = async (userId: string) => {
+      try {
+        const { data } = await supabase
+          .from("user_profiles" as never)
+          .select("cefr_level")
+          .eq("id", userId)
+          .maybeSingle();
+        const profile = data as { cefr_level?: string } | null;
+        if (!profile?.cefr_level) return;
+        const nextLevel = normalizeCEFR(profile.cefr_level);
+        const existing = await db.learningState.get(userId);
+        if (existing) {
+          await db.learningState.put({
+            ...existing,
+            state: { ...existing.state, level: { ...existing.state.level, cefrEstimate: nextLevel } },
+            updatedAt: new Date().toISOString(),
+          });
+          return;
+        }
+        const base = await getUserLearningState(userId);
+        await db.learningState.put({
+          userId,
+          state: { ...base, level: { ...base.level, cefrEstimate: nextLevel } },
+          updatedAt: new Date().toISOString(),
+        });
+      } catch {}
+    };
 
     supabase.auth.getSession().then(({ data: { session: s } }) => {
       setSession(s);
+      if (s?.user?.id) void hydrateCEFR(s.user.id);
       setLoading(false);
     });
 
@@ -63,6 +94,7 @@ export default function AuthProvider({
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, s) => {
       setSession(s);
+      if (s?.user?.id) void hydrateCEFR(s.user.id);
     });
 
     return () => subscription.unsubscribe();

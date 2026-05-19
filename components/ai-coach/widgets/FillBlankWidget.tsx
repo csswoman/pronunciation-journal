@@ -1,11 +1,15 @@
 "use client";
 
-import { Fragment, useMemo, useState } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
 import type { FillBlankArgs } from "@/lib/ai-practice/tools/registry";
 import type { ExerciseResult } from "@/lib/ai-practice/types";
 import type { EvaluationResult } from "@/lib/exercises/design";
 import { evaluateExercise } from "@/lib/exercises/evaluator";
 import { fillBlankToDesign } from "@/lib/ai-practice/tools/to-design";
+import { useAuth } from "@/components/auth/AuthProvider";
+import { db } from "@/lib/db";
+import { getUserLearningState } from "@/lib/ai-practice/load-state";
+import type { CEFRLevel } from "@/lib/exercises/cefr";
 import ExerciseFeedback from "./ExerciseFeedback";
 
 interface Props {
@@ -22,6 +26,8 @@ export default function FillBlankWidget({ args, status, onAnswer, onNext, onRetr
 
   const [values, setValues] = useState<string[]>(() => Array(blankCount).fill(""));
   const [evaluation, setEvaluation] = useState<EvaluationResult | null>(null);
+  const [userLevel, setUserLevel] = useState<CEFRLevel | undefined>(undefined);
+  const { user } = useAuth();
   // Track retry locally — status prop stays "answered" even after retry
   const [retried, setRetried] = useState(false);
 
@@ -31,9 +37,23 @@ export default function FillBlankWidget({ args, status, onAnswer, onNext, onRetr
 
   const combinedValue = values.join(" ").trim();
 
+  useEffect(() => {
+    const userId = user?.id;
+    if (!userId) return;
+    void (async () => {
+      const row = await db.learningState.get(userId);
+      if (row?.state?.level?.cefrEstimate) {
+        setUserLevel(row.state.level.cefrEstimate);
+        return;
+      }
+      const state = await getUserLearningState(userId);
+      setUserLevel(state.level.cefrEstimate);
+    })();
+  }, [user?.id]);
+
   function handleSubmit() {
     if (!combinedValue || answered) return;
-    const result = evaluateExercise(combinedValue, design);
+    const result = evaluateExercise(combinedValue, design, userLevel);
     setEvaluation(result);
     onAnswer({ correct: result.correct, topic: args.topic, gradedBy: "client" });
   }
