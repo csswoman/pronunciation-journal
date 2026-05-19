@@ -1,4 +1,4 @@
-import type { CEFRLevel } from './cefr'
+import type { CEFRLevel } from '@/lib/exercises/cefr'
 import type { ExerciseType as CanonicalExerciseType } from '@/lib/exercises/taxonomy'
 
 export type ExerciseType = 'pick_word' | 'pick_sound' | 'minimal_pair' | 'dictation' | 'speak_word'

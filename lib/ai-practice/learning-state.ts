@@ -1,4 +1,5 @@
 import type { ExerciseResult } from "./types";
+import type { CEFRLevel } from "@/lib/exercises/cefr";
 
 export interface UserLearningState {
   userId: string;
@@ -7,7 +8,7 @@ export interface UserLearningState {
   syncedAt?: string;
 
   level: {
-    cefrEstimate: "A1" | "A2" | "B1" | "B2" | "C1" | "C2";
+    cefrEstimate: CEFRLevel;
     confidence: number;
   };
 

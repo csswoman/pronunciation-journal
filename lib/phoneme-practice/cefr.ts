@@ -12,9 +12,9 @@
  *   5 → C1 (advanced, ~implicit meaning)
  */
 
-export type CEFRLevel = "A1" | "A2" | "B1" | "B2" | "C1";
+import type { CEFRLevel } from "@/lib/exercises/cefr";
 
-export const CEFR_LEVELS: CEFRLevel[] = ["A1", "A2", "B1", "B2", "C1"];
+export const CEFR_LEVELS: CEFRLevel[] = ["A1", "A2", "B1", "B2", "C1", "C2"];
 
 const NUMERIC_TO_CEFR: Record<number, CEFRLevel> = {
   1: "A1",
@@ -30,6 +30,7 @@ const CEFR_TO_NUMERIC: Record<CEFRLevel, number> = {
   B1: 3,
   B2: 4,
   C1: 5,
+  C2: 6,
 };
 
 export function numericToCEFR(difficulty: number | null | undefined): CEFRLevel | null {

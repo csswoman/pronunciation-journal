@@ -1,4 +1,4 @@
-import type { CEFRLevel } from '@/lib/phoneme-practice/cefr'
+import type { CEFRLevel } from '@/lib/exercises/cefr'
 import type { ExerciseType as CanonicalExerciseType } from './taxonomy'
 
 // ── Source references ──────────────────────────────────────────────────────
