@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react'
 import { Mic, MicOff, RotateCcw } from 'lucide-react'
-import { useSpeechRecognition } from '@/hooks/useSpeechRecognition'
+import { useSpeechInput } from '@/hooks/useSpeechInput'
 import { speak } from '@/lib/phoneme-practice/tts'
 import type { Exercise } from '@/lib/phoneme-practice/types'
 
@@ -31,7 +31,7 @@ function isMatch(transcript: string, target: string): boolean {
 }
 
 export function SpeakExercise({ exercise, onSubmit }: Props) {
-  const { status, result, isSupported, start, stop, reset } = useSpeechRecognition()
+  const { state, result, isSupported, start, stop, reset } = useSpeechInput({ prefer: 'web-speech' })
 
   useEffect(() => {
     if (exercise.targetWord) {
@@ -41,11 +41,11 @@ export function SpeakExercise({ exercise, onSubmit }: Props) {
   }, [exercise.targetWord])
 
   useEffect(() => {
-    if (status === 'done' && result && exercise.targetWord) {
+    if (state === 'done' && result && exercise.targetWord) {
       const correct = isMatch(result.transcript, exercise.targetWord)
       onSubmit(correct, result.transcript)
     }
-  }, [status, result, exercise.targetWord, onSubmit])
+  }, [state, result, exercise.targetWord, onSubmit])
 
   if (!isSupported) {
     return (
@@ -57,9 +57,9 @@ export function SpeakExercise({ exercise, onSubmit }: Props) {
     )
   }
 
-  const isListening = status === 'listening'
-  const isDone = status === 'done'
-  const isError = status === 'error'
+  const isListening = state === 'listening'
+  const isDone = state === 'done'
+  const isError = state === 'error'
 
   return (
     <div className="flex flex-col items-center gap-5 w-full">

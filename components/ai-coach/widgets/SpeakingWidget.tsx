@@ -5,7 +5,8 @@ import { Mic, MicOff, Loader2, Volume2 } from "lucide-react";
 import type { SpeakingArgs } from "@/lib/ai-practice/tools/registry";
 import type { ExerciseResult } from "@/lib/ai-practice/types";
 import type { EvaluationResult } from "@/lib/exercises/design";
-import { useRecorder } from "@/hooks/useRecorder";
+import { useSpeechInput } from "@/hooks/useSpeechInput";
+import { useSharedMicStream } from "@/hooks/useSharedMicStream";
 import ExerciseFeedback from "./ExerciseFeedback";
 
 function buildSpeakingResult(target: string, transcript: string, score: number): EvaluationResult {
@@ -48,11 +49,23 @@ function scoreTranscript(transcript: string, target: string): number {
 }
 
 export default function SpeakingWidget({ args, status, onAnswer, onNext, onRetry }: Props) {
-  const { startRecording, stopRecording, isRecording, audioUrl, resetRecording } = useRecorder();
-  const [transcribing, setTranscribing] = useState(false);
+  const { getStream } = useSharedMicStream();
+  const { state, start, stop, reset } = useSpeechInput({
+    prefer: "gemini",
+    getStream,
+    onResult: (r) => {
+      const text = r.transcript;
+      const s = scoreTranscript(text, args.target);
+      setTranscript(text);
+      setScore(s);
+      onAnswer({ correct: s >= 0.6, score: s, topic: args.target, gradedBy: "model" });
+    },
+  });
   const [transcript, setTranscript] = useState<string | null>(null);
   const [score, setScore] = useState<number | null>(null);
   const answered = status === "answered";
+  const isRecording = state === "listening";
+  const transcribing = state === "processing";
 
   const speakTarget = useCallback(() => {
     if (typeof window === "undefined" || !window.speechSynthesis) return;
@@ -62,31 +75,6 @@ export default function SpeakingWidget({ args, status, onAnswer, onNext, onRetry
     utterance.rate = 0.85;
     window.speechSynthesis.speak(utterance);
   }, [args.target]);
-
-  async function handleStop() {
-    stopRecording();
-    await new Promise(r => setTimeout(r, 300));
-    if (!audioUrl) return;
-
-    setTranscribing(true);
-    try {
-      const res = await fetch("/api/gemini/transcribe", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ audioDataUrl: audioUrl, targetWord: args.target }),
-      });
-      const data = await res.json();
-      const text: string = data.transcript ?? "";
-      const s: number = scoreTranscript(text, args.target);
-      setTranscript(text);
-      setScore(s);
-      onAnswer({ correct: s >= 0.6, score: s, topic: args.target, gradedBy: "model" });
-    } catch {
-      onAnswer({ correct: false, topic: args.target, gradedBy: "model" });
-    } finally {
-      setTranscribing(false);
-    }
-  }
 
   return (
     <div
@@ -118,7 +106,7 @@ export default function SpeakingWidget({ args, status, onAnswer, onNext, onRetry
         <div className="flex items-center gap-3">
           {!isRecording && !transcribing && !transcript && (
             <button
-              onClick={() => startRecording()}
+              onClick={() => start()}
               className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm bg-primary text-on-primary"
             >
               <Mic className="w-4 h-4" />
@@ -127,7 +115,7 @@ export default function SpeakingWidget({ args, status, onAnswer, onNext, onRetry
           )}
           {isRecording && (
             <button
-              onClick={handleStop}
+              onClick={() => stop()}
               className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm animate-pulse bg-error text-on-primary"
             >
               <MicOff className="w-4 h-4" />
@@ -151,7 +139,7 @@ export default function SpeakingWidget({ args, status, onAnswer, onNext, onRetry
               ? () => {
                   setTranscript(null);
                   setScore(null);
-                  resetRecording();
+                  reset();
                   onRetry?.();
                 }
               : undefined

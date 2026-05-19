@@ -7,6 +7,7 @@ import Button from "@/components/ui/Button";
 import { SyllableWord } from "@/components/ui/SyllableWord";
 import { CardBadge } from "@/components/ui/CardBadge";
 import { WaveformVisualizer } from "@/components/ui/WaveformVisualizer";
+import { useSpeechInput } from "@/hooks/useSpeechInput";
 
 interface WordOfDay {
   word: string;
@@ -27,10 +28,8 @@ export default function HomeWordOfDay() {
   const [isRecording, setIsRecording] = useState(false);
   const [recordedUrl, setRecordedUrl] = useState<string | null>(null);
   const [playingRecording, setPlayingRecording] = useState(false);
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-  const chunksRef = useRef<Blob[]>([]);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const streamRef = useRef<MediaStream | null>(null);
+  const { state, result, start, stop } = useSpeechInput({ prefer: "web-speech" });
 
   useEffect(() => {
     const cached = sessionStorage.getItem("wod");
@@ -79,28 +78,23 @@ export default function HomeWordOfDay() {
   }
 
   async function startRecording() {
-    if (!navigator.mediaDevices) return;
     setRecordedUrl(null);
-    chunksRef.current = [];
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    streamRef.current = stream;
-    const mimeType = MediaRecorder.isTypeSupported("audio/webm") ? "audio/webm" : "audio/mp4";
-    const mr = new MediaRecorder(stream, { mimeType });
-    mediaRecorderRef.current = mr;
-    mr.ondataavailable = (e) => { if (e.data.size > 0) chunksRef.current.push(e.data); };
-    mr.onstop = () => {
-      const blob = new Blob(chunksRef.current, { type: mimeType });
-      setRecordedUrl(URL.createObjectURL(blob));
-      stream.getTracks().forEach((t) => t.stop());
-    };
-    mr.start();
+    await start();
     setIsRecording(true);
   }
 
-  function stopRecording() {
-    mediaRecorderRef.current?.stop();
+  async function stopRecording() {
+    await stop();
     setIsRecording(false);
   }
+
+  useEffect(() => {
+    if (state !== "done") return;
+    const transcript = result?.transcript ?? "";
+    if (!transcript) return;
+    const blob = new Blob([transcript], { type: "text/plain" });
+    setRecordedUrl(URL.createObjectURL(blob));
+  }, [state, result]);
 
   function playRecording() {
     if (!recordedUrl) return;

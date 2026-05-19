@@ -3,9 +3,8 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { useScoring } from "@/hooks/useScoring";
 import { useLesson } from "@/hooks/useLesson";
-import { useRecorder } from "@/hooks/useRecorder";
 import { useSharedMicStream } from "@/hooks/useSharedMicStream";
-import { useTranscription } from "@/hooks/useTranscription";
+import { useSpeechInput } from "@/hooks/useSpeechInput";
 import { calculateXP } from "@/lib/pronunciation/scoring";
 import { fetchPronunciation } from "@/lib/pronunciation/dictionary";
 import { isFavorite, toggleFavorite } from "@/lib/db";
@@ -88,7 +87,7 @@ export function useLessonSession({
     }
   }, []);
   const [phase, setPhase] = useState<Phase>("ready");
-  const [stream, setStream] = useState<MediaStream | null>(null);
+  const [stream] = useState<MediaStream | null>(null);
   const [wordAudioUrl, setWordAudioUrl] = useState<string | null>(null);
   const [isFav, setIsFav] = useState(false);
 
@@ -119,15 +118,16 @@ export function useLessonSession({
     }
   }, [addResult, scoreAndSave]);
 
-  const { isRecording, audioUrl, startRecording, stopRecording, resetRecording } = useRecorder();
   const { getStream, release: releaseMicStream } = useSharedMicStream();
-
-  const geminiInFlightRef = useTranscription({
-    phase,
-    audioUrl,
-    currentWord: currentWordRef.current?.word ?? "",
-    onResult: processSpeechResult,
+  const { state: speechState, result: speechResult, start: startSpeech, stop: stopSpeech, abort: abortSpeech, reset: resetSpeech } = useSpeechInput({
+    prefer: "gemini",
+    getStream,
   });
+
+  useEffect(() => {
+    if (phase !== "processing" || speechState !== "done") return;
+    void processSpeechResult(speechResult?.transcript ?? "");
+  }, [phase, speechState, speechResult, processSpeechResult]);
 
   useEffect(() => {
     if (!currentWord) return;
@@ -157,37 +157,32 @@ export function useLessonSession({
 
   const resetForNext = useCallback(() => {
     resetScoring();
-    resetRecording();
-    geminiInFlightRef.current = false;
-  }, [resetScoring, resetRecording, geminiInFlightRef]);
+    resetSpeech();
+  }, [resetScoring, resetSpeech]);
 
   const handleStartRecording = useCallback(async () => {
     resetForNext();
     try {
       const ms = await getStream();
-      setStream(ms);
-      await startRecording(ms);
+      await startSpeech();
       setPhase("recording");
     } catch (err) {
       console.error("Mic error:", err);
     }
-  }, [resetForNext, getStream, startRecording]);
+  }, [resetForNext, getStream, startSpeech]);
 
   const handleStopRecording = useCallback(() => {
-    stopRecording();
+    void stopSpeech();
     releaseMicStream();
-    setStream(null);
     setPhase("processing");
-  }, [stopRecording, releaseMicStream]);
+  }, [stopSpeech, releaseMicStream]);
 
   const handleCancelRecording = useCallback(() => {
-    stopRecording();
+    abortSpeech();
     releaseMicStream();
-    setStream(null);
-    resetRecording();
-    geminiInFlightRef.current = false;
+    resetSpeech();
     setPhase("ready");
-  }, [stopRecording, releaseMicStream, resetRecording, geminiInFlightRef]);
+  }, [abortSpeech, releaseMicStream, resetSpeech]);
 
   const handleNext = useCallback(() => {
     resetForNext();
@@ -254,7 +249,7 @@ export function useLessonSession({
     scoringResult,
     xpEarned,
     feedback,
-    isRecording,
+    isRecording: speechState === "listening",
     stream,
     wordAudioUrl,
     isFav,
