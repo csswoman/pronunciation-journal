@@ -7,6 +7,7 @@
  */
 
 import type { ExerciseDesign, EvaluationResult, AnswerCategory } from "./design";
+import type { ExerciseMode } from "./taxonomy";
 
 /**
  * Normalize answer for comparison:
@@ -21,6 +22,25 @@ export function normalizeAnswer(text: string): string {
     .toLowerCase()
     .replace(/[.,!?;:'"]/g, "")
     .replace(/\s+/g, " ");
+}
+
+/**
+ * Resolves the canonical exercise mode from exerciseType (canonical)
+ * or falls back to design.type (legacy).
+ */
+function resolveMode(design: ExerciseDesign): ExerciseMode | null {
+  if (design.exerciseType?.mode) {
+    return design.exerciseType.mode;
+  }
+
+  const legacyMap: Record<string, ExerciseMode> = {
+    fill_blank: "fill_blank",
+    multiple_choice: "multiple_choice",
+    speaking: "speak",
+    word_card: "word_card",
+  };
+
+  return legacyMap[design.type] ?? null;
 }
 
 /**
@@ -52,6 +72,36 @@ export function evaluateExercise(
       },
       gradedBy: "client",
       score: 0,
+    };
+  }
+
+  // Route by canonical mode
+  const mode = resolveMode(design);
+
+  if (mode === "speak") {
+    return {
+      correct: false,
+      category: "invalid",
+      userAnswer,
+      expectedAnswer: design.correctAnswer,
+      feedback: {
+        immediate: "Use the microphone to answer.",
+        explanation: "This exercise requires a spoken answer.",
+      },
+      gradedBy: "client",
+      score: 0,
+    };
+  }
+
+  if (mode === "word_card") {
+    return {
+      correct: true,
+      category: "correct",
+      userAnswer,
+      expectedAnswer: design.correctAnswer,
+      feedback: { immediate: "✓ Noted." as string, explanation: "" },
+      gradedBy: "client",
+      score: 100,
     };
   }
 
@@ -172,7 +222,7 @@ function analyzeWrongness(userAnswer: string, design: ExerciseDesign): string {
 
   // Check if it looks like a form error (inflection attempt)
   if (
-    design.type === "fill_blank" &&
+    resolveMode(design) === "fill_blank" &&
     hasCommonFormErrors(normalized, design.correctAnswer)
   ) {
     return "form_error";

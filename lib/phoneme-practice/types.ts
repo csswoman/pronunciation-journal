@@ -1,4 +1,5 @@
 import type { CEFRLevel } from './cefr'
+import type { ExerciseType as CanonicalExerciseType } from '@/lib/exercises/taxonomy'
 
 export type ExerciseType = 'pick_word' | 'pick_sound' | 'minimal_pair' | 'dictation' | 'speak_word'
 
@@ -57,6 +58,8 @@ export interface Option {
 
 export interface Exercise {
   type: ExerciseType
+  /** Canonical taxonomy (domain + mode + optional variant). */
+  exerciseType?: CanonicalExerciseType
   soundId: number
   ipa: string
   targetWord?: string
@@ -90,6 +93,8 @@ export interface UserSoundProgressWithSound extends UserSoundProgress {
 export interface SessionAnswer {
   soundId: number
   exerciseType: ExerciseType
+  /** Canonical taxonomy (domain + mode + optional variant). */
+  exerciseTypeCanonical?: CanonicalExerciseType
   isCorrect: boolean
   userAnswer: string
   targetWord?: string

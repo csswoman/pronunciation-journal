@@ -1,3 +1,5 @@
+import type { ExerciseType } from './taxonomy';
+
 export type ProgressiveHint = {
   level1: string;
   level2: string;
@@ -6,6 +8,9 @@ export type ProgressiveHint = {
 
 export type ExerciseDesign = {
   id: string;
+  /** Canonical taxonomy (domain + mode + optional variant). */
+  exerciseType?: ExerciseType;
+  /** Legacy flat type (kept for compatibility during migration). */
   type: "fill_blank" | "multiple_choice" | "speaking" | "word_card";
 
   instruction: string;

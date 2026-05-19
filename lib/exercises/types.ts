@@ -1,4 +1,5 @@
 import type { CEFRLevel } from '@/lib/phoneme-practice/cefr'
+import type { ExerciseType as CanonicalExerciseType } from './taxonomy'
 
 // ── Source references ──────────────────────────────────────────────────────
 
@@ -22,6 +23,8 @@ interface BaseGenericExercise {
   /** Deterministic id: hash of type + sourceRef + stable payload fields. */
   id: string
   type: GenericExerciseType
+  /** Canonical taxonomy (domain + mode + optional variant). */
+  exerciseType?: CanonicalExerciseType
   sourceRef: ExerciseSourceRef
   level?: CEFRLevel
 }
@@ -83,6 +86,8 @@ export type GenericExercise =
 
 export interface GenericSessionAnswer {
   exerciseId: string
+  /** Canonical taxonomy (domain + mode + optional variant). */
+  exerciseTypeCanonical?: CanonicalExerciseType
   exerciseType: GenericExerciseType
   sourceRef: ExerciseSourceRef
   isCorrect: boolean
