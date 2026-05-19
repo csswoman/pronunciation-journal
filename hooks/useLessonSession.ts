@@ -97,6 +97,8 @@ export function useLessonSession({
   } = useLesson();
 
   const { result: scoringResult, xpEarned, feedback, scoreAndSave, reset: resetScoring } = useScoring();
+  // TODO(Fase 3): migrate speech evaluation call site in hooks/useScoring.ts (scorePronunciation)
+  // to defaultEvaluationEngine.evaluate() when text-based evaluator migration is ready.
 
   const currentWordRef = useRef(currentWord);
   useEffect(() => { currentWordRef.current = currentWord; }, [currentWord]);
