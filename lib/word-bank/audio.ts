@@ -1,3 +1,5 @@
+import type { AudioFetchResult } from "@/lib/word-bank/types";
+
 interface DictionaryPhonetic {
   text?: string;
   audio?: string;
@@ -30,11 +32,6 @@ function isValidHttpUrl(url: string): boolean {
   } catch {
     return false;
   }
-}
-
-export interface AudioFetchResult {
-  url: string | null;
-  hasAudio: boolean | null;
 }
 
 export async function getWordAudio(word: string): Promise<AudioFetchResult> {

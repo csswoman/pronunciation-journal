@@ -1,6 +1,6 @@
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { scheduleNextReview } from "@/lib/srs/schedule";
-import type { WordBankEntry } from "@/lib/types";
+import type { WordBankEntry } from "@/lib/word-bank/types";
 
 // ── Shared SM-2 state shape ──────────────────────────────────────────────────
 

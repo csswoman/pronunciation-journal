@@ -17,7 +17,7 @@ import { getSupabaseServerUserId } from "@/lib/supabase/session";
 import { getWordsDueForReview } from "@/lib/word-bank/server-queries";
 import { getTodaysMiniLesson } from "@/lib/content/lessons";
 import type { MiniLesson } from "@/lib/content/schemas";
-import type { WordBankEntry } from "@/lib/types";
+import type { WordBankEntry } from "@/lib/word-bank/types";
 
 export default async function HomePage() {
   let userId: string | null = null;

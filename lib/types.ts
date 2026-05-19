@@ -1,5 +1,3 @@
-import type { Tables } from "@/lib/supabase/types";
-
 export type Difficulty = "easy" | "medium" | "hard";
 
 export interface Definition {
@@ -324,27 +322,4 @@ export interface UserProfile {
 }
 
 // ── Word Bank Types ──
-
-export type WordBankStatus = "processing" | "ready" | "failed";
-
-export type WordBankSrsStatus = "new" | "learning" | "review" | "mastered";
-
-/**
- * Word bank row. Sourced directly from the generated Supabase types so the
- * shape never drifts from the `word_bank` table — regenerate `lib/supabase/types.ts`
- * to pick up schema changes.
- *
- * Note: `status`, `srs_status` and `error_reason` are `string` here because
- * Postgres CHECK constraints are not reflected in generated types. Use the
- * `WordBankStatus` / `WordBankSrsStatus` unions when a narrowed value is needed.
- */
-export type WordBankEntry = Tables<"word_bank">;
-
-export interface WordEnrichment {
-  meaning: string;
-  translation: string;
-  ipa: string;
-  example: string;
-  synonyms: string[];
-  image_prompt: string;
-}
+// Moved to lib/word-bank/types.ts (feature-scoped). Import from there.

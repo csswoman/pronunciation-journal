@@ -1,4 +1,4 @@
-import type { WordStrength } from "@/lib/word-bank/strength";
+import type { WordStrength } from "@/lib/word-bank/types";
 
 interface WordStrengthBarsProps {
   strength: WordStrength;

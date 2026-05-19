@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Volume2, LibraryBig, ArrowRight } from "lucide-react";
-import type { WordBankEntry } from "@/lib/types";
+import type { WordBankEntry } from "@/lib/word-bank/types";
 import { getWordStrength } from "@/lib/word-bank/strength";
 import { WordStrengthBars } from "@/components/vocabulary/words/WordStrengthBars";
 

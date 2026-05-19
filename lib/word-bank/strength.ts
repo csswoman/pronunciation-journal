@@ -1,17 +1,9 @@
-import type { WordBankEntry } from "@/lib/types";
-
-export type WordStrength = "weak" | "medium" | "strong";
+import type { WordBankEntry, WordStrength, StrengthStats } from "@/lib/word-bank/types";
 
 export function getWordStrength(word: Pick<WordBankEntry, "srs_status" | "ease_factor" | "repetitions">): WordStrength {
   if (word.srs_status === "mastered") return "strong";
   if (word.srs_status === "review") return "medium";
   return "weak";
-}
-
-export interface StrengthStats {
-  weak: number;
-  medium: number;
-  strong: number;
 }
 
 export function computeStrengthStats(words: Pick<WordBankEntry, "srs_status" | "ease_factor" | "repetitions" | "status">[]): StrengthStats {

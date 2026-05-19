@@ -9,7 +9,7 @@ import {
   incrementDifficulty as apiIncrementDifficulty,
   quickAddWord as apiQuickAddWord,
 } from "@/lib/word-bank/queries";
-import type { WordBankEntry } from "@/lib/types";
+import type { WordBankEntry } from "@/lib/word-bank/types";
 
 interface UseWordsState {
   words: WordBankEntry[];

@@ -1,7 +1,7 @@
 "use client";
 
 import { Flame, Loader2, RefreshCcw, Trash2 } from "lucide-react";
-import type { WordBankEntry } from "@/lib/types";
+import type { WordBankEntry } from "@/lib/word-bank/types";
 import { useAudioPlayback } from "@/hooks/useAudioPlayback";
 import Button from "@/components/ui/Button";
 import { H4 } from "@/components/ui/Typography";

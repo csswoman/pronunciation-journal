@@ -1,5 +1,5 @@
 import type { MatchPairsExercise, MatchPair } from '@/lib/exercises/types'
-import type { WordBankEntry } from '@/lib/types'
+import type { WordBankEntry } from '@/lib/word-bank/types'
 import type { SoundWord } from '@/lib/phoneme-practice/types'
 import { exerciseId, pick, shuffle } from '@/lib/exercises/utils'
 

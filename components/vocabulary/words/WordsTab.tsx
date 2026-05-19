@@ -6,7 +6,7 @@ import Card from "@/components/layout/Card";
 import Button from "@/components/ui/Button";
 import { WordCard } from "@/components/vocabulary/words/WordCard";
 import { WordsEmptyState } from "@/components/vocabulary/words/WordsEmptyState";
-import type { WordBankEntry } from "@/lib/types";
+import type { WordBankEntry } from "@/lib/word-bank/types";
 
 const ITEMS_PER_PAGE = 12;
 type WordFilter = "all" | "difficult" | "ready" | "processing";
