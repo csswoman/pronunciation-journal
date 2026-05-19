@@ -118,7 +118,7 @@ export default function SpeakingWidget({ args, status, onAnswer, onNext, onRetry
         <div className="flex items-center gap-3">
           {!isRecording && !transcribing && !transcript && (
             <button
-              onClick={startRecording}
+              onClick={() => startRecording()}
               className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm bg-primary text-on-primary"
             >
               <Mic className="w-4 h-4" />

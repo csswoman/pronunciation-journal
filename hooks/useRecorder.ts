@@ -3,7 +3,7 @@
 import { useState, useRef, useCallback } from "react";
 
 interface UseRecorderReturn {
-  startRecording: () => Promise<void>;
+  startRecording: (externalStream?: MediaStream) => Promise<void>;
   stopRecording: () => void;
   audioUrl: string | null;
   isRecording: boolean;
@@ -19,22 +19,16 @@ export function useRecorder(): UseRecorderReturn {
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
 
-  const startRecording = useCallback(async () => {
+  const startRecording = useCallback(async (externalStream?: MediaStream) => {
     try {
       setError(null);
-      
-      // Check if browser supports MediaRecorder
+
       if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
         throw new Error("Your browser doesn't support audio recording");
       }
 
-      // Request microphone access
-      const stream = await navigator.mediaDevices.getUserMedia({ 
-        audio: {
-          echoCancellation: true,
-          noiseSuppression: true,
-          autoGainControl: true,
-        } 
+      const stream = externalStream ?? await navigator.mediaDevices.getUserMedia({
+        audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true },
       });
 
       // Determine supported MIME type
@@ -44,6 +38,7 @@ export function useRecorder(): UseRecorderReturn {
         ? "audio/mp4"
         : "audio/wav";
 
+      const ownStream = !externalStream;
       const mediaRecorder = new MediaRecorder(stream, { mimeType });
       mediaRecorderRef.current = mediaRecorder;
       chunksRef.current = [];
@@ -65,8 +60,8 @@ export function useRecorder(): UseRecorderReturn {
         };
         reader.readAsDataURL(blob);
         
-        // Stop all tracks to release microphone
-        stream.getTracks().forEach(track => track.stop());
+        // Only stop tracks if we own the stream (no external stream was provided)
+        if (ownStream) stream.getTracks().forEach((track) => track.stop());
       };
 
       mediaRecorder.onerror = (event) => {

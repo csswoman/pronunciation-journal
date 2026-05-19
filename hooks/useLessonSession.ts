@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import { useScoring } from "@/hooks/useScoring";
 import { useLesson } from "@/hooks/useLesson";
 import { useRecorder } from "@/hooks/useRecorder";
+import { useSharedMicStream } from "@/hooks/useSharedMicStream";
 import { useTranscription } from "@/hooks/useTranscription";
 import { calculateXP } from "@/lib/pronunciation/scoring";
 import { fetchPronunciation } from "@/lib/pronunciation/dictionary";
@@ -92,6 +93,7 @@ export function useLessonSession({
   }, [addResult, scoreAndSave]);
 
   const { isRecording, audioUrl, startRecording, stopRecording, resetRecording } = useRecorder();
+  const { getStream, release: releaseMicStream } = useSharedMicStream();
 
   const geminiInFlightRef = useTranscription({
     phase,
@@ -135,32 +137,30 @@ export function useLessonSession({
   const handleStartRecording = useCallback(async () => {
     resetForNext();
     try {
-      const ms = await navigator.mediaDevices.getUserMedia({
-        audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true },
-      });
+      const ms = await getStream();
       setStream(ms);
-      await startRecording();
+      await startRecording(ms);
       setPhase("recording");
     } catch (err) {
       console.error("Mic error:", err);
     }
-  }, [resetForNext, startRecording]);
+  }, [resetForNext, getStream, startRecording]);
 
   const handleStopRecording = useCallback(() => {
     stopRecording();
-    stream?.getTracks().forEach((t) => t.stop());
+    releaseMicStream();
     setStream(null);
     setPhase("processing");
-  }, [stopRecording, stream]);
+  }, [stopRecording, releaseMicStream]);
 
   const handleCancelRecording = useCallback(() => {
     stopRecording();
-    stream?.getTracks().forEach((t) => t.stop());
+    releaseMicStream();
     setStream(null);
     resetRecording();
     geminiInFlightRef.current = false;
     setPhase("ready");
-  }, [stopRecording, stream, resetRecording, geminiInFlightRef]);
+  }, [stopRecording, releaseMicStream, resetRecording, geminiInFlightRef]);
 
   const handleNext = useCallback(() => {
     resetForNext();
