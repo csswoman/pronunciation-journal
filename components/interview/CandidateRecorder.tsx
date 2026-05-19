@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { Mic, MicOff, Loader2, RotateCcw } from "lucide-react";
 import Button from "@/components/ui/Button";
-import { useRecorder } from "@/hooks/useRecorder";
+import { useSpeechInput } from "@/hooks/useSpeechInput";
+import { useSharedMicStream } from "@/hooks/useSharedMicStream";
 import { scorePronunciation } from "@/lib/pronunciation/scoring";
 import type { ScoringResult } from "@/lib/types";
 
@@ -107,29 +108,23 @@ function WordChip({ word, status, tip }: { word: string; status: "correct" | "in
 }
 
 export default function CandidateRecorder({ targetText, difficulty, level, onDone }: Props) {
-  const { startRecording, stopRecording, audioUrl, isRecording, error: recError, resetRecording } = useRecorder();
+  const { getStream } = useSharedMicStream();
+  const { state, result: speechResult, error: speechError, start, stop, reset } = useSpeechInput({
+    prefer: "gemini",
+    getStream,
+  });
   const [phase, setPhase] = useState<Phase>("idle");
   const [result, setResult] = useState<ScoringResult | null>(null);
   const [transcript, setTranscript] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const processedUrl = useRef<string | null>(null);
+  const isRecording = state === "listening";
 
   useEffect(() => {
-    if (!audioUrl || audioUrl === processedUrl.current || phase !== "transcribing") return;
-    processedUrl.current = audioUrl;
-
+    if (!speechResult || phase !== "transcribing") return;
+    const currentResult = speechResult;
     async function run() {
       try {
-        const res = await fetch("/api/gemini/transcribe", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ audioDataUrl: audioUrl }),
-        });
-        if (!res.ok) {
-          const d = await res.json().catch(() => ({}));
-          throw new Error(d.error ?? `Transcription failed (${res.status})`);
-        }
-        const { transcript: text } = await res.json();
+        const text = currentResult.transcript;
         setTranscript(text);
         const scored = await scorePronunciation(text, targetText, getThreshold(level, difficulty));
         setResult(scored);
@@ -139,28 +134,25 @@ export default function CandidateRecorder({ targetText, difficulty, level, onDon
         setPhase("idle");
       }
     }
-
     run();
-  }, [audioUrl, phase, targetText]);
+  }, [speechResult, phase, targetText, level, difficulty]);
 
   const handleToggleRecording = async () => {
     if (isRecording) {
-      stopRecording();
+      void stop();
       setPhase("transcribing");
     } else {
       setError(null);
       setResult(null);
       setTranscript("");
-      resetRecording();
-      processedUrl.current = null;
+      reset();
       setPhase("recording");
-      await startRecording();
+      await start();
     }
   };
 
   const handleRetry = () => {
-    resetRecording();
-    processedUrl.current = null;
+    reset();
     setResult(null);
     setTranscript("");
     setError(null);
@@ -170,7 +162,7 @@ export default function CandidateRecorder({ targetText, difficulty, level, onDon
   if (phase === "idle" || phase === "recording") {
     return (
       <div className="flex flex-col items-center gap-4 py-4">
-        {(error || recError) && <p className="text-xs text-error">{error ?? recError}</p>}
+        {(error || speechError) && <p className="text-xs text-error">{error ?? speechError}</p>}
         <button
           onClick={handleToggleRecording}
           className={`w-16 h-16 rounded-full flex items-center justify-center transition-all shadow-lg ${

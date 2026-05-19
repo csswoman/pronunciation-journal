@@ -1,11 +1,13 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { scorePronunciation, calculateXP, getFeedbackMessage } from "@/lib/pronunciation/scoring";
+import { calculateXP, getFeedbackMessage } from "@/lib/pronunciation/scoring";
+import { defaultEvaluationEngine } from "@/lib/exercises/evaluation";
 import { saveAttempt, updateDailyProgress, updateUserStats } from "@/lib/db";
 import { updateSRS, accuracyToQuality, createSRSEntry } from "@/lib/srs";
 import { saveSRSData, getSRSData } from "@/lib/db";
 import type { ScoringResult } from "@/lib/types";
+import type { CEFRLevel } from "@/lib/exercises/cefr";
 
 interface UseScoringReturn {
   result: ScoringResult | null;
@@ -16,7 +18,8 @@ interface UseScoringReturn {
     transcript: string,
     target: string,
     lessonId: string,
-    threshold?: number
+    threshold?: number,
+    userLevel?: CEFRLevel
   ) => Promise<ScoringResult>;
   reset: () => void;
 }
@@ -36,13 +39,28 @@ export function useScoring(): UseScoringReturn {
       transcript: string,
       target: string,
       lessonId: string,
-      threshold = 70
+      threshold = 70,
+      userLevel?: CEFRLevel
     ): Promise<ScoringResult> => {
       setIsProcessing(true);
 
       try {
         // Score the pronunciation
-        const scoringResult = await scorePronunciation(transcript, target, threshold);
+        const evalResult = await defaultEvaluationEngine.evaluate({
+          exercise: { domain: "pronunciation", mode: "speak" },
+          expected: target,
+          actual: { kind: "speech", transcript },
+          userLevel,
+          threshold,
+        });
+
+        // EvaluationResult -> ScoringResult shim
+        const scoringResult: ScoringResult = {
+          transcript,
+          accuracy: evalResult.score ?? 0,
+          isCorrect: evalResult.correct,
+          wordResults: (evalResult as any).wordResults ?? [],
+        };
         setResult(scoringResult);
 
         // Calculate XP and feedback — hard mode gives bonus XP

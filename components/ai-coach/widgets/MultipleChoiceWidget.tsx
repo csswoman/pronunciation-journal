@@ -1,11 +1,15 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { MultipleChoiceArgs } from "@/lib/ai-practice/tools/registry";
 import type { ExerciseResult } from "@/lib/ai-practice/types";
 import type { EvaluationResult } from "@/lib/exercises/design";
 import { evaluateExercise } from "@/lib/exercises/evaluator";
 import { multipleChoiceToDesign } from "@/lib/ai-practice/tools/to-design";
+import { useAuth } from "@/components/auth/AuthProvider";
+import { db } from "@/lib/db";
+import { getUserLearningState } from "@/lib/ai-practice/load-state";
+import type { CEFRLevel } from "@/lib/exercises/cefr";
 import ExerciseFeedback from "./ExerciseFeedback";
 
 interface Props {
@@ -19,14 +23,30 @@ interface Props {
 export default function MultipleChoiceWidget({ args, status, onAnswer, onNext, onRetry }: Props) {
   const [selected, setSelected] = useState<number | null>(null);
   const [evaluation, setEvaluation] = useState<EvaluationResult | null>(null);
+  const [userLevel, setUserLevel] = useState<CEFRLevel | undefined>(undefined);
+  const { user } = useAuth();
   const answered = status === "answered";
 
   const design = useMemo(() => multipleChoiceToDesign(args), [args]);
 
+  useEffect(() => {
+    const userId = user?.id;
+    if (!userId) return;
+    void (async () => {
+      const row = await db.learningState.get(userId);
+      if (row?.state?.level?.cefrEstimate) {
+        setUserLevel(row.state.level.cefrEstimate);
+        return;
+      }
+      const state = await getUserLearningState(userId);
+      setUserLevel(state.level.cefrEstimate);
+    })();
+  }, [user?.id]);
+
   function handleSelect(idx: number) {
     if (answered) return;
     setSelected(idx);
-    const result = evaluateExercise(args.options[idx], design);
+    const result = evaluateExercise(args.options[idx], design, userLevel);
     // Fall back to the model-provided explanation when the design doesn't carry pedagogical data.
     if (!result.correct && args.explanation && !design.commonWrongAnswers?.length) {
       result.feedback.explanation = args.explanation;

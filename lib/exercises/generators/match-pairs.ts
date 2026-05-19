@@ -1,5 +1,5 @@
 import type { MatchPairsExercise, MatchPair } from '@/lib/exercises/types'
-import type { WordBankEntry } from '@/lib/types'
+import type { WordBankEntry } from '@/lib/word-bank/types'
 import type { SoundWord } from '@/lib/phoneme-practice/types'
 import { exerciseId, pick, shuffle } from '@/lib/exercises/utils'
 
@@ -34,6 +34,7 @@ export function generateMatchPairsFromWordBank(
     exercises.push({
       id: exerciseId('match_pairs', groupKey),
       type: 'match_pairs',
+      exerciseType: { domain: 'vocabulary', mode: 'match_pairs' },
       sourceRef: { source: 'word_bank', id: group[0].id },
       pairs,
     })
@@ -67,6 +68,7 @@ export function generateMatchPairsFromSoundWords(
     exercises.push({
       id: exerciseId('match_pairs', groupKey, 'ipa'),
       type: 'match_pairs',
+      exerciseType: { domain: 'pronunciation', mode: 'match_pairs', variant: 'phoneme' },
       sourceRef: { source: 'words', id: String(group[0].id) },
       pairs,
     })

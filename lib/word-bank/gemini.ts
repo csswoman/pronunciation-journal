@@ -1,5 +1,5 @@
 import { GoogleGenAI } from "@google/genai";
-import type { WordEnrichment } from "@/lib/types";
+import type { WordEnrichment } from "@/lib/word-bank/types";
 
 const ENABLE_PREVIEW_MODELS = process.env.GEMINI_ENABLE_PREVIEW_MODELS === "true";
 const BASE_MODELS = [

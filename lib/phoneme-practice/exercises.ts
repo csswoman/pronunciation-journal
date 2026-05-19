@@ -77,6 +77,7 @@ export function generatePickWord(
 
   return {
     type: 'pick_word',
+    exerciseType: { domain: 'pronunciation', mode: 'multiple_choice', variant: 'pick_word' },
     soundId: targetSound.id,
     ipa: targetSound.ipa,
     options,
@@ -116,6 +117,7 @@ export function generatePickSound(
 
   return {
     type: 'pick_sound',
+    exerciseType: { domain: 'pronunciation', mode: 'multiple_choice', variant: 'pick_sound' },
     soundId: targetSound.id,
     ipa: targetSound.ipa,
     targetWord: targetWord?.word,
@@ -148,6 +150,7 @@ export function generateMinimalPair(
 
     return {
       type: 'minimal_pair',
+      exerciseType: { domain: 'pronunciation', mode: 'multiple_choice', variant: 'minimal_pair' },
       soundId: targetSound.id,
       ipa: targetSound.ipa,
       targetWord: targetIsA ? pair.word_a : pair.word_b,
@@ -163,6 +166,7 @@ export function generateMinimalPair(
     // Last-resort placeholder so the caller never receives null
     return {
       type: 'minimal_pair',
+      exerciseType: { domain: 'pronunciation', mode: 'multiple_choice', variant: 'minimal_pair' },
       soundId: targetSound.id,
       ipa: targetSound.ipa,
       options: [],
@@ -180,6 +184,7 @@ export function generateMinimalPair(
 
   return {
     type: 'minimal_pair',
+    exerciseType: { domain: 'pronunciation', mode: 'multiple_choice', variant: 'minimal_pair' },
     soundId: targetSound.id,
     ipa: targetSound.ipa,
     targetWord: targetIsA ? synth.wordA : synth.wordB,
@@ -204,6 +209,7 @@ export function generateSpeakWord(
 
   return {
     type: 'speak_word',
+    exerciseType: { domain: 'pronunciation', mode: 'speak', variant: 'phoneme' },
     soundId: targetSound.id,
     ipa: targetSound.ipa,
     targetWord: targetWord?.word,
@@ -227,6 +233,7 @@ export function generateDictation(
 
   return {
     type: 'dictation',
+    exerciseType: { domain: 'pronunciation', mode: 'dictation', variant: 'phoneme' },
     soundId: targetSound.id,
     ipa: targetSound.ipa,
     targetWord: targetWord?.word,
@@ -235,4 +242,3 @@ export function generateDictation(
     ...(level ? { level } : {}),
   }
 }
-
