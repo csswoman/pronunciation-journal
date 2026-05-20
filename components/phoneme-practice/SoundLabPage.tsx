@@ -30,9 +30,14 @@ function categorizLesson(lesson: Lesson, soundProgressMap: Map<number, number>):
 
   if (lesson.difficulty === "easy" || lesson.category === "basics") chips.push("basics");
   if (title.includes("diphthong")) chips.push("diphthongs");
-  if (title.includes("vowel") || lesson.category === "vowels") chips.push("vowels");
-  if (title.includes("consonant") || lesson.category === "consonants") chips.push("consonants");
-  if (title.includes("/")) chips.push("vowels", "consonants");
+
+  const sectionId = getLessonSectionId(lesson);
+  if (sectionId === "vowels" || title.includes("vowel") || lesson.category === "vowels") {
+    chips.push("vowels");
+  }
+  if (sectionId === "consonants" || title.includes("consonant") || lesson.category === "consonants") {
+    chips.push("consonants");
+  }
 
   if (lesson.id.startsWith("sound-")) {
     const pct = soundProgressMap.get(Number(lesson.id.replace("sound-", "")));
