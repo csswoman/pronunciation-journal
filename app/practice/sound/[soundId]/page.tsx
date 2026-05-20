@@ -167,13 +167,13 @@ export default function SoundPracticePage() {
         <button
           type="button"
           onClick={() => router.push('/practice')}
-          className="border-none bg-transparent p-1 text-[22px] leading-none text-fg-subtle"
+          className="border-none bg-transparent p-1 text-xl leading-none text-fg-subtle"
         >
           ←
         </button>
         <div className="text-center">
           <div
-            className="text-[30px] font-bold leading-none tracking-[-0.5px] text-primary"
+            className="text-3xl font-bold leading-none tracking-[-0.5px] text-primary"
             style={{ fontFamily: 'var(--font-phoneme), serif' }}
           >
             {soundIpa}
