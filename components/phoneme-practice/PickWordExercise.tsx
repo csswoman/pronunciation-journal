@@ -84,9 +84,17 @@ export function PickWordExercise({ exercise, onSubmit }: Props) {
         Select all that apply
       </p>
 
-      <div className="grid grid-cols-2 gap-3 w-full">
+      <div role="group" aria-label="Word options — select all that contain the sound" className="grid grid-cols-2 gap-3 w-full">
         {exercise.options.map(opt => (
-          <button key={opt.id} type="button" onClick={() => toggle(opt.id, opt.label)} className={getClass(opt.id)}>
+          <button
+            key={opt.id}
+            type="button"
+            aria-pressed={selected.has(opt.id)}
+            aria-label={`Toggle ${opt.label}`}
+            aria-disabled={submitted}
+            onClick={() => toggle(opt.id, opt.label)}
+            className={getClass(opt.id)}
+          >
             {opt.label}
           </button>
         ))}
@@ -96,6 +104,7 @@ export function PickWordExercise({ exercise, onSubmit }: Props) {
         type="button"
         onClick={handleSubmit}
         disabled={!canCheck}
+        aria-disabled={!canCheck}
         style={canCheck ? { backgroundImage: 'var(--gradient-primary)' } : undefined}
         className={[
           'w-full p-4 rounded-[var(--radius-md)] border-none [font-family:inherit] text-[15px] font-semibold transition-all',

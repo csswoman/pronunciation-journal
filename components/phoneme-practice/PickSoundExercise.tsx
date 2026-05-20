@@ -65,9 +65,18 @@ export function PickSoundExercise({ exercise, onSubmit }: Props) {
         🔊 {exercise.targetWord}
       </button>
 
-      <div className="grid grid-cols-2 gap-3 w-full">
+      <div role="radiogroup" aria-label={`Which sound does "${exercise.targetWord}" contain?`} className="grid grid-cols-2 gap-3 w-full">
         {exercise.options.map(opt => (
-          <button key={opt.id} type="button" onClick={() => handleSelect(opt.id, opt.label)} className={getClass(opt.id)}>
+          <button
+            key={opt.id}
+            type="button"
+            role="radio"
+            aria-checked={selected === opt.id}
+            aria-label={`Select ${opt.label}`}
+            aria-disabled={submitted}
+            onClick={() => handleSelect(opt.id, opt.label)}
+            className={getClass(opt.id)}
+          >
             {opt.label}
           </button>
         ))}
@@ -77,6 +86,7 @@ export function PickSoundExercise({ exercise, onSubmit }: Props) {
         type="button"
         onClick={handleSubmit}
         disabled={!selected || submitted}
+        aria-disabled={!selected || submitted}
         style={selected && !submitted ? { backgroundImage: 'var(--gradient-primary)' } : undefined}
         className={[
           'w-full p-4 rounded-[var(--radius-md)] border-none [font-family:inherit] text-[15px] font-semibold transition-all',

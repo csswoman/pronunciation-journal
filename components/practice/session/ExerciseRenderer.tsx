@@ -30,6 +30,7 @@ export function ExerciseRenderer({ exercise, onSubmit }: Props) {
       <button
         type="button"
         onClick={() => onSubmit(false, 'skip')}
+        aria-label="Skip this exercise"
         className="self-center rounded-[var(--radius-full)] px-4 py-1.5 text-xs font-medium uppercase tracking-[.08em] text-fg-subtle transition-colors hover:bg-surface-raised hover:text-fg-muted"
       >
         Skip
