@@ -94,4 +94,6 @@ export type PracticeConfig = {
   /** Default: 5. */
   sessionLength?: number
   onSessionComplete: (results: SessionResult) => void
+  /** Optional: called when user taps "Terminar" on the summary. */
+  onExit?: (results: SessionResult) => void
 }

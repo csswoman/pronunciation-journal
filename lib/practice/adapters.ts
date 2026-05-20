@@ -46,7 +46,13 @@ export function fromMixedExercise(
     const { ipa, targetWord, options, correctIds, soundId, level } = ex.data
     const payload: PhonemePayload = { kind: 'phoneme', ipa, targetWord, options, correctIds }
     const slug = ex.data.type as ExerciseSlug
-    const contentId = String(soundId)
+    // contentId must vary per exercise within a sound so buildSession does not
+    // dedupe distinct phoneme drills (different slug or different target word)
+    // that legitimately share the same soundId. The optionsKey ensures even
+    // two same-slug+same-targetWord exercises with different options are
+    // treated as distinct.
+    const optionsKey = options.map((o) => o.id).join(',')
+    const contentId = `${soundId}:${slug}:${targetWord ?? ''}:${optionsKey}`
     return {
       id: deterministicId(slug, contentId, payload),
       slug,

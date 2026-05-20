@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { fromMixedExercise, fromGenericExercise } from '../adapters'
+import { buildSession } from '../engine'
 import { EXERCISE_TYPE_IDS } from '../types'
 import type { MixedExercise } from '@/lib/phoneme-practice/mixed-session'
 import type { Exercise } from '@/lib/phoneme-practice/types'
@@ -40,7 +41,8 @@ describe('fromMixedExercise', () => {
     expect(result.payload.kind).toBe('phoneme')
     expect(result.slug).toBe('pick_word')
     expect(result.exerciseTypeId).toBe(EXERCISE_TYPE_IDS.pick_word)
-    expect(result.contentId).toBe('42')
+    expect(result.contentId).toContain('42')
+    expect(result.contentId).toContain('pick_word')
     expect(result.soundId).toBe(42)
     expect(result.context).toBe('sound_lab')
     if (result.payload.kind === 'phoneme') {
@@ -76,6 +78,34 @@ describe('fromMixedExercise', () => {
     const a = fromMixedExercise({ kind: 'phoneme', data: phonemeData }, 'sound_lab')
     const b = fromMixedExercise({ kind: 'phoneme', data: other }, 'sound_lab')
     expect(a.id).not.toBe(b.id)
+  })
+
+  it('buildSession does not dedupe distinct phoneme exercises sharing soundId', () => {
+    // Regression: previously contentId was `String(soundId)`, so buildSession
+    // collapsed every phoneme exercise of the same sound into one. Now each
+    // slug/targetWord/options combination produces a distinct contentId.
+    const exercises = [
+      fromMixedExercise(
+        { kind: 'phoneme', data: { ...phonemeData, type: 'pick_word' } },
+        'sound_lab',
+      ),
+      fromMixedExercise(
+        { kind: 'phoneme', data: { ...phonemeData, type: 'pick_sound' } },
+        'sound_lab',
+      ),
+      fromMixedExercise(
+        { kind: 'phoneme', data: { ...phonemeData, type: 'minimal_pair' } },
+        'sound_lab',
+      ),
+    ]
+    const session = buildSession({
+      context: 'sound_lab',
+      exercises,
+      sessionLength: 3,
+      onSessionComplete: () => {},
+    })
+    expect(session).toHaveLength(3)
+    expect(new Set(session.map((e) => e.slug)).size).toBe(3)
   })
 })
 

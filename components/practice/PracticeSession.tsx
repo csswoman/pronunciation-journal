@@ -49,7 +49,7 @@ function buildSessionResult(results: ExerciseResult[]): SessionResult {
 
 export default function PracticeSession(config: PracticeConfig) {
   const { user } = useAuth()
-  const { context, onSessionComplete } = config
+  const { context, onSessionComplete, onExit } = config
 
   const [exercises, setExercises] = useState<PracticeExercise[]>(() =>
     buildSession(config),
@@ -79,14 +79,19 @@ export default function PracticeSession(config: PracticeConfig) {
 
   const current = exercises[currentIndex]
 
-  const finish = useCallback(
-    (final: ExerciseResult[]) => {
-      const session = buildSessionResult(final)
-      setPhase('complete')
-      onSessionComplete(session)
-    },
-    [onSessionComplete],
-  )
+  const finish = useCallback((final: ExerciseResult[]) => {
+    // onSessionComplete runs exactly once via the effect below that watches `phase`.
+    void final
+    setPhase('complete')
+  }, [])
+
+  // Fire onSessionComplete exactly once when the session transitions to `complete`.
+  const completedRef = useRef(false)
+  useEffect(() => {
+    if (phase !== 'complete' || completedRef.current) return
+    completedRef.current = true
+    onSessionComplete(buildSessionResult(results))
+  }, [phase, results, onSessionComplete])
 
   const handleSubmit = useCallback(
     (isCorrect: boolean, userAnswer: string) => {
@@ -122,12 +127,12 @@ export default function PracticeSession(config: PracticeConfig) {
       }
 
       const nextResults = [...results, result]
+      const nextIndex = currentIndex + 1
       setResults(nextResults)
       setLastFeedback(isCorrect)
       setPhase('feedback')
 
       feedbackTimerRef.current = setTimeout(() => {
-        const nextIndex = currentIndex + 1
         if (nextIndex >= exercises.length) {
           finish(nextResults)
         } else {
@@ -143,6 +148,7 @@ export default function PracticeSession(config: PracticeConfig) {
   const handlePracticeAgain = useCallback(() => {
     if (feedbackTimerRef.current) clearTimeout(feedbackTimerRef.current)
     const fresh = buildSession(config)
+    completedRef.current = false
     setExercises(fresh)
     setCurrentIndex(0)
     setResults([])
@@ -169,7 +175,7 @@ export default function PracticeSession(config: PracticeConfig) {
         <SessionSummary
           result={sessionResult}
           onPracticeAgain={handlePracticeAgain}
-          onFinish={() => onSessionComplete(sessionResult)}
+          onFinish={() => onExit?.(sessionResult)}
         />
       </div>
     )
@@ -179,8 +185,12 @@ export default function PracticeSession(config: PracticeConfig) {
     <div className="w-full max-w-md mx-auto flex flex-col gap-5 p-4">
       <SessionProgress current={currentIndex} total={exercises.length} />
 
-      {phase === 'exercising' && current && (
-        <ExerciseRenderer exercise={current} onSubmit={handleSubmit} />
+      {current && (phase === 'exercising' || phase === 'feedback') && (
+        <ExerciseRenderer
+          key={current.id}
+          exercise={current}
+          onSubmit={handleSubmit}
+        />
       )}
 
       {phase === 'feedback' && lastFeedback !== null && (

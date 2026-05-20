@@ -24,41 +24,56 @@ interface Props {
 export function ExerciseRenderer({ exercise, onSubmit }: Props) {
   const { slug, payload, soundId } = exercise
 
-  if (payload.kind === 'generic') {
-    if (slug === 'match_pairs') {
-      return (
-        <MatchPairsExercise
-          exercise={payload.data as MatchPairsExerciseType}
-          onSubmit={onSubmit}
-        />
-      )
-    }
-    return <UnsupportedExercise slug={slug} onSubmit={onSubmit} />
-  }
+  return (
+    <div className="flex flex-col gap-3">
+      {renderInner()}
+      <button
+        type="button"
+        onClick={() => onSubmit(false, 'skip')}
+        className="self-center rounded-[var(--radius-full)] px-4 py-1.5 text-xs font-medium uppercase tracking-[.08em] text-fg-subtle transition-colors hover:bg-surface-raised hover:text-fg-muted"
+      >
+        Skip
+      </button>
+    </div>
+  )
 
-  const legacy: Exercise = {
-    type: slug as Exercise['type'],
-    soundId: soundId ?? 0,
-    ipa: payload.ipa,
-    targetWord: payload.targetWord,
-    options: payload.options,
-    correctIds: payload.correctIds,
-    level: exercise.level,
-  }
-
-  switch (slug) {
-    case 'pick_word':
-      return <PickWordExercise exercise={legacy} onSubmit={onSubmit} />
-    case 'pick_sound':
-      return <PickSoundExercise exercise={legacy} onSubmit={onSubmit} />
-    case 'minimal_pair':
-      return <MinimalPairExercise exercise={legacy} onSubmit={onSubmit} />
-    case 'dictation':
-      return <DictationExercise exercise={legacy} onSubmit={onSubmit} />
-    case 'speak_word':
-      return <SpeakExercise exercise={legacy} onSubmit={onSubmit} />
-    default:
+  function renderInner() {
+    if (payload.kind === 'generic') {
+      if (slug === 'match_pairs') {
+        return (
+          <MatchPairsExercise
+            exercise={payload.data as MatchPairsExerciseType}
+            onSubmit={onSubmit}
+          />
+        )
+      }
       return <UnsupportedExercise slug={slug} onSubmit={onSubmit} />
+    }
+
+    const legacy: Exercise = {
+      type: slug as Exercise['type'],
+      soundId: soundId ?? 0,
+      ipa: payload.ipa,
+      targetWord: payload.targetWord,
+      options: payload.options,
+      correctIds: payload.correctIds,
+      level: exercise.level,
+    }
+
+    switch (slug) {
+      case 'pick_word':
+        return <PickWordExercise exercise={legacy} onSubmit={onSubmit} />
+      case 'pick_sound':
+        return <PickSoundExercise exercise={legacy} onSubmit={onSubmit} />
+      case 'minimal_pair':
+        return <MinimalPairExercise exercise={legacy} onSubmit={onSubmit} />
+      case 'dictation':
+        return <DictationExercise exercise={legacy} onSubmit={onSubmit} />
+      case 'speak_word':
+        return <SpeakExercise exercise={legacy} onSubmit={onSubmit} />
+      default:
+        return <UnsupportedExercise slug={slug} onSubmit={onSubmit} />
+    }
   }
 }
 
