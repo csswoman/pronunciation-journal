@@ -14,10 +14,14 @@ import type { Lesson } from "@/lib/types";
 
 const IPA_VOWEL_RE = /[aeiouæɑɒɔɛɜɪɐəʌʊ]/;
 
-const SECTION_DEFS: { id: string; title: string }[] = [
-  { id: "vowels", title: "Vowel Sounds" },
-  { id: "consonants", title: "Consonant Sounds" },
-];
+const CHIP_SECTION_TITLES: Record<SoundLabChip, string> = {
+  all: "All Sounds",
+  basics: "Basics",
+  vowels: "Vowel Sounds",
+  consonants: "Consonant Sounds",
+  diphthongs: "Diphthongs",
+  weak: "Weak for you",
+};
 
 function getLessonSectionId(lesson: Lesson): string {
   const ipaMatch = lesson.title.match(/^\/([^/]+)\//);
@@ -68,16 +72,9 @@ export default function SoundLabPage() {
   }, [allLessons, activeChip, search, soundProgressMap]);
 
   const sections = useMemo<LessonSection[]>(() => {
-    const grouped = new Map<string, Lesson[]>();
-    for (const lesson of filtered) {
-      const sid = getLessonSectionId(lesson);
-      if (!grouped.has(sid)) grouped.set(sid, []);
-      grouped.get(sid)!.push(lesson);
-    }
-    return SECTION_DEFS
-      .filter((def) => grouped.has(def.id))
-      .map((def) => ({ id: def.id, title: def.title, lessons: grouped.get(def.id)! }));
-  }, [filtered]);
+    if (filtered.length === 0) return [];
+    return [{ id: activeChip, title: CHIP_SECTION_TITLES[activeChip], lessons: filtered }];
+  }, [filtered, activeChip]);
 
   function handleResume() {
     if (!heroLesson.lesson?.href) return;
