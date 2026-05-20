@@ -1,0 +1,96 @@
+import type { MixedExercise } from '@/lib/phoneme-practice/mixed-session'
+import type { GenericExercise, GenericExerciseType } from '@/lib/exercises/types'
+import {
+  EXERCISE_TYPE_IDS,
+  type ExerciseSlug,
+  type PhonemePayload,
+  type GenericPayload,
+  type PracticeContext,
+  type PracticeExercise,
+} from './types'
+
+const GENERIC_TYPE_TO_SLUG: Record<GenericExerciseType, ExerciseSlug> = {
+  fill_blank: 'fill_blank',
+  sentence_dictation: 'sentence_dictation',
+  match_pairs: 'match_pairs',
+  reorder_words: 'reorder_words',
+}
+
+/**
+ * Deterministic id derived from the fields that uniquely identify an
+ * exercise within a session. Same inputs always yield the same id, so the
+ * Practice Engine can dedupe without coordination.
+ *
+ * `btoa` is sufficient here: this id is for in-session deduplication, not
+ * for cryptographic guarantees, so the cost of a real hash isn't worth it.
+ */
+function deterministicId(
+  slug: ExerciseSlug,
+  contentId: string,
+  payload: PhonemePayload | GenericPayload,
+): string {
+  const raw = `${slug}|${contentId}|${JSON.stringify(payload)}`
+  // btoa only accepts latin-1; encode to base64 via Buffer in Node and
+  // fall back to a unicode-safe path in the browser.
+  if (typeof btoa === 'function') {
+    return btoa(unescape(encodeURIComponent(raw)))
+  }
+  return Buffer.from(raw, 'utf8').toString('base64')
+}
+
+export function fromMixedExercise(
+  ex: MixedExercise,
+  context: PracticeContext,
+): PracticeExercise {
+  if (ex.kind === 'phoneme') {
+    const { ipa, targetWord, options, correctIds, soundId, level } = ex.data
+    const payload: PhonemePayload = { kind: 'phoneme', ipa, targetWord, options, correctIds }
+    const slug = ex.data.type as ExerciseSlug
+    const contentId = String(soundId)
+    return {
+      id: deterministicId(slug, contentId, payload),
+      slug,
+      exerciseTypeId: EXERCISE_TYPE_IDS[slug],
+      contentId,
+      context,
+      payload,
+      level,
+      soundId,
+    }
+  }
+
+  // ex.kind === 'match_pairs' — a generic exercise embedded in a phoneme session
+  const data = ex.data
+  const payload: GenericPayload = { kind: 'generic', data }
+  const slug: ExerciseSlug = 'match_pairs'
+  const contentId = data.id
+  return {
+    id: deterministicId(slug, contentId, payload),
+    slug,
+    exerciseTypeId: EXERCISE_TYPE_IDS[slug],
+    contentId,
+    context,
+    payload,
+    level: data.level,
+    sourceRef: data.sourceRef,
+  }
+}
+
+export function fromGenericExercise(
+  ex: GenericExercise,
+  context: PracticeContext,
+): PracticeExercise {
+  const slug = GENERIC_TYPE_TO_SLUG[ex.type]
+  const payload: GenericPayload = { kind: 'generic', data: ex }
+  const contentId = ex.id
+  return {
+    id: deterministicId(slug, contentId, payload),
+    slug,
+    exerciseTypeId: EXERCISE_TYPE_IDS[slug],
+    contentId,
+    context,
+    payload,
+    level: ex.level,
+    sourceRef: ex.sourceRef,
+  }
+}
