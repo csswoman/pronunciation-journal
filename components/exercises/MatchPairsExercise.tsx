@@ -9,7 +9,7 @@
 //   </PairsBoard>
 //   <CheckButton />
 
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { shuffle } from '@/lib/exercises/utils'
 import { speak } from '@/lib/phoneme-practice/tts'
 import type { MatchPairsExercise as MatchPairsExerciseType } from '@/lib/exercises/types'
@@ -122,8 +122,7 @@ export function MatchPairsExercise({ exercise, onSubmit }: Props) {
     onSubmit(allCorrect, JSON.stringify(matches))
   }
 
-  // Recompute SVG endpoints whenever matches or results change.
-  useIsoLayoutEffect(() => {
+  const recomputeConnections = useCallback(() => {
     const board = boardRef.current
     if (!board) return
     const boardRect = board.getBoundingClientRect()
@@ -150,7 +149,28 @@ export function MatchPairsExercise({ exercise, onSubmit }: Props) {
       })
     }
     setConnections(next)
-  }, [matches, results, rightItems])
+  }, [matches, results])
+
+  // Recompute whenever matches/results/items change.
+  useIsoLayoutEffect(() => {
+    recomputeConnections()
+  }, [recomputeConnections, rightItems])
+
+  // Keep endpoints in sync with viewport resize, board resize (rotation,
+  // sidebar toggle, font scale), and scroll-driven repositioning.
+  useEffect(() => {
+    const board = boardRef.current
+    if (!board || typeof window === 'undefined') return
+    const ro = new ResizeObserver(() => recomputeConnections())
+    ro.observe(board)
+    window.addEventListener('resize', recomputeConnections)
+    window.addEventListener('scroll', recomputeConnections, true)
+    return () => {
+      ro.disconnect()
+      window.removeEventListener('resize', recomputeConnections)
+      window.removeEventListener('scroll', recomputeConnections, true)
+    }
+  }, [recomputeConnections])
 
   const allMatched = exercise.pairs.every((p) => matches[p.id])
 
