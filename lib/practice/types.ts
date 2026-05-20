@@ -96,4 +96,13 @@ export type PracticeConfig = {
   onSessionComplete: (results: SessionResult) => void
   /** Optional: called when user taps "Terminar" on the summary. */
   onExit?: (results: SessionResult) => void
+  /**
+   * When provided, the session is persisted to Dexie under
+   * `${userId}:${soundId}` and restored on remount. Omit to keep the
+   * session purely in-memory.
+   */
+  persistence?: {
+    userId: string
+    soundId: number
+  }
 }

@@ -136,8 +136,9 @@ export default function SoundPracticePage() {
       sessionLength: exercises.length,
       onSessionComplete: handleSessionComplete,
       onExit: () => router.push('/practice'),
+      persistence: { userId: user.id, soundId },
     }
-  }, [exercises, handleSessionComplete, router, user])
+  }, [exercises, handleSessionComplete, router, user, soundId])
 
   if (error) {
     return (

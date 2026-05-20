@@ -3,6 +3,23 @@ import type { AIConversation, AISavedWord, Attempt, DailyProgress, FavoriteWord,
 import type { SyncOutboxEntry } from "../sync/types";
 import type { UserLearningState } from "../ai-practice/learning-state";
 import type { GenericExercise, GenericExerciseType, ExerciseSource } from "../exercises/types";
+import type { ExerciseResult, PracticeExercise } from "../practice/types";
+
+/**
+ * Active in-progress practice session, persisted so the user can resume
+ * after closing the tab, opening a new window, or losing offline state.
+ * One row per (userId, soundId) — composite key `${userId}:${soundId}`.
+ */
+export interface PracticeSessionRecord {
+  id: string;          // `${userId}:${soundId}`
+  soundId: number;
+  userId: string;
+  exercises: PracticeExercise[];
+  currentIndex: number;
+  answers: ExerciseResult[];
+  startedAt: string;   // ISO
+  expiresAt: string;   // ISO — used to evict 24h+ stale sessions
+}
 
 export interface CachedExercise {
   /** Same deterministic id as GenericExercise.id. */
@@ -68,6 +85,7 @@ class PronunciationDB extends Dexie {
   learningState!: Table<StoredLearningState, string>;
   analyticsEvents!: Table<AnalyticsEvent, number>;
   generatedExercises!: Table<CachedExercise, string>;
+  practiceSessions!: Table<PracticeSessionRecord, string>;
 
   constructor() {
     super("pronunciation-journal");
@@ -133,6 +151,11 @@ class PronunciationDB extends Dexie {
     // v10: generic exercise cache (fill_blank, sentence_dictation, match_pairs, reorder_words)
     this.version(10).stores({
       generatedExercises: "id, type, source, generatedAt",
+    });
+
+    // v11: active in-progress practice sessions for resume-on-reload
+    this.version(11).stores({
+      practiceSessions: "id, userId, soundId, expiresAt",
     });
   }
 }

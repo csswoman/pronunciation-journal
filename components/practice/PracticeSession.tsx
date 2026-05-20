@@ -12,6 +12,13 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useAuth } from '@/components/auth/AuthProvider'
 import { buildSession } from '@/lib/practice/engine'
 import { savePracticeAnswer } from '@/lib/practice/queries'
+import {
+  createSession,
+  deleteSession,
+  evictExpiredSessions,
+  loadActiveSession,
+  updateSessionProgress,
+} from '@/lib/practice/session-store'
 import type {
   ExerciseResult,
   PracticeConfig,
@@ -49,20 +56,69 @@ function buildSessionResult(results: ExerciseResult[]): SessionResult {
 
 export default function PracticeSession(config: PracticeConfig) {
   const { user } = useAuth()
-  const { context, onSessionComplete, onExit } = config
+  const { context, onSessionComplete, onExit, persistence } = config
 
+  // Until Dexie restore finishes, render nothing rather than briefly showing
+  // a fresh-session that flickers when the persisted one loads. `ready` flips
+  // to true once we know whether to resume or start fresh.
+  const [ready, setReady] = useState(!persistence)
   const [exercises, setExercises] = useState<PracticeExercise[]>(() =>
-    buildSession(config),
+    persistence ? [] : buildSession(config),
   )
   const [currentIndex, setCurrentIndex] = useState(0)
   const [results, setResults] = useState<ExerciseResult[]>([])
-  const [phase, setPhase] = useState<Phase>(
-    exercises.length > 0 ? 'exercising' : 'complete',
-  )
+  const [phase, setPhase] = useState<Phase>('exercising')
   const [lastFeedback, setLastFeedback] = useState<boolean | null>(null)
 
   const startTimeRef = useRef<number>(Date.now())
   const feedbackTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  // Restore (or create) the persisted session on mount.
+  useEffect(() => {
+    if (!persistence) return
+    let cancelled = false
+    ;(async () => {
+      try {
+        await evictExpiredSessions()
+        const existing = await loadActiveSession(persistence.userId, persistence.soundId)
+        if (cancelled) return
+        if (existing && existing.exercises.length > 0) {
+          setExercises(existing.exercises)
+          setCurrentIndex(existing.currentIndex)
+          setResults(existing.answers)
+          setPhase(existing.currentIndex >= existing.exercises.length ? 'complete' : 'exercising')
+        } else {
+          const fresh = buildSession(config)
+          setExercises(fresh)
+          setCurrentIndex(0)
+          setResults([])
+          setPhase(fresh.length > 0 ? 'exercising' : 'complete')
+          if (fresh.length > 0) {
+            await createSession({
+              userId: persistence.userId,
+              soundId: persistence.soundId,
+              exercises: fresh,
+            })
+          }
+        }
+      } catch (err) {
+        console.error('[PracticeSession] restore failed; starting fresh', err)
+        const fresh = buildSession(config)
+        if (!cancelled) {
+          setExercises(fresh)
+          setPhase(fresh.length > 0 ? 'exercising' : 'complete')
+        }
+      } finally {
+        if (!cancelled) setReady(true)
+      }
+    })()
+    return () => {
+      cancelled = true
+    }
+    // Only re-run if the persistence target changes; config.exercises identity
+    // is intentionally NOT tracked — we rebuild via buildSession(config) above.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [persistence?.userId, persistence?.soundId])
 
   // Reset start time whenever a new exercise is shown.
   useEffect(() => {
@@ -91,7 +147,12 @@ export default function PracticeSession(config: PracticeConfig) {
     if (phase !== 'complete' || completedRef.current) return
     completedRef.current = true
     onSessionComplete(buildSessionResult(results))
-  }, [phase, results, onSessionComplete])
+    if (persistence) {
+      void deleteSession(persistence.userId, persistence.soundId).catch((err) => {
+        console.error('[PracticeSession] deleteSession failed', err)
+      })
+    }
+  }, [phase, results, onSessionComplete, persistence])
 
   const handleSubmit = useCallback(
     (isCorrect: boolean, userAnswer: string) => {
@@ -132,6 +193,16 @@ export default function PracticeSession(config: PracticeConfig) {
       setLastFeedback(isCorrect)
       setPhase('feedback')
 
+      // Persist progress so a reload/new-window resumes exactly here.
+      if (persistence) {
+        void updateSessionProgress(persistence.userId, persistence.soundId, {
+          currentIndex: nextIndex,
+          answers: nextResults,
+        }).catch((err) => {
+          console.error('[PracticeSession] updateSessionProgress failed', err)
+        })
+      }
+
       feedbackTimerRef.current = setTimeout(() => {
         if (nextIndex >= exercises.length) {
           finish(nextResults)
@@ -142,7 +213,7 @@ export default function PracticeSession(config: PracticeConfig) {
         }
       }, FEEDBACK_MS)
     },
-    [current, phase, results, currentIndex, exercises.length, user, context, finish],
+    [current, phase, results, currentIndex, exercises.length, user, context, finish, persistence],
   )
 
   const handlePracticeAgain = useCallback(() => {
@@ -154,12 +225,29 @@ export default function PracticeSession(config: PracticeConfig) {
     setResults([])
     setLastFeedback(null)
     setPhase(fresh.length > 0 ? 'exercising' : 'complete')
-  }, [config])
+    if (persistence && fresh.length > 0) {
+      void createSession({
+        userId: persistence.userId,
+        soundId: persistence.soundId,
+        exercises: fresh,
+      }).catch((err) => {
+        console.error('[PracticeSession] createSession (restart) failed', err)
+      })
+    }
+  }, [config, persistence])
 
   const sessionResult = useMemo(
     () => buildSessionResult(results),
     [results],
   )
+
+  if (!ready) {
+    return (
+      <div className="w-full max-w-md mx-auto p-6 text-center text-fg-subtle">
+        <span className="animate-pulse">Loading…</span>
+      </div>
+    )
+  }
 
   if (exercises.length === 0) {
     return (
