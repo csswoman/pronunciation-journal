@@ -1,0 +1,75 @@
+import { getSupabaseBrowserClient } from '@/lib/supabase/client'
+import type { Json } from '@/lib/supabase/types'
+import type {
+  PracticeAnswer,
+  PracticeContext,
+  SessionResult,
+} from './types'
+
+function supabase() {
+  return getSupabaseBrowserClient()
+}
+
+/**
+ * Persist a single PracticeAnswer to `answer_history`.
+ *
+ * Coexists with `saveAnswers()` in lib/phoneme-practice/queries.ts —
+ * that function continues to serve the current Sound Lab flow. This one
+ * is the entry point for the unified Practice Engine and also writes the
+ * new `context` and `content_id` columns added in
+ * supabase/migrations/20260519120000_practice_engine.sql.
+ */
+export async function savePracticeAnswer(
+  userId: string,
+  answer: PracticeAnswer,
+): Promise<void> {
+  // Phoneme exercises forward their targetWord via exercisePayload.targetWord
+  // when the adapter constructs the PhonemePayload. Pull it out for the
+  // dedicated column when present.
+  const payload = answer.exercisePayload as
+    | { targetWord?: string }
+    | null
+    | undefined
+  const targetWord = payload?.targetWord ?? null
+
+  const row = {
+    user_id: userId,
+    sound_id: answer.soundId ?? null,
+    exercise_type_id: answer.exerciseTypeId,
+    is_correct: answer.isCorrect,
+    user_answer: answer.userAnswer ?? null,
+    target_word: targetWord,
+    time_ms: answer.timeMs,
+    exercise_payload: (answer.exercisePayload ?? null) as Json | null,
+    context: answer.context,
+    content_id: answer.contentId,
+  }
+
+  const { error } = await supabase().from('answer_history').insert(row)
+  if (error) throw error
+}
+
+/**
+ * Persist every result in a SessionResult in parallel. Best-effort:
+ * individual failures are logged but do not propagate, so a transient
+ * insert error never breaks the user's session UX.
+ */
+export async function savePracticeSession(
+  userId: string,
+  results: SessionResult,
+  context: PracticeContext,
+): Promise<void> {
+  await Promise.all(
+    results.results.map(async (r) => {
+      try {
+        await savePracticeAnswer(userId, { ...r, context })
+      } catch (err) {
+        console.error('[practice/queries] savePracticeAnswer failed', {
+          exerciseId: r.exerciseId,
+          slug: r.slug,
+          err,
+        })
+      }
+    }),
+  )
+}

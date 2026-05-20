@@ -14,10 +14,14 @@ import type { Lesson } from "@/lib/types";
 
 const IPA_VOWEL_RE = /[aeiouæɑɒɔɛɜɪɐəʌʊ]/;
 
-const SECTION_DEFS: { id: string; title: string }[] = [
-  { id: "vowels", title: "Vowel Sounds" },
-  { id: "consonants", title: "Consonant Sounds" },
-];
+const CHIP_SECTION_TITLES: Record<SoundLabChip, string> = {
+  all: "All Sounds",
+  basics: "Basics",
+  vowels: "Vowel Sounds",
+  consonants: "Consonant Sounds",
+  diphthongs: "Diphthongs",
+  weak: "Weak for you",
+};
 
 function getLessonSectionId(lesson: Lesson): string {
   const ipaMatch = lesson.title.match(/^\/([^/]+)\//);
@@ -30,9 +34,14 @@ function categorizLesson(lesson: Lesson, soundProgressMap: Map<number, number>):
 
   if (lesson.difficulty === "easy" || lesson.category === "basics") chips.push("basics");
   if (title.includes("diphthong")) chips.push("diphthongs");
-  if (title.includes("vowel") || lesson.category === "vowels") chips.push("vowels");
-  if (title.includes("consonant") || lesson.category === "consonants") chips.push("consonants");
-  if (title.includes("/")) chips.push("vowels", "consonants");
+
+  const sectionId = getLessonSectionId(lesson);
+  if (sectionId === "vowels" || title.includes("vowel") || lesson.category === "vowels") {
+    chips.push("vowels");
+  }
+  if (sectionId === "consonants" || title.includes("consonant") || lesson.category === "consonants") {
+    chips.push("consonants");
+  }
 
   if (lesson.id.startsWith("sound-")) {
     const pct = soundProgressMap.get(Number(lesson.id.replace("sound-", "")));
@@ -63,16 +72,9 @@ export default function SoundLabPage() {
   }, [allLessons, activeChip, search, soundProgressMap]);
 
   const sections = useMemo<LessonSection[]>(() => {
-    const grouped = new Map<string, Lesson[]>();
-    for (const lesson of filtered) {
-      const sid = getLessonSectionId(lesson);
-      if (!grouped.has(sid)) grouped.set(sid, []);
-      grouped.get(sid)!.push(lesson);
-    }
-    return SECTION_DEFS
-      .filter((def) => grouped.has(def.id))
-      .map((def) => ({ id: def.id, title: def.title, lessons: grouped.get(def.id)! }));
-  }, [filtered]);
+    if (filtered.length === 0) return [];
+    return [{ id: activeChip, title: CHIP_SECTION_TITLES[activeChip], lessons: filtered }];
+  }, [filtered, activeChip]);
 
   function handleResume() {
     if (!heroLesson.lesson?.href) return;

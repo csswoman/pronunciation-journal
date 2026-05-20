@@ -9,7 +9,8 @@ interface Props {
   onSubmit: (isCorrect: boolean, userAnswer: string) => void
 }
 
-const BASE_OPT = 'rounded-[var(--radius-xl)] py-5 px-3 text-xl font-bold cursor-pointer transition-all w-full [font-family:inherit] text-center border-[1.5px]'
+const BASE_OPT =
+  'rounded-[var(--radius-xl)] py-5 px-3 text-xl font-bold cursor-pointer transition-all w-full [font-family:inherit] text-center border-[1.5px] hover:-translate-y-[1px] hover:shadow-md'
 
 export function MinimalPairExercise({ exercise, onSubmit }: Props) {
   const [selected, setSelected] = useState<string | null>(null)
@@ -27,11 +28,13 @@ export function MinimalPairExercise({ exercise, onSubmit }: Props) {
   function getClass(id: string): string {
     const isCorrect = exercise.correctIds.includes(id)
     if (submitted) {
-      if (isCorrect) return `${BASE_OPT} bg-[var(--success-soft)] border-[var(--success-border)] text-[var(--success)]`
-      if (selected === id) return `${BASE_OPT} bg-[var(--error-soft)] border-[var(--error-border)] text-[var(--error)]`
-      return `${BASE_OPT} bg-[var(--surface-raised)] border-[var(--border-subtle)] text-[var(--text-primary)] opacity-[0.45]`
+      if (isCorrect)
+        return `${BASE_OPT} bg-success-soft border-success-border text-success ring-2 ring-success/40 hover:translate-y-0 hover:shadow-none`
+      if (selected === id)
+        return `${BASE_OPT} bg-error-soft border-error-border text-error ring-2 ring-error/40 hover:translate-y-0 hover:shadow-none`
+      return `${BASE_OPT} bg-surface-raised border-border-subtle text-fg opacity-40 hover:translate-y-0 hover:shadow-none`
     }
-    return `${BASE_OPT} bg-[var(--surface-raised)] border-[var(--border-subtle)] text-[var(--text-primary)]`
+    return `${BASE_OPT} bg-surface-raised border-border-subtle text-fg`
   }
 
   return (

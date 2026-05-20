@@ -96,11 +96,12 @@ export function PickWordExercise({ exercise, onSubmit }: Props) {
         type="button"
         onClick={handleSubmit}
         disabled={!canCheck}
+        style={canCheck ? { backgroundImage: 'var(--gradient-primary)' } : undefined}
         className={[
           'w-full p-4 rounded-[var(--radius-md)] border-none [font-family:inherit] text-[15px] font-semibold transition-all',
           canCheck
-            ? 'cursor-pointer bg-[var(--gradient-primary)] text-white shadow-[0_4px_20px_color-mix(in_oklch,var(--primary)_30%,transparent)]'
-            : 'cursor-not-allowed bg-[var(--surface-raised)] text-[var(--text-tertiary)]',
+            ? 'cursor-pointer text-on-primary shadow-md hover:-translate-y-[1px]'
+            : 'cursor-not-allowed bg-surface-raised text-fg-subtle',
         ].join(' ')}
       >
         Check

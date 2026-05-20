@@ -47,6 +47,8 @@ export type Database = {
       answer_history: {
         Row: {
           answered_at: string | null
+          content_id: string | null
+          context: string | null
           exercise_payload: Json | null
           exercise_type_id: number
           id: string
@@ -59,6 +61,8 @@ export type Database = {
         }
         Insert: {
           answered_at?: string | null
+          content_id?: string | null
+          context?: string | null
           exercise_payload?: Json | null
           exercise_type_id: number
           id?: string
@@ -71,6 +75,8 @@ export type Database = {
         }
         Update: {
           answered_at?: string | null
+          content_id?: string | null
+          context?: string | null
           exercise_payload?: Json | null
           exercise_type_id?: number
           id?: string

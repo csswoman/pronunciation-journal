@@ -40,11 +40,15 @@ export function PickSoundExercise({ exercise, onSubmit }: Props) {
   function getClass(id: string): string {
     const isCorrect = exercise.correctIds.includes(id)
     if (submitted) {
-      if (isCorrect) return `${BASE_OPT} bg-[var(--success-soft)] border-[var(--success-border)] text-[var(--success)]`
-      if (selected === id) return `${BASE_OPT} bg-[var(--error-soft)] border-[var(--error-border)] text-[var(--error)]`
-      return `${BASE_OPT} bg-[var(--surface-raised)] border-[var(--border-subtle)] text-[var(--text-primary)] opacity-[0.45]`
+      if (isCorrect)
+        return `${BASE_OPT} bg-success-soft border-success-border text-success ring-2 ring-success/40`
+      if (selected === id)
+        return `${BASE_OPT} bg-error-soft border-error-border text-error ring-2 ring-error/40`
+      return `${BASE_OPT} bg-surface-raised border-border-subtle text-fg opacity-40`
     }
-    return `${BASE_OPT} bg-[var(--surface-raised)] border-[var(--border-subtle)] text-[var(--text-primary)]`
+    if (selected === id)
+      return `${BASE_OPT} bg-primary-soft border-primary text-primary shadow-md`
+    return `${BASE_OPT} bg-surface-raised border-border-subtle text-fg hover:border-primary`
   }
 
   return (
@@ -73,11 +77,12 @@ export function PickSoundExercise({ exercise, onSubmit }: Props) {
         type="button"
         onClick={handleSubmit}
         disabled={!selected || submitted}
+        style={selected && !submitted ? { backgroundImage: 'var(--gradient-primary)' } : undefined}
         className={[
           'w-full p-4 rounded-[var(--radius-md)] border-none [font-family:inherit] text-[15px] font-semibold transition-all',
           selected && !submitted
-            ? 'cursor-pointer bg-[var(--gradient-primary)] text-white shadow-[0_4px_20px_color-mix(in_oklch,var(--primary)_30%,transparent)]'
-            : 'cursor-not-allowed bg-[var(--surface-raised)] text-[var(--text-tertiary)]',
+            ? 'cursor-pointer text-on-primary shadow-md hover:-translate-y-[1px]'
+            : 'cursor-not-allowed bg-surface-raised text-fg-subtle',
         ].join(' ')}
       >
         Check
