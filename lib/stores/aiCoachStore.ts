@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-export const PANEL_DEFAULT_WIDTH = 380;
+const PANEL_DEFAULT_WIDTH = 380;
 
 interface AICoachState {
   isOpen: boolean;

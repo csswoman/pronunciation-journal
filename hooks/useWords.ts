@@ -6,7 +6,6 @@ import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import {
   deleteWord as apiDeleteWord,
   getMyWords,
-  incrementDifficulty as apiIncrementDifficulty,
   quickAddWord as apiQuickAddWord,
 } from "@/lib/word-bank/queries";
 import type { WordBankEntry } from "@/lib/word-bank/types";
@@ -17,7 +16,6 @@ interface UseWordsState {
   error: string | null;
   addWord: (input: { text: string; context?: string | null; deckId?: string | null }) => Promise<void>;
   removeWord: (id: string) => Promise<void>;
-  markDifficult: (id: string) => Promise<void>;
   retry: (id: string) => Promise<void>;
   refresh: () => Promise<void>;
 }
@@ -241,23 +239,6 @@ export function useWords(): UseWordsState {
     }
   }, [words]);
 
-  const markDifficult = useCallback(async (id: string) => {
-    const target = words.find(w => w.id === id);
-    if (!target) return;
-
-    const newDifficulty = target.difficulty > 0 ? 0 : 1;
-    const optimistic = { ...target, difficulty: newDifficulty };
-    setWords(prev => prev.map(w => (w.id === id ? optimistic : w)));
-
-    try {
-      const updated = await apiIncrementDifficulty(id, newDifficulty);
-      setWords(prev => prev.map(w => (w.id === id ? updated : w)));
-    } catch (err) {
-      setWords(prev => prev.map(w => (w.id === id ? target : w)));
-      throw err;
-    }
-  }, [words]);
-
   const retry = useCallback(async (id: string) => {
     const target = words.find(w => w.id === id);
     if (!target) return;
@@ -295,5 +276,5 @@ export function useWords(): UseWordsState {
     }
   }, [words]);
 
-  return { words, loading, error, addWord, removeWord, markDifficult, retry, refresh };
+  return { words, loading, error, addWord, removeWord, retry, refresh };
 }

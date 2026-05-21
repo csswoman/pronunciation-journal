@@ -47,13 +47,9 @@ function soundToLesson(sound: DbSound, words: DbWord[]): Lesson {
 
 // ── Public API ────────────────────────────────────────────────────────────────
 
-export async function getSoundLessons(): Promise<Lesson[]> {
+export async function getAllDbLessons(): Promise<Lesson[]> {
   const soundsWithWords = await getAllSoundsWithWords()
   return soundsWithWords.map(({ sound, words }) => soundToLesson(sound, words))
-}
-
-export async function getAllDbLessons(): Promise<Lesson[]> {
-  return getSoundLessons()
 }
 
 /**
@@ -64,7 +60,6 @@ export function sliceLessonWords(lesson: Lesson, offset: number, size: number): 
   if (lesson.words.length <= size) return lesson
   const words = lesson.words
   const start = offset % words.length
-  // Wrap around if the chunk goes past the end
   const sliced =
     start + size <= words.length
       ? words.slice(start, start + size)

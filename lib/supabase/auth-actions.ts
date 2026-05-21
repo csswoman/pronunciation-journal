@@ -15,11 +15,6 @@ export async function signInAsGuest() {
   return supabase.auth.signInAnonymously();
 }
 
-export async function signOut() {
-  const supabase = getSupabaseBrowserClient();
-  return supabase.auth.signOut();
-}
-
 export async function resetPasswordForEmail(email: string) {
   const supabase = getSupabaseBrowserClient();
   const redirectTo =

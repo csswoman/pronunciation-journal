@@ -89,12 +89,6 @@ export interface FavoriteWord {
   addedAt: string; // ISO date string
 }
 
-export interface NeedsPracticeWord {
-  word: string;
-  lessonId: string;
-  bestAccuracy: number;
-  attempts: number;
-}
 
 // ── SRS Types ──
 

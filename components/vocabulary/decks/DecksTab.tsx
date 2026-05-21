@@ -4,19 +4,16 @@ import { Plus } from "lucide-react";
 import Card from "@/components/layout/Card";
 import Button from "@/components/ui/Button";
 import { DeckGrid } from "@/components/vocabulary/decks/DeckGrid";
-import { SmartDeckCard } from "@/components/vocabulary/decks/SmartDeckCard";
 import type { DeckCounts } from "@/hooks/useDeckData";
 
 interface DecksTabProps {
   decks: any[];
   counts: DeckCounts;
   loading: boolean;
-  difficultCount: number;
   onStudy: (id: string) => void;
   onManage: (id: string) => void;
   onEdit: (id: string) => void;
   onDelete: (id: string) => void;
-  onStudySmartDeck: () => void;
   onCreateNew: () => void;
 }
 
@@ -24,12 +21,10 @@ export function DecksTab({
   decks,
   counts,
   loading,
-  difficultCount,
   onStudy,
   onManage,
   onEdit,
   onDelete,
-  onStudySmartDeck,
   onCreateNew,
 }: DecksTabProps) {
   if (loading) {
@@ -65,13 +60,6 @@ export function DecksTab({
 
   return (
     <>
-      {difficultCount > 0 && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="sm:col-span-2">
-            <SmartDeckCard count={difficultCount} onStudy={onStudySmartDeck} />
-          </div>
-        </div>
-      )}
       <DeckGrid
         decks={decks}
         counts={counts}

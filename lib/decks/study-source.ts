@@ -30,12 +30,11 @@ export interface StudySource {
 
 export function wordBankSource(opts: {
   deckId?: string;
-  smart?: "difficult";
   userId: string;
   deckLabel?: string;
 }): StudySource {
   return {
-    label: opts.deckLabel ?? (opts.smart === "difficult" ? "Difficult words" : "Word bank"),
+    label: opts.deckLabel ?? "Word bank",
 
     async loadCards(): Promise<StudyCardData[]> {
       const supabase = getSupabaseBrowserClient();
@@ -55,14 +54,6 @@ export function wordBankSource(opts: {
           .select("*")
           .in("id", wordIds)
           .eq("user_id", opts.userId);
-
-        words = (data ?? []) as WordBankEntry[];
-      } else if (opts.smart === "difficult") {
-        const { data } = await supabase
-          .from("word_bank")
-          .select("*")
-          .eq("user_id", opts.userId)
-          .gt("difficulty", 0);
 
         words = (data ?? []) as WordBankEntry[];
       } else {

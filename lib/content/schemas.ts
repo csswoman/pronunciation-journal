@@ -18,12 +18,12 @@ export const LESSON_CATEGORIES = [
   "collocations",
 ] as const;
 
-export const LessonLevelSchema = z.enum(LESSON_LEVELS);
-export const LessonCategorySchema = z.enum(LESSON_CATEGORIES);
+const LessonLevelSchema = z.enum(LESSON_LEVELS);
+const LessonCategorySchema = z.enum(LESSON_CATEGORIES);
 
 // ─── Mini-lesson (card-level metadata + short body) ──────────────────────────
 
-export const MiniLessonExampleSchema = z.object({
+const MiniLessonExampleSchema = z.object({
   word: z.string(),
   ipa: z.string().optional(),
   translation: z.string().optional(),
@@ -45,25 +45,25 @@ export const MiniLessonSchema = z.object({
 
 // ─── Lesson content (full detail page: sections, exercises, quiz) ────────────
 
-export const LessonSectionSchema = z.object({
+const LessonSectionSchema = z.object({
   heading: z.string(),
   body: z.string(), // supports markdown-ish: **bold**, *italic*, `code`
 });
 
-export const LessonExampleSchema = z.object({
+const LessonExampleSchema = z.object({
   english: z.string(),
   ipa: z.string().optional(),
   translation: z.string().optional(),
   note: z.string().optional(),
 });
 
-export const LessonExerciseSchema = z.object({
+const LessonExerciseSchema = z.object({
   instruction: z.string(),
   items: z.array(z.string()),
   answers: z.array(z.string()).optional(),
 });
 
-export const QuizQuestionSchema = z.object({
+const QuizQuestionSchema = z.object({
   question: z.string(),
   options: z.array(z.string()),
   correct: z.number().int(), // index of correct option

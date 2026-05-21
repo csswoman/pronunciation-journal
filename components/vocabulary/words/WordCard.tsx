@@ -1,6 +1,6 @@
 "use client";
 
-import { Flame, Loader2, RefreshCcw, Trash2 } from "lucide-react";
+import { Loader2, RefreshCcw, Trash2 } from "lucide-react";
 import type { WordBankEntry } from "@/lib/word-bank/types";
 import { useAudioPlayback } from "@/hooks/useAudioPlayback";
 import Button from "@/components/ui/Button";
@@ -11,14 +11,13 @@ import { getWordStrength } from "@/lib/word-bank/strength";
 
 interface WordCardProps {
   word: WordBankEntry;
-  onMarkDifficult: (id: string) => void;
   onRetry: (id: string) => void;
   onDelete: (id: string) => void;
   selected?: boolean;
   onSelect?: (id: string) => void;
 }
 
-export function WordCard({ word, onMarkDifficult, onRetry, onDelete, selected, onSelect }: WordCardProps) {
+export function WordCard({ word, onRetry, onDelete, selected, onSelect }: WordCardProps) {
   const { play } = useAudioPlayback(word.audio_url, word.text);
 
   if (word.status === "processing") {
@@ -93,19 +92,6 @@ export function WordCard({ word, onMarkDifficult, onRetry, onDelete, selected, o
                 onClick={() => void play("normal")}
               />
             )}
-            {word.difficulty > 0 && (
-              <span
-                className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-tiny font-semibold ml-auto"
-                style={{
-                  background: "color-mix(in oklch, var(--primary) 14%, transparent)",
-                  color: "var(--primary)",
-                }}
-                title={`Marked difficult ${word.difficulty}×`}
-              >
-                <Flame size={10} />
-                {word.difficulty}
-              </span>
-            )}
           </div>
 
           {word.translation && (
@@ -128,16 +114,6 @@ export function WordCard({ word, onMarkDifficult, onRetry, onDelete, selected, o
         </div>
 
         <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity ml-auto">
-          <Button
-            variant={word.difficulty > 0 ? "soft" : "ghost"}
-            size="icon"
-            onClick={() => onMarkDifficult(word.id)}
-            aria-label={word.difficulty > 0 ? "Remove difficult" : "Mark difficult"}
-            title={word.difficulty > 0 ? "Remove difficult" : "Mark as difficult"}
-            className="!rounded-lg min-w-8 min-h-8"
-          >
-            <Flame size={16} fill={word.difficulty > 0 ? "currentColor" : "none"} />
-          </Button>
           <Button
             variant="ghost-danger"
             size="icon"
