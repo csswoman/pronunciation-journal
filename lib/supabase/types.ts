@@ -633,6 +633,7 @@ export type Database = {
       }
       user_profiles: {
         Row: {
+          cefr_level: string
           created_at: string | null
           display_name: string | null
           id: string
@@ -640,6 +641,7 @@ export type Database = {
           storage_used_kb: number | null
         }
         Insert: {
+          cefr_level?: string
           created_at?: string | null
           display_name?: string | null
           id: string
@@ -647,6 +649,7 @@ export type Database = {
           storage_used_kb?: number | null
         }
         Update: {
+          cefr_level?: string
           created_at?: string | null
           display_name?: string | null
           id?: string
