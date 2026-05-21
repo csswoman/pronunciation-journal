@@ -53,22 +53,6 @@ export async function deleteWord(id: string): Promise<void> {
   if (error) throw error;
 }
 
-export async function incrementDifficulty(
-  id: string,
-  newValue: number
-): Promise<WordBankEntry> {
-  const supabase = getSupabaseBrowserClient();
-  const { data, error } = await supabase
-    .from(TABLE)
-    .update({ difficulty: newValue })
-    .eq("id", id)
-    .select()
-    .single();
-
-  if (error) throw error;
-  return data as WordBankEntry;
-}
-
 /** Manually trigger re-enrichment (e.g. for a `failed` word). */
 export async function retryEnrichment(id: string): Promise<void> {
   const supabase = getSupabaseBrowserClient();
