@@ -714,45 +714,6 @@ export type Database = {
           },
         ]
       }
-      user_word_progress: {
-        Row: {
-          added_to_word_bank: boolean | null
-          category_id: string
-          created_at: string | null
-          id: string
-          last_seen_at: string | null
-          next_review_at: string | null
-          srs_level: number | null
-          status: string | null
-          user_id: string
-          word_id: string
-        }
-        Insert: {
-          added_to_word_bank?: boolean | null
-          category_id: string
-          created_at?: string | null
-          id?: string
-          last_seen_at?: string | null
-          next_review_at?: string | null
-          srs_level?: number | null
-          status?: string | null
-          user_id: string
-          word_id: string
-        }
-        Update: {
-          added_to_word_bank?: boolean | null
-          category_id?: string
-          created_at?: string | null
-          id?: string
-          last_seen_at?: string | null
-          next_review_at?: string | null
-          srs_level?: number | null
-          status?: string | null
-          user_id?: string
-          word_id?: string
-        }
-        Relationships: []
-      }
       word_bank: {
         Row: {
           audio_fetch_attempts: number

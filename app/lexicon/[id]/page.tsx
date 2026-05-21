@@ -4,7 +4,6 @@ import Section from "@/components/layout/Section";
 import { LessonDetailHeader } from "@/components/lexicon/lesson/LessonDetailHeader";
 import { WordBrowser } from "@/components/lexicon/lesson/WordBrowser";
 import { getCategories, getCategoryWords } from "@/lib/lexicon/categories";
-import { getCategoryProgress } from "@/lib/lexicon/queries";
 import type { Word } from "@/components/lexicon/lesson/WordGrid";
 
 export default async function LessonDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -14,13 +13,8 @@ export default async function LessonDetailPage({ params }: { params: Promise<{ i
   const category = categories.find((c) => c.id === id);
   if (!category) notFound();
 
-  const [rawWords, progressList] = await Promise.all([
-    Promise.resolve(getCategoryWords(id)),
-    getCategoryProgress(),
-  ]);
-
-  const categoryProgress = progressList.find((p) => p.category_id === id);
-  const wordsLearned = categoryProgress?.learned_count ?? 0;
+  const rawWords = getCategoryWords(id);
+  const wordsLearned = 0;
 
   const words: Word[] = rawWords.map((w) => ({
     id: w.id,
