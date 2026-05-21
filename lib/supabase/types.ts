@@ -51,6 +51,7 @@ export type Database = {
           context: string | null
           exercise_payload: Json | null
           exercise_type_id: number
+          grade: number | null
           id: string
           is_correct: boolean
           sound_id: number | null
@@ -65,6 +66,7 @@ export type Database = {
           context?: string | null
           exercise_payload?: Json | null
           exercise_type_id: number
+          grade?: number | null
           id?: string
           is_correct: boolean
           sound_id?: number | null
@@ -79,6 +81,7 @@ export type Database = {
           context?: string | null
           exercise_payload?: Json | null
           exercise_type_id?: number
+          grade?: number | null
           id?: string
           is_correct?: boolean
           sound_id?: number | null
