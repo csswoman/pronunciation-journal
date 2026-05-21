@@ -30,7 +30,7 @@ export const EXERCISE_TYPE_IDS: Record<ExerciseSlug, number> = {
   speak_word: 10,
 }
 
-export type PracticeContext = 'sound_lab' | 'courses' | 'ai_coach' | 'practice'
+export type PracticeContext = 'sound_lab' | 'courses' | 'ai_coach' | 'practice' | 'daily'
 
 export type PhonemePayload = {
   kind: 'phoneme'

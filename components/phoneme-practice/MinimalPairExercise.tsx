@@ -49,17 +49,21 @@ export function MinimalPairExercise({ exercise, onSubmit }: Props) {
         Tap a word to hear it, then select
       </p>
 
-      <div className="grid grid-cols-2 gap-3 w-full">
+      <div role="radiogroup" aria-label={`Which word contains ${exercise.ipa}`} className="grid grid-cols-2 gap-3 w-full">
         {exercise.options.map(opt => (
           <button
             key={opt.id}
             type="button"
+            role="radio"
+            aria-checked={selected === opt.id}
+            aria-label={`Select ${opt.label}`}
+            aria-disabled={submitted}
             onClick={() => handleSelect(opt.id)}
             onMouseEnter={() => !submitted && speak(opt.label)}
             className={getClass(opt.id)}
           >
             <div>{opt.label}</div>
-            <div className="text-[11px] font-normal mt-1 opacity-50">🔊 hover</div>
+            <div aria-hidden className="text-[11px] font-normal mt-1 opacity-50">🔊 hover</div>
           </button>
         ))}
       </div>

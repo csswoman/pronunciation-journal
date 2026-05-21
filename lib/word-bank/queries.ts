@@ -53,16 +53,17 @@ export async function deleteWord(id: string): Promise<void> {
   if (error) throw error;
 }
 
+/** Toggle difficulty flag (0 = normal, 1 = difficult). */
 export async function incrementDifficulty(
   id: string,
-  newValue: number
+  difficulty: number,
 ): Promise<WordBankEntry> {
   const supabase = getSupabaseBrowserClient();
   const { data, error } = await supabase
     .from(TABLE)
-    .update({ difficulty: newValue })
+    .update({ difficulty })
     .eq("id", id)
-    .select()
+    .select("*")
     .single();
 
   if (error) throw error;

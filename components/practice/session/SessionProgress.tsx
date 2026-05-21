@@ -17,6 +17,11 @@ export function SessionProgress({ current, total }: Props) {
         <span className="tabular-nums">{pct}%</span>
       </div>
       <div
+        role="progressbar"
+        aria-valuenow={pct}
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-label={`Exercise ${Math.min(current + 1, total)} of ${total}`}
         className="h-1.5 rounded-[var(--radius-full)] overflow-hidden"
         style={{ background: 'var(--border-subtle)' }}
       >

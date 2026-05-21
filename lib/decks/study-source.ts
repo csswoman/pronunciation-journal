@@ -1,17 +1,10 @@
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
-import { scheduleNextReview } from "@/lib/srs/schedule";
+import { computeSM2, type SM2Progress } from "@/lib/srs/compute";
 import type { WordBankEntry } from "@/lib/word-bank/types";
 
-// ── Shared SM-2 state shape ──────────────────────────────────────────────────
-
-export interface SM2Progress {
-  ease_factor: number;
-  interval_days: number;
-  repetitions: number;
-  next_review_at: string | null;
-  status: "new" | "learning" | "review" | "mastered";
-  last_reviewed_at: string | null;
-}
+// Re-exported so existing consumers (e.g. StudyModalWordBank) keep their import.
+// Canonical location is lib/srs/compute.ts.
+export type { SM2Progress };
 
 // ── Normalized card used by StudyModalWordBank ───────────────────────────────
 
@@ -31,34 +24,6 @@ export interface StudySource {
   label: string;
   loadCards(): Promise<StudyCardData[]>;
   saveProgress(cardId: string, q: number, current: SM2Progress | null): Promise<SM2Progress>;
-}
-
-// ── SM-2 mapping layer: SM2Progress <-> shared scheduleNextReview ────────────
-// Migrated to lib/srs/schedule.ts in May 2026. Pre-migration this used a
-// non-canonical order (ease updated before interval). Canonical SM-2 order
-// adopted; reviews with reps>=2 and grade>=3 shift by ~1-2 days.
-export function computeSM2(current: SM2Progress | null, q: number): SM2Progress {
-  const now = new Date();
-  const next = scheduleNextReview({
-    ease: current?.ease_factor ?? 2.5,
-    interval: current?.interval_days ?? 1,
-    repetitions: current?.repetitions ?? 0,
-    grade: q,
-    now,
-    updateEaseOnLapse: false,
-  });
-
-  const status: SM2Progress["status"] =
-    next.interval > 21 ? "mastered" : next.repetitions > 0 ? "review" : "learning";
-
-  return {
-    ease_factor: next.ease,
-    interval_days: next.interval,
-    repetitions: next.repetitions,
-    next_review_at: next.nextReviewAt.toISOString(),
-    status,
-    last_reviewed_at: now.toISOString(),
-  };
 }
 
 // ── wordBankSource: reads from word_bank, optionally filtered by deck ────────

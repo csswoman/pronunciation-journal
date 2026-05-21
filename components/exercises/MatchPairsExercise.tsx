@@ -9,7 +9,7 @@
 //   </PairsBoard>
 //   <CheckButton />
 
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { shuffle } from '@/lib/exercises/utils'
 import { speak } from '@/lib/phoneme-practice/tts'
 import type { MatchPairsExercise as MatchPairsExerciseType } from '@/lib/exercises/types'
@@ -122,8 +122,7 @@ export function MatchPairsExercise({ exercise, onSubmit }: Props) {
     onSubmit(allCorrect, JSON.stringify(matches))
   }
 
-  // Recompute SVG endpoints whenever matches or results change.
-  useIsoLayoutEffect(() => {
+  const recomputeConnections = useCallback(() => {
     const board = boardRef.current
     if (!board) return
     const boardRect = board.getBoundingClientRect()
@@ -150,7 +149,28 @@ export function MatchPairsExercise({ exercise, onSubmit }: Props) {
       })
     }
     setConnections(next)
-  }, [matches, results, rightItems])
+  }, [matches, results])
+
+  // Recompute whenever matches/results/items change.
+  useIsoLayoutEffect(() => {
+    recomputeConnections()
+  }, [recomputeConnections, rightItems])
+
+  // Keep endpoints in sync with viewport resize, board resize (rotation,
+  // sidebar toggle, font scale), and scroll-driven repositioning.
+  useEffect(() => {
+    const board = boardRef.current
+    if (!board || typeof window === 'undefined') return
+    const ro = new ResizeObserver(() => recomputeConnections())
+    ro.observe(board)
+    window.addEventListener('resize', recomputeConnections)
+    window.addEventListener('scroll', recomputeConnections, true)
+    return () => {
+      ro.disconnect()
+      window.removeEventListener('resize', recomputeConnections)
+      window.removeEventListener('scroll', recomputeConnections, true)
+    }
+  }, [recomputeConnections])
 
   const allMatched = exercise.pairs.every((p) => matches[p.id])
 
@@ -229,40 +249,63 @@ export function MatchPairsExercise({ exercise, onSubmit }: Props) {
           })}
         </svg>
 
-        <div className="flex flex-col gap-2">
-          {exercise.pairs.map((pair) => (
-            <button
-              key={pair.id}
-              ref={(el) => {
-                if (el) leftRefs.current.set(pair.id, el)
-                else leftRefs.current.delete(pair.id)
-              }}
-              type="button"
-              onClick={() => handleLeftClick(pair)}
-              disabled={submitted || !!results[pair.id]}
-              className={leftClass(pair.id)}
-            >
-              {pair.left}
-            </button>
-          ))}
+        <div role="list" aria-label="Words" className="flex flex-col gap-2">
+          {exercise.pairs.map((pair) => {
+            const matchedRightId = matches[pair.id]
+            const matchedRightLabel = matchedRightId
+              ? rightItems.find((r) => r.id === matchedRightId)?.label
+              : null
+            const ariaLabel = matchedRightLabel
+              ? `${pair.left}, matched with ${matchedRightLabel}. Click to unmatch.`
+              : `${pair.left}. Click to select.`
+            return (
+              <button
+                key={pair.id}
+                ref={(el) => {
+                  if (el) leftRefs.current.set(pair.id, el)
+                  else leftRefs.current.delete(pair.id)
+                }}
+                type="button"
+                role="listitem"
+                aria-label={ariaLabel}
+                aria-pressed={selectedLeft === pair.id || !!matches[pair.id]}
+                aria-disabled={submitted || !!results[pair.id]}
+                onClick={() => handleLeftClick(pair)}
+                disabled={submitted || !!results[pair.id]}
+                className={leftClass(pair.id)}
+              >
+                {pair.left}
+              </button>
+            )
+          })}
         </div>
 
-        <div className="flex flex-col gap-2">
-          {rightItems.map((item) => (
-            <button
-              key={item.id}
-              ref={(el) => {
-                if (el) rightRefs.current.set(item.id, el)
-                else rightRefs.current.delete(item.id)
-              }}
-              type="button"
-              onClick={() => handleRightClick(item.id)}
-              disabled={submitted}
-              className={rightClass(item.id)}
-            >
-              {item.label}
-            </button>
-          ))}
+        <div role="list" aria-label="Definitions" className="flex flex-col gap-2">
+          {rightItems.map((item) => {
+            const matchedLeftId = Object.keys(matches).find((l) => matches[l] === item.id)
+            const ariaLabel = matchedLeftId
+              ? `${item.label}, matched. Click to unmatch.`
+              : `${item.label}. Click to select.`
+            return (
+              <button
+                key={item.id}
+                ref={(el) => {
+                  if (el) rightRefs.current.set(item.id, el)
+                  else rightRefs.current.delete(item.id)
+                }}
+                type="button"
+                role="listitem"
+                aria-label={ariaLabel}
+                aria-pressed={armedRight === item.id || !!matchedLeftId}
+                aria-disabled={submitted}
+                onClick={() => handleRightClick(item.id)}
+                disabled={submitted}
+                className={rightClass(item.id)}
+              >
+                {item.label}
+              </button>
+            )
+          })}
         </div>
       </div>
 
@@ -271,6 +314,7 @@ export function MatchPairsExercise({ exercise, onSubmit }: Props) {
           type="button"
           onClick={handleCheck}
           disabled={!allMatched}
+          aria-disabled={!allMatched}
           style={allMatched ? { backgroundImage: 'var(--gradient-primary)' } : undefined}
           className={[
             'w-full rounded-[var(--radius-md)] border-0 py-4 text-[15px] font-semibold transition-all',

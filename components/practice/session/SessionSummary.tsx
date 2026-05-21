@@ -46,12 +46,15 @@ export function SessionSummary({ result, onPracticeAgain, onFinish }: Props) {
   }, [result.accuracy])
 
   return (
-    <div className="flex w-full flex-col gap-6">
+    <div role="region" aria-label="Session results" className="flex w-full flex-col gap-6">
       <div className="flex flex-col items-center gap-2">
         <p className="text-xs font-semibold uppercase tracking-[.08em] text-fg-subtle">
           Session complete
         </p>
         <div
+          role="status"
+          aria-live="polite"
+          aria-label={`Accuracy ${result.accuracy} percent`}
           className="bg-clip-text text-6xl font-bold tabular-nums text-transparent"
           style={{ backgroundImage: 'var(--gradient-primary)' }}
         >
