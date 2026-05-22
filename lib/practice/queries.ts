@@ -1,5 +1,7 @@
 import { getSupabaseBrowserClient } from '@/lib/supabase/client'
 import type { Json } from '@/lib/supabase/types'
+import { answerToGrade } from './grade'
+import { reviewWordBankEntry } from '@/lib/word-bank/srs-queries'
 import type {
   PracticeAnswer,
   PracticeContext,
@@ -51,8 +53,19 @@ export async function savePracticeAnswer(
     content_id: contentId,
   }
 
-  const { error } = await supabase().from('answer_history').insert(row)
+  const grade = answerToGrade(answer)
+  const rowWithGrade = { ...row, grade }
+
+  const { error } = await supabase().from('answer_history').insert(rowWithGrade)
   if (error) throw error
+
+  // Fire-and-forget SRS update for word_bank entries. Never blocks the caller.
+  if (answer.sourceRef?.source === 'word_bank') {
+    const wordId = answer.sourceRef.id
+    reviewWordBankEntry(userId, wordId, grade).catch((err) => {
+      console.error('[practice/queries] reviewWordBankEntry failed', { wordId, grade, err })
+    })
+  }
 }
 
 /**
