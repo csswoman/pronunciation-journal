@@ -168,6 +168,7 @@ export default function PracticeSession(config: PracticeConfig) {
         contentId: current.contentId,
         context,
         soundId: current.soundId,
+        sourceRef: current.sourceRef,
         exercisePayload:
           current.payload.kind === 'phoneme'
             ? {

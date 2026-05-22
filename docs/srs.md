@@ -49,6 +49,26 @@ Dos sistemas de repetición espaciada conviven en la app. Cada uno tiene un domi
 
 ---
 
+## Convención: `content_id` en `answer_history`
+
+El campo `answer_history.content_id` usa prefijos para que las queries SRS puedan filtrar por fuente sin joins:
+
+| Formato | Fuente | Ejemplo |
+| --- | --- | --- |
+| `word_bank:<uuid>` | `word_bank` (vocabulario del usuario) | `word_bank:abc-123` |
+| `<opaque>` (sin prefijo) | Ejercicios fonemáticos / sin `sourceRef` | `42:pick_word:seat:a,b` |
+
+**Cómo se construye:**
+
+1. El generator emite `sourceRef: { source, id }` en el `GenericExercise`.
+2. El adapter (`fromGenericExercise`) copia `sourceRef` a `PracticeExercise`.
+3. `PracticeSession.handleSubmit` copia `sourceRef` a `ExerciseResult`.
+4. `savePracticeAnswer` serializa como `"${source}:${id}"` cuando `sourceRef` está presente; de lo contrario usa `contentId` literal.
+
+**Para conectar SRS de `word_bank`:** filtrar `answer_history` donde `content_id LIKE 'word_bank:%'` y extraer el UUID con `substring(content_id, 11)`.
+
+---
+
 ## Tabla eliminada: `user_word_progress`
 
 Esta tabla (eliminada 2026-05-21) era un tercer sistema SRS para rastrear progreso por palabra en el lexicón. Se eliminó porque:
