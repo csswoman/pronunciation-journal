@@ -11,13 +11,9 @@ import {
   getAllWords,
   getMinimalPairs,
   getSoundById,
-  updateProgress,
-  markMastered,
-  unlockNextSound,
   getAllProgress,
 } from '@/lib/phoneme-practice/queries'
-import { updateSR } from '@/lib/phoneme-practice/sr'
-import { isMastered, getNextUnlockedSoundId } from '@/lib/phoneme-practice/mastery'
+import { finishPhonemeSession } from '@/lib/phoneme-practice/finish-session'
 import { buildMixedSession } from '@/lib/phoneme-practice/mixed-session'
 import { fromMixedExercise } from '@/lib/practice/adapters'
 import type { PracticeExercise, SessionResult } from '@/lib/practice/types'
@@ -74,55 +70,11 @@ export default function SoundPracticePage() {
   const handleSessionComplete = useCallback(
     async (result: SessionResult) => {
       if (!user || result.results.length === 0) return
-
-      const correct = result.results.filter((r) => r.isCorrect).length
-      const total = result.results.length
-
-      const base: UserSoundProgress = progress ?? {
-        id: '',
-        user_id: user.id,
-        sound_id: soundId,
-        status: 'available',
-        total_attempts: 0,
-        correct_answers: 0,
-        streak: 0,
-        best_streak: 0,
-        last_practiced: null,
-        next_review: null,
-        ease_factor: 2.5,
-        interval_days: 1,
-      }
-
-      const sessionPassed = correct >= Math.ceil(total / 2)
-      const sr = updateSR(base, sessionPassed)
-
-      setNextReview(sr.next_review)
-
       try {
-        await updateProgress(user.id, soundId, correct, total, sr)
+        const outcome = await finishPhonemeSession(user.id, soundId, result, progress)
+        setNextReview(outcome.nextReview)
       } catch (err) {
-        console.error('[SoundPracticePage] updateProgress failed', err)
-      }
-
-      const updated: UserSoundProgress = {
-        ...base,
-        total_attempts: base.total_attempts + total,
-        correct_answers: base.correct_answers + correct,
-        streak: sr.streak,
-      }
-
-      if (isMastered(updated)) {
-        try {
-          await markMastered(user.id, soundId)
-          const allProg = await getAllProgress(user.id)
-          const nextId = getNextUnlockedSoundId(
-            allProg,
-            allProg.map((p) => p.sound_id).sort((a, b) => a - b),
-          )
-          if (nextId) await unlockNextSound(user.id, nextId)
-        } catch (err) {
-          console.error('[SoundPracticePage] mastery/unlock failed', err)
-        }
+        console.error('[SoundPracticePage] finishPhonemeSession failed', err)
       }
     },
     [user, progress, soundId],

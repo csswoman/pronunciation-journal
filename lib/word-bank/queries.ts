@@ -53,36 +53,3 @@ export async function deleteWord(id: string): Promise<void> {
   if (error) throw error;
 }
 
-/** Toggle difficulty flag (0 = normal, 1 = difficult). */
-export async function incrementDifficulty(
-  id: string,
-  difficulty: number,
-): Promise<WordBankEntry> {
-  const supabase = getSupabaseBrowserClient();
-  const { data, error } = await supabase
-    .from(TABLE)
-    .update({ difficulty })
-    .eq("id", id)
-    .select("*")
-    .single();
-
-  if (error) throw error;
-  return data as WordBankEntry;
-}
-
-/** Manually trigger re-enrichment (e.g. for a `failed` word). */
-export async function retryEnrichment(id: string): Promise<void> {
-  const supabase = getSupabaseBrowserClient();
-  const { data: { session } } = await supabase.auth.getSession();
-  if (!session) throw new Error("Not authenticated");
-
-  const res = await fetch(`/api/words/${id}/enrich`, {
-    method: "POST",
-    headers: { Authorization: `Bearer ${session.access_token}` },
-  });
-
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({ error: "Request failed" }));
-    throw new Error(err.error ?? `HTTP ${res.status}`);
-  }
-}

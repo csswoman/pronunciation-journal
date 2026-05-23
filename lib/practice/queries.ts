@@ -1,5 +1,7 @@
 import { getSupabaseBrowserClient } from '@/lib/supabase/client'
 import type { Json } from '@/lib/supabase/types'
+import { answerToGrade } from './grade'
+import { reviewWordBankEntry } from '@/lib/word-bank/srs-queries'
 import type {
   PracticeAnswer,
   PracticeContext,
@@ -32,6 +34,12 @@ export async function savePracticeAnswer(
     | undefined
   const targetWord = payload?.targetWord ?? null
 
+  // Prefer a prefixed content_id when sourceRef is present so SRS queries can
+  // filter by source without joining. Format: "<source>:<id>" (e.g. "word_bank:abc-123").
+  const contentId = answer.sourceRef
+    ? `${answer.sourceRef.source}:${answer.sourceRef.id}`
+    : answer.contentId
+
   const row = {
     user_id: userId,
     sound_id: answer.soundId ?? null,
@@ -42,11 +50,22 @@ export async function savePracticeAnswer(
     time_ms: answer.timeMs,
     exercise_payload: (answer.exercisePayload ?? null) as Json | null,
     context: answer.context,
-    content_id: answer.contentId,
+    content_id: contentId,
   }
 
-  const { error } = await supabase().from('answer_history').insert(row)
+  const grade = answerToGrade(answer)
+  const rowWithGrade = { ...row, grade }
+
+  const { error } = await supabase().from('answer_history').insert(rowWithGrade)
   if (error) throw error
+
+  // Fire-and-forget SRS update for word_bank entries. Never blocks the caller.
+  if (answer.sourceRef?.source === 'word_bank') {
+    const wordId = answer.sourceRef.id
+    reviewWordBankEntry(userId, wordId, grade).catch((err) => {
+      console.error('[practice/queries] reviewWordBankEntry failed', { wordId, grade, err })
+    })
+  }
 }
 
 /**

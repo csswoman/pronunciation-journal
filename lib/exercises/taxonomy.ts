@@ -11,6 +11,7 @@ export type ExerciseMode =
   | 'reorder'
   | 'match_pairs'
   | 'dictation'
+  | 'sentence_dictation'
   | 'speak'
   | 'word_card'
 

@@ -76,6 +76,8 @@ export type PracticeAnswer = {
   /** Forwarded to `answer_history.sound_id` for phoneme exercises. */
   soundId?: number
   exercisePayload?: unknown
+  /** Carried from PracticeExercise; used to build a prefixed content_id for SRS routing. */
+  sourceRef?: ExerciseSourceRef
 }
 
 export type ExerciseResult = PracticeAnswer & { completedAt: Date }

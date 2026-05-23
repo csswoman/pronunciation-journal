@@ -9,13 +9,12 @@ import { WordsEmptyState } from "@/components/vocabulary/words/WordsEmptyState";
 import type { WordBankEntry } from "@/lib/word-bank/types";
 
 const ITEMS_PER_PAGE = 12;
-type WordFilter = "all" | "difficult" | "ready" | "processing";
+type WordFilter = "all" | "ready" | "processing";
 
 interface WordStats {
   total: number;
   ready: number;
   processing: number;
-  difficult: number;
 }
 
 interface WordsTabProps {
@@ -28,7 +27,6 @@ interface WordsTabProps {
   selectMode: boolean;
   onToggleSelectMode: () => void;
   onToggleWordSelection: (id: string) => void;
-  onMarkDifficult: (id: string) => void;
   onRetry: (id: string) => void;
   onDelete: (id: string) => void;
   onOpenAddWord: (initialText?: string) => void;
@@ -44,7 +42,6 @@ export function WordsTab({
   selectMode,
   onToggleSelectMode,
   onToggleWordSelection,
-  onMarkDifficult,
   onRetry,
   onDelete,
   onOpenAddWord,
@@ -57,8 +54,7 @@ export function WordsTab({
 
   const filteredWords = useMemo(() => {
     let result = words;
-    if (filterType === "difficult") result = result.filter(w => w.difficulty > 0);
-    else if (filterType === "ready") result = result.filter(w => w.status === "ready");
+    if (filterType === "ready") result = result.filter(w => w.status === "ready");
     else if (filterType === "processing") result = result.filter(w => w.status === "processing");
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
@@ -102,19 +98,16 @@ export function WordsTab({
           </div>
 
           <div className="flex items-center gap-1.5">
-            {(["all", "ready", "processing", "difficult"] as WordFilter[]).map(f => {
+            {(["all", "ready", "processing"] as WordFilter[]).map(f => {
               const count =
                 f === "all" ? wordStats.total :
                 f === "ready" ? wordStats.ready :
-                f === "processing" ? wordStats.processing :
-                wordStats.difficult;
+                wordStats.processing;
               if (f === "processing" && count === 0) return null;
-              if (f === "difficult" && count === 0) return null;
               const label =
                 f === "all" ? "All" :
                 f === "ready" ? "To review" :
-                f === "processing" ? "Enriching" :
-                "Hard for me";
+                "Enriching";
               const isActive = filterType === f;
               return (
                 <button
@@ -175,7 +168,6 @@ export function WordsTab({
               <WordCard
                 key={word.id}
                 word={word}
-                onMarkDifficult={onMarkDifficult}
                 onRetry={onRetry}
                 onDelete={onDelete}
                 selected={selectedWordIds.has(word.id)}

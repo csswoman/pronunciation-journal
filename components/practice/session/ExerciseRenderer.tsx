@@ -6,8 +6,10 @@ import { MinimalPairExercise } from '@/components/phoneme-practice/MinimalPairEx
 import { DictationExercise } from '@/components/phoneme-practice/DictationExercise'
 import { SpeakExercise } from '@/components/phoneme-practice/SpeakExercise'
 import { MatchPairsExercise } from '@/components/exercises/MatchPairsExercise'
+import { FillBlankExercise } from '@/components/exercises/FillBlankExercise'
+import { ReorderWordsExercise } from '@/components/exercises/ReorderWordsExercise'
 import type { Exercise } from '@/lib/phoneme-practice/types'
-import type { MatchPairsExercise as MatchPairsExerciseType } from '@/lib/exercises/types'
+import type { MatchPairsExercise as MatchPairsExerciseType, FillBlankExercise as FillBlankExerciseType, ReorderWordsExercise as ReorderWordsExerciseType } from '@/lib/exercises/types'
 import type { PracticeExercise } from '@/lib/practice/types'
 
 interface Props {
@@ -45,6 +47,22 @@ export function ExerciseRenderer({ exercise, onSubmit }: Props) {
           <MatchPairsExercise
             exercise={payload.data as MatchPairsExerciseType}
             onSubmit={onSubmit}
+          />
+        )
+      }
+      if (slug === 'fill_blank') {
+        return (
+          <FillBlankExercise
+            exercise={payload.data as FillBlankExerciseType}
+            onSubmit={(isCorrect, userAnswer) => onSubmit(isCorrect, userAnswer)}
+          />
+        )
+      }
+      if (slug === 'reorder_words') {
+        return (
+          <ReorderWordsExercise
+            exercise={payload.data as ReorderWordsExerciseType}
+            onSubmit={(isCorrect, userAnswer) => onSubmit(isCorrect, userAnswer)}
           />
         )
       }

@@ -168,10 +168,6 @@ export async function saveAttempt(attempt: Omit<Attempt, "id">): Promise<number>
   return db.attempts.add(attempt as Attempt);
 }
 
-export async function getAttemptsByWord(word: string): Promise<Attempt[]> {
-  return db.attempts.where("word").equals(word.toLowerCase()).toArray();
-}
-
 export async function getRecentAttempts(limit = 50): Promise<Attempt[]> {
   return db.attempts.orderBy("timestamp").reverse().limit(limit).toArray();
 }
@@ -190,24 +186,10 @@ export async function saveSRSData(data: SRSData): Promise<void> {
   await db.srsData.put(data);
 }
 
-export async function getDueWords(limit = 10): Promise<SRSData[]> {
-  const now = new Date().toISOString();
-  return db.srsData
-    .where("nextReview")
-    .belowOrEqual(now)
-    .limit(limit)
-    .toArray();
-}
-
 // ── Daily Progress Helpers ──
 
 function getTodayKey(): string {
   return new Date().toISOString().split("T")[0];
-}
-
-export async function getTodayProgress(): Promise<DailyProgress | undefined> {
-  const today = getTodayKey();
-  return db.dailyProgress.where("date").equals(today).first();
 }
 
 export async function updateDailyProgress(
@@ -304,14 +286,6 @@ export async function updateUserStats(
   return updated;
 }
 
-export async function getProgressHistory(days = 7): Promise<DailyProgress[]> {
-  const since = new Date(Date.now() - days * 86400000).toISOString().split("T")[0];
-  return db.dailyProgress
-    .where("date")
-    .aboveOrEqual(since)
-    .toArray();
-}
-
 // ── Favorites Helpers ──
 
 export async function getFavorites(): Promise<FavoriteWord[]> {
@@ -397,10 +371,6 @@ export async function advanceLessonOffset(lessonId: string, totalWords: number):
   return next
 }
 
-export async function resetLessonOffset(lessonId: string): Promise<void> {
-  await db.lessonOffsets.delete(lessonId)
-}
-
 // ── Course Lesson Completion Helpers ──
 
 export async function markLessonComplete(courseSlug: string, lessonSlug: string): Promise<void> {
@@ -415,11 +385,6 @@ export async function markLessonIncomplete(courseSlug: string, lessonSlug: strin
 export async function isLessonComplete(courseSlug: string, lessonSlug: string): Promise<boolean> {
   const row = await db.completedLessons.get(`${courseSlug}:${lessonSlug}`);
   return !!row;
-}
-
-export async function getCompletedLessonSlugs(courseSlug: string): Promise<string[]> {
-  const rows = await db.completedLessons.where("courseSlug").equals(courseSlug).toArray();
-  return rows.map((r) => r.lessonSlug);
 }
 
 export async function getCompletedCountByCourse(): Promise<Record<string, number>> {

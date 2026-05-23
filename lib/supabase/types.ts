@@ -633,6 +633,7 @@ export type Database = {
       }
       user_profiles: {
         Row: {
+          cefr_level: string
           created_at: string | null
           display_name: string | null
           id: string
@@ -640,6 +641,7 @@ export type Database = {
           storage_used_kb: number | null
         }
         Insert: {
+          cefr_level?: string
           created_at?: string | null
           display_name?: string | null
           id: string
@@ -647,6 +649,7 @@ export type Database = {
           storage_used_kb?: number | null
         }
         Update: {
+          cefr_level?: string
           created_at?: string | null
           display_name?: string | null
           id?: string
@@ -713,45 +716,6 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
-      }
-      user_word_progress: {
-        Row: {
-          added_to_word_bank: boolean | null
-          category_id: string
-          created_at: string | null
-          id: string
-          last_seen_at: string | null
-          next_review_at: string | null
-          srs_level: number | null
-          status: string | null
-          user_id: string
-          word_id: string
-        }
-        Insert: {
-          added_to_word_bank?: boolean | null
-          category_id: string
-          created_at?: string | null
-          id?: string
-          last_seen_at?: string | null
-          next_review_at?: string | null
-          srs_level?: number | null
-          status?: string | null
-          user_id: string
-          word_id: string
-        }
-        Update: {
-          added_to_word_bank?: boolean | null
-          category_id?: string
-          created_at?: string | null
-          id?: string
-          last_seen_at?: string | null
-          next_review_at?: string | null
-          srs_level?: number | null
-          status?: string | null
-          user_id?: string
-          word_id?: string
-        }
-        Relationships: []
       }
       word_bank: {
         Row: {

@@ -16,12 +16,6 @@ export async function updateConversation(
   await db.aiConversations.update(id, patch);
 }
 
-export async function getConversation(
-  id: number
-): Promise<AIConversation | undefined> {
-  return db.aiConversations.get(id);
-}
-
 export async function getRecentConversations(limit = 20): Promise<AIConversation[]> {
   return db.aiConversations
     .orderBy("updatedAt")
@@ -52,12 +46,4 @@ export async function getAIWords(limit = 100): Promise<AISavedWord[]> {
 
 export async function deleteAIWord(id: number): Promise<void> {
   await db.aiWords.delete(id);
-}
-
-export async function isAIWordSaved(word: string): Promise<boolean> {
-  const count = await db.aiWords
-    .where("word")
-    .equalsIgnoreCase(word.trim())
-    .count();
-  return count > 0;
 }

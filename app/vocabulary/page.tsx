@@ -42,7 +42,7 @@ export default function VocabularyPage() {
   };
 
   // ── Words ──────────────────────────────────────────────────────────────────
-  const { words, loading: wordsLoading, error: wordsError, addWord, removeWord, markDifficult, retry } = useWords();
+  const { words, loading: wordsLoading, error: wordsError, addWord, removeWord, retry } = useWords();
   const [showAddWord, setShowAddWord] = useState(false);
   const [initialWordText, setInitialWordText] = useState("");
   const [wordActionError, setWordActionError] = useState<string | null>(null);
@@ -95,7 +95,6 @@ export default function VocabularyPage() {
     total: words.length,
     ready: words.filter(w => w.status === "ready").length,
     processing: words.filter(w => w.status === "processing").length,
-    difficult: words.filter(w => w.difficulty > 0).length,
     strength: computeStrengthStats(words),
   }), [words]);
 
@@ -105,7 +104,6 @@ export default function VocabularyPage() {
   const [editDeckId, setEditDeckId] = useState<string | null>(null);
   const [studyDeckId, setStudyDeckId] = useState<string | null>(null);
   const [manageDeckId, setManageDeckId] = useState<string | null>(null);
-  const [studyingSmartDeck, setStudyingSmartDeck] = useState(false);
   const [wordBankStudyDeckId, setWordBankStudyDeckId] = useState<string | null>(null);
 
   const editDeck = decks.find(d => d.id === editDeckId) ?? null;
@@ -132,14 +130,6 @@ export default function VocabularyPage() {
   };
 
   // Full-screen study modes
-  if (studyingSmartDeck && user) {
-    return (
-      <StudyModalWordBank
-        source={wordBankSource({ smart: "difficult", userId: user.id })}
-        onClose={() => setStudyingSmartDeck(false)}
-      />
-    );
-  }
   if (wordBankStudyDeck && user) {
     return (
       <StudyModalWordBank
@@ -191,7 +181,6 @@ export default function VocabularyPage() {
               selectMode={selectMode}
               onToggleSelectMode={handleToggleSelectMode}
               onToggleWordSelection={toggleWordSelection}
-              onMarkDifficult={async id => { try { await markDifficult(id); } catch { setWordActionError("Failed to update"); } }}
               onRetry={async id => { try { await retry(id); } catch { setWordActionError("Failed to retry"); } }}
               onDelete={async id => { try { await removeWord(id); } catch { setWordActionError("Failed to delete"); } }}
               onOpenAddWord={(text) => { setInitialWordText(text ?? ""); setShowAddWord(true); }}
@@ -203,12 +192,10 @@ export default function VocabularyPage() {
               decks={decks}
               counts={{ ...counts }}
               loading={decksLoading}
-              difficultCount={wordStats.difficult}
               onStudy={handleStudyDeck}
               onManage={setManageDeckId}
               onEdit={setEditDeckId}
               onDelete={handleDeleteDeck}
-              onStudySmartDeck={() => setStudyingSmartDeck(true)}
               onCreateNew={() => setShowCreateDeck(true)}
             />
           )}
