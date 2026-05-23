@@ -41,8 +41,6 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
 
 With Supabase enabled, you'll see an auth screen to **sign in**, **sign up**, or **continue as guest** before accessing the journal.
 
-→ Full setup guide: [docs/SUPABASE_DESDE_CERO.md](./docs/SUPABASE_DESDE_CERO.md)
-
 ---
 
 ## Project Structure
