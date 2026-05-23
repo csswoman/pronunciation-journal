@@ -8,8 +8,9 @@ import { SpeakExercise } from '@/components/phoneme-practice/SpeakExercise'
 import { MatchPairsExercise } from '@/components/exercises/MatchPairsExercise'
 import { FillBlankExercise } from '@/components/exercises/FillBlankExercise'
 import { ReorderWordsExercise } from '@/components/exercises/ReorderWordsExercise'
+import { SentenceDictationExercise } from '@/components/exercises/SentenceDictationExercise'
 import type { Exercise } from '@/lib/phoneme-practice/types'
-import type { MatchPairsExercise as MatchPairsExerciseType, FillBlankExercise as FillBlankExerciseType, ReorderWordsExercise as ReorderWordsExerciseType } from '@/lib/exercises/types'
+import type { MatchPairsExercise as MatchPairsExerciseType, FillBlankExercise as FillBlankExerciseType, ReorderWordsExercise as ReorderWordsExerciseType, SentenceDictationExercise as SentenceDictationExerciseType } from '@/lib/exercises/types'
 import type { PracticeExercise } from '@/lib/practice/types'
 
 interface Props {
@@ -62,6 +63,14 @@ export function ExerciseRenderer({ exercise, onSubmit }: Props) {
         return (
           <ReorderWordsExercise
             exercise={payload.data as ReorderWordsExerciseType}
+            onSubmit={(isCorrect, userAnswer) => onSubmit(isCorrect, userAnswer)}
+          />
+        )
+      }
+      if (slug === 'sentence_dictation') {
+        return (
+          <SentenceDictationExercise
+            exercise={payload.data as SentenceDictationExerciseType}
             onSubmit={(isCorrect, userAnswer) => onSubmit(isCorrect, userAnswer)}
           />
         )
