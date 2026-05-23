@@ -62,7 +62,7 @@ export function FillBlankExercise({ exercise, onSubmit }: Props) {
 
 function SentencePrompt({ parts }: { parts: string[] }) {
   return (
-    <p className="text-center text-[17px] leading-relaxed text-fg">
+    <p className="text-center leading-relaxed text-fg">
       {parts[0]}
       <span className="inline-block min-w-[4rem] rounded-[var(--radius-sm)] bg-primary/10 px-2 font-semibold text-primary">
         ___
