@@ -71,6 +71,14 @@ export interface CompletedCourseLesson {
   completedAt: string; // ISO
 }
 
+export interface IpaExplorationRecord {
+  // PK: `${date}:${symbol}` — one row per phoneme explored per day
+  key: string;
+  date: string;   // YYYY-MM-DD
+  symbol: string; // e.g. "/iː/"
+  exploredAt: string; // ISO
+}
+
 class PronunciationDB extends Dexie {
   attempts!: Table<Attempt, number>;
   srsData!: Table<SRSData, string>;
@@ -86,6 +94,7 @@ class PronunciationDB extends Dexie {
   analyticsEvents!: Table<AnalyticsEvent, number>;
   generatedExercises!: Table<CachedExercise, string>;
   practiceSessions!: Table<PracticeSessionRecord, string>;
+  ipaExplorations!: Table<IpaExplorationRecord, string>;
 
   constructor() {
     super("pronunciation-journal");
@@ -156,6 +165,11 @@ class PronunciationDB extends Dexie {
     // v11: active in-progress practice sessions for resume-on-reload
     this.version(11).stores({
       practiceSessions: "id, userId, soundId, expiresAt",
+    });
+
+    // v12: per-day IPA phoneme exploration tracking
+    this.version(12).stores({
+      ipaExplorations: "key, date, symbol",
     });
   }
 }
@@ -394,4 +408,28 @@ export async function getCompletedCountByCourse(): Promise<Record<string, number
     counts[row.courseSlug] = (counts[row.courseSlug] ?? 0) + 1;
   }
   return counts;
+}
+
+// ── IPA Exploration Helpers ──
+
+export async function markPhonemeExplored(symbol: string): Promise<void> {
+  const date = getTodayKey();
+  const key = `${date}:${symbol}`;
+  await db.ipaExplorations.put({
+    key,
+    date,
+    symbol,
+    exploredAt: new Date().toISOString(),
+  });
+}
+
+export async function getExploredSymbolsToday(): Promise<string[]> {
+  const date = getTodayKey();
+  const rows = await db.ipaExplorations.where("date").equals(date).toArray();
+  return rows.map((row) => row.symbol);
+}
+
+export async function resetTodaysExplorations(): Promise<void> {
+  const date = getTodayKey();
+  await db.ipaExplorations.where("date").equals(date).delete();
 }
