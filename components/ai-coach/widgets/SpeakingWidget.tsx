@@ -28,14 +28,6 @@ function buildSpeakingResult(target: string, transcript: string, score: number):
   };
 }
 
-interface Props {
-  args: SpeakingArgs;
-  status: "pending" | "rendered" | "answered" | "error";
-  onAnswer: (result: ExerciseResult) => void;
-  onNext?: () => void;
-  onRetry?: () => void;
-}
-
 function scoreTranscript(transcript: string, target: string): number {
   const normalize = (s: string) => s.toLowerCase().replace(/[^a-z0-9\s]/g, "").trim();
   const t = normalize(transcript);
@@ -46,6 +38,14 @@ function scoreTranscript(transcript: string, target: string): number {
   const gWords = g.split(/\s+/);
   const matches = gWords.filter(w => tWords.has(w)).length;
   return gWords.length > 0 ? matches / gWords.length : 0;
+}
+
+interface Props {
+  args: SpeakingArgs;
+  status: "pending" | "rendered" | "answered" | "error";
+  onAnswer: (result: ExerciseResult) => void;
+  onNext?: () => void;
+  onRetry?: () => void;
 }
 
 export default function SpeakingWidget({ args, status, onAnswer, onNext, onRetry }: Props) {
@@ -62,8 +62,8 @@ export default function SpeakingWidget({ args, status, onAnswer, onNext, onRetry
     },
   });
   const [transcript, setTranscript] = useState<string | null>(null);
-  const [score, setScore] = useState<number | null>(null);
-  const answered = status === "answered";
+  const [score, setScore]           = useState<number | null>(null);
+  const answered    = status === "answered";
   const isRecording = state === "listening";
   const transcribing = state === "processing";
 
@@ -77,25 +77,17 @@ export default function SpeakingWidget({ args, status, onAnswer, onNext, onRetry
   }, [args.target]);
 
   return (
-    <div
-      className="rounded-xl border border-border-subtle p-4 space-y-3 bg-surface-sunken"
-    >
-      <p className="text-sm text-fg-muted">
-        {args.prompt}
-      </p>
-      <div className="flex items-center gap-3 flex-wrap">
-        <p className="text-lg font-semibold text-fg">
-          {args.target}
-        </p>
+    <div className="space-y-4 py-2">
+      <p className="text-sm text-[var(--text-secondary)] text-center">{args.prompt}</p>
+
+      <div className="flex flex-col items-center gap-2 px-4 py-5 rounded-xl bg-[var(--surface-raised)] border border-[var(--border-subtle)]">
+        <p className="text-xl font-semibold text-[var(--text-primary)]">{args.target}</p>
         {args.ipa && (
-          <span className="text-sm font-mono text-fg-subtle">
-            /{args.ipa}/
-          </span>
+          <span className="text-sm font-mono text-[var(--text-tertiary)]">/{args.ipa}/</span>
         )}
         <button
           onClick={speakTarget}
-          className="flex items-center gap-1 px-2 py-1 rounded-lg text-xs bg-surface-sunken text-fg-muted"
-          title="Listen to pronunciation"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border border-[var(--border-default)] text-[var(--text-secondary)] transition-opacity hover:opacity-70"
         >
           <Volume2 className="w-3.5 h-3.5" />
           Listen
@@ -103,27 +95,25 @@ export default function SpeakingWidget({ args, status, onAnswer, onNext, onRetry
       </div>
 
       {!answered && (
-        <div className="flex items-center gap-3">
+        <div className="flex justify-center">
           {!isRecording && !transcribing && !transcript && (
             <button
               onClick={() => start()}
-              className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm bg-primary text-on-primary"
+              className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold bg-[var(--primary)] text-[var(--on-primary)] transition-opacity hover:opacity-90"
             >
-              <Mic className="w-4 h-4" />
-              Record
+              <Mic className="w-4 h-4" /> Record
             </button>
           )}
           {isRecording && (
             <button
               onClick={() => stop()}
-              className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm animate-pulse bg-error text-on-primary"
+              className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold animate-pulse bg-[var(--error)] text-[var(--on-primary)]"
             >
-              <MicOff className="w-4 h-4" />
-              Stop
+              <MicOff className="w-4 h-4" /> Stop
             </button>
           )}
           {transcribing && (
-            <span className="flex items-center gap-2 text-sm text-fg-subtle">
+            <span className="flex items-center gap-2 text-sm text-[var(--text-tertiary)]">
               <Loader2 className="w-4 h-4 animate-spin" /> Analyzing…
             </span>
           )}
@@ -134,16 +124,7 @@ export default function SpeakingWidget({ args, status, onAnswer, onNext, onRetry
         <ExerciseFeedback
           result={buildSpeakingResult(args.target, transcript, score)}
           onNext={score >= 0.6 ? onNext : undefined}
-          onRetry={
-            score < 0.6
-              ? () => {
-                  setTranscript(null);
-                  setScore(null);
-                  reset();
-                  onRetry?.();
-                }
-              : undefined
-          }
+          onRetry={score < 0.6 ? () => { setTranscript(null); setScore(null); reset(); onRetry?.(); } : undefined}
         />
       )}
     </div>

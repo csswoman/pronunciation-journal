@@ -5,6 +5,7 @@
 //   <PromptLine />       — instruction label
 //   <AnswerArea />       — chips placed by the user (ordered)
 //   <TokenBank />        — remaining shuffled chips
+//   <CheckButton />      — full-width rounded-full
 //   <FeedbackBar />      — correct/wrong after submission
 
 import { useState, useRef, useEffect } from 'react'
@@ -17,18 +18,14 @@ interface Props {
 }
 
 type AnswerState = 'idle' | 'correct' | 'wrong'
-
-interface Chip {
-  key: string   // token + index for stable identity
-  word: string
-}
+interface Chip { key: string; word: string }
 
 function makeChips(tokens: string[]): Chip[] {
   return tokens.map((word, i) => ({ key: `${word}-${i}`, word }))
 }
 
 export function ReorderWordsExercise({ exercise, onSubmit }: Props) {
-  const [bank, setBank] = useState<Chip[]>(() => makeChips(exercise.tokens))
+  const [bank, setBank]   = useState<Chip[]>(() => makeChips(exercise.tokens))
   const [answer, setAnswer] = useState<Chip[]>([])
   const [state, setState] = useState<AnswerState>('idle')
   const startMs = useRef(Date.now())
@@ -55,7 +52,7 @@ export function ReorderWordsExercise({ exercise, onSubmit }: Props) {
   function handleCheck() {
     if (state !== 'idle' || answer.length === 0) return
     const userAnswer = answer.map(c => c.word).join(' ')
-    const isCorrect = userAnswer === exercise.sentence
+    const isCorrect  = userAnswer === exercise.sentence
     setState(isCorrect ? 'correct' : 'wrong')
     onSubmit(isCorrect, userAnswer, Date.now() - startMs.current)
   }
@@ -70,12 +67,11 @@ export function ReorderWordsExercise({ exercise, onSubmit }: Props) {
           type="button"
           onClick={handleCheck}
           disabled={answer.length === 0}
-          className={cn(
-            'self-center rounded-[var(--radius-md)] px-6 py-2.5 text-[14px] font-semibold transition-colors',
-            answer.length === 0
-              ? 'bg-surface-raised text-fg-subtle cursor-default'
-              : 'bg-primary text-white hover:bg-primary/90 cursor-pointer',
-          )}
+          className="w-full rounded-full py-3.5 text-sm font-semibold transition-all disabled:opacity-40"
+          style={{
+            backgroundColor: answer.length > 0 ? 'var(--primary)' : 'var(--border-subtle)',
+            color:           answer.length > 0 ? 'var(--on-primary)' : 'var(--text-tertiary)',
+          }}
         >
           Check
         </button>
@@ -87,11 +83,9 @@ export function ReorderWordsExercise({ exercise, onSubmit }: Props) {
   )
 }
 
-// ── Sub-components ──────────────────────────────────────────────────────────
-
 function PromptLine() {
   return (
-    <p className="text-center text-[13px] font-medium uppercase tracking-[.08em] text-fg-subtle">
+    <p className="text-center text-[13px] font-semibold uppercase tracking-[.08em] text-[var(--text-tertiary)]">
       Arrange the words in the correct order
     </p>
   )
@@ -107,19 +101,13 @@ function AnswerArea({ chips, done, onChipClick }: AreaProps) {
   return (
     <div
       className={cn(
-        'min-h-[52px] flex flex-wrap gap-2 rounded-[var(--radius-md)] border-[1.5px] border-dashed p-3 transition-colors',
-        chips.length === 0 ? 'border-border-subtle' : 'border-primary/40',
+        'min-h-[52px] flex flex-wrap gap-2 rounded-xl border-[1.5px] border-dashed p-3 transition-colors',
+        chips.length === 0 ? 'border-[var(--border-subtle)]' : 'border-[var(--primary)]',
       )}
       aria-label="Your answer"
     >
       {chips.map(chip => (
-        <WordChip
-          key={chip.key}
-          chip={chip}
-          variant="placed"
-          done={done}
-          onClick={onChipClick}
-        />
+        <WordChip key={chip.key} chip={chip} variant="placed" done={done} onClick={onChipClick} />
       ))}
     </div>
   )
@@ -129,24 +117,13 @@ function TokenBank({ chips, done, onChipClick }: AreaProps) {
   return (
     <div className="flex flex-wrap gap-2" aria-label="Available words">
       {chips.map(chip => (
-        <WordChip
-          key={chip.key}
-          chip={chip}
-          variant="bank"
-          done={done}
-          onClick={onChipClick}
-        />
+        <WordChip key={chip.key} chip={chip} variant="bank" done={done} onClick={onChipClick} />
       ))}
     </div>
   )
 }
 
-interface ChipProps {
-  chip: Chip
-  variant: 'bank' | 'placed'
-  done: boolean
-  onClick: (chip: Chip) => void
-}
+interface ChipProps { chip: Chip; variant: 'bank' | 'placed'; done: boolean; onClick: (chip: Chip) => void }
 
 function WordChip({ chip, variant, done, onClick }: ChipProps) {
   return (
@@ -155,12 +132,10 @@ function WordChip({ chip, variant, done, onClick }: ChipProps) {
       onClick={() => onClick(chip)}
       disabled={done}
       className={cn(
-        'rounded-[var(--radius-sm)] border-[1.5px] px-3 py-1.5 text-[14px] font-medium transition-all duration-150',
-        !done && variant === 'bank' &&
-          'bg-surface-raised border-border-subtle text-fg hover:border-primary hover:bg-primary-soft cursor-pointer',
-        !done && variant === 'placed' &&
-          'bg-primary-soft border-primary/50 text-primary hover:border-error hover:bg-error-soft hover:text-error cursor-pointer',
-        done && 'cursor-default opacity-80 border-border-subtle bg-surface-raised text-fg',
+        'rounded-full border px-3 py-1.5 text-[14px] font-medium transition-all duration-150',
+        !done && variant === 'bank'   && 'bg-[var(--surface-raised)] border-[var(--border-default)] text-[var(--text-primary)] hover:border-[var(--primary)] hover:bg-[var(--primary-soft)] cursor-pointer',
+        !done && variant === 'placed' && 'bg-[var(--primary-soft)] border-[var(--primary)] text-[var(--primary)] hover:border-[var(--error)] hover:bg-[var(--error-soft)] hover:text-[var(--error)] cursor-pointer',
+        done && 'cursor-default opacity-80 border-[var(--border-subtle)] bg-[var(--surface-raised)] text-[var(--text-secondary)]',
       )}
     >
       {chip.word}
@@ -171,12 +146,14 @@ function WordChip({ chip, variant, done, onClick }: ChipProps) {
 function FeedbackBar({ isCorrect, sentence }: { isCorrect: boolean; sentence: string }) {
   return (
     <div
-      className={cn(
-        'rounded-[var(--radius-md)] px-4 py-3 text-[14px] font-medium',
-        isCorrect ? 'bg-success-soft text-success' : 'bg-error-soft text-error',
-      )}
+      className="rounded-xl px-4 py-3 text-sm font-medium border-l-[3px]"
+      style={{
+        backgroundColor: isCorrect ? 'var(--success-soft)' : 'var(--error-soft)',
+        borderLeftColor: isCorrect ? 'var(--success)'      : 'var(--error)',
+        color:           isCorrect ? 'var(--success-value)' : 'var(--error-value)',
+      }}
     >
-      {isCorrect ? 'Correct!' : `Correct order: "${sentence}"`}
+      {isCorrect ? '✓ Correct!' : `✗ Correct order: "${sentence}"`}
     </div>
   )
 }

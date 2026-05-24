@@ -56,7 +56,37 @@ export default function AICoachPanel() {
 
       {showHistory && <ConversationHistoryPanel conversations={conversations} activeId={conversationId} onSelect={(conv) => { loadConversation(conv); setShowHistory(false); setActiveTab("chat"); }} onDelete={async (id) => { await removeConversation(id); setConversations((prev) => prev.filter((item) => item.id !== id)); }} onClose={() => setShowHistory(false)} />}
 
-      {!showHistory && <>{activeTab === "interview" ? <AICoachHome activeTab="interview" onSendMessage={sendMessage} isStreaming={isStreaming} prefill={inputPrefill} onPrefillConsumed={() => setInputPrefill(undefined)} /> : activeTab === "pronunciation" ? <div className="flex-1 min-h-0 overflow-hidden"><PronunciationView /></div> : !hasMessages ? <AICoachHome activeTab="chat" onSendMessage={sendMessage} isStreaming={isStreaming} prefill={inputPrefill} onPrefillConsumed={() => setInputPrefill(undefined)} /> : <div className="flex-1 flex flex-col min-h-0 overflow-hidden"><div className="flex-1 overflow-y-auto">{error && <ErrorBanner message={error} />}<ChatView messages={messages} isStreaming={isStreaming} onSaveWord={openSaveWordModal} onSuggestionClick={(prompt) => setInputPrefill(prompt)} onToolAnswer={answerToolCall} onSendMessage={sendMessage} onNext={() => sendMessage("next")} /></div><div className="flex-shrink-0 px-3 pb-3 pt-1 bg-surface-base">{quotaExhausted ? <QuotaExhaustedCard messages={messages} onNewSession={resetSession} /> : <CustomPromptPanel onSubmit={sendMessage} isDisabled={isStreaming} variant="chat" placeholder="Ask your AI Coach..." prefill={inputPrefill} onPrefillConsumed={() => setInputPrefill(undefined)} />}</div></div>}</>}
+      {!showHistory && (
+        <>
+          {/* Chat tab — kept mounted to preserve PracticeSession state */}
+          <div className={`flex-1 flex flex-col min-h-0 overflow-hidden${activeTab !== "chat" ? " hidden" : ""}`}>
+            {!hasMessages
+              ? <AICoachHome activeTab="chat" onSendMessage={sendMessage} isStreaming={isStreaming} prefill={inputPrefill} onPrefillConsumed={() => setInputPrefill(undefined)} />
+              : <>
+                  <div className="flex-1 overflow-y-auto">
+                    {error && <ErrorBanner message={error} />}
+                    <ChatView messages={messages} isStreaming={isStreaming} onSaveWord={openSaveWordModal} onSuggestionClick={(prompt) => setInputPrefill(prompt)} onToolAnswer={answerToolCall} onSendMessage={sendMessage} onNext={() => sendMessage("next")} />
+                  </div>
+                  <div className="flex-shrink-0 px-3 pb-3 pt-1 bg-surface-base">
+                    {quotaExhausted
+                      ? <QuotaExhaustedCard messages={messages} onNewSession={resetSession} />
+                      : <CustomPromptPanel onSubmit={sendMessage} isDisabled={isStreaming} variant="chat" placeholder="Ask your AI Coach..." prefill={inputPrefill} onPrefillConsumed={() => setInputPrefill(undefined)} />}
+                  </div>
+                </>
+            }
+          </div>
+
+          {/* Interview tab — kept mounted */}
+          <div className={`flex-1 min-h-0 overflow-hidden${activeTab !== "interview" ? " hidden" : ""}`}>
+            <AICoachHome activeTab="interview" onSendMessage={sendMessage} isStreaming={isStreaming} prefill={inputPrefill} onPrefillConsumed={() => setInputPrefill(undefined)} />
+          </div>
+
+          {/* Pronunciation tab — kept mounted */}
+          <div className={`flex-1 min-h-0 overflow-hidden${activeTab !== "pronunciation" ? " hidden" : ""}`}>
+            <PronunciationView />
+          </div>
+        </>
+      )}
     </div>
 
     {wordToSave && <SaveWordModal word={wordToSave.word} context={wordToSave.context} onConfirm={confirmSaveWord} onClose={closeSaveWordModal} />}

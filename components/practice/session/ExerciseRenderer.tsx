@@ -28,13 +28,13 @@ export function ExerciseRenderer({ exercise, onSubmit }: Props) {
   const { slug, payload, soundId } = exercise
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-4">
       {renderInner()}
       <button
         type="button"
         onClick={() => onSubmit(false, 'skip')}
         aria-label="Skip this exercise"
-        className="self-center rounded-[var(--radius-full)] px-4 py-1.5 text-xs font-medium uppercase tracking-[.08em] text-fg-subtle transition-colors hover:bg-surface-raised hover:text-fg-muted"
+        className="self-center py-1.5 text-xs font-semibold uppercase tracking-widest text-[var(--text-tertiary)] transition-opacity hover:opacity-70"
       >
         Skip
       </button>

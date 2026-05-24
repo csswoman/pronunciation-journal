@@ -271,8 +271,13 @@ export default function PracticeSession(config: PracticeConfig) {
   }
 
   return (
-    <div className="w-full max-w-md mx-auto flex flex-col gap-5 p-4">
-      <SessionProgress current={currentIndex} total={exercises.length} />
+    <div className="w-full max-w-md mx-auto flex flex-col gap-6">
+      <div className="flex items-center justify-between px-1">
+        <SessionProgress current={currentIndex} total={exercises.length} />
+        <span className="ml-4 shrink-0 text-[11px] font-bold px-2.5 py-1 rounded-full bg-[var(--primary)] text-[var(--on-primary)] tabular-nums">
+          {Math.min(currentIndex + 1, exercises.length)} / {exercises.length}
+        </span>
+      </div>
 
       {current && (phase === 'exercising' || phase === 'feedback') && (
         <ExerciseRenderer

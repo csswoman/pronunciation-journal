@@ -34,10 +34,7 @@ export default function MultipleChoiceWidget({ args, status, onAnswer, onNext, o
     if (!userId) return;
     void (async () => {
       const row = await db.learningState.get(userId);
-      if (row?.state?.level?.cefrEstimate) {
-        setUserLevel(row.state.level.cefrEstimate);
-        return;
-      }
+      if (row?.state?.level?.cefrEstimate) { setUserLevel(row.state.level.cefrEstimate); return; }
       const state = await getUserLearningState(userId);
       setUserLevel(state.level.cefrEstimate);
     })();
@@ -47,7 +44,6 @@ export default function MultipleChoiceWidget({ args, status, onAnswer, onNext, o
     if (answered) return;
     setSelected(idx);
     const result = evaluateExercise(args.options[idx], design, userLevel);
-    // Fall back to the model-provided explanation when the design doesn't carry pedagogical data.
     if (!result.correct && args.explanation && !design.commonWrongAnswers?.length) {
       result.feedback.explanation = args.explanation;
     }
@@ -62,32 +58,32 @@ export default function MultipleChoiceWidget({ args, status, onAnswer, onNext, o
   }
 
   return (
-    <div className="rounded-xl bg-surface-sunken p-4 space-y-3">
-      <p className="text-lg font-semibold text-fg leading-snug">
+    <div className="space-y-4 py-2">
+      <p className="text-base font-semibold text-[var(--text-primary)] leading-snug text-center px-2">
         {args.question}
       </p>
-      <div className="space-y-2">
+      <div className="space-y-2.5">
         {args.options.map((opt, idx) => {
           const isCorrect = answered && idx === args.correctIndex;
-          const isWrong = answered && idx === selected && selected !== args.correctIndex;
+          const isWrong   = answered && idx === selected && selected !== args.correctIndex;
 
-          let cls = "w-full text-left px-5 py-3.5 rounded-xl text-sm text-fg transition-colors cursor-pointer ";
-
-          if (isCorrect) {
-            cls += "bg-success-soft border border-success-border";
-          } else if (isWrong) {
-            cls += "bg-error-soft border border-error-border";
-          } else {
-            cls += "bg-surface-sunken hover:bg-surface-raised";
-          }
+          let borderColor = "var(--border-default)";
+          let bgColor     = "var(--surface-raised)";
+          if (isCorrect) { borderColor = "var(--success-border)"; bgColor = "var(--success-soft)"; }
+          if (isWrong)   { borderColor = "var(--error-border)";   bgColor = "var(--error-soft)"; }
 
           return (
             <button
               key={idx}
               disabled={answered || evaluation !== null}
               onClick={() => handleSelect(idx)}
-              className={cls}
+              className="w-full text-left px-4 py-3 rounded-xl text-sm text-[var(--text-primary)] transition-all border flex items-center gap-3 hover:border-[var(--border-hover)] active:scale-[0.99] disabled:cursor-default"
+              style={{ backgroundColor: bgColor, borderColor }}
             >
+              <span
+                className="w-2.5 h-2.5 rounded-full flex-shrink-0"
+                style={{ backgroundColor: isCorrect ? "var(--success)" : isWrong ? "var(--error)" : "var(--primary)" }}
+              />
               {opt}
             </button>
           );
