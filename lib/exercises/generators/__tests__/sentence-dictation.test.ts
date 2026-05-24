@@ -29,6 +29,8 @@ function makeEntry(overrides: Partial<WordBankEntry> = {}): WordBankEntry {
     context: null,
     audio_fetch_attempts: 0,
     review_count: 0,
+    source: null,
+    source_ref: null,
     ...overrides,
   }
 }

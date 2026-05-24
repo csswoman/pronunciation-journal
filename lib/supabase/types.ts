@@ -737,6 +737,8 @@ export type Database = {
           next_review_at: string | null
           repetitions: number
           review_count: number
+          source: string | null
+          source_ref: string | null
           srs_status: string
           status: string
           synonyms: string[] | null
@@ -764,6 +766,8 @@ export type Database = {
           next_review_at?: string | null
           repetitions?: number
           review_count?: number
+          source?: string | null
+          source_ref?: string | null
           srs_status?: string
           status?: string
           synonyms?: string[] | null
@@ -791,6 +795,8 @@ export type Database = {
           next_review_at?: string | null
           repetitions?: number
           review_count?: number
+          source?: string | null
+          source_ref?: string | null
           srs_status?: string
           status?: string
           synonyms?: string[] | null

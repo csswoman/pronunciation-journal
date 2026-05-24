@@ -4,6 +4,7 @@ import Section from "@/components/layout/Section";
 import { LessonDetailHeader } from "@/components/lexicon/lesson/LessonDetailHeader";
 import { WordBrowser } from "@/components/lexicon/lesson/WordBrowser";
 import { getCategories, getCategoryWords } from "@/lib/lexicon/categories";
+import { getLexiconWordBankSet } from "@/lib/word-bank/server-queries";
 import type { Word } from "@/components/lexicon/lesson/WordGrid";
 
 export default async function LessonDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -14,7 +15,16 @@ export default async function LessonDetailPage({ params }: { params: Promise<{ i
   if (!category) notFound();
 
   const rawWords = getCategoryWords(id);
-  const wordsLearned = 0;
+  const lexiconIds = rawWords.map((w) => w.id);
+
+  // Fetch which of these words the user already has in word_bank (by source_ref).
+  // Falls back to empty set if the user is not logged in.
+  let inWordBank: Set<string>;
+  try {
+    inWordBank = await getLexiconWordBankSet(lexiconIds);
+  } catch {
+    inWordBank = new Set();
+  }
 
   const words: Word[] = rawWords.map((w) => ({
     id: w.id,
@@ -22,9 +32,11 @@ export default async function LessonDetailPage({ params }: { params: Promise<{ i
     partOfSpeech: w.pos,
     definition: w.definition,
     example: w.example,
-    status: "new" as const,
+    status: inWordBank.has(w.id) ? ("learned" as const) : ("new" as const),
     difficulty: w.difficulty,
   }));
+
+  const wordsLearned = words.filter((w) => w.status === "learned").length;
 
   return (
     <PageLayout cardWrapper={false}>
@@ -36,7 +48,7 @@ export default async function LessonDetailPage({ params }: { params: Promise<{ i
           wordsReviewing={0}
           color={category.color}
         />
-        <WordBrowser words={words} color={category.color} />
+        <WordBrowser words={words} color={category.color} categoryId={id} />
       </Section>
     </PageLayout>
   );

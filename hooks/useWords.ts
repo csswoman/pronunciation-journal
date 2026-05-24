@@ -200,6 +200,8 @@ export function useWords(): UseWordsState {
         next_review_at: null,
         last_reviewed_at: null,
         review_count: 0,
+        source: null,
+        source_ref: null,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       };
