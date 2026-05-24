@@ -47,6 +47,20 @@ export async function quickAddWord(input: {
   return word;
 }
 
+/** Fetch word bank entries whose source_ref matches any of the given lexicon word ids. */
+export async function getWordBankEntriesBySourceRefs(
+  sourceRefs: string[]
+): Promise<WordBankEntry[]> {
+  if (sourceRefs.length === 0) return [];
+  const supabase = getSupabaseBrowserClient();
+  const { data, error } = await supabase
+    .from(TABLE)
+    .select("*")
+    .in("source_ref", sourceRefs);
+  if (error) throw error;
+  return (data ?? []) as WordBankEntry[];
+}
+
 export async function deleteWord(id: string): Promise<void> {
   const supabase = getSupabaseBrowserClient();
   const { error } = await supabase.from(TABLE).delete().eq("id", id);

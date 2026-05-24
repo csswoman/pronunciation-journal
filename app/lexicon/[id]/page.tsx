@@ -3,6 +3,7 @@ import PageLayout from "@/components/layout/PageLayout";
 import Section from "@/components/layout/Section";
 import { LessonDetailHeader } from "@/components/lexicon/lesson/LessonDetailHeader";
 import { WordBrowser } from "@/components/lexicon/lesson/WordBrowser";
+import { PracticeButton } from "@/components/lexicon/lesson/PracticeButton";
 import { getCategories, getCategoryWords } from "@/lib/lexicon/categories";
 import { getLexiconWordBankSet } from "@/lib/word-bank/server-queries";
 import type { Word } from "@/components/lexicon/lesson/WordGrid";
@@ -48,6 +49,9 @@ export default async function LessonDetailPage({ params }: { params: Promise<{ i
           wordsReviewing={0}
           color={category.color}
         />
+        <div className="flex justify-end">
+          <PracticeButton categoryId={id} />
+        </div>
         <WordBrowser words={words} color={category.color} categoryId={id} />
       </Section>
     </PageLayout>
