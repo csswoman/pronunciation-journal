@@ -44,7 +44,7 @@ export default function HomePracticeCard() {
       </div>
 
       <Link
-        href="/practice"
+        href="/practice/sounds"
         className="shrink-0 inline-flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-semibold bg-[var(--primary)] text-on-primary hover:opacity-90 transition-opacity whitespace-nowrap"
       >
         Start Practice

@@ -14,7 +14,7 @@ export const coreNav: NavSectionType = {
   label: "",
   items: [
     { name: "Home", href: "/", icon: Home },
-    { name: "Practice", href: "/practice", icon: MicVocal },
+    { name: "Sound Lab", href: "/practice/sounds", icon: MicVocal },
   ],
 };
 

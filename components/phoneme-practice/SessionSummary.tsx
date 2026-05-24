@@ -79,7 +79,7 @@ export function SessionSummary({ soundIpa, scoreableCorrect, originalTotal, next
       </button>
 
       <Link
-        href="/practice"
+        href="/practice/sounds"
         className="block w-full p-5 rounded-[var(--radius-xl)] border border-[var(--border-subtle)] bg-[var(--surface-raised)] [font-family:inherit] text-base font-semibold text-[var(--text-secondary)] text-center no-underline"
       >
         Back to practice

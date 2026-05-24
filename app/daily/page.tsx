@@ -64,7 +64,7 @@ export default function DailyPage() {
       exercises,
       sessionLength: exercises.length,
       onSessionComplete: handleSessionComplete,
-      onExit: () => router.push('/practice'),
+      onExit: () => router.push('/daily'),
     }
   }, [exercises, handleSessionComplete, router, user])
 
@@ -73,7 +73,7 @@ export default function DailyPage() {
       <div className="flex items-center justify-between px-10 pt-6 pb-4">
         <button
           type="button"
-          onClick={() => router.push('/practice')}
+          onClick={() => router.push('/daily')}
           className="border-none bg-transparent p-1 text-xl leading-none text-fg-subtle"
           aria-label="Back"
         >

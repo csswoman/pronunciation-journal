@@ -111,7 +111,7 @@ export default function IPAChart() {
             >
               Drill this sound with targeted exercises and track your progress in the practice area.
             </p>
-            <Link href="/practice">
+            <Link href="/practice/sounds">
               <Button
                 variant="outline"
                 size="lg"
@@ -270,7 +270,7 @@ export default function IPAChart() {
             Have real conversations with Gemini-powered AI and get pronunciation feedback on the sounds you just explored.
           </p>
         </div>
-        <Link href="/practice">
+        <Link href="/daily">
           <Button variant="primary" size="lg" className="shrink-0 whitespace-nowrap">
             <MessageCircle size={16} />
             Start Session

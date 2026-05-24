@@ -1,5 +1,5 @@
-import SoundLabPage from "@/components/phoneme-practice/SoundLabPage";
+import { redirect } from 'next/navigation'
 
 export default function PracticePage() {
-  return <SoundLabPage />;
+  redirect('/daily')
 }

@@ -96,7 +96,7 @@ export default function WordsToday({ words, newCount, reviewCount }: WordsTodayP
             Start a practice or review session and your studied words will appear here.
           </p>
           <Link
-            href="/practice"
+            href="/daily"
             className="mt-3 inline-block rounded-xl bg-[color-mix(in_oklch,var(--primary)_15%,transparent)] px-4 py-2 text-xs font-semibold text-[var(--primary)] transition-opacity hover:opacity-80"
           >
             Go to practice

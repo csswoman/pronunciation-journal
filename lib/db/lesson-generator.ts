@@ -41,7 +41,7 @@ function soundToLesson(sound: DbSound, words: DbWord[]): Lesson {
     difficulty: difficultyFromNumber(sound.difficulty),
     words: lessonWords,
     // Every lesson links straight to the phoneme practice session
-    href: `/practice/sound/${sound.id}`,
+    href: `/practice/sounds/sound/${sound.id}`,
   }
 }
 

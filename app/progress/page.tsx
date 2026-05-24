@@ -68,7 +68,7 @@ export default function ProgressPage() {
           description="See your streak, points, and momentum at a glance."
           primaryCta={{
             label: 'Keep Going',
-            onClick: () => window.location.href = '/practice',
+            onClick: () => window.location.href = '/daily',
           }}
           illustration={
             <Image

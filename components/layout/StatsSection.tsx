@@ -118,7 +118,7 @@ function TipBanner({
       <button
         className="shrink-0 rounded-xl px-4 py-2 text-sm font-semibold transition-opacity hover:opacity-80"
         style={{ background: "color-mix(in oklch, var(--primary) 15%, transparent)", color: "var(--primary)" }}
-        onClick={() => window.location.href = "/practice"}
+        onClick={() => window.location.href = "/daily"}
       >
         Start a practice session
       </button>

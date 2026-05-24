@@ -87,7 +87,7 @@ export default function SoundPracticePage() {
       exercises,
       sessionLength: exercises.length,
       onSessionComplete: handleSessionComplete,
-      onExit: () => router.push('/practice'),
+      onExit: () => router.push('/practice/sounds'),
       persistence: { userId: user.id, soundId },
     }
   }, [exercises, handleSessionComplete, router, user, soundId])
@@ -118,7 +118,7 @@ export default function SoundPracticePage() {
       <div className="flex items-center justify-between px-10 pt-6">
         <button
           type="button"
-          onClick={() => router.push('/practice')}
+          onClick={() => router.push('/practice/sounds')}
           className="border-none bg-transparent p-1 text-xl leading-none text-fg-subtle"
         >
           ←
