@@ -27,7 +27,6 @@ export function StreakCard({ streak }: Props) {
           ? 'linear-gradient(145deg, color-mix(in oklch, var(--primary) 14%, var(--card-bg)), var(--card-bg))'
           : 'var(--card-bg)',
         border: '1px solid var(--line-divider)',
-        boxShadow: '0 1px 3px var(--line-divider), 0 4px 14px var(--line-divider)',
       }}
     >
       {/* Header */}
