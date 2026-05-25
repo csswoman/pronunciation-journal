@@ -44,6 +44,14 @@ export default function ExerciseFeedback({ result, onNext, onRetry }: ExerciseFe
           Try again
         </button>
       )}
+      {correct && onNext && (
+        <button
+          onClick={onNext}
+          className="mt-1 text-xs px-3 py-1.5 rounded-full font-semibold bg-[var(--primary)] text-[var(--on-primary)] transition-opacity hover:opacity-90"
+        >
+          Next →
+        </button>
+      )}
     </div>
   );
 }

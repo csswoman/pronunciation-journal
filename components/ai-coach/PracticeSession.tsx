@@ -130,8 +130,13 @@ export default function PracticeSession({ initialExercises, onAnswer }: Props) {
   const handleAnswer = useCallback((exerciseId: string, callId: string, result: ExerciseResult) => {
     onAnswer(callId, result);
     const status: ExStatus = result.correct ? "correct" : "incorrect";
-    setExercises(prev => prev.map(ex => ex.id === exerciseId ? { ...ex, status, result } : ex));
-    if (result.correct) {
+    let toolName: string | undefined;
+    setExercises(prev => prev.map(ex => {
+      if (ex.id !== exerciseId) return ex;
+      toolName = ex.toolCall.name;
+      return { ...ex, status, result };
+    }));
+    if (result.correct && toolName !== "render_speaking") {
       if (autoTimerRef.current) clearTimeout(autoTimerRef.current);
       autoTimerRef.current = setTimeout(() => goTo(current + 1), AUTO_ADVANCE_MS);
     }
