@@ -5,6 +5,8 @@ import IPAMatrixCell from "./IPAMatrixCell";
 
 type MatrixCategory = "vowel" | "consonant" | "diphthong";
 
+const ROW_LABEL_BG = "var(--bg-tertiary)";
+
 export default function IPAMatrix({
   category,
   phonemes,
@@ -22,7 +24,6 @@ export default function IPAMatrix({
 }) {
   const config = getMatrixConfig(category);
 
-  // Build a lookup: row|col -> phoneme[] (can be multiple, e.g. /p/ and /b/)
   const cellMap = new Map<string, PhonemeData[]>();
   for (const phoneme of phonemes) {
     const coord = PHONEME_MATRIX[phoneme.symbol];
@@ -33,48 +34,70 @@ export default function IPAMatrix({
     cellMap.set(key, arr);
   }
 
+  const gridTemplateColumns = `100px repeat(${config.cols.length}, minmax(0, 1fr))`;
+
   return (
     <div
-      className="rounded-2xl border p-4 md:p-6"
+      className="rounded-2xl border p-4 md:p-5"
       style={{
-        backgroundColor: "var(--bg-secondary, var(--card-bg))",
-        borderColor: "var(--line-divider)",
+        backgroundColor: "var(--surface-raised)",
+        borderColor: "var(--border-default)",
       }}
     >
+      {/* Column headers — outside the table */}
       <div
-        className="grid gap-x-1.5 gap-y-2"
-        style={{
-          gridTemplateColumns: `100px repeat(${config.cols.length}, minmax(0, 1fr))`,
-        }}
+        className="grid pb-3"
+        style={{ gridTemplateColumns }}
       >
-        {/* Header row: empty corner + column labels */}
         <div />
         {config.cols.map((col) => (
           <div
             key={col.id}
-            className="text-tiny font-semibold uppercase tracking-widest text-center pb-2"
-            style={{ color: "var(--text-secondary)" }}
+            className="text-tiny font-semibold uppercase tracking-widest text-center"
+            style={{ color: "var(--text-tertiary)" }}
           >
             {col.label}
           </div>
         ))}
+      </div>
 
-        {/* Body rows */}
-        {config.rows.map((row) => (
+      {/* Table */}
+      <div
+        className="grid overflow-hidden rounded-xl border"
+        style={{
+          gridTemplateColumns,
+          borderColor: "var(--border-subtle)",
+        }}
+      >
+        {config.rows.map((row, rowIndex) => (
           <RowFragment key={row.id}>
             <div
-              className="flex items-center text-tiny font-semibold uppercase tracking-widest pr-3"
-              style={{ color: "var(--text-secondary)" }}
+              className="flex items-center text-tiny font-semibold uppercase tracking-widest px-3 py-2"
+              style={{
+                color: "var(--text-secondary)",
+                backgroundColor: ROW_LABEL_BG,
+                borderTop:
+                  rowIndex === 0 ? "none" : "1px solid var(--border-subtle)",
+                borderRight: "1px solid var(--border-subtle)",
+              }}
             >
               {row.label}
             </div>
-            {config.cols.map((col) => {
+            {config.cols.map((col, colIndex) => {
               const cellPhonemes = cellMap.get(`${row.id}|${col.id}`) ?? [];
               return (
                 <div
                   key={col.id}
-                  className="relative min-h-[72px] grid gap-px"
+                  className="relative min-h-[72px] p-1.5 grid gap-1"
                   style={{
+                    borderTop:
+                      rowIndex === 0
+                        ? "none"
+                        : "1px solid var(--border-subtle)",
+                    borderRight:
+                      colIndex === config.cols.length - 1
+                        ? "none"
+                        : "1px solid var(--border-subtle)",
                     gridTemplateColumns:
                       cellPhonemes.length > 1
                         ? `repeat(${cellPhonemes.length}, minmax(0, 1fr))`
@@ -101,7 +124,14 @@ export default function IPAMatrix({
 
       <div className="mt-5 flex items-center justify-between text-xs text-fg-muted">
         <span>{config.axisLabel}</span>
-        <span>{phonemes.length} {category === "vowel" ? "vowels" : category === "consonant" ? "consonants" : "diphthongs"}</span>
+        <span>
+          {phonemes.length}{" "}
+          {category === "vowel"
+            ? "vowels"
+            : category === "consonant"
+            ? "consonants"
+            : "diphthongs"}
+        </span>
       </div>
     </div>
   );

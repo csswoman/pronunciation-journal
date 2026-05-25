@@ -40,7 +40,7 @@ export default function PhonemeDetailPanel({
     >
       {/* ── Hero ────────────────────────────────────── */}
       <div
-        className="relative px-6 pt-5 pb-6 border-b"
+        className="relative px-5 pt-4 pb-5 border-b"
         style={{
           backgroundColor: "var(--btn-regular-bg)",
           borderColor: "var(--line-divider)",
@@ -93,7 +93,7 @@ export default function PhonemeDetailPanel({
         <div key={phoneme.symbol} className="animate-fadeIn">
           <div className="flex items-end justify-between gap-3">
             <span
-              className="font-serif text-7xl leading-none"
+              className="font-serif text-6xl leading-none"
               style={{ color: "var(--text-primary)" }}
             >
               {phoneme.symbol}
@@ -136,7 +136,7 @@ export default function PhonemeDetailPanel({
       </div>
 
       {/* ── Body ────────────────────────────────────── */}
-      <div className="px-6 py-5 space-y-5">
+      <div className="px-5 py-4 space-y-4">
         {phoneme.tips.length > 0 && (
           <section>
             <p

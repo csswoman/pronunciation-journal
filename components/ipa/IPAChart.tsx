@@ -204,7 +204,7 @@ export default function IPAChart() {
         counts={counts}
       />
 
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-5">
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_290px] gap-5">
         <div key={activeCategory} className="animate-fadeIn">
           {activeCategory === "diphthong" ? (
             <DiphthongGrid
