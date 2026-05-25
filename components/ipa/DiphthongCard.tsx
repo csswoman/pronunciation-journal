@@ -65,13 +65,13 @@ export default function DiphthongCard({
 
       {isPlaying && (
         <span
-          className="absolute top-2.5 right-2.5 flex items-end gap-[2px] h-3"
+          className="absolute top-2.5 right-2.5 flex items-end gap-1 h-3"
           aria-label="Playing"
         >
           {[0, 1, 2].map((i) => (
             <span
               key={i}
-              className="w-[2px] rounded-full origin-bottom"
+              className="w-1 rounded-full origin-bottom"
               style={{
                 backgroundColor: "var(--primary)",
                 animation: `wavePulse 0.9s ease-in-out ${i * 0.12}s infinite`,

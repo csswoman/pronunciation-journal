@@ -57,7 +57,7 @@ export default function IPACategoryTabs({
                 {tab.label}
               </span>
               <span
-                className="inline-flex items-center justify-center min-w-[22px] h-[18px] px-1.5 rounded-full text-tiny font-semibold"
+                className="inline-flex items-center justify-center min-w-[22px] h-5 px-1.5 rounded-full text-tiny font-semibold"
                 style={{
                   backgroundColor: isActive
                     ? "var(--card-bg)"
