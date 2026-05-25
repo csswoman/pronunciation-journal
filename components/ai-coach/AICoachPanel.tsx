@@ -46,7 +46,11 @@ export default function AICoachPanel() {
     getRecentConversations(30).then(setConversations);
   }, [messages.length, conversationId]);
 
-  const hasMessages = messages.some((message) => message.role !== "tool");
+  const hasMessages = messages.some((message) => {
+    if (message.role === "tool") return false;
+    if (message.role === "user" && message.hidden) return false;
+    return true;
+  }) || isStreaming;
 
   return <>
     <div style={{ position: "fixed", top: 0, right: 0, bottom: 0, width: isFullscreen ? "calc(100vw - 256px)" : `${panelWidth}px`, backgroundColor: "var(--card-bg)", borderLeft: "1px solid var(--line-divider)", display: "flex", flexDirection: "column", zIndex: 50, transform: isOpen ? "translateX(0)" : "translateX(100%)", transition: isDragging.current ? "transform 0.25s ease" : "transform 0.25s ease, width 0.25s ease", boxShadow: "-4px 0 24px color-mix(in oklch, var(--fg) 6%, transparent)" }} aria-hidden={!isOpen}>

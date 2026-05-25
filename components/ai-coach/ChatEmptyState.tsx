@@ -1,7 +1,6 @@
 "use client";
 
-import { MessageCircle, CheckCheck, ClipboardList, Star, ArrowRight, Plane, BriefcaseBusiness, AlignLeft, Mic } from "lucide-react";
-import { H2 } from "@/components/ui/Typography";
+import { MessageCircle, CheckCheck, ClipboardList, Star, ArrowUpRight, Plane, BriefcaseBusiness, AlignLeft, Mic } from "lucide-react";
 
 // ── Data ──────────────────────────────────────────────────────────────────────
 
@@ -124,53 +123,76 @@ export default function ChatEmptyState({ onSendMessage, onChipSelect }: ChatEmpt
       <div className="blob blob-4" />
 
       {/* Hero */}
-      <div className="flex flex-col items-center gap-4 text-center mb-6">
-        <div className="size-12 rounded-2xl flex items-center justify-center shrink-0" style={{ background: "var(--gradient-primary)" }}>
-          <span className="text-white text-lg leading-none">✦</span>
+      <div className="flex flex-col items-center gap-3 text-center mb-7">
+        <div
+          className="relative size-14 rounded-2xl flex items-center justify-center shrink-0"
+          style={{
+            background: "var(--gradient-primary)",
+            boxShadow: "0 8px 24px -8px color-mix(in srgb, var(--primary) 50%, transparent)",
+          }}
+        >
+          <span className="text-white text-xl leading-none">✦</span>
+          <span
+            className="absolute inset-0 rounded-2xl"
+            style={{ boxShadow: "inset 0 1px 0 0 rgb(255 255 255 / 0.25)" }}
+          />
         </div>
-        <div>
-          <H2 className="text-xl m-0">
+        <div className="space-y-1">
+          <h2 className="text-2xl font-semibold tracking-tight text-[var(--text-primary)] m-0">
             Let's practice together.
-          </H2>
-          <p className="text-sm text-[var(--text-tertiary)] mt-1">Choose a mode or just start typing.</p>
+          </h2>
+          <p className="text-sm text-[var(--text-secondary)]">
+            Pick a mode below — or just start typing.
+          </p>
         </div>
       </div>
 
       {/* Quick-start cards */}
-      <div className="grid grid-cols-2 gap-2 w-full mb-3">
+      <div className="grid grid-cols-2 gap-2.5 w-full mb-5">
         {CARDS.map(({ id, title, desc, colorVar, hoverBorder, Icon, prompt }) => (
           <button
             key={id}
             onClick={() => onSendMessage(prompt)}
-            className={`p-3.5 rounded-2xl bg-[var(--surface-raised)] border border-[var(--border-subtle)] text-left cursor-pointer transition-[transform,border-color] duration-150 flex flex-col items-start hover:-translate-y-px ${hoverBorder}`}
+            className={`group relative p-4 rounded-2xl bg-[var(--surface-raised)] border border-[var(--border-subtle)] text-left cursor-pointer transition-[transform,border-color,box-shadow] duration-200 flex flex-col items-start hover:-translate-y-0.5 hover:shadow-md ${hoverBorder}`}
           >
             <span
-              className="size-9 rounded-xl flex items-center justify-center mb-2"
-              style={{ backgroundColor: `color-mix(in srgb, ${colorVar} 12%, transparent)` }}
+              className="absolute top-3 right-3 size-7 rounded-full flex items-center justify-center opacity-0 -translate-x-1 transition-[opacity,transform] duration-200 group-hover:opacity-100 group-hover:translate-x-0"
+              style={{ backgroundColor: `color-mix(in srgb, ${colorVar} 14%, transparent)` }}
             >
-              <Icon size={18} strokeWidth={1.8} style={{ color: colorVar }} />
+              <ArrowUpRight size={14} strokeWidth={2.2} style={{ color: colorVar }} />
             </span>
-            <span className="font-semibold text-[var(--text-primary)] leading-[1.3]">{title}</span>
-            <span className="text-sm text-[var(--text-tertiary)] mt-0.5 flex-1">{desc}</span>
-            <span className="self-end mt-2 size-6 rounded-full flex items-center justify-center" style={{ backgroundColor: `color-mix(in srgb, ${colorVar} 12%, transparent)` }}>
-              <ArrowRight size={13} strokeWidth={2} style={{ color: colorVar }} />
+
+            <span
+              className="size-10 rounded-xl flex items-center justify-center mb-3 transition-transform duration-200 group-hover:scale-105"
+              style={{
+                backgroundColor: `color-mix(in srgb, ${colorVar} 14%, transparent)`,
+                boxShadow: `inset 0 0 0 1px color-mix(in srgb, ${colorVar} 18%, transparent)`,
+              }}
+            >
+              <Icon size={19} strokeWidth={2} style={{ color: colorVar }} />
             </span>
+            <span className="font-semibold text-[var(--text-primary)] leading-[1.3] text-[15px]">{title}</span>
+            <span className="text-[13px] text-[var(--text-tertiary)] mt-1 leading-snug">{desc}</span>
           </button>
         ))}
       </div>
 
       {/* Suggestion chips */}
-      <p className="w-full text-[10px] font-semibold tracking-widest text-[var(--text-tertiary)] uppercase mb-1.5">
-        Popular Shortcuts
-      </p>
+      <div className="w-full flex items-center gap-2 mb-2">
+        <span className="h-px flex-1 bg-[var(--border-subtle)]" />
+        <p className="text-[10px] font-semibold tracking-[0.14em] text-[var(--text-tertiary)] uppercase">
+          Popular Shortcuts
+        </p>
+        <span className="h-px flex-1 bg-[var(--border-subtle)]" />
+      </div>
       <div className="w-full flex gap-1.5 overflow-x-auto [scrollbar-width:none] pb-1">
         {SUGGESTION_CHIPS.map(({ label, Icon, prompt }) => (
           <button
             key={label}
             onClick={() => onChipSelect(prompt)}
-            className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[var(--surface-raised)] border border-[var(--border-subtle)] text-caption text-[var(--text-tertiary)] whitespace-nowrap cursor-pointer transition-[border-color,color,background] duration-150 hover:border-[var(--accent-border)] hover:text-[var(--primary)] hover:bg-[var(--accent-dim)]"
+            className="shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-full bg-[var(--surface-raised)] border border-[var(--border-subtle)] text-caption font-medium text-[var(--text-secondary)] whitespace-nowrap cursor-pointer transition-[border-color,color,background,transform] duration-150 hover:border-[var(--accent-border)] hover:text-[var(--primary)] hover:bg-[var(--accent-dim)] hover:-translate-y-px"
           >
-            <Icon size={13} strokeWidth={1.8} />
+            <Icon size={13} strokeWidth={2} />
             {label}
           </button>
         ))}

@@ -24,7 +24,7 @@ interface UseAIPracticeReturn {
   activeRoleplay: StartRoleplayArgs["scenario"] | null;
   mode: AIConversationMode;
   conversationId: number | null;
-  sendMessage: (text: string) => Promise<void>;
+  sendMessage: (text: string, options?: { hidden?: boolean }) => Promise<void>;
   answerToolCall: (callId: string, result: ExerciseResult) => void;
   openSaveWordModal: (word: string, context: string) => void;
   closeSaveWordModal: () => void;

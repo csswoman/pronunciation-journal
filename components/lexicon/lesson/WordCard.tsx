@@ -38,9 +38,9 @@ const STATUS_CONFIG = {
     dotColor: "bg-warning",
   },
   new: {
-    label: "new",
-    icon: "◦",
-    badgeClass: "text-fg-muted bg-surface-sunken border-border-default",
+    label: "",
+    icon: "",
+    badgeClass: "",
     cardClass: "border-border-default bg-surface-raised",
     dotColor: "bg-border-default",
   },
@@ -52,9 +52,11 @@ export function WordCard({ word, partOfSpeech, definition, example, status, diff
 
   return (
     <div className={`flex flex-col gap-2 p-4 rounded-xl border ${cfg.cardClass}`}>
-      <span className={`self-start text-xs font-medium px-2 py-0.5 rounded-full border ${cfg.badgeClass}`}>
-        {cfg.icon} {cfg.label}
-      </span>
+      {status !== "new" && (
+        <span className={`self-start text-xs font-medium px-2 py-0.5 rounded-full border ${cfg.badgeClass}`}>
+          {cfg.icon} {cfg.label}
+        </span>
+      )}
 
       <div>
         <p className="text-xl font-semibold text-fg leading-tight">{word}</p>

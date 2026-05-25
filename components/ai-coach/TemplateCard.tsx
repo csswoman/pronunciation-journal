@@ -1,7 +1,7 @@
 "use client";
 
 import type { AITemplateId } from "@/lib/types";
-import { MessageCircle, ClipboardList, Star, CheckCheck } from "lucide-react";
+import { MessageCircle, ClipboardList, Star, CheckCheck, ArrowUpRight } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 export interface TemplateDefinition {
@@ -55,28 +55,37 @@ interface TemplateCardProps {
 }
 
 export default function TemplateCard({ template, onSelect }: TemplateCardProps) {
-  const { Icon, color, colorBg } = template;
+  const { Icon, color } = template;
 
   return (
     <button
       onClick={() => onSelect(template.id)}
-      className="flex flex-col items-center gap-2.5 p-4 rounded-2xl transition-all bg-surface-raised shadow-md hover:shadow-lg hover:-translate-y-px text-center cursor-pointer"
+      className="group relative p-4 rounded-2xl bg-[var(--surface-raised)] border border-[var(--border-subtle)] text-left cursor-pointer transition-[transform,border-color,box-shadow] duration-200 flex flex-col items-start hover:-translate-y-0.5 hover:shadow-md"
+      style={{ ["--card-color" as string]: color }}
     >
-      <div
-        className="w-11 h-11 rounded-full flex items-center justify-center"
-        style={{ backgroundColor: colorBg, color }}
+      <span
+        className="absolute top-3 right-3 size-7 rounded-full flex items-center justify-center opacity-0 -translate-x-1 transition-[opacity,transform] duration-200 group-hover:opacity-100 group-hover:translate-x-0"
+        style={{ backgroundColor: `color-mix(in srgb, ${color} 14%, transparent)` }}
       >
-        <Icon size={20} strokeWidth={1.8} />
+        <ArrowUpRight size={14} strokeWidth={2.2} style={{ color }} />
+      </span>
+
+      <div
+        className="size-10 rounded-xl flex items-center justify-center mb-3 transition-transform duration-200 group-hover:scale-105"
+        style={{
+          backgroundColor: `color-mix(in srgb, ${color} 14%, transparent)`,
+          boxShadow: `inset 0 0 0 1px color-mix(in srgb, ${color} 18%, transparent)`,
+        }}
+      >
+        <Icon size={19} strokeWidth={2} style={{ color }} />
       </div>
 
-      <div className="flex flex-col gap-1">
-        <p className="text-sm font-semibold leading-tight text-fg">
-          {template.title}
-        </p>
-        <p className="text-xs leading-snug text-fg-subtle">
-          {template.description}
-        </p>
-      </div>
+      <p className="text-[15px] font-semibold leading-[1.3] text-[var(--text-primary)]">
+        {template.title}
+      </p>
+      <p className="text-[13px] leading-snug text-[var(--text-tertiary)] mt-1">
+        {template.description}
+      </p>
     </button>
   );
 }

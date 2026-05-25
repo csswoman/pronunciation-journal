@@ -1,6 +1,5 @@
 import TemplateCard, { TEMPLATES } from "./TemplateCard";
 import type { AITemplateId } from "@/lib/types";
-import { H1 } from "@/components/ui/Typography";
 
 interface WelcomeScreenProps {
   onSuggestionClick: (text: string) => void;
@@ -19,14 +18,29 @@ export default function WelcomeScreen({ onSuggestionClick, onTemplateSelect }: W
 
   return (
     <div className="flex flex-col items-center gap-8 py-10 px-4">
-      <div className="text-center">
-        <H1 className="text-h1">
-          Hi! I&apos;m your English coach.{" "}
-          <span role="img" aria-label="wave">👋</span>
-        </H1>
-        <p className="mt-2 text-base text-fg-subtle">
-          What would you like to practice today?
-        </p>
+      <div className="flex flex-col items-center gap-3 text-center">
+        <div
+          className="relative size-14 rounded-2xl flex items-center justify-center shrink-0"
+          style={{
+            background: "var(--gradient-primary)",
+            boxShadow: "0 8px 24px -8px color-mix(in srgb, var(--primary) 50%, transparent)",
+          }}
+        >
+          <span className="text-white text-xl leading-none">✦</span>
+          <span
+            className="absolute inset-0 rounded-2xl"
+            style={{ boxShadow: "inset 0 1px 0 0 rgb(255 255 255 / 0.25)" }}
+          />
+        </div>
+
+        <div className="space-y-1">
+          <h1 className="text-2xl font-semibold tracking-tight text-[var(--text-primary)] m-0">
+            Hi! I&apos;m your English coach.
+          </h1>
+          <p className="text-sm text-[var(--text-secondary)]">
+            What would you like to practice today?
+          </p>
+        </div>
       </div>
 
       <div className="grid grid-cols-4 gap-3 w-full max-w-2xl">

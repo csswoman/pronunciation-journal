@@ -1,12 +1,14 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { AIMessage, ExerciseResult } from "@/lib/ai-practice/types";
 import MessageBubble from "./MessageBubble";
 import WelcomeScreen from "./WelcomeScreen";
 import TypingIndicator from "./TypingIndicator";
 import { TEMPLATES } from "./TemplateCard";
 import type { AITemplateId } from "@/lib/types";
+
+const MIN_THINKING_MS = 700;
 
 interface ChatViewProps {
   messages: AIMessage[];
@@ -28,19 +30,43 @@ export default function ChatView({
   onNext,
 }: ChatViewProps) {
   const bottomRef = useRef<HTMLDivElement>(null);
+  const thinkingStartRef = useRef<number | null>(null);
+  const [thinkingHold, setThinkingHold] = useState(false);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, isStreaming]);
+  }, [messages, isStreaming, thinkingHold]);
+
+  // Hold the typing indicator for a minimum duration so the AI doesn't pop in abruptly.
+  useEffect(() => {
+    if (isStreaming) {
+      thinkingStartRef.current ??= Date.now();
+      setThinkingHold(true);
+      return;
+    }
+    if (thinkingStartRef.current == null) return;
+    const elapsed = Date.now() - thinkingStartRef.current;
+    const remaining = Math.max(0, MIN_THINKING_MS - elapsed);
+    const t = setTimeout(() => {
+      setThinkingHold(false);
+      thinkingStartRef.current = null;
+    }, remaining);
+    return () => clearTimeout(t);
+  }, [isStreaming]);
 
   const visibleMessages = messages.filter((m, i) => {
     if (m.role === "tool") return false;
-    if (isStreaming && i === messages.length - 1 && m.role === "model") {
+    if (m.role === "user" && m.hidden) return false;
+    if (i === messages.length - 1 && m.role === "model") {
       const hasText = m.contentParts.some(p => p.type === "text" && p.text.trim().length > 0);
-      return hasText;
+      if (!hasText) return false;
+      if (thinkingHold) return false;
+      return true;
     }
     return true;
   });
+
+  const showIndicator = isStreaming || thinkingHold;
 
   if (visibleMessages.length === 0 && !isStreaming) {
     const handleTemplateSelect = onSendMessage
@@ -70,11 +96,17 @@ export default function ChatView({
     return visibleMessages[i - 1].role !== msg.role;
   });
 
+  const lastVisible = visibleMessages[visibleMessages.length - 1];
+  const indicatorVisible = showIndicator && lastVisible?.role !== "model";
+
   return (
     <div className="chat-messages-container flex flex-col justify-end h-full py-4">
       <div className="mt-auto flex flex-col mx-5">
         {visibleMessages.map((msg, i) => (
-          <div key={i} className={gapBefore[i] ? "mt-4" : "mt-1"}>
+          <div
+            key={i}
+            className={`${gapBefore[i] ? "mt-4" : "mt-1"} ${msg.role === "model" ? "animate-message-in" : ""}`}
+          >
             <MessageBubble
               message={msg}
               showAvatar={isLastInGroup[i]}
@@ -86,8 +118,8 @@ export default function ChatView({
           </div>
         ))}
 
-        {isStreaming && (
-          <div className={visibleMessages.length > 0 && visibleMessages[visibleMessages.length - 1].role === "model" ? "mt-1" : "mt-4"}>
+        {indicatorVisible && (
+          <div className={visibleMessages.length > 0 && lastVisible?.role === "model" ? "mt-1" : "mt-4"}>
             <TypingIndicator />
           </div>
         )}

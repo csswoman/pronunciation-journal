@@ -64,7 +64,7 @@ export function useStreamingChat({
     );
   }
 
-  const sendMessage = useCallback(async (text: string) => {
+  const sendMessage = useCallback(async (text: string, options?: { hidden?: boolean }) => {
     if (!text.trim() || isStreaming) return;
     setError(null);
     setQuotaExhausted(false);
@@ -75,7 +75,7 @@ export function useStreamingChat({
       logEvent("session_started", { mode, conversationId: conversationId ?? undefined }).catch(() => {});
     }
 
-    const userMsg: AIMessage = { role: "user", content: text.trim(), timestamp: new Date().toISOString() };
+    const userMsg: AIMessage = { role: "user", content: text.trim(), timestamp: new Date().toISOString(), hidden: options?.hidden };
     const nextMessages = [...messagesRef.current, userMsg];
     setMessages(nextMessages);
 

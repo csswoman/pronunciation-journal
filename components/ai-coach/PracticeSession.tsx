@@ -80,30 +80,6 @@ function SessionProgress({ current, total, dotCount, hasNextPending }: {
   );
 }
 
-function SessionFooter({ isAnswered, onCheck, onSkip }: { isAnswered: boolean; onCheck: () => void; onSkip: () => void }) {
-  return (
-    <div className="px-6 pb-6 pt-2 space-y-2">
-      <button
-        onClick={onCheck}
-        disabled={!isAnswered}
-        className="w-full py-3.5 rounded-full text-sm font-semibold transition-all disabled:opacity-40"
-        style={{
-          backgroundColor: isAnswered ? "var(--primary)" : "var(--border-subtle)",
-          color: isAnswered ? "var(--on-primary)" : "var(--text-tertiary)",
-        }}
-      >
-        Check
-      </button>
-      <button
-        onClick={onSkip}
-        className="w-full py-2 text-xs font-semibold tracking-widest uppercase text-[var(--text-tertiary)] hover:opacity-70 transition-opacity"
-      >
-        Skip
-      </button>
-    </div>
-  );
-}
-
 const AUTO_ADVANCE_MS         = 1500;
 const PREFETCH_WHEN_REMAINING = 1;
 const PREFETCH_COUNT          = 2;
@@ -173,10 +149,9 @@ export default function PracticeSession({ initialExercises, onAnswer }: Props) {
 
   if (!ex) return null;
 
-  const topic      = (ex.toolCall.args as Record<string, unknown>)?.topic as string | undefined;
-  const isAnswered = ex.status !== "idle";
-  const dotCount   = Math.min(exercises.length, 7);
-  const title      = topic ? formatTopic(topic) : exerciseLabel(ex.toolCall.name);
+  const topic    = (ex.toolCall.args as Record<string, unknown>)?.topic as string | undefined;
+  const dotCount = Math.min(exercises.length, 7);
+  const title    = topic ? formatTopic(topic) : exerciseLabel(ex.toolCall.name);
 
   return (
     <>
@@ -194,7 +169,7 @@ export default function PracticeSession({ initialExercises, onAnswer }: Props) {
         />
         <div
           key={`${ex.id}-${slideKey}`}
-          className="px-6 py-2"
+          className="px-6 py-4"
           style={{ animation: `practiceSlideIn${slideDir} 300ms ease-in-out` }}
         >
           <ToolWidget
@@ -203,7 +178,6 @@ export default function PracticeSession({ initialExercises, onAnswer }: Props) {
             onNext={handleNext}
           />
         </div>
-        <SessionFooter isAnswered={isAnswered} onCheck={handleNext} onSkip={handleNext} />
       </div>
     </>
   );

@@ -15,7 +15,7 @@ export type ContentPart =
   | { type: "tool_call"; callId: string };
 
 export type AIMessage =
-  | { role: "user"; content: string; timestamp: string }
+  | { role: "user"; content: string; timestamp: string; hidden?: boolean }
   | { role: "model"; contentParts: ContentPart[]; toolCalls: Map<string, ToolCall>; timestamp: string }
   | { role: "tool"; toolCallId: string; name: string; result: unknown; timestamp: string };
 
