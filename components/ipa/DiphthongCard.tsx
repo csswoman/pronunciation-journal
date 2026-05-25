@@ -10,6 +10,7 @@ export default function DiphthongCard({
   glide,
   isSelected,
   isExplored,
+  isPlaying,
   onSelect,
 }: {
   phoneme: PhonemeData;
@@ -17,6 +18,7 @@ export default function DiphthongCard({
   glide: DiphthongGlide;
   isSelected: boolean;
   isExplored: boolean;
+  isPlaying: boolean;
   onSelect: () => void;
 }) {
   return (
@@ -24,22 +26,60 @@ export default function DiphthongCard({
       type="button"
       onClick={onSelect}
       className={cn(
-        "relative flex flex-col items-center w-full rounded-2xl border px-4 pt-5 pb-3 transition-all duration-150",
-        "hover:scale-[1.02] hover:shadow-sm focus:outline-none focus:ring-2"
+        "group relative flex flex-col items-center w-full rounded-2xl border px-4 pt-5 pb-3",
+        "transition-[background-color,border-color,transform,box-shadow] duration-200 ease-out",
+        "hover:-translate-y-0.5 hover:shadow-[0_6px_16px_-8px_rgba(0,0,0,0.18)]",
+        "active:translate-y-0 active:scale-[0.99]",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1"
       )}
       style={{
         backgroundColor: isSelected
           ? "var(--primary-soft, var(--btn-regular-bg))"
           : "var(--card-bg)",
-        borderColor: isSelected ? "var(--primary)" : "var(--line-divider)",
+        borderColor: isSelected
+          ? "var(--primary)"
+          : isExplored
+          ? "color-mix(in oklch, var(--success) 35%, var(--line-divider))"
+          : "var(--line-divider)",
+      }}
+      onMouseEnter={(e) => {
+        if (!isSelected) {
+          e.currentTarget.style.borderColor = "var(--border-strong)";
+        }
+      }}
+      onMouseLeave={(e) => {
+        if (!isSelected) {
+          e.currentTarget.style.borderColor = isExplored
+            ? "color-mix(in oklch, var(--success) 35%, var(--line-divider))"
+            : "var(--line-divider)";
+        }
       }}
     >
-      {isExplored && !isSelected && (
+      {isExplored && !isSelected && !isPlaying && (
         <span
           className="absolute top-2.5 right-2.5 w-1.5 h-1.5 rounded-full"
           style={{ backgroundColor: "var(--success)" }}
           aria-label="Explored"
         />
+      )}
+
+      {isPlaying && (
+        <span
+          className="absolute top-2.5 right-2.5 flex items-end gap-[2px] h-3"
+          aria-label="Playing"
+        >
+          {[0, 1, 2].map((i) => (
+            <span
+              key={i}
+              className="w-[2px] rounded-full origin-bottom"
+              style={{
+                backgroundColor: "var(--primary)",
+                animation: `wavePulse 0.9s ease-in-out ${i * 0.12}s infinite`,
+                height: "100%",
+              }}
+            />
+          ))}
+        </span>
       )}
 
       <span
@@ -50,7 +90,7 @@ export default function DiphthongCard({
       </span>
 
       <div className="w-full max-w-[180px] mb-1.5">
-        <VowelTrapezoid glide={glide} highlighted={isSelected} />
+        <VowelTrapezoid glide={glide} highlighted={isSelected} animating={isPlaying} />
       </div>
 
       <span

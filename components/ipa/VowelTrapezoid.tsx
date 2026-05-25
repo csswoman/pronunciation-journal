@@ -9,9 +9,11 @@ import type { DiphthongGlide } from "./data";
 export default function VowelTrapezoid({
   glide,
   highlighted = false,
+  animating = false,
 }: {
   glide: DiphthongGlide;
   highlighted?: boolean;
+  animating?: boolean;
 }) {
   // ViewBox coords. The trapezoid leans inward at the bottom (open vowels).
   const W = 200;
@@ -79,6 +81,33 @@ export default function VowelTrapezoid({
       />
       {/* End: filled dot */}
       <circle cx={end.x} cy={end.y} r={3} fill={strokeColor} />
+
+      {/* Animated travelling glide dot — only while playing */}
+      {animating && (
+        <circle r={4} fill={strokeColor}>
+          <animate
+            attributeName="cx"
+            from={start.x}
+            to={end.x}
+            dur="0.9s"
+            repeatCount="indefinite"
+          />
+          <animate
+            attributeName="cy"
+            from={start.y}
+            to={end.y}
+            dur="0.9s"
+            repeatCount="indefinite"
+          />
+          <animate
+            attributeName="opacity"
+            values="0;1;1;0"
+            keyTimes="0;0.15;0.85;1"
+            dur="0.9s"
+            repeatCount="indefinite"
+          />
+        </circle>
+      )}
     </svg>
   );
 }

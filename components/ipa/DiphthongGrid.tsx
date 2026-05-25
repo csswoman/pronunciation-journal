@@ -11,11 +11,13 @@ export default function DiphthongGrid({
   phonemes,
   selectedSymbol,
   exploredSymbols,
+  playingSymbol,
   onSelect,
 }: {
   phonemes: PhonemeData[];
   selectedSymbol: string;
   exploredSymbols: Set<string>;
+  playingSymbol: string | null;
   onSelect: (phoneme: PhonemeData) => void;
 }) {
   return (
@@ -39,6 +41,7 @@ export default function DiphthongGrid({
               glide={glide}
               isSelected={selectedSymbol === phoneme.symbol}
               isExplored={exploredSymbols.has(phoneme.symbol)}
+              isPlaying={playingSymbol === phoneme.rawSymbol}
               onSelect={() => onSelect(phoneme)}
             />
           );

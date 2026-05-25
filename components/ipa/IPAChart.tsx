@@ -38,6 +38,7 @@ export default function IPAChart() {
   useEffect(() => {
     return () => {
       currentAudioRef.current?.pause();
+      if (undoTimeoutRef.current) clearTimeout(undoTimeoutRef.current);
     };
   }, []);
 
@@ -162,9 +163,24 @@ export default function IPAChart() {
     return () => window.removeEventListener("keydown", handler);
   }, [navigate, playSound, selectedPhoneme, spokenWordFor]);
 
+  const [undoSnapshot, setUndoSnapshot] = useState<string[] | null>(null);
+  const undoTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   const handleReset = useCallback(() => {
+    const snapshot = [...(exploredArray ?? [])];
+    if (snapshot.length === 0) return;
+    setUndoSnapshot(snapshot);
     void resetTodaysExplorations();
-  }, []);
+    if (undoTimeoutRef.current) clearTimeout(undoTimeoutRef.current);
+    undoTimeoutRef.current = setTimeout(() => setUndoSnapshot(null), 5000);
+  }, [exploredArray]);
+
+  const handleUndoReset = useCallback(async () => {
+    if (!undoSnapshot) return;
+    await Promise.all(undoSnapshot.map((symbol) => markPhonemeExplored(symbol)));
+    setUndoSnapshot(null);
+    if (undoTimeoutRef.current) clearTimeout(undoTimeoutRef.current);
+  }, [undoSnapshot]);
 
   return (
     <div className="animate-fadeIn">
@@ -178,6 +194,8 @@ export default function IPAChart() {
         explored={exploredSymbols.size}
         total={PHONEMES.length}
         onReset={handleReset}
+        undoAvailable={undoSnapshot !== null}
+        onUndo={handleUndoReset}
       />
 
       <IPACategoryTabs
@@ -187,22 +205,26 @@ export default function IPAChart() {
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-5">
-        {activeCategory === "diphthong" ? (
-          <DiphthongGrid
-            phonemes={currentPhonemes}
-            selectedSymbol={selectedPhoneme.symbol}
-            exploredSymbols={exploredSymbols}
-            onSelect={handleSelect}
-          />
-        ) : (
-          <IPAMatrix
-            category={activeCategory}
-            phonemes={currentPhonemes}
-            selectedSymbol={selectedPhoneme.symbol}
-            exploredSymbols={exploredSymbols}
-            onSelect={handleSelect}
-          />
-        )}
+        <div key={activeCategory} className="animate-fadeIn">
+          {activeCategory === "diphthong" ? (
+            <DiphthongGrid
+              phonemes={currentPhonemes}
+              selectedSymbol={selectedPhoneme.symbol}
+              exploredSymbols={exploredSymbols}
+              playingSymbol={playingSymbol}
+              onSelect={handleSelect}
+            />
+          ) : (
+            <IPAMatrix
+              category={activeCategory}
+              phonemes={currentPhonemes}
+              selectedSymbol={selectedPhoneme.symbol}
+              exploredSymbols={exploredSymbols}
+              playingSymbol={playingSymbol}
+              onSelect={handleSelect}
+            />
+          )}
+        </div>
 
         <PhonemeDetailPanel
           phoneme={selectedPhoneme}

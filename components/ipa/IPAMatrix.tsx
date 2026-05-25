@@ -10,12 +10,14 @@ export default function IPAMatrix({
   phonemes,
   selectedSymbol,
   exploredSymbols,
+  playingSymbol,
   onSelect,
 }: {
   category: MatrixCategory;
   phonemes: PhonemeData[];
   selectedSymbol: string;
   exploredSymbols: Set<string>;
+  playingSymbol: string | null;
   onSelect: (phoneme: PhonemeData) => void;
 }) {
   const config = getMatrixConfig(category);
@@ -86,6 +88,7 @@ export default function IPAMatrix({
                       keyword={PHONEME_MATRIX[phoneme.symbol].keyword}
                       isSelected={selectedSymbol === phoneme.symbol}
                       isExplored={exploredSymbols.has(phoneme.symbol)}
+                      isPlaying={playingSymbol === phoneme.rawSymbol}
                       onSelect={() => onSelect(phoneme)}
                     />
                   ))}
