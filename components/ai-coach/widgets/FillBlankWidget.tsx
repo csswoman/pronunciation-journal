@@ -28,7 +28,17 @@ export default function FillBlankWidget({ args, status, onAnswer, onNext, onRetr
   const [evaluation, setEvaluation] = useState<EvaluationResult | null>(null);
   const [userLevel, setUserLevel]   = useState<CEFRLevel | undefined>(undefined);
   const [retried, setRetried]       = useState(false);
+  const [showOptions, setShowOptions] = useState(false);
   const { user } = useAuth();
+
+  const options = useMemo(() => {
+    const wrong = (args.commonWrongAnswers ?? []).map(w => w.value).filter(Boolean);
+    const pool = Array.from(new Set([args.answer, ...wrong])).slice(0, 4);
+    return pool.sort(() => Math.random() - 0.5);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [args.answer, args.commonWrongAnswers]);
+
+  const hasOptions = options.length >= 2;
 
   const answered  = status === "answered" && !retried;
   const design    = useMemo(() => fillBlankToDesign(args), [args]);
@@ -95,6 +105,39 @@ export default function FillBlankWidget({ args, status, onAnswer, onNext, onRetr
           </Fragment>
         ))}
       </div>
+
+      {!answered && hasOptions && !showOptions && !combined && (
+        <button
+          type="button"
+          onClick={() => setShowOptions(true)}
+          className="w-full py-2 rounded-full text-xs font-medium text-[var(--text-secondary)] bg-[var(--surface-raised)] border border-[var(--border-subtle)] hover:bg-[var(--surface-hover)] transition-colors"
+        >
+          Show options
+        </button>
+      )}
+
+      {!answered && showOptions && hasOptions && (
+        <div className="grid grid-cols-2 gap-2">
+          {options.map(opt => (
+            <button
+              key={opt}
+              type="button"
+              onClick={() => {
+                const next = [...values];
+                next[0] = opt;
+                setValues(next);
+              }}
+              className={`py-2 px-3 rounded-lg text-sm font-medium border transition-colors ${
+                values[0] === opt
+                  ? "bg-[var(--primary)] text-[var(--on-primary)] border-[var(--primary)]"
+                  : "bg-[var(--surface-raised)] text-[var(--text-primary)] border-[var(--border-subtle)] hover:bg-[var(--surface-hover)]"
+              }`}
+            >
+              {opt}
+            </button>
+          ))}
+        </div>
+      )}
 
       {!answered && combined && !evaluation && (
         <button
