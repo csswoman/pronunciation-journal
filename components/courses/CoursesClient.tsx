@@ -1,72 +1,108 @@
 "use client";
 
-import { useRef, useState } from "react";
-import PageHeader from "@/components/layout/PageHeader";
+import { useMemo, useState } from "react";
 import PageLayout from "@/components/layout/PageLayout";
+import ContinueLessonCard from "@/components/courses/ContinueLessonCard";
+import CoursesTabs, { type CoursesTab } from "@/components/courses/CoursesTabs";
+import CoursesToolbar, {
+  type LibraryFilter,
+  type LibrarySort,
+  type LibraryView,
+} from "@/components/courses/CoursesToolbar";
 import MiniLessonsGrid from "@/components/courses/MiniLessonsGrid";
 import LibraryGrid from "@/components/courses/LibraryGrid";
 import type { MiniLesson } from "@/lib/content/schemas";
 
-type ActiveTab = "library" | "mini-lessons";
-
-const tabs: { value: ActiveTab; label: string }[] = [
-  { value: "library",      label: "Library"      },
-  { value: "mini-lessons", label: "Mini Lessons" },
-];
+// TODO: replace with real "last lesson in progress" query from Supabase
+const MOCK_CONTINUE = {
+  courseTitle:  "Advanced English Pronunciation",
+  lessonLabel:  "Lesson 04",
+  lessonTitle:  "Fluidez y habla conectada: cómo dejar de sonar entrecortado.",
+  progress:     33,
+  lessonsDone:  3,
+  lessonsTotal: 9,
+  minutesLeft:  10,
+  phonemes:     ["wʊnə", "ˈgənə", "ˈdɪdʒə"],
+};
 
 export default function CoursesClient({ miniLessons }: { miniLessons: MiniLesson[] }) {
-  const [activeTab, setActiveTab] = useState<ActiveTab>("library");
-  const sectionRef = useRef<HTMLDivElement | null>(null);
+  const [tab, setTab]       = useState<CoursesTab>("library");
+  const [filter, setFilter] = useState<LibraryFilter>("all");
+  const [search, setSearch] = useState("");
+  const [sort, setSort]     = useState<LibrarySort>("recent");
+  const [view, setView]     = useState<LibraryView>("grid");
+  const [libCounts, setLibCounts] = useState({ all: 0, manual: 0, notion: 0 });
+
+  const tabs = useMemo(
+    () => [
+      { value: "library"      as const, label: "Library",      count: libCounts.all },
+      { value: "mini-lessons" as const, label: "Mini lessons",  count: miniLessons.length },
+    ],
+    [libCounts.all, miniLessons.length]
+  );
+
+  const filterChips = useMemo(
+    () => [
+      { value: "all"    as const, label: "All",     count: libCounts.all },
+      { value: "manual" as const, label: "Courses", count: libCounts.manual },
+      { value: "notion" as const, label: "Notes",   count: libCounts.notion },
+      { value: "mini"   as const, label: "Mini",    count: miniLessons.length },
+    ],
+    [libCounts, miniLessons.length]
+  );
 
   return (
-    <PageLayout
-      hero={
-        <PageHeader
-          badge="Courses"
-          title="Continue your"
-          subtitle="learning path"
-          description="Your synced Notion notes, curated courses, and quick mini lessons."
-          primaryCta={{
-            label: "Browse lessons",
-            onClick: () => {
-              sectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-            },
+    <PageLayout cardWrapper={false}>
+      <div className="mb-8">
+        <ContinueLessonCard
+          {...MOCK_CONTINUE}
+          onResume={() => {
+            // TODO: route to last lesson
           }}
-          variant="compact"
+          onViewSyllabus={() => {
+            // TODO: route to course syllabus
+          }}
         />
-      }
-    >
-      <div
-        ref={sectionRef}
-        className="rounded-2xl border border-[var(--line-divider)] bg-[var(--card-bg)] shadow-[0_1px_3px_var(--line-divider)] overflow-hidden"
-      >
-        {/* Tab selector */}
-        <div className="flex gap-1 px-4 pt-3 pb-0 border-b border-[var(--line-divider)]">
-          {tabs.map((tab) => {
-            const active = activeTab === tab.value;
-            return (
-              <button
-                key={tab.value}
-                onClick={() => setActiveTab(tab.value)}
-                className="px-4 py-2 text-sm font-medium rounded-t-lg transition-colors -mb-px border-b-2"
-                style={
-                  active
-                    ? { color: "var(--primary)", borderColor: "var(--primary)" }
-                    : { color: "var(--text-secondary)", borderColor: "transparent" }
-                }
-              >
-                {tab.label}
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Library tab — theory_lessons (Notion notes + manual courses) */}
-        {activeTab === "library" && <LibraryGrid />}
-
-        {/* Mini Lessons tab */}
-        {activeTab === "mini-lessons" && <MiniLessonsGrid lessons={miniLessons} />}
       </div>
+
+      <CoursesTabs
+        active={tab}
+        onChange={(next) => {
+          setTab(next);
+          if (next === "mini-lessons" && filter !== "mini" && filter !== "all") setFilter("all");
+        }}
+        tabs={tabs}
+      />
+
+      <CoursesToolbar
+        filters={filterChips}
+        filter={filter}
+        onFilter={(f) => {
+          setFilter(f);
+          if (f === "mini")    setTab("mini-lessons");
+          else if (tab === "mini-lessons" && (f === "manual" || f === "notion")) setTab("library");
+        }}
+        search={search}
+        onSearch={setSearch}
+        sort={sort}
+        onSort={setSort}
+        view={view}
+        onView={setView}
+      />
+
+      {tab === "library" && (
+        <LibraryGrid
+          filter={filter === "mini" ? "all" : filter}
+          search={search}
+          sort={sort}
+          view={view}
+          onCounts={setLibCounts}
+        />
+      )}
+
+      {tab === "mini-lessons" && (
+        <MiniLessonsGrid lessons={miniLessons} />
+      )}
     </PageLayout>
   );
 }

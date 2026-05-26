@@ -1,7 +1,7 @@
 import Script from "next/script";
 import "./globals.css";
 import "./markdown.css";
-import { Noto_Sans, Noto_Serif, Fraunces } from "next/font/google";
+import { DM_Sans, Noto_Sans, Noto_Serif, Fraunces } from "next/font/google";
 import AuthProvider from "@/components/auth/AuthProvider";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
 import AppShell from "@/components/layout/AppShell";
@@ -22,10 +22,23 @@ const notoSerif = Noto_Serif({
   variable: "--font-ipa",
 });
 const fraunces = Fraunces({
+  weight: "variable",
+  style: ["normal", "italic"],
+  subsets: ["latin"],
+  variable: "--font-editorial",
+  axes: ["opsz"],
+});
+// Legacy alias used by phoneme practice screens (kept for compatibility)
+const frauncesPhoneme = Fraunces({
   weight: ["700"],
   style: ["normal", "italic"],
   subsets: ["latin"],
   variable: "--font-phoneme",
+});
+const dmSans = DM_Sans({
+  weight: ["400", "500", "600", "700"],
+  subsets: ["latin"],
+  variable: "--font-ui",
 });
 
 export default function RootLayout({
@@ -37,7 +50,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${notoHeading.variable} ${notoSans.variable} ${notoSerif.variable} ${fraunces.variable}`}
+      className={`${notoHeading.variable} ${notoSans.variable} ${notoSerif.variable} ${fraunces.variable} ${frauncesPhoneme.variable} ${dmSans.variable}`}
     >
       <head>
         <meta charSet="utf-8" />

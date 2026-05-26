@@ -7,17 +7,15 @@
 //   <ContentCard />         (markdown editor)
 //   <EditorActions />
 // </LessonEditor>
-import dynamic from "next/dynamic";
 import Link from "next/link";
 import Button from "@/components/ui/Button";
 import { H1 } from "@/components/ui/Typography";
 import LessonAIPanel from "@/components/lessons/editor/LessonAIPanel";
 import LessonCoverField from "@/components/lessons/editor/LessonCoverField";
+import LessonRichEditor from "@/components/lessons/editor/LessonRichEditor";
 import { useLessonEditor } from "@/hooks/useLessonEditor";
 import { LESSON_CATEGORIES } from "@/lib/types";
 import type { TheoryLesson, LessonCategory } from "@/lib/types";
-
-const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
 
 const fieldClass =
   "w-full px-4 py-2.5 rounded-xl border border-[var(--line-divider)] bg-[var(--card-bg)] text-sm focus:outline-none focus:border-[var(--primary)] text-fg";
@@ -137,16 +135,12 @@ export default function LessonEditor({ initialLesson }: LessonEditorProps) {
         <div className="rounded-2xl border border-[var(--line-divider)] bg-[var(--card-bg)] p-5">
           <label className={labelClass}>Lesson content</label>
           <p className="text-xs mb-2.5 text-fg-subtle">
-            Use the toolbar to add headings, bold text, lists and images. The right panel shows a live preview.
+            Use the toolbar to format text, add headings, lists, links and images. Select text to see quick formatting.
           </p>
-          <div data-color-mode="auto">
-            <MDEditor
-              value={ed.content}
-              onChange={(val) => ed.setContent(val ?? "")}
-              height={480}
-              preview="live"
-            />
-          </div>
+          <LessonRichEditor
+            value={ed.content}
+            onChange={ed.setContent}
+          />
         </div>
 
         {ed.error && (

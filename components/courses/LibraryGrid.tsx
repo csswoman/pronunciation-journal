@@ -1,123 +1,133 @@
 "use client";
 // Planned structure:
-// <LibraryGrid>
-//   <SourceFilter />
-//   <LibraryCard />   ← one per theory_lesson, badged Notes / Course
+// <LibraryGrid>            ← receives filter/search/sort/view from parent
+//   <LibraryCard />         ← one per theory_lesson, badged Notes / Course
 // </LibraryGrid>
+
 import { useEffect, useMemo, useState } from "react";
-import Link from "next/link";
-import Image from "next/image";
-import Button from "@/components/ui/Button";
-import Badge from "@/components/ui/Badge";
+import LibraryItemCard from "@/components/courses/LibraryItemCard";
+import {
+  getCoverHue,
+  getCoverVariant,
+  getDurationLabel,
+  getInitials,
+  getLevelLabel,
+} from "@/components/courses/libraryCardHelpers";
 import { getAllTheoryLessons } from "@/lib/theory-lessons/queries";
-import { LESSON_CATEGORIES } from "@/lib/types";
 import type { TheoryLesson } from "@/lib/types";
-import { cn } from "@/lib/cn";
+import type { LibraryFilter, LibrarySort, LibraryView } from "@/components/courses/CoursesToolbar";
 
-type SourceFilter = "all" | "manual" | "notion";
+interface LibraryGridProps {
+  filter:  LibraryFilter;
+  search:  string;
+  sort:    LibrarySort;
+  view:    LibraryView;
+  onCounts?: (counts: { all: number; manual: number; notion: number }) => void;
+}
 
-const FILTERS: { value: SourceFilter; label: string }[] = [
-  { value: "all", label: "All" },
-  { value: "manual", label: "Courses" },
-  { value: "notion", label: "Notes" },
-];
-
-export default function LibraryGrid() {
+export default function LibraryGrid({ filter, search, sort, view, onCounts }: LibraryGridProps) {
   const [items, setItems] = useState<TheoryLesson[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [filter, setFilter] = useState<SourceFilter>("all");
 
   useEffect(() => {
     getAllTheoryLessons()
-      .then((all) => setItems(all.filter((l) => l.is_published)))
+      .then((all) => {
+        const published = all.filter((l) => l.is_published);
+        setItems(published);
+        onCounts?.({
+          all:    published.length,
+          manual: published.filter((i) => i.source === "manual").length,
+          notion: published.filter((i) => i.source === "notion").length,
+        });
+      })
       .catch((e) => setError(e instanceof Error ? e.message : "Could not load library"))
       .finally(() => setLoading(false));
+    // onCounts is intentionally omitted to avoid re-fetching
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const visible = useMemo(() => {
-    if (filter === "all") return items;
-    return items.filter((i) => i.source === filter);
-  }, [items, filter]);
+    const q = search.trim().toLowerCase();
+    return items
+      .filter((i) => filter === "all" ? true : i.source === (filter === "manual" ? "manual" : filter === "notion" ? "notion" : i.source))
+      .filter((i) => q === "" || i.title.toLowerCase().includes(q) || i.category.toLowerCase().includes(q))
+      .sort((a, b) =>
+        sort === "alpha"
+          ? a.title.localeCompare(b.title)
+          : new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
+      );
+  }, [items, filter, search, sort]);
 
-  const countFor = (value: SourceFilter) =>
-    value === "all" ? items.length : items.filter((i) => i.source === value).length;
+  if (error) {
+    return <div className="rounded-xl p-3 bg-error-soft text-error text-sm">{error}</div>;
+  }
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-16">
+        <div className="w-6 h-6 border-2 border-[var(--primary)] border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  if (visible.length === 0) {
+    return (
+      <div className="flex min-h-[200px] items-center justify-center rounded-xl border border-dashed border-border-subtle px-8 text-center">
+        <p className="text-sm text-fg-muted">Nothing here yet.</p>
+      </div>
+    );
+  }
 
   return (
-    <div>
-      <div className="flex items-center gap-2 px-4 py-3 border-b border-border-subtle">
-        {FILTERS.map((f) => (
-          <Button
-            key={f.value}
-            onClick={() => setFilter(f.value)}
-            className={cn(
-              "px-3 py-1.5 rounded-full text-sm font-medium transition-colors",
-              filter === f.value
-                ? "bg-primary text-on-primary"
-                : "bg-surface-raised text-fg-muted border border-border-subtle hover:bg-btn-plain-hover"
-            )}
-          >
-            {f.label} ({countFor(f.value)})
-          </Button>
-        ))}
-      </div>
-
-      <div className="p-4">
-        {error && (
-          <div className="rounded-xl p-3 mb-4 bg-error-soft text-error text-sm">{error}</div>
-        )}
-
-        {loading ? (
-          <div className="flex items-center justify-center py-16">
-            <div className="w-6 h-6 border-2 border-[var(--primary)] border-t-transparent rounded-full animate-spin" />
-          </div>
-        ) : visible.length === 0 ? (
-          <div className="flex min-h-[200px] items-center justify-center rounded-xl border border-dashed border-border-subtle px-8 text-center">
-            <p className="text-sm text-fg-muted">Nothing here yet.</p>
-          </div>
-        ) : (
-          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-            {visible.map((item) => (
-              <LibraryCard key={item.id} item={item} />
-            ))}
-          </div>
-        )}
-      </div>
+    <div
+      className={
+        view === "list"
+          ? "grid gap-3"
+          : "grid gap-4 sm:grid-cols-2 xl:grid-cols-3"
+      }
+    >
+      {visible.map((item, i) => (
+        <LibraryCard key={item.id} item={item} layout={view} priority={i === 0} />
+      ))}
     </div>
   );
 }
 
-function LibraryCard({ item }: { item: TheoryLesson }) {
-  const cat = LESSON_CATEGORIES.find((c) => c.value === item.category);
+// Mock metadata until the schema carries description/lessons/level/progress.
+// TODO: source these from theory_lessons or a sibling table.
+const MOCK_BY_CATEGORY: Record<string, { description: string; lessons: number; level: string; inProgress?: boolean; progress?: number }> = {
+  pronunciation: { description: "Sonidos, ritmo y entonación con prácticas dirigidas.",          lessons: 9,  level: "advanced",     inProgress: true, progress: 33 },
+  grammar:       { description: "Estructura, conectores y patrones para escribir con claridad.", lessons: 8,  level: "basic"        },
+  vocabulary:    { description: "Léxico esencial y matices de uso para conversación real.",      lessons: 14, level: "intermediate" },
+  conversation:  { description: "Rutinas para practicar inglés conversacional usando IA 1:1.",    lessons: 12, level: "intermediate" },
+  writing:       { description: "Construcción de oraciones y párrafos efectivos.",                lessons: 8,  level: "basic"        },
+  listening:     { description: "Comprensión auditiva con material auténtico.",                   lessons: 10, level: "intermediate" },
+};
+
+function LibraryCard({ item, layout, priority }: { item: TheoryLesson; layout: LibraryView; priority?: boolean }) {
   const isNotion = item.source === "notion";
+  const mock = MOCK_BY_CATEGORY[item.category] ?? { description: "", lessons: 0, level: "basic" };
+  const inProgress = mock.inProgress ?? false;
 
   return (
-    <Link
+    <LibraryItemCard
       href={`/courses/library/${item.slug}`}
-      className="group flex flex-col overflow-hidden rounded-xl border border-border-subtle bg-surface-raised transition-all duration-200 hover:border-border-default hover:-translate-y-px"
-    >
-      <div className="relative h-32 bg-[var(--btn-regular-bg)] flex items-center justify-center shrink-0">
-        <Badge
-          label={isNotion ? "Notes" : "Course"}
-          color={isNotion ? "violet" : "teal"}
-          className="absolute top-2 left-2 z-10"
-        />
-        {item.cover_image_url ? (
-          <Image src={item.cover_image_url} alt="" fill sizes="(max-width: 640px) 100vw, 33vw" className="object-cover" />
-        ) : (
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 opacity-25" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.253v13m0-13C10.832 5.477 9.206 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.794 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.794 5 16.5 5s3.332.477 4.5 1.253v13C19.832 18.477 18.206 18 16.5 18s-3.332.477-4.5 1.253" />
-          </svg>
-        )}
-      </div>
-      <div className="p-4 space-y-2">
-        <p className="text-sm font-semibold text-fg group-hover:text-[var(--primary)] transition-colors line-clamp-2">
-          {item.title}
-        </p>
-        <span className="text-tiny font-semibold px-2 py-0.5 rounded-full bg-[var(--btn-regular-bg)] text-fg-subtle inline-block">
-          {cat?.label ?? item.category}
-        </span>
-      </div>
-    </Link>
+      badge={isNotion ? "Notes" : "Course"}
+      eyebrow={item.category.replace(/-/g, " ")}
+      title={item.title}
+      description={mock.description}
+      initials={getInitials(item.title)}
+      coverImageUrl={item.cover_image_url}
+      coverVariant={getCoverVariant(item.title, inProgress)}
+      coverHue={getCoverHue(item.title)}
+      lessons={mock.lessons || undefined}
+      durationLabel={getDurationLabel(mock.lessons)}
+      levelLabel={getLevelLabel(mock.level)}
+      progress={mock.progress}
+      inProgress={inProgress}
+      layout={layout}
+      priority={priority}
+    />
   );
 }

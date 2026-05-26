@@ -48,7 +48,7 @@ export default function HomeShadowingDrill({
           Listen
         </button>
         <Link
-          href="/practice"
+          href="/practice/sounds"
           className="flex-1 h-10 flex items-center justify-center gap-1.5 text-sm font-semibold rounded-xl transition-opacity hover:opacity-90 bg-primary text-on-primary"
         >
           <Mic size={15} />

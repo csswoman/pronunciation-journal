@@ -101,7 +101,7 @@ export function evaluateExercise(
       category: "correct",
       userAnswer,
       expectedAnswer: design.correctAnswer,
-      feedback: { immediate: "✓ Noted." as string, explanation: "" },
+      feedback: { immediate: "Noted." as string, explanation: "" },
       gradedBy: "client",
       score: 100,
     };
@@ -159,7 +159,7 @@ function correctResult(
     userAnswer,
     expectedAnswer: design.correctAnswer,
     feedback: {
-      immediate: "✓ Correct!",
+      immediate: "Correct!",
       explanation: matchReason === "Exact match"
         ? `Well done! "${userAnswer}" is correct.`
         : `Perfect! "${userAnswer}" ${matchReason}`,

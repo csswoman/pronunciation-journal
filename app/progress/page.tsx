@@ -1,102 +1,68 @@
-'use client'
-
-import { useEffect, useState } from 'react'
-import Image from 'next/image'
-import { useAuth } from "@/components/auth/AuthProvider"
-import { getSupabaseBrowserClient } from '@/lib/supabase/client'
-import { getUserStats } from '@/lib/db'
-import Section from '@/components/layout/Section'
-import PageHeader from '@/components/layout/PageHeader'
+import Link from 'next/link'
+import { createSupabaseServerClient } from '@/lib/supabase/server'
+import { getProgressPageData } from '@/lib/progress/queries'
 import PageLayout from '@/components/layout/PageLayout'
-import StatsSection from '@/components/layout/StatsSection'
-import AchievementsSection from '@/components/progress/AchievementsSection'
-import JourneyToFluiditySection from '@/components/progress/JourneyToFluiditySection'
-import { useLiveTodayProgress, useLiveProgressHistory } from '@/store/useLiveData'
-import type { UserStats } from '@/lib/types'
+import { GuestBanner } from '@/components/layout/stats/GuestBanner'
+import { StreakCard } from '@/components/progress/StreakCard'
+import { DailyCompletionRate } from '@/components/progress/DailyCompletionRate'
+import { AccuracyTrend } from '@/components/progress/AccuracyTrend'
+import { SkillProfileCard } from '@/components/progress/SkillProfileCard'
+import { FluencyRadarCard } from '@/components/progress/FluencyRadarCard'
 
-export default function ProgressPage() {
-  const { user } = useAuth()
-  const [stats, setStats] = useState<UserStats | null>(null)
-  const [statsLoading, setStatsLoading] = useState(true)
-
-  // Live Dexie subscriptions — auto-update when practice data changes
-  const todayProgress = useLiveTodayProgress()
-  const progressHistory = useLiveProgressHistory(7)
-
-  useEffect(() => {
-    if (!user) {
-      setStatsLoading(false)
-      return
-    }
-
-    const load = async () => {
-      setStatsLoading(true)
-      const supabase = getSupabaseBrowserClient()
-
-      // Load Dexie stats and Supabase deck stats in parallel
-      const [localStats, deckResult, deckEntryResult, dueResult] = await Promise.all([
-        getUserStats(),
-        supabase.from("decks").select("*", { count: "exact", head: true }).eq("user_id", user.id),
-        supabase.from("deck_entries").select("entry_id, decks!inner(user_id)").eq("decks.user_id", user.id),
-        supabase
-          .from("user_sound_progress")
-          .select("id")
-          .eq("user_id", user.id)
-          .lte("next_review", new Date().toISOString().split("T")[0])
-          .in("status", ["learning", "review"]),
-      ])
-
-      setStats({
-        ...localStats,
-        totalDecks: deckResult.count ?? 0,
-        totalDeckWords: deckEntryResult.data?.length ?? 0,
-        deckWordsDueToday: dueResult.data?.length ?? 0,
-      })
-      setStatsLoading(false)
-    }
-
-    load()
-  }, [user])
+export default async function ProgressPage() {
+  const supabase = await createSupabaseServerClient()
+  const { data: { user } } = await supabase.auth.getUser()
 
   return (
-    <PageLayout
-      hero={
-        <PageHeader
-          badge="Daily Wins"
-          title="Your Progress"
-          subtitle="Keep Climbing"
-          description="See your streak, points, and momentum at a glance."
-          primaryCta={{
-            label: 'Keep Going',
-            onClick: () => window.location.href = '/practice',
-          }}
-          illustration={
-            <Image
-              src="/illustrations/xp-points.svg"
-              alt="XP points illustration"
-              width={560}
-              height={360}
-              priority
-            />
-          }
-        />
-      }
-    >
-      <Section spacing="lg">
-        <StatsSection
-          stats={stats}
-          todayProgress={todayProgress ?? null}
-          progressHistory={progressHistory}
-          userId={user?.id}
-          loading={statsLoading}
-        />
-        {user && (
-          <>
-            <AchievementsSection />
-            <JourneyToFluiditySection />
-          </>
-        )}
-      </Section>
+    <PageLayout cardWrapper={false}>
+      <div className="mx-auto flex w-full max-w-6xl flex-col gap-10">
+        <PageIntro />
+        {!user ? <GuestBanner /> : <ProgressDashboard userId={user.id} />}
+      </div>
     </PageLayout>
+  )
+}
+
+function PageIntro() {
+  return (
+    <header className="flex flex-col gap-2">
+      <span className="text-tiny font-bold uppercase tracking-[0.24em] text-fg-subtle">
+        Daily Wins
+      </span>
+      <h1 className="text-h2 font-display tracking-tight text-fg">
+        Your progress
+      </h1>
+      <p className="max-w-xl text-sm text-fg-muted">
+        Streak, consistency, and skill profile at a glance.
+      </p>
+    </header>
+  )
+}
+
+async function ProgressDashboard({ userId }: { userId: string }) {
+  const data = await getProgressPageData(userId)
+
+  return (
+    <div className="flex flex-col gap-8">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <StreakCard streak={data.streak} />
+        <DailyCompletionRate stats={data.dailyCompletion} />
+        <AccuracyTrend stats={data.accuracy} />
+      </div>
+
+      <FluencyRadarCard scores={null} />
+
+      <SkillProfileCard data={data.skillProfile} />
+
+      <div className="flex justify-center pt-2">
+        <Link
+          href="/daily"
+          className="rounded-2xl px-8 py-3 text-sm font-semibold transition-opacity hover:opacity-85"
+          style={{ background: 'var(--primary)', color: 'var(--primary-foreground)' }}
+        >
+          {data.streak.completedToday ? 'Practice more' : "Start today's daily"}
+        </Link>
+      </div>
+    </div>
   )
 }

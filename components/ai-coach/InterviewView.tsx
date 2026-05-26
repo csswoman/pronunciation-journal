@@ -101,7 +101,7 @@ export default function InterviewView() {
                   key={id}
                   onClick={() => !disabled && setMode(id)}
                   disabled={disabled}
-                  className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-tiny font-semibold transition-[background,color] duration-150 ${
+                  className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-body-sm font-semibold transition-[background,color] duration-150 ${
                     active
                       ? "bg-[var(--surface-raised)] text-[var(--text-primary)] shadow-sm"
                       : disabled
@@ -109,14 +109,14 @@ export default function InterviewView() {
                         : "text-[var(--text-tertiary)] hover:text-[var(--text-secondary)]"
                   }`}
                 >
-                  <Icon size={12} strokeWidth={2} />
+                  <Icon size={14} strokeWidth={2} />
                   {label}
                 </button>
               );
             })}
           </div>
           {activeMode === "curated" && (
-            <p className="text-tiny text-[var(--text-tertiary)] mt-1.5 text-center">
+            <p className="text-caption text-[var(--text-tertiary)] mt-2 text-center">
               Fixed script — practice the same interview until you nail it
             </p>
           )}
@@ -134,12 +134,12 @@ export default function InterviewView() {
 
       <div className="px-4 pt-2 pb-4 shrink-0">
         {phase === "error" && errorMsg && (
-          <p className="text-tiny text-center mb-2 text-error">{errorMsg}</p>
+          <p className="text-body-sm text-center mb-2 text-error">{errorMsg}</p>
         )}
         <button
           onClick={handleStart}
           disabled={phase === "loading"}
-          className="w-full py-3 rounded-2xl bg-[var(--primary)] border-none text-sm font-semibold text-[var(--on-primary)] cursor-pointer transition-[opacity,transform] duration-150 hover:opacity-90 hover:-translate-y-px disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full py-3 rounded-2xl bg-[var(--primary)] border-none text-body-lg font-semibold text-[var(--on-primary)] cursor-pointer transition-[opacity,transform] duration-150 hover:opacity-90 hover:-translate-y-px disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {phase === "loading"
             ? activeMode === "curated" ? "Loading…" : "Generating…"

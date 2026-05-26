@@ -7,23 +7,65 @@
 //   <BackToTop button />
 // </WordBrowser>
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { ArrowUp } from "lucide-react";
 import { WordFiltersBar } from "./WordFiltersBar";
 import { WordGrid } from "./WordGrid";
 import type { Word } from "./WordGrid";
 import type { StatusFilter, SortMode, ViewMode } from "./WordFiltersBar";
+import { markLexiconWordLearned } from "@/lib/word-bank/queries";
 
 interface WordBrowserProps {
   words: Word[];
   color?: string;
+  categoryId: string;
 }
 
-export function WordBrowser({ words, color }: WordBrowserProps) {
+export function WordBrowser({ words: initialWords, color, categoryId }: WordBrowserProps) {
   const [status, setStatus] = useState<StatusFilter>("all");
   const [sort, setSort] = useState<SortMode>("alpha");
   const [view, setView] = useState<ViewMode>("grid");
   const [search, setSearch] = useState("");
+
+  // Track per-word status overrides from optimistic "mark learned" actions.
+  const [learnedIds, setLearnedIds] = useState<Set<string>>(
+    () => new Set(initialWords.filter((w) => w.status === "learned").map((w) => w.id))
+  );
+
+  const words = useMemo(
+    () => initialWords.map((w) => ({ ...w, status: learnedIds.has(w.id) ? ("learned" as const) : w.status })),
+    [initialWords, learnedIds]
+  );
+
+  const handleMarkLearned = useCallback(
+    async (wordId: string) => {
+      // Find the word data from the initial list.
+      const word = initialWords.find((w) => w.id === wordId);
+      if (!word) return;
+
+      // Optimistic update.
+      setLearnedIds((prev) => new Set([...prev, wordId]));
+
+      try {
+        await markLexiconWordLearned({
+          sourceRef: word.id,
+          text: word.word,
+          definition: word.definition,
+          example: word.example ?? null,
+          difficulty: word.difficulty,
+        });
+      } catch (err) {
+        // Roll back optimistic update on failure.
+        setLearnedIds((prev) => {
+          const next = new Set(prev);
+          next.delete(wordId);
+          return next;
+        });
+        console.error("Failed to mark word as learned:", err);
+      }
+    },
+    [initialWords]
+  );
 
   const filtered = useMemo(() => {
     let result = words;
@@ -61,7 +103,7 @@ export function WordBrowser({ words, color }: WordBrowserProps) {
         onSearchChange={setSearch}
       />
 
-      <WordGrid words={filtered} view={view} color={color} />
+      <WordGrid words={filtered} view={view} color={color} onMarkLearned={handleMarkLearned} />
 
       {/* Back to top */}
       <div className="flex justify-end pb-8">

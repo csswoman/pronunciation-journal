@@ -8,8 +8,9 @@ import { SpeakExercise } from '@/components/phoneme-practice/SpeakExercise'
 import { MatchPairsExercise } from '@/components/exercises/MatchPairsExercise'
 import { FillBlankExercise } from '@/components/exercises/FillBlankExercise'
 import { ReorderWordsExercise } from '@/components/exercises/ReorderWordsExercise'
+import { SentenceDictationExercise } from '@/components/exercises/SentenceDictationExercise'
 import type { Exercise } from '@/lib/phoneme-practice/types'
-import type { MatchPairsExercise as MatchPairsExerciseType, FillBlankExercise as FillBlankExerciseType, ReorderWordsExercise as ReorderWordsExerciseType } from '@/lib/exercises/types'
+import type { MatchPairsExercise as MatchPairsExerciseType, FillBlankExercise as FillBlankExerciseType, ReorderWordsExercise as ReorderWordsExerciseType, SentenceDictationExercise as SentenceDictationExerciseType } from '@/lib/exercises/types'
 import type { PracticeExercise } from '@/lib/practice/types'
 
 interface Props {
@@ -27,13 +28,13 @@ export function ExerciseRenderer({ exercise, onSubmit }: Props) {
   const { slug, payload, soundId } = exercise
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-4">
       {renderInner()}
       <button
         type="button"
         onClick={() => onSubmit(false, 'skip')}
         aria-label="Skip this exercise"
-        className="self-center rounded-[var(--radius-full)] px-4 py-1.5 text-xs font-medium uppercase tracking-[.08em] text-fg-subtle transition-colors hover:bg-surface-raised hover:text-fg-muted"
+        className="self-center py-1.5 text-xs font-semibold uppercase tracking-widest text-[var(--text-tertiary)] transition-opacity hover:opacity-70"
       >
         Skip
       </button>
@@ -62,6 +63,14 @@ export function ExerciseRenderer({ exercise, onSubmit }: Props) {
         return (
           <ReorderWordsExercise
             exercise={payload.data as ReorderWordsExerciseType}
+            onSubmit={(isCorrect, userAnswer) => onSubmit(isCorrect, userAnswer)}
+          />
+        )
+      }
+      if (slug === 'sentence_dictation') {
+        return (
+          <SentenceDictationExercise
+            exercise={payload.data as SentenceDictationExerciseType}
             onSubmit={(isCorrect, userAnswer) => onSubmit(isCorrect, userAnswer)}
           />
         )

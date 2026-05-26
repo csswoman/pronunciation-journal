@@ -9,7 +9,7 @@
 import { WordCard } from "./WordCard";
 import type { WordCardProps } from "./WordCard";
 
-export interface Word extends Omit<WordCardProps, "onAddToWordBank"> {
+export interface Word extends Omit<WordCardProps, "onMarkLearned"> {
   id: string;
 }
 
@@ -17,7 +17,7 @@ interface WordGridProps {
   words: Word[];
   view: "grid" | "list";
   color?: string;
-  onAddToWordBank?: (word: string) => void;
+  onMarkLearned?: (wordId: string) => void;
 }
 
 function groupByLetter(words: Word[]): Map<string, Word[]> {
@@ -30,7 +30,7 @@ function groupByLetter(words: Word[]): Map<string, Word[]> {
   return new Map([...map.entries()].sort(([a], [b]) => a.localeCompare(b)));
 }
 
-export function WordGrid({ words, view, color, onAddToWordBank }: WordGridProps) {
+export function WordGrid({ words, view, color, onMarkLearned }: WordGridProps) {
   if (words.length === 0) {
     return (
       <div className="text-center py-16">
@@ -58,7 +58,12 @@ export function WordGrid({ words, view, color, onAddToWordBank }: WordGridProps)
             }
           >
             {group.map((word) => (
-              <WordCard key={word.id} {...word} color={color} onAddToWordBank={onAddToWordBank} />
+              <WordCard
+                key={word.id}
+                {...word}
+                color={color}
+                onMarkLearned={onMarkLearned ? () => onMarkLearned(word.id) : undefined}
+              />
             ))}
           </div>
         </section>

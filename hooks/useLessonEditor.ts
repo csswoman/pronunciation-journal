@@ -7,6 +7,7 @@ import {
   uploadLessonCover,
   slugify,
 } from "@/lib/theory-lessons/queries";
+import { ensureHtml } from "@/lib/theory-lessons/contentFormat";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import type { TheoryLesson, LessonCategory } from "@/lib/types";
 
@@ -20,7 +21,7 @@ export function useLessonEditor(initialLesson?: TheoryLesson) {
   const [category, setCategory] = useState<LessonCategory>(
     (initialLesson?.category as LessonCategory) ?? "general"
   );
-  const [content, setContent] = useState(initialLesson?.content ?? "");
+  const [content, setContent] = useState(ensureHtml(initialLesson?.content ?? ""));
   const [coverUrl, setCoverUrl] = useState(initialLesson?.cover_image_url ?? "");
   const [isPublished, setIsPublished] = useState(initialLesson?.is_published ?? false);
 
@@ -40,7 +41,7 @@ export function useLessonEditor(initialLesson?: TheoryLesson) {
 
   const applyAIDraft = useCallback((aiTitle: string, aiContent: string) => {
     setTitle(aiTitle);
-    setContent(aiContent);
+    setContent(ensureHtml(aiContent));
     setSlug((prev) => (slugEdited ? prev : slugify(aiTitle)));
   }, [slugEdited]);
 

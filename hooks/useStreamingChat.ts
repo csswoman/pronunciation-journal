@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useRef } from "react";
 import type { AIMessage, StreamChunk, ExerciseResult } from "@/lib/ai-practice/types";
-import { serializeMessage } from "@/lib/ai-practice/types";
+import { serializeMessage, deserializeMessage, type SerializedModelMessage } from "@/lib/ai-practice/types";
 import { applyExerciseResult, type UserLearningState } from "@/lib/ai-practice/learning-state";
 import { saveConversation, updateConversation } from "@/lib/db/ai";
 import { messagesToWire, extractLastTopic } from "@/lib/ai-practice/wire";
@@ -44,6 +44,8 @@ export function useStreamingChat({
 
   const messagesRef = useRef<AIMessage[]>([]);
   messagesRef.current = messages;
+  const conversationIdRef = useRef<number | null>(conversationId);
+  conversationIdRef.current = conversationId;
   const abortRef = useRef<AbortController | null>(null);
   const streamIdRef = useRef(0);
   const lastTopicRef = useRef<string | undefined>(undefined);
@@ -64,7 +66,7 @@ export function useStreamingChat({
     );
   }
 
-  const sendMessage = useCallback(async (text: string) => {
+  const sendMessage = useCallback(async (text: string, options?: { hidden?: boolean }) => {
     if (!text.trim() || isStreaming) return;
     setError(null);
     setQuotaExhausted(false);
@@ -72,10 +74,10 @@ export function useStreamingChat({
     if (!sessionStartedRef.current) {
       sessionStartedRef.current = true;
       sessionStartAtRef.current = Date.now();
-      logEvent("session_started", { mode, conversationId: conversationId ?? undefined }).catch(() => {});
+      logEvent("session_started", { mode, conversationId: conversationIdRef.current ?? undefined }).catch(() => {});
     }
 
-    const userMsg: AIMessage = { role: "user", content: text.trim(), timestamp: new Date().toISOString() };
+    const userMsg: AIMessage = { role: "user", content: text.trim(), timestamp: new Date().toISOString(), hidden: options?.hidden };
     const nextMessages = [...messagesRef.current, userMsg];
     setMessages(nextMessages);
 
@@ -192,8 +194,9 @@ export function useStreamingChat({
 
       const now = new Date().toISOString();
       const serialized = finalMessages.map(m => m.role === "model" ? serializeMessage(m) : m) as never;
-      if (conversationId) {
-        await updateConversation(conversationId, { messages: serialized, updatedAt: now });
+      const currentId = conversationIdRef.current;
+      if (currentId) {
+        await updateConversation(currentId, { messages: serialized, updatedAt: now });
       } else {
         const id = await saveConversation({
           templateId: "free-conversation",
@@ -204,6 +207,7 @@ export function useStreamingChat({
           createdAt: now,
           updatedAt: now,
         });
+        conversationIdRef.current = id;
         onConversationCreated(id);
       }
     } catch (err: unknown) {
@@ -213,7 +217,7 @@ export function useStreamingChat({
     } finally {
       if (streamIdRef.current === thisId) setIsStreaming(false);
     }
-  }, [isStreaming, mode, conversationId, learningState, onSaveWord, onStartRoleplay, onConversationCreated]);
+  }, [isStreaming, mode, learningState, onSaveWord, onStartRoleplay, onConversationCreated]);
 
   const answerToolCall = useCallback((callId: string, result: ExerciseResult) => {
     let toolName = "exercise_result";
@@ -260,7 +264,13 @@ export function useStreamingChat({
   }, [mode]);
 
   const loadMessages = useCallback((msgs: AIMessage[]) => {
-    setMessages(msgs);
+    const hydrated = msgs.map(m => {
+      if (m.role !== "model") return m;
+      const raw = m as unknown as SerializedModelMessage | Extract<AIMessage, { role: "model" }>;
+      if (raw.toolCalls instanceof Map) return raw as Extract<AIMessage, { role: "model" }>;
+      return deserializeMessage(raw as SerializedModelMessage);
+    });
+    setMessages(hydrated);
   }, []);
 
   return { messages, isStreaming, error, quotaExhausted, sendMessage, answerToolCall, resetChat, loadMessages };

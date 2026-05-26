@@ -2,6 +2,7 @@
 // for word_bank. SRS requires one isCorrect per word; match_pairs grades a group of 4.
 import type { MatchPairsExercise, MatchPair } from '@/lib/exercises/types'
 import type { SoundWord } from '@/lib/phoneme-practice/types'
+import type { WordBankEntry } from '@/lib/word-bank/types'
 import { exerciseId, pick, shuffle } from '@/lib/exercises/utils'
 
 const PAIRS_PER_EXERCISE = 4
@@ -46,4 +47,40 @@ export function pickMatchPairs(
   count: number
 ): MatchPairsExercise[] {
   return pick(exercises, count)
+}
+
+/**
+ * Generate match-pairs exercises from word bank entries (word ↔ definition).
+ * Works even when entries have no example sentence.
+ * Groups entries into sets of PAIRS_PER_EXERCISE; requires at least 2 entries.
+ */
+export function generateMatchPairsFromWordBank(
+  entries: WordBankEntry[],
+  count: number,
+): MatchPairsExercise[] {
+  const usable = entries.filter((e) => e.text && e.meaning)
+  const picked = pick(usable, count * PAIRS_PER_EXERCISE)
+  const exercises: MatchPairsExercise[] = []
+
+  for (let i = 0; i < picked.length; i += PAIRS_PER_EXERCISE) {
+    const group = picked.slice(i, i + PAIRS_PER_EXERCISE)
+    if (group.length < 2) break
+
+    const pairs: MatchPair[] = group.map((e) => ({
+      id: e.id,
+      left: e.text,
+      right: e.meaning!,
+    }))
+
+    const groupKey = group.map((e) => e.id).sort().join(',')
+    exercises.push({
+      id: exerciseId('match_pairs', groupKey, 'definition'),
+      type: 'match_pairs',
+      exerciseType: { domain: 'vocabulary', mode: 'match_pairs' },
+      sourceRef: { source: 'word_bank', id: group[0].id },
+      pairs,
+    })
+  }
+
+  return exercises
 }

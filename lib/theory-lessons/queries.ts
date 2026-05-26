@@ -151,6 +151,23 @@ export async function uploadLessonCover(
   return data.publicUrl;
 }
 
+export async function uploadLessonInlineImage(file: File): Promise<string> {
+  const supabase = getSupabaseBrowserClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error("Not authenticated");
+  const ext = file.name.split(".").pop();
+  const path = `${user.id}/inline/${crypto.randomUUID()}.${ext}`;
+
+  const { error } = await supabase.storage
+    .from("lesson-covers")
+    .upload(path, file, { upsert: false });
+
+  if (error) throw error;
+
+  const { data } = supabase.storage.from("lesson-covers").getPublicUrl(path);
+  return data.publicUrl;
+}
+
 // ── Slug helper ───────────────────────────────────────────────────────────────
 
 export function slugify(title: string): string {

@@ -19,7 +19,7 @@ export const defaultEvaluationEngine: EvaluationEngine = {
         category: "correct",
         userAnswer: typeof actual === "object" && "value" in actual ? actual.value : "",
         expectedAnswer: expected,
-        feedback: { immediate: "✓ Noted.", explanation: "Flashcard acknowledged." },
+        feedback: { immediate: "Noted.", explanation: "Flashcard acknowledged." },
         score: 100,
         gradedBy: "client",
       };

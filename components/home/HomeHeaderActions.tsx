@@ -23,7 +23,7 @@ export default function HomeHeaderActions({ hasStartedLearning }: HomeHeaderActi
         {hasStartedLearning ? "Continue learning" : "Start learning"}
       </Button>
       <Button
-        onClick={() => router.push("/practice")}
+        onClick={() => router.push("/daily")}
         variant="secondary"
         size="sm"
         icon={<MessageSquareText size={14} />}

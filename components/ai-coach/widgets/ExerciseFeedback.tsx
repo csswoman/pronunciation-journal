@@ -10,75 +10,48 @@ export type ExerciseFeedbackProps = {
 
 export default function ExerciseFeedback({ result, onNext, onRetry }: ExerciseFeedbackProps) {
   const { correct, feedback } = result;
-  const accentColor = correct ? "var(--score-excellent)" : "var(--score-poor)";
-  const icon = correct ? "✅" : "❌";
+  const accentColor = correct ? "var(--success)" : "var(--error)";
+  const bgColor     = correct ? "var(--success-soft)" : "var(--error-soft)";
 
   return (
     <div
-      className="rounded-lg px-3 py-2.5 space-y-2 text-sm animate-feedback-in"
-      style={{
-        backgroundColor: correct
-          ? "color-mix(in oklch, var(--score-excellent) 12%, transparent)"
-          : "color-mix(in oklch, var(--score-poor) 10%, transparent)",
-        borderLeft: `3px solid ${accentColor}`,
-      }}
+      className="rounded-xl px-4 py-3 space-y-1.5 text-sm"
+      style={{ backgroundColor: bgColor, borderLeft: `3px solid ${accentColor}` }}
     >
-      <style>{`
-        @keyframes feedbackIn {
-          from { opacity: 0; transform: scale(0.98); }
-          to   { opacity: 1; transform: scale(1); }
-        }
-        .animate-feedback-in {
-          animation: feedbackIn 180ms ease-out both;
-        }
-      `}</style>
-
-      <div className="flex flex-col gap-2.5">
-        <div className="space-y-1">
-          <p className="font-semibold leading-snug" style={{ color: accentColor }}>
-            {icon} {feedback.immediate}
-          </p>
-          <p
-            className="text-xs leading-relaxed whitespace-pre-wrap text-fg-muted"
-          >
-            {feedback.explanation}
-          </p>
-          {feedback.example && (
-            <p
-              className="text-xs leading-relaxed whitespace-pre-wrap font-mono text-fg-subtle"
-            >
-              {feedback.example}
-            </p>
-          )}
-          {feedback.tip && (
-            <p
-              className="text-xs leading-relaxed whitespace-pre-wrap text-fg-muted opacity-80"
-            >
-              💡 {feedback.tip}
-            </p>
-          )}
-        </div>
-
-        <div className="flex flex-col gap-1.5">
-          {correct && onNext && (
-            <button
-              onClick={onNext}
-              className="text-xs px-3 py-1 rounded-lg font-medium transition-opacity hover:opacity-80"
-              style={{ backgroundColor: accentColor, color: "var(--on-primary)" }}
-            >
-              Next →
-            </button>
-          )}
-          {!correct && onRetry && (
-            <button
-              onClick={onRetry}
-              className="text-xs px-3 py-1 rounded-lg font-medium transition-opacity hover:opacity-80 bg-surface-sunken text-fg border border-border-subtle"
-            >
-              Try again
-            </button>
-          )}
-        </div>
-      </div>
+      <p className="font-semibold leading-snug" style={{ color: accentColor }}>
+        {correct ? "✓" : "✗"} {feedback.immediate}
+      </p>
+      {feedback.explanation && (
+        <p className="text-xs leading-relaxed text-[var(--text-secondary)] whitespace-pre-wrap">
+          {feedback.explanation}
+        </p>
+      )}
+      {feedback.example && (
+        <p className="text-xs leading-relaxed font-mono text-[var(--text-tertiary)] whitespace-pre-wrap">
+          {feedback.example}
+        </p>
+      )}
+      {feedback.tip && (
+        <p className="text-xs leading-relaxed text-[var(--text-secondary)] opacity-80 whitespace-pre-wrap">
+          💡 {feedback.tip}
+        </p>
+      )}
+      {!correct && onRetry && (
+        <button
+          onClick={onRetry}
+          className="mt-1 text-xs px-3 py-1.5 rounded-full font-semibold border border-[var(--border-default)] bg-[var(--surface-raised)] text-[var(--text-secondary)] transition-opacity hover:opacity-70"
+        >
+          Try again
+        </button>
+      )}
+      {correct && onNext && (
+        <button
+          onClick={onNext}
+          className="mt-1 text-xs px-3 py-1.5 rounded-full font-semibold bg-[var(--primary)] text-[var(--on-primary)] transition-opacity hover:opacity-90"
+        >
+          Next →
+        </button>
+      )}
     </div>
   );
 }

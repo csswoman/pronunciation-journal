@@ -10,7 +10,7 @@ import InterviewView from "./InterviewView";
 
 interface AICoachHomeProps {
   activeTab: TabId;
-  onSendMessage: (text: string) => void;
+  onSendMessage: (text: string, options?: { hidden?: boolean }) => void;
   isStreaming: boolean;
   prefill?: string;
   onPrefillConsumed?: () => void;
@@ -35,7 +35,7 @@ export default function AICoachHome({
     <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
       <div className="flex-1 min-h-0 overflow-y-auto flex flex-col [scrollbar-width:thin] [scrollbar-color:var(--border)_transparent]">
         <ChatEmptyState
-          onSendMessage={onSendMessage}
+          onSendMessage={(text) => onSendMessage(text, { hidden: true })}
           onChipSelect={setChipPrefill}
         />
       </div>

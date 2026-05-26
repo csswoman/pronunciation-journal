@@ -11,10 +11,12 @@ import { isExerciseTool } from "@/lib/ai-practice/tools/registry";
 // ── Inline markdown renderer ──────────────────────────────────────────────────
 
 function renderInline(text: string): React.ReactNode {
-  const parts = text.split(/(\*\*[^*]+\*\*|__[^_]+__|`[^`]+`)/g);
+  // Order matters: bold (** / __) before italic (* / _) so ** isn't eaten by *.
+  const parts = text.split(/(\*\*[^*]+\*\*|__[^_]+__|`[^`]+`|(?<![*\w])\*[^*\n]+\*(?!\w)|(?<![_\w])_[^_\n]+_(?!\w))/g);
   return parts.map((part, i) => {
+    if (!part) return null;
     if ((part.startsWith("**") && part.endsWith("**")) || (part.startsWith("__") && part.endsWith("__"))) {
-      return <strong key={i} style={{ color: "var(--text-primary)", fontWeight: 600 }}>{part.slice(2, -2)}</strong>;
+      return <strong key={i} style={{ color: "var(--primary)", fontWeight: 600 }}>{part.slice(2, -2)}</strong>;
     }
     if (part.startsWith("`") && part.endsWith("`") && part.length > 2) {
       return (
@@ -22,6 +24,12 @@ function renderInline(text: string): React.ReactNode {
           {part.slice(1, -1)}
         </code>
       );
+    }
+    if (
+      (part.startsWith("*") && part.endsWith("*") && part.length > 2) ||
+      (part.startsWith("_") && part.endsWith("_") && part.length > 2)
+    ) {
+      return <em key={i} className="italic" style={{ color: "var(--text-primary)" }}>{part.slice(1, -1)}</em>;
     }
     return part;
   });
@@ -41,9 +49,9 @@ function renderProse(lines: string[]) {
         i++;
       }
       elements.push(
-        <ul key={`ul-${i}`} className="space-y-1 pl-3 my-1">
+        <ul key={`ul-${i}`} className="space-y-1.5 pl-3 my-2">
           {items.map((item, j) => (
-            <li key={j} className="flex gap-2 leading-relaxed" style={{ fontSize: "15px" }}>
+            <li key={j} className="flex gap-2 leading-[1.65]" style={{ fontSize: "15px" }}>
               <span className="mt-2 w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: "var(--primary)", opacity: 0.7 }} />
               <span>{renderInline(item)}</span>
             </li>
@@ -55,7 +63,7 @@ function renderProse(lines: string[]) {
 
     if (/^#{1,3}\s+/.test(line)) {
       elements.push(
-        <p key={`h-${i}`} className="text-xs font-semibold uppercase tracking-widest mt-3 mb-1" style={{ color: "var(--primary)", opacity: 0.8 }}>
+        <p key={`h-${i}`} className="text-xs font-semibold uppercase tracking-widest mt-4 mb-1.5" style={{ color: "var(--primary)", opacity: 0.8 }}>
           {renderInline(line.replace(/^#{1,3}\s+/, ""))}
         </p>
       );
@@ -64,7 +72,7 @@ function renderProse(lines: string[]) {
     }
 
     elements.push(
-      <p key={`p-${i}`} className="leading-relaxed" style={{ fontSize: "15px" }}>{renderInline(line)}</p>
+      <p key={`p-${i}`} className="leading-[1.65]" style={{ fontSize: "15px" }}>{renderInline(line)}</p>
     );
     i++;
   }
@@ -121,23 +129,19 @@ function AIBubble({ message, showAvatar, onSaveWord, onSuggestionClick, onToolAn
   };
 
   return (
-    <div className="flex items-end justify-start gap-3 group/msg">
+    <div className="flex items-start justify-start gap-3 group/msg">
       {/* Avatar slot — always 28px wide */}
       <div className="flex-shrink-0 w-7 h-7">
         {showAvatar && <AIAvatar />}
       </div>
 
-      <div className="flex flex-col gap-1.5 min-w-0 max-w-[82%]">
+      <div className="flex flex-col gap-1.5 min-w-0 flex-1">
         <div
-          className="px-4 py-3 rounded-2xl rounded-tl-sm cursor-text select-text"
-          style={{
-            background: "linear-gradient(135deg, var(--surface-raised), var(--surface-base))",
-            borderLeft: "3px solid var(--primary)",
-            color: "var(--text-secondary)",
-          }}
+          className="cursor-text select-text"
+          style={{ color: "var(--text-primary)" }}
           onMouseUp={handleMouseUp}
         >
-          <div className="space-y-1.5">
+          <div className="space-y-3">
             {(() => {
               const exerciseCalls = message.contentParts
                 .filter(p => p.type === "tool_call")
@@ -150,7 +154,7 @@ function AIBubble({ message, showAvatar, onSaveWord, onSuggestionClick, onToolAn
                 <>
                   {message.contentParts.map((part, i) => {
                     if (part.type === "text") {
-                      return <div key={i}>{renderProse(part.text.split("\n"))}</div>;
+                      return <div key={i} className="space-y-2.5">{renderProse(part.text.split("\n"))}</div>;
                     }
                     const tc = message.toolCalls.get(part.callId);
                     if (!tc || tc.name === "suggestions") return null;
@@ -209,12 +213,12 @@ export default function MessageBubble({
       <div className="flex justify-end group/msg">
         <div className="flex flex-col items-end gap-1.5 ml-auto max-w-[75%]">
           <div
-            className="px-4 py-3 rounded-2xl rounded-tr-sm leading-relaxed whitespace-pre-wrap break-words"
+            className="px-4 py-2.5 rounded-2xl rounded-tr-sm leading-relaxed whitespace-pre-wrap break-words"
             style={{
               fontSize: "15px",
-              background: "var(--primary)",
-              color: "oklch(0.96 0.008 var(--hue))",
-              boxShadow: "0 2px 12px color-mix(in oklch, var(--primary) 35%, transparent)",
+              background: "color-mix(in srgb, var(--primary) 12%, var(--surface-raised))",
+              color: "var(--text-primary)",
+              border: "1px solid color-mix(in srgb, var(--primary) 18%, transparent)",
             }}
           >
             {message.content}

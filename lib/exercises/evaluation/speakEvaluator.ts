@@ -25,7 +25,7 @@ function feedbackForScore(
 
   if (passed) {
     return {
-      immediate: score >= 90 ? "✓ Excellent!" : "✓ Good!",
+      immediate: score >= 90 ? "Excellent!" : "Good!",
       explanation: isEarlyLearner
         ? `You said: "${transcript}" — that's correct!`
         : `Accuracy: ${Math.round(score)}%. "${transcript}" matches the target well.`,

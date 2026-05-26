@@ -1,29 +1,40 @@
 "use client";
 
+// Planned structure:
+// <SpeakingWidget>
+//   <TargetPhrase />       — phrase + IPA + Listen button (with word highlighting after attempt)
+//   <RecordingControls />  — animated waveform + record button (shared from pronunciation flow)
+//   <ExerciseFeedback />   — score + transcript + Next/Retry
+// </SpeakingWidget>
+
 import { useState, useCallback } from "react";
-import { Mic, MicOff, Loader2, Volume2 } from "lucide-react";
+import { Volume2 } from "lucide-react";
 import type { SpeakingArgs } from "@/lib/ai-practice/tools/registry";
 import type { ExerciseResult } from "@/lib/ai-practice/types";
 import type { EvaluationResult } from "@/lib/exercises/design";
+import type { ScoringResult, WordResult } from "@/lib/types";
 import { useSpeechInput } from "@/hooks/useSpeechInput";
 import { useSharedMicStream } from "@/hooks/useSharedMicStream";
+import { scorePronunciation } from "@/lib/pronunciation/scoring";
+import RecordingControls from "@/components/ai-coach/pronunciation/RecordingControls";
 import ExerciseFeedback from "./ExerciseFeedback";
 
-function buildSpeakingResult(target: string, transcript: string, score: number): EvaluationResult {
-  const correct = score >= 0.6;
+function buildResult(target: string, scoring: ScoringResult): EvaluationResult {
+  const accuracy = scoring.accuracy;
+  const correct  = scoring.isCorrect;
   return {
     correct,
     category: correct ? "correct" : "incorrect_form",
-    userAnswer: transcript,
+    userAnswer: scoring.transcript,
     expectedAnswer: target,
     feedback: {
-      immediate: correct ? "Great pronunciation!" : "Close — keep practicing.",
-      explanation: correct
-        ? `You said: "${transcript}" (score ${Math.round(score * 100)}%).`
-        : `You said: "${transcript}" (score ${Math.round(score * 100)}%). Try to match the target more closely.`,
+      immediate: correct
+        ? accuracy >= 90 ? "Excellent pronunciation!" : "Great job!"
+        : "Close — keep practicing.",
+      explanation: `You said: "${scoring.transcript}"`,
       tip: correct ? undefined : `Target: "${target}"`,
     },
-    score: Math.round(score * 100),
+    score: accuracy,
     gradedBy: "model",
   };
 }
@@ -36,36 +47,29 @@ interface Props {
   onRetry?: () => void;
 }
 
-function scoreTranscript(transcript: string, target: string): number {
-  const normalize = (s: string) => s.toLowerCase().replace(/[^a-z0-9\s]/g, "").trim();
-  const t = normalize(transcript);
-  const g = normalize(target);
-  if (t === g) return 1;
-  if (t.includes(g) || g.includes(t)) return 0.8;
-  const tWords = new Set(t.split(/\s+/));
-  const gWords = g.split(/\s+/);
-  const matches = gWords.filter(w => tWords.has(w)).length;
-  return gWords.length > 0 ? matches / gWords.length : 0;
-}
-
 export default function SpeakingWidget({ args, status, onAnswer, onNext, onRetry }: Props) {
   const { getStream } = useSharedMicStream();
+  const [scoring, setScoring]   = useState<ScoringResult | null>(null);
+  const [analyzing, setAnalyzing] = useState(false);
+
   const { state, start, stop, reset } = useSpeechInput({
     prefer: "gemini",
     getStream,
-    onResult: (r) => {
-      const text = r.transcript;
-      const s = scoreTranscript(text, args.target);
-      setTranscript(text);
-      setScore(s);
-      onAnswer({ correct: s >= 0.6, score: s, topic: args.target, gradedBy: "model" });
+    onResult: async (r) => {
+      setAnalyzing(true);
+      try {
+        const result = await scorePronunciation(r.transcript, args.target, 60);
+        setScoring(result);
+        onAnswer({ correct: result.isCorrect, score: result.accuracy / 100, topic: args.target, gradedBy: "model" });
+      } finally {
+        setAnalyzing(false);
+      }
     },
   });
-  const [transcript, setTranscript] = useState<string | null>(null);
-  const [score, setScore] = useState<number | null>(null);
-  const answered = status === "answered";
+
+  const answered    = status === "answered";
   const isRecording = state === "listening";
-  const transcribing = state === "processing";
+  const hasResult   = scoring !== null;
 
   const speakTarget = useCallback(() => {
     if (typeof window === "undefined" || !window.speechSynthesis) return;
@@ -76,76 +80,87 @@ export default function SpeakingWidget({ args, status, onAnswer, onNext, onRetry
     window.speechSynthesis.speak(utterance);
   }, [args.target]);
 
+  const handleMicClick = useCallback(() => {
+    if (isRecording) {
+      void stop();
+    } else {
+      void start();
+    }
+  }, [isRecording, start, stop]);
+
+  const handleRetry = useCallback(() => {
+    setScoring(null);
+    reset();
+    onRetry?.();
+  }, [reset, onRetry]);
+
   return (
-    <div
-      className="rounded-xl border border-border-subtle p-4 space-y-3 bg-surface-sunken"
-    >
-      <p className="text-sm text-fg-muted">
-        {args.prompt}
-      </p>
-      <div className="flex items-center gap-3 flex-wrap">
-        <p className="text-lg font-semibold text-fg">
-          {args.target}
-        </p>
+    <div className="space-y-4 py-2">
+      <p className="text-sm text-[var(--text-secondary)] text-center">{args.prompt}</p>
+
+      <div className="flex flex-col items-center gap-2 px-4 py-5 rounded-xl bg-[var(--surface-raised)] border border-[var(--border-subtle)]">
+        <TargetPhrase target={args.target} wordResults={scoring?.wordResults ?? null} />
         {args.ipa && (
-          <span className="text-sm font-mono text-fg-subtle">
-            /{args.ipa}/
-          </span>
+          <span className="text-sm font-mono text-[var(--text-tertiary)]">/{args.ipa}/</span>
         )}
         <button
           onClick={speakTarget}
-          className="flex items-center gap-1 px-2 py-1 rounded-lg text-xs bg-surface-sunken text-fg-muted"
-          title="Listen to pronunciation"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border border-[var(--border-default)] text-[var(--text-secondary)] transition-opacity hover:opacity-70"
         >
           <Volume2 className="w-3.5 h-3.5" />
           Listen
         </button>
       </div>
 
-      {!answered && (
-        <div className="flex items-center gap-3">
-          {!isRecording && !transcribing && !transcript && (
-            <button
-              onClick={() => start()}
-              className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm bg-primary text-on-primary"
-            >
-              <Mic className="w-4 h-4" />
-              Record
-            </button>
-          )}
-          {isRecording && (
-            <button
-              onClick={() => stop()}
-              className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm animate-pulse bg-error text-on-primary"
-            >
-              <MicOff className="w-4 h-4" />
-              Stop
-            </button>
-          )}
-          {transcribing && (
-            <span className="flex items-center gap-2 text-sm text-fg-subtle">
-              <Loader2 className="w-4 h-4 animate-spin" /> Analyzing…
-            </span>
-          )}
-        </div>
+      {!answered && !hasResult && (
+        <RecordingControls
+          isRecording={isRecording}
+          onMicClick={handleMicClick}
+          onSkip={() => onNext?.()}
+        />
       )}
 
-      {transcript && score !== null && (
+      {analyzing && !hasResult && (
+        <p className="text-xs text-center text-[var(--text-tertiary)] animate-pulse">Analyzing…</p>
+      )}
+
+      {scoring && (
         <ExerciseFeedback
-          result={buildSpeakingResult(args.target, transcript, score)}
-          onNext={score >= 0.6 ? onNext : undefined}
-          onRetry={
-            score < 0.6
-              ? () => {
-                  setTranscript(null);
-                  setScore(null);
-                  reset();
-                  onRetry?.();
-                }
-              : undefined
-          }
+          result={buildResult(args.target, scoring)}
+          onNext={scoring.isCorrect ? onNext : undefined}
+          onRetry={!scoring.isCorrect ? handleRetry : undefined}
         />
       )}
     </div>
+  );
+}
+
+function TargetPhrase({ target, wordResults }: { target: string; wordResults: WordResult[] | null }) {
+  if (!wordResults) {
+    return <p className="text-xl font-semibold text-[var(--text-primary)] text-center">{target}</p>;
+  }
+  const expectedWords = wordResults.filter(w => w.status !== "extra");
+  return (
+    <p className="text-xl font-semibold text-center leading-relaxed flex flex-wrap justify-center gap-x-2 gap-y-1">
+      {expectedWords.map((w, i) => {
+        const color =
+          w.status === "correct" ? "var(--success)" :
+          w.status === "missing" ? "var(--text-tertiary)" :
+          "var(--error)";
+        const bg =
+          w.status === "correct" ? "transparent" :
+          w.status === "missing" ? "transparent" :
+          "var(--error-soft)";
+        return (
+          <span
+            key={i}
+            className="rounded px-1.5"
+            style={{ color, backgroundColor: bg, textDecoration: w.status === "missing" ? "line-through" : "none" }}
+          >
+            {w.expected}
+          </span>
+        );
+      })}
+    </p>
   );
 }

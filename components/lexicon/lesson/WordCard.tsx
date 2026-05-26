@@ -5,7 +5,7 @@
 //   <StatusBadge />
 //   <WordTitle + PartOfSpeech />
 //   <Definition />
-//   <CardFooter: DifficultyDots + WordBankButton + PlayButton />
+//   <CardFooter: DifficultyDots + LearnButton + PlayButton />
 // </WordCard>
 
 import { Volume2 } from "lucide-react";
@@ -19,7 +19,7 @@ interface WordCardProps {
   status: "learned" | "reviewing" | "new";
   difficulty: number; // 1–5
   color?: string;
-  onAddToWordBank?: (word: string) => void;
+  onMarkLearned?: () => void;
 }
 
 const STATUS_CONFIG = {
@@ -38,22 +38,25 @@ const STATUS_CONFIG = {
     dotColor: "bg-warning",
   },
   new: {
-    label: "new",
-    icon: "◦",
-    badgeClass: "text-fg-muted bg-surface-sunken border-border-default",
+    label: "",
+    icon: "",
+    badgeClass: "",
     cardClass: "border-border-default bg-surface-raised",
     dotColor: "bg-border-default",
   },
 } as const;
 
-export function WordCard({ word, partOfSpeech, definition, example, status, difficulty, color, onAddToWordBank }: WordCardProps) {
+export function WordCard({ word, partOfSpeech, definition, example, status, difficulty, color, onMarkLearned }: WordCardProps) {
   const cfg = STATUS_CONFIG[status];
+  const isLearned = status === "learned";
 
   return (
     <div className={`flex flex-col gap-2 p-4 rounded-xl border ${cfg.cardClass}`}>
-      <span className={`self-start text-xs font-medium px-2 py-0.5 rounded-full border ${cfg.badgeClass}`}>
-        {cfg.icon} {cfg.label}
-      </span>
+      {status !== "new" && (
+        <span className={`self-start text-xs font-medium px-2 py-0.5 rounded-full border ${cfg.badgeClass}`}>
+          {cfg.icon} {cfg.label}
+        </span>
+      )}
 
       <div>
         <p className="text-xl font-semibold text-fg leading-tight">{word}</p>
@@ -81,12 +84,19 @@ export function WordCard({ word, partOfSpeech, definition, example, status, diff
           ))}
         </div>
         <div className="flex items-center gap-2">
-          <button
-            onClick={() => onAddToWordBank?.(word)}
-            className="text-xs text-fg-muted hover:text-fg border border-border-default hover:border-border-strong px-2.5 py-1 rounded-full transition-colors"
-          >
-            + Word Bank
-          </button>
+          {isLearned ? (
+            <span className="text-xs text-primary font-medium px-2.5 py-1">
+              Practice this word →
+            </span>
+          ) : (
+            <button
+              onClick={onMarkLearned}
+              disabled={!onMarkLearned}
+              className="text-xs text-fg-muted hover:text-fg border border-border-default hover:border-border-strong px-2.5 py-1 rounded-full transition-colors disabled:opacity-40"
+            >
+              Mark learned
+            </button>
+          )}
           <button
             onClick={() => {
               const text = [word, definition, example ? `For example: ${example}` : ""]
