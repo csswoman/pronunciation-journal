@@ -1,14 +1,21 @@
 "use client";
 // Planned structure:
 // <CourseView>
-//   <CourseViewHeader />
-//   <LessonMarkdown />
+//   <CourseTopBar />        (breadcrumb + actions, sticky)
+//   <CourseHero />          (background image + title)
+//   <Layout>                (2-col on lg: article + sidebar)
+//     <LessonMarkdown />
+//     <CourseTocSidebar />
+//   </Layout>
 // </CourseView>
-import { useEffect, useState } from "react";
+
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
-import { H1 } from "@/components/ui/Typography";
 import LessonMarkdown from "@/components/lessons/LessonMarkdown";
+import CourseTopBar from "@/components/courses/CourseTopBar";
+import CourseHero from "@/components/courses/CourseHero";
+import CourseTocSidebar from "@/components/courses/CourseTocSidebar";
+import { getContentMetrics } from "@/components/courses/courseContentHelpers";
 import { getTheoryLessonBySlug } from "@/lib/theory-lessons/queries";
 import { LESSON_CATEGORIES } from "@/lib/types";
 import type { TheoryLesson } from "@/lib/types";
@@ -16,6 +23,7 @@ import type { TheoryLesson } from "@/lib/types";
 export default function CourseView({ slug }: { slug: string }) {
   const [course, setCourse] = useState<TheoryLesson | null>(null);
   const [status, setStatus] = useState<"loading" | "ready" | "notfound">("loading");
+  const [isCompleted, setIsCompleted] = useState(false);
 
   useEffect(() => {
     getTheoryLessonBySlug(slug)
@@ -25,6 +33,11 @@ export default function CourseView({ slug }: { slug: string }) {
       })
       .catch(() => setStatus("notfound"));
   }, [slug]);
+
+  const metrics = useMemo(
+    () => getContentMetrics(course?.content ?? ""),
+    [course?.content]
+  );
 
   if (status === "loading") {
     return (
@@ -49,51 +62,48 @@ export default function CourseView({ slug }: { slug: string }) {
 
   return (
     <div className="min-h-screen bg-page-bg">
-      <div className="max-w-3xl mx-auto px-4 py-10">
-        <nav className="flex items-center gap-1.5 text-sm mb-8">
-          <Link
-            href="/courses"
-            className="text-fg-muted hover:text-fg underline-offset-2 hover:underline transition-colors"
-          >
-            Courses
-          </Link>
-          <span className="text-fg-subtle select-none">›</span>
-          <span className="text-fg font-medium truncate">{course.title}</span>
-        </nav>
+      <CourseTopBar
+        title={course.title}
+        isCompleted={isCompleted}
+        onMarkComplete={() => setIsCompleted((v) => !v)}
+      />
 
-        <article className="rounded-2xl border border-line-divider bg-card-bg overflow-hidden shadow-sm">
-          <header className="relative h-56 flex flex-col justify-end bg-[var(--btn-regular-bg)]">
-            {course.cover_image_url && (
-              <Image
-                src={course.cover_image_url}
-                alt=""
-                fill
-                priority
-                sizes="(max-width: 768px) 100vw, 768px"
-                className="object-cover"
-              />
-            )}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/20 to-transparent" />
-            <div className="relative z-10 px-6 pb-5">
-              <div className="flex items-center gap-1.5 mb-2">
-                <span className="text-tiny font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-overlay-light text-on-primary backdrop-blur-sm">
-                  {cat?.label ?? course.category}
-                </span>
-                <span className="text-tiny font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-overlay-light text-on-primary backdrop-blur-sm">
-                  {course.source === "notion" ? "Notes" : "Course"}
-                </span>
-              </div>
-              <H1 className="text-h2 text-on-primary">{course.title}</H1>
-              <p className="text-xs text-on-primary opacity-70 mt-1">
-                Updated {new Date(course.updated_at).toLocaleDateString()}
-              </p>
-            </div>
-          </header>
+      <div
+        className="mx-auto"
+        style={{
+          maxWidth: "1180px",
+          padding: "var(--space-4) clamp(var(--space-5), 6vw, var(--space-10)) var(--space-12)",
+        }}
+      >
+        <CourseHero
+          title={course.title}
+          category={course.category}
+          categoryLabel={cat?.label}
+          source={course.source}
+          updatedAt={course.updated_at}
+          dek={metrics.dek}
+          readTimeMin={metrics.readTimeMin}
+          wordCount={metrics.wordCount}
+        />
 
-          <div className="px-6 py-8">
+        <div
+          className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_220px]"
+          style={{
+            gap: "clamp(var(--space-6), 5vw, var(--space-12))",
+            alignItems: "start",
+            marginTop: "var(--space-10)",
+          }}
+        >
+          <article className="min-w-0">
             <LessonMarkdown content={course.content} />
-          </div>
-        </article>
+          </article>
+
+          <CourseTocSidebar
+            toc={metrics.toc}
+            wordCount={metrics.wordCount}
+            readTimeMin={metrics.readTimeMin}
+          />
+        </div>
       </div>
     </div>
   );

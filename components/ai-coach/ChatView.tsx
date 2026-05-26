@@ -3,10 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { AIMessage, ExerciseResult } from "@/lib/ai-practice/types";
 import MessageBubble from "./MessageBubble";
-import WelcomeScreen from "./WelcomeScreen";
 import TypingIndicator from "./TypingIndicator";
-import { TEMPLATES } from "./TemplateCard";
-import type { AITemplateId } from "@/lib/types";
 
 const MIN_THINKING_MS = 700;
 
@@ -16,7 +13,6 @@ interface ChatViewProps {
   onSaveWord: (word: string, context: string) => void;
   onSuggestionClick: (text: string) => void;
   onToolAnswer: (callId: string, result: ExerciseResult) => void;
-  onSendMessage?: (text: string) => void;
   onNext: () => void;
 }
 
@@ -26,7 +22,6 @@ export default function ChatView({
   onSaveWord,
   onSuggestionClick,
   onToolAnswer,
-  onSendMessage,
   onNext,
 }: ChatViewProps) {
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -68,22 +63,6 @@ export default function ChatView({
 
   const showIndicator = isStreaming || thinkingHold;
 
-  if (visibleMessages.length === 0 && !isStreaming) {
-    const handleTemplateSelect = onSendMessage
-      ? (id: AITemplateId) => {
-          const t = TEMPLATES.find(t => t.id === id);
-          if (t) onSendMessage(t.description);
-        }
-      : undefined;
-
-    return (
-      <WelcomeScreen
-        onSuggestionClick={onSuggestionClick}
-        onTemplateSelect={handleTemplateSelect}
-      />
-    );
-  }
-
   // Compute grouping: is this the last message of a consecutive run from same sender?
   const isLastInGroup = visibleMessages.map((msg, i) => {
     const next = visibleMessages[i + 1];
@@ -119,7 +98,7 @@ export default function ChatView({
         ))}
 
         {indicatorVisible && (
-          <div className={visibleMessages.length > 0 && lastVisible?.role === "model" ? "mt-1" : "mt-4"}>
+          <div className={visibleMessages.length > 0 ? "mt-4" : ""}>
             <TypingIndicator />
           </div>
         )}

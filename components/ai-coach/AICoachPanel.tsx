@@ -69,7 +69,7 @@ export default function AICoachPanel() {
               : <>
                   <div className="flex-1 overflow-y-auto">
                     {error && <ErrorBanner message={error} />}
-                    <ChatView messages={messages} isStreaming={isStreaming} onSaveWord={openSaveWordModal} onSuggestionClick={(prompt) => setInputPrefill(prompt)} onToolAnswer={answerToolCall} onSendMessage={sendMessage} onNext={() => sendMessage("next")} />
+                    <ChatView messages={messages} isStreaming={isStreaming} onSaveWord={openSaveWordModal} onSuggestionClick={(prompt) => setInputPrefill(prompt)} onToolAnswer={answerToolCall} onNext={() => sendMessage("next")} />
                   </div>
                   <div className="flex-shrink-0 px-3 pb-3 pt-1 bg-surface-base">
                     {quotaExhausted

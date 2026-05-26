@@ -80,7 +80,7 @@ export default function InterviewConfig({
 
       {/* Interview Type */}
       <div className="flex flex-col gap-2.5">
-        <p className="text-tiny font-semibold uppercase tracking-[0.1em] text-[var(--text-tertiary)]">
+        <p className="text-body-sm font-semibold uppercase tracking-[0.1em] text-[var(--text-tertiary)]">
           Interview Type
         </p>
         <div className="grid grid-cols-2 gap-2">
@@ -95,8 +95,8 @@ export default function InterviewConfig({
                 strokeWidth={1.8}
                 className={scenario === id ? "text-[var(--primary)]" : "text-[var(--text-tertiary)]"}
               />
-              <span className="text-caption font-semibold text-[var(--text-primary)] leading-[1.2]">{label}</span>
-              <span className="text-tiny text-[var(--text-tertiary)]">{sub}</span>
+              <span className="text-body-lg font-semibold text-[var(--text-primary)] leading-[1.2]">{label}</span>
+              <span className="text-body-sm text-[var(--text-tertiary)]">{sub}</span>
             </button>
           ))}
         </div>
@@ -104,7 +104,7 @@ export default function InterviewConfig({
 
       {/* Level */}
       <div className="flex flex-col gap-2.5">
-        <p className="text-tiny font-semibold uppercase tracking-[0.1em] text-[var(--text-tertiary)]">
+        <p className="text-body-sm font-semibold uppercase tracking-[0.1em] text-[var(--text-tertiary)]">
           Your English Level
         </p>
         <div className="flex gap-2">
@@ -118,10 +118,10 @@ export default function InterviewConfig({
                   : "bg-[var(--surface-raised)] border-[var(--border-subtle)] hover:bg-[var(--surface-sunken)]"
               }`}
             >
-              <span className={`text-caption font-semibold leading-none ${level === id ? "text-[var(--primary)]" : "text-[var(--text-primary)]"}`}>
+              <span className={`text-body-lg font-semibold leading-none ${level === id ? "text-[var(--primary)]" : "text-[var(--text-primary)]"}`}>
                 {label}
               </span>
-              <span className="text-tiny text-[var(--text-tertiary)] text-center">{sub}</span>
+              <span className="text-body-sm text-[var(--text-tertiary)] text-center">{sub}</span>
             </button>
           ))}
         </div>
@@ -129,7 +129,7 @@ export default function InterviewConfig({
 
       {/* Scoring Mode */}
       <div className="flex flex-col gap-2.5">
-        <p className="text-tiny font-semibold uppercase tracking-[0.1em] text-[var(--text-tertiary)]">
+        <p className="text-body-sm font-semibold uppercase tracking-[0.1em] text-[var(--text-tertiary)]">
           Scoring Mode
         </p>
         <div className="grid grid-cols-2 gap-2">
@@ -140,12 +140,12 @@ export default function InterviewConfig({
               className={cardCls(difficulty === id)}
             >
               <div className="flex items-center justify-between gap-1.5">
-                <span className="text-caption font-semibold text-[var(--text-primary)] leading-[1.2]">{label}</span>
-                <span className={`text-tiny font-bold px-1.5 py-0.5 rounded-full whitespace-nowrap shrink-0 ${badgeStyle}`}>
+                <span className="text-body-lg font-semibold text-[var(--text-primary)] leading-[1.2]">{label}</span>
+                <span className={`text-caption font-bold px-2 py-0.5 rounded-full whitespace-nowrap shrink-0 ${badgeStyle}`}>
                   {badge}
                 </span>
               </div>
-              <span className="text-tiny text-[var(--text-tertiary)]">{sub}</span>
+              <span className="text-body-sm text-[var(--text-tertiary)]">{sub}</span>
             </button>
           ))}
         </div>

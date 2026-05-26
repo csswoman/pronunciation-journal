@@ -7,6 +7,7 @@ import remarkGfm from "remark-gfm";
 import 'react-notion-x/src/styles.css'
 import 'prismjs'
 import 'prismjs/themes/prism-tomorrow.css'
+import { isHtmlContent } from "@/lib/theory-lessons/contentFormat";
 
 type AdmonitionTone = "info" | "warning" | "highlight";
 
@@ -113,8 +114,114 @@ function isAdmonitionMarker(children: ReactNode): boolean {
   return /^\[!(INFO|WARNING|HIGHLIGHT)\]$/i.test(flattenText(children).trim());
 }
 
+/** Strip leading emoji + decorative pictographs from heading text. */
+function stripDecorative(children: ReactNode): ReactNode {
+  if (typeof children === "string") return cleanString(children);
+  if (Array.isArray(children)) {
+    const first = children[0];
+    if (typeof first === "string") {
+      return [cleanString(first), ...children.slice(1)];
+    }
+  }
+  return children;
+}
+
+function cleanString(s: string): string {
+  return s
+    // Strip leading emojis / pictographs / dingbats / variation selectors
+    .replace(/^[\p{Extended_Pictographic}\p{Emoji_Component}‍︎️\s]+/u, "")
+    .trimStart();
+}
+
+function slugifyChildren(children: ReactNode): string {
+  return flattenText(children)
+    .replace(/[\p{Extended_Pictographic}\p{Emoji_Component}‍︎️]/gu, "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .replace(/[^a-z0-9\s-]/g, "")
+    .trim()
+    .replace(/\s+/g, "-");
+}
+
+/** Detect a 2-column "vs" table: headers contain Weak/Strong, Wrong/Right,
+ *  Don't/Do, ❌/✅, or similar. Returns label tokens or null. */
+const VS_HEADERS: { match: RegExp; left: string; right: string }[] = [
+  { match: /weak.*strong|strong.*weak/i,                 left: "Weak",  right: "Strong" },
+  { match: /wrong.*right|right.*wrong|don.?t.*do|do.*don.?t/i, left: "Wrong", right: "Right"  },
+  { match: /before.*after|after.*before/i,               left: "Before", right: "After"  },
+  { match: /❌.*✅|✅.*❌/,                              left: "Don't", right: "Do"     },
+];
+
+function detectVsHeaders(thead: ReactNode): { left: string; right: string } | null {
+  const text = flattenText(thead);
+  for (const h of VS_HEADERS) {
+    if (h.match.test(text)) return { left: h.left, right: h.right };
+  }
+  return null;
+}
+
+/** Extract the two <td> cells from a GFM single-row tbody. */
+function getVsRowCells(tbody: ReactNode): [ReactNode, ReactNode] | null {
+  let cells: ReactNode[] = [];
+  const visit = (n: ReactNode) => {
+    if (Array.isArray(n)) { n.forEach(visit); return; }
+    if (!isValidElement<{ children?: ReactNode }>(n)) return;
+    const type = (n.type as { name?: string; displayName?: string } | string);
+    const name = typeof type === "string" ? type : (type.displayName ?? type.name ?? "");
+    if (name === "td") { cells.push(n.props.children); return; }
+    visit(n.props.children ?? null);
+  };
+  visit(tbody);
+  if (cells.length < 2) return null;
+  return [cells[0], cells[1]];
+}
+
+function tryRenderVsTable(tableChildren: ReactNode): ReactNode | null {
+  // Walk children to find <thead> and <tbody>
+  let thead: ReactNode = null;
+  let tbody: ReactNode = null;
+  const visit = (n: ReactNode) => {
+    if (Array.isArray(n)) { n.forEach(visit); return; }
+    if (!isValidElement<{ children?: ReactNode }>(n)) return;
+    const type = (n.type as { name?: string; displayName?: string } | string);
+    const name = typeof type === "string" ? type : (type.displayName ?? type.name ?? "");
+    if (name === "thead") thead = n.props.children;
+    else if (name === "tbody") tbody = n.props.children;
+    else visit(n.props.children ?? null);
+  };
+  visit(tableChildren);
+
+  const labels = detectVsHeaders(thead);
+  if (!labels) return null;
+  const cells = getVsRowCells(tbody);
+  if (!cells) return null;
+
+  return (
+    <aside className="md-vs" role="group" aria-label={`${labels.left} vs ${labels.right}`}>
+      <div className="md-vs-col is-weak">
+        <div className="md-vs-label">{labels.left}</div>
+        <div className="md-vs-body">{cells[0]}</div>
+      </div>
+      <div className="md-vs-divider" aria-hidden />
+      <div className="md-vs-col is-strong">
+        <div className="md-vs-label">{labels.right}</div>
+        <div className="md-vs-body">{cells[1]}</div>
+      </div>
+    </aside>
+  );
+}
+
 export default function LessonMarkdown({ content }: { content: string }) {
-  const markdown = preprocessAdmonitions(content || "This lesson has no content yet.");
+  const safeContent = content || "This lesson has no content yet.";
+
+  if (isHtmlContent(safeContent)) {
+    return (
+      <div className="markdown" dangerouslySetInnerHTML={{ __html: safeContent }} />
+    );
+  }
+
+  const markdown = preprocessAdmonitions(safeContent);
 
   return (
     <div className="markdown">
@@ -124,12 +231,26 @@ export default function LessonMarkdown({ content }: { content: string }) {
           h1: ({ children }) => (
             <h1 className="md-h1">{children}</h1>
           ),
-          h2: ({ children }) => (
-            <h2 className="md-h2">{children}</h2>
-          ),
-          h3: ({ children }) => (
-            <h3 className="md-h3">{children}</h3>
-          ),
+          h2: ({ children }) => {
+            const id = slugifyChildren(children);
+            const clean = stripDecorative(children);
+            return (
+              <h2 id={id} className="md-h2">
+                {clean}
+                <a href={`#${id}`} className="md-anchor" aria-label="Link to section">#</a>
+              </h2>
+            );
+          },
+          h3: ({ children }) => {
+            const id = slugifyChildren(children);
+            const clean = stripDecorative(children);
+            return (
+              <h3 id={id} className="md-h3">
+                {clean}
+                <a href={`#${id}`} className="md-anchor" aria-label="Link to section">#</a>
+              </h3>
+            );
+          },
           h4: ({ children }) => (
             <h4 className="md-h4">{children}</h4>
           ),
@@ -161,72 +282,57 @@ export default function LessonMarkdown({ content }: { content: string }) {
               </aside>
             );
           },
-          table: ({ children }) => (
-            <div className="my-6 overflow-x-auto rounded-xl border border-[var(--line-divider)]">
-              <table className="w-full text-sm">
-                {children}
-              </table>
-            </div>
-          ),
-          thead: ({ children }) => (
-            <thead className="bg-[var(--btn-plain-bg)] dark:bg-[var(--btn-regular-bg)]">
-              {children}
-            </thead>
-          ),
-          th: ({ children }) => (
-            <th className="border-b border-[var(--line-divider)] px-4 py-3 text-left font-semibold text-fg">
-              {children}
-            </th>
-          ),
-          td: ({ children }) => (
-            <td className="border-b border-[var(--line-divider)] px-4 py-3 text-fg-muted">
-              {children}
-            </td>
-          ),
-          pre: ({ children }) => (
-            <pre className="my-6 overflow-x-auto rounded-xl bg-surface-code p-4 text-on-primary">
-              {children}
-            </pre>
-          ),
+          table: ({ children }) => {
+            const vs = tryRenderVsTable(children);
+            if (vs) return vs;
+            return (
+              <div className="md-table-wrap">
+                <table className="md-table">{children}</table>
+              </div>
+            );
+          },
+          thead: ({ children }) => <thead className="md-table-head">{children}</thead>,
+          tr:    ({ children }) => <tr className="md-table-row">{children}</tr>,
+          th:    ({ children }) => <th className="md-table-th">{children}</th>,
+          td:    ({ children }) => <td className="md-table-td">{children}</td>,
+          pre: ({ children }) => <pre className="md-code">{children}</pre>,
           code: ({ children, className }) => {
             const isBlock = Boolean(className && className.includes("language-"));
             if (isBlock) {
-              return (
-                <code className="text-sm font-mono text-on-primary">
-                  {children}
-                </code>
-              );
+              return <code className={className}>{children}</code>;
             }
+            return <code className="md-inline-code">{children}</code>;
+          },
+          a: ({ href, children }) => {
+            const isExternal = typeof href === "string" && /^https?:\/\//i.test(href);
             return (
-              <code className="rounded bg-surface-sunken px-1.5 py-0.5 text-sm text-fg">
+              <a
+                href={href}
+                target={isExternal ? "_blank" : undefined}
+                rel={isExternal ? "noopener noreferrer" : undefined}
+              >
                 {children}
-              </code>
+              </a>
             );
           },
-          a: ({ href, children }) => (
-            <a
-              href={href}
-              className="font-medium text-[var(--primary)] underline decoration-[color:color-mix(in_srgb,var(--primary)_40%,transparent)] underline-offset-4 transition-colors hover:text-[var(--btn-content)]"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {children}
-            </a>
-          ),
           img: ({ src, alt }) => {
             if (typeof src !== "string" || src.length === 0) return null;
-
+            const caption = typeof alt === "string" ? alt : "";
             return (
-              <Image
-                src={src}
-                alt={typeof alt === "string" ? alt : ""}
-                className="my-6 max-w-full rounded-xl shadow-md dark:shadow-xl"
-                width={400}
-                height={200}
-              />
+              <figure>
+                <Image
+                  src={src}
+                  alt={caption}
+                  className="md-image"
+                  width={1200}
+                  height={675}
+                  unoptimized
+                />
+                {caption && <figcaption className="md-figcaption">{caption}</figcaption>}
+              </figure>
             );
           },
-          hr: () => <hr className="my-8 border-[var(--line-divider)]" />,
+          hr: () => <hr className="md-divider" />,
         }}
       >
         {markdown}
