@@ -24,7 +24,7 @@
 }
 .btn-secondary:hover {
   background-color: var(--cta-outline-bg-hover);
-  border-color: var(--primary);
+  border-color: var(--primary); /* intentional: full-hue border on hover, stronger than the tinted resting border */
 }
 .btn-secondary:disabled { opacity: 0.5; cursor: not-allowed; }
 
@@ -35,7 +35,7 @@
 }
 
 .hue-left-bar {
-  border-left: 2px solid var(--primary);
+  border-left: 2px solid var(--hue-bar);
 }
 
 .btn-soft {
