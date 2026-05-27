@@ -1,8 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Play, MessageSquareText } from "lucide-react";
-import Button from "@/components/ui/Button";
+import { Play, Zap } from "lucide-react";
 
 interface HomeHeaderActionsProps {
   hasStartedLearning: boolean;
@@ -12,25 +11,21 @@ export default function HomeHeaderActions({ hasStartedLearning }: HomeHeaderActi
   const router = useRouter();
 
   return (
-    <div className="flex gap-3 flex-wrap">
-      <Button
+    <div className="flex gap-2 flex-wrap">
+      <button
         onClick={() => router.push("/courses")}
-        size="sm"
-        icon={<Play size={14} className="fill-current" />}
-        className="shadow-[0_4px_16px_color-mix(in_oklch,var(--primary)_35%,transparent)]"
-        style={{ padding: "var(--space-2) var(--space-4)" }}
+        className="btn-primary inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold cursor-pointer"
       >
+        <Play size={13} className="fill-current" />
         {hasStartedLearning ? "Continue learning" : "Start learning"}
-      </Button>
-      <Button
+      </button>
+      <button
         onClick={() => router.push("/daily")}
-        variant="secondary"
-        size="sm"
-        icon={<MessageSquareText size={14} />}
-        style={{ padding: "var(--space-2) var(--space-4)" }}
+        className="btn-secondary inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium cursor-pointer"
       >
-        Practice with AI
-      </Button>
+        <Zap size={13} />
+        Daily practice
+      </button>
     </div>
   );
 }
