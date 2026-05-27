@@ -1,14 +1,14 @@
 import Script from "next/script";
 import "./globals.css";
 import "./markdown.css";
-import { Noto_Sans, Fraunces } from "next/font/google";
+import { DM_Sans, Fraunces, DM_Mono } from "next/font/google";
 import AuthProvider from "@/components/auth/AuthProvider";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
 import AppShell from "@/components/layout/AppShell";
 
-// Body + UI — Noto Sans covers Latin and Latin Extended (IPA symbols)
-const notoSans = Noto_Sans({
-  weight: ["400", "500", "600", "700", "800"],
+// Body + UI — DM Sans covers Latin and Latin Extended (IPA symbols)
+const dmSans = DM_Sans({
+  weight: ["300", "400", "500", "600", "700"],
   subsets: ["latin", "latin-ext"],
   variable: "--font-sans",
 });
@@ -22,6 +22,13 @@ const fraunces = Fraunces({
   axes: ["opsz"],
 });
 
+// Monospace — IPA transcription, code snippets
+const dmMono = DM_Mono({
+  weight: ["400", "500"],
+  subsets: ["latin"],
+  variable: "--font-mono-var",
+});
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -31,7 +38,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${notoSans.variable} ${fraunces.variable}`}
+      className={`${dmSans.variable} ${fraunces.variable} ${dmMono.variable}`}
     >
       <head>
         <meta charSet="utf-8" />
