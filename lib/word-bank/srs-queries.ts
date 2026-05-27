@@ -36,7 +36,7 @@ export async function applyFlashcardRating(
   let entry: WordBankEntry
 
   if (existing) {
-    entry = existing as WordBankEntry
+    entry = existing as WordBankEntry // Supabase select('*') returns untyped — shape guaranteed by the word_bank table schema
   } else {
     const { data: inserted, error: insertError } = await db
       .from('word_bank')
@@ -54,7 +54,7 @@ export async function applyFlashcardRating(
       .single()
 
     if (insertError) throw insertError
-    entry = inserted as WordBankEntry
+    entry = inserted as WordBankEntry // Supabase select('*') returns untyped — shape guaranteed by the word_bank table schema
   }
 
   const now = new Date()
@@ -100,7 +100,7 @@ export async function applyFlashcardRating(
           interval_days: entry.interval_days ?? 1,
           repetitions: entry.repetitions ?? 0,
           next_review_at: entry.next_review_at,
-          status: entry.srs_status as 'new' | 'learning' | 'review' | 'mastered',
+          status: entry.srs_status as 'new' | 'learning' | 'review' | 'mastered', // srs_status is a constrained enum column — values are always from this set
           last_reviewed_at: entry.last_reviewed_at,
         }
       : null
@@ -125,7 +125,7 @@ export async function applyFlashcardRating(
     .single()
 
   if (updateError) throw updateError
-  return updated as WordBankEntry
+  return updated as WordBankEntry // Supabase select('*') returns untyped — shape guaranteed by the word_bank table schema
 }
 
 export async function applyPhase2Penalty(
@@ -182,7 +182,7 @@ export async function reviewWordBankEntry(
         interval_days: data.interval_days,
         repetitions: data.repetitions,
         next_review_at: data.next_review_at,
-        status: data.srs_status as SM2Progress['status'],
+        status: data.srs_status as SM2Progress['status'], // srs_status is a constrained enum column — values are always from this set
         last_reviewed_at: data.last_reviewed_at,
       }
     : null
