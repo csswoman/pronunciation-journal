@@ -62,6 +62,7 @@ export default function HomeHeader() {
     <div className="relative overflow-hidden rounded-2xl p-5 grid grid-cols-1 lg:grid-cols-2 gap-5 items-center bg-surface-raised border border-border-subtle">
       {/* Decorative hue blob — style prop required: radial-gradient with CSS var cannot be expressed as a Tailwind utility */}
       <div
+        aria-hidden="true"
         className="pointer-events-none absolute -top-12 -right-12 w-48 h-48 rounded-full opacity-60"
         style={{ background: "radial-gradient(circle, var(--hue-blob) 0%, transparent 70%)" }}
       />
