@@ -1,12 +1,10 @@
-"use client";
-
 // Planned structure:
 // <HomePracticeCard>
 //   <blob div /> (decorative)
 //   <header row: icon-wrap + title + beta badge />
 //   <subtitle />
 //   <chips: Conversation · Pronunciation · Adaptive />
-//   <CTA row: "Start session" (dark) + "Browse topics" (ghost) />
+//   <CTA row: "Start session" (dark) + "Topics" (ghost) />
 // </HomePracticeCard>
 
 import Link from "next/link";
@@ -16,11 +14,8 @@ const CHIPS = ["Conversation", "Pronunciation feedback", "Adaptive"];
 
 export default function HomePracticeCard() {
   return (
-    <div
-      className="relative overflow-hidden rounded-2xl p-5 flex flex-col gap-4 bg-surface-raised"
-      style={{ border: "1px solid var(--cta-outline-border)" }}
-    >
-      {/* Decorative hue blob */}
+    <div className="relative overflow-hidden rounded-2xl p-5 flex flex-col gap-4 bg-surface-raised border border-[var(--cta-outline-border)]">
+      {/* Decorative hue blob — style required: radial-gradient with CSS var cannot be a Tailwind utility */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute -top-8 -right-8 w-32 h-32 rounded-full opacity-70"
@@ -48,8 +43,7 @@ export default function HomePracticeCard() {
         {CHIPS.map((chip) => (
           <span
             key={chip}
-            className="inline-flex items-center px-2.5 py-1 rounded-md text-[11px] font-medium"
-            style={{ background: "var(--hue-icon-bg)", color: "var(--primary)" }}
+            className="inline-flex items-center px-2.5 py-1 rounded-md text-[11px] font-medium bg-[var(--hue-icon-bg)] text-[var(--primary)]"
           >
             {chip}
           </span>
