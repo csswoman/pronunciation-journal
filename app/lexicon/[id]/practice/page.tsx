@@ -140,14 +140,15 @@ export default function LexiconPracticePage() {
   const handleSessionComplete = useCallback(
     (result: SessionResult) => {
       if (!user) return
-      // sourceRef is ExerciseSourceRef { source, id } — use .id to match word bank entries.
-      const penalties = result.results
-        .filter((r) => !r.isCorrect && r.sourceRef && forgotEntryMap.has(r.sourceRef.id))
-        .map((r) => {
-          const entry = forgotEntryMap.get(r.sourceRef!.id)!
-          return applyPhase2Penalty(user.id, entry.id, entry.ease_factor ?? 2.5)
-        })
-      void Promise.allSettled(penalties)
+      // match_pairs grades a group of 4 — there's no per-word result. If any exercise is
+      // answered incorrectly, penalize all "forgot" entries since they were part of the pool.
+      const anyIncorrect = result.results.some((r) => !r.isCorrect)
+      if (anyIncorrect && forgotEntryMap.size > 0) {
+        const penalties = Array.from(forgotEntryMap.values()).map((entry) =>
+          applyPhase2Penalty(user.id, entry.id, entry.ease_factor ?? 2.5)
+        )
+        void Promise.allSettled(penalties)
+      }
       setFlowPhase('done')
     },
     [user, forgotEntryMap],
