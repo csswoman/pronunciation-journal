@@ -91,7 +91,7 @@ export function SessionSummary({ result, onPracticeAgain, onFinish }: Props) {
           onClick={onPracticeAgain}
           className="flex-1 rounded-[var(--radius-md)] border border-border-subtle bg-surface-raised px-4 py-3 text-sm font-semibold text-fg transition-colors hover:border-border-strong"
         >
-          Practicar de nuevo
+          Practice again
         </button>
         <button
           type="button"
@@ -99,7 +99,7 @@ export function SessionSummary({ result, onPracticeAgain, onFinish }: Props) {
           className="flex-1 rounded-[var(--radius-md)] px-4 py-3 text-sm font-semibold text-on-primary shadow-md transition-transform hover:-translate-y-[1px]"
           style={{ backgroundImage: 'var(--gradient-primary)' }}
         >
-          Terminar
+          Finish
         </button>
       </div>
     </div>
