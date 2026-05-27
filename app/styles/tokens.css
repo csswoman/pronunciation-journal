@@ -156,11 +156,17 @@
   --radius-full: 9999px;
 
   /* ── 11. Typography scale ────────────────────────────────────────────── */
-  --font-display: var(--font-heading), serif;
-  --font-h1:      700 clamp(1.875rem, 4vw, 2.625rem) / 1.2 var(--font-heading), serif;
-  --font-h2:      700 clamp(1.5rem, 3vw, 2rem) / 1.3 var(--font-heading), serif;
-  --font-h3:      600 clamp(1.25rem, 2.5vw, 1.5rem) / 1.4 var(--font-heading), serif;
-  --font-h4:      600 1.25rem / 1.4 var(--font-heading), serif;
+  /* Aliases — all UI/body/IPA use Noto Sans; decorative headings use Fraunces */
+  --font-ui:      var(--font-sans);
+  --font-heading: var(--font-sans);
+  --font-ipa:     var(--font-sans); /* latin-ext subset covers all IPA characters */
+  --font-phoneme: var(--font-editorial);
+
+  --font-display: var(--font-editorial), serif;
+  --font-h1:      700 clamp(1.875rem, 4vw, 2.625rem) / 1.2 var(--font-sans), sans-serif;
+  --font-h2:      700 clamp(1.5rem, 3vw, 2rem) / 1.3 var(--font-sans), sans-serif;
+  --font-h3:      600 clamp(1.25rem, 2.5vw, 1.5rem) / 1.4 var(--font-sans), sans-serif;
+  --font-h4:      600 1.25rem / 1.4 var(--font-sans), sans-serif;
   --font-body:    400 1rem / 1.6 var(--font-sans), sans-serif;
   --font-body-sm: 400 0.875rem / 1.5 var(--font-sans), sans-serif;
   --font-caption: 400 0.75rem / 1.5 var(--font-sans), sans-serif;

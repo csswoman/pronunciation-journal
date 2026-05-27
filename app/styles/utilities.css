@@ -128,7 +128,7 @@
 .font-h4       { font: var(--font-h4); }
 .font-heading  { font-family: var(--font-heading), serif; }
 .font-ipa {
-  font-family: var(--font-ipa), "Noto Serif", serif;
+  font-family: var(--font-ipa), "Noto Sans", sans-serif;
   font-size: 15px;
   letter-spacing: 0.03em;
   color: var(--primary);

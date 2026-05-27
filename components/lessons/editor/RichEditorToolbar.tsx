@@ -5,7 +5,7 @@ import {
   IconUL, IconOL, IconQuote, IconLink, IconImage,
   IconUndo, IconRedo,
   IconAlignLeft, IconAlignCenter, IconAlignRight, IconAlignJustify,
-  IconChevron,
+  IconChevron, IconDivider,
 } from "./richEditorIcons";
 
 interface Props {
@@ -126,6 +126,14 @@ export default function RichEditorToolbar({ editor, onInsertImage, onInsertLink 
       </button>
       <button type="button" onClick={onInsertImage} className={btn(false)} aria-label="Insert image">
         <IconImage className="h-4 w-4" />
+      </button>
+      <button
+        type="button"
+        onClick={() => editor.chain().focus().setHorizontalRule().run()}
+        className={btn(false)}
+        aria-label="Insert divider"
+      >
+        <IconDivider className="h-4 w-4" />
       </button>
     </div>
   );
