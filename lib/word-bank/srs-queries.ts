@@ -168,7 +168,7 @@ export async function reviewWordBankEntry(
   const { data, error: fetchError } = await db
     .from('word_bank')
     .select(
-      'ease_factor, interval_days, repetitions, next_review_at, srs_status, last_reviewed_at',
+      'ease_factor, interval_days, repetitions, next_review_at, srs_status, last_reviewed_at, review_count',
     )
     .eq('id', wordId)
     .eq('user_id', userId)
@@ -198,7 +198,7 @@ export async function reviewWordBankEntry(
       next_review_at: next.next_review_at,
       srs_status: next.status,
       last_reviewed_at: next.last_reviewed_at,
-      review_count: data.repetitions + 1,
+      review_count: (data.review_count ?? 0) + 1,
     })
     .eq('id', wordId)
     .eq('user_id', userId)
