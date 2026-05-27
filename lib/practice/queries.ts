@@ -62,7 +62,7 @@ export async function savePracticeAnswer(
   // Fire-and-forget SRS update for word_bank entries. Never blocks the caller.
   if (answer.sourceRef?.source === 'word_bank') {
     const wordId = answer.sourceRef.id
-    reviewWordBankEntry(userId, wordId, grade).catch((err) => {
+    reviewWordBankEntry(userId, wordId, grade).catch((err: unknown) => {
       console.error('[practice/queries] reviewWordBankEntry failed', { wordId, grade, err })
     })
   }
