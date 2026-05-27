@@ -9,24 +9,34 @@
 
 /* ── Buttons ─────────────────────────────────────────────────────────────── */
 .btn-primary {
-  background-color: var(--primary);
-  color: var(--primary-foreground);
-  transition: all 0.2s ease;
+  background-color: var(--cta-bg);
+  color: var(--cta-fg);
+  transition: background-color 0.2s ease;
 }
-.btn-primary:hover    { background-color: var(--primary-hover); }
+.btn-primary:hover    { background-color: var(--cta-bg-hover); }
 .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
 
 .btn-secondary {
-  background-color: var(--btn-regular-bg);
-  color: var(--text-primary);
-  border: 1px solid var(--border);
-  transition: all 0.2s ease;
+  background: transparent;
+  color: var(--cta-outline-color);
+  border: 1px solid var(--cta-outline-border);
+  transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 .btn-secondary:hover {
-  background-color: var(--btn-regular-bg-hover);
-  border-color: var(--border-hover);
+  background-color: var(--cta-outline-bg-hover);
+  border-color: var(--primary);
 }
 .btn-secondary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ── Hue decorative helpers ──────────────────────────────────────────────── */
+.icon-wrap-hue {
+  background: var(--hue-icon-bg);
+  color: var(--primary);
+}
+
+.hue-left-bar {
+  border-left: 2px solid var(--primary);
+}
 
 .btn-soft {
   background-color: var(--primary-soft);
