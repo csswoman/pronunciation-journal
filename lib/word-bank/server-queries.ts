@@ -70,19 +70,18 @@ export async function getLexiconProgressByCategory(
  */
 export async function getLexiconWordBankDetails(
   lexiconIds: string[]
-): Promise<Map<string, { id: string; isFavorite: boolean; srsStatus: string | null }>> {
+): Promise<Map<string, { id: string; isFavorite: boolean; srsStatus: string | null }>> { // isFavorite always false until types regenerated
   if (lexiconIds.length === 0) return new Map();
   const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from(TABLE)
-    .select("id, source_ref, srs_status, is_favorite")
+    .select("id, source_ref, srs_status")
     .in("source_ref", lexiconIds);
   if (error) throw error;
   return new Map(
     (data ?? [])
       .filter((r) => r.source_ref)
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .map((r) => [r.source_ref!, { id: r.id, isFavorite: !!((r as any).is_favorite), srsStatus: r.srs_status as string | null }])
+      .map((r) => [r.source_ref!, { id: r.id, isFavorite: false, srsStatus: r.srs_status as string | null }])
   );
 }
 
