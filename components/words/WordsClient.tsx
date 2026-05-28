@@ -11,7 +11,6 @@ import WordsTabs, { type WordsTabId } from "@/components/words/WordsTabs";
 import { WordsHero } from "@/components/words/WordsHero";
 import { WordsTab } from "@/components/vocabulary/words/WordsTab";
 import { DecksTab } from "@/components/vocabulary/decks/DecksTab";
-import { LexiconHeader } from "@/components/lexicon";
 import { LexiconContent } from "@/components/lexicon/LexiconContent";
 
 import { useWords } from "@/hooks/useWords";

@@ -69,7 +69,7 @@ export default function SaveWordModal({ word, context, onConfirm, onClose }: Sav
         <div className="px-3 py-2 bg-primary-soft rounded-lg">
           <p className="text-lg font-semibold text-primary">{word}</p>
           {context !== word && (
-            <p className="text-xs text-fg-subtle mt-0.5 italic">&ldquo;{context}&rdquo;</p>
+            <p className="text-body-sm text-fg-subtle mt-0.5 italic">&ldquo;{context}&rdquo;</p>
           )}
         </div>
 

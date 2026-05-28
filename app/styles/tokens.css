@@ -157,7 +157,19 @@
   --radius-3xl:  32px;
   --radius-full: 9999px;
 
-  /* ── 11. Typography scale ────────────────────────────────────────────── */
+  /* ── 11. Badge soft backgrounds (precomputed to avoid runtime color-mix) ── */
+  --badge-primary-bg:   color-mix(in oklch, var(--primary) 14%, var(--bg-tertiary) 86%);
+  --badge-primary-border: color-mix(in oklch, var(--primary) 22%, transparent);
+  --badge-success-bg:   color-mix(in oklch, var(--success) 14%, var(--bg-tertiary) 86%);
+  --badge-success-border: color-mix(in oklch, var(--success) 22%, transparent);
+  --badge-warning-bg:   color-mix(in oklch, var(--warning) 14%, var(--bg-tertiary) 86%);
+  --badge-warning-border: color-mix(in oklch, var(--warning) 22%, transparent);
+  --badge-error-bg:     color-mix(in oklch, var(--error) 14%, var(--bg-tertiary) 86%);
+  --badge-error-border: color-mix(in oklch, var(--error) 22%, transparent);
+  --badge-info-bg:      color-mix(in oklch, var(--info) 14%, var(--bg-tertiary) 86%);
+  --badge-info-border:  color-mix(in oklch, var(--info) 22%, transparent);
+
+  /* ── 12. Typography scale ────────────────────────────────────────────── */
   /* Aliases — all UI/body/IPA use Noto Sans; decorative headings use Fraunces */
   --font-ui:      var(--font-sans);
   --font-heading: var(--font-sans);

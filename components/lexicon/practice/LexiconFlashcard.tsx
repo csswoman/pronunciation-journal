@@ -76,7 +76,7 @@ export function LexiconFlashcard({
               {definition}
             </p>
             {example && (
-              <p className="text-[11px] italic text-fg-subtle leading-snug pl-2 border-l-2 border-border-default">
+              <p className="text-body-sm italic text-fg-subtle leading-snug pl-3 rounded-lg" style={{ backgroundColor: "color-mix(in oklch, var(--primary) 5%, transparent)" }}>
                 "{example}"
               </p>
             )}

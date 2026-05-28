@@ -2,6 +2,7 @@
 
 import { useCallback, useState } from "react";
 import { cn } from "@/lib/cn";
+import Button from "@/components/ui/Button";
 import { CardBadge } from "@/components/ui/CardBadge";
 
 const PRACTICE_WORDS = ["three", "thank", "thumb", "breath", "mouth", "teeth"];
@@ -55,18 +56,18 @@ export default function HomeWeakPhoneme({
         <p className="text-xs mt-0.5 text-fg-subtle">Based on your recent sessions</p>
       </div>
 
-      {/* Phoneme card */}
-      <div className="rounded-lg px-4 py-3 flex items-center justify-between gap-3 border border-primary bg-primary-soft">
+      {/* Phoneme showcase */}
+      <div className="flex items-center justify-between gap-3 py-2">
         <div>
           <p className="text-4xl font-bold leading-none font-mono text-fg">{phoneme}</p>
-          <p className="text-xs mt-1 text-fg-subtle">{label}</p>
+          <p className="text-body-sm mt-1 text-fg-subtle">{label}</p>
         </div>
         <div className="flex items-end gap-0.5" aria-hidden="true">
           {[10, 18, 28, 22, 34, 26, 38, 30, 22, 16, 10].map((h, i) => (
             <span
               key={i}
-              className="block w-1 rounded-full opacity-70 bg-primary"
-              style={{ height: `${h}px` }}
+              className="block w-1 rounded-full opacity-70"
+              style={{ height: `${h}px`, backgroundColor: "var(--primary)" }}
             />
           ))}
         </div>
@@ -86,21 +87,15 @@ export default function HomeWeakPhoneme({
         <p className="text-xs font-semibold tracking-widest mb-2 text-fg-subtle">PRACTICE WORDS</p>
         <div className="flex flex-wrap gap-2">
           {PRACTICE_WORDS.map((w) => (
-            <button
+            <Button
               key={w}
-              type="button"
+              size="sm"
+              variant={speaking === w ? "soft" : "ghost"}
               onClick={() => speak(w)}
               aria-label={`Practice saying "${w}"`}
-              aria-pressed={speaking === w}
-              className={cn(
-                "text-sm px-4 h-9 flex items-center rounded-lg border transition-colors",
-                speaking === w
-                  ? "border-primary bg-primary-soft text-primary"
-                  : "border-border-default bg-surface-raised text-fg-muted"
-              )}
             >
               {w}
-            </button>
+            </Button>
           ))}
         </div>
       </div>

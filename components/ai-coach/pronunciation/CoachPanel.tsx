@@ -47,13 +47,12 @@ export default function CoachPanel({
       style={{
         backgroundColor: "var(--card-bg)",
         border: "1px solid var(--line-divider)",
-        borderLeft: "3px solid var(--primary)",
       }}
     >
       {/* Header */}
       <div className="flex items-start justify-between gap-3 mb-2">
         <div>
-          <p className="text-xs font-medium mb-1.5" style={{ color: "var(--text-tertiary)" }}>
+          <p className="text-body-sm font-medium mb-1.5" style={{ color: "var(--text-tertiary)" }}>
             Let&apos;s fix one thing
           </p>
           <div

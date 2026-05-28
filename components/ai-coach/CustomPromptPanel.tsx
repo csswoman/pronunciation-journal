@@ -90,7 +90,7 @@ export default function CustomPromptPanel({
         />
         <div className="flex items-center justify-between gap-3">
           {helperText && (
-            <p className="text-xs text-fg-subtle">{helperText}</p>
+            <p className="text-body-sm text-fg-subtle">{helperText}</p>
           )}
           <Button
             type="submit"

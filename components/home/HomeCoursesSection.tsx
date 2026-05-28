@@ -9,6 +9,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Anchor from "@/components/ui/Anchor";
 import { Headphones, MessageSquare, BookOpen, ArrowRight } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import type { Course } from "@/lib/notion/types";
@@ -80,12 +81,13 @@ export default function HomeCoursesSection() {
         <p className="text-[11px] font-semibold tracking-widest uppercase text-[var(--text-tertiary)]">
           Your courses
         </p>
-        <Link
+        <Anchor
           href="/courses"
-          className="text-[11px] font-medium text-[var(--primary)] hover:underline flex items-center gap-0.5"
+          icon={<ArrowRight size={11} />}
+          iconPosition="right"
         >
-          View all <ArrowRight size={11} />
-        </Link>
+          View all
+        </Anchor>
       </div>
 
       {loading ? (

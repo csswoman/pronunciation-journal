@@ -144,7 +144,7 @@ export function MatchPairsExercise({ exercise, onSubmit }: Props) {
     const leftId = Object.keys(matches).find((l) => matches[l] === rightId)
     const result = leftId ? results[leftId] : undefined
     const isArmed = armedRight === rightId
-    const base = 'relative z-10 rounded-xl py-3 px-3 text-[13px] border border-l-[3px] transition-all duration-200 text-left min-h-[48px] cursor-pointer leading-snug'
+    const base = 'relative z-10 rounded-xl py-3 px-3 text-[13px] border transition-all duration-200 text-left min-h-[48px] cursor-pointer leading-snug'
     if (result === 'correct') return `${base} bg-[var(--success-soft)] border-[var(--success-border)] text-[var(--text-secondary)] cursor-default`
     if (result === 'wrong')   return `${base} bg-[var(--error-soft)] border-[var(--error-border)] text-[var(--text-secondary)] cursor-default`
     if (isArmed)  return `${base} bg-[var(--primary-soft)] border-[var(--primary)] text-[var(--text-primary)] shadow-sm`

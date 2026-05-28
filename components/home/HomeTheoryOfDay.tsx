@@ -35,17 +35,17 @@ export default function HomeTheoryOfDay({ lesson }: HomeTheoryOfDayProps) {
 
       {/* Examples */}
       {todaysLesson.examples.length > 0 && (
-        <div className="rounded-xl border border-border-subtle border-l-2 border-l-primary bg-[var(--accent-dim)] px-4 py-3 flex flex-col gap-2">
+        <div className="flex flex-col gap-2 pt-2 border-t border-border-subtle">
           <p className="flex items-center gap-1.5 text-xs font-semibold tracking-widest uppercase text-primary">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L9.5 9.5 2 12l7.5 2.5L12 22l2.5-7.5L22 12l-7.5-2.5z"></path></svg>
             Examples
           </p>
           {todaysLesson.examples.map(({ word, ipa, translation }, i) => (
-            <div key={i} className="flex flex-col gap-0.5">
-              {i > 0 && <hr className="border-border-subtle mb-1" />}
+            <div key={i} className="flex flex-col gap-0.5 pl-4">
+              {i > 0 && <div className="mb-1" />}
               <p className="text-sm italic font-medium text-primary leading-snug">{word}</p>
               {(ipa || translation) && (
-                <p className="text-xs text-fg-subtle font-mono">
+                <p className="text-body-sm text-fg-subtle font-mono">
                   {ipa}{ipa && translation ? " · " : ""}{translation}
                 </p>
               )}
@@ -56,7 +56,7 @@ export default function HomeTheoryOfDay({ lesson }: HomeTheoryOfDayProps) {
 
       {/* Tip */}
       {todaysLesson.tip && (
-        <p className="text-xs italic text-fg-subtle px-3 py-2 border-l-2 border-primary">
+        <p className="text-body-sm italic text-fg-subtle px-3 py-2 rounded-lg" style={{ backgroundColor: "color-mix(in oklch, var(--primary) 10%, transparent)" }}>
           💡 {todaysLesson.tip}
         </p>
       )}

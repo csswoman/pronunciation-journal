@@ -62,12 +62,12 @@ export default function CourseTocSidebar({ toc }: CourseTocSidebarProps) {
                     fontSize: "0.875rem",
                     fontWeight: isActive ? 500 : 400,
                     color: isActive ? "var(--text-primary)" : "var(--text-secondary)",
-                    padding: "6px 0 6px 14px",
-                    borderLeft: `2px solid ${isActive ? "var(--primary)" : "transparent"}`,
-                    marginLeft: "-2px",
+                    padding: "6px 8px",
+                    backgroundColor: isActive ? "color-mix(in oklch, var(--primary) 12%, transparent)" : "transparent",
+                    borderRadius: "4px",
                     textDecoration: "none",
                     lineHeight: 1.4,
-                    transition: "color var(--transition-fast), border-color var(--transition-fast)",
+                    transition: "color var(--transition-fast), background-color var(--transition-fast)",
                   }}
                 >
                   {entry.text}

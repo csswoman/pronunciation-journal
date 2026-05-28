@@ -15,7 +15,7 @@ export default function WordCardWidget({ args }: Props) {
           <span className="text-sm font-mono text-[var(--text-tertiary)]">/{args.ipa}/</span>
         )}
       </div>
-      <div className="px-4 py-3 rounded-xl bg-[var(--surface-raised)] border border-[var(--border-subtle)] border-l-4" style={{ borderLeftColor: "var(--primary)" }}>
+      <div className="px-4 py-3 rounded-xl bg-[var(--surface-raised)] border border-[var(--border-subtle)]">
         <p className="text-sm text-[var(--text-secondary)] leading-relaxed">{args.meaning}</p>
         {args.example && (
           <p className="text-sm italic text-[var(--text-tertiary)] mt-1">&ldquo;{args.example}&rdquo;</p>

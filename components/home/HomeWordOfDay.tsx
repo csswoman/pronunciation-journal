@@ -150,10 +150,10 @@ export default function HomeWordOfDay() {
                 </span>
               )}
             </div>
-            <div className="mt-2 border-l-2 border-primary pl-3 flex flex-col gap-1">
-              <p className="text-xs italic leading-relaxed text-[var(--text-secondary)]">{word.definition}</p>
+            <div className="mt-2 pl-3 py-2 rounded-lg flex flex-col gap-1" style={{ backgroundColor: "color-mix(in oklch, var(--primary) 10%, transparent)" }}>
+              <p className="text-body-sm italic leading-relaxed text-[var(--text-secondary)]">{word.definition}</p>
               {word.example_sentence && (
-                <p className="text-xs italic leading-snug text-[var(--text-tertiary)]">"{word.example_sentence}"</p>
+                <p className="text-body-sm italic leading-snug text-[var(--text-tertiary)]">"{word.example_sentence}"</p>
               )}
             </div>
           </div>
@@ -168,7 +168,8 @@ export default function HomeWordOfDay() {
 
           <div className="flex gap-2">
             <Button
-              variant="outline"
+              variant="secondary"
+              size="md"
               icon={<Volume2 size={14} />}
               className="flex-1"
               onClick={speak}
@@ -180,6 +181,7 @@ export default function HomeWordOfDay() {
             {!isRecording ? (
               <Button
                 icon={<Mic size={14} />}
+                size="md"
                 className="flex-1"
                 onClick={startRecording}
                 variant="primary"
@@ -189,6 +191,7 @@ export default function HomeWordOfDay() {
             ) : (
               <Button
                 icon={<Square size={14} />}
+                size="md"
                 className="flex-1"
                 onClick={stopRecording}
                 variant="primary"
@@ -200,10 +203,12 @@ export default function HomeWordOfDay() {
 
           {recordedUrl && (
             <Button
-              variant="outline"
+              variant="secondary"
+              size="md"
               icon={<Play size={14} />}
               onClick={playRecording}
               disabled={playingRecording}
+              fullWidth
             >
               {playingRecording ? "Playing…" : "Play my recording"}
             </Button>

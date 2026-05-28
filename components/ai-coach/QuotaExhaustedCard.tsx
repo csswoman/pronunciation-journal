@@ -77,7 +77,7 @@ export default function QuotaExhaustedCard({ messages, onNewSession }: QuotaExha
         </div>
       )}
 
-      <p className="text-xs leading-relaxed text-fg-muted">
+      <p className="text-body-sm leading-relaxed text-fg-muted">
         The daily AI quota has been reached. Your conversation is saved — you can continue when the quota resets (usually within 24 hours).
       </p>
 

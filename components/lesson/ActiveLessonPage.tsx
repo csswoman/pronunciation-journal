@@ -16,17 +16,15 @@
 import { useState, useEffect, useRef } from "react";
 import { useActiveLessonSetup } from "@/hooks/useActiveLessonSetup";
 import { useLessonSession } from "@/hooks/useLessonSession";
-import AudioWaveform from "@/components/lesson/AudioWaveform";
 import PageLayout from "@/components/layout/PageLayout";
 import SessionHeader from "./SessionHeader";
-import WordCard from "./WordCard";
-import RecordingControls from "./RecordingControls";
-import FeedbackSection from "./FeedbackSection";
 import CompleteSection from "./CompleteSection";
 import { LessonContextStrip } from "./LessonContextStrip";
 import { StageProgressBar } from "./StageProgressBar";
 import { StageTransitionOverlay } from "./StageTransitionOverlay";
 import { QuizStage } from "./QuizStage";
+import { PronounceStageRenderer } from "./PronounceStageRenderer";
+import LoadingSpinner from "./LoadingSpinner";
 import { H1 } from "@/components/ui/Typography";
 import { LESSON_STAGES } from "./lesson-lobby-types";
 import type { LessonStageId, DifficultyMode } from "./lesson-lobby-types";
@@ -34,17 +32,6 @@ import type { LessonStageId, DifficultyMode } from "./lesson-lobby-types";
 export type Phase = "ready" | "recording" | "processing" | "feedback" | "no-audio" | "complete";
 
 const STAGE_IDS: LessonStageId[] = ["guided", "pronunciation", "speed"];
-
-function LoadingSpinner() {
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-surface-base">
-      <svg className="w-8 h-8 animate-spin text-primary" fill="none" viewBox="0 0 24 24">
-        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-      </svg>
-    </div>
-  );
-}
 
 interface Props {
   backHref: string;
@@ -215,47 +202,11 @@ export default function ActiveLessonPage({ backHref }: Props) {
 
         {/* Stages 1 & 2 — Word practice */}
         {activeStageIndex < 2 && session.phase !== "complete" && session.currentWord && (
-          <div className="flex flex-col items-center space-y-10">
-            {activeStageIndex === 1 && (
-              <span className="rounded-full bg-[color-mix(in_oklch,var(--warning)_12%,transparent)] px-3 py-1 text-tiny font-semibold text-warning">
-                NO HINTS
-              </span>
-            )}
-            <WordCard
-              word={session.currentWord.word}
-              ipa={session.currentWord.ipa}
-              hint={session.currentWord.hint}
-              audioUrl={session.wordAudioUrl}
-              isFav={session.isFav}
-              onToggleFavorite={session.handleToggleFavorite}
-              isHintMode={activeStageIndex === 1}
-            />
-            <div className="w-full">
-              <AudioWaveform isRecording={session.isRecording} stream={session.stream} />
-            </div>
-            <RecordingControls
-              phase={session.phase}
-              currentIndex={session.currentIndex}
-              totalWords={session.totalWords}
-              onStart={session.handleStartRecording}
-              onStop={session.handleStopRecording}
-              onCancel={session.handleCancelRecording}
-              onRetry={session.handleRetry}
-              onSkip={session.handleSkip}
-              onMarkKnown={session.handleMarkKnown}
-            />
-            {session.phase === "feedback" && session.scoringResult && session.feedback && (
-              <FeedbackSection
-                scoringResult={session.scoringResult}
-                feedback={session.feedback}
-                xpEarned={session.xpEarned}
-                currentIndex={session.currentIndex}
-                totalWords={session.totalWords}
-                onRetry={session.handleRetry}
-                onNext={session.handleNext}
-              />
-            )}
-          </div>
+          <PronounceStageRenderer
+            session={session}
+            lessonData={setup.lessonData}
+            isHintMode={activeStageIndex === 1}
+          />
         )}
       </main>
     </PageLayout>

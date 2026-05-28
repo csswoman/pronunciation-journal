@@ -25,7 +25,7 @@ interface UseLessonSessionOptions {
   advanceOffset: () => void;
 }
 
-interface UseLessonSessionReturn {
+export interface UseLessonSessionReturn {
   phase: Phase;
   setPhase: (p: Phase) => void;
   currentWord: LessonWord | null;

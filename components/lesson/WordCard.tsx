@@ -49,7 +49,7 @@ export default function WordCard({ word, ipa, hint, audioUrl, isFav, onToggleFav
         <Button
           onClick={onToggleFavorite}
           aria-label={isFav ? "Remove from favorites" : "Add to favorites"}
-          className="p-3 rounded-xl transition-colors bg-surface-sunken"
+          className="p-3 rounded-lg transition-colors bg-surface-sunken hover:bg-surface-base"
         >
           {isFav ? (
             <svg className="w-7 h-7 text-warning" fill="currentColor" viewBox="0 0 24 24">

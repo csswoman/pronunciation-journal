@@ -35,7 +35,7 @@ textarea:focus-visible {
 
 @layer components {
   main {
-    @apply transition-all duration-300;
+    @apply duration-300;
   }
 
   a.accent:focus-visible,

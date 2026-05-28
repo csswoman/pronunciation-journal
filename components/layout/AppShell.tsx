@@ -56,7 +56,6 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         className="main-scrollbar flex-1 overflow-y-auto pb-20 lg:pb-0"
         style={{
           marginRight: mainMarginRight,
-          transition: "margin-right 0.25s ease",
         }}
       >
         <div className="max-w-screen-xl mx-auto">
