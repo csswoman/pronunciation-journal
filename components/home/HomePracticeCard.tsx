@@ -1,55 +1,72 @@
-"use client";
+// Planned structure:
+// <HomePracticeCard>
+//   <blob div /> (decorative)
+//   <header row: icon-wrap + title + beta badge />
+//   <subtitle />
+//   <chips: Conversation · Pronunciation · Adaptive />
+//   <CTA row: "Start session" (dark) + "Topics" (ghost) />
+// </HomePracticeCard>
 
 import Link from "next/link";
-import { ArrowRight, Sparkles, Mic, PenLine, Headphones, BookOpen } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
+import { Bot, ArrowRight, BookOpen } from "lucide-react";
 
-const MODES: { icon: LucideIcon; label: string }[] = [
-  { icon: Mic,        label: "Speak" },
-  { icon: PenLine,    label: "Write" },
-  { icon: Headphones, label: "Listen" },
-  { icon: BookOpen,   label: "Vocab" },
-];
+const CHIPS = ["Conversation", "Pronunciation feedback", "Adaptive"];
 
 export default function HomePracticeCard() {
   return (
-    <div className="rounded-2xl bg-surface-tooltip p-6 flex items-center justify-between gap-6">
-      <div className="flex flex-col gap-3">
-        <div className="flex items-center gap-2">
-          <Sparkles size={13} className="text-[var(--primary)]" />
-          <span className="text-tiny font-bold tracking-widest text-[var(--primary)] uppercase">
-            AI Practice
-          </span>
-          <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-white/10 text-white/60 uppercase tracking-wide">
-            Beta
-          </span>
-        </div>
+    <div className="relative overflow-hidden rounded-2xl p-5 flex flex-col gap-4 bg-surface-raised border border-[var(--cta-outline-border)]">
+      {/* Decorative hue blob — style required: radial-gradient with CSS var cannot be a Tailwind utility */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -top-8 -right-8 w-32 h-32 rounded-full opacity-70"
+        style={{ background: "radial-gradient(circle, var(--hue-blob) 0%, transparent 70%)" }}
+      />
 
-        <div>
-          <p className="text-lg font-bold text-white leading-snug">Practice with AI feedback</p>
-          <p className="text-sm text-white/50 mt-0.5">Improve your speaking and writing skills.</p>
-        </div>
-
-        <div className="flex flex-wrap gap-2">
-          {MODES.map(({ icon: Icon, label }) => (
-            <span
-              key={label}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 text-white/70 text-xs font-medium"
-            >
-              <Icon size={12} />
-              {label}
-            </span>
-          ))}
-        </div>
+      {/* Header */}
+      <div className="relative z-10 flex items-center gap-2">
+        <span className="icon-wrap-hue flex items-center justify-center w-9 h-9 rounded-lg shrink-0">
+          <Bot size={18} />
+        </span>
+        <span className="text-[13px] font-semibold text-[var(--text-primary)]">Practice with AI</span>
+        <span className="ml-auto text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[var(--hue-icon-bg)] text-[var(--primary)] uppercase tracking-wide">
+          Beta
+        </span>
       </div>
 
-      <Link
-        href="/practice/sounds"
-        className="shrink-0 inline-flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-semibold bg-[var(--primary)] text-on-primary hover:opacity-90 transition-opacity whitespace-nowrap"
-      >
-        Start Practice
-        <ArrowRight size={15} />
-      </Link>
+      {/* Subtitle */}
+      <p className="relative z-10 text-[11px] text-[var(--text-secondary)] leading-relaxed -mt-1">
+        Improve speaking and writing with real-time AI feedback.
+      </p>
+
+      {/* Chips */}
+      <div className="relative z-10 flex flex-wrap gap-1.5">
+        {CHIPS.map((chip) => (
+          <span
+            key={chip}
+            className="inline-flex items-center px-2.5 py-1 rounded-md text-[11px] font-medium bg-[var(--hue-icon-bg)] text-[var(--primary)]"
+          >
+            {chip}
+          </span>
+        ))}
+      </div>
+
+      {/* CTA row */}
+      <div className="relative z-10 flex gap-2 flex-wrap mt-auto">
+        <Link
+          href="/practice/sounds"
+          className="btn-primary inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-[13px] font-semibold"
+        >
+          Start session
+          <ArrowRight size={13} />
+        </Link>
+        <Link
+          href="/practice/topics"
+          className="btn-secondary inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-[13px] font-medium"
+        >
+          <BookOpen size={13} />
+          Topics
+        </Link>
+      </div>
     </div>
   );
 }

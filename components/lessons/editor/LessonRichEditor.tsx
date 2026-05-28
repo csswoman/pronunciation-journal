@@ -1,10 +1,5 @@
 "use client";
-// Planned structure:
-// <LessonRichEditor>
-//   <RichEditorToolbar />
-//   <EditorContent />        (tiptap)
-//   <RichEditorBubbleMenu />
-// </LessonRichEditor>
+
 import { useEffect, useRef } from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
@@ -33,6 +28,7 @@ export default function LessonRichEditor({ value, onChange, placeholder }: Lesso
         heading: { levels: [1, 2, 3] },
         link: false,
         underline: false,
+        horizontalRule: {},
       }),
       Underline,
       Link.configure({ openOnClick: false, autolink: true, HTMLAttributes: { rel: "noopener noreferrer" } }),

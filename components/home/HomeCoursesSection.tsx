@@ -1,17 +1,68 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import type { Course } from "@/lib/notion/types";
-import CourseCard from "@/components/courses/CourseCard";
+// Planned structure:
+// <HomeCoursesSection>
+//   <header row: title + "View all" link />
+//   <list: up to 3 CourseRow items />
+//   <skeleton while loading />
+// </HomeCoursesSection>
 
-const VISIBLE = 2;
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { Headphones, MessageSquare, BookOpen, ArrowRight } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
+import type { Course } from "@/lib/notion/types";
+
+function courseIcon(title: string): LucideIcon {
+  const t = title.toLowerCase();
+  if (/audio|listen|shadow/.test(t)) return Headphones;
+  if (/convers|speak|chat/.test(t)) return MessageSquare;
+  return BookOpen;
+}
+
+interface CourseRowProps {
+  course: Course;
+}
+
+function CourseRow({ course }: CourseRowProps) {
+  const Icon = courseIcon(course.title);
+  return (
+    <Link
+      href={`/courses/${course.slug}`}
+      className="flex items-center gap-3 py-2.5 rounded-xl hover:bg-[var(--hue-icon-bg)] transition-colors px-1 -mx-1 group"
+    >
+      <span className="icon-wrap-hue flex items-center justify-center w-9 h-9 rounded-lg shrink-0">
+        <Icon size={16} />
+      </span>
+      <div className="flex-1 min-w-0">
+        <p className="text-[13px] font-semibold text-[var(--text-primary)] truncate">{course.title}</p>
+        <p className="text-[11px] text-[var(--text-tertiary)] truncate">{course.description ?? "—"}</p>
+      </div>
+      <div className="flex items-center gap-2 shrink-0">
+        <div className="w-16 h-1 rounded-full bg-[var(--border-subtle)] overflow-hidden">
+          <div className="h-full rounded-full bg-[var(--hue-bar)]" style={{ width: "0%" }} />
+        </div>
+        <ArrowRight size={13} className="text-[var(--text-tertiary)] opacity-0 group-hover:opacity-100 transition-opacity" />
+      </div>
+    </Link>
+  );
+}
+
+function CourseRowSkeleton() {
+  return (
+    <div className="flex items-center gap-3 py-2.5 px-1">
+      <div className="w-9 h-9 rounded-lg bg-[var(--border-subtle)] animate-pulse shrink-0" />
+      <div className="flex-1 flex flex-col gap-1.5">
+        <div className="h-3 w-2/3 rounded bg-[var(--border-subtle)] animate-pulse" />
+        <div className="h-2.5 w-1/2 rounded bg-[var(--border-subtle)] animate-pulse" />
+      </div>
+    </div>
+  );
+}
 
 export default function HomeCoursesSection() {
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
-  const [index, setIndex] = useState(0);
-  const trackRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     fetch("/api/notion/courses")
@@ -19,96 +70,34 @@ export default function HomeCoursesSection() {
         if (!r.ok) throw new Error(`HTTP ${r.status}`);
         return r.json();
       })
-      .then((data) => { setCourses(data); setLoading(false); })
+      .then((data: Course[]) => { setCourses(data.slice(0, 3)); setLoading(false); })
       .catch(() => setLoading(false));
   }, []);
 
-  const maxIndex = Math.max(0, courses.length - VISIBLE);
-  const prev = () => setIndex((i) => Math.max(0, i - 1));
-  const next = () => setIndex((i) => Math.min(maxIndex, i + 1));
-
-  // Scroll the track to the correct position using scrollLeft (no overflow on page)
-  useEffect(() => {
-    const track = trackRef.current;
-    if (!track) return;
-    const card = track.children[0] as HTMLElement | undefined;
-    if (!card) return;
-    const step = card.offsetWidth + 24;
-    track.scrollTo({ left: index * step, behavior: "smooth" });
-  }, [index]);
-
-  if (loading) {
-    return (
-      <div className="grid grid-cols-2 gap-6">
-        {Array.from({ length: 2 }).map((_, i) => (
-          <div key={i} className="rounded-lg border border-border-subtle bg-surface-raised h-40 overflow-hidden relative">
-            <div className="absolute inset-0 -translate-x-full animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-overlay-weak to-transparent" />
-          </div>
-        ))}
-      </div>
-    );
-  }
-
-  if (courses.length === 0) {
-    return <p className="text-fg-muted text-sm">No courses available yet.</p>;
-  }
-
   return (
-    <div className="flex flex-col gap-3">
-      {/* overflow-hidden on THIS div clips the track without affecting page layout */}
-      <div className="relative overflow-hidden rounded-xl">
-        {/* fade gradient indicating more content to the right */}
-        <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-20 z-10 bg-gradient-to-r from-transparent to-[var(--surface-base)]" />
-        <div
-          ref={trackRef}
-          className="flex gap-6 overflow-x-scroll [scrollbar-width:none] [&::-webkit-scrollbar]:hidden [scroll-snap-type:x_mandatory]"
+    <div className="flex flex-col gap-1">
+      <div className="flex items-center justify-between mb-1">
+        <p className="text-[11px] font-semibold tracking-widest uppercase text-[var(--text-tertiary)]">
+          Your courses
+        </p>
+        <Link
+          href="/courses"
+          className="text-[11px] font-medium text-[var(--primary)] hover:underline flex items-center gap-0.5"
         >
-          {courses.map((course, i) => (
-            <div
-              key={course.id}
-              className="max-w-[320px] min-w-[280px] w-[45vw] shrink-0 [scroll-snap-align:start]"
-            >
-              <CourseCard course={course} priority={i < 2} />
-            </div>
-          ))}
-        </div>
+          View all <ArrowRight size={11} />
+        </Link>
       </div>
 
-      {courses.length > VISIBLE && (
-        <div className="flex items-center justify-between">
-          <div className="flex gap-1.5">
-            {courses.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => setIndex(Math.min(i, maxIndex))}
-                className={`h-1.5 rounded-full transition-all duration-200 ${
-                  i >= index && i < index + VISIBLE
-                    ? "w-4 bg-[var(--primary)]"
-                    : "w-1.5 bg-[var(--line-color)]"
-                }`}
-                aria-label={`Go to slide ${i + 1}`}
-              />
-            ))}
-          </div>
-          <div className="flex gap-1">
-            <button
-              onClick={prev}
-              disabled={index === 0}
-              className="flex items-center justify-center w-7 h-7 rounded-full border border-border-subtle bg-surface-raised text-fg-muted hover:text-fg disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-              aria-label="Previous"
-            >
-              <ChevronLeft size={14} />
-            </button>
-            <button
-              onClick={next}
-              disabled={index >= maxIndex}
-              className="flex items-center justify-center w-7 h-7 rounded-full border border-border-subtle bg-surface-raised text-fg-muted hover:text-fg disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-              aria-label="Next"
-            >
-              <ChevronRight size={14} />
-            </button>
-          </div>
-        </div>
+      {loading ? (
+        <>
+          <CourseRowSkeleton />
+          <CourseRowSkeleton />
+          <CourseRowSkeleton />
+        </>
+      ) : courses.length === 0 ? (
+        <p className="text-[13px] text-[var(--text-tertiary)] py-3">No courses available yet.</p>
+      ) : (
+        courses.map((course) => <CourseRow key={course.id} course={course} />)
       )}
     </div>
   );

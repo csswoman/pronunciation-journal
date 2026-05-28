@@ -5,7 +5,7 @@ import { LessonDetailHeader } from "@/components/lexicon/lesson/LessonDetailHead
 import { WordBrowser } from "@/components/lexicon/lesson/WordBrowser";
 import { PracticeButton } from "@/components/lexicon/lesson/PracticeButton";
 import { getCategories, getCategoryWords } from "@/lib/lexicon/categories";
-import { getLexiconWordBankSet } from "@/lib/word-bank/server-queries";
+import { getLexiconWordBankMap } from "@/lib/word-bank/server-queries";
 import type { Word } from "@/components/lexicon/lesson/WordGrid";
 
 export default async function LessonDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -19,12 +19,19 @@ export default async function LessonDetailPage({ params }: { params: Promise<{ i
   const lexiconIds = rawWords.map((w) => w.id);
 
   // Fetch which of these words the user already has in word_bank (by source_ref).
-  // Falls back to empty set if the user is not logged in.
-  let inWordBank: Set<string>;
+  // Falls back to empty map if the user is not logged in.
+  let wordBankMap: Map<string, string>;
   try {
-    inWordBank = await getLexiconWordBankSet(lexiconIds);
+    wordBankMap = await getLexiconWordBankMap(lexiconIds);
   } catch {
-    inWordBank = new Set();
+    wordBankMap = new Map();
+  }
+
+  function resolveStatus(wordId: string): "learned" | "reviewing" | "new" {
+    const srsStatus = wordBankMap.get(wordId);
+    if (!srsStatus) return "new";
+    if (srsStatus === "mastered") return "learned";
+    return "reviewing";
   }
 
   const words: Word[] = rawWords.map((w) => ({
@@ -33,11 +40,12 @@ export default async function LessonDetailPage({ params }: { params: Promise<{ i
     partOfSpeech: w.pos,
     definition: w.definition,
     example: w.example,
-    status: inWordBank.has(w.id) ? ("learned" as const) : ("new" as const),
+    status: resolveStatus(w.id),
     difficulty: w.difficulty,
   }));
 
   const wordsLearned = words.filter((w) => w.status === "learned").length;
+  const wordsReviewing = words.filter((w) => w.status === "reviewing").length;
 
   return (
     <PageLayout cardWrapper={false}>
@@ -46,7 +54,7 @@ export default async function LessonDetailPage({ params }: { params: Promise<{ i
           title={category.name}
           totalWords={category.total}
           wordsLearned={wordsLearned}
-          wordsReviewing={0}
+          wordsReviewing={wordsReviewing}
           color={category.color}
         />
         <div className="flex justify-end">

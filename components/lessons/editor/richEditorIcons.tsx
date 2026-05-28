@@ -62,3 +62,6 @@ export const IconAlignJustify = (p: SVGProps<SVGSVGElement>) => (
 export const IconChevron = (p: SVGProps<SVGSVGElement>) => (
   <Icon {...p}><path d="M6 9l6 6 6-6" /></Icon>
 );
+export const IconDivider = (p: SVGProps<SVGSVGElement>) => (
+  <Icon {...p}><path d="M4 12h16M4 6h.01M20 6h.01M4 18h.01M20 18h.01" /></Icon>
+);

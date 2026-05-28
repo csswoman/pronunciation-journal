@@ -84,11 +84,7 @@ export function WordCard({ word, partOfSpeech, definition, example, status, diff
           ))}
         </div>
         <div className="flex items-center gap-2">
-          {isLearned ? (
-            <span className="text-xs text-primary font-medium px-2.5 py-1">
-              Practice this word →
-            </span>
-          ) : (
+          {!isLearned && (
             <button
               onClick={onMarkLearned}
               disabled={!onMarkLearned}

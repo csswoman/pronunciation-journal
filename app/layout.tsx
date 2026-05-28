@@ -1,26 +1,19 @@
 import Script from "next/script";
 import "./globals.css";
 import "./markdown.css";
-import { DM_Sans, Noto_Sans, Noto_Serif, Fraunces } from "next/font/google";
+import { DM_Sans, Fraunces, DM_Mono } from "next/font/google";
 import AuthProvider from "@/components/auth/AuthProvider";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
 import AppShell from "@/components/layout/AppShell";
 
-const notoSans = Noto_Sans({
-  weight: ["400", "500", "600", "700", "800"],
-  subsets: ["latin"],
+// Body + UI — DM Sans covers Latin and Latin Extended (IPA symbols)
+const dmSans = DM_Sans({
+  weight: ["300", "400", "500", "600", "700"],
+  subsets: ["latin", "latin-ext"],
   variable: "--font-sans",
 });
-const notoHeading = Noto_Serif({
-  weight: ["400", "700"],
-  subsets: ["latin"],
-  variable: "--font-heading",
-});
-const notoSerif = Noto_Serif({
-  weight: ["400", "700"],
-  subsets: ["latin"],
-  variable: "--font-ipa",
-});
+
+// Decorative / editorial headings
 const fraunces = Fraunces({
   weight: "variable",
   style: ["normal", "italic"],
@@ -28,17 +21,12 @@ const fraunces = Fraunces({
   variable: "--font-editorial",
   axes: ["opsz"],
 });
-// Legacy alias used by phoneme practice screens (kept for compatibility)
-const frauncesPhoneme = Fraunces({
-  weight: ["700"],
-  style: ["normal", "italic"],
+
+// Monospace — IPA transcription, code snippets
+const dmMono = DM_Mono({
+  weight: ["400", "500"],
   subsets: ["latin"],
-  variable: "--font-phoneme",
-});
-const dmSans = DM_Sans({
-  weight: ["400", "500", "600", "700"],
-  subsets: ["latin"],
-  variable: "--font-ui",
+  variable: "--font-mono-var",
 });
 
 export default function RootLayout({
@@ -50,7 +38,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${notoHeading.variable} ${notoSans.variable} ${notoSerif.variable} ${fraunces.variable} ${frauncesPhoneme.variable} ${dmSans.variable}`}
+      className={`${dmSans.variable} ${fraunces.variable} ${dmMono.variable}`}
     >
       <head>
         <meta charSet="utf-8" />
