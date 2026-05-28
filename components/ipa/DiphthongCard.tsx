@@ -30,7 +30,8 @@ export default function DiphthongCard({
         "transition-[background-color,border-color,transform,box-shadow] duration-200 ease-out",
         "hover:-translate-y-0.5 hover:shadow-[0_6px_16px_-8px_rgba(0,0,0,0.18)]",
         "active:translate-y-0 active:scale-[0.99]",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1"
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1",
+        !isSelected && "hover:border-[color:var(--border-strong)]"
       )}
       style={{
         backgroundColor: isSelected
@@ -41,18 +42,6 @@ export default function DiphthongCard({
           : isExplored
           ? "color-mix(in oklch, var(--success) 35%, var(--line-divider))"
           : "var(--line-divider)",
-      }}
-      onMouseEnter={(e) => {
-        if (!isSelected) {
-          e.currentTarget.style.borderColor = "var(--border-strong)";
-        }
-      }}
-      onMouseLeave={(e) => {
-        if (!isSelected) {
-          e.currentTarget.style.borderColor = isExplored
-            ? "color-mix(in oklch, var(--success) 35%, var(--line-divider))"
-            : "var(--line-divider)";
-        }
       }}
     >
       {isExplored && !isSelected && !isPlaying && (

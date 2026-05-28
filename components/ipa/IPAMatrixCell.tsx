@@ -27,7 +27,8 @@ export default function IPAMatrixCell({
         "transition-[background-color,border-color,color,transform,box-shadow] duration-200 ease-out",
         "hover:-translate-y-0.5 hover:shadow-[0_4px_12px_-6px_rgba(0,0,0,0.15)]",
         "active:translate-y-0 active:scale-[0.98]",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1"
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1",
+        !isSelected && "hover:border-[color:var(--border-strong)]"
       )}
       style={{
         backgroundColor: isSelected ? "var(--text-primary)" : "var(--card-bg)",
@@ -37,18 +38,6 @@ export default function IPAMatrixCell({
           ? "color-mix(in oklch, var(--success) 35%, var(--line-divider))"
           : "var(--line-divider)",
         color: isSelected ? "var(--card-bg)" : "var(--text-primary)",
-      }}
-      onMouseEnter={(e) => {
-        if (!isSelected) {
-          e.currentTarget.style.borderColor = "var(--border-strong)";
-        }
-      }}
-      onMouseLeave={(e) => {
-        if (!isSelected) {
-          e.currentTarget.style.borderColor = isExplored
-            ? "color-mix(in oklch, var(--success) 35%, var(--line-divider))"
-            : "var(--line-divider)";
-        }
       }}
     >
       {isExplored && !isSelected && !isPlaying && (
