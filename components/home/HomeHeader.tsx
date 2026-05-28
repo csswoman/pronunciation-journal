@@ -5,38 +5,36 @@
 //   <blob div /> (decorative)
 //   <left col>
 //     <HomeHeaderGreeting />
-//     <stat pills: streak · accuracy · time />
 //     <HomeHeaderActions />
 //   </left col>
 //   <right col>
-//     <CardsDueWidget />
-//     <TaskProgressRing />
+//     <StatCard streak />
+//     <StatCard accuracy />
+//     <StatCard time />
 //   </right col>
 // </HomeHeader>
 
-import { Flame, Target, Clock } from "lucide-react";
+import { Flame, CircleCheck, Clock } from "lucide-react";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { useSoundProgress } from "@/hooks/useSoundProgress";
 import { useUserPreferences } from "@/hooks/useUserPreferences";
 import HomeHeaderGreeting from "@/components/home/HomeHeaderGreeting";
 import HomeHeaderActions from "@/components/home/HomeHeaderActions";
-import CardsDueWidget from "@/components/home/CardsDueWidget";
-import TaskProgressRing from "@/components/home/TaskProgressRing";
 
-interface StatPillProps {
+interface StatCardProps {
   icon: React.ReactNode;
   value: string;
   label: string;
 }
 
-function StatPill({ icon, value, label }: StatPillProps) {
+function StatCard({ icon, value, label }: StatCardProps) {
   return (
-    <div className="flex items-center gap-2">
-      <span className="icon-wrap-hue flex items-center justify-center w-7 h-7 rounded-lg shrink-0">
+    <div className="flex items-center gap-3 rounded-xl bg-[var(--surface-sunken)] px-4 py-3 min-w-[120px]">
+      <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-[var(--surface-raised)] shrink-0">
         {icon}
       </span>
-      <span className="flex flex-col leading-none">
-        <span className="text-[13px] font-semibold text-[var(--text-primary)]">{value}</span>
+      <span className="flex flex-col leading-none gap-0.5">
+        <span className="text-[15px] font-bold text-[var(--text-primary)]">{value}</span>
         <span className="text-[11px] text-[var(--text-tertiary)]">{label}</span>
       </span>
     </div>
@@ -55,11 +53,8 @@ export default function HomeHeader() {
   const now = new Date();
   const dateLabel = now.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" });
 
-  // No accuracy field available on progress objects; show placeholder
-  const avgAccuracy = null;
-
   return (
-    <div className="relative overflow-hidden rounded-2xl p-5 grid grid-cols-1 lg:grid-cols-2 gap-5 items-center bg-surface-raised border border-border-subtle">
+    <div className="relative overflow-hidden rounded-2xl p-5 grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-5 items-center bg-surface-raised border border-border-subtle">
       {/* Decorative hue blob — style prop required: radial-gradient with CSS var cannot be expressed as a Tailwind utility */}
       <div
         aria-hidden="true"
@@ -68,32 +63,32 @@ export default function HomeHeader() {
       />
 
       <div className="relative z-10 flex flex-col gap-4">
-        <HomeHeaderGreeting userName={userName} dateLabel={dateLabel} />
-
-        <div className="flex items-center gap-5 flex-wrap">
-          <StatPill
-            icon={<Flame size={14} className="text-[var(--warning)]" />}
-            value="—"
-            label="day streak"
-          />
-          <StatPill
-            icon={<Target size={14} className="text-[var(--success)]" />}
-            value={avgAccuracy !== null ? `${avgAccuracy}%` : "—"}
-            label="accuracy"
-          />
-          <StatPill
-            icon={<Clock size={14} className="text-[var(--primary)]" />}
-            value="—"
-            label="today"
-          />
-        </div>
-
+        <HomeHeaderGreeting
+          userName={userName}
+          dateLabel={dateLabel}
+          exercisesReady={15}
+          improvedPhoneme="θ"
+          improvementPct={8}
+        />
         <HomeHeaderActions hasStartedLearning={hasStartedLearning} />
       </div>
 
-      <div className="relative z-10 flex items-center justify-end gap-4">
-        <CardsDueWidget />
-        <TaskProgressRing />
+      <div className="relative z-10 flex flex-col gap-2 lg:items-end">
+        <StatCard
+          icon={<Flame size={15} className="text-[var(--warning)]" />}
+          value="—"
+          label="Day streak"
+        />
+        <StatCard
+          icon={<CircleCheck size={15} className="text-[var(--success)]" />}
+          value="—"
+          label="Avg accuracy"
+        />
+        <StatCard
+          icon={<Clock size={15} className="text-[var(--primary)]" />}
+          value="—"
+          label="This week"
+        />
       </div>
     </div>
   );

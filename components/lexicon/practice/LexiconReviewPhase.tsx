@@ -13,11 +13,12 @@ import type { FlashcardRating, WordRating } from '@/lib/word-bank/lexicon-review
 
 interface LexiconReviewPhaseProps {
   entries: WordBankEntry[]
+  posMap?: Map<string, string>
   userId: string
   onComplete: (ratings: WordRating[]) => void
 }
 
-export function LexiconReviewPhase({ entries, userId, onComplete }: LexiconReviewPhaseProps) {
+export function LexiconReviewPhase({ entries, posMap, userId, onComplete }: LexiconReviewPhaseProps) {
   const [index, setIndex] = useState(0)
   const [ratings, setRatings] = useState<WordRating[]>([])
   const [busy, setBusy] = useState(false)
@@ -70,8 +71,10 @@ export function LexiconReviewPhase({ entries, userId, onComplete }: LexiconRevie
       <LexiconFlashcard
         key={current.id}
         word={current.text}
+        partOfSpeech={posMap?.get(current.source_ref ?? '') || undefined}
         definition={current.meaning ?? ''}
         example={current.example}
+        translation={current.translation ?? undefined}
         cardNumber={index + 1}
         totalCards={entries.length}
         onRate={handleRate}

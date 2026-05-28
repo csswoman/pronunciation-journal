@@ -16,6 +16,7 @@ interface LexiconFlashcardProps {
   partOfSpeech?: string
   definition: string
   example?: string | null
+  translation?: string
   cardNumber: number
   totalCards: number
   onRate: (rating: FlashcardRating) => void
@@ -26,14 +27,17 @@ export function LexiconFlashcard({
   partOfSpeech,
   definition,
   example,
+  translation,
   cardNumber,
   totalCards,
   onRate,
 }: LexiconFlashcardProps) {
   const [revealed, setRevealed] = useState(false)
+  const [showTranslation, setShowTranslation] = useState(false)
 
   function handleRate(rating: FlashcardRating) {
     setRevealed(false)
+    setShowTranslation(false)
     onRate(rating)
   }
 
@@ -56,7 +60,7 @@ export function LexiconFlashcard({
       >
         <div>
           <p className="text-2xl font-bold text-fg">{word}</p>
-          {partOfSpeech && (
+          {partOfSpeech && !revealed && (
             <p className="text-xs italic text-fg-subtle mt-0.5">{partOfSpeech}</p>
           )}
         </div>
@@ -65,11 +69,31 @@ export function LexiconFlashcard({
           <p className="text-sm text-fg-muted mt-auto">Tap to reveal →</p>
         ) : (
           <>
-            <p className="text-sm text-fg-muted leading-snug">{definition}</p>
+            <p className="text-sm text-fg-muted leading-snug">
+              {partOfSpeech && (
+                <span className="text-fg-subtle italic mr-1">({partOfSpeech})</span>
+              )}
+              {definition}
+            </p>
             {example && (
               <p className="text-[11px] italic text-fg-subtle leading-snug pl-2 border-l-2 border-border-default">
                 "{example}"
               </p>
+            )}
+            {translation && (
+              <div onClick={(e) => e.stopPropagation()}>
+                {showTranslation ? (
+                  <p className="text-xs text-fg-subtle">{translation}</p>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => setShowTranslation(true)}
+                    className="text-xs text-fg-subtle underline underline-offset-2 hover:text-fg transition-colors"
+                  >
+                    Show translation
+                  </button>
+                )}
+              </div>
             )}
             <button
               type="button"
