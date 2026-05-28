@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
-import { Search } from "lucide-react";
+import { Heart, Search } from "lucide-react";
 import Card from "@/components/layout/Card";
 import Button from "@/components/ui/Button";
 import { WordCard } from "@/components/vocabulary/words/WordCard";
@@ -9,7 +9,7 @@ import { WordsEmptyState } from "@/components/vocabulary/words/WordsEmptyState";
 import type { WordBankEntry } from "@/lib/word-bank/types";
 
 const ITEMS_PER_PAGE = 12;
-type WordFilter = "all" | "ready" | "processing";
+type WordFilter = "all" | "ready" | "processing" | "favorites";
 
 interface WordStats {
   total: number;
@@ -30,6 +30,7 @@ interface WordsTabProps {
   onRetry: (id: string) => void;
   onDelete: (id: string) => void;
   onOpenAddWord: (initialText?: string) => void;
+  onToggleFavorite?: (id: string, value: boolean) => void;
 }
 
 export function WordsTab({
@@ -45,6 +46,7 @@ export function WordsTab({
   onRetry,
   onDelete,
   onOpenAddWord,
+  onToggleFavorite,
 }: WordsTabProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [filterType, setFilterType] = useState<WordFilter>("all");
@@ -56,6 +58,7 @@ export function WordsTab({
     let result = words;
     if (filterType === "ready") result = result.filter(w => w.status === "ready");
     else if (filterType === "processing") result = result.filter(w => w.status === "processing");
+    else if (filterType === "favorites") result = result.filter(w => (w as WordBankEntry & { is_favorite?: boolean }).is_favorite);
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
       result = result.filter(w =>
@@ -130,6 +133,18 @@ export function WordsTab({
                 </button>
               );
             })}
+            <button
+              onClick={() => setFilterType("favorites")}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[13px] font-medium border transition-colors"
+              style={{
+                background: filterType === "favorites" ? "var(--primary)" : "transparent",
+                borderColor: filterType === "favorites" ? "var(--primary)" : "var(--line-divider)",
+                color: filterType === "favorites" ? "var(--on-primary)" : "var(--text-secondary)",
+              }}
+            >
+              <Heart size={11} fill={filterType === "favorites" ? "currentColor" : "none"} />
+              Favorites
+            </button>
           </div>
 
           <button
@@ -172,6 +187,8 @@ export function WordsTab({
                 onDelete={onDelete}
                 selected={selectedWordIds.has(word.id)}
                 onSelect={selectMode ? onToggleWordSelection : undefined}
+                isFavorite={!!(word as WordBankEntry & { is_favorite?: boolean }).is_favorite}
+                onToggleFavorite={onToggleFavorite ? () => onToggleFavorite(word.id, !(word as WordBankEntry & { is_favorite?: boolean }).is_favorite) : undefined}
               />
             ))}
           </div>
