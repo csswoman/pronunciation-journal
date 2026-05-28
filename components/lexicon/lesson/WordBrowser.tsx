@@ -19,9 +19,12 @@ interface WordBrowserProps {
   words: Word[];
   color?: string;
   categoryId: string;
+  wordBankMap?: Map<string, { id: string; isFavorite: boolean }>;
+  onToggleFavorite?: (wordBankId: string, value: boolean) => void;
+  onAddToMyWords?: (lexiconWord: { id: string; word: string; definition: string; example?: string }) => void;
 }
 
-export function WordBrowser({ words: initialWords, color, categoryId }: WordBrowserProps) {
+export function WordBrowser({ words: initialWords, color, categoryId, wordBankMap, onToggleFavorite, onAddToMyWords }: WordBrowserProps) {
   const [status, setStatus] = useState<StatusFilter>("all");
   const [sort, setSort] = useState<SortMode>("alpha");
   const [view, setView] = useState<ViewMode>("grid");
@@ -103,7 +106,23 @@ export function WordBrowser({ words: initialWords, color, categoryId }: WordBrow
         onSearchChange={setSearch}
       />
 
-      <WordGrid words={filtered} view={view} color={color} onMarkLearned={handleMarkLearned} />
+      <WordGrid
+        words={filtered.map((word) => ({
+          ...word,
+          isFavorite: wordBankMap?.get(word.id)?.isFavorite ?? false,
+          wordBankId: wordBankMap?.get(word.id)?.id ?? null,
+          onToggleFavorite: wordBankMap?.get(word.id)?.id
+            ? () => onToggleFavorite?.(wordBankMap!.get(word.id)!.id, !wordBankMap!.get(word.id)!.isFavorite)
+            : undefined,
+          onAddToMyWords: !wordBankMap?.get(word.id)
+            ? () => onAddToMyWords?.({ id: word.id, word: word.word, definition: word.definition, example: word.example })
+            : undefined,
+          isInMyWords: !!wordBankMap?.get(word.id),
+        }))}
+        view={view}
+        color={color}
+        onMarkLearned={handleMarkLearned}
+      />
 
       {/* Back to top */}
       <div className="flex justify-end pb-8">
