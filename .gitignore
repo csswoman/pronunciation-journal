@@ -21,6 +21,15 @@
 .claude/
 CLAUDE.md
 
+# documentation & config
+DESIGN.md
+ENGINEERING_STANDARDS.md
+PRODUCT.md
+THEME_SYSTEM.md
+.impeccable/
+.superpowers/
+.vscode/
+
 # debug
 npm-debug.log*
 yarn-debug.log*

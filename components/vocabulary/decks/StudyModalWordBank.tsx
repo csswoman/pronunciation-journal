@@ -1,15 +1,5 @@
 "use client";
 
-// Planned structure:
-// <StudyModalWordBank>
-//   <StudyLoadingScreen />   — while loading cards
-//   <StudyEmptyScreen />     — no cards due
-//   <StudyDoneScreen />      — session complete
-//   <StudySessionHeader />   — back button + progress bar
-//   <StudySessionCard />     — flashcard with 3D flip
-//   <StudyRatingBar />       — rate again / hard / easy
-// </StudyModalWordBank>
-
 import { StudySessionHeader } from "./StudySessionHeader";
 import { StudySessionCard } from "./StudySessionCard";
 import { StudyRatingBar } from "./StudyRatingBar";
