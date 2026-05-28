@@ -64,6 +64,28 @@ export async function getLexiconProgressByCategory(
   return result;
 }
 
+/**
+ * Returns a map from lexicon word id → { id: word_bank row id, isFavorite: boolean }
+ * for words the current user has in their word_bank.
+ */
+export async function getLexiconWordBankDetails(
+  lexiconIds: string[]
+): Promise<Map<string, { id: string; isFavorite: boolean; srsStatus: string | null }>> {
+  if (lexiconIds.length === 0) return new Map();
+  const supabase = await createSupabaseServerClient();
+  const { data, error } = await supabase
+    .from(TABLE)
+    .select("id, source_ref, srs_status, is_favorite")
+    .in("source_ref", lexiconIds);
+  if (error) throw error;
+  return new Map(
+    (data ?? [])
+      .filter((r) => r.source_ref)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .map((r) => [r.source_ref!, { id: r.id, isFavorite: !!((r as any).is_favorite), srsStatus: r.srs_status as string | null }])
+  );
+}
+
 /** Server-only: words due for review today, most urgent first. */
 export async function getWordsDueForReview(limit = 5): Promise<WordBankEntry[]> {
   const supabase = await createSupabaseServerClient();

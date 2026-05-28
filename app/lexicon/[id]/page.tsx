@@ -2,10 +2,10 @@ import { notFound } from "next/navigation";
 import PageLayout from "@/components/layout/PageLayout";
 import Section from "@/components/layout/Section";
 import { LessonDetailActions } from "@/components/lexicon/lesson/LessonDetailActions";
-import { WordBrowser } from "@/components/lexicon/lesson/WordBrowser";
+import { WordBrowserClient } from "@/components/lexicon/lesson/WordBrowserClient";
 import { PracticeButton } from "@/components/lexicon/lesson/PracticeButton";
 import { getCategories, getCategoryWords } from "@/lib/lexicon/categories";
-import { getLexiconWordBankMap } from "@/lib/word-bank/server-queries";
+import { getLexiconWordBankDetails } from "@/lib/word-bank/server-queries";
 import type { Word } from "@/components/lexicon/lesson/WordGrid";
 
 export default async function LessonDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -20,17 +20,17 @@ export default async function LessonDetailPage({ params }: { params: Promise<{ i
 
   // Fetch which of these words the user already has in word_bank (by source_ref).
   // Falls back to empty map if the user is not logged in.
-  let wordBankMap: Map<string, string>;
+  let wordBankDetailsMap: Map<string, { id: string; isFavorite: boolean; srsStatus: string | null }>;
   try {
-    wordBankMap = await getLexiconWordBankMap(lexiconIds);
+    wordBankDetailsMap = await getLexiconWordBankDetails(lexiconIds);
   } catch {
-    wordBankMap = new Map();
+    wordBankDetailsMap = new Map();
   }
 
   function resolveStatus(wordId: string): "learned" | "reviewing" | "new" {
-    const srsStatus = wordBankMap.get(wordId);
-    if (!srsStatus) return "new";
-    if (srsStatus === "mastered") return "learned";
+    const entry = wordBankDetailsMap.get(wordId);
+    if (!entry) return "new";
+    if (entry.srsStatus === "mastered") return "learned";
     return "reviewing";
   }
 
@@ -61,7 +61,14 @@ export default async function LessonDetailPage({ params }: { params: Promise<{ i
         <div className="flex justify-end">
           <PracticeButton categoryId={id} />
         </div>
-        <WordBrowser words={words} color={category.color} categoryId={id} />
+        <WordBrowserClient
+          words={words}
+          color={category.color}
+          categoryId={id}
+          wordBankMapEntries={Array.from(wordBankDetailsMap.entries()).map(
+            ([k, v]) => [k, { id: v.id, isFavorite: v.isFavorite }] as [string, { id: string; isFavorite: boolean }]
+          )}
+        />
       </Section>
     </PageLayout>
   );

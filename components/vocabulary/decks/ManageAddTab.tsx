@@ -1,7 +1,8 @@
 "use client";
 
 import type { Tables } from "@/lib/supabase/types";
-import type { WordSearchResult } from "@/hooks/useWordSearch";
+import { useWordSearch } from "@/hooks/useWordSearch";
+import { useWords } from "@/hooks/useWords";
 import { ChevronDown, ChevronUp, Plus } from "lucide-react";
 import Button from "@/components/ui/Button";
 
@@ -17,12 +18,17 @@ interface ManageAddTabProps {
   onManualPhrasesChange: (value: string) => void;
   onTogglePhrases: () => void;
   onAddWord: () => void;
-  searchResults?: WordSearchResult[];
-  onSelectSearchResult?: (result: WordSearchResult) => void;
 }
 
 export function ManageAddTab(props: ManageAddTabProps) {
-  const { entries, manualWord, manualPhrases, showPhrases, addingWord, onManualWordChange, onManualPhrasesChange, onTogglePhrases, onAddWord, searchResults, onSelectSearchResult } = props;
+  const { entries, manualWord, manualPhrases, showPhrases, addingWord, onManualWordChange, onManualPhrasesChange, onTogglePhrases, onAddWord } = props;
+
+  const { words } = useWords();
+  const searchResults = useWordSearch(manualWord, words);
+
+  const handleSelectResult = (r: { text: string }) => {
+    onManualWordChange(r.text);
+  };
 
   return <div className="p-4 space-y-4">
     <div>
@@ -34,7 +40,7 @@ export function ManageAddTab(props: ManageAddTabProps) {
             <li key={r.id}>
               <button
                 type="button"
-                onClick={() => onSelectSearchResult?.(r)}
+                onClick={() => handleSelectResult(r)}
                 className="w-full flex items-center justify-between px-3 py-2 text-sm hover:bg-surface-sunken transition-colors text-left"
               >
                 <span>
