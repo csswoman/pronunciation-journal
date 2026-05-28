@@ -1,24 +1,19 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import {
-  Play,
-  Square,
-  HelpCircle,
-  ArrowRight,
-  Check,
-  X,
-  RotateCcw,
-  Headphones,
-} from "lucide-react";
-import { cn } from "@/lib/cn";
-import {
-  MINIMAL_PAIR_CONTRASTS,
-  type MinimalPairContrast,
-} from "./minimal-pairs-data";
+import { Headphones } from "lucide-react";
+import { MINIMAL_PAIR_CONTRASTS } from "./minimal-pairs-data";
+import { ContrastChip } from "./contrast-chip";
+import { WordCard } from "./word-card";
+import { TrainerControls } from "./trainer-controls";
 
 type Verdict = "correct" | "wrong" | null;
 type Side = "A" | "B";
+
+interface ScoreBoard {
+  correct: number;
+  wrong: number;
+}
 
 function speakWord(word: string, onEnd?: () => void) {
   if (typeof window === "undefined" || !window.speechSynthesis) {
@@ -31,161 +26,6 @@ function speakWord(word: string, onEnd?: () => void) {
   utter.rate = 0.85;
   if (onEnd) utter.onend = () => onEnd();
   window.speechSynthesis.speak(utter);
-}
-
-function ContrastChip({
-  contrast,
-  isActive,
-  onClick,
-}: {
-  contrast: MinimalPairContrast;
-  isActive: boolean;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={cn(
-        "shrink-0 inline-flex items-center gap-2 rounded-full border px-3.5 py-2 text-sm font-medium",
-        "transition-all duration-150 hover:-translate-y-0.5",
-        "active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1"
-      )}
-      style={{
-        backgroundColor: isActive ? "var(--text-primary)" : "var(--card-bg)",
-        borderColor: isActive ? "var(--text-primary)" : "var(--line-divider)",
-        color: isActive ? "var(--card-bg)" : "var(--text-primary)",
-      }}
-    >
-      <span className="font-serif text-base">{contrast.phonemeA}</span>
-      <span className="text-tiny uppercase tracking-widest opacity-60">vs</span>
-      <span className="font-serif text-base">{contrast.phonemeB}</span>
-    </button>
-  );
-}
-
-function WordCard({
-  word,
-  symbol,
-  side,
-  isPlaying,
-  highlight,
-  selectable,
-  selected,
-  onPlay,
-  onPick,
-}: {
-  word: string;
-  symbol: string;
-  side: Side;
-  isPlaying: boolean;
-  highlight: Verdict;
-  selectable: boolean;
-  selected: boolean;
-  onPlay: () => void;
-  onPick: () => void;
-}) {
-  const isCorrect = highlight === "correct";
-  const isWrong = highlight === "wrong";
-
-  const borderColor = isCorrect
-    ? "var(--success)"
-    : isWrong
-    ? "var(--error)"
-    : selected
-    ? "var(--primary)"
-    : "var(--border-default)";
-
-  const bgColor = isCorrect
-    ? "var(--success-soft)"
-    : isWrong
-    ? "var(--error-soft)"
-    : selected
-    ? "var(--primary-soft)"
-    : "var(--card-bg)";
-
-  return (
-    <button
-      type="button"
-      onClick={selectable ? onPick : onPlay}
-      className={cn(
-        "group relative flex-1 min-w-0 flex flex-col items-center justify-center",
-        "rounded-2xl border-2 px-6 py-7 min-h-[180px]",
-        "transition-[background-color,border-color,transform,box-shadow] duration-200 ease-out",
-        "hover:-translate-y-1 hover:shadow-[0_8px_20px_-10px_rgba(0,0,0,0.2)]",
-        "active:translate-y-0 active:scale-[0.99]",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
-      )}
-      style={{
-        backgroundColor: bgColor,
-        borderColor,
-        boxShadow: highlight ? `0 0 0 3px ${borderColor}33` : undefined,
-      }}
-    >
-      <span
-        className="absolute top-3 left-3 inline-flex items-center justify-center w-5 h-5 rounded-md text-tiny font-bold"
-        style={{
-          backgroundColor: "var(--btn-regular-bg)",
-          color: "var(--text-tertiary)",
-        }}
-      >
-        {side}
-      </span>
-
-      <span
-        className="font-serif text-2xl leading-none mb-3"
-        style={{ color: "var(--text-secondary)" }}
-      >
-        {symbol}
-      </span>
-
-      <span
-        className="text-3xl font-semibold tracking-tight"
-        style={{ color: "var(--text-primary)" }}
-      >
-        {word}
-      </span>
-
-      <span
-        className="absolute bottom-3 right-3 inline-flex items-center justify-center w-8 h-8 rounded-full transition-all"
-        style={{
-          backgroundColor: isPlaying ? "var(--primary)" : "var(--text-primary)",
-          color: "var(--card-bg)",
-        }}
-        aria-hidden
-      >
-        {isPlaying ? (
-          <Square size={11} fill="currentColor" />
-        ) : (
-          <Play size={11} fill="currentColor" />
-        )}
-      </span>
-
-      {isCorrect && (
-        <span
-          className="absolute top-3 right-3 inline-flex items-center justify-center w-6 h-6 rounded-full text-white animate-chip-appear"
-          style={{ backgroundColor: "var(--success)" }}
-          aria-label="Correct"
-        >
-          <Check size={13} strokeWidth={3} />
-        </span>
-      )}
-      {isWrong && (
-        <span
-          className="absolute top-3 right-3 inline-flex items-center justify-center w-6 h-6 rounded-full text-white animate-chip-appear"
-          style={{ backgroundColor: "var(--error)" }}
-          aria-label="Wrong"
-        >
-          <X size={13} strokeWidth={3} />
-        </span>
-      )}
-    </button>
-  );
-}
-
-interface ScoreBoard {
-  correct: number;
-  wrong: number;
 }
 
 export default function MinimalPairsTrainer() {
@@ -260,7 +100,7 @@ export default function MinimalPairsTrainer() {
     [quizTarget, verdict]
   );
 
-  const handleReplayQuiz = useCallback(() => {
+  const handleReplayClue = useCallback(() => {
     if (!lastPlayedRef.current) return;
     const side = lastPlayedRef.current;
     setPlayingSide(side);
@@ -274,13 +114,8 @@ export default function MinimalPairsTrainer() {
       if (target && /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName)) return;
       if (target?.isContentEditable) return;
       const key = event.key.toLowerCase();
-      if (key === "a") {
-        event.preventDefault();
-        handleGuess("A");
-      } else if (key === "b") {
-        event.preventDefault();
-        handleGuess("B");
-      }
+      if (key === "a") { event.preventDefault(); handleGuess("A"); }
+      else if (key === "b") { event.preventDefault(); handleGuess("B"); }
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
@@ -294,49 +129,38 @@ export default function MinimalPairsTrainer() {
     };
   }, [verdict, quizTarget]);
 
-  const accuracy =
-    score.correct + score.wrong > 0
-      ? Math.round((score.correct / (score.correct + score.wrong)) * 100)
-      : null;
+  const total = score.correct + score.wrong;
+  const accuracy = total > 0 ? Math.round((score.correct / total) * 100) : null;
+  const correctWord = quizTarget === "A" ? pair.wordA : pair.wordB;
 
   return (
     <section
-      className="rounded-2xl border p-6 lg:p-8"
-      style={{
-        backgroundColor: "var(--card-bg)",
-        borderColor: "var(--line-divider)",
-      }}
+      className="rounded-2xl border p-6 lg:p-8 bg-[var(--card-bg)] border-[var(--line-divider)]"
     >
       <header className="flex items-start justify-between gap-4 mb-6">
         <div className="flex items-start gap-3">
-          <span
-            className="shrink-0 inline-flex items-center justify-center w-10 h-10 rounded-xl mt-0.5"
-            style={{ backgroundColor: "var(--btn-regular-bg)" }}
-          >
-            <Headphones size={18} style={{ color: "var(--text-primary)" }} />
+          <span className="shrink-0 inline-flex items-center justify-center w-10 h-10 rounded-xl mt-0.5 bg-[var(--btn-regular-bg)]">
+            <Headphones size={18} className="text-[var(--text-primary)]" />
           </span>
           <div>
-            <h2 className="text-xl font-semibold leading-tight mb-1" style={{ color: "var(--text-primary)" }}>
+            <h2 className="text-xl font-semibold leading-tight mb-1 text-[var(--text-primary)]">
               Minimal pairs trainer
             </h2>
-            <p className="text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>
-              Two words that differ in a single sound — train your ear to hear the difference.
+            <p className="text-sm leading-relaxed text-[var(--text-secondary)]">
+              Two words that differ by one sound — train your ear to hear the difference.
             </p>
           </div>
         </div>
 
         {accuracy !== null && (
-          <div
-            className="shrink-0 rounded-xl px-4 py-2 text-right animate-chip-appear"
-            style={{ backgroundColor: "var(--btn-regular-bg)" }}
-          >
-            <p className="text-tiny font-bold uppercase tracking-widest mb-0.5" style={{ color: "var(--text-tertiary)" }}>
+          <div className="shrink-0 rounded-xl px-4 py-2 text-right animate-chip-appear bg-[var(--btn-regular-bg)]">
+            <p className="text-tiny font-bold uppercase tracking-widest mb-0.5 text-[var(--text-tertiary)]">
               Accuracy
             </p>
-            <p className="text-lg font-semibold tabular-nums" style={{ color: "var(--text-primary)" }}>
+            <p className="text-lg font-semibold tabular-nums text-[var(--text-primary)]">
               {accuracy}%
-              <span className="ml-1.5 text-xs font-normal" style={{ color: "var(--text-tertiary)" }}>
-                ({score.correct}/{score.correct + score.wrong})
+              <span className="ml-1.5 text-xs font-normal text-[var(--text-tertiary)]">
+                ({score.correct}/{total})
               </span>
             </p>
           </div>
@@ -355,18 +179,16 @@ export default function MinimalPairsTrainer() {
       </div>
 
       <div className="mb-4 flex items-center justify-between">
-        <p className="text-sm leading-snug" style={{ color: "var(--text-secondary)" }}>
-          {contrast.hint}
-        </p>
-        <span
-          className="shrink-0 ml-3 inline-flex items-center gap-1 text-tiny font-bold uppercase tracking-widest tabular-nums"
-          style={{ color: "var(--text-tertiary)" }}
-        >
-          Pair <span style={{ color: "var(--text-primary)" }}>{pairIdx + 1}</span> / {contrast.pairs.length}
+        <p className="text-sm leading-snug text-[var(--text-secondary)]">{contrast.hint}</p>
+        <span className="shrink-0 ml-3 inline-flex items-center gap-1 text-tiny font-bold uppercase tracking-widest tabular-nums text-[var(--text-tertiary)]">
+          Pair <span className="text-[var(--text-primary)]">{pairIdx + 1}</span> / {contrast.pairs.length}
         </span>
       </div>
 
-      <div key={`${contrast.id}-${pairIdx}`} className="grid grid-cols-[1fr_auto_1fr] items-stretch gap-4 animate-fadeIn">
+      <div
+        key={`${contrast.id}-${pairIdx}`}
+        className="grid grid-cols-[1fr_auto_1fr] items-stretch gap-4 animate-fadeIn"
+      >
         <WordCard
           word={pair.wordA}
           symbol={contrast.phonemeA}
@@ -374,19 +196,13 @@ export default function MinimalPairsTrainer() {
           isPlaying={playingSide === "A"}
           highlight={highlights.A}
           selectable={quizTarget !== null && verdict === null}
-          selected={false}
           onPlay={() => playSide("A")}
           onPick={() => handleGuess("A")}
         />
 
         <div className="flex flex-col items-center justify-center gap-3 px-1">
-          <span
-            className="font-serif text-base"
-            style={{ color: "var(--text-tertiary)" }}
-          >
-            vs
-          </span>
-          <div className="w-px flex-1" style={{ backgroundColor: "var(--line-divider)" }} />
+          <span className="font-serif text-base text-[var(--text-tertiary)]">vs</span>
+          <div className="w-px flex-1 bg-[var(--line-divider)]" />
         </div>
 
         <WordCard
@@ -396,142 +212,20 @@ export default function MinimalPairsTrainer() {
           isPlaying={playingSide === "B"}
           highlight={highlights.B}
           selectable={quizTarget !== null && verdict === null}
-          selected={false}
           onPlay={() => playSide("B")}
           onPick={() => handleGuess("B")}
         />
       </div>
 
-      <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
-        <div className="flex flex-wrap items-center gap-2">
-          <button
-            type="button"
-            onClick={handlePlayBoth}
-            className="inline-flex items-center gap-2 rounded-lg border px-3.5 py-2 text-sm font-medium transition-all duration-150 hover:bg-[var(--btn-regular-bg)] active:scale-[0.97]"
-            style={{
-              backgroundColor: "var(--card-bg)",
-              borderColor: "var(--border-default)",
-              color: "var(--text-primary)",
-            }}
-          >
-            <Play size={13} fill="currentColor" />
-            Play both
-          </button>
-          <button
-            type="button"
-            onClick={handleNextPair}
-            className="inline-flex items-center gap-2 rounded-lg border px-3.5 py-2 text-sm font-medium transition-all duration-150 hover:bg-[var(--btn-regular-bg)] active:scale-[0.97]"
-            style={{
-              backgroundColor: "var(--card-bg)",
-              borderColor: "var(--border-default)",
-              color: "var(--text-primary)",
-            }}
-          >
-            Next pair
-            <ArrowRight size={13} />
-          </button>
-        </div>
-
-        {quizTarget && (
-          <button
-            type="button"
-            onClick={handleReplayQuiz}
-            className="inline-flex items-center gap-2 rounded-lg border px-3.5 py-2 text-sm font-medium transition-all duration-150 hover:bg-[var(--btn-regular-bg)] active:scale-[0.97]"
-            style={{
-              backgroundColor: "var(--card-bg)",
-              borderColor: "var(--border-default)",
-              color: "var(--text-primary)",
-            }}
-          >
-            <RotateCcw size={13} />
-            Replay clue
-          </button>
-        )}
-      </div>
-
-      <div
-        className="mt-6 pt-6 border-t flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3"
-        style={{ borderColor: "var(--line-divider)" }}
-      >
-        {!quizTarget ? (
-          <>
-            <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
-              Quiz mode — we play one word, you tell us which.
-            </p>
-            <button
-              type="button"
-              onClick={handleStartQuiz}
-              className="shrink-0 inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold transition-transform duration-150 hover:scale-[1.02] active:scale-[0.98]"
-              style={{
-                backgroundColor: "var(--primary)",
-                color: "var(--on-primary)",
-              }}
-            >
-              <HelpCircle size={14} />
-              Hear one — guess which
-            </button>
-          </>
-        ) : verdict ? (
-          <>
-            <div className="flex items-center gap-2.5">
-              <span
-                className="inline-flex items-center justify-center w-7 h-7 rounded-full"
-                style={{
-                  backgroundColor:
-                    verdict === "correct" ? "var(--success)" : "var(--error)",
-                  color: "white",
-                }}
-              >
-                {verdict === "correct" ? (
-                  <Check size={14} strokeWidth={3} />
-                ) : (
-                  <X size={14} strokeWidth={3} />
-                )}
-              </span>
-              <p className="text-sm font-medium" style={{ color: "var(--text-primary)" }}>
-                {verdict === "correct"
-                  ? "¡Correcto!"
-                  : `Era "${quizTarget === "A" ? pair.wordA : pair.wordB}".`}
-              </p>
-            </div>
-            <button
-              type="button"
-              onClick={handleStartQuiz}
-              className="shrink-0 inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-transform duration-150 hover:scale-[1.02] active:scale-[0.98]"
-              style={{
-                backgroundColor: "var(--text-primary)",
-                color: "var(--card-bg)",
-              }}
-            >
-              Otra ronda
-              <ArrowRight size={13} />
-            </button>
-          </>
-        ) : (
-          <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
-            ¿Cuál escuchaste? Toca la card o usa{" "}
-            <kbd
-              className="inline-flex items-center justify-center px-1.5 py-0.5 rounded border text-tiny font-semibold mx-0.5"
-              style={{
-                backgroundColor: "var(--card-bg)",
-                borderColor: "var(--line-divider)",
-              }}
-            >
-              A
-            </kbd>{" "}
-            /{" "}
-            <kbd
-              className="inline-flex items-center justify-center px-1.5 py-0.5 rounded border text-tiny font-semibold mx-0.5"
-              style={{
-                backgroundColor: "var(--card-bg)",
-                borderColor: "var(--line-divider)",
-              }}
-            >
-              B
-            </kbd>
-          </p>
-        )}
-      </div>
+      <TrainerControls
+        quizTarget={quizTarget}
+        verdict={verdict}
+        correctWord={correctWord}
+        onPlayBoth={handlePlayBoth}
+        onNextPair={handleNextPair}
+        onReplayClue={handleReplayClue}
+        onStartQuiz={handleStartQuiz}
+      />
     </section>
   );
 }
