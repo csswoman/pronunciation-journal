@@ -1,5 +1,7 @@
 'use client'
 
+import { cn } from '@/lib/utils'
+
 interface Props {
   isCorrect: boolean
 }
@@ -9,24 +11,24 @@ export function InlineFeedback({ isCorrect }: Props) {
     <div
       role="status"
       aria-live="polite"
-      className={
+      className={cn(
+        'flex items-center justify-center gap-3 rounded-xl border px-5 py-3 animate-fadeIn',
         isCorrect
-          ? 'flex items-center justify-center gap-2 rounded-[var(--radius-lg)] border-[1.5px] border-success-border bg-success-soft px-5 py-3 text-success animate-fadeIn'
-          : 'flex items-center justify-center gap-2 rounded-[var(--radius-lg)] border-[1.5px] border-error-border bg-error-soft px-5 py-3 text-error animate-fadeIn'
-      }
+          ? 'border-success/30 bg-success-soft text-success'
+          : 'border-error/30 bg-error-soft text-error',
+      )}
     >
       <span
-        className={
-          isCorrect
-            ? 'inline-flex h-6 w-6 items-center justify-center rounded-full bg-success text-on-primary text-sm font-bold'
-            : 'inline-flex h-6 w-6 items-center justify-center rounded-full bg-error text-on-primary text-sm font-bold'
-        }
+        className={cn(
+          'inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-sm font-bold',
+          isCorrect ? 'bg-success text-white' : 'bg-error text-white',
+        )}
         aria-hidden
       >
         {isCorrect ? '✓' : '✗'}
       </span>
-      <span className="text-base font-semibold">
-        {isCorrect ? 'Correct!' : 'Incorrect'}
+      <span className="text-sm font-semibold">
+        {isCorrect ? 'Correct!' : 'Not quite — keep going'}
       </span>
     </div>
   )

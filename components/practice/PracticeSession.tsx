@@ -244,15 +244,16 @@ export default function PracticeSession(config: PracticeConfig) {
 
   if (!ready) {
     return (
-      <div className="w-full max-w-md mx-auto p-6 text-center text-fg-subtle">
-        <span className="animate-pulse">Loading…</span>
+      <div className="w-full max-w-md mx-auto p-8 flex flex-col items-center gap-3 text-center">
+        <div className="h-6 w-6 rounded-full border-2 border-primary border-t-transparent animate-spin" aria-hidden />
+        <span className="text-sm text-fg-secondary">Loading session…</span>
       </div>
     )
   }
 
   if (exercises.length === 0) {
     return (
-      <div className="w-full max-w-md mx-auto p-6 text-center text-fg-muted">
+      <div className="w-full max-w-md mx-auto p-8 text-center text-fg-secondary text-sm">
         No exercises available.
       </div>
     )
@@ -272,12 +273,7 @@ export default function PracticeSession(config: PracticeConfig) {
 
   return (
     <div className="w-full max-w-md mx-auto flex flex-col gap-6">
-      <div className="flex items-center justify-between px-1">
-        <SessionProgress current={currentIndex} total={exercises.length} />
-        <span className="ml-4 shrink-0 text-[11px] font-bold px-2.5 py-1 rounded-full bg-[var(--primary)] text-[var(--on-primary)] tabular-nums">
-          {Math.min(currentIndex + 1, exercises.length)} / {exercises.length}
-        </span>
-      </div>
+      <SessionProgress current={currentIndex} total={exercises.length} />
 
       {current && (phase === 'exercising' || phase === 'feedback') && (
         <ExerciseRenderer
