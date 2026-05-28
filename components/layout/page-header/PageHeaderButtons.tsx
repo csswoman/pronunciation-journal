@@ -10,5 +10,26 @@ export function CtaButtons({ primaryCta, secondaryCta, rounded = "full" }: { pri
 }
 
 export function ResumeButton({ onClick }: { onClick: () => void }) {
-  return <button type="button" onClick={onClick} className="inline-flex items-center gap-2" style={{ background: "var(--primary)", color: "var(--on-primary)", borderRadius: "var(--radius-md)", height: "40px", padding: "0 var(--space-5)", font: "var(--font-body-sm)", fontWeight: 500, border: "none", cursor: "pointer", transition: "background var(--transition-fast)" }} onMouseEnter={(e) => (e.currentTarget.style.background = "var(--primary-hover)")} onMouseLeave={(e) => (e.currentTarget.style.background = "var(--primary)")}><Play size={14} />Resume Lesson</button>;
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="inline-flex items-center gap-2 hover:bg-[var(--primary-hover)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--primary)]/40"
+      style={{
+        background: "var(--primary)",
+        color: "var(--on-primary)",
+        borderRadius: "var(--radius-md)",
+        height: "40px",
+        padding: "0 var(--space-5)",
+        font: "var(--font-body-sm)",
+        fontWeight: 500,
+        border: "none",
+        cursor: "pointer",
+        transition: "background var(--transition-fast)",
+      }}
+    >
+      <Play size={14} aria-hidden />
+      Resume Lesson
+    </button>
+  );
 }
