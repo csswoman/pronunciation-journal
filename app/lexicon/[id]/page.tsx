@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import PageLayout from "@/components/layout/PageLayout";
 import Section from "@/components/layout/Section";
-import { LessonDetailHeader } from "@/components/lexicon/lesson/LessonDetailHeader";
+import { LessonDetailActions } from "@/components/lexicon/lesson/LessonDetailActions";
 import { WordBrowser } from "@/components/lexicon/lesson/WordBrowser";
 import { PracticeButton } from "@/components/lexicon/lesson/PracticeButton";
 import { getCategories, getCategoryWords } from "@/lib/lexicon/categories";
@@ -50,12 +50,13 @@ export default async function LessonDetailPage({ params }: { params: Promise<{ i
   return (
     <PageLayout cardWrapper={false}>
       <Section spacing="lg">
-        <LessonDetailHeader
+        <LessonDetailActions
           title={category.name}
           totalWords={category.total}
           wordsLearned={wordsLearned}
           wordsReviewing={wordsReviewing}
           color={category.color}
+          words={words}
         />
         <div className="flex justify-end">
           <PracticeButton categoryId={id} />
