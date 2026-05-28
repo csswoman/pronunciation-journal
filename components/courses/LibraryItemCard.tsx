@@ -42,9 +42,9 @@ export interface LibraryItemCardProps {
 }
 
 const BADGE_TOKEN: Record<LibraryItemBadge, { bg: string; text: string }> = {
-  Course: { bg: "color-mix(in srgb, var(--success) 22%, transparent)",  text: "var(--success)"  },
-  Notes:  { bg: "color-mix(in srgb, #7c5cff 22%, transparent)",          text: "#7c5cff"          },
-  Mini:   { bg: "color-mix(in srgb, var(--primary) 22%, transparent)",  text: "var(--primary)"  },
+  Course: { bg: "color-mix(in oklch, var(--success) 22%, transparent)",       text: "var(--success)"  },
+  Notes:  { bg: "color-mix(in oklch, var(--accent-analog-1) 22%, transparent)", text: "var(--accent-analog-1)" },
+  Mini:   { bg: "color-mix(in oklch, var(--primary) 22%, transparent)",       text: "var(--primary)"  },
 };
 
 export default function LibraryItemCard(props: LibraryItemCardProps) {
@@ -122,10 +122,10 @@ function ItemCover({
             fontStyle: "italic",
             fontWeight: 500,
             fontSize: isList ? "clamp(1.5rem, 3vw, 2rem)" : "clamp(2.75rem, 5vw, 3.75rem)",
-            color: coverVariant === "gradient" ? "rgba(255,255,255,0.92)" : "rgba(0,0,0,0.18)",
+            color: coverVariant === "gradient" ? "var(--overlay-darker)" : "var(--overlay-weak)",
             lineHeight: 1,
             letterSpacing: "-0.02em",
-            textShadow: coverVariant === "gradient" ? "0 1px 2px rgba(0,0,0,0.18)" : "none",
+            textShadow: coverVariant === "gradient" ? "0 1px 2px oklch(0 0 0 / 0.18)" : "none",
           }}
         >
           {initials}

@@ -157,22 +157,14 @@ export default function CustomPromptPanel({
           onClick={handleSubmit}
           disabled={(!hasText && !isDisabled) || (isDisabled && !hasText)}
           aria-label="Send"
-          className="flex-shrink-0 flex items-center justify-center transition-all disabled:opacity-40"
+          className="flex-shrink-0 flex items-center justify-center transition-all disabled:opacity-40 hover:brightness-110 hover:scale-105 active:scale-95"
           style={{
             minWidth: 36,
             minHeight: 36,
-            borderRadius: 12,
-            backgroundColor: "var(--accent)",
-            color: "var(--accent-foreground)",
+            borderRadius: "var(--radius-md)",
+            backgroundColor: "var(--primary)",
+            color: "var(--on-primary)",
             border: "none",
-          }}
-          onMouseEnter={e => {
-            (e.currentTarget as HTMLElement).style.filter = "brightness(1.1)";
-            (e.currentTarget as HTMLElement).style.transform = "scale(1.05)";
-          }}
-          onMouseLeave={e => {
-            (e.currentTarget as HTMLElement).style.filter = "none";
-            (e.currentTarget as HTMLElement).style.transform = "scale(1)";
           }}
         >
           {isDisabled
@@ -200,7 +192,7 @@ export default function CustomPromptPanel({
           {" "}for new line
         </p>
         <div className="flex items-center gap-1.5">
-          <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: "#22c55e" }} />
+          <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: "var(--success)" }} />
           <span className="text-tiny text-fg-subtle">AI feedback on</span>
         </div>
       </div>

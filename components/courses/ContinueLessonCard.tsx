@@ -24,13 +24,8 @@ export interface ContinueLesson {
 export default function ContinueLessonCard(props: ContinueLesson) {
   return (
     <div
-      className="relative grid grid-cols-1 lg:grid-cols-[1fr_minmax(0,360px)] overflow-hidden"
-      style={{
-        background: "#1a1410",
-        borderRadius: "var(--radius-lg)",
-        gap: "var(--space-6)",
-        padding: "var(--space-6)",
-      }}
+      className="relative grid grid-cols-1 lg:grid-cols-[1fr_minmax(0,360px)] overflow-hidden rounded-[var(--radius-lg)] gap-[var(--space-6)] p-[var(--space-6)]"
+      style={{ background: "var(--surface-code)" }}
     >
       <ContinueCopy {...props} />
       <ContinueVisual phonemes={props.phonemes} />
@@ -51,17 +46,11 @@ function ContinueCopy({
 }: ContinueLesson) {
   const safe = Math.max(0, Math.min(100, Math.round(progress)));
   return (
-    <div className="flex flex-col justify-between" style={{ gap: "var(--space-5)", minHeight: "220px" }}>
-      <div className="flex flex-col" style={{ gap: "var(--space-3)" }}>
+    <div className="flex flex-col justify-between gap-[var(--space-5)] min-h-[220px]">
+      <div className="flex flex-col gap-[var(--space-3)]">
         <span
-          className="inline-flex items-center self-start"
-          style={{
-            gap: "var(--space-2)",
-            font: "var(--font-tiny)",
-            color: "var(--primary)",
-            textTransform: "uppercase",
-            letterSpacing: "0.12em",
-          }}
+          className="inline-flex items-center self-start gap-[var(--space-2)] uppercase tracking-[0.12em]"
+          style={{ font: "var(--font-tiny)", color: "var(--primary)" }}
         >
           <span
             aria-hidden
@@ -76,19 +65,15 @@ function ContinueCopy({
           Continue where you left off
         </span>
 
-        <div className="flex flex-col" style={{ gap: "var(--space-1)" }}>
-          <span style={{ font: "var(--font-caption)", color: "rgba(255,255,255,0.55)" }}>
+        <div className="flex flex-col gap-[var(--space-1)]">
+          <span style={{ font: "var(--font-caption)", color: "var(--overlay-medium)" }}>
             {courseTitle} · {lessonLabel}
           </span>
           <h2
+            className="m-0 max-w-[32ch]"
             style={{
-              fontFamily: "var(--font-heading), serif",
-              fontWeight: 500,
-              fontSize: "clamp(1.25rem, 2.4vw, 1.625rem)",
-              lineHeight: 1.25,
-              color: "rgba(255,255,255,0.95)",
-              margin: 0,
-              maxWidth: "32ch",
+              font: "var(--font-h3)",
+              color: "var(--overlay-darker)",
             }}
           >
             {lessonTitle}
@@ -96,45 +81,34 @@ function ContinueCopy({
         </div>
       </div>
 
-      <div className="flex flex-col" style={{ gap: "var(--space-3)" }}>
+      <div className="flex flex-col gap-[var(--space-3)]">
         <div
-          style={{
-            height: "3px",
-            borderRadius: "var(--radius-full)",
-            background: "rgba(255,255,255,0.08)",
-            overflow: "hidden",
-          }}
+          className="rounded-full overflow-hidden"
+          style={{ height: "3px", background: "var(--overlay-subtle)" }}
         >
           <div
             className="h-full transition-all duration-500"
             style={{ width: `${safe}%`, background: "var(--primary)" }}
           />
         </div>
-        <div className="flex items-center justify-between" style={{ gap: "var(--space-3)" }}>
-          <span style={{ font: "var(--font-caption)", color: "rgba(255,255,255,0.55)" }}>
+        <div className="flex items-center justify-between gap-[var(--space-3)]">
+          <span style={{ font: "var(--font-caption)", color: "var(--overlay-medium)" }}>
             {safe}% · {lessonsDone} of {lessonsTotal} lessons
           </span>
-          <span style={{ font: "var(--font-caption)", color: "rgba(255,255,255,0.55)" }}>
+          <span style={{ font: "var(--font-caption)", color: "var(--overlay-medium)" }}>
             ~{minutesLeft} min left
           </span>
         </div>
 
-        <div className="flex flex-wrap" style={{ gap: "var(--space-2)", marginTop: "var(--space-2)" }}>
+        <div className="flex flex-wrap gap-[var(--space-2)] mt-[var(--space-2)]">
           <button
             type="button"
             onClick={onResume}
-            className="inline-flex items-center"
+            className="inline-flex items-center gap-[var(--space-2)] h-9 px-[var(--space-4)] rounded-[var(--radius-md)] cursor-pointer border-none font-medium"
             style={{
-              gap: "var(--space-2)",
               background: "var(--primary)",
               color: "var(--on-primary)",
-              borderRadius: "var(--radius-md)",
-              height: "36px",
-              padding: "0 var(--space-4)",
               font: "var(--font-body-sm)",
-              fontWeight: 500,
-              border: "none",
-              cursor: "pointer",
             }}
           >
             <Play size={14} fill="currentColor" />
@@ -144,17 +118,12 @@ function ContinueCopy({
             <button
               type="button"
               onClick={onViewSyllabus}
-              className="inline-flex items-center"
+              className="inline-flex items-center gap-[var(--space-2)] h-9 px-[var(--space-4)] rounded-[var(--radius-md)] cursor-pointer"
               style={{
-                gap: "var(--space-2)",
-                background: "rgba(255,255,255,0.04)",
-                color: "rgba(255,255,255,0.85)",
-                border: "1px solid rgba(255,255,255,0.12)",
-                borderRadius: "var(--radius-md)",
-                height: "36px",
-                padding: "0 var(--space-4)",
+                background: "var(--overlay-subtle)",
+                color: "var(--overlay-darker)",
+                border: "1px solid var(--overlay-weak)",
                 font: "var(--font-body-sm)",
-                cursor: "pointer",
               }}
             >
               <List size={14} />
@@ -174,14 +143,14 @@ function ContinueVisual({ phonemes }: { phonemes?: string[] }) {
       style={{
         borderRadius: "var(--radius-md)",
         background:
-          "radial-gradient(ellipse at 30% 35%, color-mix(in srgb, var(--primary) 45%, transparent) 0%, transparent 60%), radial-gradient(ellipse at 70% 75%, #3b2a8c 0%, transparent 55%), #0f0a08",
+          "radial-gradient(ellipse at 30% 35%, color-mix(in oklch, var(--primary) 45%, transparent) 0%, transparent 60%), radial-gradient(ellipse at 70% 75%, color-mix(in oklch, var(--primary-800) 80%, var(--surface-code)) 0%, transparent 55%), var(--surface-code)",
         minHeight: "220px",
       }}
     >
       <ArrowRight
         size={42}
         strokeWidth={1.25}
-        style={{ color: "rgba(255,255,255,0.85)" }}
+        style={{ color: "var(--overlay-darker)" }}
       />
       {phonemes && phonemes.length > 0 && (
         <div
@@ -191,7 +160,7 @@ function ContinueVisual({ phonemes }: { phonemes?: string[] }) {
             left: "var(--space-4)",
             gap: "var(--space-3)",
             font: "var(--font-caption)",
-            color: "rgba(255,255,255,0.45)",
+            color: "var(--overlay-light)",
             fontFamily: "var(--font-ipa), 'Noto Serif', serif",
           }}
         >

@@ -69,16 +69,16 @@ export default function HomeTodo({ dueWords = [], streak }: HomeTodoProps) {
           <div
             className="flex flex-col items-center justify-center rounded-lg px-4 py-3 min-w-[80px]"
             style={{
-              backgroundColor: currentStreak > 0 ? "var(--warning-soft, #fff7ed)" : "var(--surface-sunken)",
+              backgroundColor: currentStreak > 0 ? "var(--warning-soft)" : "var(--surface-sunken)",
             }}
           >
             <Flame
               size={20}
-              className={currentStreak > 0 ? "text-[var(--warning-value,#f97316)]" : "text-[var(--text-tertiary)]"}
+              className={currentStreak > 0 ? "text-[var(--warning-value)]" : "text-[var(--text-tertiary)]"}
             />
             <p
               className="mt-1 text-2xl font-bold leading-none"
-              style={{ color: currentStreak > 0 ? "var(--warning-value,#f97316)" : "var(--text-tertiary)" }}
+              style={{ color: currentStreak > 0 ? "var(--warning-value)" : "var(--text-tertiary)" }}
             >
               {currentStreak}
             </p>
@@ -86,7 +86,7 @@ export default function HomeTodo({ dueWords = [], streak }: HomeTodoProps) {
               {currentStreak === 1 ? "day" : "days"}
             </p>
             {completedToday && (
-              <p className="mt-1 text-[10px] font-semibold uppercase tracking-wide text-[var(--warning-value,#f97316)]">
+              <p className="mt-1 text-[10px] font-semibold uppercase tracking-wide text-[var(--warning-value)]">
                 Done ✓
               </p>
             )}
