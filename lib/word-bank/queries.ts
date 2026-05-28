@@ -137,7 +137,8 @@ export async function toggleFavorite(
   const supabase = getSupabaseBrowserClient();
   const { error } = await supabase
     .from("word_bank")
-    .update({ is_favorite: value })
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    .update({ is_favorite: value } as any)
     .eq("id", wordBankId);
   if (error) throw error;
 }

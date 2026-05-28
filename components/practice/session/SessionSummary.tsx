@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react'
 import confetti from 'canvas-confetti'
-import { cn } from '@/lib/utils'
+import { cn } from '@/lib/cn'
 import type { SessionResult } from '@/lib/practice/types'
 
 interface Props {

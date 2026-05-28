@@ -15,7 +15,7 @@ export type WordBankSrsStatus = "new" | "learning" | "review" | "mastered";
  * Postgres CHECK constraints are not reflected in generated types. Use the
  * `WordBankStatus` / `WordBankSrsStatus` unions when a narrowed value is needed.
  */
-export type WordBankEntry = Tables<"word_bank">;
+export type WordBankEntry = Tables<"word_bank"> & { is_favorite?: boolean };
 
 // ── Enrichment ───────────────────────────────────────────────────────────────
 

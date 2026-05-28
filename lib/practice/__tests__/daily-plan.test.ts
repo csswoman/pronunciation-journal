@@ -126,7 +126,8 @@ function setupWordBankMock(dueWords: WordBankEntry[], newWords: WordBankEntry[] 
 function setupProgressMock(rows: unknown[]) {
   // The progress query is a separate .from('user_sound_progress') call.
   // We configure mockFrom to distinguish by table name.
-  mockFrom.mockImplementation((table: string) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (mockFrom as any).mockImplementation((table: string) => {
     if (table === 'user_sound_progress') {
       return { select: () => chainResolving(rows) }
     }
