@@ -92,4 +92,4 @@
 .animate-mic-breathe  { animation: mic-breathe 1.8s ease-in-out infinite; }
 .animate-mic-ring     { animation: mic-ring 0.8s ease-out infinite; }
 .animate-chip-appear  { animation: chip-appear 0.3s ease-out both; }
-.animate-message-in   { animation: message-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.animate-message-in   { animation: message-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both; will-change: filter, opacity, transform; }
