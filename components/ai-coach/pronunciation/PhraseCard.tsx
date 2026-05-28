@@ -105,13 +105,8 @@ export default function PhraseCard({
         </button>
         <button
           onClick={onSlow}
-          className="inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-sm font-medium transition-colors cursor-pointer border-none"
-          style={{
-            backgroundColor: "transparent",
-            color: "var(--text-secondary)",
-          }}
-          onMouseEnter={e => { e.currentTarget.style.backgroundColor = "var(--btn-regular-bg)"; e.currentTarget.style.color = "var(--fg)"; }}
-          onMouseLeave={e => { e.currentTarget.style.backgroundColor = "transparent"; e.currentTarget.style.color = "var(--text-secondary)"; }}
+          className="inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-sm font-medium transition-colors cursor-pointer border-none text-[color:var(--text-secondary)] hover:bg-[var(--btn-regular-bg)] hover:text-[color:var(--fg)] focus-visible:outline-none focus-visible:ring-2"
+          style={{ backgroundColor: "transparent" }}
         >
           0.5×
         </button>

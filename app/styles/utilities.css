@@ -238,3 +238,8 @@
   text-decoration: underline;
 }
 .link-primary:hover { color: var(--btn-content); }
+
+/* ── Interactive border helpers ──────────────────────────────────────────── */
+.hover-border-primary:hover {
+  border-color: var(--primary);
+}

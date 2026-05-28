@@ -34,7 +34,7 @@ export default function PronunciationBadge({ ipa, audioUrl, onClick }: Pronuncia
     <button
       type="button"
       onClick={handleClick}
-      className="inline-flex items-center rounded-full border text-fg-muted transition-all duration-150"
+      className="inline-flex items-center rounded-full border text-fg-muted transition-all duration-150 hover-border-primary"
       style={{
         fontSize: "16px",
         lineHeight: 1.2,
@@ -45,12 +45,6 @@ export default function PronunciationBadge({ ipa, audioUrl, onClick }: Pronuncia
         borderColor: isPlaying ? "var(--primary)" : "var(--line-divider)",
         opacity: isPlaying ? 0.82 : 1,
         cursor: "pointer",
-      }}
-      onMouseEnter={e => {
-        e.currentTarget.style.borderColor = "var(--primary)";
-      }}
-      onMouseLeave={e => {
-        e.currentTarget.style.borderColor = isPlaying ? "var(--primary)" : "var(--line-divider)";
       }}
       aria-label={`Play pronunciation for ${ipa}`}
       title="Play pronunciation"
