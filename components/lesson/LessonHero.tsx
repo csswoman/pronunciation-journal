@@ -50,7 +50,7 @@ export function LessonHero({ lesson, totalWords, chunkLabel, overall, diffMode, 
         </div>
 
         <div className="flex items-center justify-between">
-          <div className="p-8 md:p-10 max-w-2xl space-y-3">
+          <div className="flex-1 p-8 md:p-10 max-w-2xl space-y-3">
             <H1 className="font-display text-h1 leading-[1.08] lg:text-h1">
               {lesson.title}
             </H1>
@@ -153,7 +153,7 @@ function DifficultyToggle({ value, onChange }: DifficultyToggleProps) {
       <p className="text-tiny font-semibold uppercase tracking-[0.18em] text-fg-subtle">
         Difficulty
       </p>
-      <div className="inline-flex rounded-2xl border border-[var(--line-divider)] bg-[color-mix(in_oklch,var(--card-bg)_70%,transparent)] p-1 text-sm font-semibold shadow-sm backdrop-blur-sm">
+      <div className="inline-flex rounded-2xl border border-[var(--line-divider)] bg-[var(--surface-translucent)] p-1 text-sm font-semibold shadow-sm backdrop-blur-sm">
         <Button
           onClick={() => onChange('chill')}
           variant={value === 'chill' ? 'secondary' : 'ghost'}

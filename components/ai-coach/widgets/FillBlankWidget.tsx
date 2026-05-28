@@ -98,7 +98,7 @@ export default function FillBlankWidget({ args, status, onAnswer, onNext, onRetr
                 disabled={answered}
                 placeholder="…"
                 size={Math.max(6, args.answer.length + 2)}
-                className="border-b-2 outline-none bg-transparent text-center px-1 font-semibold"
+                className="border-b-2 outline-none bg-transparent text-center px-1 font-semibold focus:border-[color:var(--primary)] transition-colors"
                 style={{ borderColor, color: "var(--text-primary)", minWidth: "4ch" }}
               />
             )}

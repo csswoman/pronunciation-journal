@@ -59,7 +59,7 @@ export default function SpanishSpeakersGrid({
               key={phoneme.symbol}
               type="button"
               onClick={() => onSelect(phoneme)}
-              className="text-left rounded-xl border p-3 transition-all duration-150 hover:scale-[1.02] hover:shadow-sm focus:outline-none"
+              className="text-left rounded-xl border p-3 transition-all duration-150 hover:scale-[1.02] hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1"
               style={{
                 backgroundColor: "var(--card-bg)",
                 borderColor: "var(--line-divider)",

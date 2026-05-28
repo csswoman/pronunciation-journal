@@ -113,11 +113,11 @@ const variantStyles: Record<ButtonVariant, string> = {
   `,
 
   soft: `
-    bg-[color-mix(in_oklch,var(--primary)_15%,var(--bg-secondary))]
+    bg-[var(--btn-soft-bg)]
     text-[var(--primary)]
     border border-transparent
     shadow-none
-    hover:bg-[color-mix(in_oklch,var(--primary)_25%,var(--bg-secondary))]
+    hover:bg-[var(--btn-soft-bg-hover)]
   `,
 
   "ghost-danger": `
@@ -161,7 +161,7 @@ export default function Button({
     "inline-flex items-center justify-center font-medium",
     "transition-all duration-200 ease-out",
     "focus:outline-none focus:ring-4 focus:ring-opacity-30",
-    "active:scale-[0.97] active:brightness-95",
+    "active:scale-[0.97]",
 
     !disabled && "hover:-translate-y-0.5",
 

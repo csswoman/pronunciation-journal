@@ -116,23 +116,14 @@ export default function LessonGrid({
             type="button"
             onClick={() => onPageChange(Math.max(1, currentPage - 1))}
             disabled={currentPage === 1}
+            className="text-[color:var(--text-secondary)] border-[color:var(--border-subtle)] hover:text-[color:var(--text-primary)] hover:border-[color:var(--border-default)] transition-colors focus-visible:outline-none focus-visible:ring-2"
             style={{
               font: "var(--font-body-sm)",
-              color: "var(--text-secondary)",
-              border: "1px solid var(--border-subtle)",
+              border: "1px solid",
               borderRadius: "var(--radius-md)",
               padding: "var(--space-2) var(--space-4)",
               background: "var(--surface-raised)",
               cursor: "pointer",
-              transition: `all var(--transition-fast)`,
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.color = "var(--text-primary)";
-              e.currentTarget.style.borderColor = "var(--border-default)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.color = "var(--text-secondary)";
-              e.currentTarget.style.borderColor = "var(--border-subtle)";
             }}
           >
             ← Previous
@@ -146,23 +137,14 @@ export default function LessonGrid({
             type="button"
             onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
             disabled={currentPage === totalPages}
+            className="text-[color:var(--text-secondary)] border-[color:var(--border-subtle)] hover:text-[color:var(--text-primary)] hover:border-[color:var(--border-default)] transition-colors focus-visible:outline-none focus-visible:ring-2"
             style={{
               font: "var(--font-body-sm)",
-              color: "var(--text-secondary)",
-              border: "1px solid var(--border-subtle)",
+              border: "1px solid",
               borderRadius: "var(--radius-md)",
               padding: "var(--space-2) var(--space-4)",
               background: "var(--surface-raised)",
               cursor: "pointer",
-              transition: `all var(--transition-fast)`,
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.color = "var(--text-primary)";
-              e.currentTarget.style.borderColor = "var(--border-default)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.color = "var(--text-secondary)";
-              e.currentTarget.style.borderColor = "var(--border-subtle)";
             }}
           >
             Next →

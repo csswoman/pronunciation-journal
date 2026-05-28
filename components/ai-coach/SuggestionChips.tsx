@@ -32,15 +32,7 @@ export default function SuggestionChips({ suggestions, onSelect }: SuggestionChi
           <button
             key={s.label}
             onClick={() => onSelect(s.prompt)}
-            className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full transition-colors bg-surface-sunken text-fg-muted"
-            onMouseEnter={e => {
-              e.currentTarget.style.backgroundColor = "var(--primary-100)";
-              e.currentTarget.style.color = "var(--primary)";
-            }}
-            onMouseLeave={e => {
-              e.currentTarget.style.backgroundColor = "";
-              e.currentTarget.style.color = "";
-            }}
+            className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full transition-colors bg-surface-sunken text-fg-muted hover:bg-[var(--primary-100)] hover:text-[color:var(--primary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--primary)]/40"
           >
             <Icon size={12} strokeWidth={1.8} />
             {s.label}

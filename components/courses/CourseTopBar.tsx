@@ -91,6 +91,7 @@ function IconBtn({ label, children }: { label: string; children: React.ReactNode
       type="button"
       aria-label={label}
       // TODO: wire to real actions (search/bookmark/share/theme)
+      className="hover:bg-[var(--overlay-subtle)] hover:text-[color:var(--text-primary)] transition-colors focus-visible:outline-none focus-visible:ring-2"
       style={{
         width: "32px",
         height: "32px",
@@ -104,8 +105,6 @@ function IconBtn({ label, children }: { label: string; children: React.ReactNode
         cursor: "pointer",
         transition: "background var(--transition-fast), color var(--transition-fast)",
       }}
-      onMouseEnter={(e) => { e.currentTarget.style.background = "var(--overlay-subtle)"; e.currentTarget.style.color = "var(--text-primary)"; }}
-      onMouseLeave={(e) => { e.currentTarget.style.background = "transparent";           e.currentTarget.style.color = "var(--text-secondary)"; }}
     >
       {children}
     </button>

@@ -7,6 +7,7 @@ export default function TypingIndicator() {
         <AIAvatar state="thinking" />
       </div>
       <div className="px-4 py-3 rounded-2xl rounded-tl-sm bg-[var(--surface-raised)] border border-[var(--border-subtle)] shadow-sm">
+        <div role="status" aria-label="AI Coach is typing">
         <span className="inline-flex gap-1 items-center">
           <span
             className="size-1.5 rounded-full bg-[var(--primary)] animate-bounce"
@@ -21,6 +22,7 @@ export default function TypingIndicator() {
             style={{ animationDelay: "300ms" }}
           />
         </span>
+        </div>
       </div>
     </div>
   );

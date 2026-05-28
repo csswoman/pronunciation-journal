@@ -34,10 +34,6 @@
   color: var(--primary);
 }
 
-.hue-left-bar {
-  border-left: 2px solid var(--hue-bar);
-}
-
 .btn-soft {
   background-color: var(--primary-soft);
   color: var(--primary);
@@ -238,3 +234,8 @@
   text-decoration: underline;
 }
 .link-primary:hover { color: var(--btn-content); }
+
+/* ── Interactive border helpers ──────────────────────────────────────────── */
+.hover-border-primary:hover {
+  border-color: var(--primary);
+}

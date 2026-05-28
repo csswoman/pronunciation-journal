@@ -1,45 +1,12 @@
 "use client";
 
-// Planned structure:
-// <HomeHeader>
-//   <blob div /> (decorative)
-//   <left col>
-//     <HomeHeaderGreeting />
-//     <HomeHeaderActions />
-//   </left col>
-//   <right col>
-//     <StatCard streak />
-//     <StatCard accuracy />
-//     <StatCard time />
-//   </right col>
-// </HomeHeader>
-
 import { Flame, CircleCheck, Clock } from "lucide-react";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { useSoundProgress } from "@/hooks/useSoundProgress";
 import { useUserPreferences } from "@/hooks/useUserPreferences";
 import HomeHeaderGreeting from "@/components/home/HomeHeaderGreeting";
 import HomeHeaderActions from "@/components/home/HomeHeaderActions";
-
-interface StatCardProps {
-  icon: React.ReactNode;
-  value: string;
-  label: string;
-}
-
-function StatCard({ icon, value, label }: StatCardProps) {
-  return (
-    <div className="flex items-center gap-3 rounded-xl bg-[var(--surface-sunken)] px-4 py-3 min-w-[120px]">
-      <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-[var(--surface-raised)] shrink-0">
-        {icon}
-      </span>
-      <span className="flex flex-col leading-none gap-0.5">
-        <span className="text-[15px] font-bold text-[var(--text-primary)]">{value}</span>
-        <span className="text-[11px] text-[var(--text-tertiary)]">{label}</span>
-      </span>
-    </div>
-  );
-}
+import StatCard from "@/components/home/StatCard";
 
 export default function HomeHeader() {
   const { user } = useAuth();
@@ -73,7 +40,7 @@ export default function HomeHeader() {
         <HomeHeaderActions hasStartedLearning={hasStartedLearning} />
       </div>
 
-      <div className="relative z-10 flex flex-col gap-2 lg:items-end">
+      <div className="relative z-10 flex flex-row flex-wrap gap-2 lg:flex-col lg:items-end">
         <StatCard
           icon={<Flame size={15} className="text-[var(--warning)]" />}
           value="—"

@@ -26,6 +26,44 @@ export async function getLexiconWordBankMap(
   );
 }
 
+/**
+ * Server-only: returns a map of categoryId → { mastered, reviewing } counts.
+ * categoryWordIds is a map of categoryId → array of lexicon word IDs.
+ */
+export async function getLexiconProgressByCategory(
+  categoryWordIds: Map<string, string[]>,
+): Promise<Map<string, { mastered: number; reviewing: number }>> {
+  const allIds = Array.from(categoryWordIds.values()).flat();
+  if (allIds.length === 0) return new Map();
+
+  const supabase = await createSupabaseServerClient();
+  const { data, error } = await supabase
+    .from(TABLE)
+    .select("source_ref, srs_status")
+    .in("source_ref", allIds);
+
+  if (error) throw error;
+
+  const statusByRef = new Map(
+    (data ?? [])
+      .filter((r) => r.source_ref)
+      .map((r) => [r.source_ref as string, r.srs_status as string]),
+  );
+
+  const result = new Map<string, { mastered: number; reviewing: number }>();
+  for (const [categoryId, ids] of categoryWordIds) {
+    let mastered = 0;
+    let reviewing = 0;
+    for (const id of ids) {
+      const status = statusByRef.get(id);
+      if (status === "mastered") mastered++;
+      else if (status) reviewing++;
+    }
+    result.set(categoryId, { mastered, reviewing });
+  }
+  return result;
+}
+
 /** Server-only: words due for review today, most urgent first. */
 export async function getWordsDueForReview(limit = 5): Promise<WordBankEntry[]> {
   const supabase = await createSupabaseServerClient();

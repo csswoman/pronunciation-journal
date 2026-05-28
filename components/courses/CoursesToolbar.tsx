@@ -106,7 +106,7 @@ function FilterChips({
 function SearchInput({ value, onChange }: { value: string; onChange: (v: string) => void }) {
   return (
     <label
-      className="inline-flex items-center"
+      className="inline-flex items-center focus-within:ring-2 focus-within:ring-[color:var(--primary)]/40 focus-within:border-[color:var(--primary)] transition-shadow w-full sm:w-60"
       style={{
         gap: "var(--space-2)",
         height: "32px",
@@ -114,7 +114,6 @@ function SearchInput({ value, onChange }: { value: string; onChange: (v: string)
         background: "var(--surface-raised)",
         border: "1px solid var(--border-subtle)",
         borderRadius: "var(--radius-full)",
-        minWidth: "240px",
       }}
     >
       <Search size={14} style={{ color: "var(--text-tertiary)" }} />
@@ -137,7 +136,7 @@ function SearchInput({ value, onChange }: { value: string; onChange: (v: string)
 function SortSelect({ value, onChange }: { value: LibrarySort; onChange: (s: LibrarySort) => void }) {
   return (
     <div
-      className="relative inline-flex items-center"
+      className="relative inline-flex items-center focus-within:ring-2 focus-within:ring-[color:var(--primary)]/40 focus-within:border-[color:var(--primary)] transition-shadow"
       style={{
         height: "32px",
         padding: "0 var(--space-3)",

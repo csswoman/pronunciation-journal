@@ -2,22 +2,34 @@ import PageLayout from "@/components/layout/PageLayout";
 import Section from "@/components/layout/Section";
 import { LexiconHeader } from "@/components/lexicon";
 import { LexiconContent } from "@/components/lexicon/LexiconContent";
-import { getCategories, getPreviewTags } from "@/lib/lexicon/categories";
+import { getCategories, getCategoryWords, getPreviewTags } from "@/lib/lexicon/categories";
+import { getLexiconProgressByCategory } from "@/lib/word-bank/server-queries";
 import type { LessonViewModel } from "@/lib/lexicon/types";
 
 export default async function LexiconPage() {
   const categories = getCategories();
 
+  const categoryWordIds = new Map(
+    categories.map((cat) => [cat.id, getCategoryWords(cat.id).map((w) => w.id)]),
+  );
+
+  let progressMap: Map<string, { mastered: number; reviewing: number }>;
+  try {
+    progressMap = await getLexiconProgressByCategory(categoryWordIds);
+  } catch {
+    progressMap = new Map();
+  }
+
   const lessons: LessonViewModel[] = categories.map((cat) => {
-    const wordsCompleted = 0;
-    const progress = cat.total > 0 ? Math.round((wordsCompleted / cat.total) * 100) : 0;
+    const { mastered = 0 } = progressMap.get(cat.id) ?? {};
+    const progress = cat.total > 0 ? Math.round((mastered / cat.total) * 100) : 0;
     return {
       id: cat.id,
       icon: cat.icon,
       title: cat.name,
       color: cat.color,
       totalWords: cat.total,
-      wordsCompleted,
+      wordsCompleted: mastered,
       progress,
       tags: getPreviewTags(cat.id),
     };

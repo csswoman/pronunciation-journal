@@ -1,6 +1,7 @@
 'use client'
 
 import { Search } from 'lucide-react'
+import { cn } from '@/lib/cn'
 
 export type PracticeFilter = 'all' | 'basics' | 'vowels' | 'consonants' | 'diphthongs'
 
@@ -90,6 +91,10 @@ export default function LessonFilters({
                 key={tab.id}
                 type="button"
                 onClick={() => onFilterChange(tab.id)}
+                className={cn(
+                  "transition-colors focus-visible:outline-none focus-visible:ring-2",
+                  !isActive && "text-[color:var(--text-secondary)] border-[color:var(--border-subtle)] hover:text-[color:var(--text-primary)] hover:border-[color:var(--border-default)]"
+                )}
                 style={
                   isActive
                     ? {
@@ -101,31 +106,16 @@ export default function LessonFilters({
                         fontWeight: 500,
                         padding: "4px var(--space-3)",
                         cursor: "pointer",
-                        transition: `all var(--transition-fast)`,
                       }
                     : {
                         background: "transparent",
-                        color: "var(--text-secondary)",
-                        border: "1px solid var(--border-subtle)",
+                        border: "1px solid",
                         borderRadius: "var(--radius-full)",
                         font: "var(--font-caption)",
                         padding: "4px var(--space-3)",
                         cursor: "pointer",
-                        transition: `all var(--transition-fast)`,
                       }
                 }
-                onMouseEnter={(e) => {
-                  if (!isActive) {
-                    e.currentTarget.style.color = "var(--text-primary)"
-                    e.currentTarget.style.borderColor = "var(--border-default)"
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!isActive) {
-                    e.currentTarget.style.color = "var(--text-secondary)"
-                    e.currentTarget.style.borderColor = "var(--border-subtle)"
-                  }
-                }}
               >
                 {tab.label}
               </button>

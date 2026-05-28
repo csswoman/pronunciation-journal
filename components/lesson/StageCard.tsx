@@ -71,6 +71,7 @@ export function StageCard({ stage, mastery, index, unlocked, diffMode, onSelect 
   return (
     <button
       disabled={!unlocked}
+      aria-disabled={!unlocked}
       onClick={() => unlocked && onSelect(diffMode)}
       className="group text-left rounded-3xl p-6 flex flex-col transition-all duration-200 relative overflow-hidden hover:-translate-y-1 hover:shadow-lg"
       style={{
