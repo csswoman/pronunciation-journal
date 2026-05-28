@@ -8,7 +8,7 @@
 //   <CardFooter: DifficultyDots + LearnButton + PlayButton />
 // </WordCard>
 
-import { Volume2 } from "lucide-react";
+import { Volume2, Heart, Plus, Check } from "lucide-react";
 import { speak } from "@/lib/phoneme-practice/tts";
 
 interface WordCardProps {
@@ -20,6 +20,10 @@ interface WordCardProps {
   difficulty: number; // 1–5
   color?: string;
   onMarkLearned?: () => void;
+  isFavorite?: boolean;
+  onToggleFavorite?: () => void;
+  isInMyWords?: boolean;
+  onAddToMyWords?: () => void;
 }
 
 const STATUS_CONFIG = {
@@ -46,7 +50,20 @@ const STATUS_CONFIG = {
   },
 } as const;
 
-export function WordCard({ word, partOfSpeech, definition, example, status, difficulty, color, onMarkLearned }: WordCardProps) {
+export function WordCard({
+  word,
+  partOfSpeech,
+  definition,
+  example,
+  status,
+  difficulty,
+  color,
+  onMarkLearned,
+  isFavorite,
+  onToggleFavorite,
+  isInMyWords,
+  onAddToMyWords,
+}: WordCardProps) {
   const cfg = STATUS_CONFIG[status];
   const isLearned = status === "learned";
 
@@ -91,6 +108,32 @@ export function WordCard({ word, partOfSpeech, definition, example, status, diff
               className="text-xs text-fg-muted hover:text-fg border border-border-default hover:border-border-strong px-2.5 py-1 rounded-full transition-colors disabled:opacity-40"
             >
               Mark learned
+            </button>
+          )}
+          {onToggleFavorite && (
+            <button
+              onClick={onToggleFavorite}
+              aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
+              className={`p-1.5 rounded-full transition-colors ${
+                isFavorite ? "text-error hover:text-error/70" : "text-fg-muted hover:text-fg"
+              }`}
+            >
+              <Heart size={14} fill={isFavorite ? "currentColor" : "none"} />
+            </button>
+          )}
+          {onAddToMyWords && (
+            <button
+              onClick={isInMyWords ? undefined : onAddToMyWords}
+              disabled={isInMyWords}
+              aria-label={isInMyWords ? "Already in My Words" : "Add to My Words"}
+              className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-xs border transition-colors ${
+                isInMyWords
+                  ? "text-fg-subtle border-border-subtle opacity-50 cursor-default"
+                  : "text-fg-muted border-border-default hover:text-fg hover:border-border-strong"
+              }`}
+            >
+              {isInMyWords ? <Check size={11} /> : <Plus size={11} />}
+              {isInMyWords ? "In My Words" : "Add"}
             </button>
           )}
           <button
