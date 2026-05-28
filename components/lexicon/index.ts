@@ -1,4 +1,3 @@
-export { LexiconHeader } from "./LexiconHeader";
 export { LexiconFilters } from "./LexiconFilters";
 export type { FilterId } from "./LexiconFilters";
 export { LexiconSearchBar } from "./LexiconSearchBar";
