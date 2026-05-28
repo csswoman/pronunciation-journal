@@ -74,7 +74,7 @@ export default function LessonCard({ lesson, progressPct, isFeatured = false }: 
     return (
       <Link href={lesson.href ?? `/practice/sounds/sound/${lesson.id.replace("sound-", "")}`} className="block h-full">
         <div
-          className="group flex flex-col h-full cursor-pointer"
+          className="group flex flex-col h-full cursor-pointer hover:shadow-[var(--shadow-md)] hover:border-[color-mix(in_srgb,var(--primary)_40%,transparent)]"
           style={{
             position: "relative",
             background: "linear-gradient(135deg, var(--surface-raised) 60%, var(--primary-soft))",
@@ -84,14 +84,6 @@ export default function LessonCard({ lesson, progressPct, isFeatured = false }: 
             gap: "var(--space-3)",
             overflow: "hidden",
             transition: `border-color var(--transition-fast), box-shadow var(--transition-fast)`,
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.borderColor = "color-mix(in srgb, var(--primary) 40%, transparent)";
-            e.currentTarget.style.boxShadow = "var(--shadow-md)";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.borderColor = "color-mix(in srgb, var(--primary) 20%, transparent)";
-            e.currentTarget.style.boxShadow = "none";
           }}
         >
           {/* Radial glow corner */}
@@ -187,7 +179,7 @@ export default function LessonCard({ lesson, progressPct, isFeatured = false }: 
   return (
     <Link href={lesson.href ?? `/practice/sounds/sound/${lesson.id.replace("sound-", "")}`} className="block h-full">
       <div
-        className="group flex flex-col h-full cursor-pointer"
+        className="group flex flex-col h-full cursor-pointer hover:border-[var(--border-default)]"
         style={{
           background: "var(--surface-raised)",
           border: "1px solid var(--border-subtle)",
@@ -195,12 +187,6 @@ export default function LessonCard({ lesson, progressPct, isFeatured = false }: 
           padding: "var(--space-5)",
           gap: "var(--space-3)",
           transition: `border-color var(--transition-fast), background var(--transition-fast)`,
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.borderColor = "var(--border-default)";
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.borderColor = "var(--border-subtle)";
         }}
       >
         <DifficultyPill difficulty={lesson.difficulty} />
