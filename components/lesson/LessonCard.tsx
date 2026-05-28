@@ -149,6 +149,7 @@ export default function LessonCard({ lesson, progressPct, isFeatured = false }: 
 
           <button
             type="button"
+            className="hover:opacity-85"
             style={{
               marginTop: "auto",
               alignSelf: "flex-start",
@@ -166,8 +167,6 @@ export default function LessonCard({ lesson, progressPct, isFeatured = false }: 
               cursor: "pointer",
               transition: `opacity var(--transition-fast)`,
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.85")}
-            onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
           >
             {ctaLabel} Lesson →
           </button>
