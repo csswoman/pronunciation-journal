@@ -38,7 +38,7 @@ export function LessonDetailHeader({
       {/* Left: breadcrumb + title */}
       <div className="space-y-1">
         <nav className="flex items-center gap-1 text-xs text-fg-muted">
-          <Link href="/lexicon" className="hover:text-fg transition-colors">
+          <Link href="/words?tab=lexicon" className="hover:text-fg transition-colors">
             Lexicon
           </Link>
           <ChevronRight className="w-3 h-3" />

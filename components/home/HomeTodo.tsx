@@ -30,7 +30,7 @@ export default function HomeTodo({ dueWords = [], streak }: HomeTodoProps) {
             Add words from the Lexicon to unlock your daily practice.
           </p>
           <Link
-            href="/lexicon"
+            href="/words?tab=lexicon"
             className="mt-1 inline-flex items-center gap-1 rounded-lg bg-[var(--primary)] px-4 py-2 text-xs font-semibold text-white transition-opacity hover:opacity-90"
           >
             Go to Lexicon <ArrowRight size={13} />

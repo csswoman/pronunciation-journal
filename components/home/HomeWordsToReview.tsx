@@ -22,7 +22,7 @@ export default function HomeWordsToReview({
           <h2 className="text-xl font-semibold tracking-tight text-[var(--text-primary)]">Words to review</h2>
         </div>
         <Link
-          href="/vocabulary"
+          href="/words?tab=my-words"
           className="text-[var(--primary)] hover:opacity-80 transition-opacity flex text-xs gap-1 font-medium items-center hover:underline"
           aria-label="Open Vocabulary"
         >
