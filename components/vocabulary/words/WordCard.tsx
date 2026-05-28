@@ -1,6 +1,6 @@
 "use client";
 
-import { Loader2, RefreshCcw, Trash2 } from "lucide-react";
+import { Heart, Loader2, RefreshCcw, Trash2 } from "lucide-react";
 import type { WordBankEntry } from "@/lib/word-bank/types";
 import { useAudioPlayback } from "@/hooks/useAudioPlayback";
 import Button from "@/components/ui/Button";
@@ -15,9 +15,11 @@ interface WordCardProps {
   onDelete: (id: string) => void;
   selected?: boolean;
   onSelect?: (id: string) => void;
+  isFavorite?: boolean;
+  onToggleFavorite?: () => void;
 }
 
-export function WordCard({ word, onRetry, onDelete, selected, onSelect }: WordCardProps) {
+export function WordCard({ word, onRetry, onDelete, selected, onSelect, isFavorite, onToggleFavorite }: WordCardProps) {
   const { play } = useAudioPlayback(word.audio_url, word.text);
 
   if (word.status === "processing") {
@@ -114,6 +116,19 @@ export function WordCard({ word, onRetry, onDelete, selected, onSelect }: WordCa
         </div>
 
         <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity ml-auto">
+          {onToggleFavorite && (
+            <button
+              onClick={e => { e.stopPropagation(); onToggleFavorite(); }}
+              aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
+              className={`p-1.5 rounded-full transition-colors ${
+                isFavorite
+                  ? "text-error hover:text-error/70"
+                  : "text-fg-muted hover:text-fg"
+              }`}
+            >
+              <Heart size={14} fill={isFavorite ? "currentColor" : "none"} />
+            </button>
+          )}
           <Button
             variant="ghost-danger"
             size="icon"
