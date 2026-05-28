@@ -39,7 +39,7 @@ function CourseRow({ course }: CourseRowProps) {
         <p className="text-[11px] text-[var(--text-tertiary)] truncate">{course.description ?? "—"}</p>
       </div>
       <div className="flex items-center gap-2 shrink-0">
-        <div className="w-16 h-[3px] rounded-full bg-[var(--border-subtle)] overflow-hidden">
+        <div className="w-16 h-1 rounded-full bg-[var(--border-subtle)] overflow-hidden">
           <div className="h-full rounded-full bg-[var(--hue-bar)]" style={{ width: "0%" }} />
         </div>
         <ArrowRight size={13} className="text-[var(--text-tertiary)] opacity-0 group-hover:opacity-100 transition-opacity" />
