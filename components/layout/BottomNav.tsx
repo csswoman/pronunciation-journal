@@ -95,7 +95,7 @@ export default function BottomNav({ className = "" }: BottomNavProps) {
         />
       )}
       {showMenu && (
-        <div className="fixed bottom-20 left-4 right-4 bg-[var(--card-bg)]/90 backdrop-blur-md border border-[var(--line-divider)] rounded-2xl shadow-xl z-50 p-3">
+        <div className="fixed bottom-20 left-4 right-4 max-h-[calc(100vh-120px)] overflow-y-auto bg-[var(--surface-translucent)] backdrop-blur-md border border-[var(--line-divider)] rounded-2xl shadow-xl z-50 p-3">
           <div className="grid grid-cols-2 gap-1.5">
             {menuItems.map((item) => (
               <Link

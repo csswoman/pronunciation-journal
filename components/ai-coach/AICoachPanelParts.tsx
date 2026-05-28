@@ -45,13 +45,14 @@ export function ConversationHistoryPanel({ conversations, activeId, onSelect, on
         if (!items?.length) return null;
         return <div key={label} className="mb-3">
           <p className="text-tiny font-semibold uppercase tracking-widest px-3 py-1 text-[var(--text-tertiary)]">{label}</p>
-          {items.map((conv) => {
+          {items.map((conv, i) => {
             const isActive = conv.id === activeId;
             return <div
               key={conv.id}
               className={[
                 "group flex items-center gap-2 px-3 py-2 mx-1 rounded-lg cursor-pointer transition-colors",
                 !isActive && "hover:bg-[var(--btn-regular-bg)]",
+                !isActive && i % 2 !== 0 && "bg-[var(--surface-sunken)]/40",
               ].filter(Boolean).join(" ")}
               style={isActive ? { backgroundColor: "color-mix(in oklch, var(--primary) 10%, transparent)" } : undefined}
               onClick={() => onSelect(conv)}

@@ -97,9 +97,10 @@
   --surface-base:    var(--bg);                   /* page background */
   --surface-raised:  var(--bg-secondary);         /* cards, panels, sidebars */
   --surface-sunken:  var(--bg-tertiary);          /* inputs, code blocks, inset areas */
-  --surface-overlay: oklch(1 0 0 / 0.92);         /* modals, popovers */
-  --surface-tooltip: oklch(0.17 0.006 var(--hue)); /* always-dark for tooltip bg */
-  --surface-code:    oklch(0.14 0.005 var(--hue)); /* always-dark for code blocks */
+  --surface-overlay:      oklch(1 0 0 / 0.92);         /* modals, popovers */
+  --surface-translucent:  color-mix(in oklch, var(--card-bg) 70%, transparent); /* glassmorphism containers */
+  --surface-tooltip:      oklch(0.17 0.006 var(--hue)); /* always-dark for tooltip bg */
+  --surface-code:         oklch(0.14 0.005 var(--hue)); /* always-dark for code blocks */
 
   /* ── 5. Borders — semantic strength names ────────────────────────────── */
   --border-subtle:  oklch(0.925 0 0);     /* dividers, faint separators */
@@ -179,10 +180,11 @@
   --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
 
   /* ── 13. Shadows ─────────────────────────────────────────────────────── */
-  --shadow-sm: 0 1px 2px   oklch(0 0 0 / 0.05);
-  --shadow-md: 0 4px 6px   oklch(0 0 0 / 0.07);
-  --shadow-lg: 0 10px 15px oklch(0 0 0 / 0.10);
-  --shadow-xl: 0 20px 25px oklch(0 0 0 / 0.10);
+  --shadow-sm:       0 1px 2px   oklch(0 0 0 / 0.05);
+  --shadow-md:       0 4px 6px   oklch(0 0 0 / 0.07);
+  --shadow-lg:       0 10px 15px oklch(0 0 0 / 0.10);
+  --shadow-xl:       0 20px 25px oklch(0 0 0 / 0.10);
+  --shadow-panel:    -4px 0 24px color-mix(in oklch, var(--fg) 6%, transparent);
 
   /* ── 14. Color selection bar ─────────────────────────────────────────── */
   --color-selection-bar: linear-gradient(to right,
@@ -208,6 +210,8 @@
   --btn-regular-bg-hover:  var(--bg-tertiary);
   --btn-regular-bg-active: var(--border);
   --btn-plain-bg-hover:    var(--bg-secondary);
+  --btn-soft-bg:           color-mix(in oklch, var(--primary) 15%, var(--bg-secondary));
+  --btn-soft-bg-hover:     color-mix(in oklch, var(--primary) 25%, var(--bg-secondary));
 
   /* ── Backward compatibility aliases ──────────────────────────────────── */
   --secondary:            var(--primary);
@@ -321,8 +325,9 @@
   --surface-base:    var(--bg);
   --surface-raised:  var(--bg-secondary);
   --surface-sunken:  var(--bg-tertiary);
-  --surface-overlay: oklch(0.165 0.003 var(--hue) / 0.96);
-  --surface-tooltip: oklch(0.24 0.006 var(--hue));
+  --surface-overlay:     oklch(0.165 0.003 var(--hue) / 0.96);
+  --surface-translucent: color-mix(in oklch, var(--card-bg) 70%, transparent);
+  --surface-tooltip:     oklch(0.24 0.006 var(--hue));
   --surface-code:    oklch(0.10 0.003 var(--hue));
 
   /* ── Borders — dark overrides ────────────────────────────────────────── */
@@ -348,6 +353,8 @@
   --btn-regular-bg-hover:  var(--bg-tertiary);
   --btn-regular-bg-active: var(--border);
   --btn-plain-bg-hover:    var(--bg-tertiary);
+  --btn-soft-bg:           color-mix(in oklch, var(--primary) 15%, var(--bg-secondary));
+  --btn-soft-bg-hover:     color-mix(in oklch, var(--primary) 25%, var(--bg-secondary));
 
   /* ── Backward compatibility aliases ──────────────────────────────────── */
   --secondary:            var(--primary);
