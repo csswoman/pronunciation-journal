@@ -56,16 +56,62 @@ export function QuickAddModal({ open, onClose, onSubmit, initialText = "" }: Qui
 
   if (!open) return null;
 
+  const titleId = "quick-add-modal-title";
+  const modalRef = useRef<HTMLDivElement>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    previousFocusRef.current = document.activeElement as HTMLElement;
+    const modal = modalRef.current;
+    if (modal) modal.focus();
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== "Tab") return;
+      const focusableElements = modal?.querySelectorAll(
+        'button, [href], input, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      if (!focusableElements || focusableElements.length === 0) return;
+
+      const first = focusableElements[0] as HTMLElement;
+      const last = focusableElements[focusableElements.length - 1] as HTMLElement;
+      const activeEl = document.activeElement;
+
+      if (e.shiftKey) {
+        if (activeEl === first) {
+          e.preventDefault();
+          last.focus();
+        }
+      } else {
+        if (activeEl === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      previousFocusRef.current?.focus();
+    };
+  }, [open]);
+
   return (
     <div
       className="fixed inset-0 z-50 flex items-start justify-center px-4 pt-[12vh]"
-      style={{ background: "oklch(0 0 0 / 0.45)", backdropFilter: "blur(2px)" }}
+      style={{ background: "var(--overlay-medium)", backdropFilter: "blur(2px)" }}
       onClick={onClose}
     >
       <div
+        ref={modalRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
+        tabIndex={-1}
         onClick={e => e.stopPropagation()}
         className={cn(
-          "w-full max-w-[448px] overflow-hidden",
+          "w-full max-w-[clamp(100%,448px,90vw)] overflow-hidden",
           "rounded-[--radius-lg] border border-[--border]",
           "bg-[--surface-raised] shadow-[--shadow-xl]",
           "animate-[modal-in_200ms_ease-out]",
@@ -78,7 +124,7 @@ export function QuickAddModal({ open, onClose, onSubmit, initialText = "" }: Qui
             <div className="border-b border-[--border] px-5 py-4">
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <h2 className="text-base font-semibold leading-snug text-[--fg]">Save a word</h2>
+                  <h2 id={titleId} className="text-base font-semibold leading-snug text-[--fg]">Save a word</h2>
                   <div className="mt-1 flex items-center gap-1">
                     <Sparkles size={11} className="shrink-0 text-[--primary]" />
                     <span className="text-[11px] leading-none text-[--text-tertiary]">

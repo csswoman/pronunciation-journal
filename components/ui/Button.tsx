@@ -108,7 +108,6 @@ const variantStyles: Record<ButtonVariant, string> = {
     border border-transparent
     shadow-lg
     hover:shadow-xl
-    hover:-translate-y-1
     hover:bg-[var(--primary-600)]
   `,
 
@@ -140,8 +139,8 @@ const sizeStyles: Record<ButtonSize, string> = {
   sm: "px-3 py-1.5 text-sm rounded-lg gap-1.5",
   md: "px-4 py-2.5 text-sm rounded-xl gap-2",
   lg: "px-5 py-3 text-base rounded-xl gap-2.5",
-  icon: "p-2 rounded-full",
-  iconLg: "p-3.5 rounded-full",
+  icon: "p-2.5 rounded-full min-h-11 min-w-11",
+  iconLg: "p-3.5 rounded-full min-h-12 min-w-12",
 };
 
 export default function Button({
@@ -160,10 +159,10 @@ export default function Button({
   const base = [
     "inline-flex items-center justify-center font-medium",
     "transition-all duration-200 ease-out",
-    "focus:outline-none focus:ring-4 focus:ring-opacity-30",
-    "active:scale-[0.97]",
+    "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--primary)]",
+    "active:scale-[0.98]",
 
-    !disabled && "hover:-translate-y-0.5",
+    !disabled && "hover:shadow-md",
 
     variantStyles[variant],
     sizeStyles[size],

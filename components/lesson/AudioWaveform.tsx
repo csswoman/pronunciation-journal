@@ -10,8 +10,21 @@ interface AudioWaveformProps {
 export default function AudioWaveform({ isRecording, stream }: AudioWaveformProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animFrameRef = useRef<number>(0);
-  const analyserRef = useRef<AnalyserNode | null>(null);
-  const audioCtxRef = useRef<AudioContext | null>(null);
+
+  // Sync canvas buffer dimensions to rendered size with device pixel ratio
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const observer = new ResizeObserver(() => {
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = canvas.offsetWidth * dpr;
+      canvas.height = canvas.offsetHeight * dpr;
+      const ctx = canvas.getContext("2d");
+      ctx?.scale(dpr, dpr);
+    });
+    observer.observe(canvas);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     if (!isRecording || !stream || !canvasRef.current) return;
@@ -26,31 +39,26 @@ export default function AudioWaveform({ isRecording, stream }: AudioWaveformProp
     analyser.fftSize = 256;
     source.connect(analyser);
 
-    audioCtxRef.current = audioContext;
-    analyserRef.current = analyser;
-
     const bufferLength = analyser.frequencyBinCount;
     const dataArray = new Uint8Array(bufferLength);
+    const primaryColor = getComputedStyle(canvas).getPropertyValue("--primary").trim() || "oklch(0.65 0.15 250)";
 
     const draw = () => {
       animFrameRef.current = requestAnimationFrame(draw);
       analyser.getByteFrequencyData(dataArray);
 
-      const { width, height } = canvas;
-      ctx.clearRect(0, 0, width, height);
+      const w = canvas.offsetWidth;
+      const h = canvas.offsetHeight;
+      ctx.clearRect(0, 0, w, h);
 
-      const barWidth = (width / bufferLength) * 2.5;
-      const centerY = height / 2;
+      const barWidth = (w / bufferLength) * 2.5;
+      const centerY = h / 2;
 
       for (let i = 0; i < bufferLength; i++) {
         const barHeight = (dataArray[i] / 255) * centerY;
         const x = i * barWidth;
-
-        // Gradient from brand color to accent
-        const hue = 230 + (i / bufferLength) * 30;
-        ctx.fillStyle = `hsla(${hue}, 80%, 60%, 0.9)`;
-
-        // Draw mirrored bars
+        const alpha = 0.5 + (i / bufferLength) * 0.5;
+        ctx.fillStyle = `color-mix(in oklch, ${primaryColor} ${Math.round(alpha * 100)}%, transparent)`;
         ctx.fillRect(x, centerY - barHeight, barWidth - 1, barHeight);
         ctx.fillRect(x, centerY, barWidth - 1, barHeight);
       }
@@ -65,7 +73,7 @@ export default function AudioWaveform({ isRecording, stream }: AudioWaveformProp
     };
   }, [isRecording, stream]);
 
-  // Idle animation when not recording
+  // Idle animation — skipped when user prefers reduced motion
   useEffect(() => {
     if (isRecording || !canvasRef.current) return;
 
@@ -73,21 +81,39 @@ export default function AudioWaveform({ isRecording, stream }: AudioWaveformProp
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const primaryColor = getComputedStyle(canvas).getPropertyValue("--primary").trim() || "oklch(0.65 0.15 250)";
+
+    if (reducedMotion) {
+      // Draw a single static flat line
+      const w = canvas.offsetWidth;
+      const h = canvas.offsetHeight;
+      ctx.clearRect(0, 0, w, h);
+      const numBars = 40;
+      const barWidth = w / numBars;
+      const centerY = h / 2;
+      ctx.fillStyle = `color-mix(in oklch, ${primaryColor} 30%, transparent)`;
+      for (let i = 0; i < numBars; i++) {
+        ctx.fillRect(i * barWidth, centerY - 2, barWidth - 1, 4);
+      }
+      return;
+    }
+
     let frame = 0;
     const drawIdle = () => {
       animFrameRef.current = requestAnimationFrame(drawIdle);
-      const { width, height } = canvas;
-      ctx.clearRect(0, 0, width, height);
+      const w = canvas.offsetWidth;
+      const h = canvas.offsetHeight;
+      ctx.clearRect(0, 0, w, h);
 
-      const centerY = height / 2;
+      const centerY = h / 2;
       const numBars = 40;
-      const barWidth = width / numBars;
+      const barWidth = w / numBars;
 
       for (let i = 0; i < numBars; i++) {
-        const x = i * barWidth;
-        const barHeight = Math.sin((i * 0.3) + (frame * 0.03)) * 4 + 5;
-        ctx.fillStyle = `hsla(230, 60%, 70%, 0.3)`;
-        ctx.fillRect(x, centerY - barHeight, barWidth - 1, barHeight * 2);
+        const barHeight = Math.sin(i * 0.3 + frame * 0.03) * 4 + 5;
+        ctx.fillStyle = `color-mix(in oklch, ${primaryColor} 30%, transparent)`;
+        ctx.fillRect(i * barWidth, centerY - barHeight, barWidth - 1, barHeight * 2);
       }
       frame++;
     };
@@ -100,9 +126,9 @@ export default function AudioWaveform({ isRecording, stream }: AudioWaveformProp
   return (
     <canvas
       ref={canvasRef}
-      width={400}
-      height={100}
-      className="w-full h-[100px] rounded-xl"
+      role="img"
+      aria-label={isRecording ? "Live audio waveform, recording in progress" : "Audio waveform preview"}
+      className="w-full h-[clamp(80px,20vh,120px)] rounded-xl"
     />
   );
 }

@@ -46,7 +46,7 @@
   --fg:               oklch(0.18 0.008 var(--hue));
   --text-primary:     oklch(0.18 0.008 var(--hue));
   --text-secondary:   oklch(0.46 0.006 var(--hue));
-  --text-tertiary:    oklch(0.62 0.004 var(--hue));
+  --text-tertiary:    oklch(0.55 0.004 var(--hue));
   --text-disabled:    oklch(0.75 0.002 var(--hue));
   --text-placeholder: oklch(0.75 0.002 var(--hue));
   --border:       oklch(0.875 0 0);
@@ -98,9 +98,10 @@
   --surface-raised:  var(--bg-secondary);         /* cards, panels, sidebars */
   --surface-sunken:  var(--bg-tertiary);          /* inputs, code blocks, inset areas */
   --surface-overlay:      oklch(1 0 0 / 0.92);         /* modals, popovers */
-  --surface-translucent:  color-mix(in oklch, var(--card-bg) 70%, transparent); /* glassmorphism containers */
+  --surface-translucent:  color-mix(in oklch, var(--surface-raised) 70%, transparent); /* glassmorphism containers */
   --surface-tooltip:      oklch(0.17 0.006 var(--hue)); /* always-dark for tooltip bg */
   --surface-code:         oklch(0.14 0.005 var(--hue)); /* always-dark for code blocks */
+  --card-bg:          var(--surface-raised);     /* alias for surface-raised */
 
   /* ── 5. Borders — semantic strength names ────────────────────────────── */
   --border-subtle:  oklch(0.925 0 0);     /* dividers, faint separators */

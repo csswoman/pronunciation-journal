@@ -12,7 +12,7 @@ interface Props {
 
 export function ExerciseCard({ children, feedback, onNext, finishLabel }: Props) {
   return (
-    <div className="w-full max-w-[520px] mx-auto flex flex-col gap-4">
+    <div className="w-full max-w-[clamp(100%,520px,90vw)] mx-auto px-4 lg:px-0 flex flex-col gap-4">
       {children}
 
       {feedback && (

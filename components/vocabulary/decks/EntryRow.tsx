@@ -60,14 +60,14 @@ export function EntryRow({ entry, selected, onToggleSelect, onRemove, onSaveEntr
         </div>
 
         <div className="flex items-center gap-0.5 shrink-0">
-          <button onClick={() => speakWord(entry.word)} className="p-1.5 rounded-lg text-fg-subtle hover:text-fg hover:bg-[var(--btn-regular-bg)] transition-colors" title="Pronounce">
-            <Volume2 size={13} />
+          <button onClick={() => speakWord(entry.word)} aria-label="Pronounce word" className="p-2 rounded-lg min-h-9 min-w-9 text-fg-subtle hover:text-fg hover:bg-[var(--btn-regular-bg)] transition-colors">
+            <Volume2 size={14} />
           </button>
-          <button onClick={expanded ? () => setExpanded(false) : openEdit} className={`p-1.5 rounded-lg transition-colors ${expanded ? "text-[var(--primary)] bg-[var(--primary)]/10" : "text-fg-subtle hover:text-fg hover:bg-[var(--btn-regular-bg)]"}`} title="Edit phrases">
-            {expanded ? <ChevronUp size={13} /> : <Pencil size={13} />}
+          <button onClick={expanded ? () => setExpanded(false) : openEdit} aria-label={expanded ? "Collapse" : "Edit phrases"} className={`p-2 rounded-lg min-h-9 min-w-9 transition-colors ${expanded ? "text-[var(--primary)] bg-[var(--primary)]/10" : "text-fg-subtle hover:text-fg hover:bg-[var(--btn-regular-bg)]"}`}>
+            {expanded ? <ChevronUp size={14} /> : <Pencil size={14} />}
           </button>
-          <button onClick={() => onRemove(entry.id)} className="p-1.5 rounded-lg text-fg-subtle hover:text-error hover:bg-error-soft transition-colors" title="Remove">
-            <Trash2 size={13} />
+          <button onClick={() => onRemove(entry.id)} aria-label="Remove entry" className="p-2 rounded-lg min-h-9 min-w-9 text-fg-subtle hover:text-error hover:bg-error-soft transition-colors">
+            <Trash2 size={14} />
           </button>
         </div>
       </div>

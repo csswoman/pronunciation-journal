@@ -1,27 +1,22 @@
 "use client";
 
 import React, { useEffect, useState, useCallback } from "react";
-import { ChevronLeft, Lightbulb } from "lucide-react";
-import Button from "@/components/ui/Button";
-import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { useAuth } from "@/components/auth/AuthProvider";
 import type { Tables } from "@/lib/supabase/types";
+import { getDeckCardsWithProgress, upsertCardProgress } from "@/lib/decks/queries";
 import { DIFFICULTY_CONFIG, type DifficultyKey } from "./StudyDifficultyButtons";
 import { sm2, LEVEL_LABELS, RATING_CONFIG } from "./study-utils";
-import { StudyCard } from "./StudyCard";
 import { StudyLeftPanel } from "./StudyLeftPanel";
 import { StudyRightPanel } from "./StudyRightPanel";
 import { StudyRatingBar } from "./StudyRatingBar";
 import { H2 } from "@/components/ui/Typography";
+import { StudySessionComplete } from "./StudySessionComplete";
+import { StudyEmptyStates } from "./StudyEmptyStates";
+import { StudyHeader } from "./StudyHeader";
+import { StudyCenterCard } from "./StudyCenterCard";
 
 type Deck = Tables<"decks">;
-type Entry = Tables<"entries">;
 type Progress = Tables<"deck_entry_progress">;
-type DeckEntryRow = { entries: Entry | null };
-
-interface CardWithProgress extends Entry {
-  progress: Progress | null;
-}
 
 interface SessionStats {
   seen: number;
@@ -41,7 +36,7 @@ const EMPTY_STATS: SessionStats = { seen: 0, again: 0, hard: 0, easy: 0, newlyMa
 export function StudyModal({ deck, onClose }: StudyModalProps) {
   const { user } = useAuth();
   const [phase, setPhase] = useState<"loading" | "studying" | "done">("loading");
-  const [queue, setQueue] = useState<CardWithProgress[]>([]);
+  const [queue, setQueue] = useState<Awaited<ReturnType<typeof getDeckCardsWithProgress>>>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
   const [stats, setStats] = useState<SessionStats>(EMPTY_STATS);
@@ -53,23 +48,7 @@ export function StudyModal({ deck, onClose }: StudyModalProps) {
   useEffect(() => {
     const load = async () => {
       if (!user) return;
-      const supabase = getSupabaseBrowserClient();
-      const { data: deckEntries } = await supabase
-        .from("deck_entries").select("entry_id, entries(*)").eq("deck_id", deck.id);
-      const entries = ((deckEntries ?? []) as DeckEntryRow[])
-        .map((r) => r.entries).filter(Boolean) as Entry[];
-      if (!entries.length) { setPhase("studying"); return; }
-      const { data: progressRows } = await supabase
-        .from("deck_entry_progress").select("*").eq("user_id", user.id)
-        .in("entry_id", entries.map((e) => e.id));
-      const progressMap = new Map<string, Progress>(
-        (progressRows ?? []).map((p) => [p.entry_id, p as Progress])
-      );
-      const now = new Date();
-      const due = entries
-        .map((e) => ({ ...e, progress: progressMap.get(e.id) ?? null }))
-        .filter((c) => !c.progress || new Date(c.progress.next_review_at) <= now)
-        .sort(() => Math.random() - 0.5);
+      const due = await getDeckCardsWithProgress(deck.id, user.id);
       setQueue(due);
       setPhase("studying");
     };
@@ -131,10 +110,7 @@ export function StudyModal({ deck, onClose }: StudyModalProps) {
       last_reviewed_at: null, created_at: new Date().toISOString(), updated_at: new Date().toISOString(),
     };
     const updated = sm2(existing, q);
-    await getSupabaseBrowserClient().from("deck_entry_progress").upsert(
-      { user_id: user.id, entry_id: currentCard.id, ...updated },
-      { onConflict: "user_id,entry_id" }
-    );
+    await upsertCardProgress(user.id, currentCard.id, updated);
     setStats((s) => ({
       seen: s.seen + 1,
       again: difficulty === "again" ? s.again + 1 : s.again,
@@ -170,96 +146,56 @@ export function StudyModal({ deck, onClose }: StudyModalProps) {
   const upcomingCards = queue.slice(currentIndex + 1, currentIndex + 4);
   const progress = queue.length > 0 ? (currentIndex / queue.length) * 100 : 0;
 
-  const centeredOverlay = (children: React.ReactNode) => (
-    <div className="flex flex-col min-h-[calc(100vh-10rem)] items-center justify-center p-4">
-      {children}
-    </div>
+  const emptyState = (
+    <StudyEmptyStates
+      phase={phase}
+      deckName={deck.name}
+      queueLength={queue.length}
+      onClose={onClose}
+    />
   );
 
   if (phase === "loading") {
-    return centeredOverlay(
-      <div className="w-10 h-10 rounded-full border-2 border-t-transparent animate-spin"
-        style={{ borderColor: "var(--primary)", borderTopColor: "transparent" }} />
-    );
+    return emptyState;
   }
 
   if (phase === "studying" && queue.length === 0) {
-    return centeredOverlay(
-      <div className="max-w-sm w-full rounded-2xl border p-8 text-center space-y-5"
-        style={{ backgroundColor: "var(--card-bg)", borderColor: "var(--line-divider)" }}>
-        <div className="text-5xl">🎉</div>
-        <H2 className="text-h4">All caught up!</H2>
-        <p className="text-sm text-fg-muted">
-          No cards due in <strong>{deck.name}</strong>.
-        </p>
-        <Button variant="primary" fullWidth onClick={onClose}>Done</Button>
-      </div>
-    );
+    return emptyState;
   }
 
   if (phase === "done") {
-    return centeredOverlay(
-      <div className="max-w-sm w-full rounded-2xl border p-8 text-center space-y-5"
-        style={{ backgroundColor: "var(--card-bg)", borderColor: "var(--line-divider)" }}>
-        <div className="text-5xl">🎉</div>
-        <div>
-          <H2 className="text-h2">Session complete!</H2>
-          <p className="text-sm mt-1 text-fg-muted">
-            You reviewed <strong>{stats.seen}</strong> card{stats.seen !== 1 ? "s" : ""} from <strong>{deck.name}</strong>
-          </p>
-        </div>
-        <div className="grid grid-cols-3 gap-3 text-sm">
-          {[
-            { val: stats.again, label: "hard",   cfg: RATING_CONFIG.again },
-            { val: stats.hard,  label: "medium", cfg: RATING_CONFIG.hard },
-            { val: stats.easy,  label: "easy",   cfg: RATING_CONFIG.easy },
-          ].map(({ val, label, cfg }) => (
-            <div key={label} className="rounded-xl p-3"
-              style={{ backgroundColor: cfg.bg, border: `1px solid ${cfg.border}` }}>
-              <div className="text-lg font-bold" style={{ color: cfg.color }}>{val}</div>
-              <div className="text-xs" style={{ color: cfg.color }}>{label}</div>
-            </div>
-          ))}
-        </div>
-        {stats.newlyMastered > 0 && (
-          <p className="text-sm text-fg-muted">
-            ⭐ {stats.newlyMastered} card{stats.newlyMastered !== 1 ? "s" : ""} mastered
-          </p>
-        )}
-        <div className="flex gap-2">
-          <Button variant="primary" className="flex-1 py-2.5"
-            onClick={() => { setCurrentIndex(0); setFlipped(false); setStats(EMPTY_STATS); setPhase("studying"); }}>
-            Study again
-          </Button>
-          <Button variant="outline" className="flex-1 py-2.5" onClick={onClose}>Done</Button>
-        </div>
-      </div>
+    return (
+      <StudySessionComplete
+        stats={stats}
+        deckName={deck.name}
+        onStudyAgain={() => {
+          setCurrentIndex(0);
+          setFlipped(false);
+          setStats(EMPTY_STATS);
+          setPhase("studying");
+        }}
+        onDone={onClose}
+      />
     );
   }
 
   return (
-    <div className="flex flex-col min-h-[calc(100vh-10rem)]">
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label={`Study session: ${deck.name}`}
+      className="flex flex-col min-h-[calc(100vh-10rem)]"
+    >
 
-      {/* Header */}
-      <div className="flex items-center gap-3 px-4 pt-3 pb-2">
-        <Button variant="ghost" size="icon" onClick={onClose} title="Back">
-          <ChevronLeft size={20} />
-        </Button>
-        <span className="font-semibold text-sm shrink-0 text-fg">
-          {deck.name}
-        </span>
-        <div className="flex-1 h-2 rounded-full overflow-hidden" style={{ backgroundColor: "var(--btn-regular-bg)" }}>
-          <div className="h-full rounded-full transition-all duration-500"
-            style={{ width: `${progress}%`, backgroundColor: "var(--warning)" }} />
-        </div>
-        <span className="text-xs font-mono shrink-0 text-fg-subtle">
-          {currentIndex + 1}/{queue.length}
-        </span>
-        <Button variant="outline" size="sm" icon={<Lightbulb size={13} />}
-          onClick={() => setShowTip((v) => !v)} className="hidden lg:flex shrink-0">
-          {showTip ? "Hide tip" : "View tip"}
-        </Button>
-      </div>
+      <StudyHeader
+        deckName={deck.name}
+        progress={progress}
+        currentIndex={currentIndex}
+        queueLength={queue.length}
+        showTip={showTip}
+        onClose={onClose}
+        onToggleTip={() => setShowTip((v) => !v)}
+      />
 
       {/* Body */}
       <div className="flex-1 flex gap-4 px-4 pb-2 min-h-0">
@@ -277,31 +213,15 @@ export function StudyModal({ deck, onClose }: StudyModalProps) {
           onRemoveImage={handleRemoveImage}
         />
 
-        {/* Center */}
-        <div className="flex-1 flex flex-col items-center justify-center min-w-0">
-          {currentCard && (
-            <StudyCard
-              word={currentCard.word}
-              ipa={currentCard.ipa}
-              levelLabel={levelLabel}
-              firstMeaning={firstMeaning}
-              firstDef={firstDef}
-              flipped={flipped}
-              onFlip={() => setFlipped((f) => !f)}
-              onSkip={handleSkip}
-            />
-          )}
-          {!flipped && (
-            <p className="mt-3 text-xs text-fg-subtle">
-              Hint: Press{" "}
-              <kbd className="px-1.5 py-0.5 rounded border text-tiny font-mono"
-                style={{ borderColor: "var(--line-divider)", backgroundColor: "var(--btn-regular-bg)" }}>
-                SPACE
-              </kbd>
-              {" "}to flip
-            </p>
-          )}
-        </div>
+        <StudyCenterCard
+          currentCard={currentCard}
+          levelLabel={levelLabel}
+          firstMeaning={firstMeaning}
+          firstDef={firstDef}
+          flipped={flipped}
+          onFlip={() => setFlipped((f) => !f)}
+          onSkip={handleSkip}
+        />
 
         <StudyRightPanel stats={stats} upcomingCards={upcomingCards} />
       </div>
