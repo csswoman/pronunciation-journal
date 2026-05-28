@@ -10,6 +10,7 @@ interface WordsHeroProps {
   deckCount: number;
   lexiconLearned: number;
   lexiconTotal: number;
+  lexiconPercentage?: number;
   wordsLoading: boolean;
   onAddWord: () => void;
   onAddDeck: () => void;
@@ -21,6 +22,7 @@ export function WordsHero({
   deckCount,
   lexiconLearned,
   lexiconTotal,
+  lexiconPercentage = 0,
   wordsLoading,
   onAddWord,
   onAddDeck,
@@ -30,6 +32,9 @@ export function WordsHero({
     "my-words": "My Words",
     decks: "Decks",
   };
+
+  const circumference = 2 * Math.PI * 45;
+  const dashOffset = circumference - (lexiconPercentage / 100) * circumference;
 
   return (
     <div className="relative overflow-hidden rounded-2xl p-5 mb-6 bg-gradient-to-br from-surface-raised to-surface-sunken">
@@ -64,12 +69,44 @@ export function WordsHero({
           )}
         </div>
 
-        {activeTab === "my-words" && (
-          <Button onClick={onAddWord} icon={<Plus size={15} />} size="sm">New Word</Button>
-        )}
-        {activeTab === "decks" && (
-          <Button onClick={onAddDeck} icon={<Plus size={15} />} size="sm">New Deck</Button>
-        )}
+        <div className="flex items-center gap-4 flex-shrink-0">
+          {activeTab === "lexicon" && (
+            <>
+              <div className="text-right">
+                <p className="text-2xl font-bold text-fg tabular-nums">
+                  {lexiconLearned.toLocaleString()}
+                  <span className="text-fg-muted font-normal text-base"> / {lexiconTotal.toLocaleString()}</span>
+                </p>
+                <p className="text-xs text-fg-muted mt-0.5">words learned</p>
+              </div>
+
+              <div className="relative w-16 h-16 flex-shrink-0">
+                <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
+                  <circle cx="50" cy="50" r="45" fill="none" stroke="var(--border-subtle)" strokeWidth="8" />
+                  <circle
+                    cx="50" cy="50" r="45"
+                    fill="none"
+                    stroke="var(--primary)"
+                    strokeWidth="8"
+                    strokeLinecap="round"
+                    strokeDasharray={circumference}
+                    strokeDashoffset={dashOffset}
+                  />
+                </svg>
+                <div className="absolute inset-0 flex flex-col items-center justify-center">
+                  <p className="text-sm font-bold text-fg leading-none">{lexiconPercentage.toFixed(0)}%</p>
+                </div>
+              </div>
+            </>
+          )}
+
+          {activeTab === "my-words" && (
+            <Button onClick={onAddWord} icon={<Plus size={15} />} size="sm">New Word</Button>
+          )}
+          {activeTab === "decks" && (
+            <Button onClick={onAddDeck} icon={<Plus size={15} />} size="sm">New Deck</Button>
+          )}
+        </div>
       </div>
     </div>
   );

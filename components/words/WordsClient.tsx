@@ -175,6 +175,7 @@ export function WordsClient({ lexiconLessons, lexiconLearned, lexiconTotal }: Wo
           deckCount={decks.length}
           lexiconLearned={lexiconLearned}
           lexiconTotal={lexiconTotal}
+          lexiconPercentage={lexiconPercentage}
           wordsLoading={wordsLoading}
           onAddWord={() => setShowAddWord(true)}
           onAddDeck={() => setShowCreateDeck(true)}
@@ -187,11 +188,7 @@ export function WordsClient({ lexiconLessons, lexiconLearned, lexiconTotal }: Wo
         <Section spacing="lg">
           {activeTab === "lexicon" && (
             <>
-              <LexiconHeader
-                wordsLearned={lexiconLearnedWords}
-                totalWords={lexiconTotalWords}
-                percentageDone={lexiconPercentage}
-              />
+
               <LexiconContent lessons={lexiconLessons} />
             </>
           )}
