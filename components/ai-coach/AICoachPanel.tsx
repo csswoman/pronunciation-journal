@@ -67,7 +67,7 @@ export default function AICoachPanel() {
             {!hasMessages
               ? <AICoachHome activeTab="chat" onSendMessage={sendMessage} isStreaming={isStreaming} prefill={inputPrefill} onPrefillConsumed={() => setInputPrefill(undefined)} />
               : <>
-                  <div className="flex-1 overflow-y-auto">
+                  <div className="flex-1 overflow-y-auto" aria-live="polite" aria-label="Chat messages">
                     {error && <ErrorBanner message={error} />}
                     <ChatView messages={messages} isStreaming={isStreaming} onSaveWord={openSaveWordModal} onSuggestionClick={(prompt) => setInputPrefill(prompt)} onToolAnswer={answerToolCall} onNext={() => sendMessage("next")} />
                   </div>

@@ -89,6 +89,8 @@ export default function BottomNav({ className = "" }: BottomNavProps) {
       {showMenu && (
         <div
           className="fixed inset-0 z-40 backdrop-blur-sm bg-[var(--bg-body)]/40"
+          role="presentation"
+          aria-hidden="true"
           onClick={() => setShowMenu(false)}
         />
       )}

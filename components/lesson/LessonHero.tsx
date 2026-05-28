@@ -50,7 +50,7 @@ export function LessonHero({ lesson, totalWords, chunkLabel, overall, diffMode, 
         </div>
 
         <div className="flex items-center justify-between">
-          <div className="p-8 md:p-10 max-w-2xl space-y-3">
+          <div className="flex-1 p-8 md:p-10 max-w-2xl space-y-3">
             <H1 className="font-display text-h1 leading-[1.08] lg:text-h1">
               {lesson.title}
             </H1>

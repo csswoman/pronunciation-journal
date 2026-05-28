@@ -29,8 +29,8 @@ interface StatCardProps {
 
 function StatCard({ icon, value, label }: StatCardProps) {
   return (
-    <div className="flex items-center gap-3 rounded-xl bg-[var(--surface-sunken)] px-4 py-3 min-w-[120px]">
-      <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-[var(--surface-raised)] shrink-0">
+    <div className="flex items-center gap-3 rounded-xl bg-[var(--surface-sunken)] px-3 py-2.5 sm:px-4 sm:py-3 min-w-0 flex-1 sm:flex-none sm:min-w-[120px]">
+      <span aria-hidden="true" className="flex items-center justify-center w-8 h-8 rounded-lg bg-[var(--surface-raised)] shrink-0">
         {icon}
       </span>
       <span className="flex flex-col leading-none gap-0.5">
@@ -73,7 +73,7 @@ export default function HomeHeader() {
         <HomeHeaderActions hasStartedLearning={hasStartedLearning} />
       </div>
 
-      <div className="relative z-10 flex flex-col gap-2 lg:items-end">
+      <div className="relative z-10 flex flex-row flex-wrap gap-2 lg:flex-col lg:items-end">
         <StatCard
           icon={<Flame size={15} className="text-[var(--warning)]" />}
           value="—"
