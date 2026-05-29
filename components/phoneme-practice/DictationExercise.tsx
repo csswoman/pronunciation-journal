@@ -58,17 +58,18 @@ export function DictationExercise({ exercise, onSubmit }: Props) {
 
   return (
     <div className="flex flex-col items-center gap-4 w-full">
-      <p className="text-[15px] text-(--text-secondary) text-center m-0">
+      <p className="text-[15px] text-[var(--text-secondary)] text-center m-0">
         Listen and write what you hear
       </p>
 
       <button
         type="button"
         onClick={handlePlay}
+        aria-label={played ? 'Play audio again' : 'Play audio'}
         className={[
           'inline-flex items-center justify-center gap-2 rounded-full py-3 px-7 text-[15px] font-semibold cursor-pointer w-full transition-all duration-200',
           played
-            ? 'bg-(--surface-raised) border border-[1.5px] border-solid border-(--border-subtle) text-(--text-primary)'
+            ? 'bg-[var(--surface-raised)] border border-[1.5px] border-solid border-[var(--border-subtle)] text-[var(--text-primary)]'
             : 'bg-[var(--gradient-primary)] border-0 text-white',
         ].join(' ')}
       >
@@ -82,19 +83,21 @@ export function DictationExercise({ exercise, onSubmit }: Props) {
         onChange={e => !submitted && setValue(e.target.value)}
         onKeyDown={e => e.key === 'Enter' && handleSubmit()}
         placeholder="Type the word…"
+        aria-label="Your answer"
+        aria-invalid={submitted && !isCorrect}
         className={[
-          'w-full rounded-(--radius-md) text-base py-4 px-4 text-center border border-[1.5px] border-solid outline-none transition-[border-color] duration-200',
+          'w-full rounded-[var(--radius-md)] text-base py-4 px-4 text-center border border-[1.5px] border-solid outline-none transition-[border-color] duration-200',
           submitted
             ? isCorrect
-              ? 'bg-(--success-soft) border-(--success-border) text-(--success)'
-              : 'bg-(--error-soft) border-(--error-border) text-(--error)'
-            : 'bg-(--surface-raised) border-(--border-subtle) text-(--text-primary)',
+              ? 'bg-[var(--success-soft)] border-[var(--success-border)] text-[var(--success)]'
+              : 'bg-[var(--error-soft)] border-[var(--error-border)] text-[var(--error)]'
+            : 'bg-[var(--surface-raised)] border-[var(--border-subtle)] text-[var(--text-primary)]',
         ].join(' ')}
       />
 
       {submitted && !isCorrect && (
-        <p className="text-[13px] text-(--text-tertiary) text-center m-0">
-          Answer: <strong className="text-(--text-primary)">{exercise.targetWord}</strong>
+        <p className="text-[13px] text-[var(--text-tertiary)] text-center m-0">
+          Answer: <strong className="text-[var(--text-primary)]">{exercise.targetWord}</strong>
         </p>
       )}
 
@@ -103,11 +106,12 @@ export function DictationExercise({ exercise, onSubmit }: Props) {
           type="button"
           onClick={handleSubmit}
           disabled={!canCheck}
+          aria-label="Check answer"
           className={[
-            'w-full py-4 rounded-(--radius-md) border-0 text-[15px] font-semibold transition-all duration-[250ms]',
+            'w-full py-4 rounded-[var(--radius-md)] border-0 text-[15px] font-semibold transition-all duration-[250ms]',
             canCheck
               ? 'cursor-pointer bg-[var(--gradient-primary)] text-white shadow-[0_4px_20px_color-mix(in_oklch,var(--primary)_30%,transparent)]'
-              : 'cursor-not-allowed bg-(--surface-raised) text-(--text-tertiary)',
+              : 'cursor-not-allowed bg-[var(--surface-raised)] text-[var(--text-tertiary)]',
           ].join(' ')}
         >
           Check

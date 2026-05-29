@@ -1,10 +1,6 @@
-/* ═══════════════════════════════════════════════════════════════════════════
-   Design Tokens — english-journal
-   Architecture: 3 layers
-     1. Primary Scale  — dynamic hue, full 50–800 scale
-     2. Neutral System — colorless (chroma 0), stable structure
-     3. Semantic Colors — fixed hues, independent of user hue
-   ═══════════════════════════════════════════════════════════════════════════ */
+/* Design Tokens — english-journal
+   3-layer architecture: Primary Scale (dynamic hue), Neutral System (colorless),
+   Semantic Colors (fixed hues, independent of --hue) */
 
 :root {
   --sidebar-width: 256px;
@@ -46,7 +42,7 @@
   --fg:               oklch(0.18 0.008 var(--hue));
   --text-primary:     oklch(0.18 0.008 var(--hue));
   --text-secondary:   oklch(0.46 0.006 var(--hue));
-  --text-tertiary:    oklch(0.55 0.004 var(--hue));
+  --text-tertiary:    oklch(0.62 0.004 var(--hue));
   --text-disabled:    oklch(0.75 0.002 var(--hue));
   --text-placeholder: oklch(0.75 0.002 var(--hue));
   --border:       oklch(0.875 0 0);
@@ -80,6 +76,12 @@
   --info-icon-bg: oklch(0.84 0.06 230);
   --info-value:   oklch(0.42 0.12 230);
   --info-border:  oklch(0.60 0.10 230);
+
+  /* ── Semantic hover states (proper color, not brightness filter) ──────── */
+  --success-hover: oklch(0.77 0.16 145);
+  --warning-hover: oklch(0.83 0.17 85);
+  --error-hover:   oklch(0.72 0.20 25);
+  --info-hover:    oklch(0.77 0.12 230);
 
   /* ── Admonition colors ───────────────────────────────────────────────── */
   --admonitions-color-tip:            oklch(0.70 0.16 145); /* green — same as success */
@@ -293,7 +295,7 @@
   --fg:               oklch(0.95 0.003 var(--hue));
   --text-primary:     oklch(0.93 0.004 var(--hue));
   --text-secondary:   oklch(0.65 0.004 var(--hue));
-  --text-tertiary:    oklch(0.48 0.003 var(--hue));
+  --text-tertiary:    oklch(0.56 0.003 var(--hue));
   --text-disabled:    oklch(0.38 0.003 var(--hue));
   --text-placeholder: oklch(0.38 0.003 var(--hue));
   --border:       oklch(0.275 0 0);
@@ -327,6 +329,12 @@
   --info-icon-bg: oklch(0.32 0.08 230);
   --info-value:   oklch(0.65 0.12 230);
   --info-border:  oklch(0.55 0.10 230);
+
+  /* ── Semantic hover states for dark mode ────────────────────────────── */
+  --success-hover: oklch(0.81 0.16 145);
+  --warning-hover: oklch(0.88 0.17 85);
+  --error-hover:   oklch(0.77 0.20 25);
+  --info-hover:    oklch(0.81 0.12 230);
 
   /* ── Admonition colors — dark ────────────────────────────────────────── */
   --admonitions-color-tip:            oklch(0.74 0.16 145);

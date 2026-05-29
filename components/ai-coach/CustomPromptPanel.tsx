@@ -157,7 +157,7 @@ export default function CustomPromptPanel({
           onClick={handleSubmit}
           disabled={(!hasText && !isDisabled) || (isDisabled && !hasText)}
           aria-label="Send"
-          className="flex-shrink-0 flex items-center justify-center transition-all disabled:opacity-40 hover:brightness-110 hover:scale-105 active:scale-95"
+          className="flex-shrink-0 flex items-center justify-center transition-all disabled:opacity-40 hover:scale-105 active:scale-95"
           style={{
             minWidth: 36,
             minHeight: 36,
@@ -165,6 +165,12 @@ export default function CustomPromptPanel({
             backgroundColor: "var(--primary)",
             color: "var(--on-primary)",
             border: "none",
+          }}
+          onMouseEnter={(e) => {
+            (e.currentTarget as HTMLButtonElement).style.backgroundColor = `var(--primary-hover)`;
+          }}
+          onMouseLeave={(e) => {
+            (e.currentTarget as HTMLButtonElement).style.backgroundColor = `var(--primary)`;
           }}
         >
           {isDisabled

@@ -113,7 +113,7 @@ export function SoundGrid({ progressList }: Props) {
               onClick={() => handleClick(p)}
               title={tooltipParts.join(' — ')}
               disabled={isLocked}
-              className="flex flex-col items-center justify-center rounded-xl py-2 px-1 transition-all hover:brightness-95 active:scale-95"
+              className="flex flex-col items-center justify-center rounded-xl py-2 px-1 transition-all active:scale-95 relative group"
               style={{
                 background: bg,
                 border: `1px solid ${border}`,
@@ -126,6 +126,7 @@ export function SoundGrid({ progressList }: Props) {
                   : 'none',
               }}
             >
+              <div className="absolute inset-0 rounded-xl bg-black opacity-0 transition-opacity group-hover:opacity-5 pointer-events-none" />
               <span
                 className="font-mono font-bold text-sm leading-none"
                 style={{ color: ipaColor, letterSpacing: '-0.01em' }}
