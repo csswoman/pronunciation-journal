@@ -9,7 +9,11 @@ type ButtonVariant =
   | "success"
   | "error"
   | "warning"
-  | "info";
+  | "info"
+  // Deprecated mapping aliases for backwards compatibility during migration
+  | "outline"
+  | "danger"
+  | "ghost-danger";
 
 type ButtonSize = "sm" | "md" | "lg" | "icon" | "iconLg" | "icon-sm" | "icon-lg";
 type IconPosition = "left" | "right";
@@ -79,6 +83,24 @@ const variantStyles: Record<ButtonVariant, string> = {
     "bg-[var(--info)] text-white",
     "hover:bg-[var(--info-hover)]",
     "active:translate-y-[-1px] active:shadow-md"
+  ),
+
+  // Deprecated variants — mapped to canonical equivalents for backwards compatibility
+  outline: cn(
+    "bg-transparent text-[var(--fg-primary)]",
+    "border border-[var(--border-default)]",
+    "hover:bg-[var(--surface-raised)]",
+    "active:translate-y-[-1px]"
+  ),
+  danger: cn(
+    "bg-[var(--error)] text-white",
+    "hover:bg-[var(--error-hover)]",
+    "active:translate-y-[-1px] active:shadow-md"
+  ),
+  "ghost-danger": cn(
+    "bg-transparent text-[var(--error)]",
+    "hover:bg-[var(--error-soft)]",
+    "active:translate-y-[-1px]"
   ),
 
 };
