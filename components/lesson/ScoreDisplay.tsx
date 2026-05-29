@@ -17,61 +17,55 @@ export default function ScoreDisplay({
   totalXP,
   totalWords,
 }: ScoreDisplayProps) {
-  return (
-    <div className="w-full rounded-2xl border p-6" style={{
-      backgroundColor: 'var(--card-bg)',
-      borderColor: 'var(--line-divider)',
-    }}>
-      <H3 className="text-h3 mb-4 text-center" style={{
-        color: 'var(--text-primary)',
-      }}>
-        🎉 Lesson Complete!
-      </H3>
+  const accuracyLevel = sessionAccuracy >= 85 ? "excellent" : sessionAccuracy >= 60 ? "acceptable" : "poor";
+  const accuracyColor = {
+    excellent: "text-success",
+    acceptable: "text-warning",
+    poor: "text-error",
+  }[accuracyLevel];
+  const accuracyBg = {
+    excellent: "bg-success-soft",
+    acceptable: "bg-warning-soft",
+    poor: "bg-error-soft",
+  }[accuracyLevel];
+  const accuracyLabel = {
+    excellent: "Excellent",
+    acceptable: "Keep practicing",
+    poor: "Try again",
+  }[accuracyLevel];
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-3 gap-4 mb-6">
-        <div className="text-center">
-          <p className="text-3xl font-bold" style={{
-            color: 'var(--primary)',
-          }}>
+  return (
+    <div className="w-full rounded-2xl border border-border-subtle bg-surface-raised p-6 space-y-6">
+      <div className="text-center space-y-3">
+        <H3 className="text-h3 text-fg">Lesson Complete</H3>
+        <div className={`inline-flex flex-col items-center gap-2 rounded-xl ${accuracyBg} px-6 py-4`}>
+          <p className={`text-4xl font-bold ${accuracyColor}`}>
             {sessionAccuracy}%
           </p>
-          <p className="text-xs mt-1" style={{
-            color: 'var(--text-secondary)',
-          }}>Accuracy</p>
+          <p className="text-sm font-medium text-fg-muted">{accuracyLabel}</p>
         </div>
-        <div className="text-center">
-          <p className="text-3xl font-bold" style={{
-            color: 'var(--admonitions-color-tip)',
-          }}>
-            +{totalXP}
-          </p>
-          <p className="text-xs mt-1" style={{
-            color: 'var(--text-secondary)',
-          }}>XP Earned</p>
+      </div>
+
+      {/* Progress Summary */}
+      <div className="grid grid-cols-2 gap-4">
+        <div className="rounded-lg bg-surface-sunken p-4">
+          <p className="text-xs text-fg-muted uppercase tracking-wide mb-1">Words Completed</p>
+          <p className="text-2xl font-semibold text-fg">{wordAttempts.length}/{totalWords}</p>
         </div>
-        <div className="text-center">
-          <p className="text-3xl font-bold" style={{
-            color: 'var(--admonitions-color-warning)',
-          }}>
-            {wordAttempts.length}/{totalWords}
-          </p>
-          <p className="text-xs mt-1" style={{
-            color: 'var(--text-secondary)',
-          }}>Words</p>
+        <div className="rounded-lg bg-surface-sunken p-4">
+          <p className="text-xs text-fg-muted uppercase tracking-wide mb-1">Rewards Earned</p>
+          <p className="text-2xl font-semibold text-success">+{totalXP} XP</p>
         </div>
       </div>
 
       {/* Per-word breakdown */}
-      <div className="space-y-2">
-        <H4 className="text-sm font-medium mb-2" style={{
-          color: 'var(--text-primary)',
-        }}>
-          Word Breakdown
-        </H4>
-        {wordAttempts.map((wa) => (
-          <WordAttemptRow key={wa.word} wordAttempt={wa} />
-        ))}
+      <div className="space-y-3">
+        <H4 className="text-sm font-semibold text-fg">Word-by-Word Feedback</H4>
+        <div className="space-y-2 max-h-64 overflow-y-auto">
+          {wordAttempts.map((wa) => (
+            <WordAttemptRow key={wa.word} wordAttempt={wa} />
+          ))}
+        </div>
       </div>
     </div>
   );

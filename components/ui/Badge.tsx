@@ -51,12 +51,13 @@ export default function Badge({ label, variant = "default", color, size = "sm", 
   }
 
   const isNeutral = variant === "neutral";
-  const cssColor = isNeutral ? null : colorVar[variant];
 
-  const style = isNeutral ? undefined : {
-    backgroundColor: `color-mix(in oklch, ${cssColor} 14%, var(--bg-tertiary) 86%)`,
-    color: cssColor ?? undefined,
-    border: `1px solid color-mix(in oklch, ${cssColor} 22%, transparent)`,
+  const badgeVariantClasses: Record<Exclude<BadgeVariant, "neutral">, string> = {
+    default: "bg-badge-primary-bg text-primary border border-badge-primary-border",
+    success: "bg-badge-success-bg text-success border border-badge-success-border",
+    info: "bg-badge-info-bg text-info border border-badge-info-border",
+    warning: "bg-badge-warning-bg text-warning border border-badge-warning-border",
+    error: "bg-badge-error-bg text-error border border-badge-error-border",
   };
 
   return (
@@ -64,10 +65,9 @@ export default function Badge({ label, variant = "default", color, size = "sm", 
       className={[
         "inline-flex items-center gap-1.5 font-semibold",
         sizeClasses,
-        isNeutral ? "bg-[var(--btn-regular-bg)] text-fg-muted" : "",
+        isNeutral ? "bg-[var(--btn-regular-bg)] text-fg-muted" : badgeVariantClasses[variant],
         className,
       ].filter(Boolean).join(" ")}
-      style={style}
     >
       {dot && !isNeutral && (
         <span className="w-1.5 h-1.5 rounded-full shrink-0 bg-current" />

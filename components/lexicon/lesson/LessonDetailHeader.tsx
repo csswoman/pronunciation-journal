@@ -5,8 +5,11 @@
 //   <ProgressStats: bar + legend />
 // </LessonDetailHeader>
 
+"use client";
+
 import Link from "next/link";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Layers } from "lucide-react";
+import Button from "@/components/ui/Button";
 
 interface LessonDetailHeaderProps {
   title: string;
@@ -15,6 +18,7 @@ interface LessonDetailHeaderProps {
   wordsReviewing: number;
   sortLabel?: string;
   color: string;
+  onCreateDeck?: () => void;
 }
 
 export function LessonDetailHeader({
@@ -24,6 +28,7 @@ export function LessonDetailHeader({
   wordsReviewing,
   sortLabel = "sorted alphabetically",
   color,
+  onCreateDeck,
 }: LessonDetailHeaderProps) {
   const learnedPct = (wordsLearned / totalWords) * 100;
   const reviewingPct = (wordsReviewing / totalWords) * 100;
@@ -33,7 +38,7 @@ export function LessonDetailHeader({
       {/* Left: breadcrumb + title */}
       <div className="space-y-1">
         <nav className="flex items-center gap-1 text-xs text-fg-muted">
-          <Link href="/lexicon" className="hover:text-fg transition-colors">
+          <Link href="/words?tab=lexicon" className="hover:text-fg transition-colors">
             Lexicon
           </Link>
           <ChevronRight className="w-3 h-3" />
@@ -50,7 +55,7 @@ export function LessonDetailHeader({
         </p>
       </div>
 
-      {/* Right: progress stats */}
+      {/* Right: progress stats + create deck button */}
       <div className="flex-shrink-0 min-w-48 space-y-2 text-right">
         <div>
           <span className="text-2xl font-semibold text-fg">{wordsLearned.toLocaleString()}</span>
@@ -72,6 +77,14 @@ export function LessonDetailHeader({
           <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-warning inline-block" />Reviewing</span>
           <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-border-default inline-block" />New</span>
         </div>
+
+        {onCreateDeck && (
+          <div className="pt-1">
+            <Button variant="secondary" size="sm" onClick={onCreateDeck} icon={<Layers size={14} />}>
+              Create deck
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -60,7 +60,9 @@ export function InterviewResults({ title, turns, results, difficulty, level, onR
     fired.current = true;
 
     const end = Date.now() + (totalAccuracy >= 80 ? 2500 : 1500);
-    const colors = ["#a855f7", "#6366f1", "#38bdf8", "#34d399", "#fbbf24"];
+    // canvas-confetti resolves colors at paint time; we use the token computed values.
+    // These match --primary-500 (hue 250), --success, --warning, --info, --error from tokens.css.
+    const colors = ["#7c6ff5", "#56b87a", "#c9a436", "#5b8fd4", "#d95f3b"];
 
     const frame = () => {
       confetti({

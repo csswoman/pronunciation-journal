@@ -22,17 +22,17 @@ export default function ExerciseFeedback({ result, onNext, onRetry }: ExerciseFe
         {correct ? "✓" : "✗"} {feedback.immediate}
       </p>
       {feedback.explanation && (
-        <p className="text-xs leading-relaxed text-[var(--text-secondary)] whitespace-pre-wrap">
+        <p className="text-body-sm leading-relaxed text-[var(--text-secondary)] whitespace-pre-wrap">
           {feedback.explanation}
         </p>
       )}
       {feedback.example && (
-        <p className="text-xs leading-relaxed font-mono text-[var(--text-tertiary)] whitespace-pre-wrap">
+        <p className="text-body-sm leading-relaxed font-mono text-[var(--text-tertiary)] whitespace-pre-wrap">
           {feedback.example}
         </p>
       )}
       {feedback.tip && (
-        <p className="text-xs leading-relaxed text-[var(--text-secondary)] opacity-80 whitespace-pre-wrap">
+        <p className="text-body-sm leading-relaxed text-[var(--text-secondary)] opacity-80 whitespace-pre-wrap">
           💡 {feedback.tip}
         </p>
       )}

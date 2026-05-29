@@ -9,6 +9,7 @@
 
 import Link from "next/link";
 import { Bot, ArrowRight, BookOpen } from "lucide-react";
+import Button from "@/components/ui/Button";
 
 const CHIPS = ["Conversation", "Pronunciation feedback", "Adaptive"];
 
@@ -52,19 +53,20 @@ export default function HomePracticeCard() {
 
       {/* CTA row */}
       <div className="relative z-10 flex gap-2 flex-wrap mt-auto">
-        <Link
-          href="/practice/sounds"
-          className="btn-primary inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-[13px] font-semibold"
-        >
-          Start session
-          <ArrowRight size={13} />
+        <Link href="/practice/sounds">
+          <Button
+            variant="primary"
+            size="sm"
+            icon={<ArrowRight size={13} />}
+            iconPosition="right"
+          >
+            Start session
+          </Button>
         </Link>
-        <Link
-          href="/practice/topics"
-          className="btn-secondary inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-[13px] font-medium"
-        >
-          <BookOpen size={13} />
-          Topics
+        <Link href="/practice/topics">
+          <Button variant="secondary" size="sm" icon={<BookOpen size={13} />}>
+            Topics
+          </Button>
         </Link>
       </div>
     </div>

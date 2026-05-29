@@ -33,6 +33,7 @@ export default function SessionHeader({
         <div className="flex items-center justify-between gap-4">
           <Button
             onClick={onBack}
+            aria-label="Go back"
             className="rounded-xl p-2.5 transition-colors text-fg-muted hover:bg-surface-sunken"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

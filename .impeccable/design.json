@@ -1,0 +1,335 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-05-27T00:00:00Z",
+  "title": "Design System: English Journal",
+  "extensions": {
+    "colorMeta": {
+      "primary": {
+        "role": "primary",
+        "displayName": "Adaptive Violet",
+        "canonical": "oklch(0.65 0.15 var(--hue))",
+        "note": "Dynamic — shifts with --hue. Default hue 250 = violet/blue-purple.",
+        "tonalRamp": [
+          "oklch(0.18 0.03 250)",
+          "oklch(0.28 0.07 250)",
+          "oklch(0.35 0.09 250)",
+          "oklch(0.50 0.13 250)",
+          "oklch(0.65 0.15 250)",
+          "oklch(0.80 0.10 250)",
+          "oklch(0.88 0.06 250)",
+          "oklch(0.97 0.02 250)"
+        ]
+      },
+      "primary-soft": {
+        "role": "primary-soft",
+        "displayName": "Violet Wash",
+        "canonical": "oklch(0.93 0.04 var(--hue))",
+        "tonalRamp": [
+          "oklch(0.22 0.05 250)",
+          "oklch(0.35 0.08 250)",
+          "oklch(0.50 0.11 250)",
+          "oklch(0.65 0.13 250)",
+          "oklch(0.80 0.10 250)",
+          "oklch(0.88 0.07 250)",
+          "oklch(0.93 0.04 250)",
+          "oklch(0.97 0.02 250)"
+        ]
+      },
+      "surface-base": {
+        "role": "neutral",
+        "displayName": "Warm Parchment",
+        "canonical": "oklch(0.93 0.012 var(--hue))",
+        "tonalRamp": [
+          "oklch(0.12 0.003 250)",
+          "oklch(0.22 0.005 250)",
+          "oklch(0.35 0.008 250)",
+          "oklch(0.55 0.010 250)",
+          "oklch(0.70 0.011 250)",
+          "oklch(0.83 0.012 250)",
+          "oklch(0.93 0.012 250)",
+          "oklch(0.99 0.003 250)"
+        ]
+      },
+      "surface-raised": {
+        "role": "neutral",
+        "displayName": "Lifted Paper",
+        "canonical": "oklch(0.99 0.003 var(--hue))",
+        "tonalRamp": [
+          "oklch(0.16 0.003 250)",
+          "oklch(0.28 0.003 250)",
+          "oklch(0.45 0.003 250)",
+          "oklch(0.65 0.003 250)",
+          "oklch(0.80 0.003 250)",
+          "oklch(0.90 0.003 250)",
+          "oklch(0.96 0.003 250)",
+          "oklch(0.99 0.003 250)"
+        ]
+      },
+      "fg-primary": {
+        "role": "neutral",
+        "displayName": "Deep Ink",
+        "canonical": "oklch(0.18 0.008 var(--hue))",
+        "tonalRamp": [
+          "oklch(0.10 0.006 250)",
+          "oklch(0.18 0.008 250)",
+          "oklch(0.30 0.007 250)",
+          "oklch(0.46 0.006 250)",
+          "oklch(0.62 0.004 250)",
+          "oklch(0.75 0.003 250)",
+          "oklch(0.87 0.003 250)",
+          "oklch(0.95 0.003 250)"
+        ]
+      },
+      "success": {
+        "role": "semantic",
+        "displayName": "Phoneme Green",
+        "canonical": "oklch(0.70 0.16 145)",
+        "note": "Fixed hue 145. Does not shift with --hue.",
+        "tonalRamp": [
+          "oklch(0.18 0.06 145)",
+          "oklch(0.30 0.08 145)",
+          "oklch(0.42 0.12 145)",
+          "oklch(0.55 0.14 145)",
+          "oklch(0.70 0.16 145)",
+          "oklch(0.80 0.12 145)",
+          "oklch(0.88 0.07 145)",
+          "oklch(0.95 0.04 145)"
+        ]
+      },
+      "warning": {
+        "role": "semantic",
+        "displayName": "Caution Amber",
+        "canonical": "oklch(0.78 0.17 85)",
+        "note": "Fixed hue 85. Does not shift with --hue.",
+        "tonalRamp": [
+          "oklch(0.20 0.06 85)",
+          "oklch(0.32 0.09 85)",
+          "oklch(0.46 0.13 85)",
+          "oklch(0.60 0.16 85)",
+          "oklch(0.78 0.17 85)",
+          "oklch(0.86 0.14 85)",
+          "oklch(0.92 0.08 85)",
+          "oklch(0.97 0.04 85)"
+        ]
+      },
+      "error": {
+        "role": "semantic",
+        "displayName": "Error Coral",
+        "canonical": "oklch(0.65 0.20 25)",
+        "note": "Fixed hue 25. Does not shift with --hue.",
+        "tonalRamp": [
+          "oklch(0.18 0.07 25)",
+          "oklch(0.30 0.12 25)",
+          "oklch(0.42 0.16 25)",
+          "oklch(0.55 0.18 25)",
+          "oklch(0.65 0.20 25)",
+          "oklch(0.77 0.15 25)",
+          "oklch(0.87 0.09 25)",
+          "oklch(0.95 0.04 25)"
+        ]
+      },
+      "stage-pairs": {
+        "role": "secondary",
+        "displayName": "Warm Amber",
+        "canonical": "oklch(0.74 0.14 55)",
+        "note": "Minimal-pairs practice stage. Fixed.",
+        "tonalRamp": [
+          "oklch(0.20 0.06 55)",
+          "oklch(0.35 0.09 55)",
+          "oklch(0.50 0.12 55)",
+          "oklch(0.62 0.14 55)",
+          "oklch(0.74 0.14 55)",
+          "oklch(0.84 0.11 55)",
+          "oklch(0.91 0.07 55)",
+          "oklch(0.96 0.03 55)"
+        ]
+      },
+      "stage-dictation": {
+        "role": "secondary",
+        "displayName": "Coastal Teal",
+        "canonical": "oklch(0.73 0.12 185)",
+        "note": "Dictation practice stage. Fixed.",
+        "tonalRamp": [
+          "oklch(0.18 0.05 185)",
+          "oklch(0.30 0.08 185)",
+          "oklch(0.48 0.10 185)",
+          "oklch(0.60 0.11 185)",
+          "oklch(0.73 0.12 185)",
+          "oklch(0.82 0.10 185)",
+          "oklch(0.90 0.06 185)",
+          "oklch(0.96 0.03 185)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Phoneme cards, section heroes, decorative editorial moments. Fraunces earns its use through scarcity."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Page titles, major section headings."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Card headings, widget titles, dialog headers."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "All reading content. Max line length 65–75ch."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "UI labels, button text, input labels, nav items."
+      },
+      "mono": {
+        "displayName": "Mono / IPA",
+        "purpose": "IPA transcriptions, phonetic notation blocks, code snippets. DM Mono's fixed-width rhythm makes phonetic patterns scannable."
+      }
+    },
+    "shadows": [
+      {
+        "name": "ambient",
+        "value": "0 1px 2px oklch(0 0 0 / 0.05)",
+        "purpose": "Resting elevation for interactive cards. Present but not declarative."
+      },
+      {
+        "name": "lifted",
+        "value": "0 4px 6px oklch(0 0 0 / 0.07)",
+        "purpose": "Hover state for interactive cards, focused inputs. Signals responsiveness."
+      },
+      {
+        "name": "elevated",
+        "value": "0 10px 15px oklch(0 0 0 / 0.10)",
+        "purpose": "Dropdowns, date pickers, context menus. Structural separation."
+      },
+      {
+        "name": "floating",
+        "value": "0 20px 25px oklch(0 0 0 / 0.10)",
+        "purpose": "Modals, side panels, command palette. Maximum separation."
+      },
+      {
+        "name": "panel-edge",
+        "value": "-4px 0 24px color-mix(in oklch, var(--fg) 6%, transparent)",
+        "purpose": "AI coach side panel edge. Directional shadow marks the panel boundary."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-standard",
+        "value": "cubic-bezier(0.4, 0, 0.2, 1)",
+        "purpose": "Default easing for all state transitions. Used at 150ms (fast), 200ms (base), 300ms (slow)."
+      }
+    ],
+    "breakpoints": [
+      { "name": "mobile-nav-switch", "value": "768px", "note": "Below this: bottom nav bar, hidden sidebar." }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button (CTA)",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "High-contrast ink-on-parchment. Used for the single most important action per screen.",
+      "html": "<button class=\"ds-btn-primary\">Start Practice</button>",
+      "css": ".ds-btn-primary { background: oklch(0.18 0.008 250); color: oklch(0.93 0.012 250); padding: 10px 20px; border-radius: 12px; font-family: 'DM Sans', system-ui, sans-serif; font-size: 0.875rem; font-weight: 500; border: none; cursor: pointer; transition: background 150ms cubic-bezier(0.4,0,0.2,1), box-shadow 150ms cubic-bezier(0.4,0,0.2,1), transform 200ms cubic-bezier(0.4,0,0.2,1); display: inline-flex; align-items: center; gap: 6px; } .ds-btn-primary:hover { background: oklch(0.26 0.008 250); box-shadow: 0 4px 6px oklch(0 0 0 / 0.07); transform: translateY(-1px); } .ds-btn-primary:focus-visible { outline: 2px solid oklch(0.65 0.15 250 / 0.4); outline-offset: 2px; } .ds-btn-primary:active { transform: translateY(0); box-shadow: none; }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Neutral surface button for subordinate actions.",
+      "html": "<button class=\"ds-btn-secondary\">Review Later</button>",
+      "css": ".ds-btn-secondary { background: oklch(0.99 0.003 250); color: oklch(0.18 0.008 250); padding: 10px 20px; border-radius: 12px; font-family: 'DM Sans', system-ui, sans-serif; font-size: 0.875rem; font-weight: 500; border: 1px solid oklch(0.875 0 0); cursor: pointer; transition: background 150ms cubic-bezier(0.4,0,0.2,1), border-color 150ms cubic-bezier(0.4,0,0.2,1); display: inline-flex; align-items: center; gap: 6px; } .ds-btn-secondary:hover { background: oklch(0.94 0.01 250); border-color: oklch(0.770 0 0); } .ds-btn-secondary:focus-visible { outline: 2px solid oklch(0.65 0.15 250 / 0.4); outline-offset: 2px; } .ds-btn-secondary:active { background: oklch(0.875 0 0); }"
+    },
+    {
+      "name": "Soft Button",
+      "kind": "button",
+      "refersTo": "button-soft",
+      "description": "Primary-tinted for contextual confirm actions. On-brand without dominant.",
+      "html": "<button class=\"ds-btn-soft\">Add to Deck</button>",
+      "css": ".ds-btn-soft { background: oklch(0.93 0.04 250); color: oklch(0.58 0.16 250); padding: 10px 20px; border-radius: 12px; font-family: 'DM Sans', system-ui, sans-serif; font-size: 0.875rem; font-weight: 500; border: none; cursor: pointer; transition: background 150ms cubic-bezier(0.4,0,0.2,1); display: inline-flex; align-items: center; gap: 6px; } .ds-btn-soft:hover { background: color-mix(in oklch, oklch(0.65 0.15 250) 25%, oklch(0.99 0.003 250)); } .ds-btn-soft:focus-visible { outline: 2px solid oklch(0.65 0.15 250 / 0.4); outline-offset: 2px; }"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": null,
+      "description": "Sunken field with primary focus border.",
+      "html": "<div class=\"ds-field\"><label class=\"ds-label\" for=\"word\">Word</label><input class=\"ds-input\" id=\"word\" type=\"text\" placeholder=\"e.g. thought\" /></div>",
+      "css": ".ds-field { display: flex; flex-direction: column; gap: 6px; } .ds-label { font-family: 'DM Sans', system-ui, sans-serif; font-size: 0.875rem; font-weight: 500; color: oklch(0.46 0.006 250); } .ds-input { background: oklch(0.94 0.01 250); color: oklch(0.18 0.008 250); border: 1px solid oklch(0.875 0 0); border-radius: 8px; padding: 10px 12px; font-family: 'DM Sans', system-ui, sans-serif; font-size: 1rem; font-weight: 400; width: 100%; transition: border-color 150ms cubic-bezier(0.4,0,0.2,1), box-shadow 150ms cubic-bezier(0.4,0,0.2,1); outline: none; } .ds-input::placeholder { color: oklch(0.75 0.002 250); } .ds-input:focus { border-color: oklch(0.65 0.15 250); box-shadow: 0 4px 6px oklch(0 0 0 / 0.07); } .ds-input:disabled { color: oklch(0.75 0.002 250); cursor: not-allowed; border-color: oklch(0.925 0 0); }"
+    },
+    {
+      "name": "Navigation Item",
+      "kind": "nav",
+      "refersTo": null,
+      "description": "Sidebar nav item with active state.",
+      "html": "<nav class=\"ds-nav\"><a class=\"ds-nav-item\" href=\"#\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z\"/><polyline points=\"9 22 9 12 15 12 15 22\"/></svg>Dashboard</a><a class=\"ds-nav-item ds-nav-item--active\" href=\"#\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><line x1=\"12\" y1=\"8\" x2=\"12\" y2=\"12\"/><line x1=\"12\" y1=\"16\" x2=\"12.01\" y2=\"16\"/></svg>Practice</a></nav>",
+      "css": ".ds-nav { display: flex; flex-direction: column; gap: 4px; padding: 8px; } .ds-nav-item { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-radius: 8px; font-family: 'DM Sans', system-ui, sans-serif; font-size: 0.875rem; font-weight: 500; color: oklch(0.46 0.006 250); text-decoration: none; transition: background 150ms cubic-bezier(0.4,0,0.2,1), color 150ms cubic-bezier(0.4,0,0.2,1); } .ds-nav-item:hover { background: oklch(0.99 0.003 250); color: oklch(0.18 0.008 250); } .ds-nav-item--active { background: oklch(0.93 0.04 250); color: oklch(0.58 0.16 250); } .ds-nav-item--active:hover { background: oklch(0.93 0.04 250); }"
+    },
+    {
+      "name": "Chip (Default)",
+      "kind": "chip",
+      "refersTo": "chip-default",
+      "description": "Filter or label chip. Pill-shaped, restrained.",
+      "html": "<div class=\"ds-chips\"><span class=\"ds-chip\">Vowels</span><span class=\"ds-chip ds-chip--selected\">Consonants</span><span class=\"ds-chip\">Stress</span></div>",
+      "css": ".ds-chips { display: flex; flex-wrap: wrap; gap: 8px; } .ds-chip { display: inline-flex; align-items: center; padding: 4px 12px; border-radius: 9999px; font-family: 'DM Sans', system-ui, sans-serif; font-size: 0.75rem; font-weight: 500; color: oklch(0.46 0.006 250); background: oklch(0.99 0.003 250); border: 1px solid oklch(0.875 0 0); cursor: pointer; transition: background 150ms cubic-bezier(0.4,0,0.2,1), color 150ms cubic-bezier(0.4,0,0.2,1), border-color 150ms cubic-bezier(0.4,0,0.2,1); } .ds-chip:hover { background: oklch(0.94 0.01 250); border-color: oklch(0.770 0 0); } .ds-chip--selected { background: oklch(0.93 0.04 250); color: oklch(0.58 0.16 250); border-color: transparent; } .ds-chip--selected:hover { background: color-mix(in oklch, oklch(0.65 0.15 250) 20%, oklch(0.99 0.003 250)); }"
+    },
+    {
+      "name": "Phoneme Card",
+      "kind": "card",
+      "refersTo": null,
+      "description": "The signature component. Phoneme symbol is the hero; Fraunces display weight.",
+      "html": "<div class=\"ds-phoneme-card\"><div class=\"ds-phoneme-symbol\">/θ/</div><div class=\"ds-phoneme-name\">Voiceless dental fricative</div><div class=\"ds-phoneme-example\">as in <em>think</em>, <em>through</em></div><div class=\"ds-phoneme-actions\"><button class=\"ds-phoneme-play\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><polygon points=\"5 3 19 12 5 21 5 3\"/></svg>Listen</button><button class=\"ds-phoneme-practice\">Practice</button></div></div>",
+      "css": ".ds-phoneme-card { background: oklch(0.99 0.003 250); border: 1px solid oklch(0.925 0 0); border-radius: 16px; padding: 24px; display: flex; flex-direction: column; gap: 8px; box-shadow: 0 1px 2px oklch(0 0 0 / 0.05); transition: box-shadow 200ms cubic-bezier(0.4,0,0.2,1), transform 200ms cubic-bezier(0.4,0,0.2,1); } .ds-phoneme-card:hover { box-shadow: 0 4px 6px oklch(0 0 0 / 0.07); transform: translateY(-1px); } .ds-phoneme-symbol { font-family: 'Fraunces', Georgia, serif; font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 700; line-height: 1.1; color: oklch(0.18 0.008 250); letter-spacing: -0.02em; } .ds-phoneme-name { font-family: 'DM Sans', system-ui, sans-serif; font-size: 0.875rem; font-weight: 500; color: oklch(0.46 0.006 250); } .ds-phoneme-example { font-family: 'DM Sans', system-ui, sans-serif; font-size: 0.875rem; font-weight: 400; color: oklch(0.62 0.004 250); } .ds-phoneme-actions { display: flex; gap: 8px; margin-top: 8px; } .ds-phoneme-play { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; background: transparent; border: 1px solid oklch(0.875 0 0); border-radius: 8px; font-family: 'DM Sans', system-ui, sans-serif; font-size: 0.75rem; font-weight: 500; color: oklch(0.46 0.006 250); cursor: pointer; transition: background 150ms cubic-bezier(0.4,0,0.2,1); } .ds-phoneme-play:hover { background: oklch(0.94 0.01 250); } .ds-phoneme-practice { padding: 8px 16px; background: oklch(0.18 0.008 250); color: oklch(0.93 0.012 250); border: none; border-radius: 8px; font-family: 'DM Sans', system-ui, sans-serif; font-size: 0.75rem; font-weight: 500; cursor: pointer; transition: background 150ms cubic-bezier(0.4,0,0.2,1); } .ds-phoneme-practice:hover { background: oklch(0.26 0.008 250); }"
+    },
+    {
+      "name": "Score Badge",
+      "kind": "chip",
+      "refersTo": null,
+      "description": "Accuracy feedback. Uses semantic colors exclusively. Never primary.",
+      "html": "<div class=\"ds-scores\"><span class=\"ds-score ds-score--excellent\">92% Excellent</span><span class=\"ds-score ds-score--acceptable\">71% Keep Practicing</span><span class=\"ds-score ds-score--poor\">43% Needs Work</span></div>",
+      "css": ".ds-scores { display: flex; flex-direction: column; gap: 8px; } .ds-score { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 9999px; font-family: 'DM Sans', system-ui, sans-serif; font-size: 0.75rem; font-weight: 600; width: fit-content; } .ds-score--excellent { background: oklch(0.92 0.05 145); color: oklch(0.42 0.14 145); } .ds-score--acceptable { background: oklch(0.95 0.05 85); color: oklch(0.46 0.15 85); } .ds-score--poor { background: oklch(0.93 0.05 25); color: oklch(0.42 0.18 25); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Curious Notebook",
+    "overview": "This is a learner's working environment, not a product showcase. The system carries the quality of careful observation: patient, precise, alive to nuance. Like a well-used notebook, it has warmth without sentimentality, structure without rigidity. Things are in the right place because they're useful there, not because a grid dictated it.\n\nThe palette is warm-neutral with a dynamic primary that shifts hue based on the learner's preference, defaulting to violet/blue-purple. The typography pairs DM Sans (clear, humanist, reliable for UI and IPA) with Fraunces (variable editorial serif, reserved for phoneme display and rare decorative moments).\n\nThis system explicitly rejects two anti-references: Duolingo's infantilizing gamification (cartoonish reward loops, hollow celebrations) and the generic SaaS dashboard (navy sidebar, white card grids, identical spacing everywhere). A learner opening this app should feel like they've entered a thoughtful workspace, not a product.",
+    "keyCharacteristics": [
+      "Warm-neutral surfaces with a hue-tinted primary that feels personal rather than branded",
+      "Flat surfaces at rest; shadow and lift reserved for state changes and elevation",
+      "DM Sans as the workhorse; Fraunces appears only where it earns its weight",
+      "Semantic color is fixed and culturally legible (green = correct, amber = caution, red = error)",
+      "Sound and phonetics are first-class content: IPA characters render in the same font as UI text"
+    ],
+    "rules": [
+      { "name": "The Dynamic Hue Rule", "body": "The primary color is a variable, not a fixed brand color. Code, documentation, and design all reference --hue and --primary, never a hardcoded hex. The default hue (250) is violet. Any other hue is equally valid.", "section": "colors" },
+      { "name": "The Semantic Independence Rule", "body": "Success green, warning amber, error red, and info blue are fixed hues that do not shift with --hue. They carry legible cultural meaning. Never apply the primary color to correctness feedback.", "section": "colors" },
+      { "name": "The One Voice Rule", "body": "The primary color appears on interactive affordances only: buttons, links, active states, focus rings. It does not appear on decorative elements, section backgrounds, or progress bars unless those items are directly interactive.", "section": "colors" },
+      { "name": "The IPA Parity Rule", "body": "IPA symbols render in DM Sans (UI text) or DM Mono (phonetic blocks), never in a fallback. The latin-ext font subset is required for correct IPA rendering.", "section": "typography" },
+      { "name": "The Scale Contract Rule", "body": "Adjacent hierarchy steps must differ by at least 1.25× in font size or 100 in weight. Flat scales look like accidents.", "section": "typography" },
+      { "name": "The Flat-by-Default Rule", "body": "A surface at rest has no shadow or only Ambient. Shadow is a response to state (hover, open, focus), not a decoration. If a surface always has a heavy shadow, the shadow has lost its meaning.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do use --hue and --primary in code. Never hardcode a hex for the primary color.",
+      "Do reserve the primary color for interactive affordances only: buttons, links, active nav items, focus rings, selected chips.",
+      "Do use semantic colors (success/warning/error/info) for all correctness and feedback signals.",
+      "Do vary spacing for rhythm. Sections that breathe differently feel intentional.",
+      "Do use Fraunces for phoneme display and editorial moments only. Earn its use.",
+      "Do include prefers-reduced-motion media queries for any animation longer than 100ms.",
+      "Do use DM Sans with latin-ext subset for all IPA and phonetic text.",
+      "Do pair color feedback with an icon or label. Color alone must never be the only signal."
+    ],
+    "donts": [
+      "Don't use Duolingo-style gamification patterns: confetti floods, character mascots, hollow streak celebrations.",
+      "Don't build generic SaaS dashboard layouts: navy sidebar with white card grids and identical spacing.",
+      "Don't use border-left greater than 1px as a colored accent stripe on cards or callouts.",
+      "Don't use gradient text (background-clip: text). Emphasis through weight or size only.",
+      "Don't put the primary color on progress bars, decorative blobs, or non-interactive backgrounds.",
+      "Don't nest cards inside cards. Decompose the design instead.",
+      "Don't use modal dialogs as a first response to user actions.",
+      "Don't use hero-metric layouts (big number, gradient accent) for scoring or progress surfaces.",
+      "Don't hardcode colors in components. All values must reference design tokens.",
+      "Don't use glassmorphism decoratively."
+    ]
+  }
+}

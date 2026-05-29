@@ -16,7 +16,7 @@ export function NavButton({ active, onClick, children, as = "button", href, tool
   const { collapsed } = useSidebar();
   const { ref, tip, show, hide } = useSidebarTooltip();
 
-  const baseClasses = `relative flex items-center ${collapsed ? "justify-center w-11 h-11 mx-auto" : "gap-2.5 w-full"} rounded-[var(--radius-md)] text-sm transition-all duration-[var(--transition-fast)] group`
+  const baseClasses = `relative flex items-center ${collapsed ? "justify-center w-11 h-11 mx-auto" : "gap-2.5 w-full"} rounded-[var(--radius-md)] text-sm transition-all duration-[var(--transition-fast)] group focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--primary)]`
     + (collapsed ? "" : " px-[var(--space-3)] py-[var(--space-2)]");
   const baseStyle = active
     ? { background: "var(--primary-soft)", color: "var(--primary)", fontWeight: 600 }

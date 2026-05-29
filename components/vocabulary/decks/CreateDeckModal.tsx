@@ -55,7 +55,7 @@ export function CreateDeckModal({
       <div className="w-full max-w-md mx-4 bg-[var(--card-bg)] rounded-2xl border border-[var(--line-divider)] shadow-xl p-6 space-y-4">
         <div className="flex items-center justify-between">
           <H2 className="font-heading font-bold text-lg">New Deck</H2>
-          <Button variant="ghost" size="icon" onClick={onClose}>
+          <Button variant="ghost" size="icon" onClick={onClose} aria-label="Close">
             <X size={20} />
           </Button>
         </div>

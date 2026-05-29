@@ -98,7 +98,7 @@ export default function DailyPage() {
             type="button"
             variant="primary"
             size="md"
-            onClick={() => router.push('/lexicon')}
+            onClick={() => router.push('/words?tab=lexicon')}
           >
             Go to Lexicon
           </Button>

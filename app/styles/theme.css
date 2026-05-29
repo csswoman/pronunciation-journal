@@ -163,4 +163,16 @@
   --shadow-md: 0 4px 6px   oklch(0 0 0 / 0.07);
   --shadow-lg: 0 10px 15px oklch(0 0 0 / 0.10);
   --shadow-xl: 0 20px 25px oklch(0 0 0 / 0.10);
+
+  /* ── Badge backgrounds (soft variants) ──────────────────────────────────── */
+  --color-badge-primary-bg:   var(--badge-primary-bg);
+  --color-badge-primary-border: var(--badge-primary-border);
+  --color-badge-success-bg:   var(--badge-success-bg);
+  --color-badge-success-border: var(--badge-success-border);
+  --color-badge-warning-bg:   var(--badge-warning-bg);
+  --color-badge-warning-border: var(--badge-warning-border);
+  --color-badge-error-bg:     var(--badge-error-bg);
+  --color-badge-error-border: var(--badge-error-border);
+  --color-badge-info-bg:      var(--badge-info-bg);
+  --color-badge-info-border:  var(--badge-info-border);
 }

@@ -21,8 +21,7 @@ export const coreNav: NavSectionType = {
 export const learningNav: NavSectionType = {
   label: "Learning",
   items: [
-    { name: "Vocabulary", href: "/vocabulary", icon: LibraryBig },
-    { name: "Lexicon", href: "/lexicon", icon: BookMarked },
+    { name: "Words", href: "/words", icon: LibraryBig },
     { name: "Courses", href: "/courses", icon: BookOpen },
     { name: "IPA Chart", href: "/ipa", icon: Radio },
   ],

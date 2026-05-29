@@ -53,8 +53,16 @@ export default function AICoachPanel() {
   }) || isStreaming;
 
   return <>
-    <div style={{ position: "fixed", top: 0, right: 0, bottom: 0, width: isFullscreen ? "calc(100vw - 256px)" : `${panelWidth}px`, backgroundColor: "var(--card-bg)", borderLeft: "1px solid var(--line-divider)", display: "flex", flexDirection: "column", zIndex: 50, transform: isOpen ? "translateX(0)" : "translateX(100%)", transition: isDragging.current ? "transform 0.25s ease" : "transform 0.25s ease, width 0.25s ease", boxShadow: "var(--shadow-panel)" }} aria-hidden={!isOpen}>
-      {!isFullscreen && <div onMouseDown={onDragStart} title="Drag to resize" className="absolute top-0 left-0 bottom-0 w-1 cursor-ew-resize group z-10" style={{ marginLeft: "-1px" }}><div className="absolute inset-y-0 left-0 w-1 opacity-0 group-hover:opacity-100 transition-opacity" style={{ backgroundColor: "var(--primary)" }} /></div>}
+    <div
+      className="fixed top-0 right-0 bottom-0 flex flex-col z-50 bg-surface-raised border-l border-border-subtle shadow-lg"
+      style={{
+        width: isFullscreen ? "calc(100vw - var(--sidebar-width))" : `${panelWidth}px`,
+        transform: isOpen ? "translateX(0)" : "translateX(100%)",
+        transition: "transform 0.25s ease",
+      }}
+      aria-hidden={!isOpen}
+    >
+      {!isFullscreen && <div onMouseDown={onDragStart} title="Drag to resize" className="absolute top-0 left-0 bottom-0 w-1 cursor-ew-resize group z-10 -ml-px"><div className="absolute inset-y-0 left-0 w-1 opacity-0 group-hover:opacity-100 transition-opacity bg-primary" /></div>}
       <AICoachHeader pageLabel={ctx.label} showHistory={showHistory} isFullscreen={isFullscreen} onNewChat={() => { resetSession(); setActiveTab("chat"); }} onToggleHistory={() => setShowHistory((value) => !value)} onToggleFullscreen={() => setFullscreen(!isFullscreen)} onClose={close} />
       <div className="flex-shrink-0"><ChatTabs active={activeTab} onChange={setActiveTab} /></div>
 

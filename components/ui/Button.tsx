@@ -1,20 +1,25 @@
 import React from "react";
+import { cn } from "@/lib/cn";
 
 type ButtonVariant =
   | "primary"
   | "secondary"
+  | "soft"
   | "ghost"
-  | "ghost-danger"
-  | "danger"
   | "success"
+  | "error"
+  | "warning"
+  | "info"
+  // Deprecated variants (mapped to new ones for backwards compatibility)
+  | "danger"
   | "outline"
+  | "elevated"
   | "dashed"
   | "chip"
   | "segmented"
-  | "elevated"
-  | "soft";
+  | "ghost-danger";
 
-type ButtonSize = "sm" | "md" | "lg" | "icon" | "iconLg";
+type ButtonSize = "sm" | "md" | "lg" | "icon" | "iconLg" | "icon-sm" | "icon-lg";
 type IconPosition = "left" | "right";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -23,125 +28,117 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   icon?: React.ReactNode;
   iconPosition?: IconPosition;
   fullWidth?: boolean;
-  selected?: boolean;
+  isLoading?: boolean;
 }
 
 const variantStyles: Record<ButtonVariant, string> = {
-  primary: `
-    bg-[var(--primary-500)]
-    text-[var(--on-primary)]
-    border border-transparent
-    shadow-sm hover:shadow-md
-    hover:bg-[var(--primary-600)]
-    focus:ring-[var(--primary-400)]
-  `,
+  // CTA button: dark ink on parchment (primary interactive affordance)
+  primary: cn(
+    "bg-[var(--cta-bg)] text-[var(--cta-fg)]",
+    "hover:bg-[oklch(0.26_0.008_250)] shadow-none",
+    "active:translate-y-[-1px] active:shadow-md"
+  ),
 
-  secondary: `
-    bg-[var(--bg-secondary)]
-    text-fg
-    border border-[var(--border)]
-    shadow-sm hover:shadow-md
-    hover:bg-[var(--bg-tertiary)]
-  `,
+  // Secondary: surface-raised background, primary text
+  secondary: cn(
+    "bg-[var(--surface-raised)] text-[var(--fg-primary)]",
+    "border border-[var(--border-default)]",
+    "hover:bg-[var(--surface-sunken)]",
+    "active:translate-y-[-1px] active:shadow-md"
+  ),
 
-  ghost: `
-    bg-transparent
-    text-fg-muted
-    shadow-none
-    hover:bg-[var(--bg-secondary)]
-    hover:text-fg
-  `,
+  // Soft: primary-soft background, primary text
+  soft: cn(
+    "bg-[var(--primary-soft)] text-[var(--primary)]",
+    "hover:bg-[oklch(0.90_0.04_var(--hue))]",
+    "active:translate-y-[-1px] active:shadow-md"
+  ),
 
-  danger: `
-    bg-[var(--error)]
-    text-[var(--on-primary)]
-    border border-transparent
-    shadow-sm hover:shadow-md
-    hover:brightness-105
-    focus:ring-[var(--error)]
-  `,
+  // Ghost: transparent, secondary text
+  ghost: cn(
+    "bg-transparent text-[var(--fg-secondary)]",
+    "hover:bg-[var(--surface-raised)]",
+    "active:translate-y-[-1px]"
+  ),
 
-  success: `
-    bg-[var(--success)]
-    text-[var(--on-primary)]
-    border border-transparent
-    shadow-sm hover:shadow-md
-    hover:brightness-105
-    focus:ring-[var(--success)]
-  `,
+  // Semantic: success green
+  success: cn(
+    "bg-[var(--success)] text-white",
+    "hover:brightness-110",
+    "active:translate-y-[-1px] active:shadow-md"
+  ),
 
-  outline: `
-    bg-transparent
-    text-fg
-    border border-[var(--border)]
-    shadow-sm hover:shadow-md
-    hover:bg-[var(--bg-secondary)]
-  `,
+  // Semantic: error red
+  error: cn(
+    "bg-[var(--error)] text-white",
+    "hover:brightness-110",
+    "active:translate-y-[-1px] active:shadow-md"
+  ),
 
-  dashed: `
-    bg-transparent
-    text-fg-muted
-    border-2 border-dashed border-[var(--border)]
-    shadow-none
-    hover:border-[var(--primary-500)]
-    hover:text-[var(--primary-500)]
-  `,
+  // Semantic: warning amber
+  warning: cn(
+    "bg-[var(--warning)] text-white",
+    "hover:brightness-110",
+    "active:translate-y-[-1px] active:shadow-md"
+  ),
 
-  chip: `
-    bg-[var(--bg-secondary)]
-    text-fg-muted
-    border border-transparent
-    shadow-none
-    hover:bg-[var(--bg-tertiary)]
-  `,
+  // Semantic: info blue
+  info: cn(
+    "bg-[var(--info)] text-white",
+    "hover:brightness-110",
+    "active:translate-y-[-1px] active:shadow-md"
+  ),
 
-  segmented: `
-    bg-transparent
-    text-fg-muted
-    shadow-none
-    hover:bg-[var(--bg-secondary)]
-  `,
-
-  elevated: `
-    bg-[var(--primary-500)]
-    text-[var(--on-primary)]
-    border border-transparent
-    shadow-lg
-    hover:shadow-xl
-    hover:-translate-y-1
-    hover:bg-[var(--primary-600)]
-  `,
-
-  soft: `
-    bg-[var(--btn-soft-bg)]
-    text-[var(--primary)]
-    border border-transparent
-    shadow-none
-    hover:bg-[var(--btn-soft-bg-hover)]
-  `,
-
-  "ghost-danger": `
-    bg-[var(--bg-secondary)]
-    text-fg-muted
-    border border-transparent
-    shadow-none
-    hover:bg-[var(--error)]
-    hover:text-[var(--on-primary)]
-  `,
-};
-
-const selectedStyles: Partial<Record<ButtonVariant, string>> = {
-  primary: "ring-2 ring-[var(--primary-400)]",
-  segmented: "bg-[var(--primary-500)] text-[var(--on-primary)]",
-  chip: "bg-[var(--primary-100)] text-[var(--primary-700)]",
+  // Deprecated variants (mapped to new equivalents)
+  danger: cn(
+    "bg-[var(--error)] text-white",
+    "hover:brightness-110",
+    "active:translate-y-[-1px] active:shadow-md"
+  ),
+  "ghost-danger": cn(
+    "bg-transparent text-[var(--fg-secondary)]",
+    "hover:bg-[var(--error)] hover:text-white",
+    "active:translate-y-[-1px]"
+  ),
+  outline: cn(
+    "bg-transparent text-[var(--fg-primary)]",
+    "border border-[var(--border-default)]",
+    "hover:bg-[var(--surface-raised)]",
+    "active:translate-y-[-1px]"
+  ),
+  dashed: cn(
+    "bg-transparent text-[var(--fg-secondary)]",
+    "border-2 border-dashed border-[var(--border-default)]",
+    "hover:border-[var(--primary)] hover:text-[var(--primary)]",
+    "active:translate-y-[-1px]"
+  ),
+  chip: cn(
+    "bg-[var(--surface-raised)] text-[var(--fg-secondary)]",
+    "hover:bg-[var(--surface-sunken)]",
+    "active:translate-y-[-1px]"
+  ),
+  segmented: cn(
+    "bg-transparent text-[var(--fg-secondary)]",
+    "hover:bg-[var(--surface-raised)]",
+    "active:translate-y-[-1px]"
+  ),
+  elevated: cn(
+    "bg-[var(--cta-bg)] text-[var(--cta-fg)]",
+    "shadow-lg hover:shadow-xl",
+    "hover:bg-[oklch(0.26_0.008_250)]",
+    "active:translate-y-[-1px]"
+  ),
 };
 
 const sizeStyles: Record<ButtonSize, string> = {
-  sm: "px-3 py-1.5 text-sm rounded-lg gap-1.5",
-  md: "px-4 py-2.5 text-sm rounded-xl gap-2",
-  lg: "px-5 py-3 text-base rounded-xl gap-2.5",
-  icon: "p-2 rounded-full",
-  iconLg: "p-3.5 rounded-full",
+  sm: "px-3 py-1.5 text-xs font-semibold rounded-sm gap-1.5 h-8",
+  md: "px-5 py-2.5 text-sm font-semibold rounded-md gap-2 h-10",
+  lg: "px-6 py-3 text-base font-semibold rounded-md gap-2.5 h-12",
+  // Icon sizes (deprecated, for backwards compatibility)
+  icon: "p-2.5 rounded-full min-h-11 min-w-11",
+  "icon-sm": "p-2.5 rounded-full min-h-11 min-w-11",
+  iconLg: "p-3.5 rounded-full min-h-12 min-w-12",
+  "icon-lg": "p-3.5 rounded-full min-h-12 min-w-12",
 };
 
 export default function Button({
@@ -149,48 +146,55 @@ export default function Button({
   size = "md",
   icon,
   iconPosition = "left",
-  fullWidth,
-  selected = false,
+  fullWidth = false,
+  isLoading = false,
   className = "",
   children,
   disabled,
   type = "button",
   ...props
 }: ButtonProps) {
-  const base = [
-    "inline-flex items-center justify-center font-medium",
-    "transition-all duration-200 ease-out",
-    "focus:outline-none focus:ring-4 focus:ring-opacity-30",
-    "active:scale-[0.97]",
+  const isDisabled = disabled || isLoading;
 
-    !disabled && "hover:-translate-y-0.5",
+  const base = cn(
+    // Base layout
+    "inline-flex items-center justify-center font-semibold",
+    "transition-all duration-150 ease-out-quart",
+    "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--primary)]",
 
+    // Variant styles
     variantStyles[variant],
     sizeStyles[size],
 
-    disabled &&
-      "!bg-[var(--bg-secondary)] !text-fg-subtle !border !border-[var(--border)] cursor-not-allowed pointer-events-none opacity-60",
-    fullWidth ? "w-full" : "",
-    selected && selectedStyles[variant] ? selectedStyles[variant] : "",
-  ]
-    .filter(Boolean)
-    .join(" ");
+    // State: disabled
+    isDisabled && "opacity-50 cursor-not-allowed pointer-events-none",
+
+    // Layout
+    fullWidth && "w-full",
+
+    // Custom class override
+    className
+  );
 
   return (
     <button
       type={type}
-      disabled={disabled}
-      className={`${base} ${className}`.trim()}
+      disabled={isDisabled}
+      className={base}
       {...props}
     >
       {icon && iconPosition === "left" && (
-        <span className="shrink-0 text-current opacity-90">{icon}</span>
+        <span className={cn("shrink-0", isLoading && "animate-spin")}>
+          {icon}
+        </span>
       )}
 
       {children}
 
       {icon && iconPosition === "right" && (
-        <span className="shrink-0 text-current opacity-90">{icon}</span>
+        <span className={cn("shrink-0", isLoading && "animate-spin")}>
+          {icon}
+        </span>
       )}
     </button>
   );

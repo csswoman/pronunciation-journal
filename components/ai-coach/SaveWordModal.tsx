@@ -34,23 +34,31 @@ export default function SaveWordModal({ word, context, onConfirm, onClose }: Sav
     onConfirm({ word, meaning, difficulty, context });
   };
 
+  const titleId = "save-word-modal-title";
+
   return (
     <div
       className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
     >
-      <div className="w-full max-w-md bg-surface-raised rounded-2xl shadow-xl p-6 space-y-4">
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
+        className="w-full max-w-md bg-surface-raised rounded-2xl shadow-xl p-6 space-y-4"
+      >
         <div className="flex items-center justify-between">
-          <H3 className="text-lg font-bold">
+          <H3 id={titleId} className="text-lg font-bold">
             Save Vocabulary
           </H3>
           <Button
             onClick={onClose}
             variant="ghost"
             size="icon"
+            aria-label="Close"
             className="text-fg-subtle hover:text-fg-muted dark:hover:text-fg"
             icon={
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg aria-hidden="true" className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             }
@@ -58,10 +66,10 @@ export default function SaveWordModal({ word, context, onConfirm, onClose }: Sav
           </Button>
         </div>
 
-        <div className="px-3 py-2 bg-accent-soft rounded-lg">
-          <p className="text-lg font-semibold text-accent">{word}</p>
+        <div className="px-3 py-2 bg-primary-soft rounded-lg">
+          <p className="text-lg font-semibold text-primary">{word}</p>
           {context !== word && (
-            <p className="text-xs text-fg-subtle mt-0.5 italic">&ldquo;{context}&rdquo;</p>
+            <p className="text-body-sm text-fg-subtle mt-0.5 italic">&ldquo;{context}&rdquo;</p>
           )}
         </div>
 
@@ -75,7 +83,7 @@ export default function SaveWordModal({ word, context, onConfirm, onClose }: Sav
               value={meaning}
               onChange={(e) => setMeaning(e.target.value)}
               placeholder="Add a definition or translation..."
-              className="w-full px-3 py-2 rounded-lg border border-border-subtle bg-surface-sunken text-fg placeholder:text-fg-placeholder text-sm focus:outline-none focus:ring-2 focus:ring-accent"
+              className="w-full px-3 py-2 rounded-lg border border-border-subtle bg-surface-sunken text-fg placeholder:text-fg-placeholder text-sm focus:outline-none focus:ring-2 focus:ring-primary"
             />
           </div>
 

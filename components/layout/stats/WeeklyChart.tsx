@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { cn } from "@/lib/cn";
 import type { DailyProgress } from "@/lib/types";
 
 const DAY_LABELS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -62,14 +63,7 @@ export function WeeklyChart({ progressHistory }: Props) {
   const isEmpty = weeklyAttempts === 0;
 
   return (
-    <div
-      className="rounded-3xl p-5"
-      style={{
-        background: "var(--card-bg)",
-        border: "1px solid var(--line-divider)",
-        boxShadow: "0 1px 3px var(--line-divider), 0 8px 20px var(--line-divider)",
-      }}
-    >
+    <div className="rounded-3xl p-5 border border-border-subtle bg-surface-raised shadow-md">
       <div className="flex items-center justify-between gap-3 flex-wrap">
         <div>
           <p className="text-base font-bold text-fg">Your weekly progress</p>
@@ -77,20 +71,18 @@ export function WeeklyChart({ progressHistory }: Props) {
             {chartMetric === "attempts" ? "Attempts per day" : chartMetric === "accuracy" ? "Accuracy % per day" : "XP per day"}
           </p>
         </div>
-        <div
-          className="inline-flex rounded-xl p-1 gap-1"
-          style={{ background: "var(--btn-regular-bg)" }}
-        >
+        <div className="inline-flex rounded-xl p-1 gap-1 bg-surface-sunken">
           {(["attempts", "accuracy", "xp"] as const).map((m) => (
             <button
               key={m}
               onClick={() => setChartMetric(m)}
-              className="rounded-lg px-3 py-1.5 text-xs font-semibold capitalize transition-all"
-              style={{
-                background: chartMetric === m ? "var(--card-bg)" : "transparent",
-                color: chartMetric === m ? "var(--text-primary)" : "var(--text-secondary)",
-                boxShadow: chartMetric === m ? "0 1px 3px var(--line-divider)" : "none",
-              }}
+              aria-current={chartMetric === m ? "page" : undefined}
+              className={cn(
+                "rounded-lg px-3 py-1.5 text-xs font-semibold capitalize transition-all",
+                chartMetric === m
+                  ? "bg-surface-raised text-fg shadow-sm"
+                  : "bg-transparent text-fg-muted"
+              )}
             >
               {m}
             </button>
@@ -108,13 +100,13 @@ export function WeeklyChart({ progressHistory }: Props) {
       ) : (
         <>
           {/* Bars */}
-          <div className="mt-5 grid grid-cols-7 gap-2 items-end" style={{ height: 120 }}>
+          <div className="mt-5 grid grid-cols-7 gap-2 items-end" style={{ height: "clamp(80px, 15vw, 120px)" }}>
             {barData.map((day, i) => {
               const val = metricValues[i];
               const barH = val > 0 ? Math.max((val / maxMetric) * 96, 12) : 6;
               return (
-                <div key={day.date} className="flex flex-col items-center gap-1">
-                  <span className="text-tiny font-semibold tabular-nums" style={{ color: day.isToday ? "var(--primary)" : "var(--text-tertiary)" }}>
+                <div key={day.date} className="flex flex-col items-center gap-1 min-w-0">
+                  <span className={cn("text-tiny font-semibold tabular-nums", day.isToday ? "text-primary" : "text-fg-subtle")}>
                     {val > 0 ? (chartMetric === "accuracy" ? `${val}%` : val) : ""}
                   </span>
                   <div className="w-full flex items-end" style={{ height: 96 }}>
@@ -125,9 +117,9 @@ export function WeeklyChart({ progressHistory }: Props) {
                         animationDelay: `${i * 60}ms`,
                         background: val > 0
                           ? day.isToday
-                            ? "linear-gradient(180deg, color-mix(in oklch, var(--primary) 70%, var(--on-primary)), var(--primary))"
+                            ? "var(--primary)"
                             : "color-mix(in oklch, var(--primary) 35%, transparent)"
-                          : "var(--line-divider)",
+                          : "var(--border-subtle)",
                         boxShadow: day.isToday && val > 0 ? "0 4px 14px color-mix(in oklch, var(--primary) 28%, transparent)" : "none",
                       }}
                     />
@@ -141,7 +133,7 @@ export function WeeklyChart({ progressHistory }: Props) {
           <div className="mt-2 grid grid-cols-7 gap-2">
             {barData.map((day) => (
               <div key={day.date} className="flex flex-col items-center">
-                <span className="text-tiny font-semibold" style={{ color: day.isToday ? "var(--primary)" : "var(--text-secondary)" }}>
+                <span className={cn("text-tiny font-semibold", day.isToday ? "text-primary" : "text-fg-muted")}>
                   {day.label}
                 </span>
                 <span className="text-tiny text-fg-subtle">
@@ -154,17 +146,14 @@ export function WeeklyChart({ progressHistory }: Props) {
       )}
 
       {/* Bottom summary row */}
-      <div
-        className="mt-4 grid grid-cols-4 divide-x rounded-2xl overflow-hidden"
-        style={{ background: "var(--btn-regular-bg)", borderColor: "var(--line-divider)" }}
-      >
+      <div className="mt-4 grid grid-cols-4 divide-x divide-border-subtle rounded-2xl overflow-hidden bg-surface-sunken">
         {[
           { label: "Weekly Attempts", value: weeklyAttempts || "—" },
           { label: "Weekly Accuracy", value: weeklyAccuracy ? `${weeklyAccuracy}%` : "—" },
           { label: "Days Practiced", value: `${daysPracticed} / ${WEEKLY_GOAL}` },
           { label: "Weekly XP", value: weeklyXp ? formatCompact(weeklyXp) : "—" },
         ].map(({ label, value }) => (
-          <div key={label} className="flex flex-col items-center py-3 px-2" style={{ borderColor: "var(--line-divider)" }}>
+          <div key={label} className="flex flex-col items-center py-3 px-2">
             <span className="text-tiny font-medium text-center text-fg-muted">{label}</span>
             <span className="text-base font-black mt-0.5 text-fg">{value}</span>
           </div>

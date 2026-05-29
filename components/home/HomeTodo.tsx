@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { FileText, ArrowRight, BookOpen, Flame } from "lucide-react";
+import Button from "@/components/ui/Button";
 import Card from "@/components/layout/Card";
 import CardHeader from "@/components/ui/CardHeader";
 import type { WordBankEntry } from "@/lib/word-bank/types";
@@ -29,11 +30,10 @@ export default function HomeTodo({ dueWords = [], streak }: HomeTodoProps) {
           <p className="text-xs text-[var(--text-tertiary)] max-w-48">
             Add words from the Lexicon to unlock your daily practice.
           </p>
-          <Link
-            href="/lexicon"
-            className="mt-1 inline-flex items-center gap-1 rounded-lg bg-[var(--primary)] px-4 py-2 text-xs font-semibold text-white transition-opacity hover:opacity-90"
-          >
-            Go to Lexicon <ArrowRight size={13} />
+          <Link href="/words?tab=lexicon">
+            <Button variant="primary" size="sm" icon={<ArrowRight size={13} />} iconPosition="right">
+              Go to Lexicon
+            </Button>
           </Link>
         </div>
       </Card>
@@ -53,9 +53,9 @@ export default function HomeTodo({ dueWords = [], streak }: HomeTodoProps) {
 
       <div className="flex flex-col gap-3">
         {/* Stats row */}
-        <div className="flex items-stretch gap-3">
+        <div className="flex items-stretch gap-3 p-3 rounded-lg" style={{ backgroundColor: "color-mix(in oklch, var(--primary) 5%, transparent)" }}>
           {/* Exercise count */}
-          <div className="flex flex-1 flex-col justify-center rounded-lg bg-[var(--surface-sunken)] px-4 py-3">
+          <div className="flex flex-1 flex-col justify-center">
             <p className="text-2xl font-bold leading-none text-[var(--text-primary)]">
               {DAILY_SESSION_LENGTH}
             </p>
@@ -67,18 +67,15 @@ export default function HomeTodo({ dueWords = [], streak }: HomeTodoProps) {
 
           {/* Streak */}
           <div
-            className="flex flex-col items-center justify-center rounded-lg px-4 py-3 min-w-[80px]"
-            style={{
-              backgroundColor: currentStreak > 0 ? "var(--warning-soft, #fff7ed)" : "var(--surface-sunken)",
-            }}
+            className="flex flex-col items-center justify-center min-w-[80px]"
           >
             <Flame
               size={20}
-              className={currentStreak > 0 ? "text-[var(--warning-value,#f97316)]" : "text-[var(--text-tertiary)]"}
+              className={currentStreak > 0 ? "text-[var(--warning-value)]" : "text-[var(--text-tertiary)]"}
             />
             <p
               className="mt-1 text-2xl font-bold leading-none"
-              style={{ color: currentStreak > 0 ? "var(--warning-value,#f97316)" : "var(--text-tertiary)" }}
+              style={{ color: currentStreak > 0 ? "var(--warning-value)" : "var(--text-tertiary)" }}
             >
               {currentStreak}
             </p>
@@ -86,7 +83,7 @@ export default function HomeTodo({ dueWords = [], streak }: HomeTodoProps) {
               {currentStreak === 1 ? "day" : "days"}
             </p>
             {completedToday && (
-              <p className="mt-1 text-[10px] font-semibold uppercase tracking-wide text-[var(--warning-value,#f97316)]">
+              <p className="mt-1 text-[10px] font-semibold uppercase tracking-wide text-[var(--warning-value)]">
                 Done ✓
               </p>
             )}
@@ -94,11 +91,16 @@ export default function HomeTodo({ dueWords = [], streak }: HomeTodoProps) {
         </div>
 
         {/* CTA */}
-        <Link
-          href="/daily"
-          className="flex items-center justify-center gap-2 rounded-lg bg-[var(--primary)] px-4 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
-        >
-          {completedToday ? "Practice again" : "Start today's plan"} <ArrowRight size={15} />
+        <Link href="/daily" className="w-full">
+          <Button
+            variant="primary"
+            size="md"
+            fullWidth
+            icon={<ArrowRight size={15} />}
+            iconPosition="right"
+          >
+            {completedToday ? "Practice again" : "Start today's plan"}
+          </Button>
         </Link>
       </div>
     </Card>

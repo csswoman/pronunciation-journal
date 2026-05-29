@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { Volume2, LibraryBig, ArrowRight } from "lucide-react";
+import Anchor from "@/components/ui/Anchor";
 import type { WordBankEntry } from "@/lib/word-bank/types";
 import { getWordStrength } from "@/lib/word-bank/strength";
 import { WordStrengthBars } from "@/components/vocabulary/words/WordStrengthBars";
@@ -21,13 +21,13 @@ export default function HomeWordsToReview({
           <LibraryBig size={18} className="text-[var(--primary)]" />
           <h2 className="text-xl font-semibold tracking-tight text-[var(--text-primary)]">Words to review</h2>
         </div>
-        <Link
-          href="/vocabulary"
-          className="text-[var(--primary)] hover:opacity-80 transition-opacity flex text-xs gap-1 font-medium items-center hover:underline"
-          aria-label="Open Vocabulary"
+        <Anchor
+          href="/words?tab=my-words"
+          icon={<ArrowRight size={14} />}
+          iconPosition="right"
         >
-          Open Vocabulary <ArrowRight size={14} />
-        </Link>
+          Open Vocabulary
+        </Anchor>
       </div>
 
       {/* Subline */}

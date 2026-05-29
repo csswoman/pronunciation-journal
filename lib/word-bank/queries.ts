@@ -129,3 +129,17 @@ export async function markLexiconWordLearned(
   return { entry: inserted as WordBankEntry, alreadyExisted: false };
 }
 
+/** Toggle the is_favorite flag for a word bank row owned by the current user. */
+export async function toggleFavorite(
+  wordBankId: string,
+  value: boolean
+): Promise<void> {
+  const supabase = getSupabaseBrowserClient();
+  const { error } = await supabase
+    .from("word_bank")
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    .update({ is_favorite: value } as any)
+    .eq("id", wordBankId);
+  if (error) throw error;
+}
+

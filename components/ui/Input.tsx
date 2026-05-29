@@ -38,12 +38,13 @@ export default function Input({
         placeholder={placeholder}
         aria-describedby={errorId}
         aria-invalid={error ? true : undefined}
-        className="px-3 py-2 rounded-lg text-sm border border-border-default bg-surface-sunken text-fg focus:outline-none focus:ring-2"
+        className="px-3 py-2 rounded-lg text-sm border border-border-default bg-surface-sunken text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--primary)]"
       />
       {error && (
-        <span id={errorId} className="text-xs text-error">
-          {error}
-        </span>
+        <div id={errorId} className="flex items-center gap-1.5 text-xs text-error">
+          <span>⚠</span>
+          <span>{error}</span>
+        </div>
       )}
     </div>
   );

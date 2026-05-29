@@ -27,14 +27,14 @@ Convert `/lexicon/[id]/practice` into a two-phase flow controlled by a single or
 
 | Button | SM-2 grade | SRS effect | Enters Phase 2? |
 |---|---|---|---|
-| **No la sé** | 1 | `interval_days = 1`, `ease_factor -= 0.15` (min 1.3), `repetitions = 0`, `status = new` | ✅ yes |
+| **I don't know it** | 1 | `interval_days = 1`, `ease_factor -= 0.15` (min 1.3), `repetitions = 0`, `status = new` | ✅ yes |
 | **Normal** | 3 | Standard SM-2 via `scheduleNextReview` with grade 3 | ❌ no |
-| **Ya la conozco** | 5, but with `interval_days = 30` override | `ease_factor` set to 2.5 baseline, `status = mastered`, `next_review_at = +30 days` | ❌ no |
+| **I already know it** | 5, but with `interval_days = 30` override | `ease_factor` set to 2.5 baseline, `status = mastered`, `next_review_at = +30 days` | ❌ no |
 
 ### SRS writes
 - Mutations fire immediately on button press via the existing word-bank SRS path.
 - For words not yet in `word_bank` (synthetic entries with `id = "lexicon:…"`), a real `word_bank` row is upserted first, then the SRS fields are updated.
-- "Ya la conozco" bypasses `computeSM2` and writes fixed values directly: `interval_days = 30`, `ease_factor = 2.5`, `repetitions = 1`, `status = mastered`.
+- "I already know it" bypasses `computeSM2` and writes fixed values directly: `interval_days = 30`, `ease_factor = 2.5`, `repetitions = 1`, `status = mastered`.
 
 ### Progress
 - Progress indicator shows card N of total (e.g. "3 / 12").
@@ -47,13 +47,14 @@ Convert `/lexicon/[id]/practice` into a two-phase flow controlled by a single or
 Shown after all cards are rated.
 
 Displays three counts:
-- ✗ No la sé: N
-- ~ Normal: N  
-- ✓ Ya la conozco: N
+
+- ✗ I don't know it: N
+- ~ Normal: N
+- ✓ I already know it: N
 
 ### Routing logic
-- If **"No la sé" count = 0** → skip Phase 2, show final session summary immediately.
-- If **"No la sé" count ≥ 1** → show a single CTA: **"Comenzar ejercicios"** → Phase 2.
+- If **"I don't know it" count = 0** → skip Phase 2, show final session summary immediately.
+- If **"I don't know it" count ≥ 1** → show a single CTA: **"Start exercises"** → Phase 2.
 
 No option to include or exclude specific words — the system decides automatically.
 
@@ -63,10 +64,10 @@ No option to include or exclude specific words — the system decides automatica
 
 ### Word pool rules
 
-| "No la sé" count | Pool |
+| "I don't know it" count | Pool |
 |---|---|
-| ≥ 4 | Only "No la sé" words |
-| 1–3 | "No la sé" words + filler from "Normal"-rated words of the same lesson, up to 4 total pairs |
+| ≥ 4 | Only "I don't know it" words |
+| 1–3 | "I don't know it" words + filler from "Normal"-rated words of the same lesson, up to 4 total pairs |
 
 Filler words are **distractors only** — their SRS is not modified if the user fails them in this phase.
 
@@ -98,7 +99,7 @@ loading → review → summary → practice → done
 |---|---|
 | `LexiconReviewPhase` | Renders flashcard stack, emits `onComplete(ratings: WordRating[])` |
 | `LexiconFlashcard` | Single card with front/back flip, 3 rating buttons |
-| `LexiconReviewSummary` | Shows rating counts, "Comenzar ejercicios" or auto-advance |
+| `LexiconReviewSummary` | Shows rating counts, "Start exercises" CTA or auto-advance |
 
 ### Types
 ```ts
@@ -128,8 +129,8 @@ interface WordRating {
 | Case | Behavior |
 |---|---|
 | Lesson has < 2 words | Error state (already handled by current code) |
-| All words → "Ya la conozco" | Skip Phase 2, show summary |
-| All words → "No la sé", but < 4 | Fill with "Normal" distractors up to 4 pairs |
+| All words → "I already know it" | Skip Phase 2, show summary |
+| All words → "I don't know it", but < 4 | Fill with "Normal" distractors up to 4 pairs |
 | User exits mid-review | Ratings already written to SRS (per-button), partial state is acceptable |
 
 ---

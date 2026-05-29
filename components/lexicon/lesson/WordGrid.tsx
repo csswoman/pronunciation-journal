@@ -11,6 +11,11 @@ import type { WordCardProps } from "./WordCard";
 
 export interface Word extends Omit<WordCardProps, "onMarkLearned"> {
   id: string;
+  isFavorite?: boolean;
+  wordBankId?: string | null;
+  onToggleFavorite?: () => void;
+  onAddToMyWords?: () => void;
+  isInMyWords?: boolean;
 }
 
 interface WordGridProps {
@@ -57,12 +62,16 @@ export function WordGrid({ words, view, color, onMarkLearned }: WordGridProps) {
                 : "flex flex-col gap-3"
             }
           >
-            {group.map((word) => (
+            {group.map(({ id, wordBankId, onToggleFavorite, onAddToMyWords, isInMyWords, isFavorite, ...rest }) => (
               <WordCard
-                key={word.id}
-                {...word}
+                key={id}
+                {...rest}
                 color={color}
-                onMarkLearned={onMarkLearned ? () => onMarkLearned(word.id) : undefined}
+                onMarkLearned={onMarkLearned ? () => onMarkLearned(id) : undefined}
+                isFavorite={isFavorite}
+                onToggleFavorite={onToggleFavorite}
+                onAddToMyWords={onAddToMyWords}
+                isInMyWords={isInMyWords}
               />
             ))}
           </div>

@@ -146,10 +146,10 @@ function WordChip({ chip, variant, done, onClick }: ChipProps) {
 function FeedbackBar({ isCorrect, sentence }: { isCorrect: boolean; sentence: string }) {
   return (
     <div
-      className="rounded-xl px-4 py-3 text-sm font-medium border-l-[3px]"
+      className="rounded-xl px-4 py-3 text-sm font-medium border"
       style={{
         backgroundColor: isCorrect ? 'var(--success-soft)' : 'var(--error-soft)',
-        borderLeftColor: isCorrect ? 'var(--success)'      : 'var(--error)',
+        borderColor: isCorrect ? 'var(--success)'      : 'var(--error)',
         color:           isCorrect ? 'var(--success-value)' : 'var(--error-value)',
       }}
     >

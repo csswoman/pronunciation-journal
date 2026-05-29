@@ -28,19 +28,21 @@ export function AuthInput({
 }: AuthInputProps) {
   const [showPassword, setShowPassword] = useState(false);
 
+  const inputId = label.toLowerCase().replace(/\s+/g, "-");
   const inputClass =
-    "w-full bg-[var(--surface-sunken)] border border-[var(--border-default)] rounded-[var(--radius-md)] text-fg px-[var(--space-4)] py-[var(--space-3)] outline-none transition-all placeholder:text-fg-subtle";
+    "w-full bg-surface-sunken border border-border-subtle rounded-lg text-fg px-4 py-3 outline-none transition-all placeholder:text-fg-subtle focus:border-primary focus:bg-surface-raised focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2";
 
   const isPasswordField = type === "password";
   const inputType = isPasswordField ? (showPassword ? "text" : "password") : type;
 
   return (
     <div>
-      <label className="block mb-[var(--space-2)] text-tiny font-semibold tracking-widest uppercase text-fg-muted">
+      <label htmlFor={inputId} className="block mb-2 text-tiny font-semibold tracking-widest uppercase text-fg-muted">
         {label}
       </label>
       <div className="relative">
         <input
+          id={inputId}
           type={inputType}
           autoComplete={autoComplete}
           required={required}
@@ -48,30 +50,19 @@ export function AuthInput({
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
-          className={`${isPasswordField ? `${inputClass} pr-10` : inputClass} auth-input`}
+          className={isPasswordField ? `${inputClass} pr-10` : inputClass}
         />
         {isPasswordField && (
           <button
             type="button"
             onClick={() => setShowPassword((v) => !v)}
-            className="absolute right-[var(--space-3)] top-1/2 -translate-y-1/2 p-1 rounded-md transition-all text-fg-subtle hover:text-fg-muted"
+            className="absolute right-4 top-1/2 -translate-y-1/2 p-1 rounded-md transition-all text-fg-subtle hover:text-fg-muted"
             aria-label={showPassword ? "Hide password" : "Show password"}
           >
             {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
           </button>
         )}
       </div>
-      <style>{`
-        .auth-input:focus {
-          border: 2px solid var(--primary);
-          background: var(--surface-raised);
-          outline: none;
-        }
-        .auth-input:focus-visible {
-          outline: 2px solid var(--primary);
-          outline-offset: 2px;
-        }
-      `}</style>
     </div>
   );
 }
