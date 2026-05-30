@@ -30,9 +30,9 @@ export default function PageLayout({
 
   if (useCard) {
     return (
-      <div className="bg-[var(--card-bg)] rounded-2xl my-10 mx-6 lg:mx-10 overflow-hidden">
+      <div className="bg-[var(--card-bg)] rounded-2xl my-8 mx-3 sm:mx-6 lg:mx-10 overflow-hidden">
         {hero}
-        <div className={`px-6 lg:px-10 py-8 pb-14 ${className}`} style={contentStyle}>
+        <div className={`px-3 sm:px-6 lg:px-10 py-6 sm:py-8 pb-12 sm:pb-14 ${className}`} style={contentStyle}>
           {children}
         </div>
       </div>
@@ -41,7 +41,7 @@ export default function PageLayout({
 
   // Home-style layout: no card wrapper, each section has its own card
   return (
-    <div className={`px-6 lg:px-10 py-8 pb-16 ${className}`}>
+    <div className={`px-3 sm:px-6 lg:px-10 py-6 sm:py-8 pb-12 sm:pb-16 ${className}`}>
       {children}
     </div>
   );

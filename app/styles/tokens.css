@@ -348,7 +348,7 @@
   --surface-sunken:  var(--bg-tertiary);
   --surface-overlay:     oklch(0.165 0.003 var(--hue) / 0.96);
   --surface-translucent: color-mix(in oklch, var(--card-bg) 70%, transparent);
-  --surface-tooltip:     oklch(0.24 0.006 var(--hue));
+  --surface-tooltip:     oklch(0.26 0.006 var(--hue));
   --surface-code:    oklch(0.10 0.003 var(--hue));
 
   /* ── Borders — dark overrides ────────────────────────────────────────── */
