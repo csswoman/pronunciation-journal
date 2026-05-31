@@ -61,6 +61,12 @@ interface DictionaryApiEntry {
   }>;
 }
 
+type NextFetchInit = RequestInit & {
+  next?: {
+    revalidate?: number | boolean;
+  };
+};
+
 async function fetchWordData(word: string): Promise<{
   word: string;
   ipa: string;
@@ -71,7 +77,7 @@ async function fetchWordData(word: string): Promise<{
 } | null> {
   const res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`, {
     next: { revalidate: 86400 },
-  });
+  } as NextFetchInit);
   if (!res.ok) return null;
 
   const data: DictionaryApiEntry[] = await res.json();
