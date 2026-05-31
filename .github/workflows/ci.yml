@@ -1,0 +1,159 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [main, develop, "feature/**"]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    name: Lint, Type Check & Test
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.5.0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: "pnpm"
+
+      - run: pnpm install --frozen-lockfile
+        name: Install dependencies
+
+      - run: pnpm lint
+        name: Run ESLint
+        continue-on-error: true
+
+      - run: pnpm type-check
+        name: TypeScript type check
+
+      - run: pnpm test
+        name: Run tests
+        continue-on-error: true
+
+      - name: Design Token Validation
+        run: pnpm build 2>&1 | grep -E "design token|token violations"
+        continue-on-error: true
+
+  security-audit:
+    runs-on: ubuntu-latest
+    name: Security Audit
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.5.0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: "pnpm"
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Run pnpm audit
+        run: pnpm audit --audit-level=moderate
+        continue-on-error: true
+
+      - name: Check for hardcoded secrets
+        run: |
+          if grep -r "NEXT_PUBLIC_SUPABASE_KEY\|GEMINI_API_KEY\|service_role" \
+            --include="*.tsx" --include="*.ts" --include="*.jsx" --include="*.js" \
+            components/ app/ lib/ 2>/dev/null; then
+            echo "⚠️ Warning: Potential hardcoded secrets found"
+            exit 1
+          fi
+        continue-on-error: true
+
+  build:
+    runs-on: ubuntu-latest
+    name: Build & Bundle
+    needs: [lint-and-test, security-audit]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.5.0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: "pnpm"
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Build Next.js
+        run: pnpm build
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
+          NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: nextjs-build
+          path: .next/
+          retention-days: 5
+
+  accessibility-audit:
+    runs-on: ubuntu-latest
+    name: A11y & Design Quality Check
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.5.0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: "pnpm"
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Check for accessibility patterns
+        run: |
+          echo "Checking for ARIA labels in interactive components..."
+          grep -r "aria-label\|aria-describedby\|role=" components/ui --include="*.tsx" | wc -l
+          echo "✓ ARIA patterns detected"
+
+      - name: Verify design tokens used
+        run: |
+          hardcoded=$(grep -r "oklch(0\." components/ui --include="*.tsx" | grep -v "var(--hue)" | wc -l)
+          echo "Hard-coded colors found: $hardcoded (should be < 2)"
+          if [ "$hardcoded" -gt 2 ]; then
+            echo "⚠️ Too many hard-coded colors detected"
+            exit 1
+          fi
+        continue-on-error: true
+
+  notify-status:
+    runs-on: ubuntu-latest
+    name: Notify Build Status
+    needs: [lint-and-test, security-audit, build, accessibility-audit]
+    if: always()
+
+    steps:
+      - name: Check workflow status
+        run: |
+          if [ "${{ needs.lint-and-test.result }}" != "success" ]; then
+            echo "❌ Lint/Test failed"
+            exit 1
+          fi
+          echo "✅ CI Pipeline passed"

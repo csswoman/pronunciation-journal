@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getCoursesWithLessonCount } from "@/lib/notion/courses";
 
-export const revalidate = 3600; // 1 hour
+export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {

@@ -1,6 +1,4 @@
-/* ═══════════════════════════════════════════════════════════════════════════
-   Animations — keyframes and animation utility classes
-   ═══════════════════════════════════════════════════════════════════════════ */
+/* Animations — keyframes and utility classes with prefers-reduced-motion support */
 
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(8px); }
@@ -92,12 +90,12 @@
 .animate-stat-rise    { animation: statRise 0.6s ease-out both; transform-origin: bottom center; will-change: opacity, transform; }
 .animate-progress-ring { animation: progressRing 1s ease-out both; will-change: stroke-dasharray; }
 .animate-float-soft   { animation: floatSoft 3.2s ease-in-out infinite; will-change: transform; }
-.animate-grid-in      { animation: grid-in 0.35s cubic-bezier(0.22, 1, 0.36, 1) both; will-change: opacity, transform; }
+.animate-grid-in      { animation: grid-in 0.35s cubic-bezier(0.4, 0, 0.2, 1) both; will-change: opacity, transform; }
 .animate-weak-pulse   { animation: weakPulse 1.5s ease-in-out infinite; will-change: transform, opacity; }
 .animate-mic-breathe  { animation: mic-breathe 1.8s ease-in-out infinite; will-change: transform; }
 .animate-mic-ring     { animation: mic-ring 0.8s ease-out infinite; will-change: transform, opacity; }
-.animate-chip-appear  { animation: chip-appear 0.3s ease-out both; will-change: opacity, transform; }
-.animate-message-in   { animation: message-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both; will-change: filter, opacity, transform; }
+.animate-chip-appear  { animation: chip-appear 0.3s cubic-bezier(0.4, 0, 0.2, 1) both; will-change: opacity, transform; }
+.animate-message-in   { animation: message-in 0.45s cubic-bezier(0.4, 0, 0.2, 1) both; will-change: filter, opacity, transform; }
 
 /* ── Respect prefers-reduced-motion for animations >100ms ──────────────── */
 @media (prefers-reduced-motion: reduce) {

@@ -38,6 +38,11 @@ textarea:focus-visible {
     @apply duration-300;
   }
 
+  /* Standardized focus ring for interactive components */
+  .focus-ring {
+    @apply focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--primary)];
+  }
+
   a.accent:focus-visible,
   button:focus-visible {
     outline: 2px solid var(--color-accent);

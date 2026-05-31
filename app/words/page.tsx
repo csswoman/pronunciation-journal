@@ -1,9 +1,10 @@
+import { Suspense } from "react";
 import { getCategories, getCategoryWords, getPreviewTags } from "@/lib/lexicon/categories";
 import { getLexiconProgressByCategory } from "@/lib/word-bank/server-queries";
 import { WordsClient } from "@/components/words/WordsClient";
 import type { LessonViewModel } from "@/lib/lexicon/types";
 
-export default async function WordsPage() {
+async function WordsContent() {
   const categories = getCategories();
   const categoryWordIds = new Map(
     categories.map(cat => [cat.id, getCategoryWords(cat.id).map(w => w.id)])
@@ -40,5 +41,13 @@ export default async function WordsPage() {
       lexiconLearned={lexiconLearned}
       lexiconTotal={lexiconTotal}
     />
+  );
+}
+
+export default function WordsPage() {
+  return (
+    <Suspense fallback={<div />}>
+      <WordsContent />
+    </Suspense>
   );
 }

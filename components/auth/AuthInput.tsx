@@ -1,6 +1,6 @@
 "use client";
 
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, AlertCircle } from "lucide-react";
 import { useState } from "react";
 
 type InputType = "email" | "password" | "text";
@@ -14,6 +14,7 @@ interface AuthInputProps {
   required?: boolean;
   autoComplete?: string;
   minLength?: number;
+  error?: string;
 }
 
 export function AuthInput({
@@ -25,12 +26,17 @@ export function AuthInput({
   required = false,
   autoComplete,
   minLength,
+  error,
 }: AuthInputProps) {
   const [showPassword, setShowPassword] = useState(false);
 
   const inputId = label.toLowerCase().replace(/\s+/g, "-");
-  const inputClass =
-    "w-full bg-surface-sunken border border-border-subtle rounded-lg text-fg px-4 py-3 outline-none transition-all placeholder:text-fg-subtle focus:border-primary focus:bg-surface-raised focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2";
+  const baseClass =
+    "w-full bg-surface-sunken rounded-lg text-fg px-4 py-3 outline-none transition-all placeholder:text-fg-subtle focus:bg-surface-raised focus-visible:ring-2 focus-visible:ring-offset-2";
+  const borderClass = error
+    ? "border border-error focus:border-error focus-visible:ring-error"
+    : "border border-border-subtle focus:border-primary focus-visible:ring-primary";
+  const inputClass = `${baseClass} ${borderClass}`;
 
   const isPasswordField = type === "password";
   const inputType = isPasswordField ? (showPassword ? "text" : "password") : type;
@@ -50,9 +56,14 @@ export function AuthInput({
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
-          className={isPasswordField ? `${inputClass} pr-10` : inputClass}
+          aria-invalid={!!error}
+          aria-describedby={error ? `${inputId}-error` : undefined}
+          className={isPasswordField ? `${inputClass} ${error ? "pr-10" : "pr-10"}` : `${inputClass} ${error ? "pr-10" : ""}`}
         />
-        {isPasswordField && (
+        {error && (
+          <AlertCircle className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-error shrink-0" />
+        )}
+        {isPasswordField && !error && (
           <button
             type="button"
             onClick={() => setShowPassword((v) => !v)}
@@ -63,6 +74,12 @@ export function AuthInput({
           </button>
         )}
       </div>
+      {error && (
+        <p id={`${inputId}-error`} className="mt-2 text-sm text-error flex items-center gap-1">
+          <AlertCircle className="w-4 h-4 shrink-0" />
+          {error}
+        </p>
+      )}
     </div>
   );
 }
