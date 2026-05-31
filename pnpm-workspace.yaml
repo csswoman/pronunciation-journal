@@ -1,0 +1,6 @@
+allowBuilds:
+  '@google/genai': true
+  canvas: true
+  protobufjs: true
+  sharp: true
+  unrs-resolver: true
