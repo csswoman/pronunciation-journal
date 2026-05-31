@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint .",
     "lint:design-tokens": "node scripts/lint-design-tokens.mjs",
+    "type-check": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest"
   },
