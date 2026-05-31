@@ -16,27 +16,31 @@ jobs:
         with:
           fetch-depth: 0
 
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.5.0
+
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
-          cache: "npm"
+          node-version: "24"
+          cache: "pnpm"
 
-      - run: npm ci
+      - run: pnpm install --frozen-lockfile
         name: Install dependencies
 
-      - run: npm run lint
+      - run: pnpm lint
         name: Run ESLint
         continue-on-error: true
 
-      - run: npm run type-check
+      - run: pnpm type-check
         name: TypeScript type check
 
-      - run: npm run test -- --run
+      - run: pnpm test
         name: Run tests
         continue-on-error: true
 
       - name: Design Token Validation
-        run: npm run build 2>&1 | grep -E "design token|token violations"
+        run: pnpm build 2>&1 | grep -E "design token|token violations"
         continue-on-error: true
 
   security-audit:
@@ -45,15 +49,20 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.5.0
+
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
-          cache: "npm"
+          node-version: "24"
+          cache: "pnpm"
 
-      - run: npm ci
+      - run: pnpm install --frozen-lockfile
 
-      - name: Run npm audit
-        run: npm audit --audit-level=moderate
+      - name: Run pnpm audit
+        run: pnpm audit --audit-level=moderate
         continue-on-error: true
 
       - name: Check for hardcoded secrets
@@ -73,15 +82,20 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.5.0
+
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
-          cache: "npm"
+          node-version: "24"
+          cache: "pnpm"
 
-      - run: npm ci
+      - run: pnpm install --frozen-lockfile
 
       - name: Build Next.js
-        run: npm run build
+        run: pnpm build
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
@@ -101,12 +115,17 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.5.0
+
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
-          cache: "npm"
+          node-version: "24"
+          cache: "pnpm"
 
-      - run: npm ci
+      - run: pnpm install --frozen-lockfile
 
       - name: Check for accessibility patterns
         run: |
