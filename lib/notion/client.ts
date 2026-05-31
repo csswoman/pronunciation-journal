@@ -304,7 +304,11 @@ let notionClient: NotionClient | null = null;
 
 export function getNotionClient(): NotionClient {
   if (!notionClient) {
-    notionClient = new NotionClient();
+    const token = process.env.NOTION_API_KEY;
+    if (!token) {
+      throw new Error("NOTION_API_KEY is not set");
+    }
+    notionClient = new NotionClient(token);
   }
   return notionClient;
 }

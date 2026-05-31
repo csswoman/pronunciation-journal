@@ -23,6 +23,9 @@ function getCourseIllustration(title: string) {
 export const revalidate = 3600;
 
 export async function generateStaticParams() {
+  if (!process.env.NOTION_API_KEY) {
+    return [];
+  }
   try {
     const courses = await getCourses();
     const params: { courseSlug: string; lessonSlug: string }[] = [];

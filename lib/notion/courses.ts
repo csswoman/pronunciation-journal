@@ -9,6 +9,10 @@ const COURSES_DB_ID = process.env.NOTION_DATABASE_ID!;
  * Cada página de la database = un curso.
  */
 async function fetchCourses(): Promise<Course[]> {
+  if (!process.env.NOTION_API_KEY || !COURSES_DB_ID) {
+    return [];
+  }
+
   const client = getNotionClient();
   const pages = await client.queryDatabase(COURSES_DB_ID);
 
