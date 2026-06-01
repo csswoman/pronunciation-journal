@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { isAllowedRemoteImageUrl } from "@/lib/images/remote-image";
 
 export type LibraryItemBadge = "Course" | "Notes" | "Mini";
 export type LibraryItemCoverVariant = "gradient" | "diagonals" | "grid";
@@ -63,7 +64,8 @@ export function ItemCover({
   const token = BADGE_TOKEN[badge];
   const isList = layout === "list";
   const [imgFailed, setImgFailed] = useState(false);
-  const showImg = !!coverImageUrl && !imgFailed;
+  const showImg =
+    !!coverImageUrl && isAllowedRemoteImageUrl(coverImageUrl) && !imgFailed;
 
   return (
     <div
