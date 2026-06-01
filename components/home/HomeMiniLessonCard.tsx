@@ -9,7 +9,7 @@ interface HomeMiniLessonCardProps {
 
 export default function HomeMiniLessonCard({ lesson }: HomeMiniLessonCardProps) {
   return (
-    <div className="flex flex-col gap-3 rounded-[var(--radius-xl)] border border-border-subtle bg-surface-raised p-[18px]">
+    <div className="flex flex-col gap-3 rounded-[var(--radius-xl)] border border-border-subtle bg-surface-raised p-5">
       <p className="text-xs text-[var(--text-tertiary)]">
         {lesson.duration} min · {lesson.subtitle}
       </p>

@@ -72,7 +72,7 @@ export default function HomeWordOfDayCard() {
         : "primary";
 
   return (
-    <div className="flex flex-col rounded-[var(--radius-xl)] border border-border-subtle bg-surface-raised p-[18px]">
+    <div className="flex flex-col rounded-[var(--radius-xl)] border border-border-subtle bg-surface-raised p-5">
       <div className="flex items-center justify-between gap-2">
         <CardBadge color={difficultyColor}>Word of the day</CardBadge>
         {!loading && (

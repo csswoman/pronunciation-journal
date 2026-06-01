@@ -6,7 +6,7 @@ const CHIPS = ["Conversation", "Pronunciation feedback", "Adaptive"];
 
 export default function HomeAiPracticeCard() {
   return (
-    <div className="relative flex flex-col gap-3 overflow-hidden rounded-[var(--radius-xl)] border border-[var(--cta-outline-border)] bg-surface-raised p-[18px]">
+    <div className="relative flex flex-col gap-3 overflow-hidden rounded-[var(--radius-xl)] border border-[var(--cta-outline-border)] bg-surface-raised p-5">
       <div
         aria-hidden
         className="pointer-events-none absolute -top-8 -right-8 h-32 w-32 rounded-full opacity-70"

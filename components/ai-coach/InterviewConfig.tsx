@@ -133,7 +133,7 @@ export default function InterviewConfig({
                 }`}
               >
                 <span
-                  className="w-10 h-10 flex-shrink-0 rounded-[11px] flex items-center justify-center"
+                  className="w-10 h-10 flex-shrink-0 rounded-md flex items-center justify-center"
                   style={{
                     backgroundColor: selected
                       ? "color-mix(in srgb, var(--primary) 14%, transparent)"

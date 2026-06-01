@@ -20,9 +20,9 @@ export default function HomeQuickActionCard({
   return (
     <Link
       href={href}
-      className="group flex flex-1 flex-col rounded-[var(--radius-xl)] border border-border-subtle bg-surface-raised p-[18px] transition-[transform,border-color] duration-150 hover:-translate-y-0.5 hover:border-[var(--accent-border)]"
+      className="group flex flex-1 flex-col rounded-[var(--radius-xl)] border border-border-subtle bg-surface-raised p-5 transition-[transform,border-color] duration-150 hover:-translate-y-0.5 hover:border-[var(--accent-border)]"
     >
-      <div className="mb-3 grid h-9 w-9 place-items-center rounded-[11px] bg-[var(--hue-icon-bg)] text-[var(--primary)]">
+      <div className="mb-3 grid h-9 w-9 place-items-center rounded-md bg-[var(--hue-icon-bg)] text-[var(--primary)]">
         {icon}
       </div>
       <div className="flex items-center gap-2">

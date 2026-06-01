@@ -149,7 +149,7 @@ function AIBubble({ message, showAvatar, onSaveWord, onSuggestionClick, onToolAn
         {correction && <CorrectionCard correction={correction} />}
 
         <div
-          className="cursor-text select-text rounded-[14px] border px-3.5 py-2.5"
+          className="cursor-text select-text rounded-lg border px-3.5 py-2.5"
           style={{
             color: "var(--text-primary)",
             backgroundColor: "var(--surface-raised)",
@@ -236,7 +236,7 @@ export default function MessageBubble({
       <div className="flex justify-end group/msg max-w-[88%] ml-auto">
         <div className="flex flex-col items-end gap-1.5">
           <div
-            className="px-3.5 py-2.5 rounded-[14px] rounded-tr-[6px] leading-relaxed whitespace-pre-wrap break-words"
+            className="px-3.5 py-2.5 rounded-lg rounded-tr-sm leading-relaxed whitespace-pre-wrap break-words"
             style={{
               fontSize: "15px",
               background: "color-mix(in srgb, var(--primary) 12%, var(--surface-raised))",

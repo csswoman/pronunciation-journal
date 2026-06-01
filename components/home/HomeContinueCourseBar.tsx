@@ -31,7 +31,7 @@ export default function HomeContinueCourseBar() {
   return (
     <div className="mb-4 flex flex-wrap items-center gap-4 rounded-[var(--radius-xl)] border border-border-subtle bg-surface-raised px-5 py-5">
       <div
-        className="grid h-[54px] w-[54px] shrink-0 place-items-center rounded-[14px] border text-2xl"
+        className="grid h-[54px] w-[54px] shrink-0 place-items-center rounded-lg border text-2xl"
         style={{
           background: "var(--btn-soft-bg)",
           borderColor: "var(--accent-border)",

@@ -10,7 +10,7 @@ interface InterviewAvatarProps {
 export function InterviewAvatar({ pulsing = false }: InterviewAvatarProps) {
   return (
     <div
-      className="relative w-7 h-7 rounded-[9px] flex-shrink-0 flex items-center justify-center"
+      className="relative w-7 h-7 rounded-md flex-shrink-0 flex items-center justify-center"
       style={{
         background: "var(--gradient-primary)",
         boxShadow: "0 4px 12px -4px color-mix(in srgb, var(--primary) 55%, transparent)",
@@ -23,7 +23,7 @@ export function InterviewAvatar({ pulsing = false }: InterviewAvatarProps) {
         className={`text-white ${pulsing ? "animate-pulse" : ""}`}
       />
       <span
-        className="absolute inset-0 rounded-[9px]"
+        className="absolute inset-0 rounded-md"
         style={{ boxShadow: "inset 0 1px 0 0 rgb(255 255 255 / 0.25)" }}
       />
     </div>

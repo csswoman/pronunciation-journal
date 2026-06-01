@@ -21,7 +21,7 @@ export default function HomeReviewQueueCard({
   const atRisk = preview.filter((w) => getWordStrength(w) === "weak");
 
   return (
-    <div className="flex flex-col rounded-[var(--radius-xl)] border border-border-subtle bg-surface-raised p-[22px]">
+    <div className="flex flex-col rounded-[var(--radius-xl)] border border-border-subtle bg-surface-raised p-6">
       <div className="flex items-center justify-between gap-3">
         <div className="flex min-w-0 items-center gap-2">
           <LibraryBig size={18} className="shrink-0 text-[var(--primary)]" />

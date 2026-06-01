@@ -17,7 +17,7 @@ function WeekDots({ streakDays, completedToday }: { streakDays: number; complete
           <i
             key={i}
             className={[
-              "w-3 h-3 rounded-full grid place-items-center text-[8px] not-italic",
+              "w-3 h-3 rounded-full grid place-items-center text-[9px] not-italic",
               isToday
                 ? completedToday
                   ? "bg-[var(--warning)] text-[var(--warning-value)]"

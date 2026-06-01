@@ -24,12 +24,12 @@ export default function HomeRetentionCard({
   const weakAccuracy = weakestPhoneme?.accuracy ?? null;
 
   return (
-    <div className="flex flex-col rounded-[var(--radius-xl)] border border-border-subtle bg-surface-raised p-[22px]">
+    <div className="flex flex-col rounded-[var(--radius-xl)] border border-border-subtle bg-surface-raised p-6">
       <p className="text-[13px] uppercase tracking-wider text-[var(--text-tertiary)]">
         Vocabulary retention
       </p>
       <p
-        className="mt-1.5 text-[2.2rem] leading-none text-[var(--primary)]"
+        className="mt-1.5 text-h2 leading-none text-[var(--primary)]"
         style={{ fontFamily: "var(--font-display), serif" }}
       >
         {total > 0 ? `${pct}%` : "—"}
@@ -61,7 +61,7 @@ export default function HomeRetentionCard({
             <p className="mt-1 text-[13px] text-[var(--text-secondary)]">{weakestPhoneme.label}</p>
           ) : null}
           <div className="mt-2 flex items-center gap-2.5">
-            <span className="font-ipa text-[1.6rem] text-[var(--warning)]">{weakIpa}</span>
+            <span className="font-ipa text-h3 text-[var(--warning)]">{weakIpa}</span>
             <div className="flex-1 min-w-0">
               <ProgressBar value={weakAccuracy} color="var(--warning)" height="sm" />
             </div>

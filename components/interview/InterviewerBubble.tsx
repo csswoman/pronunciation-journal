@@ -19,7 +19,7 @@ export function InterviewerBubble({ text, isActive, isPlaying, hasNextCandidate,
       <InterviewAvatar pulsing={isPlaying} />
       <div className="flex flex-col gap-1.5 min-w-0 flex-1">
         <div
-          className="rounded-[14px] rounded-tl-[6px] border px-3.5 py-2.5"
+          className="rounded-lg rounded-tl-sm border px-3.5 py-2.5"
           style={{
             backgroundColor: "var(--surface-raised)",
             borderColor: "var(--border-subtle)",

@@ -22,13 +22,13 @@ export default function HomeDiscoveryCard({
   return (
     <Link
       href={href}
-      className="group flex flex-col rounded-[var(--radius-xl)] border border-border-subtle bg-surface-raised p-[18px] transition-[transform,border-color] duration-150 hover:-translate-y-0.5 hover:border-[var(--accent-border)]"
+      className="group flex flex-col rounded-[var(--radius-xl)] border border-border-subtle bg-surface-raised p-5 transition-[transform,border-color] duration-150 hover:-translate-y-0.5 hover:border-[var(--accent-border)]"
     >
       <Badge label={badge} variant="default" className="self-start" />
       {children ? <div className="mt-2">{children}</div> : null}
       {title ? (
         <h4
-          className={`${children ? "mt-2" : "mt-2.5"} text-[1.15rem] font-medium leading-tight text-[var(--text-primary)]`}
+          className={`${children ? "mt-2" : "mt-2.5"} text-body-lg font-medium leading-tight text-[var(--text-primary)]`}
           style={{ fontFamily: "var(--font-display), serif" }}
         >
           {title}

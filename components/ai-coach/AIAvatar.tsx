@@ -5,7 +5,7 @@ interface AIAvatarProps {
 export default function AIAvatar({ state = "idle" }: AIAvatarProps) {
   return (
     <div
-      className="relative w-7 h-7 rounded-[9px] flex-shrink-0 flex items-center justify-center"
+      className="relative w-7 h-7 rounded-md flex-shrink-0 flex items-center justify-center"
       style={{
         background: "var(--gradient-primary)",
         boxShadow:
@@ -19,7 +19,7 @@ export default function AIAvatar({ state = "idle" }: AIAvatarProps) {
         ✦
       </span>
       <span
-        className="absolute inset-0 rounded-[9px]"
+        className="absolute inset-0 rounded-md"
         style={{ boxShadow: "inset 0 1px 0 0 rgb(255 255 255 / 0.25)" }}
       />
     </div>

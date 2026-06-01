@@ -28,7 +28,7 @@ export default function HomeSmartSessionCard({
 
   if (isEmptyBank) {
     return (
-      <div className="flex flex-col items-center justify-center gap-3 rounded-[var(--radius-xl)] border border-border-subtle bg-surface-raised p-[22px] text-center">
+      <div className="flex flex-col items-center justify-center gap-3 rounded-[var(--radius-xl)] border border-border-subtle bg-surface-raised p-6 text-center">
         <BookOpen size={28} className="text-[var(--text-tertiary)]" />
         <p className="text-sm font-medium text-[var(--text-secondary)]">Your word bank is empty</p>
         <p className="max-w-xs text-xs text-[var(--text-tertiary)]">
@@ -71,7 +71,7 @@ export default function HomeSmartSessionCard({
 
   return (
     <div
-      className="flex flex-col rounded-[var(--radius-xl)] border p-[22px]"
+      className="flex flex-col rounded-[var(--radius-xl)] border p-6"
       style={{
         background:
           "linear-gradient(150deg, color-mix(in oklch, var(--primary) 12%, transparent), var(--surface-raised) 65%)",

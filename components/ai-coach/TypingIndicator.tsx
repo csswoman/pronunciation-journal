@@ -6,7 +6,7 @@ export default function TypingIndicator() {
       <div className="flex-shrink-0">
         <AIAvatar state="thinking" />
       </div>
-      <div className="px-3.5 py-2.5 rounded-[14px] rounded-tl-[6px] bg-[var(--surface-raised)] border border-[var(--border-subtle)]">
+      <div className="px-3.5 py-2.5 rounded-lg rounded-tl-sm bg-[var(--surface-raised)] border border-[var(--border-subtle)]">
         <div role="status" aria-label="AI Coach is typing">
         <span className="inline-flex gap-1 items-center">
           <span
