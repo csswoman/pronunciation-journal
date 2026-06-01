@@ -38,6 +38,5 @@ export const adminNav: NavSectionType = {
   label: "Admin",
   items: [
     { name: "Seed Data", href: "/admin/seed", icon: Settings },
-    { name: "Manage Lessons", href: "/admin/lessons", icon: BookOpen },
   ],
 };
