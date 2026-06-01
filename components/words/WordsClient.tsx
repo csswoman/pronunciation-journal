@@ -7,11 +7,12 @@ import { Plus } from "lucide-react";
 import PageLayout from "@/components/layout/PageLayout";
 import Section from "@/components/layout/Section";
 import Button from "@/components/ui/Button";
-import WordsTabs, { type WordsTabId } from "@/components/words/WordsTabs";
+import { type WordsTabId } from "@/components/words/WordsTabs";
 import { WordsHero } from "@/components/words/WordsHero";
+import { WordsTopbar } from "@/components/words/WordsTopbar";
 import { WordsTab } from "@/components/vocabulary/words/WordsTab";
 import { DecksTab } from "@/components/vocabulary/decks/DecksTab";
-import { LexiconContent } from "@/components/lexicon/LexiconContent";
+import { LexiconView } from "@/components/lexicon/LexiconView";
 
 import { useWords } from "@/hooks/useWords";
 import { useDeckData } from "@/hooks/useDeckData";
@@ -34,10 +35,22 @@ import type { LessonViewModel } from "@/lib/lexicon/types";
 interface WordsClientProps {
   lexiconLessons: LessonViewModel[];
   lexiconLearned: number;
+  lexiconInProgress: number;
   lexiconTotal: number;
+  lexiconPercent: number;
+  dueForReview?: number;
+  dueWordLabels?: string[];
 }
 
-export function WordsClient({ lexiconLessons, lexiconLearned, lexiconTotal }: WordsClientProps) {
+export function WordsClient({
+  lexiconLessons,
+  lexiconLearned,
+  lexiconInProgress,
+  lexiconTotal,
+  lexiconPercent,
+  dueForReview = 0,
+  dueWordLabels = [],
+}: WordsClientProps) {
   const { user } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -161,39 +174,53 @@ export function WordsClient({ lexiconLessons, lexiconLearned, lexiconTotal }: Wo
     );
   }
 
-  const lexiconTotalWords = lexiconLessons.reduce((sum, l) => sum + l.totalWords, 0);
-  const lexiconLearnedWords = lexiconLessons.reduce((sum, l) => sum + l.wordsCompleted, 0);
-  const lexiconPercentage = lexiconTotalWords > 0 ? (lexiconLearnedWords / lexiconTotalWords) * 100 : 0;
+  const openAddWord = (text?: string) => {
+    setInitialWordText(text ?? "");
+    setShowAddWord(true);
+  };
 
   return (
     <>
       <PageLayout cardWrapper={false}>
-        <WordsHero
-          activeTab={activeTab}
-          myWordsCount={words.length}
-          deckCount={decks.length}
-          lexiconLearned={lexiconLearned}
-          lexiconTotal={lexiconTotal}
-          lexiconPercentage={lexiconPercentage}
-          wordsLoading={wordsLoading}
-          onAddWord={() => setShowAddWord(true)}
-          onAddDeck={() => setShowCreateDeck(true)}
-        />
+        <div className="words-lexicon">
+          <WordsTopbar
+            activeTab={activeTab}
+            onTabChange={handleTabChange}
+            lexiconCount={lexiconTotal}
+            myWordsCount={words.length}
+            deckCount={decks.length}
+          />
 
-        <div className="mb-3">
-          <WordsTabs active={activeTab} onChange={handleTabChange} />
-        </div>
-
-        <Section spacing="lg">
-          {activeTab === "lexicon" && (
-            <>
-
-              <LexiconContent lessons={lexiconLessons} />
-            </>
+          {activeTab !== "lexicon" && (
+            <WordsHero
+            activeTab={activeTab}
+            myWordsCount={words.length}
+            deckCount={decks.length}
+            lexiconLearned={lexiconLearned}
+            lexiconTotal={lexiconTotal}
+            lexiconPercentage={lexiconPercent}
+            wordsLoading={wordsLoading}
+            onAddWord={() => openAddWord()}
+            onAddDeck={() => setShowCreateDeck(true)}
+            />
           )}
 
-          {activeTab === "my-words" && (
-            <WordsTab
+          <Section spacing="lg">
+            {activeTab === "lexicon" && (
+              <LexiconView
+              lessons={lexiconLessons}
+              lexiconTotal={lexiconTotal}
+              lexiconLearned={lexiconLearned}
+              lexiconInProgress={lexiconInProgress}
+              lexiconPercent={lexiconPercent}
+              dueForReview={dueForReview}
+              dueWordLabels={dueWordLabels}
+                onAddWord={openAddWord}
+              />
+            )}
+
+            {activeTab === "my-words" && (
+              <WordsTab
               words={words}
               loading={wordsLoading}
               error={wordsError}
@@ -206,12 +233,12 @@ export function WordsClient({ lexiconLessons, lexiconLearned, lexiconTotal }: Wo
               onRetry={async id => { try { await retry(id); } catch { setWordActionError("Failed to retry"); } }}
               onDelete={async id => { try { await removeWord(id); } catch { setWordActionError("Failed to delete"); } }}
               onOpenAddWord={(text) => { setInitialWordText(text ?? ""); setShowAddWord(true); }}
-              onToggleFavorite={handleToggleFavorite}
-            />
-          )}
+                onToggleFavorite={handleToggleFavorite}
+              />
+            )}
 
-          {activeTab === "decks" && (
-            <DecksTab
+            {activeTab === "decks" && (
+              <DecksTab
               decks={decks}
               counts={{ ...counts }}
               loading={decksLoading}
@@ -219,10 +246,11 @@ export function WordsClient({ lexiconLessons, lexiconLearned, lexiconTotal }: Wo
               onManage={setManageDeckId}
               onEdit={setEditDeckId}
               onDelete={handleDeleteDeck}
-              onCreateNew={() => setShowCreateDeck(true)}
-            />
-          )}
-        </Section>
+                onCreateNew={() => setShowCreateDeck(true)}
+              />
+            )}
+          </Section>
+        </div>
       </PageLayout>
 
       <Button
