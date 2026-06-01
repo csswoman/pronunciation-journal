@@ -5,7 +5,13 @@
     "pos": "noun phrase",
     "definition": "A server that acts as the single entry point for all client requests to backend services.",
     "difficulty": 2,
-    "tags": ["architecture", "api", "infrastructure"]
+    "tags": [
+      "architecture",
+      "api",
+      "infrastructure"
+    ],
+    "ipa": "/eɪpiːaɪ ɡeɪtweɪ/",
+    "translation": "Puerta de enlace API"
   },
   {
     "id": "authentication",
@@ -13,7 +19,13 @@
     "pos": "noun",
     "definition": "The process of verifying who a user is before granting access to a system.",
     "difficulty": 1,
-    "tags": ["security", "fundamentals", "auth"]
+    "tags": [
+      "security",
+      "fundamentals",
+      "auth"
+    ],
+    "ipa": "/ɔθɛntʌkeɪʃʌn/",
+    "translation": "Autenticación de usuario"
   },
   {
     "id": "authorization",
@@ -21,7 +33,13 @@
     "pos": "noun",
     "definition": "Determining what actions or resources an authenticated user is permitted to access.",
     "difficulty": 1,
-    "tags": ["security", "fundamentals", "auth"]
+    "tags": [
+      "security",
+      "fundamentals",
+      "auth"
+    ],
+    "ipa": "/ɔθɜrʌzeɪʃʌn/",
+    "translation": "Autorización de acceso"
   },
   {
     "id": "backoff",
@@ -29,7 +47,12 @@
     "pos": "noun phrase",
     "definition": "A retry strategy that progressively increases wait time between failed attempts.",
     "difficulty": 3,
-    "tags": ["resilience", "networking", "patterns"]
+    "tags": [
+      "resilience",
+      "networking",
+      "patterns"
+    ],
+    "translation": "Reintentos con espera exponencial"
   },
   {
     "id": "cache-invalidation",
@@ -37,7 +60,13 @@
     "pos": "noun phrase",
     "definition": "The process of marking cached data as stale so it gets refreshed on the next request.",
     "difficulty": 3,
-    "tags": ["caching", "performance", "advanced"]
+    "tags": [
+      "caching",
+      "performance",
+      "advanced"
+    ],
+    "ipa": "/kæʃ ɪnvælʌdeɪʃʌn/",
+    "translation": "Invalidación de caché"
   },
   {
     "id": "circuit-breaker",
@@ -45,7 +74,13 @@
     "pos": "noun phrase",
     "definition": "A pattern that stops requests to a failing service to prevent cascading failures.",
     "difficulty": 3,
-    "tags": ["resilience", "patterns", "distributed"]
+    "tags": [
+      "resilience",
+      "patterns",
+      "distributed"
+    ],
+    "ipa": "/sɜrkʌt bɹeɪkɜr/",
+    "translation": "Patrón interruptor"
   },
   {
     "id": "concurrency",
@@ -53,7 +88,12 @@
     "pos": "noun",
     "definition": "The ability of a system to handle multiple tasks at overlapping points in time.",
     "difficulty": 2,
-    "tags": ["performance", "fundamentals", "systems"]
+    "tags": [
+      "performance",
+      "fundamentals",
+      "systems"
+    ],
+    "translation": "Concurrencia de tareas"
   },
   {
     "id": "connection-pooling",
@@ -61,7 +101,13 @@
     "pos": "noun phrase",
     "definition": "Reusing a set of established database connections instead of creating new ones per request.",
     "difficulty": 3,
-    "tags": ["database", "performance", "postgresql"]
+    "tags": [
+      "database",
+      "performance",
+      "postgresql"
+    ],
+    "ipa": "/kʌnɛkʃʌn puːlɪŋ/",
+    "translation": "Pool de conexiones DB"
   },
   {
     "id": "cors-server",
@@ -69,7 +115,13 @@
     "pos": "noun phrase",
     "definition": "Server-sent HTTP headers that control which origins are allowed to access its resources.",
     "difficulty": 2,
-    "tags": ["security", "http", "api"]
+    "tags": [
+      "security",
+      "http",
+      "api"
+    ],
+    "ipa": "/kɔɹ hɛdɜrz/",
+    "translation": "Cabeceras CORS"
   },
   {
     "id": "crud",
@@ -77,7 +129,13 @@
     "pos": "proper noun",
     "definition": "Create, Read, Update, Delete — the four basic operations performed on persistent data.",
     "difficulty": 1,
-    "tags": ["fundamentals", "database", "api"]
+    "tags": [
+      "fundamentals",
+      "database",
+      "api"
+    ],
+    "ipa": "/kɹʌd/",
+    "translation": "Operaciones CRUD"
   },
   {
     "id": "database-migration",
@@ -85,7 +143,13 @@
     "pos": "noun phrase",
     "definition": "A versioned script that applies incremental changes to a database schema over time.",
     "difficulty": 2,
-    "tags": ["database", "supabase", "process"]
+    "tags": [
+      "database",
+      "supabase",
+      "process"
+    ],
+    "ipa": "/deɪtʌbeɪs maɪɡɹeɪʃʌn/",
+    "translation": "Migración de base de datos"
   },
   {
     "id": "deadlock",
@@ -93,7 +157,13 @@
     "pos": "noun",
     "definition": "A state where two or more processes block each other indefinitely waiting for resources.",
     "difficulty": 3,
-    "tags": ["database", "concurrency", "bugs"]
+    "tags": [
+      "database",
+      "concurrency",
+      "bugs"
+    ],
+    "ipa": "/dɛdlɑk/",
+    "translation": "Interbloqueo"
   },
   {
     "id": "deploy",
@@ -101,7 +171,13 @@
     "pos": "verb",
     "definition": "Releasing a new version of an application to a server or hosting environment.",
     "difficulty": 1,
-    "tags": ["fundamentals", "devops", "process"]
+    "tags": [
+      "fundamentals",
+      "devops",
+      "process"
+    ],
+    "ipa": "/dɪplɔɪ/",
+    "translation": "Desplegar aplicación"
   },
   {
     "id": "edge-function",
@@ -109,7 +185,13 @@
     "pos": "noun phrase",
     "definition": "Serverless code executed at CDN nodes geographically close to the user for low latency.",
     "difficulty": 2,
-    "tags": ["serverless", "performance", "supabase"]
+    "tags": [
+      "serverless",
+      "performance",
+      "supabase"
+    ],
+    "ipa": "/ɛdʒ fʌŋkʃʌn/",
+    "translation": "Función en el borde (edge)"
   },
   {
     "id": "endpoint",
@@ -117,7 +199,13 @@
     "pos": "noun",
     "definition": "A specific URL path in an API that accepts requests and returns a defined response.",
     "difficulty": 1,
-    "tags": ["api", "fundamentals", "rest"]
+    "tags": [
+      "api",
+      "fundamentals",
+      "rest"
+    ],
+    "ipa": "/ɛndpɔɪnt/",
+    "translation": "Punto final (endpoint) API"
   },
   {
     "id": "environment-variable",
@@ -125,7 +213,13 @@
     "pos": "noun phrase",
     "definition": "A configuration value stored outside source code and injected at runtime per environment.",
     "difficulty": 1,
-    "tags": ["security", "devops", "fundamentals"]
+    "tags": [
+      "security",
+      "devops",
+      "fundamentals"
+    ],
+    "ipa": "/ɪnvaɪɹʌnmʌnt vɛɹiːʌbʌl/",
+    "translation": "Variable de entorno"
   },
   {
     "id": "foreign-key",
@@ -133,7 +227,13 @@
     "pos": "noun phrase",
     "definition": "A database column that references the primary key of another table to enforce relationships.",
     "difficulty": 2,
-    "tags": ["database", "postgresql", "fundamentals"]
+    "tags": [
+      "database",
+      "postgresql",
+      "fundamentals"
+    ],
+    "ipa": "/fɔɹʌn kiː/",
+    "translation": "Clave foránea"
   },
   {
     "id": "graphql",
@@ -141,7 +241,12 @@
     "pos": "proper noun",
     "definition": "A query language for APIs that lets clients request exactly the data shape they need.",
     "difficulty": 2,
-    "tags": ["api", "query", "protocol"]
+    "tags": [
+      "api",
+      "query",
+      "protocol"
+    ],
+    "translation": "Lenguaje de consulta GraphQL"
   },
   {
     "id": "horizontal-scaling",
@@ -149,7 +254,13 @@
     "pos": "noun phrase",
     "definition": "Adding more server instances to distribute load rather than upgrading a single machine.",
     "difficulty": 2,
-    "tags": ["infrastructure", "performance", "scaling"]
+    "tags": [
+      "infrastructure",
+      "performance",
+      "scaling"
+    ],
+    "ipa": "/hɔɹʌzɑntʌl skeɪlɪŋ/",
+    "translation": "Escalado horizontal"
   },
   {
     "id": "http-status-codes",
@@ -157,7 +268,13 @@
     "pos": "noun phrase",
     "definition": "Numeric codes in server responses indicating the result of a request, such as 200 or 404.",
     "difficulty": 1,
-    "tags": ["http", "api", "fundamentals"]
+    "tags": [
+      "http",
+      "api",
+      "fundamentals"
+    ],
+    "ipa": "/eɪtʃtiːtiːpiː stætʌs koʊdz/",
+    "translation": "Códigos de estado HTTP"
   },
   {
     "id": "idempotency-key",
@@ -165,7 +282,12 @@
     "pos": "noun phrase",
     "definition": "A unique identifier sent with a request to prevent duplicate processing on retry.",
     "difficulty": 3,
-    "tags": ["api", "reliability", "patterns"]
+    "tags": [
+      "api",
+      "reliability",
+      "patterns"
+    ],
+    "translation": "Clave de idempotencia"
   },
   {
     "id": "index",
@@ -173,7 +295,13 @@
     "pos": "noun",
     "definition": "A database structure that speeds up row lookups by storing a sorted reference to column values.",
     "difficulty": 2,
-    "tags": ["database", "postgresql", "performance"]
+    "tags": [
+      "database",
+      "postgresql",
+      "performance"
+    ],
+    "ipa": "/ɪndɛks/",
+    "translation": "Índice de base de datos"
   },
   {
     "id": "ingress",
@@ -181,7 +309,12 @@
     "pos": "noun",
     "definition": "Incoming network traffic to a service, or the Kubernetes resource that routes external requests.",
     "difficulty": 3,
-    "tags": ["networking", "infrastructure", "kubernetes"]
+    "tags": [
+      "networking",
+      "infrastructure",
+      "kubernetes"
+    ],
+    "translation": "Ingreso de tráfico"
   },
   {
     "id": "integration-test",
@@ -189,7 +322,13 @@
     "pos": "noun phrase",
     "definition": "A test verifying that multiple components or services work correctly when combined.",
     "difficulty": 2,
-    "tags": ["testing", "quality", "fundamentals"]
+    "tags": [
+      "testing",
+      "quality",
+      "fundamentals"
+    ],
+    "ipa": "/ɪntʌɡɹeɪʃʌn tɛst/",
+    "translation": "Prueba de integración"
   },
   {
     "id": "jwt",
@@ -197,7 +336,12 @@
     "pos": "proper noun",
     "definition": "JSON Web Token — a compact signed token used to transmit verified user identity claims.",
     "difficulty": 2,
-    "tags": ["auth", "security", "supabase"]
+    "tags": [
+      "auth",
+      "security",
+      "supabase"
+    ],
+    "translation": "Token web JWT"
   },
   {
     "id": "latency",
@@ -205,7 +349,13 @@
     "pos": "noun",
     "definition": "The time delay between a request being sent and the first byte of a response being received.",
     "difficulty": 1,
-    "tags": ["performance", "networking", "fundamentals"]
+    "tags": [
+      "performance",
+      "networking",
+      "fundamentals"
+    ],
+    "ipa": "/leɪtʌnsiː/",
+    "translation": "retraso"
   },
   {
     "id": "load-balancer",
@@ -213,7 +363,13 @@
     "pos": "noun phrase",
     "definition": "A system that distributes incoming requests across multiple server instances evenly.",
     "difficulty": 2,
-    "tags": ["infrastructure", "scaling", "networking"]
+    "tags": [
+      "infrastructure",
+      "scaling",
+      "networking"
+    ],
+    "ipa": "/loʊd bælʌnsɜr/",
+    "translation": "balanceador de carga"
   },
   {
     "id": "logging",
@@ -221,7 +377,13 @@
     "pos": "noun",
     "definition": "Recording application events and errors to a persistent store for monitoring and debugging.",
     "difficulty": 1,
-    "tags": ["observability", "devops", "fundamentals"]
+    "tags": [
+      "observability",
+      "devops",
+      "fundamentals"
+    ],
+    "ipa": "/lɔɡɪŋ/",
+    "translation": "registro de eventos"
   },
   {
     "id": "message-queue",
@@ -229,7 +391,13 @@
     "pos": "noun phrase",
     "definition": "A buffer that decouples services by storing messages until the receiver is ready to process them.",
     "difficulty": 3,
-    "tags": ["architecture", "async", "distributed"]
+    "tags": [
+      "architecture",
+      "async",
+      "distributed"
+    ],
+    "ipa": "/mɛsʌdʒ kjuː/",
+    "translation": "cola de mensajes"
   },
   {
     "id": "microservice",
@@ -237,7 +405,12 @@
     "pos": "noun",
     "definition": "A small, independently deployable service responsible for one specific business capability.",
     "difficulty": 2,
-    "tags": ["architecture", "patterns", "distributed"]
+    "tags": [
+      "architecture",
+      "patterns",
+      "distributed"
+    ],
+    "translation": "microservicio"
   },
   {
     "id": "middleware-server",
@@ -245,7 +418,12 @@
     "pos": "noun",
     "definition": "A function that runs between receiving a request and sending a response to process or transform it.",
     "difficulty": 2,
-    "tags": ["architecture", "api", "nextjs"]
+    "tags": [
+      "architecture",
+      "api",
+      "nextjs"
+    ],
+    "translation": "servidor intermediario"
   },
   {
     "id": "n-plus-one",
@@ -253,7 +431,12 @@
     "pos": "noun phrase",
     "definition": "A performance bug where fetching a list triggers an extra query per item instead of one batch.",
     "difficulty": 3,
-    "tags": ["database", "performance", "bugs"]
+    "tags": [
+      "database",
+      "performance",
+      "bugs"
+    ],
+    "translation": "problema N+1"
   },
   {
     "id": "normalization",
@@ -261,7 +444,13 @@
     "pos": "noun",
     "definition": "Organizing database tables to reduce redundancy by storing each fact in exactly one place.",
     "difficulty": 2,
-    "tags": ["database", "postgresql", "design"]
+    "tags": [
+      "database",
+      "postgresql",
+      "design"
+    ],
+    "ipa": "/nɔɹmʌlɪzeɪʃʌn/",
+    "translation": "normalización de base de datos"
   },
   {
     "id": "oauth",
@@ -269,7 +458,12 @@
     "pos": "proper noun",
     "definition": "An open standard allowing users to grant apps limited access to their accounts without sharing passwords.",
     "difficulty": 2,
-    "tags": ["auth", "security", "protocol"]
+    "tags": [
+      "auth",
+      "security",
+      "protocol"
+    ],
+    "translation": "estándar de autorización"
   },
   {
     "id": "observability",
@@ -277,7 +471,12 @@
     "pos": "noun",
     "definition": "The ability to understand a system's internal state from its external outputs: logs, metrics, traces.",
     "difficulty": 3,
-    "tags": ["devops", "monitoring", "fundamentals"]
+    "tags": [
+      "devops",
+      "monitoring",
+      "fundamentals"
+    ],
+    "translation": "observabilidad"
   },
   {
     "id": "optimistic-update",
@@ -285,7 +484,13 @@
     "pos": "noun phrase",
     "definition": "Updating the UI immediately on user action before the server confirms success.",
     "difficulty": 2,
-    "tags": ["ux", "patterns", "api"]
+    "tags": [
+      "ux",
+      "patterns",
+      "api"
+    ],
+    "ipa": "/ɑptʌmɪstɪk ʌpdeɪt/",
+    "translation": "actualización optimista"
   },
   {
     "id": "orm",
@@ -293,7 +498,12 @@
     "pos": "proper noun",
     "definition": "Object-Relational Mapper — a library that lets you query a database using language objects.",
     "difficulty": 2,
-    "tags": ["database", "tooling", "abstraction"]
+    "tags": [
+      "database",
+      "tooling",
+      "abstraction"
+    ],
+    "translation": "mapeo objeto-relacional"
   },
   {
     "id": "pagination-cursor",
@@ -301,7 +511,12 @@
     "pos": "noun phrase",
     "definition": "A pagination strategy using a pointer to the last item instead of page numbers for stable results.",
     "difficulty": 3,
-    "tags": ["api", "database", "patterns"]
+    "tags": [
+      "api",
+      "database",
+      "patterns"
+    ],
+    "translation": "paginación por cursor"
   },
   {
     "id": "payload",
@@ -309,7 +524,13 @@
     "pos": "noun",
     "definition": "The data body carried inside a network request or response, excluding headers.",
     "difficulty": 1,
-    "tags": ["api", "http", "fundamentals"]
+    "tags": [
+      "api",
+      "http",
+      "fundamentals"
+    ],
+    "ipa": "/peɪloʊd/",
+    "translation": "carga útil"
   },
   {
     "id": "primary-key",
@@ -317,7 +538,13 @@
     "pos": "noun phrase",
     "definition": "A column or set of columns that uniquely identifies each row in a database table.",
     "difficulty": 1,
-    "tags": ["database", "postgresql", "fundamentals"]
+    "tags": [
+      "database",
+      "postgresql",
+      "fundamentals"
+    ],
+    "ipa": "/pɹaɪmɛɹiː kiː/",
+    "translation": "clave primaria"
   },
   {
     "id": "proxy",
@@ -325,7 +552,13 @@
     "pos": "noun",
     "definition": "An intermediary server that forwards requests between a client and another server.",
     "difficulty": 1,
-    "tags": ["networking", "security", "infrastructure"]
+    "tags": [
+      "networking",
+      "security",
+      "infrastructure"
+    ],
+    "ipa": "/pɹɑksiː/",
+    "translation": "servidor proxy"
   },
   {
     "id": "query-plan",
@@ -333,7 +566,13 @@
     "pos": "noun phrase",
     "definition": "The execution strategy a database engine chooses to retrieve data for a given query.",
     "difficulty": 3,
-    "tags": ["postgresql", "performance", "database"]
+    "tags": [
+      "postgresql",
+      "performance",
+      "database"
+    ],
+    "ipa": "/kwiːɹiː plæn/",
+    "translation": "plan de consulta"
   },
   {
     "id": "rate-limiting",
@@ -341,7 +580,13 @@
     "pos": "noun phrase",
     "definition": "Restricting how many requests a client can make to an API within a given time window.",
     "difficulty": 2,
-    "tags": ["api", "security", "infrastructure"]
+    "tags": [
+      "api",
+      "security",
+      "infrastructure"
+    ],
+    "ipa": "/ɹeɪt lɪmʌtɪŋ/",
+    "translation": "limitación de peticiones"
   },
   {
     "id": "replication",
@@ -349,7 +594,13 @@
     "pos": "noun",
     "definition": "Copying data across multiple database instances to ensure availability and fault tolerance.",
     "difficulty": 3,
-    "tags": ["database", "infrastructure", "reliability"]
+    "tags": [
+      "database",
+      "infrastructure",
+      "reliability"
+    ],
+    "ipa": "/ɹɛplʌkeɪʃʌn/",
+    "translation": "replicación de datos"
   },
   {
     "id": "rest",
@@ -357,7 +608,13 @@
     "pos": "proper noun",
     "definition": "Representational State Transfer — an architectural style for stateless, resource-based APIs.",
     "difficulty": 1,
-    "tags": ["api", "fundamentals", "protocol"]
+    "tags": [
+      "api",
+      "fundamentals",
+      "protocol"
+    ],
+    "ipa": "/ɹɛst/",
+    "translation": "transferencia de estado representacional"
   },
   {
     "id": "rollback",
@@ -365,7 +622,13 @@
     "pos": "noun",
     "definition": "Reverting a database transaction or deployment to its previous stable state.",
     "difficulty": 2,
-    "tags": ["database", "devops", "reliability"]
+    "tags": [
+      "database",
+      "devops",
+      "reliability"
+    ],
+    "ipa": "/ɹoʊlbæk/",
+    "translation": "reversión"
   },
   {
     "id": "row-level-security",
@@ -373,7 +636,12 @@
     "pos": "noun phrase",
     "definition": "A database feature restricting which rows a user can read or modify based on defined policies.",
     "difficulty": 2,
-    "tags": ["supabase", "postgresql", "security"]
+    "tags": [
+      "supabase",
+      "postgresql",
+      "security"
+    ],
+    "translation": "seguridad a nivel de fila"
   },
   {
     "id": "schema",
@@ -381,7 +649,13 @@
     "pos": "noun",
     "definition": "The formal definition of a database's structure: its tables, columns, types, and relationships.",
     "difficulty": 1,
-    "tags": ["database", "fundamentals", "postgresql"]
+    "tags": [
+      "database",
+      "fundamentals",
+      "postgresql"
+    ],
+    "ipa": "/skiːmʌ/",
+    "translation": "esquema de base de datos"
   },
   {
     "id": "serverless",
@@ -389,7 +663,12 @@
     "pos": "adjective",
     "definition": "A model where backend code runs in stateless functions managed and scaled by a cloud provider.",
     "difficulty": 1,
-    "tags": ["infrastructure", "cloud", "deployment"]
+    "tags": [
+      "infrastructure",
+      "cloud",
+      "deployment"
+    ],
+    "translation": "sin servidor"
   },
   {
     "id": "sharding",
@@ -397,7 +676,12 @@
     "pos": "noun",
     "definition": "Horizontally partitioning a database across multiple machines to distribute load.",
     "difficulty": 3,
-    "tags": ["database", "scaling", "advanced"]
+    "tags": [
+      "database",
+      "scaling",
+      "advanced"
+    ],
+    "translation": "particionamiento de base de datos"
   },
   {
     "id": "soft-delete",
@@ -405,7 +689,13 @@
     "pos": "noun phrase",
     "definition": "Marking a record as deleted with a flag instead of physically removing it from the database.",
     "difficulty": 2,
-    "tags": ["database", "patterns", "data"]
+    "tags": [
+      "database",
+      "patterns",
+      "data"
+    ],
+    "ipa": "/sɑft dɪliːt/",
+    "translation": "borrado lógico"
   },
   {
     "id": "sql-injection",
@@ -413,7 +703,13 @@
     "pos": "noun phrase",
     "definition": "An attack inserting malicious SQL into a query to manipulate or expose database data.",
     "difficulty": 2,
-    "tags": ["security", "database", "vulnerabilities"]
+    "tags": [
+      "security",
+      "database",
+      "vulnerabilities"
+    ],
+    "ipa": "/ɛskjuːɛl ɪndʒɛkʃʌn/",
+    "translation": "inyección SQL"
   },
   {
     "id": "sse",
@@ -421,7 +717,12 @@
     "pos": "proper noun",
     "definition": "Server-Sent Events — a protocol for servers to push real-time updates to the browser over HTTP.",
     "difficulty": 2,
-    "tags": ["realtime", "http", "protocol"]
+    "tags": [
+      "realtime",
+      "http",
+      "protocol"
+    ],
+    "translation": "eventos enviados por servidor"
   },
   {
     "id": "stateless",
@@ -429,7 +730,13 @@
     "pos": "adjective",
     "definition": "A server that stores no client session data between requests — each request is self-contained.",
     "difficulty": 2,
-    "tags": ["architecture", "rest", "fundamentals"]
+    "tags": [
+      "architecture",
+      "rest",
+      "fundamentals"
+    ],
+    "ipa": "/steɪtlɪs/",
+    "translation": "sin estado"
   },
   {
     "id": "storage-bucket",
@@ -437,7 +744,13 @@
     "pos": "noun phrase",
     "definition": "A container for storing user-uploaded files and assets in a cloud storage service.",
     "difficulty": 1,
-    "tags": ["supabase", "storage", "cloud"]
+    "tags": [
+      "supabase",
+      "storage",
+      "cloud"
+    ],
+    "ipa": "/stɔɹʌdʒ bʌkʌt/",
+    "translation": "cubo de almacenamiento"
   },
   {
     "id": "throughput",
@@ -445,7 +758,13 @@
     "pos": "noun",
     "definition": "The number of requests or operations a system can successfully handle per unit of time.",
     "difficulty": 2,
-    "tags": ["performance", "fundamentals", "metrics"]
+    "tags": [
+      "performance",
+      "fundamentals",
+      "metrics"
+    ],
+    "ipa": "/θɹuːpʊt/",
+    "translation": "rendimiento"
   },
   {
     "id": "transaction",
@@ -453,7 +772,13 @@
     "pos": "noun",
     "definition": "A group of database operations that execute as a single atomic unit — all succeed or all fail.",
     "difficulty": 2,
-    "tags": ["database", "postgresql", "fundamentals"]
+    "tags": [
+      "database",
+      "postgresql",
+      "fundamentals"
+    ],
+    "ipa": "/tɹænzækʃʌn/",
+    "translation": "transacción"
   },
   {
     "id": "ttl",
@@ -461,7 +786,12 @@
     "pos": "proper noun",
     "definition": "Time To Live — the duration a cached value or DNS record is considered valid before expiry.",
     "difficulty": 2,
-    "tags": ["caching", "networking", "fundamentals"]
+    "tags": [
+      "caching",
+      "networking",
+      "fundamentals"
+    ],
+    "translation": "tiempo de vida"
   },
   {
     "id": "uuid",
@@ -469,7 +799,12 @@
     "pos": "proper noun",
     "definition": "Universally Unique Identifier — a 128-bit value used as a collision-resistant database primary key.",
     "difficulty": 1,
-    "tags": ["database", "fundamentals", "identifiers"]
+    "tags": [
+      "database",
+      "fundamentals",
+      "identifiers"
+    ],
+    "translation": "identificador universalmente único"
   },
   {
     "id": "vertical-scaling",
@@ -477,7 +812,13 @@
     "pos": "noun phrase",
     "definition": "Upgrading a single server's CPU, RAM, or storage capacity to handle more load.",
     "difficulty": 2,
-    "tags": ["infrastructure", "scaling", "performance"]
+    "tags": [
+      "infrastructure",
+      "scaling",
+      "performance"
+    ],
+    "ipa": "/vɜrtɪkʌl skeɪlɪŋ/",
+    "translation": "escalado vertical"
   },
   {
     "id": "webhook",
@@ -485,7 +826,12 @@
     "pos": "noun",
     "definition": "An HTTP callback triggered by an event in one service to notify another in real time.",
     "difficulty": 2,
-    "tags": ["api", "integration", "events"]
+    "tags": [
+      "api",
+      "integration",
+      "events"
+    ],
+    "translation": "webhook"
   },
   {
     "id": "websocket",
@@ -493,7 +839,12 @@
     "pos": "proper noun",
     "definition": "A protocol providing a persistent, full-duplex communication channel between client and server.",
     "difficulty": 2,
-    "tags": ["realtime", "protocol", "networking"]
+    "tags": [
+      "realtime",
+      "protocol",
+      "networking"
+    ],
+    "translation": "websocket"
   },
   {
     "id": "zero-downtime-deploy",
@@ -501,7 +852,12 @@
     "pos": "noun phrase",
     "definition": "A release strategy that updates a service without any interruption to active users.",
     "difficulty": 3,
-    "tags": ["devops", "deployment", "reliability"]
+    "tags": [
+      "devops",
+      "deployment",
+      "reliability"
+    ],
+    "translation": "despliegue sin tiempo de inactividad"
   },
   {
     "id": "acid",
@@ -509,7 +865,13 @@
     "pos": "proper noun",
     "definition": "Atomicity, Consistency, Isolation, Durability — the four guarantees of reliable database transactions.",
     "difficulty": 3,
-    "tags": ["database", "postgresql", "fundamentals"]
+    "tags": [
+      "database",
+      "postgresql",
+      "fundamentals"
+    ],
+    "ipa": "/æsʌd/",
+    "translation": "ACID (transacciones) / propiedades ACID"
   },
   {
     "id": "cron-job",
@@ -517,7 +879,13 @@
     "pos": "noun phrase",
     "definition": "A scheduled task that runs automatically at defined time intervals on a server.",
     "difficulty": 1,
-    "tags": ["automation", "devops", "scheduling"]
+    "tags": [
+      "automation",
+      "devops",
+      "scheduling"
+    ],
+    "ipa": "/kɹɑn dʒɑb/",
+    "translation": "tarea programada"
   },
   {
     "id": "graceful-degradation",
@@ -525,7 +893,13 @@
     "pos": "noun phrase",
     "definition": "Designing a system to maintain partial functionality when a component fails.",
     "difficulty": 2,
-    "tags": ["resilience", "architecture", "patterns"]
+    "tags": [
+      "resilience",
+      "architecture",
+      "patterns"
+    ],
+    "ipa": "/ɡɹeɪsfʌl dɛɡɹʌdeɪʃʌn/",
+    "translation": "degradación elegante"
   },
   {
     "id": "health-check",
@@ -533,7 +907,13 @@
     "pos": "noun phrase",
     "definition": "A periodic request to a service endpoint that confirms it is running and responsive.",
     "difficulty": 1,
-    "tags": ["devops", "monitoring", "reliability"]
+    "tags": [
+      "devops",
+      "monitoring",
+      "reliability"
+    ],
+    "ipa": "/hɛlθ tʃɛk/",
+    "translation": "verificación de estado"
   },
   {
     "id": "idempotent-request",
@@ -541,7 +921,12 @@
     "pos": "noun phrase",
     "definition": "An API request that can be safely repeated multiple times without changing the outcome.",
     "difficulty": 2,
-    "tags": ["api", "reliability", "rest"]
+    "tags": [
+      "api",
+      "reliability",
+      "rest"
+    ],
+    "translation": "solicitud idempotente"
   },
   {
     "id": "materialized-view",
@@ -549,7 +934,13 @@
     "pos": "noun phrase",
     "definition": "A precomputed database query result stored on disk and refreshed on demand.",
     "difficulty": 3,
-    "tags": ["postgresql", "performance", "database"]
+    "tags": [
+      "postgresql",
+      "performance",
+      "database"
+    ],
+    "ipa": "/mʌtɪɹiːʌlaɪzd vjuː/",
+    "translation": "vista materializada"
   },
   {
     "id": "realtime-subscription",
@@ -557,7 +948,13 @@
     "pos": "noun phrase",
     "definition": "A persistent connection that pushes database changes to the client as they happen.",
     "difficulty": 2,
-    "tags": ["supabase", "realtime", "websocket"]
+    "tags": [
+      "supabase",
+      "realtime",
+      "websocket"
+    ],
+    "ipa": "/ɹiːʌltaɪm sʌbskɹɪpʃʌn/",
+    "translation": "suscripción en tiempo real"
   },
   {
     "id": "seed",
@@ -565,7 +962,13 @@
     "pos": "verb",
     "definition": "Populating a database with initial or test data using a script.",
     "difficulty": 1,
-    "tags": ["database", "development", "testing"]
+    "tags": [
+      "database",
+      "development",
+      "testing"
+    ],
+    "ipa": "/siːd/",
+    "translation": "semilla (datos iniciales)"
   },
   {
     "id": "upsert",
@@ -573,6 +976,11 @@
     "pos": "verb",
     "definition": "A database operation that inserts a row if it does not exist or updates it if it does.",
     "difficulty": 2,
-    "tags": ["database", "postgresql", "supabase"]
+    "tags": [
+      "database",
+      "postgresql",
+      "supabase"
+    ],
+    "translation": "insertar o actualizar"
   }
 ]

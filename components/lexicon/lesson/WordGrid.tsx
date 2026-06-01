@@ -1,15 +1,7 @@
-// Planned structure:
-// <WordGrid>
-//   <LetterGroup letter="A">
-//     <WordCard /> ...
-//   </LetterGroup>
-//   ...
-// </WordGrid>
-
 import { WordCard } from "./WordCard";
 import type { WordCardProps } from "./WordCard";
 
-export interface Word extends Omit<WordCardProps, "onMarkLearned"> {
+export interface Word extends Omit<WordCardProps, "onMarkLearned" | "view"> {
   id: string;
   isFavorite?: boolean;
   wordBankId?: string | null;
@@ -21,62 +13,79 @@ export interface Word extends Omit<WordCardProps, "onMarkLearned"> {
 interface WordGridProps {
   words: Word[];
   view: "grid" | "list";
-  color?: string;
+  groupByLetter?: boolean;
   onMarkLearned?: (wordId: string) => void;
 }
 
-function groupByLetter(words: Word[]): Map<string, Word[]> {
+function partitionWordsByLetter(words: Word[]): Map<string, Word[]> {
   const map = new Map<string, Word[]>();
   for (const word of words) {
-    const letter = word.word[0].toUpperCase();
+    const letter = word.word[0]?.toUpperCase() ?? "#";
     if (!map.has(letter)) map.set(letter, []);
     map.get(letter)!.push(word);
   }
   return new Map([...map.entries()].sort(([a], [b]) => a.localeCompare(b)));
 }
 
-export function WordGrid({ words, view, color, onMarkLearned }: WordGridProps) {
+function WordCards({
+  group,
+  view,
+  onMarkLearned,
+}: {
+  group: Word[];
+  view: "grid" | "list";
+  onMarkLearned?: (wordId: string) => void;
+}) {
+  return (
+    <>
+      {group.map(({ id, wordBankId, onToggleFavorite, onAddToMyWords, isInMyWords, isFavorite, ...rest }) => (
+        <WordCard
+          key={id}
+          {...rest}
+          view={view}
+          onMarkLearned={onMarkLearned ? () => onMarkLearned(id) : undefined}
+          isFavorite={isFavorite}
+          onToggleFavorite={onToggleFavorite}
+          onAddToMyWords={onAddToMyWords}
+          isInMyWords={isInMyWords}
+        />
+      ))}
+    </>
+  );
+}
+
+export function WordGrid({ words, view, groupByLetter = true, onMarkLearned }: WordGridProps) {
   if (words.length === 0) {
+    return <p className="lexicon-area__empty">No words match this filter.</p>;
+  }
+
+  const gridClass = `lexicon-area__grid${view === "list" ? " lexicon-area__grid--list" : ""}`;
+
+  if (!groupByLetter) {
     return (
-      <div className="text-center py-16">
-        <p className="text-fg-muted text-sm">No words found</p>
+      <div className="lexicon-area__lettergroup">
+        <div className={gridClass}>
+          <WordCards group={words} view={view} onMarkLearned={onMarkLearned} />
+        </div>
       </div>
     );
   }
 
-  const grouped = groupByLetter(words);
+  const grouped = partitionWordsByLetter(words);
 
   return (
-    <div className="space-y-8">
+    <>
       {[...grouped.entries()].map(([letter, group]) => (
-        <section key={letter}>
-          <div className="flex items-center gap-3 mb-4">
-            <span className="text-xs font-semibold text-fg-subtle tracking-widest uppercase">{letter}</span>
-            <hr className="flex-1 border-border-subtle" />
+        <section key={letter} className="lexicon-area__lettergroup">
+          <div className="lexicon-area__letterhead">
+            <span className="lexicon-area__letter">{letter}</span>
+            <hr className="lexicon-area__letter-rule" />
           </div>
-
-          <div
-            className={
-              view === "grid"
-                ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4"
-                : "flex flex-col gap-3"
-            }
-          >
-            {group.map(({ id, wordBankId, onToggleFavorite, onAddToMyWords, isInMyWords, isFavorite, ...rest }) => (
-              <WordCard
-                key={id}
-                {...rest}
-                color={color}
-                onMarkLearned={onMarkLearned ? () => onMarkLearned(id) : undefined}
-                isFavorite={isFavorite}
-                onToggleFavorite={onToggleFavorite}
-                onAddToMyWords={onAddToMyWords}
-                isInMyWords={isInMyWords}
-              />
-            ))}
+          <div className={gridClass}>
+            <WordCards group={group} view={view} onMarkLearned={onMarkLearned} />
           </div>
         </section>
       ))}
-    </div>
+    </>
   );
 }

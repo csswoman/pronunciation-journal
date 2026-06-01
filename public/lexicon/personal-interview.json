@@ -6,7 +6,12 @@
     "definition": "To actively support and argue for something — a design decision, a user need, or a process.",
     "example": "I advocate for accessibility early in the design process, before implementation starts.",
     "difficulty": 2,
-    "tags": ["leadership", "values", "design"]
+    "tags": [
+      "leadership",
+      "values",
+      "design"
+    ],
+    "ipa": "/ædvʌkʌt/"
   },
   {
     "id": "ambiguous-requirements",
@@ -15,7 +20,12 @@
     "definition": "Unclear or incomplete specs that require you to ask questions and make informed assumptions.",
     "example": "When requirements are ambiguous, I try to clarify before writing a single line of code.",
     "difficulty": 2,
-    "tags": ["process", "communication", "problem-solving"]
+    "tags": [
+      "process",
+      "communication",
+      "problem-solving"
+    ],
+    "ipa": "/æmbɪɡjuːʌs ɹɪkwaɪɹmʌnts/"
   },
   {
     "id": "approach",
@@ -24,7 +34,12 @@
     "definition": "Your method or strategy for solving a problem — interviewers love hearing about your approach.",
     "example": "My approach to design systems is to start with tokens before touching any components.",
     "difficulty": 1,
-    "tags": ["fundamentals", "problem-solving", "communication"]
+    "tags": [
+      "fundamentals",
+      "problem-solving",
+      "communication"
+    ],
+    "ipa": "/ʌpɹoʊtʃ/"
   },
   {
     "id": "articulate",
@@ -33,7 +48,12 @@
     "definition": "To express your ideas clearly and precisely, especially technical or design decisions.",
     "example": "I try to articulate my design decisions so engineers understand the intent behind each choice.",
     "difficulty": 2,
-    "tags": ["communication", "collaboration", "soft-skills"]
+    "tags": [
+      "communication",
+      "collaboration",
+      "soft-skills"
+    ],
+    "ipa": "/ɑɹtɪkjʌleɪt/"
   },
   {
     "id": "autonomous",
@@ -42,7 +62,12 @@
     "definition": "Able to work independently and make decisions without constant supervision.",
     "example": "I'm comfortable working autonomously — I manage my own priorities and deliverables.",
     "difficulty": 2,
-    "tags": ["remote", "work-style", "self-management"]
+    "tags": [
+      "remote",
+      "work-style",
+      "self-management"
+    ],
+    "ipa": "/ɔtɑnʌmʌs/"
   },
   {
     "id": "balance",
@@ -51,7 +76,12 @@
     "definition": "To weigh competing priorities — speed vs quality, design vs engineering constraints.",
     "example": "I constantly balance visual polish with implementation feasibility and timeline.",
     "difficulty": 1,
-    "tags": ["trade-offs", "process", "fundamentals"]
+    "tags": [
+      "trade-offs",
+      "process",
+      "fundamentals"
+    ],
+    "ipa": "/bælʌns/"
   },
   {
     "id": "bridge",
@@ -60,7 +90,12 @@
     "definition": "To connect two different worlds — typically design and engineering — reducing friction between them.",
     "example": "As a UX Engineer, I bridge the gap between design intent and technical implementation.",
     "difficulty": 2,
-    "tags": ["ux-engineer", "collaboration", "identity"]
+    "tags": [
+      "ux-engineer",
+      "collaboration",
+      "identity"
+    ],
+    "ipa": "/bɹɪdʒ/"
   },
   {
     "id": "build-from-scratch",
@@ -69,7 +104,12 @@
     "definition": "To create something starting from nothing rather than extending an existing solution.",
     "example": "I built the design system from scratch, including the token architecture and documentation.",
     "difficulty": 1,
-    "tags": ["experience", "portfolio", "achievements"]
+    "tags": [
+      "experience",
+      "portfolio",
+      "achievements"
+    ],
+    "ipa": "/bɪld fɹʌm skɹætʃ/"
   },
   {
     "id": "challenge",
@@ -78,7 +118,12 @@
     "definition": "A difficulty or obstacle you encountered — often the setup for a strong interview story.",
     "example": "The biggest challenge was balancing performance with a visually rich interface.",
     "difficulty": 1,
-    "tags": ["storytelling", "fundamentals", "behavioral"]
+    "tags": [
+      "storytelling",
+      "fundamentals",
+      "behavioral"
+    ],
+    "ipa": "/tʃælʌndʒ/"
   },
   {
     "id": "collaborate",
@@ -87,7 +132,12 @@
     "definition": "To work jointly with others — designers, engineers, PMs — toward a shared outcome.",
     "example": "I collaborate closely with designers to catch implementation issues early in the process.",
     "difficulty": 1,
-    "tags": ["collaboration", "soft-skills", "fundamentals"]
+    "tags": [
+      "collaboration",
+      "soft-skills",
+      "fundamentals"
+    ],
+    "ipa": "/kʌlæbɜreɪt/"
   },
   {
     "id": "communicate-tradeoffs",
@@ -96,7 +146,12 @@
     "definition": "Explaining the pros and cons of a decision clearly so stakeholders can choose knowingly.",
     "example": "I always communicate trade-offs so the team understands what we gain and what we give up.",
     "difficulty": 2,
-    "tags": ["communication", "decision-making", "leadership"]
+    "tags": [
+      "communication",
+      "decision-making",
+      "leadership"
+    ],
+    "ipa": "/kʌmjuːnʌkeɪt tɹeɪdɔfs/"
   },
   {
     "id": "component-driven",
@@ -105,7 +160,11 @@
     "definition": "A development approach that builds UIs as a composition of isolated, reusable components.",
     "example": "I work in a component-driven way — every piece of UI is designed to be reusable from the start.",
     "difficulty": 2,
-    "tags": ["dev", "design-systems", "approach"]
+    "tags": [
+      "dev",
+      "design-systems",
+      "approach"
+    ]
   },
   {
     "id": "consistency",
@@ -114,7 +173,12 @@
     "definition": "The quality of applying the same patterns, styles, and decisions throughout a product.",
     "example": "Consistency across the product is one of the things I care most about as a UX Engineer.",
     "difficulty": 1,
-    "tags": ["design-systems", "quality", "values"]
+    "tags": [
+      "design-systems",
+      "quality",
+      "values"
+    ],
+    "ipa": "/kʌnsɪstʌnsiː/"
   },
   {
     "id": "contributed",
@@ -123,7 +187,12 @@
     "definition": "To add value to a project, team, or codebase — a key word for describing past work.",
     "example": "I contributed to the component library by standardizing the button variants and documentation.",
     "difficulty": 1,
-    "tags": ["achievements", "portfolio", "fundamentals"]
+    "tags": [
+      "achievements",
+      "portfolio",
+      "fundamentals"
+    ],
+    "ipa": "/kʌntɹɪbjuːt/"
   },
   {
     "id": "creative-problem-solving",
@@ -132,7 +201,11 @@
     "definition": "Finding non-obvious solutions by combining technical and design thinking.",
     "example": "I enjoy creative problem-solving — especially when constraints push me toward unexpected solutions.",
     "difficulty": 2,
-    "tags": ["identity", "values", "creative"]
+    "tags": [
+      "identity",
+      "values",
+      "creative"
+    ]
   },
   {
     "id": "cross-disciplinary",
@@ -141,7 +214,11 @@
     "definition": "Working across multiple disciplines simultaneously — design, code, and UX at once.",
     "example": "My background is cross-disciplinary — I think in systems but I also write production code.",
     "difficulty": 2,
-    "tags": ["identity", "ux-engineer", "positioning"]
+    "tags": [
+      "identity",
+      "ux-engineer",
+      "positioning"
+    ]
   },
   {
     "id": "decision-making",
@@ -150,7 +227,12 @@
     "definition": "The process of choosing between options — often what interviewers probe with behavioral questions.",
     "example": "My decision-making process usually starts by understanding the constraints and user impact.",
     "difficulty": 1,
-    "tags": ["behavioral", "process", "leadership"]
+    "tags": [
+      "behavioral",
+      "process",
+      "leadership"
+    ],
+    "ipa": "/dɪsɪʒʌnmeɪkɪŋ/"
   },
   {
     "id": "deep-dive",
@@ -159,7 +241,12 @@
     "definition": "A thorough, detailed investigation into a specific problem or topic.",
     "example": "I did a deep dive into our CSS architecture before proposing a migration to design tokens.",
     "difficulty": 1,
-    "tags": ["process", "research", "communication"]
+    "tags": [
+      "process",
+      "research",
+      "communication"
+    ],
+    "ipa": "/diːp daɪv/"
   },
   {
     "id": "define-the-problem",
@@ -168,7 +255,12 @@
     "definition": "Clarifying what the actual issue is before jumping to solutions — a key engineering and design skill.",
     "example": "Before jumping into code, I always take time to define the problem clearly.",
     "difficulty": 1,
-    "tags": ["process", "problem-solving", "fundamentals"]
+    "tags": [
+      "process",
+      "problem-solving",
+      "fundamentals"
+    ],
+    "ipa": "/dɪfaɪn ðʌ pɹɑblʌm/"
   },
   {
     "id": "deliver",
@@ -177,7 +269,12 @@
     "definition": "To complete and ship a working result — designs, features, or documentation.",
     "example": "I delivered the redesign on time while also improving the accessibility score.",
     "difficulty": 1,
-    "tags": ["achievements", "reliability", "fundamentals"]
+    "tags": [
+      "achievements",
+      "reliability",
+      "fundamentals"
+    ],
+    "ipa": "/dɪlɪvɜr/"
   },
   {
     "id": "design-sensibility",
@@ -186,7 +283,12 @@
     "definition": "An instinctive awareness of what looks, feels, and functions well in a UI.",
     "example": "What makes me different as a frontend dev is that I bring a strong design sensibility to the code.",
     "difficulty": 3,
-    "tags": ["identity", "ux-engineer", "positioning"]
+    "tags": [
+      "identity",
+      "ux-engineer",
+      "positioning"
+    ],
+    "ipa": "/dɪzaɪn sɛnsɪbɪlɪtiː/"
   },
   {
     "id": "detail-oriented",
@@ -195,7 +297,11 @@
     "definition": "Attentive to small specifics — spacing, edge cases, naming — that affect overall quality.",
     "example": "I'm very detail-oriented — I notice when something is 2px off and I care enough to fix it.",
     "difficulty": 1,
-    "tags": ["soft-skills", "identity", "quality"]
+    "tags": [
+      "soft-skills",
+      "identity",
+      "quality"
+    ]
   },
   {
     "id": "document",
@@ -204,7 +310,12 @@
     "definition": "To write clear records of decisions, processes, or code so others can understand and build on them.",
     "example": "I document my components thoroughly so other developers can use them without asking me questions.",
     "difficulty": 1,
-    "tags": ["process", "collaboration", "fundamentals"]
+    "tags": [
+      "process",
+      "collaboration",
+      "fundamentals"
+    ],
+    "ipa": "/dɑkjʌmɛnt/"
   },
   {
     "id": "drive",
@@ -213,7 +324,12 @@
     "definition": "To lead or push something forward proactively — projects, decisions, or improvements.",
     "example": "I drove the migration from hardcoded styles to a token-based design system.",
     "difficulty": 2,
-    "tags": ["leadership", "achievements", "ownership"]
+    "tags": [
+      "leadership",
+      "achievements",
+      "ownership"
+    ],
+    "ipa": "/dɹaɪv/"
   },
   {
     "id": "dry-run",
@@ -222,7 +338,12 @@
     "definition": "A rehearsal or test run before the real thing — useful for presentations or demos.",
     "example": "I always do a dry run of my portfolio walkthrough before the actual interview.",
     "difficulty": 2,
-    "tags": ["preparation", "interview", "process"]
+    "tags": [
+      "preparation",
+      "interview",
+      "process"
+    ],
+    "ipa": "/dɹaɪ ɹʌn/"
   },
   {
     "id": "end-to-end",
@@ -231,7 +352,11 @@
     "definition": "Covering the full scope of a process — from initial design concept to shipped production code.",
     "example": "I can own a feature end-to-end — from wireframes to deployed, accessible components.",
     "difficulty": 1,
-    "tags": ["ux-engineer", "identity", "capabilities"]
+    "tags": [
+      "ux-engineer",
+      "identity",
+      "capabilities"
+    ]
   },
   {
     "id": "engineer-mindset",
@@ -240,7 +365,12 @@
     "definition": "Approaching problems systematically, thinking about scalability, edge cases, and constraints.",
     "example": "I bring an engineering mindset to design — I ask 'what breaks this?' before shipping anything.",
     "difficulty": 2,
-    "tags": ["identity", "ux-engineer", "positioning"]
+    "tags": [
+      "identity",
+      "ux-engineer",
+      "positioning"
+    ],
+    "ipa": "/ɛndʒʌnɪɹɪŋ maɪndsɛt/"
   },
   {
     "id": "evangelize",
@@ -249,7 +379,12 @@
     "definition": "To promote and build enthusiasm for a practice, tool, or approach within a team.",
     "example": "I evangelize accessibility practices within teams that don't yet prioritize it.",
     "difficulty": 3,
-    "tags": ["leadership", "values", "influence"]
+    "tags": [
+      "leadership",
+      "values",
+      "influence"
+    ],
+    "ipa": "/ɪvændʒʌlaɪz/"
   },
   {
     "id": "experiment",
@@ -258,7 +393,12 @@
     "definition": "To try new tools, approaches, or ideas in a controlled way to learn and validate.",
     "example": "I actively experiment with new technologies through personal projects before bringing them to work.",
     "difficulty": 1,
-    "tags": ["growth", "learning", "identity"]
+    "tags": [
+      "growth",
+      "learning",
+      "identity"
+    ],
+    "ipa": "/ɪkspɛɹʌmʌnt/"
   },
   {
     "id": "fast-learner",
@@ -267,7 +407,12 @@
     "definition": "Someone who acquires new skills and knowledge quickly, especially in new environments.",
     "example": "I'm a fast learner — I picked up Supabase and PostgreSQL through a real production project.",
     "difficulty": 1,
-    "tags": ["growth", "identity", "soft-skills"]
+    "tags": [
+      "growth",
+      "identity",
+      "soft-skills"
+    ],
+    "ipa": "/fæst lɜrnɜr/"
   },
   {
     "id": "feedback-driven",
@@ -276,7 +421,11 @@
     "definition": "Using input from others — users, teammates, reviewers — to guide and improve your work.",
     "example": "My design process is feedback-driven — I share work early and often to avoid big surprises.",
     "difficulty": 2,
-    "tags": ["process", "collaboration", "growth"]
+    "tags": [
+      "process",
+      "collaboration",
+      "growth"
+    ]
   },
   {
     "id": "figure-things-out",
@@ -285,7 +434,12 @@
     "definition": "To solve problems independently by researching, experimenting, and reasoning through them.",
     "example": "I'm comfortable with ambiguity — I know how to figure things out when there's no clear answer.",
     "difficulty": 1,
-    "tags": ["autonomy", "problem-solving", "soft-skills"]
+    "tags": [
+      "autonomy",
+      "problem-solving",
+      "soft-skills"
+    ],
+    "ipa": "/fɪɡjɜr θɪŋz aʊt/"
   },
   {
     "id": "fluent-in",
@@ -294,7 +448,12 @@
     "definition": "Highly proficient in a tool, language, or methodology — stronger than 'familiar with'.",
     "example": "I'm fluent in React and TypeScript — they're my primary tools for building interfaces.",
     "difficulty": 1,
-    "tags": ["skills", "positioning", "fundamentals"]
+    "tags": [
+      "skills",
+      "positioning",
+      "fundamentals"
+    ],
+    "ipa": "/fluːʌnt ɪn/"
   },
   {
     "id": "go-to",
@@ -303,7 +462,12 @@
     "definition": "Your default, preferred tool or approach for a given type of problem.",
     "example": "My go-to stack for frontend projects is Next.js, TypeScript, and Tailwind CSS.",
     "difficulty": 1,
-    "tags": ["skills", "communication", "identity"]
+    "tags": [
+      "skills",
+      "communication",
+      "identity"
+    ],
+    "ipa": "/ɡoʊtuː/"
   },
   {
     "id": "growth-mindset",
@@ -312,7 +476,12 @@
     "definition": "The belief that skills and intelligence can be developed through effort and learning.",
     "example": "I have a growth mindset — I'm always looking for gaps in my knowledge to work on next.",
     "difficulty": 1,
-    "tags": ["values", "identity", "soft-skills"]
+    "tags": [
+      "values",
+      "identity",
+      "soft-skills"
+    ],
+    "ipa": "/ɡɹoʊθ maɪndsɛt/"
   },
   {
     "id": "hands-on",
@@ -321,7 +490,11 @@
     "definition": "Directly involved in doing the work rather than just directing or planning it.",
     "example": "I'm a hands-on designer — I prototype in code, not just in Figma.",
     "difficulty": 1,
-    "tags": ["identity", "work-style", "ux-engineer"]
+    "tags": [
+      "identity",
+      "work-style",
+      "ux-engineer"
+    ]
   },
   {
     "id": "hats",
@@ -330,7 +503,12 @@
     "definition": "To take on different roles simultaneously — common in startups and small teams.",
     "example": "I'm used to wearing multiple hats — I can design, build, and write documentation for the same feature.",
     "difficulty": 1,
-    "tags": ["startup", "identity", "adaptability"]
+    "tags": [
+      "startup",
+      "identity",
+      "adaptability"
+    ],
+    "ipa": "/wɛɹ mʌltʌpʌl hæts/"
   },
   {
     "id": "highlight",
@@ -339,7 +517,12 @@
     "definition": "To draw attention to the most important or impressive parts of your experience.",
     "example": "I'd like to highlight a project where I owned the full design system from tokens to components.",
     "difficulty": 1,
-    "tags": ["interview", "storytelling", "fundamentals"]
+    "tags": [
+      "interview",
+      "storytelling",
+      "fundamentals"
+    ],
+    "ipa": "/haɪlaɪt/"
   },
   {
     "id": "holistic",
@@ -348,7 +531,12 @@
     "definition": "Considering the full picture — user needs, technical constraints, and business goals together.",
     "example": "I take a holistic view of the product — not just the UI, but the whole user experience.",
     "difficulty": 2,
-    "tags": ["values", "approach", "ux"]
+    "tags": [
+      "values",
+      "approach",
+      "ux"
+    ],
+    "ipa": "/hoʊlɪstɪk/"
   },
   {
     "id": "impact-focused",
@@ -357,7 +545,11 @@
     "definition": "Prioritizing work based on the value it delivers to users or the business.",
     "example": "I try to be impact-focused — I ask 'does this actually improve the experience?' before building.",
     "difficulty": 2,
-    "tags": ["values", "prioritization", "strategy"]
+    "tags": [
+      "values",
+      "prioritization",
+      "strategy"
+    ]
   },
   {
     "id": "in-production",
@@ -366,7 +558,12 @@
     "definition": "Code or features that are live and being used by real users — not just prototypes.",
     "example": "Everything in my portfolio is in production — I build things that actually get shipped.",
     "difficulty": 1,
-    "tags": ["portfolio", "credibility", "achievements"]
+    "tags": [
+      "portfolio",
+      "credibility",
+      "achievements"
+    ],
+    "ipa": "/ɪn pɹʌdʌkʃʌn/"
   },
   {
     "id": "initiative",
@@ -375,7 +572,12 @@
     "definition": "To act proactively without being asked — identifying problems and proposing solutions.",
     "example": "I took initiative to audit our component library and document the inconsistencies I found.",
     "difficulty": 2,
-    "tags": ["leadership", "ownership", "proactivity"]
+    "tags": [
+      "leadership",
+      "ownership",
+      "proactivity"
+    ],
+    "ipa": "/teɪk ɪnɪʃʌtɪv/"
   },
   {
     "id": "interested-in",
@@ -384,7 +586,12 @@
     "definition": "A phrase to express genuine motivation for a role, team, or problem space.",
     "example": "I'm particularly interested in roles where design and engineering overlap.",
     "difficulty": 1,
-    "tags": ["interview", "motivation", "communication"]
+    "tags": [
+      "interview",
+      "motivation",
+      "communication"
+    ],
+    "ipa": "/aɪm pɑɹtɪkjʌlɜrliː ɪntɹʌstɪd ɪn/"
   },
   {
     "id": "keen-eye",
@@ -393,7 +600,12 @@
     "definition": "A natural, trained ability to notice specific qualities — detail, proportion, inconsistency.",
     "example": "I have a keen eye for visual inconsistencies that most engineers miss.",
     "difficulty": 2,
-    "tags": ["identity", "design", "soft-skills"]
+    "tags": [
+      "identity",
+      "design",
+      "soft-skills"
+    ],
+    "ipa": "/kiːn aɪ fɔɹ/"
   },
   {
     "id": "lead",
@@ -402,7 +614,12 @@
     "definition": "To guide a project, decision, or team — even informally without a formal title.",
     "example": "I led the frontend architecture decisions for the redesign without having a lead title.",
     "difficulty": 1,
-    "tags": ["leadership", "achievements", "positioning"]
+    "tags": [
+      "leadership",
+      "achievements",
+      "positioning"
+    ],
+    "ipa": "/lɛd/"
   },
   {
     "id": "lean-into",
@@ -411,7 +628,12 @@
     "definition": "To embrace and commit to something rather than avoid it — a strength, a challenge, a direction.",
     "example": "I lean into the ambiguity of being a UX Engineer — that's exactly where I add the most value.",
     "difficulty": 2,
-    "tags": ["identity", "communication", "positioning"]
+    "tags": [
+      "identity",
+      "communication",
+      "positioning"
+    ],
+    "ipa": "/liːn ɪntuː/"
   },
   {
     "id": "maintainable",
@@ -420,7 +642,11 @@
     "definition": "Code or systems that are easy to update, extend, and understand by other developers.",
     "example": "I write maintainable code — clear naming, minimal abstraction, and always documented.",
     "difficulty": 2,
-    "tags": ["code-quality", "values", "dev"]
+    "tags": [
+      "code-quality",
+      "values",
+      "dev"
+    ]
   },
   {
     "id": "mentor",
@@ -429,7 +655,12 @@
     "definition": "To guide and support someone less experienced in developing their skills.",
     "example": "I've informally mentored junior designers on how to think about component structure.",
     "difficulty": 2,
-    "tags": ["leadership", "soft-skills", "growth"]
+    "tags": [
+      "leadership",
+      "soft-skills",
+      "growth"
+    ],
+    "ipa": "/mɛntɔɹ/"
   },
   {
     "id": "milestone-driven",
@@ -438,7 +669,11 @@
     "definition": "Organizing work around concrete, measurable checkpoints rather than open-ended efforts.",
     "example": "I prefer milestone-driven projects — clear goals help me prioritize and ship consistently.",
     "difficulty": 2,
-    "tags": ["work-style", "process", "self-management"]
+    "tags": [
+      "work-style",
+      "process",
+      "self-management"
+    ]
   },
   {
     "id": "motivated-by",
@@ -447,7 +682,12 @@
     "definition": "What drives your energy and engagement — a key question in culture-fit interviews.",
     "example": "I'm motivated by problems that sit at the intersection of design quality and technical craft.",
     "difficulty": 1,
-    "tags": ["values", "culture-fit", "interview"]
+    "tags": [
+      "values",
+      "culture-fit",
+      "interview"
+    ],
+    "ipa": "/moʊtʌveɪtʌd baɪ/"
   },
   {
     "id": "nail-the-details",
@@ -456,7 +696,12 @@
     "definition": "To execute the small specifics with high precision — spacing, states, edge cases.",
     "example": "I care about nailing the details — hover states, loading states, error states — not just the happy path.",
     "difficulty": 2,
-    "tags": ["quality", "identity", "craft"]
+    "tags": [
+      "quality",
+      "identity",
+      "craft"
+    ],
+    "ipa": "/neɪl ðʌ dɪteɪlz/"
   },
   {
     "id": "ownership",
@@ -465,7 +710,12 @@
     "definition": "Taking full responsibility for a task or area — from start to finish, including problems.",
     "example": "I take full ownership of my work — if something breaks in production, I'm the one who fixes it.",
     "difficulty": 1,
-    "tags": ["values", "accountability", "identity"]
+    "tags": [
+      "values",
+      "accountability",
+      "identity"
+    ],
+    "ipa": "/oʊnɜrʃɪp/"
   },
   {
     "id": "passion",
@@ -474,7 +724,12 @@
     "definition": "A phrase expressing genuine enthusiasm — use sparingly and always back it with specifics.",
     "example": "I'm passionate about the space where design systems meet developer experience.",
     "difficulty": 1,
-    "tags": ["motivation", "interview", "values"]
+    "tags": [
+      "motivation",
+      "interview",
+      "values"
+    ],
+    "ipa": "/aɪm pæʃʌnʌt ʌbaʊt/"
   },
   {
     "id": "pragmatic",
@@ -483,7 +738,12 @@
     "definition": "Focused on practical solutions that work rather than theoretically perfect ones.",
     "example": "I'm pragmatic — I'd rather ship a good solution now than wait for a perfect one that never comes.",
     "difficulty": 2,
-    "tags": ["work-style", "values", "identity"]
+    "tags": [
+      "work-style",
+      "values",
+      "identity"
+    ],
+    "ipa": "/pɹæɡmætɪk/"
   },
   {
     "id": "proactive",
@@ -492,7 +752,12 @@
     "definition": "Anticipating problems and acting before being asked rather than reacting after the fact.",
     "example": "I'm proactive about spotting UX issues before they reach the engineering queue.",
     "difficulty": 1,
-    "tags": ["soft-skills", "identity", "work-style"]
+    "tags": [
+      "soft-skills",
+      "identity",
+      "work-style"
+    ],
+    "ipa": "/pɹoʊæktɪv/"
   },
   {
     "id": "proven-track-record",
@@ -501,7 +766,12 @@
     "definition": "Documented history of successfully delivering results — backed by portfolio and examples.",
     "example": "I have a proven track record of shipping design systems that teams actually adopt.",
     "difficulty": 2,
-    "tags": ["credibility", "positioning", "achievements"]
+    "tags": [
+      "credibility",
+      "positioning",
+      "achievements"
+    ],
+    "ipa": "/pɹuːvʌn tɹæk ɹʌkɔɹd/"
   },
   {
     "id": "quick-turnaround",
@@ -510,7 +780,12 @@
     "definition": "Delivering quality work in a short amount of time without sacrificing standards.",
     "example": "I can do a quick turnaround on prototypes — usually I can validate an idea same day.",
     "difficulty": 1,
-    "tags": ["efficiency", "startup", "work-style"]
+    "tags": [
+      "efficiency",
+      "startup",
+      "work-style"
+    ],
+    "ipa": "/kwɪk tɜrnɜraʊnd/"
   },
   {
     "id": "refine-over-time",
@@ -519,7 +794,12 @@
     "definition": "Improving something incrementally through iteration rather than getting it perfect at once.",
     "example": "My design system is something I've refined over time based on real usage and feedback.",
     "difficulty": 1,
-    "tags": ["process", "iteration", "growth"]
+    "tags": [
+      "process",
+      "iteration",
+      "growth"
+    ],
+    "ipa": "/ɹʌfaɪn oʊvɜr taɪm/"
   },
   {
     "id": "remote-ready",
@@ -528,7 +808,11 @@
     "definition": "Equipped with the habits, tools, and communication skills to work effectively in a remote team.",
     "example": "I'm fully remote-ready — I'm async-first, I document everything, and I over-communicate by default.",
     "difficulty": 1,
-    "tags": ["remote", "work-style", "positioning"]
+    "tags": [
+      "remote",
+      "work-style",
+      "positioning"
+    ]
   },
   {
     "id": "results",
@@ -537,7 +821,12 @@
     "definition": "The measurable or observable outcomes of your work — what actually changed because of you.",
     "example": "I can speak to the results — after the redesign, task completion improved noticeably.",
     "difficulty": 1,
-    "tags": ["achievements", "impact", "storytelling"]
+    "tags": [
+      "achievements",
+      "impact",
+      "storytelling"
+    ],
+    "ipa": "/ɹɪzʌlts/"
   },
   {
     "id": "self-directed",
@@ -546,7 +835,11 @@
     "definition": "Able to identify what needs to be done and pursue it without waiting for instructions.",
     "example": "I'm very self-directed — I built English Journal entirely on my own initiative.",
     "difficulty": 2,
-    "tags": ["autonomy", "identity", "remote"]
+    "tags": [
+      "autonomy",
+      "identity",
+      "remote"
+    ]
   },
   {
     "id": "sharp",
@@ -555,7 +848,12 @@
     "definition": "Quick to understand new concepts, catch issues, and find clever solutions — a compliment in tech.",
     "example": "Working in both design and code keeps me sharp — I never stop learning new things.",
     "difficulty": 1,
-    "tags": ["identity", "informal", "soft-skills"]
+    "tags": [
+      "identity",
+      "informal",
+      "soft-skills"
+    ],
+    "ipa": "/ʃɑɹp/"
   },
   {
     "id": "ship",
@@ -564,7 +862,12 @@
     "definition": "To release and deploy a feature or product to real users — the ultimate goal of any dev work.",
     "example": "I've shipped everything in my portfolio — these aren't demos, they're real products.",
     "difficulty": 1,
-    "tags": ["achievements", "credibility", "dev"]
+    "tags": [
+      "achievements",
+      "credibility",
+      "dev"
+    ],
+    "ipa": "/ʃɪp/"
   },
   {
     "id": "side-project",
@@ -573,7 +876,12 @@
     "definition": "A personal project built outside of work — often the best signal of genuine passion in tech.",
     "example": "My side project English Journal lets me experiment with backend and AI features in a real context.",
     "difficulty": 1,
-    "tags": ["portfolio", "growth", "identity"]
+    "tags": [
+      "portfolio",
+      "growth",
+      "identity"
+    ],
+    "ipa": "/saɪd pɹɑdʒɛkt/"
   },
   {
     "id": "solid-foundation",
@@ -582,7 +890,12 @@
     "definition": "Strong fundamental knowledge in a skill that allows you to build more advanced work on top.",
     "example": "I have a solid foundation in CSS — specificity, cascade, custom properties — not just utility classes.",
     "difficulty": 1,
-    "tags": ["skills", "positioning", "credibility"]
+    "tags": [
+      "skills",
+      "positioning",
+      "credibility"
+    ],
+    "ipa": "/sɑlʌd faʊndeɪʃʌn/"
   },
   {
     "id": "speak-to",
@@ -591,7 +904,12 @@
     "definition": "To address or provide evidence for something — used when backing up a claim with an example.",
     "example": "I can speak to my experience with design tokens — here's how I structured them in production.",
     "difficulty": 2,
-    "tags": ["interview", "communication", "storytelling"]
+    "tags": [
+      "interview",
+      "communication",
+      "storytelling"
+    ],
+    "ipa": "/spiːk tuː/"
   },
   {
     "id": "strengths",
@@ -600,7 +918,12 @@
     "definition": "The skills and qualities where you consistently perform above average — know yours cold.",
     "example": "My strengths are at the intersection of visual design and component architecture.",
     "difficulty": 1,
-    "tags": ["interview", "self-awareness", "fundamentals"]
+    "tags": [
+      "interview",
+      "self-awareness",
+      "fundamentals"
+    ],
+    "ipa": "/stɹɛŋkθs/"
   },
   {
     "id": "structured-thinker",
@@ -609,7 +932,12 @@
     "definition": "Someone who breaks down complex problems into clear, logical steps before acting.",
     "example": "I'm a structured thinker — I usually map out the problem space before writing any code.",
     "difficulty": 2,
-    "tags": ["problem-solving", "identity", "soft-skills"]
+    "tags": [
+      "problem-solving",
+      "identity",
+      "soft-skills"
+    ],
+    "ipa": "/stɹʌktʃɜrd θɪŋkɜr/"
   },
   {
     "id": "take-pride-in",
@@ -618,7 +946,12 @@
     "definition": "To care deeply about the quality of your work — not just getting it done but getting it right.",
     "example": "I take pride in writing CSS that reads like documentation — clear, predictable, and intentional.",
     "difficulty": 1,
-    "tags": ["values", "craft", "identity"]
+    "tags": [
+      "values",
+      "craft",
+      "identity"
+    ],
+    "ipa": "/teɪk pɹaɪd ɪn/"
   },
   {
     "id": "technical-depth",
@@ -627,7 +960,12 @@
     "definition": "A thorough understanding of how something works beneath the surface, not just how to use it.",
     "example": "I have technical depth in CSS — I understand the cascade, not just how to override it.",
     "difficulty": 2,
-    "tags": ["skills", "credibility", "positioning"]
+    "tags": [
+      "skills",
+      "credibility",
+      "positioning"
+    ],
+    "ipa": "/tɛknɪkʌl dɛpθ/"
   },
   {
     "id": "thrives-in",
@@ -636,7 +974,12 @@
     "definition": "To perform exceptionally well in a particular environment or type of challenge.",
     "example": "I thrive in environments where design and engineering collaborate closely from day one.",
     "difficulty": 2,
-    "tags": ["culture-fit", "identity", "interview"]
+    "tags": [
+      "culture-fit",
+      "identity",
+      "interview"
+    ],
+    "ipa": "/θɹaɪv ɪn/"
   },
   {
     "id": "translate",
@@ -645,7 +988,12 @@
     "definition": "To convert design intent into working code, or technical constraints into design language.",
     "example": "My job is to translate Figma designs into accessible, performant React components.",
     "difficulty": 1,
-    "tags": ["ux-engineer", "identity", "capabilities"]
+    "tags": [
+      "ux-engineer",
+      "identity",
+      "capabilities"
+    ],
+    "ipa": "/tɹænzleɪt/"
   },
   {
     "id": "unique-value",
@@ -654,7 +1002,12 @@
     "definition": "What specifically makes you different from other candidates applying for the same role.",
     "example": "My unique value is that I can review a pull request and a design spec in the same afternoon.",
     "difficulty": 2,
-    "tags": ["positioning", "identity", "interview"]
+    "tags": [
+      "positioning",
+      "identity",
+      "interview"
+    ],
+    "ipa": "/juːniːk væljuː/"
   },
   {
     "id": "user-centered",
@@ -663,7 +1016,11 @@
     "definition": "Making decisions based on actual user needs and behaviors rather than assumptions.",
     "example": "I keep a user-centered perspective even when working deep in the codebase.",
     "difficulty": 1,
-    "tags": ["values", "ux", "fundamentals"]
+    "tags": [
+      "values",
+      "ux",
+      "fundamentals"
+    ]
   },
   {
     "id": "versatile",
@@ -672,7 +1029,12 @@
     "definition": "Capable of adapting across different roles, tools, and types of problems effectively.",
     "example": "I'm versatile — I've worked on branding, design systems, frontend architecture, and AI integrations.",
     "difficulty": 2,
-    "tags": ["identity", "positioning", "adaptability"]
+    "tags": [
+      "identity",
+      "positioning",
+      "adaptability"
+    ],
+    "ipa": "/vɜrsʌtʌl/"
   },
   {
     "id": "vision",
@@ -681,7 +1043,12 @@
     "definition": "A clear picture of where you want to take something — a product, a system, or your career.",
     "example": "My vision for the design system was a single source of truth that both designers and devs trust.",
     "difficulty": 1,
-    "tags": ["leadership", "strategy", "communication"]
+    "tags": [
+      "leadership",
+      "strategy",
+      "communication"
+    ],
+    "ipa": "/vɪʒʌn/"
   },
   {
     "id": "walk-me-through",
@@ -690,7 +1057,12 @@
     "definition": "An interviewer's request to explain a project or process step by step in your own words.",
     "example": "Sure, let me walk you through my approach to building the component library.",
     "difficulty": 1,
-    "tags": ["interview", "storytelling", "fundamentals"]
+    "tags": [
+      "interview",
+      "storytelling",
+      "fundamentals"
+    ],
+    "ipa": "/wɔk miː θɹuː/"
   },
   {
     "id": "work-in-progress",
@@ -699,7 +1071,12 @@
     "definition": "Something actively being developed — honest framing when showing unfinished portfolio work.",
     "example": "This feature is a work in progress, but I can show you the current state and explain the direction.",
     "difficulty": 1,
-    "tags": ["portfolio", "honesty", "communication"]
+    "tags": [
+      "portfolio",
+      "honesty",
+      "communication"
+    ],
+    "ipa": "/wɜrk ɪn pɹɑɡɹɛs/"
   },
   {
     "id": "years-of-experience",
@@ -708,6 +1085,11 @@
     "definition": "Shorthand for tenure — but quality and depth of experience matter more than raw years.",
     "example": "I have four years of experience, but the projects span far more in scope and complexity.",
     "difficulty": 1,
-    "tags": ["positioning", "interview", "fundamentals"]
+    "tags": [
+      "positioning",
+      "interview",
+      "fundamentals"
+    ],
+    "ipa": "/jɪɹz ʌv ɪkspɪɹiːʌns/"
   }
 ]

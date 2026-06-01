@@ -1,8 +1,74 @@
 [
-  { "id": "ux-design", "name": "UX / UI Design", "color": "#6B9FC4", "icon": "✦", "total": 500 },
-  { "id": "frontend-dev", "name": "Frontend Dev", "color": "#65A87A", "icon": "⌥", "total": 800 },
-  { "id": "design-systems", "name": "Design Systems", "color": "#9B8EC4", "icon": "◻", "total": 400 },
-  { "id": "professional", "name": "Professional English", "color": "#C4846B", "icon": "◈", "total": 350 },
-  { "id": "technical-writing", "name": "Technical Writing", "color": "#5BA8A0", "icon": "∂", "total": 300 },
-  { "id": "backend-infra", "name": "Backend & Infra", "color": "#D97706", "icon": "⬡", "total": 700 }
+  {
+    "id": "artificial-intelligence",
+    "name": "Artificial Intelligence",
+    "domain": "engineering",
+    "color": "#A855F7",
+    "icon": "◎",
+    "total": 82
+  },
+  {
+    "id": "backend-infra",
+    "name": "Backend & Infra",
+    "domain": "engineering",
+    "color": "#D97706",
+    "icon": "⬡",
+    "total": 72
+  },
+  {
+    "id": "data-science",
+    "name": "Data Science",
+    "domain": "engineering",
+    "color": "#EAB308",
+    "icon": "◉",
+    "total": 82
+  },
+  {
+    "id": "frontend-dev",
+    "name": "Frontend Dev",
+    "domain": "engineering",
+    "color": "#65A87A",
+    "icon": "⌥",
+    "total": 81
+  },
+  {
+    "id": "ux-design",
+    "name": "UX / UI Design",
+    "domain": "design",
+    "color": "#6B9FC4",
+    "icon": "✦",
+    "total": 81
+  },
+  {
+    "id": "design-systems",
+    "name": "Design Systems",
+    "domain": "design",
+    "color": "#9B8EC4",
+    "icon": "◻",
+    "total": 72
+  },
+  {
+    "id": "professional",
+    "name": "Professional English",
+    "domain": "professional",
+    "color": "#C4846B",
+    "icon": "◈",
+    "total": 83
+  },
+  {
+    "id": "technical-writing",
+    "name": "Technical Writing",
+    "domain": "professional",
+    "color": "#5BA8A0",
+    "icon": "∂",
+    "total": 63
+  },
+  {
+    "id": "personal-interview",
+    "name": "Personal Interview",
+    "domain": "professional",
+    "color": "#EC4899",
+    "icon": "🎤",
+    "total": 79
+  }
 ]

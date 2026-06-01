@@ -1,22 +1,22 @@
-'use client'
+"use client";
 
-import { useRouter } from 'next/navigation'
-import { Dumbbell } from 'lucide-react'
+import { useRouter } from "next/navigation";
+import { Dumbbell } from "lucide-react";
 
 interface PracticeButtonProps {
-  categoryId: string
+  categoryId: string;
 }
 
 export function PracticeButton({ categoryId }: PracticeButtonProps) {
-  const router = useRouter()
+  const router = useRouter();
   return (
     <button
       type="button"
       onClick={() => router.push(`/lexicon/${categoryId}/practice`)}
-      className="flex items-center gap-2 px-5 py-2.5 bg-accent text-accent-fg rounded-full text-sm font-semibold shadow-sm hover:opacity-90 transition-opacity"
+      className="inline-flex items-center gap-2 px-4 py-2.5 rounded-[var(--radius-sm)] text-sm font-semibold bg-[var(--primary)] text-[var(--on-primary)] border-none cursor-pointer transition-[filter] duration-150 hover:brightness-[1.06]"
     >
-      <Dumbbell className="w-4 h-4" />
+      <Dumbbell className="w-4 h-4" aria-hidden />
       Practice lesson
     </button>
-  )
+  );
 }

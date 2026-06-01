@@ -127,20 +127,22 @@ export default function LexiconPracticePage() {
   }
 
   if (flowPhase === 'practice') {
+    const sessionLabel =
+      lessonName.length > 22 ? `${lessonName.slice(0, 20).trim()}…` : lessonName
+
     const sessionConfig = {
       context: 'practice' as const,
       exercises: practiceExercises,
       sessionLength: Math.min(10, practiceExercises.length),
+      sessionLabel,
       onSessionComplete: handleSessionComplete,
-      onExit: () => { clear(); router.push(`/lexicon/${categoryId}`) },
+      onExit: () => {
+        clear()
+        router.push(`/lexicon/${categoryId}`)
+      },
     }
-    return (
-      <PageLayout variant="lesson" hero={header}>
-        <main className="animate-fadeIn flex w-full items-center justify-center px-10 py-10">
-          <PracticeSession key={sessionKey} {...sessionConfig} />
-        </main>
-      </PageLayout>
-    )
+
+    return <PracticeSession key={sessionKey} {...sessionConfig} />
   }
 
   return null

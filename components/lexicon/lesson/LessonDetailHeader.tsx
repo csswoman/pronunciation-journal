@@ -1,91 +1,99 @@
-// Planned structure:
-// <LessonDetailHeader>
-//   <Breadcrumb />
-//   <TitleRow: dot + title + subtitle />
-//   <ProgressStats: bar + legend />
-// </LessonDetailHeader>
-
 "use client";
 
 import Link from "next/link";
-import { ChevronRight, Layers } from "lucide-react";
+import { Layers } from "lucide-react";
 import Button from "@/components/ui/Button";
+import { PracticeButton } from "./PracticeButton";
 
 interface LessonDetailHeaderProps {
   title: string;
+  blurb: string;
   totalWords: number;
   wordsLearned: number;
   wordsReviewing: number;
-  sortLabel?: string;
   color: string;
+  categoryId: string;
   onCreateDeck?: () => void;
 }
 
 export function LessonDetailHeader({
   title,
+  blurb,
   totalWords,
   wordsLearned,
   wordsReviewing,
-  sortLabel = "sorted alphabetically",
   color,
+  categoryId,
   onCreateDeck,
 }: LessonDetailHeaderProps) {
-  const learnedPct = (wordsLearned / totalWords) * 100;
-  const reviewingPct = (wordsReviewing / totalWords) * 100;
+  const learnedPct = totalWords > 0 ? (wordsLearned / totalWords) * 100 : 0;
+  const reviewingPct = totalWords > 0 ? (wordsReviewing / totalWords) * 100 : 0;
+  const wordsNew = Math.max(0, totalWords - wordsLearned - wordsReviewing);
 
   return (
-    <div className="flex items-start justify-between gap-6">
-      {/* Left: breadcrumb + title */}
-      <div className="space-y-1">
-        <nav className="flex items-center gap-1 text-xs text-fg-muted">
-          <Link href="/words?tab=lexicon" className="hover:text-fg transition-colors">
-            Lexicon
-          </Link>
-          <ChevronRight className="w-3 h-3" />
-          <span className="text-fg">{title}</span>
+    <header className="lexicon-area__head">
+      <div>
+        <nav className="lexicon-area__crumb" aria-label="Breadcrumb">
+          <Link href="/words?tab=lexicon">Lexicon</Link>
+          {" › "}
+          <strong>{title}</strong>
         </nav>
 
-        <div className="flex items-center gap-2 mt-1">
-          <span className="w-3 h-3 rounded-full flex-shrink-0" style={{ backgroundColor: color }} />
-          <h1 className="text-3xl font-bold text-fg">{title}</h1>
-        </div>
+        <h1 className="mt-1">
+          <span className="lexicon-area__dot" style={{ background: color }} aria-hidden />
+          <span className="lexicon-area__title">{title}</span>
+        </h1>
 
-        <p className="text-sm text-fg-muted pl-5">
-          {totalWords.toLocaleString()} words · {sortLabel}
+        <p className="lexicon-area__sub">
+          {totalWords.toLocaleString()} words · {blurb}
         </p>
       </div>
 
-      {/* Right: progress stats + create deck button */}
-      <div className="flex-shrink-0 min-w-48 space-y-2 text-right">
-        <div>
-          <span className="text-2xl font-semibold text-fg">{wordsLearned.toLocaleString()}</span>
-          <span className="text-sm text-fg-muted"> learned</span>
-          <span className="text-sm text-fg-muted"> / of {totalWords.toLocaleString()}</span>
+      <div className="lexicon-area__prog">
+        <div className="lexicon-area__prog-top">
+          <span className="lexicon-area__prog-num">{wordsLearned.toLocaleString()}</span>
+          <span className="lexicon-area__prog-label">
+            learned / {totalWords.toLocaleString()}
+          </span>
         </div>
 
-        {/* Progress bar */}
-        <div className="h-2 rounded-full bg-surface-sunken overflow-hidden">
-          <div className="h-full flex">
-            <div className="bg-primary h-full" style={{ width: `${learnedPct}%` }} />
-            <div className="bg-warning h-full" style={{ width: `${reviewingPct}%` }} />
-          </div>
+        <div className="lexicon-area__segbar" role="progressbar" aria-valuenow={wordsLearned} aria-valuemin={0} aria-valuemax={totalWords}>
+          <i className="lexicon-area__segbar-learned" style={{ width: `${learnedPct}%` }} />
+          <i className="lexicon-area__segbar-review" style={{ width: `${reviewingPct}%` }} />
         </div>
 
-        {/* Legend */}
-        <div className="flex items-center justify-end gap-3 text-xs text-fg-muted">
-          <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-primary inline-block" />Learned</span>
-          <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-warning inline-block" />Reviewing</span>
-          <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-border-default inline-block" />New</span>
+        <div className="lexicon-area__legend">
+          <span className="lexicon-area__legend-item">
+            <span className="lexicon-area__legend-dot" style={{ background: "var(--success)" }} />
+            Learned
+          </span>
+          <span className="lexicon-area__legend-item">
+            <span className="lexicon-area__legend-dot" style={{ background: "var(--warning)" }} />
+            Reviewing
+          </span>
+          <span className="lexicon-area__legend-item">
+            <span
+              className="lexicon-area__legend-dot"
+              style={{ background: "var(--text-tertiary)", opacity: 0.5 }}
+            />
+            New ({wordsNew.toLocaleString()})
+          </span>
         </div>
 
-        {onCreateDeck && (
-          <div className="pt-1">
+        <div className="lexicon-area__hbtns">
+          {wordsReviewing > 0 ? (
+            <span className="lexicon-area__due">
+              {wordsReviewing.toLocaleString()} due for review
+            </span>
+          ) : null}
+          {onCreateDeck ? (
             <Button variant="secondary" size="sm" onClick={onCreateDeck} icon={<Layers size={14} />}>
               Create deck
             </Button>
-          </div>
-        )}
+          ) : null}
+          <PracticeButton categoryId={categoryId} />
+        </div>
       </div>
-    </div>
+    </header>
   );
 }
