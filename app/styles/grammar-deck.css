@@ -32,21 +32,9 @@
   color: var(--text-tertiary);
 }
 
-/* Sticky deck header */
 .grammar-deck__head {
   padding: 38px 0 22px;
-  position: sticky;
-  top: 0;
-  z-index: 5;
-  background-color: var(--surface-base);
-  background-image: linear-gradient(
-    to bottom,
-    var(--surface-base) 0%,
-    var(--surface-base) 75%,
-    color-mix(in oklch, var(--surface-base) 88%, var(--bg)) 100%
-  );
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  background: transparent;
 }
 
 .grammar-deck__head .grammar-deck__eyebrow {
