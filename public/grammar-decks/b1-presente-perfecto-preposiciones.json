@@ -1,0 +1,128 @@
+{
+  "meta": {
+    "eyebrow": "B1 · Present perfect y preposiciones",
+    "title": "Present perfect y",
+    "titleEmphasis": "preposiciones"
+  },
+  "cards": [
+    {
+      "id": "pp-unfinished",
+      "tag": "Present perfect",
+      "title": "Conecta pasado y presente",
+      "lede": "have / has + participio. Para acciones del pasado que siguen importando ahora.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Experiencia", "value": "I have visited Rome twice.", "highlights": ["have visited"], "hint": "en mi vida" },
+            { "key": "Resultado", "value": "She has lost her keys.", "highlights": ["has lost"], "hint": "y siguen perdidas" },
+            { "key": "Tiempo no acabado", "value": "I have worked a lot this week.", "highlights": ["this week"], "hint": "la semana sigue" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Idea clave:",
+        "body": "no dices cuándo pasó exactamente; lo que importa es su conexión con el presente."
+      }
+    },
+    {
+      "id": "pp-for-since",
+      "tag": "for / since",
+      "title": "for y since",
+      "titleItalic": ["for", "since"],
+      "lede": "Las dos hablan de duración, pero miden el tiempo de forma distinta.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "for",
+              "rule": "+ periodo de tiempo",
+              "examples": ["for two years", "for ten minutes"]
+            },
+            {
+              "label": "since",
+              "rule": "+ punto de inicio",
+              "examples": ["since 2020", "since Monday"]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Truco:",
+        "body": "for = cuánto tiempo (un periodo); since = desde cuándo (un momento exacto)."
+      }
+    },
+    {
+      "id": "pp-adverbs",
+      "tag": "Adverbios",
+      "title": "just, already, yet, still",
+      "lede": "Matizan cuándo y cómo de reciente. Cada uno tiene su posición.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "just", "value": "hace nada · I've just arrived.", "highlights": ["just"], "hint": "antes del participio" },
+            { "key": "already", "value": "ya · I've already done it.", "highlights": ["already"], "hint": "antes de lo esperado" },
+            { "key": "yet", "value": "todavía no · I haven't finished yet.", "highlights": ["yet"], "hint": "al final, negativos/preguntas" },
+            { "key": "still", "value": "aún · I still haven't called.", "highlights": ["still"], "hint": "antes del auxiliar" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pp-vs-past",
+      "tag": "Contraste",
+      "title": "Present perfect vs past simple",
+      "lede": "El error más común de B1. Depende de si el momento es conocido o no.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "I have seen her yesterday." },
+            { "variant": "good", "text": "I saw her yesterday.", "note": "yesterday = momento concreto → pasado" },
+            { "variant": "bad", "text": "Did you ever eat sushi?" },
+            { "variant": "good", "text": "Have you ever eaten sushi?", "note": "experiencia sin fecha → present perfect" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pp-prep-time",
+      "tag": "Preposiciones",
+      "title": "in, on, at con tiempo y lugar",
+      "lede": "Las tres preposiciones más usadas. Van de lo grande (in) a lo concreto (at).",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "in", "value": "meses, años, lugares grandes · in May · in a car", "highlights": ["in"], "hint": "lo más general" },
+            { "key": "on", "value": "días, superficies · on Monday · on the wall", "highlights": ["on"] },
+            { "key": "at", "value": "horas, puntos exactos · at 5pm · at the door", "highlights": ["at"], "hint": "lo más preciso" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pp-dependent",
+      "tag": "Preposiciones fijas",
+      "title": "Verbos y adjetivos con preposición",
+      "lede": "Algunas palabras piden siempre una preposición concreta. Memorízalas juntas.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "good at", "value": "bueno en · good at maths", "highlights": ["good at"] },
+            { "key": "interested in", "value": "interesado en · interested in art", "highlights": ["interested in"] },
+            { "key": "depend on", "value": "depender de · It depends on you.", "highlights": ["depend on"] },
+            { "key": "listen to", "value": "escuchar · listen to music", "highlights": ["listen to"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Calco común:",
+        "body": "se dice depend on (no \"depend of\") y listen to (no \"listen\" a secas)."
+      }
+    }
+  ]
+}

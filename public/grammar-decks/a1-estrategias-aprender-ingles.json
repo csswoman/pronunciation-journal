@@ -1,0 +1,128 @@
+{
+  "meta": {
+    "eyebrow": "A1 · Cómo estudiar",
+    "title": "Estrategias para",
+    "titleEmphasis": "aprender"
+  },
+  "cards": [
+    {
+      "id": "es-mindset",
+      "tag": "Mentalidad",
+      "title": "El error es parte del método",
+      "lede": "Nadie aprende un idioma sin equivocarse. Hablar imperfecto vale más que callar.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Te frena",
+              "rule": "miedo al error",
+              "examples": ["Espero a hablar perfecto", "Solo estudio reglas", "Me da vergüenza"]
+            },
+            {
+              "label": "Te impulsa",
+              "rule": "práctica con errores",
+              "examples": ["Hablo desde hoy", "Uso lo poco que sé", "Pido que me corrijan"]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Idea clave:",
+        "body": "el objetivo de A1 es comunicar, no ser perfecto. La fluidez llega con el uso."
+      }
+    },
+    {
+      "id": "es-routine",
+      "tag": "Rutina",
+      "title": "Poco y diario gana",
+      "lede": "La constancia importa más que las sesiones largas. El cerebro fija con repetición.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "15 min al día", "value": "supera 3 horas de un solo día", "highlights": ["15 min al día"] },
+            { "key": "Misma hora", "value": "crea un hábito automático (después del café)", "highlights": ["hábito"] },
+            { "key": "Racha", "value": "no rompas la cadena dos días seguidos", "highlights": ["la cadena"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Truco:",
+        "body": "engancha el inglés a algo que ya haces: en el transporte, mientras cocinas, antes de dormir."
+      }
+    },
+    {
+      "id": "es-input",
+      "tag": "Input",
+      "title": "Escucha y lee mucho (input)",
+      "lede": "Aprendes absorbiendo lengua real. Busca contenido que entiendas casi todo, no todo.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Comprensible", "value": "entiendes ~80%: ni muy fácil ni imposible", "highlights": ["~80%"] },
+            { "key": "Que te guste", "value": "series, canciones, podcasts de tus temas", "highlights": ["te guste"] },
+            { "key": "Repetido", "value": "vuelve al mismo episodio: cada vez pillas más", "highlights": ["mismo episodio"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "es-techniques",
+      "tag": "Técnicas",
+      "title": "Dos técnicas que funcionan",
+      "lede": "Métodos probados para memorizar y para soltarte al hablar.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Repetición espaciada", "value": "repasa flashcards justo antes de olvidarlas", "highlights": ["antes de olvidarlas"] },
+            { "key": "Shadowing", "value": "repite en voz alta a la vez que el audio, imitando el ritmo", "highlights": ["en voz alta"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Shadowing:",
+        "body": "no traduzcas; copia la melodía y la velocidad. Tu boca aprende el sonido."
+      }
+    },
+    {
+      "id": "es-environment",
+      "tag": "Entorno",
+      "title": "Rodéate de inglés",
+      "lede": "No tienes que viajar: convierte lo que ya usas en una clase pasiva.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "El teléfono", "value": "ponlo en inglés: ves palabras útiles cada día", "highlights": ["en inglés"] },
+            { "key": "Subtítulos", "value": "en inglés, no en español, para asociar sonido y texto", "highlights": ["en inglés"] },
+            { "key": "Etiquetas", "value": "nombra objetos de tu casa en inglés", "highlights": ["nombra objetos"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "es-goals",
+      "tag": "Metas",
+      "title": "Objetivos que sí se cumplen",
+      "lede": "Una meta vaga (\"saber inglés\") no se mide. Hazla concreta y pequeña.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "Quiero aprender inglés." },
+            { "variant": "good", "text": "Voy a estudiar 15 min cada mañana este mes.", "note": "medible y con plazo" },
+            { "variant": "bad", "text": "Voy a ver muchas series." },
+            { "variant": "good", "text": "Veo un episodio con subtítulos en inglés a la semana.", "note": "concreto" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Mídelo:",
+        "body": "una meta sirve si puedes responder sí o no a si la cumpliste hoy."
+      }
+    }
+  ]
+}

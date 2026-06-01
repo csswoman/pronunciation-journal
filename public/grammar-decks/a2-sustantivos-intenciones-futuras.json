@@ -1,0 +1,134 @@
+{
+  "meta": {
+    "eyebrow": "A2 · Sustantivos y futuro",
+    "title": "Cantidades y",
+    "titleEmphasis": "futuro"
+  },
+  "cards": [
+    {
+      "id": "nf-count",
+      "tag": "Sustantivos",
+      "title": "Contables vs incontables",
+      "lede": "Saber si un sustantivo se cuenta o no decide qué palabras puedes usar con él.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Contables",
+              "rule": "se pueden contar (1, 2, 3)",
+              "examples": ["a book / two books", "an apple / apples"]
+            },
+            {
+              "label": "Incontables",
+              "rule": "masa, no plural",
+              "examples": ["water (no \"waters\")", "money, rice, time"]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Truco:",
+        "body": "si no puedes ponerle un número delante (one rice ✗), es incontable."
+      }
+    },
+    {
+      "id": "nf-some-any",
+      "tag": "some / any",
+      "title": "some y any",
+      "titleItalic": ["some", "any"],
+      "lede": "Hablan de cantidades indefinidas. La elección depende del tipo de frase.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "some", "value": "afirmativo · I have some money.", "highlights": ["some"], "hint": "algo de dinero" },
+            { "key": "any", "value": "negativo y pregunta · I don't have any. · Do you have any?", "highlights": ["any"] },
+            { "key": "some (ofrecer)", "value": "Would you like some tea?", "highlights": ["some"], "hint": "en ofrecimientos sí va some" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "nf-much-many",
+      "tag": "Cantidad",
+      "title": "much, many, a lot of",
+      "lede": "Cuánto hay. Depende de si el sustantivo es contable o incontable.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "many", "value": "+ contables · How many friends?", "highlights": ["many"], "hint": "muchos amigos" },
+            { "key": "much", "value": "+ incontables · How much time?", "highlights": ["much"], "hint": "cuánto tiempo" },
+            { "key": "a lot of", "value": "vale para los dos · a lot of people / water", "highlights": ["a lot of"], "hint": "mucho/a" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Consejo:",
+        "body": "much y many se usan más en preguntas y negativos. En afirmativo suena mejor a lot of."
+      }
+    },
+    {
+      "id": "nf-will",
+      "tag": "Futuro",
+      "title": "will: decisiones y predicciones",
+      "titleItalic": ["will"],
+      "lede": "will + verbo base. Para lo que decides en el momento o lo que crees que pasará.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Decisión", "value": "It's cold. I'll close the window.", "highlights": ["I'll close"], "hint": "decisión espontánea" },
+            { "key": "Predicción", "value": "I think it will rain.", "highlights": ["will rain"], "hint": "creencia / opinión" },
+            { "key": "Promesa", "value": "I'll call you later.", "highlights": ["I'll call"], "hint": "te llamaré" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "nf-will-vs-going",
+      "tag": "Contraste",
+      "title": "will vs be going to",
+      "lede": "Los dos son futuro, pero no se usan igual. Mira la diferencia.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "will",
+              "rule": "decides al hablar",
+              "examples": ["OK, I'll help you.", "I think she'll win."]
+            },
+            {
+              "label": "going to",
+              "rule": "plan ya decidido",
+              "examples": ["I'm going to help (lo planeé).", "Look! It's going to fall."]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Idea base:",
+        "body": "going to = ya estaba planeado; will = lo decides en este instante."
+      }
+    },
+    {
+      "id": "nf-traps",
+      "tag": "Errores comunes",
+      "title": "Trampas de cantidad",
+      "lede": "El plural y los incontables generan calcos del español. Compara:",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "I need some informations." },
+            { "variant": "good", "text": "I need some information.", "note": "information es incontable" },
+            { "variant": "bad", "text": "There are many money." },
+            { "variant": "good", "text": "There is a lot of money.", "note": "money es incontable → much / a lot of" }
+          ]
+        }
+      ]
+    }
+  ]
+}

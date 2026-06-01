@@ -1,0 +1,121 @@
+{
+  "meta": {
+    "eyebrow": "A2 · Audio historia · Sound Lab",
+    "title": "Aventura en la",
+    "titleEmphasis": "ciudad"
+  },
+  "cards": [
+    {
+      "id": "ct-vocab",
+      "tag": "Vocabulario",
+      "title": "Lugares de la ciudad",
+      "lede": "Las palabras clave de la historia. Reconócelas al oírlas en el audio.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "corner", "value": "esquina · on the corner", "highlights": ["corner"] },
+            { "key": "square", "value": "plaza · the main square", "highlights": ["square"] },
+            { "key": "block", "value": "manzana / cuadra · two blocks away", "highlights": ["block"] },
+            { "key": "crossroads", "value": "cruce · at the crossroads", "highlights": ["crossroads"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ct-ask",
+      "tag": "Preguntar",
+      "title": "Pedir direcciones",
+      "lede": "Frases hechas para preguntar cómo llegar. Apréndelas como bloques.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Excuse me", "value": "para empezar · Excuse me, where is...?", "highlights": ["Excuse me"], "hint": "disculpa" },
+            { "key": "How do I get to...?", "value": "¿cómo llego a...?", "highlights": ["How do I get to...?"] },
+            { "key": "Is it far?", "value": "¿está lejos?", "highlights": ["Is it far?"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Suena natural:",
+        "body": "empieza siempre con Excuse me antes de preguntar a un desconocido."
+      }
+    },
+    {
+      "id": "ct-give",
+      "tag": "Indicar",
+      "title": "Dar direcciones",
+      "lede": "Las respuestas que oirás. Son imperativos: van directo al verbo.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Go straight", "value": "sigue recto · go straight on", "highlights": ["Go straight"] },
+            { "key": "Turn left / right", "value": "gira a la izquierda / derecha", "highlights": ["Turn left", "right"] },
+            { "key": "Take the...", "value": "toma la... · take the second street", "highlights": ["Take the"] },
+            { "key": "It's on your left", "value": "está a tu izquierda", "highlights": ["on your left"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ct-prepositions",
+      "tag": "Preposiciones",
+      "title": "Dónde está: preposiciones de lugar",
+      "lede": "Sitúan los lugares en el espacio. Muy frecuentes al dar direcciones.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "next to", "value": "al lado de · next to the bank", "highlights": ["next to"] },
+            { "key": "across from", "value": "enfrente de · across from the park", "highlights": ["across from"] },
+            { "key": "between", "value": "entre · between the shop and the café", "highlights": ["between"] },
+            { "key": "on the corner of", "value": "en la esquina de", "highlights": ["on the corner of"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ct-linking",
+      "tag": "Escucha",
+      "title": "Por qué suena todo junto",
+      "lede": "Al hablar rápido, las palabras se enlazan. Por eso cuesta separarlas al oír.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "tur-n left (separado, como se escribe)" },
+            { "variant": "good", "text": "turn-left → \"turnleft\"", "note": "consonante + vocal se enlazan" },
+            { "variant": "bad", "text": "go straight on (tres golpes)" },
+            { "variant": "good", "text": "\"gostraighton\"", "note": "suena como una sola palabra" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Estrategia:",
+        "body": "no intentes oír cada palabra; capta el grupo y la palabra clave (left, right, straight)."
+      }
+    },
+    {
+      "id": "ct-numbers",
+      "tag": "Ordinales",
+      "title": "first, second, third",
+      "lede": "Para decir qué calle tomar se usan números ordinales. Repásalos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "first (1st)", "value": "take the first street", "highlights": ["first"], "hint": "primera" },
+            { "key": "second (2nd)", "value": "the second on the right", "highlights": ["second"], "hint": "segunda" },
+            { "key": "third (3rd)", "value": "the third traffic light", "highlights": ["third"], "hint": "tercer" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Pronunciación:",
+        "body": "third lleva el sonido th: saca la lengua, no digas \"terd\"."
+      }
+    }
+  ]
+}

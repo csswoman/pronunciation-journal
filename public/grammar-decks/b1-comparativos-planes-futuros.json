@@ -1,0 +1,114 @@
+{
+  "meta": {
+    "eyebrow": "B1 · Comparativos y futuro",
+    "title": "Comparar y",
+    "titleEmphasis": "planear"
+  },
+  "cards": [
+    {
+      "id": "cf-comparatives",
+      "tag": "Comparativos",
+      "title": "más que: -er o more",
+      "lede": "Para comparar dos cosas. La regla depende de la longitud del adjetivo.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Cortos (+ -er)", "value": "cheap → cheaper than", "highlights": ["cheaper than"], "hint": "1 sílaba" },
+            { "key": "y → ier", "value": "easy → easier than", "highlights": ["easier than"] },
+            { "key": "Largos (more)", "value": "expensive → more expensive than", "highlights": ["more expensive"], "hint": "2+ sílabas" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Recuerda:",
+        "body": "la palabra que une la comparación es than: bigger than, more useful than."
+      }
+    },
+    {
+      "id": "cf-superlatives",
+      "tag": "Superlativos",
+      "title": "el más: -est o most",
+      "lede": "Para destacar uno dentro de un grupo. Casi siempre lleva the delante.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Cortos (the -est)", "value": "cheap → the cheapest", "highlights": ["the cheapest"] },
+            { "key": "Largos (the most)", "value": "the most expensive", "highlights": ["the most expensive"] },
+            { "key": "Con grupo", "value": "the best in the world", "highlights": ["the best"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cf-irregular",
+      "tag": "Irregulares",
+      "title": "good, bad, far",
+      "lede": "Estos no siguen la regla: cambian de forma por completo. Apréndelos de memoria.",
+      "blocks": [
+        {
+          "type": "verb-table",
+          "headers": ["Adjetivo", "Comparativo", "Superlativo", "Español"],
+          "rows": [
+            ["good", "better", "the best", "bueno"],
+            ["bad", "worse", "the worst", "malo"],
+            ["far", "further", "the furthest", "lejos"],
+            ["little", "less", "the least", "poco"]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cf-asas",
+      "tag": "Igualdad",
+      "title": "as ... as",
+      "titleItalic": ["as ... as"],
+      "lede": "Para decir que dos cosas son iguales, o que no lo son.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "good", "text": "She is as tall as her brother.", "note": "igual de alta" },
+            { "variant": "good", "text": "It isn't as cold as yesterday.", "note": "menos frío que ayer" },
+            { "variant": "bad", "text": "She is so tall as him." },
+            { "variant": "good", "text": "She is as tall as he is.", "note": "as... as, no \"so... as\"" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cf-future",
+      "tag": "Futuro",
+      "title": "Tres formas de hablar del futuro",
+      "lede": "Cada una tiene su matiz. Elegir bien hace que suenes natural.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Present continuous", "value": "cita ya fijada · I'm meeting Ana at 6.", "highlights": ["I'm meeting"], "hint": "agenda con hora/lugar" },
+            { "key": "be going to", "value": "intención · I'm going to study tonight.", "highlights": ["going to study"] },
+            { "key": "will", "value": "decisión del momento · I'll get it!", "highlights": ["I'll get it"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cf-traps",
+      "tag": "Errores comunes",
+      "title": "Trampas al comparar",
+      "lede": "Mezclar more con -er o usar of en vez de in son los fallos típicos.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "She is more taller than me." },
+            { "variant": "good", "text": "She is taller than me.", "note": "o more tall, nunca los dos" },
+            { "variant": "bad", "text": "the best player of the team" },
+            { "variant": "good", "text": "the best player in the team", "note": "con grupos se usa in" }
+          ]
+        }
+      ]
+    }
+  ]
+}

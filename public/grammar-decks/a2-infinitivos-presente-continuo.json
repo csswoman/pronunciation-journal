@@ -1,0 +1,125 @@
+{
+  "meta": {
+    "eyebrow": "A2 · Infinitivos y -ing",
+    "title": "Presente",
+    "titleEmphasis": "continuo"
+  },
+  "cards": [
+    {
+      "id": "pc-form",
+      "tag": "Forma",
+      "title": "be + verbo-ing",
+      "lede": "El presente continuo describe algo que pasa ahora mismo. Se forma con to be + -ing.",
+      "blocks": [
+        {
+          "type": "conjugation",
+          "rows": [
+            { "pronoun": "I", "form": "am working", "hint": "I'm working" },
+            { "pronoun": "He / She / It", "form": "is working", "hint": "she's working" },
+            { "pronoun": "You / We / They", "form": "are working", "hint": "we're working" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Recuerda:",
+        "body": "siempre hay dos partes: el verbo to be + el verbo principal en -ing. No olvides el be."
+      }
+    },
+    {
+      "id": "pc-spelling",
+      "tag": "Ortografía",
+      "title": "Cómo añadir -ing",
+      "lede": "Casi siempre solo -ing, pero hay dos cambios frecuentes que debes recordar.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "+ ing (normal)", "value": "play → playing · go → going", "highlights": ["playing", "going"] },
+            { "key": "quita -e", "value": "make → making · write → writing", "highlights": ["making", "writing"] },
+            { "key": "dobla consonante", "value": "run → running · sit → sitting", "highlights": ["running", "sitting"], "hint": "vocal corta + consonante" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pc-vs-simple",
+      "tag": "Contraste",
+      "title": "Continuo vs simple",
+      "lede": "Confundirlos cambia el sentido: ahora mismo no es lo mismo que en general.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Continuo",
+              "rule": "ahora mismo",
+              "examples": ["I'm eating now.", "She's working today."]
+            },
+            {
+              "label": "Simple",
+              "rule": "rutina o hecho",
+              "examples": ["I eat at 2pm.", "She works in a bank."]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Pista:",
+        "body": "now, right now, at the moment piden continuo; always, every day piden simple."
+      }
+    },
+    {
+      "id": "pc-stative",
+      "tag": "Excepción",
+      "title": "Verbos que no usan -ing",
+      "lede": "Algunos verbos describen estados, no acciones, y no van en continuo.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "I am wanting a coffee." },
+            { "variant": "good", "text": "I want a coffee.", "note": "want es un estado" },
+            { "variant": "bad", "text": "I am knowing the answer." },
+            { "variant": "good", "text": "I know the answer.", "note": "know, like, need, love → simple" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pc-infinitive-purpose",
+      "tag": "Infinitivo",
+      "title": "to + verbo = para",
+      "titleItalic": ["to"],
+      "lede": "El infinitivo con to expresa el propósito de algo: para qué lo haces.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Propósito", "value": "I study to get a better job.", "highlights": ["to get"], "hint": "para conseguir" },
+            { "key": "Después de verbo", "value": "I want to travel. · She needs to rest.", "highlights": ["to travel", "to rest"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Calco común:",
+        "body": "no digas \"for to get\". El propósito es solo to + verbo: to get, to learn."
+      }
+    },
+    {
+      "id": "pc-ing-vs-to",
+      "tag": "Patrones",
+      "title": "-ing o to después del verbo",
+      "lede": "Cada verbo pide una forma. Memoriza estos grupos frecuentes.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "+ -ing", "value": "enjoy, like, finish · I enjoy reading.", "highlights": ["reading"] },
+            { "key": "+ to", "value": "want, need, decide · I decided to leave.", "highlights": ["to leave"] },
+            { "key": "going to", "value": "para planes · I'm going to call her.", "highlights": ["going to call"] }
+          ]
+        }
+      ]
+    }
+  ]
+}

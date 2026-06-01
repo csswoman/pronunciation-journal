@@ -1,0 +1,146 @@
+{
+  "meta": {
+    "eyebrow": "A1 · Construcción de oraciones",
+    "title": "Cómo se arma una",
+    "titleEmphasis": "oración"
+  },
+  "cards": [
+    {
+      "id": "co-svo",
+      "tag": "Orden básico",
+      "title": "Sujeto + Verbo + Objeto",
+      "lede": "El inglés es muy estricto con el orden. Casi siempre: quién, qué hace, sobre qué.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Sujeto", "value": "quién realiza la acción · She", "highlights": ["She"] },
+            { "key": "Verbo", "value": "la acción · eats", "highlights": ["eats"] },
+            { "key": "Objeto", "value": "qué o quién la recibe · an apple", "highlights": ["an apple"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Clave:",
+        "body": "el sujeto casi nunca se omite. En español dices \"Trabajo\"; en inglés siempre \"I work\"."
+      }
+    },
+    {
+      "id": "co-parts",
+      "tag": "Parts of speech",
+      "title": "Los tipos de palabra",
+      "lede": "Saber qué función tiene cada palabra te ayuda a colocarla bien.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Noun (sustantivo)", "value": "persona, cosa o lugar · dog, city, love", "highlights": ["dog", "city"] },
+            { "key": "Verb (verbo)", "value": "acción o estado · run, be, have", "highlights": ["run", "be"] },
+            { "key": "Adjective (adjetivo)", "value": "describe al sustantivo · big, red, happy", "highlights": ["big", "red"] },
+            { "key": "Adverb (adverbio)", "value": "describe al verbo · quickly, always", "highlights": ["quickly", "always"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "co-adjective-order",
+      "tag": "Adjetivos",
+      "title": "El adjetivo va antes",
+      "lede": "En inglés el adjetivo se pone antes del sustantivo, al revés que en español.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "a car red" },
+            { "variant": "good", "text": "a red car", "note": "adjetivo + sustantivo" },
+            { "variant": "bad", "text": "a house big and white" },
+            { "variant": "good", "text": "a big white house", "note": "varios adjetivos, también antes" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Bonus:",
+        "body": "el adjetivo no cambia en plural: red cars (nunca \"reds cars\")."
+      }
+    },
+    {
+      "id": "co-three-forms",
+      "tag": "Estructura",
+      "title": "Afirmar, negar, preguntar",
+      "lede": "Cada tipo de oración tiene su propio orden. Compáralos lado a lado.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Afirmativa",
+              "rule": "sujeto + verbo",
+              "examples": ["You like coffee.", "She is happy."]
+            },
+            {
+              "label": "Negativa",
+              "rule": "+ don't / isn't",
+              "examples": ["You don't like coffee.", "She isn't happy."]
+            },
+            {
+              "label": "Pregunta",
+              "rule": "auxiliar al inicio",
+              "examples": ["Do you like coffee?", "Is she happy?"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "co-articles",
+      "tag": "Artículos",
+      "title": "a · an · the",
+      "titleItalic": ["a · an · the"],
+      "lede": "Pequeños pero obligatorios delante de muchos sustantivos. Depende del sonido.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "a",
+              "rule": "+ sonido consonante",
+              "examples": ["a book", "a university (yu-)"]
+            },
+            {
+              "label": "an",
+              "rule": "+ sonido vocal",
+              "examples": ["an apple", "an hour (h muda)"]
+            }
+          ]
+        },
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "the", "value": "algo específico o ya conocido · the book on the table", "highlights": ["the book"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Regla del sonido:",
+        "body": "es a university porque suena \"yuniversity\", y an hour porque la h no se pronuncia."
+      }
+    },
+    {
+      "id": "co-wordorder-traps",
+      "tag": "Errores comunes",
+      "title": "Trampas de orden",
+      "lede": "El español es flexible con el orden; el inglés no. Estos calcos suenan raros.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "Is very important the sleep." },
+            { "variant": "good", "text": "Sleep is very important.", "note": "el sujeto va primero" },
+            { "variant": "bad", "text": "I like very much pizza." },
+            { "variant": "good", "text": "I like pizza very much.", "note": "very much va al final" }
+          ]
+        }
+      ]
+    }
+  ]
+}

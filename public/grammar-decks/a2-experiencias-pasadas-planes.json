@@ -1,0 +1,142 @@
+{
+  "meta": {
+    "eyebrow": "A2 · Pasado y planes",
+    "title": "Experiencias y",
+    "titleEmphasis": "planes"
+  },
+  "cards": [
+    {
+      "id": "ep-past-simple",
+      "tag": "Pasado simple",
+      "title": "El pasado simple",
+      "lede": "Para acciones terminadas. Los regulares añaden -ed; los irregulares cambian de forma.",
+      "blocks": [
+        {
+          "type": "verb-table",
+          "headers": ["Base", "Pasado", "Tipo", "Español"],
+          "rows": [
+            ["work", "worked", "regular", "trabajar"],
+            ["play", "played", "regular", "jugar"],
+            ["go", "went", "irregular", "ir"],
+            ["see", "saw", "irregular", "ver"],
+            ["have", "had", "irregular", "tener"],
+            ["buy", "bought", "irregular", "comprar"]
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Ojo:",
+        "body": "el pasado es igual para todas las personas: I went, she went, they went."
+      }
+    },
+    {
+      "id": "ep-past-did",
+      "tag": "Negativo y pregunta",
+      "title": "did / didn't",
+      "titleItalic": ["did", "didn't"],
+      "lede": "En negativo y pregunta usas did + verbo base. El verbo vuelve a su forma original.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Negativo", "value": "I didn't go. (no \"didn't went\")", "highlights": ["didn't go"] },
+            { "key": "Pregunta", "value": "Did you go? · Where did she go?", "highlights": ["Did you go?"] }
+          ]
+        },
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "Did you went?" },
+            { "variant": "good", "text": "Did you go?", "note": "did ya marca el pasado" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ep-present-perfect",
+      "tag": "Experiencias",
+      "title": "Present perfect: lo que has vivido",
+      "lede": "have / has + participio. Para experiencias de tu vida, sin decir cuándo.",
+      "blocks": [
+        {
+          "type": "conjugation",
+          "rows": [
+            { "pronoun": "I / You / We / They", "form": "have been", "hint": "to Paris" },
+            { "pronoun": "He / She / It", "form": "has been", "hint": "to Paris" }
+          ]
+        },
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "ever", "value": "alguna vez · Have you ever tried sushi?", "highlights": ["ever"] },
+            { "key": "never", "value": "nunca · I have never been to Japan.", "highlights": ["never"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ep-contrast",
+      "tag": "Contraste",
+      "title": "Pasado simple vs present perfect",
+      "lede": "El secreto está en si dices cuándo pasó o no.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Past simple",
+              "rule": "momento concreto",
+              "examples": ["I saw it yesterday.", "She went in 2020."]
+            },
+            {
+              "label": "Present perfect",
+              "rule": "experiencia, sin fecha",
+              "examples": ["I have seen it.", "She has been there."]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Regla rápida:",
+        "body": "si la frase lleva yesterday, last week, in 2020... usa pasado simple."
+      }
+    },
+    {
+      "id": "ep-going-to",
+      "tag": "Planes",
+      "title": "be going to: intenciones",
+      "titleItalic": ["going to"],
+      "lede": "Para planes y decisiones que ya tomaste. Estructura: be + going to + verbo.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Plan", "value": "I'm going to study tonight.", "highlights": ["going to study"], "hint": "voy a estudiar" },
+            { "key": "Predicción", "value": "It's going to rain.", "highlights": ["going to rain"], "hint": "va a llover (lo ves venir)" },
+            { "key": "Pregunta", "value": "Are you going to come?", "highlights": ["Are you going to come?"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ep-time-words",
+      "tag": "Tiempo",
+      "title": "ago, yet, already",
+      "lede": "Pequeñas palabras que sitúan la acción en el tiempo. No las traduzcas literal.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "ago", "value": "hace... · two days ago", "highlights": ["ago"], "hint": "va con pasado simple" },
+            { "key": "already", "value": "ya · I have already eaten.", "highlights": ["already"], "hint": "antes de lo esperado" },
+            { "key": "yet", "value": "todavía / ya · Have you finished yet?", "highlights": ["yet"], "hint": "va al final, en preguntas y negativos" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Truco:",
+        "body": "ago se pone DESPUÉS del tiempo (two days ago), no antes."
+      }
+    }
+  ]
+}

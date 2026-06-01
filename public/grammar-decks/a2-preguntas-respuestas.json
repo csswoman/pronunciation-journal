@@ -1,0 +1,124 @@
+{
+  "meta": {
+    "eyebrow": "A2 · Preguntas y respuestas",
+    "title": "Preguntar y",
+    "titleEmphasis": "responder"
+  },
+  "cards": [
+    {
+      "id": "qa-wh",
+      "tag": "Palabras Wh-",
+      "title": "Las palabras de pregunta",
+      "lede": "Sirven para pedir información concreta. Casi todas empiezan por wh-.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "What", "value": "qué · What do you do?", "highlights": ["What"], "hint": "¿a qué te dedicas?" },
+            { "key": "Where", "value": "dónde · Where do you live?", "highlights": ["Where"], "hint": "¿dónde vives?" },
+            { "key": "When", "value": "cuándo · When does it start?", "highlights": ["When"], "hint": "¿cuándo empieza?" },
+            { "key": "Why / How", "value": "por qué / cómo · Why? · How?", "highlights": ["Why", "How"], "hint": "¿por qué? / ¿cómo?" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qa-order",
+      "tag": "Orden",
+      "title": "El orden de la pregunta",
+      "lede": "La fórmula casi siempre es: palabra Wh- + auxiliar + sujeto + verbo.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Wh- + do/does", "value": "Where do you work?", "highlights": ["Where do you work?"], "hint": "presente simple" },
+            { "key": "Wh- + did", "value": "What did she say?", "highlights": ["What did she say?"], "hint": "pasado simple" },
+            { "key": "Wh- + be", "value": "Why are you late?", "highlights": ["Why are you late?"], "hint": "con to be no se usa do" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Clave:",
+        "body": "el verbo principal va en su forma base: Where does she live? (no \"lives\")."
+      }
+    },
+    {
+      "id": "qa-yesno",
+      "tag": "Sí / No",
+      "title": "Preguntas de sí o no",
+      "lede": "No llevan palabra Wh-: empiezan directamente con el auxiliar o con to be.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Afirmación",
+              "rule": "sujeto primero",
+              "examples": ["You speak English.", "She is ready."]
+            },
+            {
+              "label": "Pregunta",
+              "rule": "auxiliar primero",
+              "examples": ["Do you speak English?", "Is she ready?"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qa-short",
+      "tag": "Respuestas",
+      "title": "Respuestas cortas",
+      "lede": "No repitas todo: contesta con el auxiliar. Es lo natural en inglés.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Do you...?", "value": "Yes, I do. · No, I don't.", "highlights": ["Yes, I do.", "No, I don't."] },
+            { "key": "Does he...?", "value": "Yes, he does. · No, he doesn't.", "highlights": ["Yes, he does.", "No, he doesn't."] },
+            { "key": "Are you...?", "value": "Yes, I am. · No, I'm not.", "highlights": ["Yes, I am.", "No, I'm not."] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Suena raro:",
+        "body": "responder solo \"Yes\" es seco. Añadir el auxiliar (Yes, I do) suena más natural y educado."
+      }
+    },
+    {
+      "id": "qa-howmany",
+      "tag": "How + ...",
+      "title": "How much, How many, How often",
+      "titleItalic": ["How"],
+      "lede": "How se combina con otras palabras para preguntar cantidad, frecuencia o tiempo.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "How much", "value": "incontables · How much is it?", "highlights": ["How much"], "hint": "¿cuánto cuesta?" },
+            { "key": "How many", "value": "contables · How many people?", "highlights": ["How many"], "hint": "¿cuántas personas?" },
+            { "key": "How often", "value": "frecuencia · How often do you train?", "highlights": ["How often"], "hint": "¿cada cuánto?" },
+            { "key": "How long", "value": "duración · How long does it take?", "highlights": ["How long"], "hint": "¿cuánto dura?" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qa-traps",
+      "tag": "Errores comunes",
+      "title": "Trampas al preguntar",
+      "lede": "El error típico: olvidar el auxiliar o conjugar dos veces. Compara:",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "Where you live?" },
+            { "variant": "good", "text": "Where do you live?", "note": "falta el auxiliar do" },
+            { "variant": "bad", "text": "What does she likes?" },
+            { "variant": "good", "text": "What does she like?", "note": "la -s ya está en does" }
+          ]
+        }
+      ]
+    }
+  ]
+}

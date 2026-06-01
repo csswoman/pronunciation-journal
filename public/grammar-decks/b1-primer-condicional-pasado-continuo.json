@@ -1,0 +1,121 @@
+{
+  "meta": {
+    "eyebrow": "B1 · Condicional y pasado continuo",
+    "title": "Condicional y",
+    "titleEmphasis": "pasado continuo"
+  },
+  "cards": [
+    {
+      "id": "cc-past-cont-form",
+      "tag": "Pasado continuo",
+      "title": "was / were + verbo-ing",
+      "lede": "Describe una acción en progreso en un momento del pasado.",
+      "blocks": [
+        {
+          "type": "conjugation",
+          "rows": [
+            { "pronoun": "I / He / She / It", "form": "was working", "hint": "at 8pm" },
+            { "pronoun": "You / We / They", "form": "were working", "hint": "at 8pm" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Uso típico:",
+        "body": "pone el escenario de una historia: It was raining and I was waiting..."
+      }
+    },
+    {
+      "id": "cc-interrupt",
+      "tag": "Contraste",
+      "title": "Acción larga interrumpida",
+      "lede": "El pasado continuo es el fondo; el pasado simple es lo que lo interrumpe.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Past continuous",
+              "rule": "acción en curso (fondo)",
+              "examples": ["I was sleeping", "She was cooking"]
+            },
+            {
+              "label": "Past simple",
+              "rule": "acción que interrumpe",
+              "examples": ["when the phone rang", "when he arrived"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cc-when-while",
+      "tag": "when / while",
+      "title": "when y while",
+      "titleItalic": ["when", "while"],
+      "lede": "Conectan las dos acciones. Suelen acompañar a uno u otro tiempo.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "while", "value": "+ acción larga · While I was reading...", "highlights": ["while"], "hint": "+ pasado continuo" },
+            { "key": "when", "value": "+ acción corta · ...when the lights went out.", "highlights": ["when"], "hint": "+ pasado simple" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Regla rápida:",
+        "body": "while suele ir con -ing (lo largo); when, con la acción puntual."
+      }
+    },
+    {
+      "id": "cc-first-cond",
+      "tag": "Primer condicional",
+      "title": "if + presente, will + verbo",
+      "titleItalic": ["if"],
+      "lede": "Para situaciones reales y posibles en el futuro y su consecuencia.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Condición (if)", "value": "presente simple · If it rains...", "highlights": ["If it rains"], "hint": "nunca \"if it will rain\"" },
+            { "key": "Resultado", "value": "will + verbo · ...we will stay home.", "highlights": ["we will stay"] },
+            { "key": "Orden libre", "value": "We'll stay home if it rains. (sin coma)", "highlights": ["if it rains"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cc-unless",
+      "tag": "Variantes",
+      "title": "unless, when, as soon as",
+      "lede": "Otros conectores que también piden presente, aunque hablen del futuro.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "unless", "value": "a menos que (= if not) · unless you hurry", "highlights": ["unless"] },
+            { "key": "as soon as", "value": "en cuanto · as soon as I arrive", "highlights": ["as soon as"] },
+            { "key": "when", "value": "cuando (futuro seguro) · when I finish", "highlights": ["when"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cc-traps",
+      "tag": "Errores comunes",
+      "title": "El will detrás de if",
+      "lede": "El calco más típico: poner will en la parte del if. Evítalo.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "If it will rain, we will stay." },
+            { "variant": "good", "text": "If it rains, we will stay.", "note": "tras if, presente" },
+            { "variant": "bad", "text": "When I will arrive, I'll call you." },
+            { "variant": "good", "text": "When I arrive, I'll call you.", "note": "tras when (futuro), presente" }
+          ]
+        }
+      ]
+    }
+  ]
+}

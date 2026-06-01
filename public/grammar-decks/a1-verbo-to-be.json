@@ -1,0 +1,140 @@
+{
+  "meta": {
+    "eyebrow": "A1 · Verbo to be",
+    "title": "El verbo",
+    "titleEmphasis": "to be"
+  },
+  "cards": [
+    {
+      "id": "to-be-present",
+      "tag": "Conjugación",
+      "title": "to be en presente",
+      "titleItalic": ["to be"],
+      "lede": "Un solo verbo cubre ser y estar. Cambia de forma según el sujeto.",
+      "blocks": [
+        {
+          "type": "conjugation",
+          "rows": [
+            { "pronoun": "I", "form": "am", "hint": "I'm" },
+            { "pronoun": "You", "form": "are", "hint": "you're" },
+            { "pronoun": "He / She / It", "form": "is", "hint": "he's · she's · it's" },
+            { "pronoun": "We", "form": "are", "hint": "we're" },
+            { "pronoun": "They", "form": "are", "hint": "they're" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Contracciones:",
+        "body": "al hablar casi siempre se contrae: I'm, you're, she's. Suena natural y rápido."
+      }
+    },
+    {
+      "id": "to-be-negative",
+      "tag": "Negativo",
+      "title": "Negar con not",
+      "titleItalic": ["not"],
+      "lede": "Para negar añades not después del verbo. No necesitas do/does.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "I", "value": "am not · I'm not tired", "highlights": ["am not"], "hint": "no estoy cansado" },
+            { "key": "He / She / It", "value": "is not · isn't · she isn't here", "highlights": ["isn't"], "hint": "no está aquí" },
+            { "key": "You / We / They", "value": "are not · aren't · we aren't ready", "highlights": ["aren't"], "hint": "no estamos listos" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Ojo:",
+        "body": "no existe \"amn't\". Para I solo se contrae el sujeto: I'm not."
+      }
+    },
+    {
+      "id": "to-be-questions",
+      "tag": "Preguntas",
+      "title": "Preguntar invirtiendo",
+      "lede": "Para preguntar pones el verbo to be antes del sujeto. No se usa do.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Afirmación",
+              "rule": "sujeto + be",
+              "examples": ["You are happy.", "She is a doctor."]
+            },
+            {
+              "label": "Pregunta",
+              "rule": "be + sujeto + ?",
+              "examples": ["Are you happy?", "Is she a doctor?"]
+            }
+          ]
+        },
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Respuesta corta", "value": "Yes, I am. · No, she isn't.", "highlights": ["Yes, I am.", "No, she isn't."] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Clave:",
+        "body": "en la respuesta corta afirmativa NO se contrae: \"Yes, I am\" (nunca \"Yes, I'm\")."
+      }
+    },
+    {
+      "id": "to-be-uses",
+      "tag": "Usos",
+      "title": "Cuándo se usa to be",
+      "lede": "Edad, origen, sentimientos y descripciones van con to be, no con have.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Edad", "value": "I am 25 (years old).", "highlights": ["am 25"], "hint": "tengo 25 años" },
+            { "key": "Origen", "value": "She is from Mexico.", "highlights": ["is from"], "hint": "es de México" },
+            { "key": "Sentimiento", "value": "We are hungry.", "highlights": ["are hungry"], "hint": "tenemos hambre" },
+            { "key": "Descripción", "value": "It is cold today.", "highlights": ["is cold"], "hint": "hace frío hoy" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "to-be-traps",
+      "tag": "Errores comunes",
+      "title": "Calcos del español",
+      "lede": "El español usa tener donde el inglés usa to be. Memoriza la versión correcta.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "I have 25 years." },
+            { "variant": "good", "text": "I am 25 years old.", "note": "la edad va con to be" },
+            { "variant": "bad", "text": "I have hungry." },
+            { "variant": "good", "text": "I am hungry.", "note": "hambre, frío, calor → to be" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "to-be-there",
+      "tag": "Estructura",
+      "title": "There is / There are = hay",
+      "titleItalic": ["There is", "There are"],
+      "lede": "Para decir que algo existe usas there + to be. Cambia con singular o plural.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "There is", "value": "+ singular · There is a problem.", "highlights": ["There is a problem."], "hint": "hay un problema" },
+            { "key": "There are", "value": "+ plural · There are two cats.", "highlights": ["There are two cats."], "hint": "hay dos gatos" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Contracción:",
+        "body": "There's (singular) es muy común al hablar. El plural no se contrae: there are."
+      }
+    }
+  ]
+}
