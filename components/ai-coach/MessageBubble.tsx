@@ -7,16 +7,25 @@ import SuggestionChips from "./SuggestionChips";
 import ToolWidget from "./chat/ToolWidget";
 import PracticeSession from "./PracticeSession";
 import { isExerciseTool } from "@/lib/ai-practice/tools/registry";
+import { parseCorrection } from "@/lib/ai-coach/parse-correction";
+import CorrectionCard from "./CorrectionCard";
 
 // ── Inline markdown renderer ──────────────────────────────────────────────────
 
 function renderInline(text: string): React.ReactNode {
   // Order matters: bold (** / __) before italic (* / _) so ** isn't eaten by *.
-  const parts = text.split(/(\*\*[^*]+\*\*|__[^_]+__|`[^`]+`|(?<![*\w])\*[^*\n]+\*(?!\w)|(?<![_\w])_[^_\n]+_(?!\w))/g);
+  const parts = text.split(/(\*\*[^*]+\*\*|__[^_]+__|~~[^~]+~~|`[^`]+`|(?<![*\w])\*[^*\n]+\*(?!\w)|(?<![_\w])_[^_\n]+_(?!\w))/g);
   return parts.map((part, i) => {
     if (!part) return null;
     if ((part.startsWith("**") && part.endsWith("**")) || (part.startsWith("__") && part.endsWith("__"))) {
       return <strong key={i} style={{ color: "var(--primary)", fontWeight: 600 }}>{part.slice(2, -2)}</strong>;
+    }
+    if (part.startsWith("~~") && part.endsWith("~~") && part.length > 4) {
+      return (
+        <s key={i} className="text-[var(--text-tertiary)]">
+          {part.slice(2, -2)}
+        </s>
+      );
     }
     if (part.startsWith("`") && part.endsWith("`") && part.length > 2) {
       return (
@@ -117,8 +126,10 @@ function AIBubble({ message, showAvatar, onSaveWord, onSuggestionClick, onToolAn
     .map(p => p.text)
     .join("\n");
 
+  const { correction, body: proseBody } = parseCorrection(fullText);
+
   const hasSuggestions = message.contentParts.some(
-    p => p.type === "text" && /^suggestions?:/im.test(p.text)
+    p => p.type === "text" && /^suggestions?:/im.test(proseBody)
   );
 
   const handleMouseUp = () => {
@@ -129,16 +140,21 @@ function AIBubble({ message, showAvatar, onSaveWord, onSuggestionClick, onToolAn
   };
 
   return (
-    <div className="flex items-start justify-start gap-3 group/msg">
-      {/* Avatar slot — always 28px wide */}
+    <div className="flex items-start justify-start gap-2.5 max-w-[88%] group/msg">
       <div className="flex-shrink-0 w-7 h-7">
-        {showAvatar && <AIAvatar />}
+        {showAvatar ? <AIAvatar /> : <span className="block w-7 h-7" aria-hidden />}
       </div>
 
-      <div className="flex flex-col gap-1.5 min-w-0 flex-1">
+      <div className="flex flex-col gap-2 min-w-0 flex-1">
+        {correction && <CorrectionCard correction={correction} />}
+
         <div
-          className="cursor-text select-text"
-          style={{ color: "var(--text-primary)" }}
+          className="cursor-text select-text rounded-[14px] border px-3.5 py-2.5"
+          style={{
+            color: "var(--text-primary)",
+            backgroundColor: "var(--surface-raised)",
+            borderColor: "var(--border-subtle)",
+          }}
           onMouseUp={handleMouseUp}
         >
           <div className="space-y-3">
@@ -150,11 +166,18 @@ function AIBubble({ message, showAvatar, onSaveWord, onSuggestionClick, onToolAn
                   tc != null && isExerciseTool(tc.name as never) && tc.status !== "error"
                 );
 
+              const textParts = message.contentParts.filter((p): p is { type: "text"; text: string } => p.type === "text");
+              const displayText = textParts.length === 1 && correction
+                ? proseBody
+                : null;
+
               return (
                 <>
                   {message.contentParts.map((part, i) => {
                     if (part.type === "text") {
-                      return <div key={i} className="space-y-2.5">{renderProse(part.text.split("\n"))}</div>;
+                      const text = displayText ?? part.text;
+                      if (!text.trim()) return null;
+                      return <div key={i} className="space-y-2.5">{renderProse(text.split("\n"))}</div>;
                     }
                     const tc = message.toolCalls.get(part.callId);
                     if (!tc || tc.name === "suggestions") return null;
@@ -180,7 +203,7 @@ function AIBubble({ message, showAvatar, onSaveWord, onSuggestionClick, onToolAn
 
         {hasSuggestions && (
           <SuggestionChips
-            suggestions={extractSuggestions(fullText).map(s => ({ label: s, prompt: s }))}
+            suggestions={extractSuggestions(proseBody).map(s => ({ label: s, prompt: s }))}
             onSelect={onSuggestionClick}
           />
         )}
@@ -210,10 +233,10 @@ export default function MessageBubble({
 }: MessageBubbleProps) {
   if (message.role === "user") {
     return (
-      <div className="flex justify-end group/msg">
-        <div className="flex flex-col items-end gap-1.5 ml-auto max-w-[75%]">
+      <div className="flex justify-end group/msg max-w-[88%] ml-auto">
+        <div className="flex flex-col items-end gap-1.5">
           <div
-            className="px-4 py-2.5 rounded-2xl rounded-tr-sm leading-relaxed whitespace-pre-wrap break-words"
+            className="px-3.5 py-2.5 rounded-[14px] rounded-tr-[6px] leading-relaxed whitespace-pre-wrap break-words"
             style={{
               fontSize: "15px",
               background: "color-mix(in srgb, var(--primary) 12%, var(--surface-raised))",

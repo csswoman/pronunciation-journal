@@ -79,7 +79,7 @@ export default function AICoachPanel() {
                     {error && <ErrorBanner message={error} />}
                     <ChatView messages={messages} isStreaming={isStreaming} onSaveWord={openSaveWordModal} onSuggestionClick={(prompt) => setInputPrefill(prompt)} onToolAnswer={answerToolCall} onNext={() => sendMessage("next")} />
                   </div>
-                  <div className="flex-shrink-0 px-3 pb-3 pt-1 bg-surface-base">
+                  <div className="flex-shrink-0 px-3 pb-3 pt-1 border-t border-border-subtle bg-surface-base">
                     {quotaExhausted
                       ? <QuotaExhaustedCard messages={messages} onNewSession={resetSession} />
                       : <CustomPromptPanel onSubmit={sendMessage} isDisabled={isStreaming} variant="chat" placeholder="Ask your AI Coach..." prefill={inputPrefill} onPrefillConsumed={() => setInputPrefill(undefined)} />}
