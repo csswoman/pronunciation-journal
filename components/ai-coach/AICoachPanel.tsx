@@ -21,7 +21,8 @@ import { AICoachHeader, ConversationHistoryPanel } from "./AICoachPanelParts";
 export const PANEL_WIDTH = 380;
 
 export default function AICoachPanel() {
-  const { isOpen, isFullscreen, panelWidth, close, setFullscreen, setPanelWidth } = useAICoachStore();
+  const { isOpen, isFullscreen, panelWidth, close, setFullscreen, setPanelWidth, launch, consumeLaunch } =
+    useAICoachStore();
   const pathname = usePathname();
   const ctx = getPageContext(pathname);
   const { isDragging, onDragStart } = usePanelResize({ panelWidth, setPanelWidth });
@@ -35,12 +36,24 @@ export default function AICoachPanel() {
 
   const wasOpen = useRef(false);
   useEffect(() => {
-    if (isOpen && !wasOpen.current) {
-      setActiveTab("chat");
-      setShowHistory(false);
+    if (!isOpen) {
+      wasOpen.current = false;
+      return;
     }
-    wasOpen.current = isOpen;
-  }, [isOpen]);
+
+    const justOpened = !wasOpen.current;
+    wasOpen.current = true;
+
+    if (justOpened) setShowHistory(false);
+
+    if (launch) {
+      if (launch.tab) setActiveTab(launch.tab);
+      if (launch.prefill) setInputPrefill(launch.prefill);
+      consumeLaunch();
+    } else if (justOpened) {
+      setActiveTab("chat");
+    }
+  }, [isOpen, launch, consumeLaunch]);
 
   useEffect(() => {
     getRecentConversations(30).then(setConversations);

@@ -125,13 +125,25 @@ export const VOWEL_COLS: { id: VowelPosition; label: string }[] = [
 ];
 
 export const CONSONANT_ROWS: { id: ConsonantManner; label: string }[] = [
-  { id: "plosive", label: "Plosive" },
-  { id: "fricative", label: "Fricative" },
-  { id: "affricate", label: "Affricate" },
-  { id: "nasal", label: "Nasal" },
-  { id: "approximant", label: "Approximant" },
-  { id: "lateral", label: "Lateral" },
+  { id: "plosive", label: "Plosivas" },
+  { id: "fricative", label: "Fricativas" },
+  { id: "affricate", label: "Africadas" },
+  { id: "nasal", label: "Nasales" },
+  { id: "approximant", label: "Aproximantes" },
+  { id: "lateral", label: "Laterales" },
 ];
+
+/** Orden de columnas (lugar) dentro de cada grupo de consonantes. */
+export const CONSONANT_PLACE_ORDER: Record<ConsonantPlace, number> = {
+  bilabial: 0,
+  labiodental: 1,
+  dental: 2,
+  alveolar: 3,
+  postalveolar: 4,
+  palatal: 5,
+  velar: 6,
+  glottal: 7,
+};
 
 export const CONSONANT_COLS: { id: ConsonantPlace; label: string }[] = [
   { id: "bilabial", label: "Bilabial" },
@@ -242,7 +254,11 @@ export function getMatrixConfig(type: Exclude<FilterType, "all"> | "vowel") {
     case "vowel":
       return { rows: VOWEL_ROWS, cols: VOWEL_COLS, axisLabel: "Tongue position — front to back, close to open" };
     case "consonant":
-      return { rows: CONSONANT_ROWS, cols: CONSONANT_COLS, axisLabel: "Manner × place of articulation" };
+      return {
+        rows: CONSONANT_ROWS,
+        cols: CONSONANT_COLS,
+        axisLabel: "Agrupadas por modo de articulación",
+      };
     case "diphthong":
       return { rows: DIPHTHONG_ROWS, cols: DIPHTHONG_COLS, axisLabel: "Movement direction × starting position" };
   }

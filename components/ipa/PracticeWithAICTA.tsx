@@ -1,50 +1,45 @@
 "use client";
 
-import Link from "next/link";
-import { Sparkles, MessageCircle } from "lucide-react";
+import { MessageCircle, Sparkles } from "lucide-react";
+import { useAICoachStore } from "@/lib/stores/aiCoachStore";
 
 export default function PracticeWithAICTA({
   focusedSymbol,
 }: {
   focusedSymbol: string;
 }) {
+  const openCoach = useAICoachStore((s) => s.openCoach);
+
+  const handleOpenCoach = () => {
+    openCoach({
+      tab: "chat",
+      prefill: `Ayúdame a practicar el sonido ${focusedSymbol}. Quiero una conversación corta con feedback de pronunciación.`,
+    });
+  };
+
   return (
-    <section
-      className="rounded-2xl p-5 flex flex-col sm:flex-row items-start sm:items-center gap-4"
-      style={{ backgroundColor: "var(--primary)" }}
-    >
-      <div
-        className="w-11 h-11 shrink-0 rounded-xl inline-flex items-center justify-center"
-        style={{ backgroundColor: "var(--overlay-light)" }}
-      >
-        <Sparkles size={18} className="text-on-primary" />
+    <section className="ipa-chart__ai">
+      <div className="ipa-chart__ai-icon" aria-hidden>
+        <Sparkles size={20} />
       </div>
 
-      <div className="flex-1 min-w-0">
-        <h3 className="text-base font-semibold text-on-primary mb-0.5">
-          Practice with AI
-        </h3>
-        <p
-          className="text-sm leading-relaxed"
-          style={{ color: "rgba(var(--on-primary), 0.8)" }}
-        >
-          Have a quick conversation focused on{" "}
-          <span className="font-serif font-semibold">{focusedSymbol}</span> — get
-          pronunciation feedback in real time.
+      <div className="ipa-chart__ai-text">
+        <b>Practica con IA</b>
+        <p>
+          Conversación corta enfocada en{" "}
+          <span className="font-ipa font-semibold">{focusedSymbol}</span> — feedback de
+          pronunciación en tiempo real.
         </p>
       </div>
 
-      <Link
-        href="/daily"
-        className="shrink-0 inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-transform hover:scale-[1.02]"
-        style={{
-          backgroundColor: "var(--card-bg)",
-          color: "var(--primary)",
-        }}
+      <button
+        type="button"
+        onClick={handleOpenCoach}
+        className="ipa-chart__btn ipa-chart__btn--primary shrink-0"
       >
-        <MessageCircle size={14} />
-        Start session
-      </Link>
+        <MessageCircle size={14} aria-hidden />
+        Abrir coach
+      </button>
     </section>
   );
 }

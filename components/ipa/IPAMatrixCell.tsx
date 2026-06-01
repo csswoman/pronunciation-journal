@@ -10,6 +10,7 @@ export default function IPAMatrixCell({
   isExplored,
   isPlaying,
   onSelect,
+  variant = "matrix",
 }: {
   phoneme: PhonemeData;
   keyword: string;
@@ -17,67 +18,43 @@ export default function IPAMatrixCell({
   isExplored: boolean;
   isPlaying: boolean;
   onSelect: () => void;
+  /** tile = celda en grid agrupado (consonantes); matrix = celda en matriz de vocales */
+  variant?: "matrix" | "tile";
 }) {
+  const displaySymbol =
+    variant === "tile" ? phoneme.symbol.replace(/\//g, "") : phoneme.rawSymbol;
+
   return (
     <button
       type="button"
       onClick={onSelect}
       className={cn(
-        "group relative flex flex-col items-center justify-center w-full h-full min-w-0 rounded-xl border px-1.5 py-3",
-        "transition-[background-color,border-color,color,transform,box-shadow] duration-200 ease-out",
-        "hover:-translate-y-0.5 hover:shadow-[0_4px_12px_-6px_rgba(0,0,0,0.15)]",
-        "active:translate-y-0 active:scale-[0.98]",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1",
-        !isSelected && "hover:border-[color:var(--border-strong)]"
+        "ipa-chart__ph",
+        variant === "tile" && "ipa-chart__ph--tile",
+        isSelected && "ipa-chart__ph--sel",
+        isExplored && !isSelected && "ipa-chart__ph--explored"
       )}
-      style={{
-        backgroundColor: isSelected ? "var(--text-primary)" : "var(--card-bg)",
-        borderColor: isSelected
-          ? "var(--text-primary)"
-          : isExplored
-          ? "color-mix(in oklch, var(--success) 35%, var(--line-divider))"
-          : "var(--line-divider)",
-        color: isSelected ? "var(--card-bg)" : "var(--text-primary)",
-      }}
+      aria-pressed={isSelected}
+      aria-label={`${phoneme.symbol}, ejemplo ${keyword}`}
     >
       {isExplored && !isSelected && !isPlaying && (
-        <span
-          className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full"
-          style={{ backgroundColor: "var(--success)" }}
-          aria-label="Explored"
-        />
+        <span className="ipa-chart__ph-dot" aria-label="Explorado" />
       )}
 
       {isPlaying && (
-        <span
-          className="absolute top-1.5 right-1.5 flex items-end gap-1 h-3"
-          aria-label="Playing"
-        >
+        <span className="ipa-chart__ph-waves" aria-label="Reproduciendo">
           {[0, 1, 2].map((i) => (
             <span
               key={i}
-              className="w-1 rounded-full origin-bottom"
-              style={{
-                backgroundColor: isSelected ? "var(--card-bg)" : "var(--primary)",
-                animation: `wavePulse 0.9s ease-in-out ${i * 0.12}s infinite`,
-                height: "100%",
-              }}
+              style={{ animationDelay: `${i * 0.12}s`, height: "100%" }}
             />
           ))}
         </span>
       )}
 
-      <span className="font-serif text-2xl leading-none font-medium">
-        {phoneme.rawSymbol}
-      </span>
-      <span
-        className="mt-1.5 max-w-full text-[10px] font-semibold uppercase tracking-wider text-center leading-tight break-words transition-opacity"
-        style={{
-          color: isSelected ? "var(--card-bg)" : "var(--text-secondary)",
-          opacity: isSelected ? 0.7 : 1,
-        }}
-      >
-        {keyword}
+      <span className="ipa-chart__ph-body">
+        <span className="ipa-chart__ph-sym">{displaySymbol}</span>
+        <span className="ipa-chart__ph-word">{keyword}</span>
       </span>
     </button>
   );

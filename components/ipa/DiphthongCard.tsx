@@ -26,68 +26,37 @@ export default function DiphthongCard({
       type="button"
       onClick={onSelect}
       className={cn(
-        "group relative flex flex-col items-center w-full rounded-2xl border px-4 pt-5 pb-3",
-        "transition-[background-color,border-color,transform,box-shadow] duration-200 ease-out",
-        "hover:-translate-y-0.5 hover:shadow-[0_6px_16px_-8px_rgba(0,0,0,0.18)]",
-        "active:translate-y-0 active:scale-[0.99]",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1",
-        !isSelected && "hover:border-[color:var(--border-strong)]"
+        "ipa-chart__ph ipa-chart__ph--diph",
+        isSelected && "ipa-chart__ph--sel",
+        isExplored && !isSelected && "ipa-chart__ph--explored"
       )}
-      style={{
-        backgroundColor: isSelected
-          ? "var(--primary-soft, var(--btn-regular-bg))"
-          : "var(--card-bg)",
-        borderColor: isSelected
-          ? "var(--primary)"
-          : isExplored
-          ? "color-mix(in oklch, var(--success) 35%, var(--line-divider))"
-          : "var(--line-divider)",
-      }}
+      style={{ minHeight: "auto", padding: "16px 12px 12px" }}
+      aria-pressed={isSelected}
     >
       {isExplored && !isSelected && !isPlaying && (
-        <span
-          className="absolute top-2.5 right-2.5 w-1.5 h-1.5 rounded-full"
-          style={{ backgroundColor: "var(--success)" }}
-          aria-label="Explored"
-        />
+        <span className="ipa-chart__ph-dot" aria-label="Explorado" />
       )}
 
       {isPlaying && (
-        <span
-          className="absolute top-2.5 right-2.5 flex items-end gap-1 h-3"
-          aria-label="Playing"
-        >
+        <span className="ipa-chart__ph-waves" aria-label="Reproduciendo">
           {[0, 1, 2].map((i) => (
             <span
               key={i}
-              className="w-1 rounded-full origin-bottom"
-              style={{
-                backgroundColor: "var(--primary)",
-                animation: `wavePulse 0.9s ease-in-out ${i * 0.12}s infinite`,
-                height: "100%",
-              }}
+              style={{ animationDelay: `${i * 0.12}s`, height: "100%" }}
             />
           ))}
         </span>
       )}
 
-      <span
-        className="font-serif text-3xl leading-none mb-2"
-        style={{ color: "var(--text-primary)" }}
-      >
+      <span className="ipa-chart__ph-sym" style={{ fontSize: "1.75rem" }}>
         {phoneme.symbol.replace(/\//g, "")}
       </span>
 
-      <div className="w-full max-w-[180px] mb-1.5">
+      <div className="w-full max-w-[180px] my-2">
         <VowelTrapezoid glide={glide} highlighted={isSelected} animating={isPlaying} />
       </div>
 
-      <span
-        className="text-tiny font-semibold uppercase tracking-widest"
-        style={{ color: "var(--text-tertiary)" }}
-      >
-        {keyword}
-      </span>
+      <span className="ipa-chart__ph-word">{keyword}</span>
     </button>
   );
 }
