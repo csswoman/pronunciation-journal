@@ -1,69 +1,23 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import Link from "next/link";
 import { Volume2, Mic, Square, Play, Loader2, RotateCcw } from "lucide-react";
-import Card from "@/components/layout/Card";
 import Button from "@/components/ui/Button";
 import { SyllableWord } from "@/components/ui/SyllableWord";
 import { CardBadge } from "@/components/ui/CardBadge";
 import { WaveformVisualizer } from "@/components/ui/WaveformVisualizer";
 import { useSpeechInput } from "@/hooks/useSpeechInput";
+import { useWordOfDay } from "@/hooks/useWordOfDay";
 
-interface WordOfDay {
-  word: string;
-  ipa: string;
-  part_of_speech?: string;
-  definition: string;
-  example_sentence: string;
-  difficulty: "beginner" | "intermediate" | "advanced";
-}
-
-
-export default function HomeWordOfDay() {
-  const [word, setWord] = useState<WordOfDay | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
+export default function HomeWordOfDayCard() {
+  const { word, loading, error, refresh } = useWordOfDay();
   const [speaking, setSpeaking] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [recordedUrl, setRecordedUrl] = useState<string | null>(null);
   const [playingRecording, setPlayingRecording] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const { state, result, start, stop } = useSpeechInput({ prefer: "web-speech" });
-
-  useEffect(() => {
-    const cached = sessionStorage.getItem("wod");
-    const cachedDate = sessionStorage.getItem("wod_date");
-    const today = new Date().toISOString().slice(0, 10);
-    if (cached && cachedDate === today) {
-      setWord(JSON.parse(cached));
-      return;
-    }
-    fetchWord();
-  }, []);
-
-  async function fetchWord(forceRefresh = false) {
-    setLoading(true);
-    setError(null);
-    try {
-      const url = forceRefresh
-        ? `/api/gemini/word-of-day?refresh=1&t=${Date.now()}`
-        : "/api/gemini/word-of-day";
-      const res = await fetch(url, { cache: "no-store" });
-      if (!res.ok) {
-        const body = await res.json().catch(() => ({}));
-        throw new Error(body?.error ?? `Error ${res.status}`);
-      }
-      const data: WordOfDay = await res.json();
-      setWord(data);
-      sessionStorage.setItem("wod", JSON.stringify(data));
-      sessionStorage.setItem("wod_date", new Date().toISOString().slice(0, 10));
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Couldn't load word");
-    } finally {
-      setLoading(false);
-    }
-  }
 
   function speak() {
     if (!word || !window.speechSynthesis) return;
@@ -110,16 +64,22 @@ export default function HomeWordOfDay() {
     audio.play();
   }
 
+  const difficultyColor =
+    word?.difficulty === "beginner"
+      ? "success"
+      : word?.difficulty === "advanced"
+        ? "warning"
+        : "primary";
+
   return (
-    <Card variant="compact" className="gap-4">
-      <div className="flex items-center justify-between">
-        <CardBadge color={word?.difficulty === "beginner" ? "success" : word?.difficulty === "advanced" ? "warning" : "primary"}>
-          Word of the day
-        </CardBadge>
+    <div className="flex flex-col rounded-[var(--radius-xl)] border border-border-subtle bg-surface-raised p-[18px]">
+      <div className="flex items-center justify-between gap-2">
+        <CardBadge color={difficultyColor}>Word of the day</CardBadge>
         {!loading && (
           <button
-            onClick={() => fetchWord(true)}
-            className="transition-colors text-fg-subtle hover:text-fg-muted"
+            type="button"
+            onClick={() => refresh()}
+            className="text-fg-subtle transition-colors hover:text-fg-muted"
             title="Refresh"
           >
             <RotateCcw size={13} />
@@ -128,48 +88,54 @@ export default function HomeWordOfDay() {
       </div>
 
       {loading && (
-        <div className="flex items-center gap-2 text-xs py-2 text-fg-muted">
+        <div className="flex items-center gap-2 py-4 text-xs text-fg-muted">
           <Loader2 size={13} className="animate-spin" />
           Loading word…
         </div>
       )}
 
-      {error && (
-        <p className="text-xs text-error">{error}</p>
-      )}
+      {error && <p className="py-2 text-xs text-error">{error}</p>}
 
       {word && !loading && (
         <>
-          <div>
-            <p className="text-2xl font-bold text-[var(--text-primary)] leading-none"><SyllableWord word={word.word} /></p>
-            <div className="flex items-center gap-2 mt-1">
+          <div className="mt-3">
+            <p className="text-2xl font-bold leading-none text-[var(--text-primary)]">
+              <SyllableWord word={word.word} />
+            </p>
+            <div className="mt-1 flex items-center gap-2">
               <p className="font-ipa">{word.ipa}</p>
-              {word.part_of_speech && (
-                <span className="text-tiny font-medium px-1.5 py-0.5 rounded bg-surface-sunken border border-border-default text-fg-muted">
+              {word.part_of_speech ? (
+                <span className="text-tiny rounded border border-border-default bg-surface-sunken px-1.5 py-0.5 font-medium text-fg-muted">
                   {word.part_of_speech}
                 </span>
-              )}
+              ) : null}
             </div>
-            <div className="mt-2 pl-3 py-2 rounded-lg flex flex-col gap-1" style={{ backgroundColor: "color-mix(in oklch, var(--primary) 10%, transparent)" }}>
-              <p className="text-body-sm italic leading-relaxed text-[var(--text-secondary)]">{word.definition}</p>
-              {word.example_sentence && (
-                <p className="text-body-sm italic leading-snug text-[var(--text-tertiary)]">"{word.example_sentence}"</p>
-              )}
+            <div
+              className="mt-2 rounded-lg py-2 pl-3"
+              style={{ backgroundColor: "color-mix(in oklch, var(--primary) 10%, transparent)" }}
+            >
+              <p className="text-body-sm italic leading-relaxed text-[var(--text-secondary)]">
+                {word.definition}
+              </p>
             </div>
+            {word.example_sentence ? (
+              <p className="mt-1 text-body-sm italic text-[var(--text-tertiary)]">
+                &ldquo;{word.example_sentence}&rdquo;
+              </p>
+            ) : null}
           </div>
 
-          {/* Waveform */}
           <WaveformVisualizer
             isActive={speaking || playingRecording}
             isRecording={isRecording}
             color="gradient"
-            className="h-8"
+            className="mt-3 h-8"
           />
 
-          <div className="flex gap-2">
+          <div className="mt-3 flex gap-2">
             <Button
               variant="secondary"
-              size="md"
+              size="sm"
               icon={<Volume2 size={14} />}
               className="flex-1"
               onClick={speak}
@@ -177,11 +143,10 @@ export default function HomeWordOfDay() {
             >
               {speaking ? "Playing…" : "Listen"}
             </Button>
-
             {!isRecording ? (
               <Button
                 icon={<Mic size={14} />}
-                size="md"
+                size="sm"
                 className="flex-1"
                 onClick={startRecording}
                 variant="primary"
@@ -191,7 +156,7 @@ export default function HomeWordOfDay() {
             ) : (
               <Button
                 icon={<Square size={14} />}
-                size="md"
+                size="sm"
                 className="flex-1"
                 onClick={stopRecording}
                 variant="primary"
@@ -204,17 +169,25 @@ export default function HomeWordOfDay() {
           {recordedUrl && (
             <Button
               variant="secondary"
-              size="md"
+              size="sm"
               icon={<Play size={14} />}
               onClick={playRecording}
               disabled={playingRecording}
               fullWidth
+              className="mt-2"
             >
               {playingRecording ? "Playing…" : "Play my recording"}
             </Button>
           )}
+
+          <Link
+            href="/words?tab=lexicon"
+            className="mt-3 text-[13px] text-[var(--primary)] hover:underline"
+          >
+            Save to vocabulary →
+          </Link>
         </>
       )}
-    </Card>
+    </div>
   );
 }

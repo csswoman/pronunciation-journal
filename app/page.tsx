@@ -1,69 +1,79 @@
 export const dynamic = "force-dynamic";
 
-import SectionHeader from "@/components/layout/SectionHeader";
-import HomeHeader from "@/components/home/HomeHeader";
 import PageLayout from "@/components/layout/PageLayout";
-import HomeTodo from "@/components/home/HomeTodo";
-import HomeShadowingDrill from "@/components/home/HomeShadowingDrill";
-import HomePracticeCard from "@/components/home/HomePracticeCard";
-import HomeCoursesSection from "@/components/home/HomeCoursesSection";
-import HomeWeakPhoneme from "@/components/home/HomeWeakPhoneme";
-import HomeTheoryOfDay from "@/components/home/HomeTheoryOfDay";
-import HomeWordsToReview from "@/components/home/HomeWordsToReview";
-import HomeWordOfDay from "@/components/home/HomeWordOfDay";
+import HomeStatusHero from "@/components/home/HomeStatusHero";
+import HomeTodaySection from "@/components/home/HomeTodaySection";
+import HomeReviewsSection from "@/components/home/HomeReviewsSection";
+import HomeLearnSection from "@/components/home/HomeLearnSection";
 import { getSupabaseServerUserId } from "@/lib/supabase/session";
-import { getWordsDueForReview } from "@/lib/word-bank/server-queries";
+import {
+  getWordsDueForReview,
+  getVocabularyRetentionStats,
+  countWordsDueForReview,
+} from "@/lib/word-bank/server-queries";
+import { getLexiconRetentionStats } from "@/lib/lexicon/server-progress";
 import { getTodaysMiniLesson } from "@/lib/content/lessons";
 import { getDailyStreak } from "@/lib/daily/streak";
+import { getTodayPracticeGoal, getWeakestPhonemeForHome } from "@/lib/home/queries";
 import type { MiniLesson } from "@/lib/content/schemas";
 import type { WordBankEntry } from "@/lib/word-bank/types";
 import type { DailyStreakResult } from "@/lib/daily/streak";
+import type { DailyGoalProgress, WeakestPhonemeHome } from "@/lib/home/constants";
+import type { LexiconRetentionStats } from "@/lib/lexicon/server-progress";
+
+const REVIEW_PREVIEW_LIMIT = 4;
 
 export default async function HomePage() {
-  let userId: string | null = null;
   let dueWords: WordBankEntry[] = [];
+  let dueCount = 0;
   let todaysLesson: MiniLesson | null = null;
   let dailyStreak: DailyStreakResult | undefined;
+  let wordBankTotal = 0;
+  let lexiconRetention: LexiconRetentionStats | null = null;
+  let dailyGoal: DailyGoalProgress | null = null;
+  let weakestPhoneme: WeakestPhonemeHome | null = null;
 
-  userId = await getSupabaseServerUserId();
+  const userId = await getSupabaseServerUserId();
+
   try {
-    const [words, lesson, streak] = await Promise.all([
-      getWordsDueForReview(5),
-      getTodaysMiniLesson(),
-      userId ? getDailyStreak(userId) : Promise.resolve(undefined),
-    ]);
+    const [words, totalDue, lesson, streak, bankStats, lexicon, goal, weakSound] =
+      await Promise.all([
+        getWordsDueForReview(REVIEW_PREVIEW_LIMIT),
+        countWordsDueForReview(),
+        getTodaysMiniLesson(),
+        userId ? getDailyStreak(userId) : Promise.resolve(undefined),
+        getVocabularyRetentionStats(),
+        getLexiconRetentionStats(),
+        userId ? getTodayPracticeGoal(userId) : Promise.resolve(null),
+        userId ? getWeakestPhonemeForHome(userId) : Promise.resolve(null),
+      ]);
     dueWords = words;
+    dueCount = totalDue;
     todaysLesson = lesson;
     dailyStreak = streak ?? undefined;
+    wordBankTotal = bankStats.total;
+    lexiconRetention = lexicon;
+    dailyGoal = goal;
+    weakestPhoneme = weakSound;
   } catch (error) {
     console.error("Error loading home stats:", error);
   }
 
   return (
-    <PageLayout>
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-6 items-start">
-        {/* Main column */}
-        <div className="flex flex-col gap-6 min-w-0">
-          <HomeHeader />
-          <HomeTodo dueWords={dueWords} streak={dailyStreak} />
-          <HomeWordsToReview words={dueWords} dueCount={dueWords.length} />
-
-          <section className="flex flex-col gap-3">
-            <SectionHeader title="Your Courses" viewAllHref="/courses" />
-            <HomeCoursesSection />
-          </section>
-
-          <HomePracticeCard />
-        </div>
-
-        {/* Sidebar */}
-        <div className="flex flex-col gap-4">
-          <HomeWordOfDay />
-          <HomeWeakPhoneme />
-          <HomeTheoryOfDay lesson={todaysLesson} />
-          <HomeShadowingDrill />
-        </div>
-      </div>
+    <PageLayout className="max-w-[1080px] mx-auto">
+      <HomeStatusHero dueCount={dueCount} streak={dailyStreak} dailyGoal={dailyGoal} />
+      <HomeTodaySection
+        dueCount={dueCount}
+        streak={dailyStreak}
+        wordBankTotal={wordBankTotal}
+      />
+      <HomeReviewsSection
+        words={dueWords}
+        dueCount={dueCount}
+        lexicon={lexiconRetention}
+        weakestPhoneme={weakestPhoneme}
+      />
+      <HomeLearnSection lesson={todaysLesson} />
     </PageLayout>
   );
 }
