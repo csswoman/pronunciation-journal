@@ -1,5 +1,4 @@
 import HomeSectionHeader from "@/components/home/HomeSectionHeader";
-import HomeContinueCourseBar from "@/components/home/HomeContinueCourseBar";
 import HomeDiscoveryCard from "@/components/home/HomeDiscoveryCard";
 import HomeMiniLessonCard from "@/components/home/HomeMiniLessonCard";
 import HomeWordOfDayCard from "@/components/home/HomeWordOfDayCard";
@@ -15,17 +14,15 @@ export default function HomeLearnSection({ lesson }: HomeLearnSectionProps) {
       <HomeSectionHeader
         number="03"
         title="Learn something new"
-        subtitle="advance your course and explore"
+        subtitle="short lessons and vocabulary to explore"
       />
-
-      <HomeContinueCourseBar />
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         {lesson ? (
           <HomeMiniLessonCard lesson={lesson} />
         ) : (
           <HomeDiscoveryCard
-            href="/courses/mini-lessons"
+            href="/mini-lessons"
             badge="Mini lesson"
             title="Daily grammar bite"
             description="Short lessons on patterns you use every day."

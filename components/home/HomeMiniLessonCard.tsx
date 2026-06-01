@@ -25,7 +25,7 @@ export default function HomeMiniLessonCard({ lesson }: HomeMiniLessonCardProps) 
         {lesson.body}
       </p>
 
-      <Link href={`/courses/mini-lessons/${lesson.slug}`} className="mt-auto">
+      <Link href={`/mini-lessons/${lesson.slug}`} className="mt-auto">
         <Button
           variant="primary"
           size="sm"
