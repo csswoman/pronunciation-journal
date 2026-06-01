@@ -4,6 +4,7 @@ import {
   type DbSound,
   type DbWord,
 } from '@/lib/db/lessons'
+import { formatIpaDisplay } from '@/lib/lexicon/format-ipa'
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -14,29 +15,25 @@ function difficultyFromNumber(n: number | null): Difficulty {
   return 'hard'
 }
 
-function soundCategoryLabel(sound: DbSound): string {
-  if (sound.category) return sound.category.charAt(0).toUpperCase() + sound.category.slice(1)
-  if (sound.type === 'vowel') return 'Vowel'
-  if (sound.type === 'diphthong') return 'Diphthong'
-  return 'Consonant'
-}
-
 // ── Sound lessons ─────────────────────────────────────────────────────────────
 
 function soundToLesson(sound: DbSound, words: DbWord[]): Lesson {
+  const ipaDisplay = formatIpaDisplay(sound.ipa)
+  const example = sound.example?.trim() || null
+
   const lessonWords: LessonWord[] = words.map((w) => ({
     word: w.word,
-    ipa: w.ipa ?? `/${sound.ipa}/`,
+    ipa: w.ipa ?? ipaDisplay,
     audioUrl: w.audio_url ?? undefined,
-    hint: w.sound_focus ? `Listen for the /${w.sound_focus}/ sound` : undefined,
+    hint: w.sound_focus ? `Listen for the ${formatIpaDisplay(w.sound_focus)} sound` : undefined,
   }))
 
   return {
     id: `sound-${sound.id}`,
-    title: `/${sound.ipa}/ — ${soundCategoryLabel(sound)} Sound`,
-    description: sound.example
-      ? `Practice the /${sound.ipa}/ sound as in "${sound.example}"`
-      : `Practice words featuring the /${sound.ipa}/ sound`,
+    title: example ? `${ipaDisplay} — ${example}` : ipaDisplay,
+    description: example
+      ? `Practice ${ipaDisplay} as in “${example}”`
+      : `Practice words featuring the ${ipaDisplay} sound`,
     category: 'sounds',
     difficulty: difficultyFromNumber(sound.difficulty),
     words: lessonWords,
