@@ -1,7 +1,5 @@
-import CoursesClient from "@/components/courses/CoursesClient";
-import { getAllMiniLessons } from "@/lib/content/lessons";
+import CoursePathPage from "@/components/courses/CoursePathPage";
 
-export default async function CoursesPage() {
-  const miniLessons = await getAllMiniLessons();
-  return <CoursesClient miniLessons={miniLessons} />;
+export default function CoursesPage() {
+  return <CoursePathPage />;
 }

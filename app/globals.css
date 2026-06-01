@@ -5,5 +5,8 @@
 @import "./styles/utilities.css";
 @import "./styles/animations.css";
 @import "./styles/components.css";
+@import "./styles/sound-lab.css";
+@import "./styles/course-path.css";
+@import "./styles/grammar-deck.css";
 
 @custom-variant dark (&:where(.dark, .dark *));

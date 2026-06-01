@@ -113,9 +113,8 @@ export default function CustomPromptPanel({
 
   return (
     <div className="flex flex-col gap-1.5">
-      {/* Input card */}
       <div
-        className="flex items-end gap-2 px-3 py-2 rounded-2xl border transition-colors"
+        className="flex items-center gap-2 pl-4 pr-1.5 py-1.5 rounded-full border transition-[border-color,box-shadow] duration-150"
         style={{
           backgroundColor: "var(--card-bg)",
           borderColor: focused ? "var(--primary)" : "var(--line-divider)",
@@ -134,48 +133,32 @@ export default function CustomPromptPanel({
           placeholder={placeholder}
           disabled={isDisabled}
           rows={1}
-          className="flex-1 resize-none bg-transparent text-sm leading-relaxed focus:outline-none max-h-40 px-1 py-1.5 text-fg"
+          className="flex-1 resize-none bg-transparent text-sm leading-relaxed focus:outline-none max-h-40 py-1.5 text-fg"
         />
 
-        {/* Mic button */}
         <button
           type="button"
           aria-label="Voice input"
-          className="w-9 h-9 rounded-xl flex-shrink-0 flex items-center justify-center transition-colors border"
-          style={{
-            backgroundColor: "var(--surface2, var(--btn-regular-bg))",
-            borderColor: "var(--line-divider)",
-            color: "var(--text-tertiary)",
-          }}
+          className="w-9 h-9 rounded-full flex-shrink-0 flex items-center justify-center transition-colors text-[var(--text-tertiary)] hover:text-[var(--text-secondary)]"
         >
-          <Mic size={15} strokeWidth={2} />
+          <Mic size={16} strokeWidth={2} />
         </button>
 
-        {/* Send button */}
         <button
           type="button"
           onClick={handleSubmit}
-          disabled={(!hasText && !isDisabled) || (isDisabled && !hasText)}
+          disabled={!hasText || isDisabled}
           aria-label="Send"
-          className="flex-shrink-0 flex items-center justify-center transition-all disabled:opacity-40 hover:scale-105 active:scale-95"
+          className="w-[38px] h-[38px] rounded-full flex-shrink-0 flex items-center justify-center transition-[transform,opacity] duration-150 disabled:opacity-40 hover:scale-105 active:scale-95"
           style={{
-            minWidth: 36,
-            minHeight: 36,
-            borderRadius: "var(--radius-md)",
             backgroundColor: "var(--primary)",
             color: "var(--on-primary)",
             border: "none",
           }}
-          onMouseEnter={(e) => {
-            (e.currentTarget as HTMLButtonElement).style.backgroundColor = `var(--primary-hover)`;
-          }}
-          onMouseLeave={(e) => {
-            (e.currentTarget as HTMLButtonElement).style.backgroundColor = `var(--primary)`;
-          }}
         >
           {isDisabled
             ? <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
-            : <SendHorizonal size={15} strokeWidth={2} />}
+            : <SendHorizonal size={16} strokeWidth={2.25} />}
         </button>
       </div>
 

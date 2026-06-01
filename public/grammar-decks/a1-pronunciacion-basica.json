@@ -1,0 +1,136 @@
+{
+  "meta": {
+    "eyebrow": "A1 · Sound Lab",
+    "title": "Pronunciación",
+    "titleEmphasis": "básica"
+  },
+  "cards": [
+    {
+      "id": "pr-vowels",
+      "tag": "Vocales",
+      "title": "Vocales que no existen en español",
+      "lede": "El inglés tiene más vocales. La diferencia entre dos sonidos puede cambiar la palabra.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "/ɪ/ corta", "value": "ship (barco) · sit · this", "highlights": ["ship"], "hint": "relajada y breve" },
+            { "key": "/iː/ larga", "value": "sheep (oveja) · seat · these", "highlights": ["sheep"], "hint": "tensa y estirada" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Por qué importa:",
+        "body": "si pronuncias igual ship y sheep, te pueden malentender. Estira la /iː/."
+      }
+    },
+    {
+      "id": "pr-th",
+      "tag": "Consonantes",
+      "title": "El sonido th",
+      "titleItalic": ["th"],
+      "lede": "No existe en español. Saca un poco la lengua entre los dientes; no es una s ni una d.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "sink /sɪŋk/" },
+            { "variant": "good", "text": "think /θɪŋk/", "note": "lengua entre los dientes" },
+            { "variant": "bad", "text": "dis /dɪs/" },
+            { "variant": "good", "text": "this /ðɪs/", "note": "th suave, con vibración" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Practica:",
+        "body": "pon la lengua tocando los dientes de arriba y sopla suave para think, thing, three."
+      }
+    },
+    {
+      "id": "pr-b-v",
+      "tag": "Consonantes",
+      "title": "b y v sí son distintas",
+      "titleItalic": ["b", "v"],
+      "lede": "En español suenan casi igual; en inglés no. La v se hace con los dientes en el labio.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "/b/",
+              "rule": "labios juntos",
+              "examples": ["best", "boat", "berry"]
+            },
+            {
+              "label": "/v/",
+              "rule": "dientes sobre el labio",
+              "examples": ["vest", "vote", "very"]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Truco:",
+        "body": "para la v, muerde suave tu labio inferior y deja salir el aire con vibración."
+      }
+    },
+    {
+      "id": "pr-final-consonants",
+      "tag": "Finales",
+      "title": "Pronuncia las consonantes finales",
+      "lede": "El español suaviza el final de las palabras; el inglés lo marca. No te las comas.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "wha... (te comes la t de what)" },
+            { "variant": "good", "text": "what — marca la t final", "note": "/wɒt/" },
+            { "variant": "bad", "text": "fri (sin d)" },
+            { "variant": "good", "text": "friend — suena la d", "note": "/frend/" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pr-ed",
+      "tag": "Terminación -ed",
+      "title": "Las tres formas de -ed",
+      "titleItalic": ["-ed"],
+      "lede": "El pasado regular -ed se pronuncia de tres maneras según el sonido anterior.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "/t/", "value": "tras sonido sordo · worked · liked", "highlights": ["worked", "liked"], "hint": "suena worktt" },
+            { "key": "/d/", "value": "tras sonido sonoro · played · lived", "highlights": ["played", "lived"], "hint": "suena playd" },
+            { "key": "/ɪd/", "value": "tras t o d · wanted · needed", "highlights": ["wanted", "needed"], "hint": "añade una sílaba" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Regla rápida:",
+        "body": "solo wanted/needed (verbos en t o d) ganan sílaba extra. Los demás no."
+      }
+    },
+    {
+      "id": "pr-schwa",
+      "tag": "Ritmo",
+      "title": "El sonido relajado: schwa /ə/",
+      "lede": "Es el sonido más común del inglés. Las sílabas sin acento se vuelven una /ə/ floja.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "about", "value": "uh-BOUT · la a suena floja", "highlights": ["uh-BOUT"] },
+            { "key": "banana", "value": "buh-NA-nuh · solo el medio es fuerte", "highlights": ["buh-NA-nuh"] },
+            { "key": "the", "value": "thuh · casi no se oye la vocal", "highlights": ["thuh"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Clave del ritmo:",
+        "body": "el inglés alterna sílabas fuertes y flojas. No pronuncies todas las vocales claras como en español."
+      }
+    }
+  ]
+}

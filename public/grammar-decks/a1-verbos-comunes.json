@@ -1,0 +1,138 @@
+{
+  "meta": {
+    "eyebrow": "A1 · Verbos comunes",
+    "title": "Verbos que",
+    "titleEmphasis": "más usarás"
+  },
+  "cards": [
+    {
+      "id": "vc-irregular",
+      "tag": "Verbos clave",
+      "title": "Los irregulares más usados",
+      "lede": "Su pasado no termina en -ed; hay que memorizarlos. Empieza por estos.",
+      "blocks": [
+        {
+          "type": "verb-table",
+          "headers": ["Base", "Pasado", "Participio", "Español"],
+          "rows": [
+            ["be", "was / were", "been", "ser / estar"],
+            ["have", "had", "had", "tener"],
+            ["go", "went", "gone", "ir"],
+            ["do", "did", "done", "hacer"],
+            ["make", "made", "made", "hacer / crear"],
+            ["take", "took", "taken", "tomar"],
+            ["get", "got", "gotten", "obtener"],
+            ["say", "said", "said", "decir"]
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Truco:",
+        "body": "agrúpalos por sonido: make/take riman; know/grow/throw hacen -ew → -own."
+      }
+    },
+    {
+      "id": "vc-have",
+      "tag": "have",
+      "title": "have: tener y más",
+      "titleItalic": ["have"],
+      "lede": "have significa tener, pero también forma muchas expresiones cotidianas.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Posesión", "value": "I have a car.", "highlights": ["have a car"], "hint": "tengo un coche" },
+            { "key": "Comidas", "value": "have breakfast / lunch / dinner", "highlights": ["have breakfast"], "hint": "desayunar / comer / cenar" },
+            { "key": "Acciones", "value": "have a shower · have a break", "highlights": ["have a shower", "have a break"], "hint": "ducharse · tomar un descanso" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Tercera persona:",
+        "body": "have se vuelve has: She has a dog. (no \"She have\")."
+      }
+    },
+    {
+      "id": "vc-do-make",
+      "tag": "Confusiones",
+      "title": "do vs make",
+      "titleItalic": ["do", "make"],
+      "lede": "Los dos significan hacer en español, pero se usan en casos distintos.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "do",
+              "rule": "tareas y actividades",
+              "examples": ["do homework", "do the dishes", "do exercise"]
+            },
+            {
+              "label": "make",
+              "rule": "crear o producir algo",
+              "examples": ["make a cake", "make a mistake", "make a decision"]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Idea base:",
+        "body": "make deja un resultado nuevo (un pastel, un error); do es la actividad en sí."
+      }
+    },
+    {
+      "id": "vc-like-want",
+      "tag": "Patrones",
+      "title": "Qué va después del verbo",
+      "lede": "Algunos verbos piden -ing y otros piden to + verbo. Memoriza los patrones.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "like / love / enjoy", "value": "+ verbo-ing · I like cooking.", "highlights": ["cooking"], "hint": "me gusta cocinar" },
+            { "key": "want / need / would like", "value": "+ to + verbo · I want to eat.", "highlights": ["to eat"], "hint": "quiero comer" },
+            { "key": "can", "value": "+ verbo base · I can swim.", "highlights": ["swim"], "hint": "sé nadar" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "vc-traps",
+      "tag": "Errores comunes",
+      "title": "Trampas con verbos",
+      "lede": "Calcos del español que suenan mal. Aprende la forma correcta.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "I am agree." },
+            { "variant": "good", "text": "I agree.", "note": "agree ya es verbo, sin am" },
+            { "variant": "bad", "text": "I want eat." },
+            { "variant": "good", "text": "I want to eat.", "note": "want pide to + verbo" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "vc-go-get",
+      "tag": "Movimiento",
+      "title": "go y get: muy versátiles",
+      "titleItalic": ["go", "get"],
+      "lede": "Dos verbos comodín. Cambian de sentido según la palabra que los acompaña.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "go to", "value": "ir a un lugar · go to work", "highlights": ["go to work"], "hint": "ir al trabajo" },
+            { "key": "go + ing", "value": "actividad · go shopping · go swimming", "highlights": ["go shopping"], "hint": "ir de compras / a nadar" },
+            { "key": "get", "value": "conseguir / llegar / volverse · get a job · get home", "highlights": ["get a job", "get home"], "hint": "conseguir trabajo / llegar a casa" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Cuidado:",
+        "body": "se dice go home, sin to (nunca \"go to home\")."
+      }
+    }
+  ]
+}

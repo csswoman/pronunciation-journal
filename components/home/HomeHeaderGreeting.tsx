@@ -6,6 +6,7 @@ interface HomeHeaderGreetingProps {
   exercisesReady?: number;
   improvedPhoneme?: string | null;
   improvementPct?: number | null;
+  hideSubtitle?: boolean;
 }
 
 function getTimeGreeting(): string {
@@ -21,6 +22,7 @@ export default function HomeHeaderGreeting({
   exercisesReady,
   improvedPhoneme,
   improvementPct,
+  hideSubtitle = false,
 }: HomeHeaderGreetingProps) {
   const greeting = getTimeGreeting();
 
@@ -47,7 +49,9 @@ export default function HomeHeaderGreeting({
         {greeting},{" "}
         <em className="not-italic font-light text-[var(--primary)]">{userName}</em>
       </h1>
-      <p className="text-sm text-[var(--text-secondary)] leading-snug max-w-xs">{subtitle}</p>
+      {!hideSubtitle ? (
+        <p className="text-sm text-[var(--text-secondary)] leading-snug max-w-xs">{subtitle}</p>
+      ) : null}
     </div>
   );
 }

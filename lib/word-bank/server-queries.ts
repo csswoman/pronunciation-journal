@@ -85,6 +85,47 @@ export async function getLexiconWordBankDetails(
   );
 }
 
+/** Server-only: mastered vs in-progress counts for the current user's word bank. */
+export async function getVocabularyRetentionStats(): Promise<{
+  mastered: number;
+  inProgress: number;
+  total: number;
+}> {
+  const supabase = await createSupabaseServerClient();
+  const { data, error } = await supabase
+    .from(TABLE)
+    .select("srs_status")
+    .eq("status", "ready");
+
+  if (error) throw error;
+
+  const rows = data ?? [];
+  const mastered = rows.filter((r) => r.srs_status === "mastered").length;
+  const inProgress = rows.filter(
+    (r) => r.srs_status && r.srs_status !== "mastered",
+  ).length;
+
+  return {
+    mastered,
+    inProgress,
+    total: rows.length,
+  };
+}
+
+/** Server-only: count of words due for review today. */
+export async function countWordsDueForReview(): Promise<number> {
+  const supabase = await createSupabaseServerClient();
+  const today = new Date().toISOString();
+  const { count, error } = await supabase
+    .from(TABLE)
+    .select("*", { count: "exact", head: true })
+    .eq("status", "ready")
+    .or(`srs_status.eq.new,next_review_at.lte.${today}`);
+
+  if (error) throw error;
+  return count ?? 0;
+}
+
 /** Server-only: words due for review today, most urgent first. */
 export async function getWordsDueForReview(limit = 5): Promise<WordBankEntry[]> {
   const supabase = await createSupabaseServerClient();

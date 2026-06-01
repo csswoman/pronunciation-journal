@@ -1,6 +1,6 @@
 "use client";
 
-import { User, Laptop, Layers, Star, BrainCircuit } from "lucide-react";
+import { User, Laptop, Layers, Star, BrainCircuit, Check } from "lucide-react";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -20,39 +20,19 @@ const INTERVIEW_TYPES: { id: Scenario; label: string; sub: string; Icon: React.E
   { id: "ai-developer",  label: "AI Developer",  sub: "LLMs, agents, evals",      Icon: BrainCircuit },
 ];
 
-const LEVELS: { id: Level; label: string; sub: string }[] = [
-  { id: "beginner",     label: "Beginner",     sub: "Simple vocabulary" },
-  { id: "intermediate", label: "Intermediate", sub: "Professional language" },
-  { id: "advanced",     label: "Advanced",     sub: "Native-level fluency" },
+const LEVELS: { id: Level; label: string }[] = [
+  { id: "beginner",     label: "Beginner" },
+  { id: "intermediate", label: "Intermediate" },
+  { id: "advanced",     label: "Advanced" },
 ];
 
-const SCORING: { id: Difficulty; label: string; badge: string; badgeStyle: string; sub: string }[] = [
-  {
-    id: "guided",
-    label: "Guided",
-    badge: "Easier",
-    badgeStyle: "bg-[color-mix(in_oklch,var(--success)_15%,transparent)] text-[var(--success)]",
-    sub: "Lenient — build confidence",
-  },
-  {
-    id: "challenge",
-    label: "Challenge",
-    badge: "Harder",
-    badgeStyle: "bg-[color-mix(in_oklch,var(--warning)_15%,transparent)] text-[var(--warning)]",
-    sub: "Strict — push your limits",
-  },
+const SCORING: { id: Difficulty; label: string; badge: string }[] = [
+  { id: "guided",    label: "Guided",    badge: "Easier" },
+  { id: "challenge", label: "Challenge", badge: "Harder" },
 ];
 
-// ── Shared class strings ──────────────────────────────────────────────────────
-
-const cardBase =
-  "p-3 rounded-xl border text-left cursor-pointer transition-[border-color,background] duration-150 flex flex-col gap-1.5";
-
-function cardCls(active: boolean) {
-  return active
-    ? `${cardBase} bg-[var(--accent-dim)] border-[var(--accent-border)]`
-    : `${cardBase} bg-[var(--surface-raised)] border-[var(--border-subtle)] hover:border-[var(--border-default)]`;
-}
+const sectionLabel =
+  "text-xs font-bold uppercase tracking-[0.14em] text-[var(--text-tertiary)] text-center";
 
 // ── Props ─────────────────────────────────────────────────────────────────────
 
@@ -76,78 +56,113 @@ export default function InterviewConfig({
   onDifficultyChange,
 }: InterviewConfigProps) {
   return (
-    <div className="px-6 pt-4 pb-6 flex flex-col gap-6">
+    <div className="flex flex-col gap-5 px-5 pt-4 pb-6">
 
-      {/* Interview Type */}
-      <div className="flex flex-col gap-2.5">
-        <p className="text-body-sm font-semibold uppercase tracking-[0.1em] text-[var(--text-tertiary)]">
-          Interview Type
-        </p>
-        <div className="grid grid-cols-2 gap-2">
-          {INTERVIEW_TYPES.map(({ id, label, sub, Icon }) => (
-            <button
-              key={id}
-              onClick={() => onScenarioChange(id)}
-              className={cardCls(scenario === id)}
-            >
-              <Icon
-                size={16}
-                strokeWidth={1.8}
-                className={scenario === id ? "text-[var(--primary)]" : "text-[var(--text-tertiary)]"}
-              />
-              <span className="text-body-lg font-semibold text-[var(--text-primary)] leading-[1.2]">{label}</span>
-              <span className="text-body-sm text-[var(--text-tertiary)]">{sub}</span>
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Level */}
-      <div className="flex flex-col gap-2.5">
-        <p className="text-body-sm font-semibold uppercase tracking-[0.1em] text-[var(--text-tertiary)]">
-          Your English Level
-        </p>
-        <div className="flex gap-2">
-          {LEVELS.map(({ id, label, sub }) => (
-            <button
-              key={id}
-              onClick={() => onLevelChange(id)}
-              className={`flex-1 flex flex-col items-center gap-1 py-2.5 px-2 rounded-xl border cursor-pointer transition-[background,border-color] duration-150 ${
-                level === id
-                  ? "bg-[var(--accent-dim)] border-[var(--accent-border)]"
-                  : "bg-[var(--surface-raised)] border-[var(--border-subtle)] hover:bg-[var(--surface-sunken)]"
-              }`}
-            >
-              <span className={`text-body-lg font-semibold leading-none ${level === id ? "text-[var(--primary)]" : "text-[var(--text-primary)]"}`}>
+      <div className="flex flex-col gap-4">
+        <div>
+          <p className={sectionLabel}>Level</p>
+          <div className="mt-2.5 flex flex-wrap gap-2 justify-center">
+            {LEVELS.map(({ id, label }) => (
+              <button
+                key={id}
+                type="button"
+                onClick={() => onLevelChange(id)}
+                className={`text-sm font-semibold px-3.5 py-1.5 rounded-full border cursor-pointer transition-[background,color,border-color] duration-150 ${
+                  level === id
+                    ? "bg-[var(--primary)] text-[var(--on-primary)] border-transparent"
+                    : "bg-[var(--surface-raised)] text-[var(--text-secondary)] border-[var(--border-subtle)] hover:border-[var(--accent-border)]"
+                }`}
+              >
                 {label}
-              </span>
-              <span className="text-body-sm text-[var(--text-tertiary)] text-center">{sub}</span>
-            </button>
-          ))}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <p className={sectionLabel}>Scoring</p>
+          <div className="mt-2.5 grid grid-cols-2 gap-2">
+            {SCORING.map(({ id, label, badge }) => {
+              const active = difficulty === id;
+              return (
+                <button
+                  key={id}
+                  type="button"
+                  onClick={() => onDifficultyChange(id)}
+                  className={`flex items-center justify-between gap-2 rounded-2xl border px-3 py-2.5 text-left cursor-pointer transition-[border-color,background] duration-150 ${
+                    active
+                      ? "bg-[var(--accent-dim)] border-[var(--accent-border)]"
+                      : "bg-[var(--surface-raised)] border-[var(--border-subtle)] hover:border-[var(--accent-border)]"
+                  }`}
+                >
+                  <span className="text-base font-semibold text-[var(--text-primary)] leading-none">
+                    {label}
+                  </span>
+                  <span
+                    className={`text-xs font-bold px-2 py-0.5 rounded-full shrink-0 ${
+                      id === "guided"
+                        ? "bg-[color-mix(in_oklch,var(--success)_15%,transparent)] text-[var(--success)]"
+                        : "bg-[color-mix(in_oklch,var(--warning)_15%,transparent)] text-[var(--warning)]"
+                    }`}
+                  >
+                    {badge}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
         </div>
       </div>
 
-      {/* Scoring Mode */}
       <div className="flex flex-col gap-2.5">
-        <p className="text-body-sm font-semibold uppercase tracking-[0.1em] text-[var(--text-tertiary)]">
-          Scoring Mode
-        </p>
-        <div className="grid grid-cols-2 gap-2">
-          {SCORING.map(({ id, label, badge, badgeStyle, sub }) => (
-            <button
-              key={id}
-              onClick={() => onDifficultyChange(id)}
-              className={cardCls(difficulty === id)}
-            >
-              <div className="flex items-center justify-between gap-1.5">
-                <span className="text-body-lg font-semibold text-[var(--text-primary)] leading-[1.2]">{label}</span>
-                <span className={`text-caption font-bold px-2 py-0.5 rounded-full whitespace-nowrap shrink-0 ${badgeStyle}`}>
-                  {badge}
+        <p className={sectionLabel}>Scenario</p>
+        <div className="flex flex-col gap-2" role="listbox" aria-label="Interview scenarios">
+          {INTERVIEW_TYPES.map(({ id, label, sub, Icon }) => {
+            const selected = scenario === id;
+            return (
+              <button
+                key={id}
+                type="button"
+                role="option"
+                aria-selected={selected}
+                onClick={() => onScenarioChange(id)}
+                className={`flex items-center gap-3 w-full min-h-0 py-3 px-3 rounded-2xl border text-left cursor-pointer transition-[border-color,background] duration-150 ${
+                  selected
+                    ? "bg-[var(--accent-dim)] border-[var(--accent-border)]"
+                    : "bg-[var(--surface-raised)] border-[var(--border-subtle)] hover:border-[var(--accent-border)]"
+                }`}
+              >
+                <span
+                  className="w-10 h-10 flex-shrink-0 rounded-md flex items-center justify-center"
+                  style={{
+                    backgroundColor: selected
+                      ? "color-mix(in srgb, var(--primary) 14%, transparent)"
+                      : "var(--surface-sunken)",
+                  }}
+                >
+                  <Icon
+                    size={18}
+                    strokeWidth={1.9}
+                    className={selected ? "text-[var(--primary)]" : "text-[var(--text-tertiary)]"}
+                  />
                 </span>
-              </div>
-              <span className="text-body-sm text-[var(--text-tertiary)]">{sub}</span>
-            </button>
-          ))}
+                <span className="flex-1 min-w-0">
+                  <span className="block text-[15px] font-semibold text-[var(--text-primary)] leading-snug">
+                    {label}
+                  </span>
+                  <span className="block text-sm text-[var(--text-tertiary)] mt-0.5 leading-snug">
+                    {sub}
+                  </span>
+                </span>
+                <Check
+                  size={17}
+                  strokeWidth={2.5}
+                  className={`flex-shrink-0 text-[var(--primary)] ${selected ? "opacity-100" : "opacity-0"}`}
+                  aria-hidden
+                />
+              </button>
+            );
+          })}
         </div>
       </div>
     </div>

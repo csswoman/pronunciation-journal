@@ -1,13 +1,11 @@
-import { createRequire } from "node:module";
 import nextPlugin from "@next/eslint-plugin-next";
+import reactHooks from "eslint-plugin-react-hooks";
 import tseslint from "typescript-eslint";
-
-const require = createRequire(import.meta.url);
-const reactHooks = require("./node_modules/eslint-config-next/node_modules/eslint-plugin-react-hooks");
 
 const eslintConfig = [
   {
     ignores: [
+      ".agents/**",
       ".next/**",
       "out/**",
       "build/**",

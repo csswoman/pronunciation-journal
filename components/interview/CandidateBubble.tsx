@@ -37,34 +37,52 @@ export function CandidateBubble({
   const threshold = getThreshold(level, difficulty);
 
   return (
-    <div className="flex items-start gap-3 max-w-[85%] self-end flex-row-reverse">
-      <div className="w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center text-sm mt-1"
-        style={{ background: "color-mix(in oklch, var(--color-accent) 15%, transparent)" }}>
-        🗣️
+    <div className="flex items-start gap-2.5 max-w-[88%] self-end flex-row-reverse">
+      <div
+        className="w-7 h-7 rounded-md flex-shrink-0 flex items-center justify-center text-[11px] font-bold"
+        style={{
+          background: "color-mix(in srgb, var(--primary) 12%, transparent)",
+          color: "var(--primary)",
+          border: "1px solid color-mix(in srgb, var(--primary) 18%, transparent)",
+        }}
+        aria-hidden
+      >
+        Y
       </div>
-      <div className="flex flex-col gap-1.5 flex-1 items-end">
-        <div className="flex items-center gap-2 mr-1">
-          <span className="text-xs font-medium" style={{ color: "var(--muted-text)" }}>You</span>
-          {isActive && !turnResult && (
-            <span className="relative group">
-              <Button variant="outline" size="sm" onClick={onNext}>Skip</Button>
-              <span className="absolute bottom-full right-0 mb-1.5 px-2 py-1 rounded-lg text-xs whitespace-nowrap pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity z-20 shadow-lg"
-                style={{ background: "var(--card-bg)", border: "1px solid var(--line-divider)", color: "var(--body-text)" }}>
-                Skip this line
-              </span>
+      <div className="flex flex-col gap-1.5 min-w-0 flex-1 items-end">
+        {isActive && !turnResult && (
+          <span className="relative group mr-0.5">
+            <Button variant="outline" size="sm" onClick={onNext}>Skip</Button>
+            <span
+              className="absolute bottom-full right-0 mb-1.5 px-2 py-1 rounded-lg text-xs whitespace-nowrap pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity z-20"
+              style={{
+                background: "var(--surface-raised)",
+                border: "1px solid var(--border-subtle)",
+                color: "var(--text-secondary)",
+              }}
+            >
+              Skip this line
             </span>
-          )}
-        </div>
+          </span>
+        )}
 
-        <div className="w-full rounded-2xl rounded-tr-sm px-4 py-3"
+        <div
+          className="w-full rounded-lg rounded-tr-sm px-3.5 py-2.5"
           style={{
-            background: "var(--card-bg)",
-            border: `1.5px solid ${isActive && !turnResult ? "var(--color-accent)" : "var(--line-divider)"}`,
-          }}>
-          <p className="text-sm leading-relaxed font-medium text-fg">{text}</p>
+            fontSize: "15px",
+            background: "color-mix(in srgb, var(--primary) 12%, var(--surface-raised))",
+            color: "var(--text-primary)",
+            border: `1px solid ${
+              isActive && !turnResult
+                ? "color-mix(in srgb, var(--primary) 40%, transparent)"
+                : "color-mix(in srgb, var(--primary) 18%, transparent)"
+            }`,
+          }}
+        >
+          <p className="leading-[1.65] font-medium">{text}</p>
 
           {turnResult && (
-            <div className="mt-3 pt-3 flex flex-col gap-3" style={{ borderTop: "1px solid var(--line-divider)" }}>
+            <div className="mt-3 pt-3 flex flex-col gap-3" style={{ borderTop: "1px solid var(--border-subtle)" }}>
               <div className="flex items-center gap-3">
                 <AccuracyRing accuracy={turnResult.score.accuracy} />
                 <div className="min-w-0">

@@ -1,0 +1,121 @@
+{
+  "meta": {
+    "eyebrow": "A1 · Primeros pasos",
+    "title": "Inglés para",
+    "titleEmphasis": "principiantes"
+  },
+  "cards": [
+    {
+      "id": "bp-pronouns",
+      "tag": "Pronombres",
+      "title": "Pronombres personales",
+      "lede": "Quién hace la acción. En inglés son obligatorios: no se pueden omitir.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "I", "value": "yo (siempre en mayúscula)", "highlights": ["yo"] },
+            { "key": "you", "value": "tú / usted / ustedes", "highlights": ["tú / usted"] },
+            { "key": "he / she / it", "value": "él / ella / eso (cosa o animal)", "highlights": ["él / ella / eso"] },
+            { "key": "we / they", "value": "nosotros / ellos", "highlights": ["nosotros / ellos"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Recuerda:",
+        "body": "I siempre va en mayúscula, esté donde esté en la frase."
+      }
+    },
+    {
+      "id": "bp-greetings",
+      "tag": "Saludos",
+      "title": "Saludar y despedirse",
+      "lede": "Las primeras frases que vas a usar en cualquier conversación.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Hello / Hi", "value": "Hola (Hi es más informal)", "highlights": ["Hola"] },
+            { "key": "Good morning", "value": "Buenos días", "highlights": ["Buenos días"] },
+            { "key": "Good afternoon / evening", "value": "Buenas tardes / noches", "highlights": ["Buenas tardes"] },
+            { "key": "Goodbye / Bye", "value": "Adiós · See you! (¡Nos vemos!)", "highlights": ["Adiós"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bp-courtesy",
+      "tag": "Cortesía",
+      "title": "Las palabras mágicas",
+      "lede": "Pequeñas frases que hacen que suenes educado y natural.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Please", "value": "Por favor", "highlights": ["Por favor"] },
+            { "key": "Thank you / Thanks", "value": "Gracias · respondes con You're welcome", "highlights": ["Gracias"] },
+            { "key": "Sorry", "value": "Perdón (te disculpas)", "highlights": ["Perdón"] },
+            { "key": "Excuse me", "value": "Disculpa (para llamar la atención o pasar)", "highlights": ["Disculpa"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Sorry vs Excuse me:",
+        "body": "Excuse me es antes (para pedir paso); Sorry es después (cuando ya molestaste)."
+      }
+    },
+    {
+      "id": "bp-introduce",
+      "tag": "Presentarse",
+      "title": "Decir tu nombre",
+      "lede": "Hay dos formas correctas y un error muy común. Compáralas:",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "My name Karla." },
+            { "variant": "good", "text": "My name is Karla.", "note": "no olvides el is" },
+            { "variant": "bad", "text": "I Karla." },
+            { "variant": "good", "text": "I'm Karla.", "note": "más corto y natural" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bp-questions",
+      "tag": "Preguntas",
+      "title": "Preguntas para romper el hielo",
+      "lede": "Con estas tres preguntas puedes empezar casi cualquier charla.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "What's your name?", "value": "¿Cómo te llamas? → I'm...", "highlights": ["¿Cómo te llamas?"] },
+            { "key": "How are you?", "value": "¿Cómo estás? → I'm fine, thanks.", "highlights": ["¿Cómo estás?"] },
+            { "key": "Where are you from?", "value": "¿De dónde eres? → I'm from...", "highlights": ["¿De dónde eres?"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bp-numbers",
+      "tag": "Números",
+      "title": "Números del 1 al 10",
+      "lede": "Base para precios, horas, edades y teléfonos. Apréndelos de memoria.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "1 · 2 · 3", "value": "one · two · three", "highlights": ["one", "two", "three"] },
+            { "key": "4 · 5 · 6", "value": "four · five · six", "highlights": ["four", "five", "six"] },
+            { "key": "7 · 8 · 9 · 10", "value": "seven · eight · nine · ten", "highlights": ["seven", "eight", "nine", "ten"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "di en voz alta tu número de teléfono dígito por dígito en inglés."
+      }
+    }
+  ]
+}

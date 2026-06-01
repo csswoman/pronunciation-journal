@@ -23,6 +23,7 @@ export const learningNav: NavSectionType = {
   items: [
     { name: "Words", href: "/words", icon: LibraryBig },
     { name: "Courses", href: "/courses", icon: BookOpen },
+    { name: "Mini lessons", href: "/mini-lessons", icon: BookMarked },
     { name: "IPA Chart", href: "/ipa", icon: Radio },
   ],
 };
@@ -38,6 +39,5 @@ export const adminNav: NavSectionType = {
   label: "Admin",
   items: [
     { name: "Seed Data", href: "/admin/seed", icon: Settings },
-    { name: "Manage Lessons", href: "/admin/lessons", icon: BookOpen },
   ],
 };

@@ -1,0 +1,133 @@
+{
+  "meta": {
+    "eyebrow": "A1 · Presente simple",
+    "title": "Presente",
+    "titleEmphasis": "simple"
+  },
+  "cards": [
+    {
+      "id": "ps-form",
+      "tag": "Forma",
+      "title": "La -s de la tercera persona",
+      "titleItalic": ["-s"],
+      "lede": "Acciones habituales y hechos. El único cambio importante: he/she/it añade -s.",
+      "blocks": [
+        {
+          "type": "conjugation",
+          "rows": [
+            { "pronoun": "I / You / We / They", "form": "work" },
+            { "pronoun": "He / She / It", "form": "works", "hint": "+ s" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Regla de oro:",
+        "body": "si el sujeto es él, ella o eso (una sola cosa), el verbo lleva -s."
+      }
+    },
+    {
+      "id": "ps-spelling",
+      "tag": "Ortografía",
+      "title": "Cómo se añade la -s",
+      "lede": "Casi siempre es solo -s, pero hay tres terminaciones especiales.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "+ s (normal)", "value": "work → works · play → plays", "highlights": ["works", "plays"] },
+            { "key": "+ es (s, sh, ch, x, o)", "value": "go → goes · watch → watches", "highlights": ["goes", "watches"] },
+            { "key": "y → ies", "value": "study → studies · fly → flies", "highlights": ["studies", "flies"], "hint": "solo si antes de la y hay consonante" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ps-third-person",
+      "tag": "Errores comunes",
+      "title": "No olvides la -s",
+      "lede": "El error más típico es quitar la -s en he/she/it. Compara:",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "She work here." },
+            { "variant": "good", "text": "She works here.", "note": "ella trabaja aquí" },
+            { "variant": "bad", "text": "My brother live in Madrid." },
+            { "variant": "good", "text": "My brother lives in Madrid.", "note": "un hermano = tercera persona" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ps-do-does",
+      "tag": "Negativo y pregunta",
+      "title": "do / does como auxiliar",
+      "titleItalic": ["do", "does"],
+      "lede": "Para negar y preguntar usas do/does + verbo base (sin -s).",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Negativo", "value": "I don't work. · She doesn't work.", "highlights": ["don't", "doesn't"] },
+            { "key": "Pregunta", "value": "Do you work? · Does she work?", "highlights": ["Do you", "Does she"] }
+          ]
+        },
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "Does she works?" },
+            { "variant": "good", "text": "Does she work?", "note": "la -s ya está en does" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Recuerda:",
+        "body": "si usas does, el verbo principal pierde la -s. Solo un sitio lleva la marca."
+      }
+    },
+    {
+      "id": "ps-when",
+      "tag": "Usos",
+      "title": "Cuándo usarlo",
+      "lede": "El presente simple NO es para ahora mismo, sino para lo habitual y lo permanente.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Hábitos",
+              "rule": "rutinas que se repiten",
+              "examples": ["I drink coffee every day.", "We start at 9."]
+            },
+            {
+              "label": "Verdades",
+              "rule": "hechos generales",
+              "examples": ["Water boils at 100°C.", "The sun rises in the east."]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ps-adverbs",
+      "tag": "Adverbios",
+      "title": "Adverbios de frecuencia",
+      "lede": "Dicen cada cuánto. Van antes del verbo principal, pero después de to be.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "always", "value": "siempre · I always study at night.", "highlights": ["always study"] },
+            { "key": "usually", "value": "normalmente · She usually walks.", "highlights": ["usually walks"] },
+            { "key": "sometimes", "value": "a veces · They sometimes travel.", "highlights": ["sometimes travel"] },
+            { "key": "never", "value": "nunca · He never eats meat.", "highlights": ["never eats"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Posición:",
+        "body": "antes del verbo (I always work) pero después de to be (I am always late)."
+      }
+    }
+  ]
+}
