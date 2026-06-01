@@ -58,6 +58,10 @@ public/      → Static assets
 - [Next.js](https://nextjs.org/) — React framework
 - [Supabase](https://supabase.com/) — Backend and auth (optional)
 
+## Documentación
+
+Guías de arquitectura, despliegue, componentes UI y especificaciones: **[docs/README.md](docs/README.md)**
+
 ## Learn More
 
 - [Next.js Documentation](https://nextjs.org/docs)

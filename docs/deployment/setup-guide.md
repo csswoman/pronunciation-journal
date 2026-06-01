@@ -300,14 +300,14 @@ git push origin main
 1. ✅ Run setup script or manual config
 2. ✅ Configure branch protection
 3. ✅ Test with empty commit
-4. ✅ Review DEPLOYMENT.md for details
+4. ✅ Review [guide.md](guide.md) for details
 5. ✅ Start merging feature branches!
 
 ---
 
 ## 📖 Documentation
 
-- **DEPLOYMENT.md**: Comprehensive guide
+- **[guide.md](guide.md)**: Comprehensive guide
 - **ci.yml**: CI pipeline configuration
 - **deploy.yml**: Deploy pipeline configuration
 - **scripts/setup-deployment.sh**: Automated setup
