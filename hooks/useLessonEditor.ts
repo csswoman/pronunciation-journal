@@ -79,10 +79,6 @@ export function useLessonEditor(initialLesson?: TheoryLesson) {
           title, slug, category, content,
           cover_image_url: coverUrl || null,
           is_published: isPublished,
-          source: "manual",
-          notion_page_id: null,
-          notion_last_edited: null,
-          notion_synced_at: null,
         });
       }
       router.push("/admin/lessons");

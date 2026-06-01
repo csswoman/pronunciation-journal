@@ -16,11 +16,15 @@ CREATE TABLE IF NOT EXISTS deck_entry_progress (
 
 ALTER TABLE deck_entry_progress ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "Users manage own deck progress" ON deck_entry_progress;
+
 CREATE POLICY "Users manage own deck progress"
   ON deck_entry_progress
   FOR ALL
   USING (auth.uid() = user_id)
   WITH CHECK (auth.uid() = user_id);
+
+DROP TRIGGER IF EXISTS update_deck_entry_progress_updated_at ON deck_entry_progress;
 
 CREATE TRIGGER update_deck_entry_progress_updated_at
   BEFORE UPDATE ON deck_entry_progress

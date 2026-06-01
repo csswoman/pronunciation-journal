@@ -142,14 +142,6 @@ function LessonRow({
         <code className="text-caption font-mono text-fg-muted truncate">
           /courses/library/{lesson.slug}
         </code>
-        {lesson.source === "notion" && (
-          <span className="inline-flex items-center gap-0.5 rounded-md px-1.5 py-0.5 text-tiny font-semibold border border-border-default text-fg-muted flex-shrink-0">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 17L17 7M7 7h10v10" />
-            </svg>
-            Notion
-          </span>
-        )}
       </div>
 
       {/* Status */}

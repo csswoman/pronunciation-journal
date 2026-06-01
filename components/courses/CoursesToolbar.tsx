@@ -10,7 +10,7 @@
 
 import { ChevronDown, Grid2x2, List, Search } from "lucide-react";
 
-export type LibraryFilter = "all" | "manual" | "notion" | "mini";
+export type LibraryFilter = "all" | "manual" | "mini";
 export type LibrarySort   = "recent" | "alpha";
 export type LibraryView   = "grid" | "list";
 

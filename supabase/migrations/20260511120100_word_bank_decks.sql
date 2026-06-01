@@ -18,6 +18,10 @@ ALTER TABLE public.word_bank_decks ENABLE ROW LEVEL SECURITY;
 -- A user can read/write a link only when the underlying word belongs to them.
 -- (decks already enforce user_id via app logic; the word_bank ownership check
 --  is the canonical gate.)
+DROP POLICY IF EXISTS "word_bank_decks_select" ON public.word_bank_decks;
+DROP POLICY IF EXISTS "word_bank_decks_insert" ON public.word_bank_decks;
+DROP POLICY IF EXISTS "word_bank_decks_delete" ON public.word_bank_decks;
+
 CREATE POLICY "word_bank_decks_select" ON public.word_bank_decks
   FOR SELECT
   USING (

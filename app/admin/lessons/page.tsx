@@ -1,6 +1,5 @@
 "use client";
 import { useMemo, useState } from "react";
-import Button from "@/components/ui/Button";
 import LessonManagerHeader from "@/components/admin/LessonManagerHeader";
 import LessonToolbar, { type LessonFilter } from "@/components/admin/LessonToolbar";
 import LessonTable from "@/components/admin/LessonTable";
@@ -14,12 +13,8 @@ export default function AdminLessonsPage() {
     error,
     deletingId,
     togglingId,
-    syncStatus,
-    syncResult,
     deleteLesson,
     togglePublish,
-    syncNotion,
-    dismissSync,
   } = useLessonManager();
 
   const [query, setQuery] = useState("");
@@ -36,11 +31,6 @@ export default function AdminLessonsPage() {
     user: lessons.filter((l) => !l.is_system).length,
     drafts: lessons.filter((l) => !l.is_published).length,
   }), [lessons]);
-
-  const lastSyncedAt = useMemo(() => {
-    const stamps = lessons.map((l) => l.notion_synced_at).filter(Boolean) as string[];
-    return stamps.length ? stamps.sort().at(-1)! : null;
-  }, [lessons]);
 
   const { system, user, showSystem, showUser } = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -63,9 +53,6 @@ export default function AdminLessonsPage() {
         total={counts.all}
         published={counts.all - counts.drafts}
         drafts={counts.drafts}
-        syncStatus={syncStatus}
-        lastSyncedAt={lastSyncedAt}
-        onSync={syncNotion}
       />
 
       <div className="max-w-5xl mx-auto px-space-6 py-space-8">
@@ -83,15 +70,6 @@ export default function AdminLessonsPage() {
           </div>
         )}
 
-        {syncStatus === "success" && syncResult && (
-          <div className="rounded-xl p-space-3 mb-space-6 bg-success-soft text-success text-body-sm flex items-center justify-between">
-            <span>
-              Notion sync complete — {syncResult.created} created, {syncResult.updated} updated, {syncResult.deleted} deleted, {syncResult.skipped} skipped
-            </span>
-            <Button onClick={dismissSync} className="ml-space-4 opacity-60 hover:opacity-100 text-lg leading-none">×</Button>
-          </div>
-        )}
-
         {loading ? (
           <div className="flex items-center justify-center py-space-20">
             <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
@@ -101,7 +79,7 @@ export default function AdminLessonsPage() {
             {showSystem && (
               <LessonTable
                 label="System"
-                note="Synced from Notion · read-only origin"
+                note="Platform lessons · read-only origin"
                 lessons={system}
                 deletingId={deletingId}
                 togglingId={togglingId}

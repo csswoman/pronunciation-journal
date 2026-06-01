@@ -4,8 +4,10 @@
 -- content being practiced (word slug, lesson id, soundId, etc.).
 
 ALTER TABLE "public"."answer_history"
-  ADD COLUMN "context" text,
-  ADD COLUMN "content_id" text;
+  ADD COLUMN IF NOT EXISTS "context" text;
+
+ALTER TABLE "public"."answer_history"
+  ADD COLUMN IF NOT EXISTS "content_id" text;
 
 COMMENT ON COLUMN "public"."answer_history"."context" IS
   'sound_lab | courses | ai_coach | practice';

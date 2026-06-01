@@ -17,5 +17,8 @@ WHERE "context" IS NOT NULL
 
 -- 3) Enforce allowed values.
 ALTER TABLE "public"."answer_history"
+  DROP CONSTRAINT IF EXISTS "answer_history_context_check";
+
+ALTER TABLE "public"."answer_history"
   ADD CONSTRAINT "answer_history_context_check"
   CHECK ("context" IN ('sound_lab', 'courses', 'ai_coach', 'practice', 'daily'));

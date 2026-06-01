@@ -1,6 +1,5 @@
 import Button from "@/components/ui/Button";
 import Link from "next/link";
-import { H2 } from "@/components/ui/Typography";
 
 interface SectionHeaderProps {
   title: string;
