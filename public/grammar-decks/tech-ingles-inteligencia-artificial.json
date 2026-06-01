@@ -1,0 +1,115 @@
+{
+  "meta": {
+    "eyebrow": "Tech · Inglés para IA",
+    "title": "Inglés para",
+    "titleEmphasis": "inteligencia artificial"
+  },
+  "cards": [
+    {
+      "id": "ai-core",
+      "tag": "Conceptos",
+      "title": "Vocabulario básico de IA",
+      "lede": "Los términos que vertebran cualquier conversación sobre IA en inglés.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "training", "value": "entrenamiento · train a model", "highlights": ["training"] },
+            { "key": "dataset", "value": "conjunto de datos", "highlights": ["dataset"] },
+            { "key": "model", "value": "modelo · a language model", "highlights": ["model"] },
+            { "key": "inference", "value": "inferencia · run inference", "highlights": ["inference"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ai-ml",
+      "tag": "Machine learning",
+      "title": "Términos de aprendizaje automático",
+      "lede": "Vocabulario más específico que aparece en papers y documentación técnica.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "supervised learning", "value": "aprendizaje supervisado", "highlights": ["supervised learning"] },
+            { "key": "fine-tuning", "value": "ajuste fino de un modelo", "highlights": ["fine-tuning"] },
+            { "key": "overfitting", "value": "sobreajuste", "highlights": ["overfitting"] },
+            { "key": "weights / parameters", "value": "pesos / parámetros", "highlights": ["weights", "parameters"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ai-verbs",
+      "tag": "Verbos",
+      "title": "Verbos que se usan con modelos",
+      "lede": "Colocaciones fijas: qué verbo va con cada concepto. Apréndelas juntas.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "train a model", "value": "entrenar (no \"educate\")", "highlights": ["train a model"] },
+            { "key": "deploy a model", "value": "poner en producción", "highlights": ["deploy"] },
+            { "key": "fine-tune", "value": "ajustar con datos propios", "highlights": ["fine-tune"] },
+            { "key": "evaluate / benchmark", "value": "evaluar / comparar rendimiento", "highlights": ["evaluate", "benchmark"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ai-describe",
+      "tag": "Describir",
+      "title": "Explicar qué hace un sistema",
+      "lede": "Estructuras para describir capacidades y limitaciones de un modelo.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "is capable of -ing", "value": "es capaz de · capable of generating text", "highlights": ["capable of"] },
+            { "key": "is designed to", "value": "está diseñado para · designed to detect fraud", "highlights": ["designed to"] },
+            { "key": "tends to", "value": "tiende a · it tends to hallucinate", "highlights": ["tends to"] },
+            { "key": "struggles with", "value": "le cuesta · struggles with maths", "highlights": ["struggles with"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ai-ethics",
+      "tag": "Debate",
+      "title": "Hablar de riesgos y ética",
+      "lede": "La IA genera debate. Vocabulario para opinar sobre sus implicaciones.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "bias", "value": "sesgo · the model has a bias", "highlights": ["bias"] },
+            { "key": "accountability", "value": "responsabilidad", "highlights": ["accountability"] },
+            { "key": "to raise concerns", "value": "plantear preocupaciones", "highlights": ["raise concerns"] },
+            { "key": "safeguards", "value": "salvaguardas / medidas de seguridad", "highlights": ["safeguards"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Falso amigo:",
+        "body": "bias se pronuncia \"báias\" /ˈbaɪəs/, no \"bías\"."
+      }
+    },
+    {
+      "id": "ai-pronounce",
+      "tag": "Pronunciación",
+      "title": "Siglas y términos clave",
+      "lede": "Las siglas de IA tienen su forma de decirse. Equivocarlas delata inseguridad.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "AI", "value": "se deletrea · \"ei-ai\"", "highlights": ["ei-ai"] },
+            { "key": "GPU", "value": "se deletrea · \"yi-pi-iu\"", "highlights": ["yi-pi-iu"] },
+            { "key": "algorithm", "value": "/ˈælɡərɪðəm/ → \"álgorizm\"", "highlights": ["álgorizm"] },
+            { "key": "neural", "value": "/ˈnjʊərəl/ → \"niúral\"", "highlights": ["niúral"] }
+          ]
+        }
+      ]
+    }
+  ]
+}

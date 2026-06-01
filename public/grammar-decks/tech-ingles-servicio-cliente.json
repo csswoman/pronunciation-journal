@@ -1,0 +1,110 @@
+{
+  "meta": {
+    "eyebrow": "Tech · Inglés para servicio al cliente",
+    "title": "Servicio al",
+    "titleEmphasis": "cliente"
+  },
+  "cards": [
+    {
+      "id": "cs-greeting",
+      "tag": "Apertura",
+      "title": "Recibir al cliente",
+      "lede": "El primer contacto marca el tono. Frases cálidas y profesionales para empezar.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Saludo", "value": "Thank you for calling. How can I help?", "highlights": ["How can I help?"] },
+            { "key": "Chat/email", "value": "Thanks for reaching out.", "highlights": ["reaching out"] },
+            { "key": "Identificar", "value": "May I have your name, please?", "highlights": ["May I have"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cs-listening",
+      "tag": "Escuchar",
+      "title": "Mostrar que entiendes",
+      "lede": "Reformular el problema demuestra atención y evita malentendidos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Confirmar", "value": "Let me make sure I understand...", "highlights": ["Let me make sure"] },
+            { "key": "Reformular", "value": "So, what you're saying is...", "highlights": ["what you're saying is"] },
+            { "key": "Empatía", "value": "I understand how frustrating that is.", "highlights": ["I understand how frustrating"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Clave:",
+        "body": "la empatía calma; reconoce el problema antes de ofrecer la solución."
+      }
+    },
+    {
+      "id": "cs-apologizing",
+      "tag": "Disculparse",
+      "title": "Pedir disculpas con tacto",
+      "lede": "Disculparse bien es esencial. Asume responsabilidad sin echar la culpa al cliente.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "good", "text": "I'm sorry for the inconvenience.", "note": "formal" },
+            { "variant": "good", "text": "I apologize for the delay.", "note": "más formal" },
+            { "variant": "bad", "text": "It's not our fault.", "note": "evítalo" },
+            { "variant": "good", "text": "Let me fix this for you right away.", "note": "orientado a solución" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cs-solutions",
+      "tag": "Soluciones",
+      "title": "Ofrecer soluciones",
+      "lede": "Propón pasos claros con will y let me. Transmite control de la situación.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Ofrecer", "value": "I'll look into this for you.", "highlights": ["I'll look into"] },
+            { "key": "Pasos", "value": "What I'll do is... · The next step is...", "highlights": ["What I'll do is"] },
+            { "key": "Opciones", "value": "We could either... or...", "highlights": ["either... or"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cs-holding",
+      "tag": "Gestión",
+      "title": "Esperas y transferencias",
+      "lede": "Frases educadas para poner en espera, transferir o pedir tiempo.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Espera", "value": "Could you hold for a moment, please?", "highlights": ["hold for a moment"] },
+            { "key": "Transferir", "value": "I'll transfer you to the right team.", "highlights": ["transfer you"] },
+            { "key": "Tiempo", "value": "Bear with me while I check.", "highlights": ["Bear with me"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cs-closing",
+      "tag": "Cierre",
+      "title": "Cerrar la conversación",
+      "lede": "Termina confirmando que todo está resuelto y dejando la puerta abierta.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Confirmar", "value": "Is there anything else I can help with?", "highlights": ["anything else"] },
+            { "key": "Resumir", "value": "Just to recap, we've...", "highlights": ["Just to recap"] },
+            { "key": "Despedir", "value": "Thank you for your patience. Have a great day!", "highlights": ["Thank you for your patience"] }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -65,21 +65,24 @@ export function fromMixedExercise(
     }
   }
 
-  // ex.kind === 'match_pairs' — a generic exercise embedded in a phoneme session
-  const data = ex.data
-  const payload: GenericPayload = { kind: 'generic', data }
-  const slug: ExerciseSlug = 'match_pairs'
-  const contentId = data.id
-  return {
-    id: deterministicId(slug, contentId, payload),
-    slug,
-    exerciseTypeId: EXERCISE_TYPE_IDS[slug],
-    contentId,
-    context,
-    payload,
-    level: data.level,
-    sourceRef: data.sourceRef,
+  if (ex.kind === 'match_pairs' || ex.kind === 'reorder_words') {
+    const data = ex.data
+    const slug: ExerciseSlug = ex.kind === 'match_pairs' ? 'match_pairs' : 'reorder_words'
+    const payload: GenericPayload = { kind: 'generic', data }
+    const contentId = data.id
+    return {
+      id: deterministicId(slug, contentId, payload),
+      slug,
+      exerciseTypeId: EXERCISE_TYPE_IDS[slug],
+      contentId,
+      context,
+      payload,
+      level: data.level,
+      sourceRef: data.sourceRef,
+    }
   }
+
+  throw new Error(`Unknown mixed exercise kind: ${(ex as { kind: string }).kind}`)
 }
 
 export function fromGenericExercise(

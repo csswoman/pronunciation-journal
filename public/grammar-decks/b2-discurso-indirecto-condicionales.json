@@ -1,0 +1,127 @@
+{
+  "meta": {
+    "eyebrow": "B2 · Reported speech y condicionales",
+    "title": "Discurso indirecto y",
+    "titleEmphasis": "condicionales"
+  },
+  "cards": [
+    {
+      "id": "rs-backshift",
+      "tag": "Estilo indirecto",
+      "title": "Un paso atrás en el tiempo",
+      "lede": "Al contar lo que alguien dijo, el verbo retrocede un tiempo verbal.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "present → past", "value": "\"I work\" → He said he worked", "highlights": ["worked"] },
+            { "key": "past → past perfect", "value": "\"I saw it\" → She said she had seen it", "highlights": ["had seen"] },
+            { "key": "will → would", "value": "\"I'll go\" → He said he would go", "highlights": ["would go"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Recuerda:",
+        "body": "también cambian los pronombres y el tiempo/lugar: now → then, here → there."
+      }
+    },
+    {
+      "id": "rs-questions",
+      "tag": "Preguntas indirectas",
+      "title": "Reportar preguntas",
+      "lede": "Al contar una pregunta, el orden vuelve a ser de afirmación y desaparece el signo.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "He asked where do I live." },
+            { "variant": "good", "text": "He asked where I lived.", "note": "sin do, orden de afirmación" },
+            { "variant": "bad", "text": "She asked am I ready." },
+            { "variant": "good", "text": "She asked if I was ready.", "note": "sí/no → if / whether" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "rs-verbs",
+      "tag": "Verbos de reporte",
+      "title": "Más allá de say y tell",
+      "lede": "Verbos que resumen la intención de lo dicho. Cada uno lleva su estructura.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "offer to", "value": "ofrecerse a · He offered to help.", "highlights": ["offered to"] },
+            { "key": "suggest -ing", "value": "sugerir · She suggested leaving.", "highlights": ["suggested leaving"] },
+            { "key": "promise to", "value": "prometer · They promised to come.", "highlights": ["promised to"] },
+            { "key": "admit -ing", "value": "admitir · He admitted lying.", "highlights": ["admitted lying"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "rs-second-cond",
+      "tag": "Segundo condicional",
+      "title": "Situaciones hipotéticas",
+      "titleItalic": ["would"],
+      "lede": "Para lo improbable o imaginario: if + pasado simple, ... would + verbo.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Condición", "value": "If I had money...", "highlights": ["If I had"], "hint": "pasado, aunque sea hipótesis presente" },
+            { "key": "Resultado", "value": "...I would travel.", "highlights": ["would travel"] },
+            { "key": "Consejo", "value": "If I were you, I'd rest.", "highlights": ["If I were you"], "hint": "were para todas las personas" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "rs-third-cond",
+      "tag": "Tercer condicional",
+      "title": "Arrepentimientos del pasado",
+      "lede": "Para algo que no pasó y su consecuencia imaginaria. Todo en pasado perfecto.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Condición", "value": "If I had studied...", "highlights": ["had studied"] },
+            { "key": "Resultado", "value": "...I would have passed.", "highlights": ["would have passed"], "hint": "pero no aprobé" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Diferencia:",
+        "body": "2º condicional = presente/futuro imaginario; 3º = pasado que ya no se puede cambiar."
+      }
+    },
+    {
+      "id": "rs-contrast",
+      "tag": "Contraste",
+      "title": "1º, 2º y 3º de un vistazo",
+      "lede": "La clave es cuán real o imposible es la situación.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "1º (real)",
+              "rule": "presente + will",
+              "examples": ["If it rains, I'll stay."]
+            },
+            {
+              "label": "2º (improbable)",
+              "rule": "pasado + would",
+              "examples": ["If I won, I'd travel."]
+            },
+            {
+              "label": "3º (imposible)",
+              "rule": "had + would have",
+              "examples": ["If I'd known, I'd have gone."]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

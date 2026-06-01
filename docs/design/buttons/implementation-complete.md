@@ -99,10 +99,10 @@ All variants now use **design tokens from `globals.css`**:
 3. **components/ui/ButtonShowcase.tsx** — Visual demo of all variants + sizes
 
 ### Documentation
-1. **BUTTON_GUIDE.md** — 200+ lines, complete reference
-2. **BUTTON_QUICK_REFERENCE.md** — One-page cheat sheet
-3. **BUTTON_MIGRATION_SUMMARY.md** — Migration guide with before/after
-4. **IMPLEMENTATION_COMPLETE.md** — This file
+1. **[guide.md](guide.md)** — 200+ lines, complete reference
+2. **[quick-reference.md](quick-reference.md)** — One-page cheat sheet
+3. **[migration-summary.md](migration-summary.md)** — Migration guide with before/after
+4. **[implementation-complete.md](implementation-complete.md)** — This file
 
 ---
 
@@ -192,9 +192,9 @@ The HomeHeader component still has fixture data. Integrate real data from Supaba
 
 | Document | Purpose |
 |----------|---------|
-| **BUTTON_GUIDE.md** | Complete reference (variants, sizes, props, examples, Q&A) |
-| **BUTTON_QUICK_REFERENCE.md** | One-page cheat sheet (variants, usage, props) |
-| **BUTTON_MIGRATION_SUMMARY.md** | Migration guide (before/after, alignment, next steps) |
+| **[guide.md](guide.md)** | Complete reference (variants, sizes, props, examples, Q&A) |
+| **[quick-reference.md](quick-reference.md)** | One-page cheat sheet (variants, usage, props) |
+| **[migration-summary.md](migration-summary.md)** | Migration guide (before/after, alignment, next steps) |
 | **button-variants.tsx** | Code comments with variant documentation |
 | **ButtonShowcase.tsx** | Live demo of all variants + sizes |
 

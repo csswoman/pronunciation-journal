@@ -78,6 +78,34 @@ export const LessonContentSchema = z.object({
   quiz: z.array(QuizQuestionSchema),
 });
 
+// ─── Language concept (discovery card, rotated daily) ────────────────────────
+
+export const CONCEPT_CATEGORIES = [
+  "curiosidad",
+  "etimología",
+  "historia",
+  "vocabulario",
+  "lingüística",
+  "cultura",
+  "estilo",
+  "pronunciación",
+  "gramática",
+  "ortografía",
+] as const;
+
+export const CONCEPT_LEVELS = ["a1", "a2", "b1", "b2", "c1"] as const;
+
+export const LanguageConceptSchema = z.object({
+  id: z.string().min(1),
+  category: z.enum(CONCEPT_CATEGORIES),
+  level: z.enum(CONCEPT_LEVELS),
+  badge: z.string(),
+  title: z.string(),
+  description: z.string(),
+  footer: z.string(),
+  href: z.string(),
+});
+
 // ─── Inferred types (replace the old hand-written interfaces) ────────────────
 
 export type LessonLevel = z.infer<typeof LessonLevelSchema>;
@@ -89,3 +117,4 @@ export type LessonExample = z.infer<typeof LessonExampleSchema>;
 export type LessonExercise = z.infer<typeof LessonExerciseSchema>;
 export type QuizQuestion = z.infer<typeof QuizQuestionSchema>;
 export type LessonContent = z.infer<typeof LessonContentSchema>;
+export type LanguageConcept = z.infer<typeof LanguageConceptSchema>;

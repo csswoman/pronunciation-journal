@@ -6,7 +6,12 @@
 @import "./styles/animations.css";
 @import "./styles/components.css";
 @import "./styles/sound-lab.css";
+@import "./styles/phoneme-practice.css";
 @import "./styles/course-path.css";
 @import "./styles/grammar-deck.css";
+@import "./styles/words-lexicon.css";
+@import "./styles/lexicon-area.css";
+@import "./styles/ipa-chart.css";
+@import "./styles/mini-lessons.css";
 
 @custom-variant dark (&:where(.dark, .dark *));

@@ -1,0 +1,162 @@
+{
+  "meta": {
+    "eyebrow": "A1 · Gramática",
+    "title": "Pronombres",
+    "titleEmphasis": "objeto",
+    "goal": "Ya puedes usar me, him, her, it, us, them en lugar de repetir sustantivos."
+  },
+  "quiz": [
+    {
+      "q": "¿Cuál es el pronombre objeto correcto para 'she'?",
+      "options": ["she", "her", "hers", "he"],
+      "answer": 1,
+      "explain": "El pronombre sujeto es 'she', pero después del verbo o de una preposición se convierte en 'her': I called her. / I spoke with her."
+    },
+    {
+      "q": "¿Qué oración es correcta?",
+      "options": ["She called I.", "She called me.", "She called my.", "She called myself."],
+      "answer": 1,
+      "explain": "'Me' es el pronombre objeto de 'I'. Después del verbo, usamos 'me', nunca 'I': She called me."
+    },
+    {
+      "q": "Completa: 'This is for ___.' (nosotros)",
+      "options": ["we", "our", "us", "ours"],
+      "answer": 2,
+      "explain": "Después de una preposición ('for', 'to', 'with') se usa el pronombre objeto: 'us'. Nunca 'we' después de preposición."
+    }
+  ],
+  "cards": [
+    {
+      "id": "obj-intro",
+      "tag": "Concepto",
+      "title": "¿Qué son los pronombres objeto?",
+      "lede": "Reemplazan al sustantivo cuando este ya no es el sujeto, sino quien recibe la acción.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Sujeto", "value": "hace la acción · I, you, he, she, it, we, they", "highlights": ["I", "you", "he", "she", "it", "we", "they"] },
+            { "key": "Objeto", "value": "recibe la acción · me, you, him, her, it, us, them", "highlights": ["me", "you", "him", "her", "it", "us", "them"] },
+            { "key": "Ejemplo", "value": "I love her. · She loves me.", "highlights": ["her", "me"], "hint": "mismo par, distintos roles" },
+            { "key": "Regla", "value": "El objeto va siempre DESPUÉS del verbo o de una preposición.", "hint": "nunca antes del verbo" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Clave:",
+        "body": "en español el pronombre objeto puede ir antes o después del verbo ('lo llamo' / 'llámalo'). En inglés siempre va después: I call him."
+      }
+    },
+    {
+      "id": "obj-me-you-it",
+      "tag": "me / you / it",
+      "title": "me, you e it",
+      "lede": "'You' e 'it' son iguales como sujeto y como objeto. Solo 'I → me' cambia.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "Can you help I?" },
+            { "variant": "good", "text": "Can you help me?", "note": "me = objeto de I" },
+            { "variant": "bad", "text": "I like it not." },
+            { "variant": "good", "text": "I don't like it.", "note": "it es igual como sujeto y objeto" },
+            { "variant": "bad", "text": "Between you and I..." },
+            { "variant": "good", "text": "Between you and me...", "note": "después de preposición: me, no I" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Trampa común:",
+        "body": "'between you and I' suena elegante pero es incorrecto. Las preposiciones siempre piden pronombre objeto: between you and me."
+      }
+    },
+    {
+      "id": "obj-him-her",
+      "tag": "him / her",
+      "title": "him y her",
+      "lede": "Para personas: 'he → him' y 'she → her'. Importante en inglés porque el género sí importa.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "him (él)",
+              "rule": "objeto de 'he'",
+              "examples": ["I know him.", "Call him later.", "This is for him.", "I sat next to him."]
+            },
+            {
+              "label": "her (ella)",
+              "rule": "objeto de 'she'",
+              "examples": ["I know her.", "Call her later.", "This is for her.", "I sat next to her."]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Ojo con 'her':",
+        "body": "'her' también es adjetivo posesivo (her book = su libro). Si va antes de un sustantivo, es posesivo; si va solo o después del verbo, es pronombre objeto."
+      }
+    },
+    {
+      "id": "obj-us-them",
+      "tag": "us / them",
+      "title": "us y them",
+      "lede": "'We → us' y 'they → them'. Se usan para grupos de personas o cosas.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "us", "value": "Please help us. · Wait for us. · She told us.", "highlights": ["us"], "hint": "objeto de 'we'" },
+            { "key": "them", "value": "I love them. · Give it to them. · She knows them.", "highlights": ["them"], "hint": "objeto de 'they'" },
+            { "key": "Cosas", "value": "Those books? I need them. · Your keys? I found them.", "highlights": ["them"], "hint": "'them' también vale para objetos" },
+            { "key": "Informal", "value": "Someone called. Tell them I'm busy.", "highlights": ["them"], "hint": "'them' singular neutro es muy común" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "obj-position",
+      "tag": "Posición",
+      "title": "Dónde va el pronombre objeto",
+      "lede": "Siempre después del verbo o de una preposición. Nunca antes del verbo.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "I him called." },
+            { "variant": "good", "text": "I called him.", "note": "después del verbo" },
+            { "variant": "bad", "text": "She to me gave the book." },
+            { "variant": "good", "text": "She gave the book to me.", "note": "o: She gave me the book." },
+            { "variant": "bad", "text": "With they we went." },
+            { "variant": "good", "text": "We went with them.", "note": "después de preposición: them" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Diferencia con español:",
+        "body": "en español decimos 'le di el libro', 'lo llamé'. En inglés el pronombre siempre sigue al verbo: I called him, I gave him the book."
+      }
+    },
+    {
+      "id": "obj-mistakes",
+      "tag": "Errores frecuentes",
+      "title": "Errores típicos de hispanohablantes",
+      "lede": "Estos son los errores más comunes al transferir el español al inglés.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "I no understand you." },
+            { "variant": "good", "text": "I don't understand you.", "note": "la negación va en el auxiliar, no antes del verbo" },
+            { "variant": "bad", "text": "She explain me the lesson." },
+            { "variant": "good", "text": "She explained it to me.", "note": "el pronombre objeto va después del verbo" },
+            { "variant": "bad", "text": "Give me it." },
+            { "variant": "good", "text": "Give it to me.", "note": "cuando ambos objetos son pronombres, usa 'to me'" },
+            { "variant": "bad", "text": "I saw she at the store." },
+            { "variant": "good", "text": "I saw her at the store.", "note": "después del verbo: her, not she" }
+          ]
+        }
+      ]
+    }
+  ]
+}

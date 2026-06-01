@@ -1,0 +1,110 @@
+{
+  "meta": {
+    "eyebrow": "A2 · Práctico: partes del cuerpo",
+    "title": "Partes del",
+    "titleEmphasis": "cuerpo"
+  },
+  "cards": [
+    {
+      "id": "bd-head",
+      "tag": "Cabeza",
+      "title": "La cara y la cabeza",
+      "lede": "Vocabulario de la parte superior del cuerpo. Algunos plurales son irregulares.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Cara", "value": "eye, nose, mouth, ear", "highlights": ["eye"] },
+            { "key": "Plural irregular", "value": "tooth → teeth · foot → feet", "highlights": ["teeth", "feet"] },
+            { "key": "Pelo", "value": "hair (incontable)", "highlights": ["hair"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bd-body",
+      "tag": "Cuerpo",
+      "title": "Tronco y extremidades",
+      "lede": "Las partes principales del cuerpo, de los brazos a las piernas.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Brazos", "value": "arm, hand, finger, shoulder" },
+            { "key": "Piernas", "value": "leg, knee, foot, toe" },
+            { "key": "Tronco", "value": "chest, back, stomach" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bd-symptoms",
+      "tag": "Síntomas",
+      "title": "Decir qué te duele",
+      "lede": "Para hablar de dolores usas have a/an + parte + -ache, o my ... hurts.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "-ache", "value": "headache, stomachache, toothache", "highlights": ["-ache"] },
+            { "key": "have a", "value": "I have a headache.", "highlights": ["have a headache"] },
+            { "key": "hurts", "value": "My back hurts.", "highlights": ["hurts"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Ojo:",
+        "body": "se dice I have a sore throat para el dolor de garganta, no \"throatache\"."
+      }
+    },
+    {
+      "id": "bd-doctor",
+      "tag": "Médico",
+      "title": "En la consulta",
+      "lede": "Frases básicas para una visita al médico cuando estás de viaje o necesitas ayuda.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Cómo estás", "value": "What's wrong? · How do you feel?", "highlights": ["What's wrong?"] },
+            { "key": "Síntoma", "value": "I feel sick. · I have a fever.", "highlights": ["feel sick"] },
+            { "key": "Consejo", "value": "You should rest.", "highlights": ["should rest"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bd-actions",
+      "tag": "Acciones",
+      "title": "Verbos con el cuerpo",
+      "lede": "Cosas que haces con partes del cuerpo. Útiles para dar instrucciones.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Manos", "value": "clap, wave, point, hold", "highlights": ["wave"] },
+            { "key": "Cabeza", "value": "nod, shake your head", "highlights": ["nod"] },
+            { "key": "Cuerpo", "value": "stand, sit, walk, run, jump" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bd-describe",
+      "tag": "Describir",
+      "title": "Describir el aspecto físico",
+      "lede": "Combina have got con las partes del cuerpo para describir a alguien.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "good", "text": "She has long brown hair.", "note": "longitud + color + hair" },
+            { "variant": "good", "text": "He has blue eyes.", "note": "color + eyes" },
+            { "variant": "good", "text": "She's got a beard.", "note": "has got = tiene" },
+            { "variant": "bad", "text": "She has hairs long." }
+          ]
+        }
+      ]
+    }
+  ]
+}

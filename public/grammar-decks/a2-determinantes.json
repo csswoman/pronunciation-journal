@@ -1,0 +1,194 @@
+{
+  "meta": {
+    "eyebrow": "A2 · Gramática",
+    "title": "Each, every, all,",
+    "titleEmphasis": "both, either, neither",
+    "goal": "Ya usas correctamente los determinantes para referirte a grupos de dos o más elementos."
+  },
+  "quiz": [
+    {
+      "q": "¿Cuál expresa que los dos libros son buenos (énfasis en los dos juntos)?",
+      "options": ["Each book is good.", "Every book is good.", "Both books are good.", "Either book is good."],
+      "answer": 2,
+      "explain": "both = los dos juntos (siempre implica exactamente dos). each pone énfasis en cada uno individualmente. every se usa para tres o más."
+    },
+    {
+      "q": "Quieres decir que ninguna de las dos opciones te gusta. ¿Cuál usas?",
+      "options": ["Either option is good.", "Neither option is good.", "Both options aren't good.", "Not either option is good."],
+      "answer": 1,
+      "explain": "neither = ninguno de los dos (negativo). either = uno de los dos (positivo/neutro). Nota: neither ya es negativo, así que el verbo va en afirmativa."
+    },
+    {
+      "q": "'___ day I learn something new.' ¿Cuál completa mejor esta idea de rutina total/habitual?",
+      "options": ["Each", "Every", "All", "Both"],
+      "answer": 1,
+      "explain": "every = todos sin excepción, con sentido de totalidad o hábito (every day, every morning). each pone más énfasis en los días individualmente. all se usa con 'all the time' pero no 'all day' de la misma forma habitual."
+    }
+  ],
+  "cards": [
+    {
+      "id": "det-each-every",
+      "tag": "each / every",
+      "title": "each vs every",
+      "lede": "Los dos significan «cada», pero each pone énfasis en los elementos individualmente y every los ve como conjunto total.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "each",
+              "rule": "Foco individual: considera cada elemento uno por uno. Puede ser pronombre (sin sustantivo).",
+              "examples": [
+                "Each student got a certificate. (uno por uno)",
+                "Each of them answered differently.",
+                "They each paid €10. (each como pronombre)",
+                "We checked each room carefully."
+              ]
+            },
+            {
+              "label": "every",
+              "rule": "Foco colectivo: el grupo completo sin excepción. Solo funciona como determinante (necesita sustantivo).",
+              "examples": [
+                "Every student passed the exam. (todos, sin excepción)",
+                "I go to the gym every day.",
+                "Every room has a window.",
+                "She knows every word of the song."
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Gramática:",
+        "body": "each puede usarse solo (como pronombre): «each of them», «they each». every siempre necesita un sustantivo después: every day, every person. Nunca: «every of them»."
+      }
+    },
+    {
+      "id": "det-all",
+      "tag": "all",
+      "title": "all",
+      "lede": "all significa «todo/todos» y funciona con plurales y con sustantivos incontables. Tiene varias estructuras posibles.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "all + plural", "value": "All students must register. · All birds can fly.", "highlights": ["All"], "hint": "sin artículo" },
+            { "key": "all + the + plural", "value": "All the students passed. · All the doors are closed.", "highlights": ["all the"], "hint": "con artículo = grupo específico" },
+            { "key": "all + incontable", "value": "All information is confidential. · All money was spent.", "highlights": ["All"] },
+            { "key": "all of + pronombre", "value": "All of them left early. · All of us are ready.", "highlights": ["all of"], "hint": "all of + us/them/you" },
+            { "key": "all day / all week", "value": "I worked all day. · She studied all week.", "highlights": ["all day", "all week"], "hint": "all + periodo de tiempo" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Ojo:",
+        "body": "all the time (todo el tiempo) ✓. all times ✗. Se dice always, not all times. También: not all = no todos (Not all students passed ≠ No students passed)."
+      }
+    },
+    {
+      "id": "det-both",
+      "tag": "both",
+      "title": "both — siempre son dos",
+      "lede": "both significa «los dos / ambos» y siempre se refiere a exactamente dos elementos. El verbo va en plural.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "both + sustantivo plural", "value": "Both sisters are doctors. · Both options are good.", "highlights": ["Both"], "hint": "verbo en plural" },
+            { "key": "both of + the/pronombre", "value": "Both of the bags are heavy. · Both of us were wrong.", "highlights": ["Both of"] },
+            { "key": "both + pronombre sujeto", "value": "They both agreed. · We both love pasta.", "highlights": ["both"], "hint": "both después del pronombre sujeto" },
+            { "key": "both…and", "value": "She speaks both Spanish and English.", "highlights": ["both", "and"], "hint": "both…and = tanto… como" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Recuerda:",
+        "body": "both siempre implica DOS. Para tres o más, usa all. No se dice «both three» — se dice «all three»."
+      }
+    },
+    {
+      "id": "det-either-neither",
+      "tag": "either / neither",
+      "title": "either y neither",
+      "lede": "Los dos se refieren a exactamente dos opciones: either = uno de los dos (positivo); neither = ninguno de los dos (negativo).",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "either",
+              "rule": "Cualquiera de los dos; uno u otro. Contexto positivo o neutro. Verbo en singular.",
+              "examples": [
+                "Either day works for me. (cualquiera de los dos días)",
+                "You can take either bus.",
+                "Either answer is acceptable.",
+                "either…or: Either you come or I go."
+              ]
+            },
+            {
+              "label": "neither",
+              "rule": "Ninguno de los dos. Ya incluye negación, el verbo va en afirmativa. Verbo en singular.",
+              "examples": [
+                "Neither option is perfect. (ninguna de las dos)",
+                "Neither of them came.",
+                "I like neither option.",
+                "neither…nor: Neither Tom nor Ana came."
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Ojo con la doble negación:",
+        "body": "neither ya es negativo. Nunca digas «Neither of them didn't come» — es una doble negación incorrecta. Di: Neither of them came."
+      }
+    },
+    {
+      "id": "det-mistakes",
+      "tag": "Errores frecuentes",
+      "title": "Errores comunes con these determiners",
+      "lede": "Los errores más frecuentes que cometen los hispanohablantes con estos determinantes.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "Neither of them didn't pass.", "note": "doble negación incorrecta" },
+            { "variant": "good", "text": "Neither of them passed.", "note": "neither ya es negativo ✓" },
+            { "variant": "bad", "text": "Every of the students passed.", "note": "every no puede ir con 'of'" },
+            { "variant": "good", "text": "All of the students passed.", "note": "all of + the + sustantivo ✓" },
+            { "variant": "bad", "text": "Both of them is ready.", "note": "both siempre lleva verbo en plural" },
+            { "variant": "good", "text": "Both of them are ready.", "note": "both + verbo plural ✓" },
+            { "variant": "bad", "text": "I don't like either option not.", "note": "not…either ≠ neither en posición incorrecta" },
+            { "variant": "good", "text": "I don't like either option.", "note": "not…either = negativo con either ✓" },
+            { "variant": "bad", "text": "Each of them have their own opinion.", "note": "each = singular → verbo singular" },
+            { "variant": "good", "text": "Each of them has their own opinion.", "note": "each + verbo singular ✓" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "det-quick-reference",
+      "tag": "Referencia rápida",
+      "title": "Tabla comparativa",
+      "lede": "Un vistazo rápido a todos los determinantes: cuántos elementos implica cada uno, con qué verbo y un ejemplo.",
+      "blocks": [
+        {
+          "type": "verb-table",
+          "headers": ["Determinante", "Cantidad", "Verbo", "Ejemplo"],
+          "rows": [
+            ["each", "2 o más (individual)", "singular", "Each student has a book."],
+            ["every", "3 o más (colectivo)", "singular", "Every door is locked."],
+            ["all", "3 o más (o incontable)", "plural (o sing.)", "All students are here."],
+            ["both", "exactamente 2", "plural", "Both sisters are doctors."],
+            ["either", "exactamente 2 (uno u otro)", "singular", "Either day is fine."],
+            ["neither", "exactamente 2 (ninguno)", "singular", "Neither answer is right."]
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Regla de los dos:",
+        "body": "both, either y neither siempre implican DOS elementos exactamente. Para tres o más, usa each, every o all."
+      }
+    }
+  ]
+}

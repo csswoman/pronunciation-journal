@@ -1,0 +1,171 @@
+{
+  "meta": {
+    "eyebrow": "A1 · Pronunciación",
+    "title": "Las vocales /æ/ y /ʌ/",
+    "goal": "Ya puedes distinguir y producir las vocales /æ/ de cat y /ʌ/ de cut."
+  },
+  "sounds": ["æ", "ʌ"],
+  "quiz": [
+    {
+      "q": "¿Qué sonido tiene la palabra 'man'?",
+      "options": ["/ʌ/ como en 'cut'", "/æ/ como en 'cat'", "/ɑː/ como en 'father'", "/eɪ/ como en 'cake'"],
+      "answer": 1,
+      "explain": "'Man' lleva /æ/: la boca se abre bien y los labios se estiran hacia los lados, como una sonrisa tensa. /mæn/"
+    },
+    {
+      "q": "¿Cuál de estas palabras tiene la vocal /ʌ/?",
+      "options": ["cat", "bat", "man", "love"],
+      "answer": 3,
+      "explain": "'Love' se pronuncia /lʌv/, con la vocal /ʌ/ que es breve y central. Aunque se escribe con 'o', suena como /ʌ/. ¡Una trampa clásica!"
+    },
+    {
+      "q": "¿Cómo se diferencia /æ/ de /ʌ/ en posición de la mandíbula?",
+      "options": [
+        "/æ/ boca casi cerrada; /ʌ/ boca abierta",
+        "/æ/ mandíbula bien baja, boca abierta; /ʌ/ mandíbula menos baja, más central",
+        "Son iguales, solo cambia la longitud",
+        "/ʌ/ con labios redondeados; /æ/ con labios estirados"
+      ],
+      "answer": 1,
+      "explain": "Para /æ/ bajas mucho la mandíbula y estiras los labios (cat). Para /ʌ/ la mandíbula baja menos y la boca queda central, relajada (cut)."
+    }
+  ],
+  "cards": [
+    {
+      "id": "ae-how",
+      "tag": "El sonido /æ/",
+      "title": "Cómo producir /æ/: la vocal de cat",
+      "lede": "Es una vocal baja y frontal que no existe en español. Requiere bajar mucho la mandíbula.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Mandíbula", "value": "bájala bien — más de lo que haces en español", "hint": "como si bostezaras a medias" },
+            { "key": "Lengua", "value": "plana y adelantada, toca los molares inferiores", "hint": "lengua baja y al frente" },
+            { "key": "Labios", "value": "estíralos hacia los lados, como una sonrisa amplia", "hint": "no redondeados" },
+            { "key": "Duración", "value": "es breve pero tensa — no se desliza hacia otra vocal", "hint": "vocal pura, sin movimiento" },
+            { "key": "En español", "value": "No existe. La 'a' del español es central; /æ/ es más frontal y baja.", "hint": "exagera para aprenderla" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Ejercicio:",
+        "body": "di 'eh' y luego baja la mandíbula todavía más sin mover la lengua al fondo. Eso es /æ/. Prueba: æ æ æ cat cat cat."
+      }
+    },
+    {
+      "id": "ae-words",
+      "tag": "/æ/ en práctica",
+      "title": "Palabras comunes con /æ/",
+      "lede": "Estas palabras aparecen todos los días. Asegúrate de abrir bien la boca en cada una.",
+      "blocks": [
+        {
+          "type": "pronunciation",
+          "sound": "/æ/",
+          "focus": ["æ"],
+          "examples": [
+            { "text": "cat", "ipa": "/kæt/", "es": "gato — la vocal clásica para /æ/" },
+            { "text": "bad", "ipa": "/bæd/", "es": "malo — no digas 'bed'" },
+            { "text": "man", "ipa": "/mæn/", "es": "hombre — no digas 'men'" },
+            { "text": "have", "ipa": "/hæv/", "es": "tener — la 'a' de 'have' es /æ/, no /eɪ/" },
+            { "text": "that", "ipa": "/ðæt/", "es": "ese/eso — muy frecuente en conversación" },
+            { "text": "back", "ipa": "/bæk/", "es": "atrás / espalda — la vocal se abre" }
+          ],
+          "note": "Pon la mano bajo tu barbilla: debería bajar cuando dices /æ/. Si no se mueve, no estás abriendo lo suficiente."
+        }
+      ]
+    },
+    {
+      "id": "ua-how",
+      "tag": "El sonido /ʌ/",
+      "title": "Cómo producir /ʌ/: la vocal de cut",
+      "lede": "Es la vocal más central del inglés. Breve, relajada, la boca a medio abrir. Casi como un suspiro.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Mandíbula", "value": "baja moderadamente — menos que para /æ/", "hint": "a medio camino" },
+            { "key": "Lengua", "value": "en el centro de la boca, sin tocar nada", "hint": "posición neutra" },
+            { "key": "Labios", "value": "ligeramente abiertos, sin tensión ni redondeo", "hint": "relajados, no estirados" },
+            { "key": "Duración", "value": "breve y sin tensión — es como un 'uh' de dudas", "hint": "piensa en 'uh...'" },
+            { "key": "Ortografía", "value": "puede escribirse: u (cut), o (love, come), ou (young), oo (blood)", "hint": "¡la ortografía engaña!" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Truco:",
+        "body": "cuando dudas y dices 'uh...' en inglés, eso es /ʌ/. La vocal de 'cut', 'but', 'love' es exactamente ese sonido de pausa natural."
+      }
+    },
+    {
+      "id": "ua-words",
+      "tag": "/ʌ/ en práctica",
+      "title": "Palabras comunes con /ʌ/",
+      "lede": "¡Cuidado! Muchas palabras con /ʌ/ se escriben con 'o', lo que confunde a hispanohablantes.",
+      "blocks": [
+        {
+          "type": "pronunciation",
+          "sound": "/ʌ/",
+          "focus": ["ʌ"],
+          "examples": [
+            { "text": "cut", "ipa": "/kʌt/", "es": "cortar — la vocal de referencia" },
+            { "text": "but", "ipa": "/bʌt/", "es": "pero — muy frecuente, no digas 'boot'" },
+            { "text": "love", "ipa": "/lʌv/", "es": "amor — ¡se escribe con 'o' pero suena /ʌ/!" },
+            { "text": "come", "ipa": "/kʌm/", "es": "venir — la 'o' suena /ʌ/" },
+            { "text": "done", "ipa": "/dʌn/", "es": "terminado/hecho — no suena como 'don'" },
+            { "text": "money", "ipa": "/ˈmʌni/", "es": "dinero — la 'o' suena /ʌ/. Muy frecuente." }
+          ],
+          "note": "Palabras como 'love', 'come', 'some', 'done', 'money', 'mother' se escriben con 'o' pero llevan /ʌ/. Son las más importantes de memorizar."
+        }
+      ]
+    },
+    {
+      "id": "ae-ua-contrast",
+      "tag": "Contraste",
+      "title": "Pares mínimos: /æ/ vs /ʌ/",
+      "lede": "Estas palabras cambian de significado solo por la vocal. Entrenarte con pares mínimos es la mejor práctica.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "/æ/ — cat",
+              "rule": "mandíbula abajo, labios estirados",
+              "examples": ["cat /kæt/ (gato)", "bad /bæd/ (malo)", "man /mæn/ (hombre)", "cap /kæp/ (gorra)", "ran /ræn/ (corrió)", "ankle /ˈæŋkl/ (tobillo)"]
+            },
+            {
+              "label": "/ʌ/ — cut",
+              "rule": "mandíbula a medias, boca relajada",
+              "examples": ["cut /kʌt/ (cortar)", "bud /bʌd/ (brote)", "mun- /mʌn/ (en money)", "cup /kʌp/ (taza)", "run /ɹʌn/ (correr)", "uncle /ˈʌŋkl/ (tío)"]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Prueba esto:",
+        "body": "di 'cat' y 'cut' alternando. Sientes cómo baja más la mandíbula en 'cat'? Esa diferencia es clave para que te entiendan."
+      }
+    },
+    {
+      "id": "ae-ua-traps",
+      "tag": "Trampas ortográficas",
+      "title": "Palabras que engañan a hispanohablantes",
+      "lede": "La ortografía del inglés no es fonética. Estas palabras suenan diferente de como se escriben.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "love — pronunciado 'lo-ve' /loʊv/" },
+            { "variant": "good", "text": "love /lʌv/ — suena como 'luv'", "note": "la 'o' suena /ʌ/, no /oʊ/" },
+            { "variant": "bad", "text": "have — pronunciado 'ha-ve' /hɑːv/" },
+            { "variant": "good", "text": "have /hæv/ — con /æ/ bien abierta", "note": "mandíbula abajo, no 'a' española" },
+            { "variant": "bad", "text": "blood — pronunciado 'blod' /blɒd/" },
+            { "variant": "good", "text": "blood /blʌd/ — suena 'blud'", "note": "'oo' suena /ʌ/ en esta palabra" },
+            { "variant": "bad", "text": "young — pronunciado 'yong' /jɒŋ/" },
+            { "variant": "good", "text": "young /jʌŋ/ — suena 'yung'", "note": "'ou' suena /ʌ/ aquí" }
+          ]
+        }
+      ]
+    }
+  ]
+}

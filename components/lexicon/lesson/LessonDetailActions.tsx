@@ -9,15 +9,24 @@ import type { Word } from "./WordGrid";
 
 interface LessonDetailActionsProps {
   title: string;
+  blurb: string;
   totalWords: number;
   wordsLearned: number;
   wordsReviewing: number;
   color: string;
+  categoryId: string;
   words: Word[];
 }
 
 export function LessonDetailActions({
-  title, totalWords, wordsLearned, wordsReviewing, color, words,
+  title,
+  blurb,
+  totalWords,
+  wordsLearned,
+  wordsReviewing,
+  color,
+  categoryId,
+  words,
 }: LessonDetailActionsProps) {
   const [showCreateDeck, setShowCreateDeck] = useState(false);
   const [importedIds, setImportedIds] = useState<string[] | null>(null);
@@ -27,7 +36,7 @@ export function LessonDetailActions({
   const handleCreateDeck = async () => {
     setImporting(true);
     const results = await Promise.all(
-      words.map(w =>
+      words.map((w) =>
         markLexiconWordLearned({
           sourceRef: w.id,
           text: w.word,
@@ -36,7 +45,7 @@ export function LessonDetailActions({
         })
       )
     );
-    setImportedIds(results.map(r => r.entry.id));
+    setImportedIds(results.map((r) => r.entry.id));
     setImporting(false);
     setShowCreateDeck(true);
   };
@@ -45,17 +54,26 @@ export function LessonDetailActions({
     <>
       <LessonDetailHeader
         title={title}
+        blurb={blurb}
         totalWords={totalWords}
         wordsLearned={wordsLearned}
         wordsReviewing={wordsReviewing}
         color={color}
+        categoryId={categoryId}
         onCreateDeck={importing ? undefined : handleCreateDeck}
       />
       {showCreateDeck && importedIds && (
         <CreateDeckFromWordsModal
           wordIds={importedIds}
-          onClose={() => { setShowCreateDeck(false); setImportedIds(null); }}
-          onCreated={deck => { addDeck(deck); setShowCreateDeck(false); setImportedIds(null); }}
+          onClose={() => {
+            setShowCreateDeck(false);
+            setImportedIds(null);
+          }}
+          onCreated={(deck) => {
+            addDeck(deck);
+            setShowCreateDeck(false);
+            setImportedIds(null);
+          }}
         />
       )}
     </>

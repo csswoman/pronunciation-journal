@@ -77,11 +77,11 @@ describe('PracticeSession', () => {
         onSessionComplete={vi.fn()}
       />,
     )
-    expect(screen.queryByText(/Loading/i)).not.toBeInTheDocument()
+    expect(screen.queryByText(/Cargando/i)).not.toBeInTheDocument()
     // buildSession shuffles, so we don't know which word comes first — but
     // exactly one of the two options labels must be present.
     const firstWord = await screen.findByRole('button', {
-      name: /Toggle word[12]/i,
+      name: /Seleccionar word[12]/i,
     })
     expect(firstWord).toBeInTheDocument()
   })
@@ -97,10 +97,10 @@ describe('PracticeSession', () => {
         persistence={{ userId: 'user-1', soundId: 42 }}
       />,
     )
-    expect(screen.getByText(/Loading/i)).toBeInTheDocument()
+    expect(screen.getByText(/Cargando/i)).toBeInTheDocument()
     await waitFor(() => expect(sessionStoreMocks.createSession).toHaveBeenCalledTimes(1))
     expect(sessionStoreMocks.evictExpiredSessions).toHaveBeenCalledTimes(1)
-    expect(await screen.findByRole('button', { name: /Toggle word1/i })).toBeInTheDocument()
+    expect(await screen.findByRole('button', { name: /Seleccionar word1/i })).toBeInTheDocument()
   })
 
   it('with persistence: restores currentIndex and answers from Dexie', async () => {
@@ -137,7 +137,7 @@ describe('PracticeSession', () => {
 
     // The restored session jumps directly to exercise index 1 ("word2"), and
     // does NOT re-create the session in Dexie.
-    expect(await screen.findByRole('button', { name: /Toggle word2/i })).toBeInTheDocument()
+    expect(await screen.findByRole('button', { name: /Seleccionar word2/i })).toBeInTheDocument()
     expect(sessionStoreMocks.createSession).not.toHaveBeenCalled()
   })
 
@@ -158,7 +158,7 @@ describe('PracticeSession', () => {
 
     // Use the Skip path (single click) to avoid Pick-Word's two-step
     // select-then-check flow which races with internal state.
-    const skipBtn = await screen.findByRole('button', { name: /skip/i })
+    const skipBtn = await screen.findByRole('button', { name: /omitir/i })
     await user.click(skipBtn)
 
     // After FEEDBACK_MS (1500ms) the only-exercise session transitions to

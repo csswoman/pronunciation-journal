@@ -1,0 +1,171 @@
+{
+  "meta": {
+    "eyebrow": "A2 · Gramática",
+    "title": "So y such",
+    "goal": "Ya puedes usar so y such para intensificar adjetivos, adverbios y sustantivos."
+  },
+  "quiz": [
+    {
+      "q": "¿Cuál es correcta?",
+      "options": ["It was such cold.", "It was so a cold day.", "It was such a cold day.", "It was so cold day."],
+      "answer": 2,
+      "explain": "such + a/an + adjetivo + sustantivo singular: such a cold day. so va solo con adjetivos/adverbios sin sustantivo: It was so cold."
+    },
+    {
+      "q": "Elige la opción correcta: 'They have ___ good friends.'",
+      "options": ["so", "such", "so a", "such a"],
+      "answer": 1,
+      "explain": "friends es un sustantivo plural, así que usamos such (sin artículo): such good friends. so no va directamente antes de un sustantivo."
+    },
+    {
+      "q": "Completa: 'She spoke ___ quickly ___ nobody understood.'",
+      "options": ["such / that", "so / that", "such / as", "so / as"],
+      "answer": 1,
+      "explain": "so + adverbio + that = resultado: She spoke so quickly that nobody understood. such + (a/an) + adjetivo + sustantivo + that."
+    }
+  ],
+  "cards": [
+    {
+      "id": "ss-so-adj-adv",
+      "tag": "so + adjetivo/adverbio",
+      "title": "so + adjetivo o adverbio",
+      "lede": "so intensifica adjetivos y adverbios solos, sin sustantivo después. Es equivalente a «tan» en español.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "so + adjetivo", "value": "The food was so good! · I'm so tired.", "highlights": ["so"], "hint": "sin sustantivo después" },
+            { "key": "so + adjetivo", "value": "This book is so interesting. · He's so tall.", "highlights": ["so"] },
+            { "key": "so + adverbio", "value": "She speaks so quickly. · He drives so slowly.", "highlights": ["so"], "hint": "también intensifica adverbios" },
+            { "key": "so + adverbio", "value": "You did so well! · It happened so suddenly.", "highlights": ["so"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Regla clave:",
+        "body": "Si después de «tan» en español no hay sustantivo («tan cansado», «tan rápido»), usa so."
+      }
+    },
+    {
+      "id": "ss-such-singular",
+      "tag": "such + singular",
+      "title": "such + a/an + adjetivo + sustantivo",
+      "lede": "such intensifica una frase nominal completa con sustantivo singular contable. Siempre lleva a o an.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "such a + adj + sustantivo", "value": "It was such a nice day!", "highlights": ["such a"], "hint": "sustantivo singular" },
+            { "key": "such a + adj + sustantivo", "value": "She is such a good teacher.", "highlights": ["such a"] },
+            { "key": "such an + adj + sustantivo", "value": "He made such an interesting point.", "highlights": ["such an"], "hint": "an antes de sonido vocálico" },
+            { "key": "such an + adj + sustantivo", "value": "That was such an awful experience.", "highlights": ["such an"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Estructura:",
+        "body": "such + a/an + ADJETIVO + SUSTANTIVO. Nunca olvides el artículo con singular: such a, such an (nunca solo «such»)."
+      }
+    },
+    {
+      "id": "ss-such-plural-uncountable",
+      "tag": "such + plural/incontable",
+      "title": "such con plurales e incontables",
+      "lede": "Con sustantivos plurales o incontables, such no lleva artículo. Este es un error muy común.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "such + adj + plural", "value": "They are such good friends.", "highlights": ["such"], "hint": "sin artículo con plural" },
+            { "key": "such + adj + plural", "value": "We had such beautiful memories.", "highlights": ["such"] },
+            { "key": "such + adj + incontable", "value": "It was such bad weather.", "highlights": ["such"], "hint": "weather = incontable, sin artículo" },
+            { "key": "such + adj + incontable", "value": "She gave me such good advice.", "highlights": ["such"], "hint": "advice = incontable" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Resumen:",
+        "body": "singular contable → such a/an. plural e incontable → such (sin artículo)."
+      }
+    },
+    {
+      "id": "ss-so-vs-such",
+      "tag": "so vs such",
+      "title": "¿so o such? Elige el correcto",
+      "lede": "La clave está en lo que sigue: ¿solo un adjetivo/adverbio? → so. ¿Adjetivo + sustantivo? → such.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "so",
+              "rule": "so + adjetivo (sin sustantivo) · so + adverbio",
+              "examples": [
+                "The coffee is so hot.",
+                "She runs so fast.",
+                "That film was so boring.",
+                "I feel so happy today."
+              ]
+            },
+            {
+              "label": "such",
+              "rule": "such + (a/an) + adjetivo + sustantivo",
+              "examples": [
+                "It's such a hot day. (day = sustantivo)",
+                "She's such a fast runner. (runner = sustantivo)",
+                "It was such a boring film.",
+                "He's such a happy person."
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Prueba rápida:",
+        "body": "¿Puedo añadir un sustantivo después? Si sí → such. Si no → so. «so hot» (no hay sustantivo) vs. «such a hot day» (day es el sustantivo)."
+      }
+    },
+    {
+      "id": "ss-so-much-many",
+      "tag": "so much / many",
+      "title": "so much, so many, so few, so little",
+      "lede": "so también se combina con cuantificadores. La elección depende de si el sustantivo es contable o incontable.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "so many + plural contable", "value": "There are so many people here!", "highlights": ["so many"], "hint": "people = plural contable" },
+            { "key": "so many + plural contable", "value": "She has so many shoes. · I have so many things to do.", "highlights": ["so many"] },
+            { "key": "so much + incontable", "value": "I ate so much food. · There's so much noise.", "highlights": ["so much"], "hint": "food, noise = incontables" },
+            { "key": "so much + incontable", "value": "I don't have so much time. · She has so much patience.", "highlights": ["so much"] },
+            { "key": "so few + plural contable", "value": "There are so few seats left!", "highlights": ["so few"], "hint": "few = para contables" },
+            { "key": "so little + incontable", "value": "We have so little time. · There's so little water.", "highlights": ["so little"], "hint": "little = para incontables" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ss-so-such-that",
+      "tag": "Resultado",
+      "title": "so…that / such…that",
+      "lede": "Para expresar un resultado o consecuencia, conecta la intensidad con that. Es la estructura de «tan... que».",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "good", "text": "It was so cold that we stayed inside.", "note": "so + adjetivo + that + resultado" },
+            { "variant": "good", "text": "She was so tired that she fell asleep.", "note": "so + adjetivo + that + resultado" },
+            { "variant": "good", "text": "He spoke so fast that I couldn't understand.", "note": "so + adverbio + that + resultado" },
+            { "variant": "good", "text": "It was such a good movie that I watched it twice.", "note": "such + a + adj + sustantivo + that + resultado" },
+            { "variant": "good", "text": "They had such bad luck that they missed the train.", "note": "such + adj + sustantivo incontable + that + resultado" },
+            { "variant": "bad", "text": "It was so a cold day that we stayed inside.", "note": "Incorrecto: so no va antes de a + sustantivo → usa such" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Equivalencia:",
+        "body": "so…that = «tan… que» con adjetivos/adverbios. such…that = «tan… que» cuando hay sustantivo."
+      }
+    }
+  ]
+}

@@ -1,0 +1,125 @@
+{
+  "meta": {
+    "eyebrow": "B1 · Solicitudes y pronombres reflexivos",
+    "title": "Solicitudes y",
+    "titleEmphasis": "pronombres reflexivos"
+  },
+  "cards": [
+    {
+      "id": "sr-requests",
+      "tag": "Solicitudes",
+      "title": "Pedir con cortesía",
+      "lede": "Escala de formalidad para pedir favores. A más palabras, más educado.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Directo", "value": "Can you help me?", "highlights": ["Can you"] },
+            { "key": "Educado", "value": "Could you help me?", "highlights": ["Could you"] },
+            { "key": "Muy educado", "value": "Would you mind helping me?", "highlights": ["Would you mind"] },
+            { "key": "Formal", "value": "I was wondering if you could help.", "highlights": ["I was wondering if"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Ojo:",
+        "body": "tras Would you mind va -ing: Would you mind opening the window?"
+      }
+    },
+    {
+      "id": "sr-offers",
+      "tag": "Ofrecer",
+      "title": "Ofrecer e invitar",
+      "lede": "Frases para ofrecer ayuda o invitar a alguien de forma natural.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Shall I", "value": "Shall I carry that?", "highlights": ["Shall I"] },
+            { "key": "Would you like", "value": "Would you like a coffee?", "highlights": ["Would you like"] },
+            { "key": "I'll", "value": "I'll get it for you.", "highlights": ["I'll"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sr-reflexive",
+      "tag": "Reflexivos",
+      "title": "myself, yourself, himself",
+      "lede": "Cuando el sujeto y el objeto son la misma persona, usas el pronombre reflexivo.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Singular", "value": "myself, yourself, himself, herself, itself" },
+            { "key": "Plural", "value": "ourselves, yourselves, themselves" },
+            { "key": "Uso", "value": "I hurt myself. · She taught herself.", "highlights": ["myself", "herself"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Ojo:",
+        "body": "el plural es -selves: themselves, no \"themselfs\"."
+      }
+    },
+    {
+      "id": "sr-emphasis",
+      "tag": "Énfasis",
+      "title": "Reflexivos para enfatizar",
+      "lede": "También sirven para subrayar que alguien hizo algo por sí mismo, sin ayuda.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "good", "text": "I made it myself.", "note": "yo mismo, sin ayuda" },
+            { "variant": "good", "text": "The president himself came.", "note": "el mismísimo presidente" },
+            { "variant": "good", "text": "By myself = solo / sin ayuda", "note": "expresión fija" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sr-eachother",
+      "tag": "Recíprocos",
+      "title": "each other vs. -selves",
+      "lede": "each other es mutuo (A↔B); el reflexivo es sobre uno mismo. No los confundas.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "each other",
+              "rule": "mutuo, entre dos",
+              "examples": ["They help each other.", "We love each other."]
+            },
+            {
+              "label": "-selves",
+              "rule": "cada uno a sí mismo",
+              "examples": ["They blame themselves.", "We taught ourselves."]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sr-responses",
+      "tag": "Responder",
+      "title": "Aceptar y declinar peticiones",
+      "lede": "Cómo responder con tacto cuando alguien te pide algo.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Aceptar", "value": "Sure. · No problem. · Of course.", "highlights": ["No problem"] },
+            { "key": "A Would you mind", "value": "Not at all. (= claro que sí)", "highlights": ["Not at all"] },
+            { "key": "Declinar", "value": "I'm sorry, I can't right now.", "highlights": ["I'm sorry"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Cuidado:",
+        "body": "a Would you mind...? se responde Not at all o No, go ahead para decir que sí."
+      }
+    }
+  ]
+}

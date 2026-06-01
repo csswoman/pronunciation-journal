@@ -1,0 +1,114 @@
+{
+  "meta": {
+    "eyebrow": "Biz · Viajes de negocios",
+    "title": "Viajes de",
+    "titleEmphasis": "negocios",
+    "goal": "Ya puedes organizar un viaje de trabajo, reunirte con clientes y hacer el seguimiento posterior."
+  },
+  "related": [
+    { "slug": "b1-practico-viajes-negocios", "label": "B1 · Viajes de negocios (intermedio)" }
+  ],
+  "cards": [
+    {
+      "id": "vn-arranging",
+      "tag": "Organizar",
+      "title": "Planificar el viaje",
+      "lede": "Vocabulario y frases para coordinar un viaje de trabajo con tu equipo.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Reservar", "value": "book a flight · arrange accommodation", "highlights": ["book a flight"] },
+            { "key": "Agenda", "value": "itinerary · schedule · time zone", "highlights": ["itinerary"] },
+            { "key": "Frase", "value": "I'm flying out on Monday.", "highlights": ["flying out"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "vn-airport",
+      "tag": "Aeropuerto",
+      "title": "En tránsito",
+      "lede": "Frases útiles en aeropuertos y vuelos de trabajo.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Facturar", "value": "check in · carry-on · boarding pass", "highlights": ["check in"] },
+            { "key": "Incidencias", "value": "The flight's been delayed / cancelled.", "highlights": ["delayed"] },
+            { "key": "Conexión", "value": "I have a layover in Madrid.", "highlights": ["layover"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "vn-meetings",
+      "tag": "Reuniones",
+      "title": "Reuniones con clientes",
+      "lede": "Frases para presentarte y abrir una reunión presencial fuera de tu país.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Presentarse", "value": "Pleased to meet you. I'm... from...", "highlights": ["Pleased to meet you"] },
+            { "key": "Tarjeta", "value": "Here's my business card.", "highlights": ["business card"] },
+            { "key": "Abrir", "value": "Thank you all for coming. Shall we begin?", "highlights": ["Shall we begin?"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Cultura:",
+        "body": "investiga la etiqueta local: el saludo, la puntualidad y el small talk varían por país."
+      }
+    },
+    {
+      "id": "vn-dining",
+      "tag": "Cenas",
+      "title": "Comidas de trabajo",
+      "lede": "El small talk y la cortesía en una cena de negocios abren relaciones.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "good", "text": "Thank you for the invitation.", "note": "cortesía" },
+            { "variant": "good", "text": "What do you recommend?", "note": "pedir consejo" },
+            { "variant": "good", "text": "Please, let me get this.", "note": "invitar a pagar" },
+            { "variant": "good", "text": "It's been a pleasure.", "note": "despedida" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "vn-followup",
+      "tag": "Seguimiento",
+      "title": "Después del viaje",
+      "lede": "El email de seguimiento consolida lo acordado y mantiene la relación.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Agradecer", "value": "It was great meeting you in person.", "highlights": ["great meeting you"] },
+            { "key": "Resumir", "value": "As discussed, we agreed to...", "highlights": ["As discussed"] },
+            { "key": "Próximos pasos", "value": "I'll follow up with the details.", "highlights": ["follow up"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "vn-expenses",
+      "tag": "Gastos",
+      "title": "Gastos y reembolsos",
+      "lede": "Vocabulario para gestionar los gastos del viaje ante tu empresa.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Gastos", "value": "expenses · per diem · receipt", "highlights": ["expenses"] },
+            { "key": "Reembolso", "value": "claim back · reimbursement", "highlights": ["reimbursement"] },
+            { "key": "Frase", "value": "I'll submit my expense report.", "highlights": ["expense report"] }
+          ]
+        }
+      ]
+    }
+  ]
+}

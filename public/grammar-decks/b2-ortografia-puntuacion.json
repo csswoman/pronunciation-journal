@@ -1,0 +1,111 @@
+{
+  "meta": {
+    "eyebrow": "B2 · Ortografía y puntuación",
+    "title": "Ortografía y",
+    "titleEmphasis": "puntuación"
+  },
+  "cards": [
+    {
+      "id": "op-spelling-rules",
+      "tag": "Ortografía",
+      "title": "Reglas al añadir terminaciones",
+      "lede": "Al añadir -ing, -ed o -er, la ortografía cambia según la palabra base.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Doblar consonante", "value": "run → running · big → bigger", "highlights": ["running"] },
+            { "key": "-e muda cae", "value": "make → making · write → writing", "highlights": ["making"] },
+            { "key": "-y → -i", "value": "happy → happier · study → studied", "highlights": ["happier"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "op-commonerrors",
+      "tag": "Errores",
+      "title": "Palabras que se escriben mal",
+      "lede": "Errores ortográficos muy frecuentes, incluso entre nativos.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "definately", "note": "→ definitely" },
+            { "variant": "bad", "text": "recieve", "note": "→ receive (i antes de e, salvo tras c)" },
+            { "variant": "bad", "text": "seperate", "note": "→ separate" },
+            { "variant": "good", "text": "necessary, accommodate, beginning", "note": "ojo a las dobles" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "op-homophones",
+      "tag": "Homófonos",
+      "title": "Suenan igual, se escriben distinto",
+      "lede": "Palabras que se pronuncian igual pero significan cosas diferentes.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "their / there / they're", "value": "su / allí / they are", "highlights": ["their", "there", "they're"] },
+            { "key": "your / you're", "value": "tu / you are", "highlights": ["your", "you're"] },
+            { "key": "its / it's", "value": "su / it is", "highlights": ["its", "it's"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Truco:",
+        "body": "it's siempre = it is; its (sin apóstrofo) es posesivo, como his o her."
+      }
+    },
+    {
+      "id": "op-comma",
+      "tag": "Coma",
+      "title": "Cuándo usar coma",
+      "lede": "La coma organiza la frase. Hay reglas claras para listas, cláusulas y conectores.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Listas", "value": "apples, pears, and grapes", "highlights": [","] },
+            { "key": "Tras conector inicial", "value": "However, it was late.", "highlights": ["However,"] },
+            { "key": "Cláusula extra", "value": "My boss, who is kind, helped.", "highlights": [",who is kind,"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "op-apostrophe",
+      "tag": "Apóstrofo",
+      "title": "El apóstrofo: posesión y contracción",
+      "lede": "El apóstrofo marca posesión (Ana's) o contracción (don't). Nunca el plural.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "good", "text": "Ana's car (posesión)", "note": "de Ana" },
+            { "variant": "good", "text": "don't, it's, we're (contracción)", "note": "letras omitidas" },
+            { "variant": "bad", "text": "I bought two apple's.", "note": "el plural no lleva apóstrofo" },
+            { "variant": "good", "text": "the students' books (plural posesivo)", "note": "apóstrofo tras la -s" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "op-other-marks",
+      "tag": "Otros signos",
+      "title": "Dos puntos, punto y coma, guion",
+      "lede": "Signos menos usados pero útiles para conectar y precisar ideas.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Dos puntos", "value": "introduce una lista o explicación:", "highlights": [":"] },
+            { "key": "Punto y coma", "value": "une dos frases relacionadas; así.", "highlights": [";"] },
+            { "key": "Guion", "value": "well-known, twenty-one", "highlights": ["-"] }
+          ]
+        }
+      ]
+    }
+  ]
+}

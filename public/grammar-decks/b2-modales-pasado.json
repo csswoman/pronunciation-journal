@@ -1,0 +1,192 @@
+{
+  "meta": {
+    "eyebrow": "B2 · Gramática",
+    "title": "Modales en el",
+    "titleEmphasis": "pasado",
+    "goal": "Ya criticas, lamentas y especulas sobre el pasado usando should/could/needn't + have + participio."
+  },
+  "cards": [
+    {
+      "id": "modal-should-have",
+      "tag": "Crítica y arrepentimiento",
+      "title": "Should have + participio",
+      "lede": "Expresa que algo era lo correcto o lo esperado, pero no ocurrió. Se usa para criticar (a otros) o lamentarse (de uno mismo).",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Arrepentimiento propio", "value": "I should have studied more for the exam.", "highlights": ["should have studied"], "hint": "no estudié y me arrepiento" },
+            { "key": "Crítica a otro", "value": "You should have told me earlier!", "highlights": ["should have told"], "hint": "tendrías que haberme avisado" },
+            { "key": "Negativo (crítica)", "value": "She shouldn't have done that.", "highlights": ["shouldn't have done"], "hint": "eso estuvo mal" },
+            { "key": "Negativo propio", "value": "I shouldn't have eaten so much.", "highlights": ["shouldn't have eaten"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Contracción:",
+        "body": "en conversación, should have se contrae en should've: I should've called you. Nunca se escribe 'should of'."
+      }
+    },
+    {
+      "id": "modal-could-have",
+      "tag": "Posibilidad no aprovechada",
+      "title": "Could have: tenías la opción",
+      "lede": "Could have indica que existía la posibilidad de hacer algo, pero no se aprovechó. La diferencia con should have es clave.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Could have (posibilidad)",
+              "rule": "Tenías la capacidad o la oportunidad, pero no actuaste",
+              "examples": [
+                "You could have taken a taxi.",
+                "She could have asked for help.",
+                "I could have finished it yesterday."
+              ]
+            },
+            {
+              "label": "Should have (obligación moral)",
+              "rule": "Era lo correcto o lo esperado y no lo hiciste",
+              "examples": [
+                "You should have taken a taxi. (era lo mejor)",
+                "She should have asked for help. (era necesario)",
+                "I should have finished it yesterday. (era mi responsabilidad)"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "modal-neednt-have",
+      "tag": "Esfuerzo innecesario",
+      "title": "Needn't have: lo hiciste, pero no hacía falta",
+      "lede": "Needn't have indica que una acción ya realizada resultó ser innecesaria. Se confunde fácilmente con didn't need to, que tiene un significado diferente.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "You needn't have waited — lo usas cuando la persona no esperó.", "note": "confusión de significado" },
+            { "variant": "good", "text": "You needn't have waited. (esperaste, pero no era necesario)", "note": "la acción ya ocurrió" },
+            { "variant": "bad", "text": "I didn't need to wait — implica que esperaste.", "note": "confusión frecuente" },
+            { "variant": "good", "text": "I didn't need to wait, so I left. (sabías que no era necesario, así que no esperaste)", "note": "la acción no llegó a ocurrir" }
+          ]
+        },
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "needn't have + participio", "value": "lo hiciste, pero fue innecesario", "highlights": ["needn't have"] },
+            { "key": "didn't need to + infinitivo", "value": "sabías que no era necesario, así que no lo hiciste", "highlights": ["didn't need to"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "modal-might-have",
+      "tag": "Especulación pasada",
+      "title": "Might have / may have: quizás ocurrió",
+      "lede": "Para especular sobre el pasado cuando no tienes certeza. Aproximadamente un 50% de probabilidad.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "She might have missed the train.", "value": "→ Quizás perdió el tren, no lo sé.", "highlights": ["might have missed"] },
+            { "key": "They may have forgotten.", "value": "→ Puede que se hayan olvidado.", "highlights": ["may have forgotten"] },
+            { "key": "He might not have received it.", "value": "→ Quizás no lo recibió.", "highlights": ["might not have received"] },
+            { "key": "It may have been a mistake.", "value": "→ Puede que fuera un error.", "highlights": ["may have been"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Diferencia may/might:",
+        "body": "may have suena ligeramente más formal; might have es más frecuente en conversación. En práctica son intercambiables para especulación pasada."
+      }
+    },
+    {
+      "id": "modal-must-cant-have",
+      "tag": "Deducción lógica",
+      "title": "Must have y can't have",
+      "lede": "Para hacer deducciones sobre el pasado con un alto grado de certeza. Must have = casi seguro que ocurrió; can't have = imposible que ocurriera.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Must have (certeza positiva)",
+              "rule": "La evidencia apunta claramente a que algo ocurrió",
+              "examples": [
+                "She must have worked all night — the report is perfect.",
+                "He must have left already, the lights are off.",
+                "They must have taken the wrong road."
+              ]
+            },
+            {
+              "label": "Can't have (certeza negativa)",
+              "rule": "Es imposible que algo haya ocurrido según la lógica",
+              "examples": [
+                "She can't have finished already — it's only been 5 minutes.",
+                "He can't have known about it.",
+                "They can't have arrived yet, the flight is delayed."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "modal-patterns-use",
+      "tag": "En contexto",
+      "title": "Modales pasados en conversación",
+      "lede": "Estos modales son esenciales para dar retroalimentación, expresar sorpresa y analizar errores en el trabajo y en la vida social.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Dar feedback (trabajo)", "value": "You should have communicated this earlier.", "highlights": ["should have communicated"] },
+            { "key": "Expresar sorpresa", "value": "She must have misunderstood the brief.", "highlights": ["must have misunderstood"] },
+            { "key": "Reconocer un error", "value": "I shouldn't have sent that email without checking.", "highlights": ["shouldn't have sent"] },
+            { "key": "Consolar a alguien", "value": "You couldn't have known — it wasn't your fault.", "highlights": ["couldn't have known"] },
+            { "key": "Descartar algo", "value": "It can't have been intentional.", "highlights": ["can't have been"] },
+            { "key": "Lamentar una oportunidad", "value": "We could have handled it differently.", "highlights": ["could have handled"] }
+          ]
+        }
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "Tu amigo llegó tarde a una reunión importante. ¿Cómo le expresas que debería haber llegado a tiempo?",
+      "options": [
+        "You could have arrived on time.",
+        "You should have arrived on time.",
+        "You must have arrived on time.",
+        "You might have arrived on time."
+      ],
+      "answer": 1,
+      "explain": "should have + participio expresa crítica o lo que era esperado/correcto. could have señalaría solo que tenía la posibilidad (sin juzgar); must have sería una deducción."
+    },
+    {
+      "q": "Llevaste paraguas pero no llovió. Tu amigo dice: 'You _____ brought your umbrella.' ¿Cuál completa la frase?",
+      "options": [
+        "should have",
+        "must have",
+        "needn't have",
+        "couldn't have"
+      ],
+      "answer": 2,
+      "explain": "needn't have + participio indica que la acción ya se realizó (llevaste el paraguas) pero resultó innecesaria (no llovió). didn't need to sería si hubieras sabido antes que no era necesario."
+    },
+    {
+      "q": "Ana no ha contestado tus mensajes. ¿Qué deducción lógica puedes hacer?",
+      "options": [
+        "She must not have seen them yet.",
+        "She should have seen them.",
+        "She needn't have seen them.",
+        "She couldn't see them."
+      ],
+      "answer": 0,
+      "explain": "must not have / must have + participio expresa deducción lógica sobre el pasado. 'She must not have seen them' = deduzco que no los ha visto aún (hay evidencia: no ha contestado)."
+    }
+  ]
+}

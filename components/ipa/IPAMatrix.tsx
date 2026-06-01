@@ -1,11 +1,24 @@
 "use client";
 
-import { PHONEME_MATRIX, getMatrixConfig, type PhonemeData } from "./data";
+import {
+  CONSONANT_PLACE_ORDER,
+  CONSONANT_ROWS,
+  PHONEME_MATRIX,
+  getMatrixConfig,
+  type ConsonantPlace,
+  type PhonemeData,
+} from "./data";
 import IPAMatrixCell from "./IPAMatrixCell";
 
 type MatrixCategory = "vowel" | "consonant" | "diphthong";
 
-const ROW_LABEL_BG = "var(--bg-tertiary)";
+function sortByPlace(a: PhonemeData, b: PhonemeData) {
+  const placeA = PHONEME_MATRIX[a.symbol]?.col as ConsonantPlace | undefined;
+  const placeB = PHONEME_MATRIX[b.symbol]?.col as ConsonantPlace | undefined;
+  const orderA = placeA ? CONSONANT_PLACE_ORDER[placeA] : 99;
+  const orderB = placeB ? CONSONANT_PLACE_ORDER[placeB] : 99;
+  return orderA - orderB;
+}
 
 export default function IPAMatrix({
   category,
@@ -24,6 +37,47 @@ export default function IPAMatrix({
 }) {
   const config = getMatrixConfig(category);
 
+  if (category === "consonant") {
+    return (
+      <div className="ipa-chart__chartcard">
+        <div className="ipa-chart__consonant-groups">
+          {CONSONANT_ROWS.map((row) => {
+            const groupPhonemes = phonemes
+              .filter((p) => PHONEME_MATRIX[p.symbol]?.row === row.id)
+              .sort(sortByPlace);
+
+            if (groupPhonemes.length === 0) return null;
+
+            return (
+              <section key={row.id} className="ipa-chart__ggroup">
+                <h3 className="ipa-chart__ggroup-label">{row.label}</h3>
+                <div className="ipa-chart__gcells">
+                  {groupPhonemes.map((phoneme) => (
+                    <IPAMatrixCell
+                      key={phoneme.symbol}
+                      phoneme={phoneme}
+                      keyword={PHONEME_MATRIX[phoneme.symbol].keyword}
+                      isSelected={selectedSymbol === phoneme.symbol}
+                      isExplored={exploredSymbols.has(phoneme.symbol)}
+                      isPlaying={playingSymbol === phoneme.rawSymbol}
+                      onSelect={() => onSelect(phoneme)}
+                      variant="tile"
+                    />
+                  ))}
+                </div>
+              </section>
+            );
+          })}
+        </div>
+
+        <div className="ipa-chart__chartfoot">
+          <span>{config.axisLabel}</span>
+          <span>{phonemes.length} consonantes</span>
+        </div>
+      </div>
+    );
+  }
+
   const cellMap = new Map<string, PhonemeData[]>();
   for (const phoneme of phonemes) {
     const coord = PHONEME_MATRIX[phoneme.symbol];
@@ -34,76 +88,23 @@ export default function IPAMatrix({
     cellMap.set(key, arr);
   }
 
-  const gridTemplateColumns = `100px repeat(${config.cols.length}, minmax(0, 1fr))`;
-
   return (
-    <div
-      className="rounded-2xl border p-4 md:p-5"
-      style={{
-        backgroundColor: "var(--surface-raised)",
-        borderColor: "var(--border-default)",
-      }}
-    >
-      {/* Column headers — outside the table */}
-      <div
-        className="grid pb-3"
-        style={{ gridTemplateColumns }}
-      >
+    <div className="ipa-chart__chartcard">
+      <div className="ipa-chart__vgrid ipa-chart__vgrid--vowels">
         <div />
         {config.cols.map((col) => (
-          <div
-            key={col.id}
-            className="text-tiny font-semibold uppercase tracking-widest text-center"
-            style={{ color: "var(--text-tertiary)" }}
-          >
+          <div key={col.id} className="ipa-chart__vgrid-ch">
             {col.label}
           </div>
         ))}
-      </div>
 
-      {/* Table */}
-      <div
-        className="grid overflow-hidden rounded-xl border"
-        style={{
-          gridTemplateColumns,
-          borderColor: "var(--border-subtle)",
-        }}
-      >
-        {config.rows.map((row, rowIndex) => (
+        {config.rows.map((row) => (
           <RowFragment key={row.id}>
-            <div
-              className="flex items-center text-tiny font-semibold uppercase tracking-widest px-3 py-2"
-              style={{
-                color: "var(--text-secondary)",
-                backgroundColor: ROW_LABEL_BG,
-                borderTop:
-                  rowIndex === 0 ? "none" : "1px solid var(--border-subtle)",
-                borderRight: "1px solid var(--border-subtle)",
-              }}
-            >
-              {row.label}
-            </div>
-            {config.cols.map((col, colIndex) => {
+            <div className="ipa-chart__vgrid-rl">{row.label}</div>
+            {config.cols.map((col) => {
               const cellPhonemes = cellMap.get(`${row.id}|${col.id}`) ?? [];
               return (
-                <div
-                  key={col.id}
-                  className="relative min-h-[72px] p-1.5 grid gap-1"
-                  style={{
-                    borderTop:
-                      rowIndex === 0
-                        ? "none"
-                        : "1px solid var(--border-subtle)",
-                    borderRight:
-                      colIndex === config.cols.length - 1
-                        ? "none"
-                        : "1px solid var(--border-subtle)",
-                    gridTemplateColumns:
-                      cellPhonemes.length > 1
-                        ? `repeat(${cellPhonemes.length}, minmax(0, 1fr))`
-                        : "1fr",
-                  }}
-                >
+                <div key={col.id} className="ipa-chart__vcell">
                   {cellPhonemes.map((phoneme) => (
                     <IPAMatrixCell
                       key={phoneme.symbol}
@@ -122,16 +123,9 @@ export default function IPAMatrix({
         ))}
       </div>
 
-      <div className="mt-5 flex items-center justify-between text-xs text-fg-muted">
+      <div className="ipa-chart__chartfoot">
         <span>{config.axisLabel}</span>
-        <span>
-          {phonemes.length}{" "}
-          {category === "vowel"
-            ? "vowels"
-            : category === "consonant"
-            ? "consonants"
-            : "diphthongs"}
-        </span>
+        <span>{phonemes.length} vocales</span>
       </div>
     </div>
   );

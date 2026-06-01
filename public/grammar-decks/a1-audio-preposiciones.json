@@ -1,0 +1,118 @@
+{
+  "meta": {
+    "eyebrow": "A1 · Audio: preposiciones",
+    "title": "Preposiciones de",
+    "titleEmphasis": "lugar",
+    "goal": "Ya puedes situar objetos en el espacio y reconocer las preposiciones aunque suenen reducidas al hablar."
+  },
+  "sounds": ["ə"],
+  "cards": [
+    {
+      "id": "pr-basic",
+      "tag": "Básicas",
+      "title": "in, on, at",
+      "lede": "Las tres preposiciones más comunes de lugar. Van de lo cerrado a lo general.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "in", "value": "dentro · in the box · in the room", "highlights": ["in"] },
+            { "key": "on", "value": "sobre · on the table · on the wall", "highlights": ["on"] },
+            { "key": "at", "value": "punto exacto · at the door · at home", "highlights": ["at"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Escucha:",
+        "body": "en habla rápida, in, on y at se pronuncian débiles; el acento cae en el sustantivo."
+      }
+    },
+    {
+      "id": "pr-position",
+      "tag": "Posición",
+      "title": "under, over, between",
+      "lede": "Preposiciones para ubicar una cosa respecto a otra.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "under", "value": "debajo · The cat is under the bed.", "highlights": ["under"] },
+            { "key": "over / above", "value": "encima · A lamp over the table.", "highlights": ["over"] },
+            { "key": "between", "value": "entre dos · between the chairs", "highlights": ["between"] },
+            { "key": "among", "value": "entre muchos · among the trees", "highlights": ["among"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pr-near",
+      "tag": "Cercanía",
+      "title": "next to, near, behind",
+      "lede": "Para decir qué hay cerca o alrededor de algo.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "next to", "value": "al lado de · next to the bank", "highlights": ["next to"] },
+            { "key": "near", "value": "cerca de · near the station", "highlights": ["near"] },
+            { "key": "in front of", "value": "delante de · in front of the house", "highlights": ["in front of"] },
+            { "key": "behind", "value": "detrás de · behind the door", "highlights": ["behind"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pr-movement",
+      "tag": "Movimiento",
+      "title": "to, from, into",
+      "lede": "Preposiciones de dirección: hacia dónde va o de dónde viene algo.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "to", "value": "hacia · I go to work.", "highlights": ["to"] },
+            { "key": "from", "value": "desde · I come from Spain.", "highlights": ["from"] },
+            { "key": "into / out of", "value": "hacia dentro / fuera · into the room", "highlights": ["into"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Ojo:",
+        "body": "go home no lleva to: I go home (no \"go to home\")."
+      }
+    },
+    {
+      "id": "pr-listening",
+      "tag": "Audio",
+      "title": "Reducciones al escuchar",
+      "lede": "En conversación, las preposiciones se 'pegan' a las palabras vecinas. Reconocerlas es clave.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "good", "text": "in a → \"in-uh\"", "note": "se enlazan" },
+            { "variant": "good", "text": "at the → \"at-thuh\"", "note": "the débil" },
+            { "variant": "good", "text": "out of → \"out-uh\"", "note": "la f casi desaparece" },
+            { "variant": "good", "text": "next to → \"nex-tuh\"", "note": "la t se suaviza" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pr-practice",
+      "tag": "Práctica",
+      "title": "Describir una escena",
+      "lede": "Junta varias preposiciones para describir dónde está todo en una habitación.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Ejemplo 1", "value": "The book is on the table near the window.", "highlights": ["on", "near"] },
+            { "key": "Ejemplo 2", "value": "The keys are in the drawer under the desk.", "highlights": ["in", "under"] },
+            { "key": "Ejemplo 3", "value": "The dog is behind the sofa next to the wall.", "highlights": ["behind", "next to"] }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,129 @@
+{
+  "meta": {
+    "eyebrow": "A2 · Cuantificadores y superlativos",
+    "title": "Cuantificadores y",
+    "titleEmphasis": "superlativos"
+  },
+  "cards": [
+    {
+      "id": "qu-countable",
+      "tag": "Contable o no",
+      "title": "Sustantivos contables e incontables",
+      "lede": "La gran división del inglés: lo que puedes contar (apples) y lo que no (water). Decide qué cuantificador usar.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Contables",
+              "rule": "tienen plural",
+              "examples": ["one apple, two apples", "a book, books"]
+            },
+            {
+              "label": "Incontables",
+              "rule": "no tienen plural",
+              "examples": ["water, money, rice", "information, advice"]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Ojo:",
+        "body": "information y advice son incontables: no existe \"informations\" ni \"an advice\"."
+      }
+    },
+    {
+      "id": "qu-some-any",
+      "tag": "some / any",
+      "title": "some y any",
+      "lede": "some en afirmativas; any en negativas y preguntas. Sirven para ambos tipos de sustantivo.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "some", "value": "I have some money. · some apples", "highlights": ["some"] },
+            { "key": "any (neg.)", "value": "I don't have any money.", "highlights": ["any"] },
+            { "key": "any (pregunta)", "value": "Do you have any questions?", "highlights": ["any"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Excepción:",
+        "body": "usa some en ofertas y peticiones: Would you like some coffee?"
+      }
+    },
+    {
+      "id": "qu-much-many",
+      "tag": "much / many",
+      "title": "much, many, a lot of",
+      "lede": "much con incontables, many con contables. a lot of vale para ambos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "many + contable", "value": "many books · How many?", "highlights": ["many"] },
+            { "key": "much + incontable", "value": "much water · How much?", "highlights": ["much"] },
+            { "key": "a lot of", "value": "a lot of books · a lot of water", "highlights": ["a lot of"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Ojo:",
+        "body": "much/many suenan formales en afirmativas; en el día a día se prefiere a lot of."
+      }
+    },
+    {
+      "id": "qu-few-little",
+      "tag": "Poco / poca",
+      "title": "(a) few y (a) little",
+      "lede": "few con contables, little con incontables. El artículo a cambia el tono de negativo a positivo.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "a few", "value": "unos cuantos · a few friends", "highlights": ["a few"] },
+            { "key": "few", "value": "pocos (negativo) · few people came", "highlights": ["few"] },
+            { "key": "a little", "value": "un poco · a little water", "highlights": ["a little"] },
+            { "key": "little", "value": "poco (negativo) · little time", "highlights": ["little"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qu-comparative",
+      "tag": "Comparativos",
+      "title": "-er than / more than",
+      "lede": "Antes del superlativo, repasa el comparativo. Cortos: -er. Largos: more.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Adjetivo corto", "value": "cheaper than · faster than", "highlights": ["-er than"] },
+            { "key": "Adjetivo largo", "value": "more expensive than", "highlights": ["more"] },
+            { "key": "Irregular", "value": "good → better · bad → worse", "highlights": ["better", "worse"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qu-superlative",
+      "tag": "Superlativos",
+      "title": "the -est / the most",
+      "lede": "Para decir 'el más' de todos. Siempre con the. Cortos: -est. Largos: the most.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Corto", "value": "the cheapest · the fastest", "highlights": ["the cheapest"] },
+            { "key": "Largo", "value": "the most expensive", "highlights": ["the most"] },
+            { "key": "Irregular", "value": "the best · the worst", "highlights": ["the best"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Ojo:",
+        "body": "el superlativo siempre lleva the: the tallest building, no \"tallest building\"."
+      }
+    }
+  ]
+}

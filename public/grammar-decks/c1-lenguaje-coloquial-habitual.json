@@ -1,0 +1,124 @@
+{
+  "meta": {
+    "eyebrow": "C1 · Lenguaje coloquial",
+    "title": "Lenguaje coloquial y",
+    "titleEmphasis": "habitual"
+  },
+  "cards": [
+    {
+      "id": "co-idioms",
+      "tag": "Idioms",
+      "title": "Expresiones idiomáticas comunes",
+      "lede": "Frases hechas cuyo sentido no se deduce de las palabras. Dan naturalidad.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "hit the books", "value": "ponerse a estudiar", "highlights": ["hit the books"] },
+            { "key": "under the weather", "value": "pachucho, malito", "highlights": ["under the weather"] },
+            { "key": "a piece of cake", "value": "pan comido", "highlights": ["a piece of cake"] },
+            { "key": "cost an arm and a leg", "value": "costar un ojo de la cara", "highlights": ["an arm and a leg"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Consejo:",
+        "body": "apréndelos en contexto, no en listas sueltas. Y úsalos con medida: forzarlos suena raro."
+      }
+    },
+    {
+      "id": "co-slang",
+      "tag": "Slang",
+      "title": "Jerga del día a día",
+      "lede": "Lenguaje muy informal entre amigos. Útil para entender, con cuidado al usarlo.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "to be broke", "value": "estar sin blanca", "highlights": ["broke"] },
+            { "key": "hang out", "value": "pasar el rato", "highlights": ["hang out"] },
+            { "key": "no big deal", "value": "no es para tanto", "highlights": ["no big deal"] },
+            { "key": "to chill", "value": "relajarse", "highlights": ["chill"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "co-register",
+      "tag": "Registro",
+      "title": "Lo mismo en tres tonos",
+      "lede": "Saber subir y bajar el registro según el interlocutor es clave en C1.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Formal", "value": "I would appreciate your assistance.", "highlights": ["appreciate your assistance"] },
+            { "key": "Neutro", "value": "Could you help me?", "highlights": ["Could you help me?"] },
+            { "key": "Informal", "value": "Gimme a hand?", "highlights": ["Gimme a hand?"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "co-intensifiers",
+      "tag": "Intensificadores",
+      "title": "Más allá de very",
+      "lede": "Para sonar natural, varía cómo enfatizas. very se queda corto en C1.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Graduables",
+              "rule": "very, really, quite",
+              "examples": ["really tired", "quite good", "pretty cold"]
+            },
+            {
+              "label": "Extremos (absolutely)",
+              "rule": "absolutely, totally",
+              "examples": ["absolutely freezing", "totally exhausted", "completely wrong"]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Regla:",
+        "body": "very no va con adjetivos extremos: no \"very exhausted\", sino absolutely exhausted."
+      }
+    },
+    {
+      "id": "co-phrasal-idioms",
+      "tag": "Expresiones verbales",
+      "title": "Frases con verbos comunes",
+      "lede": "Combinaciones idiomáticas con get, make, take que oirás constantemente.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "get the hang of it", "value": "pillarle el truco", "highlights": ["get the hang of"] },
+            { "key": "make up your mind", "value": "decidirte", "highlights": ["make up your mind"] },
+            { "key": "take it easy", "value": "tomárselo con calma", "highlights": ["take it easy"] },
+            { "key": "make a fuss", "value": "armar un escándalo", "highlights": ["make a fuss"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "co-traps",
+      "tag": "Cuidado",
+      "title": "Cuándo NO usar coloquialismos",
+      "lede": "El slang fuera de lugar resta credibilidad. Lee el contexto antes de soltarlo.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "(en una entrevista) I'm kinda broke right now." },
+            { "variant": "good", "text": "I'm currently between jobs.", "note": "registro adecuado al contexto" },
+            { "variant": "bad", "text": "(a un amigo) I would be delighted to attend." },
+            { "variant": "good", "text": "Yeah, I'm in!", "note": "demasiado formal suena distante" }
+          ]
+        }
+      ]
+    }
+  ]
+}

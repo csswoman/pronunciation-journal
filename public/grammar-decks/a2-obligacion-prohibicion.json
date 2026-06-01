@@ -1,0 +1,177 @@
+{
+  "meta": {
+    "eyebrow": "A2 · Gramática",
+    "title": "Obligación y",
+    "titleEmphasis": "prohibición",
+    "goal": "Ya puedes expresar lo que es obligatorio, necesario o está prohibido en inglés."
+  },
+  "quiz": [
+    {
+      "q": "El letrero dice 'No smoking'. ¿Cómo lo expresas con modal?",
+      "options": ["You don't have to smoke here.", "You mustn't smoke here.", "You needn't smoke here.", "You haven't to smoke here."],
+      "answer": 1,
+      "explain": "mustn't expresa prohibición (está prohibido). don't have to significa que no es obligatorio, pero sí está permitido."
+    },
+    {
+      "q": "La entrada al museo es gratis. No es obligatorio pagar. ¿Cuál es correcta?",
+      "options": ["You mustn't pay.", "You must not pay.", "You don't have to pay.", "You haven't pay."],
+      "answer": 2,
+      "explain": "don't have to = no es necesario / no hay obligación. mustn't significaría que está prohibido pagar, que no tiene sentido aquí."
+    },
+    {
+      "q": "¿Cuál expresa una regla externa (como una ley o norma de empresa)?",
+      "options": ["I must finish this report.", "I have to finish this report by Friday.", "I needn't finish this report.", "I should finish this report."],
+      "answer": 1,
+      "explain": "have to implica obligación externa (jefe, plazo, norma). must sugiere obligación que el hablante siente como propia."
+    }
+  ],
+  "cards": [
+    {
+      "id": "ob-must-have-to",
+      "tag": "Obligación",
+      "title": "must vs have to",
+      "lede": "Los dos expresan obligación, pero el origen de esa obligación es diferente.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "must",
+              "rule": "obligación interna: el hablante la siente como necesaria, o es una regla oficial",
+              "examples": [
+                "I must call my mom. (yo quiero/siento que debo)",
+                "You must wear a seatbelt. (regla de tráfico)",
+                "You must be tired. (conclusión lógica)"
+              ]
+            },
+            {
+              "label": "have to",
+              "rule": "obligación externa: otra persona, la empresa o las circunstancias lo exigen",
+              "examples": [
+                "I have to finish this by 5 pm. (mi jefe lo exige)",
+                "She has to wear a uniform at work.",
+                "Do you have to work on Saturdays?"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Nota:",
+        "body": "En el uso diario, muchos angloparlantes intercambian must y have to sin problema. La distinción es más importante en el examen y en contextos formales."
+      }
+    },
+    {
+      "id": "ob-mustnt-dont-have-to",
+      "tag": "¡Cuidado!",
+      "title": "mustn't ≠ don't have to",
+      "lede": "Este es el error más común para hispanohablantes. Son opuestos, no sinónimos.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "mustn't",
+              "rule": "prohibición: está prohibido, no debes hacerlo",
+              "examples": [
+                "You mustn't park here. (prohibido aparcar)",
+                "You mustn't tell anyone. (no se lo digas a nadie)",
+                "Children mustn't run near the pool."
+              ]
+            },
+            {
+              "label": "don't have to",
+              "rule": "ausencia de obligación: no es necesario, pero puedes si quieres",
+              "examples": [
+                "You don't have to come. (no es obligatorio, pero puedes venir)",
+                "She doesn't have to pay. (la entrada es gratis)",
+                "You don't have to wear a tie here."
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Truco:",
+        "body": "mustn't = prohibido ✗. don't have to = opcional ✓. Piensa en el español: «No debes hacerlo» (está mal) vs. «No tienes que hacerlo» (no es necesario)."
+      }
+    },
+    {
+      "id": "ob-need-to",
+      "tag": "need to",
+      "title": "need to / don't need to / needn't",
+      "lede": "need to expresa necesidad. Su negativo (needn't / don't need to) indica que algo no es necesario.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "need to (afirmativa)", "value": "I need to buy milk. · She needs to study more.", "highlights": ["need to", "needs to"] },
+            { "key": "don't need to", "value": "You don't need to hurry. · He doesn't need to come.", "highlights": ["don't need to", "doesn't need to"] },
+            { "key": "needn't (formal)", "value": "You needn't worry. · She needn't sign again.", "highlights": ["needn't"], "hint": "needn't es más formal/británico; don't need to es más común en EE.UU." },
+            { "key": "need to vs have to", "value": "need to = necesidad práctica · have to = obligación (puede ser externa)", "hint": "En el habla informal se usan como sinónimos" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ob-have-to-conjugation",
+      "tag": "Conjugación",
+      "title": "Conjugar have to",
+      "lede": "have to se conjuga como un verbo normal, con do/does en preguntas y negativas.",
+      "blocks": [
+        {
+          "type": "conjugation",
+          "rows": [
+            { "pronoun": "I / You / We / They", "form": "have to", "hint": "I have to go now." },
+            { "pronoun": "He / She / It", "form": "has to", "hint": "She has to wear a uniform." },
+            { "pronoun": "Did + sujeto", "form": "have to (pasado)", "hint": "Did you have to wait long?" },
+            { "pronoun": "Do / Does", "form": "have to (pregunta)", "hint": "Does she have to work today?" },
+            { "pronoun": "Don't / Doesn't", "form": "have to (negativa)", "hint": "He doesn't have to come in early." }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Ojo:",
+        "body": "must no tiene formas de pasado ni de pregunta con do. Para el pasado se usa had to: I had to wait an hour."
+      }
+    },
+    {
+      "id": "ob-common-mistakes",
+      "tag": "Errores frecuentes",
+      "title": "«Deber» no siempre es must",
+      "lede": "Los hispanohablantes usan must cuando should o have to son más naturales. Aquí los errores más comunes.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "You must study if you want to pass.", "note": "suena demasiado severo / autoritario" },
+            { "variant": "good", "text": "You should study if you want to pass.", "note": "should = consejo, recomendación" },
+            { "variant": "bad", "text": "I must go to the doctor tomorrow.", "note": "must implica necesidad urgente/interna; aquí es una cita" },
+            { "variant": "good", "text": "I have to go to the doctor tomorrow.", "note": "have to = cita concertada, obligación externa" },
+            { "variant": "bad", "text": "You mustn't eat if you don't want to.", "note": "mustn't = prohibición, no opción" },
+            { "variant": "good", "text": "You don't have to eat if you don't want to.", "note": "don't have to = no es obligatorio" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ob-real-situations",
+      "tag": "En contexto",
+      "title": "Situaciones reales",
+      "lede": "Señales, normas y entornos laborales: así se usan estos modales en la vida real.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Señal en tienda", "value": "You must show ID to buy alcohol.", "highlights": ["must"] },
+            { "key": "Señal de tráfico", "value": "You mustn't park here between 8–6.", "highlights": ["mustn't"] },
+            { "key": "Norma de trabajo", "value": "All staff have to complete the training.", "highlights": ["have to"] },
+            { "key": "Norma relajada", "value": "You don't have to wear a tie.", "highlights": ["don't have to"] },
+            { "key": "Aeropuerto", "value": "Passengers must check in 2 hours before.", "highlights": ["must"] },
+            { "key": "Visita al médico", "value": "You don't need to fast before this test.", "highlights": ["don't need to"] }
+          ]
+        }
+      ]
+    }
+  ]
+}

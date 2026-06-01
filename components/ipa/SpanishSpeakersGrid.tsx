@@ -13,71 +13,60 @@ function shortTip(symbol: string): string {
     : `${firstSentence}.`;
 }
 
+function activateCard(
+  event: React.KeyboardEvent<HTMLDivElement>,
+  onSelect: () => void
+) {
+  if (event.key === "Enter" || event.key === " ") {
+    event.preventDefault();
+    onSelect();
+  }
+}
+
 export default function SpanishSpeakersGrid({
   onSelect,
 }: {
   onSelect: (phoneme: PhonemeData) => void;
 }) {
-  const items = HARD_FOR_SPANISH_SPEAKERS
-    .map((symbol) => PHONEMES.find((p) => p.symbol === symbol))
-    .filter((p): p is PhonemeData => Boolean(p));
+  const items = HARD_FOR_SPANISH_SPEAKERS.map((symbol) =>
+    PHONEMES.find((p) => p.symbol === symbol)
+  ).filter((p): p is PhonemeData => Boolean(p));
 
   return (
-    <section
-      className="rounded-2xl border p-6"
-      style={{
-        backgroundColor: "var(--card-bg)",
-        borderColor: "var(--line-divider)",
-      }}
-    >
-      <header className="flex items-start justify-between gap-4 mb-5">
+    <section className="ipa-chart__section">
+      <header className="ipa-chart__section-head">
         <div>
-          <h2 className="text-lg font-semibold text-fg mb-1">
+          <h2 className="ipa-chart__section-title">
             Sonidos difíciles para hispanohablantes
           </h2>
-          <p className="text-sm text-fg-muted">
+          <p className="ipa-chart__lead mt-1">
             Estos fonemas no existen en español o se confunden con otros — empieza por aquí.
           </p>
         </div>
-        <span
-          className="shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold"
-          style={{
-            backgroundColor: "var(--warning-soft, var(--btn-regular-bg))",
-            color: "var(--warning, var(--primary))",
-          }}
-        >
-          <span className="font-bold">{items.length}</span>
-          <span className="opacity-80">to focus on</span>
-        </span>
+        <span className="ipa-chart__pill-warn">{items.length} para enfocarte</span>
       </header>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+      <div className="ipa-chart__hardgrid">
         {items.map((phoneme) => {
-          const keyword = PHONEME_MATRIX[phoneme.symbol]?.keyword ?? phoneme.examples[0];
+          const keyword =
+            PHONEME_MATRIX[phoneme.symbol]?.keyword ?? phoneme.examples[0];
+          const label = `${phoneme.symbol}, ejemplo ${keyword}`;
           return (
-            <button
+            <div
               key={phoneme.symbol}
-              type="button"
+              role="button"
+              tabIndex={0}
+              aria-label={label}
+              className="ipa-chart__hard"
               onClick={() => onSelect(phoneme)}
-              className="text-left rounded-xl border p-3 transition-all duration-150 hover:scale-[1.02] hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1"
-              style={{
-                backgroundColor: "var(--card-bg)",
-                borderColor: "var(--line-divider)",
-              }}
+              onKeyDown={(e) => activateCard(e, () => onSelect(phoneme))}
             >
-              <span className="block font-serif text-2xl leading-none text-fg mb-1">
-                {phoneme.symbol}
-              </span>
-              <span
-                className="block text-tiny font-bold uppercase tracking-wider mb-2"
-                style={{ color: "var(--text-secondary)" }}
-              >
-                {keyword}
-              </span>
-              <span className="block text-xs leading-snug text-fg-muted">
-                {shortTip(phoneme.symbol)}
-              </span>
-            </button>
+              <div className="ipa-chart__hard-head">
+                <span className="ipa-chart__hard-sym">{phoneme.symbol}</span>
+                <span className="ipa-chart__hard-word">{keyword}</span>
+              </div>
+              <p className="ipa-chart__hard-note">{shortTip(phoneme.symbol)}</p>
+            </div>
           );
         })}
       </div>

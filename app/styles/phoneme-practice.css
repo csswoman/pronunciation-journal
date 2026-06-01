@@ -1,0 +1,822 @@
+/* Phoneme focus session — layout from english-journal-practice.html; app tokens */
+
+.phoneme-focus {
+  min-height: 100%;
+  color: var(--text-primary);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  background:
+    radial-gradient(
+      120% 70% at 50% -10%,
+      color-mix(in oklch, var(--primary) 12%, var(--surface-base)),
+      transparent 55%
+    ),
+    var(--surface-base);
+}
+
+.phoneme-focus__wrap {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 12px 16px 48px;
+}
+
+.phoneme-focus__phone {
+  display: flex;
+  flex-direction: column;
+  min-height: min(720px, calc(100dvh - 48px));
+  background: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: 28px;
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+}
+
+/* Top bar */
+.phoneme-focus__topbar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 18px 14px;
+}
+
+.phoneme-focus__exit {
+  flex: none;
+  background: none;
+  border: none;
+  color: var(--text-tertiary);
+  font-size: 1.35rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 2px 4px;
+  transition: color var(--transition-fast);
+}
+
+.phoneme-focus__exit:hover {
+  color: var(--text-secondary);
+}
+
+.phoneme-focus__progress {
+  flex: 1;
+  height: 12px;
+  background: var(--surface-sunken);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.phoneme-focus__progress > span {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--gradient-primary);
+  transition: width 0.4s ease;
+  box-shadow: inset 0 2px 0 color-mix(in oklch, var(--on-primary) 35%, transparent);
+}
+
+.phoneme-focus__badge {
+  flex: none;
+  font-family: var(--font-editorial), Georgia, serif;
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: var(--primary);
+  line-height: 1;
+}
+
+.phoneme-focus__badge--text {
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  max-width: 92px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Stage */
+.phoneme-focus__stage {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 8px 22px 16px;
+  min-height: 0;
+}
+
+.phoneme-focus__prompt {
+  margin: 10px 0 22px;
+}
+
+.phoneme-focus__prompt--center {
+  text-align: center;
+}
+
+.phoneme-focus__prompt--center .phoneme-focus__eyebrow {
+  text-align: center;
+}
+
+.phoneme-focus__prompt--center .phoneme-focus__title {
+  text-align: center;
+  max-width: 18rem;
+  margin-inline: auto;
+}
+
+.phoneme-focus__prompt--spacious {
+  margin-bottom: 34px;
+}
+
+.phoneme-focus__prompt--spacious .phoneme-focus__hint {
+  margin-top: 12px;
+  margin-bottom: 0;
+}
+
+.phoneme-focus__eyebrow {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--text-tertiary);
+}
+
+.phoneme-focus__title {
+  font-family: var(--font-editorial), Georgia, serif;
+  font-weight: 480;
+  font-size: 1.45rem;
+  letter-spacing: -0.015em;
+  line-height: 1.15;
+  color: var(--text-primary);
+}
+
+.phoneme-focus__title em {
+  font-style: italic;
+  color: var(--primary);
+}
+
+.phoneme-focus__hint {
+  margin: 0 0 14px;
+  font-size: 0.78rem;
+  text-align: center;
+  letter-spacing: 0.05em;
+  color: var(--text-tertiary);
+}
+
+.phoneme-focus__session {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  width: 100%;
+}
+
+.phoneme-focus__session > .phoneme-focus__exercise {
+  flex: 1;
+  min-height: 0;
+}
+
+.phoneme-focus__exercise {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+/* Options (MC / pick sound / pick word) */
+.pf-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pf-options--grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.pf-opt {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  text-align: left;
+  padding: 16px 18px;
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--border-subtle);
+  background: var(--surface-sunken);
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    border-color var(--transition-fast),
+    background var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.pf-opt:hover:not(:disabled) {
+  border-color: var(--border-default);
+}
+
+.pf-opt:disabled {
+  cursor: default;
+}
+
+.pf-opt__key {
+  width: 26px;
+  height: 26px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  border: 1.5px solid var(--border-default);
+  border-radius: 7px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-tertiary);
+}
+
+.pf-opt--ipa {
+  justify-content: center;
+  font-family: var(--font-ipa), var(--font-mono-var), monospace;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.pf-opt--ipa .pf-opt__key {
+  display: none;
+}
+
+.pf-opt--sel {
+  border-color: var(--primary);
+  background: var(--selection-bg);
+}
+
+.pf-opt--sel .pf-opt__key {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.pf-opt--correct {
+  border-color: var(--success-border);
+  background: var(--success-soft);
+  color: var(--success-value);
+}
+
+.pf-opt--correct .pf-opt__key {
+  border-color: var(--success-border);
+  color: var(--success);
+}
+
+.pf-opt--wrong {
+  border-color: var(--error-border);
+  background: var(--error-soft);
+  color: var(--error-value);
+}
+
+.pf-opt--wrong .pf-opt__key {
+  border-color: var(--error-border);
+  color: var(--error);
+}
+
+.pf-opt--dim {
+  opacity: 0.45;
+}
+
+/* Word / IPA chips */
+.pf-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border-radius: var(--radius-full);
+  border: 1.5px solid var(--border-subtle);
+  background: var(--surface-sunken);
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    border-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.pf-chip:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.pf-chip--ipa {
+  font-family: var(--font-ipa), var(--font-mono-var), monospace;
+}
+
+.pf-chip__icon {
+  font-size: 11px;
+  color: var(--text-tertiary);
+}
+
+/* Pronunciation (speak) */
+.pf-pron {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 6px;
+  margin: 8px 0 4px;
+}
+
+.pf-pron__word {
+  font-family: var(--font-editorial), Georgia, serif;
+  font-size: clamp(2rem, 8vw, 2.6rem);
+  font-weight: 480;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.pf-pron__ipa {
+  font-family: var(--font-ipa), var(--font-mono-var), monospace;
+  font-size: 1.2rem;
+  color: var(--primary);
+  margin-top: 6px;
+}
+
+.pf-listen-row {
+  display: flex;
+  justify-content: center;
+  margin: 14px 0;
+}
+
+.pf-mic-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  margin-top: 8px;
+  flex: 1;
+  justify-content: center;
+}
+
+.pf-mic {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  background: var(--primary);
+  color: var(--on-primary);
+  display: grid;
+  place-items: center;
+  position: relative;
+  transition: transform var(--transition-fast);
+  box-shadow: 0 4px 20px color-mix(in oklch, var(--primary) 32%, transparent);
+}
+
+.pf-mic:active {
+  transform: scale(0.96);
+}
+
+.pf-mic--rec {
+  background: var(--error);
+  color: var(--on-primary);
+}
+
+.pf-mic--rec::after {
+  content: "";
+  position: absolute;
+  inset: -10px;
+  border-radius: 50%;
+  border: 2px solid var(--error);
+  animation: pf-mic-pulse 1.2s ease-out infinite;
+}
+
+@keyframes pf-mic-pulse {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+.pf-mic-label {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.pf-transcript {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+.pf-transcript strong {
+  color: var(--text-primary);
+}
+
+/* Dictation */
+.pf-play-wrap {
+  display: flex;
+  justify-content: center;
+  margin: 10px 0 22px;
+}
+
+.pf-play-btn {
+  width: 120px;
+  height: 120px;
+  border-radius: 24px;
+  border: 1.5px solid var(--accent-border);
+  background: color-mix(in oklch, var(--primary) 12%, var(--surface-raised));
+  color: var(--primary);
+  font-size: 2.5rem;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: transform var(--transition-fast);
+}
+
+.pf-play-btn:active {
+  transform: scale(0.97);
+}
+
+.pf-play-btn--played {
+  background: var(--surface-sunken);
+  border-color: var(--border-subtle);
+  color: var(--text-primary);
+}
+
+.pf-type-in {
+  width: 100%;
+  background: var(--surface-base);
+  border: 1.5px solid var(--border-default);
+  color: var(--text-primary);
+  font-family: var(--font-editorial), Georgia, serif;
+  font-size: 1.3rem;
+  text-align: center;
+  padding: 16px;
+  border-radius: var(--radius-md);
+  outline: none;
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.pf-type-in:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px color-mix(in oklch, var(--primary) 18%, transparent);
+}
+
+.pf-type-in--correct {
+  background: var(--success-soft);
+  border-color: var(--success-border);
+  color: var(--success-value);
+}
+
+.pf-type-in--wrong {
+  background: var(--error-soft);
+  border-color: var(--error-border);
+  color: var(--error-value);
+}
+
+.pf-answer-note {
+  margin: 10px 0 0;
+  font-size: 0.82rem;
+  text-align: center;
+  color: var(--text-tertiary);
+}
+
+.pf-answer-note strong {
+  color: var(--text-primary);
+}
+
+/* Reorder words / sentence */
+.pf-order-answer {
+  min-height: 64px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  padding: 12px;
+  border: 1.5px dashed var(--border-default);
+  border-radius: var(--radius-md);
+  margin-bottom: 8px;
+}
+
+.pf-order-answer--empty::before {
+  content: "Toca las palabras en orden";
+  display: block;
+  width: 100%;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--text-tertiary);
+}
+
+.pf-order-tray {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 16px;
+  margin-bottom: 4px;
+}
+
+.pf-order-chip {
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 500;
+  background: var(--surface-sunken);
+  border: 1.5px solid var(--border-default);
+  border-radius: var(--radius-sm);
+  padding: 10px 18px;
+  cursor: pointer;
+  color: var(--text-primary);
+  transition:
+    border-color var(--transition-fast),
+    background var(--transition-fast),
+    opacity var(--transition-fast);
+}
+
+.pf-order-chip:hover:not(:disabled) {
+  border-color: var(--primary);
+}
+
+.pf-order-chip:disabled {
+  cursor: default;
+}
+
+.pf-order-chip--placed {
+  background: color-mix(in oklch, var(--primary) 12%, var(--surface-raised));
+  border-color: var(--accent-border);
+  color: var(--primary);
+}
+
+/* Minimal pair — hero IPA */
+.pf-minimal-pair__ipa {
+  margin: -8px 0 20px;
+  text-align: center;
+  font-family: var(--font-ipa), var(--font-mono-var), monospace;
+  font-size: clamp(2.25rem, 11vw, 3rem);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: 0.02em;
+  color: var(--primary);
+}
+
+/* Minimal pair — larger word tiles */
+.pf-pair-opt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-height: 88px;
+  padding: 18px 14px;
+  border-radius: var(--radius-lg);
+  border: 1.5px solid var(--border-subtle);
+  background: var(--surface-sunken);
+  font-family: var(--font-editorial), Georgia, serif;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition:
+    border-color var(--transition-fast),
+    background var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.pf-pair-opt:hover:not(:disabled) {
+  border-color: var(--border-default);
+  transform: translateY(-1px);
+}
+
+.pf-pair-opt.pf-opt--sel {
+  border-color: var(--primary);
+  background: var(--selection-bg);
+}
+
+.pf-pair-opt.pf-opt--correct {
+  border-color: var(--success-border);
+  background: var(--success-soft);
+  color: var(--success-value);
+}
+
+.pf-pair-opt.pf-opt--wrong {
+  border-color: var(--error-border);
+  background: var(--error-soft);
+  color: var(--error-value);
+}
+
+.pf-pair-opt.pf-opt--dim {
+  opacity: 0.45;
+}
+
+.pf-pair-opt__sub {
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--text-tertiary);
+  opacity: 0.85;
+}
+
+/* CTA */
+.pf-cta {
+  width: 100%;
+  flex-shrink: 0;
+  margin-top: 28px;
+  padding: 16px;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 1rem;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  letter-spacing: 0.01em;
+  transition:
+    transform var(--transition-fast),
+    opacity var(--transition-fast);
+}
+
+.phoneme-focus__exercise .pf-cta {
+  margin-top: auto;
+  padding-top: 28px;
+}
+
+.pf-cta--primary {
+  background: var(--primary);
+  color: var(--on-primary);
+}
+
+.pf-cta--primary:not(:disabled):hover {
+  filter: brightness(1.04);
+}
+
+.pf-cta--primary:disabled {
+  background: var(--surface-sunken);
+  color: var(--text-disabled);
+  cursor: not-allowed;
+}
+
+.pf-cta:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+/* Footer feedback (between exercises) */
+.phoneme-focus__footer {
+  padding: 16px 22px 22px;
+  border-top: 1px solid var(--border-subtle);
+  transition: background 0.2s ease;
+}
+
+.phoneme-focus__footer--ok {
+  background: var(--success-soft);
+  border-top-color: var(--success-border);
+}
+
+.phoneme-focus__footer--bad {
+  background: var(--error-soft);
+  border-top-color: var(--error-border);
+}
+
+.phoneme-focus__fb {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  animation: pf-fb-in 0.25s ease-out both;
+}
+
+@keyframes pf-fb-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.phoneme-focus__fb-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 1.1rem;
+  font-weight: 700;
+  flex: none;
+}
+
+.phoneme-focus__footer--ok .phoneme-focus__fb-icon {
+  background: var(--success);
+  color: var(--on-primary);
+}
+
+.phoneme-focus__footer--bad .phoneme-focus__fb-icon {
+  background: var(--error);
+  color: var(--on-primary);
+}
+
+.phoneme-focus__fb-text b {
+  display: block;
+  font-size: 1rem;
+}
+
+.phoneme-focus__footer--ok .phoneme-focus__fb-text b {
+  color: var(--success-value);
+}
+
+.phoneme-focus__footer--bad .phoneme-focus__fb-text b {
+  color: var(--error-value);
+}
+
+.phoneme-focus__fb-text span {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.phoneme-focus__footer-cta {
+  width: 100%;
+  margin-top: 14px;
+  padding: 16px;
+  border: none;
+  border-radius: var(--radius-md);
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: transform var(--transition-fast);
+}
+
+.phoneme-focus__footer-cta:active {
+  transform: scale(0.98);
+}
+
+.phoneme-focus__footer-cta--ok {
+  background: var(--success);
+  color: var(--on-primary);
+}
+
+.phoneme-focus__footer-cta--bad {
+  background: var(--error);
+  color: var(--on-primary);
+}
+
+.phoneme-focus__skip {
+  flex-shrink: 0;
+  display: block;
+  width: 100%;
+  margin-top: 20px;
+  margin-bottom: 6px;
+  padding: 8px 12px;
+  border: none;
+  background: none;
+  font-size: 11px;
+  font-weight: 600;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  transition: opacity var(--transition-fast);
+}
+
+.phoneme-focus__skip:hover {
+  opacity: 0.75;
+}
+
+/* Summary inside phone */
+.phoneme-focus__summary {
+  padding: 28px 22px 32px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pf-mic--rec::after,
+  .phoneme-focus__fb {
+    animation: none;
+  }
+
+  .pf-opt:hover:not(:disabled),
+  .pf-pair-opt:hover:not(:disabled) {
+    transform: none;
+  }
+}
+
+@media (max-width: 420px) {
+  .phoneme-focus__phone {
+    border-radius: 22px;
+    min-height: calc(100dvh - 32px);
+  }
+
+  .phoneme-focus__stage {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}

@@ -18,12 +18,15 @@ import { z } from "zod";
 import {
   LessonContentSchema,
   MiniLessonSchema,
+  LanguageConceptSchema,
   type LessonContent,
   type MiniLesson,
+  type LanguageConcept,
 } from "./schemas";
 
 const LESSONS_DIR = path.join(process.cwd(), "public", "lessons");
 const MINI_LESSONS_DIR = path.join(process.cwd(), "public", "mini-lessons");
+const CONCEPTS_FILE = path.join(process.cwd(), "public", "language-concepts.json");
 
 function readJson(dir: string, slug: string): unknown | null {
   const filePath = path.join(dir, `${slug}.json`);
@@ -80,6 +83,28 @@ export async function getAllMiniLessons(): Promise<MiniLesson[]> {
     .filter((l): l is MiniLesson => l !== null);
 
   return lessons.sort((a, b) => a.id - b.id);
+}
+
+/** All language concepts from the static JSON file. */
+function getAllLanguageConcepts(): LanguageConcept[] {
+  if (!fs.existsSync(CONCEPTS_FILE)) return [];
+  const raw = JSON.parse(fs.readFileSync(CONCEPTS_FILE, "utf-8"));
+  if (!Array.isArray(raw)) return [];
+  return raw
+    .map((item, i) => validate(LanguageConceptSchema, item, `language-concept[${i}]`))
+    .filter((c): c is LanguageConcept => c !== null);
+}
+
+/** The language concept for today, rotated by day of year. */
+export async function getTodaysLanguageConcept(): Promise<LanguageConcept | null> {
+  const concepts = getAllLanguageConcepts();
+  if (concepts.length === 0) return null;
+
+  const now = new Date();
+  const start = new Date(now.getFullYear(), 0, 0);
+  const dayOfYear = Math.floor((now.getTime() - start.getTime()) / 86_400_000);
+  const index = ((dayOfYear - 1) % concepts.length + concepts.length) % concepts.length;
+  return concepts[index];
 }
 
 /** The mini-lesson for today, rotated by day of year. */

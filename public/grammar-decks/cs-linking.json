@@ -1,0 +1,253 @@
+{
+  "meta": {
+    "eyebrow": "Connected Speech · Sound Lab",
+    "title": "Habla conectada:",
+    "titleEmphasis": "enlace de sonidos",
+    "goal": "Ya puedes unir sonidos entre palabras y entender por qué 'pick it up' suena 'pi-ki-tup' en habla nativa."
+  },
+  "sounds": ["ə", "t", "ɪ"],
+  "related": [
+    { "slug": "cs-reductions", "label": "CS · Reducciones" },
+    { "slug": "b2-pronunciacion-intermedia", "label": "B2 · Pronunciación intermedia" }
+  ],
+  "quiz": [
+    {
+      "q": "¿Cómo suena 'an apple' enlazado?",
+      "options": ["an-apple (dos sílabas separadas)", "a-napple (la n se mueve)", "an-napple (doble n)", "a apple"],
+      "answer": 1,
+      "explain": "La /n/ de 'an' se enlaza con la vocal de 'apple': /ə ˈnæpl̩/ → suena 'a-napple'."
+    },
+    {
+      "q": "En inglés americano, ¿cómo suena la /t/ de 'butter'?",
+      "options": ["Igual que la /t/ de 'top'", "Como una /d/ suave (flap)", "Muda, no se pronuncia", "Como /tʃ/"],
+      "answer": 1,
+      "explain": "La /t/ entre vocales en inglés americano se convierte en un flap /ɾ/, parecido a la /d/ española de 'cada'."
+    },
+    {
+      "q": "¿Qué sonido de intrusión aparece entre vocales en 'go away'?",
+      "options": ["/j/ palatal", "/w/ labial", "/h/ glotal", "/n/ nasal"],
+      "answer": 1,
+      "explain": "go → termina en /əʊ/ (labial redondeada) → el hablante inserta /w/ para unir: 'go-w-away'."
+    }
+  ],
+  "cards": [
+    {
+      "id": "cs-lnk-cv",
+      "tag": "Consonante + Vocal",
+      "title": "La regla de oro del enlace",
+      "titleItalic": ["pick it up"],
+      "lede": "Cuando una palabra termina en consonante y la siguiente empieza en vocal, el sonido se «mueve» a la sílaba siguiente.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "an apple",
+              "value": "→ /ə ˈnæpl̩/ → suena: a-napple",
+              "highlights": ["a-napple"],
+              "hint": "la /n/ salta a la vocal siguiente"
+            },
+            {
+              "key": "pick it up",
+              "value": "→ /ˌpɪ kɪ ˈtʌp/ → pi-ki-tup",
+              "highlights": ["pi-ki-tup"]
+            },
+            {
+              "key": "turn it off",
+              "value": "→ /tɜː nɪ ˈtɒf/ → tur-ni-toff",
+              "highlights": ["tur-ni-toff"]
+            },
+            {
+              "key": "run out of",
+              "value": "→ /rʌ ˈnaʊ tɒv/ → ru-nau-tov",
+              "highlights": ["ru-nau-tov"]
+            }
+          ]
+        },
+        {
+          "type": "pronunciation",
+          "sound": "Enlace C+V",
+          "focus": ["ə"],
+          "examples": [
+            { "text": "pick it up", "ipa": "/ˌpɪ kɪ ˈtʌp/", "es": "las tres palabras suenan como una" },
+            { "text": "Come and get it.", "ipa": "/ˌkʌm ən ˈɡetɪt/", "es": "come-an-getit" },
+            { "text": "I'll think about it.", "ipa": "/aɪl θɪŋk əˈbaʊt ɪt/", "es": "about-it → abou-tit" }
+          ],
+          "note": "En habla rápida no hay pausa entre palabras. Las sílabas se redistribuyen entre palabras."
+        }
+      ],
+      "tip": { "label": "Por qué importa:", "body": "Si separas cada palabra con una pausa, suenas como un robot. El enlace es lo que hace que tu inglés fluya de forma natural." }
+    },
+    {
+      "id": "cs-lnk-vv",
+      "tag": "Vocal + Vocal",
+      "title": "Intrusión: /j/ y /w/ entre vocales",
+      "lede": "Cuando dos vocales se juntan entre palabras, el cerebro inserta automáticamente un sonido de transición.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Intrusión /w/",
+              "rule": "vocal posterior → vocal",
+              "examples": [
+                "go away → go-w-away",
+                "who is → who-w-is",
+                "too often → too-w-often"
+              ]
+            },
+            {
+              "label": "Intrusión /j/",
+              "rule": "vocal anterior → vocal",
+              "examples": [
+                "I am → I-y-am",
+                "she asked → she-y-asked",
+                "the end → the-y-end"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": { "label": "No es un error:", "body": "La intrusión ocurre inconscientemente en todos los hablantes nativos. No la pienses; ocurrirá sola cuando tu velocidad aumente." }
+    },
+    {
+      "id": "cs-lnk-double",
+      "tag": "Consonante + Consonante igual",
+      "title": "Doble consonante: solo suena una vez",
+      "lede": "Cuando la misma consonante está al final de una palabra y al inicio de la siguiente, se pronuncia una sola vez, pero más larga.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "bus stop",
+              "value": "→ /bʌsˈstɒp/ → la /s/ se alarga, no se repite",
+              "highlights": ["bʌsˈstɒp"]
+            },
+            {
+              "key": "big game",
+              "value": "→ /bɪɡˈɡeɪm/ → una /ɡ/ larga",
+              "highlights": ["bɪɡˈɡeɪm"]
+            },
+            {
+              "key": "back corner",
+              "value": "→ /bæˈkɔːnər/ → /k/ sostenida",
+              "highlights": ["bæˈkɔːnər"]
+            },
+            {
+              "key": "that time",
+              "value": "→ /ðæˈtaɪm/ → una /t/ larga",
+              "highlights": ["ðæˈtaɪm"]
+            }
+          ]
+        }
+      ],
+      "tip": { "label": "Técnica:", "body": "Haz una pequeña «pausa interna» antes de la consonante doble —es lo que la hace sonar larga— en vez de pronunciarla dos veces." }
+    },
+    {
+      "id": "cs-lnk-tflap",
+      "tag": "T-flap americana",
+      "title": "La /t/ americana suena como /d/",
+      "lede": "En inglés americano, la /t/ entre dos vocales (o entre vocal y /l/, /n/) se convierte en un golpe rápido: el flap /ɾ/.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "butter / better / water",
+              "value": "→ /ˈbʌɾər/ /ˈbeɾər/ /ˈwɔːɾər/",
+              "highlights": ["ɾ"],
+              "hint": "la /t/ suena como la /d/ de 'cada' en español"
+            },
+            {
+              "key": "city / pretty / party",
+              "value": "→ /ˈsɪɾi/ /ˈpɹɪɾi/ /ˈpɑːɾi/",
+              "highlights": ["ɾ"]
+            },
+            {
+              "key": "what a day",
+              "value": "→ /ˌwʌɾ ə ˈdeɪ/",
+              "highlights": ["wʌɾ"]
+            }
+          ]
+        },
+        {
+          "type": "pronunciation",
+          "sound": "T-flap /ɾ/",
+          "focus": ["t"],
+          "examples": [
+            { "text": "better", "ipa": "/ˈbeɾər/", "es": "suena casi como 'beder'" },
+            { "text": "What are you doing?", "ipa": "/ˌwʌɾ ər jə ˈduːɪŋ/", "es": "what → /wʌɾ/" },
+            { "text": "I got a letter.", "ipa": "/aɪ ˈɡɒɾ ə ˈleɾər/", "es": "got + a → got-a con flap" }
+          ],
+          "note": "El flap solo ocurre en inglés americano. En inglés británico la /t/ se conserva más clara."
+        }
+      ]
+    },
+    {
+      "id": "cs-lnk-common",
+      "tag": "Frases de alta frecuencia",
+      "title": "Las 8 frases más enlazadas del inglés",
+      "lede": "Estas frases aparecen cientos de veces al día. Escúchalas como un bloque de sonido, no como palabras separadas.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "What are you doing?",
+              "value": "→ /ˌwʌɾ ər jə ˈduːɪŋ/",
+              "highlights": ["wʌɾ ər jə"]
+            },
+            {
+              "key": "I don't know.",
+              "value": "→ /aɪ dəʊ ˈnəʊ/ (la /t/ cae)",
+              "highlights": ["dəʊ ˈnəʊ"]
+            },
+            {
+              "key": "Let me know.",
+              "value": "→ /ˈlemɪ nəʊ/",
+              "highlights": ["lemɪ"]
+            },
+            {
+              "key": "kind of",
+              "value": "→ /ˈkaɪn əv/ o /ˈkaɪnə/",
+              "highlights": ["kaɪn əv"]
+            },
+            {
+              "key": "a lot of",
+              "value": "→ /ə ˈlɒɾ əv/",
+              "highlights": ["lɒɾ əv"]
+            },
+            {
+              "key": "I'll be right back.",
+              "value": "→ /aɪl bɪ raɪ ˈbæk/",
+              "highlights": ["raɪ ˈbæk"]
+            }
+          ]
+        }
+      ],
+      "tip": { "label": "Método:", "body": "Aprende estas frases como chunks (bloques), no palabra a palabra. Tu cerebro las almacena como una unidad de sonido." }
+    },
+    {
+      "id": "cs-lnk-drill",
+      "tag": "Práctica",
+      "title": "Cadenas para escuchar y repetir",
+      "lede": "Practica estas cadenas en voz alta. El objetivo es que suenen como una sola «ola» de sonido.",
+      "blocks": [
+        {
+          "type": "pronunciation",
+          "sound": "Cadenas enlazadas",
+          "focus": ["ə", "t"],
+          "examples": [
+            { "text": "Come and get it.", "ipa": "/ˌkʌm ən ˈɡedɪt/", "es": "getit = una sílaba" },
+            { "text": "I've been looking for it.", "ipa": "/aɪv bɪn ˈlʊkɪŋ fər ɪt/", "es": "for it → fər-it" },
+            { "text": "Turn it off and go.", "ipa": "/ˌtɜː nɪt ˈɒf ən ˈɡəʊ/", "es": "turn-it-off fluido" },
+            { "text": "What did you think about it?", "ipa": "/wʌ dɪd jə θɪŋk əˈbaʊ dɪt/", "es": "about-it → abou-dit" }
+          ],
+          "note": "Empieza despacio y acelera. No repitas las palabras: repite los bloques de sonido."
+        }
+      ],
+      "tip": { "label": "Siguiente nivel:", "body": "Grábate repitiendo estas frases y compara con el audio original. El oído es tu mejor herramienta de corrección." }
+    }
+  ]
+}

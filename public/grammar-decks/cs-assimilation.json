@@ -1,0 +1,244 @@
+{
+  "meta": {
+    "eyebrow": "Connected Speech · Sound Lab",
+    "title": "Habla conectada:",
+    "titleEmphasis": "asimilación",
+    "goal": "Ya puedes entender por qué 'don't you' suena 'doncha' y producir estas fusiones con naturalidad."
+  },
+  "sounds": ["tʃ", "dʒ", "ŋ", "ə"],
+  "related": [
+    { "slug": "cs-elision", "label": "CS · Elisión" },
+    { "slug": "c1-pronunciacion-avanzada", "label": "C1 · Pronunciación avanzada" },
+    { "slug": "c1-conectores-contracciones-informales", "label": "C1 · Contracciones informales" }
+  ],
+  "quiz": [
+    {
+      "q": "¿Cómo suena 'don't you' en habla rápida?",
+      "options": ["dont-you (dos palabras separadas)", "doncha /ˈdəʊntʃə/", "dontchu /ˈdɒntʃuː/", "don-tyoo"],
+      "answer": 1,
+      "explain": "La /t/ + /j/ → /tʃ/: 'don't you' → /dəʊntʃə/ → «doncha». Es palatalización."
+    },
+    {
+      "q": "'ten people' puede sonar como 'tem people' porque…",
+      "options": ["la /n/ cae", "la /n/ se asimila al punto de articulación bilabial de /p/", "la /t/ se convierte en /m/", "hay elisión de la /e/"],
+      "answer": 1,
+      "explain": "La /n/ alveolar se convierte en /m/ bilabial antes de /p/ o /b/: asimilación de punto de articulación."
+    },
+    {
+      "q": "¿Qué frase suena más natural en inglés rápido?",
+      "options": ["What do you want?", "Whaddya want?", "Whatdo you want?", "What-do-you-want?"],
+      "answer": 1,
+      "explain": "'what do you' → /wɒdəjə/ → 'whaddya': múltiple asimilación en una sola frase frecuente."
+    }
+  ],
+  "cards": [
+    {
+      "id": "cs-assim-palatal",
+      "tag": "Palatalización",
+      "title": "don't you → doncha / did you → didja",
+      "titleItalic": ["doncha", "didja"],
+      "lede": "Cuando /t/ o /d/ se encuentran con /j/ (you, your), se fusionan en un nuevo sonido.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "t + y → /tʃ/",
+              "value": "don't you → /dəʊntʃə/ → «doncha»",
+              "highlights": ["doncha"],
+              "hint": "como en 'cheese'"
+            },
+            {
+              "key": "d + y → /dʒ/",
+              "value": "did you → /dɪdʒə/ → «didja»",
+              "highlights": ["didja"],
+              "hint": "como en 'judge'"
+            },
+            {
+              "key": "would you → /wʊdʒə/",
+              "value": "→ «wouldja»",
+              "highlights": ["wouldja"]
+            },
+            {
+              "key": "could you → /kʊdʒə/",
+              "value": "→ «couldja»",
+              "highlights": ["couldja"]
+            }
+          ]
+        },
+        {
+          "type": "pronunciation",
+          "sound": "Palatalización t/d + y",
+          "focus": ["tʃ", "dʒ"],
+          "examples": [
+            { "text": "What did you do?", "ipa": "/wɒ dɪdʒə duː/", "es": "did you → didja" },
+            { "text": "Would you help me?", "ipa": "/wʊdʒə help miː/", "es": "would you → wouldja" },
+            { "text": "Don't you like it?", "ipa": "/dəʊntʃə laɪk ɪt/", "es": "don't you → doncha" }
+          ],
+          "note": "Este fenómeno ocurre automáticamente en habla fluida. Cuando lo escuches, no lo decodifiques letra a letra: reconócelo como un bloque."
+        }
+      ],
+      "tip": { "label": "Para hablar:", "body": "No finjas las fusiones. Practica las frases completas a velocidad natural; la asimilación ocurre sola cuando vas rápido." }
+    },
+    {
+      "id": "cs-assim-nasal",
+      "tag": "Asimilación nasal",
+      "title": "ten people → tem people",
+      "lede": "Las consonantes nasales se adaptan al punto de articulación del sonido siguiente.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "/n/ → /m/ ante /p/ y /b/",
+              "value": "ten people → /tem ˈpiːpl/ · in bed → /ɪm bed/",
+              "highlights": ["/m/"],
+              "hint": "/n/ alveolar adopta el punto bilabial de /p/ y /b/"
+            },
+            {
+              "key": "/n/ → /ŋ/ ante /k/ y /g/",
+              "value": "ten cars → /teŋ kɑːrz/ · green grass → /ɡriːŋ ɡrɑːs/",
+              "highlights": ["/ŋ/"],
+              "hint": "/n/ adopta el punto velar de /k/ y /g/"
+            }
+          ]
+        },
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "in bed /ɪn bed/ (forzado)", "note": "suena artificial" },
+            { "variant": "good", "text": "im bed /ɪm bed/ (natural)", "note": "nasal bilabial ante /b/" },
+            { "variant": "bad", "text": "ten cars /ten kɑːrz/", "note": "artificial" },
+            { "variant": "good", "text": "teng cars /teŋ kɑːrz/", "note": "nasal velar ante /k/" }
+          ]
+        }
+      ],
+      "tip": { "label": "Por qué ocurre:", "body": "El cerebro prepara el siguiente sonido antes de terminarse el actual. Es una eficiencia articulatoria, no descuido." }
+    },
+    {
+      "id": "cs-assim-voicing",
+      "tag": "Asimilación de sonoridad",
+      "title": "Sonoros y sordos se contagian",
+      "lede": "Los sonidos sordos y sonoros se influyen mutuamente cuando están en contacto.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Ensordecimiento",
+              "rule": "sonoro + sordo → el sonoro se ensordece",
+              "examples": [
+                "have to → hafta /ˈhæftə/ (v→f)",
+                "of course → /əf kɔːs/",
+                "good night → /ɡʊt naɪt/ (d→t)"
+              ]
+            },
+            {
+              "label": "Sonorización",
+              "rule": "sordo + sonoro → puede sonorizarse",
+              "examples": [
+                "as big → /æz bɪɡ/",
+                "this way → /ðɪz weɪ/",
+                "those words → /ðəʊz wɜːdz/"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": { "label": "Caso especial:", "body": "'have to' → /ˈhæftə/ (hafta): la /v/ se ensordece a /f/ porque la /t/ que sigue es sorda. Es el ejemplo más frecuente de asimilación de sonoridad." }
+    },
+    {
+      "id": "cs-assim-whaddya",
+      "tag": "Múltiple asimilación",
+      "title": "whaddya, gonna, dunno: cadenas completas",
+      "lede": "Las frases más frecuentes acumulan varios procesos a la vez: reducción + enlace + asimilación.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "what do you → whaddya",
+              "value": "→ /ˈwɒdəjə/ : t-flap + do → /də/ + you → /jə/",
+              "highlights": ["whaddya"],
+              "hint": "3 procesos simultáneos"
+            },
+            {
+              "key": "I don't know → I dunno",
+              "value": "→ /aɪ ˈdʌnəʊ/ : don't → /dʌn/ + know → /nəʊ/",
+              "highlights": ["dunno"]
+            },
+            {
+              "key": "you know → y'know",
+              "value": "→ /jə nəʊ/",
+              "highlights": ["y'know"]
+            },
+            {
+              "key": "kind of → kinda",
+              "value": "→ /ˈkaɪndə/",
+              "highlights": ["kinda"]
+            },
+            {
+              "key": "sort of → sorta",
+              "value": "→ /ˈsɔːrtə/",
+              "highlights": ["sorta"]
+            }
+          ]
+        }
+      ],
+      "tip": { "label": "Listening:", "body": "Estas formas son imposibles de entender si esperas escuchar cada palabra separada. Memorízalas como bloques de significado." }
+    },
+    {
+      "id": "cs-assim-context",
+      "tag": "¿Cuándo se asimila?",
+      "title": "Velocidad y registro controlan la asimilación",
+      "lede": "La asimilación no es obligatoria: depende del ritmo, el énfasis y el grado de formalidad.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Más asimilación",
+              "rule": "conversación informal y rápida",
+              "examples": [
+                "whaddya, gonna, hafta",
+                "doncha, didja, wouldja",
+                "kinda, sorta, dunno"
+              ]
+            },
+            {
+              "label": "Menos asimilación",
+              "rule": "presentaciones, énfasis, claridad",
+              "examples": [
+                "what do you, going to, have to",
+                "don't you, did you, would you",
+                "kind of, sort of, I don't know"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": { "label": "Tu meta:", "body": "Hablar con algo de asimilación suena más natural. Pero antes de producirla, domina el reconocimiento: entiende a los nativos sin quedarte atascado." }
+    },
+    {
+      "id": "cs-assim-drill",
+      "tag": "Práctica final",
+      "title": "Asimilación en conversación real",
+      "lede": "Estas frases combinan todos los procesos aprendidos en la pista de Connected Speech.",
+      "blocks": [
+        {
+          "type": "pronunciation",
+          "sound": "Conversación asimilada",
+          "focus": ["tʃ", "dʒ", "ə"],
+          "examples": [
+            { "text": "What are you gonna do about it?", "ipa": "/wɒ ər jə ˈɡɒnə duː əˈbaʊ dɪt/", "es": "what+are+you = /wɒ ər jə/" },
+            { "text": "Did you tell him yet?", "ipa": "/dɪdʒə tel ɪm jet/", "es": "did you → didja, him → 'im" },
+            { "text": "I don't know what to do.", "ipa": "/aɪ dəʊ nəʊ wɒ tə duː/", "es": "dunno + what to = wɒtə" },
+            { "text": "Could you give me a hand?", "ipa": "/kʊdʒə ɡɪv mi ə hænd/", "es": "could you → couldja" }
+          ],
+          "note": "Repite cada frase 3 veces: lenta, media y rápida. Solo a velocidad alta aparece la asimilación natural."
+        }
+      ],
+      "tip": { "label": "Has llegado al final:", "body": "La pista Connected Speech cubre reducciones, enlace, elisión y asimilación. Vuelve a cualquier mazo si necesitas reforzar un área." }
+    }
+  ]
+}

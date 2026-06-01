@@ -2,13 +2,14 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { ChevronLeft, ChevronRight, Check, RotateCcw, Sparkles, ArrowRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Check, RotateCcw, Sparkles, ArrowRight, Headphones, BookOpen } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { markLessonComplete } from "@/lib/db";
 import type { GrammarStudyDeckData } from "@/lib/courses/grammar-deck/types";
 import type { CoursePathTrackId } from "@/lib/courses/types";
 import GrammarDeckHeader from "./GrammarDeckHeader";
 import GrammarStudyCard from "./GrammarStudyCard";
+import QuizStep from "./QuizStep";
 
 interface GrammarStudyDeckProps {
   deck: GrammarStudyDeckData;
@@ -34,8 +35,11 @@ export default function GrammarStudyDeck({
   const [index, setIndex] = useState(0);
   const [direction, setDirection] = useState<"next" | "prev">("next");
   const [reviewed, setReviewed] = useState<Set<string>>(() => new Set());
-  const [finished, setFinished] = useState(false);
+  const [phase, setPhase] = useState<"cards" | "quiz" | "done">("cards");
+  const [quizScore, setQuizScore] = useState<{ correct: number; total: number } | null>(null);
 
+  const hasQuiz = (deck.quiz?.length ?? 0) > 0;
+  const finished = phase === "done";
   const reviewedCount = reviewed.size;
   const card = deck.cards[index];
 
@@ -63,9 +67,9 @@ export default function GrammarStudyDeck({
     if (index < total - 1) {
       setIndex((i) => i + 1);
     } else {
-      setFinished(true);
+      setPhase(hasQuiz ? "quiz" : "done");
     }
-  }, [index, total, deck.cards]);
+  }, [index, total, deck.cards, hasQuiz]);
 
   const goPrev = useCallback(() => {
     setDirection("prev");
@@ -74,20 +78,21 @@ export default function GrammarStudyDeck({
 
   const restart = useCallback(() => {
     setDirection("prev");
-    setFinished(false);
+    setPhase("cards");
+    setQuizScore(null);
     setIndex(0);
   }, []);
 
   // Keyboard navigation while studying.
   useEffect(() => {
-    if (finished) return;
+    if (phase !== "cards") return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "ArrowRight") goNext();
       else if (e.key === "ArrowLeft") goPrev();
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [finished, goNext, goPrev]);
+  }, [phase, goNext, goPrev]);
 
   // Persist completion once the deck is finished.
   useEffect(() => {
@@ -115,7 +120,15 @@ export default function GrammarStudyDeck({
           subtitle={courseTitle ? deck.meta.eyebrow : undefined}
         />
 
-        {finished ? (
+        {phase === "quiz" && deck.quiz ? (
+          <QuizStep
+            questions={deck.quiz}
+            onDone={(correct, totalQ) => {
+              setQuizScore({ correct, total: totalQ });
+              setPhase("done");
+            }}
+          />
+        ) : finished ? (
           <section className="grammar-deck__done" aria-live="polite">
             <div className="grammar-deck__done-badge">
               <Check size={30} strokeWidth={3} aria-hidden />
@@ -123,6 +136,7 @@ export default function GrammarStudyDeck({
             <Sparkles className="grammar-deck__done-spark" size={18} aria-hidden />
             <h2 className="grammar-deck__done-title">¡Lección completada!</h2>
             {courseTitle && <p className="grammar-deck__done-sub">{courseTitle}</p>}
+            {deck.meta.goal && <p className="grammar-deck__done-goal">{deck.meta.goal}</p>}
 
             <div className="grammar-deck__done-stats">
               <div>
@@ -133,7 +147,45 @@ export default function GrammarStudyDeck({
                 <b>{reviewedCount}</b>
                 <span>repasadas</span>
               </div>
+              {quizScore && (
+                <div>
+                  <b>
+                    {quizScore.correct}/{quizScore.total}
+                  </b>
+                  <span>quiz</span>
+                </div>
+              )}
             </div>
+
+            {deck.sounds && deck.sounds.length > 0 && (
+              <Link
+                href={`/practice/sounds?focus=${encodeURIComponent(deck.sounds.join(","))}`}
+                className="grammar-deck__done-soundlab"
+              >
+                <Headphones size={16} aria-hidden />
+                <span>
+                  Practica estos sonidos en Sound Lab
+                  <em>{deck.sounds.join(" · ")}</em>
+                </span>
+                <ArrowRight size={15} aria-hidden />
+              </Link>
+            )}
+
+            {deck.related && deck.related.length > 0 && (
+              <div className="grammar-deck__related">
+                <span className="grammar-deck__related-label">Continúa con</span>
+                <ul>
+                  {deck.related.map((r) => (
+                    <li key={r.slug}>
+                      <Link href={`/courses/lesson/${r.slug}`}>
+                        <BookOpen size={14} aria-hidden />
+                        {r.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
 
             <div className="grammar-deck__done-actions">
               <button type="button" className="grammar-deck__done-restart" onClick={restart}>

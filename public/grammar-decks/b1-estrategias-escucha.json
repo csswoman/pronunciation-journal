@@ -1,0 +1,177 @@
+{
+  "meta": {
+    "eyebrow": "B1 · Habilidades",
+    "title": "Estrategias de",
+    "titleEmphasis": "escucha",
+    "goal": "Ya tienes herramientas para entender inglés aunque no captures cada palabra."
+  },
+  "quiz": [
+    {
+      "q": "Escuchas un podcast en inglés por primera vez. ¿Cuál es el objetivo del 'gist listening'?",
+      "options": [
+        "Entender cada palabra que dice el presentador",
+        "Captar la idea general y el tema del podcast",
+        "Apuntar todos los números y datos que mencione",
+        "Repetir en voz alta lo que escuchas"
+      ],
+      "answer": 1,
+      "explain": "El 'gist listening' consiste en captar el mensaje global: de qué trata el audio, qué tono tiene y cuál es la idea principal. No necesitas entender cada palabra para hacer esto."
+    },
+    {
+      "q": "¿Qué significa 'gonna' en inglés hablado?",
+      "options": [
+        "going away",
+        "going to",
+        "gone again",
+        "go on"
+      ],
+      "answer": 1,
+      "explain": "'Gonna' es la forma reducida de 'going to' en inglés hablado informal: 'I'm gonna call you later' = 'I'm going to call you later'. No se usa en escritura formal."
+    },
+    {
+      "q": "No has entendido algo en una conversación. ¿Cuál es la frase más natural para pedir que repitan?",
+      "options": [
+        "What?",
+        "I don't understand. Say again.",
+        "Sorry, could you say that again, please?",
+        "Repeat please."
+      ],
+      "answer": 2,
+      "explain": "'Sorry, could you say that again, please?' es la fórmula más educada y natural. 'What?' es demasiado brusco. 'Repeat please' suena a traducción literal del español. 'Say again' es comprensible pero informal y algo seco."
+    }
+  ],
+  "cards": [
+    {
+      "id": "esc-gist",
+      "tag": "Comprensión global",
+      "title": "Escuchar para captar la idea general",
+      "lede": "El 'gist listening' no exige entender todo: basta con captar el tema, el tono y el mensaje principal.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "¿Qué es?", "value": "Escuchar solo para entender 'de qué va' el audio, no los detalles. Es la primera pasada.", "highlights": ["de qué va"] },
+            { "key": "Ignora lo desconocido", "value": "No te pares en palabras que no conoces. Deja que el significado global emerja.", "hint": "resistir la tentación de parar" },
+            { "key": "Fíjate en el tono", "value": "¿Es una discusión, una noticia, un anuncio? El tono y la entonación dan mucha información.", "highlights": ["tono", "entonación"] },
+            { "key": "Palabras ancla", "value": "Agárrate a las palabras que sí entiendes: nombres, lugares, números. Construyen el esqueleto.", "highlights": ["palabras ancla"] },
+            { "key": "Pregúntate al final", "value": "¿De qué hablaban? ¿Estaban de acuerdo? ¿Qué emoción había? Eso es el gist.", "hint": "no necesitas el 100% para responder esto" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "pon un vídeo en inglés sin subtítulos durante 60 segundos. Luego escríbete en español de qué iba. Si lo captas, has practicado el gist listening."
+      }
+    },
+    {
+      "id": "esc-especifico",
+      "tag": "Información específica",
+      "title": "Escuchar para buscar datos concretos",
+      "lede": "El 'scanning' auditivo te permite encontrar información puntual sin necesitar entender todo el texto oral.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "¿Qué es?", "value": "Escuchar con un objetivo concreto: un número, un nombre, una fecha, una instrucción.", "highlights": ["objetivo concreto"] },
+            { "key": "Anticipa antes de escuchar", "value": "¿Qué tipo de información buscas? Prepara tu mente para ese formato: ¿un precio? ¿una hora?", "highlights": ["Anticipa"] },
+            { "key": "Números y fechas", "value": "Tu cerebro los reconoce aunque estés perdido con el resto. Activa el 'modo radar' para cifras.", "highlights": ["Números", "fechas"] },
+            { "key": "Palabras clave", "value": "Antes de escuchar, piensa qué palabras probablemente aparecerán: ¿delivery? ¿appointment? ¿deadline?", "highlights": ["Palabras clave"] },
+            { "key": "No escribas mientras escuchas", "value": "Si escribes cada palabra, pierdes el hilo. Escucha primero, anota justo después.", "hint": "escuchar y escribir al mismo tiempo es difícil incluso en español" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "esc-habla-rapida",
+      "tag": "Habla rápida",
+      "title": "Lo que pasa con el inglés rápido",
+      "lede": "Los nativos no hablan como en los audios de los libros. Unen palabras, las reducen y las cortan. Es normal.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "gonna", "value": "going to · I'm gonna call you. = I'm going to call you.", "highlights": ["gonna"] },
+            { "key": "wanna", "value": "want to · Do you wanna come? = Do you want to come?", "highlights": ["wanna"] },
+            { "key": "gotta", "value": "have got to · I gotta go. = I have got to go.", "highlights": ["gotta"] },
+            { "key": "didja", "value": "did you · Didja hear that? = Did you hear that?", "highlights": ["didja"] },
+            { "key": "what're / where're", "value": "contracciones en preguntas · What're you doing? · Where're you going?", "highlights": ["what're", "where're"] },
+            { "key": "linking (enlace)", "value": "las palabras se unen entre sí · 'pick it up' suena 'pickitup' · 'not at all' suena 'notatall'", "highlights": ["linking"], "hint": "no es que hablen mal, es fonología natural" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Importante:",
+        "body": "estas formas reducidas son solo para el habla. En escritura formal o profesional siempre se usan las formas completas: 'going to', 'want to', 'have got to'."
+      }
+    },
+    {
+      "id": "esc-no-entender",
+      "tag": "Pedir aclaraciones",
+      "title": "Estrategias cuando no entiendes",
+      "lede": "Pedir que repitan o que expliquen es una habilidad comunicativa, no un signo de debilidad. Hazlo con estas fórmulas.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Pedir repetición", "value": "Sorry, could you say that again, please? · I'm sorry, I didn't quite catch that.", "highlights": ["say that again", "didn't quite catch"] },
+            { "key": "Pedir aclaración", "value": "Sorry, what did you mean by [palabra]? · Could you explain what you mean?", "highlights": ["what did you mean by"] },
+            { "key": "Confirmar lo escuchado", "value": "Did you say [lo que crees haber oído]? · So you mean...?", "highlights": ["Did you say", "So you mean"] },
+            { "key": "Pedir que hablen más despacio", "value": "Could you speak a little more slowly, please? · I'm still learning English.", "highlights": ["speak a little more slowly"] },
+            { "key": "Comprar tiempo", "value": "Let me just check I understood correctly. · Just to confirm...", "highlights": ["just check", "Just to confirm"], "hint": "útil en reuniones o llamadas" },
+            { "key": "Pedir que deletreen", "value": "Could you spell that for me? · Is that with a 'c' or a 'k'?", "highlights": ["spell that for me"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Cultura:",
+        "body": "los angloparlantes aprecian que pidas aclaraciones: demuestra que quieres entender. Decir 'I didn't quite catch that' suena más educado que 'What?' o simplemente quedarse en silencio."
+      }
+    },
+    {
+      "id": "esc-activo",
+      "tag": "Escucha activa",
+      "title": "Señales de escucha activa",
+      "lede": "En inglés, escuchar bien también es demostrar que escuchas. Estas pequeñas señales muestran que sigues la conversación.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "mm-hmm / uh-huh", "value": "señal de que sigues escuchando · no interrumpe, anima a continuar", "highlights": ["mm-hmm", "uh-huh"] },
+            { "key": "I see. / Right.", "value": "entiendo · reconoce lo que acaban de decir", "highlights": ["I see", "Right"] },
+            { "key": "Exactly. / Absolutely.", "value": "expresa acuerdo fuerte · muy usado en conversaciones informales y de trabajo", "highlights": ["Exactly", "Absolutely"] },
+            { "key": "Go on. / And then?", "value": "anima al hablante a continuar · muestra interés en el relato", "highlights": ["Go on", "And then"] },
+            { "key": "That makes sense.", "value": "confirma que has comprendido la lógica de lo dicho", "highlights": ["That makes sense"] },
+            { "key": "No/Not really (con tono suave)", "value": "desacuerdo leve · en inglés hablado no siempre significa negación total, a veces matiza", "highlights": ["Not really"], "hint": "el tono importa muchísimo" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Diferencia cultural:",
+        "body": "en muchos países hispanohablantes el silencio puede ser señal de respeto o atención. En inglés, el silencio prolongado puede interpretarse como desinterés. Usa 'mm-hmm' e 'I see' para mostrar que sigues el hilo."
+      }
+    },
+    {
+      "id": "esc-habitos",
+      "tag": "Hábitos",
+      "title": "Entrenar el oído: hábitos prácticos",
+      "lede": "La comprensión auditiva mejora con exposición constante y estratégica. Estos hábitos son más eficaces que escuchar sin objetivo.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Empieza a 0.75x", "value": "Pon el audio al 75% de velocidad al principio para acostumbrar el oído. Luego sube a 1x y 1.25x.", "highlights": ["0.75x"], "hint": "YouTube y podcasts lo permiten" },
+            { "key": "Subtítulos estratégicamente", "value": "Primero sin subtítulos (gist). Segunda vez con subtítulos en inglés. Última vez sin. No en español.", "highlights": ["subtítulos en inglés"] },
+            { "key": "Shadowing", "value": "Repite en voz alta justo detrás del hablante, imitando ritmo y entonación. Entrena pronunciación y escucha a la vez.", "highlights": ["Shadowing"] },
+            { "key": "Enfócate en chunks", "value": "No escuches palabra por palabra. Busca grupos de palabras que funcionan juntos: 'I was wondering if...', 'It turns out...'", "highlights": ["chunks"] },
+            { "key": "Varía los acentos", "value": "Escucha inglés americano, británico, australiano e indio. Cuantos más acentos conozcas, más flexible será tu oído.", "highlights": ["Varía los acentos"] },
+            { "key": "Escucha contenido que te guste", "value": "La motivación importa. Un podcast sobre algo que amas en inglés vale más que un ejercicio aburrido.", "hint": "consistencia > perfección" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Consejo final:",
+        "body": "15 minutos diarios de escucha activa y enfocada son más efectivos que 2 horas de inglés de fondo mientras haces otra cosa."
+      }
+    }
+  ]
+}

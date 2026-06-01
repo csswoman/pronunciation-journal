@@ -1,0 +1,120 @@
+{
+  "meta": {
+    "eyebrow": "C1 · Argumentar y debatir",
+    "title": "Argumentos y",
+    "titleEmphasis": "discusiones"
+  },
+  "cards": [
+    {
+      "id": "ar-structure",
+      "tag": "Estructura",
+      "title": "Construir un argumento",
+      "lede": "Un buen argumento sigue un orden: postura, razón, ejemplo y conclusión.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Postura", "value": "I firmly believe that...", "highlights": ["I firmly believe"] },
+            { "key": "Razón", "value": "The main reason is...", "highlights": ["The main reason"] },
+            { "key": "Ejemplo", "value": "For instance,... · A clear example is...", "highlights": ["For instance"] },
+            { "key": "Conclusión", "value": "All things considered,...", "highlights": ["All things considered"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ar-concede",
+      "tag": "Conceder",
+      "title": "Reconocer la otra postura",
+      "lede": "Admitir parte de razón al contrario refuerza tu argumento, no lo debilita.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Admittedly,...", "value": "hay que admitir que...", "highlights": ["Admittedly"] },
+            { "key": "While it's true that...", "value": "si bien es cierto que...", "highlights": ["While it's true that"] },
+            { "key": "I take your point, but...", "value": "acepto tu punto, pero...", "highlights": ["I take your point"] },
+            { "key": "Even so,...", "value": "aun así... · vuelves a tu tesis", "highlights": ["Even so"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Técnica:",
+        "body": "concede algo menor (While it's true...) y luego refuta con lo importante (..., but...)."
+      }
+    },
+    {
+      "id": "ar-counter",
+      "tag": "Refutar",
+      "title": "Rebatir con firmeza y cortesía",
+      "lede": "Discrepar a nivel C1 es contundente en el fondo y suave en la forma.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "That's not quite...", "value": "no es del todo así...", "highlights": ["That's not quite"] },
+            { "key": "I'd argue that...", "value": "yo diría más bien que...", "highlights": ["I'd argue that"] },
+            { "key": "On the contrary,...", "value": "al contrario...", "highlights": ["On the contrary"] },
+            { "key": "There's no evidence that...", "value": "no hay pruebas de que...", "highlights": ["no evidence"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ar-formal-informal",
+      "tag": "Registro",
+      "title": "Debate formal vs discusión casual",
+      "lede": "El mismo desacuerdo cambia de forma según el contexto.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Formal (debate)",
+              "rule": "estructurado",
+              "examples": ["I respectfully disagree.", "The evidence suggests otherwise."]
+            },
+            {
+              "label": "Informal (charla)",
+              "rule": "espontáneo",
+              "examples": ["Come on, that's not fair.", "I don't buy that."]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ar-persuade",
+      "tag": "Persuadir",
+      "title": "Recursos para convencer",
+      "lede": "Más allá de la lógica, el lenguaje persuade. Estas estructuras dan fuerza.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Pregunta retórica", "value": "Who wouldn't want that?", "highlights": ["Who wouldn't"] },
+            { "key": "Tripleta", "value": "It's faster, cheaper and safer.", "highlights": ["faster, cheaper and safer"] },
+            { "key": "Apelar al consenso", "value": "We all know that...", "highlights": ["We all know that"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ar-traps",
+      "tag": "Errores comunes",
+      "title": "Sonar agresivo sin querer",
+      "lede": "Traducir literal del español puede sonar brusco. Ajusta el tono.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "You don't understand." },
+            { "variant": "good", "text": "Perhaps I didn't explain it well.", "note": "asume la responsabilidad" },
+            { "variant": "bad", "text": "That's a stupid idea." },
+            { "variant": "good", "text": "I'm not sure that would work.", "note": "critica la idea, no a la persona" }
+          ]
+        }
+      ]
+    }
+  ]
+}

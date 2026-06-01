@@ -1,0 +1,110 @@
+{
+  "meta": {
+    "eyebrow": "B1 · Práctico: consultas médicas",
+    "title": "Consultas",
+    "titleEmphasis": "médicas"
+  },
+  "cards": [
+    {
+      "id": "md-symptoms",
+      "tag": "Síntomas",
+      "title": "Describir síntomas",
+      "lede": "Cómo explicar qué te pasa. Patrones: I have, I feel, My ... hurts.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "I have a", "value": "I have a headache / a cough / a fever.", "highlights": ["I have a"] },
+            { "key": "I feel", "value": "I feel dizzy / sick / weak.", "highlights": ["I feel"] },
+            { "key": "hurts", "value": "My throat hurts. · It hurts here.", "highlights": ["hurts"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "md-duration",
+      "tag": "Duración",
+      "title": "How long...? for / since",
+      "lede": "El médico preguntará cuánto llevas así. Usa el presente perfecto con for/since.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Pregunta", "value": "How long have you felt like this?", "highlights": ["How long have you"] },
+            { "key": "for", "value": "I've had it for three days.", "highlights": ["for three days"] },
+            { "key": "since", "value": "...since Monday.", "highlights": ["since Monday"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "md-doctor-q",
+      "tag": "El médico",
+      "title": "Preguntas del médico",
+      "lede": "Las preguntas típicas que te hará el doctor en una consulta.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Problema", "value": "What seems to be the problem?", "highlights": ["What seems to be"] },
+            { "key": "Síntomas", "value": "Where does it hurt?", "highlights": ["Where does it hurt?"] },
+            { "key": "Historial", "value": "Are you taking any medication?", "highlights": ["medication"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "md-advice",
+      "tag": "Tratamiento",
+      "title": "Consejos y recetas",
+      "lede": "Cómo entender lo que te recomienda el médico. Usa should, need to e imperativos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Consejo", "value": "You should rest and drink fluids.", "highlights": ["You should"] },
+            { "key": "Receta", "value": "I'll prescribe some antibiotics.", "highlights": ["prescribe"] },
+            { "key": "Instrucción", "value": "Take one pill twice a day.", "highlights": ["twice a day"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Vocabulario:",
+        "body": "prescription = receta médica; pharmacy/chemist = farmacia."
+      }
+    },
+    {
+      "id": "md-pharmacy",
+      "tag": "Farmacia",
+      "title": "En la farmacia",
+      "lede": "Frases para pedir medicamentos y entender las indicaciones.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Pedir", "value": "Do you have anything for a cold?", "highlights": ["anything for"] },
+            { "key": "Medicinas", "value": "painkillers, cough syrup, plasters" },
+            { "key": "Dosis", "value": "How often should I take it?", "highlights": ["How often"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "md-emergency",
+      "tag": "Emergencias",
+      "title": "Situaciones urgentes",
+      "lede": "Frases clave si la situación es grave o necesitas ayuda inmediata.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "good", "text": "I need to see a doctor urgently.", "note": "urgencia" },
+            { "variant": "good", "text": "Call an ambulance!", "note": "emergencia" },
+            { "variant": "good", "text": "I'm allergic to penicillin.", "note": "alergia: importante" },
+            { "variant": "good", "text": "Where's the nearest hospital?", "note": "ubicación" }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,138 @@
+{
+  "meta": {
+    "eyebrow": "B2 · Sound Lab",
+    "title": "Pronunciación",
+    "titleEmphasis": "intermedia",
+    "goal": "Ya puedes manejar el acento de palabra y de frase, reducir las palabras débiles y enlazar al hablar."
+  },
+  "sounds": ["ə", "ɪ"],
+  "cards": [
+    {
+      "id": "pi-stress-word",
+      "tag": "Acento",
+      "title": "La sílaba fuerte cambia todo",
+      "lede": "En inglés cada palabra tiene una sílaba tónica. Equivocarla dificulta que te entiendan.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "PHO-to-graph", "value": "foto · fuerza en la 1ª", "highlights": ["PHO"] },
+            { "key": "pho-TO-gra-pher", "value": "fotógrafo · fuerza en la 2ª", "highlights": ["TO"] },
+            { "key": "pho-to-GRAPH-ic", "value": "fotográfico · fuerza en la 3ª", "highlights": ["GRAPH"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Patrón útil:",
+        "body": "las palabras en -tion, -sion, -ic llevan el acento justo antes de esa terminación."
+      }
+    },
+    {
+      "id": "pi-noun-verb",
+      "tag": "Acento que distingue",
+      "title": "Mismo deletreo, distinto acento",
+      "lede": "Algunas palabras son sustantivo o verbo según dónde caiga el acento.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Sustantivo",
+              "rule": "acento al inicio",
+              "examples": ["a REcord", "a PREsent", "an INcrease"]
+            },
+            {
+              "label": "Verbo",
+              "rule": "acento al final",
+              "examples": ["to reCORD", "to preSENT", "to inCREASE"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pi-sentence-stress",
+      "tag": "Ritmo",
+      "title": "El inglés es una lengua rítmica",
+      "lede": "Las palabras con contenido suenan fuertes; las gramaticales, débiles y rápidas.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Fuertes", "value": "verbos, sustantivos, adjetivos · I WANT to GO HOME.", "highlights": ["WANT", "GO", "HOME"] },
+            { "key": "Débiles", "value": "to, the, a, of, and · se reducen", "highlights": ["to, the, a"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Clave:",
+        "body": "no pronuncies todo igual de claro como en español. Marca lo importante, reduce el resto."
+      }
+    },
+    {
+      "id": "pi-weak-forms",
+      "tag": "Formas débiles",
+      "title": "to, of, and casi desaparecen",
+      "lede": "Las palabras gramaticales cambian de sonido al ir sin acento. Es la /ə/ otra vez.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "I want TO go (to clara)" },
+            { "variant": "good", "text": "I wanna go → /tə/", "note": "to se reduce a /tə/" },
+            { "variant": "bad", "text": "fish AND chips (and clara)" },
+            { "variant": "good", "text": "fish 'n' chips → /ən/", "note": "and se reduce a /ən/" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pi-linking",
+      "tag": "Enlace",
+      "title": "Unir palabras al hablar",
+      "lede": "Cuando una palabra acaba en consonante y la siguiente empieza en vocal, se enlazan.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "consonante + vocal", "value": "an apple → \"a-napple\"", "highlights": ["a-napple"] },
+            { "key": "pick it up", "value": "→ \"pi-ki-tup\"", "highlights": ["pi-ki-tup"] },
+            { "key": "vocal + vocal (/w/ /j/)", "value": "go away → \"go-waway\"", "highlights": ["go-waway"] }
+          ]
+        },
+        {
+          "type": "pronunciation",
+          "sound": "Enlace y schwa",
+          "focus": ["ə"],
+          "examples": [
+            { "text": "an apple", "ipa": "/ə ˈnæpl̩/", "es": "se enlaza: a-napple" },
+            { "text": "pick it up", "ipa": "/ˌpɪ kɪ ˈtʌp/", "es": "pi-ki-tup" },
+            { "text": "I want to go home.", "es": "to → /tə/, débil y rápida" }
+          ],
+          "note": "Escucha cómo las palabras se pegan y las débiles casi desaparecen."
+        }
+      ]
+    },
+    {
+      "id": "pi-silent",
+      "tag": "Letras mudas",
+      "title": "Letras que no se pronuncian",
+      "lede": "El inglés escribe letras que luego calla. No las leas en voz alta.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "b muda", "value": "comb, climb, doubt", "highlights": ["comb", "doubt"] },
+            { "key": "k muda", "value": "know, knife, knee", "highlights": ["know", "knife"] },
+            { "key": "l muda", "value": "could, would, talk, half", "highlights": ["could", "talk"] },
+            { "key": "t muda", "value": "listen, castle, often", "highlights": ["listen", "castle"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Truco:",
+        "body": "ante una palabra nueva, fíjate en cómo suena en un diccionario de audio, no en cómo se escribe."
+      }
+    }
+  ]
+}

@@ -1,0 +1,120 @@
+{
+  "meta": {
+    "eyebrow": "A2 · Descripciones y comparaciones",
+    "title": "Descripciones y",
+    "titleEmphasis": "comparaciones"
+  },
+  "cards": [
+    {
+      "id": "dc-adjectives",
+      "tag": "Adjetivos",
+      "title": "Describir personas y cosas",
+      "lede": "Vocabulario para describir aspecto, carácter y objetos. El adjetivo va antes del sustantivo.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Aspecto", "value": "tall, short, young, old", "highlights": ["tall"] },
+            { "key": "Carácter", "value": "kind, funny, shy, friendly", "highlights": ["friendly"] },
+            { "key": "Cosas", "value": "new, cheap, comfortable, useful" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dc-order",
+      "tag": "Orden",
+      "title": "Orden de adjetivos",
+      "lede": "Cuando hay varios adjetivos, siguen un orden fijo: opinión, tamaño, color.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "good", "text": "a nice big house", "note": "opinión + tamaño" },
+            { "variant": "good", "text": "a small black bag", "note": "tamaño + color" },
+            { "variant": "bad", "text": "a black small bag", "note": "color va después del tamaño" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Regla:",
+        "body": "opinión → tamaño → edad → color → origen → material → sustantivo."
+      }
+    },
+    {
+      "id": "dc-comparative",
+      "tag": "Comparar",
+      "title": "Comparativos: -er than",
+      "lede": "Para comparar dos cosas. Adjetivos cortos llevan -er; los largos, more.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Corto", "value": "taller than · bigger than", "highlights": ["-er than"] },
+            { "key": "Termina en -y", "value": "happy → happier", "highlights": ["happier"] },
+            { "key": "Largo", "value": "more interesting than", "highlights": ["more"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Ortografía:",
+        "body": "big → bigger (dobla la consonante); easy → easier (la -y pasa a -i)."
+      }
+    },
+    {
+      "id": "dc-asas",
+      "tag": "Igualdad",
+      "title": "as ... as",
+      "lede": "Para decir que dos cosas son iguales en algo. El adjetivo no cambia.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Igual", "value": "as tall as · She's as tall as me.", "highlights": ["as tall as"] },
+            { "key": "Negativo", "value": "not as expensive as", "highlights": ["not as"] },
+            { "key": "Significado", "value": "not as big = menos grande" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dc-superlative",
+      "tag": "Superlativos",
+      "title": "the -est de todos",
+      "lede": "Para destacar uno por encima de todos. Siempre con the.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Corto", "value": "the tallest · the biggest", "highlights": ["the tallest"] },
+            { "key": "Largo", "value": "the most beautiful", "highlights": ["the most"] },
+            { "key": "Irregular", "value": "the best · the worst · the furthest", "highlights": ["the best"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dc-lookslike",
+      "tag": "Parecerse",
+      "title": "look like / be like",
+      "lede": "Dos formas fáciles de confundir: una describe el aspecto, otra el carácter.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "look like",
+              "rule": "aspecto físico",
+              "examples": ["What does she look like?", "She looks like her mom."]
+            },
+            {
+              "label": "be like",
+              "rule": "carácter / cómo es",
+              "examples": ["What is she like?", "She's friendly and calm."]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

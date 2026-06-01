@@ -1,0 +1,175 @@
+{
+  "meta": {
+    "eyebrow": "B1 · Vocabulario",
+    "title": "Tipos de",
+    "titleEmphasis": "phrasal verbs",
+    "goal": "Ya distingues cuándo puedes separar un phrasal verb y cuándo no."
+  },
+  "quiz": [
+    {
+      "q": "¿Cuál de estas oraciones es INCORRECTA?",
+      "options": [
+        "Turn off the light.",
+        "Turn the light off.",
+        "Turn it off.",
+        "Turn off it."
+      ],
+      "answer": 3,
+      "explain": "Con un pronombre (it, them, him…) los phrasal verbs separables DEBEN partir el verbo: 'Turn it off.' La forma 'Turn off it.' no es gramaticalmente correcta."
+    },
+    {
+      "q": "¿Cuál de estos phrasal verbs es inseparable? No puedes colocar el objeto en medio.",
+      "options": ["turn off", "pick up", "look after", "put on"],
+      "answer": 2,
+      "explain": "'Look after' es inseparable: siempre debes decir 'look after the kids', nunca 'look the kids after'. Los demás son separables."
+    },
+    {
+      "q": "¿Cuántas partículas tiene 'come up with'?",
+      "options": ["Una (with)", "Dos (up + with)", "Es un phrasal verb separable", "No tiene partículas"],
+      "answer": 1,
+      "explain": "'Come up with' tiene dos partículas (up + with). Los phrasal verbs de dos partículas son siempre inseparables: 'I came up with a great idea.' nunca se puede separar."
+    }
+  ],
+  "cards": [
+    {
+      "id": "pvt-tipos",
+      "tag": "Panorama",
+      "title": "Los tres tipos de phrasal verbs",
+      "lede": "No todos los phrasal verbs funcionan igual. Hay tres categorías según si tienen objeto y si se pueden separar.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "1. Intransitivo", "value": "Sin objeto. No se separa nada. · He sat down. / She gave up.", "highlights": ["sat down", "gave up"], "hint": "el verbo completa la idea solo" },
+            { "key": "2. Transitivo separable", "value": "Lleva objeto y este puede ir en medio. · Turn off the light. / Turn the light off.", "highlights": ["Turn off", "Turn the light off"], "hint": "con pronombre: obligatorio separar" },
+            { "key": "3. Preposicional inseparable", "value": "Lleva objeto pero NUNCA va en medio. · Look after the children.", "highlights": ["Look after"], "hint": "objeto siempre al final" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Estrategia:",
+        "body": "cuando aprendas un phrasal verb nuevo, anota también su tipo. Te ahorrará muchos errores."
+      }
+    },
+    {
+      "id": "pvt-separable",
+      "tag": "Separables",
+      "title": "Phrasal verbs separables",
+      "lede": "El objeto puede ir entre el verbo y la partícula, o después. Pero con pronombre, la separación es obligatoria.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Con sustantivo (las dos valen)",
+              "rule": "objeto antes o después de la partícula",
+              "examples": [
+                "Turn off the light. ✓",
+                "Turn the light off. ✓",
+                "Call back your boss. ✓",
+                "Call your boss back. ✓"
+              ]
+            },
+            {
+              "label": "Con pronombre (separación obligatoria)",
+              "rule": "el pronombre SIEMPRE va en medio",
+              "examples": [
+                "Turn it off. ✓",
+                "Turn off it. ✗",
+                "Call him back. ✓",
+                "Call back him. ✗"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Regla de oro:",
+        "body": "si el objeto es un pronombre (it, him, her, them…), siempre va entre el verbo y la partícula."
+      }
+    },
+    {
+      "id": "pvt-inseparable",
+      "tag": "Inseparables",
+      "title": "Phrasal verbs inseparables",
+      "lede": "Muchos phrasal verbs son preposicionales: el objeto siempre va después de toda la expresión, nunca en medio.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "She looked the baby after.", "note": "no se puede separar look after" },
+            { "variant": "good", "text": "She looked after the baby.", "note": "objeto siempre al final" },
+            { "variant": "bad", "text": "I ran the problem into.", "note": "run into es inseparable" },
+            { "variant": "good", "text": "I ran into the problem.", "note": "la partícula no se mueve" },
+            { "variant": "bad", "text": "We dealt the complaint with.", "note": "deal with siempre va junto" },
+            { "variant": "good", "text": "We dealt with the complaint.", "note": "correcto: deal with + objeto" },
+            { "variant": "bad", "text": "He got his feelings over.", "note": "get over es inseparable" },
+            { "variant": "good", "text": "He got over his feelings.", "note": "el objeto va al final siempre" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pvt-identificar",
+      "tag": "Cómo identificarlos",
+      "title": "Pistas para saber el tipo",
+      "lede": "Hay señales en la gramática y en el diccionario que te ayudan a identificar si un phrasal verb es separable o no.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "El diccionario", "value": "Marca 'sth' (something) entre verbo y partícula si es separable: turn sth off. Si va después, es inseparable: look after sth.", "highlights": ["turn sth off", "look after sth"] },
+            { "key": "La preposición", "value": "Los phrasal verbs con preposición real (after, into, with, for, on) suelen ser inseparables.", "highlights": ["after", "into", "with", "for"], "hint": "look after, deal with, run into" },
+            { "key": "El adverbio", "value": "Los phrasal verbs con adverbio (up, off, on, out, back) suelen ser separables.", "highlights": ["up", "off", "on", "out", "back"], "hint": "turn off, pick up, call back" },
+            { "key": "Prueba del pronombre", "value": "Intenta sustituir el objeto por 'it'. Si suena raro al final (turn off it), es separable obligatorio.", "highlights": ["it"], "hint": "test rápido: ¿it al final suena mal?" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pvt-dos-particulas",
+      "tag": "Dos partículas",
+      "title": "Phrasal verbs de tres palabras",
+      "lede": "Algunos llevan verbo + adverbio + preposición. Son siempre inseparables y muy frecuentes en inglés B1–B2.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "come up with", "value": "ocurrírsele algo, idear · I came up with a solution.", "highlights": ["come up with"] },
+            { "key": "put up with", "value": "aguantar, soportar · I can't put up with the noise.", "highlights": ["put up with"] },
+            { "key": "look forward to", "value": "tener ganas de (siempre + -ing) · I'm looking forward to seeing you.", "highlights": ["look forward to"], "hint": "to + gerundio, no infinitivo" },
+            { "key": "catch up with", "value": "ponerse al día con alguien · I need to catch up with my emails.", "highlights": ["catch up with"] },
+            { "key": "get on with", "value": "llevarse bien con · Do you get on with your colleagues?", "highlights": ["get on with"] },
+            { "key": "run out of", "value": "quedarse sin · We've run out of time.", "highlights": ["run out of"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Atención:",
+        "body": "'look forward to' va seguido de sustantivo o gerundio (-ing), nunca de infinitivo. ✓ I look forward to meeting you. ✗ I look forward to meet you."
+      }
+    },
+    {
+      "id": "pvt-tabla",
+      "tag": "Tabla comparativa",
+      "title": "Separables vs inseparables: los más usados",
+      "lede": "Aprende estas dos listas. Son los phrasal verbs que más vas a escuchar y necesitar en nivel B1.",
+      "blocks": [
+        {
+          "type": "verb-table",
+          "headers": ["Separable", "Significado", "Inseparable", "Significado"],
+          "rows": [
+            ["turn off", "apagar", "look after", "cuidar de"],
+            ["pick up", "recoger / levantar", "run into", "encontrarse con"],
+            ["put off", "posponer", "deal with", "ocuparse de"],
+            ["call back", "devolver la llamada", "get over", "superar"],
+            ["fill in", "rellenar (formulario)", "look into", "investigar"],
+            ["set up", "montar / configurar", "go through", "pasar por / revisar"],
+            ["take off", "quitarse (ropa)", "come across", "encontrarse con (algo)"],
+            ["hand in", "entregar", "keep up with", "seguirle el ritmo a"]
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,234 @@
+{
+  "meta": {
+    "eyebrow": "Connected Speech · Sound Lab",
+    "title": "Habla conectada:",
+    "titleEmphasis": "elisión",
+    "goal": "Ya puedes entender y producir el inglés rápido donde algunos sonidos caen sin que el mensaje pierda claridad."
+  },
+  "sounds": ["t", "d", "ə"],
+  "related": [
+    { "slug": "cs-linking", "label": "CS · Enlace de sonidos" },
+    { "slug": "b2-pronunciacion-intermedia", "label": "B2 · Pronunciación intermedia" },
+    { "slug": "c1-pronunciacion-avanzada", "label": "C1 · Pronunciación avanzada" }
+  ],
+  "quiz": [
+    {
+      "q": "En la frase 'last night', ¿qué ocurre con la /t/ de 'last'?",
+      "options": ["Se pronuncia con fuerza", "Se vuelve /d/", "Cae (elisión) antes de otra consonante", "Se convierte en /θ/"],
+      "answer": 2,
+      "explain": "La /t/ final cae cuando va seguida de otra consonante: 'last night' → /lɑːs naɪt/."
+    },
+    {
+      "q": "¿Cómo se pronuncia 'probably' en habla rápida?",
+      "options": ["pro-ba-bly (3 sílabas claras)", "prob-ly (2 sílabas, cae la vocal central)", "prob-ab-lee", "pro-bly-bly"],
+      "answer": 1,
+      "explain": "La schwa /ə/ de la sílaba no acentuada cae: 'probably' /ˈprɒbəbli/ → /ˈprɒbli/."
+    },
+    {
+      "q": "En 'tell him', ¿qué sonido puede desaparecer en habla informal?",
+      "options": ["La /l/ de 'tell'", "La /h/ de 'him'", "La /m/ de 'him'", "Ninguno"],
+      "answer": 1,
+      "explain": "La /h/ inicial de pronombres átonos como him, her, his cae en habla rápida: 'tell him' → /tel ɪm/."
+    }
+  ],
+  "cards": [
+    {
+      "id": "cs-eli-t",
+      "tag": "/t/ y /d/ caen",
+      "title": "La regla de la consonante final antes de consonante",
+      "titleItalic": ["last night"],
+      "lede": "Las consonantes /t/ y /d/ al final de palabra caen con frecuencia cuando la siguiente palabra empieza en consonante.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "last night",
+              "value": "→ /lɑːs naɪt/ (la /t/ de last cae)",
+              "highlights": ["lɑːs naɪt"],
+              "hint": "/t/ final + consonante → cae"
+            },
+            {
+              "key": "next week",
+              "value": "→ /neks wiːk/",
+              "highlights": ["neks"]
+            },
+            {
+              "key": "old friend",
+              "value": "→ /əʊl frend/ (la /d/ de old cae)",
+              "highlights": ["əʊl"]
+            },
+            {
+              "key": "and then",
+              "value": "→ /ən ðen/ (la /d/ cae, and → /ən/)",
+              "highlights": ["ən ðen"]
+            }
+          ]
+        },
+        {
+          "type": "pronunciation",
+          "sound": "Elisión de /t/ y /d/",
+          "focus": ["t", "d"],
+          "examples": [
+            { "text": "I just got back.", "ipa": "/aɪ dʒʌs ɡɒt bæk/", "es": "just → /dʒʌs/ (la /t/ cae)" },
+            { "text": "She looked great.", "ipa": "/ʃɪ lʊk ɡreɪt/", "es": "looked → /lʊk/ ante consonante" },
+            { "text": "We need more time.", "ipa": "/wɪ niːd mɔː taɪm/", "es": "la /d/ puede caer o suavizarse" }
+          ],
+          "note": "Esta regla no es obligatoria: depende de la velocidad y del registro. En habla cuidada la /t/ puede conservarse."
+        }
+      ],
+      "tip": { "label": "Clave auditiva:", "body": "Aprende a identificar la PALABRA aunque no oigas la /t/ o /d/ final. El contexto llena el hueco." }
+    },
+    {
+      "id": "cs-eli-schwa",
+      "tag": "Schwa que cae",
+      "title": "La vocal débil que se pierde",
+      "lede": "En sílabas no acentuadas, la schwa /ə/ puede desaparecer completamente, especialmente en palabras familiares.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "probably",
+              "value": "/ˈprɒbəbli/ → /ˈprɒbli/ (2 sílabas)",
+              "highlights": ["prɒbli"],
+              "hint": "sílaba media se sincopa"
+            },
+            {
+              "key": "family",
+              "value": "/ˈfæməli/ → /ˈfæmli/",
+              "highlights": ["fæmli"]
+            },
+            {
+              "key": "every",
+              "value": "/ˈevrɪ/ (la schwa central cae)",
+              "highlights": ["evrɪ"]
+            },
+            {
+              "key": "different",
+              "value": "/ˈdɪfrənt/ (la 'e' del medio cae)",
+              "highlights": ["dɪfrənt"]
+            },
+            {
+              "key": "vegetable",
+              "value": "/ˈvedʒtəbl̩/ (2ª sílaba cae)",
+              "highlights": ["vedʒtəbl̩"]
+            }
+          ]
+        }
+      ],
+      "tip": { "label": "Pronunciación real:", "body": "Decir 'ev-er-y' con 3 sílabas suena cuidadoso pero no natural en conversación. La forma reducida /ˈevrɪ/ es la norma coloquial." }
+    },
+    {
+      "id": "cs-eli-h",
+      "tag": "/h/ que desaparece",
+      "title": "Tell him → tell 'im",
+      "lede": "La /h/ inicial de los pronombres átonos (him, her, his, he) cae en habla rápida cuando van sin acento.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "Tell him to come. /tel hɪm/", "note": "lento / con énfasis" },
+            { "variant": "good", "text": "Tell 'im to come. /tel ɪm/", "note": "habla rápida: /h/ cae" },
+            { "variant": "bad", "text": "Give her the keys. /ɡɪv hɜːr/", "note": "con énfasis en her" },
+            { "variant": "good", "text": "Give 'er the keys. /ɡɪv ər/", "note": "habla fluida: /h/ cae" },
+            { "variant": "bad", "text": "Is he coming? /ɪz hiː/", "note": "forma plena" },
+            { "variant": "good", "text": "Is 'e coming? /ɪz iː/", "note": "informal rápido" }
+          ]
+        }
+      ],
+      "tip": { "label": "Ojo:", "body": "La /h/ SÍ se pronuncia cuando el pronombre lleva acento: «Give the keys to HIM, not her.» El acento protege la /h/." }
+    },
+    {
+      "id": "cs-eli-clusters",
+      "tag": "Grupos consonánticos",
+      "title": "Tres consonantes seguidas: algo cae",
+      "lede": "Cuando se juntan 3 o más consonantes, el inglés hablado tiende a simplificar el grupo eliminando el sonido del medio.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "months /mʌnθs/",
+              "value": "→ /mʌnts/ o /mʌns/ (la /θ/ cae)",
+              "highlights": ["mʌnts"],
+              "hint": "grupo -nθs muy difícil → se simplifica"
+            },
+            {
+              "key": "fifths /fɪfθs/",
+              "value": "→ /fɪfs/ (la /θ/ cae)",
+              "highlights": ["fɪfs"]
+            },
+            {
+              "key": "acts /ækts/",
+              "value": "→ /æks/ en habla rápida",
+              "highlights": ["æks"]
+            },
+            {
+              "key": "texts /teksts/",
+              "value": "→ /teks/ o /tekts/",
+              "highlights": ["teks"]
+            }
+          ]
+        }
+      ],
+      "tip": { "label": "Aprendizaje:", "body": "No intentes pronunciar grupos de 3+ consonantes con igual claridad. Fíjate en cuál cae en el audio de hablantes nativos y cópialo." }
+    },
+    {
+      "id": "cs-eli-t-silent",
+      "tag": "/t/ muda en contextos especiales",
+      "title": "'often', 'listen', 'castle': /t/ que no se pronuncia",
+      "lede": "Algunos grupos ortográficos han perdido la /t/ históricamente. Es elisión lexicalizada, no de habla rápida.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "/t/ muda (siempre)",
+              "rule": "grupo -sten, -stle, -sten, -ften",
+              "examples": [
+                "listen /ˈlɪsn/",
+                "castle /ˈkɑːsl/",
+                "often /ˈɒfn/ o /ˈɒftən/",
+                "fasten /ˈfɑːsn/",
+                "whistle /ˈwɪsl/"
+              ]
+            },
+            {
+              "label": "/t/ que sí suena",
+              "rule": "otros contextos",
+              "examples": [
+                "taste /teɪst/",
+                "test /test/",
+                "stand /stænd/",
+                "frost /frɒst/"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": { "label": "Regla práctica:", "body": "Aprende las palabras con /t/ muda como vocabulario, no como regla. El más frecuente: listen. Nunca digas /ˈlɪstən/." }
+    },
+    {
+      "id": "cs-eli-drill",
+      "tag": "Práctica de elisión",
+      "title": "Del texto al habla rápida",
+      "lede": "Compara la versión «de diccionario» con la versión oral real de estas frases cotidianas.",
+      "blocks": [
+        {
+          "type": "pronunciation",
+          "sound": "Elisión en frases reales",
+          "focus": ["t", "d", "ə"],
+          "examples": [
+            { "text": "I don't know what to do.", "ipa": "/aɪ dəʊ nəʊ wɒ tə duː/", "es": "don't → /dəʊ/, what → /wɒ/" },
+            { "text": "She probably left already.", "ipa": "/ʃɪ ˈprɒbli left ɔːlˈredi/", "es": "probably = 2 sílabas" },
+            { "text": "He told her to stop.", "ipa": "/hɪ ˈtəʊl ər tə stɒp/", "es": "told → /tɔʊl/, her → /ər/" },
+            { "text": "They're different from us.", "ipa": "/ðeər ˈdɪfrənt frəm əs/", "es": "different = 2 sílabas" }
+          ],
+          "note": "El cerebro reconstruye los sonidos que faltan gracias al contexto. No te preocupes: hablar así no quita claridad."
+        }
+      ],
+      "tip": { "label": "Objetivo final:", "body": "Cuando escuches habla nativa rápida y la entiendas aunque «falten» sonidos, habrás integrado la elisión." }
+    }
+  ]
+}

@@ -5,6 +5,8 @@ export interface GrammarDeckMeta {
   title: string;
   /** Italic emphasis in title, e.g. "esencial" */
   titleEmphasis?: string;
+  /** CEFR-style can-do statement shown to motivate the lesson. */
+  goal?: string;
 }
 
 export interface GrammarConjugationRow {
@@ -33,6 +35,12 @@ export interface GrammarRuleRow {
   hint?: string;
 }
 
+export interface GrammarPronExample {
+  text: string;
+  ipa?: string;
+  es?: string;
+}
+
 export type GrammarCardBlock =
   | { type: "conjugation"; rows: GrammarConjugationRow[] }
   | {
@@ -42,7 +50,14 @@ export type GrammarCardBlock =
     }
   | { type: "contrast"; columns: GrammarContrastColumn[] }
   | { type: "pairs"; lines: GrammarPairLine[] }
-  | { type: "rules"; rows: GrammarRuleRow[] };
+  | { type: "rules"; rows: GrammarRuleRow[] }
+  | {
+      type: "pronunciation";
+      sound: string;
+      focus?: string[];
+      examples: GrammarPronExample[];
+      note?: string;
+    };
 
 export interface GrammarStudyCardData {
   id: string;
@@ -56,7 +71,24 @@ export interface GrammarStudyCardData {
   tip?: { label: string; body: string };
 }
 
+export interface GrammarRelatedLink {
+  slug: string;
+  label: string;
+}
+
+export interface GrammarQuizQuestion {
+  q: string;
+  options: string[];
+  /** 0-based index of the correct option. */
+  answer: number;
+  explain?: string;
+}
+
 export interface GrammarStudyDeckData {
   meta: GrammarDeckMeta;
+  /** Target IPA sounds for the Sound Lab handoff. */
+  sounds?: string[];
+  related?: GrammarRelatedLink[];
+  quiz?: GrammarQuizQuestion[];
   cards: GrammarStudyCardData[];
 }

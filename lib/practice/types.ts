@@ -95,6 +95,10 @@ export type PracticeConfig = {
   exercises: PracticeExercise[]
   /** Default: 5. */
   sessionLength?: number
+  /** IPA badge in focus chrome (Sound Lab). */
+  soundIpa?: string
+  /** Text badge when there is no single IPA (daily, review). */
+  sessionLabel?: string
   onSessionComplete: (results: SessionResult) => void
   /** Optional: called when user taps "Terminar" on the summary. */
   onExit?: (results: SessionResult) => void

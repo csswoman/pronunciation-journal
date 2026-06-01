@@ -1,0 +1,109 @@
+{
+  "meta": {
+    "eyebrow": "B1 · Práctico: música y arte",
+    "title": "Música y",
+    "titleEmphasis": "arte"
+  },
+  "cards": [
+    {
+      "id": "ma-music",
+      "tag": "Música",
+      "title": "Hablar de música",
+      "lede": "Vocabulario de géneros e instrumentos. play + the con instrumentos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Géneros", "value": "rock, pop, jazz, classical, hip-hop" },
+            { "key": "Instrumentos", "value": "play the guitar / piano / drums", "highlights": ["play the"] },
+            { "key": "Acción", "value": "a band, a singer, a song, a track" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Ojo:",
+        "body": "play the guitar (instrumento, con the) pero play tennis (deporte, sin the)."
+      }
+    },
+    {
+      "id": "ma-opinions",
+      "tag": "Opiniones",
+      "title": "Dar tu opinión",
+      "lede": "Frases para opinar sobre arte y música, y graduar cuánto te gusta.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Me encanta", "value": "I'm really into jazz.", "highlights": ["into"] },
+            { "key": "No es lo mío", "value": "It's not really my thing.", "highlights": ["not really my thing"] },
+            { "key": "Opinar", "value": "In my opinion... · I find it...", "highlights": ["In my opinion"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ma-art",
+      "tag": "Arte",
+      "title": "En el museo",
+      "lede": "Vocabulario para hablar de arte visual y describir obras.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Obras", "value": "painting, sculpture, portrait, exhibition" },
+            { "key": "Personas", "value": "artist, painter, gallery" },
+            { "key": "Describir", "value": "It depicts... · It represents...", "highlights": ["depicts"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ma-adjectives",
+      "tag": "Adjetivos",
+      "title": "Describir obras",
+      "lede": "Adjetivos fuertes para reaccionar ante una obra de arte o una canción.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Positivo", "value": "stunning, moving, original, powerful", "highlights": ["stunning"] },
+            { "key": "Neutro", "value": "abstract, modern, traditional, realistic" },
+            { "key": "Negativo", "value": "dull, overrated, disappointing", "highlights": ["overrated"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ma-relative",
+      "tag": "Cláusulas relativas",
+      "title": "Describir con who / which",
+      "lede": "Las cláusulas relativas dan detalles sobre artistas y obras dentro de una sola frase.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "good", "text": "The artist who painted this is famous.", "note": "who = personas" },
+            { "variant": "good", "text": "It's a song which always makes me cry.", "note": "which = cosas" },
+            { "variant": "good", "text": "The museum where we met is closed.", "note": "where = lugares" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ma-recommend",
+      "tag": "Recomendar",
+      "title": "Recomendar y reaccionar",
+      "lede": "Cómo recomendar algo y responder cuando te recomiendan música o arte.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Recomendar", "value": "You should check out this band.", "highlights": ["check out"] },
+            { "key": "Interés", "value": "That sounds interesting!", "highlights": ["sounds interesting"] },
+            { "key": "Compartir", "value": "Have you heard of...?", "highlights": ["Have you heard of"] }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,12 +1,5 @@
 "use client";
 
-// Planned structure:
-// <WordBrowser>
-//   <WordFiltersBar />
-//   <WordGrid />
-//   <BackToTop button />
-// </WordBrowser>
-
 import { useState, useMemo, useCallback } from "react";
 import { ArrowUp } from "lucide-react";
 import { WordFiltersBar } from "./WordFiltersBar";
@@ -17,36 +10,45 @@ import { markLexiconWordLearned } from "@/lib/word-bank/queries";
 
 interface WordBrowserProps {
   words: Word[];
-  color?: string;
-  categoryId: string;
   wordBankMap?: Map<string, { id: string; isFavorite: boolean }>;
   onToggleFavorite?: (wordBankId: string, value: boolean) => void;
-  onAddToMyWords?: (lexiconWord: { id: string; word: string; definition: string; example?: string }) => void;
+  onAddToMyWords?: (lexiconWord: {
+    id: string;
+    word: string;
+    definition: string;
+    example?: string;
+  }) => void;
 }
 
-export function WordBrowser({ words: initialWords, color, categoryId, wordBankMap, onToggleFavorite, onAddToMyWords }: WordBrowserProps) {
+export function WordBrowser({
+  words: initialWords,
+  wordBankMap,
+  onToggleFavorite,
+  onAddToMyWords,
+}: WordBrowserProps) {
   const [status, setStatus] = useState<StatusFilter>("all");
   const [sort, setSort] = useState<SortMode>("alpha");
   const [view, setView] = useState<ViewMode>("grid");
   const [search, setSearch] = useState("");
 
-  // Track per-word status overrides from optimistic "mark learned" actions.
   const [learnedIds, setLearnedIds] = useState<Set<string>>(
     () => new Set(initialWords.filter((w) => w.status === "learned").map((w) => w.id))
   );
 
   const words = useMemo(
-    () => initialWords.map((w) => ({ ...w, status: learnedIds.has(w.id) ? ("learned" as const) : w.status })),
+    () =>
+      initialWords.map((w) => ({
+        ...w,
+        status: learnedIds.has(w.id) ? ("learned" as const) : w.status,
+      })),
     [initialWords, learnedIds]
   );
 
   const handleMarkLearned = useCallback(
     async (wordId: string) => {
-      // Find the word data from the initial list.
       const word = initialWords.find((w) => w.id === wordId);
       if (!word) return;
 
-      // Optimistic update.
       setLearnedIds((prev) => new Set([...prev, wordId]));
 
       try {
@@ -58,7 +60,6 @@ export function WordBrowser({ words: initialWords, color, categoryId, wordBankMa
           difficulty: word.difficulty,
         });
       } catch (err) {
-        // Roll back optimistic update on failure.
         setLearnedIds((prev) => {
           const next = new Set(prev);
           next.delete(wordId);
@@ -68,6 +69,16 @@ export function WordBrowser({ words: initialWords, color, categoryId, wordBankMa
       }
     },
     [initialWords]
+  );
+
+  const statusCounts = useMemo(
+    () => ({
+      all: words.length,
+      learned: words.filter((w) => w.status === "learned").length,
+      reviewing: words.filter((w) => w.status === "reviewing").length,
+      new: words.filter((w) => w.status === "new").length,
+    }),
+    [words]
   );
 
   const filtered = useMemo(() => {
@@ -80,12 +91,15 @@ export function WordBrowser({ words: initialWords, color, categoryId, wordBankMa
     if (search.trim()) {
       const q = search.toLowerCase();
       result = result.filter(
-        (w) => w.word.toLowerCase().includes(q) || w.definition.toLowerCase().includes(q)
+        (w) =>
+          w.word.toLowerCase().includes(q) ||
+          w.definition.toLowerCase().includes(q) ||
+          (w.translation?.toLowerCase().includes(q) ?? false)
       );
     }
 
     if (sort === "difficulty") {
-      result = [...result].sort((a, b) => b.difficulty - a.difficulty);
+      result = [...result].sort((a, b) => b.difficulty - a.difficulty || a.word.localeCompare(b.word));
     } else {
       result = [...result].sort((a, b) => a.word.localeCompare(b.word));
     }
@@ -93,13 +107,37 @@ export function WordBrowser({ words: initialWords, color, categoryId, wordBankMa
     return result;
   }, [words, status, sort, search]);
 
+  const enriched = filtered.map((word) => ({
+    ...word,
+    isFavorite: wordBankMap?.get(word.id)?.isFavorite ?? false,
+    wordBankId: wordBankMap?.get(word.id)?.id ?? null,
+    onToggleFavorite: wordBankMap?.get(word.id)?.id
+      ? () =>
+          onToggleFavorite?.(
+            wordBankMap!.get(word.id)!.id,
+            !wordBankMap!.get(word.id)!.isFavorite
+          )
+      : undefined,
+    onAddToMyWords: !wordBankMap?.get(word.id)
+      ? () =>
+          onAddToMyWords?.({
+            id: word.id,
+            word: word.word,
+            definition: word.definition,
+            example: word.example,
+          })
+      : undefined,
+    isInMyWords: !!wordBankMap?.get(word.id),
+  }));
+
   return (
-    <div className="space-y-6">
+    <div>
       <WordFiltersBar
         status={status}
         sort={sort}
         view={view}
         search={search}
+        counts={statusCounts}
         onStatusChange={setStatus}
         onSortChange={setSort}
         onViewChange={setView}
@@ -107,31 +145,19 @@ export function WordBrowser({ words: initialWords, color, categoryId, wordBankMa
       />
 
       <WordGrid
-        words={filtered.map((word) => ({
-          ...word,
-          isFavorite: wordBankMap?.get(word.id)?.isFavorite ?? false,
-          wordBankId: wordBankMap?.get(word.id)?.id ?? null,
-          onToggleFavorite: wordBankMap?.get(word.id)?.id
-            ? () => onToggleFavorite?.(wordBankMap!.get(word.id)!.id, !wordBankMap!.get(word.id)!.isFavorite)
-            : undefined,
-          onAddToMyWords: !wordBankMap?.get(word.id)
-            ? () => onAddToMyWords?.({ id: word.id, word: word.word, definition: word.definition, example: word.example })
-            : undefined,
-          isInMyWords: !!wordBankMap?.get(word.id),
-        }))}
+        words={enriched}
         view={view}
-        color={color}
+        groupByLetter={sort === "alpha"}
         onMarkLearned={handleMarkLearned}
       />
 
-      {/* Back to top */}
-      <div className="flex justify-end pb-8">
+      <div className="lexicon-area__backtop">
         <button
+          type="button"
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          className="flex items-center gap-2 px-4 py-2 bg-fg text-surface-raised rounded-full text-sm font-medium shadow-md hover:opacity-90 transition-opacity"
         >
-          <ArrowUp className="w-4 h-4" />
-          Back to Lexicon
+          <ArrowUp className="w-4 h-4" aria-hidden />
+          Back to top
         </button>
       </div>
     </div>

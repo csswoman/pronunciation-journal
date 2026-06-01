@@ -1,0 +1,121 @@
+{
+  "meta": {
+    "eyebrow": "A1 · Vocabulario y expresiones básicas",
+    "title": "Vocabulario y",
+    "titleEmphasis": "expresiones básicas"
+  },
+  "cards": [
+    {
+      "id": "vb-greetings",
+      "tag": "Saludos",
+      "title": "Saludar y despedirse",
+      "lede": "Las primeras frases de cualquier conversación. Cambian según la hora y la formalidad.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Formal", "value": "Good morning · Good afternoon · Good evening", "highlights": ["Good morning"] },
+            { "key": "Informal", "value": "Hi · Hey · What's up?", "highlights": ["Hi", "Hey"] },
+            { "key": "Despedida", "value": "Goodbye · See you · Take care", "highlights": ["See you"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Ojo:",
+        "body": "Good night solo se usa para despedirse de noche, no para saludar."
+      }
+    },
+    {
+      "id": "vb-howareyou",
+      "tag": "Cómo estás",
+      "title": "How are you?",
+      "titleItalic": ["How are you?"],
+      "lede": "La pregunta social por excelencia. La respuesta suele ser breve y se devuelve la pregunta.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Pregunta", "value": "How are you? · How's it going?", "highlights": ["How are you?"] },
+            { "key": "Bien", "value": "I'm fine, thanks. · Pretty good.", "highlights": ["I'm fine"] },
+            { "key": "Devolver", "value": "And you? · How about you?", "highlights": ["And you?"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "vb-politeness",
+      "tag": "Cortesía",
+      "title": "please, thanks, sorry",
+      "lede": "Tres palabras que abren puertas. Los hablantes nativos las usan muchísimo.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "please", "value": "Coffee, please. · Please sit down.", "highlights": ["please"] },
+            { "key": "thank you", "value": "Thanks · Thank you so much", "highlights": ["Thank you"] },
+            { "key": "responder", "value": "You're welcome · No problem", "highlights": ["You're welcome"] },
+            { "key": "sorry / excuse me", "value": "Sorry (disculpa) · Excuse me (permiso)", "highlights": ["Excuse me"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Matiz:",
+        "body": "Excuse me llama la atención antes; Sorry pide perdón después."
+      }
+    },
+    {
+      "id": "vb-introduce",
+      "tag": "Presentarse",
+      "title": "My name is...",
+      "lede": "Decir tu nombre, de dónde eres y conocer a alguien. La base del primer contacto.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Nombre", "value": "My name is Ana. · I'm Ana.", "highlights": ["My name is", "I'm"] },
+            { "key": "Origen", "value": "I'm from Mexico.", "highlights": ["I'm from"] },
+            { "key": "Gusto", "value": "Nice to meet you.", "highlights": ["Nice to meet you"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "vb-numbers",
+      "tag": "Números",
+      "title": "Contar del 1 al 100",
+      "lede": "Los números base y las decenas. Con ellos formas casi cualquier cifra.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "1–10", "value": "one, two, three... ten" },
+            { "key": "11–19", "value": "eleven, twelve, thirteen... (-teen)", "highlights": ["-teen"] },
+            { "key": "Decenas", "value": "twenty, thirty, forty... (-ty)", "highlights": ["-ty"] },
+            { "key": "Combinar", "value": "twenty-one, forty-five", "highlights": ["twenty-one"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Ojo:",
+        "body": "no confundas -teen (13, fourTEEN) con -ty (40, FORty): el acento cambia."
+      }
+    },
+    {
+      "id": "vb-classroom",
+      "tag": "Clase",
+      "title": "Frases para la clase",
+      "lede": "Cuando no entiendes algo, estas frases te salvan. Pide ayuda sin miedo.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "good", "text": "Can you repeat that, please?", "note": "pedir que repitan" },
+            { "variant": "good", "text": "How do you say... in English?", "note": "preguntar una palabra" },
+            { "variant": "good", "text": "What does this mean?", "note": "pedir significado" },
+            { "variant": "good", "text": "I don't understand.", "note": "decir que no entiendes" }
+          ]
+        }
+      ]
+    }
+  ]
+}

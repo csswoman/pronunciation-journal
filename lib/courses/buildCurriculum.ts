@@ -6,7 +6,7 @@ import type {
   LessonPriority,
 } from "./types";
 
-export interface PlatziCourseInput {
+export interface CourseInput {
   t: string;
   p: LessonPriority;
   s?: boolean;
@@ -16,7 +16,7 @@ export interface PlatziCourseInput {
 
 function toLesson(
   levelId: CoursePathLevel["id"],
-  course: PlatziCourseInput,
+  course: CourseInput,
   number: number
 ): CoursePathLesson {
   const numStr = String(number);
@@ -34,7 +34,7 @@ function toLesson(
 function mapLessons(
   levelId: CoursePathLevel["id"],
   prefix: string,
-  courses: PlatziCourseInput[],
+  courses: CourseInput[],
   startNumber: number
 ): { lessons: CoursePathLesson[]; nextNumber: number } {
   let n = startNumber;
@@ -42,13 +42,13 @@ function mapLessons(
   return { lessons, nextNumber: n };
 }
 
-export function buildLevelFromPlatzi(
+export function buildLevel(
   id: CoursePathLevel["id"],
   spineLabel: string,
   spineSubtitle: string,
   title: string,
   hours: string,
-  courses: PlatziCourseInput[],
+  courses: CourseInput[],
   opts?: { isElective?: boolean; spineIcon?: ElectiveSpineIcon }
 ): CoursePathLevel {
   const core = courses.filter((c) => c.p > 0);

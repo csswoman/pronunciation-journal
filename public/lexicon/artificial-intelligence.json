@@ -5,7 +5,13 @@
     "pos": "noun",
     "definition": "Combining multiple data points into a single summary value such as a sum, mean, or count.",
     "difficulty": 1,
-    "tags": ["data", "sql", "fundamentals"]
+    "tags": [
+      "data",
+      "sql",
+      "fundamentals"
+    ],
+    "ipa": "/æɡɹʌɡeɪʃʌn/",
+    "translation": "Agregación de datos"
   },
   {
     "id": "anomaly-detection",
@@ -13,7 +19,13 @@
     "pos": "noun phrase",
     "definition": "Identifying data points that deviate significantly from expected patterns or distributions.",
     "difficulty": 2,
-    "tags": ["ml", "statistics", "patterns"]
+    "tags": [
+      "ml",
+      "statistics",
+      "patterns"
+    ],
+    "ipa": "/ʌnɑmʌliː dɪtɛkʃʌn/",
+    "translation": "Detección de anomalías"
   },
   {
     "id": "array",
@@ -21,7 +33,13 @@
     "pos": "noun",
     "definition": "An ordered collection of elements of the same type, foundational to numerical computing.",
     "difficulty": 1,
-    "tags": ["fundamentals", "numpy", "data-structures"]
+    "tags": [
+      "fundamentals",
+      "numpy",
+      "data-structures"
+    ],
+    "ipa": "/ɜreɪ/",
+    "translation": "Arreglo, vector"
   },
   {
     "id": "average",
@@ -29,7 +47,13 @@
     "pos": "noun phrase",
     "definition": "The sum of all values in a dataset divided by the count of those values.",
     "difficulty": 1,
-    "tags": ["statistics", "fundamentals", "descriptive"]
+    "tags": [
+      "statistics",
+      "fundamentals",
+      "descriptive"
+    ],
+    "ipa": "/ɛɹɪθmɛtɪk miːn/",
+    "translation": "Promedio aritmético"
   },
   {
     "id": "backpropagation",
@@ -37,7 +61,12 @@
     "pos": "noun",
     "definition": "An algorithm computing gradients through a neural network to update weights during training.",
     "difficulty": 3,
-    "tags": ["deep-learning", "neural-networks", "training"]
+    "tags": [
+      "deep-learning",
+      "neural-networks",
+      "training"
+    ],
+    "translation": "Retropropagación del error"
   },
   {
     "id": "baseline",
@@ -45,7 +74,13 @@
     "pos": "noun",
     "definition": "A simple reference model used to measure whether a more complex model adds real value.",
     "difficulty": 1,
-    "tags": ["ml", "evaluation", "fundamentals"]
+    "tags": [
+      "ml",
+      "evaluation",
+      "fundamentals"
+    ],
+    "ipa": "/beɪslaɪn/",
+    "translation": "Modelo de referencia"
   },
   {
     "id": "batch",
@@ -53,7 +88,13 @@
     "pos": "noun",
     "definition": "A subset of training data processed together in one forward and backward pass of a model.",
     "difficulty": 2,
-    "tags": ["training", "deep-learning", "ml"]
+    "tags": [
+      "training",
+      "deep-learning",
+      "ml"
+    ],
+    "ipa": "/bætʃ/",
+    "translation": "Lote, conjunto de datos"
   },
   {
     "id": "bayesian-inference",
@@ -61,7 +102,13 @@
     "pos": "noun phrase",
     "definition": "Updating the probability of a hypothesis as new evidence is incorporated using Bayes' theorem.",
     "difficulty": 3,
-    "tags": ["statistics", "probability", "advanced"]
+    "tags": [
+      "statistics",
+      "probability",
+      "advanced"
+    ],
+    "ipa": "/beɪʒɪn ɪnfɜrʌns/",
+    "translation": "Inferencia bayesiana"
   },
   {
     "id": "bias",
@@ -69,7 +116,13 @@
     "pos": "noun",
     "definition": "Systematic error in a model that causes it to consistently miss the true value in one direction.",
     "difficulty": 2,
-    "tags": ["ml", "statistics", "evaluation"]
+    "tags": [
+      "ml",
+      "statistics",
+      "evaluation"
+    ],
+    "ipa": "/baɪʌs/",
+    "translation": "Sesgo, error sistemático"
   },
   {
     "id": "binary-classification",
@@ -77,7 +130,13 @@
     "pos": "noun phrase",
     "definition": "A prediction task with exactly two possible output categories, such as spam or not spam.",
     "difficulty": 1,
-    "tags": ["ml", "classification", "fundamentals"]
+    "tags": [
+      "ml",
+      "classification",
+      "fundamentals"
+    ],
+    "ipa": "/baɪnɜriː klæsʌfʌkeɪʃʌn/",
+    "translation": "Clasificación binaria"
   },
   {
     "id": "categorical-variable",
@@ -85,7 +144,13 @@
     "pos": "noun phrase",
     "definition": "A variable representing discrete groups or labels rather than continuous numeric values.",
     "difficulty": 1,
-    "tags": ["data", "statistics", "fundamentals"]
+    "tags": [
+      "data",
+      "statistics",
+      "fundamentals"
+    ],
+    "ipa": "/kætʌɡɑɹɪkʌl vɛɹiːʌbʌl/",
+    "translation": "Variable categórica"
   },
   {
     "id": "centroid",
@@ -93,7 +158,12 @@
     "pos": "noun",
     "definition": "The geometric center of a cluster, used as a reference point in algorithms like k-means.",
     "difficulty": 2,
-    "tags": ["clustering", "ml", "geometry"]
+    "tags": [
+      "clustering",
+      "ml",
+      "geometry"
+    ],
+    "translation": "Centroide, centro del clúster"
   },
   {
     "id": "class-imbalance",
@@ -101,7 +171,13 @@
     "pos": "noun phrase",
     "definition": "A dataset condition where one category has significantly more samples than others.",
     "difficulty": 2,
-    "tags": ["data", "ml", "classification"]
+    "tags": [
+      "data",
+      "ml",
+      "classification"
+    ],
+    "ipa": "/klæs ɪmbælʌns/",
+    "translation": "Desbalance de clases"
   },
   {
     "id": "classification",
@@ -109,7 +185,13 @@
     "pos": "noun",
     "definition": "A supervised learning task that predicts which category a new observation belongs to.",
     "difficulty": 1,
-    "tags": ["ml", "fundamentals", "supervised"]
+    "tags": [
+      "ml",
+      "fundamentals",
+      "supervised"
+    ],
+    "ipa": "/klæsʌfʌkeɪʃʌn/",
+    "translation": "Clasificación"
   },
   {
     "id": "clustering",
@@ -117,7 +199,13 @@
     "pos": "noun",
     "definition": "An unsupervised method grouping similar data points together without predefined labels.",
     "difficulty": 1,
-    "tags": ["ml", "unsupervised", "fundamentals"]
+    "tags": [
+      "ml",
+      "unsupervised",
+      "fundamentals"
+    ],
+    "ipa": "/klʌstɜrɪŋ/",
+    "translation": "Agrupamiento, clustering"
   },
   {
     "id": "confusion-matrix",
@@ -125,7 +213,13 @@
     "pos": "noun phrase",
     "definition": "A table comparing predicted vs actual class labels to evaluate a classification model.",
     "difficulty": 2,
-    "tags": ["evaluation", "classification", "ml"]
+    "tags": [
+      "evaluation",
+      "classification",
+      "ml"
+    ],
+    "ipa": "/kʌnfjuːʒʌn meɪtɹɪks/",
+    "translation": "Matriz de confusión"
   },
   {
     "id": "continuous-variable",
@@ -133,7 +227,13 @@
     "pos": "noun phrase",
     "definition": "A numeric variable that can take any value within a range, such as height or temperature.",
     "difficulty": 1,
-    "tags": ["statistics", "data", "fundamentals"]
+    "tags": [
+      "statistics",
+      "data",
+      "fundamentals"
+    ],
+    "ipa": "/kʌntɪnjuːʌs vɛɹiːʌbʌl/",
+    "translation": "Variable continua"
   },
   {
     "id": "correlation",
@@ -141,7 +241,13 @@
     "pos": "noun",
     "definition": "A statistical measure of how strongly two variables move together, ranging from -1 to 1.",
     "difficulty": 1,
-    "tags": ["statistics", "eda", "fundamentals"]
+    "tags": [
+      "statistics",
+      "eda",
+      "fundamentals"
+    ],
+    "ipa": "/kɔɹʌleɪʃʌn/",
+    "translation": "Correlación"
   },
   {
     "id": "cross-validation",
@@ -149,7 +255,12 @@
     "pos": "noun phrase",
     "definition": "A technique splitting data into multiple train-test folds to produce a more reliable evaluation.",
     "difficulty": 2,
-    "tags": ["ml", "evaluation", "methodology"]
+    "tags": [
+      "ml",
+      "evaluation",
+      "methodology"
+    ],
+    "translation": "Validación cruzada"
   },
   {
     "id": "csv",
@@ -157,7 +268,13 @@
     "pos": "proper noun",
     "definition": "Comma-Separated Values — a plain text format for storing tabular data, one row per line.",
     "difficulty": 1,
-    "tags": ["data", "formats", "fundamentals"]
+    "tags": [
+      "data",
+      "formats",
+      "fundamentals"
+    ],
+    "ipa": "/siːɛsviː/",
+    "translation": "CSV, valores separados por coma"
   },
   {
     "id": "data-cleaning",
@@ -165,7 +282,13 @@
     "pos": "noun phrase",
     "definition": "The process of detecting and correcting errors, inconsistencies, and missing values in a dataset.",
     "difficulty": 1,
-    "tags": ["data", "process", "fundamentals"]
+    "tags": [
+      "data",
+      "process",
+      "fundamentals"
+    ],
+    "ipa": "/deɪtʌ kliːnɪŋ/",
+    "translation": "Limpieza de datos"
   },
   {
     "id": "data-drift",
@@ -173,7 +296,13 @@
     "pos": "noun phrase",
     "definition": "The gradual change in input data distribution over time that degrades model performance.",
     "difficulty": 3,
-    "tags": ["ml", "production", "monitoring"]
+    "tags": [
+      "ml",
+      "production",
+      "monitoring"
+    ],
+    "ipa": "/deɪtʌ dɹɪft/",
+    "translation": "Deriva de datos"
   },
   {
     "id": "data-lake",
@@ -181,7 +310,13 @@
     "pos": "noun phrase",
     "definition": "A centralized repository storing raw, unstructured data at scale for future processing.",
     "difficulty": 2,
-    "tags": ["infrastructure", "data", "storage"]
+    "tags": [
+      "infrastructure",
+      "data",
+      "storage"
+    ],
+    "ipa": "/deɪtʌ leɪk/",
+    "translation": "Lago de datos"
   },
   {
     "id": "data-pipeline",
@@ -189,7 +324,13 @@
     "pos": "noun phrase",
     "definition": "An automated sequence of steps that ingests, transforms, and loads data from source to destination.",
     "difficulty": 2,
-    "tags": ["infrastructure", "etl", "data"]
+    "tags": [
+      "infrastructure",
+      "etl",
+      "data"
+    ],
+    "ipa": "/deɪtʌ paɪplaɪn/",
+    "translation": "Tubería de datos, pipeline"
   },
   {
     "id": "data-warehouse",
@@ -197,7 +338,13 @@
     "pos": "noun phrase",
     "definition": "A structured storage system optimized for querying and analyzing large volumes of historical data.",
     "difficulty": 2,
-    "tags": ["infrastructure", "data", "sql"]
+    "tags": [
+      "infrastructure",
+      "data",
+      "sql"
+    ],
+    "ipa": "/deɪtʌ wɛɹhaʊs/",
+    "translation": "Almacén de datos, data warehouse"
   },
   {
     "id": "dataframe",
@@ -205,7 +352,12 @@
     "pos": "proper noun",
     "definition": "A two-dimensional, labeled data structure with columns of potentially different types, as in pandas.",
     "difficulty": 1,
-    "tags": ["python", "pandas", "data-structures"]
+    "tags": [
+      "python",
+      "pandas",
+      "data-structures"
+    ],
+    "translation": "estructura de datos bidimensional"
   },
   {
     "id": "decision-tree",
@@ -213,7 +365,13 @@
     "pos": "noun phrase",
     "definition": "A flowchart-like model that splits data based on feature conditions to make predictions.",
     "difficulty": 1,
-    "tags": ["ml", "classification", "interpretability"]
+    "tags": [
+      "ml",
+      "classification",
+      "interpretability"
+    ],
+    "ipa": "/dɪsɪʒʌn tɹiː/",
+    "translation": "árbol de decisión"
   },
   {
     "id": "dimensionality-reduction",
@@ -221,7 +379,13 @@
     "pos": "noun phrase",
     "definition": "Reducing the number of features in a dataset while preserving as much information as possible.",
     "difficulty": 3,
-    "tags": ["ml", "preprocessing", "advanced"]
+    "tags": [
+      "ml",
+      "preprocessing",
+      "advanced"
+    ],
+    "ipa": "/dɪmɛnʃʌnælʌtiː ɹʌdʌkʃʌn/",
+    "translation": "reducción de dimensionalidad"
   },
   {
     "id": "distribution",
@@ -229,7 +393,13 @@
     "pos": "noun",
     "definition": "A function describing the frequency of values across all possible outcomes in a dataset.",
     "difficulty": 1,
-    "tags": ["statistics", "fundamentals", "probability"]
+    "tags": [
+      "statistics",
+      "fundamentals",
+      "probability"
+    ],
+    "ipa": "/dɪstɹʌbjuːʃʌn/",
+    "translation": "distribución de datos"
   },
   {
     "id": "eda",
@@ -237,7 +407,13 @@
     "pos": "proper noun",
     "definition": "Exploratory Data Analysis — the initial investigation of data using statistics and visualizations.",
     "difficulty": 1,
-    "tags": ["process", "fundamentals", "visualization"]
+    "tags": [
+      "process",
+      "fundamentals",
+      "visualization"
+    ],
+    "ipa": "/iːdʌ/",
+    "translation": "análisis exploratorio de datos"
   },
   {
     "id": "epoch",
@@ -245,7 +421,13 @@
     "pos": "noun",
     "definition": "One complete pass of the entire training dataset through a machine learning model.",
     "difficulty": 2,
-    "tags": ["training", "deep-learning", "ml"]
+    "tags": [
+      "training",
+      "deep-learning",
+      "ml"
+    ],
+    "ipa": "/ɛpʌk/",
+    "translation": "época de entrenamiento"
   },
   {
     "id": "etl",
@@ -253,7 +435,12 @@
     "pos": "proper noun",
     "definition": "Extract, Transform, Load — the process of moving and reshaping data between systems.",
     "difficulty": 1,
-    "tags": ["data", "infrastructure", "process"]
+    "tags": [
+      "data",
+      "infrastructure",
+      "process"
+    ],
+    "translation": "extraer, transformar, cargar"
   },
   {
     "id": "evaluation-metric",
@@ -261,7 +448,13 @@
     "pos": "noun phrase",
     "definition": "A quantitative measure used to assess how well a model performs on a given task.",
     "difficulty": 1,
-    "tags": ["ml", "evaluation", "fundamentals"]
+    "tags": [
+      "ml",
+      "evaluation",
+      "fundamentals"
+    ],
+    "ipa": "/ɪvæljuːeɪʃʌn mɛtɹɪk/",
+    "translation": "métrica de evaluación"
   },
   {
     "id": "f1-score",
@@ -269,7 +462,12 @@
     "pos": "noun phrase",
     "definition": "The harmonic mean of precision and recall, balancing both in a single performance metric.",
     "difficulty": 2,
-    "tags": ["evaluation", "classification", "metrics"]
+    "tags": [
+      "evaluation",
+      "classification",
+      "metrics"
+    ],
+    "translation": "puntuación F1"
   },
   {
     "id": "feature",
@@ -277,7 +475,13 @@
     "pos": "noun",
     "definition": "An individual measurable variable used as input to a machine learning model.",
     "difficulty": 1,
-    "tags": ["ml", "fundamentals", "data"]
+    "tags": [
+      "ml",
+      "fundamentals",
+      "data"
+    ],
+    "ipa": "/fiːtʃɜr/",
+    "translation": "característica, variable de entrada"
   },
   {
     "id": "feature-engineering",
@@ -285,7 +489,13 @@
     "pos": "noun phrase",
     "definition": "Creating or transforming input variables to improve a model's predictive power.",
     "difficulty": 2,
-    "tags": ["ml", "preprocessing", "process"]
+    "tags": [
+      "ml",
+      "preprocessing",
+      "process"
+    ],
+    "ipa": "/fiːtʃɜr ɛndʒʌnɪɹɪŋ/",
+    "translation": "ingeniería de características"
   },
   {
     "id": "feature-importance",
@@ -293,7 +503,13 @@
     "pos": "noun phrase",
     "definition": "A score indicating how much each input variable contributed to a model's predictions.",
     "difficulty": 2,
-    "tags": ["ml", "interpretability", "evaluation"]
+    "tags": [
+      "ml",
+      "interpretability",
+      "evaluation"
+    ],
+    "ipa": "/fiːtʃɜr ɪmpɔɹtʌns/",
+    "translation": "importancia de características"
   },
   {
     "id": "gradient-descent",
@@ -301,7 +517,13 @@
     "pos": "noun phrase",
     "definition": "An optimization algorithm iteratively adjusting model parameters to minimize a loss function.",
     "difficulty": 3,
-    "tags": ["training", "optimization", "ml"]
+    "tags": [
+      "training",
+      "optimization",
+      "ml"
+    ],
+    "ipa": "/ɡɹeɪdiːʌnt dɪsɛnt/",
+    "translation": "descenso de gradiente"
   },
   {
     "id": "ground-truth",
@@ -309,7 +531,13 @@
     "pos": "noun phrase",
     "definition": "The verified correct labels or values used to train and evaluate a machine learning model.",
     "difficulty": 1,
-    "tags": ["ml", "labeling", "fundamentals"]
+    "tags": [
+      "ml",
+      "labeling",
+      "fundamentals"
+    ],
+    "ipa": "/ɡɹaʊnd tɹuːθ/",
+    "translation": "verdad fundamental, datos reales"
   },
   {
     "id": "holdout-set",
@@ -317,7 +545,13 @@
     "pos": "noun phrase",
     "definition": "A portion of data withheld from training and used only for final model evaluation.",
     "difficulty": 2,
-    "tags": ["ml", "evaluation", "methodology"]
+    "tags": [
+      "ml",
+      "evaluation",
+      "methodology"
+    ],
+    "ipa": "/hoʊldaʊt sɛt/",
+    "translation": "conjunto de retención"
   },
   {
     "id": "hyperparameter",
@@ -325,7 +559,12 @@
     "pos": "noun",
     "definition": "A configuration value set before training that controls how a model learns, not what it learns.",
     "difficulty": 2,
-    "tags": ["ml", "training", "tuning"]
+    "tags": [
+      "ml",
+      "training",
+      "tuning"
+    ],
+    "translation": "hiperparámetro"
   },
   {
     "id": "hypothesis-testing",
@@ -333,7 +572,13 @@
     "pos": "noun phrase",
     "definition": "A statistical method determining whether observed data provides evidence against a null assumption.",
     "difficulty": 2,
-    "tags": ["statistics", "experimentation", "fundamentals"]
+    "tags": [
+      "statistics",
+      "experimentation",
+      "fundamentals"
+    ],
+    "ipa": "/haɪpɑθʌsʌs tɛstɪŋ/",
+    "translation": "prueba de hipótesis"
   },
   {
     "id": "imputation",
@@ -341,7 +586,13 @@
     "pos": "noun",
     "definition": "Filling in missing values in a dataset using statistical estimates like the mean or median.",
     "difficulty": 2,
-    "tags": ["data-cleaning", "preprocessing", "statistics"]
+    "tags": [
+      "data-cleaning",
+      "preprocessing",
+      "statistics"
+    ],
+    "ipa": "/ɪmpjʌteɪʃʌn/",
+    "translation": "imputación de datos"
   },
   {
     "id": "inference",
@@ -349,7 +600,13 @@
     "pos": "noun",
     "definition": "The phase where a trained model generates predictions on new, unseen input data.",
     "difficulty": 1,
-    "tags": ["ml", "production", "fundamentals"]
+    "tags": [
+      "ml",
+      "production",
+      "fundamentals"
+    ],
+    "ipa": "/ɪnfɜrʌns/",
+    "translation": "inferencia, predicción"
   },
   {
     "id": "interquartile-range",
@@ -357,7 +614,12 @@
     "pos": "noun phrase",
     "definition": "The difference between the 75th and 25th percentile, measuring statistical spread robustly.",
     "difficulty": 2,
-    "tags": ["statistics", "descriptive", "eda"]
+    "tags": [
+      "statistics",
+      "descriptive",
+      "eda"
+    ],
+    "translation": "rango intercuartílico"
   },
   {
     "id": "label",
@@ -365,7 +627,13 @@
     "pos": "noun",
     "definition": "The target output value a supervised learning model is trained to predict.",
     "difficulty": 1,
-    "tags": ["ml", "fundamentals", "supervised"]
+    "tags": [
+      "ml",
+      "fundamentals",
+      "supervised"
+    ],
+    "ipa": "/leɪbʌl/",
+    "translation": "etiqueta, valor objetivo"
   },
   {
     "id": "learning-rate",
@@ -373,7 +641,13 @@
     "pos": "noun phrase",
     "definition": "A hyperparameter controlling how large each step is during gradient descent optimization.",
     "difficulty": 2,
-    "tags": ["training", "optimization", "hyperparameters"]
+    "tags": [
+      "training",
+      "optimization",
+      "hyperparameters"
+    ],
+    "ipa": "/lɜrnɪŋ ɹeɪt/",
+    "translation": "tasa de aprendizaje"
   },
   {
     "id": "loss-function",
@@ -381,7 +655,13 @@
     "pos": "noun phrase",
     "definition": "A function measuring the difference between predicted and actual values during model training.",
     "difficulty": 2,
-    "tags": ["training", "optimization", "fundamentals"]
+    "tags": [
+      "training",
+      "optimization",
+      "fundamentals"
+    ],
+    "ipa": "/lɔs fʌŋkʃʌn/",
+    "translation": "función de pérdida"
   },
   {
     "id": "median",
@@ -389,7 +669,13 @@
     "pos": "noun",
     "definition": "The middle value in an ordered dataset, robust to outliers unlike the arithmetic mean.",
     "difficulty": 1,
-    "tags": ["statistics", "descriptive", "fundamentals"]
+    "tags": [
+      "statistics",
+      "descriptive",
+      "fundamentals"
+    ],
+    "ipa": "/miːdiːʌn/",
+    "translation": "mediana"
   },
   {
     "id": "missing-value",
@@ -397,7 +683,13 @@
     "pos": "noun phrase",
     "definition": "An absent data point in a dataset, represented as null or NaN, requiring handling before modeling.",
     "difficulty": 1,
-    "tags": ["data-cleaning", "fundamentals", "data"]
+    "tags": [
+      "data-cleaning",
+      "fundamentals",
+      "data"
+    ],
+    "ipa": "/mɪsɪŋ væljuː/",
+    "translation": "valor faltante"
   },
   {
     "id": "model",
@@ -405,7 +697,12 @@
     "pos": "noun",
     "definition": "A mathematical function learned from data that maps inputs to predicted outputs.",
     "difficulty": 1,
-    "tags": ["ml", "fundamentals"]
+    "tags": [
+      "ml",
+      "fundamentals"
+    ],
+    "ipa": "/mɑdʌl/",
+    "translation": "Modelo matemático de datos"
   },
   {
     "id": "multicollinearity",
@@ -413,7 +710,12 @@
     "pos": "noun",
     "definition": "A condition where two or more input features are highly correlated, distorting model coefficients.",
     "difficulty": 3,
-    "tags": ["statistics", "regression", "advanced"]
+    "tags": [
+      "statistics",
+      "regression",
+      "advanced"
+    ],
+    "translation": "Alta correlación entre variables"
   },
   {
     "id": "normal-distribution",
@@ -421,7 +723,13 @@
     "pos": "noun phrase",
     "definition": "A symmetric, bell-shaped probability distribution where most values cluster around the mean.",
     "difficulty": 1,
-    "tags": ["statistics", "probability", "fundamentals"]
+    "tags": [
+      "statistics",
+      "probability",
+      "fundamentals"
+    ],
+    "ipa": "/nɔɹmʌl dɪstɹʌbjuːʃʌn/",
+    "translation": "Distribución normal o campana"
   },
   {
     "id": "normalization",
@@ -429,7 +737,13 @@
     "pos": "noun",
     "definition": "Rescaling feature values to a standard range — typically 0 to 1 — before model training.",
     "difficulty": 2,
-    "tags": ["preprocessing", "ml", "fundamentals"]
+    "tags": [
+      "preprocessing",
+      "ml",
+      "fundamentals"
+    ],
+    "ipa": "/nɔɹmʌlɪzeɪʃʌn/",
+    "translation": "Escalar características a un rango"
   },
   {
     "id": "null-hypothesis",
@@ -437,7 +751,13 @@
     "pos": "noun phrase",
     "definition": "The default assumption of no effect or no difference that a statistical test attempts to reject.",
     "difficulty": 2,
-    "tags": ["statistics", "hypothesis-testing", "fundamentals"]
+    "tags": [
+      "statistics",
+      "hypothesis-testing",
+      "fundamentals"
+    ],
+    "ipa": "/nʌl haɪpɑθʌsʌs/",
+    "translation": "Hipótesis nula, sin efecto"
   },
   {
     "id": "outlier",
@@ -445,7 +765,13 @@
     "pos": "noun",
     "definition": "A data point that differs markedly from other observations and may indicate noise or a real anomaly.",
     "difficulty": 1,
-    "tags": ["statistics", "eda", "data-cleaning"]
+    "tags": [
+      "statistics",
+      "eda",
+      "data-cleaning"
+    ],
+    "ipa": "/aʊtlaɪɜr/",
+    "translation": "Valor atípico o extremo"
   },
   {
     "id": "overfitting",
@@ -453,7 +779,12 @@
     "pos": "noun",
     "definition": "When a model learns the training data too precisely, performing poorly on new unseen data.",
     "difficulty": 1,
-    "tags": ["ml", "evaluation", "fundamentals"]
+    "tags": [
+      "ml",
+      "evaluation",
+      "fundamentals"
+    ],
+    "translation": "Sobreajuste a datos de entrenamiento"
   },
   {
     "id": "p-value",
@@ -461,7 +792,12 @@
     "pos": "noun phrase",
     "definition": "The probability of observing results at least as extreme as those seen, assuming the null hypothesis is true.",
     "difficulty": 2,
-    "tags": ["statistics", "hypothesis-testing", "fundamentals"]
+    "tags": [
+      "statistics",
+      "hypothesis-testing",
+      "fundamentals"
+    ],
+    "translation": "Valor p, probabilidad bajo H0"
   },
   {
     "id": "pandas",
@@ -469,7 +805,13 @@
     "pos": "proper noun",
     "definition": "A Python library providing DataFrame structures for data manipulation and analysis.",
     "difficulty": 1,
-    "tags": ["python", "tooling", "data"]
+    "tags": [
+      "python",
+      "tooling",
+      "data"
+    ],
+    "ipa": "/pændʌz/",
+    "translation": "Librería Python para datos"
   },
   {
     "id": "percentile",
@@ -477,7 +819,13 @@
     "pos": "noun",
     "definition": "The value below which a given percentage of observations in a dataset fall.",
     "difficulty": 1,
-    "tags": ["statistics", "descriptive", "fundamentals"]
+    "tags": [
+      "statistics",
+      "descriptive",
+      "fundamentals"
+    ],
+    "ipa": "/pɜrsɛntaɪl/",
+    "translation": "Percentil, valor bajo el cual caen datos"
   },
   {
     "id": "pipeline-ml",
@@ -485,7 +833,12 @@
     "pos": "noun phrase",
     "definition": "A chained sequence of preprocessing and modeling steps that can be fit and applied as a unit.",
     "difficulty": 2,
-    "tags": ["ml", "process", "automation"]
+    "tags": [
+      "ml",
+      "process",
+      "automation"
+    ],
+    "translation": "Secuencia de pasos ML"
   },
   {
     "id": "precision",
@@ -493,7 +846,13 @@
     "pos": "noun",
     "definition": "The proportion of positive predictions that were actually correct out of all positive predictions made.",
     "difficulty": 2,
-    "tags": ["evaluation", "classification", "metrics"]
+    "tags": [
+      "evaluation",
+      "classification",
+      "metrics"
+    ],
+    "ipa": "/pɹiːsɪʒʌn/",
+    "translation": "Proporción de positivos correctos"
   },
   {
     "id": "prediction",
@@ -501,7 +860,13 @@
     "pos": "noun",
     "definition": "The output a trained model generates when given a new input it has not seen before.",
     "difficulty": 1,
-    "tags": ["ml", "fundamentals", "inference"]
+    "tags": [
+      "ml",
+      "fundamentals",
+      "inference"
+    ],
+    "ipa": "/pɹiːdɪkʃʌn/",
+    "translation": "Predicción del modelo"
   },
   {
     "id": "preprocessing",
@@ -509,7 +874,12 @@
     "pos": "noun",
     "definition": "All data transformation steps applied before feeding data into a machine learning model.",
     "difficulty": 1,
-    "tags": ["ml", "process", "fundamentals"]
+    "tags": [
+      "ml",
+      "process",
+      "fundamentals"
+    ],
+    "translation": "Preprocesamiento de datos"
   },
   {
     "id": "random-forest",
@@ -517,7 +887,13 @@
     "pos": "noun phrase",
     "definition": "An ensemble model combining many decision trees to improve accuracy and reduce overfitting.",
     "difficulty": 2,
-    "tags": ["ml", "ensemble", "classification"]
+    "tags": [
+      "ml",
+      "ensemble",
+      "classification"
+    ],
+    "ipa": "/ɹændʌm fɔɹʌst/",
+    "translation": "Bosque aleatorio de árboles"
   },
   {
     "id": "recall",
@@ -525,7 +901,13 @@
     "pos": "noun",
     "definition": "The proportion of actual positives that a model correctly identified out of all real positives.",
     "difficulty": 2,
-    "tags": ["evaluation", "classification", "metrics"]
+    "tags": [
+      "evaluation",
+      "classification",
+      "metrics"
+    ],
+    "ipa": "/ɹiːkɔl/",
+    "translation": "Proporción de positivos reales correctos"
   },
   {
     "id": "regression",
@@ -533,7 +915,13 @@
     "pos": "noun",
     "definition": "A supervised learning task predicting a continuous numeric output from input features.",
     "difficulty": 1,
-    "tags": ["ml", "fundamentals", "supervised"]
+    "tags": [
+      "ml",
+      "fundamentals",
+      "supervised"
+    ],
+    "ipa": "/ɹʌɡɹɛʃʌn/",
+    "translation": "Predicción de valor numérico continuo"
   },
   {
     "id": "regularization",
@@ -541,7 +929,12 @@
     "pos": "noun",
     "definition": "A technique penalizing model complexity during training to reduce overfitting.",
     "difficulty": 3,
-    "tags": ["ml", "training", "advanced"]
+    "tags": [
+      "ml",
+      "training",
+      "advanced"
+    ],
+    "translation": "Penalización de complejidad del modelo"
   },
   {
     "id": "sample",
@@ -549,7 +942,13 @@
     "pos": "noun",
     "definition": "A subset of observations drawn from a larger population for analysis or model training.",
     "difficulty": 1,
-    "tags": ["statistics", "fundamentals", "data"]
+    "tags": [
+      "statistics",
+      "fundamentals",
+      "data"
+    ],
+    "ipa": "/sæmpʌl/",
+    "translation": "Muestra de datos"
   },
   {
     "id": "sampling-bias",
@@ -557,7 +956,13 @@
     "pos": "noun phrase",
     "definition": "A systematic error occurring when the collected data does not represent the full population.",
     "difficulty": 2,
-    "tags": ["statistics", "data", "methodology"]
+    "tags": [
+      "statistics",
+      "data",
+      "methodology"
+    ],
+    "ipa": "/sæmplɪŋ baɪʌs/",
+    "translation": "Sesgo en la selección de muestra"
   },
   {
     "id": "skewness",
@@ -565,7 +970,12 @@
     "pos": "noun",
     "definition": "A measure of the asymmetry of a distribution — positive skew has a longer right tail.",
     "difficulty": 2,
-    "tags": ["statistics", "descriptive", "eda"]
+    "tags": [
+      "statistics",
+      "descriptive",
+      "eda"
+    ],
+    "translation": "Asimetría de la distribución"
   },
   {
     "id": "split",
@@ -573,7 +983,12 @@
     "pos": "noun phrase",
     "definition": "Dividing a dataset into separate portions for training a model and evaluating its performance.",
     "difficulty": 1,
-    "tags": ["ml", "methodology", "fundamentals"]
+    "tags": [
+      "ml",
+      "methodology",
+      "fundamentals"
+    ],
+    "translation": "División entrenamiento-prueba"
   },
   {
     "id": "standard-deviation",
@@ -581,7 +996,13 @@
     "pos": "noun phrase",
     "definition": "A measure of how spread out values are relative to the mean in a dataset.",
     "difficulty": 1,
-    "tags": ["statistics", "descriptive", "fundamentals"]
+    "tags": [
+      "statistics",
+      "descriptive",
+      "fundamentals"
+    ],
+    "ipa": "/stændɜrd diːviːeɪʃʌn/",
+    "translation": "Desviación estándar, dispersión"
   },
   {
     "id": "supervised-learning",
@@ -589,7 +1010,13 @@
     "pos": "noun phrase",
     "definition": "Training a model on labeled data where the correct output is known for each input.",
     "difficulty": 1,
-    "tags": ["ml", "fundamentals", "paradigm"]
+    "tags": [
+      "ml",
+      "fundamentals",
+      "paradigm"
+    ],
+    "ipa": "/suːpɜrvaɪzd lɜrnɪŋ/",
+    "translation": "Aprendizaje con datos etiquetados"
   },
   {
     "id": "target-variable",
@@ -597,7 +1024,13 @@
     "pos": "noun phrase",
     "definition": "The output column a model is trained to predict, also called the dependent variable.",
     "difficulty": 1,
-    "tags": ["ml", "fundamentals", "data"]
+    "tags": [
+      "ml",
+      "fundamentals",
+      "data"
+    ],
+    "ipa": "/tɑɹɡʌt vɛɹiːʌbʌl/",
+    "translation": "Variable objetivo a predecir"
   },
   {
     "id": "training-data",
@@ -605,7 +1038,13 @@
     "pos": "noun phrase",
     "definition": "The labeled dataset used to fit a machine learning model's parameters.",
     "difficulty": 1,
-    "tags": ["ml", "data", "fundamentals"]
+    "tags": [
+      "ml",
+      "data",
+      "fundamentals"
+    ],
+    "ipa": "/tɹeɪnɪŋ deɪtʌ/",
+    "translation": "datos de entrenamiento"
   },
   {
     "id": "underfitting",
@@ -613,7 +1052,12 @@
     "pos": "noun",
     "definition": "When a model is too simple to capture patterns in the data, performing poorly on both train and test sets.",
     "difficulty": 1,
-    "tags": ["ml", "evaluation", "fundamentals"]
+    "tags": [
+      "ml",
+      "evaluation",
+      "fundamentals"
+    ],
+    "translation": "subajuste"
   },
   {
     "id": "unsupervised-learning",
@@ -621,7 +1065,13 @@
     "pos": "noun phrase",
     "definition": "Training a model on unlabeled data to discover hidden structure or patterns without guidance.",
     "difficulty": 1,
-    "tags": ["ml", "fundamentals", "paradigm"]
+    "tags": [
+      "ml",
+      "fundamentals",
+      "paradigm"
+    ],
+    "ipa": "/ʌnsuːpɜrvaɪzd lɜrnɪŋ/",
+    "translation": "aprendizaje no supervisado"
   },
   {
     "id": "variance",
@@ -629,7 +1079,13 @@
     "pos": "noun",
     "definition": "A model's sensitivity to fluctuations in training data — high variance models tend to overfit.",
     "difficulty": 2,
-    "tags": ["ml", "statistics", "evaluation"]
+    "tags": [
+      "ml",
+      "statistics",
+      "evaluation"
+    ],
+    "ipa": "/vɛɹiːʌns/",
+    "translation": "varianza"
   },
   {
     "id": "vector",
@@ -637,7 +1093,13 @@
     "pos": "noun",
     "definition": "A one-dimensional array of numbers representing a data point or feature set in a model.",
     "difficulty": 1,
-    "tags": ["mathematics", "ml", "fundamentals"]
+    "tags": [
+      "mathematics",
+      "ml",
+      "fundamentals"
+    ],
+    "ipa": "/vɛktɜr/",
+    "translation": "vector"
   },
   {
     "id": "visualization",
@@ -645,7 +1107,13 @@
     "pos": "noun phrase",
     "definition": "Representing data graphically to reveal patterns, trends, and outliers at a glance.",
     "difficulty": 1,
-    "tags": ["eda", "communication", "fundamentals"]
+    "tags": [
+      "eda",
+      "communication",
+      "fundamentals"
+    ],
+    "ipa": "/deɪtʌ vɪʒwʌlʌzeɪʃʌn/",
+    "translation": "visualización de datos"
   },
   {
     "id": "weight",
@@ -653,6 +1121,12 @@
     "pos": "noun",
     "definition": "A learned parameter in a model that scales the importance of an input feature.",
     "difficulty": 1,
-    "tags": ["ml", "neural-networks", "fundamentals"]
+    "tags": [
+      "ml",
+      "neural-networks",
+      "fundamentals"
+    ],
+    "ipa": "/weɪt/",
+    "translation": "peso"
   }
 ]

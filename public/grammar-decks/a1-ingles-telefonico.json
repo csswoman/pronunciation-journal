@@ -1,0 +1,189 @@
+{
+  "meta": {
+    "eyebrow": "A1 · Comunicación",
+    "title": "Inglés por",
+    "titleEmphasis": "teléfono",
+    "goal": "Ya puedes contestar, pedir que repitan y dar información básica por teléfono."
+  },
+  "quiz": [
+    {
+      "q": "Recibes una llamada en el trabajo. ¿Cuál es la respuesta más profesional?",
+      "options": [
+        "Yes? Who are you?",
+        "Hello, this is María speaking. How can I help you?",
+        "What do you want?",
+        "María here. Talk."
+      ],
+      "answer": 1,
+      "explain": "'Hello, this is [nombre] speaking. How can I help you?' es la fórmula estándar para contestar en un contexto profesional: da tu nombre, confirma quién eres y ofreces ayuda."
+    },
+    {
+      "q": "No escuchaste bien lo que dijo la otra persona. ¿Qué dices?",
+      "options": [
+        "What? Repeat!",
+        "I don't hear you.",
+        "I'm sorry, could you repeat that, please?",
+        "Say again louder."
+      ],
+      "answer": 2,
+      "explain": "'I'm sorry, could you repeat that, please?' es amable y profesional. 'What?' a secas suena brusco. 'I don't hear you' es gramaticalmente incorrecto (debería ser 'I can't hear you')."
+    },
+    {
+      "q": "Quieres dejar un mensaje para alguien que no está disponible. ¿Qué dices?",
+      "options": [
+        "I want to leave a message.",
+        "Can I leave a message, please?",
+        "Message me.",
+        "Give them my message."
+      ],
+      "answer": 1,
+      "explain": "'Can I leave a message, please?' es la forma más educada y natural. 'I want to...' es correcto pero suena menos cortés. Después de 'Can I leave a message?' la otra persona te dirá qué información dejar."
+    }
+  ],
+  "cards": [
+    {
+      "id": "tel-answer",
+      "tag": "Contestar y saludar",
+      "title": "Cómo contestar el teléfono",
+      "lede": "La primera frase que digas da la impresión inicial. Hay fórmulas distintas según el contexto.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Informal (personal)", "value": "Hello? · Hey! · Yeah? · Yep?", "highlights": ["Hello?", "Hey!"], "hint": "para familia y amigos" },
+            { "key": "Semi-formal", "value": "Hello, this is María. · Hi, María speaking.", "highlights": ["this is", "speaking"], "hint": "nombre + 'speaking'" },
+            { "key": "Formal (trabajo)", "value": "Good morning, Acme Corp. How can I help you?", "highlights": ["Good morning", "How can I help"], "hint": "empresa + oferta de ayuda" },
+            { "key": "No reconoces el número", "value": "Hello? Who is this? · May I ask who's calling?", "highlights": ["Who is this", "who's calling"], "hint": "educado pero directo" },
+            { "key": "Es para ti", "value": "Speaking. · Yes, this is he/she. · That's me.", "highlights": ["Speaking", "That's me"], "hint": "confirmas que eres tú" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "En inglés americano:",
+        "body": "'Speaking' sola es la respuesta más natural cuando alguien pregunta por ti: '¿Está María?' — 'Speaking.' No hace falta más."
+      }
+    },
+    {
+      "id": "tel-repeat",
+      "tag": "Pedir que repitan",
+      "title": "No escuché bien — ¿cómo lo digo?",
+      "lede": "Por teléfono la conexión puede ser mala. Tienes todo el derecho de pedir que repitan o hablen más despacio.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Más suave", "value": "Sorry? · Excuse me? · Pardon?", "highlights": ["Sorry?", "Excuse me?", "Pardon?"], "hint": "solo una palabra, tono ascendente" },
+            { "key": "Estándar", "value": "Could you repeat that, please? · Could you say that again?", "highlights": ["repeat that", "say that again"], "hint": "cortés y claro" },
+            { "key": "Más despacio", "value": "Could you speak more slowly, please? · I'm still learning English.", "highlights": ["speak more slowly"], "hint": "honesto, no hay vergüenza en decirlo" },
+            { "key": "Mala conexión", "value": "I'm sorry, I can't hear you very well. · The line is bad.", "highlights": ["can't hear you", "line is bad"], "hint": "explica el problema técnico" },
+            { "key": "Confirmar que entendiste", "value": "So you said... [repites lo que escuchaste]. Is that right?", "highlights": ["Is that right"], "hint": "confirma antes de continuar" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "No tengas vergüenza:",
+        "body": "cualquier hablante nativo entiende que una llamada tiene ruido o que el inglés no es tu idioma nativo. Pedir que repitan es completamente normal y profesional."
+      }
+    },
+    {
+      "id": "tel-who",
+      "tag": "¿Con quién hablo?",
+      "title": "Preguntar por alguien o identificarte",
+      "lede": "Cuando llamas, debes identificarte. Cuando contestas, debes preguntar a quién buscan.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "I want to speak with John." },
+            { "variant": "good", "text": "Could I speak with John, please?", "note": "más cortés: 'Could I' en vez de 'I want'" },
+            { "variant": "bad", "text": "Who you are?" },
+            { "variant": "good", "text": "May I ask who's calling?", "note": "forma educada de preguntar el nombre" },
+            { "variant": "bad", "text": "I am María and I call for the job." },
+            { "variant": "good", "text": "This is María García calling about the job posting.", "note": "'This is' para identificarse; 'calling about' para el motivo" },
+            { "variant": "bad", "text": "Is John there?" },
+            { "variant": "good", "text": "Is John available?", "note": "'available' suena más formal; 'there' es válido en contexto informal" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tel-message",
+      "tag": "Mensajes",
+      "title": "Dejar y tomar un mensaje",
+      "lede": "Cuando la persona no está disponible, necesitas dejar información clara o tomar nota de la de otros.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Pedir dejar mensaje", "value": "Can I leave a message? · Could I leave a message, please?", "highlights": ["leave a message"], "hint": "siempre con 'please'" },
+            { "key": "Ofrecer tomar mensaje", "value": "Can I take a message? · Would you like to leave a message?", "highlights": ["take a message", "leave a message"] },
+            { "key": "Dar información", "value": "My name is María, M-A-R-I-A. My number is 555-1234.", "highlights": ["My name is", "My number is"], "hint": "deletrea si el nombre es difícil" },
+            { "key": "Pedir que llamen", "value": "Could you ask him to call me back? · Please have her return my call.", "highlights": ["call me back", "return my call"] },
+            { "key": "Confirmación", "value": "Thanks, I'll make sure he gets the message. · I'll let her know.", "highlights": ["gets the message", "let her know"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Al dejar tu número:",
+        "body": "di los números de dos en dos para que sea más fácil anotarlos: 'five-five-five, one-two-three-four'. Luego repite: 'That's 555-1234. Did you get that?'"
+      }
+    },
+    {
+      "id": "tel-numbers",
+      "tag": "Números y nombres",
+      "title": "Dar números y deletrear por teléfono",
+      "lede": "Números de teléfono, códigos y nombres propios requieren técnica especial para que no haya errores.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Números de teléfono", "value": "Dígito a dígito: 555-1234 = five five five, one two three four", "highlights": ["five five five"], "hint": "nunca en grupos de 100" },
+            { "key": "Cero", "value": "Se dice 'zero' o 'oh': 305 = three oh five / three zero five", "highlights": ["zero", "oh"], "hint": "'oh' es más informal" },
+            { "key": "Dobles", "value": "555 se puede decir 'five double five' o 'triple five'", "highlights": ["double", "triple"], "hint": "más rápido en conversación" },
+            { "key": "Confirmar número", "value": "So that's 555-1234? Let me read that back: five five five, one two three four.", "highlights": ["Let me read that back"], "hint": "siempre confirma" },
+            { "key": "Nombres difíciles", "value": "My name is González — G as in golf, O, N, Z as in zebra, A, L, E, Z.", "highlights": ["as in"], "hint": "usa palabras de referencia para letras confusas" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tel-end",
+      "tag": "Despedida",
+      "title": "Terminar la llamada con estilo",
+      "lede": "La despedida es tan importante como el saludo. Termina siempre con claridad y cortesía.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Formal / Profesional",
+              "rule": "Para trabajo, empresas, desconocidos",
+              "examples": [
+                "Thank you for calling. Goodbye.",
+                "Have a good day. Goodbye.",
+                "I'll follow up by email. Thank you.",
+                "It was a pleasure speaking with you.",
+                "We'll be in touch. Take care."
+              ]
+            },
+            {
+              "label": "Informal / Amigos",
+              "rule": "Para familia, amigos, conocidos",
+              "examples": [
+                "Talk to you later! Bye!",
+                "Gotta go! Bye-bye!",
+                "OK, catch you later!",
+                "I'll call you back. Bye!",
+                "Take it easy! Bye!"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Señal de que la llamada termina:",
+        "body": "antes del 'goodbye', usa una frase de cierre: 'Well, I think that's everything.' / 'OK, so we're all set.' / 'Thanks again for your help.' Esto avisa que vas a colgar y evita cortes abruptos."
+      }
+    }
+  ]
+}

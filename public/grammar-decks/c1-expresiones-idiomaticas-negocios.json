@@ -1,0 +1,110 @@
+{
+  "meta": {
+    "eyebrow": "C1 · Expresiones idiomáticas de negocios",
+    "title": "Expresiones idiomáticas",
+    "titleEmphasis": "de negocios"
+  },
+  "cards": [
+    {
+      "id": "bi-common",
+      "tag": "Frecuentes",
+      "title": "Idioms de oficina",
+      "lede": "Expresiones que oirás a diario en un entorno de trabajo angloparlante.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "touch base", "value": "ponerse en contacto · Let's touch base on Monday.", "highlights": ["touch base"] },
+            { "key": "on the same page", "value": "estar de acuerdo · Are we on the same page?", "highlights": ["on the same page"] },
+            { "key": "the big picture", "value": "la visión global", "highlights": ["the big picture"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bi-decisions",
+      "tag": "Decisiones",
+      "title": "Hablar de decisiones",
+      "lede": "Expresiones para deliberar, acordar y cerrar decisiones en reuniones.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "weigh the options", "value": "sopesar alternativas", "highlights": ["weigh the options"] },
+            { "key": "call the shots", "value": "tomar las decisiones", "highlights": ["call the shots"] },
+            { "key": "the bottom line", "value": "lo esencial / el resultado final", "highlights": ["the bottom line"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bi-money",
+      "tag": "Dinero",
+      "title": "Idioms de dinero y costes",
+      "lede": "Frases hechas sobre presupuesto, ganancias y gastos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "cut costs / corners", "value": "recortar gastos / hacer chapuzas", "highlights": ["cut costs"] },
+            { "key": "in the black / red", "value": "con ganancias / con pérdidas", "highlights": ["in the black", "in the red"] },
+            { "key": "ballpark figure", "value": "cifra aproximada", "highlights": ["ballpark figure"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bi-negotiation",
+      "tag": "Negociar",
+      "title": "Idioms de negociación",
+      "lede": "Expresiones para acuerdos, concesiones y puntos muertos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "meet halfway", "value": "ceder ambas partes", "highlights": ["meet halfway"] },
+            { "key": "a win-win", "value": "beneficio mutuo", "highlights": ["win-win"] },
+            { "key": "back to the drawing board", "value": "volver a empezar", "highlights": ["back to the drawing board"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Útil:",
+        "body": "let's find common ground es una forma diplomática de buscar acuerdo."
+      }
+    },
+    {
+      "id": "bi-performance",
+      "tag": "Rendimiento",
+      "title": "Trabajo y desempeño",
+      "lede": "Expresiones sobre esfuerzo, plazos y resultados del equipo.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "go the extra mile", "value": "hacer un esfuerzo extra", "highlights": ["go the extra mile"] },
+            { "key": "raise the bar", "value": "subir el nivel de exigencia", "highlights": ["raise the bar"] },
+            { "key": "drop the ball", "value": "cometer un fallo / descuidar algo", "highlights": ["drop the ball"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bi-caution",
+      "tag": "Cautela",
+      "title": "Usar idioms con criterio",
+      "lede": "Los idioms dan naturalidad, pero mal usados confunden. Adáptalos al contexto.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "good", "text": "En reuniones informales: úsalos con soltura.", "note": "registro adecuado" },
+            { "variant": "bad", "text": "En un contrato legal: evítalos.", "note": "demasiado coloquial" },
+            { "variant": "good", "text": "Apréndelos enteros, sin traducir literal.", "note": "bloque fijo" },
+            { "variant": "good", "text": "Si dudas del registro, opta por lo literal.", "note": "seguro" }
+          ]
+        }
+      ]
+    }
+  ]
+}

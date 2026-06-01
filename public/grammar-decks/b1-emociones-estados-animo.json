@@ -1,0 +1,188 @@
+{
+  "meta": {
+    "eyebrow": "B1 · Vocabulario",
+    "title": "Emociones y",
+    "titleEmphasis": "estados de ánimo",
+    "goal": "Ya puedes expresar emociones matizadas más allá de happy, sad y angry."
+  },
+  "quiz": [
+    {
+      "q": "¿Cómo se dice en inglés que alguien está 'agobiado' con demasiadas responsabilidades?",
+      "options": ["exhausted", "overwhelmed", "frustrated", "anxious"],
+      "answer": 1,
+      "explain": "'Overwhelmed' es la sensación de estar desbordado, con demasiadas cosas encima. 'Exhausted' es agotamiento físico. 'Frustrated' es frustración ante obstáculos. 'Anxious' es ansiedad ante algo incierto."
+    },
+    {
+      "q": "¿Qué frase expresa un alivio después de preocupación?",
+      "options": [
+        "I'm really proud of you.",
+        "I feel relieved — the results were good.",
+        "I'm absolutely thrilled about the news.",
+        "She seemed quite content at home."
+      ],
+      "answer": 1,
+      "explain": "'Relieved' significa aliviado: la tensión o preocupación ha desaparecido. Es la emoción típica después de recibir buenas noticias esperadas con ansia."
+    },
+    {
+      "q": "¿Cuál es la forma correcta con 'feel'?",
+      "options": [
+        "I feel pride about my daughter.",
+        "I feel anxious about the exam.",
+        "I feel disappointment in him.",
+        "I feel exhaustion after work."
+      ],
+      "answer": 1,
+      "explain": "Con 'feel' usamos el adjetivo directamente: 'I feel anxious / tired / proud'. Con los sustantivos (pride, disappointment…) usamos 'I feel a sense of...' o el verbo 'be': 'I am proud.'"
+    }
+  ],
+  "cards": [
+    {
+      "id": "emo-positivas",
+      "tag": "Positivas",
+      "title": "Emociones positivas",
+      "lede": "El inglés tiene muchas palabras para matizar la felicidad. Estas van más allá de 'happy'.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "relieved", "value": "aliviado · sensación de que algo malo no pasó · I'm so relieved the meeting went well.", "highlights": ["relieved"] },
+            { "key": "proud", "value": "orgulloso · satisfacción por un logro · She's proud of her promotion.", "highlights": ["proud"] },
+            { "key": "excited", "value": "emocionado, entusiasmado · anticipación positiva · I'm excited about the trip.", "highlights": ["excited"] },
+            { "key": "content", "value": "satisfecho, tranquilo · calma sin euforia · He's content with his life.", "highlights": ["content"], "hint": "menos intenso que 'happy'" },
+            { "key": "grateful", "value": "agradecido · I'm really grateful for your help.", "highlights": ["grateful"] },
+            { "key": "thrilled", "value": "encantado, eufórico · muy intenso · I'm absolutely thrilled about the news!", "highlights": ["thrilled"], "hint": "más fuerte que 'happy' o 'excited'" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Matiz:",
+        "body": "'content' implica calma y satisfacción tranquila; 'thrilled' es euforia intensa. No son intercambiables."
+      }
+    },
+    {
+      "id": "emo-negativas",
+      "tag": "Negativas",
+      "title": "Emociones negativas",
+      "lede": "Más allá de 'sad' y 'angry', el inglés tiene un vocabulario rico para el malestar emocional.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "frustrated", "value": "frustrado · bloqueado ante un obstáculo · I'm frustrated with this process.", "highlights": ["frustrated"] },
+            { "key": "overwhelmed", "value": "agobiado, desbordado · demasiado a la vez · I feel completely overwhelmed.", "highlights": ["overwhelmed"] },
+            { "key": "anxious", "value": "ansioso, inquieto · preocupación por algo incierto · She's anxious about the results.", "highlights": ["anxious"] },
+            { "key": "disappointed", "value": "decepcionado · la realidad no cumplió la expectativa · He was disappointed by the outcome.", "highlights": ["disappointed"] },
+            { "key": "exhausted", "value": "agotado · cansancio extremo físico o mental · I'm exhausted after this week.", "highlights": ["exhausted"] },
+            { "key": "fed up", "value": "harto · ya no aguanto más · I'm fed up with waiting.", "highlights": ["fed up"], "hint": "muy coloquial, cotidiano" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Diferencia clave:",
+        "body": "'frustrated' es ante un obstáculo concreto; 'fed up' es cansancio acumulado por algo repetitivo."
+      }
+    },
+    {
+      "id": "emo-complejas",
+      "tag": "Complejas",
+      "title": "Emociones mixtas y complejas",
+      "lede": "A veces sentimos dos cosas a la vez. El inglés tiene palabras específicas para esas emociones contradictorias.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "conflicted", "value": "en conflicto interno · dos opciones igualmente válidas o malas · I feel conflicted about leaving my job.", "highlights": ["conflicted"] },
+            { "key": "torn", "value": "dividido · no saber qué elegir · I'm torn between staying and going.", "highlights": ["torn"] },
+            { "key": "nostalgic", "value": "nostálgico · añoranza del pasado · Hearing that song makes me nostalgic.", "highlights": ["nostalgic"] },
+            { "key": "bittersweet", "value": "agridulce · alegría y tristeza al mismo tiempo · Graduation is a bittersweet moment.", "highlights": ["bittersweet"] },
+            { "key": "relieved but sad", "value": "la estructura 'relieved but...' combina emociones · I'm relieved it's over, but sad it ended.", "highlights": ["relieved but"] },
+            { "key": "proud yet nervous", "value": "otra combinación frecuente · I'm proud of myself, yet nervous about what's next.", "highlights": ["proud yet nervous"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "emo-feel-vs-be",
+      "tag": "Estructura",
+      "title": "\"I feel...\" vs \"I am...\"",
+      "lede": "En inglés se puede decir 'I feel tired' o 'I am tired'. La diferencia es sutil pero existe.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "I feel + adjetivo",
+              "rule": "estado temporal o subjetivo · cómo te sientes en este momento",
+              "examples": [
+                "I feel anxious about the interview.",
+                "I feel overwhelmed today.",
+                "I feel proud of what we did.",
+                "I feel a bit down lately."
+              ]
+            },
+            {
+              "label": "I am + adjetivo",
+              "rule": "estado más general o descriptor estable",
+              "examples": [
+                "She is proud of her work.",
+                "He is disappointed in the result.",
+                "They are exhausted after the project.",
+                "I'm grateful for everything."
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Nota:",
+        "body": "en la práctica, 'I feel' y 'I am' son intercambiables con casi todos los adjetivos de emoción. 'Feel' suena ligeramente más introspectivo."
+      }
+    },
+    {
+      "id": "emo-grados",
+      "tag": "Intensidad",
+      "title": "Expresar grados de emoción",
+      "lede": "El adverbio delante del adjetivo afectivo cambia la intensidad por completo. Estos son los más usados.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "good", "text": "I'm a bit worried about the exam.", "note": "ligeramente preocupado — muy suave" },
+            { "variant": "good", "text": "I'm quite anxious about the presentation.", "note": "bastante ansioso — intensidad media" },
+            { "variant": "good", "text": "I'm really frustrated with this situation.", "note": "muy frustrado — énfasis fuerte" },
+            { "variant": "good", "text": "I'm absolutely devastated by the news.", "note": "solo con emociones fuertes (thrilled, devastated, overwhelmed)" },
+            { "variant": "bad", "text": "I'm absolutely tired.", "note": "'absolutely' no va con adjetivos graduables como tired — usa 'really' o 'very'" },
+            { "variant": "good", "text": "I'm absolutely exhausted.", "note": "'exhausted' es un adjetivo extremo → acepta 'absolutely'" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Regla:",
+        "body": "'absolutely' y 'completely' van con adjetivos de intensidad máxima (exhausted, overwhelmed, thrilled, devastated). Con adjetivos graduables (tired, happy, sad) usa 'very' o 'really'."
+      }
+    },
+    {
+      "id": "emo-terceros",
+      "tag": "Hablar de otros",
+      "title": "Describir las emociones ajenas",
+      "lede": "En contextos de trabajo y sociales es útil hablar sobre cómo parecen sentirse los demás, sin afirmar con certeza.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "seemed + adj", "value": "parecía (observación visual) · She seemed frustrated during the meeting.", "highlights": ["seemed frustrated"], "hint": "pasado" },
+            { "key": "looks + adj", "value": "parece (ahora mismo) · He looks relieved — the call must have gone well.", "highlights": ["looks relieved"] },
+            { "key": "appeared + adj", "value": "aparentaba · más formal · They appeared overwhelmed by the workload.", "highlights": ["appeared overwhelmed"] },
+            { "key": "sounded + adj", "value": "sonó, parecía (por la voz) · She sounded really anxious on the phone.", "highlights": ["sounded anxious"] },
+            { "key": "I could tell (that)...", "value": "podía notar que · I could tell she was proud of the result.", "highlights": ["I could tell"] },
+            { "key": "They didn't seem...", "value": "no parecían · They didn't seem very excited about the idea.", "highlights": ["didn't seem"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Clave cultural:",
+        "body": "en el trabajo en inglés, 'seemed' o 'looked' son más respetuosos que afirmar 'She was frustrated'. Mitigan el juicio y suenan más profesionales."
+      }
+    }
+  ]
+}

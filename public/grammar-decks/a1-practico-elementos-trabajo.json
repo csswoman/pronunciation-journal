@@ -1,0 +1,119 @@
+{
+  "meta": {
+    "eyebrow": "A1 · Práctico: elementos de trabajo",
+    "title": "Elementos de",
+    "titleEmphasis": "trabajo",
+    "goal": "Ya puedes nombrar tu profesión, los objetos de la oficina y decir dónde están las cosas."
+  },
+  "related": [
+    { "slug": "biz-elementos-trabajo", "label": "Biz · Elementos de trabajo (profesional)" }
+  ],
+  "cards": [
+    {
+      "id": "wk-jobs",
+      "tag": "Profesiones",
+      "title": "Decir tu trabajo",
+      "lede": "Para decir tu profesión usas a/an + trabajo. El artículo es obligatorio.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Estructura", "value": "I'm a teacher. · She's an engineer.", "highlights": ["a teacher", "an engineer"] },
+            { "key": "Profesiones", "value": "doctor, nurse, lawyer, designer, driver" },
+            { "key": "Pregunta", "value": "What do you do?", "highlights": ["What do you do?"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Ojo:",
+        "body": "se dice I'm a teacher, no \"I'm teacher\": el artículo no se omite con profesiones."
+      }
+    },
+    {
+      "id": "wk-office",
+      "tag": "Oficina",
+      "title": "Objetos del escritorio",
+      "lede": "El vocabulario básico de un espacio de trabajo. Útil con there is / there are.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Escritorio", "value": "desk, chair, computer, laptop, screen" },
+            { "key": "Papelería", "value": "pen, pencil, notebook, paper, folder" },
+            { "key": "Tecnología", "value": "phone, printer, keyboard, mouse" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wk-thereis",
+      "tag": "Hay",
+      "title": "There is / There are",
+      "lede": "Para decir qué hay en un lugar. is para singular, are para plural.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Singular", "value": "There is a computer on the desk.", "highlights": ["There is"] },
+            { "key": "Plural", "value": "There are two chairs.", "highlights": ["There are"] },
+            { "key": "Negativo", "value": "There isn't a printer.", "highlights": ["isn't"] },
+            { "key": "Pregunta", "value": "Is there a phone?", "highlights": ["Is there"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Ojo:",
+        "body": "There's a lot of work pero There are a lot of files: el verbo concuerda con el sustantivo."
+      }
+    },
+    {
+      "id": "wk-places",
+      "tag": "Lugares",
+      "title": "Lugares de trabajo",
+      "lede": "Dónde trabaja la gente. Se usa con la preposición at o in.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Lugares", "value": "office, factory, shop, hospital, school" },
+            { "key": "at work", "value": "I'm at work. (en el trabajo)", "highlights": ["at work"] },
+            { "key": "work at/for", "value": "I work at a bank. · I work for Google.", "highlights": ["work at", "work for"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wk-routine",
+      "tag": "Rutina",
+      "title": "La jornada laboral",
+      "lede": "Verbos y horas para describir un día de trabajo con el presente simple.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Empezar", "value": "I start work at 9.", "highlights": ["start work"] },
+            { "key": "Terminar", "value": "I finish at 5.", "highlights": ["finish"] },
+            { "key": "Descanso", "value": "I have lunch at noon.", "highlights": ["have lunch"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wk-prepositions",
+      "tag": "Ubicación",
+      "title": "on, in, under, next to",
+      "lede": "Preposiciones de lugar para describir dónde están las cosas en el escritorio.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "good", "text": "The pen is on the desk.", "note": "on = sobre" },
+            { "variant": "good", "text": "The laptop is in the bag.", "note": "in = dentro" },
+            { "variant": "good", "text": "The trash is under the desk.", "note": "under = debajo" },
+            { "variant": "good", "text": "The phone is next to the computer.", "note": "next to = junto a" }
+          ]
+        }
+      ]
+    }
+  ]
+}

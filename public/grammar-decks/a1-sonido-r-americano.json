@@ -1,0 +1,175 @@
+{
+  "meta": {
+    "eyebrow": "A1 · Pronunciación",
+    "title": "La R americana",
+    "titleEmphasis": "/ɹ/",
+    "goal": "Ya puedes pronunciar la R americana sin que suene a R española o francesa."
+  },
+  "sounds": ["ɹ"],
+  "quiz": [
+    {
+      "q": "¿Dónde va la lengua para pronunciar la /ɹ/ americana?",
+      "options": [
+        "Toca el paladar, como la R española",
+        "Vibra varias veces, como la RR",
+        "Se curva hacia atrás sin tocar nada, lengua en el aire",
+        "Se apoya en los dientes superiores"
+      ],
+      "answer": 2,
+      "explain": "La /ɹ/ americana es retroflexa: la punta de la lengua se curva hacia atrás sin tocar el paladar. No hay contacto ni vibración."
+    },
+    {
+      "q": "¿Cómo se pronuncia la vocal en 'her' y 'bird'?",
+      "options": [
+        "La vocal se pronuncia clara, luego la R al final",
+        "La vocal y la R se fusionan en un solo sonido: /ɜːr/",
+        "La R no se pronuncia, solo la vocal",
+        "Se pronuncia como en francés, gutural"
+      ],
+      "answer": 1,
+      "explain": "En inglés americano, la R 'colorea' la vocal. En 'her' /hɜːr/ y 'bird' /bɜːrd/ la vocal y la R son casi un solo sonido fusionado."
+    },
+    {
+      "q": "En la palabra 'very', ¿cuántas R hay?",
+      "options": ["Una, al principio", "Una, en el medio", "Dos R, una en 've-' y otra en '-ry'", "Ninguna, no se pronuncia"],
+      "answer": 2,
+      "explain": "En 'very' hay dos R: la del 've-' /v/ y la de '-ry'. Se pronuncian /ˈvɛri/. Las dos deben sonar como /ɹ/ americana, no como R española."
+    }
+  ],
+  "cards": [
+    {
+      "id": "r-what",
+      "tag": "El sonido",
+      "title": "¿Qué hace diferente a la /ɹ/ americana?",
+      "lede": "No vibra, no toca el paladar, no es gutural. Es un sonido único que requiere práctica.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "R española /r/", "value": "la lengua toca el paladar una vez · pero · para", "highlights": ["pero", "para"], "hint": "contacto rápido" },
+            { "key": "RR española /r̄/", "value": "vibra varias veces · perro · carro", "highlights": ["perro", "carro"], "hint": "vibración múltiple" },
+            { "key": "R americana /ɹ/", "value": "lengua curvada atrás, sin tocar nada · red · right · car", "highlights": ["red", "right", "car"], "hint": "retroflexa: sin contacto" },
+            { "key": "Labios", "value": "los labios se redondean ligeramente al hacer /ɹ/", "hint": "como si dijeras una 'o' suave" },
+            { "key": "Cuerdas vocales", "value": "sí vibran — es un sonido sonoro como la M o la L", "hint": "no es soplo de aire" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Truco mental:",
+        "body": "imagina que tienes una papa caliente en la boca y doblas la lengua hacia atrás para no tocarla. Eso es la /ɹ/ americana."
+      }
+    },
+    {
+      "id": "r-initial",
+      "tag": "R inicial",
+      "title": "R al inicio de palabras",
+      "lede": "La R al inicio es la más fácil de practicar. La lengua ya está curvada desde el principio.",
+      "blocks": [
+        {
+          "type": "pronunciation",
+          "sound": "/ɹ/ inicial",
+          "focus": ["ɹ"],
+          "examples": [
+            { "text": "red", "ipa": "/ɹɛd/", "es": "rojo — empieza con la lengua curvada" },
+            { "text": "right", "ipa": "/ɹaɪt/", "es": "derecho / correcto" },
+            { "text": "run", "ipa": "/ɹʌn/", "es": "correr — R + vocal /ʌ/" },
+            { "text": "read", "ipa": "/ɹiːd/", "es": "leer — no vibres la R" },
+            { "text": "real", "ipa": "/ɹiːl/", "es": "real — la R no suena como en español" },
+            { "text": "room", "ipa": "/ɹuːm/", "es": "habitación — labios redondos" }
+          ],
+          "note": "Antes de pronunciar cada palabra, curva la lengua hacia atrás. Luego empieza. Evita el golpe de la R española."
+        }
+      ]
+    },
+    {
+      "id": "r-medial",
+      "tag": "R medial",
+      "title": "R en medio de palabras",
+      "lede": "En el medio de una palabra, la /ɹ/ a veces pasa desapercibida para hablantes de español.",
+      "blocks": [
+        {
+          "type": "pronunciation",
+          "sound": "/ɹ/ medial",
+          "focus": ["ɹ"],
+          "examples": [
+            { "text": "very", "ipa": "/ˈvɛri/", "es": "muy — dos sílabas: VE-ry" },
+            { "text": "sorry", "ipa": "/ˈsɒri/", "es": "lo siento — SO-rry" },
+            { "text": "morning", "ipa": "/ˈmɔːrnɪŋ/", "es": "mañana — la R colorea la vocal" },
+            { "text": "already", "ipa": "/ɔːlˈɹɛdi/", "es": "ya — la R va en la segunda sílaba" },
+            { "text": "travel", "ipa": "/ˈtɹævl/", "es": "viajar — TR juntas: /tɹ/ es un grupo difícil" },
+            { "text": "problem", "ipa": "/ˈpɹɒbləm/", "es": "problema — PR juntas: /pɹ/" }
+          ],
+          "note": "Grupos 'tr' y 'pr' son difíciles: travel, pretty, price. Curva la lengua ANTES de la T o P."
+        }
+      ]
+    },
+    {
+      "id": "r-vocalic",
+      "tag": "R vocálica",
+      "title": "R después de vocal: car, work, her",
+      "lede": "Cuando la R viene después de una vocal, se fusionan. La vocal se vuelve 'r-colored'.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "/ɑːr/ — ar", "value": "car, far, park, start, market", "highlights": ["car", "far", "park"], "hint": "la vocal es larga y oscura" },
+            { "key": "/ɔːr/ — or", "value": "work, word, world, more, store", "highlights": ["work", "word", "more"], "hint": "labios redondos" },
+            { "key": "/ɜːr/ — er, ir, ur", "value": "her, bird, first, turn, hurt", "highlights": ["her", "bird", "turn"], "hint": "vocal más corta, R coloreada" },
+            { "key": "/ɪər/ — ear, ere", "value": "here, near, ear, fear, clear", "highlights": ["here", "near", "ear"], "hint": "empieza con /ɪ/, termina en R" },
+            { "key": "/ɛər/ — air, are", "value": "there, care, hair, where, share", "highlights": ["there", "care", "hair"], "hint": "empieza con /ɛ/, termina en R" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "La R no desaparece:",
+        "body": "en inglés americano la R siempre se pronuncia (a diferencia del inglés británico). En 'car', 'work', 'bird' sientes la R al final."
+      }
+    },
+    {
+      "id": "r-mistakes",
+      "tag": "Errores comunes",
+      "title": "Palabras que los hispanohablantes mispronuncian",
+      "lede": "Estas palabras suenan muy diferente de cómo las pronunciarías en español.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "three — con R española vibrante" },
+            { "variant": "good", "text": "three /θɹiː/ — th + R americana sin vibración", "note": "lengua en dientes, luego curva para R" },
+            { "variant": "bad", "text": "ready — 'rredi' con doble vibración" },
+            { "variant": "good", "text": "ready /ˈɹɛdi/ — sin vibrar, solo curva", "note": "una sola R suave" },
+            { "variant": "bad", "text": "right — 'rrait' con R española" },
+            { "variant": "good", "text": "right /ɹaɪt/ — R americana deslizada", "note": "la boca ya empieza curvada" },
+            { "variant": "bad", "text": "problem — 'pro-blem' sin R" },
+            { "variant": "good", "text": "problem /ˈpɹɒbləm/ — pr juntas fluidas", "note": "P+R sin pausa entre ellas" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "r-connected",
+      "tag": "Habla continua",
+      "title": "La R en el habla conectada",
+      "lede": "En conversación rápida, la R a veces une palabras. Escucha y repite las frases completas.",
+      "blocks": [
+        {
+          "type": "pronunciation",
+          "sound": "/ɹ/ en frases",
+          "focus": ["ɹ"],
+          "examples": [
+            { "text": "Are you ready?", "ipa": "/ɑːr jʊ ˈɹɛdi/", "es": "¿Estás listo? — R al inicio de 'are' y 'ready'" },
+            { "text": "I'm really sorry.", "ipa": "/aɪm ˈɹiːli ˈsɒri/", "es": "Lo siento mucho — tres R en una frase" },
+            { "text": "Turn right here.", "ipa": "/tɜːrn ɹaɪt hɪər/", "es": "Gira a la derecha aquí" },
+            { "text": "She works right here.", "es": "Ella trabaja aquí mismo — R+R+R encadenadas" },
+            { "text": "We're running late.", "es": "Llegamos tarde — /ɹ/ fluida entre palabras" }
+          ],
+          "note": "Practica las frases completas, no solo las palabras. El contexto hace la R más natural."
+        }
+      ],
+      "tip": {
+        "label": "Estrategia:",
+        "body": "graba tu voz diciendo 'Are you really ready?' y compárala con un hablante nativo. La diferencia te muestra exactamente qué ajustar."
+      }
+    }
+  ]
+}

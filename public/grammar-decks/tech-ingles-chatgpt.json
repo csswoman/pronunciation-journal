@@ -1,0 +1,119 @@
+{
+  "meta": {
+    "eyebrow": "Tech · Inglés con ChatGPT",
+    "title": "Inglés práctico con",
+    "titleEmphasis": "ChatGPT"
+  },
+  "cards": [
+    {
+      "id": "gpt-prompt-verbs",
+      "tag": "Verbos de prompt",
+      "title": "Cómo pedir lo que quieres",
+      "lede": "El verbo con que empiezas el prompt marca qué hará el modelo. Elígelo bien.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Summarize", "value": "resume · Summarize this text.", "highlights": ["Summarize"] },
+            { "key": "Explain", "value": "explica · Explain it simply.", "highlights": ["Explain"] },
+            { "key": "Rewrite", "value": "reescribe · Rewrite this email.", "highlights": ["Rewrite"] },
+            { "key": "Translate", "value": "traduce · Translate into English.", "highlights": ["Translate"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "gpt-precise",
+      "tag": "Prompts claros",
+      "title": "Vago vs específico",
+      "lede": "Cuanto más concreto el prompt, mejor la respuesta. Compara.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "Write about dogs." },
+            { "variant": "good", "text": "Write a 100-word paragraph about dog training for beginners.", "note": "longitud, tema y público" },
+            { "variant": "bad", "text": "Make it better." },
+            { "variant": "good", "text": "Make it more formal and concise.", "note": "di en qué dirección" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "gpt-role",
+      "tag": "Contexto",
+      "title": "Dar rol y formato",
+      "lede": "Decirle al modelo quién es y cómo responder mejora mucho el resultado.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Act as...", "value": "Act as an English teacher.", "highlights": ["Act as"] },
+            { "key": "Use a ... tone", "value": "Use a friendly tone.", "highlights": ["Use a friendly tone"] },
+            { "key": "Format as...", "value": "Format the answer as a table.", "highlights": ["Format as"] },
+            { "key": "Step by step", "value": "Explain it step by step.", "highlights": ["step by step"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "gpt-refine",
+      "tag": "Iterar",
+      "title": "Pedir cambios sobre la respuesta",
+      "lede": "Casi nunca aciertas a la primera. Frases para refinar el resultado.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Shorten this", "value": "acórtalo · Shorten this to two lines.", "highlights": ["Shorten"] },
+            { "key": "Expand on...", "value": "amplía sobre... · Expand on point 2.", "highlights": ["Expand on"] },
+            { "key": "Give me alternatives", "value": "dame opciones · Give me 3 options.", "highlights": ["alternatives"] },
+            { "key": "Keep the... but...", "value": "mantén el tono, pero acórtalo", "highlights": ["Keep the", "but"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "gpt-learn",
+      "tag": "Aprender inglés",
+      "title": "Úsalo como tutor de inglés",
+      "lede": "ChatGPT puede corregirte y explicarte. Estos prompts lo convierten en profesor.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Correct my grammar", "value": "Correct my grammar and explain the errors.", "highlights": ["Correct my grammar"] },
+            { "key": "Rephrase naturally", "value": "Rephrase this to sound more natural.", "highlights": ["sound more natural"] },
+            { "key": "Quiz me", "value": "Quiz me on the past tense.", "highlights": ["Quiz me on"] },
+            { "key": "Roleplay", "value": "Let's roleplay a job interview.", "highlights": ["roleplay"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Truco:",
+        "body": "pídele \"explain like I'm a beginner\" para que adapte el nivel a ti."
+      }
+    },
+    {
+      "id": "gpt-limits",
+      "tag": "Límites",
+      "title": "Hablar de sus errores",
+      "lede": "El modelo se equivoca. Vocabulario para señalar y corregir esos fallos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "to hallucinate", "value": "inventarse datos falsos", "highlights": ["hallucinate"] },
+            { "key": "make things up", "value": "inventárselo · it made that up", "highlights": ["make things up"] },
+            { "key": "double-check", "value": "verificar · always double-check facts", "highlights": ["double-check"] },
+            { "key": "That's not accurate", "value": "eso no es exacto · corregir", "highlights": ["not accurate"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Consejo:",
+        "body": "verifica siempre los datos importantes; el modelo suena seguro incluso cuando se equivoca."
+      }
+    }
+  ]
+}

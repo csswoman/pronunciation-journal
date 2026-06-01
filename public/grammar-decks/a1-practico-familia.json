@@ -1,0 +1,120 @@
+{
+  "meta": {
+    "eyebrow": "A1 · Práctico: familia",
+    "title": "La",
+    "titleEmphasis": "familia"
+  },
+  "cards": [
+    {
+      "id": "fam-members",
+      "tag": "Miembros",
+      "title": "Vocabulario de familia",
+      "lede": "Los nombres de los parientes. Muchos forman pareja masculino/femenino.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Padres", "value": "father (dad) · mother (mom) · parents", "highlights": ["parents"] },
+            { "key": "Hijos", "value": "son · daughter · children (kids)", "highlights": ["children"] },
+            { "key": "Hermanos", "value": "brother · sister · siblings", "highlights": ["siblings"] },
+            { "key": "Abuelos", "value": "grandfather · grandmother · grandparents", "highlights": ["grandparents"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Ojo:",
+        "body": "children es el plural irregular de child; no existe \"childs\"."
+      }
+    },
+    {
+      "id": "fam-extended",
+      "tag": "Familia extensa",
+      "title": "Tíos, primos y políticos",
+      "lede": "El inglés usa in-law para la familia política y no distingue género en algunos casos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Tíos", "value": "uncle · aunt", "highlights": ["uncle", "aunt"] },
+            { "key": "Primos", "value": "cousin (mismo para ambos)", "highlights": ["cousin"] },
+            { "key": "Sobrinos", "value": "nephew · niece", "highlights": ["nephew", "niece"] },
+            { "key": "Políticos", "value": "mother-in-law · brother-in-law", "highlights": ["in-law"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fam-possessive",
+      "tag": "Posesión",
+      "title": "El 's posesivo",
+      "lede": "Para decir de quién es algo, añades 's al dueño. Es la forma más natural en inglés.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Persona + 's", "value": "Ana's brother · my dad's car", "highlights": ["'s"] },
+            { "key": "Plural en -s", "value": "my parents' house (solo apóstrofo)", "highlights": ["'"] },
+            { "key": "Pregunta", "value": "Whose book is this?", "highlights": ["Whose"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Ojo:",
+        "body": "el 's marca posesión, no plural: Ana's = de Ana; Anas no existe."
+      }
+    },
+    {
+      "id": "fam-possessive-adj",
+      "tag": "Posesivos",
+      "title": "my, your, his, her",
+      "lede": "Los adjetivos posesivos van antes del sustantivo y no cambian con el plural.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "my / your", "value": "my sister · your family", "highlights": ["my", "your"] },
+            { "key": "his / her", "value": "his mom · her brother", "highlights": ["his", "her"] },
+            { "key": "our / their", "value": "our kids · their parents", "highlights": ["our", "their"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Ojo:",
+        "body": "his (de él) y her (de ella) dependen del dueño, no del objeto: her father, his mother."
+      }
+    },
+    {
+      "id": "fam-describe",
+      "tag": "Describir",
+      "title": "Hablar de tu familia",
+      "lede": "Combina have got / there is con el vocabulario para describir tu familia.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Tener", "value": "I have two brothers.", "highlights": ["have"] },
+            { "key": "Hay", "value": "There are five people in my family.", "highlights": ["There are"] },
+            { "key": "Edad", "value": "My sister is ten years old.", "highlights": ["years old"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fam-questions",
+      "tag": "Preguntar",
+      "title": "Preguntas sobre la familia",
+      "lede": "Las preguntas típicas para conocer a la familia de alguien.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "good", "text": "Do you have any brothers or sisters?", "note": "preguntar por hermanos" },
+            { "variant": "good", "text": "How many people are in your family?", "note": "número de miembros" },
+            { "variant": "good", "text": "What does your father do?", "note": "preguntar el trabajo" },
+            { "variant": "good", "text": "How old is your sister?", "note": "preguntar la edad" }
+          ]
+        }
+      ]
+    }
+  ]
+}

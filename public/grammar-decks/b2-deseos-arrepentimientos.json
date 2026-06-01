@@ -1,0 +1,205 @@
+{
+  "meta": {
+    "eyebrow": "B2 · Gramática",
+    "title": "Deseos y",
+    "titleEmphasis": "arrepentimientos",
+    "goal": "Ya expresas deseos sobre el presente, el pasado y preferencias usando wish, if only e I'd rather."
+  },
+  "cards": [
+    {
+      "id": "wish-present",
+      "tag": "Deseos presentes",
+      "title": "I wish + pasado simple",
+      "lede": "Para desear que algo fuera diferente ahora mismo. El pasado simple no indica pasado: indica que la situación actual es lo contrario de lo que deseas.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "I wish I had more time.", "value": "→ No tengo tiempo suficiente ahora.", "highlights": ["had"] },
+            { "key": "I wish I spoke better English.", "value": "→ Mi inglés no es tan bueno como quisiera.", "highlights": ["spoke"] },
+            { "key": "I wish it wasn't raining.", "value": "→ Está lloviendo y no me gusta.", "highlights": ["wasn't raining"] },
+            { "key": "I wish I lived closer to work.", "value": "→ Vivo lejos del trabajo.", "highlights": ["lived"] },
+            { "key": "I wish I knew the answer.", "value": "→ No sé la respuesta.", "highlights": ["knew"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Atención:",
+        "body": "después de I wish puedes usar were en lugar de was para todas las personas: I wish it weren't raining (más formal)."
+      }
+    },
+    {
+      "id": "wish-if-only",
+      "tag": "If only",
+      "title": "If only: la misma gramática, más intensidad",
+      "lede": "If only tiene exactamente la misma estructura que I wish, pero expresa una emoción más fuerte: desesperación, frustración o anhelo profundo.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "I wish (neutro)",
+              "rule": "Deseo tranquilo, reflexivo",
+              "examples": [
+                "I wish I had a bigger flat.",
+                "I wish I could drive.",
+                "I wish the meeting was shorter."
+              ]
+            },
+            {
+              "label": "If only (intenso)",
+              "rule": "Frustración, desesperación o nostalgia fuerte",
+              "examples": [
+                "If only I had a bigger flat!",
+                "If only I could drive!",
+                "If only the meeting was shorter!"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Registro:",
+        "body": "If only suele ir con signos de exclamación porque expresa una emoción más intensa. La gramática es idéntica."
+      }
+    },
+    {
+      "id": "wish-past",
+      "tag": "Arrepentimientos",
+      "title": "I wish + pasado perfecto",
+      "lede": "Para lamentarse de algo que ya ocurrió y no se puede cambiar. El pasado perfecto marca que el momento ya pasó.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "I wish I had studied more.", "value": "→ No estudié lo suficiente y lo lamento.", "highlights": ["had studied"] },
+            { "key": "I wish I hadn't said that.", "value": "→ Lo dije y ahora me arrepiento.", "highlights": ["hadn't said"] },
+            { "key": "I wish I had listened to you.", "value": "→ No te escuché, pero debería haberlo hecho.", "highlights": ["had listened"] },
+            { "key": "If only I had arrived earlier!", "value": "→ Llegué tarde y las consecuencias fueron malas.", "highlights": ["had arrived"] }
+          ]
+        },
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "I wish I studied harder last year.", "note": "incorrecto para el pasado" },
+            { "variant": "good", "text": "I wish I had studied harder last year.", "note": "pasado perfecto para arrepentimientos" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wish-would",
+      "tag": "Comportamiento ajeno",
+      "title": "I wish + would",
+      "lede": "Cuando deseas que otra persona (o una situación externa) cambie su comportamiento. Expresa irritación o impaciencia. NO se usa para hablar de uno mismo.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "I wish you would listen!", "value": "→ Nunca me escuchas y me frustra.", "highlights": ["would listen"], "hint": "irritación hacia otra persona" },
+            { "key": "I wish it would stop raining.", "value": "→ Sigue lloviendo y estoy harto.", "highlights": ["would stop"] },
+            { "key": "I wish they would be quiet.", "value": "→ Siguen haciendo ruido.", "highlights": ["would be quiet"] }
+          ]
+        },
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "I wish I would work harder.", "note": "NO se usa wish + would para uno mismo" },
+            { "variant": "good", "text": "I wish I worked harder.", "note": "para deseos sobre ti mismo, usa pasado simple" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wish-id-rather",
+      "tag": "Preferencias",
+      "title": "I'd rather: preferencia y petición",
+      "lede": "I'd rather expresa preferencia. La estructura cambia según si hablas de ti mismo o de otra persona.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "I'd rather + infinitivo sin to",
+              "rule": "Preferencia personal, yo decido",
+              "examples": [
+                "I'd rather stay home tonight.",
+                "I'd rather have tea than coffee.",
+                "She'd rather work from home."
+              ]
+            },
+            {
+              "label": "I'd rather + pasado simple",
+              "rule": "Con otra persona: petición o preferencia sobre lo que hace otro",
+              "examples": [
+                "I'd rather you didn't come.",
+                "I'd rather you called first.",
+                "She'd rather he stayed quiet."
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Diferencia clave:",
+        "body": "I'd rather go (yo prefiero ir) / I'd rather you went (prefiero que tú vayas — más diplomático que un imperativo)."
+      }
+    },
+    {
+      "id": "wish-its-time",
+      "tag": "Ya era hora",
+      "title": "It's (high) time + pasado simple",
+      "lede": "Expresa que algo debería haber pasado ya, que está pendiente o que va siendo hora de hacerlo. El pasado simple no indica pasado: indica urgencia o reproche.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "It's time we left.", "value": "→ Ya deberíamos irnos (llevamos mucho rato).", "highlights": ["left"] },
+            { "key": "It's high time you apologized.", "value": "→ Deberías haberte disculpado hace tiempo.", "highlights": ["apologized"], "hint": "high time = todavía más urgente" },
+            { "key": "It's time he found a job.", "value": "→ Ya va siendo hora de que trabaje.", "highlights": ["found"] },
+            { "key": "It's high time we had a serious talk.", "value": "→ Esta conversación lleva mucho tiempo pendiente.", "highlights": ["had"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Tono:",
+        "body": "It's high time suena a reproche más fuerte que It's time. Úsalo cuando quieras expresar que algo se ha retrasado demasiado."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "Quieres decir que lamentas no haber ido a la fiesta. ¿Cuál es correcta?",
+      "options": [
+        "I wish I went to the party.",
+        "I wish I would go to the party.",
+        "I wish I had gone to the party.",
+        "I wish I have gone to the party."
+      ],
+      "answer": 2,
+      "explain": "Para arrepentimientos sobre el pasado se usa I wish + pasado perfecto (had + participio). 'went' sería para un deseo presente; 'would go' no se usa para hablar de uno mismo."
+    },
+    {
+      "q": "Tu compañero de trabajo hace ruido constantemente y te molesta. ¿Cómo lo expresas?",
+      "options": [
+        "I wish my colleague was quieter.",
+        "I wish my colleague would be quieter.",
+        "I wish my colleague had been quieter.",
+        "I'd rather my colleague was quiet."
+      ],
+      "answer": 1,
+      "explain": "I wish + would se usa para desear que otra persona cambie su comportamiento (irritación o impaciencia sobre hábitos continuos). La opción D también es válida gramaticalmente pero cambia el significado a preferencia, no frustración."
+    },
+    {
+      "q": "¿Cuál de estas frases expresa que algo lleva demasiado tiempo pendiente?",
+      "options": [
+        "I wish you apologized.",
+        "If only you apologized.",
+        "It's high time you apologized.",
+        "I'd rather you apologized."
+      ],
+      "answer": 2,
+      "explain": "It's high time + pasado simple implica que algo debería haberse hecho ya y se ha retrasado demasiado. Tiene un tono de reproche o urgencia que las otras opciones no tienen."
+    }
+  ]
+}

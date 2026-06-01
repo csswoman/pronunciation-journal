@@ -11,7 +11,7 @@ Your project now has **production-grade, automated deployment infrastructure**:
 ├── workflows/
 │   ├── ci.yml                    # Continuous Integration (every push/PR)
 │   └── deploy.yml                # Continuous Deployment (main → production)
-└── DEPLOYMENT_SETUP.md           # Quick start guide
+└── DEPLOYMENT_SETUP.md           # Pointer → docs/deployment/setup-guide.md
 
 app/api/health/
 └── route.ts                       # Health check endpoint for deployments
@@ -19,7 +19,11 @@ app/api/health/
 scripts/
 └── setup-deployment.sh           # Automated secret configuration
 
-DEPLOYMENT.md                      # Comprehensive deployment guide
+docs/deployment/
+├── guide.md                       # Comprehensive deployment guide
+├── setup-guide.md                 # Quick start guide
+├── ci-cd-summary.md               # This file
+└── setup-checklist.md             # Step-by-step checklist
 ```
 
 ---
@@ -358,8 +362,8 @@ gh secret set VERCEL_TOKEN
 
 ## 📖 Full Documentation
 
-- **DEPLOYMENT.md** — Comprehensive guide with all details
-- **.github/DEPLOYMENT_SETUP.md** — Quick start guide
+- **[guide.md](guide.md)** — Comprehensive guide with all details
+- **[setup-guide.md](setup-guide.md)** — Quick start guide
 - **ci.yml** — CI configuration (read for details)
 - **deploy.yml** — Deploy configuration (read for details)
 
@@ -381,5 +385,5 @@ gh secret set VERCEL_TOKEN
 
 Need help? Check:
 1. **Actions** tab for logs
-2. **DEPLOYMENT.md** for detailed guide
+2. **[guide.md](guide.md)** for detailed guide
 3. **Vercel dashboard** for deployment status

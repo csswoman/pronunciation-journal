@@ -1,0 +1,179 @@
+{
+  "meta": {
+    "eyebrow": "A2 · Gramática",
+    "title": "Orden de los",
+    "titleEmphasis": "adjetivos",
+    "goal": "Ya sabes en qué orden colocar varios adjetivos antes de un sustantivo."
+  },
+  "quiz": [
+    {
+      "q": "¿Cuál es el orden correcto?",
+      "options": ["a red big old car", "a big old red car", "an old big red car", "a red old big car"],
+      "answer": 1,
+      "explain": "El orden correcto es tamaño → edad → color: big (tamaño) → old (edad) → red (color) → car."
+    },
+    {
+      "q": "¿Dónde va un adjetivo de opinión como 'lovely'?",
+      "options": ["Después del adjetivo de color", "Al final, antes del sustantivo", "Siempre primero, antes de todos los demás", "Solo después del verbo to be"],
+      "answer": 2,
+      "explain": "Los adjetivos de opinión (lovely, nice, awful, beautiful) siempre van primero: a lovely old wooden table."
+    },
+    {
+      "q": "¿Cuál es correcta?",
+      "options": ["She has Italian beautiful long hair.", "She has beautiful long Italian hair.", "She has long Italian beautiful hair.", "She has beautiful Italian long hair."],
+      "answer": 1,
+      "explain": "Opinión → largo (tamaño) → origen: beautiful (opinión) → long (tamaño) → Italian (origen) → hair."
+    }
+  ],
+  "cards": [
+    {
+      "id": "adj-order-rule",
+      "tag": "La regla",
+      "title": "El orden de los adjetivos",
+      "lede": "En inglés los adjetivos van antes del sustantivo en un orden fijo. Memoriza la cadena: opinión → tamaño → edad → forma → color → origen → material.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "1 · Opinión", "value": "lovely, awful, nice, beautiful, ugly", "highlights": ["Opinión"], "hint": "Lo que piensas/sientes" },
+            { "key": "2 · Tamaño", "value": "big, small, tall, short, long, tiny", "highlights": ["Tamaño"] },
+            { "key": "3 · Edad", "value": "old, young, new, ancient, modern", "highlights": ["Edad"] },
+            { "key": "4 · Forma", "value": "round, square, flat, narrow, wide", "highlights": ["Forma"] },
+            { "key": "5 · Color", "value": "red, blue, dark green, light grey", "highlights": ["Color"] },
+            { "key": "6 · Origen", "value": "Italian, Chinese, American, northern", "highlights": ["Origen"] },
+            { "key": "7 · Material", "value": "wooden, silver, cotton, plastic, glass", "highlights": ["Material"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Frase mnemotécnica:",
+        "body": "O-T-E-F-C-O-M → «Organiza Tu Estilo: Forma, Color, Origen, Material»."
+      }
+    },
+    {
+      "id": "adj-two-adjectives",
+      "tag": "Dos adjetivos",
+      "title": "El caso más frecuente: dos adjetivos",
+      "lede": "El 90% de las veces usamos uno o dos adjetivos. Aquí los errores más comunes con dos.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "a red big car", "note": "color antes que tamaño" },
+            { "variant": "good", "text": "a big red car", "note": "tamaño → color ✓" },
+            { "variant": "bad", "text": "a wooden beautiful table", "note": "material antes que opinión" },
+            { "variant": "good", "text": "a beautiful wooden table", "note": "opinión → material ✓" },
+            { "variant": "bad", "text": "an old lovely house", "note": "edad antes que opinión" },
+            { "variant": "good", "text": "a lovely old house", "note": "opinión → edad ✓" },
+            { "variant": "bad", "text": "French small coffee", "note": "origen antes que tamaño" },
+            { "variant": "good", "text": "a small French coffee", "note": "tamaño → origen ✓" },
+            { "variant": "bad", "text": "cotton white shirt", "note": "material antes que color" },
+            { "variant": "good", "text": "a white cotton shirt", "note": "color → material ✓" },
+            { "variant": "bad", "text": "new tall buildings", "note": "edad antes que tamaño" },
+            { "variant": "good", "text": "tall new buildings", "note": "tamaño → edad ✓" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "adj-three-adjectives",
+      "tag": "Tres adjetivos",
+      "title": "Tres adjetivos en la misma frase",
+      "lede": "Menos frecuente, pero posible. El orden se vuelve crítico aquí.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "a wooden old big table", "note": "material, edad, tamaño — todo al revés" },
+            { "variant": "good", "text": "a big old wooden table", "note": "tamaño → edad → material ✓" },
+            { "variant": "bad", "text": "a blue small Italian car", "note": "color antes de tamaño" },
+            { "variant": "good", "text": "a small blue Italian car", "note": "tamaño → color → origen ✓" },
+            { "variant": "bad", "text": "an awful big black dog", "note": "opinión no está primero" },
+            { "variant": "good", "text": "an awful big black dog", "note": "opinión → tamaño → color ✓" },
+            { "variant": "bad", "text": "a French old narrow street", "note": "origen antes de edad y forma" },
+            { "variant": "good", "text": "a narrow old French street", "note": "forma → edad → origen ✓" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Consejo:",
+        "body": "Rara vez usamos más de tres adjetivos seguidos en conversación. Si tienes muchos, considera reescribir la frase."
+      }
+    },
+    {
+      "id": "adj-opinion-first",
+      "tag": "Opinión primero",
+      "title": "Los adjetivos de opinión siempre van primero",
+      "lede": "Hay dos tipos de adjetivos: los que describen hechos objetivos y los que expresan tu opinión. La opinión siempre gana el primer puesto.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Opinión (subjetivo)",
+              "rule": "Lo que piensas o sientes sobre algo. Siempre va primero.",
+              "examples": [
+                "lovely, nice, awful, horrible",
+                "beautiful, ugly, comfortable",
+                "interesting, boring, perfect"
+              ]
+            },
+            {
+              "label": "Hecho (objetivo)",
+              "rule": "Descripción neutra. Va después de la opinión.",
+              "examples": [
+                "big, old, square (tamaño/edad/forma)",
+                "red, wooden, Italian (color/material/origen)",
+                "a lovely small Italian restaurant ✓"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Prueba:",
+        "body": "Si puedes discutir si el adjetivo es verdad («¿Es realmente bonito?»), es de opinión. Si es un hecho («Es de madera»), es objetivo."
+      }
+    },
+    {
+      "id": "adj-spanish-errors",
+      "tag": "Errores españoles",
+      "title": "Errores al traducir del español",
+      "lede": "En español el adjetivo suele ir después del sustantivo. Al traducir al inglés palabra por palabra, el orden sale mal.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "a car red", "note": "traducción literal de «un coche rojo»" },
+            { "variant": "good", "text": "a red car", "note": "el adjetivo va ANTES del sustantivo en inglés ✓" },
+            { "variant": "bad", "text": "a dress nice and long", "note": "orden español: sustantivo + adjetivos" },
+            { "variant": "good", "text": "a nice long dress", "note": "opinión → tamaño → sustantivo ✓" },
+            { "variant": "bad", "text": "She has eyes beautiful blue", "note": "literal de «ojos azules hermosos»" },
+            { "variant": "good", "text": "She has beautiful blue eyes", "note": "opinión → color → sustantivo ✓" },
+            { "variant": "bad", "text": "a house big and old", "note": "adjetivos después del sustantivo" },
+            { "variant": "good", "text": "a big old house", "note": "tamaño → edad → sustantivo ✓" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "adj-context-phrases",
+      "tag": "En contexto",
+      "title": "Descripciones en contexto real",
+      "lede": "Personas, objetos y lugares: así se usan varios adjetivos en frases reales del día a día.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Persona", "value": "a tall young Brazilian woman", "highlights": ["tall", "young", "Brazilian"], "hint": "tamaño → edad → origen" },
+            { "key": "Objeto", "value": "a beautiful small silver ring", "highlights": ["beautiful", "small", "silver"], "hint": "opinión → tamaño → material" },
+            { "key": "Lugar", "value": "a lovely old French village", "highlights": ["lovely", "old", "French"], "hint": "opinión → edad → origen" },
+            { "key": "Ropa", "value": "comfortable dark blue cotton trousers", "highlights": ["comfortable", "dark blue", "cotton"], "hint": "opinión → color → material" },
+            { "key": "Mueble", "value": "a big square wooden desk", "highlights": ["big", "square", "wooden"], "hint": "tamaño → forma → material" },
+            { "key": "Comida", "value": "a nice hot Italian pizza", "highlights": ["nice", "hot", "Italian"], "hint": "opinión → temperatura (edad) → origen" }
+          ]
+        }
+      ]
+    }
+  ]
+}

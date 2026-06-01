@@ -18,53 +18,27 @@ export default function IPAProgressBar({
   const pct = total === 0 ? 0 : Math.min(100, Math.round((explored / total) * 100));
 
   return (
-    <div className="flex items-center gap-4 mb-6">
-      <div className="flex items-baseline gap-2 shrink-0">
-        <span className="text-2xl font-serif leading-none text-fg tabular-nums">
-          {explored}
-        </span>
-        <span className="text-sm text-fg-muted tabular-nums">/{total}</span>
-        <span className="text-sm text-fg-muted ml-2">
-          sounds explored today
-        </span>
+    <div className="ipa-chart__progress">
+      <b className="ipa-chart__progress-count">{explored}</b>
+      <span>/ {total} sonidos explorados hoy</span>
+      <div className="ipa-chart__progress-bar" role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100}>
+        <span className="ipa-chart__progress-fill" style={{ width: `${pct}%` }} />
       </div>
-
-      <div
-        className="relative flex-1 h-1.5 rounded-full overflow-hidden"
-        style={{ backgroundColor: "var(--line-divider)" }}
-      >
-        <div
-          className="absolute inset-y-0 left-0 rounded-full transition-all duration-500 ease-out"
-          style={{
-            width: `${pct}%`,
-            backgroundColor: "var(--primary)",
-          }}
-        />
-      </div>
-
-      <span className="text-xs font-semibold text-fg-muted shrink-0 tabular-nums">
-        {pct}%
-      </span>
+      <span className="tabular-nums">{pct}%</span>
 
       {undoAvailable && onUndo ? (
-        <button
-          type="button"
-          onClick={onUndo}
-          className="inline-flex items-center gap-1.5 text-xs font-semibold shrink-0 transition-opacity hover:opacity-70 animate-chip-appear"
-          style={{ color: "var(--primary)" }}
-        >
-          <Undo2 size={12} />
-          Undo reset
+        <button type="button" onClick={onUndo} className="ipa-chart__progress-undo">
+          <Undo2 size={12} aria-hidden />
+          Deshacer
         </button>
       ) : (
         <button
           type="button"
           onClick={onReset}
           disabled={explored === 0}
-          className="text-xs font-medium transition-colors hover:opacity-70 disabled:opacity-40 disabled:cursor-not-allowed shrink-0"
-          style={{ color: "var(--text-tertiary)" }}
+          className="ipa-chart__progress-reset"
         >
-          Reset
+          Reiniciar
         </button>
       )}
     </div>

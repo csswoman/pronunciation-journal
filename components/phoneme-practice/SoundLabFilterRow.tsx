@@ -2,7 +2,7 @@
 
 import { Search } from "lucide-react";
 
-export type SoundLabChip = "all" | "basics" | "vowels" | "consonants" | "diphthongs" | "weak";
+export type SoundLabChip = "all" | "easy" | "medium" | "hard";
 
 interface Props {
   activeChip: SoundLabChip;
@@ -12,12 +12,10 @@ interface Props {
 }
 
 const CHIPS: { id: SoundLabChip; label: string }[] = [
-  { id: "all", label: "All" },
-  { id: "basics", label: "Basics" },
-  { id: "vowels", label: "Vowels" },
-  { id: "consonants", label: "Consonants" },
-  { id: "diphthongs", label: "Diphthongs" },
-  { id: "weak", label: "Weak for you" },
+  { id: "all", label: "Todos" },
+  { id: "easy", label: "Fácil" },
+  { id: "medium", label: "Medio" },
+  { id: "hard", label: "Difícil" },
 ];
 
 export function SoundLabFilterRow({
@@ -31,21 +29,15 @@ export function SoundLabFilterRow({
       <div className="sound-lab__chips">
         {CHIPS.map((chip) => {
           const isOn = activeChip === chip.id;
-          const isWeak = chip.id === "weak";
           return (
             <button
               key={chip.id}
               type="button"
               onClick={() => onChipChange(chip.id)}
-              className={[
-                "sound-lab__chip",
-                isOn && "sound-lab__chip--on",
-                isWeak && "sound-lab__chip--weak",
-              ]
+              className={["sound-lab__chip", isOn && "sound-lab__chip--on"]
                 .filter(Boolean)
                 .join(" ")}
             >
-              {isWeak && !isOn && <span aria-hidden>● </span>}
               {chip.label}
             </button>
           );
@@ -56,10 +48,10 @@ export function SoundLabFilterRow({
         <Search className="h-4 w-4 shrink-0" aria-hidden />
         <input
           type="search"
-          placeholder="Search sounds…"
+          placeholder="Buscar sonidos…"
           value={search}
           onChange={(e) => onSearchChange(e.target.value)}
-          aria-label="Search sounds"
+          aria-label="Buscar sonidos"
         />
       </label>
     </div>

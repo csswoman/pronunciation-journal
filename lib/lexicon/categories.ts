@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import { domainForCategory } from "./domains";
 import type { CategoryMeta, WordEntry } from "./types";
 
 const LEXICON_DIR = path.join(process.cwd(), "public", "lexicon");
@@ -24,7 +25,11 @@ export function getCategories(): CategoryMeta[] {
       icon: "◆",
       total: 0,
     };
-    return { ...base, total: words.length };
+    return {
+      ...base,
+      total: words.length,
+      domain: base.domain ?? domainForCategory(id),
+    };
   });
 }
 

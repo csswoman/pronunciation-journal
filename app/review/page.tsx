@@ -1,14 +1,15 @@
 'use client'
 
-import Button from "@/components/ui/Button";
+import Button from '@/components/ui/Button'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { useAuth } from "@/components/auth/AuthProvider"
-import { ExerciseCard } from '@/components/phoneme-practice/ExerciseCard'
+import { useAuth } from '@/components/auth/AuthProvider'
+import { PhonemeFocusShell } from '@/components/phoneme-practice/PhonemeFocusShell'
 import { PickWordExercise } from '@/components/phoneme-practice/PickWordExercise'
 import { PickSoundExercise } from '@/components/phoneme-practice/PickSoundExercise'
 import { MinimalPairExercise } from '@/components/phoneme-practice/MinimalPairExercise'
 import { DictationExercise } from '@/components/phoneme-practice/DictationExercise'
+import { SpeakExercise } from '@/components/phoneme-practice/SpeakExercise'
 import { SessionSummary } from '@/components/phoneme-practice/SessionSummary'
 import { usePracticeSession } from '@/hooks/usePracticeSession'
 import { buildMixedSession } from '@/lib/phoneme-practice/mixed-session'
@@ -43,7 +44,6 @@ export default function ReviewPage() {
   useEffect(() => {
     if (!user) return
     loadReview()
-   
   }, [user, sessionKey])
 
   async function loadReview() {
@@ -60,29 +60,29 @@ export default function ReviewPage() {
       }
 
       const wordsBySoundId = new Map(
-        allSounds.map(s => [s.id, allWords.filter(w => w.sound_id === s.id)])
+        allSounds.map((s) => [s.id, allWords.filter((w) => w.sound_id === s.id)]),
       )
 
-      // Build mixed session across due sounds, capped at MAX_EXERCISES
       const allExercises: Exercise[] = []
       for (const p of dueProgress) {
         if (allExercises.length >= MAX_EXERCISES) break
         const pairs = await getMinimalPairs(p.sound_id)
-        const targetWords = allWords.filter(w => w.sound_id === p.sound_id)
+        const targetWords = allWords.filter((w) => w.sound_id === p.sound_id)
         const mixed = buildMixedSession(p.sounds, targetWords, allSounds, wordsBySoundId, pairs)
-        const session = mixed.filter(e => e.kind === 'phoneme').map(e => e.data)
+        const session = mixed.filter((e) => e.kind === 'phoneme').map((e) => e.data)
         const remaining = MAX_EXERCISES - allExercises.length
         allExercises.push(...session.slice(0, remaining))
       }
 
       setExercises(allExercises)
       setExerciseStartedAt(Date.now())
+      setCurrentFeedback(null)
 
       const pMap = new Map<number, UserSoundProgress>()
       for (const p of dueProgress) pMap.set(p.sound_id, p)
       setProgressMap(pMap)
     } catch (e) {
-      setError('Failed to load review session.')
+      setError('No se pudo cargar la sesión de repaso.')
       console.error(e)
     }
   }
@@ -93,7 +93,6 @@ export default function ReviewPage() {
     if (session.isComplete && user) {
       finishSession()
     }
-   
   }, [session.isComplete])
 
   async function handleAnswer(isCorrect: boolean, userAnswer: string) {
@@ -101,7 +100,7 @@ export default function ReviewPage() {
     session.submitAnswer({ isCorrect, userAnswer, startedAt: exerciseStartedAt })
   }
 
-  async function handleNext() {
+  function handleNext() {
     setCurrentFeedback(null)
     setExerciseStartedAt(Date.now())
     session.advance()
@@ -113,7 +112,6 @@ export default function ReviewPage() {
 
     await saveAnswers(user.id, answers)
 
-    // Group answers by sound
     const bySoundId = new Map<number, typeof answers>()
     for (const a of answers) {
       const list = bySoundId.get(a.soundId) ?? []
@@ -122,11 +120,20 @@ export default function ReviewPage() {
     }
 
     for (const [soundId, soundAnswers] of bySoundId) {
-      const correct = soundAnswers.filter(a => a.isCorrect).length
+      const correct = soundAnswers.filter((a) => a.isCorrect).length
       const base: UserSoundProgress = progressMap.get(soundId) ?? {
-        id: '', user_id: user.id, sound_id: soundId, status: 'available',
-        total_attempts: 0, correct_answers: 0, streak: 0, best_streak: 0,
-        last_practiced: null, next_review: null, ease_factor: 2.5, interval_days: 1,
+        id: '',
+        user_id: user.id,
+        sound_id: soundId,
+        status: 'available',
+        total_attempts: 0,
+        correct_answers: 0,
+        streak: 0,
+        best_streak: 0,
+        last_practiced: null,
+        next_review: null,
+        ease_factor: 2.5,
+        interval_days: 1,
       }
       const sessionIsCorrect = correct >= Math.ceil(soundAnswers.length / 2)
       const sr = updateSR(base, sessionIsCorrect)
@@ -141,7 +148,7 @@ export default function ReviewPage() {
       if (isMastered(updated)) {
         await markMastered(user.id, soundId)
         const allProgress = await getAllProgress(user.id)
-        const allIds = allProgress.map(p => p.sound_id).sort((a, b) => a - b)
+        const allIds = allProgress.map((p) => p.sound_id).sort((a, b) => a - b)
         const nextId = getNextUnlockedSoundId(allProgress, allIds)
         if (nextId) await unlockNextSound(user.id, nextId)
       }
@@ -150,14 +157,18 @@ export default function ReviewPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4">
-        <div className="text-center space-y-3">
+      <div className="phoneme-focus flex min-h-screen items-center justify-center p-4">
+        <div className="space-y-3 text-center">
           <p className="text-error">{error}</p>
           <Button
-            onClick={() => { setError(null); setSessionKey(k => k + 1) }}
-            className="px-4 py-2 rounded-lg text-on-primary" style={{backgroundColor: 'var(--primary)'}}
+            onClick={() => {
+              setError(null)
+              setSessionKey((k) => k + 1)
+            }}
+            variant="primary"
+            size="sm"
           >
-            Retry
+            Reintentar
           </Button>
         </div>
       </div>
@@ -166,62 +177,78 @@ export default function ReviewPage() {
 
   if (!exercises) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-pulse text-fg-subtle">Loading review…</div>
+      <div className="phoneme-focus flex min-h-screen items-center justify-center">
+        <div className="animate-pulse text-fg-subtle">Cargando repaso…</div>
       </div>
     )
   }
 
+  const progressPct = Math.min(
+    100,
+    Math.round((session.currentQueuePos / Math.max(session.queueLength, 1)) * 100),
+  )
+
   if (session.isComplete) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4">
-        <SessionSummary
-          soundIpa="Review"
-          scoreableCorrect={session.scoreableCorrect}
-          originalTotal={session.originalTotal}
-          nextReview={null}
-          onPracticeAgain={() => { setExercises(null); setSessionKey(k => k + 1) }}
-        />
-      </div>
+      <PhonemeFocusShell badge="Repaso" progressPct={100} onExit={() => router.push('/dashboard')}>
+        <div className="phoneme-focus__summary">
+          <SessionSummary
+            soundIpa="Repaso"
+            scoreableCorrect={session.scoreableCorrect}
+            originalTotal={session.originalTotal}
+            nextReview={null}
+            onPracticeAgain={() => {
+              setExercises(null)
+              setSessionKey((k) => k + 1)
+            }}
+          />
+        </div>
+      </PhonemeFocusShell>
     )
   }
 
   const ex = session.currentExercise
   if (!ex) return null
 
+  const badge = ex.ipa?.trim() || 'Repaso'
+
   function renderExercise() {
-    if (!ex) return null
     const submitHandler = (isCorrect: boolean, userAnswer: string) =>
       handleAnswer(isCorrect, userAnswer)
     switch (ex.type) {
-      case 'pick_word':    return <PickWordExercise exercise={ex} onSubmit={submitHandler} />
-      case 'pick_sound':   return <PickSoundExercise exercise={ex} onSubmit={submitHandler} />
-      case 'minimal_pair': return <MinimalPairExercise exercise={ex} onSubmit={submitHandler} />
-      case 'dictation':    return <DictationExercise exercise={ex} onSubmit={submitHandler} />
+      case 'pick_word':
+        return <PickWordExercise exercise={ex} onSubmit={submitHandler} focusUi />
+      case 'pick_sound':
+        return <PickSoundExercise exercise={ex} onSubmit={submitHandler} focusUi />
+      case 'minimal_pair':
+        return <MinimalPairExercise exercise={ex} onSubmit={submitHandler} focusUi />
+      case 'dictation':
+        return <DictationExercise exercise={ex} onSubmit={submitHandler} focusUi />
+      case 'speak_word':
+        return <SpeakExercise exercise={ex} onSubmit={submitHandler} focusUi />
+      default:
+        return null
     }
   }
 
   return (
-    <div className="min-h-screen bg-surface-base flex items-center justify-center p-4">
-      <div className="w-full max-w-md space-y-4">
-        <Button
-          onClick={() => router.back()}
-          className="text-sm text-fg-subtle hover:text-fg-muted transition-colors"
-        >
-          ← Back
-        </Button>
-
-        <ExerciseCard
-          key={session.currentQueuePos}
-          exerciseType={ex.type}
-          feedback={currentFeedback}
-          onNext={handleNext}
-        >
-          {renderExercise()}
-        </ExerciseCard>
-      </div>
-    </div>
+    <PhonemeFocusShell
+      badge={badge}
+      progressPct={progressPct}
+      onExit={() => router.back()}
+      feedback={
+        currentFeedback
+          ? {
+              isCorrect: currentFeedback.isCorrect,
+              subtitle: currentFeedback.isCorrect
+                ? 'Buen trabajo — sigue con el siguiente'
+                : 'Repasa el sonido e inténtalo otra vez',
+              onContinue: handleNext,
+            }
+          : null
+      }
+    >
+      <div key={session.currentQueuePos}>{renderExercise()}</div>
+    </PhonemeFocusShell>
   )
 }
-
-

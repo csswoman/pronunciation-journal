@@ -1,17 +1,9 @@
 'use client'
 
-// Planned structure:
-// <DailyPage>
-//   <DailyHeader />         (back button + title)
-//   <PracticeSession />     (exercises rendered inline)
-//   <DailySummary />        (shown on completion via onSessionComplete)
-// </DailyPage>
-
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/components/auth/AuthProvider'
 import PracticeSession from '@/components/practice/PracticeSession'
-import PageLayout from '@/components/layout/PageLayout'
 import Button from '@/components/ui/Button'
 import { buildDailyPlan, EmptyWordBankError } from '@/lib/practice/daily-plan'
 import type { PracticeExercise, SessionResult } from '@/lib/practice/types'
@@ -33,15 +25,17 @@ export default function DailyPage() {
     setLoading(true)
     setError(null)
     setEmptyWordBank(false)
+    setCompleted(false)
+    setFinalResult(null)
     try {
       const plan = await buildDailyPlan(user.id)
       setExercises(plan)
-      setSessionKey(k => k + 1)
+      setSessionKey((k) => k + 1)
     } catch (err) {
       if (err instanceof EmptyWordBankError) {
         setEmptyWordBank(true)
       } else {
-        setError('Failed to load today\'s plan. Please try again.')
+        setError('No se pudo cargar el plan de hoy. Inténtalo de nuevo.')
       }
     } finally {
       setLoading(false)
@@ -63,83 +57,57 @@ export default function DailyPage() {
       context: 'daily' as const,
       exercises,
       sessionLength: exercises.length,
+      sessionLabel: 'Hoy',
       onSessionComplete: handleSessionComplete,
-      onExit: () => router.push('/daily'),
+      onExit: () => router.push('/'),
     }
   }, [exercises, handleSessionComplete, router, user])
 
-  const header = (
-    <header className="sticky top-0 z-10 border-b border-[var(--border-subtle)] bg-[var(--surface-base)]">
-      <div className="flex items-center justify-between px-10 pt-6 pb-4">
-        <button
-          type="button"
-          onClick={() => router.push('/daily')}
-          className="border-none bg-transparent p-1 text-xl leading-none text-fg-subtle"
-          aria-label="Back"
-        >
-          ←
-        </button>
-        <span className="text-sm font-semibold tracking-wide text-fg-subtle uppercase">
-          Daily Practice
-        </span>
-        <div className="w-6" />
-      </div>
-    </header>
-  )
-
   if (emptyWordBank) {
     return (
-      <PageLayout variant="lesson" hero={header}>
-        <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4 px-6 text-center">
-          <p className="text-base text-fg-subtle">
-            Your word bank is empty. Add words from the Lexicon to unlock daily practice.
+      <div className="phoneme-focus flex min-h-screen items-center justify-center p-6">
+        <div className="max-w-sm space-y-4 text-center">
+          <p className="text-base text-fg-secondary">
+            Tu banco de palabras está vacío. Añade palabras desde el léxico para desbloquear la práctica
+            diaria.
           </p>
-          <Button
-            type="button"
-            variant="primary"
-            size="md"
-            onClick={() => router.push('/words?tab=lexicon')}
-          >
-            Go to Lexicon
+          <Button type="button" variant="primary" size="md" onClick={() => router.push('/words?tab=lexicon')}>
+            Ir al léxico
           </Button>
         </div>
-      </PageLayout>
+      </div>
     )
   }
 
   if (error) {
     return (
-      <PageLayout variant="lesson" hero={header}>
-        <div className="flex min-h-[60vh] flex-col items-center justify-center gap-3 px-6 text-center">
+      <div className="phoneme-focus flex min-h-screen items-center justify-center p-6">
+        <div className="space-y-3 text-center">
           <p className="text-error">{error}</p>
           <Button type="button" variant="primary" size="sm" onClick={load}>
-            Retry
+            Reintentar
           </Button>
         </div>
-      </PageLayout>
+      </div>
     )
   }
 
   if (loading || !sessionConfig) {
     return (
-      <PageLayout variant="lesson" hero={header}>
-        <div className="flex min-h-[60vh] items-center justify-center">
-          <div className="animate-pulse text-fg-subtle">Building today's plan…</div>
-        </div>
-      </PageLayout>
+      <div className="phoneme-focus flex min-h-screen items-center justify-center">
+        <div className="animate-pulse text-fg-subtle">Preparando el plan de hoy…</div>
+      </div>
     )
   }
 
   return (
-    <PageLayout variant="lesson" hero={header}>
-      <main className="animate-fadeIn flex w-full items-center justify-center px-10 py-10">
-        <PracticeSession key={sessionKey} {...sessionConfig} />
-      </main>
+    <>
+      <PracticeSession key={sessionKey} {...sessionConfig} />
       {completed && finalResult && (
-        <p className="pb-8 text-center text-xs text-fg-subtle">
-          {finalResult.accuracy}% accuracy · {finalResult.results.length} exercises
+        <p className="pb-6 text-center text-xs text-fg-subtle">
+          {finalResult.accuracy}% de aciertos · {finalResult.results.length} ejercicios
         </p>
       )}
-    </PageLayout>
+    </>
   )
 }

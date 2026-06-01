@@ -1,0 +1,161 @@
+{
+  "meta": {
+    "eyebrow": "B2 · Comunicación",
+    "title": "Contar",
+    "titleEmphasis": "anécdotas",
+    "goal": "Ya puedes contar historias personales en inglés con estructura, ritmo y gancho."
+  },
+  "quiz": [
+    {
+      "q": "¿Qué frase se usa para abrir una historia y captar la atención?",
+      "options": ["I said that...", "You won't believe what happened.", "I have a question.", "Let me explain the situation."],
+      "answer": 1,
+      "explain": "\"You won't believe what happened\" es un gancho clásico en inglés para abrir anécdotas y captar la atención del oyente inmediatamente."
+    },
+    {
+      "q": "¿Cuál es la función de \"Long story short...\"?",
+      "options": ["Introducir un nuevo personaje", "Resumir el desenlace omitiendo detalles", "Pedir al oyente que espere", "Cambiar de tema"],
+      "answer": 1,
+      "explain": "\"Long story short\" (o \"To cut a long story short\" en inglés británico) señala que vas a saltar al final o resumen, omitiendo los detalles intermedios."
+    },
+    {
+      "q": "En inglés anglosajón, el humor autodeprecativo sirve para...",
+      "options": ["Mostrar inseguridad real", "Generar conexión social y confianza", "Evitar hablar de uno mismo", "Pedir ayuda indirectamente"],
+      "answer": 1,
+      "explain": "Reírse de uno mismo (self-deprecation) es una herramienta de conexión en la cultura anglosajona — señala confianza y hace que el oyente se sienta cómodo."
+    }
+  ],
+  "cards": [
+    {
+      "id": "anec-structure",
+      "tag": "Estructura",
+      "title": "Las tres partes de una buena historia",
+      "lede": "Toda anécdota memorable tiene setup, conflicto y desenlace. Sin esa estructura, la historia se pierde.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Setup", "value": "Contexto y personajes — \"So I was at the airport last Tuesday...\"", "hint": "sitúa al oyente rápido" },
+            { "key": "Conflicto", "value": "El problema, la sorpresa o el giro — \"And then suddenly...\"", "hint": "aquí está el gancho" },
+            { "key": "Desenlace", "value": "Cómo se resolvió o qué aprendiste — \"It turns out...\" / \"And that's when I realized...\"", "hint": "cierra con punch o lección" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Error común:",
+        "body": "muchos no-nativos cuentan el final primero. En inglés, el oyente necesita no saber el resultado para mantenerse enganchado."
+      }
+    },
+    {
+      "id": "anec-opening",
+      "tag": "Apertura",
+      "title": "Cómo abrir una historia y captar atención",
+      "lede": "El primer segundo decide si la gente escucha. Estos ganchos funcionan en cualquier contexto.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Gancho directo", "value": "\"You won't believe what happened to me.\"", "highlights": ["You won't believe"] },
+            { "key": "Pregunta retórica", "value": "\"You know what happened when I tried to...?\"", "highlights": ["You know what"] },
+            { "key": "Situación vívida", "value": "\"So there I was, in the middle of nowhere, and...\"", "highlights": ["So there I was"] },
+            { "key": "Anticipación", "value": "\"This is probably the most embarrassing thing that's ever happened to me.\"", "highlights": ["most embarrassing"] },
+            { "key": "Casual/natural", "value": "\"Funny story, actually...\" / \"Oh, speaking of which...\"", "highlights": ["Funny story"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "anec-building",
+      "tag": "Desarrollo",
+      "title": "Construir tensión y secuencia",
+      "lede": "Los conectores narrativos controlan el ritmo. Úsalos para acelerar, frenar y sorprender.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Secuencia", "value": "\"And then...\" / \"After that...\" / \"The next thing I knew...\"", "hint": "avanza la historia" },
+            { "key": "Giro", "value": "\"Out of nowhere...\" / \"Just when I thought it was over...\" / \"And that's when it hit me...\"", "hint": "marca el punto de quiebre" },
+            { "key": "Pausa dramática", "value": "\"And I kid you not...\" / \"I'm not even joking...\" / \"Wait for it...\"", "hint": "prepara la sorpresa" },
+            { "key": "Diálogo directo", "value": "\"So she looks at me and goes, 'Are you serious?'\"", "hint": "da vida a los personajes" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Truco de actor:",
+        "body": "el diálogo directo (\"she goes...\", \"I'm like...\") hace la historia mucho más vívida que el estilo indirecto."
+      }
+    },
+    {
+      "id": "anec-flat-vs-animated",
+      "tag": "Estilo",
+      "title": "Historia plana vs. historia animada",
+      "lede": "El mismo evento puede ser aburrido o fascinante según cómo lo cuentes. El inglés premia el detalle sensorial y el ritmo.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "I was late for my flight and I almost missed it.", "note": "plano, sin tensión" },
+            { "variant": "good", "text": "So I'm literally sprinting through the terminal, bags flying everywhere, and they're already closing the gate — and I just made it.", "note": "vívido, tiempo presente histórico, detalle" },
+            { "variant": "bad", "text": "I said something embarrassing at the meeting.", "note": "sin contexto ni emoción" },
+            { "variant": "good", "text": "I meant to say 'public' in the meeting, and somehow what came out was... not that. Complete silence. Twenty people staring at me.", "note": "pausa dramática, detalles, auto-ironía" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "anec-closing",
+      "tag": "Cierre",
+      "title": "Cómo cerrar bien una historia",
+      "lede": "Un buen cierre deja al oyente con algo: una risa, una reflexión o una sorpresa. El silencio vacío mata la anécdota.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Remate cómico", "value": "\"And that is why I no longer cook for other people.\"", "highlights": ["And that is why"] },
+            { "key": "Reflexión", "value": "\"And that's when I realized I had no idea what I was doing.\"", "highlights": ["that's when I realized"] },
+            { "key": "Resumen rápido", "value": "\"Long story short, I missed the flight, lost my luggage, but met my best friend.\"", "highlights": ["Long story short"] },
+            { "key": "Cliffhanger", "value": "\"And I still don't know what happened after that.\"", "hint": "deja al oyente queriendo más" },
+            { "key": "Moraleja ligera", "value": "\"The moral of the story? Always check the date on the invitation.\"", "highlights": ["The moral of the story"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "anec-culture",
+      "tag": "Cultura",
+      "title": "Diferencias culturales al contar historias",
+      "lede": "La cultura anglosajona tiene convenciones narrativas distintas. Conocerlas evita malentendidos.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Estilo anglosajón",
+              "rule": "Directo, con punto claro, autodeprecación frecuente",
+              "examples": [
+                "Llega rápido al conflicto",
+                "El narrador suele ser el «tonto» de la historia",
+                "El humor es una herramienta de conexión",
+                "\"Oversharing\" está bien en contexto informal"
+              ]
+            },
+            {
+              "label": "Estilo hispano",
+              "rule": "Más contextual, narrativo y colectivo",
+              "examples": [
+                "El contexto y los personajes se desarrollan más",
+                "El narrador no siempre es el protagonista",
+                "El humor puede ser más situacional o absurdo",
+                "Las historias largas son normales en familia/amigos"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "En el trabajo:",
+        "body": "en contextos profesionales anglosajones, las anécdotas deben ser breves y tener un punto claro. Más de 90 segundos sin punch y pierdes la audiencia."
+      }
+    }
+  ]
+}

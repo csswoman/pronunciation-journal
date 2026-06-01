@@ -1,0 +1,109 @@
+{
+  "meta": {
+    "eyebrow": "Tech · Inglés para ciberseguridad",
+    "title": "Inglés para",
+    "titleEmphasis": "ciberseguridad"
+  },
+  "cards": [
+    {
+      "id": "cy-threats",
+      "tag": "Amenazas",
+      "title": "Vocabulario de amenazas",
+      "lede": "Los términos clave de ataques y amenazas. La mayoría se usan igual en inglés global.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "malware", "value": "software malicioso · virus, worm, ransomware" },
+            { "key": "phishing", "value": "engaño para robar datos", "highlights": ["phishing"] },
+            { "key": "breach", "value": "data breach = filtración de datos", "highlights": ["breach"] },
+            { "key": "exploit", "value": "aprovechar una vulnerabilidad", "highlights": ["exploit"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cy-defense",
+      "tag": "Defensa",
+      "title": "Medidas de protección",
+      "lede": "El vocabulario de la parte defensiva: cómo se protegen los sistemas.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "firewall", "value": "barrera de red", "highlights": ["firewall"] },
+            { "key": "encryption", "value": "cifrado · encrypt / decrypt", "highlights": ["encryption"] },
+            { "key": "authentication", "value": "two-factor authentication (2FA)", "highlights": ["authentication"] },
+            { "key": "patch", "value": "actualización que corrige fallos", "highlights": ["patch"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cy-verbs",
+      "tag": "Verbos",
+      "title": "Verbos del sector",
+      "lede": "Acciones frecuentes en ciberseguridad, muchas son phrasal verbs o colocaciones.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "detect / prevent", "value": "detect a threat · prevent an attack", "highlights": ["detect", "prevent"] },
+            { "key": "patch / update", "value": "patch a vulnerability", "highlights": ["patch"] },
+            { "key": "back up", "value": "hacer copia de seguridad", "highlights": ["back up"] },
+            { "key": "log in / out", "value": "iniciar / cerrar sesión", "highlights": ["log in"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cy-incident",
+      "tag": "Incidentes",
+      "title": "Reportar un incidente",
+      "lede": "Frases para comunicar un problema de seguridad de forma clara y profesional.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "good", "text": "We've detected suspicious activity.", "note": "presente perfecto" },
+            { "variant": "good", "text": "The system may have been compromised.", "note": "deducción cauta" },
+            { "variant": "good", "text": "Please reset your password immediately.", "note": "instrucción" },
+            { "variant": "good", "text": "We're investigating the breach.", "note": "estado actual" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cy-passive",
+      "tag": "Gramática",
+      "title": "La pasiva en informes",
+      "lede": "Los informes de seguridad usan la pasiva: importa el hecho, no quién lo hizo.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Presente", "value": "Data is encrypted at rest.", "highlights": ["is encrypted"] },
+            { "key": "Perfecto", "value": "The flaw has been patched.", "highlights": ["has been patched"] },
+            { "key": "Modal pasivo", "value": "Access should be restricted.", "highlights": ["should be restricted"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cy-advice",
+      "tag": "Buenas prácticas",
+      "title": "Dar recomendaciones",
+      "lede": "Usa modales para recomendar buenas prácticas a usuarios o equipos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Recomendar", "value": "You should use a strong password.", "highlights": ["should"] },
+            { "key": "Advertir", "value": "Never share your credentials.", "highlights": ["Never share"] },
+            { "key": "Sugerir", "value": "It's best to enable 2FA.", "highlights": ["It's best to"] }
+          ]
+        }
+      ]
+    }
+  ]
+}

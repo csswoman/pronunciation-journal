@@ -2,13 +2,14 @@ import HomeSectionHeader from "@/components/home/HomeSectionHeader";
 import HomeDiscoveryCard from "@/components/home/HomeDiscoveryCard";
 import HomeMiniLessonCard from "@/components/home/HomeMiniLessonCard";
 import HomeWordOfDayCard from "@/components/home/HomeWordOfDayCard";
-import type { MiniLesson } from "@/lib/content/schemas";
+import type { MiniLesson, LanguageConcept } from "@/lib/content/schemas";
 
 interface HomeLearnSectionProps {
   lesson: MiniLesson | null;
+  concept: LanguageConcept | null;
 }
 
-export default function HomeLearnSection({ lesson }: HomeLearnSectionProps) {
+export default function HomeLearnSection({ lesson, concept }: HomeLearnSectionProps) {
   return (
     <section className="mt-10">
       <HomeSectionHeader
@@ -30,13 +31,23 @@ export default function HomeLearnSection({ lesson }: HomeLearnSectionProps) {
           />
         )}
 
-        <HomeDiscoveryCard
-          href="/words?tab=decks"
-          badge="Concept"
-          title="Irregular verbs"
-          description="Study deck: base · past · participle, no flipping."
-          footer="Open deck →"
-        />
+        {concept ? (
+          <HomeDiscoveryCard
+            href={concept.href}
+            badge={concept.badge}
+            title={concept.title}
+            description={concept.description}
+            footer={concept.footer}
+          />
+        ) : (
+          <HomeDiscoveryCard
+            href="/words?tab=decks"
+            badge="Concept"
+            title="Irregular verbs"
+            description="Study deck: base · past · participle, no flipping."
+            footer="Open deck →"
+          />
+        )}
 
         <HomeWordOfDayCard />
       </div>

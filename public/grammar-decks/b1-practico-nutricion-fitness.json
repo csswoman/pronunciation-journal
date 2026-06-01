@@ -1,0 +1,110 @@
+{
+  "meta": {
+    "eyebrow": "B1 · Práctico: nutrición y fitness",
+    "title": "Nutrición y",
+    "titleEmphasis": "fitness"
+  },
+  "cards": [
+    {
+      "id": "nf-food-groups",
+      "tag": "Alimentación",
+      "title": "Comida sana y no tan sana",
+      "lede": "Vocabulario para hablar de dieta. Muchos términos son incontables.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Sano", "value": "vegetables, fruit, protein, fiber" },
+            { "key": "Menos sano", "value": "junk food, sugar, fat, processed food" },
+            { "key": "Nutrientes", "value": "carbs, vitamins, calories" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "nf-habits",
+      "tag": "Hábitos",
+      "title": "Hablar de hábitos",
+      "lede": "Usa el presente simple con adverbios de frecuencia para describir tu estilo de vida.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Frecuencia", "value": "I usually eat breakfast.", "highlights": ["usually"] },
+            { "key": "Intentar", "value": "I try to avoid sugar.", "highlights": ["try to avoid"] },
+            { "key": "Soler", "value": "I tend to skip lunch.", "highlights": ["tend to"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "nf-exercise",
+      "tag": "Ejercicio",
+      "title": "do, go, play con deportes",
+      "lede": "Tres verbos para deportes y ejercicio. Cada uno va con un tipo de actividad.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "go + -ing", "value": "go running, go swimming, go to the gym", "highlights": ["go"] },
+            { "key": "do + actividad", "value": "do yoga, do exercise", "highlights": ["do"] },
+            { "key": "play + deporte", "value": "play tennis, play football", "highlights": ["play"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Regla:",
+        "body": "play con deportes de equipo/pelota; go con actividades en -ing; do con el resto."
+      }
+    },
+    {
+      "id": "nf-goals",
+      "tag": "Objetivos",
+      "title": "Metas de salud",
+      "lede": "Para hablar de objetivos usas want to, going to o planes de futuro.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Meta", "value": "I want to lose weight / get fit.", "highlights": ["lose weight", "get fit"] },
+            { "key": "Plan", "value": "I'm going to join a gym.", "highlights": ["going to join"] },
+            { "key": "Ganar", "value": "build muscle · gain weight", "highlights": ["build muscle"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "nf-advice",
+      "tag": "Consejos",
+      "title": "Dar consejos de salud",
+      "lede": "should, ought to e imperativos para recomendar hábitos saludables.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "good", "text": "You should drink more water.", "note": "consejo" },
+            { "variant": "good", "text": "You shouldn't skip meals.", "note": "qué evitar" },
+            { "variant": "good", "text": "Try to get enough sleep.", "note": "sugerencia suave" },
+            { "variant": "good", "text": "Cut down on sugar.", "note": "reducir" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "nf-comparatives",
+      "tag": "Comparar",
+      "title": "Comparar opciones sanas",
+      "lede": "Los comparativos ayudan a contrastar alimentos y hábitos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Comparar", "value": "Water is healthier than soda.", "highlights": ["healthier than"] },
+            { "key": "Más / menos", "value": "more protein · less sugar", "highlights": ["more", "less"] },
+            { "key": "Superlativo", "value": "the healthiest option", "highlights": ["the healthiest"] }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,120 @@
+{
+  "meta": {
+    "eyebrow": "Biz · Entrevistas de trabajo",
+    "title": "Inglés para",
+    "titleEmphasis": "entrevistas"
+  },
+  "cards": [
+    {
+      "id": "iv-intro",
+      "tag": "Presentarte",
+      "title": "\"Tell me about yourself\"",
+      "lede": "La primera pregunta de casi toda entrevista. Estructúrala: presente, pasado, futuro.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Ahora", "value": "I'm a developer with 5 years' experience.", "highlights": ["I'm a developer"] },
+            { "key": "Trayectoria", "value": "I've worked mainly in fintech.", "highlights": ["I've worked"] },
+            { "key": "Objetivo", "value": "I'm looking to grow as a team lead.", "highlights": ["I'm looking to"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Clave:",
+        "body": "no cuentes tu vida: enfócate en lo profesional y conéctalo con el puesto."
+      }
+    },
+    {
+      "id": "iv-strengths",
+      "tag": "Fortalezas",
+      "title": "Hablar de tus puntos fuertes",
+      "lede": "Vende tus cualidades con ejemplos, no solo adjetivos sueltos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "I'm good at", "value": "se me da bien · I'm good at problem-solving.", "highlights": ["I'm good at"] },
+            { "key": "I have strong... skills", "value": "tengo buenas habilidades de...", "highlights": ["strong", "skills"] },
+            { "key": "One of my strengths is", "value": "una de mis fortalezas es...", "highlights": ["One of my strengths is"] },
+            { "key": "For example, I once...", "value": "por ejemplo, una vez...", "highlights": ["For example"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "iv-weakness",
+      "tag": "Debilidades",
+      "title": "La pregunta trampa",
+      "lede": "\"What's your weakness?\" no busca un defecto fatal, sino autoconciencia y mejora.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "I have no weaknesses." },
+            { "variant": "good", "text": "I used to struggle with delegating, but I've been working on it.", "note": "defecto + mejora" },
+            { "variant": "bad", "text": "I'm a perfectionist." },
+            { "variant": "good", "text": "I can focus too much on detail, so I now set clear deadlines.", "note": "concreto y con solución" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "iv-star",
+      "tag": "Método STAR",
+      "title": "Responder con ejemplos",
+      "lede": "Para preguntas de comportamiento, estructura la respuesta en cuatro pasos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Situation", "value": "el contexto · In my last role,...", "highlights": ["Situation"] },
+            { "key": "Task", "value": "tu objetivo · I had to...", "highlights": ["Task"] },
+            { "key": "Action", "value": "qué hiciste · So I decided to...", "highlights": ["Action"] },
+            { "key": "Result", "value": "el resultado · As a result,...", "highlights": ["Result"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "iv-questions",
+      "tag": "Tus preguntas",
+      "title": "Preguntar al entrevistador",
+      "lede": "Al final te dirán \"Do you have any questions?\". Tener preguntas demuestra interés.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Sobre el rol", "value": "What does a typical day look like?", "highlights": ["a typical day"] },
+            { "key": "Sobre el equipo", "value": "How is the team structured?", "highlights": ["How is the team structured?"] },
+            { "key": "Sobre crecer", "value": "What growth opportunities are there?", "highlights": ["growth opportunities"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Evita:",
+        "body": "no preguntes por el salario o las vacaciones en la primera entrevista. Deja eso para después."
+      }
+    },
+    {
+      "id": "iv-close",
+      "tag": "Cierre",
+      "title": "Terminar y agradecer",
+      "lede": "Cierra con confianza y haz seguimiento. Es lo que se espera en la cultura anglo.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Reafirmar interés", "value": "I'm very excited about this opportunity.", "highlights": ["very excited about"] },
+            { "key": "Agradecer", "value": "Thank you for your time.", "highlights": ["Thank you for your time."] },
+            { "key": "Email de seguimiento", "value": "Thank you for the interview yesterday...", "highlights": ["follow-up"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Buena práctica:",
+        "body": "envía un thank-you email el mismo día o al siguiente. Marca la diferencia."
+      }
+    }
+  ]
+}

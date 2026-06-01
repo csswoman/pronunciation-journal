@@ -32,21 +32,9 @@
   color: var(--text-tertiary);
 }
 
-/* Sticky deck header */
 .grammar-deck__head {
   padding: 38px 0 22px;
-  position: sticky;
-  top: 0;
-  z-index: 5;
-  background-color: var(--surface-base);
-  background-image: linear-gradient(
-    to bottom,
-    var(--surface-base) 0%,
-    var(--surface-base) 75%,
-    color-mix(in oklch, var(--surface-base) 88%, var(--bg)) 100%
-  );
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  background: transparent;
 }
 
 .grammar-deck__head .grammar-deck__eyebrow {
@@ -831,6 +819,364 @@
   transform: translateY(-1px);
 }
 
+/* ── Goal / can-do line in the header ── */
+.grammar-deck__goal {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  margin-top: 10px;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  color: var(--text-secondary);
+}
+
+.grammar-deck__goal svg {
+  flex: none;
+  margin-top: 2px;
+  color: var(--primary);
+}
+
+/* ── Speak button (Web Speech) ── */
+.gd-speak {
+  flex: none;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid var(--accent-border);
+  background: color-mix(in oklch, var(--primary) 8%, var(--surface-raised));
+  color: var(--primary);
+  cursor: pointer;
+  transition:
+    transform var(--transition-fast),
+    background var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.gd-speak--sm {
+  width: 26px;
+  height: 26px;
+}
+
+.gd-speak--md {
+  width: 34px;
+  height: 34px;
+}
+
+.gd-speak:hover {
+  background: color-mix(in oklch, var(--primary) 16%, var(--surface-raised));
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.gd-speak:active {
+  transform: scale(0.92);
+}
+
+.gd-speak--on {
+  background: var(--primary);
+  color: var(--primary-foreground, #fff);
+}
+
+/* ── Pronunciation block ── */
+.grammar-pron {
+  border: 1px solid var(--accent-border);
+  border-radius: var(--radius-md);
+  background: color-mix(in oklch, var(--primary) 5%, var(--surface-sunken));
+  padding: 14px 16px;
+}
+
+.grammar-pron__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.grammar-pron__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  font-size: 0.8rem;
+  color: var(--primary);
+}
+
+.grammar-pron__drill {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--primary);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.grammar-pron__drill:hover {
+  text-decoration: underline;
+}
+
+.grammar-pron__list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.grammar-pron__item {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.grammar-pron__text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.grammar-pron__phrase {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.grammar-pron__ipa {
+  font-size: 0.8rem;
+  color: var(--text-tertiary);
+}
+
+.grammar-pron__es {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.grammar-pron__note {
+  margin: 12px 0 0;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+}
+
+/* ── End-of-deck quiz ── */
+.gd-quiz {
+  animation: grammar-done-in 0.4s ease-out both;
+  padding: 8px 2px 4px;
+}
+
+.gd-quiz__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.gd-quiz__kicker {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-tertiary);
+}
+
+.gd-quiz__pos {
+  font-size: 0.8rem;
+  color: var(--text-tertiary);
+  font-variant-numeric: tabular-nums;
+}
+
+.gd-quiz__q {
+  font-family: var(--font-editorial), Georgia, serif;
+  font-size: 1.25rem;
+  font-weight: 480;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+}
+
+.gd-quiz__options {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.gd-quiz__option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  text-align: left;
+  padding: 13px 15px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-default);
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  font-size: 0.92rem;
+  cursor: pointer;
+  transition:
+    border-color var(--transition-fast),
+    background var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.gd-quiz__option:hover:not(:disabled) {
+  border-color: var(--accent-border);
+  transform: translateY(-1px);
+}
+
+.gd-quiz__option:disabled {
+  cursor: default;
+}
+
+.gd-quiz__option--correct {
+  border-color: var(--success-border);
+  background: var(--success-soft);
+  color: var(--success);
+}
+
+.gd-quiz__option--wrong {
+  border-color: var(--danger-border, #f0c0c0);
+  background: var(--danger-soft, #fdecec);
+  color: var(--danger, #c0392b);
+}
+
+.gd-quiz__explain {
+  margin: 14px 0 0;
+  padding: 11px 14px;
+  border-radius: var(--radius-md);
+  background: var(--surface-sunken);
+  border: 1px solid var(--border-subtle);
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.gd-quiz__next {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 18px;
+  padding: 11px 18px;
+  border-radius: 999px;
+  border: none;
+  background: var(--primary);
+  color: var(--primary-foreground, #fff);
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: transform var(--transition-fast);
+}
+
+.gd-quiz__next:active {
+  transform: scale(0.96);
+}
+
+/* ── Done screen: goal, Sound Lab handoff, related ── */
+.grammar-deck__done-goal {
+  max-width: 30rem;
+  margin: 8px auto 0;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.45;
+}
+
+.grammar-deck__done-soundlab {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  width: 100%;
+  max-width: 26rem;
+  margin: 4px auto 16px;
+  padding: 13px 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--accent-border);
+  background: color-mix(in oklch, var(--primary) 8%, var(--surface-raised));
+  color: var(--text-primary);
+  text-decoration: none;
+  text-align: left;
+  transition:
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.grammar-deck__done-soundlab:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+.grammar-deck__done-soundlab > svg:first-child {
+  flex: none;
+  color: var(--primary);
+}
+
+.grammar-deck__done-soundlab > svg:last-child {
+  flex: none;
+  margin-left: auto;
+  color: var(--text-tertiary);
+}
+
+.grammar-deck__done-soundlab span {
+  display: flex;
+  flex-direction: column;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.grammar-deck__done-soundlab em {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 0.8rem;
+  color: var(--primary);
+}
+
+.grammar-deck__related {
+  width: 100%;
+  max-width: 26rem;
+  margin: 0 auto 22px;
+  text-align: left;
+}
+
+.grammar-deck__related-label {
+  display: block;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-tertiary);
+  margin-bottom: 8px;
+}
+
+.grammar-deck__related ul {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.grammar-deck__related a {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 10px 13px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-default);
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  text-decoration: none;
+  font-size: 0.88rem;
+  transition: border-color var(--transition-fast);
+}
+
+.grammar-deck__related a:hover {
+  border-color: var(--accent-border);
+}
+
+.grammar-deck__related svg {
+  flex: none;
+  color: var(--primary);
+}
+
 /* Respect users who prefer reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .grammar-deck__slide--next,
@@ -840,6 +1186,7 @@
   .grammar-deck__done-spark,
   .grammar-deck__arrow--finish,
   .grammar-card__body > *,
+  .gd-quiz,
   .grammar-card--done .grammar-card__gotit svg {
     animation: none;
   }
@@ -847,7 +1194,10 @@
   .grammar-deck__arrow:hover:not(:disabled),
   .grammar-deck__arrow:active:not(:disabled),
   .grammar-deck__dot:hover,
+  .gd-speak:hover,
+  .gd-quiz__option:hover:not(:disabled),
   .grammar-deck__done-restart:active,
+  .grammar-deck__done-soundlab:hover,
   .grammar-deck__done-back:active {
     transform: none;
   }

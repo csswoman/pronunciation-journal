@@ -1,0 +1,112 @@
+{
+  "meta": {
+    "eyebrow": "Tech · Preparación IELTS",
+    "title": "Preparación",
+    "titleEmphasis": "IELTS"
+  },
+  "cards": [
+    {
+      "id": "ie-format",
+      "tag": "Formato",
+      "title": "Estructura del examen",
+      "lede": "El IELTS tiene cuatro secciones y se puntúa por bandas del 1 al 9.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Listening", "value": "4 audios, 40 preguntas", "highlights": ["Listening"] },
+            { "key": "Reading", "value": "3 textos (académico o general)", "highlights": ["Reading"] },
+            { "key": "Writing", "value": "Task 1 (gráfico/carta) + Task 2 (ensayo)", "highlights": ["Writing"] },
+            { "key": "Speaking", "value": "entrevista en 3 partes", "highlights": ["Speaking"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ie-task1",
+      "tag": "Writing Task 1",
+      "title": "Describir gráficos",
+      "lede": "En el módulo académico describes datos. Selecciona las tendencias clave, no todo.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Tendencia", "value": "rose sharply · fell steadily · leveled off", "highlights": ["rose sharply"] },
+            { "key": "Comparar", "value": "whereas · compared to · while", "highlights": ["whereas"] },
+            { "key": "Resumen", "value": "Overall, the figures show...", "highlights": ["Overall"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Clave:",
+        "body": "incluye siempre una frase de overview con la tendencia general: sube la banda."
+      }
+    },
+    {
+      "id": "ie-task2",
+      "tag": "Writing Task 2",
+      "title": "El ensayo de opinión",
+      "lede": "Un ensayo de 250 palabras con postura clara, argumentos y conclusión.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Intro", "value": "It is often argued that... In this essay, I will...", "highlights": ["It is often argued that"] },
+            { "key": "Cuerpo", "value": "Firstly, ... Moreover, ... For example, ...", "highlights": ["Firstly"] },
+            { "key": "Conclusión", "value": "In conclusion, I firmly believe...", "highlights": ["In conclusion"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ie-speaking",
+      "tag": "Speaking",
+      "title": "Fluidez en la entrevista",
+      "lede": "Speaking valora fluidez y desarrollo. Amplía tus respuestas, no contestes con monosílabos.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "Do you like music? — Yes.", "note": "muy corto" },
+            { "variant": "good", "text": "Yes, I'm really into jazz because it helps me relax.", "note": "amplía y justifica" },
+            { "variant": "good", "text": "Well, that's an interesting question...", "note": "ganar tiempo con naturalidad" },
+            { "variant": "good", "text": "It depends, but generally...", "note": "matizar" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ie-band",
+      "tag": "Criterios",
+      "title": "Cómo subir de banda",
+      "lede": "Los cuatro criterios de evaluación. Mejorar cualquiera de ellos sube tu nota.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Fluency", "value": "habla seguido, sin pausas largas" },
+            { "key": "Vocabulary", "value": "léxico variado y preciso (lexical resource)", "highlights": ["lexical resource"] },
+            { "key": "Grammar", "value": "variedad de estructuras correctas" },
+            { "key": "Pronunciation", "value": "claridad y entonación natural" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ie-paraphrase",
+      "tag": "Técnica",
+      "title": "Parafrasear",
+      "lede": "Reformular la pregunta o el dato con tus palabras es una habilidad clave en IELTS.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Sinónimos", "value": "important → crucial · big → significant", "highlights": ["crucial"] },
+            { "key": "Cambiar voz", "value": "People use it → It is widely used.", "highlights": ["It is widely used"] },
+            { "key": "Cambiar clase", "value": "decide → make a decision", "highlights": ["make a decision"] }
+          ]
+        }
+      ]
+    }
+  ]
+}

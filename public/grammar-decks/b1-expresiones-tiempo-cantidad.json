@@ -1,0 +1,115 @@
+{
+  "meta": {
+    "eyebrow": "B1 · Expresiones de tiempo y cantidad",
+    "title": "Expresiones de tiempo",
+    "titleEmphasis": "y cantidad"
+  },
+  "cards": [
+    {
+      "id": "tq-forsince",
+      "tag": "for / since",
+      "title": "for y since",
+      "lede": "Con el presente perfecto: for marca duración; since marca el punto de inicio.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "for + periodo", "value": "for two years · for a week", "highlights": ["for"] },
+            { "key": "since + momento", "value": "since 2020 · since Monday", "highlights": ["since"] },
+            { "key": "Ejemplo", "value": "I've lived here for five years / since 2019.", "highlights": ["for", "since"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Truco:",
+        "body": "for responde a how long; since responde a from when."
+      }
+    },
+    {
+      "id": "tq-already-yet",
+      "tag": "already / yet",
+      "title": "already, yet, just",
+      "lede": "Adverbios típicos del presente perfecto. Marcan si algo ya pasó o aún no.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "just", "value": "acaba de · I've just arrived.", "highlights": ["just"] },
+            { "key": "already", "value": "ya · I've already done it.", "highlights": ["already"] },
+            { "key": "yet", "value": "todavía no · I haven't finished yet.", "highlights": ["yet"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tq-during-while",
+      "tag": "during / while",
+      "title": "during, while, for",
+      "lede": "Tres formas de hablar de un periodo, pero con gramática distinta.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "during + sustantivo", "value": "during the meeting", "highlights": ["during"] },
+            { "key": "while + cláusula", "value": "while I was working", "highlights": ["while"] },
+            { "key": "for + duración", "value": "for two hours", "highlights": ["for"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Ojo:",
+        "body": "during va con un sustantivo; while va con sujeto + verbo."
+      }
+    },
+    {
+      "id": "tq-quantity",
+      "tag": "Cantidad",
+      "title": "most, several, plenty",
+      "lede": "Cuantificadores intermedios para hablar de cantidades sin dar cifras exactas.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "most", "value": "la mayoría · most people", "highlights": ["most"] },
+            { "key": "several", "value": "varios · several times", "highlights": ["several"] },
+            { "key": "plenty of", "value": "de sobra · plenty of time", "highlights": ["plenty of"] },
+            { "key": "a couple of", "value": "un par de · a couple of days", "highlights": ["a couple of"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tq-approx",
+      "tag": "Aproximar",
+      "title": "about, around, almost",
+      "lede": "Palabras para dar cantidades aproximadas cuando no sabes la cifra exacta.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "about / around", "value": "about 20 people · around noon", "highlights": ["about", "around"] },
+            { "key": "almost / nearly", "value": "almost ready · nearly done", "highlights": ["almost"] },
+            { "key": "over / under", "value": "over 100 · under an hour", "highlights": ["over", "under"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tq-contrast",
+      "tag": "Contraste",
+      "title": "for vs. ago vs. in",
+      "lede": "Tres expresiones temporales que se confunden, cada una con su tiempo verbal.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "good", "text": "I worked there for two years.", "note": "for = duración" },
+            { "variant": "good", "text": "I left two years ago.", "note": "ago = hace, pasado" },
+            { "variant": "good", "text": "I'll be back in two years.", "note": "in = dentro de, futuro" },
+            { "variant": "bad", "text": "I left for two years ago." }
+          ]
+        }
+      ]
+    }
+  ]
+}

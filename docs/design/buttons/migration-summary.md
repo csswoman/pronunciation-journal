@@ -98,9 +98,9 @@ All variants use design tokens from `globals.css`. No hardcoded colors.
 ### Created
 - 📄 `components/ui/button-variants.tsx` — Variant documentation
 - 📄 `components/ui/ButtonShowcase.tsx` — Visual demo of all variants
-- 📄 `BUTTON_GUIDE.md` — Complete reference (5 sections, 200+ lines)
-- 📄 `BUTTON_QUICK_REFERENCE.md` — One-page cheat sheet
-- 📄 `BUTTON_MIGRATION_SUMMARY.md` — This file
+- 📄 [guide.md](guide.md) — Complete reference (5 sections, 200+ lines)
+- 📄 [quick-reference.md](quick-reference.md) — One-page cheat sheet
+- 📄 [migration-summary.md](migration-summary.md) — This file
 
 ---
 
@@ -264,8 +264,8 @@ grep -r "btn-primary\|btn-secondary" src/ components/ app/
 ```
 
 ### References
-- **Full guide:** `BUTTON_GUIDE.md` (all variants, props, examples)
-- **Quick ref:** `BUTTON_QUICK_REFERENCE.md` (cheat sheet)
+- **Full guide:** [guide.md](guide.md) (all variants, props, examples)
+- **Quick ref:** [quick-reference.md](quick-reference.md) (cheat sheet)
 - **Visual demo:** `ButtonShowcase.tsx` (see all variants at once)
 - **Design system:** `DESIGN.md` (design philosophy, tokens)
 - **Project rules:** `CLAUDE.md` (styling rules, hard rules)
@@ -282,4 +282,4 @@ grep -r "btn-primary\|btn-secondary" src/ components/ app/
 
 ---
 
-**Questions?** See `BUTTON_GUIDE.md` FAQ section.
+**Questions?** See [guide.md](guide.md) FAQ section.

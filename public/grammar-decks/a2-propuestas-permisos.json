@@ -1,0 +1,125 @@
+{
+  "meta": {
+    "eyebrow": "A2 · Propuestas y permisos",
+    "title": "Propuestas y",
+    "titleEmphasis": "permisos"
+  },
+  "cards": [
+    {
+      "id": "pp-suggest",
+      "tag": "Sugerir",
+      "title": "Let's y Why don't we",
+      "lede": "Para proponer hacer algo juntos. Ambas usan el verbo base.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Let's", "value": "Let's go! · Let's eat.", "highlights": ["Let's"] },
+            { "key": "Why don't we", "value": "Why don't we watch a movie?", "highlights": ["Why don't we"] },
+            { "key": "How about", "value": "How about pizza? · How about going out?", "highlights": ["How about"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Ojo:",
+        "body": "tras How about va -ing o un sustantivo: How about going, no \"How about go\"."
+      }
+    },
+    {
+      "id": "pp-shall",
+      "tag": "Ofrecer",
+      "title": "Shall I...? / Can I help?",
+      "lede": "Para ofrecer ayuda o hacer algo por alguien. Shall es más formal.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Shall I", "value": "Shall I open the window?", "highlights": ["Shall I"] },
+            { "key": "Can I help", "value": "Can I help you?", "highlights": ["Can I help"] },
+            { "key": "Would you like", "value": "Would you like some tea?", "highlights": ["Would you like"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pp-permission",
+      "tag": "Permiso",
+      "title": "Can / Could / May I",
+      "lede": "Para pedir permiso, de lo más informal a lo más formal.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Can I (informal)", "value": "Can I sit here?", "highlights": ["Can I"] },
+            { "key": "Could I (educado)", "value": "Could I borrow your pen?", "highlights": ["Could I"] },
+            { "key": "May I (formal)", "value": "May I come in?", "highlights": ["May I"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Registro:",
+        "body": "May I es lo más formal; Can I, lo más cotidiano. Could I queda bien casi siempre."
+      }
+    },
+    {
+      "id": "pp-requests",
+      "tag": "Pedir",
+      "title": "Pedir favores",
+      "lede": "Pedirle a otra persona que haga algo. Could you y Would you suenan educados.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Can you", "value": "Can you help me?", "highlights": ["Can you"] },
+            { "key": "Could you", "value": "Could you repeat that?", "highlights": ["Could you"] },
+            { "key": "Would you mind", "value": "Would you mind closing the door?", "highlights": ["Would you mind"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Ojo:",
+        "body": "tras Would you mind va -ing: Would you mind waiting?"
+      }
+    },
+    {
+      "id": "pp-responses",
+      "tag": "Responder",
+      "title": "Aceptar y rechazar",
+      "lede": "Cómo responder a propuestas, ofertas y peticiones de forma natural.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Aceptar",
+              "rule": "decir que sí",
+              "examples": ["Sure! · Of course.", "That sounds great.", "Yes, please."]
+            },
+            {
+              "label": "Rechazar",
+              "rule": "decir que no con tacto",
+              "examples": ["Sorry, I can't.", "Maybe another time.", "I'd love to, but..."]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pp-practice",
+      "tag": "Práctica",
+      "title": "Mini diálogo",
+      "lede": "Así se encadenan propuesta, respuesta y plan en una conversación real.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "good", "text": "Why don't we go for coffee?", "note": "propuesta" },
+            { "variant": "good", "text": "Sure, that sounds great!", "note": "aceptar" },
+            { "variant": "good", "text": "Could you pick me up?", "note": "petición" },
+            { "variant": "good", "text": "Of course, no problem.", "note": "aceptar el favor" }
+          ]
+        }
+      ]
+    }
+  ]
+}

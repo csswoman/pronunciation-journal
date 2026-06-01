@@ -54,7 +54,7 @@ export function SoundLabLessonGrid({
   if (totalLessons === 0) {
     return (
       <p className="py-16 text-center text-sm text-fg-muted">
-        No lessons match this filter.
+        Ningún sonido coincide con este filtro.
       </p>
     );
   }
@@ -63,14 +63,16 @@ export function SoundLabLessonGrid({
     <>
       {sections.map((section) => (
         <section key={section.id} className="sound-lab__group">
-          <div className="sound-lab__group-head">
-            <h2>{section.title}</h2>
-            {section.count !== undefined && (
-              <span>
-                {section.count} {section.count === 1 ? "sound" : "sounds"}
-              </span>
-            )}
-          </div>
+          {section.title ? (
+            <div className="sound-lab__group-head">
+              <h2>{section.title}</h2>
+              {section.count !== undefined && (
+                <span>
+                  {section.count} {section.count === 1 ? "sonido" : "sonidos"}
+                </span>
+              )}
+            </div>
+          ) : null}
           <div className="sound-lab__grid">
             {section.lessons.map((lesson) => {
               const progressPct = getProgress(lesson, soundProgressMap);
@@ -82,7 +84,6 @@ export function SoundLabLessonGrid({
                   lesson={lesson}
                   progressPct={progressPct}
                   isWeak={isWeak}
-                  category={section.category}
                 />
               );
             })}

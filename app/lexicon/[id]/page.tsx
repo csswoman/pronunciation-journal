@@ -1,10 +1,11 @@
+import type { CSSProperties } from "react";
 import { notFound } from "next/navigation";
 import PageLayout from "@/components/layout/PageLayout";
 import Section from "@/components/layout/Section";
 import { LessonDetailActions } from "@/components/lexicon/lesson/LessonDetailActions";
 import { WordBrowserClient } from "@/components/lexicon/lesson/WordBrowserClient";
-import { PracticeButton } from "@/components/lexicon/lesson/PracticeButton";
 import { getCategories, getCategoryWords } from "@/lib/lexicon/categories";
+import { getCategoryBlurb } from "@/lib/lexicon/category-blurbs";
 import { getLexiconWordBankDetails } from "@/lib/word-bank/server-queries";
 import type { Word } from "@/components/lexicon/lesson/WordGrid";
 
@@ -18,8 +19,6 @@ export default async function LessonDetailPage({ params }: { params: Promise<{ i
   const rawWords = getCategoryWords(id);
   const lexiconIds = rawWords.map((w) => w.id);
 
-  // Fetch which of these words the user already has in word_bank (by source_ref).
-  // Falls back to empty map if the user is not logged in.
   let wordBankDetailsMap: Map<string, { id: string; isFavorite: boolean; srsStatus: string | null }>;
   try {
     wordBankDetailsMap = await getLexiconWordBankDetails(lexiconIds);
@@ -39,6 +38,8 @@ export default async function LessonDetailPage({ params }: { params: Promise<{ i
     word: w.word,
     partOfSpeech: w.pos,
     definition: w.definition,
+    ipa: w.ipa,
+    translation: w.translation,
     example: w.example,
     status: resolveStatus(w.id),
     difficulty: w.difficulty,
@@ -49,27 +50,29 @@ export default async function LessonDetailPage({ params }: { params: Promise<{ i
 
   return (
     <PageLayout cardWrapper={false}>
-      <Section spacing="lg">
-        <LessonDetailActions
-          title={category.name}
-          totalWords={category.total}
-          wordsLearned={wordsLearned}
-          wordsReviewing={wordsReviewing}
-          color={category.color}
-          words={words}
-        />
-        <div className="flex justify-end">
-          <PracticeButton categoryId={id} />
-        </div>
-        <WordBrowserClient
-          words={words}
-          color={category.color}
-          categoryId={id}
-          wordBankMapEntries={Array.from(wordBankDetailsMap.entries()).map(
-            ([k, v]) => [k, { id: v.id, isFavorite: v.isFavorite }] as [string, { id: string; isFavorite: boolean }]
-          )}
-        />
-      </Section>
+      <div
+        className="lexicon-area"
+        style={{ "--lexicon-cat": category.color } as CSSProperties}
+      >
+        <Section spacing="lg">
+          <LessonDetailActions
+            title={category.name}
+            blurb={getCategoryBlurb(id)}
+            totalWords={words.length}
+            wordsLearned={wordsLearned}
+            wordsReviewing={wordsReviewing}
+            color={category.color}
+            categoryId={id}
+            words={words}
+          />
+          <WordBrowserClient
+            words={words}
+            wordBankMapEntries={Array.from(wordBankDetailsMap.entries()).map(
+              ([k, v]) => [k, { id: v.id, isFavorite: v.isFavorite }] as [string, { id: string; isFavorite: boolean }]
+            )}
+          />
+        </Section>
+      </div>
     </PageLayout>
   );
 }

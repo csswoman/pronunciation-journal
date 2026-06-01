@@ -250,8 +250,8 @@ git push origin main
 
 After setup is complete:
 
-1. [ ] Read **CI-CD_SUMMARY.md** for overview
-2. [ ] Read **DEPLOYMENT.md** for comprehensive guide
+1. [ ] Read **[ci-cd-summary.md](ci-cd-summary.md)** for overview
+2. [ ] Read **[guide.md](guide.md)** for comprehensive guide
 3. [ ] Review **.github/workflows/ci.yml** to understand CI
 4. [ ] Review **.github/workflows/deploy.yml** to understand deploy
 
@@ -319,4 +319,4 @@ Congratulations! Your project now has:
 - **CI/CD not working?** Check `.github/workflows/` files
 - **Deployment not working?** Check Vercel dashboard
 - **Secrets issues?** Run `gh secret list`
-- **Need help?** Read `DEPLOYMENT.md` for detailed guide
+- **Need help?** Read [guide.md](guide.md) for detailed guide

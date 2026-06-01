@@ -2,42 +2,18 @@
 
 import Link from "next/link";
 import type { Lesson } from "@/lib/types";
+import { ipaFromLessonTitle, lessonSubtitleFromTitle } from "@/lib/sound-lab/display";
 
 interface Props {
   lesson: Lesson;
   progressPct?: number;
   isWeak?: boolean;
-  category?: string;
 }
 
-const DIFFICULTY_CLASS: Record<string, string> = {
-  easy: "sound-lab__diff--easy",
-  medium: "sound-lab__diff--medium",
-  hard: "sound-lab__diff--hard",
-};
-
-const DIFFICULTY_LABEL: Record<string, string> = {
-  easy: "Easy",
-  medium: "Mid",
-  hard: "Hard",
-};
-
-function extractIpa(title: string): string | null {
-  const m = title.match(/^\/([^/]+)\//);
-  return m ? `/${m[1]}/` : null;
-}
-
-function displayTitle(title: string): string {
-  return title.replace(/^\/[^/]+\/\s*[—–-]\s*/, "");
-}
-
-export function SoundLabLessonCard({ lesson, progressPct, isWeak, category }: Props) {
-  const { id, title, difficulty, words, exerciseCount, href } = lesson;
-  const ipa = extractIpa(title);
-  const label = displayTitle(title);
-  const wordCount = words.length > 0 ? words.length : (exerciseCount ?? 0);
-  const minutes = Math.max(2, Math.ceil(wordCount / 3));
-  const repsLabel = wordCount > 0 ? `↻ ${wordCount} · ${minutes}m` : null;
+export function SoundLabLessonCard({ lesson, progressPct, isWeak }: Props) {
+  const { id, title, words, href } = lesson;
+  const ipa = ipaFromLessonTitle(title);
+  const subtitle = lessonSubtitleFromTitle(title);
   const linkHref = href ?? `/practice/sounds/sound/${id.replace("sound-", "")}`;
   const examples = words.length > 0 ? words.slice(0, 3).map((w) => w.word) : [];
   const showProgress =
@@ -53,17 +29,8 @@ export function SoundLabLessonCard({ lesson, progressPct, isWeak, category }: Pr
           .filter(Boolean)
           .join(" ")}
       >
-        <div className="sound-lab__card-row1">
-          <span
-            className={`sound-lab__diff ${DIFFICULTY_CLASS[difficulty] ?? ""}`}
-          >
-            {DIFFICULTY_LABEL[difficulty] ?? difficulty}
-          </span>
-          {repsLabel && <span className="sound-lab__reps">{repsLabel}</span>}
-        </div>
-
         {ipa && <div className="sound-lab__ipa">{ipa}</div>}
-        <div className="sound-lab__name">{category || label}</div>
+        {subtitle && <p className="sound-lab__card-sub">{subtitle}</p>}
 
         {examples.length > 0 && (
           <div className="sound-lab__ex">

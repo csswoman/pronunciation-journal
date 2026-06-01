@@ -7,17 +7,10 @@ import type { Word } from "./WordGrid";
 
 interface WordBrowserClientProps {
   words: Word[];
-  color: string;
-  categoryId: string;
   wordBankMapEntries: Array<[string, { id: string; isFavorite: boolean }]>;
 }
 
-export function WordBrowserClient({
-  words,
-  color,
-  categoryId,
-  wordBankMapEntries,
-}: WordBrowserClientProps) {
+export function WordBrowserClient({ words, wordBankMapEntries }: WordBrowserClientProps) {
   const [wordBankMap, setWordBankMap] = useState(
     () => new Map(wordBankMapEntries)
   );
@@ -64,8 +57,6 @@ export function WordBrowserClient({
   return (
     <WordBrowser
       words={words}
-      color={color}
-      categoryId={categoryId}
       wordBankMap={wordBankMap}
       onToggleFavorite={handleToggleFavorite}
       onAddToMyWords={handleAddToMyWords}

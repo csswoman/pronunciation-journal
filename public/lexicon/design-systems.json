@@ -5,7 +5,12 @@
     "pos": "noun phrase",
     "definition": "A level in a design system that separates raw tokens from component-level decisions.",
     "difficulty": 3,
-    "tags": ["tokens", "architecture", "advanced"]
+    "tags": [
+      "tokens",
+      "architecture",
+      "advanced"
+    ],
+    "ipa": "/æbstɹækʃʌn leɪɜr/"
   },
   {
     "id": "alias-token",
@@ -13,7 +18,12 @@
     "pos": "noun phrase",
     "definition": "A semantic token that references a primitive token and communicates its intended use.",
     "difficulty": 3,
-    "tags": ["tokens", "semantic", "fundamentals"]
+    "tags": [
+      "tokens",
+      "semantic",
+      "fundamentals"
+    ],
+    "ipa": "/eɪliːʌs toʊkʌn/"
   },
   {
     "id": "atomic-design",
@@ -21,7 +31,12 @@
     "pos": "noun phrase",
     "definition": "A methodology by Brad Frost organizing UI into atoms, molecules, organisms, templates, and pages.",
     "difficulty": 2,
-    "tags": ["methodology", "components", "architecture"]
+    "tags": [
+      "methodology",
+      "components",
+      "architecture"
+    ],
+    "ipa": "/ʌtɑmɪk dɪzaɪn/"
   },
   {
     "id": "base-component",
@@ -29,7 +44,12 @@
     "pos": "noun phrase",
     "definition": "An unstyled or minimally styled component that provides behavior without visual opinions.",
     "difficulty": 2,
-    "tags": ["components", "architecture", "headless"]
+    "tags": [
+      "components",
+      "architecture",
+      "headless"
+    ],
+    "ipa": "/beɪs kʌmpoʊnʌnt/"
   },
   {
     "id": "baseline-grid",
@@ -37,7 +57,12 @@
     "pos": "noun phrase",
     "definition": "A horizontal rhythm system aligning text and elements to a consistent vertical spacing unit.",
     "difficulty": 2,
-    "tags": ["spacing", "typography", "layout"]
+    "tags": [
+      "spacing",
+      "typography",
+      "layout"
+    ],
+    "ipa": "/beɪslaɪn ɡɹɪd/"
   },
   {
     "id": "border-radius-token",
@@ -45,7 +70,12 @@
     "pos": "noun phrase",
     "definition": "A design token defining the corner rounding values available across a system.",
     "difficulty": 1,
-    "tags": ["tokens", "visual", "css"]
+    "tags": [
+      "tokens",
+      "visual",
+      "css"
+    ],
+    "ipa": "/bɔɹdɜr ɹeɪdiːʌs toʊkʌn/"
   },
   {
     "id": "breakpoint",
@@ -53,7 +83,11 @@
     "pos": "noun",
     "definition": "A defined viewport width at which the layout adapts to suit a different screen size.",
     "difficulty": 1,
-    "tags": ["responsive", "layout", "css"]
+    "tags": [
+      "responsive",
+      "layout",
+      "css"
+    ]
   },
   {
     "id": "cascade-layer",
@@ -61,7 +95,12 @@
     "pos": "noun phrase",
     "definition": "A CSS @layer rule that explicitly controls the order of specificity between style groups.",
     "difficulty": 3,
-    "tags": ["css", "specificity", "advanced"]
+    "tags": [
+      "css",
+      "specificity",
+      "advanced"
+    ],
+    "ipa": "/kæskeɪd leɪɜr/"
   },
   {
     "id": "color-palette",
@@ -69,7 +108,12 @@
     "pos": "noun phrase",
     "definition": "The complete set of raw color values available in a system before semantic assignment.",
     "difficulty": 1,
-    "tags": ["color", "tokens", "fundamentals"]
+    "tags": [
+      "color",
+      "tokens",
+      "fundamentals"
+    ],
+    "ipa": "/kʌlɜr pælʌt/"
   },
   {
     "id": "color-ramp",
@@ -77,7 +121,12 @@
     "pos": "noun phrase",
     "definition": "A graduated scale of tints and shades for a single hue, typically numbered 50 through 900.",
     "difficulty": 2,
-    "tags": ["color", "tokens", "visual"]
+    "tags": [
+      "color",
+      "tokens",
+      "visual"
+    ],
+    "ipa": "/kʌlɜr ɹæmp/"
   },
   {
     "id": "color-role",
@@ -85,7 +134,12 @@
     "pos": "noun phrase",
     "definition": "A semantic label describing a color's function — such as surface, on-surface, or error.",
     "difficulty": 2,
-    "tags": ["color", "semantic", "tokens"]
+    "tags": [
+      "color",
+      "semantic",
+      "tokens"
+    ],
+    "ipa": "/kʌlɜr ɹoʊl/"
   },
   {
     "id": "component-api",
@@ -93,7 +147,12 @@
     "pos": "noun phrase",
     "definition": "The set of props a component exposes to control its appearance and behavior from outside.",
     "difficulty": 2,
-    "tags": ["components", "react", "documentation"]
+    "tags": [
+      "components",
+      "react",
+      "documentation"
+    ],
+    "ipa": "/kʌmpoʊnʌnt eɪpiːaɪ/"
   },
   {
     "id": "component-library",
@@ -101,7 +160,12 @@
     "pos": "noun phrase",
     "definition": "A versioned, documented collection of reusable UI components shared across a product or org.",
     "difficulty": 1,
-    "tags": ["fundamentals", "components", "tooling"]
+    "tags": [
+      "fundamentals",
+      "components",
+      "tooling"
+    ],
+    "ipa": "/kʌmpoʊnʌnt laɪbɹɛɹiː/"
   },
   {
     "id": "composition",
@@ -109,7 +173,12 @@
     "pos": "noun",
     "definition": "Building complex UI by combining smaller, focused components rather than creating monolithic ones.",
     "difficulty": 2,
-    "tags": ["architecture", "react", "patterns"]
+    "tags": [
+      "architecture",
+      "react",
+      "patterns"
+    ],
+    "ipa": "/kɑmpʌzɪʃʌn/"
   },
   {
     "id": "compound-variant",
@@ -117,7 +186,12 @@
     "pos": "noun phrase",
     "definition": "A style rule applied only when two or more variant conditions are true simultaneously.",
     "difficulty": 3,
-    "tags": ["variants", "cva", "advanced"]
+    "tags": [
+      "variants",
+      "cva",
+      "advanced"
+    ],
+    "ipa": "/kɑmpaʊnd vɛɹiːʌnt/"
   },
   {
     "id": "constraint",
@@ -125,7 +199,12 @@
     "pos": "noun",
     "definition": "A deliberate system rule that limits choices to maintain consistency across the product.",
     "difficulty": 2,
-    "tags": ["governance", "fundamentals", "tokens"]
+    "tags": [
+      "governance",
+      "fundamentals",
+      "tokens"
+    ],
+    "ipa": "/kʌnstɹeɪnt/"
   },
   {
     "id": "consuming-team",
@@ -133,7 +212,12 @@
     "pos": "noun phrase",
     "definition": "A product team that uses a design system's components without contributing to its core.",
     "difficulty": 2,
-    "tags": ["governance", "adoption", "process"]
+    "tags": [
+      "governance",
+      "adoption",
+      "process"
+    ],
+    "ipa": "/kʌnsuːmɪŋ tiːm/"
   },
   {
     "id": "css-custom-property",
@@ -141,7 +225,11 @@
     "pos": "noun phrase",
     "definition": "A variable declared with -- prefix in CSS, used to propagate design token values at runtime.",
     "difficulty": 1,
-    "tags": ["css", "tokens", "fundamentals"]
+    "tags": [
+      "css",
+      "tokens",
+      "fundamentals"
+    ]
   },
   {
     "id": "css-in-js",
@@ -149,7 +237,11 @@
     "pos": "noun phrase",
     "definition": "An approach colocating component styles written in JavaScript alongside component logic.",
     "difficulty": 2,
-    "tags": ["css", "react", "tooling"]
+    "tags": [
+      "css",
+      "react",
+      "tooling"
+    ]
   },
   {
     "id": "dark-mode",
@@ -157,7 +249,12 @@
     "pos": "noun phrase",
     "definition": "A color scheme variant using dark backgrounds, requiring semantic tokens to switch correctly.",
     "difficulty": 1,
-    "tags": ["theming", "color", "accessibility"]
+    "tags": [
+      "theming",
+      "color",
+      "accessibility"
+    ],
+    "ipa": "/dɑɹk moʊd/"
   },
   {
     "id": "density",
@@ -165,7 +262,12 @@
     "pos": "noun",
     "definition": "The amount of content and spacing in a UI — compact vs comfortable vs spacious layouts.",
     "difficulty": 2,
-    "tags": ["spacing", "layout", "variants"]
+    "tags": [
+      "spacing",
+      "layout",
+      "variants"
+    ],
+    "ipa": "/dɛnsʌtiː/"
   },
   {
     "id": "design-language",
@@ -173,7 +275,12 @@
     "pos": "noun phrase",
     "definition": "The shared visual and interactive vocabulary — principles, patterns, and aesthetics — of a brand.",
     "difficulty": 2,
-    "tags": ["fundamentals", "brand", "strategy"]
+    "tags": [
+      "fundamentals",
+      "brand",
+      "strategy"
+    ],
+    "ipa": "/dɪzaɪn læŋɡwʌdʒ/"
   },
   {
     "id": "design-token",
@@ -181,7 +288,12 @@
     "pos": "noun phrase",
     "definition": "A named variable storing a single design decision — color, spacing, radius — usable across platforms.",
     "difficulty": 1,
-    "tags": ["tokens", "fundamentals", "css"]
+    "tags": [
+      "tokens",
+      "fundamentals",
+      "css"
+    ],
+    "ipa": "/dɪzaɪn toʊkʌn/"
   },
   {
     "id": "documentation-site",
@@ -189,7 +301,12 @@
     "pos": "noun phrase",
     "definition": "A dedicated website publishing component usage guidelines, props, and live code examples.",
     "difficulty": 1,
-    "tags": ["documentation", "adoption", "tooling"]
+    "tags": [
+      "documentation",
+      "adoption",
+      "tooling"
+    ],
+    "ipa": "/dɑkjʌmɛnteɪʃʌn saɪt/"
   },
   {
     "id": "elevation",
@@ -197,7 +314,12 @@
     "pos": "noun",
     "definition": "A system representing depth through shadow values, communicating component stacking order.",
     "difficulty": 2,
-    "tags": ["shadow", "visual", "tokens"]
+    "tags": [
+      "shadow",
+      "visual",
+      "tokens"
+    ],
+    "ipa": "/ɛlʌveɪʃʌn/"
   },
   {
     "id": "fallback-font",
@@ -205,7 +327,12 @@
     "pos": "noun phrase",
     "definition": "A secondary typeface rendered while a web font loads to prevent invisible or shifted text.",
     "difficulty": 2,
-    "tags": ["typography", "performance", "css"]
+    "tags": [
+      "typography",
+      "performance",
+      "css"
+    ],
+    "ipa": "/fɔlbæk fɑnt/"
   },
   {
     "id": "fluid-type",
@@ -213,7 +340,12 @@
     "pos": "noun phrase",
     "definition": "Font sizes that scale smoothly between breakpoints using CSS clamp() instead of fixed steps.",
     "difficulty": 3,
-    "tags": ["typography", "responsive", "css"]
+    "tags": [
+      "typography",
+      "responsive",
+      "css"
+    ],
+    "ipa": "/fluːʌd tʌpɑɡɹʌfiː/"
   },
   {
     "id": "focus-ring",
@@ -221,7 +353,12 @@
     "pos": "noun phrase",
     "definition": "A visible outline appearing on focused interactive elements to aid keyboard navigation.",
     "difficulty": 1,
-    "tags": ["accessibility", "a11y", "css"]
+    "tags": [
+      "accessibility",
+      "a11y",
+      "css"
+    ],
+    "ipa": "/foʊkʌs ɹɪŋ/"
   },
   {
     "id": "font-scale",
@@ -229,7 +366,12 @@
     "pos": "noun phrase",
     "definition": "A set of predefined font size steps — xs through 4xl — forming the typographic range of a system.",
     "difficulty": 1,
-    "tags": ["typography", "tokens", "fundamentals"]
+    "tags": [
+      "typography",
+      "tokens",
+      "fundamentals"
+    ],
+    "ipa": "/taɪp skeɪl/"
   },
   {
     "id": "font-stack",
@@ -237,7 +379,12 @@
     "pos": "noun phrase",
     "definition": "An ordered list of typefaces in CSS, falling back to the next if the preferred one is unavailable.",
     "difficulty": 1,
-    "tags": ["typography", "css", "fundamentals"]
+    "tags": [
+      "typography",
+      "css",
+      "fundamentals"
+    ],
+    "ipa": "/fɑnt stæk/"
   },
   {
     "id": "global-style",
@@ -245,7 +392,12 @@
     "pos": "noun phrase",
     "definition": "CSS rules applied to the entire document — resets, root variables, and base element defaults.",
     "difficulty": 1,
-    "tags": ["css", "fundamentals", "reset"]
+    "tags": [
+      "css",
+      "fundamentals",
+      "reset"
+    ],
+    "ipa": "/ɡloʊbʌl staɪl/"
   },
   {
     "id": "gutters",
@@ -253,7 +405,12 @@
     "pos": "noun",
     "definition": "Fixed spacing between columns in a grid layout that maintains visual separation.",
     "difficulty": 1,
-    "tags": ["layout", "grid", "spacing"]
+    "tags": [
+      "layout",
+      "grid",
+      "spacing"
+    ],
+    "ipa": "/ɡʌtɜrz/"
   },
   {
     "id": "headless-component",
@@ -261,7 +418,12 @@
     "pos": "noun phrase",
     "definition": "A component providing only logic and accessibility with no default styles applied.",
     "difficulty": 2,
-    "tags": ["components", "architecture", "accessibility"]
+    "tags": [
+      "components",
+      "architecture",
+      "accessibility"
+    ],
+    "ipa": "/hɛdlʌs kʌmpoʊnʌnt/"
   },
   {
     "id": "hue-token",
@@ -269,7 +431,12 @@
     "pos": "noun phrase",
     "definition": "A CSS custom property storing a hue value to drive a dynamic accent color system.",
     "difficulty": 3,
-    "tags": ["css", "tokens", "theming"]
+    "tags": [
+      "css",
+      "tokens",
+      "theming"
+    ],
+    "ipa": "/hjuː toʊkʌn/"
   },
   {
     "id": "icon-system",
@@ -277,7 +444,12 @@
     "pos": "noun phrase",
     "definition": "A cohesive set of SVG icons sharing consistent sizing, stroke weight, and visual style.",
     "difficulty": 1,
-    "tags": ["visual", "svg", "components"]
+    "tags": [
+      "visual",
+      "svg",
+      "components"
+    ],
+    "ipa": "/aɪkɑn sɪstʌm/"
   },
   {
     "id": "inheritance-token",
@@ -285,7 +457,12 @@
     "pos": "noun phrase",
     "definition": "The ability of a child component to receive token values cascaded from a parent theme.",
     "difficulty": 3,
-    "tags": ["tokens", "css", "theming"]
+    "tags": [
+      "tokens",
+      "css",
+      "theming"
+    ],
+    "ipa": "/toʊkʌn ɪnhɛɹʌtʌns/"
   },
   {
     "id": "interactive-state",
@@ -293,7 +470,12 @@
     "pos": "noun phrase",
     "definition": "A component's visual condition in response to user action: hover, focus, active, or disabled.",
     "difficulty": 1,
-    "tags": ["components", "css", "interaction"]
+    "tags": [
+      "components",
+      "css",
+      "interaction"
+    ],
+    "ipa": "/ɪntɜræktɪv steɪt/"
   },
   {
     "id": "layer-token",
@@ -301,7 +483,12 @@
     "pos": "noun phrase",
     "definition": "A semantic surface token — background, surface, overlay — defining stacking context colors.",
     "difficulty": 3,
-    "tags": ["tokens", "color", "semantic"]
+    "tags": [
+      "tokens",
+      "color",
+      "semantic"
+    ],
+    "ipa": "/leɪɜr toʊkʌn/"
   },
   {
     "id": "line-height",
@@ -309,7 +496,12 @@
     "pos": "noun phrase",
     "definition": "The vertical space allocated for each line of text, affecting readability and vertical rhythm.",
     "difficulty": 1,
-    "tags": ["typography", "tokens", "css"]
+    "tags": [
+      "typography",
+      "tokens",
+      "css"
+    ],
+    "ipa": "/laɪn haɪt/"
   },
   {
     "id": "linting-tokens",
@@ -317,7 +509,11 @@
     "pos": "noun phrase",
     "definition": "Automated checks enforcing that only approved design tokens are used in component code.",
     "difficulty": 3,
-    "tags": ["governance", "tooling", "tokens"]
+    "tags": [
+      "governance",
+      "tooling",
+      "tokens"
+    ]
   },
   {
     "id": "live-region",
@@ -325,7 +521,12 @@
     "pos": "noun phrase",
     "definition": "An ARIA attribute that announces dynamic content changes to screen readers automatically.",
     "difficulty": 3,
-    "tags": ["accessibility", "aria", "a11y"]
+    "tags": [
+      "accessibility",
+      "aria",
+      "a11y"
+    ],
+    "ipa": "/laɪv ɹiːdʒʌn/"
   },
   {
     "id": "motion-token",
@@ -333,7 +534,12 @@
     "pos": "noun phrase",
     "definition": "A design token storing duration and easing values for consistent animation across a system.",
     "difficulty": 2,
-    "tags": ["animation", "tokens", "motion"]
+    "tags": [
+      "animation",
+      "tokens",
+      "motion"
+    ],
+    "ipa": "/moʊʃʌn toʊkʌn/"
   },
   {
     "id": "optical-sizing",
@@ -341,7 +547,12 @@
     "pos": "noun phrase",
     "definition": "Adjusting letter-spacing or weight at different sizes to maintain visual balance of text.",
     "difficulty": 3,
-    "tags": ["typography", "advanced", "visual"]
+    "tags": [
+      "typography",
+      "advanced",
+      "visual"
+    ],
+    "ipa": "/ɑptɪkʌl saɪzɪŋ/"
   },
   {
     "id": "pattern",
@@ -349,7 +560,12 @@
     "pos": "noun",
     "definition": "A documented, reusable solution to a recurring design problem within a specific context.",
     "difficulty": 1,
-    "tags": ["fundamentals", "documentation", "ux"]
+    "tags": [
+      "fundamentals",
+      "documentation",
+      "ux"
+    ],
+    "ipa": "/pætɜrn/"
   },
   {
     "id": "polymorphic-component",
@@ -357,7 +573,12 @@
     "pos": "noun phrase",
     "definition": "A component that can render as different HTML elements via an 'as' prop without losing its styles.",
     "difficulty": 3,
-    "tags": ["components", "react", "advanced"]
+    "tags": [
+      "components",
+      "react",
+      "advanced"
+    ],
+    "ipa": "/pɑliːmɔɹfɪk kʌmpoʊnʌnt/"
   },
   {
     "id": "primitive-token",
@@ -365,7 +586,12 @@
     "pos": "noun phrase",
     "definition": "A raw, context-free token storing a single value — blue-500, space-4 — without semantic meaning.",
     "difficulty": 2,
-    "tags": ["tokens", "fundamentals", "color"]
+    "tags": [
+      "tokens",
+      "fundamentals",
+      "color"
+    ],
+    "ipa": "/pɹɪmʌtɪv toʊkʌn/"
   },
   {
     "id": "prop-driven-styling",
@@ -373,7 +599,11 @@
     "pos": "noun phrase",
     "definition": "Applying different styles to a component based on the values of its received props.",
     "difficulty": 2,
-    "tags": ["components", "react", "variants"]
+    "tags": [
+      "components",
+      "react",
+      "variants"
+    ]
   },
   {
     "id": "reduced-motion",
@@ -381,7 +611,12 @@
     "pos": "noun phrase",
     "definition": "A CSS media query respecting the user's OS preference to minimize animation and transitions.",
     "difficulty": 2,
-    "tags": ["accessibility", "animation", "css"]
+    "tags": [
+      "accessibility",
+      "animation",
+      "css"
+    ],
+    "ipa": "/ɹʌduːst moʊʃʌn/"
   },
   {
     "id": "reset",
@@ -389,7 +624,11 @@
     "pos": "noun phrase",
     "definition": "A stylesheet neutralizing browser default styles to create a consistent cross-browser baseline.",
     "difficulty": 1,
-    "tags": ["css", "fundamentals", "global-style"]
+    "tags": [
+      "css",
+      "fundamentals",
+      "global-style"
+    ]
   },
   {
     "id": "responsive-token",
@@ -397,7 +636,12 @@
     "pos": "noun phrase",
     "definition": "A token whose value changes at defined breakpoints to adapt spacing or type for screen size.",
     "difficulty": 3,
-    "tags": ["tokens", "responsive", "advanced"]
+    "tags": [
+      "tokens",
+      "responsive",
+      "advanced"
+    ],
+    "ipa": "/ɹɪspɑnsɪv toʊkʌn/"
   },
   {
     "id": "scale",
@@ -405,7 +649,12 @@
     "pos": "noun phrase",
     "definition": "A set of predefined spacing values — 4, 8, 12, 16… — used consistently across layout and components.",
     "difficulty": 1,
-    "tags": ["spacing", "tokens", "fundamentals"]
+    "tags": [
+      "spacing",
+      "tokens",
+      "fundamentals"
+    ],
+    "ipa": "/speɪsɪŋ skeɪl/"
   },
   {
     "id": "semantic-color",
@@ -413,7 +662,12 @@
     "pos": "noun phrase",
     "definition": "A color token named by its purpose — danger, success, muted — rather than its raw value.",
     "difficulty": 2,
-    "tags": ["color", "tokens", "fundamentals"]
+    "tags": [
+      "color",
+      "tokens",
+      "fundamentals"
+    ],
+    "ipa": "/sɪmæntɪk kʌlɜr/"
   },
   {
     "id": "shadow-token",
@@ -421,7 +675,12 @@
     "pos": "noun phrase",
     "definition": "A design token encoding box-shadow values to represent consistent elevation levels.",
     "difficulty": 2,
-    "tags": ["tokens", "elevation", "css"]
+    "tags": [
+      "tokens",
+      "elevation",
+      "css"
+    ],
+    "ipa": "/ʃædoʊ toʊkʌn/"
   },
   {
     "id": "slot",
@@ -429,7 +688,12 @@
     "pos": "noun",
     "definition": "A named placeholder inside a component where consumers inject custom content or child elements.",
     "difficulty": 2,
-    "tags": ["components", "composition", "patterns"]
+    "tags": [
+      "components",
+      "composition",
+      "patterns"
+    ],
+    "ipa": "/slɑt/"
   },
   {
     "id": "specificity-score",
@@ -437,7 +701,12 @@
     "pos": "noun phrase",
     "definition": "A numeric weight CSS assigns to selectors to decide which rule wins when rules conflict.",
     "difficulty": 2,
-    "tags": ["css", "cascade", "fundamentals"]
+    "tags": [
+      "css",
+      "cascade",
+      "fundamentals"
+    ],
+    "ipa": "/spɛsʌfɪsʌtiː skɔɹ/"
   },
   {
     "id": "style-dictionary",
@@ -445,7 +714,12 @@
     "pos": "proper noun",
     "definition": "An open-source tool that transforms design tokens into platform-specific output files.",
     "difficulty": 2,
-    "tags": ["tooling", "tokens", "automation"]
+    "tags": [
+      "tooling",
+      "tokens",
+      "automation"
+    ],
+    "ipa": "/staɪl dɪkʃʌnɛɹiː/"
   },
   {
     "id": "theming",
@@ -453,7 +727,12 @@
     "pos": "noun",
     "definition": "Swapping a set of token values to change the visual appearance of a system without touching components.",
     "difficulty": 2,
-    "tags": ["tokens", "css", "fundamentals"]
+    "tags": [
+      "tokens",
+      "css",
+      "fundamentals"
+    ],
+    "ipa": "/θiːmɪŋ/"
   },
   {
     "id": "token-pipeline",
@@ -461,7 +740,12 @@
     "pos": "noun phrase",
     "definition": "The automated workflow transforming raw token definitions into CSS variables or JS exports.",
     "difficulty": 3,
-    "tags": ["tokens", "tooling", "automation"]
+    "tags": [
+      "tokens",
+      "tooling",
+      "automation"
+    ],
+    "ipa": "/toʊkʌn paɪplaɪn/"
   },
   {
     "id": "utility-class",
@@ -469,7 +753,12 @@
     "pos": "noun phrase",
     "definition": "A single-purpose CSS class applying one specific style property, as used in Tailwind CSS.",
     "difficulty": 1,
-    "tags": ["css", "tailwind", "fundamentals"]
+    "tags": [
+      "css",
+      "tailwind",
+      "fundamentals"
+    ],
+    "ipa": "/juːtɪlʌtiː klæs/"
   },
   {
     "id": "variant",
@@ -477,7 +766,12 @@
     "pos": "noun",
     "definition": "A named style configuration of a component — primary, ghost, destructive — controlled via props.",
     "difficulty": 1,
-    "tags": ["components", "fundamentals", "variants"]
+    "tags": [
+      "components",
+      "fundamentals",
+      "variants"
+    ],
+    "ipa": "/vɛɹiːʌnt/"
   },
   {
     "id": "versioning",
@@ -485,7 +779,11 @@
     "pos": "noun",
     "definition": "Tagging system releases with semantic version numbers to manage breaking and non-breaking changes.",
     "difficulty": 2,
-    "tags": ["process", "governance", "semver"]
+    "tags": [
+      "process",
+      "governance",
+      "semver"
+    ]
   },
   {
     "id": "visual-regression",
@@ -493,7 +791,12 @@
     "pos": "noun phrase",
     "definition": "An automated test comparing component screenshots to detect unintended visual changes.",
     "difficulty": 2,
-    "tags": ["testing", "tooling", "quality"]
+    "tags": [
+      "testing",
+      "tooling",
+      "quality"
+    ],
+    "ipa": "/vɪʒʌwʌl ɹʌɡɹɛʃʌn tɛst/"
   },
   {
     "id": "z-index-scale",
@@ -501,7 +804,11 @@
     "pos": "noun phrase",
     "definition": "A set of named z-index token values — dropdown, modal, toast — to manage stacking order predictably.",
     "difficulty": 2,
-    "tags": ["tokens", "css", "layout"]
+    "tags": [
+      "tokens",
+      "css",
+      "layout"
+    ]
   },
   {
     "id": "cva",
@@ -509,7 +816,11 @@
     "pos": "proper noun",
     "definition": "Class Variance Authority — a library for defining typed component variants with Tailwind CSS.",
     "difficulty": 2,
-    "tags": ["tooling", "tailwind", "variants"]
+    "tags": [
+      "tooling",
+      "tailwind",
+      "variants"
+    ]
   },
   {
     "id": "class-merging",
@@ -517,7 +828,12 @@
     "pos": "noun phrase",
     "definition": "Resolving Tailwind conflicts when multiple classes target the same CSS property, using tools like cn().",
     "difficulty": 2,
-    "tags": ["tailwind", "css", "tooling"]
+    "tags": [
+      "tailwind",
+      "css",
+      "tooling"
+    ],
+    "ipa": "/klæs mɜrdʒɪŋ/"
   },
   {
     "id": "design-system-adoption",
@@ -525,7 +841,12 @@
     "pos": "noun",
     "definition": "The rate at which product teams migrate to and consistently use a shared design system.",
     "difficulty": 2,
-    "tags": ["governance", "process", "strategy"]
+    "tags": [
+      "governance",
+      "process",
+      "strategy"
+    ],
+    "ipa": "/ʌdɑpʃʌn/"
   },
   {
     "id": "contribution-model",
@@ -533,7 +854,12 @@
     "pos": "noun phrase",
     "definition": "The defined process for how teams outside the core system team can propose or add components.",
     "difficulty": 3,
-    "tags": ["governance", "process", "collaboration"]
+    "tags": [
+      "governance",
+      "process",
+      "collaboration"
+    ],
+    "ipa": "/kɑntɹʌbjuːʃʌn mɑdʌl/"
   },
   {
     "id": "aria-role",
@@ -541,7 +867,12 @@
     "pos": "noun phrase",
     "definition": "An attribute communicating an element's purpose to assistive technologies beyond its HTML tag.",
     "difficulty": 2,
-    "tags": ["accessibility", "aria", "semantics"]
+    "tags": [
+      "accessibility",
+      "aria",
+      "semantics"
+    ],
+    "ipa": "/ɑɹiːʌ ɹoʊl/"
   },
   {
     "id": "forwardref",
@@ -549,7 +880,11 @@
     "pos": "proper noun",
     "definition": "A React API that passes a ref through a component to a DOM element inside it.",
     "difficulty": 3,
-    "tags": ["react", "components", "advanced"]
+    "tags": [
+      "react",
+      "components",
+      "advanced"
+    ]
   },
   {
     "id": "open-closed-principle",
@@ -557,7 +892,12 @@
     "pos": "noun phrase",
     "definition": "A component is open for extension via props but closed for modification of its internal logic.",
     "difficulty": 3,
-    "tags": ["architecture", "principles", "advanced"]
+    "tags": [
+      "architecture",
+      "principles",
+      "advanced"
+    ],
+    "ipa": "/oʊpʌn kloʊzd pɹɪnsʌpʌl/"
   },
   {
     "id": "pixel-pushing",
@@ -565,7 +905,12 @@
     "pos": "noun phrase",
     "definition": "Making minor visual adjustments — often misalignments of 1–2px — to achieve precise rendering.",
     "difficulty": 1,
-    "tags": ["process", "visual", "detail"]
+    "tags": [
+      "process",
+      "visual",
+      "detail"
+    ],
+    "ipa": "/pɪksʌl pʊʃɪŋ/"
   },
   {
     "id": "surface",
@@ -573,6 +918,11 @@
     "pos": "noun",
     "definition": "A semantic color role representing the background layer on which content and components sit.",
     "difficulty": 2,
-    "tags": ["color", "tokens", "semantic"]
+    "tags": [
+      "color",
+      "tokens",
+      "semantic"
+    ],
+    "ipa": "/sɜrfʌs/"
   }
 ]

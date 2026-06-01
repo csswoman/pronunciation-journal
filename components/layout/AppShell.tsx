@@ -14,6 +14,10 @@ import AICoachTrigger from "@/components/ai-coach/AICoachTrigger";
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const isAuthPage = pathname.startsWith("/login");
+  const isImmersivePractice =
+    pathname.startsWith("/practice/sounds/sound/") ||
+    pathname === "/daily" ||
+    pathname === "/review";
   const { user } = useAuth();
   const [open, setOpen] = useState(false);
   const openModal = useCallback(() => setOpen(true), []);
@@ -58,7 +62,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           marginRight: mainMarginRight,
         }}
       >
-        <div className="max-w-screen-xl mx-auto">
+        <div className={isImmersivePractice ? undefined : "max-w-screen-xl mx-auto"}>
           {children}
         </div>
       </main>

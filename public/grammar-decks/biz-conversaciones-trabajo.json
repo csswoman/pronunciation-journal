@@ -1,0 +1,118 @@
+{
+  "meta": {
+    "eyebrow": "Biz · Conversaciones de trabajo",
+    "title": "Conversaciones de",
+    "titleEmphasis": "negocios"
+  },
+  "cards": [
+    {
+      "id": "bc-network",
+      "tag": "Networking",
+      "title": "Presentarte en eventos",
+      "lede": "El elevator pitch: quién eres y qué haces en pocos segundos, con naturalidad.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "I work in...", "value": "trabajo en (sector) · I work in logistics.", "highlights": ["I work in"] },
+            { "key": "I'm with...", "value": "soy de (empresa) · I'm with Acme.", "highlights": ["I'm with"] },
+            { "key": "We help... to...", "value": "ayudamos a... a... · qué hace tu empresa", "highlights": ["We help"] },
+            { "key": "What line of work...?", "value": "¿a qué te dedicas? · devolver", "highlights": ["What line of work"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bc-clients",
+      "tag": "Clientes",
+      "title": "Trato con clientes",
+      "lede": "Con clientes externos el tono es más cuidado. Frases para gestionarlos con soltura.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "How can I help...?", "value": "¿en qué puedo ayudar?", "highlights": ["How can I help"] },
+            { "key": "Let me look into that", "value": "déjame que lo revise", "highlights": ["look into that"] },
+            { "key": "I'll get back to you", "value": "le responderé · con plazo", "highlights": ["get back to you"] },
+            { "key": "I apologise for...", "value": "le pido disculpas por...", "highlights": ["I apologise for"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bc-negotiate",
+      "tag": "Negociar",
+      "title": "Negociar condiciones",
+      "lede": "Negociar es ceder y pedir. El lenguaje condicional es tu mejor aliado.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Would you consider...?", "value": "¿consideraría...?", "highlights": ["Would you consider"] },
+            { "key": "If you..., we could...", "value": "si usted..., nosotros podríamos...", "highlights": ["If you", "we could"] },
+            { "key": "Let's meet halfway", "value": "lleguemos a un punto medio", "highlights": ["meet halfway"] },
+            { "key": "That works for us", "value": "eso nos viene bien · cerrar", "highlights": ["That works for us"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Táctica:",
+        "body": "el condicional (If you..., we could...) te deja pedir sin comprometerte del todo."
+      }
+    },
+    {
+      "id": "bc-update",
+      "tag": "Informar",
+      "title": "Dar el estado de un proyecto",
+      "lede": "Reportar avances con claridad genera confianza. Usa marcadores de tiempo.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "We're on track", "value": "vamos según lo previsto", "highlights": ["on track"] },
+            { "key": "We're slightly behind", "value": "vamos un poco retrasados", "highlights": ["behind"] },
+            { "key": "We're ahead of schedule", "value": "vamos adelantados", "highlights": ["ahead of schedule"] },
+            { "key": "The next step is...", "value": "el siguiente paso es...", "highlights": ["The next step is"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bc-badnews",
+      "tag": "Malas noticias",
+      "title": "Comunicar un problema",
+      "lede": "Dar malas noticias con tacto evita conflictos. Suaviza y ofrece solución.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "We can't finish on time." },
+            { "variant": "good", "text": "I'm afraid there may be a slight delay. Here's our plan.", "note": "suaviza + solución" },
+            { "variant": "bad", "text": "That's not my problem." },
+            { "variant": "good", "text": "Let me see what I can do.", "note": "muestra disposición" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bc-culture",
+      "tag": "Cultura",
+      "title": "Diferencias culturales",
+      "lede": "El inglés de negocios es indirecto. Lo que se dice no siempre es lo que se quiere decir.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "\"Interesting\"", "value": "a veces = no muy convencido", "highlights": ["Interesting"] },
+            { "key": "\"With all due respect\"", "value": "= estoy en total desacuerdo", "highlights": ["With all due respect"] },
+            { "key": "\"I'll bear it in mind\"", "value": "= probablemente no lo haré", "highlights": ["bear it in mind"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Consejo:",
+        "body": "ante la duda, sé más educado e indirecto de lo que serías en español. Casi nunca sobra."
+      }
+    }
+  ]
+}

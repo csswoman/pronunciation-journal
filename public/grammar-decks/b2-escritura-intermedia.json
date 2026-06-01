@@ -1,0 +1,116 @@
+{
+  "meta": {
+    "eyebrow": "B2 · Escritura intermedia",
+    "title": "Escritura",
+    "titleEmphasis": "intermedia"
+  },
+  "cards": [
+    {
+      "id": "wi-paragraph",
+      "tag": "Párrafos",
+      "title": "Estructura del párrafo",
+      "lede": "Un buen párrafo tiene una idea principal y frases que la apoyan. Una idea por párrafo.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Topic sentence", "value": "la idea principal al inicio", "highlights": ["Topic sentence"] },
+            { "key": "Supporting", "value": "ejemplos y detalles que la apoyan" },
+            { "key": "Concluding", "value": "cierre o transición al siguiente" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wi-linkers",
+      "tag": "Conectores",
+      "title": "Conectores para escribir",
+      "lede": "Los conectores guían al lector. Cada grupo marca una relación distinta entre ideas.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Añadir", "value": "moreover, furthermore, in addition", "highlights": ["moreover"] },
+            { "key": "Contrastar", "value": "however, on the other hand, whereas", "highlights": ["however"] },
+            { "key": "Concluir", "value": "in conclusion, to sum up, overall", "highlights": ["in conclusion"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wi-formal-informal",
+      "tag": "Registro",
+      "title": "Formal vs. informal",
+      "lede": "El registro cambia el vocabulario y la gramática. Adáptalo a tu lector.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Formal",
+              "rule": "informes, solicitudes",
+              "examples": ["I would like to...", "I am writing to inquire...", "Therefore,"]
+            },
+            {
+              "label": "Informal",
+              "rule": "emails a amigos",
+              "examples": ["I'd love to...", "Just wanted to ask...", "So,"]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Ojo:",
+        "body": "en textos formales evita contracciones (don't → do not) y phrasal verbs."
+      }
+    },
+    {
+      "id": "wi-email",
+      "tag": "Emails",
+      "title": "Estructura de un email",
+      "lede": "Un email claro tiene saludo, propósito, cuerpo y despedida adecuados al registro.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Saludo", "value": "Dear Mr. Lee, (formal) · Hi Anna, (informal)", "highlights": ["Dear", "Hi"] },
+            { "key": "Propósito", "value": "I'm writing to... · Just a quick note to...", "highlights": ["I'm writing to"] },
+            { "key": "Cierre", "value": "Best regards, (formal) · Cheers, (informal)", "highlights": ["Best regards"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wi-cohesion",
+      "tag": "Cohesión",
+      "title": "Evitar repeticiones",
+      "lede": "Pronombres y sinónimos enlazan frases sin repetir las mismas palabras.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "The plan failed. The plan was too risky.", "note": "repite" },
+            { "variant": "good", "text": "The plan failed. It was too risky.", "note": "pronombre" },
+            { "variant": "good", "text": "...the project. This approach...", "note": "sinónimo + referencia" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wi-essay",
+      "tag": "Ensayo",
+      "title": "Opinión en un ensayo",
+      "lede": "Un ensayo de opinión presenta una tesis, argumentos y una conclusión equilibrada.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Intro", "value": "presenta el tema y tu postura" },
+            { "key": "Cuerpo", "value": "un argumento por párrafo, con ejemplos" },
+            { "key": "Conclusión", "value": "All things considered, I believe...", "highlights": ["All things considered"] }
+          ]
+        }
+      ]
+    }
+  ]
+}

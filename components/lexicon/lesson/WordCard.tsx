@@ -1,24 +1,21 @@
 "use client";
 
-// Planned structure:
-// <WordCard>
-//   <StatusBadge />
-//   <WordTitle + PartOfSpeech />
-//   <Definition />
-//   <CardFooter: DifficultyDots + LearnButton + PlayButton />
-// </WordCard>
-
+import type { CSSProperties } from "react";
 import { Volume2, Heart, Plus, Check } from "lucide-react";
 import { speak } from "@/lib/phoneme-practice/tts";
+import { formatIpaDisplay } from "@/lib/lexicon/format-ipa";
+import { cn } from "@/lib/cn";
 
 interface WordCardProps {
   word: string;
   partOfSpeech: string;
   definition: string;
+  ipa?: string;
+  translation?: string;
   example?: string;
   status: "learned" | "reviewing" | "new";
-  difficulty: number; // 1–5
-  color?: string;
+  difficulty: number;
+  view?: "grid" | "list";
   onMarkLearned?: () => void;
   isFavorite?: boolean;
   onToggleFavorite?: () => void;
@@ -28,25 +25,19 @@ interface WordCardProps {
 
 const STATUS_CONFIG = {
   learned: {
-    label: "learned",
-    icon: "✓",
-    badgeClass: "text-primary bg-primary-soft border-border-default",
-    cardClass: "border-primary/30 bg-primary-soft/30",
-    dotColor: "bg-primary",
+    label: "Learned",
+    stateColor: "var(--success)",
+    strength: 5,
   },
   reviewing: {
-    label: "reviewing",
-    icon: "↺",
-    badgeClass: "text-warning-value bg-warning-soft border-border-default",
-    cardClass: "border-warning/40 bg-warning-soft/20",
-    dotColor: "bg-warning",
+    label: "Reviewing",
+    stateColor: "var(--warning)",
+    strength: 3,
   },
   new: {
-    label: "",
-    icon: "",
-    badgeClass: "",
-    cardClass: "border-border-default bg-surface-raised",
-    dotColor: "bg-border-default",
+    label: "New",
+    stateColor: "var(--text-tertiary)",
+    strength: 0,
   },
 } as const;
 
@@ -54,10 +45,12 @@ export function WordCard({
   word,
   partOfSpeech,
   definition,
+  ipa,
+  translation,
   example,
   status,
   difficulty,
-  color,
+  view = "grid",
   onMarkLearned,
   isFavorite,
   onToggleFavorite,
@@ -66,91 +59,100 @@ export function WordCard({
 }: WordCardProps) {
   const cfg = STATUS_CONFIG[status];
   const isLearned = status === "learned";
+  const meterStrength = isLearned ? cfg.strength : Math.max(cfg.strength, difficulty);
 
   return (
-    <div className={`flex flex-col gap-2 p-4 rounded-xl border ${cfg.cardClass}`}>
-      {status !== "new" && (
-        <span className={`self-start text-xs font-medium px-2 py-0.5 rounded-full border ${cfg.badgeClass}`}>
-          {cfg.icon} {cfg.label}
+    <article
+      className={cn("lexicon-area__card", view === "list" && "lexicon-area__card--list")}
+      style={{ "--card-state": cfg.stateColor } as CSSProperties}
+    >
+      <div className="lexicon-area__card-top">
+        <div>
+          <p className="lexicon-area__card-word">{word}</p>
+          {ipa ? (
+            <p className="lexicon-area__card-ipa font-ipa">{formatIpaDisplay(ipa)}</p>
+          ) : null}
+        </div>
+        <span
+          className="lexicon-area__statepill"
+          style={{
+            color: cfg.stateColor,
+            background: `color-mix(in srgb, ${cfg.stateColor} 14%, transparent)`,
+            border: `1px solid color-mix(in srgb, ${cfg.stateColor} 35%, transparent)`,
+          }}
+        >
+          {cfg.label}
         </span>
-      )}
-
-      <div>
-        <p className="text-xl font-semibold text-fg leading-tight">{word}</p>
-        <p className="text-xs text-fg-subtle italic mt-0.5">{partOfSpeech}</p>
       </div>
 
-      <p className="text-sm text-fg-muted leading-snug flex-1">{definition}</p>
+      <div className={cn(view === "list" && "lexicon-area__card-body")}>
+        <p className="lexicon-area__card-pos">{partOfSpeech}</p>
 
-      {example && (
-        <p
-          className="text-[11px] italic text-fg-subtle leading-snug mt-1 pl-2"
-          style={{ borderLeft: `2px solid ${color ?? "var(--border-default)"}` }}
-        >
-          "{example}"
-        </p>
-      )}
+        {translation ? <p className="lexicon-area__card-trans">{translation}</p> : null}
 
-      <div className="flex items-center justify-between mt-1">
-        <div className="flex gap-1">
+        <p className="lexicon-area__card-def">{definition}</p>
+
+        {example ? <p className="lexicon-area__card-example">&ldquo;{example}&rdquo;</p> : null}
+      </div>
+
+      <div className="lexicon-area__card-foot">
+        <div className="lexicon-area__meter" aria-hidden>
           {Array.from({ length: 5 }).map((_, i) => (
-            <span
-              key={i}
-              className={`w-2 h-2 rounded-full ${i < difficulty ? cfg.dotColor : "bg-border-default"}`}
-            />
+            <i key={i} className={i < meterStrength ? "is-on" : undefined} />
           ))}
         </div>
-        <div className="flex items-center gap-2">
-          {!isLearned && (
-            <button
-              onClick={onMarkLearned}
-              disabled={!onMarkLearned}
-              className="text-xs text-fg-muted hover:text-fg border border-border-default hover:border-border-strong px-2.5 py-1 rounded-full transition-colors disabled:opacity-40"
-            >
-              Mark learned
-            </button>
-          )}
-          {onToggleFavorite && (
-            <button
-              onClick={onToggleFavorite}
-              aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
-              className={`p-1.5 rounded-full transition-colors ${
-                isFavorite ? "text-error hover:text-error/70" : "text-fg-muted hover:text-fg"
-              }`}
-            >
-              <Heart size={14} fill={isFavorite ? "currentColor" : "none"} />
-            </button>
-          )}
-          {onAddToMyWords && (
-            <button
-              onClick={isInMyWords ? undefined : onAddToMyWords}
-              disabled={isInMyWords}
-              aria-label={isInMyWords ? "Already in My Words" : "Add to My Words"}
-              className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-xs border transition-colors ${
-                isInMyWords
-                  ? "text-fg-subtle border-border-subtle opacity-50 cursor-default"
-                  : "text-fg-muted border-border-default hover:text-fg hover:border-border-strong"
-              }`}
-            >
-              {isInMyWords ? <Check size={11} /> : <Plus size={11} />}
-              {isInMyWords ? "In My Words" : "Add"}
-            </button>
-          )}
+
+        <div className="lexicon-area__acts">
           <button
+            type="button"
+            className="lexicon-area__act"
             onClick={() => {
               const text = [word, definition, example ? `For example: ${example}` : ""]
                 .filter(Boolean)
                 .join(". ");
               speak(text, 0.9);
             }}
-            className="p-1.5 rounded-full text-fg-muted hover:text-fg hover:bg-surface-sunken transition-colors"
             aria-label={`Listen to ${word}`}
           >
-            <Volume2 className="w-3.5 h-3.5" />
+            <Volume2 size={14} />
+          </button>
+
+          {onAddToMyWords ? (
+            <button
+              type="button"
+              className="lexicon-area__act"
+              onClick={isInMyWords ? undefined : onAddToMyWords}
+              disabled={isInMyWords}
+              aria-label={isInMyWords ? "Already in My Words" : "Add to My Words"}
+            >
+              {isInMyWords ? <Check size={14} /> : <Plus size={14} />}
+            </button>
+          ) : null}
+
+          {onToggleFavorite ? (
+            <button
+              type="button"
+              className={cn("lexicon-area__act", isFavorite && "is-fav")}
+              onClick={onToggleFavorite}
+              aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
+            >
+              <Heart size={14} fill={isFavorite ? "currentColor" : "none"} />
+            </button>
+          ) : null}
+
+          <button
+            type="button"
+            className={cn("lexicon-area__act", isLearned && "is-done")}
+            onClick={onMarkLearned}
+            disabled={!onMarkLearned || isLearned}
+            aria-label={isLearned ? "Marked as learned" : "Mark as learned"}
+            title={isLearned ? "Learned" : "Mark learned"}
+          >
+            <Check size={14} />
           </button>
         </div>
       </div>
-    </div>
+    </article>
   );
 }
 

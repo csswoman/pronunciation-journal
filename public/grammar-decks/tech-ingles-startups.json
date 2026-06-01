@@ -1,0 +1,111 @@
+{
+  "meta": {
+    "eyebrow": "Tech · Inglés para startups",
+    "title": "Inglés para",
+    "titleEmphasis": "startups"
+  },
+  "cards": [
+    {
+      "id": "st-basics",
+      "tag": "Conceptos",
+      "title": "Vocabulario startup",
+      "lede": "La jerga del ecosistema emprendedor, prácticamente universal en inglés.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "MVP", "value": "minimum viable product", "highlights": ["MVP"] },
+            { "key": "product-market fit", "value": "encaje producto-mercado", "highlights": ["product-market fit"] },
+            { "key": "runway", "value": "meses de dinero restante", "highlights": ["runway"] },
+            { "key": "to pivot", "value": "cambiar de modelo de negocio", "highlights": ["pivot"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "st-funding",
+      "tag": "Financiación",
+      "title": "Rondas e inversión",
+      "lede": "Términos sobre inversores, rondas y métricas de crecimiento.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Rondas", "value": "seed round · Series A · funding", "highlights": ["seed round"] },
+            { "key": "Inversores", "value": "angel investor · VC (venture capital)", "highlights": ["VC"] },
+            { "key": "Métricas", "value": "burn rate · valuation · equity", "highlights": ["valuation"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "st-pitch",
+      "tag": "Pitch",
+      "title": "El elevator pitch",
+      "lede": "Presentar tu idea en 30 segundos. Problema, solución y valor, sin rodeos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Problema", "value": "Today, people struggle to...", "highlights": ["people struggle to"] },
+            { "key": "Solución", "value": "We've built a platform that...", "highlights": ["We've built"] },
+            { "key": "Tracción", "value": "We're growing 20% month over month.", "highlights": ["growing 20% month over month"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Clave:",
+        "body": "empieza por el problema, no por el producto: el inversor compra la solución a un dolor real."
+      }
+    },
+    {
+      "id": "st-growth",
+      "tag": "Crecimiento",
+      "title": "Hablar de tracción",
+      "lede": "Verbos y estructuras para describir crecimiento y resultados con datos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Crecer", "value": "scale · grow · expand · take off", "highlights": ["scale"] },
+            { "key": "Cifras", "value": "We've doubled our user base.", "highlights": ["doubled"] },
+            { "key": "Proyectar", "value": "We aim to reach 1M users by 2026.", "highlights": ["We aim to reach"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "st-team",
+      "tag": "Equipo",
+      "title": "Cultura y equipo",
+      "lede": "Expresiones sobre la forma de trabajar típica de una startup.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Roles", "value": "co-founder · early hire · stakeholder" },
+            { "key": "Cultura", "value": "move fast · iterate · ship quickly", "highlights": ["move fast"] },
+            { "key": "Mentalidad", "value": "fail fast, learn faster", "highlights": ["fail fast"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "st-meetings",
+      "tag": "Reuniones",
+      "title": "Reuniones ágiles",
+      "lede": "El inglés de las dinámicas ágiles: standups, sprints y retros.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "good", "text": "What did you work on yesterday?", "note": "daily standup" },
+            { "variant": "good", "text": "Any blockers?", "note": "¿impedimentos?" },
+            { "variant": "good", "text": "Let's circle back on this later.", "note": "retomar después" },
+            { "variant": "good", "text": "Let's sync up after the sprint.", "note": "coordinarse" }
+          ]
+        }
+      ]
+    }
+  ]
+}

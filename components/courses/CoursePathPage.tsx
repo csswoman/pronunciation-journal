@@ -23,7 +23,7 @@ export default function CoursePathPage() {
       <div className="course-path__wrap">
         <header className="course-path__hero">
           <span className="course-path__eyebrow">
-            Currículo · base Platzi English Academy, curado para tu objetivo
+            Currículo curado para tu objetivo
           </span>
           <h1 className="course-path__title">Tu ruta de inglés</h1>
           <p className="course-path__intro">

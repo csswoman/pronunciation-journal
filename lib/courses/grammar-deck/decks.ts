@@ -10,15 +10,15 @@ import fs from "fs";
 import path from "path";
 import { z } from "zod";
 import { GrammarStudyDeckSchema } from "./schema";
-import type { GrammarStudyDeckData } from "./types";
+import type { GrammarDeckMeta, GrammarStudyDeckData } from "./types";
 import { MOCK_GRAMMAR_DECK } from "./mockGrammarDeck";
 
 const DECKS_DIR = path.join(process.cwd(), "public", "grammar-decks");
 
-const DEFAULT_META = {
+const DEFAULT_META: GrammarDeckMeta = {
   eyebrow: "Mazo de estudio · sin voltear",
   title: "Gramática",
-} as const;
+};
 
 function readJson(slug: string): unknown | null {
   const filePath = path.join(DECKS_DIR, `${slug}.json`);
@@ -47,8 +47,43 @@ export function getDeckBySlug(slug: string): GrammarStudyDeckData | null {
   // have to keep `index` in sync by hand.
   return {
     meta: result.data.meta ?? DEFAULT_META,
+    sounds: result.data.sounds,
+    related: result.data.related,
+    quiz: result.data.quiz,
     cards: result.data.cards.map((card, i) => ({ ...card, index: i + 1 })),
   };
+}
+
+/**
+ * Reverse index: for a target IPA sound, the course decks that practice it.
+ * Built by scanning every deck's `sounds` field. Server-only (uses fs).
+ */
+export interface DeckSoundRef {
+  slug: string;
+  title: string;
+}
+
+export function getDecksForSound(sound: string): DeckSoundRef[] {
+  const refs: DeckSoundRef[] = [];
+  let files: string[];
+  try {
+    files = fs.readdirSync(DECKS_DIR).filter((f) => f.endsWith(".json"));
+  } catch {
+    return refs;
+  }
+  for (const file of files) {
+    const slug = file.replace(/\.json$/, "");
+    const data = readJson(slug);
+    if (data === null) continue;
+    const parsed = GrammarStudyDeckSchema.safeParse(data);
+    if (!parsed.success) continue;
+    if (parsed.data.sounds?.includes(sound)) {
+      const meta = parsed.data.meta ?? DEFAULT_META;
+      const title = [meta.title, meta.titleEmphasis].filter(Boolean).join(" ");
+      refs.push({ slug, title });
+    }
+  }
+  return refs;
 }
 
 /**

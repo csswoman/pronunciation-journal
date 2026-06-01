@@ -134,28 +134,24 @@ export default function MinimalPairsTrainer() {
   const correctWord = quizTarget === "A" ? pair.wordA : pair.wordB;
 
   return (
-    <section
-      className="rounded-2xl border p-6 lg:p-8 bg-[var(--card-bg)] border-[var(--line-divider)]"
-    >
-      <header className="flex items-start justify-between gap-4 mb-6">
-        <div className="flex items-start gap-3">
-          <span className="shrink-0 inline-flex items-center justify-center w-10 h-10 rounded-xl mt-0.5 bg-[var(--btn-regular-bg)]">
-            <Headphones size={18} className="text-[var(--text-primary)]" />
-          </span>
-          <div>
-            <h2 className="text-xl font-semibold leading-tight mb-1 text-[var(--text-primary)]">
-              Minimal pairs trainer
-            </h2>
-            <p className="text-sm leading-relaxed text-[var(--text-secondary)]">
-              Two words that differ by one sound — train your ear to hear the difference.
-            </p>
-          </div>
+    <section className="ipa-chart__section">
+      <header className="ipa-chart__mp-head">
+        <span className="ipa-chart__mp-icon" aria-hidden>
+          <Headphones size={18} />
+        </span>
+        <div className="flex-1 min-w-0">
+          <h2 className="ipa-chart__section-title">
+            Entrenador de pares mínimos
+          </h2>
+          <p className="ipa-chart__lead mt-1">
+            Dos palabras que se diferencian en un solo sonido — entrena tu oído.
+          </p>
         </div>
 
         {accuracy !== null && (
-          <div className="shrink-0 rounded-xl px-4 py-2 text-right animate-chip-appear bg-[var(--btn-regular-bg)]">
+          <div className="shrink-0 rounded-xl px-4 py-2 text-right animate-chip-appear bg-[var(--surface-sunken)] border border-[var(--border-subtle)]">
             <p className="text-tiny font-bold uppercase tracking-widest mb-0.5 text-[var(--text-tertiary)]">
-              Accuracy
+              Precisión
             </p>
             <p className="text-lg font-semibold tabular-nums text-[var(--text-primary)]">
               {accuracy}%
@@ -167,7 +163,7 @@ export default function MinimalPairsTrainer() {
         )}
       </header>
 
-      <div className="flex flex-wrap gap-2 mb-6">
+      <div className="ipa-chart__mpchips">
         {MINIMAL_PAIR_CONTRASTS.map((c, idx) => (
           <ContrastChip
             key={c.id}
@@ -178,16 +174,17 @@ export default function MinimalPairsTrainer() {
         ))}
       </div>
 
-      <div className="mb-4 flex items-center justify-between">
+      <div className="mb-3 flex items-center justify-between gap-3">
         <p className="text-sm leading-snug text-[var(--text-secondary)]">{contrast.hint}</p>
-        <span className="shrink-0 ml-3 inline-flex items-center gap-1 text-tiny font-bold uppercase tracking-widest tabular-nums text-[var(--text-tertiary)]">
-          Pair <span className="text-[var(--text-primary)]">{pairIdx + 1}</span> / {contrast.pairs.length}
+        <span className="shrink-0 text-tiny font-bold uppercase tracking-widest tabular-nums text-[var(--text-tertiary)]">
+          Par <span className="text-[var(--text-primary)]">{pairIdx + 1}</span> /{" "}
+          {contrast.pairs.length}
         </span>
       </div>
 
       <div
         key={`${contrast.id}-${pairIdx}`}
-        className="grid grid-cols-[1fr_auto_1fr] items-stretch gap-4 animate-fadeIn"
+        className="ipa-chart__mpcards animate-fadeIn"
       >
         <WordCard
           word={pair.wordA}
@@ -200,10 +197,7 @@ export default function MinimalPairsTrainer() {
           onPick={() => handleGuess("A")}
         />
 
-        <div className="flex flex-col items-center justify-center gap-3 px-1">
-          <span className="font-serif text-base text-[var(--text-tertiary)]">vs</span>
-          <div className="w-px flex-1 bg-[var(--line-divider)]" />
-        </div>
+        <span className="ipa-chart__mpvs">vs</span>
 
         <WordCard
           word={pair.wordB}

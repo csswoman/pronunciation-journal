@@ -1,0 +1,121 @@
+{
+  "meta": {
+    "eyebrow": "Tech · Inglés para programadores",
+    "title": "Inglés para",
+    "titleEmphasis": "programadores"
+  },
+  "cards": [
+    {
+      "id": "dev-verbs",
+      "tag": "Verbos clave",
+      "title": "Los verbos del código",
+      "lede": "Acciones que repites cada día. Reconócelas en documentación y reuniones técnicas.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "deploy", "value": "desplegar · deploy to production", "highlights": ["deploy"] },
+            { "key": "merge", "value": "fusionar · merge the branch", "highlights": ["merge"] },
+            { "key": "fix / debug", "value": "arreglar / depurar", "highlights": ["fix", "debug"] },
+            { "key": "roll back", "value": "revertir · roll back the change", "highlights": ["roll back"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dev-pronounce",
+      "tag": "Pronunciación",
+      "title": "Términos que se dicen distinto",
+      "lede": "Palabras técnicas que los hispanohablantes suelen pronunciar mal.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "query", "value": "/ˈkwɪəri/ → \"kwíri\", no \"queri\"", "highlights": ["kwíri"] },
+            { "key": "cache", "value": "/kæʃ/ → \"cash\", no \"caché\"", "highlights": ["cash"] },
+            { "key": "queue", "value": "/kjuː/ → \"kiú\", suena como la letra Q", "highlights": ["kiú"] },
+            { "key": "null", "value": "/nʌl/ → \"nal\", no \"nul\"", "highlights": ["nal"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Ojo:",
+        "body": "se dice GIF, SQL o JSON con tu equipo como ellos lo digan; lo importante es ser entendido."
+      }
+    },
+    {
+      "id": "dev-standup",
+      "tag": "Daily standup",
+      "title": "La reunión diaria",
+      "lede": "El standup sigue siempre el mismo guion. Memoriza la estructura de tres partes.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Ayer", "value": "Yesterday I worked on the login bug.", "highlights": ["Yesterday I worked on"] },
+            { "key": "Hoy", "value": "Today I'm going to review the PR.", "highlights": ["Today I'm going to"] },
+            { "key": "Bloqueos", "value": "I'm blocked by the API access.", "highlights": ["I'm blocked by"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dev-review",
+      "tag": "Code review",
+      "title": "Comentar código con tacto",
+      "lede": "En las revisiones, el tono importa. Sugiere en vez de ordenar.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "This is wrong. Change it." },
+            { "variant": "good", "text": "What do you think about extracting this into a function?", "note": "sugiere, no impone" },
+            { "variant": "bad", "text": "Bad naming." },
+            { "variant": "good", "text": "Could we use a clearer name here?", "note": "constructivo" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Convención:",
+        "body": "nit: marca un comentario menor y opcional; LGTM = \"looks good to me\" (aprobado)."
+      }
+    },
+    {
+      "id": "dev-errors",
+      "tag": "Incidencias",
+      "title": "Reportar un bug",
+      "lede": "Un buen reporte tiene pasos, esperado y observado. Estas frases son estándar.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Steps to reproduce", "value": "pasos para reproducir", "highlights": ["Steps to reproduce"] },
+            { "key": "Expected behaviour", "value": "comportamiento esperado", "highlights": ["Expected behaviour"] },
+            { "key": "It throws an error", "value": "lanza un error", "highlights": ["throws an error"] },
+            { "key": "It's not working as expected", "value": "no funciona como debería", "highlights": ["as expected"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dev-docs",
+      "tag": "Documentación",
+      "title": "Leer y escribir docs",
+      "lede": "La documentación usa imperativos y presente. Patrones que verás una y otra vez.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Imperativo", "value": "Run the following command. · Install the package.", "highlights": ["Run", "Install"] },
+            { "key": "Returns / takes", "value": "This function returns a list. · It takes two arguments.", "highlights": ["returns", "takes"] },
+            { "key": "Note / Warning", "value": "Note: ... · Warning: this will overwrite data.", "highlights": ["Note", "Warning"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Estilo:",
+        "body": "la documentación técnica va en presente simple y voz activa. Frases cortas y directas."
+      }
+    }
+  ]
+}

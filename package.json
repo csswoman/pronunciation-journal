@@ -10,7 +10,8 @@
     "lint:design-tokens": "node scripts/lint-design-tokens.mjs",
     "type-check": "tsc --noEmit",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "lexicon:enrich": "node scripts/enrich-lexicon.mjs --all"
   },
   "dependencies": {
     "@ai-sdk/google": "^3.0.80",

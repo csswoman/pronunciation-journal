@@ -1,12 +1,14 @@
-// Planned structure:
-// <SkillProfileCard>
-//   <WordsByStatus />
-//   <WeakestPhonemes />
-// </SkillProfileCard>
-
-import { BarChart3 } from 'lucide-react'
+import Link from 'next/link'
+import { BookOpen, Volume2 } from 'lucide-react'
 
 import type { SkillProfileData } from '@/lib/progress/queries'
+
+import {
+  ProgressBigNumber,
+  ProgressCard,
+  ProgressCardHeader,
+  ProgressStatBar,
+} from './ProgressCard'
 
 interface Props {
   data: SkillProfileData
@@ -17,112 +19,122 @@ const STATUS_CONFIG: {
   label: string
   color: string
 }[] = [
-  { key: 'new', label: 'New', color: 'var(--line-divider)' },
-  { key: 'learning', label: 'Learning', color: 'color-mix(in oklch, var(--primary) 50%, oklch(0.6 0.15 60))' },
+  { key: 'new', label: 'New', color: 'var(--border-subtle)' },
+  { key: 'learning', label: 'Learning', color: 'var(--warning-deco)' },
   { key: 'review', label: 'Review', color: 'color-mix(in oklch, var(--primary) 75%, transparent)' },
   { key: 'mastered', label: 'Mastered', color: 'var(--primary)' },
 ]
 
-function WordsByStatus({ wordsByStatus }: { wordsByStatus: SkillProfileData['wordsByStatus'] }) {
-  const total = Object.values(wordsByStatus).reduce((a, b) => a + b, 0)
-
-  if (total === 0) {
+function SoundLabPanel({ phonemes }: { phonemes: SkillProfileData['weakestPhonemes'] }) {
+  if (phonemes.length === 0) {
     return (
-      <div className="flex flex-col gap-1">
-        <p className="text-xs font-semibold text-fg-muted uppercase tracking-[0.15em]">Word Bank</p>
-        <p className="text-xs text-fg-muted">No words added yet.</p>
-      </div>
+      <ProgressCard>
+        <ProgressCardHeader
+          icon={<Volume2 size={16} />}
+          eyebrow="Sound Lab"
+          title="Weakest sounds"
+        />
+        <p className="text-xs text-fg-muted">
+          Practice phoneme exercises to see your weakest sounds.
+        </p>
+      </ProgressCard>
     )
   }
 
+  const top = phonemes.slice(0, 3)
+
   return (
-    <div className="flex flex-col gap-3">
-      <p className="text-xs font-semibold uppercase tracking-[0.15em] text-fg-muted">
-        Word Bank · {total} words
-      </p>
-
-      {/* Stacked bar */}
-      <div className="flex h-2.5 w-full overflow-hidden rounded-full" style={{ background: 'var(--line-divider)' }}>
-        {STATUS_CONFIG.map(({ key, color }) => {
-          const pct = total > 0 ? (wordsByStatus[key] / total) * 100 : 0
-          if (pct === 0) return null
-          return (
-            <div
-              key={key}
-              style={{ width: `${pct}%`, background: color }}
-            />
-          )
-        })}
-      </div>
-
-      {/* Legend */}
-      <div className="flex flex-wrap gap-x-4 gap-y-1.5">
-        {STATUS_CONFIG.map(({ key, label, color }) => {
-          const count = wordsByStatus[key]
-          if (count === 0) return null
-          return (
-            <div key={key} className="flex items-center gap-1.5">
-              <div className="h-2 w-2 rounded-full" style={{ background: color }} />
-              <span className="text-xs text-fg-muted">
-                {label} <span className="font-semibold text-fg">{count}</span>
-              </span>
-            </div>
-          )
-        })}
-      </div>
-    </div>
+    <ProgressCard>
+      <ProgressCardHeader
+        icon={<Volume2 size={16} />}
+        eyebrow="Sound Lab"
+        title="Weakest sounds"
+      />
+      {top.map((p) => (
+        <ProgressStatBar
+          key={p.ipa}
+          label={`/${p.ipa}/`}
+          value={p.accuracy}
+          barColor={
+            p.accuracy >= 80
+              ? 'var(--success)'
+              : p.accuracy >= 70
+                ? 'var(--primary)'
+                : 'var(--warning)'
+          }
+          labelClassName="font-ipa text-primary"
+        />
+      ))}
+      <Link
+        href="/practice"
+        className="mt-3 text-caption font-medium text-primary transition-opacity hover:opacity-80"
+      >
+        Practice these sounds →
+      </Link>
+    </ProgressCard>
   )
 }
 
-function WeakestPhonemes({ phonemes }: { phonemes: SkillProfileData['weakestPhonemes'] }) {
-  if (phonemes.length === 0) {
+function LexiconPanel({ wordsByStatus }: { wordsByStatus: SkillProfileData['wordsByStatus'] }) {
+  const total = Object.values(wordsByStatus).reduce((a, b) => a + b, 0)
+  const mastered = wordsByStatus.mastered
+  const retention = total > 0 ? Math.round((mastered / total) * 100) : 0
+  const toReview = wordsByStatus.review + wordsByStatus.learning
+
+  if (total === 0) {
     return (
-      <div className="flex flex-col gap-1">
-        <p className="text-xs font-semibold uppercase tracking-[0.15em] text-fg-muted">Phonemes</p>
-        <p className="text-xs text-fg-muted">Practice phoneme exercises to see your weakest sounds.</p>
-      </div>
+      <ProgressCard>
+        <ProgressCardHeader icon={<BookOpen size={16} />} eyebrow="Lexicon" title="Vocabulary" />
+        <p className="text-xs text-fg-muted">No words in your bank yet.</p>
+      </ProgressCard>
     )
   }
 
+  const topStatuses = STATUS_CONFIG.filter((s) => wordsByStatus[s.key] > 0).slice(0, 3)
+
   return (
-    <div className="flex flex-col gap-3">
-      <p className="text-xs font-semibold uppercase tracking-[0.15em] text-fg-muted">
-        Weakest Phonemes
-      </p>
-      <div className="flex flex-col gap-2">
-        {phonemes.map((p) => (
-          <div key={p.ipa} className="flex items-center gap-3">
-            <span
-              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg font-mono text-sm font-bold"
-              style={{
-                background: 'color-mix(in oklch, var(--primary) 10%, transparent)',
-                color: 'var(--primary)',
-              }}
-            >
-              /{p.ipa}/
-            </span>
-            <div className="flex flex-1 flex-col gap-1">
-              <div className="flex items-center justify-between">
-                <span className="text-xs text-fg-muted">{p.totalAttempts} attempts</span>
-                <span className="text-xs font-semibold text-fg">
-                  {p.accuracy}%
-                </span>
-              </div>
-              <div className="h-1.5 w-full overflow-hidden rounded-full" style={{ background: 'var(--line-divider)' }}>
-                <div
-                  className="h-full rounded-full"
-                  style={{
-                    width: `${p.accuracy}%`,
-                    background: p.accuracy >= 70 ? 'var(--primary)' : 'color-mix(in oklch, var(--primary) 60%, oklch(0.6 0.15 30))',
-                    transition: 'width 0.4s ease',
-                  }}
-                />
-              </div>
-            </div>
-          </div>
-        ))}
+    <ProgressCard>
+      <ProgressCardHeader icon={<BookOpen size={16} />} eyebrow="Lexicon" title="Vocabulary" />
+      <div className="mt-1 flex gap-6">
+        <ProgressBigNumber
+          value={`${retention}%`}
+          sub={`retention · ${mastered}/${total}`}
+        />
+        <ProgressBigNumber
+          value={toReview}
+          sub="to review"
+          tone={toReview > 0 ? 'warning' : 'primary'}
+        />
       </div>
-    </div>
+
+      <div className="mt-4 flex h-2.5 w-full overflow-hidden rounded-full bg-surface-sunken">
+        {STATUS_CONFIG.map(({ key, color }) => {
+          const pct = total > 0 ? (wordsByStatus[key] / total) * 100 : 0
+          if (pct === 0) return null
+          return <div key={key} style={{ width: `${pct}%`, background: color }} />
+        })}
+      </div>
+
+      {topStatuses.map(({ key, label, color }) => {
+        const count = wordsByStatus[key]
+        const pct = total > 0 ? Math.round((count / total) * 100) : 0
+        return (
+          <ProgressStatBar
+            key={key}
+            label={label}
+            value={pct}
+            barColor={color}
+          />
+        )
+      })}
+
+      <Link
+        href="/lexicon"
+        className="mt-3 text-caption font-medium text-primary transition-opacity hover:opacity-80"
+      >
+        Open Lexicon →
+      </Link>
+    </ProgressCard>
   )
 }
 
@@ -131,42 +143,24 @@ export function SkillProfileCard({ data }: Props) {
     Object.values(data.wordsByStatus).some((v) => v > 0) ||
     data.weakestPhonemes.length > 0
 
-  return (
-    <div
-      className="flex flex-col gap-6 rounded-3xl p-6"
-      style={{
-        background: 'var(--card-bg)',
-        border: '1px solid var(--line-divider)',
-      }}
-    >
-      {/* Header */}
-      <div className="flex items-center gap-2">
-        <div
-          className="flex h-9 w-9 items-center justify-center rounded-xl"
-          style={{
-            background: 'color-mix(in oklch, var(--primary) 13%, transparent)',
-            color: 'var(--primary)',
-          }}
-        >
-          <BarChart3 size={18} />
-        </div>
-        <span className="text-sm font-semibold text-fg">Skill Profile</span>
-      </div>
+  if (!hasAnyData) {
+    return (
+      <ProgressCard>
+        <p className="font-display text-base font-medium text-fg">Skill profile</p>
+        <p className="text-sm text-fg-muted">
+          Add words and practice phonemes to build your profile.
+        </p>
+      </ProgressCard>
+    )
+  }
 
-      {!hasAnyData ? (
-        <div className="flex flex-col items-center gap-2 py-4">
-          <p className="text-sm font-medium text-fg-muted">Nothing to show yet</p>
-          <p className="text-xs text-fg-muted text-center">
-            Add words to your word bank and practice phoneme exercises to build your skill profile.
-          </p>
-        </div>
-      ) : (
-        <>
-          <WordsByStatus wordsByStatus={data.wordsByStatus} />
-          <div className="h-px w-full" style={{ background: 'var(--line-divider)' }} />
-          <WeakestPhonemes phonemes={data.weakestPhonemes} />
-        </>
-      )}
-    </div>
+  return (
+    <section className="flex flex-col gap-4">
+      <h2 className="font-display text-base font-medium text-fg">Skill profile</h2>
+      <div className="grid gap-4 md:grid-cols-2">
+        <SoundLabPanel phonemes={data.weakestPhonemes} />
+        <LexiconPanel wordsByStatus={data.wordsByStatus} />
+      </div>
+    </section>
   )
 }

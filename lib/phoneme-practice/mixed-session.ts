@@ -1,5 +1,5 @@
 import type { Exercise, Sound, SoundWord, MinimalPair } from './types'
-import type { MatchPairsExercise } from '@/lib/exercises/types'
+import type { MatchPairsExercise, ReorderWordsExercise } from '@/lib/exercises/types'
 import {
   generatePickWord,
   generatePickSound,
@@ -7,6 +7,7 @@ import {
   generateDictation,
 } from './exercises'
 import { generateMatchPairsFromSoundWords } from '@/lib/exercises/generators/match-pairs'
+import { generateReorderFromSoundExample } from '@/lib/exercises/generators/reorder-words'
 
 function shuffle<T>(arr: T[]): T[] {
   const a = [...arr]
@@ -20,6 +21,7 @@ function shuffle<T>(arr: T[]): T[] {
 export type MixedExercise =
   | { kind: 'phoneme'; data: Exercise }
   | { kind: 'match_pairs'; data: MatchPairsExercise }
+  | { kind: 'reorder_words'; data: ReorderWordsExercise }
 
 /**
  * Build a mixed session for a sound: phoneme exercises + word↔IPA match pairs.
@@ -69,6 +71,11 @@ export function buildMixedSession(
     if (matchGroups.length > 1) {
       phoneme.push({ kind: 'match_pairs', data: matchGroups[1] })
     }
+  }
+
+  const reorder = generateReorderFromSoundExample(sound)
+  if (reorder) {
+    phoneme.push({ kind: 'reorder_words', data: reorder })
   }
 
   return shuffle(phoneme)

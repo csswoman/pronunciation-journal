@@ -1,0 +1,112 @@
+{
+  "meta": {
+    "eyebrow": "Tech · Inglés para marketing",
+    "title": "Inglés para",
+    "titleEmphasis": "marketing"
+  },
+  "cards": [
+    {
+      "id": "mk-core",
+      "tag": "Conceptos",
+      "title": "Vocabulario esencial",
+      "lede": "Los términos base del marketing, casi todos usados como anglicismos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "target audience", "value": "público objetivo", "highlights": ["target audience"] },
+            { "key": "brand awareness", "value": "notoriedad de marca", "highlights": ["brand awareness"] },
+            { "key": "lead", "value": "cliente potencial · generate leads", "highlights": ["lead"] },
+            { "key": "funnel", "value": "embudo de conversión", "highlights": ["funnel"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mk-digital",
+      "tag": "Digital",
+      "title": "Marketing digital",
+      "lede": "Las siglas y términos del marketing online que aparecen en cualquier reunión.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "SEO", "value": "search engine optimization", "highlights": ["SEO"] },
+            { "key": "CTR / CTA", "value": "click-through rate · call to action", "highlights": ["CTA"] },
+            { "key": "engagement", "value": "interacción de la audiencia", "highlights": ["engagement"] },
+            { "key": "ROI", "value": "return on investment", "highlights": ["ROI"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mk-persuasive",
+      "tag": "Copy",
+      "title": "Lenguaje persuasivo",
+      "lede": "El copywriting usa imperativos, beneficios y urgencia para mover a la acción.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Imperativo", "value": "Discover · Get started · Don't miss out", "highlights": ["Discover"] },
+            { "key": "Beneficio", "value": "Save time · Boost your results", "highlights": ["Boost"] },
+            { "key": "Urgencia", "value": "Limited offer · Only today", "highlights": ["Limited offer"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Clave:",
+        "body": "el buen copy habla de beneficios (lo que ganas), no solo de características."
+      }
+    },
+    {
+      "id": "mk-trends",
+      "tag": "Datos",
+      "title": "Describir tendencias",
+      "lede": "Verbos y adverbios para presentar métricas y su evolución en informes.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Subir", "value": "rise · increase · soar · climb", "highlights": ["soar"] },
+            { "key": "Bajar", "value": "fall · drop · decline · plummet", "highlights": ["plummet"] },
+            { "key": "Grado", "value": "sharply · slightly · steadily", "highlights": ["sharply"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mk-comparatives",
+      "tag": "Comparar",
+      "title": "Comparar campañas",
+      "lede": "Los comparativos y superlativos sirven para contrastar resultados y opciones.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "good", "text": "Campaign A performed better than B.", "note": "comparativo" },
+            { "variant": "good", "text": "This was our most successful launch.", "note": "superlativo" },
+            { "variant": "good", "text": "Engagement was twice as high.", "note": "twice as ... as" },
+            { "variant": "good", "text": "Conversions rose by 30%.", "note": "rise by + cifra" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mk-pitch",
+      "tag": "Presentar",
+      "title": "Presentar una idea",
+      "lede": "Frases para lanzar una propuesta de marketing de forma convincente.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Plantear", "value": "Our goal is to... · The idea is to...", "highlights": ["Our goal is to"] },
+            { "key": "Justificar", "value": "The data suggests that...", "highlights": ["The data suggests"] },
+            { "key": "Cerrar", "value": "This will help us reach a wider audience.", "highlights": ["This will help us"] }
+          ]
+        }
+      ]
+    }
+  ]
+}

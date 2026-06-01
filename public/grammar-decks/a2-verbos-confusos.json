@@ -1,0 +1,214 @@
+{
+  "meta": {
+    "eyebrow": "A2 · Vocabulario",
+    "title": "Verbos que se",
+    "titleEmphasis": "confunden",
+    "goal": "Ya distingues los pares de verbos que el español traduce con una sola palabra."
+  },
+  "quiz": [
+    {
+      "q": "Tu amigo te pide dinero. ¿Cuál es correcta?",
+      "options": ["Can you lend me €10?", "Can you borrow me €10?", "Can you lend to me €10?", "Can you give lend me €10?"],
+      "answer": 0,
+      "explain": "lend = dar prestado (tú eres quien entrega). borrow = tomar prestado (tú eres quien recibe). Tu amigo te pide que TÚ le des, así que uses lend."
+    },
+    {
+      "q": "Estás viendo un partido de fútbol con atención. ¿Qué dices?",
+      "options": ["I'm seeing the match.", "I'm looking the match.", "I'm watching the match.", "I'm hearing the match."],
+      "answer": 2,
+      "explain": "watch = observar con atención un evento que se mueve o cambia (partidos, películas, TV). see = percibir sin intención. look = dirigir la mirada a algo estático."
+    },
+    {
+      "q": "¿Cuál es correcta para hablar de información?",
+      "options": ["She said me the answer.", "She told me the answer.", "She told the answer.", "She said to me the answer."],
+      "answer": 1,
+      "explain": "tell siempre va seguido de una persona: tell someone something. say no lleva persona directa: she said the answer (o said that...)."
+    }
+  ],
+  "cards": [
+    {
+      "id": "vb-say-tell",
+      "tag": "say / tell",
+      "title": "say vs tell",
+      "lede": "El español usa «decir» para los dos, pero en inglés la estructura cambia según si hay una persona destinataria.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "say",
+              "rule": "Las palabras exactas que alguien pronuncia. No lleva persona directa (o lleva «to + persona»).",
+              "examples": [
+                "She said «hello».",
+                "He said that he was tired.",
+                "What did you say?",
+                "She said to me that she was leaving."
+              ]
+            },
+            {
+              "label": "tell",
+              "rule": "Transmitir información A alguien. Siempre lleva persona (tell someone something).",
+              "examples": [
+                "She told me the news.",
+                "He told us to sit down.",
+                "Tell me the truth.",
+                "Did she tell you the answer?"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Truco:",
+        "body": "tell + PERSONA: «tell me, tell him, tell her, tell us». say + PALABRAS: «say hello, say yes, say that…». Si puedes meter «a alguien» después del verbo, usa tell."
+      }
+    },
+    {
+      "id": "vb-lend-borrow",
+      "tag": "lend / borrow",
+      "title": "lend vs borrow",
+      "lede": "Los dos se traducen como «prestar» en español, pero la dirección del objeto es opuesta.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "lend",
+              "rule": "Dar algo prestado: el objeto sale de ti hacia otra persona.",
+              "examples": [
+                "Can you lend me your pen? (te pido que me lo des)",
+                "I lent him €50.",
+                "The library lends books for 3 weeks.",
+                "lend → lent → lent (irregular)"
+              ]
+            },
+            {
+              "label": "borrow",
+              "rule": "Tomar prestado: el objeto viene de otra persona hacia ti.",
+              "examples": [
+                "Can I borrow your pen? (yo lo recibo)",
+                "She borrowed my jacket.",
+                "I borrowed €50 from him.",
+                "borrow → borrowed → borrowed (regular)"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Imagen mental:",
+        "body": "lend = flecha que sale →. borrow = flecha que entra ←. «Can you lend me…?» y «Can I borrow…?» significan lo mismo, pero cambias de perspectiva."
+      }
+    },
+    {
+      "id": "vb-bring-take",
+      "tag": "bring / take",
+      "title": "bring vs take",
+      "lede": "Los dos son «llevar» en español, pero la dirección importa: ¿el objeto se acerca o se aleja del hablante?",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "Take an umbrella when you come here.", "note": "el movimiento es hacia el hablante = bring" },
+            { "variant": "good", "text": "Bring an umbrella when you come here.", "note": "bring = movimiento hacia el hablante ✓" },
+            { "variant": "bad", "text": "Can I bring this to your office?", "note": "el objeto se aleja del hablante (va hacia tu oficina) = take" },
+            { "variant": "good", "text": "Can I take this to your office?", "note": "take = movimiento que se aleja del hablante ✓" },
+            { "variant": "bad", "text": "Take your passport to the interview with you.", "note": "si la entrevista es donde estás tú, llévalo aquí" },
+            { "variant": "good", "text": "Bring your passport to the interview.", "note": "el entrevistador habla desde la entrevista: bring ✓" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Regla rápida:",
+        "body": "bring = «come here» (ven aquí / tráelo). take = «go there» (ve allí / llévalo). Piensa desde el punto de vista del que habla."
+      }
+    },
+    {
+      "id": "vb-look-watch-see",
+      "tag": "look / watch / see",
+      "title": "look, watch y see",
+      "lede": "Los tres se relacionan con la visión, pero la intención y el tipo de objeto cambian todo.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "look (at)",
+              "rule": "Dirigir la mirada intencionalmente a algo estático o un momento concreto.",
+              "examples": [
+                "Look at that painting!",
+                "Look out the window.",
+                "Don't look at me like that."
+              ]
+            },
+            {
+              "label": "watch",
+              "rule": "Observar con atención algo que se mueve o cambia (eventos, pantallas, personas).",
+              "examples": [
+                "I watched a movie last night.",
+                "Watch the children carefully.",
+                "She's watching TV."
+              ]
+            },
+            {
+              "label": "see",
+              "rule": "Percibir con los ojos sin esfuerzo intencional; también para citas o espectáculos.",
+              "examples": [
+                "I can see the mountains.",
+                "Did you see that?",
+                "I'm seeing the doctor tomorrow."
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Resumen:",
+        "body": "look = mirar (activo, estático). watch = observar (activo, en movimiento). see = ver (pasivo, sin esfuerzo o citas)."
+      }
+    },
+    {
+      "id": "vb-hear-listen",
+      "tag": "hear / listen",
+      "title": "hear vs listen (to)",
+      "lede": "Los dos se traducen como «oír/escuchar» en español, pero la atención que prestas cambia el verbo.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "I listened a strange noise outside.", "note": "ruido sin buscar = hear; listen (to) necesita atención activa" },
+            { "variant": "good", "text": "I heard a strange noise outside.", "note": "hear = percibir sin intención ✓" },
+            { "variant": "bad", "text": "She hears music every morning.", "note": "si es una rutina activa con auriculares = listen to" },
+            { "variant": "good", "text": "She listens to music every morning.", "note": "listen to = escuchar activamente ✓" },
+            { "variant": "bad", "text": "Can you listen me? I'm speaking!", "note": "listen lleva 'to' antes de la persona" },
+            { "variant": "good", "text": "Can you listen to me? I'm speaking!", "note": "listen to + persona ✓" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Nota:",
+        "body": "listen siempre lleva to antes del objeto: listen to music, listen to the teacher. hear no lleva preposición: I heard something."
+      }
+    },
+    {
+      "id": "vb-quick-reference",
+      "tag": "Referencia rápida",
+      "title": "Combinaciones más comunes",
+      "lede": "Estas son las estructuras fijas que más usarás. Memoríza las combinaciones, no solo los verbos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "say", "value": "say something · say (that) · say hello/goodbye · What did you say?", "highlights": ["say"] },
+            { "key": "tell", "value": "tell someone · tell me · tell the truth · tell a story/joke/lie", "highlights": ["tell"] },
+            { "key": "lend", "value": "lend someone something · Can you lend me…? · lend → lent", "highlights": ["lend"] },
+            { "key": "borrow", "value": "borrow something from someone · Can I borrow…? · borrow → borrowed", "highlights": ["borrow"] },
+            { "key": "bring / take", "value": "Bring it here. · Take it there. · bring → brought · take → took", "highlights": ["Bring", "Take"] },
+            { "key": "look / watch / see", "value": "look at · watch TV/a match · see a movie/doctor", "highlights": ["look at", "watch", "see"] },
+            { "key": "hear / listen", "value": "hear + noun (involuntario) · listen to + noun (activo)", "highlights": ["hear", "listen to"] }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,110 @@
+{
+  "meta": {
+    "eyebrow": "Biz · Expresiones idiomáticas de negocios",
+    "title": "Expresiones idiomáticas",
+    "titleEmphasis": "de negocios"
+  },
+  "cards": [
+    {
+      "id": "ei-meetings",
+      "tag": "Reuniones",
+      "title": "Idioms de reunión",
+      "lede": "Expresiones que oirás constantemente en reuniones de trabajo.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "touch base", "value": "ponerse en contacto", "highlights": ["touch base"] },
+            { "key": "circle back", "value": "retomar más tarde", "highlights": ["circle back"] },
+            { "key": "get the ball rolling", "value": "poner algo en marcha", "highlights": ["get the ball rolling"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ei-decisions",
+      "tag": "Decisiones",
+      "title": "Idioms de decisión",
+      "lede": "Frases hechas para deliberar y resolver en el trabajo.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "the bottom line", "value": "lo esencial / el resultado", "highlights": ["the bottom line"] },
+            { "key": "think outside the box", "value": "pensar de forma creativa", "highlights": ["think outside the box"] },
+            { "key": "on the back burner", "value": "aparcado, en segundo plano", "highlights": ["on the back burner"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ei-pressure",
+      "tag": "Presión",
+      "title": "Plazos y presión",
+      "lede": "Expresiones sobre carga de trabajo, plazos ajustados y urgencias.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "swamped", "value": "I'm swamped this week.", "highlights": ["swamped"] },
+            { "key": "down to the wire", "value": "hasta el último momento", "highlights": ["down to the wire"] },
+            { "key": "drop the ball", "value": "cometer un descuido", "highlights": ["drop the ball"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Útil:",
+        "body": "I'm swamped es una forma natural de decir que estás desbordado de trabajo."
+      }
+    },
+    {
+      "id": "ei-success",
+      "tag": "Éxito",
+      "title": "Resultados y logros",
+      "lede": "Idioms para hablar de buenos (y malos) resultados.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "a game changer", "value": "algo que lo cambia todo", "highlights": ["a game changer"] },
+            { "key": "ahead of the curve", "value": "por delante de la competencia", "highlights": ["ahead of the curve"] },
+            { "key": "back to square one", "value": "vuelta al punto de partida", "highlights": ["back to square one"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ei-money",
+      "tag": "Dinero",
+      "title": "Idioms de dinero",
+      "lede": "Expresiones sobre costes, presupuestos y rentabilidad.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "cut corners", "value": "ahorrar a costa de la calidad", "highlights": ["cut corners"] },
+            { "key": "in the red / black", "value": "en pérdidas / en ganancias", "highlights": ["in the red"] },
+            { "key": "tighten our belts", "value": "apretarse el cinturón", "highlights": ["tighten our belts"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ei-usage",
+      "tag": "Uso",
+      "title": "Usarlos con criterio",
+      "lede": "Los idioms aportan naturalidad, pero conviene medir el registro y el contexto.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "good", "text": "En reuniones informales: con confianza.", "note": "registro adecuado" },
+            { "variant": "bad", "text": "En un informe formal: evítalos.", "note": "demasiado coloquial" },
+            { "variant": "good", "text": "Apréndelos como bloques fijos.", "note": "no traducir literal" },
+            { "variant": "good", "text": "Si dudas, di la versión literal.", "note": "seguro" }
+          ]
+        }
+      ]
+    }
+  ]
+}

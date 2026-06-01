@@ -25,6 +25,7 @@ import type {
   PracticeExercise,
   SessionResult,
 } from '@/lib/practice/types'
+import { PhonemeFocusShell } from '@/components/phoneme-practice/PhonemeFocusShell'
 import { ExerciseRenderer } from './session/ExerciseRenderer'
 import { SessionProgress } from './session/SessionProgress'
 import { InlineFeedback } from './session/InlineFeedback'
@@ -56,7 +57,17 @@ function buildSessionResult(results: ExerciseResult[]): SessionResult {
 
 export default function PracticeSession(config: PracticeConfig) {
   const { user } = useAuth()
-  const { context, onSessionComplete, onExit, persistence } = config
+  const { context, onSessionComplete, onExit, persistence, soundIpa, sessionLabel } = config
+  const focusBadge = soundIpa ?? sessionLabel
+  const focusUi =
+    Boolean(focusBadge) &&
+    (context === 'sound_lab' || context === 'daily' || context === 'practice')
+
+  function badgeForExercise(ex: PracticeExercise | undefined): string | undefined {
+    if (!focusBadge) return undefined
+    if (ex?.payload.kind === 'phoneme' && ex.payload.ipa.trim()) return ex.payload.ipa
+    return focusBadge
+  }
 
   // Until Dexie restore finishes, render nothing rather than briefly showing
   // a fresh-session that flickers when the persisted one loads. `ready` flips
@@ -134,6 +145,7 @@ export default function PracticeSession(config: PracticeConfig) {
   )
 
   const current = exercises[currentIndex]
+  const displayBadge = badgeForExercise(current) ?? focusBadge ?? ''
 
   const finish = useCallback((final: ExerciseResult[]) => {
     // onSessionComplete runs exactly once via the effect below that watches `phase`.
@@ -243,12 +255,20 @@ export default function PracticeSession(config: PracticeConfig) {
   )
 
   if (!ready) {
-    return (
-      <div className="w-full max-w-md mx-auto p-8 flex flex-col items-center gap-3 text-center">
+    const loading = (
+      <div className="flex flex-col items-center justify-center gap-3 p-12 text-center">
         <div className="h-6 w-6 rounded-full border-2 border-primary border-t-transparent animate-spin" aria-hidden />
-        <span className="text-sm text-fg-secondary">Loading session…</span>
+        <span className="text-sm text-fg-secondary">Cargando sesión…</span>
       </div>
     )
+    if (focusUi && displayBadge) {
+      return (
+        <PhonemeFocusShell badge={displayBadge} progressPct={0} onExit={() => onExit?.(buildSessionResult([]))}>
+          {loading}
+        </PhonemeFocusShell>
+      )
+    }
+    return <div className="w-full max-w-md mx-auto p-8">{loading}</div>
   }
 
   if (exercises.length === 0) {
@@ -259,33 +279,71 @@ export default function PracticeSession(config: PracticeConfig) {
     )
   }
 
+  const progressPct = Math.min(
+    100,
+    Math.round((Math.min(currentIndex + (phase === 'feedback' ? 1 : 0), exercises.length) / Math.max(exercises.length, 1)) * 100),
+  )
+
   if (phase === 'complete') {
-    return (
-      <div className="w-full max-w-md mx-auto p-6">
-        <SessionSummary
-          result={sessionResult}
-          onPracticeAgain={handlePracticeAgain}
-          onFinish={() => onExit?.(sessionResult)}
-        />
-      </div>
+    const summary = (
+      <SessionSummary
+        result={sessionResult}
+        onPracticeAgain={handlePracticeAgain}
+        onFinish={() => onExit?.(sessionResult)}
+      />
     )
+    if (focusUi && displayBadge) {
+      return (
+        <PhonemeFocusShell
+          badge={focusBadge ?? displayBadge}
+          progressPct={100}
+          onExit={() => onExit?.(sessionResult)}
+        >
+          <div className="phoneme-focus__summary">{summary}</div>
+        </PhonemeFocusShell>
+      )
+    }
+    return <div className="w-full max-w-md mx-auto p-6">{summary}</div>
   }
 
-  return (
-    <div className="w-full max-w-md mx-auto flex flex-col gap-6">
-      <SessionProgress current={currentIndex} total={exercises.length} />
+  const sessionBody = (
+    <>
+      {!focusUi && <SessionProgress current={currentIndex} total={exercises.length} />}
 
       {current && (phase === 'exercising' || phase === 'feedback') && (
         <ExerciseRenderer
           key={current.id}
           exercise={current}
           onSubmit={handleSubmit}
+          focusUi={focusUi}
         />
       )}
 
-      {phase === 'feedback' && lastFeedback !== null && (
+      {phase === 'feedback' && lastFeedback !== null && !focusUi && (
         <InlineFeedback isCorrect={lastFeedback} />
       )}
-    </div>
+    </>
   )
+
+  if (focusUi && displayBadge) {
+    return (
+      <PhonemeFocusShell
+        badge={displayBadge}
+        progressPct={progressPct}
+        onExit={() => onExit?.(buildSessionResult(results))}
+        feedback={
+          phase === 'feedback' && lastFeedback !== null
+            ? {
+                isCorrect: lastFeedback,
+                subtitle: lastFeedback ? 'Siguiente ejercicio…' : 'Revisa e inténtalo de nuevo',
+              }
+            : null
+        }
+      >
+        {sessionBody}
+      </PhonemeFocusShell>
+    )
+  }
+
+  return <div className="w-full max-w-md mx-auto flex flex-col gap-6">{sessionBody}</div>
 }

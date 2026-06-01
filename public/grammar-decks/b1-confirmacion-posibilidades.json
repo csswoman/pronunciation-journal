@@ -1,0 +1,127 @@
+{
+  "meta": {
+    "eyebrow": "B1 · Confirmación y posibilidades",
+    "title": "Confirmación y",
+    "titleEmphasis": "posibilidades"
+  },
+  "cards": [
+    {
+      "id": "cf-questiontags",
+      "tag": "Question tags",
+      "title": "..., isn't it?",
+      "titleItalic": ["isn't it?"],
+      "lede": "Las coletillas confirman información. La regla: afirmativa lleva coletilla negativa, y viceversa.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Afirm. → neg.", "value": "It's cold, isn't it?", "highlights": ["isn't it?"] },
+            { "key": "Neg. → afirm.", "value": "You don't smoke, do you?", "highlights": ["do you?"] },
+            { "key": "Con pasado", "value": "She left, didn't she?", "highlights": ["didn't she?"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Regla:",
+        "body": "la coletilla repite el auxiliar de la frase y lo invierte de signo."
+      }
+    },
+    {
+      "id": "cf-tags-special",
+      "tag": "Casos especiales",
+      "title": "Coletillas que cambian",
+      "lede": "Algunas frases no siguen el patrón básico. Conviene memorizarlas.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "I am → aren't I?", "value": "I'm late, aren't I?", "highlights": ["aren't I?"] },
+            { "key": "Let's → shall we?", "value": "Let's go, shall we?", "highlights": ["shall we?"] },
+            { "key": "Imperativo → will you?", "value": "Close the door, will you?", "highlights": ["will you?"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cf-modals-poss",
+      "tag": "Posibilidad",
+      "title": "may, might, could",
+      "lede": "Modales para hablar de lo posible. Todos van con verbo base y no llevan -s.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "may / might", "value": "It may rain. · It might be true.", "highlights": ["may", "might"] },
+            { "key": "could", "value": "She could be at home.", "highlights": ["could"] },
+            { "key": "Negativo", "value": "It might not work.", "highlights": ["might not"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Matiz:",
+        "body": "may y might son casi iguales; might suena un poco menos seguro."
+      }
+    },
+    {
+      "id": "cf-certainty",
+      "tag": "Certeza",
+      "title": "must, can't (deducción)",
+      "lede": "Para deducir: must cuando estás seguro de que sí; can't cuando estás seguro de que no.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "must (seguro sí)",
+              "rule": "99% seguro positivo",
+              "examples": ["She must be tired.", "He must know."]
+            },
+            {
+              "label": "can't (seguro no)",
+              "rule": "99% seguro negativo",
+              "examples": ["That can't be true.", "He can't be home."]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Ojo:",
+        "body": "para deducir lo negativo se usa can't, no mustn't (que significa prohibición)."
+      }
+    },
+    {
+      "id": "cf-probability",
+      "tag": "Probabilidad",
+      "title": "Grados de probabilidad",
+      "lede": "Una escala de los modales según lo seguro que estés del futuro.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Seguro", "value": "will definitely · It will happen.", "highlights": ["will"] },
+            { "key": "Probable", "value": "will probably · is likely to", "highlights": ["probably"] },
+            { "key": "Posible", "value": "may / might / could", "highlights": ["might"] },
+            { "key": "Improbable", "value": "is unlikely to · probably won't", "highlights": ["unlikely"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cf-responses",
+      "tag": "Responder",
+      "title": "Confirmar y mostrar acuerdo",
+      "lede": "Respuestas cortas para confirmar lo que alguien dice o mostrar acuerdo.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "good", "text": "So do I. / Me too.", "note": "acuerdo afirmativo" },
+            { "variant": "good", "text": "Neither do I. / Me neither.", "note": "acuerdo negativo" },
+            { "variant": "good", "text": "That's right.", "note": "confirmar" },
+            { "variant": "good", "text": "Exactly! / I think so too.", "note": "reforzar acuerdo" }
+          ]
+        }
+      ]
+    }
+  ]
+}

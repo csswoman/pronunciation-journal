@@ -1,0 +1,119 @@
+{
+  "meta": {
+    "eyebrow": "B1 · Preguntas negativas y recomendaciones",
+    "title": "Preguntas negativas",
+    "titleEmphasis": "y recomendaciones"
+  },
+  "cards": [
+    {
+      "id": "nr-negative-q",
+      "tag": "Preguntas negativas",
+      "title": "Don't you...? Isn't it...?",
+      "lede": "Las preguntas negativas suelen expresar sorpresa o buscar confirmación de algo que esperabas.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Sorpresa", "value": "Don't you like it?", "highlights": ["Don't you"] },
+            { "key": "Confirmar", "value": "Isn't this great?", "highlights": ["Isn't this"] },
+            { "key": "Reproche suave", "value": "Didn't you call her?", "highlights": ["Didn't you"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Matiz:",
+        "body": "una pregunta negativa suele esperar que la respuesta sea \"sí\": Isn't it nice? → Yes!"
+      }
+    },
+    {
+      "id": "nr-answering",
+      "tag": "Responder",
+      "title": "Yes / No en negativas",
+      "lede": "Responder a preguntas negativas confunde. En inglés el Yes/No sigue al hecho, no a la pregunta.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "good", "text": "Don't you like it? — Yes, I do.", "note": "sí me gusta" },
+            { "variant": "good", "text": "Don't you like it? — No, I don't.", "note": "no me gusta" },
+            { "variant": "bad", "text": "Don't you like it? — Yes, I don't." }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Clave:",
+        "body": "Yes siempre va con afirmativo; No siempre con negativo, sin importar la pregunta."
+      }
+    },
+    {
+      "id": "nr-should",
+      "tag": "Recomendar",
+      "title": "should y ought to",
+      "lede": "Los modales más comunes para aconsejar. Van con verbo base, sin to (salvo ought to).",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "should", "value": "You should see a doctor.", "highlights": ["should"] },
+            { "key": "shouldn't", "value": "You shouldn't worry.", "highlights": ["shouldn't"] },
+            { "key": "ought to", "value": "You ought to apologize.", "highlights": ["ought to"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "nr-stronger",
+      "tag": "Consejo fuerte",
+      "title": "had better / must",
+      "lede": "Cuando el consejo es urgente o casi una advertencia, subes el tono.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "had better", "value": "You'd better hurry.", "highlights": ["'d better"] },
+            { "key": "had better not", "value": "You'd better not be late.", "highlights": ["'d better not"] },
+            { "key": "must (consejo fuerte)", "value": "You must try this!", "highlights": ["must"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Matiz:",
+        "body": "had better implica una consecuencia negativa si no haces caso; should es neutro."
+      }
+    },
+    {
+      "id": "nr-suggesting",
+      "tag": "Sugerir",
+      "title": "Suavizar la recomendación",
+      "lede": "Formas más suaves de aconsejar, ideales cuando no quieres sonar mandón.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Why don't you", "value": "Why don't you rest?", "highlights": ["Why don't you"] },
+            { "key": "If I were you", "value": "If I were you, I'd wait.", "highlights": ["If I were you"] },
+            { "key": "It might be a good idea to", "value": "...call first.", "highlights": ["It might be a good idea to"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "nr-asking-advice",
+      "tag": "Pedir consejo",
+      "title": "What should I do?",
+      "titleItalic": ["What should I do?"],
+      "lede": "Cómo pedir recomendaciones a otra persona de forma natural.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "good", "text": "What should I do?", "note": "directo" },
+            { "variant": "good", "text": "What would you do?", "note": "pedir su punto de vista" },
+            { "variant": "good", "text": "Do you have any advice?", "note": "advice es incontable" },
+            { "variant": "bad", "text": "Do you have any advices?" }
+          ]
+        }
+      ]
+    }
+  ]
+}

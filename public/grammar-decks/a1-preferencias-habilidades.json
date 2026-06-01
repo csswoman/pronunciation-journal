@@ -1,0 +1,131 @@
+{
+  "meta": {
+    "eyebrow": "A1 · Preferencias y habilidades",
+    "title": "Preferencias y",
+    "titleEmphasis": "habilidades"
+  },
+  "cards": [
+    {
+      "id": "ph-like",
+      "tag": "Gustos",
+      "title": "like, love, hate",
+      "titleItalic": ["like"],
+      "lede": "Para hablar de gustos usas el verbo + -ing o + sustantivo. La acción que te gusta termina en -ing.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "like", "value": "I like coffee. · I like running.", "highlights": ["like"] },
+            { "key": "love", "value": "She loves music. · He loves cooking.", "highlights": ["loves"] },
+            { "key": "hate", "value": "They hate waiting.", "highlights": ["hate"] },
+            { "key": "don't like", "value": "I don't like onions.", "highlights": ["don't like"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Ojo:",
+        "body": "tras like/love/hate el otro verbo va en -ing: I like swimming."
+      }
+    },
+    {
+      "id": "ph-prefer",
+      "tag": "Preferir",
+      "title": "prefer y would rather",
+      "lede": "prefer compara dos opciones con to. would rather es más informal y va con verbo base.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "prefer A to B", "value": "I prefer tea to coffee.", "highlights": ["prefer", "to"] },
+            { "key": "prefer + -ing", "value": "I prefer walking.", "highlights": ["walking"] },
+            { "key": "would rather", "value": "I'd rather stay home.", "highlights": ["'d rather stay"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Ojo:",
+        "body": "tras would rather el verbo va en base, sin to: I'd rather go (no \"to go\")."
+      }
+    },
+    {
+      "id": "ph-favorite",
+      "tag": "Favoritos",
+      "title": "My favorite... is",
+      "lede": "Para hablar de lo que más te gusta usas favorite + sustantivo. Es muy común en conversación.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "favorite", "value": "My favorite color is blue.", "highlights": ["favorite"] },
+            { "key": "Pregunta", "value": "What's your favorite food?", "highlights": ["What's your favorite"] },
+            { "key": "Respuesta", "value": "It's pizza. · I love pizza." }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ph-can",
+      "tag": "Habilidad",
+      "title": "can para habilidades",
+      "titleItalic": ["can"],
+      "lede": "can dice lo que sabes o puedes hacer. Va con el verbo base, igual para todas las personas.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Afirmativo", "value": "I can swim. · She can drive.", "highlights": ["can swim", "can drive"] },
+            { "key": "Negativo", "value": "He can't cook. (cannot)", "highlights": ["can't"] },
+            { "key": "Pregunta", "value": "Can you dance?", "highlights": ["Can you"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Ojo:",
+        "body": "después de can nunca va to: I can swim (no \"can to swim\")."
+      }
+    },
+    {
+      "id": "ph-good-at",
+      "tag": "Destreza",
+      "title": "good at + -ing",
+      "lede": "Para decir en qué eres bueno usas be good at. La actividad va en -ing.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "good at", "value": "I'm good at math. · She's good at singing.", "highlights": ["good at"] },
+            { "key": "bad at", "value": "He's bad at drawing.", "highlights": ["bad at"] },
+            { "key": "not very good at", "value": "I'm not very good at cooking." }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Recuerda:",
+        "body": "siempre la preposición at: good at, nunca \"good in\" ni \"good to\"."
+      }
+    },
+    {
+      "id": "ph-contrast",
+      "tag": "Contraste",
+      "title": "Habilidad vs. gusto",
+      "lede": "Saber hacer algo (can) no es lo mismo que disfrutarlo (like). Son ideas distintas.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "can (habilidad)",
+              "rule": "sé hacerlo",
+              "examples": ["I can cook.", "She can play guitar."]
+            },
+            {
+              "label": "like (gusto)",
+              "rule": "lo disfruto",
+              "examples": ["I like cooking.", "She likes playing guitar."]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,276 @@
+{
+  "meta": {
+    "eyebrow": "Connected Speech · Sound Lab",
+    "title": "Habla conectada:",
+    "titleEmphasis": "reducciones",
+    "goal": "Ya puedes reconocer y producir gonna, wanna, 'll y las formas débiles que convierten el inglés escrito en inglés real."
+  },
+  "sounds": ["ə", "ɪ"],
+  "related": [
+    { "slug": "c1-conectores-contracciones-informales", "label": "C1 · Contracciones informales" },
+    { "slug": "b2-pronunciacion-intermedia", "label": "B2 · Pronunciación intermedia" }
+  ],
+  "quiz": [
+    {
+      "q": "¿Cómo se reduce 'going to' en habla informal?",
+      "options": ["goin'", "gonna", "going", "gon"],
+      "answer": 1,
+      "explain": "'going to' → 'gonna' /ˈɡɒnə/. Es la reducción más frecuente del inglés hablado."
+    },
+    {
+      "q": "La schwa /ə/ aparece en 'gonna' porque…",
+      "options": ["es una vocal larga y tónica", "es la vocal débil y sin acento típica del inglés rápido", "reemplaza la /o/", "solo ocurre al final de palabra"],
+      "answer": 1,
+      "explain": "La schwa /ə/ es el sonido neutro que aparece cuando una sílaba no lleva acento."
+    },
+    {
+      "q": "¿Cuál es la forma reducida de 'have to'?",
+      "options": ["haveta", "hafta", "hav'to", "haff"],
+      "answer": 1,
+      "explain": "'have to' → 'hafta' /ˈhæftə/: la /v/ se ensordece a /f/ y 'to' se reduce a /tə/."
+    }
+  ],
+  "cards": [
+    {
+      "id": "cs-red-gonna",
+      "tag": "Gonna / Wanna",
+      "title": "Las reducciones más famosas",
+      "titleItalic": ["gonna", "wanna"],
+      "lede": "En habla informal, las formas verbales perifrásticas se contraen. No son errores: son la norma oral.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "going to → gonna",
+              "value": "I'm gonna call you. /ˈɡɒnə/",
+              "highlights": ["gonna"]
+            },
+            {
+              "key": "want to → wanna",
+              "value": "Do you wanna come? /ˈwɒnə/",
+              "highlights": ["wanna"]
+            },
+            {
+              "key": "got to → gotta",
+              "value": "I've gotta go. /ˈɡɒtə/",
+              "highlights": ["gotta"]
+            },
+            {
+              "key": "have to → hafta",
+              "value": "You hafta try this. /ˈhæftə/",
+              "highlights": ["hafta"]
+            }
+          ]
+        },
+        {
+          "type": "pronunciation",
+          "sound": "Gonna / Wanna",
+          "focus": ["ə"],
+          "examples": [
+            { "text": "I'm gonna call you later.", "ipa": "/aɪm ˈɡɒnə ˈkɔːl jə ˈleɪtər/", "es": "gonna = going to" },
+            { "text": "We wanna leave early.", "ipa": "/wɪ ˈwɒnə liːv ˈɜːli/", "es": "wanna = want to" },
+            { "text": "She's gotta finish first.", "ipa": "/ʃɪz ˈɡɒtə ˈfɪnɪʃ fɜːst/", "es": "gotta = got to" }
+          ],
+          "note": "La /ə/ final de gonna/wanna/gotta es la schwa: neutral, breve, sin tensión."
+        }
+      ],
+      "tip": { "label": "Registro:", "body": "Estas formas son normales en conversación, películas y podcasts. Escríbelas completas en un correo formal." }
+    },
+    {
+      "id": "cs-red-aux",
+      "tag": "Auxiliares contraídos",
+      "title": "'ll, 've, 'd se reducen al mínimo",
+      "lede": "En habla rápida, los auxiliares modales casi desaparecen: se fusionan con el sujeto.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "I'll = I will",
+              "value": "/aɪl/ — se pronuncia como 'aisle'",
+              "highlights": ["'ll"]
+            },
+            {
+              "key": "I've = I have",
+              "value": "/aɪv/ — la /v/ es muy suave",
+              "highlights": ["'ve"]
+            },
+            {
+              "key": "I'd = I would / I had",
+              "value": "/aɪd/ — igual para los dos",
+              "highlights": ["'d"]
+            },
+            {
+              "key": "I'm / He's / We're",
+              "value": "am/is/are contraídos con sujeto",
+              "highlights": ["'m", "'s", "'re"]
+            }
+          ]
+        },
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "I will call you.", "note": "formal / lento" },
+            { "variant": "good", "text": "I'll call you.", "note": "/aɪl ˈkɔːl jə/ — natural" },
+            { "variant": "bad", "text": "She has finished.", "note": "énfasis especial" },
+            { "variant": "good", "text": "She's finished.", "note": "/ʃɪz ˈfɪnɪʃt/ — cotidiano" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cs-red-weak",
+      "tag": "Formas débiles",
+      "title": "of, to, the, and casi desaparecen",
+      "lede": "Las palabras gramaticales no llevan acento de frase; su vocal se convierte en schwa /ə/.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "of",
+              "value": "cup of tea → /kʌp ə tiː/ (la 'f' cae)",
+              "highlights": ["ə"],
+              "hint": "se escucha como una sola sílaba pegada"
+            },
+            {
+              "key": "to",
+              "value": "go to work → /ɡəʊ tə wɜːk/",
+              "highlights": ["tə"]
+            },
+            {
+              "key": "and",
+              "value": "salt and pepper → /ˈsɔːlt ən ˈpepər/",
+              "highlights": ["ən"]
+            },
+            {
+              "key": "for",
+              "value": "wait for me → /weɪt fər miː/",
+              "highlights": ["fər"]
+            },
+            {
+              "key": "the",
+              "value": "ante consonante: /ðə/; ante vocal: /ðɪ/",
+              "highlights": ["/ðə/", "/ðɪ/"]
+            }
+          ]
+        }
+      ],
+      "tip": { "label": "Regla:", "body": "Si la palabra no lleva acento, su vocal se convierte en /ə/. Este proceso explica por qué el inglés hablado suena «tragado» comparado con el español." }
+    },
+    {
+      "id": "cs-red-neg",
+      "tag": "Negaciones rápidas",
+      "title": "can't, won't, don't, didn't",
+      "lede": "Las negaciones contraídas tienen una pronunciación muy diferente de sus formas plenas.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Forma plena",
+              "rule": "con énfasis o formal",
+              "examples": [
+                "cannot /ˈkænnɒt/",
+                "will not /wɪl nɒt/",
+                "do not /duː nɒt/",
+                "did not /dɪd nɒt/"
+              ]
+            },
+            {
+              "label": "Forma reducida",
+              "rule": "habla normal",
+              "examples": [
+                "can't /kɑːnt/ o /kænt/",
+                "won't /wəʊnt/",
+                "don't /dəʊnt/",
+                "didn't /ˈdɪdnt/"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "pronunciation",
+          "sound": "can vs can't",
+          "focus": ["ə"],
+          "examples": [
+            { "text": "I can do it.", "ipa": "/aɪ kən duː ɪt/", "es": "can débil → /kən/" },
+            { "text": "I can't do it.", "ipa": "/aɪ ˈkɑːnt duː ɪt/", "es": "can't tónico → /kɑːnt/" }
+          ],
+          "note": "La diferencia clave: 'can' va sin acento (débil), 'can't' lo lleva (fuerte). Escucha el acento, no solo el sonido final."
+        }
+      ]
+    },
+    {
+      "id": "cs-red-chains",
+      "tag": "Cadenas de reducción",
+      "title": "Varias reducciones en una sola frase",
+      "lede": "En habla fluida, varias palabras se reducen a la vez. Así suena el inglés real.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "What are you gonna do?",
+              "value": "→ /wɒt ər jə ˈɡɒnə duː/",
+              "highlights": ["gonna"],
+              "hint": "are → /ər/, you → /jə/"
+            },
+            {
+              "key": "I don't wanna be late.",
+              "value": "→ /aɪ dəʊnt ˈwɒnə bi leɪt/",
+              "highlights": ["wanna"]
+            },
+            {
+              "key": "Could you give me a hand?",
+              "value": "→ /kəd jə ɡɪv mi ə hænd/",
+              "highlights": ["kəd", "jə"],
+              "hint": "could → /kəd/, you → /jə/"
+            },
+            {
+              "key": "I've gotta get to work.",
+              "value": "→ /aɪv ˈɡɒtə ˈɡet tə wɜːk/",
+              "highlights": ["gotta"]
+            }
+          ]
+        }
+      ],
+      "tip": { "label": "Práctica:", "body": "Lee la frase en voz alta despacio, luego más rápido hasta que las formas débiles salgan naturalmente. No «actúes» las reducciones: solo aumenta la velocidad." }
+    },
+    {
+      "id": "cs-red-register",
+      "tag": "¿Cuándo usarlas?",
+      "title": "Reducciones: cuándo sí y cuándo no",
+      "lede": "No todas las situaciones admiten el mismo grado de reducción. Conocer el registro te da control.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Usa reducciones",
+              "rule": "conversación, chat, podcast informal",
+              "examples": [
+                "gonna, wanna, gotta",
+                "'ll, 've, 'd contraídos",
+                "formas débiles (to, of, and)",
+                "yeah, kinda, sorta"
+              ]
+            },
+            {
+              "label": "Evítalas",
+              "rule": "escritura formal, presentaciones, exámenes",
+              "examples": [
+                "going to, want to, have to",
+                "will, have, would (plenas)",
+                "of, to, and (sin reducir al escribir)",
+                "yes, kind of, sort of"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": { "label": "Meta real:", "body": "Entiender reducciones al escuchar es tan importante como producirlas. Empieza por reconocerlas en voz de otros antes de usarlas tú." }
+    }
+  ]
+}

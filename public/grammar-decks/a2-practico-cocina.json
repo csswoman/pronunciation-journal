@@ -1,0 +1,106 @@
+{
+  "meta": {
+    "eyebrow": "A2 · Práctico: cocina",
+    "title": "En la",
+    "titleEmphasis": "cocina"
+  },
+  "cards": [
+    {
+      "id": "ck-food",
+      "tag": "Alimentos",
+      "title": "Vocabulario de comida",
+      "lede": "Grupos básicos de alimentos. Muchos son incontables (rice, bread).",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Frutas/verduras", "value": "apple, tomato, onion, carrot" },
+            { "key": "Proteínas", "value": "chicken, beef, fish, eggs" },
+            { "key": "Básicos", "value": "rice, bread, milk, butter (incontables)", "highlights": ["incontables"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ck-verbs",
+      "tag": "Verbos",
+      "title": "Verbos de cocina",
+      "lede": "Las acciones de una receta. Suelen ir en imperativo (verbo base).",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Calor", "value": "boil, fry, bake, grill", "highlights": ["boil", "fry"] },
+            { "key": "Preparar", "value": "cut, chop, mix, add", "highlights": ["chop", "mix"] },
+            { "key": "Imperativo", "value": "Cut the onion. · Add salt.", "highlights": ["Cut", "Add"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ck-quantities",
+      "tag": "Cantidades",
+      "title": "a cup of, a piece of",
+      "lede": "Para medir incontables usas expresiones de cantidad. Así sí los puedes contar.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Líquidos", "value": "a cup of milk · a glass of water", "highlights": ["a cup of"] },
+            { "key": "Sólidos", "value": "a piece of cheese · a slice of bread", "highlights": ["a piece of", "a slice of"] },
+            { "key": "Envases", "value": "a bottle of · a can of · a bag of", "highlights": ["a bottle of"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ck-recipe",
+      "tag": "Recetas",
+      "title": "Pasos de una receta",
+      "lede": "Las recetas usan imperativos y conectores de secuencia (first, then, finally).",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "first", "value": "First, heat the oil.", "highlights": ["First"] },
+            { "key": "then / next", "value": "Then add the eggs.", "highlights": ["Then"] },
+            { "key": "finally", "value": "Finally, serve hot.", "highlights": ["Finally"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ck-some-any",
+      "tag": "some / any",
+      "title": "some y any con comida",
+      "lede": "Al hablar de ingredientes, some en afirmativas y any en negativas y preguntas.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "good", "text": "We need some flour.", "note": "afirmativa" },
+            { "variant": "good", "text": "We don't have any eggs.", "note": "negativa" },
+            { "variant": "good", "text": "Is there any milk?", "note": "pregunta" },
+            { "variant": "good", "text": "Would you like some tea?", "note": "oferta = some" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ck-restaurant",
+      "tag": "Restaurante",
+      "title": "Hablar de gustos en la mesa",
+      "lede": "Describir sabores y decir qué te gusta comer y qué no.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Sabores", "value": "sweet, salty, spicy, sour", "highlights": ["spicy"] },
+            { "key": "Gusto", "value": "It's delicious! · It tastes good.", "highlights": ["delicious"] },
+            { "key": "Preferencia", "value": "I'm a vegetarian. · I don't eat meat." }
+          ]
+        }
+      ]
+    }
+  ]
+}

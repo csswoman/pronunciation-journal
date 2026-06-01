@@ -1,0 +1,162 @@
+{
+  "meta": {
+    "eyebrow": "A1 · Habilidades",
+    "title": "Alfabeto y",
+    "titleEmphasis": "deletreo",
+    "goal": "Ya puedes deletrear tu nombre, email y dirección en inglés."
+  },
+  "quiz": [
+    {
+      "q": "¿Cómo se llama la letra 'G' en inglés?",
+      "options": ["/ge/ como en español", "/dʒiː/ — suena como 'yee'", "/dʒeɪ/ — suena como la J en inglés", "/xiː/ — casi como 'ji'"],
+      "answer": 1,
+      "explain": "La 'G' en inglés se dice /dʒiː/, que suena como la sílaba 'yee'. La 'J' en inglés se dice /dʒeɪ/, que suena como 'yay'. Son el par que más confunde a hispanohablantes."
+    },
+    {
+      "q": "¿Cuál es la frase correcta para pedir que alguien deletree algo?",
+      "options": [
+        "How do you write that?",
+        "Can you spell that for me?",
+        "What letters is that?",
+        "Please letter that."
+      ],
+      "answer": 1,
+      "explain": "'Can you spell that for me?' es la frase estándar. También puedes decir 'How do you spell that?' Ambas son correctas y muy usadas."
+    },
+    {
+      "q": "¿Cómo se dice el símbolo '@' en inglés?",
+      "options": ["at sign / at symbol", "arroba", "circle a", "email sign"],
+      "answer": 0,
+      "explain": "El '@' se dice 'at' en inglés. Al dar tu email dices: 'myname AT gmail DOT com'. También se acepta 'at sign' o 'at symbol' para referirse al símbolo."
+    }
+  ],
+  "cards": [
+    {
+      "id": "abc-vowels",
+      "tag": "Vocales del alfabeto",
+      "title": "Las 5 vocales: A E I O U",
+      "lede": "Los nombres de las vocales en inglés son muy diferentes a cómo suenan dentro de las palabras.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "A", "value": "/eɪ/ — suena 'ei' · ejemplo: Apple starts with A.", "highlights": ["A"], "hint": "como la 'ei' de 'veinte'" },
+            { "key": "E", "value": "/iː/ — suena 'ii' · ejemplo: Email starts with E.", "highlights": ["E"], "hint": "larga, tensa" },
+            { "key": "I", "value": "/aɪ/ — suena 'ai' · ejemplo: Isabel — I-S-A-B-E-L.", "highlights": ["I"], "hint": "como 'ai' de 'aire'" },
+            { "key": "O", "value": "/oʊ/ — suena 'ou' · ejemplo: Open starts with O.", "highlights": ["O"], "hint": "deslizante, termina en 'u'" },
+            { "key": "U", "value": "/juː/ — suena 'yuu' · ejemplo: Under starts with U.", "highlights": ["U"], "hint": "empieza con 'y' suave" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Ojo con E e I:",
+        "body": "en español 'E' suena como 'e' e 'I' suena como 'i'. En inglés es al revés: E = /iː/ (como i larga) e I = /aɪ/ (como 'ai'). Esto confunde mucho al deletrear."
+      }
+    },
+    {
+      "id": "abc-tricky",
+      "tag": "Consonantes difíciles",
+      "title": "Las consonantes que más confunden",
+      "lede": "Estos pares de letras suenan muy parecido o nada como en español. Son la fuente de la mayoría de errores al deletrear.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "G vs J", "value": "G = /dʒiː/ 'yee' · J = /dʒeɪ/ 'yay'", "highlights": ["G", "J"], "hint": "G suena como I; J suena como A en español" },
+            { "key": "B vs V vs W", "value": "B = /biː/ · V = /viː/ · W = /ˈdʌbljuː/ 'double-u'", "highlights": ["B", "V", "W"], "hint": "W se dice 'double-u', no 'doble ve'" },
+            { "key": "C vs K vs Q", "value": "C = /siː/ · K = /keɪ/ · Q = /kjuː/ 'cue'", "highlights": ["C", "K", "Q"], "hint": "tres letras con sonido /k/, nombres distintos" },
+            { "key": "Y vs I", "value": "Y = /waɪ/ 'wai' · I = /aɪ/ 'ai'", "highlights": ["Y", "I"], "hint": "solo el sonido inicial las distingue" },
+            { "key": "H vs A vs E", "value": "H = /eɪtʃ/ 'aych' · no se pronuncia 'hache'", "highlights": ["H"], "hint": "H en inglés empieza con el sonido /eɪ/" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "abc-phrases",
+      "tag": "Frases útiles",
+      "title": "Cómo pedir y confirmar un deletreo",
+      "lede": "Estas frases te sacan de apuros cuando no entendiste cómo se escribe algo.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Pedir deletreo", "value": "How do you spell that? · Can you spell that for me?", "highlights": ["How do you spell", "Can you spell"], "hint": "las más naturales" },
+            { "key": "Confirmar", "value": "Is that G as in 'golf' or J as in 'jungle'?", "highlights": ["G as in", "J as in"], "hint": "útil cuando las letras suenan similar" },
+            { "key": "Repetir", "value": "Could you spell that again, please? · One more time?", "highlights": ["spell that again", "One more time"] },
+            { "key": "Ofrecer deletrear", "value": "Let me spell that for you. · I'll spell my name.", "highlights": ["Let me spell", "I'll spell"] },
+            { "key": "Confirmar que entendiste", "value": "So that's M-A-R-I-A? · Did you say B or P?", "highlights": ["Did you say"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "abc-nato",
+      "tag": "Alfabeto fonético",
+      "title": "Palabras clave para mayor claridad",
+      "lede": "Cuando el teléfono es malo o las letras suenan igual, usa palabras de referencia para que no haya confusión.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "A — Alpha", "value": "B — Bravo · C — Charlie · D — Delta · E — Echo", "highlights": ["Alpha", "Bravo", "Charlie", "Delta", "Echo"] },
+            { "key": "F — Foxtrot", "value": "G — Golf · H — Hotel · I — India · J — Juliet", "highlights": ["Foxtrot", "Golf", "Hotel", "India", "Juliet"] },
+            { "key": "K — Kilo", "value": "L — Lima · M — Mike · N — November · O — Oscar", "highlights": ["Kilo", "Lima", "Mike", "November", "Oscar"] },
+            { "key": "P — Papa", "value": "R — Romeo · S — Sierra · T — Tango · U — Uniform", "highlights": ["Papa", "Romeo", "Sierra", "Tango", "Uniform"] },
+            { "key": "Uso informal", "value": "'M as in mother' · 'S as in sun' — puedes usar cualquier palabra común", "highlights": ["as in"], "hint": "el sistema OTAN es una opción, no obligatorio" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "En la práctica:",
+        "body": "no necesitas memorizar el alfabeto NATO completo. Lo importante es la idea: 'G as in golf' o 'B as in book'. Usa palabras que conozcas."
+      }
+    },
+    {
+      "id": "abc-email",
+      "tag": "Emails y símbolos",
+      "title": "Cómo deletrear un correo electrónico",
+      "lede": "Dar tu email por teléfono o en voz alta requiere conocer los símbolos y deletrear con claridad.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "maria punto garcia en gmail punto com" },
+            { "variant": "good", "text": "maria DOT garcia AT gmail DOT com", "note": "símbolos en inglés: dot, at, dash, underscore" },
+            { "variant": "bad", "text": "M-A-R-I-A (deletreando las letras en español)" },
+            { "variant": "good", "text": "M as in Mike, A, R, I, A", "note": "usa palabras de referencia para letras ambiguas" },
+            { "variant": "bad", "text": "my email is underscore maria" },
+            { "variant": "good", "text": "my email is m-a-r-i-a UNDERSCORE 123", "note": "underscore = _ · dash = - · dot = ." }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Los símbolos:",
+        "body": "@ = 'at' · . = 'dot' · _ = 'underscore' · - = 'dash' o 'hyphen' · / = 'slash'. Practica diciendo tu propio email en voz alta."
+      }
+    },
+    {
+      "id": "abc-practice",
+      "tag": "Práctica real",
+      "title": "Frases de práctica: deletrea en voz alta",
+      "lede": "Practica estas situaciones reales. El objetivo es fluir sin detenerte.",
+      "blocks": [
+        {
+          "type": "pronunciation",
+          "sound": "Deletreo en voz alta",
+          "examples": [
+            { "text": "My name is María — M-A-R-I-A.", "es": "Practica con tu propio nombre primero" },
+            { "text": "My last name is González — G-O-N-Z-A-L-E-Z.", "es": "Apellidos con Z: Z = /zɛd/ o /ziː/" },
+            { "text": "My email is maria.lopez@gmail.com", "es": "Dilo: M-A-R-I-A dot L-O-P-E-Z at gmail dot com" },
+            { "text": "My address is 42 Oak Street.", "es": "Números primero, luego letras: four two, O-A-K Street" },
+            { "text": "My zip code is 90210.", "es": "Dígito a dígito: nine zero two one zero" }
+          ],
+          "note": "Cuando deletrees, habla despacio y haz una pausa pequeña entre cada letra. Tu oyente necesita tiempo para escribir."
+        }
+      ],
+      "tip": {
+        "label": "Tip para el teléfono:",
+        "body": "antes de deletrear, avisa: 'I'll spell that for you.' Luego deletrea más lento de lo que crees necesario. Siempre termina con: 'Did you get that?'"
+      }
+    }
+  ]
+}

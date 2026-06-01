@@ -16,6 +16,8 @@ import type { PracticeExercise } from '@/lib/practice/types'
 interface Props {
   exercise: PracticeExercise
   onSubmit: (isCorrect: boolean, userAnswer: string) => void
+  /** Duolingo-style focus layout for Sound Lab sessions */
+  focusUi?: boolean
 }
 
 /**
@@ -24,19 +26,19 @@ interface Props {
  * Builds the legacy `Exercise` shape from PhonemePayload at the boundary so
  * the underlying components stay untouched.
  */
-export function ExerciseRenderer({ exercise, onSubmit }: Props) {
+export function ExerciseRenderer({ exercise, onSubmit, focusUi = false }: Props) {
   const { slug, payload, soundId } = exercise
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className={focusUi ? 'phoneme-focus__session' : 'flex flex-col gap-4'}>
       {renderInner()}
       <button
         type="button"
         onClick={() => onSubmit(false, 'skip')}
-        aria-label="Skip this exercise"
-        className="self-center py-1.5 text-xs font-semibold uppercase tracking-widest text-[var(--text-tertiary)] transition-opacity hover:opacity-70"
+        aria-label="Omitir ejercicio"
+        className={focusUi ? 'phoneme-focus__skip' : 'self-center py-1.5 text-xs font-semibold uppercase tracking-widest text-[var(--text-tertiary)] transition-opacity hover:opacity-70'}
       >
-        Skip
+        Omitir
       </button>
     </div>
   )
@@ -63,7 +65,8 @@ export function ExerciseRenderer({ exercise, onSubmit }: Props) {
         return (
           <ReorderWordsExercise
             exercise={payload.data as ReorderWordsExerciseType}
-            onSubmit={(isCorrect, userAnswer) => onSubmit(isCorrect, userAnswer)}
+            onSubmit={onSubmit}
+            focusUi={focusUi}
           />
         )
       }
@@ -90,15 +93,15 @@ export function ExerciseRenderer({ exercise, onSubmit }: Props) {
 
     switch (slug) {
       case 'pick_word':
-        return <PickWordExercise exercise={legacy} onSubmit={onSubmit} />
+        return <PickWordExercise exercise={legacy} onSubmit={onSubmit} focusUi={focusUi} />
       case 'pick_sound':
-        return <PickSoundExercise exercise={legacy} onSubmit={onSubmit} />
+        return <PickSoundExercise exercise={legacy} onSubmit={onSubmit} focusUi={focusUi} />
       case 'minimal_pair':
-        return <MinimalPairExercise exercise={legacy} onSubmit={onSubmit} />
+        return <MinimalPairExercise exercise={legacy} onSubmit={onSubmit} focusUi={focusUi} />
       case 'dictation':
-        return <DictationExercise exercise={legacy} onSubmit={onSubmit} />
+        return <DictationExercise exercise={legacy} onSubmit={onSubmit} focusUi={focusUi} />
       case 'speak_word':
-        return <SpeakExercise exercise={legacy} onSubmit={onSubmit} />
+        return <SpeakExercise exercise={legacy} onSubmit={onSubmit} focusUi={focusUi} />
       default:
         return <UnsupportedExercise slug={slug} onSubmit={onSubmit} />
     }
@@ -112,8 +115,7 @@ function UnsupportedExercise({
   slug: string
   onSubmit: (isCorrect: boolean, userAnswer: string) => void
 }) {
-  // No standalone UI exists yet for fill_blank / sentence_dictation /
-  // reorder_words — the engine should auto-skip these.
+  // No standalone UI exists yet for fill_blank / sentence_dictation.
   return (
     <div className="flex flex-col items-center gap-3 p-6 text-center">
       <p className="text-sm text-fg-subtle">

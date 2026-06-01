@@ -1,0 +1,166 @@
+{
+  "meta": {
+    "eyebrow": "B1 · Vocabulario",
+    "title": "Finanzas",
+    "titleEmphasis": "personales",
+    "goal": "Ya puedes hablar de tu dinero, banco y presupuesto personal en inglés."
+  },
+  "quiz": [
+    {
+      "q": "¿Cómo se llama la cuenta bancaria para el día a día (cobrar nómina, pagar recibos)?",
+      "options": ["savings account", "current account / checking account", "credit account", "overdraft"],
+      "answer": 1,
+      "explain": "La cuenta corriente se llama 'current account' en inglés británico y 'checking account' en inglés americano. La 'savings account' es la cuenta de ahorro, sin tarjeta de débito habitual."
+    },
+    {
+      "q": "¿Qué significa 'standing order'?",
+      "options": [
+        "Un cargo por comisión bancaria",
+        "Una transferencia automática y fija que tú programas",
+        "Un pago directo que autoriza otra empresa",
+        "Un extracto mensual del banco"
+      ],
+      "answer": 1,
+      "explain": "'Standing order' es una transferencia periódica fija que tú configuras para enviar siempre la misma cantidad (por ejemplo, para pagar el alquiler). 'Direct debit' es cuando autorizas a una empresa a cobrar variable desde tu cuenta."
+    },
+    {
+      "q": "¿Qué dices cuando tu tarjeta no funciona al pagar?",
+      "options": [
+        "My card has been overdrawn.",
+        "My card has been declined.",
+        "My card has been transferred.",
+        "My card has been balanced."
+      ],
+      "answer": 1,
+      "explain": "'My card has been declined' significa que el pago fue rechazado. 'Declined' es el término técnico bancario para un pago denegado. 'Overdrawn' significa que tu saldo está en negativo."
+    }
+  ],
+  "cards": [
+    {
+      "id": "fin-cuenta",
+      "tag": "Cuenta bancaria",
+      "title": "Vocabulario de cuenta bancaria",
+      "lede": "Las palabras que necesitas para entender tu extracto y hablar con el banco en inglés.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "current account (UK) / checking account (US)", "value": "cuenta corriente · para el día a día · nómina, recibos, tarjeta de débito", "highlights": ["current account", "checking account"] },
+            { "key": "savings account", "value": "cuenta de ahorro · para guardar dinero · suele tener mejor interés", "highlights": ["savings account"] },
+            { "key": "balance", "value": "saldo · dinero disponible en la cuenta · What's my balance?", "highlights": ["balance"] },
+            { "key": "statement", "value": "extracto bancario · historial de movimientos · monthly statement", "highlights": ["statement"] },
+            { "key": "overdraft", "value": "descubierto · saldo en negativo · You're in your overdraft.", "highlights": ["overdraft"], "hint": "puede tener comisión" },
+            { "key": "PIN", "value": "número secreto de 4 dígitos · Personal Identification Number", "highlights": ["PIN"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Diferencia UK / US:",
+        "body": "en UK dicen 'current account' y en EE. UU. 'checking account'. Ambas son la cuenta corriente. No te confundas con 'savings account', que es siempre la cuenta de ahorro."
+      }
+    },
+    {
+      "id": "fin-transacciones",
+      "tag": "Transacciones",
+      "title": "Hacer y recibir pagos",
+      "lede": "El vocabulario esencial para hablar de movimientos de dinero: ingresar, retirar, transferir y más.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "deposit", "value": "ingresar dinero en una cuenta · I deposited my paycheck.", "highlights": ["deposit"] },
+            { "key": "withdraw", "value": "retirar dinero · sacar del cajero · I need to withdraw some cash.", "highlights": ["withdraw"] },
+            { "key": "transfer", "value": "transferir · enviar dinero a otra cuenta · Can I transfer money online?", "highlights": ["transfer"] },
+            { "key": "direct debit", "value": "domiciliación bancaria · autorización a una empresa para cobrar variable · Set up a direct debit for your bills.", "highlights": ["direct debit"] },
+            { "key": "standing order", "value": "orden permanente · transferencia fija y periódica que tú programas · I pay rent by standing order.", "highlights": ["standing order"] },
+            { "key": "charge a fee", "value": "cobrar una comisión · The bank charges a fee for international transfers.", "highlights": ["charge a fee"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fin-prestamos",
+      "tag": "Préstamos",
+      "title": "Pedir dinero prestado",
+      "lede": "Vocabulario para hablar de préstamos, hipotecas, tarjetas de crédito e intereses.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "loan", "value": "préstamo · dinero que pides y devuelves con interés · I took out a loan to buy a car.", "highlights": ["loan"] },
+            { "key": "mortgage", "value": "hipoteca · préstamo para comprar una vivienda · They got a 25-year mortgage.", "highlights": ["mortgage"] },
+            { "key": "interest rate", "value": "tipo de interés · porcentaje que pagas de más · The interest rate is 4.5%.", "highlights": ["interest rate"] },
+            { "key": "repayment", "value": "cuota de devolución · mensualidad del préstamo · My monthly repayment is £350.", "highlights": ["repayment"] },
+            { "key": "credit card", "value": "tarjeta de crédito · gastas ahora y pagas después · Pay off your credit card every month.", "highlights": ["credit card"], "hint": "pay off = saldar la deuda entera" },
+            { "key": "debt", "value": "deuda · dinero que debes · I'm trying to get out of debt.", "highlights": ["debt"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Expresión útil:",
+        "body": "'pay off' significa saldar una deuda completa ('I paid off my loan'). 'Pay back' es devolver dinero a alguien ('I'll pay you back tomorrow')."
+      }
+    },
+    {
+      "id": "fin-banco-frases",
+      "tag": "En el banco",
+      "title": "Frases en el banco y banca online",
+      "lede": "Expresiones que necesitas al hablar con tu banco, por teléfono o en persona.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Abrir cuenta", "value": "I'd like to open a current account, please.", "highlights": ["open a current account"] },
+            { "key": "Tarjeta rechazada", "value": "My card has been declined. Can you check the balance?", "highlights": ["declined"] },
+            { "key": "Transferencia", "value": "I need to transfer money to another account. What are your fees?", "highlights": ["transfer money"] },
+            { "key": "Extracto", "value": "Could I get a copy of my last statement?", "highlights": ["statement"] },
+            { "key": "Pérdida de tarjeta", "value": "I've lost my card. I need to cancel it immediately.", "highlights": ["cancel it"] },
+            { "key": "Cobro erróneo", "value": "There's a charge on my account that I don't recognize.", "highlights": ["charge", "don't recognize"], "hint": "para reclamar un cobro desconocido" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fin-presupuesto",
+      "tag": "Presupuesto",
+      "title": "Presupuesto y gastos",
+      "lede": "Vocabulario para hablar de ingresos, gastos, ahorros y tomar decisiones de dinero en el día a día.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "budget", "value": "presupuesto · dinero planificado para gastar · I'm on a tight budget this month.", "highlights": ["budget"] },
+            { "key": "income", "value": "ingresos · dinero que recibes · My monthly income covers my expenses.", "highlights": ["income"] },
+            { "key": "expenses", "value": "gastos · dinero que gastas · Fixed expenses: rent, utilities, subscriptions.", "highlights": ["expenses"] },
+            { "key": "afford", "value": "permitirse · tener suficiente dinero · I can't afford a new laptop right now.", "highlights": ["afford"] },
+            { "key": "worth it", "value": "merecer la pena · Is the gym membership worth it?", "highlights": ["worth it"] },
+            { "key": "cut back on", "value": "recortar, gastar menos en · I need to cut back on eating out.", "highlights": ["cut back on"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Error frecuente:",
+        "body": "'afford' siempre va en negativa o interrogativa con duda: 'I can't afford it' / 'Can you afford it?'. Decir 'I can afford it' en positivo suena a alardear."
+      }
+    },
+    {
+      "id": "fin-situaciones",
+      "tag": "Situaciones reales",
+      "title": "Situaciones financieras comunes",
+      "lede": "Diálogos breves y frases para situaciones reales: tipo de cambio, domiciliar pagos, consultar saldo.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "good", "text": "What's the exchange rate for euros today?", "note": "preguntar el tipo de cambio" },
+            { "variant": "good", "text": "I'd like to set up a direct debit for my electricity bill.", "note": "domiciliar un recibo" },
+            { "variant": "good", "text": "Could you tell me my current balance, please?", "note": "consultar saldo por teléfono" },
+            { "variant": "good", "text": "I'd like to pay in cash, not by card.", "note": "pagar en efectivo" },
+            { "variant": "good", "text": "Is there a transaction fee for international transfers?", "note": "preguntar comisiones por transferencia" },
+            { "variant": "good", "text": "I need to report a suspicious transaction on my account.", "note": "reportar un movimiento extraño" }
+          ]
+        }
+      ]
+    }
+  ]
+}
