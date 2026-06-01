@@ -375,39 +375,6 @@ export type Database = {
         }
         Relationships: []
       }
-      notion_sync_log: {
-        Row: {
-          error_message: string | null
-          finished_at: string | null
-          id: string
-          lessons_created: number
-          lessons_skipped: number
-          lessons_updated: number
-          started_at: string
-          status: string
-        }
-        Insert: {
-          error_message?: string | null
-          finished_at?: string | null
-          id?: string
-          lessons_created?: number
-          lessons_skipped?: number
-          lessons_updated?: number
-          started_at?: string
-          status: string
-        }
-        Update: {
-          error_message?: string | null
-          finished_at?: string | null
-          id?: string
-          lessons_created?: number
-          lessons_skipped?: number
-          lessons_updated?: number
-          started_at?: string
-          status?: string
-        }
-        Relationships: []
-      }
       pattern_words: {
         Row: {
           id: number
@@ -560,9 +527,6 @@ export type Database = {
           id: string
           is_published: boolean
           is_system: boolean
-          notion_last_edited: string | null
-          notion_page_id: string | null
-          notion_synced_at: string | null
           slug: string
           source: string
           title: string
@@ -577,9 +541,6 @@ export type Database = {
           id?: string
           is_published?: boolean
           is_system?: boolean
-          notion_last_edited?: string | null
-          notion_page_id?: string | null
-          notion_synced_at?: string | null
           slug: string
           source?: string
           title: string
@@ -594,9 +555,6 @@ export type Database = {
           id?: string
           is_published?: boolean
           is_system?: boolean
-          notion_last_edited?: string | null
-          notion_page_id?: string | null
-          notion_synced_at?: string | null
           slug?: string
           source?: string
           title?: string

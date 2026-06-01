@@ -8,14 +8,6 @@ import {
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import type { TheoryLesson } from "@/lib/types";
 
-export type SyncStatus = "idle" | "syncing" | "success" | "error";
-export type NotionSyncResult = {
-  created: number;
-  updated: number;
-  skipped: number;
-  deleted: number;
-};
-
 async function getAccessToken(): Promise<string> {
   const supabase = getSupabaseBrowserClient();
   const { data: { session } } = await supabase.auth.getSession();
@@ -29,8 +21,6 @@ export function useLessonManager() {
   const [error, setError] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [togglingId, setTogglingId] = useState<string | null>(null);
-  const [syncStatus, setSyncStatus] = useState<SyncStatus>("idle");
-  const [syncResult, setSyncResult] = useState<NotionSyncResult | null>(null);
 
   const load = useCallback(() => {
     setLoading(true);
@@ -82,38 +72,13 @@ export function useLessonManager() {
     }
   }, []);
 
-  const syncNotion = useCallback(async () => {
-    setSyncStatus("syncing");
-    setSyncResult(null);
-    setError(null);
-    try {
-      const token = await getAccessToken();
-      const res = await fetch("/api/notion/sync", {
-        method: "POST",
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "Sync failed");
-      setSyncResult(data);
-      setSyncStatus("success");
-      load();
-    } catch (e: unknown) {
-      setError(e instanceof Error ? e.message : "Notion sync failed");
-      setSyncStatus("error");
-    }
-  }, [load]);
-
   return {
     lessons,
     loading,
     error,
     deletingId,
     togglingId,
-    syncStatus,
-    syncResult,
     deleteLesson,
     togglePublish,
-    syncNotion,
-    dismissSync: () => setSyncStatus("idle"),
   };
 }

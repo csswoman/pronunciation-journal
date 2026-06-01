@@ -79,7 +79,6 @@ export default function CourseView({ slug }: { slug: string }) {
           title={course.title}
           category={course.category}
           categoryLabel={cat?.label}
-          source={course.source}
           updatedAt={course.updated_at}
           dek={metrics.dek}
           readTimeMin={metrics.readTimeMin}

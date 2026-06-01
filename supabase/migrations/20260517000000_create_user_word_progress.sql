@@ -1,4 +1,4 @@
-create table user_word_progress (
+create table if not exists user_word_progress (
   id uuid primary key default gen_random_uuid(),
   user_id uuid references auth.users(id) on delete cascade not null,
   word_id text not null,
@@ -14,10 +14,14 @@ create table user_word_progress (
 
 alter table user_word_progress enable row level security;
 
+drop policy if exists "Users can manage their own progress" on user_word_progress;
+
 create policy "Users can manage their own progress"
   on user_word_progress
   for all
   using (auth.uid() = user_id);
 
-create index on user_word_progress(user_id, category_id);
-create index on user_word_progress(user_id, status);
+create index if not exists user_word_progress_user_category_idx
+  on user_word_progress(user_id, category_id);
+create index if not exists user_word_progress_user_status_idx
+  on user_word_progress(user_id, status);

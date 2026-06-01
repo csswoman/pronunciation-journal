@@ -6,6 +6,12 @@ export function isSupabaseConfigured(): boolean {
   const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "";
   if (!url.trim() || !key.trim()) return false;
   const lower = `${url}${key}`.toLowerCase();
-  if (lower.includes("your_supabase")) return false;
+  if (
+    lower.includes("your_supabase") ||
+    lower.includes("tu-proyecto") ||
+    lower.includes("tu_anon_key")
+  ) {
+    return false;
+  }
   return url.startsWith("https://") && key.length > 30;
 }

@@ -22,7 +22,7 @@ interface LibraryGridProps {
   search:  string;
   sort:    LibrarySort;
   view:    LibraryView;
-  onCounts?: (counts: { all: number; manual: number; notion: number }) => void;
+  onCounts?: (counts: { all: number; manual: number }) => void;
 }
 
 export default function LibraryGrid({ filter, search, sort, view, onCounts }: LibraryGridProps) {
@@ -37,8 +37,7 @@ export default function LibraryGrid({ filter, search, sort, view, onCounts }: Li
         setItems(published);
         onCounts?.({
           all:    published.length,
-          manual: published.filter((i) => i.source === "manual").length,
-          notion: published.filter((i) => i.source === "notion").length,
+          manual: published.length,
         });
       })
       .catch((e) => setError(e instanceof Error ? e.message : "Could not load library"))
@@ -50,7 +49,7 @@ export default function LibraryGrid({ filter, search, sort, view, onCounts }: Li
   const visible = useMemo(() => {
     const q = search.trim().toLowerCase();
     return items
-      .filter((i) => filter === "all" ? true : i.source === (filter === "manual" ? "manual" : filter === "notion" ? "notion" : i.source))
+      .filter((i) => filter === "all" || filter === "manual")
       .filter((i) => q === "" || i.title.toLowerCase().includes(q) || i.category.toLowerCase().includes(q))
       .sort((a, b) =>
         sort === "alpha"
@@ -106,14 +105,13 @@ const MOCK_BY_CATEGORY: Record<string, { description: string; lessons: number; l
 };
 
 function LibraryCard({ item, layout, priority }: { item: TheoryLesson; layout: LibraryView; priority?: boolean }) {
-  const isNotion = item.source === "notion";
   const mock = MOCK_BY_CATEGORY[item.category] ?? { description: "", lessons: 0, level: "basic" };
   const inProgress = mock.inProgress ?? false;
 
   return (
     <LibraryItemCard
       href={`/courses/library/${item.slug}`}
-      badge={isNotion ? "Notes" : "Course"}
+      badge="Course"
       eyebrow={item.category.replace(/-/g, " ")}
       title={item.title}
       description={mock.description}

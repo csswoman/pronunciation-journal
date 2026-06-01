@@ -1,18 +1,15 @@
 "use client";
 
-// Planned structure:
-// <HomeCoursesSection>
-//   <header row: title + "View all" link />
-//   <list: up to 3 CourseRow items />
-//   <skeleton while loading />
-// </HomeCoursesSection>
-
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import Anchor from "@/components/ui/Anchor";
 import { Headphones, MessageSquare, BookOpen, ArrowRight } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import type { Course } from "@/lib/notion/types";
+import { getAllTheoryLessons } from "@/lib/theory-lessons/queries";
+import { LESSON_CATEGORIES, type TheoryLesson } from "@/lib/types";
+
+function categoryLabel(category: TheoryLesson["category"]): string {
+  return LESSON_CATEGORIES.find((c) => c.value === category)?.label ?? category;
+}
 
 function courseIcon(title: string): LucideIcon {
   const t = title.toLowerCase();
@@ -22,14 +19,14 @@ function courseIcon(title: string): LucideIcon {
 }
 
 interface CourseRowProps {
-  course: Course;
+  course: TheoryLesson;
 }
 
 function CourseRow({ course }: CourseRowProps) {
   const Icon = courseIcon(course.title);
   return (
     <Link
-      href={`/courses/${course.slug}`}
+      href={`/courses/library/${course.slug}`}
       className="flex items-center gap-3 py-2.5 rounded-xl hover:bg-[var(--hue-icon-bg)] transition-colors px-1 -mx-1 group"
     >
       <span className="icon-wrap-hue flex items-center justify-center w-9 h-9 rounded-lg shrink-0">
@@ -37,7 +34,7 @@ function CourseRow({ course }: CourseRowProps) {
       </span>
       <div className="flex-1 min-w-0">
         <p className="text-[13px] font-semibold text-[var(--text-primary)] truncate">{course.title}</p>
-        <p className="text-[11px] text-[var(--text-tertiary)] truncate">{course.description ?? "—"}</p>
+        <p className="text-[11px] text-[var(--text-tertiary)] truncate">{categoryLabel(course.category)}</p>
       </div>
       <div className="flex items-center gap-2 shrink-0">
         <div className="w-16 h-1 rounded-full bg-[var(--border-subtle)] overflow-hidden">
@@ -62,34 +59,21 @@ function CourseRowSkeleton() {
 }
 
 export default function HomeCoursesSection() {
-  const [courses, setCourses] = useState<Course[]>([]);
+  const [courses, setCourses] = useState<TheoryLesson[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/api/notion/courses")
-      .then((r) => {
-        if (!r.ok) throw new Error(`HTTP ${r.status}`);
-        return r.json();
+    getAllTheoryLessons()
+      .then((all) => {
+        const published = all.filter((l) => l.is_published);
+        setCourses(published.slice(0, 3));
       })
-      .then((data: Course[]) => { setCourses(data.slice(0, 3)); setLoading(false); })
-      .catch(() => setLoading(false));
+      .catch(() => {})
+      .finally(() => setLoading(false));
   }, []);
 
   return (
     <div className="flex flex-col gap-1">
-      <div className="flex items-center justify-between mb-1">
-        <p className="text-[11px] font-semibold tracking-widest uppercase text-[var(--text-tertiary)]">
-          Your courses
-        </p>
-        <Anchor
-          href="/courses"
-          icon={<ArrowRight size={11} />}
-          iconPosition="right"
-        >
-          View all
-        </Anchor>
-      </div>
-
       {loading ? (
         <>
           <CourseRowSkeleton />

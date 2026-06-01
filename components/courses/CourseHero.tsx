@@ -12,7 +12,6 @@ interface CourseHeroProps {
   title:        string;
   category:    string;
   categoryLabel?: string;
-  source:      "manual" | "notion";
   updatedAt:   string;
   dek?:        string;
   readTimeMin: number;
@@ -20,7 +19,7 @@ interface CourseHeroProps {
 }
 
 export default function CourseHero({
-  title, category, categoryLabel, source, updatedAt, dek, readTimeMin, wordCount,
+  title, category, categoryLabel, updatedAt, dek, readTimeMin, wordCount,
 }: CourseHeroProps) {
   return (
     <header
@@ -29,7 +28,7 @@ export default function CourseHero({
         borderBottom: "1px solid var(--border-subtle)",
       }}
     >
-      <Eyebrow categoryLabel={categoryLabel ?? category} source={source} />
+      <Eyebrow categoryLabel={categoryLabel ?? category} />
       <DisplayTitle title={title} />
       {dek && <Dek text={dek} />}
       <MetaRow updatedAt={updatedAt} readTimeMin={readTimeMin} wordCount={wordCount} />
@@ -38,8 +37,8 @@ export default function CourseHero({
 }
 
 function Eyebrow({
-  categoryLabel, source,
-}: { categoryLabel: string; source: "manual" | "notion" }) {
+  categoryLabel,
+}: { categoryLabel: string }) {
   return (
     <div
       style={{
@@ -52,7 +51,7 @@ function Eyebrow({
         marginBottom: "var(--space-5)",
       }}
     >
-      {categoryLabel} <span aria-hidden style={{ margin: "0 0.55em", color: "var(--primary)" }}>·</span> {source === "notion" ? "Notes" : "Course"}
+      {categoryLabel} <span aria-hidden style={{ margin: "0 0.55em", color: "var(--primary)" }}>·</span> Course
     </div>
   );
 }
