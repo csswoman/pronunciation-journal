@@ -19,6 +19,48 @@
   padding: 0 20px 80px;
 }
 
+/* Focus banner — shown when arriving from a course lesson (?focus=…) */
+.sound-lab__focus {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin: 4px 0 14px;
+  padding: 12px 15px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--accent-border);
+  background: color-mix(in oklch, var(--primary) 9%, var(--surface-raised));
+}
+
+.sound-lab__focus > svg {
+  flex: none;
+  color: var(--primary);
+}
+
+.sound-lab__focus-text {
+  flex: 1;
+  min-width: 0;
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+}
+
+.sound-lab__focus-text strong {
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.sound-lab__focus-clear {
+  flex: none;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--primary);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.sound-lab__focus-clear:hover {
+  text-decoration: underline;
+}
+
 .sound-lab__hero {
   padding: 42px 0 22px;
 }

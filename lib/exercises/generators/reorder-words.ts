@@ -1,4 +1,5 @@
 import type { ReorderWordsExercise } from '@/lib/exercises/types'
+import type { Sound } from '@/lib/phoneme-practice/types'
 import type { WordBankEntry } from '@/lib/word-bank/types'
 import { normalizeCEFR } from '@/lib/exercises/cefr'
 import { exerciseId, pick, shuffle, tokenize } from '@/lib/exercises/utils'
@@ -49,4 +50,24 @@ function shuffleDistinct<T>(arr: T[]): T[] {
 
 function isSameOrder<T>(a: T[], b: T[]): boolean {
   return a.every((v, i) => v === b[i])
+}
+
+/**
+ * Build a reorder-words exercise from the sound's example sentence (phoneme sessions).
+ */
+export function generateReorderFromSoundExample(sound: Sound): ReorderWordsExercise | null {
+  const sentence = sound.example?.trim()
+  if (!sentence) return null
+
+  const tokens = tokenize(sentence)
+  if (tokens.length < MIN_TOKENS) return null
+
+  return {
+    id: exerciseId('reorder_words', String(sound.id), sentence),
+    type: 'reorder_words',
+    exerciseType: { domain: 'pronunciation', mode: 'reorder', variant: 'sentence' },
+    sourceRef: { source: 'words', id: String(sound.id) },
+    sentence,
+    tokens: shuffleDistinct(tokens),
+  }
 }

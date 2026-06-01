@@ -4,7 +4,6 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { useAuth } from '@/components/auth/AuthProvider'
 import PracticeSession from '@/components/practice/PracticeSession'
-import PageLayout from '@/components/layout/PageLayout'
 import Button from '@/components/ui/Button'
 import {
   getAllSounds,
@@ -57,7 +56,7 @@ export default function SoundPracticePage() {
       setExercises(mixed.map((m) => fromMixedExercise(m, 'sound_lab')))
       setSessionKey((k) => k + 1)
     } catch {
-      setError('Failed to load. Please try again.')
+      setError('No se pudo cargar la sesión. Inténtalo de nuevo.')
     } finally {
       setLoading(false)
     }
@@ -86,19 +85,20 @@ export default function SoundPracticePage() {
       context: 'sound_lab' as const,
       exercises,
       sessionLength: exercises.length,
+      soundIpa,
       onSessionComplete: handleSessionComplete,
       onExit: () => router.push('/practice/sounds'),
       persistence: { userId: user.id, soundId },
     }
-  }, [exercises, handleSessionComplete, router, user, soundId])
+  }, [exercises, handleSessionComplete, router, user, soundId, soundIpa])
 
   if (error) {
     return (
-      <div className="flex min-h-screen items-center justify-center p-4">
+      <div className="phoneme-focus flex min-h-screen items-center justify-center p-4">
         <div className="space-y-3 text-center">
           <p className="text-error">{error}</p>
           <Button type="button" onClick={loadAndStart} variant="primary" size="sm">
-            Retry
+            Reintentar
           </Button>
         </div>
       </div>
@@ -107,45 +107,20 @@ export default function SoundPracticePage() {
 
   if (loading || !sessionConfig) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
-        <div className="animate-pulse text-fg-subtle">Loading…</div>
+      <div className="phoneme-focus flex min-h-screen items-center justify-center">
+        <div className="animate-pulse text-fg-subtle">Cargando sesión…</div>
       </div>
     )
   }
 
-  const header = (
-    <header className="sticky top-0 z-10 border-b border-[var(--border-subtle)] bg-[var(--surface-base)]">
-      <div className="flex items-center justify-between px-10 pt-6">
-        <button
-          type="button"
-          onClick={() => router.push('/practice/sounds')}
-          className="border-none bg-transparent p-1 text-xl leading-none text-fg-subtle"
-        >
-          ←
-        </button>
-        <div className="text-center">
-          <div
-            className="text-3xl font-bold leading-none tracking-[-0.5px] text-primary"
-            style={{ fontFamily: 'var(--font-phoneme), serif' }}
-          >
-            {soundIpa}
-          </div>
-        </div>
-        <div className="w-6" />
-      </div>
-    </header>
-  )
-
   return (
-    <PageLayout variant="lesson" hero={header}>
-      <main className="animate-fadeIn flex w-full items-center justify-center px-10 py-10">
-        <PracticeSession key={sessionKey} {...sessionConfig} />
-      </main>
+    <>
+      <PracticeSession key={sessionKey} {...sessionConfig} />
       {nextReview && (
-        <p className="pb-8 text-center text-xs text-fg-subtle">
-          Next review: {nextReview.toLocaleDateString()}
+        <p className="pb-6 text-center text-xs text-fg-subtle">
+          Próxima revisión: {nextReview.toLocaleDateString()}
         </p>
       )}
-    </PageLayout>
+    </>
   )
 }

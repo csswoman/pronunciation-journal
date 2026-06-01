@@ -1,7 +1,9 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
+import { Headphones } from "lucide-react";
 import { SoundLabHeader } from "./SoundLabHeader";
 import { SoundLabContinuingBar } from "./SoundLabContinuingBar";
 import { SoundLabStatsStrip } from "./SoundLabStatsStrip";
@@ -65,13 +67,42 @@ function resolveGroupId(lesson: Lesson): string {
   return getLessonSectionId(lesson);
 }
 
+/** True when a lesson teaches any of the focused IPA symbols (from a course handoff). */
+function matchesFocus(lesson: Lesson, tokens: string[]): boolean {
+  if (tokens.length === 0) return false;
+  const title = lesson.title.toLowerCase();
+  return tokens.some((t) => {
+    const tok = t.toLowerCase();
+    if (title.includes(tok)) return true;
+    return lesson.words?.some((w) => w.ipa?.toLowerCase().includes(tok)) ?? false;
+  });
+}
+
 export default function SoundLabPage() {
   const router = useRouter();
   const { allLessons, soundProgressMap, completedCount, inProgressCount, heroLesson, isLoading } =
     useSoundLabData();
 
+  const searchParams = useSearchParams();
+  const focusTokens = useMemo(() => {
+    const raw = searchParams.get("focus");
+    return raw ? raw.split(",").map((s) => s.trim()).filter(Boolean) : [];
+  }, [searchParams]);
+
   const [activeChip, setActiveChip] = useState<SoundLabChip>("all");
   const [search, setSearch] = useState("");
+
+  const focusSection = useMemo<LessonSection | null>(() => {
+    if (focusTokens.length === 0) return null;
+    const lessons = allLessons.filter((l) => matchesFocus(l, focusTokens));
+    if (lessons.length === 0) return null;
+    return {
+      id: "focus",
+      title: `Sonidos de tu lección · ${focusTokens.join(" · ")}`,
+      count: lessons.length,
+      lessons,
+    };
+  }, [allLessons, focusTokens]);
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -143,6 +174,20 @@ export default function SoundLabPage() {
             inProgressCount={inProgressCount}
           />
 
+          {focusTokens.length > 0 && (
+            <div className="sound-lab__focus" role="status">
+              <Headphones size={16} aria-hidden />
+              <span className="sound-lab__focus-text">
+                Llegaste desde un curso. Practicando los sonidos{" "}
+                <strong>{focusTokens.join(" · ")}</strong>
+                {!focusSection && " — no encontramos lecciones para estos aún."}
+              </span>
+              <Link href="/practice/sounds" className="sound-lab__focus-clear">
+                Ver todos
+              </Link>
+            </div>
+          )}
+
           <SoundLabFilterRow
             activeChip={activeChip}
             search={search}
@@ -152,7 +197,7 @@ export default function SoundLabPage() {
         </header>
 
         <SoundLabLessonGrid
-          sections={sections}
+          sections={focusSection ? [focusSection, ...sections] : sections}
           heroLessonId={heroLesson.lesson?.id}
           soundProgressMap={soundProgressMap}
           isLoading={isLoading}
