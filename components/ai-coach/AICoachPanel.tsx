@@ -89,7 +89,7 @@ export default function AICoachPanel() {
           </div>
 
           {/* Interview tab — kept mounted */}
-          <div className={`flex-1 min-h-0 overflow-hidden${activeTab !== "interview" ? " hidden" : ""}`}>
+          <div className={`flex flex-1 flex-col min-h-0 overflow-hidden${activeTab !== "interview" ? " hidden" : ""}`}>
             <AICoachHome activeTab="interview" onSendMessage={sendMessage} isStreaming={isStreaming} prefill={inputPrefill} onPrefillConsumed={() => setInputPrefill(undefined)} />
           </div>
 

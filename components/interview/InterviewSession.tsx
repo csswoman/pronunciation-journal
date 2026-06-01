@@ -119,17 +119,19 @@ export default function InterviewSession({ title, turns, difficulty, level, onRe
         onReset={handleReset}
       />
 
-      <div className="flex-1 overflow-y-auto px-4 py-5 flex flex-col gap-4 bg-surface-base">
+      <div className="chat-messages-container flex-1 overflow-y-auto px-4 sm:px-5 py-5 flex flex-col gap-1">
 
         {turns.slice(0, visibleCount).map((turn, idx) => {
           const isActive = idx === currentIdx;
           const isCurrentlyPlaying = playingIdx === idx;
           const turnResult = results.get(idx);
 
+          const gapClass = idx > 0 && turns[idx - 1].role !== turn.role ? "mt-4" : "mt-1";
+
           if (turn.role === "interviewer") {
             return (
+              <div key={idx} className={gapClass}>
               <InterviewerBubble
-                key={idx}
                 text={turn.text}
                 isActive={isActive}
                 isPlaying={isCurrentlyPlaying}
@@ -137,12 +139,13 @@ export default function InterviewSession({ title, turns, difficulty, level, onRe
                 onListen={() => isCurrentlyPlaying ? stopTurn() : playTurn(idx)}
                 onRevealNext={revealNext}
               />
+              </div>
             );
           }
 
           return (
+            <div key={idx} className={gapClass}>
             <CandidateBubble
-              key={idx}
               idx={idx}
               text={turn.text}
               isActive={isActive}
@@ -158,6 +161,7 @@ export default function InterviewSession({ title, turns, difficulty, level, onRe
               onRetry={() => setResults((prev) => { const m = new Map(prev); m.delete(idx); return m; })}
               onNext={() => isDone ? setShowResults(true) : revealNext()}
             />
+            </div>
           );
         })}
 
