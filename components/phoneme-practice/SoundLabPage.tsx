@@ -16,54 +16,25 @@ import type { Lesson } from "@/lib/types";
 
 const IPA_VOWEL_RE = /[aeiouæɑɒɔɛɜɪɐəʌʊ]/;
 
-const CHIP_SECTION_TITLES: Record<SoundLabChip, string> = {
-  all: "All Sounds",
-  basics: "Basics",
-  vowels: "Vowel Sounds",
-  consonants: "Consonant Sounds",
-  diphthongs: "Diphthongs",
-  weak: "Weak for you",
-};
-
 const ALL_GROUP_SECTIONS = [
-  { id: "vowels", title: "Vowel Sounds" },
-  { id: "diphthongs", title: "Diphthongs" },
-  { id: "consonants", title: "Consonant Sounds" },
+  { id: "vowels", title: "Vocales" },
+  { id: "diphthongs", title: "Diptongos" },
+  { id: "consonants", title: "Consonantes" },
 ] as const;
 
 function getLessonSectionId(lesson: Lesson): string {
-  const ipaMatch = lesson.title.match(/^\/([^/]+)\//);
+  const ipaMatch = lesson.title.match(/^\/+([^/]+)\/+/);
+  const title = lesson.title.toLowerCase();
+  if (title.includes("diphthong")) return "diphthongs";
   return ipaMatch && IPA_VOWEL_RE.test(ipaMatch[1]) ? "vowels" : "consonants";
 }
 
-function categorizLesson(lesson: Lesson, soundProgressMap: Map<number, number>): SoundLabChip[] {
-  const title = lesson.title.toLowerCase();
-  const chips: SoundLabChip[] = ["all"];
-
-  if (lesson.difficulty === "easy" || lesson.category === "basics") chips.push("basics");
-  if (title.includes("diphthong")) chips.push("diphthongs");
-
-  const sectionId = getLessonSectionId(lesson);
-  if (sectionId === "vowels" || title.includes("vowel") || lesson.category === "vowels") {
-    chips.push("vowels");
-  }
-  if (sectionId === "consonants" || title.includes("consonant") || lesson.category === "consonants") {
-    chips.push("consonants");
-  }
-
-  if (lesson.id.startsWith("sound-")) {
-    const pct = soundProgressMap.get(Number(lesson.id.replace("sound-", "")));
-    if (pct !== undefined && pct > 0 && pct < 60) chips.push("weak");
-  }
-
-  return chips;
+function matchesDifficultyChip(lesson: Lesson, chip: SoundLabChip): boolean {
+  if (chip === "all") return true;
+  return lesson.difficulty === chip;
 }
 
 function resolveGroupId(lesson: Lesson): string {
-  const chips = categorizLesson(lesson, new Map());
-  if (chips.includes("diphthongs")) return "diphthongs";
-  if (chips.includes("vowels")) return "vowels";
-  if (chips.includes("consonants")) return "consonants";
   return getLessonSectionId(lesson);
 }
 
@@ -107,14 +78,14 @@ export default function SoundLabPage() {
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
     return allLessons.filter((lesson) => {
-      if (!categorizLesson(lesson, soundProgressMap).includes(activeChip)) return false;
+      if (!matchesDifficultyChip(lesson, activeChip)) return false;
       if (!q) return true;
       return (
         lesson.title.toLowerCase().includes(q) ||
         lesson.description.toLowerCase().includes(q)
       );
     });
-  }, [allLessons, activeChip, search, soundProgressMap]);
+  }, [allLessons, activeChip, search]);
 
   const sections = useMemo<LessonSection[]>(() => {
     if (filtered.length === 0) return [];
@@ -123,7 +94,7 @@ export default function SoundLabPage() {
       return [
         {
           id: activeChip,
-          title: CHIP_SECTION_TITLES[activeChip],
+          title: "",
           count: filtered.length,
           lessons: filtered,
         },
@@ -158,7 +129,16 @@ export default function SoundLabPage() {
     <div className="sound-lab min-h-screen">
       <div className="sound-lab__wrap">
         <header className="sound-lab__hero">
-          <SoundLabHeader />
+          <div className="sound-lab__intro">
+            <div className="sound-lab__intro-head">
+              <SoundLabHeader />
+            </div>
+            <SoundLabStatsStrip
+              totalCount={allLessons.length}
+              completedCount={completedCount}
+              inProgressCount={inProgressCount}
+            />
+          </div>
 
           {heroLesson.lesson && (
             <SoundLabContinuingBar
@@ -168,10 +148,11 @@ export default function SoundLabPage() {
             />
           )}
 
-          <SoundLabStatsStrip
-            totalCount={allLessons.length}
-            completedCount={completedCount}
-            inProgressCount={inProgressCount}
+          <SoundLabFilterRow
+            activeChip={activeChip}
+            search={search}
+            onChipChange={setActiveChip}
+            onSearchChange={setSearch}
           />
 
           {focusTokens.length > 0 && (
@@ -187,13 +168,6 @@ export default function SoundLabPage() {
               </Link>
             </div>
           )}
-
-          <SoundLabFilterRow
-            activeChip={activeChip}
-            search={search}
-            onChipChange={setActiveChip}
-            onSearchChange={setSearch}
-          />
         </header>
 
         <SoundLabLessonGrid

@@ -52,9 +52,9 @@ function StatCell({
 export function SoundLabStatsStrip({ totalCount, completedCount, inProgressCount }: Props) {
   return (
     <div className="sound-lab__stats">
-      <StatCell value={totalCount} label="Sounds" />
-      <StatCell value={completedCount} label="Completed" />
-      <StatCell value={inProgressCount} label="In progress" accent />
+      <StatCell value={totalCount} label="Sonidos" />
+      <StatCell value={completedCount} label="Completados" />
+      <StatCell value={inProgressCount} label="En curso" accent />
     </div>
   );
 }
