@@ -1,6 +1,21 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   turbopack: {},
+  async redirects() {
+    return [
+      { source: "/courses/mini-lessons", destination: "/mini-lessons", permanent: true },
+      {
+        source: "/courses/mini-lessons/:slug",
+        destination: "/mini-lessons/:slug",
+        permanent: true,
+      },
+      {
+        source: "/courses/library/:slug",
+        destination: "/courses",
+        permanent: true,
+      },
+    ];
+  },
   images: {
     remotePatterns: [
       {

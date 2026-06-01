@@ -23,6 +23,7 @@ export const learningNav: NavSectionType = {
   items: [
     { name: "Words", href: "/words", icon: LibraryBig },
     { name: "Courses", href: "/courses", icon: BookOpen },
+    { name: "Mini lessons", href: "/mini-lessons", icon: BookMarked },
     { name: "IPA Chart", href: "/ipa", icon: Radio },
   ],
 };
