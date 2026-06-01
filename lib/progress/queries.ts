@@ -3,11 +3,21 @@ import { getDailyStreak, type DailyStreakResult } from '@/lib/daily/streak'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
+/** Activity level per calendar day for heatmap (0 = none, 3 = strong). */
+export type ConsistencyHeatLevel = 0 | 1 | 2 | 3
+
 export interface DailyCompletionStats {
   rate7: number   // 0-100 percentage over last 7 days
   rate30: number  // 0-100 percentage over last 30 days
   completedDays7: number
   completedDays30: number
+  /** Last 30 days, oldest → today. */
+  heatmap30: ConsistencyHeatLevel[]
+}
+
+export interface WeeklySummaryStats {
+  exercises7: number
+  newWords7: number
 }
 
 export interface AccuracyStats {
@@ -38,6 +48,7 @@ export interface ProgressPageData {
   dailyCompletion: DailyCompletionStats
   accuracy: AccuracyStats
   skillProfile: SkillProfileData
+  weeklySummary: WeeklySummaryStats
 }
 
 // ── Queries ───────────────────────────────────────────────────────────────────
@@ -70,15 +81,27 @@ async function getDailyCompletionStats(userId: string): Promise<DailyCompletionS
   const today = new Date()
   let completedDays7 = 0
   let completedDays30 = 0
+  const heatmap30: ConsistencyHeatLevel[] = []
 
-  for (let i = 0; i < 30; i++) {
+  for (let i = 29; i >= 0; i--) {
     const d = new Date(today)
     d.setDate(d.getDate() - i)
     const day = d.toISOString().slice(0, 10)
     const count = countsByDay.get(day) ?? 0
+    const level: ConsistencyHeatLevel =
+      count >= DAILY_THRESHOLD * 2
+        ? 3
+        : count >= DAILY_THRESHOLD
+          ? 2
+          : count > 0
+            ? 1
+            : 0
+
+    heatmap30.push(level)
+
     if (count >= DAILY_THRESHOLD) {
       completedDays30++
-      if (i < 7) completedDays7++
+      if (i <= 6) completedDays7++
     }
   }
 
@@ -87,6 +110,32 @@ async function getDailyCompletionStats(userId: string): Promise<DailyCompletionS
     rate30: Math.round((completedDays30 / 30) * 100),
     completedDays7,
     completedDays30,
+    heatmap30,
+  }
+}
+
+async function getWeeklySummaryStats(userId: string): Promise<WeeklySummaryStats> {
+  const supabase = await createSupabaseServerClient()
+  const since7 = new Date()
+  since7.setDate(since7.getDate() - 7)
+
+  const [answersResult, wordsResult] = await Promise.all([
+    supabase
+      .from('answer_history')
+      .select('id', { count: 'exact', head: true })
+      .eq('user_id', userId)
+      .gte('answered_at', since7.toISOString())
+      .not('answered_at', 'is', null),
+    supabase
+      .from('word_bank')
+      .select('id', { count: 'exact', head: true })
+      .eq('user_id', userId)
+      .gte('created_at', since7.toISOString()),
+  ])
+
+  return {
+    exercises7: answersResult.count ?? 0,
+    newWords7: wordsResult.count ?? 0,
   }
 }
 
@@ -168,12 +217,13 @@ async function getSkillProfileData(userId: string): Promise<SkillProfileData> {
 }
 
 export async function getProgressPageData(userId: string): Promise<ProgressPageData> {
-  const [streak, dailyCompletion, accuracy, skillProfile] = await Promise.all([
+  const [streak, dailyCompletion, accuracy, skillProfile, weeklySummary] = await Promise.all([
     getDailyStreak(userId),
     getDailyCompletionStats(userId),
     getAccuracyStats(userId),
     getSkillProfileData(userId),
+    getWeeklySummaryStats(userId),
   ])
 
-  return { streak, dailyCompletion, accuracy, skillProfile }
+  return { streak, dailyCompletion, accuracy, skillProfile, weeklySummary }
 }
