@@ -23,6 +23,12 @@ const CHIP_SECTION_TITLES: Record<SoundLabChip, string> = {
   weak: "Weak for you",
 };
 
+const ALL_GROUP_SECTIONS = [
+  { id: "vowels", title: "Vowel Sounds" },
+  { id: "diphthongs", title: "Diphthongs" },
+  { id: "consonants", title: "Consonant Sounds" },
+] as const;
+
 function getLessonSectionId(lesson: Lesson): string {
   const ipaMatch = lesson.title.match(/^\/([^/]+)\//);
   return ipaMatch && IPA_VOWEL_RE.test(ipaMatch[1]) ? "vowels" : "consonants";
@@ -51,6 +57,14 @@ function categorizLesson(lesson: Lesson, soundProgressMap: Map<number, number>):
   return chips;
 }
 
+function resolveGroupId(lesson: Lesson): string {
+  const chips = categorizLesson(lesson, new Map());
+  if (chips.includes("diphthongs")) return "diphthongs";
+  if (chips.includes("vowels")) return "vowels";
+  if (chips.includes("consonants")) return "consonants";
+  return getLessonSectionId(lesson);
+}
+
 export default function SoundLabPage() {
   const router = useRouter();
   const { allLessons, soundProgressMap, completedCount, inProgressCount, heroLesson, isLoading } =
@@ -73,7 +87,35 @@ export default function SoundLabPage() {
 
   const sections = useMemo<LessonSection[]>(() => {
     if (filtered.length === 0) return [];
-    return [{ id: activeChip, title: CHIP_SECTION_TITLES[activeChip], lessons: filtered }];
+
+    if (activeChip !== "all") {
+      return [
+        {
+          id: activeChip,
+          title: CHIP_SECTION_TITLES[activeChip],
+          count: filtered.length,
+          lessons: filtered,
+        },
+      ];
+    }
+
+    const buckets = new Map<string, Lesson[]>(
+      ALL_GROUP_SECTIONS.map((g) => [g.id, []]),
+    );
+
+    for (const lesson of filtered) {
+      const groupId = resolveGroupId(lesson);
+      const list = buckets.get(groupId) ?? buckets.get("consonants")!;
+      list.push(lesson);
+      buckets.set(groupId, list);
+    }
+
+    return ALL_GROUP_SECTIONS.map((g) => ({
+      id: g.id,
+      title: g.title,
+      count: buckets.get(g.id)?.length ?? 0,
+      lessons: buckets.get(g.id) ?? [],
+    })).filter((s) => s.lessons.length > 0);
   }, [filtered, activeChip]);
 
   function handleResume() {
@@ -82,55 +124,39 @@ export default function SoundLabPage() {
   }
 
   return (
-    <div className="min-h-screen">
-      <div className="mx-auto max-w-[1280px] px-space-8 py-space-8">
+    <div className="sound-lab min-h-screen">
+      <div className="sound-lab__wrap">
+        <header className="sound-lab__hero">
+          <SoundLabHeader />
 
-        {/* ── Zone 1: Hero ─────────────────────────────────────── */}
-        <div className="rounded-md border border-border-subtle bg-surface-raised px-space-12 py-space-10 shadow-sm">
-          {/* Row 1: title + resume CTA */}
-          <SoundLabHeader onResume={heroLesson.lesson ? handleResume : undefined} />
-
-          {/* Row 2: Continuing bar — only when a lesson is in progress */}
           {heroLesson.lesson && (
-            <div className="mt-space-5">
-              <SoundLabContinuingBar
-                lesson={heroLesson.lesson}
-                progress={heroLesson.progress}
-                onResume={handleResume}
-              />
-            </div>
+            <SoundLabContinuingBar
+              lesson={heroLesson.lesson}
+              progress={heroLesson.progress}
+              onResume={handleResume}
+            />
           )}
 
-          {/* Row 3: Stats strip */}
-          <div className="mt-space-5">
-            <SoundLabStatsStrip
-              totalCount={allLessons.length}
-              completedCount={completedCount}
-              inProgressCount={inProgressCount}
-            />
-          </div>
-        </div>
+          <SoundLabStatsStrip
+            totalCount={allLessons.length}
+            completedCount={completedCount}
+            inProgressCount={inProgressCount}
+          />
 
-        {/* ── Zone 2: Divider ───────────────────────────────────── */}
-        <div className="h-4" />
-
-        {/* ── Zone 3: Lessons ──────────────────────────────────── */}
-        <div className="rounded-md border border-border-subtle bg-surface-raised px-space-12 py-space-10 shadow-sm">
           <SoundLabFilterRow
             activeChip={activeChip}
             search={search}
-            lessonCount={filtered.length}
             onChipChange={setActiveChip}
             onSearchChange={setSearch}
           />
-          <SoundLabLessonGrid
-            sections={sections}
-            heroLessonId={heroLesson.lesson?.id}
-            soundProgressMap={soundProgressMap}
-            isLoading={isLoading}
-          />
-        </div>
+        </header>
 
+        <SoundLabLessonGrid
+          sections={sections}
+          heroLessonId={heroLesson.lesson?.id}
+          soundProgressMap={soundProgressMap}
+          isLoading={isLoading}
+        />
       </div>
     </div>
   );
