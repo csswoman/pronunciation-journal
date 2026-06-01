@@ -161,6 +161,19 @@
   color: var(--text-tertiary);
 }
 
+.phoneme-focus__session {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  width: 100%;
+}
+
+.phoneme-focus__session > .phoneme-focus__exercise {
+  flex: 1;
+  min-height: 0;
+}
+
 .phoneme-focus__exercise {
   flex: 1;
   display: flex;
@@ -612,12 +625,12 @@
 /* CTA */
 .pf-cta {
   width: 100%;
-  margin-top: auto;
-  padding-top: 18px;
+  flex-shrink: 0;
+  margin-top: 28px;
+  padding: 16px;
   font-family: inherit;
   font-weight: 700;
   font-size: 1rem;
-  padding: 16px;
   border: none;
   border-radius: var(--radius-md);
   cursor: pointer;
@@ -625,6 +638,11 @@
   transition:
     transform var(--transition-fast),
     opacity var(--transition-fast);
+}
+
+.phoneme-focus__exercise .pf-cta {
+  margin-top: auto;
+  padding-top: 28px;
 }
 
 .pf-cta--primary {
@@ -748,13 +766,17 @@
 }
 
 .phoneme-focus__skip {
-  align-self: center;
-  margin-top: 8px;
-  padding: 6px 4px;
+  flex-shrink: 0;
+  display: block;
+  width: 100%;
+  margin-top: 20px;
+  margin-bottom: 6px;
+  padding: 8px 12px;
   border: none;
   background: none;
   font-size: 11px;
   font-weight: 600;
+  text-align: center;
   text-transform: uppercase;
   letter-spacing: 0.14em;
   color: var(--text-tertiary);

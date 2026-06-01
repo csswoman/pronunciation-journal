@@ -30,7 +30,7 @@ export function ExerciseRenderer({ exercise, onSubmit, focusUi = false }: Props)
   const { slug, payload, soundId } = exercise
 
   return (
-    <div className={focusUi ? undefined : 'flex flex-col gap-4'}>
+    <div className={focusUi ? 'phoneme-focus__session' : 'flex flex-col gap-4'}>
       {renderInner()}
       <button
         type="button"
