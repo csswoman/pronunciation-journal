@@ -1,0 +1,122 @@
+{
+  "meta": {
+    "eyebrow": "B1 · Adjetivos y preguntas indirectas",
+    "title": "Adjetivos y",
+    "titleEmphasis": "preguntas indirectas"
+  },
+  "cards": [
+    {
+      "id": "ai-edinging",
+      "tag": "-ed / -ing",
+      "title": "bored vs. boring",
+      "lede": "Dos adjetivos del mismo verbo. -ed describe cómo te sientes; -ing describe la causa.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "-ed (sentimiento)",
+              "rule": "cómo me siento",
+              "examples": ["I'm bored.", "She's interested."]
+            },
+            {
+              "label": "-ing (causa)",
+              "rule": "qué lo provoca",
+              "examples": ["The film is boring.", "It's interesting."]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Cuidado:",
+        "body": "I'm boring significa \"soy aburrido\"; I'm bored, \"estoy aburrido\". ¡Gran diferencia!"
+      }
+    },
+    {
+      "id": "ai-prepositions",
+      "tag": "Preposición",
+      "title": "Adjetivo + preposición",
+      "lede": "Muchos adjetivos van con una preposición fija que conviene memorizar como bloque.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "+ of", "value": "afraid of · proud of · tired of", "highlights": ["of"] },
+            { "key": "+ at", "value": "good at · bad at · surprised at", "highlights": ["at"] },
+            { "key": "+ about", "value": "worried about · excited about", "highlights": ["about"] },
+            { "key": "+ in", "value": "interested in", "highlights": ["in"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ai-too-enough",
+      "tag": "Grado",
+      "title": "too y enough",
+      "lede": "too = demasiado (problema); enough = suficiente. Su posición cambia según la palabra.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "too + adj", "value": "too expensive · too hot", "highlights": ["too"] },
+            { "key": "adj + enough", "value": "big enough · old enough", "highlights": ["enough"] },
+            { "key": "enough + noun", "value": "enough money · enough time", "highlights": ["enough"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ai-indirect",
+      "tag": "Indirectas",
+      "title": "Preguntas indirectas",
+      "lede": "Preguntas más educadas. Cambia el orden: vuelve a sujeto + verbo, sin do/does.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "Could you tell me where is the station?" },
+            { "variant": "good", "text": "Could you tell me where the station is?", "note": "orden normal" },
+            { "variant": "bad", "text": "Do you know what time does it start?" },
+            { "variant": "good", "text": "Do you know what time it starts?", "note": "sin does" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Regla:",
+        "body": "tras la introducción, la pregunta vuelve a ser afirmativa: sujeto + verbo, sin do/does/did."
+      }
+    },
+    {
+      "id": "ai-ifwhether",
+      "tag": "if / whether",
+      "title": "Preguntas sí/no indirectas",
+      "lede": "Cuando la pregunta original es de sí/no, la indirecta usa if o whether.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Directa", "value": "Is it open?", "highlights": ["Is it open?"] },
+            { "key": "Indirecta", "value": "Do you know if it's open?", "highlights": ["if it's open"] },
+            { "key": "whether", "value": "I wonder whether it's open.", "highlights": ["whether"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ai-starters",
+      "tag": "Introducciones",
+      "title": "Fórmulas para empezar",
+      "lede": "Las frases que introducen una pregunta indirecta y la hacen sonar educada.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Could you tell me", "value": "...where the exit is?", "highlights": ["Could you tell me"] },
+            { "key": "Do you know", "value": "...when it opens?", "highlights": ["Do you know"] },
+            { "key": "I was wondering", "value": "...if you could help.", "highlights": ["I was wondering"] }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,122 @@
+{
+  "meta": {
+    "eyebrow": "B2 · Hábitos y aproximaciones",
+    "title": "Hábitos y",
+    "titleEmphasis": "aproximaciones"
+  },
+  "cards": [
+    {
+      "id": "ha-usedto",
+      "tag": "Pasado",
+      "title": "used to",
+      "titleItalic": ["used to"],
+      "lede": "Para hábitos del pasado que ya no ocurren. Va con verbo base.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Afirmativo", "value": "I used to smoke.", "highlights": ["used to"] },
+            { "key": "Negativo", "value": "I didn't use to like it.", "highlights": ["didn't use to"] },
+            { "key": "Pregunta", "value": "Did you use to live here?", "highlights": ["Did you use to"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Ojo:",
+        "body": "en negativo y pregunta se pierde la -d: didn't use to, did you use to."
+      }
+    },
+    {
+      "id": "ha-wouldused",
+      "tag": "Contraste",
+      "title": "used to vs. would",
+      "lede": "would también narra hábitos pasados, pero solo de acciones, no de estados.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "used to",
+              "rule": "acciones Y estados",
+              "examples": ["I used to live there.", "I used to play tennis."]
+            },
+            {
+              "label": "would",
+              "rule": "solo acciones repetidas",
+              "examples": ["Every summer we would travel.", "He'd always call on Sundays."]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Cuidado:",
+        "body": "no uses would con estados: \"I would live there\" no significa hábito pasado."
+      }
+    },
+    {
+      "id": "ha-getusedto",
+      "tag": "Acostumbrarse",
+      "title": "be / get used to + -ing",
+      "lede": "Distinto de used to: aquí used to significa 'acostumbrado a' y va con -ing.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "be used to", "value": "I'm used to working late. (ya estoy)", "highlights": ["used to working"] },
+            { "key": "get used to", "value": "I'm getting used to it. (proceso)", "highlights": ["getting used to"] },
+            { "key": "Contraste", "value": "used to do (pasado) ≠ used to doing (acostumbrado)" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ha-present-habits",
+      "tag": "Hábitos presentes",
+      "title": "always + -ing",
+      "lede": "El presente continuo con always expresa hábitos molestos o exagerados.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Queja", "value": "He's always complaining!", "highlights": ["always complaining"] },
+            { "key": "Tendencia", "value": "tend to · be inclined to", "highlights": ["tend to"] },
+            { "key": "Frecuencia alta", "value": "more often than not", "highlights": ["more often than not"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ha-approx",
+      "tag": "Aproximar",
+      "title": "Cantidades aproximadas",
+      "lede": "Vocabulario para dar cifras y cantidades sin ser exacto.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Cerca de", "value": "roughly · approximately · around", "highlights": ["roughly"] },
+            { "key": "Más o menos", "value": "more or less · give or take", "highlights": ["give or take"] },
+            { "key": "Límites", "value": "up to · at least · no more than", "highlights": ["up to"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ha-vague",
+      "tag": "Lenguaje vago",
+      "title": "Expresiones imprecisas",
+      "lede": "El habla coloquial usa muletillas vagas cuando no se quiere ser específico.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "good", "text": "stuff like that / and so on", "note": "etcétera" },
+            { "variant": "good", "text": "or something / or so", "note": "aproximar" },
+            { "variant": "good", "text": "a couple of / a bunch of", "note": "cantidad vaga" },
+            { "variant": "good", "text": "kind of / sort of", "note": "más o menos" }
+          ]
+        }
+      ]
+    }
+  ]
+}

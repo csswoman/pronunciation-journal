@@ -1,0 +1,121 @@
+{
+  "meta": {
+    "eyebrow": "A1 · Escritura básica",
+    "title": "Escritura",
+    "titleEmphasis": "básica"
+  },
+  "cards": [
+    {
+      "id": "eb-capitals",
+      "tag": "Mayúsculas",
+      "title": "Cuándo usar mayúscula",
+      "lede": "El inglés usa más mayúsculas que el español. Hay reglas fijas que conviene memorizar.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Inicio de frase", "value": "The dog is big.", "highlights": ["The"] },
+            { "key": "El pronombre I", "value": "siempre con mayúscula · I am here.", "highlights": ["I"] },
+            { "key": "Nombres propios", "value": "Maria, London, Monday, July", "highlights": ["Maria", "London"] },
+            { "key": "Idiomas/países", "value": "English, Spanish, Mexican", "highlights": ["English"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Ojo:",
+        "body": "los días, meses, idiomas y nacionalidades van en mayúscula, aunque no inicien la frase."
+      }
+    },
+    {
+      "id": "eb-punctuation",
+      "tag": "Puntuación",
+      "title": "Punto, coma y signos",
+      "lede": "El inglés no usa los signos de apertura ¿ ¡. Solo se cierra al final.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Punto", "value": "She works here.", "highlights": ["."] },
+            { "key": "Pregunta", "value": "Where are you? (sin ¿)", "highlights": ["?"] },
+            { "key": "Exclamación", "value": "Be careful! (sin ¡)", "highlights": ["!"] },
+            { "key": "Apóstrofo", "value": "I'm · don't · Ana's car", "highlights": ["'"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "eb-word-order",
+      "tag": "Orden",
+      "title": "Sujeto + verbo + objeto",
+      "lede": "El inglés tiene un orden fijo: SVO. A diferencia del español, el sujeto casi nunca se omite.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "Is a teacher.", "note": "falta el sujeto" },
+            { "variant": "good", "text": "She is a teacher.", "note": "sujeto + verbo + objeto" },
+            { "variant": "bad", "text": "I like very much pizza." },
+            { "variant": "good", "text": "I like pizza very much.", "note": "objeto antes del modificador" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Recuerda:",
+        "body": "en inglés siempre necesitas un sujeto, aunque sea It: It's raining."
+      }
+    },
+    {
+      "id": "eb-articles",
+      "tag": "Artículos",
+      "title": "a, an, the",
+      "lede": "a/an para algo no específico; the para algo concreto que ambos conocen.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "a + consonante", "value": "a book · a car", "highlights": ["a"] },
+            { "key": "an + vocal", "value": "an apple · an hour", "highlights": ["an"] },
+            { "key": "the", "value": "the sun · the book I bought", "highlights": ["the"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Ojo:",
+        "body": "an depende del sonido, no de la letra: an hour (la h es muda), a university (suena \"yu\")."
+      }
+    },
+    {
+      "id": "eb-sentence-types",
+      "tag": "Tipos de frase",
+      "title": "Afirmar, negar, preguntar",
+      "lede": "Tres formas básicas. En presente simple, negativas y preguntas usan do/does o is/are.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Afirmativa", "value": "She likes tea.", "highlights": ["likes"] },
+            { "key": "Negativa", "value": "She doesn't like tea.", "highlights": ["doesn't"] },
+            { "key": "Pregunta", "value": "Does she like tea?", "highlights": ["Does"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "eb-email",
+      "tag": "Mensaje corto",
+      "title": "Escribir un mensaje simple",
+      "lede": "Un mensaje básico tiene saludo, cuerpo y despedida. Estructura clara desde el principio.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Saludo", "value": "Hi Tom, · Hello,", "highlights": ["Hi Tom,"] },
+            { "key": "Cuerpo", "value": "una idea por frase, frases cortas" },
+            { "key": "Despedida", "value": "Thanks, · Best, · See you soon", "highlights": ["Thanks,"] },
+            { "key": "Firma", "value": "tu nombre en la última línea" }
+          ]
+        }
+      ]
+    }
+  ]
+}

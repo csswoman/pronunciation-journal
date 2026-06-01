@@ -1,0 +1,119 @@
+{
+  "meta": {
+    "eyebrow": "A2 · Práctico: compras",
+    "title": "De",
+    "titleEmphasis": "compras"
+  },
+  "cards": [
+    {
+      "id": "sh-shops",
+      "tag": "Tiendas",
+      "title": "Tipos de tienda",
+      "lede": "Dónde se compra cada cosa. Útil para pedir y entender direcciones.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Comida", "value": "supermarket, bakery, market" },
+            { "key": "Ropa", "value": "clothes shop, shoe store" },
+            { "key": "Otros", "value": "pharmacy, bookstore, mall" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sh-asking",
+      "tag": "Preguntar",
+      "title": "Pedir ayuda en la tienda",
+      "lede": "Frases para encontrar lo que buscas y preguntar por tallas o colores.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Buscar", "value": "I'm looking for a jacket.", "highlights": ["looking for"] },
+            { "key": "Talla", "value": "Do you have this in a medium?", "highlights": ["in a medium"] },
+            { "key": "Probar", "value": "Can I try it on?", "highlights": ["try it on"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Útil:",
+        "body": "Just looking, thanks responde al clásico Can I help you? si solo estás mirando."
+      }
+    },
+    {
+      "id": "sh-price",
+      "tag": "Precios",
+      "title": "How much...?",
+      "titleItalic": ["How much"],
+      "lede": "Preguntar precios y entender ofertas. Recuerda much con dinero (incontable).",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Precio", "value": "How much is this? · How much are these?", "highlights": ["How much"] },
+            { "key": "Caro/barato", "value": "It's expensive. · It's cheap.", "highlights": ["expensive", "cheap"] },
+            { "key": "Oferta", "value": "It's on sale. · 20% off", "highlights": ["on sale"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sh-paying",
+      "tag": "Pagar",
+      "title": "En la caja",
+      "lede": "Vocabulario y frases para el momento de pagar.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Método", "value": "Cash or card?", "highlights": ["Cash or card?"] },
+            { "key": "Pagar con", "value": "I'll pay by card.", "highlights": ["pay by card"] },
+            { "key": "Cambio", "value": "Here's your change.", "highlights": ["change"] },
+            { "key": "Recibo", "value": "Do you want a receipt?", "highlights": ["receipt"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sh-this-these",
+      "tag": "Demostrativos",
+      "title": "this, that, these, those",
+      "lede": "Para señalar productos: cerca o lejos, uno o varios. Esenciales al comprar.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Cerca",
+              "rule": "this / these",
+              "examples": ["this shirt (sing.)", "these shoes (plur.)"]
+            },
+            {
+              "label": "Lejos",
+              "rule": "that / those",
+              "examples": ["that bag (sing.)", "those jeans (plur.)"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sh-problems",
+      "tag": "Devolver",
+      "title": "Cambios y devoluciones",
+      "lede": "Si algo no sirve, así pides cambiarlo o que te devuelvan el dinero.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "good", "text": "I'd like to return this.", "note": "devolver" },
+            { "variant": "good", "text": "Can I get a refund?", "note": "pedir reembolso" },
+            { "variant": "good", "text": "It doesn't fit.", "note": "no me queda" },
+            { "variant": "good", "text": "Do you have the receipt?", "note": "te lo pedirán" }
+          ]
+        }
+      ]
+    }
+  ]
+}

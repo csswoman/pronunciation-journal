@@ -1,8 +1,8 @@
 export type CefrLevelId = "a1" | "a2" | "b1" | "b2" | "c1";
 
-export type ElectiveTrackId = "purposes" | "business";
+export type ElectiveTrackId = "purposes" | "business" | "connected-speech";
 
-export type ElectiveSpineIcon = "laptop" | "briefcase";
+export type ElectiveSpineIcon = "laptop" | "briefcase" | "mic";
 
 export type CoursePathTrackId = CefrLevelId | ElectiveTrackId;
 

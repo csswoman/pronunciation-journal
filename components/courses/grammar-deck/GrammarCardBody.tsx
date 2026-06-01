@@ -4,6 +4,7 @@ import GrammarVerbTableBlock from "./blocks/GrammarVerbTableBlock";
 import GrammarContrastBlock from "./blocks/GrammarContrastBlock";
 import GrammarPairsBlock from "./blocks/GrammarPairsBlock";
 import GrammarRulesBlock from "./blocks/GrammarRulesBlock";
+import GrammarPronunciationBlock from "./blocks/GrammarPronunciationBlock";
 
 export default function GrammarCardBody({ blocks }: { blocks: GrammarCardBlock[] }) {
   return (
@@ -20,6 +21,16 @@ export default function GrammarCardBody({ blocks }: { blocks: GrammarCardBlock[]
             return <GrammarPairsBlock key={i} lines={block.lines} />;
           case "rules":
             return <GrammarRulesBlock key={i} rows={block.rows} />;
+          case "pronunciation":
+            return (
+              <GrammarPronunciationBlock
+                key={i}
+                sound={block.sound}
+                focus={block.focus}
+                examples={block.examples}
+                note={block.note}
+              />
+            );
           default:
             return null;
         }

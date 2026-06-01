@@ -1,0 +1,120 @@
+{
+  "meta": {
+    "eyebrow": "B2 · Pasado perfecto",
+    "title": "Pasado perfecto y",
+    "titleEmphasis": "adverbios"
+  },
+  "cards": [
+    {
+      "id": "pf-form",
+      "tag": "Pasado perfecto",
+      "title": "had + participio",
+      "lede": "El pasado del pasado: una acción que ocurrió antes de otra acción pasada.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Fórmula", "value": "had + participio (igual para todos)", "highlights": ["had + participio"] },
+            { "key": "Ejemplo", "value": "When I arrived, she had left.", "highlights": ["had left"], "hint": "ella se fue antes" },
+            { "key": "Contracción", "value": "I'd, she'd, they'd had", "highlights": ["I'd", "she'd"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Idea clave:",
+        "body": "lo usas para dejar claro qué pasó primero cuando hay dos acciones pasadas."
+      }
+    },
+    {
+      "id": "pf-sequence",
+      "tag": "Orden temporal",
+      "title": "¿Qué pasó antes?",
+      "lede": "El pasado perfecto marca la acción más antigua; el pasado simple, la posterior.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Antes (had + part.)",
+              "rule": "lo más lejano",
+              "examples": ["The train had left", "I had already eaten"]
+            },
+            {
+              "label": "Después (past simple)",
+              "rule": "lo más reciente",
+              "examples": ["when we got there.", "when she called."]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pf-narrative",
+      "tag": "Narrar",
+      "title": "El pasado perfecto en historias",
+      "lede": "Sirve para dar un salto atrás (flashback) dentro de un relato en pasado.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Acción base", "value": "She felt nervous.", "highlights": ["felt"], "hint": "pasado simple" },
+            { "key": "Flashback", "value": "She had never flown before.", "highlights": ["had never flown"], "hint": "explica por qué" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pf-vs-simple",
+      "tag": "Contraste",
+      "title": "Cuándo NO usarlo",
+      "lede": "Si las acciones van en orden y está claro, basta el pasado simple. No abuses.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "I had woken up, had showered and had left." },
+            { "variant": "good", "text": "I woke up, showered and left.", "note": "orden claro → pasado simple" },
+            { "variant": "good", "text": "I realised I had forgotten my keys.", "note": "aquí sí: una es anterior" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pf-adverbs",
+      "tag": "Adverbios",
+      "title": "Frases adverbiales de tiempo",
+      "lede": "Acompañan a los tiempos perfectos y sitúan los hechos con precisión.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "by the time", "value": "para cuando · By the time we arrived, it had ended.", "highlights": ["by the time"] },
+            { "key": "already / just", "value": "ya / recién · had already gone", "highlights": ["already"] },
+            { "key": "no sooner... than", "value": "apenas... cuando · No sooner had I sat than...", "highlights": ["No sooner"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pf-position",
+      "tag": "Posición",
+      "title": "Dónde van los adverbios",
+      "lede": "La colocación del adverbio sigue reglas. Compara las opciones correctas.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "She had finished already her work." },
+            { "variant": "good", "text": "She had already finished her work.", "note": "el adverbio va entre had y el participio" },
+            { "variant": "bad", "text": "By the time arrived we, it was late." },
+            { "variant": "good", "text": "By the time we arrived, it was late.", "note": "sujeto + verbo tras la frase adverbial" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Regla:",
+        "body": "already, just, never van entre el auxiliar (had) y el participio."
+      }
+    }
+  ]
+}

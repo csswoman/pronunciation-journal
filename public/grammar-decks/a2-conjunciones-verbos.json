@@ -1,0 +1,117 @@
+{
+  "meta": {
+    "eyebrow": "A2 · Conjunciones y verbos",
+    "title": "Conjunciones y",
+    "titleEmphasis": "verbos"
+  },
+  "cards": [
+    {
+      "id": "cv-and-but",
+      "tag": "Básicas",
+      "title": "and, but, or, so",
+      "lede": "Las conjunciones que unen ideas. Cada una marca una relación distinta.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "and", "value": "suma · tea and coffee", "highlights": ["and"] },
+            { "key": "but", "value": "contraste · cheap but good", "highlights": ["but"] },
+            { "key": "or", "value": "opción · tea or coffee?", "highlights": ["or"] },
+            { "key": "so", "value": "resultado · I was tired, so I slept.", "highlights": ["so"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cv-because",
+      "tag": "Causa",
+      "title": "because y so",
+      "lede": "because da la razón; so da la consecuencia. Miran la misma idea desde lados opuestos.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "good", "text": "I stayed home because it rained.", "note": "razón después" },
+            { "variant": "good", "text": "It rained, so I stayed home.", "note": "resultado después" },
+            { "variant": "bad", "text": "Because it rained, so I stayed home.", "note": "no se usan juntas" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Ojo:",
+        "body": "no uses because y so en la misma oración: elige una de las dos."
+      }
+    },
+    {
+      "id": "cv-time-conj",
+      "tag": "Tiempo",
+      "title": "when, before, after, while",
+      "lede": "Conjunciones que ordenan acciones en el tiempo. Conectan dos cláusulas.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "when", "value": "When I arrived, she left.", "highlights": ["When"] },
+            { "key": "before / after", "value": "Brush your teeth before bed.", "highlights": ["before"] },
+            { "key": "while", "value": "I read while I wait.", "highlights": ["while"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cv-gerund-inf",
+      "tag": "Verbo + verbo",
+      "title": "¿-ing o to?",
+      "lede": "Cuando juntas dos verbos, el segundo va en -ing o en to según el primero.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "want / need + to", "value": "I want to go. · I need to rest.", "highlights": ["to go"] },
+            { "key": "enjoy / finish + -ing", "value": "I enjoy reading.", "highlights": ["reading"] },
+            { "key": "like + ambos", "value": "I like to cook / cooking.", "highlights": ["to cook", "cooking"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Memoriza:",
+        "body": "want, need, decide, hope → to. enjoy, finish, avoid, mind → -ing."
+      }
+    },
+    {
+      "id": "cv-phrasal",
+      "tag": "Phrasal verbs",
+      "title": "Verbos con partícula",
+      "lede": "Verbo + preposición que cambia el significado. Muy comunes en el habla diaria.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "get up", "value": "levantarse · I get up at 7.", "highlights": ["get up"] },
+            { "key": "turn on / off", "value": "encender / apagar", "highlights": ["turn on"] },
+            { "key": "look for", "value": "buscar · I'm looking for my keys.", "highlights": ["look for"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cv-irregular",
+      "tag": "Irregulares",
+      "title": "Verbos irregulares clave",
+      "lede": "Algunos verbos no forman el pasado con -ed. Hay que memorizarlos.",
+      "blocks": [
+        {
+          "type": "verb-table",
+          "headers": ["Base", "Pasado", "Participio", "Español"],
+          "rows": [
+            ["go", "went", "gone", "ir"],
+            ["have", "had", "had", "tener"],
+            ["make", "made", "made", "hacer"],
+            ["take", "took", "taken", "tomar"],
+            ["see", "saw", "seen", "ver"]
+          ]
+        }
+      ]
+    }
+  ]
+}

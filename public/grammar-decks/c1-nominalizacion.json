@@ -1,0 +1,197 @@
+{
+  "meta": {
+    "eyebrow": "C1 · Estilo",
+    "title": "Nominalización",
+    "goal": "Ya transformas verbos y adjetivos en sustantivos para dar distancia y formalidad a tu escritura y discurso."
+  },
+  "quiz": [
+    {
+      "q": "¿Cuál es la versión nominalizada de \"They failed to meet the deadline\"?",
+      "options": [
+        "They didn't meet the deadline",
+        "The failure to meet the deadline had consequences",
+        "Meeting the deadline was a failure",
+        "They have failed the deadline"
+      ],
+      "answer": 1,
+      "explain": "\"The failure to meet the deadline\" convierte el verbo \"failed\" en el sustantivo \"failure\", dando distancia objetiva propia del registro formal."
+    },
+    {
+      "q": "¿Qué patrón forma el sustantivo de \"develop\"?",
+      "options": ["-tion", "-ance", "-ment", "-ity"],
+      "answer": 2,
+      "explain": "develop → development. El sufijo -ment es muy común para verbos de proceso: achieve→achievement, improve→improvement, manage→management."
+    },
+    {
+      "q": "¿Cuándo NO conviene nominalizar?",
+      "options": [
+        "En artículos académicos",
+        "En informes empresariales",
+        "En conversación directa o emails informales",
+        "En presentaciones formales"
+      ],
+      "answer": 2,
+      "explain": "La nominalización en contextos informales suena fría, distante y burocrática. En conversación y emails directos, los verbos activos son más claros y naturales."
+    }
+  ],
+  "cards": [
+    {
+      "id": "nom-what",
+      "tag": "Concepto",
+      "title": "¿Qué es la nominalización y cuándo usarla?",
+      "lede": "Nominalizar es convertir un verbo o adjetivo en sustantivo. Es la marca del registro académico y profesional formal en inglés.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Verbo activo (informal)",
+              "rule": "Directo, claro, conversacional",
+              "examples": [
+                "We decided to change the plan.",
+                "They failed to deliver on time.",
+                "The team analyzed the data.",
+                "She suggested a new approach."
+              ]
+            },
+            {
+              "label": "Nominalizado (formal)",
+              "rule": "Distante, objetivo, académico/profesional",
+              "examples": [
+                "The decision to change the plan was made.",
+                "The failure to deliver on time had consequences.",
+                "An analysis of the data was conducted.",
+                "A suggestion for a new approach was put forward."
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Cuándo usarla:",
+        "body": "informes, artículos académicos, presentaciones formales, emails institucionales. Evítala en conversación y emails directos — suena fría."
+      }
+    },
+    {
+      "id": "nom-tion-ment",
+      "tag": "Sufijos",
+      "title": "Patrones -tion / -sion y -ment",
+      "lede": "Estos dos sufijos cubren la mayoría de las nominalizaciones del inglés cotidiano y profesional.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "decide → decision", "value": "The decision was unanimous.", "highlights": ["decision"] },
+            { "key": "conclude → conclusion", "value": "The conclusion of the report...", "highlights": ["conclusion"] },
+            { "key": "produce → production", "value": "Production costs increased.", "highlights": ["production"] },
+            { "key": "introduce → introduction", "value": "The introduction of new rules...", "highlights": ["introduction"] },
+            { "key": "develop → development", "value": "Career development is key.", "highlights": ["development"] },
+            { "key": "achieve → achievement", "value": "A significant achievement.", "highlights": ["achievement"] },
+            { "key": "manage → management", "value": "Risk management strategies.", "highlights": ["management"] },
+            { "key": "improve → improvement", "value": "Continuous improvement.", "highlights": ["improvement"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "nom-al-ance-ity",
+      "tag": "Sufijos",
+      "title": "Patrones -al, -ance / -ence, -ity / -ness",
+      "lede": "Estos sufijos aparecen sobre todo en vocabulario académico y técnico. Reconocerlos multiplica tu vocabulario.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "arrive → arrival", "value": "Upon arrival, please check in.", "highlights": ["arrival"], "hint": "-al" },
+            { "key": "propose → proposal", "value": "The proposal was rejected.", "highlights": ["proposal"], "hint": "-al" },
+            { "key": "perform → performance", "value": "Performance review.", "highlights": ["performance"], "hint": "-ance" },
+            { "key": "differ → difference", "value": "A key difference is...", "highlights": ["difference"], "hint": "-ence" },
+            { "key": "formal → formality", "value": "The formality of the occasion.", "highlights": ["formality"], "hint": "-ity" },
+            { "key": "complex → complexity", "value": "The complexity of the issue.", "highlights": ["complexity"], "hint": "-ity" },
+            { "key": "aware → awareness", "value": "Raising awareness.", "highlights": ["awareness"], "hint": "-ness" },
+            { "key": "effective → effectiveness", "value": "The effectiveness of the policy.", "highlights": ["effectiveness"], "hint": "-ness" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "nom-adverb-chain",
+      "tag": "Cadenas",
+      "title": "Cadenas adjetivo → sustantivo en escritura avanzada",
+      "lede": "El inglés académico encadena transformaciones: adjetivo → sustantivo → frase nominal. Dominar esto marca nivel C1–C2.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "accurate → accuracy", "value": "The accuracy of the results was confirmed.", "highlights": ["accuracy"] },
+            { "key": "clear → clarity", "value": "Clarity of expression is essential.", "highlights": ["clarity"] },
+            { "key": "efficient → efficiency", "value": "Operational efficiency improved.", "highlights": ["efficiency"] },
+            { "key": "relevant → relevance", "value": "The relevance of this finding is...", "highlights": ["relevance"] },
+            { "key": "significant → significance", "value": "The significance of this shift...", "highlights": ["significance"] },
+            { "key": "flexible → flexibility", "value": "Flexibility in working hours.", "highlights": ["flexibility"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Truco de lectura:",
+        "body": "cuando veas una palabra terminada en -ity, -ness, -ance o -ence en un texto técnico, busca el adjetivo base — te ayuda a entender el significado por raíz."
+      }
+    },
+    {
+      "id": "nom-before-after",
+      "tag": "Práctica",
+      "title": "Antes y después: nominalizar en contexto",
+      "lede": "Ver la transformación completa en contextos reales es la forma más efectiva de asimilar el patrón.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "We analyzed how customers behave.", "note": "informal / conversacional" },
+            { "variant": "good", "text": "An analysis of customer behaviour was conducted.", "note": "formal / académico" },
+            { "variant": "bad", "text": "The government decided to increase taxes.", "note": "directo" },
+            { "variant": "good", "text": "The government's decision to increase taxes...", "note": "nominalizado como sujeto de frase" },
+            { "variant": "bad", "text": "We found that the system failed.", "note": "directo" },
+            { "variant": "good", "text": "The findings indicated a system failure.", "note": "doble nominalización" },
+            { "variant": "bad", "text": "They suggested improving the process.", "note": "verbo activo" },
+            { "variant": "good", "text": "A suggestion for process improvement was put forward.", "note": "registro institucional" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "nom-when-not",
+      "tag": "Límites",
+      "title": "Cuándo NO nominalizar",
+      "lede": "El abuso de nominalizaciones crea lenguaje burocrático opaco. Saber cuándo parar es la marca del escritor avanzado.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Nominalización excesiva",
+              "rule": "Opaco, pasivo, difícil de leer",
+              "examples": [
+                "The implementation of the utilization of the new framework was achieved.",
+                "A determination was made regarding the facilitation of...",
+                "The finalization of the operationalization of the project..."
+              ]
+            },
+            {
+              "label": "Balance correcto",
+              "rule": "Claro, preciso, profesional",
+              "examples": [
+                "The new framework was successfully implemented.",
+                "We decided to facilitate...",
+                "The project was completed on time."
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Regla de oro:",
+        "body": "si tienes dos nominalizaciones seguidas sin verbo activo visible, simplifica. El lector se pierde antes de llegar al punto."
+      }
+    }
+  ]
+}

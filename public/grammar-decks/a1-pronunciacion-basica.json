@@ -2,8 +2,30 @@
   "meta": {
     "eyebrow": "A1 · Sound Lab",
     "title": "Pronunciación",
-    "titleEmphasis": "básica"
+    "titleEmphasis": "básica",
+    "goal": "Ya puedes distinguir los sonidos del inglés que no existen en español y marcar las consonantes finales."
   },
+  "sounds": ["ɪ", "iː", "θ", "ð", "v", "ə"],
+  "quiz": [
+    {
+      "q": "¿Cómo suena la 'th' en 'this' y 'the'?",
+      "options": ["/θ/ sorda (como en 'think')", "/ð/ sonora (vibra la lengua)", "/s/ como en español", "/t/ como en 'time'"],
+      "answer": 1,
+      "explain": "En 'this' y 'the' la 'th' es /ð/: pon la lengua entre los dientes y haz vibrar las cuerdas vocales."
+    },
+    {
+      "q": "¿Qué sonido es la schwa /ə/?",
+      "options": ["La 'a' fuerte de 'hablo'", "La 'e' de 'pero'", "Un sonido neutro, breve y sin acento ('uh')", "La 'o' de 'hora'"],
+      "answer": 2,
+      "explain": "La schwa /ə/ es el sonido más frecuente del inglés: neutro, brevísimo, sin tensión. Aparece en sílabas sin acento."
+    },
+    {
+      "q": "¿En qué se diferencian 'ship' y 'sheep'?",
+      "options": ["Nada, suenan igual", "/ɪ/ es breve y relajada; /iː/ es larga y tensa", "La 'h' cambia el sonido", "Solo el número de letras"],
+      "answer": 1,
+      "explain": "ship = /ɪ/ (breve, relajada); sheep = /iː/ (larga, tensa). Confundirlas cambia el significado completamente."
+    }
+  ],
   "cards": [
     {
       "id": "pr-vowels",
@@ -17,6 +39,17 @@
             { "key": "/ɪ/ corta", "value": "ship (barco) · sit · this", "highlights": ["ship"], "hint": "relajada y breve" },
             { "key": "/iː/ larga", "value": "sheep (oveja) · seat · these", "highlights": ["sheep"], "hint": "tensa y estirada" }
           ]
+        },
+        {
+          "type": "pronunciation",
+          "sound": "/ɪ/ vs /iː/",
+          "focus": ["ɪ", "iː"],
+          "examples": [
+            { "text": "ship", "ipa": "/ʃɪp/", "es": "barco — vocal corta" },
+            { "text": "sheep", "ipa": "/ʃiːp/", "es": "oveja — vocal larga" },
+            { "text": "It's a big ship.", "es": "escucha la /ɪ/ relajada" }
+          ],
+          "note": "Pulsa ▶ y repite. Estira la /iː/ el doble que la /ɪ/."
         }
       ],
       "tip": {
@@ -38,6 +71,16 @@
             { "variant": "good", "text": "think /θɪŋk/", "note": "lengua entre los dientes" },
             { "variant": "bad", "text": "dis /dɪs/" },
             { "variant": "good", "text": "this /ðɪs/", "note": "th suave, con vibración" }
+          ]
+        },
+        {
+          "type": "pronunciation",
+          "sound": "/θ/ y /ð/",
+          "focus": ["θ", "ð"],
+          "examples": [
+            { "text": "think", "ipa": "/θɪŋk/", "es": "th sorda — solo aire" },
+            { "text": "this", "ipa": "/ðɪs/", "es": "th sonora — con voz" },
+            { "text": "I think this is the one.", "es": "ambas th en una frase" }
           ]
         }
       ],

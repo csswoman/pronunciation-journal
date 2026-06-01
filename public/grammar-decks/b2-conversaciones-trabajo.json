@@ -1,0 +1,124 @@
+{
+  "meta": {
+    "eyebrow": "B2 · Inglés en el trabajo",
+    "title": "Conversaciones de",
+    "titleEmphasis": "trabajo"
+  },
+  "cards": [
+    {
+      "id": "wk-meetings",
+      "tag": "Reuniones",
+      "title": "Participar en una reunión",
+      "lede": "Frases hechas para intervenir sin interrumpir y aportar de forma clara.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Can I add...?", "value": "¿puedo añadir...? · pedir turno", "highlights": ["Can I add"] },
+            { "key": "Going back to...", "value": "volviendo a... · retomar un punto", "highlights": ["Going back to"] },
+            { "key": "Let's move on", "value": "sigamos · pasar de tema", "highlights": ["Let's move on"] },
+            { "key": "To sum up,...", "value": "en resumen... · cerrar", "highlights": ["To sum up"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wk-email",
+      "tag": "Correos",
+      "title": "Abrir y cerrar un email",
+      "lede": "El registro del correo marca tu profesionalidad. Usa fórmulas estándar.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Inicio",
+              "rule": "según la confianza",
+              "examples": ["Dear Mr Lee, (formal)", "Hi Sarah, (cercano)", "I hope you're well."]
+            },
+            {
+              "label": "Cierre",
+              "rule": "despedida",
+              "examples": ["Best regards, (formal)", "Best, (neutro)", "Looking forward to hearing from you."]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wk-phone",
+      "tag": "Teléfono",
+      "title": "Llamadas profesionales",
+      "lede": "Hablar por teléfono es más difícil: no ves a la persona. Apóyate en frases fijas.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Speaking.", "value": "soy yo (al responder por ti)", "highlights": ["Speaking."] },
+            { "key": "Could you hold on?", "value": "¿puede esperar?", "highlights": ["hold on"] },
+            { "key": "I'm calling about...", "value": "llamo por... · motivo", "highlights": ["I'm calling about"] },
+            { "key": "Can you repeat that?", "value": "¿puede repetir?", "highlights": ["repeat that"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wk-agree",
+      "tag": "Negociar",
+      "title": "Acuerdo y desacuerdo profesional",
+      "lede": "Discrepar en el trabajo sin sonar agresivo es una habilidad clave.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "I see your point, but...", "value": "entiendo tu punto, pero...", "highlights": ["I see your point"] },
+            { "key": "That's a fair point", "value": "es un buen argumento", "highlights": ["fair point"] },
+            { "key": "I'd suggest...", "value": "yo sugeriría...", "highlights": ["I'd suggest"] },
+            { "key": "Shall we compromise?", "value": "¿llegamos a un punto medio?", "highlights": ["compromise"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Tono:",
+        "body": "empieza reconociendo al otro (I see your point) antes de discrepar. Suaviza el choque."
+      }
+    },
+    {
+      "id": "wk-requests",
+      "tag": "Peticiones",
+      "title": "Pedir cosas con tacto",
+      "lede": "Cuanto más larga la pregunta, más educada suena. Útil con jefes y clientes.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "Send me the report." },
+            { "variant": "good", "text": "Could you send me the report when you have a moment?", "note": "petición educada" },
+            { "variant": "bad", "text": "I need this today." },
+            { "variant": "good", "text": "Would it be possible to have this today?", "note": "menos exigente" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wk-smalltalk",
+      "tag": "Small talk",
+      "title": "La charla previa",
+      "lede": "Antes de ir al grano se rompe el hielo. En la cultura anglo es casi obligatorio.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "How's it going?", "value": "¿qué tal todo? · saludo informal", "highlights": ["How's it going?"] },
+            { "key": "How was your weekend?", "value": "¿qué tal el finde?", "highlights": ["How was your weekend?"] },
+            { "key": "Did you have a good trip?", "value": "¿buen viaje? · con visitantes", "highlights": ["good trip"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Cultura:",
+        "body": "saltarte el small talk e ir directo al negocio puede parecer frío o brusco."
+      }
+    }
+  ]
+}

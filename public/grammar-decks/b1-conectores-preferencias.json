@@ -1,0 +1,113 @@
+{
+  "meta": {
+    "eyebrow": "B1 · Conectores y preferencias",
+    "title": "Conectores y",
+    "titleEmphasis": "preferencias"
+  },
+  "cards": [
+    {
+      "id": "cp-contrast",
+      "tag": "Contraste",
+      "title": "however, although, but",
+      "lede": "Tres conectores de contraste con distinta gramática y posición en la frase.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "but", "value": "une dos cláusulas · cheap but slow", "highlights": ["but"] },
+            { "key": "although", "value": "+ cláusula · Although it rained, we went.", "highlights": ["Although"] },
+            { "key": "however", "value": "inicia frase + coma · However, it was late.", "highlights": ["However"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Ojo:",
+        "body": "however va separado por comas; although conecta directamente dos cláusulas."
+      }
+    },
+    {
+      "id": "cp-addition",
+      "tag": "Añadir",
+      "title": "also, besides, in addition",
+      "lede": "Conectores para sumar información. Suben el registro respecto a un simple and.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "also", "value": "en medio · She also speaks French.", "highlights": ["also"] },
+            { "key": "as well / too", "value": "al final · I went too.", "highlights": ["too"] },
+            { "key": "in addition", "value": "inicia frase formal", "highlights": ["in addition"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cp-result",
+      "tag": "Resultado",
+      "title": "so, therefore, as a result",
+      "lede": "Conectores de consecuencia, de lo informal a lo formal.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "so (informal)", "value": "It was late, so we left.", "highlights": ["so"] },
+            { "key": "therefore (formal)", "value": "...; therefore, we left.", "highlights": ["therefore"] },
+            { "key": "as a result", "value": "As a result, sales rose.", "highlights": ["As a result"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cp-prefer",
+      "tag": "Preferencias",
+      "title": "prefer, would prefer, would rather",
+      "lede": "Tres niveles para expresar preferencias, cada uno con su estructura.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "prefer + -ing/noun", "value": "I prefer tea. · I prefer walking.", "highlights": ["prefer"] },
+            { "key": "would prefer + to", "value": "I'd prefer to walk.", "highlights": ["'d prefer to"] },
+            { "key": "would rather + base", "value": "I'd rather walk.", "highlights": ["'d rather walk"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Clave:",
+        "body": "would prefer va con to; would rather va con verbo base, sin to."
+      }
+    },
+    {
+      "id": "cp-comparing-pref",
+      "tag": "Comparar",
+      "title": "Preferir A en lugar de B",
+      "lede": "Cada estructura usa una preposición distinta para comparar las dos opciones.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "prefer A to B", "value": "I prefer coffee to tea.", "highlights": ["to"] },
+            { "key": "would rather A than B", "value": "I'd rather walk than drive.", "highlights": ["than"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cp-purpose",
+      "tag": "Propósito",
+      "title": "to, in order to, so that",
+      "lede": "Conectores para expresar el porqué de una acción, su finalidad.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "good", "text": "I called to confirm.", "note": "to + verbo base" },
+            { "variant": "good", "text": "I left early in order to catch the bus.", "note": "más formal" },
+            { "variant": "good", "text": "I wrote it down so that I wouldn't forget.", "note": "so that + cláusula" },
+            { "variant": "bad", "text": "I called for confirm." }
+          ]
+        }
+      ]
+    }
+  ]
+}

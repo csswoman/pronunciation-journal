@@ -1,0 +1,122 @@
+{
+  "meta": {
+    "eyebrow": "B2 · Vocabulario y expresiones intermedio",
+    "title": "Vocabulario y",
+    "titleEmphasis": "expresiones"
+  },
+  "cards": [
+    {
+      "id": "ve-collocations",
+      "tag": "Colocaciones",
+      "title": "make vs. do",
+      "lede": "Dos verbos que confunden. Se aprenden como bloque con su sustantivo (colocación).",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "make (crear)",
+              "rule": "produces un resultado",
+              "examples": ["make a decision", "make a mistake", "make money"]
+            },
+            {
+              "label": "do (realizar)",
+              "rule": "acción o tarea",
+              "examples": ["do homework", "do the dishes", "do business"]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Aprende:",
+        "body": "memoriza make/do como pareja fija con su sustantivo, no por reglas."
+      }
+    },
+    {
+      "id": "ve-phrasal",
+      "tag": "Phrasal verbs",
+      "title": "Phrasal verbs frecuentes",
+      "lede": "Verbo + partícula que cambia el sentido. Esenciales para sonar natural.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "find out", "value": "averiguar · I found out the truth.", "highlights": ["find out"] },
+            { "key": "give up", "value": "rendirse · Don't give up.", "highlights": ["give up"] },
+            { "key": "put off", "value": "posponer · They put off the meeting.", "highlights": ["put off"] },
+            { "key": "come up with", "value": "idear · come up with a plan", "highlights": ["come up with"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ve-idioms",
+      "tag": "Expresiones",
+      "title": "Idioms del día a día",
+      "lede": "Frases hechas comunes. Su significado no es literal: hay que aprenderlas enteras.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "a piece of cake", "value": "muy fácil", "highlights": ["a piece of cake"] },
+            { "key": "under the weather", "value": "sentirse mal", "highlights": ["under the weather"] },
+            { "key": "hit the books", "value": "ponerse a estudiar", "highlights": ["hit the books"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ve-prefixes",
+      "tag": "Formación",
+      "title": "Prefijos y sufijos",
+      "lede": "Construir palabras nuevas a partir de una raíz multiplica tu vocabulario.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Negar", "value": "un-, im-, dis- · unhappy, impossible", "highlights": ["un-", "im-"] },
+            { "key": "Sustantivos", "value": "-ment, -tion, -ness · movement", "highlights": ["-ment"] },
+            { "key": "Adjetivos", "value": "-ful, -less, -able · useful, useless", "highlights": ["-ful", "-less"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ve-synonyms",
+      "tag": "Sinónimos",
+      "title": "Subir de registro",
+      "lede": "Sustituir palabras básicas por sinónimos más precisos enriquece tu inglés.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "good →", "value": "great, excellent, outstanding" },
+            { "key": "big →", "value": "huge, enormous, massive" },
+            { "key": "very + adj →", "value": "exhausted (very tired), starving (very hungry)", "highlights": ["exhausted", "starving"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Truco:",
+        "body": "en vez de very + adjetivo, usa un adjetivo fuerte: very tired → exhausted."
+      }
+    },
+    {
+      "id": "ve-confusing",
+      "tag": "Confusos",
+      "title": "Pares que se confunden",
+      "lede": "Palabras parecidas con significados distintos. Errores típicos de hispanohablantes.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "good", "text": "lend (prestar) vs. borrow (pedir prestado)", "note": "dirección opuesta" },
+            { "variant": "good", "text": "say (decir algo) vs. tell (decir a alguien)", "note": "tell + persona" },
+            { "variant": "good", "text": "actually = en realidad (no \"actualmente\")", "note": "falso amigo" },
+            { "variant": "bad", "text": "I have 25 years.", "note": "→ I'm 25 years old" }
+          ]
+        }
+      ]
+    }
+  ]
+}

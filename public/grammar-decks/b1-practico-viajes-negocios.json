@@ -1,0 +1,114 @@
+{
+  "meta": {
+    "eyebrow": "B1 · Práctico: viajes de negocios",
+    "title": "Viajes de",
+    "titleEmphasis": "negocios",
+    "goal": "Ya puedes gestionar un viaje de trabajo: reservas, aeropuerto, hotel, reuniones y small talk."
+  },
+  "related": [
+    { "slug": "biz-viajes-negocios", "label": "Biz · Viajes de negocios (profesional)" }
+  ],
+  "cards": [
+    {
+      "id": "bt-booking",
+      "tag": "Reservas",
+      "title": "Organizar el viaje",
+      "lede": "Vocabulario y frases para reservar vuelos, hoteles y transporte de trabajo.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Reservar", "value": "book a flight · make a reservation", "highlights": ["book a flight"] },
+            { "key": "Documentos", "value": "itinerary, booking confirmation" },
+            { "key": "Frase", "value": "I'd like to book a room for two nights.", "highlights": ["I'd like to book"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bt-checkin",
+      "tag": "Aeropuerto",
+      "title": "Facturación y embarque",
+      "lede": "Las frases que usarás en mostradores y controles del aeropuerto.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Equipaje", "value": "Do I check this bag or carry it on?", "highlights": ["check", "carry on"] },
+            { "key": "Asiento", "value": "Could I have a window seat?", "highlights": ["window seat"] },
+            { "key": "Retraso", "value": "The flight is delayed.", "highlights": ["delayed"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bt-hotel",
+      "tag": "Hotel",
+      "title": "En el hotel de trabajo",
+      "lede": "Cómo registrarte y pedir servicios útiles en un viaje de negocios.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Registro", "value": "I have a reservation under...", "highlights": ["reservation under"] },
+            { "key": "Servicios", "value": "Is there a business center / Wi-Fi?", "highlights": ["business center"] },
+            { "key": "Factura", "value": "Could I get an invoice/receipt?", "highlights": ["invoice"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Útil:",
+        "body": "pide siempre el invoice (factura) para reembolsar gastos en tu empresa."
+      }
+    },
+    {
+      "id": "bt-meetings",
+      "tag": "Reuniones",
+      "title": "Quedar y reunirse",
+      "lede": "Cómo proponer una reunión y confirmar hora y lugar con un cliente o colega.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Proponer", "value": "Shall we meet at 10?", "highlights": ["Shall we meet"] },
+            { "key": "Confirmar", "value": "That works for me.", "highlights": ["That works for me"] },
+            { "key": "Posponer", "value": "Could we reschedule?", "highlights": ["reschedule"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bt-smalltalk",
+      "tag": "Small talk",
+      "title": "Conversación de cortesía",
+      "lede": "El small talk abre puertas en los negocios. Temas seguros: viaje, clima, ciudad.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "good", "text": "How was your flight?", "note": "tema seguro" },
+            { "variant": "good", "text": "Is this your first time here?", "note": "romper el hielo" },
+            { "variant": "good", "text": "What do you think of the city?", "note": "mostrar interés" },
+            { "variant": "good", "text": "Let me know if you need anything.", "note": "ofrecer ayuda" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bt-expenses",
+      "tag": "Gastos",
+      "title": "Pagos y gastos",
+      "lede": "Vocabulario para pagar, dejar propina y gestionar gastos de empresa.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Pagar", "value": "Can I put this on the company card?", "highlights": ["company card"] },
+            { "key": "Propina", "value": "tip (15–20% en EE. UU.)", "highlights": ["tip"] },
+            { "key": "Reembolso", "value": "I'll claim it back as an expense.", "highlights": ["expense"] }
+          ]
+        }
+      ]
+    }
+  ]
+}

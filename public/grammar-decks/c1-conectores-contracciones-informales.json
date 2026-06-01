@@ -1,0 +1,141 @@
+{
+  "meta": {
+    "eyebrow": "C1 · Conectores y reducciones · Sound Lab",
+    "title": "Conectores y",
+    "titleEmphasis": "reducciones",
+    "goal": "Ya puedes reconocer y producir las reducciones del habla rápida (gonna, wanna, whatcha) y enlazar como un nativo."
+  },
+  "sounds": ["ə", "t"],
+  "cards": [
+    {
+      "id": "co-connectors",
+      "tag": "Conectores",
+      "title": "Conectores de nivel alto",
+      "lede": "Dan cohesión a tu discurso y muestran control del idioma. Úsalos al argumentar.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "however", "value": "sin embargo · contraste formal", "highlights": ["however"] },
+            { "key": "therefore", "value": "por lo tanto · consecuencia", "highlights": ["therefore"] },
+            { "key": "nevertheless", "value": "aun así · contraste fuerte", "highlights": ["nevertheless"] },
+            { "key": "in addition", "value": "además · añadir", "highlights": ["in addition"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "co-spoken-connectors",
+      "tag": "Al hablar",
+      "title": "Conectores informales",
+      "lede": "En conversación no dices therefore. Estos son los equivalentes naturales.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Formal (escrito)",
+              "rule": "informes, ensayos",
+              "examples": ["however", "therefore", "moreover"]
+            },
+            {
+              "label": "Informal (hablado)",
+              "rule": "conversación",
+              "examples": ["but / though", "so", "plus / also"]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Matiz:",
+        "body": "though al final de frase suena muy natural: It's expensive. I like it, though."
+      }
+    },
+    {
+      "id": "co-gonna",
+      "tag": "Reducciones",
+      "title": "gonna, wanna, gotta",
+      "lede": "En habla rápida estas formas se funden. Reconocerlas es clave para entender a nativos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "going to", "value": "→ gonna · I'm gonna leave.", "highlights": ["gonna"] },
+            { "key": "want to", "value": "→ wanna · Do you wanna go?", "highlights": ["wanna"] },
+            { "key": "got to", "value": "→ gotta · I gotta run.", "highlights": ["gotta"] },
+            { "key": "kind of", "value": "→ kinda · It's kinda late.", "highlights": ["kinda"] }
+          ]
+        },
+        {
+          "type": "pronunciation",
+          "sound": "Reducciones",
+          "focus": ["ə"],
+          "examples": [
+            { "text": "I'm gonna leave.", "es": "going to → gonna" },
+            { "text": "Do you wanna go?", "es": "want to → wanna" },
+            { "text": "I gotta run.", "es": "got to → gotta" }
+          ],
+          "note": "Escucha el ritmo: la vocal reducida es siempre la schwa /ə/."
+        }
+      ],
+      "tip": {
+        "label": "Ojo:",
+        "body": "son del habla, no de la escritura formal. Reconócelas al oír, pero no las escribas en un informe."
+      }
+    },
+    {
+      "id": "co-question-reductions",
+      "tag": "Preguntas",
+      "title": "Cómo suenan las preguntas",
+      "lede": "Las preguntas con do/did se reducen tanto que casi desaparece el auxiliar.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "What did you do? (lento)" },
+            { "variant": "good", "text": "Whatcha do? → /wɒtʃə/", "note": "what did you se funde" },
+            { "variant": "bad", "text": "Did you eat?" },
+            { "variant": "good", "text": "Jeat yet? → /dʒiːt/", "note": "did you eat se reduce" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "co-linking-r",
+      "tag": "Enlace",
+      "title": "La r de enlace y la t suave",
+      "lede": "Detalles que separan a un hablante avanzado: enlaces sutiles entre palabras.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "linking r", "value": "far away → \"fa-raway\" (en acento británico)", "highlights": ["fa-raway"] },
+            { "key": "flap t", "value": "water → \"wader\" (en acento americano)", "highlights": ["wader"] },
+            { "key": "glottal t", "value": "button → \"bu'on\"", "highlights": ["bu'on"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "co-discourse",
+      "tag": "Marcadores",
+      "title": "Marcadores del discurso",
+      "lede": "Palabras que organizan la conversación y señalan tus intenciones al hablar.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "actually", "value": "de hecho · corrige con suavidad", "highlights": ["actually"] },
+            { "key": "I mean", "value": "o sea · reformula", "highlights": ["I mean"] },
+            { "key": "you know", "value": "ya sabes · busca complicidad", "highlights": ["you know"] },
+            { "key": "anyway", "value": "en fin · cierra o cambia de tema", "highlights": ["anyway"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Consejo:",
+        "body": "úsalos con moderación: bien puestos dan fluidez; en exceso suenan a relleno."
+      }
+    }
+  ]
+}

@@ -1,0 +1,180 @@
+{
+  "meta": {
+    "eyebrow": "B2 · Gramática",
+    "title": "Futuro perfecto y",
+    "titleEmphasis": "continuo",
+    "goal": "Ya hablas de acciones completas y en progreso en un punto futuro usando will have y will be."
+  },
+  "cards": [
+    {
+      "id": "fut-cont-structure",
+      "tag": "Futuro continuo",
+      "title": "Will + be + -ing: estructura",
+      "lede": "El futuro continuo describe una acción que estará en progreso en un momento concreto del futuro.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Estructura", "value": "sujeto + will be + verbo -ing", "highlights": ["will be"] },
+            { "key": "Trabajo mañana", "value": "I'll be working from home tomorrow.", "highlights": ["will be working"] },
+            { "key": "Presentación en curso", "value": "She'll be presenting at 3 pm — don't call her.", "highlights": ["will be presenting"] },
+            { "key": "Esta hora la semana próxima", "value": "They'll be travelling this time next week.", "highlights": ["will be travelling"] },
+            { "key": "Negativo", "value": "I won't be using the office on Friday.", "highlights": ["won't be using"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Marcadores de tiempo:",
+        "body": "this time tomorrow, at 10 o'clock, next Monday at noon — son señales frecuentes del futuro continuo."
+      }
+    },
+    {
+      "id": "fut-cont-uses",
+      "tag": "Usos clave",
+      "title": "Preguntas corteses con el continuo",
+      "lede": "El futuro continuo puede usarse para hacer preguntas de forma más suave e indirecta, evitando presionar al interlocutor.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Will you...? (directo)",
+              "rule": "Suena a petición o demanda",
+              "examples": [
+                "Will you use the car tonight?",
+                "Will you go to the supermarket?",
+                "Will you call her?"
+              ]
+            },
+            {
+              "label": "Will you be...? (cortés)",
+              "rule": "Pregunta si algo ya estaba en sus planes; menos comprometedor",
+              "examples": [
+                "Will you be using the car tonight?",
+                "Will you be going to the supermarket?",
+                "Will you be calling her?"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Pragmática:",
+        "body": "en contextos de trabajo o con personas que no conoces bien, will you be -ing suena más educado y profesional."
+      }
+    },
+    {
+      "id": "fut-perf-structure",
+      "tag": "Futuro perfecto",
+      "title": "Will + have + participio: estructura",
+      "lede": "El futuro perfecto describe una acción que estará completada antes de un momento concreto en el futuro.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Estructura", "value": "sujeto + will have + participio pasado", "highlights": ["will have"] },
+            { "key": "Para el viernes", "value": "I'll have finished the report by Friday.", "highlights": ["will have finished"] },
+            { "key": "Antes de que llegues", "value": "She'll have left by the time you arrive.", "highlights": ["will have left"] },
+            { "key": "Pregunta", "value": "Will you have eaten by then?", "highlights": ["Will you have eaten"] },
+            { "key": "Negativo", "value": "He won't have arrived by 8.", "highlights": ["won't have arrived"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fut-perf-by",
+      "tag": "By y by the time",
+      "title": "Marcadores del futuro perfecto",
+      "lede": "'By' y 'by the time' son las expresiones clave que marcan el límite temporal antes del cual algo habrá ocurrido.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "by + punto en el tiempo", "value": "By next month, I'll have saved enough money.", "highlights": ["By next month", "will have saved"] },
+            { "key": "by + punto en el tiempo", "value": "By 2030, they will have finished the project.", "highlights": ["By 2030", "will have finished"] },
+            { "key": "by the time + cláusula", "value": "By the time you read this, I'll have gone.", "highlights": ["By the time", "will have gone"] },
+            { "key": "by the time + cláusula", "value": "By the time the meeting starts, she'll have prepared everything.", "highlights": ["By the time", "will have prepared"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Regla importante:",
+        "body": "después de 'by the time', el verbo va en presente simple (not future): by the time you arrive (NOT will arrive)."
+      }
+    },
+    {
+      "id": "fut-perf-cont",
+      "tag": "Futuro perfecto continuo",
+      "title": "Will have been + -ing: duración futura",
+      "lede": "Esta forma destaca la duración de una acción hasta un punto en el futuro. Es menos frecuente pero muy expresiva para hablar de logros y trayectorias.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Estructura", "value": "sujeto + will have been + verbo -ing", "highlights": ["will have been"] },
+            { "key": "Trayectoria laboral", "value": "Next month, I'll have been working here for 10 years.", "highlights": ["will have been working"], "hint": "enfatiza la duración acumulada" },
+            { "key": "Proyecto en curso", "value": "By June, we'll have been developing this app for two years.", "highlights": ["will have been developing"] },
+            { "key": "Relación", "value": "In December, they'll have been dating for five years.", "highlights": ["will have been dating"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Comparación:",
+        "body": "I'll have worked here for 10 years (énfasis en el logro completado) vs I'll have been working here for 10 years (énfasis en la duración del proceso)."
+      }
+    },
+    {
+      "id": "fut-comparison",
+      "tag": "Comparación general",
+      "title": "Cuatro formas de futuro de un vistazo",
+      "lede": "Cada forma de futuro sirve para un propósito distinto. Esta tabla resume las más importantes en B2.",
+      "blocks": [
+        {
+          "type": "verb-table",
+          "headers": ["Forma", "Estructura", "Uso principal", "Ejemplo"],
+          "rows": [
+            ["will / going to", "will + inf. / going to + inf.", "Predicción o intención", "I'll call you. / I'm going to study."],
+            ["Futuro continuo", "will be + -ing", "Acción en progreso en un momento futuro", "I'll be working at 9."],
+            ["Futuro perfecto", "will have + participio", "Acción completada antes de un punto futuro", "I'll have finished by then."],
+            ["Fut. perf. continuo", "will have been + -ing", "Duración acumulada hasta un punto futuro", "I'll have been here for a year."]
+          ]
+        }
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "Son las 3 de la tarde. Tu reunión empieza a las 3:30. ¿Cuál de estas frases describe la situación correctamente?",
+      "options": [
+        "I'll finish the presentation by 3:30.",
+        "I'll have finished the presentation by 3:30.",
+        "I'll be finishing the presentation at 3:30.",
+        "I'll have been finishing the presentation by 3:30."
+      ],
+      "answer": 1,
+      "explain": "El futuro perfecto (will have + participio) describe una acción que estará completada antes de un punto futuro ('by 3:30' es el límite). La opción A es gramaticalmente incorrecta; la C describe una acción en progreso, no completada."
+    },
+    {
+      "q": "Quieres preguntar cortésmente si tu colega va a utilizar el proyector más tarde. ¿Cuál suena más profesional?",
+      "options": [
+        "Will you use the projector this afternoon?",
+        "Are you using the projector this afternoon?",
+        "Will you be using the projector this afternoon?",
+        "Do you use the projector this afternoon?"
+      ],
+      "answer": 2,
+      "explain": "Will you be using...? es la forma más cortés e indirecta. Sugiere que preguntas si ya lo tenía en sus planes, sin imponer. La opción A es correcta pero más directa; la B también es válida pero no usa el futuro continuo."
+    },
+    {
+      "q": "Completa: 'By the time she _____, I _____ for three hours.' ¿Cuál es correcta?",
+      "options": [
+        "will arrive / will be waiting",
+        "arrives / will have been waiting",
+        "arrived / will have waited",
+        "will have arrived / will be waiting"
+      ],
+      "answer": 1,
+      "explain": "Después de 'by the time' el verbo va en presente simple (arrives). La duración acumulada hasta ese punto usa el futuro perfecto continuo (will have been waiting). La opción A falla en 'will arrive'."
+    }
+  ]
+}

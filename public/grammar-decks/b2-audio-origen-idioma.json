@@ -1,0 +1,111 @@
+{
+  "meta": {
+    "eyebrow": "B2 · Audio historia: origen del idioma",
+    "title": "El origen del",
+    "titleEmphasis": "idioma",
+    "goal": "Ya puedes seguir una narración larga en inglés captando la idea general, los tiempos del pasado y los conectores."
+  },
+  "cards": [
+    {
+      "id": "ol-narrative",
+      "tag": "Narración",
+      "title": "Tiempos del pasado en una historia",
+      "lede": "Una historia combina past simple para los hechos y past continuous para el fondo.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Hechos", "value": "Languages developed over centuries.", "highlights": ["developed"] },
+            { "key": "Fondo", "value": "People were trading and mixing words.", "highlights": ["were trading"] },
+            { "key": "Anterior", "value": "Latin had already spread.", "highlights": ["had already spread"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Escucha:",
+        "body": "en la narración, los verbos en -ed suelen ir débiles; capta el cambio de tiempo de oído."
+      }
+    },
+    {
+      "id": "ol-origins",
+      "tag": "Vocabulario",
+      "title": "Hablar de orígenes",
+      "lede": "Verbos y expresiones para describir de dónde viene una palabra o un idioma.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Venir de", "value": "comes from · derives from · originates in", "highlights": ["comes from"] },
+            { "key": "Préstamos", "value": "borrowed from · loanword", "highlights": ["borrowed from"] },
+            { "key": "Cambio", "value": "evolved · spread · merged", "highlights": ["evolved"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ol-passive",
+      "tag": "Voz pasiva",
+      "title": "La pasiva para hechos",
+      "lede": "Los textos informativos usan mucho la pasiva: importa la acción, no quién la hizo.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Presente", "value": "English is spoken worldwide.", "highlights": ["is spoken"] },
+            { "key": "Pasado", "value": "The word was borrowed from French.", "highlights": ["was borrowed"] },
+            { "key": "Perfecto", "value": "Many words have been added.", "highlights": ["have been added"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ol-relative",
+      "tag": "Cláusulas",
+      "title": "Cláusulas relativas en el texto",
+      "lede": "Para añadir información sin cortar la frase, los textos usan who, which y that.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "which", "value": "Latin, which spread across Europe...", "highlights": ["which"] },
+            { "key": "who", "value": "the people who spoke it", "highlights": ["who"] },
+            { "key": "where", "value": "the region where it began", "highlights": ["where"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ol-linkers",
+      "tag": "Conectores",
+      "title": "Ordenar la información",
+      "lede": "Conectores que organizan un texto histórico en el tiempo y la causa.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Tiempo", "value": "over time · eventually · gradually", "highlights": ["eventually"] },
+            { "key": "Causa", "value": "as a result · due to", "highlights": ["as a result"] },
+            { "key": "Contraste", "value": "however · nevertheless", "highlights": ["however"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ol-listening",
+      "tag": "Audio",
+      "title": "Escucha de textos largos",
+      "lede": "Estrategias para seguir una narración hablada sin perderte.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "good", "text": "Capta primero la idea general, no cada palabra.", "note": "escucha global" },
+            { "variant": "good", "text": "Las fechas y nombres anclan la historia.", "note": "puntos de referencia" },
+            { "variant": "good", "text": "Los conectores anuncian un giro.", "note": "however, then..." },
+            { "variant": "good", "text": "weak forms: was, were, of suenan reducidos.", "note": "fija el oído" }
+          ]
+        }
+      ]
+    }
+  ]
+}

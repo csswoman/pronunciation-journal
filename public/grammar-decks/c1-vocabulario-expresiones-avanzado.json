@@ -1,0 +1,121 @@
+{
+  "meta": {
+    "eyebrow": "C1 · Vocabulario y expresiones avanzado",
+    "title": "Vocabulario",
+    "titleEmphasis": "avanzado"
+  },
+  "cards": [
+    {
+      "id": "va-collocations",
+      "tag": "Colocaciones",
+      "title": "Colocaciones avanzadas",
+      "lede": "En C1 la fluidez depende de las colocaciones: qué palabras van naturalmente juntas.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Verbo + sust.", "value": "raise awareness · meet a deadline", "highlights": ["raise awareness"] },
+            { "key": "Adverbio + adj.", "value": "deeply concerned · highly unlikely", "highlights": ["deeply concerned"] },
+            { "key": "Adj. + sust.", "value": "a compelling argument · a steep decline", "highlights": ["a compelling argument"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Clave:",
+        "body": "una palabra correcta en la colocación equivocada suena extraña: do a mistake → make a mistake."
+      }
+    },
+    {
+      "id": "va-idioms",
+      "tag": "Idioms",
+      "title": "Idioms y su registro",
+      "lede": "Los idioms dan color, pero hay que usarlos en el contexto adecuado.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "the bottom line", "value": "lo esencial / lo que cuenta", "highlights": ["the bottom line"] },
+            { "key": "to cut corners", "value": "ahorrar esfuerzo a costa de la calidad", "highlights": ["cut corners"] },
+            { "key": "a blessing in disguise", "value": "un mal que resulta bueno", "highlights": ["a blessing in disguise"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "va-nuance",
+      "tag": "Matices",
+      "title": "Sinónimos con matiz",
+      "lede": "Los sinónimos rara vez son intercambiables: cada uno aporta una connotación.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Positivo",
+              "rule": "connotación favorable",
+              "examples": ["thrifty (ahorrador)", "confident", "determined"]
+            },
+            {
+              "label": "Negativo",
+              "rule": "misma idea, juicio negativo",
+              "examples": ["stingy (tacaño)", "arrogant", "stubborn"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "va-formality",
+      "tag": "Registro",
+      "title": "Palabra común vs. culta",
+      "lede": "Los textos formales prefieren verbos de origen latino a los phrasal verbs.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "find out → ", "value": "discover · ascertain", "highlights": ["discover"] },
+            { "key": "set up → ", "value": "establish · implement", "highlights": ["establish"] },
+            { "key": "go up → ", "value": "increase · rise", "highlights": ["increase"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Regla:",
+        "body": "phrasal verbs en conversación; verbos latinos (single-word) en escritura formal."
+      }
+    },
+    {
+      "id": "va-discourse",
+      "tag": "Discurso",
+      "title": "Marcadores del discurso",
+      "lede": "Conectores avanzados que precisan la relación entre ideas en habla y escritura.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Matizar", "value": "admittedly · arguably · presumably", "highlights": ["arguably"] },
+            { "key": "Reformular", "value": "in other words · that is to say", "highlights": ["that is to say"] },
+            { "key": "Concesión", "value": "granted · that said · even so", "highlights": ["that said"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "va-falsefriends",
+      "tag": "Falsos amigos",
+      "title": "Falsos amigos avanzados",
+      "lede": "Palabras que parecen español pero significan otra cosa. Trampas frecuentes en C1.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "good", "text": "eventually = al final (no \"eventualmente\")", "note": "→ posiblemente = possibly" },
+            { "variant": "good", "text": "sensible = sensato (no \"sensible\")", "note": "→ sensible = sensitive" },
+            { "variant": "good", "text": "comprehensive = exhaustivo (no \"comprensivo\")", "note": "→ comprensivo = understanding" },
+            { "variant": "good", "text": "to assist = ayudar (asistir a = to attend)", "note": "ojo al verbo" }
+          ]
+        }
+      ]
+    }
+  ]
+}

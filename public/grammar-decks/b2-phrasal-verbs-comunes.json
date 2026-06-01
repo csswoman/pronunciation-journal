@@ -1,0 +1,123 @@
+{
+  "meta": {
+    "eyebrow": "B2 · Phrasal verbs",
+    "title": "Phrasal verbs",
+    "titleEmphasis": "comunes"
+  },
+  "cards": [
+    {
+      "id": "ph-what",
+      "tag": "Qué son",
+      "title": "Verbo + partícula = nuevo significado",
+      "lede": "Un verbo se une a una preposición o adverbio y cambia de sentido por completo.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "give up", "value": "rendirse (no \"dar arriba\")", "highlights": ["give up"], "hint": "Don't give up!" },
+            { "key": "find out", "value": "averiguar · find out the truth", "highlights": ["find out"] },
+            { "key": "look after", "value": "cuidar · look after the kids", "highlights": ["look after"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Clave:",
+        "body": "no traduzcas pieza por pieza. Apréndelos como una sola unidad de significado."
+      }
+    },
+    {
+      "id": "ph-daily",
+      "tag": "Cotidianos",
+      "title": "Los del día a día",
+      "lede": "Estos aparecen en casi cualquier conversación. Empieza por dominarlos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "get up", "value": "levantarse", "highlights": ["get up"] },
+            { "key": "wake up", "value": "despertarse", "highlights": ["wake up"] },
+            { "key": "turn on / off", "value": "encender / apagar", "highlights": ["turn on", "off"] },
+            { "key": "run out of", "value": "quedarse sin · run out of milk", "highlights": ["run out of"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ph-separable",
+      "tag": "Separables",
+      "title": "¿Va junto o separado?",
+      "lede": "Muchos phrasal verbs se pueden partir. El pronombre obliga a separarlos.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "good", "text": "Turn off the light. / Turn the light off.", "note": "con sustantivo: las dos valen" },
+            { "variant": "bad", "text": "Turn off it." },
+            { "variant": "good", "text": "Turn it off.", "note": "con pronombre: SIEMPRE en medio" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ph-work",
+      "tag": "Trabajo",
+      "title": "Phrasal verbs de oficina",
+      "lede": "Muy frecuentes en el entorno laboral. Reconócelos en reuniones y correos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "carry out", "value": "llevar a cabo · carry out a plan", "highlights": ["carry out"] },
+            { "key": "set up", "value": "montar / configurar · set up a meeting", "highlights": ["set up"] },
+            { "key": "deal with", "value": "ocuparse de · deal with a problem", "highlights": ["deal with"] },
+            { "key": "follow up", "value": "dar seguimiento · follow up on the email", "highlights": ["follow up"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ph-multi",
+      "tag": "Polisémicos",
+      "title": "Uno con varios sentidos",
+      "lede": "Algunos phrasal verbs cambian de significado según el contexto. Mira get on.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "get on (a bus)", "value": "subirse · subir al transporte", "highlights": ["get on"] },
+            { "key": "get on with sb", "value": "llevarse bien con alguien", "highlights": ["get on with"] },
+            { "key": "get over", "value": "superar · get over an illness", "highlights": ["get over"] },
+            { "key": "get by", "value": "arreglárselas · get by on little money", "highlights": ["get by"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ph-formal",
+      "tag": "Registro",
+      "title": "Phrasal vs verbo formal",
+      "lede": "Los phrasal verbs son informales. En textos formales hay un equivalente latino.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Informal",
+              "rule": "phrasal verb",
+              "examples": ["find out", "put off", "go up"]
+            },
+            {
+              "label": "Formal",
+              "rule": "verbo de origen latino",
+              "examples": ["discover", "postpone", "increase"]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Consejo:",
+        "body": "al hablar, usa phrasal verbs (suena nativo); en informes, el verbo formal."
+      }
+    }
+  ]
+}

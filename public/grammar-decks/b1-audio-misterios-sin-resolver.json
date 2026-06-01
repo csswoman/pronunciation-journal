@@ -1,0 +1,119 @@
+{
+  "meta": {
+    "eyebrow": "B1 · Audio historia · Sound Lab",
+    "title": "Misterios sin",
+    "titleEmphasis": "resolver"
+  },
+  "cards": [
+    {
+      "id": "ms-vocab",
+      "tag": "Vocabulario",
+      "title": "Palabras de misterio",
+      "lede": "El léxico que aparece en la historia. Reconócelo al escuchar.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "clue", "value": "pista · an important clue", "highlights": ["clue"] },
+            { "key": "evidence", "value": "prueba (incontable) · there is no evidence", "highlights": ["evidence"] },
+            { "key": "witness", "value": "testigo · the only witness", "highlights": ["witness"] },
+            { "key": "disappear", "value": "desaparecer · she disappeared", "highlights": ["disappear"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ms-deduction-present",
+      "tag": "Deducción",
+      "title": "must, might, can't (presente)",
+      "lede": "Modales para deducir cómo de seguro estás de algo en el presente.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "must be", "value": "seguro que sí · He must be the thief.", "highlights": ["must be"], "hint": "casi 100%" },
+            { "key": "might / could be", "value": "quizá · It might be a trick.", "highlights": ["might be"], "hint": "posible" },
+            { "key": "can't be", "value": "imposible · She can't be guilty.", "highlights": ["can't be"], "hint": "casi 0%" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Clave:",
+        "body": "para negar una deducción se usa can't, no \"mustn't\": It can't be true."
+      }
+    },
+    {
+      "id": "ms-deduction-past",
+      "tag": "Deducción pasada",
+      "title": "must have, might have, can't have",
+      "lede": "Para deducir sobre algo que ya pasó: modal + have + participio.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "must have", "value": "seguro que pasó · He must have left.", "highlights": ["must have left"] },
+            { "key": "might have", "value": "quizá pasó · She might have seen it.", "highlights": ["might have seen"] },
+            { "key": "can't have", "value": "imposible que pasara · He can't have done it.", "highlights": ["can't have done"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ms-narrative",
+      "tag": "Narrar",
+      "title": "Los tiempos de una historia",
+      "lede": "Las historias combinan tres pasados. Saber cuál es cuál ayuda a seguir el relato.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Past simple", "value": "los hechos · She opened the door.", "highlights": ["opened"] },
+            { "key": "Past continuous", "value": "el fondo · It was getting dark.", "highlights": ["was getting"] },
+            { "key": "Past perfect", "value": "lo anterior · Someone had been there.", "highlights": ["had been"], "hint": "pasado del pasado" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ms-reductions",
+      "tag": "Escucha",
+      "title": "Por qué no oyes el have",
+      "lede": "Al hablar, must have y could have se reducen. Por eso cuesta reconocerlos.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "must have (separado, como se escribe)" },
+            { "variant": "good", "text": "must've → \"mustuv\"", "note": "have se reduce a /əv/" },
+            { "variant": "bad", "text": "could have gone" },
+            { "variant": "good", "text": "could've gone → \"coulduv\"", "note": "nunca \"could of\" al escribir" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Trampa de oído:",
+        "body": "suena como could of, pero se escribe could have. El of es solo el sonido."
+      }
+    },
+    {
+      "id": "ms-intonation",
+      "tag": "Entonación",
+      "title": "La música del suspense",
+      "lede": "La entonación cambia el sentido. Sube en las preguntas, marca las palabras clave.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Sube ↗", "value": "duda o pregunta · Are you sure?", "highlights": ["sube"] },
+            { "key": "Baja ↘", "value": "afirmación firme · He did it.", "highlights": ["baja"] },
+            { "key": "Acentúa", "value": "destaca la pista clave · It was HER.", "highlights": ["HER"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Practica:",
+        "body": "repite una frase de la historia imitando la melodía del narrador, no solo las palabras."
+      }
+    }
+  ]
+}

@@ -1,0 +1,120 @@
+{
+  "meta": {
+    "eyebrow": "A2 · Adverbios y expresiones de tiempo",
+    "title": "Adverbios y",
+    "titleEmphasis": "expresiones de tiempo"
+  },
+  "cards": [
+    {
+      "id": "ad-frequency",
+      "tag": "Frecuencia",
+      "title": "always, usually, never",
+      "lede": "Dicen cada cuánto pasa algo. Van entre el sujeto y el verbo principal.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "100% → 0%", "value": "always, usually, often, sometimes, never", "highlights": ["always", "never"] },
+            { "key": "Posición", "value": "I always drink coffee.", "highlights": ["always"] },
+            { "key": "Con to be", "value": "She is never late. (tras el verbo)", "highlights": ["is never"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Ojo:",
+        "body": "el adverbio va antes del verbo normal pero después de to be: I never eat / I am never tired."
+      }
+    },
+    {
+      "id": "ad-howoften",
+      "tag": "Cada cuánto",
+      "title": "How often...?",
+      "titleItalic": ["How often"],
+      "lede": "Para preguntar la frecuencia. La respuesta usa expresiones con every o once/twice.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Pregunta", "value": "How often do you exercise?", "highlights": ["How often"] },
+            { "key": "every", "value": "every day · every week · every Monday", "highlights": ["every"] },
+            { "key": "once / twice", "value": "once a week · twice a month", "highlights": ["once a week", "twice"] },
+            { "key": "veces", "value": "three times a day", "highlights": ["three times"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ad-manner",
+      "tag": "Modo",
+      "title": "Adverbios en -ly",
+      "lede": "Dicen cómo se hace algo. Se forman añadiendo -ly al adjetivo. Van tras el verbo.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Regla", "value": "slow → slowly · quick → quickly", "highlights": ["-ly"] },
+            { "key": "Uso", "value": "She speaks slowly.", "highlights": ["slowly"] },
+            { "key": "Irregulares", "value": "good → well · fast → fast", "highlights": ["well", "fast"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Ojo:",
+        "body": "no confundas adjetivo y adverbio: a fast car (adj) / he drives fast (adv)."
+      }
+    },
+    {
+      "id": "ad-time-expr",
+      "tag": "Expresiones",
+      "title": "yesterday, now, soon",
+      "lede": "Palabras que sitúan la acción en el tiempo. Suelen ir al final de la frase.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Pasado", "value": "yesterday, last week, two days ago", "highlights": ["yesterday", "ago"] },
+            { "key": "Presente", "value": "now, today, these days", "highlights": ["now", "today"] },
+            { "key": "Futuro", "value": "tomorrow, soon, next month", "highlights": ["tomorrow", "soon"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ad-already",
+      "tag": "Ya / todavía",
+      "title": "already, yet, still",
+      "lede": "Tres adverbios que confunden. Dicen si algo pasó, falta o sigue pasando.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "already", "value": "ya (antes de lo esperado) · I've already eaten.", "highlights": ["already"] },
+            { "key": "yet", "value": "todavía (en negativas/preguntas) · Not yet.", "highlights": ["yet"] },
+            { "key": "still", "value": "todavía (continúa) · I'm still working.", "highlights": ["still"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Posición:",
+        "body": "yet va al final; already y still van en medio de la frase."
+      }
+    },
+    {
+      "id": "ad-degree",
+      "tag": "Grado",
+      "title": "very, too, enough",
+      "lede": "Modifican la intensidad de un adjetivo. too es negativo; enough significa suficiente.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "good", "text": "It's very hot.", "note": "very = mucho (neutro)" },
+            { "variant": "good", "text": "It's too hot.", "note": "too = demasiado (problema)" },
+            { "variant": "good", "text": "It's hot enough.", "note": "enough va después del adjetivo" },
+            { "variant": "bad", "text": "It's enough hot." }
+          ]
+        }
+      ]
+    }
+  ]
+}

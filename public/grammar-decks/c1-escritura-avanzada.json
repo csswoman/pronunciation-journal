@@ -1,0 +1,110 @@
+{
+  "meta": {
+    "eyebrow": "C1 · Escritura avanzada",
+    "title": "Escritura",
+    "titleEmphasis": "avanzada"
+  },
+  "cards": [
+    {
+      "id": "wa-cohesion",
+      "tag": "Cohesión",
+      "title": "Cohesión y referencia",
+      "lede": "Un texto avanzado fluye: las ideas se enlazan con referencia, sustitución y elipsis.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Referencia", "value": "this approach · such a view · the latter", "highlights": ["the latter"] },
+            { "key": "Sustitución", "value": "...and so does the second one.", "highlights": ["so does"] },
+            { "key": "Elipsis", "value": "Some agreed; others (agreed) did not.", "highlights": ["others"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wa-nominalisation",
+      "tag": "Nominalización",
+      "title": "Nominalización",
+      "lede": "El estilo académico convierte verbos en sustantivos para sonar más formal y compacto.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "good", "text": "Prices increased → The increase in prices...", "note": "verbo → sustantivo" },
+            { "variant": "good", "text": "They decided → Their decision...", "note": "más formal" },
+            { "variant": "good", "text": "The economy grew → economic growth", "note": "estilo académico" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Cuidado:",
+        "body": "úsala con medida; en exceso, la nominalización vuelve el texto pesado e impersonal."
+      }
+    },
+    {
+      "id": "wa-hedging",
+      "tag": "Cautela",
+      "title": "Lenguaje cauto académico",
+      "lede": "La escritura académica evita afirmaciones absolutas. El hedging mide tus afirmaciones.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Verbos", "value": "suggests · indicates · appears to", "highlights": ["suggests"] },
+            { "key": "Modales", "value": "may · might · could", "highlights": ["may"] },
+            { "key": "Adverbios", "value": "arguably · relatively · to some extent", "highlights": ["to some extent"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wa-complex",
+      "tag": "Sintaxis",
+      "title": "Frases complejas controladas",
+      "lede": "Combinar cláusulas con participios y relativos da variedad sin perder claridad.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Participio", "value": "Faced with criticism, the firm changed course.", "highlights": ["Faced with criticism"] },
+            { "key": "Relativa de no restricción", "value": "The report, which was leaked, ...", "highlights": [",which was leaked,"] },
+            { "key": "Inversión", "value": "Only then did they realize...", "highlights": ["Only then did they"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wa-argument",
+      "tag": "Argumentación",
+      "title": "Estructurar un argumento",
+      "lede": "Un ensayo avanzado expone, rebate y matiza antes de concluir.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Presentar", "value": "It is widely argued that...", "highlights": ["It is widely argued that"] },
+            { "key": "Rebatir", "value": "This view, however, overlooks...", "highlights": ["overlooks"] },
+            { "key": "Matizar", "value": "While valid to a point, it fails to...", "highlights": ["While valid to a point"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wa-editing",
+      "tag": "Edición",
+      "title": "Pulir el texto",
+      "lede": "La buena escritura se edita: elimina lo redundante y afina la precisión.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "due to the fact that", "note": "→ because" },
+            { "variant": "bad", "text": "in order to be able to", "note": "→ to" },
+            { "variant": "good", "text": "Corta lo superfluo: menos es más.", "note": "concisión" },
+            { "variant": "good", "text": "Varía la longitud de las frases.", "note": "ritmo" }
+          ]
+        }
+      ]
+    }
+  ]
+}

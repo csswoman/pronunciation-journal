@@ -12,10 +12,10 @@ import {
   countWordsDueForReview,
 } from "@/lib/word-bank/server-queries";
 import { getLexiconRetentionStats } from "@/lib/lexicon/server-progress";
-import { getTodaysMiniLesson } from "@/lib/content/lessons";
+import { getTodaysMiniLesson, getTodaysLanguageConcept } from "@/lib/content/lessons";
 import { getDailyStreak } from "@/lib/daily/streak";
 import { getTodayPracticeGoal, getWeakestPhonemeForHome } from "@/lib/home/queries";
-import type { MiniLesson } from "@/lib/content/schemas";
+import type { MiniLesson, LanguageConcept } from "@/lib/content/schemas";
 import type { WordBankEntry } from "@/lib/word-bank/types";
 import type { DailyStreakResult } from "@/lib/daily/streak";
 import type { DailyGoalProgress, WeakestPhonemeHome } from "@/lib/home/constants";
@@ -27,6 +27,7 @@ export default async function HomePage() {
   let dueWords: WordBankEntry[] = [];
   let dueCount = 0;
   let todaysLesson: MiniLesson | null = null;
+  let todaysConcept: LanguageConcept | null = null;
   let dailyStreak: DailyStreakResult | undefined;
   let wordBankTotal = 0;
   let lexiconRetention: LexiconRetentionStats | null = null;
@@ -36,11 +37,12 @@ export default async function HomePage() {
   const userId = await getSupabaseServerUserId();
 
   try {
-    const [words, totalDue, lesson, streak, bankStats, lexicon, goal, weakSound] =
+    const [words, totalDue, lesson, concept, streak, bankStats, lexicon, goal, weakSound] =
       await Promise.all([
         getWordsDueForReview(REVIEW_PREVIEW_LIMIT),
         countWordsDueForReview(),
         getTodaysMiniLesson(),
+        getTodaysLanguageConcept(),
         userId ? getDailyStreak(userId) : Promise.resolve(undefined),
         getVocabularyRetentionStats(),
         getLexiconRetentionStats(),
@@ -50,6 +52,7 @@ export default async function HomePage() {
     dueWords = words;
     dueCount = totalDue;
     todaysLesson = lesson;
+    todaysConcept = concept;
     dailyStreak = streak ?? undefined;
     wordBankTotal = bankStats.total;
     lexiconRetention = lexicon;
@@ -73,7 +76,7 @@ export default async function HomePage() {
         lexicon={lexiconRetention}
         weakestPhoneme={weakestPhoneme}
       />
-      <HomeLearnSection lesson={todaysLesson} />
+      <HomeLearnSection lesson={todaysLesson} concept={todaysConcept} />
     </PageLayout>
   );
 }

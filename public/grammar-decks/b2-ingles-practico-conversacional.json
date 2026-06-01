@@ -1,0 +1,125 @@
+{
+  "meta": {
+    "eyebrow": "B2 · Inglés conversacional",
+    "title": "Inglés práctico y",
+    "titleEmphasis": "conversacional"
+  },
+  "cards": [
+    {
+      "id": "pc-fillers",
+      "tag": "Fluidez",
+      "title": "Ganar tiempo para pensar",
+      "lede": "Los nativos no hablan sin pausas: usan muletillas para no quedarse en blanco.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Well,...", "value": "bueno... · para empezar", "highlights": ["Well"] },
+            { "key": "Let me think", "value": "déjame pensar · ganar segundos", "highlights": ["Let me think"] },
+            { "key": "You know,...", "value": "ya sabes... · conector informal", "highlights": ["You know"] },
+            { "key": "I mean,...", "value": "quiero decir... · para corregirte", "highlights": ["I mean"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Por qué importa:",
+        "body": "una pausa con muletilla suena natural; un silencio largo suena a bloqueo."
+      }
+    },
+    {
+      "id": "pc-react",
+      "tag": "Reaccionar",
+      "title": "Mostrar que escuchas",
+      "lede": "En una charla real hay que reaccionar. Estas respuestas mantienen viva la conversación.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Really?", "value": "¿en serio? · interés / sorpresa", "highlights": ["Really?"] },
+            { "key": "That makes sense", "value": "tiene sentido · acuerdo", "highlights": ["That makes sense"] },
+            { "key": "No way!", "value": "¡no me digas! · sorpresa fuerte", "highlights": ["No way!"] },
+            { "key": "Fair enough", "value": "me parece bien · aceptación", "highlights": ["Fair enough"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pc-opinion",
+      "tag": "Opinar",
+      "title": "Dar tu opinión con matices",
+      "lede": "En B2 ya no basta con I think. Suaviza o refuerza según el caso.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Suave",
+              "rule": "menos tajante",
+              "examples": ["I'd say...", "It seems to me that...", "I guess..."]
+            },
+            {
+              "label": "Firme",
+              "rule": "más seguro",
+              "examples": ["I'm convinced that...", "There's no doubt...", "Clearly,..."]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pc-vague",
+      "tag": "Lenguaje vago",
+      "title": "Hablar sin ser exacto",
+      "lede": "A veces no necesitas precisión. El inglés tiene expresiones para eso.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "kind of / sort of", "value": "más o menos · It's kind of cold.", "highlights": ["kind of"] },
+            { "key": "stuff / things", "value": "cosas · books and stuff", "highlights": ["stuff"] },
+            { "key": "or so", "value": "aproximadamente · ten people or so", "highlights": ["or so"] },
+            { "key": "-ish", "value": "tirando a · It's blue-ish. · at six-ish", "highlights": ["-ish"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pc-soften",
+      "tag": "Cortesía",
+      "title": "Suavizar lo que dices",
+      "lede": "Ser directo puede sonar brusco. Estos recursos hacen tus frases más educadas.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "I want a coffee." },
+            { "variant": "good", "text": "Could I get a coffee, please?", "note": "más educado" },
+            { "variant": "bad", "text": "You're wrong." },
+            { "variant": "good", "text": "I'm not sure I agree.", "note": "discrepar sin chocar" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pc-connect",
+      "tag": "Conectar ideas",
+      "title": "Conectores naturales al hablar",
+      "lede": "Para que tu discurso fluya y no suene a lista de frases sueltas.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "anyway", "value": "en fin · vuelve al tema", "highlights": ["anyway"] },
+            { "key": "by the way", "value": "por cierto · cambia de tema", "highlights": ["by the way"] },
+            { "key": "actually", "value": "de hecho · corrige o matiza", "highlights": ["actually"] },
+            { "key": "as I was saying", "value": "como decía · retoma el hilo", "highlights": ["as I was saying"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Falso amigo:",
+        "body": "actually = de hecho, no \"actualmente\". Eso es currently."
+      }
+    }
+  ]
+}

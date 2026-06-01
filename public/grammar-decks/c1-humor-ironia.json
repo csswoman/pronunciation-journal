@@ -1,0 +1,194 @@
+{
+  "meta": {
+    "eyebrow": "C1 · Cultura",
+    "title": "Humor e",
+    "titleEmphasis": "ironía",
+    "goal": "Ya reconoces y usas el humor, la ironía y el understatement típicos del inglés anglosajón."
+  },
+  "quiz": [
+    {
+      "q": "Tu jefe británico, tras leer tu informe, dice: «It's not entirely without merit.» ¿Qué significa realmente?",
+      "options": [
+        "Es un cumplido sincero: encuentra mérito genuino en el trabajo.",
+        "Es un rechazo casi total expresado de forma impecablemente educada.",
+        "Es una crítica directa sin filtros.",
+        "Es un understatement que equivale a «excelente trabajo»."
+      ],
+      "answer": 1,
+      "explain": "«Not entirely without merit» usa una doble negación atenuante típica del inglés británico. Equivale a decir que hay algo salvable, pero muy poco. El understatement aquí funciona como rechazo suavizado."
+    },
+    {
+      "q": "Un colega rompe el proyector justo antes de su presentación y dice con total calma: «Well, that's one way to start.» ¿Qué tipo de humor es este?",
+      "options": [
+        "Sarcasmo hostil dirigido al equipo técnico.",
+        "Ironía literaria con función crítica.",
+        "Deadpan: comentario absurdo entregado con cara seria para aliviar la tensión.",
+        "Self-deprecation excesiva que indica inseguridad."
+      ],
+      "answer": 2,
+      "explain": "El deadpan consiste en decir algo con una lógica aplastante pero absurda, sin reír. «That's one way to start» reconoce el desastre y lo reencuadra con ecuanimidad humorística —un clásico del humor anglosajón."
+    },
+    {
+      "q": "No has entendido un chiste cultural en una reunión. ¿Cuál es la respuesta más natural y socialmente inteligente?",
+      "options": [
+        "«I don't understand this joke. Can you explain it?»",
+        "«Ha! I think that one went completely over my head.»",
+        "No reaccionar y cambiar de tema inmediatamente.",
+        "«This is not funny to me because I lack the cultural context.»"
+      ],
+      "answer": 1,
+      "explain": "«That went over my head» es una expresión idiomática que admite no haber captado el chiste con gracia y autoironía. Es socialmente hábil porque muestra humildad sin matar el ambiente ni sonar robótico."
+    }
+  ],
+  "cards": [
+    {
+      "id": "hi-understatement",
+      "tag": "Understatement",
+      "title": "El arte de decir menos",
+      "lede": "En la cultura anglosajona —especialmente la británica— decir menos de lo que se siente no es timidez: es sofisticación. El understatement convierte la exageración inversa en elegancia social y señal de autocontrol.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "«It's not ideal.»", "value": "La situación es un desastre absoluto.", "highlights": ["not ideal"], "hint": "litote: negar el opuesto en lugar de afirmar lo negativo" },
+            { "key": "«Quite good.»", "value": "Es excelente. En inglés británico, «quite» enfatiza, no atenúa.", "highlights": ["Quite good"], "hint": "trampa clásica para hispanohablantes: «quite» ≠ «bastante»" },
+            { "key": "«A bit tricky.»", "value": "Es extremadamente difícil o complicado.", "highlights": ["A bit tricky"] },
+            { "key": "«Not bad.»", "value": "Muy bueno, incluso brillante.", "highlights": ["Not bad"] },
+            { "key": "«Could be worse.»", "value": "Todo va bien. No hay motivo real de queja.", "highlights": ["Could be worse"] },
+            { "key": "«Interesting.»", "value": "Puede significar «horrible» o «me parece mal» según el tono.", "highlights": ["Interesting"], "hint": "el tono lo decide todo; aprende a leer la pausa antes" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Por qué importa:",
+        "body": "Un jefe británico que te dice «not entirely convinced» está rechazando tu propuesta, no pidiendo ajustes menores. Aprender a leer el understatement evita errores costosos en contextos profesionales anglosajones."
+      }
+    },
+    {
+      "id": "hi-irony-sarcasm",
+      "tag": "Ironía vs. sarcasmo",
+      "title": "La diferencia que cambia el tono",
+      "lede": "Ironía y sarcasmo comparten mecanismo —decir lo contrario de lo que se piensa— pero difieren en intención y carga emocional. Confundirlos puede costar relaciones profesionales.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Ironía",
+              "rule": "Dice lo contrario de lo que se piensa con tono neutro o afectuoso. No busca herir; puede ser lúdica, literaria o de resignación compartida.",
+              "examples": [
+                "«Great, it's raining again.» (resignación, no hostilidad)",
+                "«Oh, perfect timing.» (cuando todo falla a la vez)",
+                "Dominante en el humor cotidiano británico"
+              ]
+            },
+            {
+              "label": "Sarcasmo",
+              "rule": "Ironía con intención crítica o hiriente. El tono es más agudo y hay una víctima implícita. Funciona en comedia pero puede resultar agresivo en conversación real.",
+              "examples": [
+                "«Oh brilliant, you've done it again.» (tras un error)",
+                "«Sure, because that worked so well last time.»",
+                "Más frecuente y explícito en el humor americano"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Clave cultural:",
+        "body": "El inglés británico tiende a la ironía suave y ambigua; el americano prefiere el sarcasmo más directo. En entornos profesionales, el sarcasmo mal calibrado se lee como hostilidad, especialmente con personas que no te conocen bien."
+      }
+    },
+    {
+      "id": "hi-deadpan",
+      "tag": "Deadpan",
+      "title": "Humor de cara seria",
+      "lede": "El deadpan es la capacidad de decir algo absurdo o gracioso con total seriedad, sin señales de que es un chiste. Es uno de los estilos más sofisticados —y difíciles de dominar— en inglés.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Definición", "value": "Humor entregado con expresión neutra y tono completamente plano, sin reír ni anticipar la reacción.", "highlights": ["tono completamente plano"] },
+            { "key": "Estructura típica", "value": "Premisa seria + dato absurdo o contradictorio, sin énfasis ni inflexión.", "highlights": ["dato absurdo"] },
+            { "key": "Ejemplo 1", "value": "«I'm not saying you're wrong. I'm just saying I disagree.»", "highlights": ["I'm just saying I disagree"], "hint": "lógica circular enunciada con total convicción" },
+            { "key": "Ejemplo 2", "value": "«I find it hard to believe no one has thought of this. Then again, I find most things hard.»", "highlights": ["I find most things hard"] },
+            { "key": "Ejemplo 3", "value": "«I'm very good at parking. Just not always in the right place.»", "highlights": ["not always in the right place"] },
+            { "key": "Referencia cultural", "value": "Estilo dominante en Fawlty Towers, The Office (UK), Blackadder, Fleabag.", "hint": "observa: el remate se entrega siempre con la misma cara" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Para usarlo:",
+        "body": "El deadpan requiere confianza y timing. El silencio después del remate es parte del chiste. Si sientes que tienes que explicarlo, ya no es deadpan."
+      }
+    },
+    {
+      "id": "hi-self-deprecation",
+      "tag": "Auto-ironía",
+      "title": "Reírse de uno mismo",
+      "lede": "En la cultura anglosajona, la auto-ironía no es falta de autoestima: es inteligencia emocional. Quien se ríe de sus propios fallos antes de que lo hagan los demás demuestra seguridad y facilita la conexión social.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Frases de entrada", "value": "«I'm terrible at this.» · «I have absolutely no idea what I'm doing.»", "highlights": ["I'm terrible", "no idea"] },
+            { "key": "En el trabajo", "value": "«Don't ask me — I barely function before my second coffee.»", "highlights": ["barely function"] },
+            { "key": "Ante un error propio", "value": "«Classic me.» · «That tracks, honestly.» · «Very on-brand for me.»", "highlights": ["Classic me", "Very on-brand"] },
+            { "key": "Función social", "value": "Desarma la tensión, iguala jerarquías y genera empatía instantánea.", "highlights": ["iguala jerarquías", "empatía"] },
+            { "key": "Contraste cultural", "value": "En español, reconocer un fallo públicamente puede percibirse como vergonzoso. En inglés anglosajón, hacerlo con humor genera credibilidad y cercanía.", "highlights": ["credibilidad y cercanía"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Atención:",
+        "body": "La auto-ironía excesiva puede malinterpretarse. Úsala para conectar, no para buscar consuelo. «I'm so stupid» dicho con angustia no es lo mismo que «I'm absolutely hopeless at this» dicho con una sonrisa."
+      }
+    },
+    {
+      "id": "hi-polite-rejection",
+      "tag": "Incomodidad educada",
+      "title": "Cuando la risa significa «no»",
+      "lede": "En inglés, el humor y ciertas frases aparentemente neutras pueden ser señales de rechazo o incomodidad. Leer estas señales correctamente evita malentendidos costosos en reuniones, negociaciones y relaciones profesionales.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "«Ha, that's interesting.»", "value": "Rechazo educado disfrazado de curiosidad. Casi nunca es un cumplido genuino.", "highlights": ["that's interesting"] },
+            { "key": "«Right...»", "value": "Pausa larga + «right» = escepticismo activo o incomodidad real. No sigas sin pedir clarificación.", "highlights": ["Right..."] },
+            { "key": "«Well, I suppose...»", "value": "Concesión forzada: no están de acuerdo pero evitan el conflicto directo.", "highlights": ["I suppose"] },
+            { "key": "«That's one way of looking at it.»", "value": "Desacuerdo total, expresado de forma impecablemente educada.", "highlights": ["one way of looking at it"] },
+            { "key": "«I'm not sure that's entirely...»", "value": "La pausa estratégica después del «entirely» es un rechazo suave pero firme.", "highlights": ["not entirely"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Estrategia:",
+        "body": "Cuando escuches estas frases, no tomes el humor al pie de la letra. Haz una pregunta abierta: «Is there something that doesn't quite work for you?» —obtendrás información real en lugar de cortesía evasiva."
+      }
+    },
+    {
+      "id": "hi-responding",
+      "tag": "Responder al humor",
+      "title": "Cuando el chiste se te escapa",
+      "lede": "No entender un chiste en otro idioma es completamente normal. Lo importante es reaccionar con naturalidad: ni fingir que lo entendiste cuando no fue así, ni matar el momento con literalidad.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "I don't understand this joke.", "note": "demasiado literal; interrumpe el flujo social" },
+            { "variant": "bad", "text": "Please explain what is funny about that.", "note": "suena robótico y acaba con cualquier humor" },
+            { "variant": "bad", "text": "I don't have the cultural context for that reference.", "note": "correcto pero demasiado analítico para el momento" },
+            { "variant": "good", "text": "Ha! I think that one went completely over my head.", "note": "admite no haberlo entendido con gracia y autoironía" },
+            { "variant": "good", "text": "Classic. I'm going to need a moment with that one.", "note": "funciona incluso si nunca lo entiendes del todo" },
+            { "variant": "good", "text": "I feel like I'm missing something — fill me in?", "note": "pide explicación sin matar el ambiente" },
+            { "variant": "good", "text": "I'll laugh now and Google it later.", "note": "auto-ironía que rompe el hielo; muy bien recibida" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Regla de oro:",
+        "body": "Nunca finjas entender un chiste cultural que no has captado —puede llevarte a reírte en el momento equivocado. Una frase honesta y ligera siempre es la opción más inteligente."
+      }
+    }
+  ]
+}

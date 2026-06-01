@@ -1,0 +1,115 @@
+{
+  "meta": {
+    "eyebrow": "Biz · Elementos de trabajo",
+    "title": "Elementos de",
+    "titleEmphasis": "trabajo",
+    "goal": "Ya puedes desenvolverte en la oficina: herramientas, documentos, reuniones y dar el estado de tu trabajo."
+  },
+  "related": [
+    { "slug": "a1-practico-elementos-trabajo", "label": "A1 · Elementos de trabajo (básico)" },
+    { "slug": "biz-vocabulario-trabajo", "label": "Biz · Vocabulario para el trabajo" }
+  ],
+  "cards": [
+    {
+      "id": "et-office",
+      "tag": "Oficina",
+      "title": "El entorno de trabajo",
+      "lede": "Vocabulario de los espacios y recursos de una oficina moderna.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Espacios", "value": "open space, meeting room, desk, cubicle" },
+            { "key": "Remoto", "value": "remote work, home office, hybrid", "highlights": ["remote work"] },
+            { "key": "Equipo", "value": "laptop, headset, monitor, webcam" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "et-tools",
+      "tag": "Herramientas",
+      "title": "Software y herramientas",
+      "lede": "Los nombres y verbos de las herramientas digitales del día a día.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Comunicación", "value": "email, chat, video call, thread" },
+            { "key": "Gestión", "value": "spreadsheet, dashboard, task board" },
+            { "key": "Verbos", "value": "share a file · join a call · log in", "highlights": ["share a file"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "et-documents",
+      "tag": "Documentos",
+      "title": "Documentos de trabajo",
+      "lede": "Tipos de documentos y cómo referirse a ellos en inglés.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Tipos", "value": "report, proposal, invoice, contract" },
+            { "key": "Acciones", "value": "draft · review · sign · approve", "highlights": ["draft", "approve"] },
+            { "key": "Versión", "value": "the latest version · the final draft", "highlights": ["the latest version"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "et-meetings",
+      "tag": "Reuniones",
+      "title": "En la reunión",
+      "lede": "Frases funcionales para participar en una reunión con soltura.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Intervenir", "value": "Can I add something here?", "highlights": ["Can I add something"] },
+            { "key": "Aclarar", "value": "Just to clarify, ...", "highlights": ["Just to clarify"] },
+            { "key": "Acordar", "value": "Let's move on to the next point.", "highlights": ["Let's move on"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Útil:",
+        "body": "para interrumpir educadamente: Sorry to jump in, but..."
+      }
+    },
+    {
+      "id": "et-requests",
+      "tag": "Peticiones",
+      "title": "Pedir y delegar",
+      "lede": "Modales para pedir o asignar tareas con el grado de cortesía adecuado.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Pedir", "value": "Could you send me the report?", "highlights": ["Could you"] },
+            { "key": "Delegar", "value": "Would you mind handling this?", "highlights": ["Would you mind"] },
+            { "key": "Plazo", "value": "Could you have it ready by Friday?", "highlights": ["by Friday"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "et-status",
+      "tag": "Estado",
+      "title": "Dar el estado de algo",
+      "lede": "Cómo informar del progreso de una tarea o proyecto.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "good", "text": "It's on track.", "note": "va bien" },
+            { "variant": "good", "text": "We're slightly behind schedule.", "note": "con retraso" },
+            { "variant": "good", "text": "It's almost done.", "note": "casi listo" },
+            { "variant": "good", "text": "I'm waiting on feedback.", "note": "a la espera" }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,109 @@
+{
+  "meta": {
+    "eyebrow": "B2 · Suposiciones e instrucciones",
+    "title": "Suposiciones e",
+    "titleEmphasis": "instrucciones"
+  },
+  "cards": [
+    {
+      "id": "si-deduction",
+      "tag": "Deducción presente",
+      "title": "must / might / can't be",
+      "lede": "Modales para deducir el presente según lo seguro que estés.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Seguro sí", "value": "She must be at work.", "highlights": ["must be"] },
+            { "key": "Posible", "value": "He might be sleeping.", "highlights": ["might be"] },
+            { "key": "Seguro no", "value": "That can't be right.", "highlights": ["can't be"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Ojo:",
+        "body": "para deducir lo negativo se usa can't, nunca mustn't."
+      }
+    },
+    {
+      "id": "si-past-deduction",
+      "tag": "Deducción pasada",
+      "title": "must have / might have",
+      "lede": "Para deducir sobre el pasado usas modal + have + participio.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Seguro sí", "value": "She must have left already.", "highlights": ["must have left"] },
+            { "key": "Posible", "value": "He might have forgotten.", "highlights": ["might have forgotten"] },
+            { "key": "Seguro no", "value": "They can't have known.", "highlights": ["can't have known"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "si-assume",
+      "tag": "Suponer",
+      "title": "Verbos de suposición",
+      "lede": "Más allá de los modales, hay verbos para expresar lo que supones.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "suppose / guess", "value": "I suppose it's fine.", "highlights": ["suppose"] },
+            { "key": "assume", "value": "I assume you've heard.", "highlights": ["assume"] },
+            { "key": "bound to", "value": "It's bound to rain.", "highlights": ["bound to"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "si-imperatives",
+      "tag": "Instrucciones",
+      "title": "Imperativos claros",
+      "lede": "Las instrucciones usan el verbo base. Conectores de secuencia las ordenan.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Afirmativo", "value": "Press the button. · Insert the card.", "highlights": ["Press"] },
+            { "key": "Negativo", "value": "Don't touch the screen.", "highlights": ["Don't"] },
+            { "key": "Secuencia", "value": "First... then... after that... finally", "highlights": ["First", "finally"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "si-passive-instr",
+      "tag": "Instrucciones formales",
+      "title": "La pasiva en manuales",
+      "lede": "Los manuales técnicos usan la pasiva o should para sonar impersonales.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "good", "text": "The device should be turned off first.", "note": "instrucción formal" },
+            { "variant": "good", "text": "Cards must not be removed during use.", "note": "prohibición" },
+            { "variant": "good", "text": "Make sure (that) it's plugged in.", "note": "asegurarse" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "si-clarify",
+      "tag": "Aclarar",
+      "title": "Pedir y dar aclaraciones",
+      "lede": "Cuando una instrucción no queda clara, así pides o das una aclaración.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Pedir", "value": "Could you go over that again?", "highlights": ["go over that again"] },
+            { "key": "Confirmar", "value": "So, you mean I should...?", "highlights": ["you mean"] },
+            { "key": "Aclarar", "value": "In other words, ...", "highlights": ["In other words"] }
+          ]
+        }
+      ]
+    }
+  ]
+}

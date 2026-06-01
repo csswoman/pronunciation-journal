@@ -1,0 +1,111 @@
+{
+  "meta": {
+    "eyebrow": "Tech · Preparación TOEFL",
+    "title": "Preparación",
+    "titleEmphasis": "TOEFL"
+  },
+  "cards": [
+    {
+      "id": "to-format",
+      "tag": "Formato",
+      "title": "Las cuatro secciones",
+      "lede": "El TOEFL iBT evalúa cuatro destrezas integradas. Conocer el formato es media batalla.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Reading", "value": "textos académicos + preguntas", "highlights": ["Reading"] },
+            { "key": "Listening", "value": "clases y conversaciones", "highlights": ["Listening"] },
+            { "key": "Speaking", "value": "tareas independientes e integradas", "highlights": ["Speaking"] },
+            { "key": "Writing", "value": "ensayo integrado + de opinión", "highlights": ["Writing"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "to-speaking",
+      "tag": "Speaking",
+      "title": "Plantillas para responder",
+      "lede": "En Speaking tienes pocos segundos para organizar. Una plantilla mental te salva.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Postura", "value": "In my opinion, ... for two main reasons.", "highlights": ["In my opinion"] },
+            { "key": "Desarrollar", "value": "First, ... For example, ...", "highlights": ["First", "For example"] },
+            { "key": "Cerrar", "value": "That's why I believe...", "highlights": ["That's why"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Clave:",
+        "body": "los evaluadores valoran estructura clara y ejemplos, no vocabulario rebuscado."
+      }
+    },
+    {
+      "id": "to-writing",
+      "tag": "Writing",
+      "title": "El ensayo integrado",
+      "lede": "Debes resumir cómo la lectura y la conferencia se relacionan, normalmente contrastándose.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Reportar lectura", "value": "The reading claims that...", "highlights": ["The reading claims that"] },
+            { "key": "Reportar audio", "value": "The lecturer, however, argues...", "highlights": ["The lecturer, however, argues"] },
+            { "key": "Contrastar", "value": "This casts doubt on...", "highlights": ["This casts doubt on"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "to-reporting",
+      "tag": "Gramática",
+      "title": "Verbos para reportar",
+      "lede": "El TOEFL premia parafrasear. Usa verbos de reporte variados, no siempre say.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Neutro", "value": "states · explains · notes", "highlights": ["states"] },
+            { "key": "Argumentar", "value": "argues · claims · maintains", "highlights": ["argues"] },
+            { "key": "Dudar", "value": "questions · challenges · refutes", "highlights": ["refutes"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "to-listening",
+      "tag": "Listening",
+      "title": "Tomar notas eficaces",
+      "lede": "En Listening solo oyes una vez. Anota la idea principal y la estructura, no cada palabra.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "good", "text": "Anota la idea central de cada párrafo.", "note": "main idea" },
+            { "variant": "good", "text": "Marca los giros: however, on the other hand.", "note": "contraste" },
+            { "variant": "good", "text": "Usa abreviaturas y símbolos.", "note": "rapidez" },
+            { "variant": "good", "text": "Atiende al tono del hablante.", "note": "actitud" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "to-academic",
+      "tag": "Léxico",
+      "title": "Vocabulario académico",
+      "lede": "Conectores y verbos formales que suben tu puntuación en todas las secciones.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Causa", "value": "consequently · therefore · thus", "highlights": ["consequently"] },
+            { "key": "Ejemplo", "value": "for instance · namely · in particular", "highlights": ["for instance"] },
+            { "key": "Énfasis", "value": "significantly · notably · crucially", "highlights": ["significantly"] }
+          ]
+        }
+      ]
+    }
+  ]
+}

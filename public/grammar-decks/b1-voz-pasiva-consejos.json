@@ -1,0 +1,125 @@
+{
+  "meta": {
+    "eyebrow": "B1 · Voz pasiva y consejos",
+    "title": "Voz pasiva y",
+    "titleEmphasis": "consejos"
+  },
+  "cards": [
+    {
+      "id": "pv-form",
+      "tag": "Voz pasiva",
+      "title": "be + participio",
+      "lede": "Se usa cuando importa más la acción que quién la hace. Estructura: be + participio.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Fórmula", "value": "objeto + be + participio · The car is washed.", "highlights": ["is washed"] },
+            { "key": "El sujeto pasa al final", "value": "o desaparece si no importa quién", "highlights": ["desaparece"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Cuándo usarla:",
+        "body": "cuando no sabes o no importa quién hizo la acción: My phone was stolen."
+      }
+    },
+    {
+      "id": "pv-active-passive",
+      "tag": "Contraste",
+      "title": "Activa vs pasiva",
+      "lede": "La misma idea, distinto foco. La pasiva pone el objeto al principio.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Activa",
+              "rule": "el sujeto actúa",
+              "examples": ["Shakespeare wrote it.", "They build houses."]
+            },
+            {
+              "label": "Pasiva",
+              "rule": "el foco es la acción",
+              "examples": ["It was written by Shakespeare.", "Houses are built."]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pv-tenses",
+      "tag": "Tiempos",
+      "title": "La pasiva en cada tiempo",
+      "lede": "Solo cambia el verbo to be; el participio se queda igual.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Presente", "value": "is / are + participio · English is spoken here.", "highlights": ["is spoken"] },
+            { "key": "Pasado", "value": "was / were + participio · It was made in Italy.", "highlights": ["was made"] },
+            { "key": "Futuro", "value": "will be + participio · It will be finished tomorrow.", "highlights": ["will be finished"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pv-by",
+      "tag": "by",
+      "title": "by + quién la hizo",
+      "titleItalic": ["by"],
+      "lede": "Si quieres mencionar al autor de la acción, usa by. Pero solo si aporta algo.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "good", "text": "The novel was written by Orwell.", "note": "el autor importa → by" },
+            { "variant": "bad", "text": "My wallet was stolen by someone." },
+            { "variant": "good", "text": "My wallet was stolen.", "note": "no importa quién → sin by" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pv-advice",
+      "tag": "Consejos",
+      "title": "should y shouldn't",
+      "titleItalic": ["should"],
+      "lede": "La forma más común de aconsejar. should + verbo base, igual para todos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "should", "value": "deberías · You should rest.", "highlights": ["should rest"] },
+            { "key": "shouldn't", "value": "no deberías · You shouldn't smoke.", "highlights": ["shouldn't smoke"] },
+            { "key": "Pregunta", "value": "What should I do?", "highlights": ["What should I do?"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Ojo:",
+        "body": "tras should va el verbo base, sin to: You should go (no \"should to go\")."
+      }
+    },
+    {
+      "id": "pv-more-advice",
+      "tag": "Más consejos",
+      "title": "had better, ought to, why don't you",
+      "lede": "Otras formas de aconsejar, de más fuerte a más suave.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "had better", "value": "más fuerte (advertencia) · You'd better hurry.", "highlights": ["'d better hurry"] },
+            { "key": "ought to", "value": "= should · You ought to call her.", "highlights": ["ought to call"] },
+            { "key": "Why don't you...?", "value": "sugerencia suave · Why don't you rest?", "highlights": ["Why don't you"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Matiz:",
+        "body": "had better implica que algo malo pasará si no lo haces; should es un consejo neutro."
+      }
+    }
+  ]
+}

@@ -1,0 +1,122 @@
+{
+  "meta": {
+    "eyebrow": "C1 · Sound Lab",
+    "title": "Pronunciación",
+    "titleEmphasis": "avanzada",
+    "goal": "Ya puedes controlar la entonación, el ritmo y los matices que dan naturalidad y precisión a tu inglés."
+  },
+  "sounds": ["ə", "iː", "ɪ"],
+  "cards": [
+    {
+      "id": "pa-intonation-units",
+      "tag": "Entonación",
+      "title": "Hablar en grupos de sentido",
+      "lede": "Los hablantes avanzados dividen las frases en bloques y hacen pausas naturales.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Grupo tonal", "value": "When I got home, / I made dinner.", "highlights": ["/"], "hint": "pausa donde hay coma" },
+            { "key": "Una idea, un golpe", "value": "cada grupo tiene una sílaba clave", "highlights": ["una sílaba clave"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Practica:",
+        "body": "marca con / dónde harías una pausa al leer en alto. Esos son tus grupos de sentido."
+      }
+    },
+    {
+      "id": "pa-tonic",
+      "tag": "Foco",
+      "title": "La palabra que destacas cambia el sentido",
+      "lede": "El acento de la frase dirige la atención. Mueve el énfasis y cambia el mensaje.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "I didn't say that.", "value": "no lo dije yo (otro sí)", "highlights": ["I"] },
+            { "key": "I didn't SAY that.", "value": "no lo dije (lo insinué)", "highlights": ["SAY"] },
+            { "key": "I didn't say THAT.", "value": "dije otra cosa", "highlights": ["THAT"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pa-tone",
+      "tag": "Tonos",
+      "title": "Sube, baja o ambos",
+      "lede": "La dirección del tono comunica actitud: certeza, duda o cortesía.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Caída ↘", "value": "afirmación segura, wh- questions", "highlights": ["↘"] },
+            { "key": "Subida ↗", "value": "preguntas sí/no, duda, cortesía", "highlights": ["↗"] },
+            { "key": "Sube-baja", "value": "reservas, peros implícitos · \"Wéll...\"", "highlights": ["Sube-baja"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pa-hard-sounds",
+      "tag": "Sonidos difíciles",
+      "title": "Vocales que se confunden",
+      "lede": "Pares de vocales que los hispanohablantes mezclan y que cambian la palabra.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "/æ/ vs /ʌ/",
+              "rule": "cat vs cut",
+              "examples": ["bat / but", "cap / cup"]
+            },
+            {
+              "label": "/ɜː/ vs /ɔː/",
+              "rule": "bird vs board",
+              "examples": ["work / walk", "shirt / short"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pa-assimilation",
+      "tag": "Asimilación",
+      "title": "Sonidos que se transforman al juntarse",
+      "lede": "En habla rápida un sonido contagia al vecino. Por eso a veces no reconoces la palabra.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "ten bikes (n clara)" },
+            { "variant": "good", "text": "→ \"tem bikes\"", "note": "n + b se vuelve m" },
+            { "variant": "bad", "text": "did you (d + y separadas)" },
+            { "variant": "good", "text": "→ \"dijou\" /dɪdʒu/", "note": "d + y se funden en /dʒ/" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pa-accent",
+      "tag": "Acento",
+      "title": "Tu acento está bien",
+      "lede": "El objetivo C1 no es sonar nativo, sino ser claro e inteligible. Prioriza lo que importa.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Prioriza", "value": "acento de palabra y ritmo de frase", "highlights": ["acento de palabra"] },
+            { "key": "Importa menos", "value": "perder del todo tu acento materno", "highlights": ["tu acento"] },
+            { "key": "Clave", "value": "que el oyente no tenga que esforzarse para entenderte", "highlights": ["sin esfuerzo"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Mentalidad C1:",
+        "body": "un acento extranjero claro y con buen ritmo comunica perfectamente. No persigas la perfección nativa."
+      }
+    }
+  ]
+}

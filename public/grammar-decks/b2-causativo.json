@@ -1,0 +1,190 @@
+{
+  "meta": {
+    "eyebrow": "B2 · Gramática",
+    "title": "Causativo: have y",
+    "titleEmphasis": "get done",
+    "goal": "Ya puedes expresar que otra persona hizo algo por ti usando have/get + objeto + participio."
+  },
+  "cards": [
+    {
+      "id": "caus-structure",
+      "tag": "Estructura",
+      "title": "Have + objeto + participio",
+      "lede": "El causativo expresa que alguien hace algo por ti. La estructura es siempre la misma: sujeto + have + objeto + participio pasado.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Sujeto + have", "value": "I had / She has / We'll have", "highlights": ["had", "has", "have"] },
+            { "key": "+ objeto", "value": "my car / her nails / the house", "highlights": ["my car", "her nails", "the house"] },
+            { "key": "+ participio", "value": "repaired / done / painted", "highlights": ["repaired", "done", "painted"] },
+            { "key": "Ejemplo completo", "value": "I had my car repaired last week.", "highlights": ["had my car repaired"] },
+            { "key": "Ejemplo completo", "value": "She has her nails done every month.", "highlights": ["has her nails done"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Clave:",
+        "body": "el objeto siempre va entre have/get y el participio. Nunca: I had repaired my car."
+      }
+    },
+    {
+      "id": "caus-get",
+      "tag": "Have vs Get",
+      "title": "Get: la versión informal",
+      "lede": "Get + objeto + participio tiene el mismo significado que have, pero suena más coloquial y es más frecuente en conversación.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Have (formal/neutro)",
+              "rule": "Más común en contextos escritos y profesionales",
+              "examples": [
+                "I had my suit tailored.",
+                "She had the report reviewed.",
+                "We had the system updated."
+              ]
+            },
+            {
+              "label": "Get (informal/coloquial)",
+              "rule": "Más frecuente en conversación y situaciones cotidianas",
+              "examples": [
+                "I got my suit tailored.",
+                "She got her hair cut.",
+                "I need to get my phone fixed."
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "En el examen:",
+        "body": "ambas formas son correctas. En B2 se espera que uses las dos con naturalidad."
+      }
+    },
+    {
+      "id": "caus-passive-meaning",
+      "tag": "Significado",
+      "title": "Tú no lo haces, otro lo hace",
+      "lede": "El error más frecuente es confundir la acción propia con el causativo. Compara:",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "I repaired my car.", "note": "yo lo reparé con mis propias manos" },
+            { "variant": "good", "text": "I had my car repaired.", "note": "llevé el coche al mecánico" },
+            { "variant": "bad", "text": "She cut her hair.", "note": "ella misma se cortó el pelo" },
+            { "variant": "good", "text": "She had her hair cut.", "note": "fue a la peluquería" },
+            { "variant": "bad", "text": "They painted the house.", "note": "ellos lo pintaron personalmente" },
+            { "variant": "good", "text": "They had the house painted.", "note": "contrataron a un pintor" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "caus-negatives-questions",
+      "tag": "Negativo y pregunta",
+      "title": "Formas interrogativas y negativas",
+      "lede": "El causativo sigue las reglas normales del auxiliar correspondiente. El participio nunca cambia.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Pregunta (pasado)", "value": "Did you have it fixed?", "highlights": ["Did you have", "fixed"] },
+            { "key": "Negativo (pasado)", "value": "I didn't get it done in time.", "highlights": ["didn't get", "done"] },
+            { "key": "Pregunta (presente perf.)", "value": "Have you had it checked yet?", "highlights": ["Have you had", "checked"] },
+            { "key": "Negativo (presente perf.)", "value": "I haven't had it repaired yet.", "highlights": ["haven't had", "repaired"] },
+            { "key": "Pregunta (futuro)", "value": "Are you going to get it done?", "highlights": ["going to get", "done"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "caus-situations",
+      "tag": "Situaciones comunes",
+      "title": "Servicios del día a día",
+      "lede": "Usamos el causativo para hablar de servicios profesionales: peluquería, mecánico, fontanero, médico, sastrería...",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Peluquería", "value": "I need to get my hair cut.", "highlights": ["get my hair cut"] },
+            { "key": "Mecánico", "value": "She had her car serviced yesterday.", "highlights": ["had her car serviced"] },
+            { "key": "Pintor", "value": "They're having the house painted this summer.", "highlights": ["having the house painted"] },
+            { "key": "Sastrería", "value": "He had his suit tailored for the wedding.", "highlights": ["had his suit tailored"] },
+            { "key": "Dentista", "value": "You should get your teeth checked.", "highlights": ["get your teeth checked"] },
+            { "key": "Electricista", "value": "We had the wiring inspected last month.", "highlights": ["had the wiring inspected"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "caus-unpleasant",
+      "tag": "Experiencias negativas",
+      "title": "Causativo sin intención",
+      "lede": "Have + objeto + participio también describe experiencias desagradables que te ocurren, sin que las hayas organizado tú.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Robo", "value": "I had my wallet stolen on the metro.", "highlights": ["had my wallet stolen"], "hint": "no lo organicé, me pasó" },
+            { "key": "Agresión", "value": "She had her bag snatched in the street.", "highlights": ["had her bag snatched"] },
+            { "key": "Daño", "value": "He had his arm broken in the accident.", "highlights": ["had his arm broken"] },
+            { "key": "Hackeo", "value": "We had our account hacked last year.", "highlights": ["had our account hacked"] }
+          ]
+        },
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Causativo intencionado",
+              "rule": "Tú organizas que alguien haga algo",
+              "examples": ["I had my car repaired. (lo llevé al mecánico)"]
+            },
+            {
+              "label": "Causativo de experiencia",
+              "rule": "Algo te ocurre sin que lo planifiques",
+              "examples": ["I had my car stolen. (me lo robaron)"]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "¿Cuál de estas oraciones expresa el causativo correctamente?",
+      "options": [
+        "I had repaired my car at the garage.",
+        "I had my car repaired at the garage.",
+        "I had my car to repair at the garage.",
+        "I had repairing my car at the garage."
+      ],
+      "answer": 1,
+      "explain": "La estructura correcta es have + objeto + participio pasado. El objeto (my car) siempre va entre have y el participio (repaired)."
+    },
+    {
+      "q": "Quieres preguntar si tu amigo llevó el teléfono a reparar. ¿Cómo lo dices?",
+      "options": [
+        "Did you fix your phone?",
+        "Did you have fixed your phone?",
+        "Did you get your phone fixed?",
+        "Did you get fixed your phone?"
+      ],
+      "answer": 2,
+      "explain": "get your phone fixed: get + objeto + participio es la forma informal del causativo. El objeto (your phone) va antes del participio."
+    },
+    {
+      "q": "\"She had her laptop stolen at the café.\" ¿Qué significa esta frase?",
+      "options": [
+        "Ella llevó su portátil a reparar en el café.",
+        "Ella organizó que alguien se llevara su portátil.",
+        "Le robaron el portátil en el café sin quererlo.",
+        "Ella prestó su portátil a alguien en el café."
+      ],
+      "answer": 2,
+      "explain": "Este es el causativo de experiencia: algo desagradable le ocurrió sin que ella lo organizara. El contexto 'stolen' (robado) confirma que no fue intencional."
+    }
+  ]
+}

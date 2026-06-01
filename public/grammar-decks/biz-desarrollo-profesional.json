@@ -1,0 +1,119 @@
+{
+  "meta": {
+    "eyebrow": "Biz · Desarrollo profesional",
+    "title": "Desarrollo",
+    "titleEmphasis": "profesional"
+  },
+  "cards": [
+    {
+      "id": "pd-cv",
+      "tag": "CV",
+      "title": "Verbos de acción para el currículum",
+      "lede": "Un buen CV en inglés empieza cada logro con un verbo fuerte en pasado.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "led", "value": "lideré · Led a team of 6.", "highlights": ["Led"] },
+            { "key": "improved", "value": "mejoré · Improved sales by 20%.", "highlights": ["Improved"] },
+            { "key": "launched", "value": "lancé · Launched a new product.", "highlights": ["Launched"] },
+            { "key": "managed", "value": "gestioné · Managed a budget.", "highlights": ["Managed"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Clave:",
+        "body": "cuantifica siempre que puedas: \"increased X by 30%\" convence más que \"increased X\"."
+      }
+    },
+    {
+      "id": "pd-goals",
+      "tag": "Objetivos",
+      "title": "Hablar de tus metas",
+      "lede": "En revisiones y entrevistas te preguntarán por tu futuro. Ten respuestas claras.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "I aim to...", "value": "mi meta es... · I aim to lead projects.", "highlights": ["I aim to"] },
+            { "key": "In five years, I see myself...", "value": "en cinco años me veo...", "highlights": ["I see myself"] },
+            { "key": "I'd like to develop...", "value": "me gustaría desarrollar...", "highlights": ["develop"] },
+            { "key": "I'm keen to take on...", "value": "tengo ganas de asumir...", "highlights": ["keen to take on"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pd-feedback",
+      "tag": "Feedback",
+      "title": "Dar y recibir feedback",
+      "lede": "El feedback es parte del trabajo en empresas anglosajonas. Recíbelo con apertura.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Recibir", "value": "Thanks for the feedback. I'll work on it.", "highlights": ["Thanks for the feedback"] },
+            { "key": "Pedir", "value": "Do you have any feedback for me?", "highlights": ["any feedback"] },
+            { "key": "Dar (positivo)", "value": "You did a great job on...", "highlights": ["great job"] },
+            { "key": "Dar (a mejorar)", "value": "One thing to work on might be...", "highlights": ["One thing to work on"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pd-raise",
+      "tag": "Negociar",
+      "title": "Pedir un aumento o ascenso",
+      "lede": "Pide con datos y seguridad, no con disculpas. La forma importa tanto como el fondo.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "Sorry, maybe could I have a raise?" },
+            { "variant": "good", "text": "Based on my results this year, I'd like to discuss my salary.", "note": "seguro y con datos" },
+            { "variant": "bad", "text": "I need more money." },
+            { "variant": "good", "text": "I believe my contribution justifies a review of my role.", "note": "profesional" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pd-networking",
+      "tag": "LinkedIn",
+      "title": "Tu presencia profesional",
+      "lede": "Vocabulario para describir tu perfil y conectar con otros en inglés.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "background in", "value": "formación/experiencia en · a background in design", "highlights": ["background in"] },
+            { "key": "passionate about", "value": "apasionado por", "highlights": ["passionate about"] },
+            { "key": "open to opportunities", "value": "abierto a oportunidades", "highlights": ["open to opportunities"] },
+            { "key": "Let's connect", "value": "conectemos · invitación", "highlights": ["Let's connect"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pd-learning",
+      "tag": "Crecer",
+      "title": "Aprendizaje continuo",
+      "lede": "Mostrar que sigues formándote es muy valorado. Frases para expresarlo.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "upskill", "value": "mejorar tus competencias", "highlights": ["upskill"] },
+            { "key": "stay up to date with", "value": "mantenerse al día con", "highlights": ["stay up to date with"] },
+            { "key": "take a course in", "value": "hacer un curso de", "highlights": ["take a course in"] },
+            { "key": "step out of my comfort zone", "value": "salir de mi zona de confort", "highlights": ["comfort zone"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Mentalidad:",
+        "body": "en entornos anglosajones se valora mucho la growth mindset: mostrar que quieres aprender."
+      }
+    }
+  ]
+}

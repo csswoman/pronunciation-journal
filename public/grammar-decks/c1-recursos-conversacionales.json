@@ -1,0 +1,119 @@
+{
+  "meta": {
+    "eyebrow": "C1 · Recursos conversacionales",
+    "title": "Recursos",
+    "titleEmphasis": "conversacionales"
+  },
+  "cards": [
+    {
+      "id": "rc-turn-taking",
+      "tag": "Turnos",
+      "title": "Tomar y ceder la palabra",
+      "lede": "Gestionar los turnos sin interrumpir bruscamente es señal de dominio.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Can I just say...?", "value": "pedir turno con tacto", "highlights": ["Can I just say"] },
+            { "key": "Sorry to interrupt,...", "value": "interrumpir con cortesía", "highlights": ["Sorry to interrupt"] },
+            { "key": "Go ahead.", "value": "ceder el turno", "highlights": ["Go ahead."] },
+            { "key": "What were you saying?", "value": "devolver el turno", "highlights": ["What were you saying?"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "rc-clarify",
+      "tag": "Aclarar",
+      "title": "Pedir y dar aclaraciones",
+      "lede": "Cuando no entiendes o quieres asegurarte, hay formas elegantes de comprobarlo.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Sorry, do you mean...?", "value": "¿quieres decir...?", "highlights": ["do you mean"] },
+            { "key": "If I understood correctly,...", "value": "si te entendí bien...", "highlights": ["If I understood correctly"] },
+            { "key": "In other words,...", "value": "en otras palabras... · reformular", "highlights": ["In other words"] },
+            { "key": "What I mean is...", "value": "lo que quiero decir es...", "highlights": ["What I mean is"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "rc-hedging",
+      "tag": "Matizar",
+      "title": "Hablar con cautela (hedging)",
+      "lede": "Los hablantes avanzados rara vez son tajantes. Matizan para sonar razonables.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Tajante",
+              "rule": "puede sonar arrogante",
+              "examples": ["This is wrong.", "It will fail."]
+            },
+            {
+              "label": "Matizado",
+              "rule": "más diplomático",
+              "examples": ["This might not be quite right.", "It could possibly fail."]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Recursos:",
+        "body": "tend to, seem to, sort of, I would say... suavizan afirmaciones fuertes."
+      }
+    },
+    {
+      "id": "rc-emphasis",
+      "tag": "Énfasis",
+      "title": "Estructuras para enfatizar",
+      "lede": "Reorganizar la frase resalta lo importante. Muy útil al argumentar o narrar.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Cleft (What...)", "value": "What I love is the people.", "highlights": ["What I love is"] },
+            { "key": "It was... that", "value": "It was Ana that called.", "highlights": ["It was Ana that"] },
+            { "key": "Inversión", "value": "Never have I seen such a thing.", "highlights": ["Never have I"], "hint": "formal y enfático" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "rc-buy-time",
+      "tag": "Ganar tiempo",
+      "title": "Pensar mientras hablas",
+      "lede": "Frases puente que evitan silencios mientras ordenas tus ideas.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "That's a good question.", "value": "buena pregunta · gana segundos", "highlights": ["That's a good question."] },
+            { "key": "Let me put it this way.", "value": "déjame decirlo así", "highlights": ["Let me put it this way."] },
+            { "key": "How can I put this...?", "value": "¿cómo lo diría...?", "highlights": ["How can I put this"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "rc-agree-degrees",
+      "tag": "Acuerdo",
+      "title": "Grados de acuerdo",
+      "lede": "No todo es yes o no. Expresar el matiz de tu acuerdo enriquece la conversación.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "good", "text": "Absolutely, I couldn't agree more.", "note": "acuerdo total" },
+            { "variant": "good", "text": "I see your point, but...", "note": "acuerdo parcial" },
+            { "variant": "good", "text": "I'm afraid I can't agree.", "note": "desacuerdo educado" },
+            { "variant": "bad", "text": "No, you are wrong.", "note": "demasiado directo" }
+          ]
+        }
+      ]
+    }
+  ]
+}

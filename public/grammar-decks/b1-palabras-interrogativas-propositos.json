@@ -1,0 +1,126 @@
+{
+  "meta": {
+    "eyebrow": "B1 · Palabras interrogativas y propósitos",
+    "title": "Palabras interrogativas",
+    "titleEmphasis": "y propósitos"
+  },
+  "cards": [
+    {
+      "id": "wp-whwords",
+      "tag": "Wh- words",
+      "title": "what, which, whose",
+      "lede": "Las interrogativas básicas y los matices que las diferencian.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "what", "value": "opción abierta · What do you want?", "highlights": ["What"] },
+            { "key": "which", "value": "opción limitada · Which one, A or B?", "highlights": ["Which"] },
+            { "key": "whose", "value": "posesión · Whose is this?", "highlights": ["Whose"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Matiz:",
+        "body": "which cuando hay opciones definidas; what cuando es abierto."
+      }
+    },
+    {
+      "id": "wp-howphrases",
+      "tag": "How",
+      "title": "How + adjetivo",
+      "lede": "How se combina con adjetivos y adverbios para preguntar medidas y grados.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "How long", "value": "duración · How long does it take?", "highlights": ["How long"] },
+            { "key": "How often", "value": "frecuencia · How often?", "highlights": ["How often"] },
+            { "key": "How far", "value": "distancia · How far is it?", "highlights": ["How far"] },
+            { "key": "How much/many", "value": "cantidad", "highlights": ["How much"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wp-subject-q",
+      "tag": "Sujeto",
+      "title": "Preguntas sobre el sujeto",
+      "lede": "Cuando la pregunta es sobre el sujeto (quién/qué hace), no usas do/does/did.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "good", "text": "Who called you?", "note": "sujeto: sin did" },
+            { "variant": "bad", "text": "Who did call you?" },
+            { "variant": "good", "text": "Who did you call?", "note": "objeto: con did" },
+            { "variant": "good", "text": "What happened?", "note": "sujeto: sin did" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Regla:",
+        "body": "si Who/What es el sujeto, el verbo va directo: Who wants coffee? (no \"Who does want\")."
+      }
+    },
+    {
+      "id": "wp-purpose-to",
+      "tag": "Propósito",
+      "title": "to + verbo (para)",
+      "lede": "La forma más simple de decir el porqué de una acción: to + verbo base.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "to + verbo", "value": "I went out to buy milk.", "highlights": ["to buy"] },
+            { "key": "Pregunta", "value": "What for? · Why?", "highlights": ["What for?"] },
+            { "key": "Respuesta", "value": "To relax. · To save time.", "highlights": ["To relax"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Ojo:",
+        "body": "el propósito es to + verbo, no \"for + verbo\": to buy, no \"for buy\"."
+      }
+    },
+    {
+      "id": "wp-inorderto",
+      "tag": "Propósito formal",
+      "title": "in order to / so as to",
+      "lede": "Versiones más formales de to. so that introduce una cláusula completa.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "in order to", "value": "I saved money in order to travel.", "highlights": ["in order to"] },
+            { "key": "so as to", "value": "He left early so as to avoid traffic.", "highlights": ["so as to"] },
+            { "key": "so that + cláusula", "value": "I called so that you'd know.", "highlights": ["so that"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wp-forvsto",
+      "tag": "for / to",
+      "title": "for + sustantivo vs. to + verbo",
+      "lede": "El propósito se expresa con for delante de un sustantivo y con to delante de un verbo.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "for + sustantivo",
+              "rule": "para (una cosa)",
+              "examples": ["I went out for milk.", "It's for cleaning."]
+            },
+            {
+              "label": "to + verbo",
+              "rule": "para (hacer algo)",
+              "examples": ["I went out to buy milk.", "It's used to clean."]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,110 @@
+{
+  "meta": {
+    "eyebrow": "Tech · Inglés para ventas",
+    "title": "Inglés para",
+    "titleEmphasis": "ventas"
+  },
+  "cards": [
+    {
+      "id": "sa-prospecting",
+      "tag": "Prospección",
+      "title": "Primer contacto",
+      "lede": "El acercamiento inicial debe ser breve, relevante y orientado al cliente.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Presentar", "value": "I'm reaching out because...", "highlights": ["reaching out"] },
+            { "key": "Valor", "value": "We help companies like yours to...", "highlights": ["We help companies like yours"] },
+            { "key": "Pedir tiempo", "value": "Would you be open to a quick call?", "highlights": ["Would you be open to"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sa-needs",
+      "tag": "Necesidades",
+      "title": "Detectar necesidades",
+      "lede": "Preguntas abiertas que descubren los problemas del cliente antes de vender.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Situación", "value": "What's your current process?", "highlights": ["What's your current process?"] },
+            { "key": "Problema", "value": "What challenges are you facing?", "highlights": ["What challenges"] },
+            { "key": "Impacto", "value": "How is that affecting your team?", "highlights": ["How is that affecting"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Clave:",
+        "body": "pregunta y escucha más de lo que hablas; vende sobre lo que el cliente necesita."
+      }
+    },
+    {
+      "id": "sa-pitch",
+      "tag": "Propuesta",
+      "title": "Presentar el producto",
+      "lede": "Conecta cada característica con un beneficio concreto para el cliente.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Beneficio", "value": "This means you'll save hours each week.", "highlights": ["This means you'll"] },
+            { "key": "Diferenciar", "value": "What sets us apart is...", "highlights": ["What sets us apart"] },
+            { "key": "Prueba", "value": "Our clients have seen a 40% increase.", "highlights": ["have seen"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sa-objections",
+      "tag": "Objeciones",
+      "title": "Manejar objeciones",
+      "lede": "Reconoce la objeción antes de responderla. No discutas: reencuadra.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "good", "text": "I understand your concern.", "note": "reconocer primero" },
+            { "variant": "good", "text": "That's a fair point. Let me explain...", "note": "validar y reencuadrar" },
+            { "variant": "bad", "text": "No, you're wrong about that.", "note": "evítalo" },
+            { "variant": "good", "text": "Many clients felt the same, until...", "note": "feel-felt-found" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sa-negotiation",
+      "tag": "Negociar",
+      "title": "Precio y condiciones",
+      "lede": "El condicional es la herramienta clave: ofrece concesiones a cambio de algo.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Condicional", "value": "If you sign today, we can offer 10% off.", "highlights": ["If you sign today"] },
+            { "key": "Ceder", "value": "We could be flexible on...", "highlights": ["We could be flexible"] },
+            { "key": "A cambio", "value": "...in exchange for a longer contract.", "highlights": ["in exchange for"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sa-closing",
+      "tag": "Cierre",
+      "title": "Cerrar la venta",
+      "lede": "Frases para guiar al cliente hacia la decisión y definir el siguiente paso.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Cierre suave", "value": "Does that sound good to you?", "highlights": ["Does that sound good"] },
+            { "key": "Siguiente paso", "value": "Shall we get started?", "highlights": ["Shall we get started?"] },
+            { "key": "Seguimiento", "value": "I'll send over the details.", "highlights": ["send over"] }
+          ]
+        }
+      ]
+    }
+  ]
+}

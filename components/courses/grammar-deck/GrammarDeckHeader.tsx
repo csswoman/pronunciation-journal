@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Target } from "lucide-react";
 import type { GrammarDeckMeta } from "@/lib/courses/grammar-deck/types";
 
 interface GrammarDeckHeaderProps {
@@ -32,6 +32,12 @@ export default function GrammarDeckHeader({
         {meta.title}
         {meta.titleEmphasis && <em> {meta.titleEmphasis}</em>}
       </h1>
+      {meta.goal && (
+        <p className="grammar-deck__goal">
+          <Target size={13} strokeWidth={2.25} aria-hidden />
+          <span>{meta.goal}</span>
+        </p>
+      )}
       <div className="grammar-deck__meta">
         <div className="grammar-deck__prog" role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100}>
           <span className="grammar-deck__prog-fill" style={{ width: `${pct}%` }} />

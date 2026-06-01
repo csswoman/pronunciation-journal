@@ -1,0 +1,126 @@
+{
+  "meta": {
+    "eyebrow": "A1 · Fechas, horas y descripciones",
+    "title": "Fechas, horas y",
+    "titleEmphasis": "descripciones"
+  },
+  "cards": [
+    {
+      "id": "fh-time",
+      "tag": "La hora",
+      "title": "What time is it?",
+      "titleItalic": ["What time is it?"],
+      "lede": "Para decir la hora usas It's + número. Hay dos formas: la directa y la clásica con past / to.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Directa", "value": "It's seven thirty. · It's nine fifteen.", "highlights": ["seven thirty", "nine fifteen"] },
+            { "key": "past = y", "value": "It's quarter past six (6:15).", "highlights": ["quarter past"] },
+            { "key": "to = para las", "value": "It's quarter to nine (8:45).", "highlights": ["quarter to"] },
+            { "key": "en punto", "value": "It's ten o'clock (10:00).", "highlights": ["o'clock"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Ojo:",
+        "body": "o'clock solo se usa con horas exactas: ten o'clock, nunca ten thirty o'clock."
+      }
+    },
+    {
+      "id": "fh-prepositions",
+      "tag": "at / on / in",
+      "title": "at, on, in con tiempo",
+      "lede": "Tres preposiciones para tres tamaños de tiempo: de la hora exacta al periodo largo.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "at + hora", "value": "at 7 o'clock · at noon · at night", "highlights": ["at"] },
+            { "key": "on + día/fecha", "value": "on Monday · on July 4th", "highlights": ["on"] },
+            { "key": "in + mes/año/parte del día", "value": "in May · in 2025 · in the morning", "highlights": ["in"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Excepción:",
+        "body": "se dice in the morning / afternoon / evening, pero at night."
+      }
+    },
+    {
+      "id": "fh-days",
+      "tag": "Días y meses",
+      "title": "Días, meses y estaciones",
+      "lede": "En inglés los días y meses siempre van con mayúscula, aunque estén a mitad de frase.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Días", "value": "Monday, Tuesday, Wednesday, Thursday, Friday", "highlights": ["Monday"] },
+            { "key": "Fin de semana", "value": "Saturday, Sunday", "highlights": ["Saturday", "Sunday"] },
+            { "key": "Meses", "value": "January, February, March... December", "highlights": ["January"] },
+            { "key": "Estaciones", "value": "spring, summer, fall/autumn, winter" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Cultura:",
+        "body": "en EE. UU. la fecha es mes/día/año: 7/4 = July 4th."
+      }
+    },
+    {
+      "id": "fh-dates",
+      "tag": "Fechas",
+      "title": "Números ordinales en fechas",
+      "lede": "Las fechas usan ordinales: first, second, third. Se escriben con número pero se leen completos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "1st", "value": "the first · May 1st", "highlights": ["first"] },
+            { "key": "2nd / 3rd", "value": "the second · the third", "highlights": ["second", "third"] },
+            { "key": "4th–20th", "value": "fourth, fifth... twentieth (-th)", "highlights": ["-th"] },
+            { "key": "21st, 22nd, 23rd", "value": "se repite el patrón st/nd/rd" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fh-describe",
+      "tag": "Describir",
+      "title": "It's + adjetivo",
+      "lede": "Para describir cosas, lugares o el clima usas el verbo to be + adjetivo. El adjetivo no cambia.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Cosas", "value": "The car is big. · The coffee is hot.", "highlights": ["is big", "is hot"] },
+            { "key": "Personas", "value": "She is tall. · They are friendly.", "highlights": ["is tall", "are friendly"] },
+            { "key": "Clima", "value": "It's sunny. · It's cold today.", "highlights": ["It's sunny"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Ojo:",
+        "body": "el adjetivo nunca lleva -s: two big cars, no \"two bigs cars\"."
+      }
+    },
+    {
+      "id": "fh-order",
+      "tag": "Orden",
+      "title": "El adjetivo va antes del sustantivo",
+      "lede": "Al revés que en español: en inglés el adjetivo va delante de la cosa que describe.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "a house big" },
+            { "variant": "good", "text": "a big house", "note": "adjetivo + sustantivo" },
+            { "variant": "good", "text": "an interesting book", "note": "an antes de sonido vocálico" },
+            { "variant": "good", "text": "a beautiful red car", "note": "varios adjetivos, sin coma" }
+          ]
+        }
+      ]
+    }
+  ]
+}

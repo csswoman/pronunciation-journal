@@ -1,0 +1,117 @@
+{
+  "meta": {
+    "eyebrow": "B2 · Audio historia · Sound Lab",
+    "title": "Atrapados en la",
+    "titleEmphasis": "tecnología"
+  },
+  "cards": [
+    {
+      "id": "tc-vocab",
+      "tag": "Vocabulario",
+      "title": "Tecnología del día a día",
+      "lede": "Léxico que aparece en la historia. Identifícalo al escuchar.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "device", "value": "dispositivo", "highlights": ["device"] },
+            { "key": "screen time", "value": "tiempo de pantalla", "highlights": ["screen time"] },
+            { "key": "notification", "value": "notificación", "highlights": ["notification"] },
+            { "key": "to charge", "value": "cargar (la batería)", "highlights": ["charge"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tc-collocations",
+      "tag": "Colocaciones",
+      "title": "Palabras que van juntas",
+      "lede": "En tecnología hay combinaciones fijas. Usarlas bien suena nativo.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "scroll through", "value": "deslizar por · scroll through your feed", "highlights": ["scroll through"] },
+            { "key": "log in / out", "value": "iniciar / cerrar sesión", "highlights": ["log in", "out"] },
+            { "key": "back up", "value": "hacer copia · back up your files", "highlights": ["back up"] },
+            { "key": "go viral", "value": "hacerse viral", "highlights": ["go viral"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tc-habits",
+      "tag": "Hábitos",
+      "title": "used to y would",
+      "titleItalic": ["used to"],
+      "lede": "Para contrastar cómo era la vida antes de la tecnología con cómo es ahora.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "used to", "value": "antes solía · We used to talk more.", "highlights": ["used to"], "hint": "hábito pasado que ya no" },
+            { "key": "would", "value": "solía (acciones repetidas) · We would meet outside.", "highlights": ["would"] },
+            { "key": "be used to", "value": "estar acostumbrado · I'm used to it now.", "highlights": ["be used to"], "hint": "ojo: distinto significado" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "No confundas:",
+        "body": "I used to (hábito pasado) vs I'm used to (estoy acostumbrado). El segundo lleva be."
+      }
+    },
+    {
+      "id": "tc-contractions",
+      "tag": "Escucha",
+      "title": "Contracciones rápidas",
+      "lede": "Al hablar deprisa, las contracciones se comen sílabas. Por eso cuesta seguir el audio.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "I do not know (lento)" },
+            { "variant": "good", "text": "I dunno → /aɪ dənoʊ/", "note": "don't know se funde" },
+            { "variant": "bad", "text": "What do you want?" },
+            { "variant": "good", "text": "Whaddya want? → /wɒdʒə/", "note": "what do you se reduce" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tc-intonation",
+      "tag": "Entonación",
+      "title": "Sarcasmo y énfasis",
+      "lede": "La historia juega con el tono. La misma frase cambia según cómo se dice.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Énfasis", "value": "I NEVER check my phone. (sí lo hace)", "highlights": ["NEVER"], "hint": "tono marca ironía" },
+            { "key": "Sorpresa ↗", "value": "You did WHAT?", "highlights": ["WHAT?"] },
+            { "key": "Aburrimiento ↘", "value": "Great. Another update.", "highlights": ["Great."], "hint": "tono plano = sarcasmo" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tc-strategy",
+      "tag": "Estrategia",
+      "title": "Escuchar sin entenderlo todo",
+      "lede": "No necesitas cada palabra para captar la historia. Entrena la escucha global.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Palabras clave", "value": "céntrate en sustantivos y verbos fuertes", "highlights": ["clave"] },
+            { "key": "Contexto", "value": "deduce lo que no oíste por lo que rodea", "highlights": ["deduce"] },
+            { "key": "No te pares", "value": "si pierdes una frase, sigue: ya volverá el hilo", "highlights": ["sigue"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Practica:",
+        "body": "escucha el audio una vez sin texto, otra con subtítulos y una tercera repitiendo en voz alta."
+      }
+    }
+  ]
+}

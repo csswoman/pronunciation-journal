@@ -1,0 +1,116 @@
+{
+  "meta": {
+    "eyebrow": "A1 · Audio: inglés para viajes",
+    "title": "Inglés para",
+    "titleEmphasis": "viajes",
+    "goal": "Ya puedes desenvolverte en un viaje (aeropuerto, hotel, restaurante) y entender el habla rápida real."
+  },
+  "sounds": ["ə"],
+  "cards": [
+    {
+      "id": "tv-airport",
+      "tag": "Aeropuerto",
+      "title": "En el aeropuerto",
+      "lede": "Frases y vocabulario para facturar, embarcar y pasar controles.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Documentos", "value": "passport, boarding pass, ticket" },
+            { "key": "Lugares", "value": "check-in, gate, baggage claim" },
+            { "key": "Frase", "value": "Where is the gate?", "highlights": ["Where is"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Escucha:",
+        "body": "los anuncios usan now boarding y final call; aprende a reconocerlos de oído."
+      }
+    },
+    {
+      "id": "tv-directions",
+      "tag": "Direcciones",
+      "title": "Pedir indicaciones",
+      "lede": "Cómo preguntar y entender el camino. Las respuestas usan imperativos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Preguntar", "value": "How do I get to the station?", "highlights": ["How do I get to"] },
+            { "key": "Direcciones", "value": "turn left, turn right, go straight", "highlights": ["turn left"] },
+            { "key": "Distancia", "value": "It's near. · It's two blocks away.", "highlights": ["two blocks away"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tv-hotel",
+      "tag": "Hotel",
+      "title": "En el hotel",
+      "lede": "Reservar, registrarte y pedir lo básico en tu alojamiento.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Reserva", "value": "I have a reservation.", "highlights": ["reservation"] },
+            { "key": "Registro", "value": "check in · check out", "highlights": ["check in"] },
+            { "key": "Pedir", "value": "Can I have the Wi-Fi password?", "highlights": ["Can I have"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tv-restaurant",
+      "tag": "Restaurante",
+      "title": "Pedir comida",
+      "lede": "Cómo ordenar en un restaurante de forma educada con I'd like y can I have.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Pedir", "value": "I'd like a coffee, please.", "highlights": ["I'd like"] },
+            { "key": "Alternativa", "value": "Can I have the menu?", "highlights": ["Can I have"] },
+            { "key": "Cuenta", "value": "The check, please.", "highlights": ["The check"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Cortesía:",
+        "body": "I'd like suena más educado que I want al pedir algo."
+      }
+    },
+    {
+      "id": "tv-numbers",
+      "tag": "Compras",
+      "title": "Precios y cantidades",
+      "lede": "Preguntar precios y entender cantidades al comprar o pagar.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Precio", "value": "How much is it?", "highlights": ["How much"] },
+            { "key": "Respuesta", "value": "It's twenty dollars.", "highlights": ["twenty dollars"] },
+            { "key": "Pago", "value": "Can I pay by card?", "highlights": ["pay by card"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tv-listening",
+      "tag": "Audio",
+      "title": "Entender de oído",
+      "lede": "En viajes la gente habla rápido. Estas reducciones son las que más vas a oír.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "good", "text": "How much is it? → \"howmuch-izit\"", "note": "todo enlazado" },
+            { "variant": "good", "text": "Can I → \"k'n I\"", "note": "can se reduce" },
+            { "variant": "good", "text": "Do you want → \"d'ya wanna\"", "note": "muy informal" },
+            { "variant": "good", "text": "going to → \"gonna\"", "note": "futuro hablado" }
+          ]
+        }
+      ]
+    }
+  ]
+}

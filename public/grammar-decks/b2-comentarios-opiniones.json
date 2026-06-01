@@ -1,0 +1,114 @@
+{
+  "meta": {
+    "eyebrow": "B2 · Comentarios y opiniones",
+    "title": "Comentarios y",
+    "titleEmphasis": "opiniones"
+  },
+  "cards": [
+    {
+      "id": "co-giving",
+      "tag": "Opinar",
+      "title": "Dar tu opinión",
+      "lede": "Frases para introducir una opinión, de lo neutro a lo enfático.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Neutro", "value": "In my opinion, ... · I think...", "highlights": ["In my opinion"] },
+            { "key": "Personal", "value": "If you ask me, ... · As far as I'm concerned", "highlights": ["If you ask me"] },
+            { "key": "Enfático", "value": "I strongly believe (that)...", "highlights": ["I strongly believe"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Variar:",
+        "body": "alterna las fórmulas; repetir I think todo el rato suena monótono."
+      }
+    },
+    {
+      "id": "co-agreeing",
+      "tag": "Acuerdo",
+      "title": "Mostrar acuerdo",
+      "lede": "Formas de estar de acuerdo, totalmente o en parte.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Total", "value": "I completely agree. · Absolutely.", "highlights": ["completely agree"] },
+            { "key": "Parcial", "value": "I see your point, but...", "highlights": ["I see your point"] },
+            { "key": "Reforzar", "value": "That's exactly what I think.", "highlights": ["exactly"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "co-disagreeing",
+      "tag": "Desacuerdo",
+      "title": "Mostrar desacuerdo con tacto",
+      "lede": "Discrepar sin sonar agresivo. Suaviza con I'm afraid o I see what you mean, but.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "good", "text": "I'm afraid I disagree.", "note": "educado" },
+            { "variant": "good", "text": "I see what you mean, but...", "note": "reconocer primero" },
+            { "variant": "bad", "text": "You're wrong.", "note": "demasiado directo" },
+            { "variant": "good", "text": "I'm not so sure about that.", "note": "duda suave" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "co-commenting",
+      "tag": "Comentar",
+      "title": "Reaccionar y comentar",
+      "lede": "Comentarios breves para reaccionar a lo que dice otra persona.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Interés", "value": "That's interesting. · Good point.", "highlights": ["Good point"] },
+            { "key": "Sorpresa", "value": "Really? · You're kidding!", "highlights": ["Really?"] },
+            { "key": "Empatía", "value": "That makes sense.", "highlights": ["makes sense"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "co-hedging",
+      "tag": "Matizar",
+      "title": "Suavizar opiniones",
+      "lede": "El inglés evita afirmaciones tajantes. Estas palabras suavizan lo que dices (hedging).",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Probabilidad", "value": "It seems / tends to be...", "highlights": ["seems", "tends to"] },
+            { "key": "Generalizar", "value": "in general · on the whole", "highlights": ["on the whole"] },
+            { "key": "Atenuar", "value": "kind of · sort of · a bit", "highlights": ["kind of"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Cultura:",
+        "body": "el hedging hace que suenes diplomático, no inseguro; los nativos lo usan mucho."
+      }
+    },
+    {
+      "id": "co-asking",
+      "tag": "Pedir opinión",
+      "title": "Pedir la opinión del otro",
+      "lede": "Cómo invitar a otra persona a dar su punto de vista.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Directo", "value": "What do you think?", "highlights": ["What do you think?"] },
+            { "key": "Sobre algo", "value": "How do you feel about...?", "highlights": ["How do you feel about"] },
+            { "key": "Acuerdo", "value": "Wouldn't you agree?", "highlights": ["Wouldn't you agree?"] }
+          ]
+        }
+      ]
+    }
+  ]
+}

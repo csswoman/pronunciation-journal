@@ -1,0 +1,114 @@
+{
+  "meta": {
+    "eyebrow": "C1 · Presentaciones",
+    "title": "Presentaciones y",
+    "titleEmphasis": "expresión oral"
+  },
+  "cards": [
+    {
+      "id": "pr-open",
+      "tag": "Apertura",
+      "title": "Empezar con fuerza",
+      "lede": "Los primeros segundos captan (o pierden) a la audiencia. Usa una apertura clara.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Saludo", "value": "Good morning, everyone. Thanks for coming.", "highlights": ["Thanks for coming"] },
+            { "key": "Tema", "value": "Today I'd like to talk about...", "highlights": ["I'd like to talk about"] },
+            { "key": "Gancho", "value": "Did you know that...? · pregunta o dato", "highlights": ["Did you know"] },
+            { "key": "Hoja de ruta", "value": "I'll cover three points.", "highlights": ["three points"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pr-signpost",
+      "tag": "Señalizar",
+      "title": "Guiar a la audiencia",
+      "lede": "Las frases-señal indican en qué parte estás. Hacen tu charla fácil de seguir.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Empezar punto", "value": "Let's start with...", "highlights": ["Let's start with"] },
+            { "key": "Cambiar", "value": "Moving on to... · Turning to...", "highlights": ["Moving on to"] },
+            { "key": "Volver", "value": "As I mentioned earlier,...", "highlights": ["As I mentioned earlier"] },
+            { "key": "Cerrar punto", "value": "So, to recap this part,...", "highlights": ["to recap"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pr-visuals",
+      "tag": "Apoyos",
+      "title": "Hablar de datos y gráficos",
+      "lede": "Presentar cifras con el lenguaje adecuado da profesionalidad.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "As you can see,...", "value": "como pueden ver... · señalar", "highlights": ["As you can see"] },
+            { "key": "This shows...", "value": "esto muestra... · interpretar", "highlights": ["This shows"] },
+            { "key": "rose / fell / peaked", "value": "subió / cayó / alcanzó el máximo", "highlights": ["rose", "fell", "peaked"] },
+            { "key": "a sharp increase", "value": "un fuerte aumento", "highlights": ["a sharp increase"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pr-engage",
+      "tag": "Conectar",
+      "title": "Mantener a la audiencia",
+      "lede": "Una presentación no es un monólogo. Implica al público y varía el ritmo.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Pregunta directa", "value": "Have you ever wondered...?", "highlights": ["Have you ever wondered"] },
+            { "key": "Incluir", "value": "Imagine you're...", "highlights": ["Imagine you're"] },
+            { "key": "Pausa retórica", "value": "deja un silencio tras un dato clave", "highlights": ["silencio"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Voz:",
+        "body": "varía el ritmo y haz pausas. Un tono monótono pierde a la audiencia aunque el inglés sea perfecto."
+      }
+    },
+    {
+      "id": "pr-questions",
+      "tag": "Preguntas",
+      "title": "Gestionar el turno de preguntas",
+      "lede": "El Q&A pone a prueba tu fluidez espontánea. Ten frases preparadas.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Invitar", "value": "I'm happy to take any questions.", "highlights": ["take any questions"] },
+            { "key": "Ganar tiempo", "value": "That's an interesting question.", "highlights": ["interesting question"] },
+            { "key": "No saber", "value": "I don't have that data, but I'll find out.", "highlights": ["I'll find out"] },
+            { "key": "Reformular", "value": "So, if I understand you correctly,...", "highlights": ["if I understand you correctly"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pr-close",
+      "tag": "Cierre",
+      "title": "Terminar con impacto",
+      "lede": "Evita el final flojo. Resume, lanza un mensaje y agradece.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "Well, that's all. Thanks." },
+            { "variant": "good", "text": "To sum up, the key message is... Thank you.", "note": "resume antes de cerrar" },
+            { "variant": "bad", "text": "I think I finished. Eh, questions?" },
+            { "variant": "good", "text": "That brings me to the end. I'd be glad to take questions.", "note": "transición clara al Q&A" }
+          ]
+        }
+      ]
+    }
+  ]
+}

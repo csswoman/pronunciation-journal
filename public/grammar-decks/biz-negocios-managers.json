@@ -1,0 +1,110 @@
+{
+  "meta": {
+    "eyebrow": "Biz · Negocios para managers",
+    "title": "Negocios para",
+    "titleEmphasis": "managers"
+  },
+  "cards": [
+    {
+      "id": "mg-delegating",
+      "tag": "Delegar",
+      "title": "Asignar tareas",
+      "lede": "Un manager delega con claridad y respeto. El modal adecuado marca el tono.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Pedir", "value": "Could you take the lead on this?", "highlights": ["take the lead on"] },
+            { "key": "Asignar", "value": "I'd like you to handle the client.", "highlights": ["I'd like you to"] },
+            { "key": "Plazo", "value": "We need this by end of day.", "highlights": ["by end of day"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Clave:",
+        "body": "deja claros el qué, el porqué y el plazo; evita instrucciones ambiguas."
+      }
+    },
+    {
+      "id": "mg-feedback",
+      "tag": "Feedback",
+      "title": "Dar retroalimentación",
+      "lede": "El feedback constructivo reconoce lo bueno y plantea mejoras sin desanimar.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Positivo", "value": "You did a great job on...", "highlights": ["You did a great job"] },
+            { "key": "Mejorar", "value": "One thing to work on is...", "highlights": ["One thing to work on"] },
+            { "key": "Sugerir", "value": "It might help to...", "highlights": ["It might help to"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mg-meetings",
+      "tag": "Reuniones",
+      "title": "Dirigir reuniones",
+      "lede": "Frases para abrir, encauzar y cerrar una reunión que tú lideras.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Abrir", "value": "Let's get started. Today's agenda is...", "highlights": ["Let's get started"] },
+            { "key": "Encauzar", "value": "Let's stay on topic. · Let's park that.", "highlights": ["Let's stay on topic"] },
+            { "key": "Cerrar", "value": "To sum up, the action items are...", "highlights": ["action items"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mg-conflict",
+      "tag": "Conflictos",
+      "title": "Gestionar conflictos",
+      "lede": "Mediar requiere lenguaje neutral que escuche a ambas partes sin tomar bando.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "good", "text": "Let's hear both sides.", "note": "neutralidad" },
+            { "variant": "good", "text": "I understand where you're coming from.", "note": "empatía" },
+            { "variant": "good", "text": "How can we find common ground?", "note": "buscar acuerdo" },
+            { "variant": "bad", "text": "You're overreacting.", "note": "evítalo" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mg-motivating",
+      "tag": "Motivar",
+      "title": "Motivar al equipo",
+      "lede": "Reconocer el esfuerzo y fijar metas claras mantiene al equipo comprometido.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Reconocer", "value": "I really appreciate your effort.", "highlights": ["I really appreciate"] },
+            { "key": "Animar", "value": "We're making great progress.", "highlights": ["making great progress"] },
+            { "key": "Metas", "value": "Let's aim to... · Our goal this quarter is...", "highlights": ["Our goal this quarter"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mg-reporting",
+      "tag": "Reportar",
+      "title": "Informar a dirección",
+      "lede": "Presentar resultados a superiores: conciso, con datos y orientado a decisiones.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Resumir", "value": "In short, we hit our targets.", "highlights": ["In short"] },
+            { "key": "Datos", "value": "Revenue is up 12% on last quarter.", "highlights": ["up 12%"] },
+            { "key": "Recomendar", "value": "My recommendation would be to...", "highlights": ["My recommendation would be"] }
+          ]
+        }
+      ]
+    }
+  ]
+}

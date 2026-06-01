@@ -1,0 +1,114 @@
+{
+  "meta": {
+    "eyebrow": "A2 · Práctico: viajes de turismo",
+    "title": "Viajes de",
+    "titleEmphasis": "turismo"
+  },
+  "cards": [
+    {
+      "id": "tt-transport",
+      "tag": "Transporte",
+      "title": "Moverse por la ciudad",
+      "lede": "Medios de transporte y cómo se combinan con by y con on/in.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Medios", "value": "bus, train, subway, taxi, plane" },
+            { "key": "by + medio", "value": "by bus · by train · by car", "highlights": ["by"] },
+            { "key": "Excepción", "value": "on foot (a pie)", "highlights": ["on foot"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Ojo:",
+        "body": "se dice by car pero in the car / on the bus al hablar de un vehículo concreto."
+      }
+    },
+    {
+      "id": "tt-tickets",
+      "tag": "Billetes",
+      "title": "Comprar boletos",
+      "lede": "Frases para comprar entradas y billetes de transporte.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Pedir", "value": "A ticket to London, please.", "highlights": ["A ticket to"] },
+            { "key": "Ida/vuelta", "value": "one-way · round-trip / return", "highlights": ["round-trip"] },
+            { "key": "Horario", "value": "What time does it leave?", "highlights": ["What time does it leave?"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tt-sightseeing",
+      "tag": "Turismo",
+      "title": "Visitar lugares",
+      "lede": "Vocabulario y preguntas para hacer turismo y orientarte.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Lugares", "value": "museum, castle, beach, park" },
+            { "key": "Preguntar", "value": "What's worth seeing here?", "highlights": ["worth seeing"] },
+            { "key": "Horario", "value": "What time does it open/close?", "highlights": ["open", "close"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tt-directions",
+      "tag": "Direcciones",
+      "title": "Entender indicaciones",
+      "lede": "Las respuestas a 'cómo llego' usan imperativos y preposiciones de lugar.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Girar", "value": "Turn left at the corner.", "highlights": ["Turn left"] },
+            { "key": "Seguir", "value": "Go straight ahead.", "highlights": ["Go straight"] },
+            { "key": "Referencia", "value": "It's opposite the bank.", "highlights": ["opposite"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tt-future",
+      "tag": "Planes",
+      "title": "going to para planes",
+      "lede": "Para contar tus planes de viaje usas be going to + verbo base.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Plan", "value": "We're going to visit Rome.", "highlights": ["going to visit"] },
+            { "key": "Negativo", "value": "I'm not going to fly.", "highlights": ["not going to"] },
+            { "key": "Pregunta", "value": "Where are you going to stay?", "highlights": ["going to stay"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Hablado:",
+        "body": "going to se reduce a gonna en conversación: We're gonna visit Rome."
+      }
+    },
+    {
+      "id": "tt-problems",
+      "tag": "Problemas",
+      "title": "Pedir ayuda en el viaje",
+      "lede": "Frases de emergencia cuando algo sale mal durante el viaje.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "good", "text": "I'm lost.", "note": "estoy perdido" },
+            { "variant": "good", "text": "I missed my train.", "note": "perdí el tren" },
+            { "variant": "good", "text": "Can you help me, please?", "note": "pedir ayuda" },
+            { "variant": "good", "text": "Where's the nearest hospital?", "note": "emergencia" }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,169 @@
+{
+  "meta": {
+    "eyebrow": "B2 · Gramática",
+    "title": "Tiempos narrativos",
+    "titleEmphasis": "integrados",
+    "goal": "Ya combinas past simple, past continuous y past perfect para contar historias con fluidez temporal."
+  },
+  "cards": [
+    {
+      "id": "narr-three-tenses",
+      "tag": "Los tres tiempos",
+      "title": "Cada tiempo tiene un papel",
+      "lede": "Una buena narración en inglés utiliza tres tiempos con funciones distintas y complementarias. Entenderlos como capas te ayuda a usarlos juntos con naturalidad.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Past simple", "value": "Los eventos principales, en orden cronológico: She arrived, opened the door, and saw him.", "highlights": ["arrived", "opened", "saw"], "hint": "el esqueleto de la historia" },
+            { "key": "Past continuous", "value": "El fondo o escenario, y acciones interrumpidas: It was raining. She was reading when the phone rang.", "highlights": ["was raining", "was reading"], "hint": "la atmósfera y el contexto" },
+            { "key": "Past perfect", "value": "Lo que ocurrió antes del momento central de la historia: He had already left when I called.", "highlights": ["had already left"], "hint": "la historia previa" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Imagen mental:",
+        "body": "el past simple es el primer plano; el past continuous, el fondo; el past perfect, el flashback."
+      }
+    },
+    {
+      "id": "narr-setting-scene",
+      "tag": "Escenario",
+      "title": "Past continuous para crear atmósfera",
+      "lede": "Al inicio de una narración, el past continuous pinta el escenario antes de que comience la acción principal.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Past simple (seco, sin contexto)",
+              "rule": "Solo hechos, sin atmósfera ni inmersión",
+              "examples": [
+                "I walked to the park.",
+                "She waited at the station.",
+                "We sat in the café."
+              ]
+            },
+            {
+              "label": "Past continuous (inmersivo)",
+              "rule": "Crea el ambiente antes de que entre la acción principal",
+              "examples": [
+                "I was walking to the park when I saw him.",
+                "She was waiting at the station when the train arrived.",
+                "We were sitting in the café when the argument started."
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Estructura clásica:",
+        "body": "Past continuous (escenario) + when + past simple (evento): I was cooking when the fire alarm went off."
+      }
+    },
+    {
+      "id": "narr-backstory",
+      "tag": "Historia previa",
+      "title": "Past perfect para dar contexto",
+      "lede": "El past perfect explica por qué las cosas pasaron de cierta manera. Sin él, el lector/oyente no entiende la causa o la lógica de los eventos.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "She cried when he left because she loved him for years.", "note": "sin past perfect, no queda claro el tiempo de cada acción" },
+            { "variant": "good", "text": "She cried when he left because she had loved him for years.", "note": "had loved clarifica que ese amor precedía a la despedida" },
+            { "variant": "bad", "text": "When I arrived, the meeting started and everyone went home.", "note": "parece que todo pasó a la vez, en orden incorrecto" },
+            { "variant": "good", "text": "When I arrived, the meeting had already started and half the people had gone home.", "note": "had started / had gone = antes de mi llegada" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "narr-combining",
+      "tag": "En práctica",
+      "title": "Los tres tiempos en un párrafo",
+      "lede": "Este párrafo muestra cómo los tres tiempos trabajan juntos. Observa qué aporta cada uno.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Escenario (continuo)", "value": "It was a cold Tuesday morning and I was rushing to catch my train.", "highlights": ["was rushing"], "hint": "fondo: lo que pasaba mientras" },
+            { "key": "Backstory (perfecto)", "value": "I had forgotten to set my alarm the night before.", "highlights": ["had forgotten"], "hint": "flashback: la causa del problema" },
+            { "key": "Evento principal (simple)", "value": "I ran out of the house, hailed a cab, and arrived just in time.", "highlights": ["ran", "hailed", "arrived"], "hint": "acción central de la historia" },
+            { "key": "Contexto adicional (continuo)", "value": "The other passengers were already boarding when I got there.", "highlights": ["were already boarding"], "hint": "fondo del momento clave" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "narr-time-markers",
+      "tag": "Marcadores temporales",
+      "title": "Las palabras que señalan cada tiempo",
+      "lede": "Los conectores temporales son pistas sobre qué tiempo verbal usar. Aprenderlos te ayuda a tomar decisiones rápidas mientras hablas.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "when / while / as", "value": "→ sugieren continuidad o coincidencia: while she was sleeping / as I was leaving", "highlights": ["when", "while", "as"], "hint": "→ past continuous" },
+            { "key": "after / once / by the time / already", "value": "→ señalan anterioridad: after she had left / I had already eaten by the time you called", "highlights": ["after", "once", "by the time", "already"], "hint": "→ past perfect" },
+            { "key": "then / suddenly / next / immediately", "value": "→ indican secuencia de eventos puntuales: then she turned around / suddenly he appeared", "highlights": ["then", "suddenly", "next", "immediately"], "hint": "→ past simple" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "narr-mistakes",
+      "tag": "Errores frecuentes",
+      "title": "Errores comunes al narrar",
+      "lede": "Estos errores aparecen constantemente en nivel B2. Identificarlos y corregirlos marca la diferencia entre un relato confuso y uno fluido.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "When I have arrived, the party already finished.", "note": "presente perfecto en lugar de past perfect" },
+            { "variant": "good", "text": "When I arrived, the party had already finished.", "note": "past simple + past perfect" },
+            { "variant": "bad", "text": "She was cooking dinner and suddenly she dropped the pan.", "note": "correcto, pero sin past perfect para explicar por qué" },
+            { "variant": "good", "text": "She was cooking dinner and suddenly she dropped the pan. She had been distracted by the phone.", "note": "past perfect añade la causa" },
+            { "variant": "bad", "text": "I was seeing him yesterday at the shop.", "note": "verbos de estado no se usan en continuo" },
+            { "variant": "good", "text": "I saw him yesterday at the shop.", "note": "see = verbo de percepción, solo en past simple" }
+          ]
+        }
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "¿Cuál de estas frases usa los tiempos verbales correctamente para narrar?",
+      "options": [
+        "When she arrived, the film started already.",
+        "When she arrived, the film had already started.",
+        "When she was arriving, the film already started.",
+        "When she has arrived, the film had already started."
+      ],
+      "answer": 1,
+      "explain": "Past simple (arrived) para el evento principal + past perfect (had already started) para señalar que la película empezó ANTES de que ella llegara. La opción A carece del auxiliar 'had'; la C usa past continuous incorrectamente; la D mezcla presente perfecto con pasado."
+    },
+    {
+      "q": "Estás narrando y quieres describir el ambiente de fondo. ¿Cuál de estas opciones es la mejor apertura?",
+      "options": [
+        "It rained and I walked through the empty streets.",
+        "It was raining and I was walking through the empty streets.",
+        "It had rained and I had walked through the empty streets.",
+        "It rains and I walk through the empty streets."
+      ],
+      "answer": 1,
+      "explain": "El past continuous (was raining, was walking) se usa para establecer el escenario y la atmósfera al inicio de una narración. El past simple describe hechos concretos, no el fondo; el past perfect indicaría anterioridad."
+    },
+    {
+      "q": "Elige el conector que normalmente pide past perfect:",
+      "options": [
+        "Suddenly...",
+        "By the time...",
+        "While...",
+        "Then..."
+      ],
+      "answer": 1,
+      "explain": "'By the time' señala anterioridad: by the time I arrived, they had left. 'Suddenly' y 'then' suelen ir con past simple (eventos puntuales); 'while' sugiere simultaneidad y normalmente pide past continuous."
+    }
+  ]
+}

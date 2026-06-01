@@ -1,0 +1,114 @@
+{
+  "meta": {
+    "eyebrow": "C1 · Comunicación persuasiva y efectiva",
+    "title": "Comunicación",
+    "titleEmphasis": "persuasiva"
+  },
+  "cards": [
+    {
+      "id": "pe-rhetoric",
+      "tag": "Retórica",
+      "title": "Recursos para convencer",
+      "lede": "La persuasión combina datos, emoción y credibilidad. Estructura tu mensaje con intención.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Lógica", "value": "The data clearly shows... · Research confirms...", "highlights": ["The data clearly shows"] },
+            { "key": "Emoción", "value": "Imagine a world where... · We all want...", "highlights": ["Imagine a world where"] },
+            { "key": "Credibilidad", "value": "In my experience... · Experts agree...", "highlights": ["Experts agree"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pe-emphasis",
+      "tag": "Énfasis",
+      "title": "Estructuras enfáticas",
+      "lede": "Cleft sentences y la inversión destacan lo importante y dan fuerza al mensaje.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "good", "text": "What we need is action.", "note": "cleft con what" },
+            { "variant": "good", "text": "It is trust that matters most.", "note": "cleft con it" },
+            { "variant": "good", "text": "Not only did it work, it also saved money.", "note": "inversión enfática" },
+            { "variant": "good", "text": "Never have we faced such a challenge.", "note": "inversión con never" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Ojo:",
+        "body": "tras un adverbio negativo al inicio, el orden se invierte: Never have we..."
+      }
+    },
+    {
+      "id": "pe-softening",
+      "tag": "Diplomacia",
+      "title": "Persuadir sin imponer",
+      "lede": "El lenguaje tentativo (hedging) hace tu argumento más aceptable y menos confrontativo.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Sugerir", "value": "Perhaps we could consider...", "highlights": ["Perhaps we could consider"] },
+            { "key": "Condicional", "value": "It would make sense to...", "highlights": ["It would make sense to"] },
+            { "key": "Concesión", "value": "While I take your point, ...", "highlights": ["While I take your point"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pe-questions",
+      "tag": "Preguntas",
+      "title": "Preguntas retóricas y guía",
+      "lede": "Las preguntas implican al oyente y lo llevan hacia tu conclusión.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Retórica", "value": "Who wouldn't want that?", "highlights": ["Who wouldn't want that?"] },
+            { "key": "Implicar", "value": "Wouldn't you agree that...?", "highlights": ["Wouldn't you agree"] },
+            { "key": "Encaminar", "value": "So where does that leave us?", "highlights": ["where does that leave us"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pe-signposting",
+      "tag": "Señalización",
+      "title": "Guiar al oyente",
+      "lede": "El signposting anuncia tu estructura y mantiene a la audiencia contigo.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Empezar", "value": "Let me start by... · First and foremost", "highlights": ["First and foremost"] },
+            { "key": "Avanzar", "value": "Moving on to... · This brings me to...", "highlights": ["This brings me to"] },
+            { "key": "Cerrar", "value": "To bring it all together, ...", "highlights": ["To bring it all together"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pe-calltoaction",
+      "tag": "Cierre",
+      "title": "La llamada a la acción",
+      "lede": "Un buen mensaje persuasivo termina pidiendo algo concreto al oyente.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Directa", "value": "I urge you to... · Let's make it happen.", "highlights": ["I urge you to"] },
+            { "key": "Condicional", "value": "If we act now, we can...", "highlights": ["If we act now"] },
+            { "key": "Memorable", "value": "remata con una frase corta y rotunda" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Clave:",
+        "body": "termina con un mensaje claro y accionable; la última frase es la que más se recuerda."
+      }
+    }
+  ]
+}

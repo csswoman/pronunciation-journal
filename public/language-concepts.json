@@ -1,0 +1,302 @@
+[
+  {
+    "id": "portmanteau",
+    "category": "curiosidad",
+    "level": "a2",
+    "badge": "Curiosidad",
+    "title": "Palabras portmanteau",
+    "description": "Cuando dos palabras se fusionan en una sola nueva: brunch (breakfast + lunch), smog (smoke + fog), blog (web + log), emoji (picture + character en japonés).",
+    "footer": "Explorar vocabulario →",
+    "href": "/words"
+  },
+  {
+    "id": "eponyms",
+    "category": "etimología",
+    "level": "b1",
+    "badge": "Etimología",
+    "title": "Epónimos: palabras con nombre propio",
+    "description": "Muchas palabras del inglés vienen de personas reales: sandwich (Lord Sandwich), boycott (Capitán Boycott), cardigan (Lord Cardigan), jacuzzi (Candido Jacuzzi).",
+    "footer": "Explorar mini-lecciones →",
+    "href": "/mini-lessons"
+  },
+  {
+    "id": "norman-conquest-split",
+    "category": "historia",
+    "level": "b2",
+    "badge": "Historia",
+    "title": "La conquista normanda y el inglés",
+    "description": "En 1066, los normandos introdujeron el francés medieval. Los animales conservaron nombres sajones (cow, pig, sheep) pero su carne adoptó nombres franceses (beef, pork, mutton) — la clase alta comía distinto que los granjeros.",
+    "footer": "Ver cursos →",
+    "href": "/courses"
+  },
+  {
+    "id": "borrowed-from-spanish",
+    "category": "etimología",
+    "level": "a2",
+    "badge": "Etimología",
+    "title": "Inglés toma prestado del español",
+    "description": "El inglés adoptó decenas de palabras del español: tornado, canyon, ranch, plaza, patio, avocado, chocolate, mosquito, guerrilla. La mayoría llegaron a través de los colonizadores en América.",
+    "footer": "Explorar mini-lecciones →",
+    "href": "/mini-lessons"
+  },
+  {
+    "id": "borrowed-unexpected",
+    "category": "etimología",
+    "level": "b1",
+    "badge": "Etimología",
+    "title": "Préstamos de idiomas inesperados",
+    "description": "El inglés tomó palabras de todo el mundo: ketchup viene del malayo, bungalow del hindi, sofa del árabe, safari del suajili, karaoke del japonés y avatar del sánscrito.",
+    "footer": "Explorar mini-lecciones →",
+    "href": "/mini-lessons"
+  },
+  {
+    "id": "collective-nouns",
+    "category": "vocabulario",
+    "level": "b1",
+    "badge": "Vocabulario",
+    "title": "Sustantivos colectivos creativos",
+    "description": "El inglés tiene nombres de grupo muy específicos y creativos: a murder of crows (cuervos), a parliament of owls (búhos), a pride of lions (leones), a gaggle of geese (gansos).",
+    "footer": "Explorar vocabulario →",
+    "href": "/words"
+  },
+  {
+    "id": "stress-timed-rhythm",
+    "category": "pronunciación",
+    "level": "b1",
+    "badge": "Pronunciación",
+    "title": "El inglés es stress-timed",
+    "description": "El español es syllable-timed: cada sílaba dura casi lo mismo. El inglés es stress-timed: los golpes de acento ocurren a intervalos regulares y las sílabas no acentuadas se comprimen. Por eso suena tan diferente.",
+    "footer": "Practicar pronunciación →",
+    "href": "/practice/sounds"
+  },
+  {
+    "id": "semantic-bleaching",
+    "category": "lingüística",
+    "level": "c1",
+    "badge": "Lingüística",
+    "title": "Blanqueamiento semántico",
+    "description": "Con el tiempo, palabras intensas pierden fuerza. Terrible y awful significaban «que causa terror o asombro». Nice significaba «tonto» (del latín nescius). Awesome era solo «imponente» — hoy son palabras cotidianas.",
+    "footer": "Explorar mini-lecciones →",
+    "href": "/mini-lessons"
+  },
+  {
+    "id": "borrowed-plurals",
+    "category": "vocabulario",
+    "level": "b1",
+    "badge": "Vocabulario",
+    "title": "Plurales prestados de otros idiomas",
+    "description": "Muchas palabras técnicas mantienen el plural de su idioma de origen: phenomenon → phenomena (griego), datum → data (latín), alumnus → alumni (latín), cactus → cacti, criterion → criteria.",
+    "footer": "Explorar vocabulario →",
+    "href": "/words"
+  },
+  {
+    "id": "homophones",
+    "category": "vocabulario",
+    "level": "a1",
+    "badge": "Vocabulario",
+    "title": "Homófonos: mismo sonido, distinto significado",
+    "description": "El inglés tiene cientos de palabras que suenan igual pero se escriben y significan diferente: there / their / they're, to / two / too, hear / here, knight / night, write / right.",
+    "footer": "Explorar mini-lecciones →",
+    "href": "/mini-lessons"
+  },
+  {
+    "id": "homographs",
+    "category": "vocabulario",
+    "level": "b1",
+    "badge": "Vocabulario",
+    "title": "Homógrafos: misma escritura, distinta pronunciación",
+    "description": "Algunas palabras se escriben igual pero se pronuncian diferente según su significado: wind (viento /wɪnd/ vs enrollar /waɪnd/), read (presente /riːd/ vs pasado /rɛd/), lead (plomo vs liderar).",
+    "footer": "Practicar pronunciación →",
+    "href": "/practice/sounds"
+  },
+  {
+    "id": "retronyms",
+    "category": "lingüística",
+    "level": "b2",
+    "badge": "Lingüística",
+    "title": "Retroneologismos: nombres que llegaron tarde",
+    "description": "Cuando aparece algo nuevo, el nombre original necesita un adjetivo para distinguirse. «Guitar» se convirtió en acoustic guitar al llegar la eléctrica; «mail» en snail mail al llegar el email; «watch» en analog watch.",
+    "footer": "Explorar mini-lecciones →",
+    "href": "/mini-lessons"
+  },
+  {
+    "id": "expletive-subjects",
+    "category": "gramática",
+    "level": "b1",
+    "badge": "Gramática",
+    "title": "El «it» y «there» vacíos",
+    "description": "El inglés siempre necesita un sujeto, incluso cuando no hay uno real. «It is raining» — ¿qué es «it»? Nada. «There is a problem» — «there» no señala un lugar. Son sujetos ficticios que satisfacen la gramática.",
+    "footer": "Explorar mini-lecciones →",
+    "href": "/mini-lessons"
+  },
+  {
+    "id": "nominalisation",
+    "category": "estilo",
+    "level": "c1",
+    "badge": "Estilo",
+    "title": "Nominalización: convertir verbos en sustantivos",
+    "description": "El inglés formal prefiere sustantivos a verbos: «We decided» se convierte en «The decision was made». Este patrón, llamado nominalización, da distancia y objetividad pero puede hacer la escritura opaca.",
+    "footer": "Explorar mini-lecciones →",
+    "href": "/mini-lessons"
+  },
+  {
+    "id": "mondegreens",
+    "category": "cultura",
+    "level": "b2",
+    "badge": "Cultura",
+    "title": "Mondegreens: letras que nunca dijeron eso",
+    "description": "Un mondegreen es una letra malentendida que tiene sentido propio. El más famoso: «Excuse me while I kiss the sky» (Jimi Hendrix) se escucha como «kiss this guy». El fenómeno tiene nombre propio desde 1954.",
+    "footer": "Explorar mini-lecciones →",
+    "href": "/mini-lessons"
+  },
+  {
+    "id": "ie-ei-rule",
+    "category": "ortografía",
+    "level": "a2",
+    "badge": "Ortografía",
+    "title": "La regla «i before e» y sus trampas",
+    "description": "«I before e except after c» es una de las reglas más enseñadas del inglés… y una de las más rotas. Weird, seize, neither, their, height, foreign y science la violan. La regla tiene más excepciones que casos válidos.",
+    "footer": "Explorar mini-lecciones →",
+    "href": "/mini-lessons"
+  },
+  {
+    "id": "great-vowel-shift",
+    "category": "historia",
+    "level": "c1",
+    "badge": "Historia",
+    "title": "La gran mutación vocálica",
+    "description": "Entre los siglos XV y XVII, la pronunciación de las vocales largas del inglés cambió drásticamente pero la ortografía no se actualizó. Por eso «name» se pronuncia /neɪm/ y no /naːme/ como se escribía. La culpa de la ortografía caótica es medieval.",
+    "footer": "Ver cursos →",
+    "href": "/courses"
+  },
+  {
+    "id": "kennings",
+    "category": "historia",
+    "level": "c1",
+    "badge": "Historia",
+    "title": "Kennings del inglés antiguo",
+    "description": "El inglés antiguo usaba kennings: metáforas compuestas que reemplazaban sustantivos ordinarios. El mar era «whale-road» (camino de ballenas), la espada era «wound-snake» (serpiente de heridas), el vocabulario era «word-hoard» (tesoro de palabras).",
+    "footer": "Explorar mini-lecciones →",
+    "href": "/mini-lessons"
+  },
+  {
+    "id": "onomatopoeia-languages",
+    "category": "cultura",
+    "level": "a2",
+    "badge": "Cultura",
+    "title": "La onomatopeya no es universal",
+    "description": "Los sonidos que los animales «hacen» varían según el idioma: en inglés los perros dicen bow-wow, en español guau, en japonés wan-wan, en ruso gav-gav. El sonido real es el mismo — la percepción cultural cambia todo.",
+    "footer": "Explorar mini-lecciones →",
+    "href": "/mini-lessons"
+  },
+  {
+    "id": "germanic-latin-doublets",
+    "category": "vocabulario",
+    "level": "b2",
+    "badge": "Vocabulario",
+    "title": "Dobletes: dos palabras para lo mismo",
+    "description": "El inglés frecuentemente tiene dos palabras para el mismo concepto: una sajona/germánica (informal) y una latina o francesa (formal). Ask vs inquire, begin vs commence, freedom vs liberty, buy vs purchase, holy vs sacred.",
+    "footer": "Explorar vocabulario →",
+    "href": "/words"
+  },
+  {
+    "id": "backronyms",
+    "category": "curiosidad",
+    "level": "b2",
+    "badge": "Curiosidad",
+    "title": "Backrónimos: siglas inventadas después",
+    "description": "Un backrónimo es un significado asignado a una sigla que ya existía. SOS no significa nada («Save Our Souls» es un backrónimo). Lo mismo con ZIP (Zone Improvement Plan), GOLF o CAPS LOCK — ninguna fue diseñada como acrónimo.",
+    "footer": "Explorar mini-lecciones →",
+    "href": "/mini-lessons"
+  },
+  {
+    "id": "oxford-comma",
+    "category": "estilo",
+    "level": "b1",
+    "badge": "Estilo",
+    "title": "La coma de Oxford",
+    "description": "La «Oxford comma» es la coma antes del último elemento de una lista: «eggs, bacon, and toast». Sin ella, «I love my parents, Lady Gaga and Humpty Dumpty» implica que Lady Gaga y Humpty Dumpty son tus padres. El debate sigue activo.",
+    "footer": "Explorar mini-lecciones →",
+    "href": "/mini-lessons"
+  },
+  {
+    "id": "amelioration",
+    "category": "lingüística",
+    "level": "c1",
+    "badge": "Lingüística",
+    "title": "Amelioración: palabras que mejoraron",
+    "description": "Algunas palabras históricamente negativas adquirieron un significado positivo. Knight significaba «criado joven». Pretty significaba «astuto» o «engañoso». Nice venía de «ignorante». El uso cotidiano transforma el valor de las palabras.",
+    "footer": "Explorar mini-lecciones →",
+    "href": "/mini-lessons"
+  },
+  {
+    "id": "english-lingua-franca",
+    "category": "cultura",
+    "level": "a1",
+    "badge": "Cultura",
+    "title": "Por qué el inglés es el idioma global",
+    "description": "El inglés no es el idioma con más hablantes nativos (el mandarín gana) pero sí el más hablado en total. La expansión del Imperio Británico y luego la influencia cultural y tecnológica de EE. UU. lo convirtieron en la lingua franca del siglo XX.",
+    "footer": "Ver cursos →",
+    "href": "/courses"
+  },
+  {
+    "id": "gradable-adjectives",
+    "category": "gramática",
+    "level": "b2",
+    "badge": "Gramática",
+    "title": "Adjetivos graduables vs absolutos",
+    "description": "Los adjetivos graduables admiten grados: very good, extremely cold. Los absolutos no: no se puede decir *very perfect, *slightly dead ni *absolutely unique — son extremos por definición. El error es común incluso en hablantes avanzados.",
+    "footer": "Explorar mini-lecciones →",
+    "href": "/mini-lessons"
+  },
+  {
+    "id": "code-switching",
+    "category": "cultura",
+    "level": "c1",
+    "badge": "Cultura",
+    "title": "Code-switching: alternar idiomas",
+    "description": "Code-switching es el fenómeno de cambiar de idioma o registro dentro de una misma conversación. No es un error ni una deficiencia — los bilingües lo usan estratégicamente para matizar significados, señalar identidad o llenar vacíos léxicos.",
+    "footer": "Explorar mini-lecciones →",
+    "href": "/mini-lessons"
+  },
+  {
+    "id": "minimal-pairs",
+    "category": "pronunciación",
+    "level": "a2",
+    "badge": "Pronunciación",
+    "title": "Pares mínimos: un sonido cambia todo",
+    "description": "Un par mínimo son dos palabras que difieren en un solo sonido: bit/beat, ship/sheep, hat/hot, live/leave. Practicar pares mínimos entrena al oído para distinguir los sonidos del inglés que no existen en español.",
+    "footer": "Practicar pronunciación →",
+    "href": "/practice/sounds"
+  },
+  {
+    "id": "contronyms",
+    "category": "vocabulario",
+    "level": "b2",
+    "badge": "Vocabulario",
+    "title": "Contrónimos: palabras que se contradicen",
+    "description": "Algunos verbos son su propio antónimo. Sanction puede significar autorizar o penalizar. Cleave puede significar separar o unir. Dust puede significar quitar el polvo o añadirlo. Screen puede mostrar o bloquear. El contexto lo decide todo.",
+    "footer": "Explorar vocabulario →",
+    "href": "/words"
+  },
+  {
+    "id": "word-shrinking",
+    "category": "etimología",
+    "level": "c1",
+    "badge": "Etimología",
+    "title": "Palabras que encogieron con el tiempo",
+    "description": "Muchas palabras inglesas perdieron su primera sílaba por el uso cotidiano (aféresis): especial → special, esquire → squire, estate → state, estrange → strange, examine → (e)xam. El inglés tiende a comprimir lo que se usa mucho.",
+    "footer": "Explorar mini-lecciones →",
+    "href": "/mini-lessons"
+  },
+  {
+    "id": "chaotic-spelling",
+    "category": "historia",
+    "level": "b1",
+    "badge": "Historia",
+    "title": "Por qué la ortografía inglesa es tan difícil",
+    "description": "El inglés tiene una ortografía caótica porque acumuló préstamos sin adaptar su escritura: palabras normandas, latinas, griegas, vikingas y anglosajonas coexisten con sus reglas originales. La imprenta del siglo XV congeló una ortografía que nunca se estandarizó bien.",
+    "footer": "Explorar mini-lecciones →",
+    "href": "/mini-lessons"
+  }
+]

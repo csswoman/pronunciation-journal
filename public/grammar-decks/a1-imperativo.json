@@ -1,0 +1,163 @@
+{
+  "meta": {
+    "eyebrow": "A1 · Gramática",
+    "title": "El imperativo",
+    "goal": "Ya puedes dar instrucciones, pedir cosas y hacer sugerencias en inglés."
+  },
+  "quiz": [
+    {
+      "q": "¿Cómo se forma el imperativo negativo en inglés?",
+      "options": ["No + verbo en infinitivo", "Don't + verbo base", "Not + verbo", "Do not + verbo en -ing"],
+      "answer": 1,
+      "explain": "El imperativo negativo se forma con 'Don't + verbo base': Don't open the window. / Don't be late."
+    },
+    {
+      "q": "¿Cuál de estas oraciones es un imperativo afirmativo correcto?",
+      "options": ["You open the door.", "Please opens the door.", "Open the door, please.", "Opening the door."],
+      "answer": 2,
+      "explain": "'Open the door, please.' usa el verbo base sin sujeto, que es la forma correcta del imperativo. 'Please' puede ir al principio o al final."
+    },
+    {
+      "q": "¿Cómo se hace una sugerencia con 'Let's'?",
+      "options": ["Let's to go to the park.", "Let's going to the park.", "Let's go to the park.", "Let us going to the park."],
+      "answer": 2,
+      "explain": "'Let's + verbo base (sin 'to')': Let's go, Let's eat, Let's try. Es la forma más natural para sugerir algo en grupo."
+    }
+  ],
+  "cards": [
+    {
+      "id": "imp-affirmative",
+      "tag": "Afirmativo",
+      "title": "Imperativo afirmativo",
+      "lede": "Se forma con el verbo base, sin sujeto. Es la forma más directa de dar instrucciones.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Fórmula", "value": "Verbo base (sin 'to', sin sujeto)", "hint": "igual para todas las personas" },
+            { "key": "Instrucciones", "value": "Open the book. · Write your name. · Read page 5.", "highlights": ["Open", "Write", "Read"] },
+            { "key": "Direcciones", "value": "Turn left. · Go straight. · Take the bus.", "highlights": ["Turn", "Go", "Take"] },
+            { "key": "Cocina", "value": "Add salt. · Mix well. · Bake for 30 minutes.", "highlights": ["Add", "Mix", "Bake"] },
+            { "key": "To be", "value": "Be careful. · Be quiet. · Be patient.", "highlights": ["Be careful", "Be quiet", "Be patient"], "hint": "el único verbo irregular: 'be', no 'are'" }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Diferencia con español:",
+        "body": "en español cambia según 'tú/usted/vosotros'. En inglés es siempre la misma forma: Open. No hay variación."
+      }
+    },
+    {
+      "id": "imp-negative",
+      "tag": "Negativo",
+      "title": "Imperativo negativo: Don't",
+      "lede": "Para prohibir o advertir se usa 'Don't + verbo base'. Es directo pero no grosero en contexto.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Afirmativo",
+              "rule": "Verbo base",
+              "examples": ["Open the window.", "Touch the screen.", "Park here.", "Run in the hall."]
+            },
+            {
+              "label": "Negativo",
+              "rule": "Don't + verbo base",
+              "examples": ["Don't open the window.", "Don't touch the screen.", "Don't park here.", "Don't run in the hall."]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Señales y avisos:",
+        "body": "en carteles verás 'Do not' en vez de 'Don't': Do not enter. / Do not disturb. / Do not use phone. Es más formal pero mismo significado."
+      }
+    },
+    {
+      "id": "imp-please",
+      "tag": "Cortesía",
+      "title": "Please: el imperativo educado",
+      "lede": "'Please' convierte un comando en una petición amable. Va al principio o al final.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "Give me the menu." },
+            { "variant": "good", "text": "Please give me the menu.", "note": "'please' al principio, tono amable" },
+            { "variant": "bad", "text": "Say that again." },
+            { "variant": "good", "text": "Say that again, please.", "note": "'please' al final, con coma" },
+            { "variant": "bad", "text": "You open the door for me." },
+            { "variant": "good", "text": "Please open the door for me.", "note": "sin sujeto 'you' — suena más natural" },
+            { "variant": "bad", "text": "Please to sit down." },
+            { "variant": "good", "text": "Please sit down.", "note": "no hay 'to' entre please y el verbo" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "imp-lets",
+      "tag": "Sugerencias",
+      "title": "Let's: hagamos algo juntos",
+      "lede": "'Let's + verbo base' sirve para proponer una acción en grupo. Equivalent a '¡Vamos a..!'",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Fórmula", "value": "Let's + verbo base (sin 'to')", "hint": "contracción de 'Let us'" },
+            { "key": "Planes", "value": "Let's meet at 6. · Let's take a break. · Let's try again.", "highlights": ["Let's meet", "Let's take", "Let's try"] },
+            { "key": "Rechazo", "value": "Let's not go out tonight. · Let's not argue.", "highlights": ["Let's not"], "hint": "negativo: Let's not + verbo" },
+            { "key": "Respuesta sí", "value": "Let's go! · Sure! · Good idea!", "highlights": ["Sure", "Good idea"] },
+            { "key": "Respuesta no", "value": "I'd rather not. · How about tomorrow instead?", "highlights": ["I'd rather not", "How about"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Muy útil en el trabajo:",
+        "body": "Let's schedule a meeting. / Let's check the numbers. / Let's move on. Son frases de uso diario en reuniones y conversaciones."
+      }
+    },
+    {
+      "id": "imp-daily",
+      "tag": "Situaciones reales",
+      "title": "Imperativos en situaciones cotidianas",
+      "lede": "Aquí tienes los imperativos más útiles por situación.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "En clase", "value": "Listen carefully. · Repeat after me. · Write it down.", "highlights": ["Listen", "Repeat", "Write"] },
+            { "key": "En el trabajo", "value": "Send me the file. · Check your email. · Call me back.", "highlights": ["Send", "Check", "Call"] },
+            { "key": "En la calle", "value": "Excuse me. · Watch out! · Come in.", "highlights": ["Watch out", "Come in"] },
+            { "key": "En emergencias", "value": "Call 911. · Get out! · Stay calm. · Don't move.", "highlights": ["Call 911", "Get out", "Stay calm", "Don't move"] },
+            { "key": "Teléfono", "value": "Hold on, please. · Leave a message. · Call back later.", "highlights": ["Hold on", "Leave", "Call back"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "imp-pronunciation",
+      "tag": "Pronunciación",
+      "title": "Cómo suena el imperativo",
+      "lede": "El acento y el tono cambian si es un comando, una petición o una sugerencia.",
+      "blocks": [
+        {
+          "type": "pronunciation",
+          "sound": "Acento en el verbo",
+          "examples": [
+            { "text": "OPEN the door.", "es": "el verbo lleva el acento principal" },
+            { "text": "Please OPEN the door.", "es": "con 'please': tono más suave, curva descendente" },
+            { "text": "Don't MOVE!", "es": "comando urgente: voz más fuerte y corta" },
+            { "text": "Let's GO!", "es": "sugerencia animada: tono ascendente-descendente" },
+            { "text": "Watch OUT!", "es": "advertencia: énfasis en OUT, sube rápido" }
+          ],
+          "note": "Un imperativo suave baja el tono al final. Uno urgente sube. El contexto lo hace amable o brusco, no solo las palabras."
+        }
+      ],
+      "tip": {
+        "label": "Tono importa:",
+        "body": "'Sit down' puede sonar como orden de militar o como invitación cálida. La diferencia está en el tono, no en las palabras."
+      }
+    }
+  ]
+}

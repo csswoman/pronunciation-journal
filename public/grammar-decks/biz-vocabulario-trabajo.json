@@ -1,0 +1,110 @@
+{
+  "meta": {
+    "eyebrow": "Biz · Vocabulario para el trabajo",
+    "title": "Vocabulario para el",
+    "titleEmphasis": "trabajo"
+  },
+  "cards": [
+    {
+      "id": "vt-roles",
+      "tag": "Roles",
+      "title": "Puestos y jerarquía",
+      "lede": "Los nombres de cargos y departamentos más comunes en una empresa.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Dirección", "value": "CEO, manager, head of, supervisor" },
+            { "key": "Equipo", "value": "colleague, coworker, intern, assistant" },
+            { "key": "Departamentos", "value": "HR, finance, sales, operations", "highlights": ["HR"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "vt-tasks",
+      "tag": "Tareas",
+      "title": "Hablar de tareas",
+      "lede": "Verbos y colocaciones para describir lo que haces en el trabajo.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Encargarse", "value": "be in charge of · be responsible for", "highlights": ["be in charge of"] },
+            { "key": "Ocuparse", "value": "deal with · handle · take care of", "highlights": ["deal with"] },
+            { "key": "Plazos", "value": "meet a deadline · fall behind", "highlights": ["meet a deadline"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "vt-schedule",
+      "tag": "Agenda",
+      "title": "Reuniones y agenda",
+      "lede": "Vocabulario para organizar el calendario y las citas de trabajo.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Agendar", "value": "schedule / set up a meeting", "highlights": ["schedule"] },
+            { "key": "Cambiar", "value": "reschedule · postpone · cancel", "highlights": ["reschedule"] },
+            { "key": "Asistir", "value": "attend · run / chair a meeting", "highlights": ["attend"] }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Ojo:",
+        "body": "attend a meeting (asistir a), no \"assist to a meeting\": assist significa ayudar."
+      }
+    },
+    {
+      "id": "vt-communication",
+      "tag": "Comunicación",
+      "title": "Email y mensajes",
+      "lede": "Fórmulas habituales en la comunicación escrita del trabajo.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Adjuntar", "value": "Please find attached...", "highlights": ["Please find attached"] },
+            { "key": "Seguimiento", "value": "Just following up on...", "highlights": ["following up on"] },
+            { "key": "Reenviar", "value": "forward · CC · reply all", "highlights": ["forward"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "vt-conditions",
+      "tag": "Condiciones",
+      "title": "Empleo y condiciones",
+      "lede": "Términos sobre contratos, sueldo y beneficios laborales.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Contrato", "value": "full-time · part-time · permanent", "highlights": ["full-time"] },
+            { "key": "Pago", "value": "salary · wage · raise · bonus", "highlights": ["salary"] },
+            { "key": "Beneficios", "value": "benefits · paid leave · sick days", "highlights": ["benefits"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "vt-collocations",
+      "tag": "Colocaciones",
+      "title": "Errores frecuentes",
+      "lede": "Colocaciones del trabajo donde los hispanohablantes suelen equivocarse.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "make a meeting", "note": "→ have / hold a meeting" },
+            { "variant": "bad", "text": "win money (en el trabajo)", "note": "→ earn / make money" },
+            { "variant": "good", "text": "do business · make a decision", "note": "do vs. make" },
+            { "variant": "good", "text": "work overtime · be on leave", "note": "expresiones fijas" }
+          ]
+        }
+      ]
+    }
+  ]
+}
