@@ -109,14 +109,13 @@ const SUGGESTION_CHIPS = [
 
 interface ChatEmptyStateProps {
   onSendMessage: (text: string) => void;
-  onChipSelect: (prompt: string) => void;
 }
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
-export default function ChatEmptyState({ onSendMessage, onChipSelect }: ChatEmptyStateProps) {
+export default function ChatEmptyState({ onSendMessage }: ChatEmptyStateProps) {
   return (
-    <div className="flex-1 min-h-full flex flex-col items-center justify-center px-6 pt-8 pb-4 chat-bg">
+    <div className="flex-1 min-h-full flex flex-col items-center justify-center px-6 pt-8 pb-8 chat-bg">
       <div className="blob blob-1" />
       <div className="blob blob-2" />
       <div className="blob blob-3" />
@@ -142,7 +141,7 @@ export default function ChatEmptyState({ onSendMessage, onChipSelect }: ChatEmpt
             Let's practice together.
           </h2>
           <p className="text-sm text-[var(--text-secondary)]">
-            Pick a mode below — or just start typing.
+            Pick a mode or shortcut below to start.
           </p>
         </div>
       </div>
@@ -189,7 +188,7 @@ export default function ChatEmptyState({ onSendMessage, onChipSelect }: ChatEmpt
         {SUGGESTION_CHIPS.map(({ label, Icon, prompt }) => (
           <button
             key={label}
-            onClick={() => onChipSelect(prompt)}
+            onClick={() => onSendMessage(prompt)}
             className="shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-full bg-[var(--surface-raised)] border border-[var(--border-subtle)] text-caption font-medium text-[var(--text-secondary)] whitespace-nowrap cursor-pointer transition-[border-color,color,background,transform] duration-150 hover:border-[var(--accent-border)] hover:text-[var(--primary)] hover:bg-[var(--accent-dim)] hover:-translate-y-px"
           >
             <Icon size={13} strokeWidth={2} />
