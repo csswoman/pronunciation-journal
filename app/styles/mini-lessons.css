@@ -1,0 +1,618 @@
+/* Mini Lessons — misma línea editorial que Sound Lab / IPA Chart */
+
+.mini-lessons {
+  --ml-radius: 16px;
+  --ml-radius-sm: 11px;
+  --ml-accent-soft: color-mix(in oklch, var(--primary) 12%, transparent);
+  --ml-accent-border: color-mix(in oklch, var(--primary) 38%, var(--border-subtle));
+  position: relative;
+  min-height: 100%;
+  color: var(--text-primary);
+  background:
+    radial-gradient(
+      110% 50% at 50% -8%,
+      color-mix(in oklch, var(--primary) 14%, transparent),
+      transparent 58%
+    ),
+    var(--surface-base);
+}
+
+.mini-lessons::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.025;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.mini-lessons__wrap {
+  position: relative;
+  z-index: 1;
+  max-width: 960px;
+  margin-inline: auto;
+  padding: 0 24px 80px;
+}
+
+.mini-lessons--article .mini-lessons__wrap {
+  max-width: 720px;
+}
+
+/* ── Tipografía ─────────────────────────────────────────────────────────── */
+
+.mini-lessons__eyebrow {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+.mini-lessons__title {
+  margin: 0 0 8px;
+  font-family: var(--font-editorial), "Fraunces", Georgia, serif;
+  font-size: clamp(1.9rem, 4.5vw, 2.45rem);
+  font-weight: 420;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  font-optical-sizing: auto;
+}
+
+.mini-lessons__title em {
+  font-style: italic;
+  color: var(--primary);
+}
+
+.mini-lessons__lead {
+  margin: 0;
+  max-width: 52ch;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: var(--text-secondary);
+}
+
+.mini-lessons__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  text-decoration: none;
+  transition: color 0.12s ease;
+}
+
+.mini-lessons__back:hover {
+  color: var(--text-primary);
+}
+
+/* ── Hero + stats ───────────────────────────────────────────────────────── */
+
+.mini-lessons__hero {
+  padding: 34px 0 8px;
+}
+
+.mini-lessons__hero-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.mini-lessons__stats {
+  display: flex;
+  gap: 22px;
+  flex-shrink: 0;
+}
+
+.mini-lessons__stat b {
+  display: block;
+  font-family: var(--font-editorial), "Fraunces", Georgia, serif;
+  font-size: 1.45rem;
+  font-weight: 480;
+  line-height: 1;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.mini-lessons__stat span {
+  display: block;
+  margin-top: 4px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+.mini-lessons__stat--accent b {
+  color: var(--primary);
+}
+
+/* ── Filtros (barra compacta) ───────────────────────────────────────────── */
+
+.mini-lessons__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 16px;
+  margin: 20px 0 16px;
+  padding: 12px 14px;
+  border-radius: var(--ml-radius-sm);
+  border: 1px solid var(--border-subtle);
+  background: var(--surface-raised);
+}
+
+.mini-lessons__toolbar-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.mini-lessons__toolbar-label {
+  flex-shrink: 0;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+.mini-lessons__toolbar-divider {
+  width: 1px;
+  height: 28px;
+  background: var(--border-subtle);
+  flex-shrink: 0;
+}
+
+.mini-lessons__segmented {
+  display: inline-flex;
+  padding: 3px;
+  border-radius: 999px;
+  border: 1px solid var(--border-subtle);
+  background: var(--surface-sunken);
+}
+
+.mini-lessons__segment {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+
+.mini-lessons__segment:hover:not(.mini-lessons__segment--on) {
+  color: var(--text-primary);
+}
+
+.mini-lessons__segment--on {
+  background: var(--primary);
+  color: var(--on-primary);
+  box-shadow: 0 1px 3px color-mix(in oklch, var(--primary) 35%, transparent);
+}
+
+.mini-lessons__select {
+  min-width: 160px;
+  max-width: 220px;
+  padding: 7px 32px 7px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border-subtle);
+  background: var(--surface-sunken)
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")
+    no-repeat right 12px center;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+  cursor: pointer;
+  appearance: none;
+}
+
+.mini-lessons__select:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.mini-lessons__toolbar-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.mini-lessons__count {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--text-tertiary);
+  white-space: nowrap;
+}
+
+.mini-lessons__toolbar-reset {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--primary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  white-space: nowrap;
+}
+
+.mini-lessons__toolbar-reset:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 640px) {
+  .mini-lessons__toolbar-divider {
+    display: none;
+  }
+
+  .mini-lessons__toolbar-group {
+    width: 100%;
+  }
+
+  .mini-lessons__select {
+    flex: 1;
+    max-width: none;
+  }
+
+  .mini-lessons__toolbar-meta {
+    width: 100%;
+    margin-left: 0;
+    justify-content: space-between;
+  }
+}
+
+/* ── Grid de tarjetas ───────────────────────────────────────────────────── */
+
+.mini-lessons__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
+}
+
+.mini-lessons__card {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  padding: 18px;
+  border-radius: var(--ml-radius);
+  border: 1px solid var(--border-subtle);
+  background: var(--surface-raised);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.12s ease, transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.mini-lessons__card:hover {
+  border-color: var(--ml-accent-border);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.mini-lessons__card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.mini-lessons__card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.mini-lessons__pill {
+  display: inline-block;
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: var(--surface-sunken);
+  color: var(--text-tertiary);
+  border: 1px solid var(--border-subtle);
+}
+
+.mini-lessons__pill--level {
+  color: var(--primary);
+  border-color: var(--ml-accent-border);
+  background: var(--ml-accent-soft);
+}
+
+.mini-lessons__card-duration {
+  flex-shrink: 0;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  white-space: nowrap;
+}
+
+.mini-lessons__card-title {
+  margin: 0 0 8px;
+  font-family: var(--font-editorial), "Fraunces", Georgia, serif;
+  font-size: 1.15rem;
+  font-weight: 480;
+  line-height: 1.25;
+  color: var(--text-primary);
+  transition: color 0.12s ease;
+}
+
+.mini-lessons__card:hover .mini-lessons__card-title {
+  color: var(--primary);
+}
+
+.mini-lessons__card-body {
+  margin: 0;
+  flex: 1;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: var(--text-secondary);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.mini-lessons__card-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-subtle);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-tertiary);
+}
+
+.mini-lessons__card-arrow {
+  color: var(--primary);
+  transition: transform 0.12s ease;
+}
+
+.mini-lessons__card:hover .mini-lessons__card-arrow {
+  transform: translateX(3px);
+}
+
+.mini-lessons__empty {
+  grid-column: 1 / -1;
+  padding: 48px 24px;
+  text-align: center;
+  border-radius: var(--ml-radius);
+  border: 1px dashed var(--border-subtle);
+  color: var(--text-secondary);
+}
+
+/* ── Artículo (detalle) ─────────────────────────────────────────────────── */
+
+.mini-lessons__article-hero {
+  margin-bottom: 32px;
+}
+
+.mini-lessons__article-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.mini-lessons__article-title {
+  margin: 0 0 10px;
+  font-family: var(--font-editorial), "Fraunces", Georgia, serif;
+  font-size: clamp(1.75rem, 4vw, 2.2rem);
+  font-weight: 480;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+}
+
+.mini-lessons__article-subtitle {
+  margin: 0;
+  font-size: 1.05rem;
+  line-height: 1.55;
+  color: var(--text-secondary);
+}
+
+.mini-lessons__section {
+  margin-bottom: 32px;
+}
+
+.mini-lessons__section-title {
+  margin: 0 0 12px;
+  font-family: var(--font-editorial), "Fraunces", Georgia, serif;
+  font-size: 1.35rem;
+  font-weight: 480;
+  line-height: 1.2;
+  color: var(--text-primary);
+}
+
+.mini-lessons__section-body {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: var(--text-secondary);
+  white-space: pre-wrap;
+}
+
+.mini-lessons__divider {
+  margin: 36px 0;
+  border: none;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.mini-lessons__examples {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mini-lessons__example {
+  padding: 14px 16px;
+  border-radius: var(--ml-radius-sm);
+  border: 1px solid var(--border-subtle);
+  background: var(--surface-sunken);
+}
+
+.mini-lessons__example-en {
+  margin: 0;
+  font-family: var(--font-editorial), Georgia, serif;
+  font-size: 1rem;
+  color: var(--text-primary);
+}
+
+.mini-lessons__example-ipa {
+  margin: 6px 0 0;
+  font-family: var(--font-ipa), sans-serif;
+  font-size: 0.9rem;
+  color: var(--primary);
+}
+
+.mini-lessons__example-note {
+  margin: 8px 0 0;
+  font-size: 0.82rem;
+  font-style: italic;
+  color: var(--text-tertiary);
+}
+
+.mini-lessons__tip {
+  margin-bottom: 32px;
+  padding: 14px 16px;
+  border-radius: var(--ml-radius-sm);
+  border: 1px solid color-mix(in oklch, var(--warning) 35%, transparent);
+  background: var(--warning-soft);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--text-primary);
+}
+
+.mini-lessons__tip-label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--warning-value);
+}
+
+.mini-lessons__block {
+  padding: 16px 18px;
+  border-radius: var(--ml-radius-sm);
+  border: 1px solid var(--border-subtle);
+  background: var(--surface-raised);
+}
+
+.mini-lessons__block + .mini-lessons__block {
+  margin-top: 12px;
+}
+
+.mini-lessons__block-label {
+  margin: 0 0 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.mini-lessons__list {
+  margin: 0;
+  padding-left: 1.25rem;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--text-secondary);
+}
+
+.mini-lessons__quiz-options {
+  margin: 0 0 12px;
+  padding: 0;
+  list-style: none;
+}
+
+.mini-lessons__quiz-options li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 8px;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.mini-lessons__quiz-letter {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  border-radius: 6px;
+  border: 1px solid var(--border-subtle);
+  background: var(--surface-sunken);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-tertiary);
+}
+
+.mini-lessons__quiz-details summary {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--primary);
+  cursor: pointer;
+  list-style: none;
+}
+
+.mini-lessons__quiz-details summary::-webkit-details-marker {
+  display: none;
+}
+
+.mini-lessons__quiz-answer {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border-subtle);
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+.mini-lessons__footer {
+  margin-top: 40px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.mini-lessons__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 18px;
+  border-radius: var(--ml-radius-sm);
+  border: none;
+  background: var(--primary);
+  color: var(--on-primary);
+  font-size: 0.88rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: filter 0.13s ease;
+}
+
+.mini-lessons__btn:hover {
+  filter: brightness(1.06);
+}

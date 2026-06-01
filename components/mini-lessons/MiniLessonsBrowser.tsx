@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { cn } from "@/lib/cn";
 import {
   LESSON_LEVELS,
@@ -10,133 +10,189 @@ import {
   type LessonCategory,
   type MiniLesson,
 } from "@/lib/content/schemas";
+import {
+  MINI_LESSON_CATEGORY_LABELS,
+  MINI_LESSON_LEVEL_LABELS,
+} from "@/lib/content/mini-lesson-labels";
 
 const levels: LessonLevel[] = [...LESSON_LEVELS];
 const categories: LessonCategory[] = [...LESSON_CATEGORIES];
 
 export default function MiniLessonsBrowser({ lessons }: { lessons: MiniLesson[] }) {
-  const [selectedLevel, setSelectedLevel] = useState<LessonLevel | null>(null);
-  const [selectedCategory, setSelectedCategory] = useState<LessonCategory | null>(null);
+  const [selectedLevel, setSelectedLevel] = useState<LessonLevel | "all">("all");
+  const [selectedCategory, setSelectedCategory] = useState<LessonCategory | "all">("all");
 
   const filteredLessons = lessons.filter(
     (lesson) =>
-      (!selectedLevel || lesson.level === selectedLevel) &&
-      (!selectedCategory || lesson.category === selectedCategory)
+      (selectedLevel === "all" || lesson.level === selectedLevel) &&
+      (selectedCategory === "all" || lesson.category === selectedCategory)
   );
 
+  const hasActiveFilters = selectedLevel !== "all" || selectedCategory !== "all";
+
+  const categoryCount = useMemo(() => {
+    const set = new Set(lessons.map((l) => l.category));
+    return set.size;
+  }, [lessons]);
+
+  function clearFilters() {
+    setSelectedLevel("all");
+    setSelectedCategory("all");
+  }
+
   return (
-    <div className="max-w-5xl mx-auto px-4 py-8">
-      <div className="mb-12">
-        <Link
-          href="/"
-          className="text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] mb-4 inline-block"
-        >
-          ← Back to home
-        </Link>
-        <h1 className="text-4xl font-bold text-[var(--text-primary)] mb-2">Mini Lessons</h1>
-        <p className="text-lg text-[var(--text-secondary)]">
-          Short lessons on pronunciation, grammar, vocabulary, and more
-        </p>
-      </div>
-
-      <div className="mb-8">
-        <div className="mb-6">
-          <p className="text-sm font-medium text-[var(--text-primary)] mb-2">Level</p>
-          <div className="flex flex-wrap gap-2">
-            {levels.map((level) => (
-              <button
-                key={level}
-                onClick={() => setSelectedLevel(selectedLevel === level ? null : level)}
-                className={cn(
-                  "px-3 py-1 text-sm rounded-full font-medium transition-colors",
-                  selectedLevel === level
-                    ? "bg-[var(--primary)] text-white"
-                    : "bg-[var(--btn-regular-bg)] text-[var(--text-secondary)] hover:bg-[var(--border-subtle)]"
-                )}
-              >
-                {level.charAt(0).toUpperCase() + level.slice(1)}
-              </button>
-            ))}
-            {selectedLevel && (
-              <button
-                onClick={() => setSelectedLevel(null)}
-                className="px-3 py-1 text-sm rounded-full font-medium text-[var(--text-tertiary)] hover:text-[var(--text-primary)]"
-              >
-                Clear
-              </button>
-            )}
-          </div>
-        </div>
-
-        <div>
-          <p className="text-sm font-medium text-[var(--text-primary)] mb-2">Category</p>
-          <div className="flex flex-wrap gap-2">
-            {categories.map((category) => (
-              <button
-                key={category}
-                onClick={() => setSelectedCategory(selectedCategory === category ? null : category)}
-                className={cn(
-                  "px-3 py-1 text-sm rounded-full font-medium transition-colors",
-                  selectedCategory === category
-                    ? "bg-[var(--primary)] text-white"
-                    : "bg-[var(--btn-regular-bg)] text-[var(--text-secondary)] hover:bg-[var(--border-subtle)]"
-                )}
-              >
-                {category.charAt(0).toUpperCase() + category.slice(1)}
-              </button>
-            ))}
-            {selectedCategory && (
-              <button
-                onClick={() => setSelectedCategory(null)}
-                className="px-3 py-1 text-sm rounded-full font-medium text-[var(--text-tertiary)] hover:text-[var(--text-primary)]"
-              >
-                Clear
-              </button>
-            )}
-          </div>
-        </div>
-      </div>
-
-      <p className="text-sm text-[var(--text-tertiary)] mb-6">
-        {filteredLessons.length} of {lessons.length} lessons
-      </p>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {filteredLessons.map((lesson) => (
-          <Link
-            key={lesson.id}
-            href={`/mini-lessons/${lesson.slug}`}
-            className="group block p-4 rounded-lg border border-[var(--border-subtle)] bg-[var(--btn-regular-bg)] hover:border-[var(--primary)] hover:bg-[var(--surface-raised)] transition-all"
-          >
-            <div className="flex items-start justify-between mb-2">
-              <div>
-                <span className="inline-block text-xs font-medium text-[var(--text-tertiary)] bg-[var(--surface-raised)] px-2 py-1 rounded mb-2">
-                  {lesson.level}
-                </span>
-                <h3 className="font-semibold text-[var(--text-primary)] group-hover:text-[var(--primary)] transition-colors">
-                  {lesson.title}
-                </h3>
-              </div>
-              <span className="text-xs text-[var(--text-tertiary)] whitespace-nowrap ml-2">
-                {lesson.duration} min
-              </span>
-            </div>
-            <p className="text-sm text-[var(--text-secondary)] mb-2 line-clamp-2">{lesson.body}</p>
-            <div className="flex items-center justify-between">
-              <span className="text-xs text-[var(--text-tertiary)]">{lesson.category}</span>
-              <span className="text-xs text-[var(--primary)] group-hover:translate-x-1 transition-transform">
-                →
-              </span>
-            </div>
+    <div className="mini-lessons">
+      <div className="mini-lessons__wrap">
+        <header className="mini-lessons__hero">
+          <Link href="/" className="mini-lessons__back">
+            ← Inicio
           </Link>
-        ))}
-      </div>
 
-      {filteredLessons.length === 0 && (
-        <div className="text-center py-12">
-          <p className="text-[var(--text-secondary)]">No lessons found matching your filters.</p>
+          <div className="mini-lessons__hero-row">
+            <div>
+              <span className="mini-lessons__eyebrow">Learning · Mini Lessons</span>
+              <h1 className="mini-lessons__title">
+                Lecciones <em>cortas</em>
+              </h1>
+              <p className="mini-lessons__lead">
+                Pronunciación, gramática, vocabulario y más — en pocos minutos, con ejemplos y
+                ejercicios.
+              </p>
+            </div>
+
+            <div className="mini-lessons__stats" aria-label="Resumen">
+              <div className="mini-lessons__stat mini-lessons__stat--accent">
+                <b>{lessons.length}</b>
+                <span>lecciones</span>
+              </div>
+              <div className="mini-lessons__stat">
+                <b>{categoryCount}</b>
+                <span>categorías</span>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <div className="mini-lessons__toolbar">
+          <div className="mini-lessons__toolbar-group">
+            <span className="mini-lessons__toolbar-label" id="ml-level-label">
+              Nivel
+            </span>
+            <div
+              className="mini-lessons__segmented"
+              role="group"
+              aria-labelledby="ml-level-label"
+            >
+              <button
+                type="button"
+                className={cn(
+                  "mini-lessons__segment",
+                  selectedLevel === "all" && "mini-lessons__segment--on"
+                )}
+                onClick={() => setSelectedLevel("all")}
+              >
+                Todos
+              </button>
+              {levels.map((level) => (
+                <button
+                  key={level}
+                  type="button"
+                  className={cn(
+                    "mini-lessons__segment",
+                    selectedLevel === level && "mini-lessons__segment--on"
+                  )}
+                  onClick={() => setSelectedLevel(level)}
+                >
+                  {MINI_LESSON_LEVEL_LABELS[level]}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <span className="mini-lessons__toolbar-divider" aria-hidden />
+
+          <div className="mini-lessons__toolbar-group">
+            <label className="mini-lessons__toolbar-label" htmlFor="ml-category">
+              Categoría
+            </label>
+            <select
+              id="ml-category"
+              className="mini-lessons__select"
+              value={selectedCategory}
+              onChange={(e) =>
+                setSelectedCategory(e.target.value as LessonCategory | "all")
+              }
+            >
+              <option value="all">Todas</option>
+              {categories.map((category) => (
+                <option key={category} value={category}>
+                  {MINI_LESSON_CATEGORY_LABELS[category]}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="mini-lessons__toolbar-meta">
+            <p className="mini-lessons__count">
+              {filteredLessons.length} de {lessons.length}
+            </p>
+            {hasActiveFilters && (
+              <button
+                type="button"
+                className="mini-lessons__toolbar-reset"
+                onClick={clearFilters}
+              >
+                Limpiar
+              </button>
+            )}
+          </div>
         </div>
-      )}
+
+        <div className="mini-lessons__grid">
+          {filteredLessons.map((lesson) => (
+            <Link
+              key={lesson.id}
+              href={`/mini-lessons/${lesson.slug}`}
+              className="mini-lessons__card"
+            >
+              <div className="mini-lessons__card-top">
+                <div className="mini-lessons__card-meta">
+                  <span className="mini-lessons__pill mini-lessons__pill--level">
+                    {MINI_LESSON_LEVEL_LABELS[lesson.level]}
+                  </span>
+                  <span className="mini-lessons__pill">
+                    {MINI_LESSON_CATEGORY_LABELS[lesson.category]}
+                  </span>
+                </div>
+                <span className="mini-lessons__card-duration">{lesson.duration} min</span>
+              </div>
+
+              <h2 className="mini-lessons__card-title">{lesson.title}</h2>
+              <p className="mini-lessons__card-body">{lesson.body}</p>
+
+              <div className="mini-lessons__card-foot">
+                <span>{lesson.subtitle}</span>
+                <span className="mini-lessons__card-arrow" aria-hidden>
+                  →
+                </span>
+              </div>
+            </Link>
+          ))}
+
+          {filteredLessons.length === 0 && (
+            <p className="mini-lessons__empty">
+              No hay lecciones con estos filtros.{" "}
+              <button
+                type="button"
+                className="mini-lessons__toolbar-reset"
+                onClick={clearFilters}
+              >
+                Ver todas
+              </button>
+            </p>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
