@@ -12,9 +12,10 @@ export type PhonemeExerciseMeta = {
 
 export function getPhonemeExerciseMeta(
   slug: ExerciseSlug,
-  ctx: { ipa?: string; targetWord?: string; contrastIpa?: string },
+  ctx: { ipa?: string; targetWord?: string; contrastIpa?: string; syllablePosition?: string },
 ): PhonemeExerciseMeta {
   const contrast = ctx.contrastIpa ?? (ctx.ipa ? primaryContrast(ctx.ipa) : undefined)
+  const isFinal = ctx.syllablePosition === 'final'
 
   switch (slug) {
     case 'pick_word':
@@ -35,10 +36,14 @@ export function getPhonemeExerciseMeta(
       }
     case 'minimal_pair':
       return {
-        eyebrow: contrast && ctx.ipa
-          ? `Distingue ${ctx.ipa} de ${contrast}`
-          : 'Elige la palabra correcta',
-        title: ctx.ipa ? `¿Cuál contiene ${ctx.ipa}?` : '¿Cuál palabra tiene el sonido objetivo?',
+        eyebrow: isFinal
+          ? `Consonante final: ${ctx.ipa ?? ''}${contrast ? ` vs ${contrast}` : ''}`
+          : contrast && ctx.ipa
+            ? `Distingue ${ctx.ipa} de ${contrast}`
+            : 'Elige la palabra correcta',
+        title: isFinal
+          ? `¿Cuál termina con el sonido ${ctx.ipa ?? ''}?`
+          : ctx.ipa ? `¿Cuál contiene ${ctx.ipa}?` : '¿Cuál palabra tiene el sonido objetivo?',
       }
     case 'dictation':
       return {
@@ -61,10 +66,14 @@ export function getPhonemeExerciseMeta(
       }
     case 'ax_same_different':
       return {
-        eyebrow: contrast && ctx.ipa
-          ? `Contraste ${ctx.ipa} / ${contrast}`
-          : 'Discriminación auditiva',
-        title: '¿A y X tienen el mismo sonido?',
+        eyebrow: isFinal
+          ? `Final de palabra: ¿mismo sonido?`
+          : contrast && ctx.ipa
+            ? `Contraste ${ctx.ipa} / ${contrast}`
+            : 'Discriminación auditiva',
+        title: isFinal
+          ? '¿Las dos palabras terminan con el mismo sonido?'
+          : '¿A y X tienen el mismo sonido?',
       }
     case 'odd_one_out':
       return {

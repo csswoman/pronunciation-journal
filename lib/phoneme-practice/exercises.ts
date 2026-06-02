@@ -1,7 +1,7 @@
 import type { Exercise, ExerciseOptions, Option, Sound, SoundWord, MinimalPair, AudioStimulus } from './types'
 import { filterByCEFR, numericToCEFR } from './cefr'
 import { pickConfusableIpas } from './phoneme-similarity'
-import { IPA_EXTRA } from '@/lib/pronunciation/ipa-data'
+import { IPA_EXTRA, type FinalConsonantPair } from '@/lib/pronunciation/ipa-data'
 
 function shuffle<T>(arr: T[]): T[] {
   const a = [...arr]
@@ -412,6 +412,136 @@ export function generateAbx(
     options,
     correctIds: [xMatchesA ? 'a' : 'b'],
     abxAnswer: xMatchesA ? 0 : 1,
+  }
+}
+
+/**
+ * Returns all final-consonant pairs for a sound, derived from IPA_EXTRA.
+ * Never invents data — returns empty if no finalConsonantPairs defined.
+ */
+export function getFinalConsonantPairs(ipa: string): FinalConsonantPair[] {
+  return IPA_EXTRA[ipa]?.finalConsonantPairs ?? []
+}
+
+/**
+ * final_consonant_minimal_pair: two words differing only in the final voiced/voiceless
+ * consonant — pick the one that ends with the target phoneme.
+ * Directly addresses Spanish-speaker devoicing of final stops and fricatives.
+ */
+export function generateFinalConsonantMinimalPair(
+  targetSound: Sound
+): Exercise {
+  const pairs = getFinalConsonantPairs(targetSound.ipa)
+
+  if (pairs.length === 0) {
+    return {
+      type: 'minimal_pair',
+      exerciseType: { domain: 'pronunciation', mode: 'multiple_choice', variant: 'minimal_pair' },
+      soundId: targetSound.id,
+      ipa: targetSound.ipa,
+      options: [],
+      correctIds: [],
+      synthetic: true,
+      syllablePosition: 'final',
+    }
+  }
+
+  const chosen = pairs[Math.floor(Math.random() * pairs.length)]
+  const targetIsVoiced = chosen.voicedIpa === targetSound.ipa
+  const targetWord = targetIsVoiced ? chosen.wordVoiced : chosen.wordVoiceless
+  const otherWord = targetIsVoiced ? chosen.wordVoiceless : chosen.wordVoiced
+
+  const options: Option[] = shuffle([
+    { id: 'target', label: targetWord, isCorrect: true },
+    { id: 'other', label: otherWord, isCorrect: false },
+  ])
+
+  return {
+    type: 'minimal_pair',
+    exerciseType: { domain: 'pronunciation', mode: 'multiple_choice', variant: 'minimal_pair' },
+    soundId: targetSound.id,
+    ipa: targetSound.ipa,
+    targetWord,
+    options,
+    correctIds: options.filter(o => o.isCorrect).map(o => o.id),
+    syllablePosition: 'final',
+  }
+}
+
+/**
+ * final_consonant_ax: two words, decide if they end with the same consonant voicing.
+ * Same/different discrimination focused on final position.
+ */
+export function generateFinalConsonantAx(
+  targetSound: Sound
+): Exercise {
+  const pairs = getFinalConsonantPairs(targetSound.ipa)
+
+  // Fallback to a same-same trial if no pairs
+  if (pairs.length === 0) {
+    const options: Option[] = [
+      { id: 'same', label: 'Igual', isCorrect: true },
+      { id: 'diff', label: 'Diferente', isCorrect: false },
+    ]
+    return {
+      type: 'ax_same_different',
+      exerciseType: { domain: 'pronunciation', mode: 'multiple_choice', variant: 'ax_same_different' },
+      soundId: targetSound.id,
+      ipa: targetSound.ipa,
+      stimuli: [],
+      options,
+      correctIds: ['same'],
+      synthetic: true,
+      syllablePosition: 'final',
+    }
+  }
+
+  const same = Math.random() < 0.5
+  const chosen = pairs[Math.floor(Math.random() * pairs.length)]
+
+  let wordA: string
+  let wordX: string
+  let ipaA: string
+  let ipaX: string
+
+  if (same) {
+    // Both end with the target IPA
+    const targetIsVoiced = chosen.voicedIpa === targetSound.ipa
+    wordA = targetIsVoiced ? chosen.wordVoiced : chosen.wordVoiceless
+    ipaA = targetSound.ipa
+    // Pick a different pair if available, else same word
+    const other = pairs.filter(p => p !== chosen)
+    const alt = other.length > 0 ? other[Math.floor(Math.random() * other.length)] : chosen
+    wordX = targetIsVoiced ? alt.wordVoiced : alt.wordVoiceless
+    ipaX = targetSound.ipa
+  } else {
+    // A ends with target, X ends with contrast
+    const targetIsVoiced = chosen.voicedIpa === targetSound.ipa
+    wordA = targetIsVoiced ? chosen.wordVoiced : chosen.wordVoiceless
+    ipaA = targetSound.ipa
+    wordX = targetIsVoiced ? chosen.wordVoiceless : chosen.wordVoiced
+    ipaX = targetIsVoiced ? chosen.voicelessIpa : chosen.voicedIpa
+  }
+
+  const stimuli: AudioStimulus[] = [
+    { word: wordA, ipa: ipaA },
+    { word: wordX, ipa: ipaX },
+  ]
+
+  const options: Option[] = [
+    { id: 'same', label: 'Igual', isCorrect: same },
+    { id: 'diff', label: 'Diferente', isCorrect: !same },
+  ]
+
+  return {
+    type: 'ax_same_different',
+    exerciseType: { domain: 'pronunciation', mode: 'multiple_choice', variant: 'ax_same_different' },
+    soundId: targetSound.id,
+    ipa: targetSound.ipa,
+    stimuli,
+    options,
+    correctIds: [same ? 'same' : 'diff'],
+    syllablePosition: 'final',
   }
 }
 

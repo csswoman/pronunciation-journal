@@ -1,4 +1,14 @@
 export type Difficulty = "easy" | "medium" | "hard";
+export type SyllablePosition = "initial" | "medial" | "final" | "any";
+
+export interface FinalConsonantPair {
+  /** Word ending in the voiced consonant (e.g. "robe" for /b/ vs /p/). */
+  wordVoiced: string;
+  /** Word ending in the voiceless counterpart (e.g. "rope" for /p/). */
+  wordVoiceless: string;
+  voicedIpa: string;
+  voicelessIpa: string;
+}
 
 export interface PhonemeExtra {
   difficulty: Difficulty;
@@ -6,6 +16,12 @@ export interface PhonemeExtra {
   articulationEs: string[];
   minimalPairs: { wordA: string; wordB: string; phonemeA: string; phonemeB: string }[];
   spanishTip: string;
+  /**
+   * Minimal pairs practiced specifically in word-final position.
+   * Used for Fase 9 final-consonant exercises (devoicing / elision).
+   * Only present for consonants where final position is a known L1 problem.
+   */
+  finalConsonantPairs?: FinalConsonantPair[];
 }
 
 export const IPA_EXTRA: Record<string, PhonemeExtra> = {
@@ -274,6 +290,12 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       { wordA: "back", wordB: "pack", phonemeA: "/b/", phonemeB: "/p/" },
     ],
     spanishTip: "Igual que la 'b' española al inicio de sílaba (no entre vocales). Las cuerdas vocales vibran. Es un sonido natural para hispanohablantes.",
+    finalConsonantPairs: [
+      { wordVoiced: "robe", wordVoiceless: "rope", voicedIpa: "/b/", voicelessIpa: "/p/" },
+      { wordVoiced: "cab", wordVoiceless: "cap", voicedIpa: "/b/", voicelessIpa: "/p/" },
+      { wordVoiced: "rib", wordVoiceless: "rip", voicedIpa: "/b/", voicelessIpa: "/p/" },
+      { wordVoiced: "tab", wordVoiceless: "tap", voicedIpa: "/b/", voicelessIpa: "/p/" },
+    ],
   },
   "/t/": {
     difficulty: "easy",
@@ -312,6 +334,12 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       { wordA: "day", wordB: "say", phonemeA: "/d/", phonemeB: "/s/" },
     ],
     spanishTip: "Similar a la 'd' española al inicio de sílaba (no entre vocales). La lengua toca la cresta alveolar, no los dientes. Sonido natural para hispanohablantes.",
+    finalConsonantPairs: [
+      { wordVoiced: "bad", wordVoiceless: "bat", voicedIpa: "/d/", voicelessIpa: "/t/" },
+      { wordVoiced: "bid", wordVoiceless: "bit", voicedIpa: "/d/", voicelessIpa: "/t/" },
+      { wordVoiced: "road", wordVoiceless: "wrote", voicedIpa: "/d/", voicelessIpa: "/t/" },
+      { wordVoiced: "played", wordVoiceless: "plate", voicedIpa: "/d/", voicelessIpa: "/t/" },
+    ],
   },
   "/k/": {
     difficulty: "easy",
@@ -350,6 +378,12 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       { wordA: "gold", wordB: "cold", phonemeA: "/g/", phonemeB: "/k/" },
     ],
     spanishTip: "Igual que la 'g' española al inicio de sílaba (como en 'gato', no como en 'agua'). Sonido natural para hispanohablantes.",
+    finalConsonantPairs: [
+      { wordVoiced: "bag", wordVoiceless: "back", voicedIpa: "/g/", voicelessIpa: "/k/" },
+      { wordVoiced: "big", wordVoiceless: "pick", voicedIpa: "/g/", voicelessIpa: "/k/" },
+      { wordVoiced: "log", wordVoiceless: "lock", voicedIpa: "/g/", voicelessIpa: "/k/" },
+      { wordVoiced: "rug", wordVoiceless: "ruck", voicedIpa: "/g/", voicelessIpa: "/k/" },
+    ],
   },
   "/f/": {
     difficulty: "easy",
@@ -388,6 +422,12 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       { wordA: "vine", wordB: "fine", phonemeA: "/v/", phonemeB: "/f/" },
     ],
     spanishTip: "No existe en español estándar. El labio inferior toca los dientes superiores y las cuerdas vocales vibran. No confundas con /b/ — los labios no se tocan entre sí.",
+    finalConsonantPairs: [
+      { wordVoiced: "leave", wordVoiceless: "leaf", voicedIpa: "/v/", voicelessIpa: "/f/" },
+      { wordVoiced: "live", wordVoiceless: "life", voicedIpa: "/v/", voicelessIpa: "/f/" },
+      { wordVoiced: "save", wordVoiceless: "safe", voicedIpa: "/v/", voicelessIpa: "/f/" },
+      { wordVoiced: "halve", wordVoiceless: "half", voicedIpa: "/v/", voicelessIpa: "/f/" },
+    ],
   },
   "/θ/": {
     difficulty: "hard",
@@ -464,6 +504,12 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       { wordA: "zeal", wordB: "seal", phonemeA: "/z/", phonemeB: "/s/" },
     ],
     spanishTip: "No existe en español estándar pero es igual a /s/ con vibración. Aparece mucho en inglés en plurales y verbos: 'dogs', 'runs', 'lives'. Pon la mano en el cuello y siente la vibración.",
+    finalConsonantPairs: [
+      { wordVoiced: "buzz", wordVoiceless: "bus", voicedIpa: "/z/", voicelessIpa: "/s/" },
+      { wordVoiced: "his", wordVoiceless: "hiss", voicedIpa: "/z/", voicelessIpa: "/s/" },
+      { wordVoiced: "rise", wordVoiceless: "rice", voicedIpa: "/z/", voicelessIpa: "/s/" },
+      { wordVoiced: "plays", wordVoiceless: "place", voicedIpa: "/z/", voicelessIpa: "/s/" },
+    ],
   },
   "/ʃ/": {
     difficulty: "medium",

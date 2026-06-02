@@ -10,6 +10,9 @@ import {
   generateAxSameDifferent,
   generateOddOneOut,
   generateAbx,
+  generateFinalConsonantMinimalPair,
+  generateFinalConsonantAx,
+  getFinalConsonantPairs,
 } from './exercises'
 import { generateMatchPairsFromSoundWords } from '@/lib/exercises/generators/match-pairs'
 import { generateReorderFromSoundExample } from '@/lib/exercises/generators/reorder-words'
@@ -169,6 +172,34 @@ export function buildAdaptiveSession(
   if (matchGroups.length > 0) ex.push({ kind: 'match_pairs', data: matchGroups[0] })
   const reorder = generateReorderFromSoundExample(sound)
   if (reorder) ex.push({ kind: 'reorder_words', data: reorder })
+
+  return shuffle(ex)
+}
+
+/**
+ * Build a focused session on final-consonant devoicing/elision.
+ *
+ * Targets Spanish-speaker errors: /b/→/p/, /d/→/t/, /g/→/k/, /v/→/f/, /z/→/s/.
+ * Only builds exercises when IPA_EXTRA has finalConsonantPairs for the sound.
+ * Returns empty when no final-consonant data exists — caller should fall back to
+ * buildAdaptiveSession.
+ *
+ * Mix: ax_same_different × 3, minimal_pair × 3.
+ */
+export function buildFinalConsonantSession(
+  sound: Sound,
+): MixedExercise[] {
+  const hasPairs = getFinalConsonantPairs(sound.ipa).length > 0
+  if (!hasPairs) return []
+
+  const ex: MixedExercise[] = []
+
+  for (let i = 0; i < 3; i++) {
+    ex.push({ kind: 'phoneme', data: generateFinalConsonantAx(sound) })
+  }
+  for (let i = 0; i < 3; i++) {
+    ex.push({ kind: 'phoneme', data: generateFinalConsonantMinimalPair(sound) })
+  }
 
   return shuffle(ex)
 }

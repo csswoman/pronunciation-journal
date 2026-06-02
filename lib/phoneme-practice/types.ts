@@ -1,5 +1,8 @@
 import type { CEFRLevel } from '@/lib/exercises/cefr'
 import type { ExerciseType as CanonicalExerciseType } from '@/lib/exercises/taxonomy'
+import type { SyllablePosition } from '@/lib/pronunciation/ipa-data'
+
+export type { SyllablePosition }
 
 export type ExerciseType =
   | 'pick_word'
@@ -24,6 +27,8 @@ export interface ExerciseOptions {
   correctCount?: number
   /** Number of distractor options. Default 2 for pick_word, 3 for pick_sound. */
   distractorCount?: number
+  /** Restrict exercise to a specific syllable position. */
+  syllablePosition?: SyllablePosition
 }
 
 export interface Sound {
@@ -87,6 +92,8 @@ export interface Exercise {
   level?: CEFRLevel
   /** True when the exercise was built from local fallback data (no DB pair). */
   synthetic?: boolean
+  /** Syllable position this exercise focuses on (undefined = any). */
+  syllablePosition?: SyllablePosition
   /**
    * Ordered stimuli for discrimination exercises (AX, ABX, odd-one-out).
    * ABX: [A, B, X]. AX/same-different: [A, X]. odd-one-out: N items.
