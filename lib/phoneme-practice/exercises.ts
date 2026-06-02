@@ -1,4 +1,4 @@
-import type { Exercise, ExerciseOptions, Option, Sound, SoundWord, MinimalPair } from './types'
+import type { Exercise, ExerciseOptions, Option, Sound, SoundWord, MinimalPair, AudioStimulus } from './types'
 import { filterByCEFR, numericToCEFR } from './cefr'
 import { pickConfusableIpas } from './phoneme-similarity'
 import { IPA_EXTRA } from '@/lib/pronunciation/ipa-data'
@@ -127,43 +127,36 @@ export function generatePickSound(
   }
 }
 
+type NormalizedPair = { wordA: string; wordB: string; targetIsA: boolean; synthetic: boolean }
+
+function normalizeDbPair(pair: MinimalPair, targetSoundId: number): NormalizedPair {
+  const targetIsA = pair.contrast_sound_a_id === targetSoundId
+  return { wordA: pair.word_a, wordB: pair.word_b, targetIsA, synthetic: false }
+}
+
+function normalizeSynthPair(synth: { phonemeA: string; wordA: string; wordB: string }, targetIpa: string): NormalizedPair {
+  return { wordA: synth.wordA, wordB: synth.wordB, targetIsA: synth.phonemeA === targetIpa, synthetic: true }
+}
+
 /**
  * minimal_pair: two words, one has the target sound — pick it.
- * Falls back to a synthetic pair from IPA_EXTRA when no DB pair exists.
+ * Merges DB pairs and IPA_EXTRA pairs for a larger token pool.
  */
 export function generateMinimalPair(
   targetSound: Sound,
   pairs: MinimalPair[]
 ): Exercise {
-  const relevant = pairs.filter(
-    p => p.contrast_sound_a_id === targetSound.id || p.contrast_sound_b_id === targetSound.id
-  )
+  const dbPairs = pairs
+    .filter(p => p.contrast_sound_a_id === targetSound.id || p.contrast_sound_b_id === targetSound.id)
+    .map(p => normalizeDbPair(p, targetSound.id))
 
-  if (relevant.length > 0) {
-    const pair = relevant[Math.floor(Math.random() * relevant.length)]
-    const targetIsA = pair.contrast_sound_a_id === targetSound.id
-
-    const options: Option[] = shuffle([
-      { id: 'a', label: pair.word_a, isCorrect: targetIsA },
-      { id: 'b', label: pair.word_b, isCorrect: !targetIsA },
-    ])
-
-    return {
-      type: 'minimal_pair',
-      exerciseType: { domain: 'pronunciation', mode: 'multiple_choice', variant: 'minimal_pair' },
-      soundId: targetSound.id,
-      ipa: targetSound.ipa,
-      targetWord: targetIsA ? pair.word_a : pair.word_b,
-      options,
-      correctIds: options.filter(o => o.isCorrect).map(o => o.id),
-    }
-  }
-
-  // Fallback: synthesize from local IPA_EXTRA data
   const extra = IPA_EXTRA[targetSound.ipa]
-  const synthPairs = extra?.minimalPairs ?? []
-  if (synthPairs.length === 0) {
-    // Last-resort placeholder so the caller never receives null
+  const synthPairs = (extra?.minimalPairs ?? []).map(s => normalizeSynthPair(s, targetSound.ipa))
+
+  // Prefer DB pairs but include synth pairs to widen the pool
+  const pool = dbPairs.length > 0 ? [...dbPairs, ...synthPairs] : synthPairs
+
+  if (pool.length === 0) {
     return {
       type: 'minimal_pair',
       exerciseType: { domain: 'pronunciation', mode: 'multiple_choice', variant: 'minimal_pair' },
@@ -175,11 +168,10 @@ export function generateMinimalPair(
     }
   }
 
-  const synth = synthPairs[Math.floor(Math.random() * synthPairs.length)]
-  const targetIsA = synth.phonemeA === targetSound.ipa
+  const chosen = pool[Math.floor(Math.random() * pool.length)]
   const options: Option[] = shuffle([
-    { id: 'a', label: synth.wordA, isCorrect: targetIsA },
-    { id: 'b', label: synth.wordB, isCorrect: !targetIsA },
+    { id: 'a', label: chosen.wordA, isCorrect: chosen.targetIsA },
+    { id: 'b', label: chosen.wordB, isCorrect: !chosen.targetIsA },
   ])
 
   return {
@@ -187,10 +179,10 @@ export function generateMinimalPair(
     exerciseType: { domain: 'pronunciation', mode: 'multiple_choice', variant: 'minimal_pair' },
     soundId: targetSound.id,
     ipa: targetSound.ipa,
-    targetWord: targetIsA ? synth.wordA : synth.wordB,
+    targetWord: chosen.targetIsA ? chosen.wordA : chosen.wordB,
     options,
     correctIds: options.filter(o => o.isCorrect).map(o => o.id),
-    synthetic: true,
+    ...(chosen.synthetic ? { synthetic: true } : {}),
   }
 }
 
@@ -216,6 +208,210 @@ export function generateSpeakWord(
     options: [],
     correctIds: [],
     ...(level ? { level } : {}),
+  }
+}
+
+/**
+ * identify: hear a word, confirm whether it contains the target phoneme (yes/no).
+ * Good for A1/A2 — minimal cognitive load.
+ */
+export function generateIdentify(
+  targetSound: Sound,
+  targetWords: SoundWord[],
+  allSounds: Sound[],
+  allWordsBySoundId: Map<number, SoundWord[]>,
+  opts?: ExerciseOptions
+): Exercise {
+  const leveled = applyLevel(targetWords, opts)
+  // 50% chance the test word actually has the target sound
+  const useTarget = Math.random() < 0.5
+  let testWord: SoundWord | undefined
+
+  if (useTarget) {
+    ;[testWord] = pick(leveled, 1)
+  } else {
+    const confusables = getConfusableSounds(targetSound, allSounds, 2)
+    const pool: SoundWord[] = []
+    for (const s of confusables) pool.push(...(allWordsBySoundId.get(s.id) ?? []))
+    ;[testWord] = pick(pool.length > 0 ? pool : leveled, 1)
+  }
+
+  const isCorrect = useTarget
+  const options: Option[] = [
+    { id: 'yes', label: 'Sí', isCorrect },
+    { id: 'no', label: 'No', isCorrect: !isCorrect },
+  ]
+
+  return {
+    type: 'identify',
+    exerciseType: { domain: 'pronunciation', mode: 'multiple_choice', variant: 'identify' },
+    soundId: targetSound.id,
+    ipa: targetSound.ipa,
+    targetWord: testWord?.word,
+    options,
+    correctIds: [isCorrect ? 'yes' : 'no'],
+  }
+}
+
+/**
+ * ax_same_different: play A then X, decide if they share the target phoneme (same/different).
+ * A1/A2 discrimination — 2-stimulus.
+ */
+export function generateAxSameDifferent(
+  targetSound: Sound,
+  targetWords: SoundWord[],
+  allSounds: Sound[],
+  allWordsBySoundId: Map<number, SoundWord[]>,
+  opts?: ExerciseOptions
+): Exercise {
+  const leveled = applyLevel(targetWords, opts)
+  const same = Math.random() < 0.5
+
+  const [wordA] = pick(leveled, 1)
+  let wordX: SoundWord | undefined
+
+  if (same) {
+    // Pick a different word with the same sound
+    const others = leveled.filter(w => w.id !== wordA?.id)
+    ;[wordX] = pick(others.length > 0 ? others : leveled, 1)
+  } else {
+    const confusables = getConfusableSounds(targetSound, allSounds, 2)
+    const pool: SoundWord[] = []
+    for (const s of confusables) pool.push(...(allWordsBySoundId.get(s.id) ?? []))
+    ;[wordX] = pick(pool.length > 0 ? pool : leveled, 1)
+  }
+
+  const stimuli: AudioStimulus[] = [
+    { word: wordA?.word ?? '', ipa: targetSound.ipa },
+    { word: wordX?.word ?? '', ipa: same ? targetSound.ipa : (allSounds.find(s => allWordsBySoundId.get(s.id)?.some(w => w.id === wordX?.id))?.ipa ?? '') },
+  ]
+
+  const options: Option[] = [
+    { id: 'same', label: 'Igual', isCorrect: same },
+    { id: 'diff', label: 'Diferente', isCorrect: !same },
+  ]
+
+  return {
+    type: 'ax_same_different',
+    exerciseType: { domain: 'pronunciation', mode: 'multiple_choice', variant: 'ax_same_different' },
+    soundId: targetSound.id,
+    ipa: targetSound.ipa,
+    stimuli,
+    options,
+    correctIds: [same ? 'same' : 'diff'],
+  }
+}
+
+/**
+ * odd_one_out: 4 words, 3 share the target phoneme, 1 is the odd one.
+ * A1/A2 discrimination.
+ */
+export function generateOddOneOut(
+  targetSound: Sound,
+  targetWords: SoundWord[],
+  allSounds: Sound[],
+  allWordsBySoundId: Map<number, SoundWord[]>,
+  opts?: ExerciseOptions
+): Exercise {
+  const leveled = applyLevel(targetWords, opts)
+  const targetSample = pick(leveled, 3)
+
+  const confusables = getConfusableSounds(targetSound, allSounds, 2)
+  const pool: SoundWord[] = []
+  for (const s of confusables) pool.push(...(allWordsBySoundId.get(s.id) ?? []))
+  const [oddWord] = pick(pool.length > 0 ? pool : leveled, 1)
+
+  const oddIndex = Math.floor(Math.random() * 4)
+  const allWords = [...targetSample]
+  allWords.splice(oddIndex, 0, oddWord!)
+
+  const stimuli: AudioStimulus[] = allWords.map((w, i) => ({
+    word: w?.word ?? '',
+    ipa: i === oddIndex ? '' : targetSound.ipa,
+  }))
+
+  const options: Option[] = allWords.map((w, i) => ({
+    id: String(i),
+    label: w?.word ?? '',
+    isCorrect: i === oddIndex,
+  }))
+
+  return {
+    type: 'odd_one_out',
+    exerciseType: { domain: 'pronunciation', mode: 'multiple_choice', variant: 'odd_one_out' },
+    soundId: targetSound.id,
+    ipa: targetSound.ipa,
+    stimuli,
+    options,
+    correctIds: [String(oddIndex)],
+    oddIndex,
+  }
+}
+
+/**
+ * abx: hear A, B, then X — decide if X matches A or B.
+ * B1+ only (high working-memory load).
+ */
+export function generateAbx(
+  targetSound: Sound,
+  targetWords: SoundWord[],
+  allSounds: Sound[],
+  allWordsBySoundId: Map<number, SoundWord[]>,
+  pairs: MinimalPair[],
+  opts?: ExerciseOptions
+): Exercise {
+  const leveled = applyLevel(targetWords, opts)
+
+  // Try to use a minimal pair for A/B
+  const soundPairs = pairs.filter(
+    p => p.contrast_sound_a_id === targetSound.id || p.contrast_sound_b_id === targetSound.id
+  )
+
+  let wordA: string
+  let wordB: string
+  let ipaB: string
+
+  if (soundPairs.length > 0) {
+    const chosen = soundPairs[Math.floor(Math.random() * soundPairs.length)]
+    const targetIsA = chosen.contrast_sound_a_id === targetSound.id
+    wordA = targetIsA ? chosen.word_a : chosen.word_b
+    wordB = targetIsA ? chosen.word_b : chosen.word_a
+    ipaB = targetIsA ? (chosen.contrast_ipa_b ?? '') : (chosen.contrast_ipa_a ?? '')
+  } else {
+    // Fallback: pick from confusables
+    const confusables = getConfusableSounds(targetSound, allSounds, 1)
+    const confusableWords = allWordsBySoundId.get(confusables[0]?.id ?? 0) ?? []
+    const [wA] = pick(leveled, 1)
+    const [wB] = pick(confusableWords.length > 0 ? confusableWords : leveled, 1)
+    wordA = wA?.word ?? ''
+    wordB = wB?.word ?? ''
+    ipaB = confusables[0]?.ipa ?? ''
+  }
+
+  // X matches either A or B randomly
+  const xMatchesA = Math.random() < 0.5
+  const xText = xMatchesA ? wordA : wordB
+
+  const stimuli: AudioStimulus[] = [
+    { word: wordA, ipa: targetSound.ipa },
+    { word: wordB, ipa: ipaB },
+    { word: xText, ipa: xMatchesA ? targetSound.ipa : ipaB },
+  ]
+
+  const options: Option[] = [
+    { id: 'a', label: 'A', isCorrect: xMatchesA },
+    { id: 'b', label: 'B', isCorrect: !xMatchesA },
+  ]
+
+  return {
+    type: 'abx',
+    exerciseType: { domain: 'pronunciation', mode: 'multiple_choice', variant: 'abx' },
+    soundId: targetSound.id,
+    ipa: targetSound.ipa,
+    stimuli,
+    options,
+    correctIds: [xMatchesA ? 'a' : 'b'],
+    abxAnswer: xMatchesA ? 0 : 1,
   }
 }
 

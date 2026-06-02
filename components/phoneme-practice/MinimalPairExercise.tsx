@@ -10,16 +10,17 @@ interface Props {
   exercise: Exercise
   onSubmit: (isCorrect: boolean, userAnswer: string) => void
   focusUi?: boolean
+  voice?: SpeechSynthesisVoice
 }
 
-export function MinimalPairExercise({ exercise, onSubmit, focusUi = false }: Props) {
+export function MinimalPairExercise({ exercise, onSubmit, focusUi = false, voice }: Props) {
   const [selected, setSelected] = useState<string | null>(null)
   const [submitted, setSubmitted] = useState(false)
   const meta = getPhonemeExerciseMeta('minimal_pair', { ipa: exercise.ipa })
 
   function handleSelect(id: string, label: string) {
     if (submitted) return
-    speak(label)
+    speak(label, { voice })
     setSelected(id)
   }
 

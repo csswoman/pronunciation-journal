@@ -25,6 +25,7 @@ import type {
   PracticeExercise,
   SessionResult,
 } from '@/lib/practice/types'
+import { useVoiceRotation } from '@/hooks/useVoiceRotation'
 import { PhonemeFocusShell } from '@/components/phoneme-practice/PhonemeFocusShell'
 import { ExerciseHints } from '@/components/phoneme-practice/ExerciseHints'
 import { ExerciseRenderer } from './session/ExerciseRenderer'
@@ -82,6 +83,8 @@ export default function PracticeSession(config: PracticeConfig) {
   const [phase, setPhase] = useState<Phase>('exercising')
   const [lastFeedback, setLastFeedback] = useState<boolean | null>(null)
   const [retryKey, setRetryKey] = useState(0)
+
+  const { currentVoice, nextVoice } = useVoiceRotation()
 
   const startTimeRef = useRef<number>(Date.now())
   const feedbackTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -227,6 +230,8 @@ export default function PracticeSession(config: PracticeConfig) {
         })
       }
 
+      nextVoice()
+
       feedbackTimerRef.current = setTimeout(() => {
         if (nextIndex >= exercises.length) {
           finish(nextResults)
@@ -237,7 +242,7 @@ export default function PracticeSession(config: PracticeConfig) {
         }
       }, FEEDBACK_MS)
     },
-    [current, phase, results, currentIndex, exercises.length, user, context, finish, persistence],
+    [current, phase, results, currentIndex, exercises.length, user, context, finish, persistence, nextVoice],
   )
 
   // Reset the current exercise (remount via key) so the user can retry.
@@ -347,6 +352,7 @@ export default function PracticeSession(config: PracticeConfig) {
           exercise={current}
           onSubmit={handleSubmit}
           focusUi={focusUi}
+          voice={currentVoice}
         />
       )}
 
@@ -360,6 +366,7 @@ export default function PracticeSession(config: PracticeConfig) {
           targetWord={current.payload.targetWord}
           onRetry={handleRetry}
           onContinue={handleHintContinue}
+          voice={currentVoice}
         />
       )}
     </>
@@ -388,6 +395,7 @@ export default function PracticeSession(config: PracticeConfig) {
                   targetWord={current.payload.targetWord}
                   onRetry={handleRetry}
                   onContinue={handleHintContinue}
+                  voice={currentVoice}
                 />
               </div>
             )

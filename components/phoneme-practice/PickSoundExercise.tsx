@@ -11,19 +11,20 @@ interface Props {
   exercise: Exercise
   onSubmit: (isCorrect: boolean, userAnswer: string) => void
   focusUi?: boolean
+  voice?: SpeechSynthesisVoice
 }
 
-export function PickSoundExercise({ exercise, onSubmit, focusUi = false }: Props) {
+export function PickSoundExercise({ exercise, onSubmit, focusUi = false, voice }: Props) {
   const [selected, setSelected] = useState<string | null>(null)
   const [submitted, setSubmitted] = useState(false)
   const meta = getPhonemeExerciseMeta('pick_sound', { ipa: exercise.ipa })
 
   useEffect(() => {
     if (exercise.targetWord) {
-      const timer = setTimeout(() => speak(exercise.targetWord!), 300)
+      const timer = setTimeout(() => speak(exercise.targetWord!, { voice }), 300)
       return () => clearTimeout(timer)
     }
-  }, [exercise.targetWord])
+  }, [exercise.targetWord, voice])
 
   function handleSelect(id: string, label: string) {
     if (submitted) return
@@ -56,7 +57,7 @@ export function PickSoundExercise({ exercise, onSubmit, focusUi = false }: Props
     <>
       <button
         type="button"
-        onClick={() => exercise.targetWord && speak(exercise.targetWord)}
+        onClick={() => exercise.targetWord && speak(exercise.targetWord, { voice })}
         className={focusUi ? 'pf-chip self-center mb-5' : 'inline-flex items-center gap-2 bg-[var(--surface-raised)] border-[1.5px] border-[var(--border-subtle)] rounded-[var(--radius-full)] py-3 px-6 text-lg font-semibold text-[var(--text-primary)] cursor-pointer [font-family:inherit]'}
       >
         <span className={focusUi ? 'pf-chip__icon' : undefined} aria-hidden>
