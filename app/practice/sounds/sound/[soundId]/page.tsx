@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { useAuth } from '@/components/auth/AuthProvider'
 import PracticeSession from '@/components/practice/PracticeSession'
+import { PhonemeLessonIntro } from '@/components/phoneme-practice/PhonemeLessonIntro'
 import Button from '@/components/ui/Button'
 import {
   getAllSounds,
@@ -31,6 +32,7 @@ export default function SoundPracticePage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [sessionKey, setSessionKey] = useState(0)
+  const [showIntro, setShowIntro] = useState(true)
 
   const loadAndStart = useCallback(async () => {
     if (!user) return
@@ -109,6 +111,30 @@ export default function SoundPracticePage() {
     return (
       <div className="phoneme-focus flex min-h-screen items-center justify-center">
         <div className="animate-pulse text-fg-subtle">Cargando sesión…</div>
+      </div>
+    )
+  }
+
+  if (showIntro) {
+    return (
+      <div className="phoneme-focus flex min-h-screen items-center justify-center">
+        <div className="phoneme-focus__wrap">
+          <div className="phoneme-focus__phone">
+            <div className="phoneme-focus__topbar">
+              <button
+                type="button"
+                className="phoneme-focus__exit"
+                onClick={() => router.push('/practice/sounds')}
+                aria-label="Salir de la práctica"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="phoneme-focus__stage overflow-y-auto">
+              <PhonemeLessonIntro ipa={soundIpa} onStart={() => setShowIntro(false)} />
+            </div>
+          </div>
+        </div>
       </div>
     )
   }
