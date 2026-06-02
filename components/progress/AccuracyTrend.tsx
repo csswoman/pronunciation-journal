@@ -29,7 +29,7 @@ export function AccuracyTrend({ stats }: Props) {
 
       <div className="mt-0.5 flex flex-col items-center">
         <div className="relative w-[180px]">
-          <svg width="180" height="100" viewBox="0 0 180 100" className="block">
+          <svg width="100%" height="auto" viewBox="0 0 180 100" className="block">
             <path
               d="M16 90 A74 74 0 0 1 164 90"
               fill="none"
