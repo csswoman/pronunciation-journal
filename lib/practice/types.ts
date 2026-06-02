@@ -90,6 +90,39 @@ export type SessionResult = {
   bySlug: Record<ExerciseSlug, { total: number; correct: number }>
 }
 
+// ── Daily plan (5-step "diaria") ────────────────────────────────────────────
+
+export type DailyStepKind =
+  | 'word_review'      // SRS de word_bank (fill_blank / sentence_dictation / reorder)
+  | 'phoneme_focus'    // tanda mixta de un sonido (débil si hay progreso, si no del seed)
+  | 'minimal_pairs'    // discriminación de pares mínimos
+  | 'listening'        // dictation desde words del seed
+  | 'sentence_builder' // reorder_words desde text_fragments (lecciones y grammar decks)
+  | 'concept'          // mini-lección / language concept del día (lectura ligera)
+
+export type DailyStep = {
+  kind: DailyStepKind
+  /** Stable id within a plan (used as React key and to mark completion). */
+  id: string
+  title: string
+  subtitle: string
+  /** lucide-react icon name. */
+  icon: string
+  /** Ejercicios context='daily' que componen el paso. Vacío para 'concept'. */
+  exercises: PracticeExercise[]
+  estMinutes: number
+  /** Solo para 'concept': a dónde lleva la lectura. */
+  href?: string
+}
+
+export type DailyPlan = {
+  /** Exactamente DAILY_PLAN_STEP_COUNT pasos cuando el seed está disponible. */
+  steps: DailyStep[]
+  totalExercises: number
+  /** true si no había word_bank ni progreso de fonema (todo salió del seed). */
+  isNewUser: boolean
+}
+
 export type PracticeConfig = {
   context: PracticeContext
   exercises: PracticeExercise[]
