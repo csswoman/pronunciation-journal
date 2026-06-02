@@ -97,7 +97,7 @@ export function LexiconFlashcard({
               type="button"
               onClick={(e) => {
                 e.stopPropagation()
-                speak([word, definition, example ? `For example: ${example}` : ''].filter(Boolean).join('. '), 0.9)
+                speak([word, definition, example ? `For example: ${example}` : ''].filter(Boolean).join('. '), { rate: 0.9 })
               }}
               className="self-start p-1.5 rounded-full text-fg-muted hover:text-fg hover:bg-surface-sunken transition-colors"
               aria-label={`Listen to ${word}`}

@@ -1,5 +1,5 @@
 import { HARD_FOR_SPANISH_SPEAKERS } from "@/lib/pronunciation/ipa-data";
-import { getSoundsForToday } from "@/lib/phoneme-practice/queries";
+import { getContrastsForToday } from "@/lib/phoneme-practice/queries";
 
 /** Tokens para `?focus=` en Sound Lab (sonidos difíciles para hispanohablantes). */
 export function hardSoundsFocusParam(): string {
@@ -14,7 +14,7 @@ export function soundLabDrillHref(): string {
 export async function resolveDrillHref(userId: string | undefined): Promise<string> {
   if (userId) {
     try {
-      const due = await getSoundsForToday(userId);
+      const due = await getContrastsForToday(userId);
       if (due.length > 0) return "/review";
     } catch {
       /* fallback al focus del chart */

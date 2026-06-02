@@ -60,9 +60,8 @@ export async function getUserLearningState(userId: string): Promise<UserLearning
     }));
 
     const strugglingSounds = resolvedSounds
-      .filter(s => s.status === "learning" || s.status === "review")
       .map(s => ({
-        ipa: s.ipa ?? s.sound_id,
+        ipa: s.ipa,
         avgAccuracy:
           s.total_attempts > 0
             ? Math.round((s.correct_answers / s.total_attempts) * 100)
@@ -93,18 +92,17 @@ export async function getUserLearningState(userId: string): Promise<UserLearning
 async function fetchSoundProgress(userId: string) {
   const supabase = getSupabaseBrowserClient();
   const { data } = await supabase
-    .from("user_sound_progress")
-    .select("sound_id, total_attempts, correct_answers, status, sounds(ipa)")
+    .from("user_contrast_progress")
+    .select("contrast_id, total_attempts, correct_answers")
     .eq("user_id", userId)
-    .in("status", ["learning", "review"])
+    .gt("total_attempts", 0)
     .order("correct_answers", { ascending: true })
     .limit(20);
 
-  return (data ?? []) as unknown as Array<{
-    sound_id: string;
-    ipa?: string;
-    total_attempts: number;
-    correct_answers: number;
-    status: string;
-  }>;
+  return (data ?? []).map(r => ({
+    contrast_id: r.contrast_id,
+    ipa: r.contrast_id.split("|")[0],
+    total_attempts: r.total_attempts,
+    correct_answers: r.correct_answers,
+  }));
 }

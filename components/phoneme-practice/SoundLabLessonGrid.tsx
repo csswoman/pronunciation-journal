@@ -13,13 +13,16 @@ export interface LessonSection {
 interface Props {
   sections: LessonSection[];
   heroLessonId: string | undefined;
-  soundProgressMap: Map<number, number>;
+  soundProgressMap: Map<string, number>;
   isLoading: boolean;
 }
 
-function getProgress(lesson: Lesson, map: Map<number, number>): number | undefined {
+function getProgress(lesson: Lesson, map: Map<string, number>): number | undefined {
   if (!lesson.id.startsWith("sound-")) return undefined;
-  return map.get(Number(lesson.id.replace("sound-", "")));
+  // Extract IPA from title like "/iː/ — sheep" or fall back to numeric id lookup
+  const ipaMatch = lesson.title.match(/^(\/[^/]+\/)/)
+  if (ipaMatch) return map.get(ipaMatch[1]);
+  return undefined;
 }
 
 function LoadingSkeleton() {

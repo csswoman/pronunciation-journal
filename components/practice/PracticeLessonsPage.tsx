@@ -7,9 +7,9 @@ import PageLayout from '@/components/layout/PageLayout'
 import PageHeader from '@/components/layout/PageHeader'
 import { getUserStats } from '@/lib/db'
 import { getAllDbLessons } from '@/lib/db/lesson-generator'
-import { getAllProgress } from '@/lib/phoneme-practice/queries'
+import { getAllContrastProgress } from '@/lib/phoneme-practice/queries'
 import type { Lesson } from '@/lib/types'
-import type { UserSoundProgressWithSound } from '@/lib/phoneme-practice/types'
+import type { UserContrastProgress } from '@/lib/phoneme-practice/types'
 import LessonFilters from './LessonFilters'
 import LessonGrid from './LessonGrid'
 import { useLessonFilters } from '@/hooks/useLessonFilters'
@@ -30,7 +30,7 @@ export default function PracticeLessonsPage() {
   const { user } = useAuth()
   const [dbLessons, setDbLessons] = useState<Lesson[]>([])
   const [isLoadingLessons, setIsLoadingLessons] = useState(true)
-  const [progress, setProgress] = useState<UserSoundProgressWithSound[] | null>(null)
+  const [progress, setProgress] = useState<UserContrastProgress[] | null>(null)
   const [, setDayStreak] = useState(0)
 
   useEffect(() => {
@@ -46,7 +46,7 @@ export default function PracticeLessonsPage() {
 
   useEffect(() => {
     if (!user) { setProgress([]); return }
-    getAllProgress(user.id)
+    getAllContrastProgress(user.id)
       .then(setProgress)
       .catch((err) => { console.error('Failed to load progress:', err); setProgress([]) })
   }, [user])
@@ -54,25 +54,30 @@ export default function PracticeLessonsPage() {
   const allLessons = useMemo(() => dbLessons, [dbLessons])
 
   const soundProgressMap = useMemo(() => {
-    const map = new Map<number, number>()
+    const map = new Map<string, number>()
     if (!progress) return map
-    progress.forEach((p) => {
-      if (p.status === 'mastered') { map.set(p.sound_id, 100); return }
-      if (p.total_attempts === 0) return
-      map.set(p.sound_id, Math.max(0, Math.min(100, Math.round((p.correct_answers / p.total_attempts) * 100))))
-    })
+    const byIpa = new Map<string, { correct: number; total: number }>()
+    for (const p of progress) {
+      const [ipaA] = p.contrast_id.split('|')
+      const prev = byIpa.get(ipaA) ?? { correct: 0, total: 0 }
+      byIpa.set(ipaA, { correct: prev.correct + p.correct_answers, total: prev.total + p.total_attempts })
+    }
+    for (const [ipa, { correct, total }] of byIpa) {
+      if (total === 0) continue
+      map.set(ipa, Math.max(0, Math.min(100, Math.round((correct / total) * 100))))
+    }
     return map
   }, [progress])
 
   const completedCount = useMemo(() => {
     let n = 0
-    soundProgressMap.forEach((v) => { if (v === 100) n++ })
+    soundProgressMap.forEach((v) => { if (v >= 85) n++ })
     return n
   }, [soundProgressMap])
 
   const inProgressCount = useMemo(() => {
     let n = 0
-    soundProgressMap.forEach((v) => { if (v > 0 && v < 100) n++ })
+    soundProgressMap.forEach((v) => { if (v > 0 && v < 85) n++ })
     return n
   }, [soundProgressMap])
 

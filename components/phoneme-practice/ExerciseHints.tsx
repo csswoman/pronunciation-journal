@@ -17,13 +17,14 @@ interface Props {
   targetWord?: string
   onRetry: () => void
   onContinue: () => void
+  voice?: SpeechSynthesisVoice
 }
 
 type HintLevel = 0 | 1 | 2
 
 const MAX_LEVEL: HintLevel = 2
 
-export function ExerciseHints({ ipa, targetWord, onRetry, onContinue }: Props) {
+export function ExerciseHints({ ipa, targetWord, onRetry, onContinue, voice }: Props) {
   const [level, setLevel] = useState<HintLevel>(0)
   const extra = IPA_EXTRA[ipa]
 
@@ -32,7 +33,7 @@ export function ExerciseHints({ ipa, targetWord, onRetry, onContinue }: Props) {
   }
 
   function handleRehear() {
-    if (targetWord) speak(targetWord)
+    if (targetWord) speak(targetWord, { voice })
   }
 
   const hasMoreHints = level < MAX_LEVEL

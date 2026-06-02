@@ -11,7 +11,7 @@ interface LessonGridProps {
   currentPage: number
   totalPages: number
   gridKey: number
-  soundProgressMap: Map<number, number>
+  soundProgressMap: Map<string, number>
   isLoading: boolean
   onPageChange: (page: number) => void
 }
@@ -49,9 +49,10 @@ export default function LessonGrid({
   }
 
   function getProgress(lesson: Lesson) {
-    return lesson.id.startsWith('sound-')
-      ? soundProgressMap.get(Number(lesson.id.replace('sound-', '')))
-      : undefined
+    if (!lesson.id.startsWith('sound-')) return undefined
+    const ipaMatch = lesson.title.match(/^(\/[^/]+\/)/)
+    if (ipaMatch) return soundProgressMap.get(ipaMatch[1])
+    return undefined
   }
 
   // Bento: 6-col grid on page 1 with enough lessons
