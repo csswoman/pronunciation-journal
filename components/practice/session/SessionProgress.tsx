@@ -29,8 +29,8 @@ export function SessionProgress({ current, total }: Props) {
         className="h-1.5 rounded-full overflow-hidden bg-border-subtle"
       >
         <div
-          className="h-full rounded-full bg-primary transition-[width] duration-300 ease-out"
-          style={{ width: `${pct}%` }}
+          className="h-full w-full rounded-full bg-primary origin-left transition-transform duration-300 ease-out"
+          style={{ transform: `scaleX(${pct / 100})` }}
         />
       </div>
     </div>

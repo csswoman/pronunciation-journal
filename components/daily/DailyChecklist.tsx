@@ -126,8 +126,8 @@ export default function DailyChecklist({ conceptLesson }: DailyChecklistProps) {
         </p>
         <div className="mt-4 h-1.5 w-full overflow-hidden rounded-full bg-surface-sunken">
           <div
-            className="h-full rounded-full bg-[var(--primary)] transition-[width] duration-300"
-            style={{ width: `${steps.length ? (completedCount / steps.length) * 100 : 0}%` }}
+            className="h-full w-full rounded-full bg-[var(--primary)] origin-left transition-transform duration-300 ease-out"
+            style={{ transform: `scaleX(${steps.length ? completedCount / steps.length : 0})` }}
           />
         </div>
       </header>

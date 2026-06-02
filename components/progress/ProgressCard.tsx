@@ -70,8 +70,8 @@ export function ProgressStatBar({
       </span>
       <div className="h-2 flex-1 overflow-hidden rounded-full bg-surface-sunken">
         <span
-          className="block h-full rounded-full transition-[width] duration-300"
-          style={{ width: `${Math.min(100, Math.max(0, value))}%`, background: barColor }}
+          className="block h-full w-full rounded-full origin-left transition-transform duration-300 ease-out"
+          style={{ transform: `scaleX(${Math.min(1, Math.max(0, value / 100))})`, background: barColor }}
         />
       </div>
       <span className="w-9 shrink-0 text-right text-body-sm tabular-nums text-fg-muted">
