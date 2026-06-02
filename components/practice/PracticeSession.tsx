@@ -26,6 +26,7 @@ import type {
   SessionResult,
 } from '@/lib/practice/types'
 import { PhonemeFocusShell } from '@/components/phoneme-practice/PhonemeFocusShell'
+import { ExerciseHints } from '@/components/phoneme-practice/ExerciseHints'
 import { ExerciseRenderer } from './session/ExerciseRenderer'
 import { SessionProgress } from './session/SessionProgress'
 import { InlineFeedback } from './session/InlineFeedback'
@@ -33,7 +34,7 @@ import { SessionSummary } from './session/SessionSummary'
 
 const FEEDBACK_MS = 1500
 
-type Phase = 'exercising' | 'feedback' | 'complete'
+type Phase = 'exercising' | 'feedback' | 'hints' | 'complete'
 
 function emptyBySlug(): SessionResult['bySlug'] {
   // Cast empty object to the Record shape — entries are added on demand.
@@ -80,6 +81,7 @@ export default function PracticeSession(config: PracticeConfig) {
   const [results, setResults] = useState<ExerciseResult[]>([])
   const [phase, setPhase] = useState<Phase>('exercising')
   const [lastFeedback, setLastFeedback] = useState<boolean | null>(null)
+  const [retryKey, setRetryKey] = useState(0)
 
   const startTimeRef = useRef<number>(Date.now())
   const feedbackTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -204,6 +206,15 @@ export default function PracticeSession(config: PracticeConfig) {
       const nextIndex = currentIndex + 1
       setResults(nextResults)
       setLastFeedback(isCorrect)
+
+      // Wrong phoneme answer → show hints instead of auto-advancing.
+      // Skip (userAnswer === 'skip') always advances without hints.
+      const isPhoneme = current.payload.kind === 'phoneme'
+      if (!isCorrect && isPhoneme && userAnswer !== 'skip') {
+        setPhase('hints')
+        return
+      }
+
       setPhase('feedback')
 
       // Persist progress so a reload/new-window resumes exactly here.
@@ -228,6 +239,26 @@ export default function PracticeSession(config: PracticeConfig) {
     },
     [current, phase, results, currentIndex, exercises.length, user, context, finish, persistence],
   )
+
+  // Reset the current exercise (remount via key) so the user can retry.
+  // Score is already saved; this retry doesn't add another DB entry.
+  const handleRetry = useCallback(() => {
+    setRetryKey((k) => k + 1)
+    setLastFeedback(null)
+    setPhase('exercising')
+  }, [])
+
+  // Advance past the current exercise without a second answer recording.
+  const handleHintContinue = useCallback(() => {
+    const nextIndex = currentIndex + 1
+    if (nextIndex >= exercises.length) {
+      finish(results)
+    } else {
+      setCurrentIndex(nextIndex)
+      setLastFeedback(null)
+      setPhase('exercising')
+    }
+  }, [currentIndex, exercises.length, finish, results])
 
   const handlePracticeAgain = useCallback(() => {
     if (feedbackTimerRef.current) clearTimeout(feedbackTimerRef.current)
@@ -310,9 +341,9 @@ export default function PracticeSession(config: PracticeConfig) {
     <>
       {!focusUi && <SessionProgress current={currentIndex} total={exercises.length} />}
 
-      {current && (phase === 'exercising' || phase === 'feedback') && (
+      {current && (phase === 'exercising' || phase === 'feedback' || phase === 'hints') && (
         <ExerciseRenderer
-          key={current.id}
+          key={`${current.id}-${retryKey}`}
           exercise={current}
           onSubmit={handleSubmit}
           focusUi={focusUi}
@@ -321,6 +352,15 @@ export default function PracticeSession(config: PracticeConfig) {
 
       {phase === 'feedback' && lastFeedback !== null && !focusUi && (
         <InlineFeedback isCorrect={lastFeedback} />
+      )}
+
+      {phase === 'hints' && current?.payload.kind === 'phoneme' && !focusUi && (
+        <ExerciseHints
+          ipa={current.payload.ipa}
+          targetWord={current.payload.targetWord}
+          onRetry={handleRetry}
+          onContinue={handleHintContinue}
+        />
       )}
     </>
   )
@@ -335,9 +375,23 @@ export default function PracticeSession(config: PracticeConfig) {
           phase === 'feedback' && lastFeedback !== null
             ? {
                 isCorrect: lastFeedback,
-                subtitle: lastFeedback ? 'Siguiente ejercicio…' : 'Revisa e inténtalo de nuevo',
+                subtitle: lastFeedback ? 'Siguiente ejercicio…' : undefined,
               }
             : null
+        }
+        footer={
+          phase === 'hints' && current?.payload.kind === 'phoneme'
+            ? (
+              <div className="phoneme-focus__hints-panel">
+                <ExerciseHints
+                  ipa={current.payload.ipa}
+                  targetWord={current.payload.targetWord}
+                  onRetry={handleRetry}
+                  onContinue={handleHintContinue}
+                />
+              </div>
+            )
+            : undefined
         }
       >
         {sessionBody}

@@ -797,6 +797,14 @@
   gap: 20px;
 }
 
+/* Hints panel — shown after a wrong phoneme answer */
+.phoneme-focus__hints-panel {
+  padding: 16px 22px 22px;
+  border-top: 1px solid var(--border-subtle);
+  background: var(--surface-base);
+  animation: pf-fb-in 0.2s ease-out both;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .pf-mic--rec::after,
   .phoneme-focus__fb {
