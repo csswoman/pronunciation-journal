@@ -1,3 +1,5 @@
+import { speak } from "@/lib/phoneme-practice/tts";
+
 /**
  * IPA symbol → audio filename mapping.
  * Audio files live in /public/sounds/.
@@ -96,11 +98,29 @@ export const IPA_AUDIO_MAP: Record<string, string> = {
   w: "Voiced Labial-velar Fricative.ogg",
 };
 
+// True diphthongs have no dedicated .ogg file; speak an example word instead.
+const DIPHTHONG_EXAMPLES: Record<string, string> = {
+  "eɪ": "day",
+  "aɪ": "time",
+  "ɔɪ": "boy",
+  "əʊ": "go",
+  "aʊ": "now",
+  "ɪə": "here",
+  "eə": "there",
+  "ʊə": "tour",
+};
+
 /**
  * Play a single IPA symbol's audio sample.
- * For diphthongs (multi-char like "aɪ"), uses the first char.
+ * Long vowels (iː, ɑː …) resolve to their base monophthong .ogg via [0].
+ * True diphthongs (eɪ, aɪ …) have no .ogg — fall back to TTS on an example word.
  */
 export function playIpaSound(ipaSymbol: string): void {
+  if (DIPHTHONG_EXAMPLES[ipaSymbol]) {
+    speak(DIPHTHONG_EXAMPLES[ipaSymbol]);
+    return;
+  }
+  // Long vowels: strip length mark ː so "iː"[0] → "i" which is in the map.
   const key = ipaSymbol.length > 1 ? ipaSymbol[0] : ipaSymbol;
   const filename = IPA_AUDIO_MAP[key];
   if (!filename) return;

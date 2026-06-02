@@ -1,4 +1,4 @@
-export function speak(word: string, rate = 0.85): void {
+export function speak(word: string, rate = 1.0): void {
   if (typeof window === 'undefined') return
   window.speechSynthesis.cancel()
   const utt = new SpeechSynthesisUtterance(word)
