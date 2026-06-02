@@ -52,6 +52,34 @@ export function getPhonemeExerciseMeta(
       return {
         eyebrow: 'Ordena la frase',
       }
+    case 'identify':
+      return {
+        eyebrow: contrast && ctx.ipa
+          ? `Distingue ${ctx.ipa} de ${contrast}`
+          : 'Identifica el sonido',
+        title: ctx.ipa ? `¿La palabra tiene el sonido ${ctx.ipa}?` : '¿Tiene este sonido?',
+      }
+    case 'ax_same_different':
+      return {
+        eyebrow: contrast && ctx.ipa
+          ? `Contraste ${ctx.ipa} / ${contrast}`
+          : 'Discriminación auditiva',
+        title: '¿A y X tienen el mismo sonido?',
+      }
+    case 'odd_one_out':
+      return {
+        eyebrow: contrast && ctx.ipa
+          ? `Distingue ${ctx.ipa} de ${contrast}`
+          : 'Encuentra la palabra diferente',
+        title: '¿Cuál no tiene el mismo sonido?',
+      }
+    case 'abx':
+      return {
+        eyebrow: contrast && ctx.ipa
+          ? `Contraste avanzado: ${ctx.ipa} / ${contrast}`
+          : 'Discriminación ABX',
+        title: '¿X suena más como A o como B?',
+      }
     default:
       return { eyebrow: 'Practica el sonido' }
   }

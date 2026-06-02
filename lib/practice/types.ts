@@ -17,6 +17,10 @@ export type ExerciseSlug =
   | 'match_pairs'        // id: 7
   | 'reorder_words'      // id: 8
   | 'speak_word'         // id: 10
+  | 'identify'           // id: 11
+  | 'ax_same_different'  // id: 12
+  | 'odd_one_out'        // id: 13
+  | 'abx'               // id: 14
 
 export const EXERCISE_TYPE_IDS: Record<ExerciseSlug, number> = {
   pick_word: 1,
@@ -28,6 +32,10 @@ export const EXERCISE_TYPE_IDS: Record<ExerciseSlug, number> = {
   match_pairs: 7,
   reorder_words: 8,
   speak_word: 10,
+  identify: 11,
+  ax_same_different: 12,
+  odd_one_out: 13,
+  abx: 14,
 }
 
 export type PracticeContext = 'sound_lab' | 'courses' | 'ai_coach' | 'practice' | 'daily'
