@@ -1,73 +1,56 @@
 import {
-  updateProgress,
-  markMastered,
-  unlockNextSound,
-  getAllProgress,
+  updateContrastProgress,
+  getContrastProgress,
 } from './queries'
 import { updateSR } from './sr'
-import { isMastered, getNextUnlockedSoundId } from './mastery'
-import type { UserSoundProgress, SRResult } from './types'
+import { isContrastMastered } from './mastery'
+import type { UserContrastProgress, SRResult } from './types'
 import type { SessionResult } from '@/lib/practice/types'
 
-export interface FinishSessionOutcome {
+export interface FinishContrastSessionOutcome {
   nextReview: Date
-  mastered: boolean
-  unlockedSoundId: number | null
+  contrastMastered: boolean
 }
 
-const DEFAULT_PROGRESS = (userId: string, soundId: number): UserSoundProgress => ({
+const DEFAULT_CONTRAST = (userId: string, contrastId: string): UserContrastProgress => ({
   id: '',
   user_id: userId,
-  sound_id: soundId,
-  status: 'available',
+  contrast_id: contrastId,
+  ease_factor: 2.5,
+  interval_days: 1,
+  next_review: null,
+  last_seen: null,
   total_attempts: 0,
   correct_answers: 0,
   streak: 0,
-  best_streak: 0,
-  last_practiced: null,
-  next_review: null,
-  ease_factor: 2.5,
-  interval_days: 1,
 })
 
-export async function finishPhonemeSession(
+export async function finishContrastSession(
   userId: string,
-  soundId: number,
+  contrastId: string,
   result: SessionResult,
-  currentProgress: UserSoundProgress | null,
-): Promise<FinishSessionOutcome> {
-  const correct = result.results.filter((r) => r.isCorrect).length
-  const total = result.results.length
+  currentProgress?: UserContrastProgress | null,
+): Promise<FinishContrastSessionOutcome> {
+  const correct = result.results.filter(r => r.isCorrect).length
+  const total   = result.results.length
 
-  const base = currentProgress ?? DEFAULT_PROGRESS(userId, soundId)
+  const current = currentProgress ?? await getContrastProgress(userId, contrastId)
+  const base    = current ?? DEFAULT_CONTRAST(userId, contrastId)
+
   const sessionPassed = correct >= Math.ceil(total / 2)
-  const sr: SRResult = updateSR(base, sessionPassed)
+  const sr: SRResult  = updateSR(base, sessionPassed)
 
-  await updateProgress(userId, soundId, correct, total, sr)
+  await updateContrastProgress(userId, contrastId, correct, total, sr)
 
-  const updated: UserSoundProgress = {
+  const updated: UserContrastProgress = {
     ...base,
-    total_attempts: base.total_attempts + total,
+    total_attempts:  base.total_attempts  + total,
     correct_answers: base.correct_answers + correct,
     streak: sr.streak,
   }
 
-  let mastered = false
-  let unlockedSoundId: number | null = null
-
-  if (isMastered(updated)) {
-    await markMastered(userId, soundId)
-    mastered = true
-    const allProg = await getAllProgress(userId)
-    const nextId = getNextUnlockedSoundId(
-      allProg,
-      allProg.map((p) => p.sound_id).sort((a, b) => a - b),
-    )
-    if (nextId) {
-      await unlockNextSound(userId, nextId)
-      unlockedSoundId = nextId
-    }
+  return {
+    nextReview:       sr.next_review,
+    contrastMastered: isContrastMastered(updated),
   }
-
-  return { nextReview: sr.next_review, mastered, unlockedSoundId }
 }

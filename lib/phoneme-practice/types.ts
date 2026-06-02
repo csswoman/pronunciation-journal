@@ -1,7 +1,16 @@
 import type { CEFRLevel } from '@/lib/exercises/cefr'
 import type { ExerciseType as CanonicalExerciseType } from '@/lib/exercises/taxonomy'
 
-export type ExerciseType = 'pick_word' | 'pick_sound' | 'minimal_pair' | 'dictation' | 'speak_word'
+export type ExerciseType =
+  | 'pick_word'
+  | 'pick_sound'
+  | 'minimal_pair'
+  | 'dictation'
+  | 'speak_word'
+  | 'identify'
+  | 'ax_same_different'
+  | 'odd_one_out'
+  | 'abx'
 
 export type SoundStatus = 'locked' | 'available' | 'practicing' | 'mastered'
 
@@ -56,6 +65,15 @@ export interface Option {
   isCorrect: boolean
 }
 
+/**
+ * A single audio stimulus used in discrimination exercises (AX, ABX, odd-one-out).
+ * `word` is the text to speak; `ipa` is the phoneme it exemplifies.
+ */
+export interface AudioStimulus {
+  word: string
+  ipa: string
+}
+
 export interface Exercise {
   type: ExerciseType
   /** Canonical taxonomy (domain + mode + optional variant). */
@@ -69,6 +87,15 @@ export interface Exercise {
   level?: CEFRLevel
   /** True when the exercise was built from local fallback data (no DB pair). */
   synthetic?: boolean
+  /**
+   * Ordered stimuli for discrimination exercises (AX, ABX, odd-one-out).
+   * ABX: [A, B, X]. AX/same-different: [A, X]. odd-one-out: N items.
+   */
+  stimuli?: AudioStimulus[]
+  /** For ABX: index into stimuli[] that X matches (0 = A, 1 = B). */
+  abxAnswer?: 0 | 1
+  /** For odd-one-out: index of the odd stimulus in stimuli[]. */
+  oddIndex?: number
 }
 
 export interface UserSoundProgress {
@@ -107,4 +134,18 @@ export interface SRResult {
   interval_days: number
   streak: number
   next_review: Date
+}
+
+/** Row in user_contrast_progress. contrast_id = "ipaA|ipaB" (canonical). */
+export interface UserContrastProgress {
+  id: string
+  user_id: string
+  contrast_id: string
+  ease_factor: number
+  interval_days: number
+  next_review: string | null
+  last_seen: string | null
+  total_attempts: number
+  correct_answers: number
+  streak: number
 }

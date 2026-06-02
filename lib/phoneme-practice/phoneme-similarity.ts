@@ -76,6 +76,32 @@ export const PHONEME_CONFUSION: Record<string, readonly string[]> = {
 } as const;
 
 /**
+ * Returns the canonical contrast key for a pair of IPA symbols.
+ * Always produces the same key regardless of argument order.
+ * Format: "ipaA|ipaB" where ipaA <= ipaB (lexicographic).
+ *
+ * This is the single source of truth for contrast identity — never
+ * re-implement the ordering elsewhere.
+ */
+export function contrastKey(ipaA: string, ipaB: string): string {
+  return ipaA <= ipaB ? `${ipaA}|${ipaB}` : `${ipaB}|${ipaA}`
+}
+
+/**
+ * Returns all contrast keys derivable from PHONEME_CONFUSION.
+ * Each pair (A, B) appears exactly once.
+ */
+export function getAllContrastKeys(): string[] {
+  const seen = new Set<string>()
+  for (const [ipa, confusables] of Object.entries(PHONEME_CONFUSION)) {
+    for (const other of confusables) {
+      seen.add(contrastKey(ipa, other))
+    }
+  }
+  return [...seen]
+}
+
+/**
  * Rough phoneme categories for sensible fallbacks when the confusion map
  * doesn't yield enough candidates.
  */

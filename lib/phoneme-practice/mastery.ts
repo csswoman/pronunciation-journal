@@ -1,31 +1,35 @@
-import type { UserSoundProgress } from './types'
+import type { UserContrastProgress } from './types'
+import { PHONEME_CONFUSION, contrastKey } from './phoneme-similarity'
 
-export function isMastered(p: UserSoundProgress): boolean {
+// Thresholds for a single contrast to be considered mastered.
+const MIN_ATTEMPTS = 10
+const MIN_ACCURACY = 0.85
+const MIN_STREAK   = 3
+
+export function isContrastMastered(p: UserContrastProgress): boolean {
   return (
-    p.total_attempts >= 15 &&
-    p.total_attempts > 0 &&
-    p.correct_answers / p.total_attempts >= 0.85 &&
-    p.streak >= 5
+    p.total_attempts >= MIN_ATTEMPTS &&
+    p.correct_answers / p.total_attempts >= MIN_ACCURACY &&
+    p.streak >= MIN_STREAK
   )
 }
 
-export function getNextUnlockedSoundId(
-  progressList: UserSoundProgress[],
-  allSoundIds: number[]
-): number | null {
-  const masteredIds = new Set(
-    progressList.filter(p => p.status === 'mastered').map(p => p.sound_id)
-  )
-  const unlockedIds = new Set(
-    progressList
-      .filter(p => p.status !== 'locked')
-      .map(p => p.sound_id)
-  )
-  // Find first sound in sorted order that is still locked
-  for (const id of allSoundIds) {
-    if (!unlockedIds.has(id) && masteredIds.size > 0) {
-      return id
-    }
-  }
-  return null
+/**
+ * A sound is mastered when ALL its associated contrasts are mastered.
+ * Uses minimum (not average) so one weak contrast blocks mastery display.
+ */
+export function isSoundMastered(
+  ipa: string,
+  allProgress: UserContrastProgress[]
+): boolean {
+  const contrastIpas = PHONEME_CONFUSION[ipa]
+  if (!contrastIpas || contrastIpas.length === 0) return false
+
+  const progressMap = new Map(allProgress.map(p => [p.contrast_id, p]))
+
+  return contrastIpas.every(other => {
+    const key = contrastKey(ipa, other)
+    const p = progressMap.get(key)
+    return p != null && isContrastMastered(p)
+  })
 }

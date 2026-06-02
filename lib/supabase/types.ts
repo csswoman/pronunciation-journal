@@ -616,64 +616,50 @@ export type Database = {
         }
         Relationships: []
       }
-      user_sound_progress: {
+      user_contrast_progress: {
         Row: {
-          best_streak: number | null
-          correct_answers: number | null
-          created_at: string | null
-          ease_factor: number | null
+          contrast_id: string
+          correct_answers: number
+          created_at: string
+          ease_factor: number
           id: string
-          interval_days: number | null
-          last_practiced: string | null
+          interval_days: number
+          last_seen: string | null
           next_review: string | null
-          sound_id: number
-          status: string | null
-          streak: number | null
-          total_attempts: number | null
-          updated_at: string | null
+          streak: number
+          total_attempts: number
+          updated_at: string
           user_id: string
         }
         Insert: {
-          best_streak?: number | null
-          correct_answers?: number | null
-          created_at?: string | null
-          ease_factor?: number | null
+          contrast_id: string
+          correct_answers?: number
+          created_at?: string
+          ease_factor?: number
           id?: string
-          interval_days?: number | null
-          last_practiced?: string | null
+          interval_days?: number
+          last_seen?: string | null
           next_review?: string | null
-          sound_id: number
-          status?: string | null
-          streak?: number | null
-          total_attempts?: number | null
-          updated_at?: string | null
+          streak?: number
+          total_attempts?: number
+          updated_at?: string
           user_id: string
         }
         Update: {
-          best_streak?: number | null
-          correct_answers?: number | null
-          created_at?: string | null
-          ease_factor?: number | null
+          contrast_id?: string
+          correct_answers?: number
+          created_at?: string
+          ease_factor?: number
           id?: string
-          interval_days?: number | null
-          last_practiced?: string | null
+          interval_days?: number
+          last_seen?: string | null
           next_review?: string | null
-          sound_id?: number
-          status?: string | null
-          streak?: number | null
-          total_attempts?: number | null
-          updated_at?: string | null
+          streak?: number
+          total_attempts?: number
+          updated_at?: string
           user_id?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "usp_sound_fk"
-            columns: ["sound_id"]
-            isOneToOne: false
-            referencedRelation: "sounds"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       word_bank: {
         Row: {
