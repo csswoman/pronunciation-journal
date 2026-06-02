@@ -17,12 +17,17 @@ export function MinimalPairExercise({ exercise, onSubmit, focusUi = false }: Pro
   const [submitted, setSubmitted] = useState(false)
   const meta = getPhonemeExerciseMeta('minimal_pair', { ipa: exercise.ipa })
 
-  function handleSelect(id: string) {
+  function handleSelect(id: string, label: string) {
     if (submitted) return
+    speak(label)
     setSelected(id)
+  }
+
+  function handleConfirm() {
+    if (!selected || submitted) return
     setSubmitted(true)
-    const isCorrect = exercise.correctIds.includes(id)
-    const label = exercise.options.find((o) => o.id === id)?.label ?? ''
+    const isCorrect = exercise.correctIds.includes(selected)
+    const label = exercise.options.find((o) => o.id === selected)?.label ?? ''
     onSubmit(isCorrect, label)
   }
 
@@ -33,6 +38,7 @@ export function MinimalPairExercise({ exercise, onSubmit, focusUi = false }: Pro
       if (selected === id) return 'pf-pair-opt pf-opt--wrong'
       return 'pf-pair-opt pf-opt--dim'
     }
+    if (selected === id) return 'pf-pair-opt pf-opt--sel'
     return 'pf-pair-opt'
   }
 
@@ -47,8 +53,12 @@ export function MinimalPairExercise({ exercise, onSubmit, focusUi = false }: Pro
         return `${BASE} bg-error-soft border-error-border text-error ring-2 ring-error/40 hover:translate-y-0 hover:shadow-none`
       return `${BASE} bg-surface-raised border-border-subtle text-fg opacity-40 hover:translate-y-0 hover:shadow-none`
     }
+    if (selected === id)
+      return `${BASE} bg-surface-raised border-primary text-primary ring-2 ring-primary/20`
     return `${BASE} bg-surface-raised border-border-subtle text-fg`
   }
+
+  const canConfirm = Boolean(selected) && !submitted
 
   const options = (
     <div
@@ -64,17 +74,16 @@ export function MinimalPairExercise({ exercise, onSubmit, focusUi = false }: Pro
           aria-checked={selected === opt.id}
           aria-label={`Seleccionar ${opt.label}`}
           aria-disabled={submitted}
-          onClick={() => handleSelect(opt.id)}
-          onMouseEnter={() => !submitted && speak(opt.label)}
+          onClick={() => handleSelect(opt.id, opt.label)}
           className={focusUi ? pairClass(opt.id) : legacyClass(opt.id)}
         >
           <div>{opt.label}</div>
           {!focusUi && (
             <div aria-hidden className="text-[11px] font-normal mt-1 opacity-50">
-              🔊 hover
+              🔊 tap
             </div>
           )}
-          {focusUi && <span className="pf-pair-opt__sub">Pasa el cursor para escuchar</span>}
+          {focusUi && <span className="pf-pair-opt__sub">Toca para escuchar</span>}
         </button>
       ))}
     </div>
@@ -88,9 +97,23 @@ export function MinimalPairExercise({ exercise, onSubmit, focusUi = false }: Pro
           {exercise.ipa}
         </span>
         <p className="text-xs text-[var(--text-tertiary)] text-center tracking-[.05em] m-0">
-          Tap a word to hear it, then select
+          Tap a word to hear it and select it
         </p>
         {options}
+        <button
+          type="button"
+          onClick={handleConfirm}
+          disabled={!canConfirm}
+          style={canConfirm ? { backgroundImage: 'var(--gradient-primary)' } : undefined}
+          className={[
+            'w-full p-4 rounded-[var(--radius-md)] border-none [font-family:inherit] text-[15px] font-semibold transition-all',
+            canConfirm
+              ? 'cursor-pointer text-on-primary shadow-md hover:-translate-y-[1px]'
+              : 'cursor-not-allowed bg-surface-raised text-fg-subtle',
+          ].join(' ')}
+        >
+          Check
+        </button>
       </div>
     )
   }
@@ -102,7 +125,7 @@ export function MinimalPairExercise({ exercise, onSubmit, focusUi = false }: Pro
         spacious
         eyebrow={meta.eyebrow}
         title={exercise.ipa ? '¿Cuál palabra contiene este sonido?' : meta.title}
-        hint="Toca una palabra para elegirla"
+        hint="Toca una palabra para escucharla y elegirla"
       />
       {exercise.ipa && (
         <p className="pf-minimal-pair__ipa" aria-label={`Sonido objetivo ${exercise.ipa}`}>
@@ -110,6 +133,14 @@ export function MinimalPairExercise({ exercise, onSubmit, focusUi = false }: Pro
         </p>
       )}
       {options}
+      <button
+        type="button"
+        onClick={handleConfirm}
+        disabled={!canConfirm}
+        className="pf-cta pf-cta--primary"
+      >
+        Comprobar
+      </button>
     </div>
   )
 }

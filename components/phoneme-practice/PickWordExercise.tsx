@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import type { Exercise } from '@/lib/phoneme-practice/types'
+import { speak } from '@/lib/phoneme-practice/tts'
 import { playIpaSound } from '@/lib/pronunciation/ipa-audio'
 import { cn } from '@/lib/cn'
 import { PhonemeExercisePrompt } from './PhonemeExercisePrompt'
@@ -11,15 +12,6 @@ interface Props {
   exercise: Exercise
   onSubmit: (isCorrect: boolean, userAnswer: string) => void
   focusUi?: boolean
-}
-
-function speak(text: string) {
-  if (typeof window === 'undefined' || !window.speechSynthesis) return
-  window.speechSynthesis.cancel()
-  const utt = new SpeechSynthesisUtterance(text)
-  utt.lang = 'en-US'
-  utt.rate = 0.85
-  window.speechSynthesis.speak(utt)
 }
 
 export function PickWordExercise({ exercise, onSubmit, focusUi = false }: Props) {
