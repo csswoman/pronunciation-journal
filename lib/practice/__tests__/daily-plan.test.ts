@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import type { WordBankEntry } from '@/lib/word-bank/types'
-import type { Sound, SoundWord, MinimalPair } from '@/lib/phoneme-practice/types'
+import type { Sound, SoundWord } from '@/lib/phoneme-practice/types'
 
 // ── Fixtures ─────────────────────────────────────────────────────────────────
 
@@ -85,10 +85,23 @@ import {
 import {
   buildDailyPlan,
   EmptyWordBankError,
-  DAILY_SESSION_LENGTH,
-  WORD_BANK_SLOT_COUNT,
-  PHONEME_SLOT_COUNT,
+  DAILY_PLAN_STEP_COUNT,
 } from '../daily-plan'
+import type { PracticeExercise } from '../types'
+
+/** Aplana todos los ejercicios de todos los pasos de un plan. */
+function allExercises(plan: { steps: { exercises: PracticeExercise[] }[] }): PracticeExercise[] {
+  return plan.steps.flatMap((s) => s.exercises)
+}
+
+/** Catálogo de seed razonable: varios sonidos con palabras, para llenar 5 pasos. */
+function seedCatalog() {
+  const sounds = Array.from({ length: 6 }, (_, i) => makeSound(i + 1))
+  const words = sounds.flatMap((s) =>
+    Array.from({ length: 5 }, (_, i) => makeSoundWord(s.id * 100 + i, s.id)),
+  )
+  return { sounds, words }
+}
 
 // ── Supabase query builder helpers ────────────────────────────────────────────
 
@@ -140,198 +153,106 @@ function setupProgressMock(rows: unknown[]) {
 describe('buildDailyPlan', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    // Default: no sound progress (new user)
+    // Default: no sound progress (new user), pero el seed SIEMPRE tiene contenido.
     mockFrom.mockImplementation(() => ({ select: mockSelect }))
-    vi.mocked(getAllSounds).mockResolvedValue([])
-    vi.mocked(getAllWords).mockResolvedValue([])
+    const { sounds, words } = seedCatalog()
+    vi.mocked(getAllSounds).mockResolvedValue(sounds)
+    vi.mocked(getAllWords).mockResolvedValue(words)
     vi.mocked(getMinimalPairs).mockResolvedValue([])
-    vi.mocked(getWordsBySound).mockResolvedValue([])
+    vi.mocked(getWordsBySound).mockImplementation((soundId: number) =>
+      Promise.resolve(words.filter((w) => w.sound_id === soundId)),
+    )
   })
 
-  it('throws EmptyWordBankError when word bank is empty', async () => {
+  it('usuario nuevo (sin word_bank ni progreso): 5 pasos del seed, sin lanzar error', async () => {
     setupProgressMock([])
     mockSelect.mockImplementation(() => chainResolving([]))
 
-    await expect(buildDailyPlan('user-1')).rejects.toBeInstanceOf(EmptyWordBankError)
+    const plan = await buildDailyPlan('user-1')
+
+    expect(plan.steps).toHaveLength(DAILY_PLAN_STEP_COUNT)
+    expect(plan.isNewUser).toBe(true)
+    // Sin word_bank no debe haber paso de repaso de palabras.
+    expect(plan.steps.some((s) => s.kind === 'word_review')).toBe(false)
+    // El catálogo garantiza ≥5 ejercicios 'daily' para sostener el streak.
+    expect(allExercises(plan).length).toBeGreaterThanOrEqual(5)
   })
 
-  it('returns up to DAILY_SESSION_LENGTH exercises', async () => {
-    const words = Array.from({ length: 12 }, (_, i) =>
-      makeEntry({ id: `w-${i}`, text: `vocabulary${i}`, example: `The vocabulary${i} word is useful for reading.` })
-    )
+  it('garantiza DAILY_PLAN_STEP_COUNT pasos cuando hay seed', async () => {
     setupProgressMock([])
-    setupWordBankMock(words, [])
+    mockSelect.mockImplementation(() => chainResolving([]))
 
     const plan = await buildDailyPlan('user-1')
-    expect(plan.length).toBeLessThanOrEqual(DAILY_SESSION_LENGTH)
-    expect(plan.length).toBeGreaterThan(0)
+    expect(plan.steps).toHaveLength(DAILY_PLAN_STEP_COUNT)
   })
 
-  it('does not repeat contentId across exercises', async () => {
-    const words = Array.from({ length: 10 }, (_, i) =>
-      makeEntry({ id: `w-${i}`, text: `unique${i}`, example: `The unique${i} idea was surprising to everyone today.` })
-    )
+  it('no repite contentId dentro de un mismo paso', async () => {
     setupProgressMock([])
-    setupWordBankMock(words, [])
+    mockSelect.mockImplementation(() => chainResolving([]))
 
     const plan = await buildDailyPlan('user-1')
-    const contentIds = plan.map(e => e.contentId)
-    expect(new Set(contentIds).size).toBe(contentIds.length)
+    for (const step of plan.steps) {
+      const ids = step.exercises.map((e) => e.contentId)
+      expect(new Set(ids).size).toBe(ids.length)
+    }
   })
 
-  it('all exercises have context="daily"', async () => {
-    const words = Array.from({ length: 8 }, (_, i) =>
-      makeEntry({ id: `w-${i}`, text: `daily${i}`, example: `The daily${i} routine helps build good habits.` })
-    )
+  it('todos los ejercicios tienen context="daily"', async () => {
     setupProgressMock([])
-    setupWordBankMock(words, [])
+    mockSelect.mockImplementation(() => chainResolving([]))
 
     const plan = await buildDailyPlan('user-1')
-    for (const ex of plan) {
+    for (const ex of allExercises(plan)) {
       expect(ex.context).toBe('daily')
     }
   })
 
-  it('mix includes fill_blank, sentence_dictation and reorder_words slugs', async () => {
-    const words = Array.from({ length: 10 }, (_, i) =>
-      makeEntry({ id: `w-${i}`, text: `word${i}`, example: `The word${i} appears clearly in each sentence today.` })
+  it('incluye un paso de repaso de palabras cuando hay word_bank', async () => {
+    const words = Array.from({ length: 6 }, (_, i) =>
+      makeEntry({ id: `w-${i}`, text: `word${i}`, example: `The word${i} appears clearly in each sentence today.` }),
     )
     setupProgressMock([])
     setupWordBankMock(words, [])
 
     const plan = await buildDailyPlan('user-1')
-    const slugs = new Set(plan.map(e => e.slug))
-    // At least 2 of the 3 word_bank exercise types should appear
-    const wordBankSlugs = ['fill_blank', 'sentence_dictation', 'reorder_words']
-    const found = wordBankSlugs.filter(s => slugs.has(s as never))
-    expect(found.length).toBeGreaterThanOrEqual(2)
+    expect(plan.steps.some((s) => s.kind === 'word_review')).toBe(true)
+    expect(plan.isNewUser).toBe(false)
   })
 
-  it('falls back to new words when fewer than WORD_BANK_SLOT_COUNT due', async () => {
-    const dueWords = Array.from({ length: 2 }, (_, i) =>
-      makeEntry({ id: `due-${i}`, text: `dueword${i}`, example: `The dueword${i} shows up in this long example today.` })
-    )
-    const newWords = Array.from({ length: 6 }, (_, i) =>
-      makeEntry({ id: `new-${i}`, text: `newword${i}`, example: `The newword${i} was added recently to this vocabulary list.` })
-    )
-    setupProgressMock([])
-    // First select call → due words; second → new words pad
-    let call = 0
-    mockSelect.mockImplementation(() => {
-      call++
-      return chainResolving(call === 1 ? dueWords : newWords)
-    })
-
-    const plan = await buildDailyPlan('user-1')
-    expect(plan.length).toBeGreaterThan(0)
-  })
-
-  it('includes phoneme exercises when a weak sound exists', async () => {
-    const words = Array.from({ length: 8 }, (_, i) =>
-      makeEntry({ id: `w-${i}`, text: `phoneme${i}`, example: `The phoneme${i} sound is practiced often in class.` })
-    )
-
-    const sound = makeSound(1)
-    const soundWords = Array.from({ length: 6 }, (_, i) => makeSoundWord(i + 1, 1))
-    const allPairs: MinimalPair[] = []
-
-    setupProgressMock([
-      {
-        id: 'p-1',
-        user_id: 'user-1',
-        sound_id: 1,
-        status: 'practicing',
-        total_attempts: 10,
-        correct_answers: 3,
-        streak: 1,
-        best_streak: 2,
-        last_practiced: null,
-        next_review: null,
-        ease_factor: 2.5,
-        interval_days: 1,
-        sounds: sound,
-      },
-    ])
-    setupWordBankMock(words, [])
-
-    vi.mocked(getAllSounds).mockResolvedValue([sound])
-    vi.mocked(getAllWords).mockResolvedValue(soundWords)
-    vi.mocked(getWordsBySound).mockResolvedValue(soundWords)
-    vi.mocked(getMinimalPairs).mockResolvedValue(allPairs)
-
-    const plan = await buildDailyPlan('user-1')
-    const phonemeSlugs = new Set(['pick_word', 'pick_sound', 'minimal_pair', 'dictation', 'match_pairs'])
-    const hasPhoneme = plan.some(e => phonemeSlugs.has(e.slug))
-    expect(hasPhoneme).toBe(true)
-    expect(plan.length).toBeGreaterThan(WORD_BANK_SLOT_COUNT)
-  })
-
-  it('weakest sound is the one with lowest accuracy', async () => {
-    // Two sounds: sound 1 (70% accuracy), sound 2 (20% accuracy)
-    // Should pick sound 2
-    const words = Array.from({ length: 8 }, (_, i) =>
-      makeEntry({ id: `w-${i}`, text: `word${i}`, example: `The word${i} example is used in a long sentence.` })
-    )
+  it('el paso de fonema usa el sonido más débil cuando hay progreso', async () => {
+    // sound 1 (70%) vs sound 2 (20%) → debe elegir el 2 como protagonista.
     const sound1 = makeSound(1)
     const sound2 = makeSound(2)
-    const soundWords2 = Array.from({ length: 4 }, (_, i) => makeSoundWord(i + 10, 2))
 
     setupProgressMock([
       {
-        id: 'p-1',
-        user_id: 'user-1',
-        sound_id: 1,
-        status: 'practicing',
-        total_attempts: 10,
-        correct_answers: 7, // 70%
-        streak: 3,
-        best_streak: 4,
-        last_practiced: null,
-        next_review: null,
-        ease_factor: 2.5,
-        interval_days: 1,
+        id: 'p-1', user_id: 'user-1', sound_id: 1, status: 'practicing',
+        total_attempts: 10, correct_answers: 7, streak: 3, best_streak: 4,
+        last_practiced: null, next_review: null, ease_factor: 2.5, interval_days: 1,
         sounds: sound1,
       },
       {
-        id: 'p-2',
-        user_id: 'user-1',
-        sound_id: 2,
-        status: 'practicing',
-        total_attempts: 10,
-        correct_answers: 2, // 20%
-        streak: 0,
-        best_streak: 1,
-        last_practiced: null,
-        next_review: null,
-        ease_factor: 2.5,
-        interval_days: 1,
+        id: 'p-2', user_id: 'user-1', sound_id: 2, status: 'practicing',
+        total_attempts: 10, correct_answers: 2, streak: 0, best_streak: 1,
+        last_practiced: null, next_review: null, ease_factor: 2.5, interval_days: 1,
         sounds: sound2,
       },
     ])
-    setupWordBankMock(words, [])
-
-    vi.mocked(getAllSounds).mockResolvedValue([sound1, sound2])
-    vi.mocked(getAllWords).mockResolvedValue(soundWords2)
-    vi.mocked(getWordsBySound).mockResolvedValue(soundWords2)
-    vi.mocked(getMinimalPairs).mockResolvedValue([])
-
-    await buildDailyPlan('user-1')
-
-    // getWordsBySound should have been called with sound_id 2 (the weakest)
-    expect(vi.mocked(getWordsBySound)).toHaveBeenCalledWith(2)
-  })
-
-  it('uses extra word_bank exercises when no sound progress exists (new user)', async () => {
-    const words = Array.from({ length: 8 }, (_, i) =>
-      makeEntry({ id: `w-${i}`, text: `fresh${i}`, example: `The fresh${i} approach was enlightening for all students.` })
-    )
-    setupProgressMock([])
-    setupWordBankMock(words, [])
+    mockSelect.mockImplementation(() => chainResolving([]))
 
     const plan = await buildDailyPlan('user-1')
-    const wordBankSlugs = ['fill_blank', 'sentence_dictation', 'reorder_words']
-    const allWordBank = plan.every(e => wordBankSlugs.includes(e.slug))
-    expect(allWordBank).toBe(true)
+
+    expect(vi.mocked(getWordsBySound)).toHaveBeenCalledWith(2)
+    expect(plan.steps.some((s) => s.id === 'phoneme_focus:2')).toBe(true)
+    expect(plan.isNewUser).toBe(false)
+  })
+
+  it('nunca queda por debajo de 5 pasos aunque el word_bank esté vacío', async () => {
+    setupProgressMock([])
+    mockSelect.mockImplementation(() => chainResolving([]))
+
+    const plan = await buildDailyPlan('user-1')
+    expect(plan.steps.length).toBe(DAILY_PLAN_STEP_COUNT)
   })
 })
 
