@@ -102,7 +102,7 @@ export function DictationExercise({ exercise, onSubmit, focusUi = false }: Props
       aria-label="Tu respuesta"
       aria-invalid={submitted && !isCorrect}
       className={cn(
-        focusUi ? 'pf-type-in' : 'w-full rounded-[var(--radius-md)] text-base py-4 px-4 text-center border border-[1.5px] border-solid outline-none transition-[border-color] duration-200',
+        focusUi ? 'pf-type-in' : 'w-full rounded-[var(--radius-md)] text-base py-4 px-4 text-center border border-[1.5px] border-solid outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary)] focus-visible:ring-offset-1 transition-[border-color] duration-200',
         focusUi && submitted && (isCorrect ? 'pf-type-in--correct' : 'pf-type-in--wrong'),
         !focusUi &&
           (submitted
