@@ -119,6 +119,13 @@ export default function ReviewPage() {
   }, [session.isComplete])
 
   async function handleAnswer(isCorrect: boolean, userAnswer: string) {
+    // speak_word is shadowing — no verdict banner, auto-advance
+    if (ex?.type === 'speak_word') {
+      session.submitAnswer({ isCorrect, userAnswer, startedAt: exerciseStartedAt })
+      session.advance()
+      setExerciseStartedAt(Date.now())
+      return
+    }
     setCurrentFeedback({ isCorrect })
     session.submitAnswer({ isCorrect, userAnswer, startedAt: exerciseStartedAt })
   }
@@ -135,9 +142,11 @@ export default function ReviewPage() {
 
     await saveAnswers(user.id, answers)
 
-    // Group answers by contrast id (via exercise sound ipa)
+    // Group answers by contrast id (via exercise sound ipa).
+    // speak_word is shadowing-only — it always submits isCorrect=true but must not affect SRS.
+    const scoreable = answers.filter((a) => a.exerciseType !== 'speak_word')
     const byContrastId = new Map<string, typeof answers>()
-    for (const a of answers) {
+    for (const a of scoreable) {
       const sound = soundsBySoundId.get(a.soundId)
       if (!sound) continue
       const cid = primaryContrastId(sound.ipa)
