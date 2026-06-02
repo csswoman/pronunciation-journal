@@ -2,9 +2,13 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { ChevronLeft, ChevronRight, Check, RotateCcw, Sparkles, ArrowRight, Headphones, BookOpen } from "lucide-react";
+import { ChevronLeft, ChevronRight, Check, RotateCcw, Sparkles, ArrowRight, Headphones, BookOpen, LayoutList } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { markLessonComplete } from "@/lib/db";
+import PracticeSession from "@/components/practice/PracticeSession";
+import { fetchFragmentsForDeck, generateReorderFromFragments } from "@/lib/exercises/generators/reorder-from-fragments";
+import { fromGenericExercise } from "@/lib/practice/adapters";
+import type { PracticeExercise } from "@/lib/practice/types";
 import type { GrammarStudyDeckData } from "@/lib/courses/grammar-deck/types";
 import type { CoursePathTrackId } from "@/lib/courses/types";
 import GrammarDeckHeader from "./GrammarDeckHeader";
@@ -37,6 +41,10 @@ export default function GrammarStudyDeck({
   const [reviewed, setReviewed] = useState<Set<string>>(() => new Set());
   const [phase, setPhase] = useState<"cards" | "quiz" | "done">("cards");
   const [quizScore, setQuizScore] = useState<{ correct: number; total: number } | null>(null);
+
+  // Sentence practice state
+  const [practiceExercises, setPracticeExercises] = useState<PracticeExercise[] | null>(null);
+  const [practiceLoading, setPracticeLoading] = useState(false);
 
   const hasQuiz = (deck.quiz?.length ?? 0) > 0;
   const finished = phase === "done";
@@ -83,6 +91,26 @@ export default function GrammarStudyDeck({
     setIndex(0);
   }, []);
 
+  const handleStartSentencePractice = useCallback(async () => {
+    if (!deck.meta || practiceLoading) return;
+    setPracticeLoading(true);
+    try {
+      // Derive deck slug from the lesson slug passed via lessonId or deck meta title
+      const deckSlug = lessonId ?? "";
+      const fragments = await fetchFragmentsForDeck(deckSlug, 30);
+      const exercises = generateReorderFromFragments(fragments, 8).map((ex) =>
+        fromGenericExercise(ex, "courses"),
+      );
+      if (exercises.length > 0) {
+        setPracticeExercises(exercises);
+      }
+    } catch {
+      // silently fail — button stays visible, user can retry
+    } finally {
+      setPracticeLoading(false);
+    }
+  }, [deck.meta, lessonId, practiceLoading]);
+
   // Keyboard navigation while studying.
   useEffect(() => {
     if (phase !== "cards") return;
@@ -107,6 +135,22 @@ export default function GrammarStudyDeck({
   }, [deck.meta, courseTitle]);
 
   const isLast = index === total - 1;
+
+  // Overlay: sesión de reorder_words desde las frases de esta lección
+  if (practiceExercises) {
+    return (
+      <div className="fixed inset-0 z-50 bg-[var(--surface-base)]">
+        <PracticeSession
+          context="courses"
+          exercises={practiceExercises}
+          sessionLength={practiceExercises.length}
+          sessionLabel="Arma la oración"
+          onSessionComplete={() => setPracticeExercises(null)}
+          onExit={() => setPracticeExercises(null)}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="grammar-deck" data-course-study-deck>
@@ -156,6 +200,21 @@ export default function GrammarStudyDeck({
                 </div>
               )}
             </div>
+
+            {lessonId && (
+              <button
+                type="button"
+                className="grammar-deck__done-soundlab"
+                onClick={handleStartSentencePractice}
+                disabled={practiceLoading}
+              >
+                <LayoutList size={16} aria-hidden />
+                <span>
+                  {practiceLoading ? "Cargando ejercicios…" : "Practica armando oraciones de esta lección"}
+                </span>
+                <ArrowRight size={15} aria-hidden />
+              </button>
+            )}
 
             {deck.sounds && deck.sounds.length > 0 && (
               <Link
