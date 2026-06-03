@@ -1,0 +1,4172 @@
+[
+  {
+    "id": "aggregation",
+    "word": "aggregation",
+    "definition": "Combining multiple data points into a single summary value such as a sum, mean, or count.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "anomaly-detection",
+    "word": "anomaly detection",
+    "definition": "Identifying data points that deviate significantly from expected patterns or distributions.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "array",
+    "word": "array",
+    "definition": "An ordered collection of elements of the same type, foundational to numerical computing.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "average",
+    "word": "arithmetic mean",
+    "definition": "The sum of all values in a dataset divided by the count of those values.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "backpropagation",
+    "word": "backpropagation",
+    "definition": "An algorithm computing gradients through a neural network to update weights during training.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "baseline",
+    "word": "baseline",
+    "definition": "A simple reference model used to measure whether a more complex model adds real value.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "batch",
+    "word": "batch",
+    "definition": "A subset of training data processed together in one forward and backward pass of a model.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "bayesian-inference",
+    "word": "Bayesian inference",
+    "definition": "Updating the probability of a hypothesis as new evidence is incorporated using Bayes' theorem.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "bias",
+    "word": "bias",
+    "definition": "Systematic error in a model that causes it to consistently miss the true value in one direction.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "binary-classification",
+    "word": "binary classification",
+    "definition": "A prediction task with exactly two possible output categories, such as spam or not spam.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "categorical-variable",
+    "word": "categorical variable",
+    "definition": "A variable representing discrete groups or labels rather than continuous numeric values.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "centroid",
+    "word": "centroid",
+    "definition": "The geometric center of a cluster, used as a reference point in algorithms like k-means.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "class-imbalance",
+    "word": "class imbalance",
+    "definition": "A dataset condition where one category has significantly more samples than others.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "classification",
+    "word": "classification",
+    "definition": "A supervised learning task that predicts which category a new observation belongs to.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "clustering",
+    "word": "clustering",
+    "definition": "An unsupervised method grouping similar data points together without predefined labels.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "confusion-matrix",
+    "word": "confusion matrix",
+    "definition": "A table comparing predicted vs actual class labels to evaluate a classification model.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "continuous-variable",
+    "word": "continuous variable",
+    "definition": "A numeric variable that can take any value within a range, such as height or temperature.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "correlation",
+    "word": "correlation",
+    "definition": "A statistical measure of how strongly two variables move together, ranging from -1 to 1.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "cross-validation",
+    "word": "cross-validation",
+    "definition": "A technique splitting data into multiple train-test folds to produce a more reliable evaluation.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "csv",
+    "word": "CSV",
+    "definition": "Comma-Separated Values — a plain text format for storing tabular data, one row per line.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "data-cleaning",
+    "word": "data cleaning",
+    "definition": "The process of detecting and correcting errors, inconsistencies, and missing values in a dataset.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "data-drift",
+    "word": "data drift",
+    "definition": "The gradual change in input data distribution over time that degrades model performance.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "data-lake",
+    "word": "data lake",
+    "definition": "A centralized repository storing raw, unstructured data at scale for future processing.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "data-pipeline",
+    "word": "data pipeline",
+    "definition": "An automated sequence of steps that ingests, transforms, and loads data from source to destination.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "data-warehouse",
+    "word": "data warehouse",
+    "definition": "A structured storage system optimized for querying and analyzing large volumes of historical data.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "dataframe",
+    "word": "DataFrame",
+    "definition": "A two-dimensional, labeled data structure with columns of potentially different types, as in pandas.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "decision-tree",
+    "word": "decision tree",
+    "definition": "A flowchart-like model that splits data based on feature conditions to make predictions.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "dimensionality-reduction",
+    "word": "dimensionality reduction",
+    "definition": "Reducing the number of features in a dataset while preserving as much information as possible.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "distribution",
+    "word": "distribution",
+    "definition": "A function describing the frequency of values across all possible outcomes in a dataset.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "eda",
+    "word": "EDA",
+    "definition": "Exploratory Data Analysis — the initial investigation of data using statistics and visualizations.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "epoch",
+    "word": "epoch",
+    "definition": "One complete pass of the entire training dataset through a machine learning model.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "etl",
+    "word": "ETL",
+    "definition": "Extract, Transform, Load — the process of moving and reshaping data between systems.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "evaluation-metric",
+    "word": "evaluation metric",
+    "definition": "A quantitative measure used to assess how well a model performs on a given task.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "f1-score",
+    "word": "F1 score",
+    "definition": "The harmonic mean of precision and recall, balancing both in a single performance metric.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "feature",
+    "word": "feature",
+    "definition": "An individual measurable variable used as input to a machine learning model.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "feature-engineering",
+    "word": "feature engineering",
+    "definition": "Creating or transforming input variables to improve a model's predictive power.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "feature-importance",
+    "word": "feature importance",
+    "definition": "A score indicating how much each input variable contributed to a model's predictions.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "gradient-descent",
+    "word": "gradient descent",
+    "definition": "An optimization algorithm iteratively adjusting model parameters to minimize a loss function.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "ground-truth",
+    "word": "ground truth",
+    "definition": "The verified correct labels or values used to train and evaluate a machine learning model.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "holdout-set",
+    "word": "holdout set",
+    "definition": "A portion of data withheld from training and used only for final model evaluation.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "hyperparameter",
+    "word": "hyperparameter",
+    "definition": "A configuration value set before training that controls how a model learns, not what it learns.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "hypothesis-testing",
+    "word": "hypothesis testing",
+    "definition": "A statistical method determining whether observed data provides evidence against a null assumption.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "imputation",
+    "word": "imputation",
+    "definition": "Filling in missing values in a dataset using statistical estimates like the mean or median.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "inference",
+    "word": "inference",
+    "definition": "The phase where a trained model generates predictions on new, unseen input data.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "interquartile-range",
+    "word": "interquartile range",
+    "definition": "The difference between the 75th and 25th percentile, measuring statistical spread robustly.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "label",
+    "word": "label",
+    "definition": "The target output value a supervised learning model is trained to predict.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "learning-rate",
+    "word": "learning rate",
+    "definition": "A hyperparameter controlling how large each step is during gradient descent optimization.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "loss-function",
+    "word": "loss function",
+    "definition": "A function measuring the difference between predicted and actual values during model training.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "median",
+    "word": "median",
+    "definition": "The middle value in an ordered dataset, robust to outliers unlike the arithmetic mean.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "missing-value",
+    "word": "missing value",
+    "definition": "An absent data point in a dataset, represented as null or NaN, requiring handling before modeling.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "model",
+    "word": "model",
+    "definition": "A mathematical function learned from data that maps inputs to predicted outputs.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "multicollinearity",
+    "word": "multicollinearity",
+    "definition": "A condition where two or more input features are highly correlated, distorting model coefficients.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "normal-distribution",
+    "word": "normal distribution",
+    "definition": "A symmetric, bell-shaped probability distribution where most values cluster around the mean.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "normalization",
+    "word": "normalization",
+    "definition": "Rescaling feature values to a standard range — typically 0 to 1 — before model training.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "null-hypothesis",
+    "word": "null hypothesis",
+    "definition": "The default assumption of no effect or no difference that a statistical test attempts to reject.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "outlier",
+    "word": "outlier",
+    "definition": "A data point that differs markedly from other observations and may indicate noise or a real anomaly.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "overfitting",
+    "word": "overfitting",
+    "definition": "When a model learns the training data too precisely, performing poorly on new unseen data.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "p-value",
+    "word": "p-value",
+    "definition": "The probability of observing results at least as extreme as those seen, assuming the null hypothesis is true.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "pandas",
+    "word": "pandas",
+    "definition": "A Python library providing DataFrame structures for data manipulation and analysis.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "percentile",
+    "word": "percentile",
+    "definition": "The value below which a given percentage of observations in a dataset fall.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "pipeline-ml",
+    "word": "ML pipeline",
+    "definition": "A chained sequence of preprocessing and modeling steps that can be fit and applied as a unit.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "precision",
+    "word": "precision",
+    "definition": "The proportion of positive predictions that were actually correct out of all positive predictions made.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "prediction",
+    "word": "prediction",
+    "definition": "The output a trained model generates when given a new input it has not seen before.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "preprocessing",
+    "word": "preprocessing",
+    "definition": "All data transformation steps applied before feeding data into a machine learning model.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "random-forest",
+    "word": "random forest",
+    "definition": "An ensemble model combining many decision trees to improve accuracy and reduce overfitting.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "recall",
+    "word": "recall",
+    "definition": "The proportion of actual positives that a model correctly identified out of all real positives.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "regression",
+    "word": "regression",
+    "definition": "A supervised learning task predicting a continuous numeric output from input features.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "regularization",
+    "word": "regularization",
+    "definition": "A technique penalizing model complexity during training to reduce overfitting.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "sample",
+    "word": "sample",
+    "definition": "A subset of observations drawn from a larger population for analysis or model training.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "sampling-bias",
+    "word": "sampling bias",
+    "definition": "A systematic error occurring when the collected data does not represent the full population.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "skewness",
+    "word": "skewness",
+    "definition": "A measure of the asymmetry of a distribution — positive skew has a longer right tail.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "split",
+    "word": "train-test split",
+    "definition": "Dividing a dataset into separate portions for training a model and evaluating its performance.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "standard-deviation",
+    "word": "standard deviation",
+    "definition": "A measure of how spread out values are relative to the mean in a dataset.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "supervised-learning",
+    "word": "supervised learning",
+    "definition": "Training a model on labeled data where the correct output is known for each input.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "target-variable",
+    "word": "target variable",
+    "definition": "The output column a model is trained to predict, also called the dependent variable.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "training-data",
+    "word": "training data",
+    "definition": "The labeled dataset used to fit a machine learning model's parameters.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "underfitting",
+    "word": "underfitting",
+    "definition": "When a model is too simple to capture patterns in the data, performing poorly on both train and test sets.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "unsupervised-learning",
+    "word": "unsupervised learning",
+    "definition": "Training a model on unlabeled data to discover hidden structure or patterns without guidance.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "variance",
+    "word": "variance",
+    "definition": "A model's sensitivity to fluctuations in training data — high variance models tend to overfit.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "vector",
+    "word": "vector",
+    "definition": "A one-dimensional array of numbers representing a data point or feature set in a model.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "visualization",
+    "word": "data visualization",
+    "definition": "Representing data graphically to reveal patterns, trends, and outliers at a glance.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "weight",
+    "word": "weight",
+    "definition": "A learned parameter in a model that scales the importance of an input feature.",
+    "file": "artificial-intelligence.json"
+  },
+  {
+    "id": "api-gateway",
+    "word": "API gateway",
+    "definition": "A server that acts as the single entry point for all client requests to backend services.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "authentication",
+    "word": "authentication",
+    "definition": "The process of verifying who a user is before granting access to a system.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "authorization",
+    "word": "authorization",
+    "definition": "Determining what actions or resources an authenticated user is permitted to access.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "backoff",
+    "word": "exponential backoff",
+    "definition": "A retry strategy that progressively increases wait time between failed attempts.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "cache-invalidation",
+    "word": "cache invalidation",
+    "definition": "The process of marking cached data as stale so it gets refreshed on the next request.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "circuit-breaker",
+    "word": "circuit breaker",
+    "definition": "A pattern that stops requests to a failing service to prevent cascading failures.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "concurrency",
+    "word": "concurrency",
+    "definition": "The ability of a system to handle multiple tasks at overlapping points in time.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "connection-pooling",
+    "word": "connection pooling",
+    "definition": "Reusing a set of established database connections instead of creating new ones per request.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "cors-server",
+    "word": "CORS headers",
+    "definition": "Server-sent HTTP headers that control which origins are allowed to access its resources.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "crud",
+    "word": "CRUD",
+    "definition": "Create, Read, Update, Delete — the four basic operations performed on persistent data.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "database-migration",
+    "word": "database migration",
+    "definition": "A versioned script that applies incremental changes to a database schema over time.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "deadlock",
+    "word": "deadlock",
+    "definition": "A state where two or more processes block each other indefinitely waiting for resources.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "deploy",
+    "word": "deploy",
+    "definition": "Releasing a new version of an application to a server or hosting environment.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "edge-function",
+    "word": "edge function",
+    "definition": "Serverless code executed at CDN nodes geographically close to the user for low latency.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "endpoint",
+    "word": "endpoint",
+    "definition": "A specific URL path in an API that accepts requests and returns a defined response.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "environment-variable",
+    "word": "environment variable",
+    "definition": "A configuration value stored outside source code and injected at runtime per environment.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "foreign-key",
+    "word": "foreign key",
+    "definition": "A database column that references the primary key of another table to enforce relationships.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "graphql",
+    "word": "GraphQL",
+    "definition": "A query language for APIs that lets clients request exactly the data shape they need.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "horizontal-scaling",
+    "word": "horizontal scaling",
+    "definition": "Adding more server instances to distribute load rather than upgrading a single machine.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "http-status-codes",
+    "word": "HTTP status codes",
+    "definition": "Numeric codes in server responses indicating the result of a request, such as 200 or 404.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "idempotency-key",
+    "word": "idempotency key",
+    "definition": "A unique identifier sent with a request to prevent duplicate processing on retry.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "index",
+    "word": "index",
+    "definition": "A database structure that speeds up row lookups by storing a sorted reference to column values.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "ingress",
+    "word": "ingress",
+    "definition": "Incoming network traffic to a service, or the Kubernetes resource that routes external requests.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "integration-test",
+    "word": "integration test",
+    "definition": "A test verifying that multiple components or services work correctly when combined.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "jwt",
+    "word": "JWT",
+    "definition": "JSON Web Token — a compact signed token used to transmit verified user identity claims.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "latency",
+    "word": "latency",
+    "definition": "The time delay between a request being sent and the first byte of a response being received.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "load-balancer",
+    "word": "load balancer",
+    "definition": "A system that distributes incoming requests across multiple server instances evenly.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "logging",
+    "word": "logging",
+    "definition": "Recording application events and errors to a persistent store for monitoring and debugging.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "message-queue",
+    "word": "message queue",
+    "definition": "A buffer that decouples services by storing messages until the receiver is ready to process them.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "microservice",
+    "word": "microservice",
+    "definition": "A small, independently deployable service responsible for one specific business capability.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "middleware-server",
+    "word": "middleware",
+    "definition": "A function that runs between receiving a request and sending a response to process or transform it.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "n-plus-one",
+    "word": "N+1 problem",
+    "definition": "A performance bug where fetching a list triggers an extra query per item instead of one batch.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "normalization",
+    "word": "normalization",
+    "definition": "Organizing database tables to reduce redundancy by storing each fact in exactly one place.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "oauth",
+    "word": "OAuth",
+    "definition": "An open standard allowing users to grant apps limited access to their accounts without sharing passwords.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "observability",
+    "word": "observability",
+    "definition": "The ability to understand a system's internal state from its external outputs: logs, metrics, traces.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "optimistic-update",
+    "word": "optimistic update",
+    "definition": "Updating the UI immediately on user action before the server confirms success.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "orm",
+    "word": "ORM",
+    "definition": "Object-Relational Mapper — a library that lets you query a database using language objects.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "pagination-cursor",
+    "word": "cursor-based pagination",
+    "definition": "A pagination strategy using a pointer to the last item instead of page numbers for stable results.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "payload",
+    "word": "payload",
+    "definition": "The data body carried inside a network request or response, excluding headers.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "primary-key",
+    "word": "primary key",
+    "definition": "A column or set of columns that uniquely identifies each row in a database table.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "proxy",
+    "word": "proxy",
+    "definition": "An intermediary server that forwards requests between a client and another server.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "query-plan",
+    "word": "query plan",
+    "definition": "The execution strategy a database engine chooses to retrieve data for a given query.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "rate-limiting",
+    "word": "rate limiting",
+    "definition": "Restricting how many requests a client can make to an API within a given time window.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "replication",
+    "word": "replication",
+    "definition": "Copying data across multiple database instances to ensure availability and fault tolerance.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "rest",
+    "word": "REST",
+    "definition": "Representational State Transfer — an architectural style for stateless, resource-based APIs.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "rollback",
+    "word": "rollback",
+    "definition": "Reverting a database transaction or deployment to its previous stable state.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "row-level-security",
+    "word": "row-level security",
+    "definition": "A database feature restricting which rows a user can read or modify based on defined policies.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "schema",
+    "word": "schema",
+    "definition": "The formal definition of a database's structure: its tables, columns, types, and relationships.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "serverless",
+    "word": "serverless",
+    "definition": "A model where backend code runs in stateless functions managed and scaled by a cloud provider.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "sharding",
+    "word": "sharding",
+    "definition": "Horizontally partitioning a database across multiple machines to distribute load.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "soft-delete",
+    "word": "soft delete",
+    "definition": "Marking a record as deleted with a flag instead of physically removing it from the database.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "sql-injection",
+    "word": "SQL injection",
+    "definition": "An attack inserting malicious SQL into a query to manipulate or expose database data.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "sse",
+    "word": "SSE",
+    "definition": "Server-Sent Events — a protocol for servers to push real-time updates to the browser over HTTP.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "stateless",
+    "word": "stateless",
+    "definition": "A server that stores no client session data between requests — each request is self-contained.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "storage-bucket",
+    "word": "storage bucket",
+    "definition": "A container for storing user-uploaded files and assets in a cloud storage service.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "throughput",
+    "word": "throughput",
+    "definition": "The number of requests or operations a system can successfully handle per unit of time.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "transaction",
+    "word": "transaction",
+    "definition": "A group of database operations that execute as a single atomic unit — all succeed or all fail.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "ttl",
+    "word": "TTL",
+    "definition": "Time To Live — the duration a cached value or DNS record is considered valid before expiry.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "uuid",
+    "word": "UUID",
+    "definition": "Universally Unique Identifier — a 128-bit value used as a collision-resistant database primary key.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "vertical-scaling",
+    "word": "vertical scaling",
+    "definition": "Upgrading a single server's CPU, RAM, or storage capacity to handle more load.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "webhook",
+    "word": "webhook",
+    "definition": "An HTTP callback triggered by an event in one service to notify another in real time.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "websocket",
+    "word": "WebSocket",
+    "definition": "A protocol providing a persistent, full-duplex communication channel between client and server.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "zero-downtime-deploy",
+    "word": "zero-downtime deployment",
+    "definition": "A release strategy that updates a service without any interruption to active users.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "acid",
+    "word": "ACID",
+    "definition": "Atomicity, Consistency, Isolation, Durability — the four guarantees of reliable database transactions.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "cron-job",
+    "word": "cron job",
+    "definition": "A scheduled task that runs automatically at defined time intervals on a server.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "graceful-degradation",
+    "word": "graceful degradation",
+    "definition": "Designing a system to maintain partial functionality when a component fails.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "health-check",
+    "word": "health check",
+    "definition": "A periodic request to a service endpoint that confirms it is running and responsive.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "idempotent-request",
+    "word": "idempotent request",
+    "definition": "An API request that can be safely repeated multiple times without changing the outcome.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "materialized-view",
+    "word": "materialized view",
+    "definition": "A precomputed database query result stored on disk and refreshed on demand.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "realtime-subscription",
+    "word": "realtime subscription",
+    "definition": "A persistent connection that pushes database changes to the client as they happen.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "seed",
+    "word": "seed",
+    "definition": "Populating a database with initial or test data using a script.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "upsert",
+    "word": "upsert",
+    "definition": "A database operation that inserts a row if it does not exist or updates it if it does.",
+    "file": "backend-infra.json"
+  },
+  {
+    "id": "aggregation",
+    "word": "aggregation",
+    "definition": "Combining multiple data points into a single summary value such as a sum, mean, or count.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "anomaly-detection",
+    "word": "anomaly detection",
+    "definition": "Identifying data points that deviate significantly from expected patterns or distributions.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "array",
+    "word": "array",
+    "definition": "An ordered collection of elements of the same type, foundational to numerical computing.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "average",
+    "word": "arithmetic mean",
+    "definition": "The sum of all values in a dataset divided by the count of those values.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "backpropagation",
+    "word": "backpropagation",
+    "definition": "An algorithm computing gradients through a neural network to update weights during training.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "baseline",
+    "word": "baseline",
+    "definition": "A simple reference model used to measure whether a more complex model adds real value.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "batch",
+    "word": "batch",
+    "definition": "A subset of training data processed together in one forward and backward pass of a model.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "bayesian-inference",
+    "word": "Bayesian inference",
+    "definition": "Updating the probability of a hypothesis as new evidence is incorporated using Bayes' theorem.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "bias",
+    "word": "bias",
+    "definition": "Systematic error in a model that causes it to consistently miss the true value in one direction.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "binary-classification",
+    "word": "binary classification",
+    "definition": "A prediction task with exactly two possible output categories, such as spam or not spam.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "categorical-variable",
+    "word": "categorical variable",
+    "definition": "A variable representing discrete groups or labels rather than continuous numeric values.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "centroid",
+    "word": "centroid",
+    "definition": "The geometric center of a cluster, used as a reference point in algorithms like k-means.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "class-imbalance",
+    "word": "class imbalance",
+    "definition": "A dataset condition where one category has significantly more samples than others.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "classification",
+    "word": "classification",
+    "definition": "A supervised learning task that predicts which category a new observation belongs to.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "clustering",
+    "word": "clustering",
+    "definition": "An unsupervised method grouping similar data points together without predefined labels.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "confusion-matrix",
+    "word": "confusion matrix",
+    "definition": "A table comparing predicted vs actual class labels to evaluate a classification model.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "continuous-variable",
+    "word": "continuous variable",
+    "definition": "A numeric variable that can take any value within a range, such as height or temperature.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "correlation",
+    "word": "correlation",
+    "definition": "A statistical measure of how strongly two variables move together, ranging from -1 to 1.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "cross-validation",
+    "word": "cross-validation",
+    "definition": "A technique splitting data into multiple train-test folds to produce a more reliable evaluation.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "csv",
+    "word": "CSV",
+    "definition": "Comma-Separated Values — a plain text format for storing tabular data, one row per line.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "data-cleaning",
+    "word": "data cleaning",
+    "definition": "The process of detecting and correcting errors, inconsistencies, and missing values in a dataset.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "data-drift",
+    "word": "data drift",
+    "definition": "The gradual change in input data distribution over time that degrades model performance.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "data-lake",
+    "word": "data lake",
+    "definition": "A centralized repository storing raw, unstructured data at scale for future processing.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "data-pipeline",
+    "word": "data pipeline",
+    "definition": "An automated sequence of steps that ingests, transforms, and loads data from source to destination.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "data-warehouse",
+    "word": "data warehouse",
+    "definition": "A structured storage system optimized for querying and analyzing large volumes of historical data.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "dataframe",
+    "word": "DataFrame",
+    "definition": "A two-dimensional, labeled data structure with columns of potentially different types, as in pandas.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "decision-tree",
+    "word": "decision tree",
+    "definition": "A flowchart-like model that splits data based on feature conditions to make predictions.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "dimensionality-reduction",
+    "word": "dimensionality reduction",
+    "definition": "Reducing the number of features in a dataset while preserving as much information as possible.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "distribution",
+    "word": "distribution",
+    "definition": "A function describing the frequency of values across all possible outcomes in a dataset.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "eda",
+    "word": "EDA",
+    "definition": "Exploratory Data Analysis — the initial investigation of data using statistics and visualizations.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "epoch",
+    "word": "epoch",
+    "definition": "One complete pass of the entire training dataset through a machine learning model.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "etl",
+    "word": "ETL",
+    "definition": "Extract, Transform, Load — the process of moving and reshaping data between systems.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "evaluation-metric",
+    "word": "evaluation metric",
+    "definition": "A quantitative measure used to assess how well a model performs on a given task.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "f1-score",
+    "word": "F1 score",
+    "definition": "The harmonic mean of precision and recall, balancing both in a single performance metric.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "feature",
+    "word": "feature",
+    "definition": "An individual measurable variable used as input to a machine learning model.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "feature-engineering",
+    "word": "feature engineering",
+    "definition": "Creating or transforming input variables to improve a model's predictive power.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "feature-importance",
+    "word": "feature importance",
+    "definition": "A score indicating how much each input variable contributed to a model's predictions.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "gradient-descent",
+    "word": "gradient descent",
+    "definition": "An optimization algorithm iteratively adjusting model parameters to minimize a loss function.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "ground-truth",
+    "word": "ground truth",
+    "definition": "The verified correct labels or values used to train and evaluate a machine learning model.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "holdout-set",
+    "word": "holdout set",
+    "definition": "A portion of data withheld from training and used only for final model evaluation.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "hyperparameter",
+    "word": "hyperparameter",
+    "definition": "A configuration value set before training that controls how a model learns, not what it learns.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "hypothesis-testing",
+    "word": "hypothesis testing",
+    "definition": "A statistical method determining whether observed data provides evidence against a null assumption.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "imputation",
+    "word": "imputation",
+    "definition": "Filling in missing values in a dataset using statistical estimates like the mean or median.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "inference",
+    "word": "inference",
+    "definition": "The phase where a trained model generates predictions on new, unseen input data.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "interquartile-range",
+    "word": "interquartile range",
+    "definition": "The difference between the 75th and 25th percentile, measuring statistical spread robustly.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "label",
+    "word": "label",
+    "definition": "The target output value a supervised learning model is trained to predict.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "learning-rate",
+    "word": "learning rate",
+    "definition": "A hyperparameter controlling how large each step is during gradient descent optimization.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "loss-function",
+    "word": "loss function",
+    "definition": "A function measuring the difference between predicted and actual values during model training.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "median",
+    "word": "median",
+    "definition": "The middle value in an ordered dataset, robust to outliers unlike the arithmetic mean.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "missing-value",
+    "word": "missing value",
+    "definition": "An absent data point in a dataset, represented as null or NaN, requiring handling before modeling.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "model",
+    "word": "model",
+    "definition": "A mathematical function learned from data that maps inputs to predicted outputs.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "multicollinearity",
+    "word": "multicollinearity",
+    "definition": "A condition where two or more input features are highly correlated, distorting model coefficients.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "normal-distribution",
+    "word": "normal distribution",
+    "definition": "A symmetric, bell-shaped probability distribution where most values cluster around the mean.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "normalization",
+    "word": "normalization",
+    "definition": "Rescaling feature values to a standard range — typically 0 to 1 — before model training.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "null-hypothesis",
+    "word": "null hypothesis",
+    "definition": "The default assumption of no effect or no difference that a statistical test attempts to reject.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "outlier",
+    "word": "outlier",
+    "definition": "A data point that differs markedly from other observations and may indicate noise or a real anomaly.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "overfitting",
+    "word": "overfitting",
+    "definition": "When a model learns the training data too precisely, performing poorly on new unseen data.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "p-value",
+    "word": "p-value",
+    "definition": "The probability of observing results at least as extreme as those seen, assuming the null hypothesis is true.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "pandas",
+    "word": "pandas",
+    "definition": "A Python library providing DataFrame structures for data manipulation and analysis.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "percentile",
+    "word": "percentile",
+    "definition": "The value below which a given percentage of observations in a dataset fall.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "pipeline-ml",
+    "word": "ML pipeline",
+    "definition": "A chained sequence of preprocessing and modeling steps that can be fit and applied as a unit.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "precision",
+    "word": "precision",
+    "definition": "The proportion of positive predictions that were actually correct out of all positive predictions made.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "prediction",
+    "word": "prediction",
+    "definition": "The output a trained model generates when given a new input it has not seen before.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "preprocessing",
+    "word": "preprocessing",
+    "definition": "All data transformation steps applied before feeding data into a machine learning model.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "random-forest",
+    "word": "random forest",
+    "definition": "An ensemble model combining many decision trees to improve accuracy and reduce overfitting.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "recall",
+    "word": "recall",
+    "definition": "The proportion of actual positives that a model correctly identified out of all real positives.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "regression",
+    "word": "regression",
+    "definition": "A supervised learning task predicting a continuous numeric output from input features.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "regularization",
+    "word": "regularization",
+    "definition": "A technique penalizing model complexity during training to reduce overfitting.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "sample",
+    "word": "sample",
+    "definition": "A subset of observations drawn from a larger population for analysis or model training.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "sampling-bias",
+    "word": "sampling bias",
+    "definition": "A systematic error occurring when the collected data does not represent the full population.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "skewness",
+    "word": "skewness",
+    "definition": "A measure of the asymmetry of a distribution — positive skew has a longer right tail.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "split",
+    "word": "train-test split",
+    "definition": "Dividing a dataset into separate portions for training a model and evaluating its performance.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "standard-deviation",
+    "word": "standard deviation",
+    "definition": "A measure of how spread out values are relative to the mean in a dataset.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "supervised-learning",
+    "word": "supervised learning",
+    "definition": "Training a model on labeled data where the correct output is known for each input.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "target-variable",
+    "word": "target variable",
+    "definition": "The output column a model is trained to predict, also called the dependent variable.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "training-data",
+    "word": "training data",
+    "definition": "The labeled dataset used to fit a machine learning model's parameters.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "underfitting",
+    "word": "underfitting",
+    "definition": "When a model is too simple to capture patterns in the data, performing poorly on both train and test sets.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "unsupervised-learning",
+    "word": "unsupervised learning",
+    "definition": "Training a model on unlabeled data to discover hidden structure or patterns without guidance.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "variance",
+    "word": "variance",
+    "definition": "A model's sensitivity to fluctuations in training data — high variance models tend to overfit.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "vector",
+    "word": "vector",
+    "definition": "A one-dimensional array of numbers representing a data point or feature set in a model.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "visualization",
+    "word": "data visualization",
+    "definition": "Representing data graphically to reveal patterns, trends, and outliers at a glance.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "weight",
+    "word": "weight",
+    "definition": "A learned parameter in a model that scales the importance of an input feature.",
+    "file": "data-science.json"
+  },
+  {
+    "id": "abstraction-layer",
+    "word": "abstraction layer",
+    "definition": "A level in a design system that separates raw tokens from component-level decisions.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "alias-token",
+    "word": "alias token",
+    "definition": "A semantic token that references a primitive token and communicates its intended use.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "atomic-design",
+    "word": "atomic design",
+    "definition": "A methodology by Brad Frost organizing UI into atoms, molecules, organisms, templates, and pages.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "base-component",
+    "word": "base component",
+    "definition": "An unstyled or minimally styled component that provides behavior without visual opinions.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "baseline-grid",
+    "word": "baseline grid",
+    "definition": "A horizontal rhythm system aligning text and elements to a consistent vertical spacing unit.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "border-radius-token",
+    "word": "border radius token",
+    "definition": "A design token defining the corner rounding values available across a system.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "breakpoint",
+    "word": "breakpoint",
+    "definition": "A defined viewport width at which the layout adapts to suit a different screen size.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "cascade-layer",
+    "word": "cascade layer",
+    "definition": "A CSS @layer rule that explicitly controls the order of specificity between style groups.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "color-palette",
+    "word": "color palette",
+    "definition": "The complete set of raw color values available in a system before semantic assignment.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "color-ramp",
+    "word": "color ramp",
+    "definition": "A graduated scale of tints and shades for a single hue, typically numbered 50 through 900.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "color-role",
+    "word": "color role",
+    "definition": "A semantic label describing a color's function — such as surface, on-surface, or error.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "component-api",
+    "word": "component API",
+    "definition": "The set of props a component exposes to control its appearance and behavior from outside.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "component-library",
+    "word": "component library",
+    "definition": "A versioned, documented collection of reusable UI components shared across a product or org.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "composition",
+    "word": "composition",
+    "definition": "Building complex UI by combining smaller, focused components rather than creating monolithic ones.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "compound-variant",
+    "word": "compound variant",
+    "definition": "A style rule applied only when two or more variant conditions are true simultaneously.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "constraint",
+    "word": "constraint",
+    "definition": "A deliberate system rule that limits choices to maintain consistency across the product.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "consuming-team",
+    "word": "consuming team",
+    "definition": "A product team that uses a design system's components without contributing to its core.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "css-custom-property",
+    "word": "CSS custom property",
+    "definition": "A variable declared with -- prefix in CSS, used to propagate design token values at runtime.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "css-in-js",
+    "word": "CSS-in-JS",
+    "definition": "An approach colocating component styles written in JavaScript alongside component logic.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "dark-mode",
+    "word": "dark mode",
+    "definition": "A color scheme variant using dark backgrounds, requiring semantic tokens to switch correctly.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "density",
+    "word": "density",
+    "definition": "The amount of content and spacing in a UI — compact vs comfortable vs spacious layouts.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "design-language",
+    "word": "design language",
+    "definition": "The shared visual and interactive vocabulary — principles, patterns, and aesthetics — of a brand.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "design-token",
+    "word": "design token",
+    "definition": "A named variable storing a single design decision — color, spacing, radius — usable across platforms.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "documentation-site",
+    "word": "documentation site",
+    "definition": "A dedicated website publishing component usage guidelines, props, and live code examples.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "elevation",
+    "word": "elevation",
+    "definition": "A system representing depth through shadow values, communicating component stacking order.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "fallback-font",
+    "word": "fallback font",
+    "definition": "A secondary typeface rendered while a web font loads to prevent invisible or shifted text.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "fluid-type",
+    "word": "fluid typography",
+    "definition": "Font sizes that scale smoothly between breakpoints using CSS clamp() instead of fixed steps.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "focus-ring",
+    "word": "focus ring",
+    "definition": "A visible outline appearing on focused interactive elements to aid keyboard navigation.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "font-scale",
+    "word": "type scale",
+    "definition": "A set of predefined font size steps — xs through 4xl — forming the typographic range of a system.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "font-stack",
+    "word": "font stack",
+    "definition": "An ordered list of typefaces in CSS, falling back to the next if the preferred one is unavailable.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "global-style",
+    "word": "global style",
+    "definition": "CSS rules applied to the entire document — resets, root variables, and base element defaults.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "gutters",
+    "word": "gutters",
+    "definition": "Fixed spacing between columns in a grid layout that maintains visual separation.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "headless-component",
+    "word": "headless component",
+    "definition": "A component providing only logic and accessibility with no default styles applied.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "hue-token",
+    "word": "hue token",
+    "definition": "A CSS custom property storing a hue value to drive a dynamic accent color system.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "icon-system",
+    "word": "icon system",
+    "definition": "A cohesive set of SVG icons sharing consistent sizing, stroke weight, and visual style.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "inheritance-token",
+    "word": "token inheritance",
+    "definition": "The ability of a child component to receive token values cascaded from a parent theme.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "interactive-state",
+    "word": "interactive state",
+    "definition": "A component's visual condition in response to user action: hover, focus, active, or disabled.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "layer-token",
+    "word": "layer token",
+    "definition": "A semantic surface token — background, surface, overlay — defining stacking context colors.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "line-height",
+    "word": "line height",
+    "definition": "The vertical space allocated for each line of text, affecting readability and vertical rhythm.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "linting-tokens",
+    "word": "token linting",
+    "definition": "Automated checks enforcing that only approved design tokens are used in component code.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "live-region",
+    "word": "live region",
+    "definition": "An ARIA attribute that announces dynamic content changes to screen readers automatically.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "motion-token",
+    "word": "motion token",
+    "definition": "A design token storing duration and easing values for consistent animation across a system.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "optical-sizing",
+    "word": "optical sizing",
+    "definition": "Adjusting letter-spacing or weight at different sizes to maintain visual balance of text.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "pattern",
+    "word": "pattern",
+    "definition": "A documented, reusable solution to a recurring design problem within a specific context.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "polymorphic-component",
+    "word": "polymorphic component",
+    "definition": "A component that can render as different HTML elements via an 'as' prop without losing its styles.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "primitive-token",
+    "word": "primitive token",
+    "definition": "A raw, context-free token storing a single value — blue-500, space-4 — without semantic meaning.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "prop-driven-styling",
+    "word": "prop-driven styling",
+    "definition": "Applying different styles to a component based on the values of its received props.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "reduced-motion",
+    "word": "reduced motion",
+    "definition": "A CSS media query respecting the user's OS preference to minimize animation and transitions.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "reset",
+    "word": "CSS reset",
+    "definition": "A stylesheet neutralizing browser default styles to create a consistent cross-browser baseline.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "responsive-token",
+    "word": "responsive token",
+    "definition": "A token whose value changes at defined breakpoints to adapt spacing or type for screen size.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "scale",
+    "word": "spacing scale",
+    "definition": "A set of predefined spacing values — 4, 8, 12, 16… — used consistently across layout and components.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "semantic-color",
+    "word": "semantic color",
+    "definition": "A color token named by its purpose — danger, success, muted — rather than its raw value.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "shadow-token",
+    "word": "shadow token",
+    "definition": "A design token encoding box-shadow values to represent consistent elevation levels.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "slot",
+    "word": "slot",
+    "definition": "A named placeholder inside a component where consumers inject custom content or child elements.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "specificity-score",
+    "word": "specificity score",
+    "definition": "A numeric weight CSS assigns to selectors to decide which rule wins when rules conflict.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "style-dictionary",
+    "word": "Style Dictionary",
+    "definition": "An open-source tool that transforms design tokens into platform-specific output files.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "theming",
+    "word": "theming",
+    "definition": "Swapping a set of token values to change the visual appearance of a system without touching components.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "token-pipeline",
+    "word": "token pipeline",
+    "definition": "The automated workflow transforming raw token definitions into CSS variables or JS exports.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "utility-class",
+    "word": "utility class",
+    "definition": "A single-purpose CSS class applying one specific style property, as used in Tailwind CSS.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "variant",
+    "word": "variant",
+    "definition": "A named style configuration of a component — primary, ghost, destructive — controlled via props.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "versioning",
+    "word": "versioning",
+    "definition": "Tagging system releases with semantic version numbers to manage breaking and non-breaking changes.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "visual-regression",
+    "word": "visual regression test",
+    "definition": "An automated test comparing component screenshots to detect unintended visual changes.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "z-index-scale",
+    "word": "z-index scale",
+    "definition": "A set of named z-index token values — dropdown, modal, toast — to manage stacking order predictably.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "cva",
+    "word": "CVA",
+    "definition": "Class Variance Authority — a library for defining typed component variants with Tailwind CSS.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "class-merging",
+    "word": "class merging",
+    "definition": "Resolving Tailwind conflicts when multiple classes target the same CSS property, using tools like cn().",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "design-system-adoption",
+    "word": "adoption",
+    "definition": "The rate at which product teams migrate to and consistently use a shared design system.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "contribution-model",
+    "word": "contribution model",
+    "definition": "The defined process for how teams outside the core system team can propose or add components.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "aria-role",
+    "word": "ARIA role",
+    "definition": "An attribute communicating an element's purpose to assistive technologies beyond its HTML tag.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "forwardref",
+    "word": "forwardRef",
+    "definition": "A React API that passes a ref through a component to a DOM element inside it.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "open-closed-principle",
+    "word": "open/closed principle",
+    "definition": "A component is open for extension via props but closed for modification of its internal logic.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "pixel-pushing",
+    "word": "pixel pushing",
+    "definition": "Making minor visual adjustments — often misalignments of 1–2px — to achieve precise rendering.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "surface",
+    "word": "surface",
+    "definition": "A semantic color role representing the background layer on which content and components sit.",
+    "file": "design-systems.json"
+  },
+  {
+    "id": "abstraction",
+    "word": "abstraction",
+    "definition": "Hiding implementation complexity behind a simpler interface to reduce cognitive overhead.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "api",
+    "word": "API",
+    "definition": "Application Programming Interface — a contract defining how software components communicate.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "async",
+    "word": "asynchronous",
+    "definition": "Operations that run independently without blocking the main thread while waiting to complete.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "bundle",
+    "word": "bundle",
+    "definition": "A single output file combining multiple source modules for efficient browser delivery.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "bundler",
+    "word": "bundler",
+    "definition": "A tool that compiles and combines source files into optimized assets for production.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "cache",
+    "word": "cache",
+    "definition": "A layer that stores frequently accessed data to reduce redundant fetching or computation.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "callback",
+    "word": "callback",
+    "definition": "A function passed as an argument to another function, invoked after an operation completes.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "cdn",
+    "word": "CDN",
+    "definition": "Content Delivery Network — a distributed server system delivering assets from locations near the user.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "client-side",
+    "word": "client-side",
+    "definition": "Code or logic that executes in the user's browser rather than on the server.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "closure",
+    "word": "closure",
+    "definition": "A function that retains access to its outer scope's variables even after that scope has returned.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "code-splitting",
+    "word": "code splitting",
+    "definition": "Dividing a bundle into smaller chunks loaded on demand to improve initial load time.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "component",
+    "word": "component",
+    "definition": "A self-contained, reusable piece of UI that manages its own structure, style, and behavior.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "controlled-component",
+    "word": "controlled component",
+    "definition": "A React component whose input value is driven entirely by state rather than the DOM.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "cors",
+    "word": "CORS",
+    "definition": "Cross-Origin Resource Sharing — a browser security mechanism controlling cross-domain requests.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "css-cascade",
+    "word": "cascade",
+    "definition": "The algorithm CSS uses to resolve which styles apply when multiple rules target the same element.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "custom-hook",
+    "word": "custom hook",
+    "definition": "A reusable React function prefixed with 'use' that encapsulates stateful logic for sharing.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "debounce",
+    "word": "debounce",
+    "definition": "Delaying a function's execution until a specified time has passed since its last invocation.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "declarative",
+    "word": "declarative",
+    "definition": "A programming style that describes what the UI should look like rather than how to build it.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "dependency-array",
+    "word": "dependency array",
+    "definition": "The second argument to React hooks that controls when an effect or memo should re-run.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "derived-state",
+    "word": "derived state",
+    "definition": "A value computed from existing state rather than stored independently in the state tree.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "dom",
+    "word": "DOM",
+    "definition": "Document Object Model — the tree structure browsers use to represent and manipulate HTML.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "dry",
+    "word": "DRY",
+    "definition": "Don't Repeat Yourself — a principle advocating for eliminating code duplication through abstraction.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "dynamic-import",
+    "word": "dynamic import",
+    "definition": "Loading a JavaScript module on demand at runtime rather than at initial bundle load.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "end-to-end-test",
+    "word": "end-to-end test",
+    "definition": "An automated test that simulates real user scenarios across the full application stack.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "event-delegation",
+    "word": "event delegation",
+    "definition": "Attaching a single event listener to a parent element to handle events from its children.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "event-loop",
+    "word": "event loop",
+    "definition": "The JavaScript runtime mechanism that processes the call stack and task queue sequentially.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "fallback",
+    "word": "fallback",
+    "definition": "An alternative value, component, or behavior used when the primary option fails or is unavailable.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "feature-flag",
+    "word": "feature flag",
+    "definition": "A toggle that enables or disables a feature at runtime without deploying new code.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "forking",
+    "word": "forking",
+    "definition": "Creating a personal copy of a repository to develop independently from the original source.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "generic-type",
+    "word": "generic type",
+    "definition": "A reusable type definition in TypeScript that works with multiple types via a type parameter.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "hot-reload",
+    "word": "hot reload",
+    "definition": "Automatically updating the browser with code changes without a full page refresh.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "hydration",
+    "word": "hydration",
+    "definition": "Attaching React event listeners to server-rendered HTML to make it interactive on the client.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "idempotent",
+    "word": "idempotent",
+    "definition": "An operation that produces the same result regardless of how many times it is executed.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "immutability",
+    "word": "immutability",
+    "definition": "A pattern where data is never modified in place — changes produce new copies instead.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "intersection-observer",
+    "word": "Intersection Observer",
+    "definition": "A browser API that efficiently detects when elements enter or leave the viewport.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "lazy-loading",
+    "word": "lazy loading",
+    "definition": "Deferring the load of non-critical resources until they are actually needed by the user.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "lifting-state",
+    "word": "lifting state",
+    "definition": "Moving shared state up to the nearest common ancestor component so siblings can access it.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "linting",
+    "word": "linting",
+    "definition": "Automated static analysis that flags code style issues, errors, and anti-patterns.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "media-query",
+    "word": "media query",
+    "definition": "A CSS rule that applies styles conditionally based on device characteristics like screen width.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "memoization",
+    "word": "memoization",
+    "definition": "Caching the result of a function call so repeated calls with the same input skip recomputation.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "middleware",
+    "word": "middleware",
+    "definition": "A function that intercepts and transforms requests or actions before they reach their destination.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "mock",
+    "word": "mock",
+    "definition": "A simulated object or function that replaces a real dependency during testing.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "monorepo",
+    "word": "monorepo",
+    "definition": "A single repository containing multiple related projects or packages managed together.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "mutation",
+    "word": "mutation",
+    "definition": "Directly modifying existing data in memory rather than creating a new copy of it.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "nullish-coalescing",
+    "word": "nullish coalescing",
+    "definition": "The ?? operator that returns the right-hand value only when the left is null or undefined.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "optional-chaining",
+    "word": "optional chaining",
+    "definition": "The ?. operator that safely accesses nested properties without throwing if one is undefined.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "pagination",
+    "word": "pagination",
+    "definition": "Dividing a large dataset into discrete pages to reduce load time and improve usability.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "polyfill",
+    "word": "polyfill",
+    "definition": "Code that implements a modern feature in browsers that do not natively support it.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "portals",
+    "word": "portal",
+    "definition": "A React feature that renders a child component into a DOM node outside the parent tree.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "prop-drilling",
+    "word": "prop drilling",
+    "definition": "Passing data through multiple component layers that don't use it to reach a deep child.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "pure-function",
+    "word": "pure function",
+    "definition": "A function with no side effects that always returns the same output for the same input.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "race-condition",
+    "word": "race condition",
+    "definition": "A bug where the outcome depends on the unpredictable timing of concurrent operations.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "reconciliation",
+    "word": "reconciliation",
+    "definition": "React's algorithm for comparing virtual DOM trees to determine the minimal DOM updates needed.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "refactoring",
+    "word": "refactoring",
+    "definition": "Restructuring existing code to improve readability or structure without changing its behavior.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "render-prop",
+    "word": "render prop",
+    "definition": "A React pattern where a component shares logic by accepting a function as a prop.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "rerender",
+    "word": "re-render",
+    "definition": "A React component updating its output in response to state or prop changes.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "rest-spread",
+    "word": "rest / spread",
+    "definition": "JavaScript syntax using ... to collect remaining values into an array or expand iterables.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "scope",
+    "word": "scope",
+    "definition": "The context that determines where variables are accessible within a program.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "serialization",
+    "word": "serialization",
+    "definition": "Converting a data structure into a format like JSON for storage or network transmission.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "server-side-rendering",
+    "word": "server-side rendering",
+    "definition": "Generating full HTML on the server per request, improving initial load and SEO.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "side-effect",
+    "word": "side effect",
+    "definition": "Any operation a function performs beyond returning a value, such as a fetch or DOM mutation.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "single-source-of-truth",
+    "word": "single source of truth",
+    "definition": "Storing a piece of data in one place so all parts of the app read from the same state.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "specificity",
+    "word": "specificity",
+    "definition": "A CSS scoring system that determines which rule takes priority when multiple rules conflict.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "static-site-generation",
+    "word": "static site generation",
+    "definition": "Pre-rendering pages to static HTML at build time for fast delivery without a server.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "storybook",
+    "word": "Storybook",
+    "definition": "A tool for developing and documenting UI components in isolation outside the main app.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "strict-mode",
+    "word": "strict mode",
+    "definition": "A React wrapper that intentionally double-invokes functions to surface side effect bugs.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "throttle",
+    "word": "throttle",
+    "definition": "Limiting a function to execute at most once per defined time interval regardless of calls.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "tree-shaking",
+    "word": "tree shaking",
+    "definition": "A build optimization that removes unused exported code from the final bundle.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "type-narrowing",
+    "word": "type narrowing",
+    "definition": "TypeScript's ability to refine a broad type to a more specific one within a conditional block.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "union-type",
+    "word": "union type",
+    "definition": "A TypeScript type representing a value that can be one of several specified types.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "uncontrolled-component",
+    "word": "uncontrolled component",
+    "definition": "A React form element whose value is managed by the DOM rather than component state.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "virtual-dom",
+    "word": "virtual DOM",
+    "definition": "An in-memory representation of the UI that React diffs against the real DOM before updating.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "waterfall",
+    "word": "waterfall",
+    "definition": "A sequential chain of network requests where each one waits for the previous to complete.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "web-vitals",
+    "word": "Web Vitals",
+    "definition": "Google's set of metrics measuring real-world user experience: LCP, INP, and CLS.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "zustand",
+    "word": "Zustand",
+    "definition": "A minimal React state management library using a hook-based store without boilerplate.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "compound-component",
+    "word": "compound component",
+    "definition": "A React pattern where multiple components share implicit state to form a cohesive unit.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "context-api",
+    "word": "Context API",
+    "definition": "React's built-in mechanism for passing data through the component tree without prop drilling.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "error-boundary",
+    "word": "error boundary",
+    "definition": "A React component that catches JavaScript errors in its subtree and renders a fallback UI.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "stale-closure",
+    "word": "stale closure",
+    "definition": "A bug where a function captures an outdated variable value from a previous render.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "accessibility-tree",
+    "word": "accessibility tree",
+    "definition": "A parallel DOM representation that assistive technologies use to interpret the interface.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "semantic-html",
+    "word": "semantic HTML",
+    "definition": "Using HTML elements that convey meaning about content structure rather than just appearance.",
+    "file": "frontend-dev.json"
+  },
+  {
+    "id": "advocate",
+    "word": "advocate",
+    "definition": "To actively support and argue for something — a design decision, a user need, or a process.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "ambiguous-requirements",
+    "word": "ambiguous requirements",
+    "definition": "Unclear or incomplete specs that require you to ask questions and make informed assumptions.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "approach",
+    "word": "approach",
+    "definition": "Your method or strategy for solving a problem — interviewers love hearing about your approach.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "articulate",
+    "word": "articulate",
+    "definition": "To express your ideas clearly and precisely, especially technical or design decisions.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "autonomous",
+    "word": "autonomous",
+    "definition": "Able to work independently and make decisions without constant supervision.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "balance",
+    "word": "balance",
+    "definition": "To weigh competing priorities — speed vs quality, design vs engineering constraints.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "bridge",
+    "word": "bridge",
+    "definition": "To connect two different worlds — typically design and engineering — reducing friction between them.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "build-from-scratch",
+    "word": "build from scratch",
+    "definition": "To create something starting from nothing rather than extending an existing solution.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "challenge",
+    "word": "challenge",
+    "definition": "A difficulty or obstacle you encountered — often the setup for a strong interview story.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "collaborate",
+    "word": "collaborate",
+    "definition": "To work jointly with others — designers, engineers, PMs — toward a shared outcome.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "communicate-tradeoffs",
+    "word": "communicate trade-offs",
+    "definition": "Explaining the pros and cons of a decision clearly so stakeholders can choose knowingly.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "component-driven",
+    "word": "component-driven",
+    "definition": "A development approach that builds UIs as a composition of isolated, reusable components.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "consistency",
+    "word": "consistency",
+    "definition": "The quality of applying the same patterns, styles, and decisions throughout a product.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "contributed",
+    "word": "contribute",
+    "definition": "To add value to a project, team, or codebase — a key word for describing past work.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "creative-problem-solving",
+    "word": "creative problem-solving",
+    "definition": "Finding non-obvious solutions by combining technical and design thinking.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "cross-disciplinary",
+    "word": "cross-disciplinary",
+    "definition": "Working across multiple disciplines simultaneously — design, code, and UX at once.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "decision-making",
+    "word": "decision-making",
+    "definition": "The process of choosing between options — often what interviewers probe with behavioral questions.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "deep-dive",
+    "word": "deep dive",
+    "definition": "A thorough, detailed investigation into a specific problem or topic.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "define-the-problem",
+    "word": "define the problem",
+    "definition": "Clarifying what the actual issue is before jumping to solutions — a key engineering and design skill.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "deliver",
+    "word": "deliver",
+    "definition": "To complete and ship a working result — designs, features, or documentation.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "design-sensibility",
+    "word": "design sensibility",
+    "definition": "An instinctive awareness of what looks, feels, and functions well in a UI.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "detail-oriented",
+    "word": "detail-oriented",
+    "definition": "Attentive to small specifics — spacing, edge cases, naming — that affect overall quality.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "document",
+    "word": "document",
+    "definition": "To write clear records of decisions, processes, or code so others can understand and build on them.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "drive",
+    "word": "drive",
+    "definition": "To lead or push something forward proactively — projects, decisions, or improvements.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "dry-run",
+    "word": "dry run",
+    "definition": "A rehearsal or test run before the real thing — useful for presentations or demos.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "end-to-end",
+    "word": "end-to-end",
+    "definition": "Covering the full scope of a process — from initial design concept to shipped production code.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "engineer-mindset",
+    "word": "engineering mindset",
+    "definition": "Approaching problems systematically, thinking about scalability, edge cases, and constraints.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "evangelize",
+    "word": "evangelize",
+    "definition": "To promote and build enthusiasm for a practice, tool, or approach within a team.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "experiment",
+    "word": "experiment",
+    "definition": "To try new tools, approaches, or ideas in a controlled way to learn and validate.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "fast-learner",
+    "word": "fast learner",
+    "definition": "Someone who acquires new skills and knowledge quickly, especially in new environments.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "feedback-driven",
+    "word": "feedback-driven",
+    "definition": "Using input from others — users, teammates, reviewers — to guide and improve your work.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "figure-things-out",
+    "word": "figure things out",
+    "definition": "To solve problems independently by researching, experimenting, and reasoning through them.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "fluent-in",
+    "word": "fluent in",
+    "definition": "Highly proficient in a tool, language, or methodology — stronger than 'familiar with'.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "go-to",
+    "word": "go-to",
+    "definition": "Your default, preferred tool or approach for a given type of problem.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "growth-mindset",
+    "word": "growth mindset",
+    "definition": "The belief that skills and intelligence can be developed through effort and learning.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "hands-on",
+    "word": "hands-on",
+    "definition": "Directly involved in doing the work rather than just directing or planning it.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "hats",
+    "word": "wear multiple hats",
+    "definition": "To take on different roles simultaneously — common in startups and small teams.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "highlight",
+    "word": "highlight",
+    "definition": "To draw attention to the most important or impressive parts of your experience.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "holistic",
+    "word": "holistic",
+    "definition": "Considering the full picture — user needs, technical constraints, and business goals together.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "impact-focused",
+    "word": "impact-focused",
+    "definition": "Prioritizing work based on the value it delivers to users or the business.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "in-production",
+    "word": "in production",
+    "definition": "Code or features that are live and being used by real users — not just prototypes.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "initiative",
+    "word": "take initiative",
+    "definition": "To act proactively without being asked — identifying problems and proposing solutions.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "interested-in",
+    "word": "I'm particularly interested in",
+    "definition": "A phrase to express genuine motivation for a role, team, or problem space.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "keen-eye",
+    "word": "keen eye for",
+    "definition": "A natural, trained ability to notice specific qualities — detail, proportion, inconsistency.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "lead",
+    "word": "lead",
+    "definition": "To guide a project, decision, or team — even informally without a formal title.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "lean-into",
+    "word": "lean into",
+    "definition": "To embrace and commit to something rather than avoid it — a strength, a challenge, a direction.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "maintainable",
+    "word": "maintainable",
+    "definition": "Code or systems that are easy to update, extend, and understand by other developers.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "mentor",
+    "word": "mentor",
+    "definition": "To guide and support someone less experienced in developing their skills.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "milestone-driven",
+    "word": "milestone-driven",
+    "definition": "Organizing work around concrete, measurable checkpoints rather than open-ended efforts.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "motivated-by",
+    "word": "motivated by",
+    "definition": "What drives your energy and engagement — a key question in culture-fit interviews.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "nail-the-details",
+    "word": "nail the details",
+    "definition": "To execute the small specifics with high precision — spacing, states, edge cases.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "ownership",
+    "word": "ownership",
+    "definition": "Taking full responsibility for a task or area — from start to finish, including problems.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "passion",
+    "word": "I'm passionate about",
+    "definition": "A phrase expressing genuine enthusiasm — use sparingly and always back it with specifics.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "pragmatic",
+    "word": "pragmatic",
+    "definition": "Focused on practical solutions that work rather than theoretically perfect ones.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "proactive",
+    "word": "proactive",
+    "definition": "Anticipating problems and acting before being asked rather than reacting after the fact.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "proven-track-record",
+    "word": "proven track record",
+    "definition": "Documented history of successfully delivering results — backed by portfolio and examples.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "quick-turnaround",
+    "word": "quick turnaround",
+    "definition": "Delivering quality work in a short amount of time without sacrificing standards.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "refine-over-time",
+    "word": "refine over time",
+    "definition": "Improving something incrementally through iteration rather than getting it perfect at once.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "remote-ready",
+    "word": "remote-ready",
+    "definition": "Equipped with the habits, tools, and communication skills to work effectively in a remote team.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "results",
+    "word": "results",
+    "definition": "The measurable or observable outcomes of your work — what actually changed because of you.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "self-directed",
+    "word": "self-directed",
+    "definition": "Able to identify what needs to be done and pursue it without waiting for instructions.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "sharp",
+    "word": "sharp",
+    "definition": "Quick to understand new concepts, catch issues, and find clever solutions — a compliment in tech.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "ship",
+    "word": "ship",
+    "definition": "To release and deploy a feature or product to real users — the ultimate goal of any dev work.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "side-project",
+    "word": "side project",
+    "definition": "A personal project built outside of work — often the best signal of genuine passion in tech.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "solid-foundation",
+    "word": "solid foundation",
+    "definition": "Strong fundamental knowledge in a skill that allows you to build more advanced work on top.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "speak-to",
+    "word": "speak to",
+    "definition": "To address or provide evidence for something — used when backing up a claim with an example.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "strengths",
+    "word": "strengths",
+    "definition": "The skills and qualities where you consistently perform above average — know yours cold.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "structured-thinker",
+    "word": "structured thinker",
+    "definition": "Someone who breaks down complex problems into clear, logical steps before acting.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "take-pride-in",
+    "word": "take pride in",
+    "definition": "To care deeply about the quality of your work — not just getting it done but getting it right.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "technical-depth",
+    "word": "technical depth",
+    "definition": "A thorough understanding of how something works beneath the surface, not just how to use it.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "thrives-in",
+    "word": "thrive in",
+    "definition": "To perform exceptionally well in a particular environment or type of challenge.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "translate",
+    "word": "translate",
+    "definition": "To convert design intent into working code, or technical constraints into design language.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "unique-value",
+    "word": "unique value",
+    "definition": "What specifically makes you different from other candidates applying for the same role.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "user-centered",
+    "word": "user-centered",
+    "definition": "Making decisions based on actual user needs and behaviors rather than assumptions.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "versatile",
+    "word": "versatile",
+    "definition": "Capable of adapting across different roles, tools, and types of problems effectively.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "vision",
+    "word": "vision",
+    "definition": "A clear picture of where you want to take something — a product, a system, or your career.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "walk-me-through",
+    "word": "walk me through",
+    "definition": "An interviewer's request to explain a project or process step by step in your own words.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "work-in-progress",
+    "word": "work in progress",
+    "definition": "Something actively being developed — honest framing when showing unfinished portfolio work.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "years-of-experience",
+    "word": "years of experience",
+    "definition": "Shorthand for tenure — but quality and depth of experience matter more than raw years.",
+    "file": "personal-interview.json"
+  },
+  {
+    "id": "actionable",
+    "word": "actionable",
+    "definition": "Feedback or information specific enough to act on immediately without further clarification.",
+    "file": "professional.json"
+  },
+  {
+    "id": "alignment",
+    "word": "alignment",
+    "definition": "Shared understanding and agreement among team members on goals, priorities, or direction.",
+    "file": "professional.json"
+  },
+  {
+    "id": "ambiguity",
+    "word": "ambiguity",
+    "definition": "Unclear requirements or situations where multiple interpretations are possible.",
+    "file": "professional.json"
+  },
+  {
+    "id": "async-communication",
+    "word": "async communication",
+    "definition": "Exchanging information without expecting an immediate response, common in remote teams.",
+    "file": "professional.json"
+  },
+  {
+    "id": "bandwidth",
+    "word": "bandwidth",
+    "definition": "A person's available time and mental capacity to take on additional work.",
+    "file": "professional.json"
+  },
+  {
+    "id": "bike-shedding",
+    "word": "bike-shedding",
+    "definition": "Spending disproportionate time debating trivial details while ignoring more important decisions.",
+    "file": "professional.json"
+  },
+  {
+    "id": "blocker",
+    "word": "blocker",
+    "definition": "An obstacle preventing progress on a task that requires external resolution to move forward.",
+    "file": "professional.json"
+  },
+  {
+    "id": "boilerplate",
+    "word": "boilerplate",
+    "definition": "Standardized, reusable text or code used repeatedly with little or no modification.",
+    "file": "professional.json"
+  },
+  {
+    "id": "bottleneck",
+    "word": "bottleneck",
+    "definition": "A point in a workflow where progress slows because demand exceeds capacity.",
+    "file": "professional.json"
+  },
+  {
+    "id": "buy-in",
+    "word": "buy-in",
+    "definition": "Genuine support and commitment from stakeholders or team members for a decision or initiative.",
+    "file": "professional.json"
+  },
+  {
+    "id": "cadence",
+    "word": "cadence",
+    "definition": "The regular rhythm of recurring meetings, releases, or communication cycles in a team.",
+    "file": "professional.json"
+  },
+  {
+    "id": "capacity",
+    "word": "capacity",
+    "definition": "The total amount of work a team or individual can realistically handle in a given period.",
+    "file": "professional.json"
+  },
+  {
+    "id": "caveat",
+    "word": "caveat",
+    "definition": "A warning or qualification that limits or conditions a statement or decision.",
+    "file": "professional.json"
+  },
+  {
+    "id": "changelog",
+    "word": "changelog",
+    "definition": "A curated log documenting notable changes, fixes, and new features across product versions.",
+    "file": "professional.json"
+  },
+  {
+    "id": "clarity",
+    "word": "clarity",
+    "definition": "The quality of communication that leaves no room for misinterpretation or confusion.",
+    "file": "professional.json"
+  },
+  {
+    "id": "confluence",
+    "word": "confluence",
+    "definition": "The meeting point of multiple ideas, teams, or processes — also a common team wiki tool.",
+    "file": "professional.json"
+  },
+  {
+    "id": "consensus",
+    "word": "consensus",
+    "definition": "General agreement reached by a group, though not necessarily unanimous approval.",
+    "file": "professional.json"
+  },
+  {
+    "id": "context-switching",
+    "word": "context switching",
+    "definition": "Shifting mental focus between different tasks or projects, which reduces deep work quality.",
+    "file": "professional.json"
+  },
+  {
+    "id": "cross-functional",
+    "word": "cross-functional",
+    "definition": "Involving members from different disciplines — design, engineering, product — working together.",
+    "file": "professional.json"
+  },
+  {
+    "id": "deliverable",
+    "word": "deliverable",
+    "definition": "A tangible output — a design, document, or feature — produced for a project or client.",
+    "file": "professional.json"
+  },
+  {
+    "id": "delta",
+    "word": "delta",
+    "definition": "The measurable difference or change between two states, versions, or data points.",
+    "file": "professional.json"
+  },
+  {
+    "id": "dependency",
+    "word": "dependency",
+    "definition": "A task, team, or system that another piece of work relies on before it can proceed.",
+    "file": "professional.json"
+  },
+  {
+    "id": "discovery",
+    "word": "discovery",
+    "definition": "A research phase aimed at understanding user needs and constraints before designing solutions.",
+    "file": "professional.json"
+  },
+  {
+    "id": "dog-fooding",
+    "word": "dog-fooding",
+    "definition": "Using your own product internally before releasing it to identify issues firsthand.",
+    "file": "professional.json"
+  },
+  {
+    "id": "escalate",
+    "word": "escalate",
+    "definition": "Raising an unresolved issue to a higher authority when it cannot be solved at the current level.",
+    "file": "professional.json"
+  },
+  {
+    "id": "exec",
+    "word": "exec",
+    "definition": "An executive or senior leader — often the audience for high-level presentations and summaries.",
+    "file": "professional.json"
+  },
+  {
+    "id": "footprint",
+    "word": "footprint",
+    "definition": "The scope or impact of a system, feature, or team within an organization or codebase.",
+    "file": "professional.json"
+  },
+  {
+    "id": "friction",
+    "word": "friction",
+    "definition": "Unnecessary resistance in a process, workflow, or user experience that slows progress.",
+    "file": "professional.json"
+  },
+  {
+    "id": "gap-analysis",
+    "word": "gap analysis",
+    "definition": "Comparing the current state to the desired state to identify what needs to change.",
+    "file": "professional.json"
+  },
+  {
+    "id": "garnered",
+    "word": "garner",
+    "definition": "To gather or accumulate something over time, such as feedback, support, or data.",
+    "file": "professional.json"
+  },
+  {
+    "id": "glanceable",
+    "word": "glanceable",
+    "definition": "Designed to be understood at a quick look without sustained attention or reading.",
+    "file": "professional.json"
+  },
+  {
+    "id": "granular",
+    "word": "granular",
+    "definition": "Broken into fine, detailed levels of control or specificity rather than broad categories.",
+    "file": "professional.json"
+  },
+  {
+    "id": "guardrail",
+    "word": "guardrail",
+    "definition": "A rule or constraint put in place to prevent teams from making harmful or inconsistent decisions.",
+    "file": "professional.json"
+  },
+  {
+    "id": "hardcoded",
+    "word": "hardcoded",
+    "definition": "A value embedded directly in code or a design rather than stored in a configurable token or variable.",
+    "file": "professional.json"
+  },
+  {
+    "id": "heads-up",
+    "word": "heads-up",
+    "definition": "An informal advance warning given to someone before something happens.",
+    "file": "professional.json"
+  },
+  {
+    "id": "high-level",
+    "word": "high-level",
+    "definition": "Describing a broad overview of something without going into implementation details.",
+    "file": "professional.json"
+  },
+  {
+    "id": "impact",
+    "word": "impact",
+    "definition": "The measurable effect a decision, feature, or change has on users or business outcomes.",
+    "file": "professional.json"
+  },
+  {
+    "id": "implication",
+    "word": "implication",
+    "definition": "A consequence or indirect effect that follows from a decision without being explicitly stated.",
+    "file": "professional.json"
+  },
+  {
+    "id": "in-the-weeds",
+    "word": "in the weeds",
+    "definition": "Focused on excessive detail at the expense of the bigger picture or strategic thinking.",
+    "file": "professional.json"
+  },
+  {
+    "id": "intake",
+    "word": "intake",
+    "definition": "A structured process for receiving, reviewing, and triaging new requests or projects.",
+    "file": "professional.json"
+  },
+  {
+    "id": "jargon",
+    "word": "jargon",
+    "definition": "Specialized terminology used within a field that may be unclear to outsiders.",
+    "file": "professional.json"
+  },
+  {
+    "id": "kick-off",
+    "word": "kick-off",
+    "definition": "The initial meeting that formally starts a project, aligning the team on goals and expectations.",
+    "file": "professional.json"
+  },
+  {
+    "id": "leverage-verb",
+    "word": "leverage",
+    "definition": "To use an existing resource, system, or advantage strategically to maximize output.",
+    "file": "professional.json"
+  },
+  {
+    "id": "low-hanging-fruit",
+    "word": "low-hanging fruit",
+    "definition": "Easy wins requiring minimal effort that can be completed quickly for fast visible impact.",
+    "file": "professional.json"
+  },
+  {
+    "id": "milestone",
+    "word": "milestone",
+    "definition": "A significant checkpoint in a project timeline marking the completion of a key phase.",
+    "file": "professional.json"
+  },
+  {
+    "id": "nitpick",
+    "word": "nitpick",
+    "definition": "To point out very minor issues in code or design, often during review — sometimes labeled as such.",
+    "file": "professional.json"
+  },
+  {
+    "id": "north-star",
+    "word": "north star",
+    "definition": "A guiding metric or vision that defines long-term success for a product or team.",
+    "file": "professional.json"
+  },
+  {
+    "id": "open-loop",
+    "word": "open loop",
+    "definition": "An unresolved question or task that was raised but never followed up on or closed.",
+    "file": "professional.json"
+  },
+  {
+    "id": "opinionated",
+    "word": "opinionated",
+    "definition": "A tool or system that enforces specific conventions and limits how much users can customize.",
+    "file": "professional.json"
+  },
+  {
+    "id": "overhead",
+    "word": "overhead",
+    "definition": "Extra work, time, or cost required beyond the core task — often from process or tooling.",
+    "file": "professional.json"
+  },
+  {
+    "id": "own",
+    "word": "own",
+    "definition": "To take full responsibility for a task, decision, or outcome within a team context.",
+    "file": "professional.json"
+  },
+  {
+    "id": "pain-point-pro",
+    "word": "pain point",
+    "definition": "A recurring problem experienced by a user, customer, or team that drives the need for a solution.",
+    "file": "professional.json"
+  },
+  {
+    "id": "paper-trail",
+    "word": "paper trail",
+    "definition": "A documented record of decisions, communications, or changes kept for reference or accountability.",
+    "file": "professional.json"
+  },
+  {
+    "id": "parking-lot",
+    "word": "parking lot",
+    "definition": "A list of topics raised in a meeting that are deferred to be discussed later.",
+    "file": "professional.json"
+  },
+  {
+    "id": "pivot",
+    "word": "pivot",
+    "definition": "To make a significant strategic change in direction in response to new information or constraints.",
+    "file": "professional.json"
+  },
+  {
+    "id": "postmortem",
+    "word": "postmortem",
+    "definition": "A retrospective analysis of a project, incident, or failure to extract learnings without blame.",
+    "file": "professional.json"
+  },
+  {
+    "id": "pre-mortem",
+    "word": "pre-mortem",
+    "definition": "A planning exercise imagining a project has failed to identify risks before they occur.",
+    "file": "professional.json"
+  },
+  {
+    "id": "pushback",
+    "word": "pushback",
+    "definition": "Resistance or disagreement expressed in response to a proposal or decision.",
+    "file": "professional.json"
+  },
+  {
+    "id": "rabbit-hole",
+    "word": "rabbit hole",
+    "definition": "A tangent or deeply nested problem that consumes time without advancing the main goal.",
+    "file": "professional.json"
+  },
+  {
+    "id": "ramp-up",
+    "word": "ramp-up",
+    "definition": "The period during which a new team member or system gradually reaches full productivity.",
+    "file": "professional.json"
+  },
+  {
+    "id": "rationale",
+    "word": "rationale",
+    "definition": "The reasoning or justification behind a design decision, technical choice, or strategy.",
+    "file": "professional.json"
+  },
+  {
+    "id": "refine",
+    "word": "refine",
+    "definition": "To improve something incrementally by removing rough edges or adjusting based on feedback.",
+    "file": "professional.json"
+  },
+  {
+    "id": "retrospective",
+    "word": "retrospective",
+    "definition": "A recurring team meeting reflecting on what went well, what didn't, and what to improve next.",
+    "file": "professional.json"
+  },
+  {
+    "id": "roadblock",
+    "word": "roadblock",
+    "definition": "A significant obstacle preventing a team from moving forward on a project or goal.",
+    "file": "professional.json"
+  },
+  {
+    "id": "rollout",
+    "word": "rollout",
+    "definition": "The staged or full release of a feature or system to users or internal teams.",
+    "file": "professional.json"
+  },
+  {
+    "id": "rubber-duck",
+    "word": "rubber duck debugging",
+    "definition": "Explaining a problem aloud to an object or person to clarify your own thinking and find the solution.",
+    "file": "professional.json"
+  },
+  {
+    "id": "sanity-check",
+    "word": "sanity check",
+    "definition": "A quick informal verification that something makes sense before committing further resources.",
+    "file": "professional.json"
+  },
+  {
+    "id": "scope-creep",
+    "word": "scope creep",
+    "definition": "The gradual, uncontrolled expansion of a project's requirements beyond its original boundaries.",
+    "file": "professional.json"
+  },
+  {
+    "id": "sign-off",
+    "word": "sign-off",
+    "definition": "Formal approval from a stakeholder or decision-maker to proceed with a design or plan.",
+    "file": "professional.json"
+  },
+  {
+    "id": "spike",
+    "word": "spike",
+    "definition": "A time-boxed research task undertaken to reduce uncertainty before committing to a solution.",
+    "file": "professional.json"
+  },
+  {
+    "id": "surface-verb",
+    "word": "surface",
+    "definition": "To bring a hidden issue, insight, or risk into visibility so the team can address it.",
+    "file": "professional.json"
+  },
+  {
+    "id": "tactful",
+    "word": "tactful",
+    "definition": "Communicating difficult feedback or disagreement with sensitivity and awareness of others' feelings.",
+    "file": "professional.json"
+  },
+  {
+    "id": "technical-debt",
+    "word": "technical debt",
+    "definition": "Accumulated shortcuts or suboptimal code decisions that will require future rework.",
+    "file": "professional.json"
+  },
+  {
+    "id": "time-box",
+    "word": "time-box",
+    "definition": "To set a fixed maximum duration for a task or discussion to prevent it from overrunning.",
+    "file": "professional.json"
+  },
+  {
+    "id": "traction",
+    "word": "traction",
+    "definition": "Early evidence that a product, feature, or initiative is gaining real user adoption or momentum.",
+    "file": "professional.json"
+  },
+  {
+    "id": "trade-off",
+    "word": "trade-off",
+    "definition": "A situation where gaining one benefit requires accepting a cost or limitation elsewhere.",
+    "file": "professional.json"
+  },
+  {
+    "id": "triage",
+    "word": "triage",
+    "definition": "To prioritize a list of bugs, tasks, or requests by urgency and impact to decide what to tackle first.",
+    "file": "professional.json"
+  },
+  {
+    "id": "turnover",
+    "word": "turnover",
+    "definition": "The rate at which team members leave and are replaced, affecting knowledge continuity.",
+    "file": "professional.json"
+  },
+  {
+    "id": "unblock",
+    "word": "unblock",
+    "definition": "To resolve whatever is preventing a teammate or task from moving forward.",
+    "file": "professional.json"
+  },
+  {
+    "id": "verbosity",
+    "word": "verbosity",
+    "definition": "Using more words than necessary — a quality to avoid in both writing and code.",
+    "file": "professional.json"
+  },
+  {
+    "id": "visibility",
+    "word": "visibility",
+    "definition": "How transparent or accessible the status of a project, decision, or metric is to the team.",
+    "file": "professional.json"
+  },
+  {
+    "id": "workaround",
+    "word": "workaround",
+    "definition": "A temporary solution that bypasses a problem without permanently fixing the root cause.",
+    "file": "professional.json"
+  },
+  {
+    "id": "yak-shaving",
+    "word": "yak shaving",
+    "definition": "Doing a chain of seemingly necessary but tangential tasks before reaching the original goal.",
+    "file": "professional.json"
+  },
+  {
+    "id": "active-voice",
+    "word": "active voice",
+    "definition": "A sentence structure where the subject performs the action, making writing clearer and more direct.",
+    "file": "technical-writing.json"
+  },
+  {
+    "id": "admonition",
+    "word": "admonition",
+    "definition": "A callout block — note, warning, tip — that draws attention to important supplementary information.",
+    "file": "technical-writing.json"
+  },
+  {
+    "id": "anchoring",
+    "word": "anchoring",
+    "definition": "Linking to a specific section within a document using a URL fragment identifier.",
+    "file": "technical-writing.json"
+  },
+  {
+    "id": "api-reference",
+    "word": "API reference",
+    "definition": "Documentation describing every endpoint, parameter, and response of an API exhaustively.",
+    "file": "technical-writing.json"
+  },
+  {
+    "id": "audience-awareness",
+    "word": "audience awareness",
+    "definition": "Tailoring technical content to the specific knowledge level and goals of its intended readers.",
+    "file": "technical-writing.json"
+  },
+  {
+    "id": "callout",
+    "word": "callout",
+    "definition": "A visually distinct block highlighting critical information separate from the main body text.",
+    "file": "technical-writing.json"
+  },
+  {
+    "id": "changelog-entry",
+    "word": "changelog entry",
+    "definition": "A single versioned record describing what changed, was fixed, or was added in a release.",
+    "file": "technical-writing.json"
+  },
+  {
+    "id": "code-comment",
+    "word": "code comment",
+    "definition": "Inline text within source code explaining why something is done, not just what it does.",
+    "file": "technical-writing.json"
+  },
+  {
+    "id": "code-fence",
+    "word": "code fence",
+    "definition": "Triple backticks in Markdown that wrap a code block and optionally declare its language.",
+    "file": "technical-writing.json"
+  },
+  {
+    "id": "colloquialism",
+    "word": "colloquialism",
+    "definition": "Informal or conversational language that may be unclear or culturally specific to some readers.",
+    "file": "technical-writing.json"
+  },
+  {
+    "id": "conciseness",
+    "word": "conciseness",
+    "definition": "Expressing information using the fewest words necessary without losing meaning or accuracy.",
+    "file": "technical-writing.json"
+  },
+  {
+    "id": "content-type",
+    "word": "content type",
+    "definition": "A defined category of documentation — tutorial, how-to, reference, explanation — each with a distinct purpose.",
+    "file": "technical-writing.json"
+  },
+  {
+    "id": "cross-reference",
+    "word": "cross-reference",
+    "definition": "A link or pointer directing readers to related content in another section or document.",
+    "file": "technical-writing.json"
+  },
+  {
+    "id": "deprecation-notice",
+    "word": "deprecation notice",
+    "definition": "A documented warning that a feature or API will be removed in a future version.",
+    "file": "technical-writing.json"
+  },
+  {
+    "id": "diataxis",
+    "word": "Diátaxis",
+    "definition": "A documentation framework organizing content into tutorials, how-tos, references, and explanations.",
+    "file": "technical-writing.json"
+  },
+  {
+    "id": "disambiguation",
+    "word": "disambiguation",
+    "definition": "Clarifying which of multiple possible meanings or uses of a term is intended in a given context.",
+    "file": "technical-writing.json"
+  },
+  {
+    "id": "docstring",
+    "word": "docstring",
+    "definition": "A structured comment inside a function or class that describes its purpose, parameters, and return value.",
+    "file": "technical-writing.json"
+  },
+  {
+    "id": "docs-as-code",
+    "word": "docs-as-code",
+    "definition": "Treating documentation like source code — versioned in Git, reviewed via PRs, and built automatically.",
+    "file": "technical-writing.json"
+  },
+  {
+    "id": "edge-case-doc",
+    "word": "edge case documentation",
+    "definition": "Explicit documentation of unusual or boundary scenarios a system handles or intentionally excludes.",
+    "file": "technical-writing.json"
+  },
+  {
+    "id": "evergreen",
+    "word": "evergreen",
+    "definition": "Documentation written to remain accurate over time without frequent updates tied to a specific version.",
+    "file": "technical-writing.json"
+  },
+  {
+    "id": "explainer",
+    "word": "explainer",
+    "definition": "A piece of documentation focused on building conceptual understanding rather than guiding a task.",
+    "file": "technical-writing.json"
+  },
+  {
+    "id": "frontmatter",
+    "word": "front matter",
+    "definition": "Metadata at the top of a Markdown file — title, date, tags — parsed by static site generators.",
+    "file": "technical-writing.json"
+  },
+  {
+    "id": "glossary",
+    "word": "glossary",
+    "definition": "An alphabetical list of domain-specific terms with their definitions within a documentation site.",
+    "file": "technical-writing.json"
+  },
+  {
+    "id": "how-to-guide",
+    "word": "how-to guide",
+    "definition": "A goal-oriented document walking a competent user through steps to complete a specific task.",
+    "file": "technical-writing.json"
+  },
+  {
+    "id": "imperative-mood",
+    "word": "imperative mood",
+    "definition": "A writing style using command verbs — click, open, run — standard in step-by-step instructions.",
+    "file": "technical-writing.json"
+  },
+  {
+    "id": "information-scent",
+    "word": "information scent",
+    "definition": "The cues — links, headings, labels — that help readers predict whether following a path will pay off.",
+    "file": "technical-writing.json"
+  },
+  {
+    "id": "inline-code",
+    "word": "inline code",
+    "definition": "Monospace-formatted text within a sentence used to reference code values, filenames, or commands.",
+    "file": "technical-writing.json"
+  },
+  {
+    "id": "jsdoc",
+    "word": "JSDoc",
+    "definition": "A JavaScript documentation standard using tagged comments to describe functions and types.",
+    "file": "technical-writing.json"
+  },
+  {
+    "id": "knowledge-base",
+    "word": "knowledge base",
+    "definition": "A searchable collection of articles and guides helping users solve problems independently.",
+    "file": "technical-writing.json"
+  },
+  {
+    "id": "localization",
+    "word": "localization",
+    "definition": "Adapting content for a specific locale — language, date formats, cultural references — beyond translation.",
+    "file": "technical-writing.json"
+  },
+  {
+    "id": "lede",
+    "word": "lede",
+    "definition": "The opening sentence that summarizes the most critical information, front-loading the key point.",
+    "file": "technical-writing.json"
+  },
+  {
+    "id": "markdown",
+    "word": "Markdown",
+    "definition": "A lightweight markup language using plain-text syntax to produce formatted HTML documents.",
+    "file": "technical-writing.json"
+  },
+  {
+    "id": "mdx",
+    "word": "MDX",
+    "definition": "An extension of Markdown that allows embedding React components directly inside documentation files.",
+    "file": "technical-writing.json"
+  },
+  {
+    "id": "microcopy",
+    "word": "microcopy",
+    "definition": "Short UI text — labels, error messages, tooltips, placeholders — that guides users through an interface.",
+    "file": "technical-writing.json"
+  },
+  {
+    "id": "navigational-label",
+    "word": "navigational label",
+    "definition": "The visible text of a link or menu item that sets reader expectations about the destination.",
+    "file": "technical-writing.json"
+  },
+  {
+    "id": "noun-pile",
+    "word": "noun pile",
+    "definition": "A string of multiple nouns used as modifiers that creates ambiguous, hard-to-parse phrases.",
+    "file": "technical-writing.json"
+  },
+  {
+    "id": "onboarding-doc",
+    "word": "onboarding documentation",
+    "definition": "Guides designed to help new users or developers reach their first success as quickly as possible.",
+    "file": "technical-writing.json"
+  },
+  {
+    "id": "openapi",
+    "word": "OpenAPI",
+    "definition": "A specification format for describing REST APIs in a machine-readable YAML or JSON file.",
+    "file": "technical-writing.json"
+  },
+  {
+    "id": "passive-voice",
+    "word": "passive voice",
+    "definition": "A sentence structure where the subject receives the action — often vaguer and harder to follow.",
+    "file": "technical-writing.json"
+  },
+  {
+    "id": "plain-language",
+    "word": "plain language",
+    "definition": "Writing that communicates clearly to its intended audience without unnecessary complexity.",
+    "file": "technical-writing.json"
+  },
+  {
+    "id": "prerequisite",
+    "word": "prerequisite",
+    "definition": "A condition or setup step that must be completed before following a guide or tutorial.",
+    "file": "technical-writing.json"
+  },
+  {
+    "id": "progressive-disclosure-doc",
+    "word": "progressive disclosure",
+    "definition": "Structuring documentation to reveal complexity gradually as the reader advances.",
+    "file": "technical-writing.json"
+  },
+  {
+    "id": "prose",
+    "word": "prose",
+    "definition": "Ordinary written language as opposed to structured formats like bullet lists or tables.",
+    "file": "technical-writing.json"
+  },
+  {
+    "id": "readme",
+    "word": "README",
+    "definition": "The entry-point document of a repository describing its purpose, setup, and usage.",
+    "file": "technical-writing.json"
+  },
+  {
+    "id": "release-notes",
+    "word": "release notes",
+    "definition": "User-facing documentation summarizing what changed, improved, or was fixed in a product release.",
+    "file": "technical-writing.json"
+  },
+  {
+    "id": "runbook",
+    "word": "runbook",
+    "definition": "A step-by-step operational guide for handling a specific incident or routine system procedure.",
+    "file": "technical-writing.json"
+  },
+  {
+    "id": "scannability-doc",
+    "word": "scannability",
+    "definition": "The ease with which a reader can skim a document and extract the most relevant information.",
+    "file": "technical-writing.json"
+  },
+  {
+    "id": "single-sourcing",
+    "word": "single sourcing",
+    "definition": "Writing content once and reusing it across multiple documents or output formats.",
+    "file": "technical-writing.json"
+  },
+  {
+    "id": "snippet",
+    "word": "snippet",
+    "definition": "A short, self-contained code example illustrating a specific concept or API usage.",
+    "file": "technical-writing.json"
+  },
+  {
+    "id": "spec-doc",
+    "word": "spec",
+    "definition": "A written document detailing the requirements, behavior, and constraints of a feature or system.",
+    "file": "technical-writing.json"
+  },
+  {
+    "id": "style-guide-writing",
+    "word": "style guide",
+    "definition": "A document defining writing conventions — voice, tone, terminology — for consistent communication.",
+    "file": "technical-writing.json"
+  },
+  {
+    "id": "table-of-contents",
+    "word": "table of contents",
+    "definition": "A navigational list of headings linking to sections within a long document.",
+    "file": "technical-writing.json"
+  },
+  {
+    "id": "technical-accuracy",
+    "word": "technical accuracy",
+    "definition": "The degree to which documentation correctly reflects the actual behavior of a system.",
+    "file": "technical-writing.json"
+  },
+  {
+    "id": "terminology",
+    "word": "terminology",
+    "definition": "The specific set of terms defined and used consistently across a product and its documentation.",
+    "file": "technical-writing.json"
+  },
+  {
+    "id": "toc",
+    "word": "TOC",
+    "definition": "Abbreviation for table of contents — often auto-generated from document headings in doc tools.",
+    "file": "technical-writing.json"
+  },
+  {
+    "id": "tone-of-voice",
+    "word": "tone of voice",
+    "definition": "The personality and attitude expressed through writing — formal, friendly, direct, empathetic.",
+    "file": "technical-writing.json"
+  },
+  {
+    "id": "tutorial",
+    "word": "tutorial",
+    "definition": "A learning-oriented document guiding a beginner through a complete working example step by step.",
+    "file": "technical-writing.json"
+  },
+  {
+    "id": "ux-writing",
+    "word": "UX writing",
+    "definition": "The practice of crafting all interface text — labels, errors, onboarding — to guide user behavior.",
+    "file": "technical-writing.json"
+  },
+  {
+    "id": "versioned-docs",
+    "word": "versioned documentation",
+    "definition": "Maintaining separate documentation sets for each major release of a product or API.",
+    "file": "technical-writing.json"
+  },
+  {
+    "id": "voice",
+    "word": "voice",
+    "definition": "The consistent personality and character expressed across all written content for a product or brand.",
+    "file": "technical-writing.json"
+  },
+  {
+    "id": "walkthrough",
+    "word": "walkthrough",
+    "definition": "A guided explanation of a process or codebase, often used in reviews or onboarding sessions.",
+    "file": "technical-writing.json"
+  },
+  {
+    "id": "weasel-word",
+    "word": "weasel word",
+    "definition": "A vague qualifier — easily, simply, just — that implies something is straightforward when it may not be.",
+    "file": "technical-writing.json"
+  },
+  {
+    "id": "word-count",
+    "word": "word economy",
+    "definition": "The deliberate discipline of achieving maximum clarity with the minimum number of words.",
+    "file": "technical-writing.json"
+  },
+  {
+    "id": "affordance",
+    "word": "affordance",
+    "definition": "A property of an object that signals how it can be interacted with.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "anatomy",
+    "word": "anatomy",
+    "definition": "The structural breakdown of a UI component into its named constituent parts.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "annotation",
+    "word": "annotation",
+    "definition": "Notes added to design files to explain decisions or specs for developer handoff.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "accessibility",
+    "word": "accessibility",
+    "definition": "Design practice ensuring products are usable by people with a range of disabilities.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "affordance-map",
+    "word": "affordance map",
+    "definition": "A visual audit listing all interactive elements and their intended perceived actions.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "card-sorting",
+    "word": "card sorting",
+    "definition": "A research method where users group topics into categories that feel logical to them.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "chunking",
+    "word": "chunking",
+    "definition": "Grouping related content together so users can process information more efficiently.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "cognitive-load",
+    "word": "cognitive load",
+    "definition": "The total mental effort required to process and interact with a user interface.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "contrast-ratio",
+    "word": "contrast ratio",
+    "definition": "The measured difference in luminance between two colors, used to evaluate accessibility.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "content-hierarchy",
+    "word": "content hierarchy",
+    "definition": "The order in which information is presented to guide user attention and comprehension.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "desirability-testing",
+    "word": "desirability testing",
+    "definition": "A research method measuring emotional and aesthetic reactions to a design.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "design-debt",
+    "word": "design debt",
+    "definition": "Accumulated inconsistencies or shortcuts in a design that need future correction.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "design-handoff",
+    "word": "design handoff",
+    "definition": "The process of transferring finalized designs and specs from designer to developer.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "design-critique",
+    "word": "design critique",
+    "definition": "A structured session where designers give and receive specific, constructive feedback.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "discoverability",
+    "word": "discoverability",
+    "definition": "The ease with which users can find features or content they did not know existed.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "edge-case",
+    "word": "edge case",
+    "definition": "An unusual or extreme scenario that falls outside typical user behavior patterns.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "empty-state",
+    "word": "empty state",
+    "definition": "The UI state shown when there is no content to display, often used to guide users.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "error-state",
+    "word": "error state",
+    "definition": "A UI condition that communicates something went wrong and guides the user to recover.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "fidelity",
+    "word": "fidelity",
+    "definition": "The level of detail and realism of a prototype, ranging from low to high.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "fitts-law",
+    "word": "Fitts's law",
+    "definition": "A model predicting that target acquisition time depends on the target's size and distance.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "flow",
+    "word": "flow",
+    "definition": "The sequence of steps a user takes to complete a task within a product.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "gestalt",
+    "word": "gestalt",
+    "definition": "Perceptual principles describing how the brain organizes visual elements into unified wholes.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "ghost-button",
+    "word": "ghost button",
+    "definition": "A button with a transparent fill and only an outline border, typically a secondary action.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "golden-ratio",
+    "word": "golden ratio",
+    "definition": "A mathematical proportion (~1.618) applied in design to achieve visually balanced layouts.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "grid-system",
+    "word": "grid system",
+    "definition": "A structure of columns, rows, and gutters used to align and organize interface elements.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "guerrilla-testing",
+    "word": "guerrilla testing",
+    "definition": "Informal usability testing conducted quickly in public spaces with random participants.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "heuristic",
+    "word": "heuristic",
+    "definition": "A practical usability principle used to evaluate and identify interface problems.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "heuristic-evaluation",
+    "word": "heuristic evaluation",
+    "definition": "An expert review of a UI measured against established usability principles.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "hierarchy",
+    "word": "hierarchy",
+    "definition": "Visual structure that signals the relative importance of elements to guide user attention.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "hotspot",
+    "word": "hotspot",
+    "definition": "A defined clickable area in a prototype that triggers navigation or an interaction.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "information-architecture",
+    "word": "information architecture",
+    "definition": "The structural design of shared information environments to support usability and findability.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "interaction-design",
+    "word": "interaction design",
+    "definition": "The practice of designing how users interact with digital products over time.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "iterative-design",
+    "word": "iterative design",
+    "definition": "A cyclic design process of prototyping, testing, and refining based on user feedback.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "jobs-to-be-done",
+    "word": "jobs to be done",
+    "definition": "A framework focusing on the underlying goal a user is trying to accomplish with a product.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "journey-map",
+    "word": "journey map",
+    "definition": "A visualization of the end-to-end experience a user has with a product over time.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "learnability",
+    "word": "learnability",
+    "definition": "How quickly a new user can become proficient at using an interface.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "mental-model",
+    "word": "mental model",
+    "definition": "A user's internal representation of how a system works based on prior experience.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "microinteraction",
+    "word": "microinteraction",
+    "definition": "A small, contained product moment that accomplishes a single task with user feedback.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "modal",
+    "word": "modal",
+    "definition": "A dialog overlay that requires user interaction before returning to the main interface.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "mvp",
+    "word": "MVP",
+    "definition": "Minimum Viable Product — a version with just enough features to test a core hypothesis.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "navigation-pattern",
+    "word": "navigation pattern",
+    "definition": "A reusable structural approach for helping users move through an interface.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "onboarding",
+    "word": "onboarding",
+    "definition": "The process of guiding new users to understand and adopt a product's core value.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "pain-point",
+    "word": "pain point",
+    "definition": "A specific problem or frustration a user experiences when interacting with a product.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "participatory-design",
+    "word": "participatory design",
+    "definition": "A design approach that actively involves users as co-creators in the design process.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "persona",
+    "word": "persona",
+    "definition": "A fictional but research-based character representing a key user segment of a product.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "progressive-disclosure",
+    "word": "progressive disclosure",
+    "definition": "Revealing information gradually to reduce complexity and avoid overwhelming the user.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "prototype",
+    "word": "prototype",
+    "definition": "A simulation of a product used to test ideas before committing to development.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "proximity",
+    "word": "proximity",
+    "definition": "A gestalt principle stating that elements placed close together are perceived as related.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "red-route",
+    "word": "red route",
+    "definition": "The critical tasks users perform most frequently that must work flawlessly in a product.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "responsive-design",
+    "word": "responsive design",
+    "definition": "A design approach where layouts adapt fluidly to different screen sizes and devices.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "scaffold",
+    "word": "scaffold",
+    "definition": "Temporary UI support structures that guide users until they no longer need assistance.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "scannability",
+    "word": "scannability",
+    "definition": "The ease with which users can quickly read and extract key information from a page.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "serviceability",
+    "word": "serviceability",
+    "definition": "How easily a product can be maintained, updated, or corrected after deployment.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "signifier",
+    "word": "signifier",
+    "definition": "A visual or auditory cue that communicates how an object or element should be used.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "skeleton-screen",
+    "word": "skeleton screen",
+    "definition": "A placeholder UI that mimics the layout of content while data is loading.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "skeuomorphism",
+    "word": "skeuomorphism",
+    "definition": "A design style where digital elements mimic the appearance of real-world counterparts.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "sticky-element",
+    "word": "sticky element",
+    "definition": "A UI element that remains fixed in the viewport as the user scrolls the page.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "task-flow",
+    "word": "task flow",
+    "definition": "A linear sequence of steps a user follows to complete one specific task.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "think-aloud",
+    "word": "think-aloud protocol",
+    "definition": "A usability method where participants verbalize their thoughts while using a product.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "toast",
+    "word": "toast",
+    "definition": "A brief, non-blocking notification that appears temporarily to confirm an action.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "tooltip",
+    "word": "tooltip",
+    "definition": "A small label that appears on hover to provide additional context for an element.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "tree-testing",
+    "word": "tree testing",
+    "definition": "A research method evaluating how easily users find items within a navigation structure.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "usability-testing",
+    "word": "usability testing",
+    "definition": "Observing real users attempting tasks to identify friction points in a product.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "user-flow",
+    "word": "user flow",
+    "definition": "A diagram showing all possible paths a user can take through a product.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "user-story",
+    "word": "user story",
+    "definition": "A short description of a feature from the user's perspective: As a… I want… So that…",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "utility",
+    "word": "utility",
+    "definition": "The degree to which a product provides features that fulfill real user needs.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "validation",
+    "word": "validation",
+    "definition": "Real-time feedback confirming that a user's input meets the required format or criteria.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "visual-weight",
+    "word": "visual weight",
+    "definition": "The perceived heaviness of a design element based on size, color, contrast, and position.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "wayfinding",
+    "word": "wayfinding",
+    "definition": "Design strategies that help users understand where they are and how to navigate a system.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "wcag",
+    "word": "WCAG",
+    "definition": "Web Content Accessibility Guidelines — international standards for accessible digital content.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "whitespace",
+    "word": "whitespace",
+    "definition": "Empty space in a layout used intentionally to improve readability and visual balance.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "wireframe",
+    "word": "wireframe",
+    "definition": "A low-fidelity schematic showing the structure and layout of a screen without visual design.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "wizard",
+    "word": "wizard",
+    "definition": "A multi-step UI pattern that breaks a complex task into sequential, manageable steps.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "zero-state",
+    "word": "zero state",
+    "definition": "The first-time experience when a user has no data yet — often an onboarding opportunity.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "z-pattern",
+    "word": "Z-pattern",
+    "definition": "A reading pattern where eyes scan across the top, diagonally down, then across the bottom.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "f-pattern",
+    "word": "F-pattern",
+    "definition": "A common reading pattern where users scan horizontally at top, then skim down the left side.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "above-the-fold",
+    "word": "above the fold",
+    "definition": "The portion of a webpage visible without scrolling, considered prime real estate.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "breadcrumb",
+    "word": "breadcrumb",
+    "definition": "A secondary navigation trail showing the user's current location within a site hierarchy.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "call-to-action",
+    "word": "call to action",
+    "definition": "A UI element that prompts users to take a specific desired action, often a button.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "dark-pattern",
+    "word": "dark pattern",
+    "definition": "A deceptive UI design that tricks users into actions they did not intend to take.",
+    "file": "ux-design.json"
+  },
+  {
+    "id": "feedback-loop",
+    "word": "feedback loop",
+    "definition": "A cycle where system responses to user actions inform and shape subsequent behavior.",
+    "file": "ux-design.json"
+  }
+]

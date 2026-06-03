@@ -10,7 +10,8 @@
       "communication",
       "meetings"
     ],
-    "ipa": "/ækʃʌnʌbʌl/"
+    "ipa": "/ækʃʌnʌbʌl/",
+    "exampleSentence": "Please give actionable feedback, not just that something doesn't feel right."
   },
   {
     "id": "alignment",
@@ -23,7 +24,8 @@
       "meetings",
       "fundamentals"
     ],
-    "ipa": "/ʌlaɪnmʌnt/"
+    "ipa": "/ʌlaɪnmʌnt/",
+    "exampleSentence": "We need alignment on the deadline before the sprint planning meeting."
   },
   {
     "id": "ambiguity",
@@ -36,7 +38,8 @@
       "communication",
       "fundamentals"
     ],
-    "ipa": "/æmbɪɡjuːʌtiː/"
+    "ipa": "/æmbɪɡjuːʌtiː/",
+    "exampleSentence": "The spec was full of ambiguity, so I set up a call to clarify before building."
   },
   {
     "id": "async-communication",
@@ -48,7 +51,8 @@
       "remote",
       "collaboration",
       "communication"
-    ]
+    ],
+    "exampleSentence": "Async communication works well for our team across four time zones."
   },
   {
     "id": "bandwidth",
@@ -61,7 +65,8 @@
       "communication",
       "meetings"
     ],
-    "ipa": "/bændwɪdθ/"
+    "ipa": "/bændwɪdθ/",
+    "exampleSentence": "I don't have the bandwidth for a new project until next month."
   },
   {
     "id": "bike-shedding",
@@ -73,7 +78,8 @@
       "meetings",
       "anti-patterns",
       "process"
-    ]
+    ],
+    "exampleSentence": "We spent twenty minutes bike-shedding over the button label before someone called it."
   },
   {
     "id": "blocker",
@@ -86,7 +92,8 @@
       "agile",
       "communication"
     ],
-    "ipa": "/blɑkɜr/"
+    "ipa": "/blɑkɜr/",
+    "exampleSentence": "The missing API key is a blocker — I can't test the integration without it."
   },
   {
     "id": "boilerplate",
@@ -99,7 +106,8 @@
       "writing",
       "dev"
     ],
-    "ipa": "/bɔɪlɜrpleɪt/"
+    "ipa": "/bɔɪlɜrpleɪt/",
+    "exampleSentence": "The project generator creates the boilerplate so you can focus on real logic."
   },
   {
     "id": "bottleneck",
@@ -112,7 +120,8 @@
       "performance",
       "strategy"
     ],
-    "ipa": "/bɑtʌlnɛk/"
+    "ipa": "/bɑtʌlnɛk/",
+    "exampleSentence": "The design review process was the main bottleneck for every feature release."
   },
   {
     "id": "buy-in",
@@ -124,7 +133,8 @@
       "strategy",
       "stakeholders",
       "leadership"
-    ]
+    ],
+    "exampleSentence": "We need buy-in from the engineering lead before committing to this approach."
   },
   {
     "id": "cadence",
@@ -137,7 +147,8 @@
       "agile",
       "meetings"
     ],
-    "ipa": "/keɪdʌns/"
+    "ipa": "/keɪdʌns/",
+    "exampleSentence": "We set a weekly cadence for design reviews to keep the team in sync."
   },
   {
     "id": "capacity",
@@ -150,7 +161,8 @@
       "workload",
       "agile"
     ],
-    "ipa": "/kʌpæsʌtiː/"
+    "ipa": "/kʌpæsʌtiː/",
+    "exampleSentence": "The team doesn't have capacity to take on more work this sprint."
   },
   {
     "id": "caveat",
@@ -163,7 +175,8 @@
       "writing",
       "nuance"
     ],
-    "ipa": "/keɪviːæt/"
+    "ipa": "/keɪviːæt/",
+    "exampleSentence": "The data looks good, but one caveat is that we only have two weeks of samples."
   },
   {
     "id": "changelog",
@@ -175,7 +188,8 @@
       "documentation",
       "process",
       "versioning"
-    ]
+    ],
+    "exampleSentence": "Check the changelog before upgrading to see if any breaking changes were made."
   },
   {
     "id": "clarity",
@@ -188,7 +202,8 @@
       "writing",
       "fundamentals"
     ],
-    "ipa": "/klɛɹʌtiː/"
+    "ipa": "/klɛɹʌtiː/",
+    "exampleSentence": "The ticket lacked clarity, so the engineer built the wrong thing entirely."
   },
   {
     "id": "confluence",
@@ -201,7 +216,8 @@
       "documentation",
       "tooling"
     ],
-    "ipa": "/kɑnfluːʌns/"
+    "ipa": "/kɑnfluːʌns/",
+    "exampleSentence": "The decision was documented in Confluence so everyone could find it later."
   },
   {
     "id": "consensus",
@@ -214,7 +230,8 @@
       "collaboration",
       "decisions"
     ],
-    "ipa": "/kʌnsɛnsʌs/"
+    "ipa": "/kʌnsɛnsʌs/",
+    "exampleSentence": "We reached consensus on the approach after a thirty-minute discussion."
   },
   {
     "id": "context-switching",
@@ -227,7 +244,8 @@
       "focus",
       "workload"
     ],
-    "ipa": "/kɑntɛkst swɪtʃɪŋ/"
+    "ipa": "/kɑntɛkst swɪtʃɪŋ/",
+    "exampleSentence": "Too much context switching was making it hard to finish anything deeply."
   },
   {
     "id": "cross-functional",
@@ -239,7 +257,8 @@
       "collaboration",
       "teams",
       "fundamentals"
-    ]
+    ],
+    "exampleSentence": "The feature required a cross-functional team of design, product, and engineering."
   },
   {
     "id": "deliverable",
@@ -252,7 +271,8 @@
       "project-management",
       "fundamentals"
     ],
-    "ipa": "/dɪlɪvɜrʌbʌl/"
+    "ipa": "/dɪlɪvɜrʌbʌl/",
+    "exampleSentence": "The main deliverable for this sprint is a clickable prototype for user testing."
   },
   {
     "id": "delta",
@@ -265,7 +285,8 @@
       "communication",
       "technical"
     ],
-    "ipa": "/dɛltʌ/"
+    "ipa": "/dɛltʌ/",
+    "exampleSentence": "The delta between last month and this month's retention is seven percent."
   },
   {
     "id": "dependency",
@@ -278,7 +299,8 @@
       "planning",
       "fundamentals"
     ],
-    "ipa": "/dɪpɛndʌnsiː/"
+    "ipa": "/dɪpɛndʌnsiː/",
+    "exampleSentence": "This task has a dependency on the authentication work being done first."
   },
   {
     "id": "discovery",
@@ -291,7 +313,8 @@
       "process",
       "research"
     ],
-    "ipa": "/dɪskʌvɜriː/"
+    "ipa": "/dɪskʌvɜriː/",
+    "exampleSentence": "We ran a two-week discovery phase before writing a single line of code."
   },
   {
     "id": "dog-fooding",
@@ -303,7 +326,8 @@
       "process",
       "testing",
       "culture"
-    ]
+    ],
+    "exampleSentence": "Dog-fooding the product internally helped us find ten bugs before launch."
   },
   {
     "id": "escalate",
@@ -316,7 +340,8 @@
       "process",
       "leadership"
     ],
-    "ipa": "/ɛskʌleɪt/"
+    "ipa": "/ɛskʌleɪt/",
+    "exampleSentence": "If the vendor doesn't respond by tomorrow, we need to escalate the issue."
   },
   {
     "id": "exec",
@@ -329,7 +354,8 @@
       "communication",
       "organization"
     ],
-    "ipa": "/ɛɡzɛk/"
+    "ipa": "/ɛɡzɛk/",
+    "exampleSentence": "The exec team wants a summary, not a deep technical breakdown."
   },
   {
     "id": "footprint",
@@ -342,7 +368,8 @@
       "strategy",
       "technical"
     ],
-    "ipa": "/fʊtpɹɪnt/"
+    "ipa": "/fʊtpɹɪnt/",
+    "exampleSentence": "We reduced the technical footprint of the service by merging three repositories."
   },
   {
     "id": "friction",
@@ -355,7 +382,8 @@
       "process",
       "fundamentals"
     ],
-    "ipa": "/fɹɪkʃʌn/"
+    "ipa": "/fɹɪkʃʌn/",
+    "exampleSentence": "There's too much friction in the deploy process — it takes four manual steps."
   },
   {
     "id": "gap-analysis",
@@ -368,7 +396,8 @@
       "planning",
       "audit"
     ],
-    "ipa": "/ɡæp ʌnælʌsʌs/"
+    "ipa": "/ɡæp ʌnælʌsʌs/",
+    "exampleSentence": "A quick gap analysis showed the new design was missing three key user scenarios."
   },
   {
     "id": "garnered",
@@ -381,7 +410,8 @@
       "communication",
       "formal"
     ],
-    "ipa": "/ɡɑɹnɜr/"
+    "ipa": "/ɡɑɹnɜr/",
+    "exampleSentence": "The proposal garnered positive feedback from every team it was shared with."
   },
   {
     "id": "glanceable",
@@ -393,7 +423,8 @@
       "ux",
       "design",
       "communication"
-    ]
+    ],
+    "exampleSentence": "The dashboard needs to be glanceable so managers can check it in thirty seconds."
   },
   {
     "id": "granular",
@@ -406,7 +437,8 @@
       "technical",
       "nuance"
     ],
-    "ipa": "/ɡɹænjʌlɜr/"
+    "ipa": "/ɡɹænjʌlɜr/",
+    "exampleSentence": "We need more granular permissions so editors can't accidentally publish drafts."
   },
   {
     "id": "guardrail",
@@ -419,7 +451,8 @@
       "process",
       "strategy"
     ],
-    "ipa": "/ɡɑɹdɹeɪl/"
+    "ipa": "/ɡɑɹdɹeɪl/",
+    "exampleSentence": "We added guardrails in the CI pipeline to block direct commits to main."
   },
   {
     "id": "hardcoded",
@@ -431,7 +464,8 @@
       "dev",
       "design-systems",
       "anti-patterns"
-    ]
+    ],
+    "exampleSentence": "The hardcoded URL in the config broke everything when the server moved."
   },
   {
     "id": "heads-up",
@@ -443,7 +477,8 @@
       "communication",
       "informal",
       "email"
-    ]
+    ],
+    "exampleSentence": "Just a heads-up — the deploy is happening at three today, not five."
   },
   {
     "id": "high-level",
@@ -455,7 +490,8 @@
       "communication",
       "planning",
       "fundamentals"
-    ]
+    ],
+    "exampleSentence": "Give me a high-level overview first; we can dig into the details later."
   },
   {
     "id": "impact",
@@ -468,7 +504,8 @@
       "metrics",
       "fundamentals"
     ],
-    "ipa": "/ɪmpækt/"
+    "ipa": "/ɪmpækt/",
+    "exampleSentence": "The impact of the change was a twelve percent reduction in support tickets."
   },
   {
     "id": "implication",
@@ -481,7 +518,8 @@
       "writing",
       "nuance"
     ],
-    "ipa": "/ɪmplʌkeɪʃʌn/"
+    "ipa": "/ɪmplʌkeɪʃʌn/",
+    "exampleSentence": "The implication of removing that field is that old clients will break."
   },
   {
     "id": "in-the-weeds",
@@ -494,7 +532,8 @@
       "meetings",
       "communication"
     ],
-    "ipa": "/ɪn ðʌ wiːdz/"
+    "ipa": "/ɪn ðʌ wiːdz/",
+    "exampleSentence": "Let's step back — we're getting in the weeds and losing the bigger picture."
   },
   {
     "id": "intake",
@@ -507,7 +546,8 @@
       "project-management",
       "workflow"
     ],
-    "ipa": "/ɪnteɪk/"
+    "ipa": "/ɪnteɪk/",
+    "exampleSentence": "New feature requests go through an intake process before joining the backlog."
   },
   {
     "id": "jargon",
@@ -520,7 +560,8 @@
       "writing",
       "awareness"
     ],
-    "ipa": "/dʒɑɹɡʌn/"
+    "ipa": "/dʒɑɹɡʌn/",
+    "exampleSentence": "Avoid jargon in the release notes — not everyone knows what a webhook is."
   },
   {
     "id": "kick-off",
@@ -533,7 +574,8 @@
       "process",
       "project-management"
     ],
-    "ipa": "/kɪkɔf/"
+    "ipa": "/kɪkɔf/",
+    "exampleSentence": "The project kick-off is set for Monday morning with all stakeholders present."
   },
   {
     "id": "leverage-verb",
@@ -546,7 +588,8 @@
       "communication",
       "business"
     ],
-    "ipa": "/lɛvɜrɪdʒ/"
+    "ipa": "/lɛvɜrɪdʒ/",
+    "exampleSentence": "We can leverage the existing design system instead of building a new one."
   },
   {
     "id": "low-hanging-fruit",
@@ -558,7 +601,8 @@
       "strategy",
       "idioms",
       "prioritization"
-    ]
+    ],
+    "exampleSentence": "Let's tackle the low-hanging fruit first to show quick wins to the stakeholders."
   },
   {
     "id": "milestone",
@@ -571,7 +615,8 @@
       "project-management",
       "fundamentals"
     ],
-    "ipa": "/maɪlstoʊn/"
+    "ipa": "/maɪlstoʊn/",
+    "exampleSentence": "Reaching the first public beta is a major milestone for the whole team."
   },
   {
     "id": "nitpick",
@@ -584,7 +629,8 @@
       "code-review",
       "communication"
     ],
-    "ipa": "/nɪtpɪk/"
+    "ipa": "/nɪtpɪk/",
+    "exampleSentence": "I'll mark this as a nitpick so it doesn't block the review from being approved."
   },
   {
     "id": "north-star",
@@ -597,7 +643,8 @@
       "product",
       "vision"
     ],
-    "ipa": "/nɔɹθ stɑɹ/"
+    "ipa": "/nɔɹθ stɑɹ/",
+    "exampleSentence": "Our north star metric is the number of active users after thirty days."
   },
   {
     "id": "open-loop",
@@ -610,7 +657,8 @@
       "meetings",
       "communication"
     ],
-    "ipa": "/oʊpʌn luːp/"
+    "ipa": "/oʊpʌn luːp/",
+    "exampleSentence": "There's still an open loop on who owns the migration — can we close that today?"
   },
   {
     "id": "opinionated",
@@ -623,7 +671,8 @@
       "architecture",
       "technical"
     ],
-    "ipa": "/ʌpɪnjʌneɪtɪd/"
+    "ipa": "/ʌpɪnjʌneɪtɪd/",
+    "exampleSentence": "The framework is very opinionated, which makes onboarding faster but limits flexibility."
   },
   {
     "id": "overhead",
@@ -636,7 +685,8 @@
       "performance",
       "fundamentals"
     ],
-    "ipa": "/oʊvɜrhɛd/"
+    "ipa": "/oʊvɜrhɛd/",
+    "exampleSentence": "The approval process adds two days of overhead to every small change."
   },
   {
     "id": "own",
@@ -649,7 +699,8 @@
       "communication",
       "leadership"
     ],
-    "ipa": "/oʊn/"
+    "ipa": "/oʊn/",
+    "exampleSentence": "Who owns this feature once it ships — product or engineering?"
   },
   {
     "id": "pain-point-pro",
@@ -662,7 +713,8 @@
       "communication",
       "strategy"
     ],
-    "ipa": "/peɪn pɔɪnt/"
+    "ipa": "/peɪn pɔɪnt/",
+    "exampleSentence": "The biggest pain point for users is that logging in takes too many steps."
   },
   {
     "id": "paper-trail",
@@ -675,7 +727,8 @@
       "process",
       "communication"
     ],
-    "ipa": "/peɪpɜr tɹeɪl/"
+    "ipa": "/peɪpɜr tɹeɪl/",
+    "exampleSentence": "Always leave a paper trail for decisions made in Slack by copying them to Jira."
   },
   {
     "id": "parking-lot",
@@ -688,7 +741,8 @@
       "process",
       "facilitation"
     ],
-    "ipa": "/pɑɹkɪŋ lɑt/"
+    "ipa": "/pɑɹkɪŋ lɑt/",
+    "exampleSentence": "That's a great point — let's put it in the parking lot for the next meeting."
   },
   {
     "id": "pivot",
@@ -701,7 +755,8 @@
       "product",
       "process"
     ],
-    "ipa": "/pɪvʌt/"
+    "ipa": "/pɪvʌt/",
+    "exampleSentence": "After the user research, we decided to pivot and focus on the mobile experience."
   },
   {
     "id": "postmortem",
@@ -714,7 +769,8 @@
       "retrospective",
       "quality"
     ],
-    "ipa": "/poʊstmɔɹtɛm/"
+    "ipa": "/poʊstmɔɹtɛm/",
+    "exampleSentence": "The postmortem revealed that a missing timeout caused the outage."
   },
   {
     "id": "pre-mortem",
@@ -726,7 +782,8 @@
       "planning",
       "risk",
       "process"
-    ]
+    ],
+    "exampleSentence": "A pre-mortem helped us spot three risks we hadn't considered in the plan."
   },
   {
     "id": "pushback",
@@ -738,7 +795,8 @@
       "communication",
       "feedback",
       "collaboration"
-    ]
+    ],
+    "exampleSentence": "The engineering team gave pushback on the tight timeline for the migration."
   },
   {
     "id": "rabbit-hole",
@@ -751,7 +809,8 @@
       "process",
       "focus"
     ],
-    "ipa": "/ɹæbʌt hoʊl/"
+    "ipa": "/ɹæbʌt hoʊl/",
+    "exampleSentence": "I went down a rabbit hole debugging the wrong file for an hour."
   },
   {
     "id": "ramp-up",
@@ -763,7 +822,8 @@
       "onboarding",
       "process",
       "teams"
-    ]
+    ],
+    "exampleSentence": "The new engineer will need about two weeks to fully ramp-up on the codebase."
   },
   {
     "id": "rationale",
@@ -776,7 +836,8 @@
       "communication",
       "design"
     ],
-    "ipa": "/ɹæʃʌnæl/"
+    "ipa": "/ɹæʃʌnæl/",
+    "exampleSentence": "Please add the rationale to the PR description so reviewers understand the why."
   },
   {
     "id": "refine",
@@ -789,7 +850,8 @@
       "iteration",
       "fundamentals"
     ],
-    "ipa": "/ɹʌfaɪn/"
+    "ipa": "/ɹʌfaɪn/",
+    "exampleSentence": "We'll refine the estimates once we have more information from the API team."
   },
   {
     "id": "retrospective",
@@ -802,7 +864,8 @@
       "process",
       "meetings"
     ],
-    "ipa": "/ɹɛtɹʌspɛktɪv/"
+    "ipa": "/ɹɛtɹʌspɛktɪv/",
+    "exampleSentence": "In the retrospective, the team agreed that daily standups were taking too long."
   },
   {
     "id": "roadblock",
@@ -815,7 +878,8 @@
       "communication",
       "planning"
     ],
-    "ipa": "/ɹoʊdblɑk/"
+    "ipa": "/ɹoʊdblɑk/",
+    "exampleSentence": "The legal review is the main roadblock keeping us from launching next week."
   },
   {
     "id": "rollout",
@@ -828,7 +892,8 @@
       "process",
       "product"
     ],
-    "ipa": "/ɹoʊlaʊt/"
+    "ipa": "/ɹoʊlaʊt/",
+    "exampleSentence": "The rollout will be gradual — ten percent of users this week, the rest next week."
   },
   {
     "id": "rubber-duck",
@@ -841,7 +906,8 @@
       "culture",
       "dev"
     ],
-    "ipa": "/ɹʌbɜr dʌk diːbʌɡɪŋ/"
+    "ipa": "/ɹʌbɜr dʌk diːbʌɡɪŋ/",
+    "exampleSentence": "I found the bug by rubber duck debugging out loud to my teammate."
   },
   {
     "id": "sanity-check",
@@ -854,7 +920,8 @@
       "communication",
       "review"
     ],
-    "ipa": "/sænʌtiː tʃɛk/"
+    "ipa": "/sænʌtiː tʃɛk/",
+    "exampleSentence": "Can you do a quick sanity check on these numbers before I send them to the exec?"
   },
   {
     "id": "scope-creep",
@@ -867,7 +934,8 @@
       "process",
       "planning"
     ],
-    "ipa": "/skoʊp kɹiːp/"
+    "ipa": "/skoʊp kɹiːp/",
+    "exampleSentence": "The project doubled in size due to scope creep from last-minute feature requests."
   },
   {
     "id": "sign-off",
@@ -879,7 +947,8 @@
       "process",
       "stakeholders",
       "approval"
-    ]
+    ],
+    "exampleSentence": "We need sign-off from the security team before the data goes into production."
   },
   {
     "id": "spike",
@@ -892,7 +961,8 @@
       "process",
       "research"
     ],
-    "ipa": "/spaɪk/"
+    "ipa": "/spaɪk/",
+    "exampleSentence": "We did a one-day spike to see if the third-party API would meet our needs."
   },
   {
     "id": "surface-verb",
@@ -905,7 +975,8 @@
       "meetings",
       "nuance"
     ],
-    "ipa": "/sɜrfʌs/"
+    "ipa": "/sɜrfʌs/",
+    "exampleSentence": "The retro was a good time to surface the tension that had been building in the team."
   },
   {
     "id": "tactful",
@@ -918,7 +989,8 @@
       "feedback",
       "interpersonal"
     ],
-    "ipa": "/tæktfʌl/"
+    "ipa": "/tæktfʌl/",
+    "exampleSentence": "She gave tactful feedback that was honest without making anyone defensive."
   },
   {
     "id": "technical-debt",
@@ -931,7 +1003,8 @@
       "process",
       "quality"
     ],
-    "ipa": "/tɛknɪkʌl dɛt/"
+    "ipa": "/tɛknɪkʌl dɛt/",
+    "exampleSentence": "Technical debt from the initial prototype is slowing down every new feature."
   },
   {
     "id": "time-box",
@@ -943,7 +1016,8 @@
       "process",
       "meetings",
       "agile"
-    ]
+    ],
+    "exampleSentence": "Let's time-box this discussion to fifteen minutes and then make a decision."
   },
   {
     "id": "traction",
@@ -956,7 +1030,8 @@
       "strategy",
       "metrics"
     ],
-    "ipa": "/tɹækʃʌn/"
+    "ipa": "/tɹækʃʌn/",
+    "exampleSentence": "The beta launched last week and is already getting traction with early users."
   },
   {
     "id": "trade-off",
@@ -969,7 +1044,8 @@
       "fundamentals",
       "strategy"
     ],
-    "ipa": "/tɹeɪdɔf/"
+    "ipa": "/tɹeɪdɔf/",
+    "exampleSentence": "The main trade-off is between a faster build time and a larger bundle size."
   },
   {
     "id": "triage",
@@ -982,7 +1058,8 @@
       "prioritization",
       "agile"
     ],
-    "ipa": "/tɹaɪɪdʒ/"
+    "ipa": "/tɹaɪɪdʒ/",
+    "exampleSentence": "We triage bug reports every Monday to separate critical issues from minor ones."
   },
   {
     "id": "turnover",
@@ -995,7 +1072,8 @@
       "organization",
       "hr"
     ],
-    "ipa": "/tɜrnoʊvɜr/"
+    "ipa": "/tɜrnoʊvɜr/",
+    "exampleSentence": "High turnover means a lot of institutional knowledge leaves with every person."
   },
   {
     "id": "unblock",
@@ -1007,7 +1085,8 @@
       "collaboration",
       "communication",
       "process"
-    ]
+    ],
+    "exampleSentence": "I'll unblock you as soon as I finish reviewing the PR — give me an hour."
   },
   {
     "id": "verbosity",
@@ -1020,7 +1099,8 @@
       "communication",
       "code"
     ],
-    "ipa": "/vəˈbɒsəti/"
+    "ipa": "/vəˈbɒsəti/",
+    "exampleSentence": "Cut the verbosity in the error message — users don't need the full stack trace."
   },
   {
     "id": "visibility",
@@ -1033,7 +1113,8 @@
       "process",
       "transparency"
     ],
-    "ipa": "/vɪzʌbɪlɪtiː/"
+    "ipa": "/vɪzʌbɪlɪtiː/",
+    "exampleSentence": "Better visibility into the deploy status would help the whole team."
   },
   {
     "id": "workaround",
@@ -1046,7 +1127,8 @@
       "dev",
       "problem-solving"
     ],
-    "ipa": "/wɜrkɜraʊnd/"
+    "ipa": "/wɜrkɜraʊnd/",
+    "exampleSentence": "The workaround fixes the crash for now, but the root cause still needs attention."
   },
   {
     "id": "yak-shaving",
@@ -1059,6 +1141,8 @@
       "dev",
       "productivity"
     ],
-    "ipa": "/jæk ʃeɪvɪŋ/"
+    "ipa": "/jæk ʃeɪvɪŋ/",
+    "exampleSentence": "I started yak shaving when I tried to update one package and ended up refactoring the config."
   }
 ]
+

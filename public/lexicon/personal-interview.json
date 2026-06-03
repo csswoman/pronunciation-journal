@@ -11,7 +11,8 @@
       "values",
       "design"
     ],
-    "ipa": "/ædvʌkʌt/"
+    "ipa": "/ædvʌkʌt/",
+    "exampleSentence": "She actively advocates for accessible design in every product review."
   },
   {
     "id": "ambiguous-requirements",
@@ -25,7 +26,8 @@
       "communication",
       "problem-solving"
     ],
-    "ipa": "/æmbɪɡjuːʌs ɹɪkwaɪɹmʌnts/"
+    "ipa": "/æmbɪɡjuːʌs ɹɪkwaɪɹmʌnts/",
+    "exampleSentence": "I always ask clarifying questions when I receive ambiguous requirements."
   },
   {
     "id": "approach",
@@ -39,7 +41,8 @@
       "problem-solving",
       "communication"
     ],
-    "ipa": "/ʌpɹoʊtʃ/"
+    "ipa": "/ʌpɹoʊtʃ/",
+    "exampleSentence": "Tell me about your approach to debugging something you've never seen before."
   },
   {
     "id": "articulate",
@@ -53,7 +56,8 @@
       "collaboration",
       "soft-skills"
     ],
-    "ipa": "/ɑɹtɪkjʌleɪt/"
+    "ipa": "/ɑɹtɪkjʌleɪt/",
+    "exampleSentence": "Being able to articulate your decisions clearly is just as important as making them."
   },
   {
     "id": "autonomous",
@@ -67,7 +71,8 @@
       "work-style",
       "self-management"
     ],
-    "ipa": "/ɔtɑnʌmʌs/"
+    "ipa": "/ɔtɑnʌmʌs/",
+    "exampleSentence": "I work best in environments where I can be autonomous and self-directed."
   },
   {
     "id": "balance",
@@ -81,7 +86,8 @@
       "process",
       "fundamentals"
     ],
-    "ipa": "/bælʌns/"
+    "ipa": "/bælʌns/",
+    "exampleSentence": "The hardest part of the role was learning to balance speed and quality."
   },
   {
     "id": "bridge",
@@ -95,7 +101,8 @@
       "collaboration",
       "identity"
     ],
-    "ipa": "/bɹɪdʒ/"
+    "ipa": "/bɹɪdʒ/",
+    "exampleSentence": "My job was to bridge the gap between the design team and engineering."
   },
   {
     "id": "build-from-scratch",
@@ -109,7 +116,8 @@
       "portfolio",
       "achievements"
     ],
-    "ipa": "/bɪld fɹʌm skɹætʃ/"
+    "ipa": "/bɪld fɹʌm skɹætʃ/",
+    "exampleSentence": "We had to build the component library from scratch in just three months."
   },
   {
     "id": "challenge",
@@ -123,7 +131,8 @@
       "fundamentals",
       "behavioral"
     ],
-    "ipa": "/tʃælʌndʒ/"
+    "ipa": "/tʃælʌndʒ/",
+    "exampleSentence": "The biggest challenge was migrating the codebase without stopping feature work."
   },
   {
     "id": "collaborate",
@@ -137,7 +146,8 @@
       "soft-skills",
       "fundamentals"
     ],
-    "ipa": "/kʌlæbɜreɪt/"
+    "ipa": "/kʌlæbɜreɪt/",
+    "exampleSentence": "I collaborate closely with designers to catch problems before they reach code."
   },
   {
     "id": "communicate-tradeoffs",
@@ -151,7 +161,8 @@
       "decision-making",
       "leadership"
     ],
-    "ipa": "/kʌmjuːnʌkeɪt tɹeɪdɔfs/"
+    "ipa": "/kʌmjuːnʌkeɪt tɹeɪdɔfs/",
+    "exampleSentence": "I always communicate trade-offs so the team can make an informed decision."
   },
   {
     "id": "component-driven",
@@ -164,7 +175,8 @@
       "dev",
       "design-systems",
       "approach"
-    ]
+    ],
+    "exampleSentence": "We use a component-driven approach to keep the UI consistent and testable."
   },
   {
     "id": "consistency",
@@ -178,7 +190,8 @@
       "quality",
       "values"
     ],
-    "ipa": "/kʌnsɪstʌnsiː/"
+    "ipa": "/kʌnsɪstʌnsiː/",
+    "exampleSentence": "Consistency across the product was something I focused on from day one."
   },
   {
     "id": "contributed",
@@ -192,7 +205,8 @@
       "portfolio",
       "fundamentals"
     ],
-    "ipa": "/kʌntɹɪbjuːt/"
+    "ipa": "/kʌntɹɪbjuːt/",
+    "exampleSentence": "I contributed a new onboarding flow that reduced drop-off by fifteen percent."
   },
   {
     "id": "creative-problem-solving",
@@ -205,7 +219,8 @@
       "identity",
       "values",
       "creative"
-    ]
+    ],
+    "exampleSentence": "Creative problem-solving helped us ship the feature with half the usual budget."
   },
   {
     "id": "cross-disciplinary",
@@ -218,7 +233,8 @@
       "identity",
       "ux-engineer",
       "positioning"
-    ]
+    ],
+    "exampleSentence": "The role is cross-disciplinary, so you need both design and coding skills."
   },
   {
     "id": "decision-making",
@@ -232,7 +248,8 @@
       "process",
       "leadership"
     ],
-    "ipa": "/dɪsɪʒʌnmeɪkɪŋ/"
+    "ipa": "/dɪsɪʒʌnmeɪkɪŋ/",
+    "exampleSentence": "Strong decision-making under pressure is what got the launch back on track."
   },
   {
     "id": "deep-dive",
@@ -246,7 +263,8 @@
       "research",
       "communication"
     ],
-    "ipa": "/diːp daɪv/"
+    "ipa": "/diːp daɪv/",
+    "exampleSentence": "Let me do a deep dive into how that part of the system actually works."
   },
   {
     "id": "define-the-problem",
@@ -260,7 +278,8 @@
       "problem-solving",
       "fundamentals"
     ],
-    "ipa": "/dɪfaɪn ðʌ pɹɑblʌm/"
+    "ipa": "/dɪfaɪn ðʌ pɹɑblʌm/",
+    "exampleSentence": "Before writing any code, I always take time to define the problem properly."
   },
   {
     "id": "deliver",
@@ -274,7 +293,8 @@
       "reliability",
       "fundamentals"
     ],
-    "ipa": "/dɪlɪvɜr/"
+    "ipa": "/dɪlɪvɜr/",
+    "exampleSentence": "I was able to deliver the redesign two weeks ahead of the original deadline."
   },
   {
     "id": "design-sensibility",
@@ -288,7 +308,8 @@
       "ux-engineer",
       "positioning"
     ],
-    "ipa": "/dɪzaɪn sɛnsɪbɪlɪtiː/"
+    "ipa": "/dɪzaɪn sɛnsɪbɪlɪtiː/",
+    "exampleSentence": "Strong design sensibility is what separates a good engineer from a great one."
   },
   {
     "id": "detail-oriented",
@@ -301,7 +322,8 @@
       "soft-skills",
       "identity",
       "quality"
-    ]
+    ],
+    "exampleSentence": "Being detail-oriented means I catch spacing issues before they go to QA."
   },
   {
     "id": "document",
@@ -315,7 +337,8 @@
       "collaboration",
       "fundamentals"
     ],
-    "ipa": "/dɑkjʌmɛnt/"
+    "ipa": "/dɑkjʌmɛnt/",
+    "exampleSentence": "I always document my architectural decisions so future teammates understand why."
   },
   {
     "id": "drive",
@@ -329,7 +352,8 @@
       "achievements",
       "ownership"
     ],
-    "ipa": "/dɹaɪv/"
+    "ipa": "/dɹaɪv/",
+    "exampleSentence": "I tend to drive projects forward rather than wait for someone to assign tasks."
   },
   {
     "id": "dry-run",
@@ -343,7 +367,8 @@
       "interview",
       "process"
     ],
-    "ipa": "/dɹaɪ ɹʌn/"
+    "ipa": "/dɹaɪ ɹʌn/",
+    "exampleSentence": "We did a dry run of the demo the night before to catch any broken flows."
   },
   {
     "id": "end-to-end",
@@ -356,7 +381,8 @@
       "ux-engineer",
       "identity",
       "capabilities"
-    ]
+    ],
+    "exampleSentence": "I own the feature end-to-end, from the first sketch to the production deploy."
   },
   {
     "id": "engineer-mindset",
@@ -370,7 +396,8 @@
       "ux-engineer",
       "positioning"
     ],
-    "ipa": "/ɛndʒʌnɪɹɪŋ maɪndsɛt/"
+    "ipa": "/ɛndʒʌnɪɹɪŋ maɪndsɛt/",
+    "exampleSentence": "An engineering mindset helps me think about edge cases most designers miss."
   },
   {
     "id": "evangelize",
@@ -384,7 +411,8 @@
       "values",
       "influence"
     ],
-    "ipa": "/ɪvændʒʌlaɪz/"
+    "ipa": "/ɪvændʒʌlaɪz/",
+    "exampleSentence": "I started evangelizing accessibility early and now the whole team cares about it."
   },
   {
     "id": "experiment",
@@ -398,7 +426,8 @@
       "learning",
       "identity"
     ],
-    "ipa": "/ɪkspɛɹʌmʌnt/"
+    "ipa": "/ɪkspɛɹʌmʌnt/",
+    "exampleSentence": "I like to experiment with small prototypes before committing to an approach."
   },
   {
     "id": "fast-learner",
@@ -412,7 +441,8 @@
       "identity",
       "soft-skills"
     ],
-    "ipa": "/fæst lɜrnɜr/"
+    "ipa": "/fæst lɜrnɜr/",
+    "exampleSentence": "Being a fast learner let me get productive in the new codebase within a week."
   },
   {
     "id": "feedback-driven",
@@ -425,7 +455,8 @@
       "process",
       "collaboration",
       "growth"
-    ]
+    ],
+    "exampleSentence": "I'm feedback-driven, so I actively ask for critique early and often."
   },
   {
     "id": "figure-things-out",
@@ -439,7 +470,8 @@
       "problem-solving",
       "soft-skills"
     ],
-    "ipa": "/fɪɡjɜr θɪŋz aʊt/"
+    "ipa": "/fɪɡjɜr θɪŋz aʊt/",
+    "exampleSentence": "When I'm stuck, my first instinct is to figure things out on my own before asking."
   },
   {
     "id": "fluent-in",
@@ -453,7 +485,8 @@
       "positioning",
       "fundamentals"
     ],
-    "ipa": "/fluːʌnt ɪn/"
+    "ipa": "/fluːʌnt ɪn/",
+    "exampleSentence": "I'm fluent in TypeScript and pick up new frameworks quickly."
   },
   {
     "id": "go-to",
@@ -467,7 +500,8 @@
       "communication",
       "identity"
     ],
-    "ipa": "/ɡoʊtuː/"
+    "ipa": "/ɡoʊtuː/",
+    "exampleSentence": "Figma is my go-to tool for wireframing before I write a single line of code."
   },
   {
     "id": "growth-mindset",
@@ -481,7 +515,8 @@
       "identity",
       "soft-skills"
     ],
-    "ipa": "/ɡɹoʊθ maɪndsɛt/"
+    "ipa": "/ɡɹoʊθ maɪndsɛt/",
+    "exampleSentence": "A growth mindset means I see hard feedback as an opportunity, not a criticism."
   },
   {
     "id": "hands-on",
@@ -494,7 +529,8 @@
       "identity",
       "work-style",
       "ux-engineer"
-    ]
+    ],
+    "exampleSentence": "I like to be hands-on and write code even in lead roles."
   },
   {
     "id": "hats",
@@ -508,7 +544,8 @@
       "identity",
       "adaptability"
     ],
-    "ipa": "/wɛɹ mʌltʌpʌl hæts/"
+    "ipa": "/wɛɹ mʌltʌpʌl hæts/",
+    "exampleSentence": "In a small team you need to wear multiple hats and adapt quickly."
   },
   {
     "id": "highlight",
@@ -522,7 +559,8 @@
       "storytelling",
       "fundamentals"
     ],
-    "ipa": "/haɪlaɪt/"
+    "ipa": "/haɪlaɪt/",
+    "exampleSentence": "In interviews I highlight projects where I had full ownership end-to-end."
   },
   {
     "id": "holistic",
@@ -536,7 +574,8 @@
       "approach",
       "ux"
     ],
-    "ipa": "/hoʊlɪstɪk/"
+    "ipa": "/hoʊlɪstɪk/",
+    "exampleSentence": "I take a holistic view that includes user needs, technical limits, and business goals."
   },
   {
     "id": "impact-focused",
@@ -549,7 +588,8 @@
       "values",
       "prioritization",
       "strategy"
-    ]
+    ],
+    "exampleSentence": "I'm impact-focused, so I always ask which feature will help users the most."
   },
   {
     "id": "in-production",
@@ -563,7 +603,8 @@
       "credibility",
       "achievements"
     ],
-    "ipa": "/ɪn pɹʌdʌkʃʌn/"
+    "ipa": "/ɪn pɹʌdʌkʃʌn/",
+    "exampleSentence": "Everything in my portfolio is real code that is currently in production."
   },
   {
     "id": "initiative",
@@ -577,7 +618,8 @@
       "ownership",
       "proactivity"
     ],
-    "ipa": "/teɪk ɪnɪʃʌtɪv/"
+    "ipa": "/teɪk ɪnɪʃʌtɪv/",
+    "exampleSentence": "I saw the documentation was outdated and took initiative to rewrite it."
   },
   {
     "id": "interested-in",
@@ -591,7 +633,8 @@
       "motivation",
       "communication"
     ],
-    "ipa": "/aɪm pɑɹtɪkjʌlɜrliː ɪntɹʌstɪd ɪn/"
+    "ipa": "/aɪm pɑɹtɪkjʌlɜrliː ɪntɹʌstɪd ɪn/",
+    "exampleSentence": "I'm particularly interested in the design systems work your team is doing."
   },
   {
     "id": "keen-eye",
@@ -605,7 +648,8 @@
       "design",
       "soft-skills"
     ],
-    "ipa": "/kiːn aɪ fɔɹ/"
+    "ipa": "/kiːn aɪ fɔɹ/",
+    "exampleSentence": "I have a keen eye for detail that helps me catch visual inconsistencies quickly."
   },
   {
     "id": "lead",
@@ -619,7 +663,8 @@
       "achievements",
       "positioning"
     ],
-    "ipa": "/lɛd/"
+    "ipa": "/lɛd/",
+    "exampleSentence": "I was asked to lead the front-end chapter after the senior engineer left."
   },
   {
     "id": "lean-into",
@@ -633,7 +678,8 @@
       "communication",
       "positioning"
     ],
-    "ipa": "/liːn ɪntuː/"
+    "ipa": "/liːn ɪntuː/",
+    "exampleSentence": "I decided to lean into the ambiguity rather than waiting for clearer specs."
   },
   {
     "id": "maintainable",
@@ -646,7 +692,8 @@
       "code-quality",
       "values",
       "dev"
-    ]
+    ],
+    "exampleSentence": "I write maintainable code so the next person doesn't have to ask me questions."
   },
   {
     "id": "mentor",
@@ -660,7 +707,8 @@
       "soft-skills",
       "growth"
     ],
-    "ipa": "/mɛntɔɹ/"
+    "ipa": "/mɛntɔɹ/",
+    "exampleSentence": "I enjoy mentoring junior developers during code review sessions."
   },
   {
     "id": "milestone-driven",
@@ -673,7 +721,8 @@
       "work-style",
       "process",
       "self-management"
-    ]
+    ],
+    "exampleSentence": "I stay milestone-driven so the team always knows what we're working toward."
   },
   {
     "id": "motivated-by",
@@ -687,7 +736,8 @@
       "culture-fit",
       "interview"
     ],
-    "ipa": "/moʊtʌveɪtʌd baɪ/"
+    "ipa": "/moʊtʌveɪtʌd baɪ/",
+    "exampleSentence": "I'm motivated by problems that have a real impact on people's daily work."
   },
   {
     "id": "nail-the-details",
@@ -701,7 +751,8 @@
       "identity",
       "craft"
     ],
-    "ipa": "/neɪl ðʌ dɪteɪlz/"
+    "ipa": "/neɪl ðʌ dɪteɪlz/",
+    "exampleSentence": "I care about shipping features that nail the details users actually notice."
   },
   {
     "id": "ownership",
@@ -715,7 +766,8 @@
       "accountability",
       "identity"
     ],
-    "ipa": "/oʊnɜrʃɪp/"
+    "ipa": "/oʊnɜrʃɪp/",
+    "exampleSentence": "I take full ownership of my work, which means I also own the bugs."
   },
   {
     "id": "passion",
@@ -729,7 +781,8 @@
       "interview",
       "values"
     ],
-    "ipa": "/aɪm pæʃʌnʌt ʌbaʊt/"
+    "ipa": "/aɪm pæʃʌnʌt ʌbaʊt/",
+    "exampleSentence": "I'm passionate about accessibility and have given two internal talks on it."
   },
   {
     "id": "pragmatic",
@@ -743,7 +796,8 @@
       "values",
       "identity"
     ],
-    "ipa": "/pɹæɡmætɪk/"
+    "ipa": "/pɹæɡmætɪk/",
+    "exampleSentence": "I'm pragmatic and would rather ship a good solution now than a perfect one never."
   },
   {
     "id": "proactive",
@@ -757,7 +811,8 @@
       "identity",
       "work-style"
     ],
-    "ipa": "/pɹoʊæktɪv/"
+    "ipa": "/pɹoʊæktɪv/",
+    "exampleSentence": "I'm proactive about flagging risks early so the team has time to adjust."
   },
   {
     "id": "proven-track-record",
@@ -771,7 +826,8 @@
       "positioning",
       "achievements"
     ],
-    "ipa": "/pɹuːvʌn tɹæk ɹʌkɔɹd/"
+    "ipa": "/pɹuːvʌn tɹæk ɹʌkɔɹd/",
+    "exampleSentence": "I have a proven track record of improving performance on legacy codebases."
   },
   {
     "id": "quick-turnaround",
@@ -785,7 +841,8 @@
       "startup",
       "work-style"
     ],
-    "ipa": "/kwɪk tɜrnɜraʊnd/"
+    "ipa": "/kwɪk tɜrnɜraʊnd/",
+    "exampleSentence": "The client needed a quick turnaround and I delivered the prototype in two days."
   },
   {
     "id": "refine-over-time",
@@ -799,7 +856,8 @@
       "iteration",
       "growth"
     ],
-    "ipa": "/ɹʌfaɪn oʊvɜr taɪm/"
+    "ipa": "/ɹʌfaɪn oʊvɜr taɪm/",
+    "exampleSentence": "I prefer to ship early and refine over time based on real user behavior."
   },
   {
     "id": "remote-ready",
@@ -812,7 +870,8 @@
       "remote",
       "work-style",
       "positioning"
-    ]
+    ],
+    "exampleSentence": "I'm remote-ready and have worked fully async with teams across three time zones."
   },
   {
     "id": "results",
@@ -826,7 +885,8 @@
       "impact",
       "storytelling"
     ],
-    "ipa": "/ɹɪzʌlts/"
+    "ipa": "/ɹɪzʌlts/",
+    "exampleSentence": "I always try to tie my results to metrics the business actually cares about."
   },
   {
     "id": "self-directed",
@@ -839,7 +899,8 @@
       "autonomy",
       "identity",
       "remote"
-    ]
+    ],
+    "exampleSentence": "I'm self-directed and thrive when given a goal without a prescribed path."
   },
   {
     "id": "sharp",
@@ -853,7 +914,8 @@
       "informal",
       "soft-skills"
     ],
-    "ipa": "/ʃɑɹp/"
+    "ipa": "/ʃɑɹp/",
+    "exampleSentence": "The interviewer said she was looking for someone sharp who could ramp up quickly."
   },
   {
     "id": "ship",
@@ -867,7 +929,8 @@
       "credibility",
       "dev"
     ],
-    "ipa": "/ʃɪp/"
+    "ipa": "/ʃɪp/",
+    "exampleSentence": "My goal is to ship code that real people use, not just to write it."
   },
   {
     "id": "side-project",
@@ -881,7 +944,8 @@
       "growth",
       "identity"
     ],
-    "ipa": "/saɪd pɹɑdʒɛkt/"
+    "ipa": "/saɪd pɹɑdʒɛkt/",
+    "exampleSentence": "This side project taught me more about state management than any tutorial did."
   },
   {
     "id": "solid-foundation",
@@ -895,7 +959,8 @@
       "positioning",
       "credibility"
     ],
-    "ipa": "/sɑlʌd faʊndeɪʃʌn/"
+    "ipa": "/sɑlʌd faʊndeɪʃʌn/",
+    "exampleSentence": "A solid foundation in HTML and CSS makes everything else much easier to learn."
   },
   {
     "id": "speak-to",
@@ -909,7 +974,8 @@
       "communication",
       "storytelling"
     ],
-    "ipa": "/spiːk tuː/"
+    "ipa": "/spiːk tuː/",
+    "exampleSentence": "I can speak to that experience because I've done it at two different companies."
   },
   {
     "id": "strengths",
@@ -923,7 +989,8 @@
       "self-awareness",
       "fundamentals"
     ],
-    "ipa": "/stɹɛŋkθs/"
+    "ipa": "/stɹɛŋkθs/",
+    "exampleSentence": "My main strengths are system thinking and turning vague problems into clear solutions."
   },
   {
     "id": "structured-thinker",
@@ -937,7 +1004,8 @@
       "identity",
       "soft-skills"
     ],
-    "ipa": "/stɹʌktʃɜrd θɪŋkɜr/"
+    "ipa": "/stɹʌktʃɜrd θɪŋkɜr/",
+    "exampleSentence": "Being a structured thinker helps me break ambiguous problems into clear steps."
   },
   {
     "id": "take-pride-in",
@@ -951,7 +1019,8 @@
       "craft",
       "identity"
     ],
-    "ipa": "/teɪk pɹaɪd ɪn/"
+    "ipa": "/teɪk pɹaɪd ɪn/",
+    "exampleSentence": "I take pride in writing code that doesn't need a comment to be understood."
   },
   {
     "id": "technical-depth",
@@ -965,7 +1034,8 @@
       "credibility",
       "positioning"
     ],
-    "ipa": "/tɛknɪkʌl dɛpθ/"
+    "ipa": "/tɛknɪkʌl dɛpθ/",
+    "exampleSentence": "Technical depth lets me know when a solution will cause problems down the road."
   },
   {
     "id": "thrives-in",
@@ -979,7 +1049,8 @@
       "identity",
       "interview"
     ],
-    "ipa": "/θɹaɪv ɪn/"
+    "ipa": "/θɹaɪv ɪn/",
+    "exampleSentence": "I thrive in fast-moving environments where the priorities shift week to week."
   },
   {
     "id": "translate",
@@ -993,7 +1064,8 @@
       "identity",
       "capabilities"
     ],
-    "ipa": "/tɹænzleɪt/"
+    "ipa": "/tɹænzleɪt/",
+    "exampleSentence": "My value is being able to translate between design intent and engineering constraints."
   },
   {
     "id": "unique-value",
@@ -1007,7 +1079,8 @@
       "identity",
       "interview"
     ],
-    "ipa": "/juːniːk væljuː/"
+    "ipa": "/juːniːk væljuː/",
+    "exampleSentence": "My unique value is bridging design systems work with performance optimization."
   },
   {
     "id": "user-centered",
@@ -1020,7 +1093,8 @@
       "values",
       "ux",
       "fundamentals"
-    ]
+    ],
+    "exampleSentence": "Every technical decision I make goes through a user-centered filter first."
   },
   {
     "id": "versatile",
@@ -1034,7 +1108,8 @@
       "positioning",
       "adaptability"
     ],
-    "ipa": "/vɜrsʌtʌl/"
+    "ipa": "/vɜrsʌtʌl/",
+    "exampleSentence": "I'm versatile enough to pick up backend work when the team needs it."
   },
   {
     "id": "vision",
@@ -1048,7 +1123,8 @@
       "strategy",
       "communication"
     ],
-    "ipa": "/vɪʒʌn/"
+    "ipa": "/vɪʒʌn/",
+    "exampleSentence": "Having a clear vision for the system helped the team make consistent decisions."
   },
   {
     "id": "walk-me-through",
@@ -1062,7 +1138,8 @@
       "storytelling",
       "fundamentals"
     ],
-    "ipa": "/wɔk miː θɹuː/"
+    "ipa": "/wɔk miː θɹuː/",
+    "exampleSentence": "Can you walk me through how you approached this architecture decision?"
   },
   {
     "id": "work-in-progress",
@@ -1076,7 +1153,8 @@
       "honesty",
       "communication"
     ],
-    "ipa": "/wɜrk ɪn pɹɑɡɹɛs/"
+    "ipa": "/wɜrk ɪn pɹɑɡɹɛs/",
+    "exampleSentence": "Some of the portfolio pieces are work in progress but the core flows are done."
   },
   {
     "id": "years-of-experience",
@@ -1090,6 +1168,8 @@
       "interview",
       "fundamentals"
     ],
-    "ipa": "/jɪɹz ʌv ɪkspɪɹiːʌns/"
+    "ipa": "/jɪɹz ʌv ɪkspɪɹiːʌns/",
+    "exampleSentence": "Four years of experience in React doesn't tell the whole story — the depth does."
   }
 ]
+
