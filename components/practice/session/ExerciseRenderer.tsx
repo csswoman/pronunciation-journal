@@ -13,8 +13,9 @@ import { MatchPairsExercise } from '@/components/exercises/MatchPairsExercise'
 import { FillBlankExercise } from '@/components/exercises/FillBlankExercise'
 import { ReorderWordsExercise } from '@/components/exercises/ReorderWordsExercise'
 import { SentenceDictationExercise } from '@/components/exercises/SentenceDictationExercise'
+import { SentenceContextExercise } from '@/components/lexicon/SentenceContextExercise'
 import type { Exercise } from '@/lib/phoneme-practice/types'
-import type { MatchPairsExercise as MatchPairsExerciseType, FillBlankExercise as FillBlankExerciseType, ReorderWordsExercise as ReorderWordsExerciseType, SentenceDictationExercise as SentenceDictationExerciseType } from '@/lib/exercises/types'
+import type { MatchPairsExercise as MatchPairsExerciseType, FillBlankExercise as FillBlankExerciseType, ReorderWordsExercise as ReorderWordsExerciseType, SentenceDictationExercise as SentenceDictationExerciseType, SentenceContextExercise as SentenceContextExerciseType } from '@/lib/exercises/types'
 import type { PracticeExercise } from '@/lib/practice/types'
 
 interface Props {
@@ -80,6 +81,14 @@ export function ExerciseRenderer({ exercise, onSubmit, focusUi = false, voice }:
           <SentenceDictationExercise
             exercise={payload.data as SentenceDictationExerciseType}
             onSubmit={(isCorrect, userAnswer) => onSubmit(isCorrect, userAnswer)}
+          />
+        )
+      }
+      if (slug === 'sentence_context') {
+        return (
+          <SentenceContextExercise
+            exercise={payload.data as SentenceContextExerciseType}
+            onSubmit={onSubmit}
           />
         )
       }

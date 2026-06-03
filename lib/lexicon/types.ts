@@ -22,6 +22,7 @@ export type WordEntry = {
   difficulty: 1 | 2 | 3;
   tags: string[];
   example?: string;
+  exampleSentence?: string;
 };
 
 export type LessonViewModel = {

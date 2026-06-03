@@ -25,6 +25,9 @@ export async function savePracticeAnswer(
   userId: string,
   answer: PracticeAnswer,
 ): Promise<void> {
+  // Exercises with no exerciseTypeId (e.g. sentence_context) are not tracked in answer_history.
+  if (answer.exerciseTypeId === null) return
+
   // Phoneme exercises forward their targetWord via exercisePayload.targetWord
   // when the adapter constructs the PhonemePayload. Pull it out for the
   // dedicated column when present.

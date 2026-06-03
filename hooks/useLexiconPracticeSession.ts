@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { getSupabaseBrowserClient } from '@/lib/supabase/client'
 import { generateMatchPairsFromWordBank } from '@/lib/exercises/generators/match-pairs'
+import { generateSentenceContextExercises } from '@/lib/lexicon/exercises'
 import { fromGenericExercise } from '@/lib/practice/adapters'
 import type { PracticeExercise } from '@/lib/practice/types'
 import type { WordBankEntry } from '@/lib/word-bank/types'
@@ -25,6 +26,17 @@ interface PersistedState {
   ratings: WordRating[]
   practiceExercises: PracticeExercise[]
   sessionKey: number
+}
+
+/** Interleave two arrays: [a0, b0, a1, b1, ...]. Remaining items appended. */
+function interleave<T>(a: T[], b: T[]): T[] {
+  const result: T[] = []
+  const len = Math.max(a.length, b.length)
+  for (let i = 0; i < len; i++) {
+    if (i < a.length) result.push(a[i])
+    if (i < b.length) result.push(b[i])
+  }
+  return result
 }
 
 function storageKey(categoryId: string) {
@@ -61,6 +73,9 @@ export function useLexiconPracticeSession(categoryId: string, userId: string | u
   const [lessonName, setLessonName] = useState('')
   const [allEntries, setAllEntries] = useState<WordBankEntry[]>([])
   const [posMap, setPosMap] = useState<Map<string, string>>(new Map())
+  // WordEntry[] for the current session — kept in memory only (not sessionStorage).
+  // Needed by handleReviewComplete to access exampleSentence for sentence_context generation.
+  const [sessionWordEntries, setSessionWordEntries] = useState<WordEntry[]>([])
   const [loadState, setLoadState] = useState<LoadState>('idle')
   const [error, setError] = useState<string | null>(null)
   const [flowPhase, setFlowPhaseRaw] = useState<FlowPhase>('review')
@@ -158,11 +173,14 @@ export function useLexiconPracticeSession(categoryId: string, userId: string | u
         return new Date(a.next_review_at).getTime() - new Date(b.next_review_at).getTime()
       })
       const sessionEntries = allMapped.slice(0, SESSION_SIZE)
+      const sessionWordEntryIds = new Set(sessionEntries.map((e) => e.source_ref))
+      const sessionWordEntriesSlice = words.filter((w) => sessionWordEntryIds.has(w.id))
       const name = categoryId.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
 
       setLessonName(name)
       setPosMap(newPosMap)
       setAllEntries(sessionEntries)
+      setSessionWordEntries(sessionWordEntriesSlice)
       setFlowPhaseRaw('review')
       setLoadState('ready')
 
@@ -203,7 +221,16 @@ export function useLexiconPracticeSession(categoryId: string, userId: string | u
     }
 
     const matchPairs = generateMatchPairsFromWordBank(pool, MAX_MATCH_PAIRS)
-    const exercises: PracticeExercise[] = matchPairs.map((ex) => fromGenericExercise(ex, 'practice'))
+    const matchExercises: PracticeExercise[] = matchPairs.map((ex) => fromGenericExercise(ex, 'practice'))
+
+    // Build sentence_context exercises for forgot/normal words that have exampleSentence.
+    const practiceWordIds = new Set(pool.map((e) => e.source_ref))
+    const candidateWordEntries = sessionWordEntries.filter((w) => practiceWordIds.has(w.id))
+    const sentenceContextRaw = generateSentenceContextExercises(candidateWordEntries, sessionWordEntries)
+    const sentenceContextExercises: PracticeExercise[] = sentenceContextRaw.map((ex) => fromGenericExercise(ex, 'practice'))
+
+    // Interleave match_pairs and sentence_context for better retention.
+    const exercises: PracticeExercise[] = interleave(matchExercises, sentenceContextExercises)
 
     if (exercises.length === 0) {
       setFlowPhase('done')
@@ -213,7 +240,7 @@ export function useLexiconPracticeSession(categoryId: string, userId: string | u
     setPracticeExercises(exercises)
     bumpSessionKey()
     setFlowPhase('summary')
-  }, [setRatings, setFlowPhase, setPracticeExercises, bumpSessionKey])
+  }, [setRatings, setFlowPhase, setPracticeExercises, bumpSessionKey, sessionWordEntries])
 
   function clear() {
     clearSession(categoryId)
