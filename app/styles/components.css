@@ -1,6 +1,3 @@
-/* Phoneme focus exercise UI — @import must stay first in this file */
-@import "./phoneme-practice.css";
-
 /* ═══════════════════════════════════════════════════════════════════════════
    Components — styles for specific UI patterns that can't live in Tailwind
    (scrollbars, sliders, chat backgrounds, decorative blobs)

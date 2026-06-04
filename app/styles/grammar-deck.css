@@ -1,11 +1,8 @@
-/* Grammar study deck — layout from english-journal-grammar-cards.html; app tokens */
+/* Grammar study deck — solo lo que no puede ser Tailwind */
 
 .grammar-deck {
-  width: 100%;
-  min-height: 100%;
   color: var(--text-primary);
   font-family: var(--font-sans), system-ui, sans-serif;
-  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   background:
     radial-gradient(
@@ -16,40 +13,16 @@
     var(--surface-base);
 }
 
-.grammar-deck__wrap {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 0 18px 80px;
-  position: relative;
-  z-index: 1;
-}
-
 .grammar-deck__eyebrow {
   font-size: 11px;
   font-weight: 600;
-  text-transform: uppercase;
   letter-spacing: 0.18em;
   color: var(--text-tertiary);
 }
 
-.grammar-deck__head {
-  padding: 38px 0 22px;
-  background: transparent;
-}
-
-.grammar-deck__head .grammar-deck__eyebrow {
-  display: block;
-  margin-bottom: 8px;
-}
-
 .grammar-deck__back {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  margin-bottom: 12px;
   font-size: 11px;
   font-weight: 600;
-  text-transform: uppercase;
   letter-spacing: 0.12em;
   color: var(--text-tertiary);
   text-decoration: none;
@@ -65,7 +38,6 @@
   font-weight: 480;
   font-size: 2.1rem;
   letter-spacing: -0.015em;
-  line-height: 1.1;
   color: var(--text-primary);
   background: transparent;
 }
@@ -76,19 +48,9 @@
   background: transparent;
 }
 
-.grammar-deck__meta {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-top: 14px;
-}
-
 .grammar-deck__prog {
-  flex: 1;
-  height: 8px;
-  background: var(--surface-sunken);
   border-radius: 999px;
-  overflow: hidden;
+  background: var(--surface-sunken);
 }
 
 .grammar-deck__prog-fill {
@@ -103,22 +65,10 @@
   font-size: 12.5px;
   color: var(--text-secondary);
   font-variant-numeric: tabular-nums;
-  white-space: nowrap;
 }
 
 .grammar-deck__count b {
   color: var(--text-primary);
-  font-weight: 600;
-}
-
-/* Carousel */
-.grammar-deck__carousel {
-  margin-top: 18px;
-}
-
-.grammar-deck__viewport {
-  position: relative;
-  overflow: hidden;
 }
 
 .grammar-deck__slide {
@@ -134,46 +84,20 @@
 }
 
 @keyframes grammar-slide-in-right {
-  from {
-    opacity: 0;
-    transform: translateX(34px) scale(0.985);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0) scale(1);
-  }
+  from { opacity: 0; transform: translateX(34px) scale(0.985); }
+  to   { opacity: 1; transform: translateX(0) scale(1); }
 }
 
 @keyframes grammar-slide-in-left {
-  from {
-    opacity: 0;
-    transform: translateX(-34px) scale(0.985);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0) scale(1);
-  }
-}
-
-/* Carousel navigation */
-.grammar-deck__nav {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-top: 20px;
+  from { opacity: 0; transform: translateX(-34px) scale(0.985); }
+  to   { opacity: 1; transform: translateX(0) scale(1); }
 }
 
 .grammar-deck__arrow {
-  flex: none;
-  width: 46px;
-  height: 46px;
-  display: grid;
-  place-items: center;
   border-radius: 50%;
   border: 1px solid var(--border-default);
   background: var(--surface-raised);
   color: var(--text-secondary);
-  cursor: pointer;
   transition:
     transform var(--transition-fast),
     border-color var(--transition-fast),
@@ -195,11 +119,6 @@
 
 .grammar-deck__arrow:disabled {
   opacity: 0.4;
-  cursor: not-allowed;
-}
-
-.grammar-deck__arrow--next {
-  margin-left: auto;
 }
 
 .grammar-deck__arrow--finish {
@@ -215,35 +134,14 @@
 }
 
 @keyframes grammar-finish-pulse {
-  0%, 100% {
-    box-shadow: 0 0 0 0 color-mix(in oklch, var(--primary) 45%, transparent);
-  }
-  50% {
-    box-shadow: 0 0 0 8px color-mix(in oklch, var(--primary) 0%, transparent);
-  }
-}
-
-.grammar-deck__pager {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-}
-
-.grammar-deck__dots {
-  display: flex;
-  align-items: center;
-  gap: 7px;
+  0%, 100% { box-shadow: 0 0 0 0 color-mix(in oklch, var(--primary) 45%, transparent); }
+  50%       { box-shadow: 0 0 0 8px color-mix(in oklch, var(--primary) 0%, transparent); }
 }
 
 .grammar-deck__dot {
-  width: 8px;
-  height: 8px;
-  padding: 0;
-  border: none;
   border-radius: 999px;
   background: var(--surface-sunken);
-  cursor: pointer;
+  border: none;
   transition:
     width var(--transition-fast),
     background var(--transition-fast),
@@ -270,40 +168,21 @@
   font-variant-numeric: tabular-nums;
 }
 
-/* Completion screen */
 .grammar-deck__done {
-  margin-top: 26px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  padding: 38px 24px 34px;
   background: var(--surface-raised);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md);
-  position: relative;
-  overflow: hidden;
   animation: grammar-done-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 @keyframes grammar-done-in {
-  from {
-    opacity: 0;
-    transform: translateY(14px) scale(0.97);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
+  from { opacity: 0; transform: translateY(14px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 .grammar-deck__done-badge {
-  width: 72px;
-  height: 72px;
   border-radius: 50%;
-  display: grid;
-  place-items: center;
   background: var(--success-soft);
   color: var(--success);
   border: 1px solid var(--success-border);
@@ -311,17 +190,9 @@
 }
 
 @keyframes grammar-badge-pop {
-  0% {
-    opacity: 0;
-    transform: scale(0.3) rotate(-12deg);
-  }
-  60% {
-    transform: scale(1.12) rotate(4deg);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1) rotate(0);
-  }
+  0%   { opacity: 0; transform: scale(0.3) rotate(-12deg); }
+  60%  { transform: scale(1.12) rotate(4deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0); }
 }
 
 .grammar-deck__done-spark {
@@ -333,49 +204,27 @@
 }
 
 @keyframes grammar-spark {
-  0% {
-    opacity: 0;
-    transform: scale(0) rotate(-30deg);
-  }
-  60% {
-    opacity: 1;
-    transform: scale(1.2) rotate(10deg);
-  }
-  100% {
-    opacity: 0.9;
-    transform: scale(1) rotate(0);
-  }
+  0%   { opacity: 0; transform: scale(0) rotate(-30deg); }
+  60%  { opacity: 1; transform: scale(1.2) rotate(10deg); }
+  100% { opacity: 0.9; transform: scale(1) rotate(0); }
 }
 
 .grammar-deck__done-title {
   font-family: var(--font-editorial), Georgia, serif;
   font-weight: 480;
   font-size: 1.7rem;
-  margin-top: 18px;
   color: var(--text-primary);
 }
 
 .grammar-deck__done-sub {
   color: var(--text-secondary);
   font-size: 0.95rem;
-  margin-top: 4px;
-}
-
-.grammar-deck__done-stats {
-  display: flex;
-  gap: 14px;
-  margin: 22px 0 26px;
 }
 
 .grammar-deck__done-stats > div {
-  min-width: 88px;
-  padding: 12px 16px;
   background: var(--surface-sunken);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
 }
 
 .grammar-deck__done-stats b {
@@ -387,29 +236,16 @@
 
 .grammar-deck__done-stats span {
   font-size: 11px;
-  text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--text-tertiary);
 }
 
-.grammar-deck__done-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: center;
-}
-
 .grammar-deck__done-restart,
 .grammar-deck__done-back {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
   font-size: 0.9rem;
   font-weight: 600;
   font-family: inherit;
-  padding: 11px 18px;
   border-radius: var(--radius-md);
-  cursor: pointer;
   text-decoration: none;
   transition:
     transform var(--transition-fast),
@@ -449,7 +285,6 @@
   background: var(--surface-raised);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
-  padding: 24px 22px 18px;
   box-shadow: var(--shadow-md);
   transition: opacity 0.25s ease;
 }
@@ -458,23 +293,19 @@
   opacity: 0.58;
 }
 
-.grammar-card__top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 14px;
-}
-
 .grammar-card__tag {
   font-size: 11px;
   font-weight: 600;
-  text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--primary);
   background: var(--badge-primary-bg);
   border: 1px solid var(--badge-primary-border);
-  padding: 4px 10px;
   border-radius: 999px;
+  transition: transform var(--transition-fast);
+}
+
+.grammar-card:hover .grammar-card__tag {
+  transform: translateY(-1px);
 }
 
 .grammar-card__idx {
@@ -489,7 +320,6 @@
   font-weight: 480;
   font-size: 1.55rem;
   letter-spacing: -0.01em;
-  line-height: 1.15;
   color: var(--text-primary);
   background: transparent;
 }
@@ -503,31 +333,17 @@
 .grammar-card__lede {
   color: var(--text-secondary);
   font-size: 0.95rem;
-  margin-top: 6px;
 }
 
-.grammar-card__body {
-  margin-top: 18px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-/* Conjugation grid */
 .grammar-conj {
   display: grid;
   grid-template-columns: auto 1fr;
-  gap: 2px 0;
   border-radius: var(--radius-md);
-  overflow: hidden;
   border: 1px solid var(--border-subtle);
 }
 
 .grammar-conj > div {
-  padding: 10px 14px;
   background: var(--surface-sunken);
-  display: flex;
-  align-items: baseline;
 }
 
 .grammar-conj__pron {
@@ -543,18 +359,14 @@
 
 .grammar-conj__form b {
   color: var(--primary);
-  font-weight: 600;
 }
 
 .grammar-conj__hint {
   font-family: var(--font-sans), system-ui, sans-serif;
   color: var(--text-tertiary);
   font-size: 0.8rem;
-  margin-left: 8px;
-  font-weight: 400;
 }
 
-/* Verb table */
 .grammar-vtable {
   width: 100%;
   border-collapse: collapse;
@@ -562,17 +374,13 @@
 }
 
 .grammar-vtable th {
-  text-align: left;
   font-size: 10.5px;
-  text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--text-tertiary);
   font-weight: 600;
-  padding: 0 10px 8px;
 }
 
 .grammar-vtable td {
-  padding: 8px 10px;
   border-top: 1px solid var(--border-subtle);
   font-family: var(--font-editorial), Georgia, serif;
   color: var(--text-primary);
@@ -589,7 +397,6 @@
   color: var(--text-tertiary);
 }
 
-/* Contrast columns */
 .grammar-contrast {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -606,7 +413,6 @@
   background: var(--surface-sunken);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
-  padding: 14px;
 }
 
 .grammar-contrast__big {
@@ -618,39 +424,21 @@
 .grammar-contrast__rule {
   font-size: 0.82rem;
   color: var(--text-secondary);
-  margin: 4px 0 10px;
 }
 
 .grammar-contrast__ex {
   font-family: var(--font-editorial), Georgia, serif;
   font-size: 0.95rem;
   color: var(--text-primary);
-  line-height: 1.5;
-}
-
-/* Good / bad pairs */
-.grammar-pairs {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
 }
 
 .grammar-pair {
-  display: flex;
-  gap: 10px;
-  align-items: flex-start;
   font-family: var(--font-editorial), Georgia, serif;
   font-size: 1rem;
 }
 
 .grammar-pair__mk {
-  flex: none;
-  width: 20px;
-  height: 20px;
   border-radius: 50%;
-  display: grid;
-  place-items: center;
-  margin-top: 3px;
 }
 
 .grammar-pair--bad .grammar-pair__mk {
@@ -675,30 +463,13 @@
   font-family: var(--font-sans), system-ui, sans-serif;
   font-size: 0.8rem;
   color: var(--text-tertiary);
-  display: block;
   text-decoration: none;
-  margin-top: 2px;
-}
-
-/* Rule rows */
-.grammar-rules {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.grammar-rules__row {
-  display: flex;
-  gap: 12px;
-  align-items: baseline;
 }
 
 .grammar-rules__key {
   font-family: var(--font-editorial), Georgia, serif;
   color: var(--primary);
   font-size: 1.05rem;
-  flex: none;
-  min-width: 92px;
 }
 
 .grammar-rules__val {
@@ -717,42 +488,29 @@
   font-size: 0.85em;
 }
 
-/* Tip */
 .grammar-card__tip {
-  margin-top: 18px;
   background: var(--badge-primary-bg);
   border: 1px solid var(--badge-primary-border);
   border-radius: var(--radius-md);
-  padding: 11px 14px;
   font-size: 0.86rem;
   color: var(--text-primary);
 }
 
 .grammar-card__tip b {
   color: var(--primary);
-  font-weight: 600;
 }
 
-/* Got it */
 .grammar-card__gotit {
-  margin-top: 16px;
-  width: 100%;
   font-size: 0.88rem;
   font-weight: 600;
   color: var(--text-secondary);
   background: transparent;
   border: 1px solid var(--border-default);
   border-radius: var(--radius-md);
-  padding: 10px;
-  cursor: pointer;
   transition:
     border-color var(--transition-fast),
     color var(--transition-fast),
     background var(--transition-fast);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
   font-family: inherit;
 }
 
@@ -776,90 +534,41 @@
 }
 
 @keyframes grammar-check-pop {
-  0% {
-    transform: scale(0);
-  }
-  60% {
-    transform: scale(1.25);
-  }
-  100% {
-    transform: scale(1);
-  }
+  0%   { transform: scale(0); }
+  60%  { transform: scale(1.25); }
+  100% { transform: scale(1); }
 }
 
-/* Micro-animation: body blocks fade up as the card enters */
 .grammar-card__body > * {
   animation: grammar-block-rise 0.4s ease both;
 }
 
-.grammar-card__body > *:nth-child(2) {
-  animation-delay: 0.05s;
-}
-
-.grammar-card__body > *:nth-child(3) {
-  animation-delay: 0.1s;
-}
+.grammar-card__body > *:nth-child(2) { animation-delay: 0.05s; }
+.grammar-card__body > *:nth-child(3) { animation-delay: 0.1s; }
 
 @keyframes grammar-block-rise {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
-.grammar-card__tag {
-  transition: transform var(--transition-fast);
-}
-
-.grammar-card:hover .grammar-card__tag {
-  transform: translateY(-1px);
-}
-
-/* ── Goal / can-do line in the header ── */
 .grammar-deck__goal {
-  display: flex;
-  align-items: flex-start;
-  gap: 7px;
-  margin-top: 10px;
   font-size: 0.85rem;
-  line-height: 1.4;
   color: var(--text-secondary);
 }
 
 .grammar-deck__goal svg {
-  flex: none;
-  margin-top: 2px;
   color: var(--primary);
 }
 
-/* ── Speak button (Web Speech) ── */
 .gd-speak {
-  flex: none;
-  display: grid;
-  place-items: center;
   border-radius: 50%;
   border: 1px solid var(--accent-border);
   background: color-mix(in oklch, var(--primary) 8%, var(--surface-raised));
   color: var(--primary);
-  cursor: pointer;
   transition:
     transform var(--transition-fast),
     background var(--transition-fast),
     box-shadow var(--transition-fast);
-}
-
-.gd-speak--sm {
-  width: 26px;
-  height: 26px;
-}
-
-.gd-speak--md {
-  width: 34px;
-  height: 34px;
 }
 
 .gd-speak:hover {
@@ -877,71 +586,31 @@
   color: var(--primary-foreground, #fff);
 }
 
-/* ── Pronunciation block ── */
 .grammar-pron {
   border: 1px solid var(--accent-border);
   border-radius: var(--radius-md);
   background: color-mix(in oklch, var(--primary) 5%, var(--surface-sunken));
-  padding: 14px 16px;
-}
-
-.grammar-pron__head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  margin-bottom: 12px;
 }
 
 .grammar-pron__badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
   font-weight: 600;
   font-size: 0.8rem;
   color: var(--primary);
 }
 
 .grammar-pron__drill {
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
   font-size: 0.78rem;
   font-weight: 600;
   color: var(--primary);
   text-decoration: none;
-  white-space: nowrap;
 }
 
 .grammar-pron__drill:hover {
   text-decoration: underline;
 }
 
-.grammar-pron__list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.grammar-pron__item {
-  display: flex;
-  align-items: center;
-  gap: 11px;
-}
-
-.grammar-pron__text {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-  min-width: 0;
-}
-
 .grammar-pron__phrase {
   color: var(--text-primary);
-  font-weight: 500;
 }
 
 .grammar-pron__ipa {
@@ -955,27 +624,16 @@
 }
 
 .grammar-pron__note {
-  margin: 12px 0 0;
   font-size: 0.82rem;
   color: var(--text-secondary);
 }
 
-/* ── End-of-deck quiz ── */
 .gd-quiz {
   animation: grammar-done-in 0.4s ease-out both;
-  padding: 8px 2px 4px;
-}
-
-.gd-quiz__head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  margin-bottom: 14px;
 }
 
 .gd-quiz__kicker {
   font-size: 0.72rem;
-  text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--text-tertiary);
 }
@@ -991,29 +649,14 @@
   font-size: 1.25rem;
   font-weight: 480;
   color: var(--text-primary);
-  margin-bottom: 16px;
-}
-
-.gd-quiz__options {
-  display: flex;
-  flex-direction: column;
-  gap: 9px;
 }
 
 .gd-quiz__option {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  width: 100%;
-  text-align: left;
-  padding: 13px 15px;
   border-radius: var(--radius-md);
   border: 1px solid var(--border-default);
   background: var(--surface-raised);
   color: var(--text-primary);
   font-size: 0.92rem;
-  cursor: pointer;
   transition:
     border-color var(--transition-fast),
     background var(--transition-fast),
@@ -1023,10 +666,6 @@
 .gd-quiz__option:hover:not(:disabled) {
   border-color: var(--accent-border);
   transform: translateY(-1px);
-}
-
-.gd-quiz__option:disabled {
-  cursor: default;
 }
 
 .gd-quiz__option--correct {
@@ -1042,8 +681,6 @@
 }
 
 .gd-quiz__explain {
-  margin: 14px 0 0;
-  padding: 11px 14px;
   border-radius: var(--radius-md);
   background: var(--surface-sunken);
   border: 1px solid var(--border-subtle);
@@ -1052,18 +689,12 @@
 }
 
 .gd-quiz__next {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: 18px;
-  padding: 11px 18px;
   border-radius: 999px;
   border: none;
   background: var(--primary);
   color: var(--primary-foreground, #fff);
   font-weight: 600;
   font-size: 0.9rem;
-  cursor: pointer;
   transition: transform var(--transition-fast);
 }
 
@@ -1071,29 +702,17 @@
   transform: scale(0.96);
 }
 
-/* ── Done screen: goal, Sound Lab handoff, related ── */
 .grammar-deck__done-goal {
-  max-width: 30rem;
-  margin: 8px auto 0;
   font-size: 0.9rem;
   color: var(--text-secondary);
-  line-height: 1.45;
 }
 
 .grammar-deck__done-soundlab {
-  display: flex;
-  align-items: center;
-  gap: 11px;
-  width: 100%;
-  max-width: 26rem;
-  margin: 4px auto 16px;
-  padding: 13px 16px;
   border-radius: var(--radius-md);
   border: 1px solid var(--accent-border);
   background: color-mix(in oklch, var(--primary) 8%, var(--surface-raised));
   color: var(--text-primary);
   text-decoration: none;
-  text-align: left;
   transition:
     transform var(--transition-fast),
     box-shadow var(--transition-fast);
@@ -1105,60 +724,26 @@
 }
 
 .grammar-deck__done-soundlab > svg:first-child {
-  flex: none;
   color: var(--primary);
 }
 
 .grammar-deck__done-soundlab > svg:last-child {
-  flex: none;
-  margin-left: auto;
   color: var(--text-tertiary);
-}
-
-.grammar-deck__done-soundlab span {
-  display: flex;
-  flex-direction: column;
-  font-weight: 600;
-  font-size: 0.9rem;
 }
 
 .grammar-deck__done-soundlab em {
   font-style: normal;
-  font-weight: 500;
   font-size: 0.8rem;
   color: var(--primary);
 }
 
-.grammar-deck__related {
-  width: 100%;
-  max-width: 26rem;
-  margin: 0 auto 22px;
-  text-align: left;
-}
-
 .grammar-deck__related-label {
-  display: block;
   font-size: 0.72rem;
-  text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--text-tertiary);
-  margin-bottom: 8px;
-}
-
-.grammar-deck__related ul {
-  display: flex;
-  flex-direction: column;
-  gap: 7px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
 }
 
 .grammar-deck__related a {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  padding: 10px 13px;
   border-radius: var(--radius-md);
   border: 1px solid var(--border-default);
   background: var(--surface-raised);
@@ -1173,11 +758,9 @@
 }
 
 .grammar-deck__related svg {
-  flex: none;
   color: var(--primary);
 }
 
-/* Respect users who prefer reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .grammar-deck__slide--next,
   .grammar-deck__slide--prev,

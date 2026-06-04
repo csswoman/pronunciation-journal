@@ -1,4 +1,4 @@
-/* English Sound Chart — estilos alineados con prototipo editorial (ipa-chart) */
+/* English Sound Chart — solo lo que no puede ser Tailwind */
 
 .ipa-chart {
   --ipa-radius: 16px;
@@ -6,9 +6,6 @@
   --ipa-accent-text: var(--primary-700);
   --ipa-accent-soft: color-mix(in oklch, var(--primary) 12%, transparent);
   --ipa-accent-border: color-mix(in oklch, var(--primary) 38%, var(--border-subtle));
-  position: relative;
-  max-width: 1120px;
-  margin-inline: auto;
 }
 
 .ipa-chart::before {
@@ -30,33 +27,24 @@
   z-index: 1;
 }
 
-/* ── Tipografía ─────────────────────────────────────────────────────────── */
-
 .ipa-chart__eyebrow {
-  display: block;
-  margin-bottom: 10px;
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.16em;
-  text-transform: uppercase;
   color: var(--text-tertiary);
 }
 
 .ipa-chart__title {
-  margin-bottom: 8px;
   font-family: var(--font-editorial), "Fraunces", Georgia, serif;
   font-size: clamp(1.85rem, 4vw, 2.3rem);
   font-weight: 420;
-  line-height: 1.15;
   letter-spacing: -0.02em;
   color: var(--text-primary);
   font-optical-sizing: auto;
 }
 
 .ipa-chart__lead {
-  max-width: 60ch;
   font-size: 0.95rem;
-  line-height: 1.55;
   color: var(--text-secondary);
 }
 
@@ -64,21 +52,13 @@
   font-family: var(--font-editorial), "Fraunces", Georgia, serif;
   font-size: 1.4rem;
   font-weight: 480;
-  line-height: 1.2;
   color: var(--text-primary);
 }
 
-/* ── Botones ────────────────────────────────────────────────────────────── */
-
 .ipa-chart__btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  padding: 11px 16px;
   border-radius: var(--ipa-radius-sm);
   font-size: 0.88rem;
   font-weight: 600;
-  cursor: pointer;
   border: none;
   transition: filter 0.13s ease, border-color 0.13s ease, transform 0.13s ease;
 }
@@ -107,13 +87,7 @@
   border-color: var(--border-default);
 }
 
-/* ── Progreso ───────────────────────────────────────────────────────────── */
-
 .ipa-chart__progress {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  margin: 20px 0 8px;
   font-size: 0.85rem;
   color: var(--text-secondary);
 }
@@ -121,15 +95,11 @@
 .ipa-chart__progress-count {
   font-family: var(--font-editorial), "Fraunces", Georgia, serif;
   font-size: 1.1rem;
-  font-weight: 500;
   color: var(--text-primary);
   font-variant-numeric: tabular-nums;
 }
 
 .ipa-chart__progress-bar {
-  flex: 1;
-  height: 7px;
-  overflow: hidden;
   border-radius: 999px;
   background: var(--surface-sunken);
 }
@@ -145,10 +115,8 @@
 .ipa-chart__progress-reset {
   font-size: inherit;
   color: var(--text-tertiary);
-  cursor: pointer;
   background: none;
   border: none;
-  padding: 0;
 }
 
 .ipa-chart__progress-reset:hover:not(:disabled) {
@@ -157,44 +125,23 @@
 
 .ipa-chart__progress-reset:disabled {
   opacity: 0.4;
-  cursor: not-allowed;
 }
 
 .ipa-chart__progress-undo {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
   font-size: 0.8rem;
   font-weight: 600;
   color: var(--primary);
   background: none;
   border: none;
-  cursor: pointer;
-  padding: 0;
-}
-
-/* ── Tabs ───────────────────────────────────────────────────────────────── */
-
-.ipa-chart__tabs {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-  margin: 18px 0 16px;
 }
 
 .ipa-chart__tab {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 15px;
   border-radius: 999px;
   border: 1px solid var(--border-subtle);
   background: var(--surface-sunken);
   font-size: 13px;
   font-weight: 600;
   color: var(--text-secondary);
-  cursor: pointer;
   transition: background 0.13s ease, color 0.13s ease, border-color 0.13s ease;
 }
 
@@ -216,10 +163,7 @@
 }
 
 .ipa-chart__kbd-hint {
-  margin-left: auto;
   display: none;
-  align-items: center;
-  gap: 6px;
   font-size: 11px;
   color: var(--text-tertiary);
 }
@@ -231,12 +175,6 @@
 }
 
 .ipa-chart__kbd {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 24px;
-  height: 22px;
-  padding: 2px 7px;
   border-radius: 6px;
   border: 1px solid var(--border-subtle);
   background: var(--card-bg);
@@ -244,8 +182,6 @@
   font-weight: 600;
   color: var(--text-secondary);
 }
-
-/* ── Layout principal ───────────────────────────────────────────────────── */
 
 .ipa-chart__main {
   display: grid;
@@ -261,26 +197,14 @@
 }
 
 .ipa-chart__chartcard {
-  padding: 20px;
   border-radius: var(--ipa-radius);
   border: 1px solid var(--border-subtle);
   background: var(--card-bg);
 }
 
 .ipa-chart__chartfoot {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  margin-top: 14px;
   font-size: 0.78rem;
   color: var(--text-tertiary);
-}
-
-/* ── Matriz vocales (gap grid, sin tabla pesada) ────────────────────────── */
-
-.ipa-chart__vgrid {
-  display: grid;
-  gap: 8px;
 }
 
 .ipa-chart__vgrid--vowels {
@@ -288,48 +212,25 @@
 }
 
 .ipa-chart__vgrid-ch {
-  padding-bottom: 4px;
-  text-align: center;
   font-size: 10px;
   font-weight: 600;
   letter-spacing: 0.1em;
-  text-transform: uppercase;
   color: var(--text-tertiary);
 }
 
 .ipa-chart__vgrid-rl {
-  display: flex;
-  align-items: center;
   font-size: 10px;
   font-weight: 600;
   letter-spacing: 0.06em;
-  text-transform: uppercase;
   color: var(--text-tertiary);
 }
 
-.ipa-chart__vcell {
-  display: flex;
-  gap: 8px;
-  min-height: 64px;
-}
-
-/* ── Celda fonema ───────────────────────────────────────────────────────── */
-
 .ipa-chart__ph {
   position: relative;
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 8px 4px;
   border-radius: var(--ipa-radius-sm);
   border: 1px solid var(--border-subtle);
   background: var(--surface-sunken);
-  cursor: pointer;
-  transition: border-color 0.12s ease, transform 0.12s ease, background 0.12s ease,
-    color 0.12s ease;
+  transition: border-color 0.12s ease, transform 0.12s ease, background 0.12s ease, color 0.12s ease;
 }
 
 .ipa-chart__ph:hover:not(.ipa-chart__ph--sel) {
@@ -345,7 +246,6 @@
 .ipa-chart__ph--sel {
   background: var(--primary);
   border-color: transparent;
-  transform: none;
 }
 
 .ipa-chart__ph--explored:not(.ipa-chart__ph--sel) {
@@ -355,7 +255,6 @@
 .ipa-chart__ph-sym {
   font-family: var(--font-ipa), "Noto Sans", sans-serif;
   font-size: 1.5rem;
-  line-height: 1;
   color: var(--ipa-accent-text);
 }
 
@@ -363,52 +262,21 @@
   color: var(--on-primary);
 }
 
-.ipa-chart__ph-body {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-  min-width: 0;
-  max-width: 100%;
-}
-
 .ipa-chart__ph-word {
-  max-width: 100%;
   font-size: 9.5px;
   font-weight: 600;
   letter-spacing: 0.06em;
-  text-transform: uppercase;
-  text-align: center;
-  line-height: 1.2;
   color: var(--text-tertiary);
-  word-break: break-word;
 }
 
 .ipa-chart__ph--sel .ipa-chart__ph-word {
   color: color-mix(in oklch, var(--on-primary) 72%, transparent);
 }
 
-/* Celdas en grid agrupado de consonantes — más anchas y legibles */
-.ipa-chart__consonant-groups .ipa-chart__ggroup:first-child {
-  margin-top: 0;
-}
-
 .ipa-chart__gcells {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(92px, 1fr));
   gap: 8px;
-}
-
-.ipa-chart__ph--tile {
-  flex: none;
-  width: 100%;
-  min-height: 72px;
-  padding: 10px 8px;
-}
-
-.ipa-chart__ph--tile .ipa-chart__ph-body {
-  gap: 6px;
 }
 
 .ipa-chart__ph--tile .ipa-chart__ph-sym {
@@ -434,16 +302,6 @@
   background: var(--success);
 }
 
-.ipa-chart__ph-waves {
-  position: absolute;
-  top: 6px;
-  right: 6px;
-  display: flex;
-  align-items: flex-end;
-  gap: 3px;
-  height: 12px;
-}
-
 .ipa-chart__ph-waves span {
   width: 3px;
   border-radius: 999px;
@@ -455,18 +313,14 @@
   background: var(--on-primary);
 }
 
-/* ── Grupos consonantes / diptongos ─────────────────────────────────────── */
-
 .ipa-chart__ggroup + .ipa-chart__ggroup {
   margin-top: 16px;
 }
 
 .ipa-chart__ggroup-label {
-  margin: 0 0 8px;
   font-size: 10px;
   font-weight: 600;
   letter-spacing: 0.1em;
-  text-transform: uppercase;
   color: var(--ipa-accent-text);
 }
 
@@ -476,23 +330,15 @@
   gap: 12px;
 }
 
-/* ── Panel lateral ──────────────────────────────────────────────────────── */
-
 .ipa-chart__panel {
   position: sticky;
   top: 16px;
-  overflow: hidden;
   border-radius: var(--ipa-radius);
   border: 1px solid var(--ipa-accent-border);
-  background: linear-gradient(
-    165deg,
-    var(--ipa-accent-soft),
-    var(--card-bg) 58%
-  );
+  background: linear-gradient(165deg, var(--ipa-accent-soft), var(--card-bg) 58%);
 }
 
 .ipa-chart__panel-hero {
-  padding: 16px 20px 20px;
   border-bottom: 1px solid var(--ipa-accent-border);
 }
 
@@ -500,21 +346,14 @@
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.1em;
-  text-transform: uppercase;
   color: var(--ipa-accent-text);
 }
 
 .ipa-chart__panel-nav button {
-  width: 28px;
-  height: 28px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
   border-radius: 8px;
   border: 1px solid var(--border-subtle);
   background: var(--card-bg);
   color: var(--text-secondary);
-  cursor: pointer;
   transition: border-color 0.12s ease;
 }
 
@@ -525,21 +364,14 @@
 .ipa-chart__panel-sym {
   font-family: var(--font-ipa), sans-serif;
   font-size: 3.4rem;
-  line-height: 1;
   color: var(--text-primary);
 }
 
 .ipa-chart__panel-play {
-  width: 48px;
-  height: 48px;
-  flex-shrink: 0;
-  display: grid;
-  place-items: center;
   border: none;
   border-radius: 50%;
   background: var(--primary);
   color: var(--on-primary);
-  cursor: pointer;
   transition: transform 0.13s ease;
 }
 
@@ -548,43 +380,23 @@
 }
 
 .ipa-chart__panel-name {
-  margin-top: 4px;
   font-size: 0.88rem;
   color: var(--text-secondary);
 }
 
-.ipa-chart__panel-body {
-  padding: 16px 20px 20px;
-}
-
 .ipa-chart__panel-sec {
-  margin: 18px 0 8px;
   font-size: 10px;
   font-weight: 600;
   letter-spacing: 0.1em;
-  text-transform: uppercase;
   color: var(--text-tertiary);
 }
 
-.ipa-chart__howto {
-  display: flex;
-  flex-direction: column;
-  gap: 7px;
-}
-
 .ipa-chart__howto-step {
-  display: flex;
-  gap: 10px;
   font-size: 0.9rem;
   color: var(--text-primary);
 }
 
 .ipa-chart__howto-n {
-  width: 18px;
-  height: 18px;
-  flex: none;
-  display: grid;
-  place-items: center;
   border-radius: 50%;
   border: 1px solid var(--ipa-accent-border);
   background: var(--ipa-accent-soft);
@@ -593,21 +405,13 @@
   color: var(--ipa-accent-text);
 }
 
-.ipa-chart__exwords {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 7px;
-}
-
 .ipa-chart__exword {
   font-family: var(--font-editorial), Georgia, serif;
   font-size: 0.9rem;
-  padding: 4px 11px;
   border-radius: 8px;
   border: 1px solid var(--border-subtle);
   background: var(--surface-sunken);
   color: var(--text-primary);
-  cursor: pointer;
   transition: border-color 0.12s ease;
 }
 
@@ -616,8 +420,6 @@
 }
 
 .ipa-chart__esnote {
-  margin-top: 8px;
-  padding: 11px 13px;
   border-radius: var(--ipa-radius-sm);
   border: 1px solid color-mix(in oklch, var(--warning) 35%, transparent);
   background: var(--warning-soft);
@@ -626,57 +428,25 @@
 }
 
 .ipa-chart__esnote-h {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-bottom: 5px;
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.08em;
-  text-transform: uppercase;
   color: var(--warning-value);
 }
 
-.ipa-chart__panel-practice {
-  width: 100%;
-  margin-top: 18px;
-  justify-content: space-between;
-}
-
-/* ── Secciones inferiores ───────────────────────────────────────────────── */
-
-.ipa-chart__sections {
-  margin-top: 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
-
 .ipa-chart__section {
-  padding: 24px;
   border-radius: var(--ipa-radius);
   border: 1px solid var(--border-subtle);
   background: var(--card-bg);
 }
 
-.ipa-chart__section-head {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 14px;
-  margin-bottom: 18px;
-}
-
 .ipa-chart__pill-warn {
-  flex-shrink: 0;
-  padding: 5px 11px;
   border-radius: 999px;
   border: 1px solid color-mix(in oklch, var(--warning) 35%, transparent);
   background: var(--warning-soft);
   font-size: 11px;
   font-weight: 700;
   color: var(--warning-value);
-  white-space: nowrap;
 }
 
 .ipa-chart__hardgrid {
@@ -686,16 +456,9 @@
 }
 
 .ipa-chart__hard {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 10px;
-  padding: 14px;
-  text-align: left;
   border-radius: var(--ipa-radius-sm);
   border: 1px solid var(--border-subtle);
   background: var(--surface-sunken);
-  cursor: pointer;
   transition: border-color 0.12s ease, transform 0.12s ease;
 }
 
@@ -709,76 +472,38 @@
   outline-offset: 2px;
 }
 
-.ipa-chart__hard-head {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 6px;
-}
-
 .ipa-chart__hard-sym {
-  display: block;
   font-family: var(--font-ipa), sans-serif;
   font-size: 1.6rem;
-  line-height: 1;
   color: var(--ipa-accent-text);
 }
 
 .ipa-chart__hard-word {
-  display: block;
   font-size: 10px;
   font-weight: 600;
   letter-spacing: 0.08em;
-  text-transform: uppercase;
   color: var(--text-tertiary);
 }
 
 .ipa-chart__hard-note {
-  margin: 0;
   font-size: 0.8rem;
-  line-height: 1.45;
   color: var(--text-secondary);
 }
 
-/* ── Pares mínimos ──────────────────────────────────────────────────────── */
-
-.ipa-chart__mp-head {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 18px;
-}
-
 .ipa-chart__mp-icon {
-  width: 34px;
-  height: 34px;
-  display: grid;
-  place-items: center;
   border-radius: 10px;
   border: 1px solid var(--ipa-accent-border);
   background: var(--ipa-accent-soft);
   color: var(--ipa-accent-text);
 }
 
-.ipa-chart__mpchips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 7px;
-  margin-bottom: 14px;
-}
-
 .ipa-chart__mpchip {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 7px 13px;
   border-radius: 999px;
   border: 1px solid var(--border-subtle);
   background: var(--surface-sunken);
   font-family: var(--font-ipa), sans-serif;
   font-size: 0.88rem;
   color: var(--text-secondary);
-  cursor: pointer;
   transition: background 0.12s ease, color 0.12s ease, border-color 0.12s ease;
 }
 
@@ -816,17 +541,9 @@
 }
 
 .ipa-chart__mpcard {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 26px 20px;
-  text-align: center;
   border-radius: var(--ipa-radius);
   border: 1px solid var(--border-subtle);
   background: var(--surface-sunken);
-  min-height: 180px;
-  cursor: pointer;
   transition: border-color 0.12s ease, transform 0.12s ease, background 0.12s ease;
 }
 
@@ -860,42 +577,21 @@
 }
 
 .ipa-chart__mpcard-word {
-  margin: 6px 0 14px;
   font-family: var(--font-editorial), Georgia, serif;
   font-size: 2rem;
   color: var(--text-primary);
 }
 
 .ipa-chart__mpcard-play {
-  width: 42px;
-  height: 42px;
-  display: grid;
-  place-items: center;
-  margin-top: auto;
   border: none;
   border-radius: 50%;
   background: var(--primary);
   color: var(--on-primary);
-  cursor: pointer;
 }
 
 .ipa-chart__mpvs {
-  display: flex;
-  align-items: center;
   font-size: 0.85rem;
   color: var(--text-tertiary);
-}
-
-.ipa-chart__mpfoot {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 10px;
-  margin-top: 16px;
-}
-
-.ipa-chart__mpfoot-quiz {
-  margin-left: auto;
 }
 
 @media (max-width: 600px) {
@@ -906,25 +602,13 @@
   }
 }
 
-/* ── Banner IA ──────────────────────────────────────────────────────────── */
-
 .ipa-chart__ai {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 16px;
-  padding: 20px 24px;
   border-radius: var(--ipa-radius);
   border: 1px solid var(--ipa-accent-border);
   background: linear-gradient(150deg, var(--ipa-accent-soft), var(--card-bg) 70%);
 }
 
 .ipa-chart__ai-icon {
-  width: 42px;
-  height: 42px;
-  flex: none;
-  display: grid;
-  place-items: center;
   border-radius: 12px;
   background: linear-gradient(
     140deg,
@@ -932,22 +616,14 @@
     color-mix(in oklch, var(--primary) 85%, white)
   );
   color: var(--on-primary);
-  font-size: 20px;
-}
-
-.ipa-chart__ai-text {
-  flex: 1;
-  min-width: 200px;
 }
 
 .ipa-chart__ai-text b {
-  display: block;
   font-size: 1rem;
   color: var(--text-primary);
 }
 
 .ipa-chart__ai-text p {
-  margin-top: 2px;
   font-size: 0.88rem;
   color: var(--text-secondary);
 }

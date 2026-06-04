@@ -1,7 +1,6 @@
-/* Sound Lab — layout structure; colors from app design tokens (tokens.css) */
+/* Sound Lab — solo lo que no puede ser Tailwind */
 
 .sound-lab {
-  min-height: 100%;
   color: var(--text-primary);
   background:
     radial-gradient(
@@ -10,88 +9,44 @@
       transparent 55%
     ),
     var(--surface-base);
-  position: relative;
 }
 
-.sound-lab__wrap {
-  max-width: 920px;
-  margin: 0 auto;
-  padding: 0 20px 80px;
-}
-
-/* Focus banner — shown when arriving from a course lesson (?focus=…) */
 .sound-lab__focus {
-  display: flex;
-  align-items: center;
-  gap: 11px;
-  margin: 4px 0 14px;
-  padding: 12px 15px;
   border-radius: var(--radius-md);
   border: 1px solid var(--accent-border);
   background: color-mix(in oklch, var(--primary) 9%, var(--surface-raised));
 }
 
 .sound-lab__focus > svg {
-  flex: none;
   color: var(--primary);
 }
 
 .sound-lab__focus-text {
-  flex: 1;
-  min-width: 0;
   font-size: 0.88rem;
   color: var(--text-secondary);
 }
 
 .sound-lab__focus-text strong {
   color: var(--primary);
-  font-weight: 600;
 }
 
 .sound-lab__focus-clear {
-  flex: none;
   font-size: 0.8rem;
-  font-weight: 600;
   color: var(--primary);
   text-decoration: none;
-  white-space: nowrap;
 }
 
 .sound-lab__focus-clear:hover {
   text-decoration: underline;
 }
 
-.sound-lab__hero {
-  padding: 42px 0 22px;
-}
-
-.sound-lab__intro {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 28px;
-  margin-bottom: 4px;
-}
-
-.sound-lab__intro-head {
-  flex: 1;
-  min-width: 0;
-}
-
 .sound-lab__live-dot {
-  width: 7px;
-  height: 7px;
   border-radius: 50%;
   background: var(--primary);
   box-shadow: 0 0 0 3px var(--accent-dim);
 }
 
 .sound-lab__resume {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin: 22px 0 0;
-  padding: 16px 18px;
   border-radius: var(--radius-lg);
   border: 1px solid var(--accent-border);
   background: linear-gradient(
@@ -99,10 +54,7 @@
     color-mix(in oklch, var(--primary) 12%, transparent),
     var(--surface-raised) 65%
   );
-  cursor: pointer;
   transition: transform 0.15s ease;
-  text-align: left;
-  width: 100%;
   font: inherit;
   color: inherit;
 }
@@ -112,37 +64,21 @@
 }
 
 .sound-lab__resume-play {
-  width: 52px;
-  height: 52px;
-  flex: none;
   border-radius: 50%;
   background: var(--primary);
   color: var(--on-primary);
-  display: grid;
-  place-items: center;
 }
 
 .sound-lab__resume-label {
   font-size: 11px;
   color: var(--text-tertiary);
-  text-transform: uppercase;
   letter-spacing: 0.12em;
-}
-
-.sound-lab__resume-title {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 8px;
-  margin-top: 2px;
-  line-height: 1.2;
 }
 
 .sound-lab__resume-ipa {
   font-family: var(--font-editorial), "Fraunces", Georgia, serif;
   font-optical-sizing: auto;
   font-size: 1.35rem;
-  font-weight: 600;
   color: var(--primary);
 }
 
@@ -156,36 +92,18 @@
   font-family: var(--font-display), serif;
   font-size: 1.4rem;
   color: var(--primary);
-  flex-shrink: 0;
-}
-
-.sound-lab__stats {
-  display: flex;
-  flex-shrink: 0;
-  gap: 22px;
-  margin-bottom: 0;
-  padding-bottom: 2px;
-}
-
-.sound-lab__intro .sound-lab__stat {
-  text-align: right;
 }
 
 .sound-lab__stat b {
-  display: block;
   font-family: var(--font-display), serif;
   font-size: 1.5rem;
-  line-height: 1;
   font-weight: 480;
   color: var(--text-primary);
 }
 
 .sound-lab__stat span {
-  display: block;
-  margin-top: 4px;
   font-size: 11px;
   color: var(--text-tertiary);
-  text-transform: uppercase;
   letter-spacing: 0.1em;
 }
 
@@ -193,37 +111,12 @@
   color: var(--primary);
 }
 
-.sound-lab__toolbar {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
-  margin: 18px 0 22px;
-}
-
-.sound-lab__intro + .sound-lab__toolbar {
-  margin-top: 22px;
-}
-
-.sound-lab__resume + .sound-lab__toolbar {
-  margin-top: 16px;
-}
-
-.sound-lab__chips {
-  display: flex;
-  gap: 7px;
-  flex-wrap: wrap;
-}
-
 .sound-lab__chip {
   font-size: 12.5px;
-  font-weight: 600;
   color: var(--text-secondary);
   background: var(--surface-sunken);
   border: 1px solid var(--border-subtle);
-  padding: 7px 14px;
   border-radius: var(--radius-full);
-  cursor: pointer;
   transition: 0.15s ease;
 }
 
@@ -243,16 +136,10 @@
 }
 
 .sound-lab__search {
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-  gap: 8px;
   background: var(--surface-sunken);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-full);
-  padding: 8px 16px;
   color: var(--text-tertiary);
-  min-width: 180px;
 }
 
 .sound-lab__search input {
@@ -261,27 +148,11 @@
   color: var(--text-primary);
   font-family: inherit;
   outline: none;
-  width: 140px;
   font-size: 0.875rem;
 }
 
 .sound-lab__search input::placeholder {
   color: var(--text-placeholder);
-}
-
-.sound-lab__search input:focus-visible {
-  outline: none;
-}
-
-.sound-lab__group {
-  margin-top: 30px;
-}
-
-.sound-lab__group-head {
-  display: flex;
-  align-items: baseline;
-  gap: 10px;
-  margin-bottom: 14px;
 }
 
 .sound-lab__group-head h2 {
@@ -303,13 +174,9 @@
 }
 
 .sound-lab__card {
-  position: relative;
-  overflow: hidden;
   background: var(--surface-raised);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
-  padding: 16px;
-  cursor: pointer;
   transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
@@ -336,22 +203,12 @@
   font-size: 2.4rem;
   font-weight: 600;
   color: var(--primary);
-  line-height: 1;
   letter-spacing: -0.02em;
 }
 
 .sound-lab__card-sub {
-  margin: 6px 0 0;
   font-size: 0.82rem;
   color: var(--text-secondary);
-  line-height: 1.35;
-}
-
-.sound-lab__ex {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-  margin-top: 10px;
 }
 
 .sound-lab__ex span {
@@ -359,7 +216,6 @@
   font-size: 0.8rem;
   color: var(--text-tertiary);
   background: var(--surface-sunken);
-  padding: 2px 8px;
   border-radius: var(--radius-sm);
 }
 
@@ -375,7 +231,6 @@
   font-family: var(--font-display), serif;
   font-weight: 380;
   font-size: clamp(2.2rem, 5vw, 3.1rem);
-  line-height: 1.05;
   letter-spacing: -0.02em;
   color: var(--text-primary);
 }
@@ -390,13 +245,8 @@
 }
 
 .sound-lab__eyebrow {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 12px;
   font-size: 11px;
   font-weight: 600;
-  text-transform: uppercase;
   letter-spacing: 0.18em;
   color: var(--text-tertiary);
 }
