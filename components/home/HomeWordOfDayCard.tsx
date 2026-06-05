@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import Link from "next/link";
-import { Volume2, Mic, Square, Play, Loader2, RotateCcw } from "lucide-react";
+import { Volume2, Mic, Square, Loader2, RotateCcw } from "lucide-react";
 import Button from "@/components/ui/Button";
 import { SyllableWord } from "@/components/ui/SyllableWord";
 import { CardBadge } from "@/components/ui/CardBadge";
@@ -14,10 +14,7 @@ export default function HomeWordOfDayCard() {
   const { word, loading, error, refresh } = useWordOfDay();
   const [speaking, setSpeaking] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
-  const [recordedUrl, setRecordedUrl] = useState<string | null>(null);
-  const [playingRecording, setPlayingRecording] = useState(false);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const { state, result, start, stop } = useSpeechInput({ prefer: "web-speech" });
+  const { start, stop } = useSpeechInput({ prefer: "web-speech" });
 
   function speak() {
     if (!word || !window.speechSynthesis) return;
@@ -32,7 +29,6 @@ export default function HomeWordOfDayCard() {
   }
 
   async function startRecording() {
-    setRecordedUrl(null);
     await start();
     setIsRecording(true);
   }
@@ -40,28 +36,6 @@ export default function HomeWordOfDayCard() {
   async function stopRecording() {
     await stop();
     setIsRecording(false);
-  }
-
-  useEffect(() => {
-    if (state !== "done") return;
-    const transcript = result?.transcript ?? "";
-    if (!transcript) return;
-    const blob = new Blob([transcript], { type: "text/plain" });
-    setRecordedUrl(URL.createObjectURL(blob));
-  }, [state, result]);
-
-  function playRecording() {
-    if (!recordedUrl) return;
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current = null;
-    }
-    const audio = new Audio(recordedUrl);
-    audioRef.current = audio;
-    audio.onplay = () => setPlayingRecording(true);
-    audio.onended = () => setPlayingRecording(false);
-    audio.onerror = () => setPlayingRecording(false);
-    audio.play();
   }
 
   const difficultyColor =
@@ -80,7 +54,8 @@ export default function HomeWordOfDayCard() {
             type="button"
             onClick={() => refresh()}
             className="text-fg-subtle transition-colors hover:text-fg-muted"
-            title="Refresh"
+            aria-label="Refresh word of the day"
+            title="Refresh word of the day"
           >
             <RotateCcw size={13} />
           </button>
@@ -126,7 +101,7 @@ export default function HomeWordOfDayCard() {
           </div>
 
           <WaveformVisualizer
-            isActive={speaking || playingRecording}
+            isActive={speaking}
             isRecording={isRecording}
             color="gradient"
             className="mt-3 h-8"
@@ -165,20 +140,6 @@ export default function HomeWordOfDayCard() {
               </Button>
             )}
           </div>
-
-          {recordedUrl && (
-            <Button
-              variant="secondary"
-              size="sm"
-              icon={<Play size={14} />}
-              onClick={playRecording}
-              disabled={playingRecording}
-              fullWidth
-              className="mt-2"
-            >
-              {playingRecording ? "Playing…" : "Play my recording"}
-            </Button>
-          )}
 
           <Link
             href="/words?tab=lexicon"
