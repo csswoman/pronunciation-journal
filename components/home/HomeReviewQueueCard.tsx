@@ -115,7 +115,7 @@ export default function HomeReviewQueueCard({
           iconPosition="right"
           className="shrink-0 text-caption"
         >
-          Ver diaria
+          View daily
         </Anchor>
       </div>
 
@@ -235,7 +235,7 @@ export default function HomeReviewQueueCard({
 
       {reviewState.phase === "done" ? (
         <div className="mt-3 rounded-[var(--radius-md)] bg-[var(--success-soft)] px-4 py-3 text-center text-sm text-[var(--text-secondary)]">
-          ¡Repaso completado! Vuelve mañana.
+          Review complete! Come back tomorrow.
         </div>
       ) : (
         <Button
@@ -249,13 +249,13 @@ export default function HomeReviewQueueCard({
           disabled={totalDue === 0 || reviewState.phase === "loading"}
           onClick={handleStartReview}
         >
-          {reviewState.phase === "loading" ? "Preparando…" : "Start review"}
+          {reviewState.phase === "loading" ? "Preparing…" : "Start review"}
         </Button>
       )}
 
       {reviewState.phase === "error" ? (
         <p className="mt-2 text-center text-xs text-[var(--error)]">
-          No se pudo cargar el repaso. Inténtalo de nuevo.
+          Couldn't load the review. Try again.
         </p>
       ) : null}
     </div>

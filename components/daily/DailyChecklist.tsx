@@ -47,7 +47,7 @@ export default function DailyChecklist({ conceptLesson }: DailyChecklistProps) {
   if (status === 'loading' || status === 'idle') {
     return (
       <div className="phoneme-focus fixed inset-0 z-40 flex items-center justify-center">
-        <div className="animate-pulse text-fg-subtle">Preparando tu plan de hoy…</div>
+        <div className="animate-pulse text-fg-subtle">Preparing your plan…</div>
       </div>
     )
   }
@@ -56,9 +56,9 @@ export default function DailyChecklist({ conceptLesson }: DailyChecklistProps) {
     return (
       <div className="phoneme-focus fixed inset-0 z-40 flex items-center justify-center p-6">
         <div className="space-y-3 text-center">
-          <p className="text-error">No se pudo preparar tu plan de hoy. Inténtalo de nuevo.</p>
+          <p className="text-error">Couldn't prepare your plan. Please try again.</p>
           <Button type="button" variant="primary" size="sm" onClick={load}>
-            Reintentar
+            Retry
           </Button>
         </div>
       </div>
@@ -90,11 +90,10 @@ export default function DailyChecklist({ conceptLesson }: DailyChecklistProps) {
             <Flame size={30} />
           </div>
           <h1 className="text-3xl font-medium text-[var(--text-primary)]" style={{ fontFamily: 'var(--font-display), serif' }}>
-            ¡Diaria cumplida!
+            Daily complete!
           </h1>
           <p className="max-w-sm text-[15px] text-[var(--text-secondary)]">
-            Completaste tus {steps.length} pasos de hoy. Tu racha sigue viva — vuelve mañana para
-            mantenerla.
+            You completed all {steps.length} steps today. Your streak is alive — come back tomorrow.
           </p>
           <div className="mt-4 flex flex-col gap-3 sm:flex-row">
             <Link href="/">
@@ -104,7 +103,7 @@ export default function DailyChecklist({ conceptLesson }: DailyChecklistProps) {
             </Link>
             <Link href="/practice/sounds">
               <Button variant="secondary" size="md" icon={<ArrowRight size={15} />} iconPosition="right">
-                Ejercicios libres
+                Free practice
               </Button>
             </Link>
           </div>
@@ -117,9 +116,9 @@ export default function DailyChecklist({ conceptLesson }: DailyChecklistProps) {
   return (
     <PageLayout className="mx-auto max-w-[680px]">
       <header className="mb-6">
-        <Badge label="Plan de hoy" variant="default" className="mb-3" />
+        <Badge label="Today's plan" variant="default" className="mb-3" />
         <h1 className="text-3xl font-medium text-[var(--text-primary)]" style={{ fontFamily: 'var(--font-display), serif' }}>
-          Tu diaria
+          Your daily
         </h1>
         <p className="mt-1 text-[15px] text-[var(--text-secondary)]">
           {completedCount} de {steps.length} pasos · completa los {steps.length} para mantener tu racha.

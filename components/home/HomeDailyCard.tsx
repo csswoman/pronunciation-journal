@@ -110,14 +110,14 @@ export default function HomeDailyCard({ streak, preview, conceptLesson }: HomeDa
   if (!expanded) {
     return (
       <div className="flex flex-col rounded-[var(--radius-xl)] border p-6" style={CARD_STYLE}>
-        <Badge label="Plan de hoy" variant="default" className="self-start mb-3.5" />
+        <Badge label="Today's plan" variant="default" className="self-start mb-3.5" />
         <h3 className="text-2xl font-medium text-[var(--text-primary)]" style={{ fontFamily: 'var(--font-display), serif' }}>
-          Tu diaria
+          Your daily
         </h3>
         <p className="mt-1 text-[15px] text-[var(--text-secondary)] leading-snug">
           {isNewUser
-            ? 'Empieza con una mezcla de sonidos, pares mínimos y un concepto nuevo — sin necesidad de avance previo.'
-            : 'Una mezcla equilibrada de repaso, tus sonidos débiles y algo nuevo.'}
+            ? 'Start with a mix of sounds, minimal pairs, and a new concept — no prior progress needed.'
+            : 'A balanced mix of review, your weak sounds, and something new.'}
         </p>
 
         <ol className="mt-5 flex flex-col gap-2.5">
@@ -145,7 +145,7 @@ export default function HomeDailyCard({ streak, preview, conceptLesson }: HomeDa
             className="justify-center py-3.5 text-base"
             onClick={handleStart}
           >
-            {completedToday ? 'Practicar de nuevo' : 'Empezar plan de hoy'}
+            {completedToday ? 'Practice again' : "Start today's plan"}
           </Button>
           <p className="mt-2.5 text-center text-[13px] text-[var(--text-tertiary)]">
             ≈ {estMinutes} min · {previewSteps.length} pasos
@@ -159,7 +159,7 @@ export default function HomeDailyCard({ streak, preview, conceptLesson }: HomeDa
   return (
     <div className="flex flex-col rounded-[var(--radius-xl)] border p-6" style={CARD_STYLE}>
       <div className="mb-4 flex items-center justify-between gap-3">
-        <Badge label="Plan de hoy" variant="default" />
+        <Badge label="Today's plan" variant="default" />
         {status === 'ready' && (
           <span className="text-[13px] text-[var(--text-tertiary)]">
             {completedCount} de {steps.length}
@@ -169,15 +169,15 @@ export default function HomeDailyCard({ streak, preview, conceptLesson }: HomeDa
 
       {status === 'loading' && (
         <div className="flex items-center justify-center py-10">
-          <span className="animate-pulse text-fg-subtle">Preparando tu plan de hoy…</span>
+          <span className="animate-pulse text-fg-subtle">Preparing your plan…</span>
         </div>
       )}
 
       {status === 'error' && (
         <div className="flex flex-col items-center gap-3 py-8 text-center">
-          <p className="text-error">No se pudo preparar tu plan de hoy.</p>
+          <p className="text-error">Couldn't prepare your plan.</p>
           <Button type="button" variant="primary" size="sm" onClick={() => void load()}>
-            Reintentar
+            Retry
           </Button>
         </div>
       )}
@@ -188,13 +188,13 @@ export default function HomeDailyCard({ streak, preview, conceptLesson }: HomeDa
             <div className="grid h-12 w-12 place-items-center rounded-full bg-[var(--hue-icon-bg)] text-[var(--primary)]">
               <Flame size={24} />
             </div>
-            <p className="text-lg font-medium text-[var(--text-primary)]">¡Diaria cumplida!</p>
+            <p className="text-lg font-medium text-[var(--text-primary)]">Daily complete!</p>
             <p className="max-w-xs text-[13px] text-[var(--text-secondary)]">
-              Completaste tus {steps.length} pasos de hoy. Tu racha sigue viva.
+              You completed all {steps.length} steps today. Your streak is alive.
             </p>
             <Link href="/practice/sounds">
               <Button variant="secondary" size="sm" icon={<ArrowRight size={14} />} iconPosition="right">
-                Ejercicios libres
+                Free practice
               </Button>
             </Link>
           </div>
