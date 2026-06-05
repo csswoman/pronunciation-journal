@@ -46,7 +46,7 @@ export default function HomeStreakBadge({ streak }: HomeStreakBadgeProps) {
       </div>
       <b
         className="font-display text-2xl block leading-none text-[var(--text-primary)] mt-0.5"
-        aria-label={`${current} day streak`}
+        aria-label={`${current} ${current === 1 ? 'day' : 'days'} streak`}
       >
         {current}
       </b>
