@@ -114,7 +114,8 @@ async function fetchWeakestSoundProgress(userId: string): Promise<Sound | null> 
     .eq('user_id', userId)
     .gt('total_attempts', 0)
 
-  if (error) throw error
+  // Table may not exist yet (PGRST205) — treat as no progress rather than crashing
+  if (error) return null
   if (!data || data.length === 0) return null
 
   // Find IPA with lowest accuracy across its contrast rows
@@ -314,7 +315,7 @@ async function fetchDueSounds(userId: string): Promise<Sound[]> {
     .order('next_review', { ascending: true })
     .limit(4) // fetch a few extra since we dedupe by IPA
 
-  if (error) throw error
+  if (error) return []
 
   // Collect unique IPAs from due contrasts, take up to 2 sounds
   const seen = new Set<string>()
