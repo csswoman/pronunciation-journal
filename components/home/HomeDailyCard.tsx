@@ -162,7 +162,7 @@ export default function HomeDailyCard({ streak, preview, conceptLesson }: HomeDa
         <Badge label="Today's plan" variant="default" />
         {status === 'ready' && (
           <span className="text-[13px] text-[var(--text-tertiary)]">
-            {completedCount} de {steps.length}
+            {completedCount} of {steps.length}
           </span>
         )}
       </div>
