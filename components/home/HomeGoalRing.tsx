@@ -53,11 +53,11 @@ export default function HomeGoalRing({
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
         <b
-          className="font-display text-xl leading-none text-[var(--text-primary)]"
+          className="text-xl font-bold leading-none text-[var(--text-primary)]"
         >
           {pct}%
         </b>
-        <span className="text-[10px] text-[var(--text-tertiary)] uppercase tracking-wider mt-0.5 text-center px-1">
+        <span className="text-[11px] font-semibold text-[var(--text-tertiary)] uppercase tracking-widest mt-0.5 text-center px-1">
           {label}
         </span>
       </div>

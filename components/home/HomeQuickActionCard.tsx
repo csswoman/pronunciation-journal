@@ -1,13 +1,12 @@
 import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import type { ReactNode } from "react";
-import Badge from "@/components/ui/Badge";
 
 interface HomeQuickActionCardProps {
   href: string;
   icon: ReactNode;
   title: string;
   description: string;
-  badge?: string;
 }
 
 export default function HomeQuickActionCard({
@@ -15,21 +14,20 @@ export default function HomeQuickActionCard({
   icon,
   title,
   description,
-  badge,
 }: HomeQuickActionCardProps) {
   return (
     <Link
       href={href}
-      className="group flex flex-1 flex-col rounded-[var(--radius-xl)] border border-border-subtle bg-surface-raised p-5 transition-[transform,border-color] duration-150 hover:-translate-y-0.5 hover:border-[var(--accent-border)]"
+      className="group flex items-center gap-4 rounded-[var(--radius-xl)] border border-border-subtle bg-surface-raised px-5 py-5 transition-[transform,border-color] duration-150 hover:-translate-y-0.5 hover:border-[var(--accent-border)]"
     >
-      <div className="mb-3 grid h-9 w-9 place-items-center rounded-md bg-[var(--hue-icon-bg)] text-[var(--primary)]">
+      <div className="grid h-10 w-10 shrink-0 place-items-center rounded-md bg-[var(--hue-icon-bg)] text-[var(--primary)]">
         {icon}
       </div>
-      <div className="flex items-center gap-2">
-        <p className="text-[15px] font-semibold text-[var(--text-primary)]">{title}</p>
-        {badge ? <Badge label={badge} variant="default" size="sm" /> : null}
+      <div className="min-w-0 flex-1">
+        <p className="text-base font-semibold text-[var(--text-primary)]">{title}</p>
+        <p className="mt-0.5 text-sm leading-snug text-[var(--text-secondary)]">{description}</p>
       </div>
-      <p className="mt-1 text-[13px] leading-snug text-[var(--text-tertiary)]">{description}</p>
+      <ArrowRight size={16} className="shrink-0 text-[var(--text-tertiary)] transition-transform duration-150 group-hover:translate-x-0.5" />
     </Link>
   );
 }

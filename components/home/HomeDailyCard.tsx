@@ -7,88 +7,41 @@ import Button from '@/components/ui/Button'
 import Badge from '@/components/ui/Badge'
 import PracticeSession from '@/components/practice/PracticeSession'
 import DailyStepList from '@/components/daily/DailyStepList'
-import { DailyStepIcon } from '@/components/daily/dailyIcons'
 import { useDailyPlan, type ConceptLesson, type DailyStep } from '@/hooks/useDailyPlan'
 import { useAuth } from '@/components/auth/AuthProvider'
 import type { DailyStreakResult } from '@/lib/daily/streak'
-import type { DailyPlanPreview } from '@/lib/home/constants'
 
 interface HomeDailyCardProps {
   streak?: DailyStreakResult
-  /** Preview ligero del server (se muestra antes de generar el plan real). */
-  preview?: DailyPlanPreview | null
   conceptLesson: ConceptLesson | null
 }
 
 const CARD_STYLE = {
   background:
     'linear-gradient(150deg, color-mix(in oklch, var(--primary) 12%, transparent), var(--surface-raised) 65%)',
-  borderColor: 'var(--accent-border)',
 }
-
-function expandedKey(userId: string): string {
-  const now = new Date()
-  const y = now.getFullYear()
-  const m = String(now.getMonth() + 1).padStart(2, '0')
-  const d = String(now.getDate()).padStart(2, '0')
-  return `daily-expanded:${userId}:${y}-${m}-${d}`
-}
-
-/**
- * Tarjeta de la diaria en el home. Por defecto muestra el preview de los 5
- * pasos; al pulsar "Empezar plan de hoy" genera el plan real y despliega el
- * checklist embebido. Tocar un paso abre su sesión de ejercicios a pantalla
- * completa (overlay) y al terminar vuelve al home con el paso marcado.
- *
- * Tanto el plan generado como el estado expandido se persisten en localStorage
- * con clave de fecha: al recargar el mismo día se restaura sin regenerar.
- */
-export default function HomeDailyCard({ streak, preview, conceptLesson }: HomeDailyCardProps) {
+export default function HomeDailyCard({ streak, conceptLesson }: HomeDailyCardProps) {
   const { user } = useAuth()
   const { status, steps, doneIds, completedCount, allDone, load, markDone, celebrate } = useDailyPlan({
     conceptLesson,
     autoLoad: false,
   })
 
-  const [expanded, setExpanded] = useState(false)
   const [activeStep, setActiveStep] = useState<DailyStep | null>(null)
   const [sessionKey, setSessionKey] = useState(0)
 
-  const completedToday = streak?.completedToday ?? false
-  const previewSteps = preview?.steps ?? []
-  const isNewUser = preview?.isNewUser ?? false
-  const estMinutes = preview?.estMinutes ?? Math.max(10, previewSteps.length * 2)
-
-  // Restaurar estado expandido desde localStorage una vez que el usuario está disponible.
+  // Carga el plan en cuanto el usuario esté disponible, una vez por día.
   useEffect(() => {
-    if (!user) return
-    if (window.localStorage.getItem(expandedKey(user.id)) === '1') {
-      setExpanded(true)
-    }
-  }, [user])
-
-  // Cargar el plan cuando la card está expandida, el usuario está disponible
-  // y el plan aún no está listo. Re-dispara si user llega después del expand.
-  useEffect(() => {
-    if (expanded && user && (status === 'idle' || status === 'error')) void load()
-  }, [expanded, user, status, load])
+    if (user && (status === 'idle' || status === 'error')) void load()
+  }, [user, status, load])
 
   // Celebra una vez cuando todos los pasos quedan hechos.
   useEffect(() => {
-    if (expanded && allDone && !activeStep) celebrate()
-  }, [expanded, allDone, activeStep, celebrate])
-
-  const handleStart = useCallback(() => {
-    setExpanded(true)
-    if (user) {
-      try { window.localStorage.setItem(expandedKey(user.id), '1') } catch {}
-      if (status === 'idle' || status === 'error') void load()
-    }
-    // If user not ready yet, the expanded+user effect will trigger load()
-  }, [status, load, user])
+    if (allDone && !activeStep) celebrate()
+  }, [allDone, activeStep, celebrate])
 
   const handleStartStep = useCallback((step: DailyStep) => {
-    if (step.kind === 'concept') return // lo maneja el Link de DailyStepList
+    if (step.kind === 'concept') return
     setSessionKey((k) => k + 1)
     setActiveStep(step)
   }, [])
@@ -110,67 +63,20 @@ export default function HomeDailyCard({ streak, preview, conceptLesson }: HomeDa
     )
   }
 
-  // ── Vista colapsada: preview + CTA ─────────────────────────────────────────
-  if (!expanded) {
-    return (
-      <div className="flex flex-col rounded-[var(--radius-xl)] border p-6" style={CARD_STYLE}>
-        <Badge label="Today's plan" variant="default" className="self-start mb-3.5" />
-        <h3 className="font-display text-2xl font-medium text-[var(--text-primary)]">
-          Your daily
-        </h3>
-        <p className="mt-1 text-[15px] text-[var(--text-secondary)] leading-snug">
-          {isNewUser
-            ? 'Start with a mix of sounds, minimal pairs, and a new concept — no prior progress needed.'
-            : 'A balanced mix of review, your weak sounds, and something new.'}
-        </p>
-
-        <ol className="mt-5 flex flex-col gap-2.5">
-          {previewSteps.map((step) => (
-            <li key={step.id} className="flex items-center gap-3 text-[15px]">
-              <span className="grid h-7 w-7 shrink-0 place-items-center rounded-md bg-[var(--hue-icon-bg)] text-[var(--primary)]">
-                <DailyStepIcon name={step.icon} size={14} />
-              </span>
-              <span className="min-w-0 flex-1 truncate text-[var(--text-primary)]">{step.title}</span>
-            </li>
-          ))}
-        </ol>
-
-        <div className="mt-auto pt-5">
-          <Button
-            type="button"
-            variant="primary"
-            size="md"
-            fullWidth
-            icon={<ArrowRight size={15} />}
-            iconPosition="right"
-            className="justify-center py-3.5 text-base"
-            onClick={handleStart}
-          >
-            {completedToday ? 'Practice again' : "Start today's plan"}
-          </Button>
-          <p className="mt-2.5 text-center text-[13px] text-[var(--text-tertiary)]">
-            ≈ {estMinutes} min · {previewSteps.length} steps
-          </p>
-        </div>
-      </div>
-    )
-  }
-
-  // ── Vista expandida: checklist real embebido ───────────────────────────────
+  // ── Checklist embebido (único estado) ─────────────────────────────────────
   return (
-    <div className="flex flex-col rounded-[var(--radius-xl)] border p-6" style={CARD_STYLE}>
-      <div className="mb-4 flex items-center justify-between gap-3">
-        <Badge label="Today's plan" variant="default" />
-        {status === 'ready' && (
-          <span className="text-[13px] text-[var(--text-tertiary)]">
-            {completedCount} of {steps.length}
-          </span>
-        )}
-      </div>
-
+    <div className="flex flex-col rounded-[var(--radius-xl)] border border-border-subtle p-6" style={CARD_STYLE}>
       {(status === 'loading' || status === 'idle') && (
-        <div className="flex items-center justify-center py-10">
-          <span className="animate-pulse text-fg-subtle">Preparing your plan…</span>
+        <div className="flex flex-col gap-2.5">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <div key={i} className="flex items-center gap-3">
+              <div className="h-7 w-7 shrink-0 rounded-md bg-surface-sunken animate-pulse" />
+              <div className="h-4 flex-1 rounded-md bg-surface-sunken animate-pulse" style={{ width: `${70 + (i % 3) * 10}%` }} />
+            </div>
+          ))}
+          <p className="mt-2 text-center text-xs text-[var(--text-tertiary)] animate-pulse">
+            Preparing your plan…
+          </p>
         </div>
       )}
 
@@ -189,8 +95,8 @@ export default function HomeDailyCard({ streak, preview, conceptLesson }: HomeDa
             <div className="grid h-12 w-12 place-items-center rounded-full bg-[var(--hue-icon-bg)] text-[var(--primary)]">
               <Flame size={24} />
             </div>
-            <p className="text-lg font-medium text-[var(--text-primary)]">Daily complete!</p>
-            <p className="max-w-xs text-[13px] text-[var(--text-secondary)]">
+            <p className="text-base font-semibold text-[var(--text-primary)]">Daily complete!</p>
+            <p className="max-w-xs text-xs text-[var(--text-secondary)]">
               You completed all {steps.length} steps today. Your streak is alive.
             </p>
             <Link href="/practice/sounds">
@@ -201,11 +107,17 @@ export default function HomeDailyCard({ streak, preview, conceptLesson }: HomeDa
           </div>
         ) : (
           <>
-            <div className="mb-4 h-1.5 w-full overflow-hidden rounded-full bg-surface-sunken">
-              <div
-                className="h-full w-full rounded-full bg-[var(--primary)] origin-left transition-transform duration-300 ease-out"
-                style={{ transform: `scaleX(${steps.length ? completedCount / steps.length : 0})` }}
-              />
+            <div className="mb-4 flex items-center gap-3">
+              <Badge label="Today's plan" variant="default" className="shrink-0" />
+              <div className="flex-1 overflow-hidden rounded-full bg-surface-sunken h-1.5">
+                <div
+                  className="h-full rounded-full bg-[var(--primary)] origin-left transition-transform duration-300 ease-out"
+                  style={{ transform: `scaleX(${steps.length ? completedCount / steps.length : 0})` }}
+                />
+              </div>
+              <span className="shrink-0 text-xs text-[var(--text-tertiary)]">
+                {completedCount} of {steps.length}
+              </span>
             </div>
             <DailyStepList
               steps={steps}

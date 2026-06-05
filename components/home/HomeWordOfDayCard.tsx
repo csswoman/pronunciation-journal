@@ -69,18 +69,29 @@ export default function HomeWordOfDayCard() {
         </div>
       )}
 
-      {error && <p className="py-2 text-xs text-error">{error}</p>}
+      {error && (
+        <div className="flex items-center gap-2 py-2">
+          <p className="text-xs text-[var(--error)]">Couldn't load today's word.</p>
+          <button
+            type="button"
+            onClick={() => refresh()}
+            className="text-xs text-[var(--primary)] hover:underline"
+          >
+            Try again
+          </button>
+        </div>
+      )}
 
       {word && !loading && (
         <>
           <div className="mt-3">
-            <p className="text-2xl font-bold leading-none text-[var(--text-primary)]">
+            <p className="font-display text-2xl font-semibold leading-none text-[var(--text-primary)]">
               <SyllableWord word={word.word} />
             </p>
             <div className="mt-1 flex items-center gap-2">
-              <p className="font-ipa">{word.ipa}</p>
+              <p className="font-ipa text-sm">{word.ipa}</p>
               {word.part_of_speech ? (
-                <span className="text-tiny rounded border border-border-default bg-surface-sunken px-1.5 py-0.5 font-medium text-fg-muted">
+                <span className="text-[11px] rounded border border-border-default bg-surface-sunken px-1.5 py-0.5 font-medium text-fg-muted">
                   {word.part_of_speech}
                 </span>
               ) : null}
@@ -89,12 +100,12 @@ export default function HomeWordOfDayCard() {
               className="mt-2 rounded-lg py-2 pl-3"
               style={{ backgroundColor: "color-mix(in oklch, var(--primary) 10%, transparent)" }}
             >
-              <p className="text-body-sm italic leading-relaxed text-[var(--text-secondary)]">
+              <p className="text-sm italic leading-relaxed text-[var(--text-secondary)]">
                 {word.definition}
               </p>
             </div>
             {word.example_sentence ? (
-              <p className="mt-1 text-body-sm italic text-[var(--text-tertiary)]">
+              <p className="mt-1 text-sm italic text-[var(--text-tertiary)]">
                 &ldquo;{word.example_sentence}&rdquo;
               </p>
             ) : null}
@@ -143,7 +154,7 @@ export default function HomeWordOfDayCard() {
 
           <Link
             href="/words?tab=lexicon"
-            className="mt-3 text-[13px] text-[var(--primary)] hover:underline"
+            className="mt-3 text-xs text-[var(--primary)] hover:underline"
           >
             Save to vocabulary →
           </Link>

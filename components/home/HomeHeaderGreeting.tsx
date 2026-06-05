@@ -3,10 +3,6 @@ import { CalendarDays } from "lucide-react";
 interface HomeHeaderGreetingProps {
   userName: string;
   dateLabel: string;
-  exercisesReady?: number;
-  improvedPhoneme?: string | null;
-  improvementPct?: number | null;
-  hideSubtitle?: boolean;
 }
 
 function getTimeGreeting(): string {
@@ -16,42 +12,19 @@ function getTimeGreeting(): string {
   return "Good evening";
 }
 
-export default function HomeHeaderGreeting({
-  userName,
-  dateLabel,
-  exercisesReady,
-  improvedPhoneme,
-  improvementPct,
-  hideSubtitle = false,
-}: HomeHeaderGreetingProps) {
+export default function HomeHeaderGreeting({ userName, dateLabel }: HomeHeaderGreetingProps) {
   const greeting = getTimeGreeting();
 
-  const subtitle = (() => {
-    if (exercisesReady && improvedPhoneme && improvementPct) {
-      return `You have ${exercisesReady} exercises ready. Your /${improvedPhoneme}/ accuracy improved ${improvementPct}% this week.`;
-    }
-    if (exercisesReady) {
-      return `You have ${exercisesReady} exercises ready for today.`;
-    }
-    return "You're all caught up for today.";
-  })();
-
   return (
-    <div className="flex flex-col gap-1.5">
+    <div className="flex flex-col gap-1">
       <p className="flex items-center gap-1.5 text-[11px] font-semibold tracking-widest uppercase text-[var(--text-tertiary)]">
         <CalendarDays size={11} />
         {dateLabel}
       </p>
-      <h1
-        className="font-editorial text-3xl font-light leading-tight tracking-tight"
-        style={{ fontOpticalSizing: "auto" } as React.CSSProperties}
-      >
+      <h1 className="text-2xl font-semibold tracking-tight text-[var(--text-primary)]">
         {greeting},{" "}
-        <em className="not-italic font-light text-[var(--primary)]">{userName}</em>
+        <span className="text-[var(--primary)]">{userName}</span>
       </h1>
-      {!hideSubtitle ? (
-        <p className="text-sm text-[var(--text-secondary)] leading-snug max-w-xs">{subtitle}</p>
-      ) : null}
     </div>
   );
 }

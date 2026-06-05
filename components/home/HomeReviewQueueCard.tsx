@@ -103,7 +103,7 @@ export default function HomeReviewQueueCard({
         <div className="flex min-w-0 items-center gap-2">
           <LibraryBig size={18} className="shrink-0 text-[var(--primary)]" />
           <h3
-            className="font-display text-xl font-semibold tracking-tight text-[var(--text-primary)]"
+            className="text-lg font-semibold tracking-tight text-[var(--text-primary)]"
           >
             <span className="text-[var(--primary)]">{totalDue}</span> items ready to review
           </h3>
@@ -127,7 +127,7 @@ export default function HomeReviewQueueCard({
 
       {atRisk.length > 0 ? (
         <div
-          className="mt-3 flex items-start gap-2.5 rounded-[var(--radius-md)] border px-3.5 py-2.5 text-[14px]"
+          className="mt-3 flex items-start gap-2.5 rounded-[var(--radius-md)] border px-3.5 py-2.5 text-sm"
           style={{
             background: "var(--warning-soft)",
             borderColor: "color-mix(in oklch, var(--warning) 30%, transparent)",
@@ -146,7 +146,7 @@ export default function HomeReviewQueueCard({
       {/* Words */}
       {wordPreview.length > 0 ? (
         <div className="mt-3">
-          <p className="mb-1 flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-wider text-[var(--text-tertiary)]">
+          <p className="mb-1 flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-widest text-[var(--text-tertiary)]">
             <Volume2 size={11} />
             Words
           </p>
@@ -165,7 +165,7 @@ export default function HomeReviewQueueCard({
                     <p className="text-sm font-medium leading-tight text-[var(--text-primary)]">
                       <span className="font-display">{w.text}</span>
                       {ipa ? (
-                        <small className="ml-2 font-ipa text-[13px] font-normal text-[var(--primary)]">
+                        <small className="ml-2 font-ipa text-sm font-normal text-[var(--primary)]">
                           {ipa}
                         </small>
                       ) : null}
@@ -193,7 +193,7 @@ export default function HomeReviewQueueCard({
       {/* Sounds */}
       {soundPreview.length > 0 ? (
         <div className="mt-3">
-          <p className="mb-1 flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-wider text-[var(--text-tertiary)]">
+          <p className="mb-1 flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-widest text-[var(--text-tertiary)]">
             <Waves size={11} />
             Sounds
           </p>

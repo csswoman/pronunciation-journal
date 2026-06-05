@@ -1,20 +1,19 @@
 import { Zap } from "lucide-react";
 import HomeSectionHeader from "@/components/home/HomeSectionHeader";
 import HomeDailyCard from "@/components/home/HomeDailyCard";
+import HomeWordOfDayCard from "@/components/home/HomeWordOfDayCard";
 import HomeQuickActionCard from "@/components/home/HomeQuickActionCard";
-import HomeAiPracticeCard from "@/components/home/HomeAiPracticeCard";
+import HomeStreakCard from "@/components/home/HomeStreakCard";
 import type { DailyStreakResult } from "@/lib/daily/streak";
-import type { DailyPlanPreview } from "@/lib/home/constants";
 import type { ConceptLesson } from "@/hooks/useDailyPlan";
+
 interface HomeTodaySectionProps {
   streak?: DailyStreakResult;
-  dailyPlan?: DailyPlanPreview | null;
   conceptLesson?: ConceptLesson | null;
 }
 
 export default function HomeTodaySection({
   streak,
-  dailyPlan,
   conceptLesson = null,
 }: HomeTodaySectionProps) {
   return (
@@ -25,15 +24,16 @@ export default function HomeTodaySection({
         subtitle="one session, the right next step"
       />
       <div className="grid grid-cols-1 gap-4 md:grid-cols-[1.7fr_1fr]">
-        <HomeDailyCard streak={streak} preview={dailyPlan} conceptLesson={conceptLesson} />
+        <HomeDailyCard streak={streak} conceptLesson={conceptLesson} />
         <div className="flex flex-col gap-4">
+          <HomeWordOfDayCard />
           <HomeQuickActionCard
             href="/practice/sounds"
             icon={<Zap size={18} />}
             title="Quick practice"
-            description="5 minutes on demand — no daily goal required."
+            description="5 min on demand — no daily plan needed."
           />
-          <HomeAiPracticeCard />
+          <HomeStreakCard streak={streak} />
         </div>
       </div>
     </section>
