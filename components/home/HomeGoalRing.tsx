@@ -17,7 +17,12 @@ export default function HomeGoalRing({
   const center = size / 2;
 
   return (
-    <div className="relative shrink-0" style={{ width: size, height: size }}>
+    <div
+      className="relative shrink-0"
+      style={{ width: size, height: size }}
+      aria-label={`Daily goal: ${pct}% complete`}
+      role="img"
+    >
       <svg
         className="w-full h-full -rotate-90"
         width={size}

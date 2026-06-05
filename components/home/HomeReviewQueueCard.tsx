@@ -253,9 +253,12 @@ export default function HomeReviewQueueCard({
       )}
 
       {reviewState.phase === "error" ? (
-        <p className="mt-2 text-center text-xs text-[var(--error)]">
-          Couldn't load the review. Try again.
-        </p>
+        <div className="mt-2 flex flex-col items-center gap-2">
+          <p className="text-center text-xs text-[var(--error)]">Couldn't load the review.</p>
+          <Button type="button" variant="secondary" size="sm" onClick={handleStartReview}>
+            Retry
+          </Button>
+        </div>
       ) : null}
     </div>
   );

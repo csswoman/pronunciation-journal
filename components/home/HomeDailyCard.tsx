@@ -28,8 +28,10 @@ const CARD_STYLE = {
 
 function expandedKey(userId: string): string {
   const now = new Date()
-  const date = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`
-  return `daily-expanded:${userId}:${date}`
+  const y = now.getFullYear()
+  const m = String(now.getMonth() + 1).padStart(2, '0')
+  const d = String(now.getDate()).padStart(2, '0')
+  return `daily-expanded:${userId}:${y}-${m}-${d}`
 }
 
 /**
@@ -121,15 +123,12 @@ export default function HomeDailyCard({ streak, preview, conceptLesson }: HomeDa
         </p>
 
         <ol className="mt-5 flex flex-col gap-2.5">
-          {previewSteps.map((step, i) => (
+          {previewSteps.map((step) => (
             <li key={step.id} className="flex items-center gap-3 text-[15px]">
               <span className="grid h-7 w-7 shrink-0 place-items-center rounded-md bg-[var(--hue-icon-bg)] text-[var(--primary)]">
                 <DailyStepIcon name={step.icon} size={14} />
               </span>
               <span className="min-w-0 flex-1 truncate text-[var(--text-primary)]">{step.title}</span>
-              <span className="font-display font-medium text-[var(--text-tertiary)]">
-                {String(i + 1).padStart(2, '0')}
-              </span>
             </li>
           ))}
         </ol>
