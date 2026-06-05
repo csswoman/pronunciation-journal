@@ -98,7 +98,7 @@ export default function DailyChecklist({ conceptLesson }: DailyChecklistProps) {
           <div className="mt-4 flex flex-col gap-3 sm:flex-row">
             <Link href="/">
               <Button variant="primary" size="md">
-                Volver al inicio
+                Go back home
               </Button>
             </Link>
             <Link href="/practice/sounds">
@@ -121,7 +121,7 @@ export default function DailyChecklist({ conceptLesson }: DailyChecklistProps) {
           Your daily
         </h1>
         <p className="mt-1 text-[15px] text-[var(--text-secondary)]">
-          {completedCount} de {steps.length} pasos · completa los {steps.length} para mantener tu racha.
+          {completedCount} of {steps.length} steps · complete all {steps.length} to keep your streak.
         </p>
         <div className="mt-4 h-1.5 w-full overflow-hidden rounded-full bg-surface-sunken">
           <div
@@ -141,7 +141,7 @@ export default function DailyChecklist({ conceptLesson }: DailyChecklistProps) {
       <div className="mt-8 flex flex-col items-center gap-2 text-center">
         <Link href="/practice/sounds" className="inline-flex items-center gap-1.5 text-[13px] text-[var(--text-tertiary)] hover:text-[var(--text-secondary)]">
           <Sparkles size={14} />
-          ¿Prefieres ejercicios libres? Practica lo que quieras
+          Want free practice? Choose what to work on.
         </Link>
       </div>
     </PageLayout>

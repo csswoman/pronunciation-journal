@@ -148,7 +148,7 @@ export default function HomeDailyCard({ streak, preview, conceptLesson }: HomeDa
             {completedToday ? 'Practice again' : "Start today's plan"}
           </Button>
           <p className="mt-2.5 text-center text-[13px] text-[var(--text-tertiary)]">
-            ≈ {estMinutes} min · {previewSteps.length} pasos
+            ≈ {estMinutes} min · {previewSteps.length} steps
           </p>
         </div>
       </div>
