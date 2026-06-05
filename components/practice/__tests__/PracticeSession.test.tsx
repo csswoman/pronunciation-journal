@@ -34,8 +34,29 @@ vi.mock('@/lib/practice/session-store', () => sessionStoreMocks)
 
 vi.mock('canvas-confetti', () => ({ default: vi.fn() }))
 
-vi.mock('@/lib/phoneme-practice/tts', () => ({ speak: vi.fn() }))
+vi.mock('@/lib/phoneme-practice/tts', () => ({
+  speak: vi.fn(),
+  getEnglishVoices: vi.fn(() => []),
+  invalidateVoiceCache: vi.fn(),
+}))
 vi.mock('@/lib/pronunciation/ipa-audio', () => ({ playIpaSound: vi.fn() }))
+
+// jsdom has no speechSynthesis — stub it so useVoiceRotation doesn't throw
+Object.defineProperty(window, 'speechSynthesis', {
+  writable: true,
+  value: {
+    getVoices: vi.fn(() => []),
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    speak: vi.fn(),
+    cancel: vi.fn(),
+    pause: vi.fn(),
+    resume: vi.fn(),
+    pending: false,
+    speaking: false,
+    paused: false,
+  },
+})
 
 import PracticeSession from '../PracticeSession'
 import type { PracticeExercise } from '@/lib/practice/types'
