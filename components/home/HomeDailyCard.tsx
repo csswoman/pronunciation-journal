@@ -67,10 +67,11 @@ export default function HomeDailyCard({ streak, preview, conceptLesson }: HomeDa
     }
   }, [user])
 
-  // Cargar el plan cuando la card está expandida y el plan aún no está listo.
+  // Cargar el plan cuando la card está expandida, el usuario está disponible
+  // y el plan aún no está listo. Re-dispara si user llega después del expand.
   useEffect(() => {
-    if (expanded && (status === 'idle' || status === 'error')) void load()
-  }, [expanded, status, load])
+    if (expanded && user && (status === 'idle' || status === 'error')) void load()
+  }, [expanded, user, status, load])
 
   // Celebra una vez cuando todos los pasos quedan hechos.
   useEffect(() => {
@@ -81,8 +82,9 @@ export default function HomeDailyCard({ streak, preview, conceptLesson }: HomeDa
     setExpanded(true)
     if (user) {
       try { window.localStorage.setItem(expandedKey(user.id), '1') } catch {}
+      if (status === 'idle' || status === 'error') void load()
     }
-    if (status === 'idle' || status === 'error') void load()
+    // If user not ready yet, the expanded+user effect will trigger load()
   }, [status, load, user])
 
   const handleStartStep = useCallback((step: DailyStep) => {
@@ -166,7 +168,7 @@ export default function HomeDailyCard({ streak, preview, conceptLesson }: HomeDa
         )}
       </div>
 
-      {status === 'loading' && (
+      {(status === 'loading' || status === 'idle') && (
         <div className="flex items-center justify-center py-10">
           <span className="animate-pulse text-fg-subtle">Preparing your plan…</span>
         </div>
