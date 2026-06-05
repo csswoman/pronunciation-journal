@@ -185,20 +185,20 @@ export async function getDailyPlanPreview(userId: string): Promise<DailyPlanPrev
 
   steps.push({
     id: "phoneme_focus",
-    title: `Sonido ${ipa}`,
-    subtitle: hasProgress ? "Tu sonido a reforzar hoy" : "Empieza por un sonido clave",
+    title: `Sound ${ipa}`,
+    subtitle: hasProgress ? "Your sound to strengthen today" : "Start with a key sound",
     icon: "Waves",
   });
   steps.push({
     id: "minimal_pairs",
-    title: "Pares mínimos",
-    subtitle: `Distingue ${ipa} de sonidos parecidos`,
+    title: "Minimal pairs",
+    subtitle: `Tell ${ipa} apart from similar sounds`,
     icon: "GitCompareArrows",
   });
   steps.push({
     id: "listening",
-    title: "Escucha y escribe",
-    subtitle: "Dictado de palabras nuevas",
+    title: "Listen and write",
+    subtitle: "Dictation with new words",
     icon: "Headphones",
   });
 

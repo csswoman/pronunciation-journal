@@ -35,18 +35,18 @@ export default function DailyStepList({ steps, doneIds, onStartStep, onMarkDone 
               {done ? <Check size={18} /> : <DailyStepIcon name={step.icon} />}
             </div>
             <div className="min-w-0 flex-1">
-              <p className="flex items-center gap-2 text-[15px] font-semibold text-[var(--text-primary)]">
+              <p className="flex items-center gap-2 text-sm font-semibold text-[var(--text-primary)]">
                 <span className="text-[var(--text-tertiary)]">{String(i + 1).padStart(2, '0')}</span>
                 {step.title}
               </p>
-              <p className="truncate text-[13px] text-[var(--text-tertiary)]">
+              <p className="truncate text-xs text-[var(--text-tertiary)]">
                 {step.subtitle}
-                {step.exercises.length > 0 ? ` · ${step.exercises.length} ejercicios` : ''}
+                {step.exercises.length > 0 ? ` · ${step.exercises.length} exercises` : ''}
                 {` · ≈${step.estMinutes} min`}
               </p>
             </div>
             {done ? (
-              <span className="text-[13px] font-medium text-[var(--success)]">Hecho</span>
+              <span className="text-xs font-medium text-[var(--success)]">Done</span>
             ) : (
               <ArrowRight size={16} className="text-[var(--text-tertiary)]" />
             )}

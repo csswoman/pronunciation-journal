@@ -193,8 +193,8 @@ function buildPhonemeFocusStep(
   return {
     kind: 'phoneme_focus',
     id: `phoneme_focus:${sound.id}`,
-    title: `Sonido ${sound.ipa}`,
-    subtitle: isWeak ? 'Tu sonido a reforzar hoy' : `Practica el sonido como en “${sound.example}”`,
+    title: `Sound ${sound.ipa}`,
+    subtitle: isWeak ? 'Your sound to strengthen today' : `Practice the sound as in “${sound.example}”`,
     icon: 'Waves',
     exercises,
     estMinutes: Math.max(2, Math.round(exercises.length * 1.1)),
@@ -218,8 +218,8 @@ function buildMinimalPairsStep(sound: Sound, pairs: MinimalPair[]): DailyStep | 
   return {
     kind: 'minimal_pairs',
     id: `minimal_pairs:${sound.id}`,
-    title: 'Pares mínimos',
-    subtitle: `Distingue ${sound.ipa} de sonidos parecidos`,
+    title: 'Minimal pairs',
+    subtitle: `Tell ${sound.ipa} apart from similar sounds`,
     icon: 'GitCompareArrows',
     exercises: deduped,
     estMinutes: Math.max(2, Math.round(deduped.length * 1.1)),
@@ -243,8 +243,8 @@ function buildListeningStep(sound: Sound, words: SoundWord[]): DailyStep | null 
   return {
     kind: 'listening',
     id: `listening:${sound.id}`,
-    title: 'Escucha y escribe',
-    subtitle: 'Dictado de palabras nuevas',
+    title: 'Listen and write',
+    subtitle: 'Dictation with new words',
     icon: 'Headphones',
     exercises: deduped,
     estMinutes: Math.max(2, Math.round(deduped.length * 1.1)),
