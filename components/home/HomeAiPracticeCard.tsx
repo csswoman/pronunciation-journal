@@ -41,7 +41,7 @@ export default function HomeAiPracticeCard() {
       <div className="relative z-10 mt-auto flex flex-wrap gap-2">
         <Link href="/practice/sounds">
           <Button variant="primary" size="sm" icon={<ArrowRight size={13} />} iconPosition="right">
-            Start session
+            Practice sounds
           </Button>
         </Link>
         <Link href="/practice">
