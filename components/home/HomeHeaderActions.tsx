@@ -14,7 +14,7 @@ export default function HomeHeaderActions({ hasStartedLearning }: HomeHeaderActi
   return (
     <div className="flex gap-2 flex-wrap">
       <Button
-        variant="primary"
+        variant="ghost"
         size="md"
         icon={<Play size={16} className="fill-current" />}
         onClick={() => router.push("/courses")}
@@ -22,7 +22,7 @@ export default function HomeHeaderActions({ hasStartedLearning }: HomeHeaderActi
         {hasStartedLearning ? "Continue learning" : "Start learning"}
       </Button>
       <Button
-        variant="secondary"
+        variant="ghost"
         size="md"
         icon={<BookOpen size={16} />}
         onClick={() => router.push("/vocabulary")}
