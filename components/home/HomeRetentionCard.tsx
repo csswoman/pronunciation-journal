@@ -29,8 +29,7 @@ export default function HomeRetentionCard({
         Vocabulary retention
       </p>
       <p
-        className="mt-1.5 text-h2 leading-none text-[var(--primary)]"
-        style={{ fontFamily: "var(--font-display), serif" }}
+        className="font-display mt-1.5 text-h2 leading-none text-[var(--primary)]"
       >
         {total > 0 ? `${pct}%` : "—"}
       </p>
@@ -66,8 +65,7 @@ export default function HomeRetentionCard({
               <ProgressBar value={weakAccuracy} color="var(--warning)" height="sm" />
             </div>
             <b
-              className="shrink-0 text-[var(--warning-value)]"
-              style={{ fontFamily: "var(--font-display), serif" }}
+              className="font-display shrink-0 text-[var(--warning-value)]"
             >
               {weakAccuracy}%
             </b>

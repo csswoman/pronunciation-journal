@@ -43,8 +43,8 @@ export default function HomeHeaderGreeting({
         {dateLabel}
       </p>
       <h1
-        className="text-3xl font-light leading-tight tracking-tight"
-        style={{ fontFamily: "var(--font-editorial), serif", fontOpticalSizing: "auto" } as React.CSSProperties}
+        className="font-editorial text-3xl font-light leading-tight tracking-tight"
+        style={{ fontOpticalSizing: "auto" } as React.CSSProperties}
       >
         {greeting},{" "}
         <em className="not-italic font-light text-[var(--primary)]">{userName}</em>

@@ -8,14 +8,12 @@ export default function HomeSectionHeader({ number, title, subtitle }: HomeSecti
   return (
     <div className="flex items-baseline gap-3 mb-4">
       <span
-        className="text-base italic text-[var(--primary)]"
-        style={{ fontFamily: "var(--font-display), serif" }}
+        className="font-display text-base italic text-[var(--primary)]"
       >
         {number}
       </span>
       <h2
-        className="text-2xl font-medium tracking-tight text-[var(--text-primary)]"
-        style={{ fontFamily: "var(--font-display), serif" }}
+        className="font-display text-2xl font-medium tracking-tight text-[var(--text-primary)]"
       >
         {title}
       </h2>

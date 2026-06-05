@@ -48,8 +48,7 @@ export default function HomeGoalRing({
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
         <b
-          className="text-xl leading-none text-[var(--text-primary)]"
-          style={{ fontFamily: "var(--font-display), serif" }}
+          className="font-display text-xl leading-none text-[var(--text-primary)]"
         >
           {pct}%
         </b>

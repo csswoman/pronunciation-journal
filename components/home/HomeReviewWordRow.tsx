@@ -46,7 +46,7 @@ export default function HomeReviewWordRow({ word, showDivider }: HomeReviewWordR
       <div className="min-w-0 flex-1">
         <p className="text-sm font-medium leading-tight text-[var(--text-primary)]">
           <span
-            style={{ fontFamily: "var(--font-display), serif" }}
+            className="font-display"
           >
             {word.text}
           </span>

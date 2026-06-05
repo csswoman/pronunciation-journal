@@ -111,7 +111,7 @@ export default function HomeDailyCard({ streak, preview, conceptLesson }: HomeDa
     return (
       <div className="flex flex-col rounded-[var(--radius-xl)] border p-6" style={CARD_STYLE}>
         <Badge label="Today's plan" variant="default" className="self-start mb-3.5" />
-        <h3 className="text-2xl font-medium text-[var(--text-primary)]" style={{ fontFamily: 'var(--font-display), serif' }}>
+        <h3 className="font-display text-2xl font-medium text-[var(--text-primary)]">
           Your daily
         </h3>
         <p className="mt-1 text-[15px] text-[var(--text-secondary)] leading-snug">
@@ -127,7 +127,7 @@ export default function HomeDailyCard({ streak, preview, conceptLesson }: HomeDa
                 <DailyStepIcon name={step.icon} size={14} />
               </span>
               <span className="min-w-0 flex-1 truncate text-[var(--text-primary)]">{step.title}</span>
-              <span className="font-medium text-[var(--text-tertiary)]" style={{ fontFamily: 'var(--font-display), serif' }}>
+              <span className="font-display font-medium text-[var(--text-tertiary)]">
                 {String(i + 1).padStart(2, '0')}
               </span>
             </li>

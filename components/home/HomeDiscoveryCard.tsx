@@ -28,8 +28,7 @@ export default function HomeDiscoveryCard({
       {children ? <div className="mt-2">{children}</div> : null}
       {title ? (
         <h4
-          className={`${children ? "mt-2" : "mt-2.5"} text-body-lg font-medium leading-tight text-[var(--text-primary)]`}
-          style={{ fontFamily: "var(--font-display), serif" }}
+          className={`font-display ${children ? "mt-2" : "mt-2.5"} text-body-lg font-medium leading-tight text-[var(--text-primary)]`}
         >
           {title}
         </h4>

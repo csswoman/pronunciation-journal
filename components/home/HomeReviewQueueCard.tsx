@@ -103,8 +103,7 @@ export default function HomeReviewQueueCard({
         <div className="flex min-w-0 items-center gap-2">
           <LibraryBig size={18} className="shrink-0 text-[var(--primary)]" />
           <h3
-            className="text-xl font-semibold tracking-tight text-[var(--text-primary)]"
-            style={{ fontFamily: "var(--font-display), serif" }}
+            className="font-display text-xl font-semibold tracking-tight text-[var(--text-primary)]"
           >
             <span className="text-[var(--primary)]">{totalDue}</span> items ready to review
           </h3>
@@ -164,7 +163,7 @@ export default function HomeReviewQueueCard({
                 >
                   <div className="min-w-0 flex-1">
                     <p className="text-sm font-medium leading-tight text-[var(--text-primary)]">
-                      <span style={{ fontFamily: "var(--font-display), serif" }}>{w.text}</span>
+                      <span className="font-display">{w.text}</span>
                       {ipa ? (
                         <small className="ml-2 font-ipa text-[13px] font-normal text-[var(--primary)]">
                           {ipa}

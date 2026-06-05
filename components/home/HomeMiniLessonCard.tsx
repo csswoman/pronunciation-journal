@@ -15,8 +15,7 @@ export default function HomeMiniLessonCard({ lesson }: HomeMiniLessonCardProps) 
       </p>
 
       <h4
-        className="text-lg font-medium leading-snug text-[var(--text-primary)]"
-        style={{ fontFamily: "var(--font-display), serif" }}
+        className="font-display text-lg font-medium leading-snug text-[var(--text-primary)]"
       >
         {lesson.title}
       </h4>

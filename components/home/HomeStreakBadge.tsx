@@ -45,8 +45,7 @@ export default function HomeStreakBadge({ streak }: HomeStreakBadgeProps) {
         🔥
       </div>
       <b
-        className="text-2xl block leading-none text-[var(--text-primary)] mt-0.5"
-        style={{ fontFamily: "var(--font-display), serif" }}
+        className="font-display text-2xl block leading-none text-[var(--text-primary)] mt-0.5"
       >
         {current}
       </b>
