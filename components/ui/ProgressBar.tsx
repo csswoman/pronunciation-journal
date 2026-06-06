@@ -22,8 +22,8 @@ export default function ProgressBar({
         className={`flex-1 ${heightMap[height]} rounded-full overflow-hidden border border-[var(--line-divider)] bg-surface-sunken`}
       >
         <div
-          className="h-full rounded-full transition-all duration-700 ease-out"
-          style={{ width: `${pct}%`, background: color }}
+          className="progress-fill h-full w-full rounded-full"
+          style={{ transform: `scaleX(${pct / 100})`, background: color }}
         />
       </div>
       {showLabel && (

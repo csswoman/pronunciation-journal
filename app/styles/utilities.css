@@ -34,6 +34,33 @@
   color: var(--primary);
 }
 
+.bg-primary-wash {
+  background: color-mix(in oklch, var(--primary) 10%, transparent);
+}
+
+.bg-daily-card {
+  background: linear-gradient(
+    150deg,
+    color-mix(in oklch, var(--primary) 12%, transparent),
+    var(--surface-raised) 65%
+  );
+}
+
+.callout-warning {
+  background: var(--warning-soft);
+  border: 1px solid color-mix(in oklch, var(--warning) 30%, transparent);
+}
+
+.home-card-lift {
+  transition:
+    transform 150ms var(--ease-out-expo),
+    border-color 150ms var(--ease-out-expo);
+}
+.home-card-lift:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent-border);
+}
+
 .btn-soft {
   background-color: var(--primary-soft);
   color: var(--primary);
@@ -133,7 +160,28 @@
 .font-h2       { font: var(--font-h2); }
 .font-h3       { font: var(--font-h3); }
 .font-h4       { font: var(--font-h4); }
+.font-body     { font: var(--font-body); }
+.font-body-sm  { font: var(--font-body-sm); }
+.font-caption  { font: var(--font-caption); }
+.font-tiny     { font: var(--font-tiny); }
 .font-heading  { font-family: var(--font-heading), serif; }
+
+/** Section/card overlines — 11px uppercase labels */
+.type-overline {
+  font: var(--font-tiny);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+/** Editorial numerals — streak, counts, ring percentages */
+.type-stat {
+  font-family: var(--font-display), serif;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--text-primary);
+}
 .font-ipa {
   font-family: var(--font-ipa), "Noto Sans", sans-serif;
   font-size: 15px;

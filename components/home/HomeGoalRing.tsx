@@ -39,7 +39,7 @@ export default function HomeGoalRing({
           strokeWidth={8}
         />
         <circle
-          className="stroke-[var(--primary)]"
+          className="stroke-[var(--primary)] transition-ring"
           cx={center}
           cy={center}
           r={RADIUS}
@@ -48,16 +48,13 @@ export default function HomeGoalRing({
           strokeLinecap="round"
           strokeDasharray={CIRCUMFERENCE}
           strokeDashoffset={offset}
-          style={{ transition: "stroke-dashoffset 1s ease" }}
         />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <b
-          className="text-xl font-bold leading-none text-[var(--text-primary)]"
-        >
+        <b className="type-stat text-xl">
           {pct}%
         </b>
-        <span className="text-[11px] font-semibold text-[var(--text-tertiary)] uppercase tracking-widest mt-0.5 text-center px-1">
+        <span className="type-overline mt-0.5 px-1 text-center">
           {label}
         </span>
       </div>

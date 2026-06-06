@@ -18,16 +18,16 @@ export default function HomeQuickActionCard({
   return (
     <Link
       href={href}
-      className="group flex items-center gap-4 rounded-[var(--radius-xl)] border border-border-subtle bg-surface-raised px-5 py-5 transition-[transform,border-color] duration-150 hover:-translate-y-0.5 hover:border-[var(--accent-border)]"
+      className="focus-ring group flex items-center gap-3 rounded-[var(--radius-lg)] border border-border-subtle bg-surface-raised px-4 py-3 transition-colors hover:border-[var(--accent-border)] hover:bg-surface-sunken"
     >
-      <div className="grid h-10 w-10 shrink-0 place-items-center rounded-md bg-[var(--hue-icon-bg)] text-[var(--primary)]">
+      <span className="grid h-7 w-7 shrink-0 place-items-center rounded text-[var(--primary)]">
         {icon}
-      </div>
+      </span>
       <div className="min-w-0 flex-1">
-        <p className="text-base font-semibold text-[var(--text-primary)]">{title}</p>
-        <p className="mt-0.5 text-sm leading-snug text-[var(--text-secondary)]">{description}</p>
+        <p className="text-sm font-medium text-[var(--text-primary)]">{title}</p>
+        <p className="font-caption leading-snug text-[var(--text-tertiary)]">{description}</p>
       </div>
-      <ArrowRight size={16} className="shrink-0 text-[var(--text-tertiary)] transition-transform duration-150 group-hover:translate-x-0.5" />
+      <ArrowRight size={14} className="shrink-0 text-[var(--text-tertiary)] transition-transform duration-150 group-hover:translate-x-0.5" />
     </Link>
   );
 }

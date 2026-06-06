@@ -6,6 +6,10 @@
   --sidebar-width: 256px;
   --hue: 250;
 
+  /* Motion — exponential ease-out curves (no bounce) */
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
   /* ── 1. Primary Scale (dynamic identity) ─────────────────────────────── */
   --primary-50:  oklch(0.97 0.02 var(--hue));
   --primary-100: oklch(0.93 0.04 var(--hue));

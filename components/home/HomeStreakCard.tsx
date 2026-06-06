@@ -17,7 +17,7 @@ function WeekDots({ streakDays, completedToday }: { streakDays: number; complete
           <i
             key={i}
             className={[
-              "w-4 h-4 rounded-full grid place-items-center not-italic",
+              "w-4 h-4 rounded-full grid place-items-center not-italic transition-[background-color,box-shadow] duration-200",
               isToday
                 ? completedToday
                   ? "bg-[var(--warning)]"
@@ -27,7 +27,7 @@ function WeekDots({ streakDays, completedToday }: { streakDays: number; complete
                   : "bg-[var(--surface-sunken)]",
             ].join(" ")}
           >
-            {isOn ? <Check size={8} strokeWidth={3} className="text-white" /> : null}
+            {isOn ? <Check size={8} strokeWidth={3} className="text-white animate-step-done" /> : null}
           </i>
         );
       })}
@@ -39,29 +39,20 @@ export default function HomeStreakCard({ streak }: HomeStreakCardProps) {
   const current = streak?.currentStreak ?? 0;
   const completedToday = streak?.completedToday ?? false;
 
-  const message = completedToday
-    ? "Goal reached today!"
-    : current > 0
-      ? "Keep it going!"
-      : "Start your streak today.";
-
   return (
     <div
-      className="flex items-center gap-4 rounded-[var(--radius-xl)] border border-border-subtle bg-surface-raised px-5 py-5"
+      className="flex items-center gap-3 rounded-[var(--radius-lg)] border border-border-subtle bg-surface-raised px-4 py-3"
       aria-label={`${current} ${current === 1 ? "day" : "days"} streak`}
     >
-      <div className="grid h-10 w-10 shrink-0 place-items-center rounded-md bg-[var(--hue-icon-bg)]">
-        <Flame size={20} className="text-[var(--primary)]" aria-hidden />
+      <Flame size={16} className="shrink-0 text-[var(--primary)]" aria-hidden />
+      <div className="flex items-baseline gap-1.5">
+        <span className="type-stat text-sm">{current}</span>
+        <span className="font-caption text-[var(--text-secondary)]">
+          {current === 1 ? "day" : "days"} streak
+        </span>
       </div>
-      <div className="min-w-0 flex-1">
-        <div className="flex items-baseline gap-1.5">
-          <span className="text-base font-bold text-[var(--text-primary)]">{current}</span>
-          <span className="text-sm text-[var(--text-secondary)]">
-            {current === 1 ? "day" : "days"} streak
-          </span>
-        </div>
+      <div className="ml-auto">
         <WeekDots streakDays={current} completedToday={completedToday} />
-        <p className="mt-1.5 text-xs text-[var(--text-tertiary)]">{message}</p>
       </div>
     </div>
   );

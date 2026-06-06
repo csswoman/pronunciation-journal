@@ -9,10 +9,10 @@ export default function HomeAiPracticeCard() {
         <span className="icon-wrap-hue flex h-9 w-9 shrink-0 items-center justify-center rounded-lg">
           <Zap size={18} />
         </span>
-        <span className="text-sm font-semibold text-[var(--text-primary)]">Practice</span>
+        <span className="font-body-sm font-semibold text-[var(--text-primary)]">Practice</span>
       </div>
 
-      <p className="text-xs leading-relaxed text-[var(--text-secondary)]">
+      <p className="font-caption leading-relaxed text-[var(--text-secondary)]">
         Jump into a sounds session or explore practice topics.
       </p>
 

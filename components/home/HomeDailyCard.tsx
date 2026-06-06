@@ -9,18 +9,12 @@ import PracticeSession from '@/components/practice/PracticeSession'
 import DailyStepList from '@/components/daily/DailyStepList'
 import { useDailyPlan, type ConceptLesson, type DailyStep } from '@/hooks/useDailyPlan'
 import { useAuth } from '@/components/auth/AuthProvider'
-import type { DailyStreakResult } from '@/lib/daily/streak'
 
 interface HomeDailyCardProps {
-  streak?: DailyStreakResult
   conceptLesson: ConceptLesson | null
 }
 
-const CARD_STYLE = {
-  background:
-    'linear-gradient(150deg, color-mix(in oklch, var(--primary) 12%, transparent), var(--surface-raised) 65%)',
-}
-export default function HomeDailyCard({ streak, conceptLesson }: HomeDailyCardProps) {
+export default function HomeDailyCard({ conceptLesson }: HomeDailyCardProps) {
   const { user } = useAuth()
   const { status, steps, doneIds, completedCount, allDone, load, markDone, celebrate } = useDailyPlan({
     conceptLesson,
@@ -30,12 +24,12 @@ export default function HomeDailyCard({ streak, conceptLesson }: HomeDailyCardPr
   const [activeStep, setActiveStep] = useState<DailyStep | null>(null)
   const [sessionKey, setSessionKey] = useState(0)
 
-  // Carga el plan en cuanto el usuario esté disponible, una vez por día.
+  // Load plan once the user is available.
   useEffect(() => {
     if (user && (status === 'idle' || status === 'error')) void load()
   }, [user, status, load])
 
-  // Celebra una vez cuando todos los pasos quedan hechos.
+  // Celebrate once when all steps are complete.
   useEffect(() => {
     if (allDone && !activeStep) celebrate()
   }, [allDone, activeStep, celebrate])
@@ -46,7 +40,7 @@ export default function HomeDailyCard({ streak, conceptLesson }: HomeDailyCardPr
     setActiveStep(step)
   }, [])
 
-  // ── Overlay de sesión a pantalla completa ──────────────────────────────────
+  // Full-screen session overlay
   if (activeStep) {
     return (
       <div className="fixed inset-0 z-50 bg-[var(--surface-base)]">
@@ -63,9 +57,15 @@ export default function HomeDailyCard({ streak, conceptLesson }: HomeDailyCardPr
     )
   }
 
-  // ── Checklist embebido (único estado) ─────────────────────────────────────
+  // Embedded checklist (single view)
   return (
-    <div className="flex flex-col rounded-[var(--radius-xl)] border border-border-subtle p-6" style={CARD_STYLE}>
+    <div className="bg-daily-card flex flex-col rounded-[var(--radius-xl)] border border-border-subtle p-6">
+      {/* aria-live region announces plan-ready state to screen readers */}
+      <div aria-live="polite" aria-atomic="true" className="sr-only">
+        {status === 'ready' && !allDone && `Today's plan ready, ${steps.length} steps`}
+        {status === 'ready' && allDone && 'Daily plan complete!'}
+      </div>
+
       {(status === 'loading' || status === 'idle') && (
         <div className="flex flex-col gap-2.5">
           {Array.from({ length: 5 }).map((_, i) => (
@@ -74,14 +74,14 @@ export default function HomeDailyCard({ streak, conceptLesson }: HomeDailyCardPr
               <div className="h-4 flex-1 rounded-md bg-surface-sunken animate-pulse" style={{ width: `${70 + (i % 3) * 10}%` }} />
             </div>
           ))}
-          <p className="mt-2 text-center text-xs text-[var(--text-tertiary)] animate-pulse">
+          <p className="font-body-sm mt-2 text-center text-[var(--text-tertiary)] animate-pulse">
             Preparing your plan…
           </p>
         </div>
       )}
 
       {status === 'error' && (
-        <div className="flex flex-col items-center gap-3 py-8 text-center">
+        <div className="animate-state-in flex flex-col items-center gap-3 py-8 text-center">
           <p className="text-error">Couldn't prepare your plan.</p>
           <Button type="button" variant="primary" size="sm" onClick={() => void load()}>
             Retry
@@ -89,14 +89,27 @@ export default function HomeDailyCard({ streak, conceptLesson }: HomeDailyCardPr
         </div>
       )}
 
+      {status === 'ready' && !allDone && steps.length === 0 && (
+        <div className="animate-state-in flex flex-col items-center gap-3 py-8 text-center">
+          <p className="font-body-sm text-[var(--text-secondary)]">
+            No steps scheduled yet. Start a course or practice sounds to build your first plan.
+          </p>
+          <Link href="/courses">
+            <Button variant="secondary" size="sm" icon={<ArrowRight size={14} />} iconPosition="right">
+              Explore courses
+            </Button>
+          </Link>
+        </div>
+      )}
+
       {status === 'ready' &&
         (allDone ? (
-          <div className="flex flex-col items-center gap-3 py-6 text-center">
-            <div className="grid h-12 w-12 place-items-center rounded-full bg-[var(--hue-icon-bg)] text-[var(--primary)]">
+          <div className="animate-state-in flex flex-col items-center gap-3 py-6 text-center">
+            <div className="animate-step-done grid h-12 w-12 place-items-center rounded-full bg-[var(--hue-icon-bg)] text-[var(--primary)]">
               <Flame size={24} />
             </div>
-            <p className="text-base font-semibold text-[var(--text-primary)]">Daily complete!</p>
-            <p className="max-w-xs text-xs text-[var(--text-secondary)]">
+            <p className="text-lg font-semibold text-[var(--text-primary)]">Daily complete!</p>
+            <p className="font-body-sm max-w-xs text-[var(--text-secondary)]">
               You completed all {steps.length} steps today. Your streak is alive.
             </p>
             <Link href="/practice/sounds">
@@ -105,17 +118,17 @@ export default function HomeDailyCard({ streak, conceptLesson }: HomeDailyCardPr
               </Button>
             </Link>
           </div>
-        ) : (
-          <>
+        ) : steps.length > 0 ? (
+          <div className="animate-state-in">
             <div className="mb-4 flex items-center gap-3">
               <Badge label="Today's plan" variant="default" className="shrink-0" />
-              <div className="flex-1 overflow-hidden rounded-full bg-surface-sunken h-1.5">
+              <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-surface-sunken">
                 <div
-                  className="h-full rounded-full bg-[var(--primary)] origin-left transition-transform duration-300 ease-out"
+                  className="progress-fill h-full w-full rounded-full bg-[var(--primary)]"
                   style={{ transform: `scaleX(${steps.length ? completedCount / steps.length : 0})` }}
                 />
               </div>
-              <span className="shrink-0 text-xs text-[var(--text-tertiary)]">
+              <span className="font-body-sm shrink-0 tabular-nums text-[var(--text-tertiary)]">
                 {completedCount} of {steps.length}
               </span>
             </div>
@@ -125,8 +138,8 @@ export default function HomeDailyCard({ streak, conceptLesson }: HomeDailyCardPr
               onStartStep={handleStartStep}
               onMarkDone={markDone}
             />
-          </>
-        ))}
+          </div>
+        ) : null)}
     </div>
   )
 }

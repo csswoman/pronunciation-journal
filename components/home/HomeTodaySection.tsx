@@ -17,14 +17,15 @@ export default function HomeTodaySection({
   conceptLesson = null,
 }: HomeTodaySectionProps) {
   return (
-    <section className="mt-10">
+    <section className="mt-8">
       <HomeSectionHeader
         number="01"
         title="What to do today"
         subtitle="one session, the right next step"
+        size="lg"
       />
       <div className="grid grid-cols-1 gap-4 md:grid-cols-[1.7fr_1fr]">
-        <HomeDailyCard streak={streak} conceptLesson={conceptLesson} />
+        <HomeDailyCard conceptLesson={conceptLesson} />
         <div className="flex flex-col gap-4">
           <HomeWordOfDayCard />
           <HomeQuickActionCard

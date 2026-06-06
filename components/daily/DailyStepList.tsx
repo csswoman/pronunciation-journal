@@ -8,16 +8,19 @@ import type { DailyStep } from '@/lib/practice/types'
 interface DailyStepListProps {
   steps: DailyStep[]
   doneIds: Set<string>
-  /** Inicia la sesión de ejercicios de un paso (no se llama para 'concept'). */
+  /** Starts the exercise session for a step (not called for 'concept'). */
   onStartStep: (step: DailyStep) => void
-  /** Marca un paso hecho (usado por el paso 'concept' al abrir su lectura). */
+  /** Marks a step done (used by 'concept' when opening its reading). */
   onMarkDone: (stepId: string) => void
 }
 
 const CARD_CLASS =
-  'group flex items-center gap-3 rounded-[var(--radius-lg)] border border-border-subtle bg-surface-raised p-4 text-left transition-[transform,border-color] duration-150 hover:-translate-y-0.5 hover:border-[var(--accent-border)]'
+  'home-card-lift focus-ring group flex w-full items-center gap-3 rounded-[var(--radius-lg)] border border-border-subtle bg-surface-raised p-4 text-left hover:border-[var(--accent-border)]'
 
-/** Lista de pasos de la diaria como checklist. Compartida por /daily y el home. */
+const ICON_CLASS =
+  'grid h-10 w-10 shrink-0 place-items-center rounded-full transition-[background-color,transform] duration-200'
+
+/** Daily step checklist shared by /daily and home. */
 export default function DailyStepList({ steps, doneIds, onStartStep, onMarkDone }: DailyStepListProps) {
   return (
     <ol className="flex flex-col gap-3">
@@ -28,27 +31,27 @@ export default function DailyStepList({ steps, doneIds, onStartStep, onMarkDone 
         const inner = (
           <>
             <div
-              className={`grid h-10 w-10 shrink-0 place-items-center rounded-full ${
+              className={`${ICON_CLASS} ${
                 done ? 'bg-[var(--success)] text-white' : 'bg-[var(--hue-icon-bg)] text-[var(--primary)]'
               }`}
             >
-              {done ? <Check size={18} /> : <DailyStepIcon name={step.icon} />}
+              {done ? <Check size={18} className="animate-step-done" /> : <DailyStepIcon name={step.icon} />}
             </div>
             <div className="min-w-0 flex-1">
-              <p className="flex items-center gap-2 text-sm font-semibold text-[var(--text-primary)]">
-                <span className="text-[var(--text-tertiary)]">{String(i + 1).padStart(2, '0')}</span>
+              <p className="flex items-center gap-2.5 text-base font-semibold text-[var(--text-primary)]">
+                <span className="font-caption tabular-nums text-[var(--text-tertiary)]">{String(i + 1).padStart(2, '0')}</span>
                 {step.title}
               </p>
-              <p className="truncate text-xs text-[var(--text-tertiary)]">
+              <p className="font-body-sm truncate text-[var(--text-tertiary)]">
                 {step.subtitle}
                 {step.exercises.length > 0 ? ` · ${step.exercises.length} exercises` : ''}
                 {` · ≈${step.estMinutes} min`}
               </p>
             </div>
             {done ? (
-              <span className="text-xs font-medium text-[var(--success)]">Done</span>
+              <span className="animate-state-in font-body-sm font-medium text-[var(--success)]">Done</span>
             ) : (
-              <ArrowRight size={16} className="text-[var(--text-tertiary)]" />
+              <ArrowRight size={18} className="text-[var(--text-tertiary)] transition-transform duration-150 group-hover:translate-x-0.5" />
             )}
           </>
         )

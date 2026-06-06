@@ -1,3 +1,4 @@
+import Link from "next/link";
 import ProgressBar from "@/components/ui/ProgressBar";
 import type { WeakestPhonemeHome } from "@/lib/home/constants";
 import type { LexiconRetentionStats } from "@/lib/lexicon/server-progress";
@@ -25,11 +26,9 @@ export default function HomeRetentionCard({
 
   return (
     <div className="flex flex-col rounded-[var(--radius-xl)] border border-border-subtle bg-surface-raised p-6">
-      <p className="text-[11px] font-semibold uppercase tracking-widest text-[var(--text-tertiary)]">
-        Vocabulary retention
-      </p>
+      <p className="type-overline">Vocabulary</p>
       <ProgressBar value={pct} color="var(--primary)" height="sm" className="mt-3" />
-      <p className="mt-1.5 text-sm text-[var(--text-secondary)]">
+      <p className="font-body-sm mt-1.5 text-[var(--text-secondary)]">
         {total > 0
           ? `${learned.toLocaleString()} / ${total.toLocaleString()} words · ${pct}%`
           : "Explore the Lexicon to start learning"}
@@ -37,28 +36,58 @@ export default function HomeRetentionCard({
 
       <div className="my-4 border-t border-border-subtle" />
 
-      <p className="text-[11px] font-semibold uppercase tracking-widest text-[var(--text-tertiary)]">Weakest sound</p>
+      <p className="type-overline">Weakest sound</p>
       {weakIpa && weakAccuracy !== null ? (
-        <>
-          {weakestPhoneme?.label ? (
-            <p className="mt-1 text-sm text-[var(--text-secondary)]">{weakestPhoneme.label}</p>
-          ) : null}
-          <div className="mt-2 flex items-center gap-2.5">
-            <span className="font-ipa text-xl text-[var(--warning)]">{weakIpa}</span>
-            <div className="flex-1 min-w-0">
-              <ProgressBar value={weakAccuracy} color="var(--warning)" height="sm" />
+        <Link href="/practice/sounds" className="group mt-3 flex items-center gap-4 focus-ring rounded-[var(--radius-md)]">
+          <span
+            className="font-display shrink-0 text-[2.5rem] font-bold leading-none text-[var(--warning)]"
+            style={{ fontFamily: "var(--font-display), Georgia, serif" }}
+          >
+            {weakIpa}
+          </span>
+          <div className="min-w-0 flex-1">
+            {weakestPhoneme?.label ? (
+              <p className="font-body-sm text-[var(--text-secondary)]">{weakestPhoneme.label}</p>
+            ) : null}
+            <div className="mt-1.5 flex items-center gap-2">
+              <div className="flex-1 min-w-0">
+                <ProgressBar value={weakAccuracy} color="var(--warning)" height="sm" />
+              </div>
+              <span className="font-caption shrink-0 tabular-nums text-[var(--warning-value)]">
+                {weakAccuracy}%
+              </span>
             </div>
-            <b
-              className="text-lg font-semibold shrink-0 text-[var(--warning-value)]"
-            >
-              {weakAccuracy}%
-            </b>
+            <p className="font-caption mt-1.5 text-[var(--primary)] group-hover:underline">
+              Practice this sound →
+            </p>
           </div>
-        </>
+        </Link>
       ) : (
-        <p className="mt-2 text-sm text-[var(--text-tertiary)]">
-          Practice sounds in the Sound Lab to see your weakest phoneme here.
-        </p>
+        <div className="mt-3 flex items-center gap-4">
+          <span
+            className="font-display shrink-0 text-[2.5rem] font-bold leading-none text-[var(--warning)]"
+            style={{ fontFamily: "var(--font-display), Georgia, serif" }}
+          >
+            /ð/
+          </span>
+          <div className="min-w-0 flex-1">
+            <p className="font-body-sm text-[var(--text-secondary)]">voiced dental fricative</p>
+            <div className="mt-1.5 flex items-center gap-2">
+              <div className="flex-1 min-w-0">
+                <ProgressBar value={0} color="var(--warning)" height="sm" />
+              </div>
+              <span className="font-caption shrink-0 tabular-nums text-[var(--warning-value)]">
+                0%
+              </span>
+            </div>
+            <Link
+              href="/practice/sounds"
+              className="font-caption mt-1.5 inline-flex items-center gap-1 text-[var(--primary)] hover:underline focus-ring rounded"
+            >
+              Start practicing →
+            </Link>
+          </div>
+        </div>
       )}
     </div>
   );

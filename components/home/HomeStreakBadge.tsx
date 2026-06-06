@@ -43,12 +43,12 @@ export default function HomeStreakBadge({ streak }: HomeStreakBadgeProps) {
     <div className="text-center shrink-0">
       <Flame size={20} className="text-[var(--warning)] mx-auto" aria-hidden />
       <b
-        className="text-2xl font-bold block leading-none text-[var(--text-primary)] mt-0.5"
+        className="type-stat mt-0.5 block text-2xl"
         aria-label={`${current} ${current === 1 ? 'day' : 'days'} streak`}
       >
         {current}
       </b>
-      <span className="text-[11px] font-semibold text-[var(--text-tertiary)] uppercase tracking-widest">
+      <span className="type-overline">
         {current === 1 ? "day" : "days"}
       </span>
       <WeekDots streakDays={current} completedToday={completedToday} />

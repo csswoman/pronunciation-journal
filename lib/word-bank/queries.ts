@@ -47,6 +47,25 @@ export async function quickAddWord(input: {
   return word;
 }
 
+/** Case-insensitive check whether the current user already has this word. */
+export async function isWordInBank(text: string): Promise<boolean> {
+  const supabase = getSupabaseBrowserClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return false;
+
+  const { data, error } = await supabase
+    .from(TABLE)
+    .select("id")
+    .eq("user_id", user.id)
+    .ilike("text", text.trim())
+    .maybeSingle();
+
+  if (error) throw error;
+  return !!data;
+}
+
 /** Fetch word bank entries whose source_ref matches any of the given lexicon word ids. */
 export async function getWordBankEntriesBySourceRefs(
   sourceRefs: string[]

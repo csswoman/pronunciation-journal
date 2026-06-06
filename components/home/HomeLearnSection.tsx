@@ -10,7 +10,7 @@ interface HomeLearnSectionProps {
 
 export default function HomeLearnSection({ lesson, concept }: HomeLearnSectionProps) {
   return (
-    <section className="mt-16">
+    <section className="mt-12">
       <HomeSectionHeader
         number="03"
         title="Learn something new"

@@ -21,7 +21,7 @@ export default function HomeReviewsSection({
   weakestPhoneme,
 }: HomeReviewsSectionProps) {
   return (
-    <section className="mt-10">
+    <section className="mt-14">
       <HomeSectionHeader
         number="02"
         title="Due for review"
