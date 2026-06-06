@@ -170,7 +170,7 @@ export default function HomeReviewCarousel({
                   </Button>
                 )}
                 {reviewState.phase === "error" ? (
-                  <p className="font-caption text-[var(--error)]">Couldn&apos;t load. Tap to retry.</p>
+                  <p className="font-caption text-[var(--error)]">Couldn&apos;t load the review.</p>
                 ) : null}
               </div>
             </>
