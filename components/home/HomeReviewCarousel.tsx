@@ -102,8 +102,8 @@ export default function HomeReviewCarousel({
   return (
     <section>
       <HomeSectionHeader number="02" title="Due for review" />
-      <div className="-mx-4 overflow-x-auto px-4">
-        <div className="flex snap-x snap-mandatory gap-3 pb-3">
+      <div className="-mx-4 overflow-x-auto snap-x snap-mandatory px-4">
+        <div className="flex gap-3 pb-3">
           {nothingDue ? (
             <div className="flex w-[72vw] max-w-[280px] shrink-0 snap-start flex-col items-center justify-center gap-2 rounded-[var(--radius-xl)] border border-border-subtle bg-surface-raised p-5 text-center">
               <span className="grid h-10 w-10 place-items-center rounded-full bg-[var(--success-soft)] text-[var(--success)]">
