@@ -52,7 +52,7 @@ export default function BottomNav({ className = "" }: BottomNavProps) {
       <nav
         aria-label="Main navigation"
         className={cn(
-          "fixed inset-x-0 bottom-0 z-50 grid grid-cols-5 items-end border-t border-[var(--line-divider)] bg-[var(--card-bg)] px-1 pt-2",
+          "fixed inset-x-0 bottom-0 z-50 grid grid-cols-5 items-end border-t border-[var(--line-divider)] bg-[var(--card-bg)]/90 backdrop-blur-md px-1 pt-3",
           "pb-[max(0.5rem,env(safe-area-inset-bottom))]",
           className,
         )}
