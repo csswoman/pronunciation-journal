@@ -32,8 +32,8 @@ export default function LessonFilters({
 }: LessonFiltersProps) {
   return (
     <div
-      className="flex items-start justify-between"
-      style={{ gap: "var(--space-6)", marginBottom: "var(--space-5)" }}
+      className="flex flex-col sm:flex-row sm:items-start sm:justify-between"
+      style={{ gap: "var(--space-3)", marginBottom: "var(--space-5)" }}
     >
       {/* Left: heading + count */}
       <div className="flex flex-col" style={{ gap: "2px" }}>
@@ -54,9 +54,9 @@ export default function LessonFilters({
       </div>
 
       {/* Right: search + pill tabs */}
-      <div className="flex items-center shrink-0" style={{ gap: "var(--space-3)" }}>
+      <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
         {/* Search */}
-        <div className="relative" style={{ width: "200px" }}>
+        <div className="relative w-full sm:w-[200px]">
           <Search
             size={13}
             className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
@@ -86,7 +86,7 @@ export default function LessonFilters({
         </div>
 
         {/* Filter tabs */}
-        <div className="flex items-center" style={{ gap: "var(--space-1)" }}>
+        <div className="flex flex-wrap items-center" style={{ gap: "var(--space-1)" }}>
           {FILTERS.map((tab) => {
             const isActive = filter === tab.id
             return (

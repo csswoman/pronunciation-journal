@@ -100,14 +100,11 @@ export default function LessonGrid({
       <div key={gridKey} className="animate-grid-in">
         {useBento ? (
           <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(6, 1fr)",
-              gap: "var(--space-3)",
-            }}
+            className="grid grid-cols-2 sm:grid-cols-6"
+            style={{ gap: "var(--space-3)" }}
           >
-            {/* Featured: col-span-3, row-span-2 */}
-            <div style={{ gridColumn: "span 3", gridRow: "span 2" }}>
+            {/* Featured: col-span-2 mobile, col-span-3 row-span-2 sm+ */}
+            <div className="col-span-2 sm:col-span-3 sm:row-span-2">
               <LessonCard
                 lesson={lessons[0]}
                 progressPct={getProgress(lessons[0])}
@@ -115,16 +112,16 @@ export default function LessonGrid({
               />
             </div>
 
-            {/* Wide: col-span-3, rows 1 & 2 */}
+            {/* Wide: col-span-2 mobile, col-span-3 sm+ */}
             {lessons.slice(1, 3).map((lesson) => (
-              <div key={lesson.id} style={{ gridColumn: "span 3" }}>
+              <div key={lesson.id} className="col-span-2 sm:col-span-3">
                 <LessonCard lesson={lesson} progressPct={getProgress(lesson)} />
               </div>
             ))}
 
-            {/* Normal: col-span-2, row 3 */}
+            {/* Normal: col-span-1 mobile, col-span-2 sm+ */}
             {lessons.slice(3).map((lesson) => (
-              <div key={lesson.id} style={{ gridColumn: "span 2" }}>
+              <div key={lesson.id} className="col-span-1 sm:col-span-2">
                 <LessonCard lesson={lesson} progressPct={getProgress(lesson)} />
               </div>
             ))}
