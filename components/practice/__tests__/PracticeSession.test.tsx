@@ -32,8 +32,6 @@ const { persistenceState, sessionStoreMocks } = vi.hoisted(() => {
 })
 vi.mock('@/lib/practice/session-store', () => sessionStoreMocks)
 
-vi.mock('canvas-confetti', () => ({ default: vi.fn() }))
-
 vi.mock('@/lib/phoneme-practice/tts', () => ({
   speak: vi.fn(),
   getEnglishVoices: vi.fn(() => []),
