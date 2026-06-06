@@ -5,6 +5,7 @@ import HomeStatusHero from "@/components/home/HomeStatusHero";
 import HomeTodaySection from "@/components/home/HomeTodaySection";
 import HomeReviewsSection from "@/components/home/HomeReviewsSection";
 import HomeLearnSection from "@/components/home/HomeLearnSection";
+import HomeMobileView from "@/components/home/HomeMobileView";
 import { getSupabaseServerUserId } from "@/lib/supabase/session";
 import {
   getWordsDueForReview,
@@ -63,27 +64,47 @@ export default async function HomePage() {
 
   return (
     <PageLayout className="max-w-[1080px] mx-auto">
-      <HomeStatusHero />
-      <HomeTodaySection
-        streak={dailyStreak}
-        conceptLesson={
-          todaysLesson
-            ? {
-                slug: todaysLesson.slug,
-                title: todaysLesson.title,
-                subtitle: todaysLesson.subtitle,
-              }
-            : null
-        }
-      />
-      <HomeReviewsSection
-        words={dueWords}
-        dueCount={dueCount}
-        soundsDue={soundsDue}
-        lexicon={lexiconRetention}
-        weakestPhoneme={weakestPhoneme}
-      />
-      <HomeLearnSection lesson={todaysLesson} concept={todaysConcept} />
+      {/* Mobile view */}
+      <div className="md:hidden">
+        <HomeMobileView
+          userName="there"
+          dateLabel={new Date().toLocaleDateString("en-US", {
+            weekday: "long",
+            month: "long",
+            day: "numeric",
+          })}
+          streak={dailyStreak}
+          conceptLesson={
+            todaysLesson
+              ? { slug: todaysLesson.slug, title: todaysLesson.title, subtitle: todaysLesson.subtitle }
+              : null
+          }
+          words={dueWords}
+          dueCount={dueCount}
+          soundsDue={soundsDue}
+        />
+      </div>
+
+      {/* Desktop/tablet view */}
+      <div className="hidden md:block">
+        <HomeStatusHero />
+        <HomeTodaySection
+          streak={dailyStreak}
+          conceptLesson={
+            todaysLesson
+              ? { slug: todaysLesson.slug, title: todaysLesson.title, subtitle: todaysLesson.subtitle }
+              : null
+          }
+        />
+        <HomeReviewsSection
+          words={dueWords}
+          dueCount={dueCount}
+          soundsDue={soundsDue}
+          lexicon={lexiconRetention}
+          weakestPhoneme={weakestPhoneme}
+        />
+        <HomeLearnSection lesson={todaysLesson} concept={todaysConcept} />
+      </div>
     </PageLayout>
   );
 }
