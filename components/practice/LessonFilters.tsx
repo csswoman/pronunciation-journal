@@ -33,7 +33,7 @@ export default function LessonFilters({
   return (
     <div
       className="flex flex-col sm:flex-row sm:items-start sm:justify-between sm:gap-6"
-      style={{ gap: "var(--space-3)", marginBottom: "var(--space-5)" }}
+      style={{ gap: "var(--space-3)", marginBottom: "var(--space-8)" }}
     >
       {/* Left: heading + count */}
       <div className="flex flex-col" style={{ gap: "2px" }}>

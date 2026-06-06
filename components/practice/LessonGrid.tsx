@@ -101,7 +101,7 @@ export default function LessonGrid({
         {useBento ? (
           <div
             className="grid grid-cols-2 sm:grid-cols-6"
-            style={{ gap: "var(--space-3)" }}
+            style={{ gap: "var(--space-4)" }}
           >
             {/* Featured: col-span-2 mobile, col-span-3 row-span-2 sm+ */}
             <div className="col-span-2 sm:col-span-3 sm:row-span-2">
@@ -129,7 +129,7 @@ export default function LessonGrid({
         ) : (
           <div
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
-            style={{ gap: "var(--space-3)" }}
+            style={{ gap: "var(--space-4)" }}
           >
             {lessons.map((lesson) => (
               <LessonCard

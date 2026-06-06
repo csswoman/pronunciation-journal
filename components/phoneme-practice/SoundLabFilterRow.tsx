@@ -12,10 +12,10 @@ interface Props {
 }
 
 const CHIPS: { id: SoundLabChip; label: string }[] = [
-  { id: "all", label: "Todos" },
-  { id: "easy", label: "Fácil" },
-  { id: "medium", label: "Medio" },
-  { id: "hard", label: "Difícil" },
+  { id: "all", label: "All" },
+  { id: "easy", label: "Easy" },
+  { id: "medium", label: "Medium" },
+  { id: "hard", label: "Hard" },
 ];
 
 export function SoundLabFilterRow({
@@ -25,8 +25,8 @@ export function SoundLabFilterRow({
   onSearchChange,
 }: Props) {
   return (
-    <div className="sound-lab__toolbar">
-      <div className="sound-lab__chips">
+    <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
+      <div className="flex items-center gap-2">
         {CHIPS.map((chip) => {
           const isOn = activeChip === chip.id;
           return (
@@ -44,14 +44,14 @@ export function SoundLabFilterRow({
         })}
       </div>
 
-      <label className="sound-lab__search">
+      <label className="sound-lab__search flex w-full items-center gap-2 sm:w-auto sm:min-w-[260px]">
         <Search className="h-4 w-4 shrink-0" aria-hidden />
         <input
           type="search"
-          placeholder="Buscar sonidos…"
+          placeholder="Search sounds…"
           value={search}
           onChange={(e) => onSearchChange(e.target.value)}
-          aria-label="Buscar sonidos"
+          aria-label="Search sounds"
         />
       </label>
     </div>

@@ -20,9 +20,10 @@ export function HeroCompactHeader({
 
   return (
     <div
-      className={["flex flex-col", className].join(" ")}
+      className={["flex flex-col px-3 sm:px-6 lg:px-10", className].join(" ")}
       style={{
-        padding: "var(--space-6) var(--space-8) var(--space-5)",
+        paddingTop: "var(--space-6)",
+        paddingBottom: "var(--space-5)",
         gap: "var(--space-5)",
         borderBottom: "1px solid var(--border-subtle)",
       }}

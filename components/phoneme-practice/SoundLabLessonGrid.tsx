@@ -15,6 +15,7 @@ interface Props {
   heroLessonId: string | undefined;
   soundProgressMap: Map<string, number>;
   isLoading: boolean;
+  onClearFilters?: () => void;
 }
 
 function getProgress(lesson: Lesson, map: Map<string, number>): number | undefined {
@@ -49,6 +50,7 @@ export function SoundLabLessonGrid({
   sections,
   soundProgressMap,
   isLoading,
+  onClearFilters,
 }: Props) {
   if (isLoading) return <LoadingSkeleton />;
 
@@ -56,22 +58,41 @@ export function SoundLabLessonGrid({
 
   if (totalLessons === 0) {
     return (
-      <p className="py-16 text-center text-sm text-fg-muted">
-        Ningún sonido coincide con este filtro.
-      </p>
+      <div className="flex flex-col items-center gap-4 py-20 text-center">
+        <p className="text-sm text-[color:var(--text-secondary)]">
+          No sounds match this filter.
+        </p>
+        {onClearFilters && (
+          <button
+            type="button"
+            onClick={onClearFilters}
+            className="sound-lab__chip sound-lab__chip--on"
+          >
+            Clear filters
+          </button>
+        )}
+      </div>
     );
   }
 
+  let cardIndex = 0;
+
   return (
     <>
-      {sections.map((section) => (
-        <section key={section.id} className="sound-lab__group">
+      {sections.map((section, sectionIdx) => (
+        <section
+          key={section.id}
+          className={[
+            "flex flex-col gap-4 last:mb-0",
+            sectionIdx > 0 ? "sound-lab__section-divider" : "mb-10",
+          ].join(" ")}
+        >
           {section.title ? (
-            <div className="sound-lab__group-head">
-              <h2>{section.title}</h2>
+            <div className="flex items-baseline gap-3">
+              <h2 className="sound-lab__group-title m-0">{section.title}</h2>
               {section.count !== undefined && (
-                <span>
-                  {section.count} {section.count === 1 ? "sonido" : "sonidos"}
+                <span className="text-[12px] text-[color:var(--text-tertiary)]">
+                  {section.count} {section.count === 1 ? "sound" : "sounds"}
                 </span>
               )}
             </div>
@@ -81,12 +102,14 @@ export function SoundLabLessonGrid({
               const progressPct = getProgress(lesson, soundProgressMap);
               const isWeak =
                 progressPct !== undefined && progressPct > 0 && progressPct < 60;
+              const index = cardIndex++;
               return (
                 <SoundLabLessonCard
                   key={lesson.id}
                   lesson={lesson}
                   progressPct={progressPct}
                   isWeak={isWeak}
+                  staggerIndex={index}
                 />
               );
             })}

@@ -6,7 +6,6 @@ import Link from "next/link";
 import { Headphones } from "lucide-react";
 import { SoundLabHeader } from "./SoundLabHeader";
 import { SoundLabContinuingBar } from "./SoundLabContinuingBar";
-import { SoundLabStatsStrip } from "./SoundLabStatsStrip";
 import { SoundLabFilterRow } from "./SoundLabFilterRow";
 import { SoundLabLessonGrid } from "./SoundLabLessonGrid";
 import type { LessonSection } from "./SoundLabLessonGrid";
@@ -17,9 +16,9 @@ import type { Lesson } from "@/lib/types";
 const IPA_VOWEL_RE = /[aeiouæɑɒɔɛɜɪɐəʌʊ]/;
 
 const ALL_GROUP_SECTIONS = [
-  { id: "vowels", title: "Vocales" },
-  { id: "diphthongs", title: "Diptongos" },
-  { id: "consonants", title: "Consonantes" },
+  { id: "vowels", title: "Vowels" },
+  { id: "diphthongs", title: "Diphthongs" },
+  { id: "consonants", title: "Consonants" },
 ] as const;
 
 function getLessonSectionId(lesson: Lesson): string {
@@ -69,7 +68,7 @@ export default function SoundLabPage() {
     if (lessons.length === 0) return null;
     return {
       id: "focus",
-      title: `Sonidos de tu lección · ${focusTokens.join(" · ")}`,
+      title: `Sounds from your lesson · ${focusTokens.join(" · ")}`,
       count: lessons.length,
       lessons,
     };
@@ -125,27 +124,44 @@ export default function SoundLabPage() {
     router.push(heroLesson.lesson.href);
   }
 
+  function handleClearFilters() {
+    setActiveChip("all");
+    setSearch("");
+  }
+
   return (
     <div className="sound-lab min-h-screen">
-      <div className="sound-lab__wrap">
-        <header className="sound-lab__hero">
-          <div className="sound-lab__intro">
-            <div className="sound-lab__intro-head">
-              <SoundLabHeader />
+      <div className="mx-auto max-w-[1280px] px-4 pt-5 pb-14 sm:px-6 sm:pt-10 lg:px-10">
+        <header className="mb-8 flex flex-col gap-4 sm:mb-10 sm:gap-5">
+
+          <div className="flex items-stretch gap-4">
+            <div className="min-w-0 flex-1">
+              <SoundLabHeader
+                totalCount={allLessons.length}
+                completedCount={completedCount}
+                inProgressCount={inProgressCount}
+              />
             </div>
-            <SoundLabStatsStrip
-              totalCount={allLessons.length}
-              completedCount={completedCount}
-              inProgressCount={inProgressCount}
-            />
+
+            {heroLesson.lesson && (
+              <div className="hidden shrink-0 sm:block">
+                <SoundLabContinuingBar
+                  lesson={heroLesson.lesson}
+                  progress={heroLesson.progress}
+                  onResume={handleResume}
+                />
+              </div>
+            )}
           </div>
 
           {heroLesson.lesson && (
-            <SoundLabContinuingBar
-              lesson={heroLesson.lesson}
-              progress={heroLesson.progress}
-              onResume={handleResume}
-            />
+            <div className="sm:hidden">
+              <SoundLabContinuingBar
+                lesson={heroLesson.lesson}
+                progress={heroLesson.progress}
+                onResume={handleResume}
+              />
+            </div>
           )}
 
           <SoundLabFilterRow
@@ -156,15 +172,21 @@ export default function SoundLabPage() {
           />
 
           {focusTokens.length > 0 && (
-            <div className="sound-lab__focus" role="status">
-              <Headphones size={16} aria-hidden />
-              <span className="sound-lab__focus-text">
-                Llegaste desde un curso. Practicando los sonidos{" "}
-                <strong>{focusTokens.join(" · ")}</strong>
-                {!focusSection && " — no encontramos lecciones para estos aún."}
+            <div
+              className="sound-lab__focus-banner flex items-center gap-2 rounded-xl border border-[var(--border-subtle)] px-4 py-3"
+              role="status"
+            >
+              <Headphones size={14} className="shrink-0 text-[color:var(--primary)]" aria-hidden />
+              <span className="text-sm text-[color:var(--text-secondary)]">
+                From your course, practicing{" "}
+                <span className="sound-lab__focus-tokens">{focusTokens.join(" · ")}</span>
+                {!focusSection && <span className="text-[color:var(--text-tertiary)]"> — no lessons yet.</span>}
               </span>
-              <Link href="/practice/sounds" className="sound-lab__focus-clear">
-                Ver todos
+              <Link
+                href="/practice/sounds"
+                className="ml-auto shrink-0 text-xs font-medium text-[color:var(--primary)] hover:underline"
+              >
+                View all
               </Link>
             </div>
           )}
@@ -175,6 +197,7 @@ export default function SoundLabPage() {
           heroLessonId={heroLesson.lesson?.id}
           soundProgressMap={soundProgressMap}
           isLoading={isLoading}
+          onClearFilters={handleClearFilters}
         />
       </div>
     </div>

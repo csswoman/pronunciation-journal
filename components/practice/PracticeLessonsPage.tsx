@@ -96,7 +96,7 @@ export default function PracticeLessonsPage() {
 
   return (
     <PageLayout
-      contentStyle={{ paddingTop: "var(--space-5)", paddingBottom: "3.5rem" }}
+      contentStyle={{ paddingTop: "var(--space-6)", paddingBottom: "3.5rem" }}
       hero={
         <PageHeader
           variant="hero-compact"
