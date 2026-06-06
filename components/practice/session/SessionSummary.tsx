@@ -28,7 +28,7 @@ function AccuracyDisplay({ accuracy }: { accuracy: number }) {
       className={cn(
         'text-6xl font-bold tabular-nums',
         isExcellent
-          ? 'text-success animate-[accuracy-pop_0.4s_var(--ease-out-quart)_both]'
+          ? 'text-success animate-accuracy-pop'
           : isAcceptable
             ? 'text-warning'
             : 'text-error',
