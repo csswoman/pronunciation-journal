@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation'
 import { useAuth } from "@/components/auth/AuthProvider"
 import PageLayout from '@/components/layout/PageLayout'
 import PageHeader from '@/components/layout/PageHeader'
-import { getUserStats } from '@/lib/db'
 import { getAllDbLessons } from '@/lib/db/lesson-generator'
 import { getAllContrastProgress } from '@/lib/phoneme-practice/queries'
 import type { Lesson } from '@/lib/types'
@@ -15,33 +14,18 @@ import LessonGrid from './LessonGrid'
 import { useLessonFilters } from '@/hooks/useLessonFilters'
 import { useHeroLesson } from '@/hooks/useHeroLesson'
 
-const statCard = {
-  background: "var(--surface-raised)",
-  border: "1px solid var(--border-subtle)",
-  borderRadius: "var(--radius-lg)",
-  padding: "var(--space-4) var(--space-5)",
-  display: "flex",
-  flexDirection: "column" as const,
-  gap: "var(--space-1)",
-}
-
 export default function PracticeLessonsPage() {
   const router = useRouter()
   const { user } = useAuth()
   const [dbLessons, setDbLessons] = useState<Lesson[]>([])
   const [isLoadingLessons, setIsLoadingLessons] = useState(true)
   const [progress, setProgress] = useState<UserContrastProgress[] | null>(null)
-  const [, setDayStreak] = useState(0)
 
   useEffect(() => {
     getAllDbLessons()
       .then(setDbLessons)
       .catch((err) => console.error('Failed to load DB lessons:', err))
       .finally(() => setIsLoadingLessons(false))
-
-    getUserStats()
-      .then((stats) => setDayStreak(stats.currentStreak ?? 0))
-      .catch((err) => console.error('Failed to load user stats:', err))
   }, [])
 
   useEffect(() => {
@@ -121,51 +105,11 @@ export default function PracticeLessonsPage() {
         />
       }
     >
-      {/* Stats row */}
-      <div
-        className="grid grid-cols-4"
-        style={{ gap: "var(--space-4)", marginBottom: "var(--space-8)" }}
-      >
-        <div style={statCard}>
-          <span style={{ font: "var(--font-h3)", color: "var(--text-primary)", lineHeight: 1 }}>
-            {allLessons.length}
-          </span>
-          <span style={{ font: "var(--font-tiny)", color: "var(--text-tertiary)", textTransform: "uppercase", letterSpacing: "0.08em" }}>
-            Exercises
-          </span>
-        </div>
-        <div style={statCard}>
-          <span style={{ font: "var(--font-h3)", color: "var(--text-primary)", lineHeight: 1 }}>
-            <span>{currentPage}</span>
-            <span style={{ color: "var(--primary)" }}>/{totalPages}</span>
-          </span>
-          <span style={{ font: "var(--font-tiny)", color: "var(--text-tertiary)", textTransform: "uppercase", letterSpacing: "0.08em" }}>
-            Page
-          </span>
-        </div>
-        <div style={statCard}>
-          <span style={{ font: "var(--font-h3)", color: "var(--primary)", lineHeight: 1 }}>
-            {completedCount}
-          </span>
-          <span style={{ font: "var(--font-tiny)", color: "var(--text-tertiary)", textTransform: "uppercase", letterSpacing: "0.08em" }}>
-            Completed
-          </span>
-        </div>
-        <div style={statCard}>
-          <span style={{ font: "var(--font-h3)", color: "var(--warning)", lineHeight: 1 }}>
-            {inProgressCount}
-          </span>
-          <span style={{ font: "var(--font-tiny)", color: "var(--text-tertiary)", textTransform: "uppercase", letterSpacing: "0.08em" }}>
-            In Progress
-          </span>
-        </div>
-      </div>
-
-      {/* Lessons section */}
       <LessonFilters
         filter={filter}
         search={search}
         resultCount={filteredLessons.length}
+        statLine={`${completedCount} completed · ${inProgressCount} in progress`}
         onFilterChange={setFilter}
         onSearchChange={setSearch}
       />

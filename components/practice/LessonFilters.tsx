@@ -17,6 +17,7 @@ interface LessonFiltersProps {
   filter: PracticeFilter
   search: string
   resultCount: number
+  statLine?: string
   onFilterChange: (f: PracticeFilter) => void
   onSearchChange: (s: string) => void
 }
@@ -25,6 +26,7 @@ export default function LessonFilters({
   filter,
   search,
   resultCount,
+  statLine,
   onFilterChange,
   onSearchChange,
 }: LessonFiltersProps) {
@@ -47,6 +49,7 @@ export default function LessonFilters({
           }}
         >
           {resultCount} exercises available
+          {statLine && <> · {statLine}</>}
         </span>
       </div>
 
