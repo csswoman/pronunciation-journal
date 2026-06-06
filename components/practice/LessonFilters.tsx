@@ -101,12 +101,12 @@ export default function LessonFilters({
                 style={
                   isActive
                     ? {
-                        background: "var(--primary)",
-                        color: "var(--on-primary)",
-                        border: "1px solid var(--primary)",
+                        background: "var(--primary-soft)",
+                        color: "var(--primary)",
+                        border: "1px solid transparent",
                         borderRadius: "var(--radius-full)",
                         font: "var(--font-caption)",
-                        fontWeight: 500,
+                        fontWeight: 600,
                         padding: "4px var(--space-3)",
                         cursor: "pointer",
                       }
