@@ -89,6 +89,11 @@ export default function PracticeLessonsPage() {
     router.push(heroLesson.lesson.href)
   }
 
+  const handleClearFilters = () => {
+    setFilter('all')
+    setSearch('')
+  }
+
   return (
     <PageLayout
       contentStyle={{ padding: "var(--space-6) var(--space-8) 3.5rem" }}
@@ -122,6 +127,7 @@ export default function PracticeLessonsPage() {
         soundProgressMap={soundProgressMap}
         isLoading={isLoadingLessons}
         onPageChange={handlePageChange}
+        onClearFilters={handleClearFilters}
       />
     </PageLayout>
   )

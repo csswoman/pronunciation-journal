@@ -14,6 +14,7 @@ interface LessonGridProps {
   soundProgressMap: Map<string, number>
   isLoading: boolean
   onPageChange: (page: number) => void
+  onClearFilters?: () => void
 }
 
 export { PAGE_SIZE }
@@ -27,6 +28,7 @@ export default function LessonGrid({
   soundProgressMap,
   isLoading,
   onPageChange,
+  onClearFilters,
 }: LessonGridProps) {
   if (isLoading) {
     return (
@@ -44,6 +46,41 @@ export default function LessonGrid({
         >
           Loading lessons…
         </span>
+      </div>
+    )
+  }
+
+  if (lessons.length === 0) {
+    return (
+      <div
+        className="flex flex-col items-center justify-center gap-3 py-16 text-center"
+        style={{
+          background: "var(--surface-raised)",
+          border: "1px solid var(--border-subtle)",
+          borderRadius: "var(--radius-lg)",
+        }}
+      >
+        <span style={{ font: "var(--font-body-sm)", color: "var(--text-secondary)" }}>
+          No lessons match your search.
+        </span>
+        {onClearFilters && (
+          <button
+            type="button"
+            onClick={onClearFilters}
+            style={{
+              font: "var(--font-caption)",
+              fontWeight: 500,
+              color: "var(--primary)",
+              background: "transparent",
+              border: "none",
+              cursor: "pointer",
+              textDecoration: "underline",
+              textUnderlineOffset: "3px",
+            }}
+          >
+            Clear filters
+          </button>
+        )}
       </div>
     )
   }
