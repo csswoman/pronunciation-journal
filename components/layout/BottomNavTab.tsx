@@ -17,7 +17,7 @@ interface BottomNavTabProps {
 const tabClass = (active: boolean) =>
   cn(
     "relative flex min-h-11 min-w-[3.25rem] flex-col items-center justify-end gap-0.5 rounded-[var(--radius-sm)] px-2 pb-1 pt-1.5",
-    "text-[0.6875rem] font-medium leading-tight",
+    "text-xs font-medium leading-tight tracking-wide",
     "transition-colors duration-[var(--transition-fast)]",
     "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--primary)]",
     active

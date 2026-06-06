@@ -45,10 +45,15 @@ function QuickActionCell({
 
 export default function HomeQuickActionsGrid() {
   return (
-    <div className="grid grid-cols-2 gap-3">
-      {actions.map((action) => (
-        <QuickActionCell key={action.href} {...action} />
-      ))}
-    </div>
+    <section>
+      <p className="mb-3 text-label font-medium uppercase tracking-widest text-[var(--text-tertiary)]">
+        Quick access
+      </p>
+      <div className="grid grid-cols-2 gap-2.5">
+        {actions.map((action) => (
+          <QuickActionCell key={action.href} {...action} />
+        ))}
+      </div>
+    </section>
   );
 }

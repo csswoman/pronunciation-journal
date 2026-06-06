@@ -40,7 +40,7 @@ export default function HomeRetentionCard({
       {weakIpa && weakAccuracy !== null ? (
         <Link href="/practice/sounds" className="group mt-3 flex items-center gap-4 focus-ring rounded-[var(--radius-md)]">
           <span
-            className="font-display shrink-0 text-[2.5rem] font-bold leading-none text-[var(--warning)]"
+            className="font-display shrink-0 text-display-ipa font-bold leading-none text-[var(--warning)]"
             style={{ fontFamily: "var(--font-display), Georgia, serif" }}
           >
             {weakIpa}
@@ -65,7 +65,7 @@ export default function HomeRetentionCard({
       ) : (
         <div className="mt-3 flex items-center gap-4">
           <span
-            className="font-display shrink-0 text-[2.5rem] font-bold leading-none text-[var(--warning)]"
+            className="font-display shrink-0 text-display-ipa font-bold leading-none text-[var(--warning)]"
             style={{ fontFamily: "var(--font-display), Georgia, serif" }}
           >
             /ð/

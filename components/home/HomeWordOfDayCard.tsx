@@ -82,7 +82,7 @@ export default function HomeWordOfDayCard() {
       {word && !loading && (
         <div className="animate-state-in" key={word.word}>
           <div className="mt-3">
-            <p className="font-display text-[1.625rem] font-semibold leading-none text-[var(--text-primary)]">
+            <p className="font-display text-display-word font-semibold leading-none text-[var(--text-primary)]">
               <SyllableWord word={word.word} />
             </p>
             <div className="mt-1 flex items-center gap-2">

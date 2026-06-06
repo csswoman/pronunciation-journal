@@ -1,17 +1,6 @@
 "use client";
 
-// Planned structure:
-// <BottomNav>
-//   <BottomNavMenu />
-//   <nav>
-//     <BottomNavTab /> × 2
-//     <AICoachTrigger variant="nav" />
-//     <BottomNavTab />
-//     <BottomNavMenuTab />
-//   </nav>
-// </BottomNav>
-
-import { Home, Menu, MicVocal, TrendingUp } from "lucide-react";
+import { BookOpen, Home, Menu, MicVocal } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useCallback, useState } from "react";
 import AICoachTrigger from "@/components/ai-coach/AICoachTrigger";
@@ -27,7 +16,7 @@ interface BottomNavProps {
 const primaryTabs = [
   { name: "Home", href: "/", icon: Home },
   { name: "Practice", href: "/practice/sounds", icon: MicVocal },
-  { name: "Progress", href: "/progress", icon: TrendingUp },
+  { name: "Courses", href: "/courses", icon: BookOpen },
 ] as const;
 
 export default function BottomNav({ className = "" }: BottomNavProps) {
@@ -43,7 +32,7 @@ export default function BottomNav({ className = "" }: BottomNavProps) {
   const closeMenu = useCallback(() => setShowMenu(false), []);
   const toggleMenu = useCallback(() => setShowMenu((open) => !open), []);
 
-  const [home, practice, progress] = primaryTabs;
+  const [home, practice, courses] = primaryTabs;
 
   return (
     <>
@@ -85,10 +74,10 @@ export default function BottomNav({ className = "" }: BottomNavProps) {
 
         <div className="flex justify-center">
           <BottomNavTab
-            name={progress.name}
-            href={progress.href}
-            icon={<progress.icon className="h-5 w-5" strokeWidth={activeStroke(isActive(progress.href))} />}
-            active={isActive(progress.href)}
+            name={courses.name}
+            href={courses.href}
+            icon={<courses.icon className="h-5 w-5" strokeWidth={activeStroke(isActive(courses.href))} />}
+            active={isActive(courses.href)}
           />
         </div>
 
