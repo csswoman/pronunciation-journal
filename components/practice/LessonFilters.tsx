@@ -32,7 +32,7 @@ export default function LessonFilters({
 }: LessonFiltersProps) {
   return (
     <div
-      className="flex flex-col sm:flex-row sm:items-start sm:justify-between"
+      className="flex flex-col sm:flex-row sm:items-start sm:justify-between sm:gap-6"
       style={{ gap: "var(--space-3)", marginBottom: "var(--space-5)" }}
     >
       {/* Left: heading + count */}
@@ -54,7 +54,7 @@ export default function LessonFilters({
       </div>
 
       {/* Right: search + pill tabs */}
-      <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-[var(--space-2)] sm:gap-[var(--space-3)]">
         {/* Search */}
         <div className="relative w-full sm:w-[200px]">
           <Search
