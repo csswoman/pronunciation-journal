@@ -79,9 +79,6 @@ export default async function HomePage() {
               ? { slug: todaysLesson.slug, title: todaysLesson.title, subtitle: todaysLesson.subtitle }
               : null
           }
-          words={dueWords}
-          dueCount={dueCount}
-          soundsDue={soundsDue}
         />
       </div>
 
