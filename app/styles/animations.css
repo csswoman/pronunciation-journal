@@ -140,6 +140,11 @@
   .transition-ring {
     transition: none !important;
   }
+
+  /* Tailwind arbitrary animation for accuracy-pop */
+  [class*="animate-[accuracy"] {
+    animation: none !important;
+  }
 }
 
 @keyframes accuracy-pop {
