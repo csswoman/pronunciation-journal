@@ -21,8 +21,17 @@
   padding: var(--space-10) var(--space-5) var(--space-16);
   display: flex;
   flex-direction: column;
-  gap: var(--space-8);
+  gap: 0;
 }
+
+/* Zone separations — varied rhythm instead of uniform gap */
+.course-path__hero   { margin-bottom: var(--space-6); }
+.course-path__legend { margin-bottom: var(--space-5); }
+.course-path__why    { margin-bottom: var(--space-10); }
+
+/* Spine + panel are one logical unit — tight coupling */
+.course-path__spine     { margin-bottom: var(--space-4); }
+/* tabpanel has no extra margin; electives adds its own top spacing */
 
 /* ── Hero header ─────────────────────────────────────────── */
 
@@ -30,7 +39,6 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
-  padding-bottom: var(--space-2);
 }
 
 .course-path__eyebrow {
@@ -72,38 +80,56 @@
 
 .course-path__spine {
   display: flex;
-  gap: 2px;
-  padding: 3px;
+  gap: 3px;
+  padding: 4px;
   background: var(--surface-sunken);
   border: 1px solid var(--border-subtle);
   border-radius: 999px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.course-path__spine::-webkit-scrollbar {
+  display: none;
 }
 
 .course-path__level {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: var(--space-2) var(--space-3);
+  gap: 3px;
+  padding: var(--space-2) var(--space-4);
   border-radius: 999px;
   border: none;
   background: transparent;
-  transition: background 0.15s, color 0.15s;
+  transition: background 0.15s, opacity 0.15s;
   color: inherit;
   font: inherit;
   cursor: pointer;
-  min-width: 48px;
+  min-width: 56px;
+  flex-shrink: 0;
+  opacity: 0.5;
+}
+
+.course-path__level:hover:not(.course-path__level--on) {
+  opacity: 0.8;
+  background: color-mix(in oklch, var(--primary) 10%, var(--surface-raised));
 }
 
 .course-path__level-lv {
   font-family: var(--font-editorial), Georgia, serif;
-  font-size: 1.05rem;
+  font-size: 1.1rem;
+  font-weight: 500;
+  line-height: 1;
   color: var(--text-primary);
 }
 
 .course-path__level-ln {
   font-size: 10px;
+  font-weight: 400;
   color: var(--text-tertiary);
-  letter-spacing: 0.08em;
+  letter-spacing: 0.03em;
+  line-height: 1;
 }
 
 .course-path__level:focus-visible {
@@ -113,14 +139,18 @@
 
 .course-path__level--on {
   background: var(--primary);
+  box-shadow: 0 1px 4px oklch(0 0 0 / 0.2);
+  opacity: 1;
 }
 
 .course-path__level--on .course-path__level-lv {
   color: var(--on-primary);
+  font-weight: 600;
 }
 
 .course-path__level--on .course-path__level-ln {
-  color: color-mix(in oklch, var(--on-primary) 75%, var(--primary));
+  color: color-mix(in oklch, var(--on-primary) 75%, transparent);
+  font-weight: 500;
 }
 
 /* ── Level panel head ────────────────────────────────────── */
@@ -129,6 +159,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
+  margin-bottom: var(--space-5);
 }
 
 .course-path__head h2 {
@@ -139,19 +170,40 @@
 }
 
 .course-path__prog {
-  font-size: 0.85rem;
-  color: var(--text-secondary);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
 }
 
-.course-path__prog b {
-  color: var(--primary);
+.course-path__prog-pct {
   font-family: var(--font-editorial), Georgia, serif;
+  font-size: 1.35rem;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--primary);
+  letter-spacing: -0.02em;
+}
+
+.course-path__prog-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: 0.78rem;
+  color: var(--text-tertiary);
+  line-height: 1;
 }
 
 .course-path__prog-star,
-.course-path__inline-pri,
 .course-path__rm-star {
   color: var(--primary);
+}
+
+.course-path__inline-pri {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  color: var(--primary);
+  vertical-align: middle;
 }
 
 .course-path__star-icon {
@@ -176,7 +228,7 @@
 .course-path__units {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
+  gap: var(--space-3);
 }
 
 .course-path__unit {
@@ -187,7 +239,7 @@
 }
 
 .course-path__unit--active {
-  border-color: var(--accent-border);
+  border-color: color-mix(in oklch, var(--primary) 45%, var(--border-default));
 }
 
 .course-path__urow {
@@ -195,17 +247,23 @@
   align-items: center;
   gap: var(--space-3);
   width: 100%;
-  padding: var(--space-3) var(--space-4);
+  padding: var(--space-4) var(--space-4);
   border: none;
   background: transparent;
   color: inherit;
   font: inherit;
   cursor: pointer;
   text-align: left;
+  min-height: 4rem;
 }
 
 .course-path__urow:hover {
   background: var(--surface-sunken);
+}
+
+.course-path__urow:disabled {
+  cursor: not-allowed;
+  pointer-events: none;
 }
 
 .course-path__urow:focus-visible {
@@ -218,14 +276,14 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: var(--space-1);
   min-width: 0;
 }
 
 .course-path__ring {
   flex-shrink: 0;
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   background: conic-gradient(
     var(--primary) calc(var(--p, 0) * 1%),
@@ -237,16 +295,17 @@
 }
 
 .course-path__ring-inner {
-  width: 30px;
-  height: 30px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
   background: var(--surface-raised);
-  color: var(--text-secondary);
-  font-size: 11px;
+  color: var(--text-primary);
+  font-size: 10px;
   font-weight: 600;
   display: flex;
   align-items: center;
   justify-content: center;
+  letter-spacing: -0.02em;
 }
 
 .course-path__unit--done .course-path__ring {
@@ -266,25 +325,32 @@
 }
 
 .course-path__un {
-  font-size: 10px;
+  font-size: 11px;
+  font-weight: 600;
   color: var(--text-tertiary);
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .course-path__ut {
   font-family: var(--font-editorial), Georgia, serif;
   font-size: 1.12rem;
+  font-weight: 460;
   color: var(--text-primary);
+  letter-spacing: -0.01em;
 }
 
 .course-path__um {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
   font-size: 0.8rem;
   color: var(--text-tertiary);
 }
 
 .course-path__chev {
   color: var(--text-tertiary);
-  transition: transform 0.2s, color 0.2s;
+  transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1), color 0.15s;
 }
 
 .course-path__unit--open .course-path__chev {
@@ -299,15 +365,15 @@
 .course-path__lessons > div {
   display: flex;
   flex-direction: column;
-  gap: var(--space-1);
-  padding: 0 var(--space-3) var(--space-3);
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4) var(--space-4);
 }
 
 .course-path__lesson {
   display: flex;
   align-items: center;
-  gap: var(--space-2);
-  padding: var(--space-2) var(--space-3);
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
   background: var(--surface-sunken);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
@@ -319,36 +385,36 @@
 .course-path__lesson:disabled,
 .course-path__lesson--locked {
   pointer-events: none;
-  opacity: 0.85;
+  opacity: 0.55;
+}
+
+.course-path__locked-label {
+  flex-shrink: 0;
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--text-tertiary);
+  letter-spacing: 0.04em;
+  margin-left: auto;
 }
 
 .course-path__lesson:focus-visible {
   outline: 2px solid var(--primary);
-  outline-offset: 1px;
+  outline-offset: 2px;
 }
 
 .course-path__lesson:not(.course-path__lesson--locked):hover {
   border-color: color-mix(in oklch, var(--primary) 35%, var(--border-subtle));
 }
 
-.course-path__lt {
-  flex: 1;
-  min-width: 0;
-}
-
-.course-path__lt--link {
-  flex: 1;
-  min-width: 0;
-}
 
 .course-path__st {
   flex-shrink: 0;
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
   border: 1.5px solid var(--border-default);
   color: var(--text-tertiary);
-  font-size: 10px;
+  font-size: 11px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -368,7 +434,9 @@
 
 .course-path__lt,
 .course-path__lt--link {
-  font-size: 0.92rem;
+  flex: 1;
+  min-width: 0;
+  font-size: 0.9375rem;
   color: var(--text-primary);
   background: transparent;
   overflow: hidden;
@@ -383,44 +451,90 @@
 .course-path__lk {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 3px;
   flex-shrink: 0;
   margin-left: auto;
+  padding: 4px 10px 4px 12px;
   font-size: 0.78rem;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--primary);
+  background: var(--primary-soft);
+  border-radius: var(--radius-full);
   text-decoration: none;
   white-space: nowrap;
+  transition: background 0.15s, color 0.15s;
 }
 
 .course-path__lk:hover {
+  background: color-mix(in oklch, var(--primary) 18%, var(--surface-raised));
   color: var(--primary-hover);
 }
 
-.course-path__why {
-  background: color-mix(in oklch, var(--primary) 6%, var(--surface-raised));
-  border: 1px solid color-mix(in oklch, var(--primary) 22%, var(--border-subtle));
-  border-radius: var(--radius-lg);
-  padding: var(--space-5) var(--space-6);
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
+.course-path__lk:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
 }
 
-.course-path__why h3 {
+.course-path__why {
+  background: color-mix(in oklch, var(--primary) 5%, var(--surface-raised));
+  border: 1px solid color-mix(in oklch, var(--primary) 18%, var(--border-subtle));
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.course-path__why-summary {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  cursor: pointer;
   font-family: var(--font-editorial), Georgia, serif;
   font-weight: 480;
-  font-size: 1.1rem;
+  font-size: 1rem;
+  color: var(--text-secondary);
+  transition: color 0.15s;
+  user-select: none;
+}
+
+.course-path__why-summary:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+  border-radius: var(--radius-md);
+}
+
+.course-path__why-summary::-webkit-details-marker {
+  display: none;
+}
+
+.course-path__why-chev {
+  flex-shrink: 0;
+  color: var(--text-tertiary);
+  transition: transform 0.18s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.course-path__why[open] .course-path__why-chev {
+  transform: rotate(90deg);
+}
+
+.course-path__why-summary:hover {
   color: var(--text-primary);
 }
 
-.course-path__why p {
-  font-size: 0.9rem;
+.course-path__why-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border-top: 1px solid color-mix(in oklch, var(--primary) 12%, var(--border-subtle));
+}
+
+.course-path__why-body p {
+  font-size: 0.875rem;
   color: var(--text-secondary);
   line-height: 1.6;
 }
 
-.course-path__why strong {
+.course-path__why-body strong {
   color: var(--primary);
   font-weight: 600;
 }
@@ -437,21 +551,13 @@
 }
 
 .course-path__lesson--pri {
-  border-color: var(--accent-border);
-  background: linear-gradient(
-    150deg,
-    var(--badge-primary-bg),
-    var(--surface-sunken) 70%
-  );
+  border-color: color-mix(in oklch, var(--primary) 35%, var(--border-default));
+  background: color-mix(in oklch, var(--primary) 10%, var(--surface-raised));
 }
 
 .course-path__lesson--pri-max {
-  border-color: color-mix(in oklch, var(--primary) 32%, var(--border-subtle));
-  background: linear-gradient(
-    150deg,
-    color-mix(in oklch, var(--primary) 14%, var(--surface-sunken)),
-    var(--surface-sunken) 60%
-  );
+  border-color: color-mix(in oklch, var(--primary) 50%, var(--border-default));
+  background: color-mix(in oklch, var(--primary) 16%, var(--surface-raised));
 }
 
 .course-path__lesson--pri .course-path__lt--link,
@@ -468,11 +574,17 @@
 }
 
 .course-path__snd {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 6px;
   color: var(--primary);
   border-radius: var(--radius-sm);
   text-decoration: none;
   background: var(--accent-dim);
   transition: background var(--transition-fast), color var(--transition-fast);
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .course-path__snd:hover {
@@ -480,34 +592,35 @@
   color: var(--primary-hover);
 }
 
+.course-path__snd-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.course-path__unit--optional-block {
+  border-style: dashed;
+  opacity: 0.82;
+}
+
+.course-path__unit--optional-block:has(.course-path__unit--open),
+.course-path__unit--optional-block.course-path__unit--open {
+  opacity: 1;
+}
+
 .course-path__unit--optional-block .course-path__un {
   color: var(--text-tertiary);
 }
 
-/* ── Electives section ───────────────────────────────────── */
-
-.course-path__electives {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-  padding-top: var(--space-4);
-  border-top: 1px solid var(--border-subtle);
-}
-
-.course-path__electives > .course-path__rutas {
-  margin-top: var(--space-2);
-}
-
-.course-path__electives-title {
-  font-family: var(--font-editorial), Georgia, serif;
-  font-weight: 480;
-  font-size: 1.35rem;
-  color: var(--text-primary);
-}
-
-.course-path__electives-sub {
-  font-size: 0.88rem;
-  color: var(--text-secondary);
+.course-path__optional-tag {
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: var(--text-tertiary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  padding: 1px 6px;
+  text-transform: uppercase;
 }
 
 .course-path__rutas {
@@ -524,7 +637,7 @@
 }
 
 .course-path__ruta--open {
-  border-color: var(--accent-border);
+  border-color: color-mix(in oklch, var(--primary) 45%, var(--border-default));
 }
 
 .course-path__rrow {
@@ -539,6 +652,7 @@
   font: inherit;
   cursor: pointer;
   text-align: left;
+  min-height: 3.5rem;
 }
 
 .course-path__rrow:hover {
@@ -582,7 +696,7 @@
 }
 
 .course-path__ruta-body {
-  padding: 0 var(--space-4) var(--space-4);
+  padding: var(--space-3) var(--space-4) var(--space-4);
   border-top: 1px solid var(--border-subtle);
 }
 
@@ -628,9 +742,15 @@
   color: var(--primary-hover);
 }
 
+.course-path__sound-lab-cta:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
 .course-path__rchev {
   color: var(--text-tertiary);
-  transition: transform 0.2s, color 0.2s;
+  transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1), color 0.15s;
 }
 
 .course-path__ruta--open .course-path__rchev {
@@ -642,34 +762,94 @@
   font-size: 1.15rem;
 }
 
-/* Resume card */
+/* Start-here card (zero state) */
+.course-path__start-here,
+.course-path__resume {
+  margin-bottom: var(--space-4);
+}
+
+.course-path__start-here {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-5);
+  background: var(--cta-bg);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  transition: background 0.15s, transform 0.15s;
+}
+
+.course-path__start-here:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.course-path__start-here:hover {
+  background: color-mix(in oklch, var(--cta-bg) 88%, var(--primary));
+}
+
+.course-path__start-here:active {
+  transform: scale(0.99);
+}
+
+.course-path__start-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--cta-fg);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.course-path__start-title {
+  flex: 1;
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: var(--cta-fg);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  opacity: 0.8;
+}
+
+.course-path__start-here svg {
+  color: var(--cta-fg);
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+
+/* Resume card — uses primary color so it reads as an active CTA, not ink-on-surface */
 .course-path__resume {
   display: flex;
   align-items: center;
   gap: var(--space-3);
   padding: var(--space-3) var(--space-4);
-  background: color-mix(in oklch, var(--primary) 8%, var(--surface-raised));
-  border: 1px solid color-mix(in oklch, var(--primary) 28%, var(--border-subtle));
+  background: var(--primary);
+  border: 1px solid var(--primary);
   border-radius: var(--radius-md);
   text-decoration: none;
-  transition: background 0.15s, border-color 0.15s;
+  transition: background 0.15s, border-color 0.15s, transform 0.15s;
+}
+
+.course-path__resume:active {
+  transform: scale(0.99);
 }
 
 .course-path__resume:focus-visible {
   outline: 2px solid var(--primary);
-  outline-offset: 2px;
+  outline-offset: 3px;
 }
 
 .course-path__resume:hover {
-  background: color-mix(in oklch, var(--primary) 13%, var(--surface-raised));
-  border-color: color-mix(in oklch, var(--primary) 45%, var(--border-subtle));
+  background: var(--primary-hover);
+  border-color: var(--primary-hover);
 }
 
 .course-path__resume-label {
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.1em;
-  color: var(--primary);
+  color: var(--on-primary);
   text-transform: uppercase;
   white-space: nowrap;
 }
@@ -677,16 +857,18 @@
 .course-path__resume-title {
   flex: 1;
   font-size: 0.92rem;
-  color: var(--text-primary);
+  color: var(--on-primary);
   font-weight: 500;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  opacity: 0.85;
 }
 
 .course-path__resume svg {
-  color: var(--primary);
+  color: var(--on-primary);
   flex-shrink: 0;
+  opacity: 0.8;
 }
 
 /* Loading skeleton */
@@ -753,7 +935,7 @@
 
 /* Optional lesson row */
 .course-path__lesson--optional {
-  opacity: 0.72;
+  opacity: 0.78;
 }
 
 .course-path__lesson--optional:hover,
@@ -815,6 +997,174 @@
   font-size: 1.75rem;
 }
 
+/* ── Real Life English section ───────────────────────────── */
+
+.course-path__irl {
+  margin-top: var(--space-6);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--surface-raised);
+}
+
+.course-path__irl-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  border: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.9rem;
+  gap: var(--space-2);
+}
+
+.course-path__irl-header:hover {
+  background: var(--surface-sunken);
+}
+
+.course-path__irl-header:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: -2px;
+  border-radius: var(--radius-lg);
+}
+
+.course-path__irl-chev {
+  color: var(--text-tertiary);
+  transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1), color 0.15s;
+  flex-shrink: 0;
+}
+
+.course-path__irl--open .course-path__irl-chev {
+  transform: rotate(90deg);
+  color: var(--primary);
+}
+
+.course-path__irl-body-wrap {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.22s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.course-path__irl--open .course-path__irl-body-wrap {
+  grid-template-rows: 1fr;
+}
+
+.course-path__irl-body-wrap > * {
+  overflow: hidden;
+}
+
+.course-path__irl-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4) var(--space-4);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.course-path__irl-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: var(--surface-sunken);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+}
+
+.course-path__irl-card-head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+}
+
+.course-path__irl-phrases {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.course-path__irl-phrases li {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  padding-left: var(--space-3);
+  border-left: 2px solid color-mix(in oklch, var(--primary) 35%, var(--border-subtle));
+}
+
+.course-path__irl-vocab {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin: 0;
+}
+
+.course-path__irl-vocab-row {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.course-path__irl-vocab-row dt {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.course-path__irl-vocab-row dd {
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+  margin: 0;
+}
+
+/* ── C1 electives inside level panel ─────────────────────── */
+
+.course-path__c1-electives {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-top: var(--space-8);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.course-path__c1-electives-title {
+  font-family: var(--font-editorial), Georgia, serif;
+  font-weight: 480;
+  font-size: 1.2rem;
+  color: var(--text-primary);
+}
+
+.course-path__c1-electives-sub {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+}
+
+.course-path__c1-electives > .course-path__rutas {
+  margin-top: var(--space-3);
+}
+
+@media (max-width: 480px) {
+  .course-path__wrap {
+    padding-inline: var(--space-4);
+  }
+
+  .course-path__why {
+    margin-bottom: var(--space-8);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .course-path__skeleton-bar {
     animation: none;
@@ -830,6 +1180,14 @@
   }
 
   .course-path__ruta-body-wrap {
+    transition: none;
+  }
+
+  .course-path__irl-body-wrap {
+    transition: none;
+  }
+
+  .course-path__irl-chev {
     transition: none;
   }
 }
