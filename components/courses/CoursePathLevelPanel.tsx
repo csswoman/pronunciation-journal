@@ -11,14 +11,20 @@ import { useCoursePathProgress } from "@/hooks/useCoursePathProgress";
 import CoursePathLessonRow from "@/components/courses/CoursePathLessonRow";
 import { CoursePathPriorityCount } from "@/components/courses/CoursePathIcons";
 import { cn } from "@/lib/cn";
+import CoursePathRealLife from "@/components/courses/CoursePathRealLife";
+import CoursePathC1Electives from "@/components/courses/CoursePathC1Electives";
 
 interface CoursePathLevelPanelProps {
   level: CoursePathLevel;
   compactHead?: boolean;
+  openUnits?: Record<string, boolean>;
+  onToggleUnit?: (updater: (prev: Record<string, boolean>) => Record<string, boolean>) => void;
+  electiveTracks?: CoursePathLevel[];
 }
 
-export default function CoursePathLevelPanel({ level, compactHead }: CoursePathLevelPanelProps) {
-  const [openUnits, setOpenUnits] = useState<Record<string, boolean>>({});
+export default function CoursePathLevelPanel({ level, compactHead, openUnits: openUnitsProp, onToggleUnit, electiveTracks }: CoursePathLevelPanelProps) {
+  const [localOpenUnits, setLocalOpenUnits] = useState<Record<string, boolean>>({});
+  const openUnits = openUnitsProp ?? localOpenUnits;
   const { completedIds, ready, error, retry } = useCoursePathProgress(level.id);
 
   const derived = useMemo(
@@ -27,7 +33,12 @@ export default function CoursePathLevelPanel({ level, compactHead }: CoursePathL
   );
 
   const toggleUnit = (unitId: string) => {
-    setOpenUnits((prev) => ({ ...prev, [unitId]: !prev[unitId] }));
+    const updater = (prev: Record<string, boolean>) => ({ ...prev, [unitId]: !prev[unitId] });
+    if (onToggleUnit) {
+      onToggleUnit(updater);
+    } else {
+      setLocalOpenUnits(updater);
+    }
   };
 
   const isUnitOpen = (unitId: string, defaultOpen: boolean) => openUnits[unitId] ?? defaultOpen;
@@ -37,9 +48,9 @@ export default function CoursePathLevelPanel({ level, compactHead }: CoursePathL
   if (error) {
     return (
       <div className="course-path__load-error">
-        <p>No se pudo cargar el progreso.</p>
+        <p>Couldn't load your progress. Check your connection and try again.</p>
         <button type="button" className="course-path__load-retry" onClick={retry}>
-          Intentar de nuevo
+          Try again
         </button>
       </div>
     );
@@ -59,26 +70,39 @@ export default function CoursePathLevelPanel({ level, compactHead }: CoursePathL
     .flatMap((u) => u.lessons)
     .find((l) => l.state === "current");
 
+  const firstLesson = derived.units[0]?.lessons[0];
+
   return (
     <>
       <div className={cn("course-path__head", compactHead && "course-path__head--compact")}>
         <h2>{derived.level.title}</h2>
-        <p className="course-path__prog">
-          Progreso: <b>{derived.progressPercent}%</b>
-          {derived.level.hours && <> · {derived.level.hours}</>}
-          {" · "}
-          <CoursePathPriorityCount count={nPriority} className="course-path__prog-star" />
-          {" · "}
-          {derived.completedCoreLessons} / {derived.totalCoreLessons} core
-        </p>
+        <div className="course-path__prog">
+          <b className="course-path__prog-pct">{derived.progressPercent}%</b>
+          <div className="course-path__prog-meta">
+            {derived.completedCoreLessons} / {derived.totalCoreLessons} core
+            {derived.level.hours && <span>{derived.level.hours}</span>}
+            <CoursePathPriorityCount count={nPriority} className="course-path__prog-star" />
+          </div>
+        </div>
       </div>
 
-      {currentLesson && (
+      {completedIds.size === 0 && !compactHead && firstLesson && (
+        <Link
+          href={studyLessonPath(level.id, firstLesson.number)}
+          className="course-path__start-here"
+        >
+          <span className="course-path__start-label">Start here</span>
+          <span className="course-path__start-title">{firstLesson.title}</span>
+          <ArrowRight size={16} aria-hidden />
+        </Link>
+      )}
+
+      {completedIds.size > 0 && currentLesson && (
         <Link
           href={studyLessonPath(level.id, currentLesson.number)}
           className="course-path__resume"
         >
-          <span className="course-path__resume-label">Continuar</span>
+          <span className="course-path__resume-label">Continue</span>
           <span className="course-path__resume-title">{currentLesson.title}</span>
           <ArrowRight size={16} aria-hidden />
         </Link>
@@ -114,16 +138,17 @@ export default function CoursePathLevelPanel({ level, compactHead }: CoursePathL
                 onClick={() => toggleUnit(u.unit.id)}
                 aria-expanded={open}
                 aria-controls={`unit-lessons-${u.unit.id}`}
+                disabled={u.status === "locked"}
               >
                 <div
                   className="course-path__ring"
                   style={{ "--p": u.progressPercent } as React.CSSProperties}
                   aria-label={
                     u.status === "done"
-                      ? "Completada"
+                      ? "Completed"
                       : u.status === "locked"
-                      ? "Bloqueada"
-                      : `${u.progressPercent}% completado`
+                      ? "Locked"
+                      : `${u.progressPercent}% complete`
                   }
                   role="img"
                 >
@@ -132,7 +157,12 @@ export default function CoursePathLevelPanel({ level, compactHead }: CoursePathL
                 <div className="course-path__uinfo">
                   <div className="course-path__un">{u.unit.label}</div>
                   <div className="course-path__ut">{u.unit.title}</div>
-                  <div className="course-path__um">{u.unit.lessons.length} cursos</div>
+                  <div className="course-path__um">
+                    {u.unit.lessons.length} courses
+                    {u.unit.isOptionalSection && (
+                      <span className="course-path__optional-tag">Optional</span>
+                    )}
+                  </div>
                 </div>
                 <ChevronRight className="course-path__chev" size={18} aria-hidden />
               </button>
@@ -153,6 +183,13 @@ export default function CoursePathLevelPanel({ level, compactHead }: CoursePathL
           );
         })}
       </div>
+
+      {level.realLife && level.realLife.length > 0 && (
+        <CoursePathRealLife scenarios={level.realLife} />
+      )}
+      {level.id === "c1" && electiveTracks && electiveTracks.length > 0 && (
+        <CoursePathC1Electives tracks={electiveTracks} />
+      )}
     </>
   );
 }
