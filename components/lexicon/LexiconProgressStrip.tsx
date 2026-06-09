@@ -33,24 +33,24 @@ export function LexiconProgressStrip({
         aria-label="Lexicon progress"
       >
         <i className="words-lexicon__segbar-learned" style={{ width: `${learnedPct}%` }} />
-        <i className="words-lexicon__segbar-progress" style={{ width: `${progressPct}%` }} />
+        <i className="words-lexicon__segbar-progress" style={{ width: `${progressPct}%`, left: `${learnedPct}%` }} />
       </div>
       <div className="words-lexicon__strip-legend">
-        <span className="words-lexicon__strip-dot" style={{ background: "var(--success)" }} />
+        <span className="words-lexicon__strip-dot words-lexicon__strip-dot--learned" />
         <b>{learned.toLocaleString()}</b> learned
       </div>
       <div className="words-lexicon__strip-legend">
-        <span className="words-lexicon__strip-dot" style={{ background: "var(--primary)" }} />
+        <span className="words-lexicon__strip-dot words-lexicon__strip-dot--progress" />
         <b>{inProgress.toLocaleString()}</b> in progress
       </div>
       <div className="words-lexicon__strip-legend">
-        <span className="words-lexicon__strip-dot" style={{ background: "var(--border-strong)" }} />
+        <span className="words-lexicon__strip-dot words-lexicon__strip-dot--not-started" />
         <b>{notStarted.toLocaleString()}</b> not started
       </div>
       {dueForReview > 0 && (
         <div className="words-lexicon__strip-review">
           <Link href="/review" className="words-lexicon__strip-pill">
-            ↻ {dueForReview} due for review today
+            ↻ {dueForReview} to review today
           </Link>
         </div>
       )}

@@ -31,7 +31,7 @@ export default function HomeGoalRing({
         aria-hidden
       >
         <circle
-          className="stroke-[var(--bg-tertiary)]"
+          className="stroke-[var(--surface-sunken)]"
           cx={center}
           cy={center}
           r={RADIUS}

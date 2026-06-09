@@ -20,10 +20,10 @@ function WeekDots({ streakDays, completedToday }: { streakDays: number; complete
               "w-4 h-4 rounded-full grid place-items-center not-italic transition-[background-color,box-shadow] duration-200",
               isToday
                 ? completedToday
-                  ? "bg-[var(--warning)]"
+                  ? "bg-[var(--success)]"
                   : "bg-[var(--primary)] shadow-[0_0_0_3px_var(--accent-dim)]"
                 : isOn
-                  ? "bg-[var(--warning)]"
+                  ? "bg-[var(--success)]"
                   : "bg-[var(--surface-sunken)]",
             ].join(" ")}
           >
@@ -44,7 +44,14 @@ export default function HomeStreakCard({ streak }: HomeStreakCardProps) {
       className="flex items-center gap-3 rounded-[var(--radius-lg)] border border-border-subtle bg-surface-raised px-4 py-3"
       aria-label={`${current} ${current === 1 ? "day" : "days"} streak`}
     >
-      <Flame size={16} className="shrink-0 text-[var(--primary)]" aria-hidden />
+      <Flame
+        size={16}
+        className={[
+          "shrink-0 transition-colors duration-300",
+          completedToday ? "text-[var(--success)]" : "text-[var(--primary)]",
+        ].join(" ")}
+        aria-hidden
+      />
       <div className="flex items-baseline gap-1.5">
         <span className="type-stat text-sm">{current}</span>
         <span className="font-caption text-[var(--text-secondary)]">

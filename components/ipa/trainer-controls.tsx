@@ -1,6 +1,7 @@
 "use client";
 
 import { Play, ArrowRight, RotateCcw, HelpCircle, Check, X } from "lucide-react";
+import { cn } from "@/lib/cn";
 
 type Verdict = "correct" | "wrong" | null;
 type Side = "A" | "B";
@@ -13,6 +14,7 @@ interface TrainerControlsProps {
   onNextPair: () => void;
   onReplayClue: () => void;
   onStartQuiz: () => void;
+  onNextRound: () => void;
 }
 
 export function TrainerControls({
@@ -23,6 +25,7 @@ export function TrainerControls({
   onNextPair,
   onReplayClue,
   onStartQuiz,
+  onNextRound,
 }: TrainerControlsProps) {
   return (
     <>
@@ -73,11 +76,12 @@ export function TrainerControls({
             <>
               <div className="flex items-center gap-2.5">
                 <span
-                  className="inline-flex items-center justify-center w-7 h-7 rounded-full text-white"
-                  style={{
-                    backgroundColor:
-                      verdict === "correct" ? "var(--success)" : "var(--error)",
-                  }}
+                  className={cn(
+                    "inline-flex items-center justify-center w-7 h-7 rounded-full",
+                    verdict === "correct"
+                      ? "bg-[var(--success)] text-[var(--on-success,white)]"
+                      : "bg-[var(--error)] text-[var(--on-error,white)]"
+                  )}
                 >
                   {verdict === "correct" ? (
                     <Check size={14} strokeWidth={3} />
@@ -93,10 +97,10 @@ export function TrainerControls({
               </div>
               <button
                 type="button"
-                onClick={onStartQuiz}
+                onClick={onNextRound}
                 className="ipa-chart__btn ipa-chart__btn--primary"
               >
-                Otra ronda
+                Siguiente
                 <ArrowRight size={13} aria-hidden />
               </button>
             </>

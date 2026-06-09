@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import ProgressBar from "@/components/ui/ProgressBar";
 import type { WeakestPhonemeHome } from "@/lib/home/constants";
 import type { LexiconRetentionStats } from "@/lib/lexicon/server-progress";
@@ -40,7 +41,7 @@ export default function HomeRetentionCard({
       {weakIpa && weakAccuracy !== null ? (
         <Link href="/practice/sounds" className="group mt-3 flex items-center gap-4 focus-ring rounded-[var(--radius-md)]">
           <span
-            className="font-display shrink-0 text-display-ipa font-bold leading-none text-[var(--warning)]"
+            className="animate-symbol-in font-display shrink-0 text-display-ipa font-bold leading-none text-[var(--warning)]"
             style={{ fontFamily: "var(--font-display), Georgia, serif" }}
           >
             {weakIpa}
@@ -57,15 +58,15 @@ export default function HomeRetentionCard({
                 {weakAccuracy}%
               </span>
             </div>
-            <p className="font-caption mt-1.5 text-[var(--primary)] group-hover:underline">
-              Practice this sound →
+            <p className="font-caption mt-1.5 inline-flex items-center gap-1 text-[var(--primary)] group-hover:underline">
+              Practice this sound <ArrowRight size={11} aria-hidden />
             </p>
           </div>
         </Link>
       ) : (
         <div className="mt-3 flex items-center gap-4">
           <span
-            className="font-display shrink-0 text-display-ipa font-bold leading-none text-[var(--warning)]"
+            className="animate-symbol-in font-display shrink-0 text-display-ipa font-bold leading-none text-[var(--warning)]"
             style={{ fontFamily: "var(--font-display), Georgia, serif" }}
           >
             /ð/
@@ -84,7 +85,7 @@ export default function HomeRetentionCard({
               href="/practice/sounds"
               className="font-caption mt-1.5 inline-flex items-center gap-1 text-[var(--primary)] hover:underline focus-ring rounded"
             >
-              Start practicing →
+              Start practicing <ArrowRight size={11} aria-hidden />
             </Link>
           </div>
         </div>

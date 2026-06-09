@@ -37,7 +37,7 @@ export function LexiconContinueSection({ lessons, onLessonClick }: LexiconContin
         <span className="words-lexicon__sechead-num">01</span>
         <h3>Pick up where you left off</h3>
       </div>
-      <div className="words-lexicon__continue grid grid-cols-1 min-[820px]:grid-cols-3 gap-3.5">
+      <div className="words-lexicon__continue">
         {lessons.map((lesson) => {
           const Icon = CATEGORY_ICONS[lesson.id] ?? BookOpen;
           const offset = RING_C - (RING_C * lesson.progress) / 100;

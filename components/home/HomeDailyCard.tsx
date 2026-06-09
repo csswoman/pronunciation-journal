@@ -60,12 +60,9 @@ export default function HomeDailyCard({ conceptLesson }: HomeDailyCardProps) {
   // Embedded checklist (single view)
   return (
     <section>
-      <p className="mb-3 text-label font-medium uppercase tracking-widest text-[var(--text-tertiary)]">
-        Today's plan
-      </p>
-    <div className="flex flex-col sm:bg-daily-card sm:rounded-[var(--radius-xl)] sm:border sm:border-border-subtle sm:p-6">
-      {/* aria-live region announces plan-ready state to screen readers */}
-      <div aria-live="polite" aria-atomic="true" className="sr-only">
+      <div className="flex flex-col sm:bg-daily-card sm:rounded-[var(--radius-xl)] sm:border sm:border-border-subtle sm:px-6 sm:pb-6 sm:pt-5">
+        {/* aria-live region announces plan-ready state to screen readers */}
+        <div aria-live="polite" aria-atomic="true" className="sr-only">
         {status === 'ready' && !allDone && `Today's plan ready, ${steps.length} steps`}
         {status === 'ready' && allDone && 'Daily plan complete!'}
       </div>
@@ -86,7 +83,7 @@ export default function HomeDailyCard({ conceptLesson }: HomeDailyCardProps) {
 
       {status === 'error' && (
         <div className="animate-state-in flex flex-col items-center gap-3 py-8 text-center">
-          <p className="text-error">Couldn't prepare your plan.</p>
+          <p className="font-body-sm text-[var(--error)]">Couldn't prepare your plan.</p>
           <Button type="button" variant="primary" size="sm" onClick={() => void load()}>
             Retry
           </Button>
@@ -94,12 +91,17 @@ export default function HomeDailyCard({ conceptLesson }: HomeDailyCardProps) {
       )}
 
       {status === 'ready' && !allDone && steps.length === 0 && (
-        <div className="animate-state-in flex flex-col items-center gap-3 py-8 text-center">
-          <p className="font-body-sm text-[var(--text-secondary)]">
-            No steps scheduled yet. Start a course or practice sounds to build your first plan.
-          </p>
+        <div className="animate-state-in flex flex-col items-center gap-4 py-8 text-center">
+          <div className="flex flex-col gap-1.5">
+            <p className="font-label font-semibold text-[var(--text-primary)]">
+              Your plan is empty today.
+            </p>
+            <p className="font-body-sm max-w-[28ch] text-[var(--text-secondary)]">
+              Your daily plan builds as you start a course or practice sounds.
+            </p>
+          </div>
           <Link href="/courses">
-            <Button variant="secondary" size="sm" icon={<ArrowRight size={14} />} iconPosition="right">
+            <Button variant="primary" size="sm" icon={<ArrowRight size={14} />} iconPosition="right">
               Explore courses
             </Button>
           </Link>
@@ -109,12 +111,12 @@ export default function HomeDailyCard({ conceptLesson }: HomeDailyCardProps) {
       {status === 'ready' &&
         (allDone ? (
           <div className="animate-state-in flex flex-col items-center gap-3 py-6 text-center">
-            <div className="animate-step-done grid h-12 w-12 place-items-center rounded-full bg-[var(--hue-icon-bg)] text-[var(--primary)]">
+            <div className="animate-step-done grid h-12 w-12 place-items-center rounded-full bg-[var(--success-soft)] text-[var(--success)]">
               <Flame size={24} />
             </div>
-            <p className="text-lg font-semibold text-[var(--text-primary)]">Daily complete!</p>
+            <p className="font-title text-[var(--text-primary)]">Daily complete!</p>
             <p className="font-body-sm max-w-xs text-[var(--text-secondary)]">
-              You completed all {steps.length} steps today. Your streak is alive.
+              You finished all {steps.length} steps today.
             </p>
             <Link href="/practice/sounds">
               <Button variant="secondary" size="sm" icon={<ArrowRight size={14} />} iconPosition="right">
@@ -128,7 +130,7 @@ export default function HomeDailyCard({ conceptLesson }: HomeDailyCardProps) {
               <Badge label="Today's plan" variant="default" className="shrink-0" />
               <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-surface-sunken">
                 <div
-                  className="progress-fill h-full w-full rounded-full bg-[var(--primary)]"
+                  className="progress-fill progress-fill-mount h-full w-full rounded-full bg-[var(--primary)]"
                   style={{ transform: `scaleX(${steps.length ? completedCount / steps.length : 0})` }}
                 />
               </div>

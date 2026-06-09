@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { COURSE_PATH_CURRICULUM } from "@/lib/courses/curriculum";
 import type { CefrLevelId } from "@/lib/courses/types";
 import CoursePathLevelPanel from "@/components/courses/CoursePathLevelPanel";
@@ -14,7 +14,6 @@ const DEFAULT_LEVEL: CefrLevelId = "a1";
 
 export default function CoursePathPage() {
   const [levelId, setLevelId] = useState<CefrLevelId>(DEFAULT_LEVEL);
-  const router = useRouter();
 
   const level = COURSE_PATH_CURRICULUM.levels.find((l) => l.id === levelId)!;
 
@@ -45,9 +44,11 @@ export default function CoursePathPage() {
           {COURSE_PATH_CURRICULUM.levels.map((lv) => (
             <button
               key={lv.id}
+              id={`tab-${lv.id}`}
               type="button"
               role="tab"
               aria-selected={levelId === lv.id}
+              aria-controls="course-level-panel"
               className={cn(
                 "course-path__level",
                 levelId === lv.id && "course-path__level--on"
@@ -60,11 +61,17 @@ export default function CoursePathPage() {
           ))}
         </div>
 
-        <CoursePathLevelPanel key={levelId} level={level} />
+        <div
+          id="course-level-panel"
+          role="tabpanel"
+          aria-labelledby={`tab-${levelId}`}
+        >
+          <CoursePathLevelPanel key={levelId} level={level} />
+        </div>
 
         <section className="course-path__electives" aria-labelledby="electives-heading">
           <h2 id="electives-heading" className="course-path__electives-title">
-            Después de C1 · rutas complementarias
+            Después de C1<span aria-hidden> · </span>rutas complementarias
           </h2>
           <p className="course-path__electives-sub">
             Propósitos específicos e inglés de negocios. Opcionales dentro de cada bloque aparecen al
@@ -79,20 +86,14 @@ export default function CoursePathPage() {
 
         <aside className="course-path__why">
           <h3>{COURSE_PATH_CURRICULUM.why.title}</h3>
-          {COURSE_PATH_CURRICULUM.why.paragraphs.map((p) => (
-            <p key={p.slice(0, 24)}>{p}</p>
+          {COURSE_PATH_CURRICULUM.why.paragraphs.map((p, i) => (
+            <p key={i}>{p}</p>
           ))}
-          <p className="mt-2">
-            <button
-              type="button"
-              className="course-path__sound-lab-cta"
-              onClick={() => router.push("/practice/sounds")}
-            >
-              <MicVocal size={16} strokeWidth={2} aria-hidden />
-              Ir a Sound Lab
-              <ArrowRight size={14} aria-hidden />
-            </button>
-          </p>
+          <Link href="/practice/sounds" className="course-path__sound-lab-cta">
+            <MicVocal size={16} strokeWidth={2} aria-hidden />
+            Ir a Sound Lab
+            <ArrowRight size={14} aria-hidden />
+          </Link>
         </aside>
       </div>
     </div>

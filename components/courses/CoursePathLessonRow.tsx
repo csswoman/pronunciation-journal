@@ -23,6 +23,14 @@ export default function CoursePathLessonRow({ lesson, levelId }: CoursePathLesso
   const canOpen = !isLocked;
   const isPriority = lesson.priority > 0;
 
+  const stateLabel = isDone
+    ? "Completada"
+    : isCurrent
+    ? "En curso"
+    : isLocked
+    ? "Bloqueada"
+    : "Disponible";
+
   const className = cn(
     "course-path__lesson",
     isPriority && "course-path__lesson--pri",
@@ -42,9 +50,12 @@ export default function CoursePathLessonRow({ lesson, levelId }: CoursePathLesso
   );
 
   return (
-    <div className={className}>
+    <div
+      className={className}
+      title={isLocked ? "Completa las lecciones anteriores para desbloquear" : undefined}
+    >
       <CoursePathPriorityMarks priority={lesson.priority} />
-      <div className="course-path__st">
+      <div className="course-path__st" role="img" aria-label={stateLabel}>
         {isDone ? (
           <Check size={12} strokeWidth={2.5} aria-hidden />
         ) : isCurrent ? (

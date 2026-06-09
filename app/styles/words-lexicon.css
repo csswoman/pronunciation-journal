@@ -27,6 +27,10 @@
 }
 
 .words-lexicon__seg-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 14px;
   font-size: 13px;
   font-weight: 600;
   color: var(--text-secondary);
@@ -34,6 +38,7 @@
   border: none;
   background: transparent;
   transition: background var(--transition-fast), color var(--transition-fast);
+  white-space: nowrap;
 }
 
 .words-lexicon__seg-btn:hover {
@@ -45,12 +50,20 @@
   color: var(--on-primary);
 }
 
+.words-lexicon__seg-count {
+  font-size: 11px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.7;
+}
+
 .words-lexicon__hero-title {
   font-family: var(--font-editorial), Georgia, serif;
   font-weight: 400;
   font-size: clamp(1.6rem, 3.5vw, 2.25rem);
   letter-spacing: -0.02em;
   color: var(--text-primary);
+  padding-top: 2rem;
 }
 
 .words-lexicon__hero-title em {
@@ -61,9 +74,24 @@
 .words-lexicon__hero-lede {
   color: var(--text-secondary);
   font-size: 0.95rem;
+  margin-top: 0.625rem;
+}
+
+.words-lexicon__hero {
+  padding-bottom: 0.5rem;
+}
+
+.words-lexicon__searchwrap {
+  position: relative;
+  max-width: 680px;
+  margin: 1.5rem auto 0;
 }
 
 .words-lexicon__searchbox {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 0.75rem 1rem;
   background: var(--surface-raised);
   border: 1px solid var(--border-default);
   border-radius: var(--radius-xl);
@@ -77,12 +105,20 @@
 }
 
 .words-lexicon__search-mag {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 2.25rem;
+  height: 2.25rem;
   border-radius: 13px;
   background: var(--primary);
   color: var(--on-primary);
 }
 
 .words-lexicon__search-input {
+  flex: 1;
+  min-width: 0;
   background: none;
   border: none;
   color: var(--text-primary);
@@ -96,13 +132,33 @@
 }
 
 .words-lexicon__search-kbd {
+  flex-shrink: 0;
+  padding: 0.1875rem 0.4375rem;
   font-size: 12px;
   color: var(--text-tertiary);
   border: 1px solid var(--border-subtle);
   border-radius: 8px;
+  white-space: nowrap;
+}
+
+.words-lexicon__quick {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.875rem;
+}
+
+.words-lexicon__quick-lbl {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 .words-lexicon__qchip {
+  padding: 0.25rem 0.75rem;
   font-family: var(--font-editorial), Georgia, serif;
   font-size: 0.9rem;
   color: var(--text-secondary);
@@ -120,6 +176,14 @@
 .words-lexicon__qchip.is-due {
   color: var(--warning-value);
   border-color: var(--badge-warning-border);
+}
+
+.words-lexicon__quick-lbl--spaced {
+  margin-left: 0.5rem;
+}
+
+.words-lexicon__res-def--translation {
+  color: var(--text-secondary);
 }
 
 .words-lexicon__results {
@@ -140,11 +204,18 @@
 }
 
 .words-lexicon__res {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.375rem 0.625rem;
+  width: 100%;
+  padding: 0.75rem 1rem;
   border-bottom: 1px solid var(--border-subtle);
-  background: transparent;
   border-left: none;
   border-right: none;
   border-top: none;
+  background: transparent;
+  text-align: left;
   color: inherit;
 }
 
@@ -181,6 +252,7 @@
 }
 
 .words-lexicon__nores {
+  padding: 0.875rem 1rem;
   color: var(--text-tertiary);
   font-size: 0.9rem;
 }
@@ -194,6 +266,23 @@
   );
   border: 1px solid var(--badge-primary-border);
   border-radius: var(--radius-lg);
+  padding: 1.25rem 1.5rem;
+  margin-top: 1rem;
+}
+
+.words-lexicon__wd-top {
+  display: flex;
+  align-items: baseline;
+  gap: 0.625rem;
+  flex-wrap: wrap;
+}
+
+.words-lexicon__wd-btns {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
 }
 
 .words-lexicon__worddetail.is-open {
@@ -216,15 +305,24 @@
   color: var(--text-tertiary);
 }
 
+.words-lexicon__wd-translation {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-top: 0.5rem;
+}
+
 .words-lexicon__wd-def {
   color: var(--text-secondary);
   font-size: 0.95rem;
+  margin-top: 0.625rem;
 }
 
 .words-lexicon__strip {
   background: var(--surface-raised);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
+  padding: 0.875rem 1.25rem;
   font-size: 0.85rem;
 }
 
@@ -235,11 +333,26 @@
 }
 
 .words-lexicon__segbar {
+  position: relative;
+  flex: 1;
+  min-width: 8rem;
+  max-width: 18rem;
+  height: 6px;
   border-radius: var(--radius-full);
-  background: var(--surface-sunken);
+  background: var(--border-subtle);
+  overflow: hidden;
+}
+
+.words-lexicon__segbar-learned,
+.words-lexicon__segbar-progress {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  border-radius: var(--radius-full);
 }
 
 .words-lexicon__segbar-learned {
+  left: 0;
   background: var(--success);
 }
 
@@ -248,12 +361,35 @@
 }
 
 .words-lexicon__strip-legend {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
   color: var(--text-secondary);
 }
 
 .words-lexicon__strip-legend b {
   font-family: var(--font-editorial), Georgia, serif;
   color: var(--text-primary);
+}
+
+.words-lexicon__strip-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+}
+
+.words-lexicon__strip-dot--learned {
+  background: var(--success);
+}
+
+.words-lexicon__strip-dot--progress {
+  background: var(--primary);
+}
+
+.words-lexicon__strip-dot--not-started {
+  background: var(--border-strong);
 }
 
 .words-lexicon__strip-pill {
@@ -271,17 +407,26 @@
   background: var(--warning-soft);
 }
 
+.words-lexicon__sechead {
+  display: flex;
+  align-items: baseline;
+  gap: 0.625rem;
+}
+
 .words-lexicon__sechead-num {
   font-family: var(--font-editorial), Georgia, serif;
   font-style: italic;
+  font-size: 0.875rem;
   color: var(--primary-600);
+  opacity: 0.8;
 }
 
 .words-lexicon__sechead h3 {
   font-family: var(--font-editorial), Georgia, serif;
-  font-weight: 500;
+  font-weight: 600;
   font-size: 1.35rem;
   color: var(--text-primary);
+  letter-spacing: -0.01em;
 }
 
 .words-lexicon__sechead-all {
@@ -296,10 +441,42 @@
   text-decoration: underline;
 }
 
+.words-lexicon__domain-group {
+  margin-top: 2rem;
+  margin-bottom: 2.5rem;
+  scroll-margin-top: 6rem;
+}
+
+.words-lexicon__domain-head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.words-lexicon__domain-icon {
+  font-family: var(--font-editorial), Georgia, serif;
+  font-size: 1rem;
+  font-style: italic;
+}
+
+.words-lexicon__domain-name {
+  font-family: var(--font-editorial), Georgia, serif;
+  font-weight: 500;
+  font-size: 1.25rem;
+  color: var(--text-primary);
+}
+
+.words-lexicon__domain-count {
+  font-size: 0.875rem;
+  color: var(--text-tertiary);
+}
+
 .words-lexicon__continue {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 14px;
+  gap: 0.875rem;
+  margin-top: 1rem;
 }
 
 @media (max-width: 820px) {
@@ -414,9 +591,15 @@
 }
 
 .words-lexicon__contextbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
   background: var(--surface-raised);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
+  margin-bottom: 8px;
 }
 
 .words-lexicon__contextbar-stat {
@@ -436,6 +619,10 @@
 }
 
 .words-lexicon__areachip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.4375rem 0.875rem;
   background: var(--surface-raised);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-full);
@@ -468,6 +655,7 @@
 }
 
 .words-lexicon__areachip-count {
+  padding: 0.0625rem 0.4375rem;
   font-size: 11px;
   font-weight: 600;
   color: var(--text-tertiary);
@@ -477,10 +665,59 @@
 }
 
 .words-lexicon__areachip.is-empty .words-lexicon__areachip-count {
-  background: var(--surface-raised);
+  font-weight: 400;
+  font-style: italic;
+  font-variant-numeric: normal;
+  background: transparent;
+  color: var(--text-tertiary);
 }
 
 .words-lexicon__empty {
   color: var(--text-tertiary);
   font-size: 0.9rem;
 }
+
+.shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.shimmer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in oklch, var(--primary) 18%, transparent),
+    transparent
+  );
+  animation: shimmer 1.4s infinite;
+}
+
+@keyframes shimmer {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* ─── Section rhythm ──────────────────────────────────────────────── */
+
+.words-lexicon__strip {
+  margin-top: 2rem;
+}
+
+.words-lexicon__sechead {
+  margin-top: 2.5rem;
+}
+
+.words-lexicon__sechead--spaced {
+  margin-top: 3rem;
+}
+
+.words-lexicon__areachips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+

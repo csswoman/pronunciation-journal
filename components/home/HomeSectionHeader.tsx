@@ -21,7 +21,7 @@ export default function HomeSectionHeader({
       : "text-base font-medium tracking-tight text-[var(--text-secondary)]";
 
   return (
-    <div className={size === "lg" ? "mb-5" : "mb-4"}>
+    <div className={`animate-home-in ${size === "lg" ? "mb-5" : "mb-4"}`}>
       <div className="flex items-baseline gap-3">
         <span className={numClass}>{number}</span>
         <h2 className={titleClass}>{title}</h2>

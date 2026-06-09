@@ -1,20 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import { Volume2, Mic, Square, Loader2, RotateCcw } from "lucide-react";
+import { Volume2, Loader2, RotateCcw } from "lucide-react";
 import Button from "@/components/ui/Button";
 import { SyllableWord } from "@/components/ui/SyllableWord";
 import { CardBadge } from "@/components/ui/CardBadge";
 import { WaveformVisualizer } from "@/components/ui/WaveformVisualizer";
 import HomeWordSaveHeart from "@/components/home/HomeWordSaveHeart";
-import { useSpeechInput } from "@/hooks/useSpeechInput";
 import { useWordOfDay } from "@/hooks/useWordOfDay";
 
 export default function HomeWordOfDayCard() {
   const { word, loading, error, refresh } = useWordOfDay();
   const [speaking, setSpeaking] = useState(false);
-  const [isRecording, setIsRecording] = useState(false);
-  const { start, stop } = useSpeechInput({ prefer: "web-speech" });
 
   function speak() {
     if (!word || !window.speechSynthesis) return;
@@ -26,16 +23,6 @@ export default function HomeWordOfDayCard() {
     utterance.onend = () => setSpeaking(false);
     utterance.onerror = () => setSpeaking(false);
     window.speechSynthesis.speak(utterance);
-  }
-
-  async function startRecording() {
-    await start();
-    setIsRecording(true);
-  }
-
-  async function stopRecording() {
-    await stop();
-    setIsRecording(false);
   }
 
   return (
@@ -110,45 +97,27 @@ export default function HomeWordOfDayCard() {
             ) : null}
           </div>
 
-          <WaveformVisualizer
-            isActive={speaking}
-            isRecording={isRecording}
-            color="gradient"
-            className="mt-3 h-8"
-          />
+          {speaking && (
+            <WaveformVisualizer
+              isActive
+              isRecording={false}
+              color="gradient"
+              className="mt-3 h-8"
+            />
+          )}
 
-          <div className="mt-3 flex gap-2">
+          <div className={speaking ? "mt-3" : "mt-4"}>
             <Button
               variant="secondary"
               size="sm"
               icon={<Volume2 size={14} />}
-              className="flex-1"
+              fullWidth
+              className="justify-center"
               onClick={speak}
               disabled={speaking}
             >
               {speaking ? "Playing…" : "Listen"}
             </Button>
-            {!isRecording ? (
-              <Button
-                icon={<Mic size={14} />}
-                size="sm"
-                className="flex-1"
-                onClick={startRecording}
-                variant="primary"
-              >
-                Record
-              </Button>
-            ) : (
-              <Button
-                icon={<Square size={14} />}
-                size="sm"
-                className="flex-1"
-                onClick={stopRecording}
-                variant="primary"
-              >
-                Stop
-              </Button>
-            )}
           </div>
         </div>
       )}

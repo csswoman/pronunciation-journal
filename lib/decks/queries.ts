@@ -57,6 +57,18 @@ export async function getDeckCardsWithProgress(
     .sort(() => Math.random() - 0.5);
 }
 
+export async function hasWordBankEntries(deckId: string): Promise<boolean> {
+  const { count } = await getSupabaseBrowserClient()
+    .from("word_bank_decks")
+    .select("*", { count: "exact", head: true })
+    .eq("deck_id", deckId);
+  return (count ?? 0) > 0;
+}
+
+export async function deleteDeck(deckId: string): Promise<void> {
+  await getSupabaseBrowserClient().from("decks").delete().eq("id", deckId);
+}
+
 export async function upsertCardProgress(
   userId: string,
   entryId: string,

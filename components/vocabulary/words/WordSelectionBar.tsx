@@ -22,7 +22,7 @@ export function WordSelectionBar({ count, onClear, onCreateDeck, onAddToExisting
         size="sm"
         icon={<FolderInput size={14} />}
         onClick={onAddToExistingDeck}
-        style={{ fontSize: 13 }}
+        className="text-[13px]"
       >
         Add to deck
       </Button>
@@ -31,7 +31,7 @@ export function WordSelectionBar({ count, onClear, onCreateDeck, onAddToExisting
         size="sm"
         icon={<FolderPlus size={14} />}
         onClick={onCreateDeck}
-        style={{ fontSize: 13 }}
+        className="text-[13px]"
       >
         New deck
       </Button>

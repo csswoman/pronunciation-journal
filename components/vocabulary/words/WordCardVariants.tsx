@@ -18,18 +18,18 @@ export function WordCardProcessing({ text, wordId, onRetry, onDelete }: WordCard
       <div className="flex items-center justify-between gap-3">
         <div className="min-w-0 flex-1 space-y-2">
           <div className="flex items-center gap-2 flex-wrap">
-            <Loader2 size={14} className="animate-spin shrink-0" style={{ color: "var(--primary)" }} />
+            <Loader2 size={14} className="animate-spin shrink-0 text-primary" />
             <H4 as="h3" className="truncate">
               {text}
             </H4>
-            <span className="text-tiny uppercase tracking-widest" style={{ color: "var(--primary)" }}>
+            <span className="text-tiny uppercase tracking-widest text-primary">
               Enriching…
             </span>
           </div>
 
           <div className="space-y-1.5 pl-5">
-            <div className="h-2.5 w-1/3 rounded bg-[var(--btn-regular-bg)] shimmer" />
-            <div className="h-2.5 w-2/3 rounded bg-[var(--btn-regular-bg)] shimmer" />
+            <div className="h-2.5 w-1/3 rounded bg-surface-sunken shimmer" />
+            <div className="h-2.5 w-2/3 rounded bg-surface-sunken shimmer" />
           </div>
         </div>
 
@@ -56,29 +56,6 @@ export function WordCardProcessing({ text, wordId, onRetry, onDelete }: WordCard
           </Button>
         </div>
       </div>
-
-      <style>{`
-        .shimmer {
-          position: relative;
-          overflow: hidden;
-        }
-        .shimmer::after {
-          content: "";
-          position: absolute;
-          inset: 0;
-          background: linear-gradient(
-            90deg,
-            transparent,
-            color-mix(in oklch, var(--primary) 18%, transparent),
-            transparent
-          );
-          animation: shimmer 1.4s infinite;
-        }
-        @keyframes shimmer {
-          0% { transform: translateX(-100%); }
-          100% { transform: translateX(100%); }
-        }
-      `}</style>
     </article>
   );
 }

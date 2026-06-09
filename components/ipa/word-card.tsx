@@ -55,7 +55,7 @@ export function WordCard({
 
       {isCorrect && (
         <span
-          className="absolute top-3 right-3 inline-flex items-center justify-center w-6 h-6 rounded-full bg-[var(--success)] text-white animate-chip-appear"
+          className="absolute top-3 right-3 inline-flex items-center justify-center w-6 h-6 rounded-full bg-[var(--success)] text-[var(--on-success,white)] animate-chip-appear"
           aria-label="Correcto"
         >
           <Check size={13} strokeWidth={3} />
@@ -63,7 +63,7 @@ export function WordCard({
       )}
       {isWrong && (
         <span
-          className="absolute top-3 right-3 inline-flex items-center justify-center w-6 h-6 rounded-full bg-[var(--error)] text-white animate-chip-appear"
+          className="absolute top-3 right-3 inline-flex items-center justify-center w-6 h-6 rounded-full bg-[var(--error)] text-[var(--on-error,white)] animate-chip-appear"
           aria-label="Incorrecto"
         >
           <X size={13} strokeWidth={3} />

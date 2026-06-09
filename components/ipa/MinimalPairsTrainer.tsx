@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Headphones } from "lucide-react";
 import { MINIMAL_PAIR_CONTRASTS } from "./minimal-pairs-data";
+import { speakWord } from "./speak-word";
 import { ContrastChip } from "./contrast-chip";
 import { WordCard } from "./word-card";
 import { TrainerControls } from "./trainer-controls";
@@ -15,43 +16,39 @@ interface ScoreBoard {
   wrong: number;
 }
 
-function speakWord(word: string, onEnd?: () => void) {
-  if (typeof window === "undefined" || !window.speechSynthesis) {
-    onEnd?.();
-    return;
-  }
-  window.speechSynthesis.cancel();
-  const utter = new SpeechSynthesisUtterance(word);
-  utter.lang = "en-US";
-  utter.rate = 0.85;
-  if (onEnd) utter.onend = () => onEnd();
-  window.speechSynthesis.speak(utter);
-}
-
 export default function MinimalPairsTrainer() {
   const [contrastIdx, setContrastIdx] = useState(0);
   const [pairIdx, setPairIdx] = useState(0);
   const [quizTarget, setQuizTarget] = useState<Side | null>(null);
   const [verdict, setVerdict] = useState<Verdict>(null);
+  const [guessed, setGuessed] = useState<Side | null>(null);
   const [playingSide, setPlayingSide] = useState<Side | null>(null);
   const [score, setScore] = useState<ScoreBoard>({ correct: 0, wrong: 0 });
   const lastPlayedRef = useRef<Side | null>(null);
+  // quizPlaying: true while the hidden clue is being spoken (no card animation shown)
+  const quizPlayingRef = useRef(false);
 
   const contrast = MINIMAL_PAIR_CONTRASTS[contrastIdx];
   const pair = contrast.pairs[pairIdx];
 
   const playSide = useCallback(
     (side: Side) => {
+      if (playingSide === side) {
+        window.speechSynthesis?.cancel();
+        setPlayingSide(null);
+        return;
+      }
       setPlayingSide(side);
       const word = side === "A" ? pair.wordA : pair.wordB;
       speakWord(word, () => setPlayingSide(null));
     },
-    [pair]
+    [pair, playingSide]
   );
 
   const resetQuiz = useCallback(() => {
     setQuizTarget(null);
     setVerdict(null);
+    setGuessed(null);
     lastPlayedRef.current = null;
   }, []);
 
@@ -69,28 +66,54 @@ export default function MinimalPairsTrainer() {
   }, [contrast.pairs.length, resetQuiz]);
 
   const handlePlayBoth = useCallback(() => {
+    if (playingSide !== null) {
+      window.speechSynthesis?.cancel();
+      setPlayingSide(null);
+      return;
+    }
     resetQuiz();
     setPlayingSide("A");
     speakWord(pair.wordA, () => {
       setPlayingSide("B");
       speakWord(pair.wordB, () => setPlayingSide(null));
     });
-  }, [pair, resetQuiz]);
+  }, [pair, playingSide, resetQuiz]);
 
   const handleStartQuiz = useCallback(() => {
+    window.speechSynthesis?.cancel();
+    setPlayingSide(null);
     const target: Side = Math.random() < 0.5 ? "A" : "B";
     setQuizTarget(target);
     setVerdict(null);
+    setGuessed(null);
     lastPlayedRef.current = target;
-    setPlayingSide(target);
+    quizPlayingRef.current = true;
     const word = target === "A" ? pair.wordA : pair.wordB;
-    speakWord(word, () => setPlayingSide(null));
+    speakWord(word, () => { quizPlayingRef.current = false; });
   }, [pair]);
+
+  const handleNextRound = useCallback(() => {
+    const nextIdx = (pairIdx + 1) % contrast.pairs.length;
+    const nextPair = contrast.pairs[nextIdx];
+    const target: Side = Math.random() < 0.5 ? "A" : "B";
+    setPairIdx(nextIdx);
+    setVerdict(null);
+    setGuessed(null);
+    setQuizTarget(target);
+    lastPlayedRef.current = target;
+    quizPlayingRef.current = true;
+    window.speechSynthesis?.cancel();
+    setTimeout(() => speakWord(
+      target === "A" ? nextPair.wordA : nextPair.wordB,
+      () => { quizPlayingRef.current = false; }
+    ), 80);
+  }, [pairIdx, contrast.pairs]);
 
   const handleGuess = useCallback(
     (guess: Side) => {
       if (!quizTarget || verdict) return;
       const correct = guess === quizTarget;
+      setGuessed(guess);
       setVerdict(correct ? "correct" : "wrong");
       setScore((s) => ({
         correct: s.correct + (correct ? 1 : 0),
@@ -102,9 +125,11 @@ export default function MinimalPairsTrainer() {
 
   const handleReplayClue = useCallback(() => {
     if (!lastPlayedRef.current) return;
-    const side = lastPlayedRef.current;
-    setPlayingSide(side);
-    speakWord(side === "A" ? pair.wordA : pair.wordB, () => setPlayingSide(null));
+    window.speechSynthesis?.cancel();
+    setPlayingSide(null);
+    quizPlayingRef.current = true;
+    const word = lastPlayedRef.current === "A" ? pair.wordA : pair.wordB;
+    speakWord(word, () => { quizPlayingRef.current = false; });
   }, [pair]);
 
   useEffect(() => {
@@ -122,12 +147,12 @@ export default function MinimalPairsTrainer() {
   }, [quizTarget, verdict, handleGuess]);
 
   const highlights = useMemo<{ A: Verdict; B: Verdict }>(() => {
-    if (!verdict || !quizTarget) return { A: null, B: null };
+    if (!verdict || !quizTarget || !guessed) return { A: null, B: null };
     return {
-      A: quizTarget === "A" ? verdict : verdict === "wrong" ? "wrong" : null,
-      B: quizTarget === "B" ? verdict : verdict === "wrong" ? "wrong" : null,
+      A: quizTarget === "A" ? "correct" : guessed === "A" ? "wrong" : null,
+      B: quizTarget === "B" ? "correct" : guessed === "B" ? "wrong" : null,
     };
-  }, [verdict, quizTarget]);
+  }, [verdict, quizTarget, guessed]);
 
   const total = score.correct + score.wrong;
   const accuracy = total > 0 ? Math.round((score.correct / total) * 100) : null;
@@ -219,6 +244,7 @@ export default function MinimalPairsTrainer() {
         onNextPair={handleNextPair}
         onReplayClue={handleReplayClue}
         onStartQuiz={handleStartQuiz}
+        onNextRound={handleNextRound}
       />
     </section>
   );

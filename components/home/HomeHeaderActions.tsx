@@ -12,15 +12,13 @@ export default function HomeHeaderActions({ hasStartedLearning }: HomeHeaderActi
   const router = useRouter();
 
   return (
-    <div className="flex flex-wrap gap-2">
-      <Button
-        variant="secondary"
-        size="sm"
-        icon={<Play size={14} className="fill-current" />}
-        onClick={() => router.push("/courses")}
-      >
-        {hasStartedLearning ? "Continue course" : "Explore courses"}
-      </Button>
-    </div>
+    <Button
+      variant="secondary"
+      size="sm"
+      icon={<Play size={14} className="fill-current" />}
+      onClick={() => router.push("/courses")}
+    >
+      {hasStartedLearning ? "Continue course" : "Explore courses"}
+    </Button>
   );
 }

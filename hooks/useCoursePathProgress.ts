@@ -8,19 +8,20 @@ import { lessonProgressKey } from "@/lib/courses/progress";
 export function useCoursePathProgress(levelId: CoursePathTrackId) {
   const [completedIds, setCompletedIds] = useState<Set<string>>(new Set());
   const [ready, setReady] = useState(false);
+  const [error, setError] = useState(false);
 
-  useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      const rows = await db.completedLessons.where("courseSlug").equals(levelId).toArray();
-      if (cancelled) return;
-      setCompletedIds(new Set(rows.map((r) => lessonProgressKey(levelId, r.lessonSlug))));
-      setReady(true);
-    })();
-    return () => {
-      cancelled = true;
-    };
+  const load = useCallback(() => {
+    setError(false);
+    setReady(false);
+    db.completedLessons.where("courseSlug").equals(levelId).toArray()
+      .then((rows) => {
+        setCompletedIds(new Set(rows.map((r) => lessonProgressKey(levelId, r.lessonSlug))));
+        setReady(true);
+      })
+      .catch(() => setError(true));
   }, [levelId]);
+
+  useEffect(() => { load(); }, [load]);
 
   const markComplete = useCallback(
     async (lessonId: string) => {
@@ -35,5 +36,5 @@ export function useCoursePathProgress(levelId: CoursePathTrackId) {
     [completedIds, levelId]
   );
 
-  return { completedIds, ready, markComplete, isComplete };
+  return { completedIds, ready, error, retry: load, markComplete, isComplete };
 }

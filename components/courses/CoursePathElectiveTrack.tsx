@@ -47,11 +47,11 @@ export default function CoursePathElectiveTrack({ level, defaultOpen }: CoursePa
         <ChevronRight className="course-path__rchev" size={18} aria-hidden />
       </button>
 
-      {open && (
+      <div className="course-path__ruta-body-wrap">
         <div className="course-path__ruta-body">
           <CoursePathLevelPanel level={level} compactHead />
         </div>
-      )}
+      </div>
     </div>
   );
 }

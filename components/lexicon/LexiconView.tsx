@@ -77,7 +77,7 @@ export function LexiconView({
 
       <LexiconDomainsSection groups={domainGroups} onDomainClick={scrollToDomain} />
 
-      <div className="words-lexicon__sechead" style={{ marginTop: 48 }}>
+      <div className="words-lexicon__sechead words-lexicon__sechead--spaced">
         <span className="words-lexicon__sechead-num">03</span>
         <h3>All topics</h3>
       </div>
@@ -92,22 +92,18 @@ export function LexiconView({
             ref={(el) => {
               domainRefs.current[domain.id] = el;
             }}
-            className="mb-10 scroll-mt-24"
+            className="words-lexicon__domain-group"
           >
-            <div className="flex items-baseline gap-3 mb-4">
+            <div className="words-lexicon__domain-head">
               <span
-                className="text-base italic"
-                style={{ fontFamily: "var(--font-editorial), serif", color: domain.color }}
+                className="words-lexicon__domain-icon"
+                style={{ color: domain.color }}
+                aria-hidden
               >
                 {domain.icon}
               </span>
-              <h3
-                className="text-xl font-medium text-[var(--text-primary)]"
-                style={{ fontFamily: "var(--font-editorial), serif" }}
-              >
-                {domain.name}
-              </h3>
-              <span className="text-sm text-[var(--text-tertiary)]">
+              <h3 className="words-lexicon__domain-name">{domain.name}</h3>
+              <span className="words-lexicon__domain-count">
                 {group.lessons.length} topics
               </span>
             </div>

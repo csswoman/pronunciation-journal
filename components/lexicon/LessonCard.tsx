@@ -58,14 +58,14 @@ export function LessonCard({
       onClick={() => onClick?.(id)}
       className={cn(
         "flex flex-col gap-4 p-5 rounded-xl border border-border-subtle bg-surface-raised",
-        "transition-all duration-200 hover:shadow-md hover:border-border-default text-left w-full"
+        "transition-all duration-200 hover:shadow-md hover:border-border-strong text-left w-full"
       )}
     >
       {/* Icon + progress % */}
       <div className="flex items-start justify-between">
         <div
           className="w-11 h-11 rounded-xl flex items-center justify-center"
-          style={{ backgroundColor: `color-mix(in srgb, ${color} 15%, var(--surface-sunken))` }}
+          style={{ backgroundColor: `color-mix(in oklch, ${color} 20%, var(--surface-sunken))` }}
         >
           <Icon className="w-5 h-5" style={{ color }} />
         </div>
@@ -83,7 +83,7 @@ export function LessonCard({
       </div>
 
       {/* Progress bar */}
-      <div className="h-1.5 w-full bg-surface-sunken rounded-full overflow-hidden">
+      <div className="h-1.5 w-full bg-border-subtle rounded-full overflow-hidden">
         <div
           className="h-full rounded-full transition-all duration-500"
           style={{ width: `${progress}%`, backgroundColor: color }}

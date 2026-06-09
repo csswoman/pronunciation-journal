@@ -1,20 +1,30 @@
-import { Zap } from "lucide-react";
+// Planned structure:
+// <HomeTodaySection>
+//   <HomeSectionHeader />
+//   main column: <HomeDailyCard />
+//   sidebar: <HomeWordOfDayCard /> + <HomeAiPracticeCard /> + <HomeStreakCard /> + optional <HomeGoalRing />
+// </HomeTodaySection>
+
 import HomeSectionHeader from "@/components/home/HomeSectionHeader";
 import HomeDailyCard from "@/components/home/HomeDailyCard";
 import HomeWordOfDayCard from "@/components/home/HomeWordOfDayCard";
-import HomeQuickActionCard from "@/components/home/HomeQuickActionCard";
+import HomeAiPracticeCard from "@/components/home/HomeAiPracticeCard";
 import HomeStreakCard from "@/components/home/HomeStreakCard";
+import HomeGoalRing from "@/components/home/HomeGoalRing";
 import type { DailyStreakResult } from "@/lib/daily/streak";
 import type { ConceptLesson } from "@/hooks/useDailyPlan";
+import type { DailyGoalProgress } from "@/lib/home/constants";
 
 interface HomeTodaySectionProps {
   streak?: DailyStreakResult;
   conceptLesson?: ConceptLesson | null;
+  dailyGoal?: DailyGoalProgress | null;
 }
 
 export default function HomeTodaySection({
   streak,
   conceptLesson = null,
+  dailyGoal = null,
 }: HomeTodaySectionProps) {
   return (
     <section className="mt-8">
@@ -28,12 +38,22 @@ export default function HomeTodaySection({
         <HomeDailyCard conceptLesson={conceptLesson} />
         <div className="flex flex-col gap-4">
           <HomeWordOfDayCard />
-          <HomeQuickActionCard
-            href="/practice/sounds"
-            icon={<Zap size={18} />}
-            title="Quick practice"
-            description="5 min on demand — no daily plan needed."
-          />
+          <HomeAiPracticeCard />
+          {dailyGoal != null && (
+            <div className="flex items-center gap-4 rounded-[var(--radius-xl)] border border-border-subtle bg-surface-raised p-5">
+              <HomeGoalRing percent={dailyGoal.percent} size={88} />
+              <div className="flex flex-col gap-0.5">
+                <p className="font-label font-semibold text-[var(--text-primary)]">
+                  {dailyGoal.minutesDone} / {dailyGoal.goalMinutes} min
+                </p>
+                <p className="font-caption text-[var(--text-secondary)]">
+                  {dailyGoal.percent >= 100
+                    ? "Goal reached today!"
+                    : `${dailyGoal.goalMinutes - dailyGoal.minutesDone} min to go`}
+                </p>
+              </div>
+            </div>
+          )}
           <HomeStreakCard streak={streak} />
         </div>
       </div>

@@ -67,13 +67,9 @@ export default async function HomePage() {
       {/* Mobile view */}
       <div className="md:hidden">
         <HomeMobileView
-          userName="there"
-          dateLabel={new Date().toLocaleDateString("en-US", {
-            weekday: "long",
-            month: "long",
-            day: "numeric",
-          })}
           streak={dailyStreak}
+          wordsDueCount={dueCount}
+          soundsDueCount={soundsDue.length}
           conceptLesson={
             todaysLesson
               ? { slug: todaysLesson.slug, title: todaysLesson.title, subtitle: todaysLesson.subtitle }
@@ -84,9 +80,10 @@ export default async function HomePage() {
 
       {/* Desktop/tablet view */}
       <div className="hidden md:block">
-        <HomeStatusHero />
+        <HomeStatusHero streak={dailyStreak} />
         <HomeTodaySection
           streak={dailyStreak}
+          dailyGoal={dailyGoal}
           conceptLesson={
             todaysLesson
               ? { slug: todaysLesson.slug, title: todaysLesson.title, subtitle: todaysLesson.subtitle }

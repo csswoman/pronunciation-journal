@@ -31,42 +31,29 @@ export function WordCard({ word, onRetry, onDelete, selected, onSelect, isFavori
   }
 
   const strength = getWordStrength(word);
-  const strengthColor = strength === "strong" ? "var(--success)" : strength === "medium" ? "var(--warning)" : "var(--error)";
 
   return (
     <article
-      className="group relative rounded-2xl border bg-[var(--card-bg)] pl-4 pr-5 py-4 shadow-sm transition-all duration-150 hover:shadow-md cursor-pointer hover:-translate-y-px hover:border-[var(--primary)] focus-within:border-[var(--primary)] overflow-hidden"
-      style={{
-        borderColor: selected ? "var(--primary)" : "var(--line-divider)",
-        background: selected ? "color-mix(in oklch, var(--primary) 5%, var(--card-bg))" : "var(--card-bg)",
-      }}
+      className={[
+        "group relative rounded-2xl border px-4 py-4 shadow-sm transition-all duration-150",
+        "hover:shadow-md cursor-pointer hover:-translate-y-px",
+        "hover:border-primary focus-within:border-primary overflow-hidden",
+        selected ? "border-primary bg-primary-soft" : "border-border-default bg-surface-raised",
+      ].join(" ")}
     >
-      {/* Strength accent border */}
-      <div
-        aria-hidden
-        className="absolute left-0 top-0 bottom-0 w-[4px] rounded-l-2xl"
-        style={{ background: strengthColor, opacity: 0.7 }}
-      />
       <div className="flex items-start justify-between gap-3">
         {onSelect && (
           <button
             type="button"
             onClick={() => onSelect(word.id)}
             aria-label={selected ? "Deselect word" : "Select word"}
-            style={{
-              flexShrink: 0,
-              marginTop: 2,
-              width: 18,
-              height: 18,
-              borderRadius: 5,
-              border: `2px solid ${selected ? "var(--primary)" : "var(--line-divider)"}`,
-              background: selected ? "var(--primary)" : "transparent",
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              transition: "all 120ms",
-            }}
+            className={[
+              "shrink-0 mt-0.5 w-[18px] h-[18px] rounded-[5px] border-2 transition-all duration-[120ms]",
+              "flex items-center justify-center cursor-pointer",
+              selected
+                ? "border-primary bg-primary"
+                : "border-border-strong bg-transparent",
+            ].join(" ")}
           >
             {selected && (
               <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
@@ -91,7 +78,7 @@ export function WordCard({ word, onRetry, onDelete, selected, onSelect, isFavori
           </div>
 
           {word.translation && (
-            <p className="mt-0.5 text-[15px] leading-[1.3] font-medium text-[var(--primary)]">
+            <p className="mt-0.5 text-[15px] leading-[1.3] font-medium text-fg-secondary">
               {word.translation}
             </p>
           )}

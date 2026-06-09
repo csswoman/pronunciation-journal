@@ -1,10 +1,29 @@
-/* Mini Lessons — solo lo que no puede ser Tailwind */
+/* Mini Lessons */
 
 .mini-lessons {
   --ml-radius: 16px;
   --ml-radius-sm: 11px;
   --ml-accent-soft: color-mix(in oklch, var(--primary) 12%, transparent);
   --ml-accent-border: color-mix(in oklch, var(--primary) 38%, var(--border-subtle));
+
+  /* Category accent tokens */
+  --ml-cat-pronunciation: oklch(0.65 0.15 var(--hue));
+  --ml-cat-pronunciation-soft: color-mix(in oklch, var(--ml-cat-pronunciation) 10%, transparent);
+  --ml-cat-grammar: oklch(0.73 0.12 185);
+  --ml-cat-grammar-soft: color-mix(in oklch, var(--ml-cat-grammar) 10%, transparent);
+  --ml-cat-vocabulary: oklch(0.74 0.14 55);
+  --ml-cat-vocabulary-soft: color-mix(in oklch, var(--ml-cat-vocabulary) 10%, transparent);
+  --ml-cat-listening: oklch(0.70 0.12 230);
+  --ml-cat-listening-soft: color-mix(in oklch, var(--ml-cat-listening) 10%, transparent);
+  --ml-cat-speaking: oklch(0.70 0.16 145);
+  --ml-cat-speaking-soft: color-mix(in oklch, var(--ml-cat-speaking) 10%, transparent);
+  --ml-cat-writing: oklch(0.65 0.18 300);
+  --ml-cat-writing-soft: color-mix(in oklch, var(--ml-cat-writing) 10%, transparent);
+  --ml-cat-idioms: oklch(0.65 0.20 25);
+  --ml-cat-idioms-soft: color-mix(in oklch, var(--ml-cat-idioms) 10%, transparent);
+  --ml-cat-collocations: oklch(0.72 0.13 160);
+  --ml-cat-collocations-soft: color-mix(in oklch, var(--ml-cat-collocations) 10%, transparent);
+
   color: var(--text-primary);
   background:
     radial-gradient(
@@ -14,6 +33,208 @@
     ),
     var(--surface-base);
 }
+
+/* ── Layout shell ─────────────────────────────────────────────────────────── */
+
+.mini-lessons__wrap {
+  max-width: 1120px;
+  margin-inline: auto;
+  padding: 32px 24px 64px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 640px) {
+  .mini-lessons__wrap {
+    padding: 20px 16px 48px;
+    gap: 20px;
+  }
+}
+
+.mini-lessons__hero {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.mini-lessons__hero-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+/* ── Toolbar layout ───────────────────────────────────────────────────────── */
+
+.mini-lessons__toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px 6px 10px;
+  overflow: hidden;
+}
+
+/* Scrollable chip strip — takes all available space */
+.mini-lessons__filter-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: 1;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 2px 0;
+}
+
+.mini-lessons__filter-row::-webkit-scrollbar {
+  display: none;
+}
+
+.mini-lessons__toolbar-divider {
+  width: 1px;
+  height: 16px;
+  flex-shrink: 0;
+  margin-inline: 4px;
+}
+
+/* Pinned right side — never scrolls */
+.mini-lessons__toolbar-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  padding-left: 4px;
+  border-left: 1px solid var(--border-subtle);
+}
+
+.mini-lessons__chip {
+  padding: 4px 10px;
+  min-height: 28px;
+  flex-shrink: 0;
+}
+
+/* Mobile: bigger touch target */
+@media (max-width: 640px) {
+  .mini-lessons__chip {
+    min-height: 36px;
+    padding-inline: 12px;
+  }
+}
+
+/* ── Card internals ───────────────────────────────────────────────────────── */
+
+.mini-lessons__card {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  gap: 8px;
+}
+
+.mini-lessons__card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.mini-lessons__card-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.mini-lessons__pill {
+  padding: 3px 9px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.mini-lessons__card-foot {
+  margin-top: auto;
+  padding-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.mini-lessons__empty {
+  padding: 48px 32px;
+  text-align: center;
+  grid-column: 1 / -1;
+}
+
+/* ── Article internals ────────────────────────────────────────────────────── */
+
+.mini-lessons__article-hero {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.mini-lessons__article-badges {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.mini-lessons__section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mini-lessons__section--examples {
+  padding: 16px;
+  gap: 12px;
+}
+
+.mini-lessons__examples {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mini-lessons__example {
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mini-lessons__block {
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mini-lessons__quiz {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mini-lessons__quiz-answer {
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mini-lessons__footer {
+  padding-top: 20px;
+  margin-top: 8px;
+}
+
+/* ── Noise texture ────────────────────────────────────────────────────────── */
 
 .mini-lessons::before {
   content: "";
@@ -64,123 +285,103 @@
   color: var(--text-primary);
 }
 
-.mini-lessons__stat b {
-  font-family: var(--font-editorial), "Fraunces", Georgia, serif;
-  font-size: 1.45rem;
-  font-weight: 480;
-  color: var(--text-primary);
-  font-variant-numeric: tabular-nums;
+.mini-lessons__back:focus-visible {
+  outline: 2px solid var(--focus-ring, var(--primary));
+  outline-offset: 3px;
+  border-radius: 3px;
 }
 
-.mini-lessons__stat span {
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  color: var(--text-tertiary);
-}
-
-.mini-lessons__stat--accent b {
-  color: var(--primary);
-}
+/* ── Toolbar ──────────────────────────────────────────────────────────────── */
 
 .mini-lessons__toolbar {
   border-radius: var(--ml-radius-sm);
   border: 1px solid var(--border-subtle);
   background: var(--surface-raised);
-}
-
-.mini-lessons__toolbar-label {
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  color: var(--text-tertiary);
+  /* layout: see shell block above */
 }
 
 .mini-lessons__toolbar-divider {
   background: var(--border-subtle);
 }
 
-.mini-lessons__segmented {
-  border-radius: 999px;
-  border: 1px solid var(--border-subtle);
-  background: var(--surface-sunken);
-}
-
-.mini-lessons__segment {
+/* Filter chips */
+.mini-lessons__chip {
   border-radius: 999px;
   border: none;
   background: transparent;
   font-size: 12px;
   font-weight: 600;
   color: var(--text-secondary);
-  transition: background 0.12s ease, color 0.12s ease;
+  cursor: pointer;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition:
+    background 0.18s cubic-bezier(0.25, 1, 0.5, 1),
+    color 0.18s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
-.mini-lessons__segment:hover:not(.mini-lessons__segment--on) {
+.mini-lessons__chip:hover:not(.mini-lessons__chip--on) {
   color: var(--text-primary);
+  background: var(--surface-sunken);
 }
 
-.mini-lessons__segment--on {
-  background: var(--primary);
-  color: var(--on-primary);
-  box-shadow: 0 1px 3px color-mix(in oklch, var(--primary) 35%, transparent);
-}
-
-.mini-lessons__select {
-  border-radius: 999px;
-  border: 1px solid var(--border-subtle);
-  background: var(--surface-sunken)
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")
-    no-repeat right 12px center;
-  font: inherit;
-  font-size: 12px;
-  font-weight: 600;
+.mini-lessons__chip--on {
+  background: var(--surface-sunken);
   color: var(--text-primary);
-  appearance: none;
+  box-shadow: inset 0 0 0 1px var(--border-default);
 }
 
-.mini-lessons__select:focus-visible {
-  outline: 2px solid var(--focus-ring);
+.mini-lessons__chip:focus-visible {
+  outline: 2px solid var(--focus-ring, var(--primary));
   outline-offset: 2px;
 }
 
-.mini-lessons__count {
-  font-size: 0.82rem;
+.mini-lessons__chip-count {
+  font-size: 10px;
+  font-weight: 700;
   color: var(--text-tertiary);
+  background: color-mix(in oklch, var(--border-subtle) 50%, transparent);
+  border-radius: 999px;
+  padding: 0 5px;
+  line-height: 1.6;
+}
+
+.mini-lessons__chip--on .mini-lessons__chip-count {
+  background: var(--border-default);
+  color: var(--text-secondary);
+}
+
+.mini-lessons__count {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  font-variant-numeric: tabular-nums;
+  transition: color 0.15s ease;
 }
 
 .mini-lessons__toolbar-reset {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
   color: var(--primary);
   background: none;
   border: none;
+  cursor: pointer;
+  white-space: nowrap;
 }
 
 .mini-lessons__toolbar-reset:hover {
   text-decoration: underline;
 }
 
-@media (max-width: 640px) {
-  .mini-lessons__toolbar-divider {
-    display: none;
-  }
-
-  .mini-lessons__toolbar-group {
-    width: 100%;
-  }
-
-  .mini-lessons__select {
-    flex: 1;
-    max-width: none;
-  }
-
-  .mini-lessons__toolbar-meta {
-    width: 100%;
-    margin-left: 0;
-    justify-content: space-between;
-  }
+.mini-lessons__toolbar-reset:focus-visible {
+  outline: 2px solid var(--focus-ring, var(--primary));
+  outline-offset: 2px;
+  border-radius: 3px;
 }
+
+/* ── Card grid ────────────────────────────────────────────────────────────── */
 
 .mini-lessons__grid {
   display: grid;
@@ -189,19 +390,53 @@
 }
 
 .mini-lessons__card {
+  --ml-card-accent: var(--primary);
+  --ml-card-accent-soft: var(--ml-accent-soft);
   border-radius: var(--ml-radius);
   border: 1px solid var(--border-subtle);
   background: var(--surface-raised);
   text-decoration: none;
   color: inherit;
-  transition: border-color 0.12s ease, transform 0.12s ease, box-shadow 0.12s ease;
+  /* display/padding/gap: see shell block above */
+  transition:
+    border-color 0.2s cubic-bezier(0.25, 1, 0.5, 1),
+    transform 0.2s cubic-bezier(0.25, 1, 0.5, 1),
+    box-shadow 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.mini-lessons__card:focus-visible {
+  outline: 2px solid var(--focus-ring, var(--primary));
+  outline-offset: 2px;
+}
+
+/* Thin top wash keyed to category */
+.mini-lessons__card::after {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 3px;
+  background: var(--ml-card-accent);
+  opacity: 0.7;
+  border-radius: var(--ml-radius) var(--ml-radius) 0 0;
 }
 
 .mini-lessons__card:hover {
-  border-color: var(--ml-accent-border);
+  border-color: var(--ml-card-accent);
   transform: translateY(-2px);
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 8px 24px color-mix(in oklch, var(--ml-card-accent) 18%, transparent);
 }
+
+/* Category accent overrides */
+.mini-lessons__card--pronunciation { --ml-card-accent: var(--ml-cat-pronunciation); --ml-card-accent-soft: var(--ml-cat-pronunciation-soft); }
+.mini-lessons__card--grammar       { --ml-card-accent: var(--ml-cat-grammar);       --ml-card-accent-soft: var(--ml-cat-grammar-soft); }
+.mini-lessons__card--vocabulary    { --ml-card-accent: var(--ml-cat-vocabulary);    --ml-card-accent-soft: var(--ml-cat-vocabulary-soft); }
+.mini-lessons__card--listening     { --ml-card-accent: var(--ml-cat-listening);     --ml-card-accent-soft: var(--ml-cat-listening-soft); }
+.mini-lessons__card--speaking      { --ml-card-accent: var(--ml-cat-speaking);      --ml-card-accent-soft: var(--ml-cat-speaking-soft); }
+.mini-lessons__card--writing       { --ml-card-accent: var(--ml-cat-writing);       --ml-card-accent-soft: var(--ml-cat-writing-soft); }
+.mini-lessons__card--idioms        { --ml-card-accent: var(--ml-cat-idioms);        --ml-card-accent-soft: var(--ml-cat-idioms-soft); }
+.mini-lessons__card--collocations  { --ml-card-accent: var(--ml-cat-collocations);  --ml-card-accent-soft: var(--ml-cat-collocations-soft); }
 
 .mini-lessons__pill {
   font-size: 10px;
@@ -219,6 +454,22 @@
   background: var(--ml-accent-soft);
 }
 
+.mini-lessons__pill--category {
+  color: var(--ml-card-accent, var(--text-secondary));
+  background: var(--ml-card-accent-soft, var(--surface-sunken));
+  border-color: color-mix(in oklch, var(--ml-card-accent, var(--border-subtle)) 30%, transparent);
+}
+
+/* Article view doesn't have card accent — use neutral pill */
+.mini-lessons--article .mini-lessons__pill--category {
+  --ml-card-accent: var(--text-secondary);
+  --ml-card-accent-soft: var(--surface-sunken);
+}
+
+.mini-lessons__pill--duration {
+  color: var(--text-tertiary);
+}
+
 .mini-lessons__card-duration {
   font-size: 11px;
   font-weight: 600;
@@ -230,11 +481,11 @@
   font-size: 1.15rem;
   font-weight: 480;
   color: var(--text-primary);
-  transition: color 0.12s ease;
+  transition: color 0.2s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .mini-lessons__card:hover .mini-lessons__card-title {
-  color: var(--primary);
+  color: var(--ml-card-accent);
 }
 
 .mini-lessons__card-body {
@@ -252,15 +503,16 @@
   font-weight: 600;
   letter-spacing: 0.06em;
   color: var(--text-tertiary);
+  /* layout: see shell block above */
 }
 
 .mini-lessons__card-arrow {
-  color: var(--primary);
-  transition: transform 0.12s ease;
+  color: var(--ml-card-accent);
+  transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .mini-lessons__card:hover .mini-lessons__card-arrow {
-  transform: translateX(3px);
+  transform: translateX(4px);
 }
 
 .mini-lessons__empty {
@@ -268,6 +520,8 @@
   border: 1px dashed var(--border-subtle);
   color: var(--text-secondary);
 }
+
+/* ── Article view ─────────────────────────────────────────────────────────── */
 
 .mini-lessons__article-title {
   font-family: var(--font-editorial), "Fraunces", Georgia, serif;
@@ -280,6 +534,7 @@
 .mini-lessons__article-subtitle {
   font-size: 1.05rem;
   color: var(--text-secondary);
+  max-width: 65ch;
 }
 
 .mini-lessons__section-title {
@@ -293,51 +548,83 @@
   font-size: 0.95rem;
   color: var(--text-secondary);
   white-space: pre-wrap;
+  max-width: 65ch;
 }
 
-.mini-lessons__divider {
-  border: none;
-  border-top: 1px solid var(--border-subtle);
+/* Examples section has a distinct tint background */
+.mini-lessons__section--examples {
+  border-radius: var(--ml-radius-sm);
+  background: var(--surface-sunken);
 }
 
 .mini-lessons__example {
   border-radius: var(--ml-radius-sm);
   border: 1px solid var(--border-subtle);
-  background: var(--surface-sunken);
+  background: var(--surface-raised);
 }
 
 .mini-lessons__example-en {
   font-family: var(--font-editorial), Georgia, serif;
-  font-size: 1rem;
+  font-size: 1.05rem;
   color: var(--text-primary);
+  font-optical-sizing: auto;
 }
 
 .mini-lessons__example-ipa {
-  font-family: var(--font-ipa), sans-serif;
-  font-size: 0.9rem;
+  font-family: var(--font-ipa), "DM Mono", monospace;
+  font-size: 1rem;
   color: var(--primary);
+  letter-spacing: 0.02em;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.mini-lessons__ipa-slash {
+  color: var(--text-tertiary);
+  font-size: 0.85em;
 }
 
 .mini-lessons__example-note {
   font-size: 0.82rem;
   color: var(--text-tertiary);
+  font-style: italic;
 }
 
+/* Tip aside */
 .mini-lessons__tip {
   border-radius: var(--ml-radius-sm);
   border: 1px solid color-mix(in oklch, var(--warning) 35%, transparent);
   background: var(--warning-soft);
   font-size: 0.9rem;
   color: var(--text-primary);
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.mini-lessons__tip-icon {
+  font-size: 1.1rem;
+  flex-shrink: 0;
+  margin-top: 1px;
 }
 
 .mini-lessons__tip-label {
+  display: block;
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.08em;
   color: var(--warning-value);
+  margin-bottom: 2px;
 }
 
+.mini-lessons__tip-body {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+}
+
+/* Exercise / quiz blocks */
 .mini-lessons__block {
   border-radius: var(--ml-radius-sm);
   border: 1px solid var(--border-subtle);
@@ -355,6 +642,23 @@
   color: var(--text-secondary);
 }
 
+.mini-lessons__quiz-options {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mini-lessons__quiz-options li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
 .mini-lessons__quiz-letter {
   border-radius: 6px;
   border: 1px solid var(--border-subtle);
@@ -362,39 +666,219 @@
   font-size: 11px;
   font-weight: 700;
   color: var(--text-tertiary);
+  width: 22px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
 
-.mini-lessons__quiz-details summary {
+.mini-lessons__quiz-reveal {
   font-size: 0.8rem;
   font-weight: 600;
   color: var(--primary);
+  background: var(--ml-accent-soft);
+  border: 1px solid var(--ml-accent-border);
+  border-radius: 999px;
+  padding: 4px 14px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition:
+    background 0.18s cubic-bezier(0.25, 1, 0.5, 1),
+    color 0.18s cubic-bezier(0.25, 1, 0.5, 1),
+    border-color 0.18s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
-.mini-lessons__quiz-details summary::-webkit-details-marker {
-  display: none;
+.mini-lessons__quiz-reveal:hover {
+  background: var(--primary-soft);
+}
+
+.mini-lessons__quiz-reveal--open {
+  color: var(--text-secondary);
+  background: var(--surface-sunken);
+  border-color: var(--border-subtle);
+}
+
+.mini-lessons__quiz-reveal-icon {
+  font-size: 1rem;
+  line-height: 1;
+  /* content changes between + and − in JS; no rotation needed */
+}
+
+.mini-lessons__quiz-reveal:focus-visible {
+  outline: 2px solid var(--focus-ring, var(--primary));
+  outline-offset: 2px;
+}
+
+/* Grid-row reveal — animates closed→open without height:auto issues */
+.mini-lessons__quiz-answer-wrap {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.mini-lessons__quiz-answer-wrap--open {
+  grid-template-rows: 1fr;
+}
+
+.mini-lessons__quiz-answer-wrap > .mini-lessons__quiz-answer {
+  overflow: hidden;
 }
 
 .mini-lessons__quiz-answer {
   border-top: 1px solid var(--border-subtle);
   font-size: 0.85rem;
   color: var(--text-secondary);
+  background: var(--success-soft);
+  border-radius: 0 0 var(--ml-radius-sm) var(--ml-radius-sm);
 }
 
+.mini-lessons__quiz-answer strong {
+  color: var(--success-value);
+}
+
+/* Footer */
 .mini-lessons__footer {
   border-top: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
 }
 
 .mini-lessons__btn {
   border-radius: var(--ml-radius-sm);
-  border: none;
+  border: 1px solid transparent;
   background: var(--primary);
   color: var(--on-primary);
   font-size: 0.88rem;
   font-weight: 600;
   text-decoration: none;
-  transition: filter 0.13s ease;
+  padding: 10px 18px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition:
+    filter 0.18s cubic-bezier(0.25, 1, 0.5, 1),
+    background 0.18s cubic-bezier(0.25, 1, 0.5, 1),
+    color 0.18s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .mini-lessons__btn:hover {
   filter: brightness(1.06);
+}
+
+.mini-lessons__btn:focus-visible {
+  outline: 2px solid var(--focus-ring, var(--primary));
+  outline-offset: 3px;
+}
+
+.mini-lessons__btn--ghost {
+  background: var(--surface-raised);
+  color: var(--text-secondary);
+  border-color: var(--border-subtle);
+}
+
+.mini-lessons__btn--ghost:hover {
+  filter: none;
+  background: var(--surface-sunken);
+  color: var(--text-primary);
+}
+
+/* ── Motion ───────────────────────────────────────────────────────────────── */
+
+@keyframes ml-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes ml-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Hero: eyebrow + title + lead fade up on load */
+.mini-lessons__hero {
+  animation: ml-fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Toolbar fades in slightly after hero */
+.mini-lessons__toolbar {
+  animation: ml-fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.08s both;
+}
+
+/* Cards stagger: each nth-child delays by 40ms, capped at 8 visible cards */
+.mini-lessons__card {
+  animation: ml-fade-up 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.mini-lessons__card:nth-child(1)  { animation-delay: 0.13s; }
+.mini-lessons__card:nth-child(2)  { animation-delay: 0.17s; }
+.mini-lessons__card:nth-child(3)  { animation-delay: 0.21s; }
+.mini-lessons__card:nth-child(4)  { animation-delay: 0.25s; }
+.mini-lessons__card:nth-child(5)  { animation-delay: 0.29s; }
+.mini-lessons__card:nth-child(6)  { animation-delay: 0.33s; }
+.mini-lessons__card:nth-child(7)  { animation-delay: 0.37s; }
+.mini-lessons__card:nth-child(n+8) { animation-delay: 0.40s; }
+
+/* Count text transition — tabular-nums already set; smooth color flicker on change */
+.mini-lessons__count {
+  transition: color 0.15s ease;
+}
+
+/* Empty state fades in */
+.mini-lessons__empty {
+  animation: ml-fade-in 0.25s cubic-bezier(0.25, 1, 0.5, 1) both;
+}
+
+/* Article entrance */
+.mini-lessons--article .mini-lessons__article-hero {
+  animation: ml-fade-up 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.mini-lessons--article .mini-lessons__section {
+  animation: ml-fade-up 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.mini-lessons--article .mini-lessons__section:nth-child(1) { animation-delay: 0.1s; }
+.mini-lessons--article .mini-lessons__section:nth-child(2) { animation-delay: 0.15s; }
+.mini-lessons--article .mini-lessons__section:nth-child(3) { animation-delay: 0.20s; }
+.mini-lessons--article .mini-lessons__section:nth-child(4) { animation-delay: 0.24s; }
+.mini-lessons--article .mini-lessons__section:nth-child(n+5) { animation-delay: 0.27s; }
+
+/* ── Reduced motion ───────────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .mini-lessons__hero,
+  .mini-lessons__toolbar,
+  .mini-lessons__card,
+  .mini-lessons__empty,
+  .mini-lessons--article .mini-lessons__article-hero,
+  .mini-lessons--article .mini-lessons__section {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+  }
+
+  .mini-lessons__card,
+  .mini-lessons__card-arrow,
+  .mini-lessons__card-title,
+  .mini-lessons__chip,
+  .mini-lessons__back,
+  .mini-lessons__toolbar-reset,
+  .mini-lessons__quiz-reveal,
+  .mini-lessons__quiz-answer-wrap,
+  .mini-lessons__btn {
+    transition-duration: 0.01ms !important;
+  }
 }

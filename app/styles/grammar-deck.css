@@ -51,14 +51,17 @@
 .grammar-deck__prog {
   border-radius: 999px;
   background: var(--surface-sunken);
+  overflow: hidden;
 }
 
 .grammar-deck__prog-fill {
   display: block;
   height: 100%;
+  width: 100%;
   background: var(--primary);
   border-radius: 999px;
-  transition: width 0.4s ease;
+  transform-origin: left center;
+  transition: transform 0.4s var(--ease-out-quart);
 }
 
 .grammar-deck__count {
@@ -675,9 +678,9 @@
 }
 
 .gd-quiz__option--wrong {
-  border-color: var(--danger-border, #f0c0c0);
-  background: var(--danger-soft, #fdecec);
-  color: var(--danger, #c0392b);
+  border-color: var(--error-border);
+  background: var(--error-soft);
+  color: var(--error-value);
 }
 
 .gd-quiz__explain {
@@ -735,6 +738,12 @@
   font-style: normal;
   font-size: 0.8rem;
   color: var(--primary);
+}
+
+.grammar-deck__done-practice-error {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  text-align: center;
 }
 
 .grammar-deck__related-label {
