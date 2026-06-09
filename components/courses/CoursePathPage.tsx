@@ -98,9 +98,7 @@ export default function CoursePathPage() {
             electiveTracks={COURSE_PATH_CURRICULUM.electiveTracks}
           />
         </div>
-
-
-</div>
+      </div>
     </div>
   );
 }
