@@ -160,6 +160,9 @@ export type AIConversationMode =
   | "roleplay:airport"
   | "roleplay:doctor"
   | "roleplay:store"
+  | "roleplay:code_review"
+  | "roleplay:standup"
+  | "roleplay:tech_design"
   | "pronunciation"
   | "lesson";
 

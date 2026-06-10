@@ -52,7 +52,7 @@ export type SaveWordArgs = {
 };
 
 export type StartRoleplayArgs = {
-  scenario: "interview" | "cafe" | "airport" | "doctor" | "store";
+  scenario: "interview" | "cafe" | "airport" | "doctor" | "store" | "code_review" | "standup" | "tech_design";
 };
 
 export type ToolArgs =
@@ -189,7 +189,7 @@ export const TOOL_DECLARATIONS = [
     parameters: {
       type: "object",
       properties: {
-        scenario: { type: "string", enum: ["interview", "cafe", "airport", "doctor", "store"] },
+        scenario: { type: "string", enum: ["interview", "cafe", "airport", "doctor", "store", "code_review", "standup", "tech_design"] },
       },
       required: ["scenario"],
     },
@@ -314,7 +314,7 @@ export function parseToolArgs(name: ToolName, raw: unknown): ToolArgs["args"] {
         ipa: typeof obj.ipa === "string" ? obj.ipa : undefined,
       } satisfies SaveWordArgs;
     case "start_roleplay": {
-      const valid = ["interview", "cafe", "airport", "doctor", "store"] as const;
+      const valid = ["interview", "cafe", "airport", "doctor", "store", "code_review", "standup", "tech_design"] as const;
       if (!valid.includes(obj.scenario as typeof valid[number]))
         throw new Error(`scenario must be one of: ${valid.join(", ")}`);
       return { scenario: obj.scenario as StartRoleplayArgs["scenario"] } satisfies StartRoleplayArgs;
