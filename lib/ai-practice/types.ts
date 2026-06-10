@@ -39,6 +39,8 @@ export type ExerciseResult = {
   topic: string;
   gradedBy: "client" | "model";
   latencyMs?: number;
+  /** IPA symbol being practiced, if the exercise targets a specific phoneme. */
+  ipa?: string;
 };
 
 // Serialization helpers for Dexie (Map is not JSON-serializable)

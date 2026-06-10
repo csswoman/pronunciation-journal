@@ -616,6 +616,24 @@ export type Database = {
         }
         Relationships: []
       }
+      user_learning_state: {
+        Row: {
+          user_id: string
+          state: Json
+          updated_at: string
+        }
+        Insert: {
+          user_id: string
+          state: Json
+          updated_at?: string
+        }
+        Update: {
+          user_id?: string
+          state?: Json
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_contrast_progress: {
         Row: {
           contrast_id: string
