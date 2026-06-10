@@ -24,6 +24,13 @@ export function generateFillBlankFromWordBank(
     const level = entry.difficulty ? normalizeCEFR(entry.difficulty) : undefined
     const options = buildOptions(entry, usable, level)
 
+    const firstLetter = entry.text.charAt(0).toUpperCase()
+    const hints = {
+      level1: `Starts with "${firstLetter}"`,
+      level2: entry.meaning ?? `The word is: ${entry.text}`,
+      level3: entry.translation ?? undefined,
+    }
+
     return {
       id: exerciseId('fill_blank', entry.id, entry.text),
       type: 'fill_blank',
@@ -34,6 +41,7 @@ export function generateFillBlankFromWordBank(
       answer: entry.text,
       options,
       hint: entry.meaning ?? undefined,
+      hints,
     }
   })
 
