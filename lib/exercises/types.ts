@@ -19,6 +19,7 @@ export type GenericExerciseType =
   | 'match_pairs'
   | 'reorder_words'
   | 'sentence_context'
+  | 'multiple_choice'
 
 interface BaseGenericExercise {
   /** Deterministic id: hash of type + sourceRef + stable payload fields. */
@@ -42,6 +43,8 @@ export interface FillBlankExercise extends BaseGenericExercise {
   options: string[]
   /** Optional hint (definition or translation). */
   hint?: string
+  /** Progressive hints: level1 = first letter, level2 = definition, level3 = translation. */
+  hints?: { level1: string; level2: string; level3?: string }
 }
 
 // Sentence dictation ────────────────────────────────────────────────────────
@@ -99,12 +102,27 @@ export interface SentenceContextExercise extends BaseGenericExercise {
   options: SentenceContextOption[]
 }
 
+// Multiple choice ───────────────────────────────────────────────────────────
+// Show a question and pick the correct answer from a list.
+export interface MultipleChoiceExercise extends BaseGenericExercise {
+  type: 'multiple_choice'
+  /** The question text. */
+  question: string
+  /** All answer options (4 items). */
+  options: string[]
+  /** Index into options[] that is correct. */
+  answerIndex: number
+  /** Shown after answering — explains why the correct answer is right. */
+  explanation?: string
+}
+
 export type GenericExercise =
   | FillBlankExercise
   | SentenceDictationExercise
   | MatchPairsExercise
   | ReorderWordsExercise
   | SentenceContextExercise
+  | MultipleChoiceExercise
 
 // ── Session answer ─────────────────────────────────────────────────────────
 

@@ -15,8 +15,9 @@ import { FillBlankExercise } from '@/components/exercises/FillBlankExercise'
 import { ReorderWordsExercise } from '@/components/exercises/ReorderWordsExercise'
 import { SentenceDictationExercise } from '@/components/exercises/SentenceDictationExercise'
 import { SentenceContextExercise } from '@/components/lexicon/SentenceContextExercise'
+import { MultipleChoiceExercise } from '@/components/exercises/MultipleChoiceExercise'
 import type { Exercise } from '@/lib/phoneme-practice/types'
-import type { MatchPairsExercise as MatchPairsExerciseType, FillBlankExercise as FillBlankExerciseType, ReorderWordsExercise as ReorderWordsExerciseType, SentenceDictationExercise as SentenceDictationExerciseType, SentenceContextExercise as SentenceContextExerciseType } from '@/lib/exercises/types'
+import type { MatchPairsExercise as MatchPairsExerciseType, FillBlankExercise as FillBlankExerciseType, ReorderWordsExercise as ReorderWordsExerciseType, SentenceDictationExercise as SentenceDictationExerciseType, SentenceContextExercise as SentenceContextExerciseType, MultipleChoiceExercise as MultipleChoiceExerciseType } from '@/lib/exercises/types'
 import type { PracticeExercise } from '@/lib/practice/types'
 
 interface Props {
@@ -93,6 +94,14 @@ export function ExerciseRenderer({ exercise, onSubmit, focusUi = false, voice }:
           />
         )
       }
+      if (slug === 'multiple_choice') {
+        return (
+          <MultipleChoiceExercise
+            exercise={payload.data as MultipleChoiceExerciseType}
+            onSubmit={onSubmit}
+          />
+        )
+      }
       return <UnsupportedExercise slug={slug} onSubmit={onSubmit} />
     }
 
@@ -140,7 +149,6 @@ function UnsupportedExercise({
   slug: string
   onSubmit: (isCorrect: boolean, userAnswer: string) => void
 }) {
-  // No standalone UI exists yet for fill_blank / sentence_dictation.
   return (
     <div className="flex flex-col items-center gap-3 p-6 text-center">
       <p className="text-sm text-fg-subtle">
