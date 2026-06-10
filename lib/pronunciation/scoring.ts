@@ -14,15 +14,20 @@ function cloneResult(result: ScoringResult): ScoringResult {
 /**
  * Score a pronunciation attempt by comparing the transcript
  * against the target text using word-level diff.
+ *
+ * @param strictWordMatch When true, disables fuzzy word matching (Levenshtein ≤1).
+ *   Use for minimal pair exercises where "bit" vs "beat" must NOT match — the
+ *   whole point is distinguishing near-identical words.
  */
 export async function scorePronunciation(
   transcript: string,
   target: string,
-  threshold = 70
+  threshold = 70,
+  strictWordMatch = false
 ): Promise<ScoringResult> {
   const normalizedTranscript = normalize(transcript);
   const normalizedTarget = normalize(target);
-  const cacheKey = `${threshold}::${normalizedTarget}::${normalizedTranscript}`;
+  const cacheKey = `${strictWordMatch ? "strict" : "fuzzy"}::${threshold}::${normalizedTarget}::${normalizedTranscript}`;
 
   const cached = scoreCache.get(cacheKey);
   if (cached) {
@@ -32,7 +37,7 @@ export async function scorePronunciation(
   const transcriptWords = normalizedTranscript.split(/\s+/).filter(Boolean);
   const targetWords = normalizedTarget.split(/\s+/).filter(Boolean);
 
-  const wordResults = diffWords(targetWords, transcriptWords);
+  const wordResults = diffWords(targetWords, transcriptWords, strictWordMatch);
 
   // Enrich all words (except "extra") with phoneme data in parallel
   await Promise.all(
@@ -102,7 +107,7 @@ function normalize(text: string): string {
  * Diff two word arrays using Levenshtein-style alignment.
  * Returns per-word results with status.
  */
-function diffWords(expected: string[], got: string[]): WordResult[] {
+function diffWords(expected: string[], got: string[], strict = false): WordResult[] {
   const m = expected.length;
   const n = got.length;
 
@@ -116,7 +121,7 @@ function diffWords(expected: string[], got: string[]): WordResult[] {
 
   for (let i = 1; i <= m; i++) {
     for (let j = 1; j <= n; j++) {
-      if (wordsMatch(expected[i - 1], got[j - 1])) {
+      if (wordsMatch(expected[i - 1], got[j - 1], strict)) {
         dp[i][j] = dp[i - 1][j - 1];
       } else {
         dp[i][j] = 1 + Math.min(
@@ -134,7 +139,7 @@ function diffWords(expected: string[], got: string[]): WordResult[] {
   let j = n;
 
   while (i > 0 || j > 0) {
-    if (i > 0 && j > 0 && wordsMatch(expected[i - 1], got[j - 1])) {
+    if (i > 0 && j > 0 && wordsMatch(expected[i - 1], got[j - 1], strict)) {
       results.unshift({
         expected: expected[i - 1],
         got: got[j - 1],
@@ -173,9 +178,14 @@ function diffWords(expected: string[], got: string[]): WordResult[] {
 /**
  * Fuzzy word matching to handle minor STT variations.
  * Uses Levenshtein distance with a tolerance threshold.
+ *
+ * strict=true: exact match only. Use for minimal pair exercises where
+ * "bit"/"beat", "ship"/"sheep" must NOT be treated as equivalent — distinguishing
+ * them is the entire learning objective.
  */
-function wordsMatch(a: string, b: string): boolean {
+function wordsMatch(a: string, b: string, strict = false): boolean {
   if (a === b) return true;
+  if (strict) return false;
 
   // For short words (<=3 chars), require exact match
   if (a.length <= 3 || b.length <= 3) return a === b;

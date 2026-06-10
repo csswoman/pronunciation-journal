@@ -30,7 +30,7 @@ export function PhonemeLessonIntro({ ipa, onStart }: Props) {
       {showLesson && extra ? (
         <>
           <ArticulationList steps={extra.articulationEs} />
-          <PairsGrid pairs={extra.minimalPairs} />
+          {extra.minimalPairs.length > 0 && <PairsGrid pairs={extra.minimalPairs} />}
           <SpanishTipBox tip={extra.spanishTip} />
         </>
       ) : (

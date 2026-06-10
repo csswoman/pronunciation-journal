@@ -103,21 +103,25 @@ const DIPHTHONG_EXAMPLES: Record<string, string> = {
   "eɪ": "day",
   "aɪ": "time",
   "ɔɪ": "boy",
-  "əʊ": "go",
+  "oʊ": "go",
   "aʊ": "now",
-  "ɪə": "here",
-  "eə": "there",
-  "ʊə": "tour",
+};
+
+// The r-colored vowel has no .ogg either — TTS on an example word.
+const R_COLORED_EXAMPLES: Record<string, string> = {
+  "ɜr": "bird",
 };
 
 /**
  * Play a single IPA symbol's audio sample.
- * Long vowels (iː, ɑː …) resolve to their base monophthong .ogg via [0].
- * True diphthongs (eɪ, aɪ …) have no .ogg — fall back to TTS on an example word.
+ * Long vowels (iː, uː) resolve to their base monophthong .ogg via [0].
+ * Diphthongs (eɪ, aɪ …) and r-colored vowels (ɜr) have no .ogg — fall back
+ * to TTS on an example word.
  */
 export function playIpaSound(ipaSymbol: string): void {
-  if (DIPHTHONG_EXAMPLES[ipaSymbol]) {
-    speak(DIPHTHONG_EXAMPLES[ipaSymbol]);
+  const example = DIPHTHONG_EXAMPLES[ipaSymbol] ?? R_COLORED_EXAMPLES[ipaSymbol];
+  if (example) {
+    speak(example);
     return;
   }
   // Long vowels: strip length mark ː so "iː"[0] → "i" which is in the map.

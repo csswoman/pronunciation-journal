@@ -1,36 +1,35 @@
 /**
- * Phonetic similarity map for English phonemes (RP).
+ * Phonetic similarity map for English phonemes (General American).
  * Used to pick smart distractors: a learner confusing /ɪ/ should be tested
- * against /iː/ or /e/ — not against /w/ or /ŋ/.
+ * against /iː/ or /ɛ/ — not against /w/ or /ŋ/.
  *
  * Each entry maps a target IPA (with slashes, matching Supabase `sounds.ipa`)
  * to an ordered list of phonemes most commonly confused with it.
  * Order = priority. The first entries are the most useful distractors.
  *
  * Special focus on Spanish-speaker confusions:
- *   - /iː/-/ɪ/ (sheep/ship): no vowel length in Spanish
+ *   - /iː/-/ɪ/ (sheep/ship): tense/lax distinction doesn't exist in Spanish
  *   - /b/-/v/: /v/ doesn't exist in Spanish, neutralized to [b/β]
  *   - /s/-/z/: /z/ doesn't exist in Spanish
  *   - /θ/-/s/: only in Peninsular Spanish; LATAM speakers merge both
  *   - /j/-/dʒ/ (yes/jess): Spanish "y" varies wildly by dialect
- *   - /ʌ/-/æ/-/ɑː/ (cup/cap/carp): Spanish has only /a/
+ *   - /ʌ/-/æ/-/ɑ/ (cup/cap/cop): Spanish has only /a/
  *   - Final voiced stops /b d g/: Spanish devoices/spirantizes finals
  *   - /h/: silent in Spanish, often dropped or replaced with /x/
  */
 export const PHONEME_CONFUSION: Record<string, readonly string[]> = {
   // ─── Vowels (monophthongs) ──────────────────────────────────────────────
-  "/iː/": ["/ɪ/", "/e/", "/eɪ/"],
-  "/ɪ/":  ["/iː/", "/e/", "/ə/"],
-  "/e/":  ["/æ/", "/ɪ/", "/eɪ/", "/ʌ/"],
-  "/æ/":  ["/e/", "/ʌ/", "/ɑː/"],
-  "/ɑː/": ["/ʌ/", "/æ/", "/ɒ/"],
-  "/ɒ/":  ["/ɔː/", "/ɑː/", "/ʌ/"],
-  "/ɔː/": ["/ɒ/", "/əʊ/", "/ɜː/"],
+  "/iː/": ["/ɪ/", "/ɛ/", "/eɪ/"],
+  "/ɪ/":  ["/iː/", "/ɛ/", "/ə/"],
+  "/ɛ/":  ["/æ/", "/ɪ/", "/eɪ/", "/ʌ/"],
+  "/æ/":  ["/ɛ/", "/ʌ/", "/ɑ/"],
+  "/ɑ/":  ["/ʌ/", "/æ/", "/ɔ/"],
+  "/ɔ/":  ["/ɑ/", "/oʊ/", "/ɜr/"],
   "/ʊ/":  ["/uː/", "/ə/", "/ʌ/"],
-  "/uː/": ["/ʊ/", "/əʊ/", "/ɔː/"],
-  "/ʌ/":  ["/æ/", "/ɑː/", "/ə/"],
-  "/ɜː/": ["/ə/", "/ɔː/", "/ʌ/"],
-  "/ə/":  ["/ʌ/", "/ɜː/", "/ɪ/"],
+  "/uː/": ["/ʊ/", "/oʊ/", "/ɔ/"],
+  "/ʌ/":  ["/æ/", "/ɑ/", "/ə/"],
+  "/ɜr/": ["/ə/", "/ɔ/", "/ʌ/"],
+  "/ə/":  ["/ʌ/", "/ɜr/", "/ɪ/"],
 
   // ─── Consonants: stops ──────────────────────────────────────────────────
   "/p/":  ["/b/", "/f/", "/t/"],
@@ -65,14 +64,11 @@ export const PHONEME_CONFUSION: Record<string, readonly string[]> = {
   "/w/":  ["/v/", "/uː/", "/r/"],
 
   // ─── Diphthongs ─────────────────────────────────────────────────────────
-  "/eɪ/": ["/aɪ/", "/e/", "/iː/"],
+  "/eɪ/": ["/aɪ/", "/ɛ/", "/iː/"],
   "/aɪ/": ["/eɪ/", "/ɔɪ/", "/aʊ/"],
-  "/ɔɪ/": ["/aɪ/", "/ɔː/", "/əʊ/"],
-  "/əʊ/": ["/aʊ/", "/ɔː/", "/uː/"],
-  "/aʊ/": ["/əʊ/", "/aɪ/", "/ɑː/"],
-  "/ɪə/": ["/eə/", "/ɪ/", "/iː/"],
-  "/eə/": ["/ɪə/", "/e/", "/æ/"],
-  "/ʊə/": ["/ɔː/", "/ʊ/", "/uː/"],
+  "/ɔɪ/": ["/aɪ/", "/ɔ/", "/oʊ/"],
+  "/oʊ/": ["/aʊ/", "/ɔ/", "/uː/"],
+  "/aʊ/": ["/oʊ/", "/aɪ/", "/ɑ/"],
 } as const;
 
 /**
@@ -106,9 +102,9 @@ export function getAllContrastKeys(): string[] {
  * doesn't yield enough candidates.
  */
 const VOWELS = new Set([
-  "/iː/", "/ɪ/", "/e/", "/æ/", "/ɑː/", "/ɒ/", "/ɔː/",
-  "/ʊ/", "/uː/", "/ʌ/", "/ɜː/", "/ə/",
-  "/eɪ/", "/aɪ/", "/ɔɪ/", "/əʊ/", "/aʊ/", "/ɪə/", "/eə/", "/ʊə/",
+  "/iː/", "/ɪ/", "/ɛ/", "/æ/", "/ɑ/", "/ɔ/",
+  "/ʊ/", "/uː/", "/ʌ/", "/ɜr/", "/ə/",
+  "/eɪ/", "/aɪ/", "/ɔɪ/", "/oʊ/", "/aʊ/",
 ]);
 
 const isVowel = (ipa: string) => VOWELS.has(ipa);
