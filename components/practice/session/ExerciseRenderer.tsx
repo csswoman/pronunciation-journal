@@ -5,6 +5,7 @@ import { PickSoundExercise } from '@/components/phoneme-practice/PickSoundExerci
 import { MinimalPairExercise } from '@/components/phoneme-practice/MinimalPairExercise'
 import { DictationExercise } from '@/components/phoneme-practice/DictationExercise'
 import { SpeakExercise } from '@/components/phoneme-practice/SpeakExercise'
+import { SpeakScoredExercise } from '@/components/exercises/SpeakScoredExercise'
 import { IdentifyExercise } from '@/components/phoneme-practice/IdentifyExercise'
 import { AxSameDifferentExercise } from '@/components/phoneme-practice/AxSameDifferentExercise'
 import { OddOneOutExercise } from '@/components/phoneme-practice/OddOneOutExercise'
@@ -115,7 +116,9 @@ export function ExerciseRenderer({ exercise, onSubmit, focusUi = false, voice }:
       case 'dictation':
         return <DictationExercise exercise={legacy} onSubmit={onSubmit} focusUi={focusUi} voice={voice} />
       case 'speak_word':
-        return <SpeakExercise exercise={legacy} onSubmit={onSubmit} focusUi={focusUi} />
+        return exercise.context === 'daily'
+          ? <SpeakScoredExercise exercise={legacy} onSubmit={onSubmit} />
+          : <SpeakExercise exercise={legacy} onSubmit={onSubmit} focusUi={focusUi} />
       case 'identify':
         return <IdentifyExercise exercise={legacy} onSubmit={onSubmit} voice={voice} />
       case 'ax_same_different':

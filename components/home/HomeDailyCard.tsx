@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { ArrowRight, Flame } from 'lucide-react'
 import Button from '@/components/ui/Button'
 import Badge from '@/components/ui/Badge'
-import PracticeSession from '@/components/practice/PracticeSession'
+import DailyStepSession from '@/components/daily/DailyStepSession'
 import DailyStepList from '@/components/daily/DailyStepList'
 import { useDailyPlan, type ConceptLesson, type DailyStep } from '@/hooks/useDailyPlan'
 import { useAuth } from '@/components/auth/AuthProvider'
@@ -44,13 +44,10 @@ export default function HomeDailyCard({ conceptLesson }: HomeDailyCardProps) {
   if (activeStep) {
     return (
       <div className="fixed inset-0 z-50 bg-[var(--surface-base)]">
-        <PracticeSession
-          key={sessionKey}
-          context="daily"
-          exercises={activeStep.exercises}
-          sessionLength={activeStep.exercises.length}
-          sessionLabel={activeStep.title}
-          onSessionComplete={() => markDone(activeStep.id)}
+        <DailyStepSession
+          step={activeStep}
+          sessionKey={sessionKey}
+          onComplete={() => markDone(activeStep.id)}
           onExit={() => setActiveStep(null)}
         />
       </div>

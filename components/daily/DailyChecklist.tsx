@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from 'react'
 import Link from 'next/link'
 import { ArrowRight, Flame, Sparkles } from 'lucide-react'
 import PageLayout from '@/components/layout/PageLayout'
-import PracticeSession from '@/components/practice/PracticeSession'
+import DailyStepSession from './DailyStepSession'
 import Button from '@/components/ui/Button'
 import Badge from '@/components/ui/Badge'
 import DailyStepList from './DailyStepList'
@@ -69,13 +69,10 @@ export default function DailyChecklist({ conceptLesson }: DailyChecklistProps) {
   if (view.mode === 'step') {
     const step = view.step
     return (
-      <PracticeSession
-        key={sessionKey}
-        context="daily"
-        exercises={step.exercises}
-        sessionLength={step.exercises.length}
-        sessionLabel={step.title}
-        onSessionComplete={() => markDone(step.id)}
+      <DailyStepSession
+        step={step}
+        sessionKey={sessionKey}
+        onComplete={() => markDone(step.id)}
         onExit={() => setView({ mode: 'checklist' })}
       />
     )

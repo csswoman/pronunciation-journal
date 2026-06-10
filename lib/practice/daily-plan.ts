@@ -2,6 +2,7 @@ import { getSupabaseBrowserClient } from '@/lib/supabase/client'
 import { generateFillBlankFromWordBank } from '@/lib/exercises/generators/fill-blank'
 import { generateSentenceDictationFromWordBank } from '@/lib/exercises/generators/sentence-dictation'
 import { generateReorderWordsFromWordBank } from '@/lib/exercises/generators/reorder-words'
+import { generateMatchPairsFromWordBank } from '@/lib/exercises/generators/match-pairs'
 import { fetchTextFragments, generateReorderFromFragments } from '@/lib/exercises/generators/reorder-from-fragments'
 import { generateMinimalPair, generateDictation } from '@/lib/phoneme-practice/exercises'
 import { getAllSounds, getAllWords, getMinimalPairs, getWordsBySound } from '@/lib/phoneme-practice/queries'
@@ -56,16 +57,18 @@ function dedupeByContentId(exercises: PracticeExercise[]): PracticeExercise[] {
 
 /**
  * Elige un sonido del seed de forma determinista por día, evitando el sonido
- * ya usado por el paso de fonema débil. Prioriza sonidos fáciles primero
- * (difficulty bajo) para que el usuario nuevo no se frustre.
+ * ya usado por el paso de fonema débil. Ordena por difficulty ascendente pero
+ * rota por TODOS los sonidos — no solo la mitad fácil — de modo que /θ/, /ð/,
+ * /ɜr/ y similares aparecen en la diaria con la misma frecuencia que los fáciles.
+ * La ordenación por dificultad asegura que un usuario nuevo empiece por los
+ * sonidos más accesibles los primeros días, pero llega a los difíciles
+ * conforme avanza el año.
  */
 function pickSeedSound(allSounds: Sound[], offset: number, excludeId?: number): Sound | null {
   const pool = allSounds.filter((s) => s.id !== excludeId)
   if (pool.length === 0) return null
   const ranked = [...pool].sort((a, b) => (a.difficulty ?? 9) - (b.difficulty ?? 9))
-  // Rotamos dentro de la mitad más fácil para variar sin saltar a sonidos duros.
-  const window = Math.max(1, Math.ceil(ranked.length / 2))
-  return ranked[(dayOfYear() + offset) % window]
+  return ranked[(dayOfYear() + offset) % ranked.length]
 }
 
 // ── Word bank fetchers (sin cambios respecto a la versión previa) ─────────────
@@ -118,12 +121,15 @@ async function fetchWeakestSoundProgress(userId: string): Promise<Sound | null> 
   if (error) return null
   if (!data || data.length === 0) return null
 
-  // Find IPA with lowest accuracy across its contrast rows
+  // Find IPA with lowest accuracy across its contrast rows.
+  // Each contrast_id encodes TWO phonemes (ipaA|ipaB) — count errors toward both,
+  // since a /s/-/z/ confusion is equally a /z/ weakness as it is a /s/ weakness.
   const byIpa = new Map<string, { correct: number; total: number }>()
   for (const r of data) {
-    const [ipaA] = r.contrast_id.split('|')
-    const prev = byIpa.get(ipaA) ?? { correct: 0, total: 0 }
-    byIpa.set(ipaA, { correct: prev.correct + r.correct_answers, total: prev.total + r.total_attempts })
+    for (const ipa of r.contrast_id.split('|')) {
+      const prev = byIpa.get(ipa) ?? { correct: 0, total: 0 }
+      byIpa.set(ipa, { correct: prev.correct + r.correct_answers, total: prev.total + r.total_attempts })
+    }
   }
 
   const weakestIpa = [...byIpa.entries()]
@@ -149,11 +155,13 @@ function buildWordReviewStep(words: WordBankEntry[]): DailyStep | null {
   const fillBlanks = generateFillBlankFromWordBank(words, 2)
   const dictations = generateSentenceDictationFromWordBank(words, 2)
   const reorders = generateReorderWordsFromWordBank(words, 1)
+  const matchPairs = generateMatchPairsFromWordBank(words, 1)
 
   const exercises = dedupeByContentId([
     ...fillBlanks.map((ex) => fromGenericExercise(ex, 'daily')),
     ...dictations.map((ex) => fromGenericExercise(ex, 'daily')),
     ...reorders.map((ex) => fromGenericExercise(ex, 'daily')),
+    ...matchPairs.map((ex) => fromGenericExercise(ex, 'daily')),
   ])
 
   if (exercises.length === 0) return null
@@ -198,6 +206,7 @@ function buildPhonemeFocusStep(
     icon: 'Waves',
     exercises,
     estMinutes: Math.max(2, Math.round(exercises.length * 1.1)),
+    ipa: sound.ipa,
   }
 }
 

@@ -125,6 +125,8 @@ export type DailyStep = {
   estMinutes: number
   /** Solo para 'concept': a dónde lleva la lectura. */
   href?: string
+  /** Solo para 'phoneme_focus': IPA del sonido que se practica (para mostrar intro). */
+  ipa?: string
 }
 
 export type DailyPlan = {
