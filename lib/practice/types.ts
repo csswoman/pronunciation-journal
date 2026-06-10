@@ -22,6 +22,7 @@ export type ExerciseSlug =
   | 'odd_one_out'        // id: 13
   | 'abx'               // id: 14
   | 'sentence_context'   // no DB row — does not write to answer_history
+  | 'multiple_choice'    // no DB row — does not write to answer_history
 
 // null signals "no exercise_types FK" — this exercise does not write to answer_history.
 export const EXERCISE_TYPE_IDS: Record<ExerciseSlug, number | null> = {
@@ -39,6 +40,7 @@ export const EXERCISE_TYPE_IDS: Record<ExerciseSlug, number | null> = {
   odd_one_out: 13,
   abx: 14,
   sentence_context: null,
+  multiple_choice: null,
 }
 
 export type PracticeContext = 'sound_lab' | 'courses' | 'ai_coach' | 'practice' | 'daily'
@@ -106,7 +108,9 @@ export type SessionResult = {
 
 export type DailyStepKind =
   | 'word_review'      // SRS de word_bank (fill_blank / sentence_dictation / reorder)
-  | 'phoneme_focus'    // tanda mixta de un sonido (débil si hay progreso, si no del seed)
+  | 'context_practice'   // sentence_context desde word_bank (vocabulario en contexto de oración)
+  | 'connected_speech'   // quiz + dictado desde mazos cs-*.json (habla conectada americana)
+  | 'phoneme_focus'      // tanda mixta de un sonido (débil si hay progreso, si no del seed)
   | 'minimal_pairs'    // discriminación de pares mínimos
   | 'listening'        // dictation desde words del seed
   | 'sentence_builder' // reorder_words desde text_fragments (lecciones y grammar decks)

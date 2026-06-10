@@ -76,12 +76,22 @@ vi.mock('@/lib/phoneme-practice/queries', () => ({
   getWordsBySound: vi.fn(),
 }))
 
+vi.mock('@/lib/db', () => ({
+  db: { learningState: { get: vi.fn().mockResolvedValue(null) } },
+}))
+
+vi.mock('@/lib/exercises/generators/connected-speech', () => ({
+  generateConnectedSpeechExercises: vi.fn().mockResolvedValue(null),
+  todaysDeckSlug: vi.fn().mockReturnValue('cs-linking'),
+}))
+
 import {
   getAllSounds,
   getAllWords,
   getMinimalPairs,
   getWordsBySound,
 } from '@/lib/phoneme-practice/queries'
+import { db } from '@/lib/db'
 import {
   buildDailyPlan,
   EmptyWordBankError,
@@ -268,6 +278,60 @@ describe('buildDailyPlan', () => {
 
     const plan = await buildDailyPlan('user-1')
     expect(plan.steps.length).toBe(DAILY_PLAN_STEP_COUNT)
+  })
+
+  it('context_practice aparece cuando hay palabras con oraciones de ejemplo', async () => {
+    const words = Array.from({ length: 4 }, (_, i) =>
+      makeEntry({ id: `w-${i}`, text: `word${i}`, example: `We saw word${i} in the sentence today.` }),
+    )
+    setupProgressMock([])
+    setupWordBankMock(words, [])
+
+    const plan = await buildDailyPlan('user-1')
+    expect(plan.steps.some((s) => s.kind === 'context_practice')).toBe(true)
+    const contextStep = plan.steps.find((s) => s.kind === 'context_practice')
+    expect(contextStep!.exercises.every((e) => e.slug === 'sentence_context')).toBe(true)
+  })
+
+  it('usa el sonido del AI Coach cuando Sound Lab no tiene progreso', async () => {
+    const { sounds } = seedCatalog()
+    const sound3 = sounds.find((s) => s.id === 3)!
+    // Mock learningState with a struggling sound matching sound3's IPA
+    vi.mocked(db.learningState.get).mockResolvedValue({
+      userId: 'user-1',
+      updatedAt: new Date().toISOString(),
+      state: {
+        pronunciation: {
+          strugglingSounds: [{ ipa: sound3.ipa, avgAccuracy: 40, attempts: 5 }],
+          averageAccuracy: 40,
+        },
+        grammar: { weakTopics: [] },
+        level: { cefrEstimate: 'B1', confidence: 0.5 },
+        vocabulary: { knownCount: 0, strugglingWords: [], savedWords: [] },
+        lastSessions: [],
+        userId: 'user-1',
+        deviceId: 'dev',
+      },
+    } as never)
+    setupProgressMock([]) // no Sound Lab progress
+    setupWordBankMock([])
+
+    const plan = await buildDailyPlan('user-1')
+    expect(vi.mocked(getWordsBySound)).toHaveBeenCalledWith(3)
+    expect(plan.steps.some((s) => s.id === `phoneme_focus:${sound3.id}`)).toBe(true)
+    vi.mocked(db.learningState.get).mockResolvedValue(null)
+  })
+
+  it('context_practice no aparece cuando ninguna palabra tiene oración de ejemplo', async () => {
+    const words = Array.from({ length: 6 }, (_, i) =>
+      makeEntry({ id: `w-${i}`, text: `word${i}`, example: undefined }),
+    )
+    setupProgressMock([])
+    setupWordBankMock(words, [])
+
+    const plan = await buildDailyPlan('user-1')
+    expect(plan.steps.some((s) => s.kind === 'context_practice')).toBe(false)
+    expect(plan.steps).toHaveLength(DAILY_PLAN_STEP_COUNT)
   })
 })
 
