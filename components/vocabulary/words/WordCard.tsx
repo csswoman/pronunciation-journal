@@ -48,7 +48,7 @@ export function WordCard({ word, onRetry, onDelete, selected, onSelect, isFavori
             onClick={() => onSelect(word.id)}
             aria-label={selected ? "Deselect word" : "Select word"}
             className={[
-              "shrink-0 mt-0.5 w-[18px] h-[18px] rounded-[5px] border-2 transition-all duration-[120ms]",
+              "shrink-0 mt-0.5 w-4 h-4 rounded-xs border-2 transition-all duration-[120ms]",
               "flex items-center justify-center cursor-pointer",
               selected
                 ? "border-primary bg-primary"

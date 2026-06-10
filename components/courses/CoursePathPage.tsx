@@ -29,9 +29,6 @@ export default function CoursePathPage() {
     <div className="course-path">
       <div className="course-path__wrap">
         <header className="course-path__hero">
-          <span className="course-path__eyebrow">
-            Curated curriculum for your goals
-          </span>
           <h1 className="course-path__title">Your English path</h1>
           <p className="course-path__intro">
             93 courses across 7 tracks. Starred items are the core spine; everything else is
@@ -87,9 +84,11 @@ export default function CoursePathPage() {
         </div>
 
         <div
+          key={levelId}
           id="course-level-panel"
           role="tabpanel"
           aria-labelledby={`tab-${levelId}`}
+          className="course-path__panel-enter"
         >
           <CoursePathLevelPanel
             level={level}

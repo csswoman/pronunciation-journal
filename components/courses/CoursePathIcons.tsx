@@ -28,10 +28,12 @@ export function CoursePathPriorityMarks({
   }
 
   const count = priority === 2 ? 2 : 1;
+  const label = priority === 2 ? "Highest priority" : "Core path";
   return (
     <span
       className={cn("course-path__marks-stars", className)}
-      aria-label={priority === 2 ? "Máxima prioridad" : "Ruta crítica"}
+      aria-label={label}
+      title={label}
     >
       {Array.from({ length: count }, (_, i) => (
         <Star
@@ -55,9 +57,9 @@ export function CoursePathPriorityCount({
   className?: string;
 }) {
   return (
-    <span className={cn("course-path__inline-pri", className)}>
+    <span className={cn("course-path__inline-pri", className)} title="Starred lessons are the essential spine — do these first">
       <Star size={12} className={cn(iconClass, "course-path__star-icon")} fill="currentColor" strokeWidth={0} aria-hidden />
-      <span>{count} prioritarios</span>
+      <span>{count} priority</span>
     </span>
   );
 }
@@ -67,10 +69,10 @@ export function CoursePathSoundLabLink({ className }: { className?: string }) {
     <Link
       href="/practice/sounds"
       className={cn("course-path__snd", className)}
-      title="Ir a Sound Lab"
-      aria-label="Ir a Sound Lab"
+      aria-label="Go to Sound Lab"
     >
-      <MicVocal size={16} strokeWidth={2} aria-hidden />
+      <MicVocal size={13} strokeWidth={2} aria-hidden />
+      <span className="course-path__snd-label">Sound Lab</span>
     </Link>
   );
 }

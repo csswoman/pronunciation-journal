@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Check, Play, ArrowRight } from "lucide-react";
+import { Check, Play, ArrowRight, Lock } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { studyLessonPath } from "@/lib/courses/curriculumIndex";
 import {
@@ -24,12 +24,12 @@ export default function CoursePathLessonRow({ lesson, levelId }: CoursePathLesso
   const isPriority = lesson.priority > 0;
 
   const stateLabel = isDone
-    ? "Completada"
+    ? "Completed"
     : isCurrent
-    ? "En curso"
+    ? "In progress"
     : isLocked
-    ? "Bloqueada"
-    : "Disponible";
+    ? "Locked"
+    : "Available";
 
   const className = cn(
     "course-path__lesson",
@@ -42,17 +42,23 @@ export default function CoursePathLessonRow({ lesson, levelId }: CoursePathLesso
   );
 
   const titleEl = canOpen ? (
-    <Link href={href} className="course-path__lt course-path__lt--link">
+    <Link href={href} className="course-path__lt course-path__lt--link" title={lesson.title}>
       {lesson.title}
     </Link>
   ) : (
-    <span className="course-path__lt">{lesson.title}</span>
+    <span className="course-path__lt" title={lesson.title}>{lesson.title}</span>
   );
 
   return (
     <div
       className={className}
-      title={isLocked ? "Completa las lecciones anteriores para desbloquear" : undefined}
+      title={
+        isLocked
+          ? "Complete the previous lessons to unlock this one"
+          : lesson.isOptional
+          ? "Optional — part of the extended curriculum"
+          : undefined
+      }
     >
       <CoursePathPriorityMarks priority={lesson.priority} />
       <div className="course-path__st" role="img" aria-label={stateLabel}>
@@ -60,16 +66,21 @@ export default function CoursePathLessonRow({ lesson, levelId }: CoursePathLesso
           <Check size={12} strokeWidth={2.5} aria-hidden />
         ) : isCurrent ? (
           <Play size={10} className="fill-current" aria-hidden />
+        ) : isLocked ? (
+          <Lock size={10} strokeWidth={2} aria-hidden />
         ) : (
           <CoursePathLessonStateDot available={isAvailable} />
         )}
       </div>
       {titleEl}
       {lesson.soundLab && <CoursePathSoundLabLink />}
+      {isLocked && (
+        <span className="course-path__locked-label" aria-hidden>Locked</span>
+      )}
       {isCurrent && canOpen && (
         <Link href={href} className="course-path__lk">
-          Continuar
-          <ArrowRight size={14} aria-hidden />
+          Continue
+          <ArrowRight size={12} aria-hidden />
         </Link>
       )}
     </div>
