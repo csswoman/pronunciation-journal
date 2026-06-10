@@ -45,13 +45,9 @@ export default function HomeReviewWordRow({ word, showDivider }: HomeReviewWordR
 
       <div className="min-w-0 flex-1">
         <p className="text-sm font-medium leading-tight text-[var(--text-primary)]">
-          <span
-            style={{ fontFamily: "var(--font-display), serif" }}
-          >
-            {word.text}
-          </span>
+          {word.text}
           {ipa ? (
-            <small className="ml-2 font-ipa text-[13px] font-normal text-[var(--primary)]">
+            <small className="ml-2 font-ipa text-sm font-normal text-[var(--primary)]">
               {ipa}
             </small>
           ) : null}

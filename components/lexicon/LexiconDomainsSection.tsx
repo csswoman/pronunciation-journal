@@ -19,7 +19,7 @@ export function LexiconDomainsSection({ groups, onDomainClick }: LexiconDomainsS
     <>
       <div className="words-lexicon__sechead">
         <span className="words-lexicon__sechead-num">02</span>
-        <h3>Explore by area</h3>
+        <h3>Browse by topic</h3>
       </div>
       <div className="words-lexicon__areachips" role="list">
         {LEXICON_DOMAINS.map((domain) => {

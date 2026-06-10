@@ -13,6 +13,19 @@ export interface CoursePathLegendItem {
   description: string;
 }
 
+export interface RealLifeVocabItem {
+  word: string;
+  meaning: string;
+}
+
+export interface RealLifeScenario {
+  id: string;
+  title: string;
+  emoji?: string;
+  phrases: string[];
+  vocab: RealLifeVocabItem[];
+}
+
 export type LessonPriority = 0 | 1 | 2;
 
 export type LessonProgressState = "done" | "current" | "locked" | "available";
@@ -54,6 +67,7 @@ export interface CoursePathLevel {
   isElective?: boolean;
   /** Icon in elective track header (replaces emoji badge) */
   spineIcon?: ElectiveSpineIcon;
+  realLife?: RealLifeScenario[];
 }
 
 export interface CoursePathCurriculum {

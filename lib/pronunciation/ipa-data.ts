@@ -1,10 +1,27 @@
 export type Difficulty = "easy" | "medium" | "hard";
+export type SyllablePosition = "initial" | "medial" | "final" | "any";
+
+export interface FinalConsonantPair {
+  /** Word ending in the voiced consonant (e.g. "robe" for /b/ vs /p/). */
+  wordVoiced: string;
+  /** Word ending in the voiceless counterpart (e.g. "rope" for /p/). */
+  wordVoiceless: string;
+  voicedIpa: string;
+  voicelessIpa: string;
+}
 
 export interface PhonemeExtra {
   difficulty: Difficulty;
   articulation: string[];
+  articulationEs: string[];
   minimalPairs: { wordA: string; wordB: string; phonemeA: string; phonemeB: string }[];
   spanishTip: string;
+  /**
+   * Minimal pairs practiced specifically in word-final position.
+   * Used for Fase 9 final-consonant exercises (devoicing / elision).
+   * Only present for consonants where final position is a known L1 problem.
+   */
+  finalConsonantPairs?: FinalConsonantPair[];
 }
 
 export const IPA_EXTRA: Record<string, PhonemeExtra> = {
@@ -14,6 +31,11 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       "Lips spread wide, like a big smile",
       "Tongue high and pushed forward in the mouth",
       "Held longer than the Spanish 'i'",
+    ],
+    articulationEs: [
+      "Estira los labios como en una sonrisa amplia",
+      "Lengua alta y hacia adelante en la boca",
+      "Mantenla más tiempo que la 'i' española — es larga",
     ],
     minimalPairs: [
       { wordA: "seat", wordB: "sit", phonemeA: "/iː/", phonemeB: "/ɪ/" },
@@ -29,6 +51,11 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       "Tongue slightly lower and more central than /iː/",
       "Short and lax — do not tense the muscles",
     ],
+    articulationEs: [
+      "Labios relajados, sin estirar",
+      "Lengua un poco más baja y central que en /iː/",
+      "Corta y floja — no tenses los músculos",
+    ],
     minimalPairs: [
       { wordA: "sit", wordB: "seat", phonemeA: "/ɪ/", phonemeB: "/iː/" },
       { wordA: "bit", wordB: "beat", phonemeA: "/ɪ/", phonemeB: "/iː/" },
@@ -42,6 +69,11 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       "Lips slightly spread, jaw half open",
       "Tongue at mid-front position",
       "Shorter than the Spanish 'e'",
+    ],
+    articulationEs: [
+      "Labios ligeramente estirados, mandíbula entreabierta",
+      "Lengua en posición media-delantera",
+      "Más breve que la 'e' española",
     ],
     minimalPairs: [
       { wordA: "bed", wordB: "bad", phonemeA: "/e/", phonemeB: "/æ/" },
@@ -57,6 +89,11 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       "Tongue low and pushed forward",
       "Lips spread horizontally, almost like a grimace",
     ],
+    articulationEs: [
+      "Boca muy abierta, más que para /e/",
+      "Lengua baja y hacia adelante",
+      "Labios estirados horizontalmente, casi como una mueca",
+    ],
     minimalPairs: [
       { wordA: "cat", wordB: "cut", phonemeA: "/æ/", phonemeB: "/ʌ/" },
       { wordA: "bad", wordB: "bed", phonemeA: "/æ/", phonemeB: "/e/" },
@@ -70,6 +107,11 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       "Mouth fully open, jaw dropped low",
       "Tongue low and pulled back",
       "Lips unrounded and relaxed",
+    ],
+    articulationEs: [
+      "Boca completamente abierta, mandíbula caída",
+      "Lengua baja y hacia atrás",
+      "Labios sin redondear, relajados",
     ],
     minimalPairs: [
       { wordA: "car", wordB: "cup", phonemeA: "/ɑː/", phonemeB: "/ʌ/" },
@@ -85,6 +127,11 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       "Tongue low and back",
       "Short sound — do not hold it",
     ],
+    articulationEs: [
+      "Labios redondeados y boca muy abierta",
+      "Lengua baja y hacia atrás",
+      "Sonido corto — no lo alargues",
+    ],
     minimalPairs: [
       { wordA: "hot", wordB: "hut", phonemeA: "/ɒ/", phonemeB: "/ʌ/" },
       { wordA: "cot", wordB: "cut", phonemeA: "/ɒ/", phonemeB: "/ʌ/" },
@@ -98,6 +145,11 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       "Lips rounded and pushed forward",
       "Tongue low-back, slightly raised",
       "Long sound — hold it clearly",
+    ],
+    articulationEs: [
+      "Labios redondeados y proyectados hacia adelante",
+      "Lengua trasera baja, ligeramente elevada",
+      "Sonido largo — mantenlo con claridad",
     ],
     minimalPairs: [
       { wordA: "law", wordB: "low", phonemeA: "/ɔː/", phonemeB: "/əʊ/" },
@@ -113,6 +165,11 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       "Tongue near-high and back, but relaxed",
       "Short and lax — do not hold it",
     ],
+    articulationEs: [
+      "Labios ligeramente redondeados, sin tensión",
+      "Lengua casi alta y trasera, pero relajada",
+      "Corta y floja — no la alargues",
+    ],
     minimalPairs: [
       { wordA: "book", wordB: "boot", phonemeA: "/ʊ/", phonemeB: "/uː/" },
       { wordA: "pull", wordB: "pool", phonemeA: "/ʊ/", phonemeB: "/uː/" },
@@ -126,6 +183,11 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       "Lips tightly rounded and pushed forward",
       "Tongue high and pushed back",
       "Long sound — sustain it",
+    ],
+    articulationEs: [
+      "Labios bien redondeados y proyectados hacia adelante",
+      "Lengua alta y hacia atrás",
+      "Sonido largo — sostenlo",
     ],
     minimalPairs: [
       { wordA: "moon", wordB: "man", phonemeA: "/uː/", phonemeB: "/æ/" },
@@ -141,6 +203,11 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       "Jaw slightly open, tongue mid-back",
       "Short and unstressed — never round the lips",
     ],
+    articulationEs: [
+      "Labios neutros, sin redondear",
+      "Mandíbula entreabierta, lengua medio-trasera",
+      "Corta y átona — jamás redondees los labios",
+    ],
     minimalPairs: [
       { wordA: "cup", wordB: "cap", phonemeA: "/ʌ/", phonemeB: "/æ/" },
       { wordA: "cut", wordB: "cat", phonemeA: "/ʌ/", phonemeB: "/æ/" },
@@ -154,6 +221,11 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       "Lips neutral, slightly parted",
       "Tongue in central neutral position — not touching anything",
       "Long sound with slight tension in center of mouth",
+    ],
+    articulationEs: [
+      "Labios neutros, ligeramente separados",
+      "Lengua en posición central neutra — sin tocar nada",
+      "Sonido largo con leve tensión en el centro de la boca",
     ],
     minimalPairs: [
       { wordA: "bird", wordB: "bad", phonemeA: "/ɜː/", phonemeB: "/æ/" },
@@ -169,6 +241,11 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       "Tongue in central mid position",
       "Always unstressed — never emphasize it",
     ],
+    articulationEs: [
+      "Completamente relajado — labios, lengua y mandíbula neutros",
+      "Lengua en posición central media",
+      "Siempre átono — nunca lo acentúes",
+    ],
     minimalPairs: [
       { wordA: "about", wordB: "out", phonemeA: "/ə/", phonemeB: "/aʊ/" },
       { wordA: "sofa", wordB: "sofa (stressed)", phonemeA: "/ə/", phonemeB: "/æ/" },
@@ -182,6 +259,11 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       "Both lips pressed firmly together",
       "Build up air pressure behind the lips",
       "Release with a small burst of air (aspiration at start of word)",
+    ],
+    articulationEs: [
+      "Ambos labios firmemente cerrados",
+      "Acumula presión de aire detrás de los labios",
+      "Suelta con un pequeño soplo de aire (aspiración al inicio de palabra)",
     ],
     minimalPairs: [
       { wordA: "pen", wordB: "ben", phonemeA: "/p/", phonemeB: "/b/" },
@@ -197,12 +279,23 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       "Vocal cords vibrate during the sound",
       "Less air released than /p/",
     ],
+    articulationEs: [
+      "Ambos labios firmemente cerrados",
+      "Las cuerdas vocales vibran durante el sonido",
+      "Sale menos aire que en /p/",
+    ],
     minimalPairs: [
       { wordA: "bed", wordB: "red", phonemeA: "/b/", phonemeB: "/r/" },
       { wordA: "bat", wordB: "pat", phonemeA: "/b/", phonemeB: "/p/" },
       { wordA: "back", wordB: "pack", phonemeA: "/b/", phonemeB: "/p/" },
     ],
     spanishTip: "Igual que la 'b' española al inicio de sílaba (no entre vocales). Las cuerdas vocales vibran. Es un sonido natural para hispanohablantes.",
+    finalConsonantPairs: [
+      { wordVoiced: "robe", wordVoiceless: "rope", voicedIpa: "/b/", voicelessIpa: "/p/" },
+      { wordVoiced: "cab", wordVoiceless: "cap", voicedIpa: "/b/", voicelessIpa: "/p/" },
+      { wordVoiced: "rib", wordVoiceless: "rip", voicedIpa: "/b/", voicelessIpa: "/p/" },
+      { wordVoiced: "tab", wordVoiceless: "tap", voicedIpa: "/b/", voicelessIpa: "/p/" },
+    ],
   },
   "/t/": {
     difficulty: "easy",
@@ -210,6 +303,11 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       "Tongue tip touches the alveolar ridge (just behind the upper teeth)",
       "Release sharply with a burst of air",
       "Aspirated at the start of stressed syllables",
+    ],
+    articulationEs: [
+      "La punta de la lengua toca la cresta alveolar (detrás de los dientes superiores)",
+      "Suelta con un golpe de aire",
+      "Aspirada al inicio de sílabas tónicas",
     ],
     minimalPairs: [
       { wordA: "ten", wordB: "den", phonemeA: "/t/", phonemeB: "/d/" },
@@ -225,12 +323,23 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       "Vocal cords vibrate during the release",
       "Less air than /t/",
     ],
+    articulationEs: [
+      "La punta de la lengua toca la cresta alveolar",
+      "Las cuerdas vocales vibran al soltar",
+      "Sale menos aire que en /t/",
+    ],
     minimalPairs: [
       { wordA: "dog", wordB: "log", phonemeA: "/d/", phonemeB: "/l/" },
       { wordA: "den", wordB: "ten", phonemeA: "/d/", phonemeB: "/t/" },
       { wordA: "day", wordB: "say", phonemeA: "/d/", phonemeB: "/s/" },
     ],
     spanishTip: "Similar a la 'd' española al inicio de sílaba (no entre vocales). La lengua toca la cresta alveolar, no los dientes. Sonido natural para hispanohablantes.",
+    finalConsonantPairs: [
+      { wordVoiced: "bad", wordVoiceless: "bat", voicedIpa: "/d/", voicelessIpa: "/t/" },
+      { wordVoiced: "bid", wordVoiceless: "bit", voicedIpa: "/d/", voicelessIpa: "/t/" },
+      { wordVoiced: "road", wordVoiceless: "wrote", voicedIpa: "/d/", voicelessIpa: "/t/" },
+      { wordVoiced: "played", wordVoiceless: "plate", voicedIpa: "/d/", voicelessIpa: "/t/" },
+    ],
   },
   "/k/": {
     difficulty: "easy",
@@ -238,6 +347,11 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       "Back of tongue presses against the velum (soft palate)",
       "Build air pressure, then release",
       "Aspirated at the start of stressed syllables",
+    ],
+    articulationEs: [
+      "La parte trasera de la lengua presiona el velo del paladar",
+      "Acumula presión de aire y suelta",
+      "Aspirada al inicio de sílabas tónicas",
     ],
     minimalPairs: [
       { wordA: "cat", wordB: "bat", phonemeA: "/k/", phonemeB: "/b/" },
@@ -253,12 +367,23 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       "Vocal cords vibrate",
       "Voiced version of /k/",
     ],
+    articulationEs: [
+      "La parte trasera de la lengua presiona el velo del paladar",
+      "Las cuerdas vocales vibran",
+      "Versión sonora de /k/",
+    ],
     minimalPairs: [
       { wordA: "go", wordB: "no", phonemeA: "/g/", phonemeB: "/n/" },
       { wordA: "goat", wordB: "coat", phonemeA: "/g/", phonemeB: "/k/" },
       { wordA: "gold", wordB: "cold", phonemeA: "/g/", phonemeB: "/k/" },
     ],
     spanishTip: "Igual que la 'g' española al inicio de sílaba (como en 'gato', no como en 'agua'). Sonido natural para hispanohablantes.",
+    finalConsonantPairs: [
+      { wordVoiced: "bag", wordVoiceless: "back", voicedIpa: "/g/", voicelessIpa: "/k/" },
+      { wordVoiced: "big", wordVoiceless: "pick", voicedIpa: "/g/", voicelessIpa: "/k/" },
+      { wordVoiced: "log", wordVoiceless: "lock", voicedIpa: "/g/", voicelessIpa: "/k/" },
+      { wordVoiced: "rug", wordVoiceless: "ruck", voicedIpa: "/g/", voicelessIpa: "/k/" },
+    ],
   },
   "/f/": {
     difficulty: "easy",
@@ -266,6 +391,11 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       "Upper front teeth rest on the lower lip",
       "Force air through the small gap",
       "Voiceless — no vocal cord vibration",
+    ],
+    articulationEs: [
+      "Los dientes superiores descansan sobre el labio inferior",
+      "Fuerza el aire a través del pequeño hueco",
+      "Sorda — sin vibración de cuerdas vocales",
     ],
     minimalPairs: [
       { wordA: "fan", wordB: "van", phonemeA: "/f/", phonemeB: "/v/" },
@@ -281,12 +411,23 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       "Vocal cords vibrate while air flows through",
       "Do not let both lips touch — that would be /b/",
     ],
+    articulationEs: [
+      "Los dientes superiores sobre el labio inferior — igual que en /f/",
+      "Las cuerdas vocales vibran mientras sale el aire",
+      "No juntes ambos labios — eso sería /b/",
+    ],
     minimalPairs: [
       { wordA: "van", wordB: "ban", phonemeA: "/v/", phonemeB: "/b/" },
       { wordA: "vat", wordB: "bat", phonemeA: "/v/", phonemeB: "/b/" },
       { wordA: "vine", wordB: "fine", phonemeA: "/v/", phonemeB: "/f/" },
     ],
     spanishTip: "No existe en español estándar. El labio inferior toca los dientes superiores y las cuerdas vocales vibran. No confundas con /b/ — los labios no se tocan entre sí.",
+    finalConsonantPairs: [
+      { wordVoiced: "leave", wordVoiceless: "leaf", voicedIpa: "/v/", voicelessIpa: "/f/" },
+      { wordVoiced: "live", wordVoiceless: "life", voicedIpa: "/v/", voicelessIpa: "/f/" },
+      { wordVoiced: "save", wordVoiceless: "safe", voicedIpa: "/v/", voicelessIpa: "/f/" },
+      { wordVoiced: "halve", wordVoiceless: "half", voicedIpa: "/v/", voicelessIpa: "/f/" },
+    ],
   },
   "/θ/": {
     difficulty: "hard",
@@ -294,6 +435,11 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       "Tongue tip placed between or just behind the front teeth",
       "Force air over the tongue — no vibration",
       "Gentle friction, not a hard sound",
+    ],
+    articulationEs: [
+      "La punta de la lengua entre los dientes o justo detrás",
+      "Fuerza el aire sobre la lengua — sin vibración",
+      "Fricción suave, no un sonido fuerte",
     ],
     minimalPairs: [
       { wordA: "think", wordB: "sink", phonemeA: "/θ/", phonemeB: "/s/" },
@@ -309,6 +455,11 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       "Vocal cords vibrate while air flows over tongue",
       "Voiced version of /θ/ — feel the buzz",
     ],
+    articulationEs: [
+      "La punta de la lengua entre los dientes — igual que en /θ/",
+      "Las cuerdas vocales vibran mientras el aire pasa sobre la lengua",
+      "Versión sonora de /θ/ — siente la vibración",
+    ],
     minimalPairs: [
       { wordA: "this", wordB: "thin", phonemeA: "/ð/", phonemeB: "/θ/" },
       { wordA: "then", wordB: "ten", phonemeA: "/ð/", phonemeB: "/t/" },
@@ -322,6 +473,11 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       "Tongue tip near the alveolar ridge, not touching",
       "Air flows through the narrow channel creating a hiss",
       "Lips slightly spread, teeth close together",
+    ],
+    articulationEs: [
+      "La punta de la lengua cerca de la cresta alveolar, sin tocarla",
+      "El aire pasa por el canal estrecho creando un siseo",
+      "Labios ligeramente estirados, dientes juntos",
     ],
     minimalPairs: [
       { wordA: "see", wordB: "zee", phonemeA: "/s/", phonemeB: "/z/" },
@@ -337,12 +493,23 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       "Vocal cords vibrate creating a buzz",
       "Voiced version of /s/",
     ],
+    articulationEs: [
+      "Misma posición que /s/ — lengua cerca de la cresta alveolar",
+      "Las cuerdas vocales vibran creando un zumbido",
+      "Versión sonora de /s/",
+    ],
     minimalPairs: [
       { wordA: "zoo", wordB: "sue", phonemeA: "/z/", phonemeB: "/s/" },
       { wordA: "zip", wordB: "sip", phonemeA: "/z/", phonemeB: "/s/" },
       { wordA: "zeal", wordB: "seal", phonemeA: "/z/", phonemeB: "/s/" },
     ],
     spanishTip: "No existe en español estándar pero es igual a /s/ con vibración. Aparece mucho en inglés en plurales y verbos: 'dogs', 'runs', 'lives'. Pon la mano en el cuello y siente la vibración.",
+    finalConsonantPairs: [
+      { wordVoiced: "buzz", wordVoiceless: "bus", voicedIpa: "/z/", voicelessIpa: "/s/" },
+      { wordVoiced: "his", wordVoiceless: "hiss", voicedIpa: "/z/", voicelessIpa: "/s/" },
+      { wordVoiced: "rise", wordVoiceless: "rice", voicedIpa: "/z/", voicelessIpa: "/s/" },
+      { wordVoiced: "plays", wordVoiceless: "place", voicedIpa: "/z/", voicelessIpa: "/s/" },
+    ],
   },
   "/ʃ/": {
     difficulty: "medium",
@@ -350,6 +517,11 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       "Tongue further back than /s/, near the palate",
       "Lips slightly rounded and pushed forward",
       "Broader, lower-pitched sound than /s/",
+    ],
+    articulationEs: [
+      "Lengua más atrás que en /s/, cerca del paladar",
+      "Labios ligeramente redondeados y proyectados hacia adelante",
+      "Sonido más ancho y grave que /s/",
     ],
     minimalPairs: [
       { wordA: "she", wordB: "see", phonemeA: "/ʃ/", phonemeB: "/s/" },
@@ -365,6 +537,11 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       "Lips slightly rounded and pushed forward",
       "Vocal cords vibrate — voiced version of /ʃ/",
     ],
+    articulationEs: [
+      "Misma posición que /ʃ/ — lengua atrás de la cresta alveolar",
+      "Labios ligeramente redondeados y proyectados",
+      "Las cuerdas vocales vibran — versión sonora de /ʃ/",
+    ],
     minimalPairs: [
       { wordA: "vision", wordB: "fission", phonemeA: "/ʒ/", phonemeB: "/ʃ/" },
       { wordA: "measure", wordB: "mesher", phonemeA: "/ʒ/", phonemeB: "/ʃ/" },
@@ -378,6 +555,11 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       "Produced at the glottis — the vocal cords are open",
       "Breathe out gently with the mouth slightly open",
       "No contact points in the mouth",
+    ],
+    articulationEs: [
+      "Se produce en la glotis — las cuerdas vocales están abiertas",
+      "Espira suavemente con la boca entreabierta",
+      "Ningún punto de contacto en la boca",
     ],
     minimalPairs: [
       { wordA: "hat", wordB: "at", phonemeA: "/h/", phonemeB: "∅" },
@@ -393,6 +575,11 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       "Release into the /ʃ/ fricative smoothly",
       "Lips slightly rounded and pushed forward",
     ],
+    articulationEs: [
+      "Empieza presionando la lengua en la cresta alveolar, como en /t/",
+      "Suelta hacia la fricativa /ʃ/ con fluidez",
+      "Labios ligeramente redondeados y proyectados hacia adelante",
+    ],
     minimalPairs: [
       { wordA: "church", wordB: "shirt", phonemeA: "/tʃ/", phonemeB: "/ʃ/" },
       { wordA: "cheap", wordB: "sheep", phonemeA: "/tʃ/", phonemeB: "/ʃ/" },
@@ -406,6 +593,11 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       "Start with tongue touching alveolar ridge, like /d/",
       "Release into the /ʒ/ fricative",
       "Vocal cords vibrate throughout",
+    ],
+    articulationEs: [
+      "Empieza con la lengua tocando la cresta alveolar, como en /d/",
+      "Suelta hacia la fricativa /ʒ/",
+      "Las cuerdas vocales vibran todo el tiempo",
     ],
     minimalPairs: [
       { wordA: "judge", wordB: "budge", phonemeA: "/dʒ/", phonemeB: "/b/" },
@@ -421,6 +613,11 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       "Air flows through the nose, not the mouth",
       "Vocal cords vibrate throughout",
     ],
+    articulationEs: [
+      "Ambos labios juntos",
+      "El aire sale por la nariz, no por la boca",
+      "Las cuerdas vocales vibran todo el tiempo",
+    ],
     minimalPairs: [
       { wordA: "man", wordB: "ban", phonemeA: "/m/", phonemeB: "/b/" },
       { wordA: "meet", wordB: "beat", phonemeA: "/m/", phonemeB: "/b/" },
@@ -434,6 +631,11 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       "Tongue tip presses against the alveolar ridge",
       "Air flows through the nose",
       "Vocal cords vibrate",
+    ],
+    articulationEs: [
+      "La punta de la lengua presiona la cresta alveolar",
+      "El aire sale por la nariz",
+      "Las cuerdas vocales vibran",
     ],
     minimalPairs: [
       { wordA: "no", wordB: "go", phonemeA: "/n/", phonemeB: "/g/" },
@@ -449,6 +651,11 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       "Air flows through the nose",
       "Mouth stays open — same back position as /k/ and /g/",
     ],
+    articulationEs: [
+      "La parte trasera de la lengua presiona el velo del paladar",
+      "El aire sale por la nariz",
+      "La boca queda abierta — misma posición trasera que /k/ y /g/",
+    ],
     minimalPairs: [
       { wordA: "sing", wordB: "sin", phonemeA: "/ŋ/", phonemeB: "/n/" },
       { wordA: "ring", wordB: "rin", phonemeA: "/ŋ/", phonemeB: "/n/" },
@@ -462,6 +669,11 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       "Tongue tip presses on the alveolar ridge",
       "Air flows around the sides of the tongue",
       "In 'dark l' (syllable-final), the back of tongue rises toward the velum",
+    ],
+    articulationEs: [
+      "La punta de la lengua presiona la cresta alveolar",
+      "El aire sale por los lados de la lengua",
+      "En la 'l oscura' (final de sílaba) la parte trasera sube hacia el velo",
     ],
     minimalPairs: [
       { wordA: "leg", wordB: "beg", phonemeA: "/l/", phonemeB: "/b/" },
@@ -477,6 +689,11 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       "Sides of tongue may touch upper back teeth",
       "Lips slightly rounded, no trill or tap",
     ],
+    articulationEs: [
+      "La punta se curva hacia atrás o queda detrás de los dientes inferiores — nunca toca el paladar",
+      "Los lados de la lengua pueden tocar los molares superiores",
+      "Labios ligeramente redondeados, sin vibrar ni golpear",
+    ],
     minimalPairs: [
       { wordA: "red", wordB: "led", phonemeA: "/r/", phonemeB: "/l/" },
       { wordA: "rate", wordB: "late", phonemeA: "/r/", phonemeB: "/l/" },
@@ -490,6 +707,11 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       "Tongue body raised toward the hard palate",
       "No contact — glide smoothly into the following vowel",
       "Like the beginning of the /iː/ sound",
+    ],
+    articulationEs: [
+      "El cuerpo de la lengua sube hacia el paladar duro",
+      "Sin contacto — deslízate suavemente hacia la vocal siguiente",
+      "Como el inicio del sonido /iː/",
     ],
     minimalPairs: [
       { wordA: "yes", wordB: "less", phonemeA: "/j/", phonemeB: "/l/" },
@@ -505,6 +727,11 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       "Back of tongue raised toward the velum",
       "Glide quickly into the following vowel",
     ],
+    articulationEs: [
+      "Labios bien redondeados al inicio, luego se relajan",
+      "La parte trasera de la lengua sube hacia el velo",
+      "Deslízate rápidamente hacia la vocal siguiente",
+    ],
     minimalPairs: [
       { wordA: "wet", wordB: "yet", phonemeA: "/w/", phonemeB: "/j/" },
       { wordA: "wine", wordB: "vine", phonemeA: "/w/", phonemeB: "/v/" },
@@ -518,6 +745,11 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       "Start with mouth at mid-front /e/ position",
       "Glide smoothly upward and forward to near /ɪ/",
       "The first element is longer and more prominent",
+    ],
+    articulationEs: [
+      "Empieza con la boca en posición /e/ media-delantera",
+      "Deslízate suavemente hacia arriba y adelante hasta cerca de /ɪ/",
+      "El primer elemento es más largo y prominente",
     ],
     minimalPairs: [
       { wordA: "day", wordB: "die", phonemeA: "/eɪ/", phonemeB: "/aɪ/" },
@@ -533,6 +765,11 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       "Glide up to near-high front /ɪ/",
       "First element is open and long, second is brief",
     ],
+    articulationEs: [
+      "Empieza con la boca muy abierta, como en /æ/ o /ɑː/",
+      "Deslízate hacia arriba hasta /ɪ/ delantera",
+      "El primer elemento es abierto y largo, el segundo breve",
+    ],
     minimalPairs: [
       { wordA: "time", wordB: "team", phonemeA: "/aɪ/", phonemeB: "/iː/" },
       { wordA: "light", wordB: "late", phonemeA: "/aɪ/", phonemeB: "/eɪ/" },
@@ -546,6 +783,11 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       "Start with lips rounded, like /ɔː/",
       "Glide forward and upward to /ɪ/",
       "The rounded first element is key",
+    ],
+    articulationEs: [
+      "Empieza con los labios redondeados, como en /ɔː/",
+      "Deslízate hacia adelante y arriba hasta /ɪ/",
+      "El primer elemento redondeado es la clave",
     ],
     minimalPairs: [
       { wordA: "boy", wordB: "bay", phonemeA: "/ɔɪ/", phonemeB: "/eɪ/" },
@@ -561,6 +803,11 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       "Round and push lips forward to /ʊ/",
       "First element is relaxed, second is rounded",
     ],
+    articulationEs: [
+      "Empieza en posición central neutra /ə/",
+      "Redondea y proyecta los labios hacia /ʊ/",
+      "El primer elemento es relajado, el segundo redondeado",
+    ],
     minimalPairs: [
       { wordA: "go", wordB: "guy", phonemeA: "/əʊ/", phonemeB: "/aɪ/" },
       { wordA: "low", wordB: "law", phonemeA: "/əʊ/", phonemeB: "/ɔː/" },
@@ -574,6 +821,11 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       "Start with mouth wide open, like /æ/ or /ɑː/",
       "Round the lips and glide back to /ʊ/",
       "Strong movement from front open to back rounded",
+    ],
+    articulationEs: [
+      "Empieza con la boca muy abierta, como en /æ/ o /ɑː/",
+      "Redondea los labios y deslízate hacia /ʊ/",
+      "Movimiento fuerte: de delantera abierta a trasera redondeada",
     ],
     minimalPairs: [
       { wordA: "now", wordB: "no", phonemeA: "/aʊ/", phonemeB: "/əʊ/" },
@@ -589,6 +841,11 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       "Glide toward the central schwa /ə/",
       "Centering diphthong — moves toward center",
     ],
+    articulationEs: [
+      "Empieza cerca de /ɪ/ — lengua alta delantera, relajada",
+      "Deslízate hacia el schwa central /ə/",
+      "Diptongo centralizante — se mueve hacia el centro",
+    ],
     minimalPairs: [
       { wordA: "here", wordB: "hair", phonemeA: "/ɪə/", phonemeB: "/eə/" },
       { wordA: "fear", wordB: "fair", phonemeA: "/ɪə/", phonemeB: "/eə/" },
@@ -603,6 +860,11 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       "Glide toward the central schwa /ə/",
       "Centering diphthong — moves toward center of mouth",
     ],
+    articulationEs: [
+      "Empieza en posición /e/ media-delantera",
+      "Deslízate hacia el schwa central /ə/",
+      "Diptongo centralizante — se mueve hacia el centro de la boca",
+    ],
     minimalPairs: [
       { wordA: "there", wordB: "here", phonemeA: "/eə/", phonemeB: "/ɪə/" },
       { wordA: "fair", wordB: "fear", phonemeA: "/eə/", phonemeB: "/ɪə/" },
@@ -616,6 +878,11 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       "Start near /ʊ/ — lips loosely rounded",
       "Glide toward the central schwa /ə/",
       "Becoming rare in modern British English — often replaced by /ɔː/",
+    ],
+    articulationEs: [
+      "Empieza cerca de /ʊ/ — labios ligeramente redondeados",
+      "Deslízate hacia el schwa central /ə/",
+      "Cada vez más raro en inglés británico moderno — suele reemplazarse por /ɔː/",
     ],
     minimalPairs: [
       { wordA: "tour", wordB: "tor", phonemeA: "/ʊə/", phonemeB: "/ɔː/" },

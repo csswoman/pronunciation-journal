@@ -1,11 +1,10 @@
 'use client'
 
 import { useState, useCallback } from "react";
-import Link from "next/link";
-import { ArrowRight, AlertTriangle, LibraryBig, Volume2, Waves } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import Button from "@/components/ui/Button";
-import Anchor from "@/components/ui/Anchor";
 import PracticeSession from "@/components/practice/PracticeSession";
+
 import { getWordStrength } from "@/lib/word-bank/strength";
 import { WordStrengthBars } from "@/components/vocabulary/words/WordStrengthBars";
 import { buildReviewPlan } from "@/lib/practice/daily-plan";
@@ -46,8 +45,10 @@ export default function HomeReviewQueueCard({
 
   const wordPreview = words.slice(0, WORDS_PREVIEW_LIMIT);
   const soundPreview = soundsDue.slice(0, SOUNDS_PREVIEW_LIMIT);
-  const atRisk = wordPreview.filter((w) => getWordStrength(w) === "weak");
-  const totalDue = dueCount + soundPreview.length;
+  const atRiskCount = wordPreview.filter((w) => getWordStrength(w) === "weak").length;
+  const totalDue = dueCount + soundsDue.length;
+  const hasPreview = wordPreview.length > 0 || soundPreview.length > 0;
+  const hasDue = dueCount > 0 || soundsDue.length > 0;
 
   const handleStartReview = useCallback(async () => {
     if (!user) return;
@@ -78,7 +79,6 @@ export default function HomeReviewQueueCard({
     setReviewState({ phase: "idle" });
   }, []);
 
-  // ── Overlay: sesión activa ──────────────────────────────────────────────────
   if (reviewState.phase === "session") {
     const step = reviewState.steps[reviewState.stepIndex];
     return (
@@ -96,146 +96,92 @@ export default function HomeReviewQueueCard({
     );
   }
 
-  // ── Card normal ─────────────────────────────────────────────────────────────
   return (
     <div className="flex flex-col rounded-[var(--radius-xl)] border border-border-subtle bg-surface-raised p-6">
-      <div className="flex items-center justify-between gap-3">
-        <div className="flex min-w-0 items-center gap-2">
-          <LibraryBig size={18} className="shrink-0 text-[var(--primary)]" />
-          <h3
-            className="text-xl font-semibold tracking-tight text-[var(--text-primary)]"
-            style={{ fontFamily: "var(--font-display), serif" }}
-          >
-            <span className="text-[var(--primary)]">{totalDue}</span> items ready to review
-          </h3>
-        </div>
-        <Anchor
-          href="/daily"
-          icon={<ArrowRight size={14} />}
-          iconPosition="right"
-          className="shrink-0 text-caption"
-        >
-          Ver diaria
-        </Anchor>
-      </div>
-
-      <p className="text-xs text-[var(--text-tertiary)]">
-        Due today · {dueCount} word{dueCount !== 1 ? "s" : ""}
-        {soundPreview.length > 0
-          ? ` · ${soundPreview.length} sound${soundPreview.length !== 1 ? "s" : ""}`
-          : ""}
-      </p>
-
-      {atRisk.length > 0 ? (
-        <div
-          className="mt-3 flex items-start gap-2.5 rounded-[var(--radius-md)] border px-3.5 py-2.5 text-[14px]"
-          style={{
-            background: "var(--warning-soft)",
-            borderColor: "color-mix(in oklch, var(--warning) 30%, transparent)",
-          }}
-        >
-          <AlertTriangle size={16} className="mt-0.5 shrink-0 text-[var(--warning)]" />
-          <span>
-            <b className="font-semibold text-[var(--warning-value)]">
-              {atRisk.length} word{atRisk.length !== 1 ? "s" : ""}
-            </b>{" "}
-            are at risk of being forgotten. Review them today.
+      <div className="flex items-baseline justify-between gap-3">
+        <div className="flex items-baseline gap-2">
+          <span className="type-stat text-2xl">{totalDue}</span>
+          <span className="font-body-sm text-[var(--text-secondary)]">
+            {totalDue === 1 ? "item" : "items"} due
           </span>
         </div>
-      ) : null}
+        {atRiskCount > 0 ? (
+          <span className="font-caption flex items-center gap-1.5 text-[var(--warning)]">
+            <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--warning)]" aria-hidden />
+            {atRiskCount} weakening
+          </span>
+        ) : null}
+      </div>
 
-      {/* Words */}
-      {wordPreview.length > 0 ? (
-        <div className="mt-3">
-          <p className="mb-1 flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-wider text-[var(--text-tertiary)]">
-            <Volume2 size={11} />
-            Words
-          </p>
-          <div className="flex flex-col">
-            {wordPreview.map((w, idx) => {
-              const ipa = formatIpa(w.ipa);
-              return (
-                <div
-                  key={w.id}
-                  className={[
-                    "flex items-center gap-3 py-2.5",
-                    idx < wordPreview.length - 1 ? "border-b border-border-subtle" : "",
-                  ].join(" ")}
-                >
-                  <div className="min-w-0 flex-1">
-                    <p className="text-sm font-medium leading-tight text-[var(--text-primary)]">
-                      <span style={{ fontFamily: "var(--font-display), serif" }}>{w.text}</span>
-                      {ipa ? (
-                        <small className="ml-2 font-ipa text-[13px] font-normal text-[var(--primary)]">
-                          {ipa}
-                        </small>
-                      ) : null}
-                    </p>
-                    {w.translation ? (
-                      <p className="mt-0.5 truncate text-xs text-[var(--text-tertiary)]">
-                        {w.translation}
-                      </p>
-                    ) : null}
-                  </div>
-                  <WordStrengthBars strength={getWordStrength(w)} size={14} />
-                </div>
-              );
-            })}
-          </div>
+      {hasDue ? (
+        <div className="mt-1 flex gap-3">
+          {dueCount > 0 ? (
+            <span className="font-caption text-[var(--text-tertiary)]">
+              {dueCount} {dueCount === 1 ? "word" : "words"}
+            </span>
+          ) : null}
+          {soundsDue.length > 0 ? (
+            <span className="font-caption text-[var(--text-tertiary)]">
+              {soundsDue.length} {soundsDue.length === 1 ? "sound" : "sounds"}
+            </span>
+          ) : null}
         </div>
-      ) : dueCount === 0 && soundPreview.length === 0 ? (
-        <div className="my-3">
-          <p className="py-2 text-sm text-[var(--text-tertiary)]">
-            No items due yet — check back later.
-          </p>
-        </div>
-      ) : null}
+      ) : (
+        <p className="font-body-sm mt-1 text-[var(--text-tertiary)]">
+          Nothing due yet — check back later.
+        </p>
+      )}
 
-      {/* Sounds */}
-      {soundPreview.length > 0 ? (
-        <div className="mt-3">
-          <p className="mb-1 flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-wider text-[var(--text-tertiary)]">
-            <Waves size={11} />
-            Sounds
-          </p>
-          <div className="flex flex-col">
-            {soundPreview.map((s, idx) => (
-              <div
-                key={s.soundId}
-                className={[
-                  "flex items-center gap-3 py-2.5",
-                  idx < soundPreview.length - 1 ? "border-b border-border-subtle" : "",
-                ].join(" ")}
-              >
+      {hasPreview ? (
+        <div className="mt-4 flex flex-col gap-3">
+          {wordPreview.map((w) => {
+            const ipa = formatIpa(w.ipa);
+            return (
+              <div key={w.id} className="flex items-start gap-3">
                 <div className="min-w-0 flex-1">
-                  <p className="text-sm font-medium leading-tight text-[var(--text-primary)]">
-                    <span className="font-ipa text-[var(--primary)]">{formatIpa(s.ipa)}</span>
-                    {s.example ? (
-                      <small className="ml-2 font-normal text-[var(--text-secondary)]">
-                        {s.example}
-                      </small>
+                  <p className="font-display text-lg font-medium leading-tight text-[var(--text-primary)]">
+                    {w.text}
+                    {ipa ? (
+                      <span className="font-ipa ml-2 text-base font-normal text-[var(--primary)]">
+                        {ipa}
+                      </span>
                     ) : null}
                   </p>
-                  <p className="mt-0.5 text-xs text-[var(--text-tertiary)]">
-                    {s.accuracy}% accuracy
-                    {s.daysOverdue > 0 ? ` · ${s.daysOverdue}d overdue` : " · due today"}
-                  </p>
+                  {w.translation ? (
+                    <p className="font-body-sm mt-0.5 text-[var(--text-tertiary)]">{w.translation}</p>
+                  ) : null}
                 </div>
+                <WordStrengthBars strength={getWordStrength(w)} size={14} />
               </div>
-            ))}
-          </div>
+            );
+          })}
+          {soundPreview.map((s) => (
+            <div key={s.soundId} className="min-w-0">
+              <p className="font-display text-base font-medium leading-tight text-[var(--text-primary)]">
+                <span className="font-ipa text-[var(--primary)]">{formatIpa(s.ipa)}</span>
+                {s.example ? (
+                  <span className="font-body-sm ml-2 font-normal text-[var(--text-secondary)]">
+                    {s.example}
+                  </span>
+                ) : null}
+              </p>
+              <p className="font-caption mt-0.5 text-[var(--text-tertiary)]">
+                {s.accuracy}% · {s.daysOverdue > 0 ? `${s.daysOverdue}d overdue` : "due today"}
+              </p>
+            </div>
+          ))}
         </div>
       ) : null}
 
       {dueCount > WORDS_PREVIEW_LIMIT ? (
-        <p className="mb-2 mt-1 text-center text-xs text-[var(--text-tertiary)]">
-          +{dueCount - WORDS_PREVIEW_LIMIT} more words in vocabulary
+        <p className="font-caption mt-3 text-[var(--text-tertiary)]">
+          +{dueCount - WORDS_PREVIEW_LIMIT} more in vocabulary
         </p>
       ) : null}
 
       {reviewState.phase === "done" ? (
-        <div className="mt-3 rounded-[var(--radius-md)] bg-[var(--success-soft)] px-4 py-3 text-center text-sm text-[var(--text-secondary)]">
-          ¡Repaso completado! Vuelve mañana.
+        <div className="animate-state-in mt-4 rounded-[var(--radius-md)] bg-[var(--success-soft)] px-4 py-2.5 text-center font-body-sm text-[var(--text-secondary)]">
+          Review complete! Come back tomorrow.
         </div>
       ) : (
         <Button
@@ -245,18 +191,21 @@ export default function HomeReviewQueueCard({
           fullWidth
           icon={reviewState.phase === "loading" ? undefined : <ArrowRight size={15} />}
           iconPosition="right"
-          className="mt-3 justify-center"
+          className="mt-4 justify-center"
           disabled={totalDue === 0 || reviewState.phase === "loading"}
           onClick={handleStartReview}
         >
-          {reviewState.phase === "loading" ? "Preparando…" : "Start review"}
+          {reviewState.phase === "loading" ? "Preparing…" : "Start review"}
         </Button>
       )}
 
       {reviewState.phase === "error" ? (
-        <p className="mt-2 text-center text-xs text-[var(--error)]">
-          No se pudo cargar el repaso. Inténtalo de nuevo.
-        </p>
+        <div className="animate-state-in mt-2 flex flex-col items-center gap-2">
+          <p className="font-caption text-center text-[var(--error)]">Couldn&apos;t load the review.</p>
+          <Button type="button" variant="secondary" size="sm" onClick={handleStartReview}>
+            Retry
+          </Button>
+        </div>
       ) : null}
     </div>
   );

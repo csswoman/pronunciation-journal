@@ -2,15 +2,16 @@
 
 import { useEffect, useState } from 'react'
 import { getSupabaseBrowserClient } from '@/lib/supabase/client'
-import type { UserSoundProgressWithSound } from '@/lib/phoneme-practice/types'
+import type { UserContrastProgress } from '@/lib/phoneme-practice/types'
 
 interface UseSoundProgressResult {
-  progressList: UserSoundProgressWithSound[]
+  /** All contrast progress rows for the user. */
+  progressList: UserContrastProgress[]
   loading: boolean
 }
 
 export function useSoundProgress(userId: string | undefined): UseSoundProgressResult {
-  const [progressList, setProgressList] = useState<UserSoundProgressWithSound[]>([])
+  const [progressList, setProgressList] = useState<UserContrastProgress[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -21,12 +22,12 @@ export function useSoundProgress(userId: string | undefined): UseSoundProgressRe
 
     const supabase = getSupabaseBrowserClient()
     supabase
-      .from('user_sound_progress')
-      .select('*, sounds(*)')
+      .from('user_contrast_progress')
+      .select('*')
       .eq('user_id', userId)
-      .order('sound_id', { ascending: true })
+      .order('contrast_id', { ascending: true })
       .then(({ data }) => {
-        setProgressList((data ?? []) as UserSoundProgressWithSound[])
+        setProgressList((data ?? []) as UserContrastProgress[])
         setLoading(false)
       })
   }, [userId])

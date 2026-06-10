@@ -110,7 +110,7 @@ export function WordCard({
               const text = [word, definition, example ? `For example: ${example}` : ""]
                 .filter(Boolean)
                 .join(". ");
-              speak(text, 0.9);
+              speak(text, { rate: 0.9 });
             }}
             aria-label={`Listen to ${word}`}
           >

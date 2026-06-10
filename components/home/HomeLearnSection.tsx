@@ -1,7 +1,6 @@
 import HomeSectionHeader from "@/components/home/HomeSectionHeader";
 import HomeDiscoveryCard from "@/components/home/HomeDiscoveryCard";
 import HomeMiniLessonCard from "@/components/home/HomeMiniLessonCard";
-import HomeWordOfDayCard from "@/components/home/HomeWordOfDayCard";
 import type { MiniLesson, LanguageConcept } from "@/lib/content/schemas";
 
 interface HomeLearnSectionProps {
@@ -18,7 +17,7 @@ export default function HomeLearnSection({ lesson, concept }: HomeLearnSectionPr
         subtitle="short lessons and vocabulary to explore"
       />
 
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         {lesson ? (
           <HomeMiniLessonCard lesson={lesson} />
         ) : (
@@ -48,8 +47,6 @@ export default function HomeLearnSection({ lesson, concept }: HomeLearnSectionPr
             footer="Open deck →"
           />
         )}
-
-        <HomeWordOfDayCard />
       </div>
     </section>
   );

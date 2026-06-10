@@ -1,13 +1,12 @@
 import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import type { ReactNode } from "react";
-import Badge from "@/components/ui/Badge";
 
 interface HomeQuickActionCardProps {
   href: string;
   icon: ReactNode;
   title: string;
   description: string;
-  badge?: string;
 }
 
 export default function HomeQuickActionCard({
@@ -15,21 +14,20 @@ export default function HomeQuickActionCard({
   icon,
   title,
   description,
-  badge,
 }: HomeQuickActionCardProps) {
   return (
     <Link
       href={href}
-      className="group flex flex-1 flex-col rounded-[var(--radius-xl)] border border-border-subtle bg-surface-raised p-5 transition-[transform,border-color] duration-150 hover:-translate-y-0.5 hover:border-[var(--accent-border)]"
+      className="focus-ring group flex items-center gap-3 rounded-[var(--radius-lg)] border border-border-subtle bg-surface-raised px-4 py-3 transition-colors hover:border-[var(--accent-border)] hover:bg-surface-sunken"
     >
-      <div className="mb-3 grid h-9 w-9 place-items-center rounded-md bg-[var(--hue-icon-bg)] text-[var(--primary)]">
+      <span className="grid h-7 w-7 shrink-0 place-items-center rounded text-[var(--primary)]">
         {icon}
+      </span>
+      <div className="min-w-0 flex-1">
+        <p className="text-sm font-medium text-[var(--text-primary)]">{title}</p>
+        <p className="font-caption leading-snug text-[var(--text-tertiary)]">{description}</p>
       </div>
-      <div className="flex items-center gap-2">
-        <p className="text-[15px] font-semibold text-[var(--text-primary)]">{title}</p>
-        {badge ? <Badge label={badge} variant="default" size="sm" /> : null}
-      </div>
-      <p className="mt-1 text-[13px] leading-snug text-[var(--text-tertiary)]">{description}</p>
+      <ArrowRight size={14} className="shrink-0 text-[var(--text-tertiary)] transition-transform duration-150 group-hover:translate-x-0.5" />
     </Link>
   );
 }

@@ -1,39 +1,60 @@
-import { Zap } from "lucide-react";
+// Planned structure:
+// <HomeTodaySection>
+//   <HomeSectionHeader />
+//   main column: <HomeDailyCard />
+//   sidebar: <HomeWordOfDayCard /> + <HomeAiPracticeCard /> + <HomeStreakCard /> + optional <HomeGoalRing />
+// </HomeTodaySection>
+
 import HomeSectionHeader from "@/components/home/HomeSectionHeader";
 import HomeDailyCard from "@/components/home/HomeDailyCard";
-import HomeQuickActionCard from "@/components/home/HomeQuickActionCard";
+import HomeWordOfDayCard from "@/components/home/HomeWordOfDayCard";
 import HomeAiPracticeCard from "@/components/home/HomeAiPracticeCard";
+import HomeStreakCard from "@/components/home/HomeStreakCard";
+import HomeGoalRing from "@/components/home/HomeGoalRing";
 import type { DailyStreakResult } from "@/lib/daily/streak";
-import type { DailyPlanPreview } from "@/lib/home/constants";
 import type { ConceptLesson } from "@/hooks/useDailyPlan";
+import type { DailyGoalProgress } from "@/lib/home/constants";
+
 interface HomeTodaySectionProps {
   streak?: DailyStreakResult;
-  dailyPlan?: DailyPlanPreview | null;
   conceptLesson?: ConceptLesson | null;
+  dailyGoal?: DailyGoalProgress | null;
 }
 
 export default function HomeTodaySection({
   streak,
-  dailyPlan,
   conceptLesson = null,
+  dailyGoal = null,
 }: HomeTodaySectionProps) {
   return (
-    <section className="mt-10">
+    <section className="mt-8">
       <HomeSectionHeader
         number="01"
         title="What to do today"
         subtitle="one session, the right next step"
+        size="lg"
       />
       <div className="grid grid-cols-1 gap-4 md:grid-cols-[1.7fr_1fr]">
-        <HomeDailyCard streak={streak} preview={dailyPlan} conceptLesson={conceptLesson} />
+        <HomeDailyCard conceptLesson={conceptLesson} />
         <div className="flex flex-col gap-4">
-          <HomeQuickActionCard
-            href="/practice/sounds"
-            icon={<Zap size={18} />}
-            title="Quick practice"
-            description="5 minutes on demand — no daily goal required."
-          />
+          <HomeWordOfDayCard />
           <HomeAiPracticeCard />
+          {dailyGoal != null && (
+            <div className="flex items-center gap-4 rounded-[var(--radius-xl)] border border-border-subtle bg-surface-raised p-5">
+              <HomeGoalRing percent={dailyGoal.percent} size={88} />
+              <div className="flex flex-col gap-0.5">
+                <p className="font-label font-semibold text-[var(--text-primary)]">
+                  {dailyGoal.minutesDone} / {dailyGoal.goalMinutes} min
+                </p>
+                <p className="font-caption text-[var(--text-secondary)]">
+                  {dailyGoal.percent >= 100
+                    ? "Goal reached today!"
+                    : `${dailyGoal.goalMinutes - dailyGoal.minutesDone} min to go`}
+                </p>
+              </div>
+            </div>
+          )}
+          <HomeStreakCard streak={streak} />
         </div>
       </div>
     </section>

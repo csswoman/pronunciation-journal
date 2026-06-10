@@ -52,21 +52,19 @@ export default function SpanishSpeakersGrid({
             PHONEME_MATRIX[phoneme.symbol]?.keyword ?? phoneme.examples[0];
           const label = `${phoneme.symbol}, ejemplo ${keyword}`;
           return (
-            <div
+            <button
               key={phoneme.symbol}
-              role="button"
-              tabIndex={0}
+              type="button"
               aria-label={label}
               className="ipa-chart__hard"
               onClick={() => onSelect(phoneme)}
-              onKeyDown={(e) => activateCard(e, () => onSelect(phoneme))}
             >
               <div className="ipa-chart__hard-head">
                 <span className="ipa-chart__hard-sym">{phoneme.symbol}</span>
                 <span className="ipa-chart__hard-word">{keyword}</span>
               </div>
               <p className="ipa-chart__hard-note">{shortTip(phoneme.symbol)}</p>
-            </div>
+            </button>
           );
         })}
       </div>

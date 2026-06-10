@@ -164,7 +164,7 @@ export default function ProfileAvatarCard({
         <div className="relative flex-shrink-0">
           <button
             onClick={() => fileInputRef.current?.click()}
-            className="relative w-16 h-16 rounded-full overflow-hidden transition-all focus:outline-none group bg-surface-sunken"
+            className="relative w-16 h-16 rounded-full overflow-hidden transition-all focus-visible:ring-2 focus-visible:ring-[var(--primary)] focus-visible:ring-offset-2 group bg-surface-sunken"
             title="Change photo"
             type="button"
           >

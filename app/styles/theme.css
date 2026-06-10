@@ -151,12 +151,24 @@
   --text-body-sm: 0.875rem;
   --text-body-sm--line-height: 1.5;
 
+  --text-label: 0.8125rem;
+  --text-label--line-height: 1.4;
+
   --text-caption: 0.75rem;
   --text-caption--line-height: 1.5;
+
+  --text-xxs: 0.625rem;
+  --text-xxs--line-height: 1.4;
 
   --text-tiny: 0.6875rem;
   --text-tiny--line-height: 1.4;
   --text-tiny--font-weight: 500;
+
+  --text-display-word: 1.625rem;
+  --text-display-word--line-height: 1;
+
+  --text-display-ipa: 2.5rem;
+  --text-display-ipa--line-height: 1;
 
   /* ── Shadows — shadow-sm…shadow-xl ─────────────────────────────────────── */
   --shadow-sm: 0 1px 2px   oklch(0 0 0 / 0.05);

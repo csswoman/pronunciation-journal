@@ -9,7 +9,7 @@ import { buildMixedSession, type MixedExercise } from '@/lib/phoneme-practice/mi
 import { fromGenericExercise, fromMixedExercise } from './adapters'
 import type { DailyPlan, DailyStep, PracticeExercise } from './types'
 import type { WordBankEntry } from '@/lib/word-bank/types'
-import type { Sound, SoundWord, MinimalPair, UserSoundProgressWithSound } from '@/lib/phoneme-practice/types'
+import type { Sound, SoundWord, MinimalPair } from '@/lib/phoneme-practice/types'
 
 // ── Composition constants (tweak without refactoring) ────────────────────────
 
@@ -104,28 +104,40 @@ async function fetchNewWords(userId: string, limit: number): Promise<WordBankEnt
   return (data ?? []) as WordBankEntry[]
 }
 
-async function fetchWeakestSoundProgress(userId: string): Promise<UserSoundProgressWithSound | null> {
+/** Returns the Sound with the weakest contrast accuracy, or null if no progress. */
+async function fetchWeakestSoundProgress(userId: string): Promise<Sound | null> {
   const supabase = getSupabaseBrowserClient()
 
   const { data, error } = await supabase
-    .from('user_sound_progress')
-    .select('*, sounds(*)')
+    .from('user_contrast_progress')
+    .select('contrast_id, total_attempts, correct_answers')
     .eq('user_id', userId)
-    .neq('status', 'locked')
-    .neq('status', 'mastered')
     .gt('total_attempts', 0)
 
-  if (error) throw error
+  // Table may not exist yet (PGRST205) — treat as no progress rather than crashing
+  if (error) return null
   if (!data || data.length === 0) return null
 
-  const ranked = (data as UserSoundProgressWithSound[]).sort((a, b) => {
-    const accA = a.correct_answers / a.total_attempts
-    const accB = b.correct_answers / b.total_attempts
-    if (accA !== accB) return accA - accB
-    return a.total_attempts - b.total_attempts
-  })
+  // Find IPA with lowest accuracy across its contrast rows
+  const byIpa = new Map<string, { correct: number; total: number }>()
+  for (const r of data) {
+    const [ipaA] = r.contrast_id.split('|')
+    const prev = byIpa.get(ipaA) ?? { correct: 0, total: 0 }
+    byIpa.set(ipaA, { correct: prev.correct + r.correct_answers, total: prev.total + r.total_attempts })
+  }
 
-  return ranked[0]
+  const weakestIpa = [...byIpa.entries()]
+    .sort((a, b) => (a[1].correct / a[1].total) - (b[1].correct / b[1].total))[0]?.[0]
+
+  if (!weakestIpa) return null
+
+  const { data: soundRows } = await supabase
+    .from('sounds')
+    .select('*')
+    .eq('ipa', weakestIpa)
+    .limit(1)
+
+  return (soundRows?.[0] as Sound | undefined) ?? null
 }
 
 // ── Step builders ─────────────────────────────────────────────────────────────
@@ -181,8 +193,8 @@ function buildPhonemeFocusStep(
   return {
     kind: 'phoneme_focus',
     id: `phoneme_focus:${sound.id}`,
-    title: `Sonido ${sound.ipa}`,
-    subtitle: isWeak ? 'Tu sonido a reforzar hoy' : `Practica el sonido como en “${sound.example}”`,
+    title: `Sound ${sound.ipa}`,
+    subtitle: isWeak ? 'Your sound to strengthen today' : `Practice the sound as in “${sound.example}”`,
     icon: 'Waves',
     exercises,
     estMinutes: Math.max(2, Math.round(exercises.length * 1.1)),
@@ -206,8 +218,8 @@ function buildMinimalPairsStep(sound: Sound, pairs: MinimalPair[]): DailyStep | 
   return {
     kind: 'minimal_pairs',
     id: `minimal_pairs:${sound.id}`,
-    title: 'Pares mínimos',
-    subtitle: `Distingue ${sound.ipa} de sonidos parecidos`,
+    title: 'Minimal pairs',
+    subtitle: `Tell ${sound.ipa} apart from similar sounds`,
     icon: 'GitCompareArrows',
     exercises: deduped,
     estMinutes: Math.max(2, Math.round(deduped.length * 1.1)),
@@ -231,8 +243,8 @@ function buildListeningStep(sound: Sound, words: SoundWord[]): DailyStep | null 
   return {
     kind: 'listening',
     id: `listening:${sound.id}`,
-    title: 'Escucha y escribe',
-    subtitle: 'Dictado de palabras nuevas',
+    title: 'Listen and write',
+    subtitle: 'Dictation with new words',
     icon: 'Headphones',
     exercises: deduped,
     estMinutes: Math.max(2, Math.round(deduped.length * 1.1)),
@@ -290,23 +302,41 @@ async function fetchDueReviewWords(userId: string): Promise<WordBankEntry[]> {
   return (data ?? []) as WordBankEntry[]
 }
 
-/** Fonemas con next_review vencido (excluye locked/mastered). */
-async function fetchDueSounds(userId: string): Promise<UserSoundProgressWithSound[]> {
+/** Sounds derived from due contrasts (next_review <= now). */
+async function fetchDueSounds(userId: string): Promise<Sound[]> {
   const supabase = getSupabaseBrowserClient()
   const today = new Date().toISOString()
 
   const { data, error } = await supabase
-    .from('user_sound_progress')
-    .select('*, sounds(*)')
+    .from('user_contrast_progress')
+    .select('contrast_id, next_review')
     .eq('user_id', userId)
-    .neq('status', 'locked')
-    .neq('status', 'mastered')
-    .lte('next_review', today)
+    .or(`next_review.lte.${today},next_review.is.null`)
     .order('next_review', { ascending: true })
-    .limit(2)
+    .limit(4) // fetch a few extra since we dedupe by IPA
 
-  if (error) throw error
-  return (data ?? []) as unknown as UserSoundProgressWithSound[]
+  if (error) return []
+
+  // Collect unique IPAs from due contrasts, take up to 2 sounds
+  const seen = new Set<string>()
+  const ipas: string[] = []
+  for (const r of data ?? []) {
+    const [ipaA, ipaB] = r.contrast_id.split('|')
+    for (const ipa of [ipaA, ipaB]) {
+      if (!seen.has(ipa)) { seen.add(ipa); ipas.push(ipa) }
+      if (ipas.length >= 2) break
+    }
+    if (ipas.length >= 2) break
+  }
+
+  if (ipas.length === 0) return []
+
+  const { data: soundRows } = await supabase
+    .from('sounds')
+    .select('*')
+    .in('ipa', ipas)
+
+  return (soundRows ?? []) as Sound[]
 }
 
 export type ReviewPlan = {
@@ -338,8 +368,7 @@ export async function buildReviewPlan(userId: string): Promise<ReviewPlan> {
   const wordStep = buildWordReviewStep(reviewWords)
   if (wordStep) steps.push(wordStep)
 
-  for (const progress of dueSounds) {
-    const sound = progress.sounds as Sound
+  for (const sound of dueSounds) {
     const targetWords = allWordsBySoundId.get(sound.id) ?? []
     const pairs = await getMinimalPairs(sound.id)
 
@@ -397,7 +426,7 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
   // ── 2. Sonido protagonista: débil si hay progreso, si no del seed ─────────
   const weakest = await fetchWeakestSoundProgress(userId)
   const hasProgress = weakest != null
-  const primarySound = weakest?.sounds ?? pickSeedSound(allSounds, 0)
+  const primarySound = weakest ?? pickSeedSound(allSounds, 0)
 
   const steps: DailyStep[] = []
 

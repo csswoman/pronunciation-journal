@@ -13,6 +13,11 @@ function useCountUp(target: number, duration = 600) {
   const started = useRef(false);
 
   useEffect(() => {
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduced) {
+      setValue(target);
+      return;
+    }
     if (started.current || target === 0) {
       if (target === 0) setValue(0);
       return;
@@ -42,19 +47,19 @@ function StatCell({
 }) {
   const displayed = useCountUp(value);
   return (
-    <div className={`sound-lab__stat${accent ? " sound-lab__stat--accent" : ""}`}>
-      <b>{displayed}</b>
-      <span>{label}</span>
+    <div className="flex flex-col items-end gap-0.5">
+      <b className={`sound-lab__stat-num${accent ? " sound-lab__stat-num--accent" : ""}`}>{displayed}</b>
+      <span className="text-[11px] uppercase tracking-[0.1em] text-[color:var(--text-tertiary)]">{label}</span>
     </div>
   );
 }
 
 export function SoundLabStatsStrip({ totalCount, completedCount, inProgressCount }: Props) {
   return (
-    <div className="sound-lab__stats">
-      <StatCell value={totalCount} label="Sonidos" />
-      <StatCell value={completedCount} label="Completados" />
-      <StatCell value={inProgressCount} label="En curso" accent />
+    <div className="flex items-end gap-6 pb-0.5">
+      <StatCell value={totalCount} label="Sounds" />
+      <StatCell value={completedCount} label="Completed" />
+      <StatCell value={inProgressCount} label="In progress" accent />
     </div>
   );
 }

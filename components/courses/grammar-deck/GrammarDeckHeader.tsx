@@ -40,7 +40,7 @@ export default function GrammarDeckHeader({
       )}
       <div className="grammar-deck__meta">
         <div className="grammar-deck__prog" role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100}>
-          <span className="grammar-deck__prog-fill" style={{ width: `${pct}%` }} />
+          <span className="grammar-deck__prog-fill" style={{ transform: `scaleX(${pct / 100})` }} />
         </div>
         <span className="grammar-deck__count">
           <b>{reviewedCount}</b> / {totalCount} repasadas

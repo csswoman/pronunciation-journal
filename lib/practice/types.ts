@@ -17,8 +17,14 @@ export type ExerciseSlug =
   | 'match_pairs'        // id: 7
   | 'reorder_words'      // id: 8
   | 'speak_word'         // id: 10
+  | 'identify'           // id: 11
+  | 'ax_same_different'  // id: 12
+  | 'odd_one_out'        // id: 13
+  | 'abx'               // id: 14
+  | 'sentence_context'   // no DB row — does not write to answer_history
 
-export const EXERCISE_TYPE_IDS: Record<ExerciseSlug, number> = {
+// null signals "no exercise_types FK" — this exercise does not write to answer_history.
+export const EXERCISE_TYPE_IDS: Record<ExerciseSlug, number | null> = {
   pick_word: 1,
   pick_sound: 2,
   minimal_pair: 3,
@@ -28,6 +34,11 @@ export const EXERCISE_TYPE_IDS: Record<ExerciseSlug, number> = {
   match_pairs: 7,
   reorder_words: 8,
   speak_word: 10,
+  identify: 11,
+  ax_same_different: 12,
+  odd_one_out: 13,
+  abx: 14,
+  sentence_context: null,
 }
 
 export type PracticeContext = 'sound_lab' | 'courses' | 'ai_coach' | 'practice' | 'daily'
@@ -49,8 +60,8 @@ export type PracticeExercise = {
   /** Deterministic id used to dedupe within a session. */
   id: string
   slug: ExerciseSlug
-  /** FK to `exercise_types.id`. */
-  exerciseTypeId: number
+  /** FK to `exercise_types.id`. Null for exercises that do not write to answer_history. */
+  exerciseTypeId: number | null
   /** What was practiced (word slug, lesson id, soundId stringified, etc.). */
   contentId: string
   context: PracticeContext
@@ -65,7 +76,8 @@ export type PracticeExercise = {
 export type PracticeAnswer = {
   exerciseId: string
   slug: ExerciseSlug
-  exerciseTypeId: number
+  /** Null for exercises that do not write to answer_history. */
+  exerciseTypeId: number | null
   isCorrect: boolean
   userAnswer?: string
   timeMs: number

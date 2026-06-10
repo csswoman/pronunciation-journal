@@ -116,11 +116,12 @@ function chainResolving(rows: unknown[]) {
   chain.eq = noop
   chain.neq = noop
   chain.gt = noop
+  chain.is = noop
+  chain.ilike = noop
   chain.or = noop
   chain.order = noop
-  chain.limit = () => Promise.resolve(terminal)
-  // Some paths don't call .limit() — also expose promise directly
-  Object.assign(chain, Promise.resolve(terminal))
+  chain.limit = () => chain
+  // Make the chain awaitable at any point — `await q` works after .limit() or .ilike()
   chain.then = (onfulfilled: (v: unknown) => unknown) =>
     Promise.resolve(terminal).then(onfulfilled)
   return chain

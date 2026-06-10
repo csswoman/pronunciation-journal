@@ -45,6 +45,7 @@ export default function GrammarStudyDeck({
   // Sentence practice state
   const [practiceExercises, setPracticeExercises] = useState<PracticeExercise[] | null>(null);
   const [practiceLoading, setPracticeLoading] = useState(false);
+  const [practiceError, setPracticeError] = useState(false);
 
   const hasQuiz = (deck.quiz?.length ?? 0) > 0;
   const finished = phase === "done";
@@ -94,8 +95,8 @@ export default function GrammarStudyDeck({
   const handleStartSentencePractice = useCallback(async () => {
     if (!deck.meta || practiceLoading) return;
     setPracticeLoading(true);
+    setPracticeError(false);
     try {
-      // Derive deck slug from the lesson slug passed via lessonId or deck meta title
       const deckSlug = lessonId ?? "";
       const fragments = await fetchFragmentsForDeck(deckSlug, 30);
       const exercises = generateReorderFromFragments(fragments, 8).map((ex) =>
@@ -103,9 +104,11 @@ export default function GrammarStudyDeck({
       );
       if (exercises.length > 0) {
         setPracticeExercises(exercises);
+      } else {
+        setPracticeError(true);
       }
     } catch {
-      // silently fail — button stays visible, user can retry
+      setPracticeError(true);
     } finally {
       setPracticeLoading(false);
     }
@@ -139,7 +142,7 @@ export default function GrammarStudyDeck({
   // Overlay: sesión de reorder_words desde las frases de esta lección
   if (practiceExercises) {
     return (
-      <div className="fixed inset-0 z-50 bg-[var(--surface-base)]">
+      <div className="fixed inset-0 z-50 bg-surface-base">
         <PracticeSession
           context="courses"
           exercises={practiceExercises}
@@ -202,18 +205,25 @@ export default function GrammarStudyDeck({
             </div>
 
             {lessonId && (
-              <button
-                type="button"
-                className="grammar-deck__done-soundlab"
-                onClick={handleStartSentencePractice}
-                disabled={practiceLoading}
-              >
-                <LayoutList size={16} aria-hidden />
-                <span>
-                  {practiceLoading ? "Cargando ejercicios…" : "Practica armando oraciones de esta lección"}
-                </span>
-                <ArrowRight size={15} aria-hidden />
-              </button>
+              <>
+                <button
+                  type="button"
+                  className="grammar-deck__done-soundlab"
+                  onClick={handleStartSentencePractice}
+                  disabled={practiceLoading}
+                >
+                  <LayoutList size={16} aria-hidden />
+                  <span>
+                    {practiceLoading ? "Cargando ejercicios…" : "Practica armando oraciones de esta lección"}
+                  </span>
+                  <ArrowRight size={15} aria-hidden />
+                </button>
+                {practiceError && (
+                  <p className="grammar-deck__done-practice-error">
+                    No hay ejercicios disponibles para esta lección aún.
+                  </p>
+                )}
+              </>
             )}
 
             {deck.sounds && deck.sounds.length > 0 && (

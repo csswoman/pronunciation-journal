@@ -50,12 +50,10 @@ export function LexiconFlashcard({
         </span>
       </div>
 
-      <div
-        className="min-h-52 w-full cursor-pointer rounded-2xl border border-border-subtle bg-surface-raised p-6 transition-shadow hover:shadow-md flex flex-col gap-3"
+      <button
+        type="button"
+        className="min-h-52 w-full cursor-pointer rounded-2xl border border-border-subtle bg-surface-raised p-6 transition-shadow hover:shadow-md flex flex-col gap-3 text-left"
         onClick={() => !revealed && setRevealed(true)}
-        role="button"
-        tabIndex={0}
-        onKeyDown={(e) => e.key === 'Enter' && !revealed && setRevealed(true)}
         aria-label={revealed ? undefined : `Tap to reveal definition of ${word}`}
       >
         <div>
@@ -99,7 +97,7 @@ export function LexiconFlashcard({
               type="button"
               onClick={(e) => {
                 e.stopPropagation()
-                speak([word, definition, example ? `For example: ${example}` : ''].filter(Boolean).join('. '), 0.9)
+                speak([word, definition, example ? `For example: ${example}` : ''].filter(Boolean).join('. '), { rate: 0.9 })
               }}
               className="self-start p-1.5 rounded-full text-fg-muted hover:text-fg hover:bg-surface-sunken transition-colors"
               aria-label={`Listen to ${word}`}
@@ -108,7 +106,7 @@ export function LexiconFlashcard({
             </button>
           </>
         )}
-      </div>
+      </button>
 
       {revealed && (
         <div className="grid grid-cols-3 gap-2">

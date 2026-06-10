@@ -30,9 +30,16 @@ export default function MiniLessonsBrowser({ lessons }: { lessons: MiniLesson[] 
 
   const hasActiveFilters = selectedLevel !== "all" || selectedCategory !== "all";
 
-  const categoryCount = useMemo(() => {
-    const set = new Set(lessons.map((l) => l.category));
-    return set.size;
+  const levelCounts = useMemo(() => {
+    const counts: Record<string, number> = { all: lessons.length };
+    for (const l of lessons) counts[l.level] = (counts[l.level] ?? 0) + 1;
+    return counts;
+  }, [lessons]);
+
+  const categoryCounts = useMemo(() => {
+    const counts: Record<string, number> = { all: lessons.length };
+    for (const l of lessons) counts[l.category] = (counts[l.category] ?? 0) + 1;
+    return counts;
   }, [lessons]);
 
   function clearFilters() {
@@ -55,87 +62,59 @@ export default function MiniLessonsBrowser({ lessons }: { lessons: MiniLesson[] 
                 Lecciones <em>cortas</em>
               </h1>
               <p className="mini-lessons__lead">
-                Pronunciación, gramática, vocabulario y más — en pocos minutos, con ejemplos y
-                ejercicios.
+                {lessons.length} lecciones de pronunciación, gramática, vocabulario y más, en
+                pocos minutos, con ejemplos y ejercicios.
               </p>
-            </div>
-
-            <div className="mini-lessons__stats" aria-label="Resumen">
-              <div className="mini-lessons__stat mini-lessons__stat--accent">
-                <b>{lessons.length}</b>
-                <span>lecciones</span>
-              </div>
-              <div className="mini-lessons__stat">
-                <b>{categoryCount}</b>
-                <span>categorías</span>
-              </div>
             </div>
           </div>
         </header>
 
-        <div className="mini-lessons__toolbar">
-          <div className="mini-lessons__toolbar-group">
-            <span className="mini-lessons__toolbar-label" id="ml-level-label">
-              Nivel
-            </span>
-            <div
-              className="mini-lessons__segmented"
-              role="group"
-              aria-labelledby="ml-level-label"
+        <div className="mini-lessons__toolbar" role="group" aria-label="Filtros">
+          <div className="mini-lessons__filter-row">
+            {/* Level chips */}
+            <button
+              type="button"
+              className={cn("mini-lessons__chip", selectedLevel === "all" && "mini-lessons__chip--on")}
+              onClick={() => setSelectedLevel("all")}
             >
+              Todos
+            </button>
+            {levels.map((level) => (
               <button
+                key={level}
                 type="button"
-                className={cn(
-                  "mini-lessons__segment",
-                  selectedLevel === "all" && "mini-lessons__segment--on"
-                )}
-                onClick={() => setSelectedLevel("all")}
+                className={cn("mini-lessons__chip", selectedLevel === level && "mini-lessons__chip--on")}
+                onClick={() => setSelectedLevel(level)}
               >
-                Todos
+                {MINI_LESSON_LEVEL_LABELS[level]}
+                {levelCounts[level] !== undefined && (
+                  <span className="mini-lessons__chip-count">{levelCounts[level]}</span>
+                )}
               </button>
-              {levels.map((level) => (
-                <button
-                  key={level}
-                  type="button"
-                  className={cn(
-                    "mini-lessons__segment",
-                    selectedLevel === level && "mini-lessons__segment--on"
-                  )}
-                  onClick={() => setSelectedLevel(level)}
-                >
-                  {MINI_LESSON_LEVEL_LABELS[level]}
-                </button>
-              ))}
-            </div>
-          </div>
+            ))}
 
-          <span className="mini-lessons__toolbar-divider" aria-hidden />
+            <span className="mini-lessons__toolbar-divider" aria-hidden />
 
-          <div className="mini-lessons__toolbar-group">
-            <label className="mini-lessons__toolbar-label" htmlFor="ml-category">
-              Categoría
-            </label>
-            <select
-              id="ml-category"
-              className="mini-lessons__select"
-              value={selectedCategory}
-              onChange={(e) =>
-                setSelectedCategory(e.target.value as LessonCategory | "all")
-              }
-            >
-              <option value="all">Todas</option>
-              {categories.map((category) => (
-                <option key={category} value={category}>
-                  {MINI_LESSON_CATEGORY_LABELS[category]}
-                </option>
-              ))}
-            </select>
+            {/* Category chips */}
+            {categories.map((category) => (
+              <button
+                key={category}
+                type="button"
+                className={cn("mini-lessons__chip", selectedCategory === category && "mini-lessons__chip--on")}
+                onClick={() => setSelectedCategory(category)}
+              >
+                {MINI_LESSON_CATEGORY_LABELS[category]}
+                {categoryCounts[category] !== undefined && (
+                  <span className="mini-lessons__chip-count">{categoryCounts[category]}</span>
+                )}
+              </button>
+            ))}
           </div>
 
           <div className="mini-lessons__toolbar-meta">
-            <p className="mini-lessons__count">
-              {filteredLessons.length} de {lessons.length}
-            </p>
+            <span className="mini-lessons__count">
+              {filteredLessons.length}/{lessons.length}
+            </span>
             {hasActiveFilters && (
               <button
                 type="button"
@@ -153,14 +132,14 @@ export default function MiniLessonsBrowser({ lessons }: { lessons: MiniLesson[] 
             <Link
               key={lesson.id}
               href={`/mini-lessons/${lesson.slug}`}
-              className="mini-lessons__card"
+              className={`mini-lessons__card mini-lessons__card--${lesson.category}`}
             >
               <div className="mini-lessons__card-top">
                 <div className="mini-lessons__card-meta">
                   <span className="mini-lessons__pill mini-lessons__pill--level">
                     {MINI_LESSON_LEVEL_LABELS[lesson.level]}
                   </span>
-                  <span className="mini-lessons__pill">
+                  <span className="mini-lessons__pill mini-lessons__pill--category">
                     {MINI_LESSON_CATEGORY_LABELS[lesson.category]}
                   </span>
                 </div>

@@ -71,27 +71,32 @@ export async function getWeakestPhonemeForHome(
   const supabase = await createSupabaseServerClient();
 
   const { data, error } = await supabase
-    .from("user_sound_progress")
-    .select("total_attempts, correct_answers, sounds(ipa, type, category)")
+    .from("user_contrast_progress")
+    .select("contrast_id, total_attempts, correct_answers")
     .eq("user_id", userId)
-    .gt("total_attempts", 0)
-    .neq("status", "locked");
+    .gt("total_attempts", 0);
 
   if (error) throw error;
 
-  const ranked = (data ?? [])
-    .filter((r) => (r.total_attempts ?? 0) >= 5)
-    .map((r) => {
-      const attempts = r.total_attempts ?? 0;
-      const correct = r.correct_answers ?? 0;
-      const sound = r.sounds as { ipa: string; type: string | null; category: string | null } | null;
-      return {
-        ipa: sound?.ipa ?? "?",
-        accuracy: attempts > 0 ? Math.round((correct / attempts) * 100) : 0,
-        totalAttempts: attempts,
-        label: sound?.type ?? sound?.category ?? null,
-      };
-    })
+  // Aggregate accuracy by IPA (take the first IPA of each contrast key)
+  const byIpa = new Map<string, { correct: number; total: number }>();
+  for (const r of data ?? []) {
+    const [ipaA] = r.contrast_id.split("|");
+    const prev = byIpa.get(ipaA) ?? { correct: 0, total: 0 };
+    byIpa.set(ipaA, {
+      correct: prev.correct + r.correct_answers,
+      total: prev.total + r.total_attempts,
+    });
+  }
+
+  const ranked = [...byIpa.entries()]
+    .filter(([, v]) => v.total >= 5)
+    .map(([ipa, v]) => ({
+      ipa,
+      accuracy: Math.round((v.correct / v.total) * 100),
+      totalAttempts: v.total,
+      label: null as string | null,
+    }))
     .sort((a, b) => a.accuracy - b.accuracy);
 
   return ranked[0] ?? null;
@@ -122,27 +127,38 @@ export async function getDailyPlanPreview(userId: string): Promise<DailyPlanPrev
     .or(`srs_status.eq.new,next_review_at.lte.${today}`);
   const hasWordBank = (dueCount ?? 0) > 0;
 
-  // 2. Sonido protagonista: el más débil con progreso, o uno fácil del seed.
+  // 2. Sonido protagonista: el contraste más débil con progreso, o uno fácil del seed.
   const { data: progressRows } = await supabase
-    .from("user_sound_progress")
-    .select("total_attempts, correct_answers, sounds(id, ipa, example, difficulty)")
+    .from("user_contrast_progress")
+    .select("contrast_id, total_attempts, correct_answers")
     .eq("user_id", userId)
-    .neq("status", "locked")
-    .neq("status", "mastered")
     .gt("total_attempts", 0);
 
   type SoundLite = { id: number; ipa: string; example: string | null; difficulty: number | null };
 
-  const ranked = (progressRows ?? [])
-    .map((r) => ({
-      acc: (r.total_attempts ?? 0) > 0 ? (r.correct_answers ?? 0) / (r.total_attempts ?? 1) : 1,
-      sound: r.sounds as unknown as SoundLite | null,
-    }))
-    .filter((r) => r.sound != null)
-    .sort((a, b) => a.acc - b.acc);
-  const hasProgress = ranked.length > 0;
+  // Aggregate by first IPA of contrast key
+  const byIpa = new Map<string, number>();
+  for (const r of progressRows ?? []) {
+    const [ipaA] = r.contrast_id.split("|");
+    const acc = r.total_attempts > 0 ? r.correct_answers / r.total_attempts : 1;
+    const prev = byIpa.get(ipaA);
+    if (prev === undefined || acc < prev) byIpa.set(ipaA, acc);
+  }
+  const hasProgress = byIpa.size > 0;
 
-  let primary: SoundLite | null = ranked[0]?.sound ?? null;
+  const weakestIpa = hasProgress
+    ? [...byIpa.entries()].sort((a, b) => a[1] - b[1])[0][0]
+    : null;
+
+  let primary: SoundLite | null = null;
+  if (weakestIpa) {
+    const { data: soundRows } = await supabase
+      .from("sounds")
+      .select("id, ipa, example, difficulty")
+      .eq("ipa", weakestIpa)
+      .limit(1);
+    primary = (soundRows?.[0] as SoundLite | undefined) ?? null;
+  }
   if (!primary) {
     const { data: sounds } = await supabase
       .from("sounds")
@@ -169,20 +185,20 @@ export async function getDailyPlanPreview(userId: string): Promise<DailyPlanPrev
 
   steps.push({
     id: "phoneme_focus",
-    title: `Sonido ${ipa}`,
-    subtitle: hasProgress ? "Tu sonido a reforzar hoy" : "Empieza por un sonido clave",
+    title: `Sound ${ipa}`,
+    subtitle: hasProgress ? "Your sound to strengthen today" : "Start with a key sound",
     icon: "Waves",
   });
   steps.push({
     id: "minimal_pairs",
-    title: "Pares mínimos",
-    subtitle: `Distingue ${ipa} de sonidos parecidos`,
+    title: "Minimal pairs",
+    subtitle: `Tell ${ipa} apart from similar sounds`,
     icon: "GitCompareArrows",
   });
   steps.push({
     id: "listening",
-    title: "Escucha y escribe",
-    subtitle: "Dictado de palabras nuevas",
+    title: "Listen and write",
+    subtitle: "Dictation with new words",
     icon: "Headphones",
   });
 
@@ -212,18 +228,16 @@ export async function getDailyPlanPreview(userId: string): Promise<DailyPlanPrev
 
 const SOUNDS_DUE_PREVIEW_LIMIT = 3;
 
-/** Sonidos con next_review vencido, ordenados por más urgente primero. */
+/** Contrastes con next_review vencido — muestra el sonido (primera IPA del contraste). */
 export async function getSoundsDueForHome(userId: string): Promise<SoundDueHome[]> {
   const supabase = await createSupabaseServerClient();
   const now = new Date().toISOString();
 
   const { data, error } = await supabase
-    .from("user_sound_progress")
-    .select("sound_id, total_attempts, correct_answers, next_review, sounds(ipa, example)")
+    .from("user_contrast_progress")
+    .select("contrast_id, total_attempts, correct_answers, next_review")
     .eq("user_id", userId)
-    .neq("status", "locked")
-    .neq("status", "mastered")
-    .lte("next_review", now)
+    .or(`next_review.lte.${now},next_review.is.null`)
     .order("next_review", { ascending: true })
     .limit(SOUNDS_DUE_PREVIEW_LIMIT);
 
@@ -232,17 +246,25 @@ export async function getSoundsDueForHome(userId: string): Promise<SoundDueHome[
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
+  // Fetch sound metadata for first IPA of each contrast
+  const ipas = [...new Set((data ?? []).map((r) => r.contrast_id.split("|")[0]))];
+  const { data: soundRows } = ipas.length > 0
+    ? await supabase.from("sounds").select("id, ipa, example").in("ipa", ipas)
+    : { data: [] };
+  const soundByIpa = new Map((soundRows ?? []).map((s) => [s.ipa, s]));
+
   return (data ?? []).map((r) => {
-    const sound = r.sounds as { ipa: string; example: string | null } | null;
-    const attempts = r.total_attempts ?? 0;
-    const correct = r.correct_answers ?? 0;
+    const ipa = r.contrast_id.split("|")[0];
+    const sound = soundByIpa.get(ipa);
+    const attempts = r.total_attempts;
+    const correct = r.correct_answers;
     const dueDate = r.next_review ? new Date(r.next_review) : today;
     dueDate.setHours(0, 0, 0, 0);
     const daysOverdue = Math.max(0, Math.round((today.getTime() - dueDate.getTime()) / 86_400_000));
 
     return {
-      soundId: r.sound_id,
-      ipa: sound?.ipa ?? "?",
+      soundId: sound?.id ?? 0,
+      ipa: sound?.ipa ?? ipa,
       example: sound?.example ?? null,
       accuracy: attempts > 0 ? Math.round((correct / attempts) * 100) : 0,
       daysOverdue,

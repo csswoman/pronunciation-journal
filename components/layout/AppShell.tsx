@@ -77,7 +77,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       {user && (
         <>
           <AICoachPanel />
-          <AICoachTrigger />
+          <AICoachTrigger className="hidden lg:flex" />
         </>
       )}
     </div>

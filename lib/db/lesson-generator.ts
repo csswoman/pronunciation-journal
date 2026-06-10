@@ -31,13 +31,10 @@ function soundToLesson(sound: DbSound, words: DbWord[]): Lesson {
   return {
     id: `sound-${sound.id}`,
     title: example ? `${ipaDisplay} — ${example}` : ipaDisplay,
-    description: example
-      ? `Practice ${ipaDisplay} as in “${example}”`
-      : `Practice words featuring the ${ipaDisplay} sound`,
+    description: sound.category ?? sound.type,
     category: 'sounds',
     difficulty: difficultyFromNumber(sound.difficulty),
     words: lessonWords,
-    // Every lesson links straight to the phoneme practice session
     href: `/practice/sounds/sound/${sound.id}`,
   }
 }

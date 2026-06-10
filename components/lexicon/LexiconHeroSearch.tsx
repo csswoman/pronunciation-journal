@@ -117,15 +117,15 @@ export function LexiconHeroSearch({
   return (
     <div className="words-lexicon__hero">
       <h2 className="words-lexicon__hero-title">
-        What word do you want to <em>learn</em> today?
+        Look up any word, right now.
       </h2>
       <p className="words-lexicon__hero-lede">
-        Search {totalWords.toLocaleString()} professional and technical terms — with
+        {totalWords.toLocaleString()} professional and technical terms, with
         definitions on the spot.
       </p>
 
-      <div className="words-lexicon__searchwrap relative max-w-[680px] mx-auto mt-6" ref={wrapRef}>
-        <div className="words-lexicon__searchbox flex items-center gap-3.5">
+      <div className="words-lexicon__searchwrap" ref={wrapRef}>
+        <div className="words-lexicon__searchbox">
           <div className="words-lexicon__search-mag" aria-hidden>
             <Search size={22} strokeWidth={2.2} />
           </div>
@@ -133,7 +133,7 @@ export function LexiconHeroSearch({
             ref={inputRef}
             type="search"
             className="words-lexicon__search-input"
-            placeholder="Type a word… e.g. middleware"
+            placeholder="e.g. middleware, viewport, API gateway"
             value={query}
             autoComplete="off"
             aria-label="Search lexicon"
@@ -160,7 +160,7 @@ export function LexiconHeroSearch({
         >
           {matches.length === 0 && query.trim() ? (
             <p className="words-lexicon__nores">
-              No results for &ldquo;{query.trim()}&rdquo; — try another spelling.
+              No matches for &ldquo;{query.trim()}&rdquo;. Try a different spelling or a related term.
             </p>
           ) : (
             matches.map((hit) => (
@@ -181,7 +181,7 @@ export function LexiconHeroSearch({
                 )}
                 <span className="words-lexicon__res-cat">{hit.categoryName}</span>
                 {hit.translation ? (
-                  <span className="words-lexicon__res-def" style={{ color: "var(--text-secondary)" }}>
+                  <span className="words-lexicon__res-def words-lexicon__res-def--translation">
                     {hit.translation}
                   </span>
                 ) : null}
@@ -211,7 +211,7 @@ export function LexiconHeroSearch({
           )}
           {dueWords.length > 0 && (
             <>
-              <span className="words-lexicon__quick-lbl" style={{ marginLeft: 8 }}>
+              <span className="words-lexicon__quick-lbl words-lexicon__quick-lbl--spaced">
                 To review:
               </span>
               {dueWords.map((w) => (
@@ -241,7 +241,7 @@ export function LexiconHeroSearch({
             <span className="words-lexicon__wd-cat">{selected.categoryName}</span>
           </div>
           {selected.translation ? (
-            <p className="text-sm font-medium text-fg mt-2">{selected.translation}</p>
+            <p className="words-lexicon__wd-translation">{selected.translation}</p>
           ) : null}
           <p className="words-lexicon__wd-def">{selected.definition}</p>
           <div className="words-lexicon__wd-btns">
@@ -250,7 +250,7 @@ export function LexiconHeroSearch({
               icon={<Volume2 size={15} />}
               onClick={() => void play("normal")}
             >
-              Listen
+              Hear it
             </Button>
             {onAddWord ? (
               <Button
@@ -258,11 +258,11 @@ export function LexiconHeroSearch({
                 size="sm"
                 onClick={() => onAddWord(selected.word)}
               >
-                + Add to My Words
+                Add to my words
               </Button>
             ) : null}
             <Button variant="ghost" size="sm" onClick={() => openCategory(selected)}>
-              Open category →
+              Go to category →
             </Button>
           </div>
         </div>

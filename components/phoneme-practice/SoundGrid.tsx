@@ -1,17 +1,12 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import type { UserSoundProgressWithSound } from '@/lib/phoneme-practice/types'
+import type { Sound } from '@/lib/phoneme-practice/types'
 
 interface Props {
-  progressList: UserSoundProgressWithSound[]
-}
-
-const STATUS_LABEL: Record<string, string> = {
-  locked:     'Not started',
-  available:  'Ready to practice',
-  practicing: 'In progress',
-  mastered:   'Mastered',
+  sounds: Sound[]
+  /** Accuracy (0-100) by IPA. >=85 = mastered, >0 = in progress. */
+  accuracyByIpa: Map<string, number>
 }
 
 function scoreColor(score: number): string {
@@ -20,16 +15,11 @@ function scoreColor(score: number): string {
   return 'oklch(0.62 0.18 30)'
 }
 
-export function SoundGrid({ progressList }: Props) {
+export function SoundGrid({ sounds, accuracyByIpa }: Props) {
   const router = useRouter()
 
-  const mastered = progressList.filter(p => p.status === 'mastered').length
-  const inProgress = progressList.filter(p => p.status === 'practicing').length
-
-  function handleClick(p: UserSoundProgressWithSound) {
-    if (p.status === 'locked') return
-    router.push(`/practice/sounds/sound/${p.sound_id}`)
-  }
+  const mastered   = sounds.filter(s => (accuracyByIpa.get(s.ipa) ?? 0) >= 85).length
+  const inProgress = sounds.filter(s => { const v = accuracyByIpa.get(s.ipa) ?? 0; return v > 0 && v < 85 }).length
 
   return (
     <div className="space-y-4">
@@ -44,54 +34,42 @@ export function SoundGrid({ progressList }: Props) {
           </p>
         </div>
         <span className="text-xs text-fg-subtle">
-          {progressList.length} total phonemes
+          {sounds.length} total phonemes
         </span>
       </div>
 
       {/* Grid */}
       <div className="grid grid-cols-8 sm:grid-cols-10 gap-1.5">
-        {progressList.map(p => {
-          const score = p.total_attempts > 0
-            ? Math.round((p.correct_answers / p.total_attempts) * 100)
-            : null
+        {sounds.map(s => {
+          const score = accuracyByIpa.get(s.ipa) ?? null
+          const isMastered   = (score ?? 0) >= 85
+          const isPracticing = score !== null && score > 0 && score < 85
+          const isAvailable  = score === null
 
           const tooltipParts = [
-            `/${p.sounds.ipa}/`,
-            p.sounds.example ? `"${p.sounds.example}"` : null,
-            STATUS_LABEL[p.status],
+            s.ipa,
+            s.example ? `"${s.example}"` : null,
+            isMastered ? 'Mastered' : isPracticing ? 'In progress' : 'Untouched',
             score !== null ? `${score}% accuracy` : null,
-            p.total_attempts > 0 ? `${p.total_attempts} attempts` : null,
           ].filter(Boolean)
-
-          // Per-status visual treatment
-          const isMastered  = p.status === 'mastered'
-          const isPracticing = p.status === 'practicing'
-          const isAvailable  = p.status === 'available'
-          const isLocked     = p.status === 'locked'
 
           const bg = isMastered
             ? 'var(--primary)'
             : isPracticing
             ? 'color-mix(in oklch, var(--primary) 12%, var(--card-bg))'
-            : isAvailable
-            ? 'var(--card-bg)'
-            : 'transparent'
+            : 'var(--card-bg)'
 
           const border = isMastered
             ? 'var(--primary)'
             : isPracticing
             ? 'color-mix(in oklch, var(--primary) 45%, transparent)'
-            : isAvailable
-            ? 'color-mix(in oklch, var(--line-divider) 100%, transparent)'
-            : 'var(--line-divider)'
+            : 'color-mix(in oklch, var(--line-divider) 100%, transparent)'
 
           const ipaColor = isMastered
             ? 'var(--on-primary)'
             : isPracticing
             ? 'var(--primary)'
-            : isAvailable
-            ? 'var(--text-primary)'
-            : 'var(--text-tertiary)'
+            : 'var(--text-primary)'
 
           const subColor = isMastered
             ? 'rgba(var(--on-primary), 0.65)'
@@ -99,26 +77,17 @@ export function SoundGrid({ progressList }: Props) {
             ? scoreColor(score)
             : 'var(--text-tertiary)'
 
-          const subText = isMastered
-            ? '✓'
-            : score !== null
-            ? String(score)
-            : isAvailable
-            ? '—'
-            : ''
+          const subText = isMastered ? '✓' : score !== null ? String(score) : isAvailable ? '—' : ''
 
           return (
             <button
-              key={p.sound_id}
-              onClick={() => handleClick(p)}
+              key={s.id}
+              onClick={() => router.push(`/practice/sounds/sound/${s.id}`)}
               title={tooltipParts.join(' — ')}
-              disabled={isLocked}
               className="flex flex-col items-center justify-center rounded-xl py-2 px-1 transition-all active:scale-95 relative group"
               style={{
                 background: bg,
                 border: `1px solid ${border}`,
-                cursor: isLocked ? 'default' : 'pointer',
-                opacity: isLocked ? 0.35 : 1,
                 boxShadow: isPracticing
                   ? '0 1px 4px color-mix(in oklch, var(--primary) 14%, transparent)'
                   : isAvailable
@@ -131,7 +100,7 @@ export function SoundGrid({ progressList }: Props) {
                 className="font-mono font-bold text-sm leading-none"
                 style={{ color: ipaColor, letterSpacing: '-0.01em' }}
               >
-                {p.sounds.ipa}
+                {s.ipa}
               </span>
               <span
                 className="mt-1 text-tiny font-semibold tabular-nums leading-none"
@@ -147,9 +116,9 @@ export function SoundGrid({ progressList }: Props) {
       {/* Legend */}
       <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
         {[
-          { label: 'Mastered',    bg: 'var(--primary)',                                              border: 'var(--primary)' },
-          { label: 'In progress', bg: 'color-mix(in oklch, var(--primary) 12%, var(--card-bg))',     border: 'color-mix(in oklch, var(--primary) 45%, transparent)' },
-          { label: 'Untouched',   bg: 'var(--card-bg)',                                              border: 'var(--line-divider)' },
+          { label: 'Mastered',    bg: 'var(--primary)',                                            border: 'var(--primary)' },
+          { label: 'In progress', bg: 'color-mix(in oklch, var(--primary) 12%, var(--card-bg))',   border: 'color-mix(in oklch, var(--primary) 45%, transparent)' },
+          { label: 'Untouched',   bg: 'var(--card-bg)',                                            border: 'var(--line-divider)' },
         ].map(({ label, bg, border }) => (
           <div key={label} className="flex items-center gap-1.5">
             <div className="h-3 w-3 rounded" style={{ background: bg, border: `1px solid ${border}` }} />

@@ -25,7 +25,7 @@ import { EditDeckModal } from "@/components/vocabulary/decks/EditDeckModal";
 import { StudyModal } from "@/components/vocabulary/decks/StudyModal";
 import { StudyModalWordBank } from "@/components/vocabulary/decks/StudyModalWordBank";
 import { ManageDrawer } from "@/components/vocabulary/decks/ManageDrawer";
-import { getSupabaseBrowserClient } from "@/lib/supabase/client";
+import { hasWordBankEntries, deleteDeck } from "@/lib/decks/queries";
 import { wordBankSource } from "@/lib/decks/study-source";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { toggleFavorite } from "@/lib/word-bank/queries";
@@ -135,18 +135,14 @@ export function WordsClient({
 
   const handleStudyDeck = async (deckId: string) => {
     if (!user) return;
-    const { count } = await getSupabaseBrowserClient()
-      .from("word_bank_decks")
-      .select("*", { count: "exact", head: true })
-      .eq("deck_id", deckId);
-    if ((count ?? 0) > 0) setWordBankStudyDeckId(deckId);
+    if (await hasWordBankEntries(deckId)) setWordBankStudyDeckId(deckId);
     else setStudyDeckId(deckId);
   };
 
   const handleDeleteDeck = async (id: string) => {
     const name = decks.find(d => d.id === id)?.name;
     if (!confirm(`Delete deck "${name}"? This cannot be undone.`)) return;
-    await getSupabaseBrowserClient().from("decks").delete().eq("id", id);
+    await deleteDeck(id);
     removeDeck(id);
     setEditDeckId(null);
   };
@@ -193,59 +189,59 @@ export function WordsClient({
 
           {activeTab !== "lexicon" && (
             <WordsHero
-            activeTab={activeTab}
-            myWordsCount={words.length}
-            deckCount={decks.length}
-            lexiconLearned={lexiconLearned}
-            lexiconTotal={lexiconTotal}
-            lexiconPercentage={lexiconPercent}
-            wordsLoading={wordsLoading}
-            onAddWord={() => openAddWord()}
-            onAddDeck={() => setShowCreateDeck(true)}
+              activeTab={activeTab}
+              myWordsCount={words.length}
+              deckCount={decks.length}
+              lexiconLearned={lexiconLearned}
+              lexiconTotal={lexiconTotal}
+              lexiconPercentage={lexiconPercent}
+              wordsLoading={wordsLoading}
+              onAddWord={() => openAddWord()}
+              onAddDeck={() => setShowCreateDeck(true)}
             />
           )}
 
           <Section spacing="lg">
             {activeTab === "lexicon" && (
               <LexiconView
-              lessons={lexiconLessons}
-              lexiconTotal={lexiconTotal}
-              lexiconLearned={lexiconLearned}
-              lexiconInProgress={lexiconInProgress}
-              lexiconPercent={lexiconPercent}
-              dueForReview={dueForReview}
-              dueWordLabels={dueWordLabels}
+                lessons={lexiconLessons}
+                lexiconTotal={lexiconTotal}
+                lexiconLearned={lexiconLearned}
+                lexiconInProgress={lexiconInProgress}
+                lexiconPercent={lexiconPercent}
+                dueForReview={dueForReview}
+                dueWordLabels={dueWordLabels}
                 onAddWord={openAddWord}
               />
             )}
 
             {activeTab === "my-words" && (
               <WordsTab
-              words={words}
-              loading={wordsLoading}
-              error={wordsError}
-              actionError={wordActionError}
-              wordStats={wordStats}
-              selectedWordIds={selectedWordIds}
-              selectMode={selectMode}
-              onToggleSelectMode={handleToggleSelectMode}
-              onToggleWordSelection={toggleWordSelection}
-              onRetry={async id => { try { await retry(id); } catch { setWordActionError("Failed to retry"); } }}
-              onDelete={async id => { try { await removeWord(id); } catch { setWordActionError("Failed to delete"); } }}
-              onOpenAddWord={(text) => { setInitialWordText(text ?? ""); setShowAddWord(true); }}
+                words={words}
+                loading={wordsLoading}
+                error={wordsError}
+                actionError={wordActionError}
+                wordStats={wordStats}
+                selectedWordIds={selectedWordIds}
+                selectMode={selectMode}
+                onToggleSelectMode={handleToggleSelectMode}
+                onToggleWordSelection={toggleWordSelection}
+                onRetry={async id => { try { await retry(id); } catch { setWordActionError("Failed to retry"); } }}
+                onDelete={async id => { try { await removeWord(id); } catch { setWordActionError("Failed to delete"); } }}
+                onOpenAddWord={(text) => { setInitialWordText(text ?? ""); setShowAddWord(true); }}
                 onToggleFavorite={handleToggleFavorite}
               />
             )}
 
             {activeTab === "decks" && (
               <DecksTab
-              decks={decks}
-              counts={{ ...counts }}
-              loading={decksLoading}
-              onStudy={handleStudyDeck}
-              onManage={setManageDeckId}
-              onEdit={setEditDeckId}
-              onDelete={handleDeleteDeck}
+                decks={decks}
+                counts={{ ...counts }}
+                loading={decksLoading}
+                onStudy={handleStudyDeck}
+                onManage={setManageDeckId}
+                onEdit={setEditDeckId}
+                onDelete={handleDeleteDeck}
                 onCreateNew={() => setShowCreateDeck(true)}
               />
             )}
@@ -253,14 +249,16 @@ export function WordsClient({
         </div>
       </PageLayout>
 
-      <Button
-        onClick={() => activeTab === "my-words" ? setShowAddWord(true) : setShowCreateDeck(true)}
-        aria-label={activeTab === "my-words" ? "Quick add word" : "Create deck"}
-        className="fixed bottom-6 right-6 z-40 lg:hidden !rounded-full !p-4 shadow-xl"
-        size="icon"
-      >
-        <Plus size={20} />
-      </Button>
+      {activeTab !== "lexicon" && (
+        <Button
+          onClick={() => activeTab === "my-words" ? setShowAddWord(true) : setShowCreateDeck(true)}
+          aria-label={activeTab === "my-words" ? "Quick add word" : "Create deck"}
+          className="fixed bottom-6 right-6 z-40 lg:hidden !rounded-full !p-4 shadow-xl"
+          size="icon"
+        >
+          <Plus size={20} />
+        </Button>
+      )}
 
       {selectMode && selectedWordIds.size > 0 && (
         <WordSelectionBar

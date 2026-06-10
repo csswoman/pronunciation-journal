@@ -17,7 +17,12 @@ export default function HomeGoalRing({
   const center = size / 2;
 
   return (
-    <div className="relative shrink-0" style={{ width: size, height: size }}>
+    <div
+      className="relative shrink-0"
+      style={{ width: size, height: size }}
+      aria-label={`Daily goal: ${pct}% complete`}
+      role="img"
+    >
       <svg
         className="w-full h-full -rotate-90"
         width={size}
@@ -26,7 +31,7 @@ export default function HomeGoalRing({
         aria-hidden
       >
         <circle
-          className="stroke-[var(--bg-tertiary)]"
+          className="stroke-[var(--surface-sunken)]"
           cx={center}
           cy={center}
           r={RADIUS}
@@ -34,7 +39,7 @@ export default function HomeGoalRing({
           strokeWidth={8}
         />
         <circle
-          className="stroke-[var(--primary)]"
+          className="stroke-[var(--primary)] transition-ring"
           cx={center}
           cy={center}
           r={RADIUS}
@@ -43,17 +48,13 @@ export default function HomeGoalRing({
           strokeLinecap="round"
           strokeDasharray={CIRCUMFERENCE}
           strokeDashoffset={offset}
-          style={{ transition: "stroke-dashoffset 1s ease" }}
         />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <b
-          className="text-xl leading-none text-[var(--text-primary)]"
-          style={{ fontFamily: "var(--font-display), serif" }}
-        >
+        <b className="type-stat text-xl">
           {pct}%
         </b>
-        <span className="text-[10px] text-[var(--text-tertiary)] uppercase tracking-wider mt-0.5 text-center px-1">
+        <span className="type-overline mt-0.5 px-1 text-center">
           {label}
         </span>
       </div>

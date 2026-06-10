@@ -1,7 +1,5 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
-import confetti from 'canvas-confetti'
 import { cn } from '@/lib/cn'
 import type { SessionResult } from '@/lib/practice/types'
 
@@ -29,7 +27,11 @@ function AccuracyDisplay({ accuracy }: { accuracy: number }) {
       aria-label={`Accuracy ${accuracy} percent`}
       className={cn(
         'text-6xl font-bold tabular-nums',
-        isExcellent ? 'text-success' : isAcceptable ? 'text-warning' : 'text-error',
+        isExcellent
+          ? 'text-success animate-accuracy-pop'
+          : isAcceptable
+            ? 'text-warning'
+            : 'text-error',
       )}
     >
       {accuracy}%
@@ -62,32 +64,6 @@ function ResultRow({ slug, isCorrect, index }: { slug: string; isCorrect: boolea
 
 export function SessionSummary({ result, onPracticeAgain, onFinish }: Props) {
   const correctCount = result.results.filter((r) => r.isCorrect).length
-  const firedRef = useRef(false)
-
-  useEffect(() => {
-    if (firedRef.current || result.accuracy < 50) return
-    firedRef.current = true
-
-    const burst = (delay: number) => {
-      setTimeout(() => {
-        confetti({
-          particleCount: result.accuracy >= 80 ? 140 : 90,
-          spread: 90,
-          startVelocity: 38,
-          origin: { x: 0.5, y: 0.45 },
-          // oklch doesn't work with canvas-confetti; use sRGB approximations of the design tokens
-          colors: ['#9b7fe8', '#6366f1', '#38bdf8', '#34d399', '#f59e0b'],
-          scalar: 1.05,
-        })
-      }, delay)
-    }
-
-    burst(0)
-    if (result.accuracy >= 80) {
-      burst(220)
-      burst(440)
-    }
-  }, [result.accuracy])
 
   return (
     <div role="region" aria-label="Session results" className="flex w-full flex-col gap-6">

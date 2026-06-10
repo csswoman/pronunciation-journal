@@ -182,13 +182,12 @@ async function getSkillProfileData(userId: string): Promise<SkillProfileData> {
       .eq('status', 'ready'),
 
     supabase
-      .from('user_sound_progress')
-      .select('total_attempts, correct_answers, sounds(ipa)')
+      .from('user_contrast_progress')
+      .select('contrast_id, total_attempts, correct_answers')
       .eq('user_id', userId)
       .gt('total_attempts', 0)
-      .neq('status', 'locked')
       .order('total_attempts', { ascending: false })
-      .limit(20),
+      .limit(40),
   ])
 
   // Words by SRS status
@@ -198,18 +197,21 @@ async function getSkillProfileData(userId: string): Promise<SkillProfileData> {
     if (s in wordsByStatus) wordsByStatus[s]++
   }
 
-  // Weakest phonemes: sorted by accuracy ascending, min 5 attempts
-  const phonemes = (phonemeResult.data ?? [])
-    .filter((r) => (r.total_attempts ?? 0) >= 5)
-    .map((r) => {
-      const attempts = r.total_attempts ?? 0
-      const correct = r.correct_answers ?? 0
-      return {
-        ipa: (r.sounds as { ipa: string } | null)?.ipa ?? '?',
-        accuracy: attempts > 0 ? Math.round((correct / attempts) * 100) : 0,
-        totalAttempts: attempts,
-      }
-    })
+  // Aggregate contrast progress by first IPA, then show weakest sounds
+  const byIpa = new Map<string, { correct: number; total: number }>()
+  for (const r of phonemeResult.data ?? []) {
+    const [ipa] = r.contrast_id.split('|')
+    const prev = byIpa.get(ipa) ?? { correct: 0, total: 0 }
+    byIpa.set(ipa, { correct: prev.correct + r.correct_answers, total: prev.total + r.total_attempts })
+  }
+
+  const phonemes = [...byIpa.entries()]
+    .filter(([, v]) => v.total >= 5)
+    .map(([ipa, v]) => ({
+      ipa,
+      accuracy: Math.round((v.correct / v.total) * 100),
+      totalAttempts: v.total,
+    }))
     .sort((a, b) => a.accuracy - b.accuracy)
     .slice(0, 5)
 

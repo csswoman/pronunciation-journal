@@ -80,6 +80,16 @@
   to   { opacity: 1; transform: translateY(0); }
 }
 
+@keyframes state-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes step-done {
+  from { transform: scale(0.85); opacity: 0.6; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
 @keyframes message-in {
   from { opacity: 0; transform: translateY(6px); filter: blur(2px); }
   to   { opacity: 1; transform: translateY(0); filter: blur(0); }
@@ -94,8 +104,21 @@
 .animate-weak-pulse   { animation: weakPulse 1.5s ease-in-out infinite; will-change: transform, opacity; }
 .animate-mic-breathe  { animation: mic-breathe 1.8s ease-in-out infinite; will-change: transform; }
 .animate-mic-ring     { animation: mic-ring 0.8s ease-out infinite; will-change: transform, opacity; }
-.animate-chip-appear  { animation: chip-appear 0.3s cubic-bezier(0.4, 0, 0.2, 1) both; will-change: opacity, transform; }
-.animate-message-in   { animation: message-in 0.45s cubic-bezier(0.4, 0, 0.2, 1) both; will-change: filter, opacity, transform; }
+.animate-chip-appear  { animation: chip-appear 0.3s var(--ease-out-expo) both; will-change: opacity, transform; }
+.animate-message-in   { animation: message-in 0.45s var(--ease-out-expo) both; will-change: filter, opacity, transform; }
+.animate-state-in     { animation: state-in 0.22s var(--ease-out-expo) both; will-change: opacity, transform; }
+.animate-step-done    { animation: step-done 0.2s var(--ease-out-expo) both; will-change: transform, opacity; }
+
+/* Progress fills — transform-based, not width */
+.progress-fill {
+  transform-origin: left;
+  transition: transform 250ms var(--ease-out-expo);
+}
+
+/* SVG ring stroke — goal progress */
+.transition-ring {
+  transition: stroke-dashoffset 600ms var(--ease-out-expo);
+}
 
 /* ── Respect prefers-reduced-motion for animations >100ms ──────────────── */
 @media (prefers-reduced-motion: reduce) {
@@ -107,7 +130,77 @@
   .animate-weak-pulse,
   .animate-mic-breathe,
   .animate-mic-ring,
-  .animate-message-in {
+  .animate-message-in,
+  .animate-state-in,
+  .animate-step-done {
+    animation: none !important;
+  }
+
+  .progress-fill,
+  .transition-ring {
+    transition: none !important;
+  }
+
+  .animate-accuracy-pop {
+    animation: none !important;
+  }
+}
+
+@keyframes accuracy-pop {
+  0%   { transform: scale(0.85); opacity: 0; }
+  60%  { transform: scale(1.06); }
+  100% { transform: scale(1);    opacity: 1; }
+}
+
+.animate-accuracy-pop {
+  animation: accuracy-pop 0.4s var(--ease-out-quart) both;
+}
+
+/* ── Home page entrance animations ──────────────────────────────────────── */
+
+/* Soft lift-in: used for streak pill, section headers, IPA symbol, action tiles */
+@keyframes home-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Scale-in: used for the phoneme symbol in retention card */
+@keyframes symbol-in {
+  from { opacity: 0; transform: scale(0.88); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* Progress bar mount: start collapsed, fill to current value */
+@keyframes bar-mount {
+  from { transform: scaleX(0); }
+}
+
+.animate-home-in {
+  animation: home-in 0.28s var(--ease-out-expo) both;
+  will-change: opacity, transform;
+}
+
+/* Stagger delays for sequenced entrances (e.g. action tile rows) */
+.animate-home-in-d1 { animation-delay: 60ms; }
+.animate-home-in-d2 { animation-delay: 110ms; }
+.animate-home-in-d3 { animation-delay: 160ms; }
+
+.animate-symbol-in {
+  animation: symbol-in 0.32s var(--ease-out-expo) both;
+  will-change: opacity, transform;
+}
+
+/* Progress bar: fill animates in from zero on mount */
+.progress-fill-mount {
+  transform-origin: left;
+  animation: bar-mount 500ms var(--ease-out-expo) both;
+  animation-delay: 120ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-home-in,
+  .animate-symbol-in,
+  .progress-fill-mount {
     animation: none !important;
   }
 }

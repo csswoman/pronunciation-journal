@@ -21,6 +21,10 @@ export type ExerciseVariant =
   | 'minimal_pair'
   | 'pick_sound'
   | 'pick_word'
+  | 'identify'
+  | 'ax_same_different'
+  | 'odd_one_out'
+  | 'abx'
 
 export interface ExerciseType {
   domain: ExerciseDomain

@@ -1,4 +1,4 @@
-import { Check } from "lucide-react";
+import { Check, Flame } from "lucide-react";
 import type { DailyStreakResult } from "@/lib/daily/streak";
 
 interface HomeStreakBadgeProps {
@@ -41,16 +41,14 @@ export default function HomeStreakBadge({ streak }: HomeStreakBadgeProps) {
 
   return (
     <div className="text-center shrink-0">
-      <div className="text-xl leading-none" aria-hidden>
-        🔥
-      </div>
+      <Flame size={20} className="text-[var(--warning)] mx-auto" aria-hidden />
       <b
-        className="text-2xl block leading-none text-[var(--text-primary)] mt-0.5"
-        style={{ fontFamily: "var(--font-display), serif" }}
+        className="type-stat mt-0.5 block text-2xl"
+        aria-label={`${current} ${current === 1 ? 'day' : 'days'} streak`}
       >
         {current}
       </b>
-      <span className="text-[10px] text-[var(--text-tertiary)] uppercase tracking-wider">
+      <span className="type-overline">
         {current === 1 ? "day" : "days"}
       </span>
       <WeekDots streakDays={current} completedToday={completedToday} />

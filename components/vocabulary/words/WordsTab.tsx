@@ -116,18 +116,15 @@ export function WordsTab({
                 <button
                   key={f}
                   onClick={() => setFilterType(f)}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[13px] font-medium border transition-colors"
-                  style={{
-                    background: isActive ? "var(--primary)" : "transparent",
-                    borderColor: isActive ? "var(--primary)" : "var(--line-divider)",
-                    color: isActive ? "var(--on-primary)" : "var(--text-secondary)",
-                  }}
+                  className={[
+                    "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[13px] font-medium border transition-colors",
+                    isActive
+                      ? "bg-primary border-primary text-on-primary"
+                      : "bg-transparent border-border-default text-fg-secondary hover:border-border-strong hover:text-fg",
+                  ].join(" ")}
                 >
                   {label}
-                  <span
-                    className="text-[12px] font-semibold tabular-nums"
-                    style={{ opacity: isActive ? 0.85 : 1, color: isActive ? "var(--on-primary)" : "var(--text-secondary)" }}
-                  >
+                  <span className={["text-[12px] font-semibold tabular-nums", isActive ? "opacity-85" : ""].join(" ")}>
                     {count}
                   </span>
                 </button>
@@ -135,12 +132,12 @@ export function WordsTab({
             })}
             <button
               onClick={() => setFilterType("favorites")}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[13px] font-medium border transition-colors"
-              style={{
-                background: filterType === "favorites" ? "var(--primary)" : "transparent",
-                borderColor: filterType === "favorites" ? "var(--primary)" : "var(--line-divider)",
-                color: filterType === "favorites" ? "var(--on-primary)" : "var(--text-secondary)",
-              }}
+              className={[
+                "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[13px] font-medium border transition-colors",
+                filterType === "favorites"
+                  ? "bg-primary border-primary text-on-primary"
+                  : "bg-transparent border-border-default text-fg-secondary hover:border-border-strong hover:text-fg",
+              ].join(" ")}
             >
               <Heart size={11} fill={filterType === "favorites" ? "currentColor" : "none"} />
               Favorites

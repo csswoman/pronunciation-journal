@@ -11,6 +11,7 @@ interface Props {
   exercise: Exercise
   onSubmit: (isCorrect: boolean, userAnswer: string) => void
   focusUi?: boolean
+  voice?: SpeechSynthesisVoice
 }
 
 function levenshtein(a: string, b: string): number {
@@ -28,7 +29,7 @@ function levenshtein(a: string, b: string): number {
   return dp[m][n]
 }
 
-export function DictationExercise({ exercise, onSubmit, focusUi = false }: Props) {
+export function DictationExercise({ exercise, onSubmit, focusUi = false, voice }: Props) {
   const [value, setValue] = useState('')
   const [submitted, setSubmitted] = useState(false)
   const [isCorrect, setIsCorrect] = useState(false)
@@ -38,7 +39,7 @@ export function DictationExercise({ exercise, onSubmit, focusUi = false }: Props
 
   useEffect(() => {
     if (exercise.targetWord) {
-      const timer = setTimeout(() => speak(exercise.targetWord!), 300)
+      const timer = setTimeout(() => speak(exercise.targetWord!, { voice }), 300)
       return () => clearTimeout(timer)
     }
   }, [exercise.targetWord])
@@ -59,7 +60,7 @@ export function DictationExercise({ exercise, onSubmit, focusUi = false }: Props
 
   function handlePlay() {
     setPlayed(true)
-    if (exercise.targetWord) speak(exercise.targetWord)
+    if (exercise.targetWord) speak(exercise.targetWord, { voice })
   }
 
   const canCheck = value.trim().length > 0 && !submitted
@@ -102,7 +103,7 @@ export function DictationExercise({ exercise, onSubmit, focusUi = false }: Props
       aria-label="Tu respuesta"
       aria-invalid={submitted && !isCorrect}
       className={cn(
-        focusUi ? 'pf-type-in' : 'w-full rounded-[var(--radius-md)] text-base py-4 px-4 text-center border border-[1.5px] border-solid outline-none transition-[border-color] duration-200',
+        focusUi ? 'pf-type-in' : 'w-full rounded-[var(--radius-md)] text-base py-4 px-4 text-center border border-[1.5px] border-solid outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary)] focus-visible:ring-offset-1 transition-[border-color] duration-200',
         focusUi && submitted && (isCorrect ? 'pf-type-in--correct' : 'pf-type-in--wrong'),
         !focusUi &&
           (submitted

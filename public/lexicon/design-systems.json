@@ -10,7 +10,8 @@
       "architecture",
       "advanced"
     ],
-    "ipa": "/æbstɹækʃʌn leɪɜr/"
+    "ipa": "/æbstɹækʃʌn leɪɜr/",
+    "exampleSentence": "The abstraction layer separates raw token values from component-level decisions."
   },
   {
     "id": "alias-token",
@@ -23,7 +24,8 @@
       "semantic",
       "fundamentals"
     ],
-    "ipa": "/eɪliːʌs toʊkʌn/"
+    "ipa": "/eɪliːʌs toʊkʌn/",
+    "exampleSentence": "An alias token like color-primary just points to blue-600 under the hood."
   },
   {
     "id": "atomic-design",
@@ -36,7 +38,8 @@
       "components",
       "architecture"
     ],
-    "ipa": "/ʌtɑmɪk dɪzaɪn/"
+    "ipa": "/ʌtɑmɪk dɪzaɪn/",
+    "exampleSentence": "We follow atomic design principles, starting with atoms and building up to pages."
   },
   {
     "id": "base-component",
@@ -49,7 +52,8 @@
       "architecture",
       "headless"
     ],
-    "ipa": "/beɪs kʌmpoʊnʌnt/"
+    "ipa": "/beɪs kʌmpoʊnʌnt/",
+    "exampleSentence": "The base component provides the right keyboard behavior without any visual styling."
   },
   {
     "id": "baseline-grid",
@@ -62,7 +66,8 @@
       "typography",
       "layout"
     ],
-    "ipa": "/beɪslaɪn ɡɹɪd/"
+    "ipa": "/beɪslaɪn ɡɹɪd/",
+    "exampleSentence": "All text in the interface snaps to the baseline grid for consistent vertical rhythm."
   },
   {
     "id": "border-radius-token",
@@ -75,7 +80,8 @@
       "visual",
       "css"
     ],
-    "ipa": "/bɔɹdɜr ɹeɪdiːʌs toʊkʌn/"
+    "ipa": "/bɔɹdɜr ɹeɪdiːʌs toʊkʌn/",
+    "exampleSentence": "Use the border radius token so corners stay consistent across every card."
   },
   {
     "id": "breakpoint",
@@ -87,7 +93,8 @@
       "responsive",
       "layout",
       "css"
-    ]
+    ],
+    "exampleSentence": "The sidebar collapses at the mobile breakpoint to save screen space."
   },
   {
     "id": "cascade-layer",
@@ -100,7 +107,8 @@
       "specificity",
       "advanced"
     ],
-    "ipa": "/kæskeɪd leɪɜr/"
+    "ipa": "/kæskeɪd leɪɜr/",
+    "exampleSentence": "We use a cascade layer to ensure utility classes always win over component defaults."
   },
   {
     "id": "color-palette",
@@ -113,7 +121,8 @@
       "tokens",
       "fundamentals"
     ],
-    "ipa": "/kʌlɜr pælʌt/"
+    "ipa": "/kʌlɜr pælʌt/",
+    "exampleSentence": "The full color palette has twelve hues with ten shades each."
   },
   {
     "id": "color-ramp",
@@ -126,7 +135,8 @@
       "tokens",
       "visual"
     ],
-    "ipa": "/kʌlɜr ɹæmp/"
+    "ipa": "/kʌlɜr ɹæmp/",
+    "exampleSentence": "The blue color ramp goes from blue-50 for backgrounds to blue-900 for text."
   },
   {
     "id": "color-role",
@@ -139,7 +149,8 @@
       "semantic",
       "tokens"
     ],
-    "ipa": "/kʌlɜr ɹoʊl/"
+    "ipa": "/kʌlɜr ɹoʊl/",
+    "exampleSentence": "The error color role is used wherever the system needs to signal a problem."
   },
   {
     "id": "component-api",
@@ -152,7 +163,8 @@
       "react",
       "documentation"
     ],
-    "ipa": "/kʌmpoʊnʌnt eɪpiːaɪ/"
+    "ipa": "/kʌmpoʊnʌnt eɪpiːaɪ/",
+    "exampleSentence": "Keep the component API small so consuming teams have less to learn."
   },
   {
     "id": "component-library",
@@ -165,7 +177,8 @@
       "components",
       "tooling"
     ],
-    "ipa": "/kʌmpoʊnʌnt laɪbɹɛɹiː/"
+    "ipa": "/kʌmpoʊnʌnt laɪbɹɛɹiː/",
+    "exampleSentence": "Every product team pulls from the shared component library instead of building their own."
   },
   {
     "id": "composition",
@@ -178,7 +191,8 @@
       "react",
       "patterns"
     ],
-    "ipa": "/kɑmpʌzɪʃʌn/"
+    "ipa": "/kɑmpʌzɪʃʌn/",
+    "exampleSentence": "We build complex layouts through composition of smaller focused components."
   },
   {
     "id": "compound-variant",
@@ -191,7 +205,8 @@
       "cva",
       "advanced"
     ],
-    "ipa": "/kɑmpaʊnd vɛɹiːʌnt/"
+    "ipa": "/kɑmpaʊnd vɛɹiːʌnt/",
+    "exampleSentence": "A compound variant applies a special style only when size is small and variant is ghost."
   },
   {
     "id": "constraint",
@@ -204,7 +219,8 @@
       "fundamentals",
       "tokens"
     ],
-    "ipa": "/kʌnstɹeɪnt/"
+    "ipa": "/kʌnstɹeɪnt/",
+    "exampleSentence": "A spacing constraint means teams can only pick from eight approved values."
   },
   {
     "id": "consuming-team",
@@ -217,7 +233,8 @@
       "adoption",
       "process"
     ],
-    "ipa": "/kʌnsuːmɪŋ tiːm/"
+    "ipa": "/kʌnsuːmɪŋ tiːm/",
+    "exampleSentence": "The consuming team opened an issue because the button padding changed unexpectedly."
   },
   {
     "id": "css-custom-property",
@@ -229,7 +246,8 @@
       "css",
       "tokens",
       "fundamentals"
-    ]
+    ],
+    "exampleSentence": "The theme color is set via a CSS custom property on the root element."
   },
   {
     "id": "css-in-js",
@@ -241,7 +259,8 @@
       "css",
       "react",
       "tooling"
-    ]
+    ],
+    "exampleSentence": "We moved away from CSS-in-JS to reduce runtime overhead in the bundle."
   },
   {
     "id": "dark-mode",
@@ -254,7 +273,8 @@
       "color",
       "accessibility"
     ],
-    "ipa": "/dɑɹk moʊd/"
+    "ipa": "/dɑɹk moʊd/",
+    "exampleSentence": "Semantic tokens make dark mode work without touching component code."
   },
   {
     "id": "density",
@@ -267,7 +287,8 @@
       "layout",
       "variants"
     ],
-    "ipa": "/dɛnsʌtiː/"
+    "ipa": "/dɛnsʌtiː/",
+    "exampleSentence": "The compact density option reduces padding for data-heavy admin screens."
   },
   {
     "id": "design-language",
@@ -280,7 +301,8 @@
       "brand",
       "strategy"
     ],
-    "ipa": "/dɪzaɪn læŋɡwʌdʒ/"
+    "ipa": "/dɪzaɪn læŋɡwʌdʒ/",
+    "exampleSentence": "The new design language is warmer and rounder than the previous version."
   },
   {
     "id": "design-token",
@@ -293,7 +315,8 @@
       "fundamentals",
       "css"
     ],
-    "ipa": "/dɪzaɪn toʊkʌn/"
+    "ipa": "/dɪzaɪn toʊkʌn/",
+    "exampleSentence": "Every color, size, and radius in the UI is stored as a design token."
   },
   {
     "id": "documentation-site",
@@ -306,7 +329,8 @@
       "adoption",
       "tooling"
     ],
-    "ipa": "/dɑkjʌmɛnteɪʃʌn saɪt/"
+    "ipa": "/dɑkjʌmɛnteɪʃʌn saɪt/",
+    "exampleSentence": "The documentation site shows live examples of every component variant."
   },
   {
     "id": "elevation",
@@ -319,7 +343,8 @@
       "visual",
       "tokens"
     ],
-    "ipa": "/ɛlʌveɪʃʌn/"
+    "ipa": "/ɛlʌveɪʃʌn/",
+    "exampleSentence": "Modals sit at the highest elevation level in the shadow token scale."
   },
   {
     "id": "fallback-font",
@@ -332,7 +357,8 @@
       "performance",
       "css"
     ],
-    "ipa": "/fɔlbæk fɑnt/"
+    "ipa": "/fɔlbæk fɑnt/",
+    "exampleSentence": "A well-matched fallback font prevents layout shift while the brand font loads."
   },
   {
     "id": "fluid-type",
@@ -345,7 +371,8 @@
       "responsive",
       "css"
     ],
-    "ipa": "/fluːʌd tʌpɑɡɹʌfiː/"
+    "ipa": "/fluːʌd tʌpɑɡɹʌfiː/",
+    "exampleSentence": "Fluid typography scales headings smoothly between mobile and desktop without steps."
   },
   {
     "id": "focus-ring",
@@ -358,7 +385,8 @@
       "a11y",
       "css"
     ],
-    "ipa": "/foʊkʌs ɹɪŋ/"
+    "ipa": "/foʊkʌs ɹɪŋ/",
+    "exampleSentence": "The focus ring must be visible enough to meet WCAG contrast requirements."
   },
   {
     "id": "font-scale",
@@ -371,7 +399,8 @@
       "tokens",
       "fundamentals"
     ],
-    "ipa": "/taɪp skeɪl/"
+    "ipa": "/taɪp skeɪl/",
+    "exampleSentence": "The type scale defines seven sizes from xs through 4xl for consistent hierarchy."
   },
   {
     "id": "font-stack",
@@ -384,7 +413,8 @@
       "css",
       "fundamentals"
     ],
-    "ipa": "/fɑnt stæk/"
+    "ipa": "/fɑnt stæk/",
+    "exampleSentence": "The font stack falls back to system-ui when the brand font isn't available."
   },
   {
     "id": "global-style",
@@ -397,7 +427,8 @@
       "fundamentals",
       "reset"
     ],
-    "ipa": "/ɡloʊbʌl staɪl/"
+    "ipa": "/ɡloʊbʌl staɪl/",
+    "exampleSentence": "Global styles set the root font size and CSS custom properties for the theme."
   },
   {
     "id": "gutters",
@@ -410,7 +441,8 @@
       "grid",
       "spacing"
     ],
-    "ipa": "/ɡʌtɜrz/"
+    "ipa": "/ɡʌtɜrz/",
+    "exampleSentence": "Consistent gutters between columns keep the layout breathable at every breakpoint."
   },
   {
     "id": "headless-component",
@@ -423,7 +455,8 @@
       "architecture",
       "accessibility"
     ],
-    "ipa": "/hɛdlʌs kʌmpoʊnʌnt/"
+    "ipa": "/hɛdlʌs kʌmpoʊnʌnt/",
+    "exampleSentence": "A headless component gives you accessible dialog behavior without any default styles."
   },
   {
     "id": "hue-token",
@@ -436,7 +469,8 @@
       "tokens",
       "theming"
     ],
-    "ipa": "/hjuː toʊkʌn/"
+    "ipa": "/hjuː toʊkʌn/",
+    "exampleSentence": "Changing one hue token updates the entire accent color across the product."
   },
   {
     "id": "icon-system",
@@ -449,7 +483,8 @@
       "svg",
       "components"
     ],
-    "ipa": "/aɪkɑn sɪstʌm/"
+    "ipa": "/aɪkɑn sɪstʌm/",
+    "exampleSentence": "Every icon in the icon system uses the same 24px grid and 1.5px stroke."
   },
   {
     "id": "inheritance-token",
@@ -462,7 +497,8 @@
       "css",
       "theming"
     ],
-    "ipa": "/toʊkʌn ɪnhɛɹʌtʌns/"
+    "ipa": "/toʊkʌn ɪnhɛɹʌtʌns/",
+    "exampleSentence": "Token inheritance lets a child theme override just a few values from the parent."
   },
   {
     "id": "interactive-state",
@@ -475,7 +511,8 @@
       "css",
       "interaction"
     ],
-    "ipa": "/ɪntɜræktɪv steɪt/"
+    "ipa": "/ɪntɜræktɪv steɪt/",
+    "exampleSentence": "Design the interactive state for hover, focus, and disabled before handoff."
   },
   {
     "id": "layer-token",
@@ -488,7 +525,8 @@
       "color",
       "semantic"
     ],
-    "ipa": "/leɪɜr toʊkʌn/"
+    "ipa": "/leɪɜr toʊkʌn/",
+    "exampleSentence": "The surface layer token switches from white to dark gray in dark mode."
   },
   {
     "id": "line-height",
@@ -501,7 +539,8 @@
       "tokens",
       "css"
     ],
-    "ipa": "/laɪn haɪt/"
+    "ipa": "/laɪn haɪt/",
+    "exampleSentence": "A line height of 1.5 is comfortable for body text at most font sizes."
   },
   {
     "id": "linting-tokens",
@@ -513,7 +552,8 @@
       "governance",
       "tooling",
       "tokens"
-    ]
+    ],
+    "exampleSentence": "Token linting fails the build if a hardcoded color sneaks into a component."
   },
   {
     "id": "live-region",
@@ -526,7 +566,8 @@
       "aria",
       "a11y"
     ],
-    "ipa": "/laɪv ɹiːdʒʌn/"
+    "ipa": "/laɪv ɹiːdʒʌn/",
+    "exampleSentence": "The toast message uses a live region so screen readers announce it automatically."
   },
   {
     "id": "motion-token",
@@ -539,7 +580,8 @@
       "tokens",
       "motion"
     ],
-    "ipa": "/moʊʃʌn toʊkʌn/"
+    "ipa": "/moʊʃʌn toʊkʌn/",
+    "exampleSentence": "All transitions use a motion token so the whole UI feels consistently paced."
   },
   {
     "id": "optical-sizing",
@@ -552,7 +594,8 @@
       "advanced",
       "visual"
     ],
-    "ipa": "/ɑptɪkʌl saɪzɪŋ/"
+    "ipa": "/ɑptɪkʌl saɪzɪŋ/",
+    "exampleSentence": "Optical sizing tightens letter spacing at large display sizes to look balanced."
   },
   {
     "id": "pattern",
@@ -565,7 +608,8 @@
       "documentation",
       "ux"
     ],
-    "ipa": "/pætɜrn/"
+    "ipa": "/pætɜrn/",
+    "exampleSentence": "The confirmation dialog is a documented pattern teams should reuse everywhere."
   },
   {
     "id": "polymorphic-component",
@@ -578,7 +622,8 @@
       "react",
       "advanced"
     ],
-    "ipa": "/pɑliːmɔɹfɪk kʌmpoʊnʌnt/"
+    "ipa": "/pɑliːmɔɹfɪk kʌmpoʊnʌnt/",
+    "exampleSentence": "A polymorphic component can render as a button or an anchor depending on the as prop."
   },
   {
     "id": "primitive-token",
@@ -591,7 +636,8 @@
       "fundamentals",
       "color"
     ],
-    "ipa": "/pɹɪmʌtɪv toʊkʌn/"
+    "ipa": "/pɹɪmʌtɪv toʊkʌn/",
+    "exampleSentence": "Primitive tokens like blue-500 have no opinion about where they should be used."
   },
   {
     "id": "prop-driven-styling",
@@ -603,7 +649,8 @@
       "components",
       "react",
       "variants"
-    ]
+    ],
+    "exampleSentence": "Prop-driven styling keeps variants in one place instead of scattered across CSS files."
   },
   {
     "id": "reduced-motion",
@@ -616,7 +663,8 @@
       "animation",
       "css"
     ],
-    "ipa": "/ɹʌduːst moʊʃʌn/"
+    "ipa": "/ɹʌduːst moʊʃʌn/",
+    "exampleSentence": "Respect the reduced motion preference by disabling decorative animations."
   },
   {
     "id": "reset",
@@ -628,7 +676,8 @@
       "css",
       "fundamentals",
       "global-style"
-    ]
+    ],
+    "exampleSentence": "The CSS reset removes browser defaults so every element starts from the same baseline."
   },
   {
     "id": "responsive-token",
@@ -641,7 +690,8 @@
       "responsive",
       "advanced"
     ],
-    "ipa": "/ɹɪspɑnsɪv toʊkʌn/"
+    "ipa": "/ɹɪspɑnsɪv toʊkʌn/",
+    "exampleSentence": "A responsive token increases the spacing value from four to eight on wider screens."
   },
   {
     "id": "scale",
@@ -654,7 +704,8 @@
       "tokens",
       "fundamentals"
     ],
-    "ipa": "/speɪsɪŋ skeɪl/"
+    "ipa": "/speɪsɪŋ skeɪl/",
+    "exampleSentence": "The spacing scale uses multiples of four so layouts always align to a grid."
   },
   {
     "id": "semantic-color",
@@ -667,7 +718,8 @@
       "tokens",
       "fundamentals"
     ],
-    "ipa": "/sɪmæntɪk kʌlɜr/"
+    "ipa": "/sɪmæntɪk kʌlɜr/",
+    "exampleSentence": "Use the semantic color token for danger, not the raw red hex value."
   },
   {
     "id": "shadow-token",
@@ -680,7 +732,8 @@
       "elevation",
       "css"
     ],
-    "ipa": "/ʃædoʊ toʊkʌn/"
+    "ipa": "/ʃædoʊ toʊkʌn/",
+    "exampleSentence": "The card uses the low shadow token and the modal uses the high shadow token."
   },
   {
     "id": "slot",
@@ -693,7 +746,8 @@
       "composition",
       "patterns"
     ],
-    "ipa": "/slɑt/"
+    "ipa": "/slɑt/",
+    "exampleSentence": "The card component has a slot for custom actions in the footer area."
   },
   {
     "id": "specificity-score",
@@ -706,7 +760,8 @@
       "cascade",
       "fundamentals"
     ],
-    "ipa": "/spɛsʌfɪsʌtiː skɔɹ/"
+    "ipa": "/spɛsʌfɪsʌtiː skɔɹ/",
+    "exampleSentence": "A high specificity score on a utility class can be hard to override later."
   },
   {
     "id": "style-dictionary",
@@ -719,7 +774,8 @@
       "tokens",
       "automation"
     ],
-    "ipa": "/staɪl dɪkʃʌnɛɹiː/"
+    "ipa": "/staɪl dɪkʃʌnɛɹiː/",
+    "exampleSentence": "Style Dictionary transforms the token JSON into CSS variables and iOS constants."
   },
   {
     "id": "theming",
@@ -732,7 +788,8 @@
       "css",
       "fundamentals"
     ],
-    "ipa": "/θiːmɪŋ/"
+    "ipa": "/θiːmɪŋ/",
+    "exampleSentence": "Theming lets each brand swap colors and fonts without touching any component."
   },
   {
     "id": "token-pipeline",
@@ -745,7 +802,8 @@
       "tooling",
       "automation"
     ],
-    "ipa": "/toʊkʌn paɪplaɪn/"
+    "ipa": "/toʊkʌn paɪplaɪn/",
+    "exampleSentence": "The token pipeline runs on every merge and publishes a new CSS variables file."
   },
   {
     "id": "utility-class",
@@ -758,7 +816,8 @@
       "tailwind",
       "fundamentals"
     ],
-    "ipa": "/juːtɪlʌtiː klæs/"
+    "ipa": "/juːtɪlʌtiː klæs/",
+    "exampleSentence": "A utility class like flex applies a single CSS property in one place."
   },
   {
     "id": "variant",
@@ -771,7 +830,8 @@
       "fundamentals",
       "variants"
     ],
-    "ipa": "/vɛɹiːʌnt/"
+    "ipa": "/vɛɹiːʌnt/",
+    "exampleSentence": "The destructive variant of the button is red and reserved for dangerous actions."
   },
   {
     "id": "versioning",
@@ -783,7 +843,8 @@
       "process",
       "governance",
       "semver"
-    ]
+    ],
+    "exampleSentence": "Breaking changes in the component library always bump the major version number."
   },
   {
     "id": "visual-regression",
@@ -796,7 +857,8 @@
       "tooling",
       "quality"
     ],
-    "ipa": "/vɪʒʌwʌl ɹʌɡɹɛʃʌn tɛst/"
+    "ipa": "/vɪʒʌwʌl ɹʌɡɹɛʃʌn tɛst/",
+    "exampleSentence": "A visual regression test caught a shadow change that reviewers missed."
   },
   {
     "id": "z-index-scale",
@@ -808,7 +870,8 @@
       "tokens",
       "css",
       "layout"
-    ]
+    ],
+    "exampleSentence": "The z-index scale has named levels like dropdown and modal to avoid magic numbers."
   },
   {
     "id": "cva",
@@ -820,7 +883,8 @@
       "tooling",
       "tailwind",
       "variants"
-    ]
+    ],
+    "exampleSentence": "CVA lets you define all button variants in one typed object instead of scattered classes."
   },
   {
     "id": "class-merging",
@@ -833,7 +897,8 @@
       "css",
       "tooling"
     ],
-    "ipa": "/klæs mɜrdʒɪŋ/"
+    "ipa": "/klæs mɜrdʒɪŋ/",
+    "exampleSentence": "Use class merging with cn() so consumer classes override the component defaults."
   },
   {
     "id": "design-system-adoption",
@@ -846,7 +911,8 @@
       "process",
       "strategy"
     ],
-    "ipa": "/ʌdɑpʃʌn/"
+    "ipa": "/ʌdɑpʃʌn/",
+    "exampleSentence": "Adoption of the new system reached seventy percent of teams within six months."
   },
   {
     "id": "contribution-model",
@@ -859,7 +925,8 @@
       "process",
       "collaboration"
     ],
-    "ipa": "/kɑntɹʌbjuːʃʌn mɑdʌl/"
+    "ipa": "/kɑntɹʌbjuːʃʌn mɑdʌl/",
+    "exampleSentence": "The contribution model lets product teams propose new components through a RFC."
   },
   {
     "id": "aria-role",
@@ -872,7 +939,8 @@
       "aria",
       "semantics"
     ],
-    "ipa": "/ɑɹiːʌ ɹoʊl/"
+    "ipa": "/ɑɹiːʌ ɹoʊl/",
+    "exampleSentence": "Add the correct ARIA role so screen readers announce the element properly."
   },
   {
     "id": "forwardref",
@@ -884,7 +952,8 @@
       "react",
       "components",
       "advanced"
-    ]
+    ],
+    "exampleSentence": "Wrap the input with forwardRef so parent components can access the DOM node."
   },
   {
     "id": "open-closed-principle",
@@ -897,7 +966,8 @@
       "principles",
       "advanced"
     ],
-    "ipa": "/oʊpʌn kloʊzd pɹɪnsʌpʌl/"
+    "ipa": "/oʊpʌn kloʊzd pɹɪnsʌpʌl/",
+    "exampleSentence": "The open/closed principle means you extend a component with props, not internal edits."
   },
   {
     "id": "pixel-pushing",
@@ -910,7 +980,8 @@
       "visual",
       "detail"
     ],
-    "ipa": "/pɪksʌl pʊʃɪŋ/"
+    "ipa": "/pɪksʌl pʊʃɪŋ/",
+    "exampleSentence": "After all the logic was done, we spent an afternoon pixel pushing the spacing."
   },
   {
     "id": "surface",
@@ -923,6 +994,8 @@
       "tokens",
       "semantic"
     ],
-    "ipa": "/sɜrfʌs/"
+    "ipa": "/sɜrfʌs/",
+    "exampleSentence": "Place content on the surface token color so it adapts correctly to dark mode."
   }
 ]
+

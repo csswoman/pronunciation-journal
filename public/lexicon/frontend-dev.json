@@ -10,7 +10,8 @@
       "fundamentals",
       "patterns"
     ],
-    "ipa": "/æbstɹækʃʌn/"
+    "ipa": "/æbstɹækʃʌn/",
+    "exampleSentence": "The abstraction hides the fetch logic so components don't need to know the URL."
   },
   {
     "id": "api",
@@ -23,7 +24,8 @@
       "communication",
       "integration"
     ],
-    "ipa": "/eɪpiːaɪ/"
+    "ipa": "/eɪpiːaɪ/",
+    "exampleSentence": "The frontend talks to the API to get data instead of hitting the database directly."
   },
   {
     "id": "async",
@@ -36,7 +38,8 @@
       "fundamentals",
       "performance"
     ],
-    "ipa": "/eɪsɪŋkɹʌnʌs/"
+    "ipa": "/eɪsɪŋkɹʌnʌs/",
+    "exampleSentence": "Fetching user data is asynchronous so the UI doesn't freeze while waiting."
   },
   {
     "id": "bundle",
@@ -49,7 +52,8 @@
       "tooling",
       "performance"
     ],
-    "ipa": "/bʌndʌl/"
+    "ipa": "/bʌndʌl/",
+    "exampleSentence": "The production bundle is about half the size of the development one."
   },
   {
     "id": "bundler",
@@ -61,7 +65,8 @@
       "tooling",
       "build",
       "webpack"
-    ]
+    ],
+    "exampleSentence": "The bundler compiles TypeScript, resolves imports, and outputs a single JS file."
   },
   {
     "id": "cache",
@@ -74,7 +79,8 @@
       "fundamentals",
       "browser"
     ],
-    "ipa": "/kæʃ/"
+    "ipa": "/kæʃ/",
+    "exampleSentence": "The request goes through a cache so the same data isn't fetched twice."
   },
   {
     "id": "callback",
@@ -87,7 +93,8 @@
       "async",
       "fundamentals"
     ],
-    "ipa": "/kɔlbæk/"
+    "ipa": "/kɔlbæk/",
+    "exampleSentence": "Pass a callback to the button so it knows what to do when clicked."
   },
   {
     "id": "cdn",
@@ -99,7 +106,8 @@
       "performance",
       "infrastructure",
       "deployment"
-    ]
+    ],
+    "exampleSentence": "Static assets are served from a CDN so they load fast anywhere in the world."
   },
   {
     "id": "client-side",
@@ -111,7 +119,8 @@
       "fundamentals",
       "rendering",
       "architecture"
-    ]
+    ],
+    "exampleSentence": "Form validation runs client-side first so users get instant feedback."
   },
   {
     "id": "closure",
@@ -124,7 +133,8 @@
       "scope",
       "advanced"
     ],
-    "ipa": "/kloʊʒɜr/"
+    "ipa": "/kloʊʒɜr/",
+    "exampleSentence": "The event handler closes over the count variable from the outer function."
   },
   {
     "id": "code-splitting",
@@ -137,7 +147,8 @@
       "build",
       "lazy-loading"
     ],
-    "ipa": "/koʊd splɪtɪŋ/"
+    "ipa": "/koʊd splɪtɪŋ/",
+    "exampleSentence": "Code splitting cut the initial bundle size by forty percent."
   },
   {
     "id": "component",
@@ -150,7 +161,8 @@
       "fundamentals",
       "architecture"
     ],
-    "ipa": "/kʌmpoʊnʌnt/"
+    "ipa": "/kʌmpoʊnʌnt/",
+    "exampleSentence": "Each component owns its own state, styles, and behavior."
   },
   {
     "id": "controlled-component",
@@ -163,7 +175,8 @@
       "forms",
       "state"
     ],
-    "ipa": "/kʌntɹoʊld kʌmpoʊnʌnt/"
+    "ipa": "/kʌntɹoʊld kʌmpoʊnʌnt/",
+    "exampleSentence": "A controlled component gives you full control over what the input displays."
   },
   {
     "id": "cors",
@@ -176,7 +189,8 @@
       "browser",
       "api"
     ],
-    "ipa": "/kɔɹ/"
+    "ipa": "/kɔɹ/",
+    "exampleSentence": "The browser blocked the request because of a CORS policy on the server."
   },
   {
     "id": "css-cascade",
@@ -189,7 +203,8 @@
       "fundamentals",
       "specificity"
     ],
-    "ipa": "/kæskeɪd/"
+    "ipa": "/kæskeɪd/",
+    "exampleSentence": "Understanding the cascade explains why your styles are sometimes overridden."
   },
   {
     "id": "custom-hook",
@@ -202,7 +217,8 @@
       "hooks",
       "reusability"
     ],
-    "ipa": "/kʌstʌm hʊk/"
+    "ipa": "/kʌstʌm hʊk/",
+    "exampleSentence": "We wrote a custom hook to encapsulate the fetch-and-retry logic."
   },
   {
     "id": "debounce",
@@ -214,7 +230,8 @@
       "performance",
       "javascript",
       "events"
-    ]
+    ],
+    "exampleSentence": "Debounce the search input so it only fires after the user stops typing."
   },
   {
     "id": "declarative",
@@ -227,7 +244,8 @@
       "paradigm",
       "fundamentals"
     ],
-    "ipa": "/dɪklɛɹʌtɪv/"
+    "ipa": "/dɪklɛɹʌtɪv/",
+    "exampleSentence": "React is declarative — you describe what the UI should look like, not how to build it."
   },
   {
     "id": "dependency-array",
@@ -240,7 +258,8 @@
       "hooks",
       "performance"
     ],
-    "ipa": "/dɪpɛndʌnsiː ɜreɪ/"
+    "ipa": "/dɪpɛndʌnsiː ɜreɪ/",
+    "exampleSentence": "Add the user ID to the dependency array so the effect re-runs on change."
   },
   {
     "id": "derived-state",
@@ -253,7 +272,8 @@
       "state",
       "architecture"
     ],
-    "ipa": "/dɜraɪvd steɪt/"
+    "ipa": "/dɜraɪvd steɪt/",
+    "exampleSentence": "The total price is derived state — compute it from the cart items, don't store it."
   },
   {
     "id": "dom",
@@ -266,7 +286,8 @@
       "fundamentals",
       "javascript"
     ],
-    "ipa": "/dɑm/"
+    "ipa": "/dɑm/",
+    "exampleSentence": "React updates the DOM efficiently by comparing the virtual tree first."
   },
   {
     "id": "dry",
@@ -279,7 +300,8 @@
       "architecture",
       "fundamentals"
     ],
-    "ipa": "/dɹaɪ/"
+    "ipa": "/dɹaɪ/",
+    "exampleSentence": "Extract that logic into a shared helper to keep the code DRY."
   },
   {
     "id": "dynamic-import",
@@ -292,7 +314,8 @@
       "performance",
       "lazy-loading"
     ],
-    "ipa": "/daɪnæmɪk ɪmpɔɹt/"
+    "ipa": "/daɪnæmɪk ɪmpɔɹt/",
+    "exampleSentence": "A dynamic import loads the chart library only when the user opens that tab."
   },
   {
     "id": "end-to-end-test",
@@ -304,7 +327,8 @@
       "testing",
       "quality",
       "automation"
-    ]
+    ],
+    "exampleSentence": "The end-to-end test simulates a real user completing the checkout flow."
   },
   {
     "id": "event-delegation",
@@ -317,7 +341,8 @@
       "events",
       "performance"
     ],
-    "ipa": "/ɪvɛnt dɛlʌɡeɪʃʌn/"
+    "ipa": "/ɪvɛnt dɛlʌɡeɪʃʌn/",
+    "exampleSentence": "Event delegation handles all list item clicks from a single parent listener."
   },
   {
     "id": "event-loop",
@@ -330,7 +355,8 @@
       "runtime",
       "async"
     ],
-    "ipa": "/ɪvɛnt luːp/"
+    "ipa": "/ɪvɛnt luːp/",
+    "exampleSentence": "The event loop is why you can't block JavaScript with a long synchronous task."
   },
   {
     "id": "fallback",
@@ -343,7 +369,8 @@
       "fundamentals",
       "patterns"
     ],
-    "ipa": "/fɔlbæk/"
+    "ipa": "/fɔlbæk/",
+    "exampleSentence": "Show a fallback skeleton while the data is still loading."
   },
   {
     "id": "feature-flag",
@@ -356,7 +383,8 @@
       "process",
       "experimentation"
     ],
-    "ipa": "/fiːtʃɜr flæɡ/"
+    "ipa": "/fiːtʃɜr flæɡ/",
+    "exampleSentence": "The new checkout is behind a feature flag so we can enable it gradually."
   },
   {
     "id": "forking",
@@ -369,7 +397,8 @@
       "collaboration",
       "open-source"
     ],
-    "ipa": "/fɔɹkɪŋ/"
+    "ipa": "/fɔɹkɪŋ/",
+    "exampleSentence": "Fork the repo and open a pull request from your own branch."
   },
   {
     "id": "generic-type",
@@ -382,7 +411,8 @@
       "types",
       "advanced"
     ],
-    "ipa": "/dʒʌnɛɹɪk taɪp/"
+    "ipa": "/dʒʌnɛɹɪk taɪp/",
+    "exampleSentence": "A generic type lets the same hook work with strings, numbers, or objects."
   },
   {
     "id": "hot-reload",
@@ -395,7 +425,8 @@
       "dx",
       "development"
     ],
-    "ipa": "/hɑt ɹiːloʊd/"
+    "ipa": "/hɑt ɹiːloʊd/",
+    "exampleSentence": "Hot reload applies style changes instantly without losing the component state."
   },
   {
     "id": "hydration",
@@ -408,7 +439,8 @@
       "react",
       "rendering"
     ],
-    "ipa": "/haɪdɹeɪʃʌn/"
+    "ipa": "/haɪdɹeɪʃʌn/",
+    "exampleSentence": "Hydration errors happen when the server HTML doesn't match the client render."
   },
   {
     "id": "idempotent",
@@ -420,7 +452,8 @@
       "api",
       "fundamentals",
       "advanced"
-    ]
+    ],
+    "exampleSentence": "The initialize function is idempotent — calling it twice has no extra effect."
   },
   {
     "id": "immutability",
@@ -432,7 +465,8 @@
       "state",
       "javascript",
       "patterns"
-    ]
+    ],
+    "exampleSentence": "Immutability makes state changes predictable and easy to trace in React."
   },
   {
     "id": "intersection-observer",
@@ -445,7 +479,8 @@
       "api",
       "performance"
     ],
-    "ipa": "/ɪntɜrsɛkʃʌn ʌbzɜrvɜr/"
+    "ipa": "/ɪntɜrsɛkʃʌn ʌbzɜrvɜr/",
+    "exampleSentence": "Intersection Observer triggers the animation when the section enters the viewport."
   },
   {
     "id": "lazy-loading",
@@ -458,7 +493,8 @@
       "fundamentals",
       "images"
     ],
-    "ipa": "/leɪziː loʊdɪŋ/"
+    "ipa": "/leɪziː loʊdɪŋ/",
+    "exampleSentence": "Lazy loading images below the fold cut page weight by thirty percent."
   },
   {
     "id": "lifting-state",
@@ -471,7 +507,8 @@
       "state",
       "architecture"
     ],
-    "ipa": "/lɪftɪŋ steɪt/"
+    "ipa": "/lɪftɪŋ steɪt/",
+    "exampleSentence": "Lifting state to the parent let both sibling components read the same value."
   },
   {
     "id": "linting",
@@ -483,7 +520,8 @@
       "tooling",
       "quality",
       "dx"
-    ]
+    ],
+    "exampleSentence": "Linting catches unused imports and missing dependency arrays before code review."
   },
   {
     "id": "media-query",
@@ -496,7 +534,8 @@
       "responsive",
       "fundamentals"
     ],
-    "ipa": "/miːdiːʌ kwiːɹiː/"
+    "ipa": "/miːdiːʌ kwiːɹiː/",
+    "exampleSentence": "A media query hides the sidebar on screens narrower than seven hundred pixels."
   },
   {
     "id": "memoization",
@@ -508,7 +547,8 @@
       "performance",
       "react",
       "javascript"
-    ]
+    ],
+    "exampleSentence": "Memoization prevents the expensive sort from running on every re-render."
   },
   {
     "id": "middleware",
@@ -520,7 +560,8 @@
       "architecture",
       "patterns",
       "state"
-    ]
+    ],
+    "exampleSentence": "The router middleware checks authentication before rendering protected pages."
   },
   {
     "id": "mock",
@@ -532,7 +573,8 @@
       "testing",
       "fundamentals"
     ],
-    "ipa": "/mɑk/"
+    "ipa": "/mɑk/",
+    "exampleSentence": "Use a mock for the API in unit tests so they don't hit the real network."
   },
   {
     "id": "monorepo",
@@ -544,7 +586,8 @@
       "architecture",
       "tooling",
       "collaboration"
-    ]
+    ],
+    "exampleSentence": "All our packages live in a monorepo so teams can share components easily."
   },
   {
     "id": "mutation",
@@ -557,7 +600,8 @@
       "state",
       "fundamentals"
     ],
-    "ipa": "/mjuːteɪʃʌn/"
+    "ipa": "/mjuːteɪʃʌn/",
+    "exampleSentence": "Avoid direct mutation of state — always return a new object in a reducer."
   },
   {
     "id": "nullish-coalescing",
@@ -569,7 +613,8 @@
       "javascript",
       "operators",
       "syntax"
-    ]
+    ],
+    "exampleSentence": "Use nullish coalescing to fall back to a default only when the value is null."
   },
   {
     "id": "optional-chaining",
@@ -582,7 +627,8 @@
       "syntax",
       "operators"
     ],
-    "ipa": "/ɑpʃʌnʌl tʃeɪnɪŋ/"
+    "ipa": "/ɑpʃʌnʌl tʃeɪnɪŋ/",
+    "exampleSentence": "Optional chaining safely reads user?.profile?.avatar without crashing."
   },
   {
     "id": "pagination",
@@ -595,7 +641,8 @@
       "api",
       "performance"
     ],
-    "ipa": "/pædʒʌneɪʃʌn/"
+    "ipa": "/pædʒʌneɪʃʌn/",
+    "exampleSentence": "Pagination keeps the list fast by loading only twenty items at a time."
   },
   {
     "id": "polyfill",
@@ -607,7 +654,8 @@
       "browser",
       "compatibility",
       "javascript"
-    ]
+    ],
+    "exampleSentence": "A polyfill adds the missing method so older browsers can run the same code."
   },
   {
     "id": "portals",
@@ -620,7 +668,8 @@
       "dom",
       "advanced"
     ],
-    "ipa": "/pɔɹtʌl/"
+    "ipa": "/pɔɹtʌl/",
+    "exampleSentence": "A portal renders the modal at the body level so it escapes any overflow: hidden."
   },
   {
     "id": "prop-drilling",
@@ -633,7 +682,8 @@
       "architecture",
       "anti-patterns"
     ],
-    "ipa": "/pɹɑp dɹɪlɪŋ/"
+    "ipa": "/pɹɑp dɹɪlɪŋ/",
+    "exampleSentence": "Prop drilling five levels deep is a sign you should use context instead."
   },
   {
     "id": "pure-function",
@@ -646,7 +696,8 @@
       "functional",
       "fundamentals"
     ],
-    "ipa": "/pjʊɹ fʌŋkʃʌn/"
+    "ipa": "/pjʊɹ fʌŋkʃʌn/",
+    "exampleSentence": "A pure function with the same inputs always returns exactly the same output."
   },
   {
     "id": "race-condition",
@@ -659,7 +710,8 @@
       "async",
       "advanced"
     ],
-    "ipa": "/ɹeɪs kʌndɪʃʌn/"
+    "ipa": "/ɹeɪs kʌndɪʃʌn/",
+    "exampleSentence": "A race condition caused the older response to overwrite the newer one."
   },
   {
     "id": "reconciliation",
@@ -672,7 +724,8 @@
       "rendering",
       "advanced"
     ],
-    "ipa": "/ɹɛkʌnsɪliːeɪʃʌn/"
+    "ipa": "/ɹɛkʌnsɪliːeɪʃʌn/",
+    "exampleSentence": "React's reconciliation algorithm figures out the minimum DOM changes needed."
   },
   {
     "id": "refactoring",
@@ -684,7 +737,8 @@
       "process",
       "quality",
       "fundamentals"
-    ]
+    ],
+    "exampleSentence": "We spent the sprint refactoring the form logic without changing any behavior."
   },
   {
     "id": "render-prop",
@@ -697,7 +751,8 @@
       "patterns",
       "advanced"
     ],
-    "ipa": "/ɹɛndɜr pɹɑp/"
+    "ipa": "/ɹɛndɜr pɹɑp/",
+    "exampleSentence": "The render prop pattern shares tooltip logic without imposing any specific UI."
   },
   {
     "id": "rerender",
@@ -709,7 +764,8 @@
       "react",
       "performance",
       "fundamentals"
-    ]
+    ],
+    "exampleSentence": "Unnecessary re-renders were making the list feel sluggish on slow devices."
   },
   {
     "id": "rest-spread",
@@ -722,7 +778,8 @@
       "syntax",
       "fundamentals"
     ],
-    "ipa": "/ɹɛst spɹɛd/"
+    "ipa": "/ɹɛst spɹɛd/",
+    "exampleSentence": "Use the spread operator to merge the default props with the passed ones."
   },
   {
     "id": "scope",
@@ -735,7 +792,8 @@
       "fundamentals",
       "variables"
     ],
-    "ipa": "/skoʊp/"
+    "ipa": "/skoʊp/",
+    "exampleSentence": "The variable is out of scope because it was declared inside the if block."
   },
   {
     "id": "serialization",
@@ -747,7 +805,8 @@
       "data",
       "api",
       "javascript"
-    ]
+    ],
+    "exampleSentence": "Serialization converts the state object into a JSON string for storage."
   },
   {
     "id": "server-side-rendering",
@@ -759,7 +818,8 @@
       "rendering",
       "nextjs",
       "performance"
-    ]
+    ],
+    "exampleSentence": "Server-side rendering improves the first contentful paint on slow connections."
   },
   {
     "id": "side-effect",
@@ -772,7 +832,8 @@
       "javascript",
       "fundamentals"
     ],
-    "ipa": "/saɪd ɪfɛkt/"
+    "ipa": "/saɪd ɪfɛkt/",
+    "exampleSentence": "Put the fetch call inside useEffect so the side effect runs after render."
   },
   {
     "id": "single-source-of-truth",
@@ -785,7 +846,8 @@
       "architecture",
       "patterns"
     ],
-    "ipa": "/sɪŋɡʌl sɔɹs ʌv tɹuːθ/"
+    "ipa": "/sɪŋɡʌl sɔɹs ʌv tɹuːθ/",
+    "exampleSentence": "A single source of truth means the cart total is never out of sync."
   },
   {
     "id": "specificity",
@@ -798,7 +860,8 @@
       "fundamentals",
       "cascade"
     ],
-    "ipa": "/spɛsʌfɪsʌtiː/"
+    "ipa": "/spɛsʌfɪsʌtiː/",
+    "exampleSentence": "The inline style wins because it has the highest specificity score."
   },
   {
     "id": "static-site-generation",
@@ -811,7 +874,8 @@
       "nextjs",
       "performance"
     ],
-    "ipa": "/stætɪk saɪt dʒɛnɜreɪʃʌn/"
+    "ipa": "/stætɪk saɪt dʒɛnɜreɪʃʌn/",
+    "exampleSentence": "Static site generation pre-renders the blog so it loads without a server."
   },
   {
     "id": "storybook",
@@ -824,7 +888,8 @@
       "components",
       "documentation"
     ],
-    "ipa": "/stɔɹiːbʊk/"
+    "ipa": "/stɔɹiːbʊk/",
+    "exampleSentence": "Open Storybook to see every button variant in isolation before using it."
   },
   {
     "id": "strict-mode",
@@ -837,7 +902,8 @@
       "debugging",
       "development"
     ],
-    "ipa": "/stɹɪkt moʊd/"
+    "ipa": "/stɹɪkt moʊd/",
+    "exampleSentence": "Strict mode exposed a side effect in our effect that only ran once before."
   },
   {
     "id": "throttle",
@@ -850,7 +916,8 @@
       "javascript",
       "events"
     ],
-    "ipa": "/θɹɑtʌl/"
+    "ipa": "/θɹɑtʌl/",
+    "exampleSentence": "Throttle the scroll handler so it runs at most once every hundred milliseconds."
   },
   {
     "id": "tree-shaking",
@@ -863,7 +930,8 @@
       "performance",
       "tooling"
     ],
-    "ipa": "/tɹiː ʃeɪkɪŋ/"
+    "ipa": "/tɹiː ʃeɪkɪŋ/",
+    "exampleSentence": "Tree shaking removed the unused utility functions from the final bundle."
   },
   {
     "id": "type-narrowing",
@@ -876,7 +944,8 @@
       "types",
       "advanced"
     ],
-    "ipa": "/taɪp nɛɹoʊɪŋ/"
+    "ipa": "/taɪp nɛɹoʊɪŋ/",
+    "exampleSentence": "Type narrowing inside the if block tells TypeScript the value is definitely a string."
   },
   {
     "id": "union-type",
@@ -889,7 +958,8 @@
       "types",
       "fundamentals"
     ],
-    "ipa": "/juːnjʌn taɪp/"
+    "ipa": "/juːnjʌn taɪp/",
+    "exampleSentence": "A union type lets the prop accept either a string or a number."
   },
   {
     "id": "uncontrolled-component",
@@ -902,7 +972,8 @@
       "forms",
       "dom"
     ],
-    "ipa": "/ʌnkʌntɹoʊld kʌmpoʊnʌnt/"
+    "ipa": "/ʌnkʌntɹoʊld kʌmpoʊnʌnt/",
+    "exampleSentence": "An uncontrolled component reads its value from the DOM via a ref."
   },
   {
     "id": "virtual-dom",
@@ -915,7 +986,8 @@
       "rendering",
       "fundamentals"
     ],
-    "ipa": "/vɜrtʃuːʌl dɑm/"
+    "ipa": "/vɜrtʃuːʌl dɑm/",
+    "exampleSentence": "The virtual DOM lets React batch updates and touch the real DOM as little as possible."
   },
   {
     "id": "waterfall",
@@ -928,7 +1000,8 @@
       "network",
       "anti-patterns"
     ],
-    "ipa": "/wɔtɜrfɔl/"
+    "ipa": "/wɔtɜrfɔl/",
+    "exampleSentence": "A request waterfall was adding two seconds to the page load time."
   },
   {
     "id": "web-vitals",
@@ -941,7 +1014,8 @@
       "metrics",
       "seo"
     ],
-    "ipa": "/wɛb vaɪtʌl/"
+    "ipa": "/wɛb vaɪtʌl/",
+    "exampleSentence": "We improved our Web Vitals score by lazy loading images and reducing layout shift."
   },
   {
     "id": "zustand",
@@ -953,7 +1027,8 @@
       "state",
       "react",
       "libraries"
-    ]
+    ],
+    "exampleSentence": "We switched to Zustand because the store is much simpler to set up than Redux."
   },
   {
     "id": "compound-component",
@@ -966,7 +1041,8 @@
       "patterns",
       "advanced"
     ],
-    "ipa": "/kɑmpaʊnd kʌmpoʊnʌnt/"
+    "ipa": "/kɑmpaʊnd kʌmpoʊnʌnt/",
+    "exampleSentence": "A compound component like Tabs shares state between Tab and Panel internally."
   },
   {
     "id": "context-api",
@@ -979,7 +1055,8 @@
       "state",
       "fundamentals"
     ],
-    "ipa": "/kɑntɛkst eɪpiːaɪ/"
+    "ipa": "/kɑntɛkst eɪpiːaɪ/",
+    "exampleSentence": "The Context API passes the theme down without threading it through every component."
   },
   {
     "id": "error-boundary",
@@ -992,7 +1069,8 @@
       "resilience",
       "patterns"
     ],
-    "ipa": "/ɛɹɜr baʊndɜriː/"
+    "ipa": "/ɛɹɜr baʊndɜriː/",
+    "exampleSentence": "An error boundary catches the crash and shows a friendly message instead."
   },
   {
     "id": "stale-closure",
@@ -1005,7 +1083,8 @@
       "bugs",
       "hooks"
     ],
-    "ipa": "/steɪl kloʊʒɜr/"
+    "ipa": "/steɪl kloʊʒɜr/",
+    "exampleSentence": "A stale closure inside the timer was reading the count value from the first render."
   },
   {
     "id": "accessibility-tree",
@@ -1018,7 +1097,8 @@
       "browser",
       "semantics"
     ],
-    "ipa": "/æksɛsʌbɪlɪtiː tɹiː/"
+    "ipa": "/æksɛsʌbɪlɪtiː tɹiː/",
+    "exampleSentence": "The accessibility tree showed the button had no accessible name."
   },
   {
     "id": "semantic-html",
@@ -1031,6 +1111,8 @@
       "a11y",
       "fundamentals"
     ],
-    "ipa": "/sɪmæntɪk eɪtʃtiːɛmɛl/"
+    "ipa": "/sɪmæntɪk eɪtʃtiːɛmɛl/",
+    "exampleSentence": "Use semantic HTML so screen readers and search engines understand the content."
   }
 ]
+

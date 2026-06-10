@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import Image from "next/image";
 import { ChevronDown, ImagePlus } from "lucide-react";
 import { LEVEL_NAMES, STUDY_TIPS } from "./study-utils";
 
@@ -40,8 +41,7 @@ export function StudyLeftPanel({
         <div className="rounded-xl border border-dashed border-border-subtle aspect-[4/3] flex items-center justify-center overflow-hidden relative group bg-surface-sunken">
           {imageUrl ? (
             <>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={imageUrl} alt={word} className="w-full h-full object-cover" />
+              <Image src={imageUrl} alt={word ?? ""} fill className="object-cover" />
               <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                 <button onClick={() => fileInputRef.current?.click()}
                   className="px-2 py-1 rounded-lg bg-overlay-darker text-tiny font-semibold text-fg hover:bg-surface-raised">

@@ -6,7 +6,7 @@ import LessonMarkdown from "@/components/lessons/LessonMarkdown";
 import Button from "@/components/ui/Button";
 import { getTheoryLessonBySlug } from "@/lib/theory-lessons/queries";
 import type { TheoryLesson } from "@/lib/types";
-import { markLessonComplete, isLessonComplete } from "@/lib/db";
+import { markLessonComplete, markLessonIncomplete, isLessonComplete } from "@/lib/db";
 import type { CoursePathTrackId } from "@/lib/courses/types";
 
 interface CourseLessonViewProps {
@@ -33,12 +33,17 @@ export default function CourseLessonView({ slug, levelId, lessonId }: CourseLess
     }
   }, [levelId, lessonId]);
 
-  const handleMarkComplete = async () => {
+  const handleToggleComplete = async () => {
     if (!levelId || !lessonId) return;
     setMarking(true);
     try {
-      await markLessonComplete(levelId, lessonId);
-      setCompleted(true);
+      if (completed) {
+        await markLessonIncomplete(levelId, lessonId);
+        setCompleted(false);
+      } else {
+        await markLessonComplete(levelId, lessonId);
+        setCompleted(true);
+      }
     } finally {
       setMarking(false);
     }
@@ -46,7 +51,7 @@ export default function CourseLessonView({ slug, levelId, lessonId }: CourseLess
 
   if (loading) {
     return (
-      <div className="max-w-3xl mx-auto px-4 py-12 text-fg-muted text-sm">Cargando lección…</div>
+      <div className="max-w-3xl mx-auto px-4 py-12 text-fg-subtle text-sm">Cargando lección…</div>
     );
   }
 
@@ -63,36 +68,39 @@ export default function CourseLessonView({ slug, levelId, lessonId }: CourseLess
 
   return (
     <div className="course-path">
-      <div className="course-path__wrap" style={{ paddingBottom: 48 }}>
-        <header className="course-path__hero" style={{ paddingBottom: 8 }}>
+      <div className="course-path__lesson-wrap">
+        <header className="course-path__lesson-hero">
           <Link
             href="/courses"
             className="course-path__eyebrow inline-block mb-4 hover:text-fg transition-colors"
           >
             ← Ruta de aprendizaje
           </Link>
-          <h1 className="course-path__title" style={{ fontSize: "1.75rem" }}>
+          <h1 className="course-path__title course-path__title--lesson">
             {lesson.title}
           </h1>
         </header>
 
-        <article className="prose prose-neutral max-w-none rounded-xl border border-border-subtle bg-surface-raised p-6 md:p-8">
+        <article className="rounded-xl border border-border-subtle bg-surface-raised p-6 md:p-8">
           <LessonMarkdown content={lesson.content} />
         </article>
 
-        <div className="mt-8 flex flex-wrap gap-3">
-          {levelId && lessonId && !completed && (
-            <Button variant="primary" size="md" onClick={handleMarkComplete} disabled={marking}>
-              {marking ? "Guardando…" : "Marcar como completada"}
+        <div className="mt-8 flex flex-wrap gap-3 items-center">
+          {levelId && lessonId && (
+            <Button
+              variant={completed ? "secondary" : "primary"}
+              size="md"
+              onClick={handleToggleComplete}
+              disabled={marking}
+            >
+              {marking
+                ? "Guardando…"
+                : completed
+                ? "Completada — desmarcar"
+                : "Marcar como completada"}
             </Button>
           )}
-          {completed && (
-            <p className="text-sm text-success-value font-medium self-center">✓ Completada en tu ruta</p>
-          )}
-          <Link
-            href="/courses"
-            className="inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-medium bg-surface-raised text-fg border border-border-subtle hover:bg-surface-sunken transition-colors"
-          >
+          <Link href="/courses" className="course-path__back-btn">
             Volver a la ruta
           </Link>
         </div>

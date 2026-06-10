@@ -60,7 +60,7 @@ export default function AuthPanel() {
     setPending(true);
     try {
       const { error: err } = await signInAsGuest();
-      if (err) setError(`${err.message} Enable "Anonymous" in Supabase → Authentication → Providers.`);
+      if (err) setError(err.message);
     } finally {
       setPending(false);
     }

@@ -17,25 +17,34 @@ import {
   getAllSounds,
   getAllWords,
   getMinimalPairs,
-  getSoundsForToday,
-  getAllProgress,
+  getContrastsForToday,
   saveAnswers,
-  updateProgress,
-  markMastered,
-  unlockNextSound,
+  updateContrastProgress,
 } from '@/lib/phoneme-practice/queries'
 import { updateSR } from '@/lib/phoneme-practice/sr'
-import { isMastered, getNextUnlockedSoundId } from '@/lib/phoneme-practice/mastery'
-import type { Exercise, UserSoundProgress } from '@/lib/phoneme-practice/types'
+import { contrastKey, PHONEME_CONFUSION } from '@/lib/phoneme-practice/phoneme-similarity'
+import { isContrastMastered } from '@/lib/phoneme-practice/mastery'
+import type { Exercise, UserContrastProgress } from '@/lib/phoneme-practice/types'
+import type { Sound } from '@/lib/phoneme-practice/types'
 
 const MAX_EXERCISES = 10
+
+/** Derives the primary contrast id for a sound IPA (first confusable). */
+function primaryContrastId(ipa: string): string | null {
+  const confusables = PHONEME_CONFUSION[ipa]
+  if (!confusables || confusables.length === 0) return null
+  return contrastKey(ipa, confusables[0])
+}
 
 export default function ReviewPage() {
   const { user } = useAuth()
   const router = useRouter()
 
   const [exercises, setExercises] = useState<Exercise[] | null>(null)
-  const [progressMap, setProgressMap] = useState<Map<number, UserSoundProgress>>(new Map())
+  // Map from contrastId → progress row (for SR updates)
+  const [contrastProgressMap, setContrastProgressMap] = useState<Map<string, UserContrastProgress>>(new Map())
+  // Map from soundId → sound (for exercise building)
+  const [soundsBySoundId, setSoundsBySoundId] = useState<Map<number, Sound>>(new Map())
   const [error, setError] = useState<string | null>(null)
   const [currentFeedback, setCurrentFeedback] = useState<{ isCorrect: boolean } | null>(null)
   const [exerciseStartedAt, setExerciseStartedAt] = useState(Date.now())
@@ -44,31 +53,44 @@ export default function ReviewPage() {
   useEffect(() => {
     if (!user) return
     loadReview()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, sessionKey])
 
   async function loadReview() {
     try {
-      const [dueProgress, allSounds, allWords] = await Promise.all([
-        getSoundsForToday(user!.id),
+      const [dueContrasts, allSounds, allWords] = await Promise.all([
+        getContrastsForToday(user!.id),
         getAllSounds(),
         getAllWords(),
       ])
 
-      if (dueProgress.length === 0) {
+      if (dueContrasts.length === 0) {
         router.replace('/dashboard')
         return
       }
+
+      const soundMap = new Map(allSounds.map((s) => [s.id, s]))
+      setSoundsBySoundId(soundMap)
 
       const wordsBySoundId = new Map(
         allSounds.map((s) => [s.id, allWords.filter((w) => w.sound_id === s.id)]),
       )
 
+      // Derive sounds from due contrasts (each contrastId encodes two IPAs)
+      const dueIpas = new Set<string>()
+      for (const cp of dueContrasts) {
+        const [ipaA, ipaB] = cp.contrast_id.split('|')
+        dueIpas.add(ipaA)
+        dueIpas.add(ipaB)
+      }
+      const dueSounds = allSounds.filter((s) => dueIpas.has(s.ipa))
+
       const allExercises: Exercise[] = []
-      for (const p of dueProgress) {
+      for (const sound of dueSounds) {
         if (allExercises.length >= MAX_EXERCISES) break
-        const pairs = await getMinimalPairs(p.sound_id)
-        const targetWords = allWords.filter((w) => w.sound_id === p.sound_id)
-        const mixed = buildMixedSession(p.sounds, targetWords, allSounds, wordsBySoundId, pairs)
+        const pairs = await getMinimalPairs(sound.id)
+        const targetWords = allWords.filter((w) => w.sound_id === sound.id)
+        const mixed = buildMixedSession(sound, targetWords, allSounds, wordsBySoundId, pairs)
         const session = mixed.filter((e) => e.kind === 'phoneme').map((e) => e.data)
         const remaining = MAX_EXERCISES - allExercises.length
         allExercises.push(...session.slice(0, remaining))
@@ -78,9 +100,9 @@ export default function ReviewPage() {
       setExerciseStartedAt(Date.now())
       setCurrentFeedback(null)
 
-      const pMap = new Map<number, UserSoundProgress>()
-      for (const p of dueProgress) pMap.set(p.sound_id, p)
-      setProgressMap(pMap)
+      const cMap = new Map<string, UserContrastProgress>()
+      for (const cp of dueContrasts) cMap.set(cp.contrast_id, cp)
+      setContrastProgressMap(cMap)
     } catch (e) {
       setError('No se pudo cargar la sesión de repaso.')
       console.error(e)
@@ -93,9 +115,17 @@ export default function ReviewPage() {
     if (session.isComplete && user) {
       finishSession()
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session.isComplete])
 
   async function handleAnswer(isCorrect: boolean, userAnswer: string) {
+    // speak_word is shadowing — no verdict banner, auto-advance
+    if (ex?.type === 'speak_word') {
+      session.submitAnswer({ isCorrect, userAnswer, startedAt: exerciseStartedAt })
+      session.advance()
+      setExerciseStartedAt(Date.now())
+      return
+    }
     setCurrentFeedback({ isCorrect })
     session.submitAnswer({ isCorrect, userAnswer, startedAt: exerciseStartedAt })
   }
@@ -112,46 +142,47 @@ export default function ReviewPage() {
 
     await saveAnswers(user.id, answers)
 
-    const bySoundId = new Map<number, typeof answers>()
-    for (const a of answers) {
-      const list = bySoundId.get(a.soundId) ?? []
+    // Group answers by contrast id (via exercise sound ipa).
+    // speak_word is shadowing-only — it always submits isCorrect=true but must not affect SRS.
+    const scoreable = answers.filter((a) => a.exerciseType !== 'speak_word')
+    const byContrastId = new Map<string, typeof answers>()
+    for (const a of scoreable) {
+      const sound = soundsBySoundId.get(a.soundId)
+      if (!sound) continue
+      const cid = primaryContrastId(sound.ipa)
+      if (!cid) continue
+      const list = byContrastId.get(cid) ?? []
       list.push(a)
-      bySoundId.set(a.soundId, list)
+      byContrastId.set(cid, list)
     }
 
-    for (const [soundId, soundAnswers] of bySoundId) {
-      const correct = soundAnswers.filter((a) => a.isCorrect).length
-      const base: UserSoundProgress = progressMap.get(soundId) ?? {
+    for (const [cid, contrastAnswers] of byContrastId) {
+      const correct = contrastAnswers.filter((a) => a.isCorrect).length
+      const total = contrastAnswers.length
+      const base = contrastProgressMap.get(cid) ?? {
         id: '',
         user_id: user.id,
-        sound_id: soundId,
-        status: 'available',
+        contrast_id: cid,
+        ease_factor: 2.5,
+        interval_days: 1,
+        next_review: null,
+        last_seen: null,
         total_attempts: 0,
         correct_answers: 0,
         streak: 0,
-        best_streak: 0,
-        last_practiced: null,
-        next_review: null,
-        ease_factor: 2.5,
-        interval_days: 1,
       }
-      const sessionIsCorrect = correct >= Math.ceil(soundAnswers.length / 2)
-      const sr = updateSR(base, sessionIsCorrect)
-      await updateProgress(user.id, soundId, correct, soundAnswers.length, sr)
+      const sessionPassed = correct >= Math.ceil(total / 2)
+      const sr = updateSR(base, sessionPassed)
+      await updateContrastProgress(user.id, cid, correct, total, sr)
 
-      const updated: UserSoundProgress = {
+      const updated = {
         ...base,
-        total_attempts: base.total_attempts + soundAnswers.length,
+        total_attempts: base.total_attempts + total,
         correct_answers: base.correct_answers + correct,
         streak: sr.streak,
       }
-      if (isMastered(updated)) {
-        await markMastered(user.id, soundId)
-        const allProgress = await getAllProgress(user.id)
-        const allIds = allProgress.map((p) => p.sound_id).sort((a, b) => a - b)
-        const nextId = getNextUnlockedSoundId(allProgress, allIds)
-        if (nextId) await unlockNextSound(user.id, nextId)
-      }
+      // Mastery is informational only here — sound unlock logic moves to Fase 5b display
+      void isContrastMastered(updated)
     }
   }
 

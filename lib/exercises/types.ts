@@ -18,6 +18,7 @@ export type GenericExerciseType =
   | 'sentence_dictation'
   | 'match_pairs'
   | 'reorder_words'
+  | 'sentence_context'
 
 interface BaseGenericExercise {
   /** Deterministic id: hash of type + sourceRef + stable payload fields. */
@@ -76,11 +77,34 @@ export interface ReorderWordsExercise extends BaseGenericExercise {
   tokens: string[]
 }
 
+// Sentence context ───────────────────────────────────────────────────────────
+// Show a sentence with the target word blanked; pick from 4 options.
+// Audio plays the full sentence (word included, not omitted).
+export interface SentenceContextOption {
+  id: string
+  word: string
+}
+
+export interface SentenceContextExercise extends BaseGenericExercise {
+  type: 'sentence_context'
+  /** Full sentence with the target word replaced by "___". */
+  sentence: string
+  /** The full original sentence (for audio + post-answer reveal). */
+  fullSentence: string
+  /** The correct word. */
+  answer: string
+  /** The word's definition (shown in feedback). */
+  definition: string
+  /** Four options: one correct + three distractors. */
+  options: SentenceContextOption[]
+}
+
 export type GenericExercise =
   | FillBlankExercise
   | SentenceDictationExercise
   | MatchPairsExercise
   | ReorderWordsExercise
+  | SentenceContextExercise
 
 // ── Session answer ─────────────────────────────────────────────────────────
 

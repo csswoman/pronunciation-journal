@@ -1,11 +1,8 @@
-/* Grammar study deck — layout from english-journal-grammar-cards.html; app tokens */
+/* Grammar study deck — solo lo que no puede ser Tailwind */
 
 .grammar-deck {
-  width: 100%;
-  min-height: 100%;
   color: var(--text-primary);
   font-family: var(--font-sans), system-ui, sans-serif;
-  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   background:
     radial-gradient(
@@ -14,106 +11,65 @@
       var(--surface-base) 55%
     ),
     var(--surface-base);
+  min-height: 100dvh;
 }
+
+/* ── Page shell ──────────────────────────────────────────── */
 
 .grammar-deck__wrap {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 0 18px 80px;
-  position: relative;
-  z-index: 1;
+  max-width: 44rem;
+  margin-inline: auto;
+  padding: var(--space-8) var(--space-5) var(--space-16);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
 }
 
-.grammar-deck__eyebrow {
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.18em;
-  color: var(--text-tertiary);
-}
+/* ── Deck header ─────────────────────────────────────────── */
 
 .grammar-deck__head {
-  padding: 38px 0 22px;
-  background: transparent;
-}
-
-.grammar-deck__head .grammar-deck__eyebrow {
-  display: block;
-  margin-bottom: 8px;
-}
-
-.grammar-deck__back {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  margin-bottom: 12px;
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--text-tertiary);
-  text-decoration: none;
-  transition: color var(--transition-fast);
-}
-
-.grammar-deck__back:hover {
-  color: var(--primary);
-}
-
-.grammar-deck__title {
-  font-family: var(--font-editorial), Georgia, serif;
-  font-weight: 480;
-  font-size: 2.1rem;
-  letter-spacing: -0.015em;
-  line-height: 1.1;
-  color: var(--text-primary);
-  background: transparent;
-}
-
-.grammar-deck__title em {
-  font-style: italic;
-  color: var(--primary);
-  background: transparent;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding-bottom: var(--space-5);
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .grammar-deck__meta {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-top: 14px;
+  gap: var(--space-3);
+  margin-top: var(--space-1);
 }
 
 .grammar-deck__prog {
   flex: 1;
-  height: 8px;
-  background: var(--surface-sunken);
+  height: 4px;
   border-radius: 999px;
+  background: var(--surface-sunken);
   overflow: hidden;
 }
 
-.grammar-deck__prog-fill {
-  display: block;
-  height: 100%;
-  background: var(--primary);
-  border-radius: 999px;
-  transition: width 0.4s ease;
-}
-
-.grammar-deck__count {
-  font-size: 12.5px;
+.grammar-deck__goal {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: 0.85rem;
   color: var(--text-secondary);
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
 }
 
-.grammar-deck__count b {
-  color: var(--text-primary);
-  font-weight: 600;
+.grammar-deck__goal svg {
+  color: var(--primary);
+  flex-shrink: 0;
+  margin-top: 1px;
 }
 
-/* Carousel */
+/* ── Card carousel ───────────────────────────────────────── */
+
 .grammar-deck__carousel {
-  margin-top: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
 }
 
 .grammar-deck__viewport {
@@ -121,59 +77,26 @@
   overflow: hidden;
 }
 
-.grammar-deck__slide {
-  will-change: transform, opacity;
-}
+/* ── Card nav ────────────────────────────────────────────── */
 
-.grammar-deck__slide--next {
-  animation: grammar-slide-in-right 0.34s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-.grammar-deck__slide--prev {
-  animation: grammar-slide-in-left 0.34s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-@keyframes grammar-slide-in-right {
-  from {
-    opacity: 0;
-    transform: translateX(34px) scale(0.985);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0) scale(1);
-  }
-}
-
-@keyframes grammar-slide-in-left {
-  from {
-    opacity: 0;
-    transform: translateX(-34px) scale(0.985);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0) scale(1);
-  }
-}
-
-/* Carousel navigation */
 .grammar-deck__nav {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-top: 20px;
+  justify-content: space-between;
+  gap: var(--space-3);
 }
 
 .grammar-deck__arrow {
-  flex: none;
-  width: 46px;
-  height: 46px;
-  display: grid;
-  place-items: center;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
   border-radius: 50%;
   border: 1px solid var(--border-default);
   background: var(--surface-raised);
   color: var(--text-secondary);
-  cursor: pointer;
   transition:
     transform var(--transition-fast),
     border-color var(--transition-fast),
@@ -195,55 +118,36 @@
 
 .grammar-deck__arrow:disabled {
   opacity: 0.4;
-  cursor: not-allowed;
-}
-
-.grammar-deck__arrow--next {
-  margin-left: auto;
-}
-
-.grammar-deck__arrow--finish {
-  background: var(--primary);
-  border-color: var(--primary);
-  color: var(--primary-foreground, #fff);
-  animation: grammar-finish-pulse 2s ease-in-out infinite;
-}
-
-.grammar-deck__arrow--finish:hover:not(:disabled) {
-  color: var(--primary-foreground, #fff);
-  filter: brightness(1.06);
-}
-
-@keyframes grammar-finish-pulse {
-  0%, 100% {
-    box-shadow: 0 0 0 0 color-mix(in oklch, var(--primary) 45%, transparent);
-  }
-  50% {
-    box-shadow: 0 0 0 8px color-mix(in oklch, var(--primary) 0%, transparent);
-  }
 }
 
 .grammar-deck__pager {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-2);
+  flex: 1;
+  min-width: 0;
 }
 
 .grammar-deck__dots {
   display: flex;
   align-items: center;
-  gap: 7px;
+  justify-content: center;
+  gap: 5px;
+  flex-wrap: nowrap;
+  overflow: hidden;
+  max-width: 100%;
 }
 
 .grammar-deck__dot {
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
+  flex-shrink: 0;
+  cursor: pointer;
   padding: 0;
-  border: none;
   border-radius: 999px;
   background: var(--surface-sunken);
-  cursor: pointer;
+  border: none;
   transition:
     width var(--transition-fast),
     background var(--transition-fast),
@@ -263,153 +167,261 @@
   background: var(--primary);
 }
 
-.grammar-deck__pos {
-  font-size: 11.5px;
-  letter-spacing: 0.08em;
-  color: var(--text-tertiary);
-  font-variant-numeric: tabular-nums;
-}
+/* ── Study card ──────────────────────────────────────────── */
 
-/* Completion screen */
-.grammar-deck__done {
-  margin-top: 26px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  padding: 38px 24px 34px;
+.grammar-card {
   background: var(--surface-raised);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md);
+  transition: opacity 0.25s ease;
+  padding: var(--space-5) var(--space-5) var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.grammar-card--done {
+  opacity: 0.58;
+}
+
+.grammar-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.grammar-card__tag {
+  padding: 3px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--primary);
+  background: var(--badge-primary-bg);
+  border: 1px solid var(--badge-primary-border);
+  border-radius: 999px;
+  transition: transform var(--transition-fast);
+}
+
+.grammar-card:hover .grammar-card__tag {
+  transform: translateY(-1px);
+}
+
+.grammar-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.grammar-card__tip {
+  background: var(--badge-primary-bg);
+  border: 1px solid var(--badge-primary-border);
+  border-radius: var(--radius-md);
+  font-size: 0.86rem;
+  color: var(--text-primary);
+  padding: var(--space-3) var(--space-4);
+}
+
+.grammar-card__tip b {
+  color: var(--primary);
+}
+
+.grammar-card__gotit {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  cursor: pointer;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: transparent;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  transition:
+    border-color var(--transition-fast),
+    color var(--transition-fast),
+    background var(--transition-fast);
+  font-family: inherit;
+}
+
+.grammar-card__gotit:hover {
+  border-color: var(--accent-border);
+  color: var(--text-primary);
+}
+
+.grammar-card__gotit:active {
+  transform: scale(0.97);
+}
+
+.grammar-card--done .grammar-card__gotit {
+  color: var(--success-value);
+  border-color: var(--success-border);
+  background: var(--success-soft);
+}
+
+.grammar-card--done .grammar-card__gotit svg {
+  animation: grammar-check-pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes grammar-check-pop {
+  0%   { transform: scale(0); }
+  60%  { transform: scale(1.25); }
+  100% { transform: scale(1); }
+}
+
+/* ── Completion screen ───────────────────────────────────── */
+
+.grammar-deck__done {
   position: relative;
-  overflow: hidden;
+  padding: var(--space-8) var(--space-6);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  text-align: center;
+  background: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
   animation: grammar-done-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-@keyframes grammar-done-in {
-  from {
-    opacity: 0;
-    transform: translateY(14px) scale(0.97);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
 .grammar-deck__done-badge {
-  width: 72px;
-  height: 72px;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border-radius: 50%;
-  display: grid;
-  place-items: center;
   background: var(--success-soft);
   color: var(--success);
   border: 1px solid var(--success-border);
   animation: grammar-badge-pop 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) 0.12s both;
 }
 
-@keyframes grammar-badge-pop {
-  0% {
-    opacity: 0;
-    transform: scale(0.3) rotate(-12deg);
-  }
-  60% {
-    transform: scale(1.12) rotate(4deg);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1) rotate(0);
-  }
-}
-
-.grammar-deck__done-spark {
-  position: absolute;
-  top: 34px;
-  left: calc(50% + 26px);
-  color: var(--primary);
-  animation: grammar-spark 0.6s ease-out 0.4s both;
-}
-
-@keyframes grammar-spark {
-  0% {
-    opacity: 0;
-    transform: scale(0) rotate(-30deg);
-  }
-  60% {
-    opacity: 1;
-    transform: scale(1.2) rotate(10deg);
-  }
-  100% {
-    opacity: 0.9;
-    transform: scale(1) rotate(0);
-  }
-}
-
-.grammar-deck__done-title {
-  font-family: var(--font-editorial), Georgia, serif;
-  font-weight: 480;
-  font-size: 1.7rem;
-  margin-top: 18px;
-  color: var(--text-primary);
-}
-
-.grammar-deck__done-sub {
-  color: var(--text-secondary);
-  font-size: 0.95rem;
-  margin-top: 4px;
-}
-
 .grammar-deck__done-stats {
   display: flex;
-  gap: 14px;
-  margin: 22px 0 26px;
+  gap: var(--space-3);
+  width: 100%;
+  max-width: 20rem;
 }
 
 .grammar-deck__done-stats > div {
-  min-width: 88px;
-  padding: 12px 16px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-3) var(--space-2);
   background: var(--surface-sunken);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
 }
 
-.grammar-deck__done-stats b {
-  font-family: var(--font-editorial), Georgia, serif;
-  font-size: 1.5rem;
-  font-weight: 480;
+.grammar-deck__done-soundlab {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  text-align: left;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--accent-border);
+  background: color-mix(in oklch, var(--primary) 8%, var(--surface-raised));
+  color: var(--text-primary);
+  text-decoration: none;
+  transition:
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.grammar-deck__done-soundlab:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+.grammar-deck__done-soundlab > svg:first-child {
   color: var(--primary);
 }
 
-.grammar-deck__done-stats span {
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
+.grammar-deck__done-soundlab > svg:last-child {
   color: var(--text-tertiary);
+}
+
+.grammar-deck__done-soundlab em {
+  font-style: normal;
+  font-size: 0.8rem;
+  color: var(--primary);
+}
+
+.grammar-deck__done-soundlab > span {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 0.88rem;
+}
+
+.grammar-deck__related {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.grammar-deck__related ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.grammar-deck__related a {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-default);
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  text-decoration: none;
+  font-size: 0.88rem;
+  transition: border-color var(--transition-fast);
+}
+
+.grammar-deck__related a:hover {
+  border-color: var(--accent-border);
+}
+
+.grammar-deck__related svg {
+  color: var(--primary);
 }
 
 .grammar-deck__done-actions {
   display: flex;
+  gap: var(--space-3);
   flex-wrap: wrap;
-  gap: 10px;
   justify-content: center;
+  margin-top: var(--space-2);
 }
 
 .grammar-deck__done-restart,
 .grammar-deck__done-back {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-5);
+  cursor: pointer;
   font-size: 0.9rem;
   font-weight: 600;
   font-family: inherit;
-  padding: 11px 18px;
   border-radius: var(--radius-md);
-  cursor: pointer;
   text-decoration: none;
   transition:
     transform var(--transition-fast),
@@ -445,36 +457,259 @@
   transform: scale(0.96);
 }
 
-.grammar-card {
-  background: var(--surface-raised);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-lg);
-  padding: 24px 22px 18px;
-  box-shadow: var(--shadow-md);
-  transition: opacity 0.25s ease;
+/* ── Quiz ────────────────────────────────────────────────── */
+
+.gd-quiz {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  animation: grammar-done-in 0.4s ease-out both;
 }
 
-.grammar-card--done {
-  opacity: 0.58;
-}
-
-.grammar-card__top {
+.gd-quiz__head {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 14px;
+  gap: var(--space-2);
 }
 
-.grammar-card__tag {
+.gd-quiz__options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.gd-quiz__option {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-default);
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  font-size: 0.92rem;
+  transition:
+    border-color var(--transition-fast),
+    background var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.gd-quiz__option:hover:not(:disabled) {
+  border-color: var(--accent-border);
+  transform: translateY(-1px);
+}
+
+.gd-quiz__option--correct {
+  border-color: var(--success-border);
+  background: var(--success-soft);
+  color: var(--success);
+}
+
+.gd-quiz__option--wrong {
+  border-color: var(--error-border);
+  background: var(--error-soft);
+  color: var(--error-value);
+}
+
+.gd-quiz__explain {
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--surface-sunken);
+  border: 1px solid var(--border-subtle);
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.gd-quiz__next {
+  align-self: flex-end;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-5);
+  cursor: pointer;
+  font-family: inherit;
+  border-radius: 999px;
+  border: none;
+  background: var(--primary);
+  color: var(--primary-foreground, #fff);
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: transform var(--transition-fast);
+}
+
+.gd-quiz__next:active {
+  transform: scale(0.96);
+}
+
+/* ── Responsive ──────────────────────────────────────────── */
+
+@media (max-width: 480px) {
+  .grammar-deck__wrap {
+    padding-inline: var(--space-4);
+    gap: var(--space-5);
+  }
+
+  .grammar-deck__done {
+    padding: var(--space-6) var(--space-4);
+  }
+}
+
+.grammar-deck__eyebrow {
   font-size: 11px;
   font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.18em;
+  color: var(--text-tertiary);
+}
+
+.grammar-deck__back {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--text-tertiary);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.grammar-deck__back:hover {
   color: var(--primary);
-  background: var(--badge-primary-bg);
-  border: 1px solid var(--badge-primary-border);
-  padding: 4px 10px;
+}
+
+.grammar-deck__title {
+  font-family: var(--font-editorial), Georgia, serif;
+  font-weight: 480;
+  font-size: 2.1rem;
+  letter-spacing: -0.015em;
+  color: var(--text-primary);
+  background: transparent;
+}
+
+.grammar-deck__title em {
+  font-style: italic;
+  color: var(--primary);
+  background: transparent;
+}
+
+.grammar-deck__prog-fill {
+  display: block;
+  height: 100%;
+  width: 100%;
+  background: var(--primary);
   border-radius: 999px;
+  transform-origin: left center;
+  transition: transform 0.4s var(--ease-out-quart);
+}
+
+.grammar-deck__count {
+  font-size: 12.5px;
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+.grammar-deck__count b {
+  color: var(--text-primary);
+}
+
+.grammar-deck__slide {
+  will-change: transform, opacity;
+}
+
+.grammar-deck__slide--next {
+  animation: grammar-slide-in-right 0.34s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.grammar-deck__slide--prev {
+  animation: grammar-slide-in-left 0.34s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes grammar-slide-in-right {
+  from { opacity: 0; transform: translateX(34px) scale(0.985); }
+  to   { opacity: 1; transform: translateX(0) scale(1); }
+}
+
+@keyframes grammar-slide-in-left {
+  from { opacity: 0; transform: translateX(-34px) scale(0.985); }
+  to   { opacity: 1; transform: translateX(0) scale(1); }
+}
+
+
+.grammar-deck__arrow--finish {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: var(--primary-foreground, #fff);
+  animation: grammar-finish-pulse 2s ease-in-out infinite;
+}
+
+.grammar-deck__arrow--finish:hover:not(:disabled) {
+  color: var(--primary-foreground, #fff);
+  filter: brightness(1.06);
+}
+
+@keyframes grammar-finish-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 color-mix(in oklch, var(--primary) 45%, transparent); }
+  50%       { box-shadow: 0 0 0 8px color-mix(in oklch, var(--primary) 0%, transparent); }
+}
+
+.grammar-deck__pos {
+  font-size: 11.5px;
+  letter-spacing: 0.08em;
+  color: var(--text-tertiary);
+  font-variant-numeric: tabular-nums;
+}
+
+.grammar-deck__done-spark {
+  position: absolute;
+  top: 34px;
+  left: calc(50% + 26px);
+  color: var(--primary);
+  animation: grammar-spark 0.6s ease-out 0.4s both;
+}
+
+@keyframes grammar-spark {
+  0%   { opacity: 0; transform: scale(0) rotate(-30deg); }
+  60%  { opacity: 1; transform: scale(1.2) rotate(10deg); }
+  100% { opacity: 0.9; transform: scale(1) rotate(0); }
+}
+
+@keyframes grammar-done-in {
+  from { opacity: 0; transform: translateY(14px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes grammar-badge-pop {
+  0%   { opacity: 0; transform: scale(0.3) rotate(-12deg); }
+  60%  { transform: scale(1.12) rotate(4deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0); }
+}
+
+.grammar-deck__done-title {
+  font-family: var(--font-editorial), Georgia, serif;
+  font-weight: 480;
+  font-size: 1.7rem;
+  color: var(--text-primary);
+}
+
+.grammar-deck__done-sub {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+.grammar-deck__done-stats b {
+  font-family: var(--font-editorial), Georgia, serif;
+  font-size: 1.5rem;
+  font-weight: 480;
+  color: var(--primary);
+}
+
+.grammar-deck__done-stats span {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--text-tertiary);
 }
 
 .grammar-card__idx {
@@ -489,7 +724,6 @@
   font-weight: 480;
   font-size: 1.55rem;
   letter-spacing: -0.01em;
-  line-height: 1.15;
   color: var(--text-primary);
   background: transparent;
 }
@@ -503,58 +737,42 @@
 .grammar-card__lede {
   color: var(--text-secondary);
   font-size: 0.95rem;
-  margin-top: 6px;
 }
 
-.grammar-card__body {
-  margin-top: 18px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-/* Conjugation grid */
 .grammar-conj {
   display: grid;
   grid-template-columns: auto 1fr;
-  gap: 2px 0;
   border-radius: var(--radius-md);
-  overflow: hidden;
   border: 1px solid var(--border-subtle);
 }
 
 .grammar-conj > div {
-  padding: 10px 14px;
   background: var(--surface-sunken);
-  display: flex;
-  align-items: baseline;
 }
 
 .grammar-conj__pron {
   font-family: var(--font-editorial), Georgia, serif;
   font-style: italic;
   color: var(--text-secondary);
+  padding: var(--space-2) var(--space-3);
 }
 
 .grammar-conj__form {
   font-family: var(--font-editorial), Georgia, serif;
   color: var(--text-primary);
+  padding: var(--space-2) var(--space-3);
 }
 
 .grammar-conj__form b {
   color: var(--primary);
-  font-weight: 600;
 }
 
 .grammar-conj__hint {
   font-family: var(--font-sans), system-ui, sans-serif;
   color: var(--text-tertiary);
   font-size: 0.8rem;
-  margin-left: 8px;
-  font-weight: 400;
 }
 
-/* Verb table */
 .grammar-vtable {
   width: 100%;
   border-collapse: collapse;
@@ -562,20 +780,19 @@
 }
 
 .grammar-vtable th {
-  text-align: left;
   font-size: 10.5px;
-  text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--text-tertiary);
   font-weight: 600;
-  padding: 0 10px 8px;
+  padding: var(--space-2) var(--space-3);
+  text-align: left;
 }
 
 .grammar-vtable td {
-  padding: 8px 10px;
   border-top: 1px solid var(--border-subtle);
   font-family: var(--font-editorial), Georgia, serif;
   color: var(--text-primary);
+  padding: var(--space-2) var(--space-3);
 }
 
 .grammar-vtable td:nth-child(2),
@@ -589,7 +806,6 @@
   color: var(--text-tertiary);
 }
 
-/* Contrast columns */
 .grammar-contrast {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -606,7 +822,10 @@
   background: var(--surface-sunken);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
-  padding: 14px;
+  padding: var(--space-3) var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
 }
 
 .grammar-contrast__big {
@@ -618,39 +837,37 @@
 .grammar-contrast__rule {
   font-size: 0.82rem;
   color: var(--text-secondary);
-  margin: 4px 0 10px;
 }
 
 .grammar-contrast__ex {
   font-family: var(--font-editorial), Georgia, serif;
   font-size: 0.95rem;
   color: var(--text-primary);
-  line-height: 1.5;
 }
 
-/* Good / bad pairs */
 .grammar-pairs {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: var(--space-2);
 }
 
 .grammar-pair {
   display: flex;
-  gap: 10px;
-  align-items: flex-start;
+  align-items: baseline;
+  gap: var(--space-2);
   font-family: var(--font-editorial), Georgia, serif;
   font-size: 1rem;
 }
 
 .grammar-pair__mk {
-  flex: none;
-  width: 20px;
-  height: 20px;
   border-radius: 50%;
-  display: grid;
-  place-items: center;
-  margin-top: 3px;
+  width: 18px;
+  height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 10px;
 }
 
 .grammar-pair--bad .grammar-pair__mk {
@@ -675,21 +892,18 @@
   font-family: var(--font-sans), system-ui, sans-serif;
   font-size: 0.8rem;
   color: var(--text-tertiary);
-  display: block;
   text-decoration: none;
-  margin-top: 2px;
 }
 
-/* Rule rows */
 .grammar-rules {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--space-3);
 }
 
 .grammar-rules__row {
   display: flex;
-  gap: 12px;
+  gap: var(--space-3);
   align-items: baseline;
 }
 
@@ -697,8 +911,7 @@
   font-family: var(--font-editorial), Georgia, serif;
   color: var(--primary);
   font-size: 1.05rem;
-  flex: none;
-  min-width: 92px;
+  flex-shrink: 0;
 }
 
 .grammar-rules__val {
@@ -717,149 +930,29 @@
   font-size: 0.85em;
 }
 
-/* Tip */
-.grammar-card__tip {
-  margin-top: 18px;
-  background: var(--badge-primary-bg);
-  border: 1px solid var(--badge-primary-border);
-  border-radius: var(--radius-md);
-  padding: 11px 14px;
-  font-size: 0.86rem;
-  color: var(--text-primary);
-}
 
-.grammar-card__tip b {
-  color: var(--primary);
-  font-weight: 600;
-}
-
-/* Got it */
-.grammar-card__gotit {
-  margin-top: 16px;
-  width: 100%;
-  font-size: 0.88rem;
-  font-weight: 600;
-  color: var(--text-secondary);
-  background: transparent;
-  border: 1px solid var(--border-default);
-  border-radius: var(--radius-md);
-  padding: 10px;
-  cursor: pointer;
-  transition:
-    border-color var(--transition-fast),
-    color var(--transition-fast),
-    background var(--transition-fast);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  font-family: inherit;
-}
-
-.grammar-card__gotit:hover {
-  border-color: var(--accent-border);
-  color: var(--text-primary);
-}
-
-.grammar-card__gotit:active {
-  transform: scale(0.97);
-}
-
-.grammar-card--done .grammar-card__gotit {
-  color: var(--success-value);
-  border-color: var(--success-border);
-  background: var(--success-soft);
-}
-
-.grammar-card--done .grammar-card__gotit svg {
-  animation: grammar-check-pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
-}
-
-@keyframes grammar-check-pop {
-  0% {
-    transform: scale(0);
-  }
-  60% {
-    transform: scale(1.25);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-/* Micro-animation: body blocks fade up as the card enters */
 .grammar-card__body > * {
   animation: grammar-block-rise 0.4s ease both;
 }
 
-.grammar-card__body > *:nth-child(2) {
-  animation-delay: 0.05s;
-}
-
-.grammar-card__body > *:nth-child(3) {
-  animation-delay: 0.1s;
-}
+.grammar-card__body > *:nth-child(2) { animation-delay: 0.05s; }
+.grammar-card__body > *:nth-child(3) { animation-delay: 0.1s; }
 
 @keyframes grammar-block-rise {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
-.grammar-card__tag {
-  transition: transform var(--transition-fast);
-}
 
-.grammar-card:hover .grammar-card__tag {
-  transform: translateY(-1px);
-}
-
-/* ── Goal / can-do line in the header ── */
-.grammar-deck__goal {
-  display: flex;
-  align-items: flex-start;
-  gap: 7px;
-  margin-top: 10px;
-  font-size: 0.85rem;
-  line-height: 1.4;
-  color: var(--text-secondary);
-}
-
-.grammar-deck__goal svg {
-  flex: none;
-  margin-top: 2px;
-  color: var(--primary);
-}
-
-/* ── Speak button (Web Speech) ── */
 .gd-speak {
-  flex: none;
-  display: grid;
-  place-items: center;
   border-radius: 50%;
   border: 1px solid var(--accent-border);
   background: color-mix(in oklch, var(--primary) 8%, var(--surface-raised));
   color: var(--primary);
-  cursor: pointer;
   transition:
     transform var(--transition-fast),
     background var(--transition-fast),
     box-shadow var(--transition-fast);
-}
-
-.gd-speak--sm {
-  width: 26px;
-  height: 26px;
-}
-
-.gd-speak--md {
-  width: 34px;
-  height: 34px;
 }
 
 .gd-speak:hover {
@@ -877,26 +970,48 @@
   color: var(--primary-foreground, #fff);
 }
 
-/* ── Pronunciation block ── */
 .grammar-pron {
   border: 1px solid var(--accent-border);
   border-radius: var(--radius-md);
   background: color-mix(in oklch, var(--primary) 5%, var(--surface-sunken));
-  padding: 14px 16px;
+  padding: var(--space-3) var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
 }
 
 .grammar-pron__head {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
-  margin-bottom: 12px;
+  gap: var(--space-2);
+}
+
+.grammar-pron__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.grammar-pron__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.grammar-pron__text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
 .grammar-pron__badge {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--space-1);
   font-weight: 600;
   font-size: 0.8rem;
   color: var(--primary);
@@ -910,38 +1025,14 @@
   font-weight: 600;
   color: var(--primary);
   text-decoration: none;
-  white-space: nowrap;
 }
 
 .grammar-pron__drill:hover {
   text-decoration: underline;
 }
 
-.grammar-pron__list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.grammar-pron__item {
-  display: flex;
-  align-items: center;
-  gap: 11px;
-}
-
-.grammar-pron__text {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-  min-width: 0;
-}
-
 .grammar-pron__phrase {
   color: var(--text-primary);
-  font-weight: 500;
 }
 
 .grammar-pron__ipa {
@@ -955,27 +1046,12 @@
 }
 
 .grammar-pron__note {
-  margin: 12px 0 0;
   font-size: 0.82rem;
   color: var(--text-secondary);
 }
 
-/* ── End-of-deck quiz ── */
-.gd-quiz {
-  animation: grammar-done-in 0.4s ease-out both;
-  padding: 8px 2px 4px;
-}
-
-.gd-quiz__head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  margin-bottom: 14px;
-}
-
 .gd-quiz__kicker {
   font-size: 0.72rem;
-  text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--text-tertiary);
 }
@@ -991,193 +1067,25 @@
   font-size: 1.25rem;
   font-weight: 480;
   color: var(--text-primary);
-  margin-bottom: 16px;
 }
 
-.gd-quiz__options {
-  display: flex;
-  flex-direction: column;
-  gap: 9px;
-}
-
-.gd-quiz__option {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  width: 100%;
-  text-align: left;
-  padding: 13px 15px;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border-default);
-  background: var(--surface-raised);
-  color: var(--text-primary);
-  font-size: 0.92rem;
-  cursor: pointer;
-  transition:
-    border-color var(--transition-fast),
-    background var(--transition-fast),
-    transform var(--transition-fast);
-}
-
-.gd-quiz__option:hover:not(:disabled) {
-  border-color: var(--accent-border);
-  transform: translateY(-1px);
-}
-
-.gd-quiz__option:disabled {
-  cursor: default;
-}
-
-.gd-quiz__option--correct {
-  border-color: var(--success-border);
-  background: var(--success-soft);
-  color: var(--success);
-}
-
-.gd-quiz__option--wrong {
-  border-color: var(--danger-border, #f0c0c0);
-  background: var(--danger-soft, #fdecec);
-  color: var(--danger, #c0392b);
-}
-
-.gd-quiz__explain {
-  margin: 14px 0 0;
-  padding: 11px 14px;
-  border-radius: var(--radius-md);
-  background: var(--surface-sunken);
-  border: 1px solid var(--border-subtle);
-  font-size: 0.85rem;
-  color: var(--text-secondary);
-}
-
-.gd-quiz__next {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: 18px;
-  padding: 11px 18px;
-  border-radius: 999px;
-  border: none;
-  background: var(--primary);
-  color: var(--primary-foreground, #fff);
-  font-weight: 600;
-  font-size: 0.9rem;
-  cursor: pointer;
-  transition: transform var(--transition-fast);
-}
-
-.gd-quiz__next:active {
-  transform: scale(0.96);
-}
-
-/* ── Done screen: goal, Sound Lab handoff, related ── */
 .grammar-deck__done-goal {
-  max-width: 30rem;
-  margin: 8px auto 0;
   font-size: 0.9rem;
   color: var(--text-secondary);
-  line-height: 1.45;
 }
 
-.grammar-deck__done-soundlab {
-  display: flex;
-  align-items: center;
-  gap: 11px;
-  width: 100%;
-  max-width: 26rem;
-  margin: 4px auto 16px;
-  padding: 13px 16px;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--accent-border);
-  background: color-mix(in oklch, var(--primary) 8%, var(--surface-raised));
-  color: var(--text-primary);
-  text-decoration: none;
-  text-align: left;
-  transition:
-    transform var(--transition-fast),
-    box-shadow var(--transition-fast);
-}
-
-.grammar-deck__done-soundlab:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-sm);
-}
-
-.grammar-deck__done-soundlab > svg:first-child {
-  flex: none;
-  color: var(--primary);
-}
-
-.grammar-deck__done-soundlab > svg:last-child {
-  flex: none;
-  margin-left: auto;
-  color: var(--text-tertiary);
-}
-
-.grammar-deck__done-soundlab span {
-  display: flex;
-  flex-direction: column;
-  font-weight: 600;
-  font-size: 0.9rem;
-}
-
-.grammar-deck__done-soundlab em {
-  font-style: normal;
-  font-weight: 500;
+.grammar-deck__done-practice-error {
   font-size: 0.8rem;
-  color: var(--primary);
-}
-
-.grammar-deck__related {
-  width: 100%;
-  max-width: 26rem;
-  margin: 0 auto 22px;
-  text-align: left;
+  color: var(--text-secondary);
+  text-align: center;
 }
 
 .grammar-deck__related-label {
-  display: block;
   font-size: 0.72rem;
-  text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--text-tertiary);
-  margin-bottom: 8px;
 }
 
-.grammar-deck__related ul {
-  display: flex;
-  flex-direction: column;
-  gap: 7px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.grammar-deck__related a {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  padding: 10px 13px;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border-default);
-  background: var(--surface-raised);
-  color: var(--text-primary);
-  text-decoration: none;
-  font-size: 0.88rem;
-  transition: border-color var(--transition-fast);
-}
-
-.grammar-deck__related a:hover {
-  border-color: var(--accent-border);
-}
-
-.grammar-deck__related svg {
-  flex: none;
-  color: var(--primary);
-}
-
-/* Respect users who prefer reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .grammar-deck__slide--next,
   .grammar-deck__slide--prev,
