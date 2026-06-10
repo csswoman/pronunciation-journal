@@ -31,7 +31,7 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "query", "value": "/ˈkwɪəri/ → \"kwíri\", no \"queri\"", "highlights": ["kwíri"] },
+            { "key": "query", "value": "/ˈkwɪri/ → \"kwíri\", no \"queri\"", "highlights": ["kwíri"] },
             { "key": "cache", "value": "/kæʃ/ → \"cash\", no \"caché\"", "highlights": ["cash"] },
             { "key": "queue", "value": "/kjuː/ → \"kiú\", suena como la letra Q", "highlights": ["kiú"] },
             { "key": "null", "value": "/nʌl/ → \"nal\", no \"nul\"", "highlights": ["nal"] }

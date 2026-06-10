@@ -27,7 +27,7 @@
       "q": "¿Qué sonido de intrusión aparece entre vocales en 'go away'?",
       "options": ["/j/ palatal", "/w/ labial", "/h/ glotal", "/n/ nasal"],
       "answer": 1,
-      "explain": "go → termina en /əʊ/ (labial redondeada) → el hablante inserta /w/ para unir: 'go-w-away'."
+      "explain": "go → termina en /oʊ/ (labial redondeada) → el hablante inserta /w/ para unir: 'go-w-away'."
     }
   ],
   "cards": [
@@ -54,12 +54,12 @@
             },
             {
               "key": "turn it off",
-              "value": "→ /tɜː nɪ ˈtɒf/ → tur-ni-toff",
+              "value": "→ /tɜr nɪ ˈtɑf/ → tur-ni-toff",
               "highlights": ["tur-ni-toff"]
             },
             {
               "key": "run out of",
-              "value": "→ /rʌ ˈnaʊ tɒv/ → ru-nau-tov",
+              "value": "→ /rʌ ˈnaʊ tɑv/ → ru-nau-tov",
               "highlights": ["ru-nau-tov"]
             }
           ]
@@ -121,8 +121,8 @@
           "rows": [
             {
               "key": "bus stop",
-              "value": "→ /bʌsˈstɒp/ → la /s/ se alarga, no se repite",
-              "highlights": ["bʌsˈstɒp"]
+              "value": "→ /bʌsˈstɑp/ → la /s/ se alarga, no se repite",
+              "highlights": ["bʌsˈstɑp"]
             },
             {
               "key": "big game",
@@ -131,8 +131,8 @@
             },
             {
               "key": "back corner",
-              "value": "→ /bæˈkɔːnər/ → /k/ sostenida",
-              "highlights": ["bæˈkɔːnər"]
+              "value": "→ /bæˈkɔrnər/ → /k/ sostenida",
+              "highlights": ["bæˈkɔrnər"]
             },
             {
               "key": "that time",
@@ -155,13 +155,13 @@
           "rows": [
             {
               "key": "butter / better / water",
-              "value": "→ /ˈbʌɾər/ /ˈbeɾər/ /ˈwɔːɾər/",
+              "value": "→ /ˈbʌɾər/ /ˈbeɾər/ /ˈwɔɾər/",
               "highlights": ["ɾ"],
               "hint": "la /t/ suena como la /d/ de 'cada' en español"
             },
             {
               "key": "city / pretty / party",
-              "value": "→ /ˈsɪɾi/ /ˈpɹɪɾi/ /ˈpɑːɾi/",
+              "value": "→ /ˈsɪɾi/ /ˈpɹɪɾi/ /ˈpɑɾi/",
               "highlights": ["ɾ"]
             },
             {
@@ -178,7 +178,7 @@
           "examples": [
             { "text": "better", "ipa": "/ˈbeɾər/", "es": "suena casi como 'beder'" },
             { "text": "What are you doing?", "ipa": "/ˌwʌɾ ər jə ˈduːɪŋ/", "es": "what → /wʌɾ/" },
-            { "text": "I got a letter.", "ipa": "/aɪ ˈɡɒɾ ə ˈleɾər/", "es": "got + a → got-a con flap" }
+            { "text": "I got a letter.", "ipa": "/aɪ ˈɡɑɾ ə ˈleɾər/", "es": "got + a → got-a con flap" }
           ],
           "note": "El flap solo ocurre en inglés americano. En inglés británico la /t/ se conserva más clara."
         }
@@ -200,12 +200,12 @@
             },
             {
               "key": "I don't know.",
-              "value": "→ /aɪ dəʊ ˈnəʊ/ (la /t/ cae)",
-              "highlights": ["dəʊ ˈnəʊ"]
+              "value": "→ /aɪ doʊ ˈnoʊ/ (la /t/ cae)",
+              "highlights": ["doʊ ˈnoʊ"]
             },
             {
               "key": "Let me know.",
-              "value": "→ /ˈlemɪ nəʊ/",
+              "value": "→ /ˈlemɪ noʊ/",
               "highlights": ["lemɪ"]
             },
             {
@@ -215,8 +215,8 @@
             },
             {
               "key": "a lot of",
-              "value": "→ /ə ˈlɒɾ əv/",
-              "highlights": ["lɒɾ əv"]
+              "value": "→ /ə ˈlɑɾ əv/",
+              "highlights": ["lɑɾ əv"]
             },
             {
               "key": "I'll be right back.",
@@ -241,7 +241,7 @@
           "examples": [
             { "text": "Come and get it.", "ipa": "/ˌkʌm ən ˈɡedɪt/", "es": "getit = una sílaba" },
             { "text": "I've been looking for it.", "ipa": "/aɪv bɪn ˈlʊkɪŋ fər ɪt/", "es": "for it → fər-it" },
-            { "text": "Turn it off and go.", "ipa": "/ˌtɜː nɪt ˈɒf ən ˈɡəʊ/", "es": "turn-it-off fluido" },
+            { "text": "Turn it off and go.", "ipa": "/ˌtɜr nɪt ˈɑf ən ˈɡoʊ/", "es": "turn-it-off fluido" },
             { "text": "What did you think about it?", "ipa": "/wʌ dɪd jə θɪŋk əˈbaʊ dɪt/", "es": "about-it → abou-dit" }
           ],
           "note": "Empieza despacio y acelera. No repitas las palabras: repite los bloques de sonido."

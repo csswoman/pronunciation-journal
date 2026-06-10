@@ -8,7 +8,7 @@
   "quiz": [
     {
       "q": "¿Qué sonido tiene la palabra 'man'?",
-      "options": ["/ʌ/ como en 'cut'", "/æ/ como en 'cat'", "/ɑː/ como en 'father'", "/eɪ/ como en 'cake'"],
+      "options": ["/ʌ/ como en 'cut'", "/æ/ como en 'cat'", "/ɑr/ como en 'father'", "/eɪ/ como en 'cake'"],
       "answer": 1,
       "explain": "'Man' lleva /æ/: la boca se abre bien y los labios se estiran hacia los lados, como una sonrisa tensa. /mæn/"
     },
@@ -131,12 +131,12 @@
             {
               "label": "/æ/ — cat",
               "rule": "mandíbula abajo, labios estirados",
-              "examples": ["cat /kæt/ (gato)", "bad /bæd/ (malo)", "man /mæn/ (hombre)", "cap /kæp/ (gorra)", "ran /ræn/ (corrió)", "ankle /ˈæŋkl/ (tobillo)"]
+              "examples": ["cat /kæt/ (gato)", "bad /bæd/ (malo)", "bat /bæt/ (bate)", "cap /kæp/ (gorra)", "ran /ræn/ (corrió)", "ankle /ˈæŋkl/ (tobillo)"]
             },
             {
               "label": "/ʌ/ — cut",
               "rule": "mandíbula a medias, boca relajada",
-              "examples": ["cut /kʌt/ (cortar)", "bud /bʌd/ (brote)", "mun- /mʌn/ (en money)", "cup /kʌp/ (taza)", "run /ɹʌn/ (correr)", "uncle /ˈʌŋkl/ (tío)"]
+              "examples": ["cut /kʌt/ (cortar)", "bud /bʌd/ (brote)", "but /bʌt/ (pero)", "cup /kʌp/ (taza)", "run /ɹʌn/ (correr)", "uncle /ˈʌŋkl/ (tío)"]
             }
           ]
         }
@@ -157,11 +157,11 @@
           "lines": [
             { "variant": "bad", "text": "love — pronunciado 'lo-ve' /loʊv/" },
             { "variant": "good", "text": "love /lʌv/ — suena como 'luv'", "note": "la 'o' suena /ʌ/, no /oʊ/" },
-            { "variant": "bad", "text": "have — pronunciado 'ha-ve' /hɑːv/" },
+            { "variant": "bad", "text": "have — pronunciado 'ha-ve' /hɑrv/" },
             { "variant": "good", "text": "have /hæv/ — con /æ/ bien abierta", "note": "mandíbula abajo, no 'a' española" },
-            { "variant": "bad", "text": "blood — pronunciado 'blod' /blɒd/" },
+            { "variant": "bad", "text": "blood — pronunciado 'blod' /blɑd/" },
             { "variant": "good", "text": "blood /blʌd/ — suena 'blud'", "note": "'oo' suena /ʌ/ en esta palabra" },
-            { "variant": "bad", "text": "young — pronunciado 'yong' /jɒŋ/" },
+            { "variant": "bad", "text": "young — pronunciado 'yong' /jɑŋ/" },
             { "variant": "good", "text": "young /jʌŋ/ — suena 'yung'", "note": "'ou' suena /ʌ/ aquí" }
           ]
         }

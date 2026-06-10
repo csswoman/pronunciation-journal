@@ -15,7 +15,7 @@
       "q": "¿Cómo se reduce 'going to' en habla informal?",
       "options": ["goin'", "gonna", "going", "gon"],
       "answer": 1,
-      "explain": "'going to' → 'gonna' /ˈɡɒnə/. Es la reducción más frecuente del inglés hablado."
+      "explain": "'going to' → 'gonna' /ˈɡɑnə/. Es la reducción más frecuente del inglés hablado."
     },
     {
       "q": "La schwa /ə/ aparece en 'gonna' porque…",
@@ -43,17 +43,17 @@
           "rows": [
             {
               "key": "going to → gonna",
-              "value": "I'm gonna call you. /ˈɡɒnə/",
+              "value": "I'm gonna call you. /ˈɡɑnə/",
               "highlights": ["gonna"]
             },
             {
               "key": "want to → wanna",
-              "value": "Do you wanna come? /ˈwɒnə/",
+              "value": "Do you wanna come? /ˈwɑnə/",
               "highlights": ["wanna"]
             },
             {
               "key": "got to → gotta",
-              "value": "I've gotta go. /ˈɡɒtə/",
+              "value": "I've gotta go. /ˈɡɑtə/",
               "highlights": ["gotta"]
             },
             {
@@ -68,9 +68,9 @@
           "sound": "Gonna / Wanna",
           "focus": ["ə"],
           "examples": [
-            { "text": "I'm gonna call you later.", "ipa": "/aɪm ˈɡɒnə ˈkɔːl jə ˈleɪtər/", "es": "gonna = going to" },
-            { "text": "We wanna leave early.", "ipa": "/wɪ ˈwɒnə liːv ˈɜːli/", "es": "wanna = want to" },
-            { "text": "She's gotta finish first.", "ipa": "/ʃɪz ˈɡɒtə ˈfɪnɪʃ fɜːst/", "es": "gotta = got to" }
+            { "text": "I'm gonna call you later.", "ipa": "/aɪm ˈɡɑnə ˈkɔl jə ˈleɪtər/", "es": "gonna = going to" },
+            { "text": "We wanna leave early.", "ipa": "/wɪ ˈwɑnə liːv ˈɜrli/", "es": "wanna = want to" },
+            { "text": "She's gotta finish first.", "ipa": "/ʃɪz ˈɡɑtə ˈfɪnɪʃ fɜrst/", "es": "gotta = got to" }
           ],
           "note": "La /ə/ final de gonna/wanna/gotta es la schwa: neutral, breve, sin tensión."
         }
@@ -112,7 +112,7 @@
           "type": "pairs",
           "lines": [
             { "variant": "bad", "text": "I will call you.", "note": "formal / lento" },
-            { "variant": "good", "text": "I'll call you.", "note": "/aɪl ˈkɔːl jə/ — natural" },
+            { "variant": "good", "text": "I'll call you.", "note": "/aɪl ˈkɔl jə/ — natural" },
             { "variant": "bad", "text": "She has finished.", "note": "énfasis especial" },
             { "variant": "good", "text": "She's finished.", "note": "/ʃɪz ˈfɪnɪʃt/ — cotidiano" }
           ]
@@ -136,12 +136,12 @@
             },
             {
               "key": "to",
-              "value": "go to work → /ɡəʊ tə wɜːk/",
+              "value": "go to work → /ɡoʊ tə wɜrk/",
               "highlights": ["tə"]
             },
             {
               "key": "and",
-              "value": "salt and pepper → /ˈsɔːlt ən ˈpepər/",
+              "value": "salt and pepper → /ˈsɔlt ən ˈpepər/",
               "highlights": ["ən"]
             },
             {
@@ -172,19 +172,19 @@
               "label": "Forma plena",
               "rule": "con énfasis o formal",
               "examples": [
-                "cannot /ˈkænnɒt/",
-                "will not /wɪl nɒt/",
-                "do not /duː nɒt/",
-                "did not /dɪd nɒt/"
+                "cannot /ˈkænɑt/",
+                "will not /wɪl nɑt/",
+                "do not /duː nɑt/",
+                "did not /dɪd nɑt/"
               ]
             },
             {
               "label": "Forma reducida",
               "rule": "habla normal",
               "examples": [
-                "can't /kɑːnt/ o /kænt/",
-                "won't /wəʊnt/",
-                "don't /dəʊnt/",
+                "can't /kænt/ o /kænt/",
+                "won't /woʊnt/",
+                "don't /doʊnt/",
                 "didn't /ˈdɪdnt/"
               ]
             }
@@ -196,7 +196,7 @@
           "focus": ["ə"],
           "examples": [
             { "text": "I can do it.", "ipa": "/aɪ kən duː ɪt/", "es": "can débil → /kən/" },
-            { "text": "I can't do it.", "ipa": "/aɪ ˈkɑːnt duː ɪt/", "es": "can't tónico → /kɑːnt/" }
+            { "text": "I can't do it.", "ipa": "/aɪ ˈkænt duː ɪt/", "es": "can't tónico → /kænt/" }
           ],
           "note": "La diferencia clave: 'can' va sin acento (débil), 'can't' lo lleva (fuerte). Escucha el acento, no solo el sonido final."
         }
@@ -213,13 +213,13 @@
           "rows": [
             {
               "key": "What are you gonna do?",
-              "value": "→ /wɒt ər jə ˈɡɒnə duː/",
+              "value": "→ /wɑt ər jə ˈɡɑnə duː/",
               "highlights": ["gonna"],
               "hint": "are → /ər/, you → /jə/"
             },
             {
               "key": "I don't wanna be late.",
-              "value": "→ /aɪ dəʊnt ˈwɒnə bi leɪt/",
+              "value": "→ /aɪ doʊnt ˈwɑnə bi leɪt/",
               "highlights": ["wanna"]
             },
             {
@@ -230,7 +230,7 @@
             },
             {
               "key": "I've gotta get to work.",
-              "value": "→ /aɪv ˈɡɒtə ˈɡet tə wɜːk/",
+              "value": "→ /aɪv ˈɡɑtə ˈɡet tə wɜrk/",
               "highlights": ["gotta"]
             }
           ]
@@ -270,7 +270,7 @@
           ]
         }
       ],
-      "tip": { "label": "Meta real:", "body": "Entiender reducciones al escuchar es tan importante como producirlas. Empieza por reconocerlas en voz de otros antes de usarlas tú." }
+      "tip": { "label": "Meta real:", "body": "Entender reducciones al escuchar es tan importante como producirlas. Empieza por reconocerlas en voz de otros antes de usarlas tú." }
     }
   ]
 }

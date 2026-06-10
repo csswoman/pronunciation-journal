@@ -7,7 +7,7 @@
     },
     {
       "heading": "The cot/caught merger",
-      "body": "In many American English dialects, /ɒ/ (cot) and /ɔː/ (caught) have merged — speakers say them identically. In other dialects (British, some American), they remain distinct. Knowing this variation helps you understand different speakers."
+      "body": "In many American English dialects, /ɑ/ (cot) and /ɔ/ (caught) have merged — speakers say them identically. In other dialects (some American, British), they remain distinct. Knowing this variation helps you understand different speakers."
     },
     {
       "heading": "Perception first",
@@ -17,12 +17,12 @@
   "examples": [
     {
       "english": "collar / caller",
-      "ipa": "/ˈkɒl.ər/ · /ˈkɔː.lər/",
-      "note": "Distinct in British English"
+      "ipa": "/ˈkɑl.ər/ · /ˈkɔ.lər/",
+      "note": "Distinct unless you have the cot–caught merger"
     },
     {
       "english": "cot / caught",
-      "ipa": "/kɒt/ · /kɔːt/",
+      "ipa": "/kɑt/ · /kɔt/",
       "note": "Merged in much of American English"
     },
     {

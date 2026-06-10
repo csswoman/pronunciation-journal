@@ -16,7 +16,7 @@
           "columns": [
             {
               "label": "make (crear)",
-              "rule": "produces un resultado",
+              "rule": "produce un resultado",
               "examples": ["make a decision", "make a mistake", "make money"]
             },
             {

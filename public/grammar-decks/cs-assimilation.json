@@ -14,9 +14,9 @@
   "quiz": [
     {
       "q": "¿Cómo suena 'don't you' en habla rápida?",
-      "options": ["dont-you (dos palabras separadas)", "doncha /ˈdəʊntʃə/", "dontchu /ˈdɒntʃuː/", "don-tyoo"],
+      "options": ["dont-you (dos palabras separadas)", "doncha /ˈdoʊntʃə/", "dontchu /ˈdɑntʃuː/", "don-tyoo"],
       "answer": 1,
-      "explain": "La /t/ + /j/ → /tʃ/: 'don't you' → /dəʊntʃə/ → «doncha». Es palatalización."
+      "explain": "La /t/ + /j/ → /tʃ/: 'don't you' → /doʊntʃə/ → «doncha». Es palatalización."
     },
     {
       "q": "'ten people' puede sonar como 'tem people' porque…",
@@ -28,7 +28,7 @@
       "q": "¿Qué frase suena más natural en inglés rápido?",
       "options": ["What do you want?", "Whaddya want?", "Whatdo you want?", "What-do-you-want?"],
       "answer": 1,
-      "explain": "'what do you' → /wɒdəjə/ → 'whaddya': múltiple asimilación en una sola frase frecuente."
+      "explain": "'what do you' → /wɑdəjə/ → 'whaddya': múltiple asimilación en una sola frase frecuente."
     }
   ],
   "cards": [
@@ -44,7 +44,7 @@
           "rows": [
             {
               "key": "t + y → /tʃ/",
-              "value": "don't you → /dəʊntʃə/ → «doncha»",
+              "value": "don't you → /doʊntʃə/ → «doncha»",
               "highlights": ["doncha"],
               "hint": "como en 'cheese'"
             },
@@ -71,9 +71,9 @@
           "sound": "Palatalización t/d + y",
           "focus": ["tʃ", "dʒ"],
           "examples": [
-            { "text": "What did you do?", "ipa": "/wɒ dɪdʒə duː/", "es": "did you → didja" },
+            { "text": "What did you do?", "ipa": "/wɑ dɪdʒə duː/", "es": "did you → didja" },
             { "text": "Would you help me?", "ipa": "/wʊdʒə help miː/", "es": "would you → wouldja" },
-            { "text": "Don't you like it?", "ipa": "/dəʊntʃə laɪk ɪt/", "es": "don't you → doncha" }
+            { "text": "Don't you like it?", "ipa": "/doʊntʃə laɪk ɪt/", "es": "don't you → doncha" }
           ],
           "note": "Este fenómeno ocurre automáticamente en habla fluida. Cuando lo escuches, no lo decodifiques letra a letra: reconócelo como un bloque."
         }
@@ -97,7 +97,7 @@
             },
             {
               "key": "/n/ → /ŋ/ ante /k/ y /g/",
-              "value": "ten cars → /teŋ kɑːrz/ · green grass → /ɡriːŋ ɡrɑːs/",
+              "value": "ten cars → /teŋ kɑrz/ · green grass → /ɡriːŋ ɡrɑrs/",
               "highlights": ["/ŋ/"],
               "hint": "/n/ adopta el punto velar de /k/ y /g/"
             }
@@ -108,8 +108,8 @@
           "lines": [
             { "variant": "bad", "text": "in bed /ɪn bed/ (forzado)", "note": "suena artificial" },
             { "variant": "good", "text": "im bed /ɪm bed/ (natural)", "note": "nasal bilabial ante /b/" },
-            { "variant": "bad", "text": "ten cars /ten kɑːrz/", "note": "artificial" },
-            { "variant": "good", "text": "teng cars /teŋ kɑːrz/", "note": "nasal velar ante /k/" }
+            { "variant": "bad", "text": "ten cars /ten kɑrz/", "note": "artificial" },
+            { "variant": "good", "text": "teng cars /teŋ kɑrz/", "note": "nasal velar ante /k/" }
           ]
         }
       ],
@@ -129,7 +129,7 @@
               "rule": "sonoro + sordo → el sonoro se ensordece",
               "examples": [
                 "have to → hafta /ˈhæftə/ (v→f)",
-                "of course → /əf kɔːs/",
+                "of course → /əf kɔrs/",
                 "good night → /ɡʊt naɪt/ (d→t)"
               ]
             },
@@ -139,7 +139,7 @@
               "examples": [
                 "as big → /æz bɪɡ/",
                 "this way → /ðɪz weɪ/",
-                "those words → /ðəʊz wɜːdz/"
+                "those words → /ðoʊz wɜrdz/"
               ]
             }
           ]
@@ -158,18 +158,18 @@
           "rows": [
             {
               "key": "what do you → whaddya",
-              "value": "→ /ˈwɒdəjə/ : t-flap + do → /də/ + you → /jə/",
+              "value": "→ /ˈwɑdəjə/ : t-flap + do → /də/ + you → /jə/",
               "highlights": ["whaddya"],
               "hint": "3 procesos simultáneos"
             },
             {
               "key": "I don't know → I dunno",
-              "value": "→ /aɪ ˈdʌnəʊ/ : don't → /dʌn/ + know → /nəʊ/",
+              "value": "→ /aɪ ˈdʌnoʊ/ : don't → /dʌn/ + know → /noʊ/",
               "highlights": ["dunno"]
             },
             {
               "key": "you know → y'know",
-              "value": "→ /jə nəʊ/",
+              "value": "→ /jə noʊ/",
               "highlights": ["y'know"]
             },
             {
@@ -179,7 +179,7 @@
             },
             {
               "key": "sort of → sorta",
-              "value": "→ /ˈsɔːrtə/",
+              "value": "→ /ˈsɔrtə/",
               "highlights": ["sorta"]
             }
           ]
@@ -230,9 +230,9 @@
           "sound": "Conversación asimilada",
           "focus": ["tʃ", "dʒ", "ə"],
           "examples": [
-            { "text": "What are you gonna do about it?", "ipa": "/wɒ ər jə ˈɡɒnə duː əˈbaʊ dɪt/", "es": "what+are+you = /wɒ ər jə/" },
+            { "text": "What are you gonna do about it?", "ipa": "/wɑ ər jə ˈɡɑnə duː əˈbaʊ dɪt/", "es": "what+are+you = /wɑ ər jə/" },
             { "text": "Did you tell him yet?", "ipa": "/dɪdʒə tel ɪm jet/", "es": "did you → didja, him → 'im" },
-            { "text": "I don't know what to do.", "ipa": "/aɪ dəʊ nəʊ wɒ tə duː/", "es": "dunno + what to = wɒtə" },
+            { "text": "I don't know what to do.", "ipa": "/aɪ doʊ noʊ wɑ tə duː/", "es": "dunno + what to = wɑtə" },
             { "text": "Could you give me a hand?", "ipa": "/kʊdʒə ɡɪv mi ə hænd/", "es": "could you → couldja" }
           ],
           "note": "Repite cada frase 3 veces: lenta, media y rápida. Solo a velocidad alta aparece la asimilación natural."

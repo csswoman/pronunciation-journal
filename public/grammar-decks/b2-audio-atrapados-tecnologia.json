@@ -72,7 +72,7 @@
             { "variant": "bad", "text": "I do not know (lento)" },
             { "variant": "good", "text": "I dunno → /aɪ dənoʊ/", "note": "don't know se funde" },
             { "variant": "bad", "text": "What do you want?" },
-            { "variant": "good", "text": "Whaddya want? → /wɒdʒə/", "note": "what do you se reduce" }
+            { "variant": "good", "text": "Whaddya want? → /wɑdʒə/", "note": "what do you se reduce" }
           ]
         }
       ]

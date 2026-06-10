@@ -62,11 +62,11 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "G vs J", "value": "G = /dʒiː/ 'yee' · J = /dʒeɪ/ 'yay'", "highlights": ["G", "J"], "hint": "G suena como I; J suena como A en español" },
+            { "key": "G vs J", "value": "G = /dʒiː/ 'yee' · J = /dʒeɪ/ 'yay'", "highlights": ["G", "J"], "hint": "la vocal de G suena 'i'; la de J suena 'ei'" },
             { "key": "B vs V vs W", "value": "B = /biː/ · V = /viː/ · W = /ˈdʌbljuː/ 'double-u'", "highlights": ["B", "V", "W"], "hint": "W se dice 'double-u', no 'doble ve'" },
             { "key": "C vs K vs Q", "value": "C = /siː/ · K = /keɪ/ · Q = /kjuː/ 'cue'", "highlights": ["C", "K", "Q"], "hint": "tres letras con sonido /k/, nombres distintos" },
             { "key": "Y vs I", "value": "Y = /waɪ/ 'wai' · I = /aɪ/ 'ai'", "highlights": ["Y", "I"], "hint": "solo el sonido inicial las distingue" },
-            { "key": "H vs A vs E", "value": "H = /eɪtʃ/ 'aych' · no se pronuncia 'hache'", "highlights": ["H"], "hint": "H en inglés empieza con el sonido /eɪ/" }
+            { "key": "H", "value": "H = /eɪtʃ/ 'aych' · no se pronuncia 'hache'", "highlights": ["H"], "hint": "H en inglés empieza con el sonido /eɪ/" }
           ]
         }
       ]
@@ -101,7 +101,8 @@
             { "key": "A — Alpha", "value": "B — Bravo · C — Charlie · D — Delta · E — Echo", "highlights": ["Alpha", "Bravo", "Charlie", "Delta", "Echo"] },
             { "key": "F — Foxtrot", "value": "G — Golf · H — Hotel · I — India · J — Juliet", "highlights": ["Foxtrot", "Golf", "Hotel", "India", "Juliet"] },
             { "key": "K — Kilo", "value": "L — Lima · M — Mike · N — November · O — Oscar", "highlights": ["Kilo", "Lima", "Mike", "November", "Oscar"] },
-            { "key": "P — Papa", "value": "R — Romeo · S — Sierra · T — Tango · U — Uniform", "highlights": ["Papa", "Romeo", "Sierra", "Tango", "Uniform"] },
+            { "key": "P — Papa", "value": "Q — Quebec · R — Romeo · S — Sierra · T — Tango · U — Uniform", "highlights": ["Papa", "Quebec", "Romeo", "Sierra", "Tango", "Uniform"] },
+            { "key": "V — Victor", "value": "W — Whiskey · X — X-ray · Y — Yankee · Z — Zulu", "highlights": ["Victor", "Whiskey", "X-ray", "Yankee", "Zulu"] },
             { "key": "Uso informal", "value": "'M as in mother' · 'S as in sun' — puedes usar cualquier palabra común", "highlights": ["as in"], "hint": "el sistema OTAN es una opción, no obligatorio" }
           ]
         }
@@ -145,7 +146,7 @@
           "sound": "Deletreo en voz alta",
           "examples": [
             { "text": "My name is María — M-A-R-I-A.", "es": "Practica con tu propio nombre primero" },
-            { "text": "My last name is González — G-O-N-Z-A-L-E-Z.", "es": "Apellidos con Z: Z = /zɛd/ o /ziː/" },
+            { "text": "My last name is González — G-O-N-Z-A-L-E-Z.", "es": "Apellidos con Z: Z = /ziː/ 'zee' (EE. UU.) o /zɛd/ 'zed' (UK)" },
             { "text": "My email is maria.lopez@gmail.com", "es": "Dilo: M-A-R-I-A dot L-O-P-E-Z at gmail dot com" },
             { "text": "My address is 42 Oak Street.", "es": "Números primero, luego letras: four two, O-A-K Street" },
             { "text": "My zip code is 90210.", "es": "Dígito a dígito: nine zero two one zero" }

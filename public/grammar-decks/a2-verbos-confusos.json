@@ -10,7 +10,7 @@
       "q": "Tu amigo te pide dinero. ¿Cuál es correcta?",
       "options": ["Can you lend me €10?", "Can you borrow me €10?", "Can you lend to me €10?", "Can you give lend me €10?"],
       "answer": 0,
-      "explain": "lend = dar prestado (tú eres quien entrega). borrow = tomar prestado (tú eres quien recibe). Tu amigo te pide que TÚ le des, así que uses lend."
+      "explain": "lend = dar prestado (tú eres quien entrega). borrow = tomar prestado (tú eres quien recibe). Tu amigo te pide que TÚ le des, así que usas lend."
     },
     {
       "q": "Estás viendo un partido de fútbol con atención. ¿Qué dices?",
@@ -194,7 +194,7 @@
       "id": "vb-quick-reference",
       "tag": "Referencia rápida",
       "title": "Combinaciones más comunes",
-      "lede": "Estas son las estructuras fijas que más usarás. Memoríza las combinaciones, no solo los verbos.",
+      "lede": "Estas son las estructuras fijas que más usarás. Memoriza las combinaciones, no solo los verbos.",
       "blocks": [
         {
           "type": "rules",

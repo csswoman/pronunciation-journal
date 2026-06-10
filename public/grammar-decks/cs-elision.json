@@ -16,13 +16,13 @@
       "q": "En la frase 'last night', ¿qué ocurre con la /t/ de 'last'?",
       "options": ["Se pronuncia con fuerza", "Se vuelve /d/", "Cae (elisión) antes de otra consonante", "Se convierte en /θ/"],
       "answer": 2,
-      "explain": "La /t/ final cae cuando va seguida de otra consonante: 'last night' → /lɑːs naɪt/."
+      "explain": "La /t/ final cae cuando va seguida de otra consonante: 'last night' → /læs naɪt/."
     },
     {
       "q": "¿Cómo se pronuncia 'probably' en habla rápida?",
       "options": ["pro-ba-bly (3 sílabas claras)", "prob-ly (2 sílabas, cae la vocal central)", "prob-ab-lee", "pro-bly-bly"],
       "answer": 1,
-      "explain": "La schwa /ə/ de la sílaba no acentuada cae: 'probably' /ˈprɒbəbli/ → /ˈprɒbli/."
+      "explain": "La schwa /ə/ de la sílaba no acentuada cae: 'probably' /ˈprɑbəbli/ → /ˈprɑbli/."
     },
     {
       "q": "En 'tell him', ¿qué sonido puede desaparecer en habla informal?",
@@ -44,8 +44,8 @@
           "rows": [
             {
               "key": "last night",
-              "value": "→ /lɑːs naɪt/ (la /t/ de last cae)",
-              "highlights": ["lɑːs naɪt"],
+              "value": "→ /læs naɪt/ (la /t/ de last cae)",
+              "highlights": ["læs naɪt"],
               "hint": "/t/ final + consonante → cae"
             },
             {
@@ -55,8 +55,8 @@
             },
             {
               "key": "old friend",
-              "value": "→ /əʊl frend/ (la /d/ de old cae)",
-              "highlights": ["əʊl"]
+              "value": "→ /oʊl frend/ (la /d/ de old cae)",
+              "highlights": ["oʊl"]
             },
             {
               "key": "and then",
@@ -70,9 +70,9 @@
           "sound": "Elisión de /t/ y /d/",
           "focus": ["t", "d"],
           "examples": [
-            { "text": "I just got back.", "ipa": "/aɪ dʒʌs ɡɒt bæk/", "es": "just → /dʒʌs/ (la /t/ cae)" },
+            { "text": "I just got back.", "ipa": "/aɪ dʒʌs ɡɑt bæk/", "es": "just → /dʒʌs/ (la /t/ cae)" },
             { "text": "She looked great.", "ipa": "/ʃɪ lʊk ɡreɪt/", "es": "looked → /lʊk/ ante consonante" },
-            { "text": "We need more time.", "ipa": "/wɪ niːd mɔː taɪm/", "es": "la /d/ puede caer o suavizarse" }
+            { "text": "We need more time.", "ipa": "/wɪ niːd mɔr taɪm/", "es": "la /d/ puede caer o suavizarse" }
           ],
           "note": "Esta regla no es obligatoria: depende de la velocidad y del registro. En habla cuidada la /t/ puede conservarse."
         }
@@ -90,8 +90,8 @@
           "rows": [
             {
               "key": "probably",
-              "value": "/ˈprɒbəbli/ → /ˈprɒbli/ (2 sílabas)",
-              "highlights": ["prɒbli"],
+              "value": "/ˈprɑbəbli/ → /ˈprɑbli/ (2 sílabas)",
+              "highlights": ["prɑbli"],
               "hint": "sílaba media se sincopa"
             },
             {
@@ -130,7 +130,7 @@
           "lines": [
             { "variant": "bad", "text": "Tell him to come. /tel hɪm/", "note": "lento / con énfasis" },
             { "variant": "good", "text": "Tell 'im to come. /tel ɪm/", "note": "habla rápida: /h/ cae" },
-            { "variant": "bad", "text": "Give her the keys. /ɡɪv hɜːr/", "note": "con énfasis en her" },
+            { "variant": "bad", "text": "Give her the keys. /ɡɪv hɜr/", "note": "con énfasis en her" },
             { "variant": "good", "text": "Give 'er the keys. /ɡɪv ər/", "note": "habla fluida: /h/ cae" },
             { "variant": "bad", "text": "Is he coming? /ɪz hiː/", "note": "forma plena" },
             { "variant": "good", "text": "Is 'e coming? /ɪz iː/", "note": "informal rápido" }
@@ -188,9 +188,9 @@
               "rule": "grupo -sten, -stle, -sten, -ften",
               "examples": [
                 "listen /ˈlɪsn/",
-                "castle /ˈkɑːsl/",
-                "often /ˈɒfn/ o /ˈɒftən/",
-                "fasten /ˈfɑːsn/",
+                "castle /ˈkæsl/",
+                "often /ˈɑfn/ o /ˈɑftən/",
+                "fasten /ˈfæsn/",
                 "whistle /ˈwɪsl/"
               ]
             },
@@ -201,7 +201,7 @@
                 "taste /teɪst/",
                 "test /test/",
                 "stand /stænd/",
-                "frost /frɒst/"
+                "frost /frɑst/"
               ]
             }
           ]
@@ -220,10 +220,10 @@
           "sound": "Elisión en frases reales",
           "focus": ["t", "d", "ə"],
           "examples": [
-            { "text": "I don't know what to do.", "ipa": "/aɪ dəʊ nəʊ wɒ tə duː/", "es": "don't → /dəʊ/, what → /wɒ/" },
-            { "text": "She probably left already.", "ipa": "/ʃɪ ˈprɒbli left ɔːlˈredi/", "es": "probably = 2 sílabas" },
-            { "text": "He told her to stop.", "ipa": "/hɪ ˈtəʊl ər tə stɒp/", "es": "told → /tɔʊl/, her → /ər/" },
-            { "text": "They're different from us.", "ipa": "/ðeər ˈdɪfrənt frəm əs/", "es": "different = 2 sílabas" }
+            { "text": "I don't know what to do.", "ipa": "/aɪ doʊ noʊ wɑ tə duː/", "es": "don't → /doʊ/, what → /wɑ/" },
+            { "text": "She probably left already.", "ipa": "/ʃɪ ˈprɑbli left ɔlˈredi/", "es": "probably = 2 sílabas" },
+            { "text": "He told her to stop.", "ipa": "/hɪ ˈtoʊl ər tə stɑp/", "es": "told → /toʊl/, her → /ər/" },
+            { "text": "They're different from us.", "ipa": "/ðɛr ˈdɪfrənt frəm əs/", "es": "different = 2 sílabas" }
           ],
           "note": "El cerebro reconstruye los sonidos que faltan gracias al contexto. No te preocupes: hablar así no quita claridad."
         }

@@ -22,12 +22,12 @@
       "q": "¿Cómo se pronuncia la vocal en 'her' y 'bird'?",
       "options": [
         "La vocal se pronuncia clara, luego la R al final",
-        "La vocal y la R se fusionan en un solo sonido: /ɜːr/",
+        "La vocal y la R se fusionan en un solo sonido: /ɜr/",
         "La R no se pronuncia, solo la vocal",
         "Se pronuncia como en francés, gutural"
       ],
       "answer": 1,
-      "explain": "En inglés americano, la R 'colorea' la vocal. En 'her' /hɜːr/ y 'bird' /bɜːrd/ la vocal y la R son casi un solo sonido fusionado."
+      "explain": "En inglés americano, la R 'colorea' la vocal. En 'her' /hɜr/ y 'bird' /bɜrd/ la vocal y la R son casi un solo sonido fusionado."
     },
     {
       "q": "En la palabra 'very', ¿cuántas R hay?",
@@ -93,11 +93,11 @@
           "focus": ["ɹ"],
           "examples": [
             { "text": "very", "ipa": "/ˈvɛri/", "es": "muy — dos sílabas: VE-ry" },
-            { "text": "sorry", "ipa": "/ˈsɒri/", "es": "lo siento — SO-rry" },
-            { "text": "morning", "ipa": "/ˈmɔːrnɪŋ/", "es": "mañana — la R colorea la vocal" },
-            { "text": "already", "ipa": "/ɔːlˈɹɛdi/", "es": "ya — la R va en la segunda sílaba" },
+            { "text": "sorry", "ipa": "/ˈsɑri/", "es": "lo siento — SO-rry" },
+            { "text": "morning", "ipa": "/ˈmɔrnɪŋ/", "es": "mañana — la R colorea la vocal" },
+            { "text": "already", "ipa": "/ɔlˈɹɛdi/", "es": "ya — la R va en la segunda sílaba" },
             { "text": "travel", "ipa": "/ˈtɹævl/", "es": "viajar — TR juntas: /tɹ/ es un grupo difícil" },
-            { "text": "problem", "ipa": "/ˈpɹɒbləm/", "es": "problema — PR juntas: /pɹ/" }
+            { "text": "problem", "ipa": "/ˈpɹɑbləm/", "es": "problema — PR juntas: /pɹ/" }
           ],
           "note": "Grupos 'tr' y 'pr' son difíciles: travel, pretty, price. Curva la lengua ANTES de la T o P."
         }
@@ -112,10 +112,11 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "/ɑːr/ — ar", "value": "car, far, park, start, market", "highlights": ["car", "far", "park"], "hint": "la vocal es larga y oscura" },
-            { "key": "/ɔːr/ — or", "value": "work, word, world, more, store", "highlights": ["work", "word", "more"], "hint": "labios redondos" },
-            { "key": "/ɜːr/ — er, ir, ur", "value": "her, bird, first, turn, hurt", "highlights": ["her", "bird", "turn"], "hint": "vocal más corta, R coloreada" },
-            { "key": "/ɪər/ — ear, ere", "value": "here, near, ear, fear, clear", "highlights": ["here", "near", "ear"], "hint": "empieza con /ɪ/, termina en R" },
+            { "key": "/ɑr/ — ar", "value": "car, far, park, start, market", "highlights": ["car", "far", "park"], "hint": "la vocal es larga y oscura" },
+            { "key": "/ɔr/ — or, ore", "value": "more, store, door, four, sport", "highlights": ["more", "store", "door"], "hint": "labios redondos" },
+            { "key": "/ɜr/ — er, ir, ur", "value": "her, bird, first, turn, hurt", "highlights": ["her", "bird", "turn"], "hint": "vocal más corta, R coloreada" },
+            { "key": "/ɜr/ — wor", "value": "work, word, world, worse", "highlights": ["work", "word", "world"], "hint": "ojo: 'or' tras W suena /ɜr/, no /ɔr/" },
+            { "key": "/ɪr/ — ear, ere", "value": "here, near, ear, fear, clear", "highlights": ["here", "near", "ear"], "hint": "empieza con /ɪ/, termina en R" },
             { "key": "/ɛər/ — air, are", "value": "there, care, hair, where, share", "highlights": ["there", "care", "hair"], "hint": "empieza con /ɛ/, termina en R" }
           ]
         }
@@ -128,7 +129,7 @@
     {
       "id": "r-mistakes",
       "tag": "Errores comunes",
-      "title": "Palabras que los hispanohablantes mispronuncian",
+      "title": "Palabras que los hispanohablantes pronuncian mal",
       "lede": "Estas palabras suenan muy diferente de cómo las pronunciarías en español.",
       "blocks": [
         {
@@ -141,7 +142,7 @@
             { "variant": "bad", "text": "right — 'rrait' con R española" },
             { "variant": "good", "text": "right /ɹaɪt/ — R americana deslizada", "note": "la boca ya empieza curvada" },
             { "variant": "bad", "text": "problem — 'pro-blem' sin R" },
-            { "variant": "good", "text": "problem /ˈpɹɒbləm/ — pr juntas fluidas", "note": "P+R sin pausa entre ellas" }
+            { "variant": "good", "text": "problem /ˈpɹɑbləm/ — pr juntas fluidas", "note": "P+R sin pausa entre ellas" }
           ]
         }
       ]
@@ -157,9 +158,9 @@
           "sound": "/ɹ/ en frases",
           "focus": ["ɹ"],
           "examples": [
-            { "text": "Are you ready?", "ipa": "/ɑːr jʊ ˈɹɛdi/", "es": "¿Estás listo? — R al inicio de 'are' y 'ready'" },
-            { "text": "I'm really sorry.", "ipa": "/aɪm ˈɹiːli ˈsɒri/", "es": "Lo siento mucho — tres R en una frase" },
-            { "text": "Turn right here.", "ipa": "/tɜːrn ɹaɪt hɪər/", "es": "Gira a la derecha aquí" },
+            { "text": "Are you ready?", "ipa": "/ɑr jʊ ˈɹɛdi/", "es": "¿Estás listo? — R al inicio de 'are' y 'ready'" },
+            { "text": "I'm really sorry.", "ipa": "/aɪm ˈɹiːli ˈsɑri/", "es": "Lo siento mucho — tres R en una frase" },
+            { "text": "Turn right here.", "ipa": "/tɜrn ɹaɪt hɪr/", "es": "Gira a la derecha aquí" },
             { "text": "She works right here.", "es": "Ella trabaja aquí mismo — R+R+R encadenadas" },
             { "text": "We're running late.", "es": "Llegamos tarde — /ɹ/ fluida entre palabras" }
           ],

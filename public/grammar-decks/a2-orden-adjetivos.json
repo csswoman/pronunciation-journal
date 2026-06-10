@@ -88,7 +88,7 @@
             { "variant": "good", "text": "a big old wooden table", "note": "tamaño → edad → material ✓" },
             { "variant": "bad", "text": "a blue small Italian car", "note": "color antes de tamaño" },
             { "variant": "good", "text": "a small blue Italian car", "note": "tamaño → color → origen ✓" },
-            { "variant": "bad", "text": "an awful big black dog", "note": "opinión no está primero" },
+            { "variant": "bad", "text": "a big black awful dog", "note": "opinión no está primero" },
             { "variant": "good", "text": "an awful big black dog", "note": "opinión → tamaño → color ✓" },
             { "variant": "bad", "text": "a French old narrow street", "note": "origen antes de edad y forma" },
             { "variant": "good", "text": "a narrow old French street", "note": "forma → edad → origen ✓" }
@@ -170,7 +170,7 @@
             { "key": "Lugar", "value": "a lovely old French village", "highlights": ["lovely", "old", "French"], "hint": "opinión → edad → origen" },
             { "key": "Ropa", "value": "comfortable dark blue cotton trousers", "highlights": ["comfortable", "dark blue", "cotton"], "hint": "opinión → color → material" },
             { "key": "Mueble", "value": "a big square wooden desk", "highlights": ["big", "square", "wooden"], "hint": "tamaño → forma → material" },
-            { "key": "Comida", "value": "a nice hot Italian pizza", "highlights": ["nice", "hot", "Italian"], "hint": "opinión → temperatura (edad) → origen" }
+            { "key": "Comida", "value": "a nice hot Italian pizza", "highlights": ["nice", "hot", "Italian"], "hint": "opinión → temperatura → origen" }
           ]
         }
       ]

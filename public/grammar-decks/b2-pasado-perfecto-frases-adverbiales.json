@@ -90,7 +90,7 @@
           "rows": [
             { "key": "by the time", "value": "para cuando · By the time we arrived, it had ended.", "highlights": ["by the time"] },
             { "key": "already / just", "value": "ya / recién · had already gone", "highlights": ["already"] },
-            { "key": "no sooner... than", "value": "apenas... cuando · No sooner had I sat than...", "highlights": ["No sooner"] }
+            { "key": "no sooner... than", "value": "apenas... cuando · No sooner had I sat down than the phone rang.", "highlights": ["No sooner"] }
           ]
         }
       ]
