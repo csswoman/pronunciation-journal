@@ -3,6 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 import { GoogleGenAI } from "@google/genai";
 import { createHash } from "crypto";
 import type { Database } from "@/lib/supabase/types";
+import { SENTENCE_REORDER_SYSTEM_PROMPT } from "@/lib/ai-prompts";
 
 export const runtime = "nodejs";
 
@@ -23,16 +24,6 @@ async function getUserFromBearer(token: string) {
 }
 
 // ── Gemini sentence generation ────────────────────────────────────────────────
-
-const SYSTEM_PROMPT = `You are an English language teacher for Spanish speakers.
-Generate natural English sentences for sentence-reordering exercises.
-
-Rules:
-- Each sentence must be 4–12 words long
-- Use clear, natural English (no slang unless requested)
-- Sentences should relate to the given topic/level
-- Return ONLY a JSON array of strings — no markdown, no extra text
-- Vary sentence structures (statements, questions, negatives)`;
 
 async function generateSentencesWithGemini(
   topic: string,
@@ -55,7 +46,7 @@ Return a JSON array of strings only. Example: ["The cat sat on the mat.", "She g
         model,
         contents: prompt,
         config: {
-          systemInstruction: SYSTEM_PROMPT,
+          systemInstruction: SENTENCE_REORDER_SYSTEM_PROMPT,
           responseMimeType: "application/json",
         },
       });
