@@ -7,6 +7,8 @@ import {
   Settings,
   LibraryBig,
   BookMarked,
+  Layers,
+  ListOrdered,
 } from "lucide-react";
 import { NavSectionType } from "./NavSection";
 
@@ -22,7 +24,9 @@ export const learningNav: NavSectionType = {
   label: "Learning",
   items: [
     { name: "Words", href: "/words", icon: LibraryBig },
+    { name: "Core 1000", href: "/practice/core-1000", icon: ListOrdered },
     { name: "Courses", href: "/courses", icon: BookOpen },
+    { name: "Decks", href: "/practice/decks", icon: Layers },
     { name: "Mini lessons", href: "/mini-lessons", icon: BookMarked },
     { name: "IPA Chart", href: "/ipa", icon: Radio },
   ],
