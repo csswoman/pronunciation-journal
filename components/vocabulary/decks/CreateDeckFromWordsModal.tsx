@@ -5,7 +5,7 @@ import { X } from "lucide-react";
 import Button from "@/components/ui/Button";
 import { H2 } from "@/components/ui/Typography";
 import { useAuth } from "@/components/auth/AuthProvider";
-import { getSupabaseBrowserClient } from "@/lib/supabase/client";
+import { createDeckWithWords } from "@/lib/decks/queries";
 import type { Tables } from "@/lib/supabase/types";
 
 type Deck = Tables<"decks">;
@@ -40,30 +40,17 @@ export function CreateDeckFromWordsModal({ wordIds, onClose, onCreated }: Create
     if (!name.trim() || !user) return;
     setSaving(true);
     setError("");
-    const supabase = getSupabaseBrowserClient();
-
-    const { data: deck, error: deckErr } = await supabase
-      .from("decks")
-      .insert({ name: name.trim(), description: description.trim() || null, color, icon, user_id: user.id })
-      .select()
-      .single();
-
-    if (deckErr || !deck) {
-      setError(deckErr?.message ?? "Failed to create deck");
+    try {
+      const deck = await createDeckWithWords(
+        { name: name.trim(), description: description.trim() || null, color, icon, userId: user.id },
+        wordIds
+      );
+      onCreated(deck);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to create deck");
+    } finally {
       setSaving(false);
-      return;
     }
-
-    const links = wordIds.map(word_id => ({ word_id, deck_id: deck.id }));
-    const { error: linkErr } = await supabase.from("word_bank_decks").insert(links);
-    setSaving(false);
-
-    if (linkErr) {
-      setError(linkErr.message);
-      return;
-    }
-
-    onCreated(deck);
   };
 
   return (
