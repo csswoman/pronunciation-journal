@@ -1,0 +1,4 @@
+{
+  "_comment": "ipa-mismatch aceptados tras revisión manual. Clave = palabra, valor = razón. El dataset test silencia solo estos.",
+  "_example": "water: CMU da AH para la vocal final; el dataset usa ə deliberadamente"
+}

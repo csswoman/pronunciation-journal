@@ -11,6 +11,7 @@
     "type-check": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
+    "validate:core1000": "vitest run lib/core-1000/__tests__/dataset.test.ts",
     "lexicon:enrich": "node scripts/enrich-lexicon.mjs --all"
   },
   "dependencies": {
