@@ -1,5 +1,5 @@
 import { createSupabaseServerClient } from '@/lib/supabase/server'
-import { getDailyStreak, type DailyStreakResult } from '@/lib/daily/streak'
+import { getDailyStreak, toLocalDateString, STREAK_TIMEZONE, type DailyStreakResult } from '@/lib/daily/streak'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -74,7 +74,7 @@ async function getDailyCompletionStats(userId: string): Promise<DailyCompletionS
 
   const countsByDay = new Map<string, number>()
   for (const row of rows) {
-    const day = (row.answered_at as string).slice(0, 10)
+    const day = toLocalDateString(row.answered_at as string, STREAK_TIMEZONE)
     countsByDay.set(day, (countsByDay.get(day) ?? 0) + 1)
   }
 
@@ -86,7 +86,7 @@ async function getDailyCompletionStats(userId: string): Promise<DailyCompletionS
   for (let i = 29; i >= 0; i--) {
     const d = new Date(today)
     d.setDate(d.getDate() - i)
-    const day = d.toISOString().slice(0, 10)
+    const day = toLocalDateString(d.toISOString(), STREAK_TIMEZONE)
     const count = countsByDay.get(day) ?? 0
     const level: ConsistencyHeatLevel =
       count >= DAILY_THRESHOLD * 2
