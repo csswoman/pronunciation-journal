@@ -26,7 +26,7 @@ export async function applyFlashcardRating(
 
   const { data: existing, error: selectError } = await db
     .from('word_bank')
-    .select('*')
+    .select('id, user_id, text, context, meaning, translation, ipa, example, synonyms, image_prompt, audio_url, status, difficulty, error_reason, audio_fetch_attempts, has_audio, ease_factor, interval_days, repetitions, srs_status, next_review_at, last_reviewed_at, review_count, source, source_ref, created_at, updated_at')
     .eq('user_id', userId)
     .eq('source_ref', input.sourceRef)
     .maybeSingle()
@@ -50,7 +50,7 @@ export async function applyFlashcardRating(
         source: 'lexicon',
         source_ref: input.sourceRef,
       })
-      .select('*')
+      .select('id, user_id, text, context, meaning, translation, ipa, example, synonyms, image_prompt, audio_url, status, difficulty, error_reason, audio_fetch_attempts, has_audio, ease_factor, interval_days, repetitions, srs_status, next_review_at, last_reviewed_at, review_count, source, source_ref, created_at, updated_at')
       .single()
 
     if (insertError) throw insertError
@@ -121,7 +121,7 @@ export async function applyFlashcardRating(
     .update(srsUpdate)
     .eq('id', entry.id)
     .eq('user_id', userId)
-    .select('*')
+    .select('id, user_id, text, context, meaning, translation, ipa, example, synonyms, image_prompt, audio_url, status, difficulty, error_reason, audio_fetch_attempts, has_audio, ease_factor, interval_days, repetitions, srs_status, next_review_at, last_reviewed_at, review_count, source, source_ref, created_at, updated_at')
     .single()
 
   if (updateError) throw updateError
