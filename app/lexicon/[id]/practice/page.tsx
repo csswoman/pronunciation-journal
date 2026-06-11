@@ -16,7 +16,7 @@ import { LexiconReviewPhase } from '@/components/lexicon/practice/LexiconReviewP
 import { LexiconReviewSummary } from '@/components/lexicon/practice/LexiconReviewSummary'
 import PageLayout from '@/components/layout/PageLayout'
 import Button from '@/components/ui/Button'
-import { applyPhase2Penalty } from '@/lib/word-bank/srs-queries'
+import { enqueueWordBankSRSUpdate } from '@/lib/word-bank/srs-queries'
 import { useLexiconPracticeSession } from '@/hooks/useLexiconPracticeSession'
 import type { SessionResult } from '@/lib/practice/types'
 
@@ -39,16 +39,17 @@ export default function LexiconPracticePage() {
   }, [ratings])
 
   const handleSessionComplete = useCallback(
-    (result: SessionResult) => {
+    async (result: SessionResult) => {
       if (!user) return
       // match_pairs grades a group of 4 — there's no per-word result. If any exercise is
       // answered incorrectly, penalize all "forgot" entries since they were part of the pool.
       const anyIncorrect = result.results.some((r) => !r.isCorrect)
       if (anyIncorrect && forgotEntryMap.size > 0) {
-        const penalties = Array.from(forgotEntryMap.values()).map((entry) =>
-          applyPhase2Penalty(user.id, entry.id, entry.ease_factor ?? 2.5)
+        await Promise.all(
+          Array.from(forgotEntryMap.values()).map((entry) =>
+            enqueueWordBankSRSUpdate(user.id, entry.id, 1)
+          )
         )
-        void Promise.allSettled(penalties)
       }
       clear()
       setFlowPhase('done')
