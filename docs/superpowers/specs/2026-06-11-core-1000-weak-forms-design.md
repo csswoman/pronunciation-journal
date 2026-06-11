@@ -73,12 +73,11 @@ El schema Zod es compartido por ambas vías.
   oraciones, IPA) uno por iteración; cada chunk pasa el validador antes de
   empezar el siguiente.
 - **Validador** `scripts/core-1000/validate.ts` (corre con `npm run validate:core1000`):
-  - Convierte CMUdict (ARPAbet, General American) → IPA y compara cada
-    `ipa_strong`. Las discrepancias son **señal para revisión manual**, no veto
-    automático (CMUdict no distingue algunos contrastes que un diccionario
-    moderno sí).
-  - Solo se versiona un CMUdict recortado a las ~1000 palabras
-    (`scripts/core-1000/data/cmudict-core.json`), no los 3.7 MB completos.
+  - Usa la dependencia npm existente `cmu-pronouncing-dictionary` vía
+    `lib/lexicon/ipa.ts` (`lookupIpaFromCmu`, ARPAbet→IPA GA ya implementado)
+    y compara cada `ipa_strong`. Las discrepancias son **señal para revisión
+    manual**, no veto automático: se silencian explícitamente en
+    `scripts/core-1000/data/ipa-exceptions.json` con una razón escrita.
   - Checks: weak forms solo dentro de una whitelist cerrada de function words;
     `example_sentence` contiene la palabra; `sentence_ipa` presente si hay
     `ipa_weak`; ranks únicos y contiguos.
@@ -115,8 +114,11 @@ Esto mantiene la regla dura de offline: dataset = assets estáticos cacheables,
 SRS 100 % en Dexie, sesión degrada a auto-evaluación.
 
 **Entrega de datos al cliente**: la sesión hace fetch de los chunks
-(`/core-1000/words-00N.json`, ~25 KB c/u, HTTP-cacheables) y carga solo los que
-necesita; no se pasan 1000 entradas como props del Server Component.
+(`/core-1000/words-00N.json`, ~25 KB c/u, HTTP-cacheables); no se pasan 1000
+entradas como props del Server Component. Se cargan todos los chunks
+disponibles: mapear un `wordId` vencido a su entrada requiere el dataset
+completo de todos modos (el rank no vive en `srsData`), y 10 archivos
+cacheados son baratos. El chunking sigue sirviendo para PRs revisables.
 
 ## 4. UI
 
@@ -146,8 +148,8 @@ Sin `ipa_weak` → una sola fila; mismo componente, layout condicional. Lenguaje
 visual de las phoneme cards existentes. TTS vía `lib/phoneme-practice/tts.ts`;
 nunca se guarda audio TTS (regla del repo).
 
-**Entry points**: card en `/practice` + entrada en
-`components/sidebar/navConfig.ts`.
+**Entry points**: entrada en `components/sidebar/navConfig.ts` + banner en el
+índice `/practice/decks` (`/practice` es un redirect a `/daily`, no admite cards).
 
 ## 5. Errores y degradación
 
