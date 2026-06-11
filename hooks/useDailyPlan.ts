@@ -1,7 +1,6 @@
 'use client'
 
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import confetti from 'canvas-confetti'
 import { useAuth } from '@/components/auth/AuthProvider'
 import { buildDailyPlan, DAILY_PLAN_STEP_COUNT } from '@/lib/practice/daily-plan'
 import type { DailyPlan, DailyStep } from '@/lib/practice/types'
@@ -154,11 +153,13 @@ export function useDailyPlan({ conceptLesson, autoLoad = true }: UseDailyPlanOpt
   const allDone = steps.length > 0 && completedCount >= steps.length
 
   const celebrate = useCallback(() => {
-    confetti({
-      particleCount: 120,
-      spread: 70,
-      origin: { y: 0.6 },
-      colors: ['#7c5cff', '#22c55e', '#f59e0b'],
+    void import('canvas-confetti').then(({ default: confetti }) => {
+      confetti({
+        particleCount: 120,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ['#7c5cff', '#22c55e', '#f59e0b'],
+      })
     })
   }, [])
 
