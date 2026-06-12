@@ -138,11 +138,10 @@ function setupWordBankMock(dueWords: WordBankEntry[], newWords: WordBankEntry[] 
 
 /** Mock for the weakest-sound progress query (returns empty → no phoneme slot). */
 function setupProgressMock(rows: unknown[]) {
-  // The progress query is a separate .from('user_sound_progress') call.
-  // We configure mockFrom to distinguish by table name.
+  // The progress query reads from 'user_contrast_progress' (contrast_id = 'ipaA|ipaB').
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (mockFrom as any).mockImplementation((table: string) => {
-    if (table === 'user_sound_progress') {
+    if (table === 'user_contrast_progress') {
       return { select: () => chainResolving(rows) }
     }
     return { select: mockSelect }
@@ -220,26 +219,41 @@ describe('buildDailyPlan', () => {
     expect(plan.isNewUser).toBe(false)
   })
 
-  it('el paso de fonema usa el sonido más débil cuando hay progreso', async () => {
-    // sound 1 (70%) vs sound 2 (20%) → debe elegir el 2 como protagonista.
-    const sound1 = makeSound(1)
-    const sound2 = makeSound(2)
+  it('word_review incluye un ejercicio match_pairs cuando hay ≥4 palabras', async () => {
+    const words = Array.from({ length: 6 }, (_, i) =>
+      makeEntry({ id: `w-${i}`, text: `word${i}`, example: `The word${i} appears clearly in each sentence today.` }),
+    )
+    setupProgressMock([])
+    setupWordBankMock(words, [])
 
-    setupProgressMock([
-      {
-        id: 'p-1', user_id: 'user-1', sound_id: 1, status: 'practicing',
-        total_attempts: 10, correct_answers: 7, streak: 3, best_streak: 4,
-        last_practiced: null, next_review: null, ease_factor: 2.5, interval_days: 1,
-        sounds: sound1,
-      },
-      {
-        id: 'p-2', user_id: 'user-1', sound_id: 2, status: 'practicing',
-        total_attempts: 10, correct_answers: 2, streak: 0, best_streak: 1,
-        last_practiced: null, next_review: null, ease_factor: 2.5, interval_days: 1,
-        sounds: sound2,
-      },
-    ])
-    mockSelect.mockImplementation(() => chainResolving([]))
+    const plan = await buildDailyPlan('user-1')
+    const reviewStep = plan.steps.find((s) => s.kind === 'word_review')
+    expect(reviewStep).toBeDefined()
+    expect(reviewStep!.exercises.some((e) => e.slug === 'match_pairs')).toBe(true)
+  })
+
+  it('el paso de fonema usa el sonido más débil cuando hay progreso', async () => {
+    // /ɪ1/ contrasts with /ɪ2/ (70% accuracy), and /ɪ2/ contrasts with /ɪ3/ (20%).
+    // Both phonemes in a contrast are counted — /ɪ2/ accumulates: 7+2=9 correct /
+    // 10+10=20 attempts = 45%, lower than /ɪ1/ (7/10=70%) or /ɪ3/ (2/10=20%).
+    // Actually the weakest single phoneme across all contrasts is /ɪ2/ (only appears
+    // in the low-accuracy row with 2/10=20%) so makeSound(2) should be chosen.
+    // Simplest setup: one contrast row where /ɪ2/ has very low accuracy.
+    // /ɪ1/ at 70%, /ɪ2/ at 20% → /ɪ2/ is weakest phoneme, sound id=2 should be primary.
+    // makeSound(id) produces ipa = `/ɪ${id}/`
+    const { sounds } = seedCatalog()
+    const sound2 = sounds.find(s => s.id === 2)!
+    // Route tables: user_contrast_progress → progress rows, sounds → sound2, others → []
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ;(mockFrom as any).mockImplementation((table: string) => {
+      if (table === 'user_contrast_progress') {
+        return { select: () => chainResolving([{ contrast_id: '/ɪ1/|/ɪ2/', total_attempts: 10, correct_answers: 7 }]) }
+      }
+      if (table === 'sounds') {
+        return { select: () => chainResolving([sound2]) }
+      }
+      return { select: () => chainResolving([]) }
+    })
 
     const plan = await buildDailyPlan('user-1')
 
