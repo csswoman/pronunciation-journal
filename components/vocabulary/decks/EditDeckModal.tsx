@@ -3,7 +3,7 @@ import { useState } from "react";
 import { X } from "lucide-react";
 import Button from "@/components/ui/Button";
 import { H2 } from "@/components/ui/Typography";
-import { getSupabaseBrowserClient } from "@/lib/supabase/client";
+import { updateDeck } from "@/lib/decks/queries";
 import type { Tables } from "@/lib/supabase/types";
 
 type Deck = Tables<"decks">;
@@ -38,16 +38,14 @@ export function EditDeckModal({ deck, onClose, onUpdated, onDelete }: EditDeckMo
     if (!name.trim()) return;
     setSaving(true);
     setError("");
-    const supabase = getSupabaseBrowserClient();
-    const { data, error: err } = await supabase
-      .from("decks")
-      .update({ name: name.trim(), description: description.trim() || null, color, icon, updated_at: new Date().toISOString() })
-      .eq("id", deck.id)
-      .select()
-      .single();
-    setSaving(false);
-    if (err) { setError(err.message); return; }
-    onUpdated(data);
+    try {
+      const data = await updateDeck(deck.id, { name: name.trim(), description: description.trim() || null, color, icon });
+      onUpdated(data);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to update deck");
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (

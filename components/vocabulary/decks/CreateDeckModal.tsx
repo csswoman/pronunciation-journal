@@ -4,7 +4,7 @@ import { X } from "lucide-react";
 import Button from "@/components/ui/Button";
 import { H2 } from "@/components/ui/Typography";
 import { useAuth } from "@/components/auth/AuthProvider";
-import { getSupabaseBrowserClient } from "@/lib/supabase/client";
+import { createDeck } from "@/lib/decks/queries";
 import type { Tables } from "@/lib/supabase/types";
 
 type Deck = Tables<"decks">;
@@ -39,15 +39,14 @@ export function CreateDeckModal({
     if (!name.trim() || !user) return;
     setSaving(true);
     setError("");
-    const supabase = getSupabaseBrowserClient();
-    const { data, error: err } = await supabase
-      .from("decks")
-      .insert({ name: name.trim(), description: description.trim() || null, color, icon, user_id: user.id })
-      .select()
-      .single();
-    setSaving(false);
-    if (err) { setError(err.message); return; }
-    onCreated(data);
+    try {
+      const data = await createDeck({ name: name.trim(), description: description.trim() || null, color, icon, userId: user.id });
+      onCreated(data);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to create deck");
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (

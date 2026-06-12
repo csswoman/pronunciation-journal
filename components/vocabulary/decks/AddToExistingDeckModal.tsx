@@ -4,7 +4,7 @@ import { useState } from "react";
 import { X, Check } from "lucide-react";
 import Button from "@/components/ui/Button";
 import { H2 } from "@/components/ui/Typography";
-import { getSupabaseBrowserClient } from "@/lib/supabase/client";
+import { addWordsToDeck } from "@/lib/decks/queries";
 import type { Tables } from "@/lib/supabase/types";
 
 type Deck = Tables<"decks">;
@@ -25,13 +25,14 @@ export function AddToExistingDeckModal({ wordIds, decks, onClose, onAdded }: Add
     if (!selectedDeckId) return;
     setSaving(true);
     setError("");
-    const supabase = getSupabaseBrowserClient();
-    const links = wordIds.map(word_id => ({ word_id, deck_id: selectedDeckId }));
-    // upsert ignores conflicts (word already in deck)
-    const { error: err } = await supabase.from("word_bank_decks").upsert(links, { ignoreDuplicates: true });
-    setSaving(false);
-    if (err) { setError(err.message); return; }
-    onAdded();
+    try {
+      await addWordsToDeck(wordIds, selectedDeckId);
+      onAdded();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to add words");
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (

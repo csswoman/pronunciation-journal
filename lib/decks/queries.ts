@@ -1,5 +1,5 @@
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
-import type { Tables } from "@/lib/supabase/types";
+import type { Json, Tables } from "@/lib/supabase/types";
 
 export interface DeckSummary {
   id: string;
@@ -77,4 +77,149 @@ export async function upsertCardProgress(
   await getSupabaseBrowserClient()
     .from("deck_entry_progress")
     .upsert({ user_id: userId, entry_id: entryId, ...progress }, { onConflict: "user_id,entry_id" });
+}
+
+// --- Deck mutation functions ---
+
+export async function addWordsToDeck(wordIds: string[], deckId: string): Promise<void> {
+  const links = wordIds.map((word_id) => ({ word_id, deck_id: deckId }));
+  const { error } = await getSupabaseBrowserClient()
+    .from("word_bank_decks")
+    .upsert(links, { ignoreDuplicates: true });
+  if (error) throw new Error(error.message);
+}
+
+export async function createDeck(params: {
+  name: string;
+  description?: string | null;
+  color: string;
+  icon: string;
+  userId: string;
+}): Promise<Tables<"decks">> {
+  const { data, error } = await getSupabaseBrowserClient()
+    .from("decks")
+    .insert({ name: params.name, description: params.description ?? null, color: params.color, icon: params.icon, user_id: params.userId })
+    .select()
+    .single();
+  if (error || !data) throw new Error(error?.message ?? "Failed to create deck");
+  return data;
+}
+
+export async function updateDeck(
+  deckId: string,
+  params: { name: string; description?: string | null; color: string; icon: string }
+): Promise<Tables<"decks">> {
+  const { data, error } = await getSupabaseBrowserClient()
+    .from("decks")
+    .update({ name: params.name, description: params.description ?? null, color: params.color, icon: params.icon, updated_at: new Date().toISOString() })
+    .eq("id", deckId)
+    .select()
+    .single();
+  if (error || !data) throw new Error(error?.message ?? "Failed to update deck");
+  return data;
+}
+
+export async function createDeckWithWords(
+  deckParams: { name: string; description?: string | null; color: string; icon: string; userId: string },
+  wordIds: string[]
+): Promise<Tables<"decks">> {
+  const supabase = getSupabaseBrowserClient();
+  const { data: deck, error: deckErr } = await supabase
+    .from("decks")
+    .insert({ name: deckParams.name, description: deckParams.description ?? null, color: deckParams.color, icon: deckParams.icon, user_id: deckParams.userId })
+    .select()
+    .single();
+  if (deckErr || !deck) throw new Error(deckErr?.message ?? "Failed to create deck");
+  const links = wordIds.map((word_id) => ({ word_id, deck_id: deck.id }));
+  const { error: linkErr } = await supabase.from("word_bank_decks").insert(links);
+  if (linkErr) throw new Error(linkErr.message);
+  return deck;
+}
+
+// --- ManageDrawer operations ---
+
+export async function getDeckEntries(deckId: string): Promise<Tables<"entries">[]> {
+  const supabase = getSupabaseBrowserClient();
+  const { data } = await supabase.from("deck_entries").select("entry_id, entries(*)").eq("deck_id", deckId);
+  return ((data ?? []) as { entries: Tables<"entries"> | null }[])
+    .map((row) => row.entries)
+    .filter(Boolean) as Tables<"entries">[];
+}
+
+export async function findEntryByWord(userId: string, word: string): Promise<{ id: string } | null> {
+  const { data } = await getSupabaseBrowserClient()
+    .from("entries")
+    .select("id")
+    .eq("user_id", userId)
+    .ilike("word", word)
+    .maybeSingle();
+  return data ?? null;
+}
+
+export async function insertEntry(params: {
+  word: string;
+  userId: string;
+  difficulty: number;
+  phrases: string[] | null;
+  meanings: unknown;
+  id: string;
+}): Promise<{ id: string }> {
+  const { data, error } = await getSupabaseBrowserClient()
+    .from("entries")
+    .insert({ word: params.word, user_id: params.userId, difficulty: params.difficulty, phrases: params.phrases, meanings: params.meanings as Json, id: params.id })
+    .select("id")
+    .single();
+  if (error) throw error;
+  return data;
+}
+
+export async function findDeckEntry(deckId: string, entryId: string): Promise<{ deck_id: string; entry_id: string } | null> {
+  const { data } = await getSupabaseBrowserClient()
+    .from("deck_entries")
+    .select("*")
+    .eq("deck_id", deckId)
+    .eq("entry_id", entryId)
+    .maybeSingle();
+  return data as { deck_id: string; entry_id: string } | null;
+}
+
+export async function insertDeckEntry(deckId: string, entryId: string): Promise<void> {
+  await getSupabaseBrowserClient()
+    .from("deck_entries")
+    .insert({ deck_id: deckId, entry_id: entryId });
+}
+
+export async function removeDeckEntry(deckId: string, entryId: string): Promise<void> {
+  await getSupabaseBrowserClient()
+    .from("deck_entries")
+    .delete()
+    .eq("deck_id", deckId)
+    .eq("entry_id", entryId);
+}
+
+export async function removeDeckEntries(deckId: string, entryIds: string[]): Promise<void> {
+  await getSupabaseBrowserClient()
+    .from("deck_entries")
+    .delete()
+    .eq("deck_id", deckId)
+    .in("entry_id", entryIds);
+}
+
+export async function getEntryMeanings(entryId: string): Promise<{ meanings: unknown }> {
+  const { data } = await getSupabaseBrowserClient()
+    .from("entries")
+    .select("meanings")
+    .eq("id", entryId)
+    .single();
+  return { meanings: data?.meanings ?? null };
+}
+
+export async function updateEntryContent(
+  entryId: string,
+  params: { phrases: string[] | null; meanings: unknown }
+): Promise<void> {
+  await getSupabaseBrowserClient()
+    .from("entries")
+    .update({ phrases: params.phrases, meanings: params.meanings as Json, updated_at: new Date().toISOString() })
+    .eq("id", entryId);
 }
