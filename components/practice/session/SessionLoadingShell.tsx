@@ -3,12 +3,17 @@
 // Planned structure:
 // <SessionLoadingShell>
 //   <PhonemeFocusShell>  (when focusUi mode)
-//     spinner div
+//     <WordCarousel />
 //   </PhonemeFocusShell>
 //   plain wrapper div    (otherwise)
+//     <WordCarousel />
 // </SessionLoadingShell>
 
+'use client'
+
 import { PhonemeFocusShell } from '@/components/phoneme-practice/PhonemeFocusShell'
+import { WordCarousel } from './WordCarousel'
+import { useLoadingWords } from '@/hooks/useLoadingWords'
 
 interface SessionLoadingShellProps {
   focusUi: boolean
@@ -17,15 +22,7 @@ interface SessionLoadingShellProps {
 }
 
 export function SessionLoadingShell({ focusUi, displayBadge, onExit }: SessionLoadingShellProps) {
-  const spinner = (
-    <div className="flex flex-col items-center justify-center gap-3 p-12 text-center">
-      <div
-        className="h-6 w-6 rounded-full border-2 border-primary border-t-transparent animate-spin"
-        aria-hidden
-      />
-      <span className="text-sm text-fg-secondary">Cargando sesión…</span>
-    </div>
-  )
+  const words = useLoadingWords()
 
   if (focusUi && displayBadge) {
     return (
@@ -34,10 +31,14 @@ export function SessionLoadingShell({ focusUi, displayBadge, onExit }: SessionLo
         progressPct={0}
         onExit={onExit}
       >
-        {spinner}
+        <WordCarousel words={words} />
       </PhonemeFocusShell>
     )
   }
 
-  return <div className="w-full max-w-md mx-auto p-8">{spinner}</div>
+  return (
+    <div className="w-full max-w-md mx-auto">
+      <WordCarousel words={words} />
+    </div>
+  )
 }
