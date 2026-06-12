@@ -15,7 +15,6 @@
     "lexicon:enrich": "node scripts/enrich-lexicon.mjs --all"
   },
   "dependencies": {
-    "@ai-sdk/google": "^3.0.80",
     "@google/genai": "^2.7.0",
     "@supabase/ssr": "^0.10.3",
     "@supabase/supabase-js": "^2.106.2",
@@ -27,7 +26,6 @@
     "@tiptap/extension-underline": "^3.24.0",
     "@tiptap/react": "^3.24.0",
     "@tiptap/starter-kit": "^3.24.0",
-    "ai": "^6.0.193",
     "canvas-confetti": "^1.9.4",
     "clsx": "^2.1.1",
     "cmu-pronouncing-dictionary": "^3.0.0",
