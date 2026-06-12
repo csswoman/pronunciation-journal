@@ -3,7 +3,7 @@
 import { useUserRole } from "@/hooks/useUserRole";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
-  const { isPremium, loading } = useUserRole();
+  const { isAdmin, loading } = useUserRole();
 
   if (loading) {
     return (
@@ -13,7 +13,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     );
   }
 
-  if (!isPremium) {
+  if (!isAdmin) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center gap-4 bg-page-bg">
         <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-fg-subtle" fill="none" viewBox="0 0 24 24" stroke="currentColor">

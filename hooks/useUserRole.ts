@@ -35,5 +35,5 @@ export function useUserRole() {
     })();
   }, [user?.id]);
 
-  return { role, loading, isPremium: role === "premium" };
+  return { role, loading, isPremium: role === "premium", isAdmin: role === "admin" };
 }
