@@ -31,7 +31,7 @@ function now(): string {
  * Determine whether a Supabase error should be retried or treated as permanent.
  * RLS violations (code 42501) and check-constraint errors (23514) are permanent.
  */
-function isPermanentError(message: string, code?: string): boolean {
+export function isPermanentError(message: string, code?: string): boolean {
   const permanentCodes = ['42501', '23514', '23503', '23505']
   if (code && permanentCodes.includes(code)) return true
   // Supabase REST errors come as strings; check for common keywords
