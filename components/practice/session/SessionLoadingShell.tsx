@@ -9,8 +9,6 @@
 //     <WordCarousel />
 // </SessionLoadingShell>
 
-'use client'
-
 import { PhonemeFocusShell } from '@/components/phoneme-practice/PhonemeFocusShell'
 import { WordCarousel } from './WordCarousel'
 import { useLoadingWords } from '@/hooks/useLoadingWords'
