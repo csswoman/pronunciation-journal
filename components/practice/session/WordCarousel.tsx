@@ -59,7 +59,7 @@ export function WordCarousel({ words }: WordCarouselProps) {
           {current.text}
         </span>
         {current.ipa && (
-          <span className="font-mono text-sm text-fg-secondary">
+          <span className="font-mono text-sm text-fg-muted">
             {current.ipa}
           </span>
         )}
@@ -76,7 +76,7 @@ export function WordCarousel({ words }: WordCarouselProps) {
       </div>
 
       {/* Label */}
-      <span className="text-xs font-medium uppercase tracking-widest text-fg-tertiary">
+      <span className="text-xs font-medium uppercase tracking-widest text-fg-subtle">
         Preparando tu sesión
       </span>
     </div>

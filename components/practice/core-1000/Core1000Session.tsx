@@ -9,18 +9,23 @@
 // </Core1000Session>
 
 import { useCore1000Session } from '@/hooks/useCore1000Session'
+import { useLoadingWords } from '@/hooks/useLoadingWords'
 import { DeckProgressHeader } from './DeckProgressHeader'
 import { WordStudyCard } from './WordStudyCard'
 import { SpeakReviewCard } from './SpeakReviewCard'
 import { SessionDone } from './SessionDone'
+import { WordCarousel } from '@/components/practice/session/WordCarousel'
 
 export function Core1000Session() {
   const { phase, current, position, queueLength, stats, startSpeak, submitGrade } =
     useCore1000Session()
+  const loadingWords = useLoadingWords()
 
   if (phase === 'loading') {
     return (
-      <p className="text-sm text-[var(--text-tertiary)] text-center py-10">Cargando deck…</p>
+      <div className="flex items-center justify-center min-h-[calc(100vh-10rem)]">
+        <WordCarousel words={loadingWords} />
+      </div>
     )
   }
 
