@@ -2,8 +2,7 @@
 
 import { useState, useCallback } from "react";
 import Link from "next/link";
-import { COURSE_PATH_CURRICULUM } from "@/lib/courses/curriculum";
-import type { CefrLevelId } from "@/lib/courses/types";
+import type { CefrLevelId, CoursePathCurriculum } from "@/lib/courses/types";
 import CoursePathLevelPanel from "@/components/courses/CoursePathLevelPanel";
 import { CoursePathLegendIconDisplay } from "@/components/courses/CoursePathIcons";
 import { MicVocal, ArrowRight, ChevronRight } from "lucide-react";
@@ -11,7 +10,11 @@ import { cn } from "@/lib/cn";
 
 const DEFAULT_LEVEL: CefrLevelId = "a1";
 
-export default function CoursePathPage() {
+interface CoursePathPageProps {
+  curriculum: CoursePathCurriculum;
+}
+
+export default function CoursePathPage({ curriculum }: CoursePathPageProps) {
   const [levelId, setLevelId] = useState<CefrLevelId>(DEFAULT_LEVEL);
   const [allOpenUnits, setAllOpenUnits] = useState<Record<string, Record<string, boolean>>>({});
 
@@ -23,7 +26,7 @@ export default function CoursePathPage() {
     [levelId]
   );
 
-  const level = COURSE_PATH_CURRICULUM.levels.find((l) => l.id === levelId)!;
+  const level = curriculum.levels.find((l) => l.id === levelId)!;
 
   return (
     <div className="course-path">
@@ -37,7 +40,7 @@ export default function CoursePathPage() {
         </header>
 
         <div className="course-path__legend" role="list">
-          {COURSE_PATH_CURRICULUM.legend.map((item) => (
+          {curriculum.legend.map((item) => (
             <div key={item.icon} className="course-path__lg" role="listitem">
               <CoursePathLegendIconDisplay icon={item.icon} />
               <span>{item.description}</span>
@@ -48,10 +51,10 @@ export default function CoursePathPage() {
         <details className="course-path__why">
           <summary className="course-path__why-summary">
             <ChevronRight className="course-path__why-chev" size={15} aria-hidden />
-            <span>{COURSE_PATH_CURRICULUM.why.title}</span>
+            <span>{curriculum.why.title}</span>
           </summary>
           <div className="course-path__why-body">
-            {COURSE_PATH_CURRICULUM.why.paragraphs.map((p, i) => (
+            {curriculum.why.paragraphs.map((p, i) => (
               <p key={i}>{p}</p>
             ))}
             <Link href="/practice/sounds" className="course-path__sound-lab-cta">
@@ -63,7 +66,7 @@ export default function CoursePathPage() {
         </details>
 
         <div className="course-path__spine" role="tablist" aria-label="CEFR level">
-          {COURSE_PATH_CURRICULUM.levels.map((lv) => (
+          {curriculum.levels.map((lv) => (
             <button
               key={lv.id}
               id={`tab-${lv.id}`}
@@ -94,7 +97,7 @@ export default function CoursePathPage() {
             level={level}
             openUnits={openUnitsForLevel}
             onToggleUnit={setOpenUnitsForLevel}
-            electiveTracks={COURSE_PATH_CURRICULUM.electiveTracks}
+            electiveTracks={curriculum.electiveTracks}
           />
         </div>
       </div>
