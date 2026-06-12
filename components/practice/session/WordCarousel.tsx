@@ -26,14 +26,18 @@ export function WordCarousel({ words }: WordCarouselProps) {
 
   useEffect(() => {
     if (words.length === 0) return
+    let timeoutId: ReturnType<typeof setTimeout>
     const interval = setInterval(() => {
       setVisible(false)
-      setTimeout(() => {
+      timeoutId = setTimeout(() => {
         setIndex(i => (i + 1) % words.length)
         setVisible(true)
       }, 300)
     }, 2200)
-    return () => clearInterval(interval)
+    return () => {
+      clearInterval(interval)
+      clearTimeout(timeoutId)
+    }
   }, [words.length])
 
   const current = words[index]
@@ -44,16 +48,12 @@ export function WordCarousel({ words }: WordCarouselProps) {
       {/* Word + IPA slot */}
       <div
         className={cn(
-          'flex flex-col items-center gap-1 min-h-14 justify-center transition-opacity',
+          'flex flex-col items-center gap-1 min-h-14 justify-center duration-300',
           prefersReduced.current
-            ? 'duration-300'
-            : 'duration-300',
-          visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-1.5',
-          !prefersReduced.current && 'transition-[opacity,transform]'
+            ? 'transition-opacity'
+            : 'transition-[opacity,transform] [transition-timing-function:var(--ease-out-expo)]',
+          visible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-1.5',
         )}
-        style={{
-          transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
-        }}
       >
         <span className="font-mono text-xl font-medium text-primary tracking-wide">
           {current.text}
@@ -72,7 +72,7 @@ export function WordCarousel({ words }: WordCarouselProps) {
         aria-label="Cargando sesión"
         aria-busy="true"
       >
-        <div className="h-full w-2/5 rounded-full bg-primary animate-[loadingSlide_2s_linear_infinite]" />
+        <div className="h-full w-2/5 rounded-full bg-primary animate-loading-slide" />
       </div>
 
       {/* Label */}

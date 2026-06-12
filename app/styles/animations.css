@@ -209,3 +209,13 @@
   0%   { transform: translateX(-100%); }
   100% { transform: translateX(350%); }
 }
+
+.animate-loading-slide {
+  animation: loadingSlide 2s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-loading-slide {
+    animation: none;
+  }
+}
