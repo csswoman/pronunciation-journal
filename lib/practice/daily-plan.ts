@@ -85,7 +85,7 @@ async function fetchDueWords(userId: string): Promise<WordBankEntry[]> {
 
   const { data, error } = await supabase
     .from('word_bank')
-    .select('*')
+    .select('id, user_id, text, meaning, translation, ipa, example, audio_url, difficulty, status, srs_status, next_review_at, ease_factor, interval_days, repetitions, review_count, last_reviewed_at, source, source_ref, created_at')
     .eq('user_id', userId)
     .eq('status', 'ready')
     .or(`srs_status.eq.new,next_review_at.lte.${today}`)
@@ -102,7 +102,7 @@ async function fetchNewWords(userId: string, limit: number): Promise<WordBankEnt
 
   const { data, error } = await supabase
     .from('word_bank')
-    .select('*')
+    .select('id, user_id, text, meaning, translation, ipa, example, audio_url, difficulty, status, srs_status, next_review_at, ease_factor, interval_days, repetitions, review_count, last_reviewed_at, source, source_ref, created_at')
     .eq('user_id', userId)
     .eq('status', 'ready')
     .eq('srs_status', 'new')
@@ -145,7 +145,7 @@ async function fetchWeakestSoundProgress(userId: string): Promise<Sound | null> 
 
   const { data: soundRows } = await supabase
     .from('sounds')
-    .select('*')
+    .select('id, ipa, example, category, type, difficulty')
     .eq('ipa', weakestIpa)
     .limit(1)
 
@@ -390,7 +390,7 @@ async function fetchDueReviewWords(userId: string): Promise<WordBankEntry[]> {
 
   const { data, error } = await supabase
     .from('word_bank')
-    .select('*')
+    .select('id, user_id, text, meaning, translation, ipa, example, audio_url, difficulty, status, srs_status, next_review_at, ease_factor, interval_days, repetitions, review_count, last_reviewed_at, source, source_ref, created_at')
     .eq('user_id', userId)
     .eq('status', 'ready')
     .neq('srs_status', 'new')
@@ -433,7 +433,7 @@ async function fetchDueSounds(userId: string): Promise<Sound[]> {
 
   const { data: soundRows } = await supabase
     .from('sounds')
-    .select('*')
+    .select('id, ipa, example, category, type, difficulty')
     .in('ipa', ipas)
 
   return (soundRows ?? []) as Sound[]

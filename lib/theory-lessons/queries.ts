@@ -8,7 +8,7 @@ export async function getAllTheoryLessons(): Promise<TheoryLesson[]> {
   const supabase = getSupabaseBrowserClient();
   const { data, error } = await supabase
     .from(TABLE)
-    .select("*")
+    .select("id, user_id, title, slug, content, category, cover_image_url, is_published, is_system, source, created_at, updated_at")
     .order("created_at", { ascending: false });
 
   if (error) throw error;
@@ -22,7 +22,7 @@ export async function getTheoryLessonsByCategory(
   const supabase = getSupabaseBrowserClient();
   const { data, error } = await supabase
     .from(TABLE)
-    .select("*")
+    .select("id, user_id, title, slug, content, category, cover_image_url, is_published, is_system, source, created_at, updated_at")
     .eq("category", category)
     .order("created_at", { ascending: false });
 
@@ -37,7 +37,7 @@ export async function getTheoryLessonBySlug(
   const supabase = getSupabaseBrowserClient();
   const { data, error } = await supabase
     .from(TABLE)
-    .select("*")
+    .select("id, user_id, title, slug, content, category, cover_image_url, is_published, is_system, source, created_at, updated_at")
     .eq("slug", slug)
     .maybeSingle();
 

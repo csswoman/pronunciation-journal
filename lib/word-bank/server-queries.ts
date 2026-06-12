@@ -132,7 +132,7 @@ export async function getWordsDueForReview(limit = 5): Promise<WordBankEntry[]> 
   const today = new Date().toISOString();
   const { data, error } = await supabase
     .from(TABLE)
-    .select("*")
+    .select("id, user_id, text, meaning, translation, ipa, example, audio_url, difficulty, status, srs_status, next_review_at, ease_factor, interval_days, repetitions, review_count, last_reviewed_at, source, source_ref, created_at, updated_at")
     .eq("status", "ready")
     .or(`srs_status.eq.new,next_review_at.lte.${today}`)
     .order("next_review_at", { ascending: true, nullsFirst: true })

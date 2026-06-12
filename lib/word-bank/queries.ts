@@ -8,7 +8,7 @@ export async function getMyWords(): Promise<WordBankEntry[]> {
   const supabase = getSupabaseBrowserClient();
   const { data, error } = await supabase
     .from(TABLE)
-    .select("*")
+    .select("id, user_id, text, context, meaning, translation, ipa, example, synonyms, image_prompt, audio_url, status, difficulty, error_reason, audio_fetch_attempts, has_audio, ease_factor, interval_days, repetitions, srs_status, next_review_at, last_reviewed_at, review_count, source, source_ref, created_at, updated_at")
     .order("created_at", { ascending: false });
 
   if (error) throw error;
@@ -74,7 +74,7 @@ export async function getWordBankEntriesBySourceRefs(
   const supabase = getSupabaseBrowserClient();
   const { data, error } = await supabase
     .from(TABLE)
-    .select("*")
+    .select("id, user_id, text, context, meaning, translation, ipa, example, synonyms, image_prompt, audio_url, status, difficulty, error_reason, audio_fetch_attempts, has_audio, ease_factor, interval_days, repetitions, srs_status, next_review_at, last_reviewed_at, review_count, source, source_ref, created_at, updated_at")
     .in("source_ref", sourceRefs);
   if (error) throw error;
   return (data ?? []) as WordBankEntry[];
@@ -116,7 +116,7 @@ export async function markLexiconWordLearned(
   // Check for existing row by text (case-insensitive) first.
   const { data: existing, error: selectError } = await supabase
     .from(TABLE)
-    .select("*")
+    .select("id, user_id, text, context, meaning, translation, ipa, example, synonyms, image_prompt, audio_url, status, difficulty, error_reason, audio_fetch_attempts, has_audio, ease_factor, interval_days, repetitions, srs_status, next_review_at, last_reviewed_at, review_count, source, source_ref, created_at, updated_at")
     .eq("user_id", user.id)
     .ilike("text", input.text)
     .maybeSingle();
@@ -141,7 +141,7 @@ export async function markLexiconWordLearned(
       source: "lexicon",
       source_ref: input.sourceRef,
     })
-    .select("*")
+    .select("id, user_id, text, context, meaning, translation, ipa, example, synonyms, image_prompt, audio_url, status, difficulty, error_reason, audio_fetch_attempts, has_audio, ease_factor, interval_days, repetitions, srs_status, next_review_at, last_reviewed_at, review_count, source, source_ref, created_at, updated_at")
     .single();
 
   if (insertError) throw insertError;

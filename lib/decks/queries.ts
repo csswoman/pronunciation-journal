@@ -42,7 +42,7 @@ export async function getDeckCardsWithProgress(
 
   const { data: progressRows } = await supabase
     .from("deck_entry_progress")
-    .select("*")
+    .select("id, user_id, entry_id, created_at, updated_at, ease_factor, interval_days, last_reviewed_at, next_review_at, repetitions, status")
     .eq("user_id", userId)
     .in("entry_id", entries.map((e) => e.id));
 

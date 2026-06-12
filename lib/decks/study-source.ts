@@ -51,7 +51,7 @@ export function wordBankSource(opts: {
         const wordIds = links.map(l => l.word_id);
         const { data } = await supabase
           .from("word_bank")
-          .select("*")
+          .select("id, user_id, text, meaning, translation, ipa, example, audio_url, difficulty, status, srs_status, next_review_at, ease_factor, interval_days, repetitions, review_count, last_reviewed_at, source, source_ref, created_at")
           .in("id", wordIds)
           .eq("user_id", opts.userId);
 
@@ -59,7 +59,7 @@ export function wordBankSource(opts: {
       } else {
         const { data } = await supabase
           .from("word_bank")
-          .select("*")
+          .select("id, user_id, text, meaning, translation, ipa, example, audio_url, difficulty, status, srs_status, next_review_at, ease_factor, interval_days, repetitions, review_count, last_reviewed_at, source, source_ref, created_at")
           .eq("user_id", opts.userId);
 
         words = (data ?? []) as WordBankEntry[];
