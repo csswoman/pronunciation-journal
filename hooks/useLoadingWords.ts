@@ -5,7 +5,7 @@ import { getMyWords } from '@/lib/word-bank/queries'
 
 export type LoadingWord = { text: string; ipa: string | null }
 
-const FALLBACK_WORDS: LoadingWord[] = [
+export const FALLBACK_WORDS: LoadingWord[] = [
   { text: 'thought',       ipa: '/θɔːt/' },
   { text: 'through',       ipa: '/θruː/' },
   { text: 'though',        ipa: '/ðoʊ/' },
