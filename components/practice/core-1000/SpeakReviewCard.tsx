@@ -3,15 +3,16 @@
 // Planned structure:
 // <SpeakReviewCard>
 //   <SentencePrompt />          — oración objetivo + IPA + TTS modelo
-//   <MicButton />               — useSpeechRecognition → transcript
+//   <MicButton />               — useSpeechInput + getUserMedia → transcript
 //   <PronunciationFeedback />   — resultado + Continuar
-//   <SelfGradeBar />            — fallback sin SpeechRecognition o con error
+//   <SelfGradeBar />            — fallback si no hay mic/API de voz
 // </SpeakReviewCard>
 
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Mic, MicOff, Volume2 } from 'lucide-react'
 import { speak } from '@/lib/phoneme-practice/tts'
-import { useSpeechRecognition } from '@/hooks/useSpeechRecognition'
+import { useSpeechInput } from '@/hooks/useSpeechInput'
+import { useSharedMicStream } from '@/hooks/useSharedMicStream'
 import { defaultEvaluationEngine } from '@/lib/exercises/evaluation'
 import { accuracyToQuality } from '@/lib/srs'
 import { getFeedbackMessage, calculateXP } from '@/lib/pronunciation/scoring'
@@ -34,10 +35,24 @@ interface Scored {
 
 const ttsAvailable = typeof window !== 'undefined' && 'speechSynthesis' in window
 
+function micErrorMessage(error: string | null): string {
+  if (!error) return 'No se pudo iniciar el micrófono.'
+  if (error === 'not-allowed' || error.includes('Permission')) {
+    return 'Permiso de micrófono bloqueado. Actívalo en el candado de la barra de direcciones.'
+  }
+  if (error === 'no-speech') return 'No se detectó voz. Intenta hablar más cerca del micrófono.'
+  if (error === 'audio-capture') return 'No se encontró un micrófono activo en el sistema.'
+  return 'No se pudo iniciar el micrófono.'
+}
+
 export function SpeakReviewCard({ entry, onGraded }: Props) {
-  const { status, result, isSupported, start, stop, reset } = useSpeechRecognition()
+  const { getStream, release } = useSharedMicStream()
+  const { state, result, error: speechError, isSupported, start, stop, abort, reset } =
+    useSpeechInput({ prefer: 'auto', getStream })
+
   const [scored, setScored] = useState<Scored | null>(null)
   const [isScoring, setIsScoring] = useState(false)
+  const [micError, setMicError] = useState<string | null>(null)
   const submitted = useRef(false)
 
   const sentence = entry.example_sentence
@@ -45,11 +60,14 @@ export function SpeakReviewCard({ entry, onGraded }: Props) {
   useEffect(() => {
     submitted.current = false
     setScored(null)
+    setMicError(null)
+    abort()
+    release()
     reset()
-  }, [entry.rank, reset])
+  }, [entry.rank, abort, release, reset])
 
   useEffect(() => {
-    if (!isSupported || status !== 'done' || !result || isScoring || scored) return
+    if (state !== 'done' || !result || isScoring || scored) return
     setIsScoring(true)
     defaultEvaluationEngine
       .evaluate({
@@ -65,8 +83,30 @@ export function SpeakReviewCard({ entry, onGraded }: Props) {
           transcript: result.transcript,
         })
       })
-      .finally(() => setIsScoring(false))
-  }, [isSupported, status, result, isScoring, scored, sentence])
+      .finally(() => {
+        setIsScoring(false)
+        release()
+      })
+  }, [state, result, isScoring, scored, sentence, release])
+
+  const handleMicToggle = useCallback(async () => {
+    if (state === 'listening') {
+      setMicError(null)
+      await stop()
+      return
+    }
+    setMicError(null)
+    abort()
+    reset()
+    try {
+      await getStream()
+      await start()
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'not-allowed'
+      setMicError(msg)
+      release()
+    }
+  }, [state, stop, abort, reset, getStream, start, release])
 
   const handleContinue = () => {
     if (!scored || submitted.current) return
@@ -85,11 +125,17 @@ export function SpeakReviewCard({ entry, onGraded }: Props) {
 
   const handleRetry = () => {
     setScored(null)
+    setMicError(null)
+    abort()
+    release()
     reset()
   }
 
-  const isListening = status === 'listening'
-  const useFallback = !isSupported || status === 'error'
+  const isListening = state === 'listening'
+  const isProcessing = state === 'processing' || isScoring
+  const isError = state === 'error' || !!micError || !!speechError
+  const errorDetail = micError ?? speechError
+  const useFallback = !isSupported
 
   return (
     <div className="flex w-full max-w-md flex-col items-center gap-5">
@@ -118,7 +164,7 @@ export function SpeakReviewCard({ entry, onGraded }: Props) {
       {useFallback ? (
         <div className="flex w-full flex-col items-center gap-2">
           <p className="text-xs text-[var(--text-tertiary)] m-0">
-            Sin micrófono disponible — practica en voz alta y califícate:
+            Micrófono no disponible en este navegador — practica en voz alta y califícate:
           </p>
           <SelfGradeBar onGrade={handleSelfGrade} />
         </div>
@@ -126,8 +172,8 @@ export function SpeakReviewCard({ entry, onGraded }: Props) {
         <div className="flex flex-col items-center gap-2">
           <button
             type="button"
-            onClick={isListening ? stop : start}
-            disabled={isScoring}
+            onClick={() => void handleMicToggle()}
+            disabled={isProcessing}
             aria-label={isListening ? 'Detener grabación' : 'Grabar mi voz'}
             className={cn(
               'w-20 h-20 rounded-full border-none flex items-center justify-center cursor-pointer transition-all text-white disabled:opacity-40',
@@ -139,8 +185,24 @@ export function SpeakReviewCard({ entry, onGraded }: Props) {
             {isListening ? <MicOff size={28} /> : <Mic size={28} />}
           </button>
           <p className="text-xs text-[var(--text-tertiary)] tracking-[.05em] m-0">
-            {isListening ? 'Escuchando… toca para parar' : isScoring ? 'Analizando…' : 'Toca para hablar'}
+            {isListening
+              ? 'Escuchando… toca para parar'
+              : isProcessing
+                ? 'Analizando…'
+                : 'Toca para hablar'}
           </p>
+          {isError && (
+            <p className="text-xs text-[var(--error)] text-center m-0 max-w-xs">
+              {micErrorMessage(errorDetail)}{' '}
+              <button
+                type="button"
+                onClick={handleRetry}
+                className="underline cursor-pointer bg-transparent border-none [font-family:inherit] text-xs text-[var(--error)]"
+              >
+                Reintentar
+              </button>
+            </p>
+          )}
         </div>
       ) : (
         <>

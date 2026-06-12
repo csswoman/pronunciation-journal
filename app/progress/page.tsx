@@ -53,7 +53,7 @@ async function ProgressDashboard({ userId }: { userId: string }) {
 
       <FluencyRadarCard scores={null} />
 
-      <SkillProfileCard data={data.skillProfile} />
+      <SkillProfileCard data={data.skillProfile} coach={data.coachInsights} />
 
       <ThisWeekCard stats={data.weeklySummary} />
 

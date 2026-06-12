@@ -37,10 +37,23 @@ vi.mock('@/lib/phoneme-practice/tts', () => ({
   invalidateVoiceCache: vi.fn(),
 }))
 
-vi.mock('@/hooks/useSpeechRecognition', () => ({
-  useSpeechRecognition: () => ({
-    status: 'idle', result: null, isSupported: false,
-    start: vi.fn(), stop: vi.fn(), reset: vi.fn(),
+vi.mock('@/hooks/useSharedMicStream', () => ({
+  useSharedMicStream: () => ({
+    getStream: vi.fn(async () => ({ getTracks: () => [] })),
+    release: vi.fn(),
+  }),
+}))
+
+vi.mock('@/hooks/useSpeechInput', () => ({
+  useSpeechInput: () => ({
+    state: 'idle',
+    result: null,
+    error: null,
+    isSupported: false,
+    start: vi.fn(),
+    stop: vi.fn(),
+    abort: vi.fn(),
+    reset: vi.fn(),
   }),
 }))
 

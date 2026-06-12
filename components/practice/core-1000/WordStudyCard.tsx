@@ -4,8 +4,8 @@
 // <WordStudyCard>
 //   <WordHeading />      — palabra + chips pos/CEFR
 //   <PronRow strong />   — IPA strong + TTS de la palabra aislada
-//   <PronRow weak />     — IPA weak + TTS de la oración (solo si hay ipa_weak)
-//   <SentenceBlock />    — oración con la palabra resaltada + sentence_ipa
+//   <PronRow weak />     — IPA weak + TTS de fragmento en contexto átono
+//   <SentenceBlock />    — oración + botón escuchar al lado + sentence_ipa
 //   <ContinueButton />
 // </WordStudyCard>
 
@@ -20,6 +20,14 @@ interface Props {
 }
 
 const ttsAvailable = typeof window !== 'undefined' && 'speechSynthesis' in window
+
+/** Fragmento mínimo (palabra + siguiente) donde la weak form suena natural en TTS. */
+function weakFormPhrase(sentence: string, word: string): string {
+  const tokens = sentence.match(/\b[\w']+\b/g) ?? []
+  const idx = tokens.findIndex((t) => t.toLowerCase() === word.toLowerCase())
+  if (idx === -1) return word
+  return tokens.slice(idx, idx + 2).join(' ')
+}
 
 function Chip({ children }: { children: React.ReactNode }) {
   return (
@@ -60,14 +68,27 @@ function SentenceBlock({ entry }: { entry: CoreWord }) {
   const regex = new RegExp(`\\b(${entry.word})\\b`, 'i')
   const [before, match, after] = entry.example_sentence.split(regex)
   return (
-    <div className="flex flex-col gap-1 text-center">
-      <p className="text-base text-[var(--text-primary)] m-0">
-        {before}
-        <mark className="bg-transparent font-semibold text-[var(--primary)]">{match}</mark>
-        {after}
-      </p>
+    <div className="flex flex-col items-center gap-1">
+      <div className="flex items-center justify-center gap-2">
+        <p className="text-base text-[var(--text-primary)] m-0 text-center">
+          {before}
+          <mark className="bg-transparent font-semibold text-[var(--primary)]">{match}</mark>
+          {after}
+        </p>
+        <button
+          type="button"
+          onClick={() => speak(entry.example_sentence, { rate: 0.95 })}
+          disabled={!ttsAvailable}
+          aria-label="Escuchar oración"
+          className={cn(
+            'inline-flex shrink-0 items-center justify-center w-8 h-8 rounded-[var(--radius-full)] border border-[var(--border-subtle)] bg-transparent text-[var(--text-secondary)] cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed',
+          )}
+        >
+          <Volume2 size={14} aria-hidden />
+        </button>
+      </div>
       {entry.sentence_ipa && (
-        <p className="[font-family:var(--font-ipa),monospace] text-sm text-[var(--text-tertiary)] m-0">
+        <p className="[font-family:var(--font-ipa),monospace] text-sm text-[var(--text-tertiary)] m-0 text-center">
           {entry.sentence_ipa}
         </p>
       )}
@@ -100,7 +121,7 @@ export function WordStudyCard({ entry, onContinue }: Props) {
           <PronRow
             label="Weak"
             ipa={entry.ipa_weak!}
-            onPlay={() => speak(entry.example_sentence, { rate: 0.95 })}
+            onPlay={() => speak(weakFormPhrase(entry.example_sentence, entry.word), { rate: 0.95 })}
             disabled={!ttsAvailable}
           />
         )}

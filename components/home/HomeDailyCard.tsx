@@ -57,7 +57,7 @@ export default function HomeDailyCard({ conceptLesson }: HomeDailyCardProps) {
   // Embedded checklist (single view)
   return (
     <section>
-      <div className="flex flex-col sm:bg-daily-card sm:rounded-[var(--radius-xl)] sm:border sm:border-border-subtle sm:px-6 sm:pb-6 sm:pt-5">
+      <div className="flex flex-col sm:bg-daily-card sm:rounded-[var(--radius-xl)] sm:border sm:border-border-subtle sm:px-6 sm:pb-6 sm:pt-5 sm:border-l-2 sm:border-l-[var(--primary)]">
         {/* aria-live region announces plan-ready state to screen readers */}
         <div aria-live="polite" aria-atomic="true" className="sr-only">
         {status === 'ready' && !allDone && `Today's plan ready, ${steps.length} steps`}
