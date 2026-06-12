@@ -31,21 +31,24 @@ describe('useLoadingWords', () => {
   it('keeps fallback when fetch returns empty array', async () => {
     vi.spyOn(queries, 'getReadyWordSummaries').mockResolvedValue([])
     const { result } = renderHook(() => useLoadingWords())
-    await waitFor(() => Promise.resolve())
-    expect(result.current.some(w => w.text === 'thought')).toBe(true)
+    await waitFor(() => {
+      expect(result.current.some(w => w.text === 'thought')).toBe(true)
+    })
+    expect(result.current).toHaveLength(10)
   })
 
   it('keeps fallback on network error', async () => {
     vi.spyOn(queries, 'getReadyWordSummaries').mockRejectedValue(new Error('network'))
     const { result } = renderHook(() => useLoadingWords())
-    await waitFor(() => Promise.resolve())
-    expect(result.current).toHaveLength(10)
-    expect(result.current.some(w => w.text === 'thought')).toBe(true)
+    await waitFor(() => {
+      expect(result.current).toHaveLength(10)
+      expect(result.current.some(w => w.text === 'thought')).toBe(true)
+    })
   })
 
   it('includes ipa field for each word', () => {
     vi.spyOn(queries, 'getReadyWordSummaries').mockReturnValue(new Promise(() => {}))
     const { result } = renderHook(() => useLoadingWords())
-    expect(result.current.every(w => 'ipa' in w)).toBe(true)
+    expect(result.current.every(w => typeof w.ipa === 'string' || w.ipa === null)).toBe(true)
   })
 })
