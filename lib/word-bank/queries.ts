@@ -148,6 +148,17 @@ export async function markLexiconWordLearned(
   return { entry: inserted as WordBankEntry, alreadyExisted: false };
 }
 
+/** Minimal word data for loading animations — only text, ipa, status. */
+export async function getReadyWordSummaries(): Promise<{ text: string; ipa: string | null }[]> {
+  const supabase = getSupabaseBrowserClient()
+  const { data, error } = await supabase
+    .from(TABLE)
+    .select('text, ipa')
+    .eq('status', 'ready')
+  if (error) throw error
+  return (data ?? []) as { text: string; ipa: string | null }[]
+}
+
 /** Toggle the is_favorite flag for a word bank row owned by the current user. */
 export async function toggleFavorite(
   wordBankId: string,

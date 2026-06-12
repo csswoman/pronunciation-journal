@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { getMyWords } from '@/lib/word-bank/queries'
+import { getReadyWordSummaries } from '@/lib/word-bank/queries'
 
 export type LoadingWord = { text: string; ipa: string | null }
 
@@ -33,18 +33,17 @@ export function useLoadingWords(): LoadingWord[] {
   useEffect(() => {
     let cancelled = false
 
-    getMyWords()
+    getReadyWordSummaries()
       .then(entries => {
         if (cancelled) return
-        const ready = entries.filter(e => e.status === 'ready')
-        if (ready.length === 0) return // keep fallback
-        const picked = shuffle([...ready])
+        if (entries.length === 0) return // keep fallback
+        const picked = shuffle([...entries])
           .slice(0, 10)
           .map(e => ({ text: e.text, ipa: e.ipa ?? null }))
         setWords(picked)
       })
-      .catch(() => {
-        // network error → keep fallback already set
+      .catch((err) => {
+        console.warn('[useLoadingWords] fetch failed, using fallback', err)
       })
 
     return () => { cancelled = true }
