@@ -20,7 +20,7 @@ export const CORE_POS = [
 export type CorePos = (typeof CORE_POS)[number];
 
 export interface CoreWord {
-  rank: number; // 1–1000, único, contiguo por chunk
+  rank: number; // 1–2800, único, contiguo por chunk
   word: string;
   pos: CorePos;
   ipa_strong: string; // General American, con marcas de stress

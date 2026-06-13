@@ -27,7 +27,7 @@ export default function DecksIndexPage() {
           <div className="flex flex-col gap-0.5">
             <span className="text-sm font-semibold text-[var(--text-primary)]">Essential Words</span>
             <span className="text-xs text-[var(--text-secondary)]">
-              Las 1000 palabras más frecuentes, con weak forms y repaso espaciado
+              Las palabras más frecuentes del inglés, con weak forms y repaso espaciado
             </span>
           </div>
           <span className="text-xs text-[var(--primary)] font-medium">Practicar →</span>
