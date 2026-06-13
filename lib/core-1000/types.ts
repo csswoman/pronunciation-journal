@@ -33,7 +33,7 @@ export interface CoreWord {
 export const CORE1000_PREFIX = "c1k:";
 export const NEW_CARDS_PER_DAY = 10;
 export const CHUNK_SIZE = 100;
-export const MAX_CHUNKS = 10;
+export const MAX_CHUNKS = 28;
 
 export function hasReduction(entry: CoreWord): boolean {
   return entry.ipa_weak != null;
