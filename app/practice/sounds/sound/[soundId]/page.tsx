@@ -112,7 +112,7 @@ export default function SoundPracticePage() {
 
   if (error) {
     return (
-      <div className="phoneme-focus flex min-h-screen items-center justify-center p-4">
+      <div className="phoneme-focus">
         <div className="space-y-3 text-center">
           <p className="text-error">{error}</p>
           <Button type="button" onClick={loadAndStart} variant="primary" size="sm">
@@ -125,7 +125,7 @@ export default function SoundPracticePage() {
 
   if (loading || !sessionConfig) {
     return (
-      <div className="phoneme-focus flex min-h-screen items-center justify-center">
+      <div className="phoneme-focus">
         <SessionLoadingShell
           focusUi={!!soundIpa}
           displayBadge={soundIpa}
@@ -137,7 +137,7 @@ export default function SoundPracticePage() {
 
   if (showIntro) {
     return (
-      <div className="phoneme-focus flex min-h-screen items-center justify-center">
+      <div className="phoneme-focus">
         <div className="phoneme-focus__wrap">
           <div className="phoneme-focus__phone">
             <div className="phoneme-focus__topbar">

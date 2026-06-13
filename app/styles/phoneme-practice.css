@@ -1,6 +1,11 @@
 /* Phoneme focus session — solo lo que no puede ser Tailwind */
 
 .phoneme-focus {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100dvh;
+  padding: var(--space-4);
   color: var(--text-primary);
   font-family: var(--font-sans), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
