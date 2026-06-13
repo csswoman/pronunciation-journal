@@ -53,11 +53,17 @@ describe('generateFillBlankFromWordBank', () => {
     const entries = [
       makeEntry({ id: '1', text: 'run', example: 'She went for a runner.' }),
       makeEntry({ id: '2', text: 'run', example: 'She went for a run yesterday.' }),
+      makeEntry({ id: '3', text: 'walk', example: 'He likes to walk in the park.' }),
+      makeEntry({ id: '4', text: 'swim', example: 'She can swim very fast.' }),
+      makeEntry({ id: '5', text: 'jump', example: 'The jump was very high.' }),
     ]
     const results = generateFillBlankFromWordBank(entries, 10)
-    expect(results).toHaveLength(1)
-    expect(results[0].sentence).toContain('___')
-    expect(results[0].sentence).not.toContain('run')
+    // entry '1' is discarded (runner ≠ run), entry '2' is kept; pool has enough distractors
+    const answers = results.map(r => r.answer)
+    expect(answers).toContain('run')
+    const runResult = results.find(r => r.answer === 'run')!
+    expect(runResult.sentence).toContain('___')
+    expect(runResult.sentence).not.toContain(' run ')
   })
 
   it('replaces the target word with ___ in the sentence', () => {
