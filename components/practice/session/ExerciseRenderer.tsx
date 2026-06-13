@@ -1,5 +1,6 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import { PickWordExercise } from '@/components/phoneme-practice/PickWordExercise'
 import { PickSoundExercise } from '@/components/phoneme-practice/PickSoundExercise'
 import { MinimalPairExercise } from '@/components/phoneme-practice/MinimalPairExercise'
@@ -16,8 +17,17 @@ import { ReorderWordsExercise } from '@/components/exercises/ReorderWordsExercis
 import { SentenceDictationExercise } from '@/components/exercises/SentenceDictationExercise'
 import { SentenceContextExercise } from '@/components/lexicon/SentenceContextExercise'
 import { MultipleChoiceExercise } from '@/components/exercises/MultipleChoiceExercise'
+import { ExerciseShell } from '@/components/exercises/ExerciseShell'
+import type { ExerciseResult } from '@/components/exercises/ExerciseShell'
 import type { Exercise } from '@/lib/phoneme-practice/types'
-import type { MatchPairsExercise as MatchPairsExerciseType, FillBlankExercise as FillBlankExerciseType, ReorderWordsExercise as ReorderWordsExerciseType, SentenceDictationExercise as SentenceDictationExerciseType, SentenceContextExercise as SentenceContextExerciseType, MultipleChoiceExercise as MultipleChoiceExerciseType } from '@/lib/exercises/types'
+import type {
+  MatchPairsExercise as MatchPairsExerciseType,
+  FillBlankExercise as FillBlankExerciseType,
+  ReorderWordsExercise as ReorderWordsExerciseType,
+  SentenceDictationExercise as SentenceDictationExerciseType,
+  SentenceContextExercise as SentenceContextExerciseType,
+  MultipleChoiceExercise as MultipleChoiceExerciseType,
+} from '@/lib/exercises/types'
 import type { PracticeExercise } from '@/lib/practice/types'
 
 interface Props {
@@ -28,127 +38,181 @@ interface Props {
   voice?: SpeechSynthesisVoice
 }
 
-/**
- * Renders the active PracticeExercise by dispatching on slug.
- *
- * Builds the legacy `Exercise` shape from PhonemePayload at the boundary so
- * the underlying components stay untouched.
- */
+const EXERCISE_TITLES: Record<string, string> = {
+  sentence_dictation: 'Listen and type',
+  fill_blank: 'Complete the sentence',
+  reorder_words: 'Put in order',
+  multiple_choice: 'Choose the correct answer',
+  sentence_context: 'Choose the best option',
+  match_pairs: 'Match the pairs',
+}
+
 export function ExerciseRenderer({ exercise, onSubmit, focusUi = false, voice }: Props) {
   const { slug, payload, soundId } = exercise
+  const [result, setResult] = useState<ExerciseResult | null>(null)
+
+  useEffect(() => {
+    setResult(null)
+  }, [exercise.id])
+
+  function handleResult(isCorrect: boolean, userAnswer: string, timeMs: number) {
+    setResult({ isCorrect, userAnswer, timeMs })
+  }
+
+  function handleContinue() {
+    if (!result) return
+    onSubmit(result.isCorrect, result.userAnswer)
+  }
+
+  function handleSkip() {
+    onSubmit(false, 'skip')
+  }
+
+  if (payload.kind !== 'generic') {
+    return renderPhoneme()
+  }
+
+  const title = EXERCISE_TITLES[slug] ?? slug
+  const hint = getHint(slug, payload.data)
 
   return (
     <div className={focusUi ? 'phoneme-focus__session' : 'flex flex-col gap-4'}>
-      {renderInner()}
-      <button
-        type="button"
-        onClick={() => onSubmit(false, 'skip')}
-        aria-label="Omitir ejercicio"
-        className={focusUi ? 'phoneme-focus__skip' : 'self-center py-1.5 text-xs font-semibold uppercase tracking-widest text-[var(--text-tertiary)] transition-opacity hover:opacity-70'}
+      <ExerciseShell
+        title={title}
+        hint={hint}
+        result={result}
+        onContinue={handleContinue}
+        onSkip={handleSkip}
       >
-        Omitir
-      </button>
+        {renderGeneric()}
+      </ExerciseShell>
     </div>
   )
 
-  function renderInner() {
-    if (payload.kind === 'generic') {
-      if (slug === 'match_pairs') {
-        return (
-          <MatchPairsExercise
-            exercise={payload.data as MatchPairsExerciseType}
-            onSubmit={onSubmit}
-          />
-        )
-      }
-      if (slug === 'fill_blank') {
-        return (
-          <FillBlankExercise
-            exercise={payload.data as FillBlankExerciseType}
-            onSubmit={(isCorrect, userAnswer) => onSubmit(isCorrect, userAnswer)}
-          />
-        )
-      }
-      if (slug === 'reorder_words') {
-        return (
-          <ReorderWordsExercise
-            exercise={payload.data as ReorderWordsExerciseType}
-            onSubmit={onSubmit}
-            focusUi={focusUi}
-          />
-        )
-      }
-      if (slug === 'sentence_dictation') {
-        return (
-          <SentenceDictationExercise
-            exercise={payload.data as SentenceDictationExerciseType}
-            onSubmit={(isCorrect, userAnswer) => onSubmit(isCorrect, userAnswer)}
-          />
-        )
-      }
-      if (slug === 'sentence_context') {
-        return (
-          <SentenceContextExercise
-            exercise={payload.data as SentenceContextExerciseType}
-            onSubmit={onSubmit}
-          />
-        )
-      }
-      if (slug === 'multiple_choice') {
-        return (
-          <MultipleChoiceExercise
-            exercise={payload.data as MultipleChoiceExerciseType}
-            onSubmit={onSubmit}
-          />
-        )
-      }
-      return <UnsupportedExercise slug={slug} onSubmit={onSubmit} />
+  function getHint(exerciseSlug: string, data: unknown): { word: string; meaning?: string } | undefined {
+    if (exerciseSlug === 'sentence_dictation') {
+      const d = data as SentenceDictationExerciseType
+      if (d.targetWord) return { word: d.targetWord, meaning: d.targetMeaning }
     }
+    if (exerciseSlug === 'fill_blank') {
+      const d = data as FillBlankExerciseType
+      if (d.hint) return { word: d.hint }
+    }
+    return undefined
+  }
 
+  function renderGeneric() {
+    const genericPayload = payload as any
+    if (slug === 'match_pairs') {
+      return (
+        <MatchPairsExercise
+          exercise={genericPayload.data as MatchPairsExerciseType}
+          onResult={handleResult}
+        />
+      )
+    }
+    if (slug === 'fill_blank') {
+      return (
+        <FillBlankExercise
+          exercise={genericPayload.data as FillBlankExerciseType}
+          onResult={handleResult}
+        />
+      )
+    }
+    if (slug === 'reorder_words') {
+      return (
+        <ReorderWordsExercise
+          exercise={genericPayload.data as ReorderWordsExerciseType}
+          onResult={handleResult}
+          focusUi={focusUi}
+        />
+      )
+    }
+    if (slug === 'sentence_dictation') {
+      return (
+        <SentenceDictationExercise
+          exercise={genericPayload.data as SentenceDictationExerciseType}
+          onResult={handleResult}
+        />
+      )
+    }
+    if (slug === 'sentence_context') {
+      return (
+        <SentenceContextExercise
+          exercise={genericPayload.data as SentenceContextExerciseType}
+          onResult={handleResult}
+        />
+      )
+    }
+    if (slug === 'multiple_choice') {
+      return (
+        <MultipleChoiceExercise
+          exercise={genericPayload.data as MultipleChoiceExerciseType}
+          onResult={handleResult}
+        />
+      )
+    }
+    return <UnsupportedExercise slug={slug} onSkip={handleSkip} />
+  }
+
+  function renderPhoneme() {
+    const phonemePayload = payload as any
     const legacy: Exercise = {
       type: slug as Exercise['type'],
       soundId: soundId ?? 0,
-      ipa: payload.ipa,
-      targetWord: payload.targetWord,
-      options: payload.options,
-      correctIds: payload.correctIds,
+      ipa: phonemePayload.ipa,
+      targetWord: phonemePayload.targetWord,
+      options: phonemePayload.options,
+      correctIds: phonemePayload.correctIds,
       level: exercise.level,
     }
 
-    switch (slug) {
-      case 'pick_word':
-        return <PickWordExercise exercise={legacy} onSubmit={onSubmit} focusUi={focusUi} />
-      case 'pick_sound':
-        return <PickSoundExercise exercise={legacy} onSubmit={onSubmit} focusUi={focusUi} voice={voice} />
-      case 'minimal_pair':
-        return <MinimalPairExercise exercise={legacy} onSubmit={onSubmit} focusUi={focusUi} voice={voice} />
-      case 'dictation':
-        return <DictationExercise exercise={legacy} onSubmit={onSubmit} focusUi={focusUi} voice={voice} />
-      case 'speak_word':
-        return exercise.context === 'daily'
-          ? <SpeakScoredExercise exercise={legacy} onSubmit={onSubmit} />
-          : <SpeakExercise exercise={legacy} onSubmit={onSubmit} focusUi={focusUi} />
-      case 'identify':
-        return <IdentifyExercise exercise={legacy} onSubmit={onSubmit} voice={voice} />
-      case 'ax_same_different':
-        return <AxSameDifferentExercise exercise={legacy} onSubmit={onSubmit} voice={voice} />
-      case 'odd_one_out':
-        return <OddOneOutExercise exercise={legacy} onSubmit={onSubmit} voice={voice} />
-      case 'abx':
-        return <ABXExercise exercise={legacy} onSubmit={onSubmit} voice={voice} />
-      default:
-        return <UnsupportedExercise slug={slug} onSubmit={onSubmit} />
-    }
+    const phonemeNode = (() => {
+      switch (slug) {
+        case 'pick_word':
+          return <PickWordExercise exercise={legacy} onSubmit={onSubmit} focusUi={focusUi} />
+        case 'pick_sound':
+          return <PickSoundExercise exercise={legacy} onSubmit={onSubmit} focusUi={focusUi} voice={voice} />
+        case 'minimal_pair':
+          return <MinimalPairExercise exercise={legacy} onSubmit={onSubmit} focusUi={focusUi} voice={voice} />
+        case 'dictation':
+          return <DictationExercise exercise={legacy} onSubmit={onSubmit} focusUi={focusUi} voice={voice} />
+        case 'speak_word':
+          return exercise.context === 'daily'
+            ? <SpeakScoredExercise exercise={legacy} onSubmit={onSubmit} />
+            : <SpeakExercise exercise={legacy} onSubmit={onSubmit} focusUi={focusUi} />
+        case 'identify':
+          return <IdentifyExercise exercise={legacy} onSubmit={onSubmit} voice={voice} />
+        case 'ax_same_different':
+          return <AxSameDifferentExercise exercise={legacy} onSubmit={onSubmit} voice={voice} />
+        case 'odd_one_out':
+          return <OddOneOutExercise exercise={legacy} onSubmit={onSubmit} voice={voice} />
+        case 'abx':
+          return <ABXExercise exercise={legacy} onSubmit={onSubmit} voice={voice} />
+        default:
+          return <UnsupportedExercise slug={slug} onSkip={handleSkip} />
+      }
+    })()
+
+    return (
+      <div className={focusUi ? 'phoneme-focus__session' : 'flex flex-col gap-4'}>
+        {phonemeNode}
+        {!focusUi && (
+          <button
+            type="button"
+            onClick={handleSkip}
+            aria-label="Skip exercise"
+            className="self-center py-1.5 text-xs font-semibold uppercase tracking-widest text-[var(--text-tertiary)] transition-opacity hover:opacity-70"
+          >
+            Skip
+          </button>
+        )}
+      </div>
+    )
   }
 }
 
-function UnsupportedExercise({
-  slug,
-  onSubmit,
-}: {
-  slug: string
-  onSubmit: (isCorrect: boolean, userAnswer: string) => void
-}) {
+function UnsupportedExercise({ slug, onSkip }: { slug: string; onSkip: () => void }) {
   return (
     <div className="flex flex-col items-center gap-3 p-6 text-center">
       <p className="text-sm text-fg-subtle">
@@ -156,7 +220,7 @@ function UnsupportedExercise({
       </p>
       <button
         type="button"
-        onClick={() => onSubmit(false, '')}
+        onClick={onSkip}
         className="rounded-[var(--radius-md)] px-4 py-2 text-sm font-medium bg-surface-raised text-fg-muted"
       >
         Skip
