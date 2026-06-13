@@ -55,6 +55,10 @@ export interface SentenceDictationExercise extends BaseGenericExercise {
   sentence: string
   /** Remote audio URL if available; fallback to TTS when null. */
   audioUrl: string | null
+  /** The target vocabulary word being practiced. */
+  targetWord?: string
+  /** English meaning/definition of the target word. */
+  targetMeaning?: string
 }
 
 // Match pairs ───────────────────────────────────────────────────────────────

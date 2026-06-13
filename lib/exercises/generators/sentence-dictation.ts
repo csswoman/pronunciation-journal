@@ -21,5 +21,7 @@ export function generateSentenceDictationFromWordBank(
     level: entry.difficulty ? normalizeCEFR(entry.difficulty) : undefined,
     sentence: entry.example!,
     audioUrl: entry.audio_url ?? null,
+    targetWord: entry.text ?? undefined,
+    targetMeaning: entry.meaning ?? undefined,
   }))
 }

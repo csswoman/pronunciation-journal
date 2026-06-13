@@ -98,4 +98,29 @@ describe('generateSentenceDictationFromWordBank', () => {
     const r2 = generateSentenceDictationFromWordBank([entry], 1)
     expect(r1[0].id).toBe(r2[0].id)
   })
+
+  it('populates targetWord and targetMeaning from entry', () => {
+    const entry = makeEntry({
+      id: 'entry-1',
+      text: 'idyllic',
+      meaning: 'pleasantly simple and peaceful',
+      example: 'They lived in an idyllic village, far from the city noise.',
+    })
+    const exercises = generateSentenceDictationFromWordBank([entry], 1)
+    expect(exercises).toHaveLength(1)
+    expect(exercises[0].targetWord).toBe('idyllic')
+    expect(exercises[0].targetMeaning).toBe('pleasantly simple and peaceful')
+  })
+
+  it('omits targetMeaning when entry has no meaning', () => {
+    const entry = makeEntry({
+      id: 'entry-2',
+      text: 'vivid',
+      meaning: null,
+      example: 'The vivid colors of the sunset.',
+    })
+    const exercises = generateSentenceDictationFromWordBank([entry], 1)
+    expect(exercises[0].targetWord).toBe('vivid')
+    expect(exercises[0].targetMeaning).toBeUndefined()
+  })
 })
