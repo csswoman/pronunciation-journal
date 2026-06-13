@@ -10,7 +10,7 @@
 // </DeckDoneScreen>
 
 import Link from "next/link";
-import { Check, RotateCcw, Sparkles, ArrowRight, Headphones, BookOpen, LayoutList } from "lucide-react";
+import { Check, RotateCcw, ArrowRight, Headphones, BookOpen, LayoutList } from "lucide-react";
 import type { GrammarStudyDeckData } from "@/lib/courses/grammar-deck/types";
 
 interface DeckDoneScreenProps {
@@ -47,7 +47,6 @@ export function DeckDoneScreen({
       <div className="grammar-deck__done-badge">
         <Check size={30} strokeWidth={3} aria-hidden />
       </div>
-      <Sparkles className="grammar-deck__done-spark" size={18} aria-hidden />
       <h2 className="grammar-deck__done-title">¡Lección completada!</h2>
       {courseTitle && <p className="grammar-deck__done-sub">{courseTitle}</p>}
       {deck.meta.goal && <p className="grammar-deck__done-goal">{deck.meta.goal}</p>}
