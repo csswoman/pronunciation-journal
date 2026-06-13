@@ -283,12 +283,13 @@ function exampleSentence(word, pos) {
   }
 }
 
-function readNgsl() {
-  const csv = fs.readFileSync(path.join(__dirname, "data/ngsl-1000.csv"), "utf-8");
+function readCsv(filePath) {
+  const csv = fs.readFileSync(filePath, "utf-8");
   const rows = [];
   for (const line of csv.split(/\r?\n/)) {
     if (!line || line.startsWith("#") || line.startsWith("rank,")) continue;
     const [rankStr, word] = line.split(",");
+    if (!rankStr || !word) continue;
     rows.push({ rank: Number(rankStr), word: word.trim().toLowerCase() });
   }
   return rows;
@@ -296,7 +297,10 @@ function readNgsl() {
 
 function buildEntry({ rank, word }) {
   const ipa_strong = lookupIpa(word);
-  if (!ipa_strong) throw new Error(`No CMU IPA for rank ${rank}: ${word}`);
+  if (!ipa_strong) {
+    console.warn(`  [WARN] No CMU IPA for rank ${rank}: "${word}" — skipping`);
+    return null;
+  }
 
   const pos = classifyPos(word);
   const cefr_level = cefrForRank(rank);
@@ -319,20 +323,48 @@ function buildEntry({ rank, word }) {
   return entry;
 }
 
-function main() {
-  const words = readNgsl();
-  const outDir = path.join(ROOT, "public/core-1000");
-  fs.mkdirSync(outDir, { recursive: true });
+function generateChunks(words, startChunk, endChunk, outDir) {
+  for (let chunk = startChunk; chunk <= endChunk; chunk++) {
+    const rankStart = (chunk - 1) * 100 + 1;
+    const rankEnd = chunk * 100;
+    const slice = words.filter((w) => w.rank >= rankStart && w.rank <= rankEnd);
 
-  for (let chunk = 1; chunk <= 10; chunk++) {
-    const start = (chunk - 1) * 100;
-    const slice = words.slice(start, start + 100);
-    const entries = slice.map(buildEntry);
+    if (slice.length === 0) {
+      console.log(`Chunk ${chunk}: no words in rank ${rankStart}–${rankEnd}, skipping`);
+      continue;
+    }
+
+    const entries = slice.map(buildEntry).filter(Boolean);
+
+    if (entries.length !== 100) {
+      console.warn(`  [WARN] Chunk ${chunk}: expected 100 entries, got ${entries.length}`);
+    }
+
     const file = path.join(outDir, `words-${String(chunk).padStart(3, "0")}.json`);
     fs.writeFileSync(file, JSON.stringify({ version: 1, entries }, null, 2) + "\n");
     console.log(`Wrote ${file} (${entries.length} entries)`);
   }
-  console.log("Done:", words.length, "words");
+}
+
+function main() {
+  const args = process.argv.slice(2);
+  const startChunk = args[0] ? Number(args[0]) : 1;
+  const endChunk = args[1] ? Number(args[1]) : 10;
+
+  const outDir = path.join(ROOT, "public/core-1000");
+  fs.mkdirSync(outDir, { recursive: true });
+
+  // Load the right CSV based on range
+  const words1k = readCsv(path.join(__dirname, "data/ngsl-1000.csv"));
+  const words2800 = readCsv(path.join(__dirname, "data/ngsl-2800.csv"));
+  const allWords = [...words1k, ...words2800].reduce((acc, w) => {
+    if (!acc.find((x) => x.rank === w.rank)) acc.push(w);
+    return acc;
+  }, []);
+
+  console.log(`Generating chunks ${startChunk}–${endChunk} (${(endChunk - startChunk + 1) * 100} words)...`);
+  generateChunks(allWords, startChunk, endChunk, outDir);
+  console.log("Done.");
 }
 
 main();
