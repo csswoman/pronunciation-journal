@@ -16,12 +16,12 @@ import type { SentenceContextExercise as SentenceContextExerciseType, SentenceCo
 
 interface Props {
   exercise: SentenceContextExerciseType
-  onSubmit: (isCorrect: boolean, userAnswer: string) => void
+  onResult: (isCorrect: boolean, userAnswer: string, timeMs: number) => void
 }
 
 type Phase = 'selecting' | 'feedback'
 
-export function SentenceContextExercise({ exercise, onSubmit }: Props) {
+export function SentenceContextExercise({ exercise, onResult }: Props) {
   const [selected, setSelected] = useState<string | null>(null)
   const [phase, setPhase] = useState<Phase>('selecting')
   const [isCorrect, setIsCorrect] = useState(false)
@@ -45,7 +45,7 @@ export function SentenceContextExercise({ exercise, onSubmit }: Props) {
     const correct = selectedOption?.word === exercise.answer
     setIsCorrect(correct)
     setPhase('feedback')
-    onSubmit(correct, selectedOption?.word ?? '')
+    onResult(correct, selectedOption?.word ?? '', Date.now() - startMs.current)
   }
 
   return (
