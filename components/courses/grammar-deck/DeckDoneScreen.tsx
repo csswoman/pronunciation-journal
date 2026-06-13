@@ -87,9 +87,11 @@ export function DeckDoneScreen({
           href={`/practice/sounds?focus=${encodeURIComponent(deck.sounds.join(","))}`}
           className="grammar-deck__done-soundlab"
         >
-          <Headphones size={16} aria-hidden />
-          <span>
-            Practica estos sonidos en Sound Lab
+          <span className="grammar-deck__done-soundlab-icon">
+            <Headphones size={18} aria-hidden />
+          </span>
+          <span className="grammar-deck__done-soundlab-text">
+            <span className="grammar-deck__done-soundlab-label">Practica estos sonidos</span>
             <em>{deck.sounds.join(" · ")}</em>
           </span>
           <ArrowRight size={15} aria-hidden />
