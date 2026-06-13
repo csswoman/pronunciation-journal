@@ -12,12 +12,12 @@ import type { MultipleChoiceExercise as MultipleChoiceExerciseType } from '@/lib
 
 interface Props {
   exercise: MultipleChoiceExerciseType
-  onSubmit: (isCorrect: boolean, userAnswer: string) => void
+  onResult: (isCorrect: boolean, userAnswer: string, timeMs: number) => void
 }
 
 type AnswerState = 'idle' | 'correct' | 'wrong'
 
-export function MultipleChoiceExercise({ exercise, onSubmit }: Props) {
+export function MultipleChoiceExercise({ exercise, onResult }: Props) {
   const [selected, setSelected] = useState<number | null>(null)
   const [state, setState]       = useState<AnswerState>('idle')
   const startMs = useRef(Date.now())
@@ -33,7 +33,7 @@ export function MultipleChoiceExercise({ exercise, onSubmit }: Props) {
     const isCorrect = idx === exercise.answerIndex
     setSelected(idx)
     setState(isCorrect ? 'correct' : 'wrong')
-    setTimeout(() => onSubmit(isCorrect, exercise.options[idx]), 1000)
+    onResult(isCorrect, exercise.options[idx], Date.now() - startMs.current)
   }
 
   return (
