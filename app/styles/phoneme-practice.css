@@ -30,7 +30,7 @@
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  padding: var(--space-3) var(--space-5);
+  padding: var(--space-3) var(--space-5) var(--space-2);
 }
 
 .phoneme-focus__stage {
@@ -53,8 +53,11 @@
 }
 
 .phoneme-focus__progress {
+  flex: 1;
+  height: 4px;
   border-radius: 999px;
   background: var(--surface-sunken);
+  overflow: hidden;
 }
 
 .phoneme-focus__progress > span {
@@ -68,33 +71,53 @@
 
 .phoneme-focus__badge {
   font-family: var(--font-editorial), Georgia, serif;
-  font-size: 1.35rem;
+  font-size: 1rem;
   font-weight: 600;
   color: var(--primary);
+  flex-shrink: 0;
 }
 
 .phoneme-focus__badge--text {
   font-family: var(--font-sans), system-ui, sans-serif;
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   font-weight: 700;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  max-width: 8rem;
+}
+
+.phoneme-focus__prompt {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin-bottom: var(--space-2);
+}
+
+.phoneme-focus__prompt--spacious {
+  margin-bottom: var(--space-4);
+}
+
+.phoneme-focus__prompt--center {
+  align-items: center;
+  text-align: center;
 }
 
 .phoneme-focus__eyebrow {
   font-size: 11px;
   font-weight: 600;
-  letter-spacing: 0.18em;
-  color: var(--text-tertiary);
+  letter-spacing: 0.1em;
+  color: var(--primary);
+  opacity: 0.75;
 }
 
 .phoneme-focus__title {
   font-family: var(--font-editorial), Georgia, serif;
   font-weight: 480;
-  font-size: 1.45rem;
-  letter-spacing: -0.015em;
+  font-size: 1.25rem;
+  letter-spacing: -0.01em;
+  line-height: 1.35;
   color: var(--text-primary);
 }
 
@@ -104,9 +127,9 @@
 }
 
 .phoneme-focus__hint {
-  font-size: 0.78rem;
-  letter-spacing: 0.05em;
-  color: var(--text-tertiary);
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--text-secondary);
 }
 
 .phoneme-focus__exercise {
