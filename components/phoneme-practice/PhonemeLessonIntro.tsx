@@ -57,7 +57,7 @@ function IntroStage({ bare, ipa }: { bare: string; ipa: string }) {
         onClick={() => playIpaSound(bare)}
         aria-label={`Escuchar ${ipa}`}
         className={cn(
-          'relative font-[Fraunces,Georgia,serif] text-[5.5rem] font-extrabold italic leading-none',
+          'relative font-[Fraunces,Georgia,serif] text-ipa-hero font-extrabold italic leading-none',
           'text-primary/80 transition-transform duration-100',
           'active:scale-95',
           // aro pulsante
@@ -71,7 +71,7 @@ function IntroStage({ bare, ipa }: { bare: string; ipa: string }) {
         {bare}
       </button>
 
-      <span className="relative flex items-center gap-1 text-[0.6875rem] text-primary/60">
+      <span className="relative flex items-center gap-1 text-tiny text-primary/60">
         <svg width="11" height="11" viewBox="0 0 12 12" fill="currentColor" aria-hidden>
           <polygon points="3,1 11,6 3,11" />
         </svg>
@@ -98,7 +98,7 @@ function IntroTray({
         <div className="flex gap-2.5">
           <span className="mt-px text-base leading-none" aria-hidden>🇪🇸</span>
           <div className="flex flex-col gap-0.5">
-            <span className="text-[0.6875rem] font-semibold uppercase tracking-[0.04em] text-fg-subtle">
+            <span className="text-tiny font-semibold uppercase tracking-[0.04em] text-fg-subtle">
               Para hispanohablantes
             </span>
             <p className="text-sm leading-relaxed text-fg-secondary">{extra.spanishTip}</p>
@@ -141,7 +141,7 @@ function LessonDetail({ extra }: { extra: PhonemeExtra }) {
     <div className="flex flex-col gap-3">
       {extra.articulationEs.length > 0 && (
         <div className="flex flex-col gap-1.5">
-          <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.04em] text-fg-subtle">
+          <p className="text-tiny font-semibold uppercase tracking-[0.04em] text-fg-subtle">
             Cómo se produce
           </p>
           <ol className="flex flex-col gap-1.5">
@@ -159,7 +159,7 @@ function LessonDetail({ extra }: { extra: PhonemeExtra }) {
 
       {extra.minimalPairs.length > 0 && (
         <div className="flex flex-col gap-1.5">
-          <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.04em] text-fg-subtle">
+          <p className="text-tiny font-semibold uppercase tracking-[0.04em] text-fg-subtle">
             Pares mínimos
           </p>
           <div className="flex flex-wrap gap-1.5">
