@@ -375,7 +375,7 @@
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  padding: var(--space-4);
+  padding: var(--space-3) var(--space-4);
   text-align: left;
   border-radius: var(--radius-lg);
   border: 1px solid var(--accent-border);
@@ -396,17 +396,9 @@
   box-shadow: var(--shadow-sm);
 }
 
-.grammar-deck__done-soundlab-icon {
-  width: 36px;
-  height: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  border-radius: 50%;
-  background: color-mix(in oklch, var(--primary) 15%, var(--surface-raised));
-  border: 1px solid var(--accent-border);
+.grammar-deck__done-soundlab-ico {
   color: var(--primary);
+  flex-shrink: 0;
 }
 
 .grammar-deck__done-soundlab-text {
@@ -414,26 +406,23 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
-}
-
-.grammar-deck__done-soundlab-label {
   font-size: 0.875rem;
   font-weight: 600;
-  color: var(--text-primary);
 }
 
 .grammar-deck__done-soundlab em {
   font-style: normal;
   font-size: 0.78rem;
+  font-weight: 400;
   color: var(--primary);
-  letter-spacing: 0.02em;
 }
 
-.grammar-deck__done-soundlab > svg:last-child {
+.grammar-deck__done-soundlab-arrow {
   color: var(--text-tertiary);
   flex-shrink: 0;
 }
 
+/* legacy rule — keep to avoid breaking old markup */
 .grammar-deck__done-soundlab > span {
   flex: 1;
   display: flex;
