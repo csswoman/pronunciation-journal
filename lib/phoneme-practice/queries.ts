@@ -28,7 +28,7 @@ async function getExerciseTypeId(slug: string): Promise<number> {
 export async function getAllSounds(): Promise<Sound[]> {
   const { data, error } = await supabase()
     .from('sounds')
-    .select('*')
+    .select('id, ipa, example, category, type, difficulty')
     .order('id')
   if (error) throw error
   return data as Sound[]
@@ -37,7 +37,7 @@ export async function getAllSounds(): Promise<Sound[]> {
 export async function getSoundById(soundId: number): Promise<Sound> {
   const { data, error } = await supabase()
     .from('sounds')
-    .select('*')
+    .select('id, ipa, example, category, type, difficulty')
     .eq('id', soundId)
     .single()
   if (error) throw error
@@ -47,7 +47,7 @@ export async function getSoundById(soundId: number): Promise<Sound> {
 export async function getWordsBySound(soundId: number): Promise<SoundWord[]> {
   const { data, error } = await supabase()
     .from('words')
-    .select('*')
+    .select('id, sound_id, word, ipa, audio_url, difficulty, phonemes, sound_focus')
     .eq('sound_id', soundId)
   if (error) throw error
   return data as SoundWord[]
@@ -56,7 +56,7 @@ export async function getWordsBySound(soundId: number): Promise<SoundWord[]> {
 export async function getAllWords(): Promise<SoundWord[]> {
   const { data, error } = await supabase()
     .from('words')
-    .select('*')
+    .select('id, sound_id, word, ipa, audio_url, difficulty, phonemes, sound_focus')
   if (error) throw error
   return data as SoundWord[]
 }
@@ -64,7 +64,7 @@ export async function getAllWords(): Promise<SoundWord[]> {
 export async function getMinimalPairs(soundId: number): Promise<MinimalPair[]> {
   const { data, error } = await supabase()
     .from('minimal_pairs')
-    .select('*')
+    .select('id, word_a, word_b, ipa_a, ipa_b, sound_group, contrast_ipa_a, contrast_ipa_b, contrast_sound_a_id, contrast_sound_b_id')
     .or(`contrast_sound_a_id.eq.${soundId},contrast_sound_b_id.eq.${soundId}`)
   if (error) throw error
   return data as MinimalPair[]
@@ -111,7 +111,7 @@ export async function getAllContrastProgress(
 ): Promise<UserContrastProgress[]> {
   const { data, error } = await supabase()
     .from('user_contrast_progress')
-    .select('*')
+    .select('id, user_id, contrast_id, ease_factor, interval_days, next_review, last_seen, total_attempts, correct_answers, streak')
     .eq('user_id', userId)
   if (error) throw error
   return data as UserContrastProgress[]
@@ -123,7 +123,7 @@ export async function getContrastProgress(
 ): Promise<UserContrastProgress | null> {
   const { data, error } = await supabase()
     .from('user_contrast_progress')
-    .select('*')
+    .select('id, user_id, contrast_id, ease_factor, interval_days, next_review, last_seen, total_attempts, correct_answers, streak')
     .eq('user_id', userId)
     .eq('contrast_id', contrastId)
     .maybeSingle()
@@ -170,7 +170,7 @@ export async function getContrastsForToday(
   const now = new Date().toISOString()
   const { data, error } = await supabase()
     .from('user_contrast_progress')
-    .select('*')
+    .select('id, user_id, contrast_id, ease_factor, interval_days, next_review, last_seen, total_attempts, correct_answers, streak')
     .eq('user_id', userId)
     .or(`next_review.lte.${now},next_review.is.null`)
     .order('next_review', { ascending: true })

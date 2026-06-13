@@ -1,5 +1,5 @@
 import { createSupabaseServerClient } from '@/lib/supabase/server'
-import { getDailyStreak, type DailyStreakResult } from '@/lib/daily/streak'
+import { getDailyStreak, toLocalDateString, STREAK_TIMEZONE, type DailyStreakResult } from '@/lib/daily/streak'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -43,12 +43,25 @@ export interface SkillProfileData {
   weakestPhonemes: WeakestPhoneme[]
 }
 
+export interface CoachWeakTopic {
+  topic: string
+  errorRate: number
+  sampleCount: number
+}
+
+export interface CoachInsights {
+  weakTopics: CoachWeakTopic[]
+  cefrEstimate: string | null
+  avgAccuracy: number | null
+}
+
 export interface ProgressPageData {
   streak: DailyStreakResult
   dailyCompletion: DailyCompletionStats
   accuracy: AccuracyStats
   skillProfile: SkillProfileData
   weeklySummary: WeeklySummaryStats
+  coachInsights: CoachInsights
 }
 
 // ── Queries ───────────────────────────────────────────────────────────────────
@@ -74,7 +87,7 @@ async function getDailyCompletionStats(userId: string): Promise<DailyCompletionS
 
   const countsByDay = new Map<string, number>()
   for (const row of rows) {
-    const day = (row.answered_at as string).slice(0, 10)
+    const day = toLocalDateString(row.answered_at as string, STREAK_TIMEZONE)
     countsByDay.set(day, (countsByDay.get(day) ?? 0) + 1)
   }
 
@@ -86,7 +99,7 @@ async function getDailyCompletionStats(userId: string): Promise<DailyCompletionS
   for (let i = 29; i >= 0; i--) {
     const d = new Date(today)
     d.setDate(d.getDate() - i)
-    const day = d.toISOString().slice(0, 10)
+    const day = toLocalDateString(d.toISOString(), STREAK_TIMEZONE)
     const count = countsByDay.get(day) ?? 0
     const level: ConsistencyHeatLevel =
       count >= DAILY_THRESHOLD * 2
@@ -218,14 +231,44 @@ async function getSkillProfileData(userId: string): Promise<SkillProfileData> {
   return { wordsByStatus, weakestPhonemes: phonemes }
 }
 
-export async function getProgressPageData(userId: string): Promise<ProgressPageData> {
-  const [streak, dailyCompletion, accuracy, skillProfile, weeklySummary] = await Promise.all([
-    getDailyStreak(userId),
-    getDailyCompletionStats(userId),
-    getAccuracyStats(userId),
-    getSkillProfileData(userId),
-    getWeeklySummaryStats(userId),
-  ])
+async function getCoachInsights(userId: string): Promise<CoachInsights> {
+  try {
+    const supabase = await createSupabaseServerClient()
+    const { data } = await supabase
+      .from('user_learning_state')
+      .select('state')
+      .eq('user_id', userId)
+      .maybeSingle()
 
-  return { streak, dailyCompletion, accuracy, skillProfile, weeklySummary }
+    if (!data?.state) return { weakTopics: [], cefrEstimate: null, avgAccuracy: null }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- jsonb blob, shape validated at write time
+    const state = data.state as any
+    const weakTopics: CoachWeakTopic[] = (state?.grammar?.weakTopics ?? [])
+      .filter((t: CoachWeakTopic) => t.errorRate > 0.3 && t.sampleCount >= 3)
+      .sort((a: CoachWeakTopic, b: CoachWeakTopic) => b.errorRate - a.errorRate)
+      .slice(0, 5)
+
+    return {
+      weakTopics,
+      cefrEstimate: state?.level?.cefrEstimate ?? null,
+      avgAccuracy: state?.pronunciation?.averageAccuracy ?? null,
+    }
+  } catch {
+    return { weakTopics: [], cefrEstimate: null, avgAccuracy: null }
+  }
+}
+
+export async function getProgressPageData(userId: string): Promise<ProgressPageData> {
+  const [streak, dailyCompletion, accuracy, skillProfile, weeklySummary, coachInsights] =
+    await Promise.all([
+      getDailyStreak(userId),
+      getDailyCompletionStats(userId),
+      getAccuracyStats(userId),
+      getSkillProfileData(userId),
+      getWeeklySummaryStats(userId),
+      getCoachInsights(userId),
+    ])
+
+  return { streak, dailyCompletion, accuracy, skillProfile, weeklySummary, coachInsights }
 }

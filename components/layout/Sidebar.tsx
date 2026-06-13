@@ -4,8 +4,8 @@ import { usePathname } from "next/navigation";
 import { PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import { useUserRole } from "@/hooks/useUserRole";
 import SidebarFooter from "./SidebarFooter";
-import { NavSection, NavLink, coreNav, learningNav, trackingNav, adminNav } from "../sidebar/index";
-import { SidebarContext } from "../sidebar/SidebarContext";
+import { NavSection, NavLink, coreNav, learningNav, trackingNav, adminNav } from "../theme/sidebar/index";
+import { SidebarContext } from "../theme/sidebar/SidebarContext";
 
 interface SidebarProps {
   className?: string;

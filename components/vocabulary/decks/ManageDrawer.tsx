@@ -1,8 +1,18 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { useAuth } from "@/components/auth/AuthProvider";
+import {
+  getDeckEntries,
+  findEntryByWord,
+  insertEntry,
+  findDeckEntry,
+  insertDeckEntry,
+  removeDeckEntry,
+  removeDeckEntries,
+  getEntryMeanings,
+  updateEntryContent,
+} from "@/lib/decks/queries";
 import type { Tables } from "@/lib/supabase/types";
 import { BookOpen, Plus, Sparkles, X } from "lucide-react";
 import Button from "@/components/ui/Button";
@@ -14,7 +24,6 @@ import { ManageAiTab } from "./ManageAiTab";
 
 type Deck = Tables<"decks">;
 type Entry = Tables<"entries">;
-type DeckEntryRow = { entries: Entry | null };
 type Tab = "words" | "add" | "ai";
 
 interface ManageDrawerProps {
@@ -43,9 +52,7 @@ export function ManageDrawer({ deck, onClose, onWordCountChange }: ManageDrawerP
   const selectMode = selected.size > 0;
 
   const loadEntries = useCallback(async () => {
-    const supabase = getSupabaseBrowserClient();
-    const { data } = await supabase.from("deck_entries").select("entry_id, entries(*)").eq("deck_id", deck.id);
-    const loaded = ((data ?? []) as DeckEntryRow[]).map((row) => row.entries).filter(Boolean) as Entry[];
+    const loaded = await getDeckEntries(deck.id);
     setEntries(loaded);
     onWordCountChange?.(loaded.length);
     setLoading(false);
@@ -59,22 +66,20 @@ export function ManageDrawer({ deck, onClose, onWordCountChange }: ManageDrawerP
     const word = (wordOverride ?? manualWord).trim();
     if (!word || !user) return;
     setAddingWord(true);
-    const supabase = getSupabaseBrowserClient();
     try {
-      const { data: existing } = await supabase.from("entries").select("id").eq("user_id", user.id).ilike("word", word).maybeSingle();
+      const existing = await findEntryByWord(user.id, word);
       let entryId = existing?.id;
       if (!entryId) {
         const phrases = manualPhrases.trim() ? manualPhrases.split("\n").map((phrase) => phrase.trim()).filter(Boolean) : null;
         const resolvedMeaning = meaningOverride ?? (await fetchMeaningForWord(word));
         const meanings = resolvedMeaning ? [{ definitions: [{ definition: resolvedMeaning }] }] : null;
-        const { data: newEntry, error } = await supabase.from("entries").insert({ word, user_id: user.id, difficulty: 1, phrases, meanings, id: crypto.randomUUID() }).select("id").single();
-        if (error) throw error;
+        const newEntry = await insertEntry({ word, userId: user.id, difficulty: 1, phrases, meanings, id: crypto.randomUUID() });
         entryId = newEntry?.id;
       }
       if (entryId) {
-        const { data: existingDeckEntry } = await supabase.from("deck_entries").select("*").eq("deck_id", deck.id).eq("entry_id", entryId).maybeSingle();
+        const existingDeckEntry = await findDeckEntry(deck.id, entryId);
         if (!existingDeckEntry) {
-          await supabase.from("deck_entries").insert({ deck_id: deck.id, entry_id: entryId });
+          await insertDeckEntry(deck.id, entryId);
         }
         setManualWord("");
         setManualPhrases("");
@@ -88,8 +93,7 @@ export function ManageDrawer({ deck, onClose, onWordCountChange }: ManageDrawerP
   };
 
   const handleRemoveWord = async (entryId: string) => {
-    const supabase = getSupabaseBrowserClient();
-    await supabase.from("deck_entries").delete().eq("deck_id", deck.id).eq("entry_id", entryId);
+    await removeDeckEntry(deck.id, entryId);
     setSelected((previous) => {
       const next = new Set(previous);
       next.delete(entryId);
@@ -100,16 +104,14 @@ export function ManageDrawer({ deck, onClose, onWordCountChange }: ManageDrawerP
 
   const handleBulkRemove = async () => {
     if (selected.size === 0) return;
-    const supabase = getSupabaseBrowserClient();
-    await supabase.from("deck_entries").delete().eq("deck_id", deck.id).in("entry_id", Array.from(selected));
+    await removeDeckEntries(deck.id, Array.from(selected));
     setSelected(new Set());
     await loadEntries();
   };
 
   const handleSaveEntry = async (entryId: string, phrases: string[], meaning: string) => {
-    const supabase = getSupabaseBrowserClient();
-    const { data: current } = await supabase.from("entries").select("meanings").eq("id", entryId).single();
-    const existingMeanings = Array.isArray(current?.meanings) ? (current.meanings as { partOfSpeech?: string; definitions?: { definition?: string; example?: string }[] }[]) : [];
+    const { meanings: rawMeanings } = await getEntryMeanings(entryId);
+    const existingMeanings = Array.isArray(rawMeanings) ? (rawMeanings as { partOfSpeech?: string; definitions?: { definition?: string; example?: string }[] }[]) : [];
     let meanings: { partOfSpeech?: string; definitions?: { definition?: string; example?: string }[] }[] | null = existingMeanings.length ? existingMeanings : null;
     if (meaning) {
       if (existingMeanings.length > 0) {
@@ -120,7 +122,7 @@ export function ManageDrawer({ deck, onClose, onWordCountChange }: ManageDrawerP
         meanings = [{ definitions: [{ definition: meaning }] }];
       }
     }
-    await supabase.from("entries").update({ phrases: phrases.length ? phrases : null, meanings, updated_at: new Date().toISOString() }).eq("id", entryId);
+    await updateEntryContent(entryId, { phrases: phrases.length ? phrases : null, meanings });
     await loadEntries();
   };
 

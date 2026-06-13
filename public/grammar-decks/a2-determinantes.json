@@ -22,7 +22,7 @@
       "q": "'___ day I learn something new.' ¿Cuál completa mejor esta idea de rutina total/habitual?",
       "options": ["Each", "Every", "All", "Both"],
       "answer": 1,
-      "explain": "every = todos sin excepción, con sentido de totalidad o hábito (every day, every morning). each pone más énfasis en los días individualmente. all se usa con 'all the time' pero no 'all day' de la misma forma habitual."
+      "explain": "every = todos sin excepción, con sentido de totalidad o hábito (every day, every morning). each pone más énfasis en los días individualmente. all day significa 'todo el día' (duración), no 'cada día'."
     }
   ],
   "cards": [
@@ -72,7 +72,7 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "all + plural", "value": "All students must register. · All birds can fly.", "highlights": ["All"], "hint": "sin artículo" },
+            { "key": "all + plural", "value": "All students must register. · All children need sleep.", "highlights": ["All"], "hint": "sin artículo" },
             { "key": "all + the + plural", "value": "All the students passed. · All the doors are closed.", "highlights": ["all the"], "hint": "con artículo = grupo específico" },
             { "key": "all + incontable", "value": "All information is confidential. · All money was spent.", "highlights": ["All"] },
             { "key": "all of + pronombre", "value": "All of them left early. · All of us are ready.", "highlights": ["all of"], "hint": "all of + us/them/you" },
@@ -82,7 +82,7 @@
       ],
       "tip": {
         "label": "Ojo:",
-        "body": "all the time (todo el tiempo) ✓. all times ✗. Se dice always, not all times. También: not all = no todos (Not all students passed ≠ No students passed)."
+        "body": "all the time (todo el tiempo) ✓. all times ✗ — para 'siempre' se dice always. También: not all = no todos (Not all students passed ≠ No students passed)."
       }
     },
     {
@@ -146,7 +146,7 @@
     {
       "id": "det-mistakes",
       "tag": "Errores frecuentes",
-      "title": "Errores comunes con these determiners",
+      "title": "Errores comunes con estos determinantes",
       "lede": "Los errores más frecuentes que cometen los hispanohablantes con estos determinantes.",
       "blocks": [
         {

@@ -2,20 +2,11 @@ import { GoogleGenAI } from "@google/genai";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { requireUser, rateLimit, validateBody, SECURE_HEADERS } from "@/lib/api/guards";
+import { PRONUNCIATION_PHRASES_SYSTEM_PROMPT } from "@/lib/ai-prompts";
 
 const PhrasesSchema = z.object({
   exclude: z.array(z.string().max(200)).max(100).optional(),
 }).strict();
-
-const SYSTEM_PROMPT = `You are an English pronunciation coach. Generate 10 natural English sentences for pronunciation practice. Requirements:
-- Conversational, not textbook-stiff
-- Mix of everyday, professional, and social contexts
-- Vary sentence length (5–12 words each)
-- Include phonetically challenging sounds: TH, R, W, V, SH, vowel reductions
-- Never generate the same sentence twice across calls
-
-Return ONLY valid JSON, no markdown, no code fences:
-{"phrases":["sentence one","sentence two",...]}`;
 
 const BASE_MODELS = ["gemini-2.5-flash-lite", "gemini-2.5-flash", "gemini-flash-latest"] as const;
 const ENABLE_PREVIEW = process.env.GEMINI_ENABLE_PREVIEW_MODELS === "true";
@@ -71,7 +62,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       const result = await ai.models.generateContent({
         model,
         contents: prompt,
-        config: { systemInstruction: SYSTEM_PROMPT, responseMimeType: "application/json" },
+        config: { systemInstruction: PRONUNCIATION_PHRASES_SYSTEM_PROMPT, responseMimeType: "application/json" },
       });
       if (!result.text) throw new Error("Empty response");
       const cleaned = result.text.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();

@@ -1,0 +1,121 @@
+{
+  "meta": {
+    "eyebrow": "Biz · Tech",
+    "title": "Inglés para",
+    "titleEmphasis": "code review"
+  },
+  "cards": [
+    {
+      "id": "cr-hedging",
+      "tag": "Softening / Hedging",
+      "title": "Suavizar el feedback",
+      "lede": "En inglés americano, el feedback directo suena brusco. Usa estas fórmulas para que tus comentarios sean profesionales sin perder claridad.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "It might be worth", "value": "It might be worth extracting this into a helper.", "highlights": ["might be worth"] },
+            { "key": "I wonder if we could", "value": "I wonder if we could cache this result.", "highlights": ["I wonder if we could"] },
+            { "key": "Have you considered", "value": "Have you considered using a Map here?", "highlights": ["Have you considered"] },
+            { "key": "This could be simplified to", "value": "This could be simplified to a single reduce call.", "highlights": ["could be simplified"] },
+            { "key": "Nit:", "value": "Nit: variable name could be more descriptive.", "highlights": ["Nit:"] }
+          ]
+        }
+      ],
+      "tip": { "label": "Registro:", "body": "Estos hedges son normales en PR comments americanos — no son debilidad, son colaboración." }
+    },
+    {
+      "id": "cr-approve",
+      "tag": "Aprobar / Reconocer",
+      "title": "LGTM y más allá",
+      "lede": "Hay muchas formas de aprobar un PR sin sonar mecánico.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "LGTM", "value": "Looks good to me — nice work!", "highlights": ["LGTM", "Looks good to me"] },
+            { "key": "Good catch", "value": "Good catch — I hadn't thought of that edge case.", "highlights": ["Good catch"] },
+            { "key": "This is clean", "value": "This is clean and easy to follow.", "highlights": ["clean"] },
+            { "key": "I like how you", "value": "I like how you separated concerns here.", "highlights": ["I like how"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cr-defend",
+      "tag": "Defender decisiones",
+      "title": "Explicar tu approach",
+      "lede": "Cuando te preguntan por qué hiciste algo, estas frases te dan estructura y suenan seguras sin ser defensivas.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "I went with X because", "value": "I went with a queue because it decouples the producer from the consumer.", "highlights": ["I went with", "because"] },
+            { "key": "The trade-off here is", "value": "The trade-off here is simplicity vs. performance.", "highlights": ["trade-off"] },
+            { "key": "I can change it to", "value": "I can change it to a factory if that's clearer.", "highlights": ["I can change it"] },
+            { "key": "You're right, I'll fix that", "value": "You're right, I'll fix that in the next commit.", "highlights": ["I'll fix that"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cr-collocations",
+      "tag": "Colocaciones tech",
+      "title": "El vocabulario del día a día",
+      "lede": "Estas frases suenan naturales en conversaciones técnicas en inglés americano.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "deploy to production", "value": "We can deploy to production once the tests pass.", "highlights": ["deploy to production"] },
+            { "key": "roll back a change", "value": "If something breaks, we can roll back the change.", "highlights": ["roll back"] },
+            { "key": "push back on", "value": "I want to push back on the deadline — we need more time.", "highlights": ["push back on"] },
+            { "key": "ship the feature", "value": "Let's ship the feature behind a flag first.", "highlights": ["ship the feature"] },
+            { "key": "address the comment", "value": "I'll address your comment before merging.", "highlights": ["address the comment"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cr-standup",
+      "tag": "Standup",
+      "title": "Hablar en el daily",
+      "lede": "Reportar progreso en inglés requiere los tiempos perfectos — así suenas fluido, no traducido.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            { "variant": "bad", "text": "Yesterday I worked on the login." },
+            { "variant": "good", "text": "I've been working on the login flow — almost done.", "note": "presente perfecto continuo" },
+            { "variant": "bad", "text": "I have a blocker with the API." },
+            { "variant": "good", "text": "I'm blocked on the API rate limits — could use some help.", "note": "más natural y proactivo" },
+            { "variant": "bad", "text": "I will review your PR today." },
+            { "variant": "good", "text": "I'll take a look at your PR this morning.", "note": "tono colaborativo" }
+          ]
+        }
+      ]
+    }
+  ],
+  "text_fragments": [
+    "It might be worth extracting this into a helper.",
+    "I wonder if we could cache this result.",
+    "Have you considered using a Map here?",
+    "This could be simplified to a single reduce call.",
+    "Good catch — I hadn't thought of that edge case.",
+    "I went with a queue because it decouples the producer from the consumer.",
+    "The trade-off here is simplicity versus performance.",
+    "I can change it to a factory if that's clearer.",
+    "You're right, I'll fix that in the next commit.",
+    "We can deploy to production once the tests pass.",
+    "If something breaks, we can roll back the change.",
+    "I want to push back on the deadline — we need more time.",
+    "I'll address your comment before merging.",
+    "I've been working on the login flow — almost done.",
+    "I'm blocked on the API rate limits — could use some help.",
+    "I'll take a look at your PR this morning.",
+    "Let's ship the feature behind a flag first.",
+    "LGTM — nice and clean solution.",
+    "I like how you separated concerns here.",
+    "One small nit: the variable name could be more descriptive."
+  ]
+}

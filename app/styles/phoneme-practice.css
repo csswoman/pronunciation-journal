@@ -1,6 +1,11 @@
 /* Phoneme focus session — solo lo que no puede ser Tailwind */
 
 .phoneme-focus {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100dvh;
+  padding: var(--space-4);
   color: var(--text-primary);
   font-family: var(--font-sans), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -14,27 +19,80 @@
 }
 
 .phoneme-focus__phone {
+  width: min(480px, calc(100vw - 2rem));
   background: var(--surface-raised);
   border: 1px solid var(--border-subtle);
   border-radius: 28px;
   box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (max-width: 540px) {
+  .phoneme-focus {
+    align-items: flex-start;
+    padding: 0;
+    background: var(--surface-raised);
+  }
+
+  .phoneme-focus__phone {
+    width: 100%;
+    min-height: 100dvh;
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
+    /* deja espacio para el BottomNav fijo (~56px) + safe area */
+    padding-bottom: calc(3.5rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  .phoneme-focus__footer {
+    position: sticky;
+    bottom: calc(3.5rem + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+.phoneme-focus__topbar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-5) var(--space-3);
+}
+
+.phoneme-focus__stage {
+  padding: var(--space-2) var(--space-5) var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  flex: 1;
 }
 
 .phoneme-focus__exit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  flex-shrink: 0;
   background: none;
   border: none;
+  border-radius: var(--radius-sm);
   color: var(--text-tertiary);
-  font-size: 1.35rem;
-  transition: color var(--transition-fast);
+  font-size: 1rem;
+  transition: color var(--transition-fast), background var(--transition-fast);
 }
 
 .phoneme-focus__exit:hover {
   color: var(--text-secondary);
+  background: var(--surface-sunken);
 }
 
 .phoneme-focus__progress {
+  flex: 1;
+  height: 6px;
   border-radius: 999px;
   background: var(--surface-sunken);
+  overflow: hidden;
 }
 
 .phoneme-focus__progress > span {
@@ -42,39 +100,58 @@
   height: 100%;
   border-radius: 999px;
   background: var(--gradient-primary);
-  transition: width 0.4s ease;
-  box-shadow: inset 0 2px 0 color-mix(in oklch, var(--on-primary) 35%, transparent);
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .phoneme-focus__badge {
   font-family: var(--font-editorial), Georgia, serif;
-  font-size: 1.35rem;
+  font-size: 1rem;
   font-weight: 600;
   color: var(--primary);
+  flex-shrink: 0;
 }
 
 .phoneme-focus__badge--text {
   font-family: var(--font-sans), system-ui, sans-serif;
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   font-weight: 700;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  max-width: 8rem;
+}
+
+.phoneme-focus__prompt {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin-bottom: var(--space-2);
+}
+
+.phoneme-focus__prompt--spacious {
+  margin-bottom: var(--space-4);
+}
+
+.phoneme-focus__prompt--center {
+  align-items: center;
+  text-align: center;
 }
 
 .phoneme-focus__eyebrow {
   font-size: 11px;
   font-weight: 600;
-  letter-spacing: 0.18em;
-  color: var(--text-tertiary);
+  letter-spacing: 0.1em;
+  color: var(--primary);
+  opacity: 0.75;
 }
 
 .phoneme-focus__title {
   font-family: var(--font-editorial), Georgia, serif;
   font-weight: 480;
-  font-size: 1.45rem;
-  letter-spacing: -0.015em;
+  font-size: 1.25rem;
+  letter-spacing: -0.01em;
+  line-height: 1.35;
   color: var(--text-primary);
 }
 
@@ -84,20 +161,45 @@
 }
 
 .phoneme-focus__hint {
-  font-size: 0.78rem;
-  letter-spacing: 0.05em;
-  color: var(--text-tertiary);
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.phoneme-focus__exercise {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  width: 100%;
+}
+
+.phoneme-focus__session {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  width: 100%;
 }
 
 .phoneme-focus__exercise .pf-cta {
-  margin-top: auto;
-  padding-top: 28px;
+  margin-top: var(--space-1);
+}
+
+.pf-options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  width: 100%;
 }
 
 .pf-opt {
-  border-radius: var(--radius-md);
-  border: 1.5px solid var(--border-subtle);
-  background: var(--surface-sunken);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--border-default);
+  background: var(--surface-raised);
   color: var(--text-primary);
   font-family: inherit;
   font-size: 1rem;
@@ -109,15 +211,25 @@
 }
 
 .pf-opt:hover:not(:disabled) {
-  border-color: var(--border-default);
+  border-color: var(--border-strong);
+  background: var(--surface-sunken);
 }
 
 .pf-opt__key {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.25rem;
+  height: 1.25rem;
+  padding: 0 3px;
+  flex-shrink: 0;
   border: 1.5px solid var(--border-default);
-  border-radius: 7px;
-  font-size: 12px;
+  border-radius: 5px;
+  font-size: 11px;
   font-weight: 600;
+  font-family: var(--font-mono, monospace);
   color: var(--text-tertiary);
+  background: var(--surface-raised);
 }
 
 .pf-opt--ipa {
@@ -163,6 +275,10 @@
 }
 
 .pf-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-3);
   border-radius: var(--radius-full);
   border: 1.5px solid var(--border-subtle);
   background: var(--surface-sunken);
@@ -354,8 +470,8 @@
 
 .pf-pair-opt {
   border-radius: var(--radius-lg);
-  border: 1.5px solid var(--border-subtle);
-  background: var(--surface-sunken);
+  border: 1.5px solid var(--border-default);
+  background: var(--surface-raised);
   font-family: var(--font-editorial), Georgia, serif;
   font-size: 1.15rem;
   font-weight: 600;
@@ -401,29 +517,32 @@
 }
 
 .pf-cta {
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
   font-family: inherit;
   font-weight: 700;
   font-size: 1rem;
   border: none;
   border-radius: var(--radius-md);
   letter-spacing: 0.01em;
+  cursor: pointer;
   transition:
     transform var(--transition-fast),
     opacity var(--transition-fast);
 }
 
 .pf-cta--primary {
-  background: var(--primary);
-  color: var(--on-primary);
+  background: var(--cta-bg);
+  color: var(--cta-fg);
 }
 
 .pf-cta--primary:not(:disabled):hover {
-  filter: brightness(1.04);
+  background: oklch(from var(--cta-bg) calc(l + 0.06) c h);
 }
 
 .pf-cta--primary:disabled {
-  background: var(--surface-sunken);
-  color: var(--text-disabled);
+  opacity: 0.35;
+  cursor: not-allowed;
 }
 
 .pf-cta:active:not(:disabled) {
@@ -432,6 +551,11 @@
 
 .phoneme-focus__footer {
   border-top: 1px solid var(--border-subtle);
+  padding: var(--space-4) var(--space-5);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
   transition: background 0.2s ease;
 }
 
@@ -446,6 +570,9 @@
 }
 
 .phoneme-focus__fb {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
   animation: pf-fb-in 0.25s ease-out both;
 }
 
@@ -455,9 +582,15 @@
 }
 
 .phoneme-focus__fb-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
   border-radius: 50%;
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 700;
+  flex-shrink: 0;
 }
 
 .phoneme-focus__footer--ok .phoneme-focus__fb-icon {
@@ -470,8 +603,16 @@
   color: var(--on-primary);
 }
 
+.phoneme-focus__fb-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
 .phoneme-focus__fb-text b {
-  font-size: 1rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.2;
 }
 
 .phoneme-focus__footer--ok .phoneme-focus__fb-text b {
@@ -483,16 +624,20 @@
 }
 
 .phoneme-focus__fb-text span {
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   color: var(--text-secondary);
+  line-height: 1.4;
 }
 
 .phoneme-focus__footer-cta {
   border: none;
   border-radius: var(--radius-md);
+  padding: var(--space-2) var(--space-5);
   font-family: inherit;
   font-weight: 700;
-  font-size: 1rem;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  flex-shrink: 0;
   transition: transform var(--transition-fast);
 }
 
@@ -511,22 +656,26 @@
 }
 
 .phoneme-focus__skip {
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.14em;
+  display: block;
+  width: 100%;
+  padding: var(--space-2) 0;
+  font-size: 0.8125rem;
+  font-weight: 500;
   color: var(--text-tertiary);
+  text-align: center;
   background: none;
   border: none;
-  transition: opacity var(--transition-fast);
+  transition: color var(--transition-fast);
 }
 
 .phoneme-focus__skip:hover {
-  opacity: 0.75;
+  color: var(--text-secondary);
 }
 
 .phoneme-focus__hints-panel {
   border-top: 1px solid var(--border-subtle);
   background: var(--surface-base);
+  padding: var(--space-3) var(--space-5);
   animation: pf-fb-in 0.2s ease-out both;
 }
 
@@ -543,14 +692,3 @@
   }
 }
 
-@media (max-width: 420px) {
-  .phoneme-focus__phone {
-    border-radius: 22px;
-    min-height: calc(100dvh - 32px);
-  }
-
-  .phoneme-focus__stage {
-    padding-left: 16px;
-    padding-right: 16px;
-  }
-}

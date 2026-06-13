@@ -100,7 +100,7 @@
           "lines": [
             { "variant": "good", "text": "She has long brown hair.", "note": "longitud + color + hair" },
             { "variant": "good", "text": "He has blue eyes.", "note": "color + eyes" },
-            { "variant": "good", "text": "She's got a beard.", "note": "has got = tiene" },
+            { "variant": "good", "text": "He's got a beard.", "note": "has got = tiene" },
             { "variant": "bad", "text": "She has hairs long." }
           ]
         }

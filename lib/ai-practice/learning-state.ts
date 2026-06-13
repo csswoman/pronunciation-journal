@@ -118,11 +118,39 @@ export function applyExerciseResult(
 
   let pronunciation = state.pronunciation;
   if (r.gradedBy === "model" && r.score !== undefined) {
+    const scorePercent = r.score * 100;
     pronunciation = {
       ...state.pronunciation,
       averageAccuracy:
-        state.pronunciation.averageAccuracy * (1 - EMA_ALPHA) + r.score * 100 * EMA_ALPHA,
+        state.pronunciation.averageAccuracy * (1 - EMA_ALPHA) + scorePercent * EMA_ALPHA,
     };
+  }
+  // Update strugglingSounds when the exercise targets a specific phoneme.
+  // Without this, the AI coach carries stale phoneme data after the user improves.
+  if (r.ipa) {
+    const existing = pronunciation.strugglingSounds.find(s => s.ipa === r.ipa);
+    const accuracy = r.score !== undefined ? r.score * 100 : (r.correct ? 100 : 0);
+    if (existing) {
+      const updated = {
+        ...existing,
+        avgAccuracy: existing.avgAccuracy * (1 - EMA_ALPHA) + accuracy * EMA_ALPHA,
+        attempts: existing.attempts + 1,
+      };
+      pronunciation = {
+        ...pronunciation,
+        strugglingSounds: pronunciation.strugglingSounds.map(s =>
+          s.ipa === r.ipa ? updated : s
+        ),
+      };
+    } else {
+      pronunciation = {
+        ...pronunciation,
+        strugglingSounds: [
+          ...pronunciation.strugglingSounds,
+          { ipa: r.ipa, avgAccuracy: accuracy, attempts: 1 },
+        ],
+      };
+    }
   }
 
   return {

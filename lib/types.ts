@@ -123,6 +123,8 @@ export interface DailyProgress {
   averageAccuracy: number;
   xp: number;
   wordsStudied: string[];
+  /** Palabras del Core 1000 introducidas hoy (cupo diario de nuevas). */
+  core1000NewWords?: string[];
 }
 
 export interface UserStats {
@@ -160,6 +162,9 @@ export type AIConversationMode =
   | "roleplay:airport"
   | "roleplay:doctor"
   | "roleplay:store"
+  | "roleplay:code_review"
+  | "roleplay:standup"
+  | "roleplay:tech_design"
   | "pronunciation"
   | "lesson";
 

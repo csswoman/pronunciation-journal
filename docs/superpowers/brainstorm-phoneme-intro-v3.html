@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phoneme Intro · Variante 2 mejorada</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,700;0,9..144,800;1,9..144,700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --hue: 250;
+    --primary:        oklch(0.65 0.15 var(--hue));
+    --primary-hover:  oklch(0.58 0.16 var(--hue));
+    --primary-soft:   oklch(0.93 0.04 var(--hue));
+    --primary-mid:    oklch(0.88 0.08 var(--hue));
+    --cta-bg:         oklch(0.18 0.008 var(--hue));
+    --cta-fg:         oklch(0.93 0.012 var(--hue));
+    --surface-base:   oklch(0.93 0.012 var(--hue));
+    --surface-raised: oklch(0.99 0.003 var(--hue));
+    --surface-sunken: oklch(0.94 0.01 var(--hue));
+    --fg-primary:     oklch(0.18 0.008 var(--hue));
+    --fg-secondary:   oklch(0.46 0.006 var(--hue));
+    --fg-subtle:      oklch(0.62 0.004 var(--hue));
+    --border-subtle:  oklch(0.925 0 0);
+    --border-default: oklch(0.875 0 0);
+    font-family: 'DM Sans', system-ui, sans-serif;
+  }
+
+  body {
+    background: oklch(0.89 0.015 var(--hue));
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+    gap: 1.5rem;
+  }
+
+  /* ── Etiqueta de página ── */
+  .page-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: oklch(0.50 0.06 var(--hue));
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-align: center;
+  }
+
+  /* ── Contenedor del teléfono ── */
+  .device {
+    width: 100%;
+    max-width: 360px;
+    background: var(--surface-base);
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow:
+      0 2px 4px oklch(0 0 0 / 0.04),
+      0 8px 24px oklch(0 0 0 / 0.10),
+      0 24px 48px oklch(0 0 0 / 0.08);
+  }
+
+  /* ── Topbar ── */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.625rem 0.875rem;
+    background: var(--surface-raised);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .topbar-exit {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--surface-sunken);
+    border: none;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--fg-subtle);
+    font-size: 0.75rem;
+    transition: background 120ms ease;
+  }
+
+  .topbar-exit:hover { background: var(--border-subtle); }
+
+  .topbar-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--primary);
+    letter-spacing: -0.01em;
+  }
+
+  .topbar-prog {
+    width: 48px; height: 3px;
+    background: var(--border-subtle);
+    border-radius: 9999px;
+  }
+
+  /* ══════════════════════════════════════
+     ZONA SUPERIOR: protagonista del sonido
+     Fondo degradado sutil sobre primary-soft
+     El símbolo Fraunces, grande, clickeable
+  ══════════════════════════════════════ */
+  .stage {
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 30%,
+        oklch(0.90 0.07 var(--hue)) 0%,
+        oklch(0.93 0.04 var(--hue)) 100%);
+    padding: 2.25rem 1.5rem 1.75rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Ruido sutil de fondo para textura */
+  .stage::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    opacity: 0.4;
+    pointer-events: none;
+  }
+
+  /* Etiqueta del nombre del sonido */
+  .sound-name {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: oklch(0.52 0.10 var(--hue));
+    margin-bottom: 0.875rem;
+    position: relative;
+  }
+
+  /* El símbolo IPA */
+  .ipa-symbol {
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 6rem;
+    font-weight: 800;
+    font-style: italic;
+    color: oklch(0.42 0.14 var(--hue));
+    line-height: 1;
+    letter-spacing: -0.04em;
+    cursor: pointer;
+    user-select: none;
+    position: relative;
+    transition: transform 120ms cubic-bezier(0.2, 0, 0, 1);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .ipa-symbol:active { transform: scale(0.94); }
+
+  /* Aro pulsante alrededor del símbolo cuando está en reposo */
+  .ipa-symbol::after {
+    content: '';
+    position: absolute;
+    inset: -12px;
+    border-radius: 50%;
+    border: 1.5px solid oklch(0.65 0.15 var(--hue) / 0.25);
+    animation: pulse-ring 2.8s ease-out infinite;
+  }
+
+  @keyframes pulse-ring {
+    0%   { transform: scale(0.92); opacity: 0.7; }
+    60%  { transform: scale(1.08); opacity: 0; }
+    100% { transform: scale(1.08); opacity: 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ipa-symbol::after { animation: none; opacity: 0; }
+  }
+
+  .play-hint {
+    font-size: 0.6875rem;
+    color: oklch(0.56 0.08 var(--hue));
+    margin-top: 1rem;
+    letter-spacing: 0.01em;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    position: relative;
+  }
+
+  .play-hint svg {
+    width: 12px; height: 12px;
+    fill: oklch(0.65 0.15 var(--hue));
+    opacity: 0.7;
+  }
+
+  /* ══════════════════════════════════════
+     ZONA INFERIOR: contexto + acción
+  ══════════════════════════════════════ */
+  .tray {
+    background: var(--surface-raised);
+    padding: 1.125rem 1.25rem 1.375rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+  }
+
+  /* Tip hispanohablante */
+  .tip-block {
+    display: flex;
+    gap: 0.625rem;
+    align-items: flex-start;
+  }
+
+  .tip-flag {
+    font-size: 1rem;
+    line-height: 1;
+    margin-top: 1px;
+    flex-shrink: 0;
+  }
+
+  .tip-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+  }
+
+  .tip-label {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: var(--fg-subtle);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .tip-text {
+    font-size: 0.8125rem;
+    color: var(--fg-secondary);
+    line-height: 1.55;
+  }
+
+  /* Separador */
+  .divider {
+    height: 1px;
+    background: var(--border-subtle);
+    margin: 0 -0.125rem;
+  }
+
+  /* CTA principal */
+  .cta-primary {
+    width: 100%;
+    background: var(--cta-bg);
+    color: var(--cta-fg);
+    border: none;
+    border-radius: 12px;
+    padding: 0.8125rem 1rem;
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 150ms ease, transform 120ms cubic-bezier(0.2,0,0,1);
+    letter-spacing: -0.005em;
+  }
+
+  .cta-primary:hover   { background: oklch(0.26 0.008 var(--hue)); }
+  .cta-primary:active  { transform: scale(0.985); }
+
+  /* Enlace a lección */
+  .lesson-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.3rem;
+    background: none;
+    border: none;
+    color: var(--fg-secondary);
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 0.25rem 0;
+    transition: color 120ms ease;
+  }
+
+  .lesson-link:hover { color: var(--fg-primary); }
+
+  .lesson-link svg {
+    width: 14px; height: 14px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.75;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    flex-shrink: 0;
+    opacity: 0.7;
+  }
+
+  /* ── Notas de diseño ── */
+  .notes {
+    width: 100%;
+    max-width: 360px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .note {
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-start;
+    font-size: 0.75rem;
+    color: oklch(0.50 0.06 var(--hue));
+    line-height: 1.5;
+  }
+
+  .note-dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: oklch(0.65 0.15 var(--hue));
+    margin-top: 0.4rem;
+    flex-shrink: 0;
+  }
+
+  /* ── Feedback de clic ── */
+  .ripple-overlay {
+    position: fixed;
+    inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    pointer-events: none;
+    z-index: 10;
+  }
+
+  .ripple {
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    background: oklch(0.65 0.15 var(--hue) / 0.15);
+    animation: ripple-out 0.5s cubic-bezier(0,0,0.2,1) forwards;
+  }
+
+  @keyframes ripple-out {
+    from { transform: scale(0.3); opacity: 1; }
+    to   { transform: scale(2.5); opacity: 0; }
+  }
+
+</style>
+</head>
+<body>
+
+<p class="page-label">Phoneme Practice · Primera visita</p>
+
+<div class="device">
+  <div class="topbar">
+    <button class="topbar-exit" aria-label="Salir">✕</button>
+    <span class="topbar-badge">ɪː</span>
+    <div class="topbar-prog" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+  </div>
+
+  <div class="stage">
+    <span class="sound-name">Vocal larga</span>
+    <div class="ipa-symbol" onclick="playSound()" role="button" aria-label="Escuchar ɪː" tabindex="0">ɪː</div>
+    <span class="play-hint">
+      <svg viewBox="0 0 12 12"><polygon points="3,1 11,6 3,11"/></svg>
+      toca para escuchar
+    </span>
+  </div>
+
+  <div class="tray">
+    <div class="tip-block">
+      <span class="tip-flag" aria-hidden="true">🇪🇸</span>
+      <div class="tip-content">
+        <span class="tip-label">Para hispanohablantes</span>
+        <p class="tip-text">Como la "i" española pero más larga y tensa. "Ship" vs "sheep": la duración cambia el significado.</p>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <button class="cta-primary" onclick="startPractice()">
+      Practicar ahora
+    </button>
+
+    <button class="lesson-link" onclick="openLesson()">
+      <svg viewBox="0 0 16 16">
+        <path d="M2 4h12M2 8h8M2 12h10"/>
+      </svg>
+      Ver la lección de este sonido
+    </button>
+  </div>
+</div>
+
+<div class="notes" aria-hidden="true">
+  <div class="note">
+    <div class="note-dot"></div>
+    <span>El símbolo usa Fraunces italic (la firma editorial del proyecto), tamaño 6rem.</span>
+  </div>
+  <div class="note">
+    <div class="note-dot"></div>
+    <span>Aro pulsante señala que el símbolo es clickeable. Se respeta prefers-reduced-motion.</span>
+  </div>
+  <div class="note">
+    <div class="note-dot"></div>
+    <span>Fondo degradado radial sobre primary-soft; no glassmorphism, no stripe lateral.</span>
+  </div>
+  <div class="note">
+    <div class="note-dot"></div>
+    <span>Esta pantalla aparece solo la primera vez (total_attempts === 0 en user_contrast_progress).</span>
+  </div>
+</div>
+
+<div class="ripple-overlay" id="rippleOverlay"></div>
+
+<script>
+  function playSound() {
+    const overlay = document.getElementById('rippleOverlay');
+    const el = document.createElement('div');
+    el.className = 'ripple';
+    overlay.appendChild(el);
+    setTimeout(() => el.remove(), 600);
+    console.log('play ɪː');
+  }
+
+  function startPractice() {
+    alert('→ Inicia la sesión de práctica');
+  }
+
+  function openLesson() {
+    alert('→ Abre la lección del sonido');
+  }
+
+  document.querySelector('.ipa-symbol').addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); playSound(); }
+  });
+</script>
+</body>
+</html>

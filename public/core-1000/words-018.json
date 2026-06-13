@@ -1,0 +1,805 @@
+{
+  "version": 1,
+  "entries": [
+    {
+      "rank": 1701,
+      "word": "religion",
+      "pos": "noun",
+      "ipa_strong": "/ɹɪlɪdʒʌn/",
+      "example_sentence": "The religion is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1702,
+      "word": "employer",
+      "pos": "noun",
+      "ipa_strong": "/ɛmplɔɪɜr/",
+      "example_sentence": "The employer is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1703,
+      "word": "reject",
+      "pos": "noun",
+      "ipa_strong": "/ɹɪdʒɛkt/",
+      "example_sentence": "The reject is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1704,
+      "word": "latter",
+      "pos": "noun",
+      "ipa_strong": "/lætɜr/",
+      "example_sentence": "The latter is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1705,
+      "word": "plate",
+      "pos": "noun",
+      "ipa_strong": "/pleɪt/",
+      "example_sentence": "The plate is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1706,
+      "word": "ban",
+      "pos": "noun",
+      "ipa_strong": "/bæn/",
+      "example_sentence": "The ban is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1707,
+      "word": "steal",
+      "pos": "noun",
+      "ipa_strong": "/stiːl/",
+      "example_sentence": "The steal is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1708,
+      "word": "protest",
+      "pos": "noun",
+      "ipa_strong": "/pɹoʊtɛst/",
+      "example_sentence": "The protest is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1709,
+      "word": "index",
+      "pos": "noun",
+      "ipa_strong": "/ɪndɛks/",
+      "example_sentence": "The index is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1710,
+      "word": "sad",
+      "pos": "noun",
+      "ipa_strong": "/sæd/",
+      "example_sentence": "The sad is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1711,
+      "word": "frequently",
+      "pos": "noun",
+      "ipa_strong": "/fɹiːkwʌntliː/",
+      "example_sentence": "The frequently is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1712,
+      "word": "circle",
+      "pos": "noun",
+      "ipa_strong": "/sɜrkʌl/",
+      "example_sentence": "The circle is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1713,
+      "word": "helpful",
+      "pos": "noun",
+      "ipa_strong": "/hɛlpfʌl/",
+      "example_sentence": "The helpful is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1714,
+      "word": "command",
+      "pos": "noun",
+      "ipa_strong": "/kʌmænd/",
+      "example_sentence": "The command is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1715,
+      "word": "attractive",
+      "pos": "noun",
+      "ipa_strong": "/ʌtɹæktɪv/",
+      "example_sentence": "The attractive is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1716,
+      "word": "sick",
+      "pos": "adjective",
+      "ipa_strong": "/sɪk/",
+      "example_sentence": "It is very sick today.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1717,
+      "word": "impression",
+      "pos": "noun",
+      "ipa_strong": "/ɪmpɹɛʃʌn/",
+      "example_sentence": "The impression is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1718,
+      "word": "unable",
+      "pos": "noun",
+      "ipa_strong": "/ʌneɪbʌl/",
+      "example_sentence": "The unable is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1719,
+      "word": "joke",
+      "pos": "noun",
+      "ipa_strong": "/dʒoʊk/",
+      "example_sentence": "The joke is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1720,
+      "word": "sky",
+      "pos": "noun",
+      "ipa_strong": "/skaɪ/",
+      "example_sentence": "The sky is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1721,
+      "word": "column",
+      "pos": "noun",
+      "ipa_strong": "/kɑlʌm/",
+      "example_sentence": "The column is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1722,
+      "word": "electronic",
+      "pos": "noun",
+      "ipa_strong": "/ɪlɛktɹɑnɪk/",
+      "example_sentence": "The electronic is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1723,
+      "word": "impose",
+      "pos": "noun",
+      "ipa_strong": "/ɪmpoʊz/",
+      "example_sentence": "The impose is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1724,
+      "word": "criminal",
+      "pos": "noun",
+      "ipa_strong": "/kɹɪmʌnʌl/",
+      "example_sentence": "The criminal is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1725,
+      "word": "besides",
+      "pos": "noun",
+      "ipa_strong": "/bɪsaɪdz/",
+      "example_sentence": "The besides is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1726,
+      "word": "properly",
+      "pos": "noun",
+      "ipa_strong": "/pɹɑpɜrliː/",
+      "example_sentence": "The properly is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1727,
+      "word": "ancient",
+      "pos": "adjective",
+      "ipa_strong": "/eɪntʃʌnt/",
+      "example_sentence": "It is very ancient today.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1728,
+      "word": "coast",
+      "pos": "noun",
+      "ipa_strong": "/koʊst/",
+      "example_sentence": "The coast is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1729,
+      "word": "ill",
+      "pos": "noun",
+      "ipa_strong": "/ɪl/",
+      "example_sentence": "The ill is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1730,
+      "word": "kick",
+      "pos": "noun",
+      "ipa_strong": "/kɪk/",
+      "example_sentence": "The kick is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1731,
+      "word": "closely",
+      "pos": "adverb",
+      "ipa_strong": "/kloʊsliː/",
+      "example_sentence": "She spoke closely to me.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1732,
+      "word": "multiple",
+      "pos": "noun",
+      "ipa_strong": "/mʌltʌpʌl/",
+      "example_sentence": "The multiple is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1733,
+      "word": "yield",
+      "pos": "noun",
+      "ipa_strong": "/jiːld/",
+      "example_sentence": "The yield is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1734,
+      "word": "via",
+      "pos": "preposition",
+      "ipa_strong": "/vaɪʌ/",
+      "example_sentence": "It is via the box now.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1735,
+      "word": "legislation",
+      "pos": "noun",
+      "ipa_strong": "/lɛdʒʌsleɪʃʌn/",
+      "example_sentence": "The legislation is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1736,
+      "word": "county",
+      "pos": "noun",
+      "ipa_strong": "/kaʊntiː/",
+      "example_sentence": "The county is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1737,
+      "word": "unlike",
+      "pos": "noun",
+      "ipa_strong": "/ʌnlaɪk/",
+      "example_sentence": "The unlike is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1738,
+      "word": "mobile",
+      "pos": "noun",
+      "ipa_strong": "/moʊbʌl/",
+      "example_sentence": "The mobile is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1739,
+      "word": "assistant",
+      "pos": "noun",
+      "ipa_strong": "/ʌsɪstʌnt/",
+      "example_sentence": "The assistant is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1740,
+      "word": "implement",
+      "pos": "noun",
+      "ipa_strong": "/ɪmplʌmʌnt/",
+      "example_sentence": "The implement is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1741,
+      "word": "chart",
+      "pos": "noun",
+      "ipa_strong": "/tʃɑɹt/",
+      "example_sentence": "The chart is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1742,
+      "word": "attach",
+      "pos": "noun",
+      "ipa_strong": "/ʌtætʃ/",
+      "example_sentence": "The attach is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1743,
+      "word": "hell",
+      "pos": "noun",
+      "ipa_strong": "/hɛl/",
+      "example_sentence": "The hell is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1744,
+      "word": "everywhere",
+      "pos": "adverb",
+      "ipa_strong": "/ɛvɹiːwɛɹ/",
+      "example_sentence": "She spoke everywhere to me.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1745,
+      "word": "advise",
+      "pos": "noun",
+      "ipa_strong": "/ædvaɪz/",
+      "example_sentence": "The advise is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1746,
+      "word": "household",
+      "pos": "noun",
+      "ipa_strong": "/haʊshoʊld/",
+      "example_sentence": "The household is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1747,
+      "word": "acknowledge",
+      "pos": "noun",
+      "ipa_strong": "/æknɑlɪdʒ/",
+      "example_sentence": "The acknowledge is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1748,
+      "word": "reward",
+      "pos": "noun",
+      "ipa_strong": "/ɹɪwɔɹd/",
+      "example_sentence": "The reward is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1749,
+      "word": "east",
+      "pos": "noun",
+      "ipa_strong": "/iːst/",
+      "example_sentence": "The east is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1750,
+      "word": "hat",
+      "pos": "noun",
+      "ipa_strong": "/hæt/",
+      "example_sentence": "The hat is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1751,
+      "word": "academic",
+      "pos": "noun",
+      "ipa_strong": "/ækʌdɛmɪk/",
+      "example_sentence": "The academic is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1752,
+      "word": "voter",
+      "pos": "noun",
+      "ipa_strong": "/voʊtɜr/",
+      "example_sentence": "The voter is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1753,
+      "word": "meanwhile",
+      "pos": "noun",
+      "ipa_strong": "/miːnwaɪl/",
+      "example_sentence": "The meanwhile is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1754,
+      "word": "furthermore",
+      "pos": "noun",
+      "ipa_strong": "/fɜrðɜrmɔɹ/",
+      "example_sentence": "The furthermore is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1755,
+      "word": "accuse",
+      "pos": "noun",
+      "ipa_strong": "/ʌkjuːz/",
+      "example_sentence": "The accuse is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1756,
+      "word": "scientific",
+      "pos": "noun",
+      "ipa_strong": "/saɪʌntɪfɪk/",
+      "example_sentence": "The scientific is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1757,
+      "word": "wage",
+      "pos": "noun",
+      "ipa_strong": "/weɪdʒ/",
+      "example_sentence": "The wage is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1758,
+      "word": "absence",
+      "pos": "noun",
+      "ipa_strong": "/æbsʌns/",
+      "example_sentence": "The absence is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1759,
+      "word": "construct",
+      "pos": "noun",
+      "ipa_strong": "/kʌnstɹʌkt/",
+      "example_sentence": "The construct is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1760,
+      "word": "remark",
+      "pos": "noun",
+      "ipa_strong": "/ɹɪmɑɹk/",
+      "example_sentence": "The remark is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1761,
+      "word": "medicine",
+      "pos": "noun",
+      "ipa_strong": "/mɛdʌsʌn/",
+      "example_sentence": "The medicine is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1762,
+      "word": "professor",
+      "pos": "noun",
+      "ipa_strong": "/pɹʌfɛsɜr/",
+      "example_sentence": "The professor is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1763,
+      "word": "rare",
+      "pos": "noun",
+      "ipa_strong": "/ɹɛɹ/",
+      "example_sentence": "The rare is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1764,
+      "word": "intention",
+      "pos": "noun",
+      "ipa_strong": "/ɪntɛntʃʌn/",
+      "example_sentence": "The intention is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1765,
+      "word": "dozen",
+      "pos": "noun",
+      "ipa_strong": "/dʌzʌn/",
+      "example_sentence": "The dozen is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1766,
+      "word": "settlement",
+      "pos": "noun",
+      "ipa_strong": "/sɛtʌlmʌnt/",
+      "example_sentence": "The settlement is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1767,
+      "word": "gap",
+      "pos": "noun",
+      "ipa_strong": "/ɡæp/",
+      "example_sentence": "The gap is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1768,
+      "word": "widely",
+      "pos": "adverb",
+      "ipa_strong": "/waɪdliː/",
+      "example_sentence": "She spoke widely to me.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1769,
+      "word": "minimum",
+      "pos": "noun",
+      "ipa_strong": "/mɪnʌmʌm/",
+      "example_sentence": "The minimum is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1770,
+      "word": "northern",
+      "pos": "adjective",
+      "ipa_strong": "/nɔɹðɜrn/",
+      "example_sentence": "It is very northern today.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1771,
+      "word": "estate",
+      "pos": "noun",
+      "ipa_strong": "/ɪsteɪt/",
+      "example_sentence": "The estate is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1772,
+      "word": "equally",
+      "pos": "noun",
+      "ipa_strong": "/iːkwʌliː/",
+      "example_sentence": "The equally is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1773,
+      "word": "expose",
+      "pos": "noun",
+      "ipa_strong": "/ɪkspoʊz/",
+      "example_sentence": "The expose is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1774,
+      "word": "alive",
+      "pos": "adjective",
+      "ipa_strong": "/ʌlaɪv/",
+      "example_sentence": "It is very alive today.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1775,
+      "word": "shut",
+      "pos": "verb",
+      "ipa_strong": "/ʃʌt/",
+      "example_sentence": "I shut every day here.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1776,
+      "word": "victory",
+      "pos": "noun",
+      "ipa_strong": "/vɪktɜriː/",
+      "example_sentence": "The victory is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1777,
+      "word": "resolve",
+      "pos": "verb",
+      "ipa_strong": "/ɹiːzɑlv/",
+      "example_sentence": "I resolve every day here.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1778,
+      "word": "critic",
+      "pos": "noun",
+      "ipa_strong": "/kɹɪtɪk/",
+      "example_sentence": "The critic is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1779,
+      "word": "variable",
+      "pos": "noun",
+      "ipa_strong": "/vɛɹiːʌbʌl/",
+      "example_sentence": "The variable is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1780,
+      "word": "enormous",
+      "pos": "noun",
+      "ipa_strong": "/ɪnɔɹmʌs/",
+      "example_sentence": "The enormous is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1781,
+      "word": "sweet",
+      "pos": "noun",
+      "ipa_strong": "/swiːt/",
+      "example_sentence": "The sweet is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1782,
+      "word": "permanent",
+      "pos": "noun",
+      "ipa_strong": "/pɜrmʌnʌnt/",
+      "example_sentence": "The permanent is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1783,
+      "word": "emotion",
+      "pos": "noun",
+      "ipa_strong": "/ɪmoʊʃʌn/",
+      "example_sentence": "The emotion is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1784,
+      "word": "pursue",
+      "pos": "noun",
+      "ipa_strong": "/pɜrsuː/",
+      "example_sentence": "The pursue is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1785,
+      "word": "tall",
+      "pos": "adjective",
+      "ipa_strong": "/tɔl/",
+      "example_sentence": "It is very tall today.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1786,
+      "word": "urge",
+      "pos": "noun",
+      "ipa_strong": "/ɜrdʒ/",
+      "example_sentence": "The urge is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1787,
+      "word": "enemy",
+      "pos": "noun",
+      "ipa_strong": "/ɛnʌmiː/",
+      "example_sentence": "The enemy is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1788,
+      "word": "appoint",
+      "pos": "noun",
+      "ipa_strong": "/ʌpɔɪnt/",
+      "example_sentence": "The appoint is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1789,
+      "word": "milk",
+      "pos": "noun",
+      "ipa_strong": "/mɪlk/",
+      "example_sentence": "The milk is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1790,
+      "word": "talent",
+      "pos": "noun",
+      "ipa_strong": "/tælʌnt/",
+      "example_sentence": "The talent is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1791,
+      "word": "smell",
+      "pos": "noun",
+      "ipa_strong": "/smɛl/",
+      "example_sentence": "The smell is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1792,
+      "word": "prior",
+      "pos": "noun",
+      "ipa_strong": "/pɹaɪɜr/",
+      "example_sentence": "The prior is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1793,
+      "word": "priority",
+      "pos": "noun",
+      "ipa_strong": "/pɹaɪɔɹʌtiː/",
+      "example_sentence": "The priority is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1794,
+      "word": "online",
+      "pos": "noun",
+      "ipa_strong": "/ɔnlaɪn/",
+      "example_sentence": "The online is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1795,
+      "word": "phrase",
+      "pos": "noun",
+      "ipa_strong": "/fɹeɪz/",
+      "example_sentence": "The phrase is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1796,
+      "word": "pilot",
+      "pos": "noun",
+      "ipa_strong": "/paɪlʌt/",
+      "example_sentence": "The pilot is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1797,
+      "word": "stable",
+      "pos": "noun",
+      "ipa_strong": "/steɪbʌl/",
+      "example_sentence": "The stable is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1798,
+      "word": "merely",
+      "pos": "noun",
+      "ipa_strong": "/mɪɹliː/",
+      "example_sentence": "The merely is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1799,
+      "word": "resolution",
+      "pos": "noun",
+      "ipa_strong": "/ɹɛzʌluːʃʌn/",
+      "example_sentence": "The resolution is very good.",
+      "cefr_level": "C1"
+    },
+    {
+      "rank": 1800,
+      "word": "communicate",
+      "pos": "noun",
+      "ipa_strong": "/kʌmjuːnʌkeɪt/",
+      "example_sentence": "The communicate is very good.",
+      "cefr_level": "C1"
+    }
+  ]
+}

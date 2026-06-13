@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import type { ExerciseResult } from "@/lib/ai-practice/types";
 import type { StartRoleplayArgs } from "@/lib/ai-practice/tools/registry";
 import { getUserLearningState } from "@/lib/ai-practice/load-state";
+import { hydrateFromRemote, persistLearningState } from "@/lib/ai-practice/queries";
 import type { UserLearningState } from "@/lib/ai-practice/learning-state";
 import type { AISavedWord, AIConversation, AIConversationMode } from "@/lib/types";
 import { useAuth } from "@/components/auth/AuthProvider";
@@ -40,6 +41,7 @@ interface UseAIPracticeReturn {
 export function useAIPractice(): UseAIPracticeReturn {
   const { user } = useAuth();
   const [learningState, setLearningState] = useState<UserLearningState | null>(null);
+  const persistTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [activeRoleplay, setActiveRoleplay] = useState<StartRoleplayArgs["scenario"] | null>(null);
   const [mode, setMode] = useState<AIConversationMode>("chat");
   const [conversationId, setConversationId] = useState<number | null>(null);
@@ -59,10 +61,27 @@ export function useAIPractice(): UseAIPracticeReturn {
   useEffect(() => {
     words.loadSavedWords();
     if (user?.id) {
-      getUserLearningState(user.id).then(setLearningState).catch(() => {});
+      const userId = user.id;
+      // Hydrate from remote first (last-write-wins), then build fresh state
+      hydrateFromRemote(userId).catch(() => {}).finally(() => {
+        getUserLearningState(userId).then(setLearningState).catch(() => {});
+      });
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id]);
+
+  // Throttled persistence: sync learningState to Supabase 5s after the last update.
+  useEffect(() => {
+    if (!user?.id || !learningState) return;
+    const userId = user.id;
+    if (persistTimeoutRef.current) clearTimeout(persistTimeoutRef.current);
+    persistTimeoutRef.current = setTimeout(() => {
+      persistLearningState(userId, learningState).catch(() => {});
+    }, 5000);
+    return () => {
+      if (persistTimeoutRef.current) clearTimeout(persistTimeoutRef.current);
+    };
+  }, [user?.id, learningState]);
 
   // On mount: resume last chat conversation (if any)
   useEffect(() => {

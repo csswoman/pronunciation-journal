@@ -127,7 +127,7 @@
           "type": "pairs",
           "lines": [
             { "variant": "bad", "text": "wha... (te comes la t de what)" },
-            { "variant": "good", "text": "what — marca la t final", "note": "/wɒt/" },
+            { "variant": "good", "text": "what — marca la t final", "note": "/wʌt/" },
             { "variant": "bad", "text": "fri (sin d)" },
             { "variant": "good", "text": "friend — suena la d", "note": "/frend/" }
           ]

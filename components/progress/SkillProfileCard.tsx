@@ -1,17 +1,18 @@
 import Link from 'next/link'
-import { BookOpen, Volume2 } from 'lucide-react'
+import { BookOpen, Volume2, BrainCircuit } from 'lucide-react'
 
-import type { SkillProfileData } from '@/lib/progress/queries'
+import type { SkillProfileData, CoachInsights } from '@/lib/progress/queries'
 
 import {
-  ProgressBigNumber,
   ProgressCard,
   ProgressCardHeader,
   ProgressStatBar,
+  ProgressBigNumber,
 } from './ProgressCard'
 
 interface Props {
   data: SkillProfileData
+  coach: CoachInsights
 }
 
 const STATUS_CONFIG: {
@@ -29,11 +30,7 @@ function SoundLabPanel({ phonemes }: { phonemes: SkillProfileData['weakestPhonem
   if (phonemes.length === 0) {
     return (
       <ProgressCard>
-        <ProgressCardHeader
-          icon={<Volume2 size={16} />}
-          eyebrow="Sound Lab"
-          title="Weakest sounds"
-        />
+        <ProgressCardHeader icon={<Volume2 size={16} />} eyebrow="Sound Lab" title="Weakest sounds" />
         <p className="text-xs text-fg-muted">
           Practice phoneme exercises to see your weakest sounds.
         </p>
@@ -41,34 +38,21 @@ function SoundLabPanel({ phonemes }: { phonemes: SkillProfileData['weakestPhonem
     )
   }
 
-  const top = phonemes.slice(0, 3)
-
   return (
     <ProgressCard>
-      <ProgressCardHeader
-        icon={<Volume2 size={16} />}
-        eyebrow="Sound Lab"
-        title="Weakest sounds"
-      />
-      {top.map((p) => (
+      <ProgressCardHeader icon={<Volume2 size={16} />} eyebrow="Sound Lab" title="Weakest sounds" />
+      {phonemes.slice(0, 3).map((p) => (
         <ProgressStatBar
           key={p.ipa}
           label={`/${p.ipa}/`}
           value={p.accuracy}
           barColor={
-            p.accuracy >= 80
-              ? 'var(--success)'
-              : p.accuracy >= 70
-                ? 'var(--primary)'
-                : 'var(--warning)'
+            p.accuracy >= 80 ? 'var(--success)' : p.accuracy >= 70 ? 'var(--primary)' : 'var(--warning)'
           }
           labelClassName="font-ipa text-primary"
         />
       ))}
-      <Link
-        href="/practice"
-        className="mt-3 text-caption font-medium text-primary transition-opacity hover:opacity-80"
-      >
+      <Link href="/practice" className="mt-3 text-caption font-medium text-primary transition-opacity hover:opacity-80">
         Practice these sounds →
       </Link>
     </ProgressCard>
@@ -96,17 +80,9 @@ function LexiconPanel({ wordsByStatus }: { wordsByStatus: SkillProfileData['word
     <ProgressCard>
       <ProgressCardHeader icon={<BookOpen size={16} />} eyebrow="Lexicon" title="Vocabulary" />
       <div className="mt-1 flex gap-6">
-        <ProgressBigNumber
-          value={`${retention}%`}
-          sub={`retention · ${mastered}/${total}`}
-        />
-        <ProgressBigNumber
-          value={toReview}
-          sub="to review"
-          tone={toReview > 0 ? 'warning' : 'primary'}
-        />
+        <ProgressBigNumber value={`${retention}%`} sub={`retention · ${mastered}/${total}`} />
+        <ProgressBigNumber value={toReview} sub="to review" tone={toReview > 0 ? 'warning' : 'primary'} />
       </div>
-
       <div className="mt-4 flex h-2.5 w-full overflow-hidden rounded-full bg-surface-sunken">
         {STATUS_CONFIG.map(({ key, color }) => {
           const pct = total > 0 ? (wordsByStatus[key] / total) * 100 : 0
@@ -114,34 +90,66 @@ function LexiconPanel({ wordsByStatus }: { wordsByStatus: SkillProfileData['word
           return <div key={key} style={{ width: `${pct}%`, background: color }} />
         })}
       </div>
-
       {topStatuses.map(({ key, label, color }) => {
         const count = wordsByStatus[key]
         const pct = total > 0 ? Math.round((count / total) * 100) : 0
-        return (
-          <ProgressStatBar
-            key={key}
-            label={label}
-            value={pct}
-            barColor={color}
-          />
-        )
+        return <ProgressStatBar key={key} label={label} value={pct} barColor={color} />
       })}
-
-      <Link
-        href="/lexicon"
-        className="mt-3 text-caption font-medium text-primary transition-opacity hover:opacity-80"
-      >
+      <Link href="/lexicon" className="mt-3 text-caption font-medium text-primary transition-opacity hover:opacity-80">
         Open Lexicon →
       </Link>
     </ProgressCard>
   )
 }
 
-export function SkillProfileCard({ data }: Props) {
+function CoachInsightsPanel({ coach }: { coach: CoachInsights }) {
+  const hasData = coach.weakTopics.length > 0 || coach.cefrEstimate !== null
+
+  if (!hasData) {
+    return (
+      <ProgressCard>
+        <ProgressCardHeader icon={<BrainCircuit size={16} />} eyebrow="AI Coach" title="Grammar insights" />
+        <p className="text-xs text-fg-muted">
+          Chat with the AI Coach to build your grammar profile.
+        </p>
+      </ProgressCard>
+    )
+  }
+
+  return (
+    <ProgressCard>
+      <ProgressCardHeader icon={<BrainCircuit size={16} />} eyebrow="AI Coach" title="Grammar insights" />
+      {coach.cefrEstimate && (
+        <div className="mt-1 mb-3">
+          <ProgressBigNumber value={coach.cefrEstimate} sub="estimated level" />
+        </div>
+      )}
+      {coach.weakTopics.length > 0 && (
+        <div className="flex flex-col gap-1.5">
+          <p className="text-[11px] font-medium uppercase tracking-wide text-fg-muted">Weak topics</p>
+          {coach.weakTopics.map((t) => (
+            <ProgressStatBar
+              key={t.topic}
+              label={t.topic}
+              value={Math.round(t.errorRate * 100)}
+              barColor="var(--warning)"
+            />
+          ))}
+        </div>
+      )}
+      <Link href="/practice/decks" className="mt-3 text-caption font-medium text-primary transition-opacity hover:opacity-80">
+        Practice these topics →
+      </Link>
+    </ProgressCard>
+  )
+}
+
+export function SkillProfileCard({ data, coach }: Props) {
   const hasAnyData =
     Object.values(data.wordsByStatus).some((v) => v > 0) ||
-    data.weakestPhonemes.length > 0
+    data.weakestPhonemes.length > 0 ||
+    coach.weakTopics.length > 0 ||
+    coach.cefrEstimate !== null
 
   if (!hasAnyData) {
     return (
@@ -157,9 +165,10 @@ export function SkillProfileCard({ data }: Props) {
   return (
     <section className="flex flex-col gap-4">
       <h2 className="font-display text-base font-medium text-fg">Skill profile</h2>
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid gap-4 md:grid-cols-3">
         <SoundLabPanel phonemes={data.weakestPhonemes} />
         <LexiconPanel wordsByStatus={data.wordsByStatus} />
+        <CoachInsightsPanel coach={coach} />
       </div>
     </section>
   )

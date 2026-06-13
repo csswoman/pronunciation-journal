@@ -241,6 +241,42 @@ export async function updateDailyProgress(
   }
 }
 
+// ── Core 1000 Helpers ──
+
+const CORE1000_SRS_PREFIX = "c1k:";
+
+/** Todas las entradas SRS del Core 1000 (scan; ~1000 filas máx, aceptable). */
+export async function getCore1000SrsEntries(): Promise<SRSData[]> {
+  return db.srsData.filter((e) => e.wordId.startsWith(CORE1000_SRS_PREFIX)).toArray();
+}
+
+/** Palabras del Core 1000 introducidas hoy (para el cupo de nuevas). */
+export async function getCore1000IntroducedToday(): Promise<string[]> {
+  const row = await db.dailyProgress.where("date").equals(getTodayKey()).first();
+  return row?.core1000NewWords ?? [];
+}
+
+/** Registra una palabra nueva introducida hoy. Crea la fila del día si no existe. */
+export async function recordCore1000Introduction(word: string): Promise<void> {
+  const today = getTodayKey();
+  const existing = await db.dailyProgress.where("date").equals(today).first();
+  if (existing) {
+    const set = new Set(existing.core1000NewWords ?? []);
+    set.add(word);
+    await db.dailyProgress.update(existing.id!, { core1000NewWords: [...set] });
+  } else {
+    await db.dailyProgress.add({
+      date: today,
+      totalAttempts: 0,
+      correctAttempts: 0,
+      averageAccuracy: 0,
+      xp: 0,
+      wordsStudied: [],
+      core1000NewWords: [word],
+    });
+  }
+}
+
 // ── User Stats Helpers ──
 
 export async function getUserStats(): Promise<UserStats> {

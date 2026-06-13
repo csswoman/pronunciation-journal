@@ -3,7 +3,13 @@ import { generateFillBlankFromWordBank } from '@/lib/exercises/generators/fill-b
 import { generateSentenceDictationFromWordBank } from '@/lib/exercises/generators/sentence-dictation'
 import { generateReorderWordsFromWordBank } from '@/lib/exercises/generators/reorder-words'
 import { generateMatchPairsFromWordBank } from '@/lib/exercises/generators/match-pairs'
+import { generateSentenceContextExercises } from '@/lib/lexicon/exercises'
+import { generateConnectedSpeechExercises } from '@/lib/exercises/generators/connected-speech'
+import { deckSlugForWeakTopics } from './topic-decks'
+import { db } from '@/lib/db'
+import type { WordEntry } from '@/lib/lexicon/types'
 import { fetchTextFragments, generateReorderFromFragments } from '@/lib/exercises/generators/reorder-from-fragments'
+import { generateReorderAI } from '@/lib/exercises/generators/reorder-ai'
 import { generateMinimalPair, generateDictation } from '@/lib/phoneme-practice/exercises'
 import { getAllSounds, getAllWords, getMinimalPairs, getWordsBySound } from '@/lib/phoneme-practice/queries'
 import { buildMixedSession, type MixedExercise } from '@/lib/phoneme-practice/mixed-session'
@@ -79,7 +85,7 @@ async function fetchDueWords(userId: string): Promise<WordBankEntry[]> {
 
   const { data, error } = await supabase
     .from('word_bank')
-    .select('*')
+    .select('id, user_id, text, meaning, translation, ipa, example, audio_url, difficulty, status, srs_status, next_review_at, ease_factor, interval_days, repetitions, review_count, last_reviewed_at, source, source_ref, created_at')
     .eq('user_id', userId)
     .eq('status', 'ready')
     .or(`srs_status.eq.new,next_review_at.lte.${today}`)
@@ -96,7 +102,7 @@ async function fetchNewWords(userId: string, limit: number): Promise<WordBankEnt
 
   const { data, error } = await supabase
     .from('word_bank')
-    .select('*')
+    .select('id, user_id, text, meaning, translation, ipa, example, audio_url, difficulty, status, srs_status, next_review_at, ease_factor, interval_days, repetitions, review_count, last_reviewed_at, source, source_ref, created_at')
     .eq('user_id', userId)
     .eq('status', 'ready')
     .eq('srs_status', 'new')
@@ -139,7 +145,7 @@ async function fetchWeakestSoundProgress(userId: string): Promise<Sound | null> 
 
   const { data: soundRows } = await supabase
     .from('sounds')
-    .select('*')
+    .select('id, ipa, example, category, type, difficulty')
     .eq('ipa', weakestIpa)
     .limit(1)
 
@@ -174,6 +180,75 @@ function buildWordReviewStep(words: WordBankEntry[]): DailyStep | null {
     icon: 'BookMarked',
     exercises,
     estMinutes: Math.max(2, Math.round(exercises.length * 1.1)),
+  }
+}
+
+/** Adapts WordBankEntry to the WordEntry shape expected by generateSentenceContextExercises. */
+function toWordEntry(entry: WordBankEntry): WordEntry {
+  return {
+    id: entry.id,
+    word: entry.text,
+    pos: 'n',
+    definition: entry.meaning ?? '',
+    ipa: entry.ipa ?? undefined,
+    translation: entry.translation ?? undefined,
+    difficulty: (entry.difficulty ?? 2) as 1 | 2 | 3,
+    tags: [],
+    exampleSentence: entry.example ?? undefined,
+  }
+}
+
+/**
+ * Paso de práctica en contexto: sentence_context desde word_bank.
+ * Solo se genera si hay ≥2 palabras con oraciones de ejemplo.
+ */
+function buildContextPracticeStep(words: WordBankEntry[]): DailyStep | null {
+  const wordEntries = words.map(toWordEntry)
+  const usable = wordEntries.filter((w) => w.exampleSentence)
+  if (usable.length < 2) return null
+
+  const contextExercises = generateSentenceContextExercises(usable, wordEntries)
+  const exercises = dedupeByContentId(
+    contextExercises.map((ex) => fromGenericExercise(ex, 'daily')),
+  )
+  if (exercises.length === 0) return null
+
+  return {
+    kind: 'context_practice',
+    id: 'context_practice',
+    title: 'Práctica en contexto',
+    subtitle: `${exercises.length} ${exercises.length === 1 ? 'palabra' : 'palabras'} en oraciones reales`,
+    icon: 'FileText',
+    exercises,
+    estMinutes: Math.max(2, Math.round(exercises.length * 1.2)),
+  }
+}
+
+/**
+ * Paso de habla conectada: quiz + dictado desde los decks cs-*.json.
+ * Solo aparece cuando dayOfYear() es par y el deck está disponible (online).
+ * Si el fetch falla (offline sin caché) devuelve null — la diaria no se rompe.
+ */
+async function buildConnectedSpeechStep(): Promise<DailyStep | null> {
+  if (dayOfYear() % 2 !== 0) return null
+
+  const result = await generateConnectedSpeechExercises(2, 2)
+  if (!result) return null
+
+  const exercises = dedupeByContentId([
+    ...result.quiz.map((ex) => fromGenericExercise(ex, 'daily')),
+    ...result.dictation.map((ex) => fromGenericExercise(ex, 'daily')),
+  ])
+  if (exercises.length === 0) return null
+
+  return {
+    kind: 'connected_speech',
+    id: 'connected_speech',
+    title: 'Connected speech',
+    subtitle: 'How Americans really sound',
+    icon: 'AudioWaveform',
+    exercises,
+    estMinutes: Math.max(2, Math.round(exercises.length * 1.2)),
   }
 }
 
@@ -266,24 +341,40 @@ export const SENTENCE_BUILDER_EXERCISE_COUNT = 5
 
 /**
  * Paso de construcción de oraciones: reorder_words desde text_fragments.
- * Rota fuente entre lecciones y grammar-decks para mantener variedad.
+ * Si se proporciona weakTopic, intenta enriquecer con oraciones generadas por IA
+ * (requiere red); en caso de fallo cae al generador estático.
  */
 async function buildSentenceBuilderStep(
   source: string | null = null,
+  weakTopic?: string,
 ): Promise<DailyStep | null> {
-  const fragments = await fetchTextFragments(source, 60)
-  const exercises = dedupeByContentId(
-    generateReorderFromFragments(fragments, SENTENCE_BUILDER_EXERCISE_COUNT).map((ex) =>
-      fromGenericExercise(ex, 'daily'),
-    ),
-  )
+  let exercises: ReturnType<typeof dedupeByContentId> = []
+
+  if (weakTopic) {
+    try {
+      const aiExercises = await generateReorderAI(weakTopic, 'B1', SENTENCE_BUILDER_EXERCISE_COUNT, source ?? undefined)
+      exercises = dedupeByContentId(aiExercises.map((ex) => fromGenericExercise(ex, 'daily')))
+    } catch {
+      // offline or auth missing — fall through to static generator
+    }
+  }
+
+  if (exercises.length === 0) {
+    const fragments = await fetchTextFragments(source, 60)
+    exercises = dedupeByContentId(
+      generateReorderFromFragments(fragments, SENTENCE_BUILDER_EXERCISE_COUNT).map((ex) =>
+        fromGenericExercise(ex, 'daily'),
+      ),
+    )
+  }
+
   if (exercises.length === 0) return null
 
   return {
     kind: 'sentence_builder',
     id: 'sentence_builder',
     title: 'Arma la oración',
-    subtitle: 'Ordena palabras de tus lecciones',
+    subtitle: weakTopic ? `Práctica: ${weakTopic}` : 'Ordena palabras de tus lecciones',
     icon: 'LayoutList',
     exercises,
     estMinutes: Math.max(2, Math.round(exercises.length * 1.2)),
@@ -299,7 +390,7 @@ async function fetchDueReviewWords(userId: string): Promise<WordBankEntry[]> {
 
   const { data, error } = await supabase
     .from('word_bank')
-    .select('*')
+    .select('id, user_id, text, meaning, translation, ipa, example, audio_url, difficulty, status, srs_status, next_review_at, ease_factor, interval_days, repetitions, review_count, last_reviewed_at, source, source_ref, created_at')
     .eq('user_id', userId)
     .eq('status', 'ready')
     .neq('srs_status', 'new')
@@ -342,7 +433,7 @@ async function fetchDueSounds(userId: string): Promise<Sound[]> {
 
   const { data: soundRows } = await supabase
     .from('sounds')
-    .select('*')
+    .select('id, ipa, example, category, type, difficulty')
     .in('ipa', ipas)
 
   return (soundRows ?? []) as Sound[]
@@ -376,6 +467,9 @@ export async function buildReviewPlan(userId: string): Promise<ReviewPlan> {
 
   const wordStep = buildWordReviewStep(reviewWords)
   if (wordStep) steps.push(wordStep)
+
+  const contextStep = buildContextPracticeStep(reviewWords)
+  if (contextStep) steps.push(contextStep)
 
   for (const sound of dueSounds) {
     const targetWords = allWordsBySoundId.get(sound.id) ?? []
@@ -432,15 +526,34 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
   }
   const hasWordBank = reviewWords.length > 0
 
-  // ── 2. Sonido protagonista: débil si hay progreso, si no del seed ─────────
-  const weakest = await fetchWeakestSoundProgress(userId)
+  // ── 2. Sonido protagonista: débil si hay progreso → coach → seed ─────────
+  const [weakest, localLearningState] = await Promise.all([
+    fetchWeakestSoundProgress(userId),
+    db.learningState.get(userId).catch(() => null),
+  ])
+  const aiState = localLearningState?.state ?? null
   const hasProgress = weakest != null
-  const primarySound = weakest ?? pickSeedSound(allSounds, 0)
+
+  // Fallback: if Sound Lab shows no progress but AI Coach has struggling sounds,
+  // resolve the weakest IPA against the seed catalog.
+  let primarySound: Sound | null = weakest
+  if (!primarySound && aiState) {
+    const worstSound = [...(aiState.pronunciation.strugglingSounds ?? [])]
+      .filter((s) => s.attempts >= 3 && s.avgAccuracy < 70)
+      .sort((a, b) => a.avgAccuracy - b.avgAccuracy)[0]
+    if (worstSound) {
+      primarySound = allSounds.find((s) => s.ipa === worstSound.ipa) ?? null
+    }
+  }
+  if (!primarySound) primarySound = pickSeedSound(allSounds, 0)
 
   const steps: DailyStep[] = []
 
   const wordReview = buildWordReviewStep(reviewWords)
   if (wordReview) steps.push(wordReview)
+
+  const contextPractice = buildContextPracticeStep(reviewWords)
+  if (contextPractice) steps.push(contextPractice)
 
   if (primarySound) {
     const [targetWords, pairs] = await Promise.all([
@@ -465,11 +578,28 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
     if (listening) steps.push(listening)
   }
 
-  // ── 3. Sentence builder desde text_fragments (si hay espacio) ────────────
+  // ── 3. Connected speech (días pares) o sentence builder (días impares) ──────
   if (steps.length < DAILY_PLAN_STEP_COUNT) {
-    // Alterna entre lecciones y grammar-decks según el día para variar.
-    const sentenceSource = dayOfYear() % 2 === 0 ? 'lesson' : 'grammar-deck'
-    const sentenceStep = await buildSentenceBuilderStep(sentenceSource)
+    const connectedStep = await buildConnectedSpeechStep()
+    if (connectedStep) {
+      steps.push(connectedStep)
+    } else {
+      const weakTopics = aiState?.grammar.weakTopics ?? []
+      const weakDeckSlug = deckSlugForWeakTopics(weakTopics)
+      const weakTopic = weakTopics.find((t) => t.errorRate > 0.4 && t.sampleCount >= 3)?.topic
+      const sentenceSource = weakDeckSlug ?? (dayOfYear() % 2 === 0 ? 'lesson' : 'grammar-deck')
+      const sentenceStep = await buildSentenceBuilderStep(sentenceSource, weakTopic)
+      if (sentenceStep) steps.push(sentenceStep)
+    }
+  }
+
+  // ── 4. Sentence builder si aún hay espacio (para días pares con connected speech) ─
+  if (steps.length < DAILY_PLAN_STEP_COUNT) {
+    const weakTopics = aiState?.grammar.weakTopics ?? []
+    const weakDeckSlug = deckSlugForWeakTopics(weakTopics)
+    const weakTopic = weakTopics.find((t) => t.errorRate > 0.4 && t.sampleCount >= 3)?.topic
+    const sentenceSource = weakDeckSlug ?? (dayOfYear() % 2 === 0 ? 'lesson' : 'grammar-deck')
+    const sentenceStep = await buildSentenceBuilderStep(sentenceSource, weakTopic)
     if (sentenceStep) steps.push(sentenceStep)
   }
 

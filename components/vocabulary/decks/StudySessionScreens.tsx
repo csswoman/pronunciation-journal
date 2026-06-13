@@ -5,6 +5,8 @@ import { H2 } from "@/components/ui/Typography";
 import { RATING_CONFIG } from "./study-utils";
 import type { DifficultyKey } from "./StudyDifficultyButtons";
 import type { SessionStats } from "./hooks/useStudySession";
+import { WordCarousel } from "@/components/practice/session/WordCarousel";
+import { useLoadingWords } from "@/hooks/useLoadingWords";
 
 // ── Shared layout ────────────────────────────────────────────────────────────
 
@@ -19,9 +21,10 @@ function CenteredOverlay({ children }: { children: React.ReactNode }) {
 // ── Loading ──────────────────────────────────────────────────────────────────
 
 export function StudyLoadingScreen() {
+  const words = useLoadingWords();
   return (
     <CenteredOverlay>
-      <div className="w-10 h-10 rounded-full border-2 border-[var(--primary)] border-t-transparent animate-spin" />
+      <WordCarousel words={words} />
     </CenteredOverlay>
   );
 }

@@ -22,7 +22,9 @@
             ["make", "made", "made", "hacer / crear"],
             ["take", "took", "taken", "tomar"],
             ["get", "got", "gotten", "obtener"],
-            ["say", "said", "said", "decir"]
+            ["say", "said", "said", "decir"],
+            ["know", "knew", "known", "saber / conocer"],
+            ["come", "came", "come", "venir"]
           ]
         }
       ],

@@ -1,0 +1,805 @@
+{
+  "version": 1,
+  "entries": [
+    {
+      "rank": 401,
+      "word": "body",
+      "pos": "noun",
+      "ipa_strong": "/bɑdiː/",
+      "example_sentence": "The body is very good.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 402,
+      "word": "require",
+      "pos": "verb",
+      "ipa_strong": "/ɹiːkwaɪɜr/",
+      "example_sentence": "I require every day here.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 403,
+      "word": "wait",
+      "pos": "verb",
+      "ipa_strong": "/weɪt/",
+      "example_sentence": "I wait every day here.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 404,
+      "word": "general",
+      "pos": "adjective",
+      "ipa_strong": "/dʒɛnɜrʌl/",
+      "example_sentence": "It is very general today.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 405,
+      "word": "appear",
+      "pos": "verb",
+      "ipa_strong": "/ʌpɪɹ/",
+      "example_sentence": "I appear every day here.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 406,
+      "word": "toward",
+      "pos": "noun",
+      "ipa_strong": "/tʌwɔɹd/",
+      "example_sentence": "The toward is very good.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 407,
+      "word": "team",
+      "pos": "noun",
+      "ipa_strong": "/tiːm/",
+      "example_sentence": "The team is very good.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 408,
+      "word": "easy",
+      "pos": "adjective",
+      "ipa_strong": "/iːziː/",
+      "example_sentence": "It is very easy today.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 409,
+      "word": "individual",
+      "pos": "noun",
+      "ipa_strong": "/ɪndʌvɪdʒʌwʌl/",
+      "example_sentence": "The individual is very good.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 410,
+      "word": "full",
+      "pos": "adjective",
+      "ipa_strong": "/fʊl/",
+      "example_sentence": "It is very full today.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 411,
+      "word": "black",
+      "pos": "adjective",
+      "ipa_strong": "/blæk/",
+      "example_sentence": "It is very black today.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 412,
+      "word": "sense",
+      "pos": "noun",
+      "ipa_strong": "/sɛns/",
+      "example_sentence": "The sense is very good.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 413,
+      "word": "perhaps",
+      "pos": "adverb",
+      "ipa_strong": "/pɜrhæps/",
+      "example_sentence": "She spoke perhaps to me.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 414,
+      "word": "add",
+      "pos": "verb",
+      "ipa_strong": "/æd/",
+      "example_sentence": "I add every day here.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 415,
+      "word": "rule",
+      "pos": "verb",
+      "ipa_strong": "/ɹuːl/",
+      "example_sentence": "I rule every day here.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 416,
+      "word": "pass",
+      "pos": "verb",
+      "ipa_strong": "/pæs/",
+      "example_sentence": "I pass every day here.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 417,
+      "word": "produce",
+      "pos": "verb",
+      "ipa_strong": "/pɹʌduːs/",
+      "example_sentence": "I produce every day here.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 418,
+      "word": "sell",
+      "pos": "verb",
+      "ipa_strong": "/sɛl/",
+      "example_sentence": "I sell every day here.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 419,
+      "word": "short",
+      "pos": "adjective",
+      "ipa_strong": "/ʃɔɹt/",
+      "example_sentence": "It is very short today.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 420,
+      "word": "agree",
+      "pos": "verb",
+      "ipa_strong": "/ʌɡɹiː/",
+      "example_sentence": "I agree every day here.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 421,
+      "word": "law",
+      "pos": "noun",
+      "ipa_strong": "/lɔ/",
+      "example_sentence": "The law is very good.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 422,
+      "word": "everything",
+      "pos": "pronoun",
+      "ipa_strong": "/ɛvɹiːθɪŋ/",
+      "example_sentence": "I saw everything at school.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 423,
+      "word": "research",
+      "pos": "verb",
+      "ipa_strong": "/ɹiːsɜrtʃ/",
+      "example_sentence": "I research every day here.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 424,
+      "word": "cover",
+      "pos": "verb",
+      "ipa_strong": "/kʌvɜr/",
+      "example_sentence": "I cover every day here.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 425,
+      "word": "paper",
+      "pos": "noun",
+      "ipa_strong": "/peɪpɜr/",
+      "example_sentence": "The paper is very good.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 426,
+      "word": "position",
+      "pos": "noun",
+      "ipa_strong": "/pʌzɪʃʌn/",
+      "example_sentence": "The position is very good.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 427,
+      "word": "near",
+      "pos": "preposition",
+      "ipa_strong": "/nɪɹ/",
+      "example_sentence": "It is near the box now.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 428,
+      "word": "human",
+      "pos": "adjective",
+      "ipa_strong": "/hjuːmʌn/",
+      "example_sentence": "It is very human today.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 429,
+      "word": "computer",
+      "pos": "noun",
+      "ipa_strong": "/kʌmpjuːtɜr/",
+      "example_sentence": "The computer is very good.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 430,
+      "word": "situation",
+      "pos": "noun",
+      "ipa_strong": "/sɪtʃuːeɪʃʌn/",
+      "example_sentence": "The situation is very good.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 431,
+      "word": "staff",
+      "pos": "noun",
+      "ipa_strong": "/stæf/",
+      "example_sentence": "The staff is very good.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 432,
+      "word": "activity",
+      "pos": "noun",
+      "ipa_strong": "/æktɪvʌtiː/",
+      "example_sentence": "The activity is very good.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 433,
+      "word": "film",
+      "pos": "noun",
+      "ipa_strong": "/fɪlm/",
+      "example_sentence": "The film is very good.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 434,
+      "word": "morning",
+      "pos": "noun",
+      "ipa_strong": "/mɔɹnɪŋ/",
+      "example_sentence": "The morning is very good.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 435,
+      "word": "war",
+      "pos": "noun",
+      "ipa_strong": "/wɔɹ/",
+      "example_sentence": "The war is very good.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 436,
+      "word": "account",
+      "pos": "noun",
+      "ipa_strong": "/ʌkaʊnt/",
+      "example_sentence": "The account is very good.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 437,
+      "word": "shop",
+      "pos": "noun",
+      "ipa_strong": "/ʃɑp/",
+      "example_sentence": "The shop is very good.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 438,
+      "word": "major",
+      "pos": "adjective",
+      "ipa_strong": "/meɪdʒɜr/",
+      "example_sentence": "It is very major today.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 439,
+      "word": "someone",
+      "pos": "pronoun",
+      "ipa_strong": "/sʌmwʌn/",
+      "example_sentence": "I saw someone at school.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 440,
+      "word": "above",
+      "pos": "preposition",
+      "ipa_strong": "/ʌbʌv/",
+      "example_sentence": "It is above the box now.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 441,
+      "word": "design",
+      "pos": "verb",
+      "ipa_strong": "/dɪzaɪn/",
+      "example_sentence": "I design every day here.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 442,
+      "word": "event",
+      "pos": "noun",
+      "ipa_strong": "/ɪvɛnt/",
+      "example_sentence": "The event is very good.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 443,
+      "word": "special",
+      "pos": "adjective",
+      "ipa_strong": "/spɛʃʌl/",
+      "example_sentence": "It is very special today.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 444,
+      "word": "sometimes",
+      "pos": "adverb",
+      "ipa_strong": "/sʌmtaɪmz/",
+      "example_sentence": "She spoke sometimes to me.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 445,
+      "word": "condition",
+      "pos": "noun",
+      "ipa_strong": "/kʌndɪʃʌn/",
+      "example_sentence": "The condition is very good.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 446,
+      "word": "carry",
+      "pos": "verb",
+      "ipa_strong": "/kæɹiː/",
+      "example_sentence": "I carry every day here.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 447,
+      "word": "choose",
+      "pos": "verb",
+      "ipa_strong": "/tʃuːz/",
+      "example_sentence": "I choose every day here.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 448,
+      "word": "father",
+      "pos": "noun",
+      "ipa_strong": "/fɑðɜr/",
+      "example_sentence": "The father is very good.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 449,
+      "word": "decision",
+      "pos": "noun",
+      "ipa_strong": "/dɪsɪʒʌn/",
+      "example_sentence": "The decision is very good.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 450,
+      "word": "table",
+      "pos": "noun",
+      "ipa_strong": "/teɪbʌl/",
+      "example_sentence": "The table is very good.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 451,
+      "word": "certain",
+      "pos": "adjective",
+      "ipa_strong": "/sɜrtʌn/",
+      "example_sentence": "It is very certain today.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 452,
+      "word": "forward",
+      "pos": "adverb",
+      "ipa_strong": "/fɔɹwɜrd/",
+      "example_sentence": "She spoke forward to me.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 453,
+      "word": "main",
+      "pos": "adjective",
+      "ipa_strong": "/meɪn/",
+      "example_sentence": "It is very main today.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 454,
+      "word": "die",
+      "pos": "verb",
+      "ipa_strong": "/daɪ/",
+      "example_sentence": "I die every day here.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 455,
+      "word": "bear",
+      "pos": "noun",
+      "ipa_strong": "/bɛɹ/",
+      "example_sentence": "The bear is very good.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 456,
+      "word": "cut",
+      "pos": "verb",
+      "ipa_strong": "/kʌt/",
+      "example_sentence": "I cut every day here.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 457,
+      "word": "describe",
+      "pos": "verb",
+      "ipa_strong": "/dɪskɹaɪb/",
+      "example_sentence": "I describe every day here.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 458,
+      "word": "himself",
+      "pos": "pronoun",
+      "ipa_strong": "/hɪmsɛlf/",
+      "example_sentence": "I saw himself at school.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 459,
+      "word": "available",
+      "pos": "adjective",
+      "ipa_strong": "/ʌveɪlʌbʌl/",
+      "example_sentence": "It is very available today.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 460,
+      "word": "especially",
+      "pos": "noun",
+      "ipa_strong": "/ʌspɛʃliː/",
+      "example_sentence": "The especially is very good.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 461,
+      "word": "strong",
+      "pos": "adjective",
+      "ipa_strong": "/stɹɔŋ/",
+      "example_sentence": "It is very strong today.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 462,
+      "word": "rise",
+      "pos": "verb",
+      "ipa_strong": "/ɹaɪz/",
+      "example_sentence": "I rise every day here.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 463,
+      "word": "girl",
+      "pos": "noun",
+      "ipa_strong": "/ɡɜrl/",
+      "example_sentence": "The girl is very good.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 464,
+      "word": "maybe",
+      "pos": "adverb",
+      "ipa_strong": "/meɪbiː/",
+      "example_sentence": "She spoke maybe to me.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 465,
+      "word": "community",
+      "pos": "noun",
+      "ipa_strong": "/kʌmjuːnʌtiː/",
+      "example_sentence": "The community is very good.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 466,
+      "word": "else",
+      "pos": "noun",
+      "ipa_strong": "/ɛls/",
+      "example_sentence": "The else is very good.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 467,
+      "word": "particular",
+      "pos": "adjective",
+      "ipa_strong": "/pɜrtɪkjʌlɜr/",
+      "example_sentence": "It is very particular today.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 468,
+      "word": "role",
+      "pos": "noun",
+      "ipa_strong": "/ɹoʊl/",
+      "example_sentence": "The role is very good.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 469,
+      "word": "join",
+      "pos": "verb",
+      "ipa_strong": "/dʒɔɪn/",
+      "example_sentence": "I join every day here.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 470,
+      "word": "difficult",
+      "pos": "noun",
+      "ipa_strong": "/dɪfʌkʌlt/",
+      "example_sentence": "The difficult is very good.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 471,
+      "word": "please",
+      "pos": "interjection",
+      "ipa_strong": "/pliːz/",
+      "example_sentence": "Please, that sounds good.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 472,
+      "word": "detail",
+      "pos": "noun",
+      "ipa_strong": "/dɪteɪl/",
+      "example_sentence": "The detail is very good.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 473,
+      "word": "difference",
+      "pos": "noun",
+      "ipa_strong": "/dɪfɜrʌns/",
+      "example_sentence": "The difference is very good.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 474,
+      "word": "action",
+      "pos": "noun",
+      "ipa_strong": "/ækʃʌn/",
+      "example_sentence": "The action is very good.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 475,
+      "word": "health",
+      "pos": "noun",
+      "ipa_strong": "/hɛlθ/",
+      "example_sentence": "The health is very good.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 476,
+      "word": "eat",
+      "pos": "verb",
+      "ipa_strong": "/iːt/",
+      "example_sentence": "I eat every day here.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 477,
+      "word": "step",
+      "pos": "verb",
+      "ipa_strong": "/stɛp/",
+      "example_sentence": "I step every day here.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 478,
+      "word": "true",
+      "pos": "adjective",
+      "ipa_strong": "/tɹuː/",
+      "example_sentence": "It is very true today.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 479,
+      "word": "phone",
+      "pos": "noun",
+      "ipa_strong": "/foʊn/",
+      "example_sentence": "The phone is very good.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 480,
+      "word": "themselves",
+      "pos": "pronoun",
+      "ipa_strong": "/ðɛmsɛlvz/",
+      "example_sentence": "I saw themselves at school.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 481,
+      "word": "draw",
+      "pos": "verb",
+      "ipa_strong": "/dɹɔ/",
+      "example_sentence": "I draw every day here.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 482,
+      "word": "white",
+      "pos": "adjective",
+      "ipa_strong": "/waɪt/",
+      "example_sentence": "It is very white today.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 483,
+      "word": "date",
+      "pos": "noun",
+      "ipa_strong": "/deɪt/",
+      "example_sentence": "The date is very good.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 484,
+      "word": "practice",
+      "pos": "noun",
+      "ipa_strong": "/pɹæktʌs/",
+      "example_sentence": "The practice is very good.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 485,
+      "word": "model",
+      "pos": "verb",
+      "ipa_strong": "/mɑdʌl/",
+      "example_sentence": "I model every day here.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 486,
+      "word": "raise",
+      "pos": "verb",
+      "ipa_strong": "/ɹeɪz/",
+      "example_sentence": "I raise every day here.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 487,
+      "word": "customer",
+      "pos": "noun",
+      "ipa_strong": "/kʌstʌmɜr/",
+      "example_sentence": "The customer is very good.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 488,
+      "word": "front",
+      "pos": "noun",
+      "ipa_strong": "/fɹʌnt/",
+      "example_sentence": "The front is very good.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 489,
+      "word": "explain",
+      "pos": "verb",
+      "ipa_strong": "/ɪkspleɪn/",
+      "example_sentence": "I explain every day here.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 490,
+      "word": "door",
+      "pos": "noun",
+      "ipa_strong": "/dɔɹ/",
+      "example_sentence": "The door is very good.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 491,
+      "word": "outside",
+      "pos": "noun",
+      "ipa_strong": "/aʊtsaɪd/",
+      "example_sentence": "The outside is very good.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 492,
+      "word": "behind",
+      "pos": "preposition",
+      "ipa_strong": "/bɪhaɪnd/",
+      "example_sentence": "It is behind the box now.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 493,
+      "word": "economic",
+      "pos": "noun",
+      "ipa_strong": "/ɛkʌnɑmɪk/",
+      "example_sentence": "The economic is very good.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 494,
+      "word": "site",
+      "pos": "noun",
+      "ipa_strong": "/saɪt/",
+      "example_sentence": "The site is very good.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 495,
+      "word": "approach",
+      "pos": "noun",
+      "ipa_strong": "/ʌpɹoʊtʃ/",
+      "example_sentence": "The approach is very good.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 496,
+      "word": "teacher",
+      "pos": "noun",
+      "ipa_strong": "/tiːtʃɜr/",
+      "example_sentence": "The teacher is very good.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 497,
+      "word": "land",
+      "pos": "verb",
+      "ipa_strong": "/lænd/",
+      "example_sentence": "I land every day here.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 498,
+      "word": "charge",
+      "pos": "noun",
+      "ipa_strong": "/tʃɑɹdʒ/",
+      "example_sentence": "The charge is very good.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 499,
+      "word": "finally",
+      "pos": "adverb",
+      "ipa_strong": "/faɪnʌliː/",
+      "example_sentence": "She spoke finally to me.",
+      "cefr_level": "B1"
+    },
+    {
+      "rank": 500,
+      "word": "sign",
+      "pos": "verb",
+      "ipa_strong": "/saɪn/",
+      "example_sentence": "I sign every day here.",
+      "cefr_level": "B1"
+    }
+  ]
+}

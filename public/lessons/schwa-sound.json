@@ -21,7 +21,7 @@
   "examples": [
     {
       "english": "banana",
-      "ipa": "/bəˈnɑː.nə/",
+      "ipa": "/bəˈnɑr.nə/",
       "translation": "First and last 'a' are schwas — only the middle is stressed."
     },
     {
@@ -83,7 +83,7 @@
         "None — all are schwas"
       ],
       "correct": 1,
-      "explanation": "Only the stressed middle syllable /ˈnɑː/ is a full vowel. The first and last 'a' are both /ə/."
+      "explanation": "Only the stressed middle syllable /ˈnɑr/ is a full vowel. The first and last 'a' are both /ə/."
     },
     {
       "question": "Why do native English speakers use the schwa so much?",

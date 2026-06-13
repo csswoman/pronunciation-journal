@@ -72,11 +72,11 @@
         {
           "type": "pairs",
           "lines": [
-            { "variant": "bad", "text": "I repaired my car.", "note": "yo lo reparé con mis propias manos" },
+            { "variant": "bad", "text": "I repaired my car.", "note": "gramatical, pero significa que lo reparaste tú con tus manos" },
             { "variant": "good", "text": "I had my car repaired.", "note": "llevé el coche al mecánico" },
-            { "variant": "bad", "text": "She cut her hair.", "note": "ella misma se cortó el pelo" },
+            { "variant": "bad", "text": "She cut her hair.", "note": "gramatical, pero = ella misma se cortó el pelo" },
             { "variant": "good", "text": "She had her hair cut.", "note": "fue a la peluquería" },
-            { "variant": "bad", "text": "They painted the house.", "note": "ellos lo pintaron personalmente" },
+            { "variant": "bad", "text": "They painted the house.", "note": "gramatical, pero = lo pintaron personalmente" },
             { "variant": "good", "text": "They had the house painted.", "note": "contrataron a un pintor" }
           ]
         }

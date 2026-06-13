@@ -1,5 +1,6 @@
 import { getSupabaseBrowserClient } from '@/lib/supabase/client'
 import { computeSM2, type SM2Progress } from '@/lib/srs/compute'
+import { enqueue } from '@/lib/sync/sync-manager'
 import type { WordBankEntry } from '@/lib/word-bank/types'
 import type { FlashcardRating } from '@/lib/word-bank/lexicon-review-types'
 
@@ -26,7 +27,7 @@ export async function applyFlashcardRating(
 
   const { data: existing, error: selectError } = await db
     .from('word_bank')
-    .select('*')
+    .select('id, user_id, text, context, meaning, translation, ipa, example, synonyms, image_prompt, audio_url, status, difficulty, error_reason, audio_fetch_attempts, has_audio, ease_factor, interval_days, repetitions, srs_status, next_review_at, last_reviewed_at, review_count, source, source_ref, created_at, updated_at')
     .eq('user_id', userId)
     .eq('source_ref', input.sourceRef)
     .maybeSingle()
@@ -50,7 +51,7 @@ export async function applyFlashcardRating(
         source: 'lexicon',
         source_ref: input.sourceRef,
       })
-      .select('*')
+      .select('id, user_id, text, context, meaning, translation, ipa, example, synonyms, image_prompt, audio_url, status, difficulty, error_reason, audio_fetch_attempts, has_audio, ease_factor, interval_days, repetitions, srs_status, next_review_at, last_reviewed_at, review_count, source, source_ref, created_at, updated_at')
       .single()
 
     if (insertError) throw insertError
@@ -121,7 +122,7 @@ export async function applyFlashcardRating(
     .update(srsUpdate)
     .eq('id', entry.id)
     .eq('user_id', userId)
-    .select('*')
+    .select('id, user_id, text, context, meaning, translation, ipa, example, synonyms, image_prompt, audio_url, status, difficulty, error_reason, audio_fetch_attempts, has_audio, ease_factor, interval_days, repetitions, srs_status, next_review_at, last_reviewed_at, review_count, source, source_ref, created_at, updated_at')
     .single()
 
   if (updateError) throw updateError
@@ -206,4 +207,54 @@ export async function reviewWordBankEntry(
   if (updateError) throw updateError
 
   return next
+}
+
+/**
+ * Fetch the current SRS state for a word_bank entry, compute SM-2, and enqueue
+ * the update to the sync outbox. The write will be retried on reconnection if it
+ * fails. Throws if the initial Supabase read fails.
+ */
+export async function enqueueWordBankSRSUpdate(
+  userId: string,
+  wordId: string,
+  grade: number,
+): Promise<void> {
+  const db = supabase()
+
+  const { data, error: fetchError } = await db
+    .from('word_bank')
+    .select('ease_factor, interval_days, repetitions, next_review_at, srs_status, last_reviewed_at, review_count')
+    .eq('id', wordId)
+    .eq('user_id', userId)
+    .single()
+
+  if (fetchError) throw fetchError
+
+  const current: SM2Progress | null = data.next_review_at || data.srs_status !== 'new'
+    ? {
+        ease_factor: data.ease_factor,
+        interval_days: data.interval_days,
+        repetitions: data.repetitions,
+        next_review_at: data.next_review_at,
+        status: data.srs_status as SM2Progress['status'], // srs_status is a constrained enum column — values are always from this set
+        last_reviewed_at: data.last_reviewed_at,
+      }
+    : null
+
+  const next = computeSM2(current, grade)
+
+  await enqueue(
+    'word_bank',
+    'update',
+    {
+      ease_factor: next.ease_factor,
+      interval_days: next.interval_days,
+      repetitions: next.repetitions,
+      next_review_at: next.next_review_at,
+      srs_status: next.status,
+      last_reviewed_at: next.last_reviewed_at,
+      review_count: (data.review_count ?? 0) + 1,
+    },
+    { id: wordId, user_id: userId },
+  )
 }

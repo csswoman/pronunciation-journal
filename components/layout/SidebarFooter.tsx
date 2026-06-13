@@ -7,7 +7,7 @@ import { createPortal } from "react-dom";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { useOKLCHTheme } from "@/hooks/useOKLCHTheme";
 import { LogOut, LogIn, User } from "lucide-react";
-import { useSidebar } from "@/components/sidebar/SidebarContext";
+import { useSidebar } from "@/components/theme/sidebar/SidebarContext";
 
 export default function SidebarFooter() {
   const router = useRouter();

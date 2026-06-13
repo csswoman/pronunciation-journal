@@ -153,7 +153,7 @@
             { "variant": "bad", "text": "Give me it." },
             { "variant": "good", "text": "Give it to me.", "note": "cuando ambos objetos son pronombres, usa 'to me'" },
             { "variant": "bad", "text": "I saw she at the store." },
-            { "variant": "good", "text": "I saw her at the store.", "note": "después del verbo: her, not she" }
+            { "variant": "good", "text": "I saw her at the store.", "note": "después del verbo: her, no she" }
           ]
         }
       ]

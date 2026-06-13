@@ -25,8 +25,8 @@ function supabase() {
 
 export async function getAllSoundsWithWords(): Promise<{ sound: DbSound; words: DbWord[] }[]> {
   const [soundsRes, wordsRes] = await Promise.all([
-    supabase().from('sounds').select('*').order('id'),
-    supabase().from('words').select('*'),
+    supabase().from('sounds').select('id, ipa, type, category, example, difficulty').order('id'),
+    supabase().from('words').select('id, word, ipa, sound_id, difficulty, audio_url, sound_focus'),
   ])
   if (soundsRes.error) throw soundsRes.error
   if (wordsRes.error) throw wordsRes.error

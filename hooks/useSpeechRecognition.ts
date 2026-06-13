@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 export type SpeechStatus = 'idle' | 'listening' | 'done' | 'error' | 'unsupported'
 
@@ -12,16 +12,29 @@ export interface SpeechResult {
 export function useSpeechRecognition() {
   const [status, setStatus] = useState<SpeechStatus>('idle')
   const [result, setResult] = useState<SpeechResult | null>(null)
+  const [isSupported, setIsSupported] = useState(false)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const recRef = useRef<any>(null)
 
-  const isSupported =
-    typeof window !== 'undefined' &&
-    ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)
+  useEffect(() => {
+    setIsSupported(
+      'SpeechRecognition' in window || 'webkitSpeechRecognition' in window
+    )
+  }, [])
 
-  const start = useCallback(() => {
+  const start = useCallback(async () => {
     if (!isSupported) {
       setStatus('unsupported')
+      return
+    }
+
+    try {
+      if (navigator.mediaDevices?.getUserMedia) {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+        stream.getTracks().forEach((t) => t.stop())
+      }
+    } catch {
+      setStatus('error')
       return
     }
 
@@ -48,14 +61,20 @@ export function useSpeechRecognition() {
       setStatus('done')
     }
 
-    rec.onerror = () => setStatus('error')
+    rec.onerror = (event: { error?: string }) => {
+      if (event.error === 'aborted') return
+      setStatus('error')
+    }
 
-    // onend fires after onresult — only reset to idle if nothing was captured
-    rec.onend = () => setStatus(prev => (prev === 'listening' ? 'idle' : prev))
+    rec.onend = () => setStatus((prev) => (prev === 'listening' ? 'idle' : prev))
 
     recRef.current = rec
     setResult(null)
-    rec.start()
+    try {
+      rec.start()
+    } catch {
+      setStatus('error')
+    }
   }, [isSupported])
 
   const stop = useCallback(() => {
@@ -63,7 +82,10 @@ export function useSpeechRecognition() {
   }, [])
 
   const reset = useCallback(() => {
-    recRef.current?.abort()
+    if (recRef.current) {
+      recRef.current.onerror = null
+      recRef.current.abort()
+    }
     recRef.current = null
     setStatus('idle')
     setResult(null)

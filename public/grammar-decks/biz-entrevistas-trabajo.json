@@ -107,7 +107,7 @@
           "rows": [
             { "key": "Reafirmar interés", "value": "I'm very excited about this opportunity.", "highlights": ["very excited about"] },
             { "key": "Agradecer", "value": "Thank you for your time.", "highlights": ["Thank you for your time."] },
-            { "key": "Email de seguimiento", "value": "Thank you for the interview yesterday...", "highlights": ["follow-up"] }
+            { "key": "Email de seguimiento", "value": "Thank you for the interview yesterday...", "highlights": ["Thank you for the interview"] }
           ]
         }
       ],

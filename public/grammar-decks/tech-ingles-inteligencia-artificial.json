@@ -91,7 +91,7 @@
       ],
       "tip": {
         "label": "Falso amigo:",
-        "body": "bias se pronuncia \"báias\" /ˈbaɪəs/, no \"bías\"."
+        "body": "bias se pronuncia \"báias\" /ˈbaɪrs/, no \"bías\"."
       }
     },
     {
@@ -106,7 +106,7 @@
             { "key": "AI", "value": "se deletrea · \"ei-ai\"", "highlights": ["ei-ai"] },
             { "key": "GPU", "value": "se deletrea · \"yi-pi-iu\"", "highlights": ["yi-pi-iu"] },
             { "key": "algorithm", "value": "/ˈælɡərɪðəm/ → \"álgorizm\"", "highlights": ["álgorizm"] },
-            { "key": "neural", "value": "/ˈnjʊərəl/ → \"niúral\"", "highlights": ["niúral"] }
+            { "key": "neural", "value": "/ˈnjʊrəl/ → \"niúral\"", "highlights": ["niúral"] }
           ]
         }
       ]

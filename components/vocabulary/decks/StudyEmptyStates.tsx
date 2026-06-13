@@ -2,6 +2,8 @@
 
 import Button from "@/components/ui/Button";
 import { H2 } from "@/components/ui/Typography";
+import { WordCarousel } from "@/components/practice/session/WordCarousel";
+import { useLoadingWords } from "@/hooks/useLoadingWords";
 
 interface StudyEmptyStatesProps {
   phase: "loading" | "studying" | "done";
@@ -22,13 +24,10 @@ export function StudyEmptyStates({
   queueLength,
   onClose,
 }: StudyEmptyStatesProps) {
+  const words = useLoadingWords();
+
   if (phase === "loading") {
-    return centeredOverlay(
-      <div
-        className="w-10 h-10 rounded-full border-2 border-t-transparent animate-spin"
-        style={{ borderColor: "var(--primary)", borderTopColor: "transparent" }}
-      />
-    );
+    return centeredOverlay(<WordCarousel words={words} />);
   }
 
   if (phase === "done" || queueLength === 0) {

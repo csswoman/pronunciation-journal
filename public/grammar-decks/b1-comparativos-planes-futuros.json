@@ -103,9 +103,9 @@
           "type": "pairs",
           "lines": [
             { "variant": "bad", "text": "She is more taller than me." },
-            { "variant": "good", "text": "She is taller than me.", "note": "o more tall, nunca los dos" },
+            { "variant": "good", "text": "She is taller than me.", "note": "-er O more, nunca los dos juntos" },
             { "variant": "bad", "text": "the best player of the team" },
-            { "variant": "good", "text": "the best player in the team", "note": "con grupos se usa in" }
+            { "variant": "good", "text": "the best player on the team", "note": "con grupos se usa in/on (nunca of); EE. UU. prefiere on" }
           ]
         }
       ]

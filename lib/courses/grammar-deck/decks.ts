@@ -86,6 +86,67 @@ export function getDecksForSound(sound: string): DeckSoundRef[] {
   return refs;
 }
 
+export type DeckLevel = 'a1' | 'a2' | 'b1' | 'b2' | 'c1' | 'biz' | 'tech' | 'cs' | 'other'
+
+export interface DeckSummary {
+  slug: string
+  level: DeckLevel
+  title: string
+  eyebrow: string
+  cardCount: number
+  hasQuiz: boolean
+  hasSounds: boolean
+}
+
+function slugToLevel(slug: string): DeckLevel {
+  if (slug.startsWith('a1-')) return 'a1'
+  if (slug.startsWith('a2-')) return 'a2'
+  if (slug.startsWith('b1-')) return 'b1'
+  if (slug.startsWith('b2-')) return 'b2'
+  if (slug.startsWith('c1-') || slug.startsWith('c2-')) return 'c1'
+  if (slug.startsWith('biz-')) return 'biz'
+  if (slug.startsWith('tech-')) return 'tech'
+  if (slug.startsWith('cs-')) return 'cs'
+  return 'other'
+}
+
+/**
+ * List all deck summaries for the index page.
+ * Reads only meta + card count — does NOT validate full schema for speed.
+ */
+export function listAllDecks(): DeckSummary[] {
+  let files: string[]
+  try {
+    files = fs.readdirSync(DECKS_DIR).filter((f) => f.endsWith('.json')).sort()
+  } catch {
+    return []
+  }
+
+  const summaries: DeckSummary[] = []
+  for (const file of files) {
+    const slug = file.replace(/\.json$/, '')
+    try {
+      const raw = readJson(slug) as Record<string, unknown> | null
+      if (!raw) continue
+      const meta = (raw.meta ?? {}) as Record<string, string>
+      const cards = Array.isArray(raw.cards) ? raw.cards : []
+      const title = [meta.title, meta.titleEmphasis].filter(Boolean).join(' ') || slug
+      summaries.push({
+        slug,
+        level: slugToLevel(slug),
+        title,
+        eyebrow: meta.eyebrow ?? '',
+        cardCount: cards.length,
+        hasQuiz: Array.isArray(raw.quiz) && (raw.quiz as unknown[]).length > 0,
+        hasSounds: Array.isArray(raw.sounds) && (raw.sounds as unknown[]).length > 0,
+      })
+    } catch {
+      // skip malformed
+    }
+  }
+  return summaries
+}
+
 /**
  * Resolves the deck to render for a lesson. Falls back to the demo deck while
  * a lesson's content file does not exist yet.

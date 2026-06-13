@@ -1,3 +1,8 @@
+// Inventario: General American (GA) — alineado con el diccionario CMU/ARPAbet
+// usado en lib/pronunciation/phonemes.ts y con el TTS americano de la app.
+// 11 monoftongos + 24 consonantes + 5 diptongos = 40 fonemas.
+// Las claves coinciden con sounds.ipa en Supabase (migración GA).
+
 export type Difficulty = "easy" | "medium" | "hard";
 export type SyllablePosition = "initial" | "medial" | "final" | "any";
 
@@ -20,6 +25,9 @@ export interface PhonemeExtra {
    * Minimal pairs practiced specifically in word-final position.
    * Used for Fase 9 final-consonant exercises (devoicing / elision).
    * Only present for consonants where final position is a known L1 problem.
+   * Pedagogía: la pista perceptiva principal es la DURACIÓN de la vocal
+   * precedente (vocal larga antes de sonora, recortada antes de sorda),
+   * no la vibración de la consonante final.
    */
   finalConsonantPairs?: FinalConsonantPair[];
 }
@@ -30,228 +38,207 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
     articulation: [
       "Lips spread wide, like a big smile",
       "Tongue high and pushed forward in the mouth",
-      "Held longer than the Spanish 'i'",
+      "Tense — keep the muscles firm; it usually lasts longer than /ɪ/",
     ],
     articulationEs: [
       "Estira los labios como en una sonrisa amplia",
       "Lengua alta y hacia adelante en la boca",
-      "Mantenla más tiempo que la 'i' española — es larga",
+      "Tensa — mantén los músculos firmes; suele durar más que /ɪ/",
     ],
     minimalPairs: [
       { wordA: "seat", wordB: "sit", phonemeA: "/iː/", phonemeB: "/ɪ/" },
       { wordA: "feet", wordB: "fit", phonemeA: "/iː/", phonemeB: "/ɪ/" },
       { wordA: "leave", wordB: "live", phonemeA: "/iː/", phonemeB: "/ɪ/" },
     ],
-    spanishTip: "Muy similar a la 'i' española pero más larga y con labios más estirados. Mantén la tensión muscular.",
+    spanishTip: "Como la 'i' española pero tensa: labios bien estirados y lengua firme. La diferencia clave con /ɪ/ es la tensión y la calidad del sonido — la duración es solo una pista secundaria.",
   },
   "/ɪ/": {
     difficulty: "hard",
     articulation: [
       "Lips relaxed, not spread wide",
       "Tongue slightly lower and more central than /iː/",
-      "Short and lax — do not tense the muscles",
+      "Lax — do not tense the muscles",
     ],
     articulationEs: [
       "Labios relajados, sin estirar",
       "Lengua un poco más baja y central que en /iː/",
-      "Corta y floja — no tenses los músculos",
+      "Floja (laxa) — no tenses los músculos",
     ],
     minimalPairs: [
       { wordA: "sit", wordB: "seat", phonemeA: "/ɪ/", phonemeB: "/iː/" },
       { wordA: "bit", wordB: "beat", phonemeA: "/ɪ/", phonemeB: "/iː/" },
       { wordA: "ship", wordB: "sheep", phonemeA: "/ɪ/", phonemeB: "/iː/" },
     ],
-    spanishTip: "Más corta y relajada que la 'i' española. No es /i/ ni /e/ — está entre las dos. Relaja la mandíbula y no estires los labios.",
+    spanishTip: "Más relajada que la 'i' española. No es /i/ ni /e/ — está entre las dos. Relaja la mandíbula y no estires los labios. Es el contraste más rentable del inglés: ship/sheep, live/leave.",
   },
-  "/e/": {
+  "/ɛ/": {
     difficulty: "medium",
     articulation: [
-      "Lips slightly spread, jaw half open",
-      "Tongue at mid-front position",
-      "Shorter than the Spanish 'e'",
+      "Lips slightly spread, jaw more open than for Spanish 'e'",
+      "Tongue at mid-front position, slightly lowered",
+      "Short and lax",
     ],
     articulationEs: [
-      "Labios ligeramente estirados, mandíbula entreabierta",
-      "Lengua en posición media-delantera",
-      "Más breve que la 'e' española",
+      "Labios ligeramente estirados, mandíbula más abierta que para la 'e' española",
+      "Lengua media-delantera, un poco más baja",
+      "Corta y relajada",
     ],
     minimalPairs: [
-      { wordA: "bed", wordB: "bad", phonemeA: "/e/", phonemeB: "/æ/" },
-      { wordA: "pen", wordB: "pan", phonemeA: "/e/", phonemeB: "/æ/" },
-      { wordA: "set", wordB: "sat", phonemeA: "/e/", phonemeB: "/æ/" },
+      { wordA: "bed", wordB: "bad", phonemeA: "/ɛ/", phonemeB: "/æ/" },
+      { wordA: "pen", wordB: "pan", phonemeA: "/ɛ/", phonemeB: "/æ/" },
+      { wordA: "set", wordB: "sat", phonemeA: "/ɛ/", phonemeB: "/æ/" },
     ],
-    spanishTip: "Similar a la 'e' española pero más breve y relajada. No la alargues ni la conviertas en diptongo.",
+    spanishTip: "Más abierta que la 'e' española — di la 'e' de 'mesa' y baja la mandíbula un paso más. No la conviertas en diptongo ni la cierres.",
   },
   "/æ/": {
     difficulty: "hard",
     articulation: [
-      "Mouth wide open, more than for /e/",
+      "Mouth wide open, more than for /ɛ/",
       "Tongue low and pushed forward",
       "Lips spread horizontally, almost like a grimace",
     ],
     articulationEs: [
-      "Boca muy abierta, más que para /e/",
+      "Boca muy abierta, más que para /ɛ/",
       "Lengua baja y hacia adelante",
       "Labios estirados horizontalmente, casi como una mueca",
     ],
     minimalPairs: [
       { wordA: "cat", wordB: "cut", phonemeA: "/æ/", phonemeB: "/ʌ/" },
-      { wordA: "bad", wordB: "bed", phonemeA: "/æ/", phonemeB: "/e/" },
-      { wordA: "man", wordB: "men", phonemeA: "/æ/", phonemeB: "/e/" },
+      { wordA: "bad", wordB: "bed", phonemeA: "/æ/", phonemeB: "/ɛ/" },
+      { wordA: "man", wordB: "men", phonemeA: "/æ/", phonemeB: "/ɛ/" },
     ],
-    spanishTip: "No existe en español. Es más abierta que la 'a'. Imagina decir 'a' con la boca muy abierta horizontalmente y la lengua hacia adelante.",
+    spanishTip: "No existe en español. Está entre la 'a' y la 'e': boca muy abierta horizontalmente y lengua hacia adelante. Es la vocal de 'cat', 'man', 'hand'.",
   },
-  "/ɑː/": {
+  "/ɑ/": {
     difficulty: "medium",
     articulation: [
       "Mouth fully open, jaw dropped low",
       "Tongue low and pulled back",
-      "Lips unrounded and relaxed",
+      "Lips unrounded — even when the spelling is 'o' (hot, stop)",
     ],
     articulationEs: [
       "Boca completamente abierta, mandíbula caída",
       "Lengua baja y hacia atrás",
-      "Labios sin redondear, relajados",
+      "Labios sin redondear — aunque se escriba con 'o' (hot, stop)",
     ],
     minimalPairs: [
-      { wordA: "car", wordB: "cup", phonemeA: "/ɑː/", phonemeB: "/ʌ/" },
-      { wordA: "heart", wordB: "hurt", phonemeA: "/ɑː/", phonemeB: "/ɜː/" },
-      { wordA: "farm", wordB: "firm", phonemeA: "/ɑː/", phonemeB: "/ɜː/" },
+      { wordA: "hot", wordB: "hut", phonemeA: "/ɑ/", phonemeB: "/ʌ/" },
+      { wordA: "cop", wordB: "cap", phonemeA: "/ɑ/", phonemeB: "/æ/" },
+      { wordA: "stock", wordB: "stack", phonemeA: "/ɑ/", phonemeB: "/æ/" },
     ],
-    spanishTip: "Parecida a la 'a' española pero más larga y con la lengua más atrás. Es la 'a' de 'car' — imagina al médico diciéndote 'abre la boca'.",
+    spanishTip: "Es la 'a' del médico: boca muy abierta y lengua atrás. Clave del americano: la 'o' escrita de 'hot', 'stop', 'box' se pronuncia /ɑ/ — 'hot' suena como 'jat', nunca como 'jot'.",
   },
-  "/ɒ/": {
+  "/ɔ/": {
     difficulty: "medium",
     articulation: [
-      "Lips rounded and mouth wide open",
-      "Tongue low and back",
-      "Short sound — do not hold it",
-    ],
-    articulationEs: [
-      "Labios redondeados y boca muy abierta",
-      "Lengua baja y hacia atrás",
-      "Sonido corto — no lo alargues",
-    ],
-    minimalPairs: [
-      { wordA: "hot", wordB: "hut", phonemeA: "/ɒ/", phonemeB: "/ʌ/" },
-      { wordA: "cot", wordB: "cut", phonemeA: "/ɒ/", phonemeB: "/ʌ/" },
-      { wordA: "top", wordB: "tap", phonemeA: "/ɒ/", phonemeB: "/æ/" },
-    ],
-    spanishTip: "Parecida a una 'o' española pero con la boca muy abierta. Es más abierta que la 'o' del español — no redondees tanto los labios.",
-  },
-  "/ɔː/": {
-    difficulty: "hard",
-    articulation: [
-      "Lips rounded and pushed forward",
+      "Lips lightly rounded",
       "Tongue low-back, slightly raised",
-      "Long sound — hold it clearly",
+      "More open than the Spanish 'o' — do not close it",
     ],
     articulationEs: [
-      "Labios redondeados y proyectados hacia adelante",
-      "Lengua trasera baja, ligeramente elevada",
-      "Sonido largo — mantenlo con claridad",
+      "Labios ligeramente redondeados",
+      "Lengua trasera baja, un poco elevada",
+      "Más abierta que la 'o' española — no la cierres",
     ],
     minimalPairs: [
-      { wordA: "law", wordB: "low", phonemeA: "/ɔː/", phonemeB: "/əʊ/" },
-      { wordA: "caught", wordB: "coat", phonemeA: "/ɔː/", phonemeB: "/əʊ/" },
-      { wordA: "tall", wordB: "toll", phonemeA: "/ɔː/", phonemeB: "/əʊ/" },
+      { wordA: "law", wordB: "low", phonemeA: "/ɔ/", phonemeB: "/oʊ/" },
+      { wordA: "caught", wordB: "coat", phonemeA: "/ɔ/", phonemeB: "/oʊ/" },
+      { wordA: "bought", wordB: "boat", phonemeA: "/ɔ/", phonemeB: "/oʊ/" },
     ],
-    spanishTip: "No existe exactamente en español. Es una 'o' larga con los labios bien redondeados y la boca medio abierta. Practica con 'all', 'ball', 'call'.",
+    spanishTip: "Una 'o' abierta con labios poco redondeados: 'law', 'all', 'call'. Ojo: muchos americanos la pronuncian igual que /ɑ/ ('caught' suena como 'cot') — si las oyes iguales es ese merger, no tu oído.",
   },
   "/ʊ/": {
     difficulty: "medium",
     articulation: [
       "Lips loosely rounded, not tightly pursed",
       "Tongue near-high and back, but relaxed",
-      "Short and lax — do not hold it",
+      "Lax — do not tense or hold it",
     ],
     articulationEs: [
       "Labios ligeramente redondeados, sin tensión",
       "Lengua casi alta y trasera, pero relajada",
-      "Corta y floja — no la alargues",
+      "Floja (laxa) — sin tensión ni esfuerzo",
     ],
     minimalPairs: [
       { wordA: "book", wordB: "boot", phonemeA: "/ʊ/", phonemeB: "/uː/" },
       { wordA: "pull", wordB: "pool", phonemeA: "/ʊ/", phonemeB: "/uː/" },
       { wordA: "full", wordB: "fool", phonemeA: "/ʊ/", phonemeB: "/uː/" },
     ],
-    spanishTip: "Más corta y relajada que la 'u' española. No tenses los labios — es la 'u' de 'book', muy diferente de la 'u' de 'moon'.",
+    spanishTip: "Más relajada que la 'u' española. No tenses los labios — es la 'u' de 'book' y 'good', muy diferente de la /uː/ tensa de 'moon'.",
   },
   "/uː/": {
     difficulty: "easy",
     articulation: [
       "Lips tightly rounded and pushed forward",
       "Tongue high and pushed back",
-      "Long sound — sustain it",
+      "Tense — keep the rounding firm",
     ],
     articulationEs: [
       "Labios bien redondeados y proyectados hacia adelante",
       "Lengua alta y hacia atrás",
-      "Sonido largo — sostenlo",
+      "Tensa — mantén el redondeo firme",
     ],
     minimalPairs: [
-      { wordA: "moon", wordB: "man", phonemeA: "/uː/", phonemeB: "/æ/" },
+      { wordA: "fool", wordB: "full", phonemeA: "/uː/", phonemeB: "/ʊ/" },
       { wordA: "food", wordB: "foot", phonemeA: "/uː/", phonemeB: "/ʊ/" },
       { wordA: "pool", wordB: "pull", phonemeA: "/uː/", phonemeB: "/ʊ/" },
     ],
-    spanishTip: "Similar a la 'u' española pero más larga y con los labios más redondeados. Mantén la tensión — es el sonido de 'moon' y 'food'.",
+    spanishTip: "Similar a la 'u' española pero tensa y con los labios más redondeados. Es el sonido de 'moon' y 'food'. La diferencia con /ʊ/ ('book') es la tensión, no solo la duración.",
   },
   "/ʌ/": {
     difficulty: "hard",
     articulation: [
       "Lips neutral and unrounded",
-      "Jaw slightly open, tongue mid-back",
-      "Short and unstressed — never round the lips",
+      "Jaw slightly open, tongue central, a bit back",
+      "Short and relaxed — it appears in stressed syllables (cup, luck)",
     ],
     articulationEs: [
       "Labios neutros, sin redondear",
-      "Mandíbula entreabierta, lengua medio-trasera",
-      "Corta y átona — jamás redondees los labios",
+      "Mandíbula entreabierta, lengua central, algo atrás",
+      "Corta y relajada — aparece en sílabas tónicas (cup, luck)",
     ],
     minimalPairs: [
       { wordA: "cup", wordB: "cap", phonemeA: "/ʌ/", phonemeB: "/æ/" },
       { wordA: "cut", wordB: "cat", phonemeA: "/ʌ/", phonemeB: "/æ/" },
-      { wordA: "luck", wordB: "lock", phonemeA: "/ʌ/", phonemeB: "/ɒ/" },
+      { wordA: "luck", wordB: "lock", phonemeA: "/ʌ/", phonemeB: "/ɑ/" },
     ],
-    spanishTip: "Parecida a una 'a' pero con la boca menos abierta y la lengua hacia atrás. No es /a/ ni /o/. Muchos hispanohablantes la pronuncian como 'a', pero es más central y relajada.",
+    spanishTip: "Parecida a una 'a' con la boca menos abierta y la lengua más central. No es /a/ ni /o/. Es la prima tónica del schwa /ə/: misma zona de la boca, pero en sílaba acentuada — 'cup', 'but', 'love'.",
   },
-  "/ɜː/": {
+  "/ɜr/": {
     difficulty: "hard",
     articulation: [
-      "Lips neutral, slightly parted",
-      "Tongue in central neutral position — not touching anything",
-      "Long sound with slight tension in center of mouth",
+      "Tongue bunched in the center of the mouth, tip curled slightly back — touching nothing",
+      "Lips slightly rounded",
+      "Vowel and R fuse into a single r-colored sound — hold it",
     ],
     articulationEs: [
-      "Labios neutros, ligeramente separados",
-      "Lengua en posición central neutra — sin tocar nada",
-      "Sonido largo con leve tensión en el centro de la boca",
+      "Lengua agrupada en el centro de la boca, punta ligeramente curvada hacia atrás — sin tocar nada",
+      "Labios un poco redondeados",
+      "La vocal y la R se funden en un solo sonido con color de R — sostenlo",
     ],
     minimalPairs: [
-      { wordA: "bird", wordB: "bad", phonemeA: "/ɜː/", phonemeB: "/æ/" },
-      { wordA: "word", wordB: "ward", phonemeA: "/ɜː/", phonemeB: "/ɔː/" },
-      { wordA: "hurt", wordB: "heart", phonemeA: "/ɜː/", phonemeB: "/ɑː/" },
+      { wordA: "hurt", wordB: "heart", phonemeA: "/ɜr/", phonemeB: "/ɑ/" },
+      { wordA: "shirt", wordB: "short", phonemeA: "/ɜr/", phonemeB: "/ɔ/" },
+      { wordA: "bird", wordB: "beard", phonemeA: "/ɜr/", phonemeB: "/ɪ/" },
     ],
-    spanishTip: "No existe en español. La lengua flota en el centro de la boca sin tocar nada. Es el sonido de 'bird', 'word', 'nurse' — muy diferente a cualquier vocal española.",
+    spanishTip: "No existe en español. Es la vocal con R americana de 'bird', 'word', 'nurse'. No digas vocal + R separadas ni vibres la R: es un único sonido continuo donde la lengua flota curvada.",
   },
   "/ə/": {
     difficulty: "medium",
     articulation: [
       "Completely relaxed — lips, tongue and jaw all neutral",
       "Tongue in central mid position",
-      "Always unstressed — never emphasize it",
+      "Only in unstressed syllables — never emphasize it",
     ],
     articulationEs: [
       "Completamente relajado — labios, lengua y mandíbula neutros",
       "Lengua en posición central media",
-      "Siempre átono — nunca lo acentúes",
+      "Solo en sílabas átonas — nunca lo acentúes",
     ],
-    minimalPairs: [
-      { wordA: "about", wordB: "out", phonemeA: "/ə/", phonemeB: "/aʊ/" },
-      { wordA: "sofa", wordB: "sofa (stressed)", phonemeA: "/ə/", phonemeB: "/æ/" },
-      { wordA: "the (weak)", wordB: "thee (strong)", phonemeA: "/ə/", phonemeB: "/iː/" },
-    ],
-    spanishTip: "El sonido más común en inglés y no existe en español. Es la vocal átona de sílabas relajadas como 'a-bout', 'sof-a'. Relaja completamente la boca — no hagas ningún esfuerzo.",
+    // El schwa nunca contrasta en sílaba tónica, así que no tiene pares mínimos.
+    // Se domina con ritmo y reducción (sílaba fuerte clara, débiles reducidas).
+    minimalPairs: [],
+    spanishTip: "El sonido más común del inglés y no existe en español. Aparece solo en sílabas átonas: a-BOUT, SO-fa, ba-NA-na (/bəˈnænə/). No tiene pares mínimos — se practica con ritmo: di la sílaba fuerte clara y deja las débiles casi sin vocal, con la boca totalmente relajada.",
   },
   "/p/": {
     difficulty: "easy",
@@ -266,8 +253,8 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       "Suelta con un pequeño soplo de aire (aspiración al inicio de palabra)",
     ],
     minimalPairs: [
-      { wordA: "pen", wordB: "ben", phonemeA: "/p/", phonemeB: "/b/" },
       { wordA: "pat", wordB: "bat", phonemeA: "/p/", phonemeB: "/b/" },
+      { wordA: "pig", wordB: "big", phonemeA: "/p/", phonemeB: "/b/" },
       { wordA: "pie", wordB: "buy", phonemeA: "/p/", phonemeB: "/b/" },
     ],
     spanishTip: "Muy similar a la /p/ española. La diferencia es que en inglés, al inicio de palabra, va seguida de un pequeño soplo de aire (aspiración). Prueba con un papel frente a la boca.",
@@ -285,11 +272,11 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       "Sale menos aire que en /p/",
     ],
     minimalPairs: [
-      { wordA: "bed", wordB: "red", phonemeA: "/b/", phonemeB: "/r/" },
+      { wordA: "ban", wordB: "van", phonemeA: "/b/", phonemeB: "/v/" },
+      { wordA: "berry", wordB: "very", phonemeA: "/b/", phonemeB: "/v/" },
       { wordA: "bat", wordB: "pat", phonemeA: "/b/", phonemeB: "/p/" },
-      { wordA: "back", wordB: "pack", phonemeA: "/b/", phonemeB: "/p/" },
     ],
-    spanishTip: "Igual que la 'b' española al inicio de sílaba (no entre vocales). Las cuerdas vocales vibran. Es un sonido natural para hispanohablantes.",
+    spanishTip: "Igual que la 'b' española al inicio de sílaba (no entre vocales). En posición final ('cab' vs 'cap') la pista clave no es vibrar la /b/: es alargar la vocal anterior — la vocal de 'cab' dura más que la de 'cap'.",
     finalConsonantPairs: [
       { wordVoiced: "robe", wordVoiceless: "rope", voicedIpa: "/b/", voicelessIpa: "/p/" },
       { wordVoiced: "cab", wordVoiceless: "cap", voicedIpa: "/b/", voicelessIpa: "/p/" },
@@ -314,7 +301,7 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       { wordA: "tip", wordB: "dip", phonemeA: "/t/", phonemeB: "/d/" },
       { wordA: "town", wordB: "down", phonemeA: "/t/", phonemeB: "/d/" },
     ],
-    spanishTip: "Similar a la 't' española pero la lengua toca la cresta alveolar (no los dientes). Al inicio de palabra lleva aspiración — un pequeño soplo de aire.",
+    spanishTip: "Similar a la 't' española pero la lengua toca la cresta alveolar (no los dientes) y al inicio lleva aspiración. En americano, entre vocales ('water', 'city') se convierte en un golpecito como la 'r' suave de 'cara' — se llama flap y es lo correcto.",
   },
   "/d/": {
     difficulty: "easy",
@@ -329,11 +316,11 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       "Sale menos aire que en /t/",
     ],
     minimalPairs: [
-      { wordA: "dog", wordB: "log", phonemeA: "/d/", phonemeB: "/l/" },
       { wordA: "den", wordB: "ten", phonemeA: "/d/", phonemeB: "/t/" },
-      { wordA: "day", wordB: "say", phonemeA: "/d/", phonemeB: "/s/" },
+      { wordA: "day", wordB: "they", phonemeA: "/d/", phonemeB: "/ð/" },
+      { wordA: "dare", wordB: "there", phonemeA: "/d/", phonemeB: "/ð/" },
     ],
-    spanishTip: "Similar a la 'd' española al inicio de sílaba (no entre vocales). La lengua toca la cresta alveolar, no los dientes. Sonido natural para hispanohablantes.",
+    spanishTip: "Como la 'd' española al inicio de sílaba — pero en inglés sigue siendo oclusiva entre vocales (en español ahí se suaviza a /ð/, y eso en inglés cambia la palabra: 'day' ≠ 'they'). En final ('bad' vs 'bat'), alarga la vocal de 'bad'.",
     finalConsonantPairs: [
       { wordVoiced: "bad", wordVoiceless: "bat", voicedIpa: "/d/", voicelessIpa: "/t/" },
       { wordVoiced: "bid", wordVoiceless: "bit", voicedIpa: "/d/", voicelessIpa: "/t/" },
@@ -354,9 +341,9 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       "Aspirada al inicio de sílabas tónicas",
     ],
     minimalPairs: [
-      { wordA: "cat", wordB: "bat", phonemeA: "/k/", phonemeB: "/b/" },
+      { wordA: "came", wordB: "game", phonemeA: "/k/", phonemeB: "/g/" },
       { wordA: "coat", wordB: "goat", phonemeA: "/k/", phonemeB: "/g/" },
-      { wordA: "cup", wordB: "pup", phonemeA: "/k/", phonemeB: "/p/" },
+      { wordA: "class", wordB: "glass", phonemeA: "/k/", phonemeB: "/g/" },
     ],
     spanishTip: "Igual que la 'c' (antes de a, o, u) o 'qu' en español. En inglés lleva más aspiración al inicio de palabra. Sonido familiar para hispanohablantes.",
   },
@@ -373,16 +360,16 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       "Versión sonora de /k/",
     ],
     minimalPairs: [
-      { wordA: "go", wordB: "no", phonemeA: "/g/", phonemeB: "/n/" },
+      { wordA: "game", wordB: "came", phonemeA: "/g/", phonemeB: "/k/" },
       { wordA: "goat", wordB: "coat", phonemeA: "/g/", phonemeB: "/k/" },
       { wordA: "gold", wordB: "cold", phonemeA: "/g/", phonemeB: "/k/" },
     ],
-    spanishTip: "Igual que la 'g' española al inicio de sílaba (como en 'gato', no como en 'agua'). Sonido natural para hispanohablantes.",
+    spanishTip: "Igual que la 'g' española al inicio de sílaba (como en 'gato', no como en 'agua'). En final ('bag' vs 'back'), la pista es la vocal: más larga antes de /g/.",
     finalConsonantPairs: [
       { wordVoiced: "bag", wordVoiceless: "back", voicedIpa: "/g/", voicelessIpa: "/k/" },
-      { wordVoiced: "big", wordVoiceless: "pick", voicedIpa: "/g/", voicelessIpa: "/k/" },
+      { wordVoiced: "pig", wordVoiceless: "pick", voicedIpa: "/g/", voicelessIpa: "/k/" },
       { wordVoiced: "log", wordVoiceless: "lock", voicedIpa: "/g/", voicelessIpa: "/k/" },
-      { wordVoiced: "rug", wordVoiceless: "ruck", voicedIpa: "/g/", voicelessIpa: "/k/" },
+      { wordVoiced: "dug", wordVoiceless: "duck", voicedIpa: "/g/", voicelessIpa: "/k/" },
     ],
   },
   "/f/": {
@@ -421,7 +408,7 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       { wordA: "vat", wordB: "bat", phonemeA: "/v/", phonemeB: "/b/" },
       { wordA: "vine", wordB: "fine", phonemeA: "/v/", phonemeB: "/f/" },
     ],
-    spanishTip: "No existe en español estándar. El labio inferior toca los dientes superiores y las cuerdas vocales vibran. No confundas con /b/ — los labios no se tocan entre sí.",
+    spanishTip: "No existe en español estándar. El labio inferior toca los dientes superiores y las cuerdas vocales vibran — los labios nunca se tocan entre sí. En final ('save' vs 'safe'), alarga la vocal de 'save'.",
     finalConsonantPairs: [
       { wordVoiced: "leave", wordVoiceless: "leaf", voicedIpa: "/v/", voicelessIpa: "/f/" },
       { wordVoiced: "live", wordVoiceless: "life", voicedIpa: "/v/", voicelessIpa: "/f/" },
@@ -461,11 +448,11 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       "Versión sonora de /θ/ — siente la vibración",
     ],
     minimalPairs: [
-      { wordA: "this", wordB: "thin", phonemeA: "/ð/", phonemeB: "/θ/" },
       { wordA: "then", wordB: "ten", phonemeA: "/ð/", phonemeB: "/t/" },
       { wordA: "those", wordB: "dose", phonemeA: "/ð/", phonemeB: "/d/" },
+      { wordA: "either", wordB: "ether", phonemeA: "/ð/", phonemeB: "/θ/" },
     ],
-    spanishTip: "Como /θ/ pero con vibración de cuerdas vocales. 'This' y 'think' usan el mismo placement de lengua pero /ð/ vibra. Es la 'th' de palabras frecuentes: 'the', 'this', 'that', 'they'.",
+    spanishTip: "Ya lo tienes: es la 'd' suave del español entre vocales ('cada', 'lado'). La diferencia es que en inglés aparece al inicio de palabras frecuentes: 'the', 'this', 'that', 'they' — y ahí los hispanohablantes tienden a endurecerla a /d/.",
   },
   "/s/": {
     difficulty: "easy",
@@ -480,14 +467,14 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       "Labios ligeramente estirados, dientes juntos",
     ],
     minimalPairs: [
-      { wordA: "see", wordB: "zee", phonemeA: "/s/", phonemeB: "/z/" },
+      { wordA: "sue", wordB: "zoo", phonemeA: "/s/", phonemeB: "/z/" },
       { wordA: "sip", wordB: "zip", phonemeA: "/s/", phonemeB: "/z/" },
       { wordA: "seal", wordB: "zeal", phonemeA: "/s/", phonemeB: "/z/" },
     ],
     spanishTip: "Igual que la 's' española. Atención: en inglés la 's' al final de palabras o en plurales a veces suena /z/ (dogs, runs). El sonido aislado es igual al español.",
   },
   "/z/": {
-    difficulty: "medium",
+    difficulty: "hard",
     articulation: [
       "Same position as /s/ — tongue near alveolar ridge",
       "Vocal cords vibrate creating a buzz",
@@ -503,7 +490,7 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       { wordA: "zip", wordB: "sip", phonemeA: "/z/", phonemeB: "/s/" },
       { wordA: "zeal", wordB: "seal", phonemeA: "/z/", phonemeB: "/s/" },
     ],
-    spanishTip: "No existe en español estándar pero es igual a /s/ con vibración. Aparece mucho en inglés en plurales y verbos: 'dogs', 'runs', 'lives'. Pon la mano en el cuello y siente la vibración.",
+    spanishTip: "No existe en español estándar pero es altísimamente frecuente: plurales y verbos ('dogs', 'runs', 'is', 'was'). Pon la mano en el cuello y siente la vibración. En final ('rise' vs 'rice'), alarga la vocal de 'rise'.",
     finalConsonantPairs: [
       { wordVoiced: "buzz", wordVoiceless: "bus", voicedIpa: "/z/", voicelessIpa: "/s/" },
       { wordVoiced: "his", wordVoiceless: "hiss", voicedIpa: "/z/", voicelessIpa: "/s/" },
@@ -526,7 +513,7 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
     minimalPairs: [
       { wordA: "she", wordB: "see", phonemeA: "/ʃ/", phonemeB: "/s/" },
       { wordA: "ship", wordB: "sip", phonemeA: "/ʃ/", phonemeB: "/s/" },
-      { wordA: "shoe", wordB: "zoo", phonemeA: "/ʃ/", phonemeB: "/z/" },
+      { wordA: "shoe", wordB: "sue", phonemeA: "/ʃ/", phonemeB: "/s/" },
     ],
     spanishTip: "Parecido a decir '¡shh!' para pedir silencio. No existe como fonema independiente en español pero el sonido es intuitivo. Es el 'sh' de 'she', 'shop', 'English'.",
   },
@@ -543,11 +530,11 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       "Las cuerdas vocales vibran — versión sonora de /ʃ/",
     ],
     minimalPairs: [
-      { wordA: "vision", wordB: "fission", phonemeA: "/ʒ/", phonemeB: "/ʃ/" },
-      { wordA: "measure", wordB: "mesher", phonemeA: "/ʒ/", phonemeB: "/ʃ/" },
-      { wordA: "genre", wordB: "general", phonemeA: "/ʒ/", phonemeB: "/dʒ/" },
+      { wordA: "glazier", wordB: "glacier", phonemeA: "/ʒ/", phonemeB: "/ʃ/" },
+      { wordA: "version", wordB: "virgin", phonemeA: "/ʒ/", phonemeB: "/dʒ/" },
+      { wordA: "composure", wordB: "composer", phonemeA: "/ʒ/", phonemeB: "/z/" },
     ],
-    spanishTip: "No existe en español estándar. Es como /ʃ/ pero con vibración. Aparece en palabras como 'vision', 'measure', 'pleasure'. En algunos dialectos del español rioplatense, la 'll' y 'y' suenan similar.",
+    spanishTip: "No existe en español estándar. Es como /ʃ/ pero con vibración. Aparece en 'vision', 'measure', 'usual'. En el español rioplatense, la 'll' y la 'y' suenan muy parecido.",
   },
   "/h/": {
     difficulty: "easy",
@@ -564,7 +551,7 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
     minimalPairs: [
       { wordA: "hat", wordB: "at", phonemeA: "/h/", phonemeB: "∅" },
       { wordA: "hit", wordB: "it", phonemeA: "/h/", phonemeB: "∅" },
-      { wordA: "hot", wordB: "got", phonemeA: "/h/", phonemeB: "/g/" },
+      { wordA: "hold", wordB: "old", phonemeA: "/h/", phonemeB: "∅" },
     ],
     spanishTip: "La 'h' en inglés siempre se pronuncia (es un soplo de aire). En español la 'h' es muda. No la confundas con la 'j' española — la /h/ inglesa es mucho más suave, solo aire.",
   },
@@ -581,11 +568,11 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       "Labios ligeramente redondeados y proyectados hacia adelante",
     ],
     minimalPairs: [
-      { wordA: "church", wordB: "shirt", phonemeA: "/tʃ/", phonemeB: "/ʃ/" },
+      { wordA: "chair", wordB: "share", phonemeA: "/tʃ/", phonemeB: "/ʃ/" },
       { wordA: "cheap", wordB: "sheep", phonemeA: "/tʃ/", phonemeB: "/ʃ/" },
       { wordA: "chin", wordB: "gin", phonemeA: "/tʃ/", phonemeB: "/dʒ/" },
     ],
-    spanishTip: "Igual que la 'ch' española de 'mucho', 'chico'. Es el sonido más fácil de las africadas para hispanohablantes — ya lo conoces.",
+    spanishTip: "Igual que la 'ch' española de 'mucho', 'chico'. Lo difícil no es producirlo sino no usarlo de más: 'share' y 'chair' son palabras distintas.",
   },
   "/dʒ/": {
     difficulty: "easy",
@@ -600,11 +587,11 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       "Las cuerdas vocales vibran todo el tiempo",
     ],
     minimalPairs: [
-      { wordA: "judge", wordB: "budge", phonemeA: "/dʒ/", phonemeB: "/b/" },
       { wordA: "gin", wordB: "chin", phonemeA: "/dʒ/", phonemeB: "/tʃ/" },
       { wordA: "jet", wordB: "yet", phonemeA: "/dʒ/", phonemeB: "/j/" },
+      { wordA: "jam", wordB: "yam", phonemeA: "/dʒ/", phonemeB: "/j/" },
     ],
-    spanishTip: "Similar a la 'y' o 'll' del español rioplatense (como en 'yo' o 'lluvia' pronunciadas con más fuerza). También parecida a la 'ch' pero con vibración. Es la 'j' de 'juice', 'job', 'jump'.",
+    spanishTip: "Similar a la 'y' o 'll' del español rioplatense pronunciada con fuerza, o a una 'ch' con vibración. Es la 'j' de 'juice', 'job', 'jump'. No la confundas con /j/ ('yet' ≠ 'jet').",
   },
   "/m/": {
     difficulty: "easy",
@@ -619,9 +606,9 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       "Las cuerdas vocales vibran todo el tiempo",
     ],
     minimalPairs: [
-      { wordA: "man", wordB: "ban", phonemeA: "/m/", phonemeB: "/b/" },
-      { wordA: "meet", wordB: "beat", phonemeA: "/m/", phonemeB: "/b/" },
       { wordA: "mail", wordB: "nail", phonemeA: "/m/", phonemeB: "/n/" },
+      { wordA: "meet", wordB: "neat", phonemeA: "/m/", phonemeB: "/n/" },
+      { wordA: "might", wordB: "night", phonemeA: "/m/", phonemeB: "/n/" },
     ],
     spanishTip: "Idéntico a la 'm' española. Sin diferencias. Uno de los sonidos más fáciles para hispanohablantes.",
   },
@@ -638,9 +625,9 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       "Las cuerdas vocales vibran",
     ],
     minimalPairs: [
-      { wordA: "no", wordB: "go", phonemeA: "/n/", phonemeB: "/g/" },
       { wordA: "night", wordB: "might", phonemeA: "/n/", phonemeB: "/m/" },
-      { wordA: "nail", wordB: "tail", phonemeA: "/n/", phonemeB: "/t/" },
+      { wordA: "sin", wordB: "sing", phonemeA: "/n/", phonemeB: "/ŋ/" },
+      { wordA: "nail", wordB: "mail", phonemeA: "/n/", phonemeB: "/m/" },
     ],
     spanishTip: "Muy similar a la 'n' española. La diferencia es que la lengua toca la cresta alveolar (no los dientes). Prácticamente idéntico al español.",
   },
@@ -658,10 +645,10 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
     ],
     minimalPairs: [
       { wordA: "sing", wordB: "sin", phonemeA: "/ŋ/", phonemeB: "/n/" },
-      { wordA: "ring", wordB: "rin", phonemeA: "/ŋ/", phonemeB: "/n/" },
+      { wordA: "wing", wordB: "win", phonemeA: "/ŋ/", phonemeB: "/n/" },
       { wordA: "bang", wordB: "ban", phonemeA: "/ŋ/", phonemeB: "/n/" },
     ],
-    spanishTip: "Existe en español antes de /k/ o /g/ (como en 'banco', 'tango') pero nunca al final de palabra. En inglés aparece solo al final: 'sing', 'ring', 'going'. Practica terminando palabras con este sonido.",
+    spanishTip: "Existe en español antes de /k/ o /g/ (como en 'banco', 'tango') pero nunca al final de palabra. En inglés aparece solo al final: 'sing', 'ring', 'going'. Practica terminando palabras con este sonido sin añadir una /g/ ni una /k/.",
   },
   "/l/": {
     difficulty: "easy",
@@ -676,7 +663,7 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       "En la 'l oscura' (final de sílaba) la parte trasera sube hacia el velo",
     ],
     minimalPairs: [
-      { wordA: "leg", wordB: "beg", phonemeA: "/l/", phonemeB: "/b/" },
+      { wordA: "light", wordB: "right", phonemeA: "/l/", phonemeB: "/r/" },
       { wordA: "led", wordB: "red", phonemeA: "/l/", phonemeB: "/r/" },
       { wordA: "late", wordB: "rate", phonemeA: "/l/", phonemeB: "/r/" },
     ],
@@ -685,12 +672,12 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
   "/r/": {
     difficulty: "hard",
     articulation: [
-      "Tongue tip curls back slightly or stays behind lower teeth — never touches the palate",
+      "Tongue tip curls back slightly or bunches up — never touches the palate",
       "Sides of tongue may touch upper back teeth",
       "Lips slightly rounded, no trill or tap",
     ],
     articulationEs: [
-      "La punta se curva hacia atrás o queda detrás de los dientes inferiores — nunca toca el paladar",
+      "La punta se curva hacia atrás o la lengua se agrupa — nunca toca el paladar",
       "Los lados de la lengua pueden tocar los molares superiores",
       "Labios ligeramente redondeados, sin vibrar ni golpear",
     ],
@@ -699,7 +686,7 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       { wordA: "rate", wordB: "late", phonemeA: "/r/", phonemeB: "/l/" },
       { wordA: "rain", wordB: "lane", phonemeA: "/r/", phonemeB: "/l/" },
     ],
-    spanishTip: "Nunca se vibra como la 'r' española. La lengua no toca el paladar — flota en el aire. Es más parecida a una vocal que a una consonante. Practica con 'red', 'run', 'right'.",
+    spanishTip: "Nunca se vibra como la 'r' española. La lengua no toca el paladar — flota en el aire, curvada hacia atrás. En americano la R se pronuncia SIEMPRE, también al final: 'car', 'bird', 'her'. Practica con 'red', 'run', 'right'.",
   },
   "/j/": {
     difficulty: "easy",
@@ -714,11 +701,11 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
       "Como el inicio del sonido /iː/",
     ],
     minimalPairs: [
-      { wordA: "yes", wordB: "less", phonemeA: "/j/", phonemeB: "/l/" },
-      { wordA: "yet", wordB: "get", phonemeA: "/j/", phonemeB: "/g/" },
+      { wordA: "yet", wordB: "jet", phonemeA: "/j/", phonemeB: "/dʒ/" },
       { wordA: "yam", wordB: "jam", phonemeA: "/j/", phonemeB: "/dʒ/" },
+      { wordA: "year", wordB: "ear", phonemeA: "/j/", phonemeB: "∅" },
     ],
-    spanishTip: "Igual que la 'y' española en 'yo', 'ya', 'yoga' (sin el yeísmo fuerte). Es el sonido de 'yes', 'yellow', 'you'. Sonido natural para hispanohablantes.",
+    spanishTip: "Como la 'y' española suave de 'yo', 'ya' — sin fricción. El error típico es endurecerla a /dʒ/: 'yet' no es 'jet', 'year' no es 'jier'. Deslízate suave hacia la vocal.",
   },
   "/w/": {
     difficulty: "easy",
@@ -735,19 +722,19 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
     minimalPairs: [
       { wordA: "wet", wordB: "yet", phonemeA: "/w/", phonemeB: "/j/" },
       { wordA: "wine", wordB: "vine", phonemeA: "/w/", phonemeB: "/v/" },
-      { wordA: "west", wordB: "best", phonemeA: "/w/", phonemeB: "/b/" },
+      { wordA: "west", wordB: "vest", phonemeA: "/w/", phonemeB: "/v/" },
     ],
     spanishTip: "Similar al sonido de la 'u' en diptongos españoles como 'fue', 'bueno', 'agua'. Redondea los labios como para decir 'u' y luego deslízate rápidamente a la siguiente vocal.",
   },
   "/eɪ/": {
     difficulty: "medium",
     articulation: [
-      "Start with mouth at mid-front /e/ position",
+      "Start with mouth at mid-front position, like a closed 'e'",
       "Glide smoothly upward and forward to near /ɪ/",
       "The first element is longer and more prominent",
     ],
     articulationEs: [
-      "Empieza con la boca en posición /e/ media-delantera",
+      "Empieza con la boca en posición media-delantera, como una 'e' cerrada",
       "Deslízate suavemente hacia arriba y adelante hasta cerca de /ɪ/",
       "El primer elemento es más largo y prominente",
     ],
@@ -761,17 +748,17 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
   "/aɪ/": {
     difficulty: "medium",
     articulation: [
-      "Start with mouth wide open, like /æ/ or /ɑː/",
+      "Start with mouth wide open, like the Spanish 'a'",
       "Glide up to near-high front /ɪ/",
       "First element is open and long, second is brief",
     ],
     articulationEs: [
-      "Empieza con la boca muy abierta, como en /æ/ o /ɑː/",
+      "Empieza con la boca muy abierta, como la 'a' española",
       "Deslízate hacia arriba hasta /ɪ/ delantera",
       "El primer elemento es abierto y largo, el segundo breve",
     ],
     minimalPairs: [
-      { wordA: "time", wordB: "team", phonemeA: "/aɪ/", phonemeB: "/iː/" },
+      { wordA: "time", wordB: "tame", phonemeA: "/aɪ/", phonemeB: "/eɪ/" },
       { wordA: "light", wordB: "late", phonemeA: "/aɪ/", phonemeB: "/eɪ/" },
       { wordA: "price", wordB: "place", phonemeA: "/aɪ/", phonemeB: "/eɪ/" },
     ],
@@ -780,128 +767,74 @@ export const IPA_EXTRA: Record<string, PhonemeExtra> = {
   "/ɔɪ/": {
     difficulty: "medium",
     articulation: [
-      "Start with lips rounded, like /ɔː/",
+      "Start with lips rounded, like /ɔ/",
       "Glide forward and upward to /ɪ/",
       "The rounded first element is key",
     ],
     articulationEs: [
-      "Empieza con los labios redondeados, como en /ɔː/",
+      "Empieza con los labios redondeados, como en /ɔ/",
       "Deslízate hacia adelante y arriba hasta /ɪ/",
       "El primer elemento redondeado es la clave",
     ],
     minimalPairs: [
       { wordA: "boy", wordB: "bay", phonemeA: "/ɔɪ/", phonemeB: "/eɪ/" },
-      { wordA: "coin", wordB: "cone", phonemeA: "/ɔɪ/", phonemeB: "/əʊ/" },
+      { wordA: "coin", wordB: "cone", phonemeA: "/ɔɪ/", phonemeB: "/oʊ/" },
       { wordA: "oil", wordB: "ale", phonemeA: "/ɔɪ/", phonemeB: "/eɪ/" },
     ],
     spanishTip: "Parecido al diptongo 'oi' en 'hoy' o 'voy' en español. Empieza redondeado y deslízate hacia adelante. Es la vocal de 'boy', 'oil', 'coin'.",
   },
-  "/əʊ/": {
+  "/oʊ/": {
     difficulty: "medium",
     articulation: [
-      "Start with central neutral /ə/ position",
-      "Round and push lips forward to /ʊ/",
-      "First element is relaxed, second is rounded",
+      "Start at mid-back position with rounded lips, like a Spanish 'o'",
+      "Glide toward /ʊ/, rounding the lips a bit more",
+      "Two moments: 'o' then a brief 'u' — never a flat single 'o'",
     ],
     articulationEs: [
-      "Empieza en posición central neutra /ə/",
-      "Redondea y proyecta los labios hacia /ʊ/",
-      "El primer elemento es relajado, el segundo redondeado",
+      "Empieza en posición media-trasera con labios redondeados, como una 'o' española",
+      "Deslízate hacia /ʊ/, redondeando un poco más los labios",
+      "Dos momentos: 'o' y una 'u' breve — nunca una 'o' plana",
     ],
     minimalPairs: [
-      { wordA: "go", wordB: "guy", phonemeA: "/əʊ/", phonemeB: "/aɪ/" },
-      { wordA: "low", wordB: "law", phonemeA: "/əʊ/", phonemeB: "/ɔː/" },
-      { wordA: "coat", wordB: "caught", phonemeA: "/əʊ/", phonemeB: "/ɔː/" },
+      { wordA: "low", wordB: "law", phonemeA: "/oʊ/", phonemeB: "/ɔ/" },
+      { wordA: "coat", wordB: "caught", phonemeA: "/oʊ/", phonemeB: "/ɔ/" },
+      { wordA: "no", wordB: "now", phonemeA: "/oʊ/", phonemeB: "/aʊ/" },
     ],
-    spanishTip: "No es igual a la 'o' española — es un diptongo. Empieza relajado (schwa) y redondea los labios hacia /u/. En inglés británico es /əʊ/, en americano más como /oʊ/. Es la vocal de 'go', 'home', 'no'.",
+    spanishTip: "No es la 'o' española pura — es un diptongo: 'go' suena 'gou', 'no' suena 'nou'. Si dices una 'o' corta y plana se nota el acento. Es la vocal de 'go', 'home', 'boat'.",
   },
   "/aʊ/": {
     difficulty: "medium",
     articulation: [
-      "Start with mouth wide open, like /æ/ or /ɑː/",
+      "Start with mouth wide open, like the Spanish 'a'",
       "Round the lips and glide back to /ʊ/",
       "Strong movement from front open to back rounded",
     ],
     articulationEs: [
-      "Empieza con la boca muy abierta, como en /æ/ o /ɑː/",
+      "Empieza con la boca muy abierta, como la 'a' española",
       "Redondea los labios y deslízate hacia /ʊ/",
       "Movimiento fuerte: de delantera abierta a trasera redondeada",
     ],
     minimalPairs: [
-      { wordA: "now", wordB: "no", phonemeA: "/aʊ/", phonemeB: "/əʊ/" },
+      { wordA: "now", wordB: "no", phonemeA: "/aʊ/", phonemeB: "/oʊ/" },
       { wordA: "down", wordB: "done", phonemeA: "/aʊ/", phonemeB: "/ʌ/" },
-      { wordA: "out", wordB: "ought", phonemeA: "/aʊ/", phonemeB: "/ɔː/" },
+      { wordA: "out", wordB: "oat", phonemeA: "/aʊ/", phonemeB: "/oʊ/" },
     ],
     spanishTip: "Parecido al diptongo 'au' en 'auto' o 'causa' en español. Empieza abierto y redondea hacia /u/. Es la vocal de 'now', 'out', 'how', 'town'.",
   },
-  "/ɪə/": {
-    difficulty: "medium",
-    articulation: [
-      "Start near /ɪ/ — tongue high front, relaxed",
-      "Glide toward the central schwa /ə/",
-      "Centering diphthong — moves toward center",
-    ],
-    articulationEs: [
-      "Empieza cerca de /ɪ/ — lengua alta delantera, relajada",
-      "Deslízate hacia el schwa central /ə/",
-      "Diptongo centralizante — se mueve hacia el centro",
-    ],
-    minimalPairs: [
-      { wordA: "here", wordB: "hair", phonemeA: "/ɪə/", phonemeB: "/eə/" },
-      { wordA: "fear", wordB: "fair", phonemeA: "/ɪə/", phonemeB: "/eə/" },
-      { wordA: "ear", wordB: "air", phonemeA: "/ɪə/", phonemeB: "/eə/" },
-    ],
-    spanishTip: "No existe en español. Empieza en /ɪ/ (como una 'i' relajada) y desliza hacia el schwa. Es el sonido de 'here', 'near', 'ear', 'fear'.",
-  },
-  "/eə/": {
-    difficulty: "medium",
-    articulation: [
-      "Start at mid-front /e/ position",
-      "Glide toward the central schwa /ə/",
-      "Centering diphthong — moves toward center of mouth",
-    ],
-    articulationEs: [
-      "Empieza en posición /e/ media-delantera",
-      "Deslízate hacia el schwa central /ə/",
-      "Diptongo centralizante — se mueve hacia el centro de la boca",
-    ],
-    minimalPairs: [
-      { wordA: "there", wordB: "here", phonemeA: "/eə/", phonemeB: "/ɪə/" },
-      { wordA: "fair", wordB: "fear", phonemeA: "/eə/", phonemeB: "/ɪə/" },
-      { wordA: "hair", wordB: "here", phonemeA: "/eə/", phonemeB: "/ɪə/" },
-    ],
-    spanishTip: "No existe en español. Empieza en /e/ y desliza hacia el schwa. Es el sonido de 'there', 'hair', 'care', 'fair'. Muchos lo pronuncian como vocal simple /ɛː/ en inglés moderno.",
-  },
-  "/ʊə/": {
-    difficulty: "medium",
-    articulation: [
-      "Start near /ʊ/ — lips loosely rounded",
-      "Glide toward the central schwa /ə/",
-      "Becoming rare in modern British English — often replaced by /ɔː/",
-    ],
-    articulationEs: [
-      "Empieza cerca de /ʊ/ — labios ligeramente redondeados",
-      "Deslízate hacia el schwa central /ə/",
-      "Cada vez más raro en inglés británico moderno — suele reemplazarse por /ɔː/",
-    ],
-    minimalPairs: [
-      { wordA: "tour", wordB: "tor", phonemeA: "/ʊə/", phonemeB: "/ɔː/" },
-      { wordA: "pure", wordB: "pore", phonemeA: "/ʊə/", phonemeB: "/ɔː/" },
-      { wordA: "sure", wordB: "shore", phonemeA: "/ʊə/", phonemeB: "/ɔː/" },
-    ],
-    spanishTip: "No existe en español. Empieza redondeado (/u/ relajada) y desliza hacia el schwa. Es el sonido de 'tour', 'pure', 'sure'. En inglés moderno muchos hablantes lo sustituyen por /ɔː/.",
-  },
 };
 
+// Contrastes con mayor interferencia L1 + carga funcional para hispanohablantes.
+// /z/ incluido por frecuencia (plurales, is/was); /ɔ/ por el contraste law/low.
 export const HARD_FOR_SPANISH_SPEAKERS = [
   "/æ/",
   "/ʌ/",
-  "/ɜː/",
-  "/ɔː/",
+  "/ɜr/",
+  "/ɔ/",
   "/ɪ/",
   "/ð/",
   "/θ/",
   "/v/",
+  "/z/",
   "/ʒ/",
   "/r/",
 ];

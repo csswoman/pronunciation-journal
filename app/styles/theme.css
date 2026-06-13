@@ -170,6 +170,9 @@
   --text-display-ipa: 2.5rem;
   --text-display-ipa--line-height: 1;
 
+  --text-ipa-hero: 5.5rem;
+  --text-ipa-hero--line-height: 1;
+
   /* ── Shadows — shadow-sm…shadow-xl ─────────────────────────────────────── */
   --shadow-sm: 0 1px 2px   oklch(0 0 0 / 0.05);
   --shadow-md: 0 4px 6px   oklch(0 0 0 / 0.07);

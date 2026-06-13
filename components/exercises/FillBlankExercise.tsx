@@ -8,6 +8,7 @@
 //   <FeedbackBar />      — correct/wrong after selection
 
 import { useState, useRef, useEffect } from 'react'
+import { HelpCircle } from 'lucide-react'
 import { cn } from '@/lib/cn'
 import type { FillBlankExercise as FillBlankExerciseType } from '@/lib/exercises/types'
 
@@ -21,11 +22,13 @@ type AnswerState = 'idle' | 'correct' | 'wrong'
 export function FillBlankExercise({ exercise, onSubmit }: Props) {
   const [selected, setSelected] = useState<string | null>(null)
   const [state, setState]       = useState<AnswerState>('idle')
+  const [hintLevel, setHintLevel] = useState(0)
   const startMs = useRef(Date.now())
 
   useEffect(() => {
     setSelected(null)
     setState('idle')
+    setHintLevel(0)
     startMs.current = Date.now()
   }, [exercise.id])
 
@@ -37,12 +40,34 @@ export function FillBlankExercise({ exercise, onSubmit }: Props) {
     onSubmit(isCorrect, option, Date.now() - startMs.current)
   }
 
+  function handleHint() {
+    if (!exercise.hints) return
+    const maxLevel = exercise.hints.level3 ? 3 : 2
+    setHintLevel((l) => Math.min(l + 1, maxLevel))
+  }
+
   const parts = exercise.sentence.split('___')
+  const currentHint = exercise.hints
+    ? hintLevel === 1 ? exercise.hints.level1
+      : hintLevel === 2 ? exercise.hints.level2
+      : hintLevel === 3 ? exercise.hints.level3
+      : null
+    : (exercise.hint ?? null)
 
   return (
     <div className="flex w-full flex-col gap-5">
       <SentencePrompt parts={parts} />
-      {exercise.hint && <HintLine hint={exercise.hint} />}
+      {currentHint && <HintLine hint={currentHint} />}
+      {exercise.hints && state === 'idle' && hintLevel < (exercise.hints.level3 ? 3 : 2) && (
+        <button
+          type="button"
+          onClick={handleHint}
+          className="self-center inline-flex items-center gap-1.5 text-xs text-[var(--text-tertiary)] hover:text-[var(--text-secondary)] cursor-pointer bg-transparent border-none [font-family:inherit]"
+        >
+          <HelpCircle size={13} aria-hidden />
+          {hintLevel === 0 ? 'Need a hint?' : 'Another hint?'}
+        </button>
+      )}
       <OptionGrid
         options={exercise.options}
         answer={exercise.answer}

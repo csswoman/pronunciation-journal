@@ -3,7 +3,6 @@
 import { useEffect, useRef } from "react";
 import { RotateCcw, TrendingUp, AlertCircle, CheckCircle2 } from "lucide-react";
 import Button from "@/components/ui/Button";
-import confetti from "canvas-confetti";
 import type { ScoringResult } from "@/lib/types";
 import type { InterviewTurn } from "./InterviewSession";
 import { AccuracyRing } from "./AccuracyRing";
@@ -64,24 +63,26 @@ export function InterviewResults({ title, turns, results, difficulty, level, onR
     // These match --primary-500 (hue 250), --success, --warning, --info, --error from tokens.css.
     const colors = ["#7c6ff5", "#56b87a", "#c9a436", "#5b8fd4", "#d95f3b"];
 
-    const frame = () => {
-      confetti({
-        particleCount: 3,
-        angle: 60,
-        spread: 55,
-        origin: { x: 0 },
-        colors,
-      });
-      confetti({
-        particleCount: 3,
-        angle: 120,
-        spread: 55,
-        origin: { x: 1 },
-        colors,
-      });
-      if (Date.now() < end) requestAnimationFrame(frame);
-    };
-    frame();
+    void import("canvas-confetti").then(({ default: confetti }) => {
+      const frame = () => {
+        confetti({
+          particleCount: 3,
+          angle: 60,
+          spread: 55,
+          origin: { x: 0 },
+          colors,
+        });
+        confetti({
+          particleCount: 3,
+          angle: 120,
+          spread: 55,
+          origin: { x: 1 },
+          colors,
+        });
+        if (Date.now() < end) requestAnimationFrame(frame);
+      };
+      frame();
+    });
   }, [totalAccuracy]);
 
   const grade =

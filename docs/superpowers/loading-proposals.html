@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Loading Session — Propuestas</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;1,9..144,400&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --hue: 250;
+    --primary: oklch(0.65 0.15 250);
+    --primary-soft: oklch(0.93 0.04 250);
+    --surface-base: oklch(0.93 0.012 250);
+    --surface-raised: oklch(0.99 0.003 250);
+    --fg-primary: oklch(0.18 0.008 250);
+    --fg-secondary: oklch(0.46 0.006 250);
+    --fg-tertiary: oklch(0.62 0.004 250);
+    --success: oklch(0.70 0.16 145);
+    --warning: oklch(0.74 0.14 55);
+  }
+
+  body {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    background: var(--surface-base);
+    color: var(--fg-primary);
+    padding: 2rem;
+    min-height: 100vh;
+  }
+
+  h1 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--fg-primary);
+    margin-bottom: 0.25rem;
+  }
+
+  .subtitle {
+    font-size: 0.875rem;
+    color: var(--fg-secondary);
+    margin-bottom: 2.5rem;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .card {
+    background: var(--surface-raised);
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid oklch(0.875 0 0);
+  }
+
+  .card-label {
+    padding: 1rem 1.25rem 0.75rem;
+    border-bottom: 1px solid oklch(0.925 0 0);
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+  }
+
+  .card-label strong {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--fg-primary);
+  }
+
+  .card-label span {
+    font-size: 0.75rem;
+    color: var(--fg-tertiary);
+  }
+
+  .preview {
+    height: 280px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card-desc {
+    padding: 0.75rem 1.25rem 1rem;
+    font-size: 0.75rem;
+    color: var(--fg-secondary);
+    border-top: 1px solid oklch(0.925 0 0);
+    line-height: 1.5;
+  }
+
+  /* ─── Propuesta A: Pulso de fonema ─── */
+  .preview-a { background: var(--surface-base); }
+
+  .phoneme-pulse {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.25rem;
+  }
+
+  .phoneme-symbol {
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: var(--fg-primary);
+    line-height: 1;
+    position: relative;
+    animation: symbolBreath 2.4s ease-in-out infinite;
+  }
+
+  @keyframes symbolBreath {
+    0%, 100% { opacity: 0.15; transform: scale(0.92); }
+    50%       { opacity: 1;    transform: scale(1);    }
+  }
+
+  .ripple-ring {
+    position: absolute;
+    inset: -14px;
+    border-radius: 50%;
+    border: 1.5px solid var(--primary);
+    animation: rippleOut 2.4s ease-out infinite;
+  }
+
+  .ripple-ring:nth-child(2) { animation-delay: 0.8s; }
+  .ripple-ring:nth-child(3) { animation-delay: 1.6s; }
+
+  @keyframes rippleOut {
+    0%   { transform: scale(0.6); opacity: 0.6; }
+    100% { transform: scale(1.8); opacity: 0;   }
+  }
+
+  .phoneme-symbol-wrap {
+    position: relative;
+    width: 72px;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .loading-label-a {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--fg-secondary);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    animation: fadeInOut 2.4s ease-in-out infinite;
+  }
+
+  @keyframes fadeInOut {
+    0%, 100% { opacity: 0.4; }
+    50%       { opacity: 1;   }
+  }
+
+  /* ─── Propuesta B: Barra de sonido ─── */
+  .preview-b { background: var(--surface-base); }
+
+  .waveform-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .waveform {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    height: 40px;
+  }
+
+  .bar {
+    width: 4px;
+    border-radius: 2px;
+    background: var(--primary);
+    transform-origin: center bottom;
+    animation: barDance 1.2s ease-in-out infinite;
+  }
+
+  .bar:nth-child(1)  { height: 12px; animation-delay: 0s;     opacity: 0.35; }
+  .bar:nth-child(2)  { height: 20px; animation-delay: 0.1s;   opacity: 0.5;  }
+  .bar:nth-child(3)  { height: 32px; animation-delay: 0.2s;   opacity: 0.7;  }
+  .bar:nth-child(4)  { height: 40px; animation-delay: 0.3s;   opacity: 1;    }
+  .bar:nth-child(5)  { height: 28px; animation-delay: 0.4s;   opacity: 0.8;  }
+  .bar:nth-child(6)  { height: 36px; animation-delay: 0.5s;   opacity: 0.9;  }
+  .bar:nth-child(7)  { height: 20px; animation-delay: 0.6s;   opacity: 0.6;  }
+  .bar:nth-child(8)  { height: 14px; animation-delay: 0.7s;   opacity: 0.4;  }
+  .bar:nth-child(9)  { height: 24px; animation-delay: 0.8s;   opacity: 0.65; }
+  .bar:nth-child(10) { height: 10px; animation-delay: 0.9s;   opacity: 0.3;  }
+
+  @keyframes barDance {
+    0%, 100% { transform: scaleY(0.3); }
+    50%       { transform: scaleY(1);   }
+  }
+
+  .loading-label-b {
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: var(--fg-secondary);
+  }
+
+  .dots-b {
+    display: inline-flex;
+    gap: 3px;
+  }
+
+  .dot-b {
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: var(--fg-tertiary);
+    animation: dotPulse 1.4s ease-in-out infinite;
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 1px;
+  }
+
+  .dot-b:nth-child(1) { animation-delay: 0s;    }
+  .dot-b:nth-child(2) { animation-delay: 0.2s;  }
+  .dot-b:nth-child(3) { animation-delay: 0.4s;  }
+
+  @keyframes dotPulse {
+    0%, 80%, 100% { opacity: 0.2; transform: scale(0.8); }
+    40%           { opacity: 1;   transform: scale(1);    }
+  }
+
+  /* ─── Propuesta C: Revelación de palabras ─── */
+  .preview-c { background: var(--surface-base); }
+
+  .word-reveal-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.25rem;
+    width: 220px;
+  }
+
+  .word-track {
+    height: 2.5rem;
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .word-slot {
+    font-family: 'DM Mono', monospace;
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: var(--fg-primary);
+    position: absolute;
+    letter-spacing: 0.08em;
+    animation: wordCycle 6s ease-in-out infinite;
+  }
+
+  .word-slot:nth-child(1) { animation-delay: 0s;   }
+  .word-slot:nth-child(2) { animation-delay: 2s;   }
+  .word-slot:nth-child(3) { animation-delay: 4s;   }
+
+  @keyframes wordCycle {
+    0%          { opacity: 0; transform: translateY(8px);  }
+    8%, 28%     { opacity: 1; transform: translateY(0);    }
+    36%, 100%   { opacity: 0; transform: translateY(-8px); }
+  }
+
+  .ipa-slot {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.875rem;
+    color: var(--fg-tertiary);
+    position: absolute;
+    animation: wordCycle 6s ease-in-out infinite;
+  }
+
+  .ipa-slot:nth-child(1) { animation-delay: 0s;   }
+  .ipa-slot:nth-child(2) { animation-delay: 2s;   }
+  .ipa-slot:nth-child(3) { animation-delay: 4s;   }
+
+  .ipa-track {
+    height: 1.5rem;
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: -0.5rem;
+  }
+
+  .progress-strip {
+    width: 100%;
+    height: 2px;
+    background: oklch(0.875 0 0);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-top: 0.25rem;
+  }
+
+  .progress-fill-c {
+    height: 100%;
+    background: var(--primary);
+    border-radius: 2px;
+    animation: progressIndeterminate 2s ease-in-out infinite;
+    width: 40%;
+  }
+
+  @keyframes progressIndeterminate {
+    0%   { transform: translateX(-100%); }
+    100% { transform: translateX(350%);  }
+  }
+
+  .loading-label-c {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--fg-tertiary);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-top: 0.25rem;
+  }
+</style>
+</head>
+<body>
+
+<h1>Loading session</h1>
+<p class="subtitle">3 propuestas de animación — selecciona la que mejor encaja con el tono del app</p>
+
+<div class="grid">
+
+  <!-- Propuesta A -->
+  <div class="card">
+    <div class="card-label">
+      <strong>A — Pulso de fonema</strong>
+      <span>Meditativa · centrada en el símbolo</span>
+    </div>
+    <div class="preview preview-a">
+      <div class="phoneme-pulse">
+        <div class="phoneme-symbol-wrap">
+          <div class="ripple-ring"></div>
+          <div class="ripple-ring"></div>
+          <div class="ripple-ring"></div>
+          <div class="phoneme-symbol">ə</div>
+        </div>
+        <span class="loading-label-a">Cargando sesión</span>
+      </div>
+    </div>
+    <div class="card-desc">
+      Un símbolo IPA respira (fade + escala) con anillos de onda que se expanden. Refuerza que la app trata de sonidos. Simple, elegante, sin ruido visual.
+    </div>
+  </div>
+
+  <!-- Propuesta B -->
+  <div class="card">
+    <div class="card-label">
+      <strong>B — Barra de sonido</strong>
+      <span>Activa · evoca audio en vivo</span>
+    </div>
+    <div class="preview preview-b">
+      <div class="waveform-container">
+        <div class="waveform">
+          <div class="bar"></div>
+          <div class="bar"></div>
+          <div class="bar"></div>
+          <div class="bar"></div>
+          <div class="bar"></div>
+          <div class="bar"></div>
+          <div class="bar"></div>
+          <div class="bar"></div>
+          <div class="bar"></div>
+          <div class="bar"></div>
+        </div>
+        <span class="loading-label-b">Cargando sesión<span class="dots-b"><span class="dot-b"></span><span class="dot-b"></span><span class="dot-b"></span></span></span>
+      </div>
+    </div>
+    <div class="card-desc">
+      Barras de audio que bailan con timing escalonado, evocando el visualizador de un micrófono. Da sensación de que algo está pasando, sin ser un spinner genérico.
+    </div>
+  </div>
+
+  <!-- Propuesta C -->
+  <div class="card">
+    <div class="card-label">
+      <strong>C — Desfile de palabras</strong>
+      <span>Informativa · cálida · narrativa</span>
+    </div>
+    <div class="preview preview-c">
+      <div class="word-reveal-container">
+        <div class="word-track">
+          <span class="word-slot">thought</span>
+          <span class="word-slot">though</span>
+          <span class="word-slot">through</span>
+        </div>
+        <div class="ipa-track">
+          <span class="ipa-slot">/θɔːt/</span>
+          <span class="ipa-slot">/ðoʊ/</span>
+          <span class="ipa-slot">/θruː/</span>
+        </div>
+        <div class="progress-strip">
+          <div class="progress-fill-c"></div>
+        </div>
+        <span class="loading-label-c">Preparando tu sesión</span>
+      </div>
+    </div>
+    <div class="card-desc">
+      Palabras con su transcripción IPA se revelan en ciclo mientras carga. El tiempo de espera se convierte en un momento educativo leve. Barra de progreso indeterminada.
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

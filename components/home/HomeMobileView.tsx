@@ -105,25 +105,7 @@ export default function HomeMobileView({
         <HomeHeaderGreeting userName={userName} dateLabel={dateLabel} />
       </div>
 
-      <section>
-        <p className="mb-3 text-label font-medium uppercase tracking-widest text-[var(--text-tertiary)]">
-          Quick access
-        </p>
-        <div className="flex flex-col gap-2">
-          <div className="animate-home-in animate-home-in-d1">
-            <PrimaryActionTile title="Practice sounds" href="/practice/sounds" Icon={MicVocal} accent />
-          </div>
-          <div className="animate-home-in animate-home-in-d2">
-            <PrimaryActionTile title="Continue course" href="/courses" Icon={BookOpen} />
-          </div>
-        </div>
-        <div className="animate-home-in animate-home-in-d3 mt-2 grid grid-cols-4 gap-2">
-          <SecondaryActionTile title="Decks" href="/words?tab=decks" Icon={Layers} />
-          <SecondaryActionTile title="Progress" href="/progress" Icon={BarChart2} />
-          <SecondaryActionTile title="IPA Chart" href="/ipa-chart" Icon={Grid2x2} />
-          <SecondaryActionTile title="Lessons" href="/mini-lessons" Icon={GraduationCap} />
-        </div>
-      </section>
+      <HomeDailyCard conceptLesson={conceptLesson} />
 
       {(streak?.currentStreak ?? 0) > 0 && (
         <div className="animate-home-in flex items-center gap-2">
@@ -166,7 +148,25 @@ export default function HomeMobileView({
         </Link>
       )}
 
-      <HomeDailyCard conceptLesson={conceptLesson} />
+      <section>
+        <p className="mb-3 text-label font-medium uppercase tracking-widest text-[var(--text-tertiary)]">
+          Quick access
+        </p>
+        <div className="flex flex-col gap-2">
+          <div className="animate-home-in animate-home-in-d1">
+            <PrimaryActionTile title="Practice sounds" href="/practice/sounds" Icon={MicVocal} accent />
+          </div>
+          <div className="animate-home-in animate-home-in-d2">
+            <PrimaryActionTile title="Continue course" href="/courses" Icon={BookOpen} />
+          </div>
+        </div>
+        <div className="animate-home-in animate-home-in-d3 mt-2 grid grid-cols-4 gap-2">
+          <SecondaryActionTile title="Decks" href="/practice/decks" Icon={Layers} />
+          <SecondaryActionTile title="Progress" href="/progress" Icon={BarChart2} />
+          <SecondaryActionTile title="IPA Chart" href="/ipa-chart" Icon={Grid2x2} />
+          <SecondaryActionTile title="Lessons" href="/mini-lessons" Icon={GraduationCap} />
+        </div>
+      </section>
     </div>
   );
 }

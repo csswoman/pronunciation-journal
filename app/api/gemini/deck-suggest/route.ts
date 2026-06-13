@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { requireUser, rateLimit, validateBody } from "@/lib/api/guards";
 import { createSupabaseServerClient as createClient } from "@/lib/supabase/server";
+import { DECK_SUGGEST_SYSTEM_PROMPT } from "@/lib/ai-prompts";
 
 // ---------------------------------------------------------------------------
 // Request schema
@@ -15,15 +16,6 @@ const DeckSuggestSchema = z.object({
   seed: z.string().max(100).optional(),
   existingWords: z.array(z.string().max(100)).max(200).optional(),
 });
-
-// ---------------------------------------------------------------------------
-// Server-defined system prompt — not configurable by client
-// ---------------------------------------------------------------------------
-
-const SYSTEM_PROMPT = `You are an English vocabulary coach. When given a deck name and optional description, suggest 8 relevant English words or short phrases that fit the theme. Return ONLY valid JSON with no markdown, no code fences, no extra text — just raw JSON.
-
-Format:
-{"suggestions":[{"word":"example","meaning":"brief definition or usage context"}]}`;
 
 // ---------------------------------------------------------------------------
 // Model configuration
@@ -113,7 +105,7 @@ async function generateSuggestions(ai: GoogleGenAI, prompt: string): Promise<str
         model: modelName,
         contents: prompt,
         config: {
-          systemInstruction: SYSTEM_PROMPT,
+          systemInstruction: DECK_SUGGEST_SYSTEM_PROMPT,
           responseMimeType: "application/json",
         },
       });

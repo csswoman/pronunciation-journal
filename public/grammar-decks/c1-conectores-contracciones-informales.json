@@ -93,7 +93,7 @@
           "type": "pairs",
           "lines": [
             { "variant": "bad", "text": "What did you do? (lento)" },
-            { "variant": "good", "text": "Whatcha do? → /wɒtʃə/", "note": "what did you se funde" },
+            { "variant": "good", "text": "Whatcha do? → /wɑtʃə/", "note": "what did you se funde" },
             { "variant": "bad", "text": "Did you eat?" },
             { "variant": "good", "text": "Jeat yet? → /dʒiːt/", "note": "did you eat se reduce" }
           ]
