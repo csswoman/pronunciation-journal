@@ -130,29 +130,37 @@ When the user taps X (close session), instead of exiting immediately, show a bot
 
 ```
 ┌─────────────────────────────────┐
-│  ¿Abandonar la sesión?          │
-│  Perderás tu progreso actual.   │
+│  Quit this session?             │
+│  You'll lose your current       │
+│  progress.                      │
 │                                 │
-│  [──── Salir de la sesión ────] │  ← destructive (red/error token)
-│  [──── Seguir practicando ────] │  ← neutral surface
+│  [──── End session ────]        │  ← destructive (error token)
+│  [──── Keep practicing ────]    │  ← neutral surface
 └─────────────────────────────────┘
 ```
 
 New component: `components/exercises/ExitConfirmSheet.tsx`  
-Triggered from `SessionExercisingBody` (or its parent) when X is pressed.  
-Uses the existing modal/sheet pattern in the codebase if one exists; otherwise a fixed bottom overlay with backdrop.
+Triggered from **all session types** — both generic (vocabulary) and focusUi (phoneme) modes.  
+Uses a fixed bottom overlay with backdrop; no existing sheet primitive assumed.
 
-**Scope note:** The exit handler (`onExit`) originates in `PracticeSession` and flows down through `SessionExercisingBody`. The X button that triggers it lives in `PhonemeFocusShell` (focusUi) or in the plain layout header. The confirmation sheet is rendered inside `SessionExercisingBody` — it intercepts the X tap locally before calling the real `onExit` prop.
+**Language rule:** All UI chrome (titles, buttons, labels, hints, feedback) is in English. Exercise *content* (example sentences, word meanings, translations) remains as authored in the data.
+
+**Scope note:** The exit handler (`onExit`) originates in `PracticeSession` and flows down through `SessionExercisingBody`. The X button that triggers it lives in `PhonemeFocusShell` (focusUi) or in the plain layout header. The confirmation sheet is rendered inside `SessionExercisingBody` — it intercepts the X tap locally before calling the real `onExit` prop. This covers both `focusUi` and plain layout paths.
 
 ---
 
 ## What does NOT change
 
-- `PhonemeFocusShell` and all phoneme exercise components.
-- `SessionExercisingBody` layout and phase state machine (exercising → feedback → hints → complete).
+- `PhonemeFocusShell` internal layout and all phoneme exercise components.
+- `SessionExercisingBody` phase state machine (exercising → feedback → hints → complete).
 - The parent `onSubmit(isCorrect, userAnswer)` signature — `ExerciseRenderer` still calls it, just delayed until Continue.
-- `focusUi` path in `ExerciseRenderer`.
+- `focusUi` path in `ExerciseRenderer` (phoneme exercises bypass `ExerciseShell`).
 - SRS scoring logic — timing and correctness flow through unchanged.
+
+## Language decisions
+
+- All UI chrome (eyebrow titles, button labels, hint labels, feedback messages, sheet copy) → **English**.
+- Exercise content (example sentences, word meanings, translations in data) → as authored, unchanged.
 
 ---
 
