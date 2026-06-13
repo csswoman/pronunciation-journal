@@ -80,7 +80,7 @@ export default async function HomePage() {
 
       {/* Desktop/tablet view */}
       <div className="hidden md:block">
-        <HomeStatusHero streak={dailyStreak} />
+        <HomeStatusHero streak={dailyStreak} wordsDueCount={dueCount} soundsDueCount={soundsDue.length} />
         <HomeTodaySection
           streak={dailyStreak}
           dailyGoal={dailyGoal}

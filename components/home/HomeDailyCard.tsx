@@ -57,7 +57,7 @@ export default function HomeDailyCard({ conceptLesson }: HomeDailyCardProps) {
   // Embedded checklist (single view)
   return (
     <section>
-      <div className="flex flex-col sm:bg-daily-card sm:rounded-[var(--radius-xl)] sm:border sm:border-border-subtle sm:px-6 sm:pb-6 sm:pt-5 sm:border-l-2 sm:border-l-[var(--primary)]">
+      <div className="flex flex-col bg-daily-card rounded-[var(--radius-xl)] border border-border-subtle px-6 pb-6 pt-5">
         {/* aria-live region announces plan-ready state to screen readers */}
         <div aria-live="polite" aria-atomic="true" className="sr-only">
         {status === 'ready' && !allDone && `Today's plan ready, ${steps.length} steps`}
@@ -125,7 +125,7 @@ export default function HomeDailyCard({ conceptLesson }: HomeDailyCardProps) {
           <div className="animate-state-in">
             <div className="mb-4 flex items-center gap-3">
               <Badge label="Today's plan" variant="default" className="shrink-0" />
-              <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-surface-sunken">
+              <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-[var(--primary-soft)]">
                 <div
                   className="progress-fill progress-fill-mount h-full w-full rounded-full bg-[var(--primary)]"
                   style={{ transform: `scaleX(${steps.length ? completedCount / steps.length : 0})` }}

@@ -29,8 +29,7 @@ export function PhonemeFocusShell({
 }: Props) {
   return (
     <div className="phoneme-focus">
-      <div className="phoneme-focus__wrap">
-        <div className="phoneme-focus__phone">
+      <div className="phoneme-focus__phone">
           <div className="phoneme-focus__topbar">
             <button
               type="button"
@@ -97,7 +96,6 @@ export function PhonemeFocusShell({
 
           {footer}
         </div>
-      </div>
     </div>
   )
 }

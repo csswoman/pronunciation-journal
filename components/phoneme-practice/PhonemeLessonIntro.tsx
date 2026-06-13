@@ -38,12 +38,12 @@ export function PhonemeLessonIntro({ ipa, onStart }: Props) {
 function IntroStage({ bare, ipa }: { bare: string; ipa: string }) {
   return (
     <div className="relative flex flex-col items-center gap-3 overflow-hidden bg-primary-soft px-6 pb-7 pt-8">
-      {/* gradiente radial para dar profundidad */}
+      {/* gradiente radial usando tokens para que funcione en dark mode */}
       <div
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            'radial-gradient(ellipse 80% 60% at 50% 30%, oklch(0.88 0.08 var(--hue, 250)) 0%, oklch(0.93 0.04 var(--hue, 250)) 100%)',
+            'radial-gradient(ellipse 80% 60% at 50% 30%, color-mix(in oklch, var(--primary) 20%, var(--primary-soft)) 0%, var(--primary-soft) 100%)',
         }}
         aria-hidden
       />
