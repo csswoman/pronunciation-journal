@@ -14,6 +14,7 @@
 }
 
 .phoneme-focus__phone {
+  width: min(480px, calc(100vw - 2rem));
   background: var(--surface-raised);
   border: 1px solid var(--border-subtle);
   border-radius: 28px;
