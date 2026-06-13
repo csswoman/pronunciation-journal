@@ -154,7 +154,7 @@ function DeckGrid({ decks }: { decks: DeckSummary[] }) {
 function DeckCard({ deck }: { deck: DeckSummary }) {
   return (
     <Link
-      href={`/courses/lesson/${deck.slug}`}
+      href={`/practice/decks/${deck.slug}`}
       className="group flex flex-col gap-3 rounded-[var(--radius-xl)] border border-[var(--border-subtle)] bg-[var(--surface-raised)] p-4 transition-colors hover:border-[var(--border-hover)] hover:bg-[var(--surface-sunken)] focus-ring"
     >
       <div className="flex items-start justify-between gap-2">
