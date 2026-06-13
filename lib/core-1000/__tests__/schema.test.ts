@@ -28,7 +28,7 @@ describe("CoreWordSchema", () => {
 
   it("rejects rank out of range", () => {
     expect(CoreWordSchema.safeParse({ ...base, rank: 0 }).success).toBe(false);
-    expect(CoreWordSchema.safeParse({ ...base, rank: 1001 }).success).toBe(false);
+    expect(CoreWordSchema.safeParse({ ...base, rank: 2801 }).success).toBe(false);
   });
 
   it("rejects unknown pos and cefr", () => {

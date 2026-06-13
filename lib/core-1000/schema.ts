@@ -6,7 +6,7 @@ import { CORE_POS } from "./types";
 
 export const CoreWordSchema = z
   .object({
-    rank: z.number().int().min(1).max(1000),
+    rank: z.number().int().min(1).max(2800),
     word: z.string().min(1),
     pos: z.enum(CORE_POS),
     ipa_strong: z.string().regex(/^\/.+\/$/, "IPA entre slashes, p.ej. /tuː/"),
