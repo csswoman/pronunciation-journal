@@ -16,6 +16,7 @@ import { ExerciseHints } from '@/components/phoneme-practice/ExerciseHints'
 import { ExerciseRenderer } from './ExerciseRenderer'
 import { SessionProgress } from './SessionProgress'
 import { InlineFeedback } from './InlineFeedback'
+import type React from 'react'
 import type { PracticeExercise, SessionResult } from '@/lib/practice/types'
 
 type Phase = 'exercising' | 'feedback' | 'hints' | 'complete'
@@ -44,6 +45,7 @@ export interface SessionExercisingBodyHandlers {
 interface SessionExercisingBodyProps {
   state: SessionExercisingBodyState
   handlers: SessionExercisingBodyHandlers
+  lessonFooter?: React.ReactNode
 }
 
 function buildPartialResult(results: SessionResult['results']): SessionResult {
@@ -61,7 +63,7 @@ function buildPartialResult(results: SessionResult['results']): SessionResult {
   return { results, accuracy, totalTimeMs, bySlug }
 }
 
-export function SessionExercisingBody({ state, handlers }: SessionExercisingBodyProps) {
+export function SessionExercisingBody({ state, handlers, lessonFooter }: SessionExercisingBodyProps) {
   const {
     focusUi, displayBadge, progressPct, phase, current,
     currentIndex, totalExercises, retryKey, lastFeedback, currentVoice, results,
@@ -113,8 +115,8 @@ export function SessionExercisingBody({ state, handlers }: SessionExercisingBody
             : null
         }
         footer={
-          phase === 'hints' && current?.payload.kind === 'phoneme'
-            ? (
+          <>
+            {phase === 'hints' && current?.payload.kind === 'phoneme' && (
               <div className="phoneme-focus__hints-panel">
                 <ExerciseHints
                   ipa={current.payload.ipa}
@@ -124,8 +126,9 @@ export function SessionExercisingBody({ state, handlers }: SessionExercisingBody
                   voice={currentVoice}
                 />
               </div>
-            )
-            : undefined
+            )}
+            {lessonFooter}
+          </>
         }
       >
         {sessionBody}

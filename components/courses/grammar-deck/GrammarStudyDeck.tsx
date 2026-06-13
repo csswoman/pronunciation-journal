@@ -187,6 +187,7 @@ export default function GrammarStudyDeck({
             courseTitle={courseTitle}
             lessonId={lessonId}
             backHref={backHref}
+            backLabel={backLabel}
             reviewedCount={reviewedCount}
             quizScore={quizScore}
             practiceLoading={practiceLoading}

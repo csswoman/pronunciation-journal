@@ -30,9 +30,18 @@
 .grammar-deck__head {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
+  gap: var(--space-1);
   padding-bottom: var(--space-5);
   border-bottom: 1px solid var(--border-subtle);
+}
+
+.grammar-deck__head > .grammar-deck__back {
+  margin-bottom: var(--space-3);
+}
+
+.grammar-deck__head > .grammar-deck__title {
+  margin-top: var(--space-1);
+  margin-bottom: var(--space-1);
 }
 
 .grammar-deck__meta {
@@ -321,6 +330,46 @@
   border-radius: var(--radius-md);
 }
 
+.grammar-deck__done-practice-cta {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  text-align: left;
+  border-radius: var(--radius-md);
+  border: none;
+  background: var(--cta-bg, oklch(0.18 0.008 250));
+  color: var(--cta-fg, oklch(0.93 0.012 250));
+  font-size: 0.88rem;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition:
+    background var(--transition-fast),
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.grammar-deck__done-practice-cta:hover:not(:disabled) {
+  background: oklch(0.26 0.008 250);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.grammar-deck__done-practice-cta:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.grammar-deck__done-practice-cta:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.grammar-deck__done-practice-cta > span {
+  flex: 1;
+}
+
 .grammar-deck__done-soundlab {
   width: 100%;
   display: flex;
@@ -329,32 +378,39 @@
   padding: var(--space-3) var(--space-4);
   text-align: left;
   border-radius: var(--radius-md);
-  border: 1px solid var(--accent-border);
-  background: color-mix(in oklch, var(--primary) 8%, var(--surface-raised));
-  color: var(--text-primary);
+  border: 1px solid var(--border-default);
+  background: var(--surface-raised);
+  color: var(--text-secondary);
   text-decoration: none;
+  font-size: 0.88rem;
   transition:
+    border-color var(--transition-fast),
+    color var(--transition-fast),
     transform var(--transition-fast),
     box-shadow var(--transition-fast);
 }
 
 .grammar-deck__done-soundlab:hover {
-  transform: translateY(-2px);
+  border-color: var(--accent-border);
+  color: var(--text-primary);
+  transform: translateY(-1px);
   box-shadow: var(--shadow-sm);
 }
 
 .grammar-deck__done-soundlab > svg:first-child {
-  color: var(--primary);
+  color: var(--text-tertiary);
+  flex-shrink: 0;
 }
 
 .grammar-deck__done-soundlab > svg:last-child {
   color: var(--text-tertiary);
+  flex-shrink: 0;
 }
 
 .grammar-deck__done-soundlab em {
   font-style: normal;
-  font-size: 0.8rem;
-  color: var(--primary);
+  font-size: 0.78rem;
+  color: var(--text-tertiary);
 }
 
 .grammar-deck__done-soundlab > span {
@@ -638,21 +694,35 @@
 }
 
 
-.grammar-deck__arrow--finish {
-  background: var(--primary);
-  border-color: var(--primary);
-  color: var(--primary-foreground, #fff);
-  animation: grammar-finish-pulse 2s ease-in-out infinite;
+.grammar-deck__finish {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 0 var(--space-4);
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: var(--radius-md);
+  border: none;
+  background: var(--cta-bg, oklch(0.18 0.008 250));
+  color: var(--cta-fg, oklch(0.93 0.012 250));
+  font-size: 0.875rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition:
+    background var(--transition-fast),
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast);
 }
 
-.grammar-deck__arrow--finish:hover:not(:disabled) {
-  color: var(--primary-foreground, #fff);
-  filter: brightness(1.06);
+.grammar-deck__finish:hover {
+  background: oklch(0.26 0.008 250);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
 }
 
-@keyframes grammar-finish-pulse {
-  0%, 100% { box-shadow: 0 0 0 0 color-mix(in oklch, var(--primary) 45%, transparent); }
-  50%       { box-shadow: 0 0 0 8px color-mix(in oklch, var(--primary) 0%, transparent); }
+.grammar-deck__finish:active {
+  transform: translateY(0) scale(0.96);
 }
 
 .grammar-deck__pos {
@@ -1092,7 +1162,6 @@
   .grammar-deck__done,
   .grammar-deck__done-badge,
   .grammar-deck__done-spark,
-  .grammar-deck__arrow--finish,
   .grammar-card__body > *,
   .gd-quiz,
   .grammar-card--done .grammar-card__gotit svg {

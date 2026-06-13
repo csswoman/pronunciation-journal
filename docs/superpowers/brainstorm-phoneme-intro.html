@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brainstorm: ¿Es necesaria la pantalla de intro en Practice Sounds?</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --primary: oklch(0.65 0.15 250);
+    --primary-soft: oklch(0.93 0.04 250);
+    --cta-bg: oklch(0.18 0.008 250);
+    --cta-fg: oklch(0.93 0.012 250);
+    --surface-base: oklch(0.93 0.012 250);
+    --surface-raised: oklch(0.99 0.003 250);
+    --fg-primary: oklch(0.18 0.008 250);
+    --fg-secondary: oklch(0.46 0.006 250);
+    --fg-subtle: oklch(0.62 0.004 250);
+    --border-subtle: oklch(0.925 0 0);
+    --border-default: oklch(0.875 0 0);
+    --success: oklch(0.70 0.16 145);
+    --success-soft: oklch(0.92 0.05 145);
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-full: 9999px;
+    font-family: 'DM Sans', system-ui, sans-serif;
+  }
+
+  body {
+    background: var(--surface-base);
+    color: var(--fg-primary);
+    padding: 2rem;
+    min-height: 100vh;
+  }
+
+  h1 {
+    font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin-bottom: 0.5rem;
+  }
+
+  .lead {
+    color: var(--fg-secondary);
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    max-width: 60ch;
+    margin-bottom: 2.5rem;
+  }
+
+  /* ── Layout de opciones ── */
+  .options-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+  }
+
+  .option-card {
+    background: var(--surface-raised);
+    border: 2px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    cursor: pointer;
+    transition: border-color 180ms ease, box-shadow 180ms ease;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .option-card:hover {
+    border-color: var(--border-default);
+    box-shadow: 0 4px 12px oklch(0 0 0 / 0.07);
+  }
+
+  .option-card.selected {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px oklch(0.65 0.15 250 / 0.15);
+  }
+
+  .option-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: var(--surface-base);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-full);
+    padding: 0.25rem 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--fg-subtle);
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    width: fit-content;
+  }
+
+  .option-badge.recommended {
+    background: var(--success-soft);
+    border-color: oklch(0.70 0.16 145 / 0.3);
+    color: oklch(0.40 0.12 145);
+  }
+
+  .option-card h2 {
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: -0.005em;
+  }
+
+  .option-card p {
+    font-size: 0.875rem;
+    color: var(--fg-secondary);
+    line-height: 1.6;
+  }
+
+  /* ── Mockup de pantalla ── */
+  .mockup-wrapper {
+    background: oklch(0.88 0.012 250);
+    border-radius: var(--radius-md);
+    padding: 1rem;
+  }
+
+  .phone-frame {
+    background: var(--surface-base);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    font-size: 0.75rem;
+    min-height: 240px;
+    position: relative;
+  }
+
+  /* Barra superior del shell */
+  .phoneme-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid var(--border-subtle);
+    background: var(--surface-raised);
+  }
+
+  .phoneme-topbar .exit-btn {
+    font-size: 0.75rem;
+    color: var(--fg-subtle);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.125rem 0.375rem;
+    border-radius: var(--radius-sm);
+  }
+
+  .phoneme-topbar .badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--primary);
+    letter-spacing: -0.02em;
+  }
+
+  .phoneme-topbar .progress-bar {
+    width: 60px;
+    height: 4px;
+    background: var(--border-subtle);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+  }
+
+  .phoneme-topbar .progress-fill {
+    height: 100%;
+    width: 0%;
+    background: var(--primary);
+    border-radius: var(--radius-full);
+  }
+
+  /* Contenido del mockup */
+  .mockup-body {
+    padding: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+  }
+
+  .ipa-hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.5rem 0;
+  }
+
+  .ipa-circle {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--primary-soft);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--primary);
+  }
+
+  .ipa-hint {
+    font-size: 0.625rem;
+    color: var(--fg-subtle);
+  }
+
+  .mock-text {
+    font-size: 0.6875rem;
+    color: var(--fg-secondary);
+    line-height: 1.5;
+    text-align: center;
+  }
+
+  .mock-btn {
+    border-radius: var(--radius-md);
+    padding: 0.4rem 0.75rem;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-align: center;
+    width: 100%;
+  }
+
+  .mock-btn.primary {
+    background: var(--cta-bg);
+    color: var(--cta-fg);
+  }
+
+  .mock-btn.secondary {
+    background: var(--surface-raised);
+    border: 1px solid var(--border-default);
+    color: var(--fg-secondary);
+  }
+
+  /* Pantalla de ejercicio */
+  .exercise-question {
+    background: var(--surface-raised);
+    border-radius: var(--radius-md);
+    padding: 0.5rem 0.625rem;
+    font-size: 0.6875rem;
+    color: var(--fg-secondary);
+    line-height: 1.5;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+
+  .exercise-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+  }
+
+  .exercise-chip {
+    border-radius: var(--radius-sm);
+    padding: 0.375rem 0.625rem;
+    font-size: 0.6875rem;
+    background: var(--surface-raised);
+    border: 1px solid var(--border-subtle);
+    color: var(--fg-primary);
+  }
+
+  /* Botón de lección inline */
+  .lesson-trigger {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-size: 0.6875rem;
+    color: var(--primary);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.25rem 0;
+    font-family: inherit;
+    font-weight: 500;
+  }
+
+  .lesson-trigger .icon {
+    width: 14px;
+    height: 14px;
+    background: var(--primary-soft);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.5rem;
+    color: var(--primary);
+    flex-shrink: 0;
+  }
+
+  /* Drawer inline */
+  .lesson-drawer {
+    background: var(--primary-soft);
+    border-radius: var(--radius-sm);
+    padding: 0.5rem 0.625rem;
+    font-size: 0.6875rem;
+    color: oklch(0.30 0.08 250);
+    line-height: 1.5;
+    border: 1px solid oklch(0.65 0.15 250 / 0.2);
+  }
+
+  .lesson-drawer strong {
+    display: block;
+    margin-bottom: 0.125rem;
+    font-weight: 600;
+    color: var(--primary);
+  }
+
+  /* ── Pros/Cons ── */
+  .pros-cons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    margin-top: 0.25rem;
+  }
+
+  .pros, .cons {
+    background: var(--surface-base);
+    border-radius: var(--radius-sm);
+    padding: 0.625rem 0.75rem;
+  }
+
+  .pros h4 {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    color: oklch(0.40 0.12 145);
+    margin-bottom: 0.375rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .cons h4 {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    color: oklch(0.52 0.16 25);
+    margin-bottom: 0.375rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .pros ul, .cons ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .pros li, .cons li {
+    font-size: 0.75rem;
+    color: var(--fg-secondary);
+    line-height: 1.4;
+    padding-left: 0.875rem;
+    position: relative;
+  }
+
+  .pros li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--success);
+    font-size: 0.6875rem;
+  }
+
+  .cons li::before {
+    content: '×';
+    position: absolute;
+    left: 0;
+    color: oklch(0.65 0.20 25);
+    font-size: 0.6875rem;
+  }
+
+  /* ── Contexto ── */
+  .context-box {
+    background: oklch(0.95 0.02 250);
+    border: 1px solid oklch(0.65 0.15 250 / 0.2);
+    border-radius: var(--radius-md);
+    padding: 1rem 1.25rem;
+    margin-bottom: 2rem;
+  }
+
+  .context-box p {
+    font-size: 0.875rem;
+    color: var(--fg-secondary);
+    line-height: 1.6;
+  }
+
+  .context-box strong {
+    color: var(--fg-primary);
+    font-weight: 600;
+  }
+
+  /* ── Selección ── */
+  .selection-bar {
+    position: fixed;
+    bottom: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--cta-bg);
+    color: var(--cta-fg);
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--radius-full);
+    font-size: 0.875rem;
+    font-weight: 600;
+    display: none;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 8px 20px oklch(0 0 0 / 0.25);
+  }
+
+  .selection-bar.visible {
+    display: flex;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 700px) {
+    .pros-cons { grid-template-columns: 1fr; }
+    .options-grid { grid-template-columns: 1fr; }
+    body { padding: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<h1>¿Es necesaria la pantalla de intro en Practice Sounds?</h1>
+<p class="lead">La pantalla actual muestra el símbolo IPA, texto explicativo y dos botones ("Ver lección" / "Practicar ahora"). La pregunta es si este paso intermedio ayuda o frena al usuario.</p>
+
+<div class="context-box">
+  <p><strong>Contexto:</strong> El usuario ya eligió practicar un sonido específico desde la pantalla de Practice Sounds. Llega con intención clara. La pantalla actual es un paso extra entre elegir el sonido y empezar a practicarlo.</p>
+</div>
+
+<div class="options-grid">
+
+  <!-- Opción A: Eliminar intro, ir directo al ejercicio -->
+  <div class="option-card" onclick="selectOption(this, 'a')">
+    <div>
+      <div class="option-badge">Opción A</div>
+    </div>
+    <h2>Directo al ejercicio</h2>
+    <p>Eliminar la pantalla de intro. El usuario entra directo al primer ejercicio. La lección se accede mediante un botón discreto dentro del shell de práctica.</p>
+
+    <div class="mockup-wrapper">
+      <div class="phone-frame">
+        <div class="phoneme-topbar">
+          <button class="exit-btn">✕</button>
+          <span class="badge">ɪː</span>
+          <div class="progress-bar"><div class="progress-fill"></div></div>
+        </div>
+        <div class="mockup-body">
+          <div class="exercise-question">
+            Escucha y elige: ¿cuál contiene el sonido <span style="font-family:monospace;font-weight:700;color:var(--primary)">ɪː</span>?
+          </div>
+          <div class="exercise-options">
+            <div class="exercise-chip">ship</div>
+            <div class="exercise-chip">sheep</div>
+            <div class="exercise-chip">shop</div>
+          </div>
+          <button class="lesson-trigger">
+            <span class="icon">?</span>
+            Ver teoría del sonido
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="pros-cons">
+      <div class="pros">
+        <h4>A favor</h4>
+        <ul>
+          <li>Cero fricción para usuarios recurrentes</li>
+          <li>La sesión empieza de inmediato</li>
+          <li>Respeta la intención del usuario</li>
+        </ul>
+      </div>
+      <div class="cons">
+        <h4>En contra</h4>
+        <ul>
+          <li>Primera vez: sin contexto del sonido</li>
+          <li>La teoría queda enterrada</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Opción B: Intro solo primera vez -->
+  <div class="option-card" onclick="selectOption(this, 'b')">
+    <div>
+      <div class="option-badge recommended">B · Recomendada</div>
+    </div>
+    <h2>Intro solo la primera vez</h2>
+    <p>Primera visita al sonido: muestra la intro completa. Visitas posteriores: directo al ejercicio. La lección sigue accesible con un botón dentro del shell.</p>
+
+    <div class="mockup-wrapper">
+      <div class="phone-frame">
+        <div class="phoneme-topbar">
+          <button class="exit-btn">✕</button>
+          <span class="badge">ɪː</span>
+          <div class="progress-bar"><div class="progress-fill"></div></div>
+        </div>
+        <div class="mockup-body">
+          <!-- Primera vez -->
+          <div class="ipa-hero">
+            <div class="ipa-circle">ɪː</div>
+            <span class="ipa-hint">Toca para escuchar</span>
+          </div>
+          <p class="mock-text" style="font-size:0.65rem;color:var(--fg-subtle);text-align:center">Primera vez en este sonido</p>
+          <div class="mock-btn secondary" style="font-size:0.65rem;padding:0.3rem">Ver lección antes →</div>
+          <div class="mock-btn primary">Practicar ahora</div>
+        </div>
+      </div>
+    </div>
+    <p style="font-size:0.75rem;color:var(--fg-subtle);text-align:center;margin-top:-0.25rem">↑ Primera visita &nbsp;&nbsp; ↓ Visitas posteriores</p>
+    <div class="mockup-wrapper">
+      <div class="phone-frame" style="min-height:160px">
+        <div class="phoneme-topbar">
+          <button class="exit-btn">✕</button>
+          <span class="badge">ɪː</span>
+          <div class="progress-bar"><div class="progress-fill"></div></div>
+        </div>
+        <div class="mockup-body">
+          <div class="exercise-question">¿Cuál contiene <span style="font-family:monospace;font-weight:700;color:var(--primary)">ɪː</span>?</div>
+          <div class="exercise-options">
+            <div class="exercise-chip">ship</div>
+            <div class="exercise-chip">sheep</div>
+          </div>
+          <button class="lesson-trigger">
+            <span class="icon">?</span>
+            Recordar teoría
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="pros-cons">
+      <div class="pros">
+        <h4>A favor</h4>
+        <ul>
+          <li>Onboarding del sonido la primera vez</li>
+          <li>Sin fricción en el día a día</li>
+          <li>Teoría siempre accesible</li>
+        </ul>
+      </div>
+      <div class="cons">
+        <h4>En contra</h4>
+        <ul>
+          <li>Requiere trackear "primera visita"</li>
+          <li>Lógica de estado adicional</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Opción C: Mantener intro, mejorar UX -->
+  <div class="option-card" onclick="selectOption(this, 'c')">
+    <div>
+      <div class="option-badge">Opción C</div>
+    </div>
+    <h2>Mantener intro, mejorar el diseño</h2>
+    <p>La pantalla de intro permanece siempre, pero rediseñada: más compacta, con la lección colapsada por defecto y el CTA como acción principal clara.</p>
+
+    <div class="mockup-wrapper">
+      <div class="phone-frame">
+        <div class="phoneme-topbar">
+          <button class="exit-btn">✕</button>
+          <span class="badge">ɪː</span>
+          <div class="progress-bar"><div class="progress-fill"></div></div>
+        </div>
+        <div class="mockup-body">
+          <div class="ipa-hero">
+            <div class="ipa-circle">ɪː</div>
+            <span class="ipa-hint">Toca para escuchar</span>
+          </div>
+          <div class="lesson-drawer">
+            <strong>Para hispanohablantes</strong>
+            Similar a la "i" larga española, pero un poco más abierta. Como en "sí" pero sostenida.
+          </div>
+          <div class="mock-btn primary">Practicar ahora</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pros-cons">
+      <div class="pros">
+        <h4>A favor</h4>
+        <ul>
+          <li>Contexto siempre presente</li>
+          <li>Sin lógica de "primera vez"</li>
+          <li>Ayuda para sonidos difíciles</li>
+        </ul>
+      </div>
+      <div class="cons">
+        <h4>En contra</h4>
+        <ul>
+          <li>Paso extra en cada sesión</li>
+          <li>Usuarios avanzados lo saltarán</li>
+          <li>Interrumpe el flujo diario</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div id="selectionBar" class="selection-bar">
+  <span id="selectionText">Opción seleccionada</span>
+  &nbsp;· Responde en el terminal para continuar
+</div>
+
+<script>
+  let selected = null;
+
+  function selectOption(el, choice) {
+    document.querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    selected = choice;
+    const labels = { a: 'Opción A: Directo al ejercicio', b: 'Opción B: Intro solo primera vez', c: 'Opción C: Mantener intro mejorada' };
+    document.getElementById('selectionText').textContent = labels[choice];
+    document.getElementById('selectionBar').classList.add('visible');
+
+    // Registrar evento (para cuando se usa con servidor live)
+    try {
+      const data = { type: 'click', choice, text: labels[choice], timestamp: Date.now() };
+      fetch('/event', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) }).catch(() => {});
+    } catch(e) {}
+  }
+</script>
+
+</body>
+</html>

@@ -1,3 +1,4 @@
+import type React from 'react'
 import type { CEFRLevel } from '@/lib/exercises/cefr'
 import type { Option } from '@/lib/phoneme-practice/types'
 import type {
@@ -162,4 +163,6 @@ export type PracticeConfig = {
     userId: string
     soundId: number
   }
+  /** Optional footer rendered inside the focus shell (e.g. "Ver lección" button). */
+  footer?: React.ReactNode
 }

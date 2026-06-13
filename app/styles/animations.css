@@ -205,6 +205,12 @@
   }
 }
 
+@keyframes phoneme-ring {
+  0%   { transform: scale(0.92); opacity: 0.7; }
+  60%  { transform: scale(1.08); opacity: 0; }
+  100% { transform: scale(1.08); opacity: 0; }
+}
+
 @keyframes loadingSlide {
   0%   { transform: translateX(-100%); }
   100% { transform: translateX(350%); }

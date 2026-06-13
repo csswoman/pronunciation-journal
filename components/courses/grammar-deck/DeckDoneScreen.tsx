@@ -18,6 +18,7 @@ interface DeckDoneScreenProps {
   courseTitle?: string;
   lessonId?: string;
   backHref?: string;
+  backLabel?: string;
   reviewedCount: number;
   quizScore: { correct: number; total: number } | null;
   practiceLoading: boolean;
@@ -31,6 +32,7 @@ export function DeckDoneScreen({
   courseTitle,
   lessonId,
   backHref,
+  backLabel = "Volver",
   reviewedCount,
   quizScore,
   practiceLoading,
@@ -50,30 +52,20 @@ export function DeckDoneScreen({
       {courseTitle && <p className="grammar-deck__done-sub">{courseTitle}</p>}
       {deck.meta.goal && <p className="grammar-deck__done-goal">{deck.meta.goal}</p>}
 
-      <div className="grammar-deck__done-stats">
-        <div>
-          <b>{total}</b>
-          <span>tarjetas</span>
-        </div>
-        <div>
-          <b>{reviewedCount}</b>
-          <span>repasadas</span>
-        </div>
-        {quizScore && (
+      {quizScore && (
+        <div className="grammar-deck__done-stats">
           <div>
-            <b>
-              {quizScore.correct}/{quizScore.total}
-            </b>
-            <span>quiz</span>
+            <b>{quizScore.correct}/{quizScore.total}</b>
+            <span>respuestas correctas</span>
           </div>
-        )}
-      </div>
+        </div>
+      )}
 
       {lessonId && (
         <>
           <button
             type="button"
-            className="grammar-deck__done-soundlab"
+            className="grammar-deck__done-practice-cta"
             onClick={onStartSentencePractice}
             disabled={practiceLoading}
           >
@@ -111,7 +103,7 @@ export function DeckDoneScreen({
           <ul>
             {deck.related.map((r) => (
               <li key={r.slug}>
-                <Link href={`/courses/lesson/${r.slug}`}>
+                <Link href={`/practice/decks/${r.slug}`}>
                   <BookOpen size={14} aria-hidden />
                   {r.label}
                 </Link>
@@ -128,7 +120,7 @@ export function DeckDoneScreen({
         </button>
         {backHref && (
           <Link href={backHref} className="grammar-deck__done-back">
-            Volver a la ruta
+            {backLabel}
             <ArrowRight size={15} aria-hidden />
           </Link>
         )}

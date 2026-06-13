@@ -4,11 +4,13 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { useAuth } from '@/components/auth/AuthProvider'
 import PracticeSession from '@/components/practice/PracticeSession'
+import { SessionLoadingShell } from '@/components/practice/session/SessionLoadingShell'
 import { PhonemeLessonIntro } from '@/components/phoneme-practice/PhonemeLessonIntro'
 import Button from '@/components/ui/Button'
 import {
   getAllSounds,
   getAllWords,
+  getContrastProgress,
   getMinimalPairs,
   getSoundById,
 } from '@/lib/phoneme-practice/queries'
@@ -38,6 +40,7 @@ export default function SoundPracticePage() {
   const [error, setError] = useState<string | null>(null)
   const [sessionKey, setSessionKey] = useState(0)
   const [showIntro, setShowIntro] = useState(true)
+  const [lessonOpen, setLessonOpen] = useState(false)
 
   const loadAndStart = useCallback(async () => {
     if (!user) return
@@ -52,6 +55,14 @@ export default function SoundPracticePage() {
         getMinimalPairs(soundId),
       ])
       setSoundIpa(sound.ipa)
+
+      const cid = primaryContrastId(sound.ipa)
+      if (cid) {
+        const progress = await getContrastProgress(user.id, cid)
+        setShowIntro(!progress || progress.total_attempts === 0)
+      } else {
+        setShowIntro(false)
+      }
 
       const targetWords = allWords.filter((w) => w.sound_id === soundId)
       const allWordsBySoundId = new Map(
@@ -115,7 +126,11 @@ export default function SoundPracticePage() {
   if (loading || !sessionConfig) {
     return (
       <div className="phoneme-focus flex min-h-screen items-center justify-center">
-        <div className="animate-pulse text-fg-subtle">Cargando sesión…</div>
+        <SessionLoadingShell
+          focusUi={!!soundIpa}
+          displayBadge={soundIpa}
+          onExit={() => router.push('/practice/sounds')}
+        />
       </div>
     )
   }
@@ -144,9 +159,47 @@ export default function SoundPracticePage() {
     )
   }
 
+  const lessonFooter = soundIpa ? (
+    <div className="border-t border-border-subtle px-4 py-2.5">
+      <button
+        type="button"
+        onClick={() => setLessonOpen(true)}
+        className="flex w-full items-center justify-center gap-1.5 text-xs font-medium text-fg-subtle transition-colors hover:text-fg-secondary"
+      >
+        <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+          <path d="M2 4h12M2 8h8M2 12h10" />
+        </svg>
+        Ver lección del sonido
+      </button>
+    </div>
+  ) : undefined
+
   return (
     <>
-      <PracticeSession key={sessionKey} {...sessionConfig} />
+      <PracticeSession key={sessionKey} {...sessionConfig} footer={lessonFooter} />
+
+      {lessonOpen && soundIpa && (
+        <div className="phoneme-focus fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+          <div className="phoneme-focus__wrap">
+            <div className="phoneme-focus__phone">
+              <div className="phoneme-focus__topbar">
+                <button
+                  type="button"
+                  className="phoneme-focus__exit"
+                  onClick={() => setLessonOpen(false)}
+                  aria-label="Cerrar lección"
+                >
+                  ✕
+                </button>
+              </div>
+              <div className="phoneme-focus__stage overflow-y-auto">
+                <PhonemeLessonIntro ipa={soundIpa} onStart={() => setLessonOpen(false)} />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {nextReview && (
         <p className="pb-6 text-center text-xs text-fg-subtle">
           Próxima revisión: {nextReview.toLocaleDateString()}

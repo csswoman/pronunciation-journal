@@ -116,7 +116,7 @@ describe('PracticeSession', () => {
         persistence={{ userId: 'user-1', soundId: 42 }}
       />,
     )
-    expect(screen.getByText(/Cargando/i)).toBeInTheDocument()
+    expect(screen.getByRole('progressbar', { name: /Cargando sesión/i })).toBeInTheDocument()
     await waitFor(() => expect(sessionStoreMocks.createSession).toHaveBeenCalledTimes(1))
     expect(sessionStoreMocks.evictExpiredSessions).toHaveBeenCalledTimes(1)
     expect(await screen.findByRole('button', { name: /Seleccionar word1/i })).toBeInTheDocument()

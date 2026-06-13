@@ -26,7 +26,7 @@ function badgeForExercise(
 }
 
 export default function PracticeSession(config: PracticeConfig) {
-  const { soundIpa, sessionLabel, context, onExit } = config
+  const { soundIpa, sessionLabel, context, onExit, footer } = config
   const focusBadge = soundIpa ?? sessionLabel
   const focusUi =
     Boolean(focusBadge) &&
@@ -102,6 +102,7 @@ export default function PracticeSession(config: PracticeConfig) {
 
   return (
     <SessionExercisingBody
+      lessonFooter={footer}
       state={{
         focusUi,
         displayBadge,

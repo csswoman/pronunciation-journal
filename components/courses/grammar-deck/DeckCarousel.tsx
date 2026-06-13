@@ -7,7 +7,7 @@
 //   prev/next arrows
 // </DeckCarousel>
 
-import { ChevronLeft, ChevronRight, Sparkles } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/cn";
 import GrammarStudyCard from "./GrammarStudyCard";
 import type { GrammarStudyDeckData } from "@/lib/courses/grammar-deck/types";
@@ -90,18 +90,26 @@ export function DeckCarousel({
           </span>
         </div>
 
-        <button
-          type="button"
-          className={cn(
-            "grammar-deck__arrow",
-            "grammar-deck__arrow--next",
-            isLast && "grammar-deck__arrow--finish"
-          )}
-          onClick={onNext}
-          aria-label={isLast ? "Finalizar lección" : "Tarjeta siguiente"}
-        >
-          {isLast ? <Sparkles size={18} aria-hidden /> : <ChevronRight size={20} aria-hidden />}
-        </button>
+        {isLast ? (
+          <button
+            type="button"
+            className="grammar-deck__finish"
+            onClick={onNext}
+            aria-label="Finalizar lección"
+          >
+            Finalizar
+            <ChevronRight size={16} aria-hidden />
+          </button>
+        ) : (
+          <button
+            type="button"
+            className="grammar-deck__arrow grammar-deck__arrow--next"
+            onClick={onNext}
+            aria-label="Tarjeta siguiente"
+          >
+            <ChevronRight size={20} aria-hidden />
+          </button>
+        )}
       </nav>
     </div>
   );
