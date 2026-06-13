@@ -17,7 +17,7 @@ import type { MatchPairsExercise as MatchPairsExerciseType } from '@/lib/exercis
 
 interface Props {
   exercise: MatchPairsExerciseType
-  onSubmit: (isCorrect: boolean, userAnswer: string) => void
+  onResult: (isCorrect: boolean, userAnswer: string, timeMs: number) => void
 }
 
 type MatchResult = Record<string, 'correct' | 'wrong' | null>
@@ -36,7 +36,7 @@ const DOT_COLORS = [
 
 const useIsoLayoutEffect = typeof window === 'undefined' ? useEffect : useLayoutEffect
 
-export function MatchPairsExercise({ exercise, onSubmit }: Props) {
+export function MatchPairsExercise({ exercise, onResult }: Props) {
   const rightItems = useMemo(
     () => shuffle(exercise.pairs.map((p) => ({ id: p.id, label: p.right }))),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -53,6 +53,7 @@ export function MatchPairsExercise({ exercise, onSubmit }: Props) {
   const boardRef  = useRef<HTMLDivElement>(null)
   const leftRefs  = useRef<Map<string, HTMLButtonElement>>(new Map())
   const rightRefs = useRef<Map<string, HTMLButtonElement>>(new Map())
+  const startMs   = useRef(Date.now())
 
   const matchedRightIds = new Set(Object.values(matches))
   const pairColor = (leftId: string) => DOT_COLORS[exercise.pairs.findIndex((p) => p.id === leftId) % DOT_COLORS.length]
@@ -90,7 +91,7 @@ export function MatchPairsExercise({ exercise, onSubmit }: Props) {
     }
     setResults(newResults)
     setSubmitted(true)
-    onSubmit(allCorrect, JSON.stringify(matches))
+    onResult(allCorrect, JSON.stringify(matches), Date.now() - startMs.current)
   }
 
   const recomputeConnections = useCallback(() => {
@@ -115,6 +116,10 @@ export function MatchPairsExercise({ exercise, onSubmit }: Props) {
   }, [matches, results])
 
   useIsoLayoutEffect(() => { recomputeConnections() }, [recomputeConnections, rightItems])
+
+  useEffect(() => {
+    startMs.current = Date.now()
+  }, [exercise.id])
 
   useEffect(() => {
     const board = boardRef.current
