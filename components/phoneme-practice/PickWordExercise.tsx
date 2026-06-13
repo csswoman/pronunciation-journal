@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { Volume2 } from 'lucide-react'
 import type { Exercise } from '@/lib/phoneme-practice/types'
 import { speak } from '@/lib/phoneme-practice/tts'
 import { playIpaSound } from '@/lib/pronunciation/ipa-audio'
@@ -90,9 +91,7 @@ export function PickWordExercise({ exercise, onSubmit, focusUi = false }: Props)
             aria-label={`Pronunciar ${exercise.ipa}`}
             className="flex items-center gap-2 px-4 py-2 rounded-[var(--radius-full)] border border-[var(--border-subtle)] bg-[var(--surface-raised)] text-[var(--text-primary)] text-[15px] font-mono hover:border-[var(--primary)] hover:text-[var(--primary)] transition-colors cursor-pointer [font-family:inherit]"
           >
-            <span className="text-[11px] text-[var(--text-tertiary)]" aria-hidden>
-              🔊
-            </span>
+            <Volume2 size={13} className="text-[var(--text-tertiary)]" aria-hidden />
             {exercise.ipa}
           </button>
           <p className="text-[15px] text-[var(--text-secondary)] text-center m-0">
@@ -134,9 +133,7 @@ export function PickWordExercise({ exercise, onSubmit, focusUi = false }: Props)
         aria-label={`Escuchar ${exercise.ipa}`}
         className="pf-chip pf-chip--ipa self-center mb-4"
       >
-        <span className="pf-chip__icon" aria-hidden>
-          🔊
-        </span>
+        <Volume2 size={13} className="pf-chip__icon" aria-hidden />
         {exercise.ipa}
       </button>
       {options}
