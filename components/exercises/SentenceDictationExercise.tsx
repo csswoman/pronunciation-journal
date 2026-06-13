@@ -13,7 +13,7 @@ import type { SentenceDictationExercise as SentenceDictationExerciseType } from 
 
 interface Props {
   exercise: SentenceDictationExerciseType
-  onSubmit: (isCorrect: boolean, userAnswer: string, timeMs: number) => void
+  onResult: (isCorrect: boolean, userAnswer: string, timeMs: number) => void
 }
 
 type AnswerState = 'idle' | 'correct' | 'wrong'
@@ -26,7 +26,7 @@ function normalize(text: string): string {
     .replace(/\s+/g, ' ')
 }
 
-export function SentenceDictationExercise({ exercise, onSubmit }: Props) {
+export function SentenceDictationExercise({ exercise, onResult }: Props) {
   const [input, setInput] = useState('')
   const [state, setState] = useState<AnswerState>('idle')
   const [isPlaying, setIsPlaying] = useState(false)
@@ -73,7 +73,7 @@ export function SentenceDictationExercise({ exercise, onSubmit }: Props) {
     if (state !== 'idle' || !input.trim()) return
     const isCorrect = normalize(input) === normalize(exercise.sentence)
     setState(isCorrect ? 'correct' : 'wrong')
-    onSubmit(isCorrect, input.trim(), Date.now() - startMs.current)
+    onResult(isCorrect, input.trim(), Date.now() - startMs.current)
   }
 
   function handleKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
@@ -96,9 +96,6 @@ export function SentenceDictationExercise({ exercise, onSubmit }: Props) {
       />
       {!done && (
         <SubmitButton disabled={!input.trim()} onSubmit={handleSubmit} />
-      )}
-      {done && (
-        <FeedbackBar isCorrect={state === 'correct'} sentence={exercise.sentence} />
       )}
     </div>
   )
@@ -178,22 +175,3 @@ function SubmitButton({ disabled, onSubmit }: { disabled: boolean; onSubmit: () 
   )
 }
 
-function FeedbackBar({ isCorrect, sentence }: { isCorrect: boolean; sentence: string }) {
-  return (
-    <div
-      className={cn(
-        'rounded-[var(--radius-md)] px-4 py-3 text-[14px]',
-        isCorrect ? 'bg-success-soft text-success' : 'bg-error-soft text-error',
-      )}
-    >
-      {isCorrect ? (
-        <span className="font-medium">Correct!</span>
-      ) : (
-        <span>
-          <span className="font-medium">The sentence was: </span>
-          <span className="italic">{sentence}</span>
-        </span>
-      )}
-    </div>
-  )
-}
