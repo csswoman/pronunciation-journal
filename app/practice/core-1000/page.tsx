@@ -1,7 +1,7 @@
 import PageLayout from '@/components/layout/PageLayout'
 import { Core1000Session } from '@/components/practice/core-1000/Core1000Session'
 
-export const metadata = { title: 'Core 1000' }
+export const metadata = { title: 'Essential Words' }
 
 export default function Core1000Page() {
   return (
@@ -12,7 +12,7 @@ export default function Core1000Page() {
             Vocabulario · repaso espaciado
           </span>
           <h1 className="font-display text-h2 font-normal leading-tight tracking-[-0.02em] text-[var(--text-primary)]">
-            Core 1000
+            Essential Words
           </h1>
         </header>
         <Core1000Session />

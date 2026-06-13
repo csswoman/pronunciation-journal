@@ -25,7 +25,7 @@ export default function DecksIndexPage() {
           className="mb-6 flex items-center justify-between rounded-[var(--radius-lg)] border border-[var(--border-subtle)] bg-[var(--surface-raised)] px-5 py-4 no-underline"
         >
           <div className="flex flex-col gap-0.5">
-            <span className="text-sm font-semibold text-[var(--text-primary)]">Core 1000</span>
+            <span className="text-sm font-semibold text-[var(--text-primary)]">Essential Words</span>
             <span className="text-xs text-[var(--text-secondary)]">
               Las 1000 palabras más frecuentes, con weak forms y repaso espaciado
             </span>
