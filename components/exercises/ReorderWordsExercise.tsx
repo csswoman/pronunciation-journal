@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { cn } from '@/lib/cn'
 import { PhonemeExercisePrompt } from '@/components/phoneme-practice/PhonemeExercisePrompt'
 import { getPhonemeExerciseMeta } from '@/lib/phoneme-practice/exercise-labels'
@@ -8,7 +8,7 @@ import type { ReorderWordsExercise as ReorderWordsExerciseType } from '@/lib/exe
 
 interface Props {
   exercise: ReorderWordsExerciseType
-  onSubmit: (isCorrect: boolean, userAnswer: string) => void
+  onResult: (isCorrect: boolean, userAnswer: string, timeMs: number) => void
   focusUi?: boolean
 }
 
@@ -22,16 +22,18 @@ function makeChips(tokens: string[]): Chip[] {
   return tokens.map((word, i) => ({ key: `${word}-${i}`, word }))
 }
 
-export function ReorderWordsExercise({ exercise, onSubmit, focusUi = false }: Props) {
+export function ReorderWordsExercise({ exercise, onResult, focusUi = false }: Props) {
   const [bank, setBank] = useState<Chip[]>(() => makeChips(exercise.tokens))
   const [answer, setAnswer] = useState<Chip[]>([])
   const [state, setState] = useState<AnswerState>('idle')
+  const startMs = useRef(Date.now())
   const meta = getPhonemeExerciseMeta('reorder_words', {})
 
   useEffect(() => {
     setBank(makeChips(exercise.tokens))
     setAnswer([])
     setState('idle')
+    startMs.current = Date.now()
   }, [exercise.id, exercise.tokens])
 
   function moveToAnswer(chip: Chip) {
@@ -51,7 +53,7 @@ export function ReorderWordsExercise({ exercise, onSubmit, focusUi = false }: Pr
     const userAnswer = answer.map((c) => c.word).join(' ')
     const isCorrect = userAnswer === exercise.sentence
     setState(isCorrect ? 'correct' : 'wrong')
-    onSubmit(isCorrect, userAnswer)
+    onResult(isCorrect, userAnswer, Date.now() - startMs.current)
   }
 
   const canCheck =
@@ -154,9 +156,6 @@ export function ReorderWordsExercise({ exercise, onSubmit, focusUi = false }: Pr
           Check
         </button>
       )}
-      {state !== 'idle' && (
-        <FeedbackBar isCorrect={state === 'correct'} sentence={exercise.sentence} />
-      )}
     </div>
   )
 }
@@ -191,17 +190,3 @@ function WordChip({ chip, variant, done, onClick }: ChipProps) {
   )
 }
 
-function FeedbackBar({ isCorrect, sentence }: { isCorrect: boolean; sentence: string }) {
-  return (
-    <div
-      className="rounded-xl px-4 py-3 text-sm font-medium border"
-      style={{
-        backgroundColor: isCorrect ? 'var(--success-soft)' : 'var(--error-soft)',
-        borderColor: isCorrect ? 'var(--success)' : 'var(--error)',
-        color: isCorrect ? 'var(--success-value)' : 'var(--error-value)',
-      }}
-    >
-      {isCorrect ? '✓ Correct!' : `✗ Correct order: "${sentence}"`}
-    </div>
-  )
-}
