@@ -1,30 +1,10 @@
 "use client";
 
-import { useCallback, useState } from "react";
 import Link from "next/link";
 import { Play, CheckCircle2 } from "lucide-react";
 import type { Lesson } from "@/lib/types";
 import { ipaFromLessonTitle } from "@/lib/sound-lab/display";
-
-function useSpeech() {
-  const [speaking, setSpeaking] = useState<string | null>(null);
-
-  const speak = useCallback((word: string, e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (!("speechSynthesis" in window)) return;
-    window.speechSynthesis.cancel();
-    const utt = new SpeechSynthesisUtterance(word);
-    utt.lang = "en-US";
-    utt.rate = 0.9;
-    utt.onstart = () => setSpeaking(word);
-    utt.onend = () => setSpeaking(null);
-    utt.onerror = () => setSpeaking(null);
-    window.speechSynthesis.speak(utt);
-  }, []);
-
-  return { speaking, speak };
-}
+import { useSpeakWord } from "@/hooks/useSpeakWord";
 
 const CARD_PALETTES = [
   {
@@ -92,7 +72,7 @@ interface Props {
 
 export function SoundLabLessonCard({ lesson, progressPct, isWeak, staggerIndex = 0 }: Props) {
   const { id, title, words, href, difficulty, description } = lesson;
-  const { speaking, speak } = useSpeech();
+  const { speaking, speak } = useSpeakWord();
   const ipa = ipaFromLessonTitle(title);
   const subtitle = description?.trim() || null;
   const linkHref = href ?? `/practice/sounds/sound/${id.replace("sound-", "")}`;

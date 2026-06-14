@@ -1,6 +1,7 @@
 "use client";
 
 import { Search } from "lucide-react";
+import { cn } from "@/lib/cn";
 
 export type SoundLabChip = "all" | "easy" | "medium" | "hard";
 
@@ -11,11 +12,11 @@ interface Props {
   onSearchChange: (query: string) => void;
 }
 
-const CHIPS: { id: SoundLabChip; label: string }[] = [
-  { id: "all", label: "All" },
-  { id: "easy", label: "Easy" },
-  { id: "medium", label: "Medium" },
-  { id: "hard", label: "Hard" },
+const CHIPS: { id: SoundLabChip; label: string; shortLabel: string }[] = [
+  { id: "all", label: "All levels", shortLabel: "All" },
+  { id: "easy", label: "Easy", shortLabel: "Easy" },
+  { id: "medium", label: "Medium", shortLabel: "Med" },
+  { id: "hard", label: "Hard", shortLabel: "Hard" },
 ];
 
 export function SoundLabFilterRow({
@@ -25,33 +26,37 @@ export function SoundLabFilterRow({
   onSearchChange,
 }: Props) {
   return (
-    <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
-      <div className="flex items-center gap-2">
-        {CHIPS.map((chip) => {
-          const isOn = activeChip === chip.id;
-          return (
-            <button
-              key={chip.id}
-              type="button"
-              onClick={() => onChipChange(chip.id)}
-              className={["sound-lab__chip", isOn && "sound-lab__chip--on"]
-                .filter(Boolean)
-                .join(" ")}
-            >
-              {chip.label}
-            </button>
-          );
-        })}
+    <div className="sound-lab__toolbar">
+      <div className="sound-lab__toolbar-main">
+        <span className="sound-lab__chrome-label sound-lab__chrome-label--section">Difficulty</span>
+        <div className="sound-lab__chip-row" role="group" aria-label="Filter sounds by difficulty">
+          {CHIPS.map((chip) => {
+            const isOn = activeChip === chip.id;
+            return (
+              <button
+                key={chip.id}
+                type="button"
+                onClick={() => onChipChange(chip.id)}
+                className={cn("sound-lab__chip sound-lab__chip--compact", isOn && "sound-lab__chip--on")}
+                aria-pressed={isOn}
+              >
+                <span className="sm:hidden">{chip.shortLabel}</span>
+                <span className="hidden sm:inline">{chip.label}</span>
+              </button>
+            );
+          })}
+        </div>
       </div>
 
-      <label className="sound-lab__search flex w-full items-center gap-2 sm:w-auto sm:min-w-[260px]">
-        <Search className="h-4 w-4 shrink-0" aria-hidden />
+      <label className="sound-lab__search sound-lab__search--compact">
+        <Search className="sound-lab__search-icon h-4 w-4" aria-hidden />
+        <span className="sr-only">Find sounds and example words</span>
         <input
           type="search"
-          placeholder="Search sounds…"
+          placeholder="Find a sound or word…"
           value={search}
           onChange={(e) => onSearchChange(e.target.value)}
-          aria-label="Search sounds"
+          aria-label="Find sounds and example words"
         />
       </label>
     </div>
