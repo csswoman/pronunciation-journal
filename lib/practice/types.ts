@@ -165,4 +165,6 @@ export type PracticeConfig = {
   }
   /** Optional footer rendered inside the focus shell (e.g. "Ver lección" button). */
   footer?: React.ReactNode
+  /** Start at this exercise index (0-based). Undefined = start from 0. */
+  initialIndex?: number
 }
