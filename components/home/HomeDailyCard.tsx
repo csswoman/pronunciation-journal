@@ -32,10 +32,13 @@ export default function HomeDailyCard({ conceptLesson }: HomeDailyCardProps) {
     if (allDone) celebrate()
   }, [allDone, celebrate])
 
-  // Navigate to /daily so the session runs at its own URL (survives reload).
+  // Write sessionStorage + navigate so the session starts immediately at its own URL.
   const handleStartStep = useCallback((step: DailyStep) => {
     if (step.kind === 'concept') return
-    router.push('/daily')
+    try {
+      sessionStorage.setItem('daily:step', JSON.stringify({ stepId: step.id, exerciseIndex: 0 }))
+    } catch { /* quota errors: ignore */ }
+    router.push(`/daily?step=${step.id}`)
   }, [router])
 
   // Embedded checklist (single view)
