@@ -5,6 +5,7 @@ import { cn } from '@/lib/cn'
 import { PhonemeExercisePrompt } from '@/components/phoneme-practice/PhonemeExercisePrompt'
 import { getPhonemeExerciseMeta } from '@/lib/phoneme-practice/exercise-labels'
 import type { ReorderWordsExercise as ReorderWordsExerciseType } from '@/lib/exercises/types'
+import { useUISounds } from '@/hooks/useUISounds'
 
 interface Props {
   exercise: ReorderWordsExerciseType
@@ -28,6 +29,7 @@ export function ReorderWordsExercise({ exercise, onResult, focusUi = false }: Pr
   const [state, setState] = useState<AnswerState>('idle')
   const startMs = useRef(Date.now())
   const meta = getPhonemeExerciseMeta('reorder_words', {})
+  const { playTap, playCorrect, playWrong } = useUISounds()
 
   useEffect(() => {
     setBank(makeChips(exercise.tokens))
@@ -38,6 +40,7 @@ export function ReorderWordsExercise({ exercise, onResult, focusUi = false }: Pr
 
   function moveToAnswer(chip: Chip) {
     if (state !== 'idle') return
+    playTap()
     setBank((b) => b.filter((c) => c.key !== chip.key))
     setAnswer((a) => [...a, chip])
   }
@@ -53,6 +56,7 @@ export function ReorderWordsExercise({ exercise, onResult, focusUi = false }: Pr
     const userAnswer = answer.map((c) => c.word).join(' ')
     const isCorrect = userAnswer === exercise.sentence
     setState(isCorrect ? 'correct' : 'wrong')
+    if (isCorrect) playCorrect(); else playWrong()
     onResult(isCorrect, userAnswer, Date.now() - startMs.current)
   }
 
