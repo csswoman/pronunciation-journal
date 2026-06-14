@@ -58,7 +58,7 @@ export function ManageAddTab(props: ManageAddTabProps) {
                       : "bg-surface-sunken text-fg-subtle"
                   }`}
                 >
-                  {r.source === "lexicon" ? "Lexicon" : "My Words"}
+                  {r.source === "lexicon" ? "Dictionary" : "My Words"}
                 </span>
               </button>
             </li>

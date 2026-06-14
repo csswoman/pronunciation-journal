@@ -2,7 +2,7 @@
 
 import { Plus } from "lucide-react";
 import Button from "@/components/ui/Button";
-import type { WordsTabId } from "@/components/words/WordsTabs";
+import type { WordsTabId } from "@/components/words/WordsTopbar";
 
 interface WordsHeroProps {
   activeTab: WordsTabId;
