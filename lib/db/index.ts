@@ -133,11 +133,11 @@ class PronunciationDB extends Dexie {
       syncOutbox: "++id, status, createdAt, [status+createdAt]",
     });
 
-    // v6: local cache mirrors for offline reads (user_sound_progress, answer_history)
+    // v6: legacy stores — never used; kept so Dexie doesn't break existing DBs on upgrade.
+    // user_sound_progress was dropped (migration 20260602100000_contrast_progress.sql).
+    // answer_history now goes through the syncOutbox (v5). Do not write to these.
     this.version(6).stores({
-      // localKey = `${userId}:${soundId}` — mirrors user_sound_progress
       localSoundProgress: "localKey, userId, soundId, nextReview",
-      // mirrors answer_history rows before they are confirmed by Supabase
       localAnswerHistory: "++id, userId, soundId, answeredAt, synced",
     });
 
