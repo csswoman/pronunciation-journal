@@ -7,7 +7,17 @@ import type { UserLearningState } from './learning-state'
  * Fetch the learning state stored remotely for the given user.
  * Returns null if the row does not exist or the table is not yet migrated (PGRST205).
  */
+function isMissingLearningStateTable(error: { code?: string; message?: string } | null): boolean {
+  if (!error) return false;
+  if (error.code === "PGRST205" || error.code === "42P01") return true;
+  return /user_learning_state/i.test(error.message ?? "");
+}
+
+let learningStateTableMissing = false;
+
 export async function fetchRemoteLearningState(userId: string): Promise<UserLearningState | null> {
+  if (learningStateTableMissing) return null;
+
   try {
     const supabase = getSupabaseBrowserClient()
     const { data, error } = await supabase
@@ -16,7 +26,12 @@ export async function fetchRemoteLearningState(userId: string): Promise<UserLear
       .eq('user_id', userId)
       .maybeSingle()
 
-    if (error) return null
+    if (error) {
+      if (isMissingLearningStateTable(error)) {
+        learningStateTableMissing = true;
+      }
+      return null
+    }
     if (!data) return null
     return data.state as unknown as UserLearningState
   } catch {
