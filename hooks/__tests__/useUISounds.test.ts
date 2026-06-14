@@ -5,51 +5,61 @@ import { useUISounds } from '../useUISounds'
 import { useUISoundsStore } from '@/lib/stores/uiSoundsStore'
 
 // Minimal Web Audio API mock
-const mockStop = vi.fn()
-const mockStart = vi.fn()
-const mockConnect = vi.fn()
-const mockDisconnect = vi.fn()
-const mockFrequency = { value: 440, setValueAtTime: vi.fn(), linearRampToValueAtTime: vi.fn(), exponentialRampToValueAtTime: vi.fn() }
-const mockGain = { value: 0, setValueAtTime: vi.fn(), linearRampToValueAtTime: vi.fn(), exponentialRampToValueAtTime: vi.fn() }
-
-const mockOscillator = {
+const createMockOscillator = () => ({
   type: 'sine' as OscillatorType,
-  frequency: mockFrequency,
-  connect: mockConnect,
-  start: mockStart,
-  stop: mockStop,
-  disconnect: mockDisconnect,
-}
+  frequency: {
+    value: 440,
+    setValueAtTime: vi.fn(),
+    linearRampToValueAtTime: vi.fn(),
+    exponentialRampToValueAtTime: vi.fn(),
+  },
+  connect: vi.fn(),
+  start: vi.fn(),
+  stop: vi.fn(),
+  disconnect: vi.fn(),
+  onended: null as (() => void) | null,
+})
 
-const mockGainNode = {
-  gain: mockGain,
-  connect: mockConnect,
-  disconnect: mockDisconnect,
-}
+const createMockGainNode = () => ({
+  gain: {
+    value: 0,
+    setValueAtTime: vi.fn(),
+    linearRampToValueAtTime: vi.fn(),
+    exponentialRampToValueAtTime: vi.fn(),
+  },
+  connect: vi.fn(),
+  disconnect: vi.fn(),
+})
 
-const mockCompressor = {
-  connect: mockConnect,
-  disconnect: mockDisconnect,
-}
+const mockCompressor = { connect: vi.fn(), disconnect: vi.fn() }
+
+let createdOscillators: ReturnType<typeof createMockOscillator>[] = []
+let createdGains: ReturnType<typeof createMockGainNode>[] = []
 
 const mockAudioContext = {
-  createOscillator: vi.fn(() => mockOscillator),
-  createGain: vi.fn(() => mockGainNode),
+  createOscillator: vi.fn(() => {
+    const osc = createMockOscillator()
+    createdOscillators.push(osc)
+    return osc
+  }),
+  createGain: vi.fn(() => {
+    const gain = createMockGainNode()
+    createdGains.push(gain)
+    return gain
+  }),
   createDynamicsCompressor: vi.fn(() => mockCompressor),
   destination: {},
   currentTime: 0,
   state: 'running',
 }
 
-const MockAudioContext = function () { return mockAudioContext }
-
 beforeEach(() => {
-  vi.stubGlobal('AudioContext', MockAudioContext)
+  vi.stubGlobal('AudioContext', function MockAudioContext() { return mockAudioContext })
   vi.stubGlobal('matchMedia', vi.fn(() => ({ matches: false })))
-  mockStart.mockClear()
-  mockStop.mockClear()
-  mockConnect.mockClear()
+  createdOscillators = []
+  createdGains = []
   mockAudioContext.createOscillator.mockClear()
+  mockAudioContext.createGain.mockClear()
   useUISoundsStore.setState({ soundEnabled: true })
 })
 
@@ -64,21 +74,29 @@ describe('useUISounds', () => {
   it('playTap creates and starts an oscillator', () => {
     const { result } = renderHook(() => useUISounds())
     act(() => { result.current.playTap() })
-    expect(mockAudioContext.createOscillator).toHaveBeenCalled()
-    expect(mockStart).toHaveBeenCalled()
+    expect(createdOscillators).toHaveLength(1)
+    expect(createdOscillators[0].start).toHaveBeenCalled()
   })
 
   it('does not play when soundEnabled is false', () => {
     useUISoundsStore.setState({ soundEnabled: false })
     const { result } = renderHook(() => useUISounds())
     act(() => { result.current.playTap() })
-    expect(mockStart).not.toHaveBeenCalled()
+    expect(createdOscillators).toHaveLength(0)
   })
 
   it('does not play when prefers-reduced-motion is active', () => {
     vi.stubGlobal('matchMedia', vi.fn(() => ({ matches: true })))
     const { result } = renderHook(() => useUISounds())
     act(() => { result.current.playTap() })
-    expect(mockStart).not.toHaveBeenCalled()
+    expect(createdOscillators).toHaveLength(0)
+  })
+
+  it('playCorrect creates two oscillators for the two-note sequence', () => {
+    const { result } = renderHook(() => useUISounds())
+    act(() => { result.current.playCorrect() })
+    expect(createdOscillators).toHaveLength(2)
+    expect(createdOscillators[0].start).toHaveBeenCalled()
+    expect(createdOscillators[1].start).toHaveBeenCalled()
   })
 })

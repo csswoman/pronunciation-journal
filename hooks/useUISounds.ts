@@ -12,6 +12,8 @@ function getOrCreateContext(ref: React.MutableRefObject<AudioContext | null>): A
   if (typeof window === 'undefined' || !('AudioContext' in window)) return null
   if (!ref.current || ref.current.state === 'closed') {
     ref.current = new AudioContext()
+  } else if (ref.current.state === 'suspended') {
+    void ref.current.resume()
   }
   return ref.current
 }
@@ -26,8 +28,8 @@ function buildChain(ctx: AudioContext) {
   return { osc, gain }
 }
 
-function applyEnvelope(gain: GainNode, ctx: AudioContext, durationSec: number) {
-  const now = ctx.currentTime
+function applyEnvelope(gain: GainNode, ctx: AudioContext, durationSec: number, startOffset = 0) {
+  const now = ctx.currentTime + startOffset
   const attack = 0.005
   const decay = 0.03
   const sustain = 0.3
@@ -44,12 +46,8 @@ export function useUISounds() {
   const ctxRef = useRef<AudioContext | null>(null)
   const soundEnabled = useUISoundsStore((s) => s.soundEnabled)
 
-  const canPlay = useCallback(() => {
-    return soundEnabled && !isReducedMotion()
-  }, [soundEnabled])
-
   const playTap = useCallback(() => {
-    if (!canPlay()) return
+    if (!soundEnabled || isReducedMotion()) return
     const ctx = getOrCreateContext(ctxRef)
     if (!ctx) return
 
@@ -60,10 +58,11 @@ export function useUISounds() {
     applyEnvelope(gain, ctx, duration)
     osc.start(ctx.currentTime)
     osc.stop(ctx.currentTime + duration)
-  }, [canPlay])
+    osc.onended = () => { osc.disconnect(); gain.disconnect() }
+  }, [soundEnabled])
 
   const playCorrect = useCallback(() => {
-    if (!canPlay()) return
+    if (!soundEnabled || isReducedMotion()) return
     const ctx = getOrCreateContext(ctxRef)
     if (!ctx) return
 
@@ -76,23 +75,15 @@ export function useUISounds() {
       const { osc, gain } = buildChain(ctx)
       osc.type = 'sine'
       osc.frequency.setValueAtTime(freq, ctx.currentTime + startOffset)
-      const now = ctx.currentTime + startOffset
-      const attack = 0.005
-      const decay = 0.03
-      const sustain = 0.3
-      const release = 0.04
-      gain.gain.setValueAtTime(0, now)
-      gain.gain.linearRampToValueAtTime(1, now + attack)
-      gain.gain.exponentialRampToValueAtTime(sustain, now + attack + decay)
-      gain.gain.setValueAtTime(sustain, now + noteDuration - release)
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + noteDuration)
+      applyEnvelope(gain, ctx, noteDuration, startOffset)
       osc.start(ctx.currentTime + startOffset)
       osc.stop(ctx.currentTime + startOffset + noteDuration)
+      osc.onended = () => { osc.disconnect(); gain.disconnect() }
     })
-  }, [canPlay])
+  }, [soundEnabled])
 
   const playWrong = useCallback(() => {
-    if (!canPlay()) return
+    if (!soundEnabled || isReducedMotion()) return
     const ctx = getOrCreateContext(ctxRef)
     if (!ctx) return
 
@@ -104,7 +95,8 @@ export function useUISounds() {
     applyEnvelope(gain, ctx, duration)
     osc.start(ctx.currentTime)
     osc.stop(ctx.currentTime + duration)
-  }, [canPlay])
+    osc.onended = () => { osc.disconnect(); gain.disconnect() }
+  }, [soundEnabled])
 
   return { playTap, playCorrect, playWrong }
 }
