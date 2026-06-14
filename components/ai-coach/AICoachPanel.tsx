@@ -20,6 +20,8 @@ import { AICoachHeader, ConversationHistoryPanel } from "./AICoachPanelParts";
 
 export const PANEL_WIDTH = 380;
 
+const QUOTA_WARN_THRESHOLD = 18;
+
 export default function AICoachPanel() {
   const { isOpen, isFullscreen, panelWidth, close, setFullscreen, setPanelWidth, launch, consumeLaunch } =
     useAICoachStore();
@@ -93,9 +95,22 @@ export default function AICoachPanel() {
                     <ChatView messages={messages} isStreaming={isStreaming} onSaveWord={openSaveWordModal} onSuggestionClick={(prompt) => setInputPrefill(prompt)} onToolAnswer={answerToolCall} onNext={() => sendMessage("next")} />
                   </div>
                   <div className="flex-shrink-0 px-3 pb-3 pt-1 border-t border-border-subtle bg-surface-base">
-                    {quotaExhausted
-                      ? <QuotaExhaustedCard messages={messages} onNewSession={resetSession} />
-                      : <CustomPromptPanel onSubmit={sendMessage} isDisabled={isStreaming} variant="chat" placeholder="Ask your AI Coach..." prefill={inputPrefill} onPrefillConsumed={() => setInputPrefill(undefined)} />}
+                    {quotaExhausted && <QuotaExhaustedCard messages={messages} onNewSession={resetSession} />}
+                    {!quotaExhausted && messages.length >= QUOTA_WARN_THRESHOLD && (
+                      <div className="flex justify-center mb-2">
+                        <span className="text-[11px] text-[var(--warning)] bg-[var(--warning-soft)] rounded-full px-2.5 py-1">
+                          You're approaching your session limit
+                        </span>
+                      </div>
+                    )}
+                    <CustomPromptPanel
+                      onSubmit={sendMessage}
+                      isDisabled={isStreaming || quotaExhausted}
+                      variant="chat"
+                      placeholder={quotaExhausted ? "Session limit reached" : "Ask your AI Coach..."}
+                      prefill={inputPrefill}
+                      onPrefillConsumed={() => setInputPrefill(undefined)}
+                    />
                   </div>
                 </>
             }
