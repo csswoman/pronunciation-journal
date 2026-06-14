@@ -24,7 +24,7 @@ export function ExitConfirmSheet({ open, onConfirm, onCancel }: ExitConfirmSheet
       />
       <div className="relative z-10 rounded-t-[var(--radius-xl)] bg-surface px-6 pb-10 pt-6 shadow-xl flex flex-col gap-4">
         <div className="mx-auto mb-1 h-1 w-10 rounded-full bg-border-subtle" />
-        <h2 className="text-[18px] font-bold text-fg">Quit this session?</h2>
+        <h2 className="text-lg font-bold text-fg">Quit this session?</h2>
         <p className="text-[14px] text-fg-muted leading-snug">
           You&apos;ll lose your progress in this session.
         </p>
