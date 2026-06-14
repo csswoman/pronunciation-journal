@@ -9,6 +9,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { cn } from '@/lib/cn'
 import type { MultipleChoiceExercise as MultipleChoiceExerciseType } from '@/lib/exercises/types'
+import { useUISounds } from '@/hooks/useUISounds'
 
 interface Props {
   exercise: MultipleChoiceExerciseType
@@ -21,6 +22,7 @@ export function MultipleChoiceExercise({ exercise, onResult }: Props) {
   const [selected, setSelected] = useState<number | null>(null)
   const [state, setState]       = useState<AnswerState>('idle')
   const startMs = useRef(Date.now())
+  const { playTap, playCorrect, playWrong } = useUISounds()
 
   useEffect(() => {
     setSelected(null)
@@ -30,9 +32,11 @@ export function MultipleChoiceExercise({ exercise, onResult }: Props) {
 
   function handleSelect(idx: number) {
     if (state !== 'idle') return
+    playTap()
     const isCorrect = idx === exercise.answerIndex
     setSelected(idx)
     setState(isCorrect ? 'correct' : 'wrong')
+    if (isCorrect) playCorrect(); else playWrong()
     onResult(isCorrect, exercise.options[idx], Date.now() - startMs.current)
   }
 
