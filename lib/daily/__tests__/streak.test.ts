@@ -3,7 +3,7 @@ import {
   computeStreakFromTimestamps,
   toLocalDateString,
   DAILY_STREAK_THRESHOLD,
-} from '../streak'
+} from '../streak-core'
 
 // All tests use Lima timezone (UTC-5, no DST) unless noted otherwise.
 const TZ = 'America/Lima'

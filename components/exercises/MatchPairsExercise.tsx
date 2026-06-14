@@ -14,10 +14,11 @@ import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } fr
 import { shuffle } from '@/lib/exercises/utils'
 import { speak } from '@/lib/phoneme-practice/tts'
 import type { MatchPairsExercise as MatchPairsExerciseType } from '@/lib/exercises/types'
+import { useUISounds } from '@/hooks/useUISounds'
 
 interface Props {
   exercise: MatchPairsExerciseType
-  onSubmit: (isCorrect: boolean, userAnswer: string) => void
+  onResult: (isCorrect: boolean, userAnswer: string, timeMs: number) => void
 }
 
 type MatchResult = Record<string, 'correct' | 'wrong' | null>
@@ -36,10 +37,9 @@ const DOT_COLORS = [
 
 const useIsoLayoutEffect = typeof window === 'undefined' ? useEffect : useLayoutEffect
 
-export function MatchPairsExercise({ exercise, onSubmit }: Props) {
+export function MatchPairsExercise({ exercise, onResult }: Props) {
   const rightItems = useMemo(
     () => shuffle(exercise.pairs.map((p) => ({ id: p.id, label: p.right }))),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [exercise.id],
   )
 
@@ -53,6 +53,8 @@ export function MatchPairsExercise({ exercise, onSubmit }: Props) {
   const boardRef  = useRef<HTMLDivElement>(null)
   const leftRefs  = useRef<Map<string, HTMLButtonElement>>(new Map())
   const rightRefs = useRef<Map<string, HTMLButtonElement>>(new Map())
+  const startMs   = useRef(Date.now())
+  const { playTap, playCorrect, playWrong } = useUISounds()
 
   const matchedRightIds = new Set(Object.values(matches))
   const pairColor = (leftId: string) => DOT_COLORS[exercise.pairs.findIndex((p) => p.id === leftId) % DOT_COLORS.length]
@@ -72,6 +74,7 @@ export function MatchPairsExercise({ exercise, onSubmit }: Props) {
     if (leftIdOfThisRight && !selectedLeft) { unmatch(leftIdOfThisRight); return }
     if (selectedLeft) {
       if (matchedRightIds.has(rightId) && matches[selectedLeft] !== rightId) return
+      playTap()
       setMatches((prev) => ({ ...prev, [selectedLeft]: rightId }))
       setSelectedLeft(null)
       return
@@ -90,7 +93,8 @@ export function MatchPairsExercise({ exercise, onSubmit }: Props) {
     }
     setResults(newResults)
     setSubmitted(true)
-    onSubmit(allCorrect, JSON.stringify(matches))
+    if (allCorrect) playCorrect(); else playWrong()
+    onResult(allCorrect, JSON.stringify(matches), Date.now() - startMs.current)
   }
 
   const recomputeConnections = useCallback(() => {
@@ -115,6 +119,10 @@ export function MatchPairsExercise({ exercise, onSubmit }: Props) {
   }, [matches, results])
 
   useIsoLayoutEffect(() => { recomputeConnections() }, [recomputeConnections, rightItems])
+
+  useEffect(() => {
+    startMs.current = Date.now()
+  }, [exercise.id])
 
   useEffect(() => {
     const board = boardRef.current

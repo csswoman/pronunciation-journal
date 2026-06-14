@@ -1,6 +1,6 @@
 import { Flame } from 'lucide-react'
 
-import type { DailyStreakResult } from '@/lib/daily/streak'
+import type { DailyStreakResult } from '@/lib/daily/streak-core'
 
 import { ProgressCard, ProgressCardHeader } from './ProgressCard'
 

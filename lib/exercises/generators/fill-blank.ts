@@ -19,10 +19,11 @@ export function generateFillBlankFromWordBank(
     return blankWord(e.example, e.text) !== null
   })
 
-  const exercises: FillBlankExercise[] = pick(usable, count).map(entry => {
+  const exercises: FillBlankExercise[] = pick(usable, count).flatMap(entry => {
     const sentence = blankWord(entry.example!, entry.text)!
     const level = entry.difficulty ? normalizeCEFR(entry.difficulty) : undefined
     const options = buildOptions(entry, usable, level)
+    if (!options) return []
 
     const firstLetter = entry.text.charAt(0).toUpperCase()
     const hints = {
@@ -31,7 +32,7 @@ export function generateFillBlankFromWordBank(
       level3: entry.translation ?? undefined,
     }
 
-    return {
+    return [{
       id: exerciseId('fill_blank', entry.id, entry.text),
       type: 'fill_blank',
       exerciseType: { domain: 'vocabulary', mode: 'fill_blank', variant: 'sentence' },
@@ -42,7 +43,7 @@ export function generateFillBlankFromWordBank(
       options,
       hint: entry.meaning ?? undefined,
       hints,
-    }
+    }]
   })
 
   return exercises
@@ -52,7 +53,7 @@ function buildOptions(
   entry: WordBankEntry,
   pool: WordBankEntry[],
   level: CEFRLevel | undefined
-): string[] {
+): string[] | null {
   const answer = entry.text
 
   // Prefer same CEFR level; fall back to any level.
@@ -64,10 +65,7 @@ function buildOptions(
   const candidates = sameCefr.length >= DISTRACTOR_COUNT ? sameCefr : fallback
   const distractors = pick(candidates, DISTRACTOR_COUNT).map(e => e.text)
 
-  // Pad with unique placeholders if pool is too small (shouldn't happen in practice).
-  while (distractors.length < DISTRACTOR_COUNT) {
-    distractors.push(`option${distractors.length + 1}`)
-  }
+  if (distractors.length < DISTRACTOR_COUNT) return null
 
   return shuffle([answer, ...distractors])
 }

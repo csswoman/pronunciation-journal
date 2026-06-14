@@ -2,14 +2,6 @@ export type BadgeVariant = "default" | "success" | "info" | "warning" | "error" 
 export type BadgeSize = "sm" | "md";
 export type BadgeColor = "sky" | "violet" | "teal" | "emerald" | "amber" | "red";
 
-const colorVar: Record<Exclude<BadgeVariant, "neutral">, string> = {
-  default: "var(--primary)",
-  success: "var(--success)",
-  info:    "var(--info)",
-  warning: "var(--warning)",
-  error:   "var(--error)",
-};
-
 // Tonal chip colors — light + dark via Tailwind dark: prefix
 const TONAL_CLASS: Record<BadgeColor, string> = {
   sky:     "bg-sky-100 text-sky-700 border border-sky-200 dark:bg-sky-900/40 dark:text-sky-300 dark:border-sky-700/40",

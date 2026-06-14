@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useCallback, useState, useMemo } from "react";
+import { useCallback, useState, useMemo } from "react";
 import { WebSpeechAdapter } from "@/lib/speech/adapters/webSpeechAdapter";
 import { GeminiAdapter } from "@/lib/speech/adapters/geminiAdapter";
 import type { SpeechInputResult, SpeechInputAdapter } from "@/lib/speech/types";

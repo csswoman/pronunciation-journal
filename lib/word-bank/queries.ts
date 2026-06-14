@@ -1,3 +1,4 @@
+import { getAccessToken } from "@/lib/auth/session";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import type { WordBankEntry } from "@/lib/word-bank/types";
 
@@ -21,15 +22,13 @@ export async function quickAddWord(input: {
   context?: string | null;
   deckId?: string | null;
 }): Promise<WordBankEntry> {
-  const supabase = getSupabaseBrowserClient();
-  const { data: { session } } = await supabase.auth.getSession();
-  if (!session) throw new Error("Not authenticated");
+  const accessToken = await getAccessToken();
 
   const res = await fetch("/api/words", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${session.access_token}`,
+      Authorization: `Bearer ${accessToken}`,
     },
     body: JSON.stringify({
       text: input.text,
@@ -171,5 +170,72 @@ export async function toggleFavorite(
     .update({ is_favorite: value } as any)
     .eq("id", wordBankId);
   if (error) throw error;
+}
+
+const DAILY_WORD_COLUMNS =
+  "id, user_id, text, meaning, translation, ipa, example, audio_url, difficulty, status, srs_status, next_review_at, ease_factor, interval_days, repetitions, review_count, last_reviewed_at, source, source_ref, created_at";
+
+/** Words due or new — used by the daily plan word review step. */
+export async function getDueWordsForDaily(
+  userId: string,
+  limit: number,
+): Promise<WordBankEntry[]> {
+  const supabase = getSupabaseBrowserClient();
+  const today = new Date().toISOString();
+
+  const { data, error } = await supabase
+    .from(TABLE)
+    .select(DAILY_WORD_COLUMNS)
+    .eq("user_id", userId)
+    .eq("status", "ready")
+    .or(`srs_status.eq.new,next_review_at.lte.${today}`)
+    .order("next_review_at", { ascending: true, nullsFirst: true })
+    .limit(limit);
+
+  if (error) throw error;
+  return (data ?? []) as WordBankEntry[];
+}
+
+/** New words only — primary source for daily plan word review. */
+export async function getNewWordsForDaily(
+  userId: string,
+  limit: number,
+): Promise<WordBankEntry[]> {
+  if (limit <= 0) return [];
+  const supabase = getSupabaseBrowserClient();
+
+  const { data, error } = await supabase
+    .from(TABLE)
+    .select(DAILY_WORD_COLUMNS)
+    .eq("user_id", userId)
+    .eq("status", "ready")
+    .eq("srs_status", "new")
+    .order("created_at", { ascending: false })
+    .limit(limit);
+
+  if (error) throw error;
+  return (data ?? []) as WordBankEntry[];
+}
+
+/** SRS-due review words (excludes new) — used by buildReviewPlan. */
+export async function getDueReviewWordsForDaily(
+  userId: string,
+  limit: number,
+): Promise<WordBankEntry[]> {
+  const supabase = getSupabaseBrowserClient();
+  const today = new Date().toISOString();
+
+  const { data, error } = await supabase
+    .from(TABLE)
+    .select(DAILY_WORD_COLUMNS)
+    .eq("user_id", userId)
+    .eq("status", "ready")
+    .neq("srs_status", "new")
+    .lte("next_review_at", today)
+    .order("next_review_at", { ascending: true })
+    .limit(limit);
+
+  if (error) throw error;
+  return (data ?? []) as WordBankEntry[];
 }
 

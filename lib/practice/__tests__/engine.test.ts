@@ -26,7 +26,7 @@ function makeExercise(
   }
 }
 
-const noop = (_r: SessionResult) => {}
+const noop = (result: SessionResult) => { void result }
 
 describe('buildSession', () => {
   it('respects sessionLength', () => {

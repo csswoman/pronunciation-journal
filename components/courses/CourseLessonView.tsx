@@ -6,7 +6,8 @@ import LessonMarkdown from "@/components/lessons/LessonMarkdown";
 import Button from "@/components/ui/Button";
 import { getTheoryLessonBySlug } from "@/lib/theory-lessons/queries";
 import type { TheoryLesson } from "@/lib/types";
-import { markLessonComplete, markLessonIncomplete, isLessonComplete } from "@/lib/db";
+import { markLessonIncomplete, isLessonComplete } from "@/lib/db";
+import { recordLessonComplete } from "@/lib/practice/queries";
 import type { CoursePathTrackId } from "@/lib/courses/types";
 
 interface CourseLessonViewProps {
@@ -41,7 +42,7 @@ export default function CourseLessonView({ slug, levelId, lessonId }: CourseLess
         await markLessonIncomplete(levelId, lessonId);
         setCompleted(false);
       } else {
-        await markLessonComplete(levelId, lessonId);
+        await recordLessonComplete(levelId, lessonId);
         setCompleted(true);
       }
     } finally {

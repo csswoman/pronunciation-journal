@@ -177,7 +177,7 @@ describe('PracticeSession', () => {
 
     // Use the Skip path (single click) to avoid Pick-Word's two-step
     // select-then-check flow which races with internal state.
-    const skipBtn = await screen.findByRole('button', { name: /omitir/i })
+    const skipBtn = await screen.findByRole('button', { name: /skip/i })
     await user.click(skipBtn)
 
     // After FEEDBACK_MS (1500ms) the only-exercise session transitions to

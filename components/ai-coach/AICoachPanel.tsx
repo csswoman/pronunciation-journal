@@ -20,12 +20,14 @@ import { AICoachHeader, ConversationHistoryPanel } from "./AICoachPanelParts";
 
 export const PANEL_WIDTH = 380;
 
+const QUOTA_WARN_THRESHOLD = 18;
+
 export default function AICoachPanel() {
-  const { isOpen, isFullscreen, panelWidth, close, setFullscreen, setPanelWidth, launch, consumeLaunch } =
+  const { isOpen, isFullscreen, panelWidth, close, setPanelWidth, launch, consumeLaunch } =
     useAICoachStore();
   const pathname = usePathname();
   const ctx = getPageContext(pathname);
-  const { isDragging, onDragStart } = usePanelResize({ panelWidth, setPanelWidth });
+  const { onDragStart } = usePanelResize({ panelWidth, setPanelWidth });
 
   const { messages, isStreaming, error, quotaExhausted, wordToSave, conversationId, sendMessage, answerToolCall, openSaveWordModal, closeSaveWordModal, confirmSaveWord, resetSession, loadConversation, removeConversation } = useAIPractice();
 
@@ -76,7 +78,7 @@ export default function AICoachPanel() {
       aria-hidden={!isOpen}
     >
       {!isFullscreen && <div onMouseDown={onDragStart} title="Drag to resize" className="absolute top-0 left-0 bottom-0 w-1 cursor-ew-resize group z-10 -ml-px"><div className="absolute inset-y-0 left-0 w-1 opacity-0 group-hover:opacity-100 transition-opacity bg-primary" /></div>}
-      <AICoachHeader pageLabel={ctx.label} showHistory={showHistory} isFullscreen={isFullscreen} onNewChat={() => { resetSession(); setActiveTab("chat"); }} onToggleHistory={() => setShowHistory((value) => !value)} onToggleFullscreen={() => setFullscreen(!isFullscreen)} onClose={close} />
+      <AICoachHeader pageLabel={ctx.label} showHistory={showHistory} onNewChat={() => { resetSession(); setActiveTab("chat"); }} onToggleHistory={() => setShowHistory((value) => !value)} onClose={close} />
       <div className="flex-shrink-0"><ChatTabs active={activeTab} onChange={setActiveTab} /></div>
 
       {showHistory && <ConversationHistoryPanel conversations={conversations} activeId={conversationId} onSelect={(conv) => { loadConversation(conv); setShowHistory(false); setActiveTab("chat"); }} onDelete={async (id) => { await removeConversation(id); setConversations((prev) => prev.filter((item) => item.id !== id)); }} onClose={() => setShowHistory(false)} />}
@@ -93,9 +95,22 @@ export default function AICoachPanel() {
                     <ChatView messages={messages} isStreaming={isStreaming} onSaveWord={openSaveWordModal} onSuggestionClick={(prompt) => setInputPrefill(prompt)} onToolAnswer={answerToolCall} onNext={() => sendMessage("next")} />
                   </div>
                   <div className="flex-shrink-0 px-3 pb-3 pt-1 border-t border-border-subtle bg-surface-base">
-                    {quotaExhausted
-                      ? <QuotaExhaustedCard messages={messages} onNewSession={resetSession} />
-                      : <CustomPromptPanel onSubmit={sendMessage} isDisabled={isStreaming} variant="chat" placeholder="Ask your AI Coach..." prefill={inputPrefill} onPrefillConsumed={() => setInputPrefill(undefined)} />}
+                    {quotaExhausted && <QuotaExhaustedCard messages={messages} onNewSession={resetSession} />}
+                    {!quotaExhausted && messages.length >= QUOTA_WARN_THRESHOLD && (
+                      <div className="flex justify-center mb-2">
+                        <span className="text-[11px] text-[var(--warning)] bg-[var(--warning-soft)] rounded-full px-2.5 py-1">
+                          You're approaching your session limit
+                        </span>
+                      </div>
+                    )}
+                    <CustomPromptPanel
+                      onSubmit={sendMessage}
+                      isDisabled={isStreaming || quotaExhausted}
+                      variant="chat"
+                      placeholder={quotaExhausted ? "Session limit reached" : "Ask your AI Coach..."}
+                      prefill={inputPrefill}
+                      onPrefillConsumed={() => setInputPrefill(undefined)}
+                    />
                   </div>
                 </>
             }

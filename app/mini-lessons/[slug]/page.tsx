@@ -11,6 +11,7 @@ import {
   MINI_LESSON_LEVEL_LABELS,
 } from "@/lib/content/mini-lesson-labels";
 import MiniLessonQuiz from "@/components/mini-lessons/MiniLessonQuiz";
+import ExerciseBlock from "@/components/mini-lessons/ExerciseBlock";
 
 interface MiniLessonPageProps {
   params: Promise<{ slug: string }>;
@@ -64,13 +65,13 @@ export default async function MiniLessonDetailPage({ params }: MiniLessonPagePro
 
         {content.examples.length > 0 && (
           <section className="mini-lessons__section mini-lessons__section--examples">
-            <h2 className="mini-lessons__section-title">Ejemplos</h2>
+            <h2 className="mini-lessons__section-title">Examples</h2>
             <div className="mini-lessons__examples">
               {content.examples.map((example, idx) => (
                 <div key={idx} className="mini-lessons__example">
                   <p className="mini-lessons__example-en">{example.english}</p>
                   {example.ipa && (
-                    <p className="mini-lessons__example-ipa">
+                    <p className="mini-lessons__example-ipa" lang="en-fonipa">
                       <span className="mini-lessons__ipa-slash" aria-hidden>/</span>
                       {example.ipa}
                       <span className="mini-lessons__ipa-slash" aria-hidden>/</span>
@@ -87,11 +88,12 @@ export default async function MiniLessonDetailPage({ params }: MiniLessonPagePro
 
         {lesson.tip && (
           <aside className="mini-lessons__tip">
-            <span className="mini-lessons__tip-icon" aria-hidden>
-              💡
-            </span>
+            <svg className="mini-lessons__tip-icon" aria-hidden width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <circle cx="8" cy="8" r="7" stroke="currentColor" strokeWidth="1.5"/>
+              <path d="M8 5v4M8 11v.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+            </svg>
             <div>
-              <span className="mini-lessons__tip-label">Consejo</span>
+              <span className="mini-lessons__tip-label">Tip</span>
               <p className="mini-lessons__tip-body">{lesson.tip}</p>
             </div>
           </aside>
@@ -99,16 +101,13 @@ export default async function MiniLessonDetailPage({ params }: MiniLessonPagePro
 
         {content.exercises.length > 0 && (
           <section className="mini-lessons__section">
-            <h2 className="mini-lessons__section-title">Ejercicios</h2>
+            <h2 className="mini-lessons__section-title">Exercises</h2>
             {content.exercises.map((exercise, idx) => (
-              <div key={idx} className="mini-lessons__block">
-                <p className="mini-lessons__block-label">{exercise.instruction}</p>
-                <ol className="mini-lessons__list">
-                  {exercise.items.map((item, itemIdx) => (
-                    <li key={itemIdx}>{item}</li>
-                  ))}
-                </ol>
-              </div>
+              <ExerciseBlock
+                key={idx}
+                instruction={exercise.instruction}
+                items={exercise.items}
+              />
             ))}
           </section>
         )}
@@ -122,14 +121,14 @@ export default async function MiniLessonDetailPage({ params }: MiniLessonPagePro
 
         <footer className="mini-lessons__footer">
           <Link href="/mini-lessons" className="mini-lessons__btn mini-lessons__btn--ghost">
-            ← Volver al listado
+            ← All lessons
           </Link>
           {nextLesson && (
             <Link
               href={`/mini-lessons/${nextLesson.slug}`}
               className="mini-lessons__btn"
             >
-              Siguiente: {nextLesson.title} →
+              Next: {nextLesson.title} →
             </Link>
           )}
         </footer>

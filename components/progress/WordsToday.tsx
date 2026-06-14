@@ -60,7 +60,7 @@ export default function WordsToday({ words, newCount, reviewCount }: WordsTodayP
           )}
         </div>
         <Link
-          href="/decks"
+          href="/practice/decks"
           className="shrink-0 text-xs font-semibold text-[var(--primary)] transition-opacity hover:opacity-70"
         >
           Vocabulary →

@@ -13,16 +13,6 @@ function shortTip(symbol: string): string {
     : `${firstSentence}.`;
 }
 
-function activateCard(
-  event: React.KeyboardEvent<HTMLDivElement>,
-  onSelect: () => void
-) {
-  if (event.key === "Enter" || event.key === " ") {
-    event.preventDefault();
-    onSelect();
-  }
-}
-
 export default function SpanishSpeakersGrid({
   onSelect,
 }: {

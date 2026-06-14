@@ -11,11 +11,13 @@
 //   plain layout           (otherwise, same children without shell)
 // </SessionExercisingBody>
 
+import { useState } from 'react'
 import { PhonemeFocusShell } from '@/components/phoneme-practice/PhonemeFocusShell'
 import { ExerciseHints } from '@/components/phoneme-practice/ExerciseHints'
 import { ExerciseRenderer } from './ExerciseRenderer'
 import { SessionProgress } from './SessionProgress'
 import { InlineFeedback } from './InlineFeedback'
+import { ExitConfirmSheet } from '@/components/exercises/ExitConfirmSheet'
 import type React from 'react'
 import type { PracticeExercise, SessionResult } from '@/lib/practice/types'
 
@@ -70,6 +72,8 @@ export function SessionExercisingBody({ state, handlers, lessonFooter }: Session
   } = state
   const { onSubmit, onRetry, onHintContinue, onExit } = handlers
 
+  const [showExitConfirm, setShowExitConfirm] = useState(false)
+
   const sessionBody = (
     <>
       {!focusUi && <SessionProgress current={currentIndex} total={totalExercises} />}
@@ -102,39 +106,55 @@ export function SessionExercisingBody({ state, handlers, lessonFooter }: Session
 
   if (focusUi && displayBadge) {
     return (
-      <PhonemeFocusShell
-        badge={displayBadge}
-        progressPct={progressPct}
-        onExit={() => onExit(buildPartialResult(results))}
-        feedback={
-          phase === 'feedback' && lastFeedback !== null
-            ? {
-                isCorrect: lastFeedback,
-                subtitle: lastFeedback ? 'Siguiente ejercicio…' : undefined,
-              }
-            : null
-        }
-        footer={
-          <>
-            {phase === 'hints' && current?.payload.kind === 'phoneme' && (
-              <div className="phoneme-focus__hints-panel">
-                <ExerciseHints
-                  ipa={current.payload.ipa}
-                  targetWord={current.payload.targetWord}
-                  onRetry={onRetry}
-                  onContinue={onHintContinue}
-                  voice={currentVoice}
-                />
-              </div>
-            )}
-            {lessonFooter}
-          </>
-        }
-      >
-        {sessionBody}
-      </PhonemeFocusShell>
+      <>
+        <PhonemeFocusShell
+          badge={displayBadge}
+          progressPct={progressPct}
+          onExit={() => setShowExitConfirm(true)}
+          feedback={
+            phase === 'feedback' && lastFeedback !== null
+              ? {
+                  isCorrect: lastFeedback,
+                  subtitle: lastFeedback ? 'Siguiente ejercicio…' : undefined,
+                }
+              : null
+          }
+          footer={
+            <>
+              {phase === 'hints' && current?.payload.kind === 'phoneme' && (
+                <div className="phoneme-focus__hints-panel">
+                  <ExerciseHints
+                    ipa={current.payload.ipa}
+                    targetWord={current.payload.targetWord}
+                    onRetry={onRetry}
+                    onContinue={onHintContinue}
+                    voice={currentVoice}
+                  />
+                </div>
+              )}
+              {lessonFooter}
+            </>
+          }
+        >
+          {sessionBody}
+        </PhonemeFocusShell>
+        <ExitConfirmSheet
+          open={showExitConfirm}
+          onConfirm={() => { setShowExitConfirm(false); onExit(buildPartialResult(results)) }}
+          onCancel={() => setShowExitConfirm(false)}
+        />
+      </>
     )
   }
 
-  return <div className="w-full max-w-md mx-auto flex flex-col gap-6">{sessionBody}</div>
+  return (
+    <>
+      <div className="w-full max-w-md mx-auto flex flex-col gap-6">{sessionBody}</div>
+      <ExitConfirmSheet
+        open={showExitConfirm}
+        onConfirm={() => { setShowExitConfirm(false); onExit(buildPartialResult(results)) }}
+        onCancel={() => setShowExitConfirm(false)}
+      />
+    </>
+  )
 }

@@ -54,7 +54,7 @@ export function useSessionState(config: PracticeConfig) {
   const [exercises, setExercises] = useState<PracticeExercise[]>(() =>
     persistence ? [] : buildSession(config),
   )
-  const [currentIndex, setCurrentIndex] = useState(0)
+  const [currentIndex, setCurrentIndex] = useState(config.initialIndex ?? 0)
   const [results, setResults] = useState<ExerciseResult[]>([])
   const [phase, setPhase] = useState<Phase>('exercising')
   const [lastFeedback, setLastFeedback] = useState<boolean | null>(null)
@@ -102,7 +102,6 @@ export function useSessionState(config: PracticeConfig) {
       }
     })()
     return () => { cancelled = true }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [persistence?.userId, persistence?.soundId])
 
   // Reset start time whenever a new exercise is shown.

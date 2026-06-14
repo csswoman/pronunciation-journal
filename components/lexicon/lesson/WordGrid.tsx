@@ -38,7 +38,7 @@ function WordCards({
 }) {
   return (
     <>
-      {group.map(({ id, wordBankId, onToggleFavorite, onAddToMyWords, isInMyWords, isFavorite, ...rest }) => (
+      {group.map(({ id, onToggleFavorite, onAddToMyWords, isInMyWords, isFavorite, ...rest }) => (
         <WordCard
           key={id}
           {...rest}

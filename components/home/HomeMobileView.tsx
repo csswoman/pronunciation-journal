@@ -14,17 +14,16 @@ import { BookOpen, MicVocal, Layers, BarChart2, Grid2x2, GraduationCap, Flame, A
 import Link from "next/link";
 import type { ElementType } from "react";
 import HomeHeaderGreeting from "@/components/home/HomeHeaderGreeting";
-import HomeDailyCard from "@/components/home/HomeDailyCard";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { useUserPreferences } from "@/hooks/useUserPreferences";
-import type { DailyStreakResult } from "@/lib/daily/streak";
-import type { ConceptLesson } from "@/hooks/useDailyPlan";
+import type { DailyStreakResult } from "@/lib/daily/streak-core";
+import type { ReactNode } from "react";
 
 interface HomeMobileViewProps {
   streak?: DailyStreakResult;
   wordsDueCount?: number;
   soundsDueCount?: number;
-  conceptLesson?: ConceptLesson | null;
+  dailyCard: ReactNode;
 }
 
 function PrimaryActionTile({
@@ -84,7 +83,7 @@ export default function HomeMobileView({
   streak,
   wordsDueCount = 0,
   soundsDueCount = 0,
-  conceptLesson = null,
+  dailyCard,
 }: HomeMobileViewProps) {
   const { user } = useAuth();
   const { preferences } = useUserPreferences();
@@ -105,7 +104,7 @@ export default function HomeMobileView({
         <HomeHeaderGreeting userName={userName} dateLabel={dateLabel} />
       </div>
 
-      <HomeDailyCard conceptLesson={conceptLesson} />
+      {dailyCard}
 
       {(streak?.currentStreak ?? 0) > 0 && (
         <div className="animate-home-in flex items-center gap-2">

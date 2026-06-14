@@ -1,7 +1,8 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { ArrowRight, Flame, Sparkles } from 'lucide-react'
 import PageLayout from '@/components/layout/PageLayout'
 import DailyStepSession from './DailyStepSession'
@@ -12,13 +13,48 @@ import { useDailyPlan, type ConceptLesson, type DailyStep } from '@/hooks/useDai
 
 export type { ConceptLesson }
 
-interface DailyChecklistProps {
-  conceptLesson: ConceptLesson | null
+// ── sessionStorage helpers ──────────────────────────────────────────────────
+
+const STORAGE_KEY = 'daily:step'
+
+function readStepStorage(): { stepId: string; exerciseIndex: number } | null {
+  try {
+    const raw = sessionStorage.getItem(STORAGE_KEY)
+    if (!raw) return null
+    return JSON.parse(raw) as { stepId: string; exerciseIndex: number }
+  } catch {
+    return null
+  }
 }
 
-type View = { mode: 'checklist' } | { mode: 'step'; step: DailyStep } | { mode: 'done' }
+function writeStepStorage(stepId: string, exerciseIndex: number): void {
+  try {
+    sessionStorage.setItem(STORAGE_KEY, JSON.stringify({ stepId, exerciseIndex }))
+  } catch { /* quota errors: ignore */ }
+}
 
-export default function DailyChecklist({ conceptLesson }: DailyChecklistProps) {
+function clearStepStorage(): void {
+  try {
+    sessionStorage.removeItem(STORAGE_KEY)
+  } catch { /* ignore */ }
+}
+
+// ── Types ───────────────────────────────────────────────────────────────────
+
+interface DailyChecklistProps {
+  conceptLesson: ConceptLesson | null
+  initialStepId?: string
+}
+
+type View =
+  | { mode: 'checklist' }
+  | { mode: 'step'; step: DailyStep; exerciseIndex: number }
+  | { mode: 'done' }
+
+// ── Component ───────────────────────────────────────────────────────────────
+
+export default function DailyChecklist({ conceptLesson, initialStepId }: DailyChecklistProps) {
+  const router = useRouter()
   const { status, steps, doneIds, completedCount, allDone, load, markDone, celebrate } = useDailyPlan({
     conceptLesson,
     autoLoad: true,
@@ -26,8 +62,22 @@ export default function DailyChecklist({ conceptLesson }: DailyChecklistProps) {
 
   const [view, setView] = useState<View>({ mode: 'checklist' })
   const [sessionKey, setSessionKey] = useState(0)
+  // Prevents double-triggering the initialStepId auto-start.
+  const autoStartedRef = useRef(false)
 
-  // Cuando se completan todos los pasos, celebra una vez.
+  // Auto-start: when plan is ready and we have a step from the URL.
+  useEffect(() => {
+    if (status !== 'ready' || !initialStepId || autoStartedRef.current) return
+    const step = steps.find((s) => s.id === initialStepId)
+    if (!step || step.kind === 'concept') return
+    autoStartedRef.current = true
+    const stored = readStepStorage()
+    const exerciseIndex = stored?.stepId === initialStepId ? (stored.exerciseIndex ?? 0) : 0
+    setSessionKey((k) => k + 1)
+    setView({ mode: 'step', step, exerciseIndex })
+  }, [status, steps, initialStepId])
+
+  // Celebrate once when all steps are complete.
   useEffect(() => {
     if (allDone && view.mode === 'checklist') {
       setView({ mode: 'done' })
@@ -36,14 +86,27 @@ export default function DailyChecklist({ conceptLesson }: DailyChecklistProps) {
   }, [allDone, view.mode, celebrate])
 
   const handleStartStep = useCallback((step: DailyStep) => {
-    if (step.kind === 'concept') return // lo maneja el Link
+    if (step.kind === 'concept') return
+    writeStepStorage(step.id, 0)
     setSessionKey((k) => k + 1)
-    setView({ mode: 'step', step })
-  }, [])
+    setView({ mode: 'step', step, exerciseIndex: 0 })
+    router.replace(`/daily?step=${step.id}`)
+  }, [router])
+
+  const handleComplete = useCallback((stepId: string) => {
+    clearStepStorage()
+    markDone(stepId)
+    router.replace('/daily')
+    setView({ mode: 'checklist' })
+  }, [markDone, router])
+
+  const handleExit = useCallback(() => {
+    clearStepStorage()
+    router.replace('/daily')
+    setView({ mode: 'checklist' })
+  }, [router])
 
   // ── Render: estados de carga / error ──────────────────────────────────────
-  // `fixed inset-0` centra respecto al viewport visible, no respecto al alto
-  // del <main> con scroll del dashboard — así el texto queda en el centro real.
   if (status === 'loading' || status === 'idle') {
     return (
       <div className="phoneme-focus fixed inset-0 z-40 flex items-center justify-center">
@@ -67,13 +130,14 @@ export default function DailyChecklist({ conceptLesson }: DailyChecklistProps) {
 
   // ── Render: sesión de un paso ──────────────────────────────────────────────
   if (view.mode === 'step') {
-    const step = view.step
+    const { step, exerciseIndex } = view
     return (
       <DailyStepSession
         step={step}
         sessionKey={sessionKey}
-        onComplete={() => markDone(step.id)}
-        onExit={() => setView({ mode: 'checklist' })}
+        initialExerciseIndex={exerciseIndex}
+        onComplete={() => handleComplete(step.id)}
+        onExit={handleExit}
       />
     )
   }

@@ -1,11 +1,7 @@
 export const dynamic = "force-dynamic";
 
 import PageLayout from "@/components/layout/PageLayout";
-import HomeStatusHero from "@/components/home/HomeStatusHero";
-import HomeTodaySection from "@/components/home/HomeTodaySection";
-import HomeReviewsSection from "@/components/home/HomeReviewsSection";
-import HomeLearnSection from "@/components/home/HomeLearnSection";
-import HomeMobileView from "@/components/home/HomeMobileView";
+import HomeLayout from "@/components/home/HomeLayout";
 import { getSupabaseServerUserId } from "@/lib/supabase/session";
 import {
   getWordsDueForReview,
@@ -17,7 +13,7 @@ import { getDailyStreak } from "@/lib/daily/streak";
 import { getTodayPracticeGoal, getWeakestPhonemeForHome, getSoundsDueForHome } from "@/lib/home/queries";
 import type { MiniLesson, LanguageConcept } from "@/lib/content/schemas";
 import type { WordBankEntry } from "@/lib/word-bank/types";
-import type { DailyStreakResult } from "@/lib/daily/streak";
+import type { DailyStreakResult } from "@/lib/daily/streak-core";
 import type { DailyGoalProgress, WeakestPhonemeHome, SoundDueHome } from "@/lib/home/constants";
 import type { LexiconRetentionStats } from "@/lib/lexicon/server-progress";
 
@@ -62,43 +58,26 @@ export default async function HomePage() {
     console.error("Error loading home stats:", error);
   }
 
+  const conceptLesson = todaysLesson
+    ? { slug: todaysLesson.slug, title: todaysLesson.title, subtitle: todaysLesson.subtitle }
+    : null
+
   return (
     <PageLayout className="max-w-[1080px] mx-auto">
-      {/* Mobile view */}
-      <div className="md:hidden">
-        <HomeMobileView
-          streak={dailyStreak}
-          wordsDueCount={dueCount}
-          soundsDueCount={soundsDue.length}
-          conceptLesson={
-            todaysLesson
-              ? { slug: todaysLesson.slug, title: todaysLesson.title, subtitle: todaysLesson.subtitle }
-              : null
-          }
-        />
-      </div>
-
-      {/* Desktop/tablet view */}
-      <div className="hidden md:block">
-        <HomeStatusHero streak={dailyStreak} wordsDueCount={dueCount} soundsDueCount={soundsDue.length} />
-        <HomeTodaySection
-          streak={dailyStreak}
-          dailyGoal={dailyGoal}
-          conceptLesson={
-            todaysLesson
-              ? { slug: todaysLesson.slug, title: todaysLesson.title, subtitle: todaysLesson.subtitle }
-              : null
-          }
-        />
-        <HomeReviewsSection
-          words={dueWords}
-          dueCount={dueCount}
-          soundsDue={soundsDue}
-          lexicon={lexiconRetention}
-          weakestPhoneme={weakestPhoneme}
-        />
-        <HomeLearnSection lesson={todaysLesson} concept={todaysConcept} />
-      </div>
+      <HomeLayout
+        streak={dailyStreak}
+        wordsDueCount={dueCount}
+        soundsDueCount={soundsDue.length}
+        conceptLesson={conceptLesson}
+        dailyGoal={dailyGoal}
+        weakestPhoneme={weakestPhoneme}
+        dueWords={dueWords}
+        dueCount={dueCount}
+        soundsDue={soundsDue}
+        lexiconRetention={lexiconRetention}
+        todaysLesson={todaysLesson}
+        todaysConcept={todaysConcept}
+      />
     </PageLayout>
   );
 }

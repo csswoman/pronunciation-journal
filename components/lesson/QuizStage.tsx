@@ -35,7 +35,6 @@ function buildQuestions(words: LessonWord[]): QuizQuestion[] {
     const d1 = pick(w, []);
     const d2 = pick(w, [d1]);
     const opts = [w.ipa, d1.ipa, d2.ipa].filter(Boolean);
-    const correctIndex = 0;
     // Shuffle
     const shuffled = [...opts].sort(() => Math.random() - 0.5);
     return { options: shuffled, correctIndex: shuffled.indexOf(w.ipa) };

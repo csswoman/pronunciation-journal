@@ -44,7 +44,7 @@ export const EXERCISE_TYPE_IDS: Record<ExerciseSlug, number | null> = {
   multiple_choice: null,
 }
 
-export type PracticeContext = 'sound_lab' | 'courses' | 'ai_coach' | 'practice' | 'daily'
+export type PracticeContext = 'sound_lab' | 'courses' | 'ai_coach' | 'practice' | 'daily' | 'core-1000'
 
 export type PhonemePayload = {
   kind: 'phoneme'
@@ -165,4 +165,6 @@ export type PracticeConfig = {
   }
   /** Optional footer rendered inside the focus shell (e.g. "Ver lección" button). */
   footer?: React.ReactNode
+  /** Start at this exercise index (0-based). Undefined = start from 0. */
+  initialIndex?: number
 }

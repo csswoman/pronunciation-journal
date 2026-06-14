@@ -1,5 +1,6 @@
 import { createSupabaseServerClient } from '@/lib/supabase/server'
-import { getDailyStreak, toLocalDateString, STREAK_TIMEZONE, type DailyStreakResult } from '@/lib/daily/streak'
+import { getDailyStreak } from '@/lib/daily/streak'
+import { toLocalDateString, STREAK_TIMEZONE, type DailyStreakResult } from '@/lib/daily/streak-core'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -41,6 +42,10 @@ export interface WeakestPhoneme {
 export interface SkillProfileData {
   wordsByStatus: WordBankByStatus
   weakestPhonemes: WeakestPhoneme[]
+  /** Unique Core 1000 words answered correctly at least once. */
+  core1000Practiced: number
+  /** Total course/mini-lesson completions recorded. */
+  lessonsCompleted: number
 }
 
 export interface CoachWeakTopic {
@@ -187,7 +192,7 @@ async function getAccuracyStats(userId: string): Promise<AccuracyStats> {
 async function getSkillProfileData(userId: string): Promise<SkillProfileData> {
   const supabase = await createSupabaseServerClient()
 
-  const [wordBankResult, phonemeResult] = await Promise.all([
+  const [wordBankResult, phonemeResult, core1000Result, lessonsResult] = await Promise.all([
     supabase
       .from('word_bank')
       .select('srs_status')
@@ -201,6 +206,19 @@ async function getSkillProfileData(userId: string): Promise<SkillProfileData> {
       .gt('total_attempts', 0)
       .order('total_attempts', { ascending: false })
       .limit(40),
+
+    supabase
+      .from('answer_history')
+      .select('content_id', { count: 'exact', head: false })
+      .eq('user_id', userId)
+      .eq('context', 'core-1000')
+      .eq('is_correct', true),
+
+    supabase
+      .from('answer_history')
+      .select('id', { count: 'exact', head: true })
+      .eq('user_id', userId)
+      .eq('context', 'courses'),
   ])
 
   // Words by SRS status
@@ -228,7 +246,15 @@ async function getSkillProfileData(userId: string): Promise<SkillProfileData> {
     .sort((a, b) => a.accuracy - b.accuracy)
     .slice(0, 5)
 
-  return { wordsByStatus, weakestPhonemes: phonemes }
+  // Unique Core 1000 words practiced correctly (dedupe by content_id)
+  const core1000Ids = new Set((core1000Result.data ?? []).map((r) => r.content_id))
+
+  return {
+    wordsByStatus,
+    weakestPhonemes: phonemes,
+    core1000Practiced: core1000Ids.size,
+    lessonsCompleted: lessonsResult.count ?? 0,
+  }
 }
 
 async function getCoachInsights(userId: string): Promise<CoachInsights> {

@@ -41,7 +41,6 @@ export function useWordSearch(query: string, myWords: WordBankEntry[]) {
         setLexiconIndex(flat);
       })
       .catch(() => {/* silent — lexicon search is best-effort */});
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query.length >= 2]);
 
   const results = useMemo<WordSearchResult[]>(() => {

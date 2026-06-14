@@ -33,15 +33,12 @@ export function DeckDoneScreen({
   lessonId,
   backHref,
   backLabel = "Volver",
-  reviewedCount,
   quizScore,
   practiceLoading,
   practiceError,
   onStartSentencePractice,
   onRestart,
 }: DeckDoneScreenProps) {
-  const total = deck.cards.length;
-
   return (
     <section className="grammar-deck__done" aria-live="polite">
       <div className="grammar-deck__done-badge">

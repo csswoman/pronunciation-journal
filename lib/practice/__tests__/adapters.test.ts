@@ -2,7 +2,6 @@ import { describe, it, expect } from 'vitest'
 import { fromMixedExercise, fromGenericExercise } from '../adapters'
 import { buildSession } from '../engine'
 import { EXERCISE_TYPE_IDS } from '../types'
-import type { MixedExercise } from '@/lib/phoneme-practice/mixed-session'
 import type { Exercise } from '@/lib/phoneme-practice/types'
 import type {
   FillBlankExercise,

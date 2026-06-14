@@ -44,7 +44,7 @@ export default function ActiveLessonPage({ backHref }: Props) {
   const [showTransitionOverlay, setShowTransitionOverlay] = useState(false);
   const hasStarted = useRef(false);
   // devStageOverride: set via window for quick dev testing; null means normal flow
-  const [devStage, setDevStage] = useState<number | null>(null);
+  const [devStage] = useState<number | null>(null);
 
   const setup = useActiveLessonSetup(
     () => {},
@@ -68,7 +68,6 @@ export default function ActiveLessonPage({ backHref }: Props) {
     if (!setup.fullLesson || hasStarted.current) return;
     hasStarted.current = true;
     setup.handleSelectStage("guided", diffMode);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setup.fullLesson]);
 
   // Auto-advance to next stage when session completes a non-final stage
@@ -83,7 +82,6 @@ export default function ActiveLessonPage({ backHref }: Props) {
       setup.handleSelectStage(STAGE_IDS[nextIdx], diffMode);
     }, 1800);
     return () => clearTimeout(t);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session.phase]);
 
   function handleJumpStage(targetIndex: number) {
@@ -204,7 +202,6 @@ export default function ActiveLessonPage({ backHref }: Props) {
         {activeStageIndex < 2 && session.phase !== "complete" && session.currentWord && (
           <PronounceStageRenderer
             session={session}
-            lessonData={setup.lessonData}
             isHintMode={activeStageIndex === 1}
           />
         )}

@@ -44,6 +44,10 @@ vi.mock('@/hooks/useSharedMicStream', () => ({
   }),
 }))
 
+vi.mock('@/components/auth/AuthProvider', () => ({
+  useAuth: () => ({ user: null }),
+}))
+
 vi.mock('@/hooks/useSpeechInput', () => ({
   useSpeechInput: () => ({
     state: 'idle',

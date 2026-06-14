@@ -53,7 +53,6 @@ export default function ReviewPage() {
   useEffect(() => {
     if (!user) return
     loadReview()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, sessionKey])
 
   async function loadReview() {
@@ -115,7 +114,6 @@ export default function ReviewPage() {
     if (session.isComplete && user) {
       finishSession()
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session.isComplete])
 
   async function handleAnswer(isCorrect: boolean, userAnswer: string) {
@@ -254,7 +252,7 @@ export default function ReviewPage() {
       case 'minimal_pair':
         return <MinimalPairExercise exercise={ex} onSubmit={submitHandler} focusUi />
       case 'dictation':
-        return <DictationExercise exercise={ex} onSubmit={submitHandler} focusUi />
+        return <DictationExercise exercise={ex} onSubmit={submitHandler} />
       case 'speak_word':
         return <SpeakExercise exercise={ex} onSubmit={submitHandler} focusUi />
       default:

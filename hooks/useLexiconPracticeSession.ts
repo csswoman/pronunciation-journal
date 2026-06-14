@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useState } from 'react'
-import { getSupabaseBrowserClient } from '@/lib/supabase/client'
+import { getAccessToken } from '@/lib/auth/session'
 import { generateMatchPairsFromWordBank } from '@/lib/exercises/generators/match-pairs'
 import { generateSentenceContextExercises } from '@/lib/lexicon/exercises'
 import { fromGenericExercise } from '@/lib/practice/adapters'
@@ -93,19 +93,16 @@ export function useLexiconPracticeSession(categoryId: string, userId: string | u
   const setFlowPhase = useCallback((phase: FlowPhase) => {
     setFlowPhaseRaw(phase)
     persist({ flowPhase: phase })
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [categoryId])
 
   const setRatings = useCallback((r: WordRating[]) => {
     setRatingsRaw(r)
     persist({ ratings: r })
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [categoryId])
 
   const setPracticeExercises = useCallback((ex: PracticeExercise[]) => {
     setPracticeExercisesRaw(ex)
     persist({ practiceExercises: ex })
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [categoryId])
 
   const bumpSessionKey = useCallback(() => {
@@ -114,7 +111,6 @@ export function useLexiconPracticeSession(categoryId: string, userId: string | u
       persist({ sessionKey: next })
       return next
     })
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [categoryId])
 
   const load = useCallback(async () => {
@@ -136,12 +132,10 @@ export function useLexiconPracticeSession(categoryId: string, userId: string | u
 
     setLoadState('loading'); setError(null)
     try {
-      const supabase = getSupabaseBrowserClient()
-      const { data: { session } } = await supabase.auth.getSession()
-      if (!session) throw new Error('Not authenticated')
+      const accessToken = await getAccessToken()
       const res = await fetch(`/api/lexicon/${categoryId}`, {
         method: 'POST',
-        headers: { Authorization: `Bearer ${session.access_token}` },
+        headers: { Authorization: `Bearer ${accessToken}` },
       })
       if (!res.ok) {
         const body = await res.json().catch(() => ({}))

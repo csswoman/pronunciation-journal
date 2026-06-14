@@ -1,11 +1,11 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { ArrowRight, Flame } from 'lucide-react'
 import Button from '@/components/ui/Button'
 import Badge from '@/components/ui/Badge'
-import DailyStepSession from '@/components/daily/DailyStepSession'
 import DailyStepList from '@/components/daily/DailyStepList'
 import { useDailyPlan, type ConceptLesson, type DailyStep } from '@/hooks/useDailyPlan'
 import { useAuth } from '@/components/auth/AuthProvider'
@@ -16,13 +16,11 @@ interface HomeDailyCardProps {
 
 export default function HomeDailyCard({ conceptLesson }: HomeDailyCardProps) {
   const { user } = useAuth()
-  const { status, steps, doneIds, completedCount, allDone, load, markDone, celebrate } = useDailyPlan({
+  const router = useRouter()
+  const { status, steps, doneIds, completedCount, allDone, load, celebrate } = useDailyPlan({
     conceptLesson,
     autoLoad: false,
   })
-
-  const [activeStep, setActiveStep] = useState<DailyStep | null>(null)
-  const [sessionKey, setSessionKey] = useState(0)
 
   // Load plan once the user is available.
   useEffect(() => {
@@ -31,28 +29,17 @@ export default function HomeDailyCard({ conceptLesson }: HomeDailyCardProps) {
 
   // Celebrate once when all steps are complete.
   useEffect(() => {
-    if (allDone && !activeStep) celebrate()
-  }, [allDone, activeStep, celebrate])
+    if (allDone) celebrate()
+  }, [allDone, celebrate])
 
+  // Write sessionStorage + navigate so the session starts immediately at its own URL.
   const handleStartStep = useCallback((step: DailyStep) => {
     if (step.kind === 'concept') return
-    setSessionKey((k) => k + 1)
-    setActiveStep(step)
-  }, [])
-
-  // Full-screen session overlay
-  if (activeStep) {
-    return (
-      <div className="fixed inset-0 z-50 bg-[var(--surface-base)]">
-        <DailyStepSession
-          step={activeStep}
-          sessionKey={sessionKey}
-          onComplete={() => markDone(activeStep.id)}
-          onExit={() => setActiveStep(null)}
-        />
-      </div>
-    )
-  }
+    try {
+      sessionStorage.setItem('daily:step', JSON.stringify({ stepId: step.id, exerciseIndex: 0 }))
+    } catch { /* quota errors: ignore */ }
+    router.push(`/daily?step=${step.id}`)
+  }, [router])
 
   // Embedded checklist (single view)
   return (
@@ -139,7 +126,7 @@ export default function HomeDailyCard({ conceptLesson }: HomeDailyCardProps) {
               steps={steps}
               doneIds={doneIds}
               onStartStep={handleStartStep}
-              onMarkDone={markDone}
+              onMarkDone={() => router.push('/daily')}
             />
           </div>
         ) : null)}

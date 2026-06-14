@@ -5,7 +5,7 @@ import { useAuth } from "@/components/auth/AuthProvider";
 import { useSoundProgress } from "@/hooks/useSoundProgress";
 import { useUserPreferences } from "@/hooks/useUserPreferences";
 import HomeHeaderActions from "@/components/home/HomeHeaderActions";
-import type { DailyStreakResult } from "@/lib/daily/streak";
+import type { DailyStreakResult } from "@/lib/daily/streak-core";
 
 interface HomeStatusHeroProps {
   streak?: DailyStreakResult;

@@ -10,8 +10,10 @@ export type PhonemeFocusFeedback = {
 }
 
 interface Props {
-  /** IPA or short label shown in the top bar (e.g. /iː/, Hoy, Repaso). */
-  badge: string
+  /** IPA symbol shown in the top bar (e.g. /iː/). Pass undefined for non-IPA sessions. */
+  badge?: string
+  /** Session name shown below the topbar (e.g. "Repaso de palabras"). */
+  sessionName?: string
   progressPct: number
   onExit: () => void
   children: ReactNode
@@ -21,6 +23,7 @@ interface Props {
 
 export function PhonemeFocusShell({
   badge,
+  sessionName,
   progressPct,
   onExit,
   children,
@@ -49,15 +52,22 @@ export function PhonemeFocusShell({
             >
               <span style={{ width: `${progressPct}%` }} />
             </div>
-            <span
-              className={cn(
-                'phoneme-focus__badge',
-                !badge.startsWith('/') && 'phoneme-focus__badge--text',
-              )}
-            >
-              {badge}
-            </span>
+            {badge && (
+              <span className="phoneme-focus__badge">{badge}</span>
+            )}
           </div>
+
+          {sessionName && (
+            <div className="phoneme-focus__session-title">
+              <span className="phoneme-focus__session-label">Practicando</span>
+              <span className={cn(
+                'phoneme-focus__session-name',
+                badge && 'phoneme-focus__session-name--ipa',
+              )}>
+                {sessionName}
+              </span>
+            </div>
+          )}
 
           <div className="phoneme-focus__stage">{children}</div>
 

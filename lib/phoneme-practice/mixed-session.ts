@@ -3,7 +3,6 @@ import type { MatchPairsExercise, ReorderWordsExercise } from '@/lib/exercises/t
 import type { CEFRLevel } from '@/lib/exercises/cefr'
 import {
   generatePickWord,
-  generatePickSound,
   generateMinimalPair,
   generateDictation,
   generateIdentify,
@@ -129,7 +128,7 @@ export function buildAdaptiveSession(
 
   const { userLevel, contrastProgress = [] } = opts
   const progressMap = new Map(contrastProgress.map(p => [p.contrast_id, p]))
-  const contrastIpa = weakestContrastIpa(sound.ipa, progressMap)
+  weakestContrastIpa(sound.ipa, progressMap)
   const canUseAbx = isB1OrAbove(userLevel)
 
   const ex: MixedExercise[] = []

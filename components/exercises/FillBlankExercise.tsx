@@ -11,19 +11,21 @@ import { useState, useRef, useEffect } from 'react'
 import { HelpCircle } from 'lucide-react'
 import { cn } from '@/lib/cn'
 import type { FillBlankExercise as FillBlankExerciseType } from '@/lib/exercises/types'
+import { useUISounds } from '@/hooks/useUISounds'
 
 interface Props {
   exercise: FillBlankExerciseType
-  onSubmit: (isCorrect: boolean, userAnswer: string, timeMs: number) => void
+  onResult: (isCorrect: boolean, userAnswer: string, timeMs: number) => void
 }
 
 type AnswerState = 'idle' | 'correct' | 'wrong'
 
-export function FillBlankExercise({ exercise, onSubmit }: Props) {
+export function FillBlankExercise({ exercise, onResult }: Props) {
   const [selected, setSelected] = useState<string | null>(null)
   const [state, setState]       = useState<AnswerState>('idle')
   const [hintLevel, setHintLevel] = useState(0)
   const startMs = useRef(Date.now())
+  const { playTap, playCorrect, playWrong } = useUISounds()
 
   useEffect(() => {
     setSelected(null)
@@ -34,10 +36,12 @@ export function FillBlankExercise({ exercise, onSubmit }: Props) {
 
   function handlePick(option: string) {
     if (state !== 'idle') return
+    playTap()
     const isCorrect = option === exercise.answer
     setSelected(option)
     setState(isCorrect ? 'correct' : 'wrong')
-    onSubmit(isCorrect, option, Date.now() - startMs.current)
+    if (isCorrect) playCorrect(); else playWrong()
+    onResult(isCorrect, option, Date.now() - startMs.current)
   }
 
   function handleHint() {
@@ -75,9 +79,6 @@ export function FillBlankExercise({ exercise, onSubmit }: Props) {
         answerState={state}
         onPick={handlePick}
       />
-      {state !== 'idle' && (
-        <FeedbackBar isCorrect={state === 'correct'} answer={exercise.answer} />
-      )}
     </div>
   )
 }
@@ -172,17 +173,3 @@ function OptionButton({ option, index, isAnswer, isSelected, answerState, onPick
   )
 }
 
-function FeedbackBar({ isCorrect, answer }: { isCorrect: boolean; answer: string }) {
-  return (
-    <div
-      className="rounded-xl px-4 py-3 text-sm font-medium border"
-      style={{
-        backgroundColor: isCorrect ? 'var(--success-soft)' : 'var(--error-soft)',
-        borderColor: isCorrect ? 'var(--success)'      : 'var(--error)',
-        color:           isCorrect ? 'var(--success-value)' : 'var(--error-value)',
-      }}
-    >
-      {isCorrect ? '✓ Correct!' : `✗ The answer is "${answer}"`}
-    </div>
-  )
-}

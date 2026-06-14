@@ -67,8 +67,7 @@ export function useAIPractice(): UseAIPracticeReturn {
         getUserLearningState(userId).then(setLearningState).catch(() => {});
       });
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user?.id]);
+  }, [user?.id, words]);
 
   // Throttled persistence: sync learningState to Supabase 5s after the last update.
   useEffect(() => {

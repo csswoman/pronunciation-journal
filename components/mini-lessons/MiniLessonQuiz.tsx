@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { cn } from "@/lib/cn";
+import { useUISounds } from "@/hooks/useUISounds";
 
 interface QuizQuestion {
   question: string;
@@ -14,63 +15,101 @@ interface Props {
   questions: QuizQuestion[];
 }
 
-export default function MiniLessonQuiz({ questions }: Props) {
-  const [revealed, setRevealed] = useState<Record<number, boolean>>({});
+function scoreClass(correct: number, total: number): string {
+  const pct = correct / total;
+  if (pct >= 0.7) return "mini-lessons__quiz-score--good";
+  if (pct >= 0.5) return "mini-lessons__quiz-score--mid";
+  return "mini-lessons__quiz-score--low";
+}
 
-  function toggle(idx: number) {
-    setRevealed((prev) => ({ ...prev, [idx]: !prev[idx] }));
+export default function MiniLessonQuiz({ questions }: Props) {
+  const [selected, setSelected] = useState<Record<number, number>>({});
+  const { playTap, playCorrect, playWrong } = useUISounds();
+
+  function choose(questionIdx: number, optionIdx: number) {
+    if (selected[questionIdx] !== undefined) return;
+    playTap();
+    const isCorrect = optionIdx === questions[questionIdx].correct;
+    setSelected((prev) => ({ ...prev, [questionIdx]: optionIdx }));
+    if (isCorrect) playCorrect(); else playWrong();
   }
+
+  const answeredCount = Object.keys(selected).length;
+  const allAnswered = answeredCount === questions.length;
+  const correctCount = questions.filter(
+    (q, i) => selected[i] === q.correct
+  ).length;
 
   return (
     <div className="mini-lessons__quiz">
-      {questions.map((q, idx) => {
-        const isOpen = revealed[idx] ?? false;
+      {questions.map((q, qIdx) => {
+        const chosen = selected[qIdx];
+        const isAnswered = chosen !== undefined;
+
         return (
-          <div key={idx} className="mini-lessons__block">
+          <div key={qIdx} className="mini-lessons__block">
             <p className="mini-lessons__block-label">
-              {idx + 1}. {q.question}
+              {qIdx + 1}. {q.question}
             </p>
+
             <ul className="mini-lessons__quiz-options">
-              {q.options.map((option, optIdx) => (
-                <li key={optIdx}>
-                  <span className="mini-lessons__quiz-letter">
-                    {String.fromCharCode(65 + optIdx)}
-                  </span>
-                  {option}
-                </li>
-              ))}
+              {q.options.map((option, oIdx) => {
+                const isCorrect = oIdx === q.correct;
+                const isChosen = oIdx === chosen;
+                const isDimmed = isAnswered && !isChosen && !isCorrect;
+
+                const optionClass = cn(
+                  "mini-lessons__quiz-option",
+                  isAnswered && isCorrect && "mini-lessons__quiz-option--correct",
+                  isAnswered && isChosen && !isCorrect && "mini-lessons__quiz-option--wrong",
+                  isDimmed && "mini-lessons__quiz-option--dimmed"
+                );
+
+                const letter = String.fromCharCode(65 + oIdx);
+                const ariaLabel = isAnswered && isCorrect
+                  ? `${letter} ${option} — correct answer`
+                  : `${letter} ${option}`;
+
+                return (
+                  <li key={oIdx}>
+                    <button
+                      type="button"
+                      className={optionClass}
+                      onClick={() => choose(qIdx, oIdx)}
+                      aria-disabled={isAnswered ? "true" : undefined}
+                      aria-pressed={isChosen}
+                      aria-label={ariaLabel}
+                    >
+                      <span className="mini-lessons__quiz-letter" aria-hidden>
+                        {letter}
+                      </span>
+                      {option}
+                    </button>
+                  </li>
+                );
+              })}
             </ul>
-            <button
-              type="button"
-              className={cn(
-                "mini-lessons__quiz-reveal",
-                isOpen && "mini-lessons__quiz-reveal--open"
-              )}
-              onClick={() => toggle(idx)}
-              aria-expanded={isOpen}
-            >
-              <span className="mini-lessons__quiz-reveal-icon" aria-hidden>
-                {isOpen ? "−" : "+"}
-              </span>
-              {isOpen ? "Ocultar respuesta" : "Ver respuesta"}
-            </button>
-            <div
-              className={cn(
-                "mini-lessons__quiz-answer-wrap",
-                isOpen && "mini-lessons__quiz-answer-wrap--open"
-              )}
-              {...(!isOpen && { "aria-hidden": "true" })}
-            >
+
+            {isAnswered && (
               <div className="mini-lessons__quiz-answer">
                 <p>
-                  <strong>Respuesta: {String.fromCharCode(65 + q.correct)}</strong>
+                  <strong>Answer: {String.fromCharCode(65 + q.correct)}</strong>
                 </p>
                 <p>{q.explanation}</p>
               </div>
-            </div>
+            )}
           </div>
         );
       })}
+
+      {allAnswered && (
+        <div
+          role="status"
+          className={cn("mini-lessons__quiz-score", scoreClass(correctCount, questions.length))}
+        >
+          {correctCount} / {questions.length} correct
+        </div>
+      )}
     </div>
   );
 }

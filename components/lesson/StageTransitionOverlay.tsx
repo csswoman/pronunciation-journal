@@ -23,7 +23,7 @@ interface Props {
   onDismiss: () => void;
 }
 
-export function StageTransitionOverlay({ completedStage, nextStage, visible, onDismiss }: Props) {
+export function StageTransitionOverlay({ nextStage, visible, onDismiss }: Props) {
   useEffect(() => {
     if (!visible) return;
     const t = setTimeout(onDismiss, 1800);

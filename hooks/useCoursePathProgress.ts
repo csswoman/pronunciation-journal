@@ -1,7 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { db, markLessonComplete } from "@/lib/db";
+import { db } from "@/lib/db";
+import { recordLessonComplete } from "@/lib/practice/queries";
 import type { CoursePathTrackId } from "@/lib/courses/types";
 import { lessonProgressKey } from "@/lib/courses/progress";
 
@@ -25,7 +26,7 @@ export function useCoursePathProgress(levelId: CoursePathTrackId) {
 
   const markComplete = useCallback(
     async (lessonId: string) => {
-      await markLessonComplete(levelId, lessonId);
+      await recordLessonComplete(levelId, lessonId);
       setCompletedIds((prev) => new Set(prev).add(lessonProgressKey(levelId, lessonId)));
     },
     [levelId]

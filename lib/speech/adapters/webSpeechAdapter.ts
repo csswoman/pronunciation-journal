@@ -2,8 +2,29 @@
 
 import type { SpeechInputAdapter, SpeechInputResult } from "../types";
 
+interface BrowserSpeechRecognition {
+  lang: string;
+  maxAlternatives: number;
+  continuous: boolean;
+  interimResults: boolean;
+  onresult: ((event: SpeechRecognitionEvent) => void) | null;
+  onerror: ((event: SpeechRecognitionErrorEvent) => void) | null;
+  start: () => void;
+  stop: () => void;
+  abort: () => void;
+}
+
+interface BrowserSpeechRecognitionConstructor {
+  new (): BrowserSpeechRecognition;
+}
+
+type SpeechWindow = Window & {
+  SpeechRecognition?: BrowserSpeechRecognitionConstructor;
+  webkitSpeechRecognition?: BrowserSpeechRecognitionConstructor;
+};
+
 export class WebSpeechAdapter implements SpeechInputAdapter {
-  private recognition: any = null;
+  private recognition: BrowserSpeechRecognition | null = null;
 
   isSupported(): boolean {
     return typeof window !== 'undefined' &&
@@ -11,7 +32,9 @@ export class WebSpeechAdapter implements SpeechInputAdapter {
   }
 
   async start(): Promise<void> {
-    const SR = (window as any).SpeechRecognition ?? (window as any).webkitSpeechRecognition;
+    const speechWindow = window as SpeechWindow;
+    const SR = speechWindow.SpeechRecognition ?? speechWindow.webkitSpeechRecognition;
+    if (!SR) throw new Error('Speech recognition not supported');
     this.recognition = new SR();
     this.recognition!.lang = 'en-US';
     this.recognition!.maxAlternatives = 3;

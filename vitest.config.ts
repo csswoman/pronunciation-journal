@@ -7,7 +7,7 @@ export default defineConfig({
     // DOM declare `// @vitest-environment jsdom` at the top of the file.
     environment: "node",
     include: ["**/__tests__/**/*.test.{ts,tsx}"],
-    exclude: [".claude/**", "node_modules/**"],
+    exclude: [".claude/**", "node_modules/**", "**/*.integration.test.{ts,tsx}"],
     setupFiles: ["./vitest.setup.ts"],
   },
   resolve: {

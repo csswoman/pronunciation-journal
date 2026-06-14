@@ -8,6 +8,7 @@ import {
   getSRSData, saveSRSData, saveAttempt, updateDailyProgress, updateUserStats,
 } from "@/lib/db";
 import { core1000WordId } from "./types";
+import { savePracticeAnswer } from "@/lib/practice/queries";
 
 export interface GradeExtras {
   /** Accuracy 0–100 del scoring hablado. Ausente en self-grade. */
@@ -18,7 +19,8 @@ export interface GradeExtras {
 export async function gradeCore1000Word(
   word: string,
   quality: number,
-  extras: GradeExtras = {}
+  extras: GradeExtras = {},
+  userId?: string,
 ): Promise<void> {
   const normalized = word.toLowerCase();
   const wordId = core1000WordId(normalized);
@@ -39,5 +41,23 @@ export async function gradeCore1000Word(
     });
     await updateDailyProgress(extras.accuracy, normalized, xp);
     await updateUserStats(extras.accuracy, xp);
+  }
+
+  // Write to answer_history so Core 1000 progress shows in streak/accuracy charts.
+  if (userId) {
+    try {
+      await savePracticeAnswer(userId, {
+        exerciseId: wordId,
+        exerciseTypeId: extras.accuracy !== undefined ? 10 : 5, // speak_word : fill_blank
+        slug: extras.accuracy !== undefined ? 'speak_word' : 'fill_blank',
+        isCorrect: quality >= 3,
+        userAnswer: extras.transcript,
+        contentId: wordId,
+        context: 'core-1000',
+        timeMs: 0,
+      })
+    } catch {
+      // Best-effort — never break the grading flow for a logging failure.
+    }
   }
 }

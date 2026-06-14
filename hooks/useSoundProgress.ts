@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { getSupabaseBrowserClient } from '@/lib/supabase/client'
+import { getUserContrastProgress } from '@/lib/sounds/queries'
 import type { UserContrastProgress } from '@/lib/phoneme-practice/types'
 
 interface UseSoundProgressResult {
@@ -20,16 +20,23 @@ export function useSoundProgress(userId: string | undefined): UseSoundProgressRe
       return
     }
 
-    const supabase = getSupabaseBrowserClient()
-    supabase
-      .from('user_contrast_progress')
-      .select('*')
-      .eq('user_id', userId)
-      .order('contrast_id', { ascending: true })
-      .then(({ data }) => {
-        setProgressList((data ?? []) as UserContrastProgress[])
+    let cancelled = false
+
+    getUserContrastProgress(userId)
+      .then((data) => {
+        if (cancelled) return
+        setProgressList(data)
         setLoading(false)
       })
+      .catch(() => {
+        if (cancelled) return
+        setProgressList([])
+        setLoading(false)
+      })
+
+    return () => {
+      cancelled = true
+    }
   }, [userId])
 
   return { progressList, loading }
