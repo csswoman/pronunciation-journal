@@ -870,13 +870,6 @@
   }
 }
 
-.mini-lessons__quiz-options li {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.9rem;
-  color: var(--text-secondary);
-}
 
 .mini-lessons__quiz-letter {
   border-radius: 6px;
