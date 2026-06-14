@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { cn } from "@/lib/cn";
+import { useUISounds } from "@/hooks/useUISounds";
 
 interface QuizQuestion {
   question: string;
@@ -23,10 +24,14 @@ function scoreClass(correct: number, total: number): string {
 
 export default function MiniLessonQuiz({ questions }: Props) {
   const [selected, setSelected] = useState<Record<number, number>>({});
+  const { playTap, playCorrect, playWrong } = useUISounds();
 
   function choose(questionIdx: number, optionIdx: number) {
     if (selected[questionIdx] !== undefined) return;
+    playTap();
+    const isCorrect = optionIdx === questions[questionIdx].correct;
     setSelected((prev) => ({ ...prev, [questionIdx]: optionIdx }));
+    if (isCorrect) playCorrect(); else playWrong();
   }
 
   const answeredCount = Object.keys(selected).length;
