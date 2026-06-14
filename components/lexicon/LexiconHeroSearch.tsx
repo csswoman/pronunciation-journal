@@ -49,10 +49,19 @@ export function LexiconHeroSearch({
   const [selected, setSelected] = useState<LexiconSearchHit | null>(null);
   const [resultsOpen, setResultsOpen] = useState(false);
   const [recentStored, setRecentStored] = useState<string[]>([]);
+  const [focusedIndex, setFocusedIndex] = useState(-1);
+  const [isMac, setIsMac] = useState(false);
   const { index } = useLexiconIndex();
 
   useEffect(() => {
     setRecentStored(loadRecent());
+  }, []);
+
+  useEffect(() => {
+    setIsMac(
+      navigator.platform.toUpperCase().includes("MAC") ||
+        navigator.userAgent.includes("Mac"),
+    );
   }, []);
 
   const recentWords = recentStored.length > 0 ? recentStored : recentFallback;
@@ -116,18 +125,14 @@ export function LexiconHeroSearch({
 
   return (
     <div className="words-lexicon__hero">
-      <h2 className="words-lexicon__hero-title">
-        Look up any word, right now.
-      </h2>
       <p className="words-lexicon__hero-lede">
-        {totalWords.toLocaleString()} professional and technical terms, with
-        definitions on the spot.
+        {totalWords.toLocaleString()} words with definitions, pronunciation, and examples.
       </p>
 
       <div className="words-lexicon__searchwrap" ref={wrapRef}>
         <div className="words-lexicon__searchbox">
           <div className="words-lexicon__search-mag" aria-hidden>
-            <Search size={22} strokeWidth={2.2} />
+            <Search size={16} strokeWidth={2} />
           </div>
           <input
             ref={inputRef}
@@ -136,39 +141,57 @@ export function LexiconHeroSearch({
             placeholder="e.g. middleware, viewport, API gateway"
             value={query}
             autoComplete="off"
-            aria-label="Search lexicon"
+            aria-label="Search dictionary"
             aria-expanded={resultsOpen}
             aria-controls="lexicon-search-results"
             onChange={(e) => {
               setQuery(e.target.value);
               setSelected(null);
               setResultsOpen(e.target.value.trim().length > 0);
+              setFocusedIndex(-1);
             }}
             onFocus={() => {
               if (query.trim()) setResultsOpen(true);
             }}
+            onKeyDown={(e) => {
+              if (!resultsOpen || matches.length === 0) return;
+              if (e.key === "ArrowDown") {
+                e.preventDefault();
+                setFocusedIndex((i) => Math.min(i + 1, matches.length - 1));
+              } else if (e.key === "ArrowUp") {
+                e.preventDefault();
+                setFocusedIndex((i) => Math.max(i - 1, -1));
+              } else if (e.key === "Enter" && focusedIndex >= 0) {
+                e.preventDefault();
+                pick(matches[focusedIndex]);
+                setFocusedIndex(-1);
+              } else if (e.key === "Escape") {
+                setResultsOpen(false);
+                setFocusedIndex(-1);
+              }
+            }}
           />
           <span className="words-lexicon__search-kbd" aria-hidden>
-            ⌘K
+            {isMac ? "⌘K" : "Ctrl+K"}
           </span>
         </div>
 
         <div
           id="lexicon-search-results"
           className={`words-lexicon__results${resultsOpen ? " is-open" : ""}`}
-          role="listbox"
+          aria-label="Search results"
         >
           {matches.length === 0 && query.trim() ? (
             <p className="words-lexicon__nores">
-              No matches for &ldquo;{query.trim()}&rdquo;. Try a different spelling or a related term.
+              No results for &ldquo;{query.trim()}&rdquo;. Try a different spelling or a broader term.
             </p>
           ) : (
-            matches.map((hit) => (
+            matches.map((hit, index) => (
               <button
                 key={hit.id}
                 type="button"
-                role="option"
-                className="words-lexicon__res"
+                className={`words-lexicon__res${focusedIndex === index ? " is-focused" : ""}`}
+                aria-selected={focusedIndex === index}
                 onClick={() => pick(hit)}
               >
                 <span className="words-lexicon__res-word">{hit.word}</span>
@@ -230,7 +253,13 @@ export function LexiconHeroSearch({
       )}
 
       {selected && (
-        <div className="words-lexicon__worddetail is-open">
+        <div
+          className="words-lexicon__worddetail is-open"
+          role="region"
+          aria-label="Word detail"
+          aria-live="polite"
+          aria-atomic="true"
+        >
           <div className="words-lexicon__wd-top">
             <span className="words-lexicon__wd-w">{selected.word}</span>
             {selected.ipa ? (
@@ -239,6 +268,14 @@ export function LexiconHeroSearch({
               <span className="words-lexicon__wd-pos">{selected.pos}</span>
             )}
             <span className="words-lexicon__wd-cat">{selected.categoryName}</span>
+            {selected.ipa && (
+              <span
+                className="words-lexicon__wd-cat"
+                title="International Phonetic Alphabet — shows how to pronounce the word"
+              >
+                IPA
+              </span>
+            )}
           </div>
           {selected.translation ? (
             <p className="words-lexicon__wd-translation">{selected.translation}</p>
@@ -262,7 +299,7 @@ export function LexiconHeroSearch({
               </Button>
             ) : null}
             <Button variant="ghost" size="sm" onClick={() => openCategory(selected)}>
-              Go to category →
+              Open category
             </Button>
           </div>
         </div>
