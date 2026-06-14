@@ -11,6 +11,7 @@ import { useState, useRef, useEffect } from 'react'
 import { HelpCircle } from 'lucide-react'
 import { cn } from '@/lib/cn'
 import type { FillBlankExercise as FillBlankExerciseType } from '@/lib/exercises/types'
+import { useUISounds } from '@/hooks/useUISounds'
 
 interface Props {
   exercise: FillBlankExerciseType
@@ -24,6 +25,7 @@ export function FillBlankExercise({ exercise, onResult }: Props) {
   const [state, setState]       = useState<AnswerState>('idle')
   const [hintLevel, setHintLevel] = useState(0)
   const startMs = useRef(Date.now())
+  const { playTap, playCorrect, playWrong } = useUISounds()
 
   useEffect(() => {
     setSelected(null)
@@ -34,9 +36,11 @@ export function FillBlankExercise({ exercise, onResult }: Props) {
 
   function handlePick(option: string) {
     if (state !== 'idle') return
+    playTap()
     const isCorrect = option === exercise.answer
     setSelected(option)
     setState(isCorrect ? 'correct' : 'wrong')
+    if (isCorrect) playCorrect(); else playWrong()
     onResult(isCorrect, option, Date.now() - startMs.current)
   }
 
