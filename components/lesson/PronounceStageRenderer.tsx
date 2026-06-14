@@ -5,17 +5,14 @@ import WordCard from "./WordCard";
 import RecordingControls from "./RecordingControls";
 import FeedbackSection from "./FeedbackSection";
 import type { UseLessonSessionReturn as LessonSession } from "@/hooks/useLessonSession";
-import type { Lesson } from "@/lib/types";
 
 interface PronounceStageRendererProps {
   session: LessonSession;
-  lessonData: Lesson;
   isHintMode: boolean; // true for stage 1 (no hints), false for stage 2
 }
 
 export function PronounceStageRenderer({
   session,
-  lessonData,
   isHintMode,
 }: PronounceStageRendererProps) {
   if (!session.currentWord) return null;

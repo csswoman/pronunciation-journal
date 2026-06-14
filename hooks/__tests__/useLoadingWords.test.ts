@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { renderHook, waitFor } from '@testing-library/react'
-import { useLoadingWords, FALLBACK_WORDS } from '../useLoadingWords'
+import { useLoadingWords } from '../useLoadingWords'
 import * as queries from '@/lib/word-bank/queries'
 
 describe('useLoadingWords', () => {

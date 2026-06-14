@@ -1,10 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { useAuth } from "@/components/auth/AuthProvider";
+import { getUserRole, type UserRole } from "@/lib/users/queries";
 
-export type UserRole = "free" | "premium" | "admin";
+export type { UserRole } from "@/lib/users/queries";
 
 export function useUserRole() {
   const { user } = useAuth();
@@ -18,21 +18,23 @@ export function useUserRole() {
       return;
     }
 
-    const supabase = getSupabaseBrowserClient();
-    (async () => {
-      try {
-        const { data } = await supabase
-          .from("user_profiles")
-          .select("role")
-          .eq("id", user.id)
-          .maybeSingle();
-        setRole((data?.role as UserRole) ?? "free");
-      } catch {
-        setRole("free");
-      } finally {
+    let cancelled = false;
+
+    getUserRole(user.id)
+      .then((nextRole) => {
+        if (cancelled) return;
+        setRole(nextRole);
         setLoading(false);
-      }
-    })();
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setRole("free");
+        setLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, [user?.id]);
 
   return { role, loading, isPremium: role === "premium", isAdmin: role === "admin" };

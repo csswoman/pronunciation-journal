@@ -35,7 +35,6 @@ export default function FillBlankWidget({ args, status, onAnswer, onNext, onRetr
     const wrong = (args.commonWrongAnswers ?? []).map(w => w.value).filter(Boolean);
     const pool = Array.from(new Set([args.answer, ...wrong])).slice(0, 4);
     return pool.sort(() => Math.random() - 0.5);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [args.answer, args.commonWrongAnswers]);
 
   const hasOptions = options.length >= 2;

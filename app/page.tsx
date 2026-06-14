@@ -13,7 +13,7 @@ import { getDailyStreak } from "@/lib/daily/streak";
 import { getTodayPracticeGoal, getWeakestPhonemeForHome, getSoundsDueForHome } from "@/lib/home/queries";
 import type { MiniLesson, LanguageConcept } from "@/lib/content/schemas";
 import type { WordBankEntry } from "@/lib/word-bank/types";
-import type { DailyStreakResult } from "@/lib/daily/streak";
+import type { DailyStreakResult } from "@/lib/daily/streak-core";
 import type { DailyGoalProgress, WeakestPhonemeHome, SoundDueHome } from "@/lib/home/constants";
 import type { LexiconRetentionStats } from "@/lib/lexicon/server-progress";
 

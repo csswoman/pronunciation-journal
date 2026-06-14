@@ -8,9 +8,8 @@ import { useSpeechInput } from "@/hooks/useSpeechInput";
 import { calculateXP } from "@/lib/pronunciation/scoring";
 import { fetchPronunciation } from "@/lib/pronunciation/dictionary";
 import { isFavorite, toggleFavorite } from "@/lib/db";
-import { db } from "@/lib/db";
-import { getSupabaseBrowserClient } from "@/lib/supabase/client";
-import { getUserLearningState } from "@/lib/ai-practice/load-state";
+import { useAuth } from "@/components/auth/AuthProvider";
+import { syncCefrFromLocalState } from "@/lib/ai-practice/sync-cefr";
 import type { Lesson, LessonWord } from "@/lib/types";
 import type { Phase } from "@/components/lesson/ActiveLessonPage";
 import type { LessonStageId, LessonStageMasteryMap } from "@/components/lesson/LessonLobby";
@@ -62,30 +61,12 @@ export function useLessonSession({
   setStageMastery,
   advanceOffset,
 }: UseLessonSessionOptions): UseLessonSessionReturn {
+  const { user } = useAuth();
+
   const syncCEFRAtSessionEnd = useCallback(async () => {
-    try {
-      const supabase = getSupabaseBrowserClient();
-      const { data: { session } } = await supabase.auth.getSession();
-      const userId = session?.user?.id;
-      if (!userId) return;
-      const localRow = await db.learningState.get(userId);
-      const localState = localRow?.state ?? await getUserLearningState(userId);
-      const cefrEstimate = localState.level.cefrEstimate;
-      const { data: previous } = await supabase
-        .from("user_profiles" as never)
-        .select("cefr_level")
-        .eq("id", userId)
-        .maybeSingle();
-      const previousProfile = previous as { cefr_level?: string } | null;
-      if (previousProfile?.cefr_level === cefrEstimate) return;
-      const { error } = await supabase
-        .from("user_profiles" as never)
-        .upsert({ id: userId, cefr_level: cefrEstimate } as never, { onConflict: "id" });
-      if (error) console.error("Failed to sync cefr_level:", error);
-    } catch (error) {
-      console.error("Failed to sync cefr_level:", error);
-    }
-  }, []);
+    if (!user?.id) return;
+    await syncCefrFromLocalState(user.id);
+  }, [user?.id]);
   const [phase, setPhase] = useState<Phase>("ready");
   const [stream] = useState<MediaStream | null>(null);
   const [wordAudioUrl, setWordAudioUrl] = useState<string | null>(null);
@@ -163,7 +144,7 @@ export function useLessonSession({
   const handleStartRecording = useCallback(async () => {
     resetForNext();
     try {
-      const ms = await getStream();
+      await getStream();
       await startSpeech();
       setPhase("recording");
     } catch (err) {

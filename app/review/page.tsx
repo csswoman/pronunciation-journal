@@ -53,7 +53,6 @@ export default function ReviewPage() {
   useEffect(() => {
     if (!user) return
     loadReview()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, sessionKey])
 
   async function loadReview() {
@@ -115,7 +114,6 @@ export default function ReviewPage() {
     if (session.isComplete && user) {
       finishSession()
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session.isComplete])
 
   async function handleAnswer(isCorrect: boolean, userAnswer: string) {

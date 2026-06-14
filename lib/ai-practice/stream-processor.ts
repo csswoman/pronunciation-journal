@@ -1,4 +1,4 @@
-import type { AIMessage, ToolCall, ContentPart, StreamChunk } from "./types";
+import type { ToolCall, ContentPart, StreamChunk } from "./types";
 import { isValidToolName, parseToolArgs, isExerciseTool, type StartRoleplayArgs } from "./tools/registry";
 import type { SaveWordArgs } from "./tools/registry";
 

@@ -1,5 +1,6 @@
 import { createSupabaseServerClient } from '@/lib/supabase/server'
-import { getDailyStreak, toLocalDateString, STREAK_TIMEZONE, type DailyStreakResult } from '@/lib/daily/streak'
+import { getDailyStreak } from '@/lib/daily/streak'
+import { toLocalDateString, STREAK_TIMEZONE, type DailyStreakResult } from '@/lib/daily/streak-core'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 

@@ -1,5 +1,5 @@
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { STREAK_TIMEZONE, toLocalDateString } from "@/lib/daily/streak";
+import { STREAK_TIMEZONE, toLocalDateString } from "@/lib/daily/streak-core";
 import { getTodaysMiniLesson } from "@/lib/content/lessons";
 import {
   DEFAULT_DAILY_GOAL_MINUTES,

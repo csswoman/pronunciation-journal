@@ -10,7 +10,6 @@ import type { ReactNode } from "react";
 import Image from "next/image";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { isHtmlContent } from "@/lib/theory-lessons/contentFormat";
 import {
   preprocessAdmonitions,
   getAdmonitionTone,
@@ -125,10 +124,6 @@ const components = {
 
 export default function LessonMarkdown({ content }: { content: string }) {
   const safeContent = content || "This lesson has no content yet.";
-
-  if (isHtmlContent(safeContent)) {
-    return <div className="markdown" dangerouslySetInnerHTML={{ __html: safeContent }} />;
-  }
 
   return (
     <div className="markdown">

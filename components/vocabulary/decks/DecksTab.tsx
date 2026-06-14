@@ -5,9 +5,12 @@ import Card from "@/components/layout/Card";
 import Button from "@/components/ui/Button";
 import { DeckGrid } from "@/components/vocabulary/decks/DeckGrid";
 import type { DeckCounts } from "@/hooks/useDeckData";
+import type { Tables } from "@/lib/supabase/types";
+
+type Deck = Tables<"decks">;
 
 interface DecksTabProps {
-  decks: any[];
+  decks: Deck[];
   counts: DeckCounts;
   loading: boolean;
   onStudy: (id: string) => void;

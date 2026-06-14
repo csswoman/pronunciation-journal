@@ -42,7 +42,7 @@ export function InterviewResults({ title, turns, results, difficulty, level, onR
   const passed = scores.filter((s) => s.accuracy >= threshold).length;
   const failed = scores.length - passed;
 
-  const wordsToImprove = candidateTurns.flatMap(({ idx, turn }) => {
+  const wordsToImprove = candidateTurns.flatMap(({ idx }) => {
     const result = results.get(idx);
     if (!result) return [];
     return (result.score.wordResults ?? [])

@@ -102,7 +102,6 @@ export function useSessionState(config: PracticeConfig) {
       }
     })()
     return () => { cancelled = true }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [persistence?.userId, persistence?.soundId])
 
   // Reset start time whenever a new exercise is shown.

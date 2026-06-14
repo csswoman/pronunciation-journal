@@ -9,6 +9,10 @@ import { saveSRSData, getSRSData } from "@/lib/db";
 import type { ScoringResult } from "@/lib/types";
 import type { CEFRLevel } from "@/lib/exercises/cefr";
 
+interface PronunciationEvaluationResult {
+  wordResults?: ScoringResult["wordResults"];
+}
+
 interface UseScoringReturn {
   result: ScoringResult | null;
   xpEarned: number;
@@ -59,7 +63,7 @@ export function useScoring(): UseScoringReturn {
           transcript,
           accuracy: evalResult.score ?? 0,
           isCorrect: evalResult.correct,
-          wordResults: (evalResult as any).wordResults ?? [],
+          wordResults: (evalResult as PronunciationEvaluationResult).wordResults ?? [],
         };
         setResult(scoringResult);
 

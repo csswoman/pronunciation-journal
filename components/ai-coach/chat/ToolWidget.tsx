@@ -16,7 +16,6 @@ import type {
 import { logEvent } from "@/lib/ai-practice/events";
 
 const ABANDON_TIMEOUT_MS = 30_000;
-const AUTO_NEXT_DELAY_MS = 800;
 
 interface Props {
   toolCall: ToolCall;
@@ -56,8 +55,7 @@ export default function ToolWidget({ toolCall, onAnswer, onNext, onRetry, onFirs
     }, ABANDON_TIMEOUT_MS);
 
     return () => clearTimeout(timer);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [toolCall.status]);
+  }, [toolCall.name, toolCall.status, onFirstExercise, topic]);
 
   // ── exercise_answered / exercise_correct ─────────────────────────────────
   useEffect(() => {
@@ -75,8 +73,7 @@ export default function ToolWidget({ toolCall, onAnswer, onNext, onRetry, onFirs
     if (toolCall.result.correct) {
       logEvent("exercise_correct", { exerciseType: toolCall.name, topic: toolCall.result.topic }).catch(() => {});
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [toolCall.status]);
+  }, [toolCall.name, toolCall.result, toolCall.status]);
 
   // ── auto_next_triggered disabled (user must click Next manually) ───────────
   // Removed auto-advance on correct answer; user must explicitly click Next

@@ -11,7 +11,7 @@ import HomeWordOfDayCard from "@/components/home/HomeWordOfDayCard";
 import HomeAiPracticeCard from "@/components/home/HomeAiPracticeCard";
 import HomeStreakCard from "@/components/home/HomeStreakCard";
 import HomeGoalRing from "@/components/home/HomeGoalRing";
-import type { DailyStreakResult } from "@/lib/daily/streak";
+import type { DailyStreakResult } from "@/lib/daily/streak-core";
 import type { DailyGoalProgress } from "@/lib/home/constants";
 
 interface HomeTodaySectionProps {

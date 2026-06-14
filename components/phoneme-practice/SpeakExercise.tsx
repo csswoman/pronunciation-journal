@@ -10,7 +10,6 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Mic, MicOff, Play, RotateCcw, Volume2 } from 'lucide-react'
-import { speak } from '@/lib/phoneme-practice/tts'
 import type { Exercise } from '@/lib/phoneme-practice/types'
 import { cn } from '@/lib/cn'
 import { PhonemeExercisePrompt } from './PhonemeExercisePrompt'

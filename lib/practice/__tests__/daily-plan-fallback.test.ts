@@ -1,35 +1,23 @@
 import { describe, it, expect, vi } from 'vitest'
 
-// Mock Supabase — return empty word_bank
-// The terminal builder returns { data: [], error: null }
-const terminal = () => ({ data: [], error: null })
-const withLimit = () => ({ limit: terminal })
-const withOrder = () => ({ order: withLimit, limit: terminal })
-const withLte = () => ({ lte: withOrder })
-const withNeq = () => ({ neq: withLte, lte: withOrder, order: withOrder, limit: terminal })
-const withOr = () => ({ order: withOrder, limit: terminal })
-// eq chain — supports arbitrary depth by returning self-referential object
-function makeEq(): Record<string, unknown> {
-  const obj: Record<string, unknown> = {}
-  const self = (): Record<string, unknown> => obj
-  obj['eq'] = self
-  obj['or'] = withOr
-  obj['neq'] = withNeq
-  obj['lte'] = withOrder
-  obj['order'] = withOrder
-  obj['limit'] = terminal
-  obj['gt'] = terminal
-  obj['in'] = terminal
-  return obj
-}
+vi.mock('@/lib/word-bank/queries', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@/lib/word-bank/queries')>()
+  return {
+    ...actual,
+    getDueWordsForDaily: vi.fn().mockResolvedValue([]),
+    getNewWordsForDaily: vi.fn().mockResolvedValue([]),
+    getDueReviewWordsForDaily: vi.fn().mockResolvedValue([]),
+  }
+})
 
-vi.mock('@/lib/supabase/client', () => ({
-  getSupabaseBrowserClient: () => ({
-    from: () => ({
-      select: () => makeEq(),
-    }),
-  }),
-}))
+vi.mock('@/lib/sounds/queries', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@/lib/sounds/queries')>()
+  return {
+    ...actual,
+    getWeakestSoundByProgress: vi.fn().mockResolvedValue(null),
+    getDueSoundsForReview: vi.fn().mockResolvedValue([]),
+  }
+})
 
 vi.mock('@/lib/phoneme-practice/queries', () => ({
   getAllSounds: async () => [],
@@ -86,7 +74,7 @@ vi.mock('@/lib/core-1000/client-fetch', () => ({
     })),
 }))
 
-import { buildDailyPlan } from '../daily-plan'
+import { buildDailyPlan } from '../daily-plan/index'
 
 describe('buildDailyPlan — Core 1000 fallback', () => {
   it('includes word_review step when word_bank is empty', async () => {

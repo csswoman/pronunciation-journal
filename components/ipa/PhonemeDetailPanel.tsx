@@ -5,7 +5,6 @@ import {
   Play,
   Square,
   ArrowRight,
-  Volume2,
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";

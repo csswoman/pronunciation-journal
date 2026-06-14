@@ -16,7 +16,7 @@ import type { ElementType } from "react";
 import HomeHeaderGreeting from "@/components/home/HomeHeaderGreeting";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { useUserPreferences } from "@/hooks/useUserPreferences";
-import type { DailyStreakResult } from "@/lib/daily/streak";
+import type { DailyStreakResult } from "@/lib/daily/streak-core";
 import type { ReactNode } from "react";
 
 interface HomeMobileViewProps {

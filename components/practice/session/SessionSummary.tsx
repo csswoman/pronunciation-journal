@@ -45,7 +45,7 @@ function AccuracyLabel({ accuracy }: { accuracy: number }) {
   return <span className="text-error font-medium text-sm">Needs work</span>
 }
 
-function ResultRow({ slug, isCorrect, index }: { slug: string; isCorrect: boolean; index: number }) {
+function ResultRow({ slug, isCorrect }: { slug: string; isCorrect: boolean }) {
   return (
     <li className="flex items-center justify-between rounded-lg border border-border-subtle bg-surface-raised px-3 py-2">
       <span className="text-sm text-fg-primary capitalize">{slug.replace(/_/g, ' ')}</span>
@@ -84,7 +84,6 @@ export function SessionSummary({ result, onPracticeAgain, onFinish }: Props) {
             key={`${r.exerciseId}-${i}`}
             slug={r.slug}
             isCorrect={r.isCorrect}
-            index={i}
           />
         ))}
       </ul>

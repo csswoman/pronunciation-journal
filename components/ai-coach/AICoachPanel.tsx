@@ -23,11 +23,11 @@ export const PANEL_WIDTH = 380;
 const QUOTA_WARN_THRESHOLD = 18;
 
 export default function AICoachPanel() {
-  const { isOpen, isFullscreen, panelWidth, close, setFullscreen, setPanelWidth, launch, consumeLaunch } =
+  const { isOpen, isFullscreen, panelWidth, close, setPanelWidth, launch, consumeLaunch } =
     useAICoachStore();
   const pathname = usePathname();
   const ctx = getPageContext(pathname);
-  const { isDragging, onDragStart } = usePanelResize({ panelWidth, setPanelWidth });
+  const { onDragStart } = usePanelResize({ panelWidth, setPanelWidth });
 
   const { messages, isStreaming, error, quotaExhausted, wordToSave, conversationId, sendMessage, answerToolCall, openSaveWordModal, closeSaveWordModal, confirmSaveWord, resetSession, loadConversation, removeConversation } = useAIPractice();
 

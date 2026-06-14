@@ -40,7 +40,6 @@ const useIsoLayoutEffect = typeof window === 'undefined' ? useEffect : useLayout
 export function MatchPairsExercise({ exercise, onResult }: Props) {
   const rightItems = useMemo(
     () => shuffle(exercise.pairs.map((p) => ({ id: p.id, label: p.right }))),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [exercise.id],
   )
 

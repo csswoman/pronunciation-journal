@@ -1,8 +1,13 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
-import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { useAuth } from "@/components/auth/AuthProvider";
+import {
+  getUserPreferences,
+  updateDisplayName,
+  updateAvatar as updateAvatarQuery,
+  updatePassword as updatePasswordQuery,
+} from "@/lib/users/queries";
 
 export interface UserPreferencesData {
   full_name?: string;
@@ -15,33 +20,13 @@ export function useUserPreferences() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (!user) {
-      setLoading(false);
-      return;
-    }
-    loadPreferences();
-  }, [user?.id]);
-
   const loadPreferences = useCallback(async () => {
     if (!user) return;
 
     try {
       setLoading(true);
-      const supabase = getSupabaseBrowserClient();
-
-      const { data, error: fetchError } = await supabase
-        .from("user_profiles")
-        .select("display_name")
-        .eq("id", user.id)
-        .single();
-
-      if (fetchError && fetchError.code !== "PGRST116") throw fetchError;
-
-      setPreferences({
-        full_name: data?.display_name || user.user_metadata?.full_name || "",
-        avatar_url: user.user_metadata?.avatar_url || "",
-      });
+      const prefs = await getUserPreferences(user.id, user.user_metadata);
+      setPreferences(prefs);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Unknown error");
     } finally {
@@ -49,28 +34,20 @@ export function useUserPreferences() {
     }
   }, [user]);
 
+  useEffect(() => {
+    if (!user) {
+      setLoading(false);
+      return;
+    }
+    void loadPreferences();
+  }, [user?.id, loadPreferences]);
+
   const updateFullName = useCallback(
     async (fullName: string) => {
       if (!user) return;
 
       try {
-        const supabase = getSupabaseBrowserClient();
-
-        // Update user_profiles.display_name
-        const { error: profileError } = await supabase
-          .from("user_profiles")
-          .update({ display_name: fullName })
-          .eq("id", user.id);
-
-        if (profileError) throw profileError;
-
-        // Update auth metadata
-        const { error: authError } = await supabase.auth.updateUser({
-          data: { full_name: fullName },
-        });
-
-        if (authError) throw authError;
-
+        await updateDisplayName(user.id, fullName);
         setPreferences((prev) => ({ ...prev, full_name: fullName }));
       } catch (err) {
         const message = err instanceof Error ? err.message : "Unknown error";
@@ -78,7 +55,7 @@ export function useUserPreferences() {
         throw err;
       }
     },
-    [user]
+    [user],
   );
 
   const updateAvatar = useCallback(
@@ -86,34 +63,7 @@ export function useUserPreferences() {
       if (!user) return;
 
       try {
-        const supabase = getSupabaseBrowserClient();
-        const fileExt = file.name.split(".").pop();
-        const filePath = `${user.id}-${Date.now()}.${fileExt}`;
-
-        // Upload to storage
-        const { error: uploadError } = await supabase.storage
-          .from("avatars")
-          .upload(filePath, file, { contentType: file.type, upsert: true });
-
-        if (uploadError) {
-          console.error("Upload error:", uploadError);
-          throw uploadError;
-        }
-
-        // Get public URL
-        const { data } = supabase.storage
-          .from("avatars")
-          .getPublicUrl(filePath);
-
-        const avatarUrl = data.publicUrl;
-
-        // Save to auth metadata (persists across sessions)
-        const { error: authError } = await supabase.auth.updateUser({
-          data: { avatar_url: avatarUrl },
-        });
-
-        if (authError) throw authError;
-
+        const avatarUrl = await updateAvatarQuery(user.id, file);
         setPreferences((prev) => ({ ...prev, avatar_url: avatarUrl }));
       } catch (err) {
         const message = err instanceof Error ? err.message : "Unknown error";
@@ -121,7 +71,7 @@ export function useUserPreferences() {
         throw err;
       }
     },
-    [user]
+    [user],
   );
 
   const updatePassword = useCallback(
@@ -129,16 +79,14 @@ export function useUserPreferences() {
       if (!user) return;
 
       try {
-        const supabase = getSupabaseBrowserClient();
-        const { error } = await supabase.auth.updateUser({ password: newPassword });
-        if (error) throw error;
+        await updatePasswordQuery(newPassword);
       } catch (err) {
         const message = err instanceof Error ? err.message : "Unknown error";
         setError(message);
         throw err;
       }
     },
-    [user]
+    [user],
   );
 
   return {

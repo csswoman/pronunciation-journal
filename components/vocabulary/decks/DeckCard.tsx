@@ -20,7 +20,6 @@ interface DeckCardProps {
 export function DeckCard({
   deck,
   entryCount,
-  dueCount = 0,
   masteredCount = 0,
   onStudy,
   onManage,

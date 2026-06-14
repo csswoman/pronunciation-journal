@@ -43,7 +43,6 @@ export default function InterviewSession({ title, turns, difficulty, level, onRe
   useEffect(() => {
     if (!speechSupported || turns[0]?.role !== "interviewer") return;
     playTurn(0);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const playTurn = useCallback(async (idx: number) => {

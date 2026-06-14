@@ -58,15 +58,24 @@ function makeSoundWord(id: number, soundId: number): SoundWord {
 
 // ── Module mocks ──────────────────────────────────────────────────────────────
 
-// Mock Supabase browser client used inside daily-plan.ts
-const mockSelect = vi.fn()
-const mockFrom = vi.fn(() => ({
-  select: mockSelect,
-}))
+vi.mock('@/lib/word-bank/queries', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@/lib/word-bank/queries')>()
+  return {
+    ...actual,
+    getDueWordsForDaily: vi.fn(),
+    getNewWordsForDaily: vi.fn(),
+    getDueReviewWordsForDaily: vi.fn(),
+  }
+})
 
-vi.mock('@/lib/supabase/client', () => ({
-  getSupabaseBrowserClient: () => ({ from: mockFrom }),
-}))
+vi.mock('@/lib/sounds/queries', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@/lib/sounds/queries')>()
+  return {
+    ...actual,
+    getWeakestSoundByProgress: vi.fn(),
+    getDueSoundsForReview: vi.fn(),
+  }
+})
 
 // Mock phoneme queries to avoid network calls
 vi.mock('@/lib/phoneme-practice/queries', () => ({
@@ -85,10 +94,24 @@ vi.mock('@/lib/exercises/generators/connected-speech', () => ({
   todaysDeckSlug: vi.fn().mockReturnValue('cs-linking'),
 }))
 
+vi.mock('@/lib/exercises/generators/reorder-from-fragments', () => ({
+  fetchTextFragments: vi.fn().mockResolvedValue([]),
+  generateReorderFromFragments: vi.fn().mockReturnValue([]),
+}))
+
+vi.mock('@/lib/exercises/generators/reorder-ai', () => ({
+  generateReorderAI: vi.fn().mockResolvedValue([]),
+}))
+
 vi.mock('@/lib/core-1000/client-fetch', () => ({
   fetchCoreWordsForDay: vi.fn().mockResolvedValue([]),
 }))
 
+import {
+  getDueWordsForDaily,
+  getNewWordsForDaily,
+} from '@/lib/word-bank/queries'
+import { getWeakestSoundByProgress } from '@/lib/sounds/queries'
 import {
   getAllSounds,
   getAllWords,
@@ -100,7 +123,7 @@ import {
   buildDailyPlan,
   EmptyWordBankError,
   DAILY_PLAN_STEP_COUNT,
-} from '../daily-plan'
+} from '../daily-plan/index'
 import type { PracticeExercise } from '../types'
 
 /** Aplana todos los ejercicios de todos los pasos de un plan. */
@@ -117,49 +140,15 @@ function seedCatalog() {
   return { sounds, words }
 }
 
-// ── Supabase query builder helpers ────────────────────────────────────────────
+// ── Query mock helpers ────────────────────────────────────────────────────────
 
-/**
- * Build a chainable Supabase query mock that resolves with `rows`.
- * Supports: .select().eq().or().order().limit()
- */
-function chainResolving(rows: unknown[]) {
-  const chain: Record<string, unknown> = {}
-  const terminal = { data: rows, error: null }
-  const noop = () => chain
-  chain.eq = noop
-  chain.neq = noop
-  chain.gt = noop
-  chain.is = noop
-  chain.ilike = noop
-  chain.or = noop
-  chain.order = noop
-  chain.limit = () => chain
-  // Make the chain awaitable at any point — `await q` works after .limit() or .ilike()
-  chain.then = (onfulfilled: (v: unknown) => unknown) =>
-    Promise.resolve(terminal).then(onfulfilled)
-  return chain
+function setupWordBankMock(newWords: WordBankEntry[], dueWords: WordBankEntry[] = []) {
+  vi.mocked(getNewWordsForDaily).mockResolvedValue(newWords)
+  vi.mocked(getDueWordsForDaily).mockResolvedValue(dueWords)
 }
 
-/** Two-phase mock: first call resolves dueWords, second resolves []. */
-function setupWordBankMock(dueWords: WordBankEntry[], newWords: WordBankEntry[] = []) {
-  let callCount = 0
-  mockSelect.mockImplementation(() => {
-    callCount++
-    return chainResolving(callCount <= 1 ? dueWords : newWords)
-  })
-}
-
-/** Mock for the weakest-sound progress query (returns empty → no phoneme slot). */
-function setupProgressMock(rows: unknown[]) {
-  // The progress query reads from 'user_contrast_progress' (contrast_id = 'ipaA|ipaB').
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (mockFrom as any).mockImplementation((table: string) => {
-    if (table === 'user_contrast_progress') {
-      return { select: () => chainResolving(rows) }
-    }
-    return { select: mockSelect }
-  })
+function setupProgressMock(weakest: Sound | null) {
+  vi.mocked(getWeakestSoundByProgress).mockResolvedValue(weakest)
 }
 
 // ── Tests ─────────────────────────────────────────────────────────────────────
@@ -167,8 +156,8 @@ function setupProgressMock(rows: unknown[]) {
 describe('buildDailyPlan', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    // Default: no sound progress (new user), pero el seed SIEMPRE tiene contenido.
-    mockFrom.mockImplementation(() => ({ select: mockSelect }))
+    setupProgressMock(null)
+    setupWordBankMock([], [])
     const { sounds, words } = seedCatalog()
     vi.mocked(getAllSounds).mockResolvedValue(sounds)
     vi.mocked(getAllWords).mockResolvedValue(words)
@@ -179,9 +168,6 @@ describe('buildDailyPlan', () => {
   })
 
   it('usuario nuevo (sin word_bank ni progreso): 5 pasos del seed, sin lanzar error', async () => {
-    setupProgressMock([])
-    mockSelect.mockImplementation(() => chainResolving([]))
-
     const plan = await buildDailyPlan('user-1')
 
     expect(plan.steps).toHaveLength(DAILY_PLAN_STEP_COUNT)
@@ -193,17 +179,11 @@ describe('buildDailyPlan', () => {
   })
 
   it('garantiza DAILY_PLAN_STEP_COUNT pasos cuando hay seed', async () => {
-    setupProgressMock([])
-    mockSelect.mockImplementation(() => chainResolving([]))
-
     const plan = await buildDailyPlan('user-1')
     expect(plan.steps).toHaveLength(DAILY_PLAN_STEP_COUNT)
   })
 
   it('no repite contentId dentro de un mismo paso', async () => {
-    setupProgressMock([])
-    mockSelect.mockImplementation(() => chainResolving([]))
-
     const plan = await buildDailyPlan('user-1')
     for (const step of plan.steps) {
       const ids = step.exercises.map((e) => e.contentId)
@@ -212,9 +192,6 @@ describe('buildDailyPlan', () => {
   })
 
   it('todos los ejercicios tienen context="daily"', async () => {
-    setupProgressMock([])
-    mockSelect.mockImplementation(() => chainResolving([]))
-
     const plan = await buildDailyPlan('user-1')
     for (const ex of allExercises(plan)) {
       expect(ex.context).toBe('daily')
@@ -225,7 +202,6 @@ describe('buildDailyPlan', () => {
     const words = Array.from({ length: 6 }, (_, i) =>
       makeEntry({ id: `w-${i}`, text: `word${i}`, example: `The word${i} appears clearly in each sentence today.` }),
     )
-    setupProgressMock([])
     setupWordBankMock(words, [])
 
     const plan = await buildDailyPlan('user-1')
@@ -237,7 +213,6 @@ describe('buildDailyPlan', () => {
     const words = Array.from({ length: 6 }, (_, i) =>
       makeEntry({ id: `w-${i}`, text: `word${i}`, example: `The word${i} appears clearly in each sentence today.` }),
     )
-    setupProgressMock([])
     setupWordBankMock(words, [])
 
     const plan = await buildDailyPlan('user-1')
@@ -257,17 +232,7 @@ describe('buildDailyPlan', () => {
     // makeSound(id) produces ipa = `/ɪ${id}/`
     const { sounds } = seedCatalog()
     const sound2 = sounds.find(s => s.id === 2)!
-    // Route tables: user_contrast_progress → progress rows, sounds → sound2, others → []
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ;(mockFrom as any).mockImplementation((table: string) => {
-      if (table === 'user_contrast_progress') {
-        return { select: () => chainResolving([{ contrast_id: '/ɪ1/|/ɪ2/', total_attempts: 10, correct_answers: 7 }]) }
-      }
-      if (table === 'sounds') {
-        return { select: () => chainResolving([sound2]) }
-      }
-      return { select: () => chainResolving([]) }
-    })
+    setupProgressMock(sound2)
 
     const plan = await buildDailyPlan('user-1')
 
@@ -277,9 +242,6 @@ describe('buildDailyPlan', () => {
   })
 
   it('nunca queda por debajo de 5 pasos aunque el word_bank esté vacío', async () => {
-    setupProgressMock([])
-    mockSelect.mockImplementation(() => chainResolving([]))
-
     const plan = await buildDailyPlan('user-1')
     expect(plan.steps.length).toBe(DAILY_PLAN_STEP_COUNT)
   })
@@ -288,7 +250,6 @@ describe('buildDailyPlan', () => {
     const words = Array.from({ length: 4 }, (_, i) =>
       makeEntry({ id: `w-${i}`, text: `word${i}`, example: `We saw word${i} in the sentence today.` }),
     )
-    setupProgressMock([])
     setupWordBankMock(words, [])
 
     const plan = await buildDailyPlan('user-1')
@@ -317,8 +278,8 @@ describe('buildDailyPlan', () => {
         deviceId: 'dev',
       },
     } as never)
-    setupProgressMock([]) // no Sound Lab progress
-    setupWordBankMock([])
+    setupProgressMock(null)
+    setupWordBankMock([], [])
 
     const plan = await buildDailyPlan('user-1')
     expect(vi.mocked(getWordsBySound)).toHaveBeenCalledWith(3)
@@ -330,7 +291,6 @@ describe('buildDailyPlan', () => {
     const words = Array.from({ length: 6 }, (_, i) =>
       makeEntry({ id: `w-${i}`, text: `word${i}`, example: undefined }),
     )
-    setupProgressMock([])
     setupWordBankMock(words, [])
 
     const plan = await buildDailyPlan('user-1')

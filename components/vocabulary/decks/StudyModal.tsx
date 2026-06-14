@@ -5,18 +5,16 @@ import { useAuth } from "@/components/auth/AuthProvider";
 import type { Tables } from "@/lib/supabase/types";
 import { getDeckCardsWithProgress, upsertCardProgress } from "@/lib/decks/queries";
 import { DIFFICULTY_CONFIG, type DifficultyKey } from "./StudyDifficultyButtons";
-import { sm2, LEVEL_LABELS, RATING_CONFIG } from "./study-utils";
+import { sm2, LEVEL_LABELS } from "./study-utils";
 import { StudyLeftPanel } from "./StudyLeftPanel";
 import { StudyRightPanel } from "./StudyRightPanel";
 import { StudyRatingBar } from "./StudyRatingBar";
-import { H2 } from "@/components/ui/Typography";
 import { StudySessionComplete } from "./StudySessionComplete";
 import { StudyEmptyStates } from "./StudyEmptyStates";
 import { StudyHeader } from "./StudyHeader";
 import { StudyCenterCard } from "./StudyCenterCard";
 
 type Deck = Tables<"decks">;
-type Progress = Tables<"deck_entry_progress">;
 
 interface SessionStats {
   seen: number;

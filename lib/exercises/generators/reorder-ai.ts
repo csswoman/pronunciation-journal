@@ -1,4 +1,4 @@
-import { getSupabaseBrowserClient } from '@/lib/supabase/client'
+import { getAccessToken } from '@/lib/auth/session'
 import { generateReorderFromFragments, type TextFragment } from './reorder-from-fragments'
 import type { ReorderWordsExercise } from '@/lib/exercises/types'
 
@@ -18,15 +18,13 @@ export async function generateReorderAI(
   count = 8,
   deckSlug?: string,
 ): Promise<ReorderWordsExercise[]> {
-  const supabase = getSupabaseBrowserClient()
-  const { data: { session } } = await supabase.auth.getSession()
-  if (!session) throw new Error('Not authenticated')
+  const accessToken = await getAccessToken()
 
   const res = await fetch('/api/sentences/generate', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${session.access_token}`,
+      Authorization: `Bearer ${accessToken}`,
     },
     body: JSON.stringify({ topic, level, count, deckSlug }),
   })
