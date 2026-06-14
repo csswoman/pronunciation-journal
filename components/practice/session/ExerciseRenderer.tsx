@@ -176,7 +176,7 @@ export function ExerciseRenderer({ exercise, onSubmit, focusUi = false, voice }:
         case 'minimal_pair':
           return <MinimalPairExercise exercise={legacy} onSubmit={onSubmit} focusUi={focusUi} voice={voice} />
         case 'dictation':
-          return <DictationExercise exercise={legacy} onSubmit={onSubmit} focusUi={focusUi} voice={voice} />
+          return <DictationExercise exercise={legacy} onSubmit={onSubmit} voice={voice} />
         case 'speak_word':
           return exercise.context === 'daily'
             ? <SpeakScoredExercise exercise={legacy} onSubmit={onSubmit} />

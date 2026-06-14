@@ -59,8 +59,39 @@
   padding: var(--space-4) var(--space-5) var(--space-3);
 }
 
+.phoneme-focus__session-title {
+  padding: var(--space-3) var(--space-5) 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.phoneme-focus__session-label {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+.phoneme-focus__session-name {
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-size: 1.125rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+  color: var(--text-primary);
+}
+
+.phoneme-focus__session-name--ipa {
+  font-family: var(--font-editorial), Georgia, serif;
+  font-size: 1.375rem;
+  font-weight: 480;
+  color: var(--primary);
+}
+
 .phoneme-focus__stage {
-  padding: var(--space-2) var(--space-5) var(--space-6);
+  padding: var(--space-4) var(--space-5) var(--space-6);
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
@@ -105,21 +136,11 @@
 
 .phoneme-focus__badge {
   font-family: var(--font-editorial), Georgia, serif;
-  font-size: 1rem;
-  font-weight: 600;
+  font-size: 1.125rem;
+  font-weight: 500;
   color: var(--primary);
   flex-shrink: 0;
-}
-
-.phoneme-focus__badge--text {
-  font-family: var(--font-sans), system-ui, sans-serif;
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  max-width: 8rem;
+  line-height: 1;
 }
 
 .phoneme-focus__prompt {
@@ -139,20 +160,20 @@
 }
 
 .phoneme-focus__eyebrow {
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-weight: 600;
-  letter-spacing: 0.1em;
-  color: var(--primary);
-  opacity: 0.75;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
 }
 
 .phoneme-focus__title {
-  font-family: var(--font-editorial), Georgia, serif;
-  font-weight: 480;
-  font-size: 1.25rem;
-  letter-spacing: -0.01em;
-  line-height: 1.35;
-  color: var(--text-primary);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-weight: 500;
+  font-size: 1rem;
+  letter-spacing: -0.005em;
+  line-height: 1.45;
+  color: var(--text-secondary);
 }
 
 .phoneme-focus__title em {

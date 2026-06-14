@@ -254,7 +254,7 @@ export default function ReviewPage() {
       case 'minimal_pair':
         return <MinimalPairExercise exercise={ex} onSubmit={submitHandler} focusUi />
       case 'dictation':
-        return <DictationExercise exercise={ex} onSubmit={submitHandler} focusUi />
+        return <DictationExercise exercise={ex} onSubmit={submitHandler} />
       case 'speak_word':
         return <SpeakExercise exercise={ex} onSubmit={submitHandler} focusUi />
       default:
