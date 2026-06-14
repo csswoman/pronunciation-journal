@@ -1,4 +1,5 @@
 import type { CoreWord, CefrLevel } from './types'
+import { MAX_CHUNKS } from './types'
 import type { WordBankEntry } from '@/lib/word-bank/types'
 
 function cefrToDifficulty(level: CefrLevel): number {
@@ -53,4 +54,34 @@ export function filterAndRotate(words: CoreWord[], day: number, count: number): 
     result.push(eligible[(start + i) % eligible.length])
   }
   return result
+}
+
+function chunkUrl(n: number): string {
+  return `/core-1000/words-${String(n).padStart(3, '0')}.json`
+}
+
+async function loadChunk(n: number): Promise<CoreWord[]> {
+  const res = await fetch(chunkUrl(n))
+  if (!res.ok) return []
+  return res.json() as Promise<CoreWord[]>
+}
+
+/**
+ * Fetches Core 1000 words for the given day offset, returning `count`
+ * WordBankEntry items. Words shorter than 4 characters are excluded.
+ * Selection rotates by `day` so different days surface different words.
+ * Loads additional chunks if the first chunk doesn't yield enough eligible words.
+ */
+export async function fetchCoreWordsForDay(day: number, count: number): Promise<WordBankEntry[]> {
+  const collected: CoreWord[] = []
+  let chunkIndex = 1
+
+  while (collected.filter(w => w.word.length >= 4).length < count && chunkIndex <= MAX_CHUNKS) {
+    const words = await loadChunk(chunkIndex)
+    if (words.length === 0) break
+    collected.push(...words)
+    chunkIndex++
+  }
+
+  return filterAndRotate(collected, day, count).map(coreWordToWordBankEntry)
 }

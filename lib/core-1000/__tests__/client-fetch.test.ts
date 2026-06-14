@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { coreWordToWordBankEntry, filterAndRotate } from '../client-fetch'
 import type { CoreWord } from '../types'
 
@@ -92,5 +92,42 @@ describe('filterAndRotate', () => {
   it('wraps around — rotation is deterministic and never goes out of bounds', () => {
     const result = filterAndRotate(words, 999, 2)
     expect(result.length).toBe(2)
+  })
+})
+
+describe('fetchCoreWordsForDay', () => {
+  const chunk1: CoreWord[] = Array.from({ length: 10 }, (_, i) =>
+    makeWord({ word: i < 3 ? 'the' : `word${i}`, rank: i + 1 })
+  )
+
+  beforeEach(() => {
+    global.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => chunk1,
+    })
+  })
+
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
+  it('returns WordBankEntry array', async () => {
+    const { fetchCoreWordsForDay } = await import('../client-fetch')
+    const result = await fetchCoreWordsForDay(0, 3)
+    expect(result).toHaveLength(3)
+    expect(result[0]).toHaveProperty('text')
+    expect(result[0]).toHaveProperty('example')
+  })
+
+  it('filters out words shorter than 4 chars', async () => {
+    const { fetchCoreWordsForDay } = await import('../client-fetch')
+    const result = await fetchCoreWordsForDay(0, 5)
+    expect(result.every(e => e.text.length >= 4)).toBe(true)
+  })
+
+  it('fetches chunk 001 first', async () => {
+    const { fetchCoreWordsForDay } = await import('../client-fetch')
+    await fetchCoreWordsForDay(0, 3)
+    expect(global.fetch).toHaveBeenCalledWith('/core-1000/words-001.json')
   })
 })
