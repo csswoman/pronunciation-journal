@@ -21,7 +21,7 @@ export default function SidebarFooter() {
     user?.user_metadata?.full_name ||
     user?.user_metadata?.name ||
     user?.email?.split("@")[0] ||
-    "User";
+    "Guest";
 
   const avatarUrl = user?.user_metadata?.avatar_url as string | undefined;
 

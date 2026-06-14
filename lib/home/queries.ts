@@ -118,7 +118,7 @@ export async function getDailyPlanPreview(userId: string): Promise<DailyPlanPrev
   const supabase = await createSupabaseServerClient();
   const today = new Date().toISOString();
 
-  // 1. ¿Hay palabras por repasar? (due o nuevas)
+  // 1. ¿Hay palabras para el plan diario? (due SRS o nuevas aún no introducidas)
   const { count: dueCount } = await supabase
     .from("word_bank")
     .select("*", { count: "exact", head: true })

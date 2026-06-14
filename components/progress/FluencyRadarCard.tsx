@@ -22,7 +22,7 @@ interface Props {
 const SKILL_ORDER: { key: SkillKey; label: string; source: string }[] = [
   { key: 'pronunciation', label: 'Pronunciation', source: 'Sound Lab · phoneme accuracy' },
   { key: 'grammar', label: 'Grammar', source: 'Curriculum · lessons completed' },
-  { key: 'vocabulary', label: 'Vocabulary', source: 'Lexicon · words mastered' },
+  { key: 'vocabulary', label: 'Vocabulary', source: 'Dictionary · words mastered' },
   { key: 'listening', label: 'Listening', source: 'Minimal pairs + story audio' },
   { key: 'speaking', label: 'Speaking', source: 'AI Coach · conversation' },
   { key: 'reading', label: 'Reading', source: 'Reading lessons' },
