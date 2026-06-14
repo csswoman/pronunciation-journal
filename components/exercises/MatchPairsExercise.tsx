@@ -14,6 +14,7 @@ import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } fr
 import { shuffle } from '@/lib/exercises/utils'
 import { speak } from '@/lib/phoneme-practice/tts'
 import type { MatchPairsExercise as MatchPairsExerciseType } from '@/lib/exercises/types'
+import { useUISounds } from '@/hooks/useUISounds'
 
 interface Props {
   exercise: MatchPairsExerciseType
@@ -54,6 +55,7 @@ export function MatchPairsExercise({ exercise, onResult }: Props) {
   const leftRefs  = useRef<Map<string, HTMLButtonElement>>(new Map())
   const rightRefs = useRef<Map<string, HTMLButtonElement>>(new Map())
   const startMs   = useRef(Date.now())
+  const { playTap, playCorrect, playWrong } = useUISounds()
 
   const matchedRightIds = new Set(Object.values(matches))
   const pairColor = (leftId: string) => DOT_COLORS[exercise.pairs.findIndex((p) => p.id === leftId) % DOT_COLORS.length]
@@ -73,6 +75,7 @@ export function MatchPairsExercise({ exercise, onResult }: Props) {
     if (leftIdOfThisRight && !selectedLeft) { unmatch(leftIdOfThisRight); return }
     if (selectedLeft) {
       if (matchedRightIds.has(rightId) && matches[selectedLeft] !== rightId) return
+      playTap()
       setMatches((prev) => ({ ...prev, [selectedLeft]: rightId }))
       setSelectedLeft(null)
       return
@@ -91,6 +94,7 @@ export function MatchPairsExercise({ exercise, onResult }: Props) {
     }
     setResults(newResults)
     setSubmitted(true)
+    if (allCorrect) playCorrect(); else playWrong()
     onResult(allCorrect, JSON.stringify(matches), Date.now() - startMs.current)
   }
 
