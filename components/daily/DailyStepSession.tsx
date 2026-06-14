@@ -15,11 +15,18 @@ import type { DailyStep } from '@/lib/practice/types'
 interface Props {
   step: DailyStep
   sessionKey: number
+  initialExerciseIndex?: number
   onComplete: () => void
   onExit: () => void
 }
 
-export default function DailyStepSession({ step, sessionKey, onComplete, onExit }: Props) {
+export default function DailyStepSession({
+  step,
+  sessionKey,
+  initialExerciseIndex,
+  onComplete,
+  onExit,
+}: Props) {
   const showable =
     step.kind === 'phoneme_focus' &&
     !!step.ipa &&
@@ -43,6 +50,7 @@ export default function DailyStepSession({ step, sessionKey, onComplete, onExit 
       exercises={step.exercises}
       sessionLength={step.exercises.length}
       sessionLabel={step.title}
+      initialIndex={initialExerciseIndex ?? 0}
       onSessionComplete={onComplete}
       onExit={onExit}
     />
