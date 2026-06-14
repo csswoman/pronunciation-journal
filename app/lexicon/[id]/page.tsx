@@ -30,7 +30,8 @@ export default async function LessonDetailPage({ params }: { params: Promise<{ i
     const entry = wordBankDetailsMap.get(wordId);
     if (!entry) return "new";
     if (entry.srsStatus === "mastered") return "learned";
-    return "reviewing";
+    if (entry.srsStatus === "learning" || entry.srsStatus === "review") return "reviewing";
+    return "new"; // srs_status "new" = in word bank but never practiced
   }
 
   const words: Word[] = rawWords.map((w) => ({
@@ -63,7 +64,6 @@ export default async function LessonDetailPage({ params }: { params: Promise<{ i
             wordsReviewing={wordsReviewing}
             color={category.color}
             categoryId={id}
-            words={words}
           />
           <WordBrowserClient
             words={words}

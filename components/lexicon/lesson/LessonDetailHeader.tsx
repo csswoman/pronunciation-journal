@@ -1,8 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { Layers } from "lucide-react";
-import Button from "@/components/ui/Button";
 import { PracticeButton } from "./PracticeButton";
 
 interface LessonDetailHeaderProps {
@@ -13,7 +11,6 @@ interface LessonDetailHeaderProps {
   wordsReviewing: number;
   color: string;
   categoryId: string;
-  onCreateDeck?: () => void;
 }
 
 export function LessonDetailHeader({
@@ -24,7 +21,6 @@ export function LessonDetailHeader({
   wordsReviewing,
   color,
   categoryId,
-  onCreateDeck,
 }: LessonDetailHeaderProps) {
   const learnedPct = totalWords > 0 ? (wordsLearned / totalWords) * 100 : 0;
   const reviewingPct = totalWords > 0 ? (wordsReviewing / totalWords) * 100 : 0;
@@ -34,7 +30,7 @@ export function LessonDetailHeader({
     <header className="lexicon-area__head">
       <div>
         <nav className="lexicon-area__crumb" aria-label="Breadcrumb">
-          <Link href="/words?tab=lexicon">Lexicon</Link>
+          <Link href="/words?tab=lexicon">Dictionary</Link>
           {" › "}
           <strong>{title}</strong>
         </nav>
@@ -85,11 +81,6 @@ export function LessonDetailHeader({
             <span className="lexicon-area__due">
               {wordsReviewing.toLocaleString()} due for review
             </span>
-          ) : null}
-          {onCreateDeck ? (
-            <Button variant="secondary" size="sm" onClick={onCreateDeck} icon={<Layers size={14} />}>
-              Create deck
-            </Button>
           ) : null}
           <PracticeButton categoryId={categoryId} />
         </div>
