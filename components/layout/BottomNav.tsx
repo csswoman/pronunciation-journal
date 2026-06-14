@@ -1,6 +1,6 @@
 "use client";
 
-import { BookOpen, Home, Menu, MicVocal } from "lucide-react";
+import { BookOpen, Home, Menu, Target } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useCallback, useState } from "react";
 import AICoachTrigger from "@/components/ai-coach/AICoachTrigger";
@@ -15,7 +15,7 @@ interface BottomNavProps {
 
 const primaryTabs = [
   { name: "Home", href: "/", icon: Home },
-  { name: "Practice", href: "/practice/sounds", icon: MicVocal },
+  { name: "Practice", href: "/daily", icon: Target },
   { name: "Courses", href: "/courses", icon: BookOpen },
 ] as const;
 

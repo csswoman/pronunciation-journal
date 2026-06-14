@@ -76,7 +76,7 @@ export default function AICoachPanel() {
       aria-hidden={!isOpen}
     >
       {!isFullscreen && <div onMouseDown={onDragStart} title="Drag to resize" className="absolute top-0 left-0 bottom-0 w-1 cursor-ew-resize group z-10 -ml-px"><div className="absolute inset-y-0 left-0 w-1 opacity-0 group-hover:opacity-100 transition-opacity bg-primary" /></div>}
-      <AICoachHeader pageLabel={ctx.label} showHistory={showHistory} isFullscreen={isFullscreen} onNewChat={() => { resetSession(); setActiveTab("chat"); }} onToggleHistory={() => setShowHistory((value) => !value)} onToggleFullscreen={() => setFullscreen(!isFullscreen)} onClose={close} />
+      <AICoachHeader pageLabel={ctx.label} showHistory={showHistory} onNewChat={() => { resetSession(); setActiveTab("chat"); }} onToggleHistory={() => setShowHistory((value) => !value)} onClose={close} />
       <div className="flex-shrink-0"><ChatTabs active={activeTab} onChange={setActiveTab} /></div>
 
       {showHistory && <ConversationHistoryPanel conversations={conversations} activeId={conversationId} onSelect={(conv) => { loadConversation(conv); setShowHistory(false); setActiveTab("chat"); }} onDelete={async (id) => { await removeConversation(id); setConversations((prev) => prev.filter((item) => item.id !== id)); }} onClose={() => setShowHistory(false)} />}

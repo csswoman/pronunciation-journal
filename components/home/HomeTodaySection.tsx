@@ -5,26 +5,25 @@
 //   sidebar: <HomeWordOfDayCard /> + <HomeAiPracticeCard /> + <HomeStreakCard /> + optional <HomeGoalRing />
 // </HomeTodaySection>
 
+import type { ReactNode } from "react";
 import HomeSectionHeader from "@/components/home/HomeSectionHeader";
-import HomeDailyCard from "@/components/home/HomeDailyCard";
 import HomeWordOfDayCard from "@/components/home/HomeWordOfDayCard";
 import HomeAiPracticeCard from "@/components/home/HomeAiPracticeCard";
 import HomeStreakCard from "@/components/home/HomeStreakCard";
 import HomeGoalRing from "@/components/home/HomeGoalRing";
 import type { DailyStreakResult } from "@/lib/daily/streak";
-import type { ConceptLesson } from "@/hooks/useDailyPlan";
 import type { DailyGoalProgress } from "@/lib/home/constants";
 
 interface HomeTodaySectionProps {
   streak?: DailyStreakResult;
-  conceptLesson?: ConceptLesson | null;
   dailyGoal?: DailyGoalProgress | null;
+  dailyCard: ReactNode;
 }
 
 export default function HomeTodaySection({
   streak,
-  conceptLesson = null,
   dailyGoal = null,
+  dailyCard,
 }: HomeTodaySectionProps) {
   return (
     <section className="mt-8">
@@ -35,7 +34,7 @@ export default function HomeTodaySection({
         size="lg"
       />
       <div className="grid grid-cols-1 gap-4 md:grid-cols-[1.7fr_1fr]">
-        <HomeDailyCard conceptLesson={conceptLesson} />
+        {dailyCard}
         <div className="flex flex-col gap-4">
           <HomeWordOfDayCard />
           <HomeAiPracticeCard />

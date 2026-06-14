@@ -1,16 +1,15 @@
-import { ChevronLeft, History, Maximize2, Minimize2, Plus, X } from "lucide-react";
+import { ChevronLeft, History, Plus, X } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import type { AIConversation } from "@/lib/types";
 import { groupConversationsByDate } from "@/lib/group-by-date";
 import { cn } from "@/lib/cn";
 
-export function AICoachHeader({ pageLabel, showHistory, isFullscreen, onNewChat, onToggleHistory, onToggleFullscreen, onClose }: { pageLabel: string; showHistory: boolean; isFullscreen: boolean; onNewChat: () => void; onToggleHistory: () => void; onToggleFullscreen: () => void; onClose: () => void; }) {
+export function AICoachHeader({ pageLabel, showHistory, onNewChat, onToggleHistory, onClose }: { pageLabel: string; showHistory: boolean; onNewChat: () => void; onToggleHistory: () => void; onClose: () => void; }) {
   return <div className="flex items-center justify-between px-3 py-2.5 flex-shrink-0 border-b border-[var(--line-divider)]">
     <div className="flex items-center gap-2"><span className="w-6 h-6 rounded-lg flex items-center justify-center text-sm font-bold flex-shrink-0" style={{ backgroundColor: "color-mix(in oklch, var(--primary) 15%, transparent)", color: "var(--primary)" }}>✦</span><span className="text-sm font-semibold text-fg">AI Coach</span><span className="text-tiny px-2 py-0.5 rounded-full font-medium hidden sm:inline" style={{ backgroundColor: "var(--btn-regular-bg)", color: "var(--text-tertiary)" }}>{pageLabel}</span></div>
     <div className="flex items-center gap-0.5">
       <PanelIconButton onClick={onNewChat} title="New chat"><Plus size={14} /></PanelIconButton>
       <PanelIconButton onClick={onToggleHistory} title="Conversation history" active={showHistory}><History size={14} /></PanelIconButton>
-      <PanelIconButton onClick={onToggleFullscreen} title={isFullscreen ? "Exit fullscreen" : "Fullscreen"}>{isFullscreen ? <Minimize2 size={14} /> : <Maximize2 size={14} />}</PanelIconButton>
       <PanelIconButton onClick={onClose} title="Close panel"><X size={14} /></PanelIconButton>
     </div>
   </div>;

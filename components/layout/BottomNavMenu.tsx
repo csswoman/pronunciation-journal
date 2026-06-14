@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import { cn } from "@/lib/cn";
 
 const menuItems = [
-  { name: "Decks", href: "/decks", icon: Layers },
+  { name: "Decks", href: "/practice/decks", icon: Layers },
   { name: "IPA Chart", href: "/ipa", icon: Radio },
   { name: "Courses", href: "/courses", icon: BookOpen },
   { name: "Profile", href: "/profile", icon: User },
