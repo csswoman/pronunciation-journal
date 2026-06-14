@@ -105,7 +105,7 @@ async function flushEntry(entry: SyncOutboxEntry): Promise<void> {
  * @example
  * await db.transaction('rw', [db.syncOutbox], async () => {
  *   await db.someTable.put(localRow)
- *   await enqueue('user_sound_progress', 'upsert', payload)
+ *   await enqueue('user_contrast_progress', 'upsert', payload)
  * })
  */
 export async function enqueue(

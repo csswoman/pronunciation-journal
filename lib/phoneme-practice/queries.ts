@@ -1,4 +1,5 @@
 import { getSupabaseBrowserClient } from '@/lib/supabase/client'
+import { enqueue } from '@/lib/sync/sync-manager'
 import type {
   Sound,
   SoundWord,
@@ -84,8 +85,7 @@ export async function saveAnswers(
     time_ms: a.timeMs,
     exercise_payload: (a.exercisePayload ?? null) as import('@/lib/supabase/types').Json | null,
   })))
-  const { error } = await supabase().from('answer_history').insert(rows)
-  if (error) throw error
+  await Promise.all(rows.map((row) => enqueue('answer_history', 'insert', row as Record<string, unknown>)))
 }
 
 export async function getAnswerHistoryForSound(
@@ -144,9 +144,10 @@ export async function updateContrastProgress(
   const newTotal   = (current?.total_attempts  ?? 0) + sessionTotal
   const newCorrect = (current?.correct_answers ?? 0) + sessionCorrect
 
-  const { error } = await supabase()
-    .from('user_contrast_progress')
-    .upsert({
+  await enqueue(
+    'user_contrast_progress',
+    'upsert',
+    {
       user_id:         userId,
       contrast_id:     contrastId,
       total_attempts:  newTotal,
@@ -156,8 +157,9 @@ export async function updateContrastProgress(
       interval_days:   sr.interval_days,
       last_seen:       new Date().toISOString(),
       next_review:     sr.next_review.toISOString(),
-    }, { onConflict: 'user_id,contrast_id' })
-  if (error) throw error
+    },
+    { user_id: userId, contrast_id: contrastId },
+  )
 }
 
 /**

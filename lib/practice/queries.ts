@@ -2,6 +2,8 @@ import { getSupabaseBrowserClient } from '@/lib/supabase/client'
 import type { Json } from '@/lib/supabase/types'
 import { answerToGrade } from './grade'
 import { enqueueWordBankSRSUpdate } from '@/lib/word-bank/srs-queries'
+import { markLessonComplete } from '@/lib/db'
+import { enqueue } from '@/lib/sync/sync-manager'
 import type {
   PracticeAnswer,
   PracticeContext,
@@ -10,6 +12,34 @@ import type {
 
 function supabase() {
   return getSupabaseBrowserClient()
+}
+
+/**
+ * Marks a course/mini-lesson as complete in Dexie AND records a row in
+ * answer_history (context='courses') so lesson completions appear in streak
+ * and consistency charts. Best-effort: Supabase failure never blocks the
+ * local Dexie write.
+ */
+export async function recordLessonComplete(courseSlug: string, lessonSlug: string): Promise<void> {
+  await markLessonComplete(courseSlug, lessonSlug)
+
+  try {
+    const { data: { user } } = await supabase().auth.getUser()
+    if (!user) return
+
+    const lessonId = `${courseSlug}:${lessonSlug}`
+    await savePracticeAnswer(user.id, {
+      exerciseId: lessonId,
+      exerciseTypeId: 5, // fill_blank — closest to "reading/completing a lesson"
+      slug: 'fill_blank',
+      isCorrect: true,
+      contentId: lessonId,
+      context: 'courses',
+      timeMs: 0,
+    })
+  } catch {
+    // Best-effort — local completion already recorded above.
+  }
 }
 
 /**
@@ -59,8 +89,7 @@ export async function savePracticeAnswer(
   const grade = answerToGrade(answer)
   const rowWithGrade = { ...row, grade }
 
-  const { error } = await supabase().from('answer_history').insert(rowWithGrade)
-  if (error) throw error
+  await enqueue('answer_history', 'insert', rowWithGrade as Record<string, unknown>)
 
   // Enqueue SRS update for word_bank entries via the sync outbox (retried on reconnection).
   if (answer.sourceRef?.source === 'word_bank') {

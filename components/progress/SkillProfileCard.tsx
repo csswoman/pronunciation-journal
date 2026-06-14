@@ -59,13 +59,21 @@ function SoundLabPanel({ phonemes }: { phonemes: SkillProfileData['weakestPhonem
   )
 }
 
-function LexiconPanel({ wordsByStatus }: { wordsByStatus: SkillProfileData['wordsByStatus'] }) {
+function LexiconPanel({
+  wordsByStatus,
+  core1000Practiced,
+  lessonsCompleted,
+}: {
+  wordsByStatus: SkillProfileData['wordsByStatus']
+  core1000Practiced: number
+  lessonsCompleted: number
+}) {
   const total = Object.values(wordsByStatus).reduce((a, b) => a + b, 0)
   const mastered = wordsByStatus.mastered
   const retention = total > 0 ? Math.round((mastered / total) * 100) : 0
   const toReview = wordsByStatus.review + wordsByStatus.learning
 
-  if (total === 0) {
+  if (total === 0 && core1000Practiced === 0 && lessonsCompleted === 0) {
     return (
       <ProgressCard>
         <ProgressCardHeader icon={<BookOpen size={16} />} eyebrow="Lexicon" title="Vocabulary" />
@@ -79,22 +87,36 @@ function LexiconPanel({ wordsByStatus }: { wordsByStatus: SkillProfileData['word
   return (
     <ProgressCard>
       <ProgressCardHeader icon={<BookOpen size={16} />} eyebrow="Lexicon" title="Vocabulary" />
-      <div className="mt-1 flex gap-6">
-        <ProgressBigNumber value={`${retention}%`} sub={`retention · ${mastered}/${total}`} />
-        <ProgressBigNumber value={toReview} sub="to review" tone={toReview > 0 ? 'warning' : 'primary'} />
-      </div>
-      <div className="mt-4 flex h-2.5 w-full overflow-hidden rounded-full bg-surface-sunken">
-        {STATUS_CONFIG.map(({ key, color }) => {
-          const pct = total > 0 ? (wordsByStatus[key] / total) * 100 : 0
-          if (pct === 0) return null
-          return <div key={key} style={{ width: `${pct}%`, background: color }} />
-        })}
-      </div>
-      {topStatuses.map(({ key, label, color }) => {
-        const count = wordsByStatus[key]
-        const pct = total > 0 ? Math.round((count / total) * 100) : 0
-        return <ProgressStatBar key={key} label={label} value={pct} barColor={color} />
-      })}
+      {total > 0 && (
+        <>
+          <div className="mt-1 flex gap-6">
+            <ProgressBigNumber value={`${retention}%`} sub={`retention · ${mastered}/${total}`} />
+            <ProgressBigNumber value={toReview} sub="to review" tone={toReview > 0 ? 'warning' : 'primary'} />
+          </div>
+          <div className="mt-4 flex h-2.5 w-full overflow-hidden rounded-full bg-surface-sunken">
+            {STATUS_CONFIG.map(({ key, color }) => {
+              const pct = total > 0 ? (wordsByStatus[key] / total) * 100 : 0
+              if (pct === 0) return null
+              return <div key={key} style={{ width: `${pct}%`, background: color }} />
+            })}
+          </div>
+          {topStatuses.map(({ key, label, color }) => {
+            const count = wordsByStatus[key]
+            const pct = total > 0 ? Math.round((count / total) * 100) : 0
+            return <ProgressStatBar key={key} label={label} value={pct} barColor={color} />
+          })}
+        </>
+      )}
+      {(core1000Practiced > 0 || lessonsCompleted > 0) && (
+        <div className="mt-3 flex gap-6 border-t border-[var(--line-divider)] pt-3">
+          {core1000Practiced > 0 && (
+            <ProgressBigNumber value={core1000Practiced} sub="core words" />
+          )}
+          {lessonsCompleted > 0 && (
+            <ProgressBigNumber value={lessonsCompleted} sub="lessons done" />
+          )}
+        </div>
+      )}
       <Link href="/lexicon" className="mt-3 text-caption font-medium text-primary transition-opacity hover:opacity-80">
         Open Lexicon →
       </Link>
@@ -148,6 +170,8 @@ export function SkillProfileCard({ data, coach }: Props) {
   const hasAnyData =
     Object.values(data.wordsByStatus).some((v) => v > 0) ||
     data.weakestPhonemes.length > 0 ||
+    data.core1000Practiced > 0 ||
+    data.lessonsCompleted > 0 ||
     coach.weakTopics.length > 0 ||
     coach.cefrEstimate !== null
 
@@ -167,7 +191,11 @@ export function SkillProfileCard({ data, coach }: Props) {
       <h2 className="font-display text-base font-medium text-fg">Skill profile</h2>
       <div className="grid gap-4 md:grid-cols-3">
         <SoundLabPanel phonemes={data.weakestPhonemes} />
-        <LexiconPanel wordsByStatus={data.wordsByStatus} />
+        <LexiconPanel
+          wordsByStatus={data.wordsByStatus}
+          core1000Practiced={data.core1000Practiced}
+          lessonsCompleted={data.lessonsCompleted}
+        />
         <CoachInsightsPanel coach={coach} />
       </div>
     </section>

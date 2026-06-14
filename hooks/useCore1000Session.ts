@@ -8,6 +8,7 @@ import { NEW_CARDS_PER_DAY } from "@/lib/core-1000/types";
 import {
   getCore1000SrsEntries, getCore1000IntroducedToday, recordCore1000Introduction,
 } from "@/lib/db";
+import { useAuth } from "@/components/auth/AuthProvider";
 
 export type Core1000Phase = "loading" | "study" | "speak" | "done" | "empty";
 
@@ -34,6 +35,7 @@ const EMPTY_STATS: Core1000Stats = {
 };
 
 export function useCore1000Session(): UseCore1000SessionReturn {
+  const { user } = useAuth();
   const [phase, setPhase] = useState<Core1000Phase>("loading");
   const [queue, setQueue] = useState<Core1000QueueItem[]>([]);
   const [index, setIndex] = useState(0);
@@ -79,7 +81,7 @@ export function useCore1000Session(): UseCore1000SessionReturn {
     async (quality: number, extras?: GradeExtras) => {
       const item = queue[index];
       if (!item) return;
-      await gradeCore1000Word(item.entry.word, quality, extras);
+      await gradeCore1000Word(item.entry.word, quality, extras, user?.id);
       if (item.isNew) {
         await recordCore1000Introduction(item.entry.word.toLowerCase());
         setStats((s) => ({ ...s, newToday: s.newToday + 1, learned: s.learned + 1 }));

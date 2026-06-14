@@ -10,7 +10,7 @@
 // </GrammarStudyDeck>
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { markLessonComplete } from "@/lib/db";
+import { recordLessonComplete } from "@/lib/practice/queries";
 import PracticeSession from "@/components/practice/PracticeSession";
 import { fetchFragmentsForDeck, generateReorderFromFragments } from "@/lib/exercises/generators/reorder-from-fragments";
 import { fromGenericExercise } from "@/lib/practice/adapters";
@@ -134,7 +134,7 @@ export default function GrammarStudyDeck({
   // Persist completion once the deck is finished.
   useEffect(() => {
     if (finished && levelId && lessonId) {
-      void markLessonComplete(levelId, lessonId).catch(() => {});
+      void recordLessonComplete(levelId, lessonId).catch(() => {});
     }
   }, [finished, levelId, lessonId]);
 
