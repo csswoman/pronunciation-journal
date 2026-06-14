@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { coreWordToWordBankEntry } from '../client-fetch'
+import { coreWordToWordBankEntry, filterAndRotate } from '../client-fetch'
 import type { CoreWord } from '../types'
 
 const makeWord = (overrides: Partial<CoreWord> = {}): CoreWord => ({
@@ -59,5 +59,38 @@ describe('coreWordToWordBankEntry', () => {
   it('generates stable id with core1k: prefix', () => {
     const entry = coreWordToWordBankEntry(makeWord({ word: 'Make' }))
     expect(entry.id).toBe('core1k:make')
+  })
+})
+
+describe('filterAndRotate', () => {
+  const words: CoreWord[] = [
+    makeWord({ word: 'the', rank: 1 }),   // 3 letters — excluded
+    makeWord({ word: 'make', rank: 2 }),  // 4 letters — included
+    makeWord({ word: 'build', rank: 3 }), // 5 letters — included
+    makeWord({ word: 'run', rank: 4 }),   // 3 letters — excluded
+    makeWord({ word: 'walk', rank: 5 }),  // 4 letters — included
+    makeWord({ word: 'talk', rank: 6 }),  // 4 letters — included
+  ]
+
+  it('excludes words shorter than 4 characters', () => {
+    const result = filterAndRotate(words, 0, 10)
+    expect(result.every(w => w.word.length >= 4)).toBe(true)
+  })
+
+  it('returns up to count words', () => {
+    const result = filterAndRotate(words, 0, 2)
+    expect(result.length).toBe(2)
+  })
+
+  it('rotates by day — day 0 and day 2 return different slices', () => {
+    // 4 eligible words: make, build, walk, talk
+    const day0 = filterAndRotate(words, 0, 2)
+    const day2 = filterAndRotate(words, 2, 2)
+    expect(day0).not.toEqual(day2)
+  })
+
+  it('wraps around — rotation is deterministic and never goes out of bounds', () => {
+    const result = filterAndRotate(words, 999, 2)
+    expect(result.length).toBe(2)
   })
 })

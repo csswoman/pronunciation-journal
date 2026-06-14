@@ -38,3 +38,19 @@ export function coreWordToWordBankEntry(w: CoreWord): WordBankEntry {
     synonyms: null,
   }
 }
+
+/**
+ * From a list of CoreWords, keep only words with ≥4 characters (excludes
+ * function words like "the", "a", "is"), then return a slice of `count`
+ * words rotated deterministically by `day`.
+ */
+export function filterAndRotate(words: CoreWord[], day: number, count: number): CoreWord[] {
+  const eligible = words.filter(w => w.word.length >= 4)
+  if (eligible.length === 0) return []
+  const start = day % eligible.length
+  const result: CoreWord[] = []
+  for (let i = 0; i < count && i < eligible.length; i++) {
+    result.push(eligible[(start + i) % eligible.length])
+  }
+  return result
+}
