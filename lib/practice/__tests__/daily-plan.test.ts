@@ -85,6 +85,10 @@ vi.mock('@/lib/exercises/generators/connected-speech', () => ({
   todaysDeckSlug: vi.fn().mockReturnValue('cs-linking'),
 }))
 
+vi.mock('@/lib/core-1000/client-fetch', () => ({
+  fetchCoreWordsForDay: vi.fn().mockResolvedValue([]),
+}))
+
 import {
   getAllSounds,
   getAllWords,

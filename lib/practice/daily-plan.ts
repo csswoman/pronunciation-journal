@@ -13,6 +13,7 @@ import { generateReorderAI } from '@/lib/exercises/generators/reorder-ai'
 import { generateMinimalPair, generateDictation } from '@/lib/phoneme-practice/exercises'
 import { getAllSounds, getAllWords, getMinimalPairs, getWordsBySound } from '@/lib/phoneme-practice/queries'
 import { buildMixedSession, type MixedExercise } from '@/lib/phoneme-practice/mixed-session'
+import { fetchCoreWordsForDay } from '@/lib/core-1000/client-fetch'
 import { fromGenericExercise, fromMixedExercise } from './adapters'
 import type { DailyPlan, DailyStep, PracticeExercise } from './types'
 import type { WordBankEntry } from '@/lib/word-bank/types'
@@ -525,6 +526,11 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
     reviewWords = [...reviewWords, ...due].slice(0, WORD_REVIEW_WORD_COUNT)
   }
   const hasWordBank = reviewWords.length > 0
+
+  // Fallback: si el usuario no tiene palabras hoy, usar Core 1000
+  if (reviewWords.length === 0) {
+    reviewWords = await fetchCoreWordsForDay(dayOfYear(), WORD_REVIEW_WORD_COUNT)
+  }
 
   // ── 2. Sonido protagonista: débil si hay progreso → coach → seed ─────────
   const [weakest, localLearningState] = await Promise.all([
