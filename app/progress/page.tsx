@@ -7,7 +7,6 @@ import { StreakCard } from '@/components/progress/StreakCard'
 import { DailyCompletionRate } from '@/components/progress/DailyCompletionRate'
 import { AccuracyTrend } from '@/components/progress/AccuracyTrend'
 import { SkillProfileCard } from '@/components/progress/SkillProfileCard'
-import { FluencyRadarCard } from '@/components/progress/FluencyRadarCard'
 import { ThisWeekCard } from '@/components/progress/ThisWeekCard'
 
 export default async function ProgressPage() {
@@ -50,8 +49,6 @@ async function ProgressDashboard({ userId }: { userId: string }) {
         <DailyCompletionRate stats={data.dailyCompletion} />
         <AccuracyTrend stats={data.accuracy} />
       </div>
-
-      <FluencyRadarCard scores={null} />
 
       <SkillProfileCard data={data.skillProfile} coach={data.coachInsights} />
 
