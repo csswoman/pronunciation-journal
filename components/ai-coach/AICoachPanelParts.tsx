@@ -1,6 +1,8 @@
 import { ChevronLeft, History, Maximize2, Minimize2, Plus, X } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
 import type { AIConversation } from "@/lib/types";
 import { groupConversationsByDate } from "@/lib/group-by-date";
+import { cn } from "@/lib/cn";
 
 export function AICoachHeader({ pageLabel, showHistory, isFullscreen, onNewChat, onToggleHistory, onToggleFullscreen, onClose }: { pageLabel: string; showHistory: boolean; isFullscreen: boolean; onNewChat: () => void; onToggleHistory: () => void; onToggleFullscreen: () => void; onClose: () => void; }) {
   return <div className="flex items-center justify-between px-3 py-2.5 flex-shrink-0 border-b border-[var(--line-divider)]">
@@ -30,6 +32,34 @@ function PanelIconButton({ onClick, title, active, children }: { onClick: () => 
 }
 
 export function ConversationHistoryPanel({ conversations, activeId, onSelect, onDelete, onClose }: { conversations: AIConversation[]; activeId: number | null; onSelect: (conv: AIConversation) => void; onDelete: (id: number) => void; onClose: () => void; }) {
+  const [pendingDelete, setPendingDelete] = useState<number | null>(null);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const commitDelete = (id: number) => {
+    onDelete(id);
+    setPendingDelete(null);
+    timerRef.current = null;
+  };
+
+  const handleDeleteClick = (id: number) => {
+    if (timerRef.current !== null) {
+      clearTimeout(timerRef.current);
+      if (pendingDelete !== null) onDelete(pendingDelete);
+    }
+    setPendingDelete(id);
+    timerRef.current = setTimeout(() => commitDelete(id), 3000);
+  };
+
+  const handleUndo = () => {
+    if (timerRef.current !== null) clearTimeout(timerRef.current);
+    timerRef.current = null;
+    setPendingDelete(null);
+  };
+
+  useEffect(() => {
+    return () => { if (timerRef.current !== null) clearTimeout(timerRef.current); };
+  }, []);
+
   const grouped = groupConversationsByDate(conversations);
   const order = ["TODAY", "YESTERDAY", "7 DAYS", "OLDER"] as const;
   const isEmpty = order.every((label) => grouped[label].length === 0);
@@ -45,28 +75,39 @@ export function ConversationHistoryPanel({ conversations, activeId, onSelect, on
         if (!items?.length) return null;
         return <div key={label} className="mb-3">
           <p className="text-tiny font-semibold uppercase tracking-widest px-3 py-1 text-[var(--text-tertiary)]">{label}</p>
-          {items.map((conv, i) => {
+          {items.map((conv) => {
             const isActive = conv.id === activeId;
+            const isPending = conv.id === pendingDelete;
             return <div
               key={conv.id}
-              className={[
+              className={cn(
                 "group flex items-center gap-2 px-3 py-2 mx-1 rounded-lg cursor-pointer transition-colors",
                 !isActive && "hover:bg-[var(--btn-regular-bg)]",
-                !isActive && i % 2 !== 0 && "bg-[var(--surface-sunken)]/40",
-              ].filter(Boolean).join(" ")}
+              )}
               style={isActive ? { backgroundColor: "color-mix(in oklch, var(--primary) 10%, transparent)" } : undefined}
-              onClick={() => onSelect(conv)}
+              onClick={() => !isPending && onSelect(conv)}
             >
-              <span className={["text-xs truncate flex-1", isActive ? "text-[var(--primary)]" : "text-[var(--text-secondary)]"].join(" ")}>
+              <span className={cn(
+                "text-xs truncate flex-1",
+                isActive ? "text-[var(--primary)]" : "text-[var(--text-secondary)]",
+                isPending && "opacity-50",
+              )}>
                 {typeof conv.messages.find((m) => m.role === "user")?.content === "string"
                   ? conv.messages.find((m) => m.role === "user")?.content.slice(0, 48)
                   : "Untitled conversation"}
               </span>
-              <button
-                onClick={(event) => { event.stopPropagation(); if (conv.id !== undefined) onDelete(conv.id); }}
-                className="opacity-0 group-hover:opacity-100 transition-opacity p-0.5 rounded text-[var(--text-tertiary)] hover:text-[var(--error)]"
-                title="Delete"
-              ><X size={11} /></button>
+              {isPending ? (
+                <button
+                  onClick={(e) => { e.stopPropagation(); handleUndo(); }}
+                  className="text-[11px] font-medium text-[var(--primary)] hover:underline px-1"
+                >Undo</button>
+              ) : (
+                <button
+                  onClick={(e) => { e.stopPropagation(); if (conv.id !== undefined) handleDeleteClick(conv.id); }}
+                  className="opacity-0 group-hover:opacity-100 transition-opacity p-0.5 rounded text-[var(--text-tertiary)] hover:text-[var(--error)]"
+                  title="Delete"
+                ><X size={11} /></button>
+              )}
             </div>;
           })}
         </div>;
