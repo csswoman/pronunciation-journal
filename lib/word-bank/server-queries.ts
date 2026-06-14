@@ -57,7 +57,7 @@ export async function getLexiconProgressByCategory(
     for (const id of ids) {
       const status = statusByRef.get(id);
       if (status === "mastered") mastered++;
-      else if (status) reviewing++;
+      else if (status === "learning" || status === "review") reviewing++;
     }
     result.set(categoryId, { mastered, reviewing });
   }
@@ -120,7 +120,8 @@ export async function countWordsDueForReview(): Promise<number> {
     .from(TABLE)
     .select("*", { count: "exact", head: true })
     .eq("status", "ready")
-    .or(`srs_status.eq.new,next_review_at.lte.${today}`);
+    .neq("srs_status", "new")
+    .lte("next_review_at", today);
 
   if (error) throw error;
   return count ?? 0;
@@ -134,8 +135,9 @@ export async function getWordsDueForReview(limit = 5): Promise<WordBankEntry[]> 
     .from(TABLE)
     .select("id, user_id, text, meaning, translation, ipa, example, audio_url, difficulty, status, srs_status, next_review_at, ease_factor, interval_days, repetitions, review_count, last_reviewed_at, source, source_ref, created_at, updated_at")
     .eq("status", "ready")
-    .or(`srs_status.eq.new,next_review_at.lte.${today}`)
-    .order("next_review_at", { ascending: true, nullsFirst: true })
+    .neq("srs_status", "new")
+    .lte("next_review_at", today)
+    .order("next_review_at", { ascending: true })
     .limit(limit);
 
   if (error) throw error;
