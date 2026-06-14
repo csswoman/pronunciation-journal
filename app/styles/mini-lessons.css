@@ -170,10 +170,21 @@
 
 /* ── Article internals ────────────────────────────────────────────────────── */
 
-/* Article gets a narrower reading container */
+/* Article gets a narrower reading container with a white card surface */
 .mini-lessons--article .mini-lessons__wrap {
   max-width: 720px;
   gap: 0;
+  background: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--ml-radius);
+  padding: 40px 48px 56px;
+}
+
+@media (max-width: 640px) {
+  .mini-lessons--article .mini-lessons__wrap {
+    padding: 24px 20px 40px;
+    border-radius: var(--ml-radius-sm);
+  }
 }
 
 /* Back link sits 20px above the hero; subsequent spacing governed by sections */
@@ -772,29 +783,35 @@
 
 /* ── Exercise check-off ───────────────────────────────────────────────────── */
 
-.mini-lessons__exercise-list {
-  display: flex;
-  flex-direction: column;
-}
-
 .mini-lessons__exercise-item {
   width: 100%;
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  padding: 8px 0;
-  background: none;
-  border: none;
+  padding: 10px 12px;
+  background: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--ml-radius-sm);
   font-size: 0.9rem;
   color: var(--text-secondary);
   text-align: left;
   cursor: pointer;
-  border-bottom: 1px solid var(--border-subtle);
-  transition: opacity 150ms ease-out;
+  transition:
+    background 150ms ease-out,
+    border-color 150ms ease-out,
+    opacity 150ms ease-out;
 }
 
-.mini-lessons__exercise-item:last-child {
-  border-bottom: none;
+.mini-lessons__exercise-item:hover:not(.mini-lessons__exercise-item--checked) {
+  background: var(--surface-raised);
+  border-color: var(--border-default);
+  color: var(--text-primary);
+}
+
+.mini-lessons__exercise-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .mini-lessons__exercise-item:focus-visible {
@@ -925,22 +942,8 @@
   outline-offset: 2px;
 }
 
-/* Grid-row reveal — animates closed→open without height:auto issues */
-.mini-lessons__quiz-answer-wrap {
-  display: grid;
-  grid-template-rows: 0fr;
-  transition: grid-template-rows 0.28s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.mini-lessons__quiz-answer-wrap--open {
-  grid-template-rows: 1fr;
-}
-
-.mini-lessons__quiz-answer-wrap > .mini-lessons__quiz-answer {
-  overflow: hidden;
-}
-
 .mini-lessons__quiz-answer {
+  animation: ml-fade-up 0.22s cubic-bezier(0.22, 1, 0.36, 1) both;
   border-top: 1px solid var(--border-subtle);
   font-size: 0.85rem;
   color: var(--text-secondary);

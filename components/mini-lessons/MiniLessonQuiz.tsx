@@ -90,20 +90,14 @@ export default function MiniLessonQuiz({ questions }: Props) {
               })}
             </ul>
 
-            <div
-              className={cn(
-                "mini-lessons__quiz-answer-wrap",
-                isAnswered && "mini-lessons__quiz-answer-wrap--open"
-              )}
-              aria-hidden={!isAnswered}
-            >
+            {isAnswered && (
               <div className="mini-lessons__quiz-answer">
                 <p>
                   <strong>Answer: {String.fromCharCode(65 + q.correct)}</strong>
                 </p>
                 <p>{q.explanation}</p>
               </div>
-            </div>
+            )}
           </div>
         );
       })}
