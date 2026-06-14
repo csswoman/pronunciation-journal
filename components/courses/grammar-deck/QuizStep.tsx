@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Check, X, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/cn";
+import { useUISounds } from "@/hooks/useUISounds";
 import type { GrammarQuizQuestion } from "@/lib/courses/grammar-deck/types";
 
 interface QuizStepProps {
@@ -15,6 +16,7 @@ export default function QuizStep({ questions, onDone }: QuizStepProps) {
   const [index, setIndex] = useState(0);
   const [picked, setPicked] = useState<number | null>(null);
   const [correct, setCorrect] = useState(0);
+  const { playTap, playCorrect, playWrong } = useUISounds();
 
   const q = questions[index];
   const isLast = index === questions.length - 1;
@@ -22,8 +24,15 @@ export default function QuizStep({ questions, onDone }: QuizStepProps) {
 
   function choose(i: number) {
     if (answered) return;
+    playTap();
     setPicked(i);
-    if (i === q.answer) setCorrect((c) => c + 1);
+    const isCorrect = i === q.answer;
+    if (isCorrect) {
+      setCorrect((c) => c + 1);
+      playCorrect();
+    } else {
+      playWrong();
+    }
   }
 
   function next() {
