@@ -25,7 +25,7 @@ export default function HomeDailyCard({ conceptLesson }: HomeDailyCardProps) {
   // Load plan once the user is available.
   useEffect(() => {
     if (user && status === 'idle') void load()
-  }, [user?.id, status])
+  }, [user, status, load])
 
   // Celebrate once when all steps are complete.
   useEffect(() => {
