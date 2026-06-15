@@ -15,6 +15,7 @@ import { AuthButton } from "@/components/auth/AuthButton";
 import { AuthCheckbox } from "@/components/auth/AuthCheckbox";
 import { AuthGuestButton } from "@/components/auth/AuthGuestButton";
 import { AuthBackground } from "@/components/auth/AuthBackground";
+import { InstallBanner } from "@/components/auth/InstallBanner";
 
 type Mode = "login" | "register" | "reset";
 
@@ -86,6 +87,7 @@ export default function AuthPanel() {
     >
       <AuthBackground />
 
+      <InstallBanner />
       <AuthCard>
         {mode !== "reset" && (
           <AuthTabs
