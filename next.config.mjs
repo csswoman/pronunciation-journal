@@ -1,4 +1,14 @@
-const { withSerwist } = require("@serwist/next");
+import withSerwistInit from "@serwist/next";
+
+const withSerwist = withSerwistInit({
+  swSrc: "app/sw.ts",
+  swDest: "public/sw.js",
+  exclude: [
+    /^\/api\/gemini\//,
+    /^\/api\/auth\//,
+    /^\/practice\/sounds\//,
+  ],
+});
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -52,12 +62,4 @@ const nextConfig = {
   },
 };
 
-module.exports = withSerwist({
-  swSrc: "app/sw.ts",
-  swDest: "public/sw.js",
-  exclude: [
-    /^\/api\/gemini\//,
-    /^\/api\/auth\//,
-    /^\/practice\/sounds\//,
-  ],
-})(nextConfig);
+export default withSerwist(nextConfig);
