@@ -17,6 +17,8 @@ export default function SidebarFooter() {
   const [panelPos, setPanelPos] = useState({ top: 0, left: 0 });
   const footerRef = useRef<HTMLDivElement>(null);
   const leaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const isGuest = user?.is_anonymous ?? false;
+  const isAuthenticated = !!user && !isGuest;
   const displayName =
     user?.user_metadata?.full_name ||
     user?.user_metadata?.name ||
@@ -131,17 +133,17 @@ export default function SidebarFooter() {
           <div className="h-px my-1.5" style={{ background: "var(--border)" }} />
 
           <button
-            onClick={user ? handleSignOut : () => router.push("/login")}
+            onClick={isAuthenticated ? handleSignOut : () => router.push("/login")}
             className="flex items-center gap-2.5 px-3 h-9 w-full rounded-lg text-sm font-medium
  transition-all duration-150 group
  text-fg-muted hover:text-[var(--primary)] hover:bg-[var(--primary-soft)]"
           >
-            {user ? (
+            {isAuthenticated ? (
               <LogOut className="h-4 w-4 flex-shrink-0 opacity-60 group-hover:opacity-100 transition-opacity" />
             ) : (
               <LogIn className="h-4 w-4 flex-shrink-0 opacity-60 group-hover:opacity-100 transition-opacity" />
             )}
-            <span>{user ? "Sign out" : "Login"}</span>
+            <span>{isAuthenticated ? "Sign out" : "Sign in"}</span>
           </button>
         </div>,
         document.body
