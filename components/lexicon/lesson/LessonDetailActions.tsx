@@ -1,5 +1,4 @@
 import { LessonDetailHeader } from "./LessonDetailHeader";
-import type { Word } from "./WordGrid";
 
 interface LessonDetailActionsProps {
   title: string;
@@ -9,7 +8,6 @@ interface LessonDetailActionsProps {
   wordsReviewing: number;
   color: string;
   categoryId: string;
-  words: Word[];
 }
 
 export function LessonDetailActions({
