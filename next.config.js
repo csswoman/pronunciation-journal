@@ -1,3 +1,5 @@
+const { withSerwist } = require("@serwist/next");
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   turbopack: {},
@@ -33,7 +35,6 @@ const nextConfig = {
     ],
   },
   webpack: (config, { isServer }) => {
-    // Enable Web Workers with proper handling
     if (!isServer) {
       config.resolve.fallback = {
         ...config.resolve.fallback,
@@ -44,12 +45,19 @@ const nextConfig = {
     }
     return config;
   },
-  // Required for WASM support (Whisper model)
   experimental: {
     serverActions: {
-      bodySizeLimit: '10mb',
+      bodySizeLimit: "10mb",
     },
   },
 };
 
-module.exports = nextConfig;
+module.exports = withSerwist({
+  swSrc: "app/sw.ts",
+  swDest: "public/sw.js",
+  exclude: [
+    /^\/api\/gemini\//,
+    /^\/api\/auth\//,
+    /^\/practice\/sounds\//,
+  ],
+})(nextConfig);
