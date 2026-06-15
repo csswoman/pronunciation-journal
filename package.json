@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@google/genai": "^2.8.0",
+    "@serwist/next": "^9.5.11",
     "@supabase/ssr": "^0.12.0",
     "@supabase/supabase-js": "^2.108.1",
     "@tailwindcss/postcss": "^4.3.0",
@@ -40,6 +41,7 @@
     "react-markdown": "^10.1.0",
     "remark-gfm": "^4.0.1",
     "server-only": "^0.0.1",
+    "serwist": "^9.5.11",
     "tailwind-merge": "^3.6.0",
     "zod": "^4.4.3",
     "zustand": "^5.0.14"
