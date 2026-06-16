@@ -9,7 +9,12 @@ When a user has no words in their `word_bank`, or has words but none are new or 
 
 ## Solution
 
-When `reviewWords` is empty after fetching from `word_bank`, fall back to a selection of Core 1000 words. These words have `example_sentence` (required field) and `ipa_strong`, so they work with all existing exercise generators without modification. The UI shows no difference — the step labels remain the same.
+When `reviewWords` is empty after fetching from `word_bank`, fall back to a selection of Core 1000 words. These words have `example_sentence` (required field) and `ipa_strong`, so they can feed **most** vocabulary generators after the shared eligibility contract is satisfied. The UI shows no difference — the step labels remain the same.
+
+> **Update (2026-06-16, Plan 017):** Core 1000 words are **not** automatically compatible with every generator. Eligibility is per mode (`assessWordBankEntry` in `lib/exercises/eligibility.ts`). In practice from Core 1000 fallback:
+> - **fill_blank**, **sentence_dictation**, **reorder_words** — work when `example_sentence` passes lemma/context rules (see thresholds in `pnpm validate:core1000-generators`).
+> - **match_pairs** — **does not** generate from Core 1000 alone because `coreWordToWordBankEntry` sets `meaning: null`; match-pairs requires `meaning` or `translation`.
+> - **context_practice** (lexicon) — uses the same blank/context rules as fill-blank.
 
 ## Trigger Conditions
 
@@ -42,7 +47,7 @@ The fallback activates when `reviewWords.length === 0` after the existing fetch 
 | `status` | `'ready'` |
 | remaining fields | `null` / `undefined` |
 
-The exercise generators only require `text` and `example` — all other fields are optional in practice.
+The exercise generators require `text` and `example`. Additional fields are mode-specific — see [Eligibility contract](#eligibility-contract) below and `lib/exercises/eligibility.ts`.
 
 ## Architecture
 
@@ -73,10 +78,24 @@ No other files change.
 
 ## Downstream effects
 
-- `buildWordReviewStep(reviewWords)` — works unchanged, generates fill-blank / dictation / reorder / match-pairs
-- `buildContextPracticeStep(reviewWords)` — works unchanged; Core 1000 words all have `example_sentence`, so `usable.length >= 2` is satisfied for 6 words
+- `buildWordReviewStep(reviewWords)` — generates fill-blank, dictation, and reorder from eligible entries; match-pairs is skipped when `meaning` is absent (Core 1000 fallback). Skipped entries are surfaced via `GenerationResult.skipped` in dev.
+- `buildContextPracticeStep(reviewWords)` — works when enough entries pass `assessWordBankEntry(..., 'sentence_context')`; Core 1000 words with short examples may be filtered out.
 - `isNewUser` flag — still correct: it's `!hasWordBank && !hasProgress`, computed before the fallback mutates `reviewWords`
 - `buildReviewPlan` — not affected; it uses `fetchDueReviewWords` which is a separate query
+
+## Eligibility contract
+
+Single source of truth: `lib/exercises/eligibility.ts` → `assessWordBankEntry(entry, mode)`.
+
+| Mode | Rules (summary) | Used by |
+|------|-----------------|---------|
+| `fill_blank` | `example` present; lemma or inflection in sentence (`sentenceContainsLemma`); enough content words after blank (`hasEnoughContext`); global pool has ≥3 other eligible distractors | `fill-blank.ts`, daily plan |
+| `reorder_words` | `example` with ≥4 tokens | `reorder-words.ts` |
+| `sentence_dictation` | `example` present | `sentence-dictation.ts` |
+| `match_pairs` | `text` + `meaning` (or translation) | `match-pairs.ts` — **fails for Core 1000 adapter** |
+| `sentence_context` | same blank/context rules as fill_blank | `lib/lexicon/exercises.ts` |
+
+CI gate: `pnpm validate:core1000-generators` (thresholds: fill-blank ≥85%, reorder ≥95%, dictation ≥98%). Content validation remains `pnpm validate:core1000` (schema + IPA).
 
 ## Out of scope
 

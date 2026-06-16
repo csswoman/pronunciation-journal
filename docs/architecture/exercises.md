@@ -18,10 +18,11 @@ Documentación del sistema de ejercicios de la app: qué tipos existen, cómo fu
    - [Sentence Dictation](#sentence-dictation)
    - [Match Pairs](#match-pairs)
    - [Reorder Words](#reorder-words)
-4. [Flujo de una sesión](#flujo-de-una-sesión)
-5. [Persistencia y tracking](#persistencia-y-tracking)
-6. [Spaced Repetition (SM-2)](#spaced-repetition-sm-2)
-7. [Extensión futura](#extensión-futura)
+4. [Contrato de elegibilidad](#contrato-de-elegibilidad)
+5. [Flujo de una sesión](#flujo-de-una-sesión)
+6. [Persistencia y tracking](#persistencia-y-tracking)
+7. [Spaced Repetition (SM-2)](#spaced-repetition-sm-2)
+8. [Extensión futura](#extensión-futura)
 
 ---
 
@@ -156,7 +157,8 @@ Los ejercicios se generan **on-the-fly en cliente** y se cachean en Dexie (TTL 1
 **Tipos:** `lib/exercises/types.ts`
 **Queries:** `lib/exercises/queries.ts`
 **Generadores:** `lib/exercises/generators/`
-**Utilidades:** `lib/exercises/utils.ts` (`shuffle`, `pick`, `exerciseId`, `blankWord`, `tokenize`)
+**Elegibilidad:** `lib/exercises/eligibility.ts` (`assessWordBankEntry`, `blankLemma`, `hasEnoughContext`)
+**Utilidades:** `lib/exercises/utils.ts` (`shuffle`, `pick`, `exerciseId`; re-exporta `hasEnoughContext`)
 
 Cada ejercicio tiene un **id determinista** (hash djb2 de `type + sourceRef.id`) que garantiza deduplicación en Dexie y en `answer_history`.
 
@@ -173,9 +175,9 @@ Muestra una oración con una palabra reemplazada por `___`. El usuario elige la 
 - Fuente: `word_bank.example` (la oración) + `word_bank.text` (la palabra objetivo)
 - Distractores: otras palabras del `word_bank` con dificultad ±1
 - Hint opcional: `word_bank.meaning` o `word_bank.translation`
-- La oración se descarta si la palabra objetivo no aparece literalmente en ella
+- La oración debe contener el lemma o una flexión reconocible (`sentenceContainsLemma`); el blank usa `blankLemma` (primera ocurrencia)
 
-**Requisitos de datos:** `word_bank` con `status='ready'`, `example` no nulo, al menos 2 entradas para distractores
+**Requisitos de datos:** `assessWordBankEntry(entry, 'fill_blank', { pool })` — ver [Contrato de elegibilidad](#contrato-de-elegibilidad)
 
 ---
 
@@ -214,7 +216,7 @@ Conectar elementos de la columna izquierda con los de la derecha. Los de la dere
 - Sin drag & drop (tap-to-select, funciona en móvil)
 - Validación: al pulsar "Check", cada par se evalúa individualmente; correcto solo si todos aciertan
 
-**Requisitos de datos:** `word_bank` con `meaning` o `translation`, mínimo 2 entradas
+**Requisitos de datos:** `word_bank` con `meaning` o `translation`, mínimo 2 entradas (`assessWordBankEntry(..., 'match_pairs')`)
 
 ---
 
@@ -233,7 +235,39 @@ Reordenar tokens (palabras) mezclados para reconstruir la oración original.
 - Interacción: tap token del banco → pasa a la zona de respuesta; tap en token colocado → vuelve al banco
 - Validación: comparación exacta de strings (`placed.join(' ') === sentence`)
 
-**Requisitos de datos:** `text_fragments` con oraciones de 3–12 palabras, o `word_bank.example`
+**Requisitos de datos:** `text_fragments` con oraciones de 3–12 palabras, o `word_bank.example` con ≥4 tokens (`assessWordBankEntry(..., 'reorder_words')`)
+
+---
+
+## Contrato de elegibilidad
+
+Una fila de `word_bank` (o un `CoreWord` adaptado vía `coreWordToWordBankEntry`) no es “válida para ejercicios” en abstracto: cada generador consulta el mismo contrato en `lib/exercises/eligibility.ts`.
+
+### API principal
+
+```ts
+assessWordBankEntry(entry, mode, options?)
+// → { eligible: boolean, reasons: EligibilityReason[] }
+
+blankLemma(sentence, lemma)   // primera forma encontrada → "___"
+sentenceContainsLemma(...)  // lemma o flexión en la frase
+hasEnoughContext(blanked)   // ≥2 content words tras el blank
+```
+
+`generateFillBlankFromWordBank` devuelve `GenerationResult<T>` (`lib/exercises/generation.ts`): `{ exercises, skipped[] }` con la razón de cada entrada descartada.
+
+### Reglas por modo
+
+| Modo | Reglas | Archivos |
+|------|--------|----------|
+| `fill_blank` | `example` + lemma en frase + contexto tras blank + pool global con ≥3 distractores elegibles | `generators/fill-blank.ts`, `daily-plan/step-builders.ts` |
+| `reorder_words` | `example` con ≥4 tokens | `generators/reorder-words.ts` |
+| `sentence_dictation` | `example` presente | `generators/sentence-dictation.ts` |
+| `match_pairs` | `text` + `meaning` | `generators/match-pairs.ts` |
+| `sentence_context` | mismas reglas que fill_blank (sin chequeo de pool global) | `lib/lexicon/exercises.ts` |
+
+Validación de contenido Core 1000: `pnpm validate:core1000` (schema + IPA).  
+Gate de generabilidad: `pnpm validate:core1000-generators` (umbrales documentados en `plans/017-exercise-eligibility-contract.md`).
 
 ---
 

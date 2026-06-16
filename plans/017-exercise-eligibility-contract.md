@@ -1,7 +1,7 @@
 # Plan 017 — Contrato unificado de elegibilidad para ejercicios
 
 **Written:** 2026-06-16  
-**Status:** IN PROGRESS (Fase 1 en curso)  
+**Status:** DONE (2026-06-16)  
 **Effort:** M (3–4 PRs pequeños)  
 **Priority:** P1  
 **Depends on:** — (conviene tener suite verde; ver Plan 001)
@@ -170,8 +170,8 @@ Tests: fixtures compartidos + invariantes + gate CI
 
 **Criterios de done Fase 6:**
 
-- [ ] Ningún doc promete “funciona con todos los generadores sin modificación”.
-- [ ] Tabla mode → reglas → archivos en architecture doc.
+- [x] Ningún doc promete “funciona con todos los generadores sin modificación”.
+- [x] Tabla mode → reglas → archivos en architecture doc.
 
 ---
 
@@ -224,7 +224,7 @@ Fase 1 (eligibility) ──► Fase 2 (fill-blank + GenerationResult)
 - [x] Fase 3 — fixtures compartidos ✅ (implementado 2026-06-16)
 - [x] Fase 4 — invariantes + match-pairs + integración Core 1000 ✅ (implementado 2026-06-16)
 - [x] Fase 5 — `validate:core1000-generators` en CI ✅ (implementado 2026-06-16)
-- [ ] Fase 6 — docs actualizados
+- [x] Fase 6 — docs actualizados ✅ (implementado 2026-06-16)
 
 ---
 
