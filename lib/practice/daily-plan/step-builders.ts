@@ -20,7 +20,14 @@ import { dedupeByContentId, toWordEntry } from './selectors'
 export function buildWordReviewStep(words: WordBankEntry[]): DailyStep | null {
   if (words.length === 0) return null
 
-  const fillBlanks = generateFillBlankFromWordBank(words, 2)
+  const { exercises: fillBlanks, skipped: fillBlankSkipped } = generateFillBlankFromWordBank(words, 2)
+  if (
+    process.env.NODE_ENV === 'development' &&
+    fillBlankSkipped.length > 0 &&
+    fillBlanks.length < 2
+  ) {
+    console.debug('[word_review] fill_blank skipped entries', fillBlankSkipped)
+  }
   const dictations = generateSentenceDictationFromWordBank(words, 2)
   const reorders = generateReorderWordsFromWordBank(words, 1)
   const matchPairs = generateMatchPairsFromWordBank(words, 1)

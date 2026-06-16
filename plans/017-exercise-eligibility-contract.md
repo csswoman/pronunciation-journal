@@ -95,9 +95,9 @@ Tests: fixtures compartidos + invariantes + gate CI
 
 **Criterios de done Fase 2:**
 
-- [ ] Ningún caller ignora `skipped` en tests de integración del daily plan.
-- [ ] Con un chunk representativo de Core 1000 (p. ej. ranks 60–80), fill-blank genera **más** ejercicios que antes (medir en test).
-- [ ] `pnpm test` completo verde.
+- [x] Ningún caller ignora `skipped` en tests de integración del daily plan.
+- [x] Con un chunk representativo de Core 1000 (p. ej. ranks 60–80), fill-blank genera **más** ejercicios que antes (medir en test).
+- [x] `pnpm test` completo verde.
 
 **STOP:** no propagar `GenerationResult` a todos los generadores en este PR — solo fill-blank. Los demás en Fase 4.
 
@@ -219,8 +219,8 @@ Fase 1 (eligibility) ──► Fase 2 (fill-blank + GenerationResult)
 
 ## Checklist global (plan completo)
 
-- [ ] Fase 1 — `lib/exercises/eligibility.ts` + tests ✅ (implementado 2026-06-16)
-- [ ] Fase 2 — `GenerationResult` en fill-blank + callers
+- [x] Fase 1 — `lib/exercises/eligibility.ts` + tests ✅ (implementado 2026-06-16)
+- [x] Fase 2 — `GenerationResult` en fill-blank + callers ✅ (implementado 2026-06-16)
 - [ ] Fase 3 — fixtures compartidos
 - [ ] Fase 4 — invariantes + match-pairs + integración Core 1000
 - [ ] Fase 5 — `validate:core1000-generators` en CI
