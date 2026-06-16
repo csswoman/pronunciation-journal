@@ -3,6 +3,7 @@
 // SIGNAL for manual review, silenced explicitly via
 // scripts/core-1000/data/ipa-exceptions.json, never auto-accepted.
 
+import { sentenceContainsLemma } from "@/lib/exercises/eligibility";
 import { lookupIpaFromCmu } from "@/lib/lexicon/ipa";
 import { WEAK_FORM_WHITELIST } from "./weak-forms";
 import type { CoreWord } from "./types";
@@ -30,66 +31,8 @@ export function normalizeIpaForCompare(ipa: string): string {
     .replace(/ʌ/g, "ə");
 }
 
-const IRREGULAR_FORMS: Readonly<Record<string, readonly string[]>> = {
-  be: ["am", "is", "are", "was", "were", "been", "being"],
-};
-
-const INFLECTION_SUFFIXES =
-  /^(?:s|es|ed|d|ing|er|est|ies|ied|ying|ier|iest|ers|ors|ists|ments|ness|tion|sions?|able|ible|ful|less|ous|ive|al|ity|ance|ence|ship|dom|ward|wards|ly)$/;
-
-function escapeWordRegex(word: string): string {
-  return word.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-}
-
-function matchesInflection(token: string, lemma: string): boolean {
-  if (token.startsWith(lemma) && token.length > lemma.length) {
-    if (INFLECTION_SUFFIXES.test(token.slice(lemma.length))) return true;
-  }
-
-  if (lemma.endsWith("e") && token.startsWith(lemma.slice(0, -1))) {
-    const rest = token.slice(lemma.length - 1);
-    if (/^(?:d|ds|ing|ed|er|est|s|rs?)$/.test(rest)) return true;
-  }
-
-  if (lemma.length >= 3 && token.startsWith(lemma.slice(0, -1))) {
-    const doubled = lemma.slice(-1);
-    if (token.startsWith(lemma.slice(0, -1) + doubled)) {
-      return INFLECTION_SUFFIXES.test(token.slice(lemma.length));
-    }
-  }
-
-  if (lemma.endsWith("y") && token.startsWith(lemma.slice(0, -1))) {
-    return /^(?:ies|ied|ying|ier|iest|y)$/.test(token.slice(lemma.length - 1));
-  }
-
-  return false;
-}
-
-/** True when the sentence uses the lemma or a common inflected/compound surface form. */
-export function sentenceContainsWord(sentence: string, word: string): boolean {
-  const lemma = word.toLowerCase();
-  const escaped = escapeWordRegex(word);
-
-  if (new RegExp(`\\b${escaped}\\b`, "i").test(sentence)) return true;
-
-  const irregulars = IRREGULAR_FORMS[lemma];
-  if (irregulars?.some((form) => new RegExp(`\\b${escapeWordRegex(form)}\\b`, "i").test(sentence))) {
-    return true;
-  }
-
-  const tokens = sentence.match(/\b[\w'-]+\b/g) ?? [];
-  for (const raw of tokens) {
-    const token = raw.toLowerCase().replace(/'/g, "");
-    if (token === lemma) return true;
-    if (matchesInflection(token, lemma)) return true;
-
-    if (lemma.length >= 4 && token !== lemma && (token.startsWith(lemma) || token.endsWith(lemma))) {
-      return true;
-    }
-  }
-
-  return false;
-}
+/** @deprecated Import from `@/lib/exercises/eligibility` — re-export for legacy importers. */
+export { sentenceContainsLemma as sentenceContainsWord } from "@/lib/exercises/eligibility";
 
 export function validateEntry(entry: CoreWord): ValidationIssue[] {
   const issues: ValidationIssue[] = [];
@@ -110,7 +53,7 @@ export function validateEntry(entry: CoreWord): ValidationIssue[] {
     });
   }
 
-  if (!sentenceContainsWord(entry.example_sentence, word)) {
+  if (!sentenceContainsLemma(entry.example_sentence, word)) {
     issues.push({
       rank, word, kind: "sentence-missing-word",
       detail: `"${entry.example_sentence}" no contiene "${word}"`,

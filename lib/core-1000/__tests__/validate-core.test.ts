@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { normalizeIpaForCompare, sentenceContainsWord, validateEntry } from "../validate-core";
+import { normalizeIpaForCompare, validateEntry } from "../validate-core";
 import type { CoreWord } from "../types";
 
 const to: CoreWord = {
@@ -18,26 +18,6 @@ describe("normalizeIpaForCompare", () => {
     expect(normalizeIpaForCompare("/ˈwɔːtər/")).toBe(normalizeIpaForCompare("wɔːtəɹ"));
     expect(normalizeIpaForCompare("/ɡoʊ/")).toBe(normalizeIpaForCompare("/goʊ/"));
     expect(normalizeIpaForCompare("/ʌbaʊt/")).toBe(normalizeIpaForCompare("/əbaʊt/"));
-  });
-});
-
-describe("sentenceContainsWord", () => {
-  it("accepts inflected verb forms", () => {
-    expect(sentenceContainsWord("She works at a hospital.", "work")).toBe(true);
-    expect(sentenceContainsWord("They offered help.", "offer")).toBe(true);
-  });
-
-  it("accepts irregular be forms", () => {
-    expect(sentenceContainsWord("They are happy today.", "be")).toBe(true);
-  });
-
-  it("accepts compound tokens that embed the lemma", () => {
-    expect(sentenceContainsWord("See you tonight.", "night")).toBe(true);
-  });
-
-  it("rejects unrelated sentences", () => {
-    expect(sentenceContainsWord("I want it.", "to")).toBe(false);
-    expect(sentenceContainsWord("She went for a runner.", "run")).toBe(false);
   });
 });
 
@@ -76,5 +56,17 @@ describe("validateEntry", () => {
       example_sentence: "A zzzznotaword here.",
     });
     expect(issues.filter((i) => i.kind === "ipa-mismatch")).toEqual([]);
+  });
+
+  it("accepts inflected example sentences via shared eligibility logic", () => {
+    const issues = validateEntry({
+      rank: 67,
+      word: "work",
+      pos: "verb",
+      ipa_strong: "/wɜːrk/",
+      example_sentence: "She works at a hospital downtown.",
+      cefr_level: "A1",
+    });
+    expect(issues.filter((i) => i.kind === "sentence-missing-word")).toEqual([]);
   });
 });
