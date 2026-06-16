@@ -9,6 +9,7 @@ import {
   BookMarked,
   Layers,
   ListOrdered,
+  RotateCcw,
 } from "lucide-react";
 import { NavSectionType } from "./NavSection";
 
@@ -35,6 +36,7 @@ export const learningNav: NavSectionType = {
 export const trackingNav: NavSectionType = {
   label: "Tracking",
   items: [
+    { name: "Review", href: "/practice/review", icon: RotateCcw },
     { name: "Progress", href: "/progress", icon: TrendingUp },
   ],
 };

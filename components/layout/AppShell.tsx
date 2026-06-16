@@ -17,7 +17,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   const isImmersivePractice =
     pathname.startsWith("/practice/sounds/sound/") ||
     pathname === "/daily" ||
-    pathname === "/review";
+    pathname === "/practice/review";
   const { user } = useAuth();
   const [open, setOpen] = useState(false);
   const openModal = useCallback(() => setOpen(true), []);
