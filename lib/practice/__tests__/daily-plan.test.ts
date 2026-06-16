@@ -133,6 +133,7 @@ describe('buildDailyPlan', () => {
     setupProgressMock(null)
     setupWordBankMock([], [])
     vi.mocked(getDueReviewWordsForDaily).mockResolvedValue([])
+    vi.mocked(getWeakWordsForReview).mockResolvedValue([])
     vi.mocked(getDueSoundsForReview).mockResolvedValue([])
     const { sounds, words } = seedCatalog()
     vi.mocked(getAllSounds).mockResolvedValue(sounds)
