@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
+import type { WordBankEntry } from '@/lib/word-bank/types'
 import type { Sound, SoundWord } from '@/lib/phoneme-practice/types'
 import {
   fillBlankExampleSentence,

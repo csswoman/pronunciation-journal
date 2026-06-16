@@ -1,14 +1,9 @@
 'use client'
 
-// Planned structure:
-// <ReviewHubClient>
-//   <ReviewSectionCard /> × 4
-//   <ReviewSessionLauncher />
-// </ReviewHubClient>
-
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import Button from '@/components/ui/Button'
+import { cn } from '@/lib/cn'
 import { WordStrengthBars } from '@/components/vocabulary/words/WordStrengthBars'
 import { getWordStrength } from '@/lib/word-bank/strength'
 import { useReviewSession } from '@/hooks/useReviewSession'
@@ -28,7 +23,7 @@ function formatIpa(ipa: string | null | undefined): string {
 export function ReviewHubClient({ summary }: Props) {
   const { state, sessionKey, startReview, advanceStep, exitSession } = useReviewSession()
   const { counts } = summary
-  const canStart = counts.total > 0 && state.phase !== 'loading'
+  const canStart = summary.canStartReview && state.phase !== 'loading'
 
   return (
     <>
@@ -49,7 +44,10 @@ export function ReviewHubClient({ summary }: Props) {
             {summary.failedSentences.slice(0, 4).map((item) => (
               <li key={item.contentId} className="font-body-sm text-fg-secondary">
                 <span className="text-fg">{item.label}</span>
-                <span className="ml-2 font-caption text-fg-muted">{item.slug.replace('_', ' ')}</span>
+                <span className="ml-2 font-caption text-fg-muted">{item.typeLabel}</span>
+                {!item.drillable ? (
+                  <span className="ml-2 font-caption text-fg-subtle">· solo historial</span>
+                ) : null}
               </li>
             ))}
           </ul>
@@ -126,32 +124,45 @@ export function ReviewHubClient({ summary }: Props) {
           <div className="rounded-[var(--radius-md)] bg-[var(--success-soft)] px-4 py-3 text-center font-body-sm text-fg-secondary">
             Repaso completo. Vuelve mañana o sigue practicando en el plan diario.
           </div>
-        ) : (
+        ) : state.phase === 'loading' ? (
+          <Button type="button" variant="primary" size="md" fullWidth disabled>
+            Preparando…
+          </Button>
+        ) : canStart ? (
           <Button
             type="button"
             variant="primary"
             size="md"
             fullWidth
-            icon={state.phase === 'loading' ? undefined : <ArrowRight size={15} />}
+            icon={<ArrowRight size={15} />}
             iconPosition="right"
-            disabled={!canStart}
             onClick={startReview}
           >
-            {state.phase === 'loading' ? 'Preparando…' : 'Iniciar repaso completo'}
+            Iniciar repaso completo
           </Button>
-        )}
+        ) : state.phase === 'idle' ? (
+          <Link
+            href="/daily"
+            className={cn(
+              'inline-flex w-full items-center justify-center gap-2 rounded-md px-5 py-3',
+              'text-sm font-semibold transition-all duration-150 ease-out-quart focus-ring',
+              'bg-[var(--cta-bg)] text-[var(--cta-fg)] hover:bg-[var(--cta-bg-hover)]',
+            )}
+          >
+            Ir a practicar
+            <ArrowRight size={15} aria-hidden />
+          </Link>
+        ) : null}
 
         {state.phase === 'error' ? (
           <p className="font-caption text-center text-error">No se pudo cargar el repaso.</p>
         ) : null}
 
-        {summary.nothingDue && state.phase === 'idle' ? (
+        {!summary.canStartReview && state.phase === 'idle' ? (
           <p className="font-body-sm text-center text-fg-muted">
-            Nada pendiente ahora. Practica en el{' '}
-            <Link href="/daily" className="text-primary">
-              plan diario
-            </Link>{' '}
-            para generar nuevos ítems.
+            {counts.failedSentences > 0 && counts.reviewable === 0
+              ? 'Tienes errores recientes en el historial, pero nada listo para repasar hoy. Sigue con el plan diario.'
+              : 'Nada pendiente ahora. Practica en el plan diario para generar nuevos ítems.'}
           </p>
         ) : null}
       </div>

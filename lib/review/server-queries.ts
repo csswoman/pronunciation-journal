@@ -4,54 +4,51 @@ import {
   getWeakWordsForReviewServer,
   getWordsDueForReview,
 } from '@/lib/word-bank/server-queries'
-import type { FailedSentenceItem, ReviewHubSummary } from '@/lib/review/types'
-
-const SENTENCE_EXERCISE_IDS = [5, 6, 8]
-
-type HistoryRow = {
-  content_id: string | null
-  answered_at: string | null
-  target_word: string | null
-  exercise_types: { slug: string } | null
-}
+import {
+  buildReviewHubCounts,
+  computeCanStartReview,
+  resolveFailedSentenceLookups,
+  rowsToFailedItems,
+  SENTENCE_EXERCISE_IDS,
+  type FailedHistoryRow,
+} from '@/lib/review/failed-sentences-core'
+import type { ReviewHubSummary } from '@/lib/review/types'
 
 async function loadFailedSentenceItemsServer(
   userId: string,
   limit: number,
-): Promise<FailedSentenceItem[]> {
+): Promise<import('@/lib/review/types').FailedSentenceItem[]> {
   const supabase = await createSupabaseServerClient()
   const { data, error } = await supabase
     .from('answer_history')
-    .select('content_id, exercise_type_id, answered_at, target_word, exercise_types(slug)')
+    .select('content_id, exercise_type_id, answered_at, target_word, user_answer, exercise_types(slug)')
     .eq('user_id', userId)
     .eq('is_correct', false)
-    .in('exercise_type_id', SENTENCE_EXERCISE_IDS)
+    .in('exercise_type_id', [...SENTENCE_EXERCISE_IDS])
     .order('answered_at', { ascending: false })
     .limit(50)
 
   if (error || !data) return []
 
-  const seen = new Set<string>()
-  const items: FailedSentenceItem[] = []
-  for (const row of data as HistoryRow[]) {
-    const contentId = row.content_id
-    if (!contentId || seen.has(contentId)) continue
-    seen.add(contentId)
-    const wordBankId = contentId.startsWith('word_bank:')
-      ? contentId.slice('word_bank:'.length)
-      : /^[0-9a-f-]{36}$/i.test(contentId)
-        ? contentId
-        : null
-    items.push({
-      contentId,
-      wordBankId,
-      slug: row.exercise_types?.slug ?? 'sentence',
-      label: row.target_word ?? contentId,
-      failedAt: row.answered_at ?? new Date().toISOString(),
-    })
-    if (items.length >= limit) break
-  }
-  return items
+  const rows = data as FailedHistoryRow[]
+  const { fragments, words } = await resolveFailedSentenceLookups(
+    rows,
+    async (ids) => {
+      const { data: fragments } = await supabase
+        .from('text_fragments')
+        .select('id, content, title')
+        .in('id', ids)
+      return fragments ?? []
+    },
+    async (ids) => {
+      const { data: bankWords } = await supabase
+        .from('word_bank')
+        .select('id, text, example')
+        .in('id', ids)
+      return bankWords ?? []
+    },
+  )
+  return rowsToFailedItems(rows, limit, fragments, words)
 }
 
 /** Server: full hub summary for `/practice/review`. */
@@ -63,17 +60,8 @@ export async function getReviewHubSummary(userId: string): Promise<ReviewHubSumm
     getSoundsDueForHome(userId),
   ])
 
-  const counts = {
-    failedSentences: failedSentences.length,
-    weakWords: weakWords.length,
-    dueWords: dueWords.length,
-    soundsDue: soundsDue.length,
-    total:
-      failedSentences.length +
-      weakWords.length +
-      dueWords.length +
-      soundsDue.length,
-  }
+  const counts = buildReviewHubCounts(failedSentences, weakWords, dueWords, soundsDue)
+  const canStartReview = computeCanStartReview({ failedSentences, weakWords, dueWords, soundsDue })
 
   return {
     failedSentences,
@@ -82,5 +70,6 @@ export async function getReviewHubSummary(userId: string): Promise<ReviewHubSumm
     soundsDue,
     counts,
     nothingDue: counts.total === 0,
+    canStartReview,
   }
 }
