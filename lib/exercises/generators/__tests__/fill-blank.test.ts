@@ -54,8 +54,10 @@ describe('generateFillBlankFromWordBank', () => {
       makeEntry({ id: '1', text: 'run', example: 'She went for a runner.' }),
       makeEntry({ id: '2', text: 'run', example: 'She went for a run yesterday.' }),
       makeEntry({ id: '3', text: 'walk', example: 'He likes to walk in the park.' }),
-      makeEntry({ id: '4', text: 'swim', example: 'She can swim very fast.' }),
-      makeEntry({ id: '5', text: 'jump', example: 'The jump was very high.' }),
+      makeEntry({ id: '4', text: 'swim', example: 'She can swim across the lake quickly.' }),
+      makeEntry({ id: '5', text: 'jump', example: 'The high jump was impressive.' }),
+      makeEntry({ id: '6', text: 'climb', example: 'They climb the steep hill every morning.' }),
+      makeEntry({ id: '7', text: 'dance', example: 'We dance together at the community center.' }),
     ]
     const results = generateFillBlankFromWordBank(entries, 10)
     // entry '1' is discarded (runner ≠ run), entry '2' is kept; pool has enough distractors
@@ -104,7 +106,7 @@ describe('generateFillBlankFromWordBank', () => {
 
   it('respects the count parameter', () => {
     const entries = Array.from({ length: 8 }, (_, i) =>
-      makeEntry({ id: String(i), text: `word${i}`, example: `The word${i} was useful.` })
+      makeEntry({ id: String(i), text: `word${i}`, example: `The word${i} was very useful today.` })
     )
     expect(generateFillBlankFromWordBank(entries, 3)).toHaveLength(3)
     expect(generateFillBlankFromWordBank(entries, 6)).toHaveLength(6)
