@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { generateFillBlankFromWordBank } from '../fill-blank'
+import { assertFillBlankInvariant } from '@/lib/exercises/__tests__/invariants'
 import {
   makeFillBlankEligibleEntry,
   makeFillBlankPool,
@@ -39,22 +40,42 @@ describe('generateFillBlankFromWordBank', () => {
   })
 
   it('generates fill-blank from inflected Core 1000 example sentences', () => {
-    const entries = [
-      makeWordBankEntry({
-        id: 'core-work',
-        text: 'work',
-        source: 'core1k',
-        example: 'She works at a hospital downtown.',
-      }),
+    const pool = [
       makeFillBlankEligibleEntry('walk', { id: '2', example: 'He likes to walk in the park.' }),
       makeFillBlankEligibleEntry('swim', { id: '3', example: 'She can swim across the lake quickly.' }),
       makeFillBlankEligibleEntry('jump', { id: '4', example: 'The high jump was impressive.' }),
     ]
-    const { exercises } = generateFillBlankFromWordBank(entries, 4)
-    const work = exercises.find((ex) => ex.answer === 'work')
-    expect(work).toBeDefined()
-    expect(work!.sentence).toBe('She ___ at a hospital downtown.')
-    expect(work!.sourceRef.source).toBe('core1k')
+    const inflectedCases = [
+      { word: 'work', example: 'She works at a hospital downtown.', sentence: 'She ___ at a hospital downtown.' },
+      { word: 'offer', example: 'They offered extra help during class today.', sentence: 'They ___ extra help during class today.' },
+    ] as const
+
+    for (const { word, example, sentence } of inflectedCases) {
+      const entries = [
+        makeWordBankEntry({ id: `core-${word}`, text: word, source: 'core1k', example }),
+        ...pool,
+      ]
+      const { exercises } = generateFillBlankFromWordBank(entries, 4)
+      const match = exercises.find((ex) => ex.answer === word)
+      expect(match, word).toBeDefined()
+      expect(match!.sentence).toBe(sentence)
+      expect(match!.sourceRef.source).toBe('core1k')
+      assertFillBlankInvariant(match!)
+    }
+  })
+
+  it('blanks compound tokens for night (See you tonight.)', () => {
+    const entries = [
+      makeWordBankEntry({ id: 'core-night', text: 'night', example: 'See you tonight.' }),
+      ...makeFillBlankPool(4),
+    ]
+    const { exercises } = generateFillBlankFromWordBank(entries, 5)
+    const night = exercises.find((ex) => ex.answer === 'night')
+    // Short sentence lacks context after blanking — may be skipped; lemma match still works when eligible.
+    if (night) {
+      expect(night.sentence).toBe('See you ___.')
+      assertFillBlankInvariant(night)
+    }
   })
 
   it('replaces the target word with ___ in the sentence', () => {
@@ -66,8 +87,7 @@ describe('generateFillBlankFromWordBank', () => {
     ]
     const { exercises } = generateFillBlankFromWordBank(entries, 4)
     for (const ex of exercises) {
-      expect(ex.sentence).toContain('___')
-      expect(ex.sentence).not.toMatch(new RegExp(`\\b${ex.answer}\\b`, 'i'))
+      assertFillBlankInvariant(ex)
     }
   })
 
@@ -75,8 +95,7 @@ describe('generateFillBlankFromWordBank', () => {
     const entries = makeFillBlankPool(10)
     const { exercises } = generateFillBlankFromWordBank(entries, 5)
     for (const ex of exercises) {
-      expect(ex.options).toHaveLength(4)
-      expect(ex.options).toContain(ex.answer)
+      assertFillBlankInvariant(ex)
     }
   })
 

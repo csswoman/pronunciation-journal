@@ -30,11 +30,11 @@ export function OddOneOutExercise({ exercise, onSubmit, voice }: Props) {
     if (word) speak(word, { voice })
   }
 
-  function handleSelect(id: string) {
+  function handleSelect(id: string, label: string) {
     if (submitted) return
-    // Also play the selected word
-    const idx = parseInt(id, 10)
-    handlePlay(idx)
+    // Play the selected word directly from its label — don't route through the
+    // stimuli index, which breaks if option ids aren't positional.
+    if (label) speak(label, { voice })
     setSelected(id)
   }
 
@@ -87,7 +87,7 @@ export function OddOneOutExercise({ exercise, onSubmit, voice }: Props) {
             role="radio"
             aria-checked={selected === opt.id}
             aria-disabled={submitted}
-            onClick={() => handleSelect(opt.id)}
+            onClick={() => handleSelect(opt.id, opt.label)}
             className={optClass(opt.id)}
           >
             {opt.label}

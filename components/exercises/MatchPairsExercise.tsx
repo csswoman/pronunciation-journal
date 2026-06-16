@@ -60,6 +60,17 @@ export function MatchPairsExercise({ exercise, onResult }: Props) {
   const pairColor = (leftId: string) => DOT_COLORS[exercise.pairs.findIndex((p) => p.id === leftId) % DOT_COLORS.length]
   const unmatch   = (leftId: string) => setMatches((prev) => { const next = { ...prev }; delete next[leftId]; return next })
 
+  // The `right` text expected for a given left id, and the text of any right id.
+  // Grading is text-aware: when two pairs are textually identical (e.g. two
+  // "pull" → /pʊl/), connecting a word to the *other* identical definition is
+  // still correct, since the rendered right is indistinguishable.
+  const expectedRightText = (leftId: string) => exercise.pairs.find((p) => p.id === leftId)?.right
+  const rightText         = (rightId: string) => exercise.pairs.find((p) => p.id === rightId)?.right
+  const isPairCorrect     = (leftId: string) => {
+    const chosen = matches[leftId]
+    return chosen != null && rightText(chosen) === expectedRightText(leftId)
+  }
+
   function handleLeftClick(pair: { id: string; left: string }) {
     if (submitted || results[pair.id]) return
     speak(pair.left)
@@ -87,7 +98,7 @@ export function MatchPairsExercise({ exercise, onResult }: Props) {
     const newResults: MatchResult = {}
     let allCorrect = true
     for (const pair of exercise.pairs) {
-      const correct = matches[pair.id] === pair.id
+      const correct = isPairCorrect(pair.id)
       newResults[pair.id] = correct ? 'correct' : 'wrong'
       if (!correct) allCorrect = false
     }

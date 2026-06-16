@@ -1,7 +1,7 @@
 import type { WordEntry } from '@/lib/lexicon/types'
 import type { SentenceContextExercise, SentenceContextOption } from '@/lib/exercises/types'
+import { blankLemma, hasEnoughContext } from '@/lib/exercises/eligibility'
 import { exerciseId, pick, shuffle } from '@/lib/exercises/utils'
-import { blankWord } from '@/lib/exercises/utils'
 
 const MAX_SENTENCE_CONTEXT = 4
 const OPTIONS_COUNT = 4
@@ -20,13 +20,15 @@ export function generateSentenceContextExercises(
   candidateWords: WordEntry[],
   sessionPool: WordEntry[],
 ): SentenceContextExercise[] {
-  const usable = candidateWords.filter(
-    (w) => w.exampleSentence && blankWord(w.exampleSentence, w.word) !== null,
-  )
+  const usable = candidateWords.filter((w) => {
+    if (!w.exampleSentence) return false
+    const blanked = blankLemma(w.exampleSentence, w.word)
+    return blanked !== null && hasEnoughContext(blanked)
+  })
   const selected = pick(usable, MAX_SENTENCE_CONTEXT)
 
   return selected.map((word) => {
-    const blanked = blankWord(word.exampleSentence!, word.word)!
+    const blanked = blankLemma(word.exampleSentence!, word.word)!
     const distractors = pickDistractors(word, sessionPool)
     const options: SentenceContextOption[] = shuffle([
       { id: word.id, word: word.word },

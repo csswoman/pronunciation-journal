@@ -14,5 +14,8 @@ export function toLegacyExercise(
     options: exercise.payload.options,
     correctIds: exercise.payload.correctIds,
     level: exercise.level,
+    stimuli: exercise.payload.stimuli,
+    abxAnswer: exercise.payload.abxAnswer,
+    oddIndex: exercise.payload.oddIndex,
   }
 }

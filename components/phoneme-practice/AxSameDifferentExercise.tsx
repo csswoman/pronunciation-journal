@@ -9,7 +9,8 @@
 // </AxSameDifferentExercise>
 
 import { useState } from 'react'
-import { speak } from '@/lib/phoneme-practice/tts'
+import { Volume2, Play } from 'lucide-react'
+import { speak, speakSequence } from '@/lib/phoneme-practice/tts'
 import type { Exercise } from '@/lib/phoneme-practice/types'
 import { PhonemeExercisePrompt } from './PhonemeExercisePrompt'
 
@@ -30,6 +31,10 @@ export function AxSameDifferentExercise({ exercise, onSubmit, voice }: Props) {
   function handlePlay(index: number) {
     const word = stimuli[index]?.word
     if (word) speak(word, { voice })
+  }
+
+  function handlePlayBoth() {
+    speakSequence(stimuli.map((s) => s.word), { voice })
   }
 
   function handleSelect(id: string) {
@@ -61,21 +66,34 @@ export function AxSameDifferentExercise({ exercise, onSubmit, voice }: Props) {
         spacious
         eyebrow={`Sonido objetivo: ${exercise.ipa}`}
         title="¿Tienen el mismo sonido?"
-        hint="Escucha A y X por separado"
+        hint="Escucha A y X, luego elige"
       />
 
-      <div className="flex gap-3 justify-center">
-        {LABELS.map((label, i) => (
-          <button
-            key={label}
-            type="button"
-            onClick={() => handlePlay(i)}
-            aria-label={`Escuchar estímulo ${label}`}
-            className="pf-stim-btn"
-          >
-            🔊 {label}
-          </button>
-        ))}
+      <div className="flex flex-col items-center gap-4">
+        <div className="flex gap-4 justify-center">
+          {LABELS.map((label, i) => (
+            <button
+              key={label}
+              type="button"
+              onClick={() => handlePlay(i)}
+              aria-label={`Escuchar estímulo ${label}`}
+              className="pf-stim-btn"
+            >
+              <Volume2 size={26} aria-hidden />
+              {label}
+            </button>
+          ))}
+        </div>
+
+        <button
+          type="button"
+          onClick={handlePlayBoth}
+          aria-label="Escuchar A y X seguidos"
+          className="pf-chip"
+        >
+          <Play size={14} aria-hidden />
+          Escuchar ambos
+        </button>
       </div>
 
       <div role="radiogroup" aria-label="¿Igual o diferente?" className="pf-options pf-options--grid">

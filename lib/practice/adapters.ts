@@ -45,8 +45,27 @@ export function fromMixedExercise(
   context: PracticeContext,
 ): PracticeExercise {
   if (ex.kind === 'phoneme') {
-    const { ipa, targetWord, options, correctIds, soundId, level } = ex.data
-    const payload: PhonemePayload = { kind: 'phoneme', ipa, targetWord, options, correctIds }
+    const {
+      ipa,
+      targetWord,
+      options,
+      correctIds,
+      soundId,
+      level,
+      stimuli,
+      abxAnswer,
+      oddIndex,
+    } = ex.data
+    const payload: PhonemePayload = {
+      kind: 'phoneme',
+      ipa,
+      targetWord,
+      options,
+      correctIds,
+      stimuli,
+      abxAnswer,
+      oddIndex,
+    }
     const slug = ex.data.type as ExerciseSlug
     // contentId must vary per exercise within a sound so buildSession does not
     // dedupe distinct phoneme drills (different slug or different target word)
