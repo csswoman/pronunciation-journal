@@ -222,7 +222,7 @@ Fase 1 (eligibility) ──► Fase 2 (fill-blank + GenerationResult)
 - [x] Fase 1 — `lib/exercises/eligibility.ts` + tests ✅ (implementado 2026-06-16)
 - [x] Fase 2 — `GenerationResult` en fill-blank + callers ✅ (implementado 2026-06-16)
 - [x] Fase 3 — fixtures compartidos ✅ (implementado 2026-06-16)
-- [ ] Fase 4 — invariantes + match-pairs + integración Core 1000
+- [x] Fase 4 — invariantes + match-pairs + integración Core 1000 ✅ (implementado 2026-06-16)
 - [ ] Fase 5 — `validate:core1000-generators` en CI
 - [ ] Fase 6 — docs actualizados
 
