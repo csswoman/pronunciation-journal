@@ -15,6 +15,8 @@ import { cn } from '@/lib/cn'
 import { PhonemeExercisePrompt } from './PhonemeExercisePrompt'
 import { getPhonemeExerciseMeta } from '@/lib/phoneme-practice/exercise-labels'
 import { useVoiceRecorder } from '@/hooks/useVoiceRecorder'
+import { useBlobTranscription } from '@/hooks/useBlobTranscription'
+import { PhonemeFeedbackTable } from '@/components/lesson/PhonemeFeedbackTable'
 
 interface Props {
   exercise: Exercise
@@ -89,6 +91,8 @@ export function SpeakExercise({ exercise, onSubmit, focusUi = false }: Props) {
   const meta = getPhonemeExerciseMeta('speak_word', { targetWord: exercise.targetWord })
   const { durationMs: modelMs, playAndMeasure } = useModelDuration()
   const { state, result, isSupported, start, stop, reset } = useVoiceRecorder()
+  const { state: txState, score, run: runTranscription, reset: resetTranscription } =
+    useBlobTranscription()
   const audioRef = useRef<HTMLAudioElement | null>(null)
   const [playingBack, setPlayingBack] = useState(false)
   const submitted = useRef(false)
@@ -110,6 +114,15 @@ export function SpeakExercise({ exercise, onSubmit, focusUi = false }: Props) {
     }
   }, [state, result, onSubmit])
 
+  // Once recording is done, transcribe + score for the ELSA-style breakdown.
+  // This is informative feedback only — it does NOT gate onSubmit above, and a
+  // network failure degrades silently (no table, shadowing still works).
+  useEffect(() => {
+    if (state === 'done' && result && exercise.targetWord && txState === 'idle') {
+      void runTranscription(result.blob, exercise.targetWord)
+    }
+  }, [state, result, exercise.targetWord, txState, runTranscription])
+
   const handlePlayUser = useCallback(() => {
     if (!result?.url) return
     const audio = audioRef.current ?? new Audio()
@@ -123,7 +136,8 @@ export function SpeakExercise({ exercise, onSubmit, focusUi = false }: Props) {
   const handleReset = useCallback(() => {
     submitted.current = false
     reset()
-  }, [reset])
+    resetTranscription()
+  }, [reset, resetTranscription])
 
   const maxMs = Math.max(modelMs ?? 0, result?.durationMs ?? 0) * 1.2 || 1000
 
@@ -212,6 +226,16 @@ export function SpeakExercise({ exercise, onSubmit, focusUi = false }: Props) {
             </button>
           </div>
         </div>
+      )}
+
+      {/* Phoneme breakdown (informative feedback; absent on transcription failure) */}
+      {isDone && txState === 'transcribing' && (
+        <p className="text-xs text-[var(--text-tertiary)] text-center m-0">
+          Analizando tu pronunciación…
+        </p>
+      )}
+      {isDone && txState === 'done' && score && (
+        <PhonemeFeedbackTable wordResults={score.wordResults} />
       )}
 
       {isError && (
