@@ -134,9 +134,9 @@ Tests: fixtures compartidos + invariantes + gate CI
 
 **Criterios de done Fase 4:**
 
-- [ ] `match-pairs` tiene al menos 5 casos (pool insuficiente, count, sourceRef, dedupe).
-- [ ] Test de integración Core 1000 → daily step documenta el % mínimo esperado de generabilidad.
-- [ ] `pnpm test` verde.
+- [x] `match-pairs` tiene al menos 5 casos (pool insuficiente, count, sourceRef, dedupe).
+- [x] Test de integración Core 1000 → daily step documenta el % mínimo esperado de generabilidad.
+- [x] `pnpm test` verde.
 
 ---
 
