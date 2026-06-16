@@ -34,6 +34,19 @@ export function FillBlankExercise({ exercise, onResult }: Props) {
     startMs.current = Date.now()
   }, [exercise.id])
 
+  useEffect(() => {
+    function handleKey(e: KeyboardEvent) {
+      if (state !== 'idle') return
+      const idx = parseInt(e.key) - 1
+      if (idx >= 0 && idx < exercise.options.length) {
+        handlePick(exercise.options[idx])
+      }
+    }
+    window.addEventListener('keydown', handleKey)
+    return () => window.removeEventListener('keydown', handleKey)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state, exercise.options])
+
   function handlePick(option: string) {
     if (state !== 'idle') return
     playTap()
@@ -168,7 +181,10 @@ function OptionButton({ option, index, isAnswer, isSelected, answerState, onPick
       style={{ backgroundColor: bgColor, borderColor }}
     >
       <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: dotColor }} />
-      <span className="text-[var(--text-primary)]">{option}</span>
+      <span className="text-[var(--text-primary)] flex-1">{option}</span>
+      {!done && (
+        <span className="text-[11px] text-[var(--text-tertiary)] opacity-60 font-mono">{index + 1}</span>
+      )}
     </button>
   )
 }

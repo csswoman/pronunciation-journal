@@ -126,8 +126,8 @@ export function ReorderWordsExercise({ exercise, onResult, focusUi = false }: Pr
   }
 
   return (
-    <div className="flex w-full flex-col gap-5">
-      <p className="text-center text-[13px] font-semibold uppercase tracking-[.08em] text-[var(--text-tertiary)] m-0">
+    <div className="flex w-full flex-col gap-3">
+      <p className="text-center text-[13px] font-semibold uppercase tracking-[.08em] text-[var(--text-tertiary)] m-0 pb-1">
         Arrange the words in the correct order
       </p>
       <div
@@ -141,17 +141,28 @@ export function ReorderWordsExercise({ exercise, onResult, focusUi = false }: Pr
           <WordChip key={chip.key} chip={chip} variant="placed" done={state !== 'idle'} onClick={moveToBank} />
         ))}
       </div>
-      <div className="flex flex-wrap gap-2" aria-label="Available words">
+      <div className="flex flex-wrap gap-2 py-1" aria-label="Available words">
         {bank.map((chip) => (
           <WordChip key={chip.key} chip={chip} variant="bank" done={state !== 'idle'} onClick={moveToAnswer} />
         ))}
       </div>
+      {state !== 'idle' && (
+        <div className={cn(
+          'flex items-center gap-2 rounded-xl px-4 py-3 text-[14px] font-medium mt-3',
+          state === 'correct'
+            ? 'bg-[var(--success-soft)] text-[var(--success)]'
+            : 'bg-[var(--error-soft)] text-[var(--error)]',
+        )}>
+          <span>{state === 'correct' ? '✓' : '✗'}</span>
+          <span>{state === 'correct' ? 'Correct!' : `Correct order: ${exercise.sentence}`}</span>
+        </div>
+      )}
       {state === 'idle' && (
         <button
           type="button"
           onClick={handleCheck}
           disabled={answer.length === 0}
-          className="w-full rounded-full py-3.5 text-sm font-semibold transition-all disabled:opacity-40"
+          className="w-full rounded-full py-3.5 text-sm font-semibold transition-all disabled:opacity-40 mt-3"
           style={{
             backgroundColor: answer.length > 0 ? 'var(--primary)' : 'var(--border-subtle)',
             color: answer.length > 0 ? 'var(--on-primary)' : 'var(--text-tertiary)',

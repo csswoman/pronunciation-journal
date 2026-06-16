@@ -36,6 +36,10 @@ const nextConfig = {
       },
       {
         protocol: "https",
+        hostname: "lh3.googleusercontent.com",
+      },
+      {
+        protocol: "https",
         hostname: "prod-files-secure.s3.us-east-1.amazonaws.com",
       },
       {

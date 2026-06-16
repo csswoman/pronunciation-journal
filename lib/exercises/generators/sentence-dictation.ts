@@ -17,7 +17,7 @@ export function generateSentenceDictationFromWordBank(
     id: exerciseId('sentence_dictation', entry.id, entry.example!),
     type: 'sentence_dictation',
     exerciseType: { domain: 'vocabulary', mode: 'sentence_dictation' },
-    sourceRef: { source: 'word_bank', id: entry.id },
+    sourceRef: { source: entry.source === 'core1k' ? 'core1k' : 'word_bank', id: entry.id },
     level: entry.difficulty ? normalizeCEFR(entry.difficulty) : undefined,
     sentence: entry.example!,
     audioUrl: entry.audio_url ?? null,

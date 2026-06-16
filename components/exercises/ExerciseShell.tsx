@@ -7,6 +7,7 @@
 //   [children]         — exercise mechanics
 //   <ContinueButton /> — full-width primary, shown after answer
 
+import { useEffect } from 'react'
 import { cn } from '@/lib/cn'
 
 export interface ExerciseResult {
@@ -38,6 +39,15 @@ export function ExerciseShell({
   children,
 }: ExerciseShellProps) {
   const done = result !== null
+
+  useEffect(() => {
+    if (!done) return
+    function handleKey(e: KeyboardEvent) {
+      if (e.key === 'Enter') onContinue()
+    }
+    window.addEventListener('keydown', handleKey)
+    return () => window.removeEventListener('keydown', handleKey)
+  }, [done, onContinue])
 
   return (
     <div className="flex w-full flex-col gap-5">

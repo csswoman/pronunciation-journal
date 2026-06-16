@@ -105,13 +105,9 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
   }
   if (!primarySound) primarySound = pickSeedSound(allSounds, 0)
 
-  const steps: DailyStep[] = []
-
-  const wordReview = buildWordReviewStep(reviewWords)
-  if (wordReview) steps.push(wordReview)
-
-  const contextPractice = buildContextPracticeStep(reviewWords)
-  if (contextPractice) steps.push(contextPractice)
+  // New/challenging content first, review last.
+  const newSteps: DailyStep[] = []
+  const reviewSteps: DailyStep[] = []
 
   if (primarySound) {
     const [targetWords, pairs] = await Promise.all([
@@ -127,37 +123,44 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
       pairs,
       hasProgress,
     )
-    if (focus) steps.push(focus)
+    if (focus) newSteps.push(focus)
 
     const minimal = buildMinimalPairsStep(primarySound, pairs)
-    if (minimal) steps.push(minimal)
+    if (minimal) newSteps.push(minimal)
 
     const listening = buildListeningStep(primarySound, targetWords)
-    if (listening) steps.push(listening)
+    if (listening) newSteps.push(listening)
   }
 
-  if (steps.length < DAILY_PLAN_STEP_COUNT) {
+  const weakTopics = aiState?.grammar.weakTopics ?? []
+  const weakDeckSlug = deckSlugForWeakTopics(weakTopics)
+  const weakTopic = weakTopics.find((t) => t.errorRate > 0.4 && t.sampleCount >= 3)?.topic
+  const sentenceSource = weakDeckSlug ?? (dayOfYear() % 2 === 0 ? 'lesson' : 'grammar-deck')
+
+  const allSteps = [...newSteps]
+
+  if (allSteps.length < DAILY_PLAN_STEP_COUNT) {
     const connectedStep = await buildConnectedSpeechStep()
     if (connectedStep) {
-      steps.push(connectedStep)
+      allSteps.push(connectedStep)
     } else {
-      const weakTopics = aiState?.grammar.weakTopics ?? []
-      const weakDeckSlug = deckSlugForWeakTopics(weakTopics)
-      const weakTopic = weakTopics.find((t) => t.errorRate > 0.4 && t.sampleCount >= 3)?.topic
-      const sentenceSource = weakDeckSlug ?? (dayOfYear() % 2 === 0 ? 'lesson' : 'grammar-deck')
       const sentenceStep = await buildSentenceBuilderStep(sentenceSource, weakTopic)
-      if (sentenceStep) steps.push(sentenceStep)
+      if (sentenceStep) allSteps.push(sentenceStep)
     }
   }
 
-  if (steps.length < DAILY_PLAN_STEP_COUNT) {
-    const weakTopics = aiState?.grammar.weakTopics ?? []
-    const weakDeckSlug = deckSlugForWeakTopics(weakTopics)
-    const weakTopic = weakTopics.find((t) => t.errorRate > 0.4 && t.sampleCount >= 3)?.topic
-    const sentenceSource = weakDeckSlug ?? (dayOfYear() % 2 === 0 ? 'lesson' : 'grammar-deck')
+  if (allSteps.length < DAILY_PLAN_STEP_COUNT) {
     const sentenceStep = await buildSentenceBuilderStep(sentenceSource, weakTopic)
-    if (sentenceStep) steps.push(sentenceStep)
+    if (sentenceStep) allSteps.push(sentenceStep)
   }
+
+  const wordReview = buildWordReviewStep(reviewWords)
+  if (wordReview) reviewSteps.push(wordReview)
+
+  const contextPractice = buildContextPracticeStep(reviewWords)
+  if (contextPractice) reviewSteps.push(contextPractice)
+
+  const steps: DailyStep[] = [...allSteps, ...reviewSteps]
 
   let offset = 1
   const usedIds = new Set(steps.map((s) => s.id))

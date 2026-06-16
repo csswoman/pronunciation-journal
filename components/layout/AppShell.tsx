@@ -57,12 +57,12 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       <Sidebar className="hidden lg:flex w-64 flex-col" />
       <main
         id="main-content"
-        className="main-scrollbar flex-1 overflow-y-auto pb-20 lg:pb-0"
+        className="main-scrollbar flex flex-1 flex-col overflow-y-auto pb-20 lg:pb-0"
         style={{
           marginRight: mainMarginRight,
         }}
       >
-        <div className={isImmersivePractice ? undefined : "max-w-screen-xl mx-auto"}>
+        <div className={isImmersivePractice ? "mx-auto flex w-full max-w-screen-md flex-1 flex-col" : "w-full max-w-screen-xl mx-auto"}>
           {children}
         </div>
       </main>

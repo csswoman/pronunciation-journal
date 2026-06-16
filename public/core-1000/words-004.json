@@ -6,7 +6,7 @@
       "word": "control",
       "pos": "verb",
       "ipa_strong": "/kʌntɹoʊl/",
-      "example_sentence": "I control every day here.",
+      "example_sentence": "She controls the temperature in the building.",
       "cefr_level": "A2"
     },
     {
@@ -14,7 +14,7 @@
       "word": "already",
       "pos": "adverb",
       "ipa_strong": "/ɔlɹɛdiː/",
-      "example_sentence": "She spoke already to me.",
+      "example_sentence": "By noon, she had already finished her work.",
       "cefr_level": "A2"
     },
     {
@@ -22,7 +22,7 @@
       "word": "concern",
       "pos": "verb",
       "ipa_strong": "/kʌnsɜrn/",
-      "example_sentence": "I concern every day here.",
+      "example_sentence": "The rising prices concern many families.",
       "cefr_level": "A2"
     },
     {
@@ -30,7 +30,7 @@
       "word": "product",
       "pos": "noun",
       "ipa_strong": "/pɹɑdʌkt/",
-      "example_sentence": "The product is very good.",
+      "example_sentence": "This new product sold out in one day.",
       "cefr_level": "A2"
     },
     {
@@ -38,7 +38,7 @@
       "word": "lose",
       "pos": "verb",
       "ipa_strong": "/luːz/",
-      "example_sentence": "I lose every day here.",
+      "example_sentence": "Don't lose your keys on the way home.",
       "cefr_level": "A2"
     },
     {
@@ -46,7 +46,7 @@
       "word": "story",
       "pos": "noun",
       "ipa_strong": "/stɔɹiː/",
-      "example_sentence": "The story is very good.",
+      "example_sentence": "She told us a funny story about her trip.",
       "cefr_level": "A2"
     },
     {
@@ -54,7 +54,7 @@
       "word": "almost",
       "pos": "adverb",
       "ipa_strong": "/ɔlmoʊst/",
-      "example_sentence": "She spoke almost to me.",
+      "example_sentence": "We're almost at the station — just two more stops.",
       "cefr_level": "A2"
     },
     {
@@ -62,7 +62,7 @@
       "word": "continue",
       "pos": "verb",
       "ipa_strong": "/kʌntɪnjuː/",
-      "example_sentence": "I continue every day here.",
+      "example_sentence": "Please continue reading from page twelve.",
       "cefr_level": "A2"
     },
     {
@@ -70,7 +70,7 @@
       "word": "stand",
       "pos": "verb",
       "ipa_strong": "/stænd/",
-      "example_sentence": "I stand every day here.",
+      "example_sentence": "Everyone had to stand because all the seats were taken.",
       "cefr_level": "A2"
     },
     {
@@ -78,15 +78,15 @@
       "word": "whole",
       "pos": "adjective",
       "ipa_strong": "/hoʊl/",
-      "example_sentence": "It is very whole today.",
+      "example_sentence": "He ate the whole pizza by himself.",
       "cefr_level": "A2"
     },
     {
       "rank": 311,
       "word": "yet",
-      "pos": "conjunction",
+      "pos": "adverb",
       "ipa_strong": "/jɛt/",
-      "example_sentence": "Come yet go with us.",
+      "example_sentence": "I haven't received a reply yet.",
       "cefr_level": "A2"
     },
     {
@@ -94,7 +94,7 @@
       "word": "rate",
       "pos": "verb",
       "ipa_strong": "/ɹeɪt/",
-      "example_sentence": "I rate every day here.",
+      "example_sentence": "Customers can rate the restaurant after their visit.",
       "cefr_level": "A2"
     },
     {
@@ -102,7 +102,7 @@
       "word": "care",
       "pos": "verb",
       "ipa_strong": "/kɛɹ/",
-      "example_sentence": "I care every day here.",
+      "example_sentence": "She cares deeply about helping others.",
       "cefr_level": "A2"
     },
     {
@@ -110,7 +110,7 @@
       "word": "expect",
       "pos": "verb",
       "ipa_strong": "/ɪkspɛkt/",
-      "example_sentence": "I expect every day here.",
+      "example_sentence": "We expect the package to arrive by Friday.",
       "cefr_level": "A2"
     },
     {
@@ -118,7 +118,7 @@
       "word": "effect",
       "pos": "noun",
       "ipa_strong": "/ɪfɛkt/",
-      "example_sentence": "The effect is very good.",
+      "example_sentence": "The new law had an immediate effect on prices.",
       "cefr_level": "A2"
     },
     {
@@ -126,15 +126,15 @@
       "word": "sort",
       "pos": "verb",
       "ipa_strong": "/sɔɹt/",
-      "example_sentence": "I sort every day here.",
+      "example_sentence": "Can you sort these files by date?",
       "cefr_level": "A2"
     },
     {
       "rank": 317,
       "word": "ever",
-      "pos": "noun",
+      "pos": "adverb",
       "ipa_strong": "/ɛvɜr/",
-      "example_sentence": "The ever is very good.",
+      "example_sentence": "Have you ever visited another country?",
       "cefr_level": "A2"
     },
     {
@@ -142,7 +142,7 @@
       "word": "anything",
       "pos": "pronoun",
       "ipa_strong": "/ɛniːθɪŋ/",
-      "example_sentence": "I saw anything at school.",
+      "example_sentence": "Can I do anything to help you?",
       "cefr_level": "A2"
     },
     {
@@ -150,7 +150,7 @@
       "word": "cause",
       "pos": "verb",
       "ipa_strong": "/kɑz/",
-      "example_sentence": "I cause every day here.",
+      "example_sentence": "Heavy rain can cause flooding in low areas.",
       "cefr_level": "A2"
     },
     {
@@ -158,7 +158,7 @@
       "word": "fall",
       "pos": "verb",
       "ipa_strong": "/fɔl/",
-      "example_sentence": "I fall every day here.",
+      "example_sentence": "Be careful not to fall on the wet floor.",
       "cefr_level": "A2"
     },
     {
@@ -166,7 +166,7 @@
       "word": "deal",
       "pos": "verb",
       "ipa_strong": "/diːl/",
-      "example_sentence": "I deal every day here.",
+      "example_sentence": "She knows how to deal with difficult situations.",
       "cefr_level": "A2"
     },
     {
@@ -174,7 +174,7 @@
       "word": "water",
       "pos": "noun",
       "ipa_strong": "/wɔtɜr/",
-      "example_sentence": "The water is very good.",
+      "example_sentence": "Drink plenty of water during the day.",
       "cefr_level": "A2"
     },
     {
@@ -182,7 +182,7 @@
       "word": "send",
       "pos": "verb",
       "ipa_strong": "/sɛnd/",
-      "example_sentence": "I send every day here.",
+      "example_sentence": "Please send me the report by email.",
       "cefr_level": "A2"
     },
     {
@@ -190,7 +190,7 @@
       "word": "allow",
       "pos": "verb",
       "ipa_strong": "/ʌlaʊ/",
-      "example_sentence": "I allow every day here.",
+      "example_sentence": "The school does not allow phones in class.",
       "cefr_level": "A2"
     },
     {
@@ -198,7 +198,7 @@
       "word": "soon",
       "pos": "adverb",
       "ipa_strong": "/suːn/",
-      "example_sentence": "She spoke soon to me.",
+      "example_sentence": "The doctor will see you soon.",
       "cefr_level": "A2"
     },
     {
@@ -206,7 +206,7 @@
       "word": "watch",
       "pos": "verb",
       "ipa_strong": "/wɑtʃ/",
-      "example_sentence": "I watch every day here.",
+      "example_sentence": "They watched the game together on Saturday night.",
       "cefr_level": "A2"
     },
     {
@@ -214,7 +214,7 @@
       "word": "base",
       "pos": "verb",
       "ipa_strong": "/beɪs/",
-      "example_sentence": "I base every day here.",
+      "example_sentence": "She based her decision on the latest data.",
       "cefr_level": "A2"
     },
     {
@@ -222,7 +222,7 @@
       "word": "probably",
       "pos": "adverb",
       "ipa_strong": "/pɹɑbʌbliː/",
-      "example_sentence": "She spoke probably to me.",
+      "example_sentence": "It will probably rain this afternoon.",
       "cefr_level": "A2"
     },
     {
@@ -230,7 +230,7 @@
       "word": "suggest",
       "pos": "verb",
       "ipa_strong": "/sʌdʒɛst/",
-      "example_sentence": "I suggest every day here.",
+      "example_sentence": "I suggest arriving early to get a good seat.",
       "cefr_level": "A2"
     },
     {
@@ -238,7 +238,7 @@
       "word": "past",
       "pos": "noun",
       "ipa_strong": "/pæst/",
-      "example_sentence": "The past is very good.",
+      "example_sentence": "In the past, people traveled by horse.",
       "cefr_level": "A2"
     },
     {
@@ -246,7 +246,7 @@
       "word": "power",
       "pos": "noun",
       "ipa_strong": "/paʊɜr/",
-      "example_sentence": "The power is very good.",
+      "example_sentence": "The storm knocked out the power for hours.",
       "cefr_level": "A2"
     },
     {
@@ -254,7 +254,7 @@
       "word": "test",
       "pos": "verb",
       "ipa_strong": "/tɛst/",
-      "example_sentence": "I test every day here.",
+      "example_sentence": "Engineers test the software before each release.",
       "cefr_level": "A2"
     },
     {
@@ -262,7 +262,7 @@
       "word": "visit",
       "pos": "verb",
       "ipa_strong": "/vɪzɪt/",
-      "example_sentence": "I visit every day here.",
+      "example_sentence": "We plan to visit my grandmother this weekend.",
       "cefr_level": "A2"
     },
     {
@@ -270,7 +270,7 @@
       "word": "center",
       "pos": "noun",
       "ipa_strong": "/sɛntɜr/",
-      "example_sentence": "The center is very good.",
+      "example_sentence": "The shopping center opens at nine in the morning.",
       "cefr_level": "A2"
     },
     {
@@ -278,7 +278,7 @@
       "word": "grow",
       "pos": "verb",
       "ipa_strong": "/ɡɹoʊ/",
-      "example_sentence": "I grow every day here.",
+      "example_sentence": "Children grow very quickly in their first few years.",
       "cefr_level": "A2"
     },
     {
@@ -286,7 +286,7 @@
       "word": "nothing",
       "pos": "pronoun",
       "ipa_strong": "/nʌθɪŋ/",
-      "example_sentence": "I saw nothing at school.",
+      "example_sentence": "There is nothing left in the fridge.",
       "cefr_level": "A2"
     },
     {
@@ -294,7 +294,7 @@
       "word": "return",
       "pos": "verb",
       "ipa_strong": "/ɹɪtɜrn/",
-      "example_sentence": "I return every day here.",
+      "example_sentence": "She promised to return the book by Monday.",
       "cefr_level": "A2"
     },
     {
@@ -302,7 +302,7 @@
       "word": "mother",
       "pos": "noun",
       "ipa_strong": "/mʌðɜr/",
-      "example_sentence": "The mother is very good.",
+      "example_sentence": "His mother taught him how to cook.",
       "cefr_level": "A2"
     },
     {
@@ -310,7 +310,7 @@
       "word": "walk",
       "pos": "verb",
       "ipa_strong": "/wɔk/",
-      "example_sentence": "I walk every day here.",
+      "example_sentence": "They walk to school every morning.",
       "cefr_level": "A2"
     },
     {
@@ -318,7 +318,7 @@
       "word": "matter",
       "pos": "verb",
       "ipa_strong": "/mætɜr/",
-      "example_sentence": "I matter every day here.",
+      "example_sentence": "It doesn't matter how long it takes — just do it right.",
       "cefr_level": "A2"
     },
     {
@@ -326,7 +326,7 @@
       "word": "mind",
       "pos": "verb",
       "ipa_strong": "/maɪnd/",
-      "example_sentence": "I mind every day here.",
+      "example_sentence": "Do you mind if I open the window?",
       "cefr_level": "A2"
     },
     {
@@ -334,7 +334,7 @@
       "word": "value",
       "pos": "verb",
       "ipa_strong": "/væljuː/",
-      "example_sentence": "I value every day here.",
+      "example_sentence": "Good companies value their employees' feedback.",
       "cefr_level": "A2"
     },
     {
@@ -342,7 +342,7 @@
       "word": "office",
       "pos": "noun",
       "ipa_strong": "/ɔfɪs/",
-      "example_sentence": "The office is very good.",
+      "example_sentence": "She works in a busy office downtown.",
       "cefr_level": "A2"
     },
     {
@@ -350,7 +350,7 @@
       "word": "record",
       "pos": "verb",
       "ipa_strong": "/ɹʌkɔɹd/",
-      "example_sentence": "I record every day here.",
+      "example_sentence": "He uses his phone to record short videos.",
       "cefr_level": "A2"
     },
     {
@@ -358,7 +358,7 @@
       "word": "stay",
       "pos": "verb",
       "ipa_strong": "/steɪ/",
-      "example_sentence": "I stay every day here.",
+      "example_sentence": "We decided to stay an extra night at the hotel.",
       "cefr_level": "A2"
     },
     {
@@ -366,7 +366,7 @@
       "word": "force",
       "pos": "verb",
       "ipa_strong": "/fɔɹs/",
-      "example_sentence": "I force every day here.",
+      "example_sentence": "You can't force someone to change their opinion.",
       "cefr_level": "A2"
     },
     {
@@ -374,15 +374,15 @@
       "word": "stop",
       "pos": "verb",
       "ipa_strong": "/stɑp/",
-      "example_sentence": "I stop every day here.",
+      "example_sentence": "The driver had to stop suddenly at the red light.",
       "cefr_level": "A2"
     },
     {
       "rank": 348,
       "word": "several",
-      "pos": "noun",
+      "pos": "determiner",
       "ipa_strong": "/sɛvɹʌl/",
-      "example_sentence": "The several is very good.",
+      "example_sentence": "She called several times but got no answer.",
       "cefr_level": "A2"
     },
     {
@@ -390,7 +390,7 @@
       "word": "light",
       "pos": "adjective",
       "ipa_strong": "/laɪt/",
-      "example_sentence": "It is very light today.",
+      "example_sentence": "The bag is light enough to carry all day.",
       "cefr_level": "A2"
     },
     {
@@ -398,7 +398,7 @@
       "word": "develop",
       "pos": "verb",
       "ipa_strong": "/dɪvɛlʌp/",
-      "example_sentence": "I develop every day here.",
+      "example_sentence": "The team is working hard to develop a new app.",
       "cefr_level": "A2"
     },
     {
@@ -406,7 +406,7 @@
       "word": "remember",
       "pos": "verb",
       "ipa_strong": "/ɹɪmɛmbɜr/",
-      "example_sentence": "I remember every day here.",
+      "example_sentence": "Do you remember where you put the keys?",
       "cefr_level": "B1"
     },
     {
@@ -414,7 +414,7 @@
       "word": "bit",
       "pos": "noun",
       "ipa_strong": "/bɪt/",
-      "example_sentence": "The bit is very good.",
+      "example_sentence": "Can you move a bit to the left?",
       "cefr_level": "B1"
     },
     {
@@ -422,7 +422,7 @@
       "word": "share",
       "pos": "verb",
       "ipa_strong": "/ʃɛɹ/",
-      "example_sentence": "I share every day here.",
+      "example_sentence": "She shared her notes with the rest of the class.",
       "cefr_level": "B1"
     },
     {
@@ -430,7 +430,7 @@
       "word": "real",
       "pos": "adjective",
       "ipa_strong": "/ɹiːl/",
-      "example_sentence": "It is very real today.",
+      "example_sentence": "Is that a real diamond or just glass?",
       "cefr_level": "B1"
     },
     {
@@ -438,7 +438,7 @@
       "word": "answer",
       "pos": "verb",
       "ipa_strong": "/ænsɜr/",
-      "example_sentence": "I answer every day here.",
+      "example_sentence": "Please answer the question in complete sentences.",
       "cefr_level": "B1"
     },
     {
@@ -446,7 +446,7 @@
       "word": "sit",
       "pos": "verb",
       "ipa_strong": "/sɪt/",
-      "example_sentence": "I sit every day here.",
+      "example_sentence": "Please sit down and make yourself comfortable.",
       "cefr_level": "B1"
     },
     {
@@ -454,7 +454,7 @@
       "word": "figure",
       "pos": "noun",
       "ipa_strong": "/fɪɡjɜr/",
-      "example_sentence": "The figure is very good.",
+      "example_sentence": "The report showed a figure of over two million dollars.",
       "cefr_level": "B1"
     },
     {
@@ -462,7 +462,7 @@
       "word": "letter",
       "pos": "noun",
       "ipa_strong": "/lɛtɜr/",
-      "example_sentence": "The letter is very good.",
+      "example_sentence": "She received a letter from her old friend abroad.",
       "cefr_level": "B1"
     },
     {
@@ -470,7 +470,7 @@
       "word": "decide",
       "pos": "verb",
       "ipa_strong": "/dɪsaɪd/",
-      "example_sentence": "I decide every day here.",
+      "example_sentence": "We need to decide before the deadline tomorrow.",
       "cefr_level": "B1"
     },
     {
@@ -478,7 +478,7 @@
       "word": "language",
       "pos": "noun",
       "ipa_strong": "/læŋɡwʌdʒ/",
-      "example_sentence": "The language is very good.",
+      "example_sentence": "Learning a new language takes time and practice.",
       "cefr_level": "B1"
     },
     {
@@ -486,7 +486,7 @@
       "word": "subject",
       "pos": "noun",
       "ipa_strong": "/sʌbdʒɛkt/",
-      "example_sentence": "The subject is very good.",
+      "example_sentence": "Math was her favorite subject in school.",
       "cefr_level": "B1"
     },
     {
@@ -494,7 +494,7 @@
       "word": "class",
       "pos": "noun",
       "ipa_strong": "/klæs/",
-      "example_sentence": "The class is very good.",
+      "example_sentence": "The class starts at eight o'clock every morning.",
       "cefr_level": "B1"
     },
     {
@@ -502,7 +502,7 @@
       "word": "development",
       "pos": "noun",
       "ipa_strong": "/dɪvɛlʌpmʌnt/",
-      "example_sentence": "The development is very good.",
+      "example_sentence": "The city's development over the last decade has been remarkable.",
       "cefr_level": "B1"
     },
     {
@@ -510,7 +510,7 @@
       "word": "town",
       "pos": "noun",
       "ipa_strong": "/taʊn/",
-      "example_sentence": "The town is very good.",
+      "example_sentence": "She grew up in a small town near the coast.",
       "cefr_level": "B1"
     },
     {
@@ -518,7 +518,7 @@
       "word": "half",
       "pos": "determiner",
       "ipa_strong": "/hæf/",
-      "example_sentence": "I need half new book.",
+      "example_sentence": "I only ate half of my sandwich because I wasn't hungry.",
       "cefr_level": "B1"
     },
     {
@@ -526,7 +526,7 @@
       "word": "minute",
       "pos": "noun",
       "ipa_strong": "/mɪnʌt/",
-      "example_sentence": "The minute is very good.",
+      "example_sentence": "Can you wait just one minute while I finish this?",
       "cefr_level": "B1"
     },
     {
@@ -534,7 +534,7 @@
       "word": "food",
       "pos": "noun",
       "ipa_strong": "/fuːd/",
-      "example_sentence": "The food is very good.",
+      "example_sentence": "The food at that restaurant is always fresh.",
       "cefr_level": "B1"
     },
     {
@@ -542,7 +542,7 @@
       "word": "break",
       "pos": "verb",
       "ipa_strong": "/bɹeɪk/",
-      "example_sentence": "I break every day here.",
+      "example_sentence": "Be careful not to break the glass.",
       "cefr_level": "B1"
     },
     {
@@ -550,31 +550,31 @@
       "word": "clear",
       "pos": "adjective",
       "ipa_strong": "/klɪɹ/",
-      "example_sentence": "It is very clear today.",
+      "example_sentence": "The instructions were clear and easy to follow.",
       "cefr_level": "B1"
     },
     {
       "rank": 370,
       "word": "future",
-      "pos": "adjective",
+      "pos": "noun",
       "ipa_strong": "/fjuːtʃɜr/",
-      "example_sentence": "It is very future today.",
+      "example_sentence": "Nobody can predict what the future will bring.",
       "cefr_level": "B1"
     },
     {
       "rank": 371,
       "word": "either",
-      "pos": "noun",
+      "pos": "conjunction",
       "ipa_strong": "/iːðɜr/",
-      "example_sentence": "The either is very good.",
+      "example_sentence": "You can pay either by cash or by card.",
       "cefr_level": "B1"
     },
     {
       "rank": 372,
       "word": "ago",
-      "pos": "noun",
+      "pos": "adverb",
       "ipa_strong": "/ʌɡoʊ/",
-      "example_sentence": "The ago is very good.",
+      "example_sentence": "We moved to this city three years ago.",
       "cefr_level": "B1"
     },
     {
@@ -582,7 +582,7 @@
       "word": "per",
       "pos": "preposition",
       "ipa_strong": "/pɜr/",
-      "example_sentence": "It is per the box now.",
+      "example_sentence": "The speed limit is ninety kilometers per hour.",
       "cefr_level": "B1"
     },
     {
@@ -590,7 +590,7 @@
       "word": "remain",
       "pos": "verb",
       "ipa_strong": "/ɹɪmeɪn/",
-      "example_sentence": "I remain every day here.",
+      "example_sentence": "Please remain seated until the plane has stopped.",
       "cefr_level": "B1"
     },
     {
@@ -598,7 +598,7 @@
       "word": "top",
       "pos": "noun",
       "ipa_strong": "/tɑp/",
-      "example_sentence": "The top is very good.",
+      "example_sentence": "Her name was at the top of the list.",
       "cefr_level": "B1"
     },
     {
@@ -606,7 +606,7 @@
       "word": "among",
       "pos": "preposition",
       "ipa_strong": "/ʌmʌŋ/",
-      "example_sentence": "It is among the box now.",
+      "example_sentence": "She is well-known among her colleagues.",
       "cefr_level": "B1"
     },
     {
@@ -614,7 +614,7 @@
       "word": "win",
       "pos": "verb",
       "ipa_strong": "/wɪn/",
-      "example_sentence": "I win every day here.",
+      "example_sentence": "Our team worked hard to win the championship.",
       "cefr_level": "B1"
     },
     {
@@ -622,7 +622,7 @@
       "word": "color",
       "pos": "noun",
       "ipa_strong": "/kʌlɜr/",
-      "example_sentence": "The color is very good.",
+      "example_sentence": "What color do you want to paint the walls?",
       "cefr_level": "B1"
     },
     {
@@ -630,7 +630,7 @@
       "word": "involve",
       "pos": "verb",
       "ipa_strong": "/ɪnvɑlv/",
-      "example_sentence": "I involve every day here.",
+      "example_sentence": "The project will involve a lot of research and teamwork.",
       "cefr_level": "B1"
     },
     {
@@ -638,7 +638,7 @@
       "word": "reach",
       "pos": "verb",
       "ipa_strong": "/ɹiːtʃ/",
-      "example_sentence": "I reach every day here.",
+      "example_sentence": "We should reach the airport at least two hours early.",
       "cefr_level": "B1"
     },
     {
@@ -646,7 +646,7 @@
       "word": "social",
       "pos": "adjective",
       "ipa_strong": "/soʊʃʌl/",
-      "example_sentence": "It is very social today.",
+      "example_sentence": "She has strong social skills and makes friends easily.",
       "cefr_level": "B1"
     },
     {
@@ -654,7 +654,7 @@
       "word": "period",
       "pos": "noun",
       "ipa_strong": "/pɪɹiːʌd/",
-      "example_sentence": "The period is very good.",
+      "example_sentence": "The company grew quickly during that period.",
       "cefr_level": "B1"
     },
     {
@@ -662,7 +662,7 @@
       "word": "across",
       "pos": "preposition",
       "ipa_strong": "/ʌkɹɔs/",
-      "example_sentence": "It is across the box now.",
+      "example_sentence": "They walked across the bridge to reach the other side.",
       "cefr_level": "B1"
     },
     {
@@ -670,7 +670,7 @@
       "word": "note",
       "pos": "verb",
       "ipa_strong": "/noʊt/",
-      "example_sentence": "I note every day here.",
+      "example_sentence": "Please note that the deadline has been moved to Friday.",
       "cefr_level": "B1"
     },
     {
@@ -678,7 +678,7 @@
       "word": "history",
       "pos": "noun",
       "ipa_strong": "/hɪstɜriː/",
-      "example_sentence": "The history is very good.",
+      "example_sentence": "He studied history to understand how the world changed.",
       "cefr_level": "B1"
     },
     {
@@ -686,7 +686,7 @@
       "word": "create",
       "pos": "verb",
       "ipa_strong": "/kɹiːeɪt/",
-      "example_sentence": "I create every day here.",
+      "example_sentence": "She used the app to create a short video for her class.",
       "cefr_level": "B1"
     },
     {
@@ -694,7 +694,7 @@
       "word": "drive",
       "pos": "verb",
       "ipa_strong": "/dɹaɪv/",
-      "example_sentence": "I drive every day here.",
+      "example_sentence": "He drives to work every day because there is no bus.",
       "cefr_level": "B1"
     },
     {
@@ -702,7 +702,7 @@
       "word": "along",
       "pos": "preposition",
       "ipa_strong": "/ʌlɔŋ/",
-      "example_sentence": "It is along the box now.",
+      "example_sentence": "We walked along the river until we found a quiet spot.",
       "cefr_level": "B1"
     },
     {
@@ -710,7 +710,7 @@
       "word": "type",
       "pos": "noun",
       "ipa_strong": "/taɪp/",
-      "example_sentence": "The type is very good.",
+      "example_sentence": "What type of music do you usually listen to?",
       "cefr_level": "B1"
     },
     {
@@ -718,7 +718,7 @@
       "word": "sound",
       "pos": "verb",
       "ipa_strong": "/saʊnd/",
-      "example_sentence": "I sound every day here.",
+      "example_sentence": "That plan sounds like a great idea.",
       "cefr_level": "B1"
     },
     {
@@ -726,7 +726,7 @@
       "word": "eye",
       "pos": "noun",
       "ipa_strong": "/aɪ/",
-      "example_sentence": "The eye is very good.",
+      "example_sentence": "She had a piece of dust in her eye.",
       "cefr_level": "B1"
     },
     {
@@ -734,7 +734,7 @@
       "word": "music",
       "pos": "noun",
       "ipa_strong": "/mjuːzɪk/",
-      "example_sentence": "The music is very good.",
+      "example_sentence": "She listens to music while she studies.",
       "cefr_level": "B1"
     },
     {
@@ -742,7 +742,7 @@
       "word": "game",
       "pos": "noun",
       "ipa_strong": "/ɡeɪm/",
-      "example_sentence": "The game is very good.",
+      "example_sentence": "The kids played a board game after dinner.",
       "cefr_level": "B1"
     },
     {
@@ -750,7 +750,7 @@
       "word": "political",
       "pos": "adjective",
       "ipa_strong": "/pʌlɪtʌkʌl/",
-      "example_sentence": "It is very political today.",
+      "example_sentence": "The political situation in the country changed rapidly.",
       "cefr_level": "B1"
     },
     {
@@ -758,7 +758,7 @@
       "word": "free",
       "pos": "adjective",
       "ipa_strong": "/fɹiː/",
-      "example_sentence": "It is very free today.",
+      "example_sentence": "Admission to the museum is free on Sundays.",
       "cefr_level": "B1"
     },
     {
@@ -766,7 +766,7 @@
       "word": "receive",
       "pos": "verb",
       "ipa_strong": "/ɹʌsiːv/",
-      "example_sentence": "I receive every day here.",
+      "example_sentence": "Did you receive the confirmation email?",
       "cefr_level": "B1"
     },
     {
@@ -774,7 +774,7 @@
       "word": "moment",
       "pos": "noun",
       "ipa_strong": "/moʊmʌnt/",
-      "example_sentence": "The moment is very good.",
+      "example_sentence": "Wait a moment — I need to grab my bag.",
       "cefr_level": "B1"
     },
     {
@@ -782,7 +782,7 @@
       "word": "sale",
       "pos": "noun",
       "ipa_strong": "/seɪl/",
-      "example_sentence": "The sale is very good.",
+      "example_sentence": "The store is having a big sale this weekend.",
       "cefr_level": "B1"
     },
     {
@@ -790,15 +790,15 @@
       "word": "policy",
       "pos": "noun",
       "ipa_strong": "/pɑlʌsiː/",
-      "example_sentence": "The policy is very good.",
+      "example_sentence": "The company changed its return policy last month.",
       "cefr_level": "B1"
     },
     {
       "rank": 400,
       "word": "further",
-      "pos": "noun",
+      "pos": "adverb",
       "ipa_strong": "/fɜrðɜr/",
-      "example_sentence": "The further is very good.",
+      "example_sentence": "We need to look further into this before making a decision.",
       "cefr_level": "B1"
     }
   ]

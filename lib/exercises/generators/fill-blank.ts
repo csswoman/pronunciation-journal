@@ -2,7 +2,7 @@ import type { FillBlankExercise } from '@/lib/exercises/types'
 import type { WordBankEntry } from '@/lib/word-bank/types'
 import type { CEFRLevel } from '@/lib/exercises/cefr'
 import { normalizeCEFR } from '@/lib/exercises/cefr'
-import { exerciseId, blankWord, pick, shuffle } from '@/lib/exercises/utils'
+import { exerciseId, blankWord, hasEnoughContext, pick, shuffle } from '@/lib/exercises/utils'
 
 const DISTRACTOR_COUNT = 3
 
@@ -16,7 +16,8 @@ export function generateFillBlankFromWordBank(
 ): FillBlankExercise[] {
   const usable = entries.filter(e => {
     if (!e.example || !e.text) return false
-    return blankWord(e.example, e.text) !== null
+    const blanked = blankWord(e.example, e.text)
+    return blanked !== null && hasEnoughContext(blanked)
   })
 
   const exercises: FillBlankExercise[] = pick(usable, count).flatMap(entry => {
@@ -36,7 +37,7 @@ export function generateFillBlankFromWordBank(
       id: exerciseId('fill_blank', entry.id, entry.text),
       type: 'fill_blank',
       exerciseType: { domain: 'vocabulary', mode: 'fill_blank', variant: 'sentence' },
-      sourceRef: { source: 'word_bank', id: entry.id },
+      sourceRef: { source: entry.source === 'core1k' ? 'core1k' : 'word_bank', id: entry.id },
       level,
       sentence,
       answer: entry.text,

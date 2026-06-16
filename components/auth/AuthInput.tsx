@@ -1,7 +1,7 @@
 "use client";
 
 import { Eye, EyeOff, AlertCircle } from "lucide-react";
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 type InputType = "email" | "password" | "text";
 
@@ -17,6 +17,9 @@ interface AuthInputProps {
   error?: string;
 }
 
+// Large bullet character — renders at full font-size unlike browser password glyphs
+const BULLET = "●";
+
 export function AuthInput({
   type,
   label,
@@ -29,37 +32,70 @@ export function AuthInput({
   error,
 }: AuthInputProps) {
   const [showPassword, setShowPassword] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const inputId = label.toLowerCase().replace(/\s+/g, "-");
+  const isPasswordField = type === "password";
+  const masked = isPasswordField && !showPassword;
+
   const baseClass =
-    "w-full bg-surface-sunken rounded-lg text-fg px-4 py-3 outline-none transition-all placeholder:text-fg-subtle focus:bg-surface-raised focus-visible:ring-2 focus-visible:ring-offset-2";
+    "w-full bg-surface-sunken rounded-lg text-fg text-base px-4 py-3 outline-none transition-all placeholder:text-fg-subtle focus:bg-surface-raised focus-visible:ring-2 focus-visible:ring-offset-2 pr-10";
   const borderClass = error
     ? "border border-error focus:border-error focus-visible:ring-error"
     : "border border-border-subtle focus:border-primary focus-visible:ring-primary";
-  const inputClass = `${baseClass} ${borderClass}`;
 
-  const isPasswordField = type === "password";
-  const inputType = isPasswordField ? (showPassword ? "text" : "password") : type;
+  // When masked, show bullets at display size — track-tight keeps them readable
+  const maskedClass = masked ? "tracking-[0.2em]" : "";
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!masked) { onChange(e.target.value); return; }
+
+    const raw = e.target.value;
+    const prev = value;
+    const prevDisplay = BULLET.repeat(prev.length);
+
+    // Detect what changed by comparing display string to new value
+    if (raw.length > prevDisplay.length) {
+      // Characters added — extract the real chars inserted
+      const added = raw.replace(/●/g, "");
+      const cursorPos = inputRef.current?.selectionStart ?? raw.length;
+      const insertAt = cursorPos - added.length;
+      const next = prev.slice(0, insertAt) + added + prev.slice(insertAt);
+      onChange(next);
+    } else {
+      // Characters removed
+      const removed = prevDisplay.length - raw.length;
+      const cursorPos = inputRef.current?.selectionStart ?? raw.length;
+      const next = prev.slice(0, cursorPos) + prev.slice(cursorPos + removed);
+      onChange(next);
+    }
+  };
 
   return (
     <div>
-      <label htmlFor={inputId} className="block mb-2 text-tiny font-semibold tracking-widest uppercase text-fg-muted">
+      <label htmlFor={inputId} className="block mb-1.5 text-sm font-medium text-fg-muted">
         {label}
       </label>
       <div className="relative">
         <input
+          ref={inputRef}
           id={inputId}
-          type={inputType}
+          type="text"
+          inputMode={isPasswordField ? "text" : undefined}
           autoComplete={autoComplete}
           required={required}
           minLength={minLength}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
+          value={masked ? BULLET.repeat(value.length) : value}
+          onChange={handleChange}
           placeholder={placeholder}
           aria-invalid={!!error}
           aria-describedby={error ? `${inputId}-error` : undefined}
-          className={isPasswordField ? `${inputClass} ${error ? "pr-10" : "pr-10"}` : `${inputClass} ${error ? "pr-10" : ""}`}
+          // Prevent clipboard leaking real value when masked
+          onCopy={masked ? (e) => e.preventDefault() : undefined}
+          onCut={masked  ? (e) => e.preventDefault() : undefined}
+          className={[baseClass, borderClass, maskedClass].join(" ")}
         />
+
         {error && (
           <AlertCircle className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-error shrink-0" />
         )}

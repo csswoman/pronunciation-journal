@@ -29,7 +29,7 @@ export function generateReorderWordsFromWordBank(
       id: exerciseId('reorder_words', entry.id, sentence),
       type: 'reorder_words' as const,
       exerciseType: { domain: 'vocabulary', mode: 'reorder', variant: 'sentence' } as const,
-      sourceRef: { source: 'word_bank', id: entry.id },
+      sourceRef: { source: entry.source === 'core1k' ? 'core1k' : 'word_bank', id: entry.id },
       level,
       sentence,
       tokens,

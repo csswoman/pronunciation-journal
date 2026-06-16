@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useCallback } from "react";
 import Link from "next/link";
 import { Check, ChevronRight, Lock, ArrowRight } from "lucide-react";
 import { deriveLevelView } from "@/lib/courses/progress";
@@ -24,8 +24,15 @@ interface CoursePathLevelPanelProps {
 
 export default function CoursePathLevelPanel({ level, compactHead, openUnits: openUnitsProp, onToggleUnit, electiveTracks }: CoursePathLevelPanelProps) {
   const [localOpenUnits, setLocalOpenUnits] = useState<Record<string, boolean>>({});
+  const [lockedToast, setLockedToast] = useState<string | null>(null);
   const openUnits = openUnitsProp ?? localOpenUnits;
   const { completedIds, ready, error, retry } = useCoursePathProgress(level.id);
+
+  const showLockedToast = useCallback((unitTitle: string) => {
+    setLockedToast(`Complete earlier lessons in "${unitTitle}" to unlock this unit`);
+    const t = setTimeout(() => setLockedToast(null), 3000);
+    return () => clearTimeout(t);
+  }, []);
 
   const derived = useMemo(
     () => (ready ? deriveLevelView(level, completedIds) : null),
@@ -49,9 +56,7 @@ export default function CoursePathLevelPanel({ level, compactHead, openUnits: op
     return (
       <div className="course-path__load-error">
         <p>Couldn't load your progress. Check your connection and try again.</p>
-        <button type="button" className="course-path__load-retry" onClick={retry}>
-          Try again
-        </button>
+        <button type="button" className="course-path__load-retry" onClick={retry}>Try again</button>
       </div>
     );
   }
@@ -74,6 +79,11 @@ export default function CoursePathLevelPanel({ level, compactHead, openUnits: op
 
   return (
     <>
+      {lockedToast && (
+        <div className="course-path__locked-toast" role="status" aria-live="polite">
+          {lockedToast}
+        </div>
+      )}
       <div className={cn("course-path__head", compactHead && "course-path__head--compact")}>
         <h2>{derived.level.title}</h2>
         <div className="course-path__prog">
@@ -135,10 +145,10 @@ export default function CoursePathLevelPanel({ level, compactHead, openUnits: op
               <button
                 type="button"
                 className="course-path__urow"
-                onClick={() => toggleUnit(u.unit.id)}
-                aria-expanded={open}
-                aria-controls={`unit-lessons-${u.unit.id}`}
-                disabled={u.status === "locked"}
+                onClick={() => u.status === "locked" ? showLockedToast(u.unit.title) : toggleUnit(u.unit.id)}
+                aria-expanded={u.status === "locked" ? undefined : open}
+                aria-controls={u.status === "locked" ? undefined : `unit-lessons-${u.unit.id}`}
+                aria-disabled={u.status === "locked" ? "true" : undefined}
               >
                 <div
                   className="course-path__ring"
@@ -158,7 +168,7 @@ export default function CoursePathLevelPanel({ level, compactHead, openUnits: op
                   <div className="course-path__un">{u.unit.label}</div>
                   <div className="course-path__ut">{u.unit.title}</div>
                   <div className="course-path__um">
-                    {u.unit.lessons.length} courses
+                    {u.unit.lessons.length} lessons
                     {u.unit.isOptionalSection && (
                       <span className="course-path__optional-tag">Optional</span>
                     )}

@@ -15,7 +15,7 @@ export default async function ProgressPage() {
 
   return (
     <PageLayout cardWrapper={false}>
-      <div className="relative z-[1] mx-auto flex w-full max-w-[1080px] flex-col gap-7 px-6 pb-18">
+      <div className="relative z-[1] flex w-full flex-col gap-7 px-6 pb-18">
         <PageIntro />
         {!user ? <GuestBanner /> : <ProgressDashboard userId={user.id} />}
       </div>

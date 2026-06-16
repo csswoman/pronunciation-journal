@@ -29,26 +29,20 @@ export function InstallBanner() {
   };
 
   return (
-    <div className="flex items-center justify-between gap-3 px-4 py-3 mb-4 rounded-xl bg-primary-soft border border-primary/20">
-      <div className="flex items-center gap-2 min-w-0">
-        <span className="text-base shrink-0">📲</span>
-        <p className="text-sm font-medium text-fg truncate">Install the app for offline practice</p>
-      </div>
-      <div className="flex items-center gap-2 shrink-0">
-        <button
-          onClick={handleInstall}
-          className="text-sm font-semibold text-primary hover:text-primary-hover transition-colors"
-        >
-          Install
-        </button>
-        <button
-          onClick={() => setDismissed(true)}
-          className="text-fg-subtle hover:text-fg transition-colors text-lg leading-none"
-          aria-label="Dismiss"
-        >
-          ×
-        </button>
-      </div>
+    <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary-soft border border-primary/20 whitespace-nowrap">
+      <button
+        onClick={handleInstall}
+        className="text-xs font-semibold text-primary hover:text-primary-hover transition-colors"
+      >
+        Install the app
+      </button>
+      <button
+        onClick={() => setDismissed(true)}
+        className="text-fg-subtle hover:text-fg transition-colors text-sm leading-none"
+        aria-label="Dismiss"
+      >
+        ×
+      </button>
     </div>
   );
 }

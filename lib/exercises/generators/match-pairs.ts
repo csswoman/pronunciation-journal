@@ -77,7 +77,7 @@ export function generateMatchPairsFromWordBank(
       id: exerciseId('match_pairs', groupKey, 'definition'),
       type: 'match_pairs',
       exerciseType: { domain: 'vocabulary', mode: 'match_pairs' },
-      sourceRef: { source: 'word_bank', id: group[0].id },
+      sourceRef: { source: group[0].source === 'core1k' ? 'core1k' : 'word_bank', id: group[0].id },
       pairs,
     })
   }

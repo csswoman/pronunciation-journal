@@ -130,7 +130,7 @@ export default function SoundLabPage() {
 
   return (
     <div className="sound-lab min-h-screen">
-      <div className="mx-auto max-w-[1280px] px-4 pt-5 pb-14 sm:px-6 sm:pt-10 lg:px-10">
+      <div className="px-4 pt-5 pb-14 sm:px-6 sm:pt-10 lg:px-10">
         <header className="sound-lab__page-header">
 
           <SoundLabHeader

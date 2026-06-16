@@ -133,28 +133,29 @@ export function SessionExercisingBody({ state, handlers, lessonFooter }: Session
                 </div>
               )}
               {lessonFooter}
+              <ExitConfirmSheet
+                open={showExitConfirm}
+                onConfirm={() => { setShowExitConfirm(false); onExit(buildPartialResult(results)) }}
+                onCancel={() => setShowExitConfirm(false)}
+                backdrop={false}
+              />
             </>
           }
         >
           {sessionBody}
         </PhonemeFocusShell>
-        <ExitConfirmSheet
-          open={showExitConfirm}
-          onConfirm={() => { setShowExitConfirm(false); onExit(buildPartialResult(results)) }}
-          onCancel={() => setShowExitConfirm(false)}
-        />
       </>
     )
   }
 
   return (
-    <>
-      <div className="w-full max-w-md mx-auto flex flex-col gap-6">{sessionBody}</div>
+    <div className="relative w-full max-w-md mx-auto flex flex-col gap-6">
+      {sessionBody}
       <ExitConfirmSheet
         open={showExitConfirm}
         onConfirm={() => { setShowExitConfirm(false); onExit(buildPartialResult(results)) }}
         onCancel={() => setShowExitConfirm(false)}
       />
-    </>
+    </div>
   )
 }

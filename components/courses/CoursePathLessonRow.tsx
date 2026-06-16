@@ -49,16 +49,12 @@ export default function CoursePathLessonRow({ lesson, levelId }: CoursePathLesso
     <span className="course-path__lt" title={lesson.title}>{lesson.title}</span>
   );
 
+  const lockDescId = isLocked ? `lock-desc-${lesson.id}` : undefined;
+
   return (
     <div
       className={className}
-      title={
-        isLocked
-          ? "Complete the previous lessons to unlock this one"
-          : lesson.isOptional
-          ? "Optional — part of the extended curriculum"
-          : undefined
-      }
+      aria-describedby={lockDescId}
     >
       <CoursePathPriorityMarks priority={lesson.priority} />
       <div className="course-path__st" role="img" aria-label={stateLabel}>
@@ -75,7 +71,10 @@ export default function CoursePathLessonRow({ lesson, levelId }: CoursePathLesso
       {titleEl}
       {lesson.soundLab && <CoursePathSoundLabLink />}
       {isLocked && (
-        <span className="course-path__locked-label" aria-hidden>Locked</span>
+        <>
+          <span className="course-path__locked-label" aria-hidden>Locked</span>
+          <span id={lockDescId} className="sr-only">Complete earlier lessons to unlock</span>
+        </>
       )}
       {isCurrent && canOpen && (
         <Link href={href} className="course-path__lk">

@@ -65,7 +65,7 @@ async function WordsContent() {
 
 function WordsSkeleton() {
   return (
-    <div className="words-lexicon p-4 max-w-5xl mx-auto">
+    <div className="words-lexicon p-4">
       {/* Topbar skeleton */}
       <div className="flex items-center justify-between mb-6">
         <div className="shimmer h-8 w-32 rounded-lg bg-surface-sunken" />

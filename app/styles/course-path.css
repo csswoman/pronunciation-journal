@@ -16,22 +16,19 @@
 /* ── Page shell ──────────────────────────────────────────── */
 
 .course-path__wrap {
-  max-width: 38rem;
+  max-width: 72rem;
   margin-inline: auto;
-  padding: var(--space-6) var(--space-5) var(--space-16);
+  padding: var(--space-8) var(--space-6) var(--space-16);
   display: flex;
   flex-direction: column;
   gap: 0;
 }
 
-/* Zone separations — varied rhythm instead of uniform gap */
-.course-path__hero   { margin-bottom: var(--space-5); }
+/* Zone separations: hero → spine → panel → why → legend */
+.course-path__hero   { margin-bottom: var(--space-6); }
+.course-path__spine  { margin-bottom: var(--space-3); }
+.course-path__why    { margin-top: var(--space-10); margin-bottom: var(--space-6); }
 .course-path__legend { margin-bottom: var(--space-4); }
-.course-path__why    { margin-bottom: var(--space-8); }
-
-/* Spine + panel are one logical unit — tight coupling */
-.course-path__spine     { margin-bottom: var(--space-3); }
-/* tabpanel has no extra margin; electives adds its own top spacing */
 
 /* ── Hero header ─────────────────────────────────────────── */
 
@@ -59,15 +56,13 @@
 /* ── Legend ──────────────────────────────────────────────── */
 
 .course-path__legend {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--space-2) var(--space-4);
-  padding: var(--space-3) var(--space-4);
-  background: var(--surface-raised);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-lg);
-  font-size: 0.82rem;
-  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-6);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--border-subtle);
+  font-size: 0.8rem;
+  color: var(--text-tertiary);
 }
 
 .course-path__lg {
@@ -264,9 +259,12 @@
   background: var(--surface-sunken);
 }
 
-.course-path__urow:disabled {
-  cursor: not-allowed;
-  pointer-events: none;
+.course-path__urow[aria-disabled="true"] {
+  cursor: default;
+}
+
+.course-path__urow[aria-disabled="true"]:hover {
+  background: transparent;
 }
 
 .course-path__urow:focus-visible {
@@ -384,10 +382,8 @@
   color: inherit;
 }
 
-.course-path__lesson:disabled,
 .course-path__lesson--locked {
-  pointer-events: none;
-  opacity: 0.55;
+  opacity: 0.6;
 }
 
 .course-path__locked-label {
@@ -483,6 +479,7 @@
   display: flex;
   align-items: center;
   gap: var(--space-2);
+  width: 100%;
   padding: var(--space-3) var(--space-4);
   cursor: pointer;
   font-family: var(--font-editorial), Georgia, serif;
@@ -491,6 +488,9 @@
   color: var(--text-secondary);
   transition: color 0.15s;
   user-select: none;
+  background: transparent;
+  border: none;
+  text-align: left;
 }
 
 .course-path__why-summary:focus-visible {
@@ -499,17 +499,13 @@
   border-radius: var(--radius-md);
 }
 
-.course-path__why-summary::-webkit-details-marker {
-  display: none;
-}
-
 .course-path__why-chev {
   flex-shrink: 0;
   color: var(--text-tertiary);
   transition: transform 0.18s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
-.course-path__why[open] .course-path__why-chev {
+.course-path__why-chev--open {
   transform: rotate(90deg);
 }
 
@@ -1154,7 +1150,7 @@
 
 @media (max-width: 480px) {
   .course-path__wrap {
-    padding-top: var(--space-5);
+    padding-top: var(--space-6);
     padding-inline: var(--space-4);
   }
 

@@ -13,9 +13,13 @@ interface AuthButtonProps {
 export function AuthButton({ label, pending, type = "submit", variant = "primary", onClick }: AuthButtonProps) {
   if (variant === "secondary") {
     return (
-      <Button type={type} variant="ghost" onClick={onClick} className="text-sm text-[var(--primary)] hover:underline">
+      <button
+        type={type}
+        onClick={onClick}
+        className="text-sm text-primary hover:underline underline-offset-2 transition-colors"
+      >
         {label}
-      </Button>
+      </button>
     );
   }
 
@@ -23,11 +27,12 @@ export function AuthButton({ label, pending, type = "submit", variant = "primary
     <Button
       type={type}
       variant="primary"
-      disabled={pending}
+      size="lg"
+      isLoading={pending}
       fullWidth
       onClick={onClick}
     >
-      {pending ? "Please wait…" : `${label} →`}
+      {pending ? "Please wait…" : label}
     </Button>
   );
 }

@@ -10,9 +10,7 @@ export default function DashboardLayout({
     <div className="flex h-screen bg-[var(--page-bg)] overflow-hidden">
       <Sidebar className="hidden lg:flex flex-col" />
       <main className="main-scrollbar flex-1 overflow-y-auto pb-20 lg:pb-0">
-        <div className="max-w-screen-xl mx-auto px-6 lg:px-10 py-8 lg:py-9 bg-[var(--card-bg)] rounded-2xl my-10 !p-0">
-          {children}
-        </div>
+        {children}
       </main>
       <BottomNav className="lg:hidden" />
     </div>

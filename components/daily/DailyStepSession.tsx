@@ -36,10 +36,18 @@ export default function DailyStepSession({
 
   if (!started && step.ipa) {
     return (
-      <PhonemeLessonIntro
-        ipa={step.ipa}
-        onStart={() => setStarted(true)}
-      />
+      <div className="phoneme-focus">
+        <div className="phoneme-focus__wrap">
+          <div className="phoneme-focus__phone">
+            <div className="phoneme-focus__stage phoneme-focus__stage--flush overflow-y-auto">
+              <PhonemeLessonIntro
+                ipa={step.ipa}
+                onStart={() => setStarted(true)}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
     )
   }
 

@@ -63,7 +63,7 @@ export default async function HomePage() {
     : null
 
   return (
-    <PageLayout className="max-w-[1080px] mx-auto">
+    <PageLayout>
       <HomeLayout
         streak={dailyStreak}
         wordsDueCount={dueCount}
