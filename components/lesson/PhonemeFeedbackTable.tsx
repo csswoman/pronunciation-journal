@@ -5,7 +5,9 @@
 //   <PhonemeRow />   — un fonema: SONIDO | DIJISTE/¡Excelente! + articulación
 // </PhonemeFeedbackTable>
 
+import { Volume2 } from 'lucide-react'
 import { getArticulation } from '@/lib/pronunciation/articulation'
+import { playIpaSound } from '@/lib/pronunciation/ipa-audio'
 import type { PhonemeAlignment, WordResult } from '@/lib/types'
 
 interface Props {
@@ -18,15 +20,25 @@ interface FlatPhoneme extends PhonemeAlignment {
 
 // --- PhonemeRow ---
 function PhonemeRow({ p }: { p: FlatPhoneme }) {
-  const expectedIpa = p.ipa ? `/${p.ipa}/` : `/${p.phoneme}/`
+  const ipa = p.ipa ?? p.phoneme
+  const expectedIpa = `/${ipa}/`
   const isCorrect = p.status === 'correct'
 
-  const articulation = getArticulation(p.ipa ?? p.phoneme)
+  const articulation = getArticulation(ipa)
 
   return (
     <div role="row" className="grid grid-cols-[72px_1fr] gap-2 px-4 py-3 border-b border-[var(--border-subtle)] last:border-b-0">
-      <div role="cell" className="text-lg font-semibold text-[var(--text-primary)] [font-family:var(--font-ipa),monospace]">
-        {expectedIpa}
+      <div role="cell">
+        <button
+          type="button"
+          onMouseEnter={() => playIpaSound(ipa)}
+          onClick={() => playIpaSound(ipa)}
+          aria-label={`Escuchar el sonido ${expectedIpa}`}
+          className="group flex items-center gap-1 text-left text-lg font-semibold text-[var(--text-primary)] [font-family:var(--font-ipa),monospace] cursor-pointer bg-transparent border-none p-0"
+        >
+          {expectedIpa}
+          <Volume2 size={12} aria-hidden className="opacity-40 transition-opacity group-hover:opacity-80" />
+        </button>
       </div>
       {isCorrect ? (
         <div role="cell" className="text-sm font-semibold text-[var(--success)]">¡Excelente!</div>

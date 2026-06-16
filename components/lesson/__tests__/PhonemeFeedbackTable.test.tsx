@@ -1,8 +1,13 @@
 // @vitest-environment jsdom
-import { describe, it, expect } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { describe, it, expect, vi } from 'vitest'
+import { render, screen, fireEvent } from '@testing-library/react'
 import { PhonemeFeedbackTable } from '../PhonemeFeedbackTable'
 import type { WordResult } from '@/lib/types'
+
+const playIpaSound = vi.fn()
+vi.mock('@/lib/pronunciation/ipa-audio', () => ({
+  playIpaSound: (ipa: string) => playIpaSound(ipa),
+}))
 
 const wordResults: WordResult[] = [
   {
@@ -42,5 +47,13 @@ describe('PhonemeFeedbackTable', () => {
     const noPhonemes: WordResult[] = [{ expected: 'a', got: 'a', status: 'correct' }]
     const { container } = render(<PhonemeFeedbackTable wordResults={noPhonemes} />)
     expect(container).toBeEmptyDOMElement()
+  })
+
+  it('reproduce el sonido IPA correcto al pasar el mouse por la columna SONIDO', () => {
+    playIpaSound.mockClear()
+    render(<PhonemeFeedbackTable wordResults={wordResults} />)
+    // El botón del fonema /æ/ esperado reproduce su sonido al hover
+    fireEvent.mouseEnter(screen.getByRole('button', { name: /escuchar el sonido \/æ\//i }))
+    expect(playIpaSound).toHaveBeenCalledWith('æ')
   })
 })

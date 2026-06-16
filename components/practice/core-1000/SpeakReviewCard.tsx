@@ -225,6 +225,7 @@ export function SpeakReviewCard({ entry, onGraded }: Props) {
             accuracy={scored.score}
             feedback={getFeedbackMessage(scored.score, 70)}
             xpEarned={calculateXP(scored.score)}
+            showPhonemeDetail={false}
           />
           <PhonemeFeedbackTable wordResults={scored.wordResults} />
           <div className="flex gap-2">
