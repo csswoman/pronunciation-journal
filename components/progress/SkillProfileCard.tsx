@@ -30,7 +30,7 @@ function SoundLabPanel({ phonemes }: { phonemes: SkillProfileData['weakestPhonem
   if (phonemes.length === 0) {
     return (
       <ProgressCard>
-        <ProgressCardHeader icon={<Volume2 size={16} />} eyebrow="Sound Lab" title="Weakest sounds" />
+        <ProgressCardHeader icon={<Volume2 size={16} />} eyebrow="Sound Lab" title="Lowest mastery" />
         <p className="text-xs text-fg-muted">
           Practice phoneme exercises to see your weakest sounds.
         </p>
@@ -40,7 +40,7 @@ function SoundLabPanel({ phonemes }: { phonemes: SkillProfileData['weakestPhonem
 
   return (
     <ProgressCard>
-      <ProgressCardHeader icon={<Volume2 size={16} />} eyebrow="Sound Lab" title="Weakest sounds" />
+      <ProgressCardHeader icon={<Volume2 size={16} />} eyebrow="Sound Lab" title="Lowest mastery" />
       {phonemes.slice(0, 3).map((p) => (
         <ProgressStatBar
           key={p.ipa}

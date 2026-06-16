@@ -6,7 +6,7 @@ import { generateSentenceContextExercises } from '@/lib/lexicon/exercises'
 import { generateMinimalPair, generateDictation } from '@/lib/phoneme-practice/exercises'
 import { buildMixedSession, type MixedExercise } from '@/lib/phoneme-practice/mixed-session'
 import { fromGenericExercise, fromMixedExercise } from '@/lib/practice/adapters'
-import type { DailyStep, PracticeExercise } from '@/lib/practice/types'
+import type { DailyStep, PracticeContext, PracticeExercise } from '@/lib/practice/types'
 import type { MinimalPair, Sound, SoundWord } from '@/lib/phoneme-practice/types'
 import type { WordBankEntry } from '@/lib/word-bank/types'
 import {
@@ -17,7 +17,10 @@ import {
 import { dedupeByContentId, toWordEntry } from './selectors'
 
 /** Paso de repaso de palabras (solo si hay entradas en el word_bank). */
-export function buildWordReviewStep(words: WordBankEntry[]): DailyStep | null {
+export function buildWordReviewStep(
+  words: WordBankEntry[],
+  context: PracticeContext = 'daily',
+): DailyStep | null {
   if (words.length === 0) return null
 
   const { exercises: fillBlanks, skipped: fillBlankSkipped } = generateFillBlankFromWordBank(words, 2)
@@ -33,10 +36,10 @@ export function buildWordReviewStep(words: WordBankEntry[]): DailyStep | null {
   const matchPairs = generateMatchPairsFromWordBank(words, 1)
 
   const exercises = dedupeByContentId([
-    ...fillBlanks.map((ex) => fromGenericExercise(ex, 'daily')),
-    ...dictations.map((ex) => fromGenericExercise(ex, 'daily')),
-    ...reorders.map((ex) => fromGenericExercise(ex, 'daily')),
-    ...matchPairs.map((ex) => fromGenericExercise(ex, 'daily')),
+    ...fillBlanks.map((ex) => fromGenericExercise(ex, context)),
+    ...dictations.map((ex) => fromGenericExercise(ex, context)),
+    ...reorders.map((ex) => fromGenericExercise(ex, context)),
+    ...matchPairs.map((ex) => fromGenericExercise(ex, context)),
   ])
 
   if (exercises.length === 0) return null
@@ -53,14 +56,17 @@ export function buildWordReviewStep(words: WordBankEntry[]): DailyStep | null {
 }
 
 /** Paso de práctica en contexto: sentence_context desde word_bank. */
-export function buildContextPracticeStep(words: WordBankEntry[]): DailyStep | null {
+export function buildContextPracticeStep(
+  words: WordBankEntry[],
+  context: PracticeContext = 'daily',
+): DailyStep | null {
   const wordEntries = words.map(toWordEntry)
   const usable = wordEntries.filter((w) => w.exampleSentence)
   if (usable.length < 2) return null
 
   const contextExercises = generateSentenceContextExercises(usable, wordEntries)
   const exercises = dedupeByContentId(
-    contextExercises.map((ex) => fromGenericExercise(ex, 'daily')),
+    contextExercises.map((ex) => fromGenericExercise(ex, context)),
   )
   if (exercises.length === 0) return null
 
@@ -83,11 +89,12 @@ export function buildPhonemeFocusStep(
   allWordsBySoundId: Map<number, SoundWord[]>,
   pairs: MinimalPair[],
   isWeak: boolean,
+  context: PracticeContext = 'daily',
 ): DailyStep | null {
   const mixed = buildMixedSession(sound, targetWords, allSounds, allWordsBySoundId, pairs)
   const core = mixed.filter((ex: MixedExercise) => !(ex.kind === 'phoneme' && ex.data.type === 'minimal_pair'))
   const exercises = dedupeByContentId(
-    core.slice(0, PHONEME_FOCUS_EXERCISE_COUNT).map((ex) => fromMixedExercise(ex, 'daily')),
+    core.slice(0, PHONEME_FOCUS_EXERCISE_COUNT).map((ex) => fromMixedExercise(ex, context)),
   )
 
   if (exercises.length === 0) return null
@@ -105,14 +112,18 @@ export function buildPhonemeFocusStep(
 }
 
 /** Paso de pares mínimos (solo si el sonido tiene pares en el seed). */
-export function buildMinimalPairsStep(sound: Sound, pairs: MinimalPair[]): DailyStep | null {
+export function buildMinimalPairsStep(
+  sound: Sound,
+  pairs: MinimalPair[],
+  context: PracticeContext = 'daily',
+): DailyStep | null {
   if (pairs.length === 0) return null
 
   const exercises: PracticeExercise[] = []
   for (let i = 0; i < MINIMAL_PAIRS_EXERCISE_COUNT; i++) {
     const mp = generateMinimalPair(sound, pairs)
     if (mp.options.length === 0) continue
-    exercises.push(fromMixedExercise({ kind: 'phoneme', data: mp }, 'daily'))
+    exercises.push(fromMixedExercise({ kind: 'phoneme', data: mp }, context))
   }
 
   const deduped = dedupeByContentId(exercises)
@@ -130,14 +141,18 @@ export function buildMinimalPairsStep(sound: Sound, pairs: MinimalPair[]): Daily
 }
 
 /** Paso de escucha/dictado desde palabras del seed. */
-export function buildListeningStep(sound: Sound, words: SoundWord[]): DailyStep | null {
+export function buildListeningStep(
+  sound: Sound,
+  words: SoundWord[],
+  context: PracticeContext = 'daily',
+): DailyStep | null {
   if (words.length === 0) return null
 
   const exercises: PracticeExercise[] = []
   for (let i = 0; i < LISTENING_EXERCISE_COUNT; i++) {
     const dict = generateDictation(sound, words)
     if (!dict.targetWord) continue
-    exercises.push(fromMixedExercise({ kind: 'phoneme', data: dict }, 'daily'))
+    exercises.push(fromMixedExercise({ kind: 'phoneme', data: dict }, context))
   }
 
   const deduped = dedupeByContentId(exercises)

@@ -1,18 +1,12 @@
 import { Radar } from 'lucide-react'
 
 import { cn } from '@/lib/cn'
+import type { FluencyScores, SkillKey } from '@/lib/progress/fluency-scores'
+import { SKILL_KEYS } from '@/lib/progress/fluency-scores'
 
 import { ProgressCard, ProgressCardHeader } from './ProgressCard'
 
-export type SkillKey =
-  | 'pronunciation'
-  | 'grammar'
-  | 'vocabulary'
-  | 'listening'
-  | 'speaking'
-  | 'reading'
-
-export type FluencyScores = Record<SkillKey, number>
+export type { FluencyScores, SkillKey }
 
 interface Props {
   scores?: FluencyScores | null
@@ -213,7 +207,7 @@ function EmptyRadar() {
 
 export function FluencyRadarCard({ scores, comparisonLabel }: Props) {
   const isEmpty =
-    !scores || SKILL_ORDER.every((s) => !scores[s.key] || scores[s.key] <= 0)
+    !scores || SKILL_KEYS.every((s) => !scores[s] || scores[s] <= 0)
 
   return (
     <ProgressCard className="gap-5">

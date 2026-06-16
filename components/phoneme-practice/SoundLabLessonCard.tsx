@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Play, CheckCircle2 } from "lucide-react";
 import type { Lesson } from "@/lib/types";
 import { ipaFromLessonTitle } from "@/lib/sound-lab/display";
+import { MASTERY_DISPLAY_THRESHOLD } from "@/lib/phoneme-practice/mastery-pct";
 import { useSpeakWord } from "@/hooks/useSpeakWord";
 
 const CARD_PALETTES = [
@@ -79,9 +80,9 @@ export function SoundLabLessonCard({ lesson, progressPct, isWeak, staggerIndex =
   const examples = words.length > 0 ? words.slice(0, 2).map((w) => w.word) : [];
   const delayMs = Math.min(staggerIndex * 30, 400);
 
-  const isDone         = progressPct === 100;
-  const isInProgress   = progressPct !== undefined && progressPct > 0 && progressPct < 100;
-  const isNearComplete = isInProgress && progressPct >= 90;
+  const isDone         = progressPct !== undefined && progressPct >= MASTERY_DISPLAY_THRESHOLD;
+  const isInProgress   = progressPct !== undefined && progressPct > 0 && progressPct < MASTERY_DISPLAY_THRESHOLD;
+  const isNearComplete = isInProgress && progressPct >= MASTERY_DISPLAY_THRESHOLD - 5;
 
   const palette = CARD_PALETTES[hashIpa(ipa ?? title)];
 

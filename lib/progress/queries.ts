@@ -1,6 +1,25 @@
 import { createSupabaseServerClient } from '@/lib/supabase/server'
 import { getDailyStreak } from '@/lib/daily/streak'
-import { toLocalDateString, STREAK_TIMEZONE, type DailyStreakResult } from '@/lib/daily/streak-core'
+import {
+  DAILY_STREAK_THRESHOLD,
+  toLocalDateString,
+  STREAK_TIMEZONE,
+  type DailyStreakResult,
+} from '@/lib/daily/streak-core'
+import {
+  ACTIVITY_SOURCE_LABELS,
+  type ActivitySessionSummary,
+  type ActivitySource,
+  type SkillTag,
+} from '@/lib/progress/activity-types'
+import {
+  computeFluencyScores,
+  fluencyComparisonLabel,
+  type FluencyRawAnswer,
+  type FluencyScores,
+} from '@/lib/progress/fluency-scores'
+import { rankWeakestSounds } from '@/lib/phoneme-practice/mastery-pct'
+import type { UserContrastProgress } from '@/lib/phoneme-practice/types'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -60,20 +79,25 @@ export interface CoachInsights {
   avgAccuracy: number | null
 }
 
+export interface FluencyProfileData {
+  scores: FluencyScores
+  comparisonLabel?: string
+}
+
 export interface ProgressPageData {
   streak: DailyStreakResult
   dailyCompletion: DailyCompletionStats
   accuracy: AccuracyStats
   skillProfile: SkillProfileData
+  fluencyProfile: FluencyProfileData
   weeklySummary: WeeklySummaryStats
   coachInsights: CoachInsights
+  recentSessions: ActivitySessionSummary[]
 }
 
 // ── Queries ───────────────────────────────────────────────────────────────────
 
-const DAILY_THRESHOLD = 5
-
-/** How many qualifying daily-context days in a window of N days. */
+/** How many qualifying practice days in a window of N days (any context). */
 async function getDailyCompletionStats(userId: string): Promise<DailyCompletionStats> {
   const supabase = await createSupabaseServerClient()
 
@@ -84,7 +108,6 @@ async function getDailyCompletionStats(userId: string): Promise<DailyCompletionS
     .from('answer_history')
     .select('answered_at')
     .eq('user_id', userId)
-    .eq('context', 'daily')
     .not('answered_at', 'is', null)
     .gte('answered_at', since30.toISOString())
 
@@ -107,9 +130,9 @@ async function getDailyCompletionStats(userId: string): Promise<DailyCompletionS
     const day = toLocalDateString(d.toISOString(), STREAK_TIMEZONE)
     const count = countsByDay.get(day) ?? 0
     const level: ConsistencyHeatLevel =
-      count >= DAILY_THRESHOLD * 2
+      count >= DAILY_STREAK_THRESHOLD * 2
         ? 3
-        : count >= DAILY_THRESHOLD
+        : count >= DAILY_STREAK_THRESHOLD
           ? 2
           : count > 0
             ? 1
@@ -117,7 +140,7 @@ async function getDailyCompletionStats(userId: string): Promise<DailyCompletionS
 
     heatmap30.push(level)
 
-    if (count >= DAILY_THRESHOLD) {
+    if (count >= DAILY_STREAK_THRESHOLD) {
       completedDays30++
       if (i <= 6) completedDays7++
     }
@@ -201,7 +224,7 @@ async function getSkillProfileData(userId: string): Promise<SkillProfileData> {
 
     supabase
       .from('user_contrast_progress')
-      .select('contrast_id, total_attempts, correct_answers')
+      .select('contrast_id, total_attempts, correct_answers, mastery_pct')
       .eq('user_id', userId)
       .gt('total_attempts', 0)
       .order('total_attempts', { ascending: false })
@@ -228,23 +251,16 @@ async function getSkillProfileData(userId: string): Promise<SkillProfileData> {
     if (s in wordsByStatus) wordsByStatus[s]++
   }
 
-  // Aggregate contrast progress by first IPA, then show weakest sounds
-  const byIpa = new Map<string, { correct: number; total: number }>()
-  for (const r of phonemeResult.data ?? []) {
-    const [ipa] = r.contrast_id.split('|')
-    const prev = byIpa.get(ipa) ?? { correct: 0, total: 0 }
-    byIpa.set(ipa, { correct: prev.correct + r.correct_answers, total: prev.total + r.total_attempts })
-  }
+  const contrastRows = (phonemeResult.data ?? []) as Pick<
+    UserContrastProgress,
+    'contrast_id' | 'total_attempts' | 'correct_answers' | 'mastery_pct'
+  >[]
 
-  const phonemes = [...byIpa.entries()]
-    .filter(([, v]) => v.total >= 5)
-    .map(([ipa, v]) => ({
-      ipa,
-      accuracy: Math.round((v.correct / v.total) * 100),
-      totalAttempts: v.total,
-    }))
-    .sort((a, b) => a.accuracy - b.accuracy)
-    .slice(0, 5)
+  const phonemes = rankWeakestSounds(contrastRows as UserContrastProgress[], { limit: 5 }).map((r) => ({
+    ipa: r.ipa,
+    accuracy: r.mastery,
+    totalAttempts: r.totalAttempts,
+  }))
 
   // Unique Core 1000 words practiced correctly (dedupe by content_id)
   const core1000Ids = new Set((core1000Result.data ?? []).map((r) => r.content_id))
@@ -285,8 +301,109 @@ async function getCoachInsights(userId: string): Promise<CoachInsights> {
   }
 }
 
+async function getFluencyProfile(userId: string, skillProfile: SkillProfileData): Promise<FluencyProfileData> {
+  const supabase = await createSupabaseServerClient()
+  const since30 = new Date()
+  since30.setDate(since30.getDate() - 30)
+  const since14 = new Date()
+  since14.setDate(since14.getDate() - 14)
+  const since7 = new Date()
+  since7.setDate(since7.getDate() - 7)
+
+  const [answersResult, contrastResult] = await Promise.all([
+    supabase
+      .from('answer_history')
+      .select('exercise_type_id, context, is_correct, grade, answered_at')
+      .eq('user_id', userId)
+      .gte('answered_at', since30.toISOString())
+      .not('answered_at', 'is', null),
+    supabase
+      .from('user_contrast_progress')
+      .select('correct_answers, total_attempts')
+      .eq('user_id', userId),
+  ])
+
+  let contrastCorrect = 0
+  let contrastTotal = 0
+  for (const row of contrastResult.data ?? []) {
+    contrastCorrect += row.correct_answers as number
+    contrastTotal += row.total_attempts as number
+  }
+
+  const rows = (answersResult.data ?? []) as Array<{
+    exercise_type_id: number
+    context: string | null
+    is_correct: boolean
+    grade: number | null
+    answered_at: string
+  }>
+
+  const mapRows = (list: typeof rows): FluencyRawAnswer[] =>
+    list.map((row) => ({
+      exerciseTypeId: row.exercise_type_id,
+      context: row.context,
+      isCorrect: row.is_correct,
+      grade: row.grade,
+    }))
+
+  const base = {
+    wordsByStatus: skillProfile.wordsByStatus,
+    contrastCorrect,
+    contrastTotal,
+    core1000Practiced: skillProfile.core1000Practiced,
+    lessonsCompleted: skillProfile.lessonsCompleted,
+  }
+
+  const scores = computeFluencyScores({ ...base, answers: mapRows(rows) })
+
+  const current7 = rows.filter((r) => new Date(r.answered_at) >= since7)
+  const previous7 = rows.filter((r) => {
+    const d = new Date(r.answered_at)
+    return d >= since14 && d < since7
+  })
+
+  const comparisonLabel = fluencyComparisonLabel(
+    computeFluencyScores({ ...base, answers: mapRows(current7) }),
+    computeFluencyScores({ ...base, answers: mapRows(previous7) }),
+  )
+
+  return { scores, comparisonLabel }
+}
+
+async function getRecentActivitySessions(userId: string): Promise<ActivitySessionSummary[]> {
+  try {
+    const supabase = await createSupabaseServerClient()
+    const { data, error } = await supabase
+      .from('activity_sessions')
+      .select(
+        'id, source, skill_tags, exercises_total, accuracy_pct, xp_earned, completed_at',
+      )
+      .eq('user_id', userId)
+      .order('completed_at', { ascending: false })
+      .limit(15)
+
+    if (error) throw error
+
+    return (data ?? []).map((row) => {
+      const source = row.source as ActivitySource
+      return {
+        id: row.id as string,
+        source,
+        sourceLabel: ACTIVITY_SOURCE_LABELS[source] ?? (row.source as string),
+        skillTags: (row.skill_tags ?? []) as SkillTag[],
+        exercisesTotal: row.exercises_total as number,
+        accuracyPct: row.accuracy_pct as number,
+        xpEarned: row.xp_earned as number,
+        completedAt: row.completed_at as string,
+      }
+    })
+  } catch {
+    return []
+  }
+}
+
 export async function getProgressPageData(userId: string): Promise<ProgressPageData> {
-  const [streak, dailyCompletion, accuracy, skillProfile, weeklySummary, coachInsights] =
+  const [streak, dailyCompletion, accuracy, skillProfile, weeklySummary, coachInsights, recentSessions] =
     await Promise.all([
       getDailyStreak(userId),
       getDailyCompletionStats(userId),
@@ -294,7 +411,19 @@ export async function getProgressPageData(userId: string): Promise<ProgressPageD
       getSkillProfileData(userId),
       getWeeklySummaryStats(userId),
       getCoachInsights(userId),
+      getRecentActivitySessions(userId),
     ])
 
-  return { streak, dailyCompletion, accuracy, skillProfile, weeklySummary, coachInsights }
+  const fluencyProfile = await getFluencyProfile(userId, skillProfile)
+
+  return {
+    streak,
+    dailyCompletion,
+    accuracy,
+    skillProfile,
+    fluencyProfile,
+    weeklySummary,
+    coachInsights,
+    recentSessions,
+  }
 }

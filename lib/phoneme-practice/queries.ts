@@ -111,7 +111,7 @@ export async function getAllContrastProgress(
 ): Promise<UserContrastProgress[]> {
   const { data, error } = await supabase()
     .from('user_contrast_progress')
-    .select('id, user_id, contrast_id, ease_factor, interval_days, next_review, last_seen, total_attempts, correct_answers, streak')
+    .select('id, user_id, contrast_id, ease_factor, interval_days, next_review, last_seen, total_attempts, correct_answers, streak, mastery_pct')
     .eq('user_id', userId)
   if (error) throw error
   return data as UserContrastProgress[]
@@ -123,7 +123,7 @@ export async function getContrastProgress(
 ): Promise<UserContrastProgress | null> {
   const { data, error } = await supabase()
     .from('user_contrast_progress')
-    .select('id, user_id, contrast_id, ease_factor, interval_days, next_review, last_seen, total_attempts, correct_answers, streak')
+    .select('id, user_id, contrast_id, ease_factor, interval_days, next_review, last_seen, total_attempts, correct_answers, streak, mastery_pct')
     .eq('user_id', userId)
     .eq('contrast_id', contrastId)
     .maybeSingle()
@@ -137,7 +137,8 @@ export async function updateContrastProgress(
   contrastId: string,
   sessionCorrect: number,
   sessionTotal: number,
-  sr: SRResult
+  sr: SRResult,
+  masteryPct: number,
 ): Promise<void> {
   const current = await getContrastProgress(userId, contrastId)
 
@@ -155,6 +156,7 @@ export async function updateContrastProgress(
       streak:          sr.streak,
       ease_factor:     sr.ease_factor,
       interval_days:   sr.interval_days,
+      mastery_pct:     masteryPct,
       last_seen:       new Date().toISOString(),
       next_review:     sr.next_review.toISOString(),
     },
@@ -172,7 +174,7 @@ export async function getContrastsForToday(
   const now = new Date().toISOString()
   const { data, error } = await supabase()
     .from('user_contrast_progress')
-    .select('id, user_id, contrast_id, ease_factor, interval_days, next_review, last_seen, total_attempts, correct_answers, streak')
+    .select('id, user_id, contrast_id, ease_factor, interval_days, next_review, last_seen, total_attempts, correct_answers, streak, mastery_pct')
     .eq('user_id', userId)
     .or(`next_review.lte.${now},next_review.is.null`)
     .order('next_review', { ascending: true })

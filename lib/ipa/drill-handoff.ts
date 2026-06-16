@@ -15,7 +15,7 @@ export async function resolveDrillHref(userId: string | undefined): Promise<stri
   if (userId) {
     try {
       const due = await getContrastsForToday(userId);
-      if (due.length > 0) return "/review";
+      if (due.length > 0) return "/practice/review";
     } catch {
       /* fallback al focus del chart */
     }

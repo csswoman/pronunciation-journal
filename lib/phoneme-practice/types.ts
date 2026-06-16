@@ -155,4 +155,6 @@ export interface UserContrastProgress {
   total_attempts: number
   correct_answers: number
   streak: number
+  /** Dynamic mastery 0–100 (EMA with temporal decay). */
+  mastery_pct: number
 }

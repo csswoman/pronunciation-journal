@@ -86,7 +86,7 @@ export default function HomeReviewCarousel({
       <div className="fixed inset-0 z-50 bg-[var(--surface-base)]">
         <PracticeSession
           key={`${sessionKey}-${reviewState.stepIndex}`}
-          context="daily"
+          context="review"
           exercises={step.exercises}
           sessionLength={step.exercises.length}
           sessionLabel={step.title}

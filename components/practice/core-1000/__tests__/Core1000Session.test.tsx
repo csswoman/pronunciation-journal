@@ -92,5 +92,7 @@ describe('Core1000Session', () => {
     )
     render(<Core1000Session />)
     expect(await screen.findByText('Nada pendiente por hoy')).toBeTruthy()
+    expect(screen.getByRole('link', { name: 'Ver mi progreso' })).toBeTruthy()
+    expect(screen.getByRole('link', { name: 'Ir al plan de hoy' })).toBeTruthy()
   })
 })

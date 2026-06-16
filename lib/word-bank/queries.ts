@@ -239,3 +239,38 @@ export async function getDueReviewWordsForDaily(
   return (data ?? []) as WordBankEntry[];
 }
 
+/** Weak words (new / learning) for the review hub — lowest ease first. */
+export async function getWeakWordsForReview(
+  userId: string,
+  limit: number,
+): Promise<WordBankEntry[]> {
+  if (limit <= 0) return [];
+  const supabase = getSupabaseBrowserClient();
+
+  const { data, error } = await supabase
+    .from(TABLE)
+    .select(DAILY_WORD_COLUMNS)
+    .eq('user_id', userId)
+    .eq('status', 'ready')
+    .in('srs_status', ['new', 'learning'])
+    .order('ease_factor', { ascending: true })
+    .limit(limit);
+
+  if (error) throw error;
+  return (data ?? []) as WordBankEntry[];
+}
+
+/** Load word_bank rows by primary key (failed-sentence drill). */
+export async function getWordBankEntriesByIds(ids: string[]): Promise<WordBankEntry[]> {
+  if (ids.length === 0) return [];
+  const supabase = getSupabaseBrowserClient();
+
+  const { data, error } = await supabase
+    .from(TABLE)
+    .select(DAILY_WORD_COLUMNS)
+    .in('id', ids);
+
+  if (error) throw error;
+  return (data ?? []) as WordBankEntry[];
+}
+

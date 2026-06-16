@@ -56,6 +56,7 @@ function makeContrastProgress(overrides: Partial<UserContrastProgress> = {}): Us
     last_seen: null,
     ease_factor: 2.5,
     interval_days: 1,
+    mastery_pct: 80,
     ...overrides,
   }
 }
@@ -151,5 +152,25 @@ describe('finishContrastSession', () => {
     const srArg = mockUpdateContrastProgress.mock.calls[0][4]
     expect(srArg.streak).toBe(0)
     expect(srArg.interval_days).toBe(1)
+  })
+
+  it('persists EMA mastery_pct on session complete', async () => {
+    const progress = makeContrastProgress({
+      mastery_pct: 100,
+      last_seen: new Date('2026-06-01T12:00:00Z').toISOString(),
+    })
+    const sessionResult = makeSessionResult([makeResult({ isCorrect: true })])
+
+    const outcome = await finishContrastSession(
+      USER_ID,
+      CONTRAST_ID,
+      sessionResult,
+      progress,
+      new Date('2026-06-08T12:00:00Z'),
+    )
+
+    const masteryArg = mockUpdateContrastProgress.mock.calls[0][5]
+    expect(masteryArg).toBeGreaterThanOrEqual(90)
+    expect(outcome.masteryPct).toBe(masteryArg)
   })
 })

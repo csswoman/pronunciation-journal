@@ -3,11 +3,12 @@
 import Link from 'next/link'
 import { ArrowRight, Check } from 'lucide-react'
 import { DailyStepIcon } from './dailyIcons'
+import type { DailyStepStatus } from '@/hooks/useDailyPlan'
 import type { DailyStep } from '@/lib/practice/types'
 
 interface DailyStepListProps {
   steps: DailyStep[]
-  doneIds: Set<string>
+  getStepStatus: (stepId: string) => DailyStepStatus
   /** Starts the exercise session for a step (not called for 'concept'). */
   onStartStep: (step: DailyStep) => void
   /** Marks a step done (used by 'concept' when opening its reading). */
@@ -21,25 +22,40 @@ const ICON_CLASS =
   'grid h-10 w-10 shrink-0 place-items-center rounded-full transition-[background-color,transform] duration-200'
 
 /** Daily step checklist shared by /daily and home. */
-export default function DailyStepList({ steps, doneIds, onStartStep, onMarkDone }: DailyStepListProps) {
+export default function DailyStepList({
+  steps,
+  getStepStatus,
+  onStartStep,
+  onMarkDone,
+}: DailyStepListProps) {
   return (
     <ol className="flex flex-col gap-3">
       {steps.map((step, i) => {
-        const done = doneIds.has(step.id)
+        const status = getStepStatus(step.id)
+        const done = status === 'done'
+        const resolved = status === 'resolved'
         const isConcept = step.kind === 'concept'
 
         const inner = (
           <>
             <div
               className={`${ICON_CLASS} ${
-                done ? 'bg-[var(--success)] text-white' : 'bg-[var(--hue-icon-bg)] text-[var(--primary)]'
+                done || resolved
+                  ? 'bg-[var(--success)] text-white'
+                  : 'bg-[var(--hue-icon-bg)] text-[var(--primary)]'
               }`}
             >
-              {done ? <Check size={18} className="animate-step-done" /> : <DailyStepIcon name={step.icon} />}
+              {done || resolved ? (
+                <Check size={18} className="animate-step-done" />
+              ) : (
+                <DailyStepIcon name={step.icon} />
+              )}
             </div>
             <div className="min-w-0 flex-1">
               <p className="flex items-center gap-2.5 text-base font-semibold text-[var(--text-primary)]">
-                <span className="font-caption tabular-nums text-[var(--text-tertiary)]">{String(i + 1).padStart(2, '0')}</span>
+                <span className="font-caption tabular-nums text-[var(--text-tertiary)]">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
                 {step.title}
               </p>
               <p className="font-body-sm truncate text-[var(--text-tertiary)]">
@@ -50,8 +66,15 @@ export default function DailyStepList({ steps, doneIds, onStartStep, onMarkDone 
             </div>
             {done ? (
               <span className="animate-state-in font-body-sm font-medium text-[var(--success)]">Done</span>
+            ) : resolved ? (
+              <span className="animate-state-in font-body-sm font-medium text-[var(--primary)]">
+                Practiced
+              </span>
             ) : (
-              <ArrowRight size={18} className="text-[var(--text-tertiary)] transition-transform duration-150 group-hover:translate-x-0.5" />
+              <ArrowRight
+                size={18}
+                className="text-[var(--text-tertiary)] transition-transform duration-150 group-hover:translate-x-0.5"
+              />
             )}
           </>
         )

@@ -1,5 +1,6 @@
 import type { UserContrastProgress } from './types'
 import { PHONEME_CONFUSION, contrastKey } from './phoneme-similarity'
+import { MASTERY_DISPLAY_THRESHOLD } from './mastery-pct'
 
 // Thresholds for a single contrast to be considered mastered.
 const MIN_ATTEMPTS = 10
@@ -7,6 +8,9 @@ const MIN_ACCURACY = 0.85
 const MIN_STREAK   = 3
 
 export function isContrastMastered(p: UserContrastProgress): boolean {
+  if (p.mastery_pct != null && p.mastery_pct >= MASTERY_DISPLAY_THRESHOLD) {
+    return p.total_attempts >= MIN_ATTEMPTS && p.streak >= MIN_STREAK
+  }
   return (
     p.total_attempts >= MIN_ATTEMPTS &&
     p.correct_answers / p.total_attempts >= MIN_ACCURACY &&

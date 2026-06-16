@@ -5,7 +5,7 @@ export type { DailyStreakResult } from './streak-core'
 // ── Supabase query ────────────────────────────────────────────────────────────
 
 /**
- * Server-only: fetch `answered_at` timestamps for context='daily' answers
+ * Server-only: fetch `answered_at` timestamps for any practice answer
  * and compute the user's daily streak.
  */
 export async function getDailyStreak(userId: string): Promise<DailyStreakResult> {
@@ -15,7 +15,6 @@ export async function getDailyStreak(userId: string): Promise<DailyStreakResult>
     .from('answer_history')
     .select('answered_at')
     .eq('user_id', userId)
-    .eq('context', 'daily')
     .not('answered_at', 'is', null)
 
   if (error) throw error

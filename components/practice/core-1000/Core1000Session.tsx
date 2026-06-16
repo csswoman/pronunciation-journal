@@ -17,8 +17,10 @@ import { SessionDone } from './SessionDone'
 import { WordCarousel } from '@/components/practice/session/WordCarousel'
 
 export function Core1000Session() {
-  const { phase, current, position, queueLength, stats, startSpeak, submitGrade } =
-    useCore1000Session()
+  const {
+    phase, current, position, queueLength, stats, sessionSummary,
+    reloadLoading, startSpeak, submitGrade, reload,
+  } = useCore1000Session()
   const loadingWords = useLoadingWords()
 
   if (phase === 'loading') {
@@ -30,7 +32,15 @@ export function Core1000Session() {
   }
 
   if (phase === 'empty' || phase === 'done') {
-    return <SessionDone stats={stats} wasEmpty={phase === 'empty'} />
+    return (
+      <SessionDone
+        stats={stats}
+        sessionSummary={sessionSummary}
+        wasEmpty={phase === 'empty'}
+        onContinue={reload}
+        continueLoading={reloadLoading}
+      />
+    )
   }
 
   return (

@@ -1,4 +1,6 @@
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { rankWeakestSounds } from "@/lib/phoneme-practice/mastery-pct";
+import type { UserContrastProgress } from "@/lib/phoneme-practice/types";
 import { STREAK_TIMEZONE, toLocalDateString } from "@/lib/daily/streak-core";
 import { getTodaysMiniLesson } from "@/lib/content/lessons";
 import {
@@ -64,7 +66,7 @@ export async function getTodayPracticeGoal(userId: string): Promise<DailyGoalPro
   return { minutesDone, goalMinutes, percent };
 }
 
-/** Lowest-accuracy phoneme with at least 5 attempts, or null if none yet. */
+/** Lowest-mastery phoneme with at least 5 attempts, or null if none yet. */
 export async function getWeakestPhonemeForHome(
   userId: string,
 ): Promise<WeakestPhonemeHome | null> {
@@ -72,34 +74,22 @@ export async function getWeakestPhonemeForHome(
 
   const { data, error } = await supabase
     .from("user_contrast_progress")
-    .select("contrast_id, total_attempts, correct_answers")
+    .select("contrast_id, total_attempts, correct_answers, mastery_pct")
     .eq("user_id", userId)
     .gt("total_attempts", 0);
 
   if (error) throw error;
 
-  // Aggregate accuracy by IPA (take the first IPA of each contrast key)
-  const byIpa = new Map<string, { correct: number; total: number }>();
-  for (const r of data ?? []) {
-    const [ipaA] = r.contrast_id.split("|");
-    const prev = byIpa.get(ipaA) ?? { correct: 0, total: 0 };
-    byIpa.set(ipaA, {
-      correct: prev.correct + r.correct_answers,
-      total: prev.total + r.total_attempts,
-    });
-  }
+  const ranked = rankWeakestSounds((data ?? []) as UserContrastProgress[], { limit: 1 });
+  const weakest = ranked[0];
+  if (!weakest) return null;
 
-  const ranked = [...byIpa.entries()]
-    .filter(([, v]) => v.total >= 5)
-    .map(([ipa, v]) => ({
-      ipa,
-      accuracy: Math.round((v.correct / v.total) * 100),
-      totalAttempts: v.total,
-      label: null as string | null,
-    }))
-    .sort((a, b) => a.accuracy - b.accuracy);
-
-  return ranked[0] ?? null;
+  return {
+    ipa: weakest.ipa,
+    accuracy: weakest.mastery,
+    totalAttempts: weakest.totalAttempts,
+    label: null,
+  };
 }
 
 /** Día del año (1-366), para rotar la selección de contenido por día. */
