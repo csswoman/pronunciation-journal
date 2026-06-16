@@ -25,7 +25,7 @@ your row when done.
 | 014 | Route all component Supabase calls through lib/*/queries.ts | P2 | L | 001 | TODO |
 | 015 | Split PracticeSession and GrammarStudyDeck below the 250-line limit | P3 | M | — | TODO |
 | 016 | Unified progress hub — centralize practice telemetry, radar, sounds mastery, review center | P1 | L | — | IN PROGRESS (Fase 2 done) |
-| 017 | Exercise eligibility contract — unified lemma/context rules, GenerationResult, CI generatability gate | P1 | M | — | IN PROGRESS (Fase 2 done) |
+| 017 | Exercise eligibility contract — unified lemma/context rules, GenerationResult, CI generatability gate | P1 | M | — | IN PROGRESS (Fase 3 done) |
 
 Status values: TODO | IN PROGRESS | DONE | BLOCKED (with one-line reason) | REJECTED (with one-line rationale)
 
