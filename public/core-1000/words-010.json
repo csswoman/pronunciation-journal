@@ -1,805 +1,805 @@
 {
-  "version": 1,
   "entries": [
     {
-      "rank": 901,
-      "word": "fun",
-      "pos": "noun",
+      "cefr_level": "C1",
+      "example_sentence": "The children had a lot of fun at the party.",
       "ipa_strong": "/fʌn/",
-      "example_sentence": "The fun is very good.",
-      "cefr_level": "C1"
+      "pos": "noun",
+      "rank": 901,
+      "word": "fun"
     },
     {
-      "rank": 902,
-      "word": "protect",
-      "pos": "verb",
+      "cefr_level": "C1",
+      "example_sentence": "She wore a helmet to protect her head during the ride.",
       "ipa_strong": "/pɹʌtɛkt/",
-      "example_sentence": "I protect every day here.",
-      "cefr_level": "C1"
+      "pos": "verb",
+      "rank": 902,
+      "word": "protect"
     },
     {
-      "rank": 903,
-      "word": "resource",
-      "pos": "noun",
+      "cefr_level": "C1",
+      "example_sentence": "The library is a great resource for students doing research.",
       "ipa_strong": "/ɹiːsɔɹs/",
-      "example_sentence": "The resource is very good.",
-      "cefr_level": "C1"
+      "pos": "noun",
+      "rank": 903,
+      "word": "resource"
     },
     {
-      "rank": 904,
-      "word": "science",
-      "pos": "noun",
+      "cefr_level": "C1",
+      "example_sentence": "She studied science at university and became a biologist.",
       "ipa_strong": "/saɪʌns/",
-      "example_sentence": "The science is very good.",
-      "cefr_level": "C1"
+      "pos": "noun",
+      "rank": 904,
+      "word": "science"
     },
     {
-      "rank": 905,
-      "word": "disease",
-      "pos": "noun",
+      "cefr_level": "C1",
+      "example_sentence": "The doctor said the disease could spread quickly without treatment.",
       "ipa_strong": "/dɪziːz/",
-      "example_sentence": "The disease is very good.",
-      "cefr_level": "C1"
+      "pos": "noun",
+      "rank": 905,
+      "word": "disease"
     },
     {
-      "rank": 906,
-      "word": "balance",
-      "pos": "noun",
+      "cefr_level": "C1",
+      "example_sentence": "It is important to find a balance between work and rest.",
       "ipa_strong": "/bælʌns/",
-      "example_sentence": "The balance is very good.",
-      "cefr_level": "C1"
+      "pos": "noun",
+      "rank": 906,
+      "word": "balance"
     },
     {
-      "rank": 907,
-      "word": "damage",
-      "pos": "verb",
+      "cefr_level": "C1",
+      "example_sentence": "The storm damaged several houses in the neighborhood.",
       "ipa_strong": "/dæmʌdʒ/",
-      "example_sentence": "I damage every day here.",
-      "cefr_level": "C1"
+      "pos": "verb",
+      "rank": 907,
+      "word": "damage"
     },
     {
-      "rank": 908,
-      "word": "basis",
-      "pos": "noun",
+      "cefr_level": "C1",
+      "example_sentence": "The team meets on a weekly basis to review their progress.",
       "ipa_strong": "/beɪsʌs/",
-      "example_sentence": "The basis is very good.",
-      "cefr_level": "C1"
+      "pos": "noun",
+      "rank": 908,
+      "word": "basis"
     },
     {
-      "rank": 909,
-      "word": "author",
-      "pos": "noun",
+      "cefr_level": "C1",
+      "example_sentence": "The author signed copies of her new book at the store.",
       "ipa_strong": "/ɔθɜr/",
-      "example_sentence": "The author is very good.",
-      "cefr_level": "C1"
+      "pos": "noun",
+      "rank": 909,
+      "word": "author"
     },
     {
-      "rank": 910,
-      "word": "basic",
-      "pos": "adjective",
+      "cefr_level": "C1",
+      "example_sentence": "The course covers the basic rules of English grammar.",
       "ipa_strong": "/beɪsɪk/",
-      "example_sentence": "It is very basic today.",
-      "cefr_level": "C1"
+      "pos": "adjective",
+      "rank": 910,
+      "word": "basic"
     },
     {
-      "rank": 911,
-      "word": "encourage",
-      "pos": "verb",
+      "cefr_level": "C1",
+      "example_sentence": "Her teacher encouraged her to apply for the scholarship.",
       "ipa_strong": "/ɛnkɜrɪdʒ/",
-      "example_sentence": "I encourage every day here.",
-      "cefr_level": "C1"
+      "pos": "verb",
+      "rank": 911,
+      "word": "encourage"
     },
     {
-      "rank": 912,
-      "word": "hair",
-      "pos": "noun",
+      "cefr_level": "C1",
+      "example_sentence": "She cut her hair short before the summer.",
       "ipa_strong": "/hɛɹ/",
-      "example_sentence": "The hair is very good.",
-      "cefr_level": "C1"
+      "pos": "noun",
+      "rank": 912,
+      "word": "hair"
     },
     {
-      "rank": 913,
-      "word": "male",
-      "pos": "noun",
+      "cefr_level": "C1",
+      "example_sentence": "The study included both male and female participants.",
       "ipa_strong": "/meɪl/",
-      "example_sentence": "The male is very good.",
-      "cefr_level": "C1"
+      "pos": "adjective",
+      "rank": 913,
+      "word": "male"
     },
     {
-      "rank": 914,
-      "word": "operate",
-      "pos": "verb",
+      "cefr_level": "C1",
+      "example_sentence": "The surgeon operates on patients every morning at the hospital.",
       "ipa_strong": "/ɑpɜreɪt/",
-      "example_sentence": "I operate every day here.",
-      "cefr_level": "C1"
+      "pos": "verb",
+      "rank": 914,
+      "word": "operate"
     },
     {
-      "rank": 915,
-      "word": "reflect",
-      "pos": "verb",
+      "cefr_level": "C1",
+      "example_sentence": "The test results reflect how hard the students studied.",
       "ipa_strong": "/ɹɪflɛkt/",
-      "example_sentence": "I reflect every day here.",
-      "cefr_level": "C1"
+      "pos": "verb",
+      "rank": 915,
+      "word": "reflect"
     },
     {
-      "rank": 916,
-      "word": "exercise",
-      "pos": "noun",
+      "cefr_level": "C1",
+      "example_sentence": "The doctor recommended thirty minutes of exercise every day.",
       "ipa_strong": "/ɛksɜrsaɪz/",
-      "example_sentence": "The exercise is very good.",
-      "cefr_level": "C1"
+      "pos": "noun",
+      "rank": 916,
+      "word": "exercise"
     },
     {
-      "rank": 917,
-      "word": "useful",
-      "pos": "noun",
+      "cefr_level": "C1",
+      "example_sentence": "A good dictionary is very useful when you are learning a new language.",
       "ipa_strong": "/juːsfʌl/",
-      "example_sentence": "The useful is very good.",
-      "cefr_level": "C1"
+      "pos": "adjective",
+      "rank": 917,
+      "word": "useful"
     },
     {
-      "rank": 918,
-      "word": "restaurant",
-      "pos": "noun",
+      "cefr_level": "C1",
+      "example_sentence": "They went to a restaurant near the park for dinner.",
       "ipa_strong": "/ɹɛstɜrɑnt/",
-      "example_sentence": "The restaurant is very good.",
-      "cefr_level": "C1"
+      "pos": "noun",
+      "rank": 918,
+      "word": "restaurant"
     },
     {
-      "rank": 919,
-      "word": "income",
-      "pos": "noun",
+      "cefr_level": "C1",
+      "example_sentence": "Her monthly income was not enough to pay the rent.",
       "ipa_strong": "/ɪnkʌm/",
-      "example_sentence": "The income is very good.",
-      "cefr_level": "C1"
+      "pos": "noun",
+      "rank": 919,
+      "word": "income"
     },
     {
-      "rank": 920,
-      "word": "property",
-      "pos": "noun",
+      "cefr_level": "C1",
+      "example_sentence": "They bought a property in the countryside last year.",
       "ipa_strong": "/pɹɑpɜrtiː/",
-      "example_sentence": "The property is very good.",
-      "cefr_level": "C1"
+      "pos": "noun",
+      "rank": 920,
+      "word": "property"
     },
     {
-      "rank": 921,
-      "word": "previous",
-      "pos": "adjective",
+      "cefr_level": "C1",
+      "example_sentence": "The new manager reviewed the previous reports before making a decision.",
       "ipa_strong": "/pɹiːviːʌs/",
-      "example_sentence": "It is very previous today.",
-      "cefr_level": "C1"
+      "pos": "adjective",
+      "rank": 921,
+      "word": "previous"
     },
     {
-      "rank": 922,
-      "word": "dark",
-      "pos": "adjective",
+      "cefr_level": "C1",
+      "example_sentence": "The room was so dark that she could not find the light switch.",
       "ipa_strong": "/dɑɹk/",
-      "example_sentence": "It is very dark today.",
-      "cefr_level": "C1"
+      "pos": "adjective",
+      "rank": 922,
+      "word": "dark"
     },
     {
-      "rank": 923,
-      "word": "imagine",
-      "pos": "verb",
+      "cefr_level": "C1",
+      "example_sentence": "Can you imagine living in a city with no cars?",
       "ipa_strong": "/ɪmædʒʌn/",
-      "example_sentence": "I imagine every day here.",
-      "cefr_level": "C1"
+      "pos": "verb",
+      "rank": 923,
+      "word": "imagine"
     },
     {
-      "rank": 924,
-      "word": "okay",
-      "pos": "noun",
+      "cefr_level": "C1",
+      "example_sentence": "Are you feeling okay after the fall?",
       "ipa_strong": "/oʊkeɪ/",
-      "example_sentence": "The okay is very good.",
-      "cefr_level": "C1"
+      "pos": "adjective",
+      "rank": 924,
+      "word": "okay"
     },
     {
-      "rank": 925,
-      "word": "earn",
-      "pos": "verb",
+      "cefr_level": "C1",
+      "example_sentence": "He works two jobs to earn enough money for his family.",
       "ipa_strong": "/ɜrn/",
-      "example_sentence": "I earn every day here.",
-      "cefr_level": "C1"
+      "pos": "verb",
+      "rank": 925,
+      "word": "earn"
     },
     {
-      "rank": 926,
-      "word": "daughter",
-      "pos": "noun",
+      "cefr_level": "C1",
+      "example_sentence": "Their daughter started university in September.",
       "ipa_strong": "/dɔtɜr/",
-      "example_sentence": "The daughter is very good.",
-      "cefr_level": "C1"
+      "pos": "noun",
+      "rank": 926,
+      "word": "daughter"
     },
     {
-      "rank": 927,
-      "word": "post",
-      "pos": "noun",
+      "cefr_level": "C1",
+      "example_sentence": "She saw a post about the job opening on social media.",
       "ipa_strong": "/poʊst/",
-      "example_sentence": "The post is very good.",
-      "cefr_level": "C1"
+      "pos": "noun",
+      "rank": 927,
+      "word": "post"
     },
     {
-      "rank": 928,
-      "word": "newspaper",
-      "pos": "noun",
+      "cefr_level": "C1",
+      "example_sentence": "He reads a newspaper every morning with his coffee.",
       "ipa_strong": "/nuːzpeɪpɜr/",
-      "example_sentence": "The newspaper is very good.",
-      "cefr_level": "C1"
+      "pos": "noun",
+      "rank": 928,
+      "word": "newspaper"
     },
     {
-      "rank": 929,
-      "word": "define",
-      "pos": "noun",
+      "cefr_level": "C1",
+      "example_sentence": "The teacher asked the students to define each word in the list.",
       "ipa_strong": "/dɪfaɪn/",
-      "example_sentence": "The define is very good.",
-      "cefr_level": "C1"
+      "pos": "verb",
+      "rank": 929,
+      "word": "define"
     },
     {
-      "rank": 930,
-      "word": "conclusion",
-      "pos": "noun",
+      "cefr_level": "C1",
+      "example_sentence": "At the end of the report, she wrote a short conclusion.",
       "ipa_strong": "/kʌnkluːʒʌn/",
-      "example_sentence": "The conclusion is very good.",
-      "cefr_level": "C1"
+      "pos": "noun",
+      "rank": 930,
+      "word": "conclusion"
     },
     {
-      "rank": 931,
-      "word": "clock",
-      "pos": "noun",
+      "cefr_level": "C1",
+      "example_sentence": "The clock on the wall showed that it was already noon.",
       "ipa_strong": "/klɑk/",
-      "example_sentence": "The clock is very good.",
-      "cefr_level": "C1"
+      "pos": "noun",
+      "rank": 931,
+      "word": "clock"
     },
     {
-      "rank": 932,
-      "word": "everybody",
-      "pos": "noun",
+      "cefr_level": "C1",
+      "example_sentence": "Everybody in the class passed the final exam.",
       "ipa_strong": "/ɛvɹiːbɑdiː/",
-      "example_sentence": "The everybody is very good.",
-      "cefr_level": "C1"
+      "pos": "pronoun",
+      "rank": 932,
+      "word": "everybody"
     },
     {
-      "rank": 933,
-      "word": "weekend",
-      "pos": "noun",
+      "cefr_level": "C1",
+      "example_sentence": "They usually go hiking in the mountains on the weekend.",
       "ipa_strong": "/wiːkɛnd/",
-      "example_sentence": "The weekend is very good.",
-      "cefr_level": "C1"
+      "pos": "noun",
+      "rank": 933,
+      "word": "weekend"
     },
     {
-      "rank": 934,
-      "word": "perform",
-      "pos": "verb",
+      "cefr_level": "C1",
+      "example_sentence": "The band performed three songs at the school concert.",
       "ipa_strong": "/pɜrfɔɹm/",
-      "example_sentence": "I perform every day here.",
-      "cefr_level": "C1"
+      "pos": "verb",
+      "rank": 934,
+      "word": "perform"
     },
     {
-      "rank": 935,
-      "word": "professional",
-      "pos": "adjective",
+      "cefr_level": "C1",
+      "example_sentence": "She gave a very professional presentation to the board of directors.",
       "ipa_strong": "/pɹʌfɛʃʌnʌl/",
-      "example_sentence": "It is very professional today.",
-      "cefr_level": "C1"
+      "pos": "adjective",
+      "rank": 935,
+      "word": "professional"
     },
     {
-      "rank": 936,
-      "word": "mine",
-      "pos": "pronoun",
+      "cefr_level": "C1",
+      "example_sentence": "That red jacket is mine — I left it here yesterday.",
       "ipa_strong": "/maɪn/",
-      "example_sentence": "I saw mine at school.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 937,
-      "word": "debate",
-      "pos": "noun",
-      "ipa_strong": "/dʌbeɪt/",
-      "example_sentence": "The debate is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 938,
-      "word": "memory",
-      "pos": "noun",
-      "ipa_strong": "/mɛmɜriː/",
-      "example_sentence": "The memory is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 939,
-      "word": "green",
-      "pos": "adjective",
-      "ipa_strong": "/ɡɹiːn/",
-      "example_sentence": "It is very green today.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 940,
-      "word": "song",
-      "pos": "noun",
-      "ipa_strong": "/sɔŋ/",
-      "example_sentence": "The song is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 941,
-      "word": "object",
-      "pos": "noun",
-      "ipa_strong": "/ɑbdʒɛkt/",
-      "example_sentence": "The object is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 942,
-      "word": "maintain",
-      "pos": "verb",
-      "ipa_strong": "/meɪnteɪn/",
-      "example_sentence": "I maintain every day here.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 943,
-      "word": "credit",
-      "pos": "noun",
-      "ipa_strong": "/kɹɛdʌt/",
-      "example_sentence": "The credit is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 944,
-      "word": "ring",
-      "pos": "verb",
-      "ipa_strong": "/ɹɪŋ/",
-      "example_sentence": "I ring every day here.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 945,
-      "word": "discover",
-      "pos": "verb",
-      "ipa_strong": "/dɪskʌvɜr/",
-      "example_sentence": "I discover every day here.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 946,
-      "word": "dead",
-      "pos": "adjective",
-      "ipa_strong": "/dɛd/",
-      "example_sentence": "It is very dead today.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 947,
-      "word": "afternoon",
-      "pos": "noun",
-      "ipa_strong": "/æftɜrnuːn/",
-      "example_sentence": "The afternoon is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 948,
-      "word": "prefer",
-      "pos": "verb",
-      "ipa_strong": "/pɹʌfɜr/",
-      "example_sentence": "I prefer every day here.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 949,
-      "word": "extend",
-      "pos": "verb",
-      "ipa_strong": "/ɪkstɛnd/",
-      "example_sentence": "I extend every day here.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 950,
-      "word": "possibility",
-      "pos": "noun",
-      "ipa_strong": "/pɑsʌbɪlʌtiː/",
-      "example_sentence": "The possibility is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 951,
-      "word": "direction",
-      "pos": "noun",
-      "ipa_strong": "/dɜrɛkʃʌn/",
-      "example_sentence": "The direction is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 952,
-      "word": "facility",
-      "pos": "noun",
-      "ipa_strong": "/fʌsɪlɪtiː/",
-      "example_sentence": "The facility is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 953,
-      "word": "variety",
-      "pos": "noun",
-      "ipa_strong": "/vɜraɪʌtiː/",
-      "example_sentence": "The variety is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 954,
-      "word": "daily",
-      "pos": "noun",
-      "ipa_strong": "/deɪliː/",
-      "example_sentence": "The daily is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 955,
-      "word": "clothes",
-      "pos": "noun",
-      "ipa_strong": "/kloʊðz/",
-      "example_sentence": "The clothes is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 956,
-      "word": "screen",
-      "pos": "noun",
-      "ipa_strong": "/skɹiːn/",
-      "example_sentence": "The screen is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 957,
-      "word": "track",
-      "pos": "noun",
-      "ipa_strong": "/tɹæk/",
-      "example_sentence": "The track is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 958,
-      "word": "dance",
-      "pos": "verb",
-      "ipa_strong": "/dæns/",
-      "example_sentence": "I dance every day here.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 959,
-      "word": "completely",
-      "pos": "noun",
-      "ipa_strong": "/kʌmpliːtliː/",
-      "example_sentence": "The completely is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 960,
-      "word": "female",
-      "pos": "noun",
-      "ipa_strong": "/fiːmeɪl/",
-      "example_sentence": "The female is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 961,
-      "word": "responsibility",
-      "pos": "noun",
-      "ipa_strong": "/ɹiːspɑnsʌbɪlʌtiː/",
-      "example_sentence": "The responsibility is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 962,
-      "word": "original",
-      "pos": "adjective",
-      "ipa_strong": "/ɜrɪdʒʌnʌl/",
-      "example_sentence": "It is very original today.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 963,
-      "word": "sister",
-      "pos": "noun",
-      "ipa_strong": "/sɪstɜr/",
-      "example_sentence": "The sister is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 964,
-      "word": "rock",
-      "pos": "noun",
-      "ipa_strong": "/ɹɑk/",
-      "example_sentence": "The rock is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 965,
-      "word": "dream",
-      "pos": "noun",
-      "ipa_strong": "/dɹiːm/",
-      "example_sentence": "The dream is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 966,
-      "word": "nor",
-      "pos": "conjunction",
-      "ipa_strong": "/nɔɹ/",
-      "example_sentence": "Come nor go with us.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 967,
-      "word": "university",
-      "pos": "noun",
-      "ipa_strong": "/juːnʌvɜrsʌtiː/",
-      "example_sentence": "The university is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 968,
-      "word": "easily",
-      "pos": "noun",
-      "ipa_strong": "/iːzʌliː/",
-      "example_sentence": "The easily is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 969,
-      "word": "agency",
-      "pos": "noun",
-      "ipa_strong": "/eɪdʒʌnsiː/",
-      "example_sentence": "The agency is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 970,
-      "word": "dollar",
-      "pos": "noun",
-      "ipa_strong": "/dɑlɜr/",
-      "example_sentence": "The dollar is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 971,
-      "word": "garden",
-      "pos": "noun",
-      "ipa_strong": "/ɡɑɹdʌn/",
-      "example_sentence": "The garden is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 972,
-      "word": "fix",
-      "pos": "verb",
-      "ipa_strong": "/fɪks/",
-      "example_sentence": "I fix every day here.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 973,
-      "word": "ahead",
-      "pos": "noun",
-      "ipa_strong": "/ʌhɛd/",
-      "example_sentence": "The ahead is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 974,
-      "word": "cross",
-      "pos": "verb",
-      "ipa_strong": "/kɹɔs/",
-      "example_sentence": "I cross every day here.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 975,
-      "word": "yeah",
-      "pos": "noun",
-      "ipa_strong": "/jæ/",
-      "example_sentence": "The yeah is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 976,
-      "word": "weight",
-      "pos": "noun",
-      "ipa_strong": "/weɪt/",
-      "example_sentence": "The weight is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 977,
-      "word": "legal",
-      "pos": "adjective",
-      "ipa_strong": "/liːɡʌl/",
-      "example_sentence": "It is very legal today.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 978,
-      "word": "proposal",
-      "pos": "noun",
-      "ipa_strong": "/pɹʌpoʊzʌl/",
-      "example_sentence": "The proposal is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 979,
-      "word": "version",
-      "pos": "noun",
-      "ipa_strong": "/vɜrʒʌn/",
-      "example_sentence": "The version is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 980,
-      "word": "conversation",
-      "pos": "noun",
-      "ipa_strong": "/kɑnvɜrseɪʃʌn/",
-      "example_sentence": "The conversation is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 981,
-      "word": "somebody",
-      "pos": "noun",
-      "ipa_strong": "/sʌmbɑdiː/",
-      "example_sentence": "The somebody is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 982,
-      "word": "pound",
-      "pos": "noun",
-      "ipa_strong": "/paʊnd/",
-      "example_sentence": "The pound is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 983,
-      "word": "magazine",
-      "pos": "noun",
-      "ipa_strong": "/mæɡʌziːn/",
-      "example_sentence": "The magazine is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 984,
-      "word": "shape",
-      "pos": "verb",
-      "ipa_strong": "/ʃeɪp/",
-      "example_sentence": "I shape every day here.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 985,
-      "word": "sea",
-      "pos": "noun",
-      "ipa_strong": "/siː/",
-      "example_sentence": "The sea is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 986,
-      "word": "immediately",
-      "pos": "noun",
-      "ipa_strong": "/ɪmiːdiːʌtliː/",
-      "example_sentence": "The immediately is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 987,
-      "word": "welcome",
-      "pos": "adjective",
-      "ipa_strong": "/wɛlkʌm/",
-      "example_sentence": "It is very welcome today.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 988,
-      "word": "smile",
-      "pos": "verb",
-      "ipa_strong": "/smaɪl/",
-      "example_sentence": "I smile every day here.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 989,
-      "word": "communication",
-      "pos": "noun",
-      "ipa_strong": "/kʌmjuːnʌkeɪʃʌn/",
-      "example_sentence": "The communication is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 990,
-      "word": "agent",
-      "pos": "noun",
-      "ipa_strong": "/eɪdʒʌnt/",
-      "example_sentence": "The agent is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 991,
-      "word": "traditional",
-      "pos": "adjective",
-      "ipa_strong": "/tɹʌdɪʃʌnʌl/",
-      "example_sentence": "It is very traditional today.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 992,
-      "word": "replace",
-      "pos": "verb",
-      "ipa_strong": "/ɹiːpleɪs/",
-      "example_sentence": "I replace every day here.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 993,
-      "word": "judge",
-      "pos": "noun",
-      "ipa_strong": "/dʒʌdʒ/",
-      "example_sentence": "The judge is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 994,
-      "word": "herself",
       "pos": "pronoun",
-      "ipa_strong": "/hɜrsɛlf/",
-      "example_sentence": "I saw herself at school.",
-      "cefr_level": "C1"
+      "rank": 936,
+      "word": "mine"
     },
     {
-      "rank": 995,
-      "word": "suddenly",
-      "pos": "adverb",
-      "ipa_strong": "/sʌdʌnliː/",
-      "example_sentence": "She spoke suddenly to me.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 996,
-      "word": "generation",
+      "cefr_level": "C1",
+      "example_sentence": "The students had a debate about climate change in class.",
+      "ipa_strong": "/dʌbeɪt/",
       "pos": "noun",
-      "ipa_strong": "/dʒɛnɜreɪʃʌn/",
-      "example_sentence": "The generation is very good.",
-      "cefr_level": "C1"
+      "rank": 937,
+      "word": "debate"
     },
     {
-      "rank": 997,
-      "word": "estimate",
+      "cefr_level": "C1",
+      "example_sentence": "She has a very clear memory of her first day at school.",
+      "ipa_strong": "/mɛmɜriː/",
       "pos": "noun",
-      "ipa_strong": "/ɛstʌmʌt/",
-      "example_sentence": "The estimate is very good.",
-      "cefr_level": "C1"
+      "rank": 938,
+      "word": "memory"
     },
     {
-      "rank": 998,
-      "word": "favorite",
+      "cefr_level": "C1",
+      "example_sentence": "The fields were bright green after several days of rain.",
+      "ipa_strong": "/ɡɹiːn/",
       "pos": "adjective",
-      "ipa_strong": "/feɪvɜrɪt/",
-      "example_sentence": "It is very favorite today.",
-      "cefr_level": "C1"
+      "rank": 939,
+      "word": "green"
     },
     {
-      "rank": 999,
-      "word": "difficulty",
+      "cefr_level": "C1",
+      "example_sentence": "She sang a song for her grandmother on her birthday.",
+      "ipa_strong": "/sɔŋ/",
       "pos": "noun",
-      "ipa_strong": "/dɪfʌkʌltiː/",
-      "example_sentence": "The difficulty is very good.",
-      "cefr_level": "C1"
+      "rank": 940,
+      "word": "song"
     },
     {
-      "rank": 1000,
-      "word": "purchase",
+      "cefr_level": "C1",
+      "example_sentence": "The police found a strange object near the door.",
+      "ipa_strong": "/ɑbdʒɛkt/",
+      "pos": "noun",
+      "rank": 941,
+      "word": "object"
+    },
+    {
+      "cefr_level": "C1",
+      "example_sentence": "It is difficult to maintain a healthy diet when you travel a lot.",
+      "ipa_strong": "/meɪnteɪn/",
       "pos": "verb",
+      "rank": 942,
+      "word": "maintain"
+    },
+    {
+      "cefr_level": "C1",
+      "example_sentence": "He used his credit card to pay for the hotel room.",
+      "ipa_strong": "/kɹɛdʌt/",
+      "pos": "noun",
+      "rank": 943,
+      "word": "credit"
+    },
+    {
+      "cefr_level": "C1",
+      "example_sentence": "The phone began to ring just as she was leaving the house.",
+      "ipa_strong": "/ɹɪŋ/",
+      "pos": "verb",
+      "rank": 944,
+      "word": "ring"
+    },
+    {
+      "cefr_level": "C1",
+      "example_sentence": "Scientists discovered a new species of fish in the deep ocean.",
+      "ipa_strong": "/dɪskʌvɜr/",
+      "pos": "verb",
+      "rank": 945,
+      "word": "discover"
+    },
+    {
+      "cefr_level": "C1",
+      "example_sentence": "The plant was dead because nobody watered it for weeks.",
+      "ipa_strong": "/dɛd/",
+      "pos": "adjective",
+      "rank": 946,
+      "word": "dead"
+    },
+    {
+      "cefr_level": "C1",
+      "example_sentence": "They met at the café on Saturday afternoon.",
+      "ipa_strong": "/æftɜrnuːn/",
+      "pos": "noun",
+      "rank": 947,
+      "word": "afternoon"
+    },
+    {
+      "cefr_level": "C1",
+      "example_sentence": "I prefer tea to coffee in the morning.",
+      "ipa_strong": "/pɹʌfɜr/",
+      "pos": "verb",
+      "rank": 948,
+      "word": "prefer"
+    },
+    {
+      "cefr_level": "C1",
+      "example_sentence": "The company decided to extend the deadline by two weeks.",
+      "ipa_strong": "/ɪkstɛnd/",
+      "pos": "verb",
+      "rank": 949,
+      "word": "extend"
+    },
+    {
+      "cefr_level": "C1",
+      "example_sentence": "There is a possibility that the flight will be delayed due to bad weather.",
+      "ipa_strong": "/pɑsʌbɪlʌtiː/",
+      "pos": "noun",
+      "rank": 950,
+      "word": "possibility"
+    },
+    {
+      "cefr_level": "C1",
+      "example_sentence": "She asked a stranger for directions to the nearest subway station.",
+      "ipa_strong": "/dɜrɛkʃʌn/",
+      "pos": "noun",
+      "rank": 951,
+      "word": "direction"
+    },
+    {
+      "cefr_level": "C1",
+      "example_sentence": "The sports facility has a swimming pool and a gym.",
+      "ipa_strong": "/fʌsɪlɪtiː/",
+      "pos": "noun",
+      "rank": 952,
+      "word": "facility"
+    },
+    {
+      "cefr_level": "C1",
+      "example_sentence": "The market sells a wide variety of fresh fruits and vegetables.",
+      "ipa_strong": "/vɜraɪʌtiː/",
+      "pos": "noun",
+      "rank": 953,
+      "word": "variety"
+    },
+    {
+      "cefr_level": "C1",
+      "example_sentence": "Reading the news is part of her daily routine.",
+      "ipa_strong": "/deɪliː/",
+      "pos": "adjective",
+      "rank": 954,
+      "word": "daily"
+    },
+    {
+      "cefr_level": "C1",
+      "example_sentence": "She packed her clothes into a suitcase the night before her trip.",
+      "ipa_strong": "/kloʊðz/",
+      "pos": "noun",
+      "rank": 955,
+      "word": "clothes"
+    },
+    {
+      "cefr_level": "C1",
+      "example_sentence": "He stared at the screen for hours while working on his report.",
+      "ipa_strong": "/skɹiːn/",
+      "pos": "noun",
+      "rank": 956,
+      "word": "screen"
+    },
+    {
+      "cefr_level": "C1",
+      "example_sentence": "The runners lined up at the starting line on the track.",
+      "ipa_strong": "/tɹæk/",
+      "pos": "noun",
+      "rank": 957,
+      "word": "track"
+    },
+    {
+      "cefr_level": "C1",
+      "example_sentence": "The children danced together at the school celebration.",
+      "ipa_strong": "/dæns/",
+      "pos": "verb",
+      "rank": 958,
+      "word": "dance"
+    },
+    {
+      "cefr_level": "C1",
+      "example_sentence": "The house was completely destroyed by the fire.",
+      "ipa_strong": "/kʌmpliːtliː/",
+      "pos": "adverb",
+      "rank": 959,
+      "word": "completely"
+    },
+    {
+      "cefr_level": "C1",
+      "example_sentence": "The survey showed that female students scored higher in reading.",
+      "ipa_strong": "/fiːmeɪl/",
+      "pos": "adjective",
+      "rank": 960,
+      "word": "female"
+    },
+    {
+      "cefr_level": "C1",
+      "example_sentence": "It is your responsibility to make sure the door is locked at night.",
+      "ipa_strong": "/ɹiːspɑnsʌbɪlʌtiː/",
+      "pos": "noun",
+      "rank": 961,
+      "word": "responsibility"
+    },
+    {
+      "cefr_level": "C1",
+      "example_sentence": "The museum displayed the original painting by Picasso.",
+      "ipa_strong": "/ɜrɪdʒʌnʌl/",
+      "pos": "adjective",
+      "rank": 962,
+      "word": "original"
+    },
+    {
+      "cefr_level": "C1",
+      "example_sentence": "My sister called me last night to tell me about her new job.",
+      "ipa_strong": "/sɪstɜr/",
+      "pos": "noun",
+      "rank": 963,
+      "word": "sister"
+    },
+    {
+      "cefr_level": "C1",
+      "example_sentence": "He sat on a large rock by the river and watched the water.",
+      "ipa_strong": "/ɹɑk/",
+      "pos": "noun",
+      "rank": 964,
+      "word": "rock"
+    },
+    {
+      "cefr_level": "C1",
+      "example_sentence": "It has always been her dream to travel around the world.",
+      "ipa_strong": "/dɹiːm/",
+      "pos": "noun",
+      "rank": 965,
+      "word": "dream"
+    },
+    {
+      "cefr_level": "C1",
+      "example_sentence": "He neither called nor sent a message after the meeting.",
+      "ipa_strong": "/nɔɹ/",
+      "pos": "conjunction",
+      "rank": 966,
+      "word": "nor"
+    },
+    {
+      "cefr_level": "C1",
+      "example_sentence": "She was accepted to a university in London to study medicine.",
+      "ipa_strong": "/juːnʌvɜrsʌtiː/",
+      "pos": "noun",
+      "rank": 967,
+      "word": "university"
+    },
+    {
+      "cefr_level": "C1",
+      "example_sentence": "He finished the puzzle so easily that he started another one right away.",
+      "ipa_strong": "/iːzʌliː/",
+      "pos": "adverb",
+      "rank": 968,
+      "word": "easily"
+    },
+    {
+      "cefr_level": "C1",
+      "example_sentence": "She contacted a travel agency to plan her vacation.",
+      "ipa_strong": "/eɪdʒʌnsiː/",
+      "pos": "noun",
+      "rank": 969,
+      "word": "agency"
+    },
+    {
+      "cefr_level": "C1",
+      "example_sentence": "The meal cost less than ten dollars at the food market.",
+      "ipa_strong": "/dɑlɜr/",
+      "pos": "noun",
+      "rank": 970,
+      "word": "dollar"
+    },
+    {
+      "cefr_level": "C1",
+      "example_sentence": "They spent the morning planting flowers in the garden.",
+      "ipa_strong": "/ɡɑɹdʌn/",
+      "pos": "noun",
+      "rank": 971,
+      "word": "garden"
+    },
+    {
+      "cefr_level": "C1",
+      "example_sentence": "The mechanic said he could fix the car by the next morning.",
+      "ipa_strong": "/fɪks/",
+      "pos": "verb",
+      "rank": 972,
+      "word": "fix"
+    },
+    {
+      "cefr_level": "C1",
+      "example_sentence": "She looked ahead and saw the finish line getting closer.",
+      "ipa_strong": "/ʌhɛd/",
+      "pos": "adverb",
+      "rank": 973,
+      "word": "ahead"
+    },
+    {
+      "cefr_level": "C1",
+      "example_sentence": "Always look both ways before you cross the street.",
+      "ipa_strong": "/kɹɔs/",
+      "pos": "verb",
+      "rank": 974,
+      "word": "cross"
+    },
+    {
+      "cefr_level": "C1",
+      "example_sentence": "“Are you coming to the party?” “Yeah, I’ll be there at eight.”",
+      "ipa_strong": "/jæ/",
+      "pos": "interjection",
+      "rank": 975,
+      "word": "yeah"
+    },
+    {
+      "cefr_level": "C1",
+      "example_sentence": "The doctor checked his weight and said he needed to eat more.",
+      "ipa_strong": "/weɪt/",
+      "pos": "noun",
+      "rank": 976,
+      "word": "weight"
+    },
+    {
+      "cefr_level": "C1",
+      "example_sentence": "They hired a lawyer to get legal advice before signing the contract.",
+      "ipa_strong": "/liːɡʌl/",
+      "pos": "adjective",
+      "rank": 977,
+      "word": "legal"
+    },
+    {
+      "cefr_level": "C1",
+      "example_sentence": "The manager submitted a proposal to expand the team by five people.",
+      "ipa_strong": "/pɹʌpoʊzʌl/",
+      "pos": "noun",
+      "rank": 978,
+      "word": "proposal"
+    },
+    {
+      "cefr_level": "C1",
+      "example_sentence": "Please download the latest version of the app before starting.",
+      "ipa_strong": "/vɜrʒʌn/",
+      "pos": "noun",
+      "rank": 979,
+      "word": "version"
+    },
+    {
+      "cefr_level": "C1",
+      "example_sentence": "They had a long conversation about their plans for the future.",
+      "ipa_strong": "/kɑnvɜrseɪʃʌn/",
+      "pos": "noun",
+      "rank": 980,
+      "word": "conversation"
+    },
+    {
+      "cefr_level": "C1",
+      "example_sentence": "Somebody left their umbrella by the door — does it belong to you?",
+      "ipa_strong": "/sʌmbɑdiː/",
+      "pos": "pronoun",
+      "rank": 981,
+      "word": "somebody"
+    },
+    {
+      "cefr_level": "C1",
+      "example_sentence": "She bought half a pound of cheese at the market.",
+      "ipa_strong": "/paʊnd/",
+      "pos": "noun",
+      "rank": 982,
+      "word": "pound"
+    },
+    {
+      "cefr_level": "C1",
+      "example_sentence": "He picked up a travel magazine while waiting at the airport.",
+      "ipa_strong": "/mæɡʌziːn/",
+      "pos": "noun",
+      "rank": 983,
+      "word": "magazine"
+    },
+    {
+      "cefr_level": "C1",
+      "example_sentence": "Early experiences shape the way children think about the world.",
+      "ipa_strong": "/ʃeɪp/",
+      "pos": "verb",
+      "rank": 984,
+      "word": "shape"
+    },
+    {
+      "cefr_level": "C1",
+      "example_sentence": "They sailed across the sea to reach the island.",
+      "ipa_strong": "/siː/",
+      "pos": "noun",
+      "rank": 985,
+      "word": "sea"
+    },
+    {
+      "cefr_level": "C1",
+      "example_sentence": "When she heard the alarm, she immediately called the fire department.",
+      "ipa_strong": "/ɪmiːdiːʌtliː/",
+      "pos": "adverb",
+      "rank": 986,
+      "word": "immediately"
+    },
+    {
+      "cefr_level": "C1",
+      "example_sentence": "Everyone was made to feel welcome at the community dinner.",
+      "ipa_strong": "/wɛlkʌm/",
+      "pos": "adjective",
+      "rank": 987,
+      "word": "welcome"
+    },
+    {
+      "cefr_level": "C1",
+      "example_sentence": "She smiled when she saw her old friend walking through the door.",
+      "ipa_strong": "/smaɪl/",
+      "pos": "verb",
+      "rank": 988,
+      "word": "smile"
+    },
+    {
+      "cefr_level": "C1",
+      "example_sentence": "Good communication between team members is essential for a project to succeed.",
+      "ipa_strong": "/kʌmjuːnʌkeɪʃʌn/",
+      "pos": "noun",
+      "rank": 989,
+      "word": "communication"
+    },
+    {
+      "cefr_level": "C1",
+      "example_sentence": "The real estate agent showed them three apartments before they made a decision.",
+      "ipa_strong": "/eɪdʒʌnt/",
+      "pos": "noun",
+      "rank": 990,
+      "word": "agent"
+    },
+    {
+      "cefr_level": "C1",
+      "example_sentence": "They cooked a traditional meal to celebrate the holiday with family.",
+      "ipa_strong": "/tɹʌdɪʃʌnʌl/",
+      "pos": "adjective",
+      "rank": 991,
+      "word": "traditional"
+    },
+    {
+      "cefr_level": "C1",
+      "example_sentence": "The technician came to replace the broken window.",
+      "ipa_strong": "/ɹiːpleɪs/",
+      "pos": "verb",
+      "rank": 992,
+      "word": "replace"
+    },
+    {
+      "cefr_level": "C1",
+      "example_sentence": "The judge asked both sides to present their evidence in court.",
+      "ipa_strong": "/dʒʌdʒ/",
+      "pos": "noun",
+      "rank": 993,
+      "word": "judge"
+    },
+    {
+      "cefr_level": "C1",
+      "example_sentence": "She taught herself to play the guitar by watching videos online.",
+      "ipa_strong": "/hɜrsɛlf/",
+      "pos": "pronoun",
+      "rank": 994,
+      "word": "herself"
+    },
+    {
+      "cefr_level": "C1",
+      "example_sentence": "The lights went out suddenly in the middle of the meeting.",
+      "ipa_strong": "/sʌdʌnliː/",
+      "pos": "adverb",
+      "rank": 995,
+      "word": "suddenly"
+    },
+    {
+      "cefr_level": "C1",
+      "example_sentence": "Each generation faces different challenges and opportunities.",
+      "ipa_strong": "/dʒɛnɜreɪʃʌn/",
+      "pos": "noun",
+      "rank": 996,
+      "word": "generation"
+    },
+    {
+      "cefr_level": "C1",
+      "example_sentence": "The contractor gave us an estimate of how much the repairs would cost.",
+      "ipa_strong": "/ɛstʌmʌt/",
+      "pos": "noun",
+      "rank": 997,
+      "word": "estimate"
+    },
+    {
+      "cefr_level": "C1",
+      "example_sentence": "Pizza is his favorite food, so they ordered it for his birthday.",
+      "ipa_strong": "/feɪvɜrɪt/",
+      "pos": "adjective",
+      "rank": 998,
+      "word": "favorite"
+    },
+    {
+      "cefr_level": "C1",
+      "example_sentence": "She had difficulty understanding the instructions because they were not clear.",
+      "ipa_strong": "/dɪfʌkʌltiː/",
+      "pos": "noun",
+      "rank": 999,
+      "word": "difficulty"
+    },
+    {
+      "cefr_level": "C1",
+      "example_sentence": "You can purchase tickets online or at the box office.",
       "ipa_strong": "/pɜrtʃʌs/",
-      "example_sentence": "I purchase every day here.",
-      "cefr_level": "C1"
+      "pos": "verb",
+      "rank": 1000,
+      "word": "purchase"
     }
-  ]
+  ],
+  "version": 1
 }

@@ -59,15 +59,23 @@ export function useAIPractice(): UseAIPracticeReturn {
   });
 
   useEffect(() => {
-    words.loadSavedWords();
-    if (user?.id) {
-      const userId = user.id;
-      // Hydrate from remote first (last-write-wins), then build fresh state
-      hydrateFromRemote(userId).catch(() => {}).finally(() => {
-        getUserLearningState(userId).then(setLearningState).catch(() => {});
-      });
-    }
-  }, [user?.id, words]);
+    if (!user?.id) return;
+
+    const userId = user.id;
+    let cancelled = false;
+
+    void (async () => {
+      await words.loadSavedWords();
+      await hydrateFromRemote(userId).catch(() => {});
+      if (cancelled) return;
+      const state = await getUserLearningState(userId).catch(() => null);
+      if (!cancelled && state) setLearningState(state);
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [user?.id, words.loadSavedWords]);
 
   // Throttled persistence: sync learningState to Supabase 5s after the last update.
   useEffect(() => {

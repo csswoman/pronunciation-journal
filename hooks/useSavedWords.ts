@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { saveAIWord, getAIWords, deleteAIWord } from "@/lib/db/ai";
 import type { AISavedWord, Difficulty } from "@/lib/types";
 
@@ -45,14 +45,25 @@ export function useSavedWords(conversationId: number | null) {
     setSavedWords(prev => prev.filter(w => w.id !== id));
   }, []);
 
-  return {
-    savedWords,
-    wordToSave,
-    setWordToSave,
-    loadSavedWords,
-    openSaveWordModal,
-    closeSaveWordModal,
-    confirmSaveWord,
-    deleteSavedWord,
-  };
+  return useMemo(
+    () => ({
+      savedWords,
+      wordToSave,
+      setWordToSave,
+      loadSavedWords,
+      openSaveWordModal,
+      closeSaveWordModal,
+      confirmSaveWord,
+      deleteSavedWord,
+    }),
+    [
+      savedWords,
+      wordToSave,
+      loadSavedWords,
+      openSaveWordModal,
+      closeSaveWordModal,
+      confirmSaveWord,
+      deleteSavedWord,
+    ],
+  );
 }

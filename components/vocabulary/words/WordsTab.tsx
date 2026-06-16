@@ -31,6 +31,7 @@ interface WordsTabProps {
   onDelete: (id: string) => void;
   onOpenAddWord: (initialText?: string) => void;
   onToggleFavorite?: (id: string, value: boolean) => void;
+  onClearActionError?: () => void;
 }
 
 export function WordsTab({
@@ -47,6 +48,7 @@ export function WordsTab({
   onDelete,
   onOpenAddWord,
   onToggleFavorite,
+  onClearActionError,
 }: WordsTabProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [filterType, setFilterType] = useState<WordFilter>("all");
@@ -84,7 +86,7 @@ export function WordsTab({
             <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-fg-subtle opacity-60 pointer-events-none" />
             <input
               type="text"
-              placeholder="Search words…"
+              placeholder="Filter your words…"
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
               onKeyDown={e => {
@@ -155,7 +157,19 @@ export function WordsTab({
 
       {(error || actionError) && (
         <Card className="!p-3 border-[var(--error)]/40 bg-[color-mix(in_oklch,var(--error)_8%,var(--card-bg))]">
-          <p className="text-sm text-[var(--error)]">{error ?? actionError}</p>
+          <div className="flex items-center justify-between gap-2">
+            <p className="text-sm text-[var(--error)]">{error ?? actionError}</p>
+            {actionError && onClearActionError && (
+              <button
+                type="button"
+                aria-label="Dismiss error"
+                className="shrink-0 text-[var(--error)] opacity-60 hover:opacity-100 transition-opacity text-base leading-none"
+                onClick={onClearActionError}
+              >
+                ×
+              </button>
+            )}
+          </div>
         </Card>
       )}
 
@@ -171,7 +185,7 @@ export function WordsTab({
         <WordsEmptyState onAdd={() => onOpenAddWord()} />
       ) : filteredWords.length === 0 ? (
         <Card className="p-8 text-center">
-          <p className="text-sm text-fg-muted">No words found matching your search or filter.</p>
+          <p className="text-sm text-fg-muted">No words match that search. Try clearing the filter.</p>
         </Card>
       ) : (
         <>

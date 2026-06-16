@@ -5,6 +5,10 @@ import { getAIWords } from "@/lib/db/ai";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { createEmptyState, type UserLearningState } from "./learning-state";
 
+const CACHE_TTL_MS = 30_000;
+const cache = new Map<string, { expiresAt: number; state: UserLearningState }>();
+const inflight = new Map<string, Promise<UserLearningState>>();
+
 function getOrCreateDeviceId(): string {
   const key = "ai_practice_device_id";
   let id = localStorage.getItem(key);
@@ -25,6 +29,28 @@ function accuracyToCEFR(accuracy: number): UserLearningState["level"]["cefrEstim
 }
 
 export async function getUserLearningState(userId: string): Promise<UserLearningState> {
+  const cached = cache.get(userId);
+  if (cached && cached.expiresAt > Date.now()) {
+    return cached.state;
+  }
+
+  const pending = inflight.get(userId);
+  if (pending) return pending;
+
+  const promise = buildUserLearningState(userId)
+    .then((state) => {
+      cache.set(userId, { state, expiresAt: Date.now() + CACHE_TTL_MS });
+      return state;
+    })
+    .finally(() => {
+      inflight.delete(userId);
+    });
+
+  inflight.set(userId, promise);
+  return promise;
+}
+
+async function buildUserLearningState(userId: string): Promise<UserLearningState> {
   const deviceId = getOrCreateDeviceId();
   const base = createEmptyState(userId, deviceId);
 

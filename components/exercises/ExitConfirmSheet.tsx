@@ -2,46 +2,58 @@
 
 // Planned structure:
 // <ExitConfirmSheet>
-//   <Backdrop />    — fixed overlay, click cancels
-//   <Sheet />       — bottom panel with title, subtitle, two buttons
+//   <Backdrop />   — blur overlay, click cancels
+//   <Sheet />      — bottom-anchored panel: header group, action group
 
 interface ExitConfirmSheetProps {
   open: boolean
   onConfirm: () => void
   onCancel: () => void
+  backdrop?: boolean
 }
 
 export function ExitConfirmSheet({ open, onConfirm, onCancel }: ExitConfirmSheetProps) {
   if (!open) return null
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col justify-end">
+    <div className="absolute inset-0 z-50 flex items-end">
+      {/* Blur backdrop */}
       <button
         type="button"
         aria-label="Dismiss"
         onClick={onCancel}
-        className="absolute inset-0 bg-black/40 cursor-default"
+        className="absolute inset-0 bg-[var(--page-bg)]/60 backdrop-blur-md cursor-default"
       />
-      <div className="relative z-10 rounded-t-[var(--radius-xl)] bg-surface px-6 pb-10 pt-6 shadow-xl flex flex-col gap-4">
-        <div className="mx-auto mb-1 h-1 w-10 rounded-full bg-border-subtle" />
-        <h2 className="text-lg font-bold text-fg">Quit this session?</h2>
-        <p className="text-[14px] text-fg-muted leading-snug">
-          You&apos;ll lose your progress in this session.
-        </p>
-        <button
-          type="button"
-          onClick={onConfirm}
-          className="w-full rounded-[var(--radius-full)] py-3.5 text-[15px] font-semibold bg-error text-white transition-opacity hover:opacity-90 cursor-pointer"
-        >
-          End session
-        </button>
-        <button
-          type="button"
-          onClick={onCancel}
-          className="w-full rounded-[var(--radius-full)] py-3.5 text-[15px] font-semibold bg-surface-raised text-fg transition-opacity hover:opacity-80 cursor-pointer"
-        >
-          Keep practicing
-        </button>
+
+      {/* Bottom sheet panel */}
+      <div className="relative z-10 w-full bg-[var(--card-bg)] rounded-t-[var(--radius-2xl)] px-6 pt-6 pb-20 flex flex-col gap-6 border-none">
+        {/* Header group */}
+        <div className="flex flex-col gap-1.5">
+          <h2 className="text-lg font-semibold leading-snug tracking-tight text-[var(--fg)]">
+            Quit this session?
+          </h2>
+          <p className="text-[13px] text-[var(--fg-muted)] leading-relaxed">
+            You&apos;ll lose your progress in this session.
+          </p>
+        </div>
+
+        {/* Action group */}
+        <div className="flex flex-col gap-2">
+          <button
+            type="button"
+            onClick={onConfirm}
+            className="w-full rounded-[var(--radius-md)] py-3 text-[14px] font-semibold bg-[var(--error-soft)] text-[var(--error)] border border-[var(--error)]/30 transition-colors hover:bg-[var(--error)] hover:text-white hover:border-transparent cursor-pointer"
+          >
+            End session
+          </button>
+          <button
+            type="button"
+            onClick={onCancel}
+            className="w-full rounded-[var(--radius-md)] py-3 text-[14px] font-semibold bg-[var(--cta-bg)] text-[var(--cta-fg)] transition-opacity hover:opacity-85 cursor-pointer"
+          >
+            Keep practicing
+          </button>
+        </div>
       </div>
     </div>
   )

@@ -1,3 +1,15 @@
+import withSerwistInit from "@serwist/next";
+
+const withSerwist = withSerwistInit({
+  swSrc: "app/sw.ts",
+  swDest: "public/sw.js",
+  exclude: [
+    /^\/api\/gemini\//,
+    /^\/api\/auth\//,
+    /^\/practice\/sounds\//,
+  ],
+});
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   turbopack: {},
@@ -24,6 +36,10 @@ const nextConfig = {
       },
       {
         protocol: "https",
+        hostname: "lh3.googleusercontent.com",
+      },
+      {
+        protocol: "https",
         hostname: "prod-files-secure.s3.us-east-1.amazonaws.com",
       },
       {
@@ -33,7 +49,6 @@ const nextConfig = {
     ],
   },
   webpack: (config, { isServer }) => {
-    // Enable Web Workers with proper handling
     if (!isServer) {
       config.resolve.fallback = {
         ...config.resolve.fallback,
@@ -44,12 +59,11 @@ const nextConfig = {
     }
     return config;
   },
-  // Required for WASM support (Whisper model)
   experimental: {
     serverActions: {
-      bodySizeLimit: '10mb',
+      bodySizeLimit: "10mb",
     },
   },
 };
 
-module.exports = nextConfig;
+export default withSerwist(nextConfig);

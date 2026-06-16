@@ -16,6 +16,7 @@ interface Props {
 export function MinimalPairExercise({ exercise, onSubmit, focusUi = false, voice }: Props) {
   const [selected, setSelected] = useState<string | null>(null)
   const [submitted, setSubmitted] = useState(false)
+  const [playing, setPlaying] = useState(false)
   const meta = getPhonemeExerciseMeta('minimal_pair', { ipa: exercise.ipa })
 
   function handleSelect(id: string, label: string) {
@@ -129,9 +130,24 @@ export function MinimalPairExercise({ exercise, onSubmit, focusUi = false, voice
         hint="Toca una palabra para escucharla y elegirla"
       />
       {exercise.ipa && (
-        <p className="pf-minimal-pair__ipa" aria-label={`Sonido objetivo ${exercise.ipa}`}>
-          {exercise.ipa}
-        </p>
+        <div className="pf-minimal-pair__ipa-row">
+          <p className="pf-minimal-pair__ipa" aria-label={`Sonido objetivo ${exercise.ipa}`}>
+            {exercise.ipa}
+          </p>
+          <button
+            type="button"
+            aria-label="Reproducir sonido"
+            className={`pf-replay-btn${playing ? ' pf-replay-btn--playing' : ''}`}
+            onClick={() => {
+              if (playing) return
+              setPlaying(true)
+              speak(exercise.ipa!.replace(/[/[\]]/g, ''), { voice })
+              setTimeout(() => setPlaying(false), 900)
+            }}
+          >
+            <span className="pf-replay-btn__icon" aria-hidden />
+          </button>
+        </div>
       )}
       {options}
       <button

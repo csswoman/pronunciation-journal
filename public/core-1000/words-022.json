@@ -1,805 +1,805 @@
 {
-  "version": 1,
-  "entries": [
-    {
-      "rank": 2101,
-      "word": "alter",
-      "pos": "noun",
-      "ipa_strong": "/ɔltɜr/",
-      "example_sentence": "The alter is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2102,
-      "word": "perceive",
-      "pos": "noun",
-      "ipa_strong": "/pɜrsiːv/",
-      "example_sentence": "The perceive is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2103,
-      "word": "routine",
-      "pos": "noun",
-      "ipa_strong": "/ɹuːtiːn/",
-      "example_sentence": "The routine is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2104,
-      "word": "sink",
-      "pos": "noun",
-      "ipa_strong": "/sɪŋk/",
-      "example_sentence": "The sink is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2105,
-      "word": "stare",
-      "pos": "noun",
-      "ipa_strong": "/stɛɹ/",
-      "example_sentence": "The stare is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2106,
-      "word": "anymore",
-      "pos": "noun",
-      "ipa_strong": "/ɛniːmɔɹ/",
-      "example_sentence": "The anymore is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2107,
-      "word": "hero",
-      "pos": "noun",
-      "ipa_strong": "/hɪɹoʊ/",
-      "example_sentence": "The hero is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2108,
-      "word": "supporter",
-      "pos": "noun",
-      "ipa_strong": "/sʌpɔɹtɜr/",
-      "example_sentence": "The supporter is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2109,
-      "word": "convert",
-      "pos": "noun",
-      "ipa_strong": "/kɑnvɜrt/",
-      "example_sentence": "The convert is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2110,
-      "word": "steady",
-      "pos": "noun",
-      "ipa_strong": "/stɛdiː/",
-      "example_sentence": "The steady is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2111,
-      "word": "meter",
-      "pos": "noun",
-      "ipa_strong": "/miːtɜr/",
-      "example_sentence": "The meter is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2112,
-      "word": "truck",
-      "pos": "noun",
-      "ipa_strong": "/tɹʌk/",
-      "example_sentence": "The truck is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2113,
-      "word": "nose",
-      "pos": "noun",
-      "ipa_strong": "/noʊz/",
-      "example_sentence": "The nose is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2114,
-      "word": "beside",
-      "pos": "preposition",
-      "ipa_strong": "/bɪsaɪd/",
-      "example_sentence": "It is beside the box now.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2115,
-      "word": "sail",
-      "pos": "noun",
-      "ipa_strong": "/seɪl/",
-      "example_sentence": "The sail is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2116,
-      "word": "disaster",
-      "pos": "noun",
-      "ipa_strong": "/dɪzæstɜr/",
-      "example_sentence": "The disaster is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2117,
-      "word": "pace",
-      "pos": "noun",
-      "ipa_strong": "/peɪs/",
-      "example_sentence": "The pace is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2118,
-      "word": "heavily",
-      "pos": "noun",
-      "ipa_strong": "/hɛvʌliː/",
-      "example_sentence": "The heavily is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2119,
-      "word": "devote",
-      "pos": "noun",
-      "ipa_strong": "/dɪvoʊt/",
-      "example_sentence": "The devote is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2120,
-      "word": "terrorist",
-      "pos": "noun",
-      "ipa_strong": "/tɛɹɜrɪst/",
-      "example_sentence": "The terrorist is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2121,
-      "word": "justify",
-      "pos": "verb",
-      "ipa_strong": "/dʒʌstʌfaɪ/",
-      "example_sentence": "I justify every day here.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2122,
-      "word": "vital",
-      "pos": "noun",
-      "ipa_strong": "/vaɪtʌl/",
-      "example_sentence": "The vital is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2123,
-      "word": "fascinate",
-      "pos": "noun",
-      "ipa_strong": "/fæsʌneɪt/",
-      "example_sentence": "The fascinate is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2124,
-      "word": "external",
-      "pos": "adjective",
-      "ipa_strong": "/ɪkstɜrnʌl/",
-      "example_sentence": "It is very external today.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2125,
-      "word": "spare",
-      "pos": "noun",
-      "ipa_strong": "/spɛɹ/",
-      "example_sentence": "The spare is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2126,
-      "word": "whenever",
-      "pos": "noun",
-      "ipa_strong": "/wɛnɛvɜr/",
-      "example_sentence": "The whenever is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2127,
-      "word": "depression",
-      "pos": "noun",
-      "ipa_strong": "/dɪpɹɛʃʌn/",
-      "example_sentence": "The depression is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2128,
-      "word": "guilty",
-      "pos": "noun",
-      "ipa_strong": "/ɡɪltiː/",
-      "example_sentence": "The guilty is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2129,
-      "word": "underlie",
-      "pos": "noun",
-      "ipa_strong": "/ʌndɜrlaɪ/",
-      "example_sentence": "The underlie is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2130,
-      "word": "mom",
-      "pos": "noun",
-      "ipa_strong": "/mɑm/",
-      "example_sentence": "The mom is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2131,
-      "word": "distinction",
-      "pos": "noun",
-      "ipa_strong": "/dɪstɪŋkʃʌn/",
-      "example_sentence": "The distinction is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2132,
-      "word": "satisfaction",
-      "pos": "noun",
-      "ipa_strong": "/sætʌsfækʃʌn/",
-      "example_sentence": "The satisfaction is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2133,
-      "word": "incorporate",
-      "pos": "noun",
-      "ipa_strong": "/ɪnkɔɹpɜreɪt/",
-      "example_sentence": "The incorporate is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2134,
-      "word": "pour",
-      "pos": "noun",
-      "ipa_strong": "/pɔɹ/",
-      "example_sentence": "The pour is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2135,
-      "word": "sweep",
-      "pos": "noun",
-      "ipa_strong": "/swiːp/",
-      "example_sentence": "The sweep is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2136,
-      "word": "obligation",
-      "pos": "noun",
-      "ipa_strong": "/ɑblʌɡeɪʃʌn/",
-      "example_sentence": "The obligation is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2137,
-      "word": "sir",
-      "pos": "noun",
-      "ipa_strong": "/sɜr/",
-      "example_sentence": "The sir is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2138,
-      "word": "evaluate",
-      "pos": "noun",
-      "ipa_strong": "/ɪvæljuːeɪt/",
-      "example_sentence": "The evaluate is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2139,
-      "word": "anger",
-      "pos": "noun",
-      "ipa_strong": "/æŋɡɜr/",
-      "example_sentence": "The anger is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2140,
-      "word": "pub",
-      "pos": "noun",
-      "ipa_strong": "/pʌb/",
-      "example_sentence": "The pub is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2141,
-      "word": "perception",
-      "pos": "noun",
-      "ipa_strong": "/pɜrsɛpʃʌn/",
-      "example_sentence": "The perception is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2142,
-      "word": "naturally",
-      "pos": "noun",
-      "ipa_strong": "/nætʃɜrʌliː/",
-      "example_sentence": "The naturally is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2143,
-      "word": "currency",
-      "pos": "noun",
-      "ipa_strong": "/kɜrʌnsiː/",
-      "example_sentence": "The currency is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2144,
-      "word": "database",
-      "pos": "noun",
-      "ipa_strong": "/deɪtʌbeɪs/",
-      "example_sentence": "The database is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2145,
-      "word": "initially",
-      "pos": "noun",
-      "ipa_strong": "/ɪnɪʃʌliː/",
-      "example_sentence": "The initially is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2146,
-      "word": "territory",
-      "pos": "noun",
-      "ipa_strong": "/tɛɹɪtɔɹiː/",
-      "example_sentence": "The territory is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2147,
-      "word": "stream",
-      "pos": "noun",
-      "ipa_strong": "/stɹiːm/",
-      "example_sentence": "The stream is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2148,
-      "word": "rarely",
-      "pos": "noun",
-      "ipa_strong": "/ɹɛɹliː/",
-      "example_sentence": "The rarely is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2149,
-      "word": "height",
-      "pos": "noun",
-      "ipa_strong": "/haɪt/",
-      "example_sentence": "The height is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2150,
-      "word": "apparent",
-      "pos": "noun",
-      "ipa_strong": "/ʌpɛɹʌnt/",
-      "example_sentence": "The apparent is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2151,
-      "word": "western",
-      "pos": "adjective",
-      "ipa_strong": "/wɛstɜrn/",
-      "example_sentence": "It is very western today.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2152,
-      "word": "expansion",
-      "pos": "noun",
-      "ipa_strong": "/ɪkspænʃʌn/",
-      "example_sentence": "The expansion is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2153,
-      "word": "constantly",
-      "pos": "noun",
-      "ipa_strong": "/kɑnstʌntliː/",
-      "example_sentence": "The constantly is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2154,
-      "word": "muscle",
-      "pos": "noun",
-      "ipa_strong": "/mʌsʌl/",
-      "example_sentence": "The muscle is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2155,
-      "word": "scare",
-      "pos": "noun",
-      "ipa_strong": "/skɛɹ/",
-      "example_sentence": "The scare is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2156,
-      "word": "badly",
-      "pos": "noun",
-      "ipa_strong": "/bædliː/",
-      "example_sentence": "The badly is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2157,
-      "word": "everyday",
-      "pos": "noun",
-      "ipa_strong": "/ɛvɹiːdeɪ/",
-      "example_sentence": "The everyday is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2158,
-      "word": "boundary",
-      "pos": "noun",
-      "ipa_strong": "/baʊndɜriː/",
-      "example_sentence": "The boundary is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2159,
-      "word": "ratio",
-      "pos": "noun",
-      "ipa_strong": "/ɹeɪʃiːoʊ/",
-      "example_sentence": "The ratio is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2160,
-      "word": "essay",
-      "pos": "noun",
-      "ipa_strong": "/ɛseɪ/",
-      "example_sentence": "The essay is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2161,
-      "word": "scream",
-      "pos": "noun",
-      "ipa_strong": "/skɹiːm/",
-      "example_sentence": "The scream is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2162,
-      "word": "withdraw",
-      "pos": "noun",
-      "ipa_strong": "/wɪðdɹɔ/",
-      "example_sentence": "The withdraw is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2163,
-      "word": "pollution",
-      "pos": "noun",
-      "ipa_strong": "/pʌluːʃʌn/",
-      "example_sentence": "The pollution is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2164,
-      "word": "disorder",
-      "pos": "noun",
-      "ipa_strong": "/dɪsɔɹdɜr/",
-      "example_sentence": "The disorder is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2165,
-      "word": "furniture",
-      "pos": "noun",
-      "ipa_strong": "/fɜrnɪtʃɜr/",
-      "example_sentence": "The furniture is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2166,
-      "word": "symbol",
-      "pos": "noun",
-      "ipa_strong": "/sɪmbʌl/",
-      "example_sentence": "The symbol is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2167,
-      "word": "apartment",
-      "pos": "noun",
-      "ipa_strong": "/ʌpɑɹtmʌnt/",
-      "example_sentence": "The apartment is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2168,
-      "word": "demonstration",
-      "pos": "noun",
-      "ipa_strong": "/dɛmʌnstɹeɪʃʌn/",
-      "example_sentence": "The demonstration is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2169,
-      "word": "analyst",
-      "pos": "noun",
-      "ipa_strong": "/ænʌlɪst/",
-      "example_sentence": "The analyst is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2170,
-      "word": "platform",
-      "pos": "noun",
-      "ipa_strong": "/plætfɔɹm/",
-      "example_sentence": "The platform is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2171,
-      "word": "steel",
-      "pos": "noun",
-      "ipa_strong": "/stiːl/",
-      "example_sentence": "The steel is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2172,
-      "word": "cake",
-      "pos": "noun",
-      "ipa_strong": "/keɪk/",
-      "example_sentence": "The cake is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2173,
-      "word": "transform",
-      "pos": "noun",
-      "ipa_strong": "/tɹænsfɔɹm/",
-      "example_sentence": "The transform is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2174,
-      "word": "wound",
-      "pos": "noun",
-      "ipa_strong": "/waʊnd/",
-      "example_sentence": "The wound is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2175,
-      "word": "restriction",
-      "pos": "noun",
-      "ipa_strong": "/ɹiːstɹɪkʃʌn/",
-      "example_sentence": "The restriction is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2176,
-      "word": "foundation",
-      "pos": "noun",
-      "ipa_strong": "/faʊndeɪʃʌn/",
-      "example_sentence": "The foundation is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2177,
-      "word": "designer",
-      "pos": "noun",
-      "ipa_strong": "/dɪzaɪnɜr/",
-      "example_sentence": "The designer is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2178,
-      "word": "strain",
-      "pos": "noun",
-      "ipa_strong": "/stɹeɪn/",
-      "example_sentence": "The strain is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2179,
-      "word": "innovation",
-      "pos": "noun",
-      "ipa_strong": "/ɪnʌveɪʃʌn/",
-      "example_sentence": "The innovation is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2180,
-      "word": "album",
-      "pos": "noun",
-      "ipa_strong": "/ælbʌm/",
-      "example_sentence": "The album is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2181,
-      "word": "singer",
-      "pos": "noun",
-      "ipa_strong": "/sɪŋɜr/",
-      "example_sentence": "The singer is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2182,
-      "word": "trail",
-      "pos": "noun",
-      "ipa_strong": "/tɹeɪl/",
-      "example_sentence": "The trail is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2183,
-      "word": "trap",
-      "pos": "noun",
-      "ipa_strong": "/tɹæp/",
-      "example_sentence": "The trap is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2184,
-      "word": "loose",
-      "pos": "noun",
-      "ipa_strong": "/luːs/",
-      "example_sentence": "The loose is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2185,
-      "word": "extension",
-      "pos": "noun",
-      "ipa_strong": "/ɪkstɛnʃʌn/",
-      "example_sentence": "The extension is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2186,
-      "word": "wealth",
-      "pos": "noun",
-      "ipa_strong": "/wɛlθ/",
-      "example_sentence": "The wealth is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2187,
-      "word": "gradually",
-      "pos": "noun",
-      "ipa_strong": "/ɡɹædʒuːʌliː/",
-      "example_sentence": "The gradually is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2188,
-      "word": "tank",
-      "pos": "noun",
-      "ipa_strong": "/tæŋk/",
-      "example_sentence": "The tank is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2189,
-      "word": "evil",
-      "pos": "noun",
-      "ipa_strong": "/iːvʌl/",
-      "example_sentence": "The evil is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2190,
-      "word": "remarkable",
-      "pos": "noun",
-      "ipa_strong": "/ɹɪmɑɹkʌbʌl/",
-      "example_sentence": "The remarkable is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2191,
-      "word": "tune",
-      "pos": "noun",
-      "ipa_strong": "/tuːn/",
-      "example_sentence": "The tune is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2192,
-      "word": "grass",
-      "pos": "noun",
-      "ipa_strong": "/ɡɹæs/",
-      "example_sentence": "The grass is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2193,
-      "word": "invitation",
-      "pos": "noun",
-      "ipa_strong": "/ɪnvɪteɪʃʌn/",
-      "example_sentence": "The invitation is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2194,
-      "word": "transition",
-      "pos": "noun",
-      "ipa_strong": "/tɹænzɪʃʌn/",
-      "example_sentence": "The transition is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2195,
-      "word": "frighten",
-      "pos": "noun",
-      "ipa_strong": "/fɹaɪtʌn/",
-      "example_sentence": "The frighten is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2196,
-      "word": "bid",
-      "pos": "noun",
-      "ipa_strong": "/bɪd/",
-      "example_sentence": "The bid is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2197,
-      "word": "breed",
-      "pos": "noun",
-      "ipa_strong": "/bɹiːd/",
-      "example_sentence": "The breed is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2198,
-      "word": "extraordinary",
-      "pos": "noun",
-      "ipa_strong": "/ɛkstɹʌɔɹdʌnɛɹiː/",
-      "example_sentence": "The extraordinary is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2199,
-      "word": "brilliant",
-      "pos": "noun",
-      "ipa_strong": "/bɹɪljʌnt/",
-      "example_sentence": "The brilliant is very good.",
-      "cefr_level": "C1"
-    },
-    {
-      "rank": 2200,
-      "word": "adviser",
-      "pos": "noun",
-      "ipa_strong": "/ædvaɪzɜr/",
-      "example_sentence": "The adviser is very good.",
-      "cefr_level": "C1"
-    }
-  ]
+"version": 1,
+"entries": [
+{
+"rank": 2101,
+"word": "alter",
+"pos": "verb",
+"ipa_strong": "/ɔltɜr/",
+"example_sentence": "The tailor had to alter the dress because it was too long.",
+"cefr_level": "C1"
+},
+{
+"rank": 2102,
+"word": "perceive",
+"pos": "verb",
+"ipa_strong": "/pɜrsiːv/",
+"example_sentence": "Many people perceive silence as uncomfortable during a conversation.",
+"cefr_level": "C1"
+},
+{
+"rank": 2103,
+"word": "routine",
+"pos": "noun",
+"ipa_strong": "/ɹuːtiːn/",
+"example_sentence": "Her morning routine includes a cup of coffee and a short walk.",
+"cefr_level": "C1"
+},
+{
+"rank": 2104,
+"word": "sink",
+"pos": "verb",
+"ipa_strong": "/sɪŋk/",
+"example_sentence": "The small boat began to sink after it hit the rocks.",
+"cefr_level": "C1"
+},
+{
+"rank": 2105,
+"word": "stare",
+"pos": "verb",
+"ipa_strong": "/stɛɹ/",
+"example_sentence": "It is rude to stare at people on the bus.",
+"cefr_level": "C1"
+},
+{
+"rank": 2106,
+"word": "anymore",
+"pos": "adverb",
+"ipa_strong": "/ɛniːmɔɹ/",
+"example_sentence": "She doesn't live in that city anymore; she moved last year.",
+"cefr_level": "C1"
+},
+{
+"rank": 2107,
+"word": "hero",
+"pos": "noun",
+"ipa_strong": "/hɪɹoʊ/",
+"example_sentence": "The firefighter was called a hero after saving three children from the burning building.",
+"cefr_level": "C1"
+},
+{
+"rank": 2108,
+"word": "supporter",
+"pos": "noun",
+"ipa_strong": "/sʌpɔɹtɜr/",
+"example_sentence": "She has been a strong supporter of equal rights for many years.",
+"cefr_level": "C1"
+},
+{
+"rank": 2109,
+"word": "convert",
+"pos": "verb",
+"ipa_strong": "/kɑnvɜrt/",
+"example_sentence": "They decided to convert the old warehouse into apartments.",
+"cefr_level": "C1"
+},
+{
+"rank": 2110,
+"word": "steady",
+"pos": "adjective",
+"ipa_strong": "/stɛdiː/",
+"example_sentence": "You need a steady hand to pour the liquid without spilling it.",
+"cefr_level": "C1"
+},
+{
+"rank": 2111,
+"word": "meter",
+"pos": "noun",
+"ipa_strong": "/miːtɜr/",
+"example_sentence": "The swimming pool is fifty meters long.",
+"cefr_level": "C1"
+},
+{
+"rank": 2112,
+"word": "truck",
+"pos": "noun",
+"ipa_strong": "/tɹʌk/",
+"example_sentence": "The truck delivered a large shipment of boxes to the warehouse.",
+"cefr_level": "C1"
+},
+{
+"rank": 2113,
+"word": "nose",
+"pos": "noun",
+"ipa_strong": "/noʊz/",
+"example_sentence": "He blew his nose because he had a cold.",
+"cefr_level": "C1"
+},
+{
+"rank": 2114,
+"word": "beside",
+"pos": "preposition",
+"ipa_strong": "/bɪsaɪd/",
+"example_sentence": "She sat beside her best friend during the ceremony.",
+"cefr_level": "C1"
+},
+{
+"rank": 2115,
+"word": "sail",
+"pos": "verb",
+"ipa_strong": "/seɪl/",
+"example_sentence": "They planned to sail across the Atlantic Ocean in the summer.",
+"cefr_level": "C1"
+},
+{
+"rank": 2116,
+"word": "disaster",
+"pos": "noun",
+"ipa_strong": "/dɪzæstɜr/",
+"example_sentence": "The earthquake was the worst natural disaster the region had seen in decades.",
+"cefr_level": "C1"
+},
+{
+"rank": 2117,
+"word": "pace",
+"pos": "noun",
+"ipa_strong": "/peɪs/",
+"example_sentence": "He walked at a slow pace because his leg was still healing.",
+"cefr_level": "C1"
+},
+{
+"rank": 2118,
+"word": "heavily",
+"pos": "adverb",
+"ipa_strong": "/hɛvʌliː/",
+"example_sentence": "It rained heavily all night, flooding several streets in the town.",
+"cefr_level": "C1"
+},
+{
+"rank": 2119,
+"word": "devote",
+"pos": "verb",
+"ipa_strong": "/dɪvoʊt/",
+"example_sentence": "She chose to devote her career to helping children with learning disabilities.",
+"cefr_level": "C1"
+},
+{
+"rank": 2120,
+"word": "terrorist",
+"pos": "noun",
+"ipa_strong": "/tɛɹɜrɪst/",
+"example_sentence": "The police arrested the terrorist before he could carry out the attack.",
+"cefr_level": "C1"
+},
+{
+"rank": 2121,
+"word": "justify",
+"pos": "verb",
+"ipa_strong": "/dʒʌstʌfaɪ/",
+"example_sentence": "He struggled to justify spending so much money on a new phone.",
+"cefr_level": "C1"
+},
+{
+"rank": 2122,
+"word": "vital",
+"pos": "adjective",
+"ipa_strong": "/vaɪtʌl/",
+"example_sentence": "Clean water is vital for the health of every community.",
+"cefr_level": "C1"
+},
+{
+"rank": 2123,
+"word": "fascinate",
+"pos": "verb",
+"ipa_strong": "/fæsʌneɪt/",
+"example_sentence": "Ancient ruins fascinate historians who want to understand how people lived long ago.",
+"cefr_level": "C1"
+},
+{
+"rank": 2124,
+"word": "external",
+"pos": "adjective",
+"ipa_strong": "/ɪkstɜrnʌl/",
+"example_sentence": "The company hired an external consultant to review their budget.",
+"cefr_level": "C1"
+},
+{
+"rank": 2125,
+"word": "spare",
+"pos": "verb",
+"ipa_strong": "/spɛɹ/",
+"example_sentence": "Could you spare a few minutes to help me with this problem?",
+"cefr_level": "C1"
+},
+{
+"rank": 2126,
+"word": "whenever",
+"pos": "conjunction",
+"ipa_strong": "/wɛnɛvɜr/",
+"example_sentence": "Whenever it rains, she takes her umbrella and walks to work.",
+"cefr_level": "C1"
+},
+{
+"rank": 2127,
+"word": "depression",
+"pos": "noun",
+"ipa_strong": "/dɪpɹɛʃʌn/",
+"example_sentence": "After losing his job, he fell into a deep depression and stopped going out.",
+"cefr_level": "C1"
+},
+{
+"rank": 2128,
+"word": "guilty",
+"pos": "adjective",
+"ipa_strong": "/ɡɪltiː/",
+"example_sentence": "She felt guilty about forgetting her friend's birthday.",
+"cefr_level": "C1"
+},
+{
+"rank": 2129,
+"word": "underlie",
+"pos": "verb",
+"ipa_strong": "/ʌndɜrlaɪ/",
+"example_sentence": "A fear of failure seems to underlie many of his decisions at work.",
+"cefr_level": "C1"
+},
+{
+"rank": 2130,
+"word": "mom",
+"pos": "noun",
+"ipa_strong": "/mɑm/",
+"example_sentence": "His mom packed him a lunch every day before school.",
+"cefr_level": "C1"
+},
+{
+"rank": 2131,
+"word": "distinction",
+"pos": "noun",
+"ipa_strong": "/dɪstɪŋkʃʌn/",
+"example_sentence": "There is an important distinction between being confident and being arrogant.",
+"cefr_level": "C1"
+},
+{
+"rank": 2132,
+"word": "satisfaction",
+"pos": "noun",
+"ipa_strong": "/sætʌsfækʃʌn/",
+"example_sentence": "She felt great satisfaction after finishing the difficult project on time.",
+"cefr_level": "C1"
+},
+{
+"rank": 2133,
+"word": "incorporate",
+"pos": "verb",
+"ipa_strong": "/ɪnkɔɹpɜreɪt/",
+"example_sentence": "The chef tried to incorporate local ingredients into every dish on the menu.",
+"cefr_level": "C1"
+},
+{
+"rank": 2134,
+"word": "pour",
+"pos": "verb",
+"ipa_strong": "/pɔɹ/",
+"example_sentence": "She poured the hot tea into two cups and handed one to her guest.",
+"cefr_level": "C1"
+},
+{
+"rank": 2135,
+"word": "sweep",
+"pos": "verb",
+"ipa_strong": "/swiːp/",
+"example_sentence": "He used a broom to sweep the leaves off the front porch.",
+"cefr_level": "C1"
+},
+{
+"rank": 2136,
+"word": "obligation",
+"pos": "noun",
+"ipa_strong": "/ɑblʌɡeɪʃʌn/",
+"example_sentence": "Parents have a legal obligation to send their children to school.",
+"cefr_level": "C1"
+},
+{
+"rank": 2137,
+"word": "sir",
+"pos": "noun",
+"ipa_strong": "/sɜr/",
+"example_sentence": "“Excuse me, sir, you left your wallet on the counter,” the cashier called out.",
+"cefr_level": "C1"
+},
+{
+"rank": 2138,
+"word": "evaluate",
+"pos": "verb",
+"ipa_strong": "/ɪvæljuːeɪt/",
+"example_sentence": "The committee will evaluate all applications before making a final decision.",
+"cefr_level": "C1"
+},
+{
+"rank": 2139,
+"word": "anger",
+"pos": "noun",
+"ipa_strong": "/æŋɡɜr/",
+"example_sentence": "He tried to hide his anger, but everyone could see how upset he was.",
+"cefr_level": "C1"
+},
+{
+"rank": 2140,
+"word": "pub",
+"pos": "noun",
+"ipa_strong": "/pʌb/",
+"example_sentence": "After work, they met at the pub for a drink and some food.",
+"cefr_level": "C1"
+},
+{
+"rank": 2141,
+"word": "perception",
+"pos": "noun",
+"ipa_strong": "/pɜrsɛpʃʌn/",
+"example_sentence": "His perception of the situation changed completely after he heard her side of the story.",
+"cefr_level": "C1"
+},
+{
+"rank": 2142,
+"word": "naturally",
+"pos": "adverb",
+"ipa_strong": "/nætʃɜrʌliː/",
+"example_sentence": "She naturally took charge of the meeting when the manager was absent.",
+"cefr_level": "C1"
+},
+{
+"rank": 2143,
+"word": "currency",
+"pos": "noun",
+"ipa_strong": "/kɜrʌnsiː/",
+"example_sentence": "You should exchange your currency at the bank before traveling abroad.",
+"cefr_level": "C1"
+},
+{
+"rank": 2144,
+"word": "database",
+"pos": "noun",
+"ipa_strong": "/deɪtʌbeɪs/",
+"example_sentence": "All customer information is stored in a secure database.",
+"cefr_level": "C1"
+},
+{
+"rank": 2145,
+"word": "initially",
+"pos": "adverb",
+"ipa_strong": "/ɪnɪʃʌliː/",
+"example_sentence": "She was initially nervous about the interview, but she quickly relaxed.",
+"cefr_level": "C1"
+},
+{
+"rank": 2146,
+"word": "territory",
+"pos": "noun",
+"ipa_strong": "/tɛɹɪtɔɹiː/",
+"example_sentence": "The two countries argued over which territory belonged to each side.",
+"cefr_level": "C1"
+},
+{
+"rank": 2147,
+"word": "stream",
+"pos": "noun",
+"ipa_strong": "/stɹiːm/",
+"example_sentence": "The children played in the shallow stream that ran through the park.",
+"cefr_level": "C1"
+},
+{
+"rank": 2148,
+"word": "rarely",
+"pos": "adverb",
+"ipa_strong": "/ɹɛɹliː/",
+"example_sentence": "He rarely eats fast food because he prefers cooking at home.",
+"cefr_level": "C1"
+},
+{
+"rank": 2149,
+"word": "height",
+"pos": "noun",
+"ipa_strong": "/haɪt/",
+"example_sentence": "You must be above a certain height to ride some of the attractions at the park.",
+"cefr_level": "C1"
+},
+{
+"rank": 2150,
+"word": "apparent",
+"pos": "adjective",
+"ipa_strong": "/ʌpɛɹʌnt/",
+"example_sentence": "It was apparent from her expression that she had not slept well.",
+"cefr_level": "C1"
+},
+{
+"rank": 2151,
+"word": "western",
+"pos": "adjective",
+"ipa_strong": "/wɛstɜrn/",
+"example_sentence": "Many western countries have strict environmental protection laws.",
+"cefr_level": "C1"
+},
+{
+"rank": 2152,
+"word": "expansion",
+"pos": "noun",
+"ipa_strong": "/ɪkspænʃʌn/",
+"example_sentence": "The company's rapid expansion into new markets surprised many investors.",
+"cefr_level": "C1"
+},
+{
+"rank": 2153,
+"word": "constantly",
+"pos": "adverb",
+"ipa_strong": "/kɑnstʌntliː/",
+"example_sentence": "The baby was constantly crying, so her parents took her to the doctor.",
+"cefr_level": "C1"
+},
+{
+"rank": 2154,
+"word": "muscle",
+"pos": "noun",
+"ipa_strong": "/mʌsʌl/",
+"example_sentence": "He pulled a muscle in his leg while running the marathon.",
+"cefr_level": "C1"
+},
+{
+"rank": 2155,
+"word": "scare",
+"pos": "verb",
+"ipa_strong": "/skɛɹ/",
+"example_sentence": "The loud thunder outside began to scare the young children.",
+"cefr_level": "C1"
+},
+{
+"rank": 2156,
+"word": "badly",
+"pos": "adverb",
+"ipa_strong": "/bædliː/",
+"example_sentence": "The car was badly damaged in the accident, and it could not be repaired.",
+"cefr_level": "C1"
+},
+{
+"rank": 2157,
+"word": "everyday",
+"pos": "adjective",
+"ipa_strong": "/ɛvɹiːdeɪ/",
+"example_sentence": "Smartphones have become an everyday tool that most people cannot live without.",
+"cefr_level": "C1"
+},
+{
+"rank": 2158,
+"word": "boundary",
+"pos": "noun",
+"ipa_strong": "/baʊndɜriː/",
+"example_sentence": "The fence marks the boundary between the two properties.",
+"cefr_level": "C1"
+},
+{
+"rank": 2159,
+"word": "ratio",
+"pos": "noun",
+"ipa_strong": "/ɹeɪʃiːoʊ/",
+"example_sentence": "The recipe calls for a ratio of two cups of flour to one cup of sugar.",
+"cefr_level": "C1"
+},
+{
+"rank": 2160,
+"word": "essay",
+"pos": "noun",
+"ipa_strong": "/ɛseɪ/",
+"example_sentence": "The students had to write an essay about a historical event of their choice.",
+"cefr_level": "C1"
+},
+{
+"rank": 2161,
+"word": "scream",
+"pos": "verb",
+"ipa_strong": "/skɹiːm/",
+"example_sentence": "She began to scream when she saw a spider on her pillow.",
+"cefr_level": "C1"
+},
+{
+"rank": 2162,
+"word": "withdraw",
+"pos": "verb",
+"ipa_strong": "/wɪðdɹɔ/",
+"example_sentence": "He decided to withdraw his application after receiving a better job offer.",
+"cefr_level": "C1"
+},
+{
+"rank": 2163,
+"word": "pollution",
+"pos": "noun",
+"ipa_strong": "/pʌluːʃʌn/",
+"example_sentence": "Air pollution in the city has gotten worse since more factories opened.",
+"cefr_level": "C1"
+},
+{
+"rank": 2164,
+"word": "disorder",
+"pos": "noun",
+"ipa_strong": "/dɪsɔɹdɜr/",
+"example_sentence": "The doctor explained that anxiety is a common mental disorder that can be treated.",
+"cefr_level": "C1"
+},
+{
+"rank": 2165,
+"word": "furniture",
+"pos": "noun",
+"ipa_strong": "/fɜrnɪtʃɜr/",
+"example_sentence": "They bought new furniture for the living room after moving into their house.",
+"cefr_level": "C1"
+},
+{
+"rank": 2166,
+"word": "symbol",
+"pos": "noun",
+"ipa_strong": "/sɪmbʌl/",
+"example_sentence": "The dove is often used as a symbol of peace.",
+"cefr_level": "C1"
+},
+{
+"rank": 2167,
+"word": "apartment",
+"pos": "noun",
+"ipa_strong": "/ʌpɑɹtmʌnt/",
+"example_sentence": "She rented a small apartment near the university when she started her studies.",
+"cefr_level": "C1"
+},
+{
+"rank": 2168,
+"word": "demonstration",
+"pos": "noun",
+"ipa_strong": "/dɛmʌnstɹeɪʃʌn/",
+"example_sentence": "The teacher gave a demonstration of the experiment before asking students to try it themselves.",
+"cefr_level": "C1"
+},
+{
+"rank": 2169,
+"word": "analyst",
+"pos": "noun",
+"ipa_strong": "/ænʌlɪst/",
+"example_sentence": "The financial analyst predicted that the company's stock would rise next quarter.",
+"cefr_level": "C1"
+},
+{
+"rank": 2170,
+"word": "platform",
+"pos": "noun",
+"ipa_strong": "/plætfɔɹm/",
+"example_sentence": "The train pulled into the platform just as the passengers arrived.",
+"cefr_level": "C1"
+},
+{
+"rank": 2171,
+"word": "steel",
+"pos": "noun",
+"ipa_strong": "/stiːl/",
+"example_sentence": "The bridge was built with steel beams to make it strong enough for heavy traffic.",
+"cefr_level": "C1"
+},
+{
+"rank": 2172,
+"word": "cake",
+"pos": "noun",
+"ipa_strong": "/keɪk/",
+"example_sentence": "She baked a chocolate cake for her son's birthday party.",
+"cefr_level": "C1"
+},
+{
+"rank": 2173,
+"word": "transform",
+"pos": "verb",
+"ipa_strong": "/tɹænsfɔɹm/",
+"example_sentence": "The renovation will completely transform the old building into a modern office space.",
+"cefr_level": "C1"
+},
+{
+"rank": 2174,
+"word": "wound",
+"pos": "noun",
+"ipa_strong": "/waʊnd/",
+"example_sentence": "The nurse cleaned the wound carefully before putting a bandage on it.",
+"cefr_level": "C1"
+},
+{
+"rank": 2175,
+"word": "restriction",
+"pos": "noun",
+"ipa_strong": "/ɹiːstɹɪkʃʌn/",
+"example_sentence": "There is a speed restriction of thirty miles per hour on this road.",
+"cefr_level": "C1"
+},
+{
+"rank": 2176,
+"word": "foundation",
+"pos": "noun",
+"ipa_strong": "/faʊndeɪʃʌn/",
+"example_sentence": "A strong foundation is essential before you can build any kind of structure.",
+"cefr_level": "C1"
+},
+{
+"rank": 2177,
+"word": "designer",
+"pos": "noun",
+"ipa_strong": "/dɪzaɪnɜr/",
+"example_sentence": "The designer created a logo that perfectly represented the company's values.",
+"cefr_level": "C1"
+},
+{
+"rank": 2178,
+"word": "strain",
+"pos": "noun",
+"ipa_strong": "/stɹeɪn/",
+"example_sentence": "Working long hours put a great strain on her health and relationships.",
+"cefr_level": "C1"
+},
+{
+"rank": 2179,
+"word": "innovation",
+"pos": "noun",
+"ipa_strong": "/ɪnʌveɪʃʌn/",
+"example_sentence": "The company invested heavily in research to drive innovation in its products.",
+"cefr_level": "C1"
+},
+{
+"rank": 2180,
+"word": "album",
+"pos": "noun",
+"ipa_strong": "/ælbʌm/",
+"example_sentence": "The band released their new album after three years of recording.",
+"cefr_level": "C1"
+},
+{
+"rank": 2181,
+"word": "singer",
+"pos": "noun",
+"ipa_strong": "/sɪŋɜr/",
+"example_sentence": "The singer performed to a sold-out crowd at the concert hall.",
+"cefr_level": "C1"
+},
+{
+"rank": 2182,
+"word": "trail",
+"pos": "noun",
+"ipa_strong": "/tɹeɪl/",
+"example_sentence": "They followed a narrow trail through the forest to reach the waterfall.",
+"cefr_level": "C1"
+},
+{
+"rank": 2183,
+"word": "trap",
+"pos": "noun",
+"ipa_strong": "/tɹæp/",
+"example_sentence": "The hunter set a trap near the river to catch small animals.",
+"cefr_level": "C1"
+},
+{
+"rank": 2184,
+"word": "loose",
+"pos": "adjective",
+"ipa_strong": "/luːs/",
+"example_sentence": "One of the screws was loose, so the chair wobbled when anyone sat on it.",
+"cefr_level": "C1"
+},
+{
+"rank": 2185,
+"word": "extension",
+"pos": "noun",
+"ipa_strong": "/ɪkstɛnʃʌn/",
+"example_sentence": "She asked for an extension on her assignment because she had been sick.",
+"cefr_level": "C1"
+},
+{
+"rank": 2186,
+"word": "wealth",
+"pos": "noun",
+"ipa_strong": "/wɛlθ/",
+"example_sentence": "He used his wealth to fund schools and hospitals in his hometown.",
+"cefr_level": "C1"
+},
+{
+"rank": 2187,
+"word": "gradually",
+"pos": "adverb",
+"ipa_strong": "/ɡɹædʒuːʌliː/",
+"example_sentence": "Her confidence gradually improved as she practiced speaking in public.",
+"cefr_level": "C1"
+},
+{
+"rank": 2188,
+"word": "tank",
+"pos": "noun",
+"ipa_strong": "/tæŋk/",
+"example_sentence": "The fish tank in the waiting room was filled with colorful tropical fish.",
+"cefr_level": "C1"
+},
+{
+"rank": 2189,
+"word": "evil",
+"pos": "adjective",
+"ipa_strong": "/iːvʌl/",
+"example_sentence": "In the story, the evil king taxed the poor so heavily that many starved.",
+"cefr_level": "C1"
+},
+{
+"rank": 2190,
+"word": "remarkable",
+"pos": "adjective",
+"ipa_strong": "/ɹɪmɑɹkʌbʌl/",
+"example_sentence": "It is remarkable that she learned to speak four languages before the age of twelve.",
+"cefr_level": "C1"
+},
+{
+"rank": 2191,
+"word": "tune",
+"pos": "noun",
+"ipa_strong": "/tuːn/",
+"example_sentence": "He hummed a familiar tune while washing the dishes.",
+"cefr_level": "C1"
+},
+{
+"rank": 2192,
+"word": "grass",
+"pos": "noun",
+"ipa_strong": "/ɡɹæs/",
+"example_sentence": "The children lay on the grass and watched the clouds pass overhead.",
+"cefr_level": "C1"
+},
+{
+"rank": 2193,
+"word": "invitation",
+"pos": "noun",
+"ipa_strong": "/ɪnvɪteɪʃʌn/",
+"example_sentence": "She received an invitation to her colleague's wedding in the mail.",
+"cefr_level": "C1"
+},
+{
+"rank": 2194,
+"word": "transition",
+"pos": "noun",
+"ipa_strong": "/tɹænzɪʃʌn/",
+"example_sentence": "The transition from high school to university can be difficult for many students.",
+"cefr_level": "C1"
+},
+{
+"rank": 2195,
+"word": "frighten",
+"pos": "verb",
+"ipa_strong": "/fɹaɪtʌn/",
+"example_sentence": "The sudden noise from outside began to frighten the dog.",
+"cefr_level": "C1"
+},
+{
+"rank": 2196,
+"word": "bid",
+"pos": "noun",
+"ipa_strong": "/bɪd/",
+"example_sentence": "She placed a bid on the painting at the auction, hoping to win it.",
+"cefr_level": "C1"
+},
+{
+"rank": 2197,
+"word": "breed",
+"pos": "noun",
+"ipa_strong": "/bɹiːd/",
+"example_sentence": "The golden retriever is a popular breed because it is friendly and easy to train.",
+"cefr_level": "C1"
+},
+{
+"rank": 2198,
+"word": "extraordinary",
+"pos": "adjective",
+"ipa_strong": "/ɛkstɹʌɔɹdʌnɛɹiː/",
+"example_sentence": "The young pianist gave an extraordinary performance that left the audience speechless.",
+"cefr_level": "C1"
+},
+{
+"rank": 2199,
+"word": "brilliant",
+"pos": "adjective",
+"ipa_strong": "/bɹɪljʌnt/",
+"example_sentence": "The scientist came up with a brilliant solution to a problem that had puzzled researchers for years.",
+"cefr_level": "C1"
+},
+{
+"rank": 2200,
+"word": "adviser",
+"pos": "noun",
+"ipa_strong": "/ædvaɪzɜr/",
+"example_sentence": "The president met with his adviser before making a decision on the new policy.",
+"cefr_level": "C1"
+}
+]
 }

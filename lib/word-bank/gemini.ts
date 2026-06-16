@@ -19,7 +19,7 @@ Given a word and optional context, return a JSON with:
 - meaning: simple definition (A2-B1 level English)
 - translation: Spanish translation
 - ipa: phonetic transcription (IPA)
-- example_sentence: short, natural sentence
+- example_sentence: short, natural sentence where the word appears in a meaningful context — the surrounding words must give enough clues that a language learner could guess the missing word. Avoid placing the word right after an article with no other context (e.g. "The ___ is good" is bad; "She made such a kind gesture" is good).
 - synonyms: array of max 3 synonyms
 - image_prompt: short visual description
 

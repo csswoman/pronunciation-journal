@@ -14,14 +14,14 @@ export function WordsEmptyState({ onAdd }: { onAdd: () => void }) {
           <Plus size={28} />
         </div>
         <div>
-          <p className="text-sm font-semibold text-fg">Your word bank is empty</p>
+          <p className="text-sm font-semibold text-fg">No words saved yet</p>
           <p className="text-xs mt-1 max-w-sm text-fg-subtle">
-            Save any word you encounter — Gemini adds meaning, translation, IPA and an example automatically.
+            Add any word and get its definition, IPA pronunciation, and an example sentence automatically.
           </p>
         </div>
         <Button onClick={onAdd} icon={<Plus size={16} />}>Add your first word</Button>
-        <p className="text-tiny uppercase tracking-widest text-fg-subtle">
-          Tip: press <kbd className="px-1.5 py-0.5 rounded bg-[var(--btn-regular-bg)] font-mono">N</kbd> anywhere
+        <p className="text-xs text-fg-muted">
+          Tip: press <kbd className="px-1.5 py-0.5 rounded bg-surface-sunken border border-border-subtle font-mono text-xs text-fg-secondary">N</kbd> anywhere to add a word
         </p>
       </div>
     </Card>

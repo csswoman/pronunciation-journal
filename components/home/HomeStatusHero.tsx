@@ -25,8 +25,9 @@ export default function HomeStatusHero({ streak, wordsDueCount = 0, soundsDueCou
   const { progressList } = useSoundProgress(user?.id);
   const { preferences } = useUserPreferences();
 
+  const isLoggedIn = user && !(user as { is_anonymous?: boolean }).is_anonymous;
   const fullName = preferences?.full_name || user?.email?.split("@")[0] || "Guest";
-  const userName = fullName.split(" ")[0];
+  const userName = isLoggedIn ? fullName.split(" ")[0] : "Guest";
   const hasStartedLearning = progressList.length > 0;
 
   const now = new Date();

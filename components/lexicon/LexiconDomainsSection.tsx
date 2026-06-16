@@ -18,8 +18,7 @@ export function LexiconDomainsSection({ groups, onDomainClick }: LexiconDomainsS
   return (
     <>
       <div className="words-lexicon__sechead">
-        <span className="words-lexicon__sechead-num">02</span>
-        <h3>Browse by topic</h3>
+        <h3>Topics</h3>
       </div>
       <div className="words-lexicon__areachips" role="list">
         {LEXICON_DOMAINS.map((domain) => {
@@ -37,16 +36,9 @@ export function LexiconDomainsSection({ groups, onDomainClick }: LexiconDomainsS
               onClick={() => !isEmpty && onDomainClick(domain.id)}
               title={domain.description}
             >
-              <span
-                className="words-lexicon__areachip-ic"
-                style={{ color: domain.color }}
-                aria-hidden
-              >
-                {domain.icon}
-              </span>
               <span className="words-lexicon__areachip-name">{domain.name}</span>
               <span className="words-lexicon__areachip-count">
-                {isEmpty ? "Soon" : stats!.totalWords}
+                {isEmpty ? "Coming soon" : stats!.totalWords}
               </span>
             </button>
           );

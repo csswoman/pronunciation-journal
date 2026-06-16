@@ -36,7 +36,7 @@ export function LessonGrid({ lessons, loading = false, onLessonClick }: LessonGr
   if (lessons.length === 0) {
     return (
       <div className="text-center py-12">
-        <p className="text-fg-muted text-sm">No lessons found</p>
+        <p className="text-fg-muted text-sm">No categories here yet.</p>
       </div>
     );
   }

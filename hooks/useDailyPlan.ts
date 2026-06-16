@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useAuth } from '@/components/auth/AuthProvider'
 import { buildDailyPlan, DAILY_PLAN_STEP_COUNT } from '@/lib/practice/daily-plan'
 import type { DailyPlan, DailyStep } from '@/lib/practice/types'
@@ -87,6 +87,10 @@ export function useDailyPlan({ conceptLesson, autoLoad = true }: UseDailyPlanOpt
   const [status, setStatus] = useState<DailyPlanStatus>(autoLoad ? 'loading' : 'idle')
   const [doneIds, setDoneIds] = useState<Set<string>>(new Set())
 
+  // Keep a ref so `load` never changes identity when conceptLesson updates.
+  const conceptLessonRef = useRef(conceptLesson)
+  useEffect(() => { conceptLessonRef.current = conceptLesson }, [conceptLesson])
+
   const applyPlan = useCallback((built: DailyPlan, lesson: ConceptLesson | null, userId: string) => {
     const steps = [...built.steps]
     if (lesson) {
@@ -112,19 +116,20 @@ export function useDailyPlan({ conceptLesson, autoLoad = true }: UseDailyPlanOpt
     if (!user) return
     setStatus('loading')
     try {
+      const lesson = conceptLessonRef.current
       // Restaurar desde caché si el plan de hoy ya fue generado.
       const cached = loadCachedPlan(user.id)
       if (cached) {
-        applyPlan(cached, conceptLesson, user.id)
+        applyPlan(cached, lesson, user.id)
         return
       }
       const built = await buildDailyPlan(user.id)
-      const finalPlan = applyPlan(built, conceptLesson, user.id)
+      const finalPlan = applyPlan(built, lesson, user.id)
       savePlanToCache(user.id, finalPlan)
     } catch {
       setStatus('error')
     }
-  }, [user, conceptLesson, applyPlan])
+  }, [user, applyPlan])
 
   useEffect(() => {
     if (autoLoad) load()

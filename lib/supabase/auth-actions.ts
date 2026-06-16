@@ -15,6 +15,15 @@ export async function signInAsGuest() {
   return supabase.auth.signInAnonymously();
 }
 
+export async function signInWithGoogle() {
+  const supabase = getSupabaseBrowserClient();
+  const redirectTo =
+    typeof window !== "undefined"
+      ? `${window.location.origin}/auth/callback`
+      : undefined;
+  return supabase.auth.signInWithOAuth({ provider: "google", options: { redirectTo } });
+}
+
 export async function resetPasswordForEmail(email: string) {
   const supabase = getSupabaseBrowserClient();
   const redirectTo =

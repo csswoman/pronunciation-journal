@@ -1,31 +1,12 @@
 // Planned structure:
 // <LessonCard>
-//   <CardIcon />     — colored icon container
+//   <CardInitial />  — color-tinted first-letter block
 //   <CardBody />     — title + word count
 //   <CardProgress /> — linear bar + percentage
 //   <CardTags />     — tag chips
 // </LessonCard>
 
-import {
-  Layers,
-  Code2,
-  Component,
-  Briefcase,
-  FileText,
-  Server,
-  BookOpen,
-} from "lucide-react";
-import type { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/cn";
-
-const CATEGORY_ICONS: Record<string, LucideIcon> = {
-  "ux-design":         Layers,
-  "frontend-dev":      Code2,
-  "design-systems":    Component,
-  "professional":      Briefcase,
-  "technical-writing": FileText,
-  "backend-infra":     Server,
-};
 
 interface LessonCardProps {
   id: string;
@@ -49,7 +30,6 @@ export function LessonCard({
   tags,
   onClick,
 }: LessonCardProps) {
-  const Icon = CATEGORY_ICONS[id] ?? BookOpen;
   const displayTags = tags.slice(0, 3);
   const remainingCount = tags.length - displayTags.length;
 
@@ -57,33 +37,36 @@ export function LessonCard({
     <button
       onClick={() => onClick?.(id)}
       className={cn(
-        "flex flex-col gap-4 p-5 rounded-xl border border-border-subtle bg-surface-raised",
+        "flex flex-col gap-3 p-4 rounded-xl border border-border-subtle",
         "transition-all duration-200 hover:shadow-md hover:border-border-strong text-left w-full"
       )}
+      style={{ background: `color-mix(in oklch, ${color} 6%, var(--surface-raised))` }}
     >
-      {/* Icon + progress % */}
-      <div className="flex items-start justify-between">
+      {/* Icon + title row */}
+      <div className="flex items-center gap-3">
         <div
-          className="w-11 h-11 rounded-xl flex items-center justify-center"
-          style={{ backgroundColor: `color-mix(in oklch, ${color} 20%, var(--surface-sunken))` }}
+          className="words-lexicon__card-initial"
+          style={{
+            background: `color-mix(in oklch, ${color} 18%, var(--surface-raised))`,
+            color,
+          }}
+          aria-hidden
         >
-          <Icon className="w-5 h-5" style={{ color }} />
+          {title.charAt(0)}
         </div>
-        <span className="text-sm font-semibold tabular-nums" style={{ color }}>
+        <div className="min-w-0">
+          <h3 className="text-sm font-semibold text-fg leading-snug truncate">{title}</h3>
+          <p className="text-xs text-fg-muted mt-0.5">
+            {wordsCompleted} / {totalWords} words
+          </p>
+        </div>
+        <span className="ml-auto text-xs font-semibold tabular-nums shrink-0" style={{ color }}>
           {progress}%
         </span>
       </div>
 
-      {/* Title + word count */}
-      <div>
-        <h3 className="text-base font-semibold text-fg leading-snug">{title}</h3>
-        <p className="text-sm text-fg-muted mt-0.5">
-          {wordsCompleted.toLocaleString()} / {totalWords.toLocaleString()} words
-        </p>
-      </div>
-
       {/* Progress bar */}
-      <div className="h-1.5 w-full bg-border-subtle rounded-full overflow-hidden">
+      <div className="h-1 w-full bg-border-subtle rounded-full overflow-hidden">
         <div
           className="h-full rounded-full transition-all duration-500"
           style={{ width: `${progress}%`, backgroundColor: color }}
@@ -91,17 +74,17 @@ export function LessonCard({
       </div>
 
       {/* Tags */}
-      <div className="flex flex-wrap gap-1.5">
+      <div className="flex flex-wrap gap-1">
         {displayTags.map((tag) => (
           <span
             key={tag}
-            className="inline-block px-2 py-0.5 text-xs rounded-md bg-surface-sunken text-fg-muted"
+            className="inline-block px-1.5 py-0.5 text-xs rounded bg-surface-sunken text-fg-muted"
           >
             {tag}
           </span>
         ))}
         {remainingCount > 0 && (
-          <span className="inline-block px-2 py-0.5 text-xs text-fg-subtle">
+          <span className="inline-block px-1.5 py-0.5 text-xs text-fg-subtle">
             +{remainingCount}
           </span>
         )}

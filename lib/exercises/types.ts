@@ -3,7 +3,7 @@ import type { ExerciseType as CanonicalExerciseType } from './taxonomy'
 
 // ── Source references ──────────────────────────────────────────────────────
 
-export type ExerciseSource = 'words' | 'text_fragments' | 'word_bank'
+export type ExerciseSource = 'words' | 'text_fragments' | 'word_bank' | 'core1k'
 
 export interface ExerciseSourceRef {
   source: ExerciseSource

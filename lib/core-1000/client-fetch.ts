@@ -63,7 +63,8 @@ function chunkUrl(n: number): string {
 async function loadChunk(n: number): Promise<CoreWord[]> {
   const res = await fetch(chunkUrl(n))
   if (!res.ok) return []
-  return res.json() as Promise<CoreWord[]>
+  const payload = await res.json() as { entries?: CoreWord[] } | CoreWord[]
+  return Array.isArray(payload) ? payload : (payload.entries ?? [])
 }
 
 /**

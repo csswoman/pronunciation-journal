@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { LexiconHeroSearch } from "@/components/lexicon/LexiconHeroSearch";
 import { LexiconProgressStrip } from "@/components/lexicon/LexiconProgressStrip";
@@ -49,6 +49,16 @@ export function LexiconView({
     [lessons]
   );
 
+  const [collapsedDomains, setCollapsedDomains] = useState<Set<string>>(new Set());
+
+  const toggleDomain = (id: string) => {
+    setCollapsedDomains(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id); else next.add(id);
+      return next;
+    });
+  };
+
   const scrollToDomain = (domainId: string) => {
     domainRefs.current[domainId]?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
@@ -78,8 +88,7 @@ export function LexiconView({
       <LexiconDomainsSection groups={domainGroups} onDomainClick={scrollToDomain} />
 
       <div className="words-lexicon__sechead words-lexicon__sechead--spaced">
-        <span className="words-lexicon__sechead-num">03</span>
-        <h3>All topics</h3>
+        <h3>All categories</h3>
       </div>
 
       {LEXICON_DOMAINS.map((domain) => {
@@ -94,23 +103,30 @@ export function LexiconView({
             }}
             className="words-lexicon__domain-group"
           >
-            <div className="words-lexicon__domain-head">
-              <span
-                className="words-lexicon__domain-icon"
-                style={{ color: domain.color }}
-                aria-hidden
-              >
-                {domain.icon}
-              </span>
+            <button
+              type="button"
+              className="words-lexicon__domain-head"
+              onClick={() => toggleDomain(domain.id)}
+              aria-expanded={!collapsedDomains.has(domain.id)}
+            >
               <h3 className="words-lexicon__domain-name">{domain.name}</h3>
               <span className="words-lexicon__domain-count">
-                {group.lessons.length} topics
+                {group.lessons.length} {group.lessons.length === 1 ? "category" : "categories"}
               </span>
-            </div>
-            <LessonGrid
-              lessons={group.lessons}
-              onLessonClick={(id) => router.push(`/lexicon/${id}`)}
-            />
+              <span
+                className="words-lexicon__domain-chevron"
+                aria-hidden
+                style={{ transform: collapsedDomains.has(domain.id) ? "rotate(-90deg)" : "rotate(0deg)", transition: "transform 150ms ease-out" }}
+              >
+                ›
+              </span>
+            </button>
+            {!collapsedDomains.has(domain.id) && (
+              <LessonGrid
+                lessons={group.lessons}
+                onLessonClick={(id) => router.push(`/lexicon/${id}`)}
+              />
+            )}
           </div>
         );
       })}

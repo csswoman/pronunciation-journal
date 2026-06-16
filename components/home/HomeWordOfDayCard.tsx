@@ -75,7 +75,7 @@ export default function HomeWordOfDayCard() {
         </div>
       )}
 
-      {error && (
+      {error && !word && !loading && (
         <div className="animate-state-in flex flex-col items-start gap-2 py-2">
           <p className="font-caption text-[var(--error)]">Couldn&apos;t load today&apos;s word.</p>
           <Button type="button" variant="ghost" size="sm" onClick={() => refresh()}>

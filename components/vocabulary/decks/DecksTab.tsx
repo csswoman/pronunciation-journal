@@ -51,7 +51,7 @@ export function DecksTab({
           </div>
           <div>
             <p className="text-sm font-semibold text-fg">No decks yet</p>
-            <p className="text-xs mt-1 text-fg-subtle">Create your first deck to organize vocabulary by theme.</p>
+            <p className="text-xs mt-1 text-fg-subtle">Group words by theme, lesson, or level and study them as a set.</p>
           </div>
           <Button variant="primary" icon={<Plus size={16} />} onClick={onCreateNew} className="mt-2">
             Create a deck

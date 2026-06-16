@@ -5,7 +5,7 @@
       "rank": 1,
       "word": "the",
       "pos": "article",
-      "ipa_strong": "/ðʌ/",
+      "ipa_strong": "/ðiː/",
       "example_sentence": "Give me the book please.",
       "cefr_level": "A1",
       "ipa_weak": "/ðə/",
@@ -16,14 +16,14 @@
       "word": "be",
       "pos": "auxiliary",
       "ipa_strong": "/biː/",
-      "example_sentence": "They be finished the work.",
+      "example_sentence": "They are happy today.",
       "cefr_level": "A1"
     },
     {
       "rank": 3,
       "word": "and",
       "pos": "conjunction",
-      "ipa_strong": "/ʌnd/",
+      "ipa_strong": "/ænd/",
       "example_sentence": "Bread and butter here.",
       "cefr_level": "A1",
       "ipa_weak": "/ənd/",
@@ -53,7 +53,7 @@
       "rank": 6,
       "word": "a",
       "pos": "article",
-      "ipa_strong": "/ʌ/",
+      "ipa_strong": "/eɪ/",
       "example_sentence": "I need a pen now.",
       "cefr_level": "A1",
       "ipa_weak": "/ə/",
@@ -64,7 +64,7 @@
       "word": "in",
       "pos": "preposition",
       "ipa_strong": "/ɪn/",
-      "example_sentence": "It is in the box now.",
+      "example_sentence": "The keys are in the drawer.",
       "cefr_level": "A1"
     },
     {
@@ -109,7 +109,7 @@
       "rank": 12,
       "word": "for",
       "pos": "conjunction",
-      "ipa_strong": "/fɔɹ/",
+      "ipa_strong": "/fɔːr/",
       "example_sentence": "This gift is for you.",
       "cefr_level": "A1",
       "ipa_weak": "/fər/",
@@ -120,7 +120,7 @@
       "word": "they",
       "pos": "pronoun",
       "ipa_strong": "/ðeɪ/",
-      "example_sentence": "I saw they at school.",
+      "example_sentence": "They are at school today.",
       "cefr_level": "A1"
     },
     {
@@ -128,7 +128,7 @@
       "word": "not",
       "pos": "adverb",
       "ipa_strong": "/nɑt/",
-      "example_sentence": "She spoke not to me.",
+      "example_sentence": "She did not answer the phone.",
       "cefr_level": "A1"
     },
     {
@@ -156,7 +156,7 @@
       "word": "on",
       "pos": "preposition",
       "ipa_strong": "/ɑn/",
-      "example_sentence": "It is on the box now.",
+      "example_sentence": "The cup is on the table.",
       "cefr_level": "A1"
     },
     {
@@ -164,7 +164,7 @@
       "word": "with",
       "pos": "preposition",
       "ipa_strong": "/wɪð/",
-      "example_sentence": "It is with the box now.",
+      "example_sentence": "She came with her sister.",
       "cefr_level": "A1"
     },
     {
@@ -180,7 +180,7 @@
       "word": "i",
       "pos": "pronoun",
       "ipa_strong": "/aɪ/",
-      "example_sentence": "I saw i at school.",
+      "example_sentence": "I am ready now.",
       "cefr_level": "A1"
     },
     {
@@ -238,17 +238,17 @@
       "word": "from",
       "pos": "preposition",
       "ipa_strong": "/fɹʌm/",
-      "example_sentence": "It came from home today.",
+      "example_sentence": "She's from a small town.",
       "cefr_level": "A1",
       "ipa_weak": "/frəm/",
-      "sentence_ipa": "/ɪt keɪm frəm hoʊm tʌdeɪ/"
+      "sentence_ipa": "/ʃiz frəm ə smɔl taʊn/"
     },
     {
       "rank": 27,
       "word": "by",
       "pos": "preposition",
       "ipa_strong": "/baɪ/",
-      "example_sentence": "It is by the box now.",
+      "example_sentence": "The bag is by the door.",
       "cefr_level": "A1"
     },
     {
@@ -265,10 +265,10 @@
       "rank": 29,
       "word": "or",
       "pos": "conjunction",
-      "ipa_strong": "/ɔɹ/",
+      "ipa_strong": "/ɔːr/",
       "example_sentence": "Tea or coffee today?",
       "cefr_level": "A1",
-      "ipa_weak": "/ɚ/",
+      "ipa_weak": "/ər/",
       "sentence_ipa": "/tiː ɚ kɑfiː tʌdeɪ/"
     },
     {
@@ -276,7 +276,7 @@
       "word": "say",
       "pos": "verb",
       "ipa_strong": "/seɪ/",
-      "example_sentence": "I say every day here.",
+      "example_sentence": "What did she say to you?",
       "cefr_level": "A1"
     },
     {
@@ -284,7 +284,7 @@
       "word": "go",
       "pos": "verb",
       "ipa_strong": "/ɡoʊ/",
-      "example_sentence": "I go every day here.",
+      "example_sentence": "Let's go to the park.",
       "cefr_level": "A1"
     },
     {
@@ -292,7 +292,7 @@
       "word": "so",
       "pos": "conjunction",
       "ipa_strong": "/soʊ/",
-      "example_sentence": "Come so go with us.",
+      "example_sentence": "It was cold, so I wore a coat.",
       "cefr_level": "A1"
     },
     {
@@ -300,7 +300,7 @@
       "word": "all",
       "pos": "determiner",
       "ipa_strong": "/ɔl/",
-      "example_sentence": "I need all new book.",
+      "example_sentence": "All the students passed the test.",
       "cefr_level": "A1"
     },
     {
@@ -308,7 +308,7 @@
       "word": "if",
       "pos": "conjunction",
       "ipa_strong": "/ɪf/",
-      "example_sentence": "Come if go with us.",
+      "example_sentence": "Call me if you need help.",
       "cefr_level": "A1"
     },
     {
@@ -316,7 +316,7 @@
       "word": "one",
       "pos": "number",
       "ipa_strong": "/wʌn/",
-      "example_sentence": "I have one books here.",
+      "example_sentence": "I have one brother and two sisters.",
       "cefr_level": "A1"
     },
     {
@@ -334,7 +334,7 @@
       "word": "about",
       "pos": "preposition",
       "ipa_strong": "/ʌbaʊt/",
-      "example_sentence": "It is about the box now.",
+      "example_sentence": "We talked about the trip.",
       "cefr_level": "A1"
     },
     {
@@ -352,7 +352,7 @@
       "word": "which",
       "pos": "pronoun",
       "ipa_strong": "/wɪtʃ/",
-      "example_sentence": "I saw which at school.",
+      "example_sentence": "Which book do you want?",
       "cefr_level": "A1"
     },
     {
@@ -370,15 +370,15 @@
       "word": "know",
       "pos": "verb",
       "ipa_strong": "/noʊ/",
-      "example_sentence": "I know every day here.",
+      "example_sentence": "Do you know her name?",
       "cefr_level": "A1"
     },
     {
       "rank": 42,
       "word": "more",
-      "pos": "noun",
+      "pos": "determiner",
       "ipa_strong": "/mɔɹ/",
-      "example_sentence": "The more is very good.",
+      "example_sentence": "I need more time.",
       "cefr_level": "A1"
     },
     {
@@ -386,7 +386,7 @@
       "word": "get",
       "pos": "verb",
       "ipa_strong": "/ɡɛt/",
-      "example_sentence": "I get every day here.",
+      "example_sentence": "Can you get me a glass of water?",
       "cefr_level": "A1"
     },
     {
@@ -394,7 +394,7 @@
       "word": "who",
       "pos": "pronoun",
       "ipa_strong": "/huː/",
-      "example_sentence": "I saw who at school.",
+      "example_sentence": "Who is your teacher?",
       "cefr_level": "A1"
     },
     {
@@ -402,7 +402,7 @@
       "word": "like",
       "pos": "verb",
       "ipa_strong": "/laɪk/",
-      "example_sentence": "I like every day here.",
+      "example_sentence": "I like this kind of music.",
       "cefr_level": "A1"
     },
     {
@@ -410,7 +410,7 @@
       "word": "when",
       "pos": "conjunction",
       "ipa_strong": "/wɛn/",
-      "example_sentence": "Come when go with us.",
+      "example_sentence": "Call me when you arrive.",
       "cefr_level": "A1"
     },
     {
@@ -418,7 +418,7 @@
       "word": "think",
       "pos": "verb",
       "ipa_strong": "/θɪŋk/",
-      "example_sentence": "I think every day here.",
+      "example_sentence": "I think she's right.",
       "cefr_level": "A1"
     },
     {
@@ -426,7 +426,7 @@
       "word": "make",
       "pos": "verb",
       "ipa_strong": "/meɪk/",
-      "example_sentence": "I make every day here.",
+      "example_sentence": "Can you make some coffee?",
       "cefr_level": "A1"
     },
     {
@@ -434,7 +434,7 @@
       "word": "time",
       "pos": "noun",
       "ipa_strong": "/taɪm/",
-      "example_sentence": "The time is very good.",
+      "example_sentence": "What time does the class start?",
       "cefr_level": "A1"
     },
     {
@@ -442,7 +442,7 @@
       "word": "see",
       "pos": "verb",
       "ipa_strong": "/siː/",
-      "example_sentence": "I see every day here.",
+      "example_sentence": "Can you see the sign from here?",
       "cefr_level": "A1"
     },
     {
@@ -450,7 +450,7 @@
       "word": "what",
       "pos": "pronoun",
       "ipa_strong": "/wʌt/",
-      "example_sentence": "I saw what at school.",
+      "example_sentence": "What is your name?",
       "cefr_level": "A1"
     },
     {
@@ -458,7 +458,7 @@
       "word": "up",
       "pos": "preposition",
       "ipa_strong": "/ʌp/",
-      "example_sentence": "It is up the box now.",
+      "example_sentence": "She walked up the stairs slowly.",
       "cefr_level": "A1"
     },
     {
@@ -476,7 +476,7 @@
       "word": "other",
       "pos": "adjective",
       "ipa_strong": "/ʌðɜr/",
-      "example_sentence": "It is very other today.",
+      "example_sentence": "Try the other door on your left.",
       "cefr_level": "A1"
     },
     {
@@ -484,7 +484,7 @@
       "word": "out",
       "pos": "preposition",
       "ipa_strong": "/aʊt/",
-      "example_sentence": "It is out the box now.",
+      "example_sentence": "She walked out of the room.",
       "cefr_level": "A1"
     },
     {
@@ -492,23 +492,23 @@
       "word": "good",
       "pos": "adjective",
       "ipa_strong": "/ɡʊd/",
-      "example_sentence": "It is very good today.",
+      "example_sentence": "That's a good idea.",
       "cefr_level": "A1"
     },
     {
       "rank": 57,
       "word": "people",
       "pos": "noun",
-      "ipa_strong": "/piːpʌl/",
-      "example_sentence": "The people is very good.",
+      "ipa_strong": "/ˈpiːpəl/",
+      "example_sentence": "Many people use public transport.",
       "cefr_level": "A1"
     },
     {
       "rank": 58,
       "word": "year",
       "pos": "noun",
-      "ipa_strong": "/jɪɹ/",
-      "example_sentence": "The year is very good.",
+      "ipa_strong": "/jɪr/",
+      "example_sentence": "This year went by very fast.",
       "cefr_level": "A1"
     },
     {
@@ -516,7 +516,7 @@
       "word": "take",
       "pos": "verb",
       "ipa_strong": "/teɪk/",
-      "example_sentence": "I take every day here.",
+      "example_sentence": "It will take about an hour.",
       "cefr_level": "A1"
     },
     {
@@ -532,7 +532,7 @@
       "word": "well",
       "pos": "adverb",
       "ipa_strong": "/wɛl/",
-      "example_sentence": "She spoke well to me.",
+      "example_sentence": "She speaks English very well.",
       "cefr_level": "A1"
     },
     {
@@ -540,7 +540,7 @@
       "word": "because",
       "pos": "conjunction",
       "ipa_strong": "/bɪkɔz/",
-      "example_sentence": "Come because go with us.",
+      "example_sentence": "I stayed home because it was raining.",
       "cefr_level": "A1"
     },
     {
@@ -548,7 +548,7 @@
       "word": "very",
       "pos": "adverb",
       "ipa_strong": "/vɛɹiː/",
-      "example_sentence": "She spoke very to me.",
+      "example_sentence": "The exam was very difficult.",
       "cefr_level": "A1"
     },
     {
@@ -556,7 +556,7 @@
       "word": "just",
       "pos": "adverb",
       "ipa_strong": "/dʒʌst/",
-      "example_sentence": "She spoke just to me.",
+      "example_sentence": "I just got home a minute ago.",
       "cefr_level": "A1"
     },
     {
@@ -564,7 +564,7 @@
       "word": "come",
       "pos": "verb",
       "ipa_strong": "/kʌm/",
-      "example_sentence": "I come every day here.",
+      "example_sentence": "Can you come to dinner tonight?",
       "cefr_level": "A1"
     },
     {
@@ -582,15 +582,15 @@
       "word": "work",
       "pos": "verb",
       "ipa_strong": "/wɜrk/",
-      "example_sentence": "I work every day here.",
+      "example_sentence": "She works at a hospital downtown.",
       "cefr_level": "A1"
     },
     {
       "rank": 68,
       "word": "use",
       "pos": "verb",
-      "ipa_strong": "/juːs/",
-      "example_sentence": "I use every day here.",
+      "ipa_strong": "/juːz/",
+      "example_sentence": "You can use my pen.",
       "cefr_level": "A1"
     },
     {
@@ -608,7 +608,7 @@
       "word": "now",
       "pos": "adverb",
       "ipa_strong": "/naʊ/",
-      "example_sentence": "She spoke now to me.",
+      "example_sentence": "I'm busy now — can I call you later?",
       "cefr_level": "A1"
     },
     {
@@ -616,7 +616,7 @@
       "word": "then",
       "pos": "adverb",
       "ipa_strong": "/ðɛn/",
-      "example_sentence": "She spoke then to me.",
+      "example_sentence": "Finish your homework, then we can watch TV.",
       "cefr_level": "A1"
     },
     {
@@ -624,7 +624,7 @@
       "word": "also",
       "pos": "adverb",
       "ipa_strong": "/ɔlsoʊ/",
-      "example_sentence": "She spoke also to me.",
+      "example_sentence": "She's a teacher and also a writer.",
       "cefr_level": "A1"
     },
     {
@@ -642,7 +642,7 @@
       "word": "only",
       "pos": "adverb",
       "ipa_strong": "/oʊnliː/",
-      "example_sentence": "She spoke only to me.",
+      "example_sentence": "I only have five minutes.",
       "cefr_level": "A1"
     },
     {
@@ -650,7 +650,7 @@
       "word": "look",
       "pos": "verb",
       "ipa_strong": "/lʊk/",
-      "example_sentence": "I look every day here.",
+      "example_sentence": "Look at those clouds — it might rain.",
       "cefr_level": "A1"
     },
     {
@@ -658,7 +658,7 @@
       "word": "want",
       "pos": "verb",
       "ipa_strong": "/wɑnt/",
-      "example_sentence": "I want every day here.",
+      "example_sentence": "What do you want for dinner?",
       "cefr_level": "A1"
     },
     {
@@ -666,7 +666,7 @@
       "word": "give",
       "pos": "verb",
       "ipa_strong": "/ɡɪv/",
-      "example_sentence": "I give every day here.",
+      "example_sentence": "Give me a few minutes to finish.",
       "cefr_level": "A1"
     },
     {
@@ -674,7 +674,7 @@
       "word": "first",
       "pos": "adjective",
       "ipa_strong": "/fɜrst/",
-      "example_sentence": "It is very first today.",
+      "example_sentence": "This is my first time here.",
       "cefr_level": "A1"
     },
     {
@@ -682,7 +682,7 @@
       "word": "new",
       "pos": "adjective",
       "ipa_strong": "/nuː/",
-      "example_sentence": "It is very new today.",
+      "example_sentence": "She has a new phone.",
       "cefr_level": "A1"
     },
     {
@@ -690,7 +690,7 @@
       "word": "way",
       "pos": "noun",
       "ipa_strong": "/weɪ/",
-      "example_sentence": "The way is very good.",
+      "example_sentence": "Is there a faster way to get there?",
       "cefr_level": "A1"
     },
     {
@@ -698,7 +698,7 @@
       "word": "find",
       "pos": "verb",
       "ipa_strong": "/faɪnd/",
-      "example_sentence": "I find every day here.",
+      "example_sentence": "Can you find my keys?",
       "cefr_level": "A1"
     },
     {
@@ -706,7 +706,7 @@
       "word": "over",
       "pos": "preposition",
       "ipa_strong": "/oʊvɜr/",
-      "example_sentence": "It is over the box now.",
+      "example_sentence": "The plane flew over the city.",
       "cefr_level": "A1"
     },
     {
@@ -714,7 +714,7 @@
       "word": "any",
       "pos": "determiner",
       "ipa_strong": "/ɛniː/",
-      "example_sentence": "I need any new book.",
+      "example_sentence": "Do you have any questions?",
       "cefr_level": "A1"
     },
     {
@@ -722,7 +722,7 @@
       "word": "after",
       "pos": "preposition",
       "ipa_strong": "/æftɜr/",
-      "example_sentence": "It is after the box now.",
+      "example_sentence": "Let's talk after class.",
       "cefr_level": "A1"
     },
     {
@@ -730,15 +730,15 @@
       "word": "day",
       "pos": "noun",
       "ipa_strong": "/deɪ/",
-      "example_sentence": "The day is very good.",
+      "example_sentence": "What a beautiful day it is!",
       "cefr_level": "A1"
     },
     {
       "rank": 86,
       "word": "where",
-      "pos": "conjunction",
+      "pos": "adverb",
       "ipa_strong": "/wɛɹ/",
-      "example_sentence": "Come where go with us.",
+      "example_sentence": "Where did you put my bag?",
       "cefr_level": "A1"
     },
     {
@@ -746,15 +746,15 @@
       "word": "thing",
       "pos": "noun",
       "ipa_strong": "/θɪŋ/",
-      "example_sentence": "The thing is very good.",
+      "example_sentence": "That's the best thing about living here.",
       "cefr_level": "A1"
     },
     {
       "rank": 88,
       "word": "most",
-      "pos": "noun",
+      "pos": "determiner",
       "ipa_strong": "/moʊst/",
-      "example_sentence": "The most is very good.",
+      "example_sentence": "Most students finished on time.",
       "cefr_level": "A1"
     },
     {
@@ -772,15 +772,15 @@
       "word": "need",
       "pos": "verb",
       "ipa_strong": "/niːd/",
-      "example_sentence": "I need every day here.",
+      "example_sentence": "I need a glass of water.",
       "cefr_level": "A1"
     },
     {
       "rank": 91,
       "word": "much",
-      "pos": "noun",
+      "pos": "determiner",
       "ipa_strong": "/mʌtʃ/",
-      "example_sentence": "The much is very good.",
+      "example_sentence": "There isn't much time left.",
       "cefr_level": "A1"
     },
     {
@@ -788,15 +788,15 @@
       "word": "right",
       "pos": "adjective",
       "ipa_strong": "/ɹaɪt/",
-      "example_sentence": "It is very right today.",
+      "example_sentence": "Is this the right answer?",
       "cefr_level": "A1"
     },
     {
       "rank": 93,
       "word": "how",
-      "pos": "noun",
+      "pos": "adverb",
       "ipa_strong": "/haʊ/",
-      "example_sentence": "The how is very good.",
+      "example_sentence": "How do you get to the station?",
       "cefr_level": "A1"
     },
     {
@@ -804,7 +804,7 @@
       "word": "back",
       "pos": "adverb",
       "ipa_strong": "/bæk/",
-      "example_sentence": "She spoke back to me.",
+      "example_sentence": "She'll be back in five minutes.",
       "cefr_level": "A1"
     },
     {
@@ -812,7 +812,7 @@
       "word": "mean",
       "pos": "verb",
       "ipa_strong": "/miːn/",
-      "example_sentence": "I mean every day here.",
+      "example_sentence": "What does this word mean?",
       "cefr_level": "A1"
     },
     {
@@ -820,7 +820,7 @@
       "word": "even",
       "pos": "adverb",
       "ipa_strong": "/iːvɪn/",
-      "example_sentence": "She spoke even to me.",
+      "example_sentence": "He didn't even say goodbye.",
       "cefr_level": "A1"
     },
     {
@@ -836,23 +836,23 @@
       "word": "here",
       "pos": "adverb",
       "ipa_strong": "/hiːɹ/",
-      "example_sentence": "She spoke here to me.",
+      "example_sentence": "Put your bag here, next to mine.",
       "cefr_level": "A1"
     },
     {
       "rank": 99,
       "word": "many",
-      "pos": "noun",
-      "ipa_strong": "/mɛniː/",
-      "example_sentence": "The many is very good.",
+      "pos": "determiner",
+      "ipa_strong": "/ˈmeni/",
+      "example_sentence": "Many people like coffee.",
       "cefr_level": "A1"
     },
     {
       "rank": 100,
       "word": "such",
-      "pos": "noun",
+      "pos": "determiner",
       "ipa_strong": "/sʌtʃ/",
-      "example_sentence": "The such is very good.",
+      "example_sentence": "It was such a beautiful day.",
       "cefr_level": "A1"
     }
   ]

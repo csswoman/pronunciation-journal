@@ -76,7 +76,7 @@ function LexiconPanel({
   if (total === 0 && core1000Practiced === 0 && lessonsCompleted === 0) {
     return (
       <ProgressCard>
-        <ProgressCardHeader icon={<BookOpen size={16} />} eyebrow="Lexicon" title="Vocabulary" />
+        <ProgressCardHeader icon={<BookOpen size={16} />} eyebrow="Dictionary" title="Vocabulary" />
         <p className="text-xs text-fg-muted">No words in your bank yet.</p>
       </ProgressCard>
     )
@@ -86,7 +86,7 @@ function LexiconPanel({
 
   return (
     <ProgressCard>
-      <ProgressCardHeader icon={<BookOpen size={16} />} eyebrow="Lexicon" title="Vocabulary" />
+      <ProgressCardHeader icon={<BookOpen size={16} />} eyebrow="Dictionary" title="Vocabulary" />
       {total > 0 && (
         <>
           <div className="mt-1 flex gap-6">
@@ -118,7 +118,7 @@ function LexiconPanel({
         </div>
       )}
       <Link href="/lexicon" className="mt-3 text-caption font-medium text-primary transition-opacity hover:opacity-80">
-        Open Lexicon →
+        Open Dictionary →
       </Link>
     </ProgressCard>
   )

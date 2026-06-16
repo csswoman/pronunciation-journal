@@ -1,6 +1,7 @@
 /* Phoneme focus session — solo lo que no puede ser Tailwind */
 
 .phoneme-focus {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -16,6 +17,13 @@
       transparent 55%
     ),
     var(--surface-base);
+}
+
+.phoneme-focus__wrap {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  width: 100%;
 }
 
 .phoneme-focus__phone {
@@ -96,6 +104,12 @@
   flex-direction: column;
   gap: var(--space-4);
   flex: 1;
+}
+
+/* When stage hosts a full-bleed intro (PhonemeLessonIntro), remove padding */
+.phoneme-focus__stage--flush {
+  padding: 0;
+  gap: 0;
 }
 
 .phoneme-focus__exit {
@@ -190,6 +204,7 @@
 .phoneme-focus__exercise {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: var(--space-3);
   width: 100%;
 }
@@ -445,8 +460,20 @@
 }
 
 .pf-order-answer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-height: 52px;
+  padding: 12px;
   border: 1.5px dashed var(--border-default);
   border-radius: var(--radius-md);
+}
+
+.pf-order-tray {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 8px 0;
 }
 
 .pf-order-answer--empty::before {
@@ -461,6 +488,7 @@
   font-family: inherit;
   font-size: 1rem;
   font-weight: 500;
+  padding: 6px 14px;
   background: var(--surface-sunken);
   border: 1.5px solid var(--border-default);
   border-radius: var(--radius-sm);
@@ -481,12 +509,68 @@
   color: var(--primary);
 }
 
+.pf-minimal-pair__ipa-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+}
+
 .pf-minimal-pair__ipa {
   font-family: var(--font-ipa), var(--font-mono-var), monospace;
   font-size: clamp(2.25rem, 11vw, 3rem);
   font-weight: 600;
   letter-spacing: 0.02em;
   color: var(--primary);
+  margin: 0;
+}
+
+.pf-replay-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: var(--radius-full);
+  border: none;
+  background: var(--primary);
+  cursor: pointer;
+  box-shadow: 0 2px 8px color-mix(in oklch, var(--primary) 40%, transparent);
+  transition:
+    background var(--transition-fast),
+    box-shadow var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.pf-replay-btn:hover {
+  background: color-mix(in oklch, var(--primary) 85%, black);
+  transform: scale(1.1);
+  box-shadow: 0 4px 14px color-mix(in oklch, var(--primary) 50%, transparent);
+}
+
+.pf-replay-btn:active {
+  transform: scale(0.93);
+}
+
+.pf-replay-btn__icon {
+  display: block;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 6px 0 6px 11px;
+  border-color: transparent transparent transparent var(--on-primary, #fff);
+  margin-left: 2px;
+}
+
+@keyframes pf-replay-pulse {
+  0%   { box-shadow: 0 0 0 0 color-mix(in oklch, var(--primary) 55%, transparent); }
+  60%  { box-shadow: 0 0 0 10px color-mix(in oklch, var(--primary) 0%, transparent); }
+  100% { box-shadow: 0 0 0 0 color-mix(in oklch, var(--primary) 0%, transparent); }
+}
+
+.pf-replay-btn--playing {
+  animation: pf-replay-pulse 0.85s ease-out;
+  background: color-mix(in oklch, var(--primary) 80%, black);
 }
 
 .pf-pair-opt {

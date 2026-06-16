@@ -22,8 +22,11 @@ async function WordsContent() {
     dueForReview = await countWordsDueForReview();
     const dueWords = await getWordsDueForReview(4);
     dueWordLabels = dueWords.map((w) => w.text);
-  } catch {
+  } catch (e) {
+    console.error("[WordsContent] Failed to load progress:", e);
     progressMap = new Map();
+    dueForReview = 0;
+    dueWordLabels = [];
   }
 
   const lessons: LessonViewModel[] = categories.map(cat => {
@@ -60,9 +63,33 @@ async function WordsContent() {
   );
 }
 
+function WordsSkeleton() {
+  return (
+    <div className="words-lexicon p-4">
+      {/* Topbar skeleton */}
+      <div className="flex items-center justify-between mb-6">
+        <div className="shimmer h-8 w-32 rounded-lg bg-surface-sunken" />
+        <div className="shimmer h-9 w-48 rounded-full bg-surface-sunken" />
+      </div>
+      {/* Hero search skeleton */}
+      <div className="shimmer h-6 w-64 rounded-md bg-surface-sunken mb-2" />
+      <div className="shimmer h-4 w-48 rounded-md bg-surface-sunken mb-4" />
+      <div className="shimmer h-14 w-full max-w-2xl rounded-xl bg-surface-sunken mb-6" />
+      {/* Progress strip skeleton */}
+      <div className="shimmer h-10 w-full rounded-lg bg-surface-sunken mb-8" />
+      {/* Card grid skeleton */}
+      <div className="grid grid-cols-3 gap-4">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <div key={i} className="shimmer h-40 rounded-xl bg-surface-sunken" />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function WordsPage() {
   return (
-    <Suspense fallback={<div />}>
+    <Suspense fallback={<WordsSkeleton />}>
       <WordsContent />
     </Suspense>
   );

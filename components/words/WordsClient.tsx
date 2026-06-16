@@ -7,7 +7,7 @@ import { Plus } from "lucide-react";
 import PageLayout from "@/components/layout/PageLayout";
 import Section from "@/components/layout/Section";
 import Button from "@/components/ui/Button";
-import { type WordsTabId } from "@/components/words/WordsTabs";
+import { type WordsTabId } from "@/components/words/WordsTopbar";
 import { WordsHero } from "@/components/words/WordsHero";
 import { WordsTopbar } from "@/components/words/WordsTopbar";
 import { WordsTab } from "@/components/vocabulary/words/WordsTab";
@@ -74,7 +74,7 @@ export function WordsClient({
 
   useEffect(() => {
     if (!wordActionError) return;
-    const t = setTimeout(() => setWordActionError(null), 4000);
+    const t = setTimeout(() => setWordActionError(null), 8000);
     return () => clearTimeout(t);
   }, [wordActionError]);
 
@@ -86,10 +86,19 @@ export function WordsClient({
       const isTyping = target?.tagName === "INPUT" || target?.tagName === "TEXTAREA" || target?.isContentEditable;
       if (isTyping) return;
       if (e.key === "n" || e.key === "N") { e.preventDefault(); setShowAddWord(true); }
+      if (e.key === "a" || e.key === "A") {
+        if (!selectMode) return;
+        e.preventDefault();
+        if (selectedWordIds.size === words.length) {
+          setSelectedWordIds(new Set());
+        } else {
+          setSelectedWordIds(new Set(words.map(w => w.id)));
+        }
+      }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [showAddWord, activeTab]);
+  }, [showAddWord, activeTab, selectMode, selectedWordIds, words]);
 
   const toggleWordSelection = (id: string) => {
     setSelectedWordIds(prev => {
@@ -127,6 +136,7 @@ export function WordsClient({
   const [studyDeckId, setStudyDeckId] = useState<string | null>(null);
   const [manageDeckId, setManageDeckId] = useState<string | null>(null);
   const [wordBankStudyDeckId, setWordBankStudyDeckId] = useState<string | null>(null);
+  const [deletingDeckId, setDeletingDeckId] = useState<string | null>(null);
 
   const editDeck = decks.find(d => d.id === editDeckId) ?? null;
   const studyDeck = decks.find(d => d.id === studyDeckId) ?? null;
@@ -139,11 +149,15 @@ export function WordsClient({
     else setStudyDeckId(deckId);
   };
 
-  const handleDeleteDeck = async (id: string) => {
-    const name = decks.find(d => d.id === id)?.name;
-    if (!confirm(`Delete deck "${name}"? This cannot be undone.`)) return;
-    await deleteDeck(id);
-    removeDeck(id);
+  const handleDeleteDeck = (id: string) => {
+    setDeletingDeckId(id);
+  };
+
+  const confirmDeleteDeck = async () => {
+    if (!deletingDeckId) return;
+    await deleteDeck(deletingDeckId);
+    removeDeck(deletingDeckId);
+    setDeletingDeckId(null);
     setEditDeckId(null);
   };
 
@@ -201,7 +215,7 @@ export function WordsClient({
             />
           )}
 
-          <Section spacing="lg">
+          <Section spacing="md">
             {activeTab === "lexicon" && (
               <LexiconView
                 lessons={lexiconLessons}
@@ -230,6 +244,7 @@ export function WordsClient({
                 onDelete={async id => { try { await removeWord(id); } catch { setWordActionError("Failed to delete"); } }}
                 onOpenAddWord={(text) => { setInitialWordText(text ?? ""); setShowAddWord(true); }}
                 onToggleFavorite={handleToggleFavorite}
+                onClearActionError={() => setWordActionError(null)}
               />
             )}
 
@@ -316,6 +331,28 @@ export function WordsClient({
           onClose={() => setManageDeckId(null)}
           onWordCountChange={count => setWordCount(manageDeckId!, count)}
         />
+      )}
+
+      {deletingDeckId && (
+        <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 px-4 py-3 bg-surface-raised border border-border-default rounded-xl shadow-lg text-sm">
+          <span className="text-fg-secondary">
+            Delete &ldquo;{decks.find(d => d.id === deletingDeckId)?.name}&rdquo;?
+          </span>
+          <button
+            type="button"
+            className="font-semibold text-error"
+            onClick={confirmDeleteDeck}
+          >
+            Delete
+          </button>
+          <button
+            type="button"
+            className="text-fg-muted"
+            onClick={() => setDeletingDeckId(null)}
+          >
+            Cancel
+          </button>
+        </div>
       )}
     </>
   );

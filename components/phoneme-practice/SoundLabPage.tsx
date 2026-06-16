@@ -5,7 +5,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Headphones } from "lucide-react";
 import { SoundLabHeader } from "./SoundLabHeader";
-import { SoundLabContinuingBar } from "./SoundLabContinuingBar";
 import { SoundLabFilterRow } from "./SoundLabFilterRow";
 import { SoundLabLessonGrid } from "./SoundLabLessonGrid";
 import type { LessonSection } from "./SoundLabLessonGrid";
@@ -50,7 +49,7 @@ function matchesFocus(lesson: Lesson, tokens: string[]): boolean {
 
 export default function SoundLabPage() {
   const router = useRouter();
-  const { allLessons, soundProgressMap, completedCount, inProgressCount, heroLesson, isLoading } =
+  const { allLessons, soundProgressMap, inProgressCount, heroLesson, isLoading } =
     useSoundLabData();
 
   const searchParams = useSearchParams();
@@ -131,38 +130,16 @@ export default function SoundLabPage() {
 
   return (
     <div className="sound-lab min-h-screen">
-      <div className="mx-auto max-w-[1280px] px-4 pt-5 pb-14 sm:px-6 sm:pt-10 lg:px-10">
-        <header className="mb-8 flex flex-col gap-4 sm:mb-10 sm:gap-5">
+      <div className="px-4 pt-5 pb-14 sm:px-6 sm:pt-10 lg:px-10">
+        <header className="sound-lab__page-header">
 
-          <div className="flex items-stretch gap-4">
-            <div className="min-w-0 flex-1">
-              <SoundLabHeader
-                totalCount={allLessons.length}
-                completedCount={completedCount}
-                inProgressCount={inProgressCount}
-              />
-            </div>
-
-            {heroLesson.lesson && (
-              <div className="hidden shrink-0 sm:block">
-                <SoundLabContinuingBar
-                  lesson={heroLesson.lesson}
-                  progress={heroLesson.progress}
-                  onResume={handleResume}
-                />
-              </div>
-            )}
-          </div>
-
-          {heroLesson.lesson && (
-            <div className="sm:hidden">
-              <SoundLabContinuingBar
-                lesson={heroLesson.lesson}
-                progress={heroLesson.progress}
-                onResume={handleResume}
-              />
-            </div>
-          )}
+          <SoundLabHeader
+            totalCount={allLessons.length}
+            inProgressCount={inProgressCount}
+            heroLesson={heroLesson.lesson}
+            heroProgress={heroLesson.progress}
+            onResume={handleResume}
+          />
 
           <SoundLabFilterRow
             activeChip={activeChip}
@@ -173,20 +150,22 @@ export default function SoundLabPage() {
 
           {focusTokens.length > 0 && (
             <div
-              className="sound-lab__focus-banner flex items-center gap-2 rounded-xl border border-[var(--border-subtle)] px-4 py-3"
+              className="sound-lab__focus-banner flex items-center gap-2 rounded-xl border px-4 py-3"
               role="status"
             >
-              <Headphones size={14} className="shrink-0 text-[color:var(--primary)]" aria-hidden />
+              <Headphones size={14} className="sound-lab__focus-banner-icon shrink-0" aria-hidden />
               <span className="text-sm text-[color:var(--text-secondary)]">
-                From your course, practicing{" "}
+                From your course: practicing{" "}
                 <span className="sound-lab__focus-tokens">{focusTokens.join(" · ")}</span>
-                {!focusSection && <span className="text-[color:var(--text-tertiary)]"> — no lessons yet.</span>}
+                {!focusSection && (
+                  <span className="text-[color:var(--text-tertiary)]">. No matching lessons yet.</span>
+                )}
               </span>
               <Link
                 href="/practice/sounds"
-                className="ml-auto shrink-0 text-xs font-medium text-[color:var(--primary)] hover:underline"
+                className="sound-lab__focus-banner-link ml-auto shrink-0 text-xs hover:underline"
               >
-                View all
+                View all sounds
               </Link>
             </div>
           )}

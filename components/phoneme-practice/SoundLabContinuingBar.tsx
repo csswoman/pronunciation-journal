@@ -1,61 +1,105 @@
 "use client";
 
+import { useId } from "react";
 import { Play } from "lucide-react";
 import type { Lesson } from "@/lib/types";
 import { ipaFromLessonTitle } from "@/lib/sound-lab/display";
+import { cn } from "@/lib/cn";
+import { useSpeakWord } from "@/hooks/useSpeakWord";
 
 interface Props {
   lesson: Lesson | null;
   progress: number;
-  onResume?: () => void;
 }
 
-export function SoundLabContinuingBar({ lesson, progress, onResume }: Props) {
+function progressAriaLabel(ipa: string | null, heroWord: string | null, progress: number): string {
+  const sound = [ipa, heroWord].filter(Boolean).join(", as in ");
+  if (sound) return `${sound}, ${progress}% complete`;
+  return `${progress}% complete`;
+}
+
+export function SoundLabContinuingBar({ lesson, progress }: Props) {
+  const labelId = useId();
+  const examplesGroupId = useId();
+  const { speaking, speak } = useSpeakWord();
+
   if (!lesson) return null;
 
   const ipa = ipaFromLessonTitle(lesson.title);
   const heroWord = lesson.words[0]?.word ?? null;
-  const ariaLabel = [ipa, heroWord].filter(Boolean).join(" — ");
+  const exampleWords = lesson.words.slice(0, 2).map((w) => w.word);
+  const progressLabel = progressAriaLabel(ipa, heroWord, progress);
 
   return (
-    <button
-      type="button"
-      className="sound-lab__resume flex w-full cursor-pointer flex-col justify-between text-left sm:w-[280px] sm:h-full"
-      onClick={onResume}
-      aria-label={`Continue: ${ariaLabel}`}
+    <section
+      className="sound-lab__resume"
+      aria-labelledby={labelId}
     >
-      {/* Label row */}
-      <span className="mb-2 block text-[10px] uppercase tracking-[0.14em] text-[color:oklch(60%_0.01_none)]">
-        Continue where you left off
-      </span>
+      <div className="sound-lab__resume-split">
+        <div className="sound-lab__resume-focus">
+          <span id={labelId} className="sound-lab__chrome-label sound-lab__chrome-label--section">
+            Pick up here
+          </span>
 
-      {/* Identity row: play + IPA + keyword + pct */}
-      <div className="flex items-center gap-3">
-        <span
-          className="sound-lab__resume-play flex h-8 w-8 shrink-0 items-center justify-center rounded-full"
-          aria-hidden
-        >
-          <Play className="h-3.5 w-3.5 fill-current" />
-        </span>
+          <div className="sound-lab__resume-identity">
+            {ipa && <span className="sound-lab__resume-ipa">{ipa}</span>}
+            {heroWord && (
+              <>
+                <span className="sound-lab__resume-as-in" aria-hidden>
+                  as in
+                </span>
+                <span className="sound-lab__resume-hero-word truncate">{heroWord}</span>
+              </>
+            )}
+          </div>
 
-        <span className="min-w-0 flex-1 truncate">
-          {ipa && (
-            <span className="sound-lab__resume-ipa mr-1.5">{ipa}</span>
-          )}
-          {heroWord && (
-            <span className="sound-lab__resume-sub font-semibold text-[color:oklch(90%_0.005_none)]">
-              {heroWord}
+          <div className="sound-lab__resume-progress">
+            <div
+              className="sound-lab__resume-track min-w-0 flex-1"
+              role="progressbar"
+              aria-valuenow={progress}
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-valuetext={progressLabel}
+            >
+              <span className="sound-lab__resume-fill" style={{ width: `${progress}%` }} />
+            </div>
+            <span className="sound-lab__resume-pct shrink-0 tabular-nums" aria-hidden>
+              {progress}%
             </span>
-          )}
-        </span>
+          </div>
+        </div>
 
-        <span className="sound-lab__resume-pct shrink-0">{progress}%</span>
+        {exampleWords.length > 0 && (
+          <div className="sound-lab__resume-examples">
+            <span id={examplesGroupId} className="sound-lab__chrome-label sound-lab__chrome-label--section">
+              Hear examples
+            </span>
+            <div
+              className="sound-lab__resume-examples-pills"
+              role="group"
+              aria-labelledby={examplesGroupId}
+            >
+              {exampleWords.map((word) => (
+                <button
+                  key={word}
+                  type="button"
+                  className={cn(
+                    "sound-lab__resume-pill sound-lab__resume-pill--side",
+                    speaking === word && "sound-lab__resume-pill--speaking",
+                  )}
+                  onClick={(e) => speak(word, e)}
+                  aria-label={`Play pronunciation of "${word}"`}
+                  aria-pressed={speaking === word}
+                >
+                  <Play className="sound-lab__resume-pill-icon" aria-hidden />
+                  {word}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
-
-      {/* Progress bar */}
-      <div className="sound-lab__resume-track mt-3" aria-hidden>
-        <span className="sound-lab__resume-fill" style={{ width: `${progress}%` }} />
-      </div>
-    </button>
+    </section>
   );
 }

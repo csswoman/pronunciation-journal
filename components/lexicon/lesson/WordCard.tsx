@@ -73,20 +73,10 @@ export function WordCard({
             <p className="lexicon-area__card-ipa font-ipa">{formatIpaDisplay(ipa)}</p>
           ) : null}
         </div>
-        <span
-          className="lexicon-area__statepill"
-          style={{
-            color: cfg.stateColor,
-            background: `color-mix(in srgb, ${cfg.stateColor} 14%, transparent)`,
-            border: `1px solid color-mix(in srgb, ${cfg.stateColor} 35%, transparent)`,
-          }}
-        >
-          {cfg.label}
-        </span>
+        <span className="lexicon-area__card-pos lexicon-area__card-pos--top">{partOfSpeech}</span>
       </div>
 
       <div className={cn(view === "list" && "lexicon-area__card-body")}>
-        <p className="lexicon-area__card-pos">{partOfSpeech}</p>
 
         {translation ? <p className="lexicon-area__card-trans">{translation}</p> : null}
 
@@ -96,10 +86,15 @@ export function WordCard({
       </div>
 
       <div className="lexicon-area__card-foot">
-        <div className="lexicon-area__meter" aria-hidden>
+        <div
+          className="lexicon-area__meter"
+          title={cfg.label}
+          aria-label={cfg.label}
+        >
           {Array.from({ length: 5 }).map((_, i) => (
             <i key={i} className={i < meterStrength ? "is-on" : undefined} />
           ))}
+          <span className="lexicon-area__meter-label" aria-hidden>{cfg.label}</span>
         </div>
 
         <div className="lexicon-area__acts">

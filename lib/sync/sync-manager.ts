@@ -32,14 +32,15 @@ function now(): string {
  * RLS violations (code 42501) and check-constraint errors (23514) are permanent.
  */
 export function isPermanentError(message: string, code?: string): boolean {
-  const permanentCodes = ['42501', '23514', '23503', '23505']
+  const permanentCodes = ['42501', '23514', '23503', '23505', 'PGRST205', '42P01']
   if (code && permanentCodes.includes(code)) return true
   // Supabase REST errors come as strings; check for common keywords
   return (
     message.includes('violates row-level security') ||
     message.includes('violates check constraint') ||
     message.includes('foreign key') ||
-    message.includes('duplicate key')
+    message.includes('duplicate key') ||
+    message.includes('user_learning_state')
   )
 }
 

@@ -1,16 +1,23 @@
 "use client";
 
 import { BookOpen, BookMarked, Layers } from "lucide-react";
-import type { WordsTabId } from "@/components/words/WordsTabs";
+
+export const WORDS_TABS = [
+  { id: "lexicon",  label: "Dictionary",  icon: BookOpen },
+  { id: "my-words", label: "My Words", icon: BookMarked },
+  { id: "decks",    label: "Decks",    icon: Layers },
+] as const;
+
+export type WordsTabId = (typeof WORDS_TABS)[number]["id"];
 
 const TABS: { id: WordsTabId; label: string; icon: typeof BookOpen }[] = [
-  { id: "lexicon", label: "Lexicon", icon: BookOpen },
+  { id: "lexicon", label: "Dictionary", icon: BookOpen },
   { id: "my-words", label: "My Words", icon: BookMarked },
   { id: "decks", label: "Decks", icon: Layers },
 ];
 
 const TITLES: Record<WordsTabId, string> = {
-  lexicon: "Lexicon",
+  lexicon: "Dictionary",
   "my-words": "My Words",
   decks: "Decks",
 };
