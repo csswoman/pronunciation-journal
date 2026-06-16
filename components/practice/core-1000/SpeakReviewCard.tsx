@@ -43,10 +43,17 @@ function micErrorMessage(error: string | null): string {
   }
   if (error === 'no-speech') return 'No se detectó voz. Intenta hablar más cerca del micrófono.'
   if (error === 'audio-capture') return 'No se encontró un micrófono activo en el sistema.'
-  if (error === 'network' || error.toLowerCase().includes('fetch')) {
+
+  const lower = error.toLowerCase()
+  if (
+    error === 'network' ||
+    lower.includes('failed to fetch') ||
+    lower.includes('networkerror') ||
+    lower.includes('abort')
+  ) {
     return 'Sin conexión con el servicio de reconocimiento de voz. Revisa tu internet e intenta de nuevo.'
   }
-  if (error.includes('transcribe failed') || error.toLowerCase().includes('rate')) {
+  if (lower.includes('transcribe failed') || lower.includes('rate limit')) {
     return 'El servicio de transcripción no respondió. Intenta de nuevo en unos segundos.'
   }
   return 'No se pudo iniciar el micrófono.'
