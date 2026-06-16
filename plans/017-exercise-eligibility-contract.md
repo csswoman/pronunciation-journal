@@ -152,9 +152,9 @@ Tests: fixtures compartidos + invariantes + gate CI
 
 **Criterios de done Fase 5:**
 
-- [ ] `pnpm validate:core1000-generators` pasa con el dataset actual.
-- [ ] Si una palabra nueva rompe el umbral, el reporte indica rank, word, mode, reasons[].
-- [ ] Umbrales documentados en este plan (ajustar tras primera corrida real).
+- [x] `pnpm validate:core1000-generators` pasa con el dataset actual.
+- [x] Si una palabra nueva rompe el umbral, el reporte indica rank, word, mode, reasons[].
+- [x] Umbrales documentados en este plan (ajustar tras primera corrida real).
 
 **STOP:** si el umbral fill-blank real es < 70% por frases flexionadas + contexto corto, **no** bajar el umbral a ciegas — priorizar Fase 2 (`blankLemma`) antes de fijar el gate.
 
@@ -223,7 +223,7 @@ Fase 1 (eligibility) ──► Fase 2 (fill-blank + GenerationResult)
 - [x] Fase 2 — `GenerationResult` en fill-blank + callers ✅ (implementado 2026-06-16)
 - [x] Fase 3 — fixtures compartidos ✅ (implementado 2026-06-16)
 - [x] Fase 4 — invariantes + match-pairs + integración Core 1000 ✅ (implementado 2026-06-16)
-- [ ] Fase 5 — `validate:core1000-generators` en CI
+- [x] Fase 5 — `validate:core1000-generators` en CI ✅ (implementado 2026-06-16)
 - [ ] Fase 6 — docs actualizados
 
 ---
