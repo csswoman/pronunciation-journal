@@ -11,6 +11,8 @@ export interface FailedSentenceItem {
   typeLabel: string
   /** True when this failure can be turned into a review step today. */
   drillable: boolean
+  /** Resolved sentence text when available (for dictation / reorder). */
+  phrase: string | null
   failedAt: string
 }
 

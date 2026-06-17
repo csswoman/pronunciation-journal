@@ -36,6 +36,14 @@ const CONNECTED_SPEECH_DECK_TITLES: Record<string, string> = {
   'cs-elision': 'Elision',
 }
 
+type CsDeckSlug = keyof typeof CONNECTED_SPEECH_DECK_TITLES
+
 export function connectedSpeechDeckTitle(slug: string): string | null {
   return CONNECTED_SPEECH_DECK_TITLES[slug] ?? null
 }
+
+export function isConnectedSpeechDeckSlug(slug: string): slug is CsDeckSlug {
+  return slug in CONNECTED_SPEECH_DECK_TITLES
+}
+
+export type { CsDeckSlug }

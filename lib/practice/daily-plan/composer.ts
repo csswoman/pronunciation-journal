@@ -2,9 +2,8 @@ import { fetchCoreWordsForDay } from '@/lib/core-1000/client-fetch'
 import { db } from '@/lib/db'
 import { getAllSounds, getAllWords, getMinimalPairs, getWordsBySound } from '@/lib/phoneme-practice/queries'
 import { deckSlugForWeakTopics } from '@/lib/practice/topic-decks'
-import { buildFailedSentencesStep } from '@/lib/review/failed-sentence-step'
+import { buildFailedSentencesMixStep } from '@/lib/review/build-failed-exercises'
 import {
-  fetchFailedSentenceWords,
   fetchRecentFailedSentences,
 } from '@/lib/review/client-queries'
 import { mergeReviewWords } from '@/lib/review/merge-words'
@@ -48,7 +47,6 @@ export async function buildReviewPlan(userId: string): Promise<ReviewPlan> {
     getAllWords(),
   ])
 
-  const failedWords = await fetchFailedSentenceWords(failedItems)
   const mergedWords = mergeReviewWords(weakWords, reviewWords, WORD_REVIEW_WORD_COUNT)
 
   const allWordsBySoundId = new Map<number, SoundWord[]>(
@@ -57,7 +55,7 @@ export async function buildReviewPlan(userId: string): Promise<ReviewPlan> {
 
   const steps: DailyStep[] = []
 
-  const failedStep = buildFailedSentencesStep(failedWords, reviewContext)
+  const failedStep = await buildFailedSentencesMixStep(failedItems, reviewContext)
   if (failedStep) steps.push(failedStep)
 
   const wordStep = buildWordReviewStep(mergedWords, reviewContext)

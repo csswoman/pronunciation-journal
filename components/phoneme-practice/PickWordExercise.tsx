@@ -6,8 +6,6 @@ import type { Exercise } from '@/lib/phoneme-practice/types'
 import { speak } from '@/lib/phoneme-practice/tts'
 import { playIpaSound } from '@/lib/pronunciation/ipa-audio'
 import { cn } from '@/lib/cn'
-import { PhonemeExercisePrompt } from './PhonemeExercisePrompt'
-import { getPhonemeExerciseMeta } from '@/lib/phoneme-practice/exercise-labels'
 
 interface Props {
   exercise: Exercise
@@ -18,8 +16,6 @@ interface Props {
 export function PickWordExercise({ exercise, onSubmit, focusUi = false }: Props) {
   const [selected, setSelected] = useState<Set<string>>(new Set())
   const [submitted, setSubmitted] = useState(false)
-  const meta = getPhonemeExerciseMeta('pick_word', { ipa: exercise.ipa })
-
   function toggle(id: string, label: string) {
     speak(label)
     if (submitted) return
@@ -83,36 +79,32 @@ export function PickWordExercise({ exercise, onSubmit, focusUi = false }: Props)
 
   if (!focusUi) {
     return (
-      <div className="flex flex-col items-center gap-5 w-full">
-        <div className="flex flex-col items-center gap-2">
+      <div className="flex flex-col gap-5 w-full">
+        <p className="font-[Fraunces,Georgia,serif] text-2xl font-bold leading-tight text-fg">
+          Which words contain the sound {exercise.ipa}?
+        </p>
+        <div className="flex justify-center">
           <button
             type="button"
             onClick={() => playIpaSound(exercise.ipa.replace(/[/\[\]]/g, '').trim())}
-            aria-label={`Pronunciar ${exercise.ipa}`}
-            className="flex items-center gap-2 px-4 py-2 rounded-[var(--radius-full)] border border-[var(--border-subtle)] bg-[var(--surface-raised)] text-[var(--text-primary)] text-[15px] font-mono hover:border-[var(--primary)] hover:text-[var(--primary)] transition-colors cursor-pointer [font-family:inherit]"
+            aria-label={`Play ${exercise.ipa}`}
+            className="flex items-center gap-2 px-4 py-2 rounded-full border border-border-default bg-surface-raised text-fg text-[15px] font-mono hover:border-primary hover:text-primary transition-colors cursor-pointer"
           >
-            <Volume2 size={13} className="text-[var(--text-tertiary)]" aria-hidden />
+            <Volume2 size={13} className="text-fg-subtle" aria-hidden />
             {exercise.ipa}
           </button>
-          <p className="text-[15px] text-[var(--text-secondary)] text-center m-0">
-            Which words contain this sound?
-          </p>
         </div>
-        <p className="text-xs text-[var(--text-tertiary)] text-center tracking-[.05em] m-0">
-          Select all that apply
-        </p>
         {options}
         <button
           type="button"
           onClick={handleSubmit}
           disabled={!canCheck}
-          style={canCheck ? { backgroundImage: 'var(--gradient-primary)' } : undefined}
-          className={[
-            'w-full p-4 rounded-[var(--radius-md)] border-none [font-family:inherit] text-[15px] font-semibold transition-all',
+          className={cn(
+            'w-full rounded-full py-3.5 text-[15px] font-semibold transition-all duration-150',
             canCheck
-              ? 'cursor-pointer text-on-primary shadow-md hover:-translate-y-[1px]'
-              : 'cursor-not-allowed bg-surface-raised text-fg-subtle',
-          ].join(' ')}
+              ? 'bg-(--cta-bg) text-(--cta-fg) cursor-pointer hover:opacity-90 active:scale-[0.99]'
+              : 'bg-surface-raised text-fg-subtle cursor-not-allowed opacity-50',
+          )}
         >
           Check
         </button>
@@ -122,28 +114,33 @@ export function PickWordExercise({ exercise, onSubmit, focusUi = false }: Props)
 
   return (
     <div className="phoneme-focus__exercise">
-      <PhonemeExercisePrompt
-        eyebrow={meta.eyebrow}
-        title={meta.title}
-        hint="Selecciona todas las que apliquen"
-      />
-      <button
-        type="button"
-        onClick={() => playIpaSound(exercise.ipa.replace(/[/\[\]]/g, '').trim())}
-        aria-label={`Escuchar ${exercise.ipa}`}
-        className="pf-chip pf-chip--ipa self-center mb-4"
-      >
-        <Volume2 size={13} className="pf-chip__icon" aria-hidden />
-        {exercise.ipa}
-      </button>
+      <p className="font-[Fraunces,Georgia,serif] text-2xl font-bold leading-tight text-fg mb-4">
+        Which words contain the sound {exercise.ipa}?
+      </p>
+      <div className="flex justify-center mb-4">
+        <button
+          type="button"
+          onClick={() => playIpaSound(exercise.ipa.replace(/[/\[\]]/g, '').trim())}
+          aria-label={`Play ${exercise.ipa}`}
+          className="flex items-center gap-2 px-4 py-2 rounded-full border border-border-default bg-surface-raised text-fg text-[15px] font-mono hover:border-primary hover:text-primary transition-colors cursor-pointer"
+        >
+          <Volume2 size={13} className="text-fg-subtle" aria-hidden />
+          {exercise.ipa}
+        </button>
+      </div>
       {options}
       <button
         type="button"
         onClick={handleSubmit}
         disabled={!canCheck}
-        className="pf-cta pf-cta--primary"
+        className={cn(
+          'w-full rounded-full py-3.5 text-[15px] font-semibold transition-all duration-150 mt-2',
+          canCheck
+            ? 'bg-(--cta-bg) text-(--cta-fg) cursor-pointer hover:opacity-90 active:scale-[0.99]'
+            : 'bg-surface-raised text-fg-subtle cursor-not-allowed opacity-50',
+        )}
       >
-        Comprobar
+        Check
       </button>
     </div>
   )

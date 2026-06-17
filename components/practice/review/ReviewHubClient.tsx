@@ -21,7 +21,8 @@ function formatIpa(ipa: string | null | undefined): string {
 }
 
 export function ReviewHubClient({ summary }: Props) {
-  const { state, sessionKey, startReview, advanceStep, exitSession } = useReviewSession()
+  const { state, sessionKey, startReview, startFailedItem, advanceStep, exitSession } =
+    useReviewSession()
   const { counts } = summary
   const canStart = summary.canStartReview && state.phase !== 'loading'
 
@@ -42,11 +43,27 @@ export function ReviewHubClient({ summary }: Props) {
         >
           <ul className="flex flex-col gap-2">
             {summary.failedSentences.slice(0, 4).map((item) => (
-              <li key={item.contentId} className="font-body-sm text-fg-secondary">
-                <span className="text-fg">{item.label}</span>
-                <span className="ml-2 font-caption text-fg-muted">{item.typeLabel}</span>
-                {!item.drillable ? (
-                  <span className="ml-2 font-caption text-fg-subtle">· solo historial</span>
+              <li
+                key={item.contentId}
+                className="flex items-start justify-between gap-3 font-body-sm text-fg-secondary"
+              >
+                <div className="min-w-0">
+                  <span className="text-fg">{item.label}</span>
+                  <span className="ml-2 font-caption text-fg-muted">{item.typeLabel}</span>
+                  {!item.drillable ? (
+                    <span className="ml-2 font-caption text-fg-subtle">· solo historial</span>
+                  ) : null}
+                </div>
+                {item.drillable && state.phase !== 'loading' ? (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="shrink-0 text-primary"
+                    onClick={() => startFailedItem(item)}
+                  >
+                    Practicar
+                  </Button>
                 ) : null}
               </li>
             ))}

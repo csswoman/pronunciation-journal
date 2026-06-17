@@ -15,7 +15,7 @@ export function ReviewSessionLauncher({ state, sessionKey, onStepComplete, onExi
 
   const step = state.steps[state.stepIndex]
   return (
-    <div className="fixed inset-0 z-50 bg-[var(--surface-base)]">
+    <div className="fixed inset-0 z-50">
       <PracticeSession
         key={`${sessionKey}-${state.stepIndex}`}
         context="review"

@@ -11,6 +11,7 @@
 //   <CheckButton />    — full-width rounded-full
 
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { cn } from '@/lib/cn'
 import { shuffle } from '@/lib/exercises/utils'
 import { speak } from '@/lib/phoneme-practice/tts'
 import type { MatchPairsExercise as MatchPairsExerciseType } from '@/lib/exercises/types'
@@ -179,10 +180,6 @@ export function MatchPairsExercise({ exercise, onResult }: Props) {
 
   return (
     <div className="flex w-full flex-col gap-5">
-      <p className="text-center text-base font-semibold text-[var(--text-primary)]">
-        Match each <span className="text-[var(--primary)]">word</span> with its definition
-      </p>
-
       <div ref={boardRef} className="relative grid grid-cols-2 gap-x-10 gap-y-2">
         <svg aria-hidden className="pointer-events-none absolute inset-0 h-full w-full">
           {connections.map((c) => {
@@ -254,11 +251,12 @@ export function MatchPairsExercise({ exercise, onResult }: Props) {
           type="button"
           onClick={handleCheck}
           disabled={!allMatched}
-          className="w-full rounded-full py-3.5 text-sm font-semibold transition-all disabled:opacity-40"
-          style={{
-            backgroundColor: allMatched ? 'var(--primary)' : 'var(--border-subtle)',
-            color: allMatched ? 'var(--on-primary)' : 'var(--text-tertiary)',
-          }}
+          className={cn(
+          'w-full rounded-full py-3.5 text-[15px] font-semibold transition-all duration-150',
+          allMatched
+            ? 'bg-(--cta-bg) text-(--cta-fg) cursor-pointer hover:opacity-90 active:scale-[0.99]'
+            : 'bg-surface-raised text-fg-subtle cursor-not-allowed opacity-50',
+        )}
         >
           Check
         </button>

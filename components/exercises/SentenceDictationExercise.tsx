@@ -2,18 +2,23 @@
 
 // Planned structure:
 // <SentenceDictationExercise>
-//   <PlayZone />       — centered play button with audio state
-//   <AnswerInput />    — textarea for transcription
-//   <SubmitButton />   — disabled until user types something
-//   <FeedbackBar />    — correct/wrong + correct sentence after submission
+//   <AudioButton />     — centered play button with sound wave animation
+//   <WordCountDashes /> — dashes hinting at word count
+//   <AnswerInput />     — textarea, no label
+//   <HintPanel />       — hint text below input (revealed via header button)
+//   <CheckButton />     — full-width pill, disabled until user types
 
 import { useState, useRef, useEffect, useCallback } from 'react'
+// useCallback still used for handlePlay
+import { Lightbulb } from 'lucide-react'
 import { cn } from '@/lib/cn'
 import type { SentenceDictationExercise as SentenceDictationExerciseType } from '@/lib/exercises/types'
 
 interface Props {
   exercise: SentenceDictationExerciseType
   onResult: (isCorrect: boolean, userAnswer: string, timeMs: number) => void
+  onHint?: () => void
+  hintCount?: number
 }
 
 type AnswerState = 'idle' | 'correct' | 'wrong'
@@ -26,13 +31,19 @@ function normalize(text: string): string {
     .replace(/\s+/g, ' ')
 }
 
-export function SentenceDictationExercise({ exercise, onResult }: Props) {
+export function SentenceDictationExercise({ exercise, onResult, onHint, hintCount = 0 }: Props) {
   const [input, setInput] = useState('')
   const [state, setState] = useState<AnswerState>('idle')
   const [isPlaying, setIsPlaying] = useState(false)
   const startMs = useRef(Date.now())
   const audioRef = useRef<HTMLAudioElement | null>(null)
   const inputRef = useRef<HTMLTextAreaElement | null>(null)
+
+  const hint = exercise.sentence
+    .trim()
+    .split(/\s+/)
+    .map(w => w[0] + '_'.repeat(Math.max(1, w.length - 1)))
+    .join('  ')
 
   useEffect(() => {
     setInput('')
@@ -45,6 +56,7 @@ export function SentenceDictationExercise({ exercise, onResult }: Props) {
     }
     window.speechSynthesis?.cancel()
   }, [exercise.id])
+
 
   const handlePlay = useCallback(() => {
     if (isPlaying) return
@@ -87,8 +99,9 @@ export function SentenceDictationExercise({ exercise, onResult }: Props) {
   const done = state !== 'idle'
 
   return (
-    <div className="flex w-full flex-col gap-6">
-      <PlayZone isPlaying={isPlaying} onPlay={handlePlay} />
+    <div className="flex w-full flex-col gap-5">
+      <AudioButton isPlaying={isPlaying} onPlay={handlePlay} />
+      <WordCountDashes count={exercise.sentence.trim().split(/\s+/).length} />
       <AnswerInput
         inputRef={inputRef}
         value={input}
@@ -96,59 +109,47 @@ export function SentenceDictationExercise({ exercise, onResult }: Props) {
         onChange={setInput}
         onKeyDown={handleKeyDown}
       />
-      {!done && (
-        <SubmitButton disabled={!input.trim()} onSubmit={handleSubmit} />
-      )}
-      {done && (
-        <FeedbackBar state={state} correctSentence={exercise.sentence} />
-      )}
+      {hintCount > 0 && <HintPanel hint={hint} />}
+      {done && <FeedbackBar state={state} userAnswer={input} correctSentence={exercise.sentence} />}
+      {!done && <CheckButton disabled={!input.trim()} onSubmit={handleSubmit} />}
     </div>
   )
 }
 
-// ── Sub-components ──────────────────────────────────────────────────────────
-
-function PlayZone({ isPlaying, onPlay }: { isPlaying: boolean; onPlay: () => void }) {
+function AudioButton({ isPlaying, onPlay }: { isPlaying: boolean; onPlay: () => void }) {
   return (
-    <div className="flex flex-col items-center gap-3 py-4">
+    <div className="flex justify-center py-2">
       <button
         type="button"
         onClick={onPlay}
         disabled={isPlaying}
         aria-label={isPlaying ? 'Playing sentence' : 'Play sentence'}
         className={cn(
-          'group relative flex h-16 w-16 items-center justify-center rounded-[var(--radius-full)] transition-all duration-200',
+          'flex h-14 w-14 items-center justify-center rounded-full border transition-all duration-200',
           isPlaying
-            ? 'cursor-wait'
-            : 'cursor-pointer hover:scale-105 active:scale-95',
+            ? 'cursor-wait border-border-default bg-surface-raised text-fg-subtle'
+            : 'cursor-pointer border-border-default bg-surface-raised text-fg hover:border-border-strong hover:scale-105 active:scale-95',
         )}
-        style={{
-          backgroundColor: isPlaying ? 'var(--primary-soft)' : 'var(--cta-bg)',
-          color: isPlaying ? 'var(--primary)' : 'var(--cta-fg)',
-          boxShadow: isPlaying ? 'none' : '0 4px 12px oklch(0.18 0.008 250 / 0.25)',
-        }}
       >
-        {isPlaying ? (
-          <SoundWaveIcon />
-        ) : (
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" aria-hidden>
-            <path d="M6.5 4.2a.75.75 0 0 0-1.25.56v10.5a.75.75 0 0 0 1.25.56l7.5-5.25a.75.75 0 0 0 0-1.12L6.5 4.2Z" />
-          </svg>
-        )}
+        {isPlaying ? <SoundWaveIcon /> : <SpeakerIcon />}
       </button>
-      <p
-        className="text-[12px] font-medium tracking-wide"
-        style={{ color: 'var(--text-tertiary)' }}
-      >
-        {isPlaying ? 'Playing…' : 'Tap to listen'}
-      </p>
     </div>
+  )
+}
+
+function SpeakerIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+      <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+      <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+    </svg>
   )
 }
 
 function SoundWaveIcon() {
   return (
-    <svg width="24" height="20" viewBox="0 0 24 20" fill="currentColor" aria-hidden>
+    <svg width="22" height="18" viewBox="0 0 24 20" fill="currentColor" aria-hidden>
       <rect x="0" y="7" width="3" height="6" rx="1.5" opacity="0.5">
         <animate attributeName="height" values="6;12;6" dur="0.8s" repeatCount="indefinite" />
         <animate attributeName="y" values="7;4;7" dur="0.8s" repeatCount="indefinite" />
@@ -173,6 +174,20 @@ function SoundWaveIcon() {
   )
 }
 
+function WordCountDashes({ count }: { count: number }) {
+  return (
+    <div className="flex items-center justify-center gap-1.5 py-1">
+      {Array.from({ length: count }).map((_, i) => (
+        <span
+          key={i}
+          className="h-px bg-border-strong"
+          style={{ width: '18px' }}
+        />
+      ))}
+    </div>
+  )
+}
+
 interface AnswerInputProps {
   inputRef: React.RefObject<HTMLTextAreaElement | null>
   value: string
@@ -183,95 +198,92 @@ interface AnswerInputProps {
 
 function AnswerInput({ inputRef, value, disabled, onChange, onKeyDown }: AnswerInputProps) {
   return (
-    <div className="flex flex-col gap-2">
-      <label
-        className="text-[11px] font-semibold uppercase tracking-[.08em]"
-        style={{ color: 'var(--text-tertiary)' }}
-      >
-        Type what you hear
-      </label>
-      <textarea
-        ref={inputRef}
-        value={value}
-        disabled={disabled}
-        onChange={e => onChange(e.target.value)}
-        onKeyDown={onKeyDown}
-        rows={2}
-        placeholder="Write the sentence…"
-        className={cn(
-          'w-full resize-none rounded-[var(--radius-md)] border-[1.5px] px-4 py-3 text-[15px] outline-none transition-all duration-150',
-          disabled
-            ? 'cursor-default'
-            : 'focus:border-[var(--primary)]',
-        )}
-        style={{
-          backgroundColor: 'var(--surface-sunken)',
-          borderColor: disabled ? 'var(--border-subtle)' : 'var(--border-default)',
-          color: disabled ? 'var(--text-tertiary)' : 'var(--text-primary)',
-        }}
-      />
-      {!disabled && (
-        <p className="text-right text-[11px]" style={{ color: 'var(--text-tertiary)' }}>
-          Enter to submit · Shift+Enter for newline
-        </p>
+    <textarea
+      ref={inputRef}
+      value={value}
+      disabled={disabled}
+      onChange={e => onChange(e.target.value)}
+      onKeyDown={onKeyDown}
+      rows={3}
+      placeholder="Type what you hear…"
+      className={cn(
+        'w-full resize-none rounded-(--radius-lg) border px-4 py-3.5 text-[15px] text-fg outline-none transition-all duration-150 bg-surface-raised placeholder:text-fg-subtle',
+        disabled
+          ? 'cursor-default border-border-subtle text-fg-subtle'
+          : 'border-border-default focus:border-primary',
       )}
-    </div>
+    />
   )
 }
 
-function SubmitButton({ disabled, onSubmit }: { disabled: boolean; onSubmit: () => void }) {
+function CheckButton({ disabled, onSubmit }: { disabled: boolean; onSubmit: () => void }) {
   return (
     <button
       type="button"
       onClick={onSubmit}
       disabled={disabled}
       className={cn(
-        'w-full rounded-[var(--radius-md)] py-3 text-[14px] font-semibold transition-all duration-150',
+        'w-full rounded-full py-3.5 text-[15px] font-semibold transition-all duration-150',
         disabled
-          ? 'cursor-not-allowed'
-          : 'cursor-pointer hover:opacity-90 active:scale-[0.99]',
+          ? 'bg-surface-raised text-fg-subtle cursor-not-allowed'
+          : 'bg-(--cta-bg) text-(--cta-fg) cursor-pointer hover:opacity-90 active:scale-[0.99]',
       )}
-      style={
-        disabled
-          ? { backgroundColor: 'var(--surface-raised)', color: 'var(--text-disabled)' }
-          : { backgroundColor: 'var(--cta-bg)', color: 'var(--cta-fg)' }
-      }
     >
-      Check answer
+      Check
     </button>
   )
 }
 
-function FeedbackBar({ state, correctSentence }: { state: AnswerState; correctSentence: string }) {
-  const isCorrect = state === 'correct'
+function HintPanel({ hint }: { hint: string }) {
   return (
-    <div
-      className="flex gap-3 rounded-[var(--radius-md)] px-4 py-3.5 text-[13px] border"
-      style={{
-        backgroundColor: isCorrect ? 'var(--success-soft)' : 'var(--error-soft)',
-        borderColor: isCorrect ? 'var(--success-border)' : 'var(--error-border)',
-      }}
-    >
-      <span
-        className="mt-px flex-shrink-0 text-base leading-none"
-        aria-hidden
-      >
-        {isCorrect ? '✓' : '✗'}
-      </span>
-      <div className="flex flex-col gap-0.5">
-        <p
-          className="font-semibold"
-          style={{ color: isCorrect ? 'var(--success)' : 'var(--error)' }}
-        >
-          {isCorrect ? 'Correct!' : 'Not quite'}
+    <div className="flex items-start gap-2.5 rounded-md bg-surface-sunken px-4 py-3">
+      <Lightbulb size={14} className="mt-0.5 shrink-0 text-fg-subtle" aria-hidden />
+      <p className="text-[13px] text-fg-muted italic">{hint}</p>
+    </div>
+  )
+}
+
+function diffWords(userAnswer: string, correct: string) {
+  const userWords = userAnswer.trim().split(/\s+/)
+  const correctWords = correct.trim().split(/\s+/)
+  return correctWords.map((word, i) => {
+    const userWord = userWords[i] ?? ''
+    const match = userWord.toLowerCase().replace(/[^\w]/g, '') === word.toLowerCase().replace(/[^\w]/g, '')
+    return { word, match, missing: !userWord }
+  })
+}
+
+function FeedbackBar({ state, userAnswer, correctSentence }: {
+  state: AnswerState
+  userAnswer: string
+  correctSentence: string
+}) {
+  const isCorrect = state === 'correct'
+  const diff = isCorrect ? null : diffWords(userAnswer, correctSentence)
+
+  return (
+    <div className={cn(
+      'flex flex-col gap-2 rounded-md border px-4 py-3.5',
+      isCorrect ? 'bg-success-soft border-success-border' : 'bg-surface-raised border-border-default',
+    )}>
+      <p className={cn('text-[13px] font-semibold', isCorrect ? 'text-success' : 'text-fg')}>
+        {isCorrect ? '¡Well done!' : 'Almost there — here\'s the correct sentence:'}
+      </p>
+      {diff && (
+        <p className="text-[14px] leading-relaxed flex flex-wrap gap-x-1">
+          {diff.map((token, i) => (
+            <span
+              key={i}
+              className={cn(
+                'font-medium',
+                token.match ? 'text-success' : token.missing ? 'text-fg-subtle' : 'text-error',
+              )}
+            >
+              {token.word}
+            </span>
+          ))}
         </p>
-        {!isCorrect && (
-          <p className="text-[12px] leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-            <span className="font-medium">Correct answer: </span>
-            {correctSentence}
-          </p>
-        )}
-      </div>
+      )}
     </div>
   )
 }

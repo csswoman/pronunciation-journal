@@ -92,7 +92,7 @@ function extractPhrases(deck: CsDeck): string[] {
 }
 
 /** Generate sentence_dictation exercises from a deck's example phrases. */
-export function generateCsDictation(deck: CsDeck, slug: CsDeckSlug, count: number): SentenceDictationExercise[] {
+export function generateCsDictation(deck: CsDeck, slug: string, count: number): SentenceDictationExercise[] {
   const phrases = pick(extractPhrases(deck), count)
   return phrases.map((phrase, i) => ({
     id: exerciseId('sentence_dictation', `${slug}-dict-${i}-${phrase}`, 'v1'),
@@ -101,6 +101,11 @@ export function generateCsDictation(deck: CsDeck, slug: CsDeckSlug, count: numbe
     sentence: phrase,
     audioUrl: null,
   }))
+}
+
+/** Load a connected-speech deck by slug (cached). */
+export async function loadConnectedSpeechDeck(slug: CsDeckSlug): Promise<CsDeck | null> {
+  return loadDeck(slug)
 }
 
 // ── Public API ────────────────────────────────────────────────────────────────

@@ -28,14 +28,14 @@ export function useSpeechRecognition() {
       return
     }
 
+    // Pre-warm mic permission — ignore failures, SpeechRecognition handles its own permission
     try {
       if (navigator.mediaDevices?.getUserMedia) {
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
         stream.getTracks().forEach((t) => t.stop())
       }
     } catch {
-      setStatus('error')
-      return
+      // continue — let SpeechRecognition surface the error if mic is truly unavailable
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -104,15 +104,24 @@ export function SessionExercisingBody({ state, handlers, lessonFooter }: Session
     </>
   )
 
+  const shellBadge =
+    current?.payload.kind === 'phoneme' && current.payload.ipa.trim()
+      ? current.payload.ipa
+      : undefined
+  const isGenericExercise = current?.payload.kind === 'generic'
+  // Generic exercises show their own title inside ExerciseShell; phoneme sessions without IPA badge show the session name
+  const shellSessionName = !shellBadge && !isGenericExercise ? displayBadge || undefined : undefined
+
   if (focusUi && displayBadge) {
     return (
       <>
         <PhonemeFocusShell
-          badge={displayBadge}
+          badge={shellBadge}
+          sessionName={shellSessionName}
           progressPct={progressPct}
           onExit={() => setShowExitConfirm(true)}
           feedback={
-            phase === 'feedback' && lastFeedback !== null
+            phase === 'feedback' && lastFeedback !== null && !isGenericExercise
               ? {
                   isCorrect: lastFeedback,
                   subtitle: lastFeedback ? 'Siguiente ejercicio…' : undefined,

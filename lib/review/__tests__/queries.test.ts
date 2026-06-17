@@ -44,7 +44,7 @@ describe('rowsToFailedItems', () => {
     )
     expect(items[0]?.label).toBe('Habla conectada · Assimilation')
     expect(items[0]?.typeLabel).toBe('Dictado')
-    expect(items[0]?.drillable).toBe(false)
+    expect(items[0]?.drillable).toBe(true)
   })
 
   it('uses target_word when available', () => {
@@ -66,7 +66,7 @@ describe('rowsToFailedItems', () => {
 })
 
 describe('computeCanStartReview', () => {
-  it('is false when only non-drillable failed sentences exist', () => {
+  it('is true when drillable failed sentences exist', () => {
     expect(
       computeCanStartReview({
         failedSentences: [
@@ -76,7 +76,30 @@ describe('computeCanStartReview', () => {
             slug: 'sentence_dictation',
             label: humanizeSlug('cs-assimilation'),
             typeLabel: exerciseTypeLabel('sentence_dictation'),
+            drillable: true,
+            phrase: null,
+            failedAt: '',
+          },
+        ],
+        weakWords: [],
+        dueWords: [],
+        soundsDue: [],
+      }),
+    ).toBe(true)
+  })
+
+  it('is false when only non-drillable failed sentences exist', () => {
+    expect(
+      computeCanStartReview({
+        failedSentences: [
+          {
+            contentId: 'opaque:hash',
+            wordBankId: null,
+            slug: 'sentence_dictation',
+            label: 'unknown',
+            typeLabel: exerciseTypeLabel('sentence_dictation'),
             drillable: false,
+            phrase: null,
             failedAt: '',
           },
         ],

@@ -1,6 +1,7 @@
 import {
   connectedSpeechDeckTitle,
   humanizeSlug,
+  isConnectedSpeechDeckSlug,
   isUuid,
   parseContentRef,
   parseWordBankId,
@@ -65,6 +66,45 @@ function labelFromFragmentRef(
   return humanizeSlug(ref.id)
 }
 
+function resolvePhrase(
+  contentId: string,
+  row: FailedHistoryRow,
+  fragments: Map<string, FragmentRow>,
+  words: Map<string, WordRow>,
+): string | null {
+  const target = row.target_word?.trim()
+  if (target && target.length > 1) return target
+
+  const wordId = parseWordBankId(contentId)
+  if (wordId) {
+    const word = words.get(wordId)
+    if (word?.example) return word.example
+  }
+
+  const ref = parseContentRef(contentId)
+  if (ref?.source === 'text_fragments') {
+    const frag = fragments.get(ref.id)
+    if (frag?.content) return frag.content
+  }
+
+  return null
+}
+
+function isDrillable(contentId: string): boolean {
+  const wordId = parseWordBankId(contentId)
+  if (wordId) return true
+
+  const ref = parseContentRef(contentId)
+  if (ref?.source !== 'text_fragments') return false
+
+  const fragId = ref.id
+  if (isUuid(fragId)) return true
+  if (connectedSpeechDeckTitle(fragId)) return true
+  if (fragId.startsWith('grammar-deck:') || fragId.startsWith('lesson:')) return true
+
+  return false
+}
+
 function resolveLabel(
   contentId: string,
   row: FailedHistoryRow,
@@ -114,7 +154,8 @@ export function rowsToFailedItems(
       slug,
       label: resolveLabel(contentId, row, fragments, words),
       typeLabel: exerciseTypeLabel(slug),
-      drillable: wordBankId != null,
+      drillable: isDrillable(contentId),
+      phrase: resolvePhrase(contentId, row, fragments, words),
       failedAt: row.answered_at ?? new Date().toISOString(),
     })
 

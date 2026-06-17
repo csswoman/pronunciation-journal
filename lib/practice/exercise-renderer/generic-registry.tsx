@@ -19,10 +19,13 @@ import type {
 export type GenericRenderContext = {
   onResult: (isCorrect: boolean, userAnswer: string, timeMs: number) => void
   focusUi?: boolean
+  onHint?: () => void
+  hintCount?: number
 }
 
 type GenericRegistryEntry = {
   title: string
+  noHint?: boolean
   render: (exercise: GenericExercise, ctx: GenericRenderContext) => ReactNode
 }
 
@@ -39,18 +42,22 @@ export const GENERIC_REGISTRY: Record<GenericExerciseType, GenericRegistryEntry>
         onResult={onResult}
       />
     ),
+    noHint: true,
   },
   fill_blank: {
     title: 'Complete the sentence',
-    render: (exercise, { onResult }) => (
+    render: (exercise, { onResult, onHint, hintCount }) => (
       <FillBlankExercise
         exercise={exercise as FillBlankExerciseType}
         onResult={onResult}
+        onHint={onHint}
+        hintCount={hintCount ?? 0}
       />
     ),
   },
   reorder_words: {
-    title: 'Put in order',
+    title: 'Put the words in the correct order',
+    noHint: true,
     render: (exercise, { onResult, focusUi }) => (
       <ReorderWordsExercise
         exercise={exercise as ReorderWordsExerciseType}
@@ -60,16 +67,19 @@ export const GENERIC_REGISTRY: Record<GenericExerciseType, GenericRegistryEntry>
     ),
   },
   sentence_dictation: {
-    title: 'Listen and type',
-    render: (exercise, { onResult }) => (
+    title: 'Listen and type the sentence',
+    render: (exercise, { onResult, onHint, hintCount }) => (
       <SentenceDictationExercise
         exercise={exercise as SentenceDictationExerciseType}
         onResult={onResult}
+        onHint={onHint}
+        hintCount={hintCount ?? 0}
       />
     ),
   },
   sentence_context: {
     title: 'Choose the best option',
+    noHint: true,
     render: (exercise, { onResult }) => (
       <SentenceContextExercise
         exercise={exercise as SentenceContextExerciseType}
@@ -97,4 +107,8 @@ export function renderGenericExercise(
 
 export function getGenericTitle(type: GenericExerciseType): string {
   return GENERIC_REGISTRY[type].title
+}
+
+export function getGenericSupportsHint(type: GenericExerciseType): boolean {
+  return !GENERIC_REGISTRY[type].noHint
 }

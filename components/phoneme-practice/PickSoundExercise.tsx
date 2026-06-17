@@ -1,30 +1,18 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { speak } from '@/lib/phoneme-practice/tts'
+import { useState } from 'react'
 import { playIpaSound } from '@/lib/pronunciation/ipa-audio'
 import type { Exercise } from '@/lib/phoneme-practice/types'
-import { PhonemeExercisePrompt } from './PhonemeExercisePrompt'
-import { getPhonemeExerciseMeta } from '@/lib/phoneme-practice/exercise-labels'
 
 interface Props {
   exercise: Exercise
   onSubmit: (isCorrect: boolean, userAnswer: string) => void
   focusUi?: boolean
-  voice?: SpeechSynthesisVoice
 }
 
-export function PickSoundExercise({ exercise, onSubmit, focusUi = false, voice }: Props) {
+export function PickSoundExercise({ exercise, onSubmit, focusUi = false }: Props) {
   const [selected, setSelected] = useState<string | null>(null)
   const [submitted, setSubmitted] = useState(false)
-  const meta = getPhonemeExerciseMeta('pick_sound', { ipa: exercise.ipa })
-
-  useEffect(() => {
-    if (exercise.targetWord) {
-      const timer = setTimeout(() => speak(exercise.targetWord!, { voice }), 300)
-      return () => clearTimeout(timer)
-    }
-  }, [exercise.targetWord, voice])
 
   function handleSelect(id: string, label: string) {
     if (submitted) return
@@ -53,23 +41,28 @@ export function PickSoundExercise({ exercise, onSubmit, focusUi = false, voice }
 
   const canCheck = Boolean(selected) && !submitted
 
-  const body = (
-    <>
+  return (
+    <div className={focusUi ? 'phoneme-focus__exercise' : 'flex flex-col items-center gap-5 w-full'}>
+      <h2 className="text-(--fg-primary) text-2xl font-bold leading-tight tracking-tight m-0 text-center [font-family:var(--font-display,Fraunces,Georgia,serif)]">
+        Which sound<br />did you hear?
+      </h2>
+
       <button
         type="button"
-        onClick={() => exercise.targetWord && speak(exercise.targetWord, { voice })}
-        className={focusUi ? 'pf-chip self-center mb-5' : 'inline-flex items-center gap-2 bg-[var(--surface-raised)] border-[1.5px] border-[var(--border-subtle)] rounded-[var(--radius-full)] py-3 px-6 text-lg font-semibold text-[var(--text-primary)] cursor-pointer [font-family:inherit]'}
+        onClick={() => playIpaSound(exercise.ipa.replace(/[/\[\]]/g, '').trim())}
+        className="self-center flex flex-col items-center justify-center gap-2 w-24 h-24 rounded-full bg-surface-raised border border-border-default shadow-sm cursor-pointer transition-all duration-200 hover:shadow-md hover:-translate-y-px active:scale-95"
+        aria-label={`Play sound ${exercise.ipa}`}
       >
-        <span className={focusUi ? 'pf-chip__icon' : undefined} aria-hidden>
-          🔊
+        <span className="text-2xl leading-none" aria-hidden>🔊</span>
+        <span className="text-lg font-bold text-(--fg-primary) [font-family:var(--font-mono-var,monospace)]">
+          {exercise.ipa}
         </span>
-        {exercise.targetWord}
       </button>
 
       <div
         role="radiogroup"
-        aria-label={`Sonido en "${exercise.targetWord}"`}
-        className="pf-options pf-options--grid"
+        aria-label={`Sound in "${exercise.targetWord}"`}
+        className="pf-options pf-options--grid w-full"
       >
         {exercise.options.map((opt, i) => (
           <button
@@ -77,7 +70,7 @@ export function PickSoundExercise({ exercise, onSubmit, focusUi = false, voice }
             type="button"
             role="radio"
             aria-checked={selected === opt.id}
-            aria-label={`Seleccionar ${opt.label}`}
+            aria-label={`Select ${opt.label}`}
             aria-disabled={submitted}
             onClick={() => handleSelect(opt.id, opt.label)}
             className={optClass(opt.id)}
@@ -93,33 +86,14 @@ export function PickSoundExercise({ exercise, onSubmit, focusUi = false, voice }
         onClick={handleSubmit}
         disabled={!canCheck}
         className={focusUi ? 'pf-cta pf-cta--primary' : [
-            'w-full p-4 rounded-[var(--radius-md)] border-none [font-family:inherit] text-[15px] font-semibold transition-all',
-            canCheck
-              ? 'cursor-pointer text-on-primary shadow-md hover:-translate-y-[1px]'
-              : 'cursor-not-allowed bg-surface-raised text-fg-subtle',
-          ].join(' ')}
-        style={!focusUi && canCheck ? { backgroundImage: 'var(--gradient-primary)' } : undefined}
+          'w-full p-4 rounded-md border-none font-[inherit] text-[15px] font-semibold transition-all',
+          canCheck
+            ? 'cursor-pointer text-(--cta-fg) bg-(--cta-bg) hover:-translate-y-px'
+            : 'cursor-not-allowed bg-surface-raised text-(--fg-disabled)',
+        ].join(' ')}
       >
-        {focusUi ? 'Comprobar' : 'Check'}
+        Check
       </button>
-    </>
-  )
-
-  if (!focusUi) {
-    return (
-      <div className="flex flex-col items-center gap-5 w-full">
-        <p className="text-[15px] text-[var(--text-secondary)] text-center m-0">
-          Which sound does this word contain?
-        </p>
-        {body}
-      </div>
-    )
-  }
-
-  return (
-    <div className="phoneme-focus__exercise">
-      <PhonemeExercisePrompt eyebrow={meta.eyebrow} title={meta.title} />
-      {body}
     </div>
   )
 }

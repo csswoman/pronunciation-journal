@@ -2,8 +2,10 @@
 
 import { useCallback, useState } from 'react'
 import { buildReviewPlan } from '@/lib/practice/daily-plan'
+import { buildFailedItemStep } from '@/lib/review/build-failed-exercises'
 import { useAuth } from '@/components/auth/AuthProvider'
 import type { DailyStep } from '@/lib/practice/types'
+import type { FailedSentenceItem } from '@/lib/review/types'
 
 export type ReviewSessionPhase =
   | { phase: 'idle' }
@@ -33,6 +35,25 @@ export function useReviewSession() {
     }
   }, [user])
 
+  const startFailedItem = useCallback(
+    async (item: FailedSentenceItem) => {
+      if (!user || !item.drillable) return
+      setState({ phase: 'loading' })
+      try {
+        const step = await buildFailedItemStep(item, 'review')
+        if (!step) {
+          setState({ phase: 'error' })
+          return
+        }
+        setSessionKey((k) => k + 1)
+        setState({ phase: 'session', steps: [step], stepIndex: 0 })
+      } catch {
+        setState({ phase: 'error' })
+      }
+    },
+    [user],
+  )
+
   const advanceStep = useCallback(() => {
     setState((prev) => {
       if (prev.phase !== 'session') return prev
@@ -54,6 +75,7 @@ export function useReviewSession() {
     state,
     sessionKey,
     startReview,
+    startFailedItem,
     advanceStep,
     exitSession,
     reset,
