@@ -11,13 +11,13 @@ import type { FailedSentenceItem } from '@/lib/review/types'
 export const SENTENCE_EXERCISE_IDS = [5, 6, 8] as const
 
 const EXERCISE_TYPE_LABELS: Record<string, string> = {
-  fill_blank: 'Completar frase',
-  sentence_dictation: 'Dictado',
-  reorder_words: 'Ordenar palabras',
+  fill_blank: 'Fill in the blank',
+  sentence_dictation: 'Dictation',
+  reorder_words: 'Reorder words',
 }
 
 export function exerciseTypeLabel(slug: string): string {
-  return EXERCISE_TYPE_LABELS[slug] ?? 'Oración'
+  return EXERCISE_TYPE_LABELS[slug] ?? 'Sentence'
 }
 
 export type FailedHistoryRow = {
@@ -145,6 +145,9 @@ export function rowsToFailedItems(
     if (!contentId || seen.has(contentId)) continue
     seen.add(contentId)
 
+    const drillable = isDrillable(contentId)
+    if (!drillable) continue
+
     const slug = row.exercise_types?.slug ?? 'sentence'
     const wordBankId = parseWordBankId(contentId)
 
@@ -154,7 +157,7 @@ export function rowsToFailedItems(
       slug,
       label: resolveLabel(contentId, row, fragments, words),
       typeLabel: exerciseTypeLabel(slug),
-      drillable: isDrillable(contentId),
+      drillable: true,
       phrase: resolvePhrase(contentId, row, fragments, words),
       failedAt: row.answered_at ?? new Date().toISOString(),
     })
@@ -184,17 +187,21 @@ export function buildReviewHubCounts(
   weakWords: unknown[],
   dueWords: unknown[],
   soundsDue: unknown[],
+  dueTopics: unknown[] = [],
+  weakTopics: unknown[] = [],
 ) {
   const reviewable =
-    dueWords.length + weakWords.length + soundsDue.length + failedSentences.filter((f) => f.drillable).length
+    dueWords.length + weakWords.length + soundsDue.length + failedSentences.filter((f) => f.drillable).length + dueTopics.length
 
   return {
     failedSentences: failedSentences.length,
     weakWords: weakWords.length,
     dueWords: dueWords.length,
     soundsDue: soundsDue.length,
+    dueTopics: dueTopics.length,
+    weakTopics: weakTopics.length,
     reviewable,
-    total: failedSentences.length + weakWords.length + dueWords.length + soundsDue.length,
+    total: failedSentences.length + weakWords.length + dueWords.length + soundsDue.length + dueTopics.length + weakTopics.length,
   }
 }
 

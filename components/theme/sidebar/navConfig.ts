@@ -15,21 +15,31 @@ import { NavSectionType } from "./NavSection";
 
 export const coreNav: NavSectionType = {
   label: "",
+  items: [{ name: "Home", href: "/", icon: Home }],
+};
+
+export const practiceNav: NavSectionType = {
+  label: "Practice",
   items: [
-    { name: "Home", href: "/", icon: Home },
     { name: "Sound Lab", href: "/practice/sounds", icon: MicVocal },
+    { name: "Essential Words", href: "/practice/core-1000", icon: ListOrdered },
   ],
 };
 
-export const learningNav: NavSectionType = {
-  label: "Learning",
+export const learnNav: NavSectionType = {
+  label: "Learn",
   items: [
-    { name: "Words", href: "/words", icon: LibraryBig },
-    { name: "Essential Words", href: "/practice/core-1000", icon: ListOrdered },
     { name: "Courses", href: "/courses", icon: BookOpen },
     { name: "Decks", href: "/practice/decks", icon: Layers },
-    { name: "Mini lessons", href: "/mini-lessons", icon: BookMarked },
+    { name: "Mini Lessons", href: "/mini-lessons", icon: BookMarked },
+  ],
+};
+
+export const referenceNav: NavSectionType = {
+  label: "Reference",
+  items: [
     { name: "IPA Chart", href: "/ipa", icon: Radio },
+    { name: "Words", href: "/words", icon: LibraryBig },
   ],
 };
 

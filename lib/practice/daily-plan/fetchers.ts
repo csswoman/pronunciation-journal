@@ -8,4 +8,5 @@ export {
 export {
   getWeakestSoundByProgress as fetchWeakestSoundProgress,
   getDueSoundsForReview as fetchDueSounds,
+  getAllPracticedSounds as fetchAllPracticedSounds,
 } from '@/lib/sounds/queries'

@@ -47,6 +47,43 @@ export async function getWeakestSoundByProgress(userId: string): Promise<Sound |
 }
 
 /** Sounds derived from contrasts due for SRS review today (up to 2 unique IPAs). */
+/** All sounds the user has practiced (regardless of due date), most-recently-updated first. */
+export async function getAllPracticedSounds(userId: string, limit = 4): Promise<Sound[]> {
+  const supabase = getSupabaseBrowserClient();
+
+  const { data, error } = await supabase
+    .from("user_contrast_progress")
+    .select("contrast_id")
+    .eq("user_id", userId)
+    .order("updated_at", { ascending: false })
+    .limit(limit * 2);
+
+  if (error || !data || data.length === 0) return [];
+
+  const seen = new Set<string>();
+  const ipas: string[] = [];
+  for (const r of data) {
+    const [ipaA, ipaB] = r.contrast_id.split("|");
+    for (const ipa of [ipaA, ipaB]) {
+      if (!seen.has(ipa)) {
+        seen.add(ipa);
+        ipas.push(ipa);
+      }
+      if (ipas.length >= limit * 2) break;
+    }
+    if (ipas.length >= limit * 2) break;
+  }
+
+  if (ipas.length === 0) return [];
+
+  const { data: soundRows } = await supabase
+    .from("sounds")
+    .select("id, ipa, example, category, type, difficulty")
+    .in("ipa", ipas.slice(0, limit * 2));
+
+  return (soundRows ?? []) as Sound[];
+}
+
 export async function getDueSoundsForReview(userId: string): Promise<Sound[]> {
   const supabase = getSupabaseBrowserClient();
   const today = new Date().toISOString();

@@ -14,7 +14,7 @@ export function isUuid(value: string): boolean {
 /** Extract word_bank row id from a content_id. */
 export function parseWordBankId(contentId: string): string | null {
   const ref = parseContentRef(contentId)
-  if (ref?.source === 'word_bank' && ref.id.length > 0) return ref.id
+  if (ref?.source === 'word_bank' && isUuid(ref.id)) return ref.id
   if (isUuid(contentId)) return contentId
   return null
 }

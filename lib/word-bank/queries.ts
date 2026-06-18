@@ -235,7 +235,7 @@ export async function getDueReviewWordsForDaily(
     .order("next_review_at", { ascending: true })
     .limit(limit);
 
-  if (error) throw error;
+  if (error) return [];
   return (data ?? []) as WordBankEntry[];
 }
 

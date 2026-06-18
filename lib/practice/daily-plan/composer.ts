@@ -12,6 +12,7 @@ import type { Sound, SoundWord } from '@/lib/phoneme-practice/types'
 import { buildConnectedSpeechStep, buildSentenceBuilderStep } from './async-step-builders'
 import { DAILY_PLAN_STEP_COUNT, WORD_REVIEW_WORD_COUNT } from './constants'
 import {
+  fetchAllPracticedSounds,
   fetchDueReviewWords,
   fetchDueSounds,
   fetchDueWords,
@@ -64,7 +65,10 @@ export async function buildReviewPlan(userId: string): Promise<ReviewPlan> {
   const contextStep = buildContextPracticeStep(mergedWords, reviewContext)
   if (contextStep) steps.push(contextStep)
 
-  for (const sound of dueSounds) {
+  // Sounds: use due sounds when available, fall back to all practiced sounds.
+  const soundsToReview = dueSounds.length > 0 ? dueSounds : await fetchAllPracticedSounds(userId, 4)
+
+  for (const sound of soundsToReview) {
     const targetWords = allWordsBySoundId.get(sound.id) ?? []
     const pairs = await getMinimalPairs(sound.id)
 
