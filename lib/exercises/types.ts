@@ -29,6 +29,8 @@ interface BaseGenericExercise {
   exerciseType?: CanonicalExerciseType
   sourceRef: ExerciseSourceRef
   level?: CEFRLevel
+  /** Concept label this exercise teaches (e.g. "grammar:present_simple"). Drives topic SRS. Absent for word/phoneme-sourced exercises. */
+  topic?: string
 }
 
 // Fill in the blank ──────────────────────────────────────────────────────────

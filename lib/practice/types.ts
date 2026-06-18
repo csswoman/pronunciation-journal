@@ -104,6 +104,8 @@ export type PracticeAnswer = {
   exercisePayload?: unknown
   /** Carried from PracticeExercise; used to build a prefixed content_id for SRS routing. */
   sourceRef?: ExerciseSourceRef
+  /** Raw concept label from the exercise (e.g. "grammar:present_simple"). Normalized before persisting/scheduling. */
+  topic?: string
 }
 
 export type ExerciseResult = PracticeAnswer & { completedAt: Date }

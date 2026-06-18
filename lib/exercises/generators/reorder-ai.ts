@@ -34,5 +34,6 @@ export async function generateReorderAI(
   }
 
   const { fragments } = (await res.json()) as { fragments: TextFragment[] }
-  return generateReorderFromFragments(fragments, count)
+  const exercises = generateReorderFromFragments(fragments, count)
+  return exercises.map((ex) => ({ ...ex, topic }))
 }

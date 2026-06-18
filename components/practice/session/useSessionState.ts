@@ -134,6 +134,7 @@ export function useSessionState(config: PracticeConfig) {
         context,
         soundId: current.soundId,
         sourceRef: current.sourceRef,
+        topic: current.payload.kind === 'generic' ? current.payload.data.topic : undefined,
         exercisePayload:
           current.payload.kind === 'phoneme'
             ? { type: current.slug, soundId: current.soundId, options: current.payload.options, targetWord: current.payload.targetWord }
