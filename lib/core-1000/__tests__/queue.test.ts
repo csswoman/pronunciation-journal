@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildSessionQueue } from "../queue";
+import { buildSessionQueue, appendNewBatch } from "../queue";
 import { core1000WordId, type CoreWord } from "../types";
 import type { SRSData } from "@/lib/types";
 
@@ -30,8 +30,8 @@ describe("buildSessionQueue", () => {
       now: NOW,
       newPerDay: 2,
     });
-    expect(q.map((i) => [i.entry.word, i.isNew])).toEqual([
-      ["of", false], ["the", true], ["be", true],
+    expect(q.map((i) => [i.entry.word, i.kind])).toEqual([
+      ["of", "review"], ["the", "new"], ["be", "new"],
     ]);
   });
 
@@ -77,5 +77,64 @@ describe("buildSessionQueue", () => {
       newPerDay: 0,
     });
     expect(q).toEqual([]);
+  });
+});
+
+describe("kind field", () => {
+  it("due reviews have kind 'review'", () => {
+    const q = buildSessionQueue({
+      words: WORDS,
+      srsEntries: [srs("of", "2026-06-10T00:00:00Z")],
+      introducedToday: [],
+      now: NOW,
+      newPerDay: 0,
+    });
+    expect(q[0].kind).toBe("review");
+  });
+
+  it("new cards have kind 'new'", () => {
+    const q = buildSessionQueue({
+      words: WORDS,
+      srsEntries: [],
+      introducedToday: [],
+      now: NOW,
+      newPerDay: 2,
+    });
+    expect(q.every((i) => i.kind === "new")).toBe(true);
+  });
+
+  it("treats all srsEntries as seen (archived filtering is caller's responsibility)", () => {
+    // getCore1000SrsEntries already strips archived before calling buildSessionQueue.
+    // The queue trusts the caller: any entry in srsEntries counts as seen (not new).
+    const q = buildSessionQueue({
+      words: WORDS,
+      srsEntries: [srs("the", "2026-06-20T00:00:00Z")], // not due, but seen
+      introducedToday: [],
+      now: NOW,
+      newPerDay: 3,
+    });
+    const words = q.map((i) => i.entry.word);
+    expect(words).not.toContain("the"); // seen → not new
+    expect(q.length).toBe(3); // be, and, of
+  });
+});
+
+describe("appendNewBatch", () => {
+  it("appends next N new words by rank, skipping already queued or seen", () => {
+    const existing = [
+      { entry: WORDS[0], kind: "new" as const },
+      { entry: WORDS[1], kind: "review" as const },
+    ];
+    const seen = new Set([core1000WordId("the"), core1000WordId("be")]);
+    const result = appendNewBatch(existing, WORDS, seen, 2);
+    expect(result.map((i) => i.entry.word)).toEqual(["the", "be", "and", "of"]);
+    expect(result[2].kind).toBe("new");
+    expect(result[3].kind).toBe("new");
+  });
+
+  it("does not exceed available unseen words", () => {
+    const seen = new Set(WORDS.map((w) => core1000WordId(w.word)));
+    const result = appendNewBatch([], WORDS, seen, 5);
+    expect(result).toEqual([]);
   });
 });
