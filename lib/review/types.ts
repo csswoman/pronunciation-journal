@@ -36,4 +36,23 @@ export interface ReviewHubSummary {
   nothingDue: boolean
   /** At least one step can be built for "Iniciar repaso completo". */
   canStartReview: boolean
+  srsHistory: SrsHistoryGroup[]
+}
+
+export type SrsHistoryDomain = 'words' | 'sounds' | 'sentences'
+
+export interface SrsHistoryItem {
+  id: string
+  domain: SrsHistoryDomain
+  label: string
+  sublabel?: string
+  intervalDays: number
+  nextReviewAt: string | null
+  lastPracticedAt: string
+}
+
+export interface SrsHistoryGroup {
+  domain: SrsHistoryDomain
+  title: string
+  items: SrsHistoryItem[]
 }
