@@ -26,6 +26,7 @@ import type { WordResult } from '@/lib/types'
 interface Props {
   entry: CoreWord
   onGraded: (quality: number, extras?: { accuracy: number; transcript: string }) => void
+  onArchive: () => void
 }
 
 interface Scored {
@@ -59,7 +60,7 @@ function micErrorMessage(error: string | null): string {
   return 'No se pudo iniciar el micrófono.'
 }
 
-export function SpeakReviewCard({ entry, onGraded }: Props) {
+export function SpeakReviewCard({ entry, onGraded, onArchive }: Props) {
   const { getStream, release } = useSharedMicStream()
   const { state, result, error: speechError, isSupported, start, stop, abort, reset } =
     useSpeechInput({ prefer: 'auto', getStream })
@@ -173,6 +174,14 @@ export function SpeakReviewCard({ entry, onGraded }: Props) {
       >
         <Volume2 size={14} aria-hidden />
         Escuchar modelo
+      </button>
+
+      <button
+        type="button"
+        onClick={onArchive}
+        className="text-xs py-1 px-3 rounded-[var(--radius-full)] bg-transparent border-none cursor-pointer [font-family:inherit] text-[var(--text-tertiary)] hover:text-[var(--text-secondary)]"
+      >
+        Ya la sé
       </button>
 
       {useFallback ? (

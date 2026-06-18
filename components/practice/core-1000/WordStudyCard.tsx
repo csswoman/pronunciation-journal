@@ -17,6 +17,7 @@ import { cn } from '@/lib/cn'
 interface Props {
   entry: CoreWord
   onContinue: () => void
+  onArchive: () => void
 }
 
 const ttsAvailable = typeof window !== 'undefined' && 'speechSynthesis' in window
@@ -96,7 +97,7 @@ function SentenceBlock({ entry }: { entry: CoreWord }) {
   )
 }
 
-export function WordStudyCard({ entry, onContinue }: Props) {
+export function WordStudyCard({ entry, onContinue, onArchive }: Props) {
   return (
     <div className="flex w-full max-w-md flex-col items-center gap-5">
       <div className="flex flex-col items-center gap-2">
@@ -129,13 +130,22 @@ export function WordStudyCard({ entry, onContinue }: Props) {
 
       <SentenceBlock entry={entry} />
 
-      <button
-        type="button"
-        onClick={onContinue}
-        className="text-xs py-2 px-5 rounded-[var(--radius-full)] bg-[var(--primary)] text-white border-none cursor-pointer [font-family:inherit] font-medium"
-      >
-        Practicar
-      </button>
+      <div className="flex flex-col items-center gap-2">
+        <button
+          type="button"
+          onClick={onContinue}
+          className="text-xs py-2 px-5 rounded-[var(--radius-full)] bg-[var(--primary)] text-white border-none cursor-pointer [font-family:inherit] font-medium"
+        >
+          Practicar
+        </button>
+        <button
+          type="button"
+          onClick={onArchive}
+          className="text-xs py-1 px-3 rounded-[var(--radius-full)] bg-transparent border-none cursor-pointer [font-family:inherit] text-[var(--text-tertiary)] hover:text-[var(--text-secondary)]"
+        >
+          Ya la sé
+        </button>
+      </div>
     </div>
   )
 }
