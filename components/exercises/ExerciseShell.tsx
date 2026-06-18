@@ -85,7 +85,7 @@ function SkipButton({ onSkip }: { onSkip: () => void }) {
     <button
       type="button"
       onClick={onSkip}
-      className="w-full text-center text-[12px] text-fg-subtle transition-opacity hover:opacity-70 cursor-pointer py-1"
+      className="w-full text-center text-[12px] uppercase tracking-widest font-semibold text-fg-subtle transition-opacity hover:opacity-70 cursor-pointer py-1"
     >
       Skip this one
     </button>

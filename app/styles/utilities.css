@@ -223,6 +223,7 @@
 .bg-success        { background-color: var(--success-soft); }
 .bg-warning        { background-color: var(--warning-soft); }
 .bg-error          { background-color: var(--error-soft); }
+.bg-error-solid    { background-color: var(--error); }
 .bg-info           { background-color: var(--info-soft); }
 .bg-important      { background-color: var(--admonitions-color-important-soft); }
 

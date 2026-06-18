@@ -36,16 +36,14 @@ export function PhonemeExerciseView({
   return (
     <div className={focusUi ? 'phoneme-focus__session' : 'flex flex-col gap-4'}>
       {phonemeNode ?? <UnsupportedExercise slug={slug} onSkip={handleSkip} />}
-      {!focusUi && (
-        <button
-          type="button"
-          onClick={handleSkip}
-          aria-label="Skip exercise"
-          className="self-center py-1.5 text-xs font-semibold uppercase tracking-widest text-[var(--text-tertiary)] transition-opacity hover:opacity-70"
-        >
-          Skip
-        </button>
-      )}
+      <button
+        type="button"
+        onClick={handleSkip}
+        aria-label="Skip exercise"
+        className="self-center py-1.5 text-xs font-semibold uppercase tracking-widest text-fg-subtle transition-opacity hover:opacity-70"
+      >
+        Skip this one
+      </button>
     </div>
   )
 }

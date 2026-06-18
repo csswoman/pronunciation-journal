@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { Volume2 } from 'lucide-react'
 import { playIpaSound } from '@/lib/pronunciation/ipa-audio'
 import type { Exercise } from '@/lib/phoneme-practice/types'
 
@@ -53,7 +54,7 @@ export function PickSoundExercise({ exercise, onSubmit, focusUi = false }: Props
         className="self-center flex flex-col items-center justify-center gap-2 w-24 h-24 rounded-full bg-surface-raised border border-border-default shadow-sm cursor-pointer transition-all duration-200 hover:shadow-md hover:-translate-y-px active:scale-95"
         aria-label={`Play sound ${exercise.ipa}`}
       >
-        <span className="text-2xl leading-none" aria-hidden>🔊</span>
+        <Volume2 className="size-6 text-(--fg-primary)" aria-hidden />
         <span className="text-lg font-bold text-(--fg-primary) [font-family:var(--font-mono-var,monospace)]">
           {exercise.ipa}
         </span>

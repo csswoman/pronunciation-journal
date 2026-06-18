@@ -62,7 +62,7 @@ export function ExitConfirmSheet({ open, onConfirm, onCancel }: ExitConfirmSheet
             ref={firstButtonRef}
             type="button"
             onClick={onConfirm}
-            className="w-full rounded-md py-3 text-[14px] font-semibold bg-error-soft text-error border border-(--error)/30 transition-colors hover:bg-error hover:text-white hover:border-transparent cursor-pointer"
+            className="w-full rounded-md py-3 text-[14px] font-semibold bg-error-soft text-error border border-(--error)/30 transition-colors hover:bg-error-solid hover:text-white hover:border-transparent cursor-pointer"
           >
             End session
           </button>
