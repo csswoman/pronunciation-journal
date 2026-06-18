@@ -60,10 +60,39 @@ function WordDisplay({ word, ipa, onListen }: { word?: string; ipa: string; onLi
   )
 }
 
+// ── ShadowingFallback ────────────────────────────────────────────────────────
+// Used when live speech recognition is unavailable (e.g. Brave blocks Google's
+// speech service). No automatic scoring — listen and repeat, then continue.
+
+function ShadowingFallback({ word, onContinue }: { word?: string; onContinue: () => void }) {
+  return (
+    <div className="flex flex-col items-center gap-4">
+      <p className="text-xs text-(--fg-secondary) text-center max-w-xs m-0">
+        Voice scoring isn’t available in this browser. Listen to the model and
+        repeat it out loud, then continue.
+      </p>
+      <button
+        type="button"
+        onClick={() => word && speak(word)}
+        className="flex items-center gap-2 py-2.5 px-5 rounded-full bg-surface-raised border border-border-default shadow-sm hover:shadow-md transition-all cursor-pointer text-sm text-(--fg-primary) font-[inherit]"
+      >
+        <Volume2 size={16} aria-hidden /> Listen
+      </button>
+      <button
+        type="button"
+        onClick={onContinue}
+        className="text-xs py-1.5 px-3 rounded-full bg-primary text-white border-none cursor-pointer font-[inherit] font-medium"
+      >
+        Continue
+      </button>
+    </div>
+  )
+}
+
 // ── Main component ───────────────────────────────────────────────────────────
 
 export function SpeakScoredExercise({ exercise, onSubmit }: Props) {
-  const { status, result: speechResult, isSupported, start, stop, reset } = useSpeechRecognition()
+  const { status, result: speechResult, errorCode, isSupported, start, stop, reset } = useSpeechRecognition()
   const [scored, setScored] = useState<ScoredResult | null>(null)
   const [isScoring, setIsScoring] = useState(false)
   const submitted = useRef(false)
@@ -106,6 +135,13 @@ export function SpeakScoredExercise({ exercise, onSubmit }: Props) {
     reset()
   }, [reset])
 
+  // Shadowing fallback completes the exercise without a transcript/score.
+  const handleShadowingDone = useCallback(() => {
+    if (submitted.current) return
+    submitted.current = true
+    onSubmit(true, '')
+  }, [onSubmit])
+
   if (!isSupported) {
     return (
       <div className="text-center py-4">
@@ -119,6 +155,8 @@ export function SpeakScoredExercise({ exercise, onSubmit }: Props) {
   const isListening = status === 'listening'
   const isDone = status === 'done'
   const isError = status === 'error'
+  // Browsers like Brave block Google's speech service → fall back to shadowing.
+  const isShadowing = isError && errorCode === 'network'
 
   return (
     <div className="flex flex-col items-center gap-6 w-full">
@@ -135,8 +173,8 @@ export function SpeakScoredExercise({ exercise, onSubmit }: Props) {
         onListen={() => exercise.targetWord && speak(exercise.targetWord)}
       />
 
-      {/* Mic button — hidden once scored */}
-      {!scored && (
+      {/* Mic button — hidden once scored or when shadowing */}
+      {!scored && !isShadowing && (
         <div className="flex flex-col items-center gap-3">
           <button
             type="button"
@@ -158,10 +196,19 @@ export function SpeakScoredExercise({ exercise, onSubmit }: Props) {
         </div>
       )}
 
-      {/* Error state */}
-      {isError && !scored && (
+      {/* Shadowing fallback — speech service unavailable (e.g. Brave) */}
+      {isShadowing && !scored && (
+        <ShadowingFallback word={exercise.targetWord} onContinue={handleShadowingDone} />
+      )}
+
+      {/* Error state (recoverable errors) */}
+      {isError && !isShadowing && !scored && (
         <p className="text-xs text-(--fg-secondary) text-center m-0">
-          Speech recognition requires an internet connection.{' '}
+          {errorCode === 'not-allowed'
+            ? 'Microphone access was denied. Allow microphone access in your browser settings.'
+            : errorCode === 'no-speech'
+              ? 'No speech detected. Tap the mic and speak clearly.'
+              : 'Speech recognition failed.'}{' '}
           <button type="button" onClick={handleRetry} className="underline cursor-pointer bg-transparent border-none font-[inherit] text-xs text-(--fg-secondary)">
             Retry
           </button>

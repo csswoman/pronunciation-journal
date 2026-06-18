@@ -2,16 +2,16 @@
 
 // Planned structure:
 // <OddOneOutExercise>
-//   <PhonemeExercisePrompt />  — instrucción
-//   <StimuliGrid />           — 4 botones de audio numerados
-//   <OptionButtons />         — selección de la palabra diferente
+//   <Header />       — Fraunces title + subtitle
+//   <OptionList />   — vertical word buttons with feedback states
 //   <ConfirmButton />
 // </OddOneOutExercise>
 
 import { useState } from 'react'
+import { X, Check } from 'lucide-react'
+import { cn } from '@/lib/cn'
 import { speak } from '@/lib/phoneme-practice/tts'
 import type { Exercise } from '@/lib/phoneme-practice/types'
-import { PhonemeExercisePrompt } from './PhonemeExercisePrompt'
 
 interface Props {
   exercise: Exercise
@@ -22,18 +22,9 @@ interface Props {
 export function OddOneOutExercise({ exercise, onSubmit, voice }: Props) {
   const [selected, setSelected] = useState<string | null>(null)
   const [submitted, setSubmitted] = useState(false)
-  const stimuli = exercise.stimuli ?? []
-  const canConfirm = Boolean(selected) && !submitted
-
-  function handlePlay(index: number) {
-    const word = stimuli[index]?.word
-    if (word) speak(word, { voice })
-  }
 
   function handleSelect(id: string, label: string) {
     if (submitted) return
-    // Play the selected word directly from its label — don't route through the
-    // stimuli index, which breaks if option ids aren't positional.
     if (label) speak(label, { voice })
     setSelected(id)
   }
@@ -44,64 +35,62 @@ export function OddOneOutExercise({ exercise, onSubmit, voice }: Props) {
     onSubmit(exercise.correctIds.includes(selected), selected)
   }
 
-  function optClass(id: string) {
-    const isCorrect = exercise.correctIds.includes(id)
-    if (submitted) {
-      if (isCorrect) return 'pf-pair-opt pf-opt--correct'
-      if (selected === id) return 'pf-pair-opt pf-opt--wrong'
-      return 'pf-pair-opt pf-opt--dim'
-    }
-    if (selected === id) return 'pf-pair-opt pf-opt--sel'
-    return 'pf-pair-opt'
-  }
-
   return (
-    <div className="phoneme-focus__exercise">
-      <PhonemeExercisePrompt
-        centered
-        spacious
-        eyebrow={`Sonido objetivo: ${exercise.ipa}`}
-        title="¿Cuál es la palabra diferente?"
-        hint="Tres palabras tienen el mismo sonido; una no"
-      />
+    <div className="flex flex-col gap-6 w-full">
 
-      <div className="flex gap-2 justify-center flex-wrap">
-        {stimuli.map((s, i) => (
-          <button
-            key={i}
-            type="button"
-            onClick={() => handlePlay(i)}
-            aria-label={`Escuchar palabra ${i + 1}`}
-            className="pf-stim-btn"
-          >
-            🔊 {i + 1}
-          </button>
-        ))}
+      {/* Header */}
+      <div className="flex flex-col gap-1">
+        <h2 className="font-[Fraunces,Georgia,serif] text-2xl font-bold leading-tight text-fg">
+          Which one is different?
+        </h2>
+        <p className="text-sm text-fg-subtle">
+          Three words share the same sound — one doesn't.
+        </p>
       </div>
 
-      <div role="radiogroup" aria-label="¿Cuál es la diferente?" className="pf-options pf-options--grid">
-        {exercise.options.map(opt => (
-          <button
-            key={opt.id}
-            type="button"
-            role="radio"
-            aria-checked={selected === opt.id}
-            aria-disabled={submitted}
-            onClick={() => handleSelect(opt.id, opt.label)}
-            className={optClass(opt.id)}
-          >
-            {opt.label}
-          </button>
-        ))}
+      {/* Word list */}
+      <div role="radiogroup" aria-label="Select the odd one out" className="flex flex-col gap-2">
+        {exercise.options.map(opt => {
+          const isSelected = selected === opt.id
+          const isCorrect = exercise.correctIds.includes(opt.id)
+
+          return (
+            <button
+              key={opt.id}
+              type="button"
+              role="radio"
+              aria-checked={isSelected}
+              aria-disabled={submitted}
+              onClick={() => handleSelect(opt.id, opt.label)}
+              className={cn(
+                'flex items-center justify-between w-full px-4 py-3.5 rounded-xl border text-sm font-medium text-left transition-all duration-150',
+                !submitted && !isSelected && 'border-border-default bg-surface-raised text-fg hover:border-primary/50 cursor-pointer',
+                !submitted && isSelected && 'border-primary bg-primary-soft text-primary cursor-pointer',
+                submitted && isCorrect && isSelected && 'border-success bg-success/10 text-success',
+                submitted && isCorrect && !isSelected && 'border-success bg-success/10 text-success',
+                submitted && !isCorrect && isSelected && 'border-error bg-error/10 text-error',
+                submitted && !isCorrect && !isSelected && 'border-border-subtle bg-surface-raised text-fg-disabled opacity-50',
+              )}
+            >
+              <span>{opt.label}</span>
+              {submitted && isSelected && (
+                isCorrect
+                  ? <Check size={16} className="shrink-0" />
+                  : <X size={16} className="shrink-0" />
+              )}
+            </button>
+          )
+        })}
       </div>
 
+      {/* Confirm */}
       <button
         type="button"
         onClick={handleConfirm}
-        disabled={!canConfirm}
-        className="pf-cta pf-cta--primary"
+        disabled={!selected || submitted}
+        className="w-full rounded-xl bg-(--cta-bg) py-3 text-sm font-semibold text-(--cta-fg) transition-all duration-150 hover:opacity-90 active:scale-[0.99] disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
       >
-        Comprobar
+        Check
       </button>
     </div>
   )

@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 
 export type SpeechStatus = 'idle' | 'listening' | 'done' | 'error' | 'unsupported'
+export type SpeechErrorCode = 'network' | 'not-allowed' | 'no-speech' | 'unknown'
 
 export interface SpeechResult {
   transcript: string
@@ -12,6 +13,7 @@ export interface SpeechResult {
 export function useSpeechRecognition() {
   const [status, setStatus] = useState<SpeechStatus>('idle')
   const [result, setResult] = useState<SpeechResult | null>(null)
+  const [errorCode, setErrorCode] = useState<SpeechErrorCode | null>(null)
   const [isSupported, setIsSupported] = useState(false)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const recRef = useRef<any>(null)
@@ -63,6 +65,12 @@ export function useSpeechRecognition() {
 
     rec.onerror = (event: { error?: string }) => {
       if (event.error === 'aborted') return
+      const code: SpeechErrorCode =
+        event.error === 'network' ? 'network'
+        : event.error === 'not-allowed' ? 'not-allowed'
+        : event.error === 'no-speech' ? 'no-speech'
+        : 'unknown'
+      setErrorCode(code)
       setStatus('error')
     }
 
@@ -89,7 +97,8 @@ export function useSpeechRecognition() {
     recRef.current = null
     setStatus('idle')
     setResult(null)
+    setErrorCode(null)
   }, [])
 
-  return { status, result, isSupported, start, stop, reset }
+  return { status, result, errorCode, isSupported, start, stop, reset }
 }

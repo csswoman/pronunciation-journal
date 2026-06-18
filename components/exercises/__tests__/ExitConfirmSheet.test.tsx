@@ -29,4 +29,25 @@ describe('ExitConfirmSheet', () => {
     fireEvent.click(screen.getByRole('button', { name: /keep practicing/i }))
     expect(onCancel).toHaveBeenCalled()
   })
+
+  it('calls onCancel when Escape is pressed', () => {
+    const onCancel = vi.fn()
+    render(<ExitConfirmSheet open onConfirm={vi.fn()} onCancel={onCancel} />)
+    fireEvent.keyDown(document, { key: 'Escape' })
+    expect(onCancel).toHaveBeenCalled()
+  })
+
+  it('does not call onCancel on Escape when closed', () => {
+    const onCancel = vi.fn()
+    render(<ExitConfirmSheet open={false} onConfirm={vi.fn()} onCancel={onCancel} />)
+    fireEvent.keyDown(document, { key: 'Escape' })
+    expect(onCancel).not.toHaveBeenCalled()
+  })
+
+  it('has aria-modal and dialog role', () => {
+    render(<ExitConfirmSheet open onConfirm={vi.fn()} onCancel={vi.fn()} />)
+    const dialog = screen.getByRole('dialog')
+    expect(dialog).toHaveAttribute('aria-modal', 'true')
+    expect(dialog).toHaveAttribute('aria-labelledby', 'exit-dialog-title')
+  })
 })

@@ -89,10 +89,11 @@ export const GENERIC_REGISTRY: Record<GenericExerciseType, GenericRegistryEntry>
   },
   multiple_choice: {
     title: 'Choose the correct answer',
-    render: (exercise, { onResult }) => (
+    render: (exercise, { onResult, hintCount }) => (
       <MultipleChoiceExercise
         exercise={exercise as MultipleChoiceExerciseType}
         onResult={onResult}
+        hintCount={hintCount ?? 0}
       />
     ),
   },
