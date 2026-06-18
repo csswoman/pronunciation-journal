@@ -16,7 +16,6 @@ import { useSpeechRecognition } from '@/hooks/useSpeechRecognition'
 import { defaultEvaluationEngine } from '@/lib/exercises/evaluation'
 import { getFeedbackMessage, calculateXP } from '@/lib/pronunciation/scoring'
 import PronunciationFeedback from '@/components/lesson/PronunciationFeedback'
-import { SpeakExercise } from '@/components/phoneme-practice/SpeakExercise'
 import { cn } from '@/lib/cn'
 import type { Exercise } from '@/lib/phoneme-practice/types'
 import type { WordResult } from '@/lib/types'
@@ -35,36 +34,69 @@ interface ScoredResult {
 
 // ── WordDisplay ──────────────────────────────────────────────────────────────
 
-function WordDisplay({ word, ipa }: { word?: string; ipa: string }) {
+function WordDisplay({ word, ipa, onListen }: { word?: string; ipa: string; onListen: () => void }) {
   return (
-    <>
-      <p className="text-xs font-semibold uppercase tracking-[.08em] text-[var(--text-tertiary)] m-0">
-        Pronunciation — di la palabra
-      </p>
-      <div className="[font-family:var(--font-phoneme),serif] text-5xl font-bold text-[var(--text-primary)] tracking-[-1px] leading-none">
-        {word ?? '—'}
+    <div className="flex flex-col items-center gap-1">
+      <div className="flex items-center gap-3">
+        <div
+          className="text-5xl font-bold text-(--fg-primary) tracking-tight leading-none"
+          style={{ fontFamily: 'Fraunces, Georgia, serif' }}
+        >
+          {word ?? '—'}
+        </div>
+        <button
+          type="button"
+          onClick={onListen}
+          aria-label="Listen"
+          className="w-9 h-9 rounded-full flex items-center justify-center bg-surface-raised border border-border-default shadow-sm hover:shadow-md hover:-translate-y-px transition-all duration-150 cursor-pointer shrink-0"
+        >
+          <Volume2 size={16} className="text-(--fg-primary)" aria-hidden />
+        </button>
       </div>
-      <div className="[font-family:var(--font-ipa),monospace] text-base text-[var(--primary)]">
+      <div className="text-sm text-(--fg-tertiary)" style={{ fontFamily: 'var(--font-ipa), monospace' }}>
         {ipa}
       </div>
-    </>
+    </div>
+  )
+}
+
+// ── ShadowingFallback ────────────────────────────────────────────────────────
+// Used when live speech recognition is unavailable (e.g. Brave blocks Google's
+// speech service). No automatic scoring — listen and repeat, then continue.
+
+function ShadowingFallback({ word, onContinue }: { word?: string; onContinue: () => void }) {
+  return (
+    <div className="flex flex-col items-center gap-4">
+      <p className="text-xs text-(--fg-secondary) text-center max-w-xs m-0">
+        Voice scoring isn’t available in this browser. Listen to the model and
+        repeat it out loud, then continue.
+      </p>
+      <button
+        type="button"
+        onClick={() => word && speak(word)}
+        className="flex items-center gap-2 py-2.5 px-5 rounded-full bg-surface-raised border border-border-default shadow-sm hover:shadow-md transition-all cursor-pointer text-sm text-(--fg-primary) font-[inherit]"
+      >
+        <Volume2 size={16} aria-hidden /> Listen
+      </button>
+      <button
+        type="button"
+        onClick={onContinue}
+        className="text-xs py-1.5 px-3 rounded-full bg-primary text-white border-none cursor-pointer font-[inherit] font-medium"
+      >
+        Continue
+      </button>
+    </div>
   )
 }
 
 // ── Main component ───────────────────────────────────────────────────────────
 
 export function SpeakScoredExercise({ exercise, onSubmit }: Props) {
-  const { status, result: speechResult, isSupported, start, stop, reset } = useSpeechRecognition()
+  const { status, result: speechResult, errorCode, isSupported, start, stop, reset } = useSpeechRecognition()
   const [scored, setScored] = useState<ScoredResult | null>(null)
   const [isScoring, setIsScoring] = useState(false)
   const submitted = useRef(false)
 
-  // Auto-play model on mount (always runs — hooks must not be conditional)
-  useEffect(() => {
-    if (!isSupported || !exercise.targetWord) return
-    const t = setTimeout(() => speak(exercise.targetWord!), 400)
-    return () => clearTimeout(t)
-  }, [exercise.targetWord, isSupported])
 
   // Score when transcript arrives
   useEffect(() => {
@@ -91,11 +123,6 @@ export function SpeakScoredExercise({ exercise, onSubmit }: Props) {
       .finally(() => setIsScoring(false))
   }, [isSupported, status, speechResult, isScoring, scored, exercise.targetWord])
 
-  // Fallback a shadowing cuando el navegador no soporta SpeechRecognition
-  if (!isSupported) {
-    return <SpeakExercise exercise={exercise} onSubmit={onSubmit} />
-  }
-
   const handleContinue = useCallback(() => {
     if (!scored || submitted.current) return
     submitted.current = true
@@ -108,53 +135,82 @@ export function SpeakScoredExercise({ exercise, onSubmit }: Props) {
     reset()
   }, [reset])
 
+  // Shadowing fallback completes the exercise without a transcript/score.
+  const handleShadowingDone = useCallback(() => {
+    if (submitted.current) return
+    submitted.current = true
+    onSubmit(true, '')
+  }, [onSubmit])
+
+  if (!isSupported) {
+    return (
+      <div className="text-center py-4">
+        <p className="text-sm text-(--fg-secondary)">
+          Your browser does not support speech recognition. Try Chrome or Edge.
+        </p>
+      </div>
+    )
+  }
+
   const isListening = status === 'listening'
   const isDone = status === 'done'
   const isError = status === 'error'
+  // Browsers like Brave block Google's speech service → fall back to shadowing.
+  const isShadowing = isError && errorCode === 'network'
 
   return (
-    <div className="flex flex-col items-center gap-5 w-full">
-      <WordDisplay word={exercise.targetWord} ipa={exercise.ipa} />
-
-      {/* Listen model */}
-      <button
-        type="button"
-        onClick={() => exercise.targetWord && speak(exercise.targetWord)}
-        className="inline-flex items-center gap-1.5 text-xs py-2 px-4 rounded-[var(--radius-full)] border border-[var(--border-subtle)] bg-transparent text-[var(--text-secondary)] cursor-pointer [font-family:inherit]"
+    <div className="flex flex-col items-center gap-6 w-full">
+      <h2
+        className="text-xl font-semibold text-(--fg-primary) text-center leading-snug m-0"
+        style={{ fontFamily: 'Fraunces, Georgia, serif' }}
       >
-        <Volume2 size={14} aria-hidden />
-        Escuchar modelo
-      </button>
+        Say the word
+      </h2>
 
-      {/* Mic button — hidden once scored */}
-      {!scored && (
-        <div className="flex flex-col items-center gap-2">
+      <WordDisplay
+        word={exercise.targetWord}
+        ipa={exercise.ipa}
+        onListen={() => exercise.targetWord && speak(exercise.targetWord)}
+      />
+
+      {/* Mic button — hidden once scored or when shadowing */}
+      {!scored && !isShadowing && (
+        <div className="flex flex-col items-center gap-3">
           <button
             type="button"
             onClick={isListening ? stop : start}
             disabled={isDone || isScoring}
-            aria-label={isListening ? 'Detener grabación' : 'Grabar mi voz'}
+            aria-label={isListening ? 'Stop recording' : 'Record my voice'}
             className={cn(
               'w-20 h-20 rounded-full border-none flex items-center justify-center cursor-pointer transition-all text-white disabled:opacity-40',
               isListening
-                ? 'bg-[var(--error)] shadow-[0_0_0_14px_color-mix(in_oklch,var(--error)_18%,transparent)]'
-                : 'bg-[var(--primary)] shadow-[0_4px_16px_color-mix(in_oklch,var(--primary)_35%,transparent)]',
+                ? 'bg-error shadow-[0_0_0_14px_color-mix(in_oklch,var(--error)_18%,transparent)]'
+                : 'bg-primary shadow-[0_4px_16px_color-mix(in_oklch,var(--primary)_35%,transparent)]',
             )}
           >
             {isListening ? <MicOff size={28} /> : <Mic size={28} />}
           </button>
-          <p className="text-xs text-[var(--text-tertiary)] tracking-[.05em]">
-            {isListening ? 'Escuchando… toca para parar' : isScoring ? 'Analizando…' : 'Toca para hablar'}
+          <p className="text-xs text-fg-subtle tracking-wider m-0">
+            {isListening ? 'Listening… tap to stop' : isScoring ? 'Analyzing…' : 'Tap to speak'}
           </p>
         </div>
       )}
 
-      {/* Error state */}
-      {isError && !scored && (
-        <p className="text-xs text-[var(--error)] text-center">
-          No se pudo iniciar el micrófono.{' '}
-          <button type="button" onClick={handleRetry} className="underline cursor-pointer bg-transparent border-none [font-family:inherit] text-xs">
-            Reintentar
+      {/* Shadowing fallback — speech service unavailable (e.g. Brave) */}
+      {isShadowing && !scored && (
+        <ShadowingFallback word={exercise.targetWord} onContinue={handleShadowingDone} />
+      )}
+
+      {/* Error state (recoverable errors) */}
+      {isError && !isShadowing && !scored && (
+        <p className="text-xs text-(--fg-secondary) text-center m-0">
+          {errorCode === 'not-allowed'
+            ? 'Microphone access was denied. Allow microphone access in your browser settings.'
+            : errorCode === 'no-speech'
+              ? 'No speech detected. Tap the mic and speak clearly.'
+              : 'Speech recognition failed.'}{' '}
+          <button type="button" onClick={handleRetry} className="underline cursor-pointer bg-transparent border-none font-[inherit] text-xs text-(--fg-secondary)">
+            Retry
           </button>
         </p>
       )}
@@ -172,16 +228,16 @@ export function SpeakScoredExercise({ exercise, onSubmit }: Props) {
             <button
               type="button"
               onClick={handleRetry}
-              className="text-xs py-1.5 px-3 rounded-[var(--radius-full)] border border-[var(--border-subtle)] bg-transparent text-[var(--text-secondary)] cursor-pointer [font-family:inherit]"
+              className="text-xs py-1.5 px-3 rounded-(--radius-full) border border-border-subtle bg-transparent text-fg-muted cursor-pointer font-[inherit]"
             >
-              Intentar de nuevo
+              Try again
             </button>
             <button
               type="button"
               onClick={handleContinue}
-              className="text-xs py-1.5 px-3 rounded-[var(--radius-full)] bg-[var(--primary)] text-white border-none cursor-pointer [font-family:inherit] font-medium"
+              className="text-xs py-1.5 px-3 rounded-(--radius-full) bg-primary text-white border-none cursor-pointer font-[inherit] font-medium"
             >
-              Continuar
+              Continue
             </button>
           </div>
         </>

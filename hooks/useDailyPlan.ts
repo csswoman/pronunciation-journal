@@ -2,6 +2,15 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useAuth } from '@/components/auth/AuthProvider'
+import {
+  loadCachedDailyPlan,
+  loadDoneIds,
+  loadResolvedIds,
+  saveCachedDailyPlan,
+  saveDoneIds,
+  saveResolvedIds,
+} from '@/lib/daily/plan-storage'
+import { syncTodayReconciledSteps } from '@/lib/progress/activity-queries-client'
 import { buildDailyPlan, DAILY_PLAN_STEP_COUNT } from '@/lib/practice/daily-plan'
 import type { DailyPlan, DailyStep } from '@/lib/practice/types'
 
@@ -12,55 +21,9 @@ export interface ConceptLesson {
   subtitle: string
 }
 
-function todayDateStr(): string {
-  const now = new Date()
-  return `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`
-}
-
-/** Clave de localStorage para los pasos completados hoy (fecha local del cliente). */
-function doneKey(userId: string): string {
-  return `daily-done:${userId}:${todayDateStr()}`
-}
-
-/** Clave de localStorage para el plan serializado del día. */
-function planKey(userId: string): string {
-  return `daily-plan:${userId}:${todayDateStr()}`
-}
-
-function loadDoneIds(userId: string): Set<string> {
-  if (typeof window === 'undefined') return new Set()
-  try {
-    const raw = window.localStorage.getItem(doneKey(userId))
-    return new Set(raw ? (JSON.parse(raw) as string[]) : [])
-  } catch {
-    return new Set()
-  }
-}
-
-function saveDoneIds(userId: string, ids: Set<string>): void {
-  try {
-    window.localStorage.setItem(doneKey(userId), JSON.stringify([...ids]))
-  } catch {}
-}
-
-function loadCachedPlan(userId: string): DailyPlan | null {
-  if (typeof window === 'undefined') return null
-  try {
-    const raw = window.localStorage.getItem(planKey(userId))
-    if (!raw) return null
-    return JSON.parse(raw) as DailyPlan
-  } catch {
-    return null
-  }
-}
-
-function savePlanToCache(userId: string, plan: DailyPlan): void {
-  try {
-    window.localStorage.setItem(planKey(userId), JSON.stringify(plan))
-  } catch {}
-}
-
 export type DailyPlanStatus = 'idle' | 'loading' | 'ready' | 'error'
+
+export type DailyStepStatus = 'pending' | 'done' | 'resolved'
 
 interface UseDailyPlanOptions {
   conceptLesson: ConceptLesson | null
@@ -86,10 +49,16 @@ export function useDailyPlan({ conceptLesson, autoLoad = true }: UseDailyPlanOpt
   const [plan, setPlan] = useState<DailyPlan | null>(null)
   const [status, setStatus] = useState<DailyPlanStatus>(autoLoad ? 'loading' : 'idle')
   const [doneIds, setDoneIds] = useState<Set<string>>(new Set())
+  const [resolvedIds, setResolvedIds] = useState<Set<string>>(new Set())
 
-  // Keep a ref so `load` never changes identity when conceptLesson updates.
   const conceptLessonRef = useRef(conceptLesson)
   useEffect(() => { conceptLessonRef.current = conceptLesson }, [conceptLesson])
+
+  const hydrateStepIds = useCallback(async (userId: string) => {
+    setDoneIds(loadDoneIds(userId))
+    const merged = await syncTodayReconciledSteps(userId)
+    setResolvedIds(merged)
+  }, [])
 
   const applyPlan = useCallback((built: DailyPlan, lesson: ConceptLesson | null, userId: string) => {
     const steps = [...built.steps]
@@ -107,25 +76,24 @@ export function useDailyPlan({ conceptLesson, autoLoad = true }: UseDailyPlanOpt
     }
     const finalPlan = { ...built, steps: steps.slice(0, DAILY_PLAN_STEP_COUNT) }
     setPlan(finalPlan)
-    setDoneIds(loadDoneIds(userId))
+    void hydrateStepIds(userId)
     setStatus('ready')
     return finalPlan
-  }, [])
+  }, [hydrateStepIds])
 
   const load = useCallback(async () => {
     if (!user) return
     setStatus('loading')
     try {
       const lesson = conceptLessonRef.current
-      // Restaurar desde caché si el plan de hoy ya fue generado.
-      const cached = loadCachedPlan(user.id)
+      const cached = loadCachedDailyPlan(user.id)
       if (cached) {
         applyPlan(cached, lesson, user.id)
         return
       }
       const built = await buildDailyPlan(user.id)
       const finalPlan = applyPlan(built, lesson, user.id)
-      savePlanToCache(user.id, finalPlan)
+      saveCachedDailyPlan(user.id, finalPlan)
     } catch {
       setStatus('error')
     }
@@ -144,16 +112,30 @@ export function useDailyPlan({ conceptLesson, autoLoad = true }: UseDailyPlanOpt
         saveDoneIds(user.id, next)
         return next
       })
-      // Si el paso es el primero que se completa hoy, también expande la card
-      // (el usuario puede haber entrado a /daily directamente).
+      setResolvedIds((prev) => {
+        if (!prev.has(stepId)) return prev
+        const next = new Set(prev)
+        next.delete(stepId)
+        saveResolvedIds(user.id, next)
+        return next
+      })
     },
     [user],
   )
 
+  const getStepStatus = useCallback(
+    (stepId: string): DailyStepStatus => {
+      if (doneIds.has(stepId)) return 'done'
+      if (resolvedIds.has(stepId)) return 'resolved'
+      return 'pending'
+    },
+    [doneIds, resolvedIds],
+  )
+
   const steps = plan?.steps ?? []
   const completedCount = useMemo(
-    () => steps.filter((s) => doneIds.has(s.id)).length,
-    [steps, doneIds],
+    () => steps.filter((s) => doneIds.has(s.id) || resolvedIds.has(s.id)).length,
+    [steps, doneIds, resolvedIds],
   )
   const allDone = steps.length > 0 && completedCount >= steps.length
 
@@ -173,6 +155,8 @@ export function useDailyPlan({ conceptLesson, autoLoad = true }: UseDailyPlanOpt
     status,
     steps,
     doneIds,
+    resolvedIds,
+    getStepStatus,
     completedCount,
     allDone,
     load,

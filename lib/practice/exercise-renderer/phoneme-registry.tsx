@@ -31,8 +31,8 @@ export const PHONEME_REGISTRY: Record<ExerciseType, PhonemeRegistryEntry> = {
     ),
   },
   pick_sound: {
-    render: ({ legacy, onSubmit, focusUi, voice }) => (
-      <PickSoundExercise exercise={legacy} onSubmit={onSubmit} focusUi={focusUi} voice={voice} />
+    render: ({ legacy, onSubmit, focusUi }) => (
+      <PickSoundExercise exercise={legacy} onSubmit={onSubmit} focusUi={focusUi} />
     ),
   },
   minimal_pair: {
@@ -49,7 +49,7 @@ export const PHONEME_REGISTRY: Record<ExerciseType, PhonemeRegistryEntry> = {
     render: ({ legacy, exercise, onSubmit, focusUi }) =>
       exercise.context === 'daily'
         ? <SpeakScoredExercise exercise={legacy} onSubmit={onSubmit} />
-        : <SpeakExercise exercise={legacy} onSubmit={onSubmit} focusUi={focusUi} />,
+        : <SpeakExercise exercise={legacy} onSubmit={onSubmit} />,
   },
   identify: {
     render: ({ legacy, onSubmit, voice }) => (

@@ -30,7 +30,10 @@ export default function PracticeSession(config: PracticeConfig) {
   const focusBadge = soundIpa ?? sessionLabel
   const focusUi =
     Boolean(focusBadge) &&
-    (context === 'sound_lab' || context === 'daily' || context === 'practice')
+    (context === 'sound_lab' ||
+      context === 'daily' ||
+      context === 'practice' ||
+      context === 'review')
 
   const {
     ready,

@@ -48,7 +48,7 @@ export function LexiconProgressStrip({
         {inProgress > 0 ? <> · <b>{inProgress.toLocaleString()}</b> in progress</> : null}
       </span>
       {dueForReview > 0 && (
-        <Link href="/review" className="words-lexicon__strip-pill px-3 py-1">
+        <Link href="/practice/review" className="words-lexicon__strip-pill px-3 py-1">
           ↻ {dueForReview} to review
         </Link>
       )}

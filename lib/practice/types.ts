@@ -1,6 +1,6 @@
 import type React from 'react'
 import type { CEFRLevel } from '@/lib/exercises/cefr'
-import type { Option } from '@/lib/phoneme-practice/types'
+import type { AudioStimulus, Option } from '@/lib/phoneme-practice/types'
 import type {
   ExerciseSourceRef,
   GenericExercise,
@@ -44,7 +44,14 @@ export const EXERCISE_TYPE_IDS: Record<ExerciseSlug, number | null> = {
   multiple_choice: null,
 }
 
-export type PracticeContext = 'sound_lab' | 'courses' | 'ai_coach' | 'practice' | 'daily' | 'core-1000'
+export type PracticeContext =
+  | 'sound_lab'
+  | 'courses'
+  | 'ai_coach'
+  | 'practice'
+  | 'daily'
+  | 'core-1000'
+  | 'review'
 
 export type PhonemePayload = {
   kind: 'phoneme'
@@ -52,6 +59,10 @@ export type PhonemePayload = {
   targetWord?: string
   options: Option[]
   correctIds: string[]
+  /** Ordered audio stimuli for AX / ABX / odd-one-out drills. */
+  stimuli?: AudioStimulus[]
+  abxAnswer?: 0 | 1
+  oddIndex?: number
 }
 
 export type GenericPayload = {

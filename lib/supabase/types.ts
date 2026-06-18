@@ -107,6 +107,54 @@ export type Database = {
           },
         ]
       }
+      activity_sessions: {
+        Row: {
+          id: string
+          user_id: string
+          source: string
+          practice_context: string | null
+          skill_tags: string[]
+          exercises_total: number
+          exercises_correct: number
+          accuracy_pct: number
+          duration_ms: number
+          xp_earned: number
+          reconciled_step_ids: string[]
+          completed_at: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          source: string
+          practice_context?: string | null
+          skill_tags?: string[]
+          exercises_total?: number
+          exercises_correct?: number
+          accuracy_pct?: number
+          duration_ms?: number
+          xp_earned?: number
+          reconciled_step_ids?: string[]
+          completed_at?: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          source?: string
+          practice_context?: string | null
+          skill_tags?: string[]
+          exercises_total?: number
+          exercises_correct?: number
+          accuracy_pct?: number
+          duration_ms?: number
+          xp_earned?: number
+          reconciled_step_ids?: string[]
+          completed_at?: string
+          created_at?: string
+        }
+        Relationships: []
+      }
       deck_entries: {
         Row: {
           added_at: string | null
@@ -646,6 +694,7 @@ export type Database = {
           next_review: string | null
           streak: number
           total_attempts: number
+          mastery_pct: number
           updated_at: string
           user_id: string
         }
@@ -660,6 +709,7 @@ export type Database = {
           next_review?: string | null
           streak?: number
           total_attempts?: number
+          mastery_pct?: number
           updated_at?: string
           user_id: string
         }
@@ -674,6 +724,7 @@ export type Database = {
           next_review?: string | null
           streak?: number
           total_attempts?: number
+          mastery_pct?: number
           updated_at?: string
           user_id?: string
         }

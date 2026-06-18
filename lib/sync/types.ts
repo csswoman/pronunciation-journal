@@ -2,7 +2,7 @@
 // Shared types for the offline-first sync queue between Dexie and Supabase.
 
 /** Tables that can be queued for sync */
-export type SyncTable = 'user_contrast_progress' | 'answer_history' | 'ai_conversations' | 'user_learning_state' | 'ai_events' | 'word_bank'
+export type SyncTable = 'user_contrast_progress' | 'answer_history' | 'activity_sessions' | 'ai_conversations' | 'user_learning_state' | 'ai_events' | 'word_bank'
 
 /** DML operations supported */
 export type SyncOperation = 'insert' | 'update' | 'upsert' | 'delete'

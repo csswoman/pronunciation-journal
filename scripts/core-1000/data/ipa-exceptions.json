@@ -120,5 +120,19 @@
   "victim": "CMU AH vs ɪ in unstressed syllable",
   "visitor": "CMU final ɜr vs ər — same phoneme in GenAm",
   "volume": "CMU uː vs juːm — standard GenAm transcription variant",
-  "winter": "CMU final ɜr vs ər — same phoneme in GenAm"
+  "winter": "CMU final ɜr vs ər — same phoneme in GenAm",
+  "a": "CMU weak /ə/ vs strong /eɪ/ letter-name form in dataset",
+  "and": "CMU reduced /ʌnd/ vs full /ænd/ strong form",
+  "company": "CMU final iː vs ə in unstressed syllable — standard GenAm",
+  "country": "CMU final iː vs ɪ in unstressed syllable — standard GenAm",
+  "different": "CMU ɜrʌ vs reduced ənt — standard GenAm",
+  "every": "CMU ɜriː vs reduced ɪ — standard GenAm",
+  "family": "CMU ʌliː vs reduced əli — standard GenAm",
+  "for": "CMU ɹ vs r — same phoneme in GenAm",
+  "many": "CMU iː vs ɪ in unstressed syllable — standard GenAm",
+  "or": "CMU ɹ vs r — same phoneme in GenAm",
+  "really": "CMU ɪ vs iː in unstressed syllable — standard GenAm",
+  "study": "CMU final iː vs ɪ in unstressed syllable — standard GenAm",
+  "the": "CMU weak /ðə/ vs strong /ðiː/ — both valid surface forms",
+  "use": "CMU noun /juːs/ vs verb /juːz/ — dataset uses verb form"
 }

@@ -84,6 +84,9 @@ lib/practice/exercise-renderer/
   phoneme-registry.tsx      clave: ExerciseType
   legacy-bridge.ts          único cast fonema → Exercise legacy
 
+lib/exercises/eligibility.ts   assessWordBankEntry — contrato único lemma/contexto/pool
+lib/exercises/generation.ts      GenerationResult<T> + SkippedEntry (fill-blank hoy)
+
 components/practice/session/
   ExerciseRenderer.tsx      router (~40 líneas)
   GenericExerciseView.tsx
@@ -91,6 +94,8 @@ components/practice/session/
 ```
 
 Al añadir un tipo: entrada en registry + adapter en `lib/practice/adapters.ts` si aplica. **No** condicionales en `ExerciseRenderer`.
+
+Antes de filtrar filas en un generador nuevo, usar `assessWordBankEntry(entry, mode)` — no duplicar reglas de lemma, contexto o pool en el generador. Gates CI: `pnpm validate:core1000` (contenido) y `pnpm validate:core1000-generators` (generabilidad por modo).
 
 ### Daily plan
 
@@ -172,4 +177,4 @@ Al cambiar reglas arquitectónicas:
 | Patrón, inventario, ESLint | este doc + `eslint.config.mjs` |
 | Nueva excepción ESLint | los tres |
 
-Última revisión: 2026-06-14 — guardrails Supabase, max-lines, ExerciseRenderer registry.
+Última revisión: 2026-06-16 — eligibility contract (`assessWordBankEntry`), gates `validate:core1000-generators`.

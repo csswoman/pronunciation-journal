@@ -17,7 +17,7 @@ interface HomeDailyCardProps {
 export default function HomeDailyCard({ conceptLesson }: HomeDailyCardProps) {
   const { user } = useAuth()
   const router = useRouter()
-  const { status, steps, doneIds, completedCount, allDone, load, celebrate } = useDailyPlan({
+  const { status, steps, getStepStatus, completedCount, allDone, load, celebrate } = useDailyPlan({
     conceptLesson,
     autoLoad: false,
   })
@@ -124,7 +124,7 @@ export default function HomeDailyCard({ conceptLesson }: HomeDailyCardProps) {
             </div>
             <DailyStepList
               steps={steps}
-              doneIds={doneIds}
+              getStepStatus={getStepStatus}
               onStartStep={handleStartStep}
               onMarkDone={() => router.push('/daily')}
             />

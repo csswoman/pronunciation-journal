@@ -5,6 +5,7 @@ import {
   getLexiconProgressByCategory,
   getWordsDueForReview,
 } from "@/lib/word-bank/server-queries";
+import { getSupabaseServerUserId } from "@/lib/supabase/session";
 import { WordsClient } from "@/components/words/WordsClient";
 import type { LessonViewModel } from "@/lib/lexicon/types";
 
@@ -18,9 +19,10 @@ async function WordsContent() {
   let dueForReview = 0;
   let dueWordLabels: string[] = [];
   try {
+    const userId = await getSupabaseServerUserId();
     progressMap = await getLexiconProgressByCategory(categoryWordIds);
     dueForReview = await countWordsDueForReview();
-    const dueWords = await getWordsDueForReview(4);
+    const dueWords = userId ? await getWordsDueForReview(userId, 4) : [];
     dueWordLabels = dueWords.map((w) => w.text);
   } catch (e) {
     console.error("[WordsContent] Failed to load progress:", e);

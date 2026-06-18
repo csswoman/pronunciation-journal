@@ -12,6 +12,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "validate:core1000": "vitest run lib/core-1000/__tests__/dataset.test.ts",
+    "validate:core1000-generators": "vitest run lib/core-1000/__tests__/generatability.test.ts",
     "lexicon:enrich": "node scripts/enrich-lexicon.mjs --all"
   },
   "dependencies": {

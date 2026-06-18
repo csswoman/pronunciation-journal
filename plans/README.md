@@ -24,6 +24,8 @@ your row when done.
 | 013 | Add unit tests to the three highest-value API routes | P3 | M | 001 | TODO |
 | 014 | Route all component Supabase calls through lib/*/queries.ts | P2 | L | 001 | TODO |
 | 015 | Split PracticeSession and GrammarStudyDeck below the 250-line limit | P3 | M | — | TODO |
+| 016 | Unified progress hub — centralize practice telemetry, radar, sounds mastery, review center | P1 | L | — | IN PROGRESS (Fase 2 done) |
+| 017 | Exercise eligibility contract — unified lemma/context rules, GenerationResult, CI generatability gate | P1 | M | — | DONE |
 
 Status values: TODO | IN PROGRESS | DONE | BLOCKED (with one-line reason) | REJECTED (with one-line rationale)
 
@@ -36,6 +38,7 @@ Status values: TODO | IN PROGRESS | DONE | BLOCKED (with one-line reason) | REJE
   rotation is time-sensitive.
 - 004, 009, 013, 014 depend on 001 for a green test baseline.
 - All other plans are independent and can be executed in any order after 001.
+- 017 is independent of 016 but pairs well with it: better exercise generation improves daily plan and progress telemetry quality.
 
 ## Findings considered and rejected
 

@@ -2,12 +2,14 @@
 
 // Planned structure:
 // <ExerciseShell>
-//   <ShellHeader />    — eyebrow title (left) + Skip button (right, idle only)
+//   <ShellHeader />    — title (Fraunces) + hint button slot (right)
 //   <HintChip />       — word + meaning, always visible when provided
 //   [children]         — exercise mechanics
 //   <ContinueButton /> — full-width primary, shown after answer
+//   <SkipButton />     — small text link below, shown before answer
 
-import { useEffect } from 'react'
+import { useEffect, type ReactNode } from 'react'
+import type React from 'react'
 import { cn } from '@/lib/cn'
 
 export interface ExerciseResult {
@@ -28,6 +30,7 @@ interface ExerciseShellProps {
   onContinue: () => void
   onSkip: () => void
   children: React.ReactNode
+  hintSlot?: React.ReactNode
 }
 
 export function ExerciseShell({
@@ -37,52 +40,55 @@ export function ExerciseShell({
   onContinue,
   onSkip,
   children,
+  hintSlot,
 }: ExerciseShellProps) {
   const done = result !== null
 
   useEffect(() => {
     if (!done) return
+    const timer = setTimeout(onContinue, 900)
     function handleKey(e: KeyboardEvent) {
-      if (e.key === 'Enter') onContinue()
+      if (e.key === 'Enter') { clearTimeout(timer); onContinue() }
     }
     window.addEventListener('keydown', handleKey)
-    return () => window.removeEventListener('keydown', handleKey)
+    return () => { clearTimeout(timer); window.removeEventListener('keydown', handleKey) }
   }, [done, onContinue])
 
   return (
     <div className="flex w-full flex-col gap-5">
-      <ShellHeader title={title} done={done} onSkip={onSkip} />
+      <ShellHeader title={title} hintSlot={hintSlot} />
       {hint && <HintChip word={hint.word} meaning={hint.meaning} />}
       {children}
-      {done && <ContinueButton onContinue={onContinue} />}
+      {done && <FeedbackBanner isCorrect={result.isCorrect} />}
+      {!done && <SkipButton onSkip={onSkip} />}
     </div>
   )
 }
 
-function ShellHeader({
-  title,
-  done,
-  onSkip,
-}: {
-  title: string
-  done: boolean
-  onSkip: () => void
-}) {
+function ShellHeader({ title, hintSlot }: { title: string; hintSlot?: React.ReactNode }) {
   return (
-    <div className="flex items-center justify-between">
-      <p className="text-[11px] font-semibold uppercase tracking-[.08em] text-fg-muted">
+    <div className="flex items-start justify-between gap-3">
+      <p className="font-[Fraunces,Georgia,serif] text-2xl font-bold leading-tight text-fg">
         {title}
       </p>
-      {!done && (
-        <button
-          type="button"
-          onClick={onSkip}
-          className="text-[12px] font-medium text-fg-subtle transition-opacity hover:opacity-70 cursor-pointer"
-        >
-          Skip
-        </button>
+      {hintSlot && (
+        <div className="flex items-center gap-2 pt-1 shrink-0">
+          {hintSlot}
+        </div>
       )}
     </div>
+  )
+}
+
+function SkipButton({ onSkip }: { onSkip: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onSkip}
+      className="w-full text-center text-[12px] text-fg-subtle transition-opacity hover:opacity-70 cursor-pointer py-1"
+    >
+      Skip this one
+    </button>
   )
 }
 
@@ -96,6 +102,20 @@ function HintChip({ word, meaning }: { word: string; meaning?: string }) {
           <span className="italic text-fg-muted">{meaning}</span>
         </>
       )}
+    </div>
+  )
+}
+
+function FeedbackBanner({ isCorrect }: { isCorrect: boolean }) {
+  return (
+    <div className={cn(
+      'flex items-center gap-2.5 rounded-md border px-4 py-3.5 text-[13px] font-semibold',
+      isCorrect
+        ? 'bg-success-soft border-success-border text-success'
+        : 'bg-error-soft border-error-border text-error',
+    )}>
+      <span>{isCorrect ? '✓' : '✗'}</span>
+      <span>{isCorrect ? 'Well done!' : 'Not quite — keep going!'}</span>
     </div>
   )
 }

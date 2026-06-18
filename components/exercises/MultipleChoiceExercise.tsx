@@ -14,11 +14,12 @@ import { useUISounds } from '@/hooks/useUISounds'
 interface Props {
   exercise: MultipleChoiceExerciseType
   onResult: (isCorrect: boolean, userAnswer: string, timeMs: number) => void
+  hintCount?: number
 }
 
 type AnswerState = 'idle' | 'correct' | 'wrong'
 
-export function MultipleChoiceExercise({ exercise, onResult }: Props) {
+export function MultipleChoiceExercise({ exercise, onResult, hintCount = 0 }: Props) {
   const [selected, setSelected] = useState<number | null>(null)
   const [state, setState]       = useState<AnswerState>('idle')
   const startMs = useRef(Date.now())
@@ -42,10 +43,6 @@ export function MultipleChoiceExercise({ exercise, onResult }: Props) {
 
   return (
     <div className="flex flex-col gap-5 w-full">
-      <p className="text-xs font-semibold uppercase tracking-[.08em] text-[var(--text-tertiary)]">
-        Choose the best answer
-      </p>
-
       <p className="text-lg font-medium text-[var(--text-primary)] leading-snug">
         {exercise.question}
       </p>
@@ -76,13 +73,8 @@ export function MultipleChoiceExercise({ exercise, onResult }: Props) {
         })}
       </div>
 
-      {state !== 'idle' && exercise.explanation && (
-        <p className={cn(
-          'text-sm px-4 py-3 rounded-[var(--radius-md)]',
-          state === 'correct'
-            ? 'bg-[color-mix(in_oklch,var(--success)_10%,transparent)] text-[var(--success)]'
-            : 'bg-[color-mix(in_oklch,var(--error)_10%,transparent)] text-[var(--text-secondary)]',
-        )}>
+      {(state === 'wrong' || (state === 'idle' && hintCount > 0)) && exercise.explanation && (
+        <p className="text-sm px-4 py-3 rounded-md bg-[color-mix(in_oklch,var(--primary)_8%,transparent)] text-fg-muted">
           {exercise.explanation}
         </p>
       )}

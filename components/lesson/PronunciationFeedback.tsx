@@ -9,6 +9,13 @@ interface PronunciationFeedbackProps {
   accuracy: number;
   feedback: { message: string; emoji: string; color: string };
   xpEarned: number;
+  /**
+   * When false, hides the per-word phoneme breakdown and the "sounds to
+   * practice" chips, leaving only the score summary. Use when a richer
+   * breakdown (e.g. PhonemeFeedbackTable) is rendered separately, to avoid
+   * showing the same phoneme data twice. Defaults to true.
+   */
+  showPhonemeDetail?: boolean;
 }
 
 // ── Phoneme chip — plays sound on hover ──────────────────────────────────────
@@ -97,6 +104,7 @@ export default function PronunciationFeedback({
   accuracy,
   feedback,
   xpEarned,
+  showPhonemeDetail = true,
 }: PronunciationFeedbackProps) {
   const problemWords = wordResults.filter(
     (r) =>
@@ -133,6 +141,7 @@ export default function PronunciationFeedback({
       />
 
       {/* Word results */}
+      {showPhonemeDetail && (
       <div className="space-y-2">
         {wordResults.map((result, idx) => {
           const hasPhonemes = (result.phonemes?.alignment?.length ?? 0) > 0;
@@ -188,9 +197,10 @@ export default function PronunciationFeedback({
           );
         })}
       </div>
+      )}
 
       {/* Sounds to practice */}
-      {problemWords.length > 0 && (
+      {showPhonemeDetail && problemWords.length > 0 && (
         <div
           className="rounded-xl px-4 py-3 border text-sm space-y-2"
           style={{

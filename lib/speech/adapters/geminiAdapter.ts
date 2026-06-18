@@ -55,8 +55,10 @@ export class GeminiAdapter implements SpeechInputAdapter {
           window.clearTimeout(timeoutId);
 
           if (!res.ok) {
-            const d = await res.json();
-            throw new Error(d.error ?? 'transcribe failed');
+            const d = await res.json().catch(() => ({}));
+            // Surface real server failures (auth, rate-limit, 503, etc.) so the
+            // UI shows an actionable error instead of a silent empty transcript.
+            throw new Error(d.error ?? `transcribe failed (${res.status})`);
           }
 
           const data = await res.json();
@@ -66,7 +68,10 @@ export class GeminiAdapter implements SpeechInputAdapter {
           });
         } catch (err) {
           console.warn('[GeminiAdapter] transcription failed:', err);
-          resolve({ transcript: '', source: 'gemini' });
+          // Network/abort/server errors are reported; the hook maps them to a
+          // visible message. (An OK response with an empty transcript — i.e.
+          // unintelligible audio — resolves above as transcript: '' instead.)
+          reject(err instanceof Error ? err : new Error('transcribe failed'));
         }
       };
 

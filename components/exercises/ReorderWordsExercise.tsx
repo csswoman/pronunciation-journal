@@ -2,8 +2,6 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { cn } from '@/lib/cn'
-import { PhonemeExercisePrompt } from '@/components/phoneme-practice/PhonemeExercisePrompt'
-import { getPhonemeExerciseMeta } from '@/lib/phoneme-practice/exercise-labels'
 import type { ReorderWordsExercise as ReorderWordsExerciseType } from '@/lib/exercises/types'
 import { useUISounds } from '@/hooks/useUISounds'
 
@@ -28,7 +26,6 @@ export function ReorderWordsExercise({ exercise, onResult, focusUi = false }: Pr
   const [answer, setAnswer] = useState<Chip[]>([])
   const [state, setState] = useState<AnswerState>('idle')
   const startMs = useRef(Date.now())
-  const meta = getPhonemeExerciseMeta('reorder_words', {})
   const { playTap, playCorrect, playWrong } = useUISounds()
 
   useEffect(() => {
@@ -66,17 +63,10 @@ export function ReorderWordsExercise({ exercise, onResult, focusUi = false }: Pr
   if (focusUi) {
     return (
       <div className="phoneme-focus__exercise">
-        <PhonemeExercisePrompt
-          centered
-          spacious
-          eyebrow={meta.eyebrow}
-          title="¿Cuál es el orden correcto?"
-          hint="Toca las palabras en la franja de arriba"
-        />
 
         <div
           className={cn('pf-order-answer', answer.length === 0 && 'pf-order-answer--empty')}
-          aria-label="Tu frase"
+          aria-label="Your answer"
         >
           {answer.map((chip) => (
             <button
@@ -91,7 +81,7 @@ export function ReorderWordsExercise({ exercise, onResult, focusUi = false }: Pr
           ))}
         </div>
 
-        <div className="pf-order-tray" aria-label="Palabras disponibles">
+        <div className="pf-order-tray" aria-label="Available words">
           {bank.map((chip) => (
             <button
               key={chip.key}
@@ -112,13 +102,13 @@ export function ReorderWordsExercise({ exercise, onResult, focusUi = false }: Pr
             disabled={!canCheck}
             className="pf-cta pf-cta--primary"
           >
-            Comprobar
+            Check
           </button>
         )}
 
         {state !== 'idle' && (
           <p className="pf-answer-note">
-            Orden correcto: <strong>{exercise.sentence}</strong>
+            Correct order: <strong>{exercise.sentence}</strong>
           </p>
         )}
       </div>
@@ -127,13 +117,10 @@ export function ReorderWordsExercise({ exercise, onResult, focusUi = false }: Pr
 
   return (
     <div className="flex w-full flex-col gap-3">
-      <p className="text-center text-[13px] font-semibold uppercase tracking-[.08em] text-[var(--text-tertiary)] m-0 pb-1">
-        Arrange the words in the correct order
-      </p>
       <div
         className={cn(
-          'min-h-[52px] flex flex-wrap gap-2 rounded-xl border-[1.5px] border-dashed p-3 transition-colors',
-          answer.length === 0 ? 'border-[var(--border-subtle)]' : 'border-[var(--primary)]',
+          'min-h-13 flex flex-wrap gap-2 rounded-xl border-[1.5px] border-dashed p-3 transition-colors',
+          answer.length === 0 ? 'border-border-subtle' : 'border-primary',
         )}
         aria-label="Your answer"
       >
@@ -146,27 +133,17 @@ export function ReorderWordsExercise({ exercise, onResult, focusUi = false }: Pr
           <WordChip key={chip.key} chip={chip} variant="bank" done={state !== 'idle'} onClick={moveToAnswer} />
         ))}
       </div>
-      {state !== 'idle' && (
-        <div className={cn(
-          'flex items-center gap-2 rounded-xl px-4 py-3 text-[14px] font-medium mt-3',
-          state === 'correct'
-            ? 'bg-[var(--success-soft)] text-[var(--success)]'
-            : 'bg-[var(--error-soft)] text-[var(--error)]',
-        )}>
-          <span>{state === 'correct' ? '✓' : '✗'}</span>
-          <span>{state === 'correct' ? 'Correct!' : `Correct order: ${exercise.sentence}`}</span>
-        </div>
-      )}
       {state === 'idle' && (
         <button
           type="button"
           onClick={handleCheck}
-          disabled={answer.length === 0}
-          className="w-full rounded-full py-3.5 text-sm font-semibold transition-all disabled:opacity-40 mt-3"
-          style={{
-            backgroundColor: answer.length > 0 ? 'var(--primary)' : 'var(--border-subtle)',
-            color: answer.length > 0 ? 'var(--on-primary)' : 'var(--text-tertiary)',
-          }}
+          disabled={!canCheck}
+          className={cn(
+            'w-full rounded-full py-3.5 text-[15px] font-semibold transition-all duration-150 mt-3',
+            canCheck
+              ? 'bg-(--cta-bg) text-(--cta-fg) cursor-pointer hover:opacity-90 active:scale-[0.99]'
+              : 'bg-surface-raised text-fg-subtle cursor-not-allowed opacity-50',
+          )}
         >
           Check
         </button>
@@ -190,14 +167,12 @@ function WordChip({ chip, variant, done, onClick }: ChipProps) {
       disabled={done}
       className={cn(
         'rounded-full border px-3 py-1.5 text-[14px] font-medium transition-all duration-150',
-        !done &&
-          variant === 'bank' &&
-          'bg-[var(--surface-raised)] border-[var(--border-default)] text-[var(--text-primary)] hover:border-[var(--primary)] hover:bg-[var(--primary-soft)] cursor-pointer',
-        !done &&
-          variant === 'placed' &&
-          'bg-[var(--primary-soft)] border-[var(--primary)] text-[var(--primary)] hover:border-[var(--error)] hover:bg-[var(--error-soft)] hover:text-[var(--error)] cursor-pointer',
+        !done && variant === 'bank' &&
+          'bg-surface-raised border-border-default text-fg hover:border-primary hover:bg-primary-soft cursor-pointer',
+        !done && variant === 'placed' &&
+          'bg-primary-soft border-primary text-primary hover:border-error hover:bg-error-soft hover:text-error cursor-pointer',
         done &&
-          'cursor-default opacity-80 border-[var(--border-subtle)] bg-[var(--surface-raised)] text-[var(--text-secondary)]',
+          'cursor-default opacity-80 border-border-subtle bg-surface-raised text-fg-muted',
       )}
     >
       {chip.word}

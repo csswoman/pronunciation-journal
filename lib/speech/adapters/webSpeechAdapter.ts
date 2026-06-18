@@ -9,6 +9,7 @@ interface BrowserSpeechRecognition {
   interimResults: boolean;
   onresult: ((event: SpeechRecognitionEvent) => void) | null;
   onerror: ((event: SpeechRecognitionErrorEvent) => void) | null;
+  onend: ((event: Event) => void) | null;
   start: () => void;
   stop: () => void;
   abort: () => void;
@@ -23,8 +24,40 @@ type SpeechWindow = Window & {
   webkitSpeechRecognition?: BrowserSpeechRecognitionConstructor;
 };
 
+type BraveNavigator = Navigator & { brave?: { isBrave?: () => Promise<boolean> } };
+
+/**
+ * Web Speech recognition needs Google's private speech-server key, which only
+ * ships in real Google Chrome. Brave, Edge, Arc, Opera, etc. all report
+ * "Chrome/" in their UA but lack the key, so every recognition attempt fails
+ * asynchronously with error "network" — regardless of connectivity.
+ *
+ * The "network" error surfaces only after recognition starts (via onerror),
+ * so we cannot catch it at start() time to fall back. Instead we detect these
+ * browsers up front and route them straight to the Gemini adapter.
+ */
+export function isWebSpeechReliable(): boolean {
+  if (typeof navigator === 'undefined') return false;
+  const ua = navigator.userAgent;
+  const nav = navigator as BraveNavigator;
+
+  // Brave exposes navigator.brave; treat its mere presence as "not Chrome".
+  if (nav.brave !== undefined) return false;
+  if (!/Chrome\//.test(ua)) return false;
+  if (/Edg\/|EdgA\/|EdgiOS\//.test(ua)) return false; // Edge
+  if (/OPR\//.test(ua)) return false; // Opera
+  if (/Arc\//.test(ua)) return false; // Arc
+
+  return true;
+}
+
 export class WebSpeechAdapter implements SpeechInputAdapter {
   private recognition: BrowserSpeechRecognition | null = null;
+  // The Web Speech API fires `onresult`/`onend` as soon as it detects a pause
+  // (continuous = false), which can happen BEFORE the user taps "stop". We must
+  // attach handlers in start() and capture the result into this pending promise,
+  // otherwise an early result is dropped and stop() resolves with nothing.
+  private pending: Promise<SpeechInputResult> | null = null;
 
   isSupported(): boolean {
     return typeof window !== 'undefined' &&
@@ -35,23 +68,23 @@ export class WebSpeechAdapter implements SpeechInputAdapter {
     const speechWindow = window as SpeechWindow;
     const SR = speechWindow.SpeechRecognition ?? speechWindow.webkitSpeechRecognition;
     if (!SR) throw new Error('Speech recognition not supported');
-    this.recognition = new SR();
-    this.recognition!.lang = 'en-US';
-    this.recognition!.maxAlternatives = 3;
-    this.recognition!.continuous = false;
-    this.recognition!.interimResults = false;
-    this.recognition!.start();
-  }
 
-  stop(): Promise<SpeechInputResult> {
-    return new Promise((resolve, reject) => {
-      if (!this.recognition) return reject(new Error('Recognition not started'));
+    const recognition = new SR();
+    recognition.lang = 'en-US';
+    recognition.maxAlternatives = 3;
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    this.recognition = recognition;
 
-      this.recognition.onresult = (event: SpeechRecognitionEvent) => {
+    this.pending = new Promise<SpeechInputResult>((resolve, reject) => {
+      let settled = false;
+
+      recognition.onresult = (event: SpeechRecognitionEvent) => {
         const results = Array.from(event.results[0]);
         const best = results.reduce((a, b) =>
           a.confidence > b.confidence ? a : b
         );
+        settled = true;
         resolve({
           transcript: best.transcript.trim(),
           confidence: best.confidence,
@@ -60,16 +93,37 @@ export class WebSpeechAdapter implements SpeechInputAdapter {
         });
       };
 
-      this.recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
+      recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
+        settled = true;
         reject(new Error(event.error));
       };
 
-      this.recognition.stop();
+      // Recognition ended without producing a result (e.g. silence, or stop()
+      // called before any speech was captured).
+      recognition.onend = () => {
+        if (!settled) {
+          settled = true;
+          reject(new Error('no-speech'));
+        }
+      };
     });
+
+    recognition.start();
+  }
+
+  stop(): Promise<SpeechInputResult> {
+    if (!this.recognition || !this.pending) {
+      return Promise.reject(new Error('Recognition not started'));
+    }
+    // Ask recognition to finalize; the result arrives via the handlers attached
+    // in start(). If it already fired, `pending` is already resolved.
+    this.recognition.stop();
+    return this.pending;
   }
 
   abort(): void {
     this.recognition?.abort();
     this.recognition = null;
+    this.pending = null;
   }
 }

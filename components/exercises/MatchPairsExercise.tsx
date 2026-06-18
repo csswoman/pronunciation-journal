@@ -11,6 +11,7 @@
 //   <CheckButton />    — full-width rounded-full
 
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { cn } from '@/lib/cn'
 import { shuffle } from '@/lib/exercises/utils'
 import { speak } from '@/lib/phoneme-practice/tts'
 import type { MatchPairsExercise as MatchPairsExerciseType } from '@/lib/exercises/types'
@@ -60,6 +61,17 @@ export function MatchPairsExercise({ exercise, onResult }: Props) {
   const pairColor = (leftId: string) => DOT_COLORS[exercise.pairs.findIndex((p) => p.id === leftId) % DOT_COLORS.length]
   const unmatch   = (leftId: string) => setMatches((prev) => { const next = { ...prev }; delete next[leftId]; return next })
 
+  // The `right` text expected for a given left id, and the text of any right id.
+  // Grading is text-aware: when two pairs are textually identical (e.g. two
+  // "pull" → /pʊl/), connecting a word to the *other* identical definition is
+  // still correct, since the rendered right is indistinguishable.
+  const expectedRightText = (leftId: string) => exercise.pairs.find((p) => p.id === leftId)?.right
+  const rightText         = (rightId: string) => exercise.pairs.find((p) => p.id === rightId)?.right
+  const isPairCorrect     = (leftId: string) => {
+    const chosen = matches[leftId]
+    return chosen != null && rightText(chosen) === expectedRightText(leftId)
+  }
+
   function handleLeftClick(pair: { id: string; left: string }) {
     if (submitted || results[pair.id]) return
     speak(pair.left)
@@ -87,7 +99,7 @@ export function MatchPairsExercise({ exercise, onResult }: Props) {
     const newResults: MatchResult = {}
     let allCorrect = true
     for (const pair of exercise.pairs) {
-      const correct = matches[pair.id] === pair.id
+      const correct = isPairCorrect(pair.id)
       newResults[pair.id] = correct ? 'correct' : 'wrong'
       if (!correct) allCorrect = false
     }
@@ -168,10 +180,6 @@ export function MatchPairsExercise({ exercise, onResult }: Props) {
 
   return (
     <div className="flex w-full flex-col gap-5">
-      <p className="text-center text-base font-semibold text-[var(--text-primary)]">
-        Match each <span className="text-[var(--primary)]">word</span> with its definition
-      </p>
-
       <div ref={boardRef} className="relative grid grid-cols-2 gap-x-10 gap-y-2">
         <svg aria-hidden className="pointer-events-none absolute inset-0 h-full w-full">
           {connections.map((c) => {
@@ -243,11 +251,12 @@ export function MatchPairsExercise({ exercise, onResult }: Props) {
           type="button"
           onClick={handleCheck}
           disabled={!allMatched}
-          className="w-full rounded-full py-3.5 text-sm font-semibold transition-all disabled:opacity-40"
-          style={{
-            backgroundColor: allMatched ? 'var(--primary)' : 'var(--border-subtle)',
-            color: allMatched ? 'var(--on-primary)' : 'var(--text-tertiary)',
-          }}
+          className={cn(
+          'w-full rounded-full py-3.5 text-[15px] font-semibold transition-all duration-150',
+          allMatched
+            ? 'bg-(--cta-bg) text-(--cta-fg) cursor-pointer hover:opacity-90 active:scale-[0.99]'
+            : 'bg-surface-raised text-fg-subtle cursor-not-allowed opacity-50',
+        )}
         >
           Check
         </button>

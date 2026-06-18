@@ -127,13 +127,33 @@ export async function countWordsDueForReview(): Promise<number> {
   return count ?? 0;
 }
 
+/** Server-only: weak words for review hub. */
+export async function getWeakWordsForReviewServer(
+  userId: string,
+  limit = 6,
+): Promise<WordBankEntry[]> {
+  const supabase = await createSupabaseServerClient();
+  const { data, error } = await supabase
+    .from(TABLE)
+    .select("id, user_id, text, meaning, translation, ipa, example, audio_url, difficulty, status, srs_status, next_review_at, ease_factor, interval_days, repetitions, review_count, last_reviewed_at, source, source_ref, created_at")
+    .eq("user_id", userId)
+    .eq("status", "ready")
+    .in("srs_status", ["new", "learning"])
+    .order("ease_factor", { ascending: true })
+    .limit(limit);
+
+  if (error) throw error;
+  return (data ?? []) as WordBankEntry[];
+}
+
 /** Server-only: words due for review today, most urgent first. */
-export async function getWordsDueForReview(limit = 5): Promise<WordBankEntry[]> {
+export async function getWordsDueForReview(userId: string, limit = 5): Promise<WordBankEntry[]> {
   const supabase = await createSupabaseServerClient();
   const today = new Date().toISOString();
   const { data, error } = await supabase
     .from(TABLE)
-    .select("id, user_id, text, meaning, translation, ipa, example, audio_url, difficulty, status, srs_status, next_review_at, ease_factor, interval_days, repetitions, review_count, last_reviewed_at, source, source_ref, created_at, updated_at")
+    .select("id, user_id, text, meaning, translation, ipa, example, audio_url, difficulty, status, srs_status, next_review_at, ease_factor, interval_days, repetitions, review_count, last_reviewed_at, source, source_ref, created_at")
+    .eq("user_id", userId)
     .eq("status", "ready")
     .neq("srs_status", "new")
     .lte("next_review_at", today)

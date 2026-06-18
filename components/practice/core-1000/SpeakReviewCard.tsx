@@ -17,6 +17,7 @@ import { defaultEvaluationEngine } from '@/lib/exercises/evaluation'
 import { accuracyToQuality } from '@/lib/srs'
 import { getFeedbackMessage, calculateXP } from '@/lib/pronunciation/scoring'
 import PronunciationFeedback from '@/components/lesson/PronunciationFeedback'
+import { PhonemeFeedbackTable } from '@/components/lesson/PhonemeFeedbackTable'
 import { SelfGradeBar } from './SelfGradeBar'
 import { cn } from '@/lib/cn'
 import type { CoreWord } from '@/lib/core-1000/types'
@@ -42,6 +43,19 @@ function micErrorMessage(error: string | null): string {
   }
   if (error === 'no-speech') return 'No se detectó voz. Intenta hablar más cerca del micrófono.'
   if (error === 'audio-capture') return 'No se encontró un micrófono activo en el sistema.'
+
+  const lower = error.toLowerCase()
+  if (
+    error === 'network' ||
+    lower.includes('failed to fetch') ||
+    lower.includes('networkerror') ||
+    lower.includes('abort')
+  ) {
+    return 'Sin conexión con el servicio de reconocimiento de voz. Revisa tu internet e intenta de nuevo.'
+  }
+  if (lower.includes('transcribe failed') || lower.includes('rate limit')) {
+    return 'El servicio de transcripción no respondió. Intenta de nuevo en unos segundos.'
+  }
   return 'No se pudo iniciar el micrófono.'
 }
 
@@ -211,7 +225,9 @@ export function SpeakReviewCard({ entry, onGraded }: Props) {
             accuracy={scored.score}
             feedback={getFeedbackMessage(scored.score, 70)}
             xpEarned={calculateXP(scored.score)}
+            showPhonemeDetail={false}
           />
+          <PhonemeFeedbackTable wordResults={scored.wordResults} />
           <div className="flex gap-2">
             <button
               type="button"

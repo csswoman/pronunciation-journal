@@ -1,0 +1,47 @@
+/* Scoped overrides for /test split panes — phoneme-focus normally fills the viewport */
+
+.exercise-test-viewport {
+  background: var(--surface-base);
+}
+
+@media (min-width: 1024px) {
+  .exercise-test-viewport {
+    right: 18rem; /* lg:w-72 */
+  }
+}
+
+.exercise-test-split-pane .phoneme-focus {
+  min-height: 100%;
+  height: auto;
+  align-items: stretch;
+  padding: var(--space-2);
+  background: var(--surface-sunken);
+}
+
+.exercise-test-split-pane .phoneme-focus__phone {
+  width: 100%;
+  min-height: min(640px, 100%);
+  max-height: none;
+  flex: 1;
+}
+
+@media (max-width: 1023px) {
+  .exercise-test-split-pane .phoneme-focus {
+    min-height: 70dvh;
+  }
+}
+
+@media (max-width: 540px) {
+  .exercise-test-split-pane .phoneme-focus {
+    padding: 0;
+    background: var(--surface-raised);
+  }
+
+  .exercise-test-split-pane .phoneme-focus__phone {
+    min-height: 70dvh;
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
+    padding-bottom: var(--space-4);
+  }
+}

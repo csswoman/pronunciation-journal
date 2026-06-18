@@ -6,8 +6,10 @@ import { GuestBanner } from '@/components/layout/stats/GuestBanner'
 import { StreakCard } from '@/components/progress/StreakCard'
 import { DailyCompletionRate } from '@/components/progress/DailyCompletionRate'
 import { AccuracyTrend } from '@/components/progress/AccuracyTrend'
+import { FluencyRadarCard } from '@/components/progress/FluencyRadarCard'
 import { SkillProfileCard } from '@/components/progress/SkillProfileCard'
 import { ThisWeekCard } from '@/components/progress/ThisWeekCard'
+import { ActivityHistoryCard } from '@/components/progress/ActivityHistoryCard'
 
 export default async function ProgressPage() {
   const supabase = await createSupabaseServerClient()
@@ -50,7 +52,14 @@ async function ProgressDashboard({ userId }: { userId: string }) {
         <AccuracyTrend stats={data.accuracy} />
       </div>
 
+      <FluencyRadarCard
+        scores={data.fluencyProfile.scores}
+        comparisonLabel={data.fluencyProfile.comparisonLabel}
+      />
+
       <SkillProfileCard data={data.skillProfile} coach={data.coachInsights} />
+
+      <ActivityHistoryCard sessions={data.recentSessions} />
 
       <ThisWeekCard stats={data.weeklySummary} />
 

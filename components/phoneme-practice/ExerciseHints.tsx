@@ -26,7 +26,9 @@ const MAX_LEVEL: HintLevel = 2
 
 export function ExerciseHints({ ipa, targetWord, onRetry, onContinue, voice }: Props) {
   const [level, setLevel] = useState<HintLevel>(0)
-  const extra = IPA_EXTRA[ipa]
+  // IPA_EXTRA keys are "/iː/" format; normalize bare keys like "iː" or "/iː"
+  const ipaKey = ipa.startsWith('/') && ipa.endsWith('/') ? ipa : `/${ipa.replace(/^\/|\/$/g, '')}/`
+  const extra = IPA_EXTRA[ipaKey] ?? IPA_EXTRA[ipa]
 
   function handleNextHint() {
     if (level < MAX_LEVEL) setLevel((l) => (l + 1) as HintLevel)
@@ -41,7 +43,7 @@ export function ExerciseHints({ ipa, targetWord, onRetry, onContinue, voice }: P
   return (
     <div className="flex flex-col gap-4 pt-2">
       <LevelDots level={level} />
-      <HintContent level={level} ipa={ipa} targetWord={targetWord} extra={extra} onRehear={handleRehear} />
+      <HintContent level={level} ipa={ipaKey} targetWord={targetWord} extra={extra} onRehear={handleRehear} />
       <div className="flex gap-3">
         {hasMoreHints && (
           <button
@@ -115,13 +117,14 @@ function HintContent({ level, ipa, targetWord, extra, onRehear }: HintContentPro
 
   if (level === 1) {
     const bare = ipa.replace(/[/[\]]/g, '').trim()
+    const tips = extra?.articulationEs ?? extra?.articulation ?? []
     return (
       <div className="flex flex-col gap-1">
-        <p className="text-xs font-semibold uppercase tracking-wider text-fg-subtle">Sonido objetivo</p>
+        <p className="text-xs font-semibold uppercase tracking-wider text-fg-subtle">Cómo se produce</p>
         <p className="font-[var(--font-ipa),monospace] text-3xl font-bold text-primary">{bare}</p>
-        {extra && (
+        {tips.length > 0 && (
           <ul className="mt-1 flex flex-col gap-0.5 text-sm text-fg-secondary">
-            {extra.articulation.slice(0, 2).map((tip) => (
+            {tips.slice(0, 2).map((tip) => (
               <li key={tip} className="flex gap-1.5 before:content-['·'] before:text-fg-subtle">
                 {tip}
               </li>
@@ -136,11 +139,9 @@ function HintContent({ level, ipa, targetWord, extra, onRehear }: HintContentPro
   return (
     <div className="flex flex-col gap-1">
       <p className="text-xs font-semibold uppercase tracking-wider text-fg-subtle">Consejo para hispanohablantes</p>
-      {extra?.spanishTip ? (
-        <p className="text-sm leading-relaxed text-fg-secondary">{extra.spanishTip}</p>
-      ) : (
-        <p className="text-sm text-fg-subtle italic">Sin consejo disponible para este sonido.</p>
-      )}
+      <p className="text-sm leading-relaxed text-fg-secondary">
+        {extra?.spanishTip ?? 'Sin consejo disponible para este sonido.'}
+      </p>
     </div>
   )
 }

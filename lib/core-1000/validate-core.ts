@@ -3,6 +3,7 @@
 // SIGNAL for manual review, silenced explicitly via
 // scripts/core-1000/data/ipa-exceptions.json, never auto-accepted.
 
+import { sentenceContainsLemma } from "@/lib/exercises/eligibility";
 import { lookupIpaFromCmu } from "@/lib/lexicon/ipa";
 import { WEAK_FORM_WHITELIST } from "./weak-forms";
 import type { CoreWord } from "./types";
@@ -30,6 +31,9 @@ export function normalizeIpaForCompare(ipa: string): string {
     .replace(/ʌ/g, "ə");
 }
 
+/** @deprecated Import from `@/lib/exercises/eligibility` — re-export for legacy importers. */
+export { sentenceContainsLemma as sentenceContainsWord } from "@/lib/exercises/eligibility";
+
 export function validateEntry(entry: CoreWord): ValidationIssue[] {
   const issues: ValidationIssue[] = [];
   const { rank, word } = entry;
@@ -49,8 +53,7 @@ export function validateEntry(entry: CoreWord): ValidationIssue[] {
     });
   }
 
-  const escaped = word.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  if (!new RegExp(`\\b${escaped}\\b`, "i").test(entry.example_sentence)) {
+  if (!sentenceContainsLemma(entry.example_sentence, word)) {
     issues.push({
       rank, word, kind: "sentence-missing-word",
       detail: `"${entry.example_sentence}" no contiene "${word}"`,

@@ -1,43 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import type { WordBankEntry } from '@/lib/word-bank/types'
 import type { Sound, SoundWord } from '@/lib/phoneme-practice/types'
-
-// ── Fixtures ─────────────────────────────────────────────────────────────────
-
-function makeEntry(overrides: Partial<WordBankEntry> = {}): WordBankEntry {
-  const id = overrides.id ?? crypto.randomUUID()
-  return {
-    id,
-    user_id: 'user-1',
-    text: overrides.text ?? `word-${id.slice(0, 4)}`,
-    meaning: 'a definition',
-    translation: null,
-    ipa: null,
-    // example must contain the word for fill_blank + reorder
-    example: overrides.example ?? `The ${overrides.text ?? `word-${id.slice(0, 4)}`} was interesting to read today.`,
-    synonyms: null,
-    image_prompt: null,
-    difficulty: 2,
-    srs_status: 'new',
-    ease_factor: 2.5,
-    interval_days: 1,
-    repetitions: 0,
-    next_review_at: null,
-    last_reviewed_at: null,
-    status: 'ready',
-    error_reason: null,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-    has_audio: false,
-    audio_url: null,
-    context: null,
-    audio_fetch_attempts: 0,
-    review_count: 0,
-    source: 'lexicon',
-    source_ref: null,
-    ...overrides,
-  }
-}
+import {
+  fillBlankExampleSentence,
+  makeLexiconWordBankEntry,
+} from '@/lib/exercises/__tests__/fixtures/word-bank-entry'
 
 function makeSound(id: number): Sound {
   return { id, ipa: `/ɪ${id}/`, example: 'sit', category: 'vowel', type: 'short', difficulty: 1 }
@@ -56,6 +23,11 @@ function makeSoundWord(id: number, soundId: number): SoundWord {
   }
 }
 
+vi.mock('@/lib/review/client-queries', () => ({
+  fetchRecentFailedSentences: vi.fn().mockResolvedValue([]),
+  fetchFailedSentenceWords: vi.fn().mockResolvedValue([]),
+}))
+
 // ── Module mocks ──────────────────────────────────────────────────────────────
 
 vi.mock('@/lib/word-bank/queries', async (importOriginal) => {
@@ -65,6 +37,7 @@ vi.mock('@/lib/word-bank/queries', async (importOriginal) => {
     getDueWordsForDaily: vi.fn(),
     getNewWordsForDaily: vi.fn(),
     getDueReviewWordsForDaily: vi.fn(),
+    getWeakWordsForReview: vi.fn(),
   }
 })
 
@@ -110,8 +83,10 @@ vi.mock('@/lib/core-1000/client-fetch', () => ({
 import {
   getDueWordsForDaily,
   getNewWordsForDaily,
+  getDueReviewWordsForDaily,
+  getWeakWordsForReview,
 } from '@/lib/word-bank/queries'
-import { getWeakestSoundByProgress } from '@/lib/sounds/queries'
+import { getWeakestSoundByProgress, getDueSoundsForReview } from '@/lib/sounds/queries'
 import {
   getAllSounds,
   getAllWords,
@@ -158,6 +133,9 @@ describe('buildDailyPlan', () => {
     vi.clearAllMocks()
     setupProgressMock(null)
     setupWordBankMock([], [])
+    vi.mocked(getDueReviewWordsForDaily).mockResolvedValue([])
+    vi.mocked(getWeakWordsForReview).mockResolvedValue([])
+    vi.mocked(getDueSoundsForReview).mockResolvedValue([])
     const { sounds, words } = seedCatalog()
     vi.mocked(getAllSounds).mockResolvedValue(sounds)
     vi.mocked(getAllWords).mockResolvedValue(words)
@@ -200,7 +178,7 @@ describe('buildDailyPlan', () => {
 
   it('incluye un paso de repaso de palabras cuando hay word_bank', async () => {
     const words = Array.from({ length: 6 }, (_, i) =>
-      makeEntry({ id: `w-${i}`, text: `word${i}`, example: `The word${i} appears clearly in each sentence today.` }),
+      makeLexiconWordBankEntry({ id: `w-${i}`, text: `word${i}`, example: fillBlankExampleSentence(`word${i}`) }),
     )
     setupWordBankMock(words, [])
 
@@ -211,7 +189,7 @@ describe('buildDailyPlan', () => {
 
   it('word_review incluye un ejercicio match_pairs cuando hay ≥4 palabras', async () => {
     const words = Array.from({ length: 6 }, (_, i) =>
-      makeEntry({ id: `w-${i}`, text: `word${i}`, example: `The word${i} appears clearly in each sentence today.` }),
+      makeLexiconWordBankEntry({ id: `w-${i}`, text: `word${i}`, example: fillBlankExampleSentence(`word${i}`) }),
     )
     setupWordBankMock(words, [])
 
@@ -248,7 +226,7 @@ describe('buildDailyPlan', () => {
 
   it('context_practice aparece cuando hay palabras con oraciones de ejemplo', async () => {
     const words = Array.from({ length: 4 }, (_, i) =>
-      makeEntry({ id: `w-${i}`, text: `word${i}`, example: `We saw word${i} in the sentence today.` }),
+      makeLexiconWordBankEntry({ id: `w-${i}`, text: `word${i}`, example: `We saw word${i} in the sentence today.` }),
     )
     setupWordBankMock(words, [])
 
@@ -289,7 +267,7 @@ describe('buildDailyPlan', () => {
 
   it('context_practice no aparece cuando ninguna palabra tiene oración de ejemplo', async () => {
     const words = Array.from({ length: 6 }, (_, i) =>
-      makeEntry({ id: `w-${i}`, text: `word${i}`, example: undefined }),
+      makeLexiconWordBankEntry({ id: `w-${i}`, text: `word${i}`, example: null }),
     )
     setupWordBankMock(words, [])
 

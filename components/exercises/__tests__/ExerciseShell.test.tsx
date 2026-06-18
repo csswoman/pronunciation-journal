@@ -5,7 +5,7 @@ import { ExerciseShell } from '../ExerciseShell'
 
 describe('ExerciseShell', () => {
   const baseProps = {
-    title: 'Listen and type',
+    title: 'Listen and type the sentence',
     result: null,
     onContinue: vi.fn(),
     onSkip: vi.fn(),
@@ -14,7 +14,7 @@ describe('ExerciseShell', () => {
 
   it('renders title eyebrow', () => {
     render(<ExerciseShell {...baseProps} />)
-    expect(screen.getByText('Listen and type')).toBeInTheDocument()
+    expect(screen.getByText('Listen and type the sentence')).toBeInTheDocument()
   })
 
   it('renders hint chip when hint provided', () => {

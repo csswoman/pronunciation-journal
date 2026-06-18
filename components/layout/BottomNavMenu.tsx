@@ -1,11 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { BookOpen, Layers, Radio, User } from "lucide-react";
+import { BookOpen, Layers, Radio, RotateCcw, User } from "lucide-react";
 import { useEffect } from "react";
 import { cn } from "@/lib/cn";
 
 const menuItems = [
+  { name: "Review", href: "/practice/review", icon: RotateCcw },
   { name: "Decks", href: "/practice/decks", icon: Layers },
   { name: "IPA Chart", href: "/ipa", icon: Radio },
   { name: "Courses", href: "/courses", icon: BookOpen },

@@ -7,6 +7,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useAuth } from '@/components/auth/AuthProvider'
 import { buildSession } from '@/lib/practice/engine'
 import { savePracticeAnswer } from '@/lib/practice/queries'
+import { buildSessionResult } from '@/lib/practice/session-result'
+import { recordActivitySession } from '@/lib/progress/activity-hub'
 import {
   createSession,
   deleteSession,
@@ -26,25 +28,7 @@ const FEEDBACK_MS = 1500
 
 type Phase = 'exercising' | 'feedback' | 'hints' | 'complete'
 
-function emptyBySlug(): SessionResult['bySlug'] {
-  // Cast empty object to the Record shape — entries are added on demand.
-  return {} as SessionResult['bySlug']
-}
-
-export function buildSessionResult(results: ExerciseResult[]): SessionResult {
-  const total = results.length
-  const correct = results.filter((r) => r.isCorrect).length
-  const accuracy = total > 0 ? Math.round((correct / total) * 100) : 0
-  const totalTimeMs = results.reduce((acc, r) => acc + r.timeMs, 0)
-  const bySlug = emptyBySlug()
-  for (const r of results) {
-    const entry = bySlug[r.slug] ?? { total: 0, correct: 0 }
-    entry.total += 1
-    if (r.isCorrect) entry.correct += 1
-    bySlug[r.slug] = entry
-  }
-  return { results, accuracy, totalTimeMs, bySlug }
-}
+export { buildSessionResult } from '@/lib/practice/session-result'
 
 export function useSessionState(config: PracticeConfig) {
   const { user } = useAuth()
@@ -118,13 +102,21 @@ export function useSessionState(config: PracticeConfig) {
   useEffect(() => {
     if (phase !== 'complete' || completedRef.current) return
     completedRef.current = true
-    onSessionComplete(buildSessionResult(results))
+    const sessionResult = buildSessionResult(results)
+    onSessionComplete(sessionResult)
+    if (user) {
+      void recordActivitySession(user.id, { practiceContext: context, sessionResult })
+        .then(() => import('@/lib/sync/sync-manager').then(({ flushOutbox }) => flushOutbox()))
+        .catch((err) => {
+          console.error('[PracticeSession] recordActivitySession failed', err)
+        })
+    }
     if (persistence) {
       void deleteSession(persistence.userId, persistence.soundId).catch((err) => {
         console.error('[PracticeSession] deleteSession failed', err)
       })
     }
-  }, [phase, results, onSessionComplete, persistence])
+  }, [phase, results, onSessionComplete, persistence, user, context])
 
   const handleSubmit = useCallback(
     (isCorrect: boolean, userAnswer: string) => {

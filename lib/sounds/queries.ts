@@ -1,5 +1,6 @@
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import type { Sound, UserContrastProgress } from "@/lib/phoneme-practice/types";
+import { rankWeakestSounds } from "@/lib/phoneme-practice/mastery-pct";
 
 export {
   getAllSounds,
@@ -27,39 +28,19 @@ export async function getUserContrastProgress(
   return (data ?? []) as UserContrastProgress[];
 }
 
-/** Sound with the weakest contrast accuracy for the user, or null when no progress. */
+/** Sound with the weakest dynamic mastery for the user, or null when no progress. */
 export async function getWeakestSoundByProgress(userId: string): Promise<Sound | null> {
+  const progress = await getUserContrastProgress(userId);
+  const weakest = rankWeakestSounds(progress, { minAttempts: 1, limit: 1 })[0];
+  if (!weakest) return null;
+
   const supabase = getSupabaseBrowserClient();
-
-  const { data, error } = await supabase
-    .from("user_contrast_progress")
-    .select("contrast_id, total_attempts, correct_answers")
-    .eq("user_id", userId)
-    .gt("total_attempts", 0);
-
-  if (error) return null;
-  if (!data || data.length === 0) return null;
-
-  const byIpa = new Map<string, { correct: number; total: number }>();
-  for (const r of data) {
-    for (const ipa of r.contrast_id.split("|")) {
-      const prev = byIpa.get(ipa) ?? { correct: 0, total: 0 };
-      byIpa.set(ipa, {
-        correct: prev.correct + r.correct_answers,
-        total: prev.total + r.total_attempts,
-      });
-    }
-  }
-
-  const weakestIpa = [...byIpa.entries()]
-    .sort((a, b) => a[1].correct / a[1].total - b[1].correct / b[1].total)[0]?.[0];
-
-  if (!weakestIpa) return null;
+  const ipaKey = `/${weakest.ipa}/`;
 
   const { data: soundRows } = await supabase
     .from("sounds")
     .select("id, ipa, example, category, type, difficulty")
-    .eq("ipa", weakestIpa)
+    .eq("ipa", ipaKey)
     .limit(1);
 
   return (soundRows?.[0] as Sound | undefined) ?? null;

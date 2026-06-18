@@ -1,9 +1,16 @@
 "use client";
 
-import { useCallback, useState, useMemo } from "react";
-import { WebSpeechAdapter } from "@/lib/speech/adapters/webSpeechAdapter";
+import { useCallback, useRef, useState, useMemo } from "react";
+import { WebSpeechAdapter, isWebSpeechReliable } from "@/lib/speech/adapters/webSpeechAdapter";
 import { GeminiAdapter } from "@/lib/speech/adapters/geminiAdapter";
 import type { SpeechInputResult, SpeechInputAdapter } from "@/lib/speech/types";
+
+// Browsers that report Chrome's UA but lack Google's speech backend key
+// (Brave, Edge, Arc, Opera, ...) fail every Web Speech attempt with this error,
+// regardless of connectivity. The error surfaces asynchronously (in stop()),
+// so we ALSO route these browsers to Gemini up front via isWebSpeechReliable().
+// This set remains as a defensive net for the start() path.
+const WEB_SPEECH_UNUSABLE_ERRORS = new Set(["network", "service-not-allowed"]);
 
 export type SpeechInputPreference = 'web-speech' | 'gemini' | 'auto';
 export type SpeechInputState = 'idle' | 'listening' | 'processing' | 'done' | 'error' | 'unsupported';
@@ -37,25 +44,36 @@ export function useSpeechInput({
   const [state, setState] = useState<SpeechInputState>('idle');
   const [result, setResult] = useState<SpeechInputResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  // Tracks whether we've already fallen back to Gemini for this hook instance,
+  // so we don't bounce back to a Web Speech adapter we know is unusable.
+  // Stored as state (not a ref) so the adapter is rebuilt on fallback.
+  const [usingGeminiFallback, setUsingGeminiFallback] = useState(false);
+
+  const canFallbackToGemini = prefer === 'auto' && !externalAdapter && !!getStream;
 
   const adapter = useMemo<SpeechInputAdapter>(() => {
     if (externalAdapter) return externalAdapter;
-    const web = new WebSpeechAdapter();
 
-    if (prefer === 'gemini') {
+    if (prefer === 'gemini' || usingGeminiFallback) {
       if (!getStream) throw new Error('useSpeechInput: getStream required for gemini adapter');
       return new GeminiAdapter(getStream);
     }
 
     if (prefer === 'web-speech') {
-      return web;
+      return new WebSpeechAdapter();
     }
 
-    // 'auto': prefer web-speech for quick phoneme exercises, fallback to gemini
-    if (web.isSupported()) return web;
+    // 'auto': use Web Speech only when it's both supported AND reliable in this
+    // browser. Brave/Edge/Arc/Opera support the API but fail with "network", so
+    // route them straight to Gemini instead of starting a doomed recognition.
+    const web = new WebSpeechAdapter();
+    if (web.isSupported() && isWebSpeechReliable()) return web;
     if (!getStream) throw new Error('useSpeechInput: getStream required when WebSpeech is unavailable');
     return new GeminiAdapter(getStream);
-  }, [externalAdapter, prefer, getStream]);
+  }, [externalAdapter, prefer, usingGeminiFallback, getStream]);
+
+  const adapterRef = useRef<SpeechInputAdapter>(adapter);
+  adapterRef.current = adapter;
 
   const isSupported = adapter.isSupported();
 
@@ -68,20 +86,44 @@ export function useSpeechInput({
       setState('listening');
       setError(null);
       setResult(null);
-      await adapter.start();
+      await adapterRef.current!.start();
     } catch (err) {
-      const e = err instanceof Error ? err : new Error('Failed to start');
+      const message = err instanceof Error ? err.message : 'Failed to start';
+
+      // Web Speech is unusable in this browser (e.g. Brave/Edge/Arc lack
+      // Google's key, so every attempt fails with "network"). Retry once
+      // immediately with Gemini instead of surfacing a dead-end error.
+      if (canFallbackToGemini && !usingGeminiFallback && WEB_SPEECH_UNUSABLE_ERRORS.has(message)) {
+        const gemini = new GeminiAdapter(getStream!);
+        adapterRef.current = gemini;
+        setUsingGeminiFallback(true);
+        try {
+          setState('listening');
+          setError(null);
+          setResult(null);
+          await gemini.start();
+          return;
+        } catch (fallbackErr) {
+          const fe = fallbackErr instanceof Error ? fallbackErr : new Error('Failed to start');
+          setError(fe.message);
+          setState('error');
+          onError?.(fe);
+          return;
+        }
+      }
+
+      const e = err instanceof Error ? err : new Error(message);
       setError(e.message);
       setState('error');
       onError?.(e);
     }
-  }, [adapter, isSupported, onError]);
+  }, [isSupported, canFallbackToGemini, usingGeminiFallback, getStream, onError]);
 
   const stop = useCallback(async () => {
     if (state !== 'listening') return;
     try {
       setState('processing');
-      const r = await adapter.stop();
+      const r = await adapterRef.current!.stop();
       setResult(r);
       setState('done');
       onResult?.(r);
@@ -91,13 +133,13 @@ export function useSpeechInput({
       setState('error');
       onError?.(e);
     }
-  }, [adapter, state, onResult, onError]);
+  }, [state, onResult, onError]);
 
   const abort = useCallback(() => {
-    adapter.abort();
+    adapterRef.current?.abort();
     setState('idle');
     setError(null);
-  }, [adapter]);
+  }, []);
 
   const reset = useCallback(() => {
     setState('idle');

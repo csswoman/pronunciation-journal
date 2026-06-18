@@ -66,6 +66,28 @@ describe('fromMixedExercise', () => {
     }
   })
 
+  it('preserves discrimination stimuli through the phoneme payload', () => {
+    const axData: Exercise = {
+      type: 'ax_same_different',
+      soundId: 7,
+      ipa: 'iː',
+      stimuli: [
+        { word: 'seat', ipa: 'iː' },
+        { word: 'sit', ipa: 'ɪ' },
+      ],
+      options: [
+        { id: 'same', label: 'Igual', isCorrect: false },
+        { id: 'diff', label: 'Diferente', isCorrect: true },
+      ],
+      correctIds: ['diff'],
+    }
+    const result = fromMixedExercise({ kind: 'phoneme', data: axData }, 'sound_lab')
+    expect(result.payload.kind).toBe('phoneme')
+    if (result.payload.kind === 'phoneme') {
+      expect(result.payload.stimuli).toEqual(axData.stimuli)
+    }
+  })
+
   it('produces a deterministic id (same inputs → same output)', () => {
     const a = fromMixedExercise({ kind: 'phoneme', data: phonemeData }, 'sound_lab')
     const b = fromMixedExercise({ kind: 'phoneme', data: phonemeData }, 'sound_lab')

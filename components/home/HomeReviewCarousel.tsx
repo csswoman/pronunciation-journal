@@ -83,10 +83,10 @@ export default function HomeReviewCarousel({
   if (reviewState.phase === "session") {
     const step = reviewState.steps[reviewState.stepIndex];
     return (
-      <div className="fixed inset-0 z-50 bg-[var(--surface-base)]">
+      <div className="fixed inset-0 z-50">
         <PracticeSession
           key={`${sessionKey}-${reviewState.stepIndex}`}
-          context="daily"
+          context="review"
           exercises={step.exercises}
           sessionLength={step.exercises.length}
           sessionLabel={step.title}

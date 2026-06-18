@@ -227,6 +227,54 @@
   width: 100%;
 }
 
+/* Two-column layout for short options (igual/diferente, A/B, word chips). */
+.pf-options--grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-3);
+}
+
+/* Audio stimulus button: square card with icon + label (A / X / 1…). */
+.pf-stim-btn {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  min-width: 5.5rem;
+  min-height: 5.5rem;
+  padding: var(--space-3);
+  border-radius: var(--radius-lg);
+  border: 2px solid var(--border-default);
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 1.125rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    border-color var(--transition-fast),
+    color var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.pf-stim-btn:hover:not(:disabled) {
+  border-color: var(--primary);
+  color: var(--primary);
+  transform: translateY(-1px);
+}
+
+.pf-stim-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+/* The unknown stimulus (X) in ABX — emphasised. */
+.pf-stim-btn--x {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: var(--selection-bg);
+}
+
 .pf-opt {
   display: flex;
   align-items: center;

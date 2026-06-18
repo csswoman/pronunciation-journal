@@ -57,4 +57,16 @@ describe("validateEntry", () => {
     });
     expect(issues.filter((i) => i.kind === "ipa-mismatch")).toEqual([]);
   });
+
+  it("accepts inflected example sentences via shared eligibility logic", () => {
+    const issues = validateEntry({
+      rank: 67,
+      word: "work",
+      pos: "verb",
+      ipa_strong: "/wɜːrk/",
+      example_sentence: "She works at a hospital downtown.",
+      cefr_level: "A1",
+    });
+    expect(issues.filter((i) => i.kind === "sentence-missing-word")).toEqual([]);
+  });
 });

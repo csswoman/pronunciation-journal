@@ -55,7 +55,7 @@ type View =
 
 export default function DailyChecklist({ conceptLesson, initialStepId }: DailyChecklistProps) {
   const router = useRouter()
-  const { status, steps, doneIds, completedCount, allDone, load, markDone, celebrate } = useDailyPlan({
+  const { status, steps, getStepStatus, completedCount, allDone, load, markDone, celebrate } = useDailyPlan({
     conceptLesson,
     autoLoad: true,
   })
@@ -194,7 +194,7 @@ export default function DailyChecklist({ conceptLesson, initialStepId }: DailyCh
 
       <DailyStepList
         steps={steps}
-        doneIds={doneIds}
+        getStepStatus={getStepStatus}
         onStartStep={handleStartStep}
         onMarkDone={markDone}
       />

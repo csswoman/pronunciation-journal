@@ -35,7 +35,7 @@ export default async function HomePage() {
   try {
     const [words, totalDue, sounds, lesson, concept, streak, lexicon, goal, weakSound] =
       await Promise.all([
-        getWordsDueForReview(REVIEW_PREVIEW_LIMIT),
+        userId ? getWordsDueForReview(userId, REVIEW_PREVIEW_LIMIT) : Promise.resolve([]),
         countWordsDueForReview(),
         userId ? getSoundsDueForHome(userId) : Promise.resolve([]),
         getTodaysMiniLesson(),
