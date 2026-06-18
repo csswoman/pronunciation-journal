@@ -2,6 +2,8 @@ import { getSupabaseBrowserClient } from '@/lib/supabase/client'
 import type { Json } from '@/lib/supabase/types'
 import { answerToGrade } from './grade'
 import { enqueueWordBankSRSUpdate } from '@/lib/word-bank/srs-queries'
+import { normalizeTopic } from '@/lib/practice/normalize-topic'
+import { enqueueTopicSRSUpdate } from '@/lib/practice/topic-srs-queries'
 import { markLessonComplete } from '@/lib/db'
 import { enqueue } from '@/lib/sync/sync-manager'
 import type {
@@ -73,6 +75,8 @@ export async function savePracticeAnswer(
     ? `${answer.sourceRef.source}:${answer.sourceRef.id}`
     : answer.contentId
 
+  const normalizedTopic = answer.topic ? normalizeTopic(answer.topic) : null
+
   const row = {
     user_id: userId,
     sound_id: answer.soundId ?? null,
@@ -84,6 +88,7 @@ export async function savePracticeAnswer(
     exercise_payload: (answer.exercisePayload ?? null) as Json | null,
     context: answer.context,
     content_id: contentId,
+    topic: normalizedTopic,
   }
 
   const grade = answerToGrade(answer)
@@ -95,6 +100,11 @@ export async function savePracticeAnswer(
   if (answer.sourceRef?.source === 'word_bank') {
     const wordId = answer.sourceRef.id
     await enqueueWordBankSRSUpdate(userId, wordId, grade)
+  }
+
+  // Enqueue SRS update for the concept (topic) when the exercise carries one.
+  if (normalizedTopic) {
+    await enqueueTopicSRSUpdate(userId, normalizedTopic, grade)
   }
 }
 
