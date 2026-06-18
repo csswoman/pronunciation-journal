@@ -138,6 +138,34 @@ export function ReviewHubClient({ summary }: Props) {
           ) : null}
         </ReviewSectionCard>
 
+        <ReviewSectionCard
+          title="Concepts due"
+          count={counts.dueTopics}
+          emptyMessage="No grammar concepts due today."
+        >
+          <ul className="flex flex-col gap-2">
+            {summary.dueTopics.slice(0, 4).map((t) => (
+              <li key={t.id} className="font-body-sm text-fg">
+                {t.topic}
+              </li>
+            ))}
+          </ul>
+        </ReviewSectionCard>
+
+        <ReviewSectionCard
+          title="Weak concepts"
+          count={counts.weakTopics}
+          emptyMessage="No concepts in learning."
+        >
+          <ul className="flex flex-col gap-2">
+            {summary.weakTopics.slice(0, 4).map((t) => (
+              <li key={t.id} className="font-body-sm text-fg">
+                {t.topic}
+              </li>
+            ))}
+          </ul>
+        </ReviewSectionCard>
+
         <SrsHistoryPanel groups={summary.srsHistory} />
 
         {state.phase === 'done' ? (
