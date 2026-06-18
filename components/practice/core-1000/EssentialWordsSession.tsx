@@ -1,26 +1,28 @@
 'use client'
 
 // Planned structure:
-// <Core1000Session>
+// <EssentialWordsSession>
 //   <DeckProgressHeader />
-//   <WordStudyCard />    — fase study (tarjetas nuevas)
-//   <SpeakReviewCard />  — fase speak
-//   <SessionDone />      — fases done / empty
-// </Core1000Session>
+//   <SessionProgressHud />   — New · Learning · Review live counters
+//   <WordStudyCard />        — phase: study (new cards)
+//   <SpeakReviewCard />      — phase: speak
+//   <SessionDone />          — phase: done / empty
+// </EssentialWordsSession>
 
-import { useCore1000Session } from '@/hooks/useCore1000Session'
+import { useEssentialWordsSession } from '@/hooks/useEssentialWordsSession'
 import { useLoadingWords } from '@/hooks/useLoadingWords'
 import { DeckProgressHeader } from './DeckProgressHeader'
+import { SessionProgressHud } from './SessionProgressHud'
 import { WordStudyCard } from './WordStudyCard'
 import { SpeakReviewCard } from './SpeakReviewCard'
 import { SessionDone } from './SessionDone'
 import { WordCarousel } from '@/components/practice/session/WordCarousel'
 
-export function Core1000Session() {
+export function EssentialWordsSession() {
   const {
-    phase, current, position, queueLength, stats, sessionSummary,
-    reloadLoading, startSpeak, submitGrade, reload,
-  } = useCore1000Session()
+    phase, current, stats, counts, sessionSummary,
+    reloadLoading, startSpeak, submitGrade, reload, learnMore, archiveWord,
+  } = useEssentialWordsSession()
   const loadingWords = useLoadingWords()
 
   if (phase === 'loading') {
@@ -39,6 +41,7 @@ export function Core1000Session() {
         wasEmpty={phase === 'empty'}
         onContinue={reload}
         continueLoading={reloadLoading}
+        onLearnMore={phase === 'done' ? learnMore : undefined}
       />
     )
   }
@@ -46,14 +49,20 @@ export function Core1000Session() {
   return (
     <div className="flex flex-col items-center gap-6">
       <DeckProgressHeader stats={stats} />
-      <p className="text-tiny uppercase tracking-[0.12em] text-[var(--text-tertiary)] m-0">
-        {position} / {queueLength}
-      </p>
+      <SessionProgressHud counts={counts} />
       {phase === 'study' && current && (
-        <WordStudyCard entry={current.entry} onContinue={startSpeak} />
+        <WordStudyCard
+          entry={current.entry}
+          onContinue={startSpeak}
+          onArchive={() => void archiveWord(current.entry.word)}
+        />
       )}
       {phase === 'speak' && current && (
-        <SpeakReviewCard entry={current.entry} onGraded={submitGrade} />
+        <SpeakReviewCard
+          entry={current.entry}
+          onGraded={submitGrade}
+          onArchive={() => void archiveWord(current.entry.word)}
+        />
       )}
     </div>
   )

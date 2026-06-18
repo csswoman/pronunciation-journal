@@ -100,6 +100,8 @@ export interface SRSData {
   repetitions: number; // consecutive correct answers
   nextReview: string; // ISO date string
   lastReview?: string;
+  archived?: boolean;
+  archivedAt?: string; // ISO
 }
 
 // ── Attempt / Progress Types ──

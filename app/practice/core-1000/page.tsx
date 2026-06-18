@@ -1,5 +1,5 @@
 import PageLayout from '@/components/layout/PageLayout'
-import { Core1000Session } from '@/components/practice/core-1000/Core1000Session'
+import { EssentialWordsSession } from '@/components/practice/core-1000/EssentialWordsSession'
 
 export const metadata = { title: 'Essential Words' }
 
@@ -15,7 +15,7 @@ export default function Core1000Page() {
             Essential Words
           </h1>
         </header>
-        <Core1000Session />
+        <EssentialWordsSession />
       </div>
     </PageLayout>
   )

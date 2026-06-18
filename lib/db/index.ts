@@ -245,9 +245,35 @@ export async function updateDailyProgress(
 
 const CORE1000_SRS_PREFIX = "c1k:";
 
-/** Todas las entradas SRS del Core 1000 (scan; ~1000 filas máx, aceptable). */
+/** Todas las entradas SRS del Core 1000, excluyendo archivadas. */
 export async function getCore1000SrsEntries(): Promise<SRSData[]> {
-  return db.srsData.filter((e) => e.wordId.startsWith(CORE1000_SRS_PREFIX)).toArray();
+  return db.srsData
+    .filter((e) => e.wordId.startsWith(CORE1000_SRS_PREFIX) && !e.archived)
+    .toArray();
+}
+
+/** Archiva una palabra del Core 1000 — la saca del flujo de repaso (reversible). */
+export async function archiveCore1000Word(word: string): Promise<void> {
+  const normalized = word.toLowerCase();
+  const wordId = `${CORE1000_SRS_PREFIX}${normalized}`;
+  const existing = (await db.srsData.get(wordId)) ?? {
+    wordId,
+    word: normalized,
+    ease: 2.5,
+    interval: 0,
+    repetitions: 0,
+    nextReview: new Date().toISOString(),
+  };
+  await db.srsData.put({ ...existing, archived: true, archivedAt: new Date().toISOString() });
+}
+
+/** Revierte el archivado de una palabra del Core 1000. */
+export async function unarchiveCore1000Word(word: string): Promise<void> {
+  const wordId = `${CORE1000_SRS_PREFIX}${word.toLowerCase()}`;
+  const existing = await db.srsData.get(wordId);
+  if (!existing) return;
+  const { archived: _a, archivedAt: _b, ...rest } = existing;
+  await db.srsData.put(rest);
 }
 
 /** Palabras del Core 1000 introducidas hoy (para el cupo de nuevas). */

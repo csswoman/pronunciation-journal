@@ -23,6 +23,7 @@ const dbMocks = vi.hoisted(() => ({
   getCore1000SrsEntries: vi.fn(async (): Promise<never[]> => []),
   getCore1000IntroducedToday: vi.fn(async (): Promise<string[]> => []),
   recordCore1000Introduction: vi.fn(async () => undefined),
+  archiveCore1000Word: vi.fn(async () => undefined),
   getSRSData: vi.fn(async () => undefined),
   saveSRSData: vi.fn(async () => undefined),
   saveAttempt: vi.fn(async () => undefined),
@@ -61,16 +62,16 @@ vi.mock('@/hooks/useSpeechInput', () => ({
   }),
 }))
 
-import { Core1000Session } from '../Core1000Session'
+import { EssentialWordsSession } from '../EssentialWordsSession'
 
 beforeEach(() => {
   vi.clearAllMocks()
 })
 
-describe('Core1000Session', () => {
+describe('EssentialWordsSession', () => {
   it('introduces a new card as study first, then speak with self-grade fallback', async () => {
     const user = userEvent.setup()
-    render(<Core1000Session />)
+    render(<EssentialWordsSession />)
 
     await screen.findByRole('heading', { name: 'the' })
     expect(screen.getByText('/ðʌ/')).toBeTruthy()
@@ -90,7 +91,7 @@ describe('Core1000Session', () => {
     dbMocks.getCore1000IntroducedToday.mockResolvedValue(
       Array.from({ length: 10 }, (_, i) => `w${i}`)
     )
-    render(<Core1000Session />)
+    render(<EssentialWordsSession />)
     expect(await screen.findByText('Nada pendiente por hoy')).toBeTruthy()
     expect(screen.getByRole('link', { name: 'Ver mi progreso' })).toBeTruthy()
     expect(screen.getByRole('link', { name: 'Ir al plan de hoy' })).toBeTruthy()
