@@ -60,6 +60,7 @@ export function ExerciseShell({
       {hint && <HintChip word={hint.word} meaning={hint.meaning} />}
       {children}
       {done && <FeedbackBanner isCorrect={result.isCorrect} />}
+      {done && <ContinueButton onContinue={onContinue} />}
       {!done && <SkipButton onSkip={onSkip} />}
     </div>
   )
