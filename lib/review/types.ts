@@ -16,11 +16,23 @@ export interface FailedSentenceItem {
   failedAt: string
 }
 
+export interface TopicSrsRow {
+  id: string
+  topic: string
+  interval_days: number
+  next_review_at: string | null
+  srs_status: 'new' | 'learning' | 'review' | 'mastered'
+  ease_factor: number
+  last_reviewed_at: string | null
+}
+
 export interface ReviewHubCounts {
   failedSentences: number
   weakWords: number
   dueWords: number
   soundsDue: number
+  dueTopics: number
+  weakTopics: number
   /** Items that can start a review session (excludes display-only failures). */
   reviewable: number
   total: number
@@ -31,6 +43,8 @@ export interface ReviewHubSummary {
   weakWords: WordBankEntry[]
   dueWords: WordBankEntry[]
   soundsDue: SoundDueHome[]
+  dueTopics: TopicSrsRow[]
+  weakTopics: TopicSrsRow[]
   counts: ReviewHubCounts
   /** No sections with items to show. */
   nothingDue: boolean
@@ -39,7 +53,7 @@ export interface ReviewHubSummary {
   srsHistory: SrsHistoryGroup[]
 }
 
-export type SrsHistoryDomain = 'words' | 'sounds' | 'sentences'
+export type SrsHistoryDomain = 'words' | 'sounds' | 'sentences' | 'topics'
 
 export interface SrsHistoryItem {
   id: string
