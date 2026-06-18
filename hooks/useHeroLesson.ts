@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { getAttemptsByLessonId, getRecentAttempts } from '@/lib/db'
+import { ipaFromLessonTitle } from '@/lib/sound-lab/display'
 import type { Lesson } from '@/lib/types'
 
 interface HeroLessonState {
@@ -23,26 +24,25 @@ export function useHeroLesson(
       if (latestAttempt) {
         const lesson = allLessons.find((e) => e.id === latestAttempt.lessonId) ?? null
         if (lesson) {
-          const lessonAttempts = await getAttemptsByLessonId(lesson.id)
-          const progressValue =
-            lesson.words.length === 0
-              ? lessonAttempts.length > 0
-                ? 100
-                : 0
-              : Math.round(
-                  (new Set(lessonAttempts.map((a) => a.word.toLowerCase())).size /
-                    lesson.words.length) *
-                    100
-                )
+          const soundProgress = lesson.id.startsWith('sound-')
+            ? (soundProgressMap.get(ipaFromLessonTitle(lesson.title) ?? '') ?? 0)
+            : await getAttemptsByLessonId(lesson.id).then((attempts) =>
+                lesson.words.length === 0
+                  ? attempts.length > 0 ? 100 : 0
+                  : Math.round(
+                      (new Set(attempts.map((a) => a.word.toLowerCase())).size /
+                        lesson.words.length) * 100
+                    )
+              )
           if (!isMounted) return
-          setHeroLesson({ lesson, progress: Math.max(0, Math.min(100, progressValue)) })
+          setHeroLesson({ lesson, progress: Math.max(0, Math.min(100, soundProgress)) })
           return
         }
       }
 
       const fallback = allLessons[0] ?? null
       const fallbackProgress = fallback?.id.startsWith('sound-')
-        ? (soundProgressMap.get(Number(fallback.id.replace('sound-', ''))) ?? 0)
+        ? (soundProgressMap.get(ipaFromLessonTitle(fallback.title) ?? '') ?? 0)
         : 0
       if (!isMounted) return
       setHeroLesson({ lesson: fallback, progress: fallbackProgress })
