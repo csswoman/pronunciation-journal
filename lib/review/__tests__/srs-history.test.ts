@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { normalizeWordRow, normalizeSoundRow, normalizeSentenceRow } from '@/lib/review/srs-history-queries'
+import { normalizeWordRow, normalizeSoundRow, normalizeSentenceRow, normalizeTopicRow } from '@/lib/review/srs-history-queries'
 
 describe('normalizeWordRow', () => {
   it('builds a SrsHistoryItem from a word_bank row', () => {
@@ -92,5 +92,38 @@ describe('normalizeSentenceRow', () => {
       user_answer: null,
     }
     expect(normalizeSentenceRow(row)).toBeNull()
+  })
+})
+
+describe('normalizeTopicRow', () => {
+  it('maps a topic_srs row into the unified SrsHistoryItem shape', () => {
+    const item = normalizeTopicRow({
+      id: 'row-1',
+      topic: 'grammar:present simple',
+      interval_days: 4,
+      next_review_at: '2026-06-20T00:00:00.000Z',
+      last_reviewed_at: '2026-06-16T00:00:00.000Z',
+    })
+    expect(item).toEqual({
+      id: 'topics:row-1',
+      domain: 'topics',
+      label: 'grammar:present simple',
+      sublabel: undefined,
+      intervalDays: 4,
+      nextReviewAt: '2026-06-20T00:00:00.000Z',
+      lastPracticedAt: '2026-06-16T00:00:00.000Z',
+    })
+  })
+
+  it('falls back to epoch when last_reviewed_at is null', () => {
+    const item = normalizeTopicRow({
+      id: 'row-2',
+      topic: 'vocab:business',
+      interval_days: 1,
+      next_review_at: null,
+      last_reviewed_at: null,
+    })
+    expect(item.lastPracticedAt).toBe(new Date(0).toISOString())
+    expect(item.nextReviewAt).toBeNull()
   })
 })

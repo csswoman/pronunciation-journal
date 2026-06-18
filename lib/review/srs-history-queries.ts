@@ -29,6 +29,14 @@ type SentenceRow = {
   user_answer: string | null
 }
 
+type TopicHistoryRow = {
+  id: string
+  topic: string
+  interval_days: number
+  next_review_at: string | null
+  last_reviewed_at: string | null
+}
+
 // --- Normalization helpers (exported for unit tests) ---
 
 export function normalizeWordRow(row: WordRow): SrsHistoryItem {
@@ -69,6 +77,18 @@ export function normalizeSentenceRow(row: SentenceRow): SrsHistoryItem | null {
     intervalDays: 0, // sentences don't have SRS intervals yet
     nextReviewAt: null,
     lastPracticedAt: row.answered_at ?? new Date(0).toISOString(),
+  }
+}
+
+export function normalizeTopicRow(row: TopicHistoryRow): SrsHistoryItem {
+  return {
+    id: `topics:${row.id}`,
+    domain: 'topics',
+    label: row.topic,
+    sublabel: undefined,
+    intervalDays: row.interval_days,
+    nextReviewAt: row.next_review_at,
+    lastPracticedAt: row.last_reviewed_at ?? new Date(0).toISOString(),
   }
 }
 
@@ -149,21 +169,38 @@ async function fetchSentenceHistory(
   return items
 }
 
+async function fetchTopicHistory(
+  supabase: SupabaseClient,
+  userId: string,
+  limit: number,
+): Promise<SrsHistoryItem[]> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- topic_srs not yet in generated Supabase types
+  const { data } = await (supabase as any)
+    .from('topic_srs')
+    .select('id, topic, interval_days, next_review_at, last_reviewed_at')
+    .eq('user_id', userId)
+    .order('next_review_at', { ascending: true, nullsFirst: false })
+    .limit(limit)
+  return (data ?? []).map(normalizeTopicRow)
+}
+
 export async function getSrsHistory(
   supabase: SupabaseClient,
   userId: string,
 ): Promise<SrsHistoryGroup[]> {
   const LIMIT = 20
-  const [words, sounds, sentences] = await Promise.all([
+  const [words, sounds, sentences, topics] = await Promise.all([
     fetchWordHistory(supabase, userId, LIMIT),
     fetchSoundHistory(supabase, userId, LIMIT),
     fetchSentenceHistory(supabase, userId, LIMIT),
+    fetchTopicHistory(supabase, userId, LIMIT),
   ])
 
   const groups: SrsHistoryGroup[] = []
   if (words.length > 0) groups.push({ domain: 'words', title: 'Words', items: words })
   if (sounds.length > 0) groups.push({ domain: 'sounds', title: 'Sounds', items: sounds })
   if (sentences.length > 0) groups.push({ domain: 'sentences', title: 'Failed sentences', items: sentences })
+  if (topics.length > 0) groups.push({ domain: 'topics', title: 'Concepts', items: topics })
 
   return groups
 }
