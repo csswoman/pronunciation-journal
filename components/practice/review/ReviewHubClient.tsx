@@ -38,9 +38,9 @@ export function ReviewHubClient({ summary }: Props) {
 
       <div className="flex flex-col gap-4">
         <ReviewSectionCard
-          title="Frases falladas"
+          title="Failed sentences"
           count={counts.failedSentences}
-          emptyMessage="Sin errores recientes en dictados u oraciones."
+          emptyMessage="No recent errors in dictations or sentences."
         >
           <ul className="flex flex-col gap-2">
             {summary.failedSentences.slice(0, 4).map((item) => (
@@ -52,7 +52,7 @@ export function ReviewHubClient({ summary }: Props) {
                   <span className="text-fg">{item.label}</span>
                   <span className="ml-2 font-caption text-fg-muted">{item.typeLabel}</span>
                   {!item.drillable ? (
-                    <span className="ml-2 font-caption text-fg-subtle">· solo historial</span>
+                    <span className="ml-2 font-caption text-fg-subtle">· history only</span>
                   ) : null}
                 </div>
                 {item.drillable && state.phase !== 'loading' ? (
@@ -63,7 +63,7 @@ export function ReviewHubClient({ summary }: Props) {
                     className="shrink-0 text-primary"
                     onClick={() => startFailedItem(item)}
                   >
-                    Practicar
+                    Practice
                   </Button>
                 ) : null}
               </li>
@@ -72,9 +72,9 @@ export function ReviewHubClient({ summary }: Props) {
         </ReviewSectionCard>
 
         <ReviewSectionCard
-          title="Palabras débiles"
+          title="Weak words"
           count={counts.weakWords}
-          emptyMessage="No hay palabras en learning — buen trabajo."
+          emptyMessage="No words in learning — great job."
         >
           <ul className="flex flex-col gap-3">
             {summary.weakWords.slice(0, 4).map((w) => (
@@ -92,9 +92,9 @@ export function ReviewHubClient({ summary }: Props) {
         </ReviewSectionCard>
 
         <ReviewSectionCard
-          title="SRS pendiente"
+          title="Vocabulary due"
           count={counts.dueWords}
-          emptyMessage="Ninguna palabra vence hoy."
+          emptyMessage="No words due today."
         >
           <ul className="flex flex-col gap-2">
             {summary.dueWords.slice(0, 4).map((w) => (
@@ -108,15 +108,15 @@ export function ReviewHubClient({ summary }: Props) {
           </ul>
           {counts.dueWords > 0 ? (
             <Link href="/words" className="font-caption text-primary hover:opacity-80">
-              Ver léxico →
+              View lexicon →
             </Link>
           ) : null}
         </ReviewSectionCard>
 
         <ReviewSectionCard
-          title="Sonidos due"
+          title="Sounds due"
           count={counts.soundsDue}
-          emptyMessage="Ningún contraste fonémico vence hoy."
+          emptyMessage="No phoneme contrasts due today."
         >
           <ul className="flex flex-col gap-2">
             {summary.soundsDue.slice(0, 4).map((s) => (
@@ -142,11 +142,11 @@ export function ReviewHubClient({ summary }: Props) {
 
         {state.phase === 'done' ? (
           <div className="rounded-[var(--radius-md)] bg-[var(--success-soft)] px-4 py-3 text-center font-body-sm text-fg-secondary">
-            Repaso completo. Vuelve mañana o sigue practicando en el plan diario.
+            Review complete. Come back tomorrow or keep practicing in your daily plan.
           </div>
         ) : state.phase === 'loading' ? (
           <Button type="button" variant="primary" size="md" fullWidth disabled>
-            Preparando…
+            Loading…
           </Button>
         ) : canStart ? (
           <Button
@@ -158,7 +158,7 @@ export function ReviewHubClient({ summary }: Props) {
             iconPosition="right"
             onClick={startReview}
           >
-            Iniciar repaso completo
+            Start full review
           </Button>
         ) : state.phase === 'idle' ? (
           <Link
@@ -169,20 +169,20 @@ export function ReviewHubClient({ summary }: Props) {
               'bg-[var(--cta-bg)] text-[var(--cta-fg)] hover:bg-[var(--cta-bg-hover)]',
             )}
           >
-            Ir a practicar
+            Go practice
             <ArrowRight size={15} aria-hidden />
           </Link>
         ) : null}
 
         {state.phase === 'error' ? (
-          <p className="font-caption text-center text-error">No se pudo cargar el repaso.</p>
+          <p className="font-caption text-center text-error">Could not load review session.</p>
         ) : null}
 
         {!summary.canStartReview && state.phase === 'idle' ? (
           <p className="font-body-sm text-center text-fg-muted">
             {counts.failedSentences > 0 && counts.reviewable === 0
-              ? 'Tienes errores recientes en el historial, pero nada listo para repasar hoy. Sigue con el plan diario.'
-              : 'Nada pendiente ahora. Practica en el plan diario para generar nuevos ítems.'}
+              ? 'You have recent errors in your history, but nothing ready to review today. Keep going with your daily plan.'
+              : 'Nothing pending right now. Practice in your daily plan to generate new items.'}
           </p>
         ) : null}
       </div>
