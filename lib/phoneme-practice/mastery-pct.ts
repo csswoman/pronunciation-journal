@@ -19,17 +19,35 @@ export function sessionAccuracyPct(results: ScorableResult[]): number {
 }
 
 /**
- * EMA with temporal decay.
- * Example: 100% mastery, 7 days later 80% session → ~93% mastery.
+ * Sessions needed before mastery_pct can reach 100%.
+ * Matches MIN_ATTEMPTS in mastery.ts — keep in sync.
+ */
+export const MASTERY_MIN_SESSIONS = 10
+
+/**
+ * EMA with temporal decay, scaled by repetition count.
+ *
+ * Repetition scaling: mastery grows gradually as sessions accumulate.
+ * sqrt(n / MIN_SESSIONS) gives a concave curve so early sessions feel
+ * meaningful but the score can't hit 85%+ without enough repetitions.
+ *
+ * Examples at 80% accuracy:
+ *   session 1  → ~25%
+ *   session 3  → ~44%
+ *   session 5  → ~57%
+ *   session 10 → ~80%
  */
 export function computeNextMasteryPct(
   oldMastery: number,
   sessionAccuracy: number,
   lastSeen: string | null,
+  totalSessionsAfter: number,
   now: Date = new Date(),
 ): number {
+  const repScale = Math.sqrt(Math.min(totalSessionsAfter, MASTERY_MIN_SESSIONS) / MASTERY_MIN_SESSIONS)
+
   if (lastSeen == null && oldMastery <= 0) {
-    return Math.round(Math.min(100, Math.max(0, sessionAccuracy)))
+    return Math.round(Math.min(100, Math.max(0, sessionAccuracy * repScale)))
   }
 
   const last = lastSeen ? new Date(lastSeen) : now
@@ -37,8 +55,8 @@ export function computeNextMasteryPct(
   const decayFactor = Math.exp(-daysSince / MASTERY_HALF_LIFE_DAYS)
   const sessionWeight = 1 - decayFactor
 
-  const next = oldMastery * decayFactor + sessionAccuracy * sessionWeight
-  return Math.round(Math.min(100, Math.max(0, next)))
+  const ema = oldMastery * decayFactor + sessionAccuracy * sessionWeight
+  return Math.round(Math.min(100, Math.max(0, ema * repScale)))
 }
 
 /** Strip leading/trailing slashes for display keys. */

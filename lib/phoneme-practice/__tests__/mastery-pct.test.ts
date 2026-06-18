@@ -19,21 +19,32 @@ describe('sessionAccuracyPct', () => {
 })
 
 describe('computeNextMasteryPct', () => {
-  it('sets first session to session accuracy', () => {
-    expect(computeNextMasteryPct(0, 80, null)).toBe(80)
+  it('first session scales accuracy by rep factor (~25% at 80% accuracy)', () => {
+    // session 1 of 10: sqrt(1/10) ≈ 0.316 → 80 * 0.316 ≈ 25
+    const result = computeNextMasteryPct(0, 80, null, 1)
+    expect(result).toBeGreaterThanOrEqual(24)
+    expect(result).toBeLessThanOrEqual(26)
+  })
+
+  it('reaches ~80% after 10 sessions at 80% accuracy', () => {
+    const result = computeNextMasteryPct(0, 80, null, 10)
+    expect(result).toBeGreaterThanOrEqual(75)
+    expect(result).toBeLessThanOrEqual(85)
   })
 
   it('decays toward a weaker session after ~7 days', () => {
     const lastSeen = new Date('2026-06-01T12:00:00Z')
     const now = new Date('2026-06-08T12:00:00Z')
-    const next = computeNextMasteryPct(100, 80, lastSeen.toISOString(), now)
-    expect(next).toBeGreaterThanOrEqual(90)
-    expect(next).toBeLessThanOrEqual(95)
+    // 10 sessions accumulated, repScale = 1; decayFactor ≈ 0.65 → ema ≈ 93
+    const next = computeNextMasteryPct(100, 80, lastSeen.toISOString(), 10, now)
+    expect(next).toBeGreaterThanOrEqual(88)
+    expect(next).toBeLessThanOrEqual(96)
   })
 
   it('barely moves on same-day re-practice', () => {
     const now = new Date('2026-06-08T12:00:00Z')
-    const next = computeNextMasteryPct(100, 60, now.toISOString(), now)
+    // 10 sessions, repScale = 1
+    const next = computeNextMasteryPct(100, 60, now.toISOString(), 10, now)
     expect(next).toBeGreaterThanOrEqual(95)
   })
 })

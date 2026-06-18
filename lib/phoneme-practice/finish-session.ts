@@ -2,6 +2,7 @@ import {
   updateContrastProgress,
   getContrastProgress,
 } from './queries'
+import { flushOutbox } from '@/lib/sync/sync-manager'
 import { updateSR } from './sr'
 import { isContrastMastered } from './mastery'
 import { computeNextMasteryPct, sessionAccuracyPct } from './mastery-pct'
@@ -67,14 +68,20 @@ export async function finishContrastSession(
   const sr: SRResult  = updateSR(base, sessionPassed)
 
   const sessionAccuracy = sessionAccuracyPct(result.results)
+  // Estimate sessions completed including this one. total_attempts grows by
+  // `total` each session, so dividing gives approximate session count.
+  const sessionSize = total > 0 ? total : 10
+  const totalSessionsAfter = Math.ceil((base.total_attempts + total) / sessionSize)
   const masteryPct = computeNextMasteryPct(
     base.mastery_pct ?? 0,
     sessionAccuracy,
     base.last_seen,
+    totalSessionsAfter,
     now,
   )
 
   await updateContrastProgress(userId, contrastId, correct, total, sr, masteryPct)
+  await flushOutbox()
 
   const updated: UserContrastProgress = {
     ...base,
