@@ -10,15 +10,16 @@
 import Link from 'next/link'
 import Button from '@/components/ui/Button'
 import { cn } from '@/lib/cn'
-import type { Core1000SessionSummary, Core1000Stats } from '@/hooks/useCore1000Session'
+import type { EssentialWordsSessionSummary, EssentialWordsStats } from '@/hooks/useEssentialWordsSession'
 
 interface Props {
-  stats: Core1000Stats
-  sessionSummary?: Core1000SessionSummary | null
+  stats: EssentialWordsStats
+  sessionSummary?: EssentialWordsSessionSummary | null
   /** true cuando la cola estaba vacía desde el inicio */
   wasEmpty?: boolean
   onContinue?: () => void
   continueLoading?: boolean
+  onLearnMore?: () => void
 }
 
 const linkActionClass = cn(
@@ -32,6 +33,7 @@ export function SessionDone({
   wasEmpty,
   onContinue,
   continueLoading,
+  onLearnMore,
 }: Props) {
   const practiced = sessionSummary?.practiced ?? 0
   const accuracy =
@@ -64,6 +66,17 @@ export function SessionDone({
       </div>
 
       <div className="flex w-full max-w-sm flex-col gap-2.5">
+        {onLearnMore ? (
+          <Button
+            type="button"
+            variant="secondary"
+            size="md"
+            fullWidth
+            onClick={onLearnMore}
+          >
+            Aprender 10 nuevas más
+          </Button>
+        ) : null}
         {onContinue ? (
           <Button
             type="button"

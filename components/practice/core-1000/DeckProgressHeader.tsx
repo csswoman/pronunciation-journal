@@ -3,7 +3,7 @@
 //   <Stat × 3 />   — aprendidas x/1000 · vencidas hoy · nuevas hoy x/cupo
 // </DeckProgressHeader>
 
-import type { Core1000Stats } from '@/hooks/useCore1000Session'
+import type { EssentialWordsStats } from '@/hooks/useEssentialWordsSession'
 
 function Stat({ label, value }: { label: string; value: string }) {
   return (
@@ -14,7 +14,7 @@ function Stat({ label, value }: { label: string; value: string }) {
   )
 }
 
-export function DeckProgressHeader({ stats }: { stats: Core1000Stats }) {
+export function DeckProgressHeader({ stats }: { stats: EssentialWordsStats }) {
   return (
     <div className="flex w-full max-w-md items-center justify-around border-b border-[var(--border-subtle)] pb-4">
       <Stat label="Aprendidas" value={`${stats.learned}/${stats.totalWords}`} />
