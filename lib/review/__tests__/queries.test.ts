@@ -8,8 +8,13 @@ import { parseWordBankId, humanizeSlug, connectedSpeechDeckTitle } from '@/lib/r
 import { mergeReviewWords } from '@/lib/review/merge-words'
 
 describe('parseWordBankId', () => {
-  it('extracts id from prefixed content_id', () => {
-    expect(parseWordBankId('word_bank:abc-123')).toBe('abc-123')
+  it('extracts id from prefixed content_id when id is a valid UUID', () => {
+    const uuid = '550e8400-e29b-41d4-a716-446655440000'
+    expect(parseWordBankId(`word_bank:${uuid}`)).toBe(uuid)
+  })
+
+  it('returns null for prefixed content_id with non-UUID id', () => {
+    expect(parseWordBankId('word_bank:test-gallery')).toBeNull()
   })
 
   it('accepts bare uuid', () => {
@@ -43,7 +48,7 @@ describe('rowsToFailedItems', () => {
       5,
     )
     expect(items[0]?.label).toBe('Habla conectada · Assimilation')
-    expect(items[0]?.typeLabel).toBe('Dictado')
+    expect(items[0]?.typeLabel).toBe('Dictation')
     expect(items[0]?.drillable).toBe(true)
   })
 
