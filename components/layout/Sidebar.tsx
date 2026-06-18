@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 import { PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import { useUserRole } from "@/hooks/useUserRole";
 import SidebarFooter from "./SidebarFooter";
-import { NavSection, NavLink, coreNav, learningNav, trackingNav, adminNav } from "../theme/sidebar/index";
+import { NavSection, NavLink, coreNav, practiceNav, learnNav, referenceNav, trackingNav, adminNav } from "../theme/sidebar/index";
 import { SidebarContext } from "../theme/sidebar/SidebarContext";
 
 interface SidebarProps {
@@ -65,7 +65,9 @@ export default function Sidebar({ className = "" }: SidebarProps) {
             ))}
           </div>
 
-          <NavSection section={learningNav} isActive={isActive} />
+          <NavSection section={practiceNav} isActive={isActive} />
+          <NavSection section={learnNav} isActive={isActive} />
+          <NavSection section={referenceNav} isActive={isActive} />
           <NavSection section={trackingNav} isActive={isActive} />
 
           {isPremium && (
