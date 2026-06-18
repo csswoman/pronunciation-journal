@@ -42,7 +42,7 @@ async function loadFailedSentenceItemsServer(
   }
 
   const contentIds = [...latestFailAt.keys()]
-  let redeemedIds = new Set<string>()
+  const redeemedIds = new Set<string>()
 
   if (contentIds.length > 0) {
     const { data: successes } = await supabase
