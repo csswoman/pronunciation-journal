@@ -1,6 +1,13 @@
 # Sistemas SRS — English Journal
 
-Dos sistemas de repetición espaciada conviven en la app. Cada uno tiene un dominio distinto y no se solapan.
+Cuatro sistemas de repetición espaciada conviven en la app. Cada uno tiene un dominio distinto y no se solapan.
+
+| Sistema | Almacenamiento | Algoritmo | Clave |
+| --- | --- | --- | --- |
+| Vocabulario user-owned | `word_bank` (Supabase ⇄ Dexie) | SM-2 cliente | `id` (uuid) |
+| Fonemas | `user_sound_progress` (Supabase) | SM-2 simplificado | `sound_id` |
+| Essential Words (Core 1000) | `srsData` (Dexie, offline-first) | SM-2 cliente | `c1k:<word>` |
+| Temas / conceptos del curso | `topic_srs` (Supabase) | SM-2 cliente | `normalizeTopic()` |
 
 ---
 
@@ -46,6 +53,49 @@ Dos sistemas de repetición espaciada conviven en la app. Cada uno tiene un domi
 | `last_practiced_at` | Última vez practicado |
 
 **Queries:** `lib/practice/queries.ts`
+
+---
+
+## 3. `srsData` (`c1k:`) — Essential Words / Core 1000
+
+**Propósito:** Repaso espaciado tipo Anki sobre las ~2800 palabras de alta frecuencia (NGSL). Sustituye al antiguo `Core1000Session`, que reiniciaba siempre desde la primera palabra sin persistir progreso.
+
+**Tabla:** `srsData` (Dexie, IndexedDB) — offline-first, sin sincronización a Supabase. Las entradas de Core 1000 se distinguen por el prefijo `c1k:` en `wordId` (ej. `c1k:work`). No renombrar el prefijo ni los `wordId` almacenados: orfanaría el progreso del usuario.
+
+**Algoritmo:** SM-2 cliente (`lib/srs/computeSM2.ts`), igual que `word_bank`.
+
+**Cola de sesión (estilo Anki):** lógica pura en `lib/core-1000/queue.ts`, testeable sin React:
+
+| Función | Rol |
+|---|---|
+| `buildSessionQueue` | Ordena vencidas primero, luego nuevas por rango |
+| `reinsertLearning` | Reinserta una palabra fallada ~3 turnos después (relapse en la misma sesión) |
+| `deriveCounts` | Cuenta restantes por tipo (`new` · `learning` · `review`) para el HUD |
+| `appendNewBatch` | Sube el cupo diario cuando el usuario pide "aprender más" |
+
+Cada ítem lleva `kind: 'new' | 'learning' | 'review'` (antes era un booleano `isNew`).
+
+**Orquestación:** `hooks/useEssentialWordsSession.ts`. Las palabras falladas difieren su escritura SM-2 (`pendingLapsesRef`) hasta `finishSession`, para no programarlas a mañana a mitad de sesión.
+
+**Archivar:** `archiveCore1000Word` / `unarchiveCore1000Word` (`lib/db/index.ts`) marcan `archived: true` + `archivedAt` (campos opcionales, sin migración Dexie). `getCore1000SrsEntries` filtra las archivadas — el botón "Ya la sé" las saca del flujo de forma reversible.
+
+**Validación de contenido:** `scripts/validate-core-1000.mjs` verifica que cada palabra aparezca en su `example_sentence` (entendiendo conjugaciones, plurales, posesivos e irregulares). Sale con código 1 si hay desajustes.
+
+---
+
+## 4. `topic_srs` — Temas / conceptos del curso
+
+**Propósito:** Cierra el bucle práctica → repaso para los conceptos gramaticales y temáticos del curso. Cada concepto practicado entra al ciclo SRS y aparece como cuarto dominio en el Review Hub.
+
+**Tabla:** `topic_srs` (Supabase). Espeja `word_bank` con columnas SM-2, RLS por `user_id`, y `UNIQUE (user_id, topic)`. Migración: `supabase/migrations/20260618120000_topic_srs.sql`.
+
+**Algoritmo:** SM-2 cliente. La escritura se encola con `enqueueTopicSRSUpdate` (`lib/practice/topic-srs-queries.ts`) tras guardar una respuesta.
+
+**Clave del tema:** `normalizeTopic()` (`lib/practice/normalize-topic.ts`) produce la clave canónica: minúsculas, espacios colapsados, prefijo de dominio preservado (`grammar:present simple`). Mantiene distintos los conceptos homónimos entre dominios (`grammar:articles` ≠ `vocab:articles`).
+
+**Trazabilidad:** `answer_history.topic` (nullable) guarda el tema del ejercicio que originó la respuesta. Migración: `supabase/migrations/20260618130000_answer_history_topic.sql`.
+
+**Lectura para el Review Hub:** `lib/review/srs-history-queries.ts` lee temas vencidos/débiles y los expone como cuarto dominio junto a vocabulario, fonemas y Essential Words.
 
 ---
 
