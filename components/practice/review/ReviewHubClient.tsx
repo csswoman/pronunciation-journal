@@ -9,6 +9,7 @@ import { getWordStrength } from '@/lib/word-bank/strength'
 import { useReviewSession } from '@/hooks/useReviewSession'
 import { ReviewSessionLauncher } from '@/components/practice/review/ReviewSessionLauncher'
 import { ReviewSectionCard } from '@/components/practice/review/ReviewSectionCard'
+import { SrsHistoryPanel } from '@/components/practice/review/SrsHistoryPanel'
 import type { ReviewHubSummary } from '@/lib/review/types'
 
 interface Props {
@@ -136,6 +137,8 @@ export function ReviewHubClient({ summary }: Props) {
             </Link>
           ) : null}
         </ReviewSectionCard>
+
+        <SrsHistoryPanel groups={summary.srsHistory} />
 
         {state.phase === 'done' ? (
           <div className="rounded-[var(--radius-md)] bg-[var(--success-soft)] px-4 py-3 text-center font-body-sm text-fg-secondary">
