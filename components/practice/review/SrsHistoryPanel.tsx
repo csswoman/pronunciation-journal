@@ -16,19 +16,33 @@ interface Props {
   groups: SrsHistoryGroup[]
 }
 
-function formatNextReview(isoDate: string | null): string {
-  if (!isoDate) return 'not scheduled'
-  const diffDays = Math.round((new Date(isoDate).getTime() - Date.now()) / 86_400_000)
-  if (diffDays < 0) return 'overdue'
-  if (diffDays === 0) return 'today'
-  if (diffDays === 1) return 'tomorrow'
-  return `in ${diffDays}d`
+function daysUntil(isoDate: string | null): number | null {
+  if (!isoDate) return null
+  return Math.round((new Date(isoDate).getTime() - Date.now()) / 86_400_000)
 }
 
-function IntervalBadge({ days }: { days: number }) {
+function formatNextReview(isoDate: string | null): string {
+  const diff = daysUntil(isoDate)
+  if (diff === null) return 'not scheduled'
+  if (diff < 0) return 'overdue'
+  if (diff === 0) return 'today'
+  if (diff === 1) return 'tomorrow'
+  return `in ${diff}d`
+}
+
+function NextReviewBadge({ isoDate }: { isoDate: string | null }) {
+  const diff = daysUntil(isoDate)
+  const label = formatNextReview(isoDate)
+  const isUrgent = diff !== null && diff <= 0
   return (
-    <span className="inline-flex items-center rounded-full bg-surface-hover px-2 py-0.5 font-caption text-fg-muted">
-      {days}d
+    <span
+      className={
+        isUrgent
+          ? 'inline-flex items-center rounded-full bg-error-soft px-2 py-0.5 font-caption text-error'
+          : 'inline-flex items-center rounded-full bg-surface-hover px-2 py-0.5 font-caption text-fg-muted'
+      }
+    >
+      {label}
     </span>
   )
 }
@@ -63,12 +77,11 @@ export function SrsHistoryPanel({ groups }: Props) {
                       <span className="ml-2 font-caption text-fg-muted">{item.sublabel}</span>
                     ) : null}
                   </div>
-                  <div className="flex shrink-0 items-center gap-2">
-                    <IntervalBadge days={item.intervalDays} />
-                    <span className="w-24 text-right font-caption text-fg-subtle">
-                      {formatNextReview(item.nextReviewAt)}
-                    </span>
-                  </div>
+                  {item.domain !== 'sentences' ? (
+                    <div className="flex shrink-0 items-center gap-2">
+                      <NextReviewBadge isoDate={item.nextReviewAt} />
+                    </div>
+                  ) : null}
                 </li>
               ))}
             </ul>
