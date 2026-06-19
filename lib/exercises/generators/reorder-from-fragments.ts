@@ -67,13 +67,18 @@ export async function fetchFragmentsForDeck(
 export function generateReorderFromFragments(
   fragments: TextFragment[],
   count: number,
+  options: { preserveOrder?: boolean } = {},
 ): ReorderWordsExercise[] {
   const usable = fragments.filter((f) => {
     const tokens = tokenize(f.content)
     return tokens.length >= MIN_TOKENS
   })
 
-  return pick(usable, count).map((fragment) => {
+  // preserveOrder=true keeps a caller-supplied ordering (e.g. SRS-due first);
+  // otherwise sample randomly for variety across sessions.
+  const selected = options.preserveOrder ? usable.slice(0, count) : pick(usable, count)
+
+  return selected.map((fragment) => {
     const tokens = tokenize(fragment.content)
     return {
       id: exerciseId('reorder_words', fragment.id, fragment.content),

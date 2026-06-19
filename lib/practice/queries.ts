@@ -4,6 +4,7 @@ import { answerToGrade } from './grade'
 import { enqueueWordBankSRSUpdate } from '@/lib/word-bank/srs-queries'
 import { normalizeTopic } from '@/lib/practice/normalize-topic'
 import { enqueueTopicSRSUpdate } from '@/lib/practice/topic-srs-queries'
+import { upsertFragmentSrs } from '@/lib/practice/fragment-srs'
 import { markLessonComplete } from '@/lib/db'
 import { enqueue } from '@/lib/sync/sync-manager'
 import type {
@@ -100,6 +101,10 @@ export async function savePracticeAnswer(
   if (answer.sourceRef?.source === 'word_bank') {
     const wordId = answer.sourceRef.id
     await enqueueWordBankSRSUpdate(userId, wordId, grade)
+  } else if (answer.sourceRef?.source === 'text_fragments') {
+    // System sentences carry no per-user Supabase row; their review state is
+    // local (Dexie srsData), so this write is direct rather than via the outbox.
+    await upsertFragmentSrs(answer.sourceRef.id, grade)
   }
 
   // Enqueue SRS update for the concept (topic) when the exercise carries one.

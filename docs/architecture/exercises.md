@@ -331,9 +331,9 @@ SoundLabPage
 
 ## Spaced Repetition (SM-2)
 
-El algoritmo SM-2 está implementado en dos variantes:
+El algoritmo SM-2 está implementado en varias variantes:
 
-**`lib/srs.ts`** — SM-2 genérico para Dexie
+**`lib/srs/`** — SM-2 genérico para Dexie (`updateSRS`, `createSRSEntry`, `accuracyToQuality`)
 - Input: `quality` 0–5 (derivado de accuracy %)
 - Actualiza: `ease`, `interval`, `repetitions`, `nextReview`
 
@@ -344,16 +344,21 @@ El algoritmo SM-2 está implementado en dos variantes:
 **`lib/decks/study-source.ts`** — SM-2 para decks y word_bank
 - Misma lógica, persiste en columnas SM-2 de `word_bank` o `deck_entry_progress`
 
-Los ejercicios genéricos registran respuestas en `answer_history` pero **no actualizan SM-2 todavía** — está preparado para integrarlo via `sourceRef.id` + el algoritmo existente.
+**Loop genérico (cerrado).** `savePracticeAnswer` (`lib/practice/queries.ts`) enruta cada respuesta a su SRS según `sourceRef.source` / `topic`:
+
+| Fuente | Destino SRS | Helper |
+|---|---|---|
+| `word_bank` | Columnas SM-2 de `word_bank` (vía outbox) | `enqueueWordBankSRSUpdate` |
+| `topic` (concepto) | Tabla `topic_srs` (vía outbox) | `enqueueTopicSRSUpdate` |
+| `text_fragments` | Dexie `srsData`, clave `fragment:<id>` (local) | `upsertFragmentSrs` |
+
+Los `text_fragments` son system sentences (`user_id = null`), así que su estado de repaso es per-usuario y local (Dexie), no una tabla Supabase. Los fragmentos vencidos se priorizan en la sesión vía `orderFragmentsByDue` (`lib/practice/fragment-priority.ts`).
 
 ---
 
 ## Extensión futura
 
 El sistema de ejercicios genéricos está diseñado para crecer sin cambiar la interfaz de los generadores ni los componentes:
-
-**Spaced repetition sobre ejercicios genéricos**
-Usar `sourceRef.id` como clave SRS en `lib/srs.ts`. Las entradas de `word_bank` ya tienen columnas SM-2; para `text_fragments` basta añadir una fila en `srsData` de Dexie.
 
 **Dificultad adaptativa**
 Leer accuracy reciente de `answer_history` por `source_ref` y ajustar el `level` de los ejercicios generados. El campo `level?: CEFRLevel` ya existe en todos los tipos.

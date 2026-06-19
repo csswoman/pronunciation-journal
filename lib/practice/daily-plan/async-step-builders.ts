@@ -2,6 +2,7 @@ import { generateConnectedSpeechExercises } from '@/lib/exercises/generators/con
 import { fetchTextFragments, generateReorderFromFragments } from '@/lib/exercises/generators/reorder-from-fragments'
 import { generateReorderAI } from '@/lib/exercises/generators/reorder-ai'
 import { fromGenericExercise } from '@/lib/practice/adapters'
+import { orderFragmentsByDue } from '@/lib/practice/fragment-priority'
 import type { DailyStep } from '@/lib/practice/types'
 import { SENTENCE_BUILDER_EXERCISE_COUNT } from './constants'
 import { dayOfYear, dedupeByContentId } from './selectors'
@@ -53,10 +54,13 @@ export async function buildSentenceBuilderStep(
 
   if (exercises.length === 0) {
     const fragments = await fetchTextFragments(source, 60)
+    // Surface fragments whose SRS review is due before random sampling, so the
+    // practice→review loop re-delivers sentences the user has previously missed.
+    const prioritized = await orderFragmentsByDue(fragments)
     exercises = dedupeByContentId(
-      generateReorderFromFragments(fragments, SENTENCE_BUILDER_EXERCISE_COUNT).map((ex) =>
-        fromGenericExercise(ex, 'daily'),
-      ),
+      generateReorderFromFragments(prioritized, SENTENCE_BUILDER_EXERCISE_COUNT, {
+        preserveOrder: true,
+      }).map((ex) => fromGenericExercise(ex, 'daily')),
     )
   }
 
