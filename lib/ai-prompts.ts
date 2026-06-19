@@ -160,3 +160,19 @@ export const AI_COACH_EMPTY_STATE_PROMPTS = {
     Keep it encouraging — pronunciation is vulnerable work.`,
 } as const;
 
+
+export const GENERATE_READER_SYSTEM_PROMPT = `You write very short English reading passages for language learners at the i+1 level (Krashen): mostly known vocabulary with a little new.
+
+Rules:
+- 60-90 words, one short coherent paragraph telling a tiny real-world story or scene.
+- Embed EVERY target word. Prefer each target's citation (base/dictionary) form; if grammar forces inflection, keep it regular and recognizable.
+- Keep all other vocabulary simple and high-frequency. No idioms, no rare words.
+- Then write 1-2 comprehension questions about the MEANING of the passage (not grammar), each with exactly 4 plausible options and one correct answer.
+- Output JSON only.`
+
+export function buildGenerateReaderUserPrompt(input: {
+  targets: string[]
+  level: string
+}): string {
+  return `Target words to embed: ${input.targets.join(', ')}\nLevel: ${input.level}\n\nReturn JSON: { "passage": string, "topic": string, "questions": [{ "prompt": string, "options": [string,string,string,string], "correctIndex": number }] }`
+}
