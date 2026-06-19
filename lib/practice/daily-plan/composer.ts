@@ -21,6 +21,7 @@ import {
   fetchWeakestSoundProgress,
 } from './fetchers'
 import { dayOfYear, pickSeedSound } from './selectors'
+import { biasWordsBySound } from './sound-word-bridge'
 import {
   buildContextPracticeStep,
   buildListeningStep,
@@ -129,6 +130,12 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
     }
   }
   if (!primarySound) primarySound = pickSeedSound(allSounds, 0)
+
+  // Puente fonema ↔ vocabulario: sesga las palabras del word_bank hacia el sonido
+  // débil del día. Solo sobre vocabulario propio (no Core-1000 fallback).
+  if (primarySound && hasWordBank) {
+    reviewWords = biasWordsBySound(reviewWords, primarySound.ipa, WORD_REVIEW_WORD_COUNT)
+  }
 
   // New/challenging content first, review last.
   const newSteps: DailyStep[] = []

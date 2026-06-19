@@ -1,6 +1,11 @@
 # 06 · Puente fonema ↔ vocabulario
 
-> 🟠 **Importante** · Impacto medio · ~3-4 días · Estado: 📋 Por planear
+> 🟠 **Importante** · Impacto medio · ~3-4 días · Estado: ✅ Hecho (2026-06-19, tareas 1-2; tarea 3 diferida)
+>
+> Implementado en `lib/practice/daily-plan/sound-word-bridge.ts` + `composer.ts`.
+> Spec: `docs/superpowers/specs/2026-06-19-phoneme-vocab-bridge-design.md`.
+> Heurística IPA-only, sesgo suave (cuota ½). Tarea 3 (palabras del word_bank
+> dentro del paso de fonema) queda como follow-up opcional.
 
 ## Problema
 
