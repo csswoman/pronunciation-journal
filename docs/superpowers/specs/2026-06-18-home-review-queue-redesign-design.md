@@ -69,12 +69,22 @@ export interface ReviewQueueSummary {
   pure renderer mapping `tone → design token`.
 - **Server-computed sources:** `vocabulary` (word_bank due) and `sounds`. Aggregated in
   `getReviewQueueSummary()` on the server.
-- **`essential` (Core-1000):** cannot be server-counted. A small **client island**
-  (`Core1000DueHydrator`, using a `useCore1000DueCount` hook over the existing
-  `buildSessionQueue` + Dexie I/O) merges its count into the displayed total after
-  hydration. Server renders the server-known total first; the essential row appears/
-  updates on hydration. No business logic enters `/app`; Dexie stays client-side;
-  offline mode unaffected.
+- **`essential` (Core-1000):** cannot be server-counted. A `useMergedReviewQueue(serverSummary)`
+  hook reads Dexie (via existing `buildSessionQueue` + Dexie I/O), derives the essential
+  `count` **and** essential preview items, then returns the **final merged
+  `ReviewQueueSummary`** (total updated, `essential` row inserted, sources re-sorted by
+  count desc) plus merged preview items. Server renders the server-known total first; the
+  essential row + preview appear/update on hydration. No business logic enters `/app`;
+  Dexie stays client-side; offline mode unaffected.
+
+#### Hydration ownership (resolved)
+
+`ReviewQueueCard` is a **pure renderer** — it never holds the merged state. A thin client
+wrapper **`ReviewQueueIsland`** owns `useMergedReviewQueue(serverSummary)` and renders only
+`ReviewQueueCard`. This keeps the island tight: `HomeReviewsSection` stays a **Server
+Component**, passing `serverSummary` into `ReviewQueueIsland` and `lexicon`/`weakestPhoneme`
+into the server-rendered `ReviewProgressCard` (Tier 2 never enters the client). There is no
+`Core1000DueHydrator` component — the merge is a hook, not a node in the tree.
 
 ### "Due" semantics fix
 
@@ -113,7 +123,10 @@ export interface ReviewQueueSummary {
   renders only if `count > 0`. `tone: warning` rows use the warning accent + dot,
   driven by `REVIEW_URGENCY_THRESHOLD` (replaces the ad-hoc `atRiskCount`).
 - Existing 3-item word/sound preview kept as supporting texture below the breakdown
-  (collapsible on mobile).
+  (collapsible on mobile). **Preview mixes vocabulary + essential + sounds**, sourced
+  from `useMergedReviewQueue` (the same single Dexie read — `ReviewQueuePreview` does
+  **not** open its own Dexie access / second island). The server contributes word_bank
+  + sound preview items; the hook contributes essential items on hydration.
 - **CTA state machine (fixes the disabled-button anti-pattern):**
 
   | State | Primary action |
@@ -137,25 +150,33 @@ nudge. No phoneme data → discovery CTA. Fixed structurally, not cosmetically.
 ## Component decomposition (CLAUDE.md: ≤250 lines, one responsibility each)
 
 ```
-HomeReviewsSection           (IA: two tiers)
-├─ ReviewQueueCard           (Tier 1 shell + CTA state machine; pure renderer of ReviewQueueSummary)
-│  ├─ ReviewQueueBreakdown   (tappable per-source rows)        ← new
-│  ├─ ReviewQueuePreview     (3-item word/sound preview)       ← extracted from current card
-│  └─ Core1000DueHydrator    (client island; merges essential count via useCore1000DueCount) ← new
-└─ ReviewProgressCard        (Tier 2: retention bar + weakest sound, honest empty state) ← from HomeRetentionCard
+HomeReviewsSection             (Server Component — IA: two tiers)
+├─ ReviewQueueIsland           (client wrapper; owns useMergedReviewQueue) ← new
+│  └─ ReviewQueueCard          (Tier 1 shell + CTA state machine; pure renderer of merged summary)
+│     ├─ ReviewQueueBreakdown  (tappable per-source rows)        ← new
+│     └─ ReviewQueuePreview    (3-item merged preview; no own Dexie) ← extracted from current card
+└─ ReviewProgressCard          (Tier 2: retention + weakest sound, honest empty state; stays server) ← from HomeRetentionCard
 ```
 
-`ReviewQueueCard` holds no data logic — it renders summary + CTA state. The Core-1000
-client island is isolated so the surrounding tree stays a Server Component.
+`ReviewQueueCard` holds no data logic — it renders the merged summary + CTA state.
+`ReviewQueueIsland` is the only client boundary; `useMergedReviewQueue` is its single
+Dexie read, feeding both counts and preview. Tier 2 never enters the client.
 
 ## Data flow
 
-1. `app/page.tsx` (Server) calls `getReviewQueueSummary(userId)` → server-known
-   `{ total, newAvailable, sources }` (vocabulary + sounds).
-2. `HomeReviewsSection` renders Tier 1 + Tier 2 from server data.
-3. `Core1000DueHydrator` (client) reads Dexie, computes essential `count`, merges into
-   total + inserts/updates the `essential` source row (re-sorted by count desc).
-4. CTA state derives from `total` + `newAvailable`.
+1. `app/page.tsx` (Server) calls `getReviewQueueSummary(userId)` **alongside the existing
+   `Promise.all`** → server-known `{ total, newAvailable, sources }` (vocabulary + sounds).
+   The fetch stays in the page's data-loading layer; `HomeReviewsSection` remains
+   presentational. The new `reviewQueue` prop **consolidates** today's `words`/`dueCount`/
+   `soundsDue` props; `lexicon`/`weakestPhoneme` remain for Tier 2.
+2. `HomeReviewsSection` (server, presentational — receives props) renders `ReviewProgressCard`
+   directly (sibling) and passes `reviewQueue` into `ReviewQueueIsland`. It does **not**
+   resolve `userId` or fetch.
+3. `ReviewQueueIsland` calls `useMergedReviewQueue(serverSummary)` — one Dexie read —
+   which computes the essential `count` and preview items, merges into total, inserts/
+   updates the `essential` row (re-sorted by count desc), and returns the final summary
+   plus merged preview to `ReviewQueueCard`.
+4. CTA state derives from merged `total` + `newAvailable`.
 
 ## Testing
 
