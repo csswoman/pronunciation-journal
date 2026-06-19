@@ -47,12 +47,13 @@ Decisión cerrada: **matching por word-boundary sobre formas base, sin substring
 
 - **Por qué no substring:** `includes()` da falsos positivos (`cat` ∈ `category`). Se usa `\b<target>\b` (regex word-boundary), case-insensitive.
 - **Por qué no stemmer:** aceptar inflexiones es pedagógicamente correcto (Krashen), pero un lematizador real (p. ej. `wink`/`natural` + WordNet, o `snowball`) añade peso y datos al bundle del route handler para una ganancia marginal. En su lugar, **el contrato se desplaza al prompt**: el prompt instruye a la IA a incluir cada target en una **forma reconocible y, cuando sea natural, en su forma de citación (lemma)**. El refinement valida contra un set de variantes generadas determinísticamente por reglas morfológicas ligeras (sufijos regulares), no por stemming inverso.
-- **Variantes aceptadas por target** (generación determinística, sin librería): forma exacta + plurales/3ª persona regulares (`+s`, `+es`, `y→ies`), pasado/participio regular (`+ed`, `+d`, `y→ied`, duplicación de consonante final como `stop→stopped`), gerundio (`+ing`, drop-`e`). Las formas irregulares no se generan: si el target es irregular y la IA usa una forma irregular, no matchea — aceptable, porque el prompt pide preferir la forma base.
+- **Variantes aceptadas por target** (generación determinística, sin librería): forma exacta + plurales/3ª persona regulares (`+s`, `+es`, `y→ies`), pasado/participio regular (`+ed`, `+d`, `y→ied`, duplicación de consonante final como `stop→stopped`), gerundio (`+ing`, drop-`e`).
+- **Irregulares de alta frecuencia — tabla, no solo reglas.** Decisión cerrada: las reglas de sufijo NO cubren irregulares (`go/went/gone`, `buy/bought`, `child/children`, `run/ran`). Para el nivel objetivo (A2-B1) esas son justo palabras de alta frecuencia que un target puede ser, y si la IA las usa en su forma irregular el `\b` fallaría y rechazaría un párrafo válido. Por eso el expansor consulta primero una **tabla pequeña de irregulares comunes** (~150 verbos + plurales irregulares, en un JSON estático bajo `lib/practice/reader/`) que mapea forma base → todas sus formas. Si el target está en la tabla, sus variantes salen de ahí; si no, de las reglas de sufijo. *Justificación: las ~150 irregulares de A2-B1 caben en JSON y son precisamente las de alta frecuencia; dejarlas al contrato del prompt produciría rechazos espurios.* Targets irregulares fuera de la tabla (raros a este nivel) recaen en el contrato del prompt (forma de citación) + validación de forma base.
 - **Umbral:** ≥60% de los targets deben aparecer (≥1 variante cada uno). Bajo el umbral → se rechaza y se intenta el siguiente modelo de la fallback chain.
 
 **Algoritmo del refinement (el test debe reflejarlo paso a paso):**
 1. **Normalizar** el párrafo: `toLowerCase()`, NFC, colapsar whitespace.
-2. **Expandir** cada target a su set de variantes por las reglas morfológicas anteriores (también lowercased).
+2. **Expandir** cada target a su set de variantes: si está en la tabla de irregulares, usar sus formas; si no, aplicar las reglas de sufijo (todas lowercased).
 3. **Tokenizar/match:** para cada target, `true` si **alguna** variante matchea `\bvariant\b` en el párrafo normalizado.
 4. **Contar** targets con match.
 5. **Umbral:** `matched / total >= 0.6` → válido; si no, rechazar.
@@ -62,9 +63,9 @@ Decisión cerrada: **matching por word-boundary sobre formas base, sin substring
 Decisión cerrada: **arquitectura (A) — el acierto en reader NO dispara grade SM-2; registra exposición en un campo separado.**
 
 - **Por qué:** el MC tiene ~25% de acierto por azar (4 opciones). Si el reader tocara el mismo `interval/easeFactor/repetitions` que el Word Bank usa para programar repaso, la adivinanza empujaría el ítem hacia adelante sin recall real, contaminando la señal de mastery. El reader es input pasivo, no recall activo. *(A) sobre (B) porque incluso un grade "suave" en tabla separada implicaría reintroducir esa señal en el scheduler; (A) mantiene los dos números totalmente desacoplados.*
-- **Esquema:** el estado de exposición vive **junto al SM-2 existente en Dexie `srsData`** (mismo registro keyed por el id namespaced del ítem — `c1k:`/`fragment:`/topic), en campos nuevos **que `updateSRS` no toca**:
-  - `lastExposedAt: number` (epoch ms) — timestamp de la última exposición vía reader.
-  - `exposureCount: number` — contador acumulado.
+- **Esquema — frontera estructural, no por convención.** Decisión cerrada: el estado de exposición vive junto al SM-2 en el mismo registro Dexie `srsData` (keyed por el id namespaced — `c1k:`/`fragment:`/topic), pero **aislado en un sub-objeto propio** para que la separación de dueños sea estructural y no una convención de "no lo toques":
+  - `exposure?: { lastAt: number; count: number }` — `lastAt` epoch ms de la última exposición vía reader; `count` contador acumulado.
+  - **Contrato de `updateSRS`:** opera **solo por campos nominados del estado SM-2** (`interval`, `easeFactor`, `repetitions`, `dueDate`, …) y **nunca reconstruye el registro entero** ni menciona `exposure`. `recordReaderExposure` es el único escritor de `exposure`. *Justificación: meter campos "ignorar" en el objeto que `updateSRS` reescribe invita a que un spread/overwrite futuro los pise; el sub-objeto hace la frontera estructural. Es la misma separación content-inmutable / state-mutable que ya mantiene el codebase, aquí entre dos estados mutables de dueños distintos.*
   No se crea tabla nueva en Supabase: la exposición es señal client-side, igual que el SM-2 de fragments/Core 1000 (offline-first).
 - **Cómo lo combina el scheduler:** el scheduler de repaso **ignora** `lastExposedAt`/`exposureCount` al elegir qué repasar — el orden de vencimiento sigue saliendo solo de `interval/dueDate`. La exposición es metadato observable (analítica, futura UI "lo viste en una lectura"), nunca entra en el cálculo de `due`. *Esto preserva la naturaleza de input del reader: exposición y recall activo nunca se mezclan en el mismo número.*
 - **Acierto vs. fallo:** ambos registran exposición (incrementan `exposureCount`, actualizan `lastExposedAt`). El fallo **no** penaliza el SM-2. No hay asimetría porque ninguno toca el recall.
@@ -80,10 +81,11 @@ Decisión cerrada: **arquitectura (A) — el acierto en reader NO dispara grade 
 ## Testing
 
 - `select-targets.test.ts` — targets correctos por estado SRS; `null` con <3.
-- **`refinement.test.ts`** — refleja el algoritmo paso a paso: rechaza substring (`cat` no matchea en `category`); acepta variantes regulares (`stop`→`stopped`/`stopping`, `city`→`cities`); rechaza párrafo bajo el 60%; no acepta irregulares no generadas.
+- **`refinement.test.ts`** — refleja el algoritmo paso a paso: rechaza substring (`cat` no matchea en `category`); acepta variantes regulares (`stop`→`stopped`/`stopping`, `city`→`cities`); **acepta irregulares vía tabla** (`go`→`went`/`gone`, `child`→`children`); rechaza párrafo bajo el 60%.
 - Ruta `generate-reader` — guards (auth/rate-limit), fallback de modelos, rechazo por refinement. Espejo de `grade-production`.
-- `recordReaderExposure` — incrementa `exposureCount`/`lastExposedAt`; **no** muta `interval/easeFactor/repetitions` (assert sobre el registro `srsData`); acierto y fallo ambos registran exposición.
-- `scheduler` — confirma que el orden de `due` es invariante ante `lastExposedAt`/`exposureCount`.
+- `recordReaderExposure` — incrementa `exposure.count` / setea `exposure.lastAt`; **no** muta `interval/easeFactor/repetitions` (assert sobre el registro `srsData`); acierto y fallo ambos registran exposición.
+- `updateSRS` — assert de que un grade SM-2 **deja `exposure` intacto** (no lo borra ni lo reconstruye), blindando la frontera estructural.
+- `scheduler` — confirma que el orden de `due` es invariante ante `exposure.lastAt`/`exposure.count`.
 - `buildReaderStep` — `null` offline/sin targets; usa cache fresco; stale-while-revalidate sirve stale y no bloquea; regeneración fallida conserva stale.
 - `ReaderExercise` — render párrafo + MC; botón TTS deshabilitado offline.
 
@@ -106,4 +108,4 @@ Tabla `reader_passages` (Supabase, RLS `user_id = auth.uid()` en select/insert):
 - **`target_hash` en Supabase (no solo Dexie):** decisión cerrada — la query de cache busca el passage más reciente por conjunto de targets, y debe resolverse server-side para alimentar la entrada "Reading" de home (que puede no tener Dexie poblado). Justifica replicar el hash en ambos lados.
 - **Índice `(user_id, created_at)`** sobre `reader_passages` — soporta la query de cache ("passage más reciente del usuario") y la futura paginación de la sección Reading.
 - **Espejo Dexie `readerPassages`** — relectura offline; mismas columnas, keyed por `id`, con índice por `target_hash`.
-- Estado de exposición SM-2: **sin migración Supabase** — campos `lastExposedAt`/`exposureCount` se añaden al tipo de `srsData` en Dexie (offline-first), no a una tabla nueva.
+- Estado de exposición SM-2: **sin migración Supabase** — sub-objeto `exposure?: { lastAt, count }` se añade al tipo de `srsData` en Dexie (offline-first), no a una tabla nueva.
