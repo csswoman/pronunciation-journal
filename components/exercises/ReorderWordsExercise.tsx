@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import { cn } from '@/lib/cn'
 import type { ReorderWordsExercise as ReorderWordsExerciseType } from '@/lib/exercises/types'
 import { useUISounds } from '@/hooks/useUISounds'
+import { gradeReorder } from '@/lib/exercises/grade-reorder'
 
 interface Props {
   exercise: ReorderWordsExerciseType
@@ -51,7 +52,7 @@ export function ReorderWordsExercise({ exercise, onResult, focusUi = false }: Pr
   function handleCheck() {
     if (state !== 'idle' || answer.length === 0) return
     const userAnswer = answer.map((c) => c.word).join(' ')
-    const isCorrect = userAnswer === exercise.sentence
+    const isCorrect = gradeReorder(userAnswer, exercise.sentence)
     setState(isCorrect ? 'correct' : 'wrong')
     if (isCorrect) playCorrect(); else playWrong()
     onResult(isCorrect, userAnswer, Date.now() - startMs.current)

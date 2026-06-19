@@ -5,6 +5,8 @@ import { ReorderWordsExercise } from '@/components/exercises/ReorderWordsExercis
 import { SentenceDictationExercise } from '@/components/exercises/SentenceDictationExercise'
 import { MultipleChoiceExercise } from '@/components/exercises/MultipleChoiceExercise'
 import { SentenceContextExercise } from '@/components/lexicon/SentenceContextExercise'
+import { WrittenProductionExercise } from '@/components/exercises/WrittenProductionExercise'
+import { SpokenProductionExercise } from '@/components/exercises/SpokenProductionExercise'
 import type {
   GenericExercise,
   GenericExerciseType,
@@ -14,10 +16,19 @@ import type {
   SentenceDictationExercise as SentenceDictationExerciseType,
   SentenceContextExercise as SentenceContextExerciseType,
   MultipleChoiceExercise as MultipleChoiceExerciseType,
+  WrittenProductionExercise as WrittenProductionExerciseType,
+  SpokenProductionExercise as SpokenProductionExerciseType,
 } from '@/lib/exercises/types'
 
+export type GenericRenderExtras = { score?: number }
+
 export type GenericRenderContext = {
-  onResult: (isCorrect: boolean, userAnswer: string, timeMs: number) => void
+  onResult: (
+    isCorrect: boolean,
+    userAnswer: string,
+    timeMs: number,
+    extras?: GenericRenderExtras,
+  ) => void
   focusUi?: boolean
   onHint?: () => void
   hintCount?: number
@@ -94,6 +105,26 @@ export const GENERIC_REGISTRY: Record<GenericExerciseType, GenericRegistryEntry>
         exercise={exercise as MultipleChoiceExerciseType}
         onResult={onResult}
         hintCount={hintCount ?? 0}
+      />
+    ),
+  },
+  written_production: {
+    title: 'Write your sentence',
+    noHint: true,
+    render: (exercise, { onResult }) => (
+      <WrittenProductionExercise
+        exercise={exercise as WrittenProductionExerciseType}
+        onResult={onResult}
+      />
+    ),
+  },
+  spoken_production: {
+    title: 'Say your sentence',
+    noHint: true,
+    render: (exercise, { onResult }) => (
+      <SpokenProductionExercise
+        exercise={exercise as SpokenProductionExerciseType}
+        onResult={onResult}
       />
     ),
   },

@@ -9,8 +9,10 @@
 // </SpeakReviewCard>
 
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { Mic, MicOff, Volume2 } from 'lucide-react'
+import { Mic, MicOff } from 'lucide-react'
 import { speak } from '@/lib/phoneme-practice/tts'
+import { PillButton } from '@/components/ui/PillButton'
+import { ListenButton } from '@/components/ui/ListenButton'
 import { useSpeechInput } from '@/hooks/useSpeechInput'
 import { useSharedMicStream } from '@/hooks/useSharedMicStream'
 import { defaultEvaluationEngine } from '@/lib/exercises/evaluation'
@@ -34,8 +36,6 @@ interface Scored {
   wordResults: WordResult[]
   transcript: string
 }
-
-const ttsAvailable = typeof window !== 'undefined' && 'speechSynthesis' in window
 
 function micErrorMessage(error: string | null): string {
   if (!error) return 'No se pudo iniciar el micrófono.'
@@ -153,40 +153,28 @@ export function SpeakReviewCard({ entry, onGraded, onArchive }: Props) {
   const useFallback = !isSupported
 
   return (
-    <div className="flex w-full max-w-md flex-col items-center gap-5">
+    <div className="flex w-full max-w-md flex-col items-center gap-5 rounded-2xl bg-surface-raised px-6 py-7 shadow-sm">
       <div className="flex flex-col items-center gap-1 text-center">
-        <p className="text-xs font-semibold uppercase tracking-[.08em] text-[var(--text-tertiary)] m-0">
+        <p className="text-xs font-semibold uppercase tracking-[.08em] text-fg-subtle m-0">
           Di la oración
         </p>
-        <p className="text-xl text-[var(--text-primary)] m-0">{sentence}</p>
+        <p className="text-xl text-fg m-0">{sentence}</p>
         {entry.sentence_ipa && (
-          <p className="[font-family:var(--font-ipa),monospace] text-sm text-[var(--text-tertiary)] m-0">
+          <p className="[font-family:var(--font-ipa),monospace] text-sm text-fg-subtle m-0">
             {entry.sentence_ipa}
           </p>
         )}
       </div>
 
-      <button
-        type="button"
-        onClick={() => speak(sentence, { rate: 0.95 })}
-        disabled={!ttsAvailable}
-        className="inline-flex items-center gap-1.5 text-xs py-2 px-4 rounded-[var(--radius-full)] border border-[var(--border-subtle)] bg-transparent text-[var(--text-secondary)] cursor-pointer [font-family:inherit] disabled:opacity-40 disabled:cursor-not-allowed"
-      >
-        <Volume2 size={14} aria-hidden />
-        Escuchar modelo
-      </button>
+      <ListenButton onPlay={() => speak(sentence, { rate: 0.95 })} label="Escuchar modelo" />
 
-      <button
-        type="button"
-        onClick={onArchive}
-        className="text-xs py-1 px-3 rounded-[var(--radius-full)] bg-transparent border-none cursor-pointer [font-family:inherit] text-[var(--text-tertiary)] hover:text-[var(--text-secondary)]"
-      >
+      <PillButton variant="quiet" size="sm" onClick={onArchive}>
         Ya la sé
-      </button>
+      </PillButton>
 
       {useFallback ? (
         <div className="flex w-full flex-col items-center gap-2">
-          <p className="text-xs text-[var(--text-tertiary)] m-0">
+          <p className="text-xs text-fg-subtle m-0">
             Micrófono no disponible en este navegador — practica en voz alta y califícate:
           </p>
           <SelfGradeBar onGrade={handleSelfGrade} />
@@ -199,15 +187,15 @@ export function SpeakReviewCard({ entry, onGraded, onArchive }: Props) {
             disabled={isProcessing}
             aria-label={isListening ? 'Detener grabación' : 'Grabar mi voz'}
             className={cn(
-              'w-20 h-20 rounded-full border-none flex items-center justify-center cursor-pointer transition-all text-white disabled:opacity-40',
+              'w-20 h-20 rounded-full border-none flex items-center justify-center cursor-pointer transition-all text-on-primary focus-ring disabled:opacity-40',
               isListening
-                ? 'bg-[var(--error)] shadow-[0_0_0_14px_color-mix(in_oklch,var(--error)_18%,transparent)]'
-                : 'bg-[var(--primary)] shadow-[0_4px_16px_color-mix(in_oklch,var(--primary)_35%,transparent)]',
+                ? 'bg-error shadow-[0_0_0_14px_color-mix(in_oklch,var(--error)_18%,transparent)]'
+                : 'bg-primary shadow-[0_4px_16px_color-mix(in_oklch,var(--primary)_35%,transparent)]',
             )}
           >
             {isListening ? <MicOff size={28} /> : <Mic size={28} />}
           </button>
-          <p className="text-xs text-[var(--text-tertiary)] tracking-[.05em] m-0">
+          <p className="text-xs text-fg-subtle tracking-[.05em] m-0">
             {isListening
               ? 'Escuchando… toca para parar'
               : isProcessing
@@ -215,12 +203,12 @@ export function SpeakReviewCard({ entry, onGraded, onArchive }: Props) {
                 : 'Toca para hablar'}
           </p>
           {isError && (
-            <p className="text-xs text-[var(--error)] text-center m-0 max-w-xs">
+            <p className="text-xs text-error text-center m-0 max-w-xs">
               {micErrorMessage(errorDetail)}{' '}
               <button
                 type="button"
                 onClick={handleRetry}
-                className="underline cursor-pointer bg-transparent border-none [font-family:inherit] text-xs text-[var(--error)]"
+                className="underline cursor-pointer bg-transparent border-none font-[inherit] text-xs text-error focus-ring"
               >
                 Reintentar
               </button>
@@ -238,20 +226,12 @@ export function SpeakReviewCard({ entry, onGraded, onArchive }: Props) {
           />
           <PhonemeFeedbackTable wordResults={scored.wordResults} />
           <div className="flex gap-2">
-            <button
-              type="button"
-              onClick={handleRetry}
-              className="text-xs py-1.5 px-3 rounded-[var(--radius-full)] border border-[var(--border-subtle)] bg-transparent text-[var(--text-secondary)] cursor-pointer [font-family:inherit]"
-            >
+            <PillButton variant="outline" size="sm" onClick={handleRetry}>
               Intentar de nuevo
-            </button>
-            <button
-              type="button"
-              onClick={handleContinue}
-              className="text-xs py-1.5 px-3 rounded-[var(--radius-full)] bg-[var(--primary)] text-white border-none cursor-pointer [font-family:inherit] font-medium"
-            >
+            </PillButton>
+            <PillButton variant="primary" size="sm" onClick={handleContinue}>
               Continuar
-            </button>
+            </PillButton>
           </div>
         </>
       )}

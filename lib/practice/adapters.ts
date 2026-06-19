@@ -16,6 +16,8 @@ const GENERIC_TYPE_TO_SLUG: Record<GenericExerciseType, ExerciseSlug> = {
   reorder_words: 'reorder_words',
   sentence_context: 'sentence_context',
   multiple_choice: 'multiple_choice',
+  written_production: 'written_production',
+  spoken_production: 'spoken_production',
 }
 
 /**

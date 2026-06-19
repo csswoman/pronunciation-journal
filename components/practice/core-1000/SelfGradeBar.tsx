@@ -29,10 +29,10 @@ export function SelfGradeBar({ onGrade, disabled }: Props) {
           disabled={disabled}
           onClick={() => onGrade(quality)}
           className={cn(
-            'flex-1 max-w-28 py-2 px-3 text-xs font-medium rounded-[var(--radius-full)] border cursor-pointer [font-family:inherit] disabled:opacity-40',
+            'flex-1 max-w-28 py-2 px-3 text-xs font-medium rounded-full border cursor-pointer font-[inherit] transition-colors duration-150 ease-out-quart focus-ring disabled:opacity-40',
             quality === 1
-              ? 'border-[var(--error)] text-[var(--error)] bg-transparent'
-              : 'border-[var(--border-subtle)] text-[var(--text-secondary)] bg-transparent',
+              ? 'border-error text-error bg-transparent hover:bg-error-soft'
+              : 'border-border-subtle text-fg-muted bg-transparent hover:bg-surface-sunken',
           )}
         >
           {label}

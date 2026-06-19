@@ -1,6 +1,6 @@
 'use client'
 
-import type { PracticeExercise } from '@/lib/practice/types'
+import type { PracticeExercise, PracticeSubmitHandler } from '@/lib/practice/types'
 import {
   isGenericExercise,
   isPhonemeExercise,
@@ -10,7 +10,7 @@ import { PhonemeExerciseView } from './PhonemeExerciseView'
 
 interface Props {
   exercise: PracticeExercise
-  onSubmit: (isCorrect: boolean, userAnswer: string) => void
+  onSubmit: PracticeSubmitHandler
   /** Duolingo-style focus layout for Sound Lab sessions */
   focusUi?: boolean
   voice?: SpeechSynthesisVoice

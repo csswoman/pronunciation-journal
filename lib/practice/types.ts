@@ -25,6 +25,8 @@ export type ExerciseSlug =
   | 'abx'               // id: 14
   | 'sentence_context'   // no DB row — does not write to answer_history
   | 'multiple_choice'    // no DB row — does not write to answer_history
+  | 'written_production' // id: 15 — online-only (AI grading)
+  | 'spoken_production'  // id: 16 — online-only (AI grading)
 
 // null signals "no exercise_types FK" — this exercise does not write to answer_history.
 export const EXERCISE_TYPE_IDS: Record<ExerciseSlug, number | null> = {
@@ -43,6 +45,8 @@ export const EXERCISE_TYPE_IDS: Record<ExerciseSlug, number | null> = {
   abx: 14,
   sentence_context: null,
   multiple_choice: null,
+  written_production: 15,
+  spoken_production: 16,
 }
 
 export type PracticeContext =
@@ -158,6 +162,12 @@ export type DailyPlan = {
   /** true si no había word_bank ni progreso de fonema (todo salió del seed). */
   isNewUser: boolean
 }
+
+export type PracticeSubmitHandler = (
+  isCorrect: boolean,
+  userAnswer: string,
+  extras?: { score?: number },
+) => void
 
 export type PracticeConfig = {
   context: PracticeContext

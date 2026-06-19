@@ -2,6 +2,10 @@ import { generateFillBlankFromWordBank } from '@/lib/exercises/generators/fill-b
 import { generateSentenceDictationFromWordBank } from '@/lib/exercises/generators/sentence-dictation'
 import { generateReorderWordsFromWordBank } from '@/lib/exercises/generators/reorder-words'
 import { generateMatchPairsFromWordBank } from '@/lib/exercises/generators/match-pairs'
+import {
+  generateSpokenProductionFromWordBank,
+  generateWrittenProductionFromWordBank,
+} from '@/lib/exercises/generators/production'
 import { generateSentenceContextExercises } from '@/lib/lexicon/exercises'
 import { generateMinimalPair, generateDictation } from '@/lib/phoneme-practice/exercises'
 import { buildMixedSession, type MixedExercise } from '@/lib/phoneme-practice/mixed-session'
@@ -61,12 +65,16 @@ export function buildWordReviewStep(
   const dictations = generateSentenceDictationFromWordBank(words, 2)
   const reorders = generateReorderWordsFromWordBank(words, 1)
   const matchPairs = generateMatchPairsFromWordBank(words, 1)
+  const writtenProduction = generateWrittenProductionFromWordBank(words, 1)
+  const spokenProduction = generateSpokenProductionFromWordBank(words, 1)
 
   const exercises = dedupeByContentId([
     ...fillBlanks.map((ex) => fromGenericExercise(ex, context)),
     ...dictations.map((ex) => fromGenericExercise(ex, context)),
     ...reorders.map((ex) => fromGenericExercise(ex, context)),
     ...matchPairs.map((ex) => fromGenericExercise(ex, context)),
+    ...writtenProduction.exercises.map((ex) => fromGenericExercise(ex, context)),
+    ...spokenProduction.exercises.map((ex) => fromGenericExercise(ex, context)),
   ])
 
   if (exercises.length === 0) return null

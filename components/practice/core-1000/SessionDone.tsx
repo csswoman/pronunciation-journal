@@ -42,24 +42,24 @@ export function SessionDone({
   return (
     <div className="flex flex-col items-center gap-6 py-10 text-center">
       <div className="flex flex-col items-center gap-2">
-        <h2 className="m-0 font-display text-h3 text-[var(--text-primary)]">
+        <h2 className="m-0 font-display text-h3 text-fg">
           {wasEmpty ? 'Nada pendiente por hoy' : 'Sesión completa'}
         </h2>
         {!wasEmpty && practiced > 0 ? (
-          <p className="m-0 text-sm text-[var(--text-secondary)]">
+          <p className="m-0 text-sm text-fg-muted">
             {practiced} {practiced === 1 ? 'palabra practicada' : 'palabras practicadas'}
             {accuracy !== null ? ` · ${accuracy}% precisión` : ''}
           </p>
         ) : null}
-        <p className="m-0 text-sm text-[var(--text-secondary)]">
+        <p className="m-0 text-sm text-fg-muted">
           {stats.learned} de {stats.totalWords} palabras en tu deck · {stats.newToday}/{stats.newQuota} nuevas hoy
         </p>
         {wasEmpty ? (
-          <p className="m-0 text-xs text-[var(--text-tertiary)]">
+          <p className="m-0 text-xs text-fg-subtle">
             Vuelve mañana — el repaso espaciado hace el resto.
           </p>
         ) : (
-          <p className="m-0 text-xs text-[var(--text-tertiary)]">
+          <p className="m-0 text-xs text-fg-subtle">
             Tu práctica ya cuenta en tu progreso.
           </p>
         )}
@@ -93,7 +93,7 @@ export function SessionDone({
           href="/progress"
           className={cn(
             linkActionClass,
-            'bg-[var(--surface-raised)] text-[var(--fg-primary)] hover:bg-[var(--surface-sunken)]',
+            'bg-surface-raised text-fg hover:bg-surface-sunken',
           )}
         >
           Ver mi progreso
@@ -102,7 +102,7 @@ export function SessionDone({
           href="/daily"
           className={cn(
             linkActionClass,
-            'bg-transparent text-[var(--fg-primary)] hover:bg-[var(--surface-sunken)]',
+            'bg-transparent text-fg hover:bg-surface-sunken',
           )}
         >
           Ir al plan de hoy

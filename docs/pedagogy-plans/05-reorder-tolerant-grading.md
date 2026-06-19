@@ -1,6 +1,6 @@
 # 05 · `reorder_words`: grading tolerante
 
-> ⚡ **Quick win** · Impacto medio · ~1 día · Estado: 📋 Por planear
+> ⚡ **Quick win** · Impacto medio · ~1 día · Estado: ✅ Hecho (Opción A)
 
 ## Problema
 
@@ -35,9 +35,20 @@ Recomendado para el quick win: **A + B**.
 
 ## Criterios de aceptación
 
-- [ ] Una reordenación válida distinta del original no se marca como error (al menos diferencias de puntuación/capitalización).
-- [ ] El grading es coherente con la filosofía de tolerancia del resto de ejercicios.
-- [ ] Test que cubra el caso del orden alternativo válido.
+- [x] Una reordenación válida distinta del original no se marca como error (al menos diferencias de puntuación/capitalización).
+- [x] El grading es coherente con la filosofía de tolerancia del resto de ejercicios.
+- [x] Test que cubra el caso del orden alternativo válido.
+
+## Implementación
+
+Opción A entregada: `gradeReorder()` en `lib/exercises/grade-reorder.ts` normaliza
+capitalización, puntuación y espacios antes de comparar (preservando el orden de
+palabras). Lo consume `components/exercises/ReorderWordsExercise.tsx`. Tests en
+`lib/exercises/__tests__/grade-reorder.test.ts`.
+
+Opción B (órdenes alternativos pre-computados) queda diferida: requiere conocimiento
+gramatical que el generador no tiene hoy. Opción A cubre los falsos negativos
+triviales que contaminaban el SRS.
 
 ## Riesgos / decisiones abiertas
 

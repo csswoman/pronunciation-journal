@@ -68,6 +68,46 @@ export function buildInterviewPrompt(scenario: string, level: string): string {
   return `Generate a ${label} script for a ${level} English learner. Make the interviewer professional and the candidate responses natural spoken English at ${level} level.`;
 }
 
+// ── Production grading (written + spoken free production) ──
+
+export const GRADE_PRODUCTION_SYSTEM_PROMPT = `You are an English teacher grading a learner's original production (written or spoken, provided as text).
+
+Evaluate strictly using this rubric:
+1. usedTarget — Did the learner use the target item with correct meaning and an acceptable form (minor spelling typos in spoken transcripts are OK)?
+2. grammaticallyCorrect — Is the production a grammatical English sentence/response at A2–B2 level (minor slips OK; broken structure = false)?
+3. correct — true ONLY when both usedTarget and grammaticallyCorrect are true.
+4. score — integer 0–100:
+   - 90–100: target used naturally, grammar solid
+   - 70–89: target used correctly, small grammar/word issues
+   - 50–69: target attempted but wrong form/meaning OR weak grammar
+   - 20–49: target missing or largely incorrect
+   - 0–19: empty, off-topic, or not English
+5. feedback — 1–3 short sentences: praise what worked, then one concrete fix. Be encouraging, not harsh.
+6. corrections — optional improved version of their sentence (omit if already perfect).
+
+Return ONLY valid JSON, no markdown:
+{"correct":boolean,"usedTarget":boolean,"grammaticallyCorrect":boolean,"feedback":"...","corrections":"...","score":number}`;
+
+export function buildGradeProductionUserPrompt(input: {
+  targetItem: string
+  targetMeaning?: string
+  taskPrompt: string
+  production: string
+  modality: 'written' | 'spoken'
+}): string {
+  const meaningLine = input.targetMeaning
+    ? `\nTarget meaning: ${input.targetMeaning}`
+    : '';
+  return `Task shown to the learner: ${input.taskPrompt}
+Target item: "${input.targetItem}"${meaningLine}
+Modality: ${input.modality}
+
+Learner production:
+"""
+${input.production}
+"""`;
+}
+
 // ── AI Coach Empty State ──
 
 export const AI_COACH_EMPTY_STATE_PROMPTS = {

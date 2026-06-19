@@ -19,7 +19,7 @@ import { SessionProgress } from './SessionProgress'
 import { InlineFeedback } from './InlineFeedback'
 import { ExitConfirmSheet } from '@/components/exercises/ExitConfirmSheet'
 import type React from 'react'
-import type { PracticeExercise, SessionResult } from '@/lib/practice/types'
+import type { PracticeExercise, PracticeSubmitHandler, SessionResult } from '@/lib/practice/types'
 
 type Phase = 'exercising' | 'feedback' | 'hints' | 'complete'
 
@@ -38,7 +38,7 @@ export interface SessionExercisingBodyState {
 }
 
 export interface SessionExercisingBodyHandlers {
-  onSubmit: (isCorrect: boolean, userAnswer: string) => void
+  onSubmit: PracticeSubmitHandler
   onRetry: () => void
   onHintContinue: () => void
   onExit: (result: SessionResult) => void

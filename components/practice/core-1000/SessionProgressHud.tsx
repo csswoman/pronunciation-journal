@@ -18,14 +18,12 @@ function CountPill({
       <span
         className={cn(
           'text-sm font-semibold tabular-nums',
-          accent && value > 0
-            ? 'text-[var(--accent)]'
-            : 'text-[var(--text-primary)]',
+          accent && value > 0 ? 'text-primary' : 'text-fg',
         )}
       >
         {value}
       </span>
-      <span className="text-tiny uppercase tracking-[0.12em] text-[var(--text-tertiary)]">
+      <span className="text-tiny uppercase tracking-[0.12em] text-fg-subtle">
         {label}
       </span>
     </div>
@@ -34,7 +32,7 @@ function CountPill({
 
 export function SessionProgressHud({ counts }: Props) {
   return (
-    <div className="flex w-full max-w-md items-center justify-around border-b border-[var(--border-subtle)] pb-4">
+    <div className="flex w-full items-center justify-around">
       <CountPill label="Nuevas" value={counts.newRemaining} />
       <CountPill label="Aprendiendo" value={counts.learningRemaining} accent />
       <CountPill label="Repaso" value={counts.reviewRemaining} />

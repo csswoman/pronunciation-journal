@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { Lightbulb } from 'lucide-react'
 import { ExerciseShell } from '@/components/exercises/ExerciseShell'
 import type { ExerciseResult } from '@/components/exercises/ExerciseShell'
-import type { GenericPayload, PracticeExercise } from '@/lib/practice/types'
+import type { GenericPayload, PracticeExercise, PracticeSubmitHandler } from '@/lib/practice/types'
 import { getGenericHint } from '@/lib/practice/exercise-renderer/hints'
 import {
   getGenericTitle,
@@ -15,13 +15,16 @@ import { UnsupportedExercise } from '@/lib/practice/exercise-renderer/Unsupporte
 
 interface Props {
   exercise: PracticeExercise & { payload: GenericPayload }
-  onSubmit: (isCorrect: boolean, userAnswer: string) => void
+  onSubmit: PracticeSubmitHandler
   focusUi?: boolean
 }
+
+const PRODUCTION_TYPES = new Set(['written_production', 'spoken_production'])
 
 export function GenericExerciseView({ exercise, onSubmit, focusUi = false }: Props) {
   const { slug, payload } = exercise
   const data = payload.data
+  const isProduction = PRODUCTION_TYPES.has(data.type)
   const [result, setResult] = useState<ExerciseResult | null>(null)
   const [hintCount, setHintCount] = useState(0)
 
@@ -30,13 +33,26 @@ export function GenericExerciseView({ exercise, onSubmit, focusUi = false }: Pro
     setHintCount(0)
   }, [exercise.id])
 
-  function handleResult(isCorrect: boolean, userAnswer: string, timeMs: number) {
-    setResult({ isCorrect, userAnswer, timeMs })
+  function handleResult(
+    isCorrect: boolean,
+    userAnswer: string,
+    timeMs: number,
+    extras?: { score?: number },
+  ) {
+    if (isProduction) {
+      onSubmit(isCorrect, userAnswer, extras)
+      return
+    }
+    setResult({ isCorrect, userAnswer, timeMs, score: extras?.score })
   }
 
   function handleContinue() {
     if (!result) return
-    onSubmit(result.isCorrect, result.userAnswer)
+    onSubmit(
+      result.isCorrect,
+      result.userAnswer,
+      result.score != null ? { score: result.score } : undefined,
+    )
   }
 
   function handleSkip() {
@@ -49,6 +65,21 @@ export function GenericExerciseView({ exercise, onSubmit, focusUi = false }: Pro
 
   const supportsHint = getGenericSupportsHint(data.type)
 
+  const content = renderGenericExercise(data, {
+    onResult: handleResult,
+    focusUi,
+    onHint: handleHint,
+    hintCount,
+  })
+
+  if (isProduction) {
+    return (
+      <div className={focusUi ? 'phoneme-focus__session' : 'flex flex-col gap-4'}>
+        {content ?? <UnsupportedExercise slug={slug} onSkip={handleSkip} />}
+      </div>
+    )
+  }
+
   const hintSlot = result === null && supportsHint ? (
     <button
       type="button"
@@ -59,13 +90,6 @@ export function GenericExerciseView({ exercise, onSubmit, focusUi = false }: Pro
       <Lightbulb size={14} aria-hidden />
     </button>
   ) : null
-
-  const content = renderGenericExercise(data, {
-    onResult: handleResult,
-    focusUi,
-    onHint: handleHint,
-    hintCount,
-  })
 
   return (
     <div className={focusUi ? 'phoneme-focus__session' : 'flex flex-col gap-4'}>

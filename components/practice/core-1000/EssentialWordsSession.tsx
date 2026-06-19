@@ -9,10 +9,11 @@
 //   <SessionDone />          — phase: done / empty
 // </EssentialWordsSession>
 
+import type { ReactNode } from 'react'
+import { cn } from '@/lib/cn'
 import { useEssentialWordsSession } from '@/hooks/useEssentialWordsSession'
 import { useLoadingWords } from '@/hooks/useLoadingWords'
-import { DeckProgressHeader } from './DeckProgressHeader'
-import { SessionProgressHud } from './SessionProgressHud'
+import { SessionStatsCard } from './SessionStatsCard'
 import { WordStudyCard } from './WordStudyCard'
 import { SpeakReviewCard } from './SpeakReviewCard'
 import { SessionDone } from './SessionDone'
@@ -25,45 +26,59 @@ export function EssentialWordsSession() {
   } = useEssentialWordsSession()
   const loadingWords = useLoadingWords()
 
+  // One centered column for every phase, so content width never jumps as the
+  // session moves loading → study → speak → done.
   if (phase === 'loading') {
     return (
-      <div className="flex items-center justify-center min-h-[calc(100vh-10rem)]">
+      <Frame className="min-h-[calc(100vh-10rem)] justify-center">
         <WordCarousel words={loadingWords} />
-      </div>
+      </Frame>
     )
   }
 
   if (phase === 'empty' || phase === 'done') {
     return (
-      <SessionDone
-        stats={stats}
-        sessionSummary={sessionSummary}
-        wasEmpty={phase === 'empty'}
-        onContinue={reload}
-        continueLoading={reloadLoading}
-        onLearnMore={phase === 'done' ? learnMore : undefined}
-      />
+      <Frame>
+        <SessionDone
+          stats={stats}
+          sessionSummary={sessionSummary}
+          wasEmpty={phase === 'empty'}
+          onContinue={reload}
+          continueLoading={reloadLoading}
+          onLearnMore={phase === 'done' ? learnMore : undefined}
+        />
+      </Frame>
     )
   }
 
   return (
-    <div className="flex flex-col items-center gap-6">
-      <DeckProgressHeader stats={stats} />
-      <SessionProgressHud counts={counts} />
-      {phase === 'study' && current && (
-        <WordStudyCard
-          entry={current.entry}
-          onContinue={startSpeak}
-          onArchive={() => void archiveWord(current.entry.word)}
-        />
-      )}
-      {phase === 'speak' && current && (
-        <SpeakReviewCard
-          entry={current.entry}
-          onGraded={submitGrade}
-          onArchive={() => void archiveWord(current.entry.word)}
-        />
-      )}
+    <Frame>
+      <SessionStatsCard stats={stats} counts={counts} />
+
+      <div className="mt-5 flex flex-col items-center">
+        {phase === 'study' && current && (
+          <WordStudyCard
+            entry={current.entry}
+            onContinue={startSpeak}
+            onArchive={() => void archiveWord(current.entry.word)}
+          />
+        )}
+        {phase === 'speak' && current && (
+          <SpeakReviewCard
+            entry={current.entry}
+            onGraded={submitGrade}
+            onArchive={() => void archiveWord(current.entry.word)}
+          />
+        )}
+      </div>
+    </Frame>
+  )
+}
+
+function Frame({ children, className }: { children: ReactNode; className?: string }) {
+  return (
+    <div className={cn('mx-auto flex w-full max-w-md flex-col', className)}>
+      {children}
     </div>
   )
 }

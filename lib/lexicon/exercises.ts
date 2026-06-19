@@ -2,6 +2,7 @@ import type { WordEntry } from '@/lib/lexicon/types'
 import type { SentenceContextExercise, SentenceContextOption } from '@/lib/exercises/types'
 import { blankLemma, hasEnoughContext } from '@/lib/exercises/eligibility'
 import { exerciseId, pick, shuffle } from '@/lib/exercises/utils'
+import { VOCABULARY_TOPIC } from '@/lib/practice/topic-labels'
 
 const MAX_SENTENCE_CONTEXT = 4
 const OPTIONS_COUNT = 4
@@ -39,6 +40,7 @@ export function generateSentenceContextExercises(
       id: exerciseId('sentence_context', word.id, 'v1'),
       type: 'sentence_context',
       sourceRef: { source: 'word_bank', id: word.id },
+      topic: VOCABULARY_TOPIC,
       sentence: blanked,
       fullSentence: word.exampleSentence!,
       answer: word.word,

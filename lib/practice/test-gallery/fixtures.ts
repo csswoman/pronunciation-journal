@@ -107,6 +107,22 @@ const GENERIC_FIXTURES: Record<
     answerIndex: 0,
     explanation: 'Reduction: going to → gonna in connected speech.',
   },
+  written_production: {
+    id: 'test-written_production',
+    type: 'written_production',
+    sourceRef: SOURCE,
+    taskPrompt: 'Use "achieve" in an original sentence.',
+    targetItem: 'achieve',
+    targetMeaning: 'to succeed in doing something',
+  },
+  spoken_production: {
+    id: 'test-spoken_production',
+    type: 'spoken_production',
+    sourceRef: SOURCE,
+    taskPrompt: 'Say a sentence using "achieve".',
+    targetItem: 'achieve',
+    targetMeaning: 'to succeed in doing something',
+  },
 }
 
 const PHONEME_FIXTURES: Record<
@@ -243,6 +259,8 @@ const GENERIC_LABELS: Record<keyof typeof GENERIC_FIXTURES, string> = {
   reorder_words: 'Ordenar palabras',
   sentence_context: 'Contexto de oración',
   multiple_choice: 'Opción múltiple',
+  written_production: 'Producción escrita',
+  spoken_production: 'Producción oral',
 }
 
 const PHONEME_LABELS: Record<keyof typeof PHONEME_FIXTURES, string> = {

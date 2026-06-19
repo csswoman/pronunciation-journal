@@ -83,6 +83,16 @@ describe('answerToGrade', () => {
     })
   })
 
+  describe('production slugs with score', () => {
+    it.each(['written_production', 'spoken_production'] as const)(
+      '%s maps score to SM-2 grade',
+      (slug) => {
+        expect(answerToGrade(input({ slug, score: 95, isCorrect: true }))).toBe(5)
+        expect(answerToGrade(input({ slug, score: 30, isCorrect: false }))).toBe(1)
+      },
+    )
+  })
+
   describe('score on non speak_word slug is ignored', () => {
     it('pick_word with score=10 + correct + fast → 5 (not 0)', () => {
       expect(answerToGrade(input({ slug: 'pick_word', score: 10, isCorrect: true, timeMs: 100 }))).toBe(5)

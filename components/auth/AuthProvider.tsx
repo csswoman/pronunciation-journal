@@ -15,6 +15,8 @@ import { db } from "@/lib/db";
 import { getUserLearningState } from "@/lib/ai-practice/load-state";
 import { normalizeCEFR } from "@/lib/exercises/cefr";
 import AuthPanel from "./AuthPanel";
+import { WordCarousel } from "@/components/practice/session/WordCarousel";
+import { useLoadingWords } from "@/hooks/useLoadingWords";
 
 export type AuthContextValue = {
   user: User | null;
@@ -120,9 +122,7 @@ export default function AuthProvider({
   if (loading) {
     return (
       <AuthContext.Provider value={value}>
-        <div className="min-h-screen flex items-center justify-center bg-surface-base">
-          <p className="text-fg-muted">Loading session…</p>
-        </div>
+        <AuthLoadingScreen />
       </AuthContext.Provider>
     );
   }
@@ -137,5 +137,14 @@ export default function AuthProvider({
 
   return (
     <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
+  );
+}
+
+function AuthLoadingScreen() {
+  const words = useLoadingWords();
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-surface-base">
+      <WordCarousel words={words} />
+    </div>
   );
 }

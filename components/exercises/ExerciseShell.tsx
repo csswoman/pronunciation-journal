@@ -16,6 +16,7 @@ export interface ExerciseResult {
   isCorrect: boolean
   userAnswer: string
   timeMs: number
+  score?: number
 }
 
 interface HintShape {
