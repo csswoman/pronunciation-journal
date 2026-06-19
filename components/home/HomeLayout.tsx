@@ -16,9 +16,8 @@ import HomeReviewsSection from '@/components/home/HomeReviewsSection'
 import HomeLearnSection from '@/components/home/HomeLearnSection'
 import type { DailyStreakResult } from '@/lib/daily/streak-core'
 import type { ConceptLesson } from '@/hooks/useDailyPlan'
-import type { DailyGoalProgress, WeakestPhonemeHome, SoundDueHome } from '@/lib/home/constants'
+import type { DailyGoalProgress, WeakestPhonemeHome, ReviewQueueSummary } from '@/lib/home/constants'
 import type { LexiconRetentionStats } from '@/lib/lexicon/server-progress'
-import type { WordBankEntry } from '@/lib/word-bank/types'
 import type { MiniLesson, LanguageConcept } from '@/lib/content/schemas'
 
 interface HomeLayoutProps {
@@ -28,9 +27,7 @@ interface HomeLayoutProps {
   conceptLesson?: ConceptLesson | null
   dailyGoal?: DailyGoalProgress | null
   weakestPhoneme?: WeakestPhonemeHome | null
-  dueWords?: WordBankEntry[]
-  dueCount?: number
-  soundsDue?: SoundDueHome[]
+  reviewQueue?: ReviewQueueSummary
   lexiconRetention?: LexiconRetentionStats | null
   todaysLesson?: MiniLesson | null
   todaysConcept?: LanguageConcept | null
@@ -43,9 +40,7 @@ export default function HomeLayout({
   conceptLesson = null,
   dailyGoal = null,
   weakestPhoneme = null,
-  dueWords = [],
-  dueCount = 0,
-  soundsDue = [],
+  reviewQueue = { total: 0, newAvailable: 0, sources: [], preview: [] },
   lexiconRetention = null,
   todaysLesson = null,
   todaysConcept = null,
@@ -60,9 +55,7 @@ export default function HomeLayout({
         <HomeStatusHero streak={streak} wordsDueCount={wordsDueCount} soundsDueCount={soundsDueCount} />
         <HomeTodaySection streak={streak} dailyGoal={dailyGoal} dailyCard={dailyCard} />
         <HomeReviewsSection
-          words={dueWords}
-          dueCount={dueCount}
-          soundsDue={soundsDue}
+          reviewQueue={reviewQueue}
           lexicon={lexiconRetention}
           weakestPhoneme={weakestPhoneme}
         />
