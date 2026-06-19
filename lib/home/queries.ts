@@ -227,7 +227,7 @@ export async function getSoundsDueForHome(userId: string): Promise<SoundDueHome[
     .from("user_contrast_progress")
     .select("contrast_id, total_attempts, correct_answers, next_review")
     .eq("user_id", userId)
-    .or(`next_review.lte.${now},next_review.is.null`)
+    .lte("next_review", now)
     .order("next_review", { ascending: true })
     .limit(SOUNDS_DUE_PREVIEW_LIMIT);
 
