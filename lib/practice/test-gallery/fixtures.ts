@@ -45,6 +45,7 @@ const GENERIC_FIXTURES: Record<
     | 'ax_same_different'
     | 'odd_one_out'
     | 'abx'
+    | 'reader'
   >,
   GenericExercise
 > = {

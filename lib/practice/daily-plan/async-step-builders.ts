@@ -4,6 +4,10 @@ import { generateReorderAI } from '@/lib/exercises/generators/reorder-ai'
 import { fromGenericExercise } from '@/lib/practice/adapters'
 import { orderFragmentsByDue } from '@/lib/practice/fragment-priority'
 import type { DailyStep } from '@/lib/practice/types'
+import { resolveReaderPassage } from '@/lib/practice/reader/get-passage'
+import { getCachedReaderPassage, saveReaderPassage } from '@/lib/db'
+import { generateReaderPassage } from '@/lib/practice/reader/queries'
+import { pickTargets, type ReaderTargetRow } from '@/lib/practice/reader/select-targets'
 import { SENTENCE_BUILDER_EXERCISE_COUNT } from './constants'
 import { dayOfYear, dedupeByContentId } from './selectors'
 
@@ -74,5 +78,37 @@ export async function buildSentenceBuilderStep(
     icon: 'LayoutList',
     exercises,
     estMinutes: Math.max(2, Math.round(exercises.length * 1.2)),
+  }
+}
+
+/** Comprehensible-input reader step. null when offline w/o cache or <3 targets. */
+export async function buildReaderStep(
+  userId: string,
+  srsRows: ReaderTargetRow[],
+  online: boolean,
+): Promise<DailyStep | null> {
+  const targets = pickTargets(srsRows)
+  if (!targets) return null
+
+  const passage = await resolveReaderPassage({
+    userId,
+    targets,
+    online,
+    now: Date.now(),
+    getCached: getCachedReaderPassage,
+    generate: (uid, t) => generateReaderPassage(uid, t),
+    save: saveReaderPassage,
+  })
+  if (!passage) return null
+
+  return {
+    kind: 'reader',
+    id: 'reader',
+    title: 'Lectura',
+    subtitle: 'Tus palabras recientes, en contexto',
+    icon: 'BookOpen',
+    exercises: [],
+    estMinutes: 3,
+    readerPassage: passage,
   }
 }

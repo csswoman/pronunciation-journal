@@ -6,6 +6,7 @@ import type {
   GenericExercise,
 } from '@/lib/exercises/types'
 import type { StudyCardModel } from '@/lib/practice/study-card/model'
+import type { ReaderPassage } from '@/lib/practice/reader/types'
 
 // Slugs mapped from `exercise_types` rows in Supabase.
 // Keep in sync with supabase/migrations/20260329230300_seed_exercise_types.sql.
@@ -25,6 +26,7 @@ export type ExerciseSlug =
   | 'abx'               // id: 14
   | 'sentence_context'   // no DB row — does not write to answer_history
   | 'multiple_choice'    // no DB row — does not write to answer_history
+  | 'reader'             // no DB row — comprehensible input, does not write to answer_history
   | 'written_production' // id: 15 — online-only (AI grading)
   | 'spoken_production'  // id: 16 — online-only (AI grading)
 
@@ -45,6 +47,7 @@ export const EXERCISE_TYPE_IDS: Record<ExerciseSlug, number | null> = {
   abx: 14,
   sentence_context: null,
   multiple_choice: null,
+  reader: null,
   written_production: 15,
   spoken_production: 16,
 }
@@ -135,6 +138,7 @@ export type DailyStepKind =
   | 'listening'        // dictation desde words del seed
   | 'sentence_builder' // reorder_words desde text_fragments (lecciones y grammar decks)
   | 'concept'          // mini-lección / language concept del día (lectura ligera)
+  | 'reader'           // comprehensible-input: párrafo i+1 que recicla vocab reciente
 
 export type DailyStep = {
   kind: DailyStepKind
@@ -153,6 +157,8 @@ export type DailyStep = {
   href?: string
   /** Solo para 'phoneme_focus': IPA del sonido que se practica (para mostrar intro). */
   ipa?: string
+  /** Solo para 'reader': el párrafo de comprehensible input a leer. */
+  readerPassage?: ReaderPassage
 }
 
 export type DailyPlan = {
