@@ -354,6 +354,14 @@ El algoritmo SM-2 está implementado en varias variantes:
 
 Los `text_fragments` son system sentences (`user_id = null`), así que su estado de repaso es per-usuario y local (Dexie), no una tabla Supabase. Los fragmentos vencidos se priorizan en la sesión vía `orderFragmentsByDue` (`lib/practice/fragment-priority.ts`).
 
+### Presentación antes de testear (noticing)
+
+El daily-plan antepone un paso `word_intro` (`DailyStepKind`) que **presenta** las palabras nuevas (forma + significado + audio) antes de que el alumno las recupere en `word_review`. Es un paso **no evaluado** (no escribe `answer_history`): lleva `studyCards: StudyCardModel[]` en vez de `exercises`.
+
+- Modelo + adaptadores: `lib/practice/study-card/model.ts` (`StudyCardModel`, `coreWordToStudyCard`, `wordBankEntryToStudyCard`).
+- Componente agnóstico de fuente: `components/practice/study-card/StudyCard.tsx`, reutilizado por Core 1000 (`WordStudyCard`) y por el daily-plan (`WordIntroStep`).
+- Builder: `buildWordIntroStep` (`step-builders.ts`), tope `WORD_INTRO_MAX_CARDS`; "nueva" = `srs_status === 'new'`.
+
 ---
 
 ## Extensión futura

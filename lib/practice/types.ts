@@ -5,6 +5,7 @@ import type {
   ExerciseSourceRef,
   GenericExercise,
 } from '@/lib/exercises/types'
+import type { StudyCardModel } from '@/lib/practice/study-card/model'
 
 // Slugs mapped from `exercise_types` rows in Supabase.
 // Keep in sync with supabase/migrations/20260329230300_seed_exercise_types.sql.
@@ -121,6 +122,7 @@ export type SessionResult = {
 // ── Daily plan (5-step "diaria") ────────────────────────────────────────────
 
 export type DailyStepKind =
+  | 'word_intro'       // presentación (noticing) de palabras nuevas antes de testearlas
   | 'word_review'      // SRS de word_bank (fill_blank / sentence_dictation / reorder)
   | 'context_practice'   // sentence_context desde word_bank (vocabulario en contexto de oración)
   | 'connected_speech'   // quiz + dictado desde mazos cs-*.json (habla conectada americana)
@@ -138,9 +140,11 @@ export type DailyStep = {
   subtitle: string
   /** lucide-react icon name. */
   icon: string
-  /** Ejercicios context='daily' que componen el paso. Vacío para 'concept'. */
+  /** Ejercicios context='daily' que componen el paso. Vacío para 'concept' y 'word_intro'. */
   exercises: PracticeExercise[]
   estMinutes: number
+  /** Solo para 'word_intro': tarjetas de presentación (no evaluadas, no escriben answer_history). */
+  studyCards?: StudyCardModel[]
   /** Solo para 'concept': a dónde lleva la lectura. */
   href?: string
   /** Solo para 'phoneme_focus': IPA del sonido que se practica (para mostrar intro). */

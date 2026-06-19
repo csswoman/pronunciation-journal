@@ -9,12 +9,39 @@ import { fromGenericExercise, fromMixedExercise } from '@/lib/practice/adapters'
 import type { DailyStep, PracticeContext, PracticeExercise } from '@/lib/practice/types'
 import type { MinimalPair, Sound, SoundWord } from '@/lib/phoneme-practice/types'
 import type { WordBankEntry } from '@/lib/word-bank/types'
+import { wordBankEntryToStudyCard } from '@/lib/practice/study-card/model'
 import {
   LISTENING_EXERCISE_COUNT,
   MINIMAL_PAIRS_EXERCISE_COUNT,
   PHONEME_FOCUS_EXERCISE_COUNT,
+  WORD_INTRO_MAX_CARDS,
 } from './constants'
 import { dedupeByContentId, toWordEntry } from './selectors'
+
+/**
+ * Paso de presentación (noticing): muestra palabras nuevas (forma + significado
+ * + audio) antes de que el alumno las recupere en word_review. No evaluado — no
+ * escribe answer_history. Devuelve null si no hay palabras nuevas.
+ */
+export function buildWordIntroStep(words: WordBankEntry[]): DailyStep | null {
+  const newWords = words
+    .filter((w) => w.srs_status === 'new')
+    .slice(0, WORD_INTRO_MAX_CARDS)
+  if (newWords.length === 0) return null
+
+  const studyCards = newWords.map(wordBankEntryToStudyCard)
+
+  return {
+    kind: 'word_intro',
+    id: 'word_intro',
+    title: 'Palabras nuevas',
+    subtitle: `${newWords.length} ${newWords.length === 1 ? 'palabra nueva' : 'palabras nuevas'} para conocer`,
+    icon: 'Sparkles',
+    exercises: [],
+    studyCards,
+    estMinutes: Math.max(1, Math.round(newWords.length * 0.5)),
+  }
+}
 
 /** Paso de repaso de palabras (solo si hay entradas en el word_bank). */
 export function buildWordReviewStep(

@@ -2,6 +2,7 @@
 
 // Planned structure:
 // <DailyStepSession>
+//   <WordIntroStep />       — si word_intro: presentación de palabras nuevas
 //   <PhonemeLessonIntro />  — si phoneme_focus + ipa conocido + no iniciado
 //   <PracticeSession />     — ejercicios del paso
 // </DailyStepSession>
@@ -9,6 +10,7 @@
 import { useState } from 'react'
 import PracticeSession from '@/components/practice/PracticeSession'
 import { PhonemeLessonIntro } from '@/components/phoneme-practice/PhonemeLessonIntro'
+import { WordIntroStep } from '@/components/daily/WordIntroStep'
 import { IPA_EXTRA } from '@/lib/pronunciation/ipa-data'
 import type { DailyStep } from '@/lib/practice/types'
 
@@ -33,6 +35,12 @@ export default function DailyStepSession({
     !!IPA_EXTRA[step.ipa]
 
   const [started, setStarted] = useState(!showable)
+
+  // word_intro is a non-evaluated presentation step: show the study cards, then
+  // mark the step complete (it carries no exercises / answer_history).
+  if (step.kind === 'word_intro') {
+    return <WordIntroStep cards={step.studyCards ?? []} onComplete={onComplete} />
+  }
 
   if (!started && step.ipa) {
     return (

@@ -17,6 +17,7 @@ const ICONS: Record<string, LucideIcon> = {
   Headphones,
   GraduationCap,
   LayoutList,
+  Sparkles,
 }
 
 export function DailyStepIcon({ name, size = 18 }: { name: string; size?: number }) {

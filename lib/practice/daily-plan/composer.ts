@@ -26,6 +26,7 @@ import {
   buildListeningStep,
   buildMinimalPairsStep,
   buildPhonemeFocusStep,
+  buildWordIntroStep,
   buildWordReviewStep,
 } from './step-builders'
 
@@ -177,6 +178,10 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
     const sentenceStep = await buildSentenceBuilderStep(sentenceSource, weakTopic)
     if (sentenceStep) allSteps.push(sentenceStep)
   }
+
+  // Noticing before testing: present new words before they appear in word_review.
+  const wordIntro = buildWordIntroStep(reviewWords)
+  if (wordIntro) reviewSteps.push(wordIntro)
 
   const wordReview = buildWordReviewStep(reviewWords)
   if (wordReview) reviewSteps.push(wordReview)

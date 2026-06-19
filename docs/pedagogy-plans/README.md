@@ -17,7 +17,7 @@ El orden importa: sin el #1 (SRS cerrado), los demás no consolidan nada.
 | # | Plan | Tipo | Impacto | Esfuerzo | Estado |
 |---|------|------|---------|----------|--------|
 | 1 | [01-close-vocab-srs.md](./01-close-vocab-srs.md) | 🔴 Crítico | Máximo | 2-3 días | ✅ Hecho |
-| 2 | [02-noticing-presentation-step.md](./02-noticing-presentation-step.md) | 🔴 Crítico | Alto | 1-2 días | 📋 Por planear |
+| 2 | [02-noticing-presentation-step.md](./02-noticing-presentation-step.md) | 🔴 Crítico | Alto | 1-2 días | ✅ Hecho |
 | 3 | [03-free-production-exercise.md](./03-free-production-exercise.md) | 🔴 Crítico | Alto | 4-6 días | 📋 Por planear |
 | 4 | [04-narrate-the-path.md](./04-narrate-the-path.md) | 🟠 Importante | Medio | 1-2 días | 📋 Por planear |
 | 5 | [05-reorder-tolerant-grading.md](./05-reorder-tolerant-grading.md) | ⚡ Quick win | Medio | 1 día | 📋 Por planear |
