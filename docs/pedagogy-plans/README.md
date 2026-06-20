@@ -32,7 +32,7 @@ Esta tabla refleja el estado verificado contra el código y la DB, no el plan or
 
 1. **Commitear plan 04** — vive solo en el working tree (`topic-labels.ts`, `Core1000ProgressCard.tsx`, 10 archivos `M`). Un cambio de rama lo pierde.
 2. **Completar wiring de plan 04** — los `subtitle` de `lib/practice/daily-plan/step-builders.ts` siguen siendo prosa hardcodeada; deberían consumir `topicDisplayLabel()` para narrar el objetivo gramatical real del paso.
-3. **Verificar slug `reader`** — `reader_passages` existe, pero `exercise_types` no tiene fila `reader`. El reader es un `DailyStep` propio, así que probablemente no la necesita; confirmar que ningún lookup la espera.
+3. ~~Verificar slug `reader`~~ — ✅ Confirmado: `reader: null` en `EXERCISE_TYPE_IDS` (`lib/practice/types.ts:50`) es intencional. El reader no escribe a `answer_history`, así que **no debe** tener fila en `exercise_types`. No es un bug.
 4. **QA manual reader** — completar daily plan con ≥3 due → verificar reader step + exposure tracking, y reread offline desde Dexie.
 
 ---

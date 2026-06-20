@@ -66,3 +66,24 @@ export function topicDisplayLabel(raw: string | undefined | null): string | null
   const body = stripDomain(normalized)
   return TOPIC_LABELS[body] ?? titleCase(body)
 }
+
+/**
+ * Pick a single learner-readable concept to narrate for a step, given the raw
+ * topics of its exercises. Returns the dominant *specific* concept (e.g.
+ * "Presente simple") so the step header can declare what it trains.
+ *
+ * The generic `vocab:vocabulary` topic is ignored: a word-bank step is already
+ * narrated by its prose subtitle, so surfacing "Vocabulario" adds no signal.
+ * Returns null when the step has no specific concept or mixes several — in those
+ * cases the caller keeps its existing prose subtitle.
+ */
+export function dominantTopicLabel(rawTopics: Array<string | undefined | null>): string | null {
+  const specific = new Set<string>()
+  for (const raw of rawTopics) {
+    const normalized = raw ? normalizeTopic(raw) : null
+    if (normalized === null || normalized === VOCABULARY_TOPIC) continue
+    specific.add(normalized)
+  }
+  if (specific.size !== 1) return null
+  return topicDisplayLabel([...specific][0])
+}

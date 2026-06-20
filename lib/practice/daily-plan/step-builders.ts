@@ -14,6 +14,7 @@ import type { DailyStep, PracticeContext, PracticeExercise } from '@/lib/practic
 import type { MinimalPair, Sound, SoundWord } from '@/lib/phoneme-practice/types'
 import type { WordBankEntry } from '@/lib/word-bank/types'
 import { wordBankEntryToStudyCard } from '@/lib/practice/study-card/model'
+import { dominantTopicLabel } from '@/lib/practice/topic-labels'
 import {
   LISTENING_EXERCISE_COUNT,
   MINIMAL_PAIRS_EXERCISE_COUNT,
@@ -21,6 +22,11 @@ import {
   WORD_INTRO_MAX_CARDS,
 } from './constants'
 import { dedupeByContentId, toWordEntry } from './selectors'
+
+/** Raw topic of an exercise, when it is a generic exercise that carries one. */
+function exerciseTopic(ex: PracticeExercise): string | undefined {
+  return ex.payload.kind === 'generic' ? ex.payload.data.topic : undefined
+}
 
 /**
  * Paso de presentación (noticing): muestra palabras nuevas (forma + significado
@@ -79,11 +85,14 @@ export function buildWordReviewStep(
 
   if (exercises.length === 0) return null
 
+  const concept = dominantTopicLabel(exercises.map(exerciseTopic))
+  const wordsSubtitle = `Afianzas ${words.length} ${words.length === 1 ? 'palabra' : 'palabras'} de tu léxico antes de que se te olviden`
+
   return {
     kind: 'word_review',
     id: 'word_review',
     title: 'Repaso de palabras',
-    subtitle: `Afianzas ${words.length} ${words.length === 1 ? 'palabra' : 'palabras'} de tu léxico antes de que se te olviden`,
+    subtitle: concept ? `${concept} · ${wordsSubtitle}` : wordsSubtitle,
     icon: 'BookMarked',
     exercises,
     estMinutes: Math.max(2, Math.round(exercises.length * 1.1)),
