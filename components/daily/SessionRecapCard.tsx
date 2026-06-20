@@ -17,6 +17,7 @@ import Button from '@/components/ui/Button'
 import { db } from '@/lib/db'
 import { CORE1000_PREFIX } from '@/lib/core-1000/types'
 import type { SessionArc } from '@/lib/practice/types'
+import SpeakWithCoachCard from '@/components/ai-coach/SpeakWithCoachCard'
 
 const CORE_1000_TARGET = 1000
 
@@ -108,6 +109,9 @@ export default function SessionRecapCard({ arc, stepCount, dueTomorrow, streak }
               Free practice
             </Button>
           </Link>
+        </div>
+        <div className="mt-6 w-full max-w-sm">
+          <SpeakWithCoachCard arc={arc} />
         </div>
       </div>
     </PageLayout>
