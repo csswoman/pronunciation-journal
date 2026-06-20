@@ -9,6 +9,7 @@ import { buildSession } from '@/lib/practice/engine'
 import { savePracticeAnswer } from '@/lib/practice/queries'
 import { buildSessionResult } from '@/lib/practice/session-result'
 import { recordActivitySession } from '@/lib/progress/activity-hub'
+import { gradeCore1000Word } from '@/lib/core-1000/grade'
 import {
   createSession,
   deleteSession,
@@ -145,6 +146,16 @@ export function useSessionState(config: PracticeConfig) {
       if (user) {
         void savePracticeAnswer(user.id, result).catch((err) => {
           console.error('[PracticeSession] savePracticeAnswer failed', err)
+        })
+      }
+      // Route vocab exercises from courses to the shared Core 1000 SRS entry.
+      if (result.sourceRef?.source === 'core1k') {
+        const word = result.sourceRef.id.replace(/^c1k:/, '')
+        const quality = result.isCorrect ? 4 : 2
+        // No userId: answer_history is already written above by savePracticeAnswer.
+        // This call only updates the shared Dexie SRS entry (c1k:<word>).
+        void gradeCore1000Word(word, quality, {}).catch((err) => {
+          console.error('[PracticeSession] gradeCore1000Word failed', err)
         })
       }
       const nextResults = [...results, result]
