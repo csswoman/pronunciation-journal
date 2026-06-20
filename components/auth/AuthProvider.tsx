@@ -8,7 +8,9 @@ import {
   useMemo,
   useState,
 } from "react";
+import { usePathname } from "next/navigation";
 import type { Session, User } from "@supabase/supabase-js";
+import { isPublicAuthPath } from "@/lib/auth/public-paths";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { db } from "@/lib/db";
@@ -41,6 +43,8 @@ export default function AuthProvider({
 }: {
   children: React.ReactNode;
 }) {
+  const pathname = usePathname();
+  const isPublicPath = isPublicAuthPath(pathname);
   const supabaseEnabled = useMemo(() => isSupabaseConfigured(), []);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(supabaseEnabled);
@@ -127,7 +131,7 @@ export default function AuthProvider({
     );
   }
 
-  if (!session) {
+  if (!session && !isPublicPath) {
     return (
       <AuthContext.Provider value={value}>
         <AuthPanel />

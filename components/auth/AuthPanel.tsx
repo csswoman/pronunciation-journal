@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState, useEffect } from "react";
 import {
   signInWithEmail,
@@ -175,6 +176,16 @@ export default function AuthPanel() {
                 )}
               </>
             )}
+
+            <p className="mt-8 text-center text-xs text-fg-muted">
+              <Link href="/privacy" className="transition-colors hover:text-fg">
+                Privacy Policy
+              </Link>
+              <span aria-hidden="true"> · </span>
+              <Link href="/terms" className="transition-colors hover:text-fg">
+                Terms of Service
+              </Link>
+            </p>
           </div>
         </div>
       </div>
