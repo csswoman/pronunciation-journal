@@ -9,7 +9,7 @@ vi.mock('@google/genai', () => ({
 vi.mock('@/lib/api/guards', () => ({
   requireUser: async () => ({ user: { id: 'u1' }, error: null }),
   rateLimit: () => ({ limited: false, error: null }),
-  validateBody: async (_req: Request, _schema: unknown) => ({
+  validateBody: async () => ({
     data: { targets: ['cat', 'go', 'dog'], level: 'b1' }, error: null,
   }),
 }))
