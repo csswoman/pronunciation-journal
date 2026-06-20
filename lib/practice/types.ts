@@ -161,12 +161,24 @@ export type DailyStep = {
   readerPassage?: ReaderPassage
 }
 
+/** Narrative framing metadata for a daily session (opening banner + closing recap). */
+export type SessionArc = {
+  /** Dominant grammar concept of the session, via dominantTopicLabel(). null if none. */
+  topicLabel: string | null
+  /** IPA of the day's primary sound. null if no phonetic focus. */
+  soundIpa: string | null
+  /** Distinct words touched in the session (from word_intro/word_review/context steps). */
+  sessionWords: string[]
+}
+
 export type DailyPlan = {
   /** Exactamente DAILY_PLAN_STEP_COUNT pasos cuando el seed está disponible. */
   steps: DailyStep[]
   totalExercises: number
   /** true si no había word_bank ni progreso de fonema (todo salió del seed). */
   isNewUser: boolean
+  /** Narrative framing for opening banner + closing recap. Optional: cached plans predate it. */
+  arc?: SessionArc
 }
 
 export type PracticeSubmitHandler = (
