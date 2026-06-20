@@ -289,6 +289,7 @@
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md);
   overflow: hidden;
+  padding: var(--space-6);
 }
 
 .grammar-deck__done {
