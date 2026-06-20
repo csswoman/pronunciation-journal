@@ -35,8 +35,10 @@ export function SentenceDictationExercise({ exercise, onResult, onHint, hintCoun
   const [input, setInput] = useState('')
   const [state, setState] = useState<AnswerState>('idle')
   const [isPlaying, setIsPlaying] = useState(false)
+  const [isPlayingSlow, setIsPlayingSlow] = useState(false)
   const startMs = useRef(Date.now())
   const audioRef = useRef<HTMLAudioElement | null>(null)
+  const slowAudioRef = useRef<HTMLAudioElement | null>(null)
   const inputRef = useRef<HTMLTextAreaElement | null>(null)
 
   const hint = exercise.sentence
@@ -49,10 +51,15 @@ export function SentenceDictationExercise({ exercise, onResult, onHint, hintCoun
     setInput('')
     setState('idle')
     setIsPlaying(false)
+    setIsPlayingSlow(false)
     startMs.current = Date.now()
     if (audioRef.current) {
       audioRef.current.pause()
       audioRef.current = null
+    }
+    if (slowAudioRef.current) {
+      slowAudioRef.current.pause()
+      slowAudioRef.current = null
     }
     window.speechSynthesis?.cancel()
   }, [exercise.id])
@@ -82,6 +89,31 @@ export function SentenceDictationExercise({ exercise, onResult, onHint, hintCoun
     }
   }, [exercise.audioUrl, exercise.sentence, isPlaying])
 
+  const handlePlaySlow = useCallback(() => {
+    if (isPlayingSlow) return
+
+    if (exercise.audioUrl) {
+      const audio = new Audio(exercise.audioUrl)
+      audio.playbackRate = 0.6
+      slowAudioRef.current = audio
+      setIsPlayingSlow(true)
+      audio.play()
+      audio.onended = () => { setIsPlayingSlow(false); inputRef.current?.focus() }
+      audio.onerror = () => setIsPlayingSlow(false)
+      return
+    }
+
+    if (typeof window !== 'undefined' && window.speechSynthesis) {
+      const utterance = new SpeechSynthesisUtterance(exercise.sentence)
+      utterance.lang = 'en-US'
+      utterance.rate = 0.5
+      utterance.onstart = () => setIsPlayingSlow(true)
+      utterance.onend = () => { setIsPlayingSlow(false); inputRef.current?.focus() }
+      utterance.onerror = () => setIsPlayingSlow(false)
+      window.speechSynthesis.speak(utterance)
+    }
+  }, [exercise.audioUrl, exercise.sentence, isPlayingSlow])
+
   function handleSubmit() {
     if (state !== 'idle' || !input.trim()) return
     const isCorrect = normalize(input) === normalize(exercise.sentence)
@@ -100,7 +132,12 @@ export function SentenceDictationExercise({ exercise, onResult, onHint, hintCoun
 
   return (
     <div className="flex w-full flex-col gap-5">
-      <AudioButton isPlaying={isPlaying} onPlay={handlePlay} />
+      <AudioButtons
+        isPlaying={isPlaying}
+        isPlayingSlow={isPlayingSlow}
+        onPlay={handlePlay}
+        onPlaySlow={handlePlaySlow}
+      />
       <WordCountDashes count={exercise.sentence.trim().split(/\s+/).length} />
       <AnswerInput
         inputRef={inputRef}
@@ -116,14 +153,24 @@ export function SentenceDictationExercise({ exercise, onResult, onHint, hintCoun
   )
 }
 
-function AudioButton({ isPlaying, onPlay }: { isPlaying: boolean; onPlay: () => void }) {
+function AudioButtons({
+  isPlaying,
+  isPlayingSlow,
+  onPlay,
+  onPlaySlow,
+}: {
+  isPlaying: boolean
+  isPlayingSlow: boolean
+  onPlay: () => void
+  onPlaySlow: () => void
+}) {
   return (
-    <div className="flex justify-center py-2">
+    <div className="flex items-center justify-center gap-4 py-2">
       <button
         type="button"
         onClick={onPlay}
         disabled={isPlaying}
-        aria-label={isPlaying ? 'Playing sentence' : 'Play sentence'}
+        aria-label={isPlaying ? 'Reproduciendo…' : 'Escuchar oración'}
         className={cn(
           'flex h-14 w-14 items-center justify-center rounded-full border transition-all duration-200',
           isPlaying
@@ -133,7 +180,30 @@ function AudioButton({ isPlaying, onPlay }: { isPlaying: boolean; onPlay: () => 
       >
         {isPlaying ? <SoundWaveIcon /> : <SpeakerIcon />}
       </button>
+      <div className="flex flex-col items-center gap-1">
+        <button
+          type="button"
+          onClick={onPlaySlow}
+          disabled={isPlayingSlow}
+          aria-label={isPlayingSlow ? 'Reproduciendo lento…' : 'Escuchar despacio'}
+          className={cn(
+            'flex h-10 w-10 items-center justify-center rounded-full border transition-all duration-200',
+            isPlayingSlow
+              ? 'cursor-wait border-border-default bg-surface-raised text-fg-subtle'
+              : 'cursor-pointer border-border-subtle bg-surface-base text-fg-muted hover:border-border-default hover:text-fg hover:scale-105 active:scale-95',
+          )}
+        >
+          <TurtleIcon />
+        </button>
+        <span className="text-[10px] uppercase tracking-widest text-fg-subtle font-medium">Lento</span>
+      </div>
     </div>
+  )
+}
+
+function TurtleIcon() {
+  return (
+    <span className="text-[11px] font-bold leading-none" aria-hidden>0.5×</span>
   )
 }
 

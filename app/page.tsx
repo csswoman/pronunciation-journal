@@ -3,7 +3,7 @@ export const dynamic = "force-dynamic";
 import PageLayout from "@/components/layout/PageLayout";
 import HomeLayout from "@/components/home/HomeLayout";
 import { getSupabaseServerUserId } from "@/lib/supabase/session";
-import { getLexiconRetentionStats } from "@/lib/lexicon/server-progress";
+import { getVocabularyProgressSeed } from "@/lib/vocabulary/server-progress";
 import { getTodaysMiniLesson, getTodaysLanguageConcept } from "@/lib/content/lessons";
 import { getDailyStreak } from "@/lib/daily/streak";
 import { getTodayPracticeGoal, getWeakestPhonemeForHome } from "@/lib/home/queries";
@@ -11,7 +11,7 @@ import { getReviewQueueSummary } from "@/lib/home/review-queue";
 import type { MiniLesson, LanguageConcept } from "@/lib/content/schemas";
 import type { DailyStreakResult } from "@/lib/daily/streak-core";
 import type { DailyGoalProgress, WeakestPhonemeHome, ReviewQueueSummary } from "@/lib/home/constants";
-import type { LexiconRetentionStats } from "@/lib/lexicon/server-progress";
+import type { VocabularyProgressSeed } from "@/lib/vocabulary/server-progress";
 
 const REVIEW_PREVIEW_LIMIT = 4;
 
@@ -20,20 +20,20 @@ export default async function HomePage() {
   let todaysLesson: MiniLesson | null = null;
   let todaysConcept: LanguageConcept | null = null;
   let dailyStreak: DailyStreakResult | undefined;
-  let lexiconRetention: LexiconRetentionStats | null = null;
+  let vocabularyProgress: VocabularyProgressSeed | null = null;
   let dailyGoal: DailyGoalProgress | null = null;
   let weakestPhoneme: WeakestPhonemeHome | null = null;
 
   const userId = await getSupabaseServerUserId();
 
   try {
-    const [queue, lesson, concept, streak, lexicon, goal, weakSound] =
+    const [queue, lesson, concept, streak, vocabulary, goal, weakSound] =
       await Promise.all([
         getReviewQueueSummary(userId),
         getTodaysMiniLesson(),
         getTodaysLanguageConcept(),
         userId ? getDailyStreak(userId) : Promise.resolve(undefined),
-        getLexiconRetentionStats(),
+        getVocabularyProgressSeed(),
         userId ? getTodayPracticeGoal(userId) : Promise.resolve(null),
         userId ? getWeakestPhonemeForHome(userId) : Promise.resolve(null),
       ]);
@@ -41,7 +41,7 @@ export default async function HomePage() {
     todaysLesson = lesson;
     todaysConcept = concept;
     dailyStreak = streak ?? undefined;
-    lexiconRetention = lexicon;
+    vocabularyProgress = vocabulary;
     dailyGoal = goal;
     weakestPhoneme = weakSound;
   } catch (error) {
@@ -62,7 +62,7 @@ export default async function HomePage() {
         dailyGoal={dailyGoal}
         weakestPhoneme={weakestPhoneme}
         reviewQueue={reviewQueue}
-        lexiconRetention={lexiconRetention}
+        vocabularyProgress={vocabularyProgress}
         todaysLesson={todaysLesson}
         todaysConcept={todaysConcept}
       />

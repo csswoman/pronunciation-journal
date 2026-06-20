@@ -2,20 +2,20 @@
 
 // Planned structure:
 // <GrammarStudyDeck>
-//   PracticeSession overlay  (when sentence practice is active)
 //   <GrammarDeckHeader />
 //   <QuizStep />             (quiz phase)
 //   <DeckDoneScreen />       (done phase)
+//   <PracticeSession />      (practice phase — embedded, no overlay)
 //   <DeckCarousel />         (cards phase)
 // </GrammarStudyDeck>
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { recordLessonComplete } from "@/lib/practice/queries";
 import PracticeSession from "@/components/practice/PracticeSession";
-import { fetchFragmentsForDeck, generateReorderFromFragments } from "@/lib/exercises/generators/reorder-from-fragments";
-import { fromGenericExercise } from "@/lib/practice/adapters";
 import type { PracticeExercise } from "@/lib/practice/types";
-import type { GrammarStudyDeckData } from "@/lib/courses/grammar-deck/types";
+import type { CefrLevel } from "@/lib/core-1000/types";
+import { buildCoursePracticeSession } from "@/lib/courses/practice/build-session";
+import type { GrammarRelatedLink, GrammarStudyDeckData } from "@/lib/courses/grammar-deck/types";
 import type { CoursePathTrackId } from "@/lib/courses/types";
 import GrammarDeckHeader from "./GrammarDeckHeader";
 import QuizStep from "./QuizStep";
@@ -31,6 +31,12 @@ interface GrammarStudyDeckProps {
   /** When provided, finishing the deck marks the lesson complete in the DB. */
   levelId?: CoursePathTrackId;
   lessonId?: string;
+  /** Deck slug used to fetch sentence-practice fragments (e.g. "a1-verbos-comunes") */
+  deckSlug?: string;
+  /** CEFR level for building the course practice session */
+  cefrLevel?: CefrLevel;
+  /** Server-derived related links; overrides deck.related when present */
+  relatedLinks?: GrammarRelatedLink[];
 }
 
 export default function GrammarStudyDeck({
@@ -40,13 +46,16 @@ export default function GrammarStudyDeck({
   courseTitle,
   levelId,
   lessonId,
+  deckSlug,
+  cefrLevel,
+  relatedLinks,
 }: GrammarStudyDeckProps) {
   const total = deck.cards.length;
 
   const [index, setIndex] = useState(0);
   const [direction, setDirection] = useState<"next" | "prev">("next");
   const [reviewed, setReviewed] = useState<Set<string>>(() => new Set());
-  const [phase, setPhase] = useState<"cards" | "quiz" | "done">("cards");
+  const [phase, setPhase] = useState<"cards" | "quiz" | "done" | "practice">("cards");
   const [quizScore, setQuizScore] = useState<{ correct: number; total: number } | null>(null);
 
   // Sentence practice state
@@ -103,13 +112,13 @@ export default function GrammarStudyDeck({
     setPracticeLoading(true);
     setPracticeError(false);
     try {
-      const deckSlug = lessonId ?? "";
-      const fragments = await fetchFragmentsForDeck(deckSlug, 30);
-      const exercises = generateReorderFromFragments(fragments, 8).map((ex) =>
-        fromGenericExercise(ex, "courses"),
-      );
+      const resolvedSlug = (deckSlug ?? lessonId) ?? '';
+      if (!resolvedSlug) console.warn('[GrammarStudyDeck] deckSlug missing — practice session may be empty');
+      const level: CefrLevel = cefrLevel ?? 'A1';
+      const exercises = await buildCoursePracticeSession({ deckSlug: resolvedSlug, cefrLevel: level });
       if (exercises.length > 0) {
         setPracticeExercises(exercises);
+        setPhase("practice");
       } else {
         setPracticeError(true);
       }
@@ -118,7 +127,7 @@ export default function GrammarStudyDeck({
     } finally {
       setPracticeLoading(false);
     }
-  }, [deck.meta, lessonId, practiceLoading]);
+  }, [deck.meta, lessonId, deckSlug, cefrLevel, practiceLoading]);
 
   // Keyboard navigation while studying.
   useEffect(() => {
@@ -145,22 +154,6 @@ export default function GrammarStudyDeck({
 
   const isLast = index === total - 1;
 
-  // Overlay: sesión de reorder_words desde las frases de esta lección
-  if (practiceExercises) {
-    return (
-      <div className="fixed inset-0 z-50 bg-surface-base">
-        <PracticeSession
-          context="courses"
-          exercises={practiceExercises}
-          sessionLength={practiceExercises.length}
-          sessionLabel="Arma la oración"
-          onSessionComplete={() => setPracticeExercises(null)}
-          onExit={() => setPracticeExercises(null)}
-        />
-      </div>
-    );
-  }
-
   return (
     <div className="grammar-deck" data-course-study-deck>
       <div className="grammar-deck__wrap">
@@ -173,7 +166,18 @@ export default function GrammarStudyDeck({
           subtitle={courseTitle ? deck.meta.eyebrow : undefined}
         />
 
-        {phase === "quiz" && deck.quiz ? (
+        {phase === "practice" && practiceExercises ? (
+          <div className="grammar-deck__practice-shell">
+            <PracticeSession
+              context="courses"
+              exercises={practiceExercises}
+              sessionLength={practiceExercises.length}
+              sessionLabel="Practica esta lección"
+              onSessionComplete={() => { setPracticeExercises(null); setPhase("done"); }}
+              onExit={() => { setPracticeExercises(null); setPhase("done"); }}
+            />
+          </div>
+        ) : phase === "quiz" && deck.quiz ? (
           <QuizStep
             questions={deck.quiz}
             onDone={(correct, totalQ) => {
@@ -192,6 +196,7 @@ export default function GrammarStudyDeck({
             quizScore={quizScore}
             practiceLoading={practiceLoading}
             practiceError={practiceError}
+            relatedLinks={relatedLinks}
             onStartSentencePractice={handleStartSentencePractice}
             onRestart={restart}
           />

@@ -182,12 +182,26 @@
   line-height: 1;
   color: var(--text-primary);
 }
+.font-mono {
+  font-family: var(--font-mono-var), "Fira Code", monospace;
+}
+
 .font-ipa {
   font-family: var(--font-ipa), "Noto Sans", sans-serif;
   font-size: 15px;
   letter-spacing: 0.03em;
   color: var(--primary);
   font-style: normal;
+}
+
+/** IPA transcription — DM Mono, readable at study-card scale */
+.ipa {
+  font-family: var(--font-mono-var), "Fira Code", monospace;
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  letter-spacing: 0.04em;
+  line-height: 1.8;
 }
 
 /* ── Text colors ─────────────────────────────────────────────────────────── */

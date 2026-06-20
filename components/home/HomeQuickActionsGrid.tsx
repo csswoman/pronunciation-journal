@@ -10,7 +10,7 @@ import type { ElementType } from "react";
 const actions = [
   { title: "Decks", description: "Your vocabulary decks", href: "/words?tab=decks", Icon: Layers },
   { title: "Practice", description: "Sounds and pronunciation", href: "/practice/sounds", Icon: MicVocal },
-  { title: "Courses", description: "Continue your course", href: "/courses", Icon: BookOpen },
+  { title: "Ruta", description: "Continúa tu lección", href: "/courses", Icon: BookOpen },
   { title: "Progress", description: "Your stats and streaks", href: "/progress", Icon: BarChart2 },
   { title: "IPA Chart", description: "Phoneme reference table", href: "/ipa-chart", Icon: Grid2x2 },
   { title: "Mini Lesson", description: "Today's grammar bite", href: "/mini-lessons", Icon: GraduationCap },

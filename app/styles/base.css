@@ -3,6 +3,11 @@
    ═══════════════════════════════════════════════════════════════════════════ */
 
 /* ── Typography ──────────────────────────────────────────────────────────── */
+html,
+body {
+  overflow-x: hidden;
+}
+
 html {
   font-size: 94%; /* ~15px — scales the entire rem system down slightly */
 }

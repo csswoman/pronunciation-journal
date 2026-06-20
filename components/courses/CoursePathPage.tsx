@@ -2,12 +2,14 @@
 
 import { useState, useCallback, useEffect } from "react";
 import Link from "next/link";
-import type { CefrLevelId, CoursePathCurriculum } from "@/lib/courses/types";
+import type { CefrLevelId, CoursePathCurriculum, CoursePathTrackId } from "@/lib/courses/types";
 import CoursePathLevelPanel from "@/components/courses/CoursePathLevelPanel";
+import CoursePracticeSuggestions from "@/components/courses/CoursePracticeSuggestions";
 import { CoursePathLegendIconDisplay } from "@/components/courses/CoursePathIcons";
 import { MicVocal, ArrowRight, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { db } from "@/lib/db";
+import { lessonProgressKey } from "@/lib/courses/progress";
 
 const DEFAULT_LEVEL: CefrLevelId = "a1";
 
@@ -19,10 +21,12 @@ export default function CoursePathPage({ curriculum }: CoursePathPageProps) {
   const [levelId, setLevelId] = useState<CefrLevelId>(DEFAULT_LEVEL);
   const [allOpenUnits, setAllOpenUnits] = useState<Record<string, Record<string, boolean>>>({});
   const [whyOpen, setWhyOpen] = useState(false);
+  const [completedIds, setCompletedIds] = useState<Set<string>>(new Set());
 
-  // Auto-select the user's active level on mount
+  // Auto-select the user's active level on mount and build completed lesson set
   useEffect(() => {
     db.completedLessons.toArray().then((rows) => {
+      setCompletedIds(new Set(rows.map((r) => lessonProgressKey(r.courseSlug as CoursePathTrackId, r.lessonSlug))));
       if (rows.length === 0) return;
       const counts: Record<string, number> = {};
       for (const r of rows) counts[r.courseSlug] = (counts[r.courseSlug] ?? 0) + 1;
@@ -47,10 +51,10 @@ export default function CoursePathPage({ curriculum }: CoursePathPageProps) {
     <div className="course-path">
       <div className="course-path__wrap">
         <header className="course-path__hero">
-          <h1 className="course-path__title">Your English path</h1>
+          <h1 className="course-path__title">Tu ruta de inglés</h1>
           <p className="course-path__intro">
-            Pick your level and follow the core spine. Starred lessons are the priority path;
-            everything else deepens what you know. Pronunciation runs alongside in Sound Lab.
+            Elige tu nivel y avanza por lo esencial. Las lecciones con estrella van primero;
+            el resto profundiza cuando tengas ganas. La pronunciación corre en paralelo en Sound Lab.
           </p>
         </header>
 
@@ -89,6 +93,12 @@ export default function CoursePathPage({ curriculum }: CoursePathPageProps) {
           />
         </div>
 
+        <CoursePracticeSuggestions
+          level={level}
+          levelId={levelId}
+          completedIds={completedIds}
+        />
+
         <div className="course-path__why">
           <button
             type="button"
@@ -110,7 +120,7 @@ export default function CoursePathPage({ curriculum }: CoursePathPageProps) {
               ))}
               <Link href="/practice/sounds" className="course-path__sound-lab-cta">
                 <MicVocal size={16} strokeWidth={2} aria-hidden />
-                Go to Sound Lab
+                Ir a Sound Lab
                 <ArrowRight size={14} aria-hidden />
               </Link>
             </div>

@@ -9,7 +9,7 @@ const menuItems = [
   { name: "Review", href: "/practice/review", icon: RotateCcw },
   { name: "Decks", href: "/practice/decks", icon: Layers },
   { name: "IPA Chart", href: "/ipa", icon: Radio },
-  { name: "Courses", href: "/courses", icon: BookOpen },
+  { name: "Ruta", href: "/courses", icon: BookOpen },
   { name: "Profile", href: "/profile", icon: User },
 ] as const;
 

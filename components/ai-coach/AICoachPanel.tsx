@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { usePathname } from "next/navigation";
 import { useAICoachStore } from "@/lib/stores/aiCoachStore";
 import { useAIPractice } from "@/hooks/useAIPractice";
@@ -23,6 +24,7 @@ export const PANEL_WIDTH = 380;
 const QUOTA_WARN_THRESHOLD = 18;
 
 export default function AICoachPanel() {
+  const isMobile = useMediaQuery("(max-width: 767px)");
   const { isOpen, isFullscreen, panelWidth, close, setPanelWidth, launch, consumeLaunch } =
     useAICoachStore();
   const pathname = usePathname();
@@ -69,15 +71,25 @@ export default function AICoachPanel() {
 
   return <>
     <div
-      className="fixed top-0 right-0 bottom-0 flex flex-col z-50 bg-surface-raised border-l border-border-subtle shadow-lg"
+      className={`fixed z-50 flex flex-col bg-surface-raised shadow-lg
+        max-md:inset-0 max-md:border-0
+        md:top-0 md:right-0 md:bottom-0 md:border-l md:border-border-subtle`}
       style={{
-        width: isFullscreen ? "calc(100vw - var(--sidebar-width))" : `${panelWidth}px`,
-        transform: isOpen ? "translateX(0)" : "translateX(100%)",
-        transition: "transform 0.25s ease",
+        // mobile: slide up from bottom; desktop: slide in from right
+        transform: isMobile
+          ? isOpen ? "translateY(0)" : "translateY(100%)"
+          : isOpen ? "translateX(0)" : "translateX(100%)",
+        transition: isMobile
+          ? "transform 0.35s cubic-bezier(0.22, 1, 0.36, 1)"
+          : "transform 0.25s ease",
+        // width only applies on desktop; on mobile inset-0 handles sizing
+        ...(isMobile ? {} : {
+          width: isFullscreen ? "calc(100vw - var(--sidebar-width))" : `${panelWidth}px`,
+        }),
       }}
       aria-hidden={!isOpen}
     >
-      {!isFullscreen && <div onMouseDown={onDragStart} title="Drag to resize" className="absolute top-0 left-0 bottom-0 w-1 cursor-ew-resize group z-10 -ml-px"><div className="absolute inset-y-0 left-0 w-1 opacity-0 group-hover:opacity-100 transition-opacity bg-primary" /></div>}
+      {!isFullscreen && !isMobile && <div onMouseDown={onDragStart} title="Drag to resize" className="absolute top-0 left-0 bottom-0 w-1 cursor-ew-resize group z-10 -ml-px"><div className="absolute inset-y-0 left-0 w-1 opacity-0 group-hover:opacity-100 transition-opacity bg-primary" /></div>}
       <AICoachHeader pageLabel={ctx.label} showHistory={showHistory} onNewChat={() => { resetSession(); setActiveTab("chat"); }} onToggleHistory={() => setShowHistory((value) => !value)} onClose={close} />
       <div className="flex-shrink-0"><ChatTabs active={activeTab} onChange={setActiveTab} /></div>
 

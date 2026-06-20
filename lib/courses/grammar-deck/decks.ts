@@ -10,8 +10,10 @@ import fs from "fs";
 import path from "path";
 import { z } from "zod";
 import { GrammarStudyDeckSchema } from "./schema";
-import type { GrammarDeckMeta, GrammarStudyDeckData } from "./types";
+import type { GrammarDeckMeta, GrammarStudyDeckData, GrammarRelatedLink } from "./types";
 import { MOCK_GRAMMAR_DECK } from "./mockGrammarDeck";
+import { getLevelById } from "@/lib/courses/curriculumIndex";
+import type { CoursePathTrackId } from "@/lib/courses/types";
 
 const DECKS_DIR = path.join(process.cwd(), "public", "grammar-decks");
 
@@ -157,4 +159,33 @@ export function getDeckForLesson(slug: string | undefined): GrammarStudyDeckData
     if (deck) return deck;
   }
   return MOCK_GRAMMAR_DECK;
+}
+
+/**
+ * Derives related-deck links from sibling lessons in the same curriculum level.
+ * Used as fallback when a deck's authored `related` field is empty.
+ * Returns up to `limit` links, excluding the current lesson's own slug.
+ */
+export function getDerivedRelated(
+  trackId: CoursePathTrackId,
+  currentSlug: string,
+  limit = 3,
+): GrammarRelatedLink[] {
+  const level = getLevelById(trackId);
+  if (!level) return [];
+
+  const siblings = level.units
+    .flatMap((u) => u.lessons)
+    .filter((l) => l.slug && l.slug !== currentSlug);
+
+  const result: GrammarRelatedLink[] = [];
+  for (const lesson of siblings) {
+    if (!lesson.slug) continue;
+    // Only suggest decks that actually exist on disk
+    const filePath = path.join(process.cwd(), "public", "grammar-decks", `${lesson.slug}.json`);
+    if (!fs.existsSync(filePath)) continue;
+    result.push({ slug: lesson.slug, label: lesson.title });
+    if (result.length >= limit) break;
+  }
+  return result;
 }
