@@ -23,4 +23,14 @@ describe("generateReorderFromFragments", () => {
     const out = generateReorderFromFragments(tooShort, 5, { preserveOrder: true });
     expect(out.map((e) => e.sourceRef.id)).toEqual(["y"]);
   });
+
+  it("rejects notation rows mislabeled as sentences", () => {
+    const polluted = [
+      frag("arrow", "going to → gonna already known"),
+      frag("slash", "turn off / turn it off please"),
+      frag("good", "she walks to the shop"),
+    ];
+    const out = generateReorderFromFragments(polluted, 5, { preserveOrder: true });
+    expect(out.map((e) => e.sourceRef.id)).toEqual(["good"]);
+  });
 });

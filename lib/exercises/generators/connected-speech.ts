@@ -1,4 +1,4 @@
-import { exerciseId, pick } from '@/lib/exercises/utils'
+import { exerciseId, isLikelySentence, pick } from '@/lib/exercises/utils'
 import type { MultipleChoiceExercise, SentenceDictationExercise } from '@/lib/exercises/types'
 
 // ── Types local to this module ────────────────────────────────────────────────
@@ -77,11 +77,6 @@ export function generateCsQuiz(deck: CsDeck, slug: CsDeckSlug, count: number): M
   }))
 }
 
-/** Count whitespace-separated words in a trimmed string. */
-function wordCount(text: string): number {
-  return text.split(/\s+/).filter(Boolean).length
-}
-
 /**
  * Extract real example sentences from deck `pronunciation` blocks for dictation.
  *
@@ -100,8 +95,8 @@ function extractPhrases(deck: CsDeck): string[] {
       for (const example of block.examples) {
         if (!example.text) continue
         const sentence = example.text.trim()
-        // Require a genuine multi-word sentence, not a lone reduced form.
-        if (sentence.length > 0 && sentence.length < 80 && wordCount(sentence) >= 2) {
+        // Require a genuine sentence, not a lone reduced form or notation row.
+        if (sentence.length < 80 && isLikelySentence(sentence)) {
           sentences.push(sentence)
         }
       }

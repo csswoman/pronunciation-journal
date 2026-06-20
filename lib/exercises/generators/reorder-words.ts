@@ -2,7 +2,7 @@ import type { ReorderWordsExercise } from '@/lib/exercises/types'
 import type { Sound } from '@/lib/phoneme-practice/types'
 import type { WordBankEntry } from '@/lib/word-bank/types'
 import { normalizeCEFR } from '@/lib/exercises/cefr'
-import { exerciseId, pick, shuffle, tokenize } from '@/lib/exercises/utils'
+import { exerciseId, isLikelySentence, pick, shuffle, tokenize } from '@/lib/exercises/utils'
 import { VOCABULARY_TOPIC } from '@/lib/practice/topic-labels'
 
 const MIN_TOKENS = 4
@@ -18,6 +18,7 @@ export function generateReorderWordsFromWordBank(
 ): ReorderWordsExercise[] {
   const usable = entries.filter(e => {
     if (!e.example) return false
+    if (!isLikelySentence(e.example)) return false
     return tokenize(e.example).length >= MIN_TOKENS
   })
 
