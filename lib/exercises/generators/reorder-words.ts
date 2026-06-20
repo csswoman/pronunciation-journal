@@ -3,6 +3,7 @@ import type { Sound } from '@/lib/phoneme-practice/types'
 import type { WordBankEntry } from '@/lib/word-bank/types'
 import { normalizeCEFR } from '@/lib/exercises/cefr'
 import { exerciseId, pick, shuffle, tokenize } from '@/lib/exercises/utils'
+import { VOCABULARY_TOPIC } from '@/lib/practice/topic-labels'
 
 const MIN_TOKENS = 4
 
@@ -30,6 +31,7 @@ export function generateReorderWordsFromWordBank(
       type: 'reorder_words' as const,
       exerciseType: { domain: 'vocabulary', mode: 'reorder', variant: 'sentence' } as const,
       sourceRef: { source: entry.source === 'core1k' ? 'core1k' : 'word_bank', id: entry.id },
+      topic: VOCABULARY_TOPIC,
       level,
       sentence,
       tokens,

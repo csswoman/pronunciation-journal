@@ -1,6 +1,6 @@
 # 04 · Narrar el camino al alumno
 
-> 🟠 **Importante** · Impacto medio · ~1-2 días · Estado: 📋 Por planear
+> 🟠 **Importante** · Impacto medio · ~1-2 días · Estado: 🟡 En progreso (working tree, sin commitear)
 
 ## Problema
 
@@ -44,3 +44,24 @@ Hacer visible la intención pedagógica que ya existe:
 
 - **Mapear `topic` técnico → etiqueta humana**: `grammar:present_simple` → "Presente simple". Necesita un diccionario de display labels.
 - No saturar la UI: la narrativa debe orientar, no abrumar.
+
+## Implementación (2026-06-19, ⚠️ sin commitear)
+
+> Vive solo en el working tree. **Commitear antes de cualquier cambio de rama.**
+
+Entregado:
+
+- **Diccionario topic→label**: `lib/practice/topic-labels.ts` (`topicDisplayLabel()`),
+  con fallback a title-case para topics desconocidos. Tests en
+  `lib/practice/__tests__/topic-labels.test.ts`.
+- **Progreso Core 1000**: `components/home/Core1000ProgressCard.tsx`, consumido en
+  `HomeMobileView.tsx` / `HomeReviewsSection.tsx`.
+- **Objetivo del paso en sesión**: `components/practice/session/GenericExerciseView.tsx`
+  consume `topicDisplayLabel`.
+
+Pendiente (backlog):
+
+- Los `subtitle` en `lib/practice/daily-plan/step-builders.ts` siguen siendo prosa
+  hardcodeada. Para narrar el objetivo gramatical real del paso, deberían derivar de
+  `topicDisplayLabel(topic)` cuando el step tenga un `topic` significativo.
+- Badge de estado SRS por ítem ("lo estás aprendiendo" / "dominado") — tarea 3 del brief, aún no entregada.

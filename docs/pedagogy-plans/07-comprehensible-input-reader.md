@@ -1,6 +1,6 @@
 # 07 · Reader de comprehensible input
 
-> 🟠 **Importante** · Impacto alto · ~5-7 días · Estado: 📋 Por planear
+> 🟠 **Importante** · Impacto alto · ~5-7 días · Estado: ✅ Hecho (2026-06-19, 11 commits `d52d041`→`ce60eab`)
 
 ## Problema
 
@@ -43,3 +43,29 @@ Un **reader de párrafos cortos** que:
 - **Calidad/seguridad del párrafo generado**: el prompt debe garantizar nivel y reciclaje real de las palabras objetivo.
 - **Online-only**: generación requiere red; cachear en Dexie el párrafo generado para relectura offline.
 - Depende de [01](./01-close-vocab-srs.md) para saber qué reciclar — hacer después.
+
+## Implementación (2026-06-19, commits `d52d041`→`ce60eab`)
+
+Entregado en 9 tareas TDD (spec en `docs/superpowers/`):
+
+- **Generación IA**: ruta `app/api/gemini/generate-reader/` con fallback chain y
+  **gate de refinamiento** (re-genera si el párrafo no incrusta de verdad las
+  palabras objetivo — matching por límite de palabra, no substring, con variantes
+  morfológicas e irregulares).
+- **Selección de targets**: pura, desde filas SRS en estado `learning`/`review`
+  (`lib/practice/reader/`), con hash de target case/order-independent.
+- **Caché stale-while-revalidate**: tabla `reader_passages` (Supabase RLS +
+  índices) espejada en **Dexie v13**; resolver sirve cache y revalida en background
+  → relectura offline.
+- **Exposición ≠ recall**: la comprensión del reader registra *exposición* en un
+  sub-objeto del record SRS que **estructuralmente no toca SM-2** (test de boundary
+  en `updateSRS`), preservando la separación reconocimiento/recuerdo.
+- **Componentes**: `components/practice/reader/ReaderExercise.tsx` + `ReaderEntry.tsx`;
+  página standalone `app/practice/reader/`; slug `reader` como `DailyStep`.
+- **Daily plan**: `buildReaderStep` se dispara con ≥3 palabras due.
+
+Pendiente / a verificar:
+
+- ⚠️ `exercise_types` no tiene fila `reader` (el reader es un `DailyStep` propio,
+  no un tipo genérico). Confirmar que ningún lookup espera ese slug.
+- QA manual: reader step en daily plan + exposure recording; reread offline desde Dexie.

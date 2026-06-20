@@ -85,6 +85,11 @@ export function StudyCard({ model, onContinue, onListen, onArchive }: Props) {
   return (
     <div className="flex w-full max-w-md flex-col items-center gap-5 rounded-2xl bg-surface-raised px-6 py-7 shadow-sm">
       <div className="flex flex-col items-center gap-2">
+        {model.srsBadge && (
+          <span className="text-tiny font-semibold uppercase tracking-[0.12em] text-accent">
+            {model.srsBadge}
+          </span>
+        )}
         {model.chips && model.chips.length > 0 && (
           <div className="flex items-center gap-2">
             {model.chips.map((chip) => (

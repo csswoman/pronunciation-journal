@@ -1,6 +1,6 @@
 # 03 · Ejercicio de producción libre (escrita + oral) con grading IA
 
-> 🔴 **Crítico** · Impacto alto · ~4-6 días · Estado: 📋 Por planear
+> 🔴 **Crítico** · Impacto alto · ~4-6 días · Estado: ✅ Hecho (2026-06-19, commit `b95c4df`)
 
 ## Problema
 
@@ -48,3 +48,23 @@ Dos nuevos modos de producción, ambos con grading IA:
 - **Producción libre rompe offline-first**: aceptar que este modo es online-only (precedente: `/practice/sounds` es online-only temporal). Documentar la excepción.
 - **Consistencia del grading IA**: definir rúbrica estricta en el prompt para evitar evaluación errática.
 - **Coste de tokens**: usar flash-lite por defecto.
+
+## Implementación (2026-06-19, commit `b95c4df`)
+
+Ambos modos entregados como tipos genéricos:
+
+- **Tipos** `written_production` y `spoken_production` en `lib/exercises/types.ts`.
+- **Generadores** `lib/exercises/generators/production.ts`
+  (`generateWrittenProductionFromWordBank`, `generateSpokenProductionFromWordBank`),
+  con tests en `__tests__/production.test.ts`.
+- **Grading IA** vía ruta `app/api/gemini/grade-production/`; cliente en
+  `lib/exercises/grade-production-client.ts`; lógica pura en `lib/exercises/production-grade.ts`.
+- **Componentes** `WrittenProductionExercise.tsx`, `SpokenProductionExercise.tsx`,
+  `ProductionTaskHeader.tsx`, `ProductionFeedback.tsx`.
+- **SRS (tarea 7)**: `lib/practice/grade.ts:12-18` incluye ambos slugs en el set
+  que convierte `score` → quality SM-2, así que la producción correcta consolida.
+- **DB**: migración `20260619120000_production_exercise_types.sql` — slugs
+  `written_production` / `spoken_production` verificados en remote.
+- **Daily plan**: integrados en `buildWordReviewStep` (`step-builders.ts:68-69`).
+
+Online-only por diseño (grading requiere red), como `/practice/sounds`.

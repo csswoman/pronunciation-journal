@@ -12,6 +12,7 @@ import {
   renderGenericExercise,
 } from '@/lib/practice/exercise-renderer/generic-registry'
 import { UnsupportedExercise } from '@/lib/practice/exercise-renderer/UnsupportedExercise'
+import { topicDisplayLabel } from '@/lib/practice/topic-labels'
 
 interface Props {
   exercise: PracticeExercise & { payload: GenericPayload }
@@ -95,6 +96,7 @@ export function GenericExerciseView({ exercise, onSubmit, focusUi = false }: Pro
     <div className={focusUi ? 'phoneme-focus__session' : 'flex flex-col gap-4'}>
       <ExerciseShell
         title={getGenericTitle(data.type)}
+        eyebrow={topicDisplayLabel(data.topic) ?? undefined}
         hint={getGenericHint(data)}
         result={result}
         onContinue={handleContinue}

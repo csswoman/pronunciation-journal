@@ -18,6 +18,28 @@ export interface StudyCardModel {
   weakForm?: { ipa: string; phrase: string };
   /** Metadata badges (e.g. rank, part of speech, CEFR level). */
   chips?: string[];
+  /**
+   * Learner-facing SRS state ("Nueva" / "La estás aprendiendo" / "En repaso" /
+   * "Dominada"). Signals that the word keeps coming back until mastered. Only
+   * present for word-bank cards, which carry an `srs_status`.
+   */
+  srsBadge?: string;
+}
+
+/** Maps a word_bank `srs_status` to a learner-readable badge, or undefined. */
+function srsBadgeLabel(status: string | null | undefined): string | undefined {
+  switch (status) {
+    case "new":
+      return "Nueva";
+    case "learning":
+      return "La estás aprendiendo";
+    case "review":
+      return "En repaso";
+    case "mastered":
+      return "Dominada";
+    default:
+      return undefined;
+  }
 }
 
 /** Minimal phrase (word + next token) where a weak form sounds natural in TTS. */
@@ -54,6 +76,7 @@ export function wordBankEntryToStudyCard(entry: WordBankEntry): StudyCardModel {
     meaning: present(entry.meaning),
     translation: present(entry.translation),
     sentence: present(entry.example),
+    srsBadge: srsBadgeLabel(entry.srs_status),
     // word_bank has no weak-form or sentence-IPA data.
   };
 }

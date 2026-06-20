@@ -94,6 +94,27 @@ describe("wordBankEntryToStudyCard", () => {
     expect(model.sentenceIpa).toBeUndefined();
   });
 
+  it("maps the SRS status to a learner-facing badge", () => {
+    expect(wordBankEntryToStudyCard(wordBank({ srs_status: "new" })).srsBadge).toBe(
+      "Nueva",
+    );
+    expect(
+      wordBankEntryToStudyCard(wordBank({ srs_status: "learning" })).srsBadge,
+    ).toBe("La estás aprendiendo");
+    expect(
+      wordBankEntryToStudyCard(wordBank({ srs_status: "review" })).srsBadge,
+    ).toBe("En repaso");
+    expect(
+      wordBankEntryToStudyCard(wordBank({ srs_status: "mastered" })).srsBadge,
+    ).toBe("Dominada");
+  });
+
+  it("omits the badge for an unknown SRS status", () => {
+    expect(
+      wordBankEntryToStudyCard(wordBank({ srs_status: "weird" })).srsBadge,
+    ).toBeUndefined();
+  });
+
   it("drops null fields rather than leaking them into the model", () => {
     const model = wordBankEntryToStudyCard(
       wordBank({ ipa: null, example: null, meaning: null, translation: null }),

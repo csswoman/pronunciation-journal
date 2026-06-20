@@ -10,21 +10,30 @@ Promedio de la auditoría: **~49/100**. Hechos estos tres eslabones, la app salt
 
 ---
 
-## Orden de ejecución recomendado
+## Estado de implementación (actualizado 2026-06-19, commit `ce60eab`)
 
-El orden importa: sin el #1 (SRS cerrado), los demás no consolidan nada.
+Los **7 planes están implementados en código** y `pnpm test` pasa (624 tests).
+Esta tabla refleja el estado verificado contra el código y la DB, no el plan original.
 
-| # | Plan | Tipo | Impacto | Esfuerzo | Estado |
-|---|------|------|---------|----------|--------|
-| 1 | [01-close-vocab-srs.md](./01-close-vocab-srs.md) | 🔴 Crítico | Máximo | 2-3 días | ✅ Hecho |
-| 2 | [02-noticing-presentation-step.md](./02-noticing-presentation-step.md) | 🔴 Crítico | Alto | 1-2 días | ✅ Hecho |
-| 3 | [03-free-production-exercise.md](./03-free-production-exercise.md) | 🔴 Crítico | Alto | 4-6 días | 📋 Por planear |
-| 4 | [04-narrate-the-path.md](./04-narrate-the-path.md) | 🟠 Importante | Medio | 1-2 días | 📋 Por planear |
-| 5 | [05-reorder-tolerant-grading.md](./05-reorder-tolerant-grading.md) | ⚡ Quick win | Medio | 1 día | 📋 Por planear |
-| 6 | [06-phoneme-vocab-bridge.md](./06-phoneme-vocab-bridge.md) | 🟠 Importante | Medio | 3-4 días | 📋 Por planear |
-| 7 | [07-comprehensible-input-reader.md](./07-comprehensible-input-reader.md) | 🟠 Importante | Alto | 5-7 días | 📋 Por planear |
+| # | Plan | Tipo | Estado código | DB (remote) | Pendiente |
+|---|------|------|---------------|-------------|-----------|
+| 1 | [01-close-vocab-srs.md](./01-close-vocab-srs.md) | 🔴 Crítico | ✅ Committed (`b37ba57`) | ✅ | — |
+| 2 | [02-noticing-presentation-step.md](./02-noticing-presentation-step.md) | 🔴 Crítico | ✅ Committed (`f468c9c`) | ✅ | — |
+| 3 | [03-free-production-exercise.md](./03-free-production-exercise.md) | 🔴 Crítico | ✅ Committed (`b95c4df`) | ✅ slugs `written/spoken_production` | — |
+| 4 | [04-narrate-the-path.md](./04-narrate-the-path.md) | 🟠 Importante | 🟡 **Sin commitear** (working tree) | n/a | Commit + wiring de `topicDisplayLabel` en step subtitles |
+| 5 | [05-reorder-tolerant-grading.md](./05-reorder-tolerant-grading.md) | ⚡ Quick win | ✅ Committed | n/a | Opción B diferida |
+| 6 | [06-phoneme-vocab-bridge.md](./06-phoneme-vocab-bridge.md) | 🟠 Importante | ✅ Committed (`433961f`) | n/a | Tarea 3 diferida (opcional) |
+| 7 | [07-comprehensible-input-reader.md](./07-comprehensible-input-reader.md) | 🟠 Importante | ✅ Committed (11 commits) | ✅ tabla `reader_passages` | Verificar si falta slug `reader` en `exercise_types`; QA manual |
 
-> Cada archivo arranca como **brief** (problema + objetivo + criterios de aceptación). Conviértelo en plan ejecutable con `superpowers:writing-plans` antes de implementar.
+> Los briefs originales (problema + objetivo + criterios) se conservan abajo; cada
+> uno cierra con una sección **Implementación** que documenta lo entregado y lo diferido.
+
+### Backlog vivo
+
+1. **Commitear plan 04** — vive solo en el working tree (`topic-labels.ts`, `Core1000ProgressCard.tsx`, 10 archivos `M`). Un cambio de rama lo pierde.
+2. **Completar wiring de plan 04** — los `subtitle` de `lib/practice/daily-plan/step-builders.ts` siguen siendo prosa hardcodeada; deberían consumir `topicDisplayLabel()` para narrar el objetivo gramatical real del paso.
+3. **Verificar slug `reader`** — `reader_passages` existe, pero `exercise_types` no tiene fila `reader`. El reader es un `DailyStep` propio, así que probablemente no la necesita; confirmar que ningún lookup la espera.
+4. **QA manual reader** — completar daily plan con ≥3 due → verificar reader step + exposure tracking, y reread offline desde Dexie.
 
 ---
 
