@@ -15,11 +15,11 @@ export default function CoursePathC1Electives({ tracks }: CoursePathC1ElectivesP
   return (
     <section className="course-path__c1-electives" aria-labelledby="c1-electives-heading">
       <h3 id="c1-electives-heading" className="course-path__c1-electives-title">
-        After C1<span aria-hidden> · </span>elective tracks
+        Después de C1<span aria-hidden> · </span>rutas opcionales
       </h3>
       <p className="course-path__c1-electives-sub">
-        Specific purposes and business English. Optional courses within each track appear at the end
-        of each list.
+        Inglés para tu trabajo, tu sector o el habla conectada. Las lecciones extra de cada ruta
+        están al final de cada lista.
       </p>
       <div className="course-path__rutas">
         {tracks.map((track, i) => (

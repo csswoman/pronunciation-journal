@@ -89,7 +89,7 @@ export default function CoursePathLevelPanel({ level, compactHead, openUnits: op
         <div className="course-path__prog">
           <b className="course-path__prog-pct">{derived.progressPercent}%</b>
           <div className="course-path__prog-meta">
-            {derived.completedCoreLessons} / {derived.totalCoreLessons} core
+            {derived.completedCoreLessons} / {derived.totalCoreLessons} esenciales
             {derived.level.hours && <span>{derived.level.hours}</span>}
             <CoursePathPriorityCount count={nPriority} className="course-path__prog-star" />
           </div>
@@ -101,7 +101,7 @@ export default function CoursePathLevelPanel({ level, compactHead, openUnits: op
           href={studyLessonPath(level.id, firstLesson.number)}
           className="course-path__start-here"
         >
-          <span className="course-path__start-label">Start here</span>
+          <span className="course-path__start-label">Empieza aquí</span>
           <span className="course-path__start-title">{firstLesson.title}</span>
           <ArrowRight size={16} aria-hidden />
         </Link>
@@ -112,7 +112,7 @@ export default function CoursePathLevelPanel({ level, compactHead, openUnits: op
           href={studyLessonPath(level.id, currentLesson.number)}
           className="course-path__resume"
         >
-          <span className="course-path__resume-label">Continue</span>
+          <span className="course-path__resume-label">Continúa</span>
           <span className="course-path__resume-title">{currentLesson.title}</span>
           <ArrowRight size={16} aria-hidden />
         </Link>
@@ -168,9 +168,9 @@ export default function CoursePathLevelPanel({ level, compactHead, openUnits: op
                   <div className="course-path__un">{u.unit.label}</div>
                   <div className="course-path__ut">{u.unit.title}</div>
                   <div className="course-path__um">
-                    {u.unit.lessons.length} lessons
+                    {u.unit.lessons.length} lecciones
                     {u.unit.isOptionalSection && (
-                      <span className="course-path__optional-tag">Optional</span>
+                      <span className="course-path__optional-tag">Extra</span>
                     )}
                   </div>
                 </div>
