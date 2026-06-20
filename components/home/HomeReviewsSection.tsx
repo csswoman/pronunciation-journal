@@ -3,17 +3,17 @@ import ReviewQueueIsland from "@/components/home/ReviewQueueIsland";
 import ReviewProgressCard from "@/components/home/ReviewProgressCard";
 import Core1000ProgressCard from "@/components/home/Core1000ProgressCard";
 import type { ReviewQueueSummary, WeakestPhonemeHome } from "@/lib/home/constants";
-import type { LexiconRetentionStats } from "@/lib/lexicon/server-progress";
+import type { VocabularyProgressSeed } from "@/lib/vocabulary/server-progress";
 
 interface HomeReviewsSectionProps {
   reviewQueue: ReviewQueueSummary;
-  lexicon?: LexiconRetentionStats | null;
+  vocabulary?: VocabularyProgressSeed | null;
   weakestPhoneme?: WeakestPhonemeHome | null;
 }
 
 export default function HomeReviewsSection({
   reviewQueue,
-  lexicon,
+  vocabulary,
   weakestPhoneme,
 }: HomeReviewsSectionProps) {
   return (
@@ -26,7 +26,7 @@ export default function HomeReviewsSection({
       <div className="grid grid-cols-1 gap-4 md:grid-cols-[1.7fr_1fr]">
         <ReviewQueueIsland serverSummary={reviewQueue} />
         <div className="flex flex-col gap-4">
-          <ReviewProgressCard lexicon={lexicon} weakestPhoneme={weakestPhoneme} />
+          <ReviewProgressCard vocabulary={vocabulary} weakestPhoneme={weakestPhoneme} />
           <Core1000ProgressCard />
         </div>
       </div>

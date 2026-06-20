@@ -1,11 +1,17 @@
+"use client";
+
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { useLiveQuery } from "dexie-react-hooks";
 import ProgressBar from "@/components/ui/ProgressBar";
+import { db } from "@/lib/db";
+import { CORE1000_PREFIX } from "@/lib/core-1000/types";
+import { mergeVocabularyLearned } from "@/lib/vocabulary/progress";
 import type { WeakestPhonemeHome } from "@/lib/home/constants";
-import type { LexiconRetentionStats } from "@/lib/lexicon/server-progress";
+import type { VocabularyProgressSeed } from "@/lib/vocabulary/server-progress";
 
 interface ReviewProgressCardProps {
-  lexicon?: LexiconRetentionStats | null;
+  vocabulary?: VocabularyProgressSeed | null;
   weakestPhoneme?: WeakestPhonemeHome | null;
 }
 
@@ -13,20 +19,39 @@ function formatIpaDisplay(ipa: string): string {
   return ipa.startsWith("/") ? ipa : `/${ipa}/`;
 }
 
-export default function ReviewProgressCard({ lexicon, weakestPhoneme }: ReviewProgressCardProps) {
-  const learned = lexicon?.learned ?? 0;
-  const total = lexicon?.total ?? 0;
-  const pct = lexicon?.percent ?? 0;
+export default function ReviewProgressCard({ vocabulary, weakestPhoneme }: ReviewProgressCardProps) {
+  const essentialLearned = useLiveQuery(
+    () =>
+      db.srsData
+        .filter((entry) => entry.wordId.startsWith(CORE1000_PREFIX) && !entry.archived)
+        .count(),
+    [],
+    0,
+  );
+
+  const catalogTotal = vocabulary?.catalogTotal ?? 0;
+  const { learned, percent } = mergeVocabularyLearned(
+    vocabulary?.wordBankMastered ?? 0,
+    essentialLearned,
+    catalogTotal,
+  );
   const hasPhoneme = weakestPhoneme != null && weakestPhoneme.accuracy != null;
 
   return (
     <div className="flex flex-col rounded-[var(--radius-xl)] border border-border-subtle bg-surface-raised p-6">
       <p className="type-overline">Vocabulary</p>
-      <ProgressBar value={pct} color="var(--primary)" height="sm" className="mt-3" />
+      <ProgressBar value={percent} color="var(--primary)" height="sm" className="mt-3" />
       <p className="font-body-sm mt-1.5 text-[var(--text-secondary)]">
-        {total > 0
-          ? `${learned.toLocaleString()} / ${total.toLocaleString()} words · ${pct}%`
-          : "Explore the Lexicon to start learning"}
+        {catalogTotal > 0 && learned > 0
+          ? `${learned.toLocaleString()} / ~${catalogTotal.toLocaleString()} words · ${percent}%`
+          : (
+            <Link
+              href="/practice/core-1000"
+              className="focus-ring inline-flex items-center gap-1 text-[var(--primary)] hover:underline"
+            >
+              Start with Essential Words <ArrowRight size={12} aria-hidden />
+            </Link>
+          )}
       </p>
 
       <div className="my-4 border-t border-border-subtle" />

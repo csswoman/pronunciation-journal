@@ -17,7 +17,7 @@ import HomeLearnSection from '@/components/home/HomeLearnSection'
 import type { DailyStreakResult } from '@/lib/daily/streak-core'
 import type { ConceptLesson } from '@/hooks/useDailyPlan'
 import type { DailyGoalProgress, WeakestPhonemeHome, ReviewQueueSummary } from '@/lib/home/constants'
-import type { LexiconRetentionStats } from '@/lib/lexicon/server-progress'
+import type { VocabularyProgressSeed } from '@/lib/vocabulary/server-progress'
 import type { MiniLesson, LanguageConcept } from '@/lib/content/schemas'
 
 interface HomeLayoutProps {
@@ -28,7 +28,7 @@ interface HomeLayoutProps {
   dailyGoal?: DailyGoalProgress | null
   weakestPhoneme?: WeakestPhonemeHome | null
   reviewQueue?: ReviewQueueSummary
-  lexiconRetention?: LexiconRetentionStats | null
+  vocabularyProgress?: VocabularyProgressSeed | null
   todaysLesson?: MiniLesson | null
   todaysConcept?: LanguageConcept | null
 }
@@ -41,7 +41,7 @@ export default function HomeLayout({
   dailyGoal = null,
   weakestPhoneme = null,
   reviewQueue = { total: 0, newAvailable: 0, sources: [], preview: [] },
-  lexiconRetention = null,
+  vocabularyProgress = null,
   todaysLesson = null,
   todaysConcept = null,
 }: HomeLayoutProps) {
@@ -56,7 +56,7 @@ export default function HomeLayout({
         <HomeTodaySection streak={streak} dailyGoal={dailyGoal} dailyCard={dailyCard} />
         <HomeReviewsSection
           reviewQueue={reviewQueue}
-          lexicon={lexiconRetention}
+          vocabulary={vocabularyProgress}
           weakestPhoneme={weakestPhoneme}
         />
         <HomeLearnSection lesson={todaysLesson} concept={todaysConcept} />
