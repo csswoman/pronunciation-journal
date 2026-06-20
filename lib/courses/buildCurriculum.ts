@@ -61,8 +61,8 @@ export function buildLevel(
     lessonNumber = nextNumber;
     units.push({
       id: `${id}-core`,
-      label: opts?.isElective ? "Prioritarios" : "Ruta prioritaria",
-      title: `${core.length} curso${core.length === 1 ? "" : "s"} prioritario${core.length === 1 ? "" : "s"}`,
+      label: opts?.isElective ? "Recomendados" : "Lo esencial",
+      title: `${core.length} lección${core.length === 1 ? "" : "es"} clave`,
       lessons,
     });
   }
@@ -71,8 +71,8 @@ export function buildLevel(
     const { lessons } = mapLessons(id, `${id}-opt`, optional, lessonNumber);
     units.push({
       id: `${id}-optional`,
-      label: "Opcional",
-      title: "Currículo amplio · para después",
+      label: "Extra",
+      title: "Profundiza cuando quieras",
       lessons,
       isOptionalSection: true,
     });
