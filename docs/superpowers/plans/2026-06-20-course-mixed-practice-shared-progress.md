@@ -438,9 +438,8 @@ import { core1000WordId } from '@/lib/core-1000/types'
 import { selectNewWordsForLevel } from './vocab-selector'
 import { buildWordExercises } from './word-exercise-builder'
 
-// Adjust import to match whatever Dexie helper exposes SRS wordIds for Core 1000.
-// Based on grade.ts: getSRSData is per-word. For batch lookup use db directly.
-import { db } from '@/lib/db/schema'
+// The Dexie SRS table is `db.srsData` (indexed on `wordId`), defined in lib/db/index.ts.
+import { db } from '@/lib/db'
 
 const TARGET_SIZE = 10
 const FRAGMENT_SLOTS = 5
@@ -534,6 +533,8 @@ git commit -m "feat(courses): buildCoursePracticeSession — mixed session from 
 
 After `savePracticeAnswer` is called, add a branch that calls `gradeCore1000Word` when the exercise's `sourceRef.source` is `'core1k'`. This is the single change that makes vocab progress shared with Essential Words.
 
+> **CRITICAL — do not pass `userId` to `gradeCore1000Word` here.** `gradeCore1000Word(word, quality, extras, userId)` writes to `answer_history` itself when `userId` is provided ([lib/core-1000/grade.ts:47-58](../../../lib/core-1000/grade.ts)). But `handleSubmit` already wrote this answer to `answer_history` at line ~146 via `savePracticeAnswer`. Passing `user?.id` would log the same event twice (once with `context: 'courses'`, once with `context: 'core-1000'`), inflating streak/accuracy. We only want the **shared Dexie SRS write** here, so call `gradeCore1000Word(word, quality, {})` with no userId. The answer history is owned by the existing `savePracticeAnswer` call.
+
 - [ ] **Step 1: Read the exact surrounding code**
 
 Open `components/practice/session/useSessionState.ts` at line 121–170 and confirm the structure matches what the plan shows. Look for the block:
@@ -562,7 +563,9 @@ Then, after the `savePracticeAnswer` block (around line 149), add:
       if (result.sourceRef?.source === 'core1k') {
         const word = result.sourceRef.id.replace(/^c1k:/, '')
         const quality = result.isCorrect ? 4 : 2
-        void gradeCore1000Word(word, quality, {}, user?.id).catch((err) => {
+        // No userId: answer_history is already written above by savePracticeAnswer.
+        // This call only updates the shared Dexie SRS entry (c1k:<word>).
+        void gradeCore1000Word(word, quality, {}).catch((err) => {
           console.error('[PracticeSession] gradeCore1000Word failed', err)
         })
       }
@@ -580,7 +583,9 @@ The full `handleSubmit` block around the insertion point should look like:
       if (result.sourceRef?.source === 'core1k') {
         const word = result.sourceRef.id.replace(/^c1k:/, '')
         const quality = result.isCorrect ? 4 : 2
-        void gradeCore1000Word(word, quality, {}, user?.id).catch((err) => {
+        // No userId: answer_history is already written above by savePracticeAnswer.
+        // This call only updates the shared Dexie SRS entry (c1k:<word>).
+        void gradeCore1000Word(word, quality, {}).catch((err) => {
           console.error('[PracticeSession] gradeCore1000Word failed', err)
         })
       }
@@ -592,6 +597,8 @@ The full `handleSubmit` block around the insertion point should look like:
 pnpm type-check 2>&1 | grep useSessionState | head -10
 ```
 Expected: no errors.
+
+> **On testing the dispatcher:** The spec asks for a unit test ("`core1k` invokes `gradeCore1000Word`; `text_fragments` does not"). The dispatcher lives inside `handleSubmit`'s `useCallback`, which depends on the full hook state — unit-testing it in isolation would require either refactoring the routing into a standalone pure function or a heavy hook-render test. The lowest-cost faithful verification is the manual IndexedDB check in Task 6 Step 4 (confirms `c1k:<word>` is created from a course session, and that `text_fragments` answers create no such entry). If a regression-proof unit test is wanted later, extract the routing into `routeProgressForResult(result): void` and test that directly — out of scope for this plan.
 
 - [ ] **Step 4: Commit**
 
@@ -612,10 +619,10 @@ Replace the existing `handleStartSentencePractice` implementation that calls `fe
 
 - [ ] **Step 1: Add `cefrLevel` prop to `GrammarStudyDeck`**
 
-In `components/courses/grammar-deck/GrammarStudyDeck.tsx`, add `cefrLevel?: CefrLevel` to the props interface:
+In `components/courses/grammar-deck/GrammarStudyDeck.tsx`, add `cefrLevel?: CefrLevel` to the props interface. Use `CefrLevel` from `@/lib/core-1000/types` (the type `buildCoursePracticeSession` expects — `'A1'..'C1'`), NOT `CEFRLevel` from `@/lib/exercises/cefr`:
 
 ```typescript
-import type { CEFRLevel } from '@/lib/exercises/cefr'
+import type { CefrLevel } from '@/lib/core-1000/types'
 
 interface GrammarStudyDeckProps {
   deck: GrammarStudyDeckData;
@@ -626,9 +633,11 @@ interface GrammarStudyDeckProps {
   lessonId?: string;
   deckSlug?: string;
   relatedLinks?: GrammarRelatedLink[];
-  cefrLevel?: CEFRLevel;  // ← add this
+  cefrLevel?: CefrLevel;  // ← add this
 }
 ```
+
+Then add `cefrLevel` to the destructured props in the function signature, and use it directly (no inline `import('...')` type needed since it's now imported at top):
 
 - [ ] **Step 2: Replace `handleStartSentencePractice` body**
 
@@ -642,7 +651,7 @@ Remove the existing body and replace with a call to `buildCoursePracticeSession`
     try {
       const resolvedSlug = (deckSlug ?? lessonId) ?? ''
       // cefrLevel defaults to 'A1' when not provided (most grammar decks are A1)
-      const level = (cefrLevel ?? 'A1') as import('@/lib/core-1000/types').CefrLevel
+      const level: CefrLevel = cefrLevel ?? 'A1'
       const exercises = await buildCoursePracticeSession({ deckSlug: resolvedSlug, cefrLevel: level })
       if (exercises.length > 0) {
         setPracticeExercises(exercises)
@@ -703,19 +712,28 @@ Also remove the unused `Headphones` import from the import line.
 
 - [ ] **Step 5: Pass `cefrLevel` from the page**
 
-In `app/courses/study/[n]/page.tsx`, find where `GrammarStudyDeck` is rendered and add the `cefrLevel` prop. The page already has access to the level/track — add:
+In `app/courses/study/[n]/page.tsx`, `GrammarStudyDeck` is rendered with `levelId={trackId}` (around line 38–43). `trackId` is a `CoursePathTrackId` = `CefrLevelId ('a1'..'c1')` **or** an `ElectiveTrackId ('purposes' | 'business' | 'connected-speech')` (see `lib/courses/types.ts`). There is no `lesson.cefrLevel` field and no `trackCefrLevel` helper — derive the level inline.
+
+Add a small derivation above the JSX return and pass it as a prop:
+
+```tsx
+import type { CefrLevel } from "@/lib/core-1000/types";
+
+// CEFR tracks map straight to Core 1000 levels; elective tracks have no CEFR
+// level, so default them to A1 (introduces the most common new vocabulary).
+const CEFR_TRACKS = ["a1", "a2", "b1", "b2", "c1"] as const;
+const cefrLevel: CefrLevel = (CEFR_TRACKS as readonly string[]).includes(trackId)
+  ? (trackId.toUpperCase() as CefrLevel)
+  : "A1";
+```
+
+Then add the prop to the existing element:
 
 ```tsx
 <GrammarStudyDeck
-  ...existing props...
-  cefrLevel={lesson.cefrLevel ?? trackCefrLevel(trackId)}
+  // ...existing props (deck, levelId={trackId}, lessonId, etc.)...
+  cefrLevel={cefrLevel}
 />
-```
-
-Check the actual type used for `lesson.cefrLevel` in the page. If the curriculum uses `'a1' | 'a2' | ...` (lowercase), convert with `.toUpperCase()`:
-
-```tsx
-cefrLevel={(lesson.cefrLevel?.toUpperCase() ?? 'A1') as import('@/lib/core-1000/types').CefrLevel}
 ```
 
 - [ ] **Step 6: Type-check the whole app**
@@ -757,7 +775,9 @@ Click "Practica los ejercicios de esta lección". Expect:
 
 - [ ] **Step 4: Verify shared progress**
 
-After completing the session, navigate to `/practice/review` or Essential Words. Confirm that any Core 1000 words practiced in the course session now appear as "introduced" (SRS entry exists). Open browser DevTools → Application → IndexedDB → check for `c1k:<word>` entries.
+After completing the session, navigate to `/practice/review` or Essential Words. Confirm that any Core 1000 words practiced in the course session now appear as "introduced" (SRS entry exists). Open browser DevTools → Application → IndexedDB → `srsData` table → check for `c1k:<word>` entries for the vocab words you saw.
+
+Also confirm the **negative case** (no double-logging): the sentence/`text_fragments` exercises must NOT create `c1k:` entries, and `answer_history` should have exactly one row per answered exercise (not two for vocab). Check the network tab / Supabase `answer_history` for the session — vocab answers should appear once with `context: 'courses'`, never a duplicate `context: 'core-1000'` row.
 
 - [ ] **Step 5: Commit a final type-check + lint pass**
 
@@ -777,7 +797,7 @@ Expected: no errors. Fix any lint warnings before closing the PR.
 | `buildCoursePracticeSession` assembles 3 sources | Task 3 |
 | Vocab selector: level CEFR, only new words, by rank | Task 1 |
 | Word exercise builder: `fill_blank` with `sourceRef.source = 'core1k'` | Task 2 |
-| Progress dispatcher: `core1k` → `gradeCore1000Word(word, quality)` | Task 4 |
+| Progress dispatcher: `core1k` → `gradeCore1000Word(word, quality)` | Task 4 (no userId → SRS-only, avoids answer_history double-write) |
 | No reviews in courses — only new words | Task 1 (`selectNewWordsForLevel` excludes seen) |
 | Hide button when session returns `[]` | Task 5 (error state already covers this) |
 | Remove standalone Sound Lab link | Task 5 step 4 |
