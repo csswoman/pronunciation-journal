@@ -9,6 +9,7 @@ import { resolveRecommendedMode, type RecommendedResult } from '@/lib/practice/p
 import PracticeHubHeader from './PracticeHubHeader'
 import RecommendedPracticeCard from './RecommendedPracticeCard'
 import PracticeOptionsGrid from './PracticeOptionsGrid'
+import SpeakWithCoachCard from '@/components/ai-coach/SpeakWithCoachCard'
 
 // Planned structure:
 // <PracticeHubClient>
@@ -23,6 +24,7 @@ interface Props {
 export default function PracticeHubClient({ fromDaily }: Props) {
   const { user } = useAuth()
   const [recommendation, setRecommendation] = useState<RecommendedResult | null>(null)
+  const [arc, setArc] = useState<import('@/lib/practice/types').SessionArc | undefined>(undefined)
 
   useEffect(() => {
     let cancelled = false
@@ -37,7 +39,10 @@ export default function PracticeHubClient({ fromDaily }: Props) {
         arc,
         lastModeId,
       })
-      if (!cancelled) setRecommendation(result)
+      if (!cancelled) {
+        setArc(arc)
+        setRecommendation(result)
+      }
     }
     void resolve()
     return () => {
@@ -52,6 +57,7 @@ export default function PracticeHubClient({ fromDaily }: Props) {
         <>
           <RecommendedPracticeCard recommendation={recommendation} />
           <PracticeOptionsGrid excludeModeId={recommendation.mode.id} />
+          <SpeakWithCoachCard arc={arc} />
         </>
       )}
     </PageLayout>
