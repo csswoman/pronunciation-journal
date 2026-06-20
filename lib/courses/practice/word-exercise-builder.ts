@@ -24,7 +24,12 @@ export function buildWordExercises(words: CoreWord[]): GenericExercise[] {
       const availableDistracters = allTargets.filter(
         (t) => t.toLowerCase() !== word.word.toLowerCase(),
       )
-      const distractors = pick(availableDistracters, Math.min(availableDistracters.length, FILL_BLANK_OPTIONS - 1))
+      const distractors = pick(availableDistracters, FILL_BLANK_OPTIONS - 1)
+
+      // Fall back to dictation if not enough distractors
+      if (distractors.length < FILL_BLANK_OPTIONS - 1) {
+        return [buildDictation(word, wordId)]
+      }
 
       const ex: FillBlankExercise = {
         id: exerciseId('fill_blank', wordId, word.word),
