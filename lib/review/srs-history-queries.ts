@@ -154,6 +154,7 @@ async function fetchSentenceHistory(
     .select('content_id, answered_at, target_word, user_answer')
     .eq('user_id', userId)
     .eq('is_correct', false)
+    .neq('user_answer', 'skip')
     .in('exercise_type_id', [...SENTENCE_EXERCISE_IDS])
     .order('answered_at', { ascending: false })
     .limit(limit)
