@@ -10,7 +10,7 @@
 // </DeckDoneScreen>
 
 import Link from "next/link";
-import { Check, RotateCcw, ArrowRight, Headphones, BookOpen, LayoutList } from "lucide-react";
+import { Check, RotateCcw, ArrowRight, BookOpen, LayoutList } from "lucide-react";
 import type { GrammarStudyDeckData } from "@/lib/courses/grammar-deck/types";
 
 interface DeckDoneScreenProps {
@@ -23,6 +23,8 @@ interface DeckDoneScreenProps {
   quizScore: { correct: number; total: number } | null;
   practiceLoading: boolean;
   practiceError: boolean;
+  /** Overrides deck.related — allows server-derived fallback links */
+  relatedLinks?: GrammarStudyDeckData["related"];
   onStartSentencePractice: () => void;
   onRestart: () => void;
 }
@@ -36,9 +38,11 @@ export function DeckDoneScreen({
   quizScore,
   practiceLoading,
   practiceError,
+  relatedLinks,
   onStartSentencePractice,
   onRestart,
 }: DeckDoneScreenProps) {
+  const related = relatedLinks ?? deck.related;
   return (
     <section className="grammar-deck__done" aria-live="polite">
       <div className="grammar-deck__done-badge">
@@ -67,7 +71,7 @@ export function DeckDoneScreen({
           >
             <LayoutList size={16} aria-hidden />
             <span>
-              {practiceLoading ? "Cargando ejercicios…" : "Practica armando oraciones de esta lección"}
+              {practiceLoading ? "Cargando ejercicios…" : "Practica los ejercicios de esta lección"}
             </span>
             <ArrowRight size={15} aria-hidden />
           </button>
@@ -79,25 +83,11 @@ export function DeckDoneScreen({
         </>
       )}
 
-      {deck.sounds && deck.sounds.length > 0 && (
-        <Link
-          href={`/practice/sounds?focus=${encodeURIComponent(deck.sounds.join(","))}`}
-          className="grammar-deck__done-soundlab"
-        >
-          <Headphones size={16} className="grammar-deck__done-soundlab-ico" aria-hidden />
-          <span className="grammar-deck__done-soundlab-text">
-            <span>Practica estos sonidos</span>
-            <em>{deck.sounds.join(" · ")}</em>
-          </span>
-          <ArrowRight size={14} className="grammar-deck__done-soundlab-arrow" aria-hidden />
-        </Link>
-      )}
-
-      {deck.related && deck.related.length > 0 && (
+      {related && related.length > 0 && (
         <div className="grammar-deck__related">
           <span className="grammar-deck__related-label">Continúa con</span>
           <ul>
-            {deck.related.map((r) => (
+            {related.map((r) => (
               <li key={r.slug}>
                 <Link href={`/practice/decks/${r.slug}`}>
                   <BookOpen size={14} aria-hidden />
