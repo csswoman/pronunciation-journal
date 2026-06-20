@@ -3,13 +3,17 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { ArrowRight, Flame, Sparkles } from 'lucide-react'
+import { Sparkles } from 'lucide-react'
 import PageLayout from '@/components/layout/PageLayout'
 import DailyStepSession from './DailyStepSession'
+import SessionOpeningBanner from './SessionOpeningBanner'
+import SessionRecapCard from './SessionRecapCard'
 import Button from '@/components/ui/Button'
 import Badge from '@/components/ui/Badge'
 import DailyStepList from './DailyStepList'
+import { useAuth } from '@/components/auth/AuthProvider'
 import { useDailyPlan, type ConceptLesson, type DailyStep } from '@/hooks/useDailyPlan'
+import { fetchDueTomorrowCount } from '@/lib/review/client-queries'
 
 export type { ConceptLesson }
 
@@ -44,6 +48,8 @@ function clearStepStorage(): void {
 interface DailyChecklistProps {
   conceptLesson: ConceptLesson | null
   initialStepId?: string
+  /** Current streak in days, fetched server-side. null when unavailable. */
+  streak?: number | null
 }
 
 type View =
@@ -53,15 +59,17 @@ type View =
 
 // ── Component ───────────────────────────────────────────────────────────────
 
-export default function DailyChecklist({ conceptLesson, initialStepId }: DailyChecklistProps) {
+export default function DailyChecklist({ conceptLesson, initialStepId, streak = null }: DailyChecklistProps) {
   const router = useRouter()
-  const { status, steps, getStepStatus, completedCount, allDone, load, markDone, celebrate } = useDailyPlan({
+  const { user } = useAuth()
+  const { plan, status, steps, getStepStatus, completedCount, allDone, load, markDone, celebrate } = useDailyPlan({
     conceptLesson,
     autoLoad: true,
   })
 
   const [view, setView] = useState<View>({ mode: 'checklist' })
   const [sessionKey, setSessionKey] = useState(0)
+  const [dueTomorrow, setDueTomorrow] = useState<number | null>(null)
   // Prevents double-triggering the initialStepId auto-start.
   const autoStartedRef = useRef(false)
 
@@ -77,13 +85,18 @@ export default function DailyChecklist({ conceptLesson, initialStepId }: DailyCh
     setView({ mode: 'step', step, exerciseIndex })
   }, [status, steps, initialStepId])
 
-  // Celebrate once when all steps are complete.
+  // Celebrate once when all steps are complete, and load the "due tomorrow" count.
   useEffect(() => {
     if (allDone && view.mode === 'checklist') {
       setView({ mode: 'done' })
       celebrate()
+      if (user) {
+        fetchDueTomorrowCount(user.id)
+          .then(setDueTomorrow)
+          .catch(() => setDueTomorrow(null))
+      }
     }
-  }, [allDone, view.mode, celebrate])
+  }, [allDone, view.mode, celebrate, user])
 
   const handleStartStep = useCallback((step: DailyStep) => {
     if (step.kind === 'concept') return
@@ -142,34 +155,15 @@ export default function DailyChecklist({ conceptLesson, initialStepId }: DailyCh
     )
   }
 
-  // ── Render: pantalla "diaria cumplida" ─────────────────────────────────────
+  // ── Render: pantalla de cierre ─────────────────────────────────────────────
   if (view.mode === 'done') {
     return (
-      <PageLayout className="mx-auto max-w-[640px]">
-        <div className="mt-16 flex flex-col items-center gap-4 text-center">
-          <div className="grid h-16 w-16 place-items-center rounded-full bg-[var(--hue-icon-bg)] text-[var(--primary)]">
-            <Flame size={30} />
-          </div>
-          <h1 className="text-3xl font-medium text-[var(--text-primary)]" style={{ fontFamily: 'var(--font-display), serif' }}>
-            Daily complete!
-          </h1>
-          <p className="max-w-sm text-[15px] text-[var(--text-secondary)]">
-            You completed all {steps.length} steps today. Your streak is alive — come back tomorrow.
-          </p>
-          <div className="mt-4 flex flex-col gap-3 sm:flex-row">
-            <Link href="/">
-              <Button variant="primary" size="md">
-                Go back home
-              </Button>
-            </Link>
-            <Link href="/practice/sounds">
-              <Button variant="secondary" size="md" icon={<ArrowRight size={15} />} iconPosition="right">
-                Free practice
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </PageLayout>
+      <SessionRecapCard
+        arc={plan?.arc}
+        stepCount={steps.length}
+        dueTomorrow={dueTomorrow}
+        streak={streak}
+      />
     )
   }
 
@@ -191,6 +185,8 @@ export default function DailyChecklist({ conceptLesson, initialStepId }: DailyCh
           />
         </div>
       </header>
+
+      <SessionOpeningBanner arc={plan?.arc} />
 
       <DailyStepList
         steps={steps}
