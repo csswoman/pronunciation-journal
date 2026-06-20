@@ -1,6 +1,7 @@
 import { getSupabaseBrowserClient } from '@/lib/supabase/client'
 import type { ReorderWordsExercise } from '@/lib/exercises/types'
 import { exerciseId, isLikelySentence, pick, shuffle, tokenize } from '@/lib/exercises/utils'
+import { isLikelyEnglish } from './mixed-from-fragments'
 
 const MIN_TOKENS = 4
 
@@ -51,13 +52,30 @@ export async function fetchTextFragments(
 
 /**
  * Fetches text_fragments for a specific grammar deck slug.
- * Used by GrammarStudyDeck to generate reorder exercises from the current lesson.
+ * Falls back to the whole CEFR level (e.g. "grammar-deck:a1-") when the deck
+ * has fewer than MIN_USABLE usable sentences, so the practice button always
+ * has enough material even for lightly-seeded decks.
  */
 export async function fetchFragmentsForDeck(
   deckSlug: string,
   limit = 30,
 ): Promise<TextFragment[]> {
-  return fetchTextFragments(`grammar-deck:${deckSlug}`, limit)
+  const MIN_USABLE = 3
+  const isUsable = (f: TextFragment) =>
+    isLikelySentence(f.content) && isLikelyEnglish(f.content) && tokenize(f.content).length >= MIN_TOKENS
+
+  const exact = await fetchTextFragments(`grammar-deck:${deckSlug}`, limit)
+  if (exact.filter(isUsable).length >= MIN_USABLE) return exact
+
+  // Derive level prefix: "a1-verbos-comunes" → "a1-"
+  const levelPrefix = deckSlug.match(/^([a-z]\d)-/)?.[1]
+  if (!levelPrefix) return exact
+
+  // Pull the whole level, then keep only usable English sentences so the
+  // session never falls back to broken/Spanish material.
+  const levelFragments = await fetchTextFragments(`grammar-deck:${levelPrefix}-`, limit)
+  const usableLevel = levelFragments.filter(isUsable)
+  return usableLevel.length > 0 ? usableLevel : exact
 }
 
 /**

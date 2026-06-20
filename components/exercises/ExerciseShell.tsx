@@ -28,6 +28,8 @@ interface ExerciseShellProps {
   title: string
   /** Learner-facing label of what this exercise trains (e.g. "Presente simple"). */
   eyebrow?: string
+  /** Short instructional subtitle shown below the title. */
+  description?: string
   hint?: HintShape
   result: ExerciseResult | null
   onContinue: () => void
@@ -39,6 +41,7 @@ interface ExerciseShellProps {
 export function ExerciseShell({
   title,
   eyebrow,
+  description,
   hint,
   result,
   onContinue,
@@ -60,7 +63,7 @@ export function ExerciseShell({
 
   return (
     <div className="flex w-full flex-col gap-5">
-      <ShellHeader title={title} eyebrow={eyebrow} hintSlot={hintSlot} />
+      <ShellHeader title={title} eyebrow={eyebrow} description={description} hintSlot={hintSlot} />
       {hint && <HintChip word={hint.word} meaning={hint.meaning} />}
       {children}
       {done && <FeedbackBanner isCorrect={result.isCorrect} />}
@@ -73,10 +76,12 @@ export function ExerciseShell({
 function ShellHeader({
   title,
   eyebrow,
+  description,
   hintSlot,
 }: {
   title: string
   eyebrow?: string
+  description?: string
   hintSlot?: React.ReactNode
 }) {
   return (
@@ -90,6 +95,11 @@ function ShellHeader({
         <p className="font-[Fraunces,Georgia,serif] text-2xl font-bold leading-tight text-fg">
           {title}
         </p>
+        {description && (
+          <p className="text-[13px] text-fg-muted leading-snug">
+            {description}
+          </p>
+        )}
       </div>
       {hintSlot && (
         <div className="flex items-center gap-2 pt-1 shrink-0">
