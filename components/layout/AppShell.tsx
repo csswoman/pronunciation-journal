@@ -10,10 +10,11 @@ import { useAuth } from "@/components/auth/AuthProvider";
 import { useAICoachStore } from "@/lib/stores/aiCoachStore";
 import AICoachPanel from "@/components/ai-coach/AICoachPanel";
 import AICoachTrigger from "@/components/ai-coach/AICoachTrigger";
+import { isPublicAuthPath } from "@/lib/auth/public-paths";
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const isAuthPage = pathname.startsWith("/login");
+  const isAuthPage = isPublicAuthPath(pathname);
   const isImmersivePractice =
     pathname.startsWith("/practice/sounds/sound/") ||
     pathname === "/daily" ||

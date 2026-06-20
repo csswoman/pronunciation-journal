@@ -80,6 +80,13 @@ export interface IpaExplorationRecord {
   exploredAt: string; // ISO
 }
 
+/** Key/value store for lightweight practice UI prefs (e.g. last mode used). */
+export interface PracticePrefRecord {
+  key: string;   // PK, e.g. "lastPracticeMode"
+  value: string;
+  updatedAt: string; // ISO
+}
+
 class PronunciationDB extends Dexie {
   attempts!: Table<Attempt, number>;
   srsData!: Table<SRSData, string>;
@@ -97,6 +104,7 @@ class PronunciationDB extends Dexie {
   practiceSessions!: Table<PracticeSessionRecord, string>;
   ipaExplorations!: Table<IpaExplorationRecord, string>;
   readerPassages!: Table<ReaderPassage, string>;
+  practicePrefs!: Table<PracticePrefRecord, string>;
 
   constructor() {
     super("pronunciation-journal");
@@ -177,6 +185,11 @@ class PronunciationDB extends Dexie {
     // v13: reader passages (comprehensible-input reader, offline reread cache)
     this.version(13).stores({
       readerPassages: "id, userId, targetHash, createdAt",
+    });
+
+    // v14: lightweight key/value prefs for the practice hub (last mode used)
+    this.version(14).stores({
+      practicePrefs: "key",
     });
   }
 }
@@ -519,4 +532,23 @@ export async function getExploredSymbolsToday(): Promise<string[]> {
 export async function resetTodaysExplorations(): Promise<void> {
   const date = getTodayKey();
   await db.ipaExplorations.where("date").equals(date).delete();
+}
+
+// ── Practice Prefs Helpers ──
+
+const LAST_PRACTICE_MODE_KEY = "lastPracticeMode";
+
+/** Remember the last practice mode the user entered (for the hub recommendation). */
+export async function setLastPracticeMode(modeId: string): Promise<void> {
+  await db.practicePrefs.put({
+    key: LAST_PRACTICE_MODE_KEY,
+    value: modeId,
+    updatedAt: new Date().toISOString(),
+  });
+}
+
+/** The last practice mode id the user entered, or null if none recorded. */
+export async function getLastPracticeMode(): Promise<string | null> {
+  const row = await db.practicePrefs.get(LAST_PRACTICE_MODE_KEY);
+  return row?.value ?? null;
 }
