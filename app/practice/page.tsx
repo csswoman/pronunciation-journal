@@ -1,5 +1,10 @@
-import { redirect } from 'next/navigation'
+import PracticeHubClient from '@/components/practice/hub/PracticeHubClient'
 
-export default function PracticePage() {
-  redirect('/daily')
+interface PageProps {
+  searchParams: Promise<{ from?: string }>
+}
+
+export default async function PracticePage({ searchParams }: PageProps) {
+  const { from } = await searchParams
+  return <PracticeHubClient fromDaily={from === 'daily'} />
 }

@@ -98,7 +98,7 @@ export default function SessionRecapCard({ arc, stepCount, dueTomorrow, streak }
               Go back home
             </Button>
           </Link>
-          <Link href="/practice/sounds">
+          <Link href="/practice?from=daily">
             <Button
               variant="secondary"
               size="md"
