@@ -2,10 +2,10 @@
 
 // Planned structure:
 // <GrammarStudyDeck>
-//   PracticeSession overlay  (when sentence practice is active)
 //   <GrammarDeckHeader />
 //   <QuizStep />             (quiz phase)
 //   <DeckDoneScreen />       (done phase)
+//   <PracticeSession />      (practice phase — embedded, no overlay)
 //   <DeckCarousel />         (cards phase)
 // </GrammarStudyDeck>
 
@@ -55,7 +55,7 @@ export default function GrammarStudyDeck({
   const [index, setIndex] = useState(0);
   const [direction, setDirection] = useState<"next" | "prev">("next");
   const [reviewed, setReviewed] = useState<Set<string>>(() => new Set());
-  const [phase, setPhase] = useState<"cards" | "quiz" | "done">("cards");
+  const [phase, setPhase] = useState<"cards" | "quiz" | "done" | "practice">("cards");
   const [quizScore, setQuizScore] = useState<{ correct: number; total: number } | null>(null);
 
   // Sentence practice state
@@ -118,6 +118,7 @@ export default function GrammarStudyDeck({
       const exercises = await buildCoursePracticeSession({ deckSlug: resolvedSlug, cefrLevel: level });
       if (exercises.length > 0) {
         setPracticeExercises(exercises);
+        setPhase("practice");
       } else {
         setPracticeError(true);
       }
@@ -153,22 +154,6 @@ export default function GrammarStudyDeck({
 
   const isLast = index === total - 1;
 
-  // Overlay: sesión de práctica mixta (reordenar, dictado, completar) de esta lección
-  if (practiceExercises) {
-    return (
-      <div className="fixed inset-0 z-50 bg-surface-base">
-        <PracticeSession
-          context="courses"
-          exercises={practiceExercises}
-          sessionLength={practiceExercises.length}
-          sessionLabel="Practica esta lección"
-          onSessionComplete={() => setPracticeExercises(null)}
-          onExit={() => setPracticeExercises(null)}
-        />
-      </div>
-    );
-  }
-
   return (
     <div className="grammar-deck" data-course-study-deck>
       <div className="grammar-deck__wrap">
@@ -181,7 +166,16 @@ export default function GrammarStudyDeck({
           subtitle={courseTitle ? deck.meta.eyebrow : undefined}
         />
 
-        {phase === "quiz" && deck.quiz ? (
+        {phase === "practice" && practiceExercises ? (
+          <PracticeSession
+            context="courses"
+            exercises={practiceExercises}
+            sessionLength={practiceExercises.length}
+            sessionLabel="Practica esta lección"
+            onSessionComplete={() => { setPracticeExercises(null); setPhase("done"); }}
+            onExit={() => { setPracticeExercises(null); setPhase("done"); }}
+          />
+        ) : phase === "quiz" && deck.quiz ? (
           <QuizStep
             questions={deck.quiz}
             onDone={(correct, totalQ) => {
