@@ -7,7 +7,8 @@ import {
   fetchRecentFailedSentences,
 } from '@/lib/review/client-queries'
 import { mergeReviewWords } from '@/lib/review/merge-words'
-import type { DailyPlan, DailyStep } from '@/lib/practice/types'
+import { dominantTopicLabel } from '@/lib/practice/topic-labels'
+import type { DailyPlan, DailyStep, SessionArc } from '@/lib/practice/types'
 import type { Sound, SoundWord } from '@/lib/phoneme-practice/types'
 import { buildConnectedSpeechStep, buildSentenceBuilderStep } from './async-step-builders'
 import { DAILY_PLAN_STEP_COUNT, WORD_REVIEW_WORD_COUNT } from './constants'
@@ -228,11 +229,29 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
     }
   }
 
-  const totalExercises = steps.reduce((sum, s) => sum + s.exercises.length, 0)
+  const finalSteps = steps.slice(0, DAILY_PLAN_STEP_COUNT)
+
+  // Session arc: narrative framing reusing data the plan already computed.
+  // Topics live on generic exercise payloads (payload.data.topic).
+  const arcTopics = finalSteps.flatMap((s) =>
+    s.exercises.map((e) => (e.payload.kind === 'generic' ? e.payload.data.topic : undefined)),
+  )
+  // Session words come from the day's review words (authoritative, readable text).
+  const sessionWords = Array.from(
+    new Set(reviewWords.map((w) => w.text).filter((t): t is string => !!t)),
+  )
+  const arc: SessionArc = {
+    topicLabel: dominantTopicLabel(arcTopics),
+    soundIpa: primarySound?.ipa ?? null,
+    sessionWords,
+  }
+
+  const totalExercises = finalSteps.reduce((sum, s) => sum + s.exercises.length, 0)
 
   return {
-    steps: steps.slice(0, DAILY_PLAN_STEP_COUNT),
+    steps: finalSteps,
     totalExercises,
     isNewUser: !hasWordBank && !hasProgress,
+    arc,
   }
 }
