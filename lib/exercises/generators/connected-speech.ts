@@ -14,9 +14,14 @@ interface CsRuleRow {
   key?: string
 }
 
+interface CsPronExample {
+  text?: string
+}
+
 interface CsBlock {
   type: string
   rows?: CsRuleRow[]
+  examples?: CsPronExample[]
 }
 
 interface CsCard {
@@ -72,23 +77,37 @@ export function generateCsQuiz(deck: CsDeck, slug: CsDeckSlug, count: number): M
   }))
 }
 
-/** Extract short spoken phrases from deck cards for dictation exercises. */
+/** Count whitespace-separated words in a trimmed string. */
+function wordCount(text: string): number {
+  return text.split(/\s+/).filter(Boolean).length
+}
+
+/**
+ * Extract real example sentences from deck `pronunciation` blocks for dictation.
+ *
+ * Dictation is "listen and type the sentence", so the target must be an actual
+ * sentence — not a reduction key like "gonna" or "sorta" (those are single
+ * slang spellings of "going to" / "sort of", not sentences). Reduction keys
+ * live in `rules` rows and are intentionally excluded; we use the full example
+ * sentences (e.g. "I'm gonna call you later.") that already embed the reduction
+ * in context.
+ */
 function extractPhrases(deck: CsDeck): string[] {
-  const phrases: string[] = []
+  const sentences: string[] = []
   for (const card of deck.cards) {
     for (const block of card.blocks) {
-      if (block.type !== 'rules' || !block.rows) continue
-      for (const row of block.rows) {
-        if (!row.key) continue
-        // Keys look like "going to → gonna" or "an apple" — take the part after → if present
-        const phrase = row.key.includes('→') ? row.key.split('→')[1].trim() : row.key.trim()
-        if (phrase.length > 0 && phrase.length < 40 && /^[\w\s''-]+$/.test(phrase)) {
-          phrases.push(phrase)
+      if (block.type !== 'pronunciation' || !block.examples) continue
+      for (const example of block.examples) {
+        if (!example.text) continue
+        const sentence = example.text.trim()
+        // Require a genuine multi-word sentence, not a lone reduced form.
+        if (sentence.length > 0 && sentence.length < 80 && wordCount(sentence) >= 2) {
+          sentences.push(sentence)
         }
       }
     }
   }
-  return [...new Set(phrases)]
+  return [...new Set(sentences)]
 }
 
 /** Generate sentence_dictation exercises from a deck's example phrases. */
