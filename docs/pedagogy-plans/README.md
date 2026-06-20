@@ -10,9 +10,9 @@ Promedio de la auditoría: **~49/100**. Hechos estos tres eslabones, la app salt
 
 ---
 
-## Estado de implementación (actualizado 2026-06-19, commit `ce60eab`)
+## Estado de implementación (actualizado 2026-06-20)
 
-Los **7 planes están implementados en código** y `pnpm test` pasa (624 tests).
+Los **8 planes están implementados en código** y `pnpm test` pasa (645 tests).
 Esta tabla refleja el estado verificado contra el código y la DB, no el plan original.
 
 | # | Plan | Tipo | Estado código | DB (remote) | Pendiente |
@@ -20,20 +20,22 @@ Esta tabla refleja el estado verificado contra el código y la DB, no el plan or
 | 1 | [01-close-vocab-srs.md](./01-close-vocab-srs.md) | 🔴 Crítico | ✅ Committed (`b37ba57`) | ✅ | — |
 | 2 | [02-noticing-presentation-step.md](./02-noticing-presentation-step.md) | 🔴 Crítico | ✅ Committed (`f468c9c`) | ✅ | — |
 | 3 | [03-free-production-exercise.md](./03-free-production-exercise.md) | 🔴 Crítico | ✅ Committed (`b95c4df`) | ✅ slugs `written/spoken_production` | — |
-| 4 | [04-narrate-the-path.md](./04-narrate-the-path.md) | 🟠 Importante | 🟡 **Sin commitear** (working tree) | n/a | Commit + wiring de `topicDisplayLabel` en step subtitles |
+| 4 | [04-narrate-the-path.md](./04-narrate-the-path.md) | 🟠 Importante | ✅ Committed (`e938f25`) | n/a | — |
 | 5 | [05-reorder-tolerant-grading.md](./05-reorder-tolerant-grading.md) | ⚡ Quick win | ✅ Committed | n/a | Opción B diferida |
 | 6 | [06-phoneme-vocab-bridge.md](./06-phoneme-vocab-bridge.md) | 🟠 Importante | ✅ Committed (`433961f`) | n/a | Tarea 3 diferida (opcional) |
-| 7 | [07-comprehensible-input-reader.md](./07-comprehensible-input-reader.md) | 🟠 Importante | ✅ Committed (11 commits) | ✅ tabla `reader_passages` | Verificar si falta slug `reader` en `exercise_types`; QA manual |
+| 7 | [07-comprehensible-input-reader.md](./07-comprehensible-input-reader.md) | 🟠 Importante | ✅ Committed (11 commits) | ✅ tabla `reader_passages` | QA manual pendiente |
+| 8 | [08-session-arc.md](./08-session-arc.md) | 🟠 Importante | ✅ Committed (8 commits, 2026-06-20) | n/a | Hilo entre pasos diferido → plan 09 |
 
 > Los briefs originales (problema + objetivo + criterios) se conservan abajo; cada
 > uno cierra con una sección **Implementación** que documenta lo entregado y lo diferido.
 
 ### Backlog vivo
 
-1. **Commitear plan 04** — vive solo en el working tree (`topic-labels.ts`, `Core1000ProgressCard.tsx`, 10 archivos `M`). Un cambio de rama lo pierde.
-2. **Completar wiring de plan 04** — los `subtitle` de `lib/practice/daily-plan/step-builders.ts` siguen siendo prosa hardcodeada; deberían consumir `topicDisplayLabel()` para narrar el objetivo gramatical real del paso.
-3. ~~Verificar slug `reader`~~ — ✅ Confirmado: `reader: null` en `EXERCISE_TYPE_IDS` (`lib/practice/types.ts:50`) es intencional. El reader no escribe a `answer_history`, así que **no debe** tener fila en `exercise_types`. No es un bug.
+1. ~~Commitear plan 04~~ — ✅ Committed (`e938f25`).
+2. ~~Completar wiring de plan 04~~ — ✅ `topicDisplayLabel()` wired en `step-builders.ts` subtítulos (`e938f25`).
+3. ~~Verificar slug `reader`~~ — ✅ Confirmado intencional (`reader: null` en `EXERCISE_TYPE_IDS`).
 4. **QA manual reader** — completar daily plan con ≥3 due → verificar reader step + exposure tracking, y reread offline desde Dexie.
+5. **Plan 09: hilo entre pasos** — marcar en la UI que una palabra reaparece entre `word_intro` → `word_review` → `context_practice`. Diferido del plan 08.
 
 ---
 
