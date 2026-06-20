@@ -97,6 +97,7 @@ export function GenericExerciseView({ exercise, onSubmit, focusUi = false }: Pro
       <ExerciseShell
         title={getGenericTitle(data.type)}
         eyebrow={topicDisplayLabel(data.topic) ?? undefined}
+        description={data.type === 'sentence_dictation' ? 'Escucha el audio y escribe exactamente lo que oyes. Puedes reproducirlo las veces que necesites.' : undefined}
         hint={getGenericHint(data)}
         result={result}
         onContinue={handleContinue}
