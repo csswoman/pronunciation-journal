@@ -113,6 +113,7 @@ export default function GrammarStudyDeck({
     setPracticeError(false);
     try {
       const resolvedSlug = (deckSlug ?? lessonId) ?? '';
+      if (!resolvedSlug) console.warn('[GrammarStudyDeck] deckSlug missing — practice session may be empty');
       const level: CefrLevel = cefrLevel ?? 'A1';
       const exercises = await buildCoursePracticeSession({ deckSlug: resolvedSlug, cefrLevel: level });
       if (exercises.length > 0) {

@@ -1,5 +1,3 @@
-'use client'
-
 import { fetchFragmentsForDeck } from '@/lib/exercises/generators/reorder-from-fragments'
 import { generateMixedFromFragments } from '@/lib/exercises/generators/mixed-from-fragments'
 import { fetchCoreWords } from '@/lib/core-1000/client'
