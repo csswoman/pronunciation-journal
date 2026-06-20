@@ -9,3 +9,6 @@ export const PHONEME_FOCUS_EXERCISE_COUNT = 4
 export const MINIMAL_PAIRS_EXERCISE_COUNT = 3
 export const LISTENING_EXERCISE_COUNT = 3
 export const SENTENCE_BUILDER_EXERCISE_COUNT = 5
+
+/** Tope de palabras nuevas presentadas (noticing) por sesión — carga cognitiva. */
+export const WORD_INTRO_MAX_CARDS = 5

@@ -18,6 +18,8 @@ export type ExerciseMode =
   | 'sentence_dictation'
   | 'match_pairs'
   | 'sentence_context'
+  | 'written_production'
+  | 'spoken_production'
 
 export type EligibilityReason =
   | 'missing_example'
@@ -231,6 +233,11 @@ export function assessWordBankEntry(
     case 'match_pairs':
       if (!entry.text) reasons.push('missing_text')
       if (!entry.meaning) reasons.push('missing_meaning')
+      break
+
+    case 'written_production':
+    case 'spoken_production':
+      if (!entry.text) reasons.push('missing_text')
       break
   }
 

@@ -161,6 +161,22 @@ describe('buildDailyPlan', () => {
     expect(plan.steps).toHaveLength(DAILY_PLAN_STEP_COUNT)
   })
 
+  it('populates arc with the primary sound IPA and session words', async () => {
+    const words = Array.from({ length: 6 }, (_, i) =>
+      makeLexiconWordBankEntry({ id: `w-${i}`, text: `word${i}`, example: fillBlankExampleSentence(`word${i}`) }),
+    )
+    setupWordBankMock(words, [])
+
+    const plan = await buildDailyPlan('user-1')
+
+    expect(plan.arc).toBeDefined()
+    expect(plan.arc).toHaveProperty('topicLabel')
+    expect(plan.arc).toHaveProperty('soundIpa')
+    expect(Array.isArray(plan.arc?.sessionWords)).toBe(true)
+    // word_review exercises carry targetWord, so session words should be non-empty.
+    expect(plan.arc!.sessionWords.length).toBeGreaterThan(0)
+  })
+
   it('no repite contentId dentro de un mismo paso', async () => {
     const plan = await buildDailyPlan('user-1')
     for (const step of plan.steps) {

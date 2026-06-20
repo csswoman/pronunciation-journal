@@ -3,26 +3,20 @@ export const dynamic = "force-dynamic";
 import PageLayout from "@/components/layout/PageLayout";
 import HomeLayout from "@/components/home/HomeLayout";
 import { getSupabaseServerUserId } from "@/lib/supabase/session";
-import {
-  getWordsDueForReview,
-  countWordsDueForReview,
-} from "@/lib/word-bank/server-queries";
 import { getLexiconRetentionStats } from "@/lib/lexicon/server-progress";
 import { getTodaysMiniLesson, getTodaysLanguageConcept } from "@/lib/content/lessons";
 import { getDailyStreak } from "@/lib/daily/streak";
-import { getTodayPracticeGoal, getWeakestPhonemeForHome, getSoundsDueForHome } from "@/lib/home/queries";
+import { getTodayPracticeGoal, getWeakestPhonemeForHome } from "@/lib/home/queries";
+import { getReviewQueueSummary } from "@/lib/home/review-queue";
 import type { MiniLesson, LanguageConcept } from "@/lib/content/schemas";
-import type { WordBankEntry } from "@/lib/word-bank/types";
 import type { DailyStreakResult } from "@/lib/daily/streak-core";
-import type { DailyGoalProgress, WeakestPhonemeHome, SoundDueHome } from "@/lib/home/constants";
+import type { DailyGoalProgress, WeakestPhonemeHome, ReviewQueueSummary } from "@/lib/home/constants";
 import type { LexiconRetentionStats } from "@/lib/lexicon/server-progress";
 
 const REVIEW_PREVIEW_LIMIT = 4;
 
 export default async function HomePage() {
-  let dueWords: WordBankEntry[] = [];
-  let dueCount = 0;
-  let soundsDue: SoundDueHome[] = [];
+  let reviewQueue: ReviewQueueSummary = { total: 0, newAvailable: 0, sources: [], preview: [] };
   let todaysLesson: MiniLesson | null = null;
   let todaysConcept: LanguageConcept | null = null;
   let dailyStreak: DailyStreakResult | undefined;
@@ -33,11 +27,9 @@ export default async function HomePage() {
   const userId = await getSupabaseServerUserId();
 
   try {
-    const [words, totalDue, sounds, lesson, concept, streak, lexicon, goal, weakSound] =
+    const [queue, lesson, concept, streak, lexicon, goal, weakSound] =
       await Promise.all([
-        userId ? getWordsDueForReview(userId, REVIEW_PREVIEW_LIMIT) : Promise.resolve([]),
-        countWordsDueForReview(),
-        userId ? getSoundsDueForHome(userId) : Promise.resolve([]),
+        getReviewQueueSummary(userId),
         getTodaysMiniLesson(),
         getTodaysLanguageConcept(),
         userId ? getDailyStreak(userId) : Promise.resolve(undefined),
@@ -45,9 +37,7 @@ export default async function HomePage() {
         userId ? getTodayPracticeGoal(userId) : Promise.resolve(null),
         userId ? getWeakestPhonemeForHome(userId) : Promise.resolve(null),
       ]);
-    dueWords = words;
-    dueCount = totalDue;
-    soundsDue = sounds;
+    reviewQueue = queue;
     todaysLesson = lesson;
     todaysConcept = concept;
     dailyStreak = streak ?? undefined;
@@ -66,14 +56,12 @@ export default async function HomePage() {
     <PageLayout>
       <HomeLayout
         streak={dailyStreak}
-        wordsDueCount={dueCount}
-        soundsDueCount={soundsDue.length}
+        wordsDueCount={reviewQueue.sources.find((s) => s.id === "vocabulary")?.count ?? 0}
+        soundsDueCount={reviewQueue.sources.find((s) => s.id === "sounds")?.count ?? 0}
         conceptLesson={conceptLesson}
         dailyGoal={dailyGoal}
         weakestPhoneme={weakestPhoneme}
-        dueWords={dueWords}
-        dueCount={dueCount}
-        soundsDue={soundsDue}
+        reviewQueue={reviewQueue}
         lexiconRetention={lexiconRetention}
         todaysLesson={todaysLesson}
         todaysConcept={todaysConcept}

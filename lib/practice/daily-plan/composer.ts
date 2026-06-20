@@ -7,7 +7,8 @@ import {
   fetchRecentFailedSentences,
 } from '@/lib/review/client-queries'
 import { mergeReviewWords } from '@/lib/review/merge-words'
-import type { DailyPlan, DailyStep } from '@/lib/practice/types'
+import { dominantTopicLabel } from '@/lib/practice/topic-labels'
+import type { DailyPlan, DailyStep, SessionArc } from '@/lib/practice/types'
 import type { Sound, SoundWord } from '@/lib/phoneme-practice/types'
 import { buildConnectedSpeechStep, buildSentenceBuilderStep } from './async-step-builders'
 import { DAILY_PLAN_STEP_COUNT, WORD_REVIEW_WORD_COUNT } from './constants'
@@ -21,11 +22,13 @@ import {
   fetchWeakestSoundProgress,
 } from './fetchers'
 import { dayOfYear, pickSeedSound } from './selectors'
+import { biasWordsBySound } from './sound-word-bridge'
 import {
   buildContextPracticeStep,
   buildListeningStep,
   buildMinimalPairsStep,
   buildPhonemeFocusStep,
+  buildWordIntroStep,
   buildWordReviewStep,
 } from './step-builders'
 
@@ -129,6 +132,12 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
   }
   if (!primarySound) primarySound = pickSeedSound(allSounds, 0)
 
+  // Puente fonema ↔ vocabulario: sesga las palabras del word_bank hacia el sonido
+  // débil del día. Solo sobre vocabulario propio (no Core-1000 fallback).
+  if (primarySound && hasWordBank) {
+    reviewWords = biasWordsBySound(reviewWords, primarySound.ipa, WORD_REVIEW_WORD_COUNT)
+  }
+
   // New/challenging content first, review last.
   const newSteps: DailyStep[] = []
   const reviewSteps: DailyStep[] = []
@@ -178,6 +187,10 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
     if (sentenceStep) allSteps.push(sentenceStep)
   }
 
+  // Noticing before testing: present new words before they appear in word_review.
+  const wordIntro = buildWordIntroStep(reviewWords)
+  if (wordIntro) reviewSteps.push(wordIntro)
+
   const wordReview = buildWordReviewStep(reviewWords)
   if (wordReview) reviewSteps.push(wordReview)
 
@@ -216,11 +229,29 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
     }
   }
 
-  const totalExercises = steps.reduce((sum, s) => sum + s.exercises.length, 0)
+  const finalSteps = steps.slice(0, DAILY_PLAN_STEP_COUNT)
+
+  // Session arc: narrative framing reusing data the plan already computed.
+  // Topics live on generic exercise payloads (payload.data.topic).
+  const arcTopics = finalSteps.flatMap((s) =>
+    s.exercises.map((e) => (e.payload.kind === 'generic' ? e.payload.data.topic : undefined)),
+  )
+  // Session words come from the day's review words (authoritative, readable text).
+  const sessionWords = Array.from(
+    new Set(reviewWords.map((w) => w.text).filter((t): t is string => !!t)),
+  )
+  const arc: SessionArc = {
+    topicLabel: dominantTopicLabel(arcTopics),
+    soundIpa: primarySound?.ipa ?? null,
+    sessionWords,
+  }
+
+  const totalExercises = finalSteps.reduce((sum, s) => sum + s.exercises.length, 0)
 
   return {
-    steps: steps.slice(0, DAILY_PLAN_STEP_COUNT),
+    steps: finalSteps,
     totalExercises,
     isNewUser: !hasWordBank && !hasProgress,
+    arc,
   }
 }

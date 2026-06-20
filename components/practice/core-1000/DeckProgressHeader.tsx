@@ -5,20 +5,23 @@
 
 import type { EssentialWordsStats } from '@/hooks/useEssentialWordsSession'
 
+// Persistent deck state. Rendered as a quiet inline line (label: value · …)
+// so it reads as ambient context, distinct from the live session HUD below it.
 function Stat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex flex-col items-center gap-0.5">
-      <span className="text-sm font-semibold text-[var(--text-primary)]">{value}</span>
-      <span className="text-tiny uppercase tracking-[0.12em] text-[var(--text-tertiary)]">{label}</span>
-    </div>
+    <span className="text-fg-subtle">
+      {label} <span className="font-semibold tabular-nums text-fg-muted">{value}</span>
+    </span>
   )
 }
 
 export function DeckProgressHeader({ stats }: { stats: EssentialWordsStats }) {
   return (
-    <div className="flex w-full max-w-md items-center justify-around border-b border-[var(--border-subtle)] pb-4">
+    <div className="flex w-full flex-wrap items-center justify-center gap-x-4 gap-y-1 text-caption">
       <Stat label="Aprendidas" value={`${stats.learned}/${stats.totalWords}`} />
+      <span aria-hidden className="text-border-strong">·</span>
       <Stat label="Vencidas hoy" value={String(stats.dueCount)} />
+      <span aria-hidden className="text-border-strong">·</span>
       <Stat label="Nuevas hoy" value={`${stats.newToday}/${stats.newQuota}`} />
     </div>
   )

@@ -119,7 +119,7 @@ export function useSessionState(config: PracticeConfig) {
   }, [phase, results, onSessionComplete, persistence, user, context])
 
   const handleSubmit = useCallback(
-    (isCorrect: boolean, userAnswer: string) => {
+    (isCorrect: boolean, userAnswer: string, extras?: { score?: number }) => {
       const current = exercises[currentIndex]
       if (!current || phase !== 'exercising') return
       const timeMs = Date.now() - startTimeRef.current
@@ -130,6 +130,7 @@ export function useSessionState(config: PracticeConfig) {
         isCorrect,
         userAnswer,
         timeMs,
+        score: extras?.score,
         contentId: current.contentId,
         context,
         soundId: current.soundId,

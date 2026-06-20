@@ -37,7 +37,7 @@ const variantStyles: Record<ButtonVariant, string> = {
 
   // Secondary: surface-raised background, primary text
   secondary: cn(
-    "bg-[var(--surface-raised)] text-[var(--fg-primary)]",
+    "bg-[var(--surface-raised)] text-[var(--text-primary)]",
     "border border-[var(--border-default)]",
     "hover:bg-[var(--surface-sunken)]",
     "active:translate-y-[-1px] active:shadow-md"
@@ -52,48 +52,48 @@ const variantStyles: Record<ButtonVariant, string> = {
 
   // Ghost: transparent, secondary text
   ghost: cn(
-    "bg-transparent text-[var(--fg-secondary)]",
+    "bg-transparent text-[var(--text-secondary)]",
     "hover:bg-[var(--surface-raised)]",
     "active:translate-y-[-1px]"
   ),
 
   // Semantic: success green
   success: cn(
-    "bg-[var(--success)] text-white",
+    "bg-[var(--success)] text-[var(--on-primary)]",
     "hover:bg-[var(--success-hover)]",
     "active:translate-y-[-1px] active:shadow-md"
   ),
 
   // Semantic: error red
   error: cn(
-    "bg-[var(--error)] text-white",
+    "bg-[var(--error)] text-[var(--on-primary)]",
     "hover:bg-[var(--error-hover)]",
     "active:translate-y-[-1px] active:shadow-md"
   ),
 
   // Semantic: warning amber
   warning: cn(
-    "bg-[var(--warning)] text-white",
+    "bg-[var(--warning)] text-[var(--on-primary)]",
     "hover:bg-[var(--warning-hover)]",
     "active:translate-y-[-1px] active:shadow-md"
   ),
 
   // Semantic: info blue
   info: cn(
-    "bg-[var(--info)] text-white",
+    "bg-[var(--info)] text-[var(--on-primary)]",
     "hover:bg-[var(--info-hover)]",
     "active:translate-y-[-1px] active:shadow-md"
   ),
 
   // Deprecated variants — mapped to canonical equivalents for backwards compatibility
   outline: cn(
-    "bg-transparent text-[var(--fg-primary)]",
+    "bg-transparent text-[var(--text-primary)]",
     "border border-[var(--border-default)]",
     "hover:bg-[var(--surface-raised)]",
     "active:translate-y-[-1px]"
   ),
   danger: cn(
-    "bg-[var(--error)] text-white",
+    "bg-[var(--error)] text-[var(--on-primary)]",
     "hover:bg-[var(--error-hover)]",
     "active:translate-y-[-1px] active:shadow-md"
   ),

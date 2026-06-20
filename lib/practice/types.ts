@@ -5,6 +5,8 @@ import type {
   ExerciseSourceRef,
   GenericExercise,
 } from '@/lib/exercises/types'
+import type { StudyCardModel } from '@/lib/practice/study-card/model'
+import type { ReaderPassage } from '@/lib/practice/reader/types'
 
 // Slugs mapped from `exercise_types` rows in Supabase.
 // Keep in sync with supabase/migrations/20260329230300_seed_exercise_types.sql.
@@ -24,6 +26,9 @@ export type ExerciseSlug =
   | 'abx'               // id: 14
   | 'sentence_context'   // no DB row — does not write to answer_history
   | 'multiple_choice'    // no DB row — does not write to answer_history
+  | 'reader'             // no DB row — comprehensible input, does not write to answer_history
+  | 'written_production' // id: 15 — online-only (AI grading)
+  | 'spoken_production'  // id: 16 — online-only (AI grading)
 
 // null signals "no exercise_types FK" — this exercise does not write to answer_history.
 export const EXERCISE_TYPE_IDS: Record<ExerciseSlug, number | null> = {
@@ -42,6 +47,9 @@ export const EXERCISE_TYPE_IDS: Record<ExerciseSlug, number | null> = {
   abx: 14,
   sentence_context: null,
   multiple_choice: null,
+  reader: null,
+  written_production: 15,
+  spoken_production: 16,
 }
 
 export type PracticeContext =
@@ -121,6 +129,7 @@ export type SessionResult = {
 // ── Daily plan (5-step "diaria") ────────────────────────────────────────────
 
 export type DailyStepKind =
+  | 'word_intro'       // presentación (noticing) de palabras nuevas antes de testearlas
   | 'word_review'      // SRS de word_bank (fill_blank / sentence_dictation / reorder)
   | 'context_practice'   // sentence_context desde word_bank (vocabulario en contexto de oración)
   | 'connected_speech'   // quiz + dictado desde mazos cs-*.json (habla conectada americana)
@@ -129,6 +138,7 @@ export type DailyStepKind =
   | 'listening'        // dictation desde words del seed
   | 'sentence_builder' // reorder_words desde text_fragments (lecciones y grammar decks)
   | 'concept'          // mini-lección / language concept del día (lectura ligera)
+  | 'reader'           // comprehensible-input: párrafo i+1 que recicla vocab reciente
 
 export type DailyStep = {
   kind: DailyStepKind
@@ -138,13 +148,27 @@ export type DailyStep = {
   subtitle: string
   /** lucide-react icon name. */
   icon: string
-  /** Ejercicios context='daily' que componen el paso. Vacío para 'concept'. */
+  /** Ejercicios context='daily' que componen el paso. Vacío para 'concept' y 'word_intro'. */
   exercises: PracticeExercise[]
   estMinutes: number
+  /** Solo para 'word_intro': tarjetas de presentación (no evaluadas, no escriben answer_history). */
+  studyCards?: StudyCardModel[]
   /** Solo para 'concept': a dónde lleva la lectura. */
   href?: string
   /** Solo para 'phoneme_focus': IPA del sonido que se practica (para mostrar intro). */
   ipa?: string
+  /** Solo para 'reader': el párrafo de comprehensible input a leer. */
+  readerPassage?: ReaderPassage
+}
+
+/** Narrative framing metadata for a daily session (opening banner + closing recap). */
+export type SessionArc = {
+  /** Dominant grammar concept of the session, via dominantTopicLabel(). null if none. */
+  topicLabel: string | null
+  /** IPA of the day's primary sound. null if no phonetic focus. */
+  soundIpa: string | null
+  /** Distinct words touched in the session (from word_intro/word_review/context steps). */
+  sessionWords: string[]
 }
 
 export type DailyPlan = {
@@ -153,7 +177,15 @@ export type DailyPlan = {
   totalExercises: number
   /** true si no había word_bank ni progreso de fonema (todo salió del seed). */
   isNewUser: boolean
+  /** Narrative framing for opening banner + closing recap. Optional: cached plans predate it. */
+  arc?: SessionArc
 }
+
+export type PracticeSubmitHandler = (
+  isCorrect: boolean,
+  userAnswer: string,
+  extras?: { score?: number },
+) => void
 
 export type PracticeConfig = {
   context: PracticeContext

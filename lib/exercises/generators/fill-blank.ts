@@ -10,6 +10,7 @@ import {
 } from '@/lib/exercises/eligibility'
 import type { GenerationResult, SkippedEntry } from '@/lib/exercises/generation'
 import { exerciseId, pick, shuffle } from '@/lib/exercises/utils'
+import { VOCABULARY_TOPIC } from '@/lib/practice/topic-labels'
 
 /**
  * Generate fill-in-the-blank exercises from word bank entries.
@@ -54,6 +55,7 @@ export function generateFillBlankFromWordBank(
       type: 'fill_blank',
       exerciseType: { domain: 'vocabulary', mode: 'fill_blank', variant: 'sentence' },
       sourceRef: { source: entry.source === 'core1k' ? 'core1k' : 'word_bank', id: entry.id },
+      topic: VOCABULARY_TOPIC,
       level,
       sentence,
       answer: entry.text,

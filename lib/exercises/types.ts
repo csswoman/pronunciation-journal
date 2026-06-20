@@ -20,6 +20,8 @@ export type GenericExerciseType =
   | 'reorder_words'
   | 'sentence_context'
   | 'multiple_choice'
+  | 'written_production'
+  | 'spoken_production'
 
 interface BaseGenericExercise {
   /** Deterministic id: hash of type + sourceRef + stable payload fields. */
@@ -122,6 +124,26 @@ export interface MultipleChoiceExercise extends BaseGenericExercise {
   explanation?: string
 }
 
+// Free production (online-only — requires /api/gemini/grade-production) ───────
+interface BaseProductionExercise extends BaseGenericExercise {
+  /** Instruction shown to the learner. */
+  taskPrompt: string
+  /** Vocabulary item the learner must use. */
+  targetItem: string
+  targetMeaning?: string
+  targetIpa?: string
+  /** Optional model sentence (hint only, not copied). */
+  exampleSentence?: string
+}
+
+export interface WrittenProductionExercise extends BaseProductionExercise {
+  type: 'written_production'
+}
+
+export interface SpokenProductionExercise extends BaseProductionExercise {
+  type: 'spoken_production'
+}
+
 export type GenericExercise =
   | FillBlankExercise
   | SentenceDictationExercise
@@ -129,6 +151,8 @@ export type GenericExercise =
   | ReorderWordsExercise
   | SentenceContextExercise
   | MultipleChoiceExercise
+  | WrittenProductionExercise
+  | SpokenProductionExercise
 
 // ── Session answer ─────────────────────────────────────────────────────────
 

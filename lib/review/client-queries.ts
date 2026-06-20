@@ -54,3 +54,22 @@ export async function fetchFailedSentenceWords(
   const ids = items.map((i) => i.wordBankId).filter((id): id is string => id != null)
   return getWordBankEntriesByIds(ids)
 }
+
+/**
+ * Count word_bank SRS items whose next review falls within the next 24h.
+ * Returns 0 on error so the recap card degrades gracefully offline.
+ */
+export async function fetchDueTomorrowCount(userId: string): Promise<number> {
+  const supabase = getSupabaseBrowserClient()
+  const tomorrow = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
+
+  const { count, error } = await supabase
+    .from('word_bank')
+    .select('id', { count: 'exact', head: true })
+    .eq('user_id', userId)
+    .not('next_review_at', 'is', null)
+    .lte('next_review_at', tomorrow)
+
+  if (error || count == null) return 0
+  return count
+}

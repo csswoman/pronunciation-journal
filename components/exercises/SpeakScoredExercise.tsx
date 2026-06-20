@@ -10,12 +10,14 @@
 // </SpeakScoredExercise>
 
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { Mic, MicOff, Volume2 } from 'lucide-react'
+import { Mic, MicOff } from 'lucide-react'
 import { speak } from '@/lib/phoneme-practice/tts'
 import { useSpeechRecognition } from '@/hooks/useSpeechRecognition'
 import { defaultEvaluationEngine } from '@/lib/exercises/evaluation'
 import { getFeedbackMessage, calculateXP } from '@/lib/pronunciation/scoring'
 import PronunciationFeedback from '@/components/lesson/PronunciationFeedback'
+import { PillButton } from '@/components/ui/PillButton'
+import { ListenButton } from '@/components/ui/ListenButton'
 import { cn } from '@/lib/cn'
 import type { Exercise } from '@/lib/phoneme-practice/types'
 import type { WordResult } from '@/lib/types'
@@ -39,21 +41,14 @@ function WordDisplay({ word, ipa, onListen }: { word?: string; ipa: string; onLi
     <div className="flex flex-col items-center gap-1">
       <div className="flex items-center gap-3">
         <div
-          className="text-5xl font-bold text-(--fg-primary) tracking-tight leading-none"
+          className="text-5xl font-bold text-fg tracking-tight leading-none"
           style={{ fontFamily: 'Fraunces, Georgia, serif' }}
         >
           {word ?? '—'}
         </div>
-        <button
-          type="button"
-          onClick={onListen}
-          aria-label="Listen"
-          className="w-9 h-9 rounded-full flex items-center justify-center bg-surface-raised border border-border-default shadow-sm hover:shadow-md hover:-translate-y-px transition-all duration-150 cursor-pointer shrink-0"
-        >
-          <Volume2 size={16} className="text-(--fg-primary)" aria-hidden />
-        </button>
+        <ListenButton iconOnly onPlay={onListen} aria-label="Listen" />
       </div>
-      <div className="text-sm text-(--fg-tertiary)" style={{ fontFamily: 'var(--font-ipa), monospace' }}>
+      <div className="text-sm text-fg-subtle" style={{ fontFamily: 'var(--font-ipa), monospace' }}>
         {ipa}
       </div>
     </div>
@@ -67,24 +62,14 @@ function WordDisplay({ word, ipa, onListen }: { word?: string; ipa: string; onLi
 function ShadowingFallback({ word, onContinue }: { word?: string; onContinue: () => void }) {
   return (
     <div className="flex flex-col items-center gap-4">
-      <p className="text-xs text-(--fg-secondary) text-center max-w-xs m-0">
+      <p className="text-xs text-fg-muted text-center max-w-xs m-0">
         Voice scoring isn’t available in this browser. Listen to the model and
         repeat it out loud, then continue.
       </p>
-      <button
-        type="button"
-        onClick={() => word && speak(word)}
-        className="flex items-center gap-2 py-2.5 px-5 rounded-full bg-surface-raised border border-border-default shadow-sm hover:shadow-md transition-all cursor-pointer text-sm text-(--fg-primary) font-[inherit]"
-      >
-        <Volume2 size={16} aria-hidden /> Listen
-      </button>
-      <button
-        type="button"
-        onClick={onContinue}
-        className="text-xs py-1.5 px-3 rounded-full bg-primary text-white border-none cursor-pointer font-[inherit] font-medium"
-      >
+      <ListenButton onPlay={() => word && speak(word)} label="Listen" />
+      <PillButton variant="primary" size="sm" onClick={onContinue}>
         Continue
-      </button>
+      </PillButton>
     </div>
   )
 }
@@ -145,7 +130,7 @@ export function SpeakScoredExercise({ exercise, onSubmit }: Props) {
   if (!isSupported) {
     return (
       <div className="text-center py-4">
-        <p className="text-sm text-(--fg-secondary)">
+        <p className="text-sm text-fg-muted">
           Your browser does not support speech recognition. Try Chrome or Edge.
         </p>
       </div>
@@ -161,7 +146,7 @@ export function SpeakScoredExercise({ exercise, onSubmit }: Props) {
   return (
     <div className="flex flex-col items-center gap-6 w-full">
       <h2
-        className="text-xl font-semibold text-(--fg-primary) text-center leading-snug m-0"
+        className="text-xl font-semibold text-fg text-center leading-snug m-0"
         style={{ fontFamily: 'Fraunces, Georgia, serif' }}
       >
         Say the word
@@ -182,7 +167,7 @@ export function SpeakScoredExercise({ exercise, onSubmit }: Props) {
             disabled={isDone || isScoring}
             aria-label={isListening ? 'Stop recording' : 'Record my voice'}
             className={cn(
-              'w-20 h-20 rounded-full border-none flex items-center justify-center cursor-pointer transition-all text-white disabled:opacity-40',
+              'w-20 h-20 rounded-full border-none flex items-center justify-center cursor-pointer transition-all text-on-primary focus-ring disabled:opacity-40',
               isListening
                 ? 'bg-error shadow-[0_0_0_14px_color-mix(in_oklch,var(--error)_18%,transparent)]'
                 : 'bg-primary shadow-[0_4px_16px_color-mix(in_oklch,var(--primary)_35%,transparent)]',
@@ -203,13 +188,13 @@ export function SpeakScoredExercise({ exercise, onSubmit }: Props) {
 
       {/* Error state (recoverable errors) */}
       {isError && !isShadowing && !scored && (
-        <p className="text-xs text-(--fg-secondary) text-center m-0">
+        <p className="text-xs text-fg-muted text-center m-0">
           {errorCode === 'not-allowed'
             ? 'Microphone access was denied. Allow microphone access in your browser settings.'
             : errorCode === 'no-speech'
               ? 'No speech detected. Tap the mic and speak clearly.'
               : 'Speech recognition failed.'}{' '}
-          <button type="button" onClick={handleRetry} className="underline cursor-pointer bg-transparent border-none font-[inherit] text-xs text-(--fg-secondary)">
+          <button type="button" onClick={handleRetry} className="underline cursor-pointer bg-transparent border-none font-[inherit] text-xs text-fg-muted focus-ring">
             Retry
           </button>
         </p>
@@ -225,20 +210,12 @@ export function SpeakScoredExercise({ exercise, onSubmit }: Props) {
             xpEarned={calculateXP(scored.score)}
           />
           <div className="flex gap-2">
-            <button
-              type="button"
-              onClick={handleRetry}
-              className="text-xs py-1.5 px-3 rounded-(--radius-full) border border-border-subtle bg-transparent text-fg-muted cursor-pointer font-[inherit]"
-            >
+            <PillButton variant="outline" size="sm" onClick={handleRetry}>
               Try again
-            </button>
-            <button
-              type="button"
-              onClick={handleContinue}
-              className="text-xs py-1.5 px-3 rounded-(--radius-full) bg-primary text-white border-none cursor-pointer font-[inherit] font-medium"
-            >
+            </PillButton>
+            <PillButton variant="primary" size="sm" onClick={handleContinue}>
               Continue
-            </button>
+            </PillButton>
           </div>
         </>
       )}

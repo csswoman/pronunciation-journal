@@ -13,6 +13,7 @@ export type ExerciseMode =
   | 'dictation'
   | 'sentence_dictation'
   | 'speak'
+  | 'write'
   | 'word_card'
 
 export type ExerciseVariant =

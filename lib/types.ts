@@ -102,6 +102,12 @@ export interface SRSData {
   lastReview?: string;
   archived?: boolean;
   archivedAt?: string; // ISO
+  /**
+   * Passive reader-exposure signal, owned exclusively by recordReaderExposure.
+   * Structurally separate from the SM-2 recall fields above so updateSRS never
+   * touches it. The scheduler ignores this when choosing what to review.
+   */
+  exposure?: { lastAt: number; count: number };
 }
 
 // ── Attempt / Progress Types ──

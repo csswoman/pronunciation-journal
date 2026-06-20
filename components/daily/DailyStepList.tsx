@@ -35,6 +35,9 @@ export default function DailyStepList({
         const done = status === 'done'
         const resolved = status === 'resolved'
         const isConcept = step.kind === 'concept'
+        // word_intro is a presentation step: it carries study cards, not exercises.
+        const cardCount = step.studyCards?.length ?? 0
+        const isStartable = step.exercises.length > 0 || cardCount > 0
 
         const inner = (
           <>
@@ -61,6 +64,7 @@ export default function DailyStepList({
               <p className="font-body-sm truncate text-[var(--text-tertiary)]">
                 {step.subtitle}
                 {step.exercises.length > 0 ? ` · ${step.exercises.length} exercises` : ''}
+                {cardCount > 0 ? ` · ${cardCount} ${cardCount === 1 ? 'palabra' : 'palabras'}` : ''}
                 {` · ≈${step.estMinutes} min`}
               </p>
             </div>
@@ -95,7 +99,7 @@ export default function DailyStepList({
               type="button"
               className={`${CARD_CLASS} w-full`}
               onClick={() => onStartStep(step)}
-              disabled={step.exercises.length === 0}
+              disabled={!isStartable}
             >
               {inner}
             </button>

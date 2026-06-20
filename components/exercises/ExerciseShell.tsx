@@ -16,6 +16,7 @@ export interface ExerciseResult {
   isCorrect: boolean
   userAnswer: string
   timeMs: number
+  score?: number
 }
 
 interface HintShape {
@@ -25,6 +26,8 @@ interface HintShape {
 
 interface ExerciseShellProps {
   title: string
+  /** Learner-facing label of what this exercise trains (e.g. "Presente simple"). */
+  eyebrow?: string
   hint?: HintShape
   result: ExerciseResult | null
   onContinue: () => void
@@ -35,6 +38,7 @@ interface ExerciseShellProps {
 
 export function ExerciseShell({
   title,
+  eyebrow,
   hint,
   result,
   onContinue,
@@ -56,7 +60,7 @@ export function ExerciseShell({
 
   return (
     <div className="flex w-full flex-col gap-5">
-      <ShellHeader title={title} hintSlot={hintSlot} />
+      <ShellHeader title={title} eyebrow={eyebrow} hintSlot={hintSlot} />
       {hint && <HintChip word={hint.word} meaning={hint.meaning} />}
       {children}
       {done && <FeedbackBanner isCorrect={result.isCorrect} />}
@@ -66,12 +70,27 @@ export function ExerciseShell({
   )
 }
 
-function ShellHeader({ title, hintSlot }: { title: string; hintSlot?: React.ReactNode }) {
+function ShellHeader({
+  title,
+  eyebrow,
+  hintSlot,
+}: {
+  title: string
+  eyebrow?: string
+  hintSlot?: React.ReactNode
+}) {
   return (
     <div className="flex items-start justify-between gap-3">
-      <p className="font-[Fraunces,Georgia,serif] text-2xl font-bold leading-tight text-fg">
-        {title}
-      </p>
+      <div className="flex flex-col gap-1">
+        {eyebrow && (
+          <span className="text-[11px] font-semibold uppercase tracking-widest text-accent">
+            {eyebrow}
+          </span>
+        )}
+        <p className="font-[Fraunces,Georgia,serif] text-2xl font-bold leading-tight text-fg">
+          {title}
+        </p>
+      </div>
       {hintSlot && (
         <div className="flex items-center gap-2 pt-1 shrink-0">
           {hintSlot}

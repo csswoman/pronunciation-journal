@@ -9,7 +9,12 @@ const NORMAL_THRESHOLD_MS = 15000
 export function answerToGrade(
   answer: Pick<PracticeAnswer, 'isCorrect' | 'timeMs' | 'score' | 'slug'>
 ): number {
-  if (answer.slug === 'speak_word' && answer.score != null) {
+  const scoreSlugs = new Set<PracticeAnswer['slug']>([
+    'speak_word',
+    'written_production',
+    'spoken_production',
+  ])
+  if (scoreSlugs.has(answer.slug) && answer.score != null) {
     return accuracyToQuality(answer.score)
   }
   if (answer.isCorrect === false) return 1

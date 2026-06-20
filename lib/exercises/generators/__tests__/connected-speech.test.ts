@@ -15,12 +15,20 @@ const mockDeck = {
         {
           type: 'rules',
           rows: [
+            // Reduction keys — single slang forms, NOT sentences. Must be excluded.
             { key: 'going to → gonna', value: 'gonna /ˈɡɑnə/' },
-            { key: 'pick it up', value: '/ˌpɪ kɪ ˈtʌp/' },
-            { key: 'turn it off', value: '/tɜr nɪ ˈtɑf/' },
+            { key: 'sort of → sorta', value: 'sorta /ˈsɔrtə/' },
+            { key: 'of', value: 'cup of tea → /kʌp ə tiː/' },
           ],
         },
-        { type: 'pronunciation', rows: [] },
+        {
+          type: 'pronunciation',
+          examples: [
+            { text: "I'm gonna call you later.", ipa: '/aɪm ˈɡɑnə ˈkɔl jə ˈleɪtər/' },
+            { text: 'We wanna leave early.', ipa: '/wɪ ˈwɑnə liːv ˈɜrli/' },
+            { text: 'She sorta likes it.', ipa: '/ʃi ˈsɔrtə laɪks ɪt/' },
+          ],
+        },
       ],
     },
   ],
@@ -58,7 +66,7 @@ describe('generateCsQuiz', () => {
 })
 
 describe('generateCsDictation', () => {
-  it('produces dictation exercises from rule row keys', () => {
+  it('produces dictation exercises from example sentences', () => {
     const exercises = generateCsDictation(mockDeck, SLUG, 2)
     expect(exercises.length).toBeGreaterThan(0)
     expect(exercises.length).toBeLessThanOrEqual(2)
@@ -72,7 +80,17 @@ describe('generateCsDictation', () => {
     }
   })
 
-  it('filters out arrow-notation keys — uses only right side after →', () => {
+  it('targets are real sentences (≥2 words), never lone reduction forms', () => {
+    const exercises = generateCsDictation(mockDeck, SLUG, 3)
+    expect(exercises.length).toBeGreaterThan(0)
+    for (const ex of exercises) {
+      // "gonna" / "sorta" are slang spellings, not sentences — must never be a target.
+      expect(ex.sentence.trim().split(/\s+/).length).toBeGreaterThanOrEqual(2)
+      expect(['gonna', 'sorta', 'wanna', 'of']).not.toContain(ex.sentence.trim().toLowerCase())
+    }
+  })
+
+  it('never emits arrow-notation or reduction keys as dictation targets', () => {
     const exercises = generateCsDictation(mockDeck, SLUG, 3)
     for (const ex of exercises) {
       expect(ex.sentence).not.toContain('→')

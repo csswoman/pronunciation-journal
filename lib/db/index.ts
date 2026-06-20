@@ -4,6 +4,7 @@ import type { SyncOutboxEntry } from "../sync/types";
 import type { UserLearningState } from "../ai-practice/learning-state";
 import type { GenericExercise, GenericExerciseType, ExerciseSource } from "../exercises/types";
 import type { ExerciseResult, PracticeExercise } from "../practice/types";
+import type { ReaderPassage } from "../practice/reader/types";
 
 /**
  * Active in-progress practice session, persisted so the user can resume
@@ -95,6 +96,7 @@ class PronunciationDB extends Dexie {
   generatedExercises!: Table<CachedExercise, string>;
   practiceSessions!: Table<PracticeSessionRecord, string>;
   ipaExplorations!: Table<IpaExplorationRecord, string>;
+  readerPassages!: Table<ReaderPassage, string>;
 
   constructor() {
     super("pronunciation-journal");
@@ -171,6 +173,11 @@ class PronunciationDB extends Dexie {
     this.version(12).stores({
       ipaExplorations: "key, date, symbol",
     });
+
+    // v13: reader passages (comprehensible-input reader, offline reread cache)
+    this.version(13).stores({
+      readerPassages: "id, userId, targetHash, createdAt",
+    });
   }
 }
 
@@ -198,6 +205,24 @@ export async function getSRSData(wordId: string): Promise<SRSData | undefined> {
 
 export async function saveSRSData(data: SRSData): Promise<void> {
   await db.srsData.put(data);
+}
+
+// ── Reader Passage Helpers ──
+
+export async function saveReaderPassage(p: ReaderPassage): Promise<void> {
+  await db.readerPassages.put(p);
+}
+
+/** Most recent cached passage for this user + target set, or undefined. */
+export async function getCachedReaderPassage(
+  userId: string,
+  targetHash: string,
+): Promise<ReaderPassage | undefined> {
+  const rows = await db.readerPassages
+    .where("targetHash").equals(targetHash)
+    .filter((p) => p.userId === userId)
+    .toArray();
+  return rows.sort((a, b) => b.createdAt.localeCompare(a.createdAt))[0];
 }
 
 // ── Daily Progress Helpers ──

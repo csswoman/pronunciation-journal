@@ -14,6 +14,7 @@ import { BookOpen, MicVocal, Layers, BarChart2, Grid2x2, GraduationCap, Flame, A
 import Link from "next/link";
 import type { ElementType } from "react";
 import HomeHeaderGreeting from "@/components/home/HomeHeaderGreeting";
+import Core1000ProgressCard from "@/components/home/Core1000ProgressCard";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { useUserPreferences } from "@/hooks/useUserPreferences";
 import type { DailyStreakResult } from "@/lib/daily/streak-core";
@@ -105,6 +106,8 @@ export default function HomeMobileView({
       </div>
 
       {dailyCard}
+
+      <Core1000ProgressCard />
 
       {(streak?.currentStreak ?? 0) > 0 && (
         <div className="animate-home-in flex items-center gap-2">
