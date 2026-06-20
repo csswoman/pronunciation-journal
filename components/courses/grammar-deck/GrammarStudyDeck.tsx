@@ -167,14 +167,16 @@ export default function GrammarStudyDeck({
         />
 
         {phase === "practice" && practiceExercises ? (
-          <PracticeSession
-            context="courses"
-            exercises={practiceExercises}
-            sessionLength={practiceExercises.length}
-            sessionLabel="Practica esta lección"
-            onSessionComplete={() => { setPracticeExercises(null); setPhase("done"); }}
-            onExit={() => { setPracticeExercises(null); setPhase("done"); }}
-          />
+          <div className="grammar-deck__practice-shell">
+            <PracticeSession
+              context="courses"
+              exercises={practiceExercises}
+              sessionLength={practiceExercises.length}
+              sessionLabel="Practica esta lección"
+              onSessionComplete={() => { setPracticeExercises(null); setPhase("done"); }}
+              onExit={() => { setPracticeExercises(null); setPhase("done"); }}
+            />
+          </div>
         ) : phase === "quiz" && deck.quiz ? (
           <QuizStep
             questions={deck.quiz}

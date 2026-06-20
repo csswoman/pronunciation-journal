@@ -283,6 +283,14 @@
 
 /* ── Completion screen ───────────────────────────────────── */
 
+.grammar-deck__practice-shell {
+  background: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+}
+
 .grammar-deck__done {
   position: relative;
   padding: var(--space-8) var(--space-6);
