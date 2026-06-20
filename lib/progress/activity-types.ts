@@ -26,7 +26,7 @@ export const ACTIVITY_SOURCE_LABELS: Record<ActivitySource, string> = {
   review: 'Review',
   practice: 'Practice',
   lexicon: 'Dictionary',
-  courses: 'Courses',
+  courses: 'Ruta',
   ai_coach: 'AI Coach',
 }
 

@@ -41,7 +41,7 @@ export default function PageLayout({
 
   // Home-style layout: no card wrapper, each section has its own card
   return (
-    <div className={`px-3 sm:px-6 lg:px-10 py-6 sm:py-8 pb-12 sm:pb-16 ${className}`}>
+    <div className={`w-full px-3 sm:px-6 lg:px-10 py-6 sm:py-8 pb-12 sm:pb-16 ${className}`}>
       {children}
     </div>
   );

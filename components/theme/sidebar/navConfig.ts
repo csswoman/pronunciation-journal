@@ -29,7 +29,7 @@ export const practiceNav: NavSectionType = {
 export const learnNav: NavSectionType = {
   label: "Learn",
   items: [
-    { name: "Courses", href: "/courses", icon: BookOpen },
+    { name: "Ruta", href: "/courses", icon: BookOpen },
     { name: "Decks", href: "/practice/decks", icon: Layers },
     { name: "Mini Lessons", href: "/mini-lessons", icon: BookMarked },
   ],

@@ -52,8 +52,6 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="PronJournal" />
-      </head>
-      <body className="bg-surface-base text-fg transition-colors" suppressHydrationWarning>
         <Script
           id="theme-init"
           strategy="beforeInteractive"
@@ -69,6 +67,8 @@ export default function RootLayout({
             `,
           }}
         />
+      </head>
+      <body className="bg-surface-base text-fg transition-colors" suppressHydrationWarning>
         <AuthProvider>
           <ThemeProvider>
             <AppShell>{children}</AppShell>

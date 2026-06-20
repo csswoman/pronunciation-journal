@@ -28,10 +28,12 @@ function shuffle<T>(arr: T[]): T[] {
 }
 
 export function useLoadingWords(): LoadingWord[] {
-  const [words, setWords] = useState<LoadingWord[]>(shuffle([...FALLBACK_WORDS]))
+  const [words, setWords] = useState<LoadingWord[]>([...FALLBACK_WORDS])
 
   useEffect(() => {
     let cancelled = false
+
+    setWords(shuffle([...FALLBACK_WORDS]))
 
     getReadyWordSummaries()
       .then(entries => {

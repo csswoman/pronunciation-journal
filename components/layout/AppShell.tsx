@@ -46,7 +46,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 
   if (isAuthPage) return <>{children}</>;
 
-  // When panel is open and not fullscreen, compress main content on desktop
+  // Compress main content on desktop only when panel is open; mobile panel is full-screen overlay
   const mainMarginRight =
     isPanelOpen && !isFullscreen ? `${panelWidth}px` : "0px";
 
@@ -58,7 +58,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       <Sidebar className="hidden lg:flex w-64 flex-col" />
       <main
         id="main-content"
-        className="main-scrollbar flex flex-1 flex-col overflow-y-auto pb-20 lg:pb-0"
+        className="main-scrollbar flex flex-1 flex-col overflow-y-auto overflow-x-hidden pb-20 lg:pb-0"
         style={{
           marginRight: mainMarginRight,
         }}

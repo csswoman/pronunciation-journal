@@ -29,7 +29,7 @@ export default function DailyStepList({
   onMarkDone,
 }: DailyStepListProps) {
   return (
-    <ol className="flex flex-col gap-3">
+    <ol className="flex w-full flex-col gap-3">
       {steps.map((step, i) => {
         const status = getStepStatus(step.id)
         const done = status === 'done'
@@ -55,13 +55,13 @@ export default function DailyStepList({
               )}
             </div>
             <div className="min-w-0 flex-1">
-              <p className="flex items-center gap-2.5 text-base font-semibold text-[var(--text-primary)]">
-                <span className="font-caption tabular-nums text-[var(--text-tertiary)]">
+              <p className="flex min-w-0 items-center gap-2.5 text-base font-semibold text-(--text-primary)">
+                <span className="shrink-0 font-caption tabular-nums text-(--text-tertiary)">
                   {String(i + 1).padStart(2, '0')}
                 </span>
-                {step.title}
+                <span className="truncate">{step.title}</span>
               </p>
-              <p className="font-body-sm truncate text-[var(--text-tertiary)]">
+              <p className="font-body-sm truncate text-(--text-tertiary)">
                 {step.subtitle}
                 {step.exercises.length > 0 ? ` · ${step.exercises.length} exercises` : ''}
                 {cardCount > 0 ? ` · ${cardCount} ${cardCount === 1 ? 'palabra' : 'palabras'}` : ''}
@@ -85,7 +85,7 @@ export default function DailyStepList({
 
         if (isConcept && step.href) {
           return (
-            <li key={step.id}>
+            <li key={step.id} className="min-w-0">
               <Link href={step.href} className={CARD_CLASS} onClick={() => onMarkDone(step.id)}>
                 {inner}
               </Link>
@@ -94,10 +94,10 @@ export default function DailyStepList({
         }
 
         return (
-          <li key={step.id}>
+          <li key={step.id} className="min-w-0">
             <button
               type="button"
-              className={`${CARD_CLASS} w-full`}
+              className={CARD_CLASS}
               onClick={() => onStartStep(step)}
               disabled={!isStartable}
             >

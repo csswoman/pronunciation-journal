@@ -6,7 +6,7 @@ export const CONTEXT_LABELS: Record<PracticeContext, string> = {
   review: 'Review',
   practice: 'Practice',
   sound_lab: 'Sound Lab',
-  courses: 'Courses',
+  courses: 'Ruta',
   ai_coach: 'AI Coach',
   'core-1000': 'Core 1000',
 }

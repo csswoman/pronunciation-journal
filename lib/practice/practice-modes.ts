@@ -42,7 +42,7 @@ export const PRACTICE_MODES: readonly PracticeMode[] = [
   },
   {
     id: 'courses',
-    label: 'Courses',
+    label: 'Ruta',
     description: 'Continue a guided course',
     href: '/courses',
     icon: 'BookOpen',
