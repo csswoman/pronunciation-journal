@@ -40,8 +40,8 @@ export function buildWordExercises(words: CoreWord[]): GenericExercise[] {
         answer: word.word,
         options: shuffle([word.word, ...distractors]),
         hints: {
-          level1: `Starts with "${word.word.charAt(0).toUpperCase()}"`,
-          level2: `The word is: ${word.word}`,
+          level1: `Empieza con "${word.word.charAt(0).toUpperCase()}"`,
+          level2: `La palabra es: ${word.word}`,
         },
       }
       return [ex]
