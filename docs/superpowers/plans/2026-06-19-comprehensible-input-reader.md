@@ -550,6 +550,8 @@ export interface ReaderPassage {
   id: string
   userId: string
   targetItems: string[]
+  /** Namespaced SRS ids parallel to targetItems (e.g. `c1k:go`, `wb:<uuid>`, `fragment:<id>`). Drives exposure writes. */
+  targetSrsIds: string[]
   targetHash: string
   topic: string
   passage: string
@@ -993,7 +995,7 @@ import { resolveReaderPassage } from '../get-passage'
 import type { ReaderPassage } from '../types'
 
 const passage = (over: Partial<ReaderPassage> = {}): ReaderPassage => ({
-  id: 'p1', userId: 'u1', targetItems: ['go'], targetHash: 'h', topic: 't',
+  id: 'p1', userId: 'u1', targetItems: ['go'], targetSrsIds: ['c1k:go'], targetHash: 'h', topic: 't',
   passage: 'x', questions: [], level: 'b1', createdAt: '2030-01-01T00:00:00.000Z', ...over,
 })
 
@@ -1175,7 +1177,7 @@ export async function buildReaderStep(
 }
 ```
 
-Add `'reader'` to `DailyStepKind` and a `readerPassage?: ReaderPassage` field to `DailyStep` in `lib/practice/types.ts`. Create `lib/practice/reader/queries.ts` with `generateReaderPassage(userId, targets)` that POSTs to `/api/gemini/generate-reader`, maps the response to a `ReaderPassage` (`id: crypto.randomUUID()`, `targetHash`, `createdAt: new Date().toISOString()`), and returns it.
+Add `'reader'` to `DailyStepKind` and a `readerPassage?: ReaderPassage` field to `DailyStep` in `lib/practice/types.ts`. Create `lib/practice/reader/queries.ts` with `generateReaderPassage(userId, targets)` that POSTs to `/api/gemini/generate-reader`, maps the response to a `ReaderPassage` (`id: crypto.randomUUID()`, `targetItems`/`targetSrsIds` from the passed `ReaderTarget[]`, `targetHash`, `createdAt: new Date().toISOString()`), and returns it.
 
 - [ ] **Step 6: Type-check and commit**
 
@@ -1216,7 +1218,7 @@ import { ReaderExercise } from '../ReaderExercise'
 import type { ReaderPassage } from '@/lib/practice/reader/types'
 
 const passage: ReaderPassage = {
-  id: 'p1', userId: 'u1', targetItems: ['go'], targetHash: 'h', topic: 'animals',
+  id: 'p1', userId: 'u1', targetItems: ['go'], targetSrsIds: ['c1k:go'], targetHash: 'h', topic: 'animals',
   passage: 'The cat went home.',
   questions: [{ prompt: 'Where did the cat go?', options: ['home', 'park', 'shop', 'school'], correctIndex: 0 }],
   level: 'b1', createdAt: '2030-01-01T00:00:00.000Z',
@@ -1287,7 +1289,9 @@ export function ReaderExercise({ passage, online, onComplete }: ReaderExercisePr
     setAnswered(true)
     const correct = index === question.correctIndex
     // Exposure for every recycled target — never an SM-2 grade.
-    passage.targetItems.forEach((w) => void recordReaderExposure(`c1k:${w}`, w))
+    passage.targetSrsIds.forEach((srsId, i) =>
+      void recordReaderExposure(srsId, passage.targetItems[i] ?? srsId),
+    )
     onComplete(correct)
   }
 
