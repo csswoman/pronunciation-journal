@@ -11,6 +11,7 @@ import {
   MINI_LESSON_LEVEL_LABELS,
 } from "@/lib/content/mini-lesson-labels";
 import MiniLessonQuiz from "@/components/mini-lessons/MiniLessonQuiz";
+import MiniLessonComplete from "@/components/mini-lessons/MiniLessonComplete";
 import ExerciseBlock from "@/components/mini-lessons/ExerciseBlock";
 
 interface MiniLessonPageProps {
@@ -115,7 +116,7 @@ export default async function MiniLessonDetailPage({ params }: MiniLessonPagePro
         {content.quiz.length > 0 && (
           <section className="mini-lessons__section">
             <h2 className="mini-lessons__section-title">Quiz</h2>
-            <MiniLessonQuiz questions={content.quiz} />
+            <MiniLessonQuiz questions={content.quiz} slug={slug} />
           </section>
         )}
 
@@ -123,6 +124,7 @@ export default async function MiniLessonDetailPage({ params }: MiniLessonPagePro
           <Link href="/mini-lessons" className="mini-lessons__btn mini-lessons__btn--ghost">
             ← All lessons
           </Link>
+          {content.quiz.length === 0 && <MiniLessonComplete slug={slug} />}
           {nextLesson && (
             <Link
               href={`/mini-lessons/${nextLesson.slug}`}

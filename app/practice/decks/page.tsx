@@ -13,7 +13,7 @@ export default function DecksIndexPage() {
           <span className="text-tiny font-semibold uppercase tracking-[0.18em] text-fg-subtle">
             Grammar decks
           </span>
-          <h1 className="font-display text-[1.6rem] sm:text-h2 font-normal leading-tight tracking-[-0.02em] text-fg">
+          <h1 className="font-display text-display-word sm:text-h2 font-normal leading-tight tracking-[-0.02em] text-fg">
             All decks
           </h1>
           <p className="text-sm text-fg-muted">
@@ -25,8 +25,8 @@ export default function DecksIndexPage() {
           className="mb-5 flex items-center justify-between rounded-lg border border-border-subtle bg-surface-raised px-4 py-3.5 no-underline"
         >
           <div className="flex flex-col gap-0.5">
-            <span className="text-[0.9375rem] font-semibold text-fg">Essential Words</span>
-            <span className="text-[0.8125rem] text-fg-muted">
+            <span className="text-sm font-semibold text-fg">Essential Words</span>
+            <span className="text-label text-fg-muted">
               Las palabras más frecuentes del inglés, con weak forms y repaso espaciado
             </span>
           </div>

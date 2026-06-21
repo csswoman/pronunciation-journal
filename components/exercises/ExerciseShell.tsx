@@ -8,15 +8,17 @@
 //   <ContinueButton /> — full-width primary, shown after answer
 //   <SkipButton />     — small text link below, shown before answer
 
-import { useEffect, type ReactNode } from 'react'
+import { useEffect } from 'react'
 import type React from 'react'
 import { cn } from '@/lib/cn'
+import type { PedagogicalFeedback } from '@/lib/practice/types'
 
 export interface ExerciseResult {
   isCorrect: boolean
   userAnswer: string
   timeMs: number
   score?: number
+  feedback?: PedagogicalFeedback
 }
 
 interface HintShape {
@@ -33,6 +35,7 @@ interface ExerciseShellProps {
   hint?: HintShape
   result: ExerciseResult | null
   onContinue: () => void
+  onRetry?: () => void
   onSkip: () => void
   children: React.ReactNode
   hintSlot?: React.ReactNode
@@ -45,29 +48,46 @@ export function ExerciseShell({
   hint,
   result,
   onContinue,
+  onRetry,
   onSkip,
   children,
   hintSlot,
 }: ExerciseShellProps) {
   const done = result !== null
+  const hasDetailedFeedback = !!result?.feedback && Boolean(
+    result.feedback.explanation ||
+    result.feedback.tip ||
+    result.feedback.example ||
+    result.feedback.correction ||
+    result.feedback.expectedAnswer,
+  )
 
   useEffect(() => {
     if (!done) return
+    if (!result?.isCorrect && hasDetailedFeedback) return
+    if (hasDetailedFeedback) return
     const timer = setTimeout(onContinue, 900)
     function handleKey(e: KeyboardEvent) {
       if (e.key === 'Enter') { clearTimeout(timer); onContinue() }
     }
     window.addEventListener('keydown', handleKey)
     return () => { clearTimeout(timer); window.removeEventListener('keydown', handleKey) }
-  }, [done, onContinue])
+  }, [done, hasDetailedFeedback, onContinue, result?.isCorrect])
 
   return (
     <div className="flex w-full flex-col gap-5">
       <ShellHeader title={title} eyebrow={eyebrow} description={description} hintSlot={hintSlot} />
       {hint && <HintChip word={hint.word} meaning={hint.meaning} />}
       {children}
-      {done && <FeedbackBanner isCorrect={result.isCorrect} />}
-      {done && <ContinueButton onContinue={onContinue} />}
+      {done && <FeedbackBanner result={result} />}
+      {done && (
+        <div className="flex flex-col gap-2">
+          {result.feedback?.canRetry && onRetry && (
+            <RetryButton onRetry={onRetry} />
+          )}
+          <ContinueButton onContinue={onContinue} />
+        </div>
+      )}
       {!done && <SkipButton onSkip={onSkip} />}
     </div>
   )
@@ -136,17 +156,58 @@ function HintChip({ word, meaning }: { word: string; meaning?: string }) {
   )
 }
 
-function FeedbackBanner({ isCorrect }: { isCorrect: boolean }) {
+function FeedbackBanner({ result }: { result: ExerciseResult }) {
+  const { isCorrect, feedback } = result
+  const status = feedback?.immediate ?? (isCorrect ? 'Well done!' : 'Not quite. Keep going.')
+  const expected = feedback?.correction ?? feedback?.expectedAnswer
   return (
     <div className={cn(
-      'flex items-center gap-2.5 rounded-md border px-4 py-3.5 text-[13px] font-semibold',
+      'flex flex-col gap-2 rounded-md border px-4 py-3.5 text-[13px]',
       isCorrect
         ? 'bg-success-soft border-success-border text-success'
         : 'bg-error-soft border-error-border text-error',
     )}>
-      <span>{isCorrect ? '✓' : '✗'}</span>
-      <span>{isCorrect ? 'Well done!' : 'Not quite — keep going!'}</span>
+      <p className="flex items-center gap-2.5 font-semibold">
+        <span aria-hidden>{isCorrect ? '✓' : '✗'}</span>
+        <span>{status}</span>
+      </p>
+      {feedback?.explanation && (
+        <p className="leading-relaxed text-fg">{feedback.explanation}</p>
+      )}
+      {expected && (
+        <p className="leading-relaxed text-fg">
+          <span className="font-semibold">Expected: </span>
+          <span>{expected}</span>
+        </p>
+      )}
+      {feedback?.tip && (
+        <p className="leading-relaxed text-fg-muted">
+          <span className="font-semibold text-fg">Tip: </span>
+          <span>{feedback.tip}</span>
+        </p>
+      )}
+      {feedback?.example && feedback.example !== expected && (
+        <p className="leading-relaxed text-fg-muted">
+          <span className="font-semibold text-fg">Example: </span>
+          <span>{feedback.example}</span>
+        </p>
+      )}
     </div>
+  )
+}
+
+function RetryButton({ onRetry }: { onRetry: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onRetry}
+      className={cn(
+        'w-full rounded-[var(--radius-full)] border border-border-default py-3.5 text-[15px] font-semibold',
+        'bg-surface-raised text-fg transition-all hover:bg-surface-sunken cursor-pointer',
+      )}
+    >
+      Try again
+    </button>
   )
 }
 
@@ -157,7 +218,7 @@ function ContinueButton({ onContinue }: { onContinue: () => void }) {
       onClick={onContinue}
       className={cn(
         'w-full rounded-[var(--radius-full)] py-3.5 text-[15px] font-semibold',
-        'bg-primary text-white shadow-sm transition-all hover:bg-primary/90 cursor-pointer',
+        'bg-(--cta-bg) text-(--cta-fg) shadow-sm transition-all hover:opacity-90 cursor-pointer',
       )}
     >
       Continue

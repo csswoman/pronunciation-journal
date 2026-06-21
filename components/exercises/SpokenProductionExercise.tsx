@@ -20,6 +20,7 @@ import {
   isOnline,
   ProductionGradeError,
 } from '@/lib/exercises/grade-production-client'
+import { pedagogicalFeedbackFromProductionGrade } from '@/lib/exercises/feedback'
 import type { ProductionGradeResult } from '@/lib/exercises/production-grade'
 import type { SpokenProductionExercise as SpokenProductionExerciseType } from '@/lib/exercises/types'
 import type { GenericRenderExtras } from '@/lib/practice/exercise-renderer/generic-registry'
@@ -105,7 +106,10 @@ export function SpokenProductionExercise({ exercise, onResult }: Props) {
     if (!grade || submitted.current) return
     submitted.current = true
     const transcript = speechResult?.transcript.trim() ?? ''
-    onResult(grade.correct, transcript, Date.now() - startMs.current, { score: grade.score })
+    onResult(grade.correct, transcript, Date.now() - startMs.current, {
+      score: grade.score,
+      feedback: pedagogicalFeedbackFromProductionGrade(grade),
+    })
   }, [grade, speechResult, onResult])
 
   const handleRetry = useCallback(() => {

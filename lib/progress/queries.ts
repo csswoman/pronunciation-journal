@@ -20,6 +20,7 @@ import {
 } from '@/lib/progress/fluency-scores'
 import { rankWeakestSounds } from '@/lib/phoneme-practice/mastery-pct'
 import type { UserContrastProgress } from '@/lib/phoneme-practice/types'
+import { startOfRollingWindow, sumWeeklyExercises } from '@/lib/progress/windows'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -157,16 +158,14 @@ async function getDailyCompletionStats(userId: string): Promise<DailyCompletionS
 
 async function getWeeklySummaryStats(userId: string): Promise<WeeklySummaryStats> {
   const supabase = await createSupabaseServerClient()
-  const since7 = new Date()
-  since7.setDate(since7.getDate() - 7)
+  const since7 = startOfRollingWindow(7)
 
-  const [answersResult, wordsResult] = await Promise.all([
+  const [sessionsResult, wordsResult] = await Promise.all([
     supabase
-      .from('answer_history')
-      .select('id', { count: 'exact', head: true })
+      .from('activity_sessions')
+      .select('exercises_total')
       .eq('user_id', userId)
-      .gte('answered_at', since7.toISOString())
-      .not('answered_at', 'is', null),
+      .gte('completed_at', since7.toISOString()),
     supabase
       .from('word_bank')
       .select('id', { count: 'exact', head: true })
@@ -175,7 +174,7 @@ async function getWeeklySummaryStats(userId: string): Promise<WeeklySummaryStats
   ])
 
   return {
-    exercises7: answersResult.count ?? 0,
+    exercises7: sumWeeklyExercises(sessionsResult.data ?? []),
     newWords7: wordsResult.count ?? 0,
   }
 }

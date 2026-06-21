@@ -36,7 +36,8 @@ Hay dos sistemas de ejercicios en la app, separados por dominio:
 | **Generic Exercises** | Vocabulario / comprensión | `/practice/exercises` | `word_bank`, `text_fragments`, `words` |
 
 Ambos sistemas comparten:
-- El componente `ExerciseCard` (feedback visual de respuesta correcta/incorrecta)
+- El contrato `PedagogicalFeedback` para feedback de ejercicios: mensaje inmediato,
+  explicación, corrección/respuesta esperada, pista, ejemplo y acción sugerida.
 - La tabla `answer_history` en Supabase (registro de todas las respuestas)
 - El catálogo `exercise_types` (slug + label por tipo)
 - La lógica Levenshtein para validación tolerante de texto
@@ -161,6 +162,66 @@ Los ejercicios se generan **on-the-fly en cliente** y se cachean en Dexie (TTL 1
 **Utilidades:** `lib/exercises/utils.ts` (`shuffle`, `pick`, `exerciseId`; re-exporta `hasEnoughContext`)
 
 Cada ejercicio tiene un **id determinista** (hash djb2 de `type + sourceRef.id`) que garantiza deduplicación en Dexie y en `answer_history`.
+
+### Contrato de feedback pedagogico
+
+Los ejercicios genéricos reportan el resultado mediante `PracticeSubmitHandler`
+y pueden adjuntar `feedback?: PedagogicalFeedback`:
+
+```ts
+type PedagogicalFeedback = {
+  immediate: string
+  explanation?: string
+  correction?: string
+  tip?: string
+  example?: string
+  expectedAnswer?: string
+  category?: string
+  errorCode?: ExerciseErrorCode
+  canRetry?: boolean
+  nextAction?: 'continue' | 'retry' | 'review_hint'
+}
+```
+
+### Taxonomía estable de errores
+
+`errorCode` es un contrato corto y tipado para feedback y analítica. El texto
+visible puede evolucionar, pero estos códigos deben conservar su significado:
+
+| Código | Uso |
+|---|---|
+| `correct` | Respuesta correcta |
+| `empty_answer` | No se proporcionó respuesta |
+| `form_error` | Flexión o forma gramatical incorrecta |
+| `word_order` | Tokens correctos en orden incorrecto |
+| `listening_omission` | Faltan palabras en una transcripción |
+| `meaning_choice` | Opción o palabra incompatible con el significado |
+| `target_not_used` | Producción sin el elemento objetivo |
+| `pair_mapping` | Asociación incorrecta entre pares |
+| `unknown` | Error determinista no clasificado |
+
+Mapeo principal: `fill_blank` produce `correct`, `empty_answer`,
+`form_error` o `meaning_choice`; `sentence_dictation`,
+`listening_omission`; `reorder_words`, `word_order`; `multiple_choice`,
+`meaning_choice`; y `match_pairs`, `pair_mapping`.
+
+Ejemplos de copy para principiantes:
+
+- `form_error`: “Almost! Check the ending — the answer is ‘drinks’.”
+- `listening_omission`: “Close. Replay the slow audio and listen for short words.”
+
+`ExerciseShell` muestra al alumno `immediate`, `explanation`,
+`correction`/`expectedAnswer`, `tip` y `example` cuando existen. Las respuestas
+correctas sin feedback detallado pueden avanzar solas tras una pausa breve. Las
+respuestas incorrectas con explicación, pista, ejemplo o corrección no avanzan
+solas: el alumno puede leer, continuar o usar **Try again** cuando `canRetry`
+es `true`.
+
+El soporte para principiantes es determinista primero. `fill_blank`,
+`sentence_dictation`, `reorder_words`, `multiple_choice` y `match_pairs`
+generan feedback desde el payload local del ejercicio. Gemini se reserva para
+grading de producción (`written_production` / `spoken_production`) salvo que un
+plan futuro añada explicaciones AI para ejercicios deterministas.
 
 ---
 
@@ -311,7 +372,7 @@ SoundLabPage
 
 | Tabla | Qué guarda |
 |---|---|
-| `exercise_types` | Catálogo de tipos: `pick_word`, `pick_sound`, `minimal_pair`, `dictation`, `speak_word`, `fill_blank`, `sentence_dictation`, `match_pairs`, `reorder_words` |
+| `exercise_types` | Catálogo de tipos: `pick_word`, `pick_sound`, `minimal_pair`, `dictation`, `speak_word`, `fill_blank`, `sentence_dictation`, `match_pairs`, `reorder_words`, `multiple_choice` |
 | `answer_history` | Cada respuesta: `user_id`, `exercise_type_id`, `is_correct`, `user_answer`, `target_word`, `time_ms`, `exercise_payload` (JSONB con `sourceRef`), `sound_id` (nullable) |
 | `user_sound_progress` | Progreso SM-2 por usuario × sonido |
 | `deck_entry_progress` | Progreso SM-2 por usuario × entrada de deck |
@@ -353,6 +414,24 @@ El algoritmo SM-2 está implementado en varias variantes:
 | `text_fragments` | Dexie `srsData`, clave `fragment:<id>` (local) | `upsertFragmentSrs` |
 
 Los `text_fragments` son system sentences (`user_id = null`), así que su estado de repaso es per-usuario y local (Dexie), no una tabla Supabase. Los fragmentos vencidos se priorizan en la sesión vía `orderFragmentsByDue` (`lib/practice/fragment-priority.ts`).
+
+### Features conectadas vía `savePracticeAnswer`
+
+Además de Phoneme Practice, Generic Exercises, Lexicon, Courses, Reader, Daily y Core 1000, estas UIs escriben al flujo unificado de progreso:
+
+| Feature | Call site | `context` | Qué persiste |
+|---|---|---|---|
+| **AI Coach** (fill-blank, multiple choice, speaking) | `answerToolCall` → `persistCoachExerciseResult` (`lib/ai-practice/coach-progress.ts`) | `ai_coach` | `answer_history` + `topic_srs` cuando hay `topic` |
+| **Interview** (turnos de pronunciación) | `InterviewResults` al montar resultados | `ai_coach` | `answer_history` por turno (sin `topic` → sin topic-SRS) |
+| **Mini-lessons** | `MiniLessonQuiz` al terminar quiz; `MiniLessonComplete` con "Mark as read" | `courses` (vía `recordLessonComplete`) | Dexie `completedLessons` + una fila `answer_history` por lección |
+
+Todas las escrituras son **best-effort** (try/catch): un fallo de red nunca bloquea la UX. Mini-lessons comprueba `isLessonComplete` en Dexie antes de insertar para evitar duplicados en re-finish.
+
+Las respuestas genéricas pueden persistir metadatos mínimos de feedback en
+`exercise_payload`: `feedbackCategory`, `errorCode`, `expectedAnswer`, `hintUsed` y
+`nextAction`. No se guarda por defecto el texto largo de explicaciones,
+correcciones AI o tips, para mantener `answer_history` orientado a analítica de
+errores y no a logging de contenido libre.
 
 ### Presentación antes de testear (noticing)
 

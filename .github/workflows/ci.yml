@@ -28,18 +28,15 @@ jobs:
 
       - run: pnpm lint
         name: Run ESLint
-        continue-on-error: true
 
       - run: pnpm type-check
         name: TypeScript type check
 
       - run: pnpm test
         name: Run tests
-        continue-on-error: true
 
       - name: Design Token Validation
-        run: pnpm build 2>&1 | grep -E "design token|token violations"
-        continue-on-error: true
+        run: pnpm lint:design-tokens
 
   security-audit:
     runs-on: ubuntu-latest
@@ -59,7 +56,6 @@ jobs:
 
       - name: Run pnpm audit
         run: pnpm audit --audit-level=moderate
-        continue-on-error: true
 
       - name: Check for hardcoded secrets
         run: |
@@ -70,7 +66,6 @@ jobs:
             echo "⚠️ Warning: Potential hardcoded secrets found"
             exit 1
           fi
-        continue-on-error: true
 
   build:
     runs-on: ubuntu-latest
@@ -132,7 +127,6 @@ jobs:
             echo "⚠️ Too many hard-coded colors detected"
             exit 1
           fi
-        continue-on-error: true
 
   notify-status:
     runs-on: ubuntu-latest

@@ -45,7 +45,7 @@ export default function SessionOpeningBanner({ arc }: Props) {
           {arc.soundIpa && (
             <>
               <span className="text-fg-subtle">sonido </span>
-              <code className="font-mono text-[0.8em] font-semibold text-primary">/{arc.soundIpa}/</code>
+              <code className="font-mono text-tiny font-semibold text-primary">/{arc.soundIpa}/</code>
             </>
           )}
         </p>

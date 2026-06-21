@@ -58,6 +58,7 @@ Object.defineProperty(window, 'speechSynthesis', {
 
 import PracticeSession from '../PracticeSession'
 import type { PracticeExercise } from '@/lib/practice/types'
+import { savePracticeAnswer } from '@/lib/practice/queries'
 
 function makeExercise(slug: 'pick_word' | 'pick_sound', n: number): PracticeExercise {
   return {
@@ -77,6 +78,29 @@ function makeExercise(slug: 'pick_word' | 'pick_sound', n: number): PracticeExer
       correctIds: ['a'],
     },
     soundId: 42,
+  }
+}
+
+function makeGenericFillBlank(): PracticeExercise {
+  return {
+    id: 'fill-1',
+    slug: 'fill_blank',
+    exerciseTypeId: 5,
+    contentId: 'fill-1',
+    context: 'practice',
+    payload: {
+      kind: 'generic',
+      data: {
+        id: 'fill-1',
+        type: 'fill_blank',
+        sourceRef: { source: 'words', id: 'drink' },
+        sentence: 'She ___ coffee every morning.',
+        answer: 'drinks',
+        options: ['drink', 'drinks'],
+        hint: 'Third-person singular needs -s.',
+      },
+    },
+    sourceRef: { source: 'words', id: 'drink' },
   }
 }
 
@@ -187,5 +211,39 @@ describe('PracticeSession', () => {
       { timeout: 3000 },
     )
     expect(sessionStoreMocks.deleteSession).toHaveBeenCalledWith('user-1', 42)
+  })
+
+  it('keeps wrong generic answers on the exercise until retry or continue', async () => {
+    const user = userEvent.setup()
+    const onSessionComplete = vi.fn()
+
+    render(
+      <PracticeSession
+        context="practice"
+        exercises={[makeGenericFillBlank()]}
+        sessionLength={1}
+        onSessionComplete={onSessionComplete}
+      />,
+    )
+
+    await user.click(await screen.findByRole('button', { name: 'drink' }))
+    expect(screen.getByRole('button', { name: /try again/i })).toBeInTheDocument()
+    expect(screen.getByText(/missing word must fit/i)).toBeInTheDocument()
+    expect(savePracticeAnswer).not.toHaveBeenCalled()
+
+    await user.click(screen.getByRole('button', { name: /try again/i }))
+    expect(screen.getByRole('button', { name: 'drink' })).toBeEnabled()
+
+    await user.click(screen.getByRole('button', { name: 'drink' }))
+    await user.click(screen.getByRole('button', { name: /continue/i }))
+
+    await waitFor(() => expect(savePracticeAnswer).toHaveBeenCalledTimes(1))
+    const [, saved] = vi.mocked(savePracticeAnswer).mock.calls[0]
+    expect(saved.exercisePayload).toMatchObject({
+      feedbackCategory: 'fill_blank_word_choice',
+      errorCode: 'meaning_choice',
+      expectedAnswer: 'drinks',
+      nextAction: 'retry',
+    })
   })
 })

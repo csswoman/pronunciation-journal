@@ -111,7 +111,7 @@ function FilterChip({
       type="button"
       onClick={onClick}
       className={cn(
-        'rounded-full border px-3.5 py-2 text-[0.8125rem] font-medium transition-colors focus-ring sm:py-1.5 sm:text-xs',
+        'rounded-full border px-3.5 py-2 text-label font-medium transition-colors focus-ring sm:py-1.5 sm:text-xs',
         active
           ? 'border-primary bg-primary-soft text-primary'
           : 'border-border-subtle bg-surface-raised text-fg-muted hover:border-border-hover',
@@ -135,7 +135,7 @@ function SearchInput({ value, onChange }: { value: string; onChange: (v: string)
         placeholder="Search decks…"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full rounded-lg border border-border-subtle bg-surface-raised py-2.5 pl-8 pr-3 text-[0.9375rem] text-fg placeholder:text-fg-subtle focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-0 sm:py-2 sm:text-sm"
+        className="w-full rounded-lg border border-border-subtle bg-surface-raised py-2.5 pl-8 pr-3 text-sm text-fg placeholder:text-fg-subtle focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-0 sm:py-2"
       />
     </div>
   )
@@ -177,7 +177,7 @@ function DeckCard({ deck }: { deck: DeckSummary }) {
 
       <div className="flex flex-col gap-1">
         <p className="text-xs text-fg-subtle">{deck.eyebrow}</p>
-        <p className="font-medium text-[0.9375rem] leading-snug text-fg group-hover:text-primary transition-colors">
+        <p className="font-medium text-sm leading-snug text-fg group-hover:text-primary transition-colors">
           {deck.title}
         </p>
       </div>

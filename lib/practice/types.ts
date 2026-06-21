@@ -7,6 +7,7 @@ import type {
 } from '@/lib/exercises/types'
 import type { StudyCardModel } from '@/lib/practice/study-card/model'
 import type { ReaderPassage } from '@/lib/practice/reader/types'
+import type { ExerciseErrorCode } from '@/lib/exercises/error-taxonomy'
 
 // Slugs mapped from `exercise_types` rows in Supabase.
 // Keep in sync with supabase/migrations/20260329230300_seed_exercise_types.sql.
@@ -25,7 +26,7 @@ export type ExerciseSlug =
   | 'odd_one_out'        // id: 13
   | 'abx'               // id: 14
   | 'sentence_context'   // no DB row — does not write to answer_history
-  | 'multiple_choice'    // no DB row — does not write to answer_history
+  | 'multiple_choice'    // id: 17
   | 'reader'             // no DB row — comprehensible input, does not write to answer_history
   | 'written_production' // id: 15 — online-only (AI grading)
   | 'spoken_production'  // id: 16 — online-only (AI grading)
@@ -46,7 +47,7 @@ export const EXERCISE_TYPE_IDS: Record<ExerciseSlug, number | null> = {
   odd_one_out: 13,
   abx: 14,
   sentence_context: null,
-  multiple_choice: null,
+  multiple_choice: 17,
   reader: null,
   written_production: 15,
   spoken_production: 16,
@@ -105,6 +106,7 @@ export type PracticeAnswer = {
   timeMs: number
   /** 0-100, currently used by speak_word. */
   score?: number
+  feedback?: PedagogicalFeedback
   contentId: string
   context: PracticeContext
   /** Forwarded to `answer_history.sound_id` for phoneme exercises. */
@@ -184,8 +186,26 @@ export type DailyPlan = {
 export type PracticeSubmitHandler = (
   isCorrect: boolean,
   userAnswer: string,
-  extras?: { score?: number },
+  extras?: PracticeSubmitExtras,
 ) => void
+
+export type PedagogicalFeedback = {
+  immediate: string
+  explanation?: string
+  correction?: string
+  tip?: string
+  example?: string
+  expectedAnswer?: string
+  category?: string
+  errorCode?: ExerciseErrorCode
+  canRetry?: boolean
+  nextAction?: 'continue' | 'retry' | 'review_hint'
+}
+
+export type PracticeSubmitExtras = {
+  score?: number
+  feedback?: PedagogicalFeedback
+}
 
 export type PracticeConfig = {
   context: PracticeContext

@@ -6,6 +6,7 @@ import { buildServerPrompt, type PromptKey } from "@/lib/api/prompts";
 import { detectIntent, intentToToolConfig } from "@/lib/ai-practice/intent-detection";
 import { TOOL_DECLARATIONS } from "@/lib/ai-practice/tools/registry";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { FALLBACK_MODELS, getErrorStatus, shouldTryNextModel } from "@/lib/gemini/fallback";
 
 // Cast needed: TOOL_DECLARATIONS uses plain string literals for `type` fields,
 // but the SDK expects its internal `Type` enum. Runtime values are identical.
@@ -80,45 +81,9 @@ const MAX_STREAM_CHUNKS = 2_000;
 /** Hard cap on model output — prevents runaway token consumption. */
 const MAX_OUTPUT_TOKENS = 1_024;
 
-const ENABLE_PREVIEW_MODELS = process.env.GEMINI_ENABLE_PREVIEW_MODELS === "true";
-const BASE_MODELS = [
-  "gemini-2.5-flash-lite",
-  "gemini-2.5-flash",
-  "gemini-flash-latest",
-] as const;
-const PREVIEW_MODELS = ["gemini-3.1-flash-lite-preview"] as const;
-const FALLBACK_MODELS = ENABLE_PREVIEW_MODELS
-  ? [...BASE_MODELS, ...PREVIEW_MODELS]
-  : [...BASE_MODELS];
-
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
-
-function getErrorStatus(err: unknown): number | undefined {
-  if (!err || typeof err !== "object") return undefined;
-  const maybe = err as { status?: unknown; statusCode?: unknown };
-  if (typeof maybe.status === "number") return maybe.status;
-  if (typeof maybe.statusCode === "number") return maybe.statusCode;
-  return undefined;
-}
-
-function shouldTryNextModel(err: unknown): boolean {
-  const status = getErrorStatus(err);
-  if (status === 400 || status === 401 || status === 403) return false;
-  if (status === 404 || status === 408 || status === 409 || status === 425 || status === 429) return true;
-  if (typeof status === "number" && status >= 500) return true;
-  const message = String((err as { message?: unknown })?.message ?? "").toLowerCase();
-  return (
-    message.includes("not found") ||
-    message.includes("quota") ||
-    message.includes("rate") ||
-    message.includes("resource exhausted") ||
-    message.includes("unavailable") ||
-    message.includes("timeout") ||
-    message.includes("internal")
-  );
-}
 
 function buildHistory(messages: GeminiRequest["messages"]): Content[] {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

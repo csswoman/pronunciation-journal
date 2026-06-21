@@ -1,0 +1,10 @@
+export type ExerciseErrorCode =
+  | 'correct'
+  | 'empty_answer'
+  | 'form_error'
+  | 'word_order'
+  | 'listening_omission'
+  | 'meaning_choice'
+  | 'target_not_used'
+  | 'pair_mapping'
+  | 'unknown'

@@ -93,6 +93,7 @@ export async function evaluateSpeak(input: EvaluationInput): Promise<EvaluationR
   return {
     correct: passed,
     category: passed ? "correct" : "incorrect_form",
+    errorCode: passed ? "correct" : "form_error",
     userAnswer: transcript,
     expectedAnswer: input.expected,
     feedback: feedbackForScore(

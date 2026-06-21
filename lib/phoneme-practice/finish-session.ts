@@ -8,6 +8,7 @@ import { isContrastMastered } from './mastery'
 import { computeNextMasteryPct, sessionAccuracyPct } from './mastery-pct'
 import type { UserContrastProgress, SRResult, SessionAnswer } from './types'
 import type { SessionResult } from '@/lib/practice/types'
+import { recordActivitySession } from '@/lib/progress/activity-hub'
 
 export interface FinishContrastSessionOutcome {
   nextReview: Date
@@ -81,6 +82,12 @@ export async function finishContrastSession(
   )
 
   await updateContrastProgress(userId, contrastId, correct, total, sr, masteryPct)
+  await recordActivitySession(userId, {
+    practiceContext: 'sound_lab',
+    sessionResult: result,
+    source: 'sound_lab',
+    metadata: { contrastId },
+  })
   await flushOutbox()
 
   const updated: UserContrastProgress = {

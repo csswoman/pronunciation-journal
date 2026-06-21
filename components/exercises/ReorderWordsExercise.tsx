@@ -5,10 +5,11 @@ import { cn } from '@/lib/cn'
 import type { ReorderWordsExercise as ReorderWordsExerciseType } from '@/lib/exercises/types'
 import { useUISounds } from '@/hooks/useUISounds'
 import { gradeReorder } from '@/lib/exercises/grade-reorder'
+import { buildPedagogicalFeedback } from '@/lib/exercises/feedback'
 
 interface Props {
   exercise: ReorderWordsExerciseType
-  onResult: (isCorrect: boolean, userAnswer: string, timeMs: number) => void
+  onResult: (isCorrect: boolean, userAnswer: string, timeMs: number, extras?: { feedback?: ReturnType<typeof buildPedagogicalFeedback> }) => void
   focusUi?: boolean
 }
 
@@ -55,7 +56,9 @@ export function ReorderWordsExercise({ exercise, onResult, focusUi = false }: Pr
     const isCorrect = gradeReorder(userAnswer, exercise.sentence)
     setState(isCorrect ? 'correct' : 'wrong')
     if (isCorrect) playCorrect(); else playWrong()
-    onResult(isCorrect, userAnswer, Date.now() - startMs.current)
+    onResult(isCorrect, userAnswer, Date.now() - startMs.current, {
+      feedback: buildPedagogicalFeedback(exercise, isCorrect, userAnswer),
+    })
   }
 
   const canCheck =
