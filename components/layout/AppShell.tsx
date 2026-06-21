@@ -1,16 +1,23 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useCallback, useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import Sidebar from "./Sidebar";
 import BottomNav from "./BottomNav";
-import { QuickAddModal } from "@/components/vocabulary/words/QuickAddModal";
 import { quickAddWord } from "@/lib/word-bank/queries";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { useAICoachStore } from "@/lib/stores/aiCoachStore";
-import AICoachPanel from "@/components/ai-coach/AICoachPanel";
 import AICoachTrigger from "@/components/ai-coach/AICoachTrigger";
 import { isPublicAuthPath } from "@/lib/auth/public-paths";
+
+const QuickAddModal = dynamic(() =>
+  import("@/components/vocabulary/words/QuickAddModal").then((mod) => ({
+    default: mod.QuickAddModal,
+  })),
+);
+
+const AICoachPanel = dynamic(() => import("@/components/ai-coach/AICoachPanel"));
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -23,7 +30,14 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
   const openModal = useCallback(() => setOpen(true), []);
   const closeModal = useCallback(() => setOpen(false), []);
-  const { isOpen: isPanelOpen, isFullscreen, panelWidth } = useAICoachStore();
+  const { isOpen: isPanelOpen, launch, isFullscreen, panelWidth } = useAICoachStore();
+  const [hasMountedCoach, setHasMountedCoach] = useState(false);
+
+  useEffect(() => {
+    if (isPanelOpen || launch) {
+      setHasMountedCoach(true);
+    }
+  }, [isPanelOpen, launch]);
 
   useEffect(() => {
     if (!user) return;
@@ -68,7 +82,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         </div>
       </main>
       <BottomNav className="lg:hidden" />
-      {user && (
+      {user && open && (
         <QuickAddModal
           open={open}
           onClose={closeModal}
@@ -77,7 +91,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       )}
       {user && (
         <>
-          <AICoachPanel />
+          {hasMountedCoach && <AICoachPanel />}
           <AICoachTrigger className="hidden lg:flex" />
         </>
       )}
