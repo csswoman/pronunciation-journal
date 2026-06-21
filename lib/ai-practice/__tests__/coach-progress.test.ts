@@ -1,12 +1,20 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
 const savePracticeAnswerMock = vi.fn().mockResolvedValue(undefined)
+const recordActivitySessionMock = vi.fn().mockResolvedValue({ reconciledStepIds: [] })
 
 vi.mock('@/lib/practice/queries', () => ({
   savePracticeAnswer: (...args: unknown[]) => savePracticeAnswerMock(...args),
 }))
+vi.mock('@/lib/progress/activity-hub', () => ({
+  recordActivitySession: (...args: unknown[]) => recordActivitySessionMock(...args),
+}))
 
-import { buildCoachPracticeAnswer, persistCoachExerciseResult } from '@/lib/ai-practice/coach-progress'
+import {
+  buildCoachPracticeAnswer,
+  persistCoachExerciseResult,
+  recordCoachSession,
+} from '@/lib/ai-practice/coach-progress'
 import type { ExerciseResult } from '@/lib/ai-practice/types'
 
 const baseResult: ExerciseResult = {
@@ -17,6 +25,31 @@ const baseResult: ExerciseResult = {
 
 beforeEach(() => {
   savePracticeAnswerMock.mockClear()
+  recordActivitySessionMock.mockClear()
+})
+
+describe('recordCoachSession', () => {
+  it('maps completed widgets to the shared session contract without rewriting answers', async () => {
+    await recordCoachSession('user-1', [
+      { toolName: 'render_fill_blank', result: baseResult },
+      { toolName: 'render_multiple_choice', result: { ...baseResult, correct: false } },
+    ])
+
+    expect(savePracticeAnswerMock).not.toHaveBeenCalled()
+    expect(recordActivitySessionMock).toHaveBeenCalledWith(
+      'user-1',
+      expect.objectContaining({
+        practiceContext: 'ai_coach',
+        sessionResult: expect.objectContaining({
+          accuracy: 50,
+          results: [
+            expect.objectContaining({ exerciseTypeId: 5, context: 'ai_coach' }),
+            expect.objectContaining({ exerciseTypeId: 17, context: 'ai_coach' }),
+          ],
+        }),
+      }),
+    )
+  })
 })
 
 describe('buildCoachPracticeAnswer', () => {
