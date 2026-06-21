@@ -62,6 +62,7 @@ export default function GrammarStudyDeck({
   const [practiceExercises, setPracticeExercises] = useState<PracticeExercise[] | null>(null);
   const [practiceLoading, setPracticeLoading] = useState(false);
   const [practiceError, setPracticeError] = useState(false);
+  const [completionError, setCompletionError] = useState(false);
 
   const hasQuiz = (deck.quiz?.length ?? 0) > 0;
   const finished = phase === "done";
@@ -143,7 +144,8 @@ export default function GrammarStudyDeck({
   // Persist completion once the deck is finished.
   useEffect(() => {
     if (finished && levelId && lessonId) {
-      void recordLessonComplete(levelId, lessonId).catch(() => {});
+      setCompletionError(false);
+      void recordLessonComplete(levelId, lessonId).catch(() => setCompletionError(true));
     }
   }, [finished, levelId, lessonId]);
 
@@ -186,20 +188,38 @@ export default function GrammarStudyDeck({
             }}
           />
         ) : finished ? (
-          <DeckDoneScreen
-            deck={deck}
-            courseTitle={courseTitle}
-            lessonId={lessonId}
-            backHref={backHref}
-            backLabel={backLabel}
-            reviewedCount={reviewedCount}
-            quizScore={quizScore}
-            practiceLoading={practiceLoading}
-            practiceError={practiceError}
-            relatedLinks={relatedLinks}
-            onStartSentencePractice={handleStartSentencePractice}
-            onRestart={restart}
-          />
+          <>
+            {completionError && (
+              <div role="alert" className="mb-4 flex items-center justify-between gap-3 rounded-xl border border-error bg-error-soft px-4 py-3 text-sm text-error">
+                <span>No se pudo guardar la finalización de la lección.</span>
+                <button
+                  type="button"
+                  className="font-semibold underline underline-offset-2"
+                  onClick={() => {
+                    if (!levelId || !lessonId) return;
+                    setCompletionError(false);
+                    void recordLessonComplete(levelId, lessonId).catch(() => setCompletionError(true));
+                  }}
+                >
+                  Reintentar
+                </button>
+              </div>
+            )}
+            <DeckDoneScreen
+              deck={deck}
+              courseTitle={courseTitle}
+              lessonId={lessonId}
+              backHref={backHref}
+              backLabel={backLabel}
+              reviewedCount={reviewedCount}
+              quizScore={quizScore}
+              practiceLoading={practiceLoading}
+              practiceError={practiceError}
+              relatedLinks={relatedLinks}
+              onStartSentencePractice={handleStartSentencePractice}
+              onRestart={restart}
+            />
+          </>
         ) : (
           <DeckCarousel
             cards={deck.cards}

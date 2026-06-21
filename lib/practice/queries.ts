@@ -5,7 +5,11 @@ import { enqueueWordBankSRSUpdate } from '@/lib/word-bank/srs-queries'
 import { normalizeTopic } from '@/lib/practice/normalize-topic'
 import { enqueueTopicSRSUpdate } from '@/lib/practice/topic-srs-queries'
 import { upsertFragmentSrs } from '@/lib/practice/fragment-srs'
-import { markLessonComplete } from '@/lib/db'
+import {
+  isLessonComplete,
+  markLessonComplete,
+  markLessonIncomplete,
+} from '@/lib/db'
 import { enqueue } from '@/lib/sync/sync-manager'
 import type {
   PracticeAnswer,
@@ -24,12 +28,10 @@ function supabase() {
  * local Dexie write.
  */
 export async function recordLessonComplete(courseSlug: string, lessonSlug: string): Promise<void> {
-  await markLessonComplete(courseSlug, lessonSlug)
+  if (await isLessonComplete(courseSlug, lessonSlug)) return
 
-  try {
-    const { data: { user } } = await supabase().auth.getUser()
-    if (!user) return
-
+  const { data: { user } } = await supabase().auth.getUser()
+  if (user) {
     const lessonId = `${courseSlug}:${lessonSlug}`
     await savePracticeAnswer(user.id, {
       exerciseId: lessonId,
@@ -40,9 +42,31 @@ export async function recordLessonComplete(courseSlug: string, lessonSlug: strin
       context: 'courses',
       timeMs: 0,
     })
-  } catch {
-    // Best-effort — local completion already recorded above.
   }
+
+  await markLessonComplete(courseSlug, lessonSlug)
+}
+
+/** Reverses local completion and removes its remote progress event(s). */
+export async function recordLessonIncomplete(
+  courseSlug: string,
+  lessonSlug: string,
+): Promise<void> {
+  const { data: { user } } = await supabase().auth.getUser()
+  if (user) {
+    await enqueue(
+      'answer_history',
+      'delete',
+      {},
+      {
+        user_id: user.id,
+        context: 'courses',
+        content_id: `${courseSlug}:${lessonSlug}`,
+      },
+    )
+  }
+
+  await markLessonIncomplete(courseSlug, lessonSlug)
 }
 
 /**
@@ -58,7 +82,7 @@ export async function savePracticeAnswer(
   userId: string,
   answer: PracticeAnswer,
 ): Promise<void> {
-  // Exercises with no exerciseTypeId (e.g. sentence_context) are not tracked in answer_history.
+  // Exercises with no exerciseTypeId (e.g. reader exposure) are not tracked in answer_history.
   if (answer.exerciseTypeId === null) return
 
   // Phoneme exercises forward their targetWord via exercisePayload.targetWord

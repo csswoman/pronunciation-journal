@@ -33,6 +33,13 @@ describe('ReaderExercise', () => {
     render(<ReaderExercise passage={passage} online onComplete={onComplete} />)
     fireEvent.click(screen.getByText('home'))
     expect(onComplete).toHaveBeenCalledWith(true)
+    expect(screen.getByRole('status')).toHaveTextContent(/cuenta en tu progreso/i)
+  })
+
+  it('shows actionable feedback for an incorrect answer', () => {
+    render(<ReaderExercise passage={passage} online onComplete={vi.fn()} />)
+    fireEvent.click(screen.getByText('park'))
+    expect(screen.getByRole('status')).toHaveTextContent(/revisa el texto/i)
   })
 
   it('disables the listen button when offline', () => {

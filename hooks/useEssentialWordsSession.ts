@@ -77,16 +77,17 @@ async function loadQueue(): Promise<{
 }> {
   const [words, srsEntries, introducedToday] = await Promise.all([
     fetchCoreWords(),
-    getCore1000SrsEntries(),   // already excludes archived
+    getCore1000SrsEntries(),
     getCore1000IntroducedToday(),
   ]);
 
   const items = buildSessionQueue({ words, srsEntries, introducedToday, now: new Date() });
   const seenIds = new Set(srsEntries.map((e) => e.wordId));
+  const activeSrsEntries = srsEntries.filter((entry) => !entry.archived);
 
   const stats: EssentialWordsStats = {
     totalWords: words.length,
-    learned: srsEntries.length,
+    learned: activeSrsEntries.length,
     dueCount: items.filter((i) => i.kind === "review").length,
     newToday: introducedToday.length,
     newQuota: NEW_CARDS_PER_DAY,
@@ -114,6 +115,7 @@ export function useEssentialWordsSession(): UseEssentialWordsSessionReturn {
   const sessionResultsRef = useRef<ExerciseResult[]>([]);
   // Pending lapses: wordId → quality — flushed to Dexie on session end
   const pendingLapsesRef = useRef<Map<string, number>>(new Map());
+  const lapseFlushRef = useRef<Promise<void> | null>(null);
   const allWordsRef = useRef<CoreWord[]>([]);
   const seenIdsRef = useRef<Set<string>>(new Set());
 
@@ -122,12 +124,39 @@ export function useEssentialWordsSession(): UseEssentialWordsSessionReturn {
   }, []);
 
   const flushLapses = useCallback(async () => {
-    for (const [wordId, quality] of pendingLapsesRef.current) {
-      const word = wordId.replace("c1k:", "");
-      await gradeCore1000Word(word, quality, {}, user?.id).catch(() => {});
-    }
-    pendingLapsesRef.current = new Map();
+    if (lapseFlushRef.current) return lapseFlushRef.current;
+
+    const flush = (async () => {
+      const pending = Array.from(pendingLapsesRef.current.entries());
+      for (const [wordId, quality] of pending) {
+        const word = wordId.replace("c1k:", "");
+        try {
+          await gradeCore1000Word(word, quality, {}, user?.id);
+          if (pendingLapsesRef.current.get(wordId) === quality) {
+            pendingLapsesRef.current.delete(wordId);
+          }
+        } catch (err) {
+          console.error("[EssentialWordsSession] failed to persist lapse", { wordId, err });
+        }
+      }
+    })();
+
+    lapseFlushRef.current = flush.finally(() => {
+      lapseFlushRef.current = null;
+    });
+    return lapseFlushRef.current;
   }, [user?.id]);
+
+  useEffect(() => {
+    const handlePageHide = () => {
+      void flushLapses();
+    };
+    window.addEventListener("pagehide", handlePageHide);
+    return () => {
+      window.removeEventListener("pagehide", handlePageHide);
+      void flushLapses();
+    };
+  }, [flushLapses]);
 
   const finishSession = useCallback(async () => {
     setPhase("done");
@@ -243,6 +272,7 @@ export function useEssentialWordsSession(): UseEssentialWordsSessionReturn {
 
   const archiveWord = useCallback(async (word: string) => {
     await archiveCore1000Word(word);
+    seenIdsRef.current.add(core1000WordId(word.toLowerCase()));
     const newQueue = queue.filter((_, i) => i !== index);
     setQueue(newQueue);
     if (newQueue.length === 0 || index >= newQueue.length) {

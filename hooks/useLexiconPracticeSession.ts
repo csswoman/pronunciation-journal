@@ -21,6 +21,7 @@ interface PersistedState {
   categoryId: string
   lessonName: string
   allEntries: WordBankEntry[]
+  sessionWordEntries: WordEntry[]
   posMapEntries: [string, string][]
   flowPhase: FlowPhase
   ratings: WordRating[]
@@ -121,6 +122,7 @@ export function useLexiconPracticeSession(categoryId: string, userId: string | u
     if (saved && saved.categoryId === categoryId) {
       setLessonName(saved.lessonName)
       setAllEntries(saved.allEntries)
+      setSessionWordEntries(saved.sessionWordEntries ?? [])
       setPosMap(new Map(saved.posMapEntries))
       setFlowPhaseRaw(saved.flowPhase)
       setRatingsRaw(saved.ratings)
@@ -182,6 +184,7 @@ export function useLexiconPracticeSession(categoryId: string, userId: string | u
         categoryId,
         lessonName: name,
         allEntries: sessionEntries,
+        sessionWordEntries: sessionWordEntriesSlice,
         posMapEntries: Array.from(newPosMap.entries()),
         flowPhase: 'review',
         ratings: [],

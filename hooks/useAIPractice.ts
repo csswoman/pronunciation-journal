@@ -33,6 +33,7 @@ interface UseAIPracticeReturn {
   deleteSavedWord: (id: number) => Promise<void>;
   loadSavedWords: () => Promise<void>;
   resetSession: () => void;
+  finalizeSession: () => void;
   changeMode: (next: AIConversationMode) => Promise<void>;
   loadConversation: (conv: AIConversation) => void;
   removeConversation: (id: number) => Promise<void>;
@@ -160,6 +161,7 @@ export function useAIPractice(): UseAIPracticeReturn {
     deleteSavedWord: words.deleteSavedWord,
     loadSavedWords: words.loadSavedWords,
     resetSession,
+    finalizeSession: chat.finalizeSession,
     changeMode,
     loadConversation,
     removeConversation,

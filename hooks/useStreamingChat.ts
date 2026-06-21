@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import type { AIMessage, StreamChunk, ExerciseResult } from "@/lib/ai-practice/types";
 import { serializeMessage, deserializeMessage, type SerializedModelMessage } from "@/lib/ai-practice/types";
 import { applyExerciseResult, type UserLearningState } from "@/lib/ai-practice/learning-state";
@@ -62,6 +62,8 @@ export function useStreamingChat({
   const correctCountRef = useRef(0);
   const firstExerciseLoggedRef = useRef(false);
   const sessionExercisesRef = useRef<CoachSessionExercise[]>([]);
+  const userIdRef = useRef(userId);
+  userIdRef.current = userId;
 
   function isQuotaError(message: string): boolean {
     const lower = message.toLowerCase();
@@ -255,15 +257,22 @@ export function useStreamingChat({
     }
   }, [learningState, setLearningState, userId]);
 
-  const resetChat = useCallback(() => {
-    abortRef.current?.abort();
+  const finalizeSession = useCallback(() => {
     const completedExercises = sessionExercisesRef.current;
     sessionExercisesRef.current = [];
-    if (userId && completedExercises.length > 0) {
-      void recordCoachSession(userId, completedExercises).catch((err) => {
+    const activeUserId = userIdRef.current;
+    if (activeUserId && completedExercises.length > 0) {
+      void recordCoachSession(activeUserId, completedExercises).catch((err) => {
         console.error("[AI Coach] session progress save failed", err);
       });
     }
+  }, []);
+
+  useEffect(() => finalizeSession, [finalizeSession]);
+
+  const resetChat = useCallback(() => {
+    abortRef.current?.abort();
+    finalizeSession();
     if (sessionStartedRef.current) {
       const completed = exercisesCompletedRef.current;
       logEvent("session_ended", {
@@ -280,7 +289,7 @@ export function useStreamingChat({
     setMessages([]);
     setError(null);
     setQuotaExhausted(false);
-  }, [mode, userId]);
+  }, [mode, finalizeSession]);
 
   const loadMessages = useCallback((msgs: AIMessage[]) => {
     const hydrated = msgs.map(m => {
@@ -292,5 +301,15 @@ export function useStreamingChat({
     setMessages(hydrated);
   }, []);
 
-  return { messages, isStreaming, error, quotaExhausted, sendMessage, answerToolCall, resetChat, loadMessages };
+  return {
+    messages,
+    isStreaming,
+    error,
+    quotaExhausted,
+    sendMessage,
+    answerToolCall,
+    resetChat,
+    finalizeSession,
+    loadMessages,
+  };
 }
