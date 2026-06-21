@@ -3,6 +3,8 @@
 import { useEffect, useRef } from "react";
 import { RotateCcw, TrendingUp, AlertCircle, CheckCircle2 } from "lucide-react";
 import Button from "@/components/ui/Button";
+import { useAuth } from "@/components/auth/AuthProvider";
+import { savePracticeAnswer } from "@/lib/practice/queries";
 import type { ScoringResult } from "@/lib/types";
 import type { InterviewTurn } from "./InterviewSession";
 import { AccuracyRing } from "./AccuracyRing";
@@ -25,6 +27,8 @@ interface Props {
 
 export function InterviewResults({ title, turns, results, difficulty, level, onReset }: Props) {
   const fired = useRef(false);
+  const progressSaved = useRef(false);
+  const { user } = useAuth();
   const threshold = getThreshold(level, difficulty);
 
   const candidateTurns = turns
@@ -84,6 +88,41 @@ export function InterviewResults({ title, turns, results, difficulty, level, onR
       frame();
     });
   }, [totalAccuracy]);
+
+  useEffect(() => {
+    if (progressSaved.current || !user?.id) return;
+
+    const scoredTurns = candidateTurns.flatMap(({ idx, turn }) => {
+      const result = results.get(idx);
+      if (!result?.score) return [];
+      return [{ idx, turn, result }];
+    });
+
+    if (scoredTurns.length === 0) return;
+
+    progressSaved.current = true;
+    const userId = user.id;
+
+    void (async () => {
+      try {
+        for (const { idx, turn, result } of scoredTurns) {
+          await savePracticeAnswer(userId, {
+            exerciseId: `interview:${idx}`,
+            exerciseTypeId: 10,
+            slug: "speak_word",
+            isCorrect: result.score.accuracy >= threshold,
+            context: "ai_coach",
+            contentId: `interview:${idx}`,
+            userAnswer: result.transcript,
+            timeMs: 0,
+            exercisePayload: { targetWord: turn.text, accuracy: result.score.accuracy },
+          });
+        }
+      } catch {
+        // Best-effort — never blocks the results UI.
+      }
+    })();
+  }, [user?.id, candidateTurns, results, threshold]);
 
   const grade =
     totalAccuracy >= 90 ? "Excellent!" :
