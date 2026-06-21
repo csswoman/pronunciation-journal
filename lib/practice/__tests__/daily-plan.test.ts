@@ -53,9 +53,8 @@ vi.mock('@/lib/sounds/queries', async (importOriginal) => {
 // Mock phoneme queries to avoid network calls
 vi.mock('@/lib/phoneme-practice/queries', () => ({
   getAllSounds: vi.fn(),
-  getAllWords: vi.fn(),
-  getMinimalPairs: vi.fn(),
-  getWordsBySound: vi.fn(),
+  getSessionDataset: vi.fn(),
+  getSessionDatasets: vi.fn(),
 }))
 
 vi.mock('@/lib/db', () => ({
@@ -89,9 +88,8 @@ import {
 import { getWeakestSoundByProgress, getDueSoundsForReview } from '@/lib/sounds/queries'
 import {
   getAllSounds,
-  getAllWords,
-  getMinimalPairs,
-  getWordsBySound,
+  getSessionDataset,
+  getSessionDatasets,
 } from '@/lib/phoneme-practice/queries'
 import { db } from '@/lib/db'
 import {
@@ -138,11 +136,19 @@ describe('buildDailyPlan', () => {
     vi.mocked(getDueSoundsForReview).mockResolvedValue([])
     const { sounds, words } = seedCatalog()
     vi.mocked(getAllSounds).mockResolvedValue(sounds)
-    vi.mocked(getAllWords).mockResolvedValue(words)
-    vi.mocked(getMinimalPairs).mockResolvedValue([])
-    vi.mocked(getWordsBySound).mockImplementation((soundId: number) =>
-      Promise.resolve(words.filter((w) => w.sound_id === soundId)),
-    )
+    const makeDataset = (soundId: number) => {
+      const targetSound = sounds.find((sound) => sound.id === soundId)!
+      const datasetSounds = sounds.filter((sound) => Math.abs(sound.id - soundId) <= 1)
+      const wordsBySoundId = new Map(datasetSounds.map((sound) => [
+        sound.id,
+        words.filter((word) => word.sound_id === sound.id),
+      ]))
+      return { targetSound, sounds: datasetSounds, wordsBySoundId, minimalPairs: [] }
+    }
+    vi.mocked(getSessionDataset).mockImplementation((soundId: number) => Promise.resolve(makeDataset(soundId)))
+    vi.mocked(getSessionDatasets).mockImplementation((soundIds: number[]) => Promise.resolve(
+      new Map(soundIds.map((soundId) => [soundId, makeDataset(soundId)])),
+    ))
   })
 
   it('usuario nuevo (sin word_bank ni progreso): 5 pasos del seed, sin lanzar error', async () => {
@@ -230,7 +236,7 @@ describe('buildDailyPlan', () => {
 
     const plan = await buildDailyPlan('user-1')
 
-    expect(vi.mocked(getWordsBySound)).toHaveBeenCalledWith(2)
+    expect(vi.mocked(getSessionDataset)).toHaveBeenCalledWith(2)
     expect(plan.steps.some((s) => s.id === 'phoneme_focus:2')).toBe(true)
     expect(plan.isNewUser).toBe(false)
   })
@@ -276,7 +282,7 @@ describe('buildDailyPlan', () => {
     setupWordBankMock([], [])
 
     const plan = await buildDailyPlan('user-1')
-    expect(vi.mocked(getWordsBySound)).toHaveBeenCalledWith(3)
+    expect(vi.mocked(getSessionDataset)).toHaveBeenCalledWith(3)
     expect(plan.steps.some((s) => s.id === `phoneme_focus:${sound3.id}`)).toBe(true)
     vi.mocked(db.learningState.get).mockResolvedValue(null)
   })
@@ -290,6 +296,15 @@ describe('buildDailyPlan', () => {
     const plan = await buildDailyPlan('user-1')
     expect(plan.steps.some((s) => s.kind === 'context_practice')).toBe(false)
     expect(plan.steps).toHaveLength(DAILY_PLAN_STEP_COUNT)
+  })
+
+  it('batches session datasets for review sounds', async () => {
+    const { sounds } = seedCatalog()
+    vi.mocked(getDueSoundsForReview).mockResolvedValue([sounds[0], sounds[1]])
+
+    await buildDailyPlan('user-1')
+
+    expect(vi.mocked(getSessionDatasets)).toHaveBeenCalledWith([1, 2])
   })
 })
 

@@ -8,11 +8,8 @@ import { SessionLoadingShell } from '@/components/practice/session/SessionLoadin
 import { PhonemeLessonIntro } from '@/components/phoneme-practice/PhonemeLessonIntro'
 import Button from '@/components/ui/Button'
 import {
-  getAllSounds,
-  getAllWords,
   getContrastProgress,
-  getMinimalPairs,
-  getSoundById,
+  getSessionDataset,
 } from '@/lib/phoneme-practice/queries'
 import { finishContrastSession } from '@/lib/phoneme-practice/finish-session'
 import { buildMixedSession } from '@/lib/phoneme-practice/mixed-session'
@@ -48,12 +45,7 @@ export default function SoundPracticePage() {
     setError(null)
     setNextReview(null)
     try {
-      const [sound, allSounds, allWords, pairs] = await Promise.all([
-        getSoundById(soundId),
-        getAllSounds(),
-        getAllWords(),
-        getMinimalPairs(soundId),
-      ])
+      const { targetSound: sound, sounds, wordsBySoundId, minimalPairs } = await getSessionDataset(soundId)
       setSoundIpa(sound.ipa)
 
       const cid = primaryContrastId(sound.ipa)
@@ -64,11 +56,8 @@ export default function SoundPracticePage() {
         setShowIntro(false)
       }
 
-      const targetWords = allWords.filter((w) => w.sound_id === soundId)
-      const allWordsBySoundId = new Map(
-        allSounds.map((s) => [s.id, allWords.filter((w) => w.sound_id === s.id)]),
-      )
-      const mixed = buildMixedSession(sound, targetWords, allSounds, allWordsBySoundId, pairs)
+      const targetWords = wordsBySoundId.get(soundId) ?? []
+      const mixed = buildMixedSession(sound, targetWords, sounds, wordsBySoundId, minimalPairs)
       setExercises(mixed.map((m) => fromMixedExercise(m, 'sound_lab')))
       setSessionKey((k) => k + 1)
     } catch {

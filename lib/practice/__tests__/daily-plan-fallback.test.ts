@@ -21,9 +21,13 @@ vi.mock('@/lib/sounds/queries', async (importOriginal) => {
 
 vi.mock('@/lib/phoneme-practice/queries', () => ({
   getAllSounds: async () => [],
-  getAllWords: async () => [],
-  getMinimalPairs: async () => [],
-  getWordsBySound: async () => [],
+  getSessionDataset: async () => ({
+    targetSound: { id: 0, ipa: '/x/', example: 'x', category: 'consonant', type: 'other', difficulty: 1 },
+    sounds: [],
+    wordsBySoundId: new Map(),
+    minimalPairs: [],
+  }),
+  getSessionDatasets: async () => new Map(),
 }))
 
 vi.mock('@/lib/db', () => ({
