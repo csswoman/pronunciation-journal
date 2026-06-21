@@ -29,11 +29,8 @@ export default function SpanishSpeakersGrid({
           <h2 className="ipa-chart__section-title">
             Sonidos difíciles para hispanohablantes
           </h2>
-          <p className="ipa-chart__lead mt-1">
-            Estos fonemas no existen en español o se confunden con otros — empieza por aquí.
-          </p>
+          <p className="ipa-chart__lead mt-1">{items.length} fonemas para enfocarte</p>
         </div>
-        <span className="ipa-chart__pill-warn">{items.length} para enfocarte</span>
       </header>
 
       <div className="ipa-chart__hardgrid">

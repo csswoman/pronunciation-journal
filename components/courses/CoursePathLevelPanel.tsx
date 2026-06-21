@@ -168,7 +168,7 @@ export default function CoursePathLevelPanel({ level, compactHead, openUnits: op
                   <div className="course-path__un">{u.unit.label}</div>
                   <div className="course-path__ut">{u.unit.title}</div>
                   <div className="course-path__um">
-                    {u.unit.lessons.length} lecciones
+                    {u.lessons.filter((l) => l.state === "done").length} / {u.unit.lessons.length} completadas
                     {u.unit.isOptionalSection && (
                       <span className="course-path__optional-tag">Extra</span>
                     )}

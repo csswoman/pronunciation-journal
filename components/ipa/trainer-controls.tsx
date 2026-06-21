@@ -1,6 +1,6 @@
 "use client";
 
-import { Play, ArrowRight, RotateCcw, HelpCircle, Check, X } from "lucide-react";
+import { Play, ArrowRight, RotateCcw, HelpCircle, Check, X, RefreshCw, Trophy } from "lucide-react";
 import { cn } from "@/lib/cn";
 
 type Verdict = "correct" | "wrong" | null;
@@ -10,23 +10,65 @@ interface TrainerControlsProps {
   quizTarget: Side | null;
   verdict: Verdict;
   correctWord: string;
+  isLastPair: boolean;
+  isDone: boolean;
+  accuracy: number | null;
   onPlayBoth: () => void;
   onNextPair: () => void;
   onReplayClue: () => void;
   onStartQuiz: () => void;
   onNextRound: () => void;
+  onRestart: () => void;
+  onNextContrast: () => void;
 }
 
 export function TrainerControls({
   quizTarget,
   verdict,
   correctWord,
+  isLastPair,
+  isDone,
+  accuracy,
   onPlayBoth,
   onNextPair,
   onReplayClue,
   onStartQuiz,
   onNextRound,
+  onRestart,
+  onNextContrast,
 }: TrainerControlsProps) {
+  if (isDone) {
+    return (
+      <div className="ipa-chart__done">
+        <span className="ipa-chart__done-icon" aria-hidden><Trophy size={28} /></span>
+        <p className="ipa-chart__done-title">¡Set completo!</p>
+        {accuracy !== null && (
+          <p className="ipa-chart__done-score">
+            Precisión: <strong>{accuracy}%</strong>
+          </p>
+        )}
+        <div className="ipa-chart__done-actions">
+          <button
+            type="button"
+            onClick={onRestart}
+            className="ipa-chart__btn ipa-chart__btn--ghost"
+          >
+            <RefreshCw size={13} aria-hidden />
+            Repetir
+          </button>
+          <button
+            type="button"
+            onClick={onNextContrast}
+            className="ipa-chart__btn ipa-chart__btn--primary"
+          >
+            Siguiente contraste
+            <ArrowRight size={13} aria-hidden />
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
       <div className="ipa-chart__mpfoot">
@@ -43,7 +85,7 @@ export function TrainerControls({
           onClick={onNextPair}
           className="ipa-chart__btn ipa-chart__btn--ghost"
         >
-          Siguiente par
+          {isLastPair ? "Último par" : "Siguiente par"}
           <ArrowRight size={13} aria-hidden />
         </button>
 
@@ -71,7 +113,7 @@ export function TrainerControls({
       </div>
 
       {quizTarget && (
-        <div className="mt-4 pt-4 border-t border-[var(--border-subtle)] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+        <div className="mt-4 pt-4 border-t border-border-subtle flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           {verdict ? (
             <>
               <div className="flex items-center gap-2.5">
@@ -89,7 +131,7 @@ export function TrainerControls({
                     <X size={14} strokeWidth={3} />
                   )}
                 </span>
-                <p className="text-sm font-medium text-[var(--text-primary)]">
+                <p className="text-sm font-medium text-fg">
                   {verdict === "correct"
                     ? "¡Correcto!"
                     : `Era «${correctWord}».`}
@@ -100,12 +142,12 @@ export function TrainerControls({
                 onClick={onNextRound}
                 className="ipa-chart__btn ipa-chart__btn--primary"
               >
-                Siguiente
+                {isLastPair ? "Ver resultado" : "Siguiente"}
                 <ArrowRight size={13} aria-hidden />
               </button>
             </>
           ) : (
-            <p className="text-sm text-[var(--text-secondary)]">
+            <p className="text-sm text-fg-muted">
               ¿Cuál escuchaste? Toca una tarjeta o pulsa{" "}
               <kbd className="ipa-chart__kbd">A</kbd> / <kbd className="ipa-chart__kbd">B</kbd>
             </p>

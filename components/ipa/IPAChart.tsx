@@ -3,8 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useLiveQuery } from "dexie-react-hooks";
-import { useAuth } from "@/components/auth/AuthProvider";
-import { resolveDrillHref } from "@/lib/ipa/drill-handoff";
+
 import { IPA_AUDIO_MAP, SOUNDS_BASE_URL } from "@/lib/pronunciation/ipa-audio";
 import {
   getExploredSymbolsToday,
@@ -26,8 +25,6 @@ type MatrixCategory = "vowel" | "consonant" | "diphthong";
 
 export default function IPAChart() {
   const router = useRouter();
-  const { user } = useAuth();
-  const [drillLoading, setDrillLoading] = useState(false);
   const [activeCategory, setActiveCategory] = useState<MatrixCategory>("vowel");
   const [selectedPhoneme, setSelectedPhoneme] = useState<PhonemeData>(
     () => PHONEMES.find((p) => p.type === "vowel") ?? PHONEMES[0]
@@ -188,22 +185,10 @@ export default function IPAChart() {
     if (undoTimeoutRef.current) clearTimeout(undoTimeoutRef.current);
   }, [undoSnapshot]);
 
-  const handleStartDrill = useCallback(async () => {
-    setDrillLoading(true);
-    try {
-      const href = await resolveDrillHref(user?.id);
-      router.push(href);
-    } finally {
-      setDrillLoading(false);
-    }
-  }, [router, user?.id]);
-
   return (
     <div className="animate-fadeIn">
       <IPAPageHeader
         onStartPractice={() => router.push("/practice/sounds")}
-        onStartDrill={handleStartDrill}
-        drillLoading={drillLoading}
       />
 
       <IPAProgressBar

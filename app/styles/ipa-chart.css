@@ -1,6 +1,8 @@
 /* English Sound Chart — solo lo que no puede ser Tailwind */
 
 .ipa-chart {
+  position: relative;
+  overflow-x: hidden;
   --ipa-radius: 16px;
   --ipa-radius-sm: 11px;
   --ipa-accent-text: var(--primary-700);
@@ -11,7 +13,7 @@
 .ipa-chart::before {
   content: "";
   position: absolute;
-  inset: -2rem -1.5rem auto;
+  inset: 0 -1.5rem auto;
   height: 280px;
   pointer-events: none;
   z-index: 0;
@@ -28,6 +30,8 @@
 }
 
 .ipa-chart__eyebrow {
+  display: block;
+  margin-bottom: 6px;
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.16em;
@@ -50,8 +54,9 @@
 
 .ipa-chart__section-title {
   font-family: var(--font-editorial), "Fraunces", Georgia, serif;
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   font-weight: 480;
+  line-height: 1.2;
   color: var(--text-primary);
 }
 
@@ -152,6 +157,7 @@
   font-weight: 600;
   color: var(--text-secondary);
   cursor: pointer;
+  flex-shrink: 0;
   transition: background 0.13s ease, color 0.13s ease, border-color 0.13s ease;
 }
 
@@ -211,6 +217,81 @@
 @media (max-width: 880px) {
   .ipa-chart__main {
     grid-template-columns: 1fr;
+  }
+
+  .ipa-chart__panel {
+    order: -1;
+    position: static;
+  }
+
+  .ipa-chart__panel-hero {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+  }
+
+  .ipa-chart__panel-hero header {
+    display: contents;
+  }
+
+  .ipa-chart__panel-tag {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .ipa-chart__panel-nav {
+    grid-column: 3;
+    grid-row: 1;
+  }
+
+  /* phoneme symbol + play row — horizontal strip */
+  .ipa-chart__panel-hero > div {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .ipa-chart__panel-sym {
+    font-size: 2.4rem;
+  }
+
+  .ipa-chart__panel-name {
+    flex: 1;
+    font-size: 0.85rem;
+  }
+
+  .ipa-chart__panel-play {
+    margin-left: auto;
+  }
+
+  .ipa-chart__panel-body {
+    gap: 12px;
+    padding: 12px 16px 16px;
+  }
+
+  /* Tips: horizontal scroll en lugar de lista vertical */
+  .ipa-chart__howto {
+    flex-direction: row;
+    overflow-x: auto;
+    scrollbar-width: none;
+    gap: 8px;
+    padding-bottom: 2px;
+  }
+
+  .ipa-chart__howto::-webkit-scrollbar {
+    display: none;
+  }
+
+  .ipa-chart__howto-step {
+    flex-shrink: 0;
+    max-width: 180px;
+    font-size: 0.82rem;
+    background: var(--surface-sunken);
+    border-radius: 10px;
+    padding: 8px 10px;
   }
 }
 
@@ -554,27 +635,27 @@
 .ipa-chart__pill-warn {
   display: inline-flex;
   align-items: center;
-  padding: 3px 10px;
+  padding: 5px 12px;
   flex-shrink: 0;
   border-radius: 999px;
   border: 1px solid color-mix(in oklch, var(--warning) 35%, transparent);
   background: var(--warning-soft);
-  font-size: 11px;
-  font-weight: 700;
+  font-size: 0.75rem;
+  font-weight: 600;
   color: var(--warning-value);
 }
 
 .ipa-chart__hardgrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 12px;
 }
 
 .ipa-chart__hard {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  padding: 14px 14px 12px;
+  gap: 8px;
+  padding: 16px 16px 14px;
   text-align: left;
   cursor: pointer;
   border-radius: var(--ipa-radius-sm);
@@ -594,20 +675,23 @@
 }
 
 .ipa-chart__hard-sym {
-  font-family: var(--font-ipa), sans-serif;
-  font-size: 1.6rem;
+  font-family: var(--font-editorial), "Fraunces", Georgia, serif;
+  font-size: 2.2rem;
+  font-weight: 500;
   color: var(--ipa-accent-text);
 }
 
 .ipa-chart__hard-word {
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  color: var(--text-tertiary);
+  font-family: var(--font-editorial), "Fraunces", Georgia, serif;
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: var(--text-primary);
 }
 
 .ipa-chart__hard-note {
-  font-size: 0.8rem;
+  font-size: 0.875rem;
+  line-height: 1.45;
   color: var(--text-secondary);
 }
 
@@ -776,21 +860,6 @@
   background: linear-gradient(150deg, var(--ipa-accent-soft), var(--card-bg) 70%);
 }
 
-.ipa-chart__ai-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  flex-shrink: 0;
-  border-radius: 12px;
-  background: linear-gradient(
-    140deg,
-    var(--primary),
-    color-mix(in oklch, var(--primary) 85%, white)
-  );
-  color: var(--on-primary);
-}
 
 .ipa-chart__ai-text b {
   font-size: 1rem;
@@ -828,9 +897,15 @@
 .ipa-chart__tabs {
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
   gap: 8px;
   margin-bottom: 16px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.ipa-chart__tabs::-webkit-scrollbar {
+  display: none;
 }
 
 /* ── Layout: matrix grid (vowels) ─────────────────────────────────── */
@@ -904,9 +979,68 @@
 
 .ipa-chart__mpchips {
   display: flex;
-  flex-wrap: wrap;
   gap: 6px;
   margin-bottom: 16px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 2px;
+}
+
+.ipa-chart__mpchips::-webkit-scrollbar {
+  display: none;
+}
+
+.ipa-chart__mpchips .ipa-chart__mpchip {
+  flex-shrink: 0;
+}
+
+/* ── Layout: done state ──────────────────────────────────────────── */
+
+.ipa-chart__done {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 28px 20px;
+  margin-top: 12px;
+  border-radius: var(--ipa-radius);
+  border: 1px solid var(--ipa-accent-border);
+  background: linear-gradient(160deg, var(--ipa-accent-soft), var(--card-bg) 70%);
+  text-align: center;
+}
+
+.ipa-chart__done-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: var(--ipa-accent-soft);
+  border: 1px solid var(--ipa-accent-border);
+  color: var(--ipa-accent-text);
+  margin-bottom: 4px;
+}
+
+.ipa-chart__done-title {
+  font-family: var(--font-editorial), "Fraunces", Georgia, serif;
+  font-size: 1.35rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.ipa-chart__done-score {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+}
+
+.ipa-chart__done-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 /* ── Layout: AI CTA text ─────────────────────────────────────────── */
@@ -914,5 +1048,63 @@
 .ipa-chart__ai-text {
   flex: 1;
   min-width: 0;
+}
+
+/* ── Mobile overrides ────────────────────────────────────────────── */
+
+@media (max-width: 480px) {
+  .ipa-chart__title {
+    font-size: 1.75rem;
+  }
+
+  .ipa-chart__lead {
+    font-size: 0.875rem;
+  }
+
+  .ipa-chart__btn {
+    padding: 8px 13px;
+    font-size: 0.83rem;
+  }
+
+  .ipa-chart__progress {
+    gap: 8px;
+    margin-bottom: 12px;
+    font-size: 0.8rem;
+  }
+
+  .ipa-chart__tabs {
+    margin-bottom: 12px;
+  }
+
+  .ipa-chart__sections {
+    gap: 16px;
+    margin-top: 16px;
+  }
+
+  .ipa-chart__section {
+    padding: 16px 14px 18px;
+  }
+
+  .ipa-chart__ai {
+    gap: 12px;
+    padding: 16px;
+  }
+
+  .ipa-chart__hardgrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .ipa-chart__hard {
+    padding: 14px 12px 12px;
+  }
+
+  .ipa-chart__hard-sym {
+    font-size: 1.75rem;
+  }
+
+  .ipa-chart__hard-note {
+    font-size: 0.8rem;
+  }
 }
 

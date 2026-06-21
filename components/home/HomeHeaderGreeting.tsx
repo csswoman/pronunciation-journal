@@ -5,26 +5,39 @@ interface HomeHeaderGreetingProps {
   dateLabel: string;
 }
 
-function getTimeGreeting(): string {
+type TimeSlot = "morning" | "afternoon" | "evening";
+
+function getTimeSlot(): TimeSlot {
   const hour = new Date().getHours();
-  if (hour < 12) return "Good morning";
-  if (hour < 18) return "Good afternoon";
-  return "Good evening";
+  if (hour < 12) return "morning";
+  if (hour < 18) return "afternoon";
+  return "evening";
 }
 
+const GREETINGS: Record<TimeSlot, { greeting: string; sub: string }> = {
+  morning:   { greeting: "Good morning",   sub: "Ready to train your ear?" },
+  afternoon: { greeting: "Good afternoon", sub: "A good time to practice." },
+  evening:   { greeting: "Good evening",   sub: "Wind down with some English." },
+};
+
 export default function HomeHeaderGreeting({ userName, dateLabel }: HomeHeaderGreetingProps) {
-  const greeting = getTimeGreeting();
+  const slot = getTimeSlot();
+  const { greeting, sub } = GREETINGS[slot];
+  const displayName = userName && userName !== "there" ? userName : null;
 
   return (
     <div className="flex flex-col gap-1">
-      <p className="flex items-center gap-1.5 text-[11px] font-semibold tracking-widest uppercase text-[var(--text-tertiary)]">
-        <CalendarDays size={11} />
+      <p className="flex items-center gap-1.5 text-[11px] font-semibold tracking-widest uppercase text-fg-subtle">
+        <CalendarDays size={11} aria-hidden />
         {dateLabel}
       </p>
-      <h1 className="text-2xl font-semibold tracking-tight text-[var(--text-primary)]">
-        {greeting},{" "}
-        <span className="text-[var(--primary)]">{userName}</span>
+      <h1 className="font-editorial text-[1.65rem] font-[440] tracking-[-0.02em] leading-[1.2] text-fg">
+        {greeting}
+        {displayName && (
+          <>, <span className="text-primary">{displayName}</span></>
+        )}.
       </h1>
+      <p className="text-[0.8125rem] text-fg-muted">{sub}</p>
     </div>
   );
 }

@@ -41,34 +41,33 @@ export default function CoursePathLessonRow({ lesson, levelId }: CoursePathLesso
     isLocked && "course-path__lesson--locked"
   );
 
-  const titleEl = canOpen ? (
-    <Link href={href} className="course-path__lt course-path__lt--link" title={lesson.title}>
-      {lesson.title}
-    </Link>
-  ) : (
-    <span className="course-path__lt" title={lesson.title}>{lesson.title}</span>
-  );
-
   const lockDescId = isLocked ? `lock-desc-${lesson.id}` : undefined;
 
+  const titleContent = canOpen ? (
+    <Link href={href} className="course-path__lt course-path__lt--link" title={lesson.title}>
+      {lesson.title}
+      {isDone && <Check size={11} strokeWidth={2.5} className="course-path__lt-check" aria-hidden />}
+    </Link>
+  ) : (
+    <span className="course-path__lt" title={lesson.title}>
+      {lesson.title}
+      {isDone && <Check size={11} strokeWidth={2.5} className="course-path__lt-check" aria-hidden />}
+    </span>
+  );
+
   return (
-    <div
-      className={className}
-      aria-describedby={lockDescId}
-    >
+    <div className={className} aria-describedby={lockDescId}>
       <CoursePathPriorityMarks priority={lesson.priority} />
       <div className="course-path__st" role="img" aria-label={stateLabel}>
-        {isDone ? (
-          <Check size={12} strokeWidth={2.5} aria-hidden />
-        ) : isCurrent ? (
+        {isCurrent ? (
           <Play size={10} className="fill-current" aria-hidden />
         ) : isLocked ? (
           <Lock size={10} strokeWidth={2} aria-hidden />
-        ) : (
+        ) : !isDone ? (
           <CoursePathLessonStateDot available={isAvailable} />
-        )}
+        ) : null}
       </div>
-      {titleEl}
+      {titleContent}
       {lesson.soundLab && <CoursePathSoundLabLink />}
       {isLocked && (
         <>
