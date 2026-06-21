@@ -36,7 +36,21 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
+    "/",
+    "/admin/:path*",
     "/auth/callback",
-    "/((?!api|_next/static|_next/image|favicon\\.ico|icon\\.svg|manifest\\.webmanifest|sw\\.js|service-worker\\.js|.*\\.(?:json|ogg|mp3|js|css|png|svg|ico|jpg|jpeg|gif|webp|avif|woff2?|ttf|eot|map|txt|xml)$).*)",
+    "/courses/:path*",
+    "/daily/:path*",
+    "/dashboard/:path*",
+    "/ipa/:path*",
+    "/lexicon/:path*",
+    "/mini-lessons/:path*",
+    "/practice/:path*",
+    "/profile/:path*",
+    "/progress/:path*",
+    "/review/:path*",
+    "/test/:path*",
+    "/vocabulary/:path*",
+    "/words/:path*",
   ],
 };
