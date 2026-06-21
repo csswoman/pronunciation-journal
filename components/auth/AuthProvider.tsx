@@ -8,15 +8,12 @@ import {
   useMemo,
   useState,
 } from "react";
-import { usePathname } from "next/navigation";
 import type { Session, User } from "@supabase/supabase-js";
-import { isPublicAuthPath } from "@/lib/auth/public-paths";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { db } from "@/lib/db";
 import { getUserLearningState } from "@/lib/ai-practice/load-state";
 import { normalizeCEFR } from "@/lib/exercises/cefr";
-import AuthPanel from "./AuthPanel";
 import { WordCarousel } from "@/components/practice/session/WordCarousel";
 import { useLoadingWords } from "@/hooks/useLoadingWords";
 
@@ -43,8 +40,6 @@ export default function AuthProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const pathname = usePathname();
-  const isPublicPath = isPublicAuthPath(pathname);
   const supabaseEnabled = useMemo(() => isSupabaseConfigured(), []);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(supabaseEnabled);
@@ -127,14 +122,6 @@ export default function AuthProvider({
     return (
       <AuthContext.Provider value={value}>
         <AuthLoadingScreen />
-      </AuthContext.Provider>
-    );
-  }
-
-  if (!session && !isPublicPath) {
-    return (
-      <AuthContext.Provider value={value}>
-        <AuthPanel />
       </AuthContext.Provider>
     );
   }
