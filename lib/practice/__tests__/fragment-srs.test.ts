@@ -2,7 +2,9 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const dbMocks = vi.hoisted(() => ({
   getSRSData: vi.fn(),
-  saveSRSData: vi.fn(async (_data: SRSData) => undefined),
+  saveSRSData: vi.fn(async (data: SRSData) => {
+    void data;
+  }),
 }));
 vi.mock("@/lib/db", () => dbMocks);
 

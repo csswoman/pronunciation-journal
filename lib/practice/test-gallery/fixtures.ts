@@ -1,12 +1,6 @@
 import type { Exercise } from '@/lib/phoneme-practice/types'
 import type {
-  FillBlankExercise,
   GenericExercise,
-  MatchPairsExercise,
-  MultipleChoiceExercise,
-  ReorderWordsExercise,
-  SentenceContextExercise,
-  SentenceDictationExercise,
 } from '@/lib/exercises/types'
 import { fromGenericExercise, fromMixedExercise } from '@/lib/practice/adapters'
 import type { ExerciseSlug, PracticeContext, PracticeExercise } from '@/lib/practice/types'

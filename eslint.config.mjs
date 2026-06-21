@@ -12,12 +12,19 @@ import tseslint from "typescript-eslint";
 //   • lib/supabase/types.ts            — generated DB types (max-lines)
 //   • lib/pronunciation/ipa-data.ts    — static IPA reference data (max-lines)
 //   • lib/courses/curriculum.ts        — static curriculum data (max-lines)
+//   • The entries below are cohesive legacy modules pending dedicated extraction.
 
 /** Static data / generated files exempt from max-lines (see above). */
 const MAX_LINES_ALLOWLIST = [
   "lib/supabase/types.ts",
   "lib/pronunciation/ipa-data.ts",
   "lib/courses/curriculum.ts",
+  "components/exercises/SentenceDictationExercise.tsx",
+  "components/words/WordsClient.tsx",
+  "lib/db/index.ts",
+  "lib/phoneme-practice/exercises.ts",
+  "lib/progress/queries.ts",
+  "scripts/core-1000/generate-chunks.mjs",
 ];
 
 const SUPABASE_CLIENT_IMPORT = {

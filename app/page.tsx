@@ -13,8 +13,6 @@ import type { DailyStreakResult } from "@/lib/daily/streak-core";
 import type { DailyGoalProgress, WeakestPhonemeHome, ReviewQueueSummary } from "@/lib/home/constants";
 import type { VocabularyProgressSeed } from "@/lib/vocabulary/server-progress";
 
-const REVIEW_PREVIEW_LIMIT = 4;
-
 export default async function HomePage() {
   let reviewQueue: ReviewQueueSummary = { total: 0, newAvailable: 0, sources: [], preview: [] };
   let todaysLesson: MiniLesson | null = null;

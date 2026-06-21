@@ -1,7 +1,6 @@
 import {
   connectedSpeechDeckTitle,
   humanizeSlug,
-  isConnectedSpeechDeckSlug,
   isUuid,
   parseContentRef,
   parseWordBankId,

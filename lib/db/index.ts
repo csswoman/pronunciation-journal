@@ -310,7 +310,9 @@ export async function unarchiveCore1000Word(word: string): Promise<void> {
   const wordId = `${CORE1000_SRS_PREFIX}${word.toLowerCase()}`;
   const existing = await db.srsData.get(wordId);
   if (!existing) return;
-  const { archived: _a, archivedAt: _b, ...rest } = existing;
+  const rest = { ...existing };
+  delete rest.archived;
+  delete rest.archivedAt;
   await db.srsData.put(rest);
 }
 

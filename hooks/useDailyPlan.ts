@@ -5,7 +5,6 @@ import { useAuth } from '@/components/auth/AuthProvider'
 import {
   loadCachedDailyPlan,
   loadDoneIds,
-  loadResolvedIds,
   saveCachedDailyPlan,
   saveDoneIds,
   saveResolvedIds,
