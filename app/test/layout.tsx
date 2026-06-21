@@ -1,10 +1,5 @@
-import "@/app/styles/mini-lessons.css";
 import AuthenticatedAppLayout from "@/components/layout/AuthenticatedAppLayout";
 
-export default function MiniLessonsLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function TestLayout({ children }: { children: React.ReactNode }) {
   return <AuthenticatedAppLayout>{children}</AuthenticatedAppLayout>;
 }

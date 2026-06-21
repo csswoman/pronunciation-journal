@@ -1,5 +1,6 @@
 export const dynamic = "force-dynamic";
 
+import AuthenticatedAppLayout from "@/components/layout/AuthenticatedAppLayout";
 import PageLayout from "@/components/layout/PageLayout";
 import HomeLayout from "@/components/home/HomeLayout";
 import { getSupabaseServerUserId } from "@/lib/supabase/session";
@@ -51,19 +52,21 @@ export default async function HomePage() {
     : null
 
   return (
-    <PageLayout>
-      <HomeLayout
-        streak={dailyStreak}
-        wordsDueCount={reviewQueue.sources.find((s) => s.id === "vocabulary")?.count ?? 0}
-        soundsDueCount={reviewQueue.sources.find((s) => s.id === "sounds")?.count ?? 0}
-        conceptLesson={conceptLesson}
-        dailyGoal={dailyGoal}
-        weakestPhoneme={weakestPhoneme}
-        reviewQueue={reviewQueue}
-        vocabularyProgress={vocabularyProgress}
-        todaysLesson={todaysLesson}
-        todaysConcept={todaysConcept}
-      />
-    </PageLayout>
+    <AuthenticatedAppLayout>
+      <PageLayout>
+        <HomeLayout
+          streak={dailyStreak}
+          wordsDueCount={reviewQueue.sources.find((s) => s.id === "vocabulary")?.count ?? 0}
+          soundsDueCount={reviewQueue.sources.find((s) => s.id === "sounds")?.count ?? 0}
+          conceptLesson={conceptLesson}
+          dailyGoal={dailyGoal}
+          weakestPhoneme={weakestPhoneme}
+          reviewQueue={reviewQueue}
+          vocabularyProgress={vocabularyProgress}
+          todaysLesson={todaysLesson}
+          todaysConcept={todaysConcept}
+        />
+      </PageLayout>
+    </AuthenticatedAppLayout>
   );
 }
