@@ -37,6 +37,6 @@ export async function proxy(request: NextRequest) {
 export const config = {
   matcher: [
     "/auth/callback",
-    "/((?!api|_next/static|_next/image|favicon\\.ico|icon\\.svg|sw\\.js|manifest\\.webmanifest|.*\\.[^/]+$).*)",
+    "/((?!api|_next/static|_next/image|favicon\\.ico|icon\\.svg|manifest\\.webmanifest|sw\\.js|service-worker\\.js|.*\\.(?:json|ogg|mp3|js|css|png|svg|ico|jpg|jpeg|gif|webp|avif|woff2?|ttf|eot|map|txt|xml)$).*)",
   ],
 };
