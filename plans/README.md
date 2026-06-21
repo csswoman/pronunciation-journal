@@ -88,6 +88,10 @@ Status values: TODO | IN PROGRESS | DONE | BLOCKED (with one-line reason) | REJE
   fails closed — marginal.
 - Gemini key rotation/versioning governance: ops concern, not a code finding.
 - `dayOfYear` off-by-one in daily-plan rotation: cosmetic variance only.
+- `[STATE-10]` Zustand persistence risk: rejected. The repo currently has only
+  `lib/stores/aiCoachStore.ts` and `lib/stores/uiSoundsStore.ts`, and neither
+  uses Zustand `persist` middleware. There is no current evidence of private
+  data being persisted via Zustand.
 - Adding generic memoization to every Client Component: rejected because the
   measured cost is mounting and shipping inactive feature trees, not evidence
   of widespread expensive pure renders.
