@@ -9,7 +9,7 @@ your row when done.
 
 | Plan | Title | Priority | Effort | Depends on | Status |
 |---|---|---|---|---|---|
-| 001 | Make CI actually gate — remove `continue-on-error` and fix everything that turns red | P1 | S | — | DONE (2026-06-11, commit `d5b7f38` on `advisor/001-ci-gate-on-failures`, reviewer-verified; awaiting user merge) |
+| 001 | Make CI actually gate — remove `continue-on-error` and fix everything that turns red | P1 | S | — | REJECTED (superseded by current CI drift; see 019) |
 | 002 | Fix heatmap UTC/Lima timezone mismatch in `getDailyCompletionStats` | P2 | S | 001 | DONE (2026-06-11, commit `39aff2b` on `executor/002-heatmap-tz`, reviewer-verified; awaiting user merge) |
 | 003 | Rotate all leaked credentials and purge .env.local from git history | P1 | S | — | DONE (2026-06-12: drift check confirmed .env.local was never tracked and has no git history — git steps N/A. Key rotation skipped by owner; project is personal with no external collaborators) |
 | 004 | Fix admin access gate — wrong role check in AdminLayout and missing server-side auth on seed mutations | P2 | M | 001 | TODO |
@@ -27,20 +27,32 @@ your row when done.
 | 016 | Unified progress hub — centralize practice telemetry, radar, sounds mastery, review center | P1 | L | — | IN PROGRESS (Fase 2 done) |
 | 017 | Exercise eligibility contract — unified lemma/context rules, GenerationResult, CI generatability gate | P1 | M | — | DONE |
 | 018 | Unify pedagogical exercise feedback and beginner retry support | P1 | L | — | DONE |
+| 019 | Make the current CI gates fail on broken lint, tests, audit, and token checks | P1 | S | — | DONE (2026-06-21, CI gates blocking; audit overrides added for patched transitives) |
+| 020 | Finish the unified progress hub so every practice surface records the same session contract | P1 | L | 019 | DONE (2026-06-21) |
+| 021 | Add an error taxonomy so beginner feedback and progress analytics explain why answers fail | P1 | M | 019 | DONE (2026-06-21) |
+| 022 | Extract shared Gemini route infrastructure for fallback, validation, limits, and errors | P2 | M | 019 | DONE (2026-06-21) |
+| 023 | Refresh README and onboarding docs to match the current Next 16, pnpm, Supabase, Dexie app | P2 | S | — | DONE (2026-06-21) |
 
 Status values: TODO | IN PROGRESS | DONE | BLOCKED (with one-line reason) | REJECTED (with one-line rationale)
 
 ## Dependency notes
 
-- 001 should land before any other audit finding is executed — it establishes
-  the verification baseline (green `pnpm test` + gating CI) that all other
-  plans' done criteria rely on.
+- 019 replaces the stale 001 status in the current branch. Execute it before
+  020, 021, or 022 so CI is a trustworthy verification gate again.
+- Historical plan 001 may have been completed on another branch, but the current
+  `.github/workflows/ci.yml` still contains non-blocking checks; treat 019 as
+  the active CI plan.
 - 003 has no code dependencies and should be executed immediately — key
   rotation is time-sensitive.
 - 004, 009, 013, 014 depend on 001 for a green test baseline.
 - All other plans are independent and can be executed in any order after 001.
 - 017 is independent of 016 but pairs well with it: better exercise generation improves daily plan and progress telemetry quality.
 - 018 is independent of 016/017, but should be executed before adding more exercise types so new components target the shared feedback contract from day one.
+- 020 completes and narrows the broad 016 progress-hub direction. If 016 is still
+  active elsewhere, reconcile its remaining scope into 020 before implementation.
+- 021 builds on the feedback contract from 018 but does not depend on 020.
+- 022 should wait for 019 because route refactors need reliable tests.
+- 023 is docs-only and can be done at any time.
 
 ## Findings considered and rejected
 

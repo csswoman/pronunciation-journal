@@ -113,6 +113,14 @@ lib/practice/daily-plan/
 lib/ai-practice/tools/registry.ts
 ```
 
+### Rutas Gemini
+
+- Las rutas `/api/gemini/*` usan `lib/gemini/fallback.ts` para el orden de
+  modelos y la clasificación de reintentos.
+- Los prompts viven en `lib/ai-prompts.ts`, no inline en las rutas.
+- Los límites de frecuencia permanecen en cada endpoint salvo que exista una
+  decisión explícita para compartirlos.
+
 ---
 
 ## ESLint guardrails

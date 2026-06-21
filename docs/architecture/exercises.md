@@ -177,10 +177,38 @@ type PedagogicalFeedback = {
   example?: string
   expectedAnswer?: string
   category?: string
+  errorCode?: ExerciseErrorCode
   canRetry?: boolean
   nextAction?: 'continue' | 'retry' | 'review_hint'
 }
 ```
+
+### Taxonomía estable de errores
+
+`errorCode` es un contrato corto y tipado para feedback y analítica. El texto
+visible puede evolucionar, pero estos códigos deben conservar su significado:
+
+| Código | Uso |
+|---|---|
+| `correct` | Respuesta correcta |
+| `empty_answer` | No se proporcionó respuesta |
+| `form_error` | Flexión o forma gramatical incorrecta |
+| `word_order` | Tokens correctos en orden incorrecto |
+| `listening_omission` | Faltan palabras en una transcripción |
+| `meaning_choice` | Opción o palabra incompatible con el significado |
+| `target_not_used` | Producción sin el elemento objetivo |
+| `pair_mapping` | Asociación incorrecta entre pares |
+| `unknown` | Error determinista no clasificado |
+
+Mapeo principal: `fill_blank` produce `correct`, `empty_answer`,
+`form_error` o `meaning_choice`; `sentence_dictation`,
+`listening_omission`; `reorder_words`, `word_order`; `multiple_choice`,
+`meaning_choice`; y `match_pairs`, `pair_mapping`.
+
+Ejemplos de copy para principiantes:
+
+- `form_error`: “Almost! Check the ending — the answer is ‘drinks’.”
+- `listening_omission`: “Close. Replay the slow audio and listen for short words.”
 
 `ExerciseShell` muestra al alumno `immediate`, `explanation`,
 `correction`/`expectedAnswer`, `tip` y `example` cuando existen. Las respuestas
@@ -400,7 +428,7 @@ Además de Phoneme Practice, Generic Exercises, Lexicon, Courses, Reader, Daily 
 Todas las escrituras son **best-effort** (try/catch): un fallo de red nunca bloquea la UX. Mini-lessons comprueba `isLessonComplete` en Dexie antes de insertar para evitar duplicados en re-finish.
 
 Las respuestas genéricas pueden persistir metadatos mínimos de feedback en
-`exercise_payload`: `feedbackCategory`, `expectedAnswer`, `hintUsed` y
+`exercise_payload`: `feedbackCategory`, `errorCode`, `expectedAnswer`, `hintUsed` y
 `nextAction`. No se guarda por defecto el texto largo de explicaciones,
 correcciones AI o tips, para mantener `answer_history` orientado a analítica de
 errores y no a logging de contenido libre.

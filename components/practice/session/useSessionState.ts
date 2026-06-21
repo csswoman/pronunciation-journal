@@ -144,6 +144,7 @@ export function useSessionState(config: PracticeConfig) {
                 type: current.slug,
                 contentId: current.contentId,
                 feedbackCategory: extras?.feedback?.category,
+                errorCode: extras?.feedback?.errorCode,
                 expectedAnswer: extras?.feedback?.expectedAnswer,
                 hintUsed: extras?.feedback?.category?.includes('hint_used') || undefined,
                 nextAction: extras?.feedback?.nextAction,

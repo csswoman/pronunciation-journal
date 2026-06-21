@@ -1,4 +1,5 @@
 import type { ExerciseType } from './taxonomy';
+import type { ExerciseErrorCode } from './error-taxonomy';
 
 export type ProgressiveHint = {
   level1: string;
@@ -41,6 +42,7 @@ export type AnswerCategory = "correct" | "valid_but_wrong" | "incorrect_form" | 
 export type EvaluationResult = {
   correct: boolean;
   category: AnswerCategory;
+  errorCode: ExerciseErrorCode;
   userAnswer: string;
   expectedAnswer: string;
   feedback: {

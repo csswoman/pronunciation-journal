@@ -1,74 +1,69 @@
-# Pronunciation Journal
+# English Journal
 
-A personal web app built with **Next.js** to help you track and improve your English pronunciation — one entry at a time.
+English pronunciation journal and practice environment with deterministic
+exercises, spaced repetition, offline support, and AI-assisted coaching.
 
-## Getting Started
+## Stack
 
-Install dependencies:
+- Next.js 16 App Router and React 19
+- Tailwind CSS v4
+- Supabase for authentication and cloud data
+- Dexie/IndexedDB for offline state and synchronization
+- Gemini API for server-side AI features
+- Zustand for client state
+- Vitest for tests
+
+## Requirements
+
+- Node.js 24.x
+- pnpm 11
+
+## Quick start
 
 ```bash
-npm install
-# or
-yarn install
-# or
-pnpm install
-```
-
-Then start the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm i
+Copy-Item .env.example .env.local
 pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser to get started.
+Open [http://localhost:3000](http://localhost:3000).
 
----
+## Environment
 
-## Cloud Storage with Supabase (optional)
+Copy `.env.example` to `.env.local` and replace its placeholders. Never commit
+real credentials.
 
-By default, all data is saved locally in your browser's `localStorage` — no setup needed.
+| Variable | Purpose |
+|---|---|
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase project URL used by browser and server clients |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Public Supabase anonymous key |
+| `SUPABASE_SERVICE_ROLE_KEY` | Server-only access for privileged cache operations |
+| `NEXT_PUBLIC_SITE_URL` | Optional deployed site URL for authentication redirects |
+| `GEMINI_API_KEY` | Server-only Gemini API credential |
+| `GEMINI_ENABLE_PREVIEW_MODELS` | Optional fallback-chain feature flag; keep `false` for normal use |
 
-If you'd like to sync your data to the cloud, add your Supabase credentials to `.env.local`:
+## Verification
 
-```env
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
+```bash
+pnpm type-check
+pnpm lint
+pnpm test
+pnpm lint:design-tokens
+pnpm build
 ```
 
-With Supabase enabled, you'll see an auth screen to **sign in**, **sign up**, or **continue as guest** before accessing the journal.
+Run local verification with Node 24.x, as required by `package.json`.
 
----
+## Project guidance
 
-## Project Structure
-app/         → Next.js app router pages and layouts
-components/  → Reusable React components
-lib/         → Utility functions and libraries
-hooks/       → Custom React hooks
-styles/      → Additional stylesheets
-public/      → Static assets
+- [Contributor and agent rules](CLAUDE.md)
+- [Engineering standards](ENGINEERING_STANDARDS.md)
+- [Product direction](PRODUCT.md)
+- [Documentation index](docs/README.md)
 
----
+## License and attribution
 
-## Built With
-
-- [Next.js](https://nextjs.org/) — React framework
-- [Supabase](https://supabase.com/) — Backend and auth (optional)
-
-## Documentación
-
-Guías de arquitectura, despliegue, componentes UI y especificaciones: **[docs/README.md](docs/README.md)**
-
-## Learn More
-
-- [Next.js Documentation](https://nextjs.org/docs)
-- [Learn Next.js](https://nextjs.org/learn)
-
----
-
-## License & Attribution
-
-Sound files under `public/sounds/` are licensed under [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/) and are the respective works of Peter Isotalo, User:Erutoon, User:TFighterPilot, and User:Adamsa123.
+Sound files under `public/sounds/` are licensed under
+[CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/) and are the
+respective works of Peter Isotalo, User:Erutoon, User:TFighterPilot, and
+User:Adamsa123.
