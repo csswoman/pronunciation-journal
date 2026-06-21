@@ -80,6 +80,10 @@ Status values: TODO | IN PROGRESS | DONE | BLOCKED (with one-line reason) | REJE
   throwing; check fails closed.
 - JSON.parse uncaught in phrases route: parse is inside the model-fallback
   try/catch.
+- `[SERVER-ACTIONS-13]` No Server Actions are currently in play: rejected.
+  A repo scan on 2026-06-21 found no `use server` directives in tracked app
+  source files, so the mutation surface remains API routes plus browser-side
+  Supabase access.
 - GeminiAdapter mic-track leak: stream lifecycle is owned by
   `useSharedMicStream`/`useVoiceRecorder`, which stop tracks.
 - streak `yesterdayStr` UTC slice: only misfires at server TZ offsets beyond
