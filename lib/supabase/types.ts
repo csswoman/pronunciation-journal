@@ -510,6 +510,7 @@ export type Database = {
           target_word: string | null
           transcript: string
           updated_at: string
+          user_id: string
         }
         Insert: {
           cache_key: string
@@ -520,6 +521,7 @@ export type Database = {
           target_word?: string | null
           transcript: string
           updated_at?: string
+          user_id: string
         }
         Update: {
           cache_key?: string
@@ -530,6 +532,7 @@ export type Database = {
           target_word?: string | null
           transcript?: string
           updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
