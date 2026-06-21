@@ -31,13 +31,13 @@ export default function HomeHeaderGreeting({ userName, dateLabel }: HomeHeaderGr
         <CalendarDays size={11} aria-hidden />
         {dateLabel}
       </p>
-      <h1 className="font-editorial text-[1.65rem] font-[440] tracking-[-0.02em] leading-[1.2] text-fg">
+      <h1 className="font-editorial text-display-word font-[440] tracking-[-0.02em] leading-[1.2] text-fg">
         {greeting}
         {displayName && (
           <>, <span className="text-primary">{displayName}</span></>
         )}.
       </h1>
-      <p className="text-[0.8125rem] text-fg-muted">{sub}</p>
+      <p className="text-label text-fg-muted">{sub}</p>
     </div>
   );
 }
