@@ -72,6 +72,10 @@ function fragmentId(source: string, text: string): string {
   return `${h.slice(0, 8)}-${h.slice(8, 12)}-${h.slice(12, 16)}-${h.slice(16, 20)}-${h.slice(20)}`;
 }
 
+function cacheKey(topic: string, level: string): string {
+  return createHash("sha256").update(`${level}:${topic.toLowerCase()}`).digest("hex");
+}
+
 // ── Route handler ─────────────────────────────────────────────────────────────
 
 /**
@@ -81,7 +85,8 @@ function fragmentId(source: string, text: string): string {
  *
  * Generates sentences with Gemini, saves them to text_fragments (cache),
  * and returns the rows so the client can build exercises immediately.
- * Re-running with the same topic+level returns cached rows without calling Gemini.
+ * Grammar deck sentences are cached globally as system content. Free-form topics
+ * are cached per-user to avoid exposing user-supplied prompts across accounts.
  */
 export async function POST(req: NextRequest): Promise<NextResponse> {
   const authHeader = req.headers.get("authorization");
@@ -112,7 +117,11 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     Math.max(1, typeof body.count === "number" ? body.count : DEFAULT_COUNT),
   );
   const deckSlug = typeof body.deckSlug === "string" ? body.deckSlug : null;
-  const source = deckSlug ? `grammar-deck:${deckSlug}:ai` : `ai:${topic}:${level}`;
+  const isSharedDeckCache = Boolean(deckSlug);
+  const source = isSharedDeckCache
+    ? `grammar-deck:${deckSlug}:ai`
+    : `ai:user:${user.id}:${level}:${cacheKey(topic, level)}`;
+  const cacheOwnerId = isSharedDeckCache ? null : user.id;
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
@@ -122,12 +131,18 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   const db = createClient<Database>(supabaseUrl, serviceKey);
 
   // ── Check cache first ─────────────────────────────────────────────────────
-  const { data: cached } = await db
+  let cacheQuery = db
     .from("text_fragments")
     .select("id, content, source, title")
     .eq("source", source)
     .eq("fragment_type", "sentence")
     .limit(count);
+
+  cacheQuery = cacheOwnerId === null
+    ? cacheQuery.is("user_id", null)
+    : cacheQuery.eq("user_id", cacheOwnerId);
+
+  const { data: cached } = await cacheQuery;
 
   if (cached && cached.length >= Math.min(count, 5)) {
     return NextResponse.json({ fragments: cached, fromCache: true });
@@ -149,11 +164,11 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   // ── Save to text_fragments (cache) ────────────────────────────────────────
   const rows = sentences.map((content) => ({
     id: fragmentId(source, content),
-    user_id: null as null,
+    user_id: cacheOwnerId,
     source,
     fragment_type: "sentence" as const,
     content,
-    title: `${topic} · ${level}`,
+    title: deckSlug ? `${topic} · ${level}` : `AI sentences · ${level}`,
   }));
 
   const { data: inserted, error: insertErr } = await db
