@@ -26,6 +26,8 @@ export interface SyncOutboxEntry {
   payload: Record<string, unknown>
   /** For update/delete: the WHERE clause fields + values */
   matchKey?: Record<string, unknown>
+  /** For upsert: column(s) that define the logical conflict target */
+  onConflict?: string
   /** Current processing status */
   status: SyncStatus
   /** ISO timestamp when the entry was created */
