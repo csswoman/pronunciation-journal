@@ -120,11 +120,11 @@ claim a latency percentage without a runtime benchmark.
 
 ## Done criteria
 
-- [ ] Repeated lexicon calls reuse parsed content.
-- [ ] `/words` builds its server props in one cached pass.
-- [ ] Cached arrays cannot be mutated by preview shuffling.
-- [ ] Focused and full tests pass.
-- [ ] Production build passes.
+- [x] Repeated lexicon calls reuse parsed content.
+- [x] `/words` builds its server props in one cached pass.
+- [x] Cached arrays cannot be mutated by preview shuffling.
+- [x] Focused and full tests pass.
+- [x] Production build passes.
 
 ## STOP conditions
 
