@@ -7,6 +7,7 @@ import type {
 } from '@/lib/exercises/types'
 import type { StudyCardModel } from '@/lib/practice/study-card/model'
 import type { ReaderPassage } from '@/lib/practice/reader/types'
+import type { ExerciseErrorCode } from '@/lib/exercises/error-taxonomy'
 
 // Slugs mapped from `exercise_types` rows in Supabase.
 // Keep in sync with supabase/migrations/20260329230300_seed_exercise_types.sql.
@@ -196,6 +197,7 @@ export type PedagogicalFeedback = {
   example?: string
   expectedAnswer?: string
   category?: string
+  errorCode?: ExerciseErrorCode
   canRetry?: boolean
   nextAction?: 'continue' | 'retry' | 'review_hint'
 }

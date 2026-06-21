@@ -66,6 +66,7 @@ export function evaluateExercise(
     return {
       correct: false,
       category: "invalid",
+      errorCode: "empty_answer",
       userAnswer,
       expectedAnswer: design.correctAnswer,
       feedback: {
@@ -84,6 +85,7 @@ export function evaluateExercise(
     return {
       correct: false,
       category: "invalid",
+      errorCode: "unknown",
       userAnswer,
       expectedAnswer: design.correctAnswer,
       feedback: {
@@ -99,6 +101,7 @@ export function evaluateExercise(
     return {
       correct: true,
       category: "correct",
+      errorCode: "correct",
       userAnswer,
       expectedAnswer: design.correctAnswer,
       feedback: { immediate: "Noted." as string, explanation: "" },
@@ -156,6 +159,7 @@ function correctResult(
   return {
     correct: true,
     category: "correct",
+    errorCode: "correct",
     userAnswer,
     expectedAnswer: design.correctAnswer,
     feedback: {
@@ -182,6 +186,7 @@ function wrongResult(
   return {
     correct: false,
     category,
+    errorCode: "meaning_choice",
     userAnswer,
     expectedAnswer: design.correctAnswer,
     feedback: {
@@ -209,6 +214,7 @@ function genericWrongResult(
   return {
     correct: false,
     category: levelOfWrongness === "form_error" ? "incorrect_form" : "invalid",
+    errorCode: levelOfWrongness,
     userAnswer,
     expectedAnswer: design.correctAnswer,
     feedback: {
@@ -234,8 +240,32 @@ function genericWrongResult(
 /**
  * Analyze type of error for better feedback
  */
-function analyzeWrongness(userAnswer: string, design: ExerciseDesign): string {
+export function analyzeWrongness(
+  userAnswer: string,
+  design: ExerciseDesign
+): import("./error-taxonomy").ExerciseErrorCode {
   const normalized = normalizeAnswer(userAnswer);
+  const expected = normalizeAnswer(design.correctAnswer);
+
+  if (!normalized) return "empty_answer";
+
+  const answerTokens = normalized.split(" ");
+  const expectedTokens = expected.split(" ");
+  if (
+    answerTokens.length > 1 &&
+    answerTokens.length === expectedTokens.length &&
+    [...answerTokens].sort().join(" ") === [...expectedTokens].sort().join(" ")
+  ) {
+    return "word_order";
+  }
+
+  if (
+    design.exerciseType?.mode === "dictation" &&
+    answerTokens.length < expectedTokens.length &&
+    answerTokens.every((token) => expectedTokens.includes(token))
+  ) {
+    return "listening_omission";
+  }
 
   // Check if it looks like a form error (inflection attempt)
   if (
@@ -245,7 +275,7 @@ function analyzeWrongness(userAnswer: string, design: ExerciseDesign): string {
     return "form_error";
   }
 
-  return "unknown_error";
+  return "unknown";
 }
 
 /**

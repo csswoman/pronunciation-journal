@@ -17,6 +17,7 @@ export const defaultEvaluationEngine: EvaluationEngine = {
       return {
         correct: true,
         category: "correct",
+        errorCode: "correct",
         userAnswer: typeof actual === "object" && "value" in actual ? actual.value : "",
         expectedAnswer: expected,
         feedback: { immediate: "Noted.", explanation: "Flashcard acknowledged." },

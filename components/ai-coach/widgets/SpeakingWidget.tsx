@@ -25,6 +25,7 @@ function buildResult(target: string, scoring: ScoringResult): EvaluationResult {
   return {
     correct,
     category: correct ? "correct" : "incorrect_form",
+    errorCode: correct ? "correct" : "form_error",
     userAnswer: scoring.transcript,
     expectedAnswer: target,
     feedback: {

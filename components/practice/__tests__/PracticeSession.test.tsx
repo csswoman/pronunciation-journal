@@ -241,6 +241,7 @@ describe('PracticeSession', () => {
     const [, saved] = vi.mocked(savePracticeAnswer).mock.calls[0]
     expect(saved.exercisePayload).toMatchObject({
       feedbackCategory: 'fill_blank_word_choice',
+      errorCode: 'meaning_choice',
       expectedAnswer: 'drinks',
       nextAction: 'retry',
     })
