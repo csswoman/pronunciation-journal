@@ -123,7 +123,7 @@ export default function ProfileSettings() {
     <div className="max-w-lg mx-auto py-8 px-4 space-y-5">
       {/* Header */}
       <div>
-        <H1 className="text-h2">Profile</H1>
+        <H1 className="font-editorial text-h2">Profile</H1>
         <p className="text-sm mt-0.5 text-fg-muted">
           Manage your account information and preferences
         </p>

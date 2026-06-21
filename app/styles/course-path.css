@@ -413,11 +413,7 @@
   justify-content: center;
 }
 
-.course-path__lesson--done .course-path__st {
-  background: var(--success);
-  border-color: var(--success);
-  color: var(--on-primary);
-}
+/* done state: circle hidden, check renders inline in title */
 
 .course-path__lesson--current .course-path__st {
   background: var(--primary);
@@ -560,6 +556,20 @@
 
 .course-path__lt--link {
   text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.course-path__lt-check {
+  flex-shrink: 0;
+  color: var(--success);
+  opacity: 0.85;
+}
+
+/* When done, the st circle is empty — collapse it */
+.course-path__lesson--done .course-path__st {
+  display: none;
 }
 
 .course-path__lt--link:hover {
@@ -1316,16 +1326,153 @@
 
 @media (max-width: 480px) {
   .course-path__wrap {
-    padding-top: var(--space-6);
-    padding-inline: var(--space-4);
+    padding-top: var(--space-5);
+    padding-inline: var(--space-3);
+    padding-bottom: var(--space-12);
   }
 
+  .course-path__hero {
+    margin-bottom: var(--space-4);
+  }
+
+  .course-path__title {
+    font-size: 1.5rem;
+    letter-spacing: -0.01em;
+  }
+
+  .course-path__intro {
+    display: none;
+  }
+
+  /* Level spine: tighter pills on small screens */
+  .course-path__level {
+    min-width: 52px;
+    padding-inline: var(--space-3);
+  }
+
+  .course-path__level-lv {
+    font-size: 0.95rem;
+  }
+
+  /* Level panel head: column on mobile, % inline with meta */
+  .course-path__head {
+    flex-direction: column;
+    margin-bottom: var(--space-3);
+  }
+
+  .course-path__head h2 {
+    font-size: 1.2rem;
+  }
+
+  .course-path__prog {
+    flex-direction: row;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .course-path__prog-pct {
+    font-size: 0.9rem;
+  }
+
+  .course-path__prog-meta {
+    font-size: 0.72rem;
+    gap: var(--space-2);
+  }
+
+  /* Unit rows */
+  .course-path__urow {
+    padding: var(--space-3) var(--space-3);
+    gap: var(--space-2);
+  }
+
+  .course-path__ut {
+    font-size: 0.975rem;
+  }
+
+  .course-path__un {
+    font-size: 10px;
+  }
+
+  .course-path__um {
+    font-size: 0.75rem;
+  }
+
+  .course-path__ring {
+    width: 38px;
+    height: 38px;
+  }
+
+  .course-path__ring-inner {
+    width: 28px;
+    height: 28px;
+    font-size: 9px;
+  }
+
+  /* Lesson rows: allow title to wrap on mobile */
+  .course-path__lessons > div {
+    padding-inline: var(--space-3);
+    padding-bottom: var(--space-3);
+  }
+
+  .course-path__lesson {
+    padding: var(--space-2) var(--space-3);
+    gap: var(--space-2);
+    flex-wrap: wrap;
+  }
+
+  .course-path__lt,
+  .course-path__lt--link {
+    font-size: 0.875rem;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
+  }
+
+  .course-path__st {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+  }
+
+  .course-path__locked-label {
+    margin-left: 0;
+  }
+
+  .course-path__lk {
+    margin-left: 0;
+  }
+
+  /* Start-here / Resume: allow title to wrap */
+  .course-path__start-title,
+  .course-path__resume-title {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
+    font-size: 0.875rem;
+  }
+
+  .course-path__start-here,
+  .course-path__resume {
+    padding: var(--space-3) var(--space-4);
+    align-items: flex-start;
+  }
+
+  /* Why section */
   .course-path__why {
     margin-bottom: var(--space-6);
   }
 
-  .course-path__title {
-    font-size: 1.75rem;
+  /* IRL card */
+  .course-path__irl-card-title {
+    font-size: 0.95rem;
+  }
+
+  /* Practice suggestions */
+  .course-path__practice-current-title {
+    font-size: 0.85rem;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
   }
 }
 

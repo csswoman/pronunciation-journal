@@ -11,7 +11,7 @@
 
 import { useState, useMemo } from 'react'
 import Link from 'next/link'
-import { BookOpen, Volume2, HelpCircle, Search } from 'lucide-react'
+import { BookOpen, Search } from 'lucide-react'
 import { cn } from '@/lib/cn'
 import type { DeckSummary, DeckLevel } from '@/lib/courses/grammar-deck/decks'
 
@@ -55,7 +55,7 @@ export function DecksIndexClient({ decks }: Props) {
   }, [decks, activeLevel, query])
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-4 sm:gap-6">
       <LevelFilterBar
         levels={availableLevels}
         active={activeLevel}
@@ -111,10 +111,10 @@ function FilterChip({
       type="button"
       onClick={onClick}
       className={cn(
-        'rounded-full border px-3.5 py-1.5 text-xs font-medium transition-colors focus-ring',
+        'rounded-full border px-3.5 py-2 text-label font-medium transition-colors focus-ring sm:py-1.5 sm:text-xs',
         active
-          ? 'border-[var(--primary)] bg-[var(--primary-soft)] text-[var(--primary)]'
-          : 'border-[var(--border-subtle)] bg-[var(--surface-raised)] text-[var(--text-secondary)] hover:border-[var(--border-hover)]',
+          ? 'border-primary bg-primary-soft text-primary'
+          : 'border-border-subtle bg-surface-raised text-fg-muted hover:border-border-hover',
       )}
     >
       {label}
@@ -124,10 +124,10 @@ function FilterChip({
 
 function SearchInput({ value, onChange }: { value: string; onChange: (v: string) => void }) {
   return (
-    <div className="relative max-w-sm">
+    <div className="relative w-full sm:max-w-sm">
       <Search
         size={14}
-        className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-tertiary)]"
+        className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-fg-subtle"
         aria-hidden
       />
       <input
@@ -135,7 +135,7 @@ function SearchInput({ value, onChange }: { value: string; onChange: (v: string)
         placeholder="Search decks…"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full rounded-[var(--radius-lg)] border border-[var(--border-subtle)] bg-[var(--surface-raised)] py-2 pl-8 pr-3 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:ring-offset-0"
+        className="w-full rounded-lg border border-border-subtle bg-surface-raised py-2.5 pl-8 pr-3 text-sm text-fg placeholder:text-fg-subtle focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-0 sm:py-2"
       />
     </div>
   )
@@ -155,28 +155,36 @@ function DeckCard({ deck }: { deck: DeckSummary }) {
   return (
     <Link
       href={`/practice/decks/${deck.slug}`}
-      className="group flex flex-col gap-3 rounded-[var(--radius-xl)] border border-[var(--border-subtle)] bg-[var(--surface-raised)] p-4 transition-colors hover:border-[var(--border-hover)] hover:bg-[var(--surface-sunken)] focus-ring"
+      className="group flex flex-col gap-3 rounded-xl border border-border-subtle bg-surface-raised p-4 sm:p-4 transition-colors hover:border-border-hover hover:bg-surface-sunken focus-ring"
     >
       <div className="flex items-start justify-between gap-2">
-        <span className="rounded-full border border-[var(--border-subtle)] bg-[var(--surface-base)] px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-[var(--text-tertiary)]">
+        <span className="rounded-full border border-border-subtle bg-surface-base px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-fg-subtle">
           {LEVEL_LABELS[deck.level] ?? deck.level.toUpperCase()}
         </span>
-        <div className="flex items-center gap-2 text-[var(--text-tertiary)]">
-          {deck.hasSounds && <Volume2 size={13} aria-label="Sound practice" />}
-          {deck.hasQuiz && <HelpCircle size={13} aria-label="Includes quiz" />}
+        <div className="flex items-center gap-1.5">
+          {deck.hasSounds && (
+            <span className="rounded-full bg-surface-base border border-border-subtle px-2 py-0.5 text-[10px] font-medium text-fg-subtle">
+              Sound
+            </span>
+          )}
+          {deck.hasQuiz && (
+            <span className="rounded-full bg-surface-base border border-border-subtle px-2 py-0.5 text-[10px] font-medium text-fg-subtle">
+              Quiz
+            </span>
+          )}
         </div>
       </div>
 
-      <div className="flex flex-col gap-0.5">
-        <p className="text-[11px] text-[var(--text-tertiary)]">{deck.eyebrow}</p>
-        <p className="font-medium text-sm leading-snug text-[var(--text-primary)] group-hover:text-[var(--primary)] transition-colors">
+      <div className="flex flex-col gap-1">
+        <p className="text-xs text-fg-subtle">{deck.eyebrow}</p>
+        <p className="font-medium text-sm leading-snug text-fg group-hover:text-primary transition-colors">
           {deck.title}
         </p>
       </div>
 
-      <div className="flex items-center gap-1.5 text-[var(--text-tertiary)]">
-        <BookOpen size={12} aria-hidden />
-        <span className="text-[11px]">{deck.cardCount} cards</span>
+      <div className="flex items-center gap-1.5 text-fg-subtle">
+        <BookOpen size={13} aria-hidden />
+        <span className="text-xs">{deck.cardCount} cards</span>
       </div>
     </Link>
   )

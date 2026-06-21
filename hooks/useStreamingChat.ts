@@ -9,6 +9,7 @@ import { messagesToWire } from "@/lib/ai-practice/wire";
 import { logEvent } from "@/lib/ai-practice/events";
 import { makeStreamState, processChunk } from "@/lib/ai-practice/stream-processor";
 import type { StartRoleplayArgs } from "@/lib/ai-practice/tools/registry";
+import { persistCoachExerciseResult } from "@/lib/ai-practice/coach-progress";
 import type { AIConversationMode } from "@/lib/types";
 
 function getOrCreateDeviceId(): string {
@@ -26,6 +27,7 @@ interface UseStreamingChatOptions {
   setLearningState: (s: UserLearningState) => void;
   onSaveWord: (word: string, context: string) => void;
   onStartRoleplay: (scenario: StartRoleplayArgs["scenario"]) => void;
+  userId: string | null;
 }
 
 export function useStreamingChat({
@@ -36,6 +38,7 @@ export function useStreamingChat({
   setLearningState,
   onSaveWord,
   onStartRoleplay,
+  userId,
 }: UseStreamingChatOptions) {
   const [messages, setMessages] = useState<AIMessage[]>([]);
   const [isStreaming, setIsStreaming] = useState(false);
@@ -241,7 +244,10 @@ export function useStreamingChat({
     exercisesCompletedRef.current += 1;
     if (result.correct) correctCountRef.current += 1;
     if (learningState) setLearningState(applyExerciseResult(learningState, result));
-  }, [learningState, setLearningState]);
+    if (userId) {
+      void persistCoachExerciseResult(userId, toolName, result).catch(() => {});
+    }
+  }, [learningState, setLearningState, userId]);
 
   const resetChat = useCallback(() => {
     abortRef.current?.abort();

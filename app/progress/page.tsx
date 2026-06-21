@@ -17,7 +17,7 @@ export default async function ProgressPage() {
 
   return (
     <PageLayout cardWrapper={false}>
-      <div className="relative z-[1] flex w-full flex-col gap-7 px-6 pb-18">
+      <div className="relative z-1 flex w-full flex-col gap-7">
         <PageIntro />
         {!user ? <GuestBanner /> : <ProgressDashboard userId={user.id} />}
       </div>
@@ -66,7 +66,7 @@ async function ProgressDashboard({ userId }: { userId: string }) {
       <div className="flex justify-center pt-3">
         <Link
           href="/daily"
-          className="rounded-full px-8 py-3.5 text-base font-bold text-[var(--primary-foreground)] transition-opacity hover:opacity-90"
+          className="rounded-full px-8 py-3.5 text-base font-bold text-(--primary-foreground) transition-opacity hover:opacity-90"
           style={{ background: 'var(--primary)' }}
         >
           {data.streak.completedToday ? '▶ Practice more' : "▶ Start today's daily"}

@@ -56,6 +56,7 @@ export function useAIPractice(): UseAIPracticeReturn {
     setLearningState,
     onSaveWord: words.openSaveWordModal,
     onStartRoleplay: setActiveRoleplay,
+    userId: user?.id ?? null,
   });
 
   useEffect(() => {

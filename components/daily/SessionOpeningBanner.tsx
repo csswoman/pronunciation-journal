@@ -27,25 +27,45 @@ export default function SessionOpeningBanner({ arc }: Props) {
     0,
   )
 
-  const parts: string[] = []
-  if (arc?.topicLabel) parts.push(arc.topicLabel)
-  if (arc?.soundIpa) parts.push(`sonido /${arc.soundIpa}/`)
-
-  const hasFraming = parts.length > 0 || (learned ?? 0) > 0
+  const hasFraming = !!(arc?.topicLabel || arc?.soundIpa) || (learned ?? 0) > 0
   if (!hasFraming) return null
 
+  const learnedCount = learned ?? 0
+  const progressPct = Math.min(100, (learnedCount / CORE_1000_TARGET) * 100)
+
   return (
-    <div className="mb-5 rounded-[var(--radius-lg)] border border-border-subtle bg-surface-sunken px-4 py-3">
-      {parts.length > 0 && (
-        <p className="font-body-sm text-[var(--text-secondary)]">
-          <span className="font-semibold text-[var(--text-primary)]">Hoy: </span>
-          {parts.join(' · ')}
+    <div className="mb-5 rounded-xl border border-(--accent-border) bg-primary-50 px-4 py-3.5">
+      {(arc?.topicLabel || arc?.soundIpa) && (
+        <p className="font-body-sm text-fg-muted">
+          <span className="font-semibold text-fg">Hoy </span>
+          {arc.topicLabel && <span>{arc.topicLabel}</span>}
+          {arc.topicLabel && arc.soundIpa && (
+            <span className="text-fg-subtle"> · </span>
+          )}
+          {arc.soundIpa && (
+            <>
+              <span className="text-fg-subtle">sonido </span>
+              <code className="font-mono text-tiny font-semibold text-primary">/{arc.soundIpa}/</code>
+            </>
+          )}
         </p>
       )}
-      {(learned ?? 0) > 0 && (
-        <p className="font-caption mt-0.5 tabular-nums text-[var(--text-tertiary)]">
-          {learned} / {CORE_1000_TARGET} palabras esenciales
-        </p>
+      {learnedCount > 0 && (
+        <div className="mt-2">
+          <div className="mb-1.5 flex items-baseline justify-between">
+            <p className="font-caption text-fg-subtle">Core 1000</p>
+            <p className="font-caption text-fg-subtle">
+              <span className="tabular-nums font-medium text-fg-muted">{learnedCount}</span>
+              <span> / {CORE_1000_TARGET}</span>
+            </p>
+          </div>
+          <div className="h-1.5 w-full overflow-hidden rounded-full bg-primary-100">
+            <div
+              className="h-full rounded-full bg-primary transition-[width] duration-500"
+              style={{ width: `${progressPct}%` }}
+            />
+          </div>
+        </div>
       )}
     </div>
   )

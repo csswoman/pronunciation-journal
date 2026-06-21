@@ -13,8 +13,8 @@ export default async function PracticeReviewPage() {
   const summary = user ? await getReviewHubSummary(user.id) : null
 
   return (
-    <PageLayout cardWrapper={false}>
-      <div className="w-full px-6 pb-18">
+    <PageLayout cardWrapper={false} className="pb-18">
+      <div className="w-full">
         <header className="flex flex-col gap-2 pt-2 pb-8">
           <span className="text-tiny font-semibold uppercase tracking-[0.18em] text-fg-subtle">
             Spaced repetition

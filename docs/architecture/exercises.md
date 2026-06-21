@@ -311,7 +311,7 @@ SoundLabPage
 
 | Tabla | Qué guarda |
 |---|---|
-| `exercise_types` | Catálogo de tipos: `pick_word`, `pick_sound`, `minimal_pair`, `dictation`, `speak_word`, `fill_blank`, `sentence_dictation`, `match_pairs`, `reorder_words` |
+| `exercise_types` | Catálogo de tipos: `pick_word`, `pick_sound`, `minimal_pair`, `dictation`, `speak_word`, `fill_blank`, `sentence_dictation`, `match_pairs`, `reorder_words`, `multiple_choice` |
 | `answer_history` | Cada respuesta: `user_id`, `exercise_type_id`, `is_correct`, `user_answer`, `target_word`, `time_ms`, `exercise_payload` (JSONB con `sourceRef`), `sound_id` (nullable) |
 | `user_sound_progress` | Progreso SM-2 por usuario × sonido |
 | `deck_entry_progress` | Progreso SM-2 por usuario × entrada de deck |
@@ -353,6 +353,18 @@ El algoritmo SM-2 está implementado en varias variantes:
 | `text_fragments` | Dexie `srsData`, clave `fragment:<id>` (local) | `upsertFragmentSrs` |
 
 Los `text_fragments` son system sentences (`user_id = null`), así que su estado de repaso es per-usuario y local (Dexie), no una tabla Supabase. Los fragmentos vencidos se priorizan en la sesión vía `orderFragmentsByDue` (`lib/practice/fragment-priority.ts`).
+
+### Features conectadas vía `savePracticeAnswer`
+
+Además de Phoneme Practice, Generic Exercises, Lexicon, Courses, Reader, Daily y Core 1000, estas UIs escriben al flujo unificado de progreso:
+
+| Feature | Call site | `context` | Qué persiste |
+|---|---|---|---|
+| **AI Coach** (fill-blank, multiple choice, speaking) | `answerToolCall` → `persistCoachExerciseResult` (`lib/ai-practice/coach-progress.ts`) | `ai_coach` | `answer_history` + `topic_srs` cuando hay `topic` |
+| **Interview** (turnos de pronunciación) | `InterviewResults` al montar resultados | `ai_coach` | `answer_history` por turno (sin `topic` → sin topic-SRS) |
+| **Mini-lessons** | `MiniLessonQuiz` al terminar quiz; `MiniLessonComplete` con "Mark as read" | `courses` (vía `recordLessonComplete`) | Dexie `completedLessons` + una fila `answer_history` por lección |
+
+Todas las escrituras son **best-effort** (try/catch): un fallo de red nunca bloquea la UX. Mini-lessons comprueba `isLessonComplete` en Dexie antes de insertar para evitar duplicados en re-finish.
 
 ### Presentación antes de testear (noticing)
 
