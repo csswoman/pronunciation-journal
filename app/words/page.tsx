@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { getCategories, getCategoryWords, getPreviewTags } from "@/lib/lexicon/categories";
+import { getWordsPageLexicon } from "@/lib/lexicon/categories";
 import {
   countMyWords,
   countUserDecks,
@@ -12,10 +12,7 @@ import { WordsClient } from "@/components/words/WordsClient";
 import type { LessonViewModel } from "@/lib/lexicon/types";
 
 async function WordsContent() {
-  const categories = getCategories();
-  const categoryWordIds = new Map(
-    categories.map(cat => [cat.id, getCategoryWords(cat.id).map(w => w.id)])
-  );
+  const { categories, categoryWordIds, previewTags } = getWordsPageLexicon();
 
   let progressMap: Map<string, { mastered: number; reviewing: number }>;
   let myWordsCount = 0;
@@ -53,7 +50,7 @@ async function WordsContent() {
       wordsCompleted: mastered,
       wordsReviewing: reviewing,
       progress,
-      tags: getPreviewTags(cat.id),
+      tags: previewTags.get(cat.id) ?? [],
     };
   });
 

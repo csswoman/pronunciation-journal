@@ -103,6 +103,10 @@ independent and can be parallelized after the two client-bundle plans.
 - Cached canonical arrays must not be exposed to in-place shuffling or mutation.
 - If content becomes runtime-editable, add explicit invalidation rather than an
   undocumented TTL.
+- The lexicon cache is enforced by tests: a complete `/words` read model reads
+  `index.json` and each category JSON once, and subsequent calls perform no
+  additional file or directory reads. Preview shuffling operates on a copy of
+  the cached canonical word order.
 
 ## Measurement procedure
 
@@ -147,3 +151,4 @@ A performance PR should satisfy all applicable checks:
 | 2026-06-21 | `4c35b5e` | Initial audit baseline | Root shared entry 196.6 KB gzip; `/` 299.5 KB; `/words` 225.8 KB; `/courses` 207.6 KB |
 | 2026-06-21 | `26c3d55` | Defer global AI Coach and Quick Add via `next/dynamic` + conditional mount | Root shared entry 148.3 KB gzip (−48.3 KB); `/` 254.4 KB gzip (−45.1 KB); AI Coach / Quick Add excluded from initial `/` route set |
 | 2026-06-21 | `a3dd495` | Split `/words` by tab runtime and defer inactive tab chunks | `/words` 153.0 KB gzip (−72.8 KB); inactive My Words / Decks runtimes now load only when their tab is active |
+| 2026-06-21 | local | Cache parsed lexicon datasets in the server process | Cold `/words` model reads each of the 10 JSON files once; warm reads perform no additional filesystem reads; no latency percentage claimed |
