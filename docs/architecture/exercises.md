@@ -36,7 +36,8 @@ Hay dos sistemas de ejercicios en la app, separados por dominio:
 | **Generic Exercises** | Vocabulario / comprensión | `/practice/exercises` | `word_bank`, `text_fragments`, `words` |
 
 Ambos sistemas comparten:
-- El componente `ExerciseCard` (feedback visual de respuesta correcta/incorrecta)
+- El contrato `PedagogicalFeedback` para feedback de ejercicios: mensaje inmediato,
+  explicación, corrección/respuesta esperada, pista, ejemplo y acción sugerida.
 - La tabla `answer_history` en Supabase (registro de todas las respuestas)
 - El catálogo `exercise_types` (slug + label por tipo)
 - La lógica Levenshtein para validación tolerante de texto
@@ -161,6 +162,38 @@ Los ejercicios se generan **on-the-fly en cliente** y se cachean en Dexie (TTL 1
 **Utilidades:** `lib/exercises/utils.ts` (`shuffle`, `pick`, `exerciseId`; re-exporta `hasEnoughContext`)
 
 Cada ejercicio tiene un **id determinista** (hash djb2 de `type + sourceRef.id`) que garantiza deduplicación en Dexie y en `answer_history`.
+
+### Contrato de feedback pedagogico
+
+Los ejercicios genéricos reportan el resultado mediante `PracticeSubmitHandler`
+y pueden adjuntar `feedback?: PedagogicalFeedback`:
+
+```ts
+type PedagogicalFeedback = {
+  immediate: string
+  explanation?: string
+  correction?: string
+  tip?: string
+  example?: string
+  expectedAnswer?: string
+  category?: string
+  canRetry?: boolean
+  nextAction?: 'continue' | 'retry' | 'review_hint'
+}
+```
+
+`ExerciseShell` muestra al alumno `immediate`, `explanation`,
+`correction`/`expectedAnswer`, `tip` y `example` cuando existen. Las respuestas
+correctas sin feedback detallado pueden avanzar solas tras una pausa breve. Las
+respuestas incorrectas con explicación, pista, ejemplo o corrección no avanzan
+solas: el alumno puede leer, continuar o usar **Try again** cuando `canRetry`
+es `true`.
+
+El soporte para principiantes es determinista primero. `fill_blank`,
+`sentence_dictation`, `reorder_words`, `multiple_choice` y `match_pairs`
+generan feedback desde el payload local del ejercicio. Gemini se reserva para
+grading de producción (`written_production` / `spoken_production`) salvo que un
+plan futuro añada explicaciones AI para ejercicios deterministas.
 
 ---
 
@@ -365,6 +398,12 @@ Además de Phoneme Practice, Generic Exercises, Lexicon, Courses, Reader, Daily 
 | **Mini-lessons** | `MiniLessonQuiz` al terminar quiz; `MiniLessonComplete` con "Mark as read" | `courses` (vía `recordLessonComplete`) | Dexie `completedLessons` + una fila `answer_history` por lección |
 
 Todas las escrituras son **best-effort** (try/catch): un fallo de red nunca bloquea la UX. Mini-lessons comprueba `isLessonComplete` en Dexie antes de insertar para evitar duplicados en re-finish.
+
+Las respuestas genéricas pueden persistir metadatos mínimos de feedback en
+`exercise_payload`: `feedbackCategory`, `expectedAnswer`, `hintUsed` y
+`nextAction`. No se guarda por defecto el texto largo de explicaciones,
+correcciones AI o tips, para mantener `answer_history` orientado a analítica de
+errores y no a logging de contenido libre.
 
 ### Presentación antes de testear (noticing)
 

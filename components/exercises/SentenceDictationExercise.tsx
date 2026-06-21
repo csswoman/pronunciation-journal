@@ -13,11 +13,11 @@ import { useState, useRef, useEffect, useCallback } from 'react'
 import { Lightbulb } from 'lucide-react'
 import { cn } from '@/lib/cn'
 import type { SentenceDictationExercise as SentenceDictationExerciseType } from '@/lib/exercises/types'
+import { buildPedagogicalFeedback } from '@/lib/exercises/feedback'
 
 interface Props {
   exercise: SentenceDictationExerciseType
-  onResult: (isCorrect: boolean, userAnswer: string, timeMs: number) => void
-  onHint?: () => void
+  onResult: (isCorrect: boolean, userAnswer: string, timeMs: number, extras?: { feedback?: ReturnType<typeof buildPedagogicalFeedback> }) => void
   hintCount?: number
 }
 
@@ -31,7 +31,7 @@ function normalize(text: string): string {
     .replace(/\s+/g, ' ')
 }
 
-export function SentenceDictationExercise({ exercise, onResult, onHint, hintCount = 0 }: Props) {
+export function SentenceDictationExercise({ exercise, onResult, hintCount = 0 }: Props) {
   const [input, setInput] = useState('')
   const [state, setState] = useState<AnswerState>('idle')
   const [isPlaying, setIsPlaying] = useState(false)
@@ -118,7 +118,10 @@ export function SentenceDictationExercise({ exercise, onResult, onHint, hintCoun
     if (state !== 'idle' || !input.trim()) return
     const isCorrect = normalize(input) === normalize(exercise.sentence)
     setState(isCorrect ? 'correct' : 'wrong')
-    onResult(isCorrect, input.trim(), Date.now() - startMs.current)
+    const userAnswer = input.trim()
+    onResult(isCorrect, userAnswer, Date.now() - startMs.current, {
+      feedback: buildPedagogicalFeedback(exercise, isCorrect, userAnswer, { hintUsed: hintCount > 0 }),
+    })
   }
 
   function handleKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {

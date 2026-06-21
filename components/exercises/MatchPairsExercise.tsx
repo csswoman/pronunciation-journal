@@ -15,11 +15,12 @@ import { cn } from '@/lib/cn'
 import { shuffle } from '@/lib/exercises/utils'
 import { speak } from '@/lib/phoneme-practice/tts'
 import type { MatchPairsExercise as MatchPairsExerciseType } from '@/lib/exercises/types'
+import { buildPedagogicalFeedback } from '@/lib/exercises/feedback'
 import { useUISounds } from '@/hooks/useUISounds'
 
 interface Props {
   exercise: MatchPairsExerciseType
-  onResult: (isCorrect: boolean, userAnswer: string, timeMs: number) => void
+  onResult: (isCorrect: boolean, userAnswer: string, timeMs: number, extras?: { feedback?: ReturnType<typeof buildPedagogicalFeedback> }) => void
 }
 
 type MatchResult = Record<string, 'correct' | 'wrong' | null>
@@ -98,15 +99,23 @@ export function MatchPairsExercise({ exercise, onResult }: Props) {
     if (submitted) return
     const newResults: MatchResult = {}
     let allCorrect = true
+    let correctPairCount = 0
     for (const pair of exercise.pairs) {
       const correct = isPairCorrect(pair.id)
       newResults[pair.id] = correct ? 'correct' : 'wrong'
+      if (correct) correctPairCount += 1
       if (!correct) allCorrect = false
     }
     setResults(newResults)
     setSubmitted(true)
     if (allCorrect) playCorrect(); else playWrong()
-    onResult(allCorrect, JSON.stringify(matches), Date.now() - startMs.current)
+    const userAnswer = JSON.stringify(matches)
+    onResult(allCorrect, userAnswer, Date.now() - startMs.current, {
+      feedback: buildPedagogicalFeedback(exercise, allCorrect, userAnswer, {
+        correctPairCount,
+        totalPairCount: exercise.pairs.length,
+      }),
+    })
   }
 
   const recomputeConnections = useCallback(() => {

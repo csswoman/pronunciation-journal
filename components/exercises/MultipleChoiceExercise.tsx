@@ -9,11 +9,12 @@
 import { useState, useRef, useEffect } from 'react'
 import { cn } from '@/lib/cn'
 import type { MultipleChoiceExercise as MultipleChoiceExerciseType } from '@/lib/exercises/types'
+import { buildPedagogicalFeedback } from '@/lib/exercises/feedback'
 import { useUISounds } from '@/hooks/useUISounds'
 
 interface Props {
   exercise: MultipleChoiceExerciseType
-  onResult: (isCorrect: boolean, userAnswer: string, timeMs: number) => void
+  onResult: (isCorrect: boolean, userAnswer: string, timeMs: number, extras?: { feedback?: ReturnType<typeof buildPedagogicalFeedback> }) => void
   hintCount?: number
 }
 
@@ -38,7 +39,10 @@ export function MultipleChoiceExercise({ exercise, onResult, hintCount = 0 }: Pr
     setSelected(idx)
     setState(isCorrect ? 'correct' : 'wrong')
     if (isCorrect) playCorrect(); else playWrong()
-    onResult(isCorrect, exercise.options[idx], Date.now() - startMs.current)
+    const userAnswer = exercise.options[idx]
+    onResult(isCorrect, userAnswer, Date.now() - startMs.current, {
+      feedback: buildPedagogicalFeedback(exercise, isCorrect, userAnswer, { hintUsed: hintCount > 0 }),
+    })
   }
 
   return (

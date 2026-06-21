@@ -105,6 +105,7 @@ export type PracticeAnswer = {
   timeMs: number
   /** 0-100, currently used by speak_word. */
   score?: number
+  feedback?: PedagogicalFeedback
   contentId: string
   context: PracticeContext
   /** Forwarded to `answer_history.sound_id` for phoneme exercises. */
@@ -184,8 +185,25 @@ export type DailyPlan = {
 export type PracticeSubmitHandler = (
   isCorrect: boolean,
   userAnswer: string,
-  extras?: { score?: number },
+  extras?: PracticeSubmitExtras,
 ) => void
+
+export type PedagogicalFeedback = {
+  immediate: string
+  explanation?: string
+  correction?: string
+  tip?: string
+  example?: string
+  expectedAnswer?: string
+  category?: string
+  canRetry?: boolean
+  nextAction?: 'continue' | 'retry' | 'review_hint'
+}
+
+export type PracticeSubmitExtras = {
+  score?: number
+  feedback?: PedagogicalFeedback
+}
 
 export type PracticeConfig = {
   context: PracticeContext
