@@ -2,8 +2,7 @@
 
 import React, { useEffect, useState, useCallback } from "react";
 import { useAuth } from "@/components/auth/AuthProvider";
-import type { Tables } from "@/lib/supabase/types";
-import { getDeckCardsWithProgress, upsertCardProgress } from "@/lib/decks/queries";
+import { getDeckCardsWithProgress, upsertCardProgress, type DeckListItem } from "@/lib/decks/queries";
 import { DIFFICULTY_CONFIG, type DifficultyKey } from "./StudyDifficultyButtons";
 import { sm2, LEVEL_LABELS } from "./study-utils";
 import { StudyLeftPanel } from "./StudyLeftPanel";
@@ -14,8 +13,6 @@ import { StudyEmptyStates } from "./StudyEmptyStates";
 import { StudyHeader } from "./StudyHeader";
 import { StudyCenterCard } from "./StudyCenterCard";
 
-type Deck = Tables<"decks">;
-
 interface SessionStats {
   seen: number;
   again: number;
@@ -25,7 +22,7 @@ interface SessionStats {
 }
 
 interface StudyModalProps {
-  deck: Deck;
+  deck: DeckListItem;
   onClose: () => void;
 }
 

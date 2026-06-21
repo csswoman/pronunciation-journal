@@ -1,54 +1,35 @@
-"use client";
-
-import { useState, useCallback, useEffect } from "react";
 import Link from "next/link";
-import type { CefrLevelId, CoursePathCurriculum, CoursePathTrackId } from "@/lib/courses/types";
+import { ArrowRight, MicVocal } from "lucide-react";
+import CoursePathAutoLevelSync from "@/components/courses/CoursePathAutoLevelSync";
 import CoursePathLevelPanel from "@/components/courses/CoursePathLevelPanel";
-import CoursePracticeSuggestions from "@/components/courses/CoursePracticeSuggestions";
 import { CoursePathLegendIconDisplay } from "@/components/courses/CoursePathIcons";
-import { MicVocal, ArrowRight, ChevronRight } from "lucide-react";
+import { COURSE_PATH_CURRICULUM } from "@/lib/courses/curriculum";
+import { parseCefrLevelId } from "@/lib/courses/curriculumIndex";
+import type { CefrLevelId } from "@/lib/courses/types";
 import { cn } from "@/lib/cn";
-import { db } from "@/lib/db";
-import { lessonProgressKey } from "@/lib/courses/progress";
 
 const DEFAULT_LEVEL: CefrLevelId = "a1";
 
 interface CoursePathPageProps {
-  curriculum: CoursePathCurriculum;
+  levelParam?: string;
 }
 
-export default function CoursePathPage({ curriculum }: CoursePathPageProps) {
-  const [levelId, setLevelId] = useState<CefrLevelId>(DEFAULT_LEVEL);
-  const [allOpenUnits, setAllOpenUnits] = useState<Record<string, Record<string, boolean>>>({});
-  const [whyOpen, setWhyOpen] = useState(false);
-  const [completedIds, setCompletedIds] = useState<Set<string>>(new Set());
-
-  // Auto-select the user's active level on mount and build completed lesson set
-  useEffect(() => {
-    db.completedLessons.toArray().then((rows) => {
-      setCompletedIds(new Set(rows.map((r) => lessonProgressKey(r.courseSlug as CoursePathTrackId, r.lessonSlug))));
-      if (rows.length === 0) return;
-      const counts: Record<string, number> = {};
-      for (const r of rows) counts[r.courseSlug] = (counts[r.courseSlug] ?? 0) + 1;
-      const levelIds = curriculum.levels.map((l) => l.id);
-      // Find the deepest level that has any progress
-      const activeLevel = [...levelIds].reverse().find((id) => counts[id] > 0);
-      if (activeLevel) setLevelId(activeLevel as CefrLevelId);
-    }).catch(() => {});
-  }, [curriculum.levels]);
-
-  const openUnitsForLevel = allOpenUnits[levelId] ?? {};
-  const setOpenUnitsForLevel = useCallback(
-    (updater: (prev: Record<string, boolean>) => Record<string, boolean>) => {
-      setAllOpenUnits((all) => ({ ...all, [levelId]: updater(all[levelId] ?? {}) }));
-    },
-    [levelId]
-  );
-
-  const level = curriculum.levels.find((l) => l.id === levelId)!;
+export default function CoursePathPage({ levelParam }: CoursePathPageProps) {
+  const selectedLevelId = parseCefrLevelId(levelParam) ?? DEFAULT_LEVEL;
+  const hasExplicitLevel = parseCefrLevelId(levelParam) !== null;
+  const selectedLevel =
+    COURSE_PATH_CURRICULUM.levels.find((level) => level.id === selectedLevelId) ??
+    COURSE_PATH_CURRICULUM.levels[0];
 
   return (
     <div className="course-path">
+      <CoursePathAutoLevelSync
+        hasExplicitLevel={hasExplicitLevel}
+        levels={COURSE_PATH_CURRICULUM.levels.map((level) => ({
+          id: level.id as CefrLevelId,
+          lessonIds: level.units.flatMap((unit) => unit.lessons.map((lesson) => lesson.id)),
+        }))}
+      />
       <div className="course-path__wrap">
         <header className="course-path__hero">
           <h1 className="course-path__title">Tu ruta de inglés</h1>
@@ -58,77 +39,49 @@ export default function CoursePathPage({ curriculum }: CoursePathPageProps) {
           </p>
         </header>
 
-        <div className="course-path__spine" role="tablist" aria-label="CEFR level">
-          {curriculum.levels.map((lv) => (
-            <button
-              key={lv.id}
-              id={`tab-${lv.id}`}
-              type="button"
-              role="tab"
-              aria-selected={levelId === lv.id}
-              aria-controls="course-level-panel"
-              className={cn(
-                "course-path__level",
-                levelId === lv.id && "course-path__level--on"
-              )}
-              onClick={() => setLevelId(lv.id as CefrLevelId)}
-            >
-              <div className="course-path__level-lv">{lv.spineLabel}</div>
-            </button>
-          ))}
-        </div>
+        <nav className="course-path__spine" aria-label="CEFR level">
+          {COURSE_PATH_CURRICULUM.levels.map((level) => {
+            const isActive = level.id === selectedLevelId;
+            const href = level.id === DEFAULT_LEVEL ? "/courses" : `/courses?level=${level.id}`;
 
-        <div
-          key={levelId}
-          id="course-level-panel"
-          role="tabpanel"
-          aria-labelledby={`tab-${levelId}`}
-          className="course-path__panel-enter"
-        >
+            return (
+              <Link
+                key={level.id}
+                href={href}
+                aria-current={isActive ? "page" : undefined}
+                className={cn("course-path__level", isActive && "course-path__level--on")}
+              >
+                <div className="course-path__level-lv">{level.spineLabel}</div>
+              </Link>
+            );
+          })}
+        </nav>
+
+        <div className="course-path__panel-enter">
           <CoursePathLevelPanel
-            level={level}
-            openUnits={openUnitsForLevel}
-            onToggleUnit={setOpenUnitsForLevel}
-            electiveTracks={curriculum.electiveTracks}
+            level={selectedLevel}
+            electiveTracks={COURSE_PATH_CURRICULUM.electiveTracks}
           />
         </div>
 
-        <CoursePracticeSuggestions
-          level={level}
-          levelId={levelId}
-          completedIds={completedIds}
-        />
-
-        <div className="course-path__why">
-          <button
-            type="button"
-            className="course-path__why-summary"
-            onClick={() => setWhyOpen((v) => !v)}
-            aria-expanded={whyOpen}
-          >
-            <ChevronRight
-              className={cn("course-path__why-chev", whyOpen && "course-path__why-chev--open")}
-              size={15}
-              aria-hidden
-            />
-            <span>{curriculum.why.title}</span>
-          </button>
-          {whyOpen && (
-            <div className="course-path__why-body">
-              {curriculum.why.paragraphs.map((p, i) => (
-                <p key={i}>{p}</p>
-              ))}
-              <Link href="/practice/sounds" className="course-path__sound-lab-cta">
-                <MicVocal size={16} strokeWidth={2} aria-hidden />
-                Ir a Sound Lab
-                <ArrowRight size={14} aria-hidden />
-              </Link>
-            </div>
-          )}
-        </div>
+        <details className="course-path__why" open>
+          <summary className="course-path__why-summary">
+            <span>{COURSE_PATH_CURRICULUM.why.title}</span>
+          </summary>
+          <div className="course-path__why-body">
+            {COURSE_PATH_CURRICULUM.why.paragraphs.map((paragraph, index) => (
+              <p key={index}>{paragraph}</p>
+            ))}
+            <Link href="/practice/sounds" className="course-path__sound-lab-cta">
+              <MicVocal size={16} strokeWidth={2} aria-hidden />
+              Ir a Sound Lab
+              <ArrowRight size={14} aria-hidden />
+            </Link>
+          </div>
+        </details>
 
         <div className="course-path__legend" role="list" aria-label="Icon legend">
-          {curriculum.legend.map((item) => (
+          {COURSE_PATH_CURRICULUM.legend.map((item) => (
             <div key={item.icon} className="course-path__lg" role="listitem">
               <CoursePathLegendIconDisplay icon={item.icon} />
               <span>{item.description}</span>

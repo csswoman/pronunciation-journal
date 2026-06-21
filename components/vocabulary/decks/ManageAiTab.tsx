@@ -1,13 +1,13 @@
 "use client";
 
+import type { DeckListItem } from "@/lib/decks/queries";
 import type { Tables } from "@/lib/supabase/types";
 import { GeminiSuggestPanel } from "./GeminiSuggestPanel";
 
-type Deck = Tables<"decks">;
 type Entry = Tables<"entries">;
 
 interface ManageAiTabProps {
-  deck: Deck;
+  deck: DeckListItem;
   entries: Entry[];
   onAddEntry: (word?: string, meaning?: string) => Promise<void>;
 }

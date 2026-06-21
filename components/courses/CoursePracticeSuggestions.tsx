@@ -1,10 +1,3 @@
-// Planned structure:
-// <CoursePracticeSuggestions>
-//   <heading "Practica este nivel" />
-//   <current lesson card (primary CTA)>
-//   <done lessons list (up to 2, for review)>
-// </CoursePracticeSuggestions>
-
 import Link from "next/link";
 import { ArrowRight, Play, RotateCcw } from "lucide-react";
 import { deriveLevelView } from "@/lib/courses/progress";
@@ -23,13 +16,9 @@ export default function CoursePracticeSuggestions({
   completedIds,
 }: CoursePracticeSuggestionsProps) {
   const view = deriveLevelView(level, completedIds);
-  const allLessons = view.units.flatMap((u) => u.lessons);
-
-  const current = allLessons.find((l) => l.state === "current" && l.slug);
-  const done = allLessons
-    .filter((l) => l.state === "done" && l.slug)
-    .slice(-2)
-    .reverse();
+  const allLessons = view.units.flatMap((unit) => unit.lessons);
+  const current = allLessons.find((lesson) => lesson.state === "current" && lesson.slug);
+  const done = allLessons.filter((lesson) => lesson.state === "done" && lesson.slug).slice(-2).reverse();
 
   if (!current && done.length === 0) return null;
 
@@ -38,10 +27,7 @@ export default function CoursePracticeSuggestions({
       <h2 className="course-path__practice-suggestions-heading">Practica este nivel</h2>
 
       {current && (
-        <Link
-          href={studyLessonPath(levelId, current.number)}
-          className="course-path__practice-current"
-        >
+        <Link href={studyLessonPath(levelId, current.number)} className="course-path__practice-current">
           <span className="course-path__practice-current-icon" aria-hidden>
             <Play size={14} className="fill-current" />
           </span>

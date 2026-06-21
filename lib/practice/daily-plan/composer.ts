@@ -1,6 +1,10 @@
 import { fetchCoreWordsForDay } from '@/lib/core-1000/client-fetch'
 import { db } from '@/lib/db'
-import { getAllSounds, getAllWords, getMinimalPairs, getWordsBySound } from '@/lib/phoneme-practice/queries'
+import {
+  getAllSounds,
+  getSessionDataset,
+  getSessionDatasets,
+} from '@/lib/phoneme-practice/queries'
 import { deckSlugForWeakTopics } from '@/lib/practice/topic-decks'
 import { buildFailedSentencesMixStep } from '@/lib/review/build-failed-exercises'
 import {
@@ -9,7 +13,7 @@ import {
 import { mergeReviewWords } from '@/lib/review/merge-words'
 import { dominantTopicLabel } from '@/lib/practice/topic-labels'
 import type { DailyPlan, DailyStep, SessionArc } from '@/lib/practice/types'
-import type { Sound, SoundWord } from '@/lib/phoneme-practice/types'
+import type { Sound } from '@/lib/phoneme-practice/types'
 import { buildConnectedSpeechStep, buildSentenceBuilderStep } from './async-step-builders'
 import { DAILY_PLAN_STEP_COUNT, WORD_REVIEW_WORD_COUNT } from './constants'
 import {
@@ -42,20 +46,14 @@ export type ReviewPlan = {
 export async function buildReviewPlan(userId: string): Promise<ReviewPlan> {
   const reviewContext = 'review' as const
 
-  const [failedItems, weakWords, reviewWords, dueSounds, allSounds, allWords] = await Promise.all([
+  const [failedItems, weakWords, reviewWords, dueSounds] = await Promise.all([
     fetchRecentFailedSentences(userId, 5),
     fetchWeakWords(userId, WORD_REVIEW_WORD_COUNT),
     fetchDueReviewWords(userId, WORD_REVIEW_WORD_COUNT),
     fetchDueSounds(userId),
-    getAllSounds(),
-    getAllWords(),
   ])
 
   const mergedWords = mergeReviewWords(weakWords, reviewWords, WORD_REVIEW_WORD_COUNT)
-
-  const allWordsBySoundId = new Map<number, SoundWord[]>(
-    allSounds.map((s) => [s.id, allWords.filter((w) => w.sound_id === s.id)]),
-  )
 
   const steps: DailyStep[] = []
 
@@ -70,21 +68,24 @@ export async function buildReviewPlan(userId: string): Promise<ReviewPlan> {
 
   // Sounds: use due sounds when available, fall back to all practiced sounds.
   const soundsToReview = dueSounds.length > 0 ? dueSounds : await fetchAllPracticedSounds(userId, 4)
+  const reviewDatasets = await getSessionDatasets(soundsToReview.map((sound) => sound.id))
 
   for (const sound of soundsToReview) {
-    const targetWords = allWordsBySoundId.get(sound.id) ?? []
-    const pairs = await getMinimalPairs(sound.id)
+    const dataset = reviewDatasets.get(sound.id)
+    if (!dataset) continue
 
+    const { targetSound, sounds, wordsBySoundId, minimalPairs } = dataset
+    const targetWords = wordsBySoundId.get(targetSound.id) ?? []
     const focus = buildPhonemeFocusStep(
-      sound,
+      targetSound,
       targetWords,
-      allSounds,
-      allWordsBySoundId,
-      pairs,
+      sounds,
+      wordsBySoundId,
+      minimalPairs,
       true,
       reviewContext,
     )
-    if (focus) steps.push({ ...focus, id: `review_sound:${sound.id}`, kind: 'phoneme_focus' })
+    if (focus) steps.push({ ...focus, id: `review_sound:${targetSound.id}`, kind: 'phoneme_focus' })
   }
 
   const totalExercises = steps.reduce((sum, s) => sum + s.exercises.length, 0)
@@ -97,10 +98,7 @@ export async function buildReviewPlan(userId: string): Promise<ReviewPlan> {
 }
 
 export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
-  const [allSounds, allWords] = await Promise.all([getAllSounds(), getAllWords()])
-  const allWordsBySoundId = new Map<number, SoundWord[]>(
-    allSounds.map((s) => [s.id, allWords.filter((w) => w.sound_id === s.id)]),
-  )
+  const allSounds = await getAllSounds()
 
   let reviewWords = await fetchNewWords(userId, WORD_REVIEW_WORD_COUNT)
   if (reviewWords.length < WORD_REVIEW_WORD_COUNT) {
@@ -143,22 +141,20 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
   const reviewSteps: DailyStep[] = []
 
   if (primarySound) {
-    const [targetWords, pairs] = await Promise.all([
-      getWordsBySound(primarySound.id),
-      getMinimalPairs(primarySound.id),
-    ])
+    const { sounds, wordsBySoundId, minimalPairs } = await getSessionDataset(primarySound.id)
+    const targetWords = wordsBySoundId.get(primarySound.id) ?? []
 
     const focus = buildPhonemeFocusStep(
       primarySound,
       targetWords,
-      allSounds,
-      allWordsBySoundId,
-      pairs,
+      sounds,
+      wordsBySoundId,
+      minimalPairs,
       hasProgress,
     )
     if (focus) newSteps.push(focus)
 
-    const minimal = buildMinimalPairsStep(primarySound, pairs)
+    const minimal = buildMinimalPairsStep(primarySound, minimalPairs)
     if (minimal) newSteps.push(minimal)
 
     const listening = buildListeningStep(primarySound, targetWords)
@@ -214,18 +210,39 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
 
   let offset = 1
   const usedIds = new Set(steps.map((s) => s.id))
+  const fallbackSounds: Sound[] = []
   while (steps.length < DAILY_PLAN_STEP_COUNT && offset <= allSounds.length) {
     const sound = pickSeedSound(allSounds, offset, primarySound?.id)
     offset++
     if (!sound) break
+    fallbackSounds.push(sound)
+  }
 
-    const words = allWordsBySoundId.get(sound.id) ?? []
-    if (words.length === 0) continue
+  if (fallbackSounds.length > 0) {
+    const fallbackDatasets = await getSessionDatasets(fallbackSounds.map((sound) => sound.id))
 
-    const focus = buildPhonemeFocusStep(sound, words, allSounds, allWordsBySoundId, [], false)
-    if (focus && !usedIds.has(focus.id)) {
-      steps.push(focus)
-      usedIds.add(focus.id)
+    for (const sound of fallbackSounds) {
+      if (steps.length >= DAILY_PLAN_STEP_COUNT) break
+      const dataset = fallbackDatasets.get(sound.id)
+      if (!dataset) continue
+
+      const { targetSound, sounds, wordsBySoundId, minimalPairs } = dataset
+
+      const words = wordsBySoundId.get(targetSound.id) ?? []
+      if (words.length === 0) continue
+
+      const focus = buildPhonemeFocusStep(
+        targetSound,
+        words,
+        sounds,
+        wordsBySoundId,
+        minimalPairs,
+        false,
+      )
+      if (focus && !usedIds.has(focus.id)) {
+        steps.push(focus)
+        usedIds.add(focus.id)
+      }
     }
   }
 

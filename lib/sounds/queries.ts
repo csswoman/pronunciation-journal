@@ -2,6 +2,20 @@ import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import type { Sound, UserContrastProgress } from "@/lib/phoneme-practice/types";
 import { rankWeakestSounds } from "@/lib/phoneme-practice/mastery-pct";
 
+const USER_CONTRAST_PROGRESS_COLUMNS = [
+  "id",
+  "user_id",
+  "contrast_id",
+  "ease_factor",
+  "interval_days",
+  "next_review",
+  "last_seen",
+  "total_attempts",
+  "correct_answers",
+  "streak",
+  "mastery_pct",
+].join(",");
+
 export {
   getAllSounds,
   getSoundById,
@@ -20,12 +34,12 @@ export async function getUserContrastProgress(
   const supabase = getSupabaseBrowserClient();
   const { data, error } = await supabase
     .from("user_contrast_progress")
-    .select("*")
+    .select(USER_CONTRAST_PROGRESS_COLUMNS)
     .eq("user_id", userId)
     .order("contrast_id", { ascending: true });
 
   if (error) throw error;
-  return (data ?? []) as UserContrastProgress[];
+  return ((data as unknown) as UserContrastProgress[] | null) ?? [];
 }
 
 /** Sound with the weakest dynamic mastery for the user, or null when no progress. */

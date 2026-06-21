@@ -3,10 +3,7 @@ import { useState } from "react";
 import { X } from "lucide-react";
 import Button from "@/components/ui/Button";
 import { H2 } from "@/components/ui/Typography";
-import { updateDeck } from "@/lib/decks/queries";
-import type { Tables } from "@/lib/supabase/types";
-
-type Deck = Tables<"decks">;
+import { updateDeck, type DeckListItem } from "@/lib/decks/queries";
 
 const COLORS = [
   "#6366f1", "#8b5cf6", "#ec4899", "#f43f5e",
@@ -20,9 +17,9 @@ const ICONS = [
 ];
 
 interface EditDeckModalProps {
-  deck: Deck;
+  deck: DeckListItem;
   onClose: () => void;
-  onUpdated: (deck: Deck) => void;
+  onUpdated: (deck: DeckListItem) => void;
   onDelete: () => void;
 }
 

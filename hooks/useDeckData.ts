@@ -6,10 +6,10 @@ import {
   getDeckCounts,
   getUserDecksFull,
   type DeckCounts,
+  type DeckListItem,
 } from "@/lib/decks/queries";
-import type { Tables } from "@/lib/supabase/types";
 
-type Deck = Tables<"decks">;
+type Deck = DeckListItem;
 
 export type { DeckCounts };
 

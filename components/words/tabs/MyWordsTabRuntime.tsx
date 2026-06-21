@@ -13,10 +13,9 @@ import { CreateDeckFromWordsModal } from "@/components/vocabulary/decks/CreateDe
 import { AddToExistingDeckModal } from "@/components/vocabulary/decks/AddToExistingDeckModal";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { useWords } from "@/hooks/useWords";
-import { getUserDecksFull } from "@/lib/decks/queries";
+import { getUserDecksFull, type DeckListItem } from "@/lib/decks/queries";
 import { toggleFavorite } from "@/lib/word-bank/queries";
 import type { WordsTabId } from "@/components/words/WordsTopbar";
-import type { Tables } from "@/lib/supabase/types";
 
 interface WordStats {
   total: number;
@@ -46,7 +45,7 @@ export default function MyWordsTabRuntime({
   const [selectMode, setSelectMode] = useState(false);
   const [showCreateFromWords, setShowCreateFromWords] = useState(false);
   const [showAddToExisting, setShowAddToExisting] = useState(false);
-  const [existingDecks, setExistingDecks] = useState<Tables<"decks">[]>([]);
+  const [existingDecks, setExistingDecks] = useState<DeckListItem[]>([]);
 
   useEffect(() => {
     if (!wordActionError) return;

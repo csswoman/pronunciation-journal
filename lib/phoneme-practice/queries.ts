@@ -1,5 +1,11 @@
 import { getSupabaseBrowserClient } from '@/lib/supabase/client'
 import { enqueue } from '@/lib/sync/sync-manager'
+import {
+  buildWordsBySoundId,
+  getSessionCandidateIpas,
+  limitWordsBySoundId,
+  type PhonemeSessionDataset,
+} from './session-data'
 import type {
   Sound,
   SoundWord,
@@ -63,12 +69,111 @@ export async function getAllWords(): Promise<SoundWord[]> {
 }
 
 export async function getMinimalPairs(soundId: number): Promise<MinimalPair[]> {
+  const pairsBySoundId = await getMinimalPairsForSoundIds([soundId])
+  return pairsBySoundId.get(soundId) ?? []
+}
+
+export async function getMinimalPairsForSoundIds(
+  soundIds: number[]
+): Promise<Map<number, MinimalPair[]>> {
+  const uniqueSoundIds = [...new Set(soundIds)]
+  if (uniqueSoundIds.length === 0) return new Map()
+
+  const filters = uniqueSoundIds.flatMap((soundId) => [
+    `contrast_sound_a_id.eq.${soundId}`,
+    `contrast_sound_b_id.eq.${soundId}`,
+  ])
+
   const { data, error } = await supabase()
     .from('minimal_pairs')
     .select('id, word_a, word_b, ipa_a, ipa_b, sound_group, contrast_ipa_a, contrast_ipa_b, contrast_sound_a_id, contrast_sound_b_id')
-    .or(`contrast_sound_a_id.eq.${soundId},contrast_sound_b_id.eq.${soundId}`)
+    .or(filters.join(','))
   if (error) throw error
-  return data as MinimalPair[]
+
+  const grouped = new Map<number, MinimalPair[]>()
+  for (const pair of data as MinimalPair[]) {
+    const relatedIds = [pair.contrast_sound_a_id, pair.contrast_sound_b_id].filter(
+      (id): id is number => typeof id === 'number' && uniqueSoundIds.includes(id),
+    )
+    for (const relatedId of relatedIds) {
+      const bucket = grouped.get(relatedId) ?? []
+      bucket.push(pair)
+      grouped.set(relatedId, bucket)
+    }
+  }
+
+  return grouped
+}
+
+export async function getSessionDataset(soundId: number): Promise<PhonemeSessionDataset> {
+  const datasets = await getSessionDatasets([soundId])
+  const dataset = datasets.get(soundId)
+  if (!dataset) throw new Error(`No phoneme session dataset found for sound ${soundId}`)
+  return dataset
+}
+
+export async function getSessionDatasets(
+  soundIds: number[]
+): Promise<Map<number, PhonemeSessionDataset>> {
+  const uniqueSoundIds = [...new Set(soundIds)]
+  if (uniqueSoundIds.length === 0) return new Map()
+
+  const { data: targetSoundsData, error: targetSoundsError } = await supabase()
+    .from('sounds')
+    .select('id, ipa, example, category, type, difficulty')
+    .in('id', uniqueSoundIds)
+    .order('id')
+
+  if (targetSoundsError) throw targetSoundsError
+
+  const targetSounds = targetSoundsData as Sound[]
+  const candidateIpas = [...new Set(targetSounds.flatMap((sound) => getSessionCandidateIpas(sound.ipa)))]
+
+  const [{ data: soundsData, error: soundsError }, minimalPairsBySoundId] = await Promise.all([
+    supabase()
+      .from('sounds')
+      .select('id, ipa, example, category, type, difficulty')
+      .in('ipa', candidateIpas)
+      .order('id'),
+    getMinimalPairsForSoundIds(uniqueSoundIds),
+  ])
+
+  if (soundsError) throw soundsError
+
+  const sounds = soundsData as Sound[]
+  const soundsByIpa = new Map(sounds.map((sound) => [sound.ipa, sound]))
+  const candidateSoundIds = sounds.map((sound) => sound.id)
+
+  const { data: wordsData, error: wordsError } = await supabase()
+    .from('words')
+    .select('id, sound_id, word, ipa, audio_url, difficulty, phonemes, sound_focus')
+    .in('sound_id', candidateSoundIds)
+    .order('id')
+
+  if (wordsError) throw wordsError
+
+  const limitedWordsBySoundId = limitWordsBySoundId(buildWordsBySoundId(wordsData as SoundWord[]))
+  const datasets = new Map<number, PhonemeSessionDataset>()
+
+  for (const targetSound of targetSounds) {
+    const sessionSounds = getSessionCandidateIpas(targetSound.ipa)
+      .map((ipa) => soundsByIpa.get(ipa))
+      .filter((sound): sound is Sound => Boolean(sound))
+
+    const sessionWordsBySoundId = new Map<number, SoundWord[]>()
+    for (const sound of sessionSounds) {
+      sessionWordsBySoundId.set(sound.id, limitedWordsBySoundId.get(sound.id) ?? [])
+    }
+
+    datasets.set(targetSound.id, {
+      targetSound,
+      sounds: sessionSounds,
+      wordsBySoundId: sessionWordsBySoundId,
+      minimalPairs: minimalPairsBySoundId.get(targetSound.id) ?? [],
+    })
+  }
+
+  return datasets
 }
 
 export async function saveAnswers(

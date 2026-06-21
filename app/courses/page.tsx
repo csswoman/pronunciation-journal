@@ -1,6 +1,11 @@
 import CoursePathPage from "@/components/courses/CoursePathPage";
-import { COURSE_PATH_CURRICULUM } from "@/lib/courses/curriculum";
 
-export default function CoursesPage() {
-  return <CoursePathPage curriculum={COURSE_PATH_CURRICULUM} />;
+interface CoursesPageProps {
+  searchParams: Promise<{ level?: string }>;
+}
+
+export default async function CoursesPage({ searchParams }: CoursesPageProps) {
+  const { level } = await searchParams;
+
+  return <CoursePathPage levelParam={level} />;
 }

@@ -1,5 +1,5 @@
 import { COURSE_PATH_CURRICULUM } from "./curriculum";
-import type { CoursePathLesson, CoursePathLevel, CoursePathTrackId } from "./types";
+import type { CefrLevelId, CoursePathLesson, CoursePathLevel, CoursePathTrackId } from "./types";
 
 const ALL_LEVELS: CoursePathLevel[] = [
   ...COURSE_PATH_CURRICULUM.levels,
@@ -16,6 +16,13 @@ export function parseCoursePathTrackId(value: string | undefined): CoursePathTra
     value === "purposes" ||
     value === "business"
   ) {
+    return value;
+  }
+  return null;
+}
+
+export function parseCefrLevelId(value: string | undefined): CefrLevelId | null {
+  if (value === "a1" || value === "a2" || value === "b1" || value === "b2" || value === "c1") {
     return value;
   }
   return null;
