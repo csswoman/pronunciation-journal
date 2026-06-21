@@ -103,9 +103,7 @@ describe("kind field", () => {
     expect(q.every((i) => i.kind === "new")).toBe(true);
   });
 
-  it("treats all srsEntries as seen (archived filtering is caller's responsibility)", () => {
-    // getCore1000SrsEntries already strips archived before calling buildSessionQueue.
-    // The queue trusts the caller: any entry in srsEntries counts as seen (not new).
+  it("treats persisted entries as seen", () => {
     const q = buildSessionQueue({
       words: WORDS,
       srsEntries: [srs("the", "2026-06-20T00:00:00Z")], // not due, but seen
@@ -116,6 +114,22 @@ describe("kind field", () => {
     const words = q.map((i) => i.entry.word);
     expect(words).not.toContain("the"); // seen → not new
     expect(q.length).toBe(3); // be, and, of
+  });
+
+  it("does not review or re-introduce archived words", () => {
+    const archived = { ...srs("the", "2026-06-10T00:00:00Z"), archived: true };
+    const q = buildSessionQueue({
+      words: WORDS,
+      srsEntries: [archived],
+      introducedToday: [],
+      now: NOW,
+      newPerDay: 2,
+    });
+
+    expect(q.map((i) => [i.entry.word, i.kind])).toEqual([
+      ["be", "new"],
+      ["and", "new"],
+    ]);
   });
 });
 

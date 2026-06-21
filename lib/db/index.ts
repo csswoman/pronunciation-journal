@@ -241,7 +241,20 @@ export async function getCachedReaderPassage(
 // ── Daily Progress Helpers ──
 
 function getTodayKey(): string {
-  return new Date().toISOString().split("T")[0];
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, "0");
+  const day = String(today.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+function getRelativeDayKey(offsetDays: number): string {
+  const date = new Date();
+  date.setDate(date.getDate() + offsetDays);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
 }
 
 export async function updateDailyProgress(
@@ -283,10 +296,15 @@ export async function updateDailyProgress(
 
 const CORE1000_SRS_PREFIX = "c1k:";
 
-/** Todas las entradas SRS del Core 1000, excluyendo archivadas. */
+/**
+ * Todas las entradas SRS del Core 1000.
+ *
+ * Las archivadas deben conservarse para que el constructor de la cola pueda
+ * tratarlas como palabras ya vistas sin programarlas para repaso.
+ */
 export async function getCore1000SrsEntries(): Promise<SRSData[]> {
   return db.srsData
-    .filter((e) => e.wordId.startsWith(CORE1000_SRS_PREFIX) && !e.archived)
+    .filter((e) => e.wordId.startsWith(CORE1000_SRS_PREFIX))
     .toArray();
 }
 
@@ -368,7 +386,7 @@ export async function updateUserStats(
 ): Promise<UserStats> {
   const stats = await getUserStats();
   const today = getTodayKey();
-  const yesterday = new Date(Date.now() - 86400000).toISOString().split("T")[0];
+  const yesterday = getRelativeDayKey(-1);
 
   let newStreak = stats.currentStreak;
   if (stats.lastStudyDate === today) {

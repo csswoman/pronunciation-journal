@@ -15,8 +15,12 @@ const WORDS: CoreWord[] = [
   },
 ]
 
-vi.mock('@/lib/core-1000/client', () => ({
+const coreWordClientMocks = vi.hoisted(() => ({
   fetchCoreWords: vi.fn(async () => WORDS),
+}))
+
+vi.mock('@/lib/core-1000/client', () => ({
+  fetchCoreWords: coreWordClientMocks.fetchCoreWords,
 }))
 
 const dbMocks = vi.hoisted(() => ({
@@ -66,6 +70,10 @@ import { EssentialWordsSession } from '../EssentialWordsSession'
 
 beforeEach(() => {
   vi.clearAllMocks()
+  coreWordClientMocks.fetchCoreWords.mockResolvedValue(WORDS)
+  dbMocks.getCore1000SrsEntries.mockResolvedValue([])
+  dbMocks.getCore1000IntroducedToday.mockResolvedValue([])
+  dbMocks.saveSRSData.mockResolvedValue(undefined)
 })
 
 describe('EssentialWordsSession', () => {
@@ -95,5 +103,33 @@ describe('EssentialWordsSession', () => {
     expect(await screen.findByText('Nada pendiente por hoy')).toBeTruthy()
     expect(screen.getByRole('link', { name: 'Ver mi progreso' })).toBeTruthy()
     expect(screen.getByRole('link', { name: 'Ir al plan de hoy' })).toBeTruthy()
+  })
+
+  it('resumes on the first appended card when learning more after finishing', async () => {
+    const user = userEvent.setup()
+    dbMocks.getCore1000IntroducedToday.mockResolvedValue(
+      Array.from({ length: 9 }, (_, i) => `w${i}`)
+    )
+    render(<EssentialWordsSession />)
+
+    await screen.findByRole('heading', { name: 'the' })
+    await user.click(screen.getByRole('button', { name: 'Practicar' }))
+    await screen.findByText('Give me the book please.')
+    await user.click(screen.getByRole('button', { name: 'Bien' }))
+
+    await screen.findByText('Sesión completa')
+    await user.click(screen.getByRole('button', { name: 'Aprender 10 nuevas más' }))
+
+    expect(await screen.findByRole('heading', { name: 'be' })).toBeTruthy()
+  })
+
+  it('shows a reload state instead of empty when the dataset load fails', async () => {
+    coreWordClientMocks.fetchCoreWords.mockRejectedValueOnce(new Error('offline'))
+
+    render(<EssentialWordsSession />)
+
+    expect(await screen.findByText('No se pudo cargar la sesión')).toBeTruthy()
+    expect(screen.getByText('Revisa tu conexión o vuelve a intentar la carga.')).toBeTruthy()
+    expect(screen.getByRole('button', { name: 'Continuar practicando' })).toBeTruthy()
   })
 })

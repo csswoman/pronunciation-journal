@@ -22,7 +22,7 @@ import { recordActivitySession } from "@/lib/progress/activity-hub";
 import { buildSessionResult } from "@/lib/practice/session-result";
 import type { ExerciseResult } from "@/lib/practice/types";
 
-export type EssentialWordsPhase = "loading" | "study" | "speak" | "done" | "empty";
+export type EssentialWordsPhase = "loading" | "study" | "speak" | "done" | "empty" | "error";
 
 export interface EssentialWordsStats {
   totalWords: number;
@@ -83,11 +83,10 @@ async function loadQueue(): Promise<{
 
   const items = buildSessionQueue({ words, srsEntries, introducedToday, now: new Date() });
   const seenIds = new Set(srsEntries.map((e) => e.wordId));
-  const activeSrsEntries = srsEntries.filter((entry) => !entry.archived);
 
   const stats: EssentialWordsStats = {
     totalWords: words.length,
-    learned: activeSrsEntries.length,
+    learned: srsEntries.length,
     dueCount: items.filter((i) => i.kind === "review").length,
     newToday: introducedToday.length,
     newQuota: NEW_CARDS_PER_DAY,
@@ -113,11 +112,22 @@ export function useEssentialWordsSession(): UseEssentialWordsSessionReturn {
   const [reloadLoading, setReloadLoading] = useState(false);
 
   const sessionResultsRef = useRef<ExerciseResult[]>([]);
+  const finishingRef = useRef(false);
   // Pending lapses: wordId → quality — flushed to Dexie on session end
   const pendingLapsesRef = useRef<Map<string, number>>(new Map());
   const lapseFlushRef = useRef<Promise<void> | null>(null);
   const allWordsRef = useRef<CoreWord[]>([]);
   const seenIdsRef = useRef<Set<string>>(new Set());
+
+  const persistPendingLapses = useCallback(() => {
+    if (typeof window === "undefined") return;
+    const entries = Array.from(pendingLapsesRef.current.entries());
+    if (entries.length === 0) {
+      window.sessionStorage.removeItem("core1000:pending-lapses");
+      return;
+    }
+    window.sessionStorage.setItem("core1000:pending-lapses", JSON.stringify(entries));
+  }, []);
 
   const syncCounts = useCallback((q: Core1000QueueItem[], i: number) => {
     setCounts(deriveCounts(q, i));
@@ -134,6 +144,7 @@ export function useEssentialWordsSession(): UseEssentialWordsSessionReturn {
           await gradeCore1000Word(word, quality, {}, user?.id);
           if (pendingLapsesRef.current.get(wordId) === quality) {
             pendingLapsesRef.current.delete(wordId);
+            persistPendingLapses();
           }
         } catch (err) {
           console.error("[EssentialWordsSession] failed to persist lapse", { wordId, err });
@@ -145,7 +156,25 @@ export function useEssentialWordsSession(): UseEssentialWordsSessionReturn {
       lapseFlushRef.current = null;
     });
     return lapseFlushRef.current;
-  }, [user?.id]);
+  }, [persistPendingLapses, user?.id]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const raw = window.sessionStorage.getItem("core1000:pending-lapses");
+    if (!raw) return;
+
+    try {
+      const entries = JSON.parse(raw) as [string, number][];
+      pendingLapsesRef.current = new Map(entries);
+    } catch {
+      window.sessionStorage.removeItem("core1000:pending-lapses");
+    }
+  }, []);
+
+  useEffect(() => {
+    if (pendingLapsesRef.current.size === 0) return;
+    void flushLapses();
+  }, [flushLapses]);
 
   useEffect(() => {
     const handlePageHide = () => {
@@ -159,14 +188,22 @@ export function useEssentialWordsSession(): UseEssentialWordsSessionReturn {
   }, [flushLapses]);
 
   const finishSession = useCallback(async () => {
+    if (finishingRef.current) return;
+    finishingRef.current = true;
     setPhase("done");
     await flushLapses();
-    if (!user?.id) return;
+    if (!user?.id) {
+      finishingRef.current = false;
+      return;
+    }
     const sessionResult = buildSessionResult(sessionResultsRef.current);
     void recordActivitySession(user.id, { practiceContext: "core-1000", sessionResult })
       .then(() => import("@/lib/sync/sync-manager").then(({ flushOutbox }) => flushOutbox()))
       .catch((err) => {
         console.error("[EssentialWordsSession] recordActivitySession failed", err);
+      })
+      .finally(() => {
+        finishingRef.current = false;
       });
   }, [user?.id, flushLapses]);
 
@@ -183,6 +220,7 @@ export function useEssentialWordsSession(): UseEssentialWordsSessionReturn {
 
   const bootstrap = useCallback(async () => {
     const { items, stats: nextStats, allWords, seenIds, initialPhase } = await loadQueue();
+    finishingRef.current = false;
     allWordsRef.current = allWords;
     seenIdsRef.current = seenIds;
     setQueue(items);
@@ -191,9 +229,10 @@ export function useEssentialWordsSession(): UseEssentialWordsSessionReturn {
     setSessionSummary(null);
     sessionResultsRef.current = [];
     pendingLapsesRef.current = new Map();
+    persistPendingLapses();
     syncCounts(items, 0);
     setPhase(initialPhase);
-  }, [syncCounts]);
+  }, [persistPendingLapses, syncCounts]);
 
   useEffect(() => {
     let cancelled = false;
@@ -207,8 +246,9 @@ export function useEssentialWordsSession(): UseEssentialWordsSessionReturn {
         setStats(nextStats);
         syncCounts(items, 0);
         setPhase(initialPhase);
-      } catch {
-        if (!cancelled) setPhase("empty");
+      } catch (err) {
+        console.error("[EssentialWordsSession] initial load failed", err);
+        if (!cancelled) setPhase("error");
       }
     })();
     return () => { cancelled = true; };
@@ -234,29 +274,38 @@ export function useEssentialWordsSession(): UseEssentialWordsSessionReturn {
         score: extras?.accuracy,
         completedAt: new Date(),
       };
-      sessionResultsRef.current.push(result);
-      setSessionSummary((prev) => ({
-        practiced: (prev?.practiced ?? 0) + 1,
-        correct: (prev?.correct ?? 0) + (quality >= 3 ? 1 : 0),
-      }));
 
       if (quality >= 3) {
         await gradeCore1000Word(item.entry.word, quality, extras, user?.id);
+        seenIdsRef.current.add(wordId);
         pendingLapsesRef.current.delete(wordId);
+        persistPendingLapses();
         if (item.kind === "new") {
           await recordCore1000Introduction(item.entry.word.toLowerCase());
           setStats((s) => ({ ...s, newToday: s.newToday + 1, learned: s.learned + 1 }));
         }
+        sessionResultsRef.current.push(result);
+        setSessionSummary((prev) => ({
+          practiced: (prev?.practiced ?? 0) + 1,
+          correct: (prev?.correct ?? 0) + 1,
+        }));
         advance(queue, index);
       } else {
         // Fail: re-insert ~3 positions ahead, defer SM-2 write to session end
+        seenIdsRef.current.add(wordId);
         pendingLapsesRef.current.set(wordId, quality);
+        persistPendingLapses();
         const newQueue = reinsertLearning(queue, index, item);
         setQueue(newQueue);
+        sessionResultsRef.current.push(result);
+        setSessionSummary((prev) => ({
+          practiced: (prev?.practiced ?? 0) + 1,
+          correct: prev?.correct ?? 0,
+        }));
         advance(newQueue, index);
       }
     },
-    [queue, index, advance, user?.id],
+    [queue, index, advance, persistPendingLapses, user?.id],
   );
 
   const learnMore = useCallback(() => {
@@ -264,11 +313,14 @@ export function useEssentialWordsSession(): UseEssentialWordsSessionReturn {
       queue, allWordsRef.current, seenIdsRef.current, NEW_CARDS_PER_DAY,
     );
     setQueue(newQueue);
-    syncCounts(newQueue, index);
-    if (newQueue.length > index) {
-      setPhase(phaseForItem(newQueue[index]));
+    const nextIndex = phase === "done" ? queue.length : Math.min(index, queue.length);
+    if (newQueue.length <= nextIndex) {
+      return;
     }
-  }, [queue, index, syncCounts]);
+    setIndex(nextIndex);
+    syncCounts(newQueue, nextIndex);
+    setPhase(phaseForItem(newQueue[nextIndex]));
+  }, [phase, queue, index, syncCounts]);
 
   const archiveWord = useCallback(async (word: string) => {
     await archiveCore1000Word(word);
