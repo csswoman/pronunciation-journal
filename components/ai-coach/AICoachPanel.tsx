@@ -60,8 +60,9 @@ export default function AICoachPanel() {
   }, [isOpen, launch, consumeLaunch]);
 
   useEffect(() => {
+    if (!isOpen) return;
     getRecentConversations(30).then(setConversations);
-  }, [messages.length, conversationId]);
+  }, [isOpen, messages.length, conversationId]);
 
   const hasMessages = messages.some((message) => {
     if (message.role === "tool") return false;
