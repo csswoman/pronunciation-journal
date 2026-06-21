@@ -4,6 +4,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { requireUser, rateLimit, validateBody } from "@/lib/api/guards";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { buildTranscriptionPrompt } from "@/lib/ai-prompts";
+import { FALLBACK_MODELS, getErrorStatus, shouldTryNextModel } from "@/lib/gemini/fallback";
 
 // ---------------------------------------------------------------------------
 // Request schema
@@ -34,21 +36,6 @@ const TranscribeSchema = z.object({
 });
 
 // ---------------------------------------------------------------------------
-// Model configuration
-// ---------------------------------------------------------------------------
-
-const ENABLE_PREVIEW_MODELS = process.env.GEMINI_ENABLE_PREVIEW_MODELS === "true";
-const BASE_MODELS = [
-  "gemini-2.5-flash-lite",
-  "gemini-2.5-flash",
-  "gemini-flash-latest",
-] as const;
-const PREVIEW_MODELS = ["gemini-3.1-flash-lite-preview"] as const;
-const FALLBACK_MODELS = ENABLE_PREVIEW_MODELS
-  ? [...BASE_MODELS, ...PREVIEW_MODELS]
-  : [...BASE_MODELS];
-
-// ---------------------------------------------------------------------------
 // In-memory cache (L1)
 // ---------------------------------------------------------------------------
 
@@ -70,31 +57,6 @@ type SttCacheRow = {
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
-
-function getErrorStatus(err: unknown): number | undefined {
-  if (!err || typeof err !== "object") return undefined;
-  const maybe = err as { status?: unknown; statusCode?: unknown };
-  if (typeof maybe.status === "number") return maybe.status;
-  if (typeof maybe.statusCode === "number") return maybe.statusCode;
-  return undefined;
-}
-
-function shouldTryNextModel(err: unknown): boolean {
-  const status = getErrorStatus(err);
-  if (status === 400 || status === 401 || status === 403) return false;
-  if (status === 404 || status === 408 || status === 409 || status === 425 || status === 429) return true;
-  if (typeof status === "number" && status >= 500) return true;
-  const message = String((err as { message?: unknown })?.message ?? "").toLowerCase();
-  return (
-    message.includes("not found") ||
-    message.includes("quota") ||
-    message.includes("rate") ||
-    message.includes("resource exhausted") ||
-    message.includes("unavailable") ||
-    message.includes("timeout") ||
-    message.includes("internal")
-  );
-}
 
 function parseDataUrl(dataUrl: string): { mimeType: string; base64Data: string } {
   const match = dataUrl.match(/^data:([^;,]+(?:;[^,]+)?);base64,(.+)$/);
@@ -197,9 +159,7 @@ async function transcribeWithFallback(
   targetWord?: string
 ): Promise<string> {
   let lastError: unknown;
-  const prompt = targetWord
-    ? `Transcribe this short English pronunciation attempt. Target word: "${targetWord}". Return ONLY the recognized words in plain text. If unintelligible, return an empty string.`
-    : "Transcribe this short English pronunciation attempt. Return ONLY the recognized words in plain text. If unintelligible, return an empty string.";
+  const prompt = buildTranscriptionPrompt(targetWord);
 
   for (const modelName of FALLBACK_MODELS) {
     try {

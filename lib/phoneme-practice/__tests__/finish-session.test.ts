@@ -2,15 +2,19 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import type { UserContrastProgress } from '../types'
 import type { SessionResult, ExerciseResult } from '@/lib/practice/types'
 
-const { mockUpdateContrastProgress, mockGetContrastProgress } =
+const { mockUpdateContrastProgress, mockGetContrastProgress, mockRecordActivitySession } =
   vi.hoisted(() => ({
     mockUpdateContrastProgress: vi.fn(),
     mockGetContrastProgress: vi.fn(),
+    mockRecordActivitySession: vi.fn(),
   }))
 
 vi.mock('../queries', () => ({
   updateContrastProgress: mockUpdateContrastProgress,
   getContrastProgress: mockGetContrastProgress,
+}))
+vi.mock('@/lib/progress/activity-hub', () => ({
+  recordActivitySession: mockRecordActivitySession,
 }))
 
 import { finishContrastSession } from '../finish-session'
@@ -67,6 +71,7 @@ const CONTRAST_ID = '/iː/|/ɪ/'
 beforeEach(() => {
   vi.resetAllMocks()
   mockGetContrastProgress.mockResolvedValue(null)
+  mockRecordActivitySession.mockResolvedValue({ reconciledStepIds: [] })
 })
 
 // ---------------------------------------------------------------------------
@@ -94,6 +99,18 @@ describe('finishContrastSession', () => {
     expect(cid).toBe(CONTRAST_ID)
     expect(correct).toBe(1)
     expect(total).toBe(2)
+  })
+
+  it('records a normalized Sound Lab session while preserving contrast mastery', async () => {
+    const sessionResult = makeSessionResult([makeResult()])
+    await finishContrastSession(USER_ID, CONTRAST_ID, sessionResult)
+
+    expect(mockRecordActivitySession).toHaveBeenCalledWith(USER_ID, {
+      practiceContext: 'sound_lab',
+      sessionResult,
+      source: 'sound_lab',
+      metadata: { contrastId: CONTRAST_ID },
+    })
   })
 
   it('uses default progress when no existing progress', async () => {

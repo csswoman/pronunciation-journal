@@ -18,6 +18,7 @@ import {
   isOnline,
   ProductionGradeError,
 } from '@/lib/exercises/grade-production-client'
+import { pedagogicalFeedbackFromProductionGrade } from '@/lib/exercises/feedback'
 import type { ProductionGradeResult } from '@/lib/exercises/production-grade'
 import type { WrittenProductionExercise as WrittenProductionExerciseType } from '@/lib/exercises/types'
 import type { GenericRenderExtras } from '@/lib/practice/exercise-renderer/generic-registry'
@@ -93,7 +94,10 @@ export function WrittenProductionExercise({ exercise, onResult }: Props) {
   const handleContinue = useCallback(() => {
     if (!grade || submitted.current) return
     submitted.current = true
-    onResult(grade.correct, text.trim(), Date.now() - startMs.current, { score: grade.score })
+    onResult(grade.correct, text.trim(), Date.now() - startMs.current, {
+      score: grade.score,
+      feedback: pedagogicalFeedbackFromProductionGrade(grade),
+    })
   }, [grade, text, onResult])
 
   const handleRetry = useCallback(() => {

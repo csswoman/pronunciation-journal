@@ -21,7 +21,6 @@ import type {
   ExerciseResult,
   PracticeConfig,
   PracticeExercise,
-  SessionResult,
 } from '@/lib/practice/types'
 import { useVoiceRotation } from '@/hooks/useVoiceRotation'
 
@@ -120,7 +119,7 @@ export function useSessionState(config: PracticeConfig) {
   }, [phase, results, onSessionComplete, persistence, user, context])
 
   const handleSubmit = useCallback(
-    (isCorrect: boolean, userAnswer: string, extras?: { score?: number }) => {
+    (isCorrect: boolean, userAnswer: string, extras?: { score?: number; feedback?: import('@/lib/practice/types').PedagogicalFeedback }) => {
       const current = exercises[currentIndex]
       if (!current || phase !== 'exercising') return
       const timeMs = Date.now() - startTimeRef.current
@@ -132,6 +131,7 @@ export function useSessionState(config: PracticeConfig) {
         userAnswer,
         timeMs,
         score: extras?.score,
+        feedback: extras?.feedback,
         contentId: current.contentId,
         context,
         soundId: current.soundId,
@@ -140,7 +140,15 @@ export function useSessionState(config: PracticeConfig) {
         exercisePayload:
           current.payload.kind === 'phoneme'
             ? { type: current.slug, soundId: current.soundId, options: current.payload.options, targetWord: current.payload.targetWord }
-            : { type: current.slug, contentId: current.contentId },
+            : {
+                type: current.slug,
+                contentId: current.contentId,
+                feedbackCategory: extras?.feedback?.category,
+                errorCode: extras?.feedback?.errorCode,
+                expectedAnswer: extras?.feedback?.expectedAnswer,
+                hintUsed: extras?.feedback?.category?.includes('hint_used') || undefined,
+                nextAction: extras?.feedback?.nextAction,
+              },
         completedAt: new Date(),
       }
       if (user) {

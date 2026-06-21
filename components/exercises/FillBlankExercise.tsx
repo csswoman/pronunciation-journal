@@ -10,27 +10,23 @@ import { useState, useRef, useEffect } from 'react'
 import { Lightbulb } from 'lucide-react'
 import { cn } from '@/lib/cn'
 import type { FillBlankExercise as FillBlankExerciseType } from '@/lib/exercises/types'
+import { buildPedagogicalFeedback } from '@/lib/exercises/feedback'
 import { useUISounds } from '@/hooks/useUISounds'
 
 interface Props {
   exercise: FillBlankExerciseType
-  onResult: (isCorrect: boolean, userAnswer: string, timeMs: number) => void
-  onHint?: () => void
+  onResult: (isCorrect: boolean, userAnswer: string, timeMs: number, extras?: { feedback?: ReturnType<typeof buildPedagogicalFeedback> }) => void
   hintCount?: number
 }
 
 type AnswerState = 'idle' | 'correct' | 'wrong'
 
-export function FillBlankExercise({ exercise, onResult, onHint, hintCount = 0 }: Props) {
+export function FillBlankExercise({ exercise, onResult, hintCount = 0 }: Props) {
   const [selected, setSelected] = useState<string | null>(null)
   const [state, setState]       = useState<AnswerState>('idle')
   const [hintLevel, setHintLevel] = useState(0)
   const startMs = useRef(Date.now())
   const { playTap, playCorrect, playWrong } = useUISounds()
-
-  const hasHintSource = !!(exercise.hints || exercise.hint)
-  const maxHintLevel = exercise.hints ? (exercise.hints.level3 ? 3 : 2) : 1
-  const canShowMoreHint = hasHintSource && state === 'idle' && hintLevel < maxHintLevel
 
   useEffect(() => {
     setSelected(null)
@@ -49,7 +45,6 @@ export function FillBlankExercise({ exercise, onResult, onHint, hintCount = 0 }:
     }
     window.addEventListener('keydown', handleKey)
     return () => window.removeEventListener('keydown', handleKey)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state, exercise.options])
 
   const prevHintCount = useRef(hintCount)
@@ -72,7 +67,9 @@ export function FillBlankExercise({ exercise, onResult, onHint, hintCount = 0 }:
     setSelected(option)
     setState(isCorrect ? 'correct' : 'wrong')
     if (isCorrect) playCorrect(); else playWrong()
-    onResult(isCorrect, option, Date.now() - startMs.current)
+    onResult(isCorrect, option, Date.now() - startMs.current, {
+      feedback: buildPedagogicalFeedback(exercise, isCorrect, option, { hintUsed: hintLevel > 0 }),
+    })
   }
 
   const parts = exercise.sentence.split('___')

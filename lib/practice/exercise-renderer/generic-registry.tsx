@@ -19,8 +19,9 @@ import type {
   WrittenProductionExercise as WrittenProductionExerciseType,
   SpokenProductionExercise as SpokenProductionExerciseType,
 } from '@/lib/exercises/types'
+import type { PedagogicalFeedback } from '@/lib/practice/types'
 
-export type GenericRenderExtras = { score?: number }
+export type GenericRenderExtras = { score?: number; feedback?: PedagogicalFeedback }
 
 export type GenericRenderContext = {
   onResult: (
@@ -57,11 +58,10 @@ export const GENERIC_REGISTRY: Record<GenericExerciseType, GenericRegistryEntry>
   },
   fill_blank: {
     title: 'Complete the sentence',
-    render: (exercise, { onResult, onHint, hintCount }) => (
+    render: (exercise, { onResult, hintCount }) => (
       <FillBlankExercise
         exercise={exercise as FillBlankExerciseType}
         onResult={onResult}
-        onHint={onHint}
         hintCount={hintCount ?? 0}
       />
     ),
@@ -79,11 +79,10 @@ export const GENERIC_REGISTRY: Record<GenericExerciseType, GenericRegistryEntry>
   },
   sentence_dictation: {
     title: 'Listen and type the sentence',
-    render: (exercise, { onResult, onHint, hintCount }) => (
+    render: (exercise, { onResult, hintCount }) => (
       <SentenceDictationExercise
         exercise={exercise as SentenceDictationExerciseType}
         onResult={onResult}
-        onHint={onHint}
         hintCount={hintCount ?? 0}
       />
     ),

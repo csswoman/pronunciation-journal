@@ -1,3 +1,10 @@
+// ── Transcription ──
+
+export function buildTranscriptionPrompt(targetWord?: string): string {
+  const target = targetWord ? ` Target word: "${targetWord}".` : ''
+  return `Transcribe this short English pronunciation attempt.${target} Return ONLY the recognized words in plain text. If unintelligible, return an empty string.`
+}
+
 // ── Deck Suggest ──
 
 export const DECK_SUGGEST_SYSTEM_PROMPT = `You are an English vocabulary coach. When given a deck name and optional description, suggest 8 relevant English words or short phrases that fit the theme. Return ONLY valid JSON with no markdown, no code fences, no extra text — just raw JSON.
