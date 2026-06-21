@@ -17,7 +17,13 @@ export default async function AuthenticatedRoutesLayout({
     if (!user) {
       redirect("/login");
     }
+
+    return (
+      <AuthenticatedAppLayout initialUser={user}>
+        {children}
+      </AuthenticatedAppLayout>
+    );
   }
 
-  return <AuthenticatedAppLayout>{children}</AuthenticatedAppLayout>;
+  return <AuthenticatedAppLayout initialUser={null}>{children}</AuthenticatedAppLayout>;
 }
