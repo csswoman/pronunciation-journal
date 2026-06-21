@@ -19,6 +19,51 @@ interface UseVoiceRecorderReturn {
   reset: () => void
 }
 
+const RECORDER_MIME_TYPES = [
+  'audio/webm;codecs=opus',
+  'audio/webm',
+  'audio/mp4',
+  'audio/mp4;codecs=mp4a.40.2',
+  '',
+] as const
+
+type RecorderInitResult =
+  | { supported: true; recorder: MediaRecorder; mimeType: string }
+  | { supported: false }
+
+export function createAudioRecorder(stream: MediaStream): RecorderInitResult {
+  if (
+    typeof window === 'undefined' ||
+    typeof window.MediaRecorder === 'undefined' ||
+    typeof navigator === 'undefined' ||
+    !navigator.mediaDevices?.getUserMedia
+  ) {
+    return { supported: false }
+  }
+
+  for (const mimeType of RECORDER_MIME_TYPES) {
+    if (mimeType && !MediaRecorder.isTypeSupported(mimeType)) {
+      continue
+    }
+
+    try {
+      const recorder = mimeType
+        ? new MediaRecorder(stream, { mimeType })
+        : new MediaRecorder(stream)
+
+      return {
+        supported: true,
+        recorder,
+        mimeType: recorder.mimeType || mimeType || 'audio/mp4',
+      }
+    } catch {
+      continue
+    }
+  }
+
+  return { supported: false }
+}
+
 export function useVoiceRecorder(): UseVoiceRecorderReturn {
   const [state, setState] = useState<RecorderState>('idle')
   const [result, setResult] = useState<RecordingResult | null>(null)
@@ -29,7 +74,10 @@ export function useVoiceRecorder(): UseVoiceRecorderReturn {
   const blobUrlRef = useRef<string | null>(null)
 
   const isSupported =
-    typeof window !== 'undefined' && typeof window.MediaRecorder !== 'undefined'
+    typeof window !== 'undefined' &&
+    typeof window.MediaRecorder !== 'undefined' &&
+    typeof navigator !== 'undefined' &&
+    !!navigator.mediaDevices?.getUserMedia
 
   const reset = useCallback(() => {
     if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
@@ -57,11 +105,14 @@ export function useVoiceRecorder(): UseVoiceRecorderReturn {
       return
     }
 
-    const mimeType = MediaRecorder.isTypeSupported('audio/webm;codecs=opus')
-      ? 'audio/webm;codecs=opus'
-      : 'audio/webm'
+    const recorderResult = createAudioRecorder(stream)
+    if (!recorderResult.supported) {
+      stream.getTracks().forEach((t) => t.stop())
+      setState('error')
+      return
+    }
 
-    const recorder = new MediaRecorder(stream, { mimeType })
+    const { recorder, mimeType } = recorderResult
     mediaRecorderRef.current = recorder
     chunksRef.current = []
     startTimeRef.current = Date.now()
