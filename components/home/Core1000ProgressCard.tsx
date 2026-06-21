@@ -22,7 +22,7 @@ export default function Core1000ProgressCard() {
   const learned = useLiveQuery(
     () =>
       db.srsData
-        .filter((e) => e.wordId.startsWith(CORE1000_PREFIX) && !e.archived)
+        .filter((e) => e.wordId.startsWith(CORE1000_PREFIX))
         .count(),
     [],
     0,

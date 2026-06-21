@@ -23,7 +23,7 @@ export default function ReviewProgressCard({ vocabulary, weakestPhoneme }: Revie
   const essentialLearned = useLiveQuery(
     () =>
       db.srsData
-        .filter((entry) => entry.wordId.startsWith(CORE1000_PREFIX) && !entry.archived)
+        .filter((entry) => entry.wordId.startsWith(CORE1000_PREFIX))
         .count(),
     [],
     0,

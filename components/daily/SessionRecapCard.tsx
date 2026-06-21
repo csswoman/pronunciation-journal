@@ -32,7 +32,7 @@ interface Props {
 
 export default function SessionRecapCard({ arc, stepCount, dueTomorrow, streak }: Props) {
   const learned = useLiveQuery(
-    () => db.srsData.filter((e) => e.wordId.startsWith(CORE1000_PREFIX) && !e.archived).count(),
+    () => db.srsData.filter((e) => e.wordId.startsWith(CORE1000_PREFIX)).count(),
     [],
     0,
   )

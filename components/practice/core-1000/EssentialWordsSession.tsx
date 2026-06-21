@@ -36,13 +36,14 @@ export function EssentialWordsSession() {
     )
   }
 
-  if (phase === 'empty' || phase === 'done') {
+  if (phase === 'empty' || phase === 'done' || phase === 'error') {
     return (
       <Frame>
         <SessionDone
           stats={stats}
           sessionSummary={sessionSummary}
           wasEmpty={phase === 'empty'}
+          loadFailed={phase === 'error'}
           onContinue={reload}
           continueLoading={reloadLoading}
           onLearnMore={phase === 'done' ? learnMore : undefined}

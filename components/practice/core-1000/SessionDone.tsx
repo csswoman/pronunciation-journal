@@ -17,6 +17,7 @@ interface Props {
   sessionSummary?: EssentialWordsSessionSummary | null
   /** true cuando la cola estaba vacía desde el inicio */
   wasEmpty?: boolean
+  loadFailed?: boolean
   onContinue?: () => void
   continueLoading?: boolean
   onLearnMore?: () => void
@@ -31,6 +32,7 @@ export function SessionDone({
   stats,
   sessionSummary,
   wasEmpty,
+  loadFailed,
   onContinue,
   continueLoading,
   onLearnMore,
@@ -43,9 +45,9 @@ export function SessionDone({
     <div className="flex flex-col items-center gap-6 py-10 text-center">
       <div className="flex flex-col items-center gap-2">
         <h2 className="m-0 font-display text-h3 text-fg">
-          {wasEmpty ? 'Nada pendiente por hoy' : 'Sesión completa'}
+          {loadFailed ? 'No se pudo cargar la sesión' : wasEmpty ? 'Nada pendiente por hoy' : 'Sesión completa'}
         </h2>
-        {!wasEmpty && practiced > 0 ? (
+        {!wasEmpty && !loadFailed && practiced > 0 ? (
           <p className="m-0 text-sm text-fg-muted">
             {practiced} {practiced === 1 ? 'palabra practicada' : 'palabras practicadas'}
             {accuracy !== null ? ` · ${accuracy}% precisión` : ''}
@@ -54,7 +56,11 @@ export function SessionDone({
         <p className="m-0 text-sm text-fg-muted">
           {stats.learned} de {stats.totalWords} palabras en tu deck · {stats.newToday}/{stats.newQuota} nuevas hoy
         </p>
-        {wasEmpty ? (
+        {loadFailed ? (
+          <p className="m-0 text-xs text-fg-subtle">
+            Revisa tu conexión o vuelve a intentar la carga.
+          </p>
+        ) : wasEmpty ? (
           <p className="m-0 text-xs text-fg-subtle">
             Vuelve mañana — el repaso espaciado hace el resto.
           </p>

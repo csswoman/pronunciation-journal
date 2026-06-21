@@ -27,7 +27,7 @@ import type { WordResult } from '@/lib/types'
 
 interface Props {
   entry: CoreWord
-  onGraded: (quality: number, extras?: { accuracy: number; transcript: string }) => void
+  onGraded: (quality: number, extras?: { accuracy: number; transcript: string }) => Promise<void>
   onArchive: () => void
 }
 
@@ -67,7 +67,9 @@ export function SpeakReviewCard({ entry, onGraded, onArchive }: Props) {
 
   const [scored, setScored] = useState<Scored | null>(null)
   const [isScoring, setIsScoring] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const [micError, setMicError] = useState<string | null>(null)
+  const [submitError, setSubmitError] = useState<string | null>(null)
   const submitted = useRef(false)
 
   const sentence = entry.example_sentence
@@ -76,6 +78,7 @@ export function SpeakReviewCard({ entry, onGraded, onArchive }: Props) {
     submitted.current = false
     setScored(null)
     setMicError(null)
+    setSubmitError(null)
     abort()
     release()
     reset()
@@ -126,21 +129,40 @@ export function SpeakReviewCard({ entry, onGraded, onArchive }: Props) {
   const handleContinue = () => {
     if (!scored || submitted.current) return
     submitted.current = true
-    onGraded(accuracyToQuality(scored.score), {
+    setSubmitError(null)
+    setIsSubmitting(true)
+    void onGraded(accuracyToQuality(scored.score), {
       accuracy: scored.score,
       transcript: scored.transcript,
     })
+      .catch(() => {
+        submitted.current = false
+        setSubmitError('No se pudo guardar este resultado. Intenta de nuevo.')
+      })
+      .finally(() => {
+        setIsSubmitting(false)
+      })
   }
 
   const handleSelfGrade = (quality: number) => {
     if (submitted.current) return
     submitted.current = true
-    onGraded(quality)
+    setSubmitError(null)
+    setIsSubmitting(true)
+    void onGraded(quality)
+      .catch(() => {
+        submitted.current = false
+        setSubmitError('No se pudo guardar este resultado. Intenta de nuevo.')
+      })
+      .finally(() => {
+        setIsSubmitting(false)
+      })
   }
 
   const handleRetry = () => {
     setScored(null)
     setMicError(null)
+    setSubmitError(null)
     abort()
     release()
     reset()
@@ -178,6 +200,7 @@ export function SpeakReviewCard({ entry, onGraded, onArchive }: Props) {
             Micrófono no disponible en este navegador — practica en voz alta y califícate:
           </p>
           <SelfGradeBar onGrade={handleSelfGrade} />
+          {submitError && <p className="m-0 text-center text-xs text-error">{submitError}</p>}
         </div>
       ) : !scored ? (
         <div className="flex flex-col items-center gap-2">
@@ -229,10 +252,11 @@ export function SpeakReviewCard({ entry, onGraded, onArchive }: Props) {
             <PillButton variant="outline" size="sm" onClick={handleRetry}>
               Intentar de nuevo
             </PillButton>
-            <PillButton variant="primary" size="sm" onClick={handleContinue}>
+            <PillButton variant="primary" size="sm" onClick={handleContinue} disabled={isSubmitting}>
               Continuar
             </PillButton>
           </div>
+          {submitError && <p className="m-0 text-center text-xs text-error">{submitError}</p>}
         </>
       )}
     </div>
