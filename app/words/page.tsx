@@ -1,6 +1,8 @@
 import { Suspense } from "react";
 import { getCategories, getCategoryWords, getPreviewTags } from "@/lib/lexicon/categories";
 import {
+  countMyWords,
+  countUserDecks,
   countWordsDueForReview,
   getLexiconProgressByCategory,
   getWordsDueForReview,
@@ -16,11 +18,19 @@ async function WordsContent() {
   );
 
   let progressMap: Map<string, { mastered: number; reviewing: number }>;
+  let myWordsCount = 0;
+  let deckCount = 0;
   let dueForReview = 0;
   let dueWordLabels: string[] = [];
   try {
     const userId = await getSupabaseServerUserId();
     progressMap = await getLexiconProgressByCategory(categoryWordIds);
+    if (userId) {
+      [myWordsCount, deckCount] = await Promise.all([
+        countMyWords(userId),
+        countUserDecks(userId),
+      ]);
+    }
     dueForReview = await countWordsDueForReview();
     const dueWords = userId ? await getWordsDueForReview(userId, 4) : [];
     dueWordLabels = dueWords.map((w) => w.text);
@@ -59,6 +69,8 @@ async function WordsContent() {
       lexiconInProgress={lexiconInProgress}
       lexiconTotal={lexiconTotal}
       lexiconPercent={lexiconPercent}
+      myWordsCount={myWordsCount}
+      deckCount={deckCount}
       dueForReview={dueForReview}
       dueWordLabels={dueWordLabels}
     />

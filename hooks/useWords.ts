@@ -107,6 +107,7 @@ export function useWords(): UseWordsState {
     if (!user) {
 
       setWords([]);
+      setError(null);
 
       setLoading(false);
 

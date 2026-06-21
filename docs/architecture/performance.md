@@ -4,7 +4,7 @@ This document records the project's performance boundaries, measurement
 baseline, and architectural rules. Implementation work is tracked separately
 in [`plans/README.md`](../../plans/README.md).
 
-Last measured: 2026-06-21 at implementation commit `26c3d55`.
+Last measured: 2026-06-21 at implementation commit `a3dd495`.
 
 ## Baseline
 
@@ -35,7 +35,7 @@ not as a substitute for browser transfer traces.
 |---|---:|---:|
 | Root layout shared entry | 515.0 KB | 148.3 KB |
 | `/` | 929.8 KB | 254.4 KB |
-| `/words` | 794.1 KB | 225.8 KB |
+| `/words` | 531.5 KB | 153.0 KB |
 | `/courses` | 713.7 KB | 207.6 KB |
 | `/mini-lessons` | 961.0 KB | 261.4 KB |
 | `/practice/review` | 885.3 KB | 253.2 KB |
@@ -146,3 +146,4 @@ A performance PR should satisfy all applicable checks:
 |---|---|---|---|
 | 2026-06-21 | `4c35b5e` | Initial audit baseline | Root shared entry 196.6 KB gzip; `/` 299.5 KB; `/words` 225.8 KB; `/courses` 207.6 KB |
 | 2026-06-21 | `26c3d55` | Defer global AI Coach and Quick Add via `next/dynamic` + conditional mount | Root shared entry 148.3 KB gzip (−48.3 KB); `/` 254.4 KB gzip (−45.1 KB); AI Coach / Quick Add excluded from initial `/` route set |
+| 2026-06-21 | `a3dd495` | Split `/words` by tab runtime and defer inactive tab chunks | `/words` 153.0 KB gzip (−72.8 KB); inactive My Words / Decks runtimes now load only when their tab is active |
