@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
-import { createAudioRecorder } from '../useVoiceRecorder'
+import { createAudioRecorder, hasSupportedRecorderMimeType } from '../useVoiceRecorder'
 
 describe('createAudioRecorder', () => {
   afterEach(() => {
@@ -60,5 +60,28 @@ describe('createAudioRecorder', () => {
     vi.stubGlobal('MediaRecorder', mediaRecorderMock)
 
     expect(createAudioRecorder({} as MediaStream)).toEqual({ supported: false })
+  })
+})
+
+describe('hasSupportedRecorderMimeType', () => {
+  afterEach(() => {
+    vi.unstubAllGlobals()
+  })
+
+  it('marks recording unsupported when MediaRecorder exists but no audio mime type is supported', () => {
+    const mediaRecorderMock = vi.fn()
+    Object.assign(mediaRecorderMock, {
+      isTypeSupported: vi.fn(() => false),
+    })
+
+    vi.stubGlobal('window', { MediaRecorder: mediaRecorderMock })
+    vi.stubGlobal('navigator', {
+      mediaDevices: {
+        getUserMedia: vi.fn(),
+      },
+    })
+    vi.stubGlobal('MediaRecorder', mediaRecorderMock)
+
+    expect(hasSupportedRecorderMimeType()).toBe(false)
   })
 })

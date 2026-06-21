@@ -22,8 +22,8 @@ interface UseVoiceRecorderReturn {
 const RECORDER_MIME_TYPES = [
   'audio/webm;codecs=opus',
   'audio/webm',
-  'audio/mp4',
   'audio/mp4;codecs=mp4a.40.2',
+  'audio/mp4',
   '',
 ] as const
 
@@ -31,13 +31,31 @@ type RecorderInitResult =
   | { supported: true; recorder: MediaRecorder; mimeType: string }
   | { supported: false }
 
+function hasMediaRecorderSupport() {
+  return (
+    typeof window !== 'undefined' &&
+    typeof window.MediaRecorder !== 'undefined' &&
+    typeof navigator !== 'undefined' &&
+    !!navigator.mediaDevices?.getUserMedia
+  )
+}
+
+export function hasSupportedRecorderMimeType(): boolean {
+  if (!hasMediaRecorderSupport()) {
+    return false
+  }
+
+  return RECORDER_MIME_TYPES.some((mimeType) => {
+    if (!mimeType) {
+      return false
+    }
+
+    return MediaRecorder.isTypeSupported(mimeType)
+  })
+}
+
 export function createAudioRecorder(stream: MediaStream): RecorderInitResult {
-  if (
-    typeof window === 'undefined' ||
-    typeof window.MediaRecorder === 'undefined' ||
-    typeof navigator === 'undefined' ||
-    !navigator.mediaDevices?.getUserMedia
-  ) {
+  if (!hasMediaRecorderSupport()) {
     return { supported: false }
   }
 
@@ -72,12 +90,7 @@ export function useVoiceRecorder(): UseVoiceRecorderReturn {
   const chunksRef = useRef<Blob[]>([])
   const startTimeRef = useRef<number>(0)
   const blobUrlRef = useRef<string | null>(null)
-
-  const isSupported =
-    typeof window !== 'undefined' &&
-    typeof window.MediaRecorder !== 'undefined' &&
-    typeof navigator !== 'undefined' &&
-    !!navigator.mediaDevices?.getUserMedia
+  const isSupported = hasSupportedRecorderMimeType()
 
   const reset = useCallback(() => {
     if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
