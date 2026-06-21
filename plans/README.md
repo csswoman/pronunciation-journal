@@ -26,6 +26,7 @@ your row when done.
 | 015 | Split PracticeSession and GrammarStudyDeck below the 250-line limit | P3 | M | — | TODO |
 | 016 | Unified progress hub — centralize practice telemetry, radar, sounds mastery, review center | P1 | L | — | IN PROGRESS (Fase 2 done) |
 | 017 | Exercise eligibility contract — unified lemma/context rules, GenerationResult, CI generatability gate | P1 | M | — | DONE |
+| 018 | Unify pedagogical exercise feedback and beginner retry support | P1 | L | — | DONE |
 
 Status values: TODO | IN PROGRESS | DONE | BLOCKED (with one-line reason) | REJECTED (with one-line rationale)
 
@@ -39,6 +40,7 @@ Status values: TODO | IN PROGRESS | DONE | BLOCKED (with one-line reason) | REJE
 - 004, 009, 013, 014 depend on 001 for a green test baseline.
 - All other plans are independent and can be executed in any order after 001.
 - 017 is independent of 016 but pairs well with it: better exercise generation improves daily plan and progress telemetry quality.
+- 018 is independent of 016/017, but should be executed before adding more exercise types so new components target the shared feedback contract from day one.
 
 ## Findings considered and rejected
 

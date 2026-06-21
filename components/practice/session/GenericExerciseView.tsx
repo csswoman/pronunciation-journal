@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { Lightbulb } from 'lucide-react'
 import { ExerciseShell } from '@/components/exercises/ExerciseShell'
 import type { ExerciseResult } from '@/components/exercises/ExerciseShell'
-import type { GenericPayload, PracticeExercise, PracticeSubmitHandler } from '@/lib/practice/types'
+import type { GenericPayload, PracticeExercise, PracticeSubmitExtras, PracticeSubmitHandler } from '@/lib/practice/types'
 import { getGenericHint } from '@/lib/practice/exercise-renderer/hints'
 import {
   getGenericTitle,
@@ -28,23 +28,25 @@ export function GenericExerciseView({ exercise, onSubmit, focusUi = false }: Pro
   const isProduction = PRODUCTION_TYPES.has(data.type)
   const [result, setResult] = useState<ExerciseResult | null>(null)
   const [hintCount, setHintCount] = useState(0)
+  const [retryKey, setRetryKey] = useState(0)
 
   useEffect(() => {
     setResult(null)
     setHintCount(0)
+    setRetryKey(0)
   }, [exercise.id])
 
   function handleResult(
     isCorrect: boolean,
     userAnswer: string,
     timeMs: number,
-    extras?: { score?: number },
+    extras?: PracticeSubmitExtras,
   ) {
     if (isProduction) {
       onSubmit(isCorrect, userAnswer, extras)
       return
     }
-    setResult({ isCorrect, userAnswer, timeMs, score: extras?.score })
+    setResult({ isCorrect, userAnswer, timeMs, score: extras?.score, feedback: extras?.feedback })
   }
 
   function handleContinue() {
@@ -52,8 +54,15 @@ export function GenericExerciseView({ exercise, onSubmit, focusUi = false }: Pro
     onSubmit(
       result.isCorrect,
       result.userAnswer,
-      result.score != null ? { score: result.score } : undefined,
+      result.score != null || result.feedback
+        ? { score: result.score, feedback: result.feedback }
+        : undefined,
     )
+  }
+
+  function handleRetry() {
+    setResult(null)
+    setRetryKey((key) => key + 1)
   }
 
   function handleSkip() {
@@ -101,10 +110,13 @@ export function GenericExerciseView({ exercise, onSubmit, focusUi = false }: Pro
         hint={getGenericHint(data)}
         result={result}
         onContinue={handleContinue}
+        onRetry={handleRetry}
         onSkip={handleSkip}
         hintSlot={hintSlot}
       >
-        {content ?? <UnsupportedExercise slug={slug} onSkip={handleSkip} />}
+        <div key={retryKey}>
+          {content ?? <UnsupportedExercise slug={slug} onSkip={handleSkip} />}
+        </div>
       </ExerciseShell>
     </div>
   )
