@@ -63,7 +63,8 @@ jobs:
 
       - name: Check for hardcoded secrets
         run: |
-          if grep -r "NEXT_PUBLIC_SUPABASE_KEY\|GEMINI_API_KEY\|service_role" \
+          if grep -rE \
+            "(AIza[0-9A-Za-z_-]{30,}|(GEMINI_API_KEY|NEXT_PUBLIC_SUPABASE_(ANON_)?KEY|SUPABASE_SERVICE_ROLE_KEY)[[:space:]]*[:=][[:space:]]*['\"][^'\"]{16,}['\"])" \
             --include="*.tsx" --include="*.ts" --include="*.jsx" --include="*.js" \
             components/ app/ lib/ 2>/dev/null; then
             echo "⚠️ Warning: Potential hardcoded secrets found"
