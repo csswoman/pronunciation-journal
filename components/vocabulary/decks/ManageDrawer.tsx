@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useAuth } from "@/components/auth/AuthProvider";
 import {
+  type DeckListItem,
   getDeckEntries,
   findEntryByWord,
   insertEntry,
@@ -22,12 +23,11 @@ import { ManageVocabTab } from "./ManageVocabTab";
 import { ManageAddTab } from "./ManageAddTab";
 import { ManageAiTab } from "./ManageAiTab";
 
-type Deck = Tables<"decks">;
 type Entry = Tables<"entries">;
 type Tab = "words" | "add" | "ai";
 
 interface ManageDrawerProps {
-  deck: Deck;
+  deck: DeckListItem;
   onClose: () => void;
   onWordCountChange?: (count: number) => void;
 }

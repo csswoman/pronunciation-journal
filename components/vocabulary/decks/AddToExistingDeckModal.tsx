@@ -4,14 +4,11 @@ import { useState } from "react";
 import { X, Check } from "lucide-react";
 import Button from "@/components/ui/Button";
 import { H2 } from "@/components/ui/Typography";
-import { addWordsToDeck } from "@/lib/decks/queries";
-import type { Tables } from "@/lib/supabase/types";
-
-type Deck = Tables<"decks">;
+import { addWordsToDeck, type DeckListItem } from "@/lib/decks/queries";
 
 interface AddToExistingDeckModalProps {
   wordIds: string[];
-  decks: Deck[];
+  decks: DeckListItem[];
   onClose: () => void;
   onAdded: () => void;
 }

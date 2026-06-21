@@ -90,6 +90,8 @@ independent and can be parallelized after the two client-bundle plans.
 ### Data access
 
 - Supabase queries use explicit column projections.
+- Joined relations also use explicit nested projections such as
+  `entries(id, word, ...)`; do not use relation wildcards like `entries(*)`.
 - `select("*", { count: "exact", head: true })` is allowed for count-only
   queries.
 - Unbounded catalog reads require a documented reason.

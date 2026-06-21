@@ -1,6 +1,26 @@
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import type { Json, Tables } from "@/lib/supabase/types";
 
+const DECK_LIST_COLUMNS = "id, name, description, color, icon";
+const ENTRY_COLUMNS = [
+  "id",
+  "word",
+  "meanings",
+  "difficulty",
+  "tags",
+  "image_url",
+  "audio_url",
+  "created_at",
+  "ipa",
+  "keep_permanent",
+  "notes",
+  "phrases",
+  "sound_id",
+  "updated_at",
+  "user_audio_url",
+  "user_id",
+].join(",");
+
 export interface DeckCounts {
   words: Record<string, number>;
   due: Record<string, number>;
@@ -11,6 +31,8 @@ export interface DeckSummary {
   id: string;
   name: string;
 }
+
+export type DeckListItem = Pick<Tables<"decks">, "id" | "name" | "description" | "color" | "icon">;
 
 interface DeckEntryRow {
   deck_id: string;
@@ -25,14 +47,14 @@ interface ContrastProgressRow {
 }
 
 /** Full deck rows for the current user, newest first. */
-export async function getUserDecksFull(userId: string): Promise<Tables<"decks">[]> {
+export async function getUserDecksFull(userId: string): Promise<DeckListItem[]> {
   const supabase = getSupabaseBrowserClient();
   const { data } = await supabase
     .from("decks")
-    .select("*")
+    .select(DECK_LIST_COLUMNS)
     .eq("user_id", userId)
     .order("created_at", { ascending: false });
-  return data ?? [];
+  return (data as DeckListItem[] | null) ?? [];
 }
 
 /**
@@ -129,10 +151,10 @@ export async function getDeckCardsWithProgress(
 
   const { data: deckEntries } = await supabase
     .from("deck_entries")
-    .select("entry_id, entries(*)")
+    .select(`entry_id, entries(${ENTRY_COLUMNS})`)
     .eq("deck_id", deckId);
 
-  const entries = ((deckEntries ?? []) as { entries: Entry | null }[])
+  const entries = (((deckEntries as unknown) as { entries: Entry | null }[] | null) ?? [])
     .map((r) => r.entries)
     .filter(Boolean) as Entry[];
 
@@ -238,10 +260,13 @@ export async function createDeckWithWords(
 
 export async function getDeckEntries(deckId: string): Promise<Tables<"entries">[]> {
   const supabase = getSupabaseBrowserClient();
-  const { data } = await supabase.from("deck_entries").select("entry_id, entries(*)").eq("deck_id", deckId);
-  return ((data ?? []) as { entries: Tables<"entries"> | null }[])
+  const { data } = await supabase
+    .from("deck_entries")
+    .select(`entry_id, entries(${ENTRY_COLUMNS})`)
+    .eq("deck_id", deckId);
+  return ((((data as unknown) as { entries: Tables<"entries"> | null }[] | null) ?? [])
     .map((row) => row.entries)
-    .filter(Boolean) as Tables<"entries">[];
+    .filter(Boolean)) as Tables<"entries">[];
 }
 
 export async function findEntryByWord(userId: string, word: string): Promise<{ id: string } | null> {
@@ -274,7 +299,7 @@ export async function insertEntry(params: {
 export async function findDeckEntry(deckId: string, entryId: string): Promise<{ deck_id: string; entry_id: string } | null> {
   const { data } = await getSupabaseBrowserClient()
     .from("deck_entries")
-    .select("*")
+    .select("deck_id, entry_id")
     .eq("deck_id", deckId)
     .eq("entry_id", entryId)
     .maybeSingle();

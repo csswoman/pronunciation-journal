@@ -3,9 +3,7 @@
 import { useState } from "react";
 import { Sparkles, RefreshCw, Plus, Check, ChevronRight } from "lucide-react";
 import Button from "@/components/ui/Button";
-import type { Tables } from "@/lib/supabase/types";
-
-type Deck = Tables<"decks">;
+import type { DeckListItem } from "@/lib/decks/queries";
 
 const DIFFICULTY_LEVELS = [
   { value: 1, label: "A1–A2", desc: "Beginner" },
@@ -18,7 +16,7 @@ export function GeminiSuggestPanel({
   existingWords,
   onAddEntry,
 }: {
-  deck: Deck;
+  deck: DeckListItem;
   existingWords?: string[];
   onAddEntry: (word: string, meaning?: string) => Promise<void>;
 }) {

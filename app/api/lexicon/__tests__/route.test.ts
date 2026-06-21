@@ -111,15 +111,16 @@ describe('POST /api/lexicon/[id]', () => {
   it('returns 200 with words and wordBankRows for authenticated user', async () => {
     mockGetCategoryWords.mockReturnValue(FAKE_WORDS as never)
 
+    const selectMock = vi.fn().mockReturnValue({
+      eq: vi.fn().mockReturnValue({
+        in: vi.fn().mockResolvedValue({ data: [], error: null }),
+      }),
+    })
     const authClientMock = makeMockClient({ data: { user: { id: 'user-123' } } })
     const userClientMock = {
       auth: { getUser: vi.fn() },
       from: vi.fn().mockReturnValue({
-        select: vi.fn().mockReturnValue({
-          eq: vi.fn().mockReturnValue({
-            in: vi.fn().mockResolvedValue({ data: [], error: null }),
-          }),
-        }),
+        select: selectMock,
       }),
     }
 
@@ -136,5 +137,8 @@ describe('POST /api/lexicon/[id]', () => {
     const body = await res.json()
     expect(body.words).toHaveLength(2)
     expect(body.wordBankRows).toEqual([])
+    expect(selectMock).toHaveBeenCalledWith(
+      'id, user_id, text, meaning, example, difficulty, source, source_ref, status, srs_status, audio_url, ipa, context, created_at, updated_at, ease_factor, interval_days, repetitions, review_count, last_reviewed_at, next_review_at, error_reason, has_audio, audio_fetch_attempts, image_prompt, synonyms, translation'
+    )
   })
 })

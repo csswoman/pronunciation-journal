@@ -1,13 +1,11 @@
 "use client";
 import { Plus } from "lucide-react";
 import { DeckCard } from "./DeckCard";
-import type { Tables } from "@/lib/supabase/types";
 import type { DeckCounts } from "@/hooks/useDeckData";
-
-type Deck = Tables<"decks">;
+import type { DeckListItem } from "@/lib/decks/queries";
 
 interface DeckGridProps {
-  decks: Deck[];
+  decks: DeckListItem[];
   counts: DeckCounts;
   onStudy: (id: string) => void;
   onManage: (id: string) => void;

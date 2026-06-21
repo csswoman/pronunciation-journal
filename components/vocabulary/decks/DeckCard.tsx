@@ -1,13 +1,11 @@
 "use client";
 import { Play, Settings2, BookOpen } from "lucide-react";
 import Button from "@/components/ui/Button";
-import type { Tables } from "@/lib/supabase/types";
+import type { DeckListItem } from "@/lib/decks/queries";
 import ProgressBar from "@/components/ui/ProgressBar";
 
-type Deck = Tables<"decks">;
-
 interface DeckCardProps {
-  deck: Deck;
+  deck: DeckListItem;
   entryCount: number;
   dueCount?: number;
   masteredCount?: number;
