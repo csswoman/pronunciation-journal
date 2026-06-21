@@ -36,7 +36,7 @@ your row when done.
 | 024 | Defer global client features until the user opens them | P1 | M | — | DONE (2026-06-21, implementation commit `26c3d55`) |
 | 025 | Load each Words area only when its tab is active | P1 | L | 024 | DONE (2026-06-21, local working tree) |
 | 026 | Cache parsed lexicon content within the server process | P2 | S | — | DONE (2026-06-21, local working tree) |
-| 027 | Stop serializing the complete curriculum through a Client Component | P2 | M | — | TODO |
+| 027 | Stop serializing the complete curriculum through a Client Component | P2 | M | — | DONE (2026-06-21, local working tree) |
 | 028 | Fetch only the phoneme data required for a session | P2 | M | — | TODO |
 | 029 | Remove remaining over-broad Supabase projections | P3 | S | — | TODO |
 
