@@ -20,21 +20,30 @@ export function useDeckData() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!user) return;
+    if (!user) {
+      setDecks([]);
+      setCounts({ words: {}, due: {}, mastered: {} });
+      setLoading(false);
+      return;
+    }
 
     let cancelled = false;
+    setLoading(true);
 
     void (async () => {
-      const [decksData, countsData] = await Promise.all([
-        getUserDecksFull(user.id),
-        getDeckCounts(user.id),
-      ]);
+      try {
+        const [decksData, countsData] = await Promise.all([
+          getUserDecksFull(user.id),
+          getDeckCounts(user.id),
+        ]);
 
-      if (cancelled) return;
+        if (cancelled) return;
 
-      setDecks(decksData);
-      setCounts(countsData);
-      setLoading(false);
+        setDecks(decksData);
+        setCounts(countsData);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
     })();
 
     return () => {
