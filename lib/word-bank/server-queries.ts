@@ -127,6 +127,30 @@ export async function countWordsDueForReview(): Promise<number> {
   return count ?? 0;
 }
 
+/** Server-only: count of rows in the current user's word bank. */
+export async function countMyWords(userId: string): Promise<number> {
+  const supabase = await createSupabaseServerClient();
+  const { count, error } = await supabase
+    .from(TABLE)
+    .select("*", { count: "exact", head: true })
+    .eq("user_id", userId);
+
+  if (error) throw error;
+  return count ?? 0;
+}
+
+/** Server-only: count of rows in the current user's decks. */
+export async function countUserDecks(userId: string): Promise<number> {
+  const supabase = await createSupabaseServerClient();
+  const { count, error } = await supabase
+    .from("decks")
+    .select("*", { count: "exact", head: true })
+    .eq("user_id", userId);
+
+  if (error) throw error;
+  return count ?? 0;
+}
+
 /** Server-only: weak words for review hub. */
 export async function getWeakWordsForReviewServer(
   userId: string,

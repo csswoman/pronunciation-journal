@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import type { AIMessage, StreamChunk, ExerciseResult } from "@/lib/ai-practice/types";
 import { serializeMessage, deserializeMessage, type SerializedModelMessage } from "@/lib/ai-practice/types";
 import { applyExerciseResult, type UserLearningState } from "@/lib/ai-practice/learning-state";
@@ -9,7 +9,11 @@ import { messagesToWire } from "@/lib/ai-practice/wire";
 import { logEvent } from "@/lib/ai-practice/events";
 import { makeStreamState, processChunk } from "@/lib/ai-practice/stream-processor";
 import type { StartRoleplayArgs } from "@/lib/ai-practice/tools/registry";
-import { persistCoachExerciseResult } from "@/lib/ai-practice/coach-progress";
+import {
+  persistCoachExerciseResult,
+  recordCoachSession,
+  type CoachSessionExercise,
+} from "@/lib/ai-practice/coach-progress";
 import type { AIConversationMode } from "@/lib/types";
 
 function getOrCreateDeviceId(): string {
@@ -57,6 +61,9 @@ export function useStreamingChat({
   const exercisesCompletedRef = useRef(0);
   const correctCountRef = useRef(0);
   const firstExerciseLoggedRef = useRef(false);
+  const sessionExercisesRef = useRef<CoachSessionExercise[]>([]);
+  const userIdRef = useRef(userId);
+  userIdRef.current = userId;
 
   function isQuotaError(message: string): boolean {
     const lower = message.toLowerCase();
@@ -243,14 +250,29 @@ export function useStreamingChat({
     if (result.topic) lastTopicRef.current = result.topic;
     exercisesCompletedRef.current += 1;
     if (result.correct) correctCountRef.current += 1;
+    sessionExercisesRef.current.push({ toolName, result });
     if (learningState) setLearningState(applyExerciseResult(learningState, result));
     if (userId) {
       void persistCoachExerciseResult(userId, toolName, result).catch(() => {});
     }
   }, [learningState, setLearningState, userId]);
 
+  const finalizeSession = useCallback(() => {
+    const completedExercises = sessionExercisesRef.current;
+    sessionExercisesRef.current = [];
+    const activeUserId = userIdRef.current;
+    if (activeUserId && completedExercises.length > 0) {
+      void recordCoachSession(activeUserId, completedExercises).catch((err) => {
+        console.error("[AI Coach] session progress save failed", err);
+      });
+    }
+  }, []);
+
+  useEffect(() => finalizeSession, [finalizeSession]);
+
   const resetChat = useCallback(() => {
     abortRef.current?.abort();
+    finalizeSession();
     if (sessionStartedRef.current) {
       const completed = exercisesCompletedRef.current;
       logEvent("session_ended", {
@@ -267,7 +289,7 @@ export function useStreamingChat({
     setMessages([]);
     setError(null);
     setQuotaExhausted(false);
-  }, [mode]);
+  }, [mode, finalizeSession]);
 
   const loadMessages = useCallback((msgs: AIMessage[]) => {
     const hydrated = msgs.map(m => {
@@ -279,5 +301,15 @@ export function useStreamingChat({
     setMessages(hydrated);
   }, []);
 
-  return { messages, isStreaming, error, quotaExhausted, sendMessage, answerToolCall, resetChat, loadMessages };
+  return {
+    messages,
+    isStreaming,
+    error,
+    quotaExhausted,
+    sendMessage,
+    answerToolCall,
+    resetChat,
+    finalizeSession,
+    loadMessages,
+  };
 }

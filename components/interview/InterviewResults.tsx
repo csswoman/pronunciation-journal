@@ -5,6 +5,9 @@ import { RotateCcw, TrendingUp, AlertCircle, CheckCircle2 } from "lucide-react";
 import Button from "@/components/ui/Button";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { savePracticeAnswer } from "@/lib/practice/queries";
+import { buildSessionResult } from "@/lib/practice/session-result";
+import { recordActivitySession } from "@/lib/progress/activity-hub";
+import type { ExerciseResult } from "@/lib/practice/types";
 import type { ScoringResult } from "@/lib/types";
 import type { InterviewTurn } from "./InterviewSession";
 import { AccuracyRing } from "./AccuracyRing";
@@ -105,8 +108,7 @@ export function InterviewResults({ title, turns, results, difficulty, level, onR
 
     void (async () => {
       try {
-        for (const { idx, turn, result } of scoredTurns) {
-          await savePracticeAnswer(userId, {
+        const answers: ExerciseResult[] = scoredTurns.map(({ idx, turn, result }) => ({
             exerciseId: `interview:${idx}`,
             exerciseTypeId: 10,
             slug: "speak_word",
@@ -116,10 +118,18 @@ export function InterviewResults({ title, turns, results, difficulty, level, onR
             userAnswer: result.transcript,
             timeMs: 0,
             exercisePayload: { targetWord: turn.text, accuracy: result.score.accuracy },
-          });
+            completedAt: new Date(),
+          }));
+        for (const answer of answers) {
+          await savePracticeAnswer(userId, answer);
         }
-      } catch {
-        // Best-effort — never blocks the results UI.
+        await recordActivitySession(userId, {
+          practiceContext: "ai_coach",
+          sessionResult: buildSessionResult(answers),
+          metadata: { coachTool: "interview" },
+        });
+      } catch (err) {
+        console.error("[InterviewResults] progress save failed", err);
       }
     })();
   }, [user?.id, candidateTurns, results, threshold]);

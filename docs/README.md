@@ -8,6 +8,7 @@
 |-----------|-------------|
 | [Sistemas SRS](architecture/srs.md) | Repetición espaciada (`word_bank`, lecciones, SM-2) |
 | [Sistema de ejercicios](architecture/exercises.md) | Tipos de ejercicio, flujo de sesión y persistencia |
+| [Performance](architecture/performance.md) | Baseline, presupuestos, reglas y método de medición |
 
 ## Despliegue y CI/CD
 
@@ -48,7 +49,7 @@ Documentos de diseño e implementación generados en flujos de trabajo asistidos
 ```
 docs/
 ├── README.md                 ← este índice
-├── architecture/             ← dominio de la app (SRS, ejercicios)
+├── architecture/             ← dominio de la app (SRS, ejercicios, performance)
 ├── deployment/               ← CI/CD, Vercel, Supabase
 ├── design/                   ← componentes UI
 │   ├── buttons/

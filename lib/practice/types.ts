@@ -25,7 +25,7 @@ export type ExerciseSlug =
   | 'ax_same_different'  // id: 12
   | 'odd_one_out'        // id: 13
   | 'abx'               // id: 14
-  | 'sentence_context'   // no DB row — does not write to answer_history
+  | 'sentence_context'   // id: 18
   | 'multiple_choice'    // id: 17
   | 'reader'             // no DB row — comprehensible input, does not write to answer_history
   | 'written_production' // id: 15 — online-only (AI grading)
@@ -46,7 +46,7 @@ export const EXERCISE_TYPE_IDS: Record<ExerciseSlug, number | null> = {
   ax_same_different: 12,
   odd_one_out: 13,
   abx: 14,
-  sentence_context: null,
+  sentence_context: 18,
   multiple_choice: 17,
   reader: null,
   written_production: 15,

@@ -1,6 +1,8 @@
 import { Suspense } from "react";
-import { getCategories, getCategoryWords, getPreviewTags } from "@/lib/lexicon/categories";
+import { getWordsPageLexicon } from "@/lib/lexicon/categories";
 import {
+  countMyWords,
+  countUserDecks,
   countWordsDueForReview,
   getLexiconProgressByCategory,
   getWordsDueForReview,
@@ -10,17 +12,22 @@ import { WordsClient } from "@/components/words/WordsClient";
 import type { LessonViewModel } from "@/lib/lexicon/types";
 
 async function WordsContent() {
-  const categories = getCategories();
-  const categoryWordIds = new Map(
-    categories.map(cat => [cat.id, getCategoryWords(cat.id).map(w => w.id)])
-  );
+  const { categories, categoryWordIds, previewTags } = getWordsPageLexicon();
 
   let progressMap: Map<string, { mastered: number; reviewing: number }>;
+  let myWordsCount = 0;
+  let deckCount = 0;
   let dueForReview = 0;
   let dueWordLabels: string[] = [];
   try {
     const userId = await getSupabaseServerUserId();
     progressMap = await getLexiconProgressByCategory(categoryWordIds);
+    if (userId) {
+      [myWordsCount, deckCount] = await Promise.all([
+        countMyWords(userId),
+        countUserDecks(userId),
+      ]);
+    }
     dueForReview = await countWordsDueForReview();
     const dueWords = userId ? await getWordsDueForReview(userId, 4) : [];
     dueWordLabels = dueWords.map((w) => w.text);
@@ -43,7 +50,7 @@ async function WordsContent() {
       wordsCompleted: mastered,
       wordsReviewing: reviewing,
       progress,
-      tags: getPreviewTags(cat.id),
+      tags: previewTags.get(cat.id) ?? [],
     };
   });
 
@@ -59,6 +66,8 @@ async function WordsContent() {
       lexiconInProgress={lexiconInProgress}
       lexiconTotal={lexiconTotal}
       lexiconPercent={lexiconPercent}
+      myWordsCount={myWordsCount}
+      deckCount={deckCount}
       dueForReview={dueForReview}
       dueWordLabels={dueWordLabels}
     />

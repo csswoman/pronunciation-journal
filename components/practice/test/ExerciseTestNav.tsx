@@ -3,7 +3,7 @@
 import { ChevronLeft, ChevronRight, Columns2, Play } from 'lucide-react'
 import Button from '@/components/ui/Button'
 import { cn } from '@/lib/cn'
-import { DOMAIN_LABELS, DOMAIN_ORDER } from '@/components/practice/test/constants'
+import { DOMAIN_LABELS } from '@/components/practice/test/constants'
 import type { TestGalleryDomain, TestGalleryEntry } from '@/lib/practice/test-gallery/fixtures'
 
 type ViewMode = 'single' | 'split'

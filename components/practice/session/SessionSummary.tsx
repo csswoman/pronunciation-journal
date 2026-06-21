@@ -26,7 +26,7 @@ function AccuracyDisplay({ accuracy }: { accuracy: number }) {
       aria-live="polite"
       aria-label={`Accuracy ${accuracy} percent`}
       className={cn(
-        'text-6xl font-bold tabular-nums',
+        'text-3xl font-semibold tabular-nums',
         isExcellent
           ? 'text-success animate-accuracy-pop'
           : isAcceptable

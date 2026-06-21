@@ -1,4 +1,5 @@
 import PageLayout from '@/components/layout/PageLayout'
+import { ArchivedWordsPanel } from '@/components/practice/core-1000/ArchivedWordsPanel'
 import { EssentialWordsSession } from '@/components/practice/core-1000/EssentialWordsSession'
 
 export const metadata = { title: 'Essential Words' }
@@ -16,6 +17,7 @@ export default function Core1000Page() {
           </h1>
         </header>
         <EssentialWordsSession />
+        <ArchivedWordsPanel />
       </div>
     </PageLayout>
   )

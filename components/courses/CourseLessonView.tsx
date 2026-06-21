@@ -6,8 +6,11 @@ import LessonMarkdown from "@/components/lessons/LessonMarkdown";
 import Button from "@/components/ui/Button";
 import { getTheoryLessonBySlug } from "@/lib/theory-lessons/queries";
 import type { TheoryLesson } from "@/lib/types";
-import { markLessonIncomplete, isLessonComplete } from "@/lib/db";
-import { recordLessonComplete } from "@/lib/practice/queries";
+import { isLessonComplete } from "@/lib/db";
+import {
+  recordLessonComplete,
+  recordLessonIncomplete,
+} from "@/lib/practice/queries";
 import type { CoursePathTrackId } from "@/lib/courses/types";
 
 interface CourseLessonViewProps {
@@ -21,6 +24,7 @@ export default function CourseLessonView({ slug, levelId, lessonId }: CourseLess
   const [loading, setLoading] = useState(true);
   const [completed, setCompleted] = useState(false);
   const [marking, setMarking] = useState(false);
+  const [completionError, setCompletionError] = useState<string | null>(null);
 
   useEffect(() => {
     getTheoryLessonBySlug(slug)
@@ -37,14 +41,17 @@ export default function CourseLessonView({ slug, levelId, lessonId }: CourseLess
   const handleToggleComplete = async () => {
     if (!levelId || !lessonId) return;
     setMarking(true);
+    setCompletionError(null);
     try {
       if (completed) {
-        await markLessonIncomplete(levelId, lessonId);
+        await recordLessonIncomplete(levelId, lessonId);
         setCompleted(false);
       } else {
         await recordLessonComplete(levelId, lessonId);
         setCompleted(true);
       }
+    } catch (err) {
+      setCompletionError(err instanceof Error ? err.message : "No se pudo actualizar la lección.");
     } finally {
       setMarking(false);
     }
@@ -105,6 +112,11 @@ export default function CourseLessonView({ slug, levelId, lessonId }: CourseLess
             Volver a la ruta
           </Link>
         </div>
+        {completionError && (
+          <p role="alert" className="mt-3 text-sm text-error">
+            No se pudo actualizar el progreso. Inténtalo de nuevo.
+          </p>
+        )}
       </div>
     </div>
   );

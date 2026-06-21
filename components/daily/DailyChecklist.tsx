@@ -192,7 +192,6 @@ export default function DailyChecklist({ conceptLesson, initialStepId, streak = 
         steps={steps}
         getStepStatus={getStepStatus}
         onStartStep={handleStartStep}
-        onMarkDone={markDone}
       />
 
       <div className="mt-8 flex flex-col items-center gap-2 text-center">

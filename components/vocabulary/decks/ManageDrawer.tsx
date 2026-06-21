@@ -49,13 +49,20 @@ export function ManageDrawer({ deck, onClose, onWordCountChange }: ManageDrawerP
   const [showPhrases, setShowPhrases] = useState(false);
   const [tab, setTab] = useState<Tab>("words");
   const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [actionError, setActionError] = useState<string | null>(null);
+  const [mutating, setMutating] = useState(false);
   const selectMode = selected.size > 0;
 
   const loadEntries = useCallback(async () => {
-    const loaded = await getDeckEntries(deck.id);
-    setEntries(loaded);
-    onWordCountChange?.(loaded.length);
-    setLoading(false);
+    try {
+      const loaded = await getDeckEntries(deck.id);
+      setEntries(loaded);
+      onWordCountChange?.(loaded.length);
+    } catch (error) {
+      setActionError(error instanceof Error ? error.message : "Could not load the deck.");
+    } finally {
+      setLoading(false);
+    }
   }, [deck.id, onWordCountChange]);
 
   useEffect(() => {
@@ -66,6 +73,7 @@ export function ManageDrawer({ deck, onClose, onWordCountChange }: ManageDrawerP
     const word = (wordOverride ?? manualWord).trim();
     if (!word || !user) return;
     setAddingWord(true);
+    setActionError(null);
     try {
       const existing = await findEntryByWord(user.id, word);
       let entryId = existing?.id;
@@ -86,44 +94,67 @@ export function ManageDrawer({ deck, onClose, onWordCountChange }: ManageDrawerP
         await loadEntries();
       }
     } catch (error: unknown) {
-      alert(`Error: ${error instanceof Error ? error.message : "Unknown"}`);
+      setActionError(error instanceof Error ? error.message : "Could not add the word.");
     } finally {
       setAddingWord(false);
     }
   };
 
   const handleRemoveWord = async (entryId: string) => {
-    await removeDeckEntry(deck.id, entryId);
-    setSelected((previous) => {
-      const next = new Set(previous);
-      next.delete(entryId);
-      return next;
-    });
-    await loadEntries();
+    if (mutating) return;
+    setMutating(true);
+    setActionError(null);
+    try {
+      await removeDeckEntry(deck.id, entryId);
+      setSelected((previous) => {
+        const next = new Set(previous);
+        next.delete(entryId);
+        return next;
+      });
+      await loadEntries();
+    } catch (error) {
+      setActionError(error instanceof Error ? error.message : "Could not remove the word.");
+    } finally {
+      setMutating(false);
+    }
   };
 
   const handleBulkRemove = async () => {
-    if (selected.size === 0) return;
-    await removeDeckEntries(deck.id, Array.from(selected));
-    setSelected(new Set());
-    await loadEntries();
+    if (selected.size === 0 || mutating) return;
+    setMutating(true);
+    setActionError(null);
+    try {
+      await removeDeckEntries(deck.id, Array.from(selected));
+      setSelected(new Set());
+      await loadEntries();
+    } catch (error) {
+      setActionError(error instanceof Error ? error.message : "Could not remove the selected words.");
+    } finally {
+      setMutating(false);
+    }
   };
 
   const handleSaveEntry = async (entryId: string, phrases: string[], meaning: string) => {
-    const { meanings: rawMeanings } = await getEntryMeanings(entryId);
-    const existingMeanings = Array.isArray(rawMeanings) ? (rawMeanings as { partOfSpeech?: string; definitions?: { definition?: string; example?: string }[] }[]) : [];
-    let meanings: { partOfSpeech?: string; definitions?: { definition?: string; example?: string }[] }[] | null = existingMeanings.length ? existingMeanings : null;
-    if (meaning) {
-      if (existingMeanings.length > 0) {
-        const updated = [...existingMeanings];
-        updated[0] = { ...updated[0], definitions: [{ ...(updated[0].definitions?.[0] ?? {}), definition: meaning }] };
-        meanings = updated;
-      } else {
-        meanings = [{ definitions: [{ definition: meaning }] }];
+    setActionError(null);
+    try {
+      const { meanings: rawMeanings } = await getEntryMeanings(entryId);
+      const existingMeanings = Array.isArray(rawMeanings) ? (rawMeanings as { partOfSpeech?: string; definitions?: { definition?: string; example?: string }[] }[]) : [];
+      let meanings: { partOfSpeech?: string; definitions?: { definition?: string; example?: string }[] }[] | null = existingMeanings.length ? existingMeanings : null;
+      if (meaning) {
+        if (existingMeanings.length > 0) {
+          const updated = [...existingMeanings];
+          updated[0] = { ...updated[0], definitions: [{ ...(updated[0].definitions?.[0] ?? {}), definition: meaning }] };
+          meanings = updated;
+        } else {
+          meanings = [{ definitions: [{ definition: meaning }] }];
+        }
       }
+      await updateEntryContent(entryId, { phrases: phrases.length ? phrases : null, meanings });
+      await loadEntries();
+    } catch (error) {
+      setActionError(error instanceof Error ? error.message : "Could not save the changes.");
+      throw error;
     }
-    await updateEntryContent(entryId, { phrases: phrases.length ? phrases : null, meanings });
-    await loadEntries();
   };
 
   const toggleSelect = (id: string) => {
@@ -163,6 +194,14 @@ export function ManageDrawer({ deck, onClose, onWordCountChange }: ManageDrawerP
       <div className="flex px-4 pt-3 gap-1 border-b border-[var(--line-divider)] pb-0">{TABS.map((item) => <button key={item.id} onClick={() => setTab(item.id)} className={`flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-t-lg border-b-2 transition-colors -mb-px ${tab === item.id ? "border-[var(--primary)] text-[var(--primary)]" : "border-transparent text-fg-muted hover:text-fg"}`}>{item.icon}{item.label}</button>)}</div>
 
       <div className="flex-1 overflow-y-auto">
+        {actionError && (
+          <div role="alert" className="mx-4 mt-3 flex items-center justify-between gap-3 rounded-xl border border-error bg-error-soft px-3 py-2 text-sm text-error">
+            <span>{actionError}</span>
+            <button type="button" onClick={() => setActionError(null)} aria-label="Dismiss error">
+              ×
+            </button>
+          </div>
+        )}
         {tab === "words" && <ManageVocabTab loading={loading} entries={entries} filter={filter} selected={selected} selectMode={selectMode} onFilterChange={setFilter} onToggleSelectAll={toggleSelectAll} onBulkRemove={handleBulkRemove} onToggleSelect={toggleSelect} onRemoveWord={handleRemoveWord} onSaveEntry={handleSaveEntry} onChangeTab={setTab} />}
         {tab === "add" && <ManageAddTab entries={entries} manualWord={manualWord} manualPhrases={manualPhrases} showPhrases={showPhrases} addingWord={addingWord} onManualWordChange={setManualWord} onManualPhrasesChange={setManualPhrases} onTogglePhrases={() => setShowPhrases((value) => !value)} onAddWord={() => handleAddWord()} />}
         {tab === "ai" && <ManageAiTab deck={deck} entries={entries} onAddEntry={handleAddWord} />}

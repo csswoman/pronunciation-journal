@@ -3,8 +3,6 @@
 import { useState } from 'react'
 import { speak } from '@/lib/phoneme-practice/tts'
 import type { Exercise } from '@/lib/phoneme-practice/types'
-import { PhonemeExercisePrompt } from './PhonemeExercisePrompt'
-import { getPhonemeExerciseMeta } from '@/lib/phoneme-practice/exercise-labels'
 
 interface Props {
   exercise: Exercise
@@ -17,8 +15,6 @@ export function MinimalPairExercise({ exercise, onSubmit, focusUi = false, voice
   const [selected, setSelected] = useState<string | null>(null)
   const [submitted, setSubmitted] = useState(false)
   const [playing, setPlaying] = useState(false)
-  const meta = getPhonemeExerciseMeta('minimal_pair', { ipa: exercise.ipa })
-
   function handleSelect(id: string, label: string) {
     if (submitted) return
     speak(label, { voice })

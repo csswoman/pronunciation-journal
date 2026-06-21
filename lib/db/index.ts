@@ -5,6 +5,7 @@ import type { UserLearningState } from "../ai-practice/learning-state";
 import type { GenericExercise, GenericExerciseType, ExerciseSource } from "../exercises/types";
 import type { ExerciseResult, PracticeExercise } from "../practice/types";
 import type { ReaderPassage } from "../practice/reader/types";
+import { getRelativeLocalDateKey, getTodayLocalDateKey } from "../date/local-date";
 
 /**
  * Active in-progress practice session, persisted so the user can resume
@@ -241,7 +242,7 @@ export async function getCachedReaderPassage(
 // ── Daily Progress Helpers ──
 
 function getTodayKey(): string {
-  return new Date().toISOString().split("T")[0];
+  return getTodayLocalDateKey();
 }
 
 export async function updateDailyProgress(
@@ -283,10 +284,15 @@ export async function updateDailyProgress(
 
 const CORE1000_SRS_PREFIX = "c1k:";
 
-/** Todas las entradas SRS del Core 1000, excluyendo archivadas. */
+/**
+ * Todas las entradas SRS del Core 1000.
+ *
+ * Las archivadas deben conservarse para que el constructor de la cola pueda
+ * tratarlas como palabras ya vistas sin programarlas para repaso.
+ */
 export async function getCore1000SrsEntries(): Promise<SRSData[]> {
   return db.srsData
-    .filter((e) => e.wordId.startsWith(CORE1000_SRS_PREFIX) && !e.archived)
+    .filter((e) => e.wordId.startsWith(CORE1000_SRS_PREFIX))
     .toArray();
 }
 
@@ -310,7 +316,9 @@ export async function unarchiveCore1000Word(word: string): Promise<void> {
   const wordId = `${CORE1000_SRS_PREFIX}${word.toLowerCase()}`;
   const existing = await db.srsData.get(wordId);
   if (!existing) return;
-  const { archived: _a, archivedAt: _b, ...rest } = existing;
+  const rest = { ...existing };
+  delete rest.archived;
+  delete rest.archivedAt;
   await db.srsData.put(rest);
 }
 
@@ -366,7 +374,7 @@ export async function updateUserStats(
 ): Promise<UserStats> {
   const stats = await getUserStats();
   const today = getTodayKey();
-  const yesterday = new Date(Date.now() - 86400000).toISOString().split("T")[0];
+  const yesterday = getRelativeLocalDateKey(-1);
 
   let newStreak = stats.currentStreak;
   if (stats.lastStudyDate === today) {

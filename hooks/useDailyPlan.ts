@@ -5,7 +5,6 @@ import { useAuth } from '@/components/auth/AuthProvider'
 import {
   loadCachedDailyPlan,
   loadDoneIds,
-  loadResolvedIds,
   saveCachedDailyPlan,
   saveDoneIds,
   saveResolvedIds,
@@ -139,16 +138,7 @@ export function useDailyPlan({ conceptLesson, autoLoad = true }: UseDailyPlanOpt
   )
   const allDone = steps.length > 0 && completedCount >= steps.length
 
-  const celebrate = useCallback(() => {
-    void import('canvas-confetti').then(({ default: confetti }) => {
-      confetti({
-        particleCount: 120,
-        spread: 70,
-        origin: { y: 0.6 },
-        colors: ['#7c5cff', '#22c55e', '#f59e0b'],
-      })
-    })
-  }, [])
+  const celebrate = useCallback(() => undefined, [])
 
   return {
     plan,

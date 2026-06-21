@@ -46,7 +46,7 @@ export const PHONEME_REGISTRY: Record<ExerciseType, PhonemeRegistryEntry> = {
     ),
   },
   speak_word: {
-    render: ({ legacy, exercise, onSubmit, focusUi }) =>
+    render: ({ legacy, exercise, onSubmit }) =>
       exercise.context === 'daily'
         ? <SpeakScoredExercise exercise={legacy} onSubmit={onSubmit} />
         : <SpeakExercise exercise={legacy} onSubmit={onSubmit} />,

@@ -31,7 +31,7 @@ export default function AICoachPanel() {
   const ctx = getPageContext(pathname);
   const { onDragStart } = usePanelResize({ panelWidth, setPanelWidth });
 
-  const { messages, isStreaming, error, quotaExhausted, wordToSave, conversationId, sendMessage, answerToolCall, openSaveWordModal, closeSaveWordModal, confirmSaveWord, resetSession, loadConversation, removeConversation } = useAIPractice();
+  const { messages, isStreaming, error, quotaExhausted, wordToSave, conversationId, sendMessage, answerToolCall, openSaveWordModal, closeSaveWordModal, confirmSaveWord, resetSession, finalizeSession, loadConversation, removeConversation } = useAIPractice();
 
   const [activeTab, setActiveTab] = useState<TabId>("chat");
   const [inputPrefill, setInputPrefill] = useState<string | undefined>(undefined);
@@ -60,8 +60,9 @@ export default function AICoachPanel() {
   }, [isOpen, launch, consumeLaunch]);
 
   useEffect(() => {
+    if (!isOpen) return;
     getRecentConversations(30).then(setConversations);
-  }, [messages.length, conversationId]);
+  }, [isOpen, messages.length, conversationId]);
 
   const hasMessages = messages.some((message) => {
     if (message.role === "tool") return false;
@@ -90,7 +91,7 @@ export default function AICoachPanel() {
       aria-hidden={!isOpen}
     >
       {!isFullscreen && !isMobile && <div onMouseDown={onDragStart} title="Drag to resize" className="absolute top-0 left-0 bottom-0 w-1 cursor-ew-resize group z-10 -ml-px"><div className="absolute inset-y-0 left-0 w-1 opacity-0 group-hover:opacity-100 transition-opacity bg-primary" /></div>}
-      <AICoachHeader pageLabel={ctx.label} showHistory={showHistory} onNewChat={() => { resetSession(); setActiveTab("chat"); }} onToggleHistory={() => setShowHistory((value) => !value)} onClose={close} />
+      <AICoachHeader pageLabel={ctx.label} showHistory={showHistory} onNewChat={() => { resetSession(); setActiveTab("chat"); }} onToggleHistory={() => setShowHistory((value) => !value)} onClose={() => { finalizeSession(); close(); }} />
       <div className="flex-shrink-0"><ChatTabs active={activeTab} onChange={setActiveTab} /></div>
 
       {showHistory && <ConversationHistoryPanel conversations={conversations} activeId={conversationId} onSelect={(conv) => { loadConversation(conv); setShowHistory(false); setActiveTab("chat"); }} onDelete={async (id) => { await removeConversation(id); setConversations((prev) => prev.filter((item) => item.id !== id)); }} onClose={() => setShowHistory(false)} />}

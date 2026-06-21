@@ -190,4 +190,20 @@ describe('finishContrastSession', () => {
     expect(masteryArg).toBeGreaterThanOrEqual(90)
     expect(outcome.masteryPct).toBe(masteryArg)
   })
+
+  it('skips duplicate activity recording when PracticeSession already owns it', async () => {
+    const sessionResult = makeSessionResult([makeResult({ isCorrect: true })])
+
+    await finishContrastSession(
+      USER_ID,
+      CONTRAST_ID,
+      sessionResult,
+      null,
+      new Date(),
+      false,
+    )
+
+    expect(mockRecordActivitySession).not.toHaveBeenCalled()
+    expect(mockUpdateContrastProgress).toHaveBeenCalledOnce()
+  })
 })

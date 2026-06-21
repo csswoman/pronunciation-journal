@@ -58,6 +58,7 @@ export async function finishContrastSession(
   result: SessionResult,
   currentProgress?: UserContrastProgress | null,
   now: Date = new Date(),
+  recordActivity = true,
 ): Promise<FinishContrastSessionOutcome> {
   const correct = result.results.filter(r => r.isCorrect).length
   const total   = result.results.length
@@ -82,12 +83,14 @@ export async function finishContrastSession(
   )
 
   await updateContrastProgress(userId, contrastId, correct, total, sr, masteryPct)
-  await recordActivitySession(userId, {
-    practiceContext: 'sound_lab',
-    sessionResult: result,
-    source: 'sound_lab',
-    metadata: { contrastId },
-  })
+  if (recordActivity) {
+    await recordActivitySession(userId, {
+      practiceContext: 'sound_lab',
+      sessionResult: result,
+      source: 'sound_lab',
+      metadata: { contrastId },
+    })
+  }
   await flushOutbox()
 
   const updated: UserContrastProgress = {

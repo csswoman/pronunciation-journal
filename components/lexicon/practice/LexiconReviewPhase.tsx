@@ -22,6 +22,7 @@ export function LexiconReviewPhase({ entries, posMap, userId, onComplete }: Lexi
   const [index, setIndex] = useState(0)
   const [ratings, setRatings] = useState<WordRating[]>([])
   const [busy, setBusy] = useState(false)
+  const [saveError, setSaveError] = useState<string | null>(null)
 
   async function handleRate(rating: FlashcardRating) {
     if (busy) return
@@ -29,6 +30,7 @@ export function LexiconReviewPhase({ entries, posMap, userId, onComplete }: Lexi
     if (!entry) return
 
     setBusy(true)
+    setSaveError(null)
     try {
       const updated = await applyFlashcardRating(userId, {
         sourceRef: entry.source_ref ?? entry.id,
@@ -49,15 +51,7 @@ export function LexiconReviewPhase({ entries, posMap, userId, onComplete }: Lexi
       }
     } catch (err) {
       console.error('[LexiconReviewPhase] applyFlashcardRating failed', err)
-      // Proceed without saving — don't block the user.
-      const next: WordRating[] = [...ratings, { entry, rating }]
-      const nextIndex = index + 1
-      if (nextIndex >= entries.length) {
-        onComplete(next)
-      } else {
-        setRatings(next)
-        setIndex(nextIndex)
-      }
+      setSaveError('No se pudo guardar esta valoración. Inténtalo de nuevo.')
     } finally {
       setBusy(false)
     }
@@ -68,17 +62,24 @@ export function LexiconReviewPhase({ entries, posMap, userId, onComplete }: Lexi
 
   return (
     <main className="flex w-full items-center justify-center px-10 py-10">
-      <LexiconFlashcard
-        key={current.id}
-        word={current.text}
-        partOfSpeech={posMap?.get(current.source_ref ?? '') || undefined}
-        definition={current.meaning ?? ''}
-        example={current.example}
-        translation={current.translation ?? undefined}
-        cardNumber={index + 1}
-        totalCards={entries.length}
-        onRate={handleRate}
-      />
+      <div className="flex w-full max-w-md flex-col gap-3">
+        {saveError && (
+          <p role="alert" className="rounded-lg border border-error bg-error-soft px-3 py-2 text-sm text-error">
+            {saveError}
+          </p>
+        )}
+        <LexiconFlashcard
+          key={current.id}
+          word={current.text}
+          partOfSpeech={posMap?.get(current.source_ref ?? '') || undefined}
+          definition={current.meaning ?? ''}
+          example={current.example}
+          translation={current.translation ?? undefined}
+          cardNumber={index + 1}
+          totalCards={entries.length}
+          onRate={handleRate}
+        />
+      </div>
     </main>
   )
 }

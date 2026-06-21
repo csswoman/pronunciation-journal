@@ -25,12 +25,12 @@ export function buildSessionQueue({
   newPerDay = NEW_CARDS_PER_DAY,
 }: BuildQueueOptions): Core1000QueueItem[] {
   const byId = new Map(words.map((w) => [core1000WordId(w.word), w]));
-  // archived entries are already excluded by getCore1000SrsEntries, so all
-  // entries here count as "seen" (do not re-introduce as new)
+  // Every persisted entry counts as seen, including archived words. Archived
+  // words must not be re-introduced as new after the user presses "Ya la sé".
   const seen = new Set(srsEntries.map((e) => e.wordId));
 
   const due: Core1000QueueItem[] = srsEntries
-    .filter((e) => new Date(e.nextReview).getTime() <= now.getTime())
+    .filter((e) => !e.archived && new Date(e.nextReview).getTime() <= now.getTime())
     .map((e) => byId.get(e.wordId))
     .filter((entry): entry is CoreWord => entry !== undefined)
     .sort((a, b) => a.rank - b.rank)
