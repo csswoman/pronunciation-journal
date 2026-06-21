@@ -1,8 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/cn";
 import { useUISounds } from "@/hooks/useUISounds";
+import { isLessonComplete } from "@/lib/db";
+import { recordLessonComplete } from "@/lib/practice/queries";
+
+const COURSE_SLUG = "mini-lessons";
 
 interface QuizQuestion {
   question: string;
@@ -13,6 +17,7 @@ interface QuizQuestion {
 
 interface Props {
   questions: QuizQuestion[];
+  slug: string;
 }
 
 function scoreClass(correct: number, total: number): string {
@@ -22,8 +27,9 @@ function scoreClass(correct: number, total: number): string {
   return "mini-lessons__quiz-score--low";
 }
 
-export default function MiniLessonQuiz({ questions }: Props) {
+export default function MiniLessonQuiz({ questions, slug }: Props) {
   const [selected, setSelected] = useState<Record<number, number>>({});
+  const completionRecorded = useRef(false);
   const { playTap, playCorrect, playWrong } = useUISounds();
 
   function choose(questionIdx: number, optionIdx: number) {
@@ -39,6 +45,24 @@ export default function MiniLessonQuiz({ questions }: Props) {
   const correctCount = questions.filter(
     (q, i) => selected[i] === q.correct
   ).length;
+
+  useEffect(() => {
+    if (!allAnswered || completionRecorded.current) return;
+
+    void (async () => {
+      const already = await isLessonComplete(COURSE_SLUG, slug);
+      if (already) {
+        completionRecorded.current = true;
+        return;
+      }
+      completionRecorded.current = true;
+      try {
+        await recordLessonComplete(COURSE_SLUG, slug);
+      } catch {
+        completionRecorded.current = false;
+      }
+    })();
+  }, [allAnswered, slug]);
 
   return (
     <div className="mini-lessons__quiz">
