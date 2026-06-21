@@ -34,7 +34,7 @@ export default function SessionOpeningBanner({ arc }: Props) {
   const progressPct = Math.min(100, (learnedCount / CORE_1000_TARGET) * 100)
 
   return (
-    <div className="mb-5 rounded-lg border border-border-subtle bg-surface-sunken px-4 py-3">
+    <div className="mb-5 rounded-xl border border-(--accent-border) bg-primary-50 px-4 py-3.5">
       {(arc?.topicLabel || arc?.soundIpa) && (
         <p className="font-body-sm text-fg-muted">
           <span className="font-semibold text-fg">Hoy </span>
@@ -45,22 +45,25 @@ export default function SessionOpeningBanner({ arc }: Props) {
           {arc.soundIpa && (
             <>
               <span className="text-fg-subtle">sonido </span>
-              <code className="font-mono text-[0.8em] text-fg">/{arc.soundIpa}/</code>
+              <code className="font-mono text-[0.8em] font-semibold text-primary">/{arc.soundIpa}/</code>
             </>
           )}
         </p>
       )}
       {learnedCount > 0 && (
-        <div className="mt-1.5">
-          <div className="mb-1 flex items-baseline justify-between">
+        <div className="mt-2">
+          <div className="mb-1.5 flex items-baseline justify-between">
             <p className="font-caption text-fg-subtle">Core 1000</p>
             <p className="font-caption text-fg-subtle">
-              <span className="tabular-nums text-fg-muted">{learnedCount}</span>
+              <span className="tabular-nums font-medium text-fg-muted">{learnedCount}</span>
               <span> / {CORE_1000_TARGET}</span>
             </p>
           </div>
-          <div className="h-1 w-full overflow-hidden rounded-full bg-border-subtle">
-            <div className="h-full rounded-full bg-primary" style={{ width: `${progressPct}%` }} />
+          <div className="h-1.5 w-full overflow-hidden rounded-full bg-primary-100">
+            <div
+              className="h-full rounded-full bg-primary transition-[width] duration-500"
+              style={{ width: `${progressPct}%` }}
+            />
           </div>
         </div>
       )}
