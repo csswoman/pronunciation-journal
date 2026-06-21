@@ -126,7 +126,6 @@ export default function HomeDailyCard({ conceptLesson }: HomeDailyCardProps) {
               steps={steps}
               getStepStatus={getStepStatus}
               onStartStep={handleStartStep}
-              onMarkDone={() => router.push('/daily')}
             />
           </div>
         ) : null)}

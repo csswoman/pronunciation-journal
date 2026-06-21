@@ -88,7 +88,8 @@ export default function SoundPracticePage() {
       const cid = primaryContrastId(soundIpa)
       if (!cid) return
       try {
-        const outcome = await finishContrastSession(user.id, cid, result)
+        // PracticeSession already records the activity_sessions row.
+        const outcome = await finishContrastSession(user.id, cid, result, undefined, new Date(), false)
         setNextReview(outcome.nextReview)
       } catch (err) {
         console.error('[SoundPracticePage] finishContrastSession failed', err)

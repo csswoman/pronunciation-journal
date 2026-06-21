@@ -67,8 +67,11 @@ export default function DailyStepSession({
       sessionLength={step.exercises.length}
       sessionLabel={step.title}
       initialIndex={initialExerciseIndex ?? 0}
-      onSessionComplete={onComplete}
-      onExit={onExit}
+      onSessionComplete={() => undefined}
+      onExit={(result) => {
+        if (result.results.length >= step.exercises.length) onComplete()
+        else onExit()
+      }}
     />
   )
 }

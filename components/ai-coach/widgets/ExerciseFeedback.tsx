@@ -15,8 +15,8 @@ export default function ExerciseFeedback({ result, onNext, onRetry }: ExerciseFe
 
   return (
     <div
-      className="rounded-xl px-4 py-3 space-y-1.5 text-sm"
-      style={{ backgroundColor: bgColor, borderLeft: `3px solid ${accentColor}` }}
+      className="rounded-xl border px-4 py-3 space-y-1.5 text-sm"
+      style={{ backgroundColor: bgColor, borderColor: accentColor }}
     >
       <p className="font-semibold leading-snug" style={{ color: accentColor }}>
         {correct ? "✓" : "✗"} {feedback.immediate}

@@ -119,7 +119,11 @@ export function WordsClient({
   };
 
   const handleToggleFavorite = async (wordId: string, value: boolean) => {
-    try { await toggleFavorite(wordId, value); } catch { /* silent */ }
+    try {
+      await toggleFavorite(wordId, value);
+    } catch (err) {
+      setWordActionError(err instanceof Error ? err.message : "Failed to update favorite");
+    }
   };
 
   const wordStats = useMemo(() => ({
@@ -155,10 +159,15 @@ export function WordsClient({
 
   const confirmDeleteDeck = async () => {
     if (!deletingDeckId) return;
-    await deleteDeck(deletingDeckId);
-    removeDeck(deletingDeckId);
-    setDeletingDeckId(null);
-    setEditDeckId(null);
+    try {
+      await deleteDeck(deletingDeckId);
+      removeDeck(deletingDeckId);
+      setDeletingDeckId(null);
+      setEditDeckId(null);
+    } catch (err) {
+      setWordActionError(err instanceof Error ? err.message : "Failed to delete deck");
+      setDeletingDeckId(null);
+    }
   };
 
   if (wordBankStudyDeck && user) {

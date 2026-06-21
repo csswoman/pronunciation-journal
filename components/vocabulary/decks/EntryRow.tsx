@@ -37,9 +37,14 @@ export function EntryRow({ entry, selected, onToggleSelect, onRemove, onSaveEntr
   const handleSave = async () => {
     setSaving(true);
     const phrases = editingPhrases.trim() ? editingPhrases.split("\n").map((p) => p.trim()).filter(Boolean) : [];
-    await onSaveEntry(entry.id, phrases, editingMeaning.trim());
-    setSaving(false);
-    setExpanded(false);
+    try {
+      await onSaveEntry(entry.id, phrases, editingMeaning.trim());
+      setExpanded(false);
+    } catch {
+      // The drawer owns the visible error message.
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (

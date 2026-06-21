@@ -11,8 +11,6 @@ interface DailyStepListProps {
   getStepStatus: (stepId: string) => DailyStepStatus
   /** Starts the exercise session for a step (not called for 'concept'). */
   onStartStep: (step: DailyStep) => void
-  /** Marks a step done (used by 'concept' when opening its reading). */
-  onMarkDone: (stepId: string) => void
 }
 
 const CARD_CLASS =
@@ -26,7 +24,6 @@ export default function DailyStepList({
   steps,
   getStepStatus,
   onStartStep,
-  onMarkDone,
 }: DailyStepListProps) {
   return (
     <ol className="flex w-full flex-col gap-3">
@@ -86,7 +83,7 @@ export default function DailyStepList({
         if (isConcept && step.href) {
           return (
             <li key={step.id} className="min-w-0">
-              <Link href={step.href} className={CARD_CLASS} onClick={() => onMarkDone(step.id)}>
+              <Link href={step.href} className={CARD_CLASS}>
                 {inner}
               </Link>
             </li>
