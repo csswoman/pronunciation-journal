@@ -71,8 +71,8 @@ function fragmentId(source: string, text: string): string {
   return `${h.slice(0, 8)}-${h.slice(8, 12)}-${h.slice(12, 16)}-${h.slice(16, 20)}-${h.slice(20)}`;
 }
 
-function cacheKey(topic: string, level: string): string {
-  return createHash("sha256").update(`${level}:${topic.toLowerCase()}`).digest("hex");
+function hashedSentenceSource(input: string): string {
+  return createHash("sha256").update(input).digest("hex");
 }
 
 // ── Route handler ─────────────────────────────────────────────────────────────
@@ -84,8 +84,8 @@ function cacheKey(topic: string, level: string): string {
  *
  * Generates sentences with Gemini, saves them to text_fragments (cache),
  * and returns the rows so the client can build exercises immediately.
- * Grammar deck sentences are cached globally as system content. Free-form topics
- * are cached per-user to avoid exposing user-supplied prompts across accounts.
+ * Grammar-deck sentences are shared system content; custom prompts are cached
+ * only within the requesting user's scope and never persist the raw topic.
  */
 export async function POST(req: NextRequest): Promise<NextResponse> {
   const originError = requireSameOrigin(req);
@@ -105,14 +105,16 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   if (validationError) return validationError;
 
   const topic = body.topic;
-  const level = body.level;
-  const count = body.count ?? DEFAULT_COUNT;
-  const deckSlug = body.deckSlug ?? null;
-  const isSharedDeckCache = Boolean(deckSlug);
-  const source = isSharedDeckCache
+  const level = typeof body.level === "string" ? body.level : "B1";
+  const count = Math.min(
+    MAX_COUNT,
+    Math.max(1, typeof body.count === "number" ? body.count : DEFAULT_COUNT),
+  );
+  const deckSlug = typeof body.deckSlug === "string" ? body.deckSlug : null;
+  const isSharedDeckRequest = Boolean(deckSlug);
+  const source = isSharedDeckRequest
     ? `grammar-deck:${deckSlug}:ai`
-    : `ai:user:${user.id}:${level}:${cacheKey(topic, level)}`;
-  const cacheOwnerId = isSharedDeckCache ? null : user.id;
+    : `ai-user:${hashedSentenceSource(`${user.id}:${level}:${topic}`)}`;
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
@@ -132,9 +134,9 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     .eq("fragment_type", "sentence")
     .limit(count);
 
-  cacheQuery = cacheOwnerId === null
+  cacheQuery = isSharedDeckRequest
     ? cacheQuery.is("user_id", null)
-    : cacheQuery.eq("user_id", cacheOwnerId);
+    : cacheQuery.eq("user_id", user.id);
 
   const { data: cached } = await cacheQuery;
 
@@ -164,11 +166,11 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   // ── Save to text_fragments (cache) ────────────────────────────────────────
   const rows = sentences.map((content) => ({
     id: fragmentId(source, content),
-    user_id: cacheOwnerId,
+    user_id: isSharedDeckRequest ? null : user.id,
     source,
     fragment_type: "sentence" as const,
     content,
-    title: deckSlug ? `${topic} · ${level}` : `AI sentences · ${level}`,
+    title: deckSlug ? `${deckSlug} · ${level}` : `Custom sentences · ${level}`,
   }));
 
   const { data: inserted, error: insertErr } = await db
