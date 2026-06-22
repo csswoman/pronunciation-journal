@@ -266,6 +266,7 @@ export async function updateContrastProgress(
       next_review:     sr.next_review.toISOString(),
     },
     { user_id: userId, contrast_id: contrastId },
+    'user_id,contrast_id',
   )
 }
 

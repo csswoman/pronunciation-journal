@@ -1,0 +1,216 @@
+{
+  "meta": {
+    "eyebrow": "A2 · Preguntar con cortesía",
+    "title": "Preguntar con cortesía",
+    "titleEmphasis": "preguntas indirectas",
+    "goal": "Ya puedes usar preguntas indirectas en ejemplos claros y adecuados al contexto."
+  },
+  "cards": [
+    {
+      "id": "a2-preguntas-indirectas-concept",
+      "tag": "Idea central",
+      "title": "Preguntar con cortesía: qué expresa",
+      "lede": "Esta lección te ayuda a usar preguntas indirectas con precisión y sin traducir palabra por palabra.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "inicio cortés",
+              "value": "Could you tell me...?",
+              "highlights": [
+                "inicio cortés"
+              ]
+            },
+            {
+              "key": "orden afirmativo",
+              "value": "where the station is",
+              "highlights": [
+                "orden afirmativo"
+              ]
+            },
+            {
+              "key": "sin do/does",
+              "value": "Do you know what time it starts?",
+              "highlights": [
+                "sin do/does"
+              ]
+            },
+            {
+              "key": "yes/no con if",
+              "value": "Do you know if it is open?",
+              "highlights": [
+                "yes/no con if"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer la intención y elegir correctamente preguntas indirectas en situaciones reales."
+      }
+    },
+    {
+      "id": "a2-preguntas-indirectas-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "inicio cortés",
+              "value": "Could you tell me...?"
+            },
+            {
+              "key": "orden afirmativo",
+              "value": "where the station is"
+            },
+            {
+              "key": "sin do/does",
+              "value": "Do you know what time it starts?"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a2-preguntas-indirectas-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo como una unidad completa y fíjate en la posición de las palabras.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Ejemplo 1",
+              "value": "Could you tell me where she lives?"
+            },
+            {
+              "key": "Ejemplo 2",
+              "value": "Do you know what this means?"
+            },
+            {
+              "key": "Ejemplo 3",
+              "value": "Can you tell me if they are ready?"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a2-preguntas-indirectas-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "La elección depende de la intención, la cantidad, el tiempo o el registro.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "inicio cortés",
+              "rule": "Could you tell me...?",
+              "examples": [
+                "Could you tell me where she lives?"
+              ]
+            },
+            {
+              "label": "orden afirmativo",
+              "rule": "where the station is",
+              "examples": [
+                "Do you know what this means?"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a2-preguntas-indirectas-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con una forma natural y gramatical.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "Do you know where is the bank?"
+            },
+            {
+              "variant": "good",
+              "text": "Do you know where the bank is?",
+              "note": "forma recomendada"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a2-preguntas-indirectas-reference",
+      "tag": "Referencia rápida",
+      "title": "Decisión en cuatro pasos",
+      "lede": "Usa esta lista para comprobar tu frase antes de continuar.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Intención",
+              "value": "¿Qué quieres expresar exactamente?"
+            },
+            {
+              "key": "2. Estructura",
+              "value": "Elige la forma adecuada de preguntas indirectas."
+            },
+            {
+              "key": "3. Concordancia",
+              "value": "Revisa sujeto, verbo, número y tiempo."
+            },
+            {
+              "key": "4. Naturalidad",
+              "value": "Lee la frase completa y evita traducir literalmente."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "crea una frase personal con cada patrón y léela en voz alta."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "Could you tell me where ___?",
+      "options": [
+        "is it",
+        "it is"
+      ],
+      "answer": 1,
+      "explain": "La respuesta correcta aplica la regla central de preguntas indirectas."
+    },
+    {
+      "q": "¿Cuál de estas frases es correcta?",
+      "options": [
+        "Do you know where is the bank?",
+        "Do you know where the bank is?"
+      ],
+      "answer": 1,
+      "explain": "La segunda opción usa la estructura y el orden correctos."
+    },
+    {
+      "q": "¿Qué conviene revisar al usar preguntas indirectas?",
+      "options": [
+        "La intención, la estructura y el contexto.",
+        "Solo la traducción literal al español."
+      ],
+      "answer": 0,
+      "explain": "Una frase natural depende del significado, la forma y el contexto, no de traducir palabra por palabra."
+    }
+  ]
+}

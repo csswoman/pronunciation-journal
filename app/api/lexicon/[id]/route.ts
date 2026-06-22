@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
-import type { Database } from "@/lib/supabase/types";
 import { getCategoryWords } from "@/lib/lexicon/categories";
+import { createUserScopedClient, requireUser, rateLimit, SECURE_HEADERS } from "@/lib/api/guards";
 
 const WORD_BANK_LEXICON_COLUMNS = [
   "id",
@@ -40,9 +39,9 @@ export async function GET(
   const { id } = await params;
   const words = getCategoryWords(id);
   if (words.length === 0) {
-    return NextResponse.json({ error: "Not found" }, { status: 404 });
+    return NextResponse.json({ error: "Not found" }, { status: 404, headers: SECURE_HEADERS });
   }
-  return NextResponse.json({ words });
+  return NextResponse.json({ words }, { headers: SECURE_HEADERS });
 }
 
 /**
@@ -56,36 +55,31 @@ export async function POST(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const authHeader = req.headers.get("authorization");
-  if (!authHeader) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  if (!supabaseUrl || !anonKey) {
-    return NextResponse.json({ error: "Server misconfiguration" }, { status: 500 });
-  }
-
-  const token = authHeader.replace(/^Bearer\s+/i, "");
-  const authClient = createClient<Database>(supabaseUrl, anonKey, {
-    auth: { persistSession: false },
-  });
-  const { data: { user } } = await authClient.auth.getUser(token);
-  if (!user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const { user, error: authError, accessToken } = await requireUser(req);
+  if (authError) return authError;
 
   const { id } = await params;
-  const words = getCategoryWords(id);
-  if (words.length === 0) {
-    return NextResponse.json({ error: "Not found" }, { status: 404 });
+
+  const { limited, error: rateLimitError } = rateLimit(`/api/lexicon/${id}:${user.id}`, {
+    max: 30,
+    windowMs: 60_000,
+    meta: { endpoint: "/api/lexicon/[id]", userId: user.id },
+  });
+  if (limited) return rateLimitError;
+
+  if (!accessToken) {
+    return NextResponse.json(
+      { error: "Authorization token is required" },
+      { status: 401, headers: SECURE_HEADERS }
+    );
   }
 
-  const userClient = createClient<Database>(supabaseUrl, anonKey, {
-    auth: { persistSession: false },
-    global: { headers: { Authorization: `Bearer ${token}` } },
-  });
+  const words = getCategoryWords(id);
+  if (words.length === 0) {
+    return NextResponse.json({ error: "Not found" }, { status: 404, headers: SECURE_HEADERS });
+  }
+
+  const userClient = createUserScopedClient(accessToken);
 
   const sourceRefs = words.map((w) => w.id);
   const { data: wordBankRows, error: selectErr } = await userClient
@@ -95,8 +89,11 @@ export async function POST(
     .in("source_ref", sourceRefs);
 
   if (selectErr) {
-    return NextResponse.json({ error: selectErr.message }, { status: 500 });
+    return NextResponse.json({ error: selectErr.message }, { status: 500, headers: SECURE_HEADERS });
   }
 
-  return NextResponse.json({ words, wordBankRows: wordBankRows ?? [] });
+  return NextResponse.json(
+    { words, wordBankRows: wordBankRows ?? [] },
+    { headers: SECURE_HEADERS }
+  );
 }

@@ -36,6 +36,21 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/((?!_next/static|_next/image|favicon\\.ico|api/gemini/word-of-day|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+    "/",
+    "/admin/:path*",
+    "/auth/callback",
+    "/courses/:path*",
+    "/daily/:path*",
+    "/dashboard/:path*",
+    "/ipa/:path*",
+    "/lexicon/:path*",
+    "/mini-lessons/:path*",
+    "/practice/:path*",
+    "/profile/:path*",
+    "/progress/:path*",
+    "/review/:path*",
+    "/test/:path*",
+    "/vocabulary/:path*",
+    "/words/:path*",
   ],
 };

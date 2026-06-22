@@ -39,6 +39,7 @@ your row when done.
 | 027 | Stop serializing the complete curriculum through a Client Component | P2 | M | — | DONE (2026-06-21, local working tree) |
 | 028 | Fetch only the phoneme data required for a session | P2 | M | — | TODO |
 | 029 | Remove remaining over-broad Supabase projections | P3 | S | — | DONE (2026-06-21, local working tree) |
+| 030 | Close curriculum gaps by level, then derive placement and checkpoint tests from the curriculum | P1 | L | — | DONE (focused tests and typecheck pass; full suite has 2 unrelated transcribe mock failures) |
 
 Status values: TODO | IN PROGRESS | DONE | BLOCKED (with one-line reason) | REJECTED (with one-line rationale)
 
@@ -69,6 +70,9 @@ Status values: TODO | IN PROGRESS | DONE | BLOCKED (with one-line reason) | REJE
 - 029 supersedes 012 with a current, vetted projection inventory.
 - 026, 027, 028, and 029 can execute independently after the baseline is
   recorded.
+- 030 is independent of the older infrastructure plans, but it should be
+  executed before any UI that depends on `B1+` gating or a placement test so
+  the test contract matches the curriculum instead of inventing its own scope.
 
 ## Findings considered and rejected
 
@@ -80,6 +84,10 @@ Status values: TODO | IN PROGRESS | DONE | BLOCKED (with one-line reason) | REJE
   throwing; check fails closed.
 - JSON.parse uncaught in phrases route: parse is inside the model-fallback
   try/catch.
+- `[SERVER-ACTIONS-13]` No Server Actions are currently in play: rejected.
+  A repo scan on 2026-06-21 found no `use server` directives in tracked app
+  source files, so the mutation surface remains API routes plus browser-side
+  Supabase access.
 - GeminiAdapter mic-track leak: stream lifecycle is owned by
   `useSharedMicStream`/`useVoiceRecorder`, which stop tracks.
 - streak `yesterdayStr` UTC slice: only misfires at server TZ offsets beyond
@@ -88,6 +96,10 @@ Status values: TODO | IN PROGRESS | DONE | BLOCKED (with one-line reason) | REJE
   fails closed — marginal.
 - Gemini key rotation/versioning governance: ops concern, not a code finding.
 - `dayOfYear` off-by-one in daily-plan rotation: cosmetic variance only.
+- `[STATE-10]` Zustand persistence risk: rejected. The repo currently has only
+  `lib/stores/aiCoachStore.ts` and `lib/stores/uiSoundsStore.ts`, and neither
+  uses Zustand `persist` middleware. There is no current evidence of private
+  data being persisted via Zustand.
 - Adding generic memoization to every Client Component: rejected because the
   measured cost is mounting and shipping inactive feature trees, not evidence
   of widespread expensive pure renders.

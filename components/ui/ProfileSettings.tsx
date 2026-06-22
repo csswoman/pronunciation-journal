@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useUserPreferences } from "@/hooks/useUserPreferences";
 import { useAuth } from "@/components/auth/AuthProvider";
 import ProfileAvatarCard from "@/components/profile/ProfileAvatarCard";
@@ -39,7 +40,7 @@ function SectionCard({ children }: { children: React.ReactNode }) {
 
 export default function ProfileSettings() {
   const { user } = useAuth();
-  const { preferences, loading, updateFullName, updateAvatar, updatePassword } = useUserPreferences();
+  const { preferences, loading, updateFullName, updateAvatar, updatePassword, updateCefrLevel } = useUserPreferences();
 
   const displayName =
     preferences?.full_name ||
@@ -76,6 +77,11 @@ export default function ProfileSettings() {
   const handlePasswordSave = async (password: string) => {
     await updatePassword(password);
     showToast("Password updated successfully");
+  };
+
+  const handleLevelChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
+    await updateCefrLevel(event.target.value as "A1" | "A2" | "B1" | "B2" | "C1");
+    showToast("English level updated");
   };
 
   if (loading) {
@@ -133,6 +139,36 @@ export default function ProfileSettings() {
       {toast && <Toast message={toast.message} type={toast.type} />}
 
       {/* Identity card */}
+      <SectionCard>
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <p className="text-sm font-medium text-fg">English level</p>
+            <p className="text-xs text-fg-muted">Controls the course content available to you.</p>
+          </div>
+          <select
+            aria-label="English level"
+            value={preferences?.cefr_level ?? "A1"}
+            onChange={handleLevelChange}
+            className="rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 py-2 text-sm font-semibold text-fg"
+          >
+            {["A1", "A2", "B1", "B2", "C1"].map((level) => (
+              <option key={level} value={level}>{level}</option>
+            ))}
+          </select>
+        </div>
+        <div className="flex flex-wrap gap-3 border-t border-[var(--border)] pt-4">
+          <Link href="/assessment" className="text-sm font-semibold text-primary hover:text-primary-hover">
+            Hacer prueba de nivel
+          </Link>
+          <Link
+            href={`/assessment?mode=checkpoint&level=${(preferences?.cefr_level ?? "A1").toLowerCase()}`}
+            className="text-sm font-medium text-fg-muted hover:text-fg"
+          >
+            Comprobar mi nivel actual
+          </Link>
+        </div>
+      </SectionCard>
+
       <SectionCard>
         <ProfileAvatarCard
           avatarUrl={preferences?.avatar_url}

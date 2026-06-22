@@ -11,6 +11,7 @@ import type { ReaderPassage } from '@/lib/practice/reader/types'
 import { ReaderExercise } from './ReaderExercise'
 import { buildSessionResult } from '@/lib/practice/session-result'
 import { recordActivitySession } from '@/lib/progress/activity-hub'
+import { savePracticeAnswer } from '@/lib/practice/queries'
 
 // Planned structure:
 // <ReaderEntry>
@@ -109,19 +110,25 @@ export function ReaderEntry() {
           if (!user) return
           const result = {
             exerciseId: `reader:${state.passage.id}`,
-            slug: 'reader' as const,
-            exerciseTypeId: null,
+            slug: 'multiple_choice' as const,
+            exerciseTypeId: 17,
             isCorrect: correct,
             timeMs: 0,
             contentId: state.passage.id,
             context: 'practice' as const,
             completedAt: new Date(),
           }
-          void recordActivitySession(user.id, {
-            practiceContext: 'practice',
-            source: 'practice',
-            sessionResult: buildSessionResult([result]),
-          })
+          void savePracticeAnswer(user.id, result)
+            .then(() =>
+              recordActivitySession(user.id, {
+                practiceContext: 'practice',
+                source: 'practice',
+                sessionResult: buildSessionResult([result]),
+              }),
+            )
+            .catch((err) => {
+              console.error('[ReaderEntry] progress save failed', err)
+            })
         }}
       />
     </div>

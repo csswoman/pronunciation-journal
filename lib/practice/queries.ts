@@ -11,6 +11,8 @@ import {
   markLessonIncomplete,
 } from '@/lib/db'
 import { enqueue } from '@/lib/sync/sync-manager'
+import { buildSessionResult } from '@/lib/practice/session-result'
+import { recordActivitySession } from '@/lib/progress/activity-hub'
 import type {
   PracticeAnswer,
   PracticeContext,
@@ -33,7 +35,7 @@ export async function recordLessonComplete(courseSlug: string, lessonSlug: strin
   const { data: { user } } = await supabase().auth.getUser()
   if (user) {
     const lessonId = `${courseSlug}:${lessonSlug}`
-    await savePracticeAnswer(user.id, {
+    const answer = {
       exerciseId: lessonId,
       exerciseTypeId: 5, // fill_blank — closest to "reading/completing a lesson"
       slug: 'fill_blank',
@@ -41,6 +43,12 @@ export async function recordLessonComplete(courseSlug: string, lessonSlug: strin
       contentId: lessonId,
       context: 'courses',
       timeMs: 0,
+    } as const
+    await savePracticeAnswer(user.id, answer)
+    await recordActivitySession(user.id, {
+      practiceContext: 'courses',
+      sessionResult: buildSessionResult([{ ...answer, completedAt: new Date() }]),
+      metadata: { lessonSlug },
     })
   }
 

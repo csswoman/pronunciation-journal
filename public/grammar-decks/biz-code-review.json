@@ -94,6 +94,27 @@
           ]
         }
       ]
+    },
+    {
+      "id": "cr-checklist",
+      "tag": "Referencia rápida",
+      "title": "Antes de enviar el comentario",
+      "lede": "Un comentario útil deja claro el problema, el impacto y una posible dirección sin convertir una sugerencia en una orden.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            { "key": "Contexto", "value": "Describe qué parte del cambio estás comentando." },
+            { "key": "Impacto", "value": "Explica si afecta claridad, mantenimiento, rendimiento o corrección." },
+            { "key": "Propuesta", "value": "Sugiere una alternativa concreta cuando sea útil." },
+            { "key": "Prioridad", "value": "Aclara si es bloqueante, sugerencia o nit." }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Tono:",
+        "body": "Sé directo sobre el código y respetuoso con la persona. Pregunta cuando no tengas todo el contexto."
+      }
     }
   ],
   "text_fragments": [

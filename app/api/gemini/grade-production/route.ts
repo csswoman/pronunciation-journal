@@ -5,7 +5,7 @@ import {
   GRADE_PRODUCTION_SYSTEM_PROMPT,
   buildGradeProductionUserPrompt,
 } from '@/lib/ai-prompts'
-import { requireUser, rateLimit, validateBody } from '@/lib/api/guards'
+import { requireSameOrigin, requireUser, rateLimit, validateBody } from '@/lib/api/guards'
 import type { ProductionGradeResult } from '@/lib/exercises/production-grade'
 
 const GradeProductionSchema = z.object({
@@ -81,7 +81,10 @@ async function gradeWithFallback(ai: GoogleGenAI, prompt: string): Promise<Produ
 }
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
-  const { user, error: authError } = await requireUser()
+  const originError = requireSameOrigin(request)
+  if (originError) return originError
+
+  const { user, error: authError } = await requireUser(request)
   if (authError) return authError as NextResponse
 
   const { limited, error: rateLimitError } = rateLimit(`/api/gemini/grade-production:${user.id}`, {

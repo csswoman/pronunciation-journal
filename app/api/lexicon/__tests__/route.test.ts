@@ -6,17 +6,25 @@ vi.mock('@/lib/lexicon/categories', () => ({
   getCategoryWords: vi.fn(),
 }))
 
-// Mock @supabase/supabase-js createClient
-vi.mock('@supabase/supabase-js', () => ({
-  createClient: vi.fn(),
+vi.mock('@/lib/api/guards', () => ({
+  requireUser: vi.fn(),
+  rateLimit: vi.fn(),
+  createUserScopedClient: vi.fn(),
+  SECURE_HEADERS: { 'Cache-Control': 'no-store' },
 }))
 
 import { GET, POST } from '../../lexicon/[id]/route'
 import { getCategoryWords } from '@/lib/lexicon/categories'
-import { createClient } from '@supabase/supabase-js'
+import {
+  requireUser,
+  rateLimit,
+  createUserScopedClient,
+} from '@/lib/api/guards'
 
 const mockGetCategoryWords = vi.mocked(getCategoryWords)
-const mockCreateClient = vi.mocked(createClient)
+const mockRequireUser = vi.mocked(requireUser)
+const mockRateLimit = vi.mocked(rateLimit)
+const mockCreateUserScopedClient = vi.mocked(createUserScopedClient)
 
 const FAKE_WORDS = [
   { id: 'w1', text: 'apple' },
@@ -27,20 +35,11 @@ function makeParams(id: string) {
   return { params: Promise.resolve({ id }) }
 }
 
-function makeMockClient(
-  getUserResult: { data: { user: { id: string } | null } },
-  fromImpl?: () => unknown
-) {
-  return {
-    auth: {
-      getUser: vi.fn().mockResolvedValue(getUserResult),
-    },
-    from: fromImpl ?? vi.fn().mockReturnValue({}),
-  }
-}
-
 describe('GET /api/lexicon/[id]', () => {
-  beforeEach(() => { vi.clearAllMocks() })
+  beforeEach(() => {
+    vi.clearAllMocks()
+    mockRateLimit.mockReturnValue({ limited: false, error: null })
+  })
 
   it('returns 404 when category has no words', async () => {
     mockGetCategoryWords.mockReturnValue([])
@@ -69,6 +68,7 @@ describe('POST /api/lexicon/[id]', () => {
       NEXT_PUBLIC_SUPABASE_URL: 'https://test.supabase.co',
       NEXT_PUBLIC_SUPABASE_ANON_KEY: 'test-anon-key',
     }
+    mockRateLimit.mockReturnValue({ limited: false, error: null })
   })
 
   afterEach(() => {
@@ -77,6 +77,11 @@ describe('POST /api/lexicon/[id]', () => {
 
   it('returns 401 when Authorization header is missing', async () => {
     mockGetCategoryWords.mockReturnValue(FAKE_WORDS as never)
+    mockRequireUser.mockResolvedValue({
+      user: null,
+      error: new Response(null, { status: 401 }) as never,
+      accessToken: null,
+    })
     const req = new NextRequest('http://localhost/api/lexicon/food', { method: 'POST' })
     const res = await POST(req, makeParams('food'))
     expect(res.status).toBe(401)
@@ -84,9 +89,11 @@ describe('POST /api/lexicon/[id]', () => {
 
   it('returns 401 when token resolves to null user', async () => {
     mockGetCategoryWords.mockReturnValue(FAKE_WORDS as never)
-    mockCreateClient.mockReturnValue(
-      makeMockClient({ data: { user: null } }) as never
-    )
+    mockRequireUser.mockResolvedValue({
+      user: null,
+      error: new Response(null, { status: 401 }) as never,
+      accessToken: null,
+    })
     const req = new NextRequest('http://localhost/api/lexicon/food', {
       method: 'POST',
       headers: { Authorization: 'Bearer bad-token' },
@@ -97,9 +104,11 @@ describe('POST /api/lexicon/[id]', () => {
 
   it('returns 404 when category has no words (authenticated)', async () => {
     mockGetCategoryWords.mockReturnValue([])
-    mockCreateClient.mockReturnValue(
-      makeMockClient({ data: { user: { id: 'user-123' } } }) as never
-    )
+    mockRequireUser.mockResolvedValue({
+      user: { id: 'user-123' } as never,
+      error: null,
+      accessToken: 'good-token',
+    })
     const req = new NextRequest('http://localhost/api/lexicon/unknown', {
       method: 'POST',
       headers: { Authorization: 'Bearer good-token' },
@@ -116,17 +125,18 @@ describe('POST /api/lexicon/[id]', () => {
         in: vi.fn().mockResolvedValue({ data: [], error: null }),
       }),
     })
-    const authClientMock = makeMockClient({ data: { user: { id: 'user-123' } } })
     const userClientMock = {
-      auth: { getUser: vi.fn() },
       from: vi.fn().mockReturnValue({
         select: selectMock,
       }),
     }
 
-    mockCreateClient
-      .mockReturnValueOnce(authClientMock as never)
-      .mockReturnValueOnce(userClientMock as never)
+    mockRequireUser.mockResolvedValue({
+      user: { id: 'user-123' } as never,
+      error: null,
+      accessToken: 'good-token',
+    })
+    mockCreateUserScopedClient.mockReturnValue(userClientMock as never)
 
     const req = new NextRequest('http://localhost/api/lexicon/food', {
       method: 'POST',

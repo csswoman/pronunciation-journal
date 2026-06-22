@@ -125,7 +125,7 @@ function LexiconPanel({
 }
 
 function CoachInsightsPanel({ coach }: { coach: CoachInsights }) {
-  const hasData = coach.weakTopics.length > 0 || coach.cefrEstimate !== null
+  const hasData = coach.weakTopics.length > 0 || coach.cefrEstimate !== null || coach.profileLevel !== null
 
   if (!hasData) {
     return (
@@ -141,6 +141,11 @@ function CoachInsightsPanel({ coach }: { coach: CoachInsights }) {
   return (
     <ProgressCard>
       <ProgressCardHeader icon={<BrainCircuit size={16} />} eyebrow="AI Coach" title="Grammar insights" />
+      {coach.profileLevel && (
+        <div className="mt-1 mb-3">
+          <ProgressBigNumber value={coach.profileLevel} sub="current level" />
+        </div>
+      )}
       {coach.cefrEstimate && (
         <div className="mt-1 mb-3">
           <ProgressBigNumber value={coach.cefrEstimate} sub="estimated level" />
@@ -173,7 +178,8 @@ export function SkillProfileCard({ data, coach }: Props) {
     data.core1000Practiced > 0 ||
     data.lessonsCompleted > 0 ||
     coach.weakTopics.length > 0 ||
-    coach.cefrEstimate !== null
+    coach.cefrEstimate !== null ||
+    coach.profileLevel !== null
 
   if (!hasAnyData) {
     return (

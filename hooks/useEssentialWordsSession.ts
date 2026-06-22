@@ -1,5 +1,4 @@
 "use client";
-
 import { useCallback, useEffect, useRef, useState } from "react";
 import { fetchCoreWords } from "@/lib/core-1000/client";
 import {

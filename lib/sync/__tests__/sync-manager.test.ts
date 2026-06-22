@@ -174,6 +174,7 @@ describe('flushOutbox', () => {
   }
 
   it('deletes entry and increments synced count when Supabase succeeds', async () => {
+    const upsert = vi.fn().mockResolvedValue({ error: null })
     const entry = {
       id: 1,
       table: 'user_contrast_progress',
@@ -186,15 +187,64 @@ describe('flushOutbox', () => {
 
     setupFlush([entry])
 
-    mocks.mockSupabaseFrom.mockReturnValue({
-      upsert: vi.fn().mockResolvedValue({ error: null }),
-    })
+    mocks.mockSupabaseFrom.mockReturnValue({ upsert })
 
     const result = await flushOutbox()
 
+    expect(upsert).toHaveBeenCalledWith(
+      { contrast_id: 'x' },
+      { onConflict: 'user_id,contrast_id' },
+    )
     expect(mocks.mockSyncOutboxDelete).toHaveBeenCalledWith(1)
     expect(result.synced).toBe(1)
     expect(result.failed).toBe(0)
+  })
+
+  it('uses the explicit onConflict from the queued entry when provided', async () => {
+    const upsert = vi.fn().mockResolvedValue({ error: null })
+    const entry = {
+      id: 11,
+      table: 'user_contrast_progress',
+      operation: 'upsert',
+      payload: { contrast_id: 'x' },
+      onConflict: 'id',
+      status: 'pending',
+      retryCount: 0,
+      createdAt: new Date().toISOString(),
+    }
+
+    setupFlush([entry])
+    mocks.mockSupabaseFrom.mockReturnValue({ upsert })
+
+    await flushOutbox()
+
+    expect(upsert).toHaveBeenCalledWith(
+      { contrast_id: 'x' },
+      { onConflict: 'id' },
+    )
+  })
+
+  it('derives onConflict for user_learning_state when the producer omitted it', async () => {
+    const upsert = vi.fn().mockResolvedValue({ error: null })
+    const entry = {
+      id: 12,
+      table: 'user_learning_state',
+      operation: 'upsert',
+      payload: { user_id: 'u1', state: { foo: 'bar' } },
+      status: 'pending',
+      retryCount: 0,
+      createdAt: new Date().toISOString(),
+    }
+
+    setupFlush([entry])
+    mocks.mockSupabaseFrom.mockReturnValue({ upsert })
+
+    await flushOutbox()
+
+    expect(upsert).toHaveBeenCalledWith(
+      { user_id: 'u1', state: { foo: 'bar' } },
+      { onConflict: 'user_id' },
+    )
   })
 
   it('increments retryCount and keeps status pending on a transient error', async () => {

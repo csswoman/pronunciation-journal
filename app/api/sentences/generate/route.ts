@@ -2,8 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { GoogleGenAI } from "@google/genai";
 import { createHash } from "crypto";
+import { z } from "zod";
 import type { Database } from "@/lib/supabase/types";
 import { SENTENCE_REORDER_SYSTEM_PROMPT } from "@/lib/ai-prompts";
+import { requireSameOrigin, requireUser, rateLimit, validateBody, SECURE_HEADERS } from "@/lib/api/guards";
 
 export const runtime = "nodejs";
 
@@ -11,17 +13,14 @@ const MIN_TOKENS = 4;
 const DEFAULT_COUNT = 10;
 const MAX_COUNT = 30;
 
-// ── Auth helper ───────────────────────────────────────────────────────────────
-
-async function getUserFromBearer(token: string) {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-  const client = createClient<Database>(supabaseUrl, anonKey, {
-    auth: { persistSession: false },
-  });
-  const { data: { user } } = await client.auth.getUser(token);
-  return user;
-}
+const SentencesRequestSchema = z
+  .object({
+    topic: z.string().trim().min(1, "topic is required").max(200, "topic too long"),
+    level: z.string().trim().min(1).max(20).default("B1"),
+    count: z.number().int().min(1).max(MAX_COUNT).optional(),
+    deckSlug: z.string().trim().min(1).max(120).optional(),
+  })
+  .strict();
 
 // ── Gemini sentence generation ────────────────────────────────────────────────
 
@@ -89,28 +88,23 @@ function hashedSentenceSource(input: string): string {
  * only within the requesting user's scope and never persist the raw topic.
  */
 export async function POST(req: NextRequest): Promise<NextResponse> {
-  const authHeader = req.headers.get("authorization");
-  if (!authHeader) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const originError = requireSameOrigin(req);
+  if (originError) return originError;
 
-  const token = authHeader.replace(/^Bearer\s+/i, "");
-  const user = await getUserFromBearer(token);
-  if (!user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const { user, error: authError } = await requireUser(req);
+  if (authError) return authError;
 
-  let body: { topic?: unknown; level?: unknown; count?: unknown; deckSlug?: unknown };
-  try {
-    body = await req.json();
-  } catch {
-    return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
-  }
+  const { limited, error: rateLimitError } = rateLimit(`/api/sentences/generate:${user.id}`, {
+    max: 15,
+    windowMs: 60_000,
+    meta: { endpoint: "/api/sentences/generate", userId: user.id },
+  });
+  if (limited) return rateLimitError;
 
-  const topic = typeof body.topic === "string" ? body.topic.trim() : "";
-  if (!topic) return NextResponse.json({ error: "topic is required" }, { status: 400 });
-  if (topic.length > 200) return NextResponse.json({ error: "topic too long" }, { status: 400 });
+  const { data: body, error: validationError } = await validateBody(req, SentencesRequestSchema);
+  if (validationError) return validationError;
 
+  const topic = body.topic;
   const level = typeof body.level === "string" ? body.level : "B1";
   const count = Math.min(
     MAX_COUNT,
@@ -118,14 +112,17 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   );
   const deckSlug = typeof body.deckSlug === "string" ? body.deckSlug : null;
   const isSharedDeckRequest = Boolean(deckSlug);
-  const source = deckSlug
+  const source = isSharedDeckRequest
     ? `grammar-deck:${deckSlug}:ai`
     : `ai-user:${hashedSentenceSource(`${user.id}:${level}:${topic}`)}`;
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
   if (!serviceKey) {
-    return NextResponse.json({ error: "Server misconfiguration" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Server misconfiguration" },
+      { status: 500, headers: SECURE_HEADERS }
+    );
   }
   const db = createClient<Database>(supabaseUrl, serviceKey);
 
@@ -144,7 +141,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   const { data: cached } = await cacheQuery;
 
   if (cached && cached.length >= Math.min(count, 5)) {
-    return NextResponse.json({ fragments: cached, fromCache: true });
+    return NextResponse.json({ fragments: cached, fromCache: true }, { headers: SECURE_HEADERS });
   }
 
   // ── Generate with Gemini ──────────────────────────────────────────────────
@@ -153,11 +150,17 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     sentences = await generateSentencesWithGemini(topic, level, count);
   } catch (err) {
     console.error("[sentences/generate] Gemini error:", err);
-    return NextResponse.json({ error: "Generation failed" }, { status: 502 });
+    return NextResponse.json(
+      { error: "Generation failed" },
+      { status: 502, headers: SECURE_HEADERS }
+    );
   }
 
   if (sentences.length === 0) {
-    return NextResponse.json({ error: "No sentences generated" }, { status: 502 });
+    return NextResponse.json(
+      { error: "No sentences generated" },
+      { status: 502, headers: SECURE_HEADERS }
+    );
   }
 
   // ── Save to text_fragments (cache) ────────────────────────────────────────
@@ -178,8 +181,14 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   if (insertErr) {
     console.error("[sentences/generate] DB insert error:", insertErr);
     // Still return the generated sentences even if caching failed
-    return NextResponse.json({ fragments: rows.map(({ id, content, source, title }) => ({ id, content, source, title })), fromCache: false });
+    return NextResponse.json(
+      { fragments: rows.map(({ id, content, source, title }) => ({ id, content, source, title })), fromCache: false },
+      { headers: SECURE_HEADERS }
+    );
   }
 
-  return NextResponse.json({ fragments: inserted ?? rows, fromCache: false });
+  return NextResponse.json(
+    { fragments: inserted ?? rows, fromCache: false },
+    { headers: SECURE_HEADERS }
+  );
 }

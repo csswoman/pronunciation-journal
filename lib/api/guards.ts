@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
+import { createClient } from "@supabase/supabase-js";
 import type { User } from "@supabase/supabase-js";
 import type { ZodSchema } from "zod";
+import type { Database } from "@/lib/supabase/types";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 // ---------------------------------------------------------------------------
@@ -22,18 +24,55 @@ export const SECURE_HEADERS: Record<string, string> = {
 // ---------------------------------------------------------------------------
 
 export type AuthResult =
-  | { user: User; error: null }
-  | { user: null; error: NextResponse };
+  | { user: User; error: null; accessToken: string | null }
+  | { user: null; error: NextResponse; accessToken: null };
 
 /**
  * Validates the session cookie and returns the authenticated user.
  * Returns a 401 NextResponse if no valid session exists.
  *
  * Usage:
- *   const { user, error } = await requireUser();
+ *   const { user, error } = await requireUser(request);
  *   if (error) return error;
  */
-export async function requireUser(): Promise<AuthResult> {
+export async function requireUser(request?: Request): Promise<AuthResult> {
+  const bearerToken = getBearerToken(request);
+
+  if (bearerToken) {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+    if (!supabaseUrl || !anonKey) {
+      return {
+        user: null,
+        error: NextResponse.json(
+          { error: "Server misconfiguration" },
+          { status: 500, headers: SECURE_HEADERS }
+        ),
+        accessToken: null,
+      };
+    }
+
+    const supabase = createClient<Database>(supabaseUrl, anonKey, {
+      auth: { persistSession: false },
+    });
+    const { data, error } = await supabase.auth.getUser(bearerToken);
+
+    if (error || !data.user) {
+      console.info("[auth] unauthenticated bearer request rejected");
+      return {
+        user: null,
+        error: NextResponse.json(
+          { error: "Unauthorized" },
+          { status: 401, headers: SECURE_HEADERS }
+        ),
+        accessToken: null,
+      };
+    }
+
+    return { user: data.user, error: null, accessToken: bearerToken };
+  }
+
   const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase.auth.getUser();
 
@@ -42,10 +81,71 @@ export async function requireUser(): Promise<AuthResult> {
     return {
       user: null,
       error: NextResponse.json({ error: "Unauthorized" }, { status: 401, headers: SECURE_HEADERS }),
+      accessToken: null,
     };
   }
 
-  return { user: data.user, error: null };
+  return { user: data.user, error: null, accessToken: null };
+}
+
+function getBearerToken(request?: Request): string | null {
+  const authHeader = request?.headers.get("authorization");
+  if (!authHeader) return null;
+  const token = authHeader.replace(/^Bearer\s+/i, "").trim();
+  return token || null;
+}
+
+export function createUserScopedClient(accessToken: string) {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  if (!supabaseUrl || !anonKey) {
+    throw new Error("Supabase client environment variables are not configured");
+  }
+
+  return createClient<Database>(supabaseUrl, anonKey, {
+    auth: { persistSession: false },
+    global: { headers: { Authorization: `Bearer ${accessToken}` } },
+  });
+}
+
+// ---------------------------------------------------------------------------
+// Same-origin guard for cookie-authenticated mutations
+// ---------------------------------------------------------------------------
+
+/**
+ * Reject cross-site mutation requests when auth is carried by cookies.
+ * Bearer-token clients are exempt because they do not rely on ambient auth.
+ */
+export function requireSameOrigin(request: Request): NextResponse | null {
+  if (getBearerToken(request)) return null;
+
+  const origin = request.headers.get("origin");
+  if (!origin) {
+    return NextResponse.json(
+      { error: "Cross-site request blocked" },
+      { status: 403, headers: SECURE_HEADERS }
+    );
+  }
+
+  let expectedOrigin: string;
+  try {
+    expectedOrigin = new URL(request.url).origin;
+  } catch {
+    return NextResponse.json(
+      { error: "Invalid request URL" },
+      { status: 400, headers: SECURE_HEADERS }
+    );
+  }
+
+  if (origin !== expectedOrigin) {
+    return NextResponse.json(
+      { error: "Cross-site request blocked" },
+      { status: 403, headers: SECURE_HEADERS }
+    );
+  }
+
+  return null;
 }
 
 // ---------------------------------------------------------------------------

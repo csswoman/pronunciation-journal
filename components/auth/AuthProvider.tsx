@@ -8,15 +8,12 @@ import {
   useMemo,
   useState,
 } from "react";
-import { usePathname } from "next/navigation";
 import type { Session, User } from "@supabase/supabase-js";
-import { isPublicAuthPath } from "@/lib/auth/public-paths";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { db } from "@/lib/db";
 import { getUserLearningState } from "@/lib/ai-practice/load-state";
 import { normalizeCEFR } from "@/lib/exercises/cefr";
-import AuthPanel from "./AuthPanel";
 import { WordCarousel } from "@/components/practice/session/WordCarousel";
 import { useLoadingWords } from "@/hooks/useLoadingWords";
 
@@ -39,15 +36,16 @@ export function useAuth(): AuthContextValue {
 }
 
 export default function AuthProvider({
+  initialUser = null,
   children,
 }: {
+  initialUser?: User | null;
   children: React.ReactNode;
 }) {
-  const pathname = usePathname();
-  const isPublicPath = isPublicAuthPath(pathname);
   const supabaseEnabled = useMemo(() => isSupabaseConfigured(), []);
   const [session, setSession] = useState<Session | null>(null);
-  const [loading, setLoading] = useState(supabaseEnabled);
+  const [user, setUser] = useState<User | null>(initialUser);
+  const [loading, setLoading] = useState(supabaseEnabled && !initialUser);
 
   const signOutUser = useCallback(async () => {
     if (!supabaseEnabled) return;
@@ -92,6 +90,7 @@ export default function AuthProvider({
 
     supabase.auth.getSession().then(({ data: { session: s } }) => {
       setSession(s);
+      setUser(s?.user ?? initialUser);
       if (s?.user?.id) void hydrateCEFR(s.user.id);
       setLoading(false);
     });
@@ -100,21 +99,22 @@ export default function AuthProvider({
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, s) => {
       setSession(s);
+      setUser(s?.user ?? null);
       if (s?.user?.id) void hydrateCEFR(s.user.id);
     });
 
     return () => subscription.unsubscribe();
-  }, [supabaseEnabled]);
+  }, [initialUser, supabaseEnabled]);
 
   const value = useMemo<AuthContextValue>(
     () => ({
-      user: session?.user ?? null,
+      user,
       session,
       loading,
       supabaseEnabled,
       signOutUser,
     }),
-    [session, loading, supabaseEnabled, signOutUser]
+    [user, session, loading, supabaseEnabled, signOutUser]
   );
 
   if (!supabaseEnabled) {
@@ -127,14 +127,6 @@ export default function AuthProvider({
     return (
       <AuthContext.Provider value={value}>
         <AuthLoadingScreen />
-      </AuthContext.Provider>
-    );
-  }
-
-  if (!session && !isPublicPath) {
-    return (
-      <AuthContext.Provider value={value}>
-        <AuthPanel />
       </AuthContext.Provider>
     );
   }

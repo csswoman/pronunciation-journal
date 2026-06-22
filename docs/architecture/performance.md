@@ -105,6 +105,10 @@ independent and can be parallelized after the two client-bundle plans.
 - Cached canonical arrays must not be exposed to in-place shuffling or mutation.
 - If content becomes runtime-editable, add explicit invalidation rather than an
   undocumented TTL.
+- The codebase does not currently use Next.js Cache Components or related
+  invalidation primitives directly (`"use cache"`, `unstable_cache`,
+  `cacheTag`, `cacheLife`, `revalidateTag`, `revalidatePath`). Cache review
+  should focus on custom cache layers and route behavior instead.
 - The lexicon cache is enforced by tests: a complete `/words` read model reads
   `index.json` and each category JSON once, and subsequent calls perform no
   additional file or directory reads. Preview shuffling operates on a copy of

@@ -1,368 +1,133 @@
 # Deployment & CI/CD Guide
 
-## Overview
+## Current repo state
 
-This project uses **GitHub Actions** for automated CI/CD pipelines with the following stages:
+This repository currently includes one implemented GitHub Actions workflow:
+`.github/workflows/ci.yml`.
 
-1. **CI Pipeline** (`ci.yml`) - Run on every push/PR
-   - Linting & type checking
-   - Security audit
-   - Build validation
-   - Accessibility checks
+That workflow runs:
 
-2. **Deploy Pipeline** (`deploy.yml`) - Run on main branch only
-   - Database migrations
-   - Vercel deployment
-   - Health checks & smoke tests
-   - Automatic rollback on failure
+- `pnpm lint`
+- `pnpm type-check`
+- `pnpm test`
+- `pnpm lint:design-tokens`
+- `pnpm audit --audit-level=moderate`
+- secret-pattern checks
+- `pnpm build`
+- a lightweight accessibility/design-quality audit
 
----
+There is currently no `deploy.yml` workflow in the repository. Any references to
+automatic production deploys, rollback, release tagging, or smoke-test driven
+deploy orchestration should be treated as planned work, not present behavior.
 
-## Prerequisites
-
-### GitHub Secrets (Required)
-
-Set these in **Settings → Secrets and variables → Actions**:
-
-```
-NEXT_PUBLIC_SUPABASE_URL       # Supabase project URL
-NEXT_PUBLIC_SUPABASE_ANON_KEY  # Supabase anonymous key
-VERCEL_TOKEN                   # Vercel authentication token
-VERCEL_ORG_ID                  # Vercel organization ID
-VERCEL_PROJECT_ID              # Vercel project ID
-DATABASE_URL                   # PostgreSQL connection string (optional)
-```
-
-### Branch Protection Rules
-
-In **Settings → Branches**, set `main` branch protection:
-
-- ✅ Require status checks to pass before merging
-  - `lint-and-test`
-  - `security-audit`
-  - `build`
-- ✅ Require code reviews before merging (1 reviewer)
-- ✅ Dismiss stale PR approvals
-- ✅ Require branches to be up to date before merging
-
----
-
-## CI Pipeline (`ci.yml`)
+## CI workflow
 
 ### Triggers
 
-- Every push to any branch
-- Every pull request to `main` or `develop`
+`ci.yml` runs on:
+
+- push to `main`
+- push to `develop`
+- push to `feature/**`
+- pull requests targeting `main` or `develop`
 
 ### Jobs
 
-#### 1. **lint-and-test**
-Runs in parallel with security audit.
+1. `lint-and-test`
+   Runs install, lint, type-check, tests, and design-token validation.
+
+2. `security-audit`
+   Runs `pnpm audit --audit-level=moderate` and scans `components/`, `app/`,
+   and `lib/` for obvious hardcoded secret patterns.
+
+3. `build`
+   Depends on `lint-and-test` and `security-audit`, then runs `pnpm build` and
+   uploads `.next/` as an artifact.
+
+4. `accessibility-audit`
+   Runs separate grep-based checks for accessibility patterns and hardcoded UI
+   colors.
+
+5. `notify-status`
+   Fails the workflow if required upstream jobs did not succeed.
+
+## Required GitHub secrets for CI
+
+The `build` job injects:
+
+```text
+NEXT_PUBLIC_SUPABASE_URL
+NEXT_PUBLIC_SUPABASE_ANON_KEY
+```
+
+Set these in GitHub under `Settings -> Secrets and variables -> Actions`.
+
+If you later automate deployment from GitHub, you will also need deployment
+secrets such as Vercel credentials, but they are not consumed by the current
+workflow.
+
+## Local verification
+
+Run the same core checks locally before opening a PR:
 
 ```bash
-npm run lint          # ESLint
-npm run type-check    # TypeScript
-npm run test -- --run # Jest (optional)
+pnpm lint
+pnpm type-check
+pnpm test
+pnpm lint:design-tokens
+pnpm build
 ```
 
-**Continue on error**: Lint & test failures don't block deployment (visible in logs).
+Use Node `24.x`, matching `package.json`.
 
-#### 2. **security-audit**
-Parallel with lint-and-test.
+## Manual deployment guidance
 
-- `npm audit --audit-level=moderate`
-- Checks for hardcoded secrets (Supabase keys, API keys, etc.)
+Production deployment is currently documented as a manual/infrastructure task
+outside the checked-in GitHub workflow set.
 
-#### 3. **build**
-Requires: `lint-and-test` AND `security-audit` to pass.
+Recommended baseline:
 
-- Builds Next.js with environment variables
-- Uploads `.next/` artifact (5-day retention)
+1. Configure production environment variables in the hosting platform.
+2. Verify `/api/health` or the exposed health route after deployment.
+3. Keep Supabase auth redirect URLs aligned with `NEXT_PUBLIC_SITE_URL`.
+4. Run the local verification commands before promoting changes.
 
-#### 4. **accessibility-audit**
-Parallel with build.
+## Health endpoint
 
-- Verifies ARIA labels in interactive components
-- Checks for hard-coded colors (should be < 2 in UI components)
-- Fails if > 2 hard-coded `oklch()` values found
+The repository includes `app/api/health/route.ts`.
 
-#### 5. **notify-status**
-Runs last. Requires all jobs.
+Current behavior:
 
-- Summarizes pipeline status
+- returns `503` when `NEXT_PUBLIC_SUPABASE_URL` or
+  `NEXT_PUBLIC_SUPABASE_ANON_KEY` is missing
+- probes the Supabase REST endpoint with a short timeout
+- returns `200` when connectivity looks healthy
 
-### Example PR Workflow
+This endpoint is useful both for manual checks and for any future deploy
+automation.
 
-1. Push to `feature/new-button` branch
-2. GitHub Actions automatically:
-   - Lints code
-   - Type-checks TypeScript
-   - Validates design tokens
-   - Runs security audit
-3. Create PR → CI pipeline visible in PR checks
-4. Approve & merge (if all checks pass)
+## Branch protection
 
----
+Recommended protection for `main`:
 
-## Deploy Pipeline (`deploy.yml`)
+- require pull requests before merge
+- require CI checks to pass
+- require at least one review
+- require branches to be up to date before merge
 
-### Triggers
+Use the actual job names exposed by the current workflow when configuring
+required checks.
 
-- Direct push to `main` branch
-- Completion of `ci.yml` on `main`
+## Known gaps
 
-### Pre-Deploy Validation
+- no checked-in deploy workflow
+- no smoke-test or end-to-end deployment validation
+- no automatic rollback
+- no staging environment workflow
+- accessibility audit is grep-based and should not be treated as full coverage
 
-- **Branch protection check**: Main branch must be protected
-- **Commit message check**: Skip with `[skip deploy]` in commit message
-  ```bash
-  git commit -m "Fix typo [skip deploy]"  # Won't trigger deploy
-  ```
+## Suggested next steps
 
-### Deployment Stages
-
-#### 1. **database-migration**
-Runs Supabase migrations (placeholder).
-
-```bash
-supabase migration up --db-url $DATABASE_URL
-```
-
-#### 2. **deploy-vercel**
-Deploys to Vercel production environment.
-
-- Uses Vercel Action v6.1.0
-- Sets `production: true`
-- Waits for deployment completion
-
-#### 3. **smoke-test**
-Basic health checks after deployment.
-
-- Hits `/health` endpoint 5 times (retry with 10s delay)
-- Requires 200 HTTP response
-- Placeholder for Playwright/Cypress tests
-
-#### 4. **rollback-on-failure**
-If any stage fails, automatically rolls back.
-
-- Reverts to previous working deployment
-- Posts comment to PR/commit
-- Notifies team
-
-#### 5. **notify-success**
-On successful deployment:
-
-- Creates GitHub Deployment record
-- Creates Release tag (`v{run_number}`)
-- Posts success notification
-
-### Example Deploy Workflow
-
-```
-1. Merge PR to main
-   ↓
-2. CI Pipeline runs (lint, test, build, audit)
-   ↓
-3. All checks pass
-   ↓
-4. Deploy Pipeline triggered
-   ↓
-5. Database migrations run
-   ↓
-6. Deploy to Vercel production
-   ↓
-7. Health checks pass
-   ↓
-8. Smoke tests pass
-   ↓
-9. Release tag created (v{run_number})
-   ↓
-✅ Deployment complete
-```
-
----
-
-## Manual Deployment
-
-### Force Deploy (Bypass CI)
-
-```bash
-git commit --allow-empty -m "chore: force deploy" && git push
-```
-
-### Skip Deployment
-
-```bash
-git commit -m "docs: update README [skip deploy]"
-```
-
-### Trigger Redeployment
-
-```bash
-# Create empty commit to trigger CI/Deploy
-git commit --allow-empty -m "chore: trigger redeploy"
-git push origin main
-```
-
----
-
-## Secrets & Security
-
-### Adding New Secrets
-
-1. Go to **Settings → Secrets and variables → Actions**
-2. Click **New repository secret**
-3. Name: `NEXT_PUBLIC_*` (for client-side), or regular name (for server-only)
-4. Never commit `.env.local` or `.env` files
-
-### Accessing Secrets in Workflows
-
-```yaml
-env:
-  NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-  DATABASE_URL: ${{ secrets.DATABASE_URL }}
-```
-
-### Security Checks in CI
-
-- ✅ No hardcoded API keys/secrets in code
-- ✅ npm audit for vulnerable dependencies
-- ✅ Design token validation (no rogue colors)
-
----
-
-## Monitoring & Debugging
-
-### View Workflow Logs
-
-1. Go to **Actions** tab in GitHub
-2. Click workflow name → click run
-3. Expand job to see full logs
-
-### Common Issues
-
-#### ❌ "Lint failed"
-- Fix ESLint errors: `npm run lint -- --fix`
-- Commit and push: `git push`
-
-#### ❌ "Type check failed"
-- Fix TypeScript errors: Review error in build output
-- Ensure types are correct: `npm run type-check`
-
-#### ❌ "Build failed"
-- Check Next.js build: `npm run build`
-- Verify env variables are set
-- Check for missing dependencies
-
-#### ❌ "Deployment rolled back"
-- Check Vercel logs for runtime errors
-- Verify database migrations were correct
-- Check environment variables in Vercel dashboard
-
-#### ❌ "Health check failed"
-- Ensure `/health` endpoint exists and returns 200
-- Check Vercel deployment status
-- Verify environment variables are set in Vercel
-
----
-
-## Best Practices
-
-### Commit Messages
-
-Use conventional commits for clarity:
-
-```bash
-git commit -m "feat: add dark mode toggle"
-git commit -m "fix: contrast ratio in dark theme"
-git commit -m "docs: update deployment guide"
-git commit -m "chore: update dependencies"
-```
-
-### PR Workflow
-
-1. Create feature branch: `git checkout -b feature/my-feature`
-2. Make changes & commit regularly
-3. Push: `git push -u origin feature/my-feature`
-4. Create PR → CI pipeline runs automatically
-5. Wait for checks to pass
-6. Request review
-7. Merge when approved
-
-### Production Stability
-
-- Always merge PRs, never force push to main
-- Main branch should always be deployable
-- Tag releases: `git tag -a v1.0.0 -m "Release v1.0.0"`
-
----
-
-## Rollback Procedures
-
-### Automatic Rollback (Smoke Test Failure)
-
-The deploy pipeline **automatically rolls back** if:
-- Smoke tests fail
-- Health checks fail
-- Deployment fails
-
-### Manual Rollback
-
-```bash
-# Option 1: Revert the commit
-git revert <commit-hash> && git push origin main
-
-# Option 2: Redeploy previous version
-# In Vercel dashboard → Deployments → click previous → "Redeploy"
-```
-
----
-
-## Cost & Quotas
-
-### GitHub Actions
-
-- Free tier: 2,000 minutes/month
-- This project uses ~5-10 minutes per CI run
-- Estimate: ~100-200 CI runs/month (plenty of headroom)
-
-### Vercel
-
-- Free tier: Unlimited deployments
-- Production deployments are free
-- Environment variables included
-
-### Supabase
-
-- Database migrations are free
-- Connection pooling available for production
-
----
-
-## Future Enhancements
-
-- [ ] Add E2E tests (Playwright/Cypress)
-- [ ] Add performance benchmarks
-- [ ] Add Lighthouse CI checks
-- [ ] Add staging environment deployment
-- [ ] Add Slack notifications
-- [ ] Add Discord notifications
-- [ ] Database backup before migrations
-- [ ] Feature flags for gradual rollout
-
----
-
-## Support
-
-For workflow issues:
-1. Check GitHub Actions logs: **Actions** tab
-2. Review error messages in job output
-3. Check secrets are set correctly
-4. Verify branch protection rules
-5. Run locally first: `npm run build`, `npm run test`
-
-For deployment issues:
-1. Check Vercel deployment logs
-2. Verify environment variables in Vercel dashboard
-3. Check database connection string
-4. Review Supabase migration logs
+- add a real `deploy.yml` if GitHub-managed deploys are desired
+- add E2E smoke tests before automating production promotion
+- replace grep-based accessibility checks with deterministic test coverage
