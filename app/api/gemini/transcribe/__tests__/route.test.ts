@@ -12,6 +12,7 @@ vi.mock("@google/genai", () => ({
 }));
 
 vi.mock("@/lib/api/guards", () => ({
+  requireSameOrigin: () => null,
   requireUser: (...args: unknown[]) => requireUser(...args),
   rateLimit: () => ({ limited: false, error: null }),
   validateBody: (...args: unknown[]) => validateBody(...args),
