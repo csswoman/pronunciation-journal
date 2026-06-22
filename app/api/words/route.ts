@@ -1,59 +1,47 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
-import type { Database } from "@/lib/supabase/types";
+import { z } from "zod";
 import { enrichWord } from "@/lib/word-bank/enrich";
+import { createUserScopedClient, requireUser, rateLimit, validateBody, SECURE_HEADERS } from "@/lib/api/guards";
 
 export const runtime = "nodejs";
 
+const WordsRequestSchema = z
+  .object({
+    text: z.string().trim().min(1, "text is required").max(200, "text too long"),
+    context: z.string().trim().max(1000).optional(),
+    id: z.string().min(1).optional(),
+    deckId: z.string().trim().min(1).optional(),
+  })
+  .strict();
+
 export async function POST(req: NextRequest): Promise<NextResponse> {
-  const authHeader = req.headers.get("authorization");
-  if (!authHeader) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const { user, error: authError, accessToken } = await requireUser(req);
+  if (authError) return authError;
 
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  if (!supabaseUrl || !anonKey) {
-    return NextResponse.json({ error: "Server misconfiguration" }, { status: 500 });
-  }
-
-  const token = authHeader.replace(/^Bearer\s+/i, "");
-  const authClient = createClient<Database>(supabaseUrl, anonKey, {
-    auth: { persistSession: false },
+  const { limited, error: rateLimitError } = rateLimit(`/api/words:${user.id}`, {
+    max: 20,
+    windowMs: 60_000,
+    meta: { endpoint: "/api/words", userId: user.id },
   });
-  const { data: { user } } = await authClient.auth.getUser(token);
-  if (!user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (limited) return rateLimitError;
+
+  const { data: body, error: validationError } = await validateBody(req, WordsRequestSchema);
+  if (validationError) return validationError;
+
+  if (!accessToken) {
+    return NextResponse.json(
+      { error: "Authorization token is required" },
+      { status: 401, headers: SECURE_HEADERS }
+    );
   }
 
-  let body: { text?: unknown; context?: unknown; id?: unknown; deckId?: unknown };
-  try {
-    body = await req.json();
-  } catch {
-    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
-  }
-
-  const text = typeof body.text === "string" ? body.text.trim() : "";
-  if (!text) {
-    return NextResponse.json({ error: "text is required" }, { status: 400 });
-  }
-  if (text.length > 200) {
-    return NextResponse.json({ error: "text too long" }, { status: 400 });
-  }
-
-  const context =
-    typeof body.context === "string" && body.context.trim()
-      ? body.context.trim().slice(0, 1000)
-      : null;
-
-  const id = typeof body.id === "string" ? body.id : null;
-  const deckId = typeof body.deckId === "string" && body.deckId.trim() ? body.deckId.trim() : null;
+  const text = body.text;
+  const context = body.context ? body.context.slice(0, 1000) : null;
+  const id = body.id ?? null;
+  const deckId = body.deckId ?? null;
 
   // User-scoped client so RLS applies and user_id is enforced.
-  const userClient = createClient<Database>(supabaseUrl, anonKey, {
-    auth: { persistSession: false },
-    global: { headers: { Authorization: `Bearer ${token}` } },
-  });
+  const userClient = createUserScopedClient(accessToken);
 
   // If retrying an existing word, update it instead of inserting.
   if (id) {
@@ -71,12 +59,12 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       console.error("[POST /api/words] retry update failed:", updateErr);
       return NextResponse.json(
         { error: updateErr?.message ?? "Failed to retry word" },
-        { status: 500 }
+        { status: 500, headers: SECURE_HEADERS }
       );
     }
 
     void enrichWord(word.id);
-    return NextResponse.json({ word }, { status: 200 });
+    return NextResponse.json({ word }, { status: 200, headers: SECURE_HEADERS });
   }
 
   // Create new word.
@@ -95,7 +83,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     console.error("[POST /api/words] insert failed:", insertErr);
     return NextResponse.json(
       { error: insertErr?.message ?? "Failed to create word" },
-      { status: 500 }
+      { status: 500, headers: SECURE_HEADERS }
     );
   }
 
@@ -114,5 +102,5 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   }
 
   void enrichWord(word.id);
-  return NextResponse.json({ word }, { status: 201 });
+  return NextResponse.json({ word }, { status: 201, headers: SECURE_HEADERS });
 }

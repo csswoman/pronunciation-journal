@@ -14,6 +14,45 @@ export type Database = {
   }
   public: {
     Tables: {
+      assessment_results: {
+        Row: {
+          assigned_level: string
+          completed_at: string
+          evaluated_level: string | null
+          id: string
+          mode: string
+          passed: boolean
+          score: number
+          topic_scores: Json
+          total: number
+          user_id: string
+        }
+        Insert: {
+          assigned_level: string
+          completed_at?: string
+          evaluated_level?: string | null
+          id?: string
+          mode: string
+          passed: boolean
+          score: number
+          topic_scores?: Json
+          total: number
+          user_id: string
+        }
+        Update: {
+          assigned_level?: string
+          completed_at?: string
+          evaluated_level?: string | null
+          id?: string
+          mode?: string
+          passed?: boolean
+          score?: number
+          topic_scores?: Json
+          total?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       ai_prompts: {
         Row: {
           category: string | null
@@ -510,6 +549,7 @@ export type Database = {
           target_word: string | null
           transcript: string
           updated_at: string
+          user_id: string
         }
         Insert: {
           cache_key: string
@@ -520,6 +560,7 @@ export type Database = {
           target_word?: string | null
           transcript: string
           updated_at?: string
+          user_id: string
         }
         Update: {
           cache_key?: string
@@ -530,6 +571,7 @@ export type Database = {
           target_word?: string | null
           transcript?: string
           updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }

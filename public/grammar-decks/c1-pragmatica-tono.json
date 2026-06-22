@@ -1,0 +1,216 @@
+{
+  "meta": {
+    "eyebrow": "C1 · Intención y relación",
+    "title": "Intención y relación",
+    "titleEmphasis": "pragmática, tono y cortesía",
+    "goal": "Ya puedes usar pragmática, tono y cortesía en ejemplos claros y adecuados al contexto."
+  },
+  "cards": [
+    {
+      "id": "c1-pragmatica-tono-concept",
+      "tag": "Idea central",
+      "title": "Intención y relación: qué expresa",
+      "lede": "Esta lección te ayuda a usar pragmática, tono y cortesía con precisión y sin traducir palabra por palabra.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "indirectness",
+              "value": "Could we revisit that point?",
+              "highlights": [
+                "indirectness"
+              ]
+            },
+            {
+              "key": "face-saving",
+              "value": "I may not have explained that clearly.",
+              "highlights": [
+                "face-saving"
+              ]
+            },
+            {
+              "key": "implicature",
+              "value": "That's one way of looking at it.",
+              "highlights": [
+                "implicature"
+              ]
+            },
+            {
+              "key": "entonación y contexto",
+              "value": "la misma frase puede apoyar o criticar",
+              "highlights": [
+                "entonación y contexto"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer la intención y elegir correctamente pragmática, tono y cortesía en situaciones reales."
+      }
+    },
+    {
+      "id": "c1-pragmatica-tono-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "indirectness",
+              "value": "Could we revisit that point?"
+            },
+            {
+              "key": "face-saving",
+              "value": "I may not have explained that clearly."
+            },
+            {
+              "key": "implicature",
+              "value": "That's one way of looking at it."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c1-pragmatica-tono-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo como una unidad completa y fíjate en la posición de las palabras.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Ejemplo 1",
+              "value": "You might want to check that figure."
+            },
+            {
+              "key": "Ejemplo 2",
+              "value": "I'm not entirely convinced."
+            },
+            {
+              "key": "Ejemplo 3",
+              "value": "Perhaps we could consider another option."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c1-pragmatica-tono-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "La elección depende de la intención, la cantidad, el tiempo o el registro.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "indirectness",
+              "rule": "Could we revisit that point?",
+              "examples": [
+                "You might want to check that figure."
+              ]
+            },
+            {
+              "label": "face-saving",
+              "rule": "I may not have explained that clearly.",
+              "examples": [
+                "I'm not entirely convinced."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c1-pragmatica-tono-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con una forma natural y gramatical.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "You're wrong."
+            },
+            {
+              "variant": "good",
+              "text": "I see it somewhat differently.",
+              "note": "forma recomendada"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c1-pragmatica-tono-reference",
+      "tag": "Referencia rápida",
+      "title": "Decisión en cuatro pasos",
+      "lede": "Usa esta lista para comprobar tu frase antes de continuar.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Intención",
+              "value": "¿Qué quieres expresar exactamente?"
+            },
+            {
+              "key": "2. Estructura",
+              "value": "Elige la forma adecuada de pragmática, tono y cortesía."
+            },
+            {
+              "key": "3. Concordancia",
+              "value": "Revisa sujeto, verbo, número y tiempo."
+            },
+            {
+              "key": "4. Naturalidad",
+              "value": "Lee la frase completa y evita traducir literalmente."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "crea una frase personal con cada patrón y léela en voz alta."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "Which sounds diplomatically uncertain?",
+      "options": [
+        "That is false.",
+        "I'm not entirely convinced."
+      ],
+      "answer": 1,
+      "explain": "La respuesta correcta aplica la regla central de pragmática, tono y cortesía."
+    },
+    {
+      "q": "¿Cuál de estas frases es correcta?",
+      "options": [
+        "You're wrong.",
+        "I see it somewhat differently."
+      ],
+      "answer": 1,
+      "explain": "La segunda opción usa la estructura y el orden correctos."
+    },
+    {
+      "q": "¿Qué conviene revisar al usar pragmática, tono y cortesía?",
+      "options": [
+        "La intención, la estructura y el contexto.",
+        "Solo la traducción literal al español."
+      ],
+      "answer": 0,
+      "explain": "Una frase natural depende del significado, la forma y el contexto, no de traducir palabra por palabra."
+    }
+  ]
+}

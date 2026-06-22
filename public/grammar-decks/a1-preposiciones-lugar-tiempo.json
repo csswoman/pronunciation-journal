@@ -1,0 +1,216 @@
+{
+  "meta": {
+    "eyebrow": "A1 · Lugar y tiempo",
+    "title": "Lugar y tiempo",
+    "titleEmphasis": "preposiciones básicas",
+    "goal": "Ya puedes usar preposiciones básicas en ejemplos claros y adecuados al contexto."
+  },
+  "cards": [
+    {
+      "id": "a1-preposiciones-lugar-tiempo-concept",
+      "tag": "Idea central",
+      "title": "Lugar y tiempo: qué expresa",
+      "lede": "Esta lección te ayuda a usar preposiciones básicas con precisión y sin traducir palabra por palabra.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "in",
+              "value": "dentro; meses, años y partes del día",
+              "highlights": [
+                "in"
+              ]
+            },
+            {
+              "key": "on",
+              "value": "sobre una superficie; días y fechas",
+              "highlights": [
+                "on"
+              ]
+            },
+            {
+              "key": "at",
+              "value": "punto exacto; horas y lugares concretos",
+              "highlights": [
+                "at"
+              ]
+            },
+            {
+              "key": "next to / between",
+              "value": "posición relativa",
+              "highlights": [
+                "next to / between"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer la intención y elegir correctamente preposiciones básicas en situaciones reales."
+      }
+    },
+    {
+      "id": "a1-preposiciones-lugar-tiempo-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "in",
+              "value": "dentro; meses, años y partes del día"
+            },
+            {
+              "key": "on",
+              "value": "sobre una superficie; días y fechas"
+            },
+            {
+              "key": "at",
+              "value": "punto exacto; horas y lugares concretos"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a1-preposiciones-lugar-tiempo-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo como una unidad completa y fíjate en la posición de las palabras.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Ejemplo 1",
+              "value": "The keys are on the table."
+            },
+            {
+              "key": "Ejemplo 2",
+              "value": "We meet at six."
+            },
+            {
+              "key": "Ejemplo 3",
+              "value": "My birthday is in May."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a1-preposiciones-lugar-tiempo-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "La elección depende de la intención, la cantidad, el tiempo o el registro.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "in",
+              "rule": "dentro; meses, años y partes del día",
+              "examples": [
+                "The keys are on the table."
+              ]
+            },
+            {
+              "label": "on",
+              "rule": "sobre una superficie; días y fechas",
+              "examples": [
+                "We meet at six."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a1-preposiciones-lugar-tiempo-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con una forma natural y gramatical.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "See you in Monday."
+            },
+            {
+              "variant": "good",
+              "text": "See you on Monday.",
+              "note": "forma recomendada"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a1-preposiciones-lugar-tiempo-reference",
+      "tag": "Referencia rápida",
+      "title": "Decisión en cuatro pasos",
+      "lede": "Usa esta lista para comprobar tu frase antes de continuar.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Intención",
+              "value": "¿Qué quieres expresar exactamente?"
+            },
+            {
+              "key": "2. Estructura",
+              "value": "Elige la forma adecuada de preposiciones básicas."
+            },
+            {
+              "key": "3. Concordancia",
+              "value": "Revisa sujeto, verbo, número y tiempo."
+            },
+            {
+              "key": "4. Naturalidad",
+              "value": "Lee la frase completa y evita traducir literalmente."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "crea una frase personal con cada patrón y léela en voz alta."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "The class starts ___ 9.",
+      "options": [
+        "in",
+        "at"
+      ],
+      "answer": 1,
+      "explain": "La respuesta correcta aplica la regla central de preposiciones básicas."
+    },
+    {
+      "q": "¿Cuál de estas frases es correcta?",
+      "options": [
+        "See you in Monday.",
+        "See you on Monday."
+      ],
+      "answer": 1,
+      "explain": "La segunda opción usa la estructura y el orden correctos."
+    },
+    {
+      "q": "¿Qué conviene revisar al usar preposiciones básicas?",
+      "options": [
+        "La intención, la estructura y el contexto.",
+        "Solo la traducción literal al español."
+      ],
+      "answer": 0,
+      "explain": "Una frase natural depende del significado, la forma y el contexto, no de traducir palabra por palabra."
+    }
+  ]
+}

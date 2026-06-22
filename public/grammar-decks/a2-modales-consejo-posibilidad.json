@@ -1,0 +1,216 @@
+{
+  "meta": {
+    "eyebrow": "A2 · Consejo y obligación",
+    "title": "Consejo y obligación",
+    "titleEmphasis": "should, could y must",
+    "goal": "Ya puedes usar should, could y must en ejemplos claros y adecuados al contexto."
+  },
+  "cards": [
+    {
+      "id": "a2-modales-consejo-posibilidad-concept",
+      "tag": "Idea central",
+      "title": "Consejo y obligación: qué expresa",
+      "lede": "Esta lección te ayuda a usar should, could y must con precisión y sin traducir palabra por palabra.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "should",
+              "value": "consejo o expectativa",
+              "highlights": [
+                "should"
+              ]
+            },
+            {
+              "key": "could",
+              "value": "posibilidad o sugerencia",
+              "highlights": [
+                "could"
+              ]
+            },
+            {
+              "key": "must",
+              "value": "obligación fuerte",
+              "highlights": [
+                "must"
+              ]
+            },
+            {
+              "key": "mustn't",
+              "value": "prohibición, no ausencia de obligación",
+              "highlights": [
+                "mustn't"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer la intención y elegir correctamente should, could y must en situaciones reales."
+      }
+    },
+    {
+      "id": "a2-modales-consejo-posibilidad-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "should",
+              "value": "consejo o expectativa"
+            },
+            {
+              "key": "could",
+              "value": "posibilidad o sugerencia"
+            },
+            {
+              "key": "must",
+              "value": "obligación fuerte"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a2-modales-consejo-posibilidad-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo como una unidad completa y fíjate en la posición de las palabras.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Ejemplo 1",
+              "value": "You should rest."
+            },
+            {
+              "key": "Ejemplo 2",
+              "value": "We could take a taxi."
+            },
+            {
+              "key": "Ejemplo 3",
+              "value": "You must wear a seat belt."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a2-modales-consejo-posibilidad-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "La elección depende de la intención, la cantidad, el tiempo o el registro.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "should",
+              "rule": "consejo o expectativa",
+              "examples": [
+                "You should rest."
+              ]
+            },
+            {
+              "label": "could",
+              "rule": "posibilidad o sugerencia",
+              "examples": [
+                "We could take a taxi."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a2-modales-consejo-posibilidad-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con una forma natural y gramatical.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "You mustn't come if you're busy."
+            },
+            {
+              "variant": "good",
+              "text": "You don't have to come if you're busy.",
+              "note": "forma recomendada"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a2-modales-consejo-posibilidad-reference",
+      "tag": "Referencia rápida",
+      "title": "Decisión en cuatro pasos",
+      "lede": "Usa esta lista para comprobar tu frase antes de continuar.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Intención",
+              "value": "¿Qué quieres expresar exactamente?"
+            },
+            {
+              "key": "2. Estructura",
+              "value": "Elige la forma adecuada de should, could y must."
+            },
+            {
+              "key": "3. Concordancia",
+              "value": "Revisa sujeto, verbo, número y tiempo."
+            },
+            {
+              "key": "4. Naturalidad",
+              "value": "Lee la frase completa y evita traducir literalmente."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "crea una frase personal con cada patrón y léela en voz alta."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "For advice, use ___.",
+      "options": [
+        "should",
+        "mustn't"
+      ],
+      "answer": 0,
+      "explain": "La respuesta correcta aplica la regla central de should, could y must."
+    },
+    {
+      "q": "¿Cuál de estas frases es correcta?",
+      "options": [
+        "You mustn't come if you're busy.",
+        "You don't have to come if you're busy."
+      ],
+      "answer": 1,
+      "explain": "La segunda opción usa la estructura y el orden correctos."
+    },
+    {
+      "q": "¿Qué conviene revisar al usar should, could y must?",
+      "options": [
+        "La intención, la estructura y el contexto.",
+        "Solo la traducción literal al español."
+      ],
+      "answer": 0,
+      "explain": "Una frase natural depende del significado, la forma y el contexto, no de traducir palabra por palabra."
+    }
+  ]
+}

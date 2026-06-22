@@ -2,9 +2,6 @@ import Script from "next/script";
 import "./globals.css";
 import "./markdown.css";
 import { DM_Sans, Fraunces, DM_Mono } from "next/font/google";
-import AuthProvider from "@/components/auth/AuthProvider";
-import { ThemeProvider } from "@/components/theme/ThemeProvider";
-import AppShell from "@/components/layout/AppShell";
 
 // Body + UI — DM Sans covers Latin and Latin Extended (IPA symbols)
 const dmSans = DM_Sans({
@@ -68,14 +65,9 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="bg-surface-base text-fg transition-colors" suppressHydrationWarning>
-        <AuthProvider>
-          <ThemeProvider>
-            <AppShell>{children}</AppShell>
-          </ThemeProvider>
-        </AuthProvider>
+      <body className="bg-surface-base text-fg transition-colors" suppressHydrationWarning>
+        {children}
       </body>
     </html>
   );
 }
-

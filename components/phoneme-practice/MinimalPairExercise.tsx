@@ -15,9 +15,8 @@ export function MinimalPairExercise({ exercise, onSubmit, focusUi = false, voice
   const [selected, setSelected] = useState<string | null>(null)
   const [submitted, setSubmitted] = useState(false)
   const [playing, setPlaying] = useState(false)
-  function handleSelect(id: string, label: string) {
+  function handleSelect(id: string) {
     if (submitted) return
-    speak(label, { voice })
     setSelected(id)
   }
 
@@ -57,6 +56,15 @@ export function MinimalPairExercise({ exercise, onSubmit, focusUi = false, voice
   }
 
   const canConfirm = Boolean(selected) && !submitted
+  const correctOption = exercise.options.find((option) =>
+    exercise.correctIds.includes(option.id),
+  )
+  const selectedOption = exercise.options.find((option) => option.id === selected)
+  const selectedIsCorrect = selected ? exercise.correctIds.includes(selected) : false
+  const targetPronunciation =
+    correctOption && exercise.ipa
+      ? `${correctOption.label} se pronuncia con ${exercise.ipa}`
+      : undefined
 
   const options = (
     <div
@@ -72,16 +80,16 @@ export function MinimalPairExercise({ exercise, onSubmit, focusUi = false, voice
           aria-checked={selected === opt.id}
           aria-label={`Seleccionar ${opt.label}`}
           aria-disabled={submitted}
-          onClick={() => handleSelect(opt.id, opt.label)}
+          onClick={() => handleSelect(opt.id)}
           className={focusUi ? pairClass(opt.id) : legacyClass(opt.id)}
         >
           <div>{opt.label}</div>
           {!focusUi && (
             <div aria-hidden className="text-[11px] font-normal mt-1 opacity-50">
-              🔊 tap
+              Select
             </div>
           )}
-          {focusUi && <span className="pf-pair-opt__sub">Toca para escuchar</span>}
+          {focusUi && <span className="pf-pair-opt__sub">Seleccionar</span>}
         </button>
       ))}
     </div>
@@ -132,7 +140,7 @@ export function MinimalPairExercise({ exercise, onSubmit, focusUi = false, voice
           onClick={() => {
             if (playing) return
             setPlaying(true)
-            speak(exercise.ipa!.replace(/[/[\]]/g, ''), { voice })
+            speak(exercise.targetWord ?? correctOption?.label ?? '', { voice })
             setTimeout(() => setPlaying(false), 900)
           }}
           className={[
@@ -159,6 +167,32 @@ export function MinimalPairExercise({ exercise, onSubmit, focusUi = false, voice
       {options}
 
       {confirmButton}
+
+      {submitted && correctOption && (
+        <div
+          role="status"
+          aria-live="polite"
+          className={[
+            'w-full rounded-xl border px-4 py-3 text-sm',
+            selectedIsCorrect
+              ? 'border-success/30 bg-success-soft text-success'
+              : 'border-error/30 bg-error-soft text-error',
+          ].join(' ')}
+        >
+          <p className="m-0 font-semibold">
+            {selectedIsCorrect ? '¡Correcto!' : `La respuesta es “${correctOption.label}”.`}
+          </p>
+          {targetPronunciation && (
+            <p className="mt-1 mb-0 text-(--fg-primary)">
+              <strong>{correctOption.label}</strong> contiene el sonido{' '}
+              <strong>{exercise.ipa}</strong>.
+              {selectedOption && !selectedIsCorrect
+                ? ` “${selectedOption.label}” usa un sonido diferente.`
+                : ''}
+            </p>
+          )}
+        </div>
+      )}
     </div>
   )
 }

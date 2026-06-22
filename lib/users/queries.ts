@@ -1,4 +1,5 @@
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
+import type { CefrLevel } from "@/lib/core-1000/types";
 
 export type UserRole = "free" | "premium" | "admin";
 
@@ -11,6 +12,7 @@ export interface UserProfile {
 export interface UserPreferences {
   full_name: string;
   avatar_url: string;
+  cefr_level: CefrLevel | null;
 }
 
 function parseUserRole(role: string | null | undefined): UserRole {
@@ -62,7 +64,7 @@ export async function getUserPreferences(
   const supabase = getSupabaseBrowserClient();
   const { data, error } = await supabase
     .from("user_profiles")
-    .select("display_name")
+    .select("display_name, cefr_level")
     .eq("id", userId)
     .single();
 
@@ -71,6 +73,7 @@ export async function getUserPreferences(
   return {
     full_name: data?.display_name || metadataString(authMetadata?.full_name) || "",
     avatar_url: metadataString(authMetadata?.avatar_url) || "",
+    cefr_level: (data?.cefr_level as CefrLevel | null) ?? null,
   };
 }
 
@@ -133,5 +136,5 @@ export async function syncCefrLevel(userId: string, cefrEstimate: string): Promi
     .from("user_profiles")
     .upsert({ id: userId, cefr_level: cefrEstimate }, { onConflict: "id" });
 
-  if (error) console.error("Failed to sync cefr_level:", error);
+  if (error) throw error;
 }

@@ -1,11 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
-import { requireUser } from "@/lib/api/guards";
+import { requireSameOrigin, requireUser } from "@/lib/api/guards";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export const maxDuration = 30;
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
-  const { user, error: authError } = await requireUser();
+  const originError = requireSameOrigin(request);
+  if (originError) return originError;
+
+  const { user, error: authError } = await requireUser(request);
   if (authError) return authError as NextResponse;
 
   const formData = await request.formData().catch(() => null);
@@ -56,7 +59,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 }
 
 export async function DELETE(request: NextRequest): Promise<NextResponse> {
-  const { user, error: authError } = await requireUser();
+  const originError = requireSameOrigin(request);
+  if (originError) return originError;
+
+  const { user, error: authError } = await requireUser(request);
   if (authError) return authError as NextResponse;
 
   const { entryId } = await request.json().catch(() => ({}));

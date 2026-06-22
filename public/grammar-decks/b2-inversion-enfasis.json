@@ -1,0 +1,216 @@
+{
+  "meta": {
+    "eyebrow": "B2 · Énfasis formal",
+    "title": "Énfasis formal",
+    "titleEmphasis": "inversión",
+    "goal": "Ya puedes usar inversión en ejemplos claros y adecuados al contexto."
+  },
+  "cards": [
+    {
+      "id": "b2-inversion-enfasis-concept",
+      "tag": "Idea central",
+      "title": "Énfasis formal: qué expresa",
+      "lede": "Esta lección te ayuda a usar inversión con precisión y sin traducir palabra por palabra.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "never / rarely",
+              "value": "Never have I seen...",
+              "highlights": [
+                "never / rarely"
+              ]
+            },
+            {
+              "key": "not only",
+              "value": "Not only did she win...",
+              "highlights": [
+                "not only"
+              ]
+            },
+            {
+              "key": "only then",
+              "value": "Only then did I understand.",
+              "highlights": [
+                "only then"
+              ]
+            },
+            {
+              "key": "no sooner / scarcely",
+              "value": "No sooner had... than...",
+              "highlights": [
+                "no sooner / scarcely"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer la intención y elegir correctamente inversión en situaciones reales."
+      }
+    },
+    {
+      "id": "b2-inversion-enfasis-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "never / rarely",
+              "value": "Never have I seen..."
+            },
+            {
+              "key": "not only",
+              "value": "Not only did she win..."
+            },
+            {
+              "key": "only then",
+              "value": "Only then did I understand."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2-inversion-enfasis-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo como una unidad completa y fíjate en la posición de las palabras.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Ejemplo 1",
+              "value": "Rarely do we see this."
+            },
+            {
+              "key": "Ejemplo 2",
+              "value": "Not only did he apologize, but he also paid."
+            },
+            {
+              "key": "Ejemplo 3",
+              "value": "Only later did I realize the truth."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2-inversion-enfasis-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "La elección depende de la intención, la cantidad, el tiempo o el registro.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "never / rarely",
+              "rule": "Never have I seen...",
+              "examples": [
+                "Rarely do we see this."
+              ]
+            },
+            {
+              "label": "not only",
+              "rule": "Not only did she win...",
+              "examples": [
+                "Not only did he apologize, but he also paid."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2-inversion-enfasis-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con una forma natural y gramatical.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "Never I have seen that."
+            },
+            {
+              "variant": "good",
+              "text": "Never have I seen that.",
+              "note": "forma recomendada"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2-inversion-enfasis-reference",
+      "tag": "Referencia rápida",
+      "title": "Decisión en cuatro pasos",
+      "lede": "Usa esta lista para comprobar tu frase antes de continuar.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Intención",
+              "value": "¿Qué quieres expresar exactamente?"
+            },
+            {
+              "key": "2. Estructura",
+              "value": "Elige la forma adecuada de inversión."
+            },
+            {
+              "key": "3. Concordancia",
+              "value": "Revisa sujeto, verbo, número y tiempo."
+            },
+            {
+              "key": "4. Naturalidad",
+              "value": "Lee la frase completa y evita traducir literalmente."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "crea una frase personal con cada patrón y léela en voz alta."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "Rarely ___ such care.",
+      "options": [
+        "we see",
+        "do we see"
+      ],
+      "answer": 1,
+      "explain": "La respuesta correcta aplica la regla central de inversión."
+    },
+    {
+      "q": "¿Cuál de estas frases es correcta?",
+      "options": [
+        "Never I have seen that.",
+        "Never have I seen that."
+      ],
+      "answer": 1,
+      "explain": "La segunda opción usa la estructura y el orden correctos."
+    },
+    {
+      "q": "¿Qué conviene revisar al usar inversión?",
+      "options": [
+        "La intención, la estructura y el contexto.",
+        "Solo la traducción literal al español."
+      ],
+      "answer": 0,
+      "explain": "Una frase natural depende del significado, la forma y el contexto, no de traducir palabra por palabra."
+    }
+  ]
+}

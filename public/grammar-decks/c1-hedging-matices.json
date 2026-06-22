@@ -1,0 +1,216 @@
+{
+  "meta": {
+    "eyebrow": "C1 · Matizar afirmaciones",
+    "title": "Matizar afirmaciones",
+    "titleEmphasis": "hedging",
+    "goal": "Ya puedes usar hedging en ejemplos claros y adecuados al contexto."
+  },
+  "cards": [
+    {
+      "id": "c1-hedging-matices-concept",
+      "tag": "Idea central",
+      "title": "Matizar afirmaciones: qué expresa",
+      "lede": "Esta lección te ayuda a usar hedging con precisión y sin traducir palabra por palabra.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "verbos",
+              "value": "seem, appear, tend to, suggest",
+              "highlights": [
+                "verbos"
+              ]
+            },
+            {
+              "key": "adverbios",
+              "value": "arguably, apparently, relatively",
+              "highlights": [
+                "adverbios"
+              ]
+            },
+            {
+              "key": "cuantificadores",
+              "value": "to some extent, in many cases",
+              "highlights": [
+                "cuantificadores"
+              ]
+            },
+            {
+              "key": "distancia",
+              "value": "It could be argued that...",
+              "highlights": [
+                "distancia"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer la intención y elegir correctamente hedging en situaciones reales."
+      }
+    },
+    {
+      "id": "c1-hedging-matices-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "verbos",
+              "value": "seem, appear, tend to, suggest"
+            },
+            {
+              "key": "adverbios",
+              "value": "arguably, apparently, relatively"
+            },
+            {
+              "key": "cuantificadores",
+              "value": "to some extent, in many cases"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c1-hedging-matices-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo como una unidad completa y fíjate en la posición de las palabras.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Ejemplo 1",
+              "value": "This appears to be effective."
+            },
+            {
+              "key": "Ejemplo 2",
+              "value": "The policy may have contributed."
+            },
+            {
+              "key": "Ejemplo 3",
+              "value": "This is arguably the main factor."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c1-hedging-matices-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "La elección depende de la intención, la cantidad, el tiempo o el registro.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "verbos",
+              "rule": "seem, appear, tend to, suggest",
+              "examples": [
+                "This appears to be effective."
+              ]
+            },
+            {
+              "label": "adverbios",
+              "rule": "arguably, apparently, relatively",
+              "examples": [
+                "The policy may have contributed."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c1-hedging-matices-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con una forma natural y gramatical.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "This proves the policy always works."
+            },
+            {
+              "variant": "good",
+              "text": "This suggests the policy may work.",
+              "note": "forma recomendada"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c1-hedging-matices-reference",
+      "tag": "Referencia rápida",
+      "title": "Decisión en cuatro pasos",
+      "lede": "Usa esta lista para comprobar tu frase antes de continuar.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Intención",
+              "value": "¿Qué quieres expresar exactamente?"
+            },
+            {
+              "key": "2. Estructura",
+              "value": "Elige la forma adecuada de hedging."
+            },
+            {
+              "key": "3. Concordancia",
+              "value": "Revisa sujeto, verbo, número y tiempo."
+            },
+            {
+              "key": "4. Naturalidad",
+              "value": "Lee la frase completa y evita traducir literalmente."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "crea una frase personal con cada patrón y léela en voz alta."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "Which is more cautious?",
+      "options": [
+        "This causes X.",
+        "This may contribute to X."
+      ],
+      "answer": 1,
+      "explain": "La respuesta correcta aplica la regla central de hedging."
+    },
+    {
+      "q": "¿Cuál de estas frases es correcta?",
+      "options": [
+        "This proves the policy always works.",
+        "This suggests the policy may work."
+      ],
+      "answer": 1,
+      "explain": "La segunda opción usa la estructura y el orden correctos."
+    },
+    {
+      "q": "¿Qué conviene revisar al usar hedging?",
+      "options": [
+        "La intención, la estructura y el contexto.",
+        "Solo la traducción literal al español."
+      ],
+      "answer": 0,
+      "explain": "Una frase natural depende del significado, la forma y el contexto, no de traducir palabra por palabra."
+    }
+  ]
+}

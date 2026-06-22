@@ -6,29 +6,26 @@ vi.mock('@/lib/word-bank/enrich', () => ({
   enrichWord: vi.fn().mockResolvedValue(undefined),
 }))
 
-// Mock @supabase/supabase-js createClient
-vi.mock('@supabase/supabase-js', () => ({
-  createClient: vi.fn(),
+vi.mock('@/lib/api/guards', () => ({
+  requireUser: vi.fn(),
+  rateLimit: vi.fn(),
+  validateBody: vi.fn(),
+  createUserScopedClient: vi.fn(),
+  SECURE_HEADERS: { 'Cache-Control': 'no-store' },
 }))
 
 import { POST } from '../route'
-import { createClient } from '@supabase/supabase-js'
+import {
+  requireUser,
+  rateLimit,
+  validateBody,
+  createUserScopedClient,
+} from '@/lib/api/guards'
 
-const mockCreateClient = vi.mocked(createClient)
-
-// Builds a mock Supabase client with the given auth.getUser return value
-// and optional from() chain behavior.
-function makeMockClient(
-  getUserResult: { data: { user: { id: string } | null } },
-  fromImpl?: (table: string) => unknown
-) {
-  return {
-    auth: {
-      getUser: vi.fn().mockResolvedValue(getUserResult),
-    },
-    from: fromImpl ?? vi.fn().mockReturnValue({}),
-  }
-}
+const mockRequireUser = vi.mocked(requireUser)
+const mockRateLimit = vi.mocked(rateLimit)
+const mockValidateBody = vi.mocked(validateBody)
+const mockCreateUserScopedClient = vi.mocked(createUserScopedClient)
 
 describe('POST /api/words', () => {
   const originalEnv = process.env
@@ -40,6 +37,7 @@ describe('POST /api/words', () => {
       NEXT_PUBLIC_SUPABASE_URL: 'https://test.supabase.co',
       NEXT_PUBLIC_SUPABASE_ANON_KEY: 'test-anon-key',
     }
+    mockRateLimit.mockReturnValue({ limited: false, error: null })
   })
 
   afterEach(() => {
@@ -47,6 +45,11 @@ describe('POST /api/words', () => {
   })
 
   it('returns 401 when Authorization header is missing', async () => {
+    mockRequireUser.mockResolvedValue({
+      user: null,
+      error: new Response(null, { status: 401 }) as never,
+      accessToken: null,
+    })
     const req = new NextRequest('http://localhost/api/words', {
       method: 'POST',
       body: JSON.stringify({ text: 'hello' }),
@@ -55,10 +58,12 @@ describe('POST /api/words', () => {
     expect(res.status).toBe(401)
   })
 
-  it('returns 401 when token is invalid (getUser returns null user)', async () => {
-    mockCreateClient.mockReturnValue(
-      makeMockClient({ data: { user: null } }) as never
-    )
+  it('returns 401 when token is invalid', async () => {
+    mockRequireUser.mockResolvedValue({
+      user: null,
+      error: new Response(null, { status: 401 }) as never,
+      accessToken: null,
+    })
     const req = new NextRequest('http://localhost/api/words', {
       method: 'POST',
       headers: { Authorization: 'Bearer bad-token' },
@@ -69,9 +74,15 @@ describe('POST /api/words', () => {
   })
 
   it('returns 400 when text is missing', async () => {
-    mockCreateClient.mockReturnValue(
-      makeMockClient({ data: { user: { id: 'user-123' } } }) as never
-    )
+    mockRequireUser.mockResolvedValue({
+      user: { id: 'user-123' } as never,
+      error: null,
+      accessToken: 'good-token',
+    })
+    mockValidateBody.mockResolvedValue({
+      data: null,
+      error: new Response(null, { status: 400 }) as never,
+    })
     const req = new NextRequest('http://localhost/api/words', {
       method: 'POST',
       headers: { Authorization: 'Bearer good-token' },
@@ -84,10 +95,16 @@ describe('POST /api/words', () => {
   it('returns 201 when a new word is created successfully', async () => {
     const fakeWord = { id: 'word-abc', text: 'ephemeral', status: 'processing' }
 
-    // authClient and userClient are created in sequence; provide both mocks
-    const authClientMock = makeMockClient({ data: { user: { id: 'user-123' } } })
+    mockRequireUser.mockResolvedValue({
+      user: { id: 'user-123' } as never,
+      error: null,
+      accessToken: 'good-token',
+    })
+    mockValidateBody.mockResolvedValue({
+      data: { text: 'ephemeral' },
+      error: null,
+    })
     const userClientMock = {
-      auth: { getUser: vi.fn() },
       from: vi.fn().mockReturnValue({
         insert: vi.fn().mockReturnValue({
           select: vi.fn().mockReturnValue({
@@ -97,9 +114,7 @@ describe('POST /api/words', () => {
       }),
     }
 
-    mockCreateClient
-      .mockReturnValueOnce(authClientMock as never)
-      .mockReturnValueOnce(userClientMock as never)
+    mockCreateUserScopedClient.mockReturnValue(userClientMock as never)
 
     const req = new NextRequest('http://localhost/api/words', {
       method: 'POST',
@@ -115,10 +130,11 @@ describe('POST /api/words', () => {
   it('returns 500 when Supabase env vars are missing', async () => {
     delete process.env.NEXT_PUBLIC_SUPABASE_URL
     delete process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-    // Provide a mock so auth header check passes first
-    mockCreateClient.mockReturnValue(
-      makeMockClient({ data: { user: { id: 'user-123' } } }) as never
-    )
+    mockRequireUser.mockResolvedValue({
+      user: null,
+      error: new Response(null, { status: 500 }) as never,
+      accessToken: null,
+    })
     const req = new NextRequest('http://localhost/api/words', {
       method: 'POST',
       headers: { Authorization: 'Bearer good-token' },

@@ -15,8 +15,9 @@ interface CoursePathPageProps {
 }
 
 export default function CoursePathPage({ levelParam }: CoursePathPageProps) {
-  const selectedLevelId = parseCefrLevelId(levelParam) ?? DEFAULT_LEVEL;
-  const hasExplicitLevel = parseCefrLevelId(levelParam) !== null;
+  const requestedLevel = parseCefrLevelId(levelParam);
+  const selectedLevelId = requestedLevel ?? DEFAULT_LEVEL;
+  const hasExplicitLevel = requestedLevel !== null;
   const selectedLevel =
     COURSE_PATH_CURRICULUM.levels.find((level) => level.id === selectedLevelId) ??
     COURSE_PATH_CURRICULUM.levels[0];
@@ -37,12 +38,21 @@ export default function CoursePathPage({ levelParam }: CoursePathPageProps) {
             Elige tu nivel y avanza por lo esencial. Las lecciones con estrella van primero;
             el resto profundiza cuando tengas ganas. La pronunciación corre en paralelo en Sound Lab.
           </p>
+          <div className="course-path__assessment-links">
+            <Link href="/assessment">Hacer prueba de nivel</Link>
+            <Link href={`/assessment?mode=checkpoint&level=${selectedLevelId}`}>
+              Comprobar {selectedLevel.spineLabel}
+            </Link>
+          </div>
         </header>
 
         <nav className="course-path__spine" aria-label="CEFR level">
           {COURSE_PATH_CURRICULUM.levels.map((level) => {
             const isActive = level.id === selectedLevelId;
-            const href = level.id === DEFAULT_LEVEL ? "/courses" : `/courses?level=${level.id}`;
+            const href =
+              level.id === DEFAULT_LEVEL
+                ? "/courses#course-level-a1"
+                : `/courses?level=${level.id}#course-level-${level.id}`;
 
             return (
               <Link
@@ -57,12 +67,16 @@ export default function CoursePathPage({ levelParam }: CoursePathPageProps) {
           })}
         </nav>
 
-        <div className="course-path__panel-enter">
+        <section
+          id={`course-level-${selectedLevel.id}`}
+          className="course-path__panel-enter course-path__panel-enter--selected"
+          aria-label={selectedLevel.title}
+        >
           <CoursePathLevelPanel
             level={selectedLevel}
             electiveTracks={COURSE_PATH_CURRICULUM.electiveTracks}
           />
-        </div>
+        </section>
 
         <details className="course-path__why" open>
           <summary className="course-path__why-summary">

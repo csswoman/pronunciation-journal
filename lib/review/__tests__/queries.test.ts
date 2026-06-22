@@ -48,7 +48,7 @@ describe('rowsToFailedItems', () => {
       5,
     )
     expect(items[0]?.label).toBe('Habla conectada · Assimilation')
-    expect(items[0]?.typeLabel).toBe('Dictation')
+    expect(items[0]?.typeLabel).toBe('Exercise')
     expect(items[0]?.drillable).toBe(true)
   })
 

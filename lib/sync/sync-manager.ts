@@ -27,6 +27,15 @@ function now(): string {
   return new Date().toISOString()
 }
 
+const UPSERT_CONFLICT_COLUMNS: Partial<Record<SyncTable, string>> = {
+  user_contrast_progress: 'user_id,contrast_id',
+  user_learning_state: 'user_id',
+}
+
+function resolveOnConflict(entry: SyncOutboxEntry): string | undefined {
+  return entry.onConflict ?? UPSERT_CONFLICT_COLUMNS[entry.table]
+}
+
 /**
  * Determine whether a Supabase error should be retried or treated as permanent.
  * RLS violations (code 42501) and check-constraint errors (23514) are permanent.
@@ -49,6 +58,7 @@ export function isPermanentError(message: string, code?: string): boolean {
 async function flushEntry(entry: SyncOutboxEntry): Promise<void> {
   const supabase = getSupabaseBrowserClient()
   const { operation, payload, matchKey } = entry
+  const onConflict = resolveOnConflict(entry)
   // Cast table to any — SyncTable may include tables not yet in the generated types
   // (e.g. ai_conversations, user_learning_state pending migration).
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -63,7 +73,7 @@ async function flushEntry(entry: SyncOutboxEntry): Promise<void> {
       break
     }
     case 'upsert': {
-      const res = await supabase.from(table).upsert(payload as never)
+      const res = await supabase.from(table).upsert(payload as never, onConflict ? { onConflict } : undefined)
       error = res.error
       break
     }
@@ -113,13 +123,15 @@ export async function enqueue(
   table: SyncTable,
   operation: SyncOperation,
   payload: Record<string, unknown>,
-  matchKey?: Record<string, unknown>
+  matchKey?: Record<string, unknown>,
+  onConflict?: string,
 ): Promise<number> {
   const entry: SyncOutboxEntry = {
     table,
     operation,
     payload,
     matchKey,
+    onConflict,
     status: 'pending',
     createdAt: now(),
     retryCount: 0,

@@ -1,0 +1,216 @@
+{
+  "meta": {
+    "eyebrow": "B1 · Contar lo que alguien dijo",
+    "title": "Contar lo que alguien dijo",
+    "titleEmphasis": "estilo indirecto",
+    "goal": "Ya puedes usar estilo indirecto en ejemplos claros y adecuados al contexto."
+  },
+  "cards": [
+    {
+      "id": "b1-estilo-indirecto-concept",
+      "tag": "Idea central",
+      "title": "Contar lo que alguien dijo: qué expresa",
+      "lede": "Esta lección te ayuda a usar estilo indirecto con precisión y sin traducir palabra por palabra.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "say / tell",
+              "value": "say something; tell someone",
+              "highlights": [
+                "say / tell"
+              ]
+            },
+            {
+              "key": "backshift",
+              "value": "present → past; will → would",
+              "highlights": [
+                "backshift"
+              ]
+            },
+            {
+              "key": "pronombres",
+              "value": "cambian según quién cuenta",
+              "highlights": [
+                "pronombres"
+              ]
+            },
+            {
+              "key": "tiempo y lugar",
+              "value": "today → that day; here → there",
+              "highlights": [
+                "tiempo y lugar"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer la intención y elegir correctamente estilo indirecto en situaciones reales."
+      }
+    },
+    {
+      "id": "b1-estilo-indirecto-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "say / tell",
+              "value": "say something; tell someone"
+            },
+            {
+              "key": "backshift",
+              "value": "present → past; will → would"
+            },
+            {
+              "key": "pronombres",
+              "value": "cambian según quién cuenta"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b1-estilo-indirecto-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo como una unidad completa y fíjate en la posición de las palabras.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Ejemplo 1",
+              "value": "She said she was tired."
+            },
+            {
+              "key": "Ejemplo 2",
+              "value": "He told me he would call."
+            },
+            {
+              "key": "Ejemplo 3",
+              "value": "They said they had finished."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b1-estilo-indirecto-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "La elección depende de la intención, la cantidad, el tiempo o el registro.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "say / tell",
+              "rule": "say something; tell someone",
+              "examples": [
+                "She said she was tired."
+              ]
+            },
+            {
+              "label": "backshift",
+              "rule": "present → past; will → would",
+              "examples": [
+                "He told me he would call."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b1-estilo-indirecto-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con una forma natural y gramatical.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "She told that she was busy."
+            },
+            {
+              "variant": "good",
+              "text": "She said that she was busy.",
+              "note": "forma recomendada"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b1-estilo-indirecto-reference",
+      "tag": "Referencia rápida",
+      "title": "Decisión en cuatro pasos",
+      "lede": "Usa esta lista para comprobar tu frase antes de continuar.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Intención",
+              "value": "¿Qué quieres expresar exactamente?"
+            },
+            {
+              "key": "2. Estructura",
+              "value": "Elige la forma adecuada de estilo indirecto."
+            },
+            {
+              "key": "3. Concordancia",
+              "value": "Revisa sujeto, verbo, número y tiempo."
+            },
+            {
+              "key": "4. Naturalidad",
+              "value": "Lee la frase completa y evita traducir literalmente."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "crea una frase personal con cada patrón y léela en voz alta."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "He said, 'I am ready.' → He said he ___ ready.",
+      "options": [
+        "is",
+        "was"
+      ],
+      "answer": 1,
+      "explain": "La respuesta correcta aplica la regla central de estilo indirecto."
+    },
+    {
+      "q": "¿Cuál de estas frases es correcta?",
+      "options": [
+        "She told that she was busy.",
+        "She said that she was busy."
+      ],
+      "answer": 1,
+      "explain": "La segunda opción usa la estructura y el orden correctos."
+    },
+    {
+      "q": "¿Qué conviene revisar al usar estilo indirecto?",
+      "options": [
+        "La intención, la estructura y el contexto.",
+        "Solo la traducción literal al español."
+      ],
+      "answer": 0,
+      "explain": "Una frase natural depende del significado, la forma y el contexto, no de traducir palabra por palabra."
+    }
+  ]
+}

@@ -45,10 +45,19 @@ function AccuracyLabel({ accuracy }: { accuracy: number }) {
   return <span className="text-error font-medium text-sm">Needs work</span>
 }
 
-function ResultRow({ slug, isCorrect }: { slug: string; isCorrect: boolean }) {
+export function formatExerciseLabel(slug: string, exercisePayload: unknown): string {
+  if (exercisePayload && typeof exercisePayload === 'object') {
+    const targetWord = (exercisePayload as { targetWord?: unknown }).targetWord
+    if (typeof targetWord === 'string' && targetWord.trim().length > 0) return targetWord.trim()
+  }
+
+  return slug.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
+}
+
+function ResultRow({ slug, isCorrect, exercisePayload }: { slug: string; isCorrect: boolean; exercisePayload: unknown }) {
   return (
     <li className="flex items-center justify-between rounded-lg border border-border-subtle bg-surface-raised px-3 py-2">
-      <span className="text-sm text-fg-primary capitalize">{slug.replace(/_/g, ' ')}</span>
+      <span className="text-sm text-fg-primary">{formatExerciseLabel(slug, exercisePayload)}</span>
       <span
         className={cn(
           'inline-flex h-6 w-6 items-center justify-center rounded-full text-xs font-semibold',
@@ -84,6 +93,7 @@ export function SessionSummary({ result, onPracticeAgain, onFinish }: Props) {
             key={`${r.exerciseId}-${i}`}
             slug={r.slug}
             isCorrect={r.isCorrect}
+            exercisePayload={r.exercisePayload}
           />
         ))}
       </ul>

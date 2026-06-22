@@ -1,0 +1,216 @@
+{
+  "meta": {
+    "eyebrow": "A2 · Experiencias",
+    "title": "Experiencias",
+    "titleEmphasis": "presente perfecto",
+    "goal": "Ya puedes usar presente perfecto en ejemplos claros y adecuados al contexto."
+  },
+  "cards": [
+    {
+      "id": "a2-presente-perfecto-experiencias-concept",
+      "tag": "Idea central",
+      "title": "Experiencias: qué expresa",
+      "lede": "Esta lección te ayuda a usar presente perfecto con precisión y sin traducir palabra por palabra.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "have/has + participio",
+              "value": "I have visited Cusco.",
+              "highlights": [
+                "have/has + participio"
+              ]
+            },
+            {
+              "key": "ever / never",
+              "value": "experiencias hasta ahora",
+              "highlights": [
+                "ever / never"
+              ]
+            },
+            {
+              "key": "just / already / yet",
+              "value": "acciones recientes",
+              "highlights": [
+                "just / already / yet"
+              ]
+            },
+            {
+              "key": "sin tiempo terminado",
+              "value": "no con yesterday o last year",
+              "highlights": [
+                "sin tiempo terminado"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer la intención y elegir correctamente presente perfecto en situaciones reales."
+      }
+    },
+    {
+      "id": "a2-presente-perfecto-experiencias-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "have/has + participio",
+              "value": "I have visited Cusco."
+            },
+            {
+              "key": "ever / never",
+              "value": "experiencias hasta ahora"
+            },
+            {
+              "key": "just / already / yet",
+              "value": "acciones recientes"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a2-presente-perfecto-experiencias-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo como una unidad completa y fíjate en la posición de las palabras.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Ejemplo 1",
+              "value": "Have you ever flown?"
+            },
+            {
+              "key": "Ejemplo 2",
+              "value": "She has never tried sushi."
+            },
+            {
+              "key": "Ejemplo 3",
+              "value": "We haven't finished yet."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a2-presente-perfecto-experiencias-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "La elección depende de la intención, la cantidad, el tiempo o el registro.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "have/has + participio",
+              "rule": "I have visited Cusco.",
+              "examples": [
+                "Have you ever flown?"
+              ]
+            },
+            {
+              "label": "ever / never",
+              "rule": "experiencias hasta ahora",
+              "examples": [
+                "She has never tried sushi."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a2-presente-perfecto-experiencias-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con una forma natural y gramatical.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "I have seen him yesterday."
+            },
+            {
+              "variant": "good",
+              "text": "I saw him yesterday.",
+              "note": "forma recomendada"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a2-presente-perfecto-experiencias-reference",
+      "tag": "Referencia rápida",
+      "title": "Decisión en cuatro pasos",
+      "lede": "Usa esta lista para comprobar tu frase antes de continuar.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Intención",
+              "value": "¿Qué quieres expresar exactamente?"
+            },
+            {
+              "key": "2. Estructura",
+              "value": "Elige la forma adecuada de presente perfecto."
+            },
+            {
+              "key": "3. Concordancia",
+              "value": "Revisa sujeto, verbo, número y tiempo."
+            },
+            {
+              "key": "4. Naturalidad",
+              "value": "Lee la frase completa y evita traducir literalmente."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "crea una frase personal con cada patrón y léela en voz alta."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "She has ___ arrived.",
+      "options": [
+        "just",
+        "yesterday"
+      ],
+      "answer": 0,
+      "explain": "La respuesta correcta aplica la regla central de presente perfecto."
+    },
+    {
+      "q": "¿Cuál de estas frases es correcta?",
+      "options": [
+        "I have seen him yesterday.",
+        "I saw him yesterday."
+      ],
+      "answer": 1,
+      "explain": "La segunda opción usa la estructura y el orden correctos."
+    },
+    {
+      "q": "¿Qué conviene revisar al usar presente perfecto?",
+      "options": [
+        "La intención, la estructura y el contexto.",
+        "Solo la traducción literal al español."
+      ],
+      "answer": 0,
+      "explain": "Una frase natural depende del significado, la forma y el contexto, no de traducir palabra por palabra."
+    }
+  ]
+}
