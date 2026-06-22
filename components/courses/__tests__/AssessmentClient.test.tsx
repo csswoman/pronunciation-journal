@@ -4,24 +4,13 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import AssessmentClient from "../AssessmentClient";
 import type { AssessmentQuestion } from "@/lib/courses/assessment";
 
-const { syncCefrLevel, getUser } = vi.hoisted(() => ({
-  syncCefrLevel: vi.fn(),
-  getUser: vi.fn(),
-}));
-
 vi.mock("next/link", () => ({
   default: ({ children, href, ...props }: React.ComponentProps<"a">) => (
     <a href={String(href)} {...props}>{children}</a>
   ),
 }));
 
-vi.mock("@/lib/users/queries", () => ({ syncCefrLevel }));
-vi.mock("@/lib/courses/assessment-queries", () => ({
-  saveAssessmentResult: vi.fn().mockResolvedValue(undefined),
-}));
-vi.mock("@/lib/supabase/client", () => ({
-  getSupabaseBrowserClient: () => ({ auth: { getUser } }),
-}));
+const fetchMock = vi.fn();
 
 const questions: AssessmentQuestion[] = [
   {
@@ -37,6 +26,7 @@ const questions: AssessmentQuestion[] = [
 describe("AssessmentClient", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.stubGlobal("fetch", fetchMock);
     const store = new Map<string, string>();
     Object.defineProperty(window, "localStorage", {
       configurable: true,
@@ -47,8 +37,7 @@ describe("AssessmentClient", () => {
         removeItem: (key: string) => store.delete(key),
       },
     });
-    getUser.mockResolvedValue({ data: { user: { id: "user-1" } } });
-    syncCefrLevel.mockResolvedValue(undefined);
+    fetchMock.mockResolvedValue({ ok: true });
     window.localStorage.clear();
   });
 
@@ -71,12 +60,20 @@ describe("AssessmentClient", () => {
 
     expect(screen.getByRole("heading", { name: "Avanzas a A2" })).toBeInTheDocument();
     expect(screen.getByText("topic one")).toBeInTheDocument();
-    await waitFor(() => expect(syncCefrLevel).toHaveBeenCalledWith("user-1", "A2"));
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
+    expect(fetchMock).toHaveBeenCalledWith(
+      "/api/assessment/results",
+      expect.objectContaining({
+        method: "POST",
+      }),
+    );
     expect(window.localStorage.getItem("assessment:checkpoint:A1")).toContain('"assignedLevel":"A2"');
   });
 
   it("offers retry when saving the result fails", async () => {
-    syncCefrLevel.mockRejectedValueOnce(new Error("offline")).mockResolvedValueOnce(undefined);
+    fetchMock
+      .mockResolvedValueOnce({ ok: false })
+      .mockResolvedValueOnce({ ok: true });
     render(<AssessmentClient mode="checkpoint" checkpointLabel="A1" questions={questions} />);
 
     fireEvent.click(screen.getByText("Right"));
@@ -85,7 +82,7 @@ describe("AssessmentClient", () => {
     const retry = await screen.findByRole("button", { name: "Reintentar" });
     fireEvent.click(retry);
 
-    await waitFor(() => expect(syncCefrLevel).toHaveBeenCalledTimes(2));
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(2));
     await waitFor(() => expect(screen.queryByRole("button", { name: "Reintentar" })).not.toBeInTheDocument());
   });
 });
