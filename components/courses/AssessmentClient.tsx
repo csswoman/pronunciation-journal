@@ -3,9 +3,6 @@
 import Link from "next/link";
 import { useState } from "react";
 import { AlertCircle, ArrowLeft, Check, CheckCircle2, RefreshCw } from "lucide-react";
-import { syncCefrLevel } from "@/lib/users/queries";
-import { saveAssessmentResult } from "@/lib/courses/assessment-queries";
-import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import {
   groupQuestionsByLevel,
   levelPassed,
@@ -39,11 +36,16 @@ export default function AssessmentClient({
     setSaving(true);
     setSaveError(false);
     try {
-      const { data: { user } } = await getSupabaseBrowserClient().auth.getUser();
-      if (user) {
-        await syncCefrLevel(user.id, nextResult.assignedLevel);
-        await saveAssessmentResult(user.id, mode, nextResult, questions[0]?.level);
-      }
+      const response = await fetch("/api/assessment/results", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          mode,
+          evaluatedLevel: questions[0]?.level ?? null,
+          result: nextResult,
+        }),
+      });
+      if (!response.ok) throw new Error("Failed to persist assessment result");
     } catch {
       setSaveError(true);
     } finally {

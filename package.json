@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "cross-env NODE_OPTIONS=--max-old-space-size=4096 next dev",
+    "dev": "cross-env NODE_OPTIONS=--max-old-space-size=4096 next dev --webpack",
     "build": "npm run lint:design-tokens && next build",
     "start": "next start",
     "lint": "eslint .",

@@ -5,7 +5,6 @@ import { buildAssessment } from "@/lib/courses/curriculum";
 import { getDeckBySlug } from "@/lib/courses/grammar-deck/decks";
 import type { GrammarQuizQuestion } from "@/lib/courses/grammar-deck/types";
 import { parseCefrLevelId } from "@/lib/courses/curriculumIndex";
-import type { CefrLevelId } from "@/lib/courses/types";
 import "@/app/styles/assessment.css";
 
 interface AssessmentPageProps {

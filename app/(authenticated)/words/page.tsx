@@ -11,6 +11,9 @@ import { getSupabaseServerUserId } from "@/lib/supabase/session";
 import { WordsClient } from "@/components/words/WordsClient";
 import type { LessonViewModel } from "@/lib/lexicon/types";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 async function WordsContent() {
   const { categories, categoryWordIds, previewTags } = getWordsPageLexicon();
 

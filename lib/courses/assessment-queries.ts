@@ -1,6 +1,6 @@
-import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import type { AssessmentResult } from "@/lib/courses/assessment";
 import type { CefrLevelId } from "@/lib/courses/types";
+import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 
 export async function saveAssessmentResult(
   userId: string,
@@ -21,4 +21,20 @@ export async function saveAssessmentResult(
   });
 
   if (error && error.code !== "PGRST205" && error.code !== "42P01") throw error;
+}
+
+export async function persistAssessmentOutcome(
+  userId: string,
+  mode: "placement" | "checkpoint",
+  result: AssessmentResult,
+  evaluatedLevel?: CefrLevelId,
+): Promise<void> {
+  const supabase = getSupabaseBrowserClient();
+  await Promise.all([
+    supabase.from("user_profiles").upsert({
+      id: userId,
+      cefr_level: result.assignedLevel,
+    }, { onConflict: "id" }),
+    saveAssessmentResult(userId, mode, result, evaluatedLevel),
+  ]);
 }

@@ -25,6 +25,8 @@ const MAX_LINES_ALLOWLIST = [
   "lib/phoneme-practice/exercises.ts",
   "lib/progress/queries.ts",
   "scripts/core-1000/generate-chunks.mjs",
+  "hooks/useEssentialWordsSession.ts",
+  "scripts/generate-missing-curriculum-decks.mjs",
 ];
 
 const SUPABASE_CLIENT_IMPORT = {

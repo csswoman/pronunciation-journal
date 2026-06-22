@@ -106,7 +106,7 @@ export function buildAssessmentQuestions(
   checkpointLevel?: CefrLevelId,
 ): AssessmentQuestion[] {
   return buildAssessment(mode, checkpointLevel).flatMap((section) => {
-    const authored = section.items.flatMap((item, index) => {
+    const authored = section.items.flatMap((item) => {
       const quiz = quizzes[item.lessonSlug];
       if (!quiz?.length) return [];
       const selected = quiz.slice(0, 2);

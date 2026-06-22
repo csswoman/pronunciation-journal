@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import type { Database } from "@/lib/supabase/types";
 import { enrichWord } from "@/lib/word-bank/enrich";
 import { createUserScopedClient, requireUser, rateLimit, validateBody, SECURE_HEADERS } from "@/lib/api/guards";
 
