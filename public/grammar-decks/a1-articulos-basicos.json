@@ -1,0 +1,216 @@
+{
+  "meta": {
+    "eyebrow": "A1 · Artículos básicos",
+    "title": "Artículos básicos",
+    "titleEmphasis": "a, an y the",
+    "goal": "Ya puedes usar a, an y the en ejemplos claros y adecuados al contexto."
+  },
+  "cards": [
+    {
+      "id": "a1-articulos-basicos-concept",
+      "tag": "Idea central",
+      "title": "Artículos básicos: qué expresa",
+      "lede": "Esta lección te ayuda a usar a, an y the con precisión y sin traducir palabra por palabra.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "a",
+              "value": "antes de sonido consonántico: a book, a university",
+              "highlights": [
+                "a"
+              ]
+            },
+            {
+              "key": "an",
+              "value": "antes de sonido vocálico: an apple, an hour",
+              "highlights": [
+                "an"
+              ]
+            },
+            {
+              "key": "the",
+              "value": "para algo específico o ya conocido",
+              "highlights": [
+                "the"
+              ]
+            },
+            {
+              "key": "sin artículo",
+              "value": "para plurales y conceptos generales",
+              "highlights": [
+                "sin artículo"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer la intención y elegir correctamente a, an y the en situaciones reales."
+      }
+    },
+    {
+      "id": "a1-articulos-basicos-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "a",
+              "value": "antes de sonido consonántico: a book, a university"
+            },
+            {
+              "key": "an",
+              "value": "antes de sonido vocálico: an apple, an hour"
+            },
+            {
+              "key": "the",
+              "value": "para algo específico o ya conocido"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a1-articulos-basicos-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo como una unidad completa y fíjate en la posición de las palabras.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Ejemplo 1",
+              "value": "I have a dog."
+            },
+            {
+              "key": "Ejemplo 2",
+              "value": "She is an engineer."
+            },
+            {
+              "key": "Ejemplo 3",
+              "value": "The dog is in the garden."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a1-articulos-basicos-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "La elección depende de la intención, la cantidad, el tiempo o el registro.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "a",
+              "rule": "antes de sonido consonántico: a book, a university",
+              "examples": [
+                "I have a dog."
+              ]
+            },
+            {
+              "label": "an",
+              "rule": "antes de sonido vocálico: an apple, an hour",
+              "examples": [
+                "She is an engineer."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a1-articulos-basicos-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con una forma natural y gramatical.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "I have an car."
+            },
+            {
+              "variant": "good",
+              "text": "I have a car.",
+              "note": "forma recomendada"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a1-articulos-basicos-reference",
+      "tag": "Referencia rápida",
+      "title": "Decisión en cuatro pasos",
+      "lede": "Usa esta lista para comprobar tu frase antes de continuar.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Intención",
+              "value": "¿Qué quieres expresar exactamente?"
+            },
+            {
+              "key": "2. Estructura",
+              "value": "Elige la forma adecuada de a, an y the."
+            },
+            {
+              "key": "3. Concordancia",
+              "value": "Revisa sujeto, verbo, número y tiempo."
+            },
+            {
+              "key": "4. Naturalidad",
+              "value": "Lee la frase completa y evita traducir literalmente."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "crea una frase personal con cada patrón y léela en voz alta."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "Elige la opción correcta para a, an y the.",
+      "options": [
+        "a university",
+        "an university"
+      ],
+      "answer": 0,
+      "explain": "La respuesta correcta aplica la regla central de a, an y the."
+    },
+    {
+      "q": "¿Cuál de estas frases es correcta?",
+      "options": [
+        "I have an car.",
+        "I have a car."
+      ],
+      "answer": 1,
+      "explain": "La segunda opción usa la estructura y el orden correctos."
+    },
+    {
+      "q": "¿Qué conviene revisar al usar a, an y the?",
+      "options": [
+        "La intención, la estructura y el contexto.",
+        "Solo la traducción literal al español."
+      ],
+      "answer": 0,
+      "explain": "Una frase natural depende del significado, la forma y el contexto, no de traducir palabra por palabra."
+    }
+  ]
+}

@@ -74,8 +74,11 @@ export default function CoursePathProgressClient({ level, compactHead }: CourseP
 
       {completedIds.size > 0 && currentLesson && (
         <Link href={studyLessonPath(level.id, currentLesson.number)} className="course-path__resume">
-          <span className="course-path__resume-label">Continúa</span>
-          <span className="course-path__resume-title">{currentLesson.title}</span>
+          <span className="course-path__resume-body">
+            <span className="course-path__resume-label">Siguiente lección</span>
+            <span className="course-path__resume-title">{currentLesson.title}</span>
+          </span>
+          <span className="course-path__resume-action">Continuar</span>
           <ArrowRight size={16} aria-hidden />
         </Link>
       )}

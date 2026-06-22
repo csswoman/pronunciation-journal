@@ -1,0 +1,216 @@
+{
+  "meta": {
+    "eyebrow": "B1 · Rutinas del pasado",
+    "title": "Rutinas del pasado",
+    "titleEmphasis": "used to y would",
+    "goal": "Ya puedes usar used to y would en ejemplos claros y adecuados al contexto."
+  },
+  "cards": [
+    {
+      "id": "b1-habitos-pasados-concept",
+      "tag": "Idea central",
+      "title": "Rutinas del pasado: qué expresa",
+      "lede": "Esta lección te ayuda a usar used to y would con precisión y sin traducir palabra por palabra.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "used to",
+              "value": "hábitos y estados pasados",
+              "highlights": [
+                "used to"
+              ]
+            },
+            {
+              "key": "would",
+              "value": "acciones repetidas, no estados",
+              "highlights": [
+                "would"
+              ]
+            },
+            {
+              "key": "past simple",
+              "value": "eventos concretos o secuencia",
+              "highlights": [
+                "past simple"
+              ]
+            },
+            {
+              "key": "marco temporal",
+              "value": "When I was a child...",
+              "highlights": [
+                "marco temporal"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer la intención y elegir correctamente used to y would en situaciones reales."
+      }
+    },
+    {
+      "id": "b1-habitos-pasados-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "used to",
+              "value": "hábitos y estados pasados"
+            },
+            {
+              "key": "would",
+              "value": "acciones repetidas, no estados"
+            },
+            {
+              "key": "past simple",
+              "value": "eventos concretos o secuencia"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b1-habitos-pasados-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo como una unidad completa y fíjate en la posición de las palabras.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Ejemplo 1",
+              "value": "I used to be shy."
+            },
+            {
+              "key": "Ejemplo 2",
+              "value": "Every summer, we'd visit my aunt."
+            },
+            {
+              "key": "Ejemplo 3",
+              "value": "I moved here in 2020."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b1-habitos-pasados-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "La elección depende de la intención, la cantidad, el tiempo o el registro.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "used to",
+              "rule": "hábitos y estados pasados",
+              "examples": [
+                "I used to be shy."
+              ]
+            },
+            {
+              "label": "would",
+              "rule": "acciones repetidas, no estados",
+              "examples": [
+                "Every summer, we'd visit my aunt."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b1-habitos-pasados-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con una forma natural y gramatical.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "I would be shy as a child."
+            },
+            {
+              "variant": "good",
+              "text": "I used to be shy as a child.",
+              "note": "forma recomendada"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b1-habitos-pasados-reference",
+      "tag": "Referencia rápida",
+      "title": "Decisión en cuatro pasos",
+      "lede": "Usa esta lista para comprobar tu frase antes de continuar.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Intención",
+              "value": "¿Qué quieres expresar exactamente?"
+            },
+            {
+              "key": "2. Estructura",
+              "value": "Elige la forma adecuada de used to y would."
+            },
+            {
+              "key": "3. Concordancia",
+              "value": "Revisa sujeto, verbo, número y tiempo."
+            },
+            {
+              "key": "4. Naturalidad",
+              "value": "Lee la frase completa y evita traducir literalmente."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "crea una frase personal con cada patrón y léela en voz alta."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "For a past state, choose ___.",
+      "options": [
+        "would",
+        "used to"
+      ],
+      "answer": 1,
+      "explain": "La respuesta correcta aplica la regla central de used to y would."
+    },
+    {
+      "q": "¿Cuál de estas frases es correcta?",
+      "options": [
+        "I would be shy as a child.",
+        "I used to be shy as a child."
+      ],
+      "answer": 1,
+      "explain": "La segunda opción usa la estructura y el orden correctos."
+    },
+    {
+      "q": "¿Qué conviene revisar al usar used to y would?",
+      "options": [
+        "La intención, la estructura y el contexto.",
+        "Solo la traducción literal al español."
+      ],
+      "answer": 0,
+      "explain": "Una frase natural depende del significado, la forma y el contexto, no de traducir palabra por palabra."
+    }
+  ]
+}

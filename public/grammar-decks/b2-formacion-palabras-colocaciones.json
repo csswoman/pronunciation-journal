@@ -1,0 +1,216 @@
+{
+  "meta": {
+    "eyebrow": "B2 · Precisión léxica",
+    "title": "Precisión léxica",
+    "titleEmphasis": "formación de palabras y colocaciones",
+    "goal": "Ya puedes usar formación de palabras y colocaciones en ejemplos claros y adecuados al contexto."
+  },
+  "cards": [
+    {
+      "id": "b2-formacion-palabras-colocaciones-concept",
+      "tag": "Idea central",
+      "title": "Precisión léxica: qué expresa",
+      "lede": "Esta lección te ayuda a usar formación de palabras y colocaciones con precisión y sin traducir palabra por palabra.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "prefijos",
+              "value": "un-, dis-, mis-, over-",
+              "highlights": [
+                "prefijos"
+              ]
+            },
+            {
+              "key": "sufijos",
+              "value": "-tion, -ment, -able, -ly",
+              "highlights": [
+                "sufijos"
+              ]
+            },
+            {
+              "key": "familias",
+              "value": "decide → decision → decisive",
+              "highlights": [
+                "familias"
+              ]
+            },
+            {
+              "key": "colocaciones",
+              "value": "make a decision; heavy rain",
+              "highlights": [
+                "colocaciones"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer la intención y elegir correctamente formación de palabras y colocaciones en situaciones reales."
+      }
+    },
+    {
+      "id": "b2-formacion-palabras-colocaciones-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "prefijos",
+              "value": "un-, dis-, mis-, over-"
+            },
+            {
+              "key": "sufijos",
+              "value": "-tion, -ment, -able, -ly"
+            },
+            {
+              "key": "familias",
+              "value": "decide → decision → decisive"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2-formacion-palabras-colocaciones-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo como una unidad completa y fíjate en la posición de las palabras.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Ejemplo 1",
+              "value": "The decision was unexpected."
+            },
+            {
+              "key": "Ejemplo 2",
+              "value": "She gave a convincing explanation."
+            },
+            {
+              "key": "Ejemplo 3",
+              "value": "We made significant progress."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2-formacion-palabras-colocaciones-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "La elección depende de la intención, la cantidad, el tiempo o el registro.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "prefijos",
+              "rule": "un-, dis-, mis-, over-",
+              "examples": [
+                "The decision was unexpected."
+              ]
+            },
+            {
+              "label": "sufijos",
+              "rule": "-tion, -ment, -able, -ly",
+              "examples": [
+                "She gave a convincing explanation."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2-formacion-palabras-colocaciones-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con una forma natural y gramatical.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "We did a decision."
+            },
+            {
+              "variant": "good",
+              "text": "We made a decision.",
+              "note": "forma recomendada"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2-formacion-palabras-colocaciones-reference",
+      "tag": "Referencia rápida",
+      "title": "Decisión en cuatro pasos",
+      "lede": "Usa esta lista para comprobar tu frase antes de continuar.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Intención",
+              "value": "¿Qué quieres expresar exactamente?"
+            },
+            {
+              "key": "2. Estructura",
+              "value": "Elige la forma adecuada de formación de palabras y colocaciones."
+            },
+            {
+              "key": "3. Concordancia",
+              "value": "Revisa sujeto, verbo, número y tiempo."
+            },
+            {
+              "key": "4. Naturalidad",
+              "value": "Lee la frase completa y evita traducir literalmente."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "crea una frase personal con cada patrón y léela en voz alta."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "Choose the natural collocation.",
+      "options": [
+        "strong rain",
+        "heavy rain"
+      ],
+      "answer": 1,
+      "explain": "La respuesta correcta aplica la regla central de formación de palabras y colocaciones."
+    },
+    {
+      "q": "¿Cuál de estas frases es correcta?",
+      "options": [
+        "We did a decision.",
+        "We made a decision."
+      ],
+      "answer": 1,
+      "explain": "La segunda opción usa la estructura y el orden correctos."
+    },
+    {
+      "q": "¿Qué conviene revisar al usar formación de palabras y colocaciones?",
+      "options": [
+        "La intención, la estructura y el contexto.",
+        "Solo la traducción literal al español."
+      ],
+      "answer": 0,
+      "explain": "Una frase natural depende del significado, la forma y el contexto, no de traducir palabra por palabra."
+    }
+  ]
+}

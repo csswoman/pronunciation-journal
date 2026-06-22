@@ -2,7 +2,7 @@ import { createHash } from "crypto";
 import { GoogleGenAI } from "@google/genai";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { requireUser, rateLimit, validateBody } from "@/lib/api/guards";
+import { requireSameOrigin, requireUser, rateLimit, validateBody } from "@/lib/api/guards";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { buildTranscriptionPrompt } from "@/lib/ai-prompts";
 import { FALLBACK_MODELS, getErrorStatus, shouldTryNextModel } from "@/lib/gemini/fallback";
@@ -195,8 +195,11 @@ async function transcribeWithFallback(
 // ---------------------------------------------------------------------------
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  const originError = requireSameOrigin(request);
+  if (originError) return originError;
+
   // 1. Auth
-  const { user, error: authError } = await requireUser();
+  const { user, error: authError } = await requireUser(request);
   if (authError) return authError as NextResponse;
 
   // 2. Rate limit — tighter for transcription (costs more per call)

@@ -110,6 +110,45 @@ export function createUserScopedClient(accessToken: string) {
 }
 
 // ---------------------------------------------------------------------------
+// Same-origin guard for cookie-authenticated mutations
+// ---------------------------------------------------------------------------
+
+/**
+ * Reject cross-site mutation requests when auth is carried by cookies.
+ * Bearer-token clients are exempt because they do not rely on ambient auth.
+ */
+export function requireSameOrigin(request: Request): NextResponse | null {
+  if (getBearerToken(request)) return null;
+
+  const origin = request.headers.get("origin");
+  if (!origin) {
+    return NextResponse.json(
+      { error: "Cross-site request blocked" },
+      { status: 403, headers: SECURE_HEADERS }
+    );
+  }
+
+  let expectedOrigin: string;
+  try {
+    expectedOrigin = new URL(request.url).origin;
+  } catch {
+    return NextResponse.json(
+      { error: "Invalid request URL" },
+      { status: 400, headers: SECURE_HEADERS }
+    );
+  }
+
+  if (origin !== expectedOrigin) {
+    return NextResponse.json(
+      { error: "Cross-site request blocked" },
+      { status: 403, headers: SECURE_HEADERS }
+    );
+  }
+
+  return null;
+}
+
+// ---------------------------------------------------------------------------
 // rateLimit — in-memory per-user-per-endpoint sliding window
 // ---------------------------------------------------------------------------
 

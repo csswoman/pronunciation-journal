@@ -19,6 +19,7 @@ export default function CoursePathLessonRow({ lesson, levelId }: CoursePathLesso
 
   return (
     <div
+      id={lesson.slug ? `lesson-${lesson.slug}` : undefined}
       className={cn(
         "course-path__lesson",
         isPriority && "course-path__lesson--pri",

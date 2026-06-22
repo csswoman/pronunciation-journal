@@ -153,11 +153,13 @@
 /* ── Level panel head ────────────────────────────────────── */
 
 .course-path__head {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: var(--space-3) var(--space-6);
   margin-bottom: var(--space-4);
-  padding-top: var(--space-1);
+  padding: var(--space-2) 0 var(--space-3);
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .course-path__head h2 {
@@ -169,8 +171,8 @@
 
 .course-path__prog {
   display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
+  align-items: baseline;
+  gap: var(--space-3);
 }
 
 .course-path__prog-pct {
@@ -445,6 +447,12 @@
   font-weight: 600;
 }
 
+.course-path__lesson:target {
+  background: var(--primary-soft);
+  border-color: color-mix(in oklch, var(--primary) 40%, var(--border-subtle));
+  scroll-margin-top: 6rem;
+}
+
 .course-path__lk {
   display: inline-flex;
   align-items: center;
@@ -540,6 +548,36 @@
   color: var(--text-secondary);
   font-size: 0.95rem;
   line-height: 1.6;
+}
+
+.course-path__assessment-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+}
+
+.course-path__assessment-links a {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.course-path__assessment-links a:last-child {
+  color: var(--text-secondary);
+}
+
+.course-path__assessment-links a:hover {
+  color: var(--primary-hover);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.course-path__assessment-links a:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+  border-radius: var(--radius-xs);
 }
 
 .course-path__lg > span {
@@ -833,10 +871,10 @@
 .course-path__resume {
   display: flex;
   align-items: center;
-  gap: var(--space-3);
-  padding: var(--space-3) var(--space-4);
-  background: var(--primary);
-  border: 1px solid var(--primary);
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-5);
+  background: var(--cta-bg);
+  border: 1px solid var(--cta-bg);
   border-radius: var(--radius-md);
   text-decoration: none;
   transition: background 0.15s, border-color 0.15s, transform 0.15s;
@@ -852,34 +890,46 @@
 }
 
 .course-path__resume:hover {
-  background: var(--primary-hover);
-  border-color: var(--primary-hover);
+  background: color-mix(in oklch, var(--cta-bg) 88%, var(--primary));
+  border-color: color-mix(in oklch, var(--cta-bg) 88%, var(--primary));
+}
+
+.course-path__resume-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
 .course-path__resume-label {
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  color: var(--on-primary);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: color-mix(in oklch, var(--cta-fg) 68%, transparent);
   text-transform: uppercase;
   white-space: nowrap;
 }
 
 .course-path__resume-title {
-  flex: 1;
-  font-size: 0.92rem;
-  color: var(--on-primary);
-  font-weight: 500;
+  font-size: 1rem;
+  color: var(--cta-fg);
+  font-weight: 600;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  opacity: 0.85;
+}
+
+.course-path__resume-action {
+  font-size: 0.82rem;
+  color: var(--cta-fg);
+  font-weight: 600;
 }
 
 .course-path__resume svg {
-  color: var(--on-primary);
+  color: var(--cta-fg);
   flex-shrink: 0;
-  opacity: 0.8;
+  opacity: 0.72;
 }
 
 /* Loading skeleton */
@@ -1469,6 +1519,21 @@
     align-items: flex-start;
   }
 
+  .course-path__head {
+    grid-template-columns: 1fr;
+    align-items: start;
+    gap: var(--space-2);
+  }
+
+  .course-path__prog {
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .course-path__resume-action {
+    display: none;
+  }
+
   /* Why section */
   .course-path__why {
     margin-bottom: var(--space-6);
@@ -1485,6 +1550,15 @@
     white-space: normal;
     overflow: visible;
     text-overflow: unset;
+  }
+
+  .course-path__practice-suggestions {
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+  }
+
+  .course-path__practice-review-list {
+    flex-direction: column;
   }
 }
 
@@ -1579,11 +1653,14 @@
 /* ── Practice suggestions block ─────────────────────────── */
 
 .course-path__practice-suggestions {
-  margin-top: var(--space-8);
+  margin-top: var(--space-6);
   margin-bottom: var(--space-2);
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
+  display: grid;
+  grid-template-columns: minmax(150px, 0.35fr) 1fr;
+  align-items: start;
+  gap: var(--space-4) var(--space-6);
+  padding: var(--space-4) 0;
+  border-top: 1px solid var(--border-subtle);
 }
 
 .course-path__practice-suggestions-heading {
@@ -1594,84 +1671,17 @@
   color: var(--text-tertiary);
 }
 
-.course-path__practice-current {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  padding: var(--space-3) var(--space-4);
-  background: var(--primary);
-  border-radius: var(--radius-md);
-  text-decoration: none;
-  transition: background 0.15s, transform 0.15s;
-}
-
-.course-path__practice-current:hover {
-  background: var(--primary-hover);
-}
-
-.course-path__practice-current:active {
-  transform: scale(0.99);
-}
-
-.course-path__practice-current:focus-visible {
-  outline: 2px solid var(--primary);
-  outline-offset: 3px;
-  border-radius: var(--radius-md);
-}
-
-.course-path__practice-current-icon {
-  flex-shrink: 0;
-  width: 28px;
-  height: 28px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: color-mix(in oklch, var(--on-primary) 15%, transparent);
-  border-radius: 50%;
-  color: var(--on-primary);
-}
-
-.course-path__practice-current-body {
-  flex: 1;
+.course-path__practice-heading {
   display: flex;
   flex-direction: column;
-  gap: 1px;
-  min-width: 0;
+  gap: var(--space-1);
 }
 
-.course-path__practice-current-label {
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: color-mix(in oklch, var(--on-primary) 75%, transparent);
-}
-
-.course-path__practice-current-title {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: var(--on-primary);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.course-path__practice-current > svg {
-  flex-shrink: 0;
-  color: color-mix(in oklch, var(--on-primary) 70%, transparent);
-}
-
-.course-path__practice-review {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-}
-
-.course-path__practice-review-label {
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+.course-path__practice-heading p {
+  margin: 0;
+  max-width: 30ch;
+  font-size: 0.78rem;
+  line-height: 1.45;
   color: var(--text-tertiary);
 }
 
@@ -1680,8 +1690,13 @@
   padding: 0;
   margin: 0;
   display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.course-path__practice-review-list li {
+  flex: 1 1 240px;
 }
 
 .course-path__practice-review-item {
@@ -1712,6 +1727,69 @@
 .course-path__practice-review-item svg {
   flex-shrink: 0;
   color: var(--text-tertiary);
+}
+
+.grammar-deck__unavailable {
+  max-width: 620px;
+  margin: var(--space-12) auto 0;
+  padding: var(--space-8);
+  text-align: center;
+  background: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+}
+
+.grammar-deck__unavailable-icon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto var(--space-4);
+  display: grid;
+  place-items: center;
+  color: var(--primary);
+  background: var(--primary-soft);
+  border-radius: var(--radius-md);
+}
+
+.grammar-deck__unavailable-eyebrow {
+  margin: 0 0 var(--space-2);
+  color: var(--text-tertiary);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.grammar-deck__unavailable h1 {
+  margin: 0;
+  color: var(--text-primary);
+  font-family: var(--font-editorial), Georgia, serif;
+  font-size: 1.75rem;
+}
+
+.grammar-deck__unavailable > p:not(.grammar-deck__unavailable-eyebrow) {
+  max-width: 52ch;
+  margin: var(--space-3) auto var(--space-6);
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.grammar-deck__unavailable-action {
+  display: inline-flex;
+  padding: var(--space-3) var(--space-5);
+  color: var(--cta-fg);
+  background: var(--cta-bg);
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.grammar-deck__unavailable-action:hover {
+  background: color-mix(in oklch, var(--cta-bg) 88%, var(--primary));
+}
+
+.grammar-deck__unavailable-action:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
 }
 
 /* ── Reduced motion ──────────────────────────────────────── */

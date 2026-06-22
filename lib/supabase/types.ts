@@ -14,6 +14,45 @@ export type Database = {
   }
   public: {
     Tables: {
+      assessment_results: {
+        Row: {
+          assigned_level: string
+          completed_at: string
+          evaluated_level: string | null
+          id: string
+          mode: string
+          passed: boolean
+          score: number
+          topic_scores: Json
+          total: number
+          user_id: string
+        }
+        Insert: {
+          assigned_level: string
+          completed_at?: string
+          evaluated_level?: string | null
+          id?: string
+          mode: string
+          passed: boolean
+          score: number
+          topic_scores?: Json
+          total: number
+          user_id: string
+        }
+        Update: {
+          assigned_level?: string
+          completed_at?: string
+          evaluated_level?: string | null
+          id?: string
+          mode?: string
+          passed?: boolean
+          score?: number
+          topic_scores?: Json
+          total?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       ai_prompts: {
         Row: {
           category: string | null

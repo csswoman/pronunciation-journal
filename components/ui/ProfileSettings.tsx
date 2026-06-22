@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useUserPreferences } from "@/hooks/useUserPreferences";
 import { useAuth } from "@/components/auth/AuthProvider";
 import ProfileAvatarCard from "@/components/profile/ProfileAvatarCard";
@@ -154,6 +155,17 @@ export default function ProfileSettings() {
               <option key={level} value={level}>{level}</option>
             ))}
           </select>
+        </div>
+        <div className="flex flex-wrap gap-3 border-t border-[var(--border)] pt-4">
+          <Link href="/assessment" className="text-sm font-semibold text-primary hover:text-primary-hover">
+            Hacer prueba de nivel
+          </Link>
+          <Link
+            href={`/assessment?mode=checkpoint&level=${(preferences?.cefr_level ?? "A1").toLowerCase()}`}
+            className="text-sm font-medium text-fg-muted hover:text-fg"
+          >
+            Comprobar mi nivel actual
+          </Link>
         </div>
       </SectionCard>
 

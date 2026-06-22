@@ -1,7 +1,7 @@
 import { GoogleGenAI, type Content, type FunctionCallingConfigMode, type FunctionDeclaration } from "@google/genai";
 import { NextRequest } from "next/server";
 import { z } from "zod";
-import { requireUser, rateLimit, validateBody, SECURE_HEADERS } from "@/lib/api/guards";
+import { requireSameOrigin, requireUser, rateLimit, validateBody, SECURE_HEADERS } from "@/lib/api/guards";
 import { buildServerPrompt, type PromptKey } from "@/lib/api/prompts";
 import { detectIntent, intentToToolConfig } from "@/lib/ai-practice/intent-detection";
 import { TOOL_DECLARATIONS } from "@/lib/ai-practice/tools/registry";
@@ -231,8 +231,11 @@ async function streamWithFallback(
 // ---------------------------------------------------------------------------
 
 export async function POST(request: NextRequest): Promise<Response> {
+  const originError = requireSameOrigin(request);
+  if (originError) return originError;
+
   // 1. Auth — reject before touching the body
-  const { user, error: authError } = await requireUser();
+  const { user, error: authError } = await requireUser(request);
   if (authError) return authError;
 
   // 2. Rate limit — 15 req/min per user, keyed per endpoint so routes are independent

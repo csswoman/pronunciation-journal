@@ -39,6 +39,7 @@ your row when done.
 | 027 | Stop serializing the complete curriculum through a Client Component | P2 | M | — | DONE (2026-06-21, local working tree) |
 | 028 | Fetch only the phoneme data required for a session | P2 | M | — | TODO |
 | 029 | Remove remaining over-broad Supabase projections | P3 | S | — | DONE (2026-06-21, local working tree) |
+| 030 | Close curriculum gaps by level, then derive placement and checkpoint tests from the curriculum | P1 | L | — | DONE (focused tests and typecheck pass; full suite has 2 unrelated transcribe mock failures) |
 
 Status values: TODO | IN PROGRESS | DONE | BLOCKED (with one-line reason) | REJECTED (with one-line rationale)
 
@@ -69,6 +70,9 @@ Status values: TODO | IN PROGRESS | DONE | BLOCKED (with one-line reason) | REJE
 - 029 supersedes 012 with a current, vetted projection inventory.
 - 026, 027, 028, and 029 can execute independently after the baseline is
   recorded.
+- 030 is independent of the older infrastructure plans, but it should be
+  executed before any UI that depends on `B1+` gating or a placement test so
+  the test contract matches the curriculum instead of inventing its own scope.
 
 ## Findings considered and rejected
 

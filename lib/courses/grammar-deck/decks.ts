@@ -11,7 +11,6 @@ import path from "path";
 import { z } from "zod";
 import { GrammarStudyDeckSchema } from "./schema";
 import type { GrammarDeckMeta, GrammarStudyDeckData, GrammarRelatedLink } from "./types";
-import { MOCK_GRAMMAR_DECK } from "./mockGrammarDeck";
 import { getLevelById } from "@/lib/courses/curriculumIndex";
 import type { CoursePathTrackId } from "@/lib/courses/types";
 
@@ -150,15 +149,11 @@ export function listAllDecks(): DeckSummary[] {
 }
 
 /**
- * Resolves the deck to render for a lesson. Falls back to the demo deck while
- * a lesson's content file does not exist yet.
+ * Resolves the authored deck for a lesson.
+ * Missing content stays explicit so an unrelated lesson is never shown.
  */
-export function getDeckForLesson(slug: string | undefined): GrammarStudyDeckData {
-  if (slug) {
-    const deck = getDeckBySlug(slug);
-    if (deck) return deck;
-  }
-  return MOCK_GRAMMAR_DECK;
+export function getDeckForLesson(slug: string | undefined): GrammarStudyDeckData | null {
+  return slug ? getDeckBySlug(slug) : null;
 }
 
 /**

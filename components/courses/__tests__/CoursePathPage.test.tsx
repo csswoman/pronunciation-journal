@@ -58,11 +58,13 @@ describe("CoursePathPage", () => {
     expect(screen.getByText("Conecta con Sound Lab")).toBeInTheDocument();
   });
 
-  it("locks levels above the persisted profile level", () => {
-    render(<CoursePathPage levelParam="b1" maxLevel="a2" />);
+  it("keeps every level available for exploration", () => {
+    render(<CoursePathPage levelParam="b1" />);
 
-    expect(screen.getByText("Fundamentos A1")).toBeInTheDocument();
-    expect(screen.queryByRole("link", { name: "B1" })).not.toBeInTheDocument();
-    expect(screen.getByLabelText("B1 locked")).toBeInTheDocument();
+    expect(screen.getByText("Inglés en acción B1")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "C1" })).toHaveAttribute(
+      "href",
+      "/courses?level=c1#course-level-c1",
+    );
   });
 });

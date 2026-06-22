@@ -5,7 +5,7 @@ import { createHash } from "crypto";
 import { z } from "zod";
 import type { Database } from "@/lib/supabase/types";
 import { SENTENCE_REORDER_SYSTEM_PROMPT } from "@/lib/ai-prompts";
-import { requireUser, rateLimit, validateBody, SECURE_HEADERS } from "@/lib/api/guards";
+import { requireSameOrigin, requireUser, rateLimit, validateBody, SECURE_HEADERS } from "@/lib/api/guards";
 
 export const runtime = "nodejs";
 
@@ -88,6 +88,9 @@ function cacheKey(topic: string, level: string): string {
  * are cached per-user to avoid exposing user-supplied prompts across accounts.
  */
 export async function POST(req: NextRequest): Promise<NextResponse> {
+  const originError = requireSameOrigin(req);
+  if (originError) return originError;
+
   const { user, error: authError } = await requireUser(req);
   if (authError) return authError;
 

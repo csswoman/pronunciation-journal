@@ -11,7 +11,7 @@ export const SENTENCE_EXERCISE_IDS = [5, 6, 8] as const
 
 const EXERCISE_TYPE_LABELS: Record<string, string> = {
   fill_blank: 'Fill in the blank',
-  sentence_dictation: 'Dictation',
+  sentence_dictation: 'Exercise',
   reorder_words: 'Reorder words',
 }
 

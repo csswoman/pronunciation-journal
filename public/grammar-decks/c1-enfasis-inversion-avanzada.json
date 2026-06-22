@@ -1,0 +1,216 @@
+{
+  "meta": {
+    "eyebrow": "C1 · Control retórico",
+    "title": "Control retórico",
+    "titleEmphasis": "énfasis e inversión avanzada",
+    "goal": "Ya puedes usar énfasis e inversión avanzada en ejemplos claros y adecuados al contexto."
+  },
+  "cards": [
+    {
+      "id": "c1-enfasis-inversion-avanzada-concept",
+      "tag": "Idea central",
+      "title": "Control retórico: qué expresa",
+      "lede": "Esta lección te ayuda a usar énfasis e inversión avanzada con precisión y sin traducir palabra por palabra.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "cleft sentences",
+              "value": "What matters is... / It was X that...",
+              "highlights": [
+                "cleft sentences"
+              ]
+            },
+            {
+              "key": "fronting",
+              "value": "This point, we cannot ignore.",
+              "highlights": [
+                "fronting"
+              ]
+            },
+            {
+              "key": "inversión negativa",
+              "value": "Under no circumstances should...",
+              "highlights": [
+                "inversión negativa"
+              ]
+            },
+            {
+              "key": "condicional sin if",
+              "value": "Were it not for... / Had they known...",
+              "highlights": [
+                "condicional sin if"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer la intención y elegir correctamente énfasis e inversión avanzada en situaciones reales."
+      }
+    },
+    {
+      "id": "c1-enfasis-inversion-avanzada-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "cleft sentences",
+              "value": "What matters is... / It was X that..."
+            },
+            {
+              "key": "fronting",
+              "value": "This point, we cannot ignore."
+            },
+            {
+              "key": "inversión negativa",
+              "value": "Under no circumstances should..."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c1-enfasis-inversion-avanzada-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo como una unidad completa y fíjate en la posición de las palabras.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Ejemplo 1",
+              "value": "What I need is more time."
+            },
+            {
+              "key": "Ejemplo 2",
+              "value": "Under no circumstances should you respond."
+            },
+            {
+              "key": "Ejemplo 3",
+              "value": "Were it not for her help, we'd have failed."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c1-enfasis-inversion-avanzada-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "La elección depende de la intención, la cantidad, el tiempo o el registro.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "cleft sentences",
+              "rule": "What matters is... / It was X that...",
+              "examples": [
+                "What I need is more time."
+              ]
+            },
+            {
+              "label": "fronting",
+              "rule": "This point, we cannot ignore.",
+              "examples": [
+                "Under no circumstances should you respond."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c1-enfasis-inversion-avanzada-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con una forma natural y gramatical.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "Under no circumstances you should leave."
+            },
+            {
+              "variant": "good",
+              "text": "Under no circumstances should you leave.",
+              "note": "forma recomendada"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c1-enfasis-inversion-avanzada-reference",
+      "tag": "Referencia rápida",
+      "title": "Decisión en cuatro pasos",
+      "lede": "Usa esta lista para comprobar tu frase antes de continuar.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Intención",
+              "value": "¿Qué quieres expresar exactamente?"
+            },
+            {
+              "key": "2. Estructura",
+              "value": "Elige la forma adecuada de énfasis e inversión avanzada."
+            },
+            {
+              "key": "3. Concordancia",
+              "value": "Revisa sujeto, verbo, número y tiempo."
+            },
+            {
+              "key": "4. Naturalidad",
+              "value": "Lee la frase completa y evita traducir literalmente."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "crea una frase personal con cada patrón y léela en voz alta."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "___ it not for the delay, we'd be finished.",
+      "options": [
+        "Was",
+        "Were"
+      ],
+      "answer": 1,
+      "explain": "La respuesta correcta aplica la regla central de énfasis e inversión avanzada."
+    },
+    {
+      "q": "¿Cuál de estas frases es correcta?",
+      "options": [
+        "Under no circumstances you should leave.",
+        "Under no circumstances should you leave."
+      ],
+      "answer": 1,
+      "explain": "La segunda opción usa la estructura y el orden correctos."
+    },
+    {
+      "q": "¿Qué conviene revisar al usar énfasis e inversión avanzada?",
+      "options": [
+        "La intención, la estructura y el contexto.",
+        "Solo la traducción literal al español."
+      ],
+      "answer": 0,
+      "explain": "Una frase natural depende del significado, la forma y el contexto, no de traducir palabra por palabra."
+    }
+  ]
+}

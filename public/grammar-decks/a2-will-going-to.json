@@ -1,0 +1,216 @@
+{
+  "meta": {
+    "eyebrow": "A2 · Planes y predicciones",
+    "title": "Planes y predicciones",
+    "titleEmphasis": "will o going to",
+    "goal": "Ya puedes usar will o going to en ejemplos claros y adecuados al contexto."
+  },
+  "cards": [
+    {
+      "id": "a2-will-going-to-concept",
+      "tag": "Idea central",
+      "title": "Planes y predicciones: qué expresa",
+      "lede": "Esta lección te ayuda a usar will o going to con precisión y sin traducir palabra por palabra.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "going to",
+              "value": "plan previo o evidencia visible",
+              "highlights": [
+                "going to"
+              ]
+            },
+            {
+              "key": "will",
+              "value": "decisión inmediata, promesa o predicción",
+              "highlights": [
+                "will"
+              ]
+            },
+            {
+              "key": "present continuous",
+              "value": "plan ya acordado",
+              "highlights": [
+                "present continuous"
+              ]
+            },
+            {
+              "key": "probably / definitely",
+              "value": "matizan predicciones",
+              "highlights": [
+                "probably / definitely"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer la intención y elegir correctamente will o going to en situaciones reales."
+      }
+    },
+    {
+      "id": "a2-will-going-to-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "going to",
+              "value": "plan previo o evidencia visible"
+            },
+            {
+              "key": "will",
+              "value": "decisión inmediata, promesa o predicción"
+            },
+            {
+              "key": "present continuous",
+              "value": "plan ya acordado"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a2-will-going-to-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo como una unidad completa y fíjate en la posición de las palabras.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Ejemplo 1",
+              "value": "I'm going to study tonight."
+            },
+            {
+              "key": "Ejemplo 2",
+              "value": "I'll answer the phone."
+            },
+            {
+              "key": "Ejemplo 3",
+              "value": "Look! It's going to rain."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a2-will-going-to-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "La elección depende de la intención, la cantidad, el tiempo o el registro.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "going to",
+              "rule": "plan previo o evidencia visible",
+              "examples": [
+                "I'm going to study tonight."
+              ]
+            },
+            {
+              "label": "will",
+              "rule": "decisión inmediata, promesa o predicción",
+              "examples": [
+                "I'll answer the phone."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a2-will-going-to-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con una forma natural y gramatical.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "I will going to travel."
+            },
+            {
+              "variant": "good",
+              "text": "I'm going to travel.",
+              "note": "forma recomendada"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a2-will-going-to-reference",
+      "tag": "Referencia rápida",
+      "title": "Decisión en cuatro pasos",
+      "lede": "Usa esta lista para comprobar tu frase antes de continuar.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Intención",
+              "value": "¿Qué quieres expresar exactamente?"
+            },
+            {
+              "key": "2. Estructura",
+              "value": "Elige la forma adecuada de will o going to."
+            },
+            {
+              "key": "3. Concordancia",
+              "value": "Revisa sujeto, verbo, número y tiempo."
+            },
+            {
+              "key": "4. Naturalidad",
+              "value": "Lee la frase completa y evita traducir literalmente."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "crea una frase personal con cada patrón y léela en voz alta."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "The phone is ringing. I ___ answer it.",
+      "options": [
+        "will",
+        "am going to"
+      ],
+      "answer": 0,
+      "explain": "La respuesta correcta aplica la regla central de will o going to."
+    },
+    {
+      "q": "¿Cuál de estas frases es correcta?",
+      "options": [
+        "I will going to travel.",
+        "I'm going to travel."
+      ],
+      "answer": 1,
+      "explain": "La segunda opción usa la estructura y el orden correctos."
+    },
+    {
+      "q": "¿Qué conviene revisar al usar will o going to?",
+      "options": [
+        "La intención, la estructura y el contexto.",
+        "Solo la traducción literal al español."
+      ],
+      "answer": 0,
+      "explain": "Una frase natural depende del significado, la forma y el contexto, no de traducir palabra por palabra."
+    }
+  ]
+}

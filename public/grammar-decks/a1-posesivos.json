@@ -1,0 +1,216 @@
+{
+  "meta": {
+    "eyebrow": "A1 · Posesión",
+    "title": "Posesión",
+    "titleEmphasis": "adjetivos y pronombres posesivos",
+    "goal": "Ya puedes usar adjetivos y pronombres posesivos en ejemplos claros y adecuados al contexto."
+  },
+  "cards": [
+    {
+      "id": "a1-posesivos-concept",
+      "tag": "Idea central",
+      "title": "Posesión: qué expresa",
+      "lede": "Esta lección te ayuda a usar adjetivos y pronombres posesivos con precisión y sin traducir palabra por palabra.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "my / mine",
+              "value": "my book / The book is mine",
+              "highlights": [
+                "my / mine"
+              ]
+            },
+            {
+              "key": "your / yours",
+              "value": "your coat / The coat is yours",
+              "highlights": [
+                "your / yours"
+              ]
+            },
+            {
+              "key": "his / her / its",
+              "value": "posesión de él, ella o una cosa",
+              "highlights": [
+                "his / her / its"
+              ]
+            },
+            {
+              "key": "our / their",
+              "value": "posesión de nosotros o ellos",
+              "highlights": [
+                "our / their"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer la intención y elegir correctamente adjetivos y pronombres posesivos en situaciones reales."
+      }
+    },
+    {
+      "id": "a1-posesivos-form",
+      "tag": "Forma",
+      "title": "La estructura que debes recordar",
+      "lede": "Observa la forma completa antes de producir tus propios ejemplos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "my / mine",
+              "value": "my book / The book is mine"
+            },
+            {
+              "key": "your / yours",
+              "value": "your coat / The coat is yours"
+            },
+            {
+              "key": "his / her / its",
+              "value": "posesión de él, ella o una cosa"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a1-posesivos-examples",
+      "tag": "En contexto",
+      "title": "Ejemplos naturales",
+      "lede": "Lee cada ejemplo como una unidad completa y fíjate en la posición de las palabras.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Ejemplo 1",
+              "value": "This is my phone."
+            },
+            {
+              "key": "Ejemplo 2",
+              "value": "That bag is hers."
+            },
+            {
+              "key": "Ejemplo 3",
+              "value": "Their house is new."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a1-posesivos-contrast",
+      "tag": "Contraste",
+      "title": "Cómo cambia el significado",
+      "lede": "La elección depende de la intención, la cantidad, el tiempo o el registro.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "my / mine",
+              "rule": "my book / The book is mine",
+              "examples": [
+                "This is my phone."
+              ]
+            },
+            {
+              "label": "your / yours",
+              "rule": "your coat / The coat is yours",
+              "examples": [
+                "That bag is hers."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a1-posesivos-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con una forma natural y gramatical.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "This is the book of me."
+            },
+            {
+              "variant": "good",
+              "text": "This is my book.",
+              "note": "forma recomendada"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a1-posesivos-reference",
+      "tag": "Referencia rápida",
+      "title": "Decisión en cuatro pasos",
+      "lede": "Usa esta lista para comprobar tu frase antes de continuar.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Intención",
+              "value": "¿Qué quieres expresar exactamente?"
+            },
+            {
+              "key": "2. Estructura",
+              "value": "Elige la forma adecuada de adjetivos y pronombres posesivos."
+            },
+            {
+              "key": "3. Concordancia",
+              "value": "Revisa sujeto, verbo, número y tiempo."
+            },
+            {
+              "key": "4. Naturalidad",
+              "value": "Lee la frase completa y evita traducir literalmente."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "crea una frase personal con cada patrón y léela en voz alta."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "The keys are ___.",
+      "options": [
+        "my",
+        "mine"
+      ],
+      "answer": 1,
+      "explain": "La respuesta correcta aplica la regla central de adjetivos y pronombres posesivos."
+    },
+    {
+      "q": "¿Cuál de estas frases es correcta?",
+      "options": [
+        "This is the book of me.",
+        "This is my book."
+      ],
+      "answer": 1,
+      "explain": "La segunda opción usa la estructura y el orden correctos."
+    },
+    {
+      "q": "¿Qué conviene revisar al usar adjetivos y pronombres posesivos?",
+      "options": [
+        "La intención, la estructura y el contexto.",
+        "Solo la traducción literal al español."
+      ],
+      "answer": 0,
+      "explain": "Una frase natural depende del significado, la forma y el contexto, no de traducir palabra por palabra."
+    }
+  ]
+}
