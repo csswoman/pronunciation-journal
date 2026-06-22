@@ -57,4 +57,12 @@ describe("CoursePathPage", () => {
     expect(screen.getByText("Prioridad alta (meta laboral)")).toBeInTheDocument();
     expect(screen.getByText("Conecta con Sound Lab")).toBeInTheDocument();
   });
+
+  it("locks levels above the persisted profile level", () => {
+    render(<CoursePathPage levelParam="b1" maxLevel="a2" />);
+
+    expect(screen.getByText("Fundamentos A1")).toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "B1" })).not.toBeInTheDocument();
+    expect(screen.getByLabelText("B1 locked")).toBeInTheDocument();
+  });
 });

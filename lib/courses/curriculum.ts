@@ -1,5 +1,5 @@
 import { buildLevel } from "./buildCurriculum";
-import type { CoursePathCurriculum } from "./types";
+import type { CefrLevelId, CoursePathCurriculum } from "./types";
 
 export const COURSE_PATH_CURRICULUM: CoursePathCurriculum = {
   levels: [
@@ -17,6 +17,13 @@ export const COURSE_PATH_CURRICULUM: CoursePathCurriculum = {
           { t: "Hábitos y rutinas (presente simple)", p: 1, g: "a1-presente-simple" },
           { t: "Los verbos que más salen", p: 1, g: "a1-verbos-comunes" },
           { t: "Partes de la oración", p: 1, g: "a1-construccion-oraciones" },
+          { t: "A, an y the: artículos básicos", p: 1, g: "a1-articulos-basicos" },
+          { t: "There is y there are", p: 1, g: "a1-there-is-there-are" },
+          { t: "Mi, tu, su: posesivos", p: 1, g: "a1-posesivos" },
+          { t: "Preguntas con do y does", p: 1, g: "a1-preguntas-do-does" },
+          { t: "Can y can't: capacidad y permiso", p: 1, g: "a1-can-capacidad-permiso" },
+          { t: "Preposiciones básicas de lugar y tiempo", p: 1, g: "a1-preposiciones-lugar-tiempo" },
+          { t: "Plurales regulares e irregulares", p: 1, g: "a1-plurales" },
           { t: "Primeros sonidos", p: 1, s: true, g: "a1-pronunciacion-basica" },
           { t: "La erre americana /ɹ/", p: 1, s: true, g: "a1-sonido-r-americano" },
           { t: "Vocales /æ/ y /ʌ/", p: 1, s: true, g: "a1-vocales-ae-ua" },
@@ -103,6 +110,12 @@ export const COURSE_PATH_CURRICULUM: CoursePathCurriculum = {
           { t: "Debes, no debes, prohibido", p: 1, g: "a2-obligacion-prohibicion" },
           { t: "Verbos que se confunden", p: 1, g: "a2-verbos-confusos" },
           { t: "Orden de los adjetivos", p: 1, g: "a2-orden-adjetivos" },
+          { t: "Some, any, much y many", p: 1, g: "a2-cuantificadores-esenciales" },
+          { t: "Hábitos del pasado con used to", p: 1, g: "a2-used-to" },
+          { t: "Will o going to", p: 1, g: "a2-will-going-to" },
+          { t: "Presente perfecto: experiencias", p: 1, g: "a2-presente-perfecto-experiencias" },
+          { t: "Should, could y must", p: 1, g: "a2-modales-consejo-posibilidad" },
+          { t: "Preguntas indirectas básicas", p: 1, g: "a2-preguntas-indirectas" },
           { t: "Historia: tarde en la ciudad", p: 1, s: true, g: "a2-audio-aventura-ciudad" },
           { t: "Tiempo, frecuencia y lugar", p: 0, g: "a2-adverbios-expresiones-tiempo" },
           { t: "So y such", p: 0, g: "a2-so-such" },
@@ -185,6 +198,13 @@ export const COURSE_PATH_CURRICULUM: CoursePathCurriculum = {
           { t: "Pronombres y oraciones de relativo", p: 1, g: "b1-pronombres-clausulas-relativas" },
           { t: "Voz pasiva y consejos", p: 1, g: "b1-voz-pasiva-consejos" },
           { t: "Phrasal verbs: los tipos", p: 1, g: "b1-phrasal-verbs-tipos" },
+          { t: "Presente perfecto continuo", p: 1, g: "b1-presente-perfecto-continuo" },
+          { t: "Segundo condicional", p: 1, g: "b1-segundo-condicional" },
+          { t: "Estilo indirecto", p: 1, g: "b1-estilo-indirecto" },
+          { t: "Gerundios e infinitivos", p: 1, g: "b1-gerundios-infinitivos" },
+          { t: "Hábitos pasados: used to y would", p: 1, g: "b1-habitos-pasados" },
+          { t: "Modales de deducción", p: 1, g: "b1-modales-deduccion" },
+          { t: "Conectores para organizar ideas", p: 1, g: "b1-conectores-discurso" },
           { t: "Historia: misterios sin resolver", p: 1, s: true, g: "b1-audio-misterios-sin-resolver" },
           { t: "Tiempo, cantidad y frecuencia", p: 0, g: "b1-expresiones-tiempo-cantidad" },
           { t: "Emociones y estados de ánimo", p: 0, g: "b1-emociones-estados-animo" },
@@ -273,6 +293,11 @@ export const COURSE_PATH_CURRICULUM: CoursePathCurriculum = {
           { t: "Have/get something done", p: 1, g: "b2-causativo" },
           { t: "Deseos y arrepentimientos", p: 1, g: "b2-deseos-arrepentimientos" },
           { t: "Modales en el pasado", p: 1, g: "b2-modales-pasado" },
+          { t: "Tercer condicional", p: 1, g: "b2-tercer-condicional" },
+          { t: "Inversión para dar énfasis", p: 1, g: "b2-inversion-enfasis" },
+          { t: "Cláusulas de participio", p: 1, g: "b2-clausulas-participio" },
+          { t: "Formación de palabras y colocaciones", p: 1, g: "b2-formacion-palabras-colocaciones" },
+          { t: "Registro formal e informal", p: 1, g: "b2-registro-formal-informal" },
           { t: "Historia: atrapados en la tecnología", p: 1, s: true, g: "b2-audio-atrapados-tecnologia" },
           { t: "Historia: origen del idioma", p: 0, s: true, g: "b2-audio-origen-idioma" },
           { t: "Futuro perfecto y continuo", p: 0, g: "b2-futuro-perfecto-continuo" },
@@ -354,6 +379,12 @@ export const COURSE_PATH_CURRICULUM: CoursePathCurriculum = {
           { t: "Recursos para sonar natural", p: 1, g: "c1-recursos-conversacionales" },
           { t: "Argumentar y debatir", p: 1, g: "c1-argumentos-discusiones" },
           { t: "Presentaciones y expresión oral", p: 1, g: "c1-presentaciones-expresion-oral" },
+          { t: "Hedging: matizar afirmaciones", p: 1, g: "c1-hedging-matices" },
+          { t: "Precisión léxica y colocaciones", p: 1, g: "c1-precision-lexica" },
+          { t: "Cohesión y estructura del discurso", p: 1, g: "c1-cohesion-discurso" },
+          { t: "Escritura académica y profesional", p: 1, g: "c1-escritura-academica-profesional" },
+          { t: "Pragmática: intención, tono y cortesía", p: 1, g: "c1-pragmatica-tono" },
+          { t: "Énfasis e inversión avanzada", p: 1, g: "c1-enfasis-inversion-avanzada" },
           { t: "Humor e ironía", p: 0, g: "c1-humor-ironia" },
           { t: "Nominalización", p: 0, g: "c1-nominalizacion" },
           { t: "Persuadir con sutileza", p: 0, g: "c1-comunicacion-persuasiva-efectiva" },
@@ -485,3 +516,97 @@ export const COURSE_PATH_CURRICULUM: CoursePathCurriculum = {
     ],
   },
 };
+
+export type AssessmentMode = "placement" | "checkpoint";
+export type AssessmentQuestionType = "grammar" | "vocabulary" | "reading";
+
+export interface LevelAssessmentContract {
+  level: CefrLevelId;
+  questionTypes: AssessmentQuestionType[];
+  minimumCorrect: number;
+  questionCount: number;
+  requiredLessonSlugs: string[];
+  failureFallback: CefrLevelId;
+}
+
+const REQUIRED_ASSESSMENT_SLUGS: Record<CefrLevelId, string[]> = {
+  a1: [
+    "a1-verbo-to-be",
+    "a1-presente-simple",
+    "a1-articulos-basicos",
+    "a1-there-is-there-are",
+    "a1-preguntas-do-does",
+    "a1-can-capacidad-permiso",
+  ],
+  a2: [
+    "a2-experiencias-pasadas-planes",
+    "a2-cuantificadores-esenciales",
+    "a2-used-to",
+    "a2-will-going-to",
+    "a2-presente-perfecto-experiencias",
+    "a2-preguntas-indirectas",
+  ],
+  b1: [
+    "b1-presente-perfecto-continuo",
+    "b1-segundo-condicional",
+    "b1-estilo-indirecto",
+    "b1-gerundios-infinitivos",
+    "b1-modales-deduccion",
+    "b1-conectores-discurso",
+  ],
+  b2: [
+    "b2-tercer-condicional",
+    "b2-inversion-enfasis",
+    "b2-modales-pasado",
+    "b2-clausulas-participio",
+    "b2-formacion-palabras-colocaciones",
+    "b2-registro-formal-informal",
+  ],
+  c1: [
+    "c1-hedging-matices",
+    "c1-precision-lexica",
+    "c1-cohesion-discurso",
+    "c1-escritura-academica-profesional",
+    "c1-pragmatica-tono",
+    "c1-enfasis-inversion-avanzada",
+  ],
+};
+
+export const LEVEL_ASSESSMENT_CONTRACTS: Record<CefrLevelId, LevelAssessmentContract> = {
+  a1: { level: "a1", questionTypes: ["grammar", "vocabulary"], minimumCorrect: 4, questionCount: 6, requiredLessonSlugs: REQUIRED_ASSESSMENT_SLUGS.a1, failureFallback: "a1" },
+  a2: { level: "a2", questionTypes: ["grammar", "vocabulary", "reading"], minimumCorrect: 5, questionCount: 6, requiredLessonSlugs: REQUIRED_ASSESSMENT_SLUGS.a2, failureFallback: "a1" },
+  b1: { level: "b1", questionTypes: ["grammar", "vocabulary", "reading"], minimumCorrect: 5, questionCount: 6, requiredLessonSlugs: REQUIRED_ASSESSMENT_SLUGS.b1, failureFallback: "a2" },
+  b2: { level: "b2", questionTypes: ["grammar", "vocabulary", "reading"], minimumCorrect: 5, questionCount: 6, requiredLessonSlugs: REQUIRED_ASSESSMENT_SLUGS.b2, failureFallback: "b1" },
+  c1: { level: "c1", questionTypes: ["grammar", "vocabulary", "reading"], minimumCorrect: 5, questionCount: 6, requiredLessonSlugs: REQUIRED_ASSESSMENT_SLUGS.c1, failureFallback: "b2" },
+};
+
+export interface AssessmentSection {
+  level: CefrLevelId;
+  passThreshold: number;
+  fallbackLevel: CefrLevelId;
+  items: Array<{ lessonSlug: string; questionType: AssessmentQuestionType }>;
+}
+
+const CEFR_ORDER: CefrLevelId[] = ["a1", "a2", "b1", "b2", "c1"];
+
+export function buildAssessment(
+  mode: AssessmentMode,
+  checkpointLevel?: CefrLevelId,
+): AssessmentSection[] {
+  const levels = mode === "placement"
+    ? CEFR_ORDER
+    : [checkpointLevel ?? "a1"];
+
+  return levels.map((level) => {
+    const contract = LEVEL_ASSESSMENT_CONTRACTS[level];
+    return {
+      level,
+      passThreshold: contract.minimumCorrect,
+      fallbackLevel: contract.failureFallback,
+      items: contract.requiredLessonSlugs.map((lessonSlug, index) => ({
+        lessonSlug,
+        questionType: contract.questionTypes[index % contract.questionTypes.length],
+      })),
+    };
+  });
+}

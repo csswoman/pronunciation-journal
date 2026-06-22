@@ -3,6 +3,8 @@ import GrammarStudyDeck from "@/components/courses/grammar-deck/GrammarStudyDeck
 import { getDeckForLesson, getDerivedRelated } from "@/lib/courses/grammar-deck/decks";
 import { getLessonByNumber, parseCoursePathTrackId } from "@/lib/courses/curriculumIndex";
 import type { CefrLevel } from "@/lib/core-1000/types";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
+import type { CefrLevelId } from "@/lib/courses/types";
 
 interface PageProps {
   params: Promise<{ n: string }>;
@@ -25,10 +27,23 @@ export default async function CourseStudyPage({ params, searchParams }: PageProp
     notFound();
   }
 
+  const CEFR_TRACKS = ['a1', 'a2', 'b1', 'b2', 'c1'] as const
+  if ((CEFR_TRACKS as readonly string[]).includes(trackId)) {
+    const supabase = await createSupabaseServerClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    const { data: profile } = user
+      ? await supabase.from("user_profiles").select("cefr_level").eq("id", user.id).maybeSingle()
+      : { data: null };
+    const storedLevel = profile?.cefr_level?.toLowerCase();
+    const storedTrackIndex = CEFR_TRACKS.indexOf(storedLevel as CefrLevelId);
+    if (storedTrackIndex >= 0 && CEFR_TRACKS.indexOf(trackId as CefrLevelId) > storedTrackIndex) {
+      notFound();
+    }
+  }
+
   const deck = getDeckForLesson(lesson.slug);
 
   // CEFR tracks map straight to Core 1000 levels; elective tracks default to A1
-  const CEFR_TRACKS = ['a1', 'a2', 'b1', 'b2', 'c1'] as const
   const cefrLevel: CefrLevel = (CEFR_TRACKS as readonly string[]).includes(trackId)
     ? (trackId.toUpperCase() as CefrLevel)
     : 'A1'

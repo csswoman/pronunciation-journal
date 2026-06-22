@@ -7,11 +7,14 @@ import {
   updateDisplayName,
   updateAvatar as updateAvatarQuery,
   updatePassword as updatePasswordQuery,
+  syncCefrLevel,
 } from "@/lib/users/queries";
+import type { CefrLevel } from "@/lib/core-1000/types";
 
 export interface UserPreferencesData {
   full_name?: string;
   avatar_url?: string;
+  cefr_level?: CefrLevel | null;
 }
 
 export function useUserPreferences() {
@@ -89,6 +92,21 @@ export function useUserPreferences() {
     [user],
   );
 
+  const updateCefrLevel = useCallback(
+    async (level: CefrLevel) => {
+      if (!user) return;
+      try {
+        await syncCefrLevel(user.id, level);
+        setPreferences((prev) => ({ ...prev, cefr_level: level }));
+      } catch (err) {
+        const message = err instanceof Error ? err.message : "Unknown error";
+        setError(message);
+        throw err;
+      }
+    },
+    [user],
+  );
+
   return {
     preferences,
     loading,
@@ -96,5 +114,6 @@ export function useUserPreferences() {
     updateFullName,
     updateAvatar,
     updatePassword,
+    updateCefrLevel,
   };
 }

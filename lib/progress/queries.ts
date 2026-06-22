@@ -77,6 +77,7 @@ export interface CoachWeakTopic {
 export interface CoachInsights {
   weakTopics: CoachWeakTopic[]
   cefrEstimate: string | null
+  profileLevel: string | null
   avgAccuracy: number | null
 }
 
@@ -275,13 +276,14 @@ async function getSkillProfileData(userId: string): Promise<SkillProfileData> {
 async function getCoachInsights(userId: string): Promise<CoachInsights> {
   try {
     const supabase = await createSupabaseServerClient()
-    const { data } = await supabase
-      .from('user_learning_state')
-      .select('state')
-      .eq('user_id', userId)
-      .maybeSingle()
+    const [{ data }, { data: profile }] = await Promise.all([
+      supabase.from('user_learning_state').select('state').eq('user_id', userId).maybeSingle(),
+      supabase.from('user_profiles').select('cefr_level').eq('id', userId).maybeSingle(),
+    ])
 
-    if (!data?.state) return { weakTopics: [], cefrEstimate: null, avgAccuracy: null }
+    if (!data?.state) {
+      return { weakTopics: [], cefrEstimate: null, profileLevel: profile?.cefr_level ?? null, avgAccuracy: null }
+    }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any -- jsonb blob, shape validated at write time
     const state = data.state as any
@@ -293,10 +295,11 @@ async function getCoachInsights(userId: string): Promise<CoachInsights> {
     return {
       weakTopics,
       cefrEstimate: state?.level?.cefrEstimate ?? null,
+      profileLevel: profile?.cefr_level ?? null,
       avgAccuracy: state?.pronunciation?.averageAccuracy ?? null,
     }
   } catch {
-    return { weakTopics: [], cefrEstimate: null, avgAccuracy: null }
+    return { weakTopics: [], cefrEstimate: null, profileLevel: null, avgAccuracy: null }
   }
 }
 

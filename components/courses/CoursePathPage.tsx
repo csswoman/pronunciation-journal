@@ -12,11 +12,19 @@ const DEFAULT_LEVEL: CefrLevelId = "a1";
 
 interface CoursePathPageProps {
   levelParam?: string;
+  maxLevel?: CefrLevelId | null;
 }
 
-export default function CoursePathPage({ levelParam }: CoursePathPageProps) {
-  const selectedLevelId = parseCefrLevelId(levelParam) ?? DEFAULT_LEVEL;
-  const hasExplicitLevel = parseCefrLevelId(levelParam) !== null;
+const CEFR_ORDER: CefrLevelId[] = ["a1", "a2", "b1", "b2", "c1"];
+
+export default function CoursePathPage({ levelParam, maxLevel = null }: CoursePathPageProps) {
+  const requestedLevel = parseCefrLevelId(levelParam);
+  const allowedLevels = maxLevel
+    ? CEFR_ORDER.slice(0, CEFR_ORDER.indexOf(maxLevel) + 1)
+    : CEFR_ORDER;
+  const selectedLevelId =
+    requestedLevel && allowedLevels.includes(requestedLevel) ? requestedLevel : DEFAULT_LEVEL;
+  const hasExplicitLevel = requestedLevel !== null && allowedLevels.includes(requestedLevel);
   const selectedLevel =
     COURSE_PATH_CURRICULUM.levels.find((level) => level.id === selectedLevelId) ??
     COURSE_PATH_CURRICULUM.levels[0];
@@ -42,12 +50,21 @@ export default function CoursePathPage({ levelParam }: CoursePathPageProps) {
         <nav className="course-path__spine" aria-label="CEFR level">
           {COURSE_PATH_CURRICULUM.levels.map((level) => {
             const isActive = level.id === selectedLevelId;
+            const isLocked = !allowedLevels.includes(level.id as CefrLevelId);
             const href =
               level.id === DEFAULT_LEVEL
                 ? "/courses#course-level-a1"
                 : `/courses?level=${level.id}#course-level-${level.id}`;
 
-            return (
+            return isLocked ? (
+              <span
+                key={level.id}
+                aria-label={`${level.spineLabel} locked`}
+                className="course-path__level opacity-40"
+              >
+                <div className="course-path__level-lv">{level.spineLabel}</div>
+              </span>
+            ) : (
               <Link
                 key={level.id}
                 href={href}
