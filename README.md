@@ -61,6 +61,7 @@ paths for parts of the practice experience.
 - Admin bootstrap is controlled server-side via `ADMIN_BOOTSTRAP_EMAIL` and `SUPABASE_SERVICE_ROLE_KEY`.
 - Migration safety checks run with `pnpm check:migrations`.
 - RLS coverage checks run with `pnpm audit:rls`.
+- Global security headers, including CSP, are configured in `next.config.mjs`.
 - Operational deployment notes live in `docs/deployment/runbook-minimo.md`.
 
 ## Common commands

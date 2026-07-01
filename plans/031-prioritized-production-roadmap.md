@@ -15,6 +15,7 @@ Hecho hasta ahora:
 - Existe runbook minimo en `docs/deployment/runbook-minimo.md`.
 - Se reforzaron rutas mutantes con `requireSameOrigin()` y errores publicos normalizados.
 - Se agregaron checks automatizados para migraciones peligrosas y cobertura de RLS en migraciones nuevas.
+- Se configuraron headers globales de seguridad y CSP en `next.config.mjs`.
 - El inventario de rutas mutantes revisado queda cubierto por los guards actuales.
 
 ## Reglas de Ejecucion
