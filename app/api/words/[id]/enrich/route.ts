@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import type { Database } from "@/lib/supabase/types";
 import { enrichWord } from "@/lib/word-bank/enrich";
+import { SECURE_HEADERS, publicErrorResponse } from "@/lib/api/guards";
 
 export const runtime = "nodejs";
 
@@ -13,13 +14,13 @@ export async function POST(
 
   const authHeader = req.headers.get("authorization");
   if (!authHeader) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return publicErrorResponse(401, "Unauthorized");
   }
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
   if (!supabaseUrl || !anonKey) {
-    return NextResponse.json({ error: "Server misconfiguration" }, { status: 500 });
+    return publicErrorResponse(500, "Server misconfiguration");
   }
 
   const token = authHeader.replace(/^Bearer\s+/i, "");
@@ -28,7 +29,7 @@ export async function POST(
   });
   const { data: { user } } = await authClient.auth.getUser(token);
   if (!user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return publicErrorResponse(401, "Unauthorized");
   }
 
   // Verify ownership through RLS.
@@ -43,7 +44,7 @@ export async function POST(
     .maybeSingle();
 
   if (!row) {
-    return NextResponse.json({ error: "Not found" }, { status: 404 });
+    return publicErrorResponse(404, "Not found");
   }
 
   if (row.status === "processing") {
@@ -57,12 +58,13 @@ export async function POST(
     .neq("status", "processing");
 
   if (resetErr) {
-    return NextResponse.json({ error: resetErr.message }, { status: 500 });
+    console.error("[words/[id]/enrich] reset failed:", resetErr);
+    return publicErrorResponse(500, "Failed to start enrichment");
   }
 
   // Fire in background — client already shows "processing" and will receive
   // the DB update via realtime subscription when Gemini finishes.
   void enrichWord(id);
 
-  return NextResponse.json({ ok: true });
+  return NextResponse.json({ ok: true }, { headers: SECURE_HEADERS });
 }
