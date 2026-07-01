@@ -19,6 +19,16 @@ export const SECURE_HEADERS: Record<string, string> = {
   "Referrer-Policy": "no-referrer",
 };
 
+export function publicErrorResponse(
+  status: number,
+  message: string,
+): NextResponse {
+  return NextResponse.json(
+    { error: message },
+    { status, headers: SECURE_HEADERS }
+  );
+}
+
 // ---------------------------------------------------------------------------
 // requireUser
 // ---------------------------------------------------------------------------

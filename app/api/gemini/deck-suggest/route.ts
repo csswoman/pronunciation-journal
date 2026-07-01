@@ -1,7 +1,7 @@
 import { GoogleGenAI } from "@google/genai";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { requireUser, rateLimit, validateBody } from "@/lib/api/guards";
+import { requireSameOrigin, requireUser, rateLimit, validateBody, publicErrorResponse } from "@/lib/api/guards";
 import { createSupabaseServerClient as createClient } from "@/lib/supabase/server";
 import { DECK_SUGGEST_SYSTEM_PROMPT } from "@/lib/ai-prompts";
 
@@ -125,6 +125,9 @@ async function generateSuggestions(ai: GoogleGenAI, prompt: string): Promise<str
 // ---------------------------------------------------------------------------
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  const originError = requireSameOrigin(request);
+  if (originError) return originError;
+
   // 1. Auth
   const { user, error: authError } = await requireUser();
   if (authError) return authError as NextResponse;
@@ -190,9 +193,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     return NextResponse.json(parsed);
   } catch (err: unknown) {
-    const status = getErrorStatus(err) ?? 500;
-    const message = String((err as { message?: unknown })?.message ?? "Internal server error");
     console.error("deck-suggest error:", err);
-    return NextResponse.json({ error: message }, { status });
+    const status = getErrorStatus(err) ?? 500;
+    return publicErrorResponse(status >= 500 ? 500 : status, "Failed to generate deck suggestions");
   }
 }

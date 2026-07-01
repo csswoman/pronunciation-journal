@@ -5,7 +5,7 @@ import { createHash } from "crypto";
 import { z } from "zod";
 import type { Database } from "@/lib/supabase/types";
 import { SENTENCE_REORDER_SYSTEM_PROMPT } from "@/lib/ai-prompts";
-import { requireSameOrigin, requireUser, rateLimit, validateBody, SECURE_HEADERS } from "@/lib/api/guards";
+import { requireSameOrigin, requireUser, rateLimit, validateBody, SECURE_HEADERS, publicErrorResponse } from "@/lib/api/guards";
 
 export const runtime = "nodejs";
 
@@ -119,10 +119,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
   if (!serviceKey) {
-    return NextResponse.json(
-      { error: "Server misconfiguration" },
-      { status: 500, headers: SECURE_HEADERS }
-    );
+    return publicErrorResponse(500, "Server misconfiguration");
   }
   const db = createClient<Database>(supabaseUrl, serviceKey);
 
@@ -150,17 +147,11 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     sentences = await generateSentencesWithGemini(topic, level, count);
   } catch (err) {
     console.error("[sentences/generate] Gemini error:", err);
-    return NextResponse.json(
-      { error: "Generation failed" },
-      { status: 502, headers: SECURE_HEADERS }
-    );
+    return publicErrorResponse(502, "Generation failed");
   }
 
   if (sentences.length === 0) {
-    return NextResponse.json(
-      { error: "No sentences generated" },
-      { status: 502, headers: SECURE_HEADERS }
-    );
+    return publicErrorResponse(502, "No sentences generated");
   }
 
   // ── Save to text_fragments (cache) ────────────────────────────────────────

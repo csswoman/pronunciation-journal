@@ -1,7 +1,7 @@
 import { GoogleGenAI } from "@google/genai";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { requireUser, rateLimit, validateBody, SECURE_HEADERS } from "@/lib/api/guards";
+import { requireSameOrigin, requireUser, rateLimit, validateBody, SECURE_HEADERS, publicErrorResponse } from "@/lib/api/guards";
 import { PRONUNCIATION_PHRASES_SYSTEM_PROMPT } from "@/lib/ai-prompts";
 
 const PhrasesSchema = z.object({
@@ -32,6 +32,9 @@ function shouldTryNextModel(err: unknown): boolean {
 }
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  const originError = requireSameOrigin(request);
+  if (originError) return originError;
+
   const { user, error: authError } = await requireUser();
   if (authError) return authError as NextResponse;
 
@@ -75,6 +78,6 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     }
   }
 
-  const msg = String((lastError as { message?: unknown })?.message ?? "Failed to generate phrases");
-  return NextResponse.json({ error: msg }, { status: 500, headers: SECURE_HEADERS });
+  console.error("phrases error:", lastError);
+  return publicErrorResponse(500, "Failed to generate phrases");
 }

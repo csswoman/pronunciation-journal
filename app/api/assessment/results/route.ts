@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { requireSameOrigin, requireUser, SECURE_HEADERS } from "@/lib/api/guards";
+import { requireSameOrigin, requireUser, SECURE_HEADERS, publicErrorResponse } from "@/lib/api/guards";
 import { saveAssessmentResult } from "@/lib/courses/assessment-queries";
 import type { AssessmentResult } from "@/lib/courses/assessment";
 import type { CefrLevelId } from "@/lib/courses/types";
@@ -34,18 +34,20 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
   const body = AssessmentResultSchema.safeParse(await req.json());
   if (!body.success) {
-    return NextResponse.json(
-      { error: "Invalid assessment payload" },
-      { status: 400, headers: SECURE_HEADERS },
-    );
+    return publicErrorResponse(400, "Invalid assessment payload");
   }
 
-  await saveAssessmentResult(
-    user.id,
-    body.data.mode,
-    body.data.result as AssessmentResult,
-    body.data.evaluatedLevel ?? undefined,
-  );
+  try {
+    await saveAssessmentResult(
+      user.id,
+      body.data.mode,
+      body.data.result as AssessmentResult,
+      body.data.evaluatedLevel ?? undefined,
+    );
+  } catch (error) {
+    console.error("[assessment/results] save failed:", error);
+    return publicErrorResponse(500, "Failed to save assessment result");
+  }
 
   return NextResponse.json({ ok: true }, { headers: SECURE_HEADERS });
 }

@@ -1,7 +1,7 @@
 import { GoogleGenAI, type Content, type FunctionCallingConfigMode, type FunctionDeclaration } from "@google/genai";
 import { NextRequest } from "next/server";
 import { z } from "zod";
-import { requireSameOrigin, requireUser, rateLimit, validateBody, SECURE_HEADERS } from "@/lib/api/guards";
+import { requireSameOrigin, requireUser, rateLimit, validateBody, SECURE_HEADERS, publicErrorResponse } from "@/lib/api/guards";
 import { buildServerPrompt, type PromptKey } from "@/lib/api/prompts";
 import { detectIntent, intentToToolConfig } from "@/lib/ai-practice/intent-detection";
 import { TOOL_DECLARATIONS } from "@/lib/ai-practice/tools/registry";
@@ -264,14 +264,11 @@ export async function POST(request: NextRequest): Promise<Response> {
       .single();
 
     if (profile?.role !== "admin") {
-      return Response.json({ error: "Forbidden" }, { status: 403, headers: SECURE_HEADERS });
+      return publicErrorResponse(403, "Forbidden");
     }
 
     if (!body.activeTab || !body.sounds) {
-      return Response.json(
-        { error: "activeTab and sounds are required for admin-seed" },
-        { status: 400, headers: SECURE_HEADERS }
-      );
+      return publicErrorResponse(400, "activeTab and sounds are required for admin-seed");
     }
   }
 
@@ -356,9 +353,8 @@ export async function POST(request: NextRequest): Promise<Response> {
 
     throw lastError || new Error("All fallback models failed");
   } catch (err: unknown) {
-    const status = getErrorStatus(err) ?? 500;
-    const message = String((err as { message?: unknown })?.message ?? "Internal server error");
     console.error("Gemini API error:", err);
-    return Response.json({ error: message }, { status, headers: SECURE_HEADERS });
+    const status = getErrorStatus(err) ?? 500;
+    return publicErrorResponse(status >= 500 ? 500 : status, "Gemini request failed");
   }
 }

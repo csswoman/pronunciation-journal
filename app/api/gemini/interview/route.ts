@@ -1,7 +1,7 @@
 import { GoogleGenAI } from "@google/genai";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { requireUser, rateLimit, validateBody } from "@/lib/api/guards";
+import { requireSameOrigin, requireUser, rateLimit, validateBody, publicErrorResponse } from "@/lib/api/guards";
 import { INTERVIEW_SYSTEM_PROMPT, buildInterviewPrompt } from "@/lib/ai-prompts";
 
 const InterviewSchema = z.object({
@@ -51,6 +51,9 @@ async function generateScript(ai: GoogleGenAI, prompt: string): Promise<string> 
 }
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  const originError = requireSameOrigin(request);
+  if (originError) return originError;
+
   const { user, error: authError } = await requireUser();
   if (authError) return authError as NextResponse;
 
@@ -76,9 +79,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const parsed = JSON.parse(cleaned);
     return NextResponse.json(parsed);
   } catch (err: unknown) {
-    const status = getErrorStatus(err) ?? 500;
-    const message = String((err as { message?: unknown })?.message ?? "Internal server error");
     console.error("interview error:", err);
-    return NextResponse.json({ error: message }, { status });
+    const status = getErrorStatus(err) ?? 500;
+    return publicErrorResponse(status >= 500 ? 500 : status, "Failed to generate interview");
   }
 }

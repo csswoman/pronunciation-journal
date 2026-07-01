@@ -7,6 +7,7 @@ vi.mock('@/lib/word-bank/enrich', () => ({
 }))
 
 vi.mock('@/lib/api/guards', () => ({
+  requireSameOrigin: vi.fn(() => null),
   requireUser: vi.fn(),
   rateLimit: vi.fn(),
   validateBody: vi.fn(),

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { enrichWord } from "@/lib/word-bank/enrich";
-import { createUserScopedClient, requireUser, rateLimit, validateBody, SECURE_HEADERS } from "@/lib/api/guards";
+import { createUserScopedClient, requireSameOrigin, requireUser, rateLimit, validateBody, SECURE_HEADERS, publicErrorResponse } from "@/lib/api/guards";
 
 export const runtime = "nodejs";
 
@@ -15,6 +15,9 @@ const WordsRequestSchema = z
   .strict();
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
+  const originError = requireSameOrigin(req);
+  if (originError) return originError;
+
   const { user, error: authError, accessToken } = await requireUser(req);
   if (authError) return authError;
 
@@ -57,10 +60,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
     if (updateErr || !word) {
       console.error("[POST /api/words] retry update failed:", updateErr);
-      return NextResponse.json(
-        { error: updateErr?.message ?? "Failed to retry word" },
-        { status: 500, headers: SECURE_HEADERS }
-      );
+      return publicErrorResponse(500, "Failed to retry word");
     }
 
     void enrichWord(word.id);
@@ -81,10 +81,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
   if (insertErr || !word) {
     console.error("[POST /api/words] insert failed:", insertErr);
-    return NextResponse.json(
-      { error: insertErr?.message ?? "Failed to create word" },
-      { status: 500, headers: SECURE_HEADERS }
-    );
+    return publicErrorResponse(500, "Failed to create word");
   }
 
   if (deckId) {

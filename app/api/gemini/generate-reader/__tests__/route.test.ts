@@ -7,6 +7,7 @@ vi.mock('@google/genai', () => ({
   },
 }))
 vi.mock('@/lib/api/guards', () => ({
+  requireSameOrigin: () => null,
   requireUser: async () => ({ user: { id: 'u1' }, error: null }),
   rateLimit: () => ({ limited: false, error: null }),
   validateBody: async () => ({

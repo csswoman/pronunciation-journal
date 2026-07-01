@@ -5,7 +5,7 @@ import {
   GENERATE_READER_SYSTEM_PROMPT,
   buildGenerateReaderUserPrompt,
 } from '@/lib/ai-prompts'
-import { requireUser, rateLimit, validateBody } from '@/lib/api/guards'
+import { requireSameOrigin, requireUser, rateLimit, validateBody, publicErrorResponse } from '@/lib/api/guards'
 import { passageEmbedsTargets } from '@/lib/practice/reader/refinement'
 import type { ReaderQuestion } from '@/lib/practice/reader/types'
 
@@ -86,6 +86,9 @@ async function generateWithFallback(
 }
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  const originError = requireSameOrigin(request)
+  if (originError) return originError
+
   const { user, error: authError } = await requireUser()
   if (authError) return authError as NextResponse
 
@@ -106,9 +109,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const result = await generateWithFallback(ai, prompt, body.targets)
     return NextResponse.json(result)
   } catch (err: unknown) {
-    const status = getErrorStatus(err) ?? 500
-    const message = String((err as { message?: unknown })?.message ?? 'Internal server error')
     console.error('generate-reader error:', err)
-    return NextResponse.json({ error: message }, { status })
+    const status = getErrorStatus(err) ?? 500
+    return publicErrorResponse(status >= 500 ? 500 : status, 'Failed to generate reader')
   }
 }

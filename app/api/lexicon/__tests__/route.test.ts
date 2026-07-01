@@ -7,9 +7,11 @@ vi.mock('@/lib/lexicon/categories', () => ({
 }))
 
 vi.mock('@/lib/api/guards', () => ({
+  requireSameOrigin: vi.fn(() => null),
   requireUser: vi.fn(),
   rateLimit: vi.fn(),
   createUserScopedClient: vi.fn(),
+  publicErrorResponse: (status: number) => new Response(null, { status }) as never,
   SECURE_HEADERS: { 'Cache-Control': 'no-store' },
 }))
 

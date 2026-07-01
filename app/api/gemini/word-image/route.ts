@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { requireSameOrigin, requireUser } from "@/lib/api/guards";
+import { requireSameOrigin, requireUser, publicErrorResponse } from "@/lib/api/guards";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export const maxDuration = 30;
@@ -12,14 +12,14 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   if (authError) return authError as NextResponse;
 
   const formData = await request.formData().catch(() => null);
-  if (!formData) return NextResponse.json({ error: "Invalid form data" }, { status: 400 });
+  if (!formData) return publicErrorResponse(400, "Invalid form data");
 
   const file = formData.get("file") as File | null;
   const entryId = formData.get("entryId") as string | null;
 
-  if (!file || !entryId) return NextResponse.json({ error: "Missing file or entryId" }, { status: 400 });
-  if (!file.type.startsWith("image/")) return NextResponse.json({ error: "File must be an image" }, { status: 400 });
-  if (file.size > 5 * 1024 * 1024) return NextResponse.json({ error: "Image must be under 5 MB" }, { status: 400 });
+  if (!file || !entryId) return publicErrorResponse(400, "Missing file or entryId");
+  if (!file.type.startsWith("image/")) return publicErrorResponse(400, "File must be an image");
+  if (file.size > 5 * 1024 * 1024) return publicErrorResponse(400, "Image must be under 5 MB");
 
   const supabase = await createSupabaseServerClient();
 
@@ -31,7 +31,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     .eq("user_id", user.id)
     .single();
 
-  if (!entry) return NextResponse.json({ error: "Entry not found" }, { status: 404 });
+  if (!entry) return publicErrorResponse(404, "Entry not found");
 
   const ext = file.name.split(".").pop()?.toLowerCase() ?? "jpg";
   const path = `${user.id}/${entryId}.${ext}`;
@@ -43,7 +43,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
   if (uploadError) {
     console.error("[word-image] Storage upload error:", uploadError);
-    return NextResponse.json({ error: "Failed to save image" }, { status: 500 });
+    return publicErrorResponse(500, "Failed to save image");
   }
 
   const { data: publicUrl } = supabase.storage.from("word-images").getPublicUrl(path);
@@ -66,7 +66,7 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
   if (authError) return authError as NextResponse;
 
   const { entryId } = await request.json().catch(() => ({}));
-  if (!entryId) return NextResponse.json({ error: "Missing entryId" }, { status: 400 });
+  if (!entryId) return publicErrorResponse(400, "Missing entryId");
 
   const supabase = await createSupabaseServerClient();
 
@@ -77,7 +77,7 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
     .eq("user_id", user.id)
     .single();
 
-  if (!entry) return NextResponse.json({ error: "Entry not found" }, { status: 404 });
+  if (!entry) return publicErrorResponse(404, "Entry not found");
 
   if (entry.image_url) {
     const pathMatch = entry.image_url.match(/word-images\/(.+)$/);

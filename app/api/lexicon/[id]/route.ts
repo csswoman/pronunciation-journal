@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCategoryWords } from "@/lib/lexicon/categories";
-import { createUserScopedClient, requireUser, rateLimit, SECURE_HEADERS } from "@/lib/api/guards";
+import { createUserScopedClient, requireSameOrigin, requireUser, rateLimit, SECURE_HEADERS, publicErrorResponse } from "@/lib/api/guards";
 
 const WORD_BANK_LEXICON_COLUMNS = [
   "id",
@@ -55,6 +55,9 @@ export async function POST(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const originError = requireSameOrigin(req);
+  if (originError) return originError;
+
   const { user, error: authError, accessToken } = await requireUser(req);
   if (authError) return authError;
 
@@ -68,15 +71,12 @@ export async function POST(
   if (limited) return rateLimitError;
 
   if (!accessToken) {
-    return NextResponse.json(
-      { error: "Authorization token is required" },
-      { status: 401, headers: SECURE_HEADERS }
-    );
+    return publicErrorResponse(401, "Authorization token is required");
   }
 
   const words = getCategoryWords(id);
   if (words.length === 0) {
-    return NextResponse.json({ error: "Not found" }, { status: 404, headers: SECURE_HEADERS });
+    return publicErrorResponse(404, "Not found");
   }
 
   const userClient = createUserScopedClient(accessToken);
@@ -89,7 +89,8 @@ export async function POST(
     .in("source_ref", sourceRefs);
 
   if (selectErr) {
-    return NextResponse.json({ error: selectErr.message }, { status: 500, headers: SECURE_HEADERS });
+    console.error("[lexicon/[id]] select failed:", selectErr);
+    return publicErrorResponse(500, "Failed to load lexicon words");
   }
 
   return NextResponse.json(
