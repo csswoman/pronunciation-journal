@@ -6,6 +6,17 @@ Fuente principal: `TODO.md`
 
 Esta planeacion ordena las tareas por riesgo real de produccion. El objetivo es corregir lo que puede romper datos, seguridad o disponibilidad, sin bloquear la app al publico salvo que exista un incidente activo que lo justifique.
 
+## Estado Actual
+
+Hecho hasta ahora:
+
+- `components/auth/AuthPanel.tsx` ya no usa el cliente Supabase directo para cambiar contraseña; el flujo pasa por `lib/supabase/auth-actions.ts`.
+- Existe bootstrap seguro de admin por `ADMIN_BOOTSTRAP_EMAIL` en `lib/users/admin.ts` con cliente service-role server-only.
+- Existe runbook minimo en `docs/deployment/runbook-minimo.md`.
+- Se reforzaron rutas mutantes con `requireSameOrigin()` y errores publicos normalizados.
+- Se agregaron checks automatizados para migraciones peligrosas y cobertura de RLS en migraciones nuevas.
+- El inventario de rutas mutantes revisado queda cubierto por los guards actuales.
+
 ## Reglas de Ejecucion
 
 - No avanzar a una fase superior si la fase anterior tiene tareas `P0` abiertas.

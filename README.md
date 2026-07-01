@@ -56,6 +56,13 @@ Without valid Supabase or Gemini credentials, some authenticated and AI-backed
 flows will be unavailable. The app still contains local/offline-oriented state
 paths for parts of the practice experience.
 
+## Production Notes
+
+- Admin bootstrap is controlled server-side via `ADMIN_BOOTSTRAP_EMAIL` and `SUPABASE_SERVICE_ROLE_KEY`.
+- Migration safety checks run with `pnpm check:migrations`.
+- RLS coverage checks run with `pnpm audit:rls`.
+- Operational deployment notes live in `docs/deployment/runbook-minimo.md`.
+
 ## Common commands
 
 ```bash
@@ -66,6 +73,8 @@ pnpm test
 pnpm test:watch
 pnpm lint:design-tokens
 pnpm build
+pnpm check:migrations
+pnpm audit:rls
 pnpm validate:core1000
 pnpm validate:core1000-generators
 pnpm lexicon:enrich
