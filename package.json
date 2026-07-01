@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint .",
     "check:migrations": "node scripts/check-migrations.mjs",
+    "audit:rls": "node scripts/audit-rls.mjs",
     "lint:design-tokens": "node scripts/lint-design-tokens.mjs",
     "type-check": "tsc --noEmit",
     "test": "vitest run",

@@ -38,6 +38,9 @@ jobs:
       - name: Check migration safety
         run: pnpm check:migrations
 
+      - name: Audit RLS coverage
+        run: pnpm audit:rls
+
       - name: Design Token Validation
         run: pnpm lint:design-tokens
 
