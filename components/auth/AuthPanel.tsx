@@ -2,12 +2,14 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import {
   signInWithEmail,
   signUpWithEmail,
   signInAsGuest,
   signInWithGoogle,
   resetPasswordForEmail,
+  updatePassword,
 } from "@/lib/supabase/auth-actions";
 import { AuthTabs } from "@/components/auth/AuthTabs";
 import { AuthFeedback } from "@/components/auth/AuthFeedback";
@@ -17,16 +19,25 @@ import { InstallBanner } from "@/components/auth/InstallBanner";
 import { LoginForm } from "@/components/auth/LoginForm";
 import { RegisterForm } from "@/components/auth/RegisterForm";
 import { ResetForm } from "@/components/auth/ResetForm";
+import { RecoveryForm } from "@/components/auth/RecoveryForm";
 
-type Mode = "login" | "register" | "reset";
+type Mode = "login" | "register" | "reset" | "recovery";
 
 const HUE_MAP = [350, 145, 220, 30] as const;
 
 export default function AuthPanel() {
-  const [mode, setMode] = useState<Mode>("login");
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const initialMode = searchParams.get("mode") === "reset"
+    ? "reset"
+    : searchParams.get("mode") === "recovery"
+      ? "recovery"
+      : "login";
+  const [mode, setMode] = useState<Mode>(initialMode);
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(true);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -48,13 +59,53 @@ export default function AuthPanel() {
     };
   }, [imageIndex]);
 
+  useEffect(() => {
+    if (searchParams.get("message") === "password-updated") {
+      setMode("login");
+      setMessage("Password updated. You can sign in now.");
+      router.replace("/login");
+    }
+  }, [router, searchParams]);
+
   const clearFeedback = () => { setError(null); setMessage(null); };
+
+  const handleRecovery = async (e: React.FormEvent) => {
+    e.preventDefault();
+    clearFeedback();
+    setPending(true);
+    try {
+      if (password !== confirmPassword) {
+        setError("Passwords do not match.");
+        return;
+      }
+      const { error: err } = await updatePassword(password);
+      if (err) {
+        setError(err.message);
+        return;
+      }
+      setPassword("");
+      setConfirmPassword("");
+      setMode("login");
+      router.replace("/login?message=password-updated");
+    } finally {
+      setPending(false);
+    }
+  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault(); clearFeedback(); setPending(true);
     try {
-      const { error: err } = await signInWithEmail(email.trim(), password);
-      if (err) setError(err.message);
+      const { data, error: err } = await signInWithEmail(email.trim(), password);
+      if (err) {
+        setError(err.message);
+        return;
+      }
+      if (data.session) {
+        router.replace("/");
+        router.refresh();
+        return;
+      }
+      router.refresh();
     } finally { setPending(false); }
   };
 
@@ -71,7 +122,11 @@ export default function AuthPanel() {
     clearFeedback(); setPending(true);
     try {
       const { error: err } = await signInWithGoogle();
-      if (err) setError(err.message);
+      if (err) {
+        setError(err.message);
+        return;
+      }
+      router.refresh();
     } finally { setPending(false); }
   };
 
@@ -82,7 +137,10 @@ export default function AuthPanel() {
       if (err) { setError(err.message); return; }
       // If Supabase returned a session but onAuthStateChange doesn't fire
       // (e.g. existing anonymous session), force a page reload to pick it up
-      if (data.session) window.location.href = "/";
+      if (data.session) {
+        router.replace("/");
+        router.refresh();
+      }
     } finally { setPending(false); }
   };
 
@@ -135,7 +193,7 @@ export default function AuthPanel() {
 
             {(error || message) && (
               <div className="mb-6">
-                <AuthFeedback error={error} message={message} />
+                <AuthFeedback error={error} message={message} compact={mode === "login"} />
               </div>
             )}
 
@@ -144,22 +202,44 @@ export default function AuthPanel() {
                 email={email} setEmail={setEmail}
                 pending={pending}
                 onSubmit={handleReset}
-                onBack={() => { setMode("login"); clearFeedback(); }}
+                onBack={() => {
+                  setMode("login");
+                  clearFeedback();
+                  router.replace("/login");
+                }}
+              />
+            ) : mode === "recovery" ? (
+              <RecoveryForm
+                password={password}
+                setPassword={setPassword}
+                confirmPassword={confirmPassword}
+                setConfirmPassword={setConfirmPassword}
+                pending={pending}
+                onSubmit={handleRecovery}
+                onBack={() => {
+                  setMode("login");
+                  clearFeedback();
+                  router.replace("/login");
+                }}
               />
             ) : (
               <>
                 <AuthTabs
-                  mode={mode as "login" | "register"}
+                  mode={mode === "register" ? "register" : "login"}
                   onModeChange={(m) => { setMode(m); clearFeedback(); }}
                 />
                 {mode === "login" ? (
-                  <LoginForm
+                <LoginForm
                     email={email} setEmail={setEmail}
                     password={password} setPassword={setPassword}
                     rememberMe={rememberMe} setRememberMe={setRememberMe}
                     pending={pending}
                     onSubmit={handleLogin}
-                    onForgot={() => { setMode("reset"); clearFeedback(); }}
+                    onForgot={() => {
+                      setMode("reset");
+                      clearFeedback();
+                      router.replace("/login?mode=reset");
+                    }}
                     onGoogle={handleGoogle}
                     onGuest={handleGuest}
                   />

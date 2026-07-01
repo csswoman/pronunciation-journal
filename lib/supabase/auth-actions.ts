@@ -27,6 +27,13 @@ export async function signInWithGoogle() {
 export async function resetPasswordForEmail(email: string) {
   const supabase = getSupabaseBrowserClient();
   const redirectTo =
-    typeof window !== "undefined" ? `${window.location.origin}/` : undefined;
+    typeof window !== "undefined"
+      ? `${window.location.origin}/auth/callback?next=${encodeURIComponent("/login?mode=recovery")}`
+      : undefined;
   return supabase.auth.resetPasswordForEmail(email, { redirectTo });
+}
+
+export async function updatePassword(password: string) {
+  const supabase = getSupabaseBrowserClient();
+  return supabase.auth.updateUser({ password });
 }
