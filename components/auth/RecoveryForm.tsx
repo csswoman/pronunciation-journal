@@ -2,6 +2,7 @@
 
 import { AuthInput } from "@/components/auth/AuthInput";
 import { AuthButton } from "@/components/auth/AuthButton";
+import { MIN_PASSWORD_LENGTH, PASSWORD_POLICY_MESSAGE } from "@/lib/auth/password-policy";
 
 interface RecoveryFormProps {
   password: string;
@@ -39,7 +40,7 @@ export function RecoveryForm({
           onChange={setPassword}
           required
           autoComplete="new-password"
-          minLength={6}
+          minLength={MIN_PASSWORD_LENGTH}
         />
         <AuthInput
           type="password"
@@ -49,8 +50,9 @@ export function RecoveryForm({
           onChange={setConfirmPassword}
           required
           autoComplete="new-password"
-          minLength={6}
+          minLength={MIN_PASSWORD_LENGTH}
         />
+        <p className="text-xs text-fg-muted">{PASSWORD_POLICY_MESSAGE}</p>
         <AuthButton label="Update password" pending={pending} />
         <AuthButton label="Back to sign in" pending={pending} type="button" variant="secondary" onClick={onBack} />
       </form>

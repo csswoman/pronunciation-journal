@@ -2,6 +2,7 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { ResetPasswordForm } from "../ResetPasswordForm";
+import { MIN_PASSWORD_LENGTH, PASSWORD_POLICY_MESSAGE } from "@/lib/auth/password-policy";
 
 vi.mock("@/components/auth/AuthInput", () => ({
   AuthInput: ({
@@ -49,5 +50,7 @@ describe("ResetPasswordForm", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Update password" }));
     expect(onSubmit).not.toHaveBeenCalled();
+    expect(screen.getByText(PASSWORD_POLICY_MESSAGE)).toBeInTheDocument();
+    expect(screen.getByLabelText("New password")).toHaveAttribute("minLength", String(MIN_PASSWORD_LENGTH));
   });
 });

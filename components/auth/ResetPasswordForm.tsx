@@ -2,6 +2,7 @@
 
 import { AuthButton } from "@/components/auth/AuthButton";
 import { AuthInput } from "@/components/auth/AuthInput";
+import { MIN_PASSWORD_LENGTH, PASSWORD_POLICY_MESSAGE } from "@/lib/auth/password-policy";
 
 interface ResetPasswordFormProps {
   password: string;
@@ -37,7 +38,7 @@ export function ResetPasswordForm({
           onChange={setPassword}
           required
           autoComplete="new-password"
-          minLength={6}
+          minLength={MIN_PASSWORD_LENGTH}
         />
         <AuthInput
           type="password"
@@ -47,8 +48,9 @@ export function ResetPasswordForm({
           onChange={setConfirmPassword}
           required
           autoComplete="new-password"
-          minLength={6}
+          minLength={MIN_PASSWORD_LENGTH}
         />
+        <p className="text-xs text-fg-muted">{PASSWORD_POLICY_MESSAGE}</p>
         <AuthButton label="Update password" pending={pending} />
       </form>
     </>

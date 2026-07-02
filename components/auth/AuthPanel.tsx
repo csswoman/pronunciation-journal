@@ -20,6 +20,7 @@ import { LoginForm } from "@/components/auth/LoginForm";
 import { RegisterForm } from "@/components/auth/RegisterForm";
 import { ResetForm } from "@/components/auth/ResetForm";
 import { RecoveryForm } from "@/components/auth/RecoveryForm";
+import { publicAuthErrorMessage, validatePasswordPolicy } from "@/lib/auth/password-policy";
 
 type Mode = "login" | "register" | "reset" | "recovery";
 
@@ -78,9 +79,15 @@ export default function AuthPanel() {
         setError("Passwords do not match.");
         return;
       }
+      const policyError = validatePasswordPolicy(password);
+      if (policyError) {
+        setError(policyError);
+        return;
+      }
       const { error: err } = await updatePassword(password);
       if (err) {
-        setError(err.message);
+        console.error("[auth] password update failed", err);
+        setError(publicAuthErrorMessage());
         return;
       }
       setPassword("");
@@ -97,7 +104,8 @@ export default function AuthPanel() {
     try {
       const { data, error: err } = await signInWithEmail(email.trim(), password);
       if (err) {
-        setError(err.message);
+        console.error("[auth] sign in failed", err);
+        setError(publicAuthErrorMessage());
         return;
       }
       if (data.session) {
@@ -113,7 +121,11 @@ export default function AuthPanel() {
     e.preventDefault(); clearFeedback(); setPending(true);
     try {
       const { error: err } = await signUpWithEmail(email.trim(), password);
-      if (err) { setError(err.message); return; }
+      if (err) {
+        console.error("[auth] sign up failed", err);
+        setError(publicAuthErrorMessage());
+        return;
+      }
       setMessage("Check your inbox to confirm your email address.");
     } finally { setPending(false); }
   };
@@ -123,7 +135,8 @@ export default function AuthPanel() {
     try {
       const { error: err } = await signInWithGoogle();
       if (err) {
-        setError(err.message);
+        console.error("[auth] google sign in failed", err);
+        setError(publicAuthErrorMessage());
         return;
       }
       router.refresh();
@@ -134,7 +147,11 @@ export default function AuthPanel() {
     clearFeedback(); setPending(true);
     try {
       const { data, error: err } = await signInAsGuest();
-      if (err) { setError(err.message); return; }
+      if (err) {
+        console.error("[auth] guest sign in failed", err);
+        setError(publicAuthErrorMessage());
+        return;
+      }
       // If Supabase returned a session but onAuthStateChange doesn't fire
       // (e.g. existing anonymous session), force a page reload to pick it up
       if (data.session) {
@@ -148,7 +165,11 @@ export default function AuthPanel() {
     e.preventDefault(); clearFeedback(); setPending(true);
     try {
       const { error: err } = await resetPasswordForEmail(email.trim());
-      if (err) { setError(err.message); return; }
+      if (err) {
+        console.error("[auth] password reset request failed", err);
+        setError(publicAuthErrorMessage());
+        return;
+      }
       setMessage("If that email exists, you'll receive a password reset link.");
     } finally { setPending(false); }
   };
