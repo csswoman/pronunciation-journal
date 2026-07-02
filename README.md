@@ -48,6 +48,7 @@ credentials.
 | `NEXT_PUBLIC_SUPABASE_URL` | Supabase project URL used by browser and server clients |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Public Supabase anonymous key |
 | `SUPABASE_SERVICE_ROLE_KEY` | Server-only access for privileged cache operations |
+| `ADMIN_BOOTSTRAP_EMAIL` | Optional email used by the server-only admin bootstrap flow |
 | `NEXT_PUBLIC_SITE_URL` | Optional deployed site URL for auth redirects |
 | `GEMINI_API_KEY` | Server-only Gemini API credential |
 | `GEMINI_ENABLE_PREVIEW_MODELS` | Optional fallback-chain flag for testing preview models |
@@ -59,6 +60,7 @@ paths for parts of the practice experience.
 ## Production Notes
 
 - Admin bootstrap is controlled server-side via `ADMIN_BOOTSTRAP_EMAIL` and `SUPABASE_SERVICE_ROLE_KEY`.
+- Use the server-only bootstrap flow to promote the intended account to `admin`; do not hardcode personal emails in migrations or app code.
 - Migration safety checks run with `pnpm check:migrations`.
 - RLS coverage checks run with `pnpm audit:rls`.
 - Global security headers, including CSP, are configured in `next.config.mjs`.

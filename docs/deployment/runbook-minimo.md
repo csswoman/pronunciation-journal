@@ -19,9 +19,10 @@ Este documento cubre el flujo minimo para operar despliegues sin bloquear la app
 
 1. Definir `ADMIN_BOOTSTRAP_EMAIL` solo para el despliegue o mantenimiento.
 2. Ejecutar `bootstrapAdminRole()` desde un contexto server-only o una tarea operativa interna.
-3. Verificar que el usuario objetivo ya existe en Auth.
+3. Verificar que la cuenta objetivo existe en Auth.
 4. Confirmar que `user_profiles.role` quedó en `admin`.
 5. Eliminar `ADMIN_BOOTSTRAP_EMAIL` si el bootstrap era temporal.
+6. No escribir correos personales ni IDs de cuentas en migraciones o documentación pública.
 
 ## Rollback
 

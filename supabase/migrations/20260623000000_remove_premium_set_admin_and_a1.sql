@@ -4,26 +4,6 @@
 ALTER TABLE user_profiles
 ALTER COLUMN cefr_level SET DEFAULT 'A1';
 
-UPDATE user_profiles
-SET role = 'admin'
-FROM auth.users
-WHERE user_profiles.id = auth.users.id
-  AND auth.users.email = 'karla.agraz@gmail.com';
-
-DELETE FROM public.user_sound_progress
-WHERE user_id IN (
-  SELECT id
-  FROM auth.users
-  WHERE email IS DISTINCT FROM 'karla.agraz@gmail.com'
-);
-
-DELETE FROM public.user_profiles
-WHERE id IN (
-  SELECT id
-  FROM auth.users
-  WHERE email IS DISTINCT FROM 'karla.agraz@gmail.com'
-);
-
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS trigger
 LANGUAGE plpgsql
