@@ -15,12 +15,14 @@ import { recordReaderExposure } from '@/lib/practice/reader/exposure'
 interface ReaderExerciseProps {
   passage: ReaderPassage
   online: boolean
-  onComplete: (correct: boolean) => void
+  onComplete: (correct: boolean) => Promise<void>
 }
 
 export function ReaderExercise({ passage, online, onComplete }: ReaderExerciseProps) {
   const [answered, setAnswered] = useState(false)
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null)
+  const [saving, setSaving] = useState(false)
+  const [saveError, setSaveError] = useState(false)
   const question = passage.questions[0]
 
   function speak() {
@@ -29,16 +31,25 @@ export function ReaderExercise({ passage, online, onComplete }: ReaderExercisePr
     window.speechSynthesis.speak(u) // on-demand, never saved
   }
 
-  function choose(index: number) {
-    if (answered) return
+  async function choose(index: number) {
+    if (answered || saving) return
     setAnswered(true)
     setSelectedIndex(index)
+    setSaving(true)
+    setSaveError(false)
     const correct = index === question.correctIndex
-    // Exposure for every recycled target — never an SM-2 grade.
-    passage.targetSrsIds.forEach((srsId, i) =>
-      void recordReaderExposure(srsId, passage.targetItems[i] ?? srsId),
-    )
-    onComplete(correct)
+    try {
+      // Exposure for every recycled target — never an SM-2 grade.
+      await Promise.all(passage.targetSrsIds.map((srsId, i) =>
+        recordReaderExposure(srsId, passage.targetItems[i] ?? srsId),
+      ))
+      await onComplete(correct)
+    } catch (err) {
+      console.error('[ReaderExercise] progress save failed', err)
+      setSaveError(true)
+    } finally {
+      setSaving(false)
+    }
   }
 
   return (
@@ -64,8 +75,8 @@ export function ReaderExercise({ passage, online, onComplete }: ReaderExercisePr
             <button
               key={opt}
               type="button"
-              onClick={() => choose(i)}
-              disabled={answered}
+              onClick={() => void choose(i)}
+              disabled={answered || saving}
               className={cn(
                 'rounded-md border border-border-default px-4 py-3 text-left',
                 answered &&
@@ -83,9 +94,16 @@ export function ReaderExercise({ passage, online, onComplete }: ReaderExercisePr
         </div>
         {answered && (
           <p role="status" className={cn('text-sm font-medium', selectedIndex === question.correctIndex ? 'text-success' : 'text-error')}>
-            {selectedIndex === question.correctIndex
+            {saving
+              ? 'Saving progress…'
+              : selectedIndex === question.correctIndex
               ? 'Correcto. Esta lectura cuenta en tu progreso.'
               : 'No exactamente. Revisa el texto y compara con la respuesta marcada.'}
+          </p>
+        )}
+        {saveError && (
+          <p role="alert" className="text-sm text-warning">
+            Your answer is shown here, but progress could not be saved. Try again when the connection recovers.
           </p>
         )}
       </div>
