@@ -16,7 +16,7 @@ export async function getMyWords(): Promise<WordBankEntry[]> {
   return (data ?? []) as WordBankEntry[];
 }
 
-/** Quick-add: POST to API which creates the row + triggers async enrichment. */
+/** Quick-add: POST to API which creates the row + queues async enrichment. */
 export async function quickAddWord(input: {
   text: string;
   context?: string | null;
