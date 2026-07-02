@@ -60,10 +60,14 @@ async function getCached(key: string): Promise<Suggestion[] | null> {
 }
 
 async function setCached(key: string, suggestions: Suggestion[]): Promise<void> {
-  const supabase = await createClient();
-  await supabase
-    .from("deck_suggestions_cache")
-    .upsert({ cache_key: key, suggestions, created_at: new Date().toISOString() }, { onConflict: "cache_key" });
+  try {
+    const supabase = await createClient();
+    await supabase
+      .from("deck_suggestions_cache")
+      .upsert({ cache_key: key, suggestions, created_at: new Date().toISOString() }, { onConflict: "cache_key" });
+  } catch {
+    // Cache writes must not fail the user-facing AI response.
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -186,7 +190,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     // 6. Store in cache (only when no variance factors — seed/existingWords make results specific)
     if (!hasVariance && parsed.suggestions) {
       const cacheKey = buildCacheKey(body.deckName, description, difficulty);
-      setCached(cacheKey, parsed.suggestions).catch(() => {});
+      await setCached(cacheKey, parsed.suggestions);
     }
 
     return NextResponse.json(parsed);

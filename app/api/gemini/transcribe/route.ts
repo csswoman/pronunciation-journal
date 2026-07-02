@@ -117,7 +117,7 @@ async function getL2Cached(userId: string, key: string): Promise<string | null> 
 
     const ageMs = Date.now() - new Date(data.updated_at).getTime();
     if (Number.isFinite(ageMs) && ageMs > TRANSCRIBE_CACHE_TTL_MS) {
-      void supabase.from(SUPABASE_STT_CACHE_TABLE).delete().eq("user_id", userId).eq("cache_key", key);
+      await supabase.from(SUPABASE_STT_CACHE_TABLE).delete().eq("user_id", userId).eq("cache_key", key);
       return null;
     }
 
@@ -236,7 +236,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const transcript = await transcribeWithFallback(ai, mimeType, base64Data, body.targetWord);
 
     setL1Cache(cacheKey, transcript);
-    void setL2Cache(user.id, cacheKey, transcript, body.targetWord, mimeType, base64Data.length);
+    await setL2Cache(user.id, cacheKey, transcript, body.targetWord, mimeType, base64Data.length);
 
     return NextResponse.json({ transcript });
   } catch (err: unknown) {
