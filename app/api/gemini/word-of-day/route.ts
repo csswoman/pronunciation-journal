@@ -1,5 +1,6 @@
 import { getWordOfDay } from "@/lib/word-of-day";
 import { NextRequest, NextResponse } from "next/server";
+import { redactError } from "@/lib/api/guards";
 
 export const dynamic = "force-dynamic";
 
@@ -12,7 +13,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       headers: { "Cache-Control": forceRefresh ? "no-store" : "public, max-age=3600" },
     });
   } catch (error) {
-    console.error("word-of-day error:", error);
+    console.error("word-of-day error:", redactError(error));
     const fallback = await getWordOfDay();
     return NextResponse.json(fallback, {
       headers: { "Cache-Control": "no-store" },

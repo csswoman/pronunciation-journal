@@ -1,0 +1,112 @@
+# Arquitectura Multi-Instancia
+
+Fecha: 2026-07-02
+
+## Contexto
+
+English Journal corre en Vercel como funcion serverless Next.js. Cada instancia
+es efimera y stateless: no comparte memoria con otras instancias. Esto afecta
+directamente tres areas: rate limiting, jobs en background y observabilidad.
+
+## Componentes con Dependencias de Estado
+
+### Rate Limiting
+
+**Problema original**: `rateLimitStore` era un `Map` en memoria, lo que
+significaba que cada instancia contaba por separado, permitiendo N veces el
+limite configurado con N instancias.
+
+**Solucion implementada**: `lib/api/guards.ts` llama al RPC `consume_rate_limit`
+en Supabase Postgres, que realiza un upsert atomico con ventana fija. Si las
+credenciales no estan disponibles (dev/test local), cae al Map in-memory como
+fallback controlado.
+
+**Estado**: resuelto. Ver `supabase/migrations/20260701000000_rate_limits.sql`.
+
+### Jobs en Background (word enrichment y STT cache)
+
+**Problema original**: `void enrichWord(...)` y `void setL2Cache(...)` dentro
+de handlers HTTP serverless. Al terminar el handler, el runtime puede apagar la
+instancia antes de que el job complete, perdiendo trabajo silenciosamente.
+
+**Solucion implementada**: `word_enrichment_jobs` en Supabase actua como cola
+durable. El handler HTTP encola el job y responde; un worker externo drena la
+cola con retry e idempotencia.
+
+**Pendiente**: el worker aun no esta desplegado como proceso continuo. Opciones:
+
+| Opcion | Costo | Complejidad | Estado |
+|---|---|---|---|
+| Vercel Cron Job (cada 1-5 min) | Bajo | Bajo | **Recomendado** |
+| Supabase Edge Function con pg_cron | Medio | Medio | Alternativa |
+| Worker externo (Fly.io, Railway) | Medio-alto | Alto | Si se requiere low-latency |
+
+El Vercel Cron Job es suficiente para el volumen actual: llama a un endpoint
+`/api/jobs/drain-enrichment` que procesa hasta N jobs por invocacion con
+idempotencia garantizada por el estado en `word_enrichment_jobs`.
+
+### Observabilidad
+
+**Problema**: sin instrumentacion, no hay visibilidad de errores en produccion
+salvo los logs de Vercel.
+
+**Opciones por costo/esfuerzo**:
+
+1. **Vercel Log Drains** (inmediato, gratuito en Pro): reenviar logs a Axiom,
+   Datadog o Logtail. Sin cambio de codigo. Captura `console.error` redactados.
+
+2. **Sentry** (recomendado para errores estructurados): `@sentry/nextjs` captura
+   excepciones con contexto de request. Costo: free tier hasta 5k eventos/mes.
+
+3. **OpenTelemetry + Vercel** (futuro): si la app crece, OTEL permite migrar
+   a cualquier backend sin cambiar instrumentacion.
+
+**Accion minima aceptable para produccion**: Vercel Log Drain hacia un servicio
+de logs con retencion de 7 dias. Esto cubre el 80% del valor sin cambios de codigo.
+
+## Variables de Entorno por Instancia
+
+Todas las variables son identicas entre instancias del mismo entorno. Ver
+`docs/deployment/environments.md` para la matriz completa.
+
+Las variables que afectan comportamiento multi-instancia:
+
+| Variable | Efecto |
+|---|---|
+| `SUPABASE_SERVICE_ROLE_KEY` | Requerida para `consume_rate_limit` RPC. Sin ella, rate limit cae a in-memory. |
+| `GEMINI_API_KEY` | Requerida para todos los endpoints AI. Misma key en todas las instancias. |
+
+## Limites por Plan de Usuario
+
+El rate limiter actual tiene limites fijos por endpoint. No distingue entre
+usuarios free y premium. Cuando se implemente planes:
+
+1. Leer el tier del usuario en `user_profiles.tier` antes del rate limit check.
+2. Pasar el limite como parametro a `rateLimit(key, { max: tierLimit })`.
+3. El RPC `consume_rate_limit` acepta `p_max` dinamico, ya esta preparado.
+
+## Backpressure y Limites de Gemini
+
+Gemini tiene cuotas por proyecto (RPM/TPM). Con multiples usuarios simultaneos
+en multiples instancias, es posible alcanzar la cuota del proyecto aunque cada
+usuario este bajo su limite individual.
+
+**Mitigaciones actuales**:
+- Cache L1 (in-memory) y L2 (Supabase) en transcripcion evitan llamadas duplicadas.
+- Fallback de modelos (`flash-lite → flash → latest`) reduce presion en el modelo principal.
+
+**Pendiente**:
+- Anadir header `Retry-After` en respuestas 429 de Gemini propagadas al cliente.
+- Considerar un semaforo global (Supabase RPC) para limitar concurrencia total
+  de llamadas Gemini si se acercan a cuotas.
+
+## Checklist de Preparacion Multi-Instancia
+
+- [x] Rate limiting atomico via Supabase RPC
+- [x] Errores de proveedor no expuestos al cliente (`publicErrorResponse`)
+- [x] PII sanitizado en logs (`redactError`)
+- [x] Jobs encuestados en tabla durable (`word_enrichment_jobs`)
+- [ ] Worker de drenaje de jobs desplegado como Vercel Cron o equivalente
+- [ ] Log Drain configurado hacia servicio de retencion
+- [ ] Limites de Gemini monitoreados y alertados
+- [ ] Health check distingue liveness de readiness (Supabase/Gemini degradados)

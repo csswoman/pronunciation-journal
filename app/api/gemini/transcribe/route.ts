@@ -2,7 +2,7 @@ import { createHash } from "crypto";
 import { GoogleGenAI } from "@google/genai";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { requireSameOrigin, requireUser, rateLimit, validateBody, publicErrorResponse } from "@/lib/api/guards";
+import { requireSameOrigin, requireUser, rateLimit, validateBody, publicErrorResponse, redactError } from "@/lib/api/guards";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { buildTranscriptionPrompt } from "@/lib/ai-prompts";
 import { FALLBACK_MODELS, getErrorStatus, shouldTryNextModel } from "@/lib/gemini/fallback";
@@ -240,7 +240,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     return NextResponse.json({ transcript });
   } catch (err: unknown) {
-    console.error("gemini transcribe error:", err);
+    console.error("gemini transcribe error:", redactError(err));
     const status = getErrorStatus(err) ?? 500;
     return publicErrorResponse(status >= 500 ? 500 : status, "Transcription failed");
   }

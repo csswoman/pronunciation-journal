@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { requireSameOrigin, requireUser, rateLimit, publicErrorResponse } from "@/lib/api/guards";
+import { requireSameOrigin, requireUser, rateLimit, publicErrorResponse, redactError } from "@/lib/api/guards";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export const maxDuration = 30;
@@ -49,7 +49,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     .upload(path, buffer, { contentType: file.type, upsert: true });
 
   if (uploadError) {
-    console.error("[word-image] Storage upload error:", uploadError);
+    console.error("[word-image] Storage upload error:", redactError(uploadError));
     return publicErrorResponse(500, "Failed to save image");
   }
 

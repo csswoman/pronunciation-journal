@@ -95,6 +95,18 @@ jobs:
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          # Server-side key; mock value is safe here — never reaches the client
+          # and is only required to satisfy env validation at build time.
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY || 'ci-build-placeholder' }}
+          ADMIN_BOOTSTRAP_EMAIL: ci-bootstrap@placeholder.invalid
+
+      - name: Smoke check build output
+        run: |
+          echo "Verifying build artifact integrity..."
+          test -f .next/BUILD_ID        || (echo "Missing .next/BUILD_ID" && exit 1)
+          test -f .next/routes-manifest.json || (echo "Missing routes-manifest.json" && exit 1)
+          test -d .next/server          || (echo "Missing .next/server directory" && exit 1)
+          echo "Build artifact looks valid. BUILD_ID=$(cat .next/BUILD_ID)"
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4

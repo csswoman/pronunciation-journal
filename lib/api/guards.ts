@@ -369,3 +369,51 @@ export async function validateBody<T>(
 
   return { data: result.data, error: null };
 }
+
+// ---------------------------------------------------------------------------
+// redactError — safe server-side error logger
+// ---------------------------------------------------------------------------
+
+interface RedactedError {
+  type: string;
+  message: string;
+  status?: number;
+}
+
+const BASE64_PATTERN = /[A-Za-z0-9+/]{100,}={0,2}/g;
+const MAX_MESSAGE_LENGTH = 200;
+
+/**
+ * Strips PII-bearing fields from an error before logging.
+ *
+ * SDK errors from Gemini/Supabase can embed request bodies (which may contain
+ * audio base64 data, prompts with user words, or transcript text) in their
+ * serialised form. This helper:
+ *   1. Extracts only the safe scalar fields (type, message, status).
+ *   2. Removes long base64 sequences from the message.
+ *   3. Truncates the message to avoid accidental data dumps.
+ *
+ * Use instead of `console.error("label:", err)` in any route that handles
+ * audio, transcription, or other user-generated content.
+ */
+export function redactError(err: unknown): RedactedError {
+  if (!err || typeof err !== "object") {
+    return { type: "UnknownError", message: String(err).slice(0, MAX_MESSAGE_LENGTH) };
+  }
+
+  const e = err as Record<string, unknown>;
+  const type = typeof e["name"] === "string" ? e["name"] : err?.constructor?.name ?? "Error";
+  const rawMessage = typeof e["message"] === "string" ? e["message"] : "";
+  const status =
+    typeof e["status"] === "number"
+      ? e["status"]
+      : typeof e["statusCode"] === "number"
+        ? e["statusCode"]
+        : undefined;
+
+  const safeMessage = rawMessage
+    .replace(BASE64_PATTERN, "[redacted-base64]")
+    .slice(0, MAX_MESSAGE_LENGTH);
+
+  return { type, message: safeMessage, ...(status !== undefined ? { status } : {}) };
+}

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { enqueueWordEnrichmentJob } from "@/lib/word-bank/jobs";
-import { createUserScopedClient, requireSameOrigin, requireUser, rateLimit, validateBody, SECURE_HEADERS, publicErrorResponse } from "@/lib/api/guards";
+import { createUserScopedClient, requireSameOrigin, requireUser, rateLimit, validateBody, SECURE_HEADERS, publicErrorResponse, redactError } from "@/lib/api/guards";
 
 export const runtime = "nodejs";
 
@@ -59,7 +59,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       .single();
 
     if (updateErr || !word) {
-      console.error("[POST /api/words] retry update failed:", updateErr);
+      console.error("[POST /api/words] retry update failed:", redactError(updateErr));
       return publicErrorResponse(500, "Failed to retry word");
     }
 
@@ -80,7 +80,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     .single();
 
   if (insertErr || !word) {
-    console.error("[POST /api/words] insert failed:", insertErr);
+    console.error("[POST /api/words] insert failed:", redactError(insertErr));
     return publicErrorResponse(500, "Failed to create word");
   }
 

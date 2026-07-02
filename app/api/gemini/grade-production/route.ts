@@ -5,7 +5,7 @@ import {
   GRADE_PRODUCTION_SYSTEM_PROMPT,
   buildGradeProductionUserPrompt,
 } from '@/lib/ai-prompts'
-import { requireSameOrigin, requireUser, rateLimit, validateBody, publicErrorResponse } from '@/lib/api/guards'
+import { requireSameOrigin, requireUser, rateLimit, validateBody, publicErrorResponse, redactError } from '@/lib/api/guards'
 import type { ProductionGradeResult } from '@/lib/exercises/production-grade'
 
 const GradeProductionSchema = z.object({
@@ -108,7 +108,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const grade = await gradeWithFallback(ai, prompt)
     return NextResponse.json(grade)
   } catch (err: unknown) {
-    console.error('grade-production error:', err)
+    console.error('grade-production error:', redactError(err))
     const status = getErrorStatus(err) ?? 500
     return publicErrorResponse(status >= 500 ? 500 : status, 'Failed to grade production')
   }

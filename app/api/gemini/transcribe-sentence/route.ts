@@ -2,7 +2,7 @@ import { createHash } from "crypto";
 import { GoogleGenAI } from "@google/genai";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { requireSameOrigin, requireUser, rateLimit, validateBody, publicErrorResponse } from "@/lib/api/guards";
+import { requireSameOrigin, requireUser, rateLimit, validateBody, publicErrorResponse, redactError } from "@/lib/api/guards";
 
 // Separate endpoint for transcribing full spoken sentences (e.g. interview responses).
 // Differences from /api/gemini/transcribe:
@@ -123,7 +123,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const transcript = await transcribe(ai, mimeType, base64Data);
     return NextResponse.json({ transcript });
   } catch (err: unknown) {
-    console.error("transcribe-sentence error:", err);
+    console.error("transcribe-sentence error:", redactError(err));
     const status = getErrorStatus(err) ?? 500;
     return publicErrorResponse(status >= 500 ? 500 : status, "Failed to transcribe sentence");
   }

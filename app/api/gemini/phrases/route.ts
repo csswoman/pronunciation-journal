@@ -1,7 +1,7 @@
 import { GoogleGenAI } from "@google/genai";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { requireSameOrigin, requireUser, rateLimit, validateBody, SECURE_HEADERS, publicErrorResponse } from "@/lib/api/guards";
+import { requireSameOrigin, requireUser, rateLimit, validateBody, SECURE_HEADERS, publicErrorResponse, redactError } from "@/lib/api/guards";
 import { PRONUNCIATION_PHRASES_SYSTEM_PROMPT } from "@/lib/ai-prompts";
 
 const PhrasesSchema = z.object({
@@ -78,6 +78,6 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     }
   }
 
-  console.error("phrases error:", lastError);
+  console.error("phrases error:", redactError(lastError));
   return publicErrorResponse(500, "Failed to generate phrases");
 }

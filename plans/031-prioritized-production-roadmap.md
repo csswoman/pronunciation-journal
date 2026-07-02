@@ -17,8 +17,8 @@ Hecho hasta ahora:
 - Se agregaron checks automatizados para migraciones peligrosas y cobertura de RLS en migraciones nuevas.
 - Se configuraron headers globales de seguridad y CSP en `next.config.mjs`.
 - El inventario de rutas mutantes revisado queda cubierto por los guards actuales.
-- P1 completadas: 9, 10, 12, 15, 16, 17, 20, 26, 27, 28, 30, 38, 39, 40 y 41.
-- P1 aun abiertas: 11, 21 y 29.
+- P1 completadas: 9, 10, 11, 12, 15, 16, 17, 20, 25, 26, 27, 28, 29, 30, 38, 39, 40, 41, 42 y 43.
+- P1 aun abiertas: 21 (worker de drenaje de jobs y observabilidad; diseno documentado en `docs/architecture/multi-instance.md`).
 
 ## Reglas de Ejecucion
 
@@ -60,10 +60,12 @@ Objetivo: cerrar rutas de abuso, filtrar menos informacion interna y evitar que 
 |---:|---|---:|---:|---:|---|---|
 | 9 | Aplicar `requireSameOrigin(request)` a todos los POST autenticados por cookie, manteniendo exencion Bearer. | P1 | M | 1 dia | Fase 0 | Completado. Proteccion CSRF consistente en rutas mutantes/costosas. |
 | 10 | Sustituir mensajes internos (`err.message`) por errores publicos normalizados. | P1 | S | 4-6 h | Fase 0 | Completado. El cliente no recibe detalles de proveedor, DB o stack interno. |
-| 11 | Cambiar rate limiter en memoria por Redis/Upstash/Supabase RPC atomico. | P1 | M | 1-2 dias | Fase 0 | Limites funcionan en despliegues multi-instancia. |
+| 11 | Cambiar rate limiter en memoria por Redis/Upstash/Supabase RPC atomico. | P1 | M | 1-2 dias | Fase 0 | Completado. consume_rate_limit RPC atomico en Postgres; fallback in-memory solo para dev/test. |
 | 12 | Anadir tests de guards para rutas POST: auth, same-origin, rate limit y validacion. | P1 | M | 1-2 dias | 9-11 | Completado. Regresiones de seguridad quedan bloqueadas por tests. |
 | 13 | Ampliar escaneo de secretos en CI y precommit local. | P2 | S | 4 h | Fase 0 | El escaneo cubre scripts, supabase, docs y configuracion. |
 | 14 | Definir CSP/headers globales para paginas, no solo APIs. | P2 | M | 1 dia | Fase 0 | Cabeceras de seguridad consistentes en la app completa. |
+| 42 | Revisar y acotar PII/audio/transcripts en logs de servidor: ningun dato de usuario llega a console.error sin sanitizar. | P1 | M | 1-2 dias | 10 | Completado. `redactError` en `lib/api/guards.ts`; aplicado en todas las rutas Gemini y words. |
+| 43 | Anadir GEMINI_API_KEY mock al job de build en CI y paso de smoke post-build. | P1 | S | 4-6 h | Fase 0 | Completado. Mock añadido y smoke check de `.next/BUILD_ID` y rutas clave en `.github/workflows/ci.yml`. |
 
 Comandos de salida:
 
@@ -104,11 +106,11 @@ Objetivo: que la app sobreviva picos, retries, multiples instancias y fallos de 
 | Orden | Tarea | Prioridad | Dificultad | Tiempo | Depende de | Resultado esperado |
 |---:|---|---:|---:|---:|---|---|
 | 20 | Sacar enriquecimiento de palabras y cache writes de `void` en rutas HTTP; usar cola durable o tabla de jobs. | P1 | L | 2-4 dias | Fase 1 | Completado. Trabajos background tienen retry, estado e idempotencia. |
-| 21 | Definir arquitectura de produccion multi-instancia: rate limit, jobs, observabilidad, variables por entorno. | P0/P1 | L | 3-5 dias | 11, 20 | Hay diseno operativo claro antes de escalar. |
+| 21 | Definir arquitectura de produccion multi-instancia: rate limit, jobs, observabilidad, variables por entorno. | P0/P1 | L | 3-5 dias | 11, 20 | Diseno documentado en `docs/architecture/multi-instance.md`. Pendiente: worker de drenaje y Log Drain. |
 | 22 | Anadir timeouts uniformes a llamadas Gemini. | P2 | M | 1 dia | Fase 1 | Ninguna request queda colgada por proveedor externo. |
 | 23 | Unificar infraestructura Gemini: fallback, parseo, errores, limites y timeout. | P2 | M | 1-2 dias | 22 | Menos duplicacion y comportamiento uniforme entre endpoints. |
 | 24 | Anadir health checks reales y readiness/liveness separados. | P2 | M | 1 dia | 21 | Monitoreo distingue app viva de dependencias degradadas. |
-| 25 | Crear estrategia documentada de backups, restore y retencion Supabase. | P0/P1 | M | 1-2 dias | Fase 0 | Existe recuperacion practicable ante perdida de datos. |
+| 25 | Crear estrategia documentada de backups, restore y retencion Supabase. | P0/P1 | M | 1-2 dias | Fase 0 | Completado. `docs/deployment/backups.md` con metodos por capa, comandos, tabla de prioridades y checklist post-restore. |
 
 Comandos de salida:
 
@@ -130,7 +132,7 @@ Objetivo: que los flujos principales fallen de forma comprensible y no prometan 
 | 26 | Endurecer auth/reset/recovery: expiracion, sesion invalida, password policy y mensajes no filtradores. | P1 | M | 1-2 dias | Fase 0 | Completado. Login y recovery son robustos y testeados. |
 | 27 | Anadir pruebas de interaccion y a11y para auth/recovery/reset. | P1 | M | 1-2 dias | 26 | Completado. Flujos de entrada no dependen solo de tests unitarios. |
 | 28 | Disenar degradacion clara para Supabase/Gemini no disponibles. | P1 | M | 1-2 dias | Fase 3 | Completado. Usuarios entienden que se puede hacer y que queda pendiente. |
-| 29 | Revisar persistencia offline real: Dexie/Supabase/outbox vs `localStorage/sessionStorage`. | P1 | L | 2-4 dias | Fase 3 | El estado critico se sincroniza o se documenta como local/temporal. |
+| 29 | Revisar persistencia offline real: Dexie/Supabase/outbox vs `localStorage/sessionStorage`. | P1 | L | 2-4 dias | Fase 3 | Completado. Inventario completo en `docs/architecture/offline-sync.md`; gap de `pronunciation_mastered` documentado como deuda activa. |
 | 30 | Anadir estados de retry/cola visibles para enriquecimiento y transcripcion. | P1 | M | 1-2 dias | 20 | Completado. El usuario no recibe OK falso cuando el trabajo puede fallar luego. |
 | 31 | Auditar accesibilidad real con Playwright/axe en flujos criticos. | P2 | M | 1-2 dias | 27 | CI valida comportamiento accesible, no solo presencia de ARIA. |
 
