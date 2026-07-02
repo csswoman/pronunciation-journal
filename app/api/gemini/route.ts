@@ -239,7 +239,7 @@ export async function POST(request: NextRequest): Promise<Response> {
   if (authError) return authError;
 
   // 2. Rate limit — 15 req/min per user, keyed per endpoint so routes are independent
-  const { limited, error: rateLimitError } = rateLimit(`/api/gemini:${user.id}`, {
+  const { limited, error: rateLimitError } = await rateLimit(`/api/gemini:${user.id}`, {
     meta: { endpoint: "/api/gemini", userId: user.id },
   });
   if (limited) return rateLimitError;

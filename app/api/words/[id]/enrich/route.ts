@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import type { Database } from "@/lib/supabase/types";
 import { enrichWord } from "@/lib/word-bank/enrich";
-import { SECURE_HEADERS, publicErrorResponse } from "@/lib/api/guards";
+import { SECURE_HEADERS, publicErrorResponse, rateLimit } from "@/lib/api/guards";
 
 export const runtime = "nodejs";
 
@@ -31,6 +31,13 @@ export async function POST(
   if (!user) {
     return publicErrorResponse(401, "Unauthorized");
   }
+
+  const { limited, error: rateLimitError } = await rateLimit(`/api/words/${id}/enrich:${user.id}`, {
+    max: 10,
+    windowMs: 60_000,
+    meta: { endpoint: "/api/words/[id]/enrich", userId: user.id },
+  });
+  if (limited) return rateLimitError;
 
   // Verify ownership through RLS.
   const userClient = createClient<Database>(supabaseUrl, anonKey, {

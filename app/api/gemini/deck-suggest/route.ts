@@ -133,7 +133,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   if (authError) return authError as NextResponse;
 
   // 2. Rate limit — 10 req/min (AI suggestion calls are heavy)
-  const { limited, error: rateLimitError } = rateLimit(`/api/gemini/deck-suggest:${user.id}`, {
+  const { limited, error: rateLimitError } = await rateLimit(`/api/gemini/deck-suggest:${user.id}`, {
     max: 10,
     windowMs: 60_000,
     meta: { endpoint: "/api/gemini/deck-suggest", userId: user.id },

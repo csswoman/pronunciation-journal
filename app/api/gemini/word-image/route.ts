@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { requireSameOrigin, requireUser, publicErrorResponse } from "@/lib/api/guards";
+import { requireSameOrigin, requireUser, rateLimit, publicErrorResponse } from "@/lib/api/guards";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export const maxDuration = 30;
@@ -10,6 +10,13 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
   const { user, error: authError } = await requireUser(request);
   if (authError) return authError as NextResponse;
+
+  const { limited, error: rateLimitError } = await rateLimit(`/api/gemini/word-image:${user.id}`, {
+    max: 10,
+    windowMs: 60_000,
+    meta: { endpoint: "/api/gemini/word-image", userId: user.id },
+  });
+  if (limited) return rateLimitError;
 
   const formData = await request.formData().catch(() => null);
   if (!formData) return publicErrorResponse(400, "Invalid form data");

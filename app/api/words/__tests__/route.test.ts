@@ -38,7 +38,7 @@ describe('POST /api/words', () => {
       NEXT_PUBLIC_SUPABASE_URL: 'https://test.supabase.co',
       NEXT_PUBLIC_SUPABASE_ANON_KEY: 'test-anon-key',
     }
-    mockRateLimit.mockReturnValue({ limited: false, error: null })
+    mockRateLimit.mockResolvedValue({ limited: false, error: null })
   })
 
   afterEach(() => {

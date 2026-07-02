@@ -203,7 +203,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   if (authError) return authError as NextResponse;
 
   // 2. Rate limit — tighter for transcription (costs more per call)
-  const { limited, error: rateLimitError } = rateLimit(`/api/gemini/transcribe:${user.id}`, {
+  const { limited, error: rateLimitError } = await rateLimit(`/api/gemini/transcribe:${user.id}`, {
     max: 20,
     windowMs: 60_000,
     meta: { endpoint: "/api/gemini/transcribe", userId: user.id },

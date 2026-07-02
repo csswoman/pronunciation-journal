@@ -63,7 +63,7 @@ export async function POST(
 
   const { id } = await params;
 
-  const { limited, error: rateLimitError } = rateLimit(`/api/lexicon/${id}:${user.id}`, {
+  const { limited, error: rateLimitError } = await rateLimit(`/api/lexicon/${id}:${user.id}`, {
     max: 30,
     windowMs: 60_000,
     meta: { endpoint: "/api/lexicon/[id]", userId: user.id },

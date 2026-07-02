@@ -104,7 +104,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const { user, error: authError } = await requireUser();
   if (authError) return authError as NextResponse;
 
-  const { limited, error: rateLimitError } = rateLimit(`/api/gemini/transcribe-sentence:${user.id}`, {
+  const { limited, error: rateLimitError } = await rateLimit(`/api/gemini/transcribe-sentence:${user.id}`, {
     max: 20,
     windowMs: 60_000,
     meta: { endpoint: "/api/gemini/transcribe-sentence", userId: user.id },

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { requireSameOrigin, requireUser, SECURE_HEADERS, publicErrorResponse } from "@/lib/api/guards";
+import { requireSameOrigin, requireUser, rateLimit, SECURE_HEADERS, publicErrorResponse } from "@/lib/api/guards";
 import { saveAssessmentResult } from "@/lib/courses/assessment-queries";
 import type { AssessmentResult } from "@/lib/courses/assessment";
 import type { CefrLevelId } from "@/lib/courses/types";
@@ -31,6 +31,13 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
   const { user, error: authError } = await requireUser(req);
   if (authError) return authError;
+
+  const { limited, error: rateLimitError } = await rateLimit(`/api/assessment/results:${user.id}`, {
+    max: 30,
+    windowMs: 60_000,
+    meta: { endpoint: "/api/assessment/results", userId: user.id },
+  });
+  if (limited) return rateLimitError;
 
   const body = AssessmentResultSchema.safeParse(await req.json());
   if (!body.success) {

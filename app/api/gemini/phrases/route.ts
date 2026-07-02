@@ -38,7 +38,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const { user, error: authError } = await requireUser();
   if (authError) return authError as NextResponse;
 
-  const { limited, error: rateLimitError } = rateLimit(`/api/gemini/phrases:${user.id}`, {
+  const { limited, error: rateLimitError } = await rateLimit(`/api/gemini/phrases:${user.id}`, {
     max: 10,
     windowMs: 60_000,
     meta: { endpoint: "/api/gemini/phrases", userId: user.id },

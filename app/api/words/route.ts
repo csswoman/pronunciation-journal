@@ -21,7 +21,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   const { user, error: authError, accessToken } = await requireUser(req);
   if (authError) return authError;
 
-  const { limited, error: rateLimitError } = rateLimit(`/api/words:${user.id}`, {
+  const { limited, error: rateLimitError } = await rateLimit(`/api/words:${user.id}`, {
     max: 20,
     windowMs: 60_000,
     meta: { endpoint: "/api/words", userId: user.id },
