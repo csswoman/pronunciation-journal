@@ -15,6 +15,7 @@ import {
   type CoachSessionExercise,
 } from "@/lib/ai-practice/coach-progress";
 import type { AIConversationMode } from "@/lib/types";
+import { AI_UNAVAILABLE_MESSAGE, isQuotaLikeError, publicAiErrorMessage } from "@/lib/degradation/messages";
 
 function getOrCreateDeviceId(): string {
   const key = "ai_practice_device_id";
@@ -65,17 +66,6 @@ export function useStreamingChat({
   const userIdRef = useRef(userId);
   userIdRef.current = userId;
 
-  function isQuotaError(message: string): boolean {
-    const lower = message.toLowerCase();
-    return (
-      lower.includes("quota") ||
-      lower.includes("resource exhausted") ||
-      lower.includes("rate limit") ||
-      lower.includes("429") ||
-      lower.includes("too many requests")
-    );
-  }
-
   const sendMessage = useCallback(async (text: string, options?: { hidden?: boolean }) => {
     if (!text.trim() || isStreaming) return;
     setError(null);
@@ -114,12 +104,12 @@ export function useStreamingChat({
       if (!res.ok || !res.body) {
         const data = await res.json().catch(() => ({}));
         const errMsg: string = data.error ?? "Failed to get AI response";
-        if (res.status === 429 || isQuotaError(errMsg)) {
+        if (res.status === 429 || isQuotaLikeError(errMsg)) {
           setQuotaExhausted(true);
           setMessages(messagesRef.current.slice(0, -1));
           return;
         }
-        throw new Error(errMsg);
+        throw new Error(publicAiErrorMessage(res.status, errMsg));
       }
 
       const reader = res.body.getReader();
@@ -173,12 +163,12 @@ export function useStreamingChat({
           if (result === "done") break outer;
           if (typeof result === "object" && "error" in result) {
             // Stream-level error from the server (e.g. quota exhausted after all fallbacks)
-            if (isQuotaError(result.error)) {
+            if (isQuotaLikeError(result.error)) {
               setQuotaExhausted(true);
               // Remove the empty model placeholder; keep prior conversation
               setMessages(prev => prev.slice(0, -1));
             } else {
-              setError(result.error);
+              setError(publicAiErrorMessage(undefined, result.error));
               setMessages(messagesRef.current.slice(0, -2));
             }
             break outer;
@@ -222,7 +212,10 @@ export function useStreamingChat({
       }
     } catch (err: unknown) {
       if ((err as Error).name === "AbortError") return;
-      setError(err instanceof Error ? err.message : "An error occurred.");
+      const message = err instanceof Error ? err.message : "";
+      setError(message === AI_UNAVAILABLE_MESSAGE || message.includes("temporarily limited")
+        ? message
+        : publicAiErrorMessage(undefined, message));
       setMessages(messagesRef.current.slice(0, -2));
     } finally {
       if (streamIdRef.current === thisId) setIsStreaming(false);

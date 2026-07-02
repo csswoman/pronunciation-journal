@@ -1,0 +1,21 @@
+import { describe, expect, it } from "vitest";
+import {
+  AI_UNAVAILABLE_MESSAGE,
+  DATA_UNAVAILABLE_MESSAGE,
+  isQuotaLikeError,
+  publicAiErrorMessage,
+} from "@/lib/degradation/messages";
+
+describe("degradation messages", () => {
+  it("detects quota-like provider errors", () => {
+    expect(isQuotaLikeError("Resource exhausted: quota exceeded")).toBe(true);
+    expect(isQuotaLikeError("HTTP 429")).toBe(true);
+    expect(isQuotaLikeError("database password leaked")).toBe(false);
+  });
+
+  it("returns public AI degradation copy without provider internals", () => {
+    expect(publicAiErrorMessage(503, "Gemini stack trace")).toBe(AI_UNAVAILABLE_MESSAGE);
+    expect(publicAiErrorMessage(429, "Gemini quota")).toMatch(/temporarily limited/i);
+    expect(DATA_UNAVAILABLE_MESSAGE).toMatch(/sync will retry/i);
+  });
+});
