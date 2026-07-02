@@ -52,6 +52,7 @@ export function useSessionState(config: PracticeConfig) {
   const startTimeRef = useRef<number>(Date.now())
   const feedbackTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const completedRef = useRef(false)
+  const submittingRef = useRef(false)
 
   // Restore (or create) the persisted session on mount.
   useEffect(() => {
@@ -130,7 +131,8 @@ export function useSessionState(config: PracticeConfig) {
   const handleSubmit = useCallback(
     async (isCorrect: boolean, userAnswer: string, extras?: { score?: number; feedback?: import('@/lib/practice/types').PedagogicalFeedback }) => {
       const current = exercises[currentIndex]
-      if (!current || phase !== 'exercising') return
+      if (!current || phase !== 'exercising' || submittingRef.current) return
+      submittingRef.current = true
       const timeMs = Date.now() - startTimeRef.current
       const result: ExerciseResult = {
         exerciseId: current.id,
@@ -182,21 +184,25 @@ export function useSessionState(config: PracticeConfig) {
       const nextIndex = currentIndex + 1
       setResults(nextResults)
       setLastFeedback(isCorrect)
-      if (!isCorrect && current.payload.kind === 'phoneme' && userAnswer !== 'skip') {
-        setPhase('hints')
-        return
+      try {
+        if (!isCorrect && current.payload.kind === 'phoneme' && userAnswer !== 'skip') {
+          setPhase('hints')
+          return
+        }
+        setPhase('feedback')
+        if (persistence) {
+          void updateSessionProgress(persistence.userId, persistence.soundId, { currentIndex: nextIndex, answers: nextResults }).catch((err) => {
+            console.error('[PracticeSession] updateSessionProgress failed', err)
+          })
+        }
+        nextVoice()
+        feedbackTimerRef.current = setTimeout(() => {
+          if (nextIndex >= exercises.length) { finish(nextResults) }
+          else { setCurrentIndex(nextIndex); setLastFeedback(null); setPhase('exercising') }
+        }, FEEDBACK_MS)
+      } finally {
+        submittingRef.current = false
       }
-      setPhase('feedback')
-      if (persistence) {
-        void updateSessionProgress(persistence.userId, persistence.soundId, { currentIndex: nextIndex, answers: nextResults }).catch((err) => {
-          console.error('[PracticeSession] updateSessionProgress failed', err)
-        })
-      }
-      nextVoice()
-      feedbackTimerRef.current = setTimeout(() => {
-        if (nextIndex >= exercises.length) { finish(nextResults) }
-        else { setCurrentIndex(nextIndex); setLastFeedback(null); setPhase('exercising') }
-      }, FEEDBACK_MS)
     },
     [exercises, currentIndex, phase, results, user, context, persistence, nextVoice, finish],
   )
