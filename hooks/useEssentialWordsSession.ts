@@ -196,14 +196,15 @@ export function useEssentialWordsSession(): UseEssentialWordsSessionReturn {
       return;
     }
     const sessionResult = buildSessionResult(sessionResultsRef.current);
-    void recordActivitySession(user.id, { practiceContext: "core-1000", sessionResult })
-      .then(() => import("@/lib/sync/sync-manager").then(({ flushOutbox }) => flushOutbox()))
-      .catch((err) => {
-        console.error("[EssentialWordsSession] recordActivitySession failed", err);
-      })
-      .finally(() => {
-        finishingRef.current = false;
-      });
+    try {
+      await recordActivitySession(user.id, { practiceContext: "core-1000", sessionResult });
+      const { flushOutbox } = await import("@/lib/sync/sync-manager");
+      await flushOutbox();
+    } catch (err) {
+      console.error("[EssentialWordsSession] recordActivitySession failed", err);
+    } finally {
+      finishingRef.current = false;
+    }
   }, [user?.id, flushLapses]);
 
   const advance = useCallback((q: Core1000QueueItem[], i: number) => {
