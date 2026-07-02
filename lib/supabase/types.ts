@@ -943,6 +943,48 @@ export type Database = {
           },
         ]
       }
+      word_enrichment_jobs: {
+        Row: {
+          attempts: number
+          created_at: string
+          id: string
+          last_error: string | null
+          locked_at: string | null
+          locked_by: string | null
+          run_after: string
+          status: string
+          updated_at: string
+          user_id: string
+          word_id: string
+        }
+        Insert: {
+          attempts?: number
+          created_at?: string
+          id?: string
+          last_error?: string | null
+          locked_at?: string | null
+          locked_by?: string | null
+          run_after?: string
+          status?: string
+          updated_at?: string
+          user_id: string
+          word_id: string
+        }
+        Update: {
+          attempts?: number
+          created_at?: string
+          id?: string
+          last_error?: string | null
+          locked_at?: string | null
+          locked_by?: string | null
+          run_after?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+          word_id?: string
+        }
+        Relationships: []
+      }
       words: {
         Row: {
           audio_url: string | null

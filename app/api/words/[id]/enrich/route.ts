@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import type { Database } from "@/lib/supabase/types";
-import { enrichWord } from "@/lib/word-bank/enrich";
+import { enqueueWordEnrichmentJob } from "@/lib/word-bank/jobs";
 import { SECURE_HEADERS, publicErrorResponse, rateLimit } from "@/lib/api/guards";
 
 export const runtime = "nodejs";
@@ -69,9 +69,7 @@ export async function POST(
     return publicErrorResponse(500, "Failed to start enrichment");
   }
 
-  // Fire in background — client already shows "processing" and will receive
-  // the DB update via realtime subscription when Gemini finishes.
-  void enrichWord(id);
+  const jobId = await enqueueWordEnrichmentJob(userClient, user.id, id);
 
-  return NextResponse.json({ ok: true }, { headers: SECURE_HEADERS });
+  return NextResponse.json({ ok: true, jobId }, { headers: SECURE_HEADERS });
 }

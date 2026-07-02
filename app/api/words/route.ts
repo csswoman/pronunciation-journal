@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { enrichWord } from "@/lib/word-bank/enrich";
+import { enqueueWordEnrichmentJob } from "@/lib/word-bank/jobs";
 import { createUserScopedClient, requireSameOrigin, requireUser, rateLimit, validateBody, SECURE_HEADERS, publicErrorResponse } from "@/lib/api/guards";
 
 export const runtime = "nodejs";
@@ -63,8 +63,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       return publicErrorResponse(500, "Failed to retry word");
     }
 
-    void enrichWord(word.id);
-    return NextResponse.json({ word }, { status: 200, headers: SECURE_HEADERS });
+    const jobId = await enqueueWordEnrichmentJob(userClient, user.id, word.id);
+    return NextResponse.json({ word, jobId }, { status: 200, headers: SECURE_HEADERS });
   }
 
   // Create new word.
@@ -98,6 +98,6 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     }
   }
 
-  void enrichWord(word.id);
-  return NextResponse.json({ word }, { status: 201, headers: SECURE_HEADERS });
+  const jobId = await enqueueWordEnrichmentJob(userClient, user.id, word.id);
+  return NextResponse.json({ word, jobId }, { status: 201, headers: SECURE_HEADERS });
 }

@@ -39,7 +39,6 @@ async function withTimeout<T>(promise: Promise<T>, timeoutMs: number): Promise<T
 
 /**
  * Background enrichment: fetch word, ask Gemini, persist enriched fields.
- * Runs without awaiting from the API route (`void enrichWord(id)`).
  * Failures are caught and persisted as `status = 'failed'` so the UI can react.
  */
 export async function enrichWord(wordId: string): Promise<void> {
