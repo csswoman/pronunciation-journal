@@ -9,6 +9,7 @@ import {
   saveDoneIds,
   saveResolvedIds,
 } from '@/lib/daily/plan-storage'
+import { recordDailyStepCompletion } from '@/lib/progress/activity-hub'
 import { syncTodayReconciledSteps } from '@/lib/progress/activity-queries-client'
 import { buildDailyPlan, DAILY_PLAN_STEP_COUNT } from '@/lib/practice/daily-plan'
 import type { DailyPlan, DailyStep } from '@/lib/practice/types'
@@ -103,7 +104,7 @@ export function useDailyPlan({ conceptLesson, autoLoad = true }: UseDailyPlanOpt
   }, [autoLoad, load])
 
   const markDone = useCallback(
-    (stepId: string) => {
+    async (stepId: string) => {
       if (!user) return
       setDoneIds((prev) => {
         const next = new Set(prev)
@@ -118,6 +119,11 @@ export function useDailyPlan({ conceptLesson, autoLoad = true }: UseDailyPlanOpt
         saveResolvedIds(user.id, next)
         return next
       })
+      try {
+        await recordDailyStepCompletion(user.id, stepId)
+      } catch (err) {
+        console.error('[useDailyPlan] recordDailyStepCompletion failed', err)
+      }
     },
     [user],
   )

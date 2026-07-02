@@ -10,7 +10,8 @@ Fecha: 2026-07-01
 | Word bank y SRS | Supabase + caches cliente | Supabase |
 | Outbox de cambios | Dexie `syncOutbox` | Supabase al confirmar flush |
 | Preferencias UI | Zustand/local storage según feature | Cliente |
-| Daily plan local | local storage/cache cliente | Temporal |
+| Daily plan generado | local storage/cache cliente | Temporal |
+| Daily plan completado | local storage + Dexie `syncOutbox` (`activity_sessions`) | Supabase al confirmar flush |
 | Jobs de enriquecimiento | `word_enrichment_jobs` | Supabase |
 
 ## Reglas
@@ -32,5 +33,5 @@ Fecha: 2026-07-01
 ## Limitaciones Actuales
 
 - No existe sincronización CRDT ni resolución multi-dispositivo avanzada.
-- No todos los flujos usan outbox; algunos dependen de escritura Supabase directa.
+- No todos los flujos usan outbox; algunos dependen de escritura Supabase directa. El checklist manual del daily plan si encola `activity_sessions` para reconciliacion.
 - El runner de `word_enrichment_jobs` debe desplegarse como worker/scheduled job externo al request HTTP.

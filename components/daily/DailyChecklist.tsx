@@ -106,9 +106,9 @@ export default function DailyChecklist({ conceptLesson, initialStepId, streak = 
     router.replace(`/daily?step=${step.id}`)
   }, [router])
 
-  const handleComplete = useCallback((stepId: string) => {
+  const handleComplete = useCallback(async (stepId: string) => {
     clearStepStorage()
-    markDone(stepId)
+    await markDone(stepId)
     router.replace('/daily')
     setView({ mode: 'checklist' })
   }, [markDone, router])
