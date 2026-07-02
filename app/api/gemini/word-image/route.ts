@@ -72,6 +72,13 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
   const { user, error: authError } = await requireUser(request);
   if (authError) return authError as NextResponse;
 
+  const { limited, error: rateLimitError } = await rateLimit(`/api/gemini/word-image/delete:${user.id}`, {
+    max: 20,
+    windowMs: 60_000,
+    meta: { endpoint: "/api/gemini/word-image DELETE", userId: user.id },
+  });
+  if (limited) return rateLimitError;
+
   const { entryId } = await request.json().catch(() => ({}));
   if (!entryId) return publicErrorResponse(400, "Missing entryId");
 

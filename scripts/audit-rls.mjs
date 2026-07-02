@@ -62,7 +62,10 @@ function findCreatedTables(sql) {
 
 function hasRlsEnabled(sql, tableName) {
   const tablePattern = tableName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  return new RegExp(`enable\\s+row\\s+level\\s+security\\s+on\\s+table\\s+${tablePattern}`, "i").test(sql);
+  return (
+    new RegExp(`enable\\s+row\\s+level\\s+security\\s+on\\s+table\\s+${tablePattern}`, "i").test(sql) ||
+    new RegExp(`alter\\s+table\\s+${tablePattern}\\s+enable\\s+row\\s+level\\s+security`, "i").test(sql)
+  );
 }
 
 function hasPolicy(sql, tableName) {

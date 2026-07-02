@@ -6,8 +6,16 @@ CREATE TABLE IF NOT EXISTS public.rate_limits (
 );
 
 ALTER TABLE public.rate_limits ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.rate_limits FORCE ROW LEVEL SECURITY;
 
 REVOKE ALL ON public.rate_limits FROM anon, authenticated;
+
+CREATE POLICY "rate_limits_no_client_access"
+ON public.rate_limits
+FOR ALL
+TO anon, authenticated
+USING (false)
+WITH CHECK (false);
 
 CREATE OR REPLACE FUNCTION public.consume_rate_limit(
   p_key text,
