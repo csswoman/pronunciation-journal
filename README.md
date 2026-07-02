@@ -66,12 +66,14 @@ paths for parts of the practice experience.
 - Global security headers, including CSP, are configured in `next.config.mjs`.
 - API cost controls use the `consume_rate_limit` Supabase RPC and require `SUPABASE_SERVICE_ROLE_KEY` in production.
 - Word enrichment is queued in `word_enrichment_jobs`; run `processWordEnrichmentJobs()` from a trusted worker or scheduled job.
+- Practice progress uses the Dexie `syncOutbox` for retryable writes. Generic practice sessions, Reader, the daily checklist, and Essential Words activity show or preserve pending/error state instead of promising remote sync before flush.
+- Gemini and speech transcription errors are normalized before reaching UI. User-facing copy should stay public and provider-neutral.
 - Operational deployment notes live in `docs/deployment/runbook-minimo.md`.
 - Security, sync, and environment ownership are documented in `docs/security/threat-model.md`, `docs/architecture/offline-sync.md`, and `docs/deployment/environments.md`.
 
 ## Current Limitations
 
-- Offline support is not a full multi-device sync guarantee. Dexie/local queues cover selected client workflows; Supabase remains the source of truth after reconnect.
+- Offline support is not a full multi-device sync guarantee. Dexie/local queues cover selected client workflows; Supabase remains the source of truth after reconnect. Some short-lived buffers, such as Essential Words pending lapses, are session-scoped only.
 - Gemini-backed features require server credentials and may degrade or queue when the provider is unavailable.
 - Background word enrichment requires an external trusted worker/schedule to drain `word_enrichment_jobs`.
 - Supabase migrations must be reviewed and applied deliberately; this repo does not auto-apply production SQL from the app server.

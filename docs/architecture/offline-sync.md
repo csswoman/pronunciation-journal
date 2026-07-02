@@ -7,11 +7,14 @@ Fecha: 2026-07-01
 | Estado | Persistencia | Fuente de verdad |
 |---|---|---|
 | Sesión auth | Supabase cookies/session | Supabase Auth |
-| Word bank y SRS | Supabase + caches cliente | Supabase |
+| Word bank y SRS | Supabase + caches cliente + Dexie SRS local | Supabase para datos de usuario; Dexie para review local pendiente |
 | Outbox de cambios | Dexie `syncOutbox` | Supabase al confirmar flush |
 | Preferencias UI | Zustand/local storage según feature | Cliente |
 | Daily plan generado | local storage/cache cliente | Temporal |
 | Daily plan completado | local storage + Dexie `syncOutbox` (`activity_sessions`) | Supabase al confirmar flush |
+| Practice sessions | Dexie `practiceSessions` + `syncOutbox` (`answer_history`, `activity_sessions`) | Supabase al confirmar flush |
+| Reader progress | Dexie reader/exposure cache + `syncOutbox` | Supabase al confirmar flush |
+| Essential Words lapses | `sessionStorage` temporal + Dexie SRS flush al cierre | Dexie local; outbox para actividad |
 | Jobs de enriquecimiento | `word_enrichment_jobs` | Supabase |
 
 ## Reglas
@@ -19,8 +22,10 @@ Fecha: 2026-07-01
 - Los cambios críticos de progreso o vocabulario deben llegar a Supabase o entrar al outbox con retry.
 - `localStorage` y `sessionStorage` solo pueden guardar estado recreable o temporal.
 - Dexie puede retener cambios pendientes, pero la UI debe tratar esos cambios como no confirmados hasta flush exitoso.
+- Las superficies que completan practica deben mostrar estado pendiente/error cuando la sincronizacion puede tardar o fallar. Esto aplica a sesiones genericas, reader y daily checklist.
 - `word_enrichment_jobs` evita promesas fire-and-forget en rutas HTTP; un worker confiable debe drenar la cola.
 - Si Supabase no está disponible, no se debe prometer sincronización remota inmediata.
+- Los errores de Gemini/transcripcion se normalizan antes de mostrarse en UI; no se deben exponer detalles de proveedor, stack ni API keys.
 
 ## Reconciliación
 
@@ -33,5 +38,6 @@ Fecha: 2026-07-01
 ## Limitaciones Actuales
 
 - No existe sincronización CRDT ni resolución multi-dispositivo avanzada.
-- No todos los flujos usan outbox; algunos dependen de escritura Supabase directa. El checklist manual del daily plan si encola `activity_sessions` para reconciliacion.
+- No todos los flujos usan outbox; algunos dependen de escritura Supabase directa. El checklist manual del daily plan, reader y sesiones de practica encolan progreso critico para reconciliacion.
+- `core1000:pending-lapses` sigue usando `sessionStorage` como buffer corto para lapses dentro de una sesion; el hook intenta flush al cierre de sesion/pagehide. No debe tratarse como almacenamiento multi-tab durable.
 - El runner de `word_enrichment_jobs` debe desplegarse como worker/scheduled job externo al request HTTP.
