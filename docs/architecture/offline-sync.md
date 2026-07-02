@@ -10,6 +10,7 @@ Fecha: 2026-07-01
 | Word bank y SRS | Supabase + caches cliente + Dexie SRS local | Supabase para datos de usuario; Dexie para review local pendiente |
 | Outbox de cambios | Dexie `syncOutbox` | Supabase al confirmar flush |
 | Preferencias UI | Zustand/local storage según feature | Cliente |
+| Perfil y preferencias de usuario | Supabase + estado React local | Supabase |
 | Daily plan generado | local storage/cache cliente | Temporal |
 | Daily plan completado | local storage + Dexie `syncOutbox` (`activity_sessions`) | Supabase al confirmar flush |
 | Practice sessions | Dexie `practiceSessions` + `syncOutbox` (`answer_history`, `activity_sessions`) | Supabase al confirmar flush |
@@ -27,6 +28,7 @@ Fecha: 2026-07-01
 - `word_enrichment_jobs` evita promesas fire-and-forget en rutas HTTP; un worker confiable debe drenar la cola.
 - Si Supabase no está disponible, no se debe prometer sincronización remota inmediata.
 - Los errores de Gemini/transcripcion se normalizan antes de mostrarse en UI; no se deben exponer detalles de proveedor, stack ni API keys.
+- Los errores de perfil/preferencias deben usar mensajes publicos de auth o datos; no deben mostrar mensajes crudos de Supabase.
 
 ## Reconciliación
 
