@@ -69,4 +69,28 @@ describe("AuthPanel", () => {
     expect(screen.getByRole("alert")).toHaveTextContent(PASSWORD_POLICY_MESSAGE);
     await waitFor(() => expect(authActions.updatePassword).not.toHaveBeenCalled());
   });
+
+  it("keeps reset and recovery controls labelled and reachable", () => {
+    searchParams = new URLSearchParams("mode=reset");
+
+    render(<AuthPanel />);
+
+    expect(screen.getByRole("heading", { name: "Reset your password" })).toBeInTheDocument();
+    expect(screen.getByLabelText("Email address")).toHaveAttribute("autocomplete", "email");
+    expect(screen.getByRole("button", { name: "Send reset link" })).toBeEnabled();
+    expect(screen.getByRole("button", { name: "Back to sign in" })).toBeEnabled();
+  });
+
+  it("uses an alert region for recovery validation failures", async () => {
+    searchParams = new URLSearchParams("mode=recovery");
+
+    render(<AuthPanel />);
+
+    fireEvent.change(screen.getByLabelText("New password"), { target: { value: "StrongPass1" } });
+    fireEvent.change(screen.getByLabelText("Confirm password"), { target: { value: "StrongPass2" } });
+    fireEvent.click(screen.getByRole("button", { name: "Update password" }));
+
+    expect(await screen.findByRole("alert")).toHaveTextContent("Passwords do not match.");
+    expect(authActions.updatePassword).not.toHaveBeenCalled();
+  });
 });
