@@ -11,6 +11,7 @@ Fecha: 2026-07-01
 | Outbox de cambios | Dexie `syncOutbox` | Supabase al confirmar flush |
 | Preferencias UI | Zustand/local storage según feature | Cliente |
 | Perfil y preferencias de usuario | Supabase + estado React local | Supabase |
+| Course lesson completion | Dexie `completedLessons` + `syncOutbox` (`answer_history`, `activity_sessions`) | Supabase al confirmar flush |
 | Daily plan generado | local storage/cache cliente | Temporal |
 | Daily plan completado | local storage + Dexie `syncOutbox` (`activity_sessions`) | Supabase al confirmar flush |
 | Practice sessions | Dexie `practiceSessions` + `syncOutbox` (`answer_history`, `activity_sessions`) | Supabase al confirmar flush |
@@ -29,6 +30,7 @@ Fecha: 2026-07-01
 - Si Supabase no está disponible, no se debe prometer sincronización remota inmediata.
 - Los errores de Gemini/transcripcion se normalizan antes de mostrarse en UI; no se deben exponer detalles de proveedor, stack ni API keys.
 - Los errores de perfil/preferencias deben usar mensajes publicos de auth o datos; no deben mostrar mensajes crudos de Supabase.
+- La finalizacion de lecciones de curso debe degradar con mensaje publico de datos; el estado local Dexie no implica confirmacion remota hasta flush.
 
 ## Reconciliación
 
