@@ -15,8 +15,7 @@ export async function enqueueTopicSRSUpdate(
 ): Promise<void> {
   const db = getSupabaseBrowserClient()
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- topic_srs not yet in generated Supabase types
-  const { data, error } = await (db as any)
+  const { data, error } = await db
     .from('topic_srs')
     .select(
       'id, ease_factor, interval_days, repetitions, next_review_at, srs_status, last_reviewed_at, review_count',

@@ -175,8 +175,7 @@ async function fetchTopicHistory(
   userId: string,
   limit: number,
 ): Promise<SrsHistoryItem[]> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- topic_srs not yet in generated Supabase types
-  const { data } = await (supabase as any)
+  const { data } = await supabase
     .from('topic_srs')
     .select('id, topic, interval_days, next_review_at, last_reviewed_at')
     .eq('user_id', userId)

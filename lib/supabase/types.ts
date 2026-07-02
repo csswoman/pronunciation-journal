@@ -679,6 +679,51 @@ export type Database = {
           },
         ]
       }
+      topic_srs: {
+        Row: {
+          created_at: string
+          ease_factor: number
+          id: string
+          interval_days: number
+          last_reviewed_at: string | null
+          next_review_at: string | null
+          repetitions: number
+          review_count: number
+          srs_status: string
+          topic: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          ease_factor?: number
+          id?: string
+          interval_days?: number
+          last_reviewed_at?: string | null
+          next_review_at?: string | null
+          repetitions?: number
+          review_count?: number
+          srs_status?: string
+          topic: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          ease_factor?: number
+          id?: string
+          interval_days?: number
+          last_reviewed_at?: string | null
+          next_review_at?: string | null
+          repetitions?: number
+          review_count?: number
+          srs_status?: string
+          topic?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_profiles: {
         Row: {
           cefr_level: string
@@ -787,6 +832,7 @@ export type Database = {
           image_prompt: string | null
           interval_days: number
           ipa: string | null
+          is_favorite?: boolean
           last_reviewed_at: string | null
           meaning: string | null
           next_review_at: string | null
@@ -816,6 +862,7 @@ export type Database = {
           image_prompt?: string | null
           interval_days?: number
           ipa?: string | null
+          is_favorite?: boolean
           last_reviewed_at?: string | null
           meaning?: string | null
           next_review_at?: string | null
@@ -845,6 +892,7 @@ export type Database = {
           image_prompt?: string | null
           interval_days?: number
           ipa?: string | null
+          is_favorite?: boolean
           last_reviewed_at?: string | null
           meaning?: string | null
           next_review_at?: string | null
@@ -948,6 +996,13 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      consume_rate_limit: {
+        Args: { p_key: string; p_max: number; p_window_ms: number }
+        Returns: {
+          allowed: boolean
+          retry_after_seconds: number
+        }[]
+      }
       get_random_word: {
         Args: { p_sound_id: number }
         Returns: {

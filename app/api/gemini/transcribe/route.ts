@@ -106,9 +106,7 @@ function setL1Cache(key: string, transcript: string): void {
 async function getL2Cached(userId: string, key: string): Promise<string | null> {
   try {
     const supabase = await createSupabaseServerClient();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const db = supabase as any;
-    const { data, error } = await db
+    const { data, error } = await supabase
       .from(SUPABASE_STT_CACHE_TABLE)
       .select("transcript, updated_at")
       .eq("user_id", userId)
@@ -119,7 +117,7 @@ async function getL2Cached(userId: string, key: string): Promise<string | null> 
 
     const ageMs = Date.now() - new Date(data.updated_at).getTime();
     if (Number.isFinite(ageMs) && ageMs > TRANSCRIBE_CACHE_TTL_MS) {
-      void db.from(SUPABASE_STT_CACHE_TABLE).delete().eq("user_id", userId).eq("cache_key", key);
+      void supabase.from(SUPABASE_STT_CACHE_TABLE).delete().eq("user_id", userId).eq("cache_key", key);
       return null;
     }
 
@@ -139,8 +137,7 @@ async function setL2Cache(
 ): Promise<void> {
   try {
     const supabase = await createSupabaseServerClient();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    await (supabase as any).from(SUPABASE_STT_CACHE_TABLE).upsert(
+    await supabase.from(SUPABASE_STT_CACHE_TABLE).upsert(
       {
         cache_key: key,
         user_id: userId,
