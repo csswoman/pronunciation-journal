@@ -27,6 +27,7 @@ import {
 } from "@/lib/word-bank/queries";
 
 import { subscribeWordBankChanges } from "@/lib/word-bank/realtime";
+import { publicDataErrorMessage } from "@/lib/degradation/messages";
 
 import type { WordBankEntry } from "@/lib/word-bank/types";
 
@@ -90,9 +91,9 @@ export function useWords(): UseWordsState {
 
       setError(null);
 
-    } catch (err) {
+    } catch {
 
-      setError(err instanceof Error ? err.message : "Failed to load words");
+      setError(publicDataErrorMessage());
 
     }
 
@@ -133,11 +134,11 @@ export function useWords(): UseWordsState {
 
       })
 
-      .catch(err => {
+      .catch(() => {
 
         if (cancelled) return;
 
-        setError(err instanceof Error ? err.message : "Failed to load words");
+        setError(publicDataErrorMessage());
 
       })
 
@@ -393,7 +394,7 @@ export function useWords(): UseWordsState {
 
         processingSinceRef.current.set(real.id, Date.now());
 
-      } catch (err) {
+      } catch {
 
         // Roll back optimistic insert on failure.
 
@@ -401,7 +402,7 @@ export function useWords(): UseWordsState {
 
         setWords(prev => prev.filter(w => w.id !== tempId));
 
-        throw err;
+        throw new Error(publicDataErrorMessage());
 
       }
 
@@ -423,11 +424,11 @@ export function useWords(): UseWordsState {
 
       await apiDeleteWord(id);
 
-    } catch (err) {
+    } catch {
 
       setWords(snapshot);
 
-      throw err;
+      throw new Error(publicDataErrorMessage());
 
     }
 
@@ -479,13 +480,13 @@ export function useWords(): UseWordsState {
 
       if (!res.ok) {
 
-        const err = await res.json();
+        await res.json().catch(() => null);
 
-        throw new Error(err.error || "Failed to retry");
+        throw new Error(publicDataErrorMessage());
 
       }
 
-    } catch (err) {
+    } catch {
 
       setWords(prev => prev.map(w =>
 
@@ -497,7 +498,7 @@ export function useWords(): UseWordsState {
 
       ));
 
-      throw err;
+      throw new Error(publicDataErrorMessage());
 
     }
 

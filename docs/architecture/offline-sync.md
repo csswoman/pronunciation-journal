@@ -23,6 +23,7 @@ Fecha: 2026-07-01
 - `localStorage` y `sessionStorage` solo pueden guardar estado recreable o temporal.
 - Dexie puede retener cambios pendientes, pero la UI debe tratar esos cambios como no confirmados hasta flush exitoso.
 - Las superficies que completan practica deben mostrar estado pendiente/error cuando la sincronizacion puede tardar o fallar. Esto aplica a sesiones genericas, reader y daily checklist.
+- Las superficies de vocabulario/word bank deben mostrar errores publicos de datos y conservar acciones de retry; no deben mostrar mensajes crudos de Supabase.
 - `word_enrichment_jobs` evita promesas fire-and-forget en rutas HTTP; un worker confiable debe drenar la cola.
 - Si Supabase no está disponible, no se debe prometer sincronización remota inmediata.
 - Los errores de Gemini/transcripcion se normalizan antes de mostrarse en UI; no se deben exponer detalles de proveedor, stack ni API keys.

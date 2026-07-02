@@ -14,6 +14,7 @@ import { AddToExistingDeckModal } from "@/components/vocabulary/decks/AddToExist
 import { useAuth } from "@/components/auth/AuthProvider";
 import { useWords } from "@/hooks/useWords";
 import { getUserDecksFull, type DeckListItem } from "@/lib/decks/queries";
+import { publicDataErrorMessage } from "@/lib/degradation/messages";
 import { toggleFavorite } from "@/lib/word-bank/queries";
 import type { WordsTabId } from "@/components/words/WordsTopbar";
 
@@ -129,16 +130,16 @@ export default function MyWordsTabRuntime({
   const handleAddWord = async (input: { text: string; context?: string | null; deckId?: string | null }) => {
     try {
       await addWord(input);
-    } catch (err) {
-      setWordActionError(err instanceof Error ? err.message : "Failed to save word");
+    } catch {
+      setWordActionError(publicDataErrorMessage());
     }
   };
 
   const handleToggleFavorite = async (wordId: string, value: boolean) => {
     try {
       await toggleFavorite(wordId, value);
-    } catch (err) {
-      setWordActionError(err instanceof Error ? err.message : "Failed to update favorite");
+    } catch {
+      setWordActionError(publicDataErrorMessage());
     }
   };
 

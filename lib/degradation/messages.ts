@@ -21,3 +21,7 @@ export function publicAiErrorMessage(status?: number, message = ""): string {
   }
   return AI_UNAVAILABLE_MESSAGE;
 }
+
+export function publicDataErrorMessage(): string {
+  return DATA_UNAVAILABLE_MESSAGE;
+}
