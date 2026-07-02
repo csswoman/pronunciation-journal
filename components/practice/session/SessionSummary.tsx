@@ -7,6 +7,7 @@ interface Props {
   result: SessionResult
   onPracticeAgain: () => void
   onFinish: () => void
+  progressSaveStatus?: 'idle' | 'saving' | 'saved' | 'error'
 }
 
 function formatDuration(ms: number): string {
@@ -71,8 +72,9 @@ function ResultRow({ slug, isCorrect, exercisePayload }: { slug: string; isCorre
   )
 }
 
-export function SessionSummary({ result, onPracticeAgain, onFinish }: Props) {
+export function SessionSummary({ result, onPracticeAgain, onFinish, progressSaveStatus = 'idle' }: Props) {
   const correctCount = result.results.filter((r) => r.isCorrect).length
+  const showProgressStatus = progressSaveStatus !== 'idle'
 
   return (
     <div role="region" aria-label="Session results" className="flex w-full flex-col gap-6">
@@ -85,6 +87,23 @@ export function SessionSummary({ result, onPracticeAgain, onFinish }: Props) {
         <p className="text-sm text-fg-secondary mt-1">
           {correctCount} of {result.results.length} correct · {formatDuration(result.totalTimeMs)}
         </p>
+        {showProgressStatus && (
+          <p
+            role={progressSaveStatus === 'error' ? 'alert' : 'status'}
+            className={cn(
+              'mt-2 rounded-md px-3 py-2 text-sm',
+              progressSaveStatus === 'error'
+                ? 'bg-warning-soft text-warning'
+                : 'bg-surface-sunken text-fg-secondary',
+            )}
+          >
+            {progressSaveStatus === 'saving'
+              ? 'Saving progress…'
+              : progressSaveStatus === 'saved'
+                ? 'Progress saved.'
+                : 'Progress could not be saved. It will retry when the connection recovers.'}
+          </p>
+        )}
       </div>
 
       <ul className="flex max-h-64 flex-col gap-1.5 overflow-y-auto">

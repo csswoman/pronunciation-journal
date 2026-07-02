@@ -187,7 +187,7 @@ export type PracticeSubmitHandler = (
   isCorrect: boolean,
   userAnswer: string,
   extras?: PracticeSubmitExtras,
-) => void
+) => void | Promise<void>
 
 export type PedagogicalFeedback = {
   immediate: string
