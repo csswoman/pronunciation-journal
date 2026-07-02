@@ -17,6 +17,8 @@ Fecha: 2026-07-01
 | Practice sessions | Dexie `practiceSessions` + `syncOutbox` (`answer_history`, `activity_sessions`) | Supabase al confirmar flush |
 | Reader progress | Dexie reader/exposure cache + `syncOutbox` | Supabase al confirmar flush |
 | Essential Words lapses | `sessionStorage` temporal + Dexie SRS flush al cierre | Dexie local; outbox para actividad |
+| Lexicon practice session | `sessionStorage` temporal por categoria | Temporal, recreable desde API |
+| Word of Day | `sessionStorage` cache diario | Temporal, recreable desde API/Gemini |
 | Jobs de enriquecimiento | `word_enrichment_jobs` | Supabase |
 
 ## Reglas
@@ -32,6 +34,7 @@ Fecha: 2026-07-01
 - Los flujos de entrevista/recording deben mantener mensajes publicos incluso si falla scoring local posterior a transcripcion.
 - Los errores de perfil/preferencias deben usar mensajes publicos de auth o datos; no deben mostrar mensajes crudos de Supabase.
 - La finalizacion de lecciones de curso debe degradar con mensaje publico de datos; el estado local Dexie no implica confirmacion remota hasta flush.
+- Lexicon practice y Word of Day pueden usar `sessionStorage` como cache temporal, pero sus errores visibles deben ser publicos y no filtrar payloads del API.
 
 ## Reconciliación
 

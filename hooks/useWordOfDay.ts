@@ -1,6 +1,7 @@
 "use client";
 
 import { isWordOfDay, type WordOfDay } from "@/lib/word-of-day";
+import { publicAiErrorMessage } from "@/lib/degradation/messages";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 export type { WordOfDay };
@@ -62,11 +63,10 @@ export function useWordOfDay() {
       const res = await fetch(url, { cache: "no-store" });
       if (!res.ok) {
         const body: unknown = await res.json().catch(() => ({}));
-        const message =
-          body && typeof body === "object" && "error" in body && typeof body.error === "string"
-            ? body.error
-            : `Error ${res.status}`;
-        throw new Error(message);
+        const message = body && typeof body === "object" && "error" in body && typeof body.error === "string"
+          ? body.error
+          : "";
+        throw new Error(publicAiErrorMessage(res.status, message));
       }
 
       const data: unknown = await res.json();
@@ -97,7 +97,7 @@ export function useWordOfDay() {
 
       clearCachedWord();
       setWord(null);
-      setError(err instanceof Error ? err.message : "Couldn't load word");
+      setError(publicAiErrorMessage(undefined, err instanceof Error ? err.message : ""));
     } finally {
       if (requestId === requestIdRef.current) {
         setLoading(false);
