@@ -31,6 +31,9 @@ Este documento cubre el flujo minimo para operar despliegues sin bloquear la app
 3. Restablecer backups si hubo perdida o corrupcion de datos.
 4. Validar auth, perfiles y acceso publico.
 
+La estrategia detallada de backups, restore y retencion esta en
+`docs/deployment/backups.md`.
+
 ## Incidentes
 
 1. Si hay borrado o corrupcion activa, pausar cambios nuevos.

@@ -23,6 +23,7 @@ diseño y planes de producto.
 | [Checklist de setup](deployment/setup-checklist.md) | Lista operativa de puesta en marcha |
 | [Resumen CI/CD](deployment/ci-cd-summary.md) | Resumen del estado actual y pendientes del pipeline |
 | [Matriz de entornos](deployment/environments.md) | Variables, secretos y reglas para local, preview, staging y producción |
+| [Backups y restore](deployment/backups.md) | Retención, preparación de migraciones y validación post-restore |
 
 ## Seguridad
 
