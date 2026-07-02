@@ -1,4 +1,5 @@
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
+import { publicDataErrorMessage } from "@/lib/degradation/messages";
 import type { Json, Tables } from "@/lib/supabase/types";
 
 const DECK_LIST_COLUMNS = "id, name, description, color, icon";
@@ -206,7 +207,7 @@ export async function addWordsToDeck(wordIds: string[], deckId: string): Promise
   const { error } = await getSupabaseBrowserClient()
     .from("word_bank_decks")
     .upsert(links, { ignoreDuplicates: true });
-  if (error) throw new Error(error.message);
+  if (error) throw new Error(publicDataErrorMessage());
 }
 
 export async function createDeck(params: {
@@ -221,7 +222,7 @@ export async function createDeck(params: {
     .insert({ name: params.name, description: params.description ?? null, color: params.color, icon: params.icon, user_id: params.userId })
     .select()
     .single();
-  if (error || !data) throw new Error(error?.message ?? "Failed to create deck");
+  if (error || !data) throw new Error(publicDataErrorMessage());
   return data;
 }
 
@@ -235,7 +236,7 @@ export async function updateDeck(
     .eq("id", deckId)
     .select()
     .single();
-  if (error || !data) throw new Error(error?.message ?? "Failed to update deck");
+  if (error || !data) throw new Error(publicDataErrorMessage());
   return data;
 }
 
@@ -249,10 +250,10 @@ export async function createDeckWithWords(
     .insert({ name: deckParams.name, description: deckParams.description ?? null, color: deckParams.color, icon: deckParams.icon, user_id: deckParams.userId })
     .select()
     .single();
-  if (deckErr || !deck) throw new Error(deckErr?.message ?? "Failed to create deck");
+  if (deckErr || !deck) throw new Error(publicDataErrorMessage());
   const links = wordIds.map((word_id) => ({ word_id, deck_id: deck.id }));
   const { error: linkErr } = await supabase.from("word_bank_decks").insert(links);
-  if (linkErr) throw new Error(linkErr.message);
+  if (linkErr) throw new Error(publicDataErrorMessage());
   return deck;
 }
 

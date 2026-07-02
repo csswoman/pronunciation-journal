@@ -5,6 +5,7 @@ import Button from "@/components/ui/Button";
 import { H2 } from "@/components/ui/Typography";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { createDeck } from "@/lib/decks/queries";
+import { publicDataErrorMessage } from "@/lib/degradation/messages";
 import type { Tables } from "@/lib/supabase/types";
 
 type Deck = Tables<"decks">;
@@ -42,8 +43,8 @@ export function CreateDeckModal({
     try {
       const data = await createDeck({ name: name.trim(), description: description.trim() || null, color, icon, userId: user.id });
       onCreated(data);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to create deck");
+    } catch {
+      setError(publicDataErrorMessage());
     } finally {
       setSaving(false);
     }
