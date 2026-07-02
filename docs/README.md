@@ -12,6 +12,7 @@ diseño y planes de producto.
 | [Sistema de ejercicios](architecture/exercises.md) | Tipos de ejercicio, flujo de sesión y persistencia |
 | [Progress telemetry](architecture/progress.md) | Contrato de sesiones, answers y almacenamiento de actividad |
 | [Performance](architecture/performance.md) | Baseline, presupuestos, reglas y método de medición |
+| [Offline y sync](architecture/offline-sync.md) | Persistencia local, outbox, Supabase y reglas de reconciliación |
 
 ## Despliegue y CI/CD
 
@@ -21,6 +22,13 @@ diseño y planes de producto.
 | [Configuración rápida](deployment/setup-guide.md) | Checklist breve para preparar CI y producción |
 | [Checklist de setup](deployment/setup-checklist.md) | Lista operativa de puesta en marcha |
 | [Resumen CI/CD](deployment/ci-cd-summary.md) | Resumen del estado actual y pendientes del pipeline |
+| [Matriz de entornos](deployment/environments.md) | Variables, secretos y reglas para local, preview, staging y producción |
+
+## Seguridad
+
+| Documento | Descripción |
+|-----------|-------------|
+| [Threat model](security/threat-model.md) | Riesgos principales, controles actuales y owners operativos |
 
 ## Diseño y componentes UI
 
@@ -68,6 +76,7 @@ docs/
 ├── README.md
 ├── architecture/
 ├── deployment/
+├── security/
 ├── design/
 ├── pedagogy-plans/
 ├── superpowers/

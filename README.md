@@ -64,7 +64,17 @@ paths for parts of the practice experience.
 - Migration safety checks run with `pnpm check:migrations`.
 - RLS coverage checks run with `pnpm audit:rls`.
 - Global security headers, including CSP, are configured in `next.config.mjs`.
+- API cost controls use the `consume_rate_limit` Supabase RPC and require `SUPABASE_SERVICE_ROLE_KEY` in production.
+- Word enrichment is queued in `word_enrichment_jobs`; run `processWordEnrichmentJobs()` from a trusted worker or scheduled job.
 - Operational deployment notes live in `docs/deployment/runbook-minimo.md`.
+- Security, sync, and environment ownership are documented in `docs/security/threat-model.md`, `docs/architecture/offline-sync.md`, and `docs/deployment/environments.md`.
+
+## Current Limitations
+
+- Offline support is not a full multi-device sync guarantee. Dexie/local queues cover selected client workflows; Supabase remains the source of truth after reconnect.
+- Gemini-backed features require server credentials and may degrade or queue when the provider is unavailable.
+- Background word enrichment requires an external trusted worker/schedule to drain `word_enrichment_jobs`.
+- Supabase migrations must be reviewed and applied deliberately; this repo does not auto-apply production SQL from the app server.
 
 ## Common commands
 
