@@ -33,17 +33,16 @@ instancia antes de que el job complete, perdiendo trabajo silenciosamente.
 durable. El handler HTTP encola el job y responde; un worker externo drena la
 cola con retry e idempotencia.
 
-**Pendiente**: el worker aun no esta desplegado como proceso continuo. Opciones:
+**Solucion implementada**: Vercel Cron Job cada 2 minutos.
 
-| Opcion | Costo | Complejidad | Estado |
-|---|---|---|---|
-| Vercel Cron Job (cada 1-5 min) | Bajo | Bajo | **Recomendado** |
-| Supabase Edge Function con pg_cron | Medio | Medio | Alternativa |
-| Worker externo (Fly.io, Railway) | Medio-alto | Alto | Si se requiere low-latency |
+- Endpoint: `app/api/jobs/drain-enrichment/route.ts`
+- RPC atomico: `claim_enrichment_jobs` (SELECT FOR UPDATE SKIP LOCKED, migration 20260702000000)
+- Batch de 3 jobs por invocacion; backoff exponencial (2 min → 8 min → 30 min → 2 h)
+- Autenticado con `CRON_SECRET` via `Authorization: Bearer`
+- Configurado en `vercel.json` con schedule `*/2 * * * *`
 
-El Vercel Cron Job es suficiente para el volumen actual: llama a un endpoint
-`/api/jobs/drain-enrichment` que procesa hasta N jobs por invocacion con
-idempotencia garantizada por el estado en `word_enrichment_jobs`.
+**Requerimiento de deploy**: configurar `CRON_SECRET` en las variables de entorno
+del proyecto Vercel antes de activar el cron en produccion.
 
 ### Observabilidad
 
@@ -106,7 +105,7 @@ usuario este bajo su limite individual.
 - [x] Errores de proveedor no expuestos al cliente (`publicErrorResponse`)
 - [x] PII sanitizado en logs (`redactError`)
 - [x] Jobs encuestados en tabla durable (`word_enrichment_jobs`)
-- [ ] Worker de drenaje de jobs desplegado como Vercel Cron o equivalente
+- [x] Worker de drenaje: `app/api/jobs/drain-enrichment` + `vercel.json` cron cada 2 min
 - [ ] Log Drain configurado hacia servicio de retencion
 - [ ] Limites de Gemini monitoreados y alertados
 - [ ] Health check distingue liveness de readiness (Supabase/Gemini degradados)
