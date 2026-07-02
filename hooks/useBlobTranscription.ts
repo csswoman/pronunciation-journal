@@ -1,6 +1,7 @@
 'use client'
 
 import { useCallback, useState } from 'react'
+import { publicAiErrorMessage } from '@/lib/degradation/messages'
 import { scorePronunciation } from '@/lib/pronunciation/scoring'
 import type { WordResult } from '@/lib/types'
 
@@ -66,7 +67,7 @@ export function useBlobTranscription(): UseBlobTranscriptionReturn {
         })
         if (!res.ok) {
           const data = await res.json().catch(() => ({}))
-          throw new Error(data.error ?? `transcribe failed (${res.status})`)
+          throw new Error(publicAiErrorMessage(res.status, data.error))
         }
         const data = await res.json()
         transcript = String(data.transcript ?? '').trim()
@@ -84,7 +85,7 @@ export function useBlobTranscription(): UseBlobTranscriptionReturn {
       })
       setState('done')
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'transcription failed')
+      setError(publicAiErrorMessage(undefined, err instanceof Error ? err.message : ''))
       setScore(null)
       setState('error')
     }

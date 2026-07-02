@@ -2,6 +2,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { renderHook, act, waitFor } from '@testing-library/react'
 import { useBlobTranscription } from '../useBlobTranscription'
+import { AI_UNAVAILABLE_MESSAGE } from '@/lib/degradation/messages'
 import * as scoring from '@/lib/pronunciation/scoring'
 import type { ScoringResult } from '@/lib/types'
 
@@ -63,6 +64,7 @@ describe('useBlobTranscription', () => {
 
     await waitFor(() => expect(result.current.state).toBe('error'))
     expect(result.current.score).toBeNull()
+    expect(result.current.error).toBe(AI_UNAVAILABLE_MESSAGE)
   })
 
   it('pasa a error cuando la respuesta no es ok', async () => {
@@ -82,6 +84,7 @@ describe('useBlobTranscription', () => {
 
     await waitFor(() => expect(result.current.state).toBe('error'))
     expect(result.current.score).toBeNull()
+    expect(result.current.error).toBe(AI_UNAVAILABLE_MESSAGE)
   })
 
   it('reset vuelve a idle', async () => {
