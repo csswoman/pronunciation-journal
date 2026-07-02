@@ -17,6 +17,8 @@ Hecho hasta ahora:
 - Se agregaron checks automatizados para migraciones peligrosas y cobertura de RLS en migraciones nuevas.
 - Se configuraron headers globales de seguridad y CSP en `next.config.mjs`.
 - El inventario de rutas mutantes revisado queda cubierto por los guards actuales.
+- P1 completadas: 9, 10, 12, 15, 16, 17, 20, 26, 27, 28, 30, 38, 39, 40 y 41.
+- P1 aun abiertas: 11, 21 y 29.
 
 ## Reglas de Ejecucion
 
@@ -56,10 +58,10 @@ Objetivo: cerrar rutas de abuso, filtrar menos informacion interna y evitar que 
 
 | Orden | Tarea | Prioridad | Dificultad | Tiempo | Depende de | Resultado esperado |
 |---:|---|---:|---:|---:|---|---|
-| 9 | Aplicar `requireSameOrigin(request)` a todos los POST autenticados por cookie, manteniendo exencion Bearer. | P1 | M | 1 dia | Fase 0 | Proteccion CSRF consistente en rutas mutantes/costosas. |
-| 10 | Sustituir mensajes internos (`err.message`) por errores publicos normalizados. | P1 | S | 4-6 h | Fase 0 | El cliente no recibe detalles de proveedor, DB o stack interno. |
+| 9 | Aplicar `requireSameOrigin(request)` a todos los POST autenticados por cookie, manteniendo exencion Bearer. | P1 | M | 1 dia | Fase 0 | Completado. Proteccion CSRF consistente en rutas mutantes/costosas. |
+| 10 | Sustituir mensajes internos (`err.message`) por errores publicos normalizados. | P1 | S | 4-6 h | Fase 0 | Completado. El cliente no recibe detalles de proveedor, DB o stack interno. |
 | 11 | Cambiar rate limiter en memoria por Redis/Upstash/Supabase RPC atomico. | P1 | M | 1-2 dias | Fase 0 | Limites funcionan en despliegues multi-instancia. |
-| 12 | Anadir tests de guards para rutas POST: auth, same-origin, rate limit y validacion. | P1 | M | 1-2 dias | 9-11 | Regresiones de seguridad quedan bloqueadas por tests. |
+| 12 | Anadir tests de guards para rutas POST: auth, same-origin, rate limit y validacion. | P1 | M | 1-2 dias | 9-11 | Completado. Regresiones de seguridad quedan bloqueadas por tests. |
 | 13 | Ampliar escaneo de secretos en CI y precommit local. | P2 | S | 4 h | Fase 0 | El escaneo cubre scripts, supabase, docs y configuracion. |
 | 14 | Definir CSP/headers globales para paginas, no solo APIs. | P2 | M | 1 dia | Fase 0 | Cabeceras de seguridad consistentes en la app completa. |
 
@@ -80,9 +82,9 @@ Objetivo: evitar que errores SQL o policies futuras comprometan datos de usuario
 
 | Orden | Tarea | Prioridad | Dificultad | Tiempo | Depende de | Resultado esperado |
 |---:|---|---:|---:|---:|---|---|
-| 15 | Crear checks de migraciones peligrosas: deletes masivos, emails hardcodeados, grants amplios, `DROP POLICY` sin reemplazo. | P1 | M | 1 dia | Fase 0 | CI bloquea SQL de alto riesgo. |
-| 16 | Anadir pruebas o checks de RLS para tablas nuevas. | P1 | L | 2-4 dias | 15 | Cada tabla nueva prueba select/insert/update/delete esperado. |
-| 17 | Regenerar tipos Supabase y eliminar casts `as any` por tablas faltantes. | P1 | M | 1 dia | Fase 0 | Query layer vuelve a estar tipado contra schema actual. |
+| 15 | Crear checks de migraciones peligrosas: deletes masivos, emails hardcodeados, grants amplios, `DROP POLICY` sin reemplazo. | P1 | M | 1 dia | Fase 0 | Completado. CI bloquea SQL de alto riesgo. |
+| 16 | Anadir pruebas o checks de RLS para tablas nuevas. | P1 | L | 2-4 dias | 15 | Completado. Cada tabla nueva prueba select/insert/update/delete esperado. |
+| 17 | Regenerar tipos Supabase y eliminar casts `as any` por tablas faltantes. | P1 | M | 1 dia | Fase 0 | Completado. Query layer vuelve a estar tipado contra schema actual. |
 | 18 | Revisar grants heredados a `anon` y default privileges. | P2 | M | 1-2 dias | 16 | Privilegios minimos compatibles con RLS. |
 | 19 | Documentar o consolidar migraciones historicas que abren policy insegura y luego la corrigen. | P2 | M | 1 dia | 16 | Onboarding y despliegues parciales no reproducen ventanas inseguras. |
 
@@ -101,7 +103,7 @@ Objetivo: que la app sobreviva picos, retries, multiples instancias y fallos de 
 
 | Orden | Tarea | Prioridad | Dificultad | Tiempo | Depende de | Resultado esperado |
 |---:|---|---:|---:|---:|---|---|
-| 20 | Sacar enriquecimiento de palabras y cache writes de `void` en rutas HTTP; usar cola durable o tabla de jobs. | P1 | L | 2-4 dias | Fase 1 | Trabajos background tienen retry, estado e idempotencia. |
+| 20 | Sacar enriquecimiento de palabras y cache writes de `void` en rutas HTTP; usar cola durable o tabla de jobs. | P1 | L | 2-4 dias | Fase 1 | Completado. Trabajos background tienen retry, estado e idempotencia. |
 | 21 | Definir arquitectura de produccion multi-instancia: rate limit, jobs, observabilidad, variables por entorno. | P0/P1 | L | 3-5 dias | 11, 20 | Hay diseno operativo claro antes de escalar. |
 | 22 | Anadir timeouts uniformes a llamadas Gemini. | P2 | M | 1 dia | Fase 1 | Ninguna request queda colgada por proveedor externo. |
 | 23 | Unificar infraestructura Gemini: fallback, parseo, errores, limites y timeout. | P2 | M | 1-2 dias | 22 | Menos duplicacion y comportamiento uniforme entre endpoints. |
@@ -125,11 +127,11 @@ Objetivo: que los flujos principales fallen de forma comprensible y no prometan 
 
 | Orden | Tarea | Prioridad | Dificultad | Tiempo | Depende de | Resultado esperado |
 |---:|---|---:|---:|---:|---|---|
-| 26 | Endurecer auth/reset/recovery: expiracion, sesion invalida, password policy y mensajes no filtradores. | P1 | M | 1-2 dias | Fase 0 | Login y recovery son robustos y testeados. |
-| 27 | Anadir pruebas de interaccion y a11y para auth/recovery/reset. | P1 | M | 1-2 dias | 26 | Flujos de entrada no dependen solo de tests unitarios. |
-| 28 | Disenar degradacion clara para Supabase/Gemini no disponibles. | P1 | M | 1-2 dias | Fase 3 | Usuarios entienden que se puede hacer y que queda pendiente. |
+| 26 | Endurecer auth/reset/recovery: expiracion, sesion invalida, password policy y mensajes no filtradores. | P1 | M | 1-2 dias | Fase 0 | Completado. Login y recovery son robustos y testeados. |
+| 27 | Anadir pruebas de interaccion y a11y para auth/recovery/reset. | P1 | M | 1-2 dias | 26 | Completado. Flujos de entrada no dependen solo de tests unitarios. |
+| 28 | Disenar degradacion clara para Supabase/Gemini no disponibles. | P1 | M | 1-2 dias | Fase 3 | Completado. Usuarios entienden que se puede hacer y que queda pendiente. |
 | 29 | Revisar persistencia offline real: Dexie/Supabase/outbox vs `localStorage/sessionStorage`. | P1 | L | 2-4 dias | Fase 3 | El estado critico se sincroniza o se documenta como local/temporal. |
-| 30 | Anadir estados de retry/cola visibles para enriquecimiento y transcripcion. | P1 | M | 1-2 dias | 20 | El usuario no recibe OK falso cuando el trabajo puede fallar luego. |
+| 30 | Anadir estados de retry/cola visibles para enriquecimiento y transcripcion. | P1 | M | 1-2 dias | 20 | Completado. El usuario no recibe OK falso cuando el trabajo puede fallar luego. |
 | 31 | Auditar accesibilidad real con Playwright/axe en flujos criticos. | P2 | M | 1-2 dias | 27 | CI valida comportamiento accesible, no solo presencia de ARIA. |
 
 Comandos de salida:
@@ -173,10 +175,10 @@ Objetivo: que otra persona pueda operar, auditar y evolucionar el proyecto sin d
 
 | Orden | Tarea | Prioridad | Dificultad | Tiempo | Depende de | Resultado esperado |
 |---:|---|---:|---:|---:|---|---|
-| 38 | Actualizar README con prerequisitos, verificacion, variables, limitaciones offline y estado de produccion. | P1 | S | 4-6 h | Fase 0 | Onboarding realista y no engañoso. |
-| 39 | Documentar threat model: auth, CSRF, RLS, audio, transcripts, service role, cache, logs. | P1 | M | 1 dia | Fase 1 | Riesgos principales tienen controles y owners. |
-| 40 | Documentar arquitectura offline/sync: Dexie, Supabase, Zustand, localStorage y reconciliacion. | P1 | M | 1 dia | 29 | Cualquier cambio de estado sabe donde persistir. |
-| 41 | Documentar matriz de entornos: local, preview, staging, production, secrets y migraciones permitidas. | P1 | S | 4-6 h | Fase 3 | Despliegues y previews son repetibles. |
+| 38 | Actualizar README con prerequisitos, verificacion, variables, limitaciones offline y estado de produccion. | P1 | S | 4-6 h | Fase 0 | Completado. Onboarding realista y no engañoso. |
+| 39 | Documentar threat model: auth, CSRF, RLS, audio, transcripts, service role, cache, logs. | P1 | M | 1 dia | Fase 1 | Completado. Riesgos principales tienen controles y owners. |
+| 40 | Documentar arquitectura offline/sync: Dexie, Supabase, Zustand, localStorage y reconciliacion. | P1 | M | 1 dia | 29 | Completado. Cualquier cambio de estado sabe donde persistir. |
+| 41 | Documentar matriz de entornos: local, preview, staging, production, secrets y migraciones permitidas. | P1 | S | 4-6 h | Fase 3 | Completado. Despliegues y previews son repetibles. |
 
 Comandos de salida:
 
