@@ -5,6 +5,7 @@ import { Mic, MicOff, RotateCcw, Volume2, ChevronRight, Loader2, Pause } from "l
 import { useSpeechInput } from "@/hooks/useSpeechInput";
 import { useSharedMicStream } from "@/hooks/useSharedMicStream";
 import { GeminiAdapter } from "@/lib/speech/adapters/geminiAdapter";
+import { publicAiErrorMessage } from "@/lib/degradation/messages";
 import type { SpeechInputAdapter } from "@/lib/speech/types";
 import { scorePronunciation } from "@/lib/pronunciation/scoring";
 import type { ScoringResult } from "@/lib/types";
@@ -44,7 +45,7 @@ export function InlineRecorder({ targetText, difficulty, level, onDone, onListen
         );
         onDone(scored, result.transcript);
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Something went wrong");
+        setError(publicAiErrorMessage(undefined, err instanceof Error ? err.message : ""));
         setPhase("idle");
       }
     })();

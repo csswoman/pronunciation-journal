@@ -29,6 +29,7 @@ Fecha: 2026-07-01
 - `word_enrichment_jobs` evita promesas fire-and-forget en rutas HTTP; un worker confiable debe drenar la cola.
 - Si Supabase no está disponible, no se debe prometer sincronización remota inmediata.
 - Los errores de Gemini/transcripcion se normalizan antes de mostrarse en UI; no se deben exponer detalles de proveedor, stack ni API keys.
+- Los flujos de entrevista/recording deben mantener mensajes publicos incluso si falla scoring local posterior a transcripcion.
 - Los errores de perfil/preferencias deben usar mensajes publicos de auth o datos; no deben mostrar mensajes crudos de Supabase.
 - La finalizacion de lecciones de curso debe degradar con mensaje publico de datos; el estado local Dexie no implica confirmacion remota hasta flush.
 

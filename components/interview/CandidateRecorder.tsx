@@ -5,6 +5,7 @@ import { Mic, MicOff, Loader2, RotateCcw } from "lucide-react";
 import Button from "@/components/ui/Button";
 import { useSpeechInput } from "@/hooks/useSpeechInput";
 import { useSharedMicStream } from "@/hooks/useSharedMicStream";
+import { publicAiErrorMessage } from "@/lib/degradation/messages";
 import { scorePronunciation } from "@/lib/pronunciation/scoring";
 import type { ScoringResult } from "@/lib/types";
 
@@ -130,7 +131,7 @@ export default function CandidateRecorder({ targetText, difficulty, level, onDon
         setResult(scored);
         setPhase("result");
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Something went wrong");
+        setError(publicAiErrorMessage(undefined, err instanceof Error ? err.message : ""));
         setPhase("idle");
       }
     }
