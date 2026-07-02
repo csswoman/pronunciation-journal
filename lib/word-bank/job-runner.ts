@@ -20,6 +20,34 @@ function retryDelayMinutes(attempts: number): number {
   return Math.min(60, 2 ** Math.max(0, attempts - 1));
 }
 
+export function buildEnrichmentFailurePlan(
+  attempts: number,
+  err: unknown,
+  now = Date.now()
+): {
+  exhausted: boolean;
+  wordStatus: "processing" | "failed";
+  wordErrorReason: "retry_scheduled" | "enrichment_failed";
+  jobStatus: "queued" | "failed";
+  runAfter: string;
+  lastError: string;
+} {
+  const exhausted = attempts >= MAX_ATTEMPTS;
+  const runAfter = exhausted
+    ? new Date(now).toISOString()
+    : new Date(now + retryDelayMinutes(attempts) * 60_000).toISOString();
+  const message = err instanceof Error ? err.message : "enrichment_failed";
+
+  return {
+    exhausted,
+    wordStatus: exhausted ? "failed" : "processing",
+    wordErrorReason: exhausted ? "enrichment_failed" : "retry_scheduled",
+    jobStatus: exhausted ? "failed" : "queued",
+    runAfter,
+    lastError: message.slice(0, 500),
+  };
+}
+
 export async function processWordEnrichmentJobs(workerId = "word-enrichment-worker"): Promise<number> {
   const supabase = getAdminClient();
   const now = new Date().toISOString();
@@ -60,7 +88,33 @@ export async function processWordEnrichmentJobs(workerId = "word-enrichment-work
       .update({ status: "processing", error_reason: null })
       .eq("id", job.word_id);
 
-    await enrichWord(job.word_id);
+    try {
+      await enrichWord(job.word_id);
+    } catch (err) {
+      const failure = buildEnrichmentFailurePlan(nextAttempts, err);
+
+      await supabase
+        .from("word_bank")
+        .update({
+          status: failure.wordStatus,
+          error_reason: failure.wordErrorReason,
+        })
+        .eq("id", job.word_id);
+
+      await supabase
+        .from("word_enrichment_jobs")
+        .update({
+          status: failure.jobStatus,
+          run_after: failure.runAfter,
+          locked_at: null,
+          locked_by: null,
+          last_error: failure.lastError,
+        })
+        .eq("id", job.id);
+
+      processed++;
+      continue;
+    }
 
     const { data: word } = await supabase
       .from("word_bank")
