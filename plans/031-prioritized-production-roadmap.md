@@ -1,8 +1,9 @@
 # Planeacion Priorizada para Produccion
 
 Fecha: 2026-07-01
+Ultima actualizacion: 2026-07-03
 Base auditada: commit `11dee70`
-Fuente principal: `TODO.md`
+Fuente principal: `TODO.md` (reconciliado 2026-07-03)
 
 Esta planeacion ordena las tareas por riesgo real de produccion. El objetivo es corregir lo que puede romper datos, seguridad o disponibilidad, sin bloquear la app al publico salvo que exista un incidente activo que lo justifique.
 
@@ -17,8 +18,9 @@ Hecho hasta ahora:
 - Se agregaron checks automatizados para migraciones peligrosas y cobertura de RLS en migraciones nuevas.
 - Se configuraron headers globales de seguridad y CSP en `next.config.mjs`.
 - El inventario de rutas mutantes revisado queda cubierto por los guards actuales.
-- P1/P2 completadas: 9-12, 15-17, 20-23, 25-30, 34-43.
-- Aun abiertas: 13 (ampliar escaneo secretos CI), 18 (grants anon), 19 (migraciones historicas), 24 ya completado, 31 (a11y Playwright), 32 (componentes grandes), 33 (estilos inline).
+- P1/P2 completadas: 9-12, 14-17, 20-30, 34-43.
+- Parcialmente completada: 21 (diseno + worker Vercel Cron listos; pendiente Log Drain en dashboard Vercel).
+- Aun abiertas: 13 (ampliar escaneo secretos CI), 18 (grants anon), 19 (migraciones historicas), 31 (a11y Playwright), 32 (componentes grandes), 33 (estilos inline).
 
 ## Reglas de Ejecucion
 
@@ -63,7 +65,7 @@ Objetivo: cerrar rutas de abuso, filtrar menos informacion interna y evitar que 
 | 11 | Cambiar rate limiter en memoria por Redis/Upstash/Supabase RPC atomico. | P1 | M | 1-2 dias | Fase 0 | Completado. consume_rate_limit RPC atomico en Postgres; fallback in-memory solo para dev/test. |
 | 12 | Anadir tests de guards para rutas POST: auth, same-origin, rate limit y validacion. | P1 | M | 1-2 dias | 9-11 | Completado. Regresiones de seguridad quedan bloqueadas por tests. |
 | 13 | Ampliar escaneo de secretos en CI y precommit local. | P2 | S | 4 h | Fase 0 | El escaneo cubre scripts, supabase, docs y configuracion. |
-| 14 | Definir CSP/headers globales para paginas, no solo APIs. | P2 | M | 1 dia | Fase 0 | Cabeceras de seguridad consistentes en la app completa. |
+| 14 | Definir CSP/headers globales para paginas, no solo APIs. | P2 | M | 1 dia | Fase 0 | Completado. Headers globales y CSP en `next.config.mjs`. |
 | 42 | Revisar y acotar PII/audio/transcripts en logs de servidor: ningun dato de usuario llega a console.error sin sanitizar. | P1 | M | 1-2 dias | 10 | Completado. `redactError` en `lib/api/guards.ts`; aplicado en todas las rutas Gemini y words. |
 | 43 | Anadir GEMINI_API_KEY mock al job de build en CI y paso de smoke post-build. | P1 | S | 4-6 h | Fase 0 | Completado. Mock añadido y smoke check de `.next/BUILD_ID` y rutas clave en `.github/workflows/ci.yml`. |
 
@@ -106,7 +108,7 @@ Objetivo: que la app sobreviva picos, retries, multiples instancias y fallos de 
 | Orden | Tarea | Prioridad | Dificultad | Tiempo | Depende de | Resultado esperado |
 |---:|---|---:|---:|---:|---|---|
 | 20 | Sacar enriquecimiento de palabras y cache writes de `void` en rutas HTTP; usar cola durable o tabla de jobs. | P1 | L | 2-4 dias | Fase 1 | Completado. Trabajos background tienen retry, estado e idempotencia. |
-| 21 | Definir arquitectura de produccion multi-instancia: rate limit, jobs, observabilidad, variables por entorno. | P0/P1 | L | 3-5 dias | 11, 20 | Diseno documentado en `docs/architecture/multi-instance.md`. Pendiente: worker de drenaje y Log Drain. |
+| 21 | Definir arquitectura de produccion multi-instancia: rate limit, jobs, observabilidad, variables por entorno. | P0/P1 | L | 3-5 dias | 11, 20 | Casi completado. Diseno en `docs/architecture/multi-instance.md`; worker Vercel Cron en `/api/jobs/drain-enrichment` + `vercel.json`. Pendiente: configurar Log Drain en Vercel (sin codigo). |
 | 22 | Anadir timeouts uniformes a llamadas Gemini. | P2 | M | 1 dia | Fase 1 | Completado. withGeminiTimeout(30s/45s) en callWithFallback y rutas de transcripcion. |
 | 23 | Unificar infraestructura Gemini: fallback, parseo, errores, limites y timeout. | P2 | M | 1-2 dias | 22 | Completado. lib/gemini/client.ts con callWithFallback<T>; 7 rutas migradas, ~100 lineas duplicadas eliminadas. |
 | 24 | Anadir health checks reales y readiness/liveness separados. | P2 | M | 1 dia | 21 | Completado. GET /api/health (liveness) y GET /api/health?ready=1 (readiness: Supabase+Gemini). |
