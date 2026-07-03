@@ -17,8 +17,8 @@ Hecho hasta ahora:
 - Se agregaron checks automatizados para migraciones peligrosas y cobertura de RLS en migraciones nuevas.
 - Se configuraron headers globales de seguridad y CSP en `next.config.mjs`.
 - El inventario de rutas mutantes revisado queda cubierto por los guards actuales.
-- P1 completadas: 9, 10, 11, 12, 15, 16, 17, 20, 25, 26, 27, 28, 29, 30, 38, 39, 40, 41, 42 y 43.
-- P1 aun abiertas: 21 (worker de drenaje de jobs y observabilidad; diseno documentado en `docs/architecture/multi-instance.md`).
+- P1/P2 completadas: 9-12, 15-17, 20-23, 25-30, 34-43.
+- Aun abiertas: 13 (ampliar escaneo secretos CI), 18 (grants anon), 19 (migraciones historicas), 24 ya completado, 31 (a11y Playwright), 32 (componentes grandes), 33 (estilos inline).
 
 ## Reglas de Ejecucion
 
@@ -107,9 +107,9 @@ Objetivo: que la app sobreviva picos, retries, multiples instancias y fallos de 
 |---:|---|---:|---:|---:|---|---|
 | 20 | Sacar enriquecimiento de palabras y cache writes de `void` en rutas HTTP; usar cola durable o tabla de jobs. | P1 | L | 2-4 dias | Fase 1 | Completado. Trabajos background tienen retry, estado e idempotencia. |
 | 21 | Definir arquitectura de produccion multi-instancia: rate limit, jobs, observabilidad, variables por entorno. | P0/P1 | L | 3-5 dias | 11, 20 | Diseno documentado en `docs/architecture/multi-instance.md`. Pendiente: worker de drenaje y Log Drain. |
-| 22 | Anadir timeouts uniformes a llamadas Gemini. | P2 | M | 1 dia | Fase 1 | Ninguna request queda colgada por proveedor externo. |
-| 23 | Unificar infraestructura Gemini: fallback, parseo, errores, limites y timeout. | P2 | M | 1-2 dias | 22 | Menos duplicacion y comportamiento uniforme entre endpoints. |
-| 24 | Anadir health checks reales y readiness/liveness separados. | P2 | M | 1 dia | 21 | Monitoreo distingue app viva de dependencias degradadas. |
+| 22 | Anadir timeouts uniformes a llamadas Gemini. | P2 | M | 1 dia | Fase 1 | Completado. withGeminiTimeout(30s/45s) en callWithFallback y rutas de transcripcion. |
+| 23 | Unificar infraestructura Gemini: fallback, parseo, errores, limites y timeout. | P2 | M | 1-2 dias | 22 | Completado. lib/gemini/client.ts con callWithFallback<T>; 7 rutas migradas, ~100 lineas duplicadas eliminadas. |
+| 24 | Anadir health checks reales y readiness/liveness separados. | P2 | M | 1 dia | 21 | Completado. GET /api/health (liveness) y GET /api/health?ready=1 (readiness: Supabase+Gemini). |
 | 25 | Crear estrategia documentada de backups, restore y retencion Supabase. | P0/P1 | M | 1-2 dias | Fase 0 | Completado. `docs/deployment/backups.md` con metodos por capa, comandos, tabla de prioridades y checklist post-restore. |
 
 Comandos de salida:
@@ -155,10 +155,10 @@ Objetivo: reducir coste de cambio una vez cerrado el riesgo de produccion.
 |---:|---|---:|---:|---:|---|---|
 | 32 | Dividir componentes/hooks grandes y reducir excepciones de max-lines. | P2 | L | 3-5 dias | Fase 1 | Menos archivos fragiles y mas faciles de testear. |
 | 33 | Eliminar estilos inline no runtime o formalizar excepciones. | P3 | M | 1 dia | 32 | Las reglas de diseno vuelven a coincidir con el codigo. |
-| 34 | Separar scripts de tests: unit, integration, smoke/e2e. | P2 | M | 1 dia | Fase 0 | CI puede ejecutar capas segun coste y riesgo. |
-| 35 | Anadir cobertura y umbrales por rutas criticas. | P2 | M | 1-2 dias | 34 | La cobertura protege zonas de alto riesgo, no vanity metrics. |
-| 36 | Publicar artefactos de test/cobertura en CI. | P3 | S | 4 h | 35 | Fallos CI son diagnosticables sin reproducir localmente. |
-| 37 | Mantener `plans/README.md` reconciliado con `TODO.md` y esta planeacion. | P2 | S | 4 h | - | No hay dos fuentes contradictorias de prioridad. |
+| 34 | Separar scripts de tests: unit, integration, smoke/e2e. | P2 | M | 1 dia | Fase 0 | Completado. pnpm test:coverage y pnpm test:integration; vitest.integration.config.ts creado. |
+| 35 | Anadir cobertura y umbrales por rutas criticas. | P2 | M | 1-2 dias | 34 | Completado. Umbrales globales (50% lines) + targets per-file en docs/architecture/testing-strategy.md. |
+| 36 | Publicar artefactos de test/cobertura en CI. | P3 | S | 4 h | 35 | Completado. CI sube coverage/ como artefacto con retencion de 14 dias. |
+| 37 | Mantener `plans/README.md` reconciliado con `TODO.md` y esta planeacion. | P2 | S | 4 h | - | Completado. README apunta a 031 como fuente de verdad; plan 022 actualizado. |
 
 Comandos de salida:
 
