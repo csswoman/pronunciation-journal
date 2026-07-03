@@ -43,7 +43,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   const supabase = getAdminClient();
 
   // Claim a batch of jobs atomically via SELECT FOR UPDATE SKIP LOCKED.
-  const { data: jobs, error: claimErr } = await supabase.rpc("claim_enrichment_jobs", {
+  // claim_enrichment_jobs is a new RPC not yet reflected in generated types; cast is safe here.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: rawJobs, error: claimErr } = await (supabase as any).rpc("claim_enrichment_jobs", {
     p_batch_size: BATCH_SIZE,
     p_worker_id: "vercel-cron",
   });
@@ -53,13 +55,15 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ error: "Failed to claim jobs" }, { status: 500 });
   }
 
-  if (!jobs || jobs.length === 0) {
+  const jobs = (rawJobs as JobRow[] | null) ?? [];
+
+  if (jobs.length === 0) {
     return NextResponse.json({ processed: 0, message: "No jobs queued" });
   }
 
   const results: Array<{ id: string; status: "succeeded" | "failed"; error?: string }> = [];
 
-  for (const job of jobs as JobRow[]) {
+  for (const job of jobs) {
     try {
       await enrichWord(job.word_id);
 
@@ -96,6 +100,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
   const succeeded = results.filter((r) => r.status === "succeeded").length;
   const failed = results.filter((r) => r.status === "failed").length;
+
 
   console.log(`[drain-enrichment] batch done: ${succeeded} succeeded, ${failed} failed`);
 

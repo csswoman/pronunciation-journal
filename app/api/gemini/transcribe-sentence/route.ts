@@ -1,8 +1,8 @@
 import { createHash } from "crypto";
-import { GoogleGenAI } from "@google/genai";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { requireSameOrigin, requireUser, rateLimit, validateBody, publicErrorResponse, redactError } from "@/lib/api/guards";
+import { callWithFallback, getErrorStatus } from "@/lib/gemini/client";
 
 // Separate endpoint for transcribing full spoken sentences (e.g. interview responses).
 // Differences from /api/gemini/transcribe:
@@ -33,30 +33,8 @@ const TranscribeSentenceSchema = z.object({
     }),
 });
 
-const ENABLE_PREVIEW_MODELS = process.env.GEMINI_ENABLE_PREVIEW_MODELS === "true";
-const BASE_MODELS = ["gemini-2.5-flash-lite", "gemini-2.5-flash", "gemini-flash-latest"] as const;
-const PREVIEW_MODELS = ["gemini-3.1-flash-lite-preview"] as const;
-const FALLBACK_MODELS = ENABLE_PREVIEW_MODELS ? [...BASE_MODELS, ...PREVIEW_MODELS] : [...BASE_MODELS];
-
 const PROMPT =
   "Transcribe this spoken English sentence exactly as heard. Return ONLY the words, no punctuation, no commentary, no formatting. If unintelligible, return an empty string.";
-
-function getErrorStatus(err: unknown): number | undefined {
-  if (!err || typeof err !== "object") return undefined;
-  const maybe = err as { status?: unknown; statusCode?: unknown };
-  if (typeof maybe.status === "number") return maybe.status;
-  if (typeof maybe.statusCode === "number") return maybe.statusCode;
-  return undefined;
-}
-
-function shouldTryNextModel(err: unknown): boolean {
-  const status = getErrorStatus(err);
-  if (status === 400 || status === 401 || status === 403) return false;
-  if (status === 404 || status === 408 || status === 429) return true;
-  if (typeof status === "number" && status >= 500) return true;
-  const msg = String((err as { message?: unknown })?.message ?? "").toLowerCase();
-  return msg.includes("quota") || msg.includes("rate") || msg.includes("unavailable") || msg.includes("timeout");
-}
 
 function parseDataUrl(dataUrl: string): { mimeType: string; base64Data: string } {
   const match = dataUrl.match(/^data:([^;,]+(?:;[^,]+)?);base64,(.+)$/);
@@ -68,34 +46,6 @@ function parseDataUrl(dataUrl: string): { mimeType: string; base64Data: string }
 
 // Simple in-memory cache — same audio blob = same transcript
 const cache = new Map<string, string>();
-
-async function transcribe(ai: GoogleGenAI, mimeType: string, base64Data: string): Promise<string> {
-  const key = createHash("sha256").update(mimeType).update(base64Data).digest("hex");
-  const cached = cache.get(key);
-  if (cached !== undefined) return cached;
-
-  let lastError: unknown;
-  for (const modelName of FALLBACK_MODELS) {
-    try {
-      const result = await ai.models.generateContent({
-        model: modelName,
-        contents: [
-          { text: PROMPT },
-          { inlineData: { mimeType, data: base64Data } },
-        ],
-        config: { temperature: 0, maxOutputTokens: 300 },
-      });
-      const transcript = (result.text ?? "").trim();
-      if (cache.size > 200) cache.delete(cache.keys().next().value!);
-      cache.set(key, transcript);
-      return transcript;
-    } catch (err: unknown) {
-      lastError = err;
-      if (!shouldTryNextModel(err)) throw err;
-    }
-  }
-  throw lastError ?? new Error("All fallback models failed");
-}
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
   const originError = requireSameOrigin(request);
@@ -119,8 +69,26 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
   try {
     const { mimeType, base64Data } = parseDataUrl(body.audioDataUrl);
-    const ai = new GoogleGenAI({ apiKey });
-    const transcript = await transcribe(ai, mimeType, base64Data);
+    const key = createHash("sha256").update(mimeType).update(base64Data).digest("hex");
+    const cached = cache.get(key);
+    if (cached !== undefined) return NextResponse.json({ transcript: cached });
+
+    const transcript = await callWithFallback(
+      apiKey,
+      {
+        contents: [
+          { text: PROMPT },
+          { inlineData: { mimeType, data: base64Data } },
+        ],
+        config: { temperature: 0, maxOutputTokens: 300 },
+      },
+      (text) => text.trim(),
+      { timeoutMs: 45_000 }
+    );
+
+    if (cache.size > 200) cache.delete(cache.keys().next().value!);
+    cache.set(key, transcript);
+
     return NextResponse.json({ transcript });
   } catch (err: unknown) {
     console.error("transcribe-sentence error:", redactError(err));

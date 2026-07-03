@@ -5,7 +5,8 @@ import { z } from "zod";
 import { requireSameOrigin, requireUser, rateLimit, validateBody, publicErrorResponse, redactError } from "@/lib/api/guards";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { buildTranscriptionPrompt } from "@/lib/ai-prompts";
-import { FALLBACK_MODELS, getErrorStatus, shouldTryNextModel } from "@/lib/gemini/fallback";
+import { getErrorStatus, shouldTryNextModel, FALLBACK_MODELS } from "@/lib/gemini/fallback";
+import { withGeminiTimeout } from "@/lib/gemini/client";
 
 // ---------------------------------------------------------------------------
 // Request schema
@@ -169,14 +170,17 @@ async function transcribeWithFallback(
 
   for (const modelName of FALLBACK_MODELS) {
     try {
-      const result = await ai.models.generateContent({
-        model: modelName,
-        contents: [
-          { text: prompt },
-          { inlineData: { mimeType, data: base64Data } },
-        ],
-        config: { temperature: 0, maxOutputTokens: 24 },
-      });
+      const result = await withGeminiTimeout(
+        ai.models.generateContent({
+          model: modelName,
+          contents: [
+            { text: prompt },
+            { inlineData: { mimeType, data: base64Data } },
+          ],
+          config: { temperature: 0, maxOutputTokens: 24 },
+        }),
+        45_000
+      );
       return (result.text ?? "").trim();
     } catch (err: unknown) {
       lastError = err;
