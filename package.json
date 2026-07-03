@@ -13,6 +13,8 @@
     "type-check": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:integration": "vitest run --config vitest.integration.config.ts",
     "validate:core1000": "vitest run lib/core-1000/__tests__/dataset.test.ts",
     "validate:core1000-generators": "vitest run lib/core-1000/__tests__/generatability.test.ts",
     "audit:course-content": "vitest run lib/courses/__tests__/content-audit.test.ts lib/courses/__tests__/grammar-deck-coverage.test.ts",
