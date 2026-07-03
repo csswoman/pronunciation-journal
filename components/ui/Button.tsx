@@ -160,18 +160,19 @@ export default function Button({
       aria-label={ariaLabel}
       {...props}
     >
-      {icon && iconPosition === "left" && (
-        <span className={cn("shrink-0", isLoading && "animate-spin")}>
-          {icon}
-        </span>
-      )}
+      {isLoading ? (
+        <span
+          className="shrink-0 w-4 h-4 rounded-full border-2 border-current border-t-transparent animate-spin"
+          aria-hidden="true"
+        />
+      ) : (icon && iconPosition === "left") ? (
+        <span className="shrink-0">{icon}</span>
+      ) : null}
 
       {children}
 
-      {icon && iconPosition === "right" && (
-        <span className={cn("shrink-0", isLoading && "animate-spin")}>
-          {icon}
-        </span>
+      {!isLoading && icon && iconPosition === "right" && (
+        <span className="shrink-0">{icon}</span>
       )}
     </button>
   );

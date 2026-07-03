@@ -11,6 +11,8 @@ const withSerwist = withSerwistInit({
   ],
 });
 
+const isDev = process.env.NODE_ENV === "development";
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   turbopack: {},
@@ -28,7 +30,9 @@ const nextConfig = {
               "form-action 'self'",
               "img-src 'self' https: data:",
               "media-src 'self' https: data:",
-              "script-src 'self' 'unsafe-inline'",
+              // 'unsafe-eval' is required in dev for React Fast Refresh (HMR).
+              // It is intentionally excluded from production builds.
+              `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
               "style-src 'self' 'unsafe-inline'",
               "connect-src 'self' https:",
             ].join("; "),

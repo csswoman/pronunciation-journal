@@ -16,7 +16,7 @@ export function AuthButton({ label, pending, type = "submit", variant = "primary
       <button
         type={type}
         onClick={onClick}
-        className="text-sm text-primary hover:underline underline-offset-2 transition-colors"
+        className="text-sm font-medium text-fg hover:text-primary-hover hover:underline underline-offset-2 transition-colors"
       >
         {label}
       </button>
@@ -32,7 +32,7 @@ export function AuthButton({ label, pending, type = "submit", variant = "primary
       fullWidth
       onClick={onClick}
     >
-      {pending ? "Please wait…" : label}
+      {label}
     </Button>
   );
 }

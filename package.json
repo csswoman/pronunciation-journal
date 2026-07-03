@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint .",
     "check:migrations": "node scripts/check-migrations.mjs",
+    "scan:secrets": "node scripts/scan-secrets.mjs",
     "audit:rls": "node scripts/audit-rls.mjs",
     "lint:design-tokens": "node scripts/lint-design-tokens.mjs",
     "type-check": "tsc --noEmit",
@@ -15,6 +16,7 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "test:integration": "vitest run --config vitest.integration.config.ts",
+    "test:a11y": "playwright test",
     "validate:core1000": "vitest run lib/core-1000/__tests__/dataset.test.ts",
     "validate:core1000-generators": "vitest run lib/core-1000/__tests__/generatability.test.ts",
     "audit:course-content": "vitest run lib/courses/__tests__/content-audit.test.ts lib/courses/__tests__/grammar-deck-coverage.test.ts",
@@ -53,7 +55,9 @@
     "zustand": "^5.0.14"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.12.1",
     "@next/eslint-plugin-next": "^16.2.9",
+    "@playwright/test": "^1.61.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.1",

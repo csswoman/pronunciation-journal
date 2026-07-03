@@ -30,6 +30,8 @@ docs/deployment/
 Active automation in-repo:
 
 - GitHub Actions CI workflow in `.github/workflows/ci.yml`
+- Optional local pre-commit hook in `.githooks/pre-commit`; enable it with
+  `git config core.hooksPath .githooks`
 
 That workflow covers:
 
@@ -38,7 +40,7 @@ That workflow covers:
 - tests
 - design-token validation
 - dependency audit
-- hardcoded-secret scanning
+- hardcoded-secret scanning via `pnpm scan:secrets`
 - build artifact generation
 - lightweight accessibility/design checks
 

@@ -24,6 +24,8 @@ diseño y planes de producto.
 | [Resumen CI/CD](deployment/ci-cd-summary.md) | Resumen del estado actual y pendientes del pipeline |
 | [Matriz de entornos](deployment/environments.md) | Variables, secretos y reglas para local, preview, staging y producción |
 | [Backups y restore](deployment/backups.md) | Retención, preparación de migraciones y validación post-restore |
+| [Registro de riesgos de migraciones](database/migration-risk-register.md) | Ventanas históricas inseguras y acciones de auditoría |
+| [Revisión de grants anon](database/anon-grants-review.md) | Grants heredados a `anon`, corrección y reglas futuras |
 
 ## Seguridad
 
@@ -41,6 +43,7 @@ diseño y planes de producto.
 | [Referencia rápida](design/buttons/quick-reference.md) | Cheat sheet de una página |
 | [Resumen de migración](design/buttons/migration-summary.md) | Antes y después del refactor |
 | [Implementación completada](design/buttons/implementation-complete.md) | Notas del refactor de 2026-05-28 |
+| [Excepciones de estilos inline](design/inline-style-exceptions.md) | Casos runtime permitidos para `style={{ ... }}` |
 
 ### Enlaces (Anchor)
 

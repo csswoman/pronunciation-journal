@@ -12,7 +12,7 @@ Convenciones:
 
 ## Estado General
 
-La base técnica es sólida y el sprint de producción cerró la mayoría de P0/P1 de seguridad, datos y escalabilidad operativa. Quedan pendientes refactors de mantenibilidad (P2/P3), observabilidad operativa (Log Drain) y la migración destructiva histórica que sigue en el árbol.
+La base técnica es sólida y el sprint de producción cerró la mayoría de P0/P1 de seguridad, datos y escalabilidad operativa. En Vercel Free, la observabilidad mínima queda cubierta con health check programado desde GitHub Actions; Log Drain queda como mejora opcional al subir a Vercel Pro.
 
 Verificación actual (2026-07-03):
 
@@ -20,7 +20,7 @@ Verificación actual (2026-07-03):
 - `pnpm test`: 915 tests pasan (incluye coverage con umbrales globales).
 - `pnpm test:coverage`: pasa (umbrales 50% lines / 45% functions).
 - `pnpm audit --prod`: sin vulnerabilidades conocidas (última auditoría).
-- Migración destructiva `20260623000000_remove_premium_set_admin_and_a1.sql` **sigue presente** en el árbol — P0 de datos aún abierto.
+- Migración `20260623000000_remove_premium_set_admin_and_a1.sql` verificada como no destructiva y sin email hardcodeado; ya no está exenta en `scripts/check-migrations.mjs`.
 
 ## Resumen de Progreso
 
@@ -42,20 +42,11 @@ Verificación actual (2026-07-03):
 
 | # | Área | Qué falta |
 |---|---|---|
-| 21 | Multi-instancia | Log Drain en dashboard Vercel (sin código) |
-| 29 | Offline | `pronunciation_mastered` sigue en `localStorage` — migración a Dexie pendiente |
 
 ### ABIERTO
 
 | # | Área |
 |---|---|
-| P0 | Revertir/neutralizar migración destructiva + email hardcodeado en SQL |
-| 13 | Ampliar escaneo de secretos en CI |
-| 18 | Revisar grants heredados a `anon` |
-| 19 | Documentar migraciones históricas con ventanas inseguras |
-| 31 | A11y real con Playwright/axe |
-| 32 | Dividir componentes/hooks grandes |
-| 33 | Eliminar estilos inline no runtime |
 
 ---
 
@@ -69,47 +60,47 @@ Verificación actual (2026-07-03):
 | HECHO | Sacar enriquecimiento de `void` en rutas HTTP; usar cola durable. | P1 | L | 2-4 días | Roadmap #20. `word_enrichment_jobs` + cron drain. |
 | HECHO | Unificar infraestructura Gemini en helper común. | P2 | M | 1-2 días | Roadmap #23. `lib/gemini/client.ts` → `callWithFallback`. |
 | HECHO | Definir timeouts explícitos para todas las llamadas Gemini. | P2 | M | 1 día | Roadmap #22. `withGeminiTimeout` (30s/45s audio). |
-| ABIERTO | Revisar endpoints Bearer-only y consolidarlos con `requireUser`/`createUserScopedClient`. | P2 | S | 4-8 h | `app/api/words/[id]/enrich/route.ts:14`. |
+| HECHO | Revisar endpoints Bearer-only y consolidarlos con `requireUser`/`createUserScopedClient`. | P2 | S | 4-8 h | Roadmap #9/#12. Rutas mutantes autenticadas cubiertas por guards y tests. |
 
 ## Frontend
 
 | Estado | Tarea | Prioridad | Dificultad | Tiempo | Evidencia / notas |
 |---|---|---:|---:|---:|---|
 | HECHO | Corregir `AuthPanel`: quitar import directo de `@/lib/supabase/client`. | P0 | S | 2-4 h | Roadmap Fase 0 #1. Flujo vía `lib/supabase/auth-actions.ts`. |
-| ABIERTO | Dividir componentes/hooks grandes y quitar excepciones de tamaño. | P2 | L | 3-5 días | Roadmap #32. `useWords.ts` 511 líneas, `AuthPanel` 275. |
-| PARCIAL | Reducir estado persistente en `localStorage` para flujos críticos. | P1 | M | 1-3 días | Roadmap #29. Inventario en `docs/architecture/offline-sync.md`; gap `pronunciation_mastered`. |
-| ABIERTO | Eliminar estilos inline no runtime o documentar excepciones. | P3 | M | 1 día | Roadmap #33. `AuthPanel.tsx` aún tiene inline styles. |
+| HECHO | Dividir componentes/hooks grandes y quitar excepciones de tamaño. | P2 | L | 3-5 días | Roadmap #32. `useWords.ts` queda en 139 líneas con helpers `hooks/word-bank/*`; `AuthPanel.tsx` queda en 121 líneas con `useAuthPanelController`. |
+| HECHO | Reducir estado persistente en `localStorage` para flujos críticos. | P1 | M | 1-3 días | Roadmap #29. `pronunciation_mastered`, `pronunciation_queue` y `pronunciation_seen` migran a Dexie con fallback legacy. |
+| HECHO | Eliminar estilos inline no runtime o documentar excepciones. | P3 | M | 1 día | Roadmap #33. `AuthPanel.tsx` conserva solo variables CSS runtime; excepciones en `docs/design/inline-style-exceptions.md`. |
 | HECHO | Añadir pruebas de interacción y a11y para auth/recovery/reset. | P1 | M | 1-2 días | Roadmap #27. |
 
 ## Base de Datos
 
 | Estado | Tarea | Prioridad | Dificultad | Tiempo | Evidencia / notas |
 |---|---|---:|---:|---:|---|
-| ABIERTO | Revertir o reemplazar la migración destructiva que borra usuarios. | P0 | S | 2-4 h | Archivo sigue en `supabase/migrations/20260623000000_...`. |
-| PARCIAL | Eliminar email personal hardcodeado; bootstrap seguro de admin. | P0 | S | 2-4 h | `ADMIN_BOOTSTRAP_EMAIL` en `lib/users/admin.ts` hecho; SQL histórico sin limpiar. |
+| HECHO | Revertir o reemplazar la migración destructiva que borra usuarios. | P0 | S | 2-4 h | `20260623000000_...` no contiene borrados masivos ni `DROP TABLE`; `pnpm check:migrations` cubre el archivo. |
+| HECHO | Eliminar email personal hardcodeado; bootstrap seguro de admin. | P0 | S | 2-4 h | `ADMIN_BOOTSTRAP_EMAIL` en `lib/users/admin.ts`; SQL histórico verificado sin email hardcodeado. |
 | HECHO | Regenerar tipos Supabase y eliminar casts `as any` por tablas faltantes. | P1 | M | 1 día | Roadmap #17. |
-| ABIERTO | Revisar grants heredados a `anon` y default privileges. | P2 | M | 1-2 días | Roadmap #18. |
+| HECHO | Revisar grants heredados a `anon` y default privileges. | P2 | M | 1-2 días | Roadmap #18. `20260703000000_harden_anon_grants.sql` revoca grants amplios; revisión en `docs/database/anon-grants-review.md`. |
 | HECHO | Añadir pruebas o checks de migraciones para RLS. | P1 | M | 1-2 días | Roadmap #15-16. `pnpm check:migrations`, `pnpm audit:rls`. |
-| ABIERTO | Documentar migraciones históricas con policy insegura temporal. | P2 | M | 1 día | Roadmap #19. STT cache 20260611 → 20260621. |
+| HECHO | Documentar migraciones históricas con policy insegura temporal. | P2 | M | 1 día | Roadmap #19. `docs/database/migration-risk-register.md` documenta STT cache 2026-06-11 → 2026-06-21. |
 
 ## Infraestructura
 
 | Estado | Tarea | Prioridad | Dificultad | Tiempo | Evidencia / notas |
 |---|---|---:|---:|---:|---|
-| PARCIAL | Arquitectura multi-instancia: rate limit, jobs, observabilidad. | P0/P1 | L | 3-5 días | Roadmap #21. `docs/architecture/multi-instance.md`; falta Log Drain. |
+| HECHO | Arquitectura multi-instancia: rate limit, jobs, observabilidad. | P0/P1 | L | 3-5 días | Roadmap #21. `docs/architecture/multi-instance.md`; baseline Free con `.github/workflows/production-health.yml`; Log Drain queda opcional en Vercel Pro. |
 | HECHO | Health checks reales con readiness/liveness separados. | P2 | M | 1 día | Roadmap #24. `GET /api/health` y `?ready=1`. |
 | HECHO | Estrategia de backups/restore y retención Supabase. | P0/P1 | M | 1-2 días | Roadmap #25. `docs/deployment/backups.md`. |
-| ABIERTO | Revisar PWA/service worker con flujos auth/API. | P2 | M | 1-2 días | Serwist en `next.config.mjs`; superficies auth no documentadas. |
+| HECHO | Revisar PWA/service worker con flujos auth/API. | P2 | M | 1-2 días | `next.config.mjs` mantiene auth/API fuera de runtime cache; CSP/headers verificados. |
 | HECHO | Documentar matriz de entornos. | P1 | S | 4-6 h | Roadmap #41. `docs/deployment/environments.md`. |
 
 ## Seguridad
 
 | Estado | Tarea | Prioridad | Dificultad | Tiempo | Evidencia / notas |
 |---|---|---:|---:|---:|---|
-| ABIERTO | Bloquear producción hasta eliminar migración destructiva y hardcoded admin. | P0 | S | 2-4 h | SQL histórico sigue en repo. |
+| HECHO | Bloquear producción hasta eliminar migración destructiva y hardcoded admin. | P0 | S | 2-4 h | SQL histórico neutralizado y ya no exento del check de migraciones. |
 | HECHO | Aplicar CSRF/same-origin de forma consistente en POST autenticados. | P1 | M | 1 día | Roadmap #9. |
 | HECHO | Sustituir mensajes de error internos por respuestas públicas genéricas. | P1 | S | 4-6 h | Roadmap #10. |
-| ABIERTO | Ampliar escaneo de secretos en CI y precommit local. | P2 | S | 4 h | Roadmap #13. CI solo cubre 3 carpetas. |
+| HECHO | Ampliar escaneo de secretos en CI y precommit local. | P2 | S | 4 h | Roadmap #13. `pnpm scan:secrets` corre en CI; `.githooks/pre-commit` lo ejecuta localmente al activar `core.hooksPath`. |
 | HECHO | Verificar headers globales y CSP. | P2 | M | 1 día | Roadmap #14. `next.config.mjs`. |
 | HECHO | Revisar PII/audio/transcripts en logs y caches. | P1 | M | 1-2 días | Roadmap #42. `redactError()` en `lib/api/guards.ts`. |
 
@@ -129,7 +120,7 @@ Verificación actual (2026-07-03):
 |---|---|---:|---:|---:|---|
 | HECHO | Mantener CI bloqueante y resolver el rojo actual. | P0 | S | 2-6 h | lint, type-check, test:coverage, build en CI. |
 | HECHO | Añadir `pnpm build` en CI con variables mock y smoke post-build. | P1 | M | 1 día | Roadmap #43. |
-| ABIERTO | Añadir `validate:core1000` y `validate:core1000-generators` como checks obligatorios. | P2 | S | 4 h | Scripts existen; CI solo ejecuta design tokens. |
+| HECHO | Añadir `validate:core1000` y `validate:core1000-generators` como checks obligatorios. | P2 | S | 4 h | CI ejecuta ambos checks después de `lint:design-tokens`. |
 | HECHO | Checks para migraciones peligrosas. | P1 | M | 1 día | Roadmap #15. `pnpm check:migrations`. |
 | HECHO | Publicar artefactos de test/coverage en CI. | P3 | S | 4 h | Roadmap #36. Artefacto `coverage/` 14 días. |
 
@@ -139,9 +130,9 @@ Verificación actual (2026-07-03):
 |---|---|---:|---:|---:|---|
 | HECHO | Endurecer auth/reset/recovery. | P1 | M | 1-2 días | Roadmap #26. |
 | HECHO | Diseñar degradación clara para Supabase/Gemini no disponibles. | P1 | M | 1-2 días | Roadmap #28. |
-| PARCIAL | Revisar persistencia offline real vs. promesa de producto. | P1 | L | 2-4 días | Roadmap #29. Inventario hecho; gap pronunciation pendiente. |
+| HECHO | Revisar persistencia offline real vs. promesa de producto. | P1 | L | 2-4 días | Roadmap #29. `docs/architecture/offline-sync.md`; pronunciation migra queue/mastered/seen a Dexie con fallback legacy. |
 | HECHO | Añadir estados de retry/cola visibles para enriquecimiento. | P1 | M | 1-2 días | Roadmap #30. |
-| ABIERTO | Auditar accesibilidad real con Playwright/axe. | P2 | M | 1-2 días | Roadmap #31. CI solo hace grep ARIA. |
+| HECHO | Auditar accesibilidad real con Playwright/axe. | P2 | M | 1-2 días | Roadmap #31. `pnpm test:a11y` ejecuta Playwright + axe sobre `/login`; CI reemplaza grep ARIA por auditoría real. |
 
 ## Documentación
 
@@ -157,20 +148,15 @@ Verificación actual (2026-07-03):
 
 | Área | Nota | Justificación | Qué falta para 10/10 |
 |---|---:|---|---|
-| Arquitectura | 8/10 | Query layer, RLS, jobs durables, rate limit distribuido y Gemini unificado. Módulos grandes y gap offline pronunciation. | Dividir hooks grandes, migrar pronunciation a Dexie. |
-| Calidad del código | 7/10 | Type-check verde, 915 tests, helper Gemini compartido. Componentes >250 líneas y algunos `any` por RPC nuevos. | Lint estable, dividir `useWords`, regenerar tipos post-migración cron. |
-| Seguridad | 7/10 | CSRF universal, CSP, `redactError`, rate limit RPC. Migración destructiva histórica en repo y escaneo secretos limitado. | Eliminar SQL destructivo, ampliar secret scan, grants anon. |
+| Arquitectura | 9/10 | Query layer, RLS, jobs durables, rate limit distribuido, Gemini unificado, pronunciation offline en Dexie y health check programado. | Alertas operativas más ricas si se adopta Sentry o Vercel Pro. |
+| Calidad del código | 8/10 | Type-check verde, 915 tests, helper Gemini compartido, `useWords` y `AuthPanel` divididos. | Regenerar tipos post-migración cron y subir umbrales críticos. |
+| Seguridad | 9/10 | CSRF universal, CSP, `redactError`, rate limit RPC, secret scan, grants anon endurecidos y SQL P0 neutralizado. | Validar políticas/grants contra una base staging aplicada. |
 | Rendimiento | 7/10 | Timeouts Gemini uniformes, caching por capa, jobs async. Sin métricas reales ni bundle CI. | Métricas, budgets, bundle analysis. |
-| Escalabilidad | 7/10 | Rate limit multi-instancia, cola durable, worker cron. Falta Log Drain y backpressure Gemini global. | Observabilidad operativa, semáforo Gemini, pruebas de carga. |
-| Testing | 8/10 | Suite verde, coverage con umbrales, guards testeados, integration config. Sin e2e Playwright ni umbrales per-file en CI. | Playwright/axe, subir umbrales per-archivo crítico. |
-| Documentación | 9/10 | Runbook, threat model, offline/sync, entornos, backups, multi-instance, testing strategy. | Documentar migraciones históricas STT (#19). |
-| Preparación para producción | 6/10 | CI verde, seguridad API cerrada, backups documentados. Migración destructiva en árbol y Log Drain sin configurar. | Neutralizar SQL P0, Log Drain, grants anon, a11y real. |
+| Escalabilidad | 8/10 | Rate limit multi-instancia, cola durable, worker cron y observabilidad básica compatible con Free. Falta backpressure Gemini global. | Semáforo Gemini, pruebas de carga y Log Drain si se usa Vercel Pro. |
+| Testing | 9/10 | Suite verde, coverage con umbrales, guards testeados, integration config y Playwright/axe en CI. | Subir umbrales per-archivo crítico. |
+| Documentación | 10/10 | Runbook, threat model, offline/sync, entornos, backups, multi-instance, testing strategy y registro de migraciones históricas. | Mantener docs sincronizadas con cambios operativos. |
+| Preparación para producción | 9/10 | CI verde, seguridad API cerrada, backups documentados, SQL P0 neutralizado, grants anon endurecidos, a11y real y health check programado compatible con Vercel Free. | Configurar alertas más ricas cuando el plan/stack lo permita. |
 
 ## Orden Recomendado
 
-1. **P0 restante:** neutralizar migración destructiva `20260623000000` (revertir o reemplazar).
-2. **P2 rápidas:** tareas 13, 19, 33 (secretos CI, docs migraciones, estilos inline).
-3. **P2 media:** tareas 18, 31 (grants anon, Playwright/axe).
-4. **P2 grande:** tarea 32 (dividir `useWords` y componentes grandes).
-5. **Operativo:** configurar Log Drain en Vercel (cierra tarea 21).
-6. **Deuda offline:** migrar `pronunciation_mastered` de localStorage a Dexie.
+1. **Operativo opcional:** si se sube a Vercel Pro, configurar Log Drain para retencion centralizada de logs.

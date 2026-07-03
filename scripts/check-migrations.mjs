@@ -5,7 +5,6 @@ const MIGRATIONS_DIR = path.join(process.cwd(), "supabase", "migrations");
 const ALLOWED_LEGACY_FILES = new Set([
   "supabase/migrations/20260329230234_remote_schema.sql",
   "supabase/migrations/20260602000000_seed_text_fragments_sentences.sql",
-  "supabase/migrations/20260623000000_remove_premium_set_admin_and_a1.sql",
 ]);
 
 function readSqlFiles(dir) {

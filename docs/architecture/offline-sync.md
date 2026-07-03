@@ -51,25 +51,24 @@ Fecha: 2026-07-01
 | `daily-plan:{uid}:{fecha}` | `lib/daily/plan-storage.ts` | Cache diario | Aceptable — caduca con la fecha, recreable desde API |
 | `daily-done:{uid}:{fecha}` | `lib/daily/plan-storage.ts` | IDs completados hoy | Aceptable — temporal de sesion; progreso va a outbox |
 | `daily-resolved:{uid}:{fecha}` | `lib/daily/plan-storage.ts` | Paso resueltos | Aceptable — temporal de sesion |
-| `pronunciation_queue` | `lib/ai-coach/pronunciation.ts` | Cola de fonemas activos | **Gap**: deberia vivir en Dexie para persistir entre dispositivos |
-| `pronunciation_mastered` | `lib/ai-coach/pronunciation.ts` | Fonemas dominados | **Gap critico**: es progreso permanente del usuario; debe migrar a Dexie o Supabase |
-| `pronunciation_seen` | `lib/ai-coach/pronunciation.ts` | Fonemas vistos | **Gap**: deberia vivir en Dexie |
+| `pronunciation_queue` | `lib/ai-coach/pronunciation.ts` | Cola de frases activas | Resuelto en Dexie `pronunciationCoachState`; localStorage queda solo para migracion/fallback |
+| `pronunciation_mastered` | `lib/ai-coach/pronunciation.ts` | Frases dominadas | Resuelto en Dexie `pronunciationMastery`; localStorage queda solo para migracion/fallback |
+| `pronunciation_seen` | `lib/ai-coach/pronunciation.ts` | Frases vistas | Resuelto en Dexie `pronunciationCoachState`; localStorage queda solo para migracion/fallback |
 | `ai_practice_device_id` | `lib/ai-practice/load-state.ts` | UUID de dispositivo | Aceptable — identifica sesion, no es progreso critico |
 | `core1000:pending-lapses` | hooks core1000 | Buffer de lapses in-session | Aceptable — flush a Dexie al pagehide |
 | Lexicon/Word of Day | varios | Cache de sesion | Aceptable — temporal, recreable desde API/Gemini |
 
 ### Estado de Migracion del AI Coach de Pronunciacion
 
-Los tres keys de `lib/ai-coach/pronunciation.ts` son el gap mas critico:
-`pronunciation_mastered` es progreso real que se pierde al cambiar de dispositivo o limpiar el navegador.
+`pronunciation_queue`, `pronunciation_mastered` y `pronunciation_seen` ya no son
+la fuente primaria. Desde 2026-07-03 el estado del coach se guarda en Dexie:
+`pronunciationMastery` para frases dominadas y `pronunciationCoachState` para
+cola/frases vistas. Al primer load se migran los datos legacy de localStorage y
+luego se eliminan esas claves si Dexie esta disponible. Si Dexie falla,
+localStorage sigue como fallback degradado.
 
-**Camino de migracion**:
-1. Anadir tabla `ai_coach_phoneme_progress` en Supabase (o tabla Dexie local) con
-   columnas `user_id`, `phoneme`, `mastered: boolean`, `seen: boolean`, `updated_at`.
-2. Refactorizar `lib/ai-coach/pronunciation.ts` para leer/escribir contra Dexie
-   con sync outbox hacia Supabase, igual que otros flujos de practica.
-3. Hacer migracion one-time de datos existentes en localStorage al primer login.
-4. Mantener fallback a localStorage solo si Dexie no esta disponible.
+**Pendiente**:
+1. Agregar sync remoto opcional si el coach debe seguir al usuario entre dispositivos.
 
 Esto se rastrea como deuda tecnica activa; no debe bloquearse nuevas features del coach
 hasta que este resuelto.
@@ -80,4 +79,4 @@ hasta que este resuelto.
 - No todos los flujos usan outbox; algunos dependen de escritura Supabase directa. El checklist manual del daily plan, reader y sesiones de practica encolan progreso critico para reconciliacion.
 - `core1000:pending-lapses` sigue usando `sessionStorage` como buffer corto para lapses dentro de una sesion; el hook intenta flush al cierre de sesion/pagehide. No debe tratarse como almacenamiento multi-tab durable.
 - El runner de `word_enrichment_jobs` debe desplegarse como worker/scheduled job externo al request HTTP.
-- El AI Coach de pronunciacion guarda progreso en `localStorage` solamente (ver tabla de inventario arriba). El progreso se pierde entre dispositivos. Migracion a Dexie pendiente.
+- El AI Coach de pronunciacion guarda mastery, queue y seen en Dexie con migracion desde localStorage. El progreso local no sincroniza entre dispositivos.

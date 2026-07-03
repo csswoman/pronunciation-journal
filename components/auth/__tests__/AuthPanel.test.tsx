@@ -40,7 +40,7 @@ describe("AuthPanel", () => {
     });
   });
 
-  it("shows a public message instead of provider login details", async () => {
+  it("shows a friendly message instead of provider login details", async () => {
     authActions.signInWithEmail.mockResolvedValue({
       data: { session: null },
       error: { message: "Supabase AuthApiError: invalid login credentials" },
@@ -52,8 +52,61 @@ describe("AuthPanel", () => {
     fireEvent.change(screen.getByLabelText("Password"), { target: { value: "wrong-password" } });
     fireEvent.click(screen.getByRole("button", { name: "Sign in" }));
 
-    expect(await screen.findByText(publicAuthErrorMessage())).toBeInTheDocument();
+    expect(await screen.findByText(/Incorrect email or password/i)).toBeInTheDocument();
     expect(screen.queryByText(/Supabase AuthApiError/i)).not.toBeInTheDocument();
+  });
+
+  it("shows message and does not navigate when login succeeds but returns no session", async () => {
+    authActions.signInWithEmail.mockResolvedValue({
+      data: { session: null },
+      error: null,
+    });
+
+    render(<AuthPanel />);
+
+    fireEvent.change(screen.getByLabelText("Email address"), { target: { value: "unconfirmed@example.com" } });
+    fireEvent.change(screen.getByLabelText("Password"), { target: { value: "SomePass1" } });
+    fireEvent.click(screen.getByRole("button", { name: "Sign in" }));
+
+    expect(await screen.findByText("Please confirm your email address before signing in.")).toBeInTheDocument();
+    expect(replace).not.toHaveBeenCalled();
+    expect(refresh).not.toHaveBeenCalled();
+  });
+
+  it("shows error and create account CTA when login credentials are invalid", async () => {
+    authActions.signInWithEmail.mockResolvedValue({
+      data: { session: null },
+      error: { message: "Invalid login credentials" },
+    });
+
+    render(<AuthPanel />);
+
+    fireEvent.change(screen.getByLabelText("Email address"), { target: { value: "new@example.com" } });
+    fireEvent.change(screen.getByLabelText("Password"), { target: { value: "new-password" } });
+    fireEvent.click(screen.getByRole("button", { name: "Sign in" }));
+
+    expect(await screen.findByText(/Incorrect email or password/i)).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Create one" })).toBeInTheDocument();
+    expect(authActions.signUpWithEmail).not.toHaveBeenCalled();
+  });
+
+  it("switches to register tab when clicking create account CTA after failed login", async () => {
+    authActions.signInWithEmail.mockResolvedValue({
+      data: { session: null },
+      error: { message: "Invalid login credentials" },
+    });
+
+    render(<AuthPanel />);
+
+    fireEvent.change(screen.getByLabelText("Email address"), { target: { value: "new@example.com" } });
+    fireEvent.change(screen.getByLabelText("Password"), { target: { value: "new-password" } });
+    fireEvent.click(screen.getByRole("button", { name: "Sign in" }));
+
+    await screen.findByText(/Incorrect email or password/i);
+    fireEvent.click(screen.getByRole("button", { name: "Create one" }));
+
+    expect(screen.getByRole("tab", { name: "Create account", selected: true })).toBeInTheDocument();
+    expect(screen.queryByText(/Incorrect email or password/i)).not.toBeInTheDocument();
   });
 
   it("blocks weak recovery passwords before calling Supabase", async () => {

@@ -52,6 +52,12 @@ jobs:
       - name: Design Token Validation
         run: pnpm lint:design-tokens
 
+      - name: Validate Core 1000 dataset
+        run: pnpm validate:core1000
+
+      - name: Validate Core 1000 generators
+        run: pnpm validate:core1000-generators
+
   security-audit:
     runs-on: ubuntu-latest
     name: Security Audit
@@ -72,14 +78,7 @@ jobs:
         run: pnpm audit --audit-level=moderate
 
       - name: Check for hardcoded secrets
-        run: |
-          if grep -rE \
-            "(AIza[0-9A-Za-z_-]{30,}|(GEMINI_API_KEY|NEXT_PUBLIC_SUPABASE_(ANON_)?KEY|SUPABASE_SERVICE_ROLE_KEY)[[:space:]]*[:=][[:space:]]*['\"][^'\"]{16,}['\"])" \
-            --include="*.tsx" --include="*.ts" --include="*.jsx" --include="*.js" \
-            components/ app/ lib/ 2>/dev/null; then
-            echo "⚠️ Warning: Potential hardcoded secrets found"
-            exit 1
-          fi
+        run: pnpm scan:secrets
 
   build:
     runs-on: ubuntu-latest
@@ -139,11 +138,16 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      - name: Check for accessibility patterns
-        run: |
-          echo "Checking for ARIA labels in interactive components..."
-          grep -r "aria-label\|aria-describedby\|role=" components/ui --include="*.tsx" | wc -l
-          echo "✓ ARIA patterns detected"
+      - name: Install Playwright browser
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Run Playwright axe audit
+        run: pnpm test:a11y
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://example.supabase.co' }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'ci-anon-placeholder' }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY || 'ci-gemini-placeholder' }}
+          ADMIN_BOOTSTRAP_EMAIL: ci-bootstrap@placeholder.invalid
 
       - name: Verify design tokens used
         run: |

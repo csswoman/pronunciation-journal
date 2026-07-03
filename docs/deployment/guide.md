@@ -11,10 +11,13 @@ That workflow runs:
 - `pnpm type-check`
 - `pnpm test`
 - `pnpm lint:design-tokens`
+- `pnpm validate:core1000`
+- `pnpm validate:core1000-generators`
 - `pnpm audit --audit-level=moderate`
-- secret-pattern checks
+- `pnpm scan:secrets`
 - `pnpm build`
-- a lightweight accessibility/design-quality audit
+- Playwright + axe accessibility audit for `/login`
+- scheduled production readiness probe in `production-health.yml`
 
 There is currently no `deploy.yml` workflow in the repository. Any references to
 automatic production deploys, rollback, release tagging, or smoke-test driven
@@ -37,16 +40,15 @@ deploy orchestration should be treated as planned work, not present behavior.
    Runs install, lint, type-check, tests, and design-token validation.
 
 2. `security-audit`
-   Runs `pnpm audit --audit-level=moderate` and scans `components/`, `app/`,
-   and `lib/` for obvious hardcoded secret patterns.
+   Runs `pnpm audit --audit-level=moderate` and `pnpm scan:secrets`.
 
 3. `build`
    Depends on `lint-and-test` and `security-audit`, then runs `pnpm build` and
    uploads `.next/` as an artifact.
 
 4. `accessibility-audit`
-   Runs separate grep-based checks for accessibility patterns and hardcoded UI
-   colors.
+   Installs Chromium and runs `pnpm test:a11y`, currently covering `/login`
+   with Playwright and axe.
 
 5. `notify-status`
    Fails the workflow if required upstream jobs did not succeed.
@@ -75,6 +77,10 @@ pnpm lint
 pnpm type-check
 pnpm test
 pnpm lint:design-tokens
+pnpm validate:core1000
+pnpm validate:core1000-generators
+pnpm scan:secrets
+pnpm test:a11y
 pnpm build
 ```
 
@@ -91,6 +97,9 @@ Recommended baseline:
 2. Verify `/api/health` or the exposed health route after deployment.
 3. Keep Supabase auth redirect URLs aligned with `NEXT_PUBLIC_SITE_URL`.
 4. Run the local verification commands before promoting changes.
+5. Configure Vercel Log Drain before accepting production traffic.
+   On Vercel Free, use the scheduled GitHub Actions health check instead and
+   review Vercel dashboard logs manually during incidents.
 
 ## Health endpoint
 
@@ -124,10 +133,12 @@ required checks.
 - no smoke-test or end-to-end deployment validation
 - no automatic rollback
 - no staging environment workflow
-- accessibility audit is grep-based and should not be treated as full coverage
+- centralized Log Drain requires Vercel Pro; Free plan uses scheduled health
+  checks plus manual Vercel log review
 
 ## Suggested next steps
 
 - add a real `deploy.yml` if GitHub-managed deploys are desired
 - add E2E smoke tests before automating production promotion
-- replace grep-based accessibility checks with deterministic test coverage
+- if upgrading to Vercel Pro, configure Log Drain and record the destination in
+  the production runbook

@@ -17,6 +17,8 @@ Fecha: 2026-07-01
 - Rate limit: rutas costosas usan `rateLimit()` con RPC Supabase atómico en producción.
 - Errores públicos: rutas API devuelven mensajes normalizados con `publicErrorResponse()`.
 - RLS: migraciones nuevas se bloquean con `pnpm audit:rls`; SQL peligroso se bloquea con `pnpm check:migrations`.
+- Grants: `anon` no conserva grants heredados amplios sobre tablas, secuencias o funciones del schema `public`.
+- Secretos: `pnpm scan:secrets` corre en CI y puede ejecutarse localmente antes de commit.
 - Service role: uso server-only para admin bootstrap, rate limit RPC y trabajos de backend.
 - Headers/CSP: definidos globalmente en `next.config.mjs`.
 

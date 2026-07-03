@@ -1,16 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
-import {
-  signInWithEmail,
-  signUpWithEmail,
-  signInAsGuest,
-  signInWithGoogle,
-  resetPasswordForEmail,
-  updatePassword,
-} from "@/lib/supabase/auth-actions";
 import { AuthTabs } from "@/components/auth/AuthTabs";
 import { AuthFeedback } from "@/components/auth/AuthFeedback";
 import { AuthMobileIdentity } from "@/components/auth/AuthMobileIdentity";
@@ -20,178 +10,27 @@ import { LoginForm } from "@/components/auth/LoginForm";
 import { RegisterForm } from "@/components/auth/RegisterForm";
 import { ResetForm } from "@/components/auth/ResetForm";
 import { RecoveryForm } from "@/components/auth/RecoveryForm";
-import { publicAuthErrorMessage, validatePasswordPolicy } from "@/lib/auth/password-policy";
-
-type Mode = "login" | "register" | "reset" | "recovery";
-
-const HUE_MAP = [350, 145, 220, 30] as const;
+import { useAuthPanelController } from "@/components/auth/useAuthPanelController";
 
 export default function AuthPanel() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const initialMode = searchParams.get("mode") === "reset"
-    ? "reset"
-    : searchParams.get("mode") === "recovery"
-      ? "recovery"
-      : "login";
-  const [mode, setMode] = useState<Mode>(initialMode);
-  const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [rememberMe, setRememberMe] = useState(true);
-  const [message, setMessage] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [pending, setPending] = useState(false);
-  const [imageIndex, setImageIndex] = useState(0);
-
-  useEffect(() => {
-    const id = setInterval(() => setImageIndex(i => (i + 1) % 4), 5000);
-    return () => clearInterval(id);
-  }, []);
-
-  // Sync rotating image hue to the global theme token
-  useEffect(() => {
-    document.documentElement.style.setProperty("--hue", String(HUE_MAP[imageIndex]));
-    return () => {
-      // Restore user's saved hue on unmount
-      const saved = localStorage.getItem("hue");
-      document.documentElement.style.setProperty("--hue", saved ?? "250");
-    };
-  }, [imageIndex]);
-
-  useEffect(() => {
-    if (searchParams.get("message") === "password-updated") {
-      setMode("login");
-      setMessage("Password updated. You can sign in now.");
-      router.replace("/login");
-    }
-  }, [router, searchParams]);
-
-  const clearFeedback = () => { setError(null); setMessage(null); };
-
-  const handleRecovery = async (e: React.FormEvent) => {
-    e.preventDefault();
-    clearFeedback();
-    setPending(true);
-    try {
-      if (password !== confirmPassword) {
-        setError("Passwords do not match.");
-        return;
-      }
-      const policyError = validatePasswordPolicy(password);
-      if (policyError) {
-        setError(policyError);
-        return;
-      }
-      const { error: err } = await updatePassword(password);
-      if (err) {
-        console.error("[auth] password update failed", err);
-        setError(publicAuthErrorMessage());
-        return;
-      }
-      setPassword("");
-      setConfirmPassword("");
-      setMode("login");
-      router.replace("/login?message=password-updated");
-    } finally {
-      setPending(false);
-    }
-  };
-
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault(); clearFeedback(); setPending(true);
-    try {
-      const { data, error: err } = await signInWithEmail(email.trim(), password);
-      if (err) {
-        console.error("[auth] sign in failed", err);
-        setError(publicAuthErrorMessage());
-        return;
-      }
-      if (data.session) {
-        router.replace("/");
-        router.refresh();
-        return;
-      }
-      router.refresh();
-    } finally { setPending(false); }
-  };
-
-  const handleRegister = async (e: React.FormEvent) => {
-    e.preventDefault(); clearFeedback(); setPending(true);
-    try {
-      const { error: err } = await signUpWithEmail(email.trim(), password);
-      if (err) {
-        console.error("[auth] sign up failed", err);
-        setError(publicAuthErrorMessage());
-        return;
-      }
-      setMessage("Check your inbox to confirm your email address.");
-    } finally { setPending(false); }
-  };
-
-  const handleGoogle = async () => {
-    clearFeedback(); setPending(true);
-    try {
-      const { error: err } = await signInWithGoogle();
-      if (err) {
-        console.error("[auth] google sign in failed", err);
-        setError(publicAuthErrorMessage());
-        return;
-      }
-      router.refresh();
-    } finally { setPending(false); }
-  };
-
-  const handleGuest = async () => {
-    clearFeedback(); setPending(true);
-    try {
-      const { data, error: err } = await signInAsGuest();
-      if (err) {
-        console.error("[auth] guest sign in failed", err);
-        setError(publicAuthErrorMessage());
-        return;
-      }
-      // If Supabase returned a session but onAuthStateChange doesn't fire
-      // (e.g. existing anonymous session), force a page reload to pick it up
-      if (data.session) {
-        router.replace("/");
-        router.refresh();
-      }
-    } finally { setPending(false); }
-  };
-
-  const handleReset = async (e: React.FormEvent) => {
-    e.preventDefault(); clearFeedback(); setPending(true);
-    try {
-      const { error: err } = await resetPasswordForEmail(email.trim());
-      if (err) {
-        console.error("[auth] password reset request failed", err);
-        setError(publicAuthErrorMessage());
-        return;
-      }
-      setMessage("If that email exists, you'll receive a password reset link.");
-    } finally { setPending(false); }
-  };
-
-  const hue = HUE_MAP[imageIndex];
+  const auth = useAuthPanelController();
 
   return (
     <div className="min-h-screen flex bg-surface-base">
 
       {/* Left — rotating image, desktop only */}
-      <AuthImagePanel index={imageIndex} />
+      <AuthImagePanel index={auth.imageIndex} />
 
-      {/* Right — form panel; only hue + primary scale are JS-driven */}
+      {/* Right — form panel; hue variables are runtime-driven by the image rotation. */}
       <div
         className="flex-1 flex flex-col min-h-screen bg-surface-raised"
         style={{
-          "--primary-100": `oklch(0.93 0.04 ${hue})`,
-          "--primary-500": `oklch(0.65 0.15 ${hue})`,
-          "--primary-600": `oklch(0.58 0.16 ${hue})`,
+          "--primary-100": `oklch(0.93 0.04 ${auth.hue})`,
+          "--primary-500": `oklch(0.65 0.15 ${auth.hue})`,
+          "--primary-600": `oklch(0.58 0.16 ${auth.hue})`,
         } as React.CSSProperties}
       >
-        <AuthMobileIdentity index={imageIndex} />
+        <AuthMobileIdentity index={auth.imageIndex} />
 
         <div className="flex-1 px-6 flex flex-col items-center justify-center py-10 lg:py-16">
           <div className="w-full max-w-sm">
@@ -199,80 +38,77 @@ export default function AuthPanel() {
             {/* Desktop wordmark */}
             <div className="hidden lg:flex items-start justify-between mb-10">
               <div>
-                <p
-                  className="text-fg font-bold leading-none"
-                  style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: "clamp(1.5rem, 2vw, 1.875rem)", letterSpacing: "-0.02em" }}
-                >
+                <p className="font-editorial text-h3 text-fg font-bold leading-none tracking-tight">
                   English Journal
                 </p>
-                <p className="mt-1.5 text-fg-muted text-sm italic" style={{ fontFamily: "'DM Sans', system-ui, sans-serif" }}>
+                <p className="mt-1.5 text-sm text-fg-muted italic">
                   Practice with intention.
                 </p>
               </div>
               <InstallBanner />
             </div>
 
-            {(error || message) && (
+            {(auth.error || auth.message) && (
               <div className="mb-6">
-                <AuthFeedback error={error} message={message} compact={mode === "login"} />
+                <AuthFeedback error={auth.error} message={auth.message} compact={auth.mode === "login"} />
+                {auth.error && auth.mode === "login" && (
+                  <p className="mt-2 text-sm text-fg-muted text-center">
+                    Don&apos;t have an account?{" "}
+                    <button
+                      type="button"
+                      className="text-primary underline-offset-2 hover:underline font-medium"
+                      onClick={() => { auth.setMode("register"); auth.clearFeedback(); }}
+                    >
+                      Create one
+                    </button>
+                  </p>
+                )}
               </div>
             )}
 
-            {mode === "reset" ? (
+            {auth.mode === "reset" ? (
               <ResetForm
-                email={email} setEmail={setEmail}
-                pending={pending}
-                onSubmit={handleReset}
-                onBack={() => {
-                  setMode("login");
-                  clearFeedback();
-                  router.replace("/login");
-                }}
+                email={auth.email} setEmail={auth.setEmail}
+                pending={auth.pending}
+                onSubmit={auth.handleReset}
+                onBack={auth.goToLogin}
               />
-            ) : mode === "recovery" ? (
+            ) : auth.mode === "recovery" ? (
               <RecoveryForm
-                password={password}
-                setPassword={setPassword}
-                confirmPassword={confirmPassword}
-                setConfirmPassword={setConfirmPassword}
-                pending={pending}
-                onSubmit={handleRecovery}
-                onBack={() => {
-                  setMode("login");
-                  clearFeedback();
-                  router.replace("/login");
-                }}
+                password={auth.password}
+                setPassword={auth.setPassword}
+                confirmPassword={auth.confirmPassword}
+                setConfirmPassword={auth.setConfirmPassword}
+                pending={auth.pending}
+                onSubmit={auth.handleRecovery}
+                onBack={auth.goToLogin}
               />
             ) : (
               <>
                 <AuthTabs
-                  mode={mode === "register" ? "register" : "login"}
-                  onModeChange={(m) => { setMode(m); clearFeedback(); }}
+                  mode={auth.mode === "register" ? "register" : "login"}
+                  onModeChange={(mode) => { auth.setMode(mode); auth.clearFeedback(); }}
                 />
-                {mode === "login" ? (
+                {auth.mode === "login" ? (
                 <LoginForm
-                    email={email} setEmail={setEmail}
-                    password={password} setPassword={setPassword}
-                    rememberMe={rememberMe} setRememberMe={setRememberMe}
-                    pending={pending}
-                    onSubmit={handleLogin}
-                    onForgot={() => {
-                      setMode("reset");
-                      clearFeedback();
-                      router.replace("/login?mode=reset");
-                    }}
-                    onGoogle={handleGoogle}
-                    onGuest={handleGuest}
+                    email={auth.email} setEmail={auth.setEmail}
+                    password={auth.password} setPassword={auth.setPassword}
+                    rememberMe={auth.rememberMe} setRememberMe={auth.setRememberMe}
+                    pending={auth.pending}
+                    onSubmit={auth.handleLogin}
+                    onForgot={auth.goToReset}
+                    onGoogle={auth.handleGoogle}
+                    onGuest={auth.handleGuest}
                   />
                 ) : (
                   <RegisterForm
-                    name={name} setName={setName}
-                    email={email} setEmail={setEmail}
-                    password={password} setPassword={setPassword}
-                    pending={pending}
-                    onSubmit={handleRegister}
-                    onGoogle={handleGoogle}
-                    onGuest={handleGuest}
+                    name={auth.name} setName={auth.setName}
+                    email={auth.email} setEmail={auth.setEmail}
+                    password={auth.password} setPassword={auth.setPassword}
+                    pending={auth.pending}
+                    onSubmit={auth.handleRegister}
+                    onGoogle={auth.handleGoogle}
+                    onGuest={auth.handleGuest}
                   />
                 )}
               </>

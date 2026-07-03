@@ -1,4 +1,10 @@
 import { pickUSPhonetic, stripIPASlashes } from "@/lib/ai-practice/modes/pronunciation";
+import {
+  getPronunciationCoachState,
+  getPronunciationMasteredPhrases,
+  savePronunciationCoachState,
+  savePronunciationMasteredPhrases,
+} from "@/lib/db";
 
 export const DEFAULT_PHRASES = [
   "I would appreciate the opportunity",
@@ -39,6 +45,78 @@ export function loadSeen(): Set<string> { try { return new Set(JSON.parse(localS
 export function saveSeen(s: Set<string>) { localStorage.setItem(LS_SEEN, JSON.stringify([...s])); }
 export function pickBatch(exclude: Set<string>): string[] { return shuffle(DEFAULT_PHRASES.filter((p) => !exclude.has(p))).slice(0, BATCH_SIZE); }
 export function initQueue(): string[] { const stored = loadQueue(); if (stored.length > 0) return stored; const batch = pickBatch(loadMastered()); saveQueue(batch); return batch; }
+
+export async function loadQueueFromDexie(): Promise<string[]> {
+  try {
+    const values = await getPronunciationCoachState("queue");
+    if (values) return values;
+
+    const legacy = loadQueue();
+    if (legacy.length > 0) {
+      await savePronunciationCoachState("queue", legacy, { migratedFromLocalStorage: true });
+    }
+    return legacy;
+  } catch {
+    return loadQueue();
+  }
+}
+
+export async function saveQueueToDexie(queue: string[]): Promise<void> {
+  try {
+    await savePronunciationCoachState("queue", queue);
+    localStorage.removeItem(LS_QUEUE);
+  } catch {
+    saveQueue(queue);
+  }
+}
+
+export async function loadSeenFromDexie(): Promise<Set<string>> {
+  try {
+    const values = await getPronunciationCoachState("seen");
+    if (values) return new Set(values);
+
+    const legacy = loadSeen();
+    if (legacy.size > 0) {
+      await savePronunciationCoachState("seen", legacy, { migratedFromLocalStorage: true });
+    }
+    return legacy;
+  } catch {
+    return loadSeen();
+  }
+}
+
+export async function saveSeenToDexie(seen: Set<string>): Promise<void> {
+  try {
+    await savePronunciationCoachState("seen", seen);
+    localStorage.removeItem(LS_SEEN);
+  } catch {
+    saveSeen(seen);
+  }
+}
+
+export async function loadMasteredFromDexie(): Promise<Set<string>> {
+  try {
+    const rows = await getPronunciationMasteredPhrases();
+    if (rows.length > 0) return new Set(rows);
+
+    const legacy = loadMastered();
+    if (legacy.size > 0) {
+      await savePronunciationMasteredPhrases(legacy, { migratedFromLocalStorage: true });
+    }
+    return legacy;
+  } catch {
+    return loadMastered();
+  }
+}
+
+export async function saveMasteredToDexie(mastered: Set<string>): Promise<void> {
+  try {
+    await savePronunciationMasteredPhrases(mastered);
+    localStorage.removeItem(LS_MASTERED);
+  } catch {
+    saveMastered(mastered);
+  }
+}
 
 export async function fetchWordIPA(word: string): Promise<string | null> {
   try { const res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`); if (!res.ok) return null; const data = await res.json(); if (!Array.isArray(data) || !data[0]) return null; const phonetics = (data[0] as { phonetics?: Array<{ text?: string; audio?: string }> }).phonetics ?? []; const raw = pickUSPhonetic(phonetics); return raw ? stripIPASlashes(raw) : null; } catch { return null; }

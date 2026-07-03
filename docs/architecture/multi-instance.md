@@ -51,17 +51,23 @@ salvo los logs de Vercel.
 
 **Opciones por costo/esfuerzo**:
 
-1. **Vercel Log Drains** (inmediato, gratuito en Pro): reenviar logs a Axiom,
-   Datadog o Logtail. Sin cambio de codigo. Captura `console.error` redactados.
+1. **GitHub Actions health check** (compatible con Vercel Free): ejecuta
+   `/api/health?ready=1` cada 30 minutos y falla el workflow si produccion no
+   responde correctamente.
 
-2. **Sentry** (recomendado para errores estructurados): `@sentry/nextjs` captura
+2. **Vercel Log Drains** (requiere Vercel Pro): reenviar logs a Axiom, Datadog
+   o Logtail. Sin cambio de codigo. Captura `console.error` redactados.
+
+3. **Sentry** (recomendado para errores estructurados): `@sentry/nextjs` captura
    excepciones con contexto de request. Costo: free tier hasta 5k eventos/mes.
 
-3. **OpenTelemetry + Vercel** (futuro): si la app crece, OTEL permite migrar
+4. **OpenTelemetry + Vercel** (futuro): si la app crece, OTEL permite migrar
    a cualquier backend sin cambiar instrumentacion.
 
-**Accion minima aceptable para produccion**: Vercel Log Drain hacia un servicio
-de logs con retencion de 7 dias. Esto cubre el 80% del valor sin cambios de codigo.
+**Accion minima aceptable para produccion en Vercel Free**: health check
+programado desde GitHub Actions y revision manual de logs en Vercel durante
+incidentes. El Log Drain queda como mejora recomendada al subir a Vercel Pro.
+El procedimiento operativo esta en `docs/deployment/runbook-minimo.md`.
 
 ## Variables de Entorno por Instancia
 
@@ -104,8 +110,9 @@ usuario este bajo su limite individual.
 - [x] Rate limiting atomico via Supabase RPC
 - [x] Errores de proveedor no expuestos al cliente (`publicErrorResponse`)
 - [x] PII sanitizado en logs (`redactError`)
-- [x] Jobs encuestados en tabla durable (`word_enrichment_jobs`)
+- [x] Jobs encolados en tabla durable (`word_enrichment_jobs`)
 - [x] Worker de drenaje: `app/api/jobs/drain-enrichment` + `vercel.json` cron cada 2 min
-- [ ] Log Drain configurado hacia servicio de retencion
+- [x] Health check programado compatible con Vercel Free (`production-health.yml`)
+- [ ] Log Drain configurado hacia servicio de retencion (opcional, requiere Vercel Pro)
 - [ ] Limites de Gemini monitoreados y alertados
-- [ ] Health check distingue liveness de readiness (Supabase/Gemini degradados)
+- [x] Health check distingue liveness de readiness (Supabase/Gemini degradados)

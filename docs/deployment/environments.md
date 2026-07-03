@@ -16,6 +16,8 @@ Fecha: 2026-07-01
 - `SUPABASE_SERVICE_ROLE_KEY`
 - `GEMINI_API_KEY`
 - `NEXT_PUBLIC_SITE_URL`
+- GitHub repository variable `PRODUCTION_HEALTH_URL` for scheduled production
+  readiness checks, usually `https://TU_DOMINIO/api/health?ready=1`.
 
 ## Variables Operativas
 
@@ -30,6 +32,7 @@ Fecha: 2026-07-01
 - Revisar manualmente cualquier SQL que cree tablas, policies, funciones security definer o jobs.
 - No aplicar migraciones destructivas en preview/staging sin datos descartables o backup.
 - Confirmar que el Vercel Cron (`vercel.json`) apunta a `/api/jobs/drain-enrichment` y que `CRON_SECRET` está configurado en el proyecto antes de depender de enriquecimiento async.
+- En Vercel Free, configurar `PRODUCTION_HEALTH_URL` en GitHub Actions y activar notificaciones de workflow fallido. En Vercel Pro, agregar Log Drain si se requiere retencion centralizada de logs.
 - El worker de enriquecimiento usa `claim_enrichment_jobs` RPC con SELECT FOR UPDATE SKIP LOCKED; emite logs de jobs procesados, fallidos y reencolados. Backoff exponencial: 2 min → 8 min → 30 min → 2 h.
 - Las rutas Gemini deben degradar con mensajes publicos. Si Gemini no esta disponible, validar que UI muestre estados de retry/error sin revelar detalles del proveedor.
 - Confirmar que `syncOutbox` se drena en flujos principales: sesiones de practica, reader, daily checklist, phoneme/AI progress y Essential Words activity.
