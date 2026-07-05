@@ -4,8 +4,9 @@ import {
   GENERATE_READER_SYSTEM_PROMPT,
   buildGenerateReaderUserPrompt,
 } from "@/lib/ai-prompts";
-import { requireSameOrigin, requireUser, rateLimit, validateBody, publicErrorResponse, redactError } from "@/lib/api/guards";
-import { callWithFallback, getErrorStatus, stripJsonFences, shouldTryNextModel as defaultShouldRetry } from "@/lib/gemini/client";
+import { requireSameOrigin, requireUser, rateLimit, validateBody } from "@/lib/api/guards";
+import { shouldTryNextModel as defaultShouldRetry } from "@/lib/gemini/client";
+import { callGeminiJson, parseGeminiJson } from "@/lib/gemini/json-route";
 import { passageEmbedsTargets } from "@/lib/practice/reader/refinement";
 import type { ReaderQuestion } from "@/lib/practice/reader/types";
 
@@ -28,7 +29,7 @@ interface ReaderResult { passage: string; topic: string; questions: ReaderQuesti
 
 function makeReaderParser(targets: string[]) {
   return function parseReader(raw: string): ReaderResult {
-    const parsed = ResponseSchema.parse(JSON.parse(stripJsonFences(raw)));
+    const parsed = parseGeminiJson(raw, (json) => ResponseSchema.parse(json));
     if (!passageEmbedsTargets(parsed.passage, targets)) {
       throw Object.assign(new Error("refinement failed"), { statusCode: 422 });
     }
@@ -60,28 +61,22 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const { data: body, error: validationError } = await validateBody(request, RequestSchema);
   if (validationError) return validationError as NextResponse;
 
-  const apiKey = process.env.GEMINI_API_KEY;
-  if (!apiKey) return NextResponse.json({ error: "AI service unavailable" }, { status: 503 });
-
-  try {
-    const result = await callWithFallback(
-      apiKey,
-      {
-        contents: buildGenerateReaderUserPrompt({ targets: body.targets, level: body.level }),
-        config: {
-          systemInstruction: GENERATE_READER_SYSTEM_PROMPT,
-          responseMimeType: "application/json",
-          temperature: 0.6,
-          maxOutputTokens: 1024,
-        },
+  const { data: result, response } = await callGeminiJson({
+    endpoint: "/api/gemini/generate-reader",
+    userId: user.id,
+    params: {
+      contents: buildGenerateReaderUserPrompt({ targets: body.targets, level: body.level }),
+      config: {
+        systemInstruction: GENERATE_READER_SYSTEM_PROMPT,
+        responseMimeType: "application/json",
+        temperature: 0.6,
+        maxOutputTokens: 1024,
       },
-      makeReaderParser(body.targets),
-      { shouldRetry: readerShouldRetry }
-    );
-    return NextResponse.json(result);
-  } catch (err: unknown) {
-    console.error("generate-reader error:", redactError(err));
-    const status = getErrorStatus(err) ?? 500;
-    return publicErrorResponse(status >= 500 ? 500 : status, "Failed to generate reader");
-  }
+    },
+    parse: makeReaderParser(body.targets),
+    fallbackOptions: { shouldRetry: readerShouldRetry },
+    failureMessage: "Failed to generate reader",
+  });
+  if (response) return response;
+  return NextResponse.json(result);
 }

@@ -7,8 +7,8 @@ import {
   SECURE_HEADERS,
   publicErrorResponse,
   rateLimit,
-  redactError,
 } from "@/lib/api/guards";
+import { logServerError } from "@/lib/api/logging";
 
 export const runtime = "nodejs";
 
@@ -44,7 +44,11 @@ export async function POST(
     .maybeSingle();
 
   if (selectErr) {
-    console.error("[words/[id]/enrich] lookup failed:", redactError(selectErr));
+    logServerError("Word enrichment lookup failed", selectErr, {
+      endpoint: "/api/words/[id]/enrich",
+      operation: "lookup",
+      userId: user.id,
+    });
     return publicErrorResponse(500, "Failed to load word");
   }
 
@@ -63,7 +67,11 @@ export async function POST(
     .neq("status", "processing");
 
   if (resetErr) {
-    console.error("[words/[id]/enrich] reset failed:", resetErr);
+    logServerError("Word enrichment reset failed", resetErr, {
+      endpoint: "/api/words/[id]/enrich",
+      operation: "reset",
+      userId: user.id,
+    });
     return publicErrorResponse(500, "Failed to start enrichment");
   }
 

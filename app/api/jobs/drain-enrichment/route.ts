@@ -2,6 +2,7 @@ import { createClient } from "@supabase/supabase-js";
 import { NextRequest, NextResponse } from "next/server";
 import { enrichWord } from "@/lib/word-bank/enrich";
 import { redactError } from "@/lib/api/guards";
+import { logServerError } from "@/lib/api/logging";
 import type { Database } from "@/lib/supabase/types";
 
 // Vercel cron jobs run at most every 60 s on free tier, every 1 s on Pro.
@@ -51,7 +52,10 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   });
 
   if (claimErr) {
-    console.error("[drain-enrichment] claim failed:", redactError(claimErr));
+    logServerError("Enrichment job claim failed", claimErr, {
+      endpoint: "/api/jobs/drain-enrichment",
+      operation: "claim",
+    });
     return NextResponse.json({ error: "Failed to claim jobs" }, { status: 500 });
   }
 
@@ -99,7 +103,10 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         })
         .eq("id", job.id);
 
-      console.error("[drain-enrichment] job failed:", { jobId: job.id, ...redacted });
+      logServerError("Enrichment job failed", err, {
+        endpoint: "/api/jobs/drain-enrichment",
+        operation: "processJob",
+      });
       results.push({ id: job.id, status: "failed", error: redacted.message });
     }
   }

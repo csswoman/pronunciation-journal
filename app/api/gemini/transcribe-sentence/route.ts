@@ -1,9 +1,10 @@
 import { createHash } from "crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { requireSameOrigin, requireUser, rateLimit, validateBody, publicErrorResponse, redactError } from "@/lib/api/guards";
+import { requireSameOrigin, requireUser, rateLimit, validateBody, publicErrorResponse } from "@/lib/api/guards";
 import { callWithFallback, getErrorStatus } from "@/lib/gemini/client";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { logServerError } from "@/lib/api/logging";
 
 // Separate endpoint for transcribing full spoken sentences (e.g. interview responses).
 // Differences from /api/gemini/transcribe:
@@ -180,8 +181,13 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     return NextResponse.json({ transcript });
   } catch (err: unknown) {
-    console.error("transcribe-sentence error:", redactError(err));
     const status = getErrorStatus(err) ?? 500;
+    logServerError("Sentence transcription failed", err, {
+      endpoint: "/api/gemini/transcribe-sentence",
+      operation: "transcribe",
+      status,
+      userId: user.id,
+    });
     return publicErrorResponse(status >= 500 ? 500 : status, "Failed to transcribe sentence");
   }
 }

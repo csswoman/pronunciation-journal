@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCategoryWords } from "@/lib/lexicon/categories";
 import { createUserScopedClient, requireSameOrigin, requireUser, rateLimit, SECURE_HEADERS, publicErrorResponse } from "@/lib/api/guards";
+import { logServerError } from "@/lib/api/logging";
 
 const WORD_BANK_LEXICON_COLUMNS = [
   "id",
@@ -89,7 +90,11 @@ export async function POST(
     .in("source_ref", sourceRefs);
 
   if (selectErr) {
-    console.error("[lexicon/[id]] select failed:", selectErr);
+    logServerError("Lexicon word bank select failed", selectErr, {
+      endpoint: "/api/lexicon/[id]",
+      operation: "selectWordBankRows",
+      userId: user.id,
+    });
     return publicErrorResponse(500, "Failed to load lexicon words");
   }
 

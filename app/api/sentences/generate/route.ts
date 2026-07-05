@@ -6,6 +6,7 @@ import { z } from "zod";
 import type { Database } from "@/lib/supabase/types";
 import { buildSentenceReorderUserPrompt, SENTENCE_REORDER_SYSTEM_PROMPT } from "@/lib/ai-prompts";
 import { requireSameOrigin, requireUser, rateLimit, validateBody, SECURE_HEADERS, publicErrorResponse } from "@/lib/api/guards";
+import { logServerError } from "@/lib/api/logging";
 
 export const runtime = "nodejs";
 
@@ -145,7 +146,11 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
     sentences = await generateSentencesWithGemini(topic, level, count);
   } catch (err) {
-    console.error("[sentences/generate] Gemini error:", err);
+    logServerError("Sentence generation Gemini call failed", err, {
+      endpoint: "/api/sentences/generate",
+      operation: "generateSentences",
+      userId: user.id,
+    });
     return publicErrorResponse(502, "Generation failed");
   }
 
@@ -169,7 +174,11 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     .select("id, content, source, title");
 
   if (insertErr) {
-    console.error("[sentences/generate] DB insert error:", insertErr);
+    logServerError("Sentence generation cache insert failed", insertErr, {
+      endpoint: "/api/sentences/generate",
+      operation: "cacheInsert",
+      userId: user.id,
+    });
     // Still return the generated sentences even if caching failed
     return NextResponse.json(
       { fragments: rows.map(({ id, content, source, title }) => ({ id, content, source, title })), fromCache: false },

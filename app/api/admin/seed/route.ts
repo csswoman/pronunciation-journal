@@ -9,6 +9,7 @@ import {
 import { requireAdmin } from "@/lib/api/require-admin";
 import { AdminSeedBodySchema } from "@/lib/admin/seed/mutation-schemas";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { logServerError } from "@/lib/api/logging";
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
   const originError = requireSameOrigin(request);
@@ -49,7 +50,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   }
 
   if (dbError) {
-    console.error("[admin/seed] insert failed", { action: body.action, code: dbError.code });
+    logServerError("Admin seed insert failed", dbError, {
+      endpoint: "/api/admin/seed",
+      operation: body.action,
+      userId: user.id,
+    });
     return publicErrorResponse(500, "Failed to save seed data");
   }
 

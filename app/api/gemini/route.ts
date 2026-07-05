@@ -13,6 +13,7 @@ import {
   streamWithFallback,
   STREAM_TIMEOUT_MS,
 } from "@/lib/gemini/chat-route";
+import { logServerError } from "@/lib/api/logging";
 
 // ---------------------------------------------------------------------------
 // Request schema — all strings bounded, unknown keys rejected
@@ -183,8 +184,13 @@ export async function POST(request: NextRequest): Promise<Response> {
     );
     return Response.json({ content: responseText }, { headers: SECURE_HEADERS });
   } catch (err: unknown) {
-    console.error("Gemini API error:", err);
     const status = getErrorStatus(err) ?? 500;
+    logServerError("Gemini chat route failed", err, {
+      endpoint: "/api/gemini",
+      operation: body.stream ? "stream" : "sendMessage",
+      status,
+      userId: user.id,
+    });
     return publicErrorResponse(status >= 500 ? 500 : status, "Gemini request failed");
   }
 }

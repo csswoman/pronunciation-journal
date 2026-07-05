@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { requireSameOrigin, requireUser, rateLimit, validateBody, SECURE_HEADERS, publicErrorResponse } from "@/lib/api/guards";
 import { saveAssessmentResult } from "@/lib/courses/assessment-queries";
+import { logServerError } from "@/lib/api/logging";
 import type { AssessmentResult } from "@/lib/courses/assessment";
 import type { CefrLevelId } from "@/lib/courses/types";
 
@@ -58,7 +59,11 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       body.evaluatedLevel ?? undefined,
     );
   } catch (error) {
-    console.error("[assessment/results] save failed:", error);
+    logServerError("Assessment result save failed", error, {
+      endpoint: "/api/assessment/results",
+      operation: "saveAssessmentResult",
+      userId: user.id,
+    });
     return publicErrorResponse(500, "Failed to save assessment result");
   }
 

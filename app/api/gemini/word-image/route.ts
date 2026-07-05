@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { requireSameOrigin, requireUser, rateLimit, publicErrorResponse, redactError } from "@/lib/api/guards";
+import { requireSameOrigin, requireUser, rateLimit, publicErrorResponse } from "@/lib/api/guards";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { logServerError } from "@/lib/api/logging";
 
 export const maxDuration = 30;
 
@@ -49,7 +50,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     .upload(path, buffer, { contentType: file.type, upsert: true });
 
   if (uploadError) {
-    console.error("[word-image] Storage upload error:", redactError(uploadError));
+    logServerError("Word image upload failed", uploadError, {
+      endpoint: "/api/gemini/word-image",
+      operation: "upload",
+      userId: user.id,
+    });
     return publicErrorResponse(500, "Failed to save image");
   }
 
@@ -62,7 +67,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     .eq("user_id", user.id);
 
   if (updateError) {
-    console.error("[word-image] entry update error:", redactError(updateError));
+    logServerError("Word image metadata update failed", updateError, {
+      endpoint: "/api/gemini/word-image",
+      operation: "updateMetadata",
+      userId: user.id,
+    });
     return publicErrorResponse(500, "Failed to save image metadata");
   }
 
@@ -111,7 +120,11 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
     .eq("user_id", user.id);
 
   if (updateError) {
-    console.error("[word-image] entry delete update error:", redactError(updateError));
+    logServerError("Word image metadata delete failed", updateError, {
+      endpoint: "/api/gemini/word-image",
+      operation: "deleteMetadata",
+      userId: user.id,
+    });
     return publicErrorResponse(500, "Failed to remove image metadata");
   }
 

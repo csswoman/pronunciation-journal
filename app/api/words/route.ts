@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { enqueueWordEnrichmentJob } from "@/lib/word-bank/jobs";
-import { createUserScopedClient, requireSameOrigin, requireUser, rateLimit, validateBody, SECURE_HEADERS, publicErrorResponse, redactError } from "@/lib/api/guards";
+import { createUserScopedClient, requireSameOrigin, requireUser, rateLimit, validateBody, SECURE_HEADERS, publicErrorResponse } from "@/lib/api/guards";
+import { logServerError } from "@/lib/api/logging";
 
 export const runtime = "nodejs";
 
@@ -59,7 +60,11 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       .single();
 
     if (updateErr || !word) {
-      console.error("[POST /api/words] retry update failed:", redactError(updateErr));
+      logServerError("Word retry update failed", updateErr, {
+        endpoint: "/api/words",
+        operation: "retryUpdate",
+        userId: user.id,
+      });
       return publicErrorResponse(500, "Failed to retry word");
     }
 
@@ -80,7 +85,11 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     .single();
 
   if (insertErr || !word) {
-    console.error("[POST /api/words] insert failed:", redactError(insertErr));
+    logServerError("Word insert failed", insertErr, {
+      endpoint: "/api/words",
+      operation: "insert",
+      userId: user.id,
+    });
     return publicErrorResponse(500, "Failed to create word");
   }
 
@@ -94,7 +103,11 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       .single();
 
     if (deckErr) {
-      console.error("[POST /api/words] deck lookup failed:", redactError(deckErr));
+      logServerError("Word deck lookup failed", deckErr, {
+        endpoint: "/api/words",
+        operation: "deckLookup",
+        userId: user.id,
+      });
       return publicErrorResponse(500, "Failed to verify deck");
     }
 
@@ -107,7 +120,11 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       .insert({ word_id: word.id, deck_id: deckId });
 
     if (linkErr) {
-      console.error("[POST /api/words] deck link failed:", redactError(linkErr));
+      logServerError("Word deck link failed", linkErr, {
+        endpoint: "/api/words",
+        operation: "deckLink",
+        userId: user.id,
+      });
       return publicErrorResponse(500, "Failed to add word to deck");
     }
 
