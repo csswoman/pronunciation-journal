@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useLiveQuery } from "dexie-react-hooks";
 
 import { IPA_AUDIO_MAP, SOUNDS_BASE_URL } from "@/lib/pronunciation/ipa-audio";
+import { cancelSpeech, speakText } from "@/lib/speech/synthesis";
 import {
   getExploredSymbolsToday,
   markPhonemeExplored,
@@ -66,12 +67,7 @@ export default function IPAChart() {
   );
 
   const speakExample = useCallback((word: string) => {
-    if (typeof window === "undefined" || !window.speechSynthesis) return;
-    window.speechSynthesis.cancel();
-    const utter = new SpeechSynthesisUtterance(word);
-    utter.lang = "en-US";
-    utter.rate = 0.85;
-    window.speechSynthesis.speak(utter);
+    speakText(word);
   }, []);
 
   const playSound = useCallback((rawSymbol: string, example?: string) => {
@@ -79,7 +75,7 @@ export default function IPAChart() {
     if (!fileName) return;
 
     currentAudioRef.current?.pause();
-    window.speechSynthesis?.cancel();
+    cancelSpeech();
 
     try {
       setPlayingSymbol(rawSymbol);

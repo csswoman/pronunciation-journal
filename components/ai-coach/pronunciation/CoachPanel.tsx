@@ -19,6 +19,7 @@ interface CoachPanelProps {
   focusTip: string | null;
   focusProgress: FocusProgress | null;
   savedWords: Set<string>;
+  onListen: (word: string) => void;
   onSave: (word: string) => void;
 }
 
@@ -27,6 +28,7 @@ export default function CoachPanel({
   focusTip,
   focusProgress,
   savedWords,
+  onListen,
   onSave,
 }: CoachPanelProps) {
   const isSaved = savedWords.has(focus.word.toLowerCase());
@@ -74,7 +76,7 @@ export default function CoachPanel({
         </div>
 
         <div className="flex gap-1 shrink-0">
-          <IconBtn title="Listen to this sound">
+          <IconBtn title="Listen to this sound" onClick={() => onListen(focus.word)}>
             <Volume2 size={13} />
           </IconBtn>
           <IconBtn title={isSaved ? "Saved" : "Save for practice"} onClick={handleSave} disabled={isSaved}>

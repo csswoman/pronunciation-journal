@@ -1,4 +1,5 @@
 import { pickUSPhonetic, stripIPASlashes } from "@/lib/ai-practice/modes/pronunciation";
+import { speakText } from "@/lib/speech/synthesis";
 import {
   getPronunciationCoachState,
   getPronunciationMasteredPhrases,
@@ -122,4 +123,6 @@ export async function fetchWordIPA(word: string): Promise<string | null> {
   try { const res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`); if (!res.ok) return null; const data = await res.json(); if (!Array.isArray(data) || !data[0]) return null; const phonetics = (data[0] as { phonetics?: Array<{ text?: string; audio?: string }> }).phonetics ?? []; const raw = pickUSPhonetic(phonetics); return raw ? stripIPASlashes(raw) : null; } catch { return null; }
 }
 
-export function speakPhrase(phrase: string, rate = 0.85) { if (typeof window === "undefined" || !("speechSynthesis" in window)) return; window.speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(phrase); u.lang = "en-US"; u.rate = rate; window.speechSynthesis.speak(u); }
+export function speakPhrase(phrase: string, rate = 0.85) {
+  speakText(phrase, { rate });
+}

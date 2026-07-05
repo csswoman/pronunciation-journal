@@ -261,7 +261,12 @@ export function useStreamingChat({
     }
   }, []);
 
-  useEffect(() => finalizeSession, [finalizeSession]);
+  useEffect(() => {
+    return () => {
+      abortRef.current?.abort();
+      finalizeSession();
+    };
+  }, [finalizeSession]);
 
   const resetChat = useCallback(() => {
     abortRef.current?.abort();

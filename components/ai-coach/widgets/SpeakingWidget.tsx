@@ -16,6 +16,7 @@ import type { ScoringResult, WordResult } from "@/lib/types";
 import { useSpeechInput } from "@/hooks/useSpeechInput";
 import { useSharedMicStream } from "@/hooks/useSharedMicStream";
 import { scorePronunciation } from "@/lib/pronunciation/scoring";
+import { speakText } from "@/lib/speech/synthesis";
 import RecordingControls from "@/components/ai-coach/pronunciation/RecordingControls";
 import ExerciseFeedback from "./ExerciseFeedback";
 
@@ -73,12 +74,7 @@ export default function SpeakingWidget({ args, status, onAnswer, onNext, onRetry
   const hasResult   = scoring !== null;
 
   const speakTarget = useCallback(() => {
-    if (typeof window === "undefined" || !window.speechSynthesis) return;
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(args.target);
-    utterance.lang = "en-US";
-    utterance.rate = 0.85;
-    window.speechSynthesis.speak(utterance);
+    speakText(args.target);
   }, [args.target]);
 
   const handleMicClick = useCallback(() => {

@@ -10,6 +10,7 @@ import {
 } from "@/lib/core-1000/queue";
 import { gradeCore1000Word, type GradeExtras } from "@/lib/core-1000/grade";
 import { core1000WordId, NEW_CARDS_PER_DAY, type CoreWord } from "@/lib/core-1000/types";
+import { loadPendingLapses, savePendingLapses } from "@/lib/core-1000/pending-lapses";
 import {
   getCore1000SrsEntries,
   getCore1000IntroducedToday,
@@ -119,13 +120,7 @@ export function useEssentialWordsSession(): UseEssentialWordsSessionReturn {
   const seenIdsRef = useRef<Set<string>>(new Set());
 
   const persistPendingLapses = useCallback(() => {
-    if (typeof window === "undefined") return;
-    const entries = Array.from(pendingLapsesRef.current.entries());
-    if (entries.length === 0) {
-      window.sessionStorage.removeItem("core1000:pending-lapses");
-      return;
-    }
-    window.sessionStorage.setItem("core1000:pending-lapses", JSON.stringify(entries));
+    savePendingLapses(pendingLapsesRef.current);
   }, []);
 
   const syncCounts = useCallback((q: Core1000QueueItem[], i: number) => {
@@ -158,16 +153,7 @@ export function useEssentialWordsSession(): UseEssentialWordsSessionReturn {
   }, [persistPendingLapses, user?.id]);
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
-    const raw = window.sessionStorage.getItem("core1000:pending-lapses");
-    if (!raw) return;
-
-    try {
-      const entries = JSON.parse(raw) as [string, number][];
-      pendingLapsesRef.current = new Map(entries);
-    } catch {
-      window.sessionStorage.removeItem("core1000:pending-lapses");
-    }
+    pendingLapsesRef.current = loadPendingLapses();
   }, []);
 
   useEffect(() => {
