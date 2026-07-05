@@ -4,7 +4,7 @@ This document records the project's performance boundaries, measurement
 baseline, and architectural rules. Implementation work is tracked separately
 in [`plans/README.md`](../../plans/README.md).
 
-Last measured: 2026-06-21 at implementation commit `a3dd495`.
+Last measured: 2026-07-03 at commit `51515e0` (post roadmap 032 Fase 2).
 
 ## Baseline
 
@@ -13,41 +13,34 @@ Environment:
 - Next.js 16.2.9 with Turbopack production build
 - React 19.2.7
 - Project runtime requirement: Node.js 24.x
-- Audit machine used Node.js 26.3.1, so build timings are diagnostic rather
-  than release benchmarks
 
 Verification baseline:
 
-- Production compilation: 10.8 seconds
-- TypeScript phase: 14.9 seconds
-- Static generation: 88 pages in about 1.1 seconds
-- Tests: 110 files, 735 tests, all passing
-- Public assets: approximately 8.8 MB
-- Lexicon JSON: 10 files, approximately 313.1 KB
+- Production compilation: 11.2 seconds
+- TypeScript phase: 16.5 seconds
+- Static generation: 91 pages in about 1.6 seconds
+- Tests: 151 files, 925 tests, all passing
+- Bundle analysis: `pnpm analyze:bundle` → `bundle-summary.json` (CI enforces `pnpm analyze:bundle:check`)
 
-### Client JavaScript
+### Client JavaScript (Turbopack build, 2026-07-03)
 
-The values below sum unique route client chunks and gzip each generated file.
-They are suitable for before/after comparisons in the same build environment,
-not as a substitute for browser transfer traces.
+Metrics from `scripts/analyze-bundle.mjs` (gzip via Node zlib, same machine as build):
 
-| Route | Raw JS | Gzip JS |
+| Metric | Raw | Gzip |
 |---|---:|---:|
-| Root layout shared entry | 515.0 KB | 148.3 KB |
-| `/` | 929.8 KB | 254.4 KB |
-| `/words` | 531.5 KB | 153.0 KB |
-| `/courses` | 713.7 KB | 207.6 KB |
-| `/mini-lessons` | 961.0 KB | 261.4 KB |
-| `/practice/review` | 885.3 KB | 253.2 KB |
+| Root main entry (`build-manifest.json` root + polyfills) | 556 KB | 168 KB |
+| All `static/chunks/*.js` (64 files) | 6,960 KB | 1,868 KB |
 
-Additional server output:
+CI budgets (`scripts/bundle-budget.json`, +10% tolerance):
 
-| Artifact | Size |
+| Metric | Budget gzip |
 |---|---:|
-| `/courses.rsc` | 38.9 KB |
-| `/courses.html` | 49.1 KB |
-| `/mini-lessons.rsc` | 40.3 KB |
-| `/mini-lessons.html` | 49.5 KB |
+| `rootMainGzipKB` | 168 KB |
+| `allChunksGzipKB` | 1,868 KB |
+
+Historical route-level gzip totals (pre-Turbopack baseline, 2026-06-21) remain
+below for trend comparison only — re-measure per-route after adding route-level
+parsing to `analyze-bundle.mjs` if needed.
 
 ## Current optimization backlog
 
@@ -60,7 +53,7 @@ document:
 | [025](../../plans/025-split-words-route-by-tab.md) | Isolate `/words` tab code and data subscriptions |
 | [026](../../plans/026-cache-lexicon-content.md) | Cache parsed static lexicon content |
 | [027](../../plans/027-server-render-course-path.md) | Keep curriculum data on the server side of RSC |
-| [028](../../plans/028-scope-phoneme-session-data.md) | Bound phoneme session queries and grouping |
+| [028](../../plans/028-scope-phoneme-session-data.md) | Bound phoneme session queries and grouping — **DONE** (2026-07-03) |
 | [029](../../plans/029-narrow-query-projections.md) | Remove remaining broad Supabase projections |
 
 Recommended order: 024, 025, 026, 027, 028, 029. Plans 026–029 are

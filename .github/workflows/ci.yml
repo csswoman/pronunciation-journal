@@ -115,6 +115,16 @@ jobs:
           test -d .next/server          || (echo "Missing .next/server directory" && exit 1)
           echo "Build artifact looks valid. BUILD_ID=$(cat .next/BUILD_ID)"
 
+      - name: Analyze bundle sizes
+        run: pnpm analyze:bundle:check
+
+      - name: Upload bundle summary
+        uses: actions/upload-artifact@v4
+        with:
+          name: bundle-summary
+          path: bundle-summary.json
+          retention-days: 14
+
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:

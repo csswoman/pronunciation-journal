@@ -26,18 +26,23 @@ de tests. No son métricas de vanidad — el objetivo es que suban gradualmente.
 | Functions | 45% | ~54% |
 | Statements | 50% | ~55% |
 
-### Targets por archivo crítico (a alcanzar, no aplicados en CI todavía)
+### Targets por archivo crítico (aplicados en CI desde Jul 2026)
 
-| Archivo | Target lines | Target functions | Justificación |
-|---|---|---|---|
-| `lib/api/guards.ts` | 80% | 80% | Seguridad — cualquier regresión es un riesgo |
-| `lib/gemini/fallback.ts` | 90% | 90% | Fallback incorrecto = fallo silencioso en AI |
-| `lib/gemini/client.ts` | 70% | 70% | Timeout y retry deben ser correctos |
-| `lib/practice/srs.ts` | 80% | 80% | Correctitud del SRS afecta aprendizaje |
-| `lib/api/guards.ts` — `redactError` | 90% | 90% | PII leak si falla |
+Umbrales en `vitest.config.ts` bajo `coverage.thresholds["ruta/al/archivo.ts"]`.
+Cada valor es ~5 puntos por debajo de la cobertura medida para evitar falsos
+positivos mientras se añaden tests.
 
-Para aplicar umbrales per-archivo, añadirlos en `vitest.config.ts` bajo
-`coverage.thresholds["ruta/al/archivo.ts"]` cuando los tests existan.
+| Archivo | Lines | Functions | Justificación |
+|---|---:|---:|---|
+| `lib/api/guards.ts` | 48% | 45% | Seguridad — subir gradualmente hacia 80% |
+| `lib/api/require-admin.ts` | 95% | 95% | Gate admin server-side |
+| `lib/gemini/client.ts` | 88% | 80% | Timeout y fallback |
+| `lib/gemini/fallback.ts` | 95% | 95% | Cadena de modelos |
+| `lib/practice/queries.ts` | 62% | 60% | Persistencia de respuestas |
+| `lib/sync/sync-manager.ts` | 72% | 95% | Outbox offline |
+
+Para subir un umbral: medir con `pnpm test:coverage`, actualizar el valor en
+`vitest.config.ts` y documentar aquí.
 
 ## Archivos con Baja Cobertura Conocida
 

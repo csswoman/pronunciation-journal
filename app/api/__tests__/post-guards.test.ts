@@ -41,7 +41,11 @@ describe("POST API guard coverage", () => {
       const rel = relative(filePath);
       const issues: string[] = [];
 
-      if (!source.includes("requireUser(") && !source.includes(".auth.getUser(")) {
+      if (
+        !source.includes("requireUser(") &&
+        !source.includes("requireAdmin(") &&
+        !source.includes(".auth.getUser(")
+      ) {
         issues.push("auth");
       }
       if (!SAME_ORIGIN_EXEMPTIONS.has(rel) && !source.includes("requireSameOrigin(")) {

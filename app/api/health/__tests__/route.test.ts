@@ -1,5 +1,9 @@
-import { describe, it, expect } from 'vitest'
-import { GET } from '../route'
+import { afterEach, describe, it, expect, vi } from 'vitest'
+
+afterEach(() => {
+  vi.unstubAllEnvs()
+  vi.resetModules()
+})
 
 function makeRequest(url: string) {
   return new Request(url)
@@ -7,6 +11,7 @@ function makeRequest(url: string) {
 
 describe('GET /api/health', () => {
   it('returns 200 for liveness (no ?ready param)', async () => {
+    const { GET } = await import('../route')
     const res = await GET(makeRequest('http://localhost/api/health'))
 
     expect(res.status).toBe(200)
@@ -17,9 +22,13 @@ describe('GET /api/health', () => {
   })
 
   it('returns 503 for readiness when Supabase env vars are missing', async () => {
+    vi.stubEnv('NEXT_PUBLIC_SUPABASE_URL', '')
+    vi.stubEnv('NEXT_PUBLIC_SUPABASE_ANON_KEY', '')
+    vi.stubEnv('GEMINI_API_KEY', '')
+
+    const { GET } = await import('../route')
     const res = await GET(makeRequest('http://localhost/api/health?ready=1'))
 
-    // In test env, Supabase creds are not set, so readiness reports degraded.
     expect(res.status).toBe(503)
 
     const body = await res.json()

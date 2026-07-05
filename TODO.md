@@ -1,7 +1,7 @@
 # TODO de Producción
 
 Auditoría crítica original: commit `11dee70`, 2026-06-30.
-**Última actualización:** 2026-07-03 — reconciliado con `plans/031-prioritized-production-roadmap.md`.
+**Última actualización:** 2026-07-03 — roadmap 031 cerrado; trabajo nuevo en `plans/032-post-production-improvement-roadmap.md`.
 
 Convenciones:
 
@@ -43,10 +43,19 @@ Verificación actual (2026-07-03):
 | # | Área | Qué falta |
 |---|---|---|
 
-### ABIERTO
+### HECHO (roadmap 032 Fase 1-2)
 
 | # | Área |
 |---|---|
+| T44-T49 | Prompts centralizados, STT cache RLS, admin seed, bundle CI, fonemas scoped, coverage per-file |
+| T50-T51 | Reader en daily plan + checklist QA; hilo entre pasos (plan 09) |
+
+### ABIERTO (roadmap 032)
+
+| # | Área | Prioridad |
+|---|---|---|
+| T52-T54 | Tests sync-manager/API + reconciliación índice planes | P2 |
+| T55-T58 | Escala opcional: semáforo Gemini, staging grants, sounds offline, observabilidad | P2/P3 |
 
 ---
 
@@ -149,14 +158,18 @@ Verificación actual (2026-07-03):
 | Área | Nota | Justificación | Qué falta para 10/10 |
 |---|---:|---|---|
 | Arquitectura | 9/10 | Query layer, RLS, jobs durables, rate limit distribuido, Gemini unificado, pronunciation offline en Dexie y health check programado. | Alertas operativas más ricas si se adopta Sentry o Vercel Pro. |
-| Calidad del código | 8/10 | Type-check verde, 915 tests, helper Gemini compartido, `useWords` y `AuthPanel` divididos. | Regenerar tipos post-migración cron y subir umbrales críticos. |
+| Calidad del código | 8/10 | Type-check verde, 925 tests, coverage per-file en CI. | Subir umbrales guards hacia 80%. |
 | Seguridad | 9/10 | CSRF universal, CSP, `redactError`, rate limit RPC, secret scan, grants anon endurecidos y SQL P0 neutralizado. | Validar políticas/grants contra una base staging aplicada. |
-| Rendimiento | 7/10 | Timeouts Gemini uniformes, caching por capa, jobs async. Sin métricas reales ni bundle CI. | Métricas, budgets, bundle analysis. |
+| Rendimiento | 8/10 | Bundle analysis en CI con budgets; fonemas scoped; timeouts Gemini. | Métricas per-route en analyze-bundle. |
 | Escalabilidad | 8/10 | Rate limit multi-instancia, cola durable, worker cron y observabilidad básica compatible con Free. Falta backpressure Gemini global. | Semáforo Gemini, pruebas de carga y Log Drain si se usa Vercel Pro. |
-| Testing | 9/10 | Suite verde, coverage con umbrales, guards testeados, integration config y Playwright/axe en CI. | Subir umbrales per-archivo crítico. |
+| Testing | 9/10 | Suite verde, coverage global + per-file crítico en CI. | Subir umbrales guards/sync hacia targets altos. |
 | Documentación | 10/10 | Runbook, threat model, offline/sync, entornos, backups, multi-instance, testing strategy y registro de migraciones históricas. | Mantener docs sincronizadas con cambios operativos. |
 | Preparación para producción | 9/10 | CI verde, seguridad API cerrada, backups documentados, SQL P0 neutralizado, grants anon endurecidos, a11y real y health check programado compatible con Vercel Free. | Configurar alertas más ricas cuando el plan/stack lo permita. |
 
 ## Orden Recomendado
 
-1. **Operativo opcional:** si se sube a Vercel Pro, configurar Log Drain para retencion centralizada de logs.
+Fuente detallada: `plans/032-post-production-improvement-roadmap.md`.
+
+1. **Fase 4 (tests):** T52-T54 sync-manager, API routes, reconciliación índice planes.
+2. **Fase 4:** T54 reconciliar índice → T52 sync tests → T53 API tests.
+5. **Operativo opcional:** T58 Log Drain (Vercel Pro) o Sentry free tier.

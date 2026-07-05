@@ -1,0 +1,8 @@
+{
+  "tolerancePct": 10,
+  "limitsKb": {
+    "rootMainGzipKB": 168,
+    "allChunksGzipKB": 1868
+  },
+  "notes": "Baseline captured 2026-07-03 at commit 51515e0+ (Next.js 16.2.9 Turbopack build). CI allows +10% growth before failing."
+}
