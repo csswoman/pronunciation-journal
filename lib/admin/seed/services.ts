@@ -6,9 +6,27 @@ import type {
   Sound,
   Word,
 } from "@/lib/admin/seed/types";
+import type { AdminSeedBody } from "@/lib/admin/seed/mutation-schemas";
 
 function supabase() {
   return getSupabaseBrowserClient();
+}
+
+async function adminInsert(
+  body: AdminSeedBody,
+): Promise<{ error: { message: string } | null }> {
+  const res = await fetch("/api/admin/seed", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+
+  if (!res.ok) {
+    const json = (await res.json().catch(() => ({}))) as { error?: string };
+    return { error: { message: json.error ?? `HTTP ${res.status}` } };
+  }
+
+  return { error: null };
 }
 
 export async function fetchSounds(): Promise<Sound[]> {
@@ -23,7 +41,7 @@ export async function insertSound(payload: {
   example: string | null;
   difficulty: number | null;
 }) {
-  return supabase().from("sounds").insert(payload);
+  return adminInsert({ action: "insertSound", payload });
 }
 
 export async function fetchSoundsAndWords(): Promise<{ sounds: Sound[]; words: Word[] }> {
@@ -46,7 +64,7 @@ export async function insertWord(payload: {
   difficulty: number | null;
   audio_url: string | null;
 }) {
-  return supabase().from("words").insert(payload);
+  return adminInsert({ action: "insertWord", payload });
 }
 
 export async function fetchPatternsAndPatternWords(): Promise<{ patterns: Pattern[]; patternWords: PatternWord[] }> {
@@ -66,7 +84,7 @@ export async function insertPattern(payload: {
   type: string | null;
   sound_focus: string | null;
 }) {
-  return supabase().from("patterns").insert(payload);
+  return adminInsert({ action: "insertPattern", payload });
 }
 
 export async function insertPatternWord(payload: {
@@ -74,7 +92,7 @@ export async function insertPatternWord(payload: {
   word: string;
   ipa: string | null;
 }) {
-  return supabase().from("pattern_words").insert(payload);
+  return adminInsert({ action: "insertPatternWord", payload });
 }
 
 export async function fetchSoundsAndMinimalPairs(): Promise<{ sounds: Sound[]; pairs: MinimalPair[] }> {
@@ -102,5 +120,5 @@ export async function insertMinimalPair(payload: {
   contrast_ipa_a: string | null;
   contrast_ipa_b: string | null;
 }) {
-  return supabase().from("minimal_pairs").insert(payload);
+  return adminInsert({ action: "insertMinimalPair", payload });
 }
