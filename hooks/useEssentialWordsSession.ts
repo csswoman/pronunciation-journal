@@ -1,8 +1,6 @@
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { fetchCoreWords } from "@/lib/core-1000/client";
 import {
-  buildSessionQueue,
   reinsertLearning,
   deriveCounts,
   appendNewBatch,
@@ -12,8 +10,17 @@ import { gradeCore1000Word, type GradeExtras } from "@/lib/core-1000/grade";
 import { core1000WordId, NEW_CARDS_PER_DAY, type CoreWord } from "@/lib/core-1000/types";
 import { loadPendingLapses, savePendingLapses } from "@/lib/core-1000/pending-lapses";
 import {
-  getCore1000SrsEntries,
-  getCore1000IntroducedToday,
+  loadEssentialWordsQueue,
+  type EssentialWordsStats,
+} from "@/lib/core-1000/session-loader";
+import {
+  advanceSummary,
+  buildCore1000ExerciseResult,
+  phaseForCore1000Item,
+  type EssentialWordsPhase,
+  type EssentialWordsSessionSummary,
+} from "@/lib/core-1000/session-model";
+import {
   recordCore1000Introduction,
   archiveCore1000Word,
 } from "@/lib/db";
@@ -22,39 +29,13 @@ import { recordActivitySession } from "@/lib/progress/activity-hub";
 import { buildSessionResult } from "@/lib/practice/session-result";
 import type { ExerciseResult } from "@/lib/practice/types";
 
-export type EssentialWordsPhase = "loading" | "study" | "speak" | "done" | "empty" | "error";
-
-export interface EssentialWordsStats {
-  totalWords: number;
-  learned: number;
-  dueCount: number;
-  newToday: number;
-  newQuota: number;
-}
+export type { EssentialWordsPhase, EssentialWordsSessionSummary } from "@/lib/core-1000/session-model";
+export type { EssentialWordsStats } from "@/lib/core-1000/session-loader";
 
 export interface EssentialWordsCounts {
   newRemaining: number;
   learningRemaining: number;
   reviewRemaining: number;
-}
-
-export interface EssentialWordsSessionSummary {
-  practiced: number;
-  correct: number;
-}
-
-interface UseEssentialWordsSessionReturn {
-  phase: EssentialWordsPhase;
-  current: Core1000QueueItem | null;
-  stats: EssentialWordsStats;
-  counts: EssentialWordsCounts;
-  sessionSummary: EssentialWordsSessionSummary | null;
-  reloadLoading: boolean;
-  startSpeak: () => void;
-  submitGrade: (quality: number, extras?: GradeExtras) => Promise<void>;
-  reload: () => Promise<void>;
-  learnMore: () => void;
-  archiveWord: (word: string) => Promise<void>;
 }
 
 const EMPTY_STATS: EssentialWordsStats = {
@@ -64,44 +45,7 @@ const EMPTY_COUNTS: EssentialWordsCounts = {
   newRemaining: 0, learningRemaining: 0, reviewRemaining: 0,
 };
 
-function phaseForItem(item: Core1000QueueItem): EssentialWordsPhase {
-  return item.kind === "new" ? "study" : "speak";
-}
-
-async function loadQueue(): Promise<{
-  items: Core1000QueueItem[];
-  stats: EssentialWordsStats;
-  allWords: CoreWord[];
-  seenIds: Set<string>;
-  initialPhase: EssentialWordsPhase;
-}> {
-  const [words, srsEntries, introducedToday] = await Promise.all([
-    fetchCoreWords(),
-    getCore1000SrsEntries(),
-    getCore1000IntroducedToday(),
-  ]);
-
-  const items = buildSessionQueue({ words, srsEntries, introducedToday, now: new Date() });
-  const seenIds = new Set(srsEntries.map((e) => e.wordId));
-
-  const stats: EssentialWordsStats = {
-    totalWords: words.length,
-    learned: srsEntries.length,
-    dueCount: items.filter((i) => i.kind === "review").length,
-    newToday: introducedToday.length,
-    newQuota: NEW_CARDS_PER_DAY,
-  };
-
-  return {
-    items,
-    stats,
-    allWords: words,
-    seenIds,
-    initialPhase: items.length === 0 ? "empty" : phaseForItem(items[0]),
-  };
-}
-
-export function useEssentialWordsSession(): UseEssentialWordsSessionReturn {
+export function useEssentialWordsSession() {
   const { user } = useAuth();
   const [phase, setPhase] = useState<EssentialWordsPhase>("loading");
   const [queue, setQueue] = useState<Core1000QueueItem[]>([]);
@@ -201,11 +145,11 @@ export function useEssentialWordsSession(): UseEssentialWordsSessionReturn {
     }
     setIndex(next);
     syncCounts(q, next);
-    setPhase(phaseForItem(q[next]));
+    setPhase(phaseForCore1000Item(q[next]));
   }, [finishSession, syncCounts]);
 
   const bootstrap = useCallback(async () => {
-    const { items, stats: nextStats, allWords, seenIds, initialPhase } = await loadQueue();
+    const { items, stats: nextStats, allWords, seenIds, initialPhase } = await loadEssentialWordsQueue();
     finishingRef.current = false;
     allWordsRef.current = allWords;
     seenIdsRef.current = seenIds;
@@ -224,7 +168,7 @@ export function useEssentialWordsSession(): UseEssentialWordsSessionReturn {
     let cancelled = false;
     (async () => {
       try {
-        const { items, stats: nextStats, allWords, seenIds, initialPhase } = await loadQueue();
+        const { items, stats: nextStats, allWords, seenIds, initialPhase } = await loadEssentialWordsQueue();
         if (cancelled) return;
         allWordsRef.current = allWords;
         seenIdsRef.current = seenIds;
@@ -248,18 +192,7 @@ export function useEssentialWordsSession(): UseEssentialWordsSessionReturn {
       if (!item) return;
       const wordId = core1000WordId(item.entry.word.toLowerCase());
 
-      const result: ExerciseResult = {
-        exerciseId: wordId,
-        slug: extras?.accuracy !== undefined ? "speak_word" : "fill_blank",
-        exerciseTypeId: extras?.accuracy !== undefined ? 10 : 5,
-        isCorrect: quality >= 3,
-        userAnswer: extras?.transcript,
-        contentId: wordId,
-        context: "core-1000",
-        timeMs: 0,
-        score: extras?.accuracy,
-        completedAt: new Date(),
-      };
+      const result = buildCore1000ExerciseResult(item, quality, extras);
 
       if (quality >= 3) {
         await gradeCore1000Word(item.entry.word, quality, extras, user?.id);
@@ -271,10 +204,7 @@ export function useEssentialWordsSession(): UseEssentialWordsSessionReturn {
           setStats((s) => ({ ...s, newToday: s.newToday + 1, learned: s.learned + 1 }));
         }
         sessionResultsRef.current.push(result);
-        setSessionSummary((prev) => ({
-          practiced: (prev?.practiced ?? 0) + 1,
-          correct: (prev?.correct ?? 0) + 1,
-        }));
+        setSessionSummary((prev) => advanceSummary(prev, true));
         advance(queue, index);
       } else {
         // Fail: re-insert ~3 positions ahead, defer SM-2 write to session end
@@ -284,10 +214,7 @@ export function useEssentialWordsSession(): UseEssentialWordsSessionReturn {
         const newQueue = reinsertLearning(queue, index, item);
         setQueue(newQueue);
         sessionResultsRef.current.push(result);
-        setSessionSummary((prev) => ({
-          practiced: (prev?.practiced ?? 0) + 1,
-          correct: prev?.correct ?? 0,
-        }));
+        setSessionSummary((prev) => advanceSummary(prev, false));
         advance(newQueue, index);
       }
     },
@@ -305,7 +232,7 @@ export function useEssentialWordsSession(): UseEssentialWordsSessionReturn {
     }
     setIndex(nextIndex);
     syncCounts(newQueue, nextIndex);
-    setPhase(phaseForItem(newQueue[nextIndex]));
+    setPhase(phaseForCore1000Item(newQueue[nextIndex]));
   }, [phase, queue, index, syncCounts]);
 
   const archiveWord = useCallback(async (word: string) => {
@@ -318,7 +245,7 @@ export function useEssentialWordsSession(): UseEssentialWordsSessionReturn {
       return;
     }
     syncCounts(newQueue, index);
-    setPhase(phaseForItem(newQueue[index]));
+    setPhase(phaseForCore1000Item(newQueue[index]));
   }, [queue, index, finishSession, syncCounts]);
 
   const reload = useCallback(async () => {

@@ -14,6 +14,7 @@ import { Mic, MicOff } from 'lucide-react'
 import { speak } from '@/lib/phoneme-practice/tts'
 import { useSpeechRecognition } from '@/hooks/useSpeechRecognition'
 import { defaultEvaluationEngine } from '@/lib/exercises/evaluation'
+import { getEvaluationWordResults } from '@/lib/exercises/evaluation/word-results'
 import { getFeedbackMessage, calculateXP } from '@/lib/pronunciation/scoring'
 import PronunciationFeedback from '@/components/lesson/PronunciationFeedback'
 import { PillButton } from '@/components/ui/PillButton'
@@ -100,8 +101,7 @@ export function SpeakScoredExercise({ exercise, onSubmit }: Props) {
         setScored({
           correct: evalResult.correct,
           score: evalResult.score ?? 0,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          wordResults: (evalResult as any).wordResults ?? [],
+          wordResults: getEvaluationWordResults(evalResult),
           transcript: speechResult.transcript,
         })
       })

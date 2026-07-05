@@ -1,0 +1,46 @@
+import { fetchCoreWords } from "@/lib/core-1000/client";
+import { buildSessionQueue, type Core1000QueueItem } from "@/lib/core-1000/queue";
+import { NEW_CARDS_PER_DAY, type CoreWord } from "@/lib/core-1000/types";
+import { getCore1000IntroducedToday, getCore1000SrsEntries } from "@/lib/db";
+import { phaseForCore1000Item, type EssentialWordsPhase } from "@/lib/core-1000/session-model";
+
+export interface EssentialWordsStats {
+  totalWords: number;
+  learned: number;
+  dueCount: number;
+  newToday: number;
+  newQuota: number;
+}
+
+export interface LoadedEssentialWordsQueue {
+  items: Core1000QueueItem[];
+  stats: EssentialWordsStats;
+  allWords: CoreWord[];
+  seenIds: Set<string>;
+  initialPhase: EssentialWordsPhase;
+}
+
+export async function loadEssentialWordsQueue(): Promise<LoadedEssentialWordsQueue> {
+  const [words, srsEntries, introducedToday] = await Promise.all([
+    fetchCoreWords(),
+    getCore1000SrsEntries(),
+    getCore1000IntroducedToday(),
+  ]);
+
+  const items = buildSessionQueue({ words, srsEntries, introducedToday, now: new Date() });
+  const seenIds = new Set(srsEntries.map((entry) => entry.wordId));
+
+  return {
+    items,
+    stats: {
+      totalWords: words.length,
+      learned: srsEntries.length,
+      dueCount: items.filter((item) => item.kind === "review").length,
+      newToday: introducedToday.length,
+      newQuota: NEW_CARDS_PER_DAY,
+    },
+    allWords: words,
+    seenIds,
+    initialPhase: items.length === 0 ? "empty" : phaseForCore1000Item(items[0]),
+  };
+}

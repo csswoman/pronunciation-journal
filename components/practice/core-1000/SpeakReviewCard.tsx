@@ -16,6 +16,7 @@ import { ListenButton } from '@/components/ui/ListenButton'
 import { useSpeechInput } from '@/hooks/useSpeechInput'
 import { useSharedMicStream } from '@/hooks/useSharedMicStream'
 import { defaultEvaluationEngine } from '@/lib/exercises/evaluation'
+import { getEvaluationWordResults } from '@/lib/exercises/evaluation/word-results'
 import { accuracyToQuality } from '@/lib/srs'
 import { getFeedbackMessage, calculateXP } from '@/lib/pronunciation/scoring'
 import PronunciationFeedback from '@/components/lesson/PronunciationFeedback'
@@ -96,8 +97,7 @@ export function SpeakReviewCard({ entry, onGraded, onArchive }: Props) {
       .then((evalResult) => {
         setScored({
           score: evalResult.score ?? 0,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          wordResults: (evalResult as any).wordResults ?? [],
+          wordResults: getEvaluationWordResults(evalResult),
           transcript: result.transcript,
         })
       })
