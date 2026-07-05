@@ -144,9 +144,12 @@ export default function DailyChecklist({ conceptLesson, initialStepId, streak = 
   // ── Render: sesión de un paso ──────────────────────────────────────────────
   if (view.mode === 'step') {
     const { step, exerciseIndex } = view
+    const stepIndex = steps.findIndex((s) => s.id === step.id)
     return (
       <DailyStepSession
         step={step}
+        allSteps={steps}
+        stepIndex={stepIndex >= 0 ? stepIndex : 0}
         sessionKey={sessionKey}
         initialExerciseIndex={exerciseIndex}
         onComplete={() => handleComplete(step.id)}

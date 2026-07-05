@@ -3,6 +3,8 @@
 import Link from 'next/link'
 import { ArrowRight, Check } from 'lucide-react'
 import { DailyStepIcon } from './dailyIcons'
+import { StepThreadHints } from './StepThreadHints'
+import { getThreadHintsForStep } from '@/lib/practice/daily-plan/step-thread'
 import type { DailyStepStatus } from '@/hooks/useDailyPlan'
 import type { DailyStep } from '@/lib/practice/types'
 
@@ -32,9 +34,10 @@ export default function DailyStepList({
         const done = status === 'done'
         const resolved = status === 'resolved'
         const isConcept = step.kind === 'concept'
-        // word_intro is a presentation step: it carries study cards, not exercises.
         const cardCount = step.studyCards?.length ?? 0
-        const isStartable = step.exercises.length > 0 || cardCount > 0
+        const hasReader = !!step.readerPassage
+        const isStartable = step.exercises.length > 0 || cardCount > 0 || hasReader
+        const threadHints = getThreadHintsForStep(steps, i)
 
         const inner = (
           <>
@@ -62,8 +65,12 @@ export default function DailyStepList({
                 {step.subtitle}
                 {step.exercises.length > 0 ? ` · ${step.exercises.length} exercises` : ''}
                 {cardCount > 0 ? ` · ${cardCount} ${cardCount === 1 ? 'palabra' : 'palabras'}` : ''}
+                {hasReader ? ' · reading' : ''}
                 {` · ≈${step.estMinutes} min`}
               </p>
+              {threadHints.length > 0 && (
+                <StepThreadHints hints={threadHints} className="mt-2" />
+              )}
             </div>
             {done ? (
               <span className="animate-state-in font-body-sm font-medium text-[var(--success)]">Done</span>
