@@ -73,9 +73,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       <main
         id="main-content"
         className="main-scrollbar flex flex-1 flex-col overflow-y-auto overflow-x-hidden pb-20 lg:pb-0"
-        style={{
-          marginRight: mainMarginRight,
-        }}
+        style={{ marginRight: mainMarginRight }}
       >
         <div className={isImmersivePractice ? "mx-auto flex w-full max-w-screen-md flex-1 flex-col" : "w-full max-w-screen-xl mx-auto"}>
           {children}
