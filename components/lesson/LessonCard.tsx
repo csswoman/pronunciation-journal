@@ -27,10 +27,10 @@ function deriveLessonDescription(title: string, category: string): string {
 }
 
 function deriveWatermark(title: string): string {
-  const phoneme = title.match(/\/([^/]+)\//)
-  if (phoneme) return phoneme[1]
-  const words = title.trim().split(/\s+/)
-  return words[0].slice(0, 2).toUpperCase()
+  const phoneme = title.match(/\/([^/]+)\//);
+  if (phoneme) return phoneme[1];
+  const words = title.trim().split(/\s+/);
+  return words[0].slice(0, 2).toUpperCase();
 }
 
 export default function LessonCard({ lesson, progressPct, isFeatured = false }: LessonCardProps) {
@@ -74,64 +74,34 @@ export default function LessonCard({ lesson, progressPct, isFeatured = false }: 
     return (
       <Link href={lesson.href ?? `/practice/sounds/sound/${lesson.id.replace("sound-", "")}`} className="block h-full">
         <div
-          className="group flex flex-col h-full cursor-pointer hover:shadow-[var(--shadow-md)] hover:border-[color-mix(in_srgb,var(--primary)_40%,transparent)]"
-          style={{
-            position: "relative",
-            background: "linear-gradient(135deg, var(--surface-raised) 60%, var(--primary-soft))",
-            border: "1px solid color-mix(in srgb, var(--primary) 20%, transparent)",
-            borderRadius: "var(--radius-lg)",
-            padding: "var(--space-7, 1.75rem)",
-            gap: "var(--space-3)",
-            overflow: "hidden",
-            transition: `border-color var(--transition-fast), box-shadow var(--transition-fast)`,
-          }}
+          className="group relative flex h-full cursor-pointer flex-col gap-3 overflow-hidden rounded-[var(--radius-lg)] border border-[color-mix(in_srgb,var(--primary)_20%,transparent)] bg-[linear-gradient(135deg,var(--surface-raised)_60%,var(--primary-soft))] p-[var(--space-7,1.75rem)] transition-[border-color,box-shadow] hover:border-[color-mix(in_srgb,var(--primary)_40%,transparent)] hover:shadow-[var(--shadow-md)]"
         >
           {/* Radial glow corner */}
           <div
             aria-hidden
-            style={{
-              position: "absolute",
-              top: "-60px",
-              right: "-60px",
-              width: "200px",
-              height: "200px",
-              background: "radial-gradient(circle, color-mix(in srgb, var(--primary) 10%, transparent) 0%, transparent 70%)",
-              pointerEvents: "none",
-            }}
+            className="pointer-events-none absolute -right-15 -top-15 h-[200px] w-[200px] bg-[radial-gradient(circle,color-mix(in_srgb,var(--primary)_10%,transparent)_0%,transparent_70%)]"
           />
 
           {/* Watermark */}
           <span
             aria-hidden
-            style={{
-              position: "absolute",
-              bottom: "-10px",
-              right: "16px",
-              font: "var(--font-h1, 700 3.5rem/1 var(--font-family))",
-              fontSize: "clamp(3rem, 6vw, 4.5rem)",
-              color: "var(--primary)",
-              opacity: 0.1,
-              userSelect: "none",
-              pointerEvents: "none",
-              lineHeight: 1,
-            }}
+            className="pointer-events-none absolute -bottom-2.5 right-4 select-none text-[clamp(3rem,6vw,4.5rem)] leading-none text-[var(--primary)] opacity-10"
           >
             {watermark}
           </span>
 
           <DifficultyPill difficulty={lesson.difficulty} />
 
-          <h2 style={{ font: "var(--font-h2)", color: "var(--text-primary)", lineHeight: 1.2, margin: 0 }}>
+          <h2 className="m-0 text-[var(--font-h2)] leading-[1.2] text-[var(--text-primary)]">
             {lesson.title}
           </h2>
 
-          <p style={{ font: "var(--font-body-sm)", color: "var(--text-secondary)", lineHeight: 1.6, flex: 1 }}>
+          <p className="flex-1 text-[var(--font-body-sm)] leading-[1.6] text-[var(--text-secondary)]">
             {description}
           </p>
 
           <div
-            className="flex items-center"
-            style={{ font: "var(--font-caption)", color: "var(--text-tertiary)", gap: "var(--space-3)" }}
+            className="flex items-center gap-[var(--space-3)] text-[var(--font-caption)] text-[var(--text-tertiary)]"
           >
             <span className="flex items-center gap-1">
               <BookOpen size={12} />
@@ -143,31 +113,11 @@ export default function LessonCard({ lesson, progressPct, isFeatured = false }: 
             </span>
           </div>
 
-          <p style={{ font: "var(--font-caption)", color: "var(--text-tertiary)", textTransform: "uppercase", letterSpacing: "0.08em" }}>
+          <p className="text-[var(--font-caption)] uppercase tracking-[0.08em] text-[var(--text-tertiary)]">
             {lessonState === "not-started" ? "Not started" : `${barProgress}%`}
           </p>
 
-          <button
-            type="button"
-            className="hover:opacity-85"
-            style={{
-              marginTop: "auto",
-              alignSelf: "flex-start",
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "var(--space-2)",
-              background: "var(--primary)",
-              color: "var(--on-primary)",
-              borderRadius: "var(--radius-full)",
-              height: "44px",
-              padding: "0 var(--space-5)",
-              font: "var(--font-body-sm)",
-              fontWeight: 600,
-              border: "none",
-              cursor: "pointer",
-              transition: `opacity var(--transition-fast)`,
-            }}
-          >
+          <button type="button" className="mt-auto inline-flex items-center gap-[var(--space-2)] self-start rounded-full border-none bg-[var(--primary)] px-[var(--space-5)] h-11 font-semibold text-[var(--font-body-sm)] text-[var(--on-primary)] cursor-pointer transition-opacity hover:opacity-85">
             {ctaLabel} Lesson →
           </button>
         </div>
@@ -178,41 +128,19 @@ export default function LessonCard({ lesson, progressPct, isFeatured = false }: 
   return (
     <Link href={lesson.href ?? `/practice/sounds/sound/${lesson.id.replace("sound-", "")}`} className="block h-full">
       <div
-        className="group flex flex-col h-full cursor-pointer hover:border-[var(--border-default)]"
-        style={{
-          background: "var(--surface-raised)",
-          border: "1px solid var(--border-subtle)",
-          borderRadius: "var(--radius-lg)",
-          padding: "var(--space-5)",
-          gap: "var(--space-3)",
-          transition: `border-color var(--transition-fast), background var(--transition-fast)`,
-        }}
+        className="group flex h-full cursor-pointer flex-col gap-3 rounded-[var(--radius-lg)] border border-[var(--border-subtle)] bg-[var(--surface-raised)] p-[var(--space-5)] transition-[border-color,background] hover:border-[var(--border-default)]"
       >
         <DifficultyPill difficulty={lesson.difficulty} />
 
-        <h3 style={{ font: "var(--font-h4)", color: "var(--text-primary)", lineHeight: 1.3, margin: 0 }}>
+        <h3 className="m-0 text-[var(--font-h4)] leading-[1.3] text-[var(--text-primary)]">
           {lesson.title}
         </h3>
 
-        <p
-          style={{
-            font: "var(--font-body-sm)",
-            color: "var(--text-secondary)",
-            lineHeight: 1.5,
-            display: "-webkit-box",
-            WebkitLineClamp: 2,
-            WebkitBoxOrient: "vertical" as const,
-            overflow: "hidden",
-            flex: 1,
-          }}
-        >
+        <p className="flex-1 overflow-hidden text-[var(--font-body-sm)] leading-[1.5] text-[var(--text-secondary)] line-clamp-2">
           {description}
         </p>
 
-        <div
-          className="flex items-center"
-          style={{ font: "var(--font-caption)", color: "var(--text-tertiary)", gap: "var(--space-3)" }}
-        >
+        <div className="flex items-center gap-[var(--space-3)] text-[var(--font-caption)] text-[var(--text-tertiary)]">
           <span className="flex items-center gap-1">
             <BookOpen size={12} />
             {lesson.words.length} words
@@ -223,18 +151,12 @@ export default function LessonCard({ lesson, progressPct, isFeatured = false }: 
           </span>
         </div>
 
-        <p style={{ font: "var(--font-caption)", color: "var(--text-tertiary)", textTransform: "uppercase", letterSpacing: "0.08em" }}>
+        <p className="text-[var(--font-caption)] uppercase tracking-[0.08em] text-[var(--text-tertiary)]">
           {lessonState === "not-started" ? "Not started" : `${barProgress}%`}
         </p>
 
-        <div className="flex justify-start" style={{ marginTop: "auto" }}>
-          <span
-            style={{
-              font: "var(--font-caption)",
-              fontWeight: 500,
-              color: "var(--primary)",
-            }}
-          >
+        <div className="mt-auto flex justify-start">
+          <span className="text-[var(--font-caption)] font-medium text-[var(--primary)]">
             {ctaLabel} →
           </span>
         </div>
