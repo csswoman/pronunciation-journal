@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { buildHistory, buildToolConfig, encodeChunk } from '../chat-route'
+import { buildHistory, buildToolConfig, encodeChunk, streamWithFallback } from '../chat-route'
 
 describe('gemini chat-route helpers', () => {
   it('maps plain and tool messages into Gemini history content', () => {
@@ -35,5 +35,76 @@ describe('gemini chat-route helpers', () => {
     const encoded = new TextDecoder().decode(encodeChunk({ type: 'done' }))
 
     expect(encoded).toBe('data: {"type":"done"}\n\n')
+  })
+
+  it('streams text deltas and a terminal done event', async () => {
+    const ai = {
+      chats: {
+        create: () => ({
+          async *sendMessageStream() {
+            yield { candidates: [{ content: { parts: [{ text: 'hello' }] } }] }
+          },
+        }),
+      },
+    }
+
+    const stream = new ReadableStream({
+      start(controller) {
+        return streamWithFallback(
+          ai as never,
+          'system',
+          [],
+          'message',
+          { toolChoice: 'none' },
+          controller,
+          new AbortController().signal
+        )
+      },
+    })
+
+    const text = await new Response(stream).text()
+
+    expect(text).toContain('data: {"type":"text_delta","delta":"hello"}')
+    expect(text).toContain('data: {"type":"done"}')
+  })
+
+  it('streams tool call lifecycle events', async () => {
+    const ai = {
+      chats: {
+        create: () => ({
+          async *sendMessageStream() {
+            yield {
+              candidates: [{
+                content: {
+                  parts: [{ functionCall: { name: 'save_word', args: { word: 'focus' } } }],
+                },
+              }],
+            }
+          },
+        }),
+      },
+    }
+
+    const stream = new ReadableStream({
+      start(controller) {
+        return streamWithFallback(
+          ai as never,
+          'system',
+          [],
+          'message',
+          { toolChoice: 'auto', allowedTools: ['save_word'] },
+          controller,
+          new AbortController().signal
+        )
+      },
+    })
+
+    const text = await new Response(stream).text()
+
+    expect(text).toContain('"type":"tool_call_start"')
+    expect(text).toContain('"name":"save_word"')
+    expect(text).toContain('"type":"tool_call_args_delta"')
+    expect(text).toContain('\\"word\\":\\"focus\\"')
+    expect(text).toContain('"type":"tool_call_end"')
   })
 })

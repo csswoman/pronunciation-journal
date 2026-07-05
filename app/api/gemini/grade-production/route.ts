@@ -4,8 +4,8 @@ import {
   GRADE_PRODUCTION_SYSTEM_PROMPT,
   buildGradeProductionUserPrompt,
 } from "@/lib/ai-prompts";
-import { requireSameOrigin, requireUser, rateLimit, validateBody, publicErrorResponse, redactError } from "@/lib/api/guards";
-import { callWithFallback, getErrorStatus, stripJsonFences } from "@/lib/gemini/client";
+import { requireSameOrigin, requireUser, rateLimit, validateBody } from "@/lib/api/guards";
+import { parseGeminiJson, respondWithGeminiJson } from "@/lib/gemini/json-route";
 import type { ProductionGradeResult } from "@/lib/exercises/production-grade";
 
 const GradeProductionSchema = z.object({
@@ -26,7 +26,7 @@ const GradeResponseSchema = z.object({
 }).strict();
 
 function parseGradeJson(raw: string): ProductionGradeResult {
-  const parsed = GradeResponseSchema.parse(JSON.parse(stripJsonFences(raw)));
+  const parsed = parseGeminiJson(raw, (json) => GradeResponseSchema.parse(json));
   return { ...parsed, score: Math.round(parsed.score) };
 }
 
@@ -47,27 +47,19 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const { data: body, error: validationError } = await validateBody(request, GradeProductionSchema);
   if (validationError) return validationError as NextResponse;
 
-  const apiKey = process.env.GEMINI_API_KEY;
-  if (!apiKey) return NextResponse.json({ error: "AI service unavailable" }, { status: 503 });
-
-  try {
-    const grade = await callWithFallback(
-      apiKey,
-      {
-        contents: buildGradeProductionUserPrompt(body),
-        config: {
-          systemInstruction: GRADE_PRODUCTION_SYSTEM_PROMPT,
-          responseMimeType: "application/json",
-          temperature: 0.1,
-          maxOutputTokens: 768,
-        },
+  return respondWithGeminiJson({
+    endpoint: "/api/gemini/grade-production",
+    userId: user.id,
+    params: {
+      contents: buildGradeProductionUserPrompt(body),
+      config: {
+        systemInstruction: GRADE_PRODUCTION_SYSTEM_PROMPT,
+        responseMimeType: "application/json",
+        temperature: 0.1,
+        maxOutputTokens: 768,
       },
-      parseGradeJson
-    );
-    return NextResponse.json(grade);
-  } catch (err: unknown) {
-    console.error("grade-production error:", redactError(err));
-    const status = getErrorStatus(err) ?? 500;
-    return publicErrorResponse(status >= 500 ? 500 : status, "Failed to grade production");
-  }
+    },
+    parse: parseGradeJson,
+    failureMessage: "Failed to grade production",
+  });
 }

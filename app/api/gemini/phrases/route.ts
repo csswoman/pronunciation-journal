@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { requireSameOrigin, requireUser, rateLimit, validateBody, SECURE_HEADERS, publicErrorResponse, redactError } from "@/lib/api/guards";
-import { callWithFallback, getErrorStatus, stripJsonFences } from "@/lib/gemini/client";
+import { requireSameOrigin, requireUser, rateLimit, validateBody, SECURE_HEADERS } from "@/lib/api/guards";
+import { parseGeminiJson, respondWithGeminiJson } from "@/lib/gemini/json-route";
 import { buildPhrasesUserPrompt, PRONUNCIATION_PHRASES_SYSTEM_PROMPT } from "@/lib/ai-prompts";
 
 const PhrasesSchema = z.object({
@@ -13,7 +13,7 @@ const PhrasesResponseSchema = z.object({
 }).strict();
 
 function parsePhrases(raw: string): { phrases: string[] } {
-  return PhrasesResponseSchema.parse(JSON.parse(stripJsonFences(raw)));
+  return parseGeminiJson(raw, (json) => PhrasesResponseSchema.parse(json));
 }
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
@@ -33,24 +33,17 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const { data: body, error: validationError } = await validateBody(request, PhrasesSchema);
   if (validationError) return validationError as NextResponse;
 
-  const apiKey = process.env.GEMINI_API_KEY;
-  if (!apiKey) return NextResponse.json({ error: "AI service unavailable" }, { status: 503, headers: SECURE_HEADERS });
-
   const prompt = buildPhrasesUserPrompt(body?.exclude);
 
-  try {
-    const result = await callWithFallback(
-      apiKey,
-      {
-        contents: prompt,
-        config: { systemInstruction: PRONUNCIATION_PHRASES_SYSTEM_PROMPT, responseMimeType: "application/json" },
-      },
-      parsePhrases
-    );
-    return NextResponse.json(result, { headers: SECURE_HEADERS });
-  } catch (err: unknown) {
-    console.error("phrases error:", redactError(err));
-    const status = getErrorStatus(err) ?? 500;
-    return publicErrorResponse(status >= 500 ? 500 : status, "Failed to generate phrases");
-  }
+  return respondWithGeminiJson({
+    endpoint: "/api/gemini/phrases",
+    userId: user.id,
+    params: {
+      contents: prompt,
+      config: { systemInstruction: PRONUNCIATION_PHRASES_SYSTEM_PROMPT, responseMimeType: "application/json" },
+    },
+    parse: parsePhrases,
+    failureMessage: "Failed to generate phrases",
+    headers: SECURE_HEADERS,
+  });
 }

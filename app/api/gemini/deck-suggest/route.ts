@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { requireSameOrigin, requireUser, rateLimit, validateBody, publicErrorResponse, redactError } from "@/lib/api/guards";
+import { requireSameOrigin, requireUser, rateLimit, validateBody } from "@/lib/api/guards";
 import { createSupabaseServerClient as createClient } from "@/lib/supabase/server";
 import { buildDeckSuggestUserPrompt, DECK_SUGGEST_SYSTEM_PROMPT } from "@/lib/ai-prompts";
-import { callWithFallback, getErrorStatus, stripJsonFences } from "@/lib/gemini/client";
+import { callGeminiJson, parseGeminiJson } from "@/lib/gemini/json-route";
 
 const DeckSuggestSchema = z.object({
   deckName: z.string().min(1).max(100),
@@ -79,9 +79,6 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (cached) return NextResponse.json({ suggestions: cached, cached: true });
   }
 
-  const apiKey = process.env.GEMINI_API_KEY;
-  if (!apiKey) return NextResponse.json({ error: "AI service unavailable" }, { status: 503 });
-
   const prompt = buildDeckSuggestUserPrompt({
     deckName: body.deckName,
     deckDescription: description,
@@ -90,25 +87,22 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     existingWords: body.existingWords,
   });
 
-  try {
-    const parsed = await callWithFallback(
-      apiKey,
-      {
-        contents: prompt,
-        config: { systemInstruction: DECK_SUGGEST_SYSTEM_PROMPT, responseMimeType: "application/json" },
-      },
-      (text) => DeckSuggestResponseSchema.parse(JSON.parse(stripJsonFences(text)))
-    );
+  const { data: parsed, response } = await callGeminiJson({
+    endpoint: "/api/gemini/deck-suggest",
+    userId: user.id,
+    params: {
+      contents: prompt,
+      config: { systemInstruction: DECK_SUGGEST_SYSTEM_PROMPT, responseMimeType: "application/json" },
+    },
+    parse: (text) => parseGeminiJson(text, (json) => DeckSuggestResponseSchema.parse(json)),
+    failureMessage: "Failed to generate deck suggestions",
+  });
+  if (response) return response;
 
-    if (!hasVariance && parsed.suggestions) {
-      const cacheKey = buildCacheKey(body.deckName, description, difficulty);
-      await setCached(cacheKey, parsed.suggestions);
-    }
-
-    return NextResponse.json(parsed);
-  } catch (err: unknown) {
-    console.error("deck-suggest error:", redactError(err));
-    const status = getErrorStatus(err) ?? 500;
-    return publicErrorResponse(status >= 500 ? 500 : status, "Failed to generate deck suggestions");
+  if (!hasVariance && parsed.suggestions) {
+    const cacheKey = buildCacheKey(body.deckName, description, difficulty);
+    await setCached(cacheKey, parsed.suggestions);
   }
+
+  return NextResponse.json(parsed);
 }
