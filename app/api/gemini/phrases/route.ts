@@ -8,10 +8,12 @@ const PhrasesSchema = z.object({
   exclude: z.array(z.string().max(200)).max(100).optional(),
 }).strict();
 
+const PhrasesResponseSchema = z.object({
+  phrases: z.array(z.string().trim().min(1).max(200)).min(1).max(20),
+}).strict();
+
 function parsePhrases(raw: string): { phrases: string[] } {
-  const parsed = JSON.parse(stripJsonFences(raw)) as { phrases?: unknown };
-  if (!Array.isArray(parsed.phrases)) throw new Error("Invalid response shape");
-  return { phrases: parsed.phrases as string[] };
+  return PhrasesResponseSchema.parse(JSON.parse(stripJsonFences(raw)));
 }
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
