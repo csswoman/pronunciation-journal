@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { NextRequest } from "next/server";
 
-const generateContent = vi.fn();
+const callWithFallback = vi.fn();
 const requireUser = vi.fn();
 const validateBody = vi.fn();
 const upsert = vi.fn();
@@ -11,10 +11,9 @@ const is = vi.fn();
 const limit = vi.fn();
 const createClient = vi.fn();
 
-vi.mock("@google/genai", () => ({
-  GoogleGenAI: class {
-    models = { generateContent };
-  },
+vi.mock("@/lib/gemini/client", () => ({
+  callWithFallback: (...args: unknown[]) => callWithFallback(...args),
+  stripJsonFences: (text: string) => text,
 }));
 
 vi.mock("@/lib/api/guards", () => ({
@@ -75,9 +74,9 @@ beforeEach(() => {
     data: { topic: "travel", level: "B1" },
     error: null,
   });
-  generateContent.mockResolvedValue({
-    text: JSON.stringify(["Travel by train feels calm and practical."]),
-  });
+  callWithFallback.mockImplementation(async (_apiKey, _params, parse) =>
+    parse(JSON.stringify(["Travel by train feels calm and practical."]))
+  );
   process.env.GEMINI_API_KEY = "test";
   process.env.NEXT_PUBLIC_SUPABASE_URL = "https://test.supabase.co";
   process.env.SUPABASE_SERVICE_ROLE_KEY = "test-service-role";
@@ -101,5 +100,16 @@ describe("POST /api/sentences/generate", () => {
     const body = await res.json();
     expect(body.fromCache).toBe(false);
     expect(body.fragments).toHaveLength(1);
+  });
+
+  it("returns 502 when Gemini returns malformed sentence JSON", async () => {
+    buildDbMock({ insertError: null });
+    callWithFallback.mockImplementationOnce(async (_apiKey, _params, parse) =>
+      parse(JSON.stringify({ sentences: ["not an array"] }))
+    );
+
+    const res = await POST(reqWith() as never);
+
+    expect(res.status).toBe(502);
   });
 });

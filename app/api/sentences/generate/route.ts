@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
-import { GoogleGenAI } from "@google/genai";
 import { createHash } from "crypto";
 import { z } from "zod";
 import type { Database } from "@/lib/supabase/types";
 import { buildSentenceReorderUserPrompt, SENTENCE_REORDER_SYSTEM_PROMPT } from "@/lib/ai-prompts";
 import { requireSameOrigin, requireUser, rateLimit, validateBody, SECURE_HEADERS, publicErrorResponse } from "@/lib/api/guards";
 import { logServerError } from "@/lib/api/logging";
+import { callWithFallback, stripJsonFences } from "@/lib/gemini/client";
 
 export const runtime = "nodejs";
 
@@ -23,6 +23,8 @@ const SentencesRequestSchema = z
   })
   .strict();
 
+const SentencesResponseSchema = z.array(z.string().trim().min(1).max(300)).min(1).max(MAX_COUNT);
+
 // ── Gemini sentence generation ────────────────────────────────────────────────
 
 async function generateSentencesWithGemini(
@@ -33,35 +35,20 @@ async function generateSentencesWithGemini(
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) throw new Error("GEMINI_API_KEY not configured");
 
-  const ai = new GoogleGenAI({ apiKey });
   const prompt = buildSentenceReorderUserPrompt(count, topic, level);
+  const parsed = await callWithFallback(
+    apiKey,
+    {
+      contents: prompt,
+      config: {
+        systemInstruction: SENTENCE_REORDER_SYSTEM_PROMPT,
+        responseMimeType: "application/json",
+      },
+    },
+    (text) => SentencesResponseSchema.parse(JSON.parse(stripJsonFences(text)))
+  );
 
-  const models = ["gemini-2.5-flash-lite", "gemini-2.5-flash"];
-  let lastError: unknown;
-
-  for (const model of models) {
-    try {
-      const result = await ai.models.generateContent({
-        model,
-        contents: prompt,
-        config: {
-          systemInstruction: SENTENCE_REORDER_SYSTEM_PROMPT,
-          responseMimeType: "application/json",
-        },
-      });
-      if (!result.text) throw new Error("Empty response");
-
-      const parsed = JSON.parse(result.text);
-      if (!Array.isArray(parsed)) throw new Error("Expected array");
-
-      return parsed
-        .filter((s): s is string => typeof s === "string")
-        .filter((s) => s.trim().split(/\s+/).length >= MIN_TOKENS);
-    } catch (err) {
-      lastError = err;
-    }
-  }
-  throw lastError ?? new Error("Gemini generation failed");
+  return parsed.filter((s) => s.trim().split(/\s+/).length >= MIN_TOKENS);
 }
 
 // ── Deterministic fragment ID ─────────────────────────────────────────────────
