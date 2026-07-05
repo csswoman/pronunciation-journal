@@ -575,6 +575,36 @@ export type Database = {
         }
         Relationships: []
       }
+      sentence_transcription_cache: {
+        Row: {
+          cache_key: string
+          created_at: string
+          mime_type: string
+          payload_size: number
+          transcript: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          cache_key: string
+          created_at?: string
+          mime_type: string
+          payload_size?: number
+          transcript: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          cache_key?: string
+          created_at?: string
+          mime_type?: string
+          payload_size?: number
+          transcript?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       text_fragments: {
         Row: {
           audio_url: string | null

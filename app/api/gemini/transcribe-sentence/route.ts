@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { requireSameOrigin, requireUser, rateLimit, validateBody, publicErrorResponse, redactError } from "@/lib/api/guards";
 import { callWithFallback, getErrorStatus } from "@/lib/gemini/client";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 // Separate endpoint for transcribing full spoken sentences (e.g. interview responses).
 // Differences from /api/gemini/transcribe:
@@ -47,6 +48,84 @@ function parseDataUrl(dataUrl: string): { mimeType: string; base64Data: string }
 const CACHE_TTL_MS = 1000 * 60 * 60 * 6;
 const MAX_CACHE_ENTRIES = 200;
 const cache = new Map<string, { transcript: string; createdAt: number }>();
+const SENTENCE_TRANSCRIPTION_CACHE_TABLE = "sentence_transcription_cache";
+
+type SentenceTranscriptionCacheRow = {
+  transcript: string;
+  updated_at: string;
+};
+
+function buildCacheKey(userId: string, mimeType: string, base64Data: string): string {
+  return createHash("sha256").update(userId).update(mimeType).update(base64Data).digest("hex");
+}
+
+function getL1Cached(key: string): string | null {
+  const cached = cache.get(key);
+  if (!cached) return null;
+  if (Date.now() - cached.createdAt > CACHE_TTL_MS) {
+    cache.delete(key);
+    return null;
+  }
+  return cached.transcript;
+}
+
+function setL1Cache(key: string, transcript: string): void {
+  if (cache.size >= MAX_CACHE_ENTRIES) cache.delete(cache.keys().next().value!);
+  cache.set(key, { transcript, createdAt: Date.now() });
+}
+
+async function getL2Cached(userId: string, key: string): Promise<string | null> {
+  try {
+    const supabase = await createSupabaseServerClient();
+    const { data, error } = await supabase
+      .from(SENTENCE_TRANSCRIPTION_CACHE_TABLE)
+      .select("transcript, updated_at")
+      .eq("user_id", userId)
+      .eq("cache_key", key)
+      .maybeSingle() as { data: SentenceTranscriptionCacheRow | null; error: unknown };
+
+    if (error || !data) return null;
+
+    const ageMs = Date.now() - new Date(data.updated_at).getTime();
+    if (Number.isFinite(ageMs) && ageMs > CACHE_TTL_MS) {
+      await supabase
+        .from(SENTENCE_TRANSCRIPTION_CACHE_TABLE)
+        .delete()
+        .eq("user_id", userId)
+        .eq("cache_key", key);
+      return null;
+    }
+
+    return data.transcript;
+  } catch {
+    return null;
+  }
+}
+
+async function setL2Cache(
+  userId: string,
+  key: string,
+  transcript: string,
+  mimeType: string,
+  payloadSize: number
+): Promise<void> {
+  try {
+    const supabase = await createSupabaseServerClient();
+    await supabase.from(SENTENCE_TRANSCRIPTION_CACHE_TABLE).upsert(
+      {
+        user_id: userId,
+        cache_key: key,
+        mime_type: mimeType,
+        transcript,
+        payload_size: payloadSize,
+        updated_at: new Date().toISOString(),
+      },
+      { onConflict: "user_id,cache_key" }
+    );
+  } catch {
+    // Cache writes must not fail transcription.
+  }
+}
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
   const originError = requireSameOrigin(request);
@@ -70,13 +149,17 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
   try {
     const { mimeType, base64Data } = parseDataUrl(body.audioDataUrl);
-    const key = createHash("sha256").update(user.id).update(mimeType).update(base64Data).digest("hex");
-    const cached = cache.get(key);
-    if (cached !== undefined) {
-      if (Date.now() - cached.createdAt <= CACHE_TTL_MS) {
-        return NextResponse.json({ transcript: cached.transcript });
-      }
-      cache.delete(key);
+    const key = buildCacheKey(user.id, mimeType, base64Data);
+
+    const l1 = getL1Cached(key);
+    if (l1 !== null) {
+      return NextResponse.json({ transcript: l1, cached: true });
+    }
+
+    const l2 = await getL2Cached(user.id, key);
+    if (l2 !== null) {
+      setL1Cache(key, l2);
+      return NextResponse.json({ transcript: l2, cached: true, source: "supabase" });
     }
 
     const transcript = await callWithFallback(
@@ -92,8 +175,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       { timeoutMs: 45_000 }
     );
 
-    if (cache.size >= MAX_CACHE_ENTRIES) cache.delete(cache.keys().next().value!);
-    cache.set(key, { transcript, createdAt: Date.now() });
+    setL1Cache(key, transcript);
+    await setL2Cache(user.id, key, transcript, mimeType, base64Data.length);
 
     return NextResponse.json({ transcript });
   } catch (err: unknown) {
