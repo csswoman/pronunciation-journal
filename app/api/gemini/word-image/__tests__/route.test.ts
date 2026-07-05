@@ -7,7 +7,6 @@ const createSupabaseServerClient = vi.fn();
 const upload = vi.fn();
 const remove = vi.fn();
 const getPublicUrl = vi.fn();
-const update = vi.fn();
 
 vi.mock("@/lib/api/guards", () => ({
   requireSameOrigin: () => null,
@@ -25,10 +24,16 @@ vi.mock("@/lib/supabase/server", () => ({
 import { DELETE, POST } from "../route";
 
 function buildEntryQuery() {
-  const updateQuery: any = {
+  const updateQuery = {
     eq: vi.fn().mockReturnThis(),
   };
-  const query: any = {
+  type Query = {
+    select: ReturnType<typeof vi.fn>;
+    eq: ReturnType<typeof vi.fn>;
+    single: ReturnType<typeof vi.fn>;
+    update: ReturnType<typeof vi.fn>;
+  };
+  const query: Query = {
     select: vi.fn().mockReturnThis(),
     eq: vi.fn().mockReturnThis(),
     single: vi.fn().mockResolvedValue({ data: { id: "entry-1", image_url: "https://old.example/image.png" }, error: null }),
@@ -39,7 +44,7 @@ function buildEntryQuery() {
 
 function buildSupabase(updateError: unknown) {
   const entryQuery = buildEntryQuery();
-  (entryQuery.update as any).mockReturnValue({
+  entryQuery.update.mockReturnValue({
     eq: vi.fn().mockReturnValue({
       eq: vi.fn().mockResolvedValue({ error: updateError }),
     }),

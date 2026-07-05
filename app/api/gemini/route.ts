@@ -66,8 +66,6 @@ const GeminiRequestSchema = z.object({
   stream: z.boolean().optional().default(false),
 }).strict();
 
-type GeminiRequest = z.infer<typeof GeminiRequestSchema>;
-
 // ---------------------------------------------------------------------------
 // Route handler
 // ---------------------------------------------------------------------------

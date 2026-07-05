@@ -2,7 +2,7 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import AuthPanel from "../AuthPanel";
-import { PASSWORD_POLICY_MESSAGE, publicAuthErrorMessage } from "@/lib/auth/password-policy";
+import { PASSWORD_POLICY_MESSAGE } from "@/lib/auth/password-policy";
 
 const replace = vi.fn();
 const refresh = vi.fn();
