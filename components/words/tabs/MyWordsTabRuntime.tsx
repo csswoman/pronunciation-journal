@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useEffect, useMemo, useState } from "react";
 import { Plus } from "lucide-react";
 
@@ -7,16 +8,29 @@ import Section from "@/components/layout/Section";
 import Button from "@/components/ui/Button";
 import { WordsHero } from "@/components/words/WordsHero";
 import { WordsTab } from "@/components/vocabulary/words/WordsTab";
-import { QuickAddModal } from "@/components/vocabulary/words/QuickAddModal";
 import { WordSelectionBar } from "@/components/vocabulary/words/WordSelectionBar";
-import { CreateDeckFromWordsModal } from "@/components/vocabulary/decks/CreateDeckFromWordsModal";
-import { AddToExistingDeckModal } from "@/components/vocabulary/decks/AddToExistingDeckModal";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { useWords } from "@/hooks/useWords";
 import { getUserDecksFull, type DeckListItem } from "@/lib/decks/queries";
 import { publicDataErrorMessage } from "@/lib/degradation/messages";
 import { toggleFavorite } from "@/lib/word-bank/queries";
 import type { WordsTabId } from "@/components/words/WordsTopbar";
+
+const QuickAddModal = dynamic(
+  () => import("@/components/vocabulary/words/QuickAddModal").then((mod) => mod.QuickAddModal),
+);
+const CreateDeckFromWordsModal = dynamic(
+  () =>
+    import("@/components/vocabulary/decks/CreateDeckFromWordsModal").then(
+      (mod) => mod.CreateDeckFromWordsModal,
+    ),
+);
+const AddToExistingDeckModal = dynamic(
+  () =>
+    import("@/components/vocabulary/decks/AddToExistingDeckModal").then(
+      (mod) => mod.AddToExistingDeckModal,
+    ),
+);
 
 interface WordStats {
   total: number;

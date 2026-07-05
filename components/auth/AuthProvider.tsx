@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import {
   createContext,
   useCallback,
@@ -11,10 +12,6 @@ import {
 import type { Session, User } from "@supabase/supabase-js";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
-import { db } from "@/lib/db";
-import { getUserLearningState } from "@/lib/ai-practice/load-state";
-import { normalizeCEFR } from "@/lib/exercises/cefr";
-import { WordCarousel } from "@/components/practice/session/WordCarousel";
 import { useLoadingWords } from "@/hooks/useLoadingWords";
 
 export type AuthContextValue = {
@@ -26,6 +23,11 @@ export type AuthContextValue = {
 };
 
 const AuthContext = createContext<AuthContextValue | null>(null);
+
+const LoadingWordCarousel = dynamic(
+  () => import("@/components/practice/session/WordCarousel").then((mod) => mod.WordCarousel),
+  { ssr: false },
+);
 
 export function useAuth(): AuthContextValue {
   const ctx = useContext(AuthContext);
@@ -69,6 +71,13 @@ export default function AuthProvider({
           .maybeSingle();
         const profile = data as { cefr_level?: string } | null;
         if (!profile?.cefr_level) return;
+
+        const [{ db }, { getUserLearningState }, { normalizeCEFR }] = await Promise.all([
+          import("@/lib/db"),
+          import("@/lib/ai-practice/load-state"),
+          import("@/lib/exercises/cefr"),
+        ]);
+
         const nextLevel = normalizeCEFR(profile.cefr_level);
         const existing = await db.learningState.get(userId);
         if (existing) {
@@ -140,7 +149,7 @@ function AuthLoadingScreen() {
   const words = useLoadingWords();
   return (
     <div className="min-h-screen flex items-center justify-center bg-surface-base">
-      <WordCarousel words={words} />
+      <LoadingWordCarousel words={words} />
     </div>
   );
 }

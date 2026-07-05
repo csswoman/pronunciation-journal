@@ -24,6 +24,8 @@ export function QuickAddModal({ open, onClose, onSubmit, initialText = "" }: Qui
   const [decks, setDecks] = useState<DeckSummary[]>([]);
   const [selectedDeckId, setSelectedDeckId] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     if (!open || !user) return;
@@ -54,12 +56,6 @@ export function QuickAddModal({ open, onClose, onSubmit, initialText = "" }: Qui
     setTimeout(() => { onClose(); setSuccess(false); }, 1500);
   };
 
-  if (!open) return null;
-
-  const titleId = "quick-add-modal-title";
-  const modalRef = useRef<HTMLDivElement>(null);
-  const previousFocusRef = useRef<HTMLElement | null>(null);
-
   useEffect(() => {
     if (!open) return;
     previousFocusRef.current = document.activeElement as HTMLElement;
@@ -69,7 +65,7 @@ export function QuickAddModal({ open, onClose, onSubmit, initialText = "" }: Qui
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key !== "Tab") return;
       const focusableElements = modal?.querySelectorAll(
-        'button, [href], input, textarea, [tabindex]:not([tabindex="-1"])'
+        'button, [href], input, textarea, [tabindex]:not([tabindex="-1"])',
       );
       if (!focusableElements || focusableElements.length === 0) return;
 
@@ -82,11 +78,9 @@ export function QuickAddModal({ open, onClose, onSubmit, initialText = "" }: Qui
           e.preventDefault();
           last.focus();
         }
-      } else {
-        if (activeEl === last) {
-          e.preventDefault();
-          first.focus();
-        }
+      } else if (activeEl === last) {
+        e.preventDefault();
+        first.focus();
       }
     };
 
@@ -96,6 +90,10 @@ export function QuickAddModal({ open, onClose, onSubmit, initialText = "" }: Qui
       previousFocusRef.current?.focus();
     };
   }, [open]);
+
+  if (!open) return null;
+
+  const titleId = "quick-add-modal-title";
 
   return (
     <div

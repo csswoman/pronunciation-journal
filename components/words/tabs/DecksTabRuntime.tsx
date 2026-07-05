@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import { Plus } from "lucide-react";
 
@@ -7,15 +8,29 @@ import Section from "@/components/layout/Section";
 import Button from "@/components/ui/Button";
 import { WordsHero } from "@/components/words/WordsHero";
 import { DecksTab } from "@/components/vocabulary/decks/DecksTab";
-import { CreateDeckModal } from "@/components/vocabulary/decks/CreateDeckModal";
-import { EditDeckModal } from "@/components/vocabulary/decks/EditDeckModal";
-import { StudyModal } from "@/components/vocabulary/decks/StudyModal";
-import { StudyModalWordBank } from "@/components/vocabulary/decks/StudyModalWordBank";
-import { ManageDrawer } from "@/components/vocabulary/decks/ManageDrawer";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { useDeckData } from "@/hooks/useDeckData";
 import { hasWordBankEntries, deleteDeck } from "@/lib/decks/queries";
 import { wordBankSource } from "@/lib/decks/study-source";
+
+const CreateDeckModal = dynamic(
+  () => import("@/components/vocabulary/decks/CreateDeckModal").then((mod) => mod.CreateDeckModal),
+);
+const EditDeckModal = dynamic(
+  () => import("@/components/vocabulary/decks/EditDeckModal").then((mod) => mod.EditDeckModal),
+);
+const StudyModal = dynamic(
+  () => import("@/components/vocabulary/decks/StudyModal").then((mod) => mod.StudyModal),
+);
+const StudyModalWordBank = dynamic(
+  () =>
+    import("@/components/vocabulary/decks/StudyModalWordBank").then(
+      (mod) => mod.StudyModalWordBank,
+    ),
+);
+const ManageDrawer = dynamic(
+  () => import("@/components/vocabulary/decks/ManageDrawer").then((mod) => mod.ManageDrawer),
+);
 
 interface DecksTabRuntimeProps {
   onDeckCountChange: (count: number) => void;
