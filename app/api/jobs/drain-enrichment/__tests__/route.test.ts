@@ -15,8 +15,8 @@ vi.mock("@/lib/api/guards", () => ({
   redactError: (err: unknown) => ({ type: "Error", message: err instanceof Error ? err.message : String(err) }),
 }));
 
-vi.mock("@supabase/supabase-js", () => ({
-  createClient: () => ({ rpc, from }),
+vi.mock("@/lib/supabase/admin", () => ({
+  getSupabaseAdminClient: () => ({ rpc, from }),
 }));
 
 import { GET } from "../route";

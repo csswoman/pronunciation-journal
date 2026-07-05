@@ -1,20 +1,8 @@
-import { createClient } from "@supabase/supabase-js";
-import type { Database } from "@/lib/supabase/types";
+import { getSupabaseAdminClient } from "@/lib/supabase/admin";
 import { enrichWithGemini } from "./gemini";
 import { getWordAudio } from "./audio";
 
 const ENRICH_TIMEOUT_MS = 45_000;
-
-function getAdminClient() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!url || !serviceRoleKey) {
-    throw new Error("Supabase admin credentials missing");
-  }
-  return createClient<Database>(url, serviceRoleKey, {
-    auth: { persistSession: false, autoRefreshToken: false },
-  });
-}
 
 function getFailureReason(err: unknown): "parse_error" | "api_error" {
   if (err instanceof SyntaxError) return "parse_error";
@@ -42,7 +30,7 @@ async function withTimeout<T>(promise: Promise<T>, timeoutMs: number): Promise<T
  * Failures are caught and persisted as `status = 'failed'` so the UI can react.
  */
 export async function enrichWord(wordId: string): Promise<void> {
-  const supabase = getAdminClient();
+  const supabase = getSupabaseAdminClient();
 
   const { data: row, error: fetchErr } = await supabase
     .from("word_bank")

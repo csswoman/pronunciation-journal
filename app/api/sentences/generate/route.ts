@@ -1,12 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
 import { createHash } from "crypto";
 import { z } from "zod";
-import type { Database } from "@/lib/supabase/types";
 import { buildSentenceReorderUserPrompt, SENTENCE_REORDER_SYSTEM_PROMPT } from "@/lib/ai-prompts";
 import { requireSameOrigin, requireUser, rateLimit, validateBody, SECURE_HEADERS, publicErrorResponse } from "@/lib/api/guards";
 import { logServerError } from "@/lib/api/logging";
 import { callWithFallback, stripJsonFences } from "@/lib/gemini/client";
+import { getSupabaseAdminClient } from "@/lib/supabase/admin";
 
 export const runtime = "nodejs";
 
@@ -103,12 +102,12 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     ? `grammar-deck:${deckSlug}:ai`
     : `ai-user:${hashedSentenceSource(`${user.id}:${level}:${topic}`)}`;
 
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!supabaseUrl || !serviceKey) {
+  let db: ReturnType<typeof getSupabaseAdminClient>;
+  try {
+    db = getSupabaseAdminClient();
+  } catch {
     return publicErrorResponse(500, "Server misconfiguration");
   }
-  const db = createClient<Database>(supabaseUrl, serviceKey);
 
   // ── Check cache first ─────────────────────────────────────────────────────
   let cacheQuery = db

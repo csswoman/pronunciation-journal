@@ -1,20 +1,8 @@
-import { createClient } from "@supabase/supabase-js";
-import type { Database } from "@/lib/supabase/types";
 import { enrichWord } from "@/lib/word-bank/enrich";
+import { getSupabaseAdminClient } from "@/lib/supabase/admin";
 
 const MAX_ATTEMPTS = 3;
 const BATCH_SIZE = 10;
-
-function getAdminClient() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!url || !serviceRoleKey) {
-    throw new Error("Supabase admin credentials missing");
-  }
-  return createClient<Database>(url, serviceRoleKey, {
-    auth: { persistSession: false, autoRefreshToken: false },
-  });
-}
 
 function retryDelayMinutes(attempts: number): number {
   return Math.min(60, 2 ** Math.max(0, attempts - 1));
@@ -49,7 +37,7 @@ export function buildEnrichmentFailurePlan(
 }
 
 export async function processWordEnrichmentJobs(workerId = "word-enrichment-worker"): Promise<number> {
-  const supabase = getAdminClient();
+  const supabase = getSupabaseAdminClient();
   const now = new Date().toISOString();
 
   const { data: jobs, error } = await supabase

@@ -25,12 +25,13 @@ vi.mock("@/lib/api/guards", () => ({
   SECURE_HEADERS: { "Cache-Control": "no-store" },
 }));
 
-vi.mock("@/lib/supabase/server", () => ({
-  createSupabaseServerClient: () => createClient(),
-}));
-
-vi.mock("@supabase/supabase-js", () => ({
-  createClient: (...args: unknown[]) => createClient(...args),
+vi.mock("@/lib/supabase/admin", () => ({
+  getSupabaseAdminClient: (...args: unknown[]) => {
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+      throw new Error("Supabase admin credentials missing")
+    }
+    return createClient(...args)
+  },
 }));
 
 import { POST } from "../route";

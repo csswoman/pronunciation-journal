@@ -1,8 +1,8 @@
-import { createClient } from "@supabase/supabase-js";
 import { NextRequest, NextResponse } from "next/server";
 import { enrichWord } from "@/lib/word-bank/enrich";
 import { redactError } from "@/lib/api/guards";
 import { logServerError } from "@/lib/api/logging";
+import { getSupabaseAdminClient } from "@/lib/supabase/admin";
 import type { Database } from "@/lib/supabase/types";
 
 // Vercel cron jobs run at most every 60 s on free tier, every 1 s on Pro.
@@ -16,15 +16,6 @@ const BACKOFF_SECONDS = [120, 480, 1800, 7200];
 const MAX_ATTEMPTS = 5;
 
 type JobRow = Database["public"]["Tables"]["word_enrichment_jobs"]["Row"];
-
-function getAdminClient() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!url || !serviceRoleKey) throw new Error("Supabase admin credentials missing");
-  return createClient<Database>(url, serviceRoleKey, {
-    auth: { persistSession: false, autoRefreshToken: false },
-  });
-}
 
 function verifyCronSecret(request: NextRequest): boolean {
   const secret = process.env.CRON_SECRET;
@@ -41,7 +32,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const supabase = getAdminClient();
+  const supabase = getSupabaseAdminClient();
 
   // Claim a batch of jobs atomically via SELECT FOR UPDATE SKIP LOCKED.
   // claim_enrichment_jobs is a new RPC not yet reflected in generated types; cast is safe here.
