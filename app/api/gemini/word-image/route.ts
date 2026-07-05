@@ -55,12 +55,16 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
   const { data: publicUrl } = supabase.storage.from("word-images").getPublicUrl(path);
   const imageUrl = publicUrl.publicUrl;
-
-  await supabase
+  const { error: updateError } = await supabase
     .from("entries")
     .update({ image_url: imageUrl })
     .eq("id", entryId)
     .eq("user_id", user.id);
+
+  if (updateError) {
+    console.error("[word-image] entry update error:", redactError(updateError));
+    return publicErrorResponse(500, "Failed to save image metadata");
+  }
 
   return NextResponse.json({ imageUrl });
 }
@@ -100,7 +104,16 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
     }
   }
 
-  await supabase.from("entries").update({ image_url: null }).eq("id", entryId).eq("user_id", user.id);
+  const { error: updateError } = await supabase
+    .from("entries")
+    .update({ image_url: null })
+    .eq("id", entryId)
+    .eq("user_id", user.id);
+
+  if (updateError) {
+    console.error("[word-image] entry delete update error:", redactError(updateError));
+    return publicErrorResponse(500, "Failed to remove image metadata");
+  }
 
   return NextResponse.json({ ok: true });
 }

@@ -69,7 +69,13 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
       await supabase
         .from("word_enrichment_jobs")
-        .update({ status: "succeeded", updated_at: new Date().toISOString() })
+        .update({
+          status: "succeeded",
+          locked_at: null,
+          locked_by: null,
+          last_error: null,
+          updated_at: new Date().toISOString(),
+        })
         .eq("id", job.id);
 
       results.push({ id: job.id, status: "succeeded" });
@@ -100,7 +106,6 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
   const succeeded = results.filter((r) => r.status === "succeeded").length;
   const failed = results.filter((r) => r.status === "failed").length;
-
 
   console.log(`[drain-enrichment] batch done: ${succeeded} succeeded, ${failed} failed`);
 

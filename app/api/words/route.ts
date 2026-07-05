@@ -86,16 +86,31 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
   if (deckId) {
     // Verify deck belongs to this user before linking.
-    const { data: deck } = await userClient
+    const { data: deck, error: deckErr } = await userClient
       .from("decks")
       .select("id")
       .eq("id", deckId)
       .eq("user_id", user.id)
       .single();
 
-    if (deck) {
-      await userClient.from("word_bank_decks").insert({ word_id: word.id, deck_id: deckId });
+    if (deckErr) {
+      console.error("[POST /api/words] deck lookup failed:", redactError(deckErr));
+      return publicErrorResponse(500, "Failed to verify deck");
     }
+
+    if (!deck) {
+      return publicErrorResponse(404, "Deck not found");
+    }
+
+    const { error: linkErr } = await userClient
+      .from("word_bank_decks")
+      .insert({ word_id: word.id, deck_id: deckId });
+
+    if (linkErr) {
+      console.error("[POST /api/words] deck link failed:", redactError(linkErr));
+      return publicErrorResponse(500, "Failed to add word to deck");
+    }
+
   }
 
   const jobId = await enqueueWordEnrichmentJob(userClient, user.id, word.id);

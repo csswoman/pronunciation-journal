@@ -4,7 +4,7 @@ import { GoogleGenAI } from "@google/genai";
 import { createHash } from "crypto";
 import { z } from "zod";
 import type { Database } from "@/lib/supabase/types";
-import { SENTENCE_REORDER_SYSTEM_PROMPT } from "@/lib/ai-prompts";
+import { buildSentenceReorderUserPrompt, SENTENCE_REORDER_SYSTEM_PROMPT } from "@/lib/ai-prompts";
 import { requireSameOrigin, requireUser, rateLimit, validateBody, SECURE_HEADERS, publicErrorResponse } from "@/lib/api/guards";
 
 export const runtime = "nodejs";
@@ -33,8 +33,7 @@ async function generateSentencesWithGemini(
   if (!apiKey) throw new Error("GEMINI_API_KEY not configured");
 
   const ai = new GoogleGenAI({ apiKey });
-  const prompt = `Generate ${count} English sentences for a ${level} learner about: "${topic}".
-Return a JSON array of strings only. Example: ["The cat sat on the mat.", "She goes to school every day."]`;
+  const prompt = buildSentenceReorderUserPrompt(count, topic, level);
 
   const models = ["gemini-2.5-flash-lite", "gemini-2.5-flash"];
   let lastError: unknown;
@@ -116,9 +115,9 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     ? `grammar-deck:${deckSlug}:ai`
     : `ai-user:${hashedSentenceSource(`${user.id}:${level}:${topic}`)}`;
 
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-  if (!serviceKey) {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!supabaseUrl || !serviceKey) {
     return publicErrorResponse(500, "Server misconfiguration");
   }
   const db = createClient<Database>(supabaseUrl, serviceKey);
