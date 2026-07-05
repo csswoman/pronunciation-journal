@@ -89,8 +89,7 @@ export default function CustomPromptPanel({
           <Button
             type="submit"
             disabled={!text.trim() || isDisabled}
-            className="ml-auto flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold transition-colors disabled:opacity-40"
-            style={{ backgroundColor: "var(--primary)", color: "var(--primary-foreground)" }}
+            className="ml-auto flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold transition-colors disabled:opacity-40 bg-[var(--primary)] text-[var(--primary-foreground)]"
           >
             {isDisabled
               ? <span className="w-3.5 h-3.5 border-2 border-current border-t-transparent rounded-full animate-spin" />
@@ -106,8 +105,8 @@ export default function CustomPromptPanel({
   const hasText = text.trim().length > 0;
 
   return (
-      <div className="flex flex-col gap-1.5">
-        <div
+    <div className="flex flex-col gap-1.5">
+      <div
         className={`flex items-center gap-2 rounded-full border px-4 pr-1.5 py-1.5 transition-[border-color,box-shadow] duration-150 bg-[var(--card-bg)] ${
           focused
             ? "border-[var(--primary)] shadow-[0_0_0_3px_color-mix(in_oklch,var(--primary)_18%,transparent)]"
@@ -152,22 +151,20 @@ export default function CustomPromptPanel({
       <div className="flex items-center justify-between px-1">
         <p className="text-tiny text-fg-subtle">
           <kbd
-            className="px-1 py-px rounded text-tiny font-mono"
-            style={{ backgroundColor: "var(--btn-regular-bg)", color: "var(--text-secondary)" }}
+            className="px-1 py-px rounded text-tiny font-mono bg-[var(--btn-regular-bg)] text-[var(--text-secondary)]"
           >
             ↵
           </kbd>
           {" "}to send ·{" "}
           <kbd
-            className="px-1 py-px rounded text-tiny font-mono"
-            style={{ backgroundColor: "var(--btn-regular-bg)", color: "var(--text-secondary)" }}
+            className="px-1 py-px rounded text-tiny font-mono bg-[var(--btn-regular-bg)] text-[var(--text-secondary)]"
           >
             Shift + ↵
           </kbd>
           {" "}for new line
         </p>
         <div className="flex items-center gap-1.5">
-          <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: "var(--success)" }} />
+          <span className="w-1.5 h-1.5 rounded-full bg-[var(--success)]" />
           <span className="text-tiny text-fg-subtle">AI feedback on</span>
         </div>
       </div>
