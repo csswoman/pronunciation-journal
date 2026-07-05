@@ -130,36 +130,36 @@ export default function InterviewSession({ title, turns, difficulty, level, onRe
           if (turn.role === "interviewer") {
             return (
               <div key={idx} className={gapClass}>
-              <InterviewerBubble
-                text={turn.text}
-                isActive={isActive}
-                isPlaying={isCurrentlyPlaying}
-                hasNextCandidate={isActive && idx + 1 < turns.length && turns[idx + 1].role === "candidate"}
-                onListen={() => isCurrentlyPlaying ? stopTurn() : playTurn(idx)}
-                onRevealNext={revealNext}
-              />
+                <InterviewerBubble
+                  text={turn.text}
+                  isActive={isActive}
+                  isPlaying={isCurrentlyPlaying}
+                  hasNextCandidate={isActive && idx + 1 < turns.length && turns[idx + 1].role === "candidate"}
+                  onListen={() => isCurrentlyPlaying ? stopTurn() : playTurn(idx)}
+                  onRevealNext={revealNext}
+                />
               </div>
             );
           }
 
           return (
             <div key={idx} className={gapClass}>
-            <CandidateBubble
-              idx={idx}
-              text={turn.text}
-              isActive={isActive}
-              isListening={isCurrentlyPlaying}
-              turnResult={turnResult}
-              difficulty={difficulty}
-              level={level}
-              isDone={isDone}
-              onRecordDone={(score, transcript) =>
-                setResults((prev) => new Map(prev).set(idx, { score, transcript }))
-              }
-              onListen={() => isCurrentlyPlaying ? stopTurn() : playTurn(idx)}
-              onRetry={() => setResults((prev) => { const m = new Map(prev); m.delete(idx); return m; })}
-              onNext={() => isDone ? setShowResults(true) : revealNext()}
-            />
+              <CandidateBubble
+                idx={idx}
+                text={turn.text}
+                isActive={isActive}
+                isListening={isCurrentlyPlaying}
+                turnResult={turnResult}
+                difficulty={difficulty}
+                level={level}
+                isDone={isDone}
+                onRecordDone={(score, transcript) =>
+                  setResults((prev) => new Map(prev).set(idx, { score, transcript }))
+                }
+                onListen={() => isCurrentlyPlaying ? stopTurn() : playTurn(idx)}
+                onRetry={() => setResults((prev) => { const m = new Map(prev); m.delete(idx); return m; })}
+                onNext={() => isDone ? setShowResults(true) : revealNext()}
+              />
             </div>
           );
         })}
