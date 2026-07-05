@@ -70,24 +70,24 @@ export default function AICoachPanel() {
     return true;
   }) || isStreaming;
 
+  const panelStyle = {
+    transform: isMobile
+      ? isOpen ? "translateY(0)" : "translateY(100%)"
+      : isOpen ? "translateX(0)" : "translateX(100%)",
+    transition: isMobile
+      ? "transform 0.35s cubic-bezier(0.22, 1, 0.36, 1)"
+      : "transform 0.25s ease",
+    ...(isMobile ? {} : {
+      width: isFullscreen ? "calc(100vw - var(--sidebar-width))" : `${panelWidth}px`,
+    }),
+  } as const;
+
   return <>
     <div
       className={`fixed z-50 flex flex-col bg-surface-raised shadow-lg
         max-md:inset-0 max-md:border-0
         md:top-0 md:right-0 md:bottom-0 md:border-l md:border-border-subtle`}
-      style={{
-        // mobile: slide up from bottom; desktop: slide in from right
-        transform: isMobile
-          ? isOpen ? "translateY(0)" : "translateY(100%)"
-          : isOpen ? "translateX(0)" : "translateX(100%)",
-        transition: isMobile
-          ? "transform 0.35s cubic-bezier(0.22, 1, 0.36, 1)"
-          : "transform 0.25s ease",
-        // width only applies on desktop; on mobile inset-0 handles sizing
-        ...(isMobile ? {} : {
-          width: isFullscreen ? "calc(100vw - var(--sidebar-width))" : `${panelWidth}px`,
-        }),
-      }}
+      style={panelStyle}
       aria-hidden={!isOpen}
     >
       {!isFullscreen && !isMobile && <div onMouseDown={onDragStart} title="Drag to resize" className="absolute top-0 left-0 bottom-0 w-1 cursor-ew-resize group z-10 -ml-px"><div className="absolute inset-y-0 left-0 w-1 opacity-0 group-hover:opacity-100 transition-opacity bg-primary" /></div>}

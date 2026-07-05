@@ -24,11 +24,8 @@ export default function PronunciationProgress({ current, total, mastered, pct }:
         className="relative w-full h-1 rounded-full overflow-hidden bg-surface-sunken"
       >
         <div
-          className="h-full rounded-full transition-all duration-500"
-          style={{
-            width: `${safePct}%`,
-            background: "linear-gradient(90deg, var(--primary-300), var(--primary))",
-          }}
+          className="h-full rounded-full transition-all duration-500 bg-[linear-gradient(90deg,var(--primary-300),var(--primary))]"
+          style={{ width: `${safePct}%` }}
         />
       </div>
     </div>
