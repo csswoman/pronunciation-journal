@@ -72,24 +72,23 @@ export function InlineRecorder({ targetText, difficulty, level, onDone, onListen
 
   if (phase === "transcribing") {
     return (
-      <div className="flex items-center gap-2 mt-3 pt-3" style={{ borderTop: "1px solid var(--line-divider)" }}>
-        <Loader2 size={15} className="animate-spin" style={{ color: "var(--color-accent)" }} />
-        <span className="text-xs" style={{ color: "var(--muted-text)" }}>Analyzing your pronunciation…</span>
+      <div className="flex items-center gap-2 mt-3 pt-3 border-t border-[var(--line-divider)]">
+        <Loader2 size={15} className="animate-spin text-[var(--color-accent)]" />
+        <span className="text-xs text-[var(--muted-text)]">Analyzing your pronunciation…</span>
       </div>
     );
   }
 
   if (phase === "review") {
     return (
-      <div className="flex items-center gap-2 mt-3 pt-3" style={{ borderTop: "1px solid var(--line-divider)" }}>
-        <span className="text-xs" style={{ color: "var(--muted-text)" }}>Recording ready</span>
+      <div className="flex items-center gap-2 mt-3 pt-3 border-t border-[var(--line-divider)]">
+        <span className="text-xs text-[var(--muted-text)]">Recording ready</span>
         <Button variant="primary" size="sm" icon={<ChevronRight size={13} />} onClick={() => setPhase("transcribing")}>Send</Button>
         <span className="relative group ml-auto">
           <Button variant="outline" size="icon" onClick={handleReRecord} className="!rounded-xl w-8 h-8">
             <RotateCcw size={14} />
           </Button>
-          <span className="absolute bottom-full right-0 mb-1.5 px-2 py-1 rounded-lg text-xs whitespace-nowrap pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity z-20 shadow-lg"
-            style={{ background: "var(--card-bg)", border: "1px solid var(--line-divider)", color: "var(--body-text)" }}>
+          <span className="absolute bottom-full right-0 mb-1.5 px-2 py-1 rounded-lg text-xs whitespace-nowrap pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity z-20 shadow-lg bg-[var(--card-bg)] border border-[var(--line-divider)] text-[var(--body-text)]">
             Re-record
           </span>
         </span>
@@ -98,7 +97,7 @@ export function InlineRecorder({ targetText, difficulty, level, onDone, onListen
   }
 
   return (
-    <div className="flex items-center gap-2 mt-3 pt-3 flex-wrap" style={{ borderTop: "1px solid var(--line-divider)" }}>
+    <div className="flex items-center gap-2 mt-3 pt-3 flex-wrap border-t border-[var(--line-divider)]">
       {(error || speechError) && <p className="w-full text-xs text-error mb-1">{error ?? speechError}</p>}
 
       <Button
@@ -122,7 +121,7 @@ export function InlineRecorder({ targetText, difficulty, level, onDone, onListen
       </Button>
 
       {phase === "idle" && !isRecording && (
-        <span className="text-xs" style={{ color: "var(--muted-text)" }}>Say the text above</span>
+        <span className="text-xs text-[var(--muted-text)]">Say the text above</span>
       )}
     </div>
   );

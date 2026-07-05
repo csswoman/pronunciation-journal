@@ -149,8 +149,7 @@ export function InterviewResults({ title, turns, results, difficulty, level, onR
     <div className="flex flex-col h-full max-w-2xl mx-auto w-full">
       {/* Header */}
       <div
-        className="flex-shrink-0 px-4 pt-4 pb-3 flex items-center justify-between gap-3 border-b"
-        style={{ borderColor: "var(--line-divider)", background: "var(--card-bg)" }}
+        className="flex-shrink-0 px-4 pt-4 pb-3 flex items-center justify-between gap-3 border-b border-[var(--line-divider)] bg-[var(--card-bg)]"
       >
         <p className="text-sm font-semibold truncate text-fg">{title}</p>
         <Button variant="outline" size="sm" icon={<RotateCcw size={11} />} onClick={onReset}>New</Button>
@@ -158,18 +157,16 @@ export function InterviewResults({ title, turns, results, difficulty, level, onR
 
       {/* Body */}
       <div
-        className="flex-1 overflow-y-auto px-4 py-6 flex flex-col gap-6"
-        style={{ background: "var(--muted-bg)" }}
+        className="flex-1 overflow-y-auto px-4 py-6 flex flex-col gap-6 bg-[var(--muted-bg)]"
       >
         {/* Score hero */}
         <div
-          className="rounded-2xl px-6 py-6 flex flex-col items-center gap-3 text-center"
-          style={{ background: "var(--card-bg)", border: "1px solid var(--line-divider)" }}
+          className="rounded-2xl px-6 py-6 flex flex-col items-center gap-3 text-center bg-[var(--card-bg)] border border-[var(--line-divider)]"
         >
           <AccuracyRing accuracy={totalAccuracy} size={80} />
           <div>
             <p className="text-xl font-bold" style={{ color: gradeColor }}>{grade}</p>
-            <p className="text-sm mt-0.5" style={{ color: "var(--muted-text)" }}>
+            <p className="text-sm mt-0.5 text-[var(--muted-text)]">
               Overall pronunciation accuracy
             </p>
           </div>
@@ -177,21 +174,21 @@ export function InterviewResults({ title, turns, results, difficulty, level, onR
           {/* Stats row */}
           <div className="flex gap-6 mt-1">
             <div className="flex flex-col items-center gap-0.5">
-              <CheckCircle2 size={16} style={{ color: "var(--score-excellent)" }} />
+              <CheckCircle2 size={16} className="text-[var(--score-excellent)]" />
               <span className="text-lg font-bold text-fg">{passed}</span>
-              <span className="text-xs" style={{ color: "var(--muted-text)" }}>Passed</span>
+              <span className="text-xs text-[var(--muted-text)]">Passed</span>
             </div>
-            <div className="w-px" style={{ background: "var(--line-divider)" }} />
+            <div className="w-px bg-[var(--line-divider)]" />
             <div className="flex flex-col items-center gap-0.5">
-              <AlertCircle size={16} style={{ color: "var(--score-poor)" }} />
+              <AlertCircle size={16} className="text-[var(--score-poor)]" />
               <span className="text-lg font-bold text-fg">{failed}</span>
-              <span className="text-xs" style={{ color: "var(--muted-text)" }}>To improve</span>
+              <span className="text-xs text-[var(--muted-text)]">To improve</span>
             </div>
-            <div className="w-px" style={{ background: "var(--line-divider)" }} />
+            <div className="w-px bg-[var(--line-divider)]" />
             <div className="flex flex-col items-center gap-0.5">
-              <TrendingUp size={16} style={{ color: "var(--color-accent)" }} />
+              <TrendingUp size={16} className="text-[var(--color-accent)]" />
               <span className="text-lg font-bold text-fg">{scores.length}</span>
-              <span className="text-xs" style={{ color: "var(--muted-text)" }}>Turns</span>
+              <span className="text-xs text-[var(--muted-text)]">Turns</span>
             </div>
           </div>
         </div>
@@ -199,7 +196,7 @@ export function InterviewResults({ title, turns, results, difficulty, level, onR
         {/* Per-turn breakdown */}
         {candidateTurns.length > 0 && (
           <div className="flex flex-col gap-2">
-            <p className="text-xs font-semibold uppercase tracking-wide px-1" style={{ color: "var(--muted-text)" }}>
+            <p className="text-xs font-semibold uppercase tracking-wide px-1 text-[var(--muted-text)]">
               Turn breakdown
             </p>
             {candidateTurns.map(({ idx, turn }, i) => {
@@ -209,13 +206,12 @@ export function InterviewResults({ title, turns, results, difficulty, level, onR
               return (
                 <div
                   key={idx}
-                  className="rounded-xl px-4 py-3 flex items-center gap-3"
-                  style={{ background: "var(--card-bg)", border: "1px solid var(--line-divider)" }}
+                  className="rounded-xl px-4 py-3 flex items-center gap-3 bg-[var(--card-bg)] border border-[var(--line-divider)]"
                 >
-                  <span className="text-xs font-bold w-5 text-center flex-shrink-0" style={{ color: "var(--muted-text)" }}>
+                  <span className="text-xs font-bold w-5 text-center flex-shrink-0 text-[var(--muted-text)]">
                     {i + 1}
                   </span>
-                  <p className="flex-1 text-xs leading-relaxed min-w-0 truncate" style={{ color: "var(--body-text)" }}>
+                  <p className="flex-1 text-xs leading-relaxed min-w-0 truncate text-[var(--body-text)]">
                     {turn.text}
                   </p>
                   {acc !== null ? (
@@ -229,7 +225,7 @@ export function InterviewResults({ title, turns, results, difficulty, level, onR
                       {acc}%
                     </span>
                   ) : (
-                    <span className="flex-shrink-0 text-xs" style={{ color: "var(--muted-text)" }}>skipped</span>
+                    <span className="flex-shrink-0 text-xs text-[var(--muted-text)]">skipped</span>
                   )}
                 </div>
               );
@@ -240,12 +236,11 @@ export function InterviewResults({ title, turns, results, difficulty, level, onR
         {/* Words to improve */}
         {uniqueWords.length > 0 && (
           <div className="flex flex-col gap-2">
-            <p className="text-xs font-semibold uppercase tracking-wide px-1" style={{ color: "var(--muted-text)" }}>
+            <p className="text-xs font-semibold uppercase tracking-wide px-1 text-[var(--muted-text)]">
               Words to practice
             </p>
             <div
-              className="rounded-2xl px-4 py-4 flex flex-wrap gap-2"
-              style={{ background: "var(--card-bg)", border: "1px solid var(--line-divider)" }}
+              className="rounded-2xl px-4 py-4 flex flex-wrap gap-2 bg-[var(--card-bg)] border border-[var(--line-divider)]"
             >
               {uniqueWords.map(({ word, tip }, i) => (
                 <span
@@ -261,8 +256,7 @@ export function InterviewResults({ title, turns, results, difficulty, level, onR
                   {word}
                   {tip && (
                     <span
-                      className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 rounded-lg text-xs whitespace-nowrap pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity z-20 shadow-lg"
-                      style={{ background: "var(--card-bg)", border: "1px solid var(--line-divider)", color: "var(--body-text)" }}
+                      className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 rounded-lg text-xs whitespace-nowrap pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity z-20 shadow-lg bg-[var(--card-bg)] border border-[var(--line-divider)] text-[var(--body-text)]"
                     >
                       {tip}
                     </span>
