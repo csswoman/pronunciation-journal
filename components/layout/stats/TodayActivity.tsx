@@ -5,7 +5,7 @@ function MetricRow({ label, value, colored }: { label: string; value: string; co
   return (
     <div className="flex items-center justify-between py-2.5 border-b border-border-subtle">
       <span className="text-sm text-fg-muted">{label}</span>
-      <span className="text-sm font-bold" style={{ color: colored ? "var(--primary)" : "var(--text-primary)" }}>
+      <span className={colored ? "text-sm font-bold text-[var(--primary)]" : "text-sm font-bold text-[var(--text-primary)]"}>
         {value}
       </span>
     </div>

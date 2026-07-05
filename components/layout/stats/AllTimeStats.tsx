@@ -12,8 +12,7 @@ function MetricRow({ label, value, colored, highlight }: { label: string; value:
     <div className="flex items-center justify-between py-2.5 border-b border-border-subtle">
       <span className="text-sm text-fg-muted">{label}</span>
       <span
-        className="text-sm font-bold"
-        style={{ color: highlight ? "oklch(0.65 0.18 30)" : colored ? "var(--primary)" : "var(--text-primary)" }}
+        className={`text-sm font-bold ${highlight ? "text-[oklch(0.65_0.18_30)]" : colored ? "text-[var(--primary)]" : "text-[var(--text-primary)]"}`}
       >
         {value}
       </span>
@@ -58,10 +57,7 @@ export function AllTimeStats({ stats }: Props) {
           <MetricRow label="Words in Decks" value={formatCompact(totalDeckWords)} />
           <div className="flex items-center justify-between pt-2.5">
             <span className="text-sm text-fg-muted">Words Due Today</span>
-            <span
-              className="text-sm font-bold"
-              style={{ color: dueToday > 0 ? "oklch(0.65 0.18 30)" : "var(--text-primary)" }}
-            >
+            <span className={`text-sm font-bold ${dueToday > 0 ? "text-[oklch(0.65_0.18_30)]" : "text-[var(--text-primary)]"}`}>
               {dueToday}
             </span>
           </div>
