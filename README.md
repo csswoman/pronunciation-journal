@@ -53,6 +53,10 @@ credentials.
 | `GEMINI_API_KEY` | Server-only Gemini API credential |
 | `GEMINI_ENABLE_PREVIEW_MODELS` | Optional fallback-chain flag for testing preview models |
 
+The Gemini fallback chain already uses the stable alias `gemini-flash-latest`
+before any preview-only models are considered. That keeps minor provider
+updates out of app code unless you deliberately pin a fixed model ID.
+
 Without valid Supabase or Gemini credentials, some authenticated and AI-backed
 flows will be unavailable. The app still contains local/offline-oriented state
 paths for parts of the practice experience.
