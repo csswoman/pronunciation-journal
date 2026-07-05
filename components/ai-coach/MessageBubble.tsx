@@ -18,7 +18,7 @@ function renderInline(text: string): React.ReactNode {
   return parts.map((part, i) => {
     if (!part) return null;
     if ((part.startsWith("**") && part.endsWith("**")) || (part.startsWith("__") && part.endsWith("__"))) {
-      return <strong key={i} style={{ color: "var(--primary)", fontWeight: 600 }}>{part.slice(2, -2)}</strong>;
+      return <strong key={i} className="font-semibold text-[var(--primary)]">{part.slice(2, -2)}</strong>;
     }
     if (part.startsWith("~~") && part.endsWith("~~") && part.length > 4) {
       return (
@@ -29,7 +29,7 @@ function renderInline(text: string): React.ReactNode {
     }
     if (part.startsWith("`") && part.endsWith("`") && part.length > 2) {
       return (
-        <code key={i} className="px-1.5 py-0.5 rounded text-xs font-mono" style={{ background: "oklch(0 0 0 / 0.25)", color: "var(--primary)" }}>
+        <code key={i} className="rounded bg-[oklch(0_0_0_/_0.25)] px-1.5 py-0.5 font-mono text-xs text-[var(--primary)]">
           {part.slice(1, -1)}
         </code>
       );
@@ -38,7 +38,7 @@ function renderInline(text: string): React.ReactNode {
       (part.startsWith("*") && part.endsWith("*") && part.length > 2) ||
       (part.startsWith("_") && part.endsWith("_") && part.length > 2)
     ) {
-      return <em key={i} className="italic" style={{ color: "var(--text-primary)" }}>{part.slice(1, -1)}</em>;
+      return <em key={i} className="italic text-[var(--text-primary)]">{part.slice(1, -1)}</em>;
     }
     return part;
   });
@@ -60,8 +60,8 @@ function renderProse(lines: string[]) {
       elements.push(
         <ul key={`ul-${i}`} className="space-y-1.5 pl-3 my-2">
           {items.map((item, j) => (
-            <li key={j} className="flex gap-2 leading-[1.65]" style={{ fontSize: "15px" }}>
-              <span className="mt-2 w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: "var(--primary)", opacity: 0.7 }} />
+            <li key={j} className="flex gap-2 leading-[1.65] text-[15px]">
+              <span className="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-[var(--primary)] opacity-70" />
               <span>{renderInline(item)}</span>
             </li>
           ))}
@@ -72,7 +72,7 @@ function renderProse(lines: string[]) {
 
     if (/^#{1,3}\s+/.test(line)) {
       elements.push(
-        <p key={`h-${i}`} className="text-xs font-semibold uppercase tracking-widest mt-4 mb-1.5" style={{ color: "var(--primary)", opacity: 0.8 }}>
+        <p key={`h-${i}`} className="mb-1.5 mt-4 text-xs font-semibold uppercase tracking-widest text-[var(--primary)]/80">
           {renderInline(line.replace(/^#{1,3}\s+/, ""))}
         </p>
       );
@@ -81,7 +81,7 @@ function renderProse(lines: string[]) {
     }
 
     elements.push(
-      <p key={`p-${i}`} className="leading-[1.65]" style={{ fontSize: "15px" }}>{renderInline(line)}</p>
+      <p key={`p-${i}`} className="text-[15px] leading-[1.65]">{renderInline(line)}</p>
     );
     i++;
   }
@@ -149,12 +149,7 @@ function AIBubble({ message, showAvatar, onSaveWord, onSuggestionClick, onToolAn
         {correction && <CorrectionCard correction={correction} />}
 
         <div
-          className="cursor-text select-text rounded-lg border px-3.5 py-2.5"
-          style={{
-            color: "var(--text-primary)",
-            backgroundColor: "var(--surface-raised)",
-            borderColor: "var(--border-subtle)",
-          }}
+          className="cursor-text select-text rounded-lg border border-[var(--border-subtle)] bg-[var(--surface-raised)] px-3.5 py-2.5 text-[var(--text-primary)]"
           onMouseUp={handleMouseUp}
         >
           <div className="space-y-3">
@@ -197,7 +192,7 @@ function AIBubble({ message, showAvatar, onSaveWord, onSuggestionClick, onToolAn
           </div>
         </div>
 
-        <p className="text-tiny pl-1 opacity-0 group-hover/msg:opacity-100 transition-opacity" style={{ color: "var(--text-tertiary)" }}>
+        <p className="text-tiny pl-1 opacity-0 text-[var(--text-tertiary)] transition-opacity group-hover/msg:opacity-100">
           {formatTime((message as { createdAt?: Date }).createdAt)}
         </p>
 
@@ -235,22 +230,14 @@ export default function MessageBubble({
     return (
       <div className="flex justify-end group/msg max-w-[88%] ml-auto">
         <div className="flex flex-col items-end gap-1.5">
-          <div
-            className="px-3.5 py-2.5 rounded-lg rounded-tr-sm leading-relaxed whitespace-pre-wrap break-words"
-            style={{
-              fontSize: "15px",
-              background: "color-mix(in srgb, var(--primary) 12%, var(--surface-raised))",
-              color: "var(--text-primary)",
-              border: "1px solid color-mix(in srgb, var(--primary) 18%, transparent)",
-            }}
-          >
+          <div className="rounded-lg rounded-tr-sm border border-[color-mix(in_srgb,var(--primary)_18%,transparent)] bg-[color-mix(in_srgb,var(--primary)_12%,var(--surface-raised))] px-3.5 py-2.5 text-[15px] leading-relaxed whitespace-pre-wrap break-words text-[var(--text-primary)]">
             {message.content}
           </div>
           <div className="flex items-center gap-1 pr-1 opacity-0 group-hover/msg:opacity-100 transition-opacity">
-            <span className="text-tiny" style={{ color: "var(--text-tertiary)" }}>
+            <span className="text-tiny text-[var(--text-tertiary)]">
               {formatTime((message as { createdAt?: Date }).createdAt)}
             </span>
-            <CheckCheck size={11} style={{ color: "var(--primary)" }} />
+            <CheckCheck size={11} className="text-[var(--primary)]" />
           </div>
         </div>
       </div>

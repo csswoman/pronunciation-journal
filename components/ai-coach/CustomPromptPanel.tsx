@@ -69,13 +69,7 @@ export default function CustomPromptPanel({
     return (
       <form
         onSubmit={handleSubmit}
-        className="flex flex-col gap-4 p-5 rounded-xl border-2 transition-all"
-        style={{ backgroundColor: "var(--card-bg)", borderColor: "var(--line-divider)" }}
-        onFocus={e => (e.currentTarget.style.borderColor = "var(--primary)")}
-        onBlur={e => {
-          if (!e.currentTarget.contains(e.relatedTarget))
-            e.currentTarget.style.borderColor = "var(--line-divider)";
-        }}
+        className="flex flex-col gap-4 rounded-xl border-2 border-[var(--line-divider)] bg-[var(--card-bg)] p-5 transition-all focus-within:border-[var(--primary)]"
       >
         <textarea
           ref={textareaRef}
@@ -112,16 +106,13 @@ export default function CustomPromptPanel({
   const hasText = text.trim().length > 0;
 
   return (
-    <div className="flex flex-col gap-1.5">
-      <div
-        className="flex items-center gap-2 pl-4 pr-1.5 py-1.5 rounded-full border transition-[border-color,box-shadow] duration-150"
-        style={{
-          backgroundColor: "var(--card-bg)",
-          borderColor: focused ? "var(--primary)" : "var(--line-divider)",
-          boxShadow: focused
-            ? "0 0 0 3px color-mix(in oklch, var(--primary) 18%, transparent)"
-            : "none",
-        }}
+      <div className="flex flex-col gap-1.5">
+        <div
+        className={`flex items-center gap-2 rounded-full border px-4 pr-1.5 py-1.5 transition-[border-color,box-shadow] duration-150 bg-[var(--card-bg)] ${
+          focused
+            ? "border-[var(--primary)] shadow-[0_0_0_3px_color-mix(in_oklch,var(--primary)_18%,transparent)]"
+            : "border-[var(--line-divider)]"
+        }`}
       >
         <textarea
           ref={textareaRef}
@@ -149,12 +140,7 @@ export default function CustomPromptPanel({
           onClick={handleSubmit}
           disabled={!hasText || isDisabled}
           aria-label="Send"
-          className="w-[38px] h-[38px] rounded-full flex-shrink-0 flex items-center justify-center transition-[transform,opacity] duration-150 disabled:opacity-40 hover:scale-105 active:scale-95"
-          style={{
-            backgroundColor: "var(--primary)",
-            color: "var(--on-primary)",
-            border: "none",
-          }}
+          className="flex h-[38px] w-[38px] flex-shrink-0 items-center justify-center rounded-full border-none bg-[var(--primary)] text-[var(--on-primary)] transition-[transform,opacity] duration-150 hover:scale-105 active:scale-95 disabled:opacity-40"
         >
           {isDisabled
             ? <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />

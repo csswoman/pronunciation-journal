@@ -5,12 +5,7 @@ interface AIAvatarProps {
 export default function AIAvatar({ state = "idle" }: AIAvatarProps) {
   return (
     <div
-      className="relative w-7 h-7 rounded-md flex-shrink-0 flex items-center justify-center"
-      style={{
-        background: "var(--gradient-primary)",
-        boxShadow:
-          "0 4px 12px -4px color-mix(in srgb, var(--primary) 55%, transparent)",
-      }}
+      className="relative flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-md bg-[var(--gradient-primary)] shadow-[0_4px_12px_-4px_color-mix(in_srgb,var(--primary)_55%,transparent)]"
       aria-hidden
     >
       <span
@@ -18,10 +13,7 @@ export default function AIAvatar({ state = "idle" }: AIAvatarProps) {
       >
         ✦
       </span>
-      <span
-        className="absolute inset-0 rounded-md"
-        style={{ boxShadow: "inset 0 1px 0 0 rgb(255 255 255 / 0.25)" }}
-      />
+      <span className="absolute inset-0 rounded-md shadow-[inset_0_1px_0_0_rgb(255_255_255_/_0.25)]" />
     </div>
   );
 }

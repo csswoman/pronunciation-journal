@@ -56,12 +56,15 @@ interface TemplateCardProps {
 
 export default function TemplateCard({ template, onSelect }: TemplateCardProps) {
   const { Icon, color } = template;
+  const accentStyle = {
+    backgroundColor: `color-mix(in srgb, ${color} 14%, transparent)`,
+    boxShadow: `inset 0 0 0 1px color-mix(in srgb, ${color} 18%, transparent)`,
+  } as const;
 
   return (
     <button
       onClick={() => onSelect(template.id)}
       className="group relative p-4 rounded-2xl bg-[var(--surface-raised)] border border-[var(--border-subtle)] text-left cursor-pointer transition-[transform,border-color,box-shadow] duration-200 flex flex-col items-start hover:-translate-y-0.5 hover:shadow-md"
-      style={{ ["--card-color" as string]: color }}
     >
       <span
         className="absolute top-3 right-3 size-7 rounded-full flex items-center justify-center opacity-0 -translate-x-1 transition-[opacity,transform] duration-200 group-hover:opacity-100 group-hover:translate-x-0"
@@ -70,13 +73,7 @@ export default function TemplateCard({ template, onSelect }: TemplateCardProps) 
         <ArrowUpRight size={14} strokeWidth={2.2} style={{ color }} />
       </span>
 
-      <div
-        className="size-10 rounded-xl flex items-center justify-center mb-3 transition-transform duration-200 group-hover:scale-105"
-        style={{
-          backgroundColor: `color-mix(in srgb, ${color} 14%, transparent)`,
-          boxShadow: `inset 0 0 0 1px color-mix(in srgb, ${color} 18%, transparent)`,
-        }}
-      >
+      <div className="size-10 rounded-xl flex items-center justify-center mb-3 transition-transform duration-200 group-hover:scale-105" style={accentStyle}>
         <Icon size={19} strokeWidth={2} style={{ color }} />
       </div>
 

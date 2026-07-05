@@ -76,6 +76,11 @@ interface ChatEmptyStateProps {
 // ── Component ─────────────────────────────────────────────────────────────────
 
 export default function ChatEmptyState({ onSendMessage }: ChatEmptyStateProps) {
+  const accentHeroStyle = {
+    background: "var(--gradient-primary)",
+    boxShadow: "0 8px 24px -8px color-mix(in srgb, var(--primary) 50%, transparent)",
+  } as const;
+
   return (
     <div className="flex-1 min-h-full flex flex-col items-center px-5 pt-10 pb-6 chat-bg">
       <div className="blob blob-1" />
@@ -87,16 +92,10 @@ export default function ChatEmptyState({ onSendMessage }: ChatEmptyStateProps) {
       <div className="flex flex-col items-center gap-4 text-center mb-8 w-full">
         <div
           className="relative size-14 rounded-2xl flex items-center justify-center shrink-0"
-          style={{
-            background: "var(--gradient-primary)",
-            boxShadow: "0 8px 24px -8px color-mix(in srgb, var(--primary) 50%, transparent)",
-          }}
+          style={accentHeroStyle}
         >
           <span className="text-white text-xl leading-none">✦</span>
-          <span
-            className="absolute inset-0 rounded-2xl"
-            style={{ boxShadow: "inset 0 1px 0 0 rgb(255 255 255 / 0.25)" }}
-          />
+          <span className="absolute inset-0 rounded-2xl shadow-[inset_0_1px_0_0_rgb(255_255_255_/_0.25)]" />
         </div>
         <div className="space-y-1.5">
           <h2 className="text-2xl font-semibold tracking-tight text-[var(--text-primary)] m-0">
@@ -120,7 +119,7 @@ export default function ChatEmptyState({ onSendMessage }: ChatEmptyStateProps) {
               className="absolute top-3.5 right-3.5 size-7 rounded-full flex items-center justify-center opacity-0 -translate-x-1 transition-[opacity,transform] duration-200 group-hover:opacity-100 group-hover:translate-x-0"
               style={{ backgroundColor: `color-mix(in srgb, ${colorVar} 14%, transparent)` }}
             >
-              <ArrowUpRight size={14} strokeWidth={2.2} style={{ color: colorVar }} />
+              <ArrowUpRight size={14} strokeWidth={2.2} className="text-[var(--text-primary)]" style={{ color: colorVar }} />
             </span>
 
             <span

@@ -9,16 +9,9 @@ interface CorrectionCardProps {
 export default function CorrectionCard({ correction }: CorrectionCardProps) {
   return (
     <div
-      className="self-end max-w-[88%] rounded-xl px-3.5 py-2.5 text-sm leading-relaxed"
-      style={{
-        backgroundColor: "var(--success-soft)",
-        border: "1px solid color-mix(in srgb, var(--success) 30%, transparent)",
-      }}
+      className="self-end max-w-[88%] rounded-xl border border-[color-mix(in_srgb,var(--success)_30%,transparent)] bg-[var(--success-soft)] px-3.5 py-2.5 text-sm leading-relaxed"
     >
-      <p
-        className="text-[11px] font-semibold uppercase tracking-wide mb-1"
-        style={{ color: "var(--success)" }}
-      >
+      <p className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-[var(--success)]">
         ✓ Small correction
       </p>
       <p>
