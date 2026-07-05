@@ -38,6 +38,7 @@ That workflow covers:
 - lint
 - type-check
 - tests
+- optional integration tests via `pnpm test:integration` when explicitly invoked
 - design-token validation
 - dependency audit
 - hardcoded-secret scanning via `pnpm scan:secrets`
@@ -75,3 +76,8 @@ that:
 2. deploys to the hosting provider
 3. hits the readiness endpoint
 4. fails fast on unhealthy deploys
+
+For database assurance, add an optional RLS integration job that starts Supabase
+local or targets an isolated staging project, then validates anon/authenticated/
+service-role behavior. Keep this job gated by environment availability so unit
+CI remains deterministic.

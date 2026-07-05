@@ -69,7 +69,9 @@ paths for parts of the practice experience.
 - RLS coverage checks run with `pnpm audit:rls`.
 - Global security headers, including CSP, are configured in `next.config.mjs`.
 - API cost controls use the `consume_rate_limit` Supabase RPC and require `SUPABASE_SERVICE_ROLE_KEY` in production.
+- Service-role Supabase clients are centralized through `lib/supabase/service-role.ts` and `lib/supabase/admin.ts`; route code should not create ad-hoc service-role clients.
 - Word enrichment is queued in `word_enrichment_jobs`; run `processWordEnrichmentJobs()` from a trusted worker or scheduled job.
+- Speech transcription caches are scoped per user and backed by Supabase (`stt_transcription_cache` and `sentence_transcription_cache`) with short-lived in-memory L1 caches.
 - Practice progress uses the Dexie `syncOutbox` for retryable writes. Generic practice sessions, Reader, the daily checklist, and Essential Words activity show or preserve pending/error state instead of promising remote sync before flush.
 - Gemini and speech transcription errors are normalized before reaching UI. User-facing copy should stay public and provider-neutral.
 - Operational deployment notes live in `docs/deployment/runbook-minimo.md`.
@@ -94,6 +96,7 @@ pnpm lint:design-tokens
 pnpm build
 pnpm check:migrations
 pnpm audit:rls
+pnpm test:integration
 pnpm validate:core1000
 pnpm validate:core1000-generators
 pnpm lexicon:enrich

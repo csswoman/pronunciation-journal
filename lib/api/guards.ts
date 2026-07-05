@@ -4,6 +4,7 @@ import type { User } from "@supabase/supabase-js";
 import type { ZodSchema } from "zod";
 import type { Database } from "@/lib/supabase/types";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { tryGetSupabaseAdminClient } from "@/lib/supabase/service-role";
 
 // ---------------------------------------------------------------------------
 // Shared secure response headers
@@ -220,16 +221,11 @@ async function consumeDatabaseRateLimit(
   windowMs: number,
   meta?: Record<string, unknown>
 ): Promise<RateLimitRpcResult | null> {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-  if (!supabaseUrl || !serviceRoleKey) {
+  const supabase = tryGetSupabaseAdminClient();
+  if (!supabase) {
     return null;
   }
 
-  const supabase = createClient(supabaseUrl, serviceRoleKey, {
-    auth: { persistSession: false },
-  });
   const { data, error } = await supabase.rpc("consume_rate_limit", {
     p_key: key,
     p_max: max,

@@ -1,7 +1,7 @@
 # TODO de Producción
 
 Auditoría crítica original: commit `11dee70`, 2026-06-30.
-**Última actualización:** 2026-07-03 — roadmap 031 cerrado; trabajo nuevo en `plans/032-post-production-improvement-roadmap.md`.
+**Última actualización:** 2026-07-05 — hardening backend post-producción completado; quedan pruebas RLS integration opcionales y operación avanzada.
 
 Convenciones:
 
@@ -14,10 +14,10 @@ Convenciones:
 
 La base técnica es sólida y el sprint de producción cerró la mayoría de P0/P1 de seguridad, datos y escalabilidad operativa. En Vercel Free, la observabilidad mínima queda cubierta con health check programado desde GitHub Actions; Log Drain queda como mejora opcional al subir a Vercel Pro.
 
-Verificación actual (2026-07-03):
+Verificación actual (2026-07-05):
 
 - `pnpm type-check`: pasa.
-- `pnpm test`: 915 tests pasan (incluye coverage con umbrales globales).
+- `pnpm test`: 978 tests pasan.
 - `pnpm test:coverage`: pasa (umbrales 50% lines / 45% functions).
 - `pnpm audit --prod`: sin vulnerabilidades conocidas (última auditoría).
 - Migración `20260623000000_remove_premium_set_admin_and_a1.sql` verificada como no destructiva y sin email hardcodeado; ya no está exenta en `scripts/check-migrations.mjs`.
@@ -54,8 +54,21 @@ Verificación actual (2026-07-03):
 
 | # | Área | Prioridad |
 |---|---|---|
-| T52-T54 | Tests sync-manager/API + reconciliación índice planes | P2 |
 | T55-T58 | Escala opcional: semáforo Gemini, staging grants, sounds offline, observabilidad | P2/P3 |
+| RLS-INT | Pruebas RLS contra Supabase local/staging aplicada | P2 |
+
+### HECHO (hardening backend 2026-07-04/05)
+
+| Área | Evidencia |
+|---|---|
+| Cobertura API backend | Tests añadidos para rutas Gemini, assessment, enrichment, word-of-day, transcribe-sentence y rutas dinámicas. |
+| Gemini JSON helpers | `lib/gemini/json-route.ts` centraliza API key, fallback, parsing JSON y errores públicos. |
+| Gemini chat streaming | `lib/gemini/chat-route.ts` extraído y cubierto con tests de deltas, tool calls, truncado, fallback y abort. |
+| Logging sanitizado | `lib/api/logging.ts`; rutas `app/api/**/route.ts` sin `console.error`/`console.warn` directos. |
+| Cache transcripción persistente | `stt_transcription_cache` y `sentence_transcription_cache` con L1/L2 por usuario. |
+| Cache común transcripción | `lib/gemini/transcription-cache.ts` compartido por `transcribe` y `transcribe-sentence`. |
+| Service-role clients | `lib/supabase/service-role.ts` y `lib/supabase/admin.ts`; rutas/worker usan helper central. |
+| Sentences generate | Usa `callWithFallback`, schema Zod de respuesta Gemini y errores públicos. |
 
 ---
 
@@ -70,6 +83,9 @@ Verificación actual (2026-07-03):
 | HECHO | Unificar infraestructura Gemini en helper común. | P2 | M | 1-2 días | Roadmap #23. `lib/gemini/client.ts` → `callWithFallback`. |
 | HECHO | Definir timeouts explícitos para todas las llamadas Gemini. | P2 | M | 1 día | Roadmap #22. `withGeminiTimeout` (30s/45s audio). |
 | HECHO | Revisar endpoints Bearer-only y consolidarlos con `requireUser`/`createUserScopedClient`. | P2 | S | 4-8 h | Roadmap #9/#12. Rutas mutantes autenticadas cubiertas por guards y tests. |
+| HECHO | Centralizar clientes service-role de runtime backend. | P2 | S | 2-4 h | `lib/supabase/service-role.ts`; rutas y workers usan `getSupabaseAdminClient`; rate-limit usa `tryGetSupabaseAdminClient` con fallback memoria. |
+| HECHO | Unificar rutas Gemini JSON y logging de errores. | P2 | M | 1 día | `lib/gemini/json-route.ts`, `lib/api/logging.ts`; rutas API sin logs directos no sanitizados. |
+| HECHO | Extraer cache común de transcripción. | P2 | M | 1 día | `lib/gemini/transcription-cache.ts`; L1/L2 compartido por word/sentence transcription. |
 
 ## Frontend
 
@@ -91,6 +107,7 @@ Verificación actual (2026-07-03):
 | HECHO | Revisar grants heredados a `anon` y default privileges. | P2 | M | 1-2 días | Roadmap #18. `20260703000000_harden_anon_grants.sql` revoca grants amplios; revisión en `docs/database/anon-grants-review.md`. |
 | HECHO | Añadir pruebas o checks de migraciones para RLS. | P1 | M | 1-2 días | Roadmap #15-16. `pnpm check:migrations`, `pnpm audit:rls`. |
 | HECHO | Documentar migraciones históricas con policy insegura temporal. | P2 | M | 1 día | Roadmap #19. `docs/database/migration-risk-register.md` documenta STT cache 2026-06-11 → 2026-06-21. |
+| ABIERTO | Ejecutar pruebas RLS contra una base local/staging aplicada. | P2 | M | 1-2 días | Requiere Supabase local o credenciales de test aisladas; complementa `audit:rls` estático. |
 
 ## Infraestructura
 
@@ -111,13 +128,13 @@ Verificación actual (2026-07-03):
 | HECHO | Sustituir mensajes de error internos por respuestas públicas genéricas. | P1 | S | 4-6 h | Roadmap #10. |
 | HECHO | Ampliar escaneo de secretos en CI y precommit local. | P2 | S | 4 h | Roadmap #13. `pnpm scan:secrets` corre en CI; `.githooks/pre-commit` lo ejecuta localmente al activar `core.hooksPath`. |
 | HECHO | Verificar headers globales y CSP. | P2 | M | 1 día | Roadmap #14. `next.config.mjs`. |
-| HECHO | Revisar PII/audio/transcripts en logs y caches. | P1 | M | 1-2 días | Roadmap #42. `redactError()` en `lib/api/guards.ts`. |
+| HECHO | Revisar PII/audio/transcripts en logs y caches. | P1 | M | 1-2 días | Roadmap #42. `logServerError`, `redactError`, caches STT/sentence por usuario y rutas API sin `console.error` directo. |
 
 ## Testing
 
 | Estado | Tarea | Prioridad | Dificultad | Tiempo | Evidencia / notas |
 |---|---|---:|---:|---:|---|
-| HECHO | Restaurar suite verde. | P0 | S | 2-6 h | 915 tests pasan (2026-07-03). |
+| HECHO | Restaurar suite verde. | P0 | S | 2-6 h | 978 tests pasan (2026-07-05). |
 | HECHO | Añadir tests de guard para cada POST sensible. | P1 | M | 1-2 días | Roadmap #12. |
 | HECHO | Añadir cobertura de migraciones/RLS. | P1 | L | 2-4 días | Roadmap #15-16. |
 | HECHO | Separar tests unitarios, integración y smoke/e2e. | P2 | M | 1 día | Roadmap #34. `pnpm test:integration`. |
@@ -151,18 +168,18 @@ Verificación actual (2026-07-03):
 | HECHO | Crear runbook de producción. | P0 | M | 1-2 días | Roadmap Fase 0 #5. `docs/deployment/runbook-minimo.md`. |
 | HECHO | Documentar threat model. | P1 | M | 1 día | Roadmap #39. |
 | HECHO | Documentar arquitectura offline/sync. | P1 | M | 1 día | Roadmap #40. `docs/architecture/offline-sync.md`. |
-| HECHO | Mantener `plans/README.md` reconciliado con este TODO. | P2 | S | 4 h | Roadmap #37. Actualizado 2026-07-03. |
+| HECHO | Mantener `plans/README.md` reconciliado con este TODO. | P2 | S | 4 h | Roadmap #37. Actualizado 2026-07-05. |
 
-## Puntuación (actualizada 2026-07-03)
+## Puntuación (actualizada 2026-07-05)
 
 | Área | Nota | Justificación | Qué falta para 10/10 |
 |---|---:|---|---|
 | Arquitectura | 9/10 | Query layer, RLS, jobs durables, rate limit distribuido, Gemini unificado, pronunciation offline en Dexie y health check programado. | Alertas operativas más ricas si se adopta Sentry o Vercel Pro. |
-| Calidad del código | 8/10 | Type-check verde, 925 tests, coverage per-file en CI. | Subir umbrales guards hacia 80%. |
-| Seguridad | 9/10 | CSRF universal, CSP, `redactError`, rate limit RPC, secret scan, grants anon endurecidos y SQL P0 neutralizado. | Validar políticas/grants contra una base staging aplicada. |
+| Calidad del código | 9/10 | Type-check verde, 978 tests, helpers backend compartidos y coverage per-file en CI. | RLS integration real y métricas operativas. |
+| Seguridad | 9/10 | CSRF universal, CSP, logging sanitizado, rate limit RPC con fallback, secret scan, grants anon endurecidos y SQL P0 neutralizado. | Validar políticas/grants contra una base staging aplicada. |
 | Rendimiento | 8/10 | Bundle analysis en CI con budgets; fonemas scoped; timeouts Gemini. | Métricas per-route en analyze-bundle. |
 | Escalabilidad | 8/10 | Rate limit multi-instancia, cola durable, worker cron y observabilidad básica compatible con Free. Falta backpressure Gemini global. | Semáforo Gemini, pruebas de carga y Log Drain si se usa Vercel Pro. |
-| Testing | 9/10 | Suite verde, coverage global + per-file crítico en CI. | Subir umbrales guards/sync hacia targets altos. |
+| Testing | 9/10 | Suite verde, coverage global + per-file crítico en CI, streaming/backend routes cubiertos. | Añadir RLS integration opcional. |
 | Documentación | 10/10 | Runbook, threat model, offline/sync, entornos, backups, multi-instance, testing strategy y registro de migraciones históricas. | Mantener docs sincronizadas con cambios operativos. |
 | Preparación para producción | 9/10 | CI verde, seguridad API cerrada, backups documentados, SQL P0 neutralizado, grants anon endurecidos, a11y real y health check programado compatible con Vercel Free. | Configurar alertas más ricas cuando el plan/stack lo permita. |
 
@@ -170,6 +187,6 @@ Verificación actual (2026-07-03):
 
 Fuente detallada: `plans/032-post-production-improvement-roadmap.md`.
 
-1. **Fase 4 (tests):** T52-T54 sync-manager, API routes, reconciliación índice planes.
-2. **Fase 4:** T54 reconciliar índice → T52 sync tests → T53 API tests.
-5. **Operativo opcional:** T58 Log Drain (Vercel Pro) o Sentry free tier.
+1. **RLS integration opcional:** levantar Supabase local/staging y validar permisos reales por rol.
+2. **CI opcional:** ejecutar RLS integration solo cuando existan variables/servicio de test.
+3. **Operativo opcional:** T58 Log Drain (Vercel Pro) o Sentry free tier.
