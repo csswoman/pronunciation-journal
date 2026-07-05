@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { requireSameOrigin, requireUser, rateLimit, validateBody, SECURE_HEADERS, publicErrorResponse, redactError } from "@/lib/api/guards";
 import { callWithFallback, getErrorStatus, stripJsonFences } from "@/lib/gemini/client";
-import { PRONUNCIATION_PHRASES_SYSTEM_PROMPT } from "@/lib/ai-prompts";
+import { buildPhrasesUserPrompt, PRONUNCIATION_PHRASES_SYSTEM_PROMPT } from "@/lib/ai-prompts";
 
 const PhrasesSchema = z.object({
   exclude: z.array(z.string().max(200)).max(100).optional(),
@@ -18,7 +18,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const originError = requireSameOrigin(request);
   if (originError) return originError;
 
-  const { user, error: authError } = await requireUser();
+  const { user, error: authError } = await requireUser(request);
   if (authError) return authError as NextResponse;
 
   const { limited, error: rateLimitError } = await rateLimit(`/api/gemini/phrases:${user.id}`, {
@@ -34,10 +34,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) return NextResponse.json({ error: "AI service unavailable" }, { status: 503, headers: SECURE_HEADERS });
 
-  const excludeHint = body?.exclude?.length
-    ? `Do NOT generate any of these phrases:\n${body.exclude.slice(0, 20).map(p => `- ${p}`).join("\n")}`
-    : "";
-  const prompt = `Generate 10 English pronunciation practice sentences. ${excludeHint}`;
+  const prompt = buildPhrasesUserPrompt(body?.exclude);
 
   try {
     const result = await callWithFallback(

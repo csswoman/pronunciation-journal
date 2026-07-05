@@ -14,9 +14,23 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     });
   } catch (error) {
     console.error("word-of-day error:", redactError(error));
-    const fallback = await getWordOfDay();
-    return NextResponse.json(fallback, {
-      headers: { "Cache-Control": "no-store" },
-    });
+    try {
+      const fallback = await getWordOfDay();
+      return NextResponse.json(fallback, {
+        headers: { "Cache-Control": "no-store" },
+      });
+    } catch (fallbackError) {
+      console.error("word-of-day fallback error:", redactError(fallbackError));
+      return NextResponse.json(
+        {
+          word: "clarity",
+          ipa: "",
+          definition: "The quality of being clear and easy to understand.",
+          example_sentence: "Clarity makes practice easier to repeat.",
+          difficulty: "beginner",
+        },
+        { headers: { "Cache-Control": "no-store" } }
+      );
+    }
   }
 }

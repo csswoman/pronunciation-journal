@@ -1,8 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
-import type { Database } from "@/lib/supabase/types";
 import { enqueueWordEnrichmentJob } from "@/lib/word-bank/jobs";
-import { SECURE_HEADERS, publicErrorResponse, rateLimit } from "@/lib/api/guards";
+import {
+  createUserScopedClient,
+  requireSameOrigin,
+  requireUser,
+  SECURE_HEADERS,
+  publicErrorResponse,
+  rateLimit,
+  redactError,
+} from "@/lib/api/guards";
 
 export const runtime = "nodejs";
 
@@ -12,24 +18,14 @@ export async function POST(
 ): Promise<NextResponse> {
   const { id } = await params;
 
-  const authHeader = req.headers.get("authorization");
-  if (!authHeader) {
-    return publicErrorResponse(401, "Unauthorized");
-  }
+  const originError = requireSameOrigin(req);
+  if (originError) return originError;
 
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  if (!supabaseUrl || !anonKey) {
-    return publicErrorResponse(500, "Server misconfiguration");
-  }
+  const { user, error: authError, accessToken } = await requireUser(req);
+  if (authError) return authError;
 
-  const token = authHeader.replace(/^Bearer\s+/i, "");
-  const authClient = createClient<Database>(supabaseUrl, anonKey, {
-    auth: { persistSession: false },
-  });
-  const { data: { user } } = await authClient.auth.getUser(token);
-  if (!user) {
-    return publicErrorResponse(401, "Unauthorized");
+  if (!accessToken) {
+    return publicErrorResponse(401, "Authorization token is required");
   }
 
   const { limited, error: rateLimitError } = await rateLimit(`/api/words/${id}/enrich:${user.id}`, {
@@ -40,15 +36,17 @@ export async function POST(
   if (limited) return rateLimitError;
 
   // Verify ownership through RLS.
-  const userClient = createClient<Database>(supabaseUrl, anonKey, {
-    auth: { persistSession: false },
-    global: { headers: { Authorization: `Bearer ${token}` } },
-  });
-  const { data: row } = await userClient
+  const userClient = createUserScopedClient(accessToken);
+  const { data: row, error: selectErr } = await userClient
     .from("word_bank")
     .select("id, status")
     .eq("id", id)
     .maybeSingle();
+
+  if (selectErr) {
+    console.error("[words/[id]/enrich] lookup failed:", redactError(selectErr));
+    return publicErrorResponse(500, "Failed to load word");
+  }
 
   if (!row) {
     return publicErrorResponse(404, "Not found");

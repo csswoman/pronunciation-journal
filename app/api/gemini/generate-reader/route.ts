@@ -47,7 +47,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const originError = requireSameOrigin(request);
   if (originError) return originError;
 
-  const { user, error: authError } = await requireUser();
+  const { user, error: authError } = await requireUser(request);
   if (authError) return authError as NextResponse;
 
   const { limited, error: rateLimitError } = await rateLimit(`/api/gemini/generate-reader:${user.id}`, {

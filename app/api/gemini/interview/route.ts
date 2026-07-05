@@ -9,11 +9,19 @@ const InterviewSchema = z.object({
   level: z.enum(["beginner", "intermediate", "advanced"]),
 });
 
+const InterviewResponseSchema = z.object({
+  title: z.string().min(1).max(200).optional(),
+  turns: z.array(z.object({
+    role: z.enum(["interviewer", "candidate"]),
+    text: z.string().min(1).max(2000),
+  }).strict()).min(2).max(24),
+}).passthrough();
+
 export async function POST(request: NextRequest): Promise<NextResponse> {
   const originError = requireSameOrigin(request);
   if (originError) return originError;
 
-  const { user, error: authError } = await requireUser();
+  const { user, error: authError } = await requireUser(request);
   if (authError) return authError as NextResponse;
 
   const { limited, error: rateLimitError } = await rateLimit(`/api/gemini/interview:${user.id}`, {
@@ -38,7 +46,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         contents: prompt,
         config: { systemInstruction: INTERVIEW_SYSTEM_PROMPT, responseMimeType: "application/json" },
       },
-      (text) => JSON.parse(stripJsonFences(text))
+      (text) => InterviewResponseSchema.parse(JSON.parse(stripJsonFences(text)))
     );
     return NextResponse.json(parsed);
   } catch (err: unknown) {

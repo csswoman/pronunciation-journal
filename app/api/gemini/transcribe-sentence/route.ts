@@ -44,14 +44,15 @@ function parseDataUrl(dataUrl: string): { mimeType: string; base64Data: string }
   return { mimeType, base64Data: match[2] };
 }
 
-// Simple in-memory cache — same audio blob = same transcript
-const cache = new Map<string, string>();
+const CACHE_TTL_MS = 1000 * 60 * 60 * 6;
+const MAX_CACHE_ENTRIES = 200;
+const cache = new Map<string, { transcript: string; createdAt: number }>();
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
   const originError = requireSameOrigin(request);
   if (originError) return originError;
 
-  const { user, error: authError } = await requireUser();
+  const { user, error: authError } = await requireUser(request);
   if (authError) return authError as NextResponse;
 
   const { limited, error: rateLimitError } = await rateLimit(`/api/gemini/transcribe-sentence:${user.id}`, {
@@ -69,9 +70,14 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
   try {
     const { mimeType, base64Data } = parseDataUrl(body.audioDataUrl);
-    const key = createHash("sha256").update(mimeType).update(base64Data).digest("hex");
+    const key = createHash("sha256").update(user.id).update(mimeType).update(base64Data).digest("hex");
     const cached = cache.get(key);
-    if (cached !== undefined) return NextResponse.json({ transcript: cached });
+    if (cached !== undefined) {
+      if (Date.now() - cached.createdAt <= CACHE_TTL_MS) {
+        return NextResponse.json({ transcript: cached.transcript });
+      }
+      cache.delete(key);
+    }
 
     const transcript = await callWithFallback(
       apiKey,
@@ -86,8 +92,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       { timeoutMs: 45_000 }
     );
 
-    if (cache.size > 200) cache.delete(cache.keys().next().value!);
-    cache.set(key, transcript);
+    if (cache.size >= MAX_CACHE_ENTRIES) cache.delete(cache.keys().next().value!);
+    cache.set(key, { transcript, createdAt: Date.now() });
 
     return NextResponse.json({ transcript });
   } catch (err: unknown) {

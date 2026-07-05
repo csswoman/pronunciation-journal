@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { requireSameOrigin, requireUser, rateLimit, validateBody, publicErrorResponse, redactError } from "@/lib/api/guards";
 import { createSupabaseServerClient as createClient } from "@/lib/supabase/server";
-import { DECK_SUGGEST_SYSTEM_PROMPT } from "@/lib/ai-prompts";
+import { buildDeckSuggestUserPrompt, DECK_SUGGEST_SYSTEM_PROMPT } from "@/lib/ai-prompts";
 import { callWithFallback, getErrorStatus, stripJsonFences } from "@/lib/gemini/client";
 
 const DeckSuggestSchema = z.object({
@@ -12,6 +12,13 @@ const DeckSuggestSchema = z.object({
   seed: z.string().max(100).optional(),
   existingWords: z.array(z.string().max(100)).max(200).optional(),
 });
+
+const DeckSuggestResponseSchema = z.object({
+  suggestions: z.array(z.object({
+    word: z.string().min(1).max(100),
+    meaning: z.string().min(1).max(500),
+  })).min(1).max(50),
+}).passthrough();
 
 const CACHE_TTL_DAYS = 7;
 
@@ -49,7 +56,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const originError = requireSameOrigin(request);
   if (originError) return originError;
 
-  const { user, error: authError } = await requireUser();
+  const { user, error: authError } = await requireUser(request);
   if (authError) return authError as NextResponse;
 
   const { limited, error: rateLimitError } = await rateLimit(`/api/gemini/deck-suggest:${user.id}`, {
@@ -75,18 +82,13 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) return NextResponse.json({ error: "AI service unavailable" }, { status: 503 });
 
-  const difficultyHint =
-    typeof body.difficulty === "number" && body.difficulty >= 2
-      ? "Use more advanced / less common vocabulary appropriate for an intermediate to advanced learner."
-      : "Use common to intermediate vocabulary appropriate for learners.";
-  const seedHint = body.seed ? `Use this seed to vary results: ${body.seed}.` : "";
-  const existingHint =
-    body.existingWords && body.existingWords.length > 0
-      ? `\nThe user already has these words in the deck — do NOT suggest any of them: ${body.existingWords.join(", ")}.`
-      : "";
-  const prompt = description
-    ? `Deck: "${body.deckName}"\nDescription: "${description}"\n\n${difficultyHint} ${seedHint}${existingHint}\nSuggest 8 English words or short phrases for this theme.`
-    : `Deck: "${body.deckName}"\n\n${difficultyHint} ${seedHint}${existingHint}\nSuggest 8 English words or short phrases for this theme.`;
+  const prompt = buildDeckSuggestUserPrompt({
+    deckName: body.deckName,
+    deckDescription: description,
+    difficulty: body.difficulty,
+    seed: body.seed,
+    existingWords: body.existingWords,
+  });
 
   try {
     const parsed = await callWithFallback(
@@ -95,7 +97,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         contents: prompt,
         config: { systemInstruction: DECK_SUGGEST_SYSTEM_PROMPT, responseMimeType: "application/json" },
       },
-      (text) => JSON.parse(stripJsonFences(text))
+      (text) => DeckSuggestResponseSchema.parse(JSON.parse(stripJsonFences(text)))
     );
 
     if (!hasVariance && parsed.suggestions) {
