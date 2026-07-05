@@ -23,16 +23,22 @@ function StatTile({
   sub: string;
   accent?: boolean;
 }) {
+  const tileStyle = accent
+    ? {
+        background: "linear-gradient(145deg, color-mix(in oklch, var(--primary) 18%, var(--card-bg)), var(--card-bg))",
+        border: "1px solid var(--line-divider)",
+        boxShadow: "0 1px 3px var(--line-divider), 0 4px 14px var(--line-divider)",
+      }
+    : {
+        background: "var(--card-bg)",
+        border: "1px solid var(--line-divider)",
+        boxShadow: "0 1px 3px var(--line-divider), 0 4px 14px var(--line-divider)",
+      };
+
   return (
     <div
       className="flex flex-col gap-2 rounded-3xl p-4"
-      style={{
-        background: accent
-          ? "linear-gradient(145deg, color-mix(in oklch, var(--primary) 18%, var(--card-bg)), var(--card-bg))"
-          : "var(--card-bg)",
-        border: "1px solid var(--line-divider)",
-        boxShadow: "0 1px 3px var(--line-divider), 0 4px 14px var(--line-divider)",
-      }}
+      style={tileStyle}
     >
       <div
         className="flex h-9 w-9 items-center justify-center rounded-xl"
@@ -51,7 +57,7 @@ function StatTile({
           {value}
         </p>
       </div>
-      <p className="text-xs leading-5" style={{ color: "var(--primary)" }}>
+      <p className="text-xs leading-5 text-[var(--primary)]">
         {sub}
       </p>
     </div>
@@ -64,12 +70,12 @@ function StatTileSkeleton() {
       className="flex flex-col gap-2 rounded-3xl p-4"
       style={{ background: "var(--card-bg)", border: "1px solid var(--line-divider)" }}
     >
-      <div className="h-9 w-9 rounded-xl animate-pulse" style={{ background: "var(--line-divider)" }} />
+      <div className="h-9 w-9 rounded-xl animate-pulse bg-[var(--line-divider)]" />
       <div className="space-y-1.5">
-        <div className="h-2.5 w-16 rounded animate-pulse" style={{ background: "var(--line-divider)" }} />
-        <div className="h-7 w-12 rounded animate-pulse" style={{ background: "var(--line-divider)" }} />
+        <div className="h-2.5 w-16 rounded animate-pulse bg-[var(--line-divider)]" />
+        <div className="h-7 w-12 rounded animate-pulse bg-[var(--line-divider)]" />
       </div>
-      <div className="h-2.5 w-20 rounded animate-pulse" style={{ background: "var(--line-divider)" }} />
+      <div className="h-2.5 w-20 rounded animate-pulse bg-[var(--line-divider)]" />
     </div>
   );
 }

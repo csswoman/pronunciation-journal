@@ -109,11 +109,11 @@ export function WeeklyChart({ progressHistory }: Props) {
                   <span className={cn("text-tiny font-semibold tabular-nums", day.isToday ? "text-primary" : "text-fg-subtle")}>
                     {val > 0 ? (chartMetric === "accuracy" ? `${val}%` : val) : ""}
                   </span>
-                  <div className="w-full flex items-end" style={{ height: 96 }}>
+                  <div className="w-full flex items-end h-24">
                     <div
                       className="w-full rounded-xl animate-stat-rise"
                       style={{
-                        height: barH,
+                        height: `${barH}px`,
                         animationDelay: `${i * 60}ms`,
                         background: val > 0
                           ? day.isToday
