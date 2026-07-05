@@ -1,5 +1,14 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { buildHistory, buildToolConfig, encodeChunk, streamWithFallback } from '../chat-route'
+
+async function readStream(run: (controller: ReadableStreamDefaultController) => unknown): Promise<string> {
+  const stream = new ReadableStream({
+    start(controller) {
+      return run(controller)
+    },
+  })
+  return new Response(stream).text()
+}
 
 describe('gemini chat-route helpers', () => {
   it('maps plain and tool messages into Gemini history content', () => {
@@ -48,21 +57,15 @@ describe('gemini chat-route helpers', () => {
       },
     }
 
-    const stream = new ReadableStream({
-      start(controller) {
-        return streamWithFallback(
-          ai as never,
-          'system',
-          [],
-          'message',
-          { toolChoice: 'none' },
-          controller,
-          new AbortController().signal
-        )
-      },
-    })
-
-    const text = await new Response(stream).text()
+    const text = await readStream((controller) => streamWithFallback(
+      ai as never,
+      'system',
+      [],
+      'message',
+      { toolChoice: 'none' },
+      controller,
+      new AbortController().signal
+    ))
 
     expect(text).toContain('data: {"type":"text_delta","delta":"hello"}')
     expect(text).toContain('data: {"type":"done"}')
@@ -85,26 +88,122 @@ describe('gemini chat-route helpers', () => {
       },
     }
 
-    const stream = new ReadableStream({
-      start(controller) {
-        return streamWithFallback(
-          ai as never,
-          'system',
-          [],
-          'message',
-          { toolChoice: 'auto', allowedTools: ['save_word'] },
-          controller,
-          new AbortController().signal
-        )
-      },
-    })
-
-    const text = await new Response(stream).text()
+    const text = await readStream((controller) => streamWithFallback(
+      ai as never,
+      'system',
+      [],
+      'message',
+      { toolChoice: 'auto', allowedTools: ['save_word'] },
+      controller,
+      new AbortController().signal
+    ))
 
     expect(text).toContain('"type":"tool_call_start"')
     expect(text).toContain('"name":"save_word"')
     expect(text).toContain('"type":"tool_call_args_delta"')
     expect(text).toContain('\\"word\\":\\"focus\\"')
     expect(text).toContain('"type":"tool_call_end"')
+  })
+
+  it('truncates streams that exceed the chunk limit', async () => {
+    const ai = {
+      chats: {
+        create: () => ({
+          async *sendMessageStream() {
+            yield { candidates: [{ content: { parts: [{ text: 'one' }] } }] }
+            yield { candidates: [{ content: { parts: [{ text: 'two' }] } }] }
+          },
+        }),
+      },
+    }
+
+    const text = await readStream((controller) => streamWithFallback(
+      ai as never,
+      'system',
+      [],
+      'message',
+      { toolChoice: 'none' },
+      controller,
+      new AbortController().signal,
+      { maxChunks: 1 }
+    ))
+
+    expect(text).toContain('"delta":"one"')
+    expect(text).toContain('"truncated":true')
+    expect(text).not.toContain('"delta":"two"')
+  })
+
+  it('truncates streams that exceed the byte limit', async () => {
+    const ai = {
+      chats: {
+        create: () => ({
+          async *sendMessageStream() {
+            yield { candidates: [{ content: { parts: [{ text: 'a long stream chunk' }] } }] }
+          },
+        }),
+      },
+    }
+
+    const text = await readStream((controller) => streamWithFallback(
+      ai as never,
+      'system',
+      [],
+      'message',
+      { toolChoice: 'none' },
+      controller,
+      new AbortController().signal,
+      { maxBytes: 5 }
+    ))
+
+    expect(text).toBe('data: {"type":"done","truncated":true}\n\n')
+  })
+
+  it('tries the next stream model after a retryable failure', async () => {
+    const create = vi.fn()
+      .mockReturnValueOnce({
+        sendMessageStream: () => {
+          throw { status: 429, message: 'rate limited' }
+        },
+      })
+      .mockReturnValueOnce({
+        async *sendMessageStream() {
+          yield { candidates: [{ content: { parts: [{ text: 'fallback' }] } }] }
+        },
+      })
+    const ai = { chats: { create } }
+
+    const text = await readStream((controller) => streamWithFallback(
+      ai as never,
+      'system',
+      [],
+      'message',
+      { toolChoice: 'none' },
+      controller,
+      new AbortController().signal
+    ))
+
+    expect(create).toHaveBeenCalledTimes(2)
+    expect(text).toContain('"delta":"fallback"')
+    expect(text).toContain('"type":"done"')
+  })
+
+  it('closes cleanly without error chunks when aborted before streaming', async () => {
+    const abortController = new AbortController()
+    abortController.abort()
+    const create = vi.fn()
+    const ai = { chats: { create } }
+
+    const text = await readStream((controller) => streamWithFallback(
+      ai as never,
+      'system',
+      [],
+      'message',
+      { toolChoice: 'none' },
+      controller,
+      abortController.signal
+    ))
+
+    expect(create).not.toHaveBeenCalled()
+    expect(text).toBe('')
   })
 })

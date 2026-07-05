@@ -27,6 +27,11 @@ export type ChatToolSelection = {
   allowedTools?: string[];
 };
 
+type StreamLimitOverrides = {
+  maxBytes?: number;
+  maxChunks?: number;
+};
+
 export const STREAM_TIMEOUT_MS = 30_000;
 
 const MAX_STREAM_BYTES = 512_000;
@@ -107,12 +112,15 @@ export async function streamWithFallback(
   lastMessage: string,
   selection: ChatToolSelection,
   controller: ReadableStreamDefaultController,
-  abortSignal: AbortSignal
+  abortSignal: AbortSignal,
+  limits: StreamLimitOverrides = {}
 ): Promise<void> {
   let lastError: unknown;
   let bytesStreamed = 0;
   let chunksStreamed = 0;
   let closed = false;
+  const maxBytes = limits.maxBytes ?? MAX_STREAM_BYTES;
+  const maxChunks = limits.maxChunks ?? MAX_STREAM_CHUNKS;
 
   function safeClose() {
     if (!closed) { closed = true; controller.close(); }
@@ -120,6 +128,11 @@ export async function streamWithFallback(
 
   function safeEnqueue(chunk: object) {
     if (!closed) controller.enqueue(encodeChunk(chunk));
+  }
+
+  if (abortSignal.aborted) {
+    safeClose();
+    return;
   }
 
   for (const model of FALLBACK_MODELS) {
@@ -139,7 +152,7 @@ export async function streamWithFallback(
         if (abortSignal.aborted || closed) break;
 
         chunksStreamed++;
-        if (chunksStreamed > MAX_STREAM_CHUNKS) {
+        if (chunksStreamed > maxChunks) {
           safeEnqueue({ type: "done", truncated: true });
           safeClose();
           return;
@@ -150,7 +163,7 @@ export async function streamWithFallback(
             if (part.text) {
               const encoded = encodeChunk({ type: "text_delta", delta: part.text });
               bytesStreamed += encoded.byteLength;
-              if (bytesStreamed > MAX_STREAM_BYTES) {
+              if (bytesStreamed > maxBytes) {
                 safeEnqueue({ type: "done", truncated: true });
                 safeClose();
                 return;
