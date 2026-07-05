@@ -67,22 +67,21 @@ export default function MultipleChoiceWidget({ args, status, onAnswer, onNext, o
           const isCorrect = answered && idx === args.correctIndex;
           const isWrong   = answered && idx === selected && selected !== args.correctIndex;
 
-          let borderColor = "var(--border-default)";
-          let bgColor     = "var(--surface-raised)";
-          if (isCorrect) { borderColor = "var(--success-border)"; bgColor = "var(--success-soft)"; }
-          if (isWrong)   { borderColor = "var(--error-border)";   bgColor = "var(--error-soft)"; }
+          const optionClass = isCorrect
+            ? "border-[var(--success-border)] bg-[var(--success-soft)]"
+            : isWrong
+              ? "border-[var(--error-border)] bg-[var(--error-soft)]"
+              : "border-[var(--border-default)] bg-[var(--surface-raised)]";
 
           return (
             <button
               key={idx}
               disabled={answered || evaluation !== null}
               onClick={() => handleSelect(idx)}
-              className="w-full text-left px-4 py-3 rounded-xl text-sm text-[var(--text-primary)] transition-all border flex items-center gap-3 hover:border-[var(--border-hover)] active:scale-[0.99] disabled:cursor-default"
-              style={{ backgroundColor: bgColor, borderColor }}
+              className={`w-full text-left px-4 py-3 rounded-xl text-sm text-[var(--text-primary)] transition-all border flex items-center gap-3 hover:border-[var(--border-hover)] active:scale-[0.99] disabled:cursor-default ${optionClass}`}
             >
               <span
-                className="w-2.5 h-2.5 rounded-full flex-shrink-0"
-                style={{ backgroundColor: isCorrect ? "var(--success)" : isWrong ? "var(--error)" : "var(--primary)" }}
+                className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${isCorrect ? "bg-[var(--success)]" : isWrong ? "bg-[var(--error)]" : "bg-[var(--primary)]"}`}
               />
               {opt}
             </button>
