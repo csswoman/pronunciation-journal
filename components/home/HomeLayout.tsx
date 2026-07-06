@@ -1,5 +1,3 @@
-'use client'
-
 // Planned structure:
 // <HomeLayout>
 //   mobile: <HomeMobileView />

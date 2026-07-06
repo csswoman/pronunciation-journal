@@ -1,5 +1,3 @@
-"use client";
-
 import { BookOpen, CheckCircle2, Flame, Target, Zap } from "lucide-react";
 import type { UserStats } from "@/lib/types";
 
