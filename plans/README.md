@@ -54,7 +54,7 @@ your row when done.
 | 038 | Slim the authenticated shell client bundle | P1 | M | 037 | DONE (2026-07-05, implementation commit `f47f5a13`) |
 | 039 | Split Words interaction chunks beyond tab runtimes | P1 | M | — | DONE (2026-07-05, implementation commit `44f6acc`) |
 | 040 | Convert presentational Client Components to Server Components | P2 | L | 038 | TODO |
-| 041 | Stabilize hot client re-renders in practice and words flows | P2 | M | — | TODO |
+| 041 | Stabilize hot client re-renders in practice and words flows | P2 | M | — | DONE (2026-07-05, implementation commit `8f797d8`) |
 | 042 | Restore the normal production build gate | P1 | S | — | TODO |
 
 Status values: TODO | IN PROGRESS | DONE | BLOCKED (with one-line reason) | REJECTED (with one-line rationale)

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { useAuth } from "@/components/auth/AuthProvider";
 import { publicDataErrorMessage } from "@/lib/degradation/messages";
@@ -34,8 +34,13 @@ export function useWords(): UseWordsState {
   const [error, setError] = useState<string | null>(null);
 
   // Track when each processing word started, so polling can give up.
+  const wordsRef = useRef<WordBankEntry[]>([]);
   const processingSinceRef = useRef<Map<string, number>>(new Map());
   const pendingAddRef = useRef<Map<string, string>>(new Map());
+
+  useEffect(() => {
+    wordsRef.current = words;
+  }, [words]);
 
   const refresh = useCallback(async () => {
     if (!user) return;
@@ -115,7 +120,7 @@ export function useWords(): UseWordsState {
   );
 
   const removeWord = useCallback(async (id: string) => {
-    const snapshot = words;
+    const snapshot = wordsRef.current;
     setWords((prev) => prev.filter((word) => word.id !== id));
 
     try {
@@ -124,10 +129,10 @@ export function useWords(): UseWordsState {
       setWords(snapshot);
       throw new Error(publicDataErrorMessage());
     }
-  }, [words]);
+  }, []);
 
   const retry = useCallback(async (id: string) => {
-    const target = words.find((word) => word.id === id);
+    const target = wordsRef.current.find((word) => word.id === id);
     if (!target) return;
 
     // Mark as processing and clear error, then trigger enrichment.
@@ -158,7 +163,7 @@ export function useWords(): UseWordsState {
       );
       throw new Error(publicDataErrorMessage());
     }
-  }, [words]);
+  }, []);
 
   return { words, loading, error, addWord, removeWord, retry, refresh };
 }
