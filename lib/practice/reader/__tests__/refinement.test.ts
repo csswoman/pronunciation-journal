@@ -11,6 +11,19 @@ describe('passageEmbedsTargets', () => {
     expect(passageEmbedsTargets('The cat sleeps.', ['cat'])).toBe(true)
   })
 
+  it('matches phrases across whitespace and punctuation boundaries', () => {
+    expect(passageEmbedsTargets('I need to take care of my dog.', ['take care'])).toBe(true)
+  })
+
+  it('matches targets next to apostrophes without substring false positives', () => {
+    expect(passageEmbedsTargets("The dog's bowl is full.", ['dog'])).toBe(true)
+    expect(passageEmbedsTargets('The watchdog barked.', ['dog'])).toBe(false)
+  })
+
+  it('normalizes target casing before matching', () => {
+    expect(passageEmbedsTargets('She went home.', ['Go'])).toBe(true)
+  })
+
   it('accepts regular inflected forms', () => {
     expect(passageEmbedsTargets('She stopped here.', ['stop'])).toBe(true)
     expect(passageEmbedsTargets('Two cities grew.', ['city'])).toBe(true)

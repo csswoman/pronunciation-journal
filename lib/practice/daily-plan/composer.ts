@@ -197,8 +197,12 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
 
   if (hasWordBank) {
     const readerRows = await fetchReaderTargetRows()
-    const readerStep = await buildReaderStep(userId, readerRows, isBrowserOnline())
-    if (readerStep) reviewSteps.push(readerStep)
+    try {
+      const readerStep = await buildReaderStep(userId, readerRows, isBrowserOnline())
+      if (readerStep) reviewSteps.push(readerStep)
+    } catch (err) {
+      console.error('[buildDailyPlan] reader step failed', err)
+    }
   }
 
   let steps: DailyStep[] = [...allSteps, ...reviewSteps]
