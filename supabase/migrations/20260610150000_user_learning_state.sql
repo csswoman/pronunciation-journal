@@ -10,14 +10,17 @@ create table if not exists user_learning_state (
 -- RLS: each user can only read and write their own row.
 alter table user_learning_state enable row level security;
 
+drop policy if exists "user_learning_state_select" on user_learning_state;
 create policy "user_learning_state_select"
   on user_learning_state for select
   using (auth.uid() = user_id);
 
+drop policy if exists "user_learning_state_insert" on user_learning_state;
 create policy "user_learning_state_insert"
   on user_learning_state for insert
   with check (auth.uid() = user_id);
 
+drop policy if exists "user_learning_state_update" on user_learning_state;
 create policy "user_learning_state_update"
   on user_learning_state for update
   using (auth.uid() = user_id)
