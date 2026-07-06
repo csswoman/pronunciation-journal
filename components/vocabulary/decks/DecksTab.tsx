@@ -16,6 +16,10 @@ interface DecksTabProps {
   onEdit: (id: string) => void;
   onDelete: (id: string) => void;
   onCreateNew: () => void;
+  onStudyHover?: () => void;
+  onManageHover?: () => void;
+  onEditHover?: () => void;
+  onCreateNewHover?: () => void;
 }
 
 export function DecksTab({
@@ -27,6 +31,10 @@ export function DecksTab({
   onEdit,
   onDelete,
   onCreateNew,
+  onStudyHover,
+  onManageHover,
+  onEditHover,
+  onCreateNewHover,
 }: DecksTabProps) {
   if (loading) {
     return (
@@ -69,6 +77,10 @@ export function DecksTab({
         onEdit={onEdit}
         onDelete={onDelete}
         onCreateNew={onCreateNew}
+        onStudyHover={onStudyHover}
+        onManageHover={onManageHover}
+        onEditHover={onEditHover}
+        onCreateNewHover={onCreateNewHover}
       />
     </>
   );

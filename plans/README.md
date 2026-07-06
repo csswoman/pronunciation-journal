@@ -52,7 +52,7 @@ your row when done.
 | 036 | Harden sentence generation configuration and cache writes | P2 | S | — | TODO |
 | 037 | Deduplicate server auth and Supabase clients per request | P1 | M | — | TODO |
 | 038 | Slim the authenticated shell client bundle | P1 | M | 037 | DONE (2026-07-05, implementation commit `f47f5a13`) |
-| 039 | Split Words interaction chunks beyond tab runtimes | P1 | M | — | TODO |
+| 039 | Split Words interaction chunks beyond tab runtimes | P1 | M | — | DONE (2026-07-05, implementation commit `44f6acc`) |
 | 040 | Convert presentational Client Components to Server Components | P2 | L | 038 | TODO |
 | 041 | Stabilize hot client re-renders in practice and words flows | P2 | M | — | TODO |
 | 042 | Restore the normal production build gate | P1 | S | — | TODO |

@@ -13,6 +13,9 @@ interface DeckCardProps {
   onManage: () => void;
   onEdit: () => void;
   onDelete: () => void;
+  onStudyHover?: () => void;
+  onManageHover?: () => void;
+  onEditHover?: () => void;
 }
 
 export function DeckCard({
@@ -22,6 +25,9 @@ export function DeckCard({
   onStudy,
   onManage,
   onEdit,
+  onStudyHover,
+  onManageHover,
+  onEditHover,
 }: DeckCardProps) {
   const canStudy = entryCount > 0;
   const progressPercent = entryCount > 0 ? Math.round((masteredCount / entryCount) * 100) : 0;
@@ -43,10 +49,10 @@ export function DeckCard({
             <p className="text-xs text-fg-subtle mt-0.5">{deck.description || "Vocabulary set"}</p>
           </div>
           <div className="flex items-center gap-1 flex-shrink-0">
-            <Button variant="ghost" size="icon" onClick={onManage} title="Manage words">
+            <Button variant="ghost" size="icon" onClick={onManage} title="Manage words" onMouseEnter={onManageHover} onFocus={onManageHover}>
               <BookOpen size={16} />
             </Button>
-            <Button variant="ghost" size="icon" onClick={onEdit} title="Edit deck">
+            <Button variant="ghost" size="icon" onClick={onEdit} title="Edit deck" onMouseEnter={onEditHover} onFocus={onEditHover}>
               <Settings2 size={16} />
             </Button>
           </div>
@@ -69,6 +75,8 @@ export function DeckCard({
         <Button
           variant="primary"
           onClick={onStudy}
+          onMouseEnter={onStudyHover}
+          onFocus={onStudyHover}
           disabled={!canStudy}
           title={!canStudy ? "Add words to study" : ""}
           icon={<Play size={15} className="fill-current" />}

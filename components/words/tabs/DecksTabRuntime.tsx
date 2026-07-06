@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Plus } from "lucide-react";
 
 import Section from "@/components/layout/Section";
@@ -13,24 +13,17 @@ import { useDeckData } from "@/hooks/useDeckData";
 import { hasWordBankEntries, deleteDeck } from "@/lib/decks/queries";
 import { wordBankSource } from "@/lib/decks/study-source";
 
-const CreateDeckModal = dynamic(
-  () => import("@/components/vocabulary/decks/CreateDeckModal").then((mod) => mod.CreateDeckModal),
-);
-const EditDeckModal = dynamic(
-  () => import("@/components/vocabulary/decks/EditDeckModal").then((mod) => mod.EditDeckModal),
-);
-const StudyModal = dynamic(
-  () => import("@/components/vocabulary/decks/StudyModal").then((mod) => mod.StudyModal),
-);
-const StudyModalWordBank = dynamic(
-  () =>
-    import("@/components/vocabulary/decks/StudyModalWordBank").then(
-      (mod) => mod.StudyModalWordBank,
-    ),
-);
-const ManageDrawer = dynamic(
-  () => import("@/components/vocabulary/decks/ManageDrawer").then((mod) => mod.ManageDrawer),
-);
+const loadCreateDeckModal = () => import("@/components/vocabulary/decks/CreateDeckModal");
+const loadEditDeckModal = () => import("@/components/vocabulary/decks/EditDeckModal");
+const loadStudyModal = () => import("@/components/vocabulary/decks/StudyModal");
+const loadStudyModalWordBank = () => import("@/components/vocabulary/decks/StudyModalWordBank");
+const loadManageDrawer = () => import("@/components/vocabulary/decks/ManageDrawer");
+
+const CreateDeckModal = dynamic(() => loadCreateDeckModal().then((mod) => mod.CreateDeckModal));
+const EditDeckModal = dynamic(() => loadEditDeckModal().then((mod) => mod.EditDeckModal));
+const StudyModal = dynamic(() => loadStudyModal().then((mod) => mod.StudyModal));
+const StudyModalWordBank = dynamic(() => loadStudyModalWordBank().then((mod) => mod.StudyModalWordBank));
+const ManageDrawer = dynamic(() => loadManageDrawer().then((mod) => mod.ManageDrawer));
 
 interface DecksTabRuntimeProps {
   onDeckCountChange: (count: number) => void;
@@ -45,6 +38,23 @@ export default function DecksTabRuntime({ onDeckCountChange }: DecksTabRuntimePr
   const [manageDeckId, setManageDeckId] = useState<string | null>(null);
   const [wordBankStudyDeckId, setWordBankStudyDeckId] = useState<string | null>(null);
   const [deletingDeckId, setDeletingDeckId] = useState<string | null>(null);
+
+  const preloadCreateDeckModal = useCallback(() => {
+    void loadCreateDeckModal();
+  }, []);
+
+  const preloadEditDeckModal = useCallback(() => {
+    void loadEditDeckModal();
+  }, []);
+
+  const preloadStudyDeckModal = useCallback(() => {
+    void loadStudyModal();
+    void loadStudyModalWordBank();
+  }, []);
+
+  const preloadManageDrawer = useCallback(() => {
+    void loadManageDrawer();
+  }, []);
 
   useEffect(() => {
     onDeckCountChange(decks.length);
@@ -124,12 +134,18 @@ export default function DecksTabRuntime({ onDeckCountChange }: DecksTabRuntimePr
           onEdit={setEditDeckId}
           onDelete={setDeletingDeckId}
           onCreateNew={() => setShowCreateDeck(true)}
+          onCreateNewHover={preloadCreateDeckModal}
+          onStudyHover={preloadStudyDeckModal}
+          onManageHover={preloadManageDrawer}
+          onEditHover={preloadEditDeckModal}
         />
       </Section>
 
       <Button
         onClick={() => setShowCreateDeck(true)}
         aria-label="Create deck"
+        onMouseEnter={preloadCreateDeckModal}
+        onFocus={preloadCreateDeckModal}
         className="fixed bottom-6 right-6 z-40 lg:hidden !rounded-full !p-4 shadow-xl"
         size="icon"
       >

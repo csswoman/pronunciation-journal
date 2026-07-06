@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Plus } from "lucide-react";
 
 import Section from "@/components/layout/Section";
@@ -16,21 +16,13 @@ import { publicDataErrorMessage } from "@/lib/degradation/messages";
 import { toggleFavorite } from "@/lib/word-bank/queries";
 import type { WordsTabId } from "@/components/words/WordsTopbar";
 
-const QuickAddModal = dynamic(
-  () => import("@/components/vocabulary/words/QuickAddModal").then((mod) => mod.QuickAddModal),
-);
-const CreateDeckFromWordsModal = dynamic(
-  () =>
-    import("@/components/vocabulary/decks/CreateDeckFromWordsModal").then(
-      (mod) => mod.CreateDeckFromWordsModal,
-    ),
-);
-const AddToExistingDeckModal = dynamic(
-  () =>
-    import("@/components/vocabulary/decks/AddToExistingDeckModal").then(
-      (mod) => mod.AddToExistingDeckModal,
-    ),
-);
+const loadQuickAddModal = () => import("@/components/vocabulary/words/QuickAddModal");
+const loadCreateDeckFromWordsModal = () => import("@/components/vocabulary/decks/CreateDeckFromWordsModal");
+const loadAddToExistingDeckModal = () => import("@/components/vocabulary/decks/AddToExistingDeckModal");
+
+const QuickAddModal = dynamic(() => loadQuickAddModal().then((mod) => mod.QuickAddModal));
+const CreateDeckFromWordsModal = dynamic(() => loadCreateDeckFromWordsModal().then((mod) => mod.CreateDeckFromWordsModal));
+const AddToExistingDeckModal = dynamic(() => loadAddToExistingDeckModal().then((mod) => mod.AddToExistingDeckModal));
 
 interface WordStats {
   total: number;
@@ -61,6 +53,18 @@ export default function MyWordsTabRuntime({
   const [showCreateFromWords, setShowCreateFromWords] = useState(false);
   const [showAddToExisting, setShowAddToExisting] = useState(false);
   const [existingDecks, setExistingDecks] = useState<DeckListItem[]>([]);
+
+  const preloadCreateDeckFromWordsModal = useCallback(() => {
+    void loadCreateDeckFromWordsModal();
+  }, []);
+
+  const preloadAddToExistingDeckModal = useCallback(() => {
+    void loadAddToExistingDeckModal();
+  }, []);
+
+  const preloadQuickAddModal = useCallback(() => {
+    void loadQuickAddModal();
+  }, []);
 
   useEffect(() => {
     if (!wordActionError) return;
@@ -209,6 +213,8 @@ export default function MyWordsTabRuntime({
       <Button
         onClick={() => setShowAddWord(true)}
         aria-label="Quick add word"
+        onMouseEnter={preloadQuickAddModal}
+        onFocus={preloadQuickAddModal}
         className="fixed bottom-6 right-6 z-40 lg:hidden !rounded-full !p-4 shadow-xl"
         size="icon"
       >
@@ -221,6 +227,8 @@ export default function MyWordsTabRuntime({
           onClear={() => setSelectedWordIds(new Set())}
           onCreateDeck={() => setShowCreateFromWords(true)}
           onAddToExistingDeck={() => setShowAddToExisting(true)}
+          onCreateDeckHover={preloadCreateDeckFromWordsModal}
+          onAddToExistingDeckHover={preloadAddToExistingDeckModal}
         />
       )}
 
