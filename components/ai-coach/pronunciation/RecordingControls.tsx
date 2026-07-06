@@ -34,7 +34,7 @@ export default function RecordingControls({ isRecording, onMicClick, onSkip }: P
         {WAVE_HEIGHTS.map((h, i) => (
           <span
             key={i}
-            className={`inline-block w-[3px] rounded-sm origin-center ${isRecording ? "animate-[waveBarPulse_1.4s_ease-in-out_infinite]" : "animate-[waveBarIdle_1.8s_ease-in-out_infinite]"}`}
+            className={`inline-block w-1 rounded-sm origin-center ${isRecording ? "animate-[waveBarPulse_1.4s_ease-in-out_infinite]" : "animate-[waveBarIdle_1.8s_ease-in-out_infinite]"}`}
             style={{
               height: `${h}%`,
               backgroundColor: "var(--primary)",

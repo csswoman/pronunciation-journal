@@ -50,6 +50,12 @@ your row when done.
 | 034 | Fail word creation when deck linking fails | P1 | S | — | TODO |
 | 035 | Confirm word image database updates | P2 | S | — | TODO |
 | 036 | Harden sentence generation configuration and cache writes | P2 | S | — | TODO |
+| 037 | Deduplicate server auth and Supabase clients per request | P1 | M | — | TODO |
+| 038 | Slim the authenticated shell client bundle | P1 | M | 037 | DONE (2026-07-05, implementation commit `f47f5a13`) |
+| 039 | Split Words interaction chunks beyond tab runtimes | P1 | M | — | TODO |
+| 040 | Convert presentational Client Components to Server Components | P2 | L | 038 | TODO |
+| 041 | Stabilize hot client re-renders in practice and words flows | P2 | M | — | TODO |
+| 042 | Restore the normal production build gate | P1 | S | — | TODO |
 
 Status values: TODO | IN PROGRESS | DONE | BLOCKED (with one-line reason) | REJECTED (with one-line rationale)
 
@@ -86,6 +92,12 @@ Status values: TODO | IN PROGRESS | DONE | BLOCKED (with one-line reason) | REJE
 - 033-036 are new backend hardening plans from the 2026-07-04 API audit. They
   can execute independently, but 033 should go first because it cleans up the
   durable-job lifecycle that later word-enrichment work depends on.
+- 037-042 are performance follow-up plans from the 2026-07-05 Vercel React best
+  practices audit. Execute 042 early so `pnpm build` is trustworthy again.
+  037 should precede 038 because shell measurements are cleaner after
+  request-level auth/client duplication is removed. 039 and 041 can run
+  independently. 040 should wait for 038 so Server Component conversion is
+  measured against the slimmer shell baseline.
 
 ## Findings considered and rejected
 
