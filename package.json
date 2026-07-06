@@ -16,6 +16,7 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "test:integration": "vitest run --config vitest.integration.config.ts",
+    "test:rls:integration": "node scripts/rls-integration.mjs",
     "test:a11y": "playwright test",
     "validate:core1000": "vitest run lib/core-1000/__tests__/dataset.test.ts",
     "validate:core1000-generators": "vitest run lib/core-1000/__tests__/generatability.test.ts",

@@ -46,16 +46,17 @@ your row when done.
 | 032 | Post-production improvement roadmap — security, perf, pedagogy, tests, scale | P1 | L | 031 | IN PROGRESS (Fase 1-3 DONE 2026-07-03) |
 | 029 | Remove remaining over-broad Supabase projections | P3 | S | — | DONE (2026-06-21, local working tree) |
 | 030 | Close curriculum gaps by level, then derive placement and checkpoint tests from the curriculum | P1 | L | — | DONE (focused tests and typecheck pass; full suite has 2 unrelated transcribe mock failures) |
-| 033 | Unify enrichment job lifecycle updates | P1 | S | — | TODO |
-| 034 | Fail word creation when deck linking fails | P1 | S | — | TODO |
-| 035 | Confirm word image database updates | P2 | S | — | TODO |
-| 036 | Harden sentence generation configuration and cache writes | P2 | S | — | TODO |
+| 033 | Unify enrichment job lifecycle updates | P1 | S | — | DONE (2026-07-05: cron success path clears locks; regression test exists) |
+| 034 | Fail word creation when deck linking fails | P1 | S | — | DONE (2026-07-05: deck lookup/link failures surface public errors; route tests exist) |
+| 035 | Confirm word image database updates | P2 | S | — | DONE (2026-07-05: upload/delete metadata updates checked; route tests exist) |
+| 036 | Harden sentence generation configuration and cache writes | P2 | S | — | DONE (2026-07-05: server config guarded; cache-failure degradation tested) |
 | 037 | Deduplicate server auth and Supabase clients per request | P1 | M | — | DONE (2026-07-05, implementation commit `f47f5a13`) |
 | 038 | Slim the authenticated shell client bundle | P1 | M | 037 | DONE (2026-07-05, implementation commit `f47f5a13`) |
 | 039 | Split Words interaction chunks beyond tab runtimes | P1 | M | — | DONE (2026-07-05, implementation commit `8f797d8`) |
 | 040 | Convert presentational Client Components to Server Components | P2 | L | 038 | DONE (2026-07-05: serverized safe home/layout presentation components; broader words split deferred by client tab boundary) |
 | 041 | Stabilize hot client re-renders in practice and words flows | P2 | M | — | DONE (2026-07-05, implementation commit `c9e08b9`) |
 | 042 | Restore the normal production build gate | P1 | S | — | DONE (2026-07-05, implementation commit `44f6acc`) |
+| 043 | Weekly retention loop | P1 | M | RLS-INT | TODO |
 
 Status values: TODO | IN PROGRESS | DONE | BLOCKED (with one-line reason) | REJECTED (with one-line rationale)
 

@@ -1,7 +1,7 @@
 # TODO de Producción
 
 Auditoría crítica original: commit `11dee70`, 2026-06-30.
-**Última actualización:** 2026-07-05 — hardening backend post-producción completado; quedan pruebas RLS integration opcionales y operación avanzada.
+**Última actualización:** 2026-07-05 — hardening backend post-producción completado; RLS integration ya tiene runner y detectó drift de migraciones en la base remota enlazada.
 
 Convenciones:
 
@@ -42,6 +42,7 @@ Verificación actual (2026-07-05):
 
 | # | Área | Qué falta |
 |---|---|---|
+| RLS-INT | RLS integration real | `pnpm test:rls:integration` existe y limpia usuarios temporales, pero falló contra la base remota enlazada porque faltan migraciones desde `20260610120000` en adelante; validar primero en staging/local aplicado. |
 
 ### HECHO (roadmap 032 Fase 1-2)
 
@@ -55,7 +56,7 @@ Verificación actual (2026-07-05):
 | # | Área | Prioridad |
 |---|---|---|
 | T55-T58 | Escala opcional: semáforo Gemini, staging grants, sounds offline, observabilidad | P2/P3 |
-| RLS-INT | Pruebas RLS contra Supabase local/staging aplicada | P2 |
+| T59 | Weekly retention loop: resumen semanal + siguiente acción en Home | P1 producto |
 
 ### HECHO (hardening backend 2026-07-04/05)
 
