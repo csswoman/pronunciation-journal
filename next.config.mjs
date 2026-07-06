@@ -11,9 +11,40 @@ const withSerwist = withSerwistInit({
   ],
 });
 
+const isDev = process.env.NODE_ENV === "development";
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   turbopack: {},
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          {
+            key: "Content-Security-Policy",
+            value: [
+              "default-src 'self'",
+              "base-uri 'self'",
+              "frame-ancestors 'none'",
+              "form-action 'self'",
+              "img-src 'self' https: data:",
+              "media-src 'self' https: data:",
+              // 'unsafe-eval' is required in dev for React Fast Refresh (HMR).
+              // It is intentionally excluded from production builds.
+              `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
+              "style-src 'self' 'unsafe-inline'",
+              "connect-src 'self' https:",
+            ].join("; "),
+          },
+          { key: "Cross-Origin-Opener-Policy", value: "same-origin" },
+          { key: "Cross-Origin-Resource-Policy", value: "same-origin" },
+          { key: "Origin-Agent-Cluster", value: "?1" },
+          { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
+        ],
+      },
+    ];
+  },
   async redirects() {
     return [
       { source: "/courses/mini-lessons", destination: "/mini-lessons", permanent: true },

@@ -106,9 +106,9 @@ export default function DailyChecklist({ conceptLesson, initialStepId, streak = 
     router.replace(`/daily?step=${step.id}`)
   }, [router])
 
-  const handleComplete = useCallback((stepId: string) => {
+  const handleComplete = useCallback(async (stepId: string) => {
     clearStepStorage()
-    markDone(stepId)
+    await markDone(stepId)
     router.replace('/daily')
     setView({ mode: 'checklist' })
   }, [markDone, router])
@@ -144,9 +144,12 @@ export default function DailyChecklist({ conceptLesson, initialStepId, streak = 
   // ── Render: sesión de un paso ──────────────────────────────────────────────
   if (view.mode === 'step') {
     const { step, exerciseIndex } = view
+    const stepIndex = steps.findIndex((s) => s.id === step.id)
     return (
       <DailyStepSession
         step={step}
+        allSteps={steps}
+        stepIndex={stepIndex >= 0 ? stepIndex : 0}
         sessionKey={sessionKey}
         initialExerciseIndex={exerciseIndex}
         onComplete={() => handleComplete(step.id)}

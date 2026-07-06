@@ -3,10 +3,15 @@
 interface AuthFeedbackProps {
   error?: string | null;
   message?: string | null;
+  compact?: boolean;
 }
 
-export function AuthFeedback({ error, message }: AuthFeedbackProps) {
+export function AuthFeedback({ error, message, compact = false }: AuthFeedbackProps) {
   if (!error && !message) return null;
+
+  const messageClassName = compact
+    ? "rounded-xl px-3 py-2.5 text-sm mt-4 bg-[var(--success-soft)] border border-[var(--success-border)] text-[var(--success)]"
+    : "rounded-xl px-3 py-2.5 text-sm mb-4 bg-[var(--success-soft)] border border-[var(--success-border)] text-[var(--success)]";
 
   return (
     <>
@@ -19,7 +24,7 @@ export function AuthFeedback({ error, message }: AuthFeedbackProps) {
         </div>
       )}
       {message && (
-        <div className="rounded-xl px-3 py-2.5 text-sm mb-4 bg-[var(--success-soft)] border border-[var(--success-border)] text-[var(--success)]">
+        <div className={messageClassName}>
           {message}
         </div>
       )}

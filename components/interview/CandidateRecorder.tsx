@@ -5,6 +5,7 @@ import { Mic, MicOff, Loader2, RotateCcw } from "lucide-react";
 import Button from "@/components/ui/Button";
 import { useSpeechInput } from "@/hooks/useSpeechInput";
 import { useSharedMicStream } from "@/hooks/useSharedMicStream";
+import { publicAiErrorMessage } from "@/lib/degradation/messages";
 import { scorePronunciation } from "@/lib/pronunciation/scoring";
 import type { ScoringResult } from "@/lib/types";
 
@@ -130,7 +131,7 @@ export default function CandidateRecorder({ targetText, difficulty, level, onDon
         setResult(scored);
         setPhase("result");
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Something went wrong");
+        setError(publicAiErrorMessage(undefined, err instanceof Error ? err.message : ""));
         setPhase("idle");
       }
     }
@@ -165,14 +166,13 @@ export default function CandidateRecorder({ targetText, difficulty, level, onDon
         {(error || speechError) && <p className="text-xs text-error">{error ?? speechError}</p>}
         <button
           onClick={handleToggleRecording}
-          className={`w-16 h-16 rounded-full flex items-center justify-center transition-all shadow-lg ${
-            isRecording ? "bg-warning scale-110 animate-pulse" : "hover:scale-105"
+          className={`w-16 h-16 rounded-full flex items-center justify-center transition-all shadow-lg text-white ${
+            isRecording ? "bg-warning scale-110 animate-pulse" : "bg-[var(--accent)] hover:scale-105"
           }`}
-          style={!isRecording ? { background: "var(--accent)" } : {}}
         >
           {isRecording ? <MicOff size={24} color="white" /> : <Mic size={24} color="white" />}
         </button>
-        <p className="text-xs" style={{ color: "var(--muted-text)" }}>
+        <p className="text-xs text-[var(--muted-text)]">
           {isRecording ? "Recording… tap to stop" : "Tap to record yourself"}
         </p>
       </div>
@@ -182,8 +182,8 @@ export default function CandidateRecorder({ targetText, difficulty, level, onDon
   if (phase === "transcribing") {
     return (
       <div className="flex flex-col items-center gap-3 py-6">
-        <Loader2 size={28} className="animate-spin" style={{ color: "var(--accent)" }} />
-        <p className="text-sm" style={{ color: "var(--muted-text)" }}>Analyzing your pronunciation…</p>
+        <Loader2 size={28} className="animate-spin text-[var(--accent)]" />
+        <p className="text-sm text-[var(--muted-text)]">Analyzing your pronunciation…</p>
       </div>
     );
   }
@@ -205,7 +205,7 @@ export default function CandidateRecorder({ targetText, difficulty, level, onDon
         <div>
           <p className="text-sm font-medium" style={{ color: feedbackColor }}>{feedbackMsg}</p>
           {transcript && (
-            <p className="text-xs mt-1" style={{ color: "var(--muted-text)" }}>
+            <p className="text-xs mt-1 text-[var(--muted-text)]">
               You said: &ldquo;{transcript}&rdquo;
             </p>
           )}
@@ -226,7 +226,7 @@ export default function CandidateRecorder({ targetText, difficulty, level, onDon
       )}
 
       {result.wordResults?.some((w) => w.phonemes?.tip) && (
-        <p className="text-xs" style={{ color: "var(--muted-text)" }}>
+        <p className="text-xs text-[var(--muted-text)]">
           Hover the underlined words for pronunciation tips.
         </p>
       )}

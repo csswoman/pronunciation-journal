@@ -15,9 +15,22 @@
 
 "use client";
 
+import { useEffect, useState } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "@/lib/db";
+import { getRelativeLocalDateKey, getTodayLocalDateKey } from "@/lib/date/local-date";
 import type { AIConversation, AISavedWord, Attempt, DailyProgress } from "@/lib/types";
+
+function useClockTick(intervalMs = 60_000): number {
+  const [tick, setTick] = useState(() => Date.now());
+
+  useEffect(() => {
+    const intervalId = window.setInterval(() => setTick(Date.now()), intervalMs);
+    return () => window.clearInterval(intervalId);
+  }, [intervalMs]);
+
+  return tick;
+}
 
 // ── Attempts ──────────────────────────────────────────────────────────────────
 
@@ -55,18 +68,18 @@ export function useLiveAttemptsForLesson(lessonId: string): Attempt[] {
 
 /** Today's progress record (undefined while loading). */
 export function useLiveTodayProgress(): DailyProgress | undefined {
-  const today = new Date().toISOString().split("T")[0];
+  const tick = useClockTick();
+  const today = getTodayLocalDateKey();
   return useLiveQuery(
     () => db.dailyProgress.where("date").equals(today).first(),
-    [today]
+    [today, tick]
   );
 }
 
 /** Progress for the last N days, newest first. */
 export function useLiveProgressHistory(days = 7): DailyProgress[] {
-  const since = new Date(Date.now() - days * 86_400_000)
-    .toISOString()
-    .split("T")[0];
+  const tick = useClockTick();
+  const since = getRelativeLocalDateKey(-days + 1);
   return (
     useLiveQuery(
       () =>
@@ -75,7 +88,7 @@ export function useLiveProgressHistory(days = 7): DailyProgress[] {
           .aboveOrEqual(since)
           .reverse()
           .toArray(),
-      [since]
+      [since, tick]
     ) ?? []
   );
 }
@@ -134,12 +147,12 @@ export function useLiveAIWordsForConversation(conversationId: number | null): AI
 
 /** Words due for review right now. */
 export function useLiveDueWords() {
+  const tick = useClockTick();
   const now = new Date().toISOString();
   return (
     useLiveQuery(
       () => db.srsData.where("nextReview").belowOrEqual(now).toArray(),
-      // Intentionally no deps: re-evaluates on any srsData change
-      []
+      [now, tick]
     ) ?? []
   );
 }

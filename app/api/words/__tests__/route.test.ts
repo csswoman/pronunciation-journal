@@ -7,10 +7,13 @@ vi.mock('@/lib/word-bank/enrich', () => ({
 }))
 
 vi.mock('@/lib/api/guards', () => ({
+  requireSameOrigin: vi.fn(() => null),
   requireUser: vi.fn(),
   rateLimit: vi.fn(),
   validateBody: vi.fn(),
   createUserScopedClient: vi.fn(),
+  publicErrorResponse: (status: number) => new Response(null, { status }) as never,
+  redactError: (err: unknown) => err,
   SECURE_HEADERS: { 'Cache-Control': 'no-store' },
 }))
 
@@ -27,6 +30,47 @@ const mockRateLimit = vi.mocked(rateLimit)
 const mockValidateBody = vi.mocked(validateBody)
 const mockCreateUserScopedClient = vi.mocked(createUserScopedClient)
 
+function buildUserClientMock({
+  wordResult,
+  deckResult,
+  linkResult,
+}: {
+  wordResult: { data: unknown; error: unknown };
+  deckResult?: { data: unknown; error: unknown };
+  linkResult?: { error: unknown };
+}) {
+  const wordSingle = vi.fn().mockResolvedValue(wordResult);
+  const wordSelect = vi.fn().mockReturnValue({ single: wordSingle });
+  const wordInsert = vi.fn().mockReturnValue({ select: wordSelect });
+
+  const deckSingle = vi.fn().mockResolvedValue(deckResult ?? { data: { id: 'deck-1' }, error: null });
+  const deckEqUser = vi.fn().mockReturnValue({ single: deckSingle });
+  const deckEqId = vi.fn().mockReturnValue({ eq: deckEqUser });
+  const deckSelect = vi.fn().mockReturnValue({ eq: deckEqId });
+
+  const linkInsert = vi.fn().mockResolvedValue(linkResult ?? { error: null });
+  const linkFrom = vi.fn().mockReturnValue({ insert: linkInsert });
+
+  const from = vi.fn((table: string) => {
+    if (table === 'word_bank') return { insert: wordInsert };
+    if (table === 'decks') return { select: deckSelect };
+    if (table === 'word_bank_decks') return { insert: linkInsert };
+    return {};
+  });
+
+  return {
+    from,
+    wordInsert,
+    wordSingle,
+    deckSelect,
+    deckEqId,
+    deckEqUser,
+    deckSingle,
+    linkInsert,
+    linkFrom,
+  };
+}
+
 describe('POST /api/words', () => {
   const originalEnv = process.env
 
@@ -37,7 +81,7 @@ describe('POST /api/words', () => {
       NEXT_PUBLIC_SUPABASE_URL: 'https://test.supabase.co',
       NEXT_PUBLIC_SUPABASE_ANON_KEY: 'test-anon-key',
     }
-    mockRateLimit.mockReturnValue({ limited: false, error: null })
+    mockRateLimit.mockResolvedValue({ limited: false, error: null })
   })
 
   afterEach(() => {
@@ -125,6 +169,66 @@ describe('POST /api/words', () => {
     expect(res.status).toBe(201)
     const body = await res.json()
     expect(body.word.text).toBe('ephemeral')
+  })
+
+  it('returns 404 when a provided deckId does not belong to the user', async () => {
+    const fakeWord = { id: 'word-abc', text: 'ephemeral', status: 'processing' }
+
+    mockRequireUser.mockResolvedValue({
+      user: { id: 'user-123' } as never,
+      error: null,
+      accessToken: 'good-token',
+    })
+    mockValidateBody.mockResolvedValue({
+      data: { text: 'ephemeral', deckId: 'deck-404' },
+      error: null,
+    })
+    const userClientMock = buildUserClientMock({
+      wordResult: { data: fakeWord, error: null },
+      deckResult: { data: null, error: null },
+    })
+
+    mockCreateUserScopedClient.mockReturnValue(userClientMock as never)
+
+    const req = new NextRequest('http://localhost/api/words', {
+      method: 'POST',
+      headers: { Authorization: 'Bearer good-token' },
+      body: JSON.stringify({ text: 'ephemeral', deckId: 'deck-404' }),
+    })
+    const res = await POST(req)
+    expect(res.status).toBe(404)
+    expect(userClientMock.from).toHaveBeenCalledWith('decks')
+    expect(userClientMock.from).not.toHaveBeenCalledWith('word_bank_decks')
+  })
+
+  it('returns 500 when linking the word to the deck fails', async () => {
+    const fakeWord = { id: 'word-abc', text: 'ephemeral', status: 'processing' }
+
+    mockRequireUser.mockResolvedValue({
+      user: { id: 'user-123' } as never,
+      error: null,
+      accessToken: 'good-token',
+    })
+    mockValidateBody.mockResolvedValue({
+      data: { text: 'ephemeral', deckId: 'deck-1' },
+      error: null,
+    })
+    const userClientMock = buildUserClientMock({
+      wordResult: { data: fakeWord, error: null },
+      deckResult: { data: { id: 'deck-1' }, error: null },
+      linkResult: { error: { message: 'insert failed' } },
+    })
+
+    mockCreateUserScopedClient.mockReturnValue(userClientMock as never)
+
+    const req = new NextRequest('http://localhost/api/words', {
+      method: 'POST',
+      headers: { Authorization: 'Bearer good-token' },
+      body: JSON.stringify({ text: 'ephemeral', deckId: 'deck-1' }),
+    })
+    const res = await POST(req)
+    expect(res.status).toBe(500)
+    expect(userClientMock.from).toHaveBeenCalledWith('word_bank_decks')
   })
 
   it('returns 500 when Supabase env vars are missing', async () => {

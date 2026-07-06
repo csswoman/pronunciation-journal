@@ -1,0 +1,32 @@
+name: Production Health Check
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  health-check:
+    name: Check production readiness
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      PRODUCTION_HEALTH_URL: ${{ vars.PRODUCTION_HEALTH_URL }}
+    steps:
+      - name: Validate configuration
+        run: |
+          if [ -z "$PRODUCTION_HEALTH_URL" ]; then
+            echo "Set repository variable PRODUCTION_HEALTH_URL to https://your-domain/api/health?ready=1"
+            exit 1
+          fi
+
+      - name: Probe readiness endpoint
+        run: |
+          curl --fail --show-error --silent --location \
+            --max-time 20 \
+            --retry 2 \
+            --retry-delay 10 \
+            "$PRODUCTION_HEALTH_URL"

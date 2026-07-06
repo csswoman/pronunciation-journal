@@ -1,58 +1,25 @@
 import { NextResponse } from "next/server";
+import { buildReadinessPayload } from "@/app/api/health/checks";
 
 export const runtime = "nodejs";
 export const revalidate = 0;
 
-export async function GET() {
-  try {
-    // Check database connection (Supabase)
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+// ---------------------------------------------------------------------------
+// Liveness vs Readiness
+//
+// GET /api/health           → liveness: is the process alive? (fast, no I/O)
+// GET /api/health?ready=1   → readiness: can it serve traffic? (checks deps)
+// ---------------------------------------------------------------------------
 
-    if (!supabaseUrl || !supabaseKey) {
-      return NextResponse.json(
-        {
-          status: "unhealthy",
-          message: "Missing Supabase configuration",
-          timestamp: new Date().toISOString(),
-        },
-        { status: 503 }
-      );
-    }
+export async function GET(request: Request): Promise<NextResponse> {
+  const isReadiness = new URL(request.url).searchParams.has("ready");
+  const version = process.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 7) ?? "unknown";
 
-    // Quick Supabase connectivity check
-    const response = await fetch(`${supabaseUrl}/rest/v1/`, {
-      method: "GET",
-      headers: {
-        apikey: supabaseKey,
-        Authorization: `Bearer ${supabaseKey}`,
-      },
-      signal: AbortSignal.timeout(5000), // 5s timeout
-    });
-
-    const dbHealthy = response.ok || response.status === 401; // 401 is expected without valid auth scope
-
-    return NextResponse.json(
-      {
-        status: dbHealthy ? "healthy" : "unhealthy",
-        checks: {
-          database: dbHealthy ? "✓" : "✗",
-          environment: "✓",
-          timestamp: new Date().toISOString(),
-        },
-        version: process.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 7) || "unknown",
-      },
-      { status: dbHealthy ? 200 : 503 }
-    );
-  } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
-    return NextResponse.json(
-      {
-        status: "unhealthy",
-        message,
-        timestamp: new Date().toISOString(),
-      },
-      { status: 503 }
-    );
+  // Liveness: the process is alive if this handler runs.
+  if (!isReadiness) {
+    return NextResponse.json({ status: "ok", version }, { status: 200 });
   }
+
+  const { payload, status } = await buildReadinessPayload();
+  return NextResponse.json(payload, { status });
 }

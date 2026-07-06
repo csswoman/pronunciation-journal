@@ -110,5 +110,6 @@ export async function buildReaderStep(
     exercises: [],
     estMinutes: 3,
     readerPassage: passage,
+    featuredWords: passage.targetItems,
   }
 }

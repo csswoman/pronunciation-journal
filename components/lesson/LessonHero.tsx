@@ -70,11 +70,7 @@ export function LessonHero({ lesson, totalWords, chunkLabel, overall, diffMode, 
         </div>
 
         <div
-          className="flex flex-wrap items-center gap-x-4 gap-y-2 px-8 px-10 py-3 text-caption font-medium"
-          style={{
-            border: '1px solid var(--line-divider)',
-            color: 'var(--text-secondary)',
-          }}
+          className="flex flex-wrap items-center gap-x-4 gap-y-2 px-8 px-10 py-3 text-caption font-medium border border-[var(--line-divider)] text-[var(--text-secondary)]"
         >
           <span className="flex items-center gap-1.5">
             <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
@@ -83,7 +79,7 @@ export function LessonHero({ lesson, totalWords, chunkLabel, overall, diffMode, 
             {totalWords} words
           </span>
 
-          <span style={{ color: 'var(--line-divider)' }}>|</span>
+          <span className="text-[var(--line-divider)]">|</span>
 
           <span className="flex items-center gap-1.5">
             <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
@@ -93,7 +89,7 @@ export function LessonHero({ lesson, totalWords, chunkLabel, overall, diffMode, 
             {estMin} min
           </span>
 
-          <span style={{ color: 'var(--line-divider)' }}>|</span>
+          <span className="text-[var(--line-divider)]">|</span>
 
           {visibleWords.length > 0 && (
             <span className="flex flex-wrap items-center gap-x-1 gap-y-0.5">
@@ -101,7 +97,7 @@ export function LessonHero({ lesson, totalWords, chunkLabel, overall, diffMode, 
                 <span key={w.word} className="flex items-center gap-1">
                   <span className="hover:text-fg transition-colors cursor-pointer">{w.word}</span>
                   {(i < visibleWords.length - 1 || extraCount > 0) && (
-                    <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor" style={{ color: 'var(--text-tertiary)', opacity: 0.5 }}>
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor" className="text-[var(--text-tertiary)] opacity-50">
                       <circle cx="6" cy="6" r="1.8" />
                     </svg>
                   )}
@@ -115,8 +111,8 @@ export function LessonHero({ lesson, totalWords, chunkLabel, overall, diffMode, 
 
           {overall >= 80 && (
             <>
-              <span style={{ color: 'var(--line-divider)' }}>|</span>
-              <span className="flex items-center gap-1.5" style={{ color: 'var(--primary)' }}>
+              <span className="text-[var(--line-divider)]">|</span>
+              <span className="flex items-center gap-1.5 text-[var(--primary)]">
                 <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
                   <path d="M8 2l1.8 3.6L14 6.3l-3 2.9.7 4.1L8 11.4l-3.7 1.9.7-4.1-3-2.9 4.2-.7z" />
                 </svg>
@@ -126,8 +122,8 @@ export function LessonHero({ lesson, totalWords, chunkLabel, overall, diffMode, 
           )}
           {overall > 0 && overall < 80 && (
             <>
-              <span style={{ color: 'var(--line-divider)' }}>|</span>
-              <span className="flex items-center gap-1.5" style={{ color: 'var(--primary)' }}>
+              <span className="text-[var(--line-divider)]">|</span>
+              <span className="flex items-center gap-1.5 text-[var(--primary)]">
                 <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
                   <circle cx="8" cy="8" r="6" />
                   <path d="M8 5v3" /><circle cx="8" cy="11" r="0.5" fill="currentColor" />

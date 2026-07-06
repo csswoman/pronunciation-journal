@@ -1,5 +1,6 @@
 "use client";
 
+import { publicAiErrorMessage } from "@/lib/degradation/messages";
 import type { SpeechInputAdapter, SpeechInputResult } from "../types";
 
 export class GeminiAdapter implements SpeechInputAdapter {
@@ -58,7 +59,7 @@ export class GeminiAdapter implements SpeechInputAdapter {
             const d = await res.json().catch(() => ({}));
             // Surface real server failures (auth, rate-limit, 503, etc.) so the
             // UI shows an actionable error instead of a silent empty transcript.
-            throw new Error(d.error ?? `transcribe failed (${res.status})`);
+            throw new Error(publicAiErrorMessage(res.status, d.error));
           }
 
           const data = await res.json();
@@ -71,7 +72,7 @@ export class GeminiAdapter implements SpeechInputAdapter {
           // Network/abort/server errors are reported; the hook maps them to a
           // visible message. (An OK response with an empty transcript — i.e.
           // unintelligible audio — resolves above as transcript: '' instead.)
-          reject(err instanceof Error ? err : new Error('transcribe failed'));
+          reject(new Error(publicAiErrorMessage(undefined, err instanceof Error ? err.message : '')));
         }
       };
 

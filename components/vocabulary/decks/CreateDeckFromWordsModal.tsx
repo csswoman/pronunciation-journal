@@ -6,6 +6,7 @@ import Button from "@/components/ui/Button";
 import { H2 } from "@/components/ui/Typography";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { createDeckWithWords } from "@/lib/decks/queries";
+import { publicDataErrorMessage } from "@/lib/degradation/messages";
 import type { Tables } from "@/lib/supabase/types";
 
 type Deck = Tables<"decks">;
@@ -46,8 +47,8 @@ export function CreateDeckFromWordsModal({ wordIds, onClose, onCreated }: Create
         wordIds
       );
       onCreated(deck);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to create deck");
+    } catch {
+      setError(publicDataErrorMessage());
     } finally {
       setSaving(false);
     }

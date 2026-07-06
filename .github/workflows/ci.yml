@@ -32,11 +32,31 @@ jobs:
       - run: pnpm type-check
         name: TypeScript type check
 
-      - run: pnpm test
-        name: Run tests
+      - run: pnpm test:coverage
+        name: Run tests with coverage
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-report
+          path: coverage/
+          retention-days: 14
+
+      - name: Check migration safety
+        run: pnpm check:migrations
+
+      - name: Audit RLS coverage
+        run: pnpm audit:rls
 
       - name: Design Token Validation
         run: pnpm lint:design-tokens
+
+      - name: Validate Core 1000 dataset
+        run: pnpm validate:core1000
+
+      - name: Validate Core 1000 generators
+        run: pnpm validate:core1000-generators
 
   security-audit:
     runs-on: ubuntu-latest
@@ -58,14 +78,7 @@ jobs:
         run: pnpm audit --audit-level=moderate
 
       - name: Check for hardcoded secrets
-        run: |
-          if grep -rE \
-            "(AIza[0-9A-Za-z_-]{30,}|(GEMINI_API_KEY|NEXT_PUBLIC_SUPABASE_(ANON_)?KEY|SUPABASE_SERVICE_ROLE_KEY)[[:space:]]*[:=][[:space:]]*['\"][^'\"]{16,}['\"])" \
-            --include="*.tsx" --include="*.ts" --include="*.jsx" --include="*.js" \
-            components/ app/ lib/ 2>/dev/null; then
-            echo "⚠️ Warning: Potential hardcoded secrets found"
-            exit 1
-          fi
+        run: pnpm scan:secrets
 
   build:
     runs-on: ubuntu-latest
@@ -89,6 +102,28 @@ jobs:
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          # Server-side key; mock value is safe here — never reaches the client
+          # and is only required to satisfy env validation at build time.
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY || 'ci-build-placeholder' }}
+          ADMIN_BOOTSTRAP_EMAIL: ci-bootstrap@placeholder.invalid
+
+      - name: Smoke check build output
+        run: |
+          echo "Verifying build artifact integrity..."
+          test -f .next/BUILD_ID        || (echo "Missing .next/BUILD_ID" && exit 1)
+          test -f .next/routes-manifest.json || (echo "Missing routes-manifest.json" && exit 1)
+          test -d .next/server          || (echo "Missing .next/server directory" && exit 1)
+          echo "Build artifact looks valid. BUILD_ID=$(cat .next/BUILD_ID)"
+
+      - name: Analyze bundle sizes
+        run: pnpm analyze:bundle:check
+
+      - name: Upload bundle summary
+        uses: actions/upload-artifact@v4
+        with:
+          name: bundle-summary
+          path: bundle-summary.json
+          retention-days: 14
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
@@ -113,11 +148,16 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      - name: Check for accessibility patterns
-        run: |
-          echo "Checking for ARIA labels in interactive components..."
-          grep -r "aria-label\|aria-describedby\|role=" components/ui --include="*.tsx" | wc -l
-          echo "✓ ARIA patterns detected"
+      - name: Install Playwright browser
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Run Playwright axe audit
+        run: pnpm test:a11y
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://example.supabase.co' }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'ci-anon-placeholder' }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY || 'ci-gemini-placeholder' }}
+          ADMIN_BOOTSTRAP_EMAIL: ci-bootstrap@placeholder.invalid
 
       - name: Verify design tokens used
         run: |

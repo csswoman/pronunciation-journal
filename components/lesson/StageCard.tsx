@@ -73,13 +73,8 @@ export function StageCard({ stage, mastery, index, unlocked, diffMode, onSelect 
       disabled={!unlocked}
       aria-disabled={!unlocked}
       onClick={() => unlocked && onSelect(diffMode)}
-      className="group text-left rounded-3xl p-6 flex flex-col transition-all duration-200 relative overflow-hidden hover:-translate-y-1 hover:shadow-lg"
-      style={{
-        backgroundColor: color.bg,
-        opacity: unlocked ? 1 : 0.5,
-        cursor: unlocked ? 'pointer' : 'not-allowed',
-        minHeight: '280px',
-      }}
+      className="group relative flex min-h-[280px] flex-col overflow-hidden rounded-3xl p-6 text-left transition-all duration-200 hover:-translate-y-1 hover:shadow-lg"
+      style={{ backgroundColor: color.bg, opacity: unlocked ? 1 : 0.5, cursor: unlocked ? 'pointer' : 'not-allowed' }}
     >
       {/* Top row: number + icon */}
       <div className="flex items-start justify-between mb-4">
@@ -103,18 +98,18 @@ export function StageCard({ stage, mastery, index, unlocked, diffMode, onSelect 
       </span>
 
       {/* Title */}
-      <H3 className="text-h3 mb-2" style={{ color: CARD_TEXT.title }}>
+      <H3 className="text-h3 mb-2 text-[var(--text-primary)]">
         {stage.title}
       </H3>
 
       {/* Description */}
-      <p className="text-caption leading-relaxed flex-1" style={{ color: CARD_TEXT.subtitle }}>
+      <p className="text-caption leading-relaxed flex-1 text-[var(--text-secondary)]">
         {stage.subtitle}
       </p>
 
       {/* Bottom row: time + arrow */}
       <div className="flex items-center justify-between mt-6">
-        <span className="text-caption font-medium" style={{ color: CARD_TEXT.meta }}>
+        <span className="text-caption font-medium text-[var(--text-tertiary)]">
           {mastery.attempts > 0 ? `${mastery.pct}% mastery` : (STAGE_TIMES[stage.id] ?? '5 min')}
         </span>
         <span

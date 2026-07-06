@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react'
 import { getAccessToken } from '@/lib/auth/session'
+import { publicDataErrorMessage } from '@/lib/degradation/messages'
 import { generateMatchPairsFromWordBank } from '@/lib/exercises/generators/match-pairs'
 import { generateSentenceContextExercises } from '@/lib/lexicon/exercises'
 import { fromGenericExercise } from '@/lib/practice/adapters'
@@ -140,8 +141,8 @@ export function useLexiconPracticeSession(categoryId: string, userId: string | u
         headers: { Authorization: `Bearer ${accessToken}` },
       })
       if (!res.ok) {
-        const body = await res.json().catch(() => ({}))
-        throw new Error((body as { error?: string }).error ?? 'Failed to load lesson')
+        await res.json().catch(() => ({}))
+        throw new Error(publicDataErrorMessage())
       }
       const { words, wordBankRows } = (await res.json()) as {
         words: WordEntry[]; wordBankRows: WordBankEntry[]
@@ -191,8 +192,8 @@ export function useLexiconPracticeSession(categoryId: string, userId: string | u
         practiceExercises: [],
         sessionKey: 0,
       })
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load lesson')
+    } catch {
+      setError(publicDataErrorMessage())
       setLoadState('error')
     }
   }, [categoryId, userId])

@@ -25,6 +25,7 @@ CREATE INDEX IF NOT EXISTS topic_srs_next_review_idx
     ON "public"."topic_srs" (user_id, next_review_at)
     WHERE srs_status <> 'mastered';
 
+DROP TRIGGER IF EXISTS "topic_srs_updated_at" ON "public"."topic_srs";
 CREATE TRIGGER "topic_srs_updated_at"
     BEFORE UPDATE ON "public"."topic_srs"
     FOR EACH ROW EXECUTE FUNCTION "public"."update_updated_at"();
@@ -33,15 +34,19 @@ CREATE TRIGGER "topic_srs_updated_at"
 
 ALTER TABLE "public"."topic_srs" ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "topic_srs_select" ON "public"."topic_srs";
 CREATE POLICY "topic_srs_select" ON "public"."topic_srs"
     FOR SELECT USING (user_id = auth.uid());
 
+DROP POLICY IF EXISTS "topic_srs_insert" ON "public"."topic_srs";
 CREATE POLICY "topic_srs_insert" ON "public"."topic_srs"
     FOR INSERT WITH CHECK (auth.uid() IS NOT NULL AND user_id = auth.uid());
 
+DROP POLICY IF EXISTS "topic_srs_update" ON "public"."topic_srs";
 CREATE POLICY "topic_srs_update" ON "public"."topic_srs"
     FOR UPDATE USING (user_id = auth.uid())
     WITH CHECK (user_id = auth.uid());
 
+DROP POLICY IF EXISTS "topic_srs_delete" ON "public"."topic_srs";
 CREATE POLICY "topic_srs_delete" ON "public"."topic_srs"
     FOR DELETE USING (user_id = auth.uid());

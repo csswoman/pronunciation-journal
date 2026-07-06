@@ -34,15 +34,11 @@ export default function RecordingControls({ isRecording, onMicClick, onSkip }: P
         {WAVE_HEIGHTS.map((h, i) => (
           <span
             key={i}
-            className="inline-block rounded-sm"
+            className={`inline-block w-1 rounded-sm origin-center ${isRecording ? "animate-[waveBarPulse_1.4s_ease-in-out_infinite]" : "animate-[waveBarIdle_1.8s_ease-in-out_infinite]"}`}
             style={{
-              width: 3,
               height: `${h}%`,
               backgroundColor: "var(--primary)",
-              transformOrigin: "center",
-              animation: isRecording
-                ? `waveBarPulse 1.4s ease-in-out ${i * 0.05}s infinite`
-                : `waveBarIdle 1.8s ease-in-out ${i * 0.06}s infinite`,
+              animationDelay: `${isRecording ? i * 0.05 : i * 0.06}s`,
             }}
           />
         ))}
@@ -69,11 +65,11 @@ export default function RecordingControls({ isRecording, onMicClick, onSkip }: P
           <button
             onClick={onSkip}
             aria-label="Skip phrase"
-            className="w-9 h-9 rounded-full flex items-center justify-center border cursor-pointer transition-all duration-150 hover:translate-x-0.5 bg-surface-sunken border-border-subtle text-fg-muted"
+            className="w-9 h-9 rounded-full flex items-center justify-center border cursor-pointer transition-all duration-150 hover:translate-x-0.5 bg-[var(--btn-regular-bg)] border-[var(--line-divider)] text-[var(--text-tertiary)]"
           >
             <ChevronRight size={16} />
           </button>
-          <div className="pointer-events-none absolute bottom-full right-0 mb-1.5 px-2 py-1 rounded-md text-[11px] font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity bg-surface-tooltip text-white/80">
+          <div className="pointer-events-none absolute bottom-full right-0 mb-1.5 px-2 py-1 rounded-md text-[11px] font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity bg-[var(--tooltip-bg)] text-white/80">
             Skip
           </div>
         </div>

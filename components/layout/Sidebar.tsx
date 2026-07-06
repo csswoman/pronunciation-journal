@@ -13,7 +13,7 @@ interface SidebarProps {
 
 export default function Sidebar({ className = "" }: SidebarProps) {
   const pathname = usePathname();
-  const { isPremium } = useUserRole();
+  const { isAdmin } = useUserRole();
   const [collapsed, setCollapsed] = useState(false);
 
   useEffect(() => {
@@ -70,7 +70,7 @@ export default function Sidebar({ className = "" }: SidebarProps) {
           <NavSection section={referenceNav} isActive={isActive} />
           <NavSection section={trackingNav} isActive={isActive} />
 
-          {isPremium && (
+          {isAdmin && (
             <NavSection section={adminNav} isActive={isActive} />
           )}
         </nav>

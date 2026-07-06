@@ -106,6 +106,11 @@ export type ActivitySessionInsert = {
   completed_at: string
 }
 
+export type DailyStepCompletionOptions = {
+  id?: string
+  completedAt?: Date
+}
+
 export type SessionTelemetry = {
   activitySession: ActivitySessionInsert
   answers: PracticeAnswer[]
@@ -197,4 +202,36 @@ export async function recordActivitySession(
   }
 
   return { reconciledStepIds }
+}
+
+/**
+ * Persist a manual daily checklist completion through the same outbox-backed
+ * activity stream used by real practice sessions.
+ */
+export async function recordDailyStepCompletion(
+  userId: string,
+  stepId: string,
+  options: DailyStepCompletionOptions = {},
+): Promise<void> {
+  const completedAt = options.completedAt ?? new Date()
+  const activitySession: ActivitySessionInsert = {
+    id: options.id ?? crypto.randomUUID(),
+    user_id: userId,
+    source: 'daily_plan',
+    practice_context: 'daily',
+    skill_tags: [],
+    exercises_total: 0,
+    exercises_correct: 0,
+    accuracy_pct: 0,
+    duration_ms: 0,
+    xp_earned: 0,
+    reconciled_step_ids: [stepId],
+    completed_at: completedAt.toISOString(),
+  }
+
+  await enqueue(
+    'activity_sessions',
+    'insert',
+    activitySession as unknown as Record<string, unknown>,
+  )
 }

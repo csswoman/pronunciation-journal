@@ -1,13 +1,9 @@
-'use client'
-
 // Planned structure:
 // <HomeLayout>
-//   <HomeDailyCard />           — single instance, shared across breakpoints
 //   mobile: <HomeMobileView />
 //   desktop: <HomeTodaySection /> + <HomeReviewsSection /> + <HomeLearnSection />
 // </HomeLayout>
 
-import { useMediaQuery } from '@/hooks/useMediaQuery'
 import HomeDailyCard from '@/components/home/HomeDailyCard'
 import HomeStatusHero from '@/components/home/HomeStatusHero'
 import HomeMobileView from '@/components/home/HomeMobileView'
@@ -45,31 +41,31 @@ export default function HomeLayout({
   todaysLesson = null,
   todaysConcept = null,
 }: HomeLayoutProps) {
-  const isDesktop = useMediaQuery('(min-width: 768px)')
+  return (
+    <>
+      <div className="md:hidden">
+        <HomeMobileView
+          streak={streak}
+          wordsDueCount={wordsDueCount}
+          soundsDueCount={soundsDueCount}
+          dailyCard={<HomeDailyCard conceptLesson={conceptLesson} />}
+        />
+      </div>
 
-  const dailyCard = <HomeDailyCard conceptLesson={conceptLesson} />
-
-  if (isDesktop) {
-    return (
-      <>
+      <div className="hidden md:block">
         <HomeStatusHero streak={streak} wordsDueCount={wordsDueCount} soundsDueCount={soundsDueCount} />
-        <HomeTodaySection streak={streak} dailyGoal={dailyGoal} dailyCard={dailyCard} />
+        <HomeTodaySection
+          streak={streak}
+          dailyGoal={dailyGoal}
+          dailyCard={<HomeDailyCard conceptLesson={conceptLesson} />}
+        />
         <HomeReviewsSection
           reviewQueue={reviewQueue}
           vocabulary={vocabularyProgress}
           weakestPhoneme={weakestPhoneme}
         />
         <HomeLearnSection lesson={todaysLesson} concept={todaysConcept} />
-      </>
-    )
-  }
-
-  return (
-    <HomeMobileView
-      streak={streak}
-      wordsDueCount={wordsDueCount}
-      soundsDueCount={soundsDueCount}
-      dailyCard={dailyCard}
-    />
+      </div>
+    </>
   )
 }

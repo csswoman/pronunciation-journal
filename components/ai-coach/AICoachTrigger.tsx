@@ -47,10 +47,7 @@ export default function AICoachTrigger({ variant = "fab", className }: AICoachTr
           "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--primary)] motion-reduce:transition-none",
           className,
         )}
-        style={{
-          backgroundColor: "var(--primary)",
-          boxShadow: navShadow,
-        }}
+        style={{ backgroundColor: "var(--primary)", boxShadow: navShadow }}
       >
         <TriggerIcon isOpen={isOpen} />
       </button>

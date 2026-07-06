@@ -9,6 +9,7 @@ import { WaveformVisualizer } from "@/components/ui/WaveformVisualizer";
 import { useWordOfDay } from "@/hooks/useWordOfDay";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { isWordInBank, quickAddWord } from "@/lib/word-bank/queries";
+import { speakText } from "@/lib/speech/synthesis";
 
 export default function HomeWordOfDayCard() {
   const { word, loading, error, refresh } = useWordOfDay();
@@ -27,15 +28,11 @@ export default function HomeWordOfDayCard() {
   }, [user, word]);
 
   function speak() {
-    if (!word || !window.speechSynthesis) return;
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(word.word);
-    utterance.lang = "en-US";
-    utterance.rate = 0.85;
-    utterance.onstart = () => setSpeaking(true);
-    utterance.onend = () => setSpeaking(false);
-    utterance.onerror = () => setSpeaking(false);
-    window.speechSynthesis.speak(utterance);
+    if (!word) return;
+    speakText(word.word, {
+      onStart: () => setSpeaking(true),
+      onEnd: () => setSpeaking(false),
+    });
   }
 
   const handleSave = useCallback(async () => {

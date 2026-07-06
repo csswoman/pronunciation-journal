@@ -86,8 +86,7 @@ const TOPIC_COLS = 'id, topic, interval_days, next_review_at, srs_status, ease_f
 async function getDueTopicsForReview(userId: string, limit = 6): Promise<TopicSrsRow[]> {
   const supabase = await createSupabaseServerClient()
   const today = new Date().toISOString()
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- topic_srs not yet in generated Supabase types
-  const { data, error } = await (supabase as any)
+  const { data, error } = await supabase
     .from('topic_srs')
     .select(TOPIC_COLS)
     .eq('user_id', userId)
@@ -104,8 +103,7 @@ async function getDueTopicsForReview(userId: string, limit = 6): Promise<TopicSr
 
 async function getWeakTopicsForReview(userId: string, limit = 6): Promise<TopicSrsRow[]> {
   const supabase = await createSupabaseServerClient()
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- topic_srs not yet in generated Supabase types
-  const { data, error } = await (supabase as any)
+  const { data, error } = await supabase
     .from('topic_srs')
     .select(TOPIC_COLS)
     .eq('user_id', userId)

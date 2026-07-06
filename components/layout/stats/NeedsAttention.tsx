@@ -1,5 +1,3 @@
-"use client";
-
 import { ArrowRight } from "lucide-react";
 import type { UserSoundProgressWithSound } from "@/lib/phoneme-practice/types";
 import { H3 } from "@/components/ui/Typography";

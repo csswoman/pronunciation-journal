@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
-import { GoogleGenAI } from "@google/genai";
 import { createHash } from "crypto";
 import { z } from "zod";
-import type { Database } from "@/lib/supabase/types";
-import { SENTENCE_REORDER_SYSTEM_PROMPT } from "@/lib/ai-prompts";
-import { requireSameOrigin, requireUser, rateLimit, validateBody, SECURE_HEADERS } from "@/lib/api/guards";
+import { buildSentenceReorderUserPrompt, SENTENCE_REORDER_SYSTEM_PROMPT } from "@/lib/ai-prompts";
+import { requireSameOrigin, requireUser, rateLimit, validateBody, SECURE_HEADERS, publicErrorResponse } from "@/lib/api/guards";
+import { logServerError } from "@/lib/api/logging";
+import { callWithFallback, stripJsonFences } from "@/lib/gemini/client";
+import { getSupabaseAdminClient } from "@/lib/supabase/admin";
 
 export const runtime = "nodejs";
 
@@ -22,6 +22,8 @@ const SentencesRequestSchema = z
   })
   .strict();
 
+const SentencesResponseSchema = z.array(z.string().trim().min(1).max(300)).min(1).max(MAX_COUNT);
+
 // ── Gemini sentence generation ────────────────────────────────────────────────
 
 async function generateSentencesWithGemini(
@@ -32,36 +34,20 @@ async function generateSentencesWithGemini(
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) throw new Error("GEMINI_API_KEY not configured");
 
-  const ai = new GoogleGenAI({ apiKey });
-  const prompt = `Generate ${count} English sentences for a ${level} learner about: "${topic}".
-Return a JSON array of strings only. Example: ["The cat sat on the mat.", "She goes to school every day."]`;
+  const prompt = buildSentenceReorderUserPrompt(count, topic, level);
+  const parsed = await callWithFallback(
+    apiKey,
+    {
+      contents: prompt,
+      config: {
+        systemInstruction: SENTENCE_REORDER_SYSTEM_PROMPT,
+        responseMimeType: "application/json",
+      },
+    },
+    (text) => SentencesResponseSchema.parse(JSON.parse(stripJsonFences(text)))
+  );
 
-  const models = ["gemini-2.5-flash-lite", "gemini-2.5-flash"];
-  let lastError: unknown;
-
-  for (const model of models) {
-    try {
-      const result = await ai.models.generateContent({
-        model,
-        contents: prompt,
-        config: {
-          systemInstruction: SENTENCE_REORDER_SYSTEM_PROMPT,
-          responseMimeType: "application/json",
-        },
-      });
-      if (!result.text) throw new Error("Empty response");
-
-      const parsed = JSON.parse(result.text);
-      if (!Array.isArray(parsed)) throw new Error("Expected array");
-
-      return parsed
-        .filter((s): s is string => typeof s === "string")
-        .filter((s) => s.trim().split(/\s+/).length >= MIN_TOKENS);
-    } catch (err) {
-      lastError = err;
-    }
-  }
-  throw lastError ?? new Error("Gemini generation failed");
+  return parsed.filter((s) => s.trim().split(/\s+/).length >= MIN_TOKENS);
 }
 
 // ── Deterministic fragment ID ─────────────────────────────────────────────────
@@ -94,7 +80,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   const { user, error: authError } = await requireUser(req);
   if (authError) return authError;
 
-  const { limited, error: rateLimitError } = rateLimit(`/api/sentences/generate:${user.id}`, {
+  const { limited, error: rateLimitError } = await rateLimit(`/api/sentences/generate:${user.id}`, {
     max: 15,
     windowMs: 60_000,
     meta: { endpoint: "/api/sentences/generate", userId: user.id },
@@ -116,15 +102,12 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     ? `grammar-deck:${deckSlug}:ai`
     : `ai-user:${hashedSentenceSource(`${user.id}:${level}:${topic}`)}`;
 
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-  if (!serviceKey) {
-    return NextResponse.json(
-      { error: "Server misconfiguration" },
-      { status: 500, headers: SECURE_HEADERS }
-    );
+  let db: ReturnType<typeof getSupabaseAdminClient>;
+  try {
+    db = getSupabaseAdminClient();
+  } catch {
+    return publicErrorResponse(500, "Server misconfiguration");
   }
-  const db = createClient<Database>(supabaseUrl, serviceKey);
 
   // ── Check cache first ─────────────────────────────────────────────────────
   let cacheQuery = db
@@ -149,18 +132,16 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
     sentences = await generateSentencesWithGemini(topic, level, count);
   } catch (err) {
-    console.error("[sentences/generate] Gemini error:", err);
-    return NextResponse.json(
-      { error: "Generation failed" },
-      { status: 502, headers: SECURE_HEADERS }
-    );
+    logServerError("Sentence generation Gemini call failed", err, {
+      endpoint: "/api/sentences/generate",
+      operation: "generateSentences",
+      userId: user.id,
+    });
+    return publicErrorResponse(502, "Generation failed");
   }
 
   if (sentences.length === 0) {
-    return NextResponse.json(
-      { error: "No sentences generated" },
-      { status: 502, headers: SECURE_HEADERS }
-    );
+    return publicErrorResponse(502, "No sentences generated");
   }
 
   // ── Save to text_fragments (cache) ────────────────────────────────────────
@@ -179,7 +160,11 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     .select("id, content, source, title");
 
   if (insertErr) {
-    console.error("[sentences/generate] DB insert error:", insertErr);
+    logServerError("Sentence generation cache insert failed", insertErr, {
+      endpoint: "/api/sentences/generate",
+      operation: "cacheInsert",
+      userId: user.id,
+    });
     // Still return the generated sentences even if caching failed
     return NextResponse.json(
       { fragments: rows.map(({ id, content, source, title }) => ({ id, content, source, title })), fromCache: false },

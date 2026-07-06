@@ -1,6 +1,7 @@
 import "server-only";
 
 import { createServerClient } from "@supabase/ssr";
+import { cache } from "react";
 import { cookies } from "next/headers";
 import type { Database } from "./types";
 
@@ -8,7 +9,7 @@ import type { Database } from "./types";
  * Creates a Supabase client that reads auth state from cookies.
  * Only valid in Server Components, API Routes, and Server Actions.
  */
-export async function createSupabaseServerClient() {
+export const createSupabaseServerClient = cache(async () => {
   const cookieStore = await cookies();
   return createServerClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -30,4 +31,4 @@ export async function createSupabaseServerClient() {
       },
     }
   );
-}
+});

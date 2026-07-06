@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { enrichWord } from "@/lib/word-bank/enrich";
-import { createUserScopedClient, requireUser, rateLimit, validateBody, SECURE_HEADERS } from "@/lib/api/guards";
+import { enqueueWordEnrichmentJob } from "@/lib/word-bank/jobs";
+import { createUserScopedClient, requireSameOrigin, requireUser, rateLimit, validateBody, SECURE_HEADERS, publicErrorResponse } from "@/lib/api/guards";
+import { logServerError } from "@/lib/api/logging";
 
 export const runtime = "nodejs";
 
@@ -15,10 +16,13 @@ const WordsRequestSchema = z
   .strict();
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
+  const originError = requireSameOrigin(req);
+  if (originError) return originError;
+
   const { user, error: authError, accessToken } = await requireUser(req);
   if (authError) return authError;
 
-  const { limited, error: rateLimitError } = rateLimit(`/api/words:${user.id}`, {
+  const { limited, error: rateLimitError } = await rateLimit(`/api/words:${user.id}`, {
     max: 20,
     windowMs: 60_000,
     meta: { endpoint: "/api/words", userId: user.id },
@@ -56,15 +60,16 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       .single();
 
     if (updateErr || !word) {
-      console.error("[POST /api/words] retry update failed:", updateErr);
-      return NextResponse.json(
-        { error: updateErr?.message ?? "Failed to retry word" },
-        { status: 500, headers: SECURE_HEADERS }
-      );
+      logServerError("Word retry update failed", updateErr, {
+        endpoint: "/api/words",
+        operation: "retryUpdate",
+        userId: user.id,
+      });
+      return publicErrorResponse(500, "Failed to retry word");
     }
 
-    void enrichWord(word.id);
-    return NextResponse.json({ word }, { status: 200, headers: SECURE_HEADERS });
+    const jobId = await enqueueWordEnrichmentJob(userClient, user.id, word.id);
+    return NextResponse.json({ word, jobId }, { status: 200, headers: SECURE_HEADERS });
   }
 
   // Create new word.
@@ -80,27 +85,51 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     .single();
 
   if (insertErr || !word) {
-    console.error("[POST /api/words] insert failed:", insertErr);
-    return NextResponse.json(
-      { error: insertErr?.message ?? "Failed to create word" },
-      { status: 500, headers: SECURE_HEADERS }
-    );
+    logServerError("Word insert failed", insertErr, {
+      endpoint: "/api/words",
+      operation: "insert",
+      userId: user.id,
+    });
+    return publicErrorResponse(500, "Failed to create word");
   }
 
   if (deckId) {
     // Verify deck belongs to this user before linking.
-    const { data: deck } = await userClient
+    const { data: deck, error: deckErr } = await userClient
       .from("decks")
       .select("id")
       .eq("id", deckId)
       .eq("user_id", user.id)
       .single();
 
-    if (deck) {
-      await userClient.from("word_bank_decks").insert({ word_id: word.id, deck_id: deckId });
+    if (deckErr) {
+      logServerError("Word deck lookup failed", deckErr, {
+        endpoint: "/api/words",
+        operation: "deckLookup",
+        userId: user.id,
+      });
+      return publicErrorResponse(500, "Failed to verify deck");
     }
+
+    if (!deck) {
+      return publicErrorResponse(404, "Deck not found");
+    }
+
+    const { error: linkErr } = await userClient
+      .from("word_bank_decks")
+      .insert({ word_id: word.id, deck_id: deckId });
+
+    if (linkErr) {
+      logServerError("Word deck link failed", linkErr, {
+        endpoint: "/api/words",
+        operation: "deckLink",
+        userId: user.id,
+      });
+      return publicErrorResponse(500, "Failed to add word to deck");
+    }
+
   }
 
-  void enrichWord(word.id);
-  return NextResponse.json({ word }, { status: 201, headers: SECURE_HEADERS });
+  const jobId = await enqueueWordEnrichmentJob(userClient, user.id, word.id);
+  return NextResponse.json({ word, jobId }, { status: 201, headers: SECURE_HEADERS });
 }

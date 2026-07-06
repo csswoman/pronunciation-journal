@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Button from "@/components/ui/Button";
+import { publicAuthErrorMessage } from "@/lib/auth/password-policy";
 
 interface Props {
   onSave: (password: string) => Promise<void>;
@@ -26,8 +27,8 @@ export default function ProfilePasswordCard({ onSave }: Props) {
       setNewPassword("");
       setConfirmPassword("");
       setIsEditing(false);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to update password");
+    } catch {
+      setError(publicAuthErrorMessage());
     } finally {
       setIsSaving(false);
     }

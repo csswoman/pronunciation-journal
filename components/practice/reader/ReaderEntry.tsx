@@ -12,6 +12,7 @@ import { ReaderExercise } from './ReaderExercise'
 import { buildSessionResult } from '@/lib/practice/session-result'
 import { recordActivitySession } from '@/lib/progress/activity-hub'
 import { savePracticeAnswer } from '@/lib/practice/queries'
+import { flushOutbox } from '@/lib/sync/sync-manager'
 
 // Planned structure:
 // <ReaderEntry>
@@ -106,7 +107,7 @@ export function ReaderEntry() {
       <ReaderExercise
         passage={state.passage}
         online={online}
-        onComplete={(correct) => {
+        onComplete={async (correct) => {
           if (!user) return
           const result = {
             exerciseId: `reader:${state.passage.id}`,
@@ -118,17 +119,13 @@ export function ReaderEntry() {
             context: 'practice' as const,
             completedAt: new Date(),
           }
-          void savePracticeAnswer(user.id, result)
-            .then(() =>
-              recordActivitySession(user.id, {
-                practiceContext: 'practice',
-                source: 'practice',
-                sessionResult: buildSessionResult([result]),
-              }),
-            )
-            .catch((err) => {
-              console.error('[ReaderEntry] progress save failed', err)
-            })
+          await savePracticeAnswer(user.id, result)
+          await recordActivitySession(user.id, {
+            practiceContext: 'practice',
+            source: 'practice',
+            sessionResult: buildSessionResult([result]),
+          })
+          await flushOutbox()
         }}
       />
     </div>

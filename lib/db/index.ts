@@ -88,6 +88,19 @@ export interface PracticePrefRecord {
   updatedAt: string; // ISO
 }
 
+export interface PronunciationMasteryRecord {
+  phrase: string; // PK
+  masteredAt: string;
+  migratedFromLocalStorage?: 0 | 1;
+}
+
+export interface PronunciationCoachStateRecord {
+  key: "queue" | "seen";
+  values: string[];
+  updatedAt: string;
+  migratedFromLocalStorage?: 0 | 1;
+}
+
 class PronunciationDB extends Dexie {
   attempts!: Table<Attempt, number>;
   srsData!: Table<SRSData, string>;
@@ -106,6 +119,8 @@ class PronunciationDB extends Dexie {
   ipaExplorations!: Table<IpaExplorationRecord, string>;
   readerPassages!: Table<ReaderPassage, string>;
   practicePrefs!: Table<PracticePrefRecord, string>;
+  pronunciationMastery!: Table<PronunciationMasteryRecord, string>;
+  pronunciationCoachState!: Table<PronunciationCoachStateRecord, string>;
 
   constructor() {
     super("pronunciation-journal");
@@ -191,6 +206,16 @@ class PronunciationDB extends Dexie {
     // v14: lightweight key/value prefs for the practice hub (last mode used)
     this.version(14).stores({
       practicePrefs: "key",
+    });
+
+    // v15: durable pronunciation coach mastery state.
+    this.version(15).stores({
+      pronunciationMastery: "phrase, masteredAt",
+    });
+
+    // v16: durable pronunciation coach queue/seen state.
+    this.version(16).stores({
+      pronunciationCoachState: "key, updatedAt",
     });
   }
 }
@@ -559,4 +584,50 @@ export async function setLastPracticeMode(modeId: string): Promise<void> {
 export async function getLastPracticeMode(): Promise<string | null> {
   const row = await db.practicePrefs.get(LAST_PRACTICE_MODE_KEY);
   return row?.value ?? null;
+}
+
+// ── AI Coach Pronunciation Mastery Helpers ──
+
+export async function getPronunciationMasteredPhrases(): Promise<string[]> {
+  const rows = await db.pronunciationMastery.toArray();
+  return rows.map((row) => row.phrase);
+}
+
+export async function savePronunciationMasteredPhrases(
+  phrases: Iterable<string>,
+  options: { migratedFromLocalStorage?: boolean } = {},
+): Promise<void> {
+  const masteredAt = new Date().toISOString();
+  const rows: PronunciationMasteryRecord[] = [...new Set(phrases)].map((phrase) => ({
+    phrase,
+    masteredAt,
+    migratedFromLocalStorage: options.migratedFromLocalStorage ? 1 : 0,
+  }));
+
+  await db.transaction("rw", db.pronunciationMastery, async () => {
+    await db.pronunciationMastery.clear();
+    if (rows.length > 0) {
+      await db.pronunciationMastery.bulkPut(rows);
+    }
+  });
+}
+
+export async function getPronunciationCoachState(
+  key: PronunciationCoachStateRecord["key"],
+): Promise<string[] | undefined> {
+  const row = await db.pronunciationCoachState.get(key);
+  return row?.values;
+}
+
+export async function savePronunciationCoachState(
+  key: PronunciationCoachStateRecord["key"],
+  values: Iterable<string>,
+  options: { migratedFromLocalStorage?: boolean } = {},
+): Promise<void> {
+  await db.pronunciationCoachState.put({
+    key,
+    values: [...new Set(values)],
+    updatedAt: new Date().toISOString(),
+    migratedFromLocalStorage: options.migratedFromLocalStorage ? 1 : 0,
+  });
 }

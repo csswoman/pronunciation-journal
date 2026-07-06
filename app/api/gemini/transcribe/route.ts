@@ -1,11 +1,12 @@
-import { createHash } from "crypto";
 import { GoogleGenAI } from "@google/genai";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { requireSameOrigin, requireUser, rateLimit, validateBody } from "@/lib/api/guards";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { requireSameOrigin, requireUser, rateLimit, validateBody, publicErrorResponse } from "@/lib/api/guards";
 import { buildTranscriptionPrompt } from "@/lib/ai-prompts";
-import { FALLBACK_MODELS, getErrorStatus, shouldTryNextModel } from "@/lib/gemini/fallback";
+import { getErrorStatus, shouldTryNextModel, FALLBACK_MODELS } from "@/lib/gemini/fallback";
+import { withGeminiTimeout } from "@/lib/gemini/client";
+import { logServerError } from "@/lib/api/logging";
+import { buildTranscriptionCacheKey, createTranscriptionCache } from "@/lib/gemini/transcription-cache";
 
 // ---------------------------------------------------------------------------
 // Request schema
@@ -41,19 +42,12 @@ const TranscribeSchema = z.object({
 
 const TRANSCRIBE_CACHE_TTL_MS = 1000 * 60 * 60 * 6;
 const MAX_TRANSCRIBE_CACHE_ENTRIES = 400;
-const transcribeCache = new Map<string, { transcript: string; createdAt: number }>();
-
-const SUPABASE_STT_CACHE_TABLE = "stt_transcription_cache";
-
-type SttCacheRow = {
-  cache_key: string;
-  user_id: string;
-  target_word: string | null;
-  mime_type: string;
-  transcript: string;
-  payload_size: number;
-  updated_at: string;
-};
+const transcriptionCache = createTranscriptionCache<{ targetWord?: string }>({
+  table: "stt_transcription_cache",
+  ttlMs: TRANSCRIBE_CACHE_TTL_MS,
+  maxEntries: MAX_TRANSCRIBE_CACHE_ENTRIES,
+  buildExtraRow: ({ targetWord }) => ({ target_word: targetWord ?? null }),
+});
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -69,98 +63,6 @@ function parseDataUrl(dataUrl: string): { mimeType: string; base64Data: string }
   return { mimeType, base64Data: match[2] };
 }
 
-function buildCacheKey(
-  userId: string,
-  targetWord: string | undefined,
-  mimeType: string,
-  base64Data: string
-): string {
-  return createHash("sha256")
-    .update(`${userId}|${targetWord ?? ""}|${mimeType}|`)
-    .update(base64Data)
-    .digest("hex");
-}
-
-function getL1Cached(key: string): string | null {
-  const cached = transcribeCache.get(key);
-  if (!cached) return null;
-  if (Date.now() - cached.createdAt > TRANSCRIBE_CACHE_TTL_MS) {
-    transcribeCache.delete(key);
-    return null;
-  }
-  return cached.transcript;
-}
-
-function setL1Cache(key: string, transcript: string): void {
-  if (transcribeCache.size >= MAX_TRANSCRIBE_CACHE_ENTRIES) {
-    const oldest = transcribeCache.keys().next().value;
-    if (oldest) transcribeCache.delete(oldest);
-  }
-  transcribeCache.set(key, { transcript, createdAt: Date.now() });
-}
-
-// ---------------------------------------------------------------------------
-// Supabase STT cache — uses the user's session client (RLS enforced)
-// ---------------------------------------------------------------------------
-
-async function getL2Cached(userId: string, key: string): Promise<string | null> {
-  try {
-    const supabase = await createSupabaseServerClient();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const db = supabase as any;
-    const { data, error } = await db
-      .from(SUPABASE_STT_CACHE_TABLE)
-      .select("transcript, updated_at")
-      .eq("user_id", userId)
-      .eq("cache_key", key)
-      .maybeSingle() as { data: Pick<SttCacheRow, "transcript" | "updated_at"> | null; error: unknown };
-
-    if (error || !data) return null;
-
-    const ageMs = Date.now() - new Date(data.updated_at).getTime();
-    if (Number.isFinite(ageMs) && ageMs > TRANSCRIBE_CACHE_TTL_MS) {
-      void db.from(SUPABASE_STT_CACHE_TABLE).delete().eq("user_id", userId).eq("cache_key", key);
-      return null;
-    }
-
-    return data.transcript;
-  } catch {
-    return null;
-  }
-}
-
-async function setL2Cache(
-  userId: string,
-  key: string,
-  transcript: string,
-  targetWord: string | undefined,
-  mimeType: string,
-  payloadSize: number
-): Promise<void> {
-  try {
-    const supabase = await createSupabaseServerClient();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    await (supabase as any).from(SUPABASE_STT_CACHE_TABLE).upsert(
-      {
-        cache_key: key,
-        user_id: userId,
-        target_word: targetWord ?? null,
-        mime_type: mimeType,
-        transcript,
-        payload_size: payloadSize,
-        updated_at: new Date().toISOString(),
-      },
-      { onConflict: "user_id,cache_key" }
-    );
-  } catch {
-    // Cache write is non-critical; ignore failures silently
-  }
-}
-
-// ---------------------------------------------------------------------------
-// Transcription
-// ---------------------------------------------------------------------------
-
 async function transcribeWithFallback(
   ai: GoogleGenAI,
   mimeType: string,
@@ -172,14 +74,17 @@ async function transcribeWithFallback(
 
   for (const modelName of FALLBACK_MODELS) {
     try {
-      const result = await ai.models.generateContent({
-        model: modelName,
-        contents: [
-          { text: prompt },
-          { inlineData: { mimeType, data: base64Data } },
-        ],
-        config: { temperature: 0, maxOutputTokens: 24 },
-      });
+      const result = await withGeminiTimeout(
+        ai.models.generateContent({
+          model: modelName,
+          contents: [
+            { text: prompt },
+            { inlineData: { mimeType, data: base64Data } },
+          ],
+          config: { temperature: 0, maxOutputTokens: 24 },
+        }),
+        45_000
+      );
       return (result.text ?? "").trim();
     } catch (err: unknown) {
       lastError = err;
@@ -203,7 +108,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   if (authError) return authError as NextResponse;
 
   // 2. Rate limit — tighter for transcription (costs more per call)
-  const { limited, error: rateLimitError } = rateLimit(`/api/gemini/transcribe:${user.id}`, {
+  const { limited, error: rateLimitError } = await rateLimit(`/api/gemini/transcribe:${user.id}`, {
     max: 20,
     windowMs: 60_000,
     meta: { endpoint: "/api/gemini/transcribe", userId: user.id },
@@ -221,16 +126,16 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
   try {
     const { mimeType, base64Data } = parseDataUrl(body.audioDataUrl);
-    const cacheKey = buildCacheKey(user.id, body.targetWord, mimeType, base64Data);
+    const cacheKey = buildTranscriptionCacheKey([user.id, body.targetWord, mimeType, base64Data]);
 
     // L1 in-memory cache
-    const l1 = getL1Cached(cacheKey);
+    const l1 = transcriptionCache.getL1(cacheKey);
     if (l1 !== null) return NextResponse.json({ transcript: l1, cached: true });
 
     // L2 Supabase cache
-    const l2 = await getL2Cached(user.id, cacheKey);
+    const l2 = await transcriptionCache.getL2(user.id, cacheKey);
     if (l2 !== null) {
-      setL1Cache(cacheKey, l2);
+      transcriptionCache.setL1(cacheKey, l2);
       return NextResponse.json({ transcript: l2, cached: true, source: "supabase" });
     }
 
@@ -238,14 +143,20 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const ai = new GoogleGenAI({ apiKey });
     const transcript = await transcribeWithFallback(ai, mimeType, base64Data, body.targetWord);
 
-    setL1Cache(cacheKey, transcript);
-    void setL2Cache(user.id, cacheKey, transcript, body.targetWord, mimeType, base64Data.length);
+    transcriptionCache.setL1(cacheKey, transcript);
+    await transcriptionCache.setL2(user.id, cacheKey, transcript, mimeType, base64Data.length, {
+      targetWord: body.targetWord,
+    });
 
     return NextResponse.json({ transcript });
   } catch (err: unknown) {
     const status = getErrorStatus(err) ?? 500;
-    const message = String((err as { message?: unknown })?.message ?? "Internal server error");
-    console.error("gemini transcribe error:", err);
-    return NextResponse.json({ error: message }, { status });
+    logServerError("Word transcription failed", err, {
+      endpoint: "/api/gemini/transcribe",
+      operation: "transcribe",
+      status,
+      userId: user.id,
+    });
+    return publicErrorResponse(status >= 500 ? 500 : status, "Transcription failed");
   }
 }

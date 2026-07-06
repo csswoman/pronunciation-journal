@@ -7,9 +7,11 @@ vi.mock('@/lib/lexicon/categories', () => ({
 }))
 
 vi.mock('@/lib/api/guards', () => ({
+  requireSameOrigin: vi.fn(() => null),
   requireUser: vi.fn(),
   rateLimit: vi.fn(),
   createUserScopedClient: vi.fn(),
+  publicErrorResponse: (status: number) => new Response(null, { status }) as never,
   SECURE_HEADERS: { 'Cache-Control': 'no-store' },
 }))
 
@@ -38,7 +40,7 @@ function makeParams(id: string) {
 describe('GET /api/lexicon/[id]', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    mockRateLimit.mockReturnValue({ limited: false, error: null })
+    mockRateLimit.mockResolvedValue({ limited: false, error: null })
   })
 
   it('returns 404 when category has no words', async () => {
@@ -68,7 +70,7 @@ describe('POST /api/lexicon/[id]', () => {
       NEXT_PUBLIC_SUPABASE_URL: 'https://test.supabase.co',
       NEXT_PUBLIC_SUPABASE_ANON_KEY: 'test-anon-key',
     }
-    mockRateLimit.mockReturnValue({ limited: false, error: null })
+    mockRateLimit.mockResolvedValue({ limited: false, error: null })
   })
 
   afterEach(() => {

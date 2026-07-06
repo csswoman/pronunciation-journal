@@ -138,7 +138,9 @@ describe("AppShell mount behavior", () => {
     );
 
     expect(screen.getByTestId("page-content")).toBeInTheDocument();
-    expect(aiCoachTriggerMount).toHaveBeenCalled();
+    await waitFor(() => {
+      expect(aiCoachTriggerMount).toHaveBeenCalled();
+    });
     await waitFor(() => {
       expect(quickAddMount).not.toHaveBeenCalled();
       expect(aiCoachPanelMount).not.toHaveBeenCalled();

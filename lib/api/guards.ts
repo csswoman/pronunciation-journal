@@ -4,6 +4,7 @@ import type { User } from "@supabase/supabase-js";
 import type { ZodSchema } from "zod";
 import type { Database } from "@/lib/supabase/types";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { tryGetSupabaseAdminClient } from "@/lib/supabase/service-role";
 
 // ---------------------------------------------------------------------------
 // Shared secure response headers
@@ -18,6 +19,16 @@ export const SECURE_HEADERS: Record<string, string> = {
   "X-Frame-Options": "DENY",
   "Referrer-Policy": "no-referrer",
 };
+
+export function publicErrorResponse(
+  status: number,
+  message: string,
+): NextResponse {
+  return NextResponse.json(
+    { error: message },
+    { status, headers: SECURE_HEADERS }
+  );
+}
 
 // ---------------------------------------------------------------------------
 // requireUser
@@ -149,7 +160,7 @@ export function requireSameOrigin(request: Request): NextResponse | null {
 }
 
 // ---------------------------------------------------------------------------
-// rateLimit — in-memory per-user-per-endpoint sliding window
+// rateLimit — database-backed per-user-per-endpoint fixed window
 // ---------------------------------------------------------------------------
 
 interface RateLimitWindow {
@@ -175,22 +186,84 @@ export type RateLimitResult =
   | { limited: false; error: null }
   | { limited: true; error: NextResponse };
 
+type RateLimitRpcResult = {
+  allowed: boolean;
+  retry_after_seconds: number;
+};
+
 /**
- * In-memory sliding-window rate limiter keyed by `${endpoint}:${userId}`.
+ * Database-backed fixed-window rate limiter keyed by `${endpoint}:${userId}`.
  *
- * Key convention: always pass `endpoint:userId` so limits are independent
- * per route — hitting /api/gemini does not consume the /api/gemini/transcribe
- * budget and vice versa.
- *
- * Not suitable for multi-instance deployments — use Redis/Upstash there.
+ * Production uses the `public.consume_rate_limit` RPC, which performs an
+ * atomic upsert in Postgres so limits hold across multiple app instances.
+ * Local/test environments without service-role credentials fall back to the
+ * in-memory store to keep unit tests and offline development usable.
  *
  * Usage:
- *   const { limited, error } = rateLimit(`/api/gemini:${user.id}`, { meta: { endpoint, userId } });
+ *   const { limited, error } = await rateLimit(`/api/gemini:${user.id}`, { meta: { endpoint, userId } });
  *   if (limited) return error;
  */
-export function rateLimit(
+export async function rateLimit(
   key: string,
   { max = 15, windowMs = 60_000, meta }: RateLimitOptions = {}
+): Promise<RateLimitResult> {
+  const rpcResult = await consumeDatabaseRateLimit(key, max, windowMs, meta);
+  if (rpcResult) {
+    return buildRateLimitResult(key, max, rpcResult.allowed, rpcResult.retry_after_seconds, meta);
+  }
+
+  return consumeMemoryRateLimit(key, { max, windowMs, meta });
+}
+
+async function consumeDatabaseRateLimit(
+  key: string,
+  max: number,
+  windowMs: number,
+  meta?: Record<string, unknown>
+): Promise<RateLimitRpcResult | null> {
+  const supabase = tryGetSupabaseAdminClient();
+  if (!supabase) {
+    return null;
+  }
+
+  const { data, error } = await supabase.rpc("consume_rate_limit", {
+    p_key: key,
+    p_max: max,
+    p_window_ms: windowMs,
+  });
+
+  if (error) {
+    console.error("[rate-limit] database check failed", { key, ...meta, error });
+    return {
+      allowed: false,
+      retry_after_seconds: 60,
+    };
+  }
+
+  const row = Array.isArray(data) ? data[0] : data;
+  if (!isRateLimitRpcResult(row)) {
+    console.error("[rate-limit] database check returned invalid payload", { key, ...meta });
+    return {
+      allowed: false,
+      retry_after_seconds: 60,
+    };
+  }
+
+  return row;
+}
+
+function isRateLimitRpcResult(value: unknown): value is RateLimitRpcResult {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    typeof (value as RateLimitRpcResult).allowed === "boolean" &&
+    typeof (value as RateLimitRpcResult).retry_after_seconds === "number"
+  );
+}
+
+function consumeMemoryRateLimit(
+  key: string,
+  { max, windowMs, meta }: Required<Pick<RateLimitOptions, "max" | "windowMs">> & Pick<RateLimitOptions, "meta">
 ): RateLimitResult {
   const now = Date.now();
   const entry = rateLimitStore.get(key);
@@ -202,27 +275,42 @@ export function rateLimit(
 
   if (entry.count >= max) {
     const retryAfter = Math.ceil((entry.windowStart + windowMs - now) / 1000);
-    console.warn("[rate-limit] exceeded", {
-      key,
-      count: entry.count,
-      max,
-      retryAfterSeconds: retryAfter,
-      ...meta,
-    });
-    return {
-      limited: true,
-      error: NextResponse.json(
-        { error: "Too many requests. Please wait before retrying." },
-        {
-          status: 429,
-          headers: { ...SECURE_HEADERS, "Retry-After": String(retryAfter) },
-        }
-      ),
-    };
+    return buildRateLimitResult(key, max, false, retryAfter, meta, entry.count);
   }
 
   entry.count++;
   return { limited: false, error: null };
+}
+
+function buildRateLimitResult(
+  key: string,
+  max: number,
+  allowed: boolean,
+  retryAfter: number,
+  meta?: Record<string, unknown>,
+  count?: number
+): RateLimitResult {
+  if (allowed) {
+    return { limited: false, error: null };
+  }
+
+  console.warn("[rate-limit] exceeded", {
+    key,
+    count,
+    max,
+    retryAfterSeconds: retryAfter,
+    ...meta,
+  });
+  return {
+    limited: true,
+    error: NextResponse.json(
+      { error: "Too many requests. Please wait before retrying." },
+      {
+        status: 429,
+        headers: { ...SECURE_HEADERS, "Retry-After": String(Math.max(1, Math.ceil(retryAfter))) },
+      }
+    ),
+  };
 }
 
 // ---------------------------------------------------------------------------
@@ -276,4 +364,52 @@ export async function validateBody<T>(
   }
 
   return { data: result.data, error: null };
+}
+
+// ---------------------------------------------------------------------------
+// redactError — safe server-side error logger
+// ---------------------------------------------------------------------------
+
+interface RedactedError {
+  type: string;
+  message: string;
+  status?: number;
+}
+
+const BASE64_PATTERN = /[A-Za-z0-9+/]{100,}={0,2}/g;
+const MAX_MESSAGE_LENGTH = 200;
+
+/**
+ * Strips PII-bearing fields from an error before logging.
+ *
+ * SDK errors from Gemini/Supabase can embed request bodies (which may contain
+ * audio base64 data, prompts with user words, or transcript text) in their
+ * serialised form. This helper:
+ *   1. Extracts only the safe scalar fields (type, message, status).
+ *   2. Removes long base64 sequences from the message.
+ *   3. Truncates the message to avoid accidental data dumps.
+ *
+ * Use instead of `console.error("label:", err)` in any route that handles
+ * audio, transcription, or other user-generated content.
+ */
+export function redactError(err: unknown): RedactedError {
+  if (!err || typeof err !== "object") {
+    return { type: "UnknownError", message: String(err).slice(0, MAX_MESSAGE_LENGTH) };
+  }
+
+  const e = err as Record<string, unknown>;
+  const type = typeof e["name"] === "string" ? e["name"] : err?.constructor?.name ?? "Error";
+  const rawMessage = typeof e["message"] === "string" ? e["message"] : "";
+  const status =
+    typeof e["status"] === "number"
+      ? e["status"]
+      : typeof e["statusCode"] === "number"
+        ? e["statusCode"]
+        : undefined;
+
+  const safeMessage = rawMessage
+    .replace(BASE64_PATTERN, "[redacted-base64]")
+    .slice(0, MAX_MESSAGE_LENGTH);
+
+  return { type, message: safeMessage, ...(status !== undefined ? { status } : {}) };
 }

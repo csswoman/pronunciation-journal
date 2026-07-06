@@ -2,6 +2,8 @@
 
 import { useState, useCallback, useEffect } from "react";
 import { useAuth } from "@/components/auth/AuthProvider";
+import { publicAuthErrorMessage } from "@/lib/auth/password-policy";
+import { publicDataErrorMessage } from "@/lib/degradation/messages";
 import {
   getUserPreferences,
   updateDisplayName,
@@ -30,8 +32,8 @@ export function useUserPreferences() {
       setLoading(true);
       const prefs = await getUserPreferences(user.id, user.user_metadata);
       setPreferences(prefs);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Unknown error");
+    } catch {
+      setError(publicDataErrorMessage());
     } finally {
       setLoading(false);
     }
@@ -52,10 +54,10 @@ export function useUserPreferences() {
       try {
         await updateDisplayName(user.id, fullName);
         setPreferences((prev) => ({ ...prev, full_name: fullName }));
-      } catch (err) {
-        const message = err instanceof Error ? err.message : "Unknown error";
+      } catch {
+        const message = publicDataErrorMessage();
         setError(message);
-        throw err;
+        throw new Error(message);
       }
     },
     [user],
@@ -68,10 +70,10 @@ export function useUserPreferences() {
       try {
         const avatarUrl = await updateAvatarQuery(user.id, file);
         setPreferences((prev) => ({ ...prev, avatar_url: avatarUrl }));
-      } catch (err) {
-        const message = err instanceof Error ? err.message : "Unknown error";
+      } catch {
+        const message = publicDataErrorMessage();
         setError(message);
-        throw err;
+        throw new Error(message);
       }
     },
     [user],
@@ -83,10 +85,10 @@ export function useUserPreferences() {
 
       try {
         await updatePasswordQuery(newPassword);
-      } catch (err) {
-        const message = err instanceof Error ? err.message : "Unknown error";
+      } catch {
+        const message = publicAuthErrorMessage();
         setError(message);
-        throw err;
+        throw new Error(message);
       }
     },
     [user],
@@ -98,10 +100,10 @@ export function useUserPreferences() {
       try {
         await syncCefrLevel(user.id, level);
         setPreferences((prev) => ({ ...prev, cefr_level: level }));
-      } catch (err) {
-        const message = err instanceof Error ? err.message : "Unknown error";
+      } catch {
+        const message = publicDataErrorMessage();
         setError(message);
-        throw err;
+        throw new Error(message);
       }
     },
     [user],

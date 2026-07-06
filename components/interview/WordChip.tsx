@@ -27,9 +27,7 @@ export function WordChip({ word, status, tip, onPlay }: Props) {
         <button
           type="button"
           onClick={(e) => { e.stopPropagation(); onPlay?.(); }}
-          className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium transition-opacity cursor-pointer hover:opacity-75 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 border-none
-            ${tip ? "underline decoration-dotted underline-offset-2" : ""}
-          `}
+          className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium transition-opacity cursor-pointer hover:opacity-75 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 border-none ${tip ? "underline decoration-dotted underline-offset-2" : ""}`}
           style={{ color: colors[status], background: bgs[status] }}
           aria-label={`Listen to "${word}"`}
         >
@@ -38,9 +36,7 @@ export function WordChip({ word, status, tip, onPlay }: Props) {
         </button>
       ) : (
         <span
-          className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium
-            ${tip ? "underline decoration-dotted underline-offset-2" : ""}
-          `}
+          className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium ${tip ? "underline decoration-dotted underline-offset-2" : ""}`}
           style={{ color: colors[status], background: bgs[status] }}
         >
           {word}
@@ -51,10 +47,8 @@ export function WordChip({ word, status, tip, onPlay }: Props) {
           className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2.5 py-1.5 rounded-lg text-xs whitespace-nowrap z-30 shadow-xl pointer-events-none bg-surface-raised border border-border-subtle text-fg"
         >
           {tip}
-          <span className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent"
-            style={{ borderTopColor: "var(--line-divider)" }} />
-          <span className="absolute top-full left-1/2 -translate-x-1/2 mt-px border-4 border-transparent"
-            style={{ borderTopColor: "var(--card-bg)" }} />
+          <span className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-[var(--line-divider)]" />
+          <span className="absolute top-full left-1/2 -translate-x-1/2 mt-px border-4 border-transparent border-t-[var(--card-bg)]" />
         </span>
       )}
     </span>

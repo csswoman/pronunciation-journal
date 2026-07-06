@@ -29,10 +29,11 @@ export default function PageLayout({
   }
 
   if (useCard) {
+    const contentClassName = `px-3 sm:px-6 lg:px-10 py-6 sm:py-8 pb-12 sm:pb-14 ${className}`;
     return (
       <div className="bg-[var(--card-bg)] rounded-2xl my-8 mx-3 sm:mx-6 lg:mx-10 overflow-hidden">
         {hero}
-        <div className={`px-3 sm:px-6 lg:px-10 py-6 sm:py-8 pb-12 sm:pb-14 ${className}`} style={contentStyle}>
+        <div className={contentClassName} style={contentStyle}>
           {children}
         </div>
       </div>

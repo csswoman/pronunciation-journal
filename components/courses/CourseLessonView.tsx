@@ -11,6 +11,7 @@ import {
   recordLessonComplete,
   recordLessonIncomplete,
 } from "@/lib/practice/queries";
+import { publicDataErrorMessage } from "@/lib/degradation/messages";
 import type { CoursePathTrackId } from "@/lib/courses/types";
 
 interface CourseLessonViewProps {
@@ -50,8 +51,8 @@ export default function CourseLessonView({ slug, levelId, lessonId }: CourseLess
         await recordLessonComplete(levelId, lessonId);
         setCompleted(true);
       }
-    } catch (err) {
-      setCompletionError(err instanceof Error ? err.message : "No se pudo actualizar la lección.");
+    } catch {
+      setCompletionError(publicDataErrorMessage());
     } finally {
       setMarking(false);
     }

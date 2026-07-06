@@ -29,18 +29,13 @@ export default function QuotaExhaustedCard({ messages, onNewSession }: QuotaExha
 
   return (
     <div
-      className="mx-4 my-3 rounded-2xl border p-4 space-y-3"
-      style={{
-        borderColor: "var(--line-divider)",
-        backgroundColor: "var(--btn-regular-bg)",
-      }}
+      className="mx-4 my-3 space-y-3 rounded-2xl border border-[var(--line-divider)] bg-[var(--btn-regular-bg)] p-4"
     >
       <div className="flex items-center gap-2">
         <span
-          className="flex items-center justify-center w-7 h-7 rounded-full"
-          style={{ backgroundColor: "color-mix(in oklch, var(--primary) 12%, transparent)" }}
+          className="flex h-7 w-7 items-center justify-center rounded-full bg-[color-mix(in_oklch,var(--primary)_12%,transparent)]"
         >
-          <Zap size={14} style={{ color: "var(--primary)" }} />
+          <Zap size={14} className="text-[var(--primary)]" />
         </span>
         <p className="text-sm font-semibold text-fg">
           {hasConversation ? "Session ended" : "AI unavailable right now"}
@@ -49,8 +44,7 @@ export default function QuotaExhaustedCard({ messages, onNewSession }: QuotaExha
 
       {hasConversation && hasScore && (
         <div
-          className="rounded-xl p-3 flex items-center justify-between"
-          style={{ backgroundColor: "var(--card-bg)", border: "1px solid var(--line-divider)" }}
+          className="flex items-center justify-between rounded-xl border border-[var(--line-divider)] bg-[var(--card-bg)] p-3"
         >
           <div>
             <p className="text-xs font-medium text-fg-muted">
@@ -61,15 +55,11 @@ export default function QuotaExhaustedCard({ messages, onNewSession }: QuotaExha
             </p>
           </div>
           <div
-            className="w-14 h-14 rounded-full flex items-center justify-center text-base font-bold"
-            style={{
-              background: `conic-gradient(var(--primary) ${pct * 3.6}deg, var(--btn-regular-bg) 0deg)`,
-              color: "var(--primary)",
-            }}
+            className="flex h-14 w-14 items-center justify-center rounded-full text-base font-bold text-[var(--primary)]"
+            style={{ background: `conic-gradient(var(--primary) ${pct * 3.6}deg, var(--btn-regular-bg) 0deg)` }}
           >
             <span
-              className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold"
-              style={{ backgroundColor: "var(--card-bg)", color: "var(--primary)" }}
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--card-bg)] text-sm font-bold text-[var(--primary)]"
             >
               {pct}%
             </span>
@@ -83,11 +73,7 @@ export default function QuotaExhaustedCard({ messages, onNewSession }: QuotaExha
 
       <button
         onClick={onNewSession}
-        className="w-full py-2 rounded-xl text-xs font-semibold transition-opacity hover:opacity-80"
-        style={{
-          backgroundColor: "color-mix(in oklch, var(--primary) 14%, transparent)",
-          color: "var(--primary)",
-        }}
+        className="w-full rounded-xl bg-[color-mix(in_oklch,var(--primary)_14%,transparent)] py-2 text-xs font-semibold text-[var(--primary)] transition-opacity hover:opacity-80"
       >
         Start new session
       </button>

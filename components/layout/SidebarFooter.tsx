@@ -69,8 +69,7 @@ export default function SidebarFooter() {
   return (
     <div
       ref={footerRef}
-      className="relative flex-shrink-0 border-t px-3 pt-2 pb-3"
-      style={{ borderColor: "var(--line-divider)" }}
+      className="relative flex-shrink-0 border-t border-[var(--line-divider)] px-3 pt-2 pb-3"
       onMouseEnter={enter}
       onMouseLeave={leave}
     >
@@ -80,12 +79,7 @@ export default function SidebarFooter() {
         style={{ background: open ? "var(--btn-regular-bg-hover)" : undefined }}
       >
         <div
-          className="relative w-6 h-6 rounded-full flex items-center justify-center text-tiny font-bold overflow-hidden flex-shrink-0"
-          style={{
-            background: "var(--primary-soft)",
-            color: "var(--primary)",
-            boxShadow: "0 0 0 1.5px var(--border)",
-          }}
+          className="relative w-6 h-6 rounded-full flex items-center justify-center text-tiny font-bold overflow-hidden flex-shrink-0 bg-[var(--primary-soft)] text-[var(--primary)] shadow-[0_0_0_1.5px_var(--border)]"
         >
           {avatarUrl ? (
             <Image src={avatarUrl} alt={displayName} fill sizes="24px" className="object-cover" />
@@ -101,13 +95,7 @@ export default function SidebarFooter() {
         <div
           className="fixed z-[9999] w-56 rounded-xl p-2 shadow-xl border
  animate-in fade-in zoom-in-95 duration-150 origin-bottom-left"
-          style={{
-            top: panelPos.top - 8,
-            left: panelPos.left,
-            transform: "translateY(-100%)",
-            background: "var(--bg-secondary)",
-            borderColor: "var(--border)",
-          }}
+          style={{ top: panelPos.top - 8, left: panelPos.left, transform: "translateY(-100%)", background: "var(--bg-secondary)", borderColor: "var(--border)" }}
           onMouseEnter={enter}
           onMouseLeave={leave}
         >
@@ -121,7 +109,7 @@ export default function SidebarFooter() {
             <span>Profile</span>
           </button>
 
-          <div className="h-px my-1.5" style={{ background: "var(--border)" }} />
+          <div className="h-px my-1.5 bg-[var(--border)]" />
 
           <div className="px-2 py-1">
             <p className="text-tiny font-medium mb-2 text-fg-subtle">
@@ -130,7 +118,7 @@ export default function SidebarFooter() {
             <ThemeInline />
           </div>
 
-          <div className="h-px my-1.5" style={{ background: "var(--border)" }} />
+          <div className="h-px my-1.5 bg-[var(--border)]" />
 
           <button
             onClick={isAuthenticated ? handleSignOut : () => router.push("/login")}
@@ -169,10 +157,7 @@ function ThemeInline() {
         title={`Hue: ${hue}°`}
       />
       <div className="flex items-center justify-between">
-        <span
-          className="text-xs font-mono px-2 py-0.5 rounded-md"
-          style={{ background: "var(--bg-tertiary)", color: "var(--text-secondary)" }}
-        >
+        <span className="text-xs font-mono px-2 py-0.5 rounded-md bg-[var(--bg-tertiary)] text-[var(--text-secondary)]">
           {hue}°
         </span>
         <div className="flex items-center gap-1">

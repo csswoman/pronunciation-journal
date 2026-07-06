@@ -161,6 +161,8 @@ export type DailyStep = {
   ipa?: string
   /** Solo para 'reader': el párrafo de comprehensible input a leer. */
   readerPassage?: ReaderPassage
+  /** Palabras ancla del paso (vocab/reader) para el hilo entre pasos. */
+  featuredWords?: string[]
 }
 
 /** Narrative framing metadata for a daily session (opening banner + closing recap). */
@@ -187,7 +189,7 @@ export type PracticeSubmitHandler = (
   isCorrect: boolean,
   userAnswer: string,
   extras?: PracticeSubmitExtras,
-) => void
+) => void | Promise<void>
 
 export type PedagogicalFeedback = {
   immediate: string

@@ -27,9 +27,22 @@ export interface DailyStreakResult {
  * IANA timezone without depending on any third-party library.
  */
 export function toLocalDateString(utcIso: string, timeZone: string): string {
-  return new Intl.DateTimeFormat('en-CA', { timeZone, dateStyle: 'short' }).format(
-    new Date(utcIso),
-  )
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).formatToParts(new Date(utcIso))
+
+  const year = parts.find((part) => part.type === 'year')?.value
+  const month = parts.find((part) => part.type === 'month')?.value
+  const day = parts.find((part) => part.type === 'day')?.value
+
+  if (!year || !month || !day) {
+    throw new Error(`Unable to format local date for timezone: ${timeZone}`)
+  }
+
+  return `${year}-${month}-${day}`
 }
 
 /**

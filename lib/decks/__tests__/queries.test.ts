@@ -9,11 +9,13 @@ vi.mock("@/lib/supabase/client", () => ({
 }));
 
 import {
+  createDeck,
   findDeckEntry,
   getDeckCardsWithProgress,
   getDeckEntries,
   getUserDecksFull,
 } from "@/lib/decks/queries";
+import { DATA_UNAVAILABLE_MESSAGE } from "@/lib/degradation/messages";
 
 describe("deck query projections", () => {
   beforeEach(() => {
@@ -128,5 +130,22 @@ describe("deck query projections", () => {
 
     expect(row).toEqual({ deck_id: "deck-1", entry_id: "entry-1" });
     expect(selectMock).toHaveBeenCalledWith("deck_id, entry_id");
+  });
+
+  it("normalizes deck mutation failures to public data copy", async () => {
+    const singleMock = vi.fn().mockResolvedValue({
+      data: null,
+      error: { message: "violates row-level security policy" },
+    });
+    const selectMock = vi.fn(() => ({ single: singleMock }));
+    const insertMock = vi.fn(() => ({ select: selectMock }));
+    fromMock.mockReturnValue({ insert: insertMock });
+
+    await expect(createDeck({
+      name: "Travel",
+      color: "#111",
+      icon: "book",
+      userId: "user-1",
+    })).rejects.toThrow(DATA_UNAVAILABLE_MESSAGE);
   });
 });

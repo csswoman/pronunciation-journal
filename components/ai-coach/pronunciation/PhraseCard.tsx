@@ -28,20 +28,14 @@ export default function PhraseCard({
     <div className="flex flex-col items-center justify-center text-center px-6 py-8 flex-1">
 
       <h1
-        className="leading-snug font-medium mb-5"
-        style={{
-          fontFamily: "'Georgia', 'Times New Roman', serif",
-          fontSize: "clamp(22px, 6vw, 34px)",
-          letterSpacing: "-0.02em",
-          color: "var(--fg)",
-        }}
+        className="mb-5 font-[Georgia,'Times_New_Roman',serif] text-[clamp(22px,6vw,34px)] font-medium leading-snug tracking-[-0.02em] text-[var(--fg)]"
       >
         {phrase}
       </h1>
 
       {ipaLoading ? (
         <div className="flex justify-center mb-4">
-          <Loader2 size={13} className="animate-spin" style={{ color: "var(--text-tertiary)" }} />
+          <Loader2 size={13} className="animate-spin text-[var(--text-tertiary)]" />
         </div>
       ) : wordIPAs.length > 0 ? (
         <div className="flex flex-wrap justify-center gap-x-3 gap-y-1.5 mb-5 font-mono text-sm">
@@ -54,8 +48,7 @@ export default function PhraseCard({
               return (
                 <span
                   key={i}
-                  className="font-medium rounded px-1.5 py-0.5"
-                  style={{ color: "var(--warning)", backgroundColor: "var(--warning-soft)" }}
+                  className="rounded bg-[var(--warning-soft)] px-1.5 py-0.5 font-medium text-[var(--warning)]"
                 >
                   {text}
                 </span>
@@ -63,18 +56,18 @@ export default function PhraseCard({
             }
             if (allCorrect) {
               return (
-                <span key={i} style={{ color: "var(--score-excellent)" }}>{text}</span>
+                <span key={i} className="text-[var(--score-excellent)]">{text}</span>
               );
             }
             return (
-              <span key={i} style={{ color: "var(--text-tertiary)" }}>{text}</span>
+              <span key={i} className="text-[var(--text-tertiary)]">{text}</span>
             );
           })}
         </div>
       ) : null}
 
       {analyzing && (
-        <div className="flex items-center justify-center gap-1.5 mb-3" style={{ color: "var(--text-tertiary)" }}>
+        <div className="mb-3 flex items-center justify-center gap-1.5 text-[var(--text-tertiary)]">
           <Loader2 size={12} className="animate-spin" />
           <span className="text-xs">Analyzing…</span>
         </div>
@@ -82,23 +75,18 @@ export default function PhraseCard({
 
       {hasAnalysis && !hasMistakes && !analyzing && (
         <div className="flex items-center gap-1.5 mb-3">
-          <PartyPopper size={14} style={{ color: "var(--score-excellent)" }} />
-          <p className="text-sm font-semibold" style={{ color: "var(--score-excellent)" }}>Perfect!</p>
+          <PartyPopper size={14} className="text-[var(--score-excellent)]" />
+          <p className="text-sm font-semibold text-[var(--score-excellent)]">Perfect!</p>
         </div>
       )}
 
       {/* Audio controls pill */}
       <div
-        className="inline-flex items-center gap-0.5 rounded-full p-1"
-        style={{
-          backgroundColor: "var(--btn-regular-bg)",
-          border: "1px solid var(--line-divider)",
-        }}
+        className="inline-flex items-center gap-0.5 rounded-full border border-[var(--line-divider)] bg-[var(--btn-regular-bg)] p-1"
       >
         <button
           onClick={onListen}
-          className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-medium transition-colors cursor-pointer border-none"
-          style={{ backgroundColor: "var(--primary)", color: "var(--primary-foreground)" }}
+          className="inline-flex cursor-pointer items-center gap-2 rounded-full border-none bg-[var(--primary)] px-4 py-1.5 text-sm font-medium text-[var(--primary-foreground)] transition-colors"
         >
           <Play size={11} fill="currentColor" />
           Listen
@@ -106,7 +94,6 @@ export default function PhraseCard({
         <button
           onClick={onSlow}
           className="inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-sm font-medium transition-colors cursor-pointer border-none text-[color:var(--text-secondary)] hover:bg-[var(--btn-regular-bg)] hover:text-[color:var(--fg)] focus-visible:outline-none focus-visible:ring-2"
-          style={{ backgroundColor: "transparent" }}
         >
           0.5×
         </button>

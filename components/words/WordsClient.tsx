@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import PageLayout from "@/components/layout/PageLayout";
@@ -85,10 +85,10 @@ export function WordsClient({
     }
   }, [normalizedTab, activeTab]);
 
-  const handleTabChange = (tab: WordsTabId) => {
+  const handleTabChange = useCallback((tab: WordsTabId) => {
     setActiveTab(tab);
     router.replace(`/words?tab=${tab}`, { scroll: false });
-  };
+  }, [router]);
 
   return (
     <PageLayout cardWrapper={false}>

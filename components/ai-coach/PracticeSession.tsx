@@ -63,9 +63,8 @@ function SessionProgress({ current, total, dotCount, hasNextPending }: {
           return (
             <div
               key={i}
-              className="rounded-full transition-all duration-300"
+              className={`rounded-full transition-all duration-300 ${isCurrent ? "w-5" : "w-2"}`}
               style={{
-                width: isCurrent ? 18 : 6,
                 height: 6,
                 backgroundColor: isCurrent ? "var(--primary)" : isPast ? "var(--primary-300)" : "var(--border-default)",
               }}
@@ -73,7 +72,7 @@ function SessionProgress({ current, total, dotCount, hasNextPending }: {
           );
         })}
         {hasNextPending && (
-          <div className="rounded-full animate-pulse" style={{ width: 6, height: 6, backgroundColor: "var(--border-default)" }} />
+          <div className="w-2 h-2 rounded-full animate-pulse bg-[var(--border-default)]" />
         )}
       </div>
     </div>

@@ -1,8 +1,9 @@
-import { createHash } from "crypto";
-import { GoogleGenAI } from "@google/genai";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { requireUser, rateLimit, validateBody } from "@/lib/api/guards";
+import { requireSameOrigin, requireUser, rateLimit, validateBody, publicErrorResponse } from "@/lib/api/guards";
+import { callWithFallback, getErrorStatus } from "@/lib/gemini/client";
+import { logServerError } from "@/lib/api/logging";
+import { buildTranscriptionCacheKey, createTranscriptionCache } from "@/lib/gemini/transcription-cache";
 
 // Separate endpoint for transcribing full spoken sentences (e.g. interview responses).
 // Differences from /api/gemini/transcribe:
@@ -33,30 +34,8 @@ const TranscribeSentenceSchema = z.object({
     }),
 });
 
-const ENABLE_PREVIEW_MODELS = process.env.GEMINI_ENABLE_PREVIEW_MODELS === "true";
-const BASE_MODELS = ["gemini-2.5-flash-lite", "gemini-2.5-flash", "gemini-flash-latest"] as const;
-const PREVIEW_MODELS = ["gemini-3.1-flash-lite-preview"] as const;
-const FALLBACK_MODELS = ENABLE_PREVIEW_MODELS ? [...BASE_MODELS, ...PREVIEW_MODELS] : [...BASE_MODELS];
-
 const PROMPT =
   "Transcribe this spoken English sentence exactly as heard. Return ONLY the words, no punctuation, no commentary, no formatting. If unintelligible, return an empty string.";
-
-function getErrorStatus(err: unknown): number | undefined {
-  if (!err || typeof err !== "object") return undefined;
-  const maybe = err as { status?: unknown; statusCode?: unknown };
-  if (typeof maybe.status === "number") return maybe.status;
-  if (typeof maybe.statusCode === "number") return maybe.statusCode;
-  return undefined;
-}
-
-function shouldTryNextModel(err: unknown): boolean {
-  const status = getErrorStatus(err);
-  if (status === 400 || status === 401 || status === 403) return false;
-  if (status === 404 || status === 408 || status === 429) return true;
-  if (typeof status === "number" && status >= 500) return true;
-  const msg = String((err as { message?: unknown })?.message ?? "").toLowerCase();
-  return msg.includes("quota") || msg.includes("rate") || msg.includes("unavailable") || msg.includes("timeout");
-}
 
 function parseDataUrl(dataUrl: string): { mimeType: string; base64Data: string } {
   const match = dataUrl.match(/^data:([^;,]+(?:;[^,]+)?);base64,(.+)$/);
@@ -66,42 +45,22 @@ function parseDataUrl(dataUrl: string): { mimeType: string; base64Data: string }
   return { mimeType, base64Data: match[2] };
 }
 
-// Simple in-memory cache — same audio blob = same transcript
-const cache = new Map<string, string>();
-
-async function transcribe(ai: GoogleGenAI, mimeType: string, base64Data: string): Promise<string> {
-  const key = createHash("sha256").update(mimeType).update(base64Data).digest("hex");
-  const cached = cache.get(key);
-  if (cached !== undefined) return cached;
-
-  let lastError: unknown;
-  for (const modelName of FALLBACK_MODELS) {
-    try {
-      const result = await ai.models.generateContent({
-        model: modelName,
-        contents: [
-          { text: PROMPT },
-          { inlineData: { mimeType, data: base64Data } },
-        ],
-        config: { temperature: 0, maxOutputTokens: 300 },
-      });
-      const transcript = (result.text ?? "").trim();
-      if (cache.size > 200) cache.delete(cache.keys().next().value!);
-      cache.set(key, transcript);
-      return transcript;
-    } catch (err: unknown) {
-      lastError = err;
-      if (!shouldTryNextModel(err)) throw err;
-    }
-  }
-  throw lastError ?? new Error("All fallback models failed");
-}
+const CACHE_TTL_MS = 1000 * 60 * 60 * 6;
+const MAX_CACHE_ENTRIES = 200;
+const transcriptionCache = createTranscriptionCache({
+  table: "sentence_transcription_cache",
+  ttlMs: CACHE_TTL_MS,
+  maxEntries: MAX_CACHE_ENTRIES,
+});
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
-  const { user, error: authError } = await requireUser();
+  const originError = requireSameOrigin(request);
+  if (originError) return originError;
+
+  const { user, error: authError } = await requireUser(request);
   if (authError) return authError as NextResponse;
 
-  const { limited, error: rateLimitError } = rateLimit(`/api/gemini/transcribe-sentence:${user.id}`, {
+  const { limited, error: rateLimitError } = await rateLimit(`/api/gemini/transcribe-sentence:${user.id}`, {
     max: 20,
     windowMs: 60_000,
     meta: { endpoint: "/api/gemini/transcribe-sentence", userId: user.id },
@@ -116,13 +75,44 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
   try {
     const { mimeType, base64Data } = parseDataUrl(body.audioDataUrl);
-    const ai = new GoogleGenAI({ apiKey });
-    const transcript = await transcribe(ai, mimeType, base64Data);
+    const key = buildTranscriptionCacheKey([user.id, mimeType, base64Data]);
+
+    const l1 = transcriptionCache.getL1(key);
+    if (l1 !== null) {
+      return NextResponse.json({ transcript: l1, cached: true });
+    }
+
+    const l2 = await transcriptionCache.getL2(user.id, key);
+    if (l2 !== null) {
+      transcriptionCache.setL1(key, l2);
+      return NextResponse.json({ transcript: l2, cached: true, source: "supabase" });
+    }
+
+    const transcript = await callWithFallback(
+      apiKey,
+      {
+        contents: [
+          { text: PROMPT },
+          { inlineData: { mimeType, data: base64Data } },
+        ],
+        config: { temperature: 0, maxOutputTokens: 300 },
+      },
+      (text) => text.trim(),
+      { timeoutMs: 45_000 }
+    );
+
+    transcriptionCache.setL1(key, transcript);
+    await transcriptionCache.setL2(user.id, key, transcript, mimeType, base64Data.length, {});
+
     return NextResponse.json({ transcript });
   } catch (err: unknown) {
     const status = getErrorStatus(err) ?? 500;
-    const message = String((err as { message?: unknown })?.message ?? "Internal server error");
-    console.error("transcribe-sentence error:", err);
-    return NextResponse.json({ error: message }, { status });
+    logServerError("Sentence transcription failed", err, {
+      endpoint: "/api/gemini/transcribe-sentence",
+      operation: "transcribe",
+      status,
+      userId: user.id,
+    });
+    return publicErrorResponse(status >= 500 ? 500 : status, "Failed to transcribe sentence");
   }
 }

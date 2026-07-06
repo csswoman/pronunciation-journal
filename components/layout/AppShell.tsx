@@ -3,13 +3,20 @@
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import Sidebar from "./Sidebar";
-import BottomNav from "./BottomNav";
 import { quickAddWord } from "@/lib/word-bank/queries";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { useAICoachStore } from "@/lib/stores/aiCoachStore";
-import AICoachTrigger from "@/components/ai-coach/AICoachTrigger";
 import { isPublicAuthPath } from "@/lib/auth/public-paths";
+
+const Sidebar = dynamic(() => import("./Sidebar"), {
+  loading: () => <div className="hidden lg:block w-64 flex-shrink-0" aria-hidden />,
+});
+
+const BottomNav = dynamic(() => import("./BottomNav"), {
+  loading: () => <div className="lg:hidden" aria-hidden />,
+});
+
+const AICoachTrigger = dynamic(() => import("@/components/ai-coach/AICoachTrigger"));
 
 const QuickAddModal = dynamic(() =>
   import("@/components/vocabulary/words/QuickAddModal").then((mod) => ({
@@ -73,9 +80,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       <main
         id="main-content"
         className="main-scrollbar flex flex-1 flex-col overflow-y-auto overflow-x-hidden pb-20 lg:pb-0"
-        style={{
-          marginRight: mainMarginRight,
-        }}
+        style={{ marginRight: mainMarginRight }}
       >
         <div className={isImmersivePractice ? "mx-auto flex w-full max-w-screen-md flex-1 flex-col" : "w-full max-w-screen-xl mx-auto"}>
           {children}

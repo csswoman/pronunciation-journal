@@ -14,7 +14,7 @@ import { mergeReviewWords } from '@/lib/review/merge-words'
 import { dominantTopicLabel } from '@/lib/practice/topic-labels'
 import type { DailyPlan, DailyStep, SessionArc } from '@/lib/practice/types'
 import type { Sound } from '@/lib/phoneme-practice/types'
-import { buildConnectedSpeechStep, buildSentenceBuilderStep } from './async-step-builders'
+import { buildConnectedSpeechStep, buildReaderStep, buildSentenceBuilderStep } from './async-step-builders'
 import { DAILY_PLAN_STEP_COUNT, WORD_REVIEW_WORD_COUNT } from './constants'
 import {
   fetchAllPracticedSounds,
@@ -25,6 +25,8 @@ import {
   fetchWeakWords,
   fetchWeakestSoundProgress,
 } from './fetchers'
+import { isBrowserOnline } from './online'
+import { fetchReaderTargetRows } from './reader-targets'
 import { dayOfYear, pickSeedSound } from './selectors'
 import { biasWordsBySound } from './sound-word-bridge'
 import {
@@ -192,6 +194,12 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
 
   const contextPractice = buildContextPracticeStep(reviewWords)
   if (contextPractice) reviewSteps.push(contextPractice)
+
+  if (hasWordBank) {
+    const readerRows = await fetchReaderTargetRows()
+    const readerStep = await buildReaderStep(userId, readerRows, isBrowserOnline())
+    if (readerStep) reviewSteps.push(readerStep)
+  }
 
   let steps: DailyStep[] = [...allSteps, ...reviewSteps]
 

@@ -49,6 +49,7 @@ export function buildWordIntroStep(words: WordBankEntry[]): DailyStep | null {
     icon: 'Sparkles',
     exercises: [],
     studyCards,
+    featuredWords: newWords.map((w) => w.text),
     estMinutes: Math.max(1, Math.round(newWords.length * 0.5)),
   }
 }
@@ -95,6 +96,7 @@ export function buildWordReviewStep(
     subtitle: concept ? `${concept} · ${wordsSubtitle}` : wordsSubtitle,
     icon: 'BookMarked',
     exercises,
+    featuredWords: words.map((w) => w.text),
     estMinutes: Math.max(2, Math.round(exercises.length * 1.1)),
   }
 }
@@ -121,6 +123,7 @@ export function buildContextPracticeStep(
     subtitle: 'Usas el vocabulario dentro de oraciones reales para fijar su significado',
     icon: 'FileText',
     exercises,
+    featuredWords: usable.map((w) => w.word),
     estMinutes: Math.max(2, Math.round(exercises.length * 1.2)),
   }
 }

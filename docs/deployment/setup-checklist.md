@@ -42,6 +42,7 @@ Complete this checklist to activate your automated deployment system.
 - [ ] Copy Team ID → `VERCEL_ORG_ID`
 - [ ] (Optional) **Settings → Environment Variables**
 - [ ] Copy `DATABASE_URL` if you have it
+- [ ] Confirm plan: Free uses GitHub health checks; Pro can add Log Drains
 
 ---
 
@@ -202,6 +203,9 @@ Expected response:
 - [ ] [ ] See new deployment with green checkmark
 - [ ] [ ] Click deployment → see build logs
 - [ ] [ ] Visit app URL → app loads successfully
+- [ ] [ ] Set GitHub variable `PRODUCTION_HEALTH_URL` to `https://TU_DOMINIO/api/health?ready=1`
+- [ ] [ ] Run `Production Health Check` manually and confirm it passes
+- [ ] [ ] If on Vercel Pro, configure Production Log Drain to the team's logging provider
 
 ### Health Check
 
@@ -241,8 +245,8 @@ git push origin main
 ```
 
 - [ ] CI pipeline runs again ✅
-- [ ] Deploy pipeline runs automatically ✅
-- [ ] App deploys to production 🎉
+- [ ] Promote or deploy through the configured Vercel project flow
+- [ ] App deploys to production
 
 ---
 
@@ -306,9 +310,9 @@ Congratulations! Your project now has:
 ✅ Branch protection
 ✅ Automatic testing
 ✅ Security checks
-✅ Production deployments
-✅ Auto-rollback on failure
+✅ Production deployment checklist
 ✅ Health monitoring
+✅ Production health-check checklist
 
 **Start pushing features with confidence!** 🚀
 

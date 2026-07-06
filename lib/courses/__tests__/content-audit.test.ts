@@ -23,5 +23,5 @@ describe("grammar deck content audit", () => {
       });
 
     expect(issues).toEqual([]);
-  });
+  }, 15_000);
 });

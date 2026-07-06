@@ -7,12 +7,42 @@ export function buildTranscriptionPrompt(targetWord?: string): string {
 
 // ── Deck Suggest ──
 
+export function buildDeckSuggestUserPrompt(input: {
+  deckName: string;
+  deckDescription?: string;
+  difficulty?: number;
+  seed?: string;
+  existingWords?: string[];
+}): string {
+  const description = input.deckDescription ?? "";
+  const difficultyHint =
+    typeof input.difficulty === "number" && input.difficulty >= 2
+      ? "Use more advanced / less common vocabulary appropriate for an intermediate to advanced learner."
+      : "Use common to intermediate vocabulary appropriate for learners.";
+  const seedHint = input.seed ? `Use this seed to vary results: ${input.seed}.` : "";
+  const existingHint =
+    input.existingWords && input.existingWords.length > 0
+      ? `\nThe user already has these words in the deck — do NOT suggest any of them: ${input.existingWords.join(", ")}.`
+      : "";
+
+  return description
+    ? `Deck: "${input.deckName}"\nDescription: "${description}"\n\n${difficultyHint} ${seedHint}${existingHint}\nSuggest 8 English words or short phrases for this theme.`
+    : `Deck: "${input.deckName}"\n\n${difficultyHint} ${seedHint}${existingHint}\nSuggest 8 English words or short phrases for this theme.`;
+}
+
 export const DECK_SUGGEST_SYSTEM_PROMPT = `You are an English vocabulary coach. When given a deck name and optional description, suggest 8 relevant English words or short phrases that fit the theme. Return ONLY valid JSON with no markdown, no code fences, no extra text — just raw JSON.
 
 Format:
 {"suggestions":[{"word":"example","meaning":"brief definition or usage context"}]}`;
 
 // ── Pronunciation Phrases ──
+
+export function buildPhrasesUserPrompt(exclude?: string[]): string {
+  const excludeHint = exclude?.length
+    ? `Do NOT generate any of these phrases:\n${exclude.slice(0, 20).map((p) => `- ${p}`).join("\n")}`
+    : "";
+  return `Generate 10 English pronunciation practice sentences.${excludeHint ? ` ${excludeHint}` : ""}`;
+}
 
 export const PRONUNCIATION_PHRASES_SYSTEM_PROMPT = `You are an English pronunciation coach. Generate 10 natural English sentences for pronunciation practice. Requirements:
 - Conversational, not textbook-stiff
@@ -25,6 +55,15 @@ Return ONLY valid JSON, no markdown, no code fences:
 {"phrases":["sentence one","sentence two",...]}`;
 
 // ── Sentence Reorder ──
+
+export function buildSentenceReorderUserPrompt(
+  count: number,
+  topic: string,
+  level: string,
+): string {
+  return `Generate ${count} English sentences for a ${level} learner about: "${topic}".
+Return a JSON array of strings only. Example: ["The cat sat on the mat.", "She goes to school every day."]`;
+}
 
 export const SENTENCE_REORDER_SYSTEM_PROMPT = `You are an English language teacher for Spanish speakers.
 Generate natural English sentences for sentence-reordering exercises.

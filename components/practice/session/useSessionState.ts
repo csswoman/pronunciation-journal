@@ -10,6 +10,7 @@ import { savePracticeAnswer } from '@/lib/practice/queries'
 import { buildSessionResult } from '@/lib/practice/session-result'
 import { recordActivitySession } from '@/lib/progress/activity-hub'
 import { gradeCore1000Word } from '@/lib/core-1000/grade'
+import { flushOutbox } from '@/lib/sync/sync-manager'
 import {
   createSession,
   deleteSession,
@@ -27,6 +28,7 @@ import { useVoiceRotation } from '@/hooks/useVoiceRotation'
 const FEEDBACK_MS = 1500
 
 type Phase = 'exercising' | 'feedback' | 'hints' | 'complete'
+type ProgressSaveStatus = 'idle' | 'saving' | 'saved' | 'error'
 
 export { buildSessionResult } from '@/lib/practice/session-result'
 
@@ -43,12 +45,14 @@ export function useSessionState(config: PracticeConfig) {
   const [phase, setPhase] = useState<Phase>('exercising')
   const [lastFeedback, setLastFeedback] = useState<boolean | null>(null)
   const [retryKey, setRetryKey] = useState(0)
+  const [progressSaveStatus, setProgressSaveStatus] = useState<ProgressSaveStatus>('idle')
 
   const { currentVoice, nextVoice } = useVoiceRotation()
 
   const startTimeRef = useRef<number>(Date.now())
   const feedbackTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const completedRef = useRef(false)
+  const submittingRef = useRef(false)
 
   // Restore (or create) the persisted session on mount.
   useEffect(() => {
@@ -105,11 +109,17 @@ export function useSessionState(config: PracticeConfig) {
     const sessionResult = buildSessionResult(results)
     onSessionComplete(sessionResult)
     if (user) {
-      void recordActivitySession(user.id, { practiceContext: context, sessionResult })
-        .then(() => import('@/lib/sync/sync-manager').then(({ flushOutbox }) => flushOutbox()))
-        .catch((err) => {
+      setProgressSaveStatus('saving')
+      void (async () => {
+        try {
+          await recordActivitySession(user.id, { practiceContext: context, sessionResult })
+          await flushOutbox()
+          setProgressSaveStatus('saved')
+        } catch (err) {
           console.error('[PracticeSession] recordActivitySession failed', err)
-        })
+          setProgressSaveStatus('error')
+        }
+      })()
     }
     if (persistence) {
       void deleteSession(persistence.userId, persistence.soundId).catch((err) => {
@@ -119,9 +129,10 @@ export function useSessionState(config: PracticeConfig) {
   }, [phase, results, onSessionComplete, persistence, user, context])
 
   const handleSubmit = useCallback(
-    (isCorrect: boolean, userAnswer: string, extras?: { score?: number; feedback?: import('@/lib/practice/types').PedagogicalFeedback }) => {
+    async (isCorrect: boolean, userAnswer: string, extras?: { score?: number; feedback?: import('@/lib/practice/types').PedagogicalFeedback }) => {
       const current = exercises[currentIndex]
-      if (!current || phase !== 'exercising') return
+      if (!current || phase !== 'exercising' || submittingRef.current) return
+      submittingRef.current = true
       const timeMs = Date.now() - startTimeRef.current
       const result: ExerciseResult = {
         exerciseId: current.id,
@@ -152,9 +163,12 @@ export function useSessionState(config: PracticeConfig) {
         completedAt: new Date(),
       }
       if (user) {
-        void savePracticeAnswer(user.id, result).catch((err) => {
+        try {
+          await savePracticeAnswer(user.id, result)
+        } catch (err) {
           console.error('[PracticeSession] savePracticeAnswer failed', err)
-        })
+          setProgressSaveStatus('error')
+        }
       }
       // Route vocab exercises from courses to the shared Core 1000 SRS entry.
       if (result.sourceRef?.source === 'core1k') {
@@ -170,21 +184,25 @@ export function useSessionState(config: PracticeConfig) {
       const nextIndex = currentIndex + 1
       setResults(nextResults)
       setLastFeedback(isCorrect)
-      if (!isCorrect && current.payload.kind === 'phoneme' && userAnswer !== 'skip') {
-        setPhase('hints')
-        return
+      try {
+        if (!isCorrect && current.payload.kind === 'phoneme' && userAnswer !== 'skip') {
+          setPhase('hints')
+          return
+        }
+        setPhase('feedback')
+        if (persistence) {
+          void updateSessionProgress(persistence.userId, persistence.soundId, { currentIndex: nextIndex, answers: nextResults }).catch((err) => {
+            console.error('[PracticeSession] updateSessionProgress failed', err)
+          })
+        }
+        nextVoice()
+        feedbackTimerRef.current = setTimeout(() => {
+          if (nextIndex >= exercises.length) { finish(nextResults) }
+          else { setCurrentIndex(nextIndex); setLastFeedback(null); setPhase('exercising') }
+        }, FEEDBACK_MS)
+      } finally {
+        submittingRef.current = false
       }
-      setPhase('feedback')
-      if (persistence) {
-        void updateSessionProgress(persistence.userId, persistence.soundId, { currentIndex: nextIndex, answers: nextResults }).catch((err) => {
-          console.error('[PracticeSession] updateSessionProgress failed', err)
-        })
-      }
-      nextVoice()
-      feedbackTimerRef.current = setTimeout(() => {
-        if (nextIndex >= exercises.length) { finish(nextResults) }
-        else { setCurrentIndex(nextIndex); setLastFeedback(null); setPhase('exercising') }
-      }, FEEDBACK_MS)
     },
     [exercises, currentIndex, phase, results, user, context, persistence, nextVoice, finish],
   )
@@ -203,6 +221,7 @@ export function useSessionState(config: PracticeConfig) {
     if (feedbackTimerRef.current) clearTimeout(feedbackTimerRef.current)
     const fresh = buildSession(config)
     completedRef.current = false
+    setProgressSaveStatus('idle')
     setExercises(fresh); setCurrentIndex(0); setResults([]); setLastFeedback(null)
     setPhase(fresh.length > 0 ? 'exercising' : 'complete')
     if (persistence && fresh.length > 0) {
@@ -220,6 +239,7 @@ export function useSessionState(config: PracticeConfig) {
     currentIndex,
     results,
     phase,
+    progressSaveStatus,
     lastFeedback,
     retryKey,
     currentVoice,

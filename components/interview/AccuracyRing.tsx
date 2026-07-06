@@ -17,7 +17,7 @@ export function AccuracyRing({ accuracy, size = 56 }: Props) {
         strokeDasharray={`${(accuracy / 100) * circ} ${circ}`}
         strokeDashoffset={circ / 4}
         strokeLinecap="round"
-        style={{ transition: "stroke-dasharray 0.8s ease" }}
+        className="transition-[stroke-dasharray] duration-[800ms]"
       />
       <text x={size / 2} y={size / 2 + 4} textAnchor="middle" fontSize="11" fontWeight="700" fill={color}>
         {Math.round(accuracy)}%

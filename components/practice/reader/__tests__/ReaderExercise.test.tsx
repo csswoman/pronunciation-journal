@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { ReaderExercise } from '../ReaderExercise'
 import type { ReaderPassage } from '@/lib/practice/reader/types'
 
@@ -28,18 +28,26 @@ describe('ReaderExercise', () => {
     expect(screen.getByText('Where did the cat go?')).toBeInTheDocument()
   })
 
-  it('calls onComplete with correctness when an option is chosen', () => {
-    const onComplete = vi.fn()
+  it('calls onComplete with correctness when an option is chosen', async () => {
+    const onComplete = vi.fn(async () => {})
     render(<ReaderExercise passage={passage} online onComplete={onComplete} />)
     fireEvent.click(screen.getByText('home'))
-    expect(onComplete).toHaveBeenCalledWith(true)
-    expect(screen.getByRole('status')).toHaveTextContent(/cuenta en tu progreso/i)
+    expect(screen.getByRole('status')).toHaveTextContent(/saving progress/i)
+    await waitFor(() => expect(onComplete).toHaveBeenCalledWith(true))
+    await waitFor(() => expect(screen.getByRole('status')).toHaveTextContent(/cuenta en tu progreso/i))
   })
 
-  it('shows actionable feedback for an incorrect answer', () => {
-    render(<ReaderExercise passage={passage} online onComplete={vi.fn()} />)
+  it('shows actionable feedback for an incorrect answer', async () => {
+    render(<ReaderExercise passage={passage} online onComplete={vi.fn(async () => {})} />)
     fireEvent.click(screen.getByText('park'))
-    expect(screen.getByRole('status')).toHaveTextContent(/revisa el texto/i)
+    await waitFor(() => expect(screen.getByRole('status')).toHaveTextContent(/revisa el texto/i))
+  })
+
+  it('keeps the answer visible and warns when progress save fails', async () => {
+    render(<ReaderExercise passage={passage} online onComplete={vi.fn(async () => { throw new Error('offline') })} />)
+    fireEvent.click(screen.getByText('home'))
+    await waitFor(() => expect(screen.getByRole('alert')).toHaveTextContent(/progress could not be saved/i))
+    expect(screen.getByRole('status')).toHaveTextContent(/cuenta en tu progreso/i)
   })
 
   it('disables the listen button when offline', () => {

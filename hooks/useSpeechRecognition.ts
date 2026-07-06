@@ -10,13 +10,38 @@ export interface SpeechResult {
   confidence: number
 }
 
+interface SpeechRecognitionResultLike {
+  transcript: string
+  confidence: number
+}
+
+interface SpeechRecognitionEventLike {
+  results: ArrayLike<ArrayLike<SpeechRecognitionResultLike>>
+}
+
+interface SpeechRecognitionInstance {
+  lang: string
+  interimResults: boolean
+  maxAlternatives: number
+  onstart: (() => void) | null
+  onresult: ((event: SpeechRecognitionEventLike) => void) | null
+  onerror: ((event: { error?: string }) => void) | null
+  onend: (() => void) | null
+  start: () => void
+  stop: () => void
+  abort: () => void
+}
+
+interface SpeechRecognitionCtor {
+  new (): SpeechRecognitionInstance
+}
+
 export function useSpeechRecognition() {
   const [status, setStatus] = useState<SpeechStatus>('idle')
   const [result, setResult] = useState<SpeechResult | null>(null)
   const [errorCode, setErrorCode] = useState<SpeechErrorCode | null>(null)
   const [isSupported, setIsSupported] = useState(false)
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const recRef = useRef<any>(null)
+  const recRef = useRef<SpeechRecognitionInstance | null>(null)
 
   useEffect(() => {
     setIsSupported(
@@ -40,20 +65,23 @@ export function useSpeechRecognition() {
       // continue — let SpeechRecognition surface the error if mic is truly unavailable
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const w = window as any
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const SR: any = w.SpeechRecognition ?? w.webkitSpeechRecognition
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const rec: any = new SR()
+    const w = window as Window & {
+      SpeechRecognition?: SpeechRecognitionCtor
+      webkitSpeechRecognition?: SpeechRecognitionCtor
+    }
+    const SR = w.SpeechRecognition ?? w.webkitSpeechRecognition
+    if (!SR) {
+      setStatus('unsupported')
+      return
+    }
+    const rec = new SR()
     rec.lang = 'en-US'
     rec.interimResults = false
     rec.maxAlternatives = 3
 
     rec.onstart = () => setStatus('listening')
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    rec.onresult = (e: any) => {
+    rec.onresult = (e) => {
       // Pick the alternative with highest confidence
       let best = e.results[0][0]
       for (let i = 1; i < e.results[0].length; i++) {

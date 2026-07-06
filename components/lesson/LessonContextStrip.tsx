@@ -40,10 +40,7 @@ export function LessonContextStrip({
   return (
     <div
       className="overflow-hidden border-b border-border-subtle bg-surface-raised"
-      style={{
-        maxHeight: expanded ? "220px" : "40px",
-        transition: "max-height 300ms ease-out",
-      }}
+      style={{ maxHeight: expanded ? "220px" : "40px", transition: "max-height 300ms ease-out" }}
     >
       {/* Expanded view */}
       <div

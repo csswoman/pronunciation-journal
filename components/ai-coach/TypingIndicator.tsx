@@ -8,20 +8,11 @@ export default function TypingIndicator() {
       </div>
       <div className="px-3.5 py-2.5 rounded-lg rounded-tl-sm bg-[var(--surface-raised)] border border-[var(--border-subtle)]">
         <div role="status" aria-label="AI Coach is typing">
-        <span className="inline-flex gap-1 items-center">
-          <span
-            className="size-1.5 rounded-full bg-[var(--primary)] animate-bounce"
-            style={{ animationDelay: "0ms" }}
-          />
-          <span
-            className="size-1.5 rounded-full bg-[var(--primary)] animate-bounce"
-            style={{ animationDelay: "150ms" }}
-          />
-          <span
-            className="size-1.5 rounded-full bg-[var(--primary)] animate-bounce"
-            style={{ animationDelay: "300ms" }}
-          />
-        </span>
+          <span className="inline-flex items-center gap-1">
+            <span className="size-1.5 rounded-full bg-[var(--primary)] animate-bounce [animation-delay:0ms]" />
+            <span className="size-1.5 rounded-full bg-[var(--primary)] animate-bounce [animation-delay:150ms]" />
+            <span className="size-1.5 rounded-full bg-[var(--primary)] animate-bounce [animation-delay:300ms]" />
+          </span>
         </div>
       </div>
     </div>

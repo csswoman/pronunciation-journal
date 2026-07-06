@@ -1,7 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
-import type { Database } from "@/lib/supabase/types";
-import { enrichWord } from "@/lib/word-bank/enrich";
+import { enqueueWordEnrichmentJob } from "@/lib/word-bank/jobs";
+import {
+  createUserScopedClient,
+  requireSameOrigin,
+  requireUser,
+  SECURE_HEADERS,
+  publicErrorResponse,
+  rateLimit,
+} from "@/lib/api/guards";
+import { logServerError } from "@/lib/api/logging";
 
 export const runtime = "nodejs";
 
@@ -11,39 +18,42 @@ export async function POST(
 ): Promise<NextResponse> {
   const { id } = await params;
 
-  const authHeader = req.headers.get("authorization");
-  if (!authHeader) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const originError = requireSameOrigin(req);
+  if (originError) return originError;
+
+  const { user, error: authError, accessToken } = await requireUser(req);
+  if (authError) return authError;
+
+  if (!accessToken) {
+    return publicErrorResponse(401, "Authorization token is required");
   }
 
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  if (!supabaseUrl || !anonKey) {
-    return NextResponse.json({ error: "Server misconfiguration" }, { status: 500 });
-  }
-
-  const token = authHeader.replace(/^Bearer\s+/i, "");
-  const authClient = createClient<Database>(supabaseUrl, anonKey, {
-    auth: { persistSession: false },
+  const { limited, error: rateLimitError } = await rateLimit(`/api/words/${id}/enrich:${user.id}`, {
+    max: 10,
+    windowMs: 60_000,
+    meta: { endpoint: "/api/words/[id]/enrich", userId: user.id },
   });
-  const { data: { user } } = await authClient.auth.getUser(token);
-  if (!user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  if (limited) return rateLimitError;
 
   // Verify ownership through RLS.
-  const userClient = createClient<Database>(supabaseUrl, anonKey, {
-    auth: { persistSession: false },
-    global: { headers: { Authorization: `Bearer ${token}` } },
-  });
-  const { data: row } = await userClient
+  const userClient = createUserScopedClient(accessToken);
+  const { data: row, error: selectErr } = await userClient
     .from("word_bank")
     .select("id, status")
     .eq("id", id)
     .maybeSingle();
 
+  if (selectErr) {
+    logServerError("Word enrichment lookup failed", selectErr, {
+      endpoint: "/api/words/[id]/enrich",
+      operation: "lookup",
+      userId: user.id,
+    });
+    return publicErrorResponse(500, "Failed to load word");
+  }
+
   if (!row) {
-    return NextResponse.json({ error: "Not found" }, { status: 404 });
+    return publicErrorResponse(404, "Not found");
   }
 
   if (row.status === "processing") {
@@ -57,12 +67,15 @@ export async function POST(
     .neq("status", "processing");
 
   if (resetErr) {
-    return NextResponse.json({ error: resetErr.message }, { status: 500 });
+    logServerError("Word enrichment reset failed", resetErr, {
+      endpoint: "/api/words/[id]/enrich",
+      operation: "reset",
+      userId: user.id,
+    });
+    return publicErrorResponse(500, "Failed to start enrichment");
   }
 
-  // Fire in background — client already shows "processing" and will receive
-  // the DB update via realtime subscription when Gemini finishes.
-  void enrichWord(id);
+  const jobId = await enqueueWordEnrichmentJob(userClient, user.id, id);
 
-  return NextResponse.json({ ok: true });
+  return NextResponse.json({ ok: true, jobId }, { headers: SECURE_HEADERS });
 }

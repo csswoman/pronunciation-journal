@@ -11,7 +11,9 @@ The repository currently contains:
 └── DEPLOYMENT_SETUP.md
 
 app/api/health/
-└── route.ts
+├── route.ts
+└── ready/
+    └── route.ts
 
 scripts/
 └── setup-deployment.sh
@@ -28,15 +30,18 @@ docs/deployment/
 Active automation in-repo:
 
 - GitHub Actions CI workflow in `.github/workflows/ci.yml`
+- Optional local pre-commit hook in `.githooks/pre-commit`; enable it with
+  `git config core.hooksPath .githooks`
 
 That workflow covers:
 
 - lint
 - type-check
 - tests
+- optional integration tests via `pnpm test:integration` when explicitly invoked
 - design-token validation
 - dependency audit
-- hardcoded-secret scanning
+- hardcoded-secret scanning via `pnpm scan:secrets`
 - build artifact generation
 - lightweight accessibility/design checks
 
@@ -58,8 +63,9 @@ This summary reflects the current repository state as of 2026-06-21.
 - CI status can be enforced on pull requests today.
 - Production deployment still needs to be handled manually or via external
   platform configuration.
-- `app/api/health/route.ts` can support future smoke tests, but those tests are
-  not wired into GitHub Actions yet.
+- `app/api/health/route.ts` is a lightweight liveness signal.
+- `app/api/health/ready/route.ts` performs the Supabase readiness check and can
+  support future smoke tests.
 
 ## Recommended next milestone
 
@@ -68,5 +74,10 @@ that:
 
 1. builds from `main`
 2. deploys to the hosting provider
-3. hits the health endpoint
+3. hits the readiness endpoint
 4. fails fast on unhealthy deploys
+
+For database assurance, add an optional RLS integration job that starts Supabase
+local or targets an isolated staging project, then validates anon/authenticated/
+service-role behavior. Keep this job gated by environment availability so unit
+CI remains deterministic.

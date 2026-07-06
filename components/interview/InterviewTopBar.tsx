@@ -25,11 +25,11 @@ export function InterviewTopBar({
         <div className="flex items-center gap-2 mt-1.5">
           <div className="flex-1 h-1.5 rounded-full bg-[var(--border-subtle)]">
             <div
-              className="h-full rounded-full transition-all duration-500"
-              style={{ width: `${progress}%`, background: "var(--primary)" }}
+              className="h-full rounded-full bg-[var(--primary)] transition-all duration-500"
+              style={{ width: `${progress}%` }}
             />
           </div>
-          <span className="text-xs flex-shrink-0 tabular-nums" style={{ color: "var(--muted-text)" }}>
+          <span className="text-xs flex-shrink-0 tabular-nums text-[var(--muted-text)]">
             {Math.ceil(visibleCount / 2)}/{Math.ceil(totalTurns / 2)}
           </span>
         </div>

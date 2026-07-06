@@ -2,6 +2,7 @@ import type {
   GradeProductionInput,
   ProductionGradeResult,
 } from '@/lib/exercises/production-grade'
+import { publicAiErrorMessage } from '@/lib/degradation/messages'
 
 export type { GradeProductionInput, ProductionGradeResult }
 
@@ -35,7 +36,7 @@ export async function gradeProduction(
     })
   } catch {
     throw new ProductionGradeError(
-      'Could not reach the grading service. Check your connection and try again.',
+      publicAiErrorMessage(),
       'network',
     )
   }
@@ -43,7 +44,7 @@ export async function gradeProduction(
   if (!res.ok) {
     const body = (await res.json().catch(() => null)) as { error?: string } | null
     throw new ProductionGradeError(
-      body?.error ?? 'Grading failed. Please try again.',
+      publicAiErrorMessage(res.status, body?.error),
       'server',
     )
   }

@@ -48,13 +48,41 @@ credentials.
 | `NEXT_PUBLIC_SUPABASE_URL` | Supabase project URL used by browser and server clients |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Public Supabase anonymous key |
 | `SUPABASE_SERVICE_ROLE_KEY` | Server-only access for privileged cache operations |
+| `ADMIN_BOOTSTRAP_EMAIL` | Optional email used by the server-only admin bootstrap flow |
 | `NEXT_PUBLIC_SITE_URL` | Optional deployed site URL for auth redirects |
 | `GEMINI_API_KEY` | Server-only Gemini API credential |
 | `GEMINI_ENABLE_PREVIEW_MODELS` | Optional fallback-chain flag for testing preview models |
 
+The Gemini fallback chain already uses the stable alias `gemini-flash-latest`
+before any preview-only models are considered. That keeps minor provider
+updates out of app code unless you deliberately pin a fixed model ID.
+
 Without valid Supabase or Gemini credentials, some authenticated and AI-backed
 flows will be unavailable. The app still contains local/offline-oriented state
 paths for parts of the practice experience.
+
+## Production Notes
+
+- Admin bootstrap is controlled server-side via `ADMIN_BOOTSTRAP_EMAIL` and `SUPABASE_SERVICE_ROLE_KEY`.
+- Use the server-only bootstrap flow to promote the intended account to `admin`; do not hardcode personal emails in migrations or app code.
+- Migration safety checks run with `pnpm check:migrations`.
+- RLS coverage checks run with `pnpm audit:rls`.
+- Global security headers, including CSP, are configured in `next.config.mjs`.
+- API cost controls use the `consume_rate_limit` Supabase RPC and require `SUPABASE_SERVICE_ROLE_KEY` in production.
+- Service-role Supabase clients are centralized through `lib/supabase/service-role.ts` and `lib/supabase/admin.ts`; route code should not create ad-hoc service-role clients.
+- Word enrichment is queued in `word_enrichment_jobs`; run `processWordEnrichmentJobs()` from a trusted worker or scheduled job.
+- Speech transcription caches are scoped per user and backed by Supabase (`stt_transcription_cache` and `sentence_transcription_cache`) with short-lived in-memory L1 caches.
+- Practice progress uses the Dexie `syncOutbox` for retryable writes. Generic practice sessions, Reader, the daily checklist, and Essential Words activity show or preserve pending/error state instead of promising remote sync before flush.
+- Gemini and speech transcription errors are normalized before reaching UI. User-facing copy should stay public and provider-neutral.
+- Operational deployment notes live in `docs/deployment/runbook-minimo.md`.
+- Security, sync, and environment ownership are documented in `docs/security/threat-model.md`, `docs/architecture/offline-sync.md`, and `docs/deployment/environments.md`.
+
+## Current Limitations
+
+- Offline support is not a full multi-device sync guarantee. Dexie/local queues cover selected client workflows; Supabase remains the source of truth after reconnect. Some short-lived buffers, such as Essential Words pending lapses, are session-scoped only.
+- Gemini-backed features require server credentials and may degrade or queue when the provider is unavailable.
+- Background word enrichment requires an external trusted worker/schedule to drain `word_enrichment_jobs`.
+- Supabase migrations must be reviewed and applied deliberately; this repo does not auto-apply production SQL from the app server.
 
 ## Common commands
 
@@ -66,6 +94,9 @@ pnpm test
 pnpm test:watch
 pnpm lint:design-tokens
 pnpm build
+pnpm check:migrations
+pnpm audit:rls
+pnpm test:integration
 pnpm validate:core1000
 pnpm validate:core1000-generators
 pnpm lexicon:enrich

@@ -4,6 +4,7 @@ import { X } from "lucide-react";
 import Button from "@/components/ui/Button";
 import { H2 } from "@/components/ui/Typography";
 import { updateDeck, type DeckListItem } from "@/lib/decks/queries";
+import { publicDataErrorMessage } from "@/lib/degradation/messages";
 
 const COLORS = [
   "#6366f1", "#8b5cf6", "#ec4899", "#f43f5e",
@@ -38,8 +39,8 @@ export function EditDeckModal({ deck, onClose, onUpdated, onDelete }: EditDeckMo
     try {
       const data = await updateDeck(deck.id, { name: name.trim(), description: description.trim() || null, color, icon });
       onUpdated(data);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to update deck");
+    } catch {
+      setError(publicDataErrorMessage());
     } finally {
       setSaving(false);
     }

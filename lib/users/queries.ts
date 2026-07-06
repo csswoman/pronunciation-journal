@@ -1,7 +1,7 @@
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import type { CefrLevel } from "@/lib/core-1000/types";
 
-export type UserRole = "free" | "premium" | "admin";
+export type UserRole = "free" | "admin";
 
 export interface UserProfile {
   display_name: string | null;
@@ -16,7 +16,7 @@ export interface UserPreferences {
 }
 
 function parseUserRole(role: string | null | undefined): UserRole {
-  if (role === "premium" || role === "admin") return role;
+  if (role === "admin") return role;
   return "free";
 }
 

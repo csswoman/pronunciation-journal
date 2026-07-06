@@ -1,6 +1,7 @@
 // @vitest-environment jsdom
 import { renderHook, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { DATA_UNAVAILABLE_MESSAGE } from "@/lib/degradation/messages";
 
 const getMyWords = vi.fn();
 const subscribeWordBankChanges = vi.fn();
@@ -54,6 +55,18 @@ describe("useWords", () => {
         "user-1",
         expect.objectContaining({ onChange: expect.any(Function) }),
       );
+    });
+  });
+
+  it("normalizes load failures to public data copy", async () => {
+    mockUser = { id: "user-1" };
+    getMyWords.mockRejectedValue(new Error("Supabase RLS stack trace"));
+    subscribeWordBankChanges.mockReturnValue({ unsubscribe: vi.fn() });
+
+    const { result } = renderHook(() => useWords());
+
+    await waitFor(() => {
+      expect(result.current.error).toBe(DATA_UNAVAILABLE_MESSAGE);
     });
   });
 });

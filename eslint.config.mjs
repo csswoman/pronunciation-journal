@@ -47,6 +47,7 @@ const eslintConfig = [
       ".agents/**",
       ".claude/**",
       ".next/**",
+      "coverage/**",
       "out/**",
       "build/**",
       "test-results/**",

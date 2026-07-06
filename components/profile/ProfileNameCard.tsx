@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Button from "@/components/ui/Button";
+import { publicDataErrorMessage } from "@/lib/degradation/messages";
 
 interface Props {
   currentName: string;
@@ -22,8 +23,8 @@ export default function ProfileNameCard({ currentName, onSave }: Props) {
       setIsSaving(true);
       await onSave(value.trim());
       setIsEditing(false);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to update name");
+    } catch {
+      setError(publicDataErrorMessage());
     } finally {
       setIsSaving(false);
     }

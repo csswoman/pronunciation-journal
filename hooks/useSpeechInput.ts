@@ -3,6 +3,7 @@
 import { useCallback, useRef, useState, useMemo } from "react";
 import { WebSpeechAdapter, isWebSpeechReliable } from "@/lib/speech/adapters/webSpeechAdapter";
 import { GeminiAdapter } from "@/lib/speech/adapters/geminiAdapter";
+import { publicAiErrorMessage } from "@/lib/degradation/messages";
 import type { SpeechInputResult, SpeechInputAdapter } from "@/lib/speech/types";
 
 // Browsers that report Chrome's UA but lack Google's speech backend key
@@ -14,6 +15,12 @@ const WEB_SPEECH_UNUSABLE_ERRORS = new Set(["network", "service-not-allowed"]);
 
 export type SpeechInputPreference = 'web-speech' | 'gemini' | 'auto';
 export type SpeechInputState = 'idle' | 'listening' | 'processing' | 'done' | 'error' | 'unsupported';
+
+function publicSpeechErrorMessage(err: unknown, fallback: string): string {
+  const message = err instanceof Error ? err.message : fallback;
+  if (message === 'network' || message === 'not-allowed' || message === 'no-speech') return message;
+  return publicAiErrorMessage(undefined, message);
+}
 
 interface UseSpeechInputOptions {
   prefer?: SpeechInputPreference;
@@ -105,7 +112,7 @@ export function useSpeechInput({
           return;
         } catch (fallbackErr) {
           const fe = fallbackErr instanceof Error ? fallbackErr : new Error('Failed to start');
-          setError(fe.message);
+          setError(publicSpeechErrorMessage(fe, 'Failed to start'));
           setState('error');
           onError?.(fe);
           return;
@@ -113,7 +120,7 @@ export function useSpeechInput({
       }
 
       const e = err instanceof Error ? err : new Error(message);
-      setError(e.message);
+      setError(publicSpeechErrorMessage(e, message));
       setState('error');
       onError?.(e);
     }
@@ -129,7 +136,7 @@ export function useSpeechInput({
       onResult?.(r);
     } catch (err) {
       const e = err instanceof Error ? err : new Error('Failed to stop');
-      setError(e.message);
+      setError(publicSpeechErrorMessage(e, 'Failed to stop'));
       setState('error');
       onError?.(e);
     }

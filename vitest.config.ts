@@ -9,6 +9,37 @@ export default defineConfig({
     include: ["**/__tests__/**/*.test.{ts,tsx}"],
     exclude: [".claude/**", "node_modules/**", "**/*.integration.test.{ts,tsx}"],
     setupFiles: ["./vitest.setup.ts"],
+    coverage: {
+      provider: "v8",
+      reporter: ["text", "json", "html", "json-summary"],
+      reportsDirectory: "./coverage",
+      // Global floor to catch catastrophic test loss. Per-file floors in
+      // `thresholds["path/to/file.ts"]` guard critical modules (Jul 2026).
+      thresholds: {
+        lines: 50,
+        functions: 45,
+        statements: 50,
+        // Per-file floors: current measured coverage minus ~5% headroom (Jul 2026).
+        // See docs/architecture/testing-strategy.md for rationale.
+        "lib/gemini/client.ts": { lines: 88, functions: 80, statements: 75 },
+        "lib/gemini/fallback.ts": { lines: 95, functions: 95, statements: 90 },
+        "lib/api/require-admin.ts": { lines: 95, functions: 95, statements: 95 },
+        "lib/sync/sync-manager.ts": { lines: 72, functions: 95, statements: 72 },
+        "lib/practice/queries.ts": { lines: 62, functions: 60, statements: 62 },
+        "lib/api/guards.ts": { lines: 48, functions: 45, statements: 48 },
+      },
+      exclude: [
+        "node_modules/**",
+        ".next/**",
+        "**/*.config.{ts,js,mjs}",
+        "**/types/**",
+        "**/__tests__/**",
+        "scripts/**",
+        ".claude/**",
+        "supabase/**",
+        "public/**",
+      ],
+    },
   },
   resolve: {
     alias: {

@@ -16,7 +16,7 @@ export async function getMyWords(): Promise<WordBankEntry[]> {
   return (data ?? []) as WordBankEntry[];
 }
 
-/** Quick-add: POST to API which creates the row + triggers async enrichment. */
+/** Quick-add: POST to API which creates the row + queues async enrichment. */
 export async function quickAddWord(input: {
   text: string;
   context?: string | null;
@@ -166,8 +166,7 @@ export async function toggleFavorite(
   const supabase = getSupabaseBrowserClient();
   const { error } = await supabase
     .from("word_bank")
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    .update({ is_favorite: value } as any)
+    .update({ is_favorite: value })
     .eq("id", wordBankId);
   if (error) throw error;
 }

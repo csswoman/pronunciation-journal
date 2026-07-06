@@ -1,44 +1,277 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useSpeechInput } from "@/hooks/useSpeechInput";
 import { useSharedMicStream } from "@/hooks/useSharedMicStream";
 import { analyzePhonemes, ARPABET_TO_IPA } from "@/lib/pronunciation/phonemes";
 import { saveAIWord } from "@/lib/db/ai";
+import {
+  BATCH_SIZE,
+  PHONEME_TIPS,
+  fetchWordIPA,
+  loadMasteredFromDexie,
+  loadQueueFromDexie,
+  loadSeenFromDexie,
+  pickBatch,
+  saveMasteredToDexie,
+  saveQueueToDexie,
+  saveSeenToDexie,
+  shuffle,
+  speakPhrase,
+} from "@/lib/ai-coach/pronunciation";
 import PronunciationProgress from "./pronunciation/PronunciationProgress";
 import PhraseCard from "./pronunciation/PhraseCard";
 import RecordingControls from "./pronunciation/RecordingControls";
 import CoachPanel from "./pronunciation/CoachPanel";
 import type { WordIPA, SoundProgress } from "./pronunciation/types";
 import SessionComplete from "./pronunciation/SessionComplete";
-import { BATCH_SIZE, PHONEME_TIPS, fetchWordIPA, initQueue, loadMastered, loadSeen, pickBatch, saveMastered, saveQueue, saveSeen, shuffle, speakPhrase } from "@/lib/ai-coach/pronunciation";
 
-function firstBadPhoneme(wordIPAs: WordIPA[]) { for (const entry of wordIPAs) { if (!entry.alignment) continue; for (const a of entry.alignment) { if (a.status !== "correct" && a.phoneme) return { word: entry.word, phoneme: a.phoneme, ipa: a.ipa ?? ARPABET_TO_IPA[a.phoneme] ?? a.phoneme }; } } return null; }
+function firstBadPhoneme(wordIPAs: WordIPA[]) {
+  for (const entry of wordIPAs) {
+    if (!entry.alignment) continue;
+    for (const alignment of entry.alignment) {
+      if (alignment.status !== "correct" && alignment.phoneme) {
+        return {
+          word: entry.word,
+          phoneme: alignment.phoneme,
+          ipa: alignment.ipa ?? ARPABET_TO_IPA[alignment.phoneme] ?? alignment.phoneme,
+        };
+      }
+    }
+  }
+  return null;
+}
 
 export default function PronunciationView() {
-  const [queue, setQueue] = useState<string[]>([]); const [mastered, setMastered] = useState<Set<string>>(new Set()); const [seen, setSeen] = useState<Set<string>>(new Set()); const [batchCount, setBatchCount] = useState(0); const [fetchingPhrases, setFetchingPhrases] = useState(false);
+  const [queue, setQueue] = useState<string[]>([]);
+  const [mastered, setMastered] = useState<Set<string>>(new Set());
+  const [seen, setSeen] = useState<Set<string>>(new Set());
+  const [batchCount, setBatchCount] = useState(0);
+  const [fetchingPhrases, setFetchingPhrases] = useState(false);
+  const [wordIPAs, setWordIPAs] = useState<WordIPA[]>([]);
+  const [ipaLoading, setIpaLoading] = useState(false);
+  const [analyzing, setAnalyzing] = useState(false);
+  const [soundProgress, setSoundProgress] = useState<SoundProgress>({});
+  const [savedWords, setSavedWords] = useState<Set<string>>(new Set());
+
   const { getStream } = useSharedMicStream();
   const { state, result, start, stop, reset } = useSpeechInput({ prefer: "gemini", getStream });
+
   const isRecording = state === "listening";
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const [wordIPAs, setWordIPAs] = useState<WordIPA[]>([]); const [ipaLoading, setIpaLoading] = useState(false); const [analyzing, setAnalyzing] = useState(false); const [soundProgress, setSoundProgress] = useState<SoundProgress>({}); const [savedWords, setSavedWords] = useState<Set<string>>(new Set());
+  const activePhrase = queue[0] ?? "";
+  const sessionDone = queue.length === 0;
 
-  useEffect(() => { const q = initQueue(); setQueue(q); setMastered(loadMastered()); setSeen(loadSeen()); setBatchCount(q.length); }, []);
-  const activePhrase = queue[0] ?? ""; const sessionDone = queue.length === 0;
+  useEffect(() => {
+    let cancelled = false;
 
-  const loadMoreFromPool = useCallback((currentSeen: Set<string>, currentMastered: Set<string>) => { const exclude = new Set([...currentSeen, ...currentMastered]); const batch = pickBatch(exclude); const fallback = batch.length === 0 ? pickBatch(currentMastered) : batch; setQueue(fallback); saveQueue(fallback); setBatchCount(fallback.length); reset(); setWordIPAs([]); }, [reset]);
-  const fetchMoreWithAI = useCallback(async (currentSeen: Set<string>) => { setFetchingPhrases(true); try { const res = await fetch("/api/gemini/phrases", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ exclude: [...currentSeen].slice(-30), count: BATCH_SIZE }) }); if (!res.ok) { loadMoreFromPool(currentSeen, mastered); return; } const { phrases } = await res.json() as { phrases?: string[] }; if (!Array.isArray(phrases) || phrases.length === 0) { loadMoreFromPool(currentSeen, mastered); return; } const batch = shuffle(phrases).slice(0, BATCH_SIZE); setQueue(batch); saveQueue(batch); setBatchCount(batch.length); reset(); setWordIPAs([]); } catch { loadMoreFromPool(currentSeen, mastered); } finally { setFetchingPhrases(false); } }, [mastered, loadMoreFromPool, reset]);
+    void Promise.all([
+      loadMasteredFromDexie(),
+      loadQueueFromDexie(),
+      loadSeenFromDexie(),
+    ]).then(([storedMastered, storedQueue, storedSeen]) => {
+      if (cancelled) return;
+      const initialQueue = storedQueue.length > 0 ? storedQueue : pickBatch(storedMastered);
+      if (storedQueue.length === 0) void saveQueueToDexie(initialQueue);
+      setQueue(initialQueue);
+      setMastered(storedMastered);
+      setSeen(storedSeen);
+      setBatchCount(initialQueue.length);
+    });
 
-  useEffect(() => { if (!activePhrase) return; setWordIPAs([]); setIpaLoading(true); const words = activePhrase.split(/\s+/).filter(Boolean); const clean = (w: string) => w.replace(/[^a-zA-Z']/g, "").toLowerCase(); Promise.all(words.map((w) => fetchWordIPA(clean(w)))).then((ipas) => { setWordIPAs(words.map((w, i) => ({ word: w, ipa: ipas[i], alignment: null }))); setIpaLoading(false); }); }, [activePhrase]);
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
-  const analyzeRecording = useCallback(async (transcript: string) => { setAnalyzing(true); try { if (!transcript) return; const phraseWords = activePhrase.split(/\s+/).filter(Boolean); const transcriptWords = transcript.trim().split(/\s+/).filter(Boolean); const results = await Promise.all(phraseWords.map((w, i) => analyzePhonemes(w, transcriptWords[i] ?? ""))); setWordIPAs((prev) => prev.map((entry, i) => ({ ...entry, alignment: results[i]?.alignment ?? null }))); setSoundProgress((prev) => { const next = { ...prev }; for (const r of results) { for (const a of r.alignment) { const key = a.phoneme; if (!next[key]) next[key] = { correct: 0, total: 0 }; next[key].total += 1; if (a.status === "correct") next[key].correct += 1; } } return next; }); if (results.every((r) => r.alignment.every((a) => a.status === "correct")) && activePhrase) { setMastered((prev) => { const next = new Set(prev).add(activePhrase); saveMastered(next); return next; }); } } finally { setAnalyzing(false); } }, [activePhrase]);
-  useEffect(() => { if (result?.transcript) analyzeRecording(result.transcript); }, [result, analyzeRecording]);
+  const loadMoreFromPool = useCallback((currentSeen: Set<string>, currentMastered: Set<string>) => {
+    const exclude = new Set([...currentSeen, ...currentMastered]);
+    const batch = pickBatch(exclude);
+    const fallback = batch.length === 0 ? pickBatch(currentMastered) : batch;
+    setQueue(fallback);
+    void saveQueueToDexie(fallback);
+    setBatchCount(fallback.length);
+    reset();
+    setWordIPAs([]);
+  }, [reset]);
 
-  const advanceQueue = useCallback(() => { setSeen((prev) => { const next = new Set(prev).add(activePhrase); saveSeen(next); return next; }); setQueue((prev) => { const next = prev.slice(1); saveQueue(next); return next; }); reset(); setWordIPAs([]); }, [activePhrase, reset]);
-  const handleMicClick = () => { if (isRecording) { void stop(); } else { reset(); setWordIPAs((prev) => prev.map((e) => ({ ...e, alignment: null }))); void start(); } };
-  const handleSavePractice = async (word: string) => { await saveAIWord({ word: word.toLowerCase(), meaning: "", difficulty: "medium", context: activePhrase, conversationId: 0, savedAt: new Date().toISOString() }); setSavedWords((prev) => new Set(prev).add(word.toLowerCase())); };
+  const fetchMoreWithAI = useCallback(async (currentSeen: Set<string>) => {
+    setFetchingPhrases(true);
+    try {
+      const res = await fetch("/api/gemini/phrases", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ exclude: [...currentSeen].slice(-30), count: BATCH_SIZE }),
+      });
+      if (!res.ok) { loadMoreFromPool(currentSeen, mastered); return; }
 
-  const hasAnalysis = wordIPAs.some((w) => w.alignment !== null); const hasMistakes = wordIPAs.some((w) => w.alignment?.some((a) => a.status !== "correct")); const focus = hasAnalysis && hasMistakes ? firstBadPhoneme(wordIPAs) : null; const focusTip = focus ? PHONEME_TIPS[focus.phoneme] ?? null : null; const focusProgress = focus ? soundProgress[focus.phoneme] ?? null : null; const doneInBatch = batchCount - queue.length; const progressPct = batchCount > 0 ? (doneInBatch / batchCount) * 100 : 0;
+      const { phrases } = await res.json() as { phrases?: string[] };
+      if (!Array.isArray(phrases) || phrases.length === 0) {
+        loadMoreFromPool(currentSeen, mastered);
+        return;
+      }
 
-  return <div className="flex flex-col h-full overflow-hidden"><PronunciationProgress current={doneInBatch} total={batchCount} mastered={mastered.size} pct={progressPct} />{sessionDone ? <SessionComplete mastered={mastered.size} batchSize={batchCount} onMore={() => loadMoreFromPool(seen, mastered)} onMoreAI={() => fetchMoreWithAI(seen)} loadingMore={fetchingPhrases} /> : <div className="flex-1 flex flex-col min-h-0 overflow-y-auto"><PhraseCard phrase={activePhrase} wordIPAs={wordIPAs} ipaLoading={ipaLoading} analyzing={analyzing} hasAnalysis={hasAnalysis} hasMistakes={hasMistakes} onListen={() => speakPhrase(activePhrase)} onSlow={() => speakPhrase(activePhrase, 0.55)} />{focus && !analyzing && <div className="px-4 pb-4 shrink-0"><CoachPanel focus={focus} focusTip={focusTip} focusProgress={focusProgress} savedWords={savedWords} onSave={handleSavePractice} /></div>}</div>}{!sessionDone && <RecordingControls isRecording={isRecording} onMicClick={handleMicClick} onSkip={advanceQueue} />}<audio ref={audioRef} className="hidden" /></div>;
+      const batch = shuffle(phrases).slice(0, BATCH_SIZE);
+      setQueue(batch);
+      void saveQueueToDexie(batch);
+      setBatchCount(batch.length);
+      reset();
+      setWordIPAs([]);
+    } catch {
+      loadMoreFromPool(currentSeen, mastered);
+    } finally {
+      setFetchingPhrases(false);
+    }
+  }, [mastered, loadMoreFromPool, reset]);
+
+  useEffect(() => {
+    if (!activePhrase) return;
+
+    setWordIPAs([]);
+    setIpaLoading(true);
+    const words = activePhrase.split(/\s+/).filter(Boolean);
+    const clean = (word: string) => word.replace(/[^a-zA-Z']/g, "").toLowerCase();
+
+    void Promise.all(words.map((word) => fetchWordIPA(clean(word)))).then((ipas) => {
+      setWordIPAs(words.map((word, index) => ({
+        word,
+        ipa: ipas[index],
+        alignment: null,
+      })));
+      setIpaLoading(false);
+    });
+  }, [activePhrase]);
+
+  const analyzeRecording = useCallback(async (transcript: string) => {
+    setAnalyzing(true);
+    try {
+      if (!transcript) return;
+      const phraseWords = activePhrase.split(/\s+/).filter(Boolean);
+      const transcriptWords = transcript.trim().split(/\s+/).filter(Boolean);
+      const results = await Promise.all(
+        phraseWords.map((word, index) => analyzePhonemes(word, transcriptWords[index] ?? "")),
+      );
+
+      setWordIPAs((prev) => prev.map((entry, index) => ({
+        ...entry,
+        alignment: results[index]?.alignment ?? null,
+      })));
+
+      setSoundProgress((prev) => {
+        const next = { ...prev };
+        for (const result of results) {
+          for (const alignment of result.alignment) {
+            const key = alignment.phoneme;
+            if (!next[key]) next[key] = { correct: 0, total: 0 };
+            next[key].total += 1;
+            if (alignment.status === "correct") next[key].correct += 1;
+          }
+        }
+        return next;
+      });
+
+      if (results.every((item) => item.alignment.every((alignment) => alignment.status === "correct")) && activePhrase) {
+        setMastered((prev) => {
+          const next = new Set(prev).add(activePhrase);
+          void saveMasteredToDexie(next);
+          return next;
+        });
+      }
+    } finally {
+      setAnalyzing(false);
+    }
+  }, [activePhrase]);
+
+  useEffect(() => {
+    if (result?.transcript) void analyzeRecording(result.transcript);
+  }, [result, analyzeRecording]);
+
+  const advanceQueue = useCallback(() => {
+    setSeen((prev) => {
+      const next = new Set(prev).add(activePhrase);
+      void saveSeenToDexie(next);
+      return next;
+    });
+    setQueue((prev) => {
+      const next = prev.slice(1);
+      void saveQueueToDexie(next);
+      return next;
+    });
+    reset();
+    setWordIPAs([]);
+  }, [activePhrase, reset]);
+
+  const handleMicClick = () => {
+    if (isRecording) {
+      void stop();
+      return;
+    }
+
+    reset();
+    setWordIPAs((prev) => prev.map((entry) => ({ ...entry, alignment: null })));
+    void start();
+  };
+
+  const handleSavePractice = async (word: string) => {
+    await saveAIWord({
+      word: word.toLowerCase(),
+      meaning: "",
+      difficulty: "medium",
+      context: activePhrase,
+      conversationId: 0,
+      savedAt: new Date().toISOString(),
+    });
+    setSavedWords((prev) => new Set(prev).add(word.toLowerCase()));
+  };
+
+  const hasAnalysis = wordIPAs.some((word) => word.alignment !== null);
+  const hasMistakes = wordIPAs.some((word) => word.alignment?.some((alignment) => alignment.status !== "correct"));
+  const focus = hasAnalysis && hasMistakes ? firstBadPhoneme(wordIPAs) : null;
+  const focusTip = focus ? PHONEME_TIPS[focus.phoneme] ?? null : null;
+  const focusProgress = focus ? soundProgress[focus.phoneme] ?? null : null;
+  const doneInBatch = batchCount - queue.length;
+  const progressPct = batchCount > 0 ? (doneInBatch / batchCount) * 100 : 0;
+
+  return (
+    <div className="flex flex-col h-full overflow-hidden">
+      <PronunciationProgress current={doneInBatch} total={batchCount} mastered={mastered.size} pct={progressPct} />
+
+      {sessionDone ? (
+        <SessionComplete
+          mastered={mastered.size}
+          batchSize={batchCount}
+          onMore={() => loadMoreFromPool(seen, mastered)}
+          onMoreAI={() => fetchMoreWithAI(seen)}
+          loadingMore={fetchingPhrases}
+        />
+      ) : (
+        <div className="flex-1 flex flex-col min-h-0 overflow-y-auto">
+          <PhraseCard
+            phrase={activePhrase}
+            wordIPAs={wordIPAs}
+            ipaLoading={ipaLoading}
+            analyzing={analyzing}
+            hasAnalysis={hasAnalysis}
+            hasMistakes={hasMistakes}
+            onListen={() => speakPhrase(activePhrase)}
+            onSlow={() => speakPhrase(activePhrase, 0.55)}
+          />
+
+          {focus && !analyzing && (
+            <div className="px-4 pb-4 shrink-0">
+              <CoachPanel
+                focus={focus}
+                focusTip={focusTip}
+                focusProgress={focusProgress}
+                savedWords={savedWords}
+                onListen={(word) => speakPhrase(word, 0.75)}
+                onSave={handleSavePractice}
+              />
+            </div>
+          )}
+        </div>
+      )}
+
+      {!sessionDone && <RecordingControls isRecording={isRecording} onMicClick={handleMicClick} onSkip={advanceQueue} />}
+    </div>
+  );
 }

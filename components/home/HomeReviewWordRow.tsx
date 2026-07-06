@@ -3,6 +3,7 @@
 import { Volume2 } from "lucide-react";
 import { getWordStrength } from "@/lib/word-bank/strength";
 import { WordStrengthBars } from "@/components/vocabulary/words/WordStrengthBars";
+import { speakText } from "@/lib/speech/synthesis";
 import type { WordBankEntry } from "@/lib/word-bank/types";
 
 interface HomeReviewWordRowProps {
@@ -19,12 +20,7 @@ export default function HomeReviewWordRow({ word, showDivider }: HomeReviewWordR
   const ipa = formatIpa(word.ipa);
 
   function speak() {
-    if (!window.speechSynthesis) return;
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(word.text);
-    utterance.lang = "en-US";
-    utterance.rate = 0.85;
-    window.speechSynthesis.speak(utterance);
+    speakText(word.text);
   }
 
   return (

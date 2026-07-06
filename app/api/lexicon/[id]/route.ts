@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCategoryWords } from "@/lib/lexicon/categories";
-import { createUserScopedClient, requireUser, rateLimit, SECURE_HEADERS } from "@/lib/api/guards";
+import { createUserScopedClient, requireSameOrigin, requireUser, rateLimit, SECURE_HEADERS, publicErrorResponse } from "@/lib/api/guards";
+import { logServerError } from "@/lib/api/logging";
 
 const WORD_BANK_LEXICON_COLUMNS = [
   "id",
@@ -55,12 +56,15 @@ export async function POST(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const originError = requireSameOrigin(req);
+  if (originError) return originError;
+
   const { user, error: authError, accessToken } = await requireUser(req);
   if (authError) return authError;
 
   const { id } = await params;
 
-  const { limited, error: rateLimitError } = rateLimit(`/api/lexicon/${id}:${user.id}`, {
+  const { limited, error: rateLimitError } = await rateLimit(`/api/lexicon/${id}:${user.id}`, {
     max: 30,
     windowMs: 60_000,
     meta: { endpoint: "/api/lexicon/[id]", userId: user.id },
@@ -68,15 +72,12 @@ export async function POST(
   if (limited) return rateLimitError;
 
   if (!accessToken) {
-    return NextResponse.json(
-      { error: "Authorization token is required" },
-      { status: 401, headers: SECURE_HEADERS }
-    );
+    return publicErrorResponse(401, "Authorization token is required");
   }
 
   const words = getCategoryWords(id);
   if (words.length === 0) {
-    return NextResponse.json({ error: "Not found" }, { status: 404, headers: SECURE_HEADERS });
+    return publicErrorResponse(404, "Not found");
   }
 
   const userClient = createUserScopedClient(accessToken);
@@ -89,7 +90,12 @@ export async function POST(
     .in("source_ref", sourceRefs);
 
   if (selectErr) {
-    return NextResponse.json({ error: selectErr.message }, { status: 500, headers: SECURE_HEADERS });
+    logServerError("Lexicon word bank select failed", selectErr, {
+      endpoint: "/api/lexicon/[id]",
+      operation: "selectWordBankRows",
+      userId: user.id,
+    });
+    return publicErrorResponse(500, "Failed to load lexicon words");
   }
 
   return NextResponse.json(

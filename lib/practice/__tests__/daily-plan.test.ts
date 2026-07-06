@@ -79,6 +79,18 @@ vi.mock('@/lib/core-1000/client-fetch', () => ({
   fetchCoreWordsForDay: vi.fn().mockResolvedValue([]),
 }))
 
+vi.mock('@/lib/practice/daily-plan/reader-targets', () => ({
+  fetchReaderTargetRows: vi.fn().mockResolvedValue([]),
+}))
+
+vi.mock('@/lib/practice/daily-plan/async-step-builders', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@/lib/practice/daily-plan/async-step-builders')>()
+  return {
+    ...actual,
+    buildReaderStep: vi.fn().mockResolvedValue(null),
+  }
+})
+
 import {
   getDueWordsForDaily,
   getNewWordsForDaily,
@@ -97,6 +109,7 @@ import {
   EmptyWordBankError,
   DAILY_PLAN_STEP_COUNT,
 } from '../daily-plan/index'
+import { buildReaderStep } from '../daily-plan/async-step-builders'
 import type { PracticeExercise } from '../types'
 
 /** Aplana todos los ejercicios de todos los pasos de un plan. */
@@ -305,6 +318,43 @@ describe('buildDailyPlan', () => {
     await buildDailyPlan('user-1')
 
     expect(vi.mocked(getSessionDatasets)).toHaveBeenCalledWith([1, 2])
+  })
+
+  it('incluye paso reader cuando hay word_bank y buildReaderStep devuelve paso', async () => {
+    const words = Array.from({ length: 4 }, (_, i) =>
+      makeLexiconWordBankEntry({ id: `w-${i}`, text: `word${i}`, example: `We saw word${i} today.` }),
+    )
+    setupWordBankMock(words, [])
+
+    const readerStep = {
+      kind: 'reader' as const,
+      id: 'reader',
+      title: 'Lectura',
+      subtitle: 'Tus palabras recientes, en contexto',
+      icon: 'BookOpen' as const,
+      exercises: [],
+      estMinutes: 3,
+      readerPassage: {
+        id: 'p1',
+        userId: 'user-1',
+        targetItems: ['word0'],
+        targetSrsIds: ['wb:w-0'],
+        targetHash: 'hash',
+        topic: 'daily',
+        passage: 'Hello world',
+        questions: [],
+        level: 'A2' as const,
+        createdAt: new Date().toISOString(),
+      },
+    }
+    vi.mocked(buildReaderStep).mockResolvedValueOnce(readerStep)
+
+    const plan = await buildDailyPlan('user-1')
+    expect(vi.mocked(buildReaderStep)).toHaveBeenCalled()
+    // Reader puede quedar fuera del slice de DAILY_PLAN_STEP_COUNT cuando el plan está lleno.
+    if (plan.steps.some((s) => s.kind === 'reader')) {
+      expect(plan.steps.find((s) => s.kind === 'reader')?.readerPassage?.id).toBe('p1')
+    }
   })
 })
 

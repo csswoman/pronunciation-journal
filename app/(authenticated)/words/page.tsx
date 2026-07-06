@@ -24,15 +24,17 @@ async function WordsContent() {
   let dueWordLabels: string[] = [];
   try {
     const userId = await getSupabaseServerUserId();
-    progressMap = await getLexiconProgressByCategory(categoryWordIds);
-    if (userId) {
-      [myWordsCount, deckCount] = await Promise.all([
-        countMyWords(userId),
-        countUserDecks(userId),
-      ]);
-    }
-    dueForReview = await countWordsDueForReview();
-    const dueWords = userId ? await getWordsDueForReview(userId, 4) : [];
+    const [nextProgressMap, nextDueForReview, userCounts, dueWords] = await Promise.all([
+      getLexiconProgressByCategory(categoryWordIds),
+      countWordsDueForReview(),
+      userId
+        ? Promise.all([countMyWords(userId), countUserDecks(userId)])
+        : Promise.resolve([0, 0] as const),
+      userId ? getWordsDueForReview(userId, 4) : Promise.resolve([]),
+    ]);
+    progressMap = nextProgressMap;
+    [myWordsCount, deckCount] = userCounts;
+    dueForReview = nextDueForReview;
     dueWordLabels = dueWords.map((w) => w.text);
   } catch (e) {
     console.error("[WordsContent] Failed to load progress:", e);

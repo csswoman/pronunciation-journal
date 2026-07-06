@@ -5,6 +5,7 @@ import { Sparkles, BookOpen, Briefcase } from "lucide-react";
 import InterviewConfig, { type Scenario, type Level, type Difficulty, CURATED_SCENARIOS } from "./InterviewConfig";
 import InterviewSession, { type InterviewTurn } from "@/components/interview/InterviewSession";
 import type { ExerciseDifficulty } from "@/components/interview/CandidateRecorder";
+import { publicAiErrorMessage } from "@/lib/degradation/messages";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -49,7 +50,7 @@ export default function InterviewView() {
         });
         if (!res.ok) {
           const body = await res.json().catch(() => ({}));
-          throw new Error(body.error ?? `Error ${res.status}`);
+          throw new Error(publicAiErrorMessage(res.status, body.error));
         }
         data = await res.json();
       }
@@ -58,7 +59,9 @@ export default function InterviewView() {
       setScript(data);
       setPhase("session");
     } catch (err) {
-      setErrorMsg(err instanceof Error ? err.message : "Something went wrong");
+      setErrorMsg(activeMode === "curated"
+        ? err instanceof Error ? err.message : "Could not load this interview script."
+        : publicAiErrorMessage(undefined, err instanceof Error ? err.message : ""));
       setPhase("error");
     }
   }

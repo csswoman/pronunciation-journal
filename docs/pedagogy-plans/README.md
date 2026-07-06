@@ -23,8 +23,9 @@ Esta tabla refleja el estado verificado contra el código y la DB, no el plan or
 | 4 | [04-narrate-the-path.md](./04-narrate-the-path.md) | 🟠 Importante | ✅ Committed (`e938f25`) | n/a | — |
 | 5 | [05-reorder-tolerant-grading.md](./05-reorder-tolerant-grading.md) | ⚡ Quick win | ✅ Committed | n/a | Opción B diferida |
 | 6 | [06-phoneme-vocab-bridge.md](./06-phoneme-vocab-bridge.md) | 🟠 Importante | ✅ Committed (`433961f`) | n/a | Tarea 3 diferida (opcional) |
-| 7 | [07-comprehensible-input-reader.md](./07-comprehensible-input-reader.md) | 🟠 Importante | ✅ Committed (11 commits) | ✅ tabla `reader_passages` | QA manual pendiente |
-| 8 | [08-session-arc.md](./08-session-arc.md) | 🟠 Importante | ✅ Committed (8 commits, 2026-06-20) | n/a | Hilo entre pasos diferido → plan 09 |
+| 7 | [07-comprehensible-input-reader.md](./07-comprehensible-input-reader.md) | 🟠 Importante | ✅ Committed (11 commits) | ✅ tabla `reader_passages` | QA manual → [reader-qa-checklist.md](./reader-qa-checklist.md) |
+| 8 | [08-session-arc.md](./08-session-arc.md) | 🟠 Importante | ✅ Committed (8 commits, 2026-06-20) | n/a | — |
+| 9 | [09-session-step-thread.md](./09-session-step-thread.md) | 🟠 Importante | ✅ Implementado (2026-07-03) | n/a | — |
 
 > Los briefs originales (problema + objetivo + criterios) se conservan abajo; cada
 > uno cierra con una sección **Implementación** que documenta lo entregado y lo diferido.
@@ -34,8 +35,8 @@ Esta tabla refleja el estado verificado contra el código y la DB, no el plan or
 1. ~~Commitear plan 04~~ — ✅ Committed (`e938f25`).
 2. ~~Completar wiring de plan 04~~ — ✅ `topicDisplayLabel()` wired en `step-builders.ts` subtítulos (`e938f25`).
 3. ~~Verificar slug `reader`~~ — ✅ Confirmado intencional (`reader: null` en `EXERCISE_TYPE_IDS`).
-4. **QA manual reader** — completar daily plan con ≥3 due → verificar reader step + exposure tracking, y reread offline desde Dexie.
-5. **Plan 09: hilo entre pasos** — marcar en la UI que una palabra reaparece entre `word_intro` → `word_review` → `context_practice`. Diferido del plan 08.
+4. **QA manual reader** — checklist en [reader-qa-checklist.md](./reader-qa-checklist.md); reader cableado en daily plan (2026-07-03).
+5. ~~**Plan 09: hilo entre pasos**~~ — ✅ [09-session-step-thread.md](./09-session-step-thread.md).
 
 ---
 

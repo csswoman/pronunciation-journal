@@ -21,41 +21,22 @@ export function HeroCompactHeader({
   return (
     <div
       className={["flex flex-col px-3 sm:px-6 lg:px-10", className].join(" ")}
-      style={{
-        paddingTop: "var(--space-6)",
-        paddingBottom: "var(--space-5)",
-        gap: "var(--space-5)",
-        borderBottom: "1px solid var(--border-subtle)",
-      }}
+      style={{ paddingTop: "var(--space-6)", paddingBottom: "var(--space-5)" }}
     >
-      <div className="flex items-start justify-between" style={{ gap: "var(--space-6)" }}>
-        <div className="flex flex-col" style={{ gap: "var(--space-1)" }}>
+      <div className="flex items-start justify-between gap-[var(--space-6)]">
+        <div className="flex flex-col gap-[var(--space-1)]">
           {badge && (
-            <span
-              style={{
-                font: "var(--font-tiny)",
-                color: "var(--text-tertiary)",
-                textTransform: "uppercase",
-                letterSpacing: "0.1em",
-              }}
-            >
+            <span className="text-[var(--font-tiny)] text-[var(--text-tertiary)] uppercase tracking-[0.1em]">
               {badge}
             </span>
           )}
-          <h1
-            style={{
-              font: "var(--font-h2)",
-              color: "var(--text-primary)",
-              lineHeight: 1.25,
-              margin: 0,
-            }}
-          >
+          <h1 className="m-0 text-[var(--font-h2)] text-[var(--text-primary)] leading-[1.25]">
             {title}
             {subtitle && (
               <>
                 {", "}
-                <span style={{ color: "var(--primary)" }}>{accent}</span>
-                {tail && <span style={{ color: "var(--text-primary)" }}> {tail}</span>}
+                <span className="text-[var(--primary)]">{accent}</span>
+                {tail && <span className="text-[var(--text-primary)]"> {tail}</span>}
               </>
             )}
           </h1>
@@ -75,90 +56,27 @@ export function HeroCompactHeader({
       </div>
 
       {hasProgress && (
-        <div
-          className="flex items-center"
-          style={{
-            background: "var(--surface-raised)",
-            border: "1px solid var(--border-subtle)",
-            borderRadius: "var(--radius-lg)",
-            padding: "var(--space-4) var(--space-5)",
-            gap: "var(--space-4)",
-            overflow: "hidden",
-          }}
-        >
+        <div className="flex items-center bg-[var(--surface-raised)] border border-[var(--border-subtle)] rounded-[var(--radius-lg)] px-[var(--space-5)] py-[var(--space-4)] gap-[var(--space-4)] overflow-hidden">
           {phonemeLabel && (
-            <div
-              className="shrink-0 flex items-center justify-center"
-              style={{
-                background: "var(--primary-soft)",
-                border: "1px solid var(--border-subtle)",
-                borderRadius: "var(--radius-md)",
-                padding: "var(--space-2) var(--space-3)",
-                minWidth: "64px",
-              }}
-            >
-              <span
-                style={{
-                  font: "var(--font-h4)",
-                  fontWeight: 300,
-                  color: "var(--primary)",
-                }}
-              >
-                {phonemeLabel}
-              </span>
+            <div className="shrink-0 flex items-center justify-center bg-[var(--primary-soft)] border border-[var(--border-subtle)] rounded-[var(--radius-md)] px-[var(--space-3)] py-[var(--space-2)] min-w-16">
+              <span className="text-[var(--font-h4)] font-light text-[var(--primary)]">{phonemeLabel}</span>
             </div>
           )}
 
-          <div className="flex-1 min-w-0 flex flex-col" style={{ gap: "var(--space-1)" }}>
-            <span
-              style={{
-                font: "var(--font-tiny)",
-                color: "var(--text-tertiary)",
-                textTransform: "uppercase",
-                letterSpacing: "0.1em",
-              }}
-            >
+          <div className="flex-1 min-w-0 flex flex-col gap-[var(--space-1)]">
+            <span className="text-[var(--font-tiny)] text-[var(--text-tertiary)] uppercase tracking-[0.1em]">
               Continuing
             </span>
-            <div className="flex items-center justify-between" style={{ gap: "var(--space-3)" }}>
-              <span
-                className="truncate"
-                style={{
-                  font: "var(--font-body-sm)",
-                  fontWeight: 500,
-                  color: "var(--text-primary)",
-                }}
-              >
+            <div className="flex items-center justify-between gap-[var(--space-3)]">
+              <span className="truncate text-[var(--font-body-sm)] font-medium text-[var(--text-primary)]">
                 {lessonTitle}
               </span>
-              <span
-                className="shrink-0 tabular-nums"
-                style={{
-                  font: "var(--font-body-sm)",
-                  fontWeight: 600,
-                  color: "var(--primary)",
-                }}
-              >
+              <span className="shrink-0 tabular-nums text-[var(--font-body-sm)] font-semibold text-[var(--primary)]">
                 {safeProgress}%
               </span>
             </div>
-            <div
-              style={{
-                height: "4px",
-                borderRadius: "var(--radius-full)",
-                background: "var(--surface-sunken)",
-                overflow: "hidden",
-                marginTop: "var(--space-1)",
-              }}
-            >
-              <div
-                className="h-full transition-all duration-500"
-                style={{
-                  width: `${safeProgress}%`,
-                  borderRadius: "var(--radius-full)",
-                  background: "var(--primary)",
-                }}
-              />
+            <div className="mt-[var(--space-1)] h-1 rounded-full bg-[var(--surface-sunken)] overflow-hidden">
+              <div className="h-full rounded-full bg-[var(--primary)] transition-all duration-500" style={{ width: `${safeProgress}%` }} />
             </div>
           </div>
         </div>

@@ -19,6 +19,37 @@ vi.mock('@/lib/db/ai', () => ({
 vi.mock('@/lib/ai-practice/events', () => ({ logEvent: vi.fn(async () => undefined) }))
 
 describe('useStreamingChat session finalization', () => {
+  it('aborts an active stream when the hook unmounts', async () => {
+    let capturedSignal: AbortSignal | undefined
+    vi.stubGlobal('fetch', vi.fn((_url, init) => {
+      capturedSignal = (init as RequestInit).signal as AbortSignal
+      return new Promise(() => undefined)
+    }))
+
+    const { result, unmount } = renderHook(() =>
+      useStreamingChat({
+        mode: 'chat',
+        conversationId: null,
+        onConversationCreated: vi.fn(),
+        learningState: null,
+        setLearningState: vi.fn(),
+        onSaveWord: vi.fn(),
+        onStartRoleplay: vi.fn(),
+        userId: 'user-1',
+      }),
+    )
+
+    await act(async () => {
+      void result.current.sendMessage('hello')
+      await Promise.resolve()
+    })
+
+    unmount()
+
+    expect(capturedSignal?.aborted).toBe(true)
+    vi.unstubAllGlobals()
+  })
+
   it('records accumulated exercises when the hook unmounts', () => {
     const { result, unmount } = renderHook(() =>
       useStreamingChat({

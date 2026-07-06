@@ -45,6 +45,7 @@ export default function PracticeSession(config: PracticeConfig) {
     retryKey,
     currentVoice,
     sessionResult,
+    progressSaveStatus,
     handleSubmit,
     handleRetry,
     handleHintContinue,
@@ -85,6 +86,7 @@ export default function PracticeSession(config: PracticeConfig) {
     const summary = (
       <SessionSummary
         result={sessionResult}
+        progressSaveStatus={progressSaveStatus}
         onPracticeAgain={handlePracticeAgain}
         onFinish={() => onExit?.(sessionResult)}
       />

@@ -5,6 +5,7 @@ import { X, Check } from "lucide-react";
 import Button from "@/components/ui/Button";
 import { H2 } from "@/components/ui/Typography";
 import { addWordsToDeck, type DeckListItem } from "@/lib/decks/queries";
+import { publicDataErrorMessage } from "@/lib/degradation/messages";
 
 interface AddToExistingDeckModalProps {
   wordIds: string[];
@@ -25,8 +26,8 @@ export function AddToExistingDeckModal({ wordIds, decks, onClose, onAdded }: Add
     try {
       await addWordsToDeck(wordIds, selectedDeckId);
       onAdded();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to add words");
+    } catch {
+      setError(publicDataErrorMessage());
     } finally {
       setSaving(false);
     }

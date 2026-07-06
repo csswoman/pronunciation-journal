@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import AuthenticatedAppLayout from "@/components/layout/AuthenticatedAppLayout";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { getSupabaseServerUser } from "@/lib/supabase/session";
 
 export default async function AuthenticatedRoutesLayout({
   children,
@@ -9,10 +9,7 @@ export default async function AuthenticatedRoutesLayout({
   children: React.ReactNode;
 }) {
   if (isSupabaseConfigured()) {
-    const supabase = await createSupabaseServerClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+    const user = await getSupabaseServerUser();
 
     if (!user) {
       redirect("/login");
