@@ -92,8 +92,9 @@ export default function HomeMobileView({
   const { user } = useAuth();
   const { preferences } = useUserPreferences();
 
-  const fullName = preferences?.full_name || user?.email?.split("@")[0] || "there";
-  const userName = fullName.split(" ")[0];
+  const isLoggedIn = user && !(user as { is_anonymous?: boolean }).is_anonymous;
+  const fullName = preferences?.full_name || user?.email?.split("@")[0] || "Guest";
+  const userName = isLoggedIn ? fullName.split(" ")[0] : "Guest";
 
   const now = new Date();
   const dateLabel = now.toLocaleDateString("en-US", {

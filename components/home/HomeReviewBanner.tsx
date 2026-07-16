@@ -18,9 +18,16 @@ export default function HomeReviewBanner({
     soundsDueCount > 0 && `${soundsDueCount} sound${soundsDueCount === 1 ? "" : "s"}`,
   ].filter(Boolean);
 
+  const href =
+    wordsDueCount > 0
+      ? "/practice/review"
+      : soundsDueCount > 0
+        ? "/practice/sounds"
+        : "/practice/review";
+
   return (
     <Link
-      href="/words?tab=review"
+      href={href}
       className="home-card-lift focus-ring flex items-center gap-3 rounded-xl border border-border-subtle bg-surface-sunken px-4 py-3 transition-transform active:scale-[0.96]"
     >
       <div className="flex min-w-0 flex-1 flex-col gap-0.5">
