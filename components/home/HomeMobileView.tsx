@@ -2,19 +2,19 @@
 
 // Planned structure:
 // <HomeMobileView>
-//   <HomeHeaderGreeting />   resolved name via useUserPreferences
-//   <PrimaryActionTile />    Practice sounds (accent) + Continue course
-//   <SecondaryActionTile />  Decks / Progress / IPA Chart / Lessons (4-column)
-//   streak pill              inline flame + count, visible when streak > 0
-//   review banner            compact due count + CTA, visible when items due
-//   <HomeDailyCard />
+//   slim utility bar         mono date · name + optional streak pill
+//   <HomeReviewBanner />     due counts + review CTA
+//   {dailyCard}
+//   grid cols-2              <Core1000ProgressCard /> + <WeakSoundCard />
+//   Quick access section     <PrimaryActionTile /> x2 + <SecondaryActionTile /> x4
 // </HomeMobileView>
 
-import { BookOpen, MicVocal, Layers, BarChart2, Grid2x2, GraduationCap, Flame, ArrowRight } from "lucide-react";
+import { BookOpen, MicVocal, Layers, BarChart2, Grid2x2, GraduationCap, Flame } from "lucide-react";
 import Link from "next/link";
 import type { ElementType } from "react";
-import HomeHeaderGreeting from "@/components/home/HomeHeaderGreeting";
 import Core1000ProgressCard from "@/components/home/Core1000ProgressCard";
+import HomeReviewBanner from "@/components/home/HomeReviewBanner";
+import WeakSoundCard from "@/components/home/WeakSoundCard";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { useUserPreferences } from "@/hooks/useUserPreferences";
 import type { DailyStreakResult } from "@/lib/daily/streak-core";
@@ -89,7 +89,6 @@ export default function HomeMobileView({
   weakestPhoneme = null,
   dailyCard,
 }: HomeMobileViewProps) {
-  void weakestPhoneme;
   const { user } = useAuth();
   const { preferences } = useUserPreferences();
 
@@ -104,60 +103,34 @@ export default function HomeMobileView({
   });
 
   return (
-    <div className="flex flex-col gap-6 pt-2">
-      <div className="animate-home-in">
-        <HomeHeaderGreeting userName={userName} dateLabel={dateLabel} />
+    <div className="flex flex-col gap-4 pt-2">
+      <div className="flex items-center justify-between gap-2 border-b border-border-subtle pb-3">
+        <p className="font-mono text-caption text-fg-muted">
+          {dateLabel} · {userName.toLowerCase()}
+        </p>
+        {(streak?.currentStreak ?? 0) > 0 && (
+          <span className="inline-flex items-center gap-1 font-caption tabular-nums text-fg">
+            <Flame
+              size={14}
+              className={streak?.completedToday ? "text-success" : "text-primary"}
+              aria-hidden
+            />
+            {streak!.currentStreak}
+          </span>
+        )}
       </div>
+
+      <HomeReviewBanner wordsDueCount={wordsDueCount} soundsDueCount={soundsDueCount} />
 
       {dailyCard}
 
-      <Core1000ProgressCard />
-
-      {(streak?.currentStreak ?? 0) > 0 && (
-        <div className="animate-home-in flex items-center gap-2">
-          <Flame
-            size={14}
-            className={[
-              "transition-colors duration-300",
-              streak?.completedToday ? "text-[var(--success)]" : "text-[var(--primary)]",
-            ].join(" ")}
-            aria-hidden
-          />
-          <span className="font-label tabular-nums text-[var(--text-primary)]">
-            {streak!.currentStreak}
-          </span>
-          <span className="font-caption text-[var(--text-tertiary)]">
-            {streak!.currentStreak === 1 ? "day" : "days"} streak
-          </span>
-        </div>
-      )}
-
-      {(wordsDueCount + soundsDueCount) > 0 && (
-        <Link
-          href="/words?tab=review"
-          className="animate-home-in flex items-center gap-3 rounded-[var(--radius-xl)] border border-border-subtle bg-surface-raised px-4 py-3 transition-colors hover:bg-surface-sunken focus-ring"
-        >
-          <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-            <p className="font-label font-semibold text-[var(--text-primary)]">
-              {wordsDueCount + soundsDueCount} item{(wordsDueCount + soundsDueCount) === 1 ? "" : "s"} to review
-            </p>
-            <p className="font-caption text-[var(--text-secondary)]">
-              {[
-                wordsDueCount > 0 && `${wordsDueCount} word${wordsDueCount === 1 ? "" : "s"}`,
-                soundsDueCount > 0 && `${soundsDueCount} sound${soundsDueCount === 1 ? "" : "s"}`,
-              ]
-                .filter(Boolean)
-                .join(" · ")}
-            </p>
-          </div>
-          <ArrowRight size={16} className="shrink-0 text-[var(--text-tertiary)]" aria-hidden />
-        </Link>
-      )}
+      <div className="grid grid-cols-2 gap-2">
+        <Core1000ProgressCard />
+        <WeakSoundCard weakestPhoneme={weakestPhoneme} />
+      </div>
 
       <section>
-        <p className="mb-3 text-label font-medium uppercase tracking-widest text-[var(--text-tertiary)]">
-          Quick access
-        </p>
+        <p className="font-kicker mb-3">Quick access</p>
         <div className="flex flex-col gap-2">
           <div className="animate-home-in animate-home-in-d1">
             <PrimaryActionTile title="Practice sounds" href="/practice/sounds" Icon={MicVocal} accent />
