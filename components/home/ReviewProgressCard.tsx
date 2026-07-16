@@ -1,3 +1,4 @@
+/** Legacy card; home now uses WeakSoundCard. Kept for rollback. */
 "use client";
 
 import Link from "next/link";
