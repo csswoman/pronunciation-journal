@@ -5,7 +5,6 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { ArrowRight, Flame } from 'lucide-react'
 import Button from '@/components/ui/Button'
-import Badge from '@/components/ui/Badge'
 import DailyStepList from '@/components/daily/DailyStepList'
 import { useDailyPlan, type ConceptLesson, type DailyStep } from '@/hooks/useDailyPlan'
 import { useAuth } from '@/components/auth/AuthProvider'
@@ -44,7 +43,7 @@ export default function HomeDailyCard({ conceptLesson }: HomeDailyCardProps) {
   // Embedded checklist (single view)
   return (
     <section>
-      <div className="flex flex-col bg-daily-card rounded-[var(--radius-xl)] border border-border-subtle px-6 pb-6 pt-5">
+      <div className="flex flex-col rounded-xl border border-border-subtle bg-daily-card px-6 pb-6 pt-5 shadow-sm">
         {/* aria-live region announces plan-ready state to screen readers */}
         <div aria-live="polite" aria-atomic="true" className="sr-only">
         {status === 'ready' && !allDone && `Today's plan ready, ${steps.length} steps`}
@@ -98,7 +97,7 @@ export default function HomeDailyCard({ conceptLesson }: HomeDailyCardProps) {
             <div className="animate-step-done grid h-12 w-12 place-items-center rounded-full bg-[var(--success-soft)] text-[var(--success)]">
               <Flame size={24} />
             </div>
-            <p className="font-title text-[var(--text-primary)]">Daily complete!</p>
+            <p className="font-label font-semibold text-fg">Daily complete!</p>
             <p className="font-body-sm max-w-xs text-[var(--text-secondary)]">
               You finished all {steps.length} steps today.
             </p>
@@ -111,14 +110,14 @@ export default function HomeDailyCard({ conceptLesson }: HomeDailyCardProps) {
         ) : steps.length > 0 ? (
           <div className="animate-state-in">
             <div className="mb-4 flex items-center gap-3">
-              <Badge label="Today's plan" variant="default" className="shrink-0" />
+              <span className="font-kicker shrink-0">Daily</span>
               <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-[var(--primary-soft)]">
                 <div
                   className="progress-fill progress-fill-mount h-full w-full rounded-full bg-[var(--primary)]"
                   style={{ transform: `scaleX(${steps.length ? completedCount / steps.length : 0})` }}
                 />
               </div>
-              <span className="font-body-sm shrink-0 tabular-nums text-[var(--text-tertiary)]">
+              <span className="font-caption shrink-0 tabular-nums text-fg-muted">
                 {completedCount} of {steps.length}
               </span>
             </div>

@@ -4,15 +4,15 @@ import Button from "@/components/ui/Button";
 
 export default function HomeAiPracticeCard() {
   return (
-    <div className="flex flex-col gap-3 rounded-[var(--radius-xl)] border border-[var(--cta-outline-border)] bg-surface-raised p-5">
+    <div className="home-sidebar-card flex flex-col gap-3">
+      <span className="font-kicker">AI</span>
       <div className="flex items-center gap-2">
         <span className="icon-wrap-hue flex h-9 w-9 shrink-0 items-center justify-center rounded-lg">
           <Zap size={18} />
         </span>
-        <span className="font-body-sm font-semibold text-[var(--text-primary)]">Practice</span>
+        <span className="font-label font-semibold text-fg">Practice</span>
       </div>
-
-      <p className="font-caption leading-relaxed text-[var(--text-secondary)]">
+      <p className="font-caption text-pretty leading-relaxed text-fg-muted">
         Jump into a sounds session or explore practice topics.
       </p>
 

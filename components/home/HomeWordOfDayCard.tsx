@@ -4,7 +4,6 @@ import { useState, useCallback, useEffect } from "react";
 import { Volume2, Loader2, RotateCcw, BookmarkPlus, BookmarkCheck } from "lucide-react";
 import Button from "@/components/ui/Button";
 import { SyllableWord } from "@/components/ui/SyllableWord";
-import { CardBadge } from "@/components/ui/CardBadge";
 import { WaveformVisualizer } from "@/components/ui/WaveformVisualizer";
 import { useWordOfDay } from "@/hooks/useWordOfDay";
 import { useAuth } from "@/components/auth/AuthProvider";
@@ -49,9 +48,9 @@ export default function HomeWordOfDayCard() {
   }, [user, word, saved, saving]);
 
   return (
-    <div className="flex flex-col rounded-[var(--radius-xl)] border border-border-subtle bg-surface-raised p-5">
+    <div className="home-sidebar-card flex flex-col">
       <div className="flex items-center justify-between gap-2">
-        <CardBadge>Word of the day</CardBadge>
+        <span className="font-kicker">Word</span>
         {!loading && (
           <button
             type="button"
@@ -84,18 +83,18 @@ export default function HomeWordOfDayCard() {
       {word && !loading && (
         <div className="animate-state-in" key={word.word}>
           <div className="mt-3">
-            <p className="font-display text-display-word font-semibold leading-none text-[var(--text-primary)]">
+            <p className="font-mono text-display-word font-semibold leading-none text-fg">
               <SyllableWord word={word.word} />
             </p>
             <div className="mt-1 flex items-center gap-2">
               <p className="font-ipa text-sm">{word.ipa}</p>
               {word.part_of_speech ? (
-                <span className="font-tiny rounded border border-border-default bg-surface-sunken px-1.5 py-0.5 text-[var(--text-tertiary)]">
+                <span className="font-caption rounded border border-border-default bg-surface-sunken px-1.5 py-0.5 text-fg-muted">
                   {word.part_of_speech}
                 </span>
               ) : null}
               {word.difficulty ? (
-                <span className="font-tiny rounded border border-border-default bg-surface-sunken px-1.5 py-0.5 capitalize text-[var(--text-tertiary)]">
+                <span className="font-caption rounded border border-border-default bg-surface-sunken px-1.5 py-0.5 capitalize text-fg-muted">
                   {word.difficulty}
                 </span>
               ) : null}
