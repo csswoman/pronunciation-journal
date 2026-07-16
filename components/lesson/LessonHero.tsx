@@ -94,7 +94,7 @@ export function LessonHero({ lesson, totalWords, chunkLabel, overall, diffMode, 
           {visibleWords.length > 0 && (
             <span className="flex flex-wrap items-center gap-x-1 gap-y-0.5">
               {visibleWords.map((w, i) => (
-                <span key={w.word} className="flex items-center gap-1">
+                <span key={`${w.word}-${i}`} className="flex items-center gap-1">
                   <span className="hover:text-fg transition-colors cursor-pointer">{w.word}</span>
                   {(i < visibleWords.length - 1 || extraCount > 0) && (
                     <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor" className="text-[var(--text-tertiary)] opacity-50">

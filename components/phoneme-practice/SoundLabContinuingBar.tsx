@@ -26,8 +26,10 @@ export function SoundLabContinuingBar({ lesson, progress }: Props) {
   if (!lesson) return null;
 
   const ipa = ipaFromLessonTitle(lesson.title);
-  const heroWord = lesson.words[0]?.word ?? null;
-  const exampleWords = lesson.words.slice(0, 2).map((w) => w.word);
+  const exampleWords = [
+    ...new Set(lesson.words.map((w) => w.word).filter(Boolean)),
+  ].slice(0, 2);
+  const heroWord = exampleWords[0] ?? null;
   const progressLabel = progressAriaLabel(ipa, heroWord, progress);
 
   return (
@@ -80,9 +82,9 @@ export function SoundLabContinuingBar({ lesson, progress }: Props) {
               role="group"
               aria-labelledby={examplesGroupId}
             >
-              {exampleWords.map((word) => (
+              {exampleWords.map((word, i) => (
                 <button
-                  key={word}
+                  key={`${word}-${i}`}
                   type="button"
                   className={cn(
                     "sound-lab__resume-pill sound-lab__resume-pill--side",

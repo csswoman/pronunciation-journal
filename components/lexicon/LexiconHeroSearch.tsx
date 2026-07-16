@@ -222,7 +222,7 @@ export function LexiconHeroSearch({
               <span className="words-lexicon__quick-lbl">Recent:</span>
               {recentWords.map((w) => (
                 <button
-                  key={w}
+                  key={`recent:${w}`}
                   type="button"
                   className="words-lexicon__qchip"
                   onClick={() => chipPick(w)}
@@ -239,7 +239,7 @@ export function LexiconHeroSearch({
               </span>
               {dueWords.map((w) => (
                 <button
-                  key={w}
+                  key={`due:${w}`}
                   type="button"
                   className="words-lexicon__qchip is-due"
                   onClick={() => chipPick(w)}

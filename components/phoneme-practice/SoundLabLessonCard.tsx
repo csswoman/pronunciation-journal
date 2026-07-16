@@ -77,7 +77,9 @@ export function SoundLabLessonCard({ lesson, progressPct, isWeak, staggerIndex =
   const ipa = ipaFromLessonTitle(title);
   const subtitle = description?.trim() || null;
   const linkHref = href ?? `/practice/sounds/sound/${id.replace("sound-", "")}`;
-  const examples = words.length > 0 ? words.slice(0, 2).map((w) => w.word) : [];
+  const examples = [
+    ...new Set(words.map((w) => w.word).filter(Boolean)),
+  ].slice(0, 2);
   const delayMs = Math.min(staggerIndex * 30, 400);
 
   const isDone         = progressPct !== undefined && progressPct >= MASTERY_DISPLAY_THRESHOLD;
@@ -89,7 +91,6 @@ export function SoundLabLessonCard({ lesson, progressPct, isWeak, staggerIndex =
   const cardBg = isWeak || isNearComplete || isDone ? undefined : palette.tint;
 
   const heroWord = examples[0];
-  const restWords = examples.slice(1);
 
   return (
     <Link href={linkHref} className="block no-underline">
@@ -166,11 +167,11 @@ export function SoundLabLessonCard({ lesson, progressPct, isWeak, staggerIndex =
         {/* Example pills — tap to hear via SpeechSynthesis */}
         {examples.length > 0 && (
           <div className="flex flex-wrap gap-1.5 pt-3">
-            {[heroWord, ...restWords].filter(Boolean).map((word) => (
+            {examples.map((word, i) => (
               <button
-                key={word}
+                key={`${word}-${i}`}
                 type="button"
-                onClick={(e) => speak(word!, e)}
+                onClick={(e) => speak(word, e)}
                 className={[
                   "sound-lab__example-pill cursor-pointer",
                   speaking === word && "sound-lab__example-pill--speaking",

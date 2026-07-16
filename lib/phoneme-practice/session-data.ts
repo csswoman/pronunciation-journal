@@ -10,10 +10,22 @@ export interface PhonemeSessionDataset {
   minimalPairs: MinimalPair[]
 }
 
+/**
+ * Groups words by sound, keeping the first row per (sound_id, word) pair.
+ * Seed re-runs left duplicate rows in `public.words`; without this, React lists
+ * keyed by word text warn and sessions over-weight the same lemma.
+ */
 export function buildWordsBySoundId(words: SoundWord[]): Map<number, SoundWord[]> {
   const grouped = new Map<number, SoundWord[]>()
+  const seen = new Map<number, Set<string>>()
 
   for (const word of words) {
+    const key = word.word.toLowerCase()
+    const seenForSound = seen.get(word.sound_id) ?? new Set<string>()
+    if (seenForSound.has(key)) continue
+    seenForSound.add(key)
+    seen.set(word.sound_id, seenForSound)
+
     const bucket = grouped.get(word.sound_id) ?? []
     bucket.push(word)
     grouped.set(word.sound_id, bucket)
