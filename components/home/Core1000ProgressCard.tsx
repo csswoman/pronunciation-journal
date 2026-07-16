@@ -24,8 +24,9 @@ export default function Core1000ProgressCard() {
         .filter((e) => e.wordId.startsWith(CORE1000_PREFIX))
         .count(),
     [],
-    0,
   )
+
+  if (learned === undefined) return null
 
   if (learned === 0) {
     return (
