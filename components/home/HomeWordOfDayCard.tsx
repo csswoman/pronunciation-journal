@@ -1,12 +1,13 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
-import { Volume2, Loader2, RotateCcw, BookmarkPlus, BookmarkCheck } from "lucide-react";
+import { Volume2, Loader2, RotateCcw, BookmarkPlus, BookmarkCheck } from "@/components/icons";
 import Button from "@/components/ui/Button";
 import { SyllableWord } from "@/components/ui/SyllableWord";
 import { WaveformVisualizer } from "@/components/ui/WaveformVisualizer";
 import { useWordOfDay } from "@/hooks/useWordOfDay";
 import { useAuth } from "@/components/auth/AuthProvider";
+import { formatIpaDisplay } from "@/lib/lexicon/format-ipa";
 import { isWordInBank, quickAddWord } from "@/lib/word-bank/queries";
 import { speakText } from "@/lib/speech/synthesis";
 
@@ -48,95 +49,95 @@ export default function HomeWordOfDayCard() {
   }, [user, word, saved, saving]);
 
   return (
-    <div className="home-sidebar-card flex flex-col">
+    <div className="home-sidebar-card flex flex-col gap-2">
       <div className="flex items-center justify-between gap-2">
-        <span className="font-kicker">Word</span>
+        <span className="font-label text-fg">Palabra del día</span>
         {!loading && (
           <button
             type="button"
             onClick={() => refresh()}
-            className="focus-ring grid h-9 w-9 shrink-0 place-items-center rounded-md text-[var(--text-tertiary)] transition-colors hover:bg-surface-sunken hover:text-[var(--text-secondary)]"
-            aria-label="Refresh word of the day"
-            title="Refresh word of the day"
+            className="focus-ring grid h-9 w-9 shrink-0 place-items-center rounded-md text-fg-muted transition-colors hover:bg-surface-sunken hover:text-fg"
+            aria-label="Otra palabra"
+            title="Otra palabra"
           >
-            <RotateCcw size={13} />
+            <RotateCcw size={15} />
           </button>
         )}
       </div>
 
       {loading && (
-        <div className="font-caption flex items-center gap-2 py-4 text-[var(--text-tertiary)]">
-          <Loader2 size={13} className="animate-spin" />
-          Loading word…
+        <div className="font-caption flex items-center gap-2 py-2 text-fg-muted">
+          <Loader2 size={15} className="animate-spin" />
+          Cargando…
         </div>
       )}
 
       {error && !word && !loading && (
-        <div className="animate-state-in flex flex-col items-start gap-2 py-2">
-          <p className="font-caption text-[var(--error)]">Couldn&apos;t load today&apos;s word.</p>
-          <Button type="button" variant="ghost" size="sm" onClick={() => refresh()}>
-            Try again
+        <div className="animate-state-in flex flex-col items-start gap-2 py-1">
+          <p className="font-body-sm text-error">No se pudo cargar la palabra.</p>
+          <Button type="button" variant="ghost" size="md" onClick={() => refresh()}>
+            Reintentar
           </Button>
         </div>
       )}
 
       {word && !loading && (
         <div className="animate-state-in" key={word.word}>
-          <div className="mt-3">
-            <p className="font-mono text-display-word font-semibold leading-none text-fg">
-              <SyllableWord word={word.word} />
-            </p>
-            <div className="mt-1 flex items-center gap-2">
-              <p className="font-ipa text-sm">{word.ipa}</p>
-              {word.part_of_speech ? (
-                <span className="font-caption rounded border border-border-default bg-surface-sunken px-1.5 py-0.5 text-fg-muted">
-                  {word.part_of_speech}
-                </span>
-              ) : null}
-              {word.difficulty ? (
-                <span className="font-caption rounded border border-border-default bg-surface-sunken px-1.5 py-0.5 capitalize text-fg-muted">
-                  {word.difficulty}
-                </span>
-              ) : null}
-            </div>
-            <div className="bg-primary-wash mt-2 rounded-lg py-2 pl-3">
-              <p className="font-body-sm max-w-[65ch] italic leading-relaxed text-[var(--text-secondary)]">
-                {word.definition}
-              </p>
-            </div>
-            {word.example_sentence ? (
-              <p className="font-body-sm mt-1 max-w-[65ch] italic text-[var(--text-tertiary)]">
-                &ldquo;{word.example_sentence}&rdquo;
-              </p>
+          <p className="font-mono text-display-word font-semibold leading-tight text-fg">
+            <SyllableWord word={word.word} />
+          </p>
+          <div className="mt-1.5 flex flex-wrap items-center gap-2">
+            {word.ipa ? (
+              <p className="font-ipa text-body-lg leading-snug text-fg-muted">{formatIpaDisplay(word.ipa)}</p>
+            ) : null}
+            {word.part_of_speech ? (
+              <span className="font-caption rounded-md border border-border-default bg-surface-sunken px-2 py-0.5 text-fg-muted">
+                {word.part_of_speech}
+              </span>
+            ) : null}
+            {word.difficulty ? (
+              <span className="font-caption rounded-md border border-border-default bg-surface-sunken px-2 py-0.5 capitalize text-fg-muted">
+                {word.difficulty}
+              </span>
             ) : null}
           </div>
+          {word.definition ? (
+            <p className="font-body-sm mt-2 line-clamp-2 text-fg-muted" title={word.definition}>
+              {word.definition}
+            </p>
+          ) : null}
+          {word.example_sentence ? (
+            <p className="font-body-sm mt-1.5 line-clamp-2 text-pretty text-fg italic">
+              &ldquo;{word.example_sentence}&rdquo;
+            </p>
+          ) : null}
 
           {speaking && (
-            <WaveformVisualizer isActive isRecording={false} color="gradient" className="mt-3 h-8" />
+            <WaveformVisualizer isActive isRecording={false} color="gradient" className="mt-2 h-6" />
           )}
 
-          <div className={`flex gap-2 ${speaking ? "mt-3" : "mt-4"}`}>
+          <div className={`flex gap-2 ${speaking ? "mt-2" : "mt-3"}`}>
             <Button
               variant="secondary"
-              size="sm"
-              icon={<Volume2 size={14} />}
+              size="md"
+              icon={<Volume2 size={18} />}
               className="flex-1 justify-center"
               onClick={speak}
               disabled={speaking}
             >
-              {speaking ? "Playing…" : "Listen"}
+              {speaking ? "…" : "Escuchar"}
             </Button>
 
             {user && (
               <Button
-                variant={saved ? "ghost" : "primary"}
-                size="sm"
-                icon={saved ? <BookmarkCheck size={14} /> : <BookmarkPlus size={14} />}
+                variant={saved ? "ghost" : "secondary"}
+                size="md"
+                icon={saved ? <BookmarkCheck size={18} /> : <BookmarkPlus size={18} />}
                 className="flex-1 justify-center"
                 onClick={() => void handleSave()}
                 disabled={saved || saving}
               >
-                {saving ? "Saving…" : saved ? "Saved" : "Add to words"}
+                {saving ? "…" : saved ? "Guardada" : "Añadir"}
               </Button>
             )}
           </div>

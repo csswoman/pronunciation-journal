@@ -1,4 +1,4 @@
-import { CalendarDays } from "lucide-react";
+import { CalendarDays } from "@/components/icons";
 
 interface HomeHeaderGreetingProps {
   userName: string;
@@ -27,8 +27,8 @@ export default function HomeHeaderGreeting({ userName, dateLabel }: HomeHeaderGr
 
   return (
     <div className="flex flex-col gap-1">
-      <p className="flex items-center gap-1.5 text-[11px] font-semibold tracking-widest uppercase text-fg-subtle">
-        <CalendarDays size={11} aria-hidden />
+      <p className="flex items-center gap-1.5 font-kicker text-fg-subtle">
+        <CalendarDays size={14} aria-hidden />
         {dateLabel}
       </p>
       <h1 className="font-editorial text-display-word font-[440] tracking-[-0.02em] leading-[1.2] text-fg">

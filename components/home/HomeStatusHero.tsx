@@ -1,6 +1,6 @@
 "use client";
 
-import { Flame, CalendarDays } from "lucide-react";
+import { Flame, CalendarDays } from "@/components/icons";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { useSoundProgress } from "@/hooks/useSoundProgress";
 import { useUserPreferences } from "@/hooks/useUserPreferences";

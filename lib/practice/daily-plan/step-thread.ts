@@ -2,6 +2,8 @@ import type { DailyStep, DailyStepKind } from '@/lib/practice/types'
 
 export type StepThreadHint = {
   word: string
+  /** IPA from a prior study card when available. */
+  ipa?: string
   fromStepTitle: string
   fromStepKind: DailyStepKind
 }
@@ -34,6 +36,20 @@ export function extractFeaturedWords(step: DailyStep): string[] {
   return []
 }
 
+/** Collect IPA spellings from study cards across the plan. */
+function buildIpaIndex(steps: DailyStep[]): Map<string, string> {
+  const map = new Map<string, string>()
+  for (const step of steps) {
+    for (const card of step.studyCards ?? []) {
+      const key = normalizeWord(card.word)
+      if (key && card.ipa && !map.has(key)) {
+        map.set(key, card.ipa)
+      }
+    }
+  }
+  return map
+}
+
 /**
  * Words in step `index` that already appeared in an earlier vocab/reader step.
  */
@@ -41,6 +57,7 @@ export function getThreadHintsForStep(steps: DailyStep[], index: number): StepTh
   if (index <= 0 || index >= steps.length) return []
 
   const prior = new Map<string, { title: string; kind: DailyStepKind }>()
+  const ipaByWord = buildIpaIndex(steps)
 
   for (let i = 0; i < index; i++) {
     const step = steps[i]
@@ -60,8 +77,10 @@ export function getThreadHintsForStep(steps: DailyStep[], index: number): StepTh
   for (const word of currentWords) {
     const source = prior.get(word)
     if (source) {
+      const ipa = ipaByWord.get(word)
       hints.push({
         word,
+        ...(ipa ? { ipa } : {}),
         fromStepTitle: source.title,
         fromStepKind: source.kind,
       })

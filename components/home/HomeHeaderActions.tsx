@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Play } from "lucide-react";
+import { Play } from "@/components/icons";
 import Button from "@/components/ui/Button";
 
 interface HomeHeaderActionsProps {
@@ -14,8 +14,8 @@ export default function HomeHeaderActions({ hasStartedLearning }: HomeHeaderActi
   return (
     <Button
       variant="primary"
-      size="sm"
-      icon={<Play size={14} className="fill-current" />}
+      size="md"
+      icon={<Play size={18} className="fill-current" />}
       onClick={() => router.push("/courses")}
     >
       {hasStartedLearning ? "Continue course" : "Explore courses"}

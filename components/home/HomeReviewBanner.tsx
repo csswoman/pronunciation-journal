@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight } from "@/components/icons";
 
 interface HomeReviewBannerProps {
   wordsDueCount?: number;
@@ -14,8 +14,10 @@ export default function HomeReviewBanner({
   if (total <= 0) return null;
 
   const parts = [
-    wordsDueCount > 0 && `${wordsDueCount} word${wordsDueCount === 1 ? "" : "s"}`,
-    soundsDueCount > 0 && `${soundsDueCount} sound${soundsDueCount === 1 ? "" : "s"}`,
+    wordsDueCount > 0 &&
+      `${wordsDueCount} ${wordsDueCount === 1 ? "palabra" : "palabras"}`,
+    soundsDueCount > 0 &&
+      `${soundsDueCount} ${soundsDueCount === 1 ? "sonido" : "sonidos"}`,
   ].filter(Boolean);
 
   const href =
@@ -28,23 +30,24 @@ export default function HomeReviewBanner({
   return (
     <Link
       href={href}
-      className="home-card-lift focus-ring flex items-center gap-3 rounded-xl border border-border-subtle bg-surface-sunken px-4 py-3 transition-transform active:scale-[0.96]"
+      className="home-card-lift focus-ring flex items-center gap-4 rounded-xl border border-primary bg-primary-soft px-5 py-4 shadow-sm transition-transform active:scale-[0.96]"
     >
-      <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-        <span className="font-kicker">Review</span>
-        <p className="font-label tabular-nums font-semibold text-fg">
-          {total} due
+      <div className="flex min-w-0 flex-1 flex-col gap-1">
+        <span className="font-kicker text-fg-muted">Urgente</span>
+        <span className="text-h4 text-fg">Pendiente de repasar</span>
+        <p className="font-body-sm tabular-nums text-fg">
+          {total} {total === 1 ? "pendiente" : "pendientes"}
           {parts.length > 0 ? (
-            <span className="font-caption font-normal text-fg-muted">
+            <span className="text-fg-muted">
               {" "}
               · {parts.join(" · ")}
             </span>
           ) : null}
         </p>
       </div>
-      <span className="font-label inline-flex shrink-0 items-center gap-1 font-semibold text-primary">
-        Review now
-        <ArrowRight size={14} aria-hidden />
+      <span className="inline-flex min-h-11 shrink-0 items-center gap-1.5 rounded-md bg-primary px-4 font-label text-on-primary">
+        Repasar ahora
+        <ArrowRight size={16} aria-hidden />
       </span>
     </Link>
   );

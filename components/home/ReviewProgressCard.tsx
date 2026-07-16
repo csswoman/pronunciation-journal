@@ -2,7 +2,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight } from "@/components/icons";
 import { useLiveQuery } from "dexie-react-hooks";
 import ProgressBar from "@/components/ui/ProgressBar";
 import { db } from "@/lib/db";

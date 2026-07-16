@@ -9,6 +9,7 @@ import {
   saveDoneIds,
   saveResolvedIds,
 } from '@/lib/daily/plan-storage'
+import { localizeDailyPlanSubtitles } from '@/lib/daily/localize-step-copy'
 import { recordDailyStepCompletion } from '@/lib/progress/activity-hub'
 import { syncTodayReconciledSteps } from '@/lib/progress/activity-queries-client'
 import { buildDailyPlan, DAILY_PLAN_STEP_COUNT } from '@/lib/practice/daily-plan'
@@ -88,7 +89,14 @@ export function useDailyPlan({ conceptLesson, autoLoad = true }: UseDailyPlanOpt
       const lesson = conceptLessonRef.current
       const cached = loadCachedDailyPlan(user.id)
       if (cached) {
-        applyPlan(cached, lesson, user.id)
+        const localized = localizeDailyPlanSubtitles(cached)
+        const changed = localized.steps.some(
+          (s, i) =>
+            s.subtitle !== cached.steps[i]?.subtitle ||
+            s.title !== cached.steps[i]?.title,
+        )
+        applyPlan(localized, lesson, user.id)
+        if (changed) saveCachedDailyPlan(user.id, localized)
         return
       }
       const built = await buildDailyPlan(user.id)

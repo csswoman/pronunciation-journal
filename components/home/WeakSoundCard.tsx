@@ -1,11 +1,11 @@
 // Planned structure:
 // <WeakSoundCard>
-//   kicker label
-//   phoneme link (IPA + label + ProgressBar + CTA) | empty-state CTA
+//   title Pronunciación
+//   phoneme focus OR empty CTA → /practice/sounds
 // </WeakSoundCard>
 
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight } from "@/components/icons";
 import ProgressBar from "@/components/ui/ProgressBar";
 import type { WeakestPhonemeHome } from "@/lib/home/constants";
 
@@ -17,12 +17,13 @@ function formatIpaDisplay(ipa: string): string {
   return ipa.startsWith("/") ? ipa : `/${ipa}/`;
 }
 
+/** Aside card: pronunciation focus + single path into Sound Lab. */
 export default function WeakSoundCard({ weakestPhoneme = null }: WeakSoundCardProps) {
   const hasPhoneme = weakestPhoneme != null && weakestPhoneme.accuracy != null;
 
   return (
-    <div className="home-sidebar-card flex flex-col gap-2">
-      <span className="font-kicker">Sound</span>
+    <div className="home-sidebar-card flex flex-col gap-3">
+      <span className="font-label text-fg">Pronunciación</span>
       {hasPhoneme ? (
         <Link
           href="/practice/sounds"
@@ -33,7 +34,7 @@ export default function WeakSoundCard({ weakestPhoneme = null }: WeakSoundCardPr
           </span>
           <div className="min-w-0 flex-1">
             {weakestPhoneme!.label ? (
-              <p className="font-caption text-fg-muted line-clamp-1">{weakestPhoneme!.label}</p>
+              <p className="font-body-sm line-clamp-1 text-fg-muted">{weakestPhoneme!.label}</p>
             ) : null}
             <div className="mt-1.5 flex items-center gap-2">
               <div className="min-w-0 flex-1">
@@ -43,17 +44,17 @@ export default function WeakSoundCard({ weakestPhoneme = null }: WeakSoundCardPr
                 {weakestPhoneme!.accuracy}%
               </span>
             </div>
-            <p className="font-caption mt-1.5 inline-flex items-center gap-1 text-primary group-hover:underline">
-              Practice this sound <ArrowRight size={12} aria-hidden />
+            <p className="font-body-sm mt-1.5 inline-flex items-center gap-1.5 text-primary group-hover:underline">
+              Practicar este sonido <ArrowRight size={16} aria-hidden />
             </p>
           </div>
         </Link>
       ) : (
         <Link
           href="/practice/sounds"
-          className="focus-ring inline-flex items-center gap-1.5 font-body-md text-primary hover:underline"
+          className="focus-ring inline-flex min-h-11 items-center justify-center gap-1.5 rounded-md border border-primary bg-surface-raised px-4 font-label text-primary transition-colors hover:bg-primary-soft"
         >
-          Find your weakest sound <ArrowRight size={13} aria-hidden />
+          Practicar sonidos <ArrowRight size={16} aria-hidden />
         </Link>
       )}
     </div>

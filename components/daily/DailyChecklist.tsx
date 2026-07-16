@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { Sparkles } from 'lucide-react'
+import { Sparkles } from "@/components/icons"
 import PageLayout from '@/components/layout/PageLayout'
 import DailyStepSession from './DailyStepSession'
 import SessionOpeningBanner from './SessionOpeningBanner'

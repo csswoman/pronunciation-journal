@@ -14,7 +14,6 @@ import type { DailyStep, PracticeContext, PracticeExercise } from '@/lib/practic
 import type { MinimalPair, Sound, SoundWord } from '@/lib/phoneme-practice/types'
 import type { WordBankEntry } from '@/lib/word-bank/types'
 import { wordBankEntryToStudyCard } from '@/lib/practice/study-card/model'
-import { dominantTopicLabel } from '@/lib/practice/topic-labels'
 import {
   LISTENING_EXERCISE_COUNT,
   MINIMAL_PAIRS_EXERCISE_COUNT,
@@ -22,11 +21,6 @@ import {
   WORD_INTRO_MAX_CARDS,
 } from './constants'
 import { dedupeByContentId, toWordEntry } from './selectors'
-
-/** Raw topic of an exercise, when it is a generic exercise that carries one. */
-function exerciseTopic(ex: PracticeExercise): string | undefined {
-  return ex.payload.kind === 'generic' ? ex.payload.data.topic : undefined
-}
 
 /**
  * Paso de presentación (noticing): muestra palabras nuevas (forma + significado
@@ -45,7 +39,7 @@ export function buildWordIntroStep(words: WordBankEntry[]): DailyStep | null {
     kind: 'word_intro',
     id: 'word_intro',
     title: 'Palabras nuevas',
-    subtitle: `${newWords.length} ${newWords.length === 1 ? 'palabra nueva' : 'palabras nuevas'} para conocer`,
+    subtitle: `${newWords.length} ${newWords.length === 1 ? 'palabra nueva' : 'palabras nuevas'} para conocer hoy`,
     icon: 'Sparkles',
     exercises: [],
     studyCards,
@@ -86,14 +80,11 @@ export function buildWordReviewStep(
 
   if (exercises.length === 0) return null
 
-  const concept = dominantTopicLabel(exercises.map(exerciseTopic))
-  const wordsSubtitle = `Afianzas ${words.length} ${words.length === 1 ? 'palabra' : 'palabras'} de tu léxico antes de que se te olviden`
-
   return {
     kind: 'word_review',
     id: 'word_review',
     title: 'Repaso de palabras',
-    subtitle: concept ? `${concept} · ${wordsSubtitle}` : wordsSubtitle,
+    subtitle: `Afianza ${words.length} ${words.length === 1 ? 'palabra' : 'palabras'} de tu léxico`,
     icon: 'BookMarked',
     exercises,
     featuredWords: words.map((w) => w.text),
@@ -120,7 +111,7 @@ export function buildContextPracticeStep(
     kind: 'context_practice',
     id: 'context_practice',
     title: 'Práctica en contexto',
-    subtitle: 'Usas el vocabulario dentro de oraciones reales para fijar su significado',
+    subtitle: 'Usa el vocabulario en oraciones reales',
     icon: 'FileText',
     exercises,
     featuredWords: usable.map((w) => w.word),
@@ -149,8 +140,10 @@ export function buildPhonemeFocusStep(
   return {
     kind: 'phoneme_focus',
     id: `phoneme_focus:${sound.id}`,
-    title: `Sound ${sound.ipa}`,
-    subtitle: isWeak ? 'Your sound to strengthen today' : `Practice the sound as in “${sound.example}”`,
+    title: 'Sound',
+    subtitle: isWeak
+      ? 'Tu sonido a reforzar hoy'
+      : `Practica el sonido como en '${sound.example}'`,
     icon: 'Waves',
     exercises,
     estMinutes: Math.max(2, Math.round(exercises.length * 1.1)),
@@ -180,7 +173,7 @@ export function buildMinimalPairsStep(
     kind: 'minimal_pairs',
     id: `minimal_pairs:${sound.id}`,
     title: 'Minimal pairs',
-    subtitle: `Tell ${sound.ipa} apart from similar sounds`,
+    subtitle: `Distingue ${sound.ipa} de sonidos parecidos`,
     icon: 'GitCompareArrows',
     exercises: deduped,
     estMinutes: Math.max(2, Math.round(deduped.length * 1.1)),
@@ -209,7 +202,7 @@ export function buildListeningStep(
     kind: 'listening',
     id: `listening:${sound.id}`,
     title: 'Listen and write',
-    subtitle: 'Dictation with new words',
+    subtitle: 'Dictado con palabras nuevas',
     icon: 'Headphones',
     exercises: deduped,
     estMinutes: Math.max(2, Math.round(deduped.length * 1.1)),

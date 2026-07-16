@@ -39,11 +39,7 @@
 }
 
 .bg-daily-card {
-  background: linear-gradient(
-    150deg,
-    color-mix(in oklch, var(--primary) 12%, transparent),
-    var(--surface-raised) 65%
-  );
+  background: var(--surface-raised);
 }
 
 .callout-warning {
@@ -176,9 +172,9 @@
 .font-label    { font: var(--font-label); }
 .font-kicker {
   font: var(--font-kicker);
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--text-tertiary);
+  color: var(--text-secondary);
 }
 .font-tiny     { font: var(--font-tiny); }
 .font-heading  { font-family: var(--font-heading), serif; }
@@ -186,7 +182,7 @@
 /** Prefer .font-kicker over .type-overline for new UI */
 .type-overline {
   font: var(--font-kicker);
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--text-tertiary);
 }
@@ -204,10 +200,11 @@
 
 .font-ipa {
   font-family: var(--font-ipa), "Noto Sans", sans-serif;
-  font-size: 15px;
   letter-spacing: 0.03em;
-  color: var(--primary);
+  color: var(--text-primary);
   font-style: normal;
+  font-weight: 500;
+  line-height: 1.3;
 }
 
 /** IPA transcription — DM Mono, readable at study-card scale */
@@ -324,7 +321,7 @@
 .home-layout-shell {
   position: relative;
   width: 100%;
-  max-width: 90rem;
+  max-width: 80rem;
   margin-inline: auto;
   isolation: isolate;
 }
@@ -346,6 +343,10 @@
     grid-template-columns: minmax(0, 1.45fr) minmax(0, 0.9fr);
     align-items: start;
   }
+
+  .home-command-footer {
+    grid-column: 1 / -1;
+  }
 }
 
 .home-command-main {
@@ -360,9 +361,22 @@
   gap: var(--space-3);
 }
 
+.home-command-footer {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-3);
+}
+
+@media (min-width: 768px) {
+  .home-command-footer {
+    grid-template-columns: minmax(0, 1.45fr) minmax(0, 0.9fr);
+    align-items: stretch;
+  }
+}
+
 .home-sidebar-card {
   border-radius: var(--radius-xl);
-  border: 1px solid color-mix(in oklch, var(--border-subtle) 75%, transparent);
+  border: 1px solid var(--border-subtle);
   background-color: var(--surface-raised);
-  padding: var(--space-4);
+  padding: var(--space-5);
 }

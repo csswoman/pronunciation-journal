@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Layers, MicVocal, BookOpen, BarChart2, Grid2x2, GraduationCap } from "lucide-react";
+import { Layers, MicVocal, BookOpen, BarChart2, Grid2x2, GraduationCap } from "@/components/icons";
 import type { ElementType } from "react";
 
 // Planned structure:

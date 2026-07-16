@@ -7,7 +7,7 @@ describe("WeakSoundCard", () => {
   it("shows CTA when there is no phoneme data", () => {
     render(<WeakSoundCard weakestPhoneme={null} />);
     expect(screen.queryByText("/ð/")).not.toBeInTheDocument();
-    expect(screen.getByText(/find your weakest sound/i)).toBeInTheDocument();
+    expect(screen.getByText(/practicar sonidos/i)).toBeInTheDocument();
   });
 
   it("renders IPA and accuracy when data is present", () => {
@@ -23,6 +23,7 @@ describe("WeakSoundCard", () => {
     );
     expect(screen.getByText("/ð/")).toBeInTheDocument();
     expect(screen.getByText(/40%/)).toBeInTheDocument();
+    expect(screen.getByText(/practicar este sonido/i)).toBeInTheDocument();
     expect(screen.getByRole("link")).toHaveAttribute("href", "/practice/sounds");
   });
 });

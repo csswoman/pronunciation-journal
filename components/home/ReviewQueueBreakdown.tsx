@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight } from "@/components/icons";
 import { cn } from "@/lib/cn";
 import type { ReviewSource } from "@/lib/home/constants";
 

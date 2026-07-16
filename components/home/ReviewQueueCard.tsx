@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Check } from "lucide-react";
+import { ArrowRight, Check } from "@/components/icons";
 import ReviewQueueBreakdown from "./ReviewQueueBreakdown";
 import ReviewQueuePreview from "./ReviewQueuePreview";
 import type { ReviewQueueSummary } from "@/lib/home/constants";

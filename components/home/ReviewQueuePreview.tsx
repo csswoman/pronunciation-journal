@@ -18,9 +18,7 @@ export default function ReviewQueuePreview({ items }: ReviewQueuePreviewProps) {
           <p className="font-display text-base font-medium leading-tight text-[var(--text-primary)]">
             {item.text}
             {item.ipa ? (
-              <span className="font-ipa ml-2 text-sm font-normal text-[var(--primary)]">
-                {formatIpa(item.ipa)}
-              </span>
+              <span className="font-ipa ml-2 text-body-sm">{formatIpa(item.ipa)}</span>
             ) : null}
           </p>
           {item.translation ? (

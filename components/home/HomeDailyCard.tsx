@@ -1,11 +1,11 @@
 'use client'
 
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { ArrowRight, Flame } from 'lucide-react'
+import { ArrowRight, Flame } from "@/components/icons"
 import Button from '@/components/ui/Button'
-import DailyStepList from '@/components/daily/DailyStepList'
+import DailyStepList, { readInProgressStepId } from '@/components/daily/DailyStepList'
 import { useDailyPlan, type ConceptLesson, type DailyStep } from '@/hooks/useDailyPlan'
 import { useAuth } from '@/components/auth/AuthProvider'
 
@@ -20,18 +20,20 @@ export default function HomeDailyCard({ conceptLesson }: HomeDailyCardProps) {
     conceptLesson,
     autoLoad: false,
   })
+  const [inProgressStepId, setInProgressStepId] = useState<string | null>(null)
 
-  // Load plan once the user is available.
   useEffect(() => {
     if (user && status === 'idle') void load()
   }, [user, status, load])
 
-  // Celebrate once when all steps are complete.
   useEffect(() => {
     if (allDone) celebrate()
   }, [allDone, celebrate])
 
-  // Write sessionStorage + navigate so the session starts immediately at its own URL.
+  useEffect(() => {
+    setInProgressStepId(readInProgressStepId())
+  }, [status, steps])
+
   const handleStartStep = useCallback((step: DailyStep) => {
     if (step.kind === 'concept') return
     try {
@@ -40,95 +42,119 @@ export default function HomeDailyCard({ conceptLesson }: HomeDailyCardProps) {
     router.push(`/daily?step=${step.id}`)
   }, [router])
 
-  // Embedded checklist (single view)
+  const remainingMinutes = useMemo(() => {
+    return steps.reduce((sum, s) => {
+      const st = getStepStatus(s.id)
+      if (st === 'done' || st === 'resolved') return sum
+      return sum + (s.estMinutes || 0)
+    }, 0)
+  }, [steps, getStepStatus])
+
+  const progressLabel = useMemo(() => {
+    if (steps.length === 0) return ''
+    const parts = [`${completedCount} de ${steps.length}`]
+    if (inProgressStepId) parts.push('en curso')
+    if (remainingMinutes > 0) {
+      parts.push(
+        completedCount === 0
+          ? `≈${remainingMinutes} min`
+          : `≈${remainingMinutes} min restantes`,
+      )
+    }
+    return parts.join(' · ')
+  }, [steps.length, completedCount, inProgressStepId, remainingMinutes])
+
   return (
     <section>
-      <div className="flex flex-col rounded-xl border border-border-subtle bg-daily-card px-6 pb-6 pt-5 shadow-sm">
-        {/* aria-live region announces plan-ready state to screen readers */}
+      <div className="flex flex-col rounded-xl border border-border-default bg-daily-card px-6 pb-6 pt-5 shadow-sm">
         <div aria-live="polite" aria-atomic="true" className="sr-only">
-        {status === 'ready' && !allDone && `Today's plan ready, ${steps.length} steps`}
-        {status === 'ready' && allDone && 'Daily plan complete!'}
-      </div>
-
-      {(status === 'loading' || status === 'idle') && (
-        <div className="flex flex-col gap-2.5">
-          {Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} className="flex items-center gap-3">
-              <div className="h-7 w-7 shrink-0 rounded-md bg-surface-sunken animate-pulse" />
-              <div className="h-4 flex-1 rounded-md bg-surface-sunken animate-pulse" style={{ width: `${70 + (i % 3) * 10}%` }} />
-            </div>
-          ))}
-          <p className="font-body-sm mt-2 text-center text-[var(--text-tertiary)] animate-pulse">
-            Preparing your plan…
-          </p>
+          {status === 'ready' && !allDone && `Plan de hoy listo, ${steps.length} pasos`}
+          {status === 'ready' && allDone && 'Plan diario completo'}
         </div>
-      )}
 
-      {status === 'error' && (
-        <div className="animate-state-in flex flex-col items-center gap-3 py-8 text-center">
-          <p className="font-body-sm text-[var(--error)]">Couldn't prepare your plan.</p>
-          <Button type="button" variant="primary" size="sm" onClick={() => void load()}>
-            Retry
-          </Button>
-        </div>
-      )}
-
-      {status === 'ready' && !allDone && steps.length === 0 && (
-        <div className="animate-state-in flex flex-col items-center gap-4 py-8 text-center">
-          <div className="flex flex-col gap-1.5">
-            <p className="font-label font-semibold text-[var(--text-primary)]">
-              Your plan is empty today.
-            </p>
-            <p className="font-body-sm max-w-[28ch] text-[var(--text-secondary)]">
-              Your daily plan builds as you start a course or practice sounds.
+        {(status === 'loading' || status === 'idle') && (
+          <div className="flex flex-col gap-2.5">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <div key={i} className="flex items-center gap-3">
+                <div className="h-3 w-6 shrink-0 animate-pulse rounded bg-surface-sunken" />
+                <div
+                  className="h-4 flex-1 animate-pulse rounded-md bg-surface-sunken"
+                  style={{ width: `${70 + (i % 3) * 10}%` }}
+                />
+              </div>
+            ))}
+            <p className="font-body-sm mt-2 animate-pulse text-center text-fg-muted">
+              Preparando tu plan…
             </p>
           </div>
-          <Link href="/courses">
-            <Button variant="primary" size="sm" icon={<ArrowRight size={14} />} iconPosition="right">
-              Explore courses
-            </Button>
-          </Link>
-        </div>
-      )}
+        )}
 
-      {status === 'ready' &&
-        (allDone ? (
-          <div className="animate-state-in flex flex-col items-center gap-3 py-6 text-center">
-            <div className="animate-step-done grid h-12 w-12 place-items-center rounded-full bg-[var(--success-soft)] text-[var(--success)]">
-              <Flame size={24} />
+        {status === 'error' && (
+          <div className="animate-state-in flex flex-col items-center gap-3 py-8 text-center">
+            <p className="font-body-sm text-error">No se pudo preparar tu plan.</p>
+            <Button type="button" variant="primary" size="md" onClick={() => void load()}>
+              Reintentar
+            </Button>
+          </div>
+        )}
+
+        {status === 'ready' && !allDone && steps.length === 0 && (
+          <div className="animate-state-in flex flex-col items-center gap-4 py-8 text-center">
+            <div className="flex flex-col gap-1.5">
+              <p className="font-label font-semibold text-fg">
+                Tu plan está vacío hoy.
+              </p>
+              <p className="font-body-sm max-w-[28ch] text-fg-muted">
+                Se arma cuando empiezas un curso o practicas sonidos.
+              </p>
             </div>
-            <p className="font-label font-semibold text-fg">Daily complete!</p>
-            <p className="font-body-sm max-w-xs text-[var(--text-secondary)]">
-              You finished all {steps.length} steps today.
-            </p>
-            <Link href="/practice/sounds">
-              <Button variant="secondary" size="sm" icon={<ArrowRight size={14} />} iconPosition="right">
-                Free practice
+            <Link href="/courses">
+              <Button variant="primary" size="md" icon={<ArrowRight size={18} />} iconPosition="right">
+                Explorar cursos
               </Button>
             </Link>
           </div>
-        ) : steps.length > 0 ? (
-          <div className="animate-state-in">
-            <div className="mb-4 flex items-center gap-3">
-              <span className="font-kicker shrink-0">Daily</span>
-              <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-[var(--primary-soft)]">
-                <div
-                  className="progress-fill progress-fill-mount h-full w-full rounded-full bg-[var(--primary)]"
-                  style={{ transform: `scaleX(${steps.length ? completedCount / steps.length : 0})` }}
-                />
+        )}
+
+        {status === 'ready' &&
+          (allDone ? (
+            <div className="animate-state-in flex flex-col items-center gap-3 py-6 text-center">
+              <div className="animate-step-done grid h-12 w-12 place-items-center rounded-full bg-success-soft text-success">
+                <Flame size={24} />
               </div>
-              <span className="font-caption shrink-0 tabular-nums text-fg-muted">
-                {completedCount} of {steps.length}
-              </span>
+              <p className="font-label font-semibold text-fg">¡Plan completo!</p>
+              <p className="font-body-sm max-w-xs text-fg-muted">
+                Terminaste los {steps.length} pasos de hoy.
+              </p>
+              <Link href="/practice/sounds">
+                <Button variant="secondary" size="md" icon={<ArrowRight size={18} />} iconPosition="right">
+                  Práctica libre
+                </Button>
+              </Link>
             </div>
-            <DailyStepList
-              steps={steps}
-              getStepStatus={getStepStatus}
-              onStartStep={handleStartStep}
-            />
-          </div>
-        ) : null)}
-    </div>
+          ) : steps.length > 0 ? (
+            <div className="animate-state-in">
+              <div className="mb-4 flex items-center gap-2.5">
+                <span className="font-label shrink-0 text-fg">Plan de hoy</span>
+                <div className="h-1.5 min-w-0 flex-1 overflow-hidden rounded-full bg-primary-soft">
+                  <div
+                    className="progress-fill progress-fill-mount h-full w-full rounded-full bg-primary"
+                    style={{ transform: `scaleX(${steps.length ? completedCount / steps.length : 0})` }}
+                  />
+                </div>
+                <span className="font-caption shrink-0 tabular-nums text-fg-muted">
+                  {progressLabel}
+                </span>
+              </div>
+              <DailyStepList
+                steps={steps}
+                getStepStatus={getStepStatus}
+                onStartStep={handleStartStep}
+                inProgressStepId={inProgressStepId}
+              />
+            </div>
+          ) : null)}
+      </div>
     </section>
   )
 }

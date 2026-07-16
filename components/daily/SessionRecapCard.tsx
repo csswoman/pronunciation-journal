@@ -10,7 +10,7 @@
 // </SessionRecapCard>
 
 import Link from 'next/link'
-import { ArrowRight, Flame } from 'lucide-react'
+import { ArrowRight, Flame } from "@/components/icons"
 import { useLiveQuery } from 'dexie-react-hooks'
 import PageLayout from '@/components/layout/PageLayout'
 import Button from '@/components/ui/Button'

@@ -27,8 +27,8 @@ export async function buildConnectedSpeechStep(): Promise<DailyStep | null> {
   return {
     kind: 'connected_speech',
     id: 'connected_speech',
-    title: 'Connected speech',
-    subtitle: 'How Americans really sound',
+    title: 'Habla conectada',
+    subtitle: 'Cómo suenan de verdad los estadounidenses',
     icon: 'AudioWaveform',
     exercises,
     estMinutes: Math.max(2, Math.round(exercises.length * 1.2)),
@@ -73,8 +73,10 @@ export async function buildSentenceBuilderStep(
   return {
     kind: 'sentence_builder',
     id: 'sentence_builder',
-    title: 'Arma la oración',
-    subtitle: weakTopic ? `Práctica: ${weakTopic}` : 'Ordena palabras de tus lecciones',
+    title: 'Constructor de oraciones',
+    subtitle: weakTopic
+      ? 'Ordena oraciones de tu tema más débil'
+      : 'Ordena palabras de tus lecciones',
     icon: 'LayoutList',
     exercises,
     estMinutes: Math.max(2, Math.round(exercises.length * 1.2)),

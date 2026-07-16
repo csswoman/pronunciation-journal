@@ -40,9 +40,7 @@ export default function HomeLayout({
   todaysLesson = null,
   todaysConcept = null,
 }: HomeLayoutProps) {
-  void dailyGoal;
   void reviewQueue;
-  void vocabularyProgress;
 
   return (
     <div className="home-layout home-layout-shell">
@@ -52,12 +50,19 @@ export default function HomeLayout({
           wordsDueCount={wordsDueCount}
           soundsDueCount={soundsDueCount}
           weakestPhoneme={weakestPhoneme}
+          wordsMastered={vocabularyProgress?.wordBankMastered ?? 0}
+          weekMinutes={dailyGoal?.weekMinutes ?? 0}
           dailyCard={<HomeDailyCard conceptLesson={conceptLesson} />}
         />
       </div>
 
       <div className="home-layout-sections hidden md:flex">
-        <HomeUtilityBar streak={streak} />
+        <HomeUtilityBar
+          streak={streak}
+          wordsMastered={vocabularyProgress?.wordBankMastered ?? 0}
+          weekMinutes={dailyGoal?.weekMinutes ?? 0}
+          dailyGoal={dailyGoal}
+        />
         <HomeReviewBanner wordsDueCount={wordsDueCount} soundsDueCount={soundsDueCount} />
         <HomeCommandGrid
           conceptLesson={conceptLesson}

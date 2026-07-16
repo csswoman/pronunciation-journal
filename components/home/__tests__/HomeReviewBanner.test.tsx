@@ -13,10 +13,10 @@ describe("HomeReviewBanner", () => {
 
   it("shows total due and breakdown when words and sounds exist", () => {
     render(<HomeReviewBanner wordsDueCount={8} soundsDueCount={4} />);
-    expect(screen.getByText(/12 due/i)).toBeInTheDocument();
-    expect(screen.getByText(/8 words/i)).toBeInTheDocument();
-    expect(screen.getByText(/4 sounds/i)).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /review now/i })).toHaveAttribute(
+    expect(screen.getByText(/12 pendientes/i)).toBeInTheDocument();
+    expect(screen.getByText(/8 palabras/i)).toBeInTheDocument();
+    expect(screen.getByText(/4 sonidos/i)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /repasar ahora/i })).toHaveAttribute(
       "href",
       "/practice/review",
     );
@@ -24,10 +24,10 @@ describe("HomeReviewBanner", () => {
 
   it("links to review when only words are due", () => {
     render(<HomeReviewBanner wordsDueCount={5} soundsDueCount={0} />);
-    expect(screen.getByText(/5 due/i)).toBeInTheDocument();
-    expect(screen.getByText(/5 words/i)).toBeInTheDocument();
-    expect(screen.queryByText(/sound/i)).not.toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /review now/i })).toHaveAttribute(
+    expect(screen.getByText(/5 pendientes/i)).toBeInTheDocument();
+    expect(screen.getByText(/5 palabras/i)).toBeInTheDocument();
+    expect(screen.queryByText(/sonido/i)).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /repasar ahora/i })).toHaveAttribute(
       "href",
       "/practice/review",
     );
@@ -35,9 +35,9 @@ describe("HomeReviewBanner", () => {
 
   it("links to sounds when only sounds are due", () => {
     render(<HomeReviewBanner wordsDueCount={0} soundsDueCount={3} />);
-    expect(screen.getByText(/3 due/i)).toBeInTheDocument();
-    expect(screen.getByText(/3 sounds/i)).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /review now/i })).toHaveAttribute(
+    expect(screen.getByText(/3 pendientes/i)).toBeInTheDocument();
+    expect(screen.getByText(/3 sonidos/i)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /repasar ahora/i })).toHaveAttribute(
       "href",
       "/practice/sounds",
     );
