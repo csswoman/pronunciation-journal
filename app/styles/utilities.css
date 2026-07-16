@@ -164,6 +164,7 @@
 .font-body-md  { font: var(--font-body-md); }
 .font-body-sm  { font: var(--font-body-sm); }
 .font-caption  { font: var(--font-caption); }
+.font-label    { font: var(--font-label); }
 .font-kicker {
   font: var(--font-kicker);
   letter-spacing: 0.08em;

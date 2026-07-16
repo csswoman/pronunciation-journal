@@ -60,9 +60,9 @@ typography:
     lineHeight: 1.55
   label:
     fontFamily: "DM Sans, system-ui, sans-serif"
-    fontSize: "0.875rem"
+    fontSize: "0.8125rem"
     fontWeight: 500
-    lineHeight: 1.5
+    lineHeight: 1.4
   caption:
     fontFamily: "DM Sans, system-ui, sans-serif"
     fontSize: "0.8125rem"
@@ -286,7 +286,7 @@ The standard `<Button>` (`components/ui/Button.tsx`) covers form, dialog, and to
 - **App shell:** Fixed sidebar (256px desktop), bottom navigation bar (mobile). Tab bar is flat, no elevation.
 - **Nav items:** Ghost-style at rest (transparent bg, text-secondary text). Active state: primary-soft background, primary text, 8px radius.
 - **Hover:** Surface-raised fill, text-primary text, 150ms transition.
-- **Typography:** Label scale (DM Sans 500, 0.875rem).
+- **Typography:** Label scale (DM Sans 500, 0.8125rem / 13px).
 
 ### Phoneme Cards (Signature Component)
 
