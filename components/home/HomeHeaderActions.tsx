@@ -13,7 +13,7 @@ export default function HomeHeaderActions({ hasStartedLearning }: HomeHeaderActi
 
   return (
     <Button
-      variant="secondary"
+      variant="primary"
       size="sm"
       icon={<Play size={14} className="fill-current" />}
       onClick={() => router.push("/courses")}
