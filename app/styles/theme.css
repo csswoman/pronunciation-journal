@@ -141,28 +141,34 @@
   --text-h3--font-weight: 600;
   --text-h3--letter-spacing: -0.005em;
 
-  --text-h4: 1.25rem;
+  --text-h4: 1.125rem;
   --text-h4--line-height: 1.4;
   --text-h4--font-weight: 600;
 
   --text-body-lg: 1.125rem;
   --text-body-lg--line-height: 1.6;
 
+  --text-body-md: 0.9375rem;
+  --text-body-md--line-height: 1.55;
+
   --text-body-sm: 0.875rem;
   --text-body-sm--line-height: 1.5;
 
   --text-label: 0.8125rem;
   --text-label--line-height: 1.4;
+  --text-label--font-weight: 500;
 
-  --text-caption: 0.75rem;
-  --text-caption--line-height: 1.5;
+  --text-caption: 0.8125rem;
+  --text-caption--line-height: 1.45;
 
-  --text-xxs: 0.625rem;
-  --text-xxs--line-height: 1.4;
+  --text-kicker: 0.75rem;
+  --text-kicker--line-height: 1.4;
+  --text-kicker--font-weight: 500;
+  --text-kicker--letter-spacing: 0.08em;
 
-  --text-tiny: 0.6875rem;
-  --text-tiny--line-height: 1.4;
-  --text-tiny--font-weight: 500;
+  /* Keep xxs/tiny for legacy CSS outside home; do not use in new home UI */
+  --text-xxs: 0.75rem;
+  --text-tiny: 0.75rem;
 
   --text-display-word: 1.625rem;
   --text-display-word--line-height: 1;

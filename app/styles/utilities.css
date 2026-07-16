@@ -161,22 +161,28 @@
 .font-h3       { font: var(--font-h3); }
 .font-h4       { font: var(--font-h4); }
 .font-body     { font: var(--font-body); }
+.font-body-md  { font: var(--font-body-md); }
 .font-body-sm  { font: var(--font-body-sm); }
 .font-caption  { font: var(--font-caption); }
+.font-kicker {
+  font: var(--font-kicker);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
 .font-tiny     { font: var(--font-tiny); }
 .font-heading  { font-family: var(--font-heading), serif; }
 
-/** Section/card overlines — 11px uppercase labels */
+/** Prefer .font-kicker over .type-overline for new UI */
 .type-overline {
-  font: var(--font-tiny);
+  font: var(--font-kicker);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--text-tertiary);
 }
 
-/** Editorial numerals — streak, counts, ring percentages */
 .type-stat {
-  font-family: var(--font-display), serif;
+  font-family: var(--font-sans), sans-serif;
   font-variant-numeric: tabular-nums;
   font-weight: 700;
   line-height: 1;
