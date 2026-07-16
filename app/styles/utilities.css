@@ -53,12 +53,21 @@
 
 .home-card-lift {
   transition:
-    transform 150ms var(--ease-out-expo),
-    border-color 150ms var(--ease-out-expo);
+    transform 150ms var(--ease-out-expo, ease-out),
+    border-color 150ms var(--ease-out-expo, ease-out);
 }
 .home-card-lift:hover {
   transform: translateY(-2px);
   border-color: var(--accent-border);
+}
+.home-card-lift:active {
+  transform: scale(0.96);
+}
+@media (prefers-reduced-motion: reduce) {
+  .home-card-lift:hover,
+  .home-card-lift:active {
+    transform: none;
+  }
 }
 
 .btn-soft {
@@ -309,4 +318,51 @@
 /* ── Interactive border helpers ──────────────────────────────────────────── */
 .hover-border-primary:hover {
   border-color: var(--primary);
+}
+
+/* ── Home Notebook Command Center ─────────────────────────────────────── */
+.home-layout-shell {
+  position: relative;
+  width: 100%;
+  max-width: 90rem;
+  margin-inline: auto;
+  isolation: isolate;
+}
+
+.home-layout-sections {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.home-command-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-5);
+}
+
+@media (min-width: 768px) {
+  .home-command-grid {
+    grid-template-columns: minmax(0, 1.45fr) minmax(0, 0.9fr);
+    align-items: start;
+  }
+}
+
+.home-command-main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.home-command-aside {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.home-sidebar-card {
+  border-radius: var(--radius-xl);
+  border: 1px solid color-mix(in oklch, var(--border-subtle) 75%, transparent);
+  background-color: var(--surface-raised);
+  padding: var(--space-4);
 }

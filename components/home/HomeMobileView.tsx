@@ -18,12 +18,14 @@ import Core1000ProgressCard from "@/components/home/Core1000ProgressCard";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { useUserPreferences } from "@/hooks/useUserPreferences";
 import type { DailyStreakResult } from "@/lib/daily/streak-core";
+import type { WeakestPhonemeHome } from "@/lib/home/constants";
 import type { ReactNode } from "react";
 
 interface HomeMobileViewProps {
   streak?: DailyStreakResult;
   wordsDueCount?: number;
   soundsDueCount?: number;
+  weakestPhoneme?: WeakestPhonemeHome | null;
   dailyCard: ReactNode;
 }
 
@@ -84,8 +86,10 @@ export default function HomeMobileView({
   streak,
   wordsDueCount = 0,
   soundsDueCount = 0,
+  weakestPhoneme = null,
   dailyCard,
 }: HomeMobileViewProps) {
+  void weakestPhoneme;
   const { user } = useAuth();
   const { preferences } = useUserPreferences();
 
