@@ -24,6 +24,11 @@ interface DailyStepListProps {
   onStartStep: (step: DailyStep) => void
   /** Step id with a real mid-session (exerciseIndex > 0). */
   inProgressStepId?: string | null
+  /**
+   * When review is the home primary, keep "Empieza aquí" but drop primary wash
+   * so only one zone shouts.
+   */
+  demoteEntryHighlight?: boolean
 }
 
 function collectPlanHints(steps: DailyStep[]): StepThreadHint[] {
@@ -86,6 +91,7 @@ export default function DailyStepList({
   getStepStatus,
   onStartStep,
   inProgressStepId = null,
+  demoteEntryHighlight = false,
 }: DailyStepListProps) {
   const threadHints = collectPlanHints(steps)
   const [activeId, setActiveId] = useState<string | null>(inProgressStepId)
@@ -119,7 +125,9 @@ export default function DailyStepList({
           const cardClass = cn(
             'home-card-lift focus-ring group flex w-full flex-col gap-2 rounded-[var(--radius-lg)] border bg-surface-raised px-4 py-3.5 text-left',
             visual === 'entry' &&
-              'border-primary bg-primary-soft hover:border-primary',
+              (demoteEntryHighlight
+                ? 'border-border-subtle hover:border-[var(--accent-border)]'
+                : 'border-primary bg-primary-soft hover:border-primary'),
             visual === 'current' &&
               'border-primary bg-primary-soft hover:border-primary',
             visual === 'pending' &&

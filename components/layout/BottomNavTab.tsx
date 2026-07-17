@@ -55,6 +55,8 @@ export default function BottomNavTab({
         href={href}
         className={tabClass(active)}
         aria-current={active ? "page" : undefined}
+        data-cuelume-hover="tick"
+        data-cuelume-press="press"
       >
         {content}
       </Link>
@@ -69,6 +71,7 @@ export default function BottomNavTab({
       aria-expanded={ariaExpanded}
       aria-controls={ariaControls}
       aria-haspopup={ariaControls ? "dialog" : undefined}
+      data-cuelume-toggle="toggle"
     >
       {content}
     </button>

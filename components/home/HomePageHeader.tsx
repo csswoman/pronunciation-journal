@@ -2,7 +2,7 @@
 
 // Planned structure:
 // <HomePageHeader>
-//   <PageHeader title={greeting} subtitle={retention} />
+//   <PageHeader title={greeting} subtitle={retention?} />
 // </HomePageHeader>
 
 import PageHeader from "@/components/layout/PageHeader";
@@ -25,33 +25,34 @@ function getGreeting(): "Buenos días" | "Buenas tardes" | "Buenas noches" {
   return "Buenas noches";
 }
 
+/** Only non-zero retention — never "0 días · 0 dominadas" above the fold. */
 function buildRetentionSubtitle(
   current: number,
   wordsMastered: number,
   week: number,
-): string {
+): string | undefined {
   const parts: string[] = [];
 
-  if (current === 0) {
-    parts.push("0 días de racha");
-  } else {
+  if (current > 0) {
     parts.push(
       `${current} ${current === 1 ? "día seguido" : "días seguidos"}`,
     );
   }
 
-  parts.push(
-    `${wordsMastered} ${wordsMastered === 1 ? "palabra dominada" : "palabras dominadas"}`,
-  );
+  if (wordsMastered > 0) {
+    parts.push(
+      `${wordsMastered} ${wordsMastered === 1 ? "palabra dominada" : "palabras dominadas"}`,
+    );
+  }
 
   if (week > 0) {
     parts.push(`${week} min esta semana`);
   }
 
-  return parts.join(" · ");
+  return parts.length > 0 ? parts.join(" · ") : undefined;
 }
 
-/** Canonical PageHeader for home — greeting + quiet retention line. */
+/** Canonical PageHeader for home — greeting + quiet non-zero retention. */
 export default function HomePageHeader({
   streak,
   wordsMastered = 0,

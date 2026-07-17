@@ -1,5 +1,6 @@
 import { SoundLabLessonCard } from "./SoundLabLessonCard";
 import type { Lesson } from "@/lib/types";
+import { ipaFromLessonTitle } from "@/lib/sound-lab/display";
 
 export interface LessonSection {
   id: string;
@@ -20,9 +21,8 @@ interface Props {
 
 function getProgress(lesson: Lesson, map: Map<string, number>): number | undefined {
   if (!lesson.id.startsWith("sound-")) return undefined;
-  // Extract IPA from title like "/iː/ — sheep" or fall back to numeric id lookup
-  const ipaMatch = lesson.title.match(/^(\/[^/]+\/)/)
-  if (ipaMatch) return map.get(ipaMatch[1]);
+  const ipa = ipaFromLessonTitle(lesson.title);
+  if (ipa) return map.get(ipa);
   return undefined;
 }
 
@@ -36,7 +36,7 @@ function LoadingSkeleton() {
             {Array.from({ length: 4 }).map((_, i) => (
               <div
                 key={i}
-                className="h-[140px] animate-pulse rounded-lg bg-surface-raised"
+                className="h-[140px] animate-pulse rounded-xl bg-surface-raised"
               />
             ))}
           </div>
@@ -48,6 +48,7 @@ function LoadingSkeleton() {
 
 export function SoundLabLessonGrid({
   sections,
+  heroLessonId,
   soundProgressMap,
   isLoading,
   onClearFilters,
@@ -60,15 +61,15 @@ export function SoundLabLessonGrid({
     return (
       <div className="flex flex-col items-center gap-4 py-20 text-center">
         <p className="text-sm text-[color:var(--text-secondary)]">
-          No sounds match this filter.
+          Ningún sonido coincide con este filtro.
         </p>
         {onClearFilters && (
           <button
             type="button"
             onClick={onClearFilters}
-            className="sound-lab__chip sound-lab__chip--on"
+            className="btn-secondary"
           >
-            Clear filters
+            Limpiar filtros
           </button>
         )}
       </div>
@@ -91,8 +92,8 @@ export function SoundLabLessonGrid({
             <div className="flex items-baseline gap-3">
               <h2 className="sound-lab__group-title m-0">{section.title}</h2>
               {section.count !== undefined && (
-                <span className="text-[12px] text-[color:var(--text-tertiary)]">
-                  {section.count} {section.count === 1 ? "sound" : "sounds"}
+                <span className="text-[12px] text-[color:var(--text-secondary)]">
+                  {section.count} {section.count === 1 ? "sonido" : "sonidos"}
                 </span>
               )}
             </div>
@@ -109,6 +110,7 @@ export function SoundLabLessonGrid({
                   lesson={lesson}
                   progressPct={progressPct}
                   isWeak={isWeak}
+                  isContinuing={heroLessonId !== undefined && lesson.id === heroLessonId}
                   staggerIndex={index}
                 />
               );

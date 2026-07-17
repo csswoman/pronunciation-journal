@@ -21,15 +21,25 @@ export function invalidateVoiceCache(): void {
 
 export function speak(
   word: string,
-  options: { rate?: number; voice?: SpeechSynthesisVoice } = {}
-): void {
-  if (typeof window === 'undefined') return
+  options: {
+    rate?: number
+    voice?: SpeechSynthesisVoice
+    onStart?: () => void
+    onEnd?: () => void
+    onError?: () => void
+  } = {}
+): SpeechSynthesisUtterance | null {
+  if (typeof window === 'undefined') return null
   window.speechSynthesis.cancel()
   const utt = new SpeechSynthesisUtterance(word)
   utt.rate = options.rate ?? 1.0
   utt.lang = 'en-US'
   if (options.voice) utt.voice = options.voice
+  utt.onstart = options.onStart ?? null
+  utt.onend = options.onEnd ?? null
+  utt.onerror = options.onError ?? null
   window.speechSynthesis.speak(utt)
+  return utt
 }
 
 /**

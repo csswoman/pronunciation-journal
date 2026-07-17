@@ -341,12 +341,20 @@
 
 @media (min-width: 768px) {
   .home-command-grid {
-    grid-template-columns: minmax(0, 1.45fr) minmax(0, 0.9fr);
+    /* Balanced columns — plan+learn left, compact aside right */
+    grid-template-columns: minmax(0, 1fr) minmax(17rem, 22rem);
     align-items: start;
+    column-gap: var(--space-5);
+    row-gap: var(--space-5);
   }
 
-  .home-command-footer {
+  .home-command-review {
     grid-column: 1 / -1;
+  }
+
+  .home-command-aside {
+    position: sticky;
+    top: var(--space-4);
   }
 }
 
@@ -357,12 +365,6 @@
 }
 
 .home-command-aside {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-}
-
-.home-command-footer {
   display: flex;
   flex-direction: column;
   gap: var(--space-3);

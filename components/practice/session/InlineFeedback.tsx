@@ -12,7 +12,7 @@ export function InlineFeedback({ isCorrect }: Props) {
       role="status"
       aria-live="polite"
       className={cn(
-        'flex items-center justify-center gap-3 rounded-xl border px-5 py-3 animate-fadeIn',
+        'flex animate-fadeIn items-center justify-center gap-3 rounded-xl border px-5 py-3',
         isCorrect
           ? 'border-success/30 bg-success-soft text-success'
           : 'border-error/30 bg-error-soft text-error',
@@ -28,7 +28,7 @@ export function InlineFeedback({ isCorrect }: Props) {
         {isCorrect ? '✓' : '✗'}
       </span>
       <span className="text-sm font-semibold">
-        {isCorrect ? 'Correct!' : 'Not quite — keep going'}
+        {isCorrect ? '¡Correcto!' : 'No exactamente — sigue'}
       </span>
     </div>
   )

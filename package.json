@@ -42,6 +42,7 @@
     "canvas-confetti": "^1.9.4",
     "clsx": "^2.1.1",
     "cmu-pronouncing-dictionary": "^3.0.0",
+    "cuelume": "^0.1.2",
     "dexie": "^4.4.4",
     "dexie-react-hooks": "^4.4.0",
     "hyphen": "^1.14.1",

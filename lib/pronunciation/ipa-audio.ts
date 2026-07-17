@@ -112,23 +112,55 @@ const R_COLORED_EXAMPLES: Record<string, string> = {
   "ɜr": "bird",
 };
 
+interface PlayIpaSoundOptions {
+  onStart?: () => void;
+  onEnd?: () => void;
+  onError?: () => void;
+}
+
+type PlayIpaSoundResult =
+  | { kind: "audio"; audio: HTMLAudioElement }
+  | { kind: "speech"; utterance: SpeechSynthesisUtterance }
+  | null;
+
 /**
  * Play a single IPA symbol's audio sample.
  * Long vowels (iː, uː) resolve to their base monophthong .ogg via [0].
  * Diphthongs (eɪ, aɪ …) and r-colored vowels (ɜr) have no .ogg — fall back
  * to TTS on an example word.
  */
-export function playIpaSound(ipaSymbol: string): void {
-  const example = DIPHTHONG_EXAMPLES[ipaSymbol] ?? R_COLORED_EXAMPLES[ipaSymbol];
+export function playIpaSound(
+  ipaSymbol: string,
+  options: PlayIpaSoundOptions = {},
+): PlayIpaSoundResult {
+  if (typeof window === "undefined") {
+    options.onError?.();
+    return null;
+  }
+
+  const normalized = ipaSymbol.replace(/[/[\]]/g, "").trim();
+  const example = DIPHTHONG_EXAMPLES[normalized] ?? R_COLORED_EXAMPLES[normalized];
   if (example) {
-    speak(example);
-    return;
+    const utterance = speak(example, {
+      rate: 0.9,
+      onStart: options.onStart,
+      onEnd: options.onEnd,
+      onError: options.onError,
+    });
+    return utterance ? { kind: "speech", utterance } : null;
   }
   // Long vowels: strip length mark ː so "iː"[0] → "i" which is in the map.
-  const key = ipaSymbol.length > 1 ? ipaSymbol[0] : ipaSymbol;
+  const key = normalized.length > 1 ? normalized[0] : normalized;
   const filename = IPA_AUDIO_MAP[key];
-  if (!filename) return;
+  if (!filename) {
+    options.onError?.();
+    return null;
+  }
   const audio = new Audio(`${SOUNDS_BASE_URL}/${encodeURIComponent(filename)}`);
   audio.volume = 0.8;
-  audio.play().catch(() => {/* user hasn't interacted yet or no file */});
+  audio.addEventListener("play", () => options.onStart?.(), { once: true });
+  audio.addEventListener("ended", () => options.onEnd?.(), { once: true });
+  audio.addEventListener("error", () => options.onError?.(), { once: true });
+  audio.play().catch(() => options.onError?.());
+  return { kind: "audio", audio };
 }

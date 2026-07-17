@@ -2,16 +2,22 @@ import type { ReactNode } from 'react'
 import { cn } from '@/lib/cn'
 
 interface Props {
-  eyebrow: string
+  /** Optional soft label above the title (sentence case, not an AI eyebrow). */
+  kicker?: string
   title?: ReactNode
   hint?: string
-  /** Center eyebrow + title (minimal pair, pronunciation hero). */
   centered?: boolean
-  /** Extra space below the prompt before options. */
   spacious?: boolean
 }
 
-export function PhonemeExercisePrompt({ eyebrow, title, hint, centered, spacious }: Props) {
+/** Shared exercise prompt — one clear title, optional kicker/hint. */
+export function PhonemeExercisePrompt({
+  kicker,
+  title,
+  hint,
+  centered,
+  spacious,
+}: Props) {
   return (
     <header
       className={cn(
@@ -20,7 +26,7 @@ export function PhonemeExercisePrompt({ eyebrow, title, hint, centered, spacious
         spacious && 'phoneme-focus__prompt--spacious',
       )}
     >
-      <span className="phoneme-focus__eyebrow">{eyebrow}</span>
+      {kicker && <p className="phoneme-focus__kicker">{kicker}</p>}
       {title && <h2 className="phoneme-focus__title">{title}</h2>}
       {hint && <p className="phoneme-focus__hint">{hint}</p>}
     </header>

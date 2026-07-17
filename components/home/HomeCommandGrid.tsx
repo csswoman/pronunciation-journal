@@ -1,20 +1,20 @@
+"use client";
+
 // Planned structure:
 // <HomeCommandGrid>
+//   <HomeCommandReview />     — full-width strip
 //   <HomeCommandMain>
 //     <HomeDailyCard />
+//     <HomeLearnRow />        — under plan (fills left)
 //   </HomeCommandMain>
 //   <HomeCommandAside>
-//     <WeakSoundCard />        — Pronunciación
-//     <Core1000ProgressCard />
-//     <HomeWordOfDayCard />
+//     Pronunciación → Core → WOTD
 //   </HomeCommandAside>
-//   <HomeCommandFooter>
-//     <HomeLearnRow />
-//   </HomeCommandFooter>
 // </HomeCommandGrid>
 
-import type { ReactNode } from "react";
+import { useCallback, useState } from "react";
 import HomeDailyCard from "@/components/home/HomeDailyCard";
+import HomeReviewBanner from "@/components/home/HomeReviewBanner";
 import HomeLearnRow from "@/components/home/HomeLearnRow";
 import Core1000ProgressCard from "@/components/home/Core1000ProgressCard";
 import WeakSoundCard from "@/components/home/WeakSoundCard";
@@ -28,7 +28,8 @@ interface HomeCommandGridProps {
   weakestPhoneme?: WeakestPhonemeHome | null;
   todaysLesson: MiniLesson | null;
   secondaryLesson?: MiniLesson | null;
-  dailyCard?: ReactNode;
+  wordsDueCount?: number;
+  soundsDueCount?: number;
 }
 
 export default function HomeCommandGrid({
@@ -36,21 +37,47 @@ export default function HomeCommandGrid({
   weakestPhoneme = null,
   todaysLesson,
   secondaryLesson = null,
-  dailyCard,
+  wordsDueCount = 0,
+  soundsDueCount = 0,
 }: HomeCommandGridProps) {
+  const [planEmpty, setPlanEmpty] = useState(false);
+  const onPlanEmptyChange = useCallback((empty: boolean) => {
+    setPlanEmpty(empty);
+  }, []);
+
+  const reviewDue = wordsDueCount + soundsDueCount > 0;
+
   return (
     <div className="home-command-grid">
+      {reviewDue ? (
+        <div className="home-command-review">
+          <HomeReviewBanner
+            wordsDueCount={wordsDueCount}
+            soundsDueCount={soundsDueCount}
+          />
+        </div>
+      ) : null}
+
       <div className="home-command-main">
-        {dailyCard ?? <HomeDailyCard conceptLesson={conceptLesson} />}
+        <HomeDailyCard
+          conceptLesson={conceptLesson}
+          reviewDue={reviewDue}
+          onPlanEmptyChange={onPlanEmptyChange}
+        />
+        {!planEmpty ? (
+          <HomeLearnRow primary={todaysLesson} secondary={secondaryLesson} />
+        ) : null}
       </div>
+
       <aside className="home-command-aside" aria-label="Práctica sugerida">
         <WeakSoundCard weakestPhoneme={weakestPhoneme} />
-        <Core1000ProgressCard />
-        <HomeWordOfDayCard />
+        {!planEmpty ? (
+          <>
+            <Core1000ProgressCard />
+            <HomeWordOfDayCard />
+          </>
+        ) : null}
       </aside>
-      <div className="home-command-footer">
-        <HomeLearnRow primary={todaysLesson} secondary={secondaryLesson} />
-      </div>
     </div>
   );
 }

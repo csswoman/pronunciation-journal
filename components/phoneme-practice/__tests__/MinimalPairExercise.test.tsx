@@ -30,9 +30,12 @@ describe('MinimalPairExercise', () => {
       <MinimalPairExercise exercise={exercise} onSubmit={vi.fn()} focusUi />,
     )
 
-    await user.click(screen.getByRole('button', { name: 'Play sound' }))
+    await user.click(screen.getByRole('button', { name: 'Escuchar done' }))
 
-    expect(speak).toHaveBeenCalledWith('done', { voice: undefined })
+    expect(speak).toHaveBeenCalledWith(
+      'done',
+      expect.objectContaining({ voice: undefined }),
+    )
   })
 
   it('does not reveal an option audio when selecting it', async () => {
@@ -54,12 +57,11 @@ describe('MinimalPairExercise', () => {
     )
 
     await user.click(screen.getByRole('radio', { name: 'Seleccionar down' }))
-    await user.click(screen.getByRole('button', { name: 'Check' }))
+    await user.click(screen.getByRole('button', { name: 'Comprobar' }))
 
     expect(onSubmit).toHaveBeenCalledWith(false, 'down')
-    expect(screen.getByText('La respuesta es “done”.')).toBeInTheDocument()
     expect(screen.getByRole('status')).toHaveTextContent(
-      'done contiene el sonido /ʌ/. “down” usa un sonido diferente.',
+      'done lleva /ʌ/. “down” suena distinto.',
     )
   })
 })

@@ -2,20 +2,24 @@
 
 // Planned structure:
 // <Core1000ProgressCard>
-//   <ProgressBar />   — learned / total fill
-//   label              — "N / 1000 essential words"
+//   milestone copy (no N/1000 hero)
+//   quiet progress wash
 // </Core1000ProgressCard>
-//
-// Core 1000 progress is Dexie-only (no Supabase mirror), so this reads the
-// learned count live from IndexedDB.
 
 import Link from 'next/link'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from '@/lib/db'
 import { CORE1000_PREFIX } from '@/lib/core-1000/types'
 
-/** The Core 1000 milestone the learner is progressing toward. */
 const CORE_1000_TARGET = 1000
+
+function milestoneLabel(learned: number): string {
+  if (learned < 50) return 'Primeras palabras'
+  if (learned < 200) return 'Base en marcha'
+  if (learned < 500) return 'Mitad del camino cerca'
+  if (learned < CORE_1000_TARGET) return 'Casi el mazo completo'
+  return 'Mazo completo'
+}
 
 export default function Core1000ProgressCard() {
   const learned = useLiveQuery(
@@ -26,13 +30,24 @@ export default function Core1000ProgressCard() {
     [],
   )
 
-  if (learned === undefined) return null
+  if (learned === undefined) {
+    return (
+      <div
+        className="flex flex-col gap-2 rounded-xl border border-border-subtle bg-surface-raised p-4"
+        aria-hidden
+      >
+        <div className="h-3 w-16 animate-pulse rounded bg-surface-sunken" />
+        <div className="h-5 w-40 animate-pulse rounded bg-surface-sunken" />
+        <div className="h-4 w-full animate-pulse rounded bg-surface-sunken" />
+      </div>
+    )
+  }
 
   if (learned === 0) {
     return (
       <Link
         href="/practice/core-1000"
-        className="home-card-lift focus-ring flex flex-col gap-2 rounded-xl border border-border-subtle bg-surface-raised p-4 transition-transform active:scale-[0.96]"
+        className="focus-ring flex flex-col gap-2 rounded-xl border border-border-subtle bg-surface-raised p-4 transition-colors hover:bg-surface-sunken"
       >
         <span className="font-kicker text-fg-muted">Core 1000</span>
         <span className="text-h4 text-balance text-fg">Palabras esenciales</span>
@@ -51,17 +66,12 @@ export default function Core1000ProgressCard() {
   return (
     <Link
       href="/practice/core-1000"
-      className="home-card-lift focus-ring flex flex-col gap-2 rounded-xl border border-border-subtle bg-surface-raised p-4 transition-transform active:scale-[0.96]"
+      className="focus-ring flex flex-col gap-2 rounded-xl border border-border-subtle bg-surface-raised p-4 transition-colors hover:bg-surface-sunken"
     >
-      <div className="flex items-baseline justify-between gap-2">
-        <span className="font-kicker text-fg-muted">Core 1000</span>
-        <span className="font-caption tabular-nums text-fg-muted">
-          <span className="font-semibold text-fg">{learned}</span> / {CORE_1000_TARGET}
-        </span>
-      </div>
+      <span className="font-kicker text-fg-muted">Core 1000</span>
       <span className="text-h4 text-balance text-fg">Palabras esenciales</span>
-      <span className="font-body-sm text-pretty text-fg-muted line-clamp-2">
-        Las mil palabras más frecuentes del inglés, en un mazo progresivo.
+      <span className="font-body-sm text-pretty text-fg-muted">
+        {milestoneLabel(learned)}
       </span>
       <div className="mt-auto h-1.5 w-full overflow-hidden rounded-full bg-surface-sunken">
         <div

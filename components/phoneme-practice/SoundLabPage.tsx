@@ -16,9 +16,9 @@ import type { Lesson } from "@/lib/types";
 const IPA_VOWEL_RE = /[aeiouæɑɒɔɛɜɪɐəʌʊ]/;
 
 const ALL_GROUP_SECTIONS = [
-  { id: "vowels", title: "Vowels" },
-  { id: "diphthongs", title: "Diphthongs" },
-  { id: "consonants", title: "Consonants" },
+  { id: "vowels", title: "Vocales" },
+  { id: "diphthongs", title: "Diptongos" },
+  { id: "consonants", title: "Consonantes" },
 ] as const;
 
 function getLessonSectionId(lesson: Lesson): string {
@@ -68,7 +68,7 @@ export default function SoundLabPage() {
     if (lessons.length === 0) return null;
     return {
       id: "focus",
-      title: `Sounds from your lesson · ${focusTokens.join(" · ")}`,
+      title: `Sonidos de tu lección · ${focusTokens.join(" · ")}`,
       count: lessons.length,
       lessons,
     };
@@ -79,9 +79,16 @@ export default function SoundLabPage() {
     return allLessons.filter((lesson) => {
       if (!matchesDifficultyChip(lesson, activeChip)) return false;
       if (!q) return true;
+      if (lesson.title.toLowerCase().includes(q)) return true;
+      if (lesson.description.toLowerCase().includes(q)) return true;
+      const ipa = lesson.title.match(/^\/+([^/]+)\/+/)?.[1]?.toLowerCase();
+      if (ipa && ipa.includes(q.replaceAll("/", ""))) return true;
       return (
-        lesson.title.toLowerCase().includes(q) ||
-        lesson.description.toLowerCase().includes(q)
+        lesson.words?.some((w) => {
+          if (w.word?.toLowerCase().includes(q)) return true;
+          if (w.ipa?.toLowerCase().includes(q)) return true;
+          return false;
+        }) ?? false
       );
     });
   }, [allLessons, activeChip, search]);
@@ -136,7 +143,6 @@ export default function SoundLabPage() {
           totalCount={allLessons.length}
           inProgressCount={inProgressCount}
           heroLesson={heroLesson.lesson}
-          heroProgress={heroLesson.progress}
           onResume={handleResume}
         />
 
@@ -157,7 +163,7 @@ export default function SoundLabPage() {
               Del curso: practicando{" "}
               <span className="sound-lab__focus-tokens">{focusTokens.join(" · ")}</span>
               {!focusSection && (
-                <span className="text-[color:var(--text-tertiary)]">
+                <span className="text-[color:var(--text-secondary)]">
                   . Aún no hay lecciones que coincidan.
                 </span>
               )}

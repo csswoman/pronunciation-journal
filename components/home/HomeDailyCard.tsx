@@ -11,9 +11,17 @@ import { useAuth } from '@/components/auth/AuthProvider'
 
 interface HomeDailyCardProps {
   conceptLesson: ConceptLesson | null
+  /** When true, demote plan entry highlight — review strip is the primary. */
+  reviewDue?: boolean
+  /** Notify parent when the plan is empty (collapse aside extras). */
+  onPlanEmptyChange?: (empty: boolean) => void
 }
 
-export default function HomeDailyCard({ conceptLesson }: HomeDailyCardProps) {
+export default function HomeDailyCard({
+  conceptLesson,
+  reviewDue = false,
+  onPlanEmptyChange,
+}: HomeDailyCardProps) {
   const { user } = useAuth()
   const router = useRouter()
   const { status, steps, getStepStatus, completedCount, allDone, load, celebrate } = useDailyPlan({
@@ -34,6 +42,12 @@ export default function HomeDailyCard({ conceptLesson }: HomeDailyCardProps) {
     setInProgressStepId(readInProgressStepId())
   }, [status, steps])
 
+  useEffect(() => {
+    if (!onPlanEmptyChange) return
+    const empty = status === 'ready' && !allDone && steps.length === 0
+    onPlanEmptyChange(empty)
+  }, [status, allDone, steps.length, onPlanEmptyChange])
+
   const handleStartStep = useCallback((step: DailyStep) => {
     if (step.kind === 'concept') return
     try {
@@ -52,7 +66,6 @@ export default function HomeDailyCard({ conceptLesson }: HomeDailyCardProps) {
 
   const progressLabel = useMemo(() => {
     if (steps.length === 0) return ''
-    // Never show "0 de N" — demotivating at start of day (home hierarchy spec).
     if (completedCount === 0) {
       const parts = [
         `${steps.length} ${steps.length === 1 ? 'paso' : 'pasos'}`,
@@ -105,14 +118,19 @@ export default function HomeDailyCard({ conceptLesson }: HomeDailyCardProps) {
           <div className="animate-state-in flex flex-col items-center gap-4 py-8 text-center">
             <div className="flex flex-col gap-1.5">
               <p className="font-label font-semibold text-fg">
-                Tu plan está vacío hoy.
+                {reviewDue ? 'Después del repaso, arma tu plan.' : 'Tu plan está vacío hoy.'}
               </p>
               <p className="font-body-sm max-w-[28ch] text-fg-muted">
                 Se arma cuando empiezas un curso o practicas sonidos.
               </p>
             </div>
             <Link href="/courses">
-              <Button variant="primary" size="md" icon={<ArrowRight size={18} />} iconPosition="right">
+              <Button
+                variant={reviewDue ? 'secondary' : 'primary'}
+                size="md"
+                icon={<ArrowRight size={18} />}
+                iconPosition="right"
+              >
                 Explorar cursos
               </Button>
             </Link>
@@ -154,6 +172,7 @@ export default function HomeDailyCard({ conceptLesson }: HomeDailyCardProps) {
                 getStepStatus={getStepStatus}
                 onStartStep={handleStartStep}
                 inProgressStepId={inProgressStepId}
+                demoteEntryHighlight={reviewDue}
               />
             </div>
           ) : null)}

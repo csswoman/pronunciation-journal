@@ -2,14 +2,16 @@
 
 // Planned structure:
 // <ExerciseHints>
-//   <HintLevelIndicator />   — dots showing current level
-//   <HintContent />          — re-hear | IPA highlight | spanishTip
-//   <HintActions />          — "Ver pista" / "Reintentar" / "Continuar"
+//   <HintLevelIndicator />
+//   <HintContent />
+//   <PrimaryRetry />
+//   <SecondaryActions /> — pista + seguir
 // </ExerciseHints>
 
 import { useState } from 'react'
-import { speak } from '@/lib/phoneme-practice/tts'
 import { IPA_EXTRA } from '@/lib/pronunciation/ipa-data'
+import { PhonemePlayButton } from '@/components/phoneme-practice/PhonemePlayButton'
+import { playUiCue } from '@/lib/ui-sounds/cues'
 import { cn } from '@/lib/cn'
 
 interface Props {
@@ -26,47 +28,60 @@ const MAX_LEVEL: HintLevel = 2
 
 export function ExerciseHints({ ipa, targetWord, onRetry, onContinue, voice }: Props) {
   const [level, setLevel] = useState<HintLevel>(0)
-  // IPA_EXTRA keys are "/iː/" format; normalize bare keys like "iː" or "/iː"
-  const ipaKey = ipa.startsWith('/') && ipa.endsWith('/') ? ipa : `/${ipa.replace(/^\/|\/$/g, '')}/`
+  const ipaKey =
+    ipa.startsWith('/') && ipa.endsWith('/')
+      ? ipa
+      : `/${ipa.replace(/^\/|\/$/g, '')}/`
   const extra = IPA_EXTRA[ipaKey] ?? IPA_EXTRA[ipa]
-
-  function handleNextHint() {
-    if (level < MAX_LEVEL) setLevel((l) => (l + 1) as HintLevel)
-  }
-
-  function handleRehear() {
-    if (targetWord) speak(targetWord, { voice })
-  }
-
   const hasMoreHints = level < MAX_LEVEL
 
   return (
-    <div className="flex flex-col gap-4 pt-2">
+    <div className="phoneme-hints">
       <LevelDots level={level} />
-      <HintContent level={level} ipa={ipaKey} targetWord={targetWord} extra={extra} onRehear={handleRehear} />
-      <div className="flex gap-3">
-        {hasMoreHints && (
+      <HintContent
+        level={level}
+        ipa={ipaKey}
+        targetWord={targetWord}
+        extra={extra}
+        voice={voice}
+      />
+
+      <button
+        type="button"
+        onClick={onRetry}
+        className="pf-cta pf-cta--primary"
+        data-cuelume-press="press"
+        data-cuelume-release="release"
+      >
+        Reintentar
+      </button>
+
+      <div className="phoneme-hints__secondary">
+        {hasMoreHints ? (
           <button
             type="button"
-            onClick={handleNextHint}
-            className="flex-1 rounded-[var(--radius-md)] border border-border-subtle bg-surface-raised py-3 text-sm font-semibold text-fg transition-colors hover:border-border-default"
+            onClick={() => {
+              playUiCue('reveal')
+              setLevel((l) => (l + 1) as HintLevel)
+            }}
+            className="phoneme-hints__ghost"
           >
             Ver pista
           </button>
+        ) : (
+          <span className="phoneme-hints__ghost phoneme-hints__ghost--muted" aria-hidden>
+            Pistas vistas
+          </span>
         )}
         <button
           type="button"
-          onClick={onRetry}
-          className="flex-1 rounded-[var(--radius-md)] border border-primary bg-surface-raised py-3 text-sm font-semibold text-primary transition-colors hover:bg-selection-bg"
+          onClick={() => {
+            playUiCue('soft')
+            onContinue()
+          }}
+          className="phoneme-hints__ghost"
         >
-          Reintentar
-        </button>
-        <button
-          type="button"
-          onClick={onContinue}
-          className="rounded-[var(--radius-md)] border border-border-subtle bg-surface-raised px-4 py-3 text-sm font-medium text-fg-subtle transition-colors hover:border-border-default"
-        >
-          Omitir
+          Seguir
         </button>
       </div>
     </div>
@@ -75,13 +90,16 @@ export function ExerciseHints({ ipa, targetWord, onRetry, onContinue, voice }: P
 
 function LevelDots({ level }: { level: HintLevel }) {
   return (
-    <div className="flex items-center gap-1.5" aria-label={`Pista ${level + 1} de ${MAX_LEVEL + 1}`}>
+    <div
+      className="phoneme-hints__dots"
+      aria-label={`Pista ${level + 1} de ${MAX_LEVEL + 1}`}
+    >
       {([0, 1, 2] as HintLevel[]).map((l) => (
         <span
           key={l}
           className={cn(
-            'h-1.5 w-1.5 rounded-full transition-colors',
-            l <= level ? 'bg-primary' : 'bg-border-subtle',
+            'phoneme-hints__dot',
+            l <= level && 'phoneme-hints__dot--on',
           )}
         />
       ))}
@@ -89,28 +107,31 @@ function LevelDots({ level }: { level: HintLevel }) {
   )
 }
 
-interface HintContentProps {
+function HintContent({
+  level,
+  ipa,
+  targetWord,
+  extra,
+  voice,
+}: {
   level: HintLevel
   ipa: string
   targetWord?: string
   extra: (typeof IPA_EXTRA)[string] | undefined
-  onRehear: () => void
-}
-
-function HintContent({ level, ipa, targetWord, extra, onRehear }: HintContentProps) {
+  voice?: SpeechSynthesisVoice
+}) {
   if (level === 0) {
     return (
-      <div className="flex flex-col items-start gap-2">
-        <p className="text-xs font-semibold uppercase tracking-wider text-fg-subtle">Escucha de nuevo</p>
-        <button
-          type="button"
-          onClick={onRehear}
-          className="pf-chip"
-          aria-label={`Escuchar ${targetWord ?? ipa}`}
-        >
-          <span className="pf-chip__icon" aria-hidden>🔊</span>
-          {targetWord ?? ipa}
-        </button>
+      <div className="phoneme-hints__block">
+        <p className="phoneme-hints__label">Escucha de nuevo</p>
+        <PhonemePlayButton
+          ariaLabel={`Escuchar ${targetWord ?? ipa}`}
+          word={targetWord}
+          ipa={targetWord ? undefined : ipa}
+          voice={voice}
+          caption={targetWord ?? ipa}
+          size="md"
+        />
       </div>
     )
   }
@@ -119,15 +140,13 @@ function HintContent({ level, ipa, targetWord, extra, onRehear }: HintContentPro
     const bare = ipa.replace(/[/[\]]/g, '').trim()
     const tips = extra?.articulationEs ?? extra?.articulation ?? []
     return (
-      <div className="flex flex-col gap-1">
-        <p className="text-xs font-semibold uppercase tracking-wider text-fg-subtle">Cómo se produce</p>
-        <p className="font-[var(--font-ipa),monospace] text-3xl font-bold text-primary">{bare}</p>
+      <div className="phoneme-hints__block">
+        <p className="phoneme-hints__label">Cómo se produce</p>
+        <p className="phoneme-hints__ipa">{bare}</p>
         {tips.length > 0 && (
-          <ul className="mt-1 flex flex-col gap-0.5 text-sm text-fg-secondary">
+          <ul className="phoneme-hints__tips">
             {tips.slice(0, 2).map((tip) => (
-              <li key={tip} className="flex gap-1.5 before:content-['·'] before:text-fg-subtle">
-                {tip}
-              </li>
+              <li key={tip}>{tip}</li>
             ))}
           </ul>
         )}
@@ -135,11 +154,10 @@ function HintContent({ level, ipa, targetWord, extra, onRehear }: HintContentPro
     )
   }
 
-  // level === 2
   return (
-    <div className="flex flex-col gap-1">
-      <p className="text-xs font-semibold uppercase tracking-wider text-fg-subtle">Consejo para hispanohablantes</p>
-      <p className="text-sm leading-relaxed text-fg-secondary">
+    <div className="phoneme-hints__block">
+      <p className="phoneme-hints__label">Consejo para hispanohablantes</p>
+      <p className="phoneme-hints__body">
         {extra?.spanishTip ?? 'Sin consejo disponible para este sonido.'}
       </p>
     </div>
