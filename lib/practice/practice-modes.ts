@@ -41,6 +41,13 @@ export const PRACTICE_MODES: readonly PracticeMode[] = [
     icon: 'RotateCcw',
   },
   {
+    id: 'reader',
+    label: 'Reading',
+    description: 'Practice your recent words in context',
+    href: '/practice/reader',
+    icon: 'BookOpen',
+  },
+  {
     id: 'courses',
     label: 'Ruta',
     description: 'Continue a guided course',
