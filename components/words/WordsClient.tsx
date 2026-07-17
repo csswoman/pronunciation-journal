@@ -116,7 +116,7 @@ export function WordsClient({
   }, [router]);
 
   return (
-    <PageLayout cardWrapper={false}>
+    <PageLayout>
       <div className="words-lexicon">
         <PageHeader
           kicker="Reference"
