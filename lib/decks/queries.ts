@@ -13,12 +13,10 @@ const ENTRY_COLUMNS = [
   "audio_url",
   "created_at",
   "ipa",
-  "keep_permanent",
   "notes",
   "phrases",
   "sound_id",
   "updated_at",
-  "user_audio_url",
   "user_id",
 ].join(",");
 

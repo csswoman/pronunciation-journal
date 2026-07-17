@@ -18,6 +18,6 @@ describe('StepThreadHints', () => {
       />,
     )
     expect(screen.getByText('cat')).toBeInTheDocument()
-    expect(screen.getByText(/from Intro/i)).toBeInTheDocument()
+    expect(screen.getByText(/de Intro/i)).toBeInTheDocument()
   })
 })
