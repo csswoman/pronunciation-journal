@@ -6,6 +6,7 @@ practice, review loops, offline resilience, and AI-assisted coaching.
 ## What the app includes
 
 - Daily practice flows and review sessions
+- Essential Words (high-frequency NGSL) with spaced repetition, weak forms, and an SRS vault (snooze / mastered)
 - Course path, mini-lessons, and grammar study decks
 - Lexicon, words, vocabulary, and pronunciation practice surfaces
 - AI coach features backed by Gemini server routes
