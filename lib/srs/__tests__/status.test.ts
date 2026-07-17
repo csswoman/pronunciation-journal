@@ -5,6 +5,7 @@ import {
   patchSnooze,
   patchMaster,
   patchActivateNow,
+  activateExpiredSnoozes,
   isDueForQueue,
 } from "../status";
 import type { SRSData } from "@/lib/types";
@@ -34,6 +35,32 @@ describe("patchSnooze", () => {
     expect(next.status).toBe("snoozed");
     expect(next.nextReview).toBe(addDaysIso(now, 90));
     expect(next.snoozedAt).toBe(now.toISOString());
+  });
+});
+
+describe("activateExpiredSnoozes", () => {
+  const now = new Date("2026-07-17T12:00:00.000Z");
+
+  it("activates snoozed entries whose nextReview is in the past", () => {
+    const snoozed = {
+      ...base,
+      status: "snoozed" as const,
+      nextReview: "2026-07-01T00:00:00.000Z",
+    };
+    const [result] = activateExpiredSnoozes([snoozed], now);
+    expect(result.status).toBe("active");
+    expect(result.nextReview).toBe(now.toISOString());
+  });
+
+  it("leaves future snoozed entries unchanged", () => {
+    const snoozed = {
+      ...base,
+      status: "snoozed" as const,
+      nextReview: "2026-10-01T00:00:00.000Z",
+    };
+    const [result] = activateExpiredSnoozes([snoozed], now);
+    expect(result).toBe(snoozed);
+    expect(result.status).toBe("snoozed");
   });
 });
 

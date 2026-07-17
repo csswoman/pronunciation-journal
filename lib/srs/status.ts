@@ -44,6 +44,14 @@ export function patchActivateNow(entry: SRSData, now: Date): SRSData {
   };
 }
 
+export function activateExpiredSnoozes(entries: SRSData[], now: Date): SRSData[] {
+  return entries.map((e) => {
+    if (effectiveStatus(e) !== "snoozed") return e;
+    if (new Date(e.nextReview).getTime() > now.getTime()) return e;
+    return patchActivateNow(e, now);
+  });
+}
+
 /** After expired-snooze activation pass, use this for due filtering. */
 export function isDueForQueue(entry: SRSData, now: Date): boolean {
   const status = effectiveStatus(entry);

@@ -15,6 +15,11 @@ vi.mock("../client", () => ({
 }))
 
 vi.mock("@/lib/db", () => ({
+  db: {
+    srsData: {
+      put: vi.fn(async () => undefined),
+    },
+  },
   getCore1000SrsEntries: vi.fn(async () => []),
   getCore1000IntroducedToday: vi.fn(async () => []),
 }))
