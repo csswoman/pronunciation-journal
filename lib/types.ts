@@ -92,6 +92,8 @@ export interface FavoriteWord {
 
 // ── SRS Types ──
 
+export type SrsStatus = "active" | "snoozed" | "mastered";
+
 export interface SRSData {
   wordId: string;
   word: string;
@@ -100,6 +102,11 @@ export interface SRSData {
   repetitions: number; // consecutive correct answers
   nextReview: string; // ISO date string
   lastReview?: string;
+  /** Vault/schedule state. Missing ≡ active. */
+  status?: SrsStatus;
+  snoozedAt?: string;
+  masteredAt?: string;
+  /** @deprecated Prefer status=snoozed. Kept for migration. */
   archived?: boolean;
   archivedAt?: string; // ISO
   /**
