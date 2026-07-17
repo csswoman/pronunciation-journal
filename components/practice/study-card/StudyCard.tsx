@@ -44,7 +44,7 @@ function PronRow({
         <span className="text-tiny font-semibold uppercase tracking-[0.12em] text-fg-subtle w-14">
           {label}
         </span>
-        <span className="[font-family:var(--font-ipa),monospace] text-lg text-primary">{ipa}</span>
+        <span className="font-ipa text-lg text-primary">{ipa}</span>
       </div>
       <ListenButton onPlay={onPlay} aria-label={`Escuchar forma ${label.toLowerCase()}`} />
     </div>
@@ -57,7 +57,7 @@ function SentenceBlock({
   const regex = new RegExp(`\\b(${word})\\b`, 'i')
   const [before, match, after] = sentence.split(regex)
   return (
-    <div className="flex flex-col items-center gap-1">
+    <div className="flex flex-col items-center gap-2">
       <div className="flex items-center justify-center gap-2">
         <p className="text-base text-fg m-0 text-center">
           {match ? (
@@ -73,7 +73,7 @@ function SentenceBlock({
         <ListenButton iconOnly onPlay={onListen} aria-label="Escuchar oración" />
       </div>
       {sentenceIpa && (
-        <p className="[font-family:var(--font-ipa),monospace] text-sm text-fg-subtle m-0 text-center">
+        <p className="ipa m-0 max-w-[36ch] text-center text-fg-muted">
           {sentenceIpa}
         </p>
       )}

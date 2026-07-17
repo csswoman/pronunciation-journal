@@ -13,31 +13,17 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { createRequire } from "module";
+import { arpabetStringToIpa } from "./lib/arpabet-to-ipa.mjs";
 
 const require = createRequire(import.meta.url);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const LEXICON_DIR = path.join(__dirname, "..", "public", "lexicon");
 
-const ARPABET_TO_IPA = {
-  AA: "ɑ", AE: "æ", AH: "ʌ", AO: "ɔ", AW: "aʊ", AY: "aɪ", EH: "ɛ", ER: "ɜr",
-  EY: "eɪ", IH: "ɪ", IY: "iː", OW: "oʊ", OY: "ɔɪ", UH: "ʊ", UW: "uː",
-  B: "b", CH: "tʃ", D: "d", DH: "ð", F: "f", G: "ɡ", HH: "h", JH: "dʒ",
-  K: "k", L: "l", M: "m", N: "n", NG: "ŋ", P: "p", R: "ɹ", S: "s",
-  SH: "ʃ", T: "t", TH: "θ", V: "v", W: "w", Y: "j", Z: "z", ZH: "ʒ",
-};
-
 const dict = require("cmu-pronouncing-dictionary");
 const CMU = dict.dictionary ?? dict.default ?? dict;
 
-function stripStress(p) {
-  return p.replace(/\d$/, "");
-}
-
 function arpabetToIpa(arpabet) {
-  return arpabet
-    .split(" ")
-    .map((ph) => ARPABET_TO_IPA[stripStress(ph)] ?? stripStress(ph).toLowerCase())
-    .join("");
+  return arpabetStringToIpa(arpabet);
 }
 
 function lookupCmu(word) {

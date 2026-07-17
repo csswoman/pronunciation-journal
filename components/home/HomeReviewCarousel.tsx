@@ -90,6 +90,7 @@ export default function HomeReviewCarousel({
           exercises={step.exercises}
           sessionLength={step.exercises.length}
           sessionLabel={step.title}
+          soundIpa={step.ipa}
           onSessionComplete={handleStepComplete}
           onExit={handleExit}
         />

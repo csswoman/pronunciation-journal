@@ -372,8 +372,10 @@
 }
 
 .ipa-chart__ph-sym {
-  font-family: var(--font-ipa), "Noto Sans", sans-serif;
-  font-size: 1.5rem;
+  font-family: var(--font-ipa), "Andika", "Noto Sans", sans-serif;
+  font-size: 1.55rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
   color: var(--ipa-accent-text);
 }
 
@@ -499,9 +501,11 @@
 }
 
 .ipa-chart__panel-sym {
-  font-family: var(--font-ipa), sans-serif;
+  font-family: var(--font-ipa), "Andika", "Noto Sans", sans-serif;
   font-size: 3.4rem;
-  line-height: 1;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1.1;
   color: var(--text-primary);
 }
 
@@ -796,8 +800,10 @@
 }
 
 .ipa-chart__mpcard-sym {
-  font-family: var(--font-ipa), sans-serif;
-  font-size: 1.1rem;
+  font-family: var(--font-ipa), "Andika", "Noto Sans", sans-serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
   color: var(--ipa-accent-text);
 }
 

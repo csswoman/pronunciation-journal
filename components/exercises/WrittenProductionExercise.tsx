@@ -4,6 +4,7 @@
 // <WrittenProductionExercise>
 //   <ProductionTaskHeader />
 //   <ProductionTextarea />
+//   <ProductionHint />
 //   <OfflineBanner />
 //   <ProductionFeedback />
 //   <SubmitActions />
@@ -12,6 +13,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { PillButton } from '@/components/ui/PillButton'
 import { ProductionFeedback } from '@/components/exercises/ProductionFeedback'
+import { ProductionHint } from '@/components/exercises/ProductionHint'
 import { ProductionTaskHeader } from '@/components/exercises/ProductionTaskHeader'
 import {
   gradeProduction,
@@ -124,6 +126,10 @@ export function WrittenProductionExercise({ exercise, onResult }: Props) {
             rows={4}
             placeholder="Type your sentence here…"
             className="w-full resize-none rounded-[var(--radius-md)] border border-border-default bg-surface-raised px-3 py-3 text-base text-fg placeholder:text-fg-subtle focus:border-border-strong focus:outline-none disabled:opacity-50"
+          />
+          <ProductionHint
+            exampleSentence={exercise.exampleSentence}
+            exerciseId={exercise.id}
           />
           {error && <p className="m-0 text-sm text-error">{error}</p>}
           <PillButton

@@ -31,6 +31,18 @@ describe('formatExerciseLabel', () => {
 })
 
 describe('SessionSummary progress state', () => {
+  it('shows the practiced phoneme when provided', () => {
+    render(
+      <SessionSummary
+        result={result}
+        practiceIpa="/ŋ/"
+        onPracticeAgain={() => {}}
+        onFinish={() => {}}
+      />,
+    )
+    expect(screen.getByText('/ŋ/')).toBeInTheDocument()
+  })
+
   it('shows when progress is saving', () => {
     render(<SessionSummary result={result} progressSaveStatus="saving" onPracticeAgain={() => {}} onFinish={() => {}} />)
     expect(screen.getByText(/guardando progreso/i)).toBeInTheDocument()

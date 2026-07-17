@@ -48,7 +48,7 @@ function WordDisplay({ word, ipa, onListen }: { word?: string; ipa: string; onLi
         </div>
         <ListenButton iconOnly onPlay={onListen} aria-label="Listen" />
       </div>
-      <div className="text-sm text-fg-subtle" style={{ fontFamily: 'var(--font-ipa), monospace' }}>
+      <div className="ipa text-fg-muted">
         {ipa}
       </div>
     </div>

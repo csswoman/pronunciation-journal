@@ -1,10 +1,12 @@
 'use client'
 
 import { cn } from '@/lib/cn'
+import { formatIpaDisplay } from '@/lib/practice/resolve-session-ipa'
 import type { SessionResult } from '@/lib/practice/types'
 
 interface Props {
   result: SessionResult
+  practiceIpa?: string
   onPracticeAgain: () => void
   onFinish: () => void
   progressSaveStatus?: 'idle' | 'saving' | 'saved' | 'error'
@@ -84,16 +86,21 @@ function ResultRow({
 
 export function SessionSummary({
   result,
+  practiceIpa,
   onPracticeAgain,
   onFinish,
   progressSaveStatus = 'idle',
 }: Props) {
   const correctCount = result.results.filter((r) => r.isCorrect).length
   const showProgressStatus = progressSaveStatus !== 'idle'
+  const ipaLabel = practiceIpa ? formatIpaDisplay(practiceIpa) : null
 
   return (
     <div role="region" aria-label="Resultados de la sesión" className="flex w-full flex-col gap-6">
       <div className="flex flex-col items-center gap-1.5">
+        {ipaLabel && (
+          <p className="font-ipa m-0 text-3xl font-bold leading-none text-primary">{ipaLabel}</p>
+        )}
         <p className="text-sm font-semibold text-fg-secondary">Sesión completa</p>
         <AccuracyDisplay accuracy={result.accuracy} />
         <AccuracyLabel accuracy={result.accuracy} />

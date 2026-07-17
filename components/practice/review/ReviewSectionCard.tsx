@@ -13,7 +13,7 @@ export function ReviewSectionCard({ title, count, emptyMessage, children }: Prop
       <div className="flex items-baseline justify-between gap-2">
         <h2 className="text-base font-medium text-fg">{title}</h2>
         <span className="font-caption text-fg-muted">
-          {count} {count === 1 ? 'item' : 'items'}
+          {count} {count === 1 ? 'elemento' : 'elementos'}
         </span>
       </div>
       {count === 0 ? (

@@ -4,6 +4,7 @@
 // <SpokenProductionExercise>
 //   <ProductionTaskHeader />
 //   <MicButton />
+//   <ProductionHint />
 //   <OfflineBanner />
 //   <ProductionFeedback />
 //   <SubmitActions />
@@ -13,6 +14,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { Mic, MicOff } from "@/components/icons"
 import { PillButton } from '@/components/ui/PillButton'
 import { ProductionFeedback } from '@/components/exercises/ProductionFeedback'
+import { ProductionHint } from '@/components/exercises/ProductionHint'
 import { ProductionTaskHeader } from '@/components/exercises/ProductionTaskHeader'
 import { useSpeechRecognition } from '@/hooks/useSpeechRecognition'
 import {
@@ -182,6 +184,11 @@ export function SpokenProductionExercise({ exercise, onResult }: Props) {
               </button>
             </p>
           )}
+
+          <ProductionHint
+            exampleSentence={exercise.exampleSentence}
+            exerciseId={exercise.id}
+          />
 
           {error && <p className="m-0 text-sm text-error">{error}</p>}
         </>

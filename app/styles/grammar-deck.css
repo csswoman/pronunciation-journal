@@ -1115,8 +1115,13 @@
 }
 
 .grammar-pron__ipa {
-  font-size: 0.8rem;
-  color: var(--text-tertiary);
+  font-family: var(--font-ipa), "Andika", "Noto Sans", sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  word-spacing: 0.14em;
+  line-height: 1.55;
+  color: var(--text-secondary);
 }
 
 .grammar-pron__es {

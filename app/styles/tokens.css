@@ -176,11 +176,11 @@
   --badge-info-border:  color-mix(in oklch, var(--info) 22%, transparent);
 
   /* ── 12. Typography scale ────────────────────────────────────────────── */
-  /* UI/headings/body: DM Sans. Kickers + IPA glyphs: DM Mono. No decorative serif. */
+  /* UI/headings/body: DM Sans. Kickers/code: DM Mono.
+     IPA face: Andika via next/font (--font-ipa on <html>). */
   --font-ui:        var(--font-sans);
   --font-heading:   var(--font-sans);
-  --font-ipa:       var(--font-sans);
-  --font-phoneme:   var(--font-mono-var);
+  --font-phoneme:   var(--font-ipa);
   /* Legacy aliases — resolve to sans so old class names stay safe */
   --font-editorial: var(--font-sans);
   --font-display:   var(--font-sans), system-ui, sans-serif;

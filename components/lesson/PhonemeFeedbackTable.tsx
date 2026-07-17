@@ -34,7 +34,7 @@ function PhonemeRow({ p }: { p: FlatPhoneme }) {
           onMouseEnter={() => playIpaSound(ipa)}
           onClick={() => playIpaSound(ipa)}
           aria-label={`Escuchar el sonido ${expectedIpa}`}
-          className="group flex items-center gap-1 text-left text-lg font-semibold text-[var(--text-primary)] [font-family:var(--font-ipa),monospace] cursor-pointer bg-transparent border-none p-0"
+          className="group flex items-center gap-1 text-left text-lg font-semibold text-[var(--text-primary)] font-ipa cursor-pointer bg-transparent border-none p-0"
         >
           {expectedIpa}
           <Volume2 size={12} aria-hidden className="opacity-40 transition-opacity group-hover:opacity-80" />
@@ -44,7 +44,7 @@ function PhonemeRow({ p }: { p: FlatPhoneme }) {
         <div role="cell" className="text-sm font-semibold text-[var(--success)]">¡Excelente!</div>
       ) : (
         <div role="cell" className="flex flex-col gap-1">
-          <div className="text-base font-semibold text-[var(--error)] [font-family:var(--font-ipa),monospace]">
+          <div className="text-base font-semibold text-[var(--error)] font-ipa">
             {p.status === 'missing' ? '—' : p.gotIpa ? `/${p.gotIpa}/` : `/${p.got}/`}
           </div>
           {articulation && (

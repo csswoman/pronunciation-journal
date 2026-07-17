@@ -47,7 +47,7 @@ type GenericRegistryEntry = {
  */
 export const GENERIC_REGISTRY: Record<GenericExerciseType, GenericRegistryEntry> = {
   match_pairs: {
-    title: 'Match the pairs',
+    title: 'Empareja los pares',
     render: (exercise, { onResult }) => (
       <MatchPairsExercise
         exercise={exercise as MatchPairsExerciseType}

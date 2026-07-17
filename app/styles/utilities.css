@@ -199,23 +199,28 @@
   font-family: var(--font-mono-var), "Fira Code", monospace;
 }
 
+/* IPA glyphs — Andika (SIL): even IPA metrics, literacy-first forms */
 .font-ipa {
-  font-family: var(--font-ipa), "Noto Sans", sans-serif;
-  letter-spacing: 0.03em;
-  color: var(--text-primary);
+  font-family: var(--font-ipa), "Andika", "Noto Sans", sans-serif;
   font-style: normal;
-  font-weight: 500;
-  line-height: 1.3;
+  font-weight: 400;
+  font-optical-sizing: auto;
+  letter-spacing: 0.04em;
+  word-spacing: 0.14em;
+  line-height: 1.55;
+  color: var(--text-secondary);
 }
 
-/** IPA transcription — DM Mono, readable at study-card scale */
+/** Sentence / multi-token IPA transcription */
 .ipa {
-  font-family: var(--font-mono-var), "Fira Code", monospace;
-  font-size: 1.1rem;
-  font-weight: 500;
-  color: var(--text-primary);
-  letter-spacing: 0.04em;
-  line-height: 1.8;
+  font-family: var(--font-ipa), "Andika", "Noto Sans", sans-serif;
+  font-size: 1.1875rem;
+  font-weight: 400;
+  font-optical-sizing: auto;
+  letter-spacing: 0.05em;
+  word-spacing: 0.2em;
+  line-height: 1.7;
+  color: var(--text-secondary);
 }
 
 /* ── Text colors ─────────────────────────────────────────────────────────── */

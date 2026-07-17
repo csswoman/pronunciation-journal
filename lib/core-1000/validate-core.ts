@@ -19,9 +19,9 @@ export interface ValidationIssue {
 
 /**
  * Normalization for comparing authored IPA against CMU-derived IPA.
- * CMU (via ARPABET_TO_IPA) carries no stress and writes ʌ for every AH, so we
- * erase stress marks and merge ʌ/ə, r/ɹ, g/ɡ on BOTH sides. This loses real
- * contrasts on purpose: the comparison is a review signal, not a proof.
+ * CMU may include lexical stress (ˈ/ˌ) and AH0→ə; we erase stress marks and
+ * merge ʌ/ə, r/ɹ, g/ɡ on BOTH sides. This loses real contrasts on purpose:
+ * the comparison is a review signal, not a proof.
  */
 export function normalizeIpaForCompare(ipa: string): string {
   return ipa

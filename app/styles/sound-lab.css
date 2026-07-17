@@ -365,12 +365,12 @@
 
 /* IPA glyph — dominant, brand ink (not hashed rainbow) */
 .sound-lab__ipa {
-  font-family: var(--font-mono-var), "Fira Code", monospace;
+  font-family: var(--font-ipa), "Andika", "Noto Sans", sans-serif;
   font-optical-sizing: auto;
   font-size: 2.4rem;
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  line-height: 1;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1.15;
   margin-bottom: 6px;
   color: var(--primary);
 }

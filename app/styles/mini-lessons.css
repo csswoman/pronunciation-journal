@@ -619,13 +619,16 @@
 }
 
 .mini-lessons__example-ipa {
-  font-family: var(--font-ipa), "DM Mono", monospace;
-  font-size: 1rem;
-  color: var(--primary);
-  letter-spacing: 0.02em;
+  font-family: var(--font-ipa), "Andika", "Noto Sans", sans-serif;
+  font-size: 1.1875rem;
+  font-weight: 400;
+  color: var(--text-secondary);
+  letter-spacing: 0.05em;
+  word-spacing: 0.18em;
+  line-height: 1.7;
   display: flex;
   align-items: center;
-  gap: 2px;
+  gap: 0.2em;
 }
 
 .mini-lessons__ipa-slash {

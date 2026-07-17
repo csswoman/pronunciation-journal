@@ -104,6 +104,7 @@ export default function DailyStepSession({
         exercises={step.exercises}
         sessionLength={step.exercises.length}
         sessionLabel={step.title}
+        soundIpa={step.ipa}
         initialIndex={initialExerciseIndex ?? 0}
         onSessionComplete={() => undefined}
         onExit={(result) => {

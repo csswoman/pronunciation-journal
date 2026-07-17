@@ -140,7 +140,7 @@ export function buildPhonemeFocusStep(
   return {
     kind: 'phoneme_focus',
     id: `phoneme_focus:${sound.id}`,
-    title: 'Sound',
+    title: 'Práctica de sonido',
     subtitle: isWeak
       ? 'Tu sonido a reforzar hoy'
       : `Practica el sonido como en '${sound.example}'`,
@@ -177,6 +177,7 @@ export function buildMinimalPairsStep(
     icon: 'GitCompareArrows',
     exercises: deduped,
     estMinutes: Math.max(2, Math.round(deduped.length * 1.1)),
+    ipa: sound.ipa,
   }
 }
 
@@ -206,5 +207,6 @@ export function buildListeningStep(
     icon: 'Headphones',
     exercises: deduped,
     estMinutes: Math.max(2, Math.round(deduped.length * 1.1)),
+    ipa: sound.ipa,
   }
 }
