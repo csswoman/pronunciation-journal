@@ -15,9 +15,9 @@ function getTimeSlot(): TimeSlot {
 }
 
 const GREETINGS: Record<TimeSlot, { greeting: string; sub: string }> = {
-  morning:   { greeting: "Good morning",   sub: "Ready to train your ear?" },
-  afternoon: { greeting: "Good afternoon", sub: "A good time to practice." },
-  evening:   { greeting: "Good evening",   sub: "Wind down with some English." },
+  morning: { greeting: "Buenos días", sub: "Un buen momento para entrenar el oído." },
+  afternoon: { greeting: "Buenas tardes", sub: "Un buen momento para practicar." },
+  evening: { greeting: "Buenas noches", sub: "Cierra el día con un poco de inglés." },
 };
 
 export default function HomeHeaderGreeting({ userName, dateLabel }: HomeHeaderGreetingProps) {
@@ -35,7 +35,8 @@ export default function HomeHeaderGreeting({ userName, dateLabel }: HomeHeaderGr
         {greeting}
         {displayName && (
           <>, <span className="text-primary">{displayName}</span></>
-        )}.
+        )}
+        .
       </h1>
       <p className="text-label text-fg-muted">{sub}</p>
     </div>

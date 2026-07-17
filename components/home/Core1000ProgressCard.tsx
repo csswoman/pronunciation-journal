@@ -39,8 +39,8 @@ export default function Core1000ProgressCard() {
         <span className="font-body-sm text-pretty text-fg-muted line-clamp-2">
           Las mil palabras más frecuentes del inglés, en un mazo progresivo.
         </span>
-        <span className="mt-auto inline-flex min-h-10 items-center gap-1.5 font-label text-primary">
-          Empezar el mazo →
+        <span className="mt-auto inline-flex min-h-10 items-center gap-1.5 font-body-sm text-fg-muted">
+          Abrir mazo <span aria-hidden>→</span>
         </span>
       </Link>
     )

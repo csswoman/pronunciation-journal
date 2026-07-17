@@ -52,15 +52,18 @@ export default function HomeDailyCard({ conceptLesson }: HomeDailyCardProps) {
 
   const progressLabel = useMemo(() => {
     if (steps.length === 0) return ''
+    // Never show "0 de N" — demotivating at start of day (home hierarchy spec).
+    if (completedCount === 0) {
+      const parts = [
+        `${steps.length} ${steps.length === 1 ? 'paso' : 'pasos'}`,
+      ]
+      if (inProgressStepId) parts.push('en curso')
+      if (remainingMinutes > 0) parts.push(`≈${remainingMinutes} min`)
+      return parts.join(' · ')
+    }
     const parts = [`${completedCount} de ${steps.length}`]
     if (inProgressStepId) parts.push('en curso')
-    if (remainingMinutes > 0) {
-      parts.push(
-        completedCount === 0
-          ? `≈${remainingMinutes} min`
-          : `≈${remainingMinutes} min restantes`,
-      )
-    }
+    if (remainingMinutes > 0) parts.push(`≈${remainingMinutes} min restantes`)
     return parts.join(' · ')
   }, [steps.length, completedCount, inProgressStepId, remainingMinutes])
 

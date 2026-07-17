@@ -1,12 +1,11 @@
 // Planned structure:
 // <HomeLayout>
-//   mobile: <HomeMobileView />
-//   desktop: <HomeUtilityBar /> + <HomeReviewBanner /> + <HomeCommandGrid />
+//   <HomePageHeader />
+//   <HomeReviewBanner />
+//   <HomeCommandGrid />
 // </HomeLayout>
 
-import HomeDailyCard from "@/components/home/HomeDailyCard";
-import HomeMobileView from "@/components/home/HomeMobileView";
-import HomeUtilityBar from "@/components/home/HomeUtilityBar";
+import HomePageHeader from "@/components/home/HomePageHeader";
 import HomeReviewBanner from "@/components/home/HomeReviewBanner";
 import HomeCommandGrid from "@/components/home/HomeCommandGrid";
 import type { DailyStreakResult } from "@/lib/daily/streak-core";
@@ -35,29 +34,14 @@ export default function HomeLayout({
   conceptLesson = null,
   dailyGoal = null,
   weakestPhoneme = null,
-  reviewQueue = { total: 0, newAvailable: 0, sources: [], preview: [] },
   vocabularyProgress = null,
   todaysLesson = null,
   secondaryLesson = null,
 }: HomeLayoutProps) {
-  void reviewQueue;
-
   return (
     <div className="home-layout home-layout-shell">
-      <div className="md:hidden">
-        <HomeMobileView
-          streak={streak}
-          wordsDueCount={wordsDueCount}
-          soundsDueCount={soundsDueCount}
-          weakestPhoneme={weakestPhoneme}
-          wordsMastered={vocabularyProgress?.wordBankMastered ?? 0}
-          weekMinutes={dailyGoal?.weekMinutes ?? 0}
-          dailyCard={<HomeDailyCard conceptLesson={conceptLesson} />}
-        />
-      </div>
-
-      <div className="home-layout-sections hidden md:flex">
-        <HomeUtilityBar
+      <div className="home-layout-sections flex flex-col">
+        <HomePageHeader
           streak={streak}
           wordsMastered={vocabularyProgress?.wordBankMastered ?? 0}
           weekMinutes={dailyGoal?.weekMinutes ?? 0}

@@ -5,7 +5,7 @@ import type { StepThreadHint } from '@/lib/practice/daily-plan/step-thread'
 import { cn } from '@/lib/cn'
 
 const KIND_LABEL: Partial<Record<StepThreadHint['fromStepKind'], string>> = {
-  word_intro: 'Intro',
+  word_intro: 'Introducción',
   word_review: 'Repaso',
   context_practice: 'Contexto',
   reader: 'Lectura',

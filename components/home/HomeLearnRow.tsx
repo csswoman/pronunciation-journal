@@ -18,10 +18,10 @@ const CATEGORY_ES: Record<LessonCategory, string> = {
   grammar: "Gramática",
   vocabulary: "Vocabulario",
   listening: "Comprensión",
-  speaking: "Speaking",
+  speaking: "Expresión oral",
   writing: "Escritura",
   idioms: "Expresiones",
-  collocations: "Collocations",
+  collocations: "Colocaciones",
 };
 
 function categoryLabel(category: LessonCategory): string {
@@ -47,7 +47,7 @@ function LearnChip({
           {lesson.subtitle || lesson.body}
         </span>
       ) : null}
-      <span className="mt-auto inline-flex min-h-10 items-center gap-1.5 font-label text-primary">
+      <span className="mt-auto inline-flex min-h-10 items-center gap-1.5 font-body-sm text-fg-muted">
         Abrir <ArrowRight size={16} aria-hidden />
       </span>
     </Link>
@@ -70,7 +70,7 @@ export default function HomeLearnRow({
         <span className="font-body-sm text-fg-muted">
           Gramática, pronunciación y vocabulario del día.
         </span>
-        <span className="mt-auto inline-flex min-h-10 items-center gap-1.5 font-label text-primary">
+        <span className="mt-auto inline-flex min-h-10 items-center gap-1.5 font-body-sm text-fg-muted">
           Abrir <ArrowRight size={16} aria-hidden />
         </span>
       </Link>

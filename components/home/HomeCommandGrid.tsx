@@ -4,12 +4,12 @@
 //     <HomeDailyCard />
 //   </HomeCommandMain>
 //   <HomeCommandAside>
-//     <WeakSoundCard />
+//     <WeakSoundCard />        — Pronunciación
+//     <Core1000ProgressCard />
 //     <HomeWordOfDayCard />
 //   </HomeCommandAside>
 //   <HomeCommandFooter>
 //     <HomeLearnRow />
-//     <Core1000ProgressCard />
 //   </HomeCommandFooter>
 // </HomeCommandGrid>
 
@@ -43,13 +43,13 @@ export default function HomeCommandGrid({
       <div className="home-command-main">
         {dailyCard ?? <HomeDailyCard conceptLesson={conceptLesson} />}
       </div>
-      <aside className="home-command-aside">
+      <aside className="home-command-aside" aria-label="Práctica sugerida">
         <WeakSoundCard weakestPhoneme={weakestPhoneme} />
+        <Core1000ProgressCard />
         <HomeWordOfDayCard />
       </aside>
       <div className="home-command-footer">
         <HomeLearnRow primary={todaysLesson} secondary={secondaryLesson} />
-        <Core1000ProgressCard />
       </div>
     </div>
   );

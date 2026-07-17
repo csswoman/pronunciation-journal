@@ -100,36 +100,34 @@ export default function DailyStepList({
   })
 
   return (
-    <ol className="flex w-full flex-col gap-2.5">
-      {steps.map((step, i) => {
-        const status = getStepStatus(step.id)
-        const isInProgress =
-          activeId === step.id && status !== 'done' && status !== 'resolved'
-        // Entry point only when nothing is mid-session — avoid false "en curso".
-        const isEntry =
-          !activeId && i === entryIndex && status !== 'done' && status !== 'resolved'
-        const visual = rowVisual(status, isInProgress, isEntry)
-        const done = visual === 'done'
-        const isConcept = step.kind === 'concept'
-        const cardCount = step.studyCards?.length ?? 0
-        const hasReader = !!step.readerPassage
-        const isStartable = step.exercises.length > 0 || cardCount > 0 || hasReader
-        const showThread =
-          step.kind === 'word_review' && threadHints.length > 0
+    <div className="flex w-full flex-col gap-3">
+      <ol className="flex w-full flex-col gap-2.5">
+        {steps.map((step, i) => {
+          const status = getStepStatus(step.id)
+          const isInProgress =
+            activeId === step.id && status !== 'done' && status !== 'resolved'
+          // Entry point only when nothing is mid-session — avoid false "en curso".
+          const isEntry =
+            !activeId && i === entryIndex && status !== 'done' && status !== 'resolved'
+          const visual = rowVisual(status, isInProgress, isEntry)
+          const done = visual === 'done'
+          const isConcept = step.kind === 'concept'
+          const cardCount = step.studyCards?.length ?? 0
+          const hasReader = !!step.readerPassage
+          const isStartable = step.exercises.length > 0 || cardCount > 0 || hasReader
 
-        const cardClass = cn(
-          'home-card-lift focus-ring group flex w-full flex-col gap-2 rounded-[var(--radius-lg)] border bg-surface-raised px-4 py-3.5 text-left',
-          visual === 'entry' &&
-            'border-border-subtle border-l-[3px] border-l-primary hover:border-[var(--accent-border)]',
-          visual === 'current' &&
-            'border-border-subtle border-l-[3px] border-l-primary hover:border-[var(--accent-border)]',
-          visual === 'pending' &&
-            'border-border-subtle hover:border-[var(--accent-border)]',
-          visual === 'done' && 'border-border-subtle opacity-80',
-        )
+          const cardClass = cn(
+            'home-card-lift focus-ring group flex w-full flex-col gap-2 rounded-[var(--radius-lg)] border bg-surface-raised px-4 py-3.5 text-left',
+            visual === 'entry' &&
+              'border-primary bg-primary-soft hover:border-primary',
+            visual === 'current' &&
+              'border-primary bg-primary-soft hover:border-primary',
+            visual === 'pending' &&
+              'border-border-subtle hover:border-[var(--accent-border)]',
+            visual === 'done' && 'border-border-subtle opacity-80',
+          )
 
-        const inner = (
-          <>
+          const inner = (
             <div className="flex w-full items-center gap-3">
               <div className="min-w-0 flex-1">
                 <div className={cn(done && 'opacity-60')}>
@@ -170,33 +168,33 @@ export default function DailyStepList({
                 />
               )}
             </div>
-            {showThread ? <DailyThreadStrip hints={threadHints} embedded /> : null}
-          </>
-        )
+          )
 
-        if (isConcept && step.href) {
+          if (isConcept && step.href) {
+            return (
+              <li key={step.id} className="min-w-0">
+                <Link href={step.href} className={cardClass}>
+                  {inner}
+                </Link>
+              </li>
+            )
+          }
+
           return (
             <li key={step.id} className="min-w-0">
-              <Link href={step.href} className={cardClass}>
+              <button
+                type="button"
+                className={cardClass}
+                onClick={() => onStartStep(step)}
+                disabled={!isStartable || done}
+              >
                 {inner}
-              </Link>
+              </button>
             </li>
           )
-        }
-
-        return (
-          <li key={step.id} className="min-w-0">
-            <button
-              type="button"
-              className={cardClass}
-              onClick={() => onStartStep(step)}
-              disabled={!isStartable || done}
-            >
-              {inner}
-            </button>
-          </li>
-        )
-      })}
-    </ol>
+        })}
+      </ol>
+      {threadHints.length > 0 ? <DailyThreadStrip hints={threadHints} /> : null}
+    </div>
   )
 }

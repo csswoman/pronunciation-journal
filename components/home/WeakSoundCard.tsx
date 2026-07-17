@@ -52,7 +52,7 @@ export default function WeakSoundCard({ weakestPhoneme = null }: WeakSoundCardPr
       ) : (
         <Link
           href="/practice/sounds"
-          className="focus-ring inline-flex min-h-11 items-center justify-center gap-1.5 rounded-md border border-primary bg-surface-raised px-4 font-label text-primary transition-colors hover:bg-primary-soft"
+          className="focus-ring inline-flex min-h-10 items-center gap-1.5 font-body-sm text-primary transition-colors hover:underline"
         >
           Practicar sonidos <ArrowRight size={16} aria-hidden />
         </Link>

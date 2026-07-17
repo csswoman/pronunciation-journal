@@ -363,16 +363,9 @@
 }
 
 .home-command-footer {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
+  display: flex;
+  flex-direction: column;
   gap: var(--space-3);
-}
-
-@media (min-width: 768px) {
-  .home-command-footer {
-    grid-template-columns: minmax(0, 1.45fr) minmax(0, 0.9fr);
-    align-items: stretch;
-  }
 }
 
 .home-sidebar-card {

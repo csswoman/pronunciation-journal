@@ -70,7 +70,6 @@ export default async function HomePage() {
         conceptLesson={conceptLesson}
         dailyGoal={goal}
         weakestPhoneme={weakSound}
-        reviewQueue={queue}
         vocabularyProgress={vocabulary}
         todaysLesson={homeLessons.primary}
         secondaryLesson={homeLessons.secondary}

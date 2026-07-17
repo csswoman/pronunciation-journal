@@ -33,7 +33,7 @@ export default function HomeReviewBanner({
       className="home-card-lift focus-ring flex items-center gap-4 rounded-xl border border-primary bg-primary-soft px-5 py-4 shadow-sm transition-transform active:scale-[0.96]"
     >
       <div className="flex min-w-0 flex-1 flex-col gap-1">
-        <span className="font-kicker text-fg-muted">Urgente</span>
+        <span className="font-kicker text-fg-muted">Repaso</span>
         <span className="text-h4 text-fg">Pendiente de repasar</span>
         <p className="font-body-sm tabular-nums text-fg">
           {total} {total === 1 ? "pendiente" : "pendientes"}
