@@ -5,11 +5,11 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Sparkles } from "@/components/icons"
 import PageLayout from '@/components/layout/PageLayout'
+import PageHeader from '@/components/layout/PageHeader'
 import DailyStepSession from './DailyStepSession'
 import SessionOpeningBanner from './SessionOpeningBanner'
 import SessionRecapCard from './SessionRecapCard'
 import Button from '@/components/ui/Button'
-import Badge from '@/components/ui/Badge'
 import DailyStepList from './DailyStepList'
 import { useAuth } from '@/components/auth/AuthProvider'
 import { useDailyPlan, type ConceptLesson, type DailyStep } from '@/hooks/useDailyPlan'
@@ -173,21 +173,13 @@ export default function DailyChecklist({ conceptLesson, initialStepId, streak = 
   // ── Render: checklist ──────────────────────────────────────────────────────
   return (
     <PageLayout className="mx-auto max-w-[680px]">
-      <header className="mb-6">
-        <Badge label="Today's plan" variant="default" className="mb-3" />
-        <h1 className="text-3xl font-medium text-[var(--text-primary)]" style={{ fontFamily: 'var(--font-display), serif' }}>
-          Your daily
-        </h1>
-        <p className="mt-1 text-[15px] text-[var(--text-secondary)]">
-          {completedCount} of {steps.length} steps · complete all {steps.length} to keep your streak.
-        </p>
-        <div className="mt-4 h-1.5 w-full overflow-hidden rounded-full bg-surface-sunken">
-          <div
-            className="h-full w-full rounded-full bg-[var(--primary)] origin-left transition-transform duration-300 ease-out"
-            style={{ transform: `scaleX(${steps.length ? completedCount / steps.length : 0})` }}
-          />
-        </div>
-      </header>
+      <PageHeader
+        variant="compact"
+        kicker="Hoy"
+        title="Plan diario"
+        subtitle={`${completedCount} de ${steps.length} pasos · completa los ${steps.length} para mantener tu racha.`}
+        progress={steps.length ? Math.round((completedCount / steps.length) * 100) : 0}
+      />
 
       <SessionOpeningBanner arc={plan?.arc} />
 
