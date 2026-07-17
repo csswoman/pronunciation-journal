@@ -21,6 +21,7 @@ import {
   type EssentialWordsSessionSummary,
 } from "@/lib/core-1000/session-model";
 import {
+  masterEssentialWord,
   recordCore1000Introduction,
   snoozeEssentialWord,
 } from "@/lib/db";
@@ -235,8 +236,7 @@ export function useEssentialWordsSession() {
     setPhase(phaseForCore1000Item(newQueue[nextIndex]));
   }, [phase, queue, index, syncCounts]);
 
-  const archiveWord = useCallback(async (word: string) => {
-    await snoozeEssentialWord(word);
+  const removeCurrentAndAdvance = useCallback((word: string) => {
     seenIdsRef.current.add(core1000WordId(word.toLowerCase()));
     const newQueue = queue.filter((_, i) => i !== index);
     setQueue(newQueue);
@@ -247,6 +247,21 @@ export function useEssentialWordsSession() {
     syncCounts(newQueue, index);
     setPhase(phaseForCore1000Item(newQueue[index]));
   }, [queue, index, finishSession, syncCounts]);
+
+  const archiveWord = useCallback(async (word: string) => {
+    await snoozeEssentialWord(word);
+    removeCurrentAndAdvance(word);
+  }, [removeCurrentAndAdvance]);
+
+  const keepSnooze = useCallback(async (word: string) => {
+    await snoozeEssentialWord(word, 90);
+    removeCurrentAndAdvance(word);
+  }, [removeCurrentAndAdvance]);
+
+  const masterWord = useCallback(async (word: string) => {
+    await masterEssentialWord(word);
+    removeCurrentAndAdvance(word);
+  }, [removeCurrentAndAdvance]);
 
   const reload = useCallback(async () => {
     setReloadLoading(true);
@@ -266,5 +281,7 @@ export function useEssentialWordsSession() {
     reload,
     learnMore,
     archiveWord,
+    keepSnooze,
+    masterWord,
   };
 }

@@ -1,6 +1,6 @@
 import { fetchCoreWords } from "@/lib/core-1000/client";
 import { buildSessionQueue, type Core1000QueueItem } from "@/lib/core-1000/queue";
-import { NEW_CARDS_PER_DAY, type CoreWord } from "@/lib/core-1000/types";
+import { core1000WordId, NEW_CARDS_PER_DAY, type CoreWord } from "@/lib/core-1000/types";
 import { getCore1000IntroducedToday } from "@/lib/db";
 import { prepareCore1000SrsEntries } from "@/lib/core-1000/prepare-srs";
 import { phaseForCore1000Item, type EssentialWordsPhase } from "@/lib/core-1000/session-model";
@@ -28,9 +28,12 @@ export async function loadEssentialWordsQueue(): Promise<LoadedEssentialWordsQue
   ]);
 
   const now = new Date();
-  const srsEntries = await prepareCore1000SrsEntries(now);
+  const { entries: srsEntries, activatedWordIds } = await prepareCore1000SrsEntries(now);
 
-  const items = buildSessionQueue({ words, srsEntries, introducedToday, now });
+  const items = buildSessionQueue({ words, srsEntries, introducedToday, now }).map((item) => ({
+    ...item,
+    fromSnooze: activatedWordIds.includes(core1000WordId(item.entry.word)),
+  }));
   const seenIds = new Set(srsEntries.map((entry) => entry.wordId));
 
   return {

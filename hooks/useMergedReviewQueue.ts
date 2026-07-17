@@ -51,12 +51,12 @@ export function useMergedReviewQueue(server: ReviewQueueSummary): ReviewQueueSum
     (async () => {
       try {
         const now = new Date();
-        const [words, introducedToday, srsEntries] = await Promise.all([
+        const [words, introducedToday, prepared] = await Promise.all([
           fetchCoreWords(),
           getCore1000IntroducedToday(),
           prepareCore1000SrsEntries(now),
         ]);
-        const queue = buildSessionQueue({ words, srsEntries, introducedToday, now });
+        const queue = buildSessionQueue({ words, srsEntries: prepared.entries, introducedToday, now });
         if (cancelled) return;
         setMerged(mergeEssential(server, deriveEssentialSource(queue)));
       } catch {

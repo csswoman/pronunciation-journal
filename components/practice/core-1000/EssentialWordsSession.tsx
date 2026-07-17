@@ -23,6 +23,7 @@ export function EssentialWordsSession() {
   const {
     phase, current, stats, counts, sessionSummary,
     reloadLoading, startSpeak, submitGrade, reload, learnMore, archiveWord,
+    keepSnooze, masterWord,
   } = useEssentialWordsSession()
   const loadingWords = useLoadingWords()
 
@@ -69,6 +70,9 @@ export function EssentialWordsSession() {
             entry={current.entry}
             onGraded={submitGrade}
             onArchive={() => void archiveWord(current.entry.word)}
+            fromSnooze={current.fromSnooze}
+            onKeepSnooze={() => void keepSnooze(current.entry.word)}
+            onMaster={() => void masterWord(current.entry.word)}
           />
         )}
       </div>

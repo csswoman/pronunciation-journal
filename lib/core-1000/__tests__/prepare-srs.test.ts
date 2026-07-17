@@ -14,9 +14,9 @@ vi.mock("@/lib/db", () => ({
   getCore1000SrsEntries: () => mockGetEntries(),
 }));
 
-function snoozedEntry(nextReview: string): SRSData {
+function snoozedEntry(wordId: string, nextReview: string): SRSData {
   return {
-    wordId: "core-1000:1",
+    wordId,
     interval: 1,
     easeFactor: 2.5,
     repetitions: 1,
@@ -34,25 +34,27 @@ describe("prepareCore1000SrsEntries", () => {
   });
 
   it("returns entries unchanged when no snoozes expired", async () => {
-    const entries = [snoozedEntry("2099-01-01T00:00:00.000Z")];
+    const entries = [snoozedEntry("c1k:apple", "2099-01-01T00:00:00.000Z")];
     mockGetEntries.mockResolvedValue(entries);
 
     const result = await prepareCore1000SrsEntries(new Date("2026-07-17T12:00:00.000Z"));
 
-    expect(result).toEqual(entries);
+    expect(result.entries).toEqual(entries);
+    expect(result.activatedWordIds).toEqual([]);
     expect(mockPut).not.toHaveBeenCalled();
   });
 
-  it("activates expired snoozes and persists changed rows", async () => {
+  it("activates expired snoozes, persists changed rows, and tracks word ids", async () => {
     const now = new Date("2026-07-17T12:00:00.000Z");
-    const expired = snoozedEntry("2026-07-01T00:00:00.000Z");
+    const expired = snoozedEntry("c1k:apple", "2026-07-01T00:00:00.000Z");
     mockGetEntries.mockResolvedValue([expired]);
 
     const result = await prepareCore1000SrsEntries(now);
 
-    expect(result[0].status).toBe("active");
-    expect(result[0].nextReview).toBe(now.toISOString());
+    expect(result.entries[0].status).toBe("active");
+    expect(result.entries[0].nextReview).toBe(now.toISOString());
+    expect(result.activatedWordIds).toEqual(["c1k:apple"]);
     expect(mockPut).toHaveBeenCalledOnce();
-    expect(mockPut).toHaveBeenCalledWith(result[0]);
+    expect(mockPut).toHaveBeenCalledWith(result.entries[0]);
   });
 });

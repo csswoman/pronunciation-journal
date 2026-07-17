@@ -22,6 +22,7 @@ import { getFeedbackMessage, calculateXP } from '@/lib/pronunciation/scoring'
 import PronunciationFeedback from '@/components/lesson/PronunciationFeedback'
 import { PhonemeFeedbackTable } from '@/components/lesson/PhonemeFeedbackTable'
 import { SelfGradeBar } from './SelfGradeBar'
+import { playUiCue } from '@/lib/ui-sounds/cues'
 import { cn } from '@/lib/cn'
 import type { CoreWord } from '@/lib/core-1000/types'
 import type { WordResult } from '@/lib/types'
@@ -30,6 +31,9 @@ interface Props {
   entry: CoreWord
   onGraded: (quality: number, extras?: { accuracy: number; transcript: string }) => Promise<void>
   onArchive: () => void
+  fromSnooze?: boolean
+  onKeepSnooze?: () => void
+  onMaster?: () => void
 }
 
 interface Scored {
@@ -61,7 +65,14 @@ function micErrorMessage(error: string | null): string {
   return 'No se pudo iniciar el micrófono.'
 }
 
-export function SpeakReviewCard({ entry, onGraded, onArchive }: Props) {
+export function SpeakReviewCard({
+  entry,
+  onGraded,
+  onArchive,
+  fromSnooze,
+  onKeepSnooze,
+  onMaster,
+}: Props) {
   const { getStream, release } = useSharedMicStream()
   const { state, result, error: speechError, isSupported, start, stop, abort, reset } =
     useSpeechInput({ prefer: 'auto', getStream })
@@ -95,11 +106,15 @@ export function SpeakReviewCard({ entry, onGraded, onArchive }: Props) {
         actual: { kind: 'speech', transcript: result.transcript },
       })
       .then((evalResult) => {
+        const score = evalResult.score ?? 0
         setScored({
-          score: evalResult.score ?? 0,
+          score,
           wordResults: getEvaluationWordResults(evalResult),
           transcript: result.transcript,
         })
+        if (score >= 85) playUiCue('correct')
+        else if (score >= 60) playUiCue('reveal')
+        else playUiCue('wrong')
       })
       .finally(() => {
         setIsScoring(false)
@@ -177,12 +192,12 @@ export function SpeakReviewCard({ entry, onGraded, onArchive }: Props) {
   return (
     <div className="flex w-full max-w-md flex-col items-center gap-5 rounded-2xl bg-surface-raised px-6 py-7 shadow-sm">
       <div className="flex flex-col items-center gap-1 text-center">
-        <p className="text-xs font-semibold uppercase tracking-[.08em] text-fg-subtle m-0">
+        <p className="m-0 text-sm font-medium text-fg-muted">
           Di la oración
         </p>
-        <p className="text-xl text-fg m-0">{sentence}</p>
+        <p className="m-0 text-xl text-balance text-fg">{sentence}</p>
         {entry.sentence_ipa && (
-          <p className="[font-family:var(--font-ipa),monospace] text-sm text-fg-subtle m-0">
+          <p className="ipa m-0 max-w-[36ch] text-center text-fg-muted">
             {entry.sentence_ipa}
           </p>
         )}
@@ -190,9 +205,21 @@ export function SpeakReviewCard({ entry, onGraded, onArchive }: Props) {
 
       <ListenButton onPlay={() => speak(sentence, { rate: 0.95 })} label="Escuchar modelo" />
 
-      <PillButton variant="quiet" size="sm" onClick={onArchive}>
-        Ya la sé
-      </PillButton>
+      <div className="flex flex-col items-center gap-2">
+        <PillButton variant="quiet" size="sm" onClick={onArchive}>
+          Ya la sé
+        </PillButton>
+        {fromSnooze && (
+          <div className="flex flex-wrap items-center justify-center gap-2">
+            <PillButton variant="quiet" size="sm" onClick={onKeepSnooze}>
+              Seguir en 90 días
+            </PillButton>
+            <PillButton variant="quiet" size="sm" onClick={onMaster}>
+              No me la recuerdes más
+            </PillButton>
+          </div>
+        )}
+      </div>
 
       {useFallback ? (
         <div className="flex w-full flex-col items-center gap-2">

@@ -8,6 +8,7 @@ import type { SRSData } from "@/lib/types";
 export interface Core1000QueueItem {
   entry: CoreWord;
   kind: 'new' | 'review' | 'learning';
+  fromSnooze?: boolean;
 }
 
 export interface BuildQueueOptions {

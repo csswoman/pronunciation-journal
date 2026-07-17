@@ -28,13 +28,21 @@ const dbMocks = vi.hoisted(() => ({
   getCore1000IntroducedToday: vi.fn(async (): Promise<string[]> => []),
   recordCore1000Introduction: vi.fn(async () => undefined),
   snoozeEssentialWord: vi.fn(async () => undefined),
+  masterEssentialWord: vi.fn(async () => undefined),
   getSRSData: vi.fn(async () => undefined),
   saveSRSData: vi.fn(async () => undefined),
   saveAttempt: vi.fn(async () => undefined),
   updateDailyProgress: vi.fn(async () => undefined),
   updateUserStats: vi.fn(async () => undefined),
 }))
-vi.mock('@/lib/db', () => dbMocks)
+vi.mock('@/lib/db', () => ({
+  db: {
+    srsData: {
+      put: dbMocks.saveSRSData,
+    },
+  },
+  ...dbMocks,
+}))
 
 const authMocks = vi.hoisted(() => ({
   user: null as { id: string } | null,
@@ -187,5 +195,54 @@ describe('EssentialWordsSession', () => {
     expect(activityMocks.recordActivitySession).toHaveBeenCalledWith('user-1', expect.objectContaining({
       practiceContext: 'core-1000',
     }))
+  })
+
+  it('offers keep/master actions for words reactivated from snooze', async () => {
+    const user = userEvent.setup()
+    dbMocks.getCore1000SrsEntries.mockResolvedValue([
+      {
+        wordId: 'c1k:the',
+        interval: 1,
+        easeFactor: 2.5,
+        repetitions: 1,
+        nextReview: '2026-07-01T00:00:00.000Z',
+        status: 'snoozed',
+        snoozedAt: '2026-01-01T00:00:00.000Z',
+      },
+    ])
+
+    render(<EssentialWordsSession />)
+
+    expect(await screen.findByText('Give me the book please.')).toBeTruthy()
+    expect(screen.getByRole('button', { name: 'Seguir en 90 días' })).toBeTruthy()
+    expect(screen.getByRole('button', { name: 'No me la recuerdes más' })).toBeTruthy()
+
+    await user.click(screen.getByRole('button', { name: 'Seguir en 90 días' }))
+
+    await waitFor(() => expect(dbMocks.snoozeEssentialWord).toHaveBeenCalledWith('the', 90))
+    await screen.findByRole('heading', { name: 'be' })
+  })
+
+  it('masters a reactivated snooze word and advances', async () => {
+    const user = userEvent.setup()
+    dbMocks.getCore1000SrsEntries.mockResolvedValue([
+      {
+        wordId: 'c1k:the',
+        interval: 1,
+        easeFactor: 2.5,
+        repetitions: 1,
+        nextReview: '2026-07-01T00:00:00.000Z',
+        status: 'snoozed',
+        snoozedAt: '2026-01-01T00:00:00.000Z',
+      },
+    ])
+
+    render(<EssentialWordsSession />)
+
+    await screen.findByText('Give me the book please.')
+    await user.click(screen.getByRole('button', { name: 'No me la recuerdes más' }))
+
+    await waitFor(() => expect(dbMocks.masterEssentialWord).toHaveBeenCalledWith('the'))
+    await screen.findByRole('heading', { name: 'be' })
   })
 })
