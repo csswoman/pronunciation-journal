@@ -653,7 +653,7 @@
 
 /* Headline — editorial font + fluid size */
 .sound-lab__headline {
-  font-family: var(--font-display), serif;
+  font-family: var(--font-sans), sans-serif;
   font-weight: 520;
   font-size: clamp(1.25rem, 4.5vw, 2.1rem);
   letter-spacing: -0.02em;
@@ -681,7 +681,7 @@
 
 /* Section group title — display font */
 .sound-lab__group-title {
-  font-family: var(--font-display), serif;
+  font-family: var(--font-sans), sans-serif;
   font-weight: 480;
   font-size: 1.3rem;
   color: var(--text-primary);

@@ -19,7 +19,7 @@ function StatColumn({
     <div className="flex flex-1 flex-col items-center gap-1">
       <span
         className={cn(
-          'font-display text-4xl font-bold leading-none tabular-nums tracking-tight',
+          'text-4xl font-bold leading-none tabular-nums tracking-tight',
           accent && value > 0
             ? 'text-primary'
             : zero && value === 0

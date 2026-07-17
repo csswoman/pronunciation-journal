@@ -99,8 +99,7 @@ export default function PracticeLessonsPage() {
       className="pt-[var(--space-6)] sm:pt-[var(--space-6)] pb-14 sm:pb-14"
       hero={
         <PageHeader
-          variant="hero-compact"
-          badge="Sound Lab"
+          kicker="Sound Lab"
           title="Speak Better"
           subtitle="One Sound at a Time"
           progress={heroLesson.progress}

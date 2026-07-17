@@ -112,7 +112,7 @@ function ShellHeader({
             {eyebrow}
           </span>
         )}
-        <p className="font-[Fraunces,Georgia,serif] text-2xl font-bold leading-tight text-fg">
+        <p className="text-2xl font-bold leading-tight text-fg">
           {title}
         </p>
         {description && (

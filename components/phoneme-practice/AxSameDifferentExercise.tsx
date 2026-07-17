@@ -64,7 +64,6 @@ export function AxSameDifferentExercise({ exercise, onSubmit, voice }: Props) {
     <div className="flex flex-col items-center gap-6 w-full">
       <h2
         className="text-xl font-semibold text-(--fg-primary) text-center leading-snug m-0"
-        style={{ fontFamily: 'Fraunces, Georgia, serif' }}
       >
         Do A and X sound the same?
       </h2>
@@ -81,7 +80,6 @@ export function AxSameDifferentExercise({ exercise, onSubmit, voice }: Props) {
           >
             <span
               className="text-lg font-bold text-primary"
-              style={{ fontFamily: 'Fraunces, Georgia, serif' }}
             >
               {label}
             </span>

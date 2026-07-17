@@ -44,7 +44,7 @@ export function PickSoundExercise({ exercise, onSubmit, focusUi = false }: Props
 
   return (
     <div className={focusUi ? 'phoneme-focus__exercise' : 'flex flex-col items-center gap-5 w-full'}>
-      <h2 className="text-(--fg-primary) text-2xl font-bold leading-tight tracking-tight m-0 text-center [font-family:var(--font-display,Fraunces,Georgia,serif)]">
+      <h2 className="text-(--fg-primary) text-2xl font-bold leading-tight tracking-tight m-0 text-center">
         Which sound<br />did you hear?
       </h2>
 

@@ -51,7 +51,7 @@ export function ABXExercise({ exercise, onSubmit, voice }: Props) {
         <span className="text-[11px] font-semibold tracking-[0.09em] uppercase text-fg-subtle">
           {exercise.ipa}
         </span>
-        <p className="font-[Fraunces,Georgia,serif] text-xl font-bold text-fg leading-snug">
+        <p className="text-xl font-bold text-fg leading-snug">
           Does <span className="text-primary">X</span> sound more like <span className="text-fg">A</span> or <span className="text-fg">B</span>?
         </p>
         <p className="text-xs text-fg-subtle mt-0.5">

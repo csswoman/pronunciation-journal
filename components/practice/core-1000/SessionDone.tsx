@@ -44,7 +44,7 @@ export function SessionDone({
   return (
     <div className="flex flex-col items-center gap-6 py-10 text-center">
       <div className="flex flex-col items-center gap-2">
-        <h2 className="m-0 font-display text-h3 text-fg">
+        <h2 className="m-0 text-h3 text-fg">
           {loadFailed ? 'No se pudo cargar la sesión' : wasEmpty ? 'Nada pendiente por hoy' : 'Sesión completa'}
         </h2>
         {!wasEmpty && !loadFailed && practiced > 0 ? (

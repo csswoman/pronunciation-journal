@@ -78,7 +78,6 @@ export function DictationExercise({ exercise, onSubmit, voice }: Props) {
     <div className="flex flex-col items-center gap-6 w-full">
       <h2
         className="text-xl font-semibold text-(--fg-primary) text-center leading-snug m-0"
-        style={{ fontFamily: 'Fraunces, Georgia, serif' }}
       >
         Listen and write the word
       </h2>

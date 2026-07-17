@@ -13,8 +13,8 @@ export default function HomeSectionHeader({
 }: HomeSectionHeaderProps) {
   const numClass =
     size === "lg"
-      ? "font-display text-lg italic text-[var(--primary)]"
-      : "font-display text-sm italic text-[var(--primary)]";
+      ? "text-lg italic text-[var(--primary)]"
+      : "text-sm italic text-[var(--primary)]";
   const titleClass =
     size === "lg"
       ? "text-2xl font-semibold tracking-tight text-[var(--text-primary)]"

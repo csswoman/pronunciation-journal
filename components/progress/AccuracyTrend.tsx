@@ -48,7 +48,7 @@ export function AccuracyTrend({ stats }: Props) {
               />
             ) : null}
           </svg>
-          <div className="-mt-[26px] text-center font-display text-h2 leading-none text-fg">
+          <div className="-mt-[26px] text-center text-h2 leading-none text-fg">
             {hasData ? `${stats.accuracy7}%` : '—'}
           </div>
         </div>

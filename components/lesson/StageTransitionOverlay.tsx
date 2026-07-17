@@ -52,7 +52,7 @@ export function StageTransitionOverlay({ nextStage, visible, onDismiss }: Props)
         </span>
         <div>
           <p
-            className="font-display text-h4 leading-tight"
+            className="text-h4 leading-tight"
             style={{ color: "var(--admonitions-color-tip)" }}
           >
             Stage complete — moving to {NEXT_LABELS[nextStage]}

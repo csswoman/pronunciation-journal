@@ -80,7 +80,7 @@ export function PickWordExercise({ exercise, onSubmit, focusUi = false }: Props)
   if (!focusUi) {
     return (
       <div className="flex flex-col gap-5 w-full">
-        <p className="font-[Fraunces,Georgia,serif] text-2xl font-bold leading-tight text-fg">
+        <p className="text-2xl font-bold leading-tight text-fg">
           Which words contain the sound {exercise.ipa}?
         </p>
         <div className="flex justify-center">
@@ -114,7 +114,7 @@ export function PickWordExercise({ exercise, onSubmit, focusUi = false }: Props)
 
   return (
     <div className="phoneme-focus__exercise">
-      <p className="font-[Fraunces,Georgia,serif] text-2xl font-bold leading-tight text-fg mb-4">
+      <p className="text-2xl font-bold leading-tight text-fg mb-4">
         Which words contain the sound {exercise.ipa}?
       </p>
       <div className="flex justify-center mb-4">

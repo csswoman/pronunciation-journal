@@ -43,7 +43,6 @@ function WordDisplay({ word, ipa, onListen }: { word?: string; ipa: string; onLi
       <div className="flex items-center gap-3">
         <div
           className="text-5xl font-bold text-fg tracking-tight leading-none"
-          style={{ fontFamily: 'Fraunces, Georgia, serif' }}
         >
           {word ?? '—'}
         </div>
@@ -147,7 +146,6 @@ export function SpeakScoredExercise({ exercise, onSubmit }: Props) {
     <div className="flex flex-col items-center gap-6 w-full">
       <h2
         className="text-xl font-semibold text-fg text-center leading-snug m-0"
-        style={{ fontFamily: 'Fraunces, Georgia, serif' }}
       >
         Say the word
       </h2>

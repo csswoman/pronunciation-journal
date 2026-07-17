@@ -13,9 +13,9 @@ interface Props {
 }
 
 function progressAriaLabel(ipa: string | null, heroWord: string | null, progress: number): string {
-  const sound = [ipa, heroWord].filter(Boolean).join(", as in ");
-  if (sound) return `${sound}, ${progress}% complete`;
-  return `${progress}% complete`;
+  const sound = [ipa, heroWord].filter(Boolean).join(", como en ");
+  if (sound) return `${sound}, ${progress}% completado`;
+  return `${progress}% completado`;
 }
 
 export function SoundLabContinuingBar({ lesson, progress }: Props) {
@@ -40,7 +40,7 @@ export function SoundLabContinuingBar({ lesson, progress }: Props) {
       <div className="sound-lab__resume-split">
         <div className="sound-lab__resume-focus">
           <span id={labelId} className="sound-lab__chrome-label sound-lab__chrome-label--section">
-            Pick up here
+            Retoma aquí
           </span>
 
           <div className="sound-lab__resume-identity">
@@ -48,7 +48,7 @@ export function SoundLabContinuingBar({ lesson, progress }: Props) {
             {heroWord && (
               <>
                 <span className="sound-lab__resume-as-in" aria-hidden>
-                  as in
+                  como en
                 </span>
                 <span className="sound-lab__resume-hero-word truncate">{heroWord}</span>
               </>
@@ -75,7 +75,7 @@ export function SoundLabContinuingBar({ lesson, progress }: Props) {
         {exampleWords.length > 0 && (
           <div className="sound-lab__resume-examples">
             <span id={examplesGroupId} className="sound-lab__chrome-label sound-lab__chrome-label--section">
-              Hear examples
+              Escuchar ejemplos
             </span>
             <div
               className="sound-lab__resume-examples-pills"

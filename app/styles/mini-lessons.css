@@ -308,7 +308,7 @@
 }
 
 .mini-lessons__title {
-  font-family: var(--font-editorial), "Fraunces", Georgia, serif;
+  font-family: var(--font-sans), sans-serif;
   font-size: clamp(1.9rem, 4.5vw, 2.45rem);
   font-weight: 420;
   letter-spacing: -0.02em;
@@ -530,7 +530,7 @@
 }
 
 .mini-lessons__card-title {
-  font-family: var(--font-editorial), "Fraunces", Georgia, serif;
+  font-family: var(--font-sans), sans-serif;
   font-size: 1.15rem;
   font-weight: 480;
   color: var(--text-primary);
@@ -577,7 +577,7 @@
 /* ── Article view ─────────────────────────────────────────────────────────── */
 
 .mini-lessons__article-title {
-  font-family: var(--font-editorial), "Fraunces", Georgia, serif;
+  font-family: var(--font-sans), sans-serif;
   font-size: clamp(1.75rem, 4vw, 2.2rem);
   font-weight: 480;
   letter-spacing: -0.02em;
@@ -591,7 +591,7 @@
 }
 
 .mini-lessons__section-title {
-  font-family: var(--font-editorial), "Fraunces", Georgia, serif;
+  font-family: var(--font-sans), sans-serif;
   font-size: 1.35rem;
   font-weight: 480;
   color: var(--text-primary);
@@ -612,7 +612,7 @@
 }
 
 .mini-lessons__example-en {
-  font-family: var(--font-editorial), Georgia, serif;
+  font-family: var(--font-sans), sans-serif;
   font-size: 1.05rem;
   color: var(--text-primary);
   font-optical-sizing: auto;

@@ -41,7 +41,7 @@ export function DailyCompletionRate({ stats }: Props) {
           </div>
           <div className="mt-3 flex justify-between text-body-sm text-fg-muted">
             <span>
-              <b className="font-display font-normal text-fg">{stats.completedDays30}</b> of 30 days
+              <b className="font-normal text-fg">{stats.completedDays30}</b> of 30 days
             </span>
             <span>{stats.rate30}% of the month</span>
           </div>

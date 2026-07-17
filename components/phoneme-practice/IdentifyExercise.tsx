@@ -67,7 +67,6 @@ export function IdentifyExercise({ exercise, onSubmit, voice }: Props) {
         </p>
         <h2
           className="text-xl font-semibold text-(--fg-primary) text-center leading-snug m-0"
-          style={{ fontFamily: 'Fraunces, Georgia, serif' }}
         >
           Listen and decide
         </h2>

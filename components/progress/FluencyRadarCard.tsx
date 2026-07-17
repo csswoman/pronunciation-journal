@@ -135,7 +135,7 @@ function DimensionList({ scores }: { scores: FluencyScores }) {
             </div>
             <div
               className={cn(
-                'font-display text-body-lg text-primary',
+                'text-body-lg text-primary',
                 isBest && 'text-success',
                 isWorst && 'text-warning',
               )}
@@ -148,13 +148,13 @@ function DimensionList({ scores }: { scores: FluencyScores }) {
 
       <div className="mt-1 flex gap-2.5">
         <div className="flex-1 rounded-[var(--radius-md)] bg-success-soft px-3 py-2.5 text-caption text-success">
-          <b className="mb-0.5 block font-display text-body-sm text-success-value">
+          <b className="mb-0.5 block text-body-sm text-success-value">
             {best.label} {max}
           </b>
           Your strongest area right now.
         </div>
         <div className="flex-1 rounded-[var(--radius-md)] bg-warning-soft px-3 py-2.5 text-caption text-warning">
-          <b className="mb-0.5 block font-display text-body-sm text-warning-value">
+          <b className="mb-0.5 block text-body-sm text-warning-value">
             {worst.label} {min}
           </b>
           Worth a focused practice session.

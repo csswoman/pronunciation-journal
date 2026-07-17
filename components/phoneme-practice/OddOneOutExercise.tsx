@@ -40,7 +40,7 @@ export function OddOneOutExercise({ exercise, onSubmit, voice }: Props) {
 
       {/* Header */}
       <div className="flex flex-col gap-1">
-        <h2 className="font-[Fraunces,Georgia,serif] text-2xl font-bold leading-tight text-fg">
+        <h2 className="text-2xl font-bold leading-tight text-fg">
           Which one is different?
         </h2>
         <p className="text-sm text-fg-subtle">

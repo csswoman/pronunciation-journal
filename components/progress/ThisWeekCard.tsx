@@ -52,7 +52,7 @@ function WeekStat({
         .filter(Boolean)
         .join(' ')}
     >
-      <b className="block font-display text-h3 leading-none text-primary">{value}</b>
+      <b className="block text-h3 leading-none text-primary">{value}</b>
       <span className="mt-1.5 block text-caption uppercase tracking-[0.06em] text-fg-subtle">
         {label}
       </span>

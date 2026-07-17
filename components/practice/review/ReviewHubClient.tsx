@@ -80,7 +80,7 @@ export function ReviewHubClient({ summary }: Props) {
             {summary.weakWords.slice(0, 4).map((w) => (
               <li key={w.id} className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
-                  <p className="font-display text-base font-medium text-fg">{w.text}</p>
+                  <p className="text-base font-medium text-fg">{w.text}</p>
                   {w.translation ? (
                     <p className="font-body-sm text-fg-muted">{w.translation}</p>
                   ) : null}

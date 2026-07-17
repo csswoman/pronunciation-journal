@@ -120,7 +120,7 @@ export default function HomeReviewCarousel({
                   className="flex w-[72vw] max-w-[280px] shrink-0 snap-start flex-col justify-between gap-3 rounded-[var(--radius-xl)] border border-border-subtle bg-surface-raised p-4"
                 >
                   <div>
-                    <p className="font-display text-xl font-semibold leading-tight text-[var(--text-primary)]">
+                    <p className="text-xl font-semibold leading-tight text-[var(--text-primary)]">
                       {w.text}
                     </p>
                     {w.ipa ? (

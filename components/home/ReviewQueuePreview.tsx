@@ -15,7 +15,7 @@ export default function ReviewQueuePreview({ items }: ReviewQueuePreviewProps) {
     <div className="mt-4 flex flex-col gap-2 border-t border-border-subtle pt-4">
       {items.map((item) => (
         <div key={`${item.sourceId}:${item.id}`} className="flex items-baseline gap-2">
-          <p className="font-display text-base font-medium leading-tight text-[var(--text-primary)]">
+          <p className="text-base font-medium leading-tight text-[var(--text-primary)]">
             {item.text}
             {item.ipa ? (
               <span className="font-ipa ml-2 text-body-sm">{formatIpa(item.ipa)}</span>
