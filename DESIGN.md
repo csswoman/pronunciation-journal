@@ -283,10 +283,51 @@ The standard `<Button>` (`components/ui/Button.tsx`) covers form, dialog, and to
 
 ### Navigation
 
-- **App shell:** Fixed sidebar (256px desktop), bottom navigation bar (mobile). Tab bar is flat, no elevation.
+- **App shell:** Fixed sidebar (256px desktop), bottom navigation bar (mobile). Tab bar is flat, no elevation. Always present on authenticated routes, including practice sessions — immersion narrows content, it does not hide chrome.
 - **Nav items:** Ghost-style at rest (transparent bg, text-secondary text). Active state: primary-soft background, primary text, 8px radius.
 - **Hover:** Surface-raised fill, text-primary text, 150ms transition.
 - **Typography:** Label scale (DM Sans 600, 0.9375rem / 15px).
+
+### Page Layout Pattern (canonical authenticated page)
+
+Home is the reference composition. Every sidebar destination (hubs and in-session/detail routes) uses the same shell rules. Full spec: `docs/superpowers/specs/2026-07-16-page-layout-pattern-design.md`.
+
+**Hierarchy**
+
+```
+AppShell → PageLayout → PageHeader → Content
+```
+
+**PageLayout**
+
+- Open canvas: no full-page card wrapper around the route.
+- Outer gutters and vertical rhythm from layout utilities / spacing tokens only.
+- Sessions may use a tighter inner max-width; outer shell unchanged.
+- Prefer `cardWrapper={false}` (or equivalent canonical mode). Do not invent per-page outer shells.
+
+**PageHeader**
+
+- Fixed order: optional kicker → title → optional subtitle → optional actions.
+- Chrome typography: DM Sans / system scales. Never Fraunces on page titles or nav chrome.
+- Kicker: `font-kicker` (or system kicker). No ad-hoc `uppercase` + wide tracking eyebrows.
+- Subtitles and UI labels: Spanish. Learning content may stay English. No Spanglish inside one phrase.
+- Variants: `default` (hubs) and `compact` (sessions/detail, optional functional progress). Do not invent new header languages per route.
+
+**CTAs**
+
+- One solid primary action per view/zone. Secondary = outline / ghost / soft.
+- Do not repeat the same primary on sibling cards.
+
+**Sections & cards**
+
+- Flat sections by default. Cards only for interactive units (clickable row, stateful widget, step list).
+- Nested cards prohibited. No decorative icons that only echo the label.
+- Spacing rhythm via tokens (`gap-3` / `gap-4` / `gap-6`). Avoid one-off gaps (`gap-7`).
+
+**Theme preservation**
+
+- Patterns consume semantic utilities and CSS variables only (`bg-surface-*`, `text-fg*`, `font-*`, spacing scale, `--hue`).
+- User changes to hue, spacing, or fonts must retheme every conforming page without local hardcodes.
 
 ### Phoneme Cards (Signature Component)
 
@@ -312,7 +353,9 @@ The IPA phoneme card is the most distinctive component in the system. It surface
 - **Do** reserve the primary color for interactive affordances only: buttons, links, active nav items, focus rings, selected chips.
 - **Do** use semantic colors (success/warning/error/info) for all correctness and feedback signals. These are fixed and must not shift with `--hue`.
 - **Do** vary spacing for rhythm. Sections that breathe differently feel intentional; uniform padding feels like a template.
-- **Do** use Fraunces for phoneme display and editorial moments only. Earn its use.
+- **Do** use Fraunces for phoneme display and editorial moments only. Earn its use. Never for page chrome titles.
+- **Do** use the canonical Page Layout Pattern (`AppShell` → `PageLayout` → `PageHeader` → content) on authenticated sidebar routes, including sessions (compact header).
+- **Do** keep UI chrome copy in Spanish; reserve English for learning content.
 - **Do** include `prefers-reduced-motion` media queries for any animation longer than 100ms.
 - **Do** use DM Sans with latin-ext subset for all IPA and phonetic text. Never let it fall back to system fonts.
 - **Do** pair color feedback with an icon or label. Color alone must never be the only signal for correctness.
@@ -324,6 +367,9 @@ The IPA phoneme card is the most distinctive component in the system. It surface
 - **Don't** use gradient text (`background-clip: text`). Emphasis through weight or size; never decorative gradients.
 - **Don't** put the primary color on progress bars, decorative blobs, or section backgrounds that are not interactive.
 - **Don't** nest cards inside cards. Decompose the design instead.
+- **Don't** wrap an entire page in a single card and then nest more cards inside.
+- **Don't** hide AppShell or invent a chrome-less mode for practice sessions.
+- **Don't** rebuild page headers per route (`PageIntro`, hero eyebrows, Fraunces titles) outside the `PageHeader` contract.
 - **Don't** use modal dialogs as a first response to user actions. Exhaust inline patterns, progressive disclosure, and side panels before reaching for a modal.
 - **Don't** use hero-metric layouts (big number, small label, gradient accent) for any scoring or progress surface. Progress is felt through texture, not counted in a SaaS dashboard widget.
 - **Don't** hardcode colors in components. All color values must reference design tokens via `var(--token-name)` or Tailwind utility classes that map to tokens.
