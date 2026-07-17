@@ -1,5 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import PageLayout from "@/components/layout/PageLayout";
+import PageHeader from "@/components/layout/PageHeader";
 import {
   getLessonBySlug,
   getMiniLessonBySlug,
@@ -36,12 +38,19 @@ export default async function MiniLessonDetailPage({ params }: MiniLessonPagePro
 
   return (
     <article className="mini-lessons mini-lessons--article">
-      <div className="mini-lessons__wrap">
-        <Link href="/mini-lessons" className="mini-lessons__back">
-          ← Mini lessons
-        </Link>
+      <PageLayout>
+        <div className="mini-lessons__wrap mini-lessons__wrap--shell">
+          <Link href="/mini-lessons" className="mini-lessons__back">
+            ← Mini lecciones
+          </Link>
 
-        <header className="mini-lessons__article-hero">
+          <PageHeader
+            variant="compact"
+            kicker={MINI_LESSON_CATEGORY_LABELS[lesson.category]}
+            title={lesson.title}
+            subtitle={lesson.body}
+          />
+
           <div className="mini-lessons__article-badges">
             <span className="mini-lessons__pill mini-lessons__pill--level">
               {MINI_LESSON_LEVEL_LABELS[lesson.level]}
@@ -53,9 +62,6 @@ export default async function MiniLessonDetailPage({ params }: MiniLessonPagePro
               {lesson.duration} min
             </span>
           </div>
-          <h1 className="mini-lessons__article-title">{lesson.title}</h1>
-          <p className="mini-lessons__article-subtitle">{lesson.body}</p>
-        </header>
 
         {content.sections.map((section, idx) => (
           <section key={idx} className="mini-lessons__section">
@@ -134,7 +140,8 @@ export default async function MiniLessonDetailPage({ params }: MiniLessonPagePro
             </Link>
           )}
         </footer>
-      </div>
+        </div>
+      </PageLayout>
     </article>
   );
 }

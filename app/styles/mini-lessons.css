@@ -54,6 +54,11 @@
   }
 }
 
+.mini-lessons__wrap--shell {
+  padding-inline: 0;
+  padding-top: 0;
+}
+
 .mini-lessons__hero {
   display: flex;
   flex-direction: column;

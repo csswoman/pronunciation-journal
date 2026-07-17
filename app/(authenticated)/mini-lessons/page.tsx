@@ -1,7 +1,14 @@
 import MiniLessonsBrowser from "@/components/mini-lessons/MiniLessonsBrowser";
+import PageLayout from "@/components/layout/PageLayout";
 import { getAllMiniLessons } from "@/lib/content/lessons";
 
 export default async function MiniLessonsPage() {
   const lessons = await getAllMiniLessons();
-  return <MiniLessonsBrowser lessons={lessons} />;
+  return (
+    <div className="mini-lessons">
+      <PageLayout>
+        <MiniLessonsBrowser lessons={lessons} />
+      </PageLayout>
+    </div>
+  );
 }
