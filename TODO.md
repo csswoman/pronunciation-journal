@@ -48,7 +48,7 @@ Verificación actual (2026-07-05):
 
 | # | Área |
 |---|---|
-| T44-T49 | Prompts centralizados, STT cache RLS, admin seed, bundle CI, fonemas scoped, coverage per-file |
+| T44-T49 | Prompts centralizados, STT cache RLS, bundle CI, fonemas scoped, coverage per-file |
 | T50-T51 | Reader en daily plan + checklist QA; hilo entre pasos (plan 09) |
 
 ### ABIERTO (roadmap 032)

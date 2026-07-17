@@ -3,7 +3,6 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 const mocks = vi.hoisted(() => ({
   sendMessage: vi.fn(),
   validateBody: vi.fn(),
-  from: vi.fn(),
 }))
 
 vi.mock('@google/genai', () => ({
@@ -26,10 +25,6 @@ vi.mock('@/lib/api/guards', () => ({
     Response.json({ error: message }, { status }),
 }))
 
-vi.mock('@/lib/supabase/server', () => ({
-  createSupabaseServerClient: async () => ({ from: mocks.from }),
-}))
-
 vi.mock('@/lib/gemini/fallback', () => ({
   FALLBACK_MODELS: ['model-a', 'model-b'],
   getErrorStatus: (error: unknown) =>
@@ -49,7 +44,6 @@ function reqWith(): Request {
 beforeEach(() => {
   mocks.sendMessage.mockReset()
   mocks.validateBody.mockReset()
-  mocks.from.mockReset()
   process.env.GEMINI_API_KEY = 'test'
 })
 
@@ -66,30 +60,6 @@ describe('main gemini route', () => {
     expect(res.status).toBe(400)
     expect(body.error).toBe('Last message must be from the user')
     expect(mocks.sendMessage).not.toHaveBeenCalled()
-  })
-
-  it('requires admin role for admin-seed prompt key', async () => {
-    mocks.validateBody.mockResolvedValueOnce({
-      data: {
-        messages: [{ role: 'user', content: 'seed' }],
-        promptKey: 'admin-seed',
-        activeTab: 'sounds',
-        sounds: [],
-        stream: false,
-      },
-      error: null,
-    })
-    mocks.from.mockReturnValueOnce({
-      select: vi.fn().mockReturnThis(),
-      eq: vi.fn().mockReturnThis(),
-      single: vi.fn().mockResolvedValue({ data: { role: 'user' }, error: null }),
-    })
-
-    const res = await POST(reqWith() as never)
-    const body = await res.json()
-
-    expect(res.status).toBe(403)
-    expect(body.error).toBe('Forbidden')
   })
 
   it('tries the next model for retryable provider errors', async () => {

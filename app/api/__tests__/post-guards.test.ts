@@ -43,7 +43,6 @@ describe("POST API guard coverage", () => {
 
       if (
         !source.includes("requireUser(") &&
-        !source.includes("requireAdmin(") &&
         !source.includes(".auth.getUser(")
       ) {
         issues.push("auth");

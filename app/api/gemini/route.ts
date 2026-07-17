@@ -4,7 +4,6 @@ import { z } from "zod";
 import { requireSameOrigin, requireUser, rateLimit, validateBody, SECURE_HEADERS, publicErrorResponse } from "@/lib/api/guards";
 import { buildServerPrompt, type PromptKey } from "@/lib/api/prompts";
 import { detectIntent, intentToToolConfig } from "@/lib/ai-practice/intent-detection";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { getErrorStatus } from "@/lib/gemini/fallback";
 import {
   buildHistory,
@@ -40,14 +39,6 @@ const MessageSchema = z.object({
   result: z.unknown().optional(),
 }).strict();
 
-const SoundSchema = z.object({
-  id: z.string().max(50),
-  ipa: z.string().max(20),
-  type: z.string().max(20),
-  category: z.string().max(50).nullable(),
-  example: z.string().max(100).nullable(),
-}).strict();
-
 const GeminiRequestSchema = z.object({
   messages: z.array(MessageSchema).min(1).max(100),
   /**
@@ -55,14 +46,7 @@ const GeminiRequestSchema = z.object({
    * Closed enum — any value outside this list is rejected with 400.
    * The client cannot supply raw prompt text.
    */
-  promptKey: z.enum(["default", "admin-seed"] satisfies [PromptKey, ...PromptKey[]]).optional().default("default"),
-  /** Required when promptKey = "admin-seed" */
-  activeTab: z.string().max(50).optional(),
-  /**
-   * Required when promptKey = "admin-seed".
-   * Capped at 50 entries to prevent oversized prompt injection via the sounds list.
-   */
-  sounds: z.array(SoundSchema).max(50).optional(),
+  promptKey: z.enum(["default"] satisfies [PromptKey, ...PromptKey[]]).optional().default("default"),
   stream: z.boolean().optional().default(false),
 }).strict();
 
@@ -93,34 +77,10 @@ export async function POST(request: NextRequest): Promise<Response> {
     return Response.json({ error: "AI service unavailable" }, { status: 503, headers: SECURE_HEADERS });
   }
 
-  // 4. Prompt key authorization
-  //    admin-seed requires role = admin; verified server-side, never client-trusted
-  if (body.promptKey === "admin-seed") {
-    const supabase = await createSupabaseServerClient();
-    const { data: profile } = await supabase
-      .from("user_profiles")
-      .select("role")
-      .eq("id", user.id)
-      .single();
+  // 4. Build the system prompt entirely server-side
+  const systemPrompt = buildServerPrompt();
 
-    if (profile?.role !== "admin") {
-      return publicErrorResponse(403, "Forbidden");
-    }
-
-    if (!body.activeTab || !body.sounds) {
-      return publicErrorResponse(400, "activeTab and sounds are required for admin-seed");
-    }
-  }
-
-  // 5. Build system prompt entirely server-side
-  const systemPrompt = buildServerPrompt(
-    body.promptKey,
-    body.promptKey === "admin-seed"
-      ? { activeTab: body.activeTab!, sounds: body.sounds! }
-      : undefined
-  );
-
-  // 6. Determine tool config server-side from the last user message
+  // 5. Determine tool config server-side from the last user message
   //    Client has zero influence over which tools the model can use
   const lastMsg = body.messages[body.messages.length - 1];
   if (lastMsg.role !== "user") {

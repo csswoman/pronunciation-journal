@@ -462,56 +462,6 @@ export type Database = {
         }
         Relationships: []
       }
-      pattern_words: {
-        Row: {
-          id: number
-          ipa: string | null
-          pattern_id: number | null
-          word: string | null
-        }
-        Insert: {
-          id?: number
-          ipa?: string | null
-          pattern_id?: number | null
-          word?: string | null
-        }
-        Update: {
-          id?: number
-          ipa?: string | null
-          pattern_id?: number | null
-          word?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "pattern_words_pattern_id_fkey"
-            columns: ["pattern_id"]
-            isOneToOne: false
-            referencedRelation: "patterns"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      patterns: {
-        Row: {
-          id: number
-          pattern: string | null
-          sound_focus: string | null
-          type: string | null
-        }
-        Insert: {
-          id?: number
-          pattern?: string | null
-          sound_focus?: string | null
-          type?: string | null
-        }
-        Update: {
-          id?: number
-          pattern?: string | null
-          sound_focus?: string | null
-          type?: string | null
-        }
-        Relationships: []
-      }
       sounds: {
         Row: {
           category: string | null
