@@ -1,4 +1,5 @@
 import PageLayout from '@/components/layout/PageLayout'
+import PageHeader from '@/components/layout/PageHeader'
 import Link from 'next/link'
 import { listAllDecks } from '@/lib/courses/grammar-deck/decks'
 import { DecksIndexClient } from '@/components/practice/decks/DecksIndexClient'
@@ -7,19 +8,13 @@ export default function DecksIndexPage() {
   const decks = listAllDecks()
 
   return (
-    <PageLayout cardWrapper={false} className="pb-18">
+    <PageLayout>
       <div className="w-full">
-        <header className="flex flex-col gap-1.5 pt-2 pb-5 sm:pb-8">
-          <span className="text-tiny font-semibold uppercase tracking-[0.18em] text-fg-subtle">
-            Grammar decks
-          </span>
-          <h1 className="font-display text-display-word sm:text-h2 font-normal leading-tight tracking-[-0.02em] text-fg">
-            All decks
-          </h1>
-          <p className="text-sm text-fg-muted">
-            {decks.length} decks · browse by level or search by topic
-          </p>
-        </header>
+        <PageHeader
+          kicker="Learn"
+          title="Decks"
+          subtitle={`${decks.length} mazos · filtra por nivel o busca por tema`}
+        />
         <Link
           href="/practice/core-1000"
           className="mb-5 flex items-center justify-between rounded-lg border border-border-subtle bg-surface-raised px-4 py-3.5 no-underline"
