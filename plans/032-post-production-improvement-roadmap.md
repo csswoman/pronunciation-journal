@@ -1,13 +1,32 @@
 # Roadmap Post-Producción — Mejoras Priorizadas
 
 Fecha: 2026-07-03  
-Última actualización: 2026-07-03  
+Última actualización: 2026-07-17
 Base auditada: commit `51515e0`  
 Fuente: auditoría de mejoras post-sprint (roadmap 031 cerrado)
 
 Este documento ordena el trabajo que queda después de cerrar el sprint de producción.
 El objetivo es cerrar deuda técnica verificada, mejorar rendimiento medible, completar
 el arco pedagógico y preparar la app para escalar sin sorpresas.
+
+## Reconciliación 2026-07-17
+
+- **Fase 1 cerrada**: T44-T46 están implementadas y cubiertas por los planes
+  008, 007 y 004.
+- **Fase 2 cerrada**: bundle budgets corren en CI, las sesiones de fonemas usan
+  datasets acotados y `vitest.config.ts` aplica umbrales por archivo crítico.
+- **Fase 3 parcial**: T51 está implementada y testeada; T50 sigue pendiente
+  porque `docs/pedagogy-plans/reader-qa-checklist.md` conserva todos sus checks
+  manuales sin marcar.
+- **Fase 4 cerrada**: el índice está reconciliado y los planes 009 y 013 tienen
+  suites verificadas en el código actual.
+- **Fase 5 diferida**: se mantiene como menú opcional condicionado a tráfico,
+  necesidad real de offline en Sound Lab o un plan de observabilidad de pago;
+  no mantiene este roadmap abierto.
+
+Por tanto, el único bloqueo de cierre de este roadmap es ejecutar y documentar
+T50. No reabrir tareas ya cerradas usando la evidencia histórica de la tabla
+"Deuda verificada al escribir este plan".
 
 ## Estado Actual
 

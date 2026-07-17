@@ -2,14 +2,14 @@
 
 // Planned structure:
 // <SpeakReviewCard>
-//   <SentencePrompt />          — oración objetivo + IPA + TTS modelo
-//   <MicButton />               — useSpeechInput + getUserMedia → transcript
-//   <PronunciationFeedback />   — resultado + Continuar
-//   <SelfGradeBar />            — fallback si no hay mic/API de voz
+//   <SentencePrompt />
+//   <MicButton | SelfGradeBar />
+//   <QuietSpeakFeedback + PhonemeFeedbackTable />
+//   <SpeakSkipActions />
 // </SpeakReviewCard>
 
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { Mic, MicOff } from "@/components/icons"
+import { Mic, MicOff } from '@/components/icons'
 import { speak } from '@/lib/phoneme-practice/tts'
 import { PillButton } from '@/components/ui/PillButton'
 import { ListenButton } from '@/components/ui/ListenButton'
@@ -18,10 +18,12 @@ import { useSharedMicStream } from '@/hooks/useSharedMicStream'
 import { defaultEvaluationEngine } from '@/lib/exercises/evaluation'
 import { getEvaluationWordResults } from '@/lib/exercises/evaluation/word-results'
 import { accuracyToQuality } from '@/lib/srs'
-import { getFeedbackMessage, calculateXP } from '@/lib/pronunciation/scoring'
-import PronunciationFeedback from '@/components/lesson/PronunciationFeedback'
+import { getFeedbackMessage } from '@/lib/pronunciation/scoring'
 import { PhonemeFeedbackTable } from '@/components/lesson/PhonemeFeedbackTable'
 import { SelfGradeBar } from './SelfGradeBar'
+import { QuietSpeakFeedback } from './QuietSpeakFeedback'
+import { SpeakSkipActions } from './SpeakSkipActions'
+import { micErrorMessage } from './mic-error-message'
 import { playUiCue } from '@/lib/ui-sounds/cues'
 import { cn } from '@/lib/cn'
 import type { CoreWord } from '@/lib/core-1000/types'
@@ -40,29 +42,6 @@ interface Scored {
   score: number
   wordResults: WordResult[]
   transcript: string
-}
-
-function micErrorMessage(error: string | null): string {
-  if (!error) return 'No se pudo iniciar el micrófono.'
-  if (error === 'not-allowed' || error.includes('Permission')) {
-    return 'Permiso de micrófono bloqueado. Actívalo en el candado de la barra de direcciones.'
-  }
-  if (error === 'no-speech') return 'No se detectó voz. Intenta hablar más cerca del micrófono.'
-  if (error === 'audio-capture') return 'No se encontró un micrófono activo en el sistema.'
-
-  const lower = error.toLowerCase()
-  if (
-    error === 'network' ||
-    lower.includes('failed to fetch') ||
-    lower.includes('networkerror') ||
-    lower.includes('abort')
-  ) {
-    return 'Sin conexión con el servicio de reconocimiento de voz. Revisa tu internet e intenta de nuevo.'
-  }
-  if (lower.includes('transcribe failed') || lower.includes('rate limit')) {
-    return 'El servicio de transcripción no respondió. Intenta de nuevo en unos segundos.'
-  }
-  return 'No se pudo iniciar el micrófono.'
 }
 
 export function SpeakReviewCard({
@@ -188,13 +167,12 @@ export function SpeakReviewCard({
   const isError = state === 'error' || !!micError || !!speechError
   const errorDetail = micError ?? speechError
   const useFallback = !isSupported
+  const feedback = scored ? getFeedbackMessage(scored.score, 70) : null
 
   return (
-    <div className="flex w-full max-w-md flex-col items-center gap-5 rounded-2xl bg-surface-raised px-6 py-7 shadow-sm">
+    <div className="flex w-full max-w-md flex-col items-center gap-6 rounded-2xl bg-surface-raised px-6 py-7 shadow-sm">
       <div className="flex flex-col items-center gap-1 text-center">
-        <p className="m-0 text-sm font-medium text-fg-muted">
-          Di la oración
-        </p>
+        <p className="m-0 text-sm font-medium text-fg-muted">Di la oración</p>
         <p className="m-0 text-xl text-balance text-fg">{sentence}</p>
         {entry.sentence_ipa && (
           <p className="ipa m-0 max-w-[36ch] text-center text-fg-muted">
@@ -205,25 +183,9 @@ export function SpeakReviewCard({
 
       <ListenButton onPlay={() => speak(sentence, { rate: 0.95 })} label="Escuchar modelo" />
 
-      <div className="flex flex-col items-center gap-2">
-        <PillButton variant="quiet" size="sm" onClick={onArchive}>
-          Ya la sé
-        </PillButton>
-        {fromSnooze && (
-          <div className="flex flex-wrap items-center justify-center gap-2">
-            <PillButton variant="quiet" size="sm" onClick={onKeepSnooze}>
-              Seguir en 90 días
-            </PillButton>
-            <PillButton variant="quiet" size="sm" onClick={onMaster}>
-              No me la recuerdes más
-            </PillButton>
-          </div>
-        )}
-      </div>
-
       {useFallback ? (
         <div className="flex w-full flex-col items-center gap-2">
-          <p className="text-xs text-fg-subtle m-0">
+          <p className="m-0 text-xs text-fg-subtle">
             Micrófono no disponible en este navegador — practica en voz alta y califícate:
           </p>
           <SelfGradeBar onGrade={handleSelfGrade} />
@@ -237,15 +199,13 @@ export function SpeakReviewCard({
             disabled={isProcessing}
             aria-label={isListening ? 'Detener grabación' : 'Grabar mi voz'}
             className={cn(
-              'w-20 h-20 rounded-full border-none flex items-center justify-center cursor-pointer transition-all text-on-primary focus-ring disabled:opacity-40',
-              isListening
-                ? 'bg-error shadow-[0_0_0_14px_color-mix(in_oklch,var(--error)_18%,transparent)]'
-                : 'bg-primary shadow-[0_4px_16px_color-mix(in_oklch,var(--primary)_35%,transparent)]',
+              'flex h-16 w-16 items-center justify-center rounded-full border-none text-on-primary transition-colors focus-ring disabled:opacity-40',
+              isListening ? 'bg-error' : 'bg-primary',
             )}
           >
-            {isListening ? <MicOff size={28} /> : <Mic size={28} />}
+            {isListening ? <MicOff size={24} /> : <Mic size={24} />}
           </button>
-          <p className="text-xs text-fg-subtle tracking-[.05em] m-0">
+          <p className="m-0 text-xs tracking-[.05em] text-fg-subtle">
             {isListening
               ? 'Escuchando… toca para parar'
               : isProcessing
@@ -253,12 +213,12 @@ export function SpeakReviewCard({
                 : 'Toca para hablar'}
           </p>
           {isError && (
-            <p className="text-xs text-error text-center m-0 max-w-xs">
+            <p className="m-0 max-w-xs text-center text-xs text-error">
               {micErrorMessage(errorDetail)}{' '}
               <button
                 type="button"
                 onClick={handleRetry}
-                className="underline cursor-pointer bg-transparent border-none font-[inherit] text-xs text-error focus-ring"
+                className="cursor-pointer border-none bg-transparent font-[inherit] text-xs text-error underline focus-ring"
               >
                 Reintentar
               </button>
@@ -266,14 +226,10 @@ export function SpeakReviewCard({
           )}
         </div>
       ) : (
-        <>
-          <PronunciationFeedback
-            wordResults={scored.wordResults}
-            accuracy={scored.score}
-            feedback={getFeedbackMessage(scored.score, 70)}
-            xpEarned={calculateXP(scored.score)}
-            showPhonemeDetail={false}
-          />
+        <div className="flex w-full flex-col items-center gap-4">
+          {feedback && (
+            <QuietSpeakFeedback accuracy={scored.score} message={feedback.message} />
+          )}
           <PhonemeFeedbackTable wordResults={scored.wordResults} />
           <div className="flex gap-2">
             <PillButton variant="outline" size="sm" onClick={handleRetry}>
@@ -284,8 +240,15 @@ export function SpeakReviewCard({
             </PillButton>
           </div>
           {submitError && <p className="m-0 text-center text-xs text-error">{submitError}</p>}
-        </>
+        </div>
       )}
+
+      <SpeakSkipActions
+        onArchive={onArchive}
+        fromSnooze={fromSnooze}
+        onKeepSnooze={onKeepSnooze}
+        onMaster={onMaster}
+      />
     </div>
   )
 }

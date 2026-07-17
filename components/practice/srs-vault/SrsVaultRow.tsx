@@ -1,5 +1,12 @@
 'use client'
 
+// Planned structure:
+// <SrsVaultRow>
+//   <WordMeta />
+//   <SnoozeSelect />     — un solo control de intervalo
+//   <PrimarySecondary /> — Practicar ahora + Dominada (con confirmación)
+// </SrsVaultRow>
+
 import { useState } from 'react'
 import Button from '@/components/ui/Button'
 import {
@@ -12,6 +19,7 @@ import { sourceLabelFromWordId } from '@/lib/srs/vault'
 import type { SRSData } from '@/lib/types'
 
 const SNOOZE_DAYS = [7, 30, 90, 180] as const
+type SnoozeDays = (typeof SNOOZE_DAYS)[number]
 
 type RowAction = 'snooze' | 'activate' | 'master'
 
@@ -30,6 +38,8 @@ function formatReturnDate(iso: string): string {
 export function SrsVaultRow({ entry }: SrsVaultRowProps) {
   const [loadingAction, setLoadingAction] = useState<RowAction | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [snoozeDays, setSnoozeDays] = useState<SnoozeDays>(90)
+  const [confirmMaster, setConfirmMaster] = useState(false)
   const status = effectiveStatus(entry)
   const sourceLabel = sourceLabelFromWordId(entry.wordId)
   const statusLabel =
@@ -42,6 +52,7 @@ export function SrsVaultRow({ entry }: SrsVaultRowProps) {
     setErrorMessage(null)
     try {
       await fn()
+      setConfirmMaster(false)
     } catch {
       setErrorMessage('No se pudo guardar. Intenta de nuevo.')
     } finally {
@@ -67,51 +78,78 @@ export function SrsVaultRow({ entry }: SrsVaultRowProps) {
       </div>
 
       {status === 'snoozed' && (
-        <div className="flex flex-wrap gap-2">
-          {SNOOZE_DAYS.map((days) => (
-            <Button
-              key={days}
-              type="button"
-              variant="ghost"
-              size="sm"
-              isLoading={loadingAction === 'snooze'}
-              disabled={isBusy && loadingAction !== 'snooze'}
-              onClick={() =>
+        <div className="flex flex-col gap-3">
+          <label className="flex flex-col gap-1">
+            <span className="text-tiny font-medium text-fg-subtle">Pausar por</span>
+            <select
+              value={snoozeDays}
+              disabled={isBusy}
+              onChange={(event) => {
+                const days = Number(event.target.value) as SnoozeDays
+                setSnoozeDays(days)
                 void runAction('snooze', () => snoozeEssentialWord(entry.word, days))
+              }}
+              className="rounded-lg border border-border-default bg-surface-sunken px-3 py-2 text-sm text-fg focus-ring disabled:opacity-50"
+            >
+              {SNOOZE_DAYS.map((days) => (
+                <option key={days} value={days}>
+                  {days} días
+                </option>
+              ))}
+            </select>
+          </label>
+
+          <div className="flex flex-wrap items-center gap-2">
+            <Button
+              type="button"
+              variant="soft"
+              size="sm"
+              isLoading={loadingAction === 'activate'}
+              disabled={isBusy && loadingAction !== 'activate'}
+              onClick={() =>
+                void runAction('activate', () => activateEssentialWordNow(entry.word))
               }
             >
-              {days}
+              Practicar ahora
             </Button>
-          ))}
-        </div>
-      )}
 
-      {status === 'snoozed' && (
-        <div className="flex flex-wrap gap-2">
-          <Button
-            type="button"
-            variant="soft"
-            size="sm"
-            isLoading={loadingAction === 'activate'}
-            disabled={isBusy && loadingAction !== 'activate'}
-            onClick={() =>
-              void runAction('activate', () => activateEssentialWordNow(entry.word))
-            }
-          >
-            Practicar ahora
-          </Button>
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            isLoading={loadingAction === 'master'}
-            disabled={isBusy && loadingAction !== 'master'}
-            onClick={() =>
-              void runAction('master', () => masterEssentialWord(entry.word))
-            }
-          >
-            Dominada
-          </Button>
+            {confirmMaster ? (
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="text-sm text-fg-muted">¿Marcar como dominada?</span>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  isLoading={loadingAction === 'master'}
+                  disabled={isBusy && loadingAction !== 'master'}
+                  onClick={() =>
+                    void runAction('master', () => masterEssentialWord(entry.word))
+                  }
+                >
+                  Sí, dominada
+                </Button>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  disabled={isBusy}
+                  onClick={() => setConfirmMaster(false)}
+                >
+                  Cancelar
+                </Button>
+              </div>
+            ) : (
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                disabled={isBusy}
+                onClick={() => setConfirmMaster(true)}
+              >
+                Dominada
+              </Button>
+            )}
+          </div>
         </div>
       )}
     </div>

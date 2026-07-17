@@ -190,6 +190,7 @@ describe('EssentialWordsSession', () => {
 
     await screen.findByRole('heading', { name: 'the' })
     await user.click(screen.getByRole('button', { name: 'Ya la sé' }))
+    await user.click(screen.getByRole('button', { name: 'Sí, pausar' }))
 
     await screen.findByText(/Sesión completa/)
     await waitFor(() => expect(activityMocks.recordActivitySession).toHaveBeenCalledTimes(1))
@@ -244,6 +245,7 @@ describe('EssentialWordsSession', () => {
 
     await screen.findByText('Give me the book please.')
     await user.click(screen.getByRole('button', { name: 'No me la recuerdes más' }))
+    await user.click(screen.getByRole('button', { name: 'Sí, dominada' }))
 
     await waitFor(() => expect(dbMocks.masterEssentialWord).toHaveBeenCalledWith('the'))
     await screen.findByRole('heading', { name: 'be' })

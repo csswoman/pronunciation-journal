@@ -80,13 +80,14 @@ describe('SrsVault', () => {
     expect(screen.getByRole('heading', { name: 'Baúl' })).toBeInTheDocument()
   })
 
-  it('calls masterEssentialWord from a snoozed row', async () => {
+  it('calls masterEssentialWord from a snoozed row after confirm', async () => {
     const user = userEvent.setup()
     render(<SrsVault />)
 
     await user.click(screen.getByRole('button', { name: 'Baúl · 2 palabras' }))
     await user.click(screen.getByRole('button', { name: 'En pausa' }))
     await user.click(screen.getByRole('button', { name: 'Dominada' }))
+    await user.click(screen.getByRole('button', { name: 'Sí, dominada' }))
 
     expect(dbMocks.masterEssentialWord).toHaveBeenCalledWith('apple')
   })

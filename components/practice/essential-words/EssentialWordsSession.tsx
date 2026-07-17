@@ -57,7 +57,7 @@ export function EssentialWordsSession() {
     <Frame>
       <SessionStatsCard stats={stats} counts={counts} />
 
-      <div className="mt-5 flex flex-col items-center">
+      <div className="mt-4 flex flex-col items-center">
         {phase === 'study' && current && (
           <WordStudyCard
             entry={current.entry}

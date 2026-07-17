@@ -229,7 +229,11 @@ export function ReviewHubClient({ summary }: Props) {
           onRetry={startReview}
         />
 
-        {state.phase === 'idle' ? <SrsVault /> : null}
+        {state.phase === 'idle' ? (
+          <div className="flex justify-center pt-2">
+            <SrsVault />
+          </div>
+        ) : null}
 
         {!summary.canStartReview && state.phase === 'idle' && !summary.nothingDue ? (
           <p className="font-body-sm text-center text-fg-muted animate-fadeIn">

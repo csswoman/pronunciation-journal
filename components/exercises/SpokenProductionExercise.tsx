@@ -6,12 +6,14 @@
 //   <MicButton />
 //   <ProductionHint />
 //   <OfflineBanner />
+//   <ErrorAlert />
+//   <SkipLink />
 //   <ProductionFeedback />
-//   <SubmitActions />
+//   <FeedbackActions />
 // </SpokenProductionExercise>
 
-import { useCallback, useEffect, useRef, useState } from 'react'
-import { Mic, MicOff } from "@/components/icons"
+import { useCallback, useEffect, useId, useRef, useState } from 'react'
+import { Mic, MicOff } from '@/components/icons'
 import { PillButton } from '@/components/ui/PillButton'
 import { ProductionFeedback } from '@/components/exercises/ProductionFeedback'
 import { ProductionHint } from '@/components/exercises/ProductionHint'
@@ -36,9 +38,10 @@ interface Props {
     timeMs: number,
     extras?: GenericRenderExtras,
   ) => void
+  onSkip?: () => void
 }
 
-export function SpokenProductionExercise({ exercise, onResult }: Props) {
+export function SpokenProductionExercise({ exercise, onResult, onSkip }: Props) {
   const { status, result: speechResult, errorCode, isSupported, start, stop, reset } =
     useSpeechRecognition()
   const [grading, setGrading] = useState(false)
@@ -47,6 +50,7 @@ export function SpokenProductionExercise({ exercise, onResult }: Props) {
   const [online, setOnline] = useState(true)
   const startMs = useRef(Date.now())
   const submitted = useRef(false)
+  const errorId = useId()
 
   useEffect(() => {
     setGrade(null)
@@ -70,7 +74,7 @@ export function SpokenProductionExercise({ exercise, onResult }: Props) {
 
   const runGrading = useCallback(async (transcript: string) => {
     if (!isOnline()) {
-      setError('Free production needs an internet connection to grade your answer.')
+      setError('Necesitas conexión a internet para corregir tu respuesta.')
       return
     }
     setGrading(true)
@@ -87,7 +91,7 @@ export function SpokenProductionExercise({ exercise, onResult }: Props) {
     } catch (err) {
       const msg = err instanceof ProductionGradeError
         ? err.message
-        : 'Grading failed. Please try again.'
+        : 'No se pudo corregir. Inténtalo de nuevo.'
       setError(msg)
     } finally {
       setGrading(false)
@@ -98,7 +102,7 @@ export function SpokenProductionExercise({ exercise, onResult }: Props) {
     if (status !== 'done' || !speechResult || grading || grade) return
     const transcript = speechResult.transcript.trim()
     if (!transcript) {
-      setError('No speech detected. Tap the mic and speak clearly.')
+      setError('No se detectó voz. Toca el micrófono y habla con claridad.')
       return
     }
     void runGrading(transcript)
@@ -124,8 +128,8 @@ export function SpokenProductionExercise({ exercise, onResult }: Props) {
 
   if (!isSupported) {
     return (
-      <p className="text-sm text-fg-muted text-center">
-        Your browser does not support speech recognition. Try Chrome or Edge.
+      <p className="text-center text-sm text-fg-muted">
+        Tu navegador no admite reconocimiento de voz. Prueba Chrome o Edge.
       </p>
     )
   }
@@ -135,12 +139,18 @@ export function SpokenProductionExercise({ exercise, onResult }: Props) {
   const isMicError = status === 'error'
 
   return (
-    <div className="flex w-full flex-col items-center gap-5">
-      <ProductionTaskHeader exercise={exercise} title="Say your sentence" />
+    <div
+      className="flex w-full flex-col items-center gap-5"
+      aria-busy={grading || undefined}
+    >
+      <ProductionTaskHeader exercise={exercise} title="Di tu oración" />
 
       {!online && !grade && (
-        <p className="m-0 w-full rounded-[var(--radius-md)] border border-warning-border bg-warning-soft px-3 py-2 text-sm text-warning">
-          You&apos;re offline. Connect to record and grade your answer.
+        <p
+          role="status"
+          className="m-0 w-full rounded-[var(--radius-md)] border border-warning-border bg-warning-soft px-3 py-2 text-sm text-warning"
+        >
+          Sin conexión. Conéctate para grabar y corregir tu respuesta.
         </p>
       )}
 
@@ -152,7 +162,7 @@ export function SpokenProductionExercise({ exercise, onResult }: Props) {
                 type="button"
                 onClick={isListening ? stop : start}
                 disabled={isDone || grading || !online}
-                aria-label={isListening ? 'Stop recording' : 'Record my voice'}
+                aria-label={isListening ? 'Detener grabación' : 'Grabar mi voz'}
                 className={cn(
                   'flex h-20 w-20 items-center justify-center rounded-full border-none text-on-primary transition-all focus-ring disabled:opacity-40 cursor-pointer',
                   isListening
@@ -162,25 +172,29 @@ export function SpokenProductionExercise({ exercise, onResult }: Props) {
               >
                 {isListening ? <MicOff size={28} /> : <Mic size={28} />}
               </button>
-              <p className="m-0 text-xs tracking-wider text-fg-subtle">
-                {isListening ? 'Listening… tap to stop' : grading ? 'Grading…' : 'Tap to speak'}
+              <p className="m-0 text-sm text-fg-subtle">
+                {isListening
+                  ? 'Escuchando… toca para parar'
+                  : grading
+                    ? 'Corrigiendo…'
+                    : 'Toca para hablar'}
               </p>
             </div>
           )}
 
           {isMicError && (
-            <p className="m-0 text-xs text-center text-fg-muted">
+            <p className="m-0 text-center text-sm text-fg-muted" role="alert">
               {errorCode === 'not-allowed'
-                ? 'Microphone access was denied.'
+                ? 'Se denegó el acceso al micrófono.'
                 : errorCode === 'no-speech'
-                  ? 'No speech detected. Tap the mic and speak clearly.'
-                  : 'Speech recognition failed.'}{' '}
+                  ? 'No se detectó voz. Toca el micrófono y habla con claridad.'
+                  : 'Falló el reconocimiento de voz.'}{' '}
               <button
                 type="button"
                 onClick={handleRetry}
-                className="cursor-pointer border-none bg-transparent text-xs text-fg-muted underline focus-ring"
+                className="min-h-11 cursor-pointer border-none bg-transparent px-1 text-sm text-fg-muted underline focus-ring"
               >
-                Retry
+                Reintentar
               </button>
             </p>
           )}
@@ -190,7 +204,23 @@ export function SpokenProductionExercise({ exercise, onResult }: Props) {
             exerciseId={exercise.id}
           />
 
-          {error && <p className="m-0 text-sm text-error">{error}</p>}
+          {error && (
+            <p id={errorId} role="alert" className="m-0 text-sm text-error">
+              {error}
+            </p>
+          )}
+
+          {onSkip && (
+            <button
+              type="button"
+              onClick={onSkip}
+              disabled={grading || isListening}
+              aria-label="Omitir este ejercicio"
+              className="min-h-11 cursor-pointer border-none bg-transparent px-4 text-sm font-medium text-fg-subtle transition-colors hover:text-fg-muted focus-ring disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              Omitir este
+            </button>
+          )}
         </>
       )}
 
@@ -200,12 +230,22 @@ export function SpokenProductionExercise({ exercise, onResult }: Props) {
             grade={grade}
             transcript={speechResult?.transcript.trim()}
           />
-          <div className="flex gap-2">
-            <PillButton variant="outline" size="sm" onClick={handleRetry}>
-              Try again
+          <div className="flex w-full flex-col gap-2">
+            <PillButton
+              variant="primary"
+              size="md"
+              className="min-h-11 w-full"
+              onClick={handleContinue}
+            >
+              Continuar
             </PillButton>
-            <PillButton variant="primary" size="sm" onClick={handleContinue}>
-              Continue
+            <PillButton
+              variant="outline"
+              size="md"
+              className="min-h-11 w-full"
+              onClick={handleRetry}
+            >
+              Intentar de nuevo
             </PillButton>
           </div>
         </>

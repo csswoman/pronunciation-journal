@@ -34,7 +34,7 @@ export function ProductionHint({ exampleSentence, exerciseId }: Props) {
           playUiCue('reveal')
           setRevealed(true)
         }}
-        className="inline-flex items-center gap-1.5 self-start border-none bg-transparent p-0 text-sm font-medium text-fg-muted transition-colors hover:text-fg-secondary focus-ring cursor-pointer"
+        className="inline-flex min-h-11 items-center gap-1.5 self-start border-none bg-transparent px-1 text-sm font-medium text-fg-muted transition-colors hover:text-fg-secondary focus-ring cursor-pointer"
       >
         <Lightbulb size={14} aria-hidden />
         Ver un ejemplo

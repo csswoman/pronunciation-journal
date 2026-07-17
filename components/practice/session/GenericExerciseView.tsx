@@ -77,6 +77,7 @@ export function GenericExerciseView({ exercise, onSubmit, focusUi = false }: Pro
 
   const content = renderGenericExercise(data, {
     onResult: handleResult,
+    onSkip: handleSkip,
     focusUi,
     onHint: handleHint,
     hintCount,

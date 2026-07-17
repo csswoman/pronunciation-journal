@@ -60,6 +60,7 @@ describe('SpeakReviewCard', () => {
 
     await user.click(screen.getByRole('button', { name: 'Seguir en 90 días' }))
     await user.click(screen.getByRole('button', { name: 'No me la recuerdes más' }))
+    await user.click(screen.getByRole('button', { name: 'Sí, dominada' }))
 
     expect(onKeepSnooze).toHaveBeenCalledOnce()
     expect(onMaster).toHaveBeenCalledOnce()
