@@ -24,6 +24,11 @@
   gap: 0;
 }
 
+.course-path__wrap--shell {
+  padding-inline: 0;
+  padding-top: 0;
+}
+
 /* Zone separations: hero → spine → panel → why → legend */
 .course-path__hero   { margin-bottom: var(--space-6); }
 .course-path__spine  { margin-bottom: var(--space-3); }

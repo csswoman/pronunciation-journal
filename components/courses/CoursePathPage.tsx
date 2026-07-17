@@ -3,6 +3,8 @@ import { ArrowRight, MicVocal } from "@/components/icons";
 import CoursePathAutoLevelSync from "@/components/courses/CoursePathAutoLevelSync";
 import CoursePathLevelPanel from "@/components/courses/CoursePathLevelPanel";
 import { CoursePathLegendIconDisplay } from "@/components/courses/CoursePathIcons";
+import PageLayout from "@/components/layout/PageLayout";
+import PageHeader from "@/components/layout/PageHeader";
 import { COURSE_PATH_CURRICULUM } from "@/lib/courses/curriculum";
 import { parseCefrLevelId } from "@/lib/courses/curriculumIndex";
 import type { CefrLevelId } from "@/lib/courses/types";
@@ -31,20 +33,19 @@ export default function CoursePathPage({ levelParam }: CoursePathPageProps) {
           lessonIds: level.units.flatMap((unit) => unit.lessons.map((lesson) => lesson.id)),
         }))}
       />
-      <div className="course-path__wrap">
-        <header className="course-path__hero">
-          <h1 className="course-path__title">Tu ruta de inglés</h1>
-          <p className="course-path__intro">
-            Elige tu nivel y avanza por lo esencial. Las lecciones con estrella van primero;
-            el resto profundiza cuando tengas ganas. La pronunciación corre en paralelo en Sound Lab.
-          </p>
-          <div className="course-path__assessment-links">
+      <PageLayout>
+        <div className="course-path__wrap course-path__wrap--shell">
+          <PageHeader
+            kicker="Learn"
+            title="Ruta"
+            subtitle="Elige tu nivel y avanza por lo esencial. Las lecciones con estrella van primero; el resto profundiza cuando tengas ganas. La pronunciación corre en paralelo en Sound Lab."
+          />
+          <div className={cn("course-path__assessment-links", "mb-6")}>
             <Link href="/assessment">Hacer prueba de nivel</Link>
             <Link href={`/assessment?mode=checkpoint&level=${selectedLevelId}`}>
               Comprobar {selectedLevel.spineLabel}
             </Link>
           </div>
-        </header>
 
         <nav className="course-path__spine" aria-label="CEFR level">
           {COURSE_PATH_CURRICULUM.levels.map((level) => {
@@ -103,6 +104,7 @@ export default function CoursePathPage({ levelParam }: CoursePathPageProps) {
           ))}
         </div>
       </div>
+      </PageLayout>
     </div>
   );
 }
