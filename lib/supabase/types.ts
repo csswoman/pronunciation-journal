@@ -342,14 +342,12 @@ export type Database = {
           id: string
           image_url: string | null
           ipa: string | null
-          keep_permanent: boolean
           meanings: Json | null
           notes: string | null
           phrases: string[] | null
           sound_id: number | null
           tags: string[] | null
           updated_at: string | null
-          user_audio_url: string | null
           user_id: string
           word: string
         }
@@ -360,14 +358,12 @@ export type Database = {
           id: string
           image_url?: string | null
           ipa?: string | null
-          keep_permanent?: boolean
           meanings?: Json | null
           notes?: string | null
           phrases?: string[] | null
           sound_id?: number | null
           tags?: string[] | null
           updated_at?: string | null
-          user_audio_url?: string | null
           user_id: string
           word: string
         }
@@ -378,14 +374,12 @@ export type Database = {
           id?: string
           image_url?: string | null
           ipa?: string | null
-          keep_permanent?: boolean
           meanings?: Json | null
           notes?: string | null
           phrases?: string[] | null
           sound_id?: number | null
           tags?: string[] | null
           updated_at?: string | null
-          user_audio_url?: string | null
           user_id?: string
           word?: string
         }

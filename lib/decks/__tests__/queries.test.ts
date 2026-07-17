@@ -54,12 +54,10 @@ describe("deck query projections", () => {
             audio_url: null,
             created_at: "2026-06-21T00:00:00.000Z",
             ipa: "/ʃɪp/",
-            keep_permanent: false,
             notes: null,
             phrases: null,
             sound_id: 7,
             updated_at: null,
-            user_audio_url: null,
             user_id: "user-1",
           },
         },
@@ -77,7 +75,7 @@ describe("deck query projections", () => {
 
     expect(rows).toHaveLength(1);
     expect(deckSelectMock).toHaveBeenCalledWith(
-      "entry_id, entries(id,word,meanings,difficulty,tags,image_url,audio_url,created_at,ipa,keep_permanent,notes,phrases,sound_id,updated_at,user_audio_url,user_id)"
+      "entry_id, entries(id,word,meanings,difficulty,tags,image_url,audio_url,created_at,ipa,notes,phrases,sound_id,updated_at,user_id)"
     );
   });
 
@@ -95,12 +93,10 @@ describe("deck query projections", () => {
             audio_url: null,
             created_at: "2026-06-21T00:00:00.000Z",
             ipa: null,
-            keep_permanent: false,
             notes: null,
             phrases: null,
             sound_id: null,
             updated_at: null,
-            user_audio_url: null,
             user_id: "user-1",
           },
         },
@@ -113,7 +109,7 @@ describe("deck query projections", () => {
 
     expect(rows).toHaveLength(1);
     expect(selectMock).toHaveBeenCalledWith(
-      "entry_id, entries(id,word,meanings,difficulty,tags,image_url,audio_url,created_at,ipa,keep_permanent,notes,phrases,sound_id,updated_at,user_audio_url,user_id)"
+      "entry_id, entries(id,word,meanings,difficulty,tags,image_url,audio_url,created_at,ipa,notes,phrases,sound_id,updated_at,user_id)"
     );
   });
 
