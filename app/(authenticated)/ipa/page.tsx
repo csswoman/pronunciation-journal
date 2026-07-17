@@ -1,9 +1,12 @@
 import IPAChart from "@/components/ipa/IPAChart";
+import PageLayout from "@/components/layout/PageLayout";
 
 export default function IPAPage() {
   return (
-    <div className="ipa-chart px-4 sm:px-6 lg:px-10 py-6 sm:py-8 pb-16">
-      <IPAChart />
+    <div className="ipa-chart">
+      <PageLayout>
+        <IPAChart />
+      </PageLayout>
     </div>
   );
 }
