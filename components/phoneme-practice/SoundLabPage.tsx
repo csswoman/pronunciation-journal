@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Headphones } from "@/components/icons";
+import PageLayout from "@/components/layout/PageLayout";
 import { SoundLabHeader } from "./SoundLabHeader";
 import { SoundLabFilterRow } from "./SoundLabFilterRow";
 import { SoundLabLessonGrid } from "./SoundLabLessonGrid";
@@ -129,56 +130,55 @@ export default function SoundLabPage() {
   }
 
   return (
-    <div className="sound-lab min-h-screen">
-      <div className="px-4 pt-5 pb-14 sm:px-6 sm:pt-10 lg:px-10">
-        <header className="sound-lab__page-header">
-
-          <SoundLabHeader
-            totalCount={allLessons.length}
-            inProgressCount={inProgressCount}
-            heroLesson={heroLesson.lesson}
-            heroProgress={heroLesson.progress}
-            onResume={handleResume}
-          />
-
-          <SoundLabFilterRow
-            activeChip={activeChip}
-            search={search}
-            onChipChange={setActiveChip}
-            onSearchChange={setSearch}
-          />
-
-          {focusTokens.length > 0 && (
-            <div
-              className="sound-lab__focus-banner flex items-center gap-2 rounded-xl border px-4 py-3"
-              role="status"
-            >
-              <Headphones size={14} className="sound-lab__focus-banner-icon shrink-0" aria-hidden />
-              <span className="text-sm text-[color:var(--text-secondary)]">
-                From your course: practicing{" "}
-                <span className="sound-lab__focus-tokens">{focusTokens.join(" · ")}</span>
-                {!focusSection && (
-                  <span className="text-[color:var(--text-tertiary)]">. No matching lessons yet.</span>
-                )}
-              </span>
-              <Link
-                href="/practice/sounds"
-                className="sound-lab__focus-banner-link ml-auto shrink-0 text-xs hover:underline"
-              >
-                View all sounds
-              </Link>
-            </div>
-          )}
-        </header>
-
-        <SoundLabLessonGrid
-          sections={focusSection ? [focusSection, ...sections] : sections}
-          heroLessonId={heroLesson.lesson?.id}
-          soundProgressMap={soundProgressMap}
-          isLoading={isLoading}
-          onClearFilters={handleClearFilters}
+    <PageLayout className="sound-lab min-h-screen">
+      <header className="sound-lab__page-header">
+        <SoundLabHeader
+          totalCount={allLessons.length}
+          inProgressCount={inProgressCount}
+          heroLesson={heroLesson.lesson}
+          heroProgress={heroLesson.progress}
+          onResume={handleResume}
         />
-      </div>
-    </div>
+
+        <SoundLabFilterRow
+          activeChip={activeChip}
+          search={search}
+          onChipChange={setActiveChip}
+          onSearchChange={setSearch}
+        />
+
+        {focusTokens.length > 0 && (
+          <div
+            className="sound-lab__focus-banner flex items-center gap-2 rounded-xl border px-4 py-3"
+            role="status"
+          >
+            <Headphones size={14} className="sound-lab__focus-banner-icon shrink-0" aria-hidden />
+            <span className="text-sm text-[color:var(--text-secondary)]">
+              Del curso: practicando{" "}
+              <span className="sound-lab__focus-tokens">{focusTokens.join(" · ")}</span>
+              {!focusSection && (
+                <span className="text-[color:var(--text-tertiary)]">
+                  . Aún no hay lecciones que coincidan.
+                </span>
+              )}
+            </span>
+            <Link
+              href="/practice/sounds"
+              className="sound-lab__focus-banner-link ml-auto shrink-0 text-xs hover:underline"
+            >
+              Ver todos los sonidos
+            </Link>
+          </div>
+        )}
+      </header>
+
+      <SoundLabLessonGrid
+        sections={focusSection ? [focusSection, ...sections] : sections}
+        heroLessonId={heroLesson.lesson?.id}
+        soundProgressMap={soundProgressMap}
+        isLoading={isLoading}
+        onClearFilters={handleClearFilters}
+      />
+    </PageLayout>
   );
 }

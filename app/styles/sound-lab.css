@@ -170,6 +170,19 @@
   }
 }
 
+/* Continue panel stacked under PageHeader (full width, not hero sidecar) */
+.sound-lab__continuing-below .sound-lab__resume {
+  width: 100%;
+  border-left: none;
+  border-radius: var(--radius-xl);
+}
+
+@media (min-width: 640px) {
+  .sound-lab__continuing-below .sound-lab__resume {
+    border-top: 1px solid var(--sound-lab-chrome-border);
+  }
+}
+
 /* Continue panel — separated by tone + edge border, no floating dividers */
 .sound-lab__resume {
   font: inherit;
