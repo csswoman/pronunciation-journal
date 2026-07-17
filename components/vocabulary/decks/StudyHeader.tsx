@@ -28,7 +28,7 @@ export function StudyHeader({
       <span className="font-semibold text-sm shrink-0 text-fg">{deckName}</span>
       <div className="flex-1 h-2 rounded-full overflow-hidden bg-surface-sunken">
         <div
-          className="h-full rounded-full bg-warning transition-all duration-500"
+          className="h-full rounded-full bg-[var(--warning)] transition-all duration-500"
           style={{ width: `${progress}%` }}
         />
       </div>
