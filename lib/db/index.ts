@@ -6,6 +6,7 @@ import type { GenericExercise, GenericExerciseType, ExerciseSource } from "../ex
 import type { ExerciseResult, PracticeExercise } from "../practice/types";
 import type { ReaderPassage } from "../practice/reader/types";
 import { getRelativeLocalDateKey, getTodayLocalDateKey } from "../date/local-date";
+import { migrateArchivedRow } from "../srs/migrate-archived";
 
 /**
  * Active in-progress practice session, persisted so the user can resume
@@ -309,6 +310,27 @@ export async function updateDailyProgress(
 
 const CORE1000_SRS_PREFIX = "c1k:";
 
+let archivedMigrationPromise: Promise<number> | null = null;
+
+/** One-time idempotent migration: legacy `archived` → `status: snoozed`. */
+export async function migrateArchivedSrsRows(): Promise<number> {
+  if (!archivedMigrationPromise) {
+    archivedMigrationPromise = (async () => {
+      const all = await db.srsData.toArray();
+      let count = 0;
+      for (const entry of all) {
+        const migrated = migrateArchivedRow(entry);
+        if (migrated !== entry) {
+          await db.srsData.put(migrated);
+          count++;
+        }
+      }
+      return count;
+    })();
+  }
+  return archivedMigrationPromise;
+}
+
 /**
  * Todas las entradas SRS del Core 1000.
  *
@@ -316,6 +338,7 @@ const CORE1000_SRS_PREFIX = "c1k:";
  * tratarlas como palabras ya vistas sin programarlas para repaso.
  */
 export async function getCore1000SrsEntries(): Promise<SRSData[]> {
+  await migrateArchivedSrsRows();
   return db.srsData
     .filter((e) => e.wordId.startsWith(CORE1000_SRS_PREFIX))
     .toArray();
