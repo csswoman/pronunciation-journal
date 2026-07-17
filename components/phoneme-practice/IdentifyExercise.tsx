@@ -2,7 +2,7 @@
 
 // Planned structure:
 // <IdentifyExercise>
-//   <Title />         — Fraunces heading
+//   <Title />         — exercise heading
 //   <PlayButton />    — circular audio button
 //   <YesNoButtons />  — binary answer
 //   <ConfirmButton /> — submit

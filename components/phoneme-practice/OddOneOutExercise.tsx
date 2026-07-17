@@ -2,7 +2,7 @@
 
 // Planned structure:
 // <OddOneOutExercise>
-//   <Header />       — Fraunces title + subtitle
+//   <Header />       — title + subtitle
 //   <OptionList />   — vertical word buttons with feedback states
 //   <ConfirmButton />
 // </OddOneOutExercise>

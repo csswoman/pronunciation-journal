@@ -92,7 +92,7 @@
 }
 
 .phoneme-focus__session-name--ipa {
-  font-family: var(--font-editorial), Georgia, serif;
+  font-family: var(--font-mono-var), "Fira Code", monospace;
   font-size: 1.375rem;
   font-weight: 480;
   color: var(--primary);
@@ -149,7 +149,7 @@
 }
 
 .phoneme-focus__badge {
-  font-family: var(--font-editorial), Georgia, serif;
+  font-family: var(--font-mono-var), "Fira Code", monospace;
   font-size: 1.125rem;
   font-weight: 500;
   color: var(--primary);

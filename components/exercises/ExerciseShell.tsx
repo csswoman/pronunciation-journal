@@ -2,7 +2,7 @@
 
 // Planned structure:
 // <ExerciseShell>
-//   <ShellHeader />    — title (Fraunces) + hint button slot (right)
+//   <ShellHeader />    — title + hint button slot (right)
 //   <HintChip />       — word + meaning, always visible when provided
 //   [children]         — exercise mechanics
 //   <ContinueButton /> — full-width primary, shown after answer

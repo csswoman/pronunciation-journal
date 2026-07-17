@@ -97,7 +97,7 @@ export function StudyCard({ model, onContinue, onListen, onArchive }: Props) {
             ))}
           </div>
         )}
-        <h2 className="[font-family:var(--font-phoneme),serif] text-5xl font-bold tracking-[-1px] leading-none text-fg m-0">
+        <h2 className="font-mono text-5xl font-bold tracking-[-1px] leading-none text-fg m-0">
           {model.word}
         </h2>
       </div>

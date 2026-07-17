@@ -176,13 +176,14 @@
   --badge-info-border:  color-mix(in oklch, var(--info) 22%, transparent);
 
   /* ── 12. Typography scale ────────────────────────────────────────────── */
-  /* UI/body: DM Sans. Kickers/metadata: DM Mono. Fraunces = content-only (not chrome). */
-  --font-ui:      var(--font-sans);
-  --font-heading: var(--font-sans);
-  --font-ipa:     var(--font-sans);
-  --font-phoneme: var(--font-editorial);
-
-  --font-display: var(--font-editorial), serif;
+  /* UI/headings/body: DM Sans. Kickers + IPA glyphs: DM Mono. No decorative serif. */
+  --font-ui:        var(--font-sans);
+  --font-heading:   var(--font-sans);
+  --font-ipa:       var(--font-sans);
+  --font-phoneme:   var(--font-mono-var);
+  /* Legacy aliases — resolve to sans so old class names stay safe */
+  --font-editorial: var(--font-sans);
+  --font-display:   var(--font-sans), system-ui, sans-serif;
   --font-h1:      700 clamp(1.875rem, 4vw, 2.625rem) / 1.2 var(--font-sans), sans-serif;
   --font-h2:      700 clamp(1.5rem, 3vw, 2rem) / 1.3 var(--font-sans), sans-serif;
   --font-h3:      600 clamp(1.25rem, 2.5vw, 1.5rem) / 1.4 var(--font-sans), sans-serif;

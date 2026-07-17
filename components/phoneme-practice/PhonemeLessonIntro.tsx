@@ -87,7 +87,7 @@ function IntroStage({
         aria-label={`Escuchar ${ipa}`}
         style={{ fontSize: 'var(--text-ipa-hero)', lineHeight: 1 }}
         className={cn(
-          'relative font-[Fraunces,Georgia,serif] font-extrabold italic',
+          'relative font-mono text-display-ipa font-extrabold',
           'text-primary transition-all duration-100',
           'active:scale-95',
           // pulsing ring

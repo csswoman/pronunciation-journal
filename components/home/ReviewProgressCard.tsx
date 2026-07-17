@@ -63,7 +63,7 @@ export default function ReviewProgressCard({ vocabulary, weakestPhoneme }: Revie
           href="/practice/sounds"
           className="focus-ring group mt-3 flex items-center gap-4 rounded-[var(--radius-md)]"
         >
-          <span className="animate-symbol-in font-editorial shrink-0 text-display-ipa font-bold leading-none text-[var(--warning)]">
+          <span className="animate-symbol-in font-mono shrink-0 text-display-ipa font-bold leading-none text-[var(--warning)]">
             {formatIpaDisplay(weakestPhoneme!.ipa)}
           </span>
           <div className="min-w-0 flex-1">

@@ -2,7 +2,7 @@
 
 // Planned structure:
 // <AxSameDifferentExercise>
-//   <Title />          — Fraunces heading
+//   <Title />          — exercise heading
 //   <StimuliCards />   — A and X audio cards
 //   <PlayBothChip />   — play A then X
 //   <Options />        — same / different

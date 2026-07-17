@@ -37,7 +37,7 @@ export function SessionSummary({ soundIpa, scoreableCorrect, originalTotal, next
       <div className="bg-[var(--surface-raised)] border border-[var(--border-subtle)] rounded-[var(--radius-2xl)] pt-10 px-8 pb-8 flex flex-col items-center gap-3 text-center">
 
         {/* IPA */}
-        <div className="[font-family:var(--font-phoneme),serif] text-h1 font-bold text-[var(--primary)] tracking-[-1px] leading-none">
+        <div className="font-mono text-h1 font-bold text-[var(--primary)] tracking-[-1px] leading-none">
           {soundIpa}
         </div>
 

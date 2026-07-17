@@ -31,7 +31,7 @@ colors:
   cta-fg: "oklch(0.93 0.012 250)"
 typography:
   display:
-    fontFamily: "Fraunces, Georgia, serif"
+    fontFamily: "DM Sans, system-ui, sans-serif"
     fontSize: "clamp(1.875rem, 4vw, 2.625rem)"
     fontWeight: 700
     lineHeight: 1.2
@@ -146,14 +146,15 @@ components:
 
 This is a learner's private space, not a product showcase. It opens quietly and gets out of the way. The mood is settled: warm surfaces, unhurried spacing, nothing competing for attention. A beginner and an advanced learner should both feel at home, because the interface does not assume prior knowledge. Phonetic symbols appear naturally alongside plain text, interesting rather than intimidating. Every element has earned its place through use, not decoration.
 
-The palette uses near-neutral surfaces with a dynamic primary that shifts hue based on the learner's preference, defaulting to violet/blue-purple. Identity is concentrated in actions and states instead of washing the entire canvas in color. The typography pairs DM Sans (clear, humanist, reliable for UI and IPA) with Fraunces (variable editorial serif, reserved for phoneme display and rare decorative moments). The spacing is 8pt, applied with intention: sessions feel spacious, feedback feels close, and the canvas never feels busy.
+The palette uses near-neutral surfaces with a dynamic primary that shifts hue based on the learner's preference, defaulting to violet/blue-purple. Identity is concentrated in actions and states instead of washing the entire canvas in color. The typography is a two-family system: DM Sans (clear, humanist, reliable for UI and headings) and DM Mono (kickers, IPA glyphs, phonetic transcriptions). No decorative serif. The spacing is 8pt, applied with intention: sessions feel spacious, feedback feels close, and the canvas never feels busy.
 
 This system explicitly rejects three anti-references established in PRODUCT.md: Duolingo's infantilizing gamification (cartoonish reward loops, owl mascots, hollow celebrations); the generic SaaS dashboard (navy sidebar, white card grids, blue primary buttons, identical spacing everywhere); and corporate language platforms (Rosetta Stone, Babbel, institutional e-learning shells) with their stiff, joyless, compliance-module energy. A learner opening this app should feel like returning to something that belongs to them, not launching a product.
 
 **Key Characteristics:**
 - Warm-neutral surfaces with a hue-tinted primary that feels personal rather than branded
 - Quiet by default: flat surfaces at rest, shadow reserved for state changes and elevation
-- DM Sans as the workhorse; Fraunces appears only where it earns its weight
+- DM Sans as the workhorse for UI and headings; DM Mono for IPA glyphs and kickers
+- No decorative display serif — phonemes earn presence through size and weight, not a second family
 - Semantic color fixed and culturally legible (green = correct, amber = caution, red = error)
 - Sound and phonetics are first-class content: IPA characters render in the same font as UI text, with identical clarity
 - Entry points that do not require phonetic expertise to begin; depth rewards those who go looking
@@ -194,30 +195,29 @@ The palette is neutral-first with a dynamic primary scale. Every surface carries
 
 ## 3. Typography
 
-**Display Font:** Fraunces (variable weight + optical size, serif)
-**Body / UI Font:** DM Sans (variable weight 300–700, humanist sans-serif, latin + latin-ext)
+**Display / UI Font:** DM Sans (variable weight 300–700, humanist sans-serif, latin + latin-ext)
 **Mono / IPA Font:** DM Mono (400, 500, latin)
 
-**Character:** DM Sans is the workhorse: warm, legible, friendly without being childlike, and its latin-ext subset covers every IPA character without a font switch. Fraunces is the exception: an optical-size serif used for phoneme display and editorial content moments — not app chrome (home shell first). DM Mono carries kickers, IPA transcriptions, and code snippets; its fixed-width rhythm makes phonetic patterns scannable.
+**Character:** DM Sans carries headings, buttons, labels, body, and card titles. DM Mono carries kickers, IPA glyphs, phonetic transcriptions, and code — its fixed-width rhythm makes phonetic patterns scannable. There is no decorative serif in the product.
 
-**UI floor:** 13px minimum (`--font-kicker`, `--font-tiny`). Captions are 14px; labels and compact body copy are 15–16px. Do not use Fraunces on navigation, cards, stats, or section headers in the home redesign.
+**UI floor:** 13px minimum (`--font-kicker`, `--font-tiny`). Captions are 14px; labels and compact body copy are 15–16px.
 
 ### Hierarchy
-- **Display** (Fraunces, 700, `clamp(1.875rem, 4vw, 2.625rem)`, lh 1.2, ls -0.02em): Section hero headings, phoneme cards, decorative moments. Rare; its weight earns authority through scarcity. Content-only — not app chrome.
-- **Headline** (DM Sans, 700, `clamp(1.5rem, 3vw, 2rem)`, lh 1.3, ls -0.01em): Page titles, section headings. Tight letter-spacing prevents loosey-goosey weight.
+- **Display** (DM Sans, 700, `clamp(1.875rem, 4vw, 2.625rem)`, lh 1.2, ls -0.02em): Rare large moments (phoneme heroes). Same family as UI — presence via size/weight, not a serif switch.
+- **Headline** (DM Sans, 700, `clamp(1.5rem, 3vw, 2rem)`, lh 1.3, ls -0.01em): Page titles, section headings.
 - **Title** (DM Sans, 600, `clamp(1.25rem, 2.5vw, 1.5rem)`, lh 1.4, ls -0.005em): Card headings, widget titles, dialog headers.
 - **Body** (DM Sans, 400, 1rem, lh 1.6): All reading content. Max line length 65–75ch.
 - **Body Medium** (DM Sans, 400, 1rem/16px, lh 1.55): Secondary card copy, metadata rows, compact descriptions.
 - **Body Small** (DM Sans, 400, 0.875rem, lh 1.5): Secondary descriptions, helper text, list items.
 - **Label** (DM Sans, 600, 0.9375rem/15px, lh 1.4): UI labels, button text, input labels.
 - **Caption** (DM Sans, 400, 0.875rem/14px, lh 1.5): Timestamps, metadata, footnotes.
-- **Kicker** (DM Mono, 500, 0.75rem/12px, lh 1.4, ls 0.08em, uppercase): Section overlines, card eyebrows, status metadata. Prefer over `.type-overline` in new home UI.
+- **Kicker** (DM Mono, 500, 0.75rem/12px, lh 1.4, ls 0.08em, uppercase): Section overlines, card eyebrows, status metadata.
 - **Tiny** (DM Sans, 500, 0.75rem/12px, lh 1.4): Legacy badges and status chips. Absolute UI minimum; prefer caption or kicker for new work.
-- **Mono** (DM Mono, 400, 0.875rem, lh 1.6): IPA transcriptions, code snippets, phonetic notation.
+- **Mono / Phoneme** (DM Mono, 400–700, sizes as needed): IPA glyphs, transcriptions, code snippets.
 
-**The IPA Parity Rule.** IPA symbols render in DM Sans (UI text) or DM Mono (phonetic blocks), never in a fallback. The latin-ext font subset is required for correct IPA rendering. A font that falls back to system-ui for IPA characters has failed.
+**The IPA Parity Rule.** IPA symbols render in DM Sans (inline UI text) or DM Mono (glyph heroes and phonetic blocks), never in a decorative serif or system fallback. The latin-ext font subset is required for correct IPA rendering.
 
-**The Scale Contract Rule.** Adjacent hierarchy steps must differ by at least 1.25× in font size or 100 in weight. Flat scales look like accidents. Fraunces and DM Sans are visually distinct enough that the body/display contrast reads even at similar sizes.
+**The Scale Contract Rule.** Adjacent hierarchy steps must differ by at least 1.25× in font size or 100 in weight. Flat scales look like accidents.
 
 ## 4. Elevation
 
@@ -308,7 +308,7 @@ AppShell → PageLayout → PageHeader → Content
 **PageHeader**
 
 - Fixed order: optional kicker → title → optional subtitle → optional actions.
-- Chrome typography: DM Sans / system scales. Never Fraunces on page titles or nav chrome.
+- Chrome typography: DM Sans / system scales. IPA glyphs: DM Mono.
 - Kicker: `font-kicker` (or system kicker). No ad-hoc `uppercase` + wide tracking eyebrows.
 - Subtitles and UI labels: Spanish. Learning content may stay English. No Spanglish inside one phrase.
 - Variants: `default` (hubs) and `compact` (sessions/detail, optional functional progress). Do not invent new header languages per route.
@@ -333,7 +333,7 @@ AppShell → PageLayout → PageHeader → Content
 
 The IPA phoneme card is the most distinctive component in the system. It surfaces a phoneme symbol, its description, and audio/practice affordances.
 
-- **Symbol:** Fraunces Display weight, large (clamp 2.5rem–4rem). The phoneme is the hero.
+- **Symbol:** DM Mono, large (clamp 2.5rem–4rem), bold. The phoneme is the hero via size, not a serif.
 - **Background:** Surface-raised with a subtle primary-soft bleed at one edge (not a stripe; a wash).
 - **Stage accent:** When inside a minimal-pairs context, the card uses the stage-pairs amber as its wash; inside dictation, stage-dictation teal.
 - **Actions:** Ghost buttons for audio playback; primary button for practice entry.
@@ -353,7 +353,7 @@ The IPA phoneme card is the most distinctive component in the system. It surface
 - **Do** reserve the primary color for interactive affordances only: buttons, links, active nav items, focus rings, selected chips.
 - **Do** use semantic colors (success/warning/error/info) for all correctness and feedback signals. These are fixed and must not shift with `--hue`.
 - **Do** vary spacing for rhythm. Sections that breathe differently feel intentional; uniform padding feels like a template.
-- **Do** use Fraunces for phoneme display and editorial moments only. Earn its use. Never for page chrome titles.
+- **Do** use DM Mono for IPA glyphs and phonetic blocks. Presence via size/weight — never a decorative serif.
 - **Do** use the canonical Page Layout Pattern (`AppShell` → `PageLayout` → `PageHeader` → content) on authenticated sidebar routes, including sessions (compact header).
 - **Do** keep UI chrome copy in Spanish; reserve English for learning content.
 - **Do** include `prefers-reduced-motion` media queries for any animation longer than 100ms.
@@ -369,7 +369,8 @@ The IPA phoneme card is the most distinctive component in the system. It surface
 - **Don't** nest cards inside cards. Decompose the design instead.
 - **Don't** wrap an entire page in a single card and then nest more cards inside.
 - **Don't** hide AppShell or invent a chrome-less mode for practice sessions.
-- **Don't** rebuild page headers per route (`PageIntro`, hero eyebrows, Fraunces titles) outside the `PageHeader` contract.
+- **Don't** rebuild page headers per route (`PageIntro`, hero eyebrows, custom title fonts) outside the `PageHeader` contract.
+- **Don't** load or use Fraunces (or any decorative serif) — the product is DM Sans + DM Mono only.
 - **Don't** use modal dialogs as a first response to user actions. Exhaust inline patterns, progressive disclosure, and side panels before reaching for a modal.
 - **Don't** use hero-metric layouts (big number, small label, gradient accent) for any scoring or progress surface. Progress is felt through texture, not counted in a SaaS dashboard widget.
 - **Don't** hardcode colors in components. All color values must reference design tokens via `var(--token-name)` or Tailwind utility classes that map to tokens.

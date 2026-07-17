@@ -159,8 +159,9 @@
 .dot-info    { background: var(--info); }
 
 /* ── Typography helpers ──────────────────────────────────────────────────── */
-.font-display  { font-family: var(--font-display), serif; }
-.font-editorial { font-family: var(--font-editorial), serif; }
+.font-display  { font-family: var(--font-sans), system-ui, sans-serif; }
+.font-editorial { font-family: var(--font-sans), system-ui, sans-serif; }
+.font-phoneme  { font-family: var(--font-mono-var), "Fira Code", monospace; }
 .font-h1       { font: var(--font-h1); }
 .font-h2       { font: var(--font-h2); }
 .font-h3       { font: var(--font-h3); }

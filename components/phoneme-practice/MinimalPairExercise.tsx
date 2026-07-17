@@ -115,7 +115,7 @@ export function MinimalPairExercise({ exercise, onSubmit, focusUi = false, voice
     return (
       <div className="flex flex-col items-center gap-5 w-full">
         <p className="text-[15px] text-(--fg-secondary) text-center m-0">Which word contains</p>
-        <span className="text-3xl font-bold text-primary" style={{ fontFamily: 'var(--font-phoneme), serif' }}>
+        <span className="text-3xl font-bold font-mono text-primary">
           {exercise.ipa}
         </span>
         <p className="text-xs text-(--fg-tertiary) text-center tracking-wider m-0">

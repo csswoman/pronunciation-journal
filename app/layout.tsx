@@ -1,25 +1,16 @@
 import Script from "next/script";
 import "./globals.css";
 import "./markdown.css";
-import { DM_Sans, Fraunces, DM_Mono } from "next/font/google";
+import { DM_Sans, DM_Mono } from "next/font/google";
 
-// Body + UI — DM Sans covers Latin and Latin Extended (IPA symbols)
+// Body + UI + headings — DM Sans covers Latin and Latin Extended (IPA symbols)
 const dmSans = DM_Sans({
   weight: ["300", "400", "500", "600", "700"],
   subsets: ["latin", "latin-ext"],
   variable: "--font-sans",
 });
 
-// Decorative / editorial headings
-const fraunces = Fraunces({
-  weight: "variable",
-  style: ["normal", "italic"],
-  subsets: ["latin"],
-  variable: "--font-editorial",
-  axes: ["opsz"],
-});
-
-// Monospace — IPA transcription, code snippets
+// Monospace — IPA glyphs, transcriptions, kickers, code
 const dmMono = DM_Mono({
   weight: ["400", "500"],
   subsets: ["latin"],
@@ -35,7 +26,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${dmSans.variable} ${fraunces.variable} ${dmMono.variable}`}
+      className={`${dmSans.variable} ${dmMono.variable}`}
     >
       <head>
         <meta charSet="utf-8" />
