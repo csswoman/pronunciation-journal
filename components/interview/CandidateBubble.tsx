@@ -1,6 +1,6 @@
 "use client";
 
-import { RotateCcw, ChevronRight } from "lucide-react";
+import { RotateCcw, ChevronRight } from "@/components/icons";
 import Button from "@/components/ui/Button";
 import type { ScoringResult } from "@/lib/types";
 import type { ExerciseDifficulty, Level } from "./CandidateRecorder";

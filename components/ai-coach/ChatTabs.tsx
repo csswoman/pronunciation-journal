@@ -1,6 +1,6 @@
 "use client";
 
-import { MessageCircle, BriefcaseBusiness, Mic } from "lucide-react";
+import { MessageCircle, BriefcaseBusiness, Mic } from "@/components/icons";
 import { cn } from "@/lib/cn";
 
 export const TABS = [

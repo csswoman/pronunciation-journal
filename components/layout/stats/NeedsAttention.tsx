@@ -1,4 +1,4 @@
-import { ArrowRight } from "lucide-react";
+import { ArrowRight } from "@/components/icons";
 import type { UserSoundProgressWithSound } from "@/lib/phoneme-practice/types";
 import { H3 } from "@/components/ui/Typography";
 

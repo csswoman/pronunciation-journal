@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { X, Sparkles, CornerDownLeft } from "lucide-react";
+import { X, Sparkles, CornerDownLeft } from "@/components/icons";
 import Button from "@/components/ui/Button";
 import { cn } from "@/lib/cn";
 import { useAuth } from "@/components/auth/AuthProvider";

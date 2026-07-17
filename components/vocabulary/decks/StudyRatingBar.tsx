@@ -1,6 +1,6 @@
 "use client";
 
-import { Lock } from "lucide-react";
+import { Lock } from "@/components/icons";
 import { RATING_CONFIG, previewInterval } from "./study-utils";
 import type { DifficultyKey } from "./StudyDifficultyButtons";
 import type { Tables } from "@/lib/supabase/types";

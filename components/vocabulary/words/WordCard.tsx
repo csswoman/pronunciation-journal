@@ -1,6 +1,6 @@
 "use client";
 
-import { Heart, Trash2 } from "lucide-react";
+import { Heart, Trash2 } from "@/components/icons";
 import type { WordBankEntry } from "@/lib/word-bank/types";
 import { useAudioPlayback } from "@/hooks/useAudioPlayback";
 import Button from "@/components/ui/Button";

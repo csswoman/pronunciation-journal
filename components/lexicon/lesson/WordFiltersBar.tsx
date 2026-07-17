@@ -1,6 +1,6 @@
 "use client";
 
-import { Search, LayoutGrid, List } from "lucide-react";
+import { Search, LayoutGrid, List } from "@/components/icons";
 import { cn } from "@/lib/cn";
 
 export type StatusFilter = "all" | "learned" | "reviewing" | "new";

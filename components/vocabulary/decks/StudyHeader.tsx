@@ -1,4 +1,4 @@
-import { ChevronLeft, Lightbulb } from "lucide-react";
+import { ChevronLeft, Lightbulb } from "@/components/icons";
 import Button from "@/components/ui/Button";
 
 interface StudyHeaderProps {

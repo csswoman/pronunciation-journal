@@ -1,4 +1,4 @@
-import { Flame } from 'lucide-react'
+import { Flame } from "@/components/icons"
 
 import type { DailyStreakResult } from '@/lib/daily/streak-core'
 

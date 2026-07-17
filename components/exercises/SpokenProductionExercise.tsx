@@ -10,7 +10,7 @@
 // </SpokenProductionExercise>
 
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { Mic, MicOff } from 'lucide-react'
+import { Mic, MicOff } from "@/components/icons"
 import { PillButton } from '@/components/ui/PillButton'
 import { ProductionFeedback } from '@/components/exercises/ProductionFeedback'
 import { ProductionTaskHeader } from '@/components/exercises/ProductionTaskHeader'

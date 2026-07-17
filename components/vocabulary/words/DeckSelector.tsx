@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { BookMarked, ChevronDown } from "lucide-react";
+import { BookMarked, ChevronDown } from "@/components/icons";
 import { cn } from "@/lib/cn";
 import type { DeckSummary } from "@/lib/decks/queries";
 

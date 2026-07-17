@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Sparkles, RefreshCw, Plus, Check, ChevronRight } from "lucide-react";
+import { Sparkles, RefreshCw, Plus, Check, ChevronRight } from "@/components/icons";
 import Button from "@/components/ui/Button";
 import type { DeckListItem } from "@/lib/decks/queries";
 

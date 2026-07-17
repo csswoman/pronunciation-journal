@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { X } from "lucide-react";
+import { X } from "@/components/icons";
 import Button from "@/components/ui/Button";
 import { H2 } from "@/components/ui/Typography";
 import { useAuth } from "@/components/auth/AuthProvider";

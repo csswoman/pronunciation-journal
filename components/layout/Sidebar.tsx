@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
-import { PanelLeftClose, PanelLeftOpen } from "lucide-react";
+import { PanelLeftClose, PanelLeftOpen } from "@/components/icons";
 import { useUserRole } from "@/hooks/useUserRole";
 import SidebarFooter from "./SidebarFooter";
 import { NavSection, NavLink, coreNav, practiceNav, learnNav, referenceNav, trackingNav, adminNav } from "../theme/sidebar/index";

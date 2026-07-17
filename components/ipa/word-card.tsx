@@ -1,6 +1,6 @@
 "use client";
 
-import { Play, Square, Check, X } from "lucide-react";
+import { Play, Square, Check, X } from "@/components/icons";
 import { cn } from "@/lib/cn";
 
 type Verdict = "correct" | "wrong" | null;

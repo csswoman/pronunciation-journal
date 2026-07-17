@@ -1,4 +1,4 @@
-import { Target } from 'lucide-react'
+import { Target } from "@/components/icons"
 
 import type { AccuracyStats } from '@/lib/progress/queries'
 

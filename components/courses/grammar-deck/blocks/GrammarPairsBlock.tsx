@@ -1,4 +1,4 @@
-import { X, Check } from "lucide-react";
+import { X, Check } from "@/components/icons";
 import type { GrammarPairLine } from "@/lib/courses/grammar-deck/types";
 import { cn } from "@/lib/cn";
 

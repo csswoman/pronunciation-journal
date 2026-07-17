@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight } from "@/components/icons"
 import Button from '@/components/ui/Button'
 import { cn } from '@/lib/cn'
 import { WordStrengthBars } from '@/components/vocabulary/words/WordStrengthBars'

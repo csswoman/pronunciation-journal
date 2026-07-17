@@ -1,6 +1,6 @@
 "use client";
 
-import { Briefcase } from "lucide-react";
+import { Briefcase } from "@/components/icons";
 
 interface InterviewAvatarProps {
   pulsing?: boolean;

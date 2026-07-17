@@ -1,6 +1,6 @@
 "use client";
 
-import { Pause, Play, ChevronRight } from "lucide-react";
+import { Pause, Play, ChevronRight } from "@/components/icons";
 import Button from "@/components/ui/Button";
 import { InterviewAvatar } from "./InterviewAvatar";
 

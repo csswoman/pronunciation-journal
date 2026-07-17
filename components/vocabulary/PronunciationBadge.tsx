@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { Volume2 } from "lucide-react";
+import { Volume2 } from "@/components/icons";
 
 interface PronunciationBadgeProps {
   ipa: string;

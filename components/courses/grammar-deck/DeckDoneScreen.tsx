@@ -10,7 +10,7 @@
 // </DeckDoneScreen>
 
 import Link from "next/link";
-import { Check, RotateCcw, ArrowRight, BookOpen, LayoutList } from "lucide-react";
+import { Check, RotateCcw, ArrowRight, BookOpen, LayoutList } from "@/components/icons";
 import type { GrammarStudyDeckData } from "@/lib/courses/grammar-deck/types";
 
 interface DeckDoneScreenProps {

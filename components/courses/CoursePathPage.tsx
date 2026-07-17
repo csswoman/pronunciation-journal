@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, MicVocal } from "lucide-react";
+import { ArrowRight, MicVocal } from "@/components/icons";
 import CoursePathAutoLevelSync from "@/components/courses/CoursePathAutoLevelSync";
 import CoursePathLevelPanel from "@/components/courses/CoursePathLevelPanel";
 import { CoursePathLegendIconDisplay } from "@/components/courses/CoursePathIcons";

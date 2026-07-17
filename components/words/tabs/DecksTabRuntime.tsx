@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useState } from "react";
-import { Plus } from "lucide-react";
+import { Plus } from "@/components/icons";
 
 import Section from "@/components/layout/Section";
 import Button from "@/components/ui/Button";

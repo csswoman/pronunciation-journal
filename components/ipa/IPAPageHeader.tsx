@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Play, ArrowDown } from "lucide-react";
+import { Play, ArrowDown } from "@/components/icons";
 
 export default function IPAPageHeader({
   onStartPractice,

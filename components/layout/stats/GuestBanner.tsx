@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { LogIn, Sparkles } from "lucide-react";
+import { LogIn, Sparkles } from "@/components/icons";
 import Button from "@/components/ui/Button";
 import { H2 } from "@/components/ui/Typography";
 

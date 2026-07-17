@@ -1,7 +1,7 @@
 "use client";
 
 import { useId } from "react";
-import { Play } from "lucide-react";
+import { Play } from "@/components/icons";
 import type { Lesson } from "@/lib/types";
 import { ipaFromLessonTitle } from "@/lib/sound-lab/display";
 import { cn } from "@/lib/cn";

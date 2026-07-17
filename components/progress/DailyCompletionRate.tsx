@@ -1,4 +1,4 @@
-import { CalendarCheck } from 'lucide-react'
+import { CalendarCheck } from "@/components/icons"
 
 import type { ConsistencyHeatLevel, DailyCompletionStats } from '@/lib/progress/queries'
 import { cn } from '@/lib/cn'

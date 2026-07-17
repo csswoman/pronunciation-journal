@@ -1,6 +1,6 @@
 'use client'
 
-import { Columns2, Layers } from 'lucide-react'
+import { Columns2, Layers } from "@/components/icons"
 import Button from '@/components/ui/Button'
 import { cn } from '@/lib/cn'
 import { CONTEXT_LABELS } from '@/components/practice/test/constants'

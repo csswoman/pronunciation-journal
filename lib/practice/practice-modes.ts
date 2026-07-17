@@ -6,7 +6,7 @@ export interface PracticeMode {
   label: string
   description: string
   href: string
-  /** lucide-react icon name, resolved in the component layer. */
+  /** Icon name (Tabler via @/components/icons), resolved in the component layer. */
   icon: string
 }
 

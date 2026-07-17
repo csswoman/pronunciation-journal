@@ -148,7 +148,7 @@ export type DailyStep = {
   id: string
   title: string
   subtitle: string
-  /** lucide-react icon name. */
+  /** Icon name (Tabler via @/components/icons). */
   icon: string
   /** Ejercicios context='daily' que componen el paso. Vacío para 'concept' y 'word_intro'. */
   exercises: PracticeExercise[]

@@ -10,7 +10,7 @@
 // </SpeakScoredExercise>
 
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { Mic, MicOff } from 'lucide-react'
+import { Mic, MicOff } from "@/components/icons"
 import { speak } from '@/lib/phoneme-practice/tts'
 import { useSpeechRecognition } from '@/hooks/useSpeechRecognition'
 import { defaultEvaluationEngine } from '@/lib/exercises/evaluation'

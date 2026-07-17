@@ -10,7 +10,7 @@
 // </AxSameDifferentExercise>
 
 import { useState } from 'react'
-import { Play } from 'lucide-react'
+import { Play } from "@/components/icons"
 import { speak, speakSequence } from '@/lib/phoneme-practice/tts'
 import type { Exercise } from '@/lib/phoneme-practice/types'
 import { cn } from '@/lib/cn'

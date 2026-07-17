@@ -10,7 +10,7 @@
 // </ABXExercise>
 
 import { useState } from 'react'
-import { Play } from 'lucide-react'
+import { Play } from "@/components/icons"
 import { cn } from '@/lib/cn'
 import { speak } from '@/lib/phoneme-practice/tts'
 import type { Exercise } from '@/lib/phoneme-practice/types'

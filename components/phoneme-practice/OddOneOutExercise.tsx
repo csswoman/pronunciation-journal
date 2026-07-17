@@ -8,7 +8,7 @@
 // </OddOneOutExercise>
 
 import { useState } from 'react'
-import { X, Check } from 'lucide-react'
+import { X, Check } from "@/components/icons"
 import { cn } from '@/lib/cn'
 import { speak } from '@/lib/phoneme-practice/tts'
 import type { Exercise } from '@/lib/phoneme-practice/types'

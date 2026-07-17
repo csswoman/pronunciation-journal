@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Play, CheckCircle2 } from "lucide-react";
+import { Play, CheckCircle2 } from "@/components/icons";
 import type { Lesson } from "@/lib/types";
 import { ipaFromLessonTitle } from "@/lib/sound-lab/display";
 import { MASTERY_DISPLAY_THRESHOLD } from "@/lib/phoneme-practice/mastery-pct";

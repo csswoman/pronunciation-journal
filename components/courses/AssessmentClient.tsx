@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { AlertCircle, ArrowLeft, Check, CheckCircle2, RefreshCw } from "lucide-react";
+import { AlertCircle, ArrowLeft, Check, CheckCircle2, RefreshCw } from "@/components/icons";
 import {
   groupQuestionsByLevel,
   levelPassed,

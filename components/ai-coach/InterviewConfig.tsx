@@ -1,6 +1,6 @@
 "use client";
 
-import { User, Laptop, Layers, Star, BrainCircuit, Check } from "lucide-react";
+import { User, Laptop, Layers, Star, BrainCircuit, Check } from "@/components/icons";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 

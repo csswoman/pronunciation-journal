@@ -8,8 +8,8 @@ import {
   FileText,
   Server,
   BookOpen,
-} from "lucide-react";
-import type { LucideIcon } from "lucide-react";
+} from "@/components/icons";
+import type { LucideIcon } from "@/components/icons";
 import type { LessonViewModel } from "@/lib/lexicon/types";
 
 const CATEGORY_ICONS: Record<string, LucideIcon> = {

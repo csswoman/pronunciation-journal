@@ -1,4 +1,4 @@
-import { Ear, Mic, Zap, type LucideIcon } from 'lucide-react'
+import { Ear, Mic, Zap, type LucideIcon } from "@/components/icons"
 import type { LessonStageDef, LessonStageMastery, DifficultyMode } from './lesson-lobby-types'
 import { H3 } from '@/components/ui/Typography'
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
-import { Heart, Search } from "lucide-react";
+import { Heart, Search } from "@/components/icons";
 import Card from "@/components/layout/Card";
 import Button from "@/components/ui/Button";
 import { WordCard } from "@/components/vocabulary/words/WordCard";

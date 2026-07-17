@@ -2,19 +2,21 @@
 
 // Planned structure:
 // <HomeMobileView>
-//   slim utility bar         mono date · name + optional streak pill
-//   <HomeReviewBanner />     due counts + review CTA
+//   greeting + retention stats
+//   <HomeReviewBanner />
 //   {dailyCard}
-//   grid cols-2              <Core1000ProgressCard /> + <WeakSoundCard />
-//   Quick access section     <PrimaryActionTile /> x2 + <SecondaryActionTile /> x4
+//   grid: Core1000 + WeakSound
+//   Quick access
 // </HomeMobileView>
 
-import { BookOpen, MicVocal, Layers, BarChart2, Grid2x2, GraduationCap } from "@/components/icons";
+import { BookOpen, MicVocal, Layers, BarChart2, Grid2x2, GraduationCap, Flame } from "@/components/icons";
 import Link from "next/link";
 import type { ElementType } from "react";
 import Core1000ProgressCard from "@/components/home/Core1000ProgressCard";
 import HomeReviewBanner from "@/components/home/HomeReviewBanner";
 import WeakSoundCard from "@/components/home/WeakSoundCard";
+import { useAuth } from "@/components/auth/AuthProvider";
+import { useUserPreferences } from "@/hooks/useUserPreferences";
 import type { DailyStreakResult } from "@/lib/daily/streak-core";
 import type { WeakestPhonemeHome } from "@/lib/home/constants";
 import type { ReactNode } from "react";
@@ -27,6 +29,13 @@ interface HomeMobileViewProps {
   wordsMastered?: number;
   weekMinutes?: number;
   dailyCard: ReactNode;
+}
+
+function getGreeting(): "Buenos días" | "Buenas tardes" | "Buenas noches" {
+  const hour = new Date().getHours();
+  if (hour < 12) return "Buenos días";
+  if (hour < 19) return "Buenas tardes";
+  return "Buenas noches";
 }
 
 function PrimaryActionTile({
@@ -91,26 +100,55 @@ export default function HomeMobileView({
   weekMinutes = 0,
   dailyCard,
 }: HomeMobileViewProps) {
+  const { user } = useAuth();
+  const { preferences } = useUserPreferences();
+
+  const isLoggedIn = user && !(user as { is_anonymous?: boolean }).is_anonymous;
+  const fullName = preferences?.full_name || user?.email?.split("@")[0] || null;
+  const userName = isLoggedIn && fullName ? fullName.split(" ")[0] : null;
+
   const current = streak?.currentStreak ?? 0;
-  const stats: string[] = [];
-  if (current > 0) {
-    stats.push(`${current} ${current === 1 ? "día seguido" : "días seguidos"}`);
-  }
-  if (wordsMastered > 0) {
-    stats.push(
-      `${wordsMastered} ${wordsMastered === 1 ? "palabra dominada" : "palabras dominadas"}`,
-    );
-  }
-  if (weekMinutes > 0) {
-    stats.push(`${weekMinutes} min esta semana`);
-  }
+  const completedToday = streak?.completedToday ?? false;
+  const greeting = getGreeting();
 
   return (
     <div className="flex flex-col gap-4 pt-2">
-      <div className="border-b border-border-subtle pb-3">
-        <p className="font-caption tabular-nums text-fg">
-          {stats.length > 0 ? stats.join(" · ") : "Empieza hoy para ver tu progreso"}
+      <div className="flex flex-col gap-1.5 border-b border-border-subtle pb-3">
+        <p className="font-label text-fg">
+          {greeting}
+          {userName ? (
+            <>
+              , <span className="text-primary">{userName}</span>
+            </>
+          ) : null}
         </p>
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+          <span className="inline-flex items-center gap-1 font-caption tabular-nums text-fg">
+            <Flame
+              size={14}
+              className={
+                current === 0
+                  ? "text-fg-muted"
+                  : completedToday
+                    ? "text-success"
+                    : "text-primary"
+              }
+              aria-hidden
+            />
+            {current === 0
+              ? "0 días de racha"
+              : `${current} ${current === 1 ? "día seguido" : "días seguidos"}`}
+          </span>
+          <span className="font-caption tabular-nums text-fg">
+            {wordsMastered}{" "}
+            {wordsMastered === 1 ? "palabra dominada" : "palabras dominadas"}
+          </span>
+          {weekMinutes > 0 ? (
+            <span className="font-caption tabular-nums text-fg-muted">
+              {weekMinutes} min esta semana
+            </span>
+          ) : null}
+        </div>
       </div>
 
       <HomeReviewBanner wordsDueCount={wordsDueCount} soundsDueCount={soundsDueCount} />

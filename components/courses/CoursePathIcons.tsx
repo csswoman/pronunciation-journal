@@ -6,7 +6,7 @@ import {
   Briefcase,
   Circle,
   Minus,
-} from "lucide-react";
+} from "@/components/icons";
 import { cn } from "@/lib/cn";
 import type { LessonPriority } from "@/lib/courses/types";
 import type { CoursePathLegendIcon, ElectiveSpineIcon } from "@/lib/courses/types";

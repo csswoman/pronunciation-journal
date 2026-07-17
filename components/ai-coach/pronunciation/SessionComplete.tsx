@@ -1,4 +1,4 @@
-import { RotateCcw, Sparkles } from "lucide-react";
+import { RotateCcw, Sparkles } from "@/components/icons";
 
 export default function SessionComplete({ mastered, batchSize, onMore, onMoreAI, loadingMore }: { mastered: number; batchSize: number; onMore: () => void; onMoreAI: () => void; loadingMore: boolean; }) {
   return (

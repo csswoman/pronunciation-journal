@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Check, X, ArrowRight } from "lucide-react";
+import { Check, X, ArrowRight } from "@/components/icons";
 import { cn } from "@/lib/cn";
 import { useUISounds } from "@/hooks/useUISounds";
 import type { GrammarQuizQuestion } from "@/lib/courses/grammar-deck/types";

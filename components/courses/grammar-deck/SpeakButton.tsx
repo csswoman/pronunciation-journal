@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { Volume2 } from "lucide-react";
+import { Volume2 } from "@/components/icons";
 import { cn } from "@/lib/cn";
 
 interface SpeakButtonProps {

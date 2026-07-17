@@ -1,4 +1,4 @@
-import { Play } from "lucide-react";
+import { Play } from "@/components/icons";
 import type { CTAButton } from "./types";
 
 export function CtaButtons({ primaryCta, secondaryCta, rounded = "full" }: { primaryCta?: CTAButton; secondaryCta?: CTAButton; rounded?: "full" | "md"; }) {

@@ -11,7 +11,7 @@
 
 import { useState, useMemo } from 'react'
 import Link from 'next/link'
-import { BookOpen, Search } from 'lucide-react'
+import { BookOpen, Search } from "@/components/icons"
 import { cn } from '@/lib/cn'
 import type { DeckSummary, DeckLevel } from '@/lib/courses/grammar-deck/decks'
 

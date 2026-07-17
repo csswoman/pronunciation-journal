@@ -1,7 +1,7 @@
 "use client";
 
 import Button from "./Button";
-import { Play, Plus, Trash2, AlertCircle, Info, Check } from "lucide-react";
+import { Play, Plus, Trash2, AlertCircle, Info, Check } from "@/components/icons";
 
 /**
  * ButtonShowcase

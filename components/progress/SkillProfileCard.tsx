@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { BookOpen, Volume2, BrainCircuit } from 'lucide-react'
+import { BookOpen, Volume2, BrainCircuit } from "@/components/icons"
 
 import type { SkillProfileData, CoachInsights } from '@/lib/progress/queries'
 

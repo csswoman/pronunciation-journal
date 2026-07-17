@@ -1,6 +1,6 @@
 "use client";
 
-import { Bookmark, SkipForward, Volume2 } from "lucide-react";
+import { Bookmark, SkipForward, Volume2 } from "@/components/icons";
 import Button from "@/components/ui/Button";
 import { blankOutWord, speakWord } from "./study-utils";
 import { H2 } from "@/components/ui/Typography";

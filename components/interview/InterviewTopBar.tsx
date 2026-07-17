@@ -1,6 +1,6 @@
 "use client";
 
-import { RotateCcw, Square, Volume2 } from "lucide-react";
+import { RotateCcw, Square, Volume2 } from "@/components/icons";
 import Button from "@/components/ui/Button";
 
 interface Props {

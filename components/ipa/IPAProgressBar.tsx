@@ -1,6 +1,6 @@
 "use client";
 
-import { Undo2 } from "lucide-react";
+import { Undo2 } from "@/components/icons";
 
 export default function IPAProgressBar({
   explored,

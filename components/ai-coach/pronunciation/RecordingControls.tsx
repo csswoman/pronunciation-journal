@@ -1,6 +1,6 @@
 "use client";
 
-import { Mic, ChevronRight } from "lucide-react";
+import { Mic, ChevronRight } from "@/components/icons";
 
 interface Props {
   isRecording: boolean;

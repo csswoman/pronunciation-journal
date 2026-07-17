@@ -9,13 +9,15 @@ body {
 }
 
 html {
-  font-size: 94%; /* ~15px — scales the entire rem system down slightly */
+  font-size: 100%;
 }
 
 body {
-  font-size: 15.5px;
+  font-size: 1rem;
   font-weight: 400;
   letter-spacing: -0.01em;
+  font-kerning: normal;
+  font-optical-sizing: auto;
 }
 
 /* ── Smooth theme transitions ────────────────────────────────────────────── */

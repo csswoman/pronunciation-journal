@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowLeft, BookOpen } from "lucide-react";
+import { ArrowLeft, BookOpen } from "@/components/icons";
 
 interface DeckUnavailableProps {
   lessonTitle: string;

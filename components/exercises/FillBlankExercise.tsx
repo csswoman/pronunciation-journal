@@ -7,7 +7,7 @@
 //   <HintPanel />        — hint text below options (revealed via external button)
 
 import { useState, useRef, useEffect } from 'react'
-import { Lightbulb } from 'lucide-react'
+import { Lightbulb } from "@/components/icons"
 import { cn } from '@/lib/cn'
 import type { FillBlankExercise as FillBlankExerciseType } from '@/lib/exercises/types'
 import { buildPedagogicalFeedback } from '@/lib/exercises/feedback'

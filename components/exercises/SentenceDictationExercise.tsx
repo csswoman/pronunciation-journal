@@ -10,7 +10,7 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react'
 // useCallback still used for handlePlay
-import { Lightbulb } from 'lucide-react'
+import { Lightbulb } from "@/components/icons"
 import { cn } from '@/lib/cn'
 import type { SentenceDictationExercise as SentenceDictationExerciseType } from '@/lib/exercises/types'
 import { buildPedagogicalFeedback } from '@/lib/exercises/feedback'

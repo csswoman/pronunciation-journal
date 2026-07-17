@@ -1,4 +1,4 @@
-import { ArrowRight } from "lucide-react";
+import { ArrowRight } from "@/components/icons";
 import type { DailyProgress } from "@/lib/types";
 
 function MetricRow({ label, value, colored }: { label: string; value: string; colored?: boolean }) {

@@ -5,7 +5,7 @@
 //   <PhonemeRow />   — un fonema: SONIDO | DIJISTE/¡Excelente! + articulación
 // </PhonemeFeedbackTable>
 
-import { Volume2 } from 'lucide-react'
+import { Volume2 } from "@/components/icons"
 import { getArticulation } from '@/lib/pronunciation/articulation'
 import { playIpaSound } from '@/lib/pronunciation/ipa-audio'
 import type { PhonemeAlignment, WordResult } from '@/lib/types'

@@ -2,12 +2,12 @@
 name: English Journal
 description: A personal pronunciation journal and practice environment for English learners at any level, from beginners to advanced.
 colors:
-  primary: "oklch(0.65 0.15 250)"
-  primary-hover: "oklch(0.58 0.16 250)"
-  primary-soft: "oklch(0.93 0.04 250)"
-  surface-base: "oklch(0.93 0.012 250)"
-  surface-raised: "oklch(0.99 0.003 250)"
-  surface-sunken: "oklch(0.94 0.01 250)"
+  primary: "oklch(0.50 0.17 250)"
+  primary-hover: "oklch(0.42 0.15 250)"
+  primary-soft: "oklch(0.97 0.02 250)"
+  surface-base: "oklch(0.965 0.003 250)"
+  surface-raised: "oklch(0.995 0.001 250)"
+  surface-sunken: "oklch(0.94 0.005 250)"
   surface-overlay: "oklch(1 0 0 / 0.92)"
   surface-tooltip: "oklch(0.17 0.006 250)"
   text-primary: "oklch(0.18 0.008 250)"
@@ -55,22 +55,22 @@ typography:
     lineHeight: 1.6
   body-md:
     fontFamily: "DM Sans, system-ui, sans-serif"
-    fontSize: "0.9375rem"
+    fontSize: "1rem"
     fontWeight: 400
     lineHeight: 1.55
   label:
     fontFamily: "DM Sans, system-ui, sans-serif"
-    fontSize: "0.8125rem"
-    fontWeight: 500
+    fontSize: "0.9375rem"
+    fontWeight: 600
     lineHeight: 1.4
   caption:
     fontFamily: "DM Sans, system-ui, sans-serif"
-    fontSize: "0.8125rem"
+    fontSize: "0.875rem"
     fontWeight: 400
     lineHeight: 1.45
   kicker:
     fontFamily: "DM Mono, Fira Code, monospace"
-    fontSize: "0.75rem"
+    fontSize: "0.8125rem"
     fontWeight: 500
     lineHeight: 1.4
     letterSpacing: "0.08em"
@@ -146,7 +146,7 @@ components:
 
 This is a learner's private space, not a product showcase. It opens quietly and gets out of the way. The mood is settled: warm surfaces, unhurried spacing, nothing competing for attention. A beginner and an advanced learner should both feel at home, because the interface does not assume prior knowledge. Phonetic symbols appear naturally alongside plain text, interesting rather than intimidating. Every element has earned its place through use, not decoration.
 
-The palette is warm-neutral with a dynamic primary that shifts hue based on the learner's preference, defaulting to violet/blue-purple. The typography pairs DM Sans (clear, humanist, reliable for UI and IPA) with Fraunces (variable editorial serif, reserved for phoneme display and rare decorative moments). The spacing is 8pt, applied with intention: sessions feel spacious, feedback feels close, and the canvas never feels busy.
+The palette uses near-neutral surfaces with a dynamic primary that shifts hue based on the learner's preference, defaulting to violet/blue-purple. Identity is concentrated in actions and states instead of washing the entire canvas in color. The typography pairs DM Sans (clear, humanist, reliable for UI and IPA) with Fraunces (variable editorial serif, reserved for phoneme display and rare decorative moments). The spacing is 8pt, applied with intention: sessions feel spacious, feedback feels close, and the canvas never feels busy.
 
 This system explicitly rejects three anti-references established in PRODUCT.md: Duolingo's infantilizing gamification (cartoonish reward loops, owl mascots, hollow celebrations); the generic SaaS dashboard (navy sidebar, white card grids, blue primary buttons, identical spacing everywhere); and corporate language platforms (Rosetta Stone, Babbel, institutional e-learning shells) with their stiff, joyless, compliance-module energy. A learner opening this app should feel like returning to something that belongs to them, not launching a product.
 
@@ -176,7 +176,7 @@ The palette is neutral-first with a dynamic primary scale. Every surface carries
 - **Ink Black (CTA)** (`oklch(0.18 0.008 var(--hue))`): The CTA button background. Uses the primary text color so it always-contrasts against the surface, regardless of hue. Not a semantic color; a contrast strategy.
 
 ### Neutral
-- **Warm Parchment** (`oklch(0.93 0.012 var(--hue))`): Page background. Not a pure gray; the subtle primary tint makes the canvas feel warm without yellowing.
+- **Quiet Canvas** (`oklch(0.965 0.003 var(--hue))`): Page background. Near-neutral so the learner's chosen hue does not color-wash the interface.
 - **Lifted Paper** (`oklch(0.99 0.003 var(--hue))`): Cards, panels, sidebars. The elevation of choice for raised surfaces.
 - **Sunken Stone** (`oklch(0.94 0.01 var(--hue))`): Inputs, code blocks, inset regions. Slightly darker than the page to create recession without contrast.
 - **Deep Ink** (`oklch(0.18 0.008 var(--hue))`): Primary text. Near-black with a hair of hue.
@@ -200,17 +200,17 @@ The palette is neutral-first with a dynamic primary scale. Every surface carries
 
 **Character:** DM Sans is the workhorse: warm, legible, friendly without being childlike, and its latin-ext subset covers every IPA character without a font switch. Fraunces is the exception: an optical-size serif used for phoneme display and editorial content moments — not app chrome (home shell first). DM Mono carries kickers, IPA transcriptions, and code snippets; its fixed-width rhythm makes phonetic patterns scannable.
 
-**UI floor:** 12px minimum (`--font-kicker`, `--font-tiny`). Preferred label/caption size is 13px (`--font-caption`, `--font-label`). Do not use Fraunces on navigation, cards, stats, or section headers in the home redesign.
+**UI floor:** 13px minimum (`--font-kicker`, `--font-tiny`). Captions are 14px; labels and compact body copy are 15–16px. Do not use Fraunces on navigation, cards, stats, or section headers in the home redesign.
 
 ### Hierarchy
 - **Display** (Fraunces, 700, `clamp(1.875rem, 4vw, 2.625rem)`, lh 1.2, ls -0.02em): Section hero headings, phoneme cards, decorative moments. Rare; its weight earns authority through scarcity. Content-only — not app chrome.
 - **Headline** (DM Sans, 700, `clamp(1.5rem, 3vw, 2rem)`, lh 1.3, ls -0.01em): Page titles, section headings. Tight letter-spacing prevents loosey-goosey weight.
 - **Title** (DM Sans, 600, `clamp(1.25rem, 2.5vw, 1.5rem)`, lh 1.4, ls -0.005em): Card headings, widget titles, dialog headers.
 - **Body** (DM Sans, 400, 1rem, lh 1.6): All reading content. Max line length 65–75ch.
-- **Body Medium** (DM Sans, 400, 0.9375rem/15px, lh 1.55): Secondary card copy, metadata rows, compact descriptions.
+- **Body Medium** (DM Sans, 400, 1rem/16px, lh 1.55): Secondary card copy, metadata rows, compact descriptions.
 - **Body Small** (DM Sans, 400, 0.875rem, lh 1.5): Secondary descriptions, helper text, list items.
-- **Label** (DM Sans, 500, 0.8125rem/13px, lh 1.4): UI labels, button text, input labels.
-- **Caption** (DM Sans, 400, 0.8125rem/13px, lh 1.45): Timestamps, metadata, footnotes. Preferred UI floor for readable secondary text.
+- **Label** (DM Sans, 600, 0.9375rem/15px, lh 1.4): UI labels, button text, input labels.
+- **Caption** (DM Sans, 400, 0.875rem/14px, lh 1.5): Timestamps, metadata, footnotes.
 - **Kicker** (DM Mono, 500, 0.75rem/12px, lh 1.4, ls 0.08em, uppercase): Section overlines, card eyebrows, status metadata. Prefer over `.type-overline` in new home UI.
 - **Tiny** (DM Sans, 500, 0.75rem/12px, lh 1.4): Legacy badges and status chips. Absolute UI minimum; prefer caption or kicker for new work.
 - **Mono** (DM Mono, 400, 0.875rem, lh 1.6): IPA transcriptions, code snippets, phonetic notation.
@@ -225,7 +225,7 @@ The system uses tonal layering for structure and shadow for state. Surfaces are 
 
 ### Surface Layers
 Three background levels create the structural hierarchy without shadows:
-- **Surface Base** (page background, Warm Parchment): The canvas.
+- **Surface Base** (page background, Quiet Canvas): The canvas.
 - **Surface Raised** (cards, panels, sidebars, Lifted Paper): One step lighter than the base; creates visual separation through lightness contrast alone.
 - **Surface Sunken** (inputs, code blocks, Sunken Stone): Slightly darker than the base; recession signals editable or contained regions.
 
@@ -286,7 +286,7 @@ The standard `<Button>` (`components/ui/Button.tsx`) covers form, dialog, and to
 - **App shell:** Fixed sidebar (256px desktop), bottom navigation bar (mobile). Tab bar is flat, no elevation.
 - **Nav items:** Ghost-style at rest (transparent bg, text-secondary text). Active state: primary-soft background, primary text, 8px radius.
 - **Hover:** Surface-raised fill, text-primary text, 150ms transition.
-- **Typography:** Label scale (DM Sans 500, 0.8125rem / 13px).
+- **Typography:** Label scale (DM Sans 600, 0.9375rem / 15px).
 
 ### Phoneme Cards (Signature Component)
 

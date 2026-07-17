@@ -1,6 +1,6 @@
 'use client'
 
-import { Search } from 'lucide-react'
+import { Search } from "@/components/icons"
 import { cn } from '@/lib/cn'
 
 export type PracticeFilter = 'all' | 'basics' | 'vowels' | 'consonants' | 'diphthongs'

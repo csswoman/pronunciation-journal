@@ -1,6 +1,6 @@
 "use client";
 
-import { MessageCircle, CheckCheck, ClipboardList, Star, ArrowUpRight, Plane, BriefcaseBusiness, AlignLeft, Mic } from "lucide-react";
+import { MessageCircle, CheckCheck, ClipboardList, Star, ArrowUpRight, Plane, BriefcaseBusiness, AlignLeft, Mic } from "@/components/icons";
 import { AI_COACH_EMPTY_STATE_PROMPTS } from "@/lib/ai-prompts";
 
 // ── Data ──────────────────────────────────────────────────────────────────────

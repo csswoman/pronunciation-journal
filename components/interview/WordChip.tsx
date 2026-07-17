@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Volume2 } from "lucide-react";
+import { Volume2 } from "@/components/icons";
 
 const colors = { correct: "var(--word-correct)", incorrect: "var(--word-incorrect)", missing: "var(--word-missing)", extra: "var(--word-extra)" };
 const bgs    = { correct: "var(--word-correct-bg)", incorrect: "var(--word-incorrect-bg)", missing: "var(--word-missing-bg)", extra: "var(--word-extra-bg)" };

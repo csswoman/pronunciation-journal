@@ -79,20 +79,43 @@ export async function getAllLessonSlugs(): Promise<string[]> {
 /** All mini-lessons, ordered by `id` (basic → advanced). */
 export async function getAllMiniLessons(): Promise<MiniLesson[]> {
   const lessons = listSlugs(MINI_LESSONS_DIR)
-    .map((slug) => validate(MiniLessonSchema, readJson(MINI_LESSONS_DIR, slug), `mini-lesson "${slug}"`))
+    .map((slug) => {
+      try {
+        return validate(
+          MiniLessonSchema,
+          readJson(MINI_LESSONS_DIR, slug),
+          `mini-lesson "${slug}"`,
+        );
+      } catch (error) {
+        // Skip bad files so one broken lesson does not blank the home.
+        console.error(error);
+        return null;
+      }
+    })
     .filter((l): l is MiniLesson => l !== null);
 
   return lessons.sort((a, b) => a.id - b.id);
 }
 
-/** All language concepts from the static JSON file. */
 function getAllLanguageConcepts(): LanguageConcept[] {
   if (!fs.existsSync(CONCEPTS_FILE)) return [];
-  const raw = JSON.parse(fs.readFileSync(CONCEPTS_FILE, "utf-8"));
-  if (!Array.isArray(raw)) return [];
-  return raw
-    .map((item, i) => validate(LanguageConceptSchema, item, `language-concept[${i}]`))
-    .filter((c): c is LanguageConcept => c !== null);
+  try {
+    const raw = JSON.parse(fs.readFileSync(CONCEPTS_FILE, "utf-8"));
+    if (!Array.isArray(raw)) return [];
+    return raw
+      .map((item, i) => {
+        try {
+          return validate(LanguageConceptSchema, item, `language-concept[${i}]`);
+        } catch (error) {
+          console.error(error);
+          return null;
+        }
+      })
+      .filter((c): c is LanguageConcept => c !== null);
+  } catch (error) {
+    console.error("[content] Failed to load language-concepts.json:", error);
+    return [];
+  }
 }
 
 /** The language concept for today, rotated by day of year. */
@@ -117,4 +140,31 @@ export async function getTodaysMiniLesson(): Promise<MiniLesson | null> {
   const dayOfYear = Math.floor((now.getTime() - start.getTime()) / 86_400_000);
   const index = ((dayOfYear - 1) % lessons.length + lessons.length) % lessons.length;
   return lessons[index];
+}
+
+/**
+ * Two distinct mini-lessons for the home footer — both real authored content.
+ * No language-concept / "Historia" card (that surface is not a product route).
+ */
+export async function getHomeMiniLessons(): Promise<{
+  primary: MiniLesson | null;
+  secondary: MiniLesson | null;
+}> {
+  const lessons = await getAllMiniLessons();
+  if (lessons.length === 0) return { primary: null, secondary: null };
+
+  const now = new Date();
+  const start = new Date(now.getFullYear(), 0, 0);
+  const dayOfYear = Math.floor((now.getTime() - start.getTime()) / 86_400_000);
+  const index = ((dayOfYear - 1) % lessons.length + lessons.length) % lessons.length;
+  const primary = lessons[index];
+  const secondary =
+    lessons.length > 1
+      ? lessons[(index + Math.ceil(lessons.length / 2)) % lessons.length]
+      : null;
+
+  return {
+    primary,
+    secondary: secondary?.slug === primary.slug ? null : secondary,
+  };
 }

@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { Headphones } from "lucide-react";
+import { Headphones } from "@/components/icons";
 import { SoundLabHeader } from "./SoundLabHeader";
 import { SoundLabFilterRow } from "./SoundLabFilterRow";
 import { SoundLabLessonGrid } from "./SoundLabLessonGrid";

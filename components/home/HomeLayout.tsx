@@ -13,7 +13,7 @@ import type { DailyStreakResult } from "@/lib/daily/streak-core";
 import type { ConceptLesson } from "@/hooks/useDailyPlan";
 import type { DailyGoalProgress, WeakestPhonemeHome, ReviewQueueSummary } from "@/lib/home/constants";
 import type { VocabularyProgressSeed } from "@/lib/vocabulary/server-progress";
-import type { MiniLesson, LanguageConcept } from "@/lib/content/schemas";
+import type { MiniLesson } from "@/lib/content/schemas";
 
 interface HomeLayoutProps {
   streak?: DailyStreakResult;
@@ -25,7 +25,7 @@ interface HomeLayoutProps {
   reviewQueue?: ReviewQueueSummary;
   vocabularyProgress?: VocabularyProgressSeed | null;
   todaysLesson?: MiniLesson | null;
-  todaysConcept?: LanguageConcept | null;
+  secondaryLesson?: MiniLesson | null;
 }
 
 export default function HomeLayout({
@@ -38,7 +38,7 @@ export default function HomeLayout({
   reviewQueue = { total: 0, newAvailable: 0, sources: [], preview: [] },
   vocabularyProgress = null,
   todaysLesson = null,
-  todaysConcept = null,
+  secondaryLesson = null,
 }: HomeLayoutProps) {
   void reviewQueue;
 
@@ -68,7 +68,7 @@ export default function HomeLayout({
           conceptLesson={conceptLesson}
           weakestPhoneme={weakestPhoneme}
           todaysLesson={todaysLesson}
-          todaysConcept={todaysConcept}
+          secondaryLesson={secondaryLesson}
         />
       </div>
     </div>

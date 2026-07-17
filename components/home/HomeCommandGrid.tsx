@@ -21,13 +21,13 @@ import WeakSoundCard from "@/components/home/WeakSoundCard";
 import HomeWordOfDayCard from "@/components/home/HomeWordOfDayCard";
 import type { ConceptLesson } from "@/hooks/useDailyPlan";
 import type { WeakestPhonemeHome } from "@/lib/home/constants";
-import type { MiniLesson, LanguageConcept } from "@/lib/content/schemas";
+import type { MiniLesson } from "@/lib/content/schemas";
 
 interface HomeCommandGridProps {
   conceptLesson: ConceptLesson | null;
   weakestPhoneme?: WeakestPhonemeHome | null;
   todaysLesson: MiniLesson | null;
-  todaysConcept: LanguageConcept | null;
+  secondaryLesson?: MiniLesson | null;
   dailyCard?: ReactNode;
 }
 
@@ -35,7 +35,7 @@ export default function HomeCommandGrid({
   conceptLesson,
   weakestPhoneme = null,
   todaysLesson,
-  todaysConcept,
+  secondaryLesson = null,
   dailyCard,
 }: HomeCommandGridProps) {
   return (
@@ -48,7 +48,7 @@ export default function HomeCommandGrid({
         <HomeWordOfDayCard />
       </aside>
       <div className="home-command-footer">
-        <HomeLearnRow lesson={todaysLesson} concept={todaysConcept} />
+        <HomeLearnRow primary={todaysLesson} secondary={secondaryLesson} />
         <Core1000ProgressCard />
       </div>
     </div>

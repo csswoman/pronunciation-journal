@@ -1,4 +1,4 @@
-import { ChevronLeft, History, Plus, X } from "lucide-react";
+import { ChevronLeft, History, Plus, X } from "@/components/icons";
 import { useState, useEffect, useRef } from "react";
 import type { AIConversation } from "@/lib/types";
 import { groupConversationsByDate } from "@/lib/group-by-date";

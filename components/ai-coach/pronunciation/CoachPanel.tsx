@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Volume2, BookmarkPlus, Check, Circle, Lightbulb } from "lucide-react";
+import { Volume2, BookmarkPlus, Check, Circle, Lightbulb } from "@/components/icons";
 
 interface FocusPhoneme {
   word: string;

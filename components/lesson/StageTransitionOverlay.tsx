@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { Check } from "lucide-react";
+import { Check } from "@/components/icons";
 import type { LessonStageId } from "./lesson-lobby-types";
 
 const NEXT_LABELS: Record<LessonStageId, string> = {

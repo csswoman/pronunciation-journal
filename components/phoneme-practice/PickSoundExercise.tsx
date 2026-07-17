@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Volume2 } from 'lucide-react'
+import { Volume2 } from "@/components/icons"
 import { playIpaSound } from '@/lib/pronunciation/ipa-audio'
 import type { Exercise } from '@/lib/phoneme-practice/types'
 

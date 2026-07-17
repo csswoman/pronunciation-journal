@@ -1,4 +1,4 @@
-import { Radar } from 'lucide-react'
+import { Radar } from "@/components/icons"
 
 import { cn } from '@/lib/cn'
 import type { FluencyScores, SkillKey } from '@/lib/progress/fluency-scores'

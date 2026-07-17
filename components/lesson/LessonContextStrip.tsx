@@ -7,7 +7,7 @@
 // </LessonContextStrip>
 
 import { useEffect, useState } from "react";
-import { Target, Flame, Mic, ChevronDown } from "lucide-react";
+import { Target, Flame, Mic, ChevronDown } from "@/components/icons";
 import type { Lesson } from "@/lib/types";
 
 interface Props {

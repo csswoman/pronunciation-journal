@@ -6,7 +6,7 @@
 //   <ExerciseTestNav />
 // </ExerciseTestSidebar>
 
-import { X } from 'lucide-react'
+import { X } from "@/components/icons"
 import { ExerciseTestControls } from '@/components/practice/test/ExerciseTestControls'
 import { ExerciseTestNav } from '@/components/practice/test/ExerciseTestNav'
 import { TEST_SIDEBAR_CLASS } from '@/components/practice/test/constants'

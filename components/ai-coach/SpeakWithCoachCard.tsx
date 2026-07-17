@@ -1,6 +1,6 @@
 'use client'
 
-import { MessageCircle, Mic } from 'lucide-react'
+import { MessageCircle, Mic } from "@/components/icons"
 import { useAICoachStore } from '@/lib/stores/aiCoachStore'
 import { buildCoachPrefill } from '@/lib/ai-practice/coach-prefill'
 import type { SessionArc } from '@/lib/practice/types'

@@ -10,7 +10,7 @@ import {
   Layers,
   ListOrdered,
   RotateCcw,
-} from "lucide-react";
+} from "@/components/icons";
 import { NavSectionType } from "./NavSection";
 
 export const coreNav: NavSectionType = {

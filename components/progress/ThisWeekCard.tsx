@@ -1,4 +1,4 @@
-import { TrendingUp } from 'lucide-react'
+import { TrendingUp } from "@/components/icons"
 
 import type { WeeklySummaryStats } from '@/lib/progress/queries'
 

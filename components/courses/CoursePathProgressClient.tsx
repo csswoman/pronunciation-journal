@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight } from "@/components/icons";
 import { useEffect, useMemo, useState } from "react";
 import { CoursePathPriorityCount } from "@/components/courses/CoursePathIcons";
 import CoursePracticeSuggestions from "@/components/courses/CoursePracticeSuggestions";

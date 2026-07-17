@@ -3,7 +3,7 @@
 import type { Tables } from "@/lib/supabase/types";
 import { useWordSearch } from "@/hooks/useWordSearch";
 import { useWords } from "@/hooks/useWords";
-import { ChevronDown, ChevronUp, Plus } from "lucide-react";
+import { ChevronDown, ChevronUp, Plus } from "@/components/icons";
 import Button from "@/components/ui/Button";
 
 type Entry = Tables<"entries">;

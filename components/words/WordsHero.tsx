@@ -1,6 +1,6 @@
 "use client";
 
-import { Plus } from "lucide-react";
+import { Plus } from "@/components/icons";
 import Button from "@/components/ui/Button";
 import type { WordsTabId } from "@/components/words/WordsTopbar";
 
