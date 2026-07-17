@@ -31,7 +31,7 @@ export default function HomeHeaderGreeting({ userName, dateLabel }: HomeHeaderGr
         <CalendarDays size={14} aria-hidden />
         {dateLabel}
       </p>
-      <h1 className="font-editorial text-display-word font-[440] tracking-[-0.02em] leading-[1.2] text-fg">
+      <h1 className="text-h2 font-bold tracking-[-0.02em] leading-[1.2] text-fg">
         {greeting}
         {displayName && (
           <>, <span className="text-primary">{displayName}</span></>

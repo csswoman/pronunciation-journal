@@ -60,7 +60,7 @@ export default function HomeStatusHero({ streak, wordsDueCount = 0, soundsDueCou
         <div className="flex flex-col gap-3">
           <h1 className="text-[clamp(1.5rem,3vw,2rem)] font-bold tracking-tight leading-tight text-[var(--text-primary)]">
             {greeting},{" "}
-            <span className="font-[family-name:var(--font-editorial)] font-bold italic text-[var(--primary)]">
+            <span className="font-bold italic text-primary">
               {userName}
             </span>
           </h1>

@@ -64,7 +64,7 @@
 .assessment-result h1 {
   margin: 0;
   color: var(--text-primary);
-  font-family: var(--font-editorial), Georgia, serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-size: 2rem;
   font-weight: 560;
   letter-spacing: -0.025em;

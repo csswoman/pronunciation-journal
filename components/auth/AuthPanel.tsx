@@ -38,7 +38,7 @@ export default function AuthPanel() {
             {/* Desktop wordmark */}
             <div className="hidden lg:flex items-start justify-between mb-10">
               <div>
-                <p className="font-editorial text-h3 text-fg font-bold leading-none tracking-tight">
+                <p className="text-h3 text-fg font-bold leading-none tracking-tight">
                   English Journal
                 </p>
                 <p className="mt-1.5 text-sm text-fg-muted italic">

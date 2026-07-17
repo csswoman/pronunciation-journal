@@ -390,7 +390,7 @@
 }
 
 .pf-pron__word {
-  font-family: var(--font-editorial), Georgia, serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-size: clamp(2rem, 8vw, 2.6rem);
   font-weight: 480;
   letter-spacing: -0.02em;
@@ -472,7 +472,7 @@
   background: var(--surface-base);
   border: 1.5px solid var(--border-default);
   color: var(--text-primary);
-  font-family: var(--font-editorial), Georgia, serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-size: 1.3rem;
   border-radius: var(--radius-md);
   outline: none;
@@ -625,7 +625,7 @@
   border-radius: var(--radius-lg);
   border: 1.5px solid var(--border-default);
   background: var(--surface-raised);
-  font-family: var(--font-editorial), Georgia, serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-size: 1.15rem;
   font-weight: 600;
   color: var(--text-primary);

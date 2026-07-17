@@ -6,7 +6,7 @@
 }
 
 .words-lexicon__title {
-  font-family: var(--font-editorial), Georgia, serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-weight: 600;
   font-size: 1.75rem;
   letter-spacing: -0.02em;
@@ -60,7 +60,7 @@
 }
 
 .words-lexicon__hero-title {
-  font-family: var(--font-editorial), Georgia, serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-weight: 400;
   font-size: clamp(1.75rem, 3.5vw, 2.5rem);
   letter-spacing: -0.03em;
@@ -161,7 +161,7 @@
 
 .words-lexicon__qchip {
   padding: 0.25rem 0.75rem;
-  font-family: var(--font-editorial), Georgia, serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-size: 0.9rem;
   color: var(--text-secondary);
   background: var(--surface-sunken);
@@ -231,7 +231,7 @@
 }
 
 .words-lexicon__res-word {
-  font-family: var(--font-editorial), Georgia, serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-size: 1.05rem;
   color: var(--text-primary);
 }
@@ -294,7 +294,7 @@
 }
 
 .words-lexicon__wd-w {
-  font-family: var(--font-editorial), Georgia, serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-size: 1.8rem;
   color: var(--text-primary);
 }
@@ -513,7 +513,7 @@
 }
 
 .words-lexicon__cont-title {
-  font-family: var(--font-editorial), Georgia, serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-size: 1rem;
   color: var(--text-primary);
 }
@@ -576,14 +576,14 @@
   position: absolute;
   top: -14px;
   right: 8px;
-  font-family: var(--font-editorial), Georgia, serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-size: 6rem;
   color: color-mix(in oklch, var(--text-primary) 4%, transparent);
   pointer-events: none;
 }
 
 .words-lexicon__tile h4 {
-  font-family: var(--font-editorial), Georgia, serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-weight: 500;
   font-size: 1.2rem;
   color: var(--text-primary);
@@ -661,7 +661,7 @@
 }
 
 .words-lexicon__areachip-name {
-  font-family: var(--font-editorial), Georgia, serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-size: 0.98rem;
   color: var(--text-primary);
 }
@@ -745,7 +745,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--font-editorial), Georgia, serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-size: 1.1rem;
   font-weight: 600;
   flex-shrink: 0;

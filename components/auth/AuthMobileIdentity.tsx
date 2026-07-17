@@ -51,15 +51,11 @@ export function AuthMobileIdentity({ index }: AuthMobileIdentityProps) {
       {/* Wordmark — always white against the dark overlay */}
       <div className="absolute inset-x-0 bottom-0 px-6 pb-7 z-10">
         <h1
-          className="font-bold leading-tight text-white"
-          style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: "clamp(1.75rem, 5vw, 2.5rem)", letterSpacing: "-0.02em" }}
+          className="font-bold leading-tight text-white text-[clamp(1.75rem,5vw,2.5rem)] tracking-[-0.02em]"
         >
           English Journal
         </h1>
-        <p
-          className="mt-1 text-white/70 text-sm italic"
-          style={{ fontFamily: "'DM Sans', system-ui, sans-serif" }}
-        >
+        <p className="mt-1 text-white/70 text-sm italic">
           Practice with intention. Listen closely.
         </p>
       </div>
