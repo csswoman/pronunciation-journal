@@ -96,7 +96,7 @@ export default function PracticeLessonsPage() {
 
   return (
     <PageLayout
-      className="pt-[var(--space-6)] pb-14"
+      className="pt-[var(--space-6)] sm:pt-[var(--space-6)] pb-14 sm:pb-14"
       hero={
         <PageHeader
           variant="hero-compact"
