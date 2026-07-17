@@ -35,6 +35,7 @@ interface MyWordsTabRuntimeProps {
   onMyWordsCountChange: (count: number) => void;
   onDeckCountChange: (count: number) => void;
   onTabChange: (tab: WordsTabId) => void;
+  onRegisterPrimaryAction?: (action: () => void) => void;
 }
 
 export default function MyWordsTabRuntime({
@@ -42,6 +43,7 @@ export default function MyWordsTabRuntime({
   onMyWordsCountChange,
   onDeckCountChange,
   onTabChange,
+  onRegisterPrimaryAction,
 }: MyWordsTabRuntimeProps) {
   const { user } = useAuth();
   const { words, loading, error, addWord, removeWord, retry } = useWords();
@@ -166,17 +168,17 @@ export default function MyWordsTabRuntime({
     setShowAddWord(true);
   };
 
+  useEffect(() => {
+    onRegisterPrimaryAction?.(() => openAddWord());
+  }, [onRegisterPrimaryAction]);
+
   return (
     <>
       <WordsHero
         activeTab="my-words"
         myWordsCount={words.length}
         deckCount={deckCount}
-        lexiconLearned={0}
-        lexiconTotal={0}
         wordsLoading={loading}
-        onAddWord={() => openAddWord()}
-        onAddDeck={() => {}}
       />
 
       <Section spacing="md">

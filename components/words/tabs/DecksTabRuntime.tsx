@@ -27,9 +27,13 @@ const ManageDrawer = dynamic(() => loadManageDrawer().then((mod) => mod.ManageDr
 
 interface DecksTabRuntimeProps {
   onDeckCountChange: (count: number) => void;
+  onRegisterPrimaryAction?: (action: () => void) => void;
 }
 
-export default function DecksTabRuntime({ onDeckCountChange }: DecksTabRuntimeProps) {
+export default function DecksTabRuntime({
+  onDeckCountChange,
+  onRegisterPrimaryAction,
+}: DecksTabRuntimeProps) {
   const { user } = useAuth();
   const { decks, counts, loading, addDeck, updateDeck, removeDeck, setWordCount } = useDeckData();
   const [showCreateDeck, setShowCreateDeck] = useState(false);
@@ -59,6 +63,10 @@ export default function DecksTabRuntime({ onDeckCountChange }: DecksTabRuntimePr
   useEffect(() => {
     onDeckCountChange(decks.length);
   }, [decks.length, onDeckCountChange]);
+
+  useEffect(() => {
+    onRegisterPrimaryAction?.(() => setShowCreateDeck(true));
+  }, [onRegisterPrimaryAction]);
 
   const editDeck = decks.find((deck) => deck.id === editDeckId) ?? null;
   const studyDeck = decks.find((deck) => deck.id === studyDeckId) ?? null;
@@ -117,11 +125,7 @@ export default function DecksTabRuntime({ onDeckCountChange }: DecksTabRuntimePr
         activeTab="decks"
         myWordsCount={0}
         deckCount={decks.length}
-        lexiconLearned={0}
-        lexiconTotal={0}
         wordsLoading={loading}
-        onAddWord={() => {}}
-        onAddDeck={() => setShowCreateDeck(true)}
       />
 
       <Section spacing="md">

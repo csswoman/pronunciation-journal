@@ -1,19 +1,12 @@
 "use client";
 
-import { Plus } from "@/components/icons";
-import Button from "@/components/ui/Button";
 import type { WordsTabId } from "@/components/words/WordsTopbar";
 
 interface WordsHeroProps {
   activeTab: WordsTabId;
   myWordsCount: number;
   deckCount: number;
-  lexiconLearned: number;
-  lexiconTotal: number;
-  lexiconPercentage?: number;
   wordsLoading: boolean;
-  onAddWord: () => void;
-  onAddDeck: () => void;
 }
 
 export function WordsHero({
@@ -21,14 +14,12 @@ export function WordsHero({
   myWordsCount,
   deckCount,
   wordsLoading,
-  onAddWord,
-  onAddDeck,
 }: WordsHeroProps) {
   const isWords = activeTab === "my-words";
 
   const stat = isWords
-    ? `${myWordsCount} ${myWordsCount === 1 ? "word" : "words"} in your collection`
-    : `${deckCount} ${deckCount === 1 ? "deck" : "decks"}`;
+    ? `${myWordsCount} ${myWordsCount === 1 ? "palabra" : "palabras"} en tu colección`
+    : `${deckCount} ${deckCount === 1 ? "mazo" : "mazos"}`;
 
   return (
     <div className="words-lexicon__contextbar">
@@ -39,16 +30,6 @@ export function WordsHero({
           stat
         )}
       </p>
-
-      {isWords ? (
-        <Button onClick={onAddWord} icon={<Plus size={15} />} size="sm">
-          New Word
-        </Button>
-      ) : (
-        <Button onClick={onAddDeck} icon={<Plus size={15} />} size="sm">
-          New Deck
-        </Button>
-      )}
     </div>
   );
 }
