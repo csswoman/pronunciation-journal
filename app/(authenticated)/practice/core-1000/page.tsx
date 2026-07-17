@@ -1,21 +1,21 @@
 import PageLayout from '@/components/layout/PageLayout'
 import PageHeader from '@/components/layout/PageHeader'
-import { ArchivedWordsPanel } from '@/components/practice/core-1000/ArchivedWordsPanel'
 import { EssentialWordsSession } from '@/components/practice/core-1000/EssentialWordsSession'
+import { SrsVault } from '@/components/practice/srs-vault/SrsVault'
 
-export const metadata = { title: 'Essential Words' }
+export const metadata = { title: 'Palabras esenciales' }
 
 export default function Core1000Page() {
   return (
     <PageLayout>
       <div className="w-full">
         <PageHeader
-          kicker="Practice"
-          title="Essential Words"
+          kicker="Práctica"
+          title="Palabras esenciales"
           subtitle="Las mil palabras más frecuentes del inglés, con weak forms y repaso espaciado."
         />
         <EssentialWordsSession />
-        <ArchivedWordsPanel />
+        <SrsVault />
       </div>
     </PageLayout>
   )
