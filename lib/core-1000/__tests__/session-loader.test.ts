@@ -44,8 +44,9 @@ describe("loadEssentialWordsQueue", () => {
   it("marks queue items activated from expired snooze", async () => {
     const expiredSnooze: SRSData = {
       wordId: "c1k:test",
+      word: "test",
+      ease: 2.5,
       interval: 1,
-      easeFactor: 2.5,
       repetitions: 1,
       nextReview: "2026-07-01T00:00:00.000Z",
       status: "snoozed",

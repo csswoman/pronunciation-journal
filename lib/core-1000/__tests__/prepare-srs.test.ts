@@ -2,13 +2,13 @@ import { describe, expect, it, vi, beforeEach } from "vitest";
 import { prepareCore1000SrsEntries } from "../prepare-srs";
 import type { SRSData } from "@/lib/types";
 
-const mockPut = vi.fn(async () => undefined);
+const mockPut = vi.fn(async (_entry: SRSData) => undefined);
 const mockGetEntries = vi.fn(async (): Promise<SRSData[]> => []);
 
 vi.mock("@/lib/db", () => ({
   db: {
     srsData: {
-      put: (...args: unknown[]) => mockPut(...args),
+      put: (entry: SRSData) => mockPut(entry),
     },
   },
   getCore1000SrsEntries: () => mockGetEntries(),
@@ -17,8 +17,9 @@ vi.mock("@/lib/db", () => ({
 function snoozedEntry(wordId: string, nextReview: string): SRSData {
   return {
     wordId,
+    word: wordId.replace(/^c1k:/, ""),
+    ease: 2.5,
     interval: 1,
-    easeFactor: 2.5,
     repetitions: 1,
     nextReview,
     status: "snoozed",
