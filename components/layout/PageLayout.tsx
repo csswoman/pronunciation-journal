@@ -1,11 +1,12 @@
-import { CSSProperties, ReactNode } from "react";
+import { ReactNode } from "react";
+import { cn } from "@/lib/cn";
 
 interface PageLayoutProps {
   hero?: ReactNode;
   children: ReactNode;
   className?: string;
-  contentStyle?: CSSProperties;
   variant?: "default" | "lesson";
+  /** @deprecated Ignored for default variant — open canvas is mandatory */
   cardWrapper?: boolean;
 }
 
@@ -13,12 +14,8 @@ export default function PageLayout({
   hero,
   children,
   className = "",
-  contentStyle,
   variant = "default",
-  cardWrapper,
 }: PageLayoutProps) {
-  const useCard = cardWrapper ?? !!hero;
-
   if (variant === "lesson") {
     return (
       <div className="flex flex-col">
@@ -28,21 +25,14 @@ export default function PageLayout({
     );
   }
 
-  if (useCard) {
-    const contentClassName = `px-3 sm:px-6 lg:px-10 py-6 sm:py-8 pb-12 sm:pb-14 ${className}`;
-    return (
-      <div className="bg-[var(--card-bg)] rounded-2xl my-8 mx-3 sm:mx-6 lg:mx-10 overflow-hidden">
-        {hero}
-        <div className={contentClassName} style={contentStyle}>
-          {children}
-        </div>
-      </div>
-    );
-  }
-
-  // Home-style layout: no card wrapper, each section has its own card
   return (
-    <div className={`w-full px-4 sm:px-6 lg:px-10 py-6 sm:py-8 pb-12 sm:pb-16 ${className}`}>
+    <div
+      className={cn(
+        "w-full px-4 py-6 pb-12 sm:px-6 sm:py-8 sm:pb-16 lg:px-10",
+        className,
+      )}
+    >
+      {hero}
       {children}
     </div>
   );
