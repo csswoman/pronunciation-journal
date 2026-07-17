@@ -29,6 +29,7 @@ function formatReturnDate(iso: string): string {
 
 export function SrsVaultRow({ entry }: SrsVaultRowProps) {
   const [loadingAction, setLoadingAction] = useState<RowAction | null>(null)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const status = effectiveStatus(entry)
   const sourceLabel = sourceLabelFromWordId(entry.wordId)
   const statusLabel =
@@ -38,8 +39,11 @@ export function SrsVaultRow({ entry }: SrsVaultRowProps) {
 
   const runAction = async (action: RowAction, fn: () => Promise<void>) => {
     setLoadingAction(action)
+    setErrorMessage(null)
     try {
       await fn()
+    } catch {
+      setErrorMessage('No se pudo guardar. Intenta de nuevo.')
     } finally {
       setLoadingAction(null)
     }
@@ -55,6 +59,11 @@ export function SrsVaultRow({ entry }: SrsVaultRowProps) {
           <span className="font-caption text-fg-muted">{sourceLabel}</span>
         </div>
         <p className="m-0 text-sm text-fg-muted">{statusLabel}</p>
+        {errorMessage ? (
+          <p className="m-0 text-sm text-error" role="alert">
+            {errorMessage}
+          </p>
+        ) : null}
       </div>
 
       {status === 'snoozed' && (
