@@ -19,7 +19,7 @@ function StatColumn({
     <div className="flex flex-1 flex-col items-center gap-1">
       <span
         className={cn(
-          'text-4xl font-bold leading-none tabular-nums tracking-tight',
+          'text-4xl font-bold leading-none tabular-nums tracking-tight transition-colors duration-200',
           accent && value > 0
             ? 'text-primary'
             : zero && value === 0
@@ -29,7 +29,7 @@ function StatColumn({
       >
         {value}
       </span>
-      <span className="text-tiny font-medium uppercase tracking-[0.12em] text-fg-subtle">
+      <span className="text-tiny font-medium text-fg-subtle">
         {label}
       </span>
     </div>

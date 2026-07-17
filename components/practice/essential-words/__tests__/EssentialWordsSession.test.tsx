@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import type { CoreWord } from '@/lib/core-1000/types'
+import type { SRSData } from '@/lib/types'
 
 const WORDS: CoreWord[] = [
   {
@@ -24,7 +25,7 @@ vi.mock('@/lib/core-1000/client', () => ({
 }))
 
 const dbMocks = vi.hoisted(() => ({
-  getCore1000SrsEntries: vi.fn(async (): Promise<never[]> => []),
+  getCore1000SrsEntries: vi.fn(async (): Promise<SRSData[]> => []),
   getCore1000IntroducedToday: vi.fn(async (): Promise<string[]> => []),
   recordCore1000Introduction: vi.fn(async () => undefined),
   snoozeEssentialWord: vi.fn(async () => undefined),
@@ -202,8 +203,9 @@ describe('EssentialWordsSession', () => {
     dbMocks.getCore1000SrsEntries.mockResolvedValue([
       {
         wordId: 'c1k:the',
+        word: 'the',
         interval: 1,
-        easeFactor: 2.5,
+        ease: 2.5,
         repetitions: 1,
         nextReview: '2026-07-01T00:00:00.000Z',
         status: 'snoozed',
@@ -228,8 +230,9 @@ describe('EssentialWordsSession', () => {
     dbMocks.getCore1000SrsEntries.mockResolvedValue([
       {
         wordId: 'c1k:the',
+        word: 'the',
         interval: 1,
-        easeFactor: 2.5,
+        ease: 2.5,
         repetitions: 1,
         nextReview: '2026-07-01T00:00:00.000Z',
         status: 'snoozed',

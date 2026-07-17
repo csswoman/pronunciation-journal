@@ -53,7 +53,7 @@ export default function SessionOpeningBanner({ arc }: Props) {
       {learnedCount > 0 && (
         <div className="mt-2">
           <div className="mb-1.5 flex items-baseline justify-between">
-            <p className="font-caption text-fg-subtle">Core 1000</p>
+            <p className="font-caption text-fg-subtle">Palabras esenciales</p>
             <p className="font-caption text-fg-subtle">
               <span className="tabular-nums font-medium text-fg-muted">{learnedCount}</span>
               <span> / {CORE_1000_TARGET}</span>

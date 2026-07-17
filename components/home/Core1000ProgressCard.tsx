@@ -49,7 +49,7 @@ export default function Core1000ProgressCard() {
         href="/practice/core-1000"
         className="focus-ring flex flex-col gap-2 rounded-xl border border-border-subtle bg-surface-raised p-4 transition-colors hover:bg-surface-sunken"
       >
-        <span className="font-kicker text-fg-muted">Core 1000</span>
+        <span className="font-kicker text-fg-muted">Palabras esenciales</span>
         <span className="text-h4 text-balance text-fg">Palabras esenciales</span>
         <span className="font-body-sm text-pretty text-fg-muted line-clamp-2">
           Las mil palabras más frecuentes del inglés, en un mazo progresivo.
@@ -68,7 +68,7 @@ export default function Core1000ProgressCard() {
       href="/practice/core-1000"
       className="focus-ring flex flex-col gap-2 rounded-xl border border-border-subtle bg-surface-raised p-4 transition-colors hover:bg-surface-sunken"
     >
-      <span className="font-kicker text-fg-muted">Core 1000</span>
+      <span className="font-kicker text-fg-muted">Palabras esenciales</span>
       <span className="text-h4 text-balance text-fg">Palabras esenciales</span>
       <span className="font-body-sm text-pretty text-fg-muted">
         {milestoneLabel(learned)}

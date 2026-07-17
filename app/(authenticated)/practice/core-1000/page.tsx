@@ -1,11 +1,11 @@
 import PageLayout from '@/components/layout/PageLayout'
 import PageHeader from '@/components/layout/PageHeader'
-import { EssentialWordsSession } from '@/components/practice/core-1000/EssentialWordsSession'
+import { EssentialWordsSession } from '@/components/practice/essential-words/EssentialWordsSession'
 import { SrsVault } from '@/components/practice/srs-vault/SrsVault'
 
 export const metadata = { title: 'Palabras esenciales' }
 
-export default function Core1000Page() {
+export default function EssentialWordsPage() {
   return (
     <PageLayout>
       <div className="w-full">
