@@ -79,7 +79,7 @@ export interface ReviewQueueSummary {
 /** Maps a source id to its session route. */
 export const REVIEW_SOURCE_HREF: Record<ReviewSourceId, string> = {
   vocabulary: "/practice/review",
-  essential: "/practice/core-1000",
+  essential: "/practice/essential-words",
   sounds: "/practice/sounds",
 };
 

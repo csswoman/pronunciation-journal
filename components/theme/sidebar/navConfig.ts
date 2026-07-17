@@ -4,7 +4,6 @@ import {
   BookOpen,
   Radio,
   TrendingUp,
-  Settings,
   LibraryBig,
   BookMarked,
   Layers,
@@ -22,7 +21,7 @@ export const practiceNav: NavSectionType = {
   label: "Practice",
   items: [
     { name: "Sound Lab", href: "/practice/sounds", icon: MicVocal },
-    { name: "Essential Words", href: "/practice/core-1000", icon: ListOrdered },
+    { name: "Essential Words", href: "/practice/essential-words", icon: ListOrdered },
   ],
 };
 
@@ -48,12 +47,5 @@ export const trackingNav: NavSectionType = {
   items: [
     { name: "Review", href: "/practice/review", icon: RotateCcw },
     { name: "Progress", href: "/progress", icon: TrendingUp },
-  ],
-};
-
-export const adminNav: NavSectionType = {
-  label: "Admin",
-  items: [
-    { name: "Seed Data", href: "/admin/seed", icon: Settings },
   ],
 };

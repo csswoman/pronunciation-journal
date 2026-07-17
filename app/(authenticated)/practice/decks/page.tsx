@@ -16,7 +16,7 @@ export default function DecksIndexPage() {
           subtitle={`${decks.length} mazos · filtra por nivel o busca por tema`}
         />
         <Link
-          href="/practice/core-1000"
+          href="/practice/essential-words"
           className="mb-5 flex items-center justify-between rounded-lg border border-border-subtle bg-surface-raised px-4 py-3.5 no-underline"
         >
           <div className="flex flex-col gap-0.5">

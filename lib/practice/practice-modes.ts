@@ -22,8 +22,8 @@ export const PRACTICE_MODES: readonly PracticeMode[] = [
   {
     id: 'core-1000',
     label: 'Essential Words',
-    description: 'The 1000 most useful words',
-    href: '/practice/core-1000',
+    description: 'High-frequency words with spaced repetition',
+    href: '/practice/essential-words',
     icon: 'ListOrdered',
   },
   {

@@ -46,7 +46,7 @@ export default function Core1000ProgressCard() {
   if (learned === 0) {
     return (
       <Link
-        href="/practice/core-1000"
+        href="/practice/essential-words"
         className="focus-ring flex flex-col gap-2 rounded-xl border border-border-subtle bg-surface-raised p-4 transition-colors hover:bg-surface-sunken"
       >
         <span className="font-kicker text-fg-muted">Palabras esenciales</span>
@@ -65,7 +65,7 @@ export default function Core1000ProgressCard() {
 
   return (
     <Link
-      href="/practice/core-1000"
+      href="/practice/essential-words"
       className="focus-ring flex flex-col gap-2 rounded-xl border border-border-subtle bg-surface-raised p-4 transition-colors hover:bg-surface-sunken"
     >
       <span className="font-kicker text-fg-muted">Palabras esenciales</span>

@@ -47,7 +47,7 @@ export default function ReviewProgressCard({ vocabulary, weakestPhoneme }: Revie
           ? `${learned.toLocaleString()} / ~${catalogTotal.toLocaleString()} words · ${percent}%`
           : (
             <Link
-              href="/practice/core-1000"
+              href="/practice/essential-words"
               className="focus-ring inline-flex items-center gap-1 text-[var(--primary)] hover:underline"
             >
               Start with Essential Words <ArrowRight size={12} aria-hidden />
