@@ -60,6 +60,8 @@ Cuatro sistemas de repetición espaciada conviven en la app. Cada uno tiene un d
 
 **Propósito:** Repaso espaciado tipo Anki sobre las ~2800 palabras de alta frecuencia (NGSL), no solo las primeras 1000. Sustituye al antiguo `Core1000Session`, que reiniciaba siempre desde la primera palabra sin persistir progreso.
 
+**Ruta canónica:** `/practice/essential-words` (hub + sesión + Baúl). `/practice/core-1000` redirige ahí por compatibilidad con bookmarks antiguos; no usarla en enlaces nuevos.
+
 **Tabla:** `srsData` (Dexie, IndexedDB) — offline-first, sin sincronización a Supabase. Las entradas se distinguen por el prefijo `c1k:` en `wordId` (ej. `c1k:work`). No renombrar el prefijo ni los `wordId` almacenados: orfanaría el progreso del usuario. La capa de datos sigue en `lib/core-1000/`.
 
 **Algoritmo:** SM-2 cliente (`lib/srs/computeSM2.ts`), igual que `word_bank`.
@@ -72,11 +74,15 @@ Cuatro sistemas de repetición espaciada conviven en la app. Cada uno tiene un d
 | `snoozed` | Fuera de la cola hasta `nextReview`; visible en el Baúl SRS |
 | `mastered` | Nunca vence; solo buscable en el Baúl SRS |
 
-**«Ya la sé» → snooze:** el botón en sesión llama `snoozeEssentialWord` (`lib/db/index.ts`) con 90 días por defecto. Tras confirmar, la tarjeta ofrece «Seguir en 90 días» o «No me la recuerdes más» (snooze vs `masterEssentialWord`).
+**«Ya la sé» → snooze:** en sesión, el botón llama `snoozeEssentialWord` (`lib/db/index.ts`) con **90 días** por defecto y saca la palabra de la cola al momento. No muestra aún las opciones de dominio permanente.
 
-**Snooze vencido → reactivación automática:** antes de construir la cola, `prepareCore1000SrsEntries` (`lib/core-1000/prepare-srs.ts`) aplica `activateExpiredSnoozes` (`lib/srs/status.ts`). Si `nextReview` ya pasó, la fila vuelve a `active`, entra en la cola y sale del Baúl.
+**Snooze vencido → reactivación automática:** antes de construir la cola, `prepareCore1000SrsEntries` (`lib/core-1000/prepare-srs.ts`) aplica `activateExpiredSnoozes` (`lib/srs/status.ts`). Si `nextReview` ya pasó, la fila vuelve a `active`, entra en la cola y sale del Baúl. Esas cartas llevan `fromSnooze` en la cola.
 
-**Baúl SRS (`SrsVault`):** componente trigger + modal (`components/practice/srs-vault/`) visible en el hub Essential Words y en Review hub (fase `idle`). Lista entradas `snoozed` y `mastered`, con filtros y búsqueda (`lib/srs/vault.ts`). Desde el Baúl se puede re-snoozar, practicar ya o marcar como dominada.
+**Al volver del snooze (`fromSnooze`):** en la tarjeta de speak, además del flujo normal, aparecen dos acciones secundarias (sin bloquear el micrófono):
+- «Seguir en 90 días» → otro snooze (`snoozeEssentialWord`)
+- «No me la recuerdes más» → `masterEssentialWord` (sale del SRS; solo queda en el Baúl)
+
+**Baúl SRS (`SrsVault`):** componente trigger + modal (`components/practice/srs-vault/`) en `/practice/essential-words` y en Review hub (fase `idle`). Lista entradas `snoozed` y `mastered`, con filtros y búsqueda (`lib/srs/vault.ts`). Desde el Baúl se puede cambiar el intervalo (7 / 30 / 90 / 180), practicar ya o marcar como dominada.
 
 **Migración legacy:** filas antiguas con `archived: true` se convierten una sola vez a `status: snoozed` vía `migrateArchivedSrsRows` (`lib/db/index.ts`), usando `migrateArchivedRow` (`lib/srs/migrate-archived.ts`). Idempotente; se ejecuta al abrir el Baúl y al leer entradas.
 
