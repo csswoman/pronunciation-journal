@@ -7,6 +7,7 @@ import type { ExerciseResult, PracticeExercise } from "../practice/types";
 import type { ReaderPassage } from "../practice/reader/types";
 import { getRelativeLocalDateKey, getTodayLocalDateKey } from "../date/local-date";
 import { migrateArchivedRow } from "../srs/migrate-archived";
+import { patchActivateNow, patchMaster, patchSnooze } from "../srs/status";
 
 /**
  * Active in-progress practice session, persisted so the user can resume
@@ -347,11 +348,10 @@ export async function getCore1000SrsEntries(): Promise<SRSData[]> {
     .toArray();
 }
 
-/** Archiva una palabra del Core 1000 — la saca del flujo de repaso (reversible). */
-export async function archiveCore1000Word(word: string): Promise<void> {
+async function getOrCreateCore1000SrsRow(word: string): Promise<SRSData> {
   const normalized = word.toLowerCase();
   const wordId = `${CORE1000_SRS_PREFIX}${normalized}`;
-  const existing = (await db.srsData.get(wordId)) ?? {
+  return (await db.srsData.get(wordId)) ?? {
     wordId,
     word: normalized,
     ease: 2.5,
@@ -359,18 +359,34 @@ export async function archiveCore1000Word(word: string): Promise<void> {
     repetitions: 0,
     nextReview: new Date().toISOString(),
   };
-  await db.srsData.put({ ...existing, archived: true, archivedAt: new Date().toISOString() });
 }
 
-/** Revierte el archivado de una palabra del Core 1000. */
+/** Pausa una palabra esencial — la saca del flujo de repaso hasta `nextReview`. */
+export async function snoozeEssentialWord(word: string, days = 90): Promise<void> {
+  const existing = await getOrCreateCore1000SrsRow(word);
+  await db.srsData.put(patchSnooze(existing, new Date(), days));
+}
+
+/** Marca una palabra esencial como dominada (sin repaso programado). */
+export async function masterEssentialWord(word: string): Promise<void> {
+  const existing = await getOrCreateCore1000SrsRow(word);
+  await db.srsData.put(patchMaster(existing, new Date()));
+}
+
+/** Reactiva una palabra esencial para repaso inmediato. */
+export async function activateEssentialWordNow(word: string): Promise<void> {
+  const existing = await getOrCreateCore1000SrsRow(word);
+  await db.srsData.put(patchActivateNow(existing, new Date()));
+}
+
+/** @deprecated Use snoozeEssentialWord */
+export async function archiveCore1000Word(word: string): Promise<void> {
+  return snoozeEssentialWord(word, 90);
+}
+
+/** @deprecated Use activateEssentialWordNow */
 export async function unarchiveCore1000Word(word: string): Promise<void> {
-  const wordId = `${CORE1000_SRS_PREFIX}${word.toLowerCase()}`;
-  const existing = await db.srsData.get(wordId);
-  if (!existing) return;
-  const rest = { ...existing };
-  delete rest.archived;
-  delete rest.archivedAt;
-  await db.srsData.put(rest);
+  return activateEssentialWordNow(word);
 }
 
 /** Palabras del Core 1000 introducidas hoy (para el cupo de nuevas). */

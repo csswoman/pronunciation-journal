@@ -27,7 +27,7 @@ const dbMocks = vi.hoisted(() => ({
   getCore1000SrsEntries: vi.fn(async (): Promise<never[]> => []),
   getCore1000IntroducedToday: vi.fn(async (): Promise<string[]> => []),
   recordCore1000Introduction: vi.fn(async () => undefined),
-  archiveCore1000Word: vi.fn(async () => undefined),
+  snoozeEssentialWord: vi.fn(async () => undefined),
   getSRSData: vi.fn(async () => undefined),
   saveSRSData: vi.fn(async () => undefined),
   saveAttempt: vi.fn(async () => undefined),
@@ -139,7 +139,7 @@ describe('EssentialWordsSession', () => {
     await screen.findByText('Give me the book please.')
     await user.click(screen.getByRole('button', { name: 'Bien' }))
 
-    await screen.findByText('Sesión completa')
+    await screen.findByText(/Sesión completa/)
     await user.click(screen.getByRole('button', { name: 'Aprender 10 nuevas más' }))
 
     expect(await screen.findByRole('heading', { name: 'be' })).toBeTruthy()
@@ -182,7 +182,7 @@ describe('EssentialWordsSession', () => {
     await screen.findByRole('heading', { name: 'the' })
     await user.click(screen.getByRole('button', { name: 'Ya la sé' }))
 
-    await screen.findByText('Sesión completa')
+    await screen.findByText(/Sesión completa/)
     await waitFor(() => expect(activityMocks.recordActivitySession).toHaveBeenCalledTimes(1))
     expect(activityMocks.recordActivitySession).toHaveBeenCalledWith('user-1', expect.objectContaining({
       practiceContext: 'core-1000',

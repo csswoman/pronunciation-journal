@@ -22,7 +22,7 @@ import {
 } from "@/lib/core-1000/session-model";
 import {
   recordCore1000Introduction,
-  archiveCore1000Word,
+  snoozeEssentialWord,
 } from "@/lib/db";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { recordActivitySession } from "@/lib/progress/activity-hub";
@@ -236,7 +236,7 @@ export function useEssentialWordsSession() {
   }, [phase, queue, index, syncCounts]);
 
   const archiveWord = useCallback(async (word: string) => {
-    await archiveCore1000Word(word);
+    await snoozeEssentialWord(word);
     seenIdsRef.current.add(core1000WordId(word.toLowerCase()));
     const newQueue = queue.filter((_, i) => i !== index);
     setQueue(newQueue);
