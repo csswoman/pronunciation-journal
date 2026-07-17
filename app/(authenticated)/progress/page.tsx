@@ -1,7 +1,9 @@
 import Link from 'next/link'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
 import { getProgressPageData } from '@/lib/progress/queries'
+import { cn } from '@/lib/cn'
 import PageLayout from '@/components/layout/PageLayout'
+import PageHeader from '@/components/layout/PageHeader'
 import { GuestBanner } from '@/components/layout/stats/GuestBanner'
 import { StreakCard } from '@/components/progress/StreakCard'
 import { DailyCompletionRate } from '@/components/progress/DailyCompletionRate'
@@ -16,28 +18,16 @@ export default async function ProgressPage() {
   const { data: { user } } = await supabase.auth.getUser()
 
   return (
-    <PageLayout cardWrapper={false}>
-      <div className="relative z-1 flex w-full flex-col gap-7">
-        <PageIntro />
+    <PageLayout>
+      <div className="relative z-1 flex w-full flex-col gap-6">
+        <PageHeader
+          kicker="Seguimiento"
+          title="Progreso"
+          subtitle="Racha, consistencia y perfil de habilidades a partir de lo que practicas."
+        />
         {!user ? <GuestBanner /> : <ProgressDashboard userId={user.id} />}
       </div>
     </PageLayout>
-  )
-}
-
-function PageIntro() {
-  return (
-    <header className="flex flex-col gap-2 pt-2">
-      <span className="text-tiny font-semibold uppercase tracking-[0.18em] text-fg-subtle">
-        Daily wins
-      </span>
-      <h1 className="font-display text-h2 font-normal leading-tight tracking-[-0.02em] text-fg">
-        Your progress
-      </h1>
-      <p className="max-w-xl text-body-sm text-fg-muted">
-        Streak, consistency, and skill profile at a glance — calculated from what you practice.
-      </p>
-    </header>
   )
 }
 
@@ -66,10 +56,15 @@ async function ProgressDashboard({ userId }: { userId: string }) {
       <div className="flex justify-center pt-3">
         <Link
           href="/daily"
-          className="rounded-full px-8 py-3.5 text-base font-bold text-(--primary-foreground) transition-opacity hover:opacity-90"
-          style={{ background: 'var(--primary)' }}
+          className={cn(
+            'inline-flex items-center justify-center rounded-md px-6 py-3',
+            'text-base font-semibold transition-all duration-150 ease-out-quart focus-ring',
+            'bg-[var(--cta-bg)] text-[var(--cta-fg)] hover:bg-[var(--cta-bg-hover)]',
+          )}
         >
-          {data.streak.completedToday ? '▶ Practice more' : "▶ Start today's daily"}
+          {data.streak.completedToday
+            ? 'Practicar más'
+            : 'Empezar el plan de hoy'}
         </Link>
       </div>
     </div>
