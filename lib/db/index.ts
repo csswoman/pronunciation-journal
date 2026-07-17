@@ -326,7 +326,10 @@ export async function migrateArchivedSrsRows(): Promise<number> {
         }
       }
       return count;
-    })();
+    })().catch((err) => {
+      archivedMigrationPromise = null;
+      throw err;
+    });
   }
   return archivedMigrationPromise;
 }
