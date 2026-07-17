@@ -15,14 +15,15 @@ describe("PageHeader canonical contract", () => {
     );
 
     const header = screen.getByRole("banner");
-    expect(header.textContent).toMatch(/Practice.*Sound Lab.*Elige un sonido/s);
+    expect(header.textContent).toMatch(/Practice[\s\S]*Sound Lab[\s\S]*Elige un sonido/);
     expect(screen.getByRole("button", { name: "Empezar" })).toBeTruthy();
   });
 
   it("does not use Fraunces/display font class on the title", () => {
     const { container } = render(<PageHeader title="Progress" />);
     const title = container.querySelector("h1");
-    expect(title?.className).not.toMatch(/font-display|font-fraunces/);
+    expect(title).not.toBeNull();
+    expect(title!.className).not.toMatch(/font-display|font-fraunces/);
   });
 
   it("compact variant still exposes the same anatomy", () => {
