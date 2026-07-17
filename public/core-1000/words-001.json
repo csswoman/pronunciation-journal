@@ -9,15 +9,16 @@
       "example_sentence": "Give me the book please.",
       "cefr_level": "A1",
       "ipa_weak": "/ðə/",
-      "sentence_ipa": "/ɡɪv miː ðə bʊk pliːz/"
+      "sentence_ipa": "/ˈɡɪv ˈmiː ðə ˈbʊk ˈpliːz/"
     },
     {
       "rank": 2,
       "word": "be",
       "pos": "auxiliary",
-      "ipa_strong": "/biː/",
+      "ipa_strong": "/ˈbiː/",
       "example_sentence": "I want to be happy.",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈaɪ ˈwɑnt ˈtuː ˈbiː ˈhæpiː/"
     },
     {
       "rank": 3,
@@ -27,27 +28,27 @@
       "example_sentence": "Bread and butter here.",
       "cefr_level": "A1",
       "ipa_weak": "/ənd/",
-      "sentence_ipa": "/bɹɛd ənd bʌtɜr hiːɹ/"
+      "sentence_ipa": "/ˈbɹɛd ənd ˈbʌtɜr ˈhiːɹ/"
     },
     {
       "rank": 4,
       "word": "of",
       "pos": "preposition",
-      "ipa_strong": "/ʌv/",
+      "ipa_strong": "/ˈʌv/",
       "example_sentence": "A cup of tea please.",
       "cefr_level": "A1",
       "ipa_weak": "/əv/",
-      "sentence_ipa": "/ʌ kʌp əv tiː pliːz/"
+      "sentence_ipa": "/ə ˈkʌp əv ˈtiː ˈpliːz/"
     },
     {
       "rank": 5,
       "word": "to",
       "pos": "preposition",
-      "ipa_strong": "/tuː/",
+      "ipa_strong": "/ˈtuː/",
       "example_sentence": "I want to go home.",
       "cefr_level": "A1",
       "ipa_weak": "/tə/",
-      "sentence_ipa": "/aɪ wɑnt tə ɡoʊ hoʊm/"
+      "sentence_ipa": "/ˈaɪ ˈwɑnt tə ˈɡoʊ ˈhoʊm/"
     },
     {
       "rank": 6,
@@ -57,7 +58,7 @@
       "example_sentence": "I need a pen now.",
       "cefr_level": "A1",
       "ipa_weak": "/ə/",
-      "sentence_ipa": "/aɪ niːd ə pɛn naʊ/"
+      "sentence_ipa": "/ˈaɪ ˈniːd ə ˈpɛn ˈnaʊ/"
     },
     {
       "rank": 7,
@@ -65,45 +66,47 @@
       "pos": "preposition",
       "ipa_strong": "/ɪn/",
       "example_sentence": "The keys are in the drawer.",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ðə ˈkiːz ˈɑɹ ɪn ðə ˈdɹɔɹ/"
     },
     {
       "rank": 8,
       "word": "have",
       "pos": "auxiliary",
-      "ipa_strong": "/hæv/",
+      "ipa_strong": "/ˈhæv/",
       "example_sentence": "I have a dog at home.",
       "cefr_level": "A1",
       "ipa_weak": "/həv/",
-      "sentence_ipa": "/aɪ həv ʌ dɔɡ æt hoʊm/"
+      "sentence_ipa": "/ˈaɪ həv ə ˈdɔɡ ˈæt ˈhoʊm/"
     },
     {
       "rank": 9,
       "word": "it",
       "pos": "pronoun",
-      "ipa_strong": "/ɪt/",
+      "ipa_strong": "/ˈɪt/",
       "example_sentence": "I saw it at school.",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈaɪ ˈsɔ ˈɪt ˈæt ˈskuːl/"
     },
     {
       "rank": 10,
       "word": "you",
       "pos": "pronoun",
-      "ipa_strong": "/juː/",
+      "ipa_strong": "/ˈjuː/",
       "example_sentence": "Did you see that today?",
       "cefr_level": "A1",
       "ipa_weak": "/jə/",
-      "sentence_ipa": "/dɪd jə siː ðæt tʌdeɪ/"
+      "sentence_ipa": "/ˈdɪd jə ˈsiː ˈðæt təˈdeɪ/"
     },
     {
       "rank": 11,
       "word": "he",
       "pos": "pronoun",
-      "ipa_strong": "/hiː/",
+      "ipa_strong": "/ˈhiː/",
       "example_sentence": "Did he say yes today?",
       "cefr_level": "A1",
       "ipa_weak": "/i/",
-      "sentence_ipa": "/dɪd i seɪ jɛs tʌdeɪ/"
+      "sentence_ipa": "/ˈdɪd i ˈseɪ ˈjɛs təˈdeɪ/"
     },
     {
       "rank": 12,
@@ -113,153 +116,160 @@
       "example_sentence": "This gift is for you.",
       "cefr_level": "A1",
       "ipa_weak": "/fər/",
-      "sentence_ipa": "/ðɪs ɡɪft ɪz fər juː/"
+      "sentence_ipa": "/ˈðɪs ˈɡɪft ˈɪz fər ˈjuː/"
     },
     {
       "rank": 13,
       "word": "they",
       "pos": "pronoun",
-      "ipa_strong": "/ðeɪ/",
+      "ipa_strong": "/ˈðeɪ/",
       "example_sentence": "They are at school today.",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈðeɪ ˈɑɹ ˈæt ˈskuːl təˈdeɪ/"
     },
     {
       "rank": 14,
       "word": "not",
       "pos": "adverb",
-      "ipa_strong": "/nɑt/",
+      "ipa_strong": "/ˈnɑt/",
       "example_sentence": "She did not answer the phone.",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈʃiː ˈdɪd ˈnɑt ˈænsɜr ðə ˈfoʊn/"
     },
     {
       "rank": 15,
       "word": "that",
       "pos": "conjunction",
-      "ipa_strong": "/ðæt/",
+      "ipa_strong": "/ˈðæt/",
       "example_sentence": "I hope that it works.",
       "cefr_level": "A1",
       "ipa_weak": "/ðət/",
-      "sentence_ipa": "/aɪ hoʊp ðət ɪt wɜrks/"
+      "sentence_ipa": "/ˈaɪ ˈhoʊp ðət ˈɪt ˈwɜrks/"
     },
     {
       "rank": 16,
       "word": "we",
       "pos": "pronoun",
-      "ipa_strong": "/wiː/",
+      "ipa_strong": "/ˈwiː/",
       "example_sentence": "We can go home now.",
       "cefr_level": "A1",
       "ipa_weak": "/wi/",
-      "sentence_ipa": "/wi kæn ɡoʊ hoʊm naʊ/"
+      "sentence_ipa": "/wi ˈkæn ˈɡoʊ ˈhoʊm ˈnaʊ/"
     },
     {
       "rank": 17,
       "word": "on",
       "pos": "preposition",
-      "ipa_strong": "/ɑn/",
+      "ipa_strong": "/ˈɑn/",
       "example_sentence": "The cup is on the table.",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ðə ˈkʌp ˈɪz ˈɑn ðə ˈteɪbəl/"
     },
     {
       "rank": 18,
       "word": "with",
       "pos": "preposition",
-      "ipa_strong": "/wɪð/",
+      "ipa_strong": "/ˈwɪð/",
       "example_sentence": "She came with her sister.",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈʃiː ˈkeɪm ˈwɪð ˈhɜr ˈsɪstɜr/"
     },
     {
       "rank": 19,
       "word": "this",
       "pos": "pronoun",
-      "ipa_strong": "/ðɪs/",
+      "ipa_strong": "/ˈðɪs/",
       "example_sentence": "I saw this at school.",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈaɪ ˈsɔ ˈðɪs ˈæt ˈskuːl/"
     },
     {
       "rank": 20,
       "word": "i",
       "pos": "pronoun",
-      "ipa_strong": "/aɪ/",
+      "ipa_strong": "/ˈaɪ/",
       "example_sentence": "I am ready now.",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈaɪ ˈæm ˈɹɛdiː ˈnaʊ/"
     },
     {
       "rank": 21,
       "word": "do",
       "pos": "auxiliary",
-      "ipa_strong": "/duː/",
+      "ipa_strong": "/ˈduː/",
       "example_sentence": "What do you want today?",
       "cefr_level": "A1",
       "ipa_weak": "/du/",
-      "sentence_ipa": "/wʌt du juː wɑnt tʌdeɪ/"
+      "sentence_ipa": "/ˈwʌt du ˈjuː ˈwɑnt təˈdeɪ/"
     },
     {
       "rank": 22,
       "word": "as",
       "pos": "conjunction",
-      "ipa_strong": "/æz/",
+      "ipa_strong": "/ˈæz/",
       "example_sentence": "Do as I say please.",
       "cefr_level": "A1",
       "ipa_weak": "/əz/",
-      "sentence_ipa": "/duː əz aɪ seɪ pliːz/"
+      "sentence_ipa": "/ˈduː əz ˈaɪ ˈseɪ ˈpliːz/"
     },
     {
       "rank": 23,
       "word": "at",
       "pos": "preposition",
-      "ipa_strong": "/æt/",
+      "ipa_strong": "/ˈæt/",
       "example_sentence": "Look at the map now.",
       "cefr_level": "A1",
       "ipa_weak": "/ət/",
-      "sentence_ipa": "/lʊk ət ðʌ mæp naʊ/"
+      "sentence_ipa": "/ˈlʊk ət ðə ˈmæp ˈnaʊ/"
     },
     {
       "rank": 24,
       "word": "she",
       "pos": "pronoun",
-      "ipa_strong": "/ʃiː/",
+      "ipa_strong": "/ˈʃiː/",
       "example_sentence": "Did she call you today?",
       "cefr_level": "A1",
       "ipa_weak": "/ʃi/",
-      "sentence_ipa": "/dɪd ʃi kɔl juː tʌdeɪ/"
+      "sentence_ipa": "/ˈdɪd ʃi ˈkɔl ˈjuː təˈdeɪ/"
     },
     {
       "rank": 25,
       "word": "but",
       "pos": "conjunction",
-      "ipa_strong": "/bʌt/",
+      "ipa_strong": "/ˈbʌt/",
       "example_sentence": "Small but very nice.",
       "cefr_level": "A1",
       "ipa_weak": "/bət/",
-      "sentence_ipa": "/smɔl bət vɛɹiː naɪs/"
+      "sentence_ipa": "/ˈsmɔl bət ˈvɛɹiː ˈnaɪs/"
     },
     {
       "rank": 26,
       "word": "from",
       "pos": "preposition",
-      "ipa_strong": "/fɹʌm/",
+      "ipa_strong": "/ˈfɹʌm/",
       "example_sentence": "She's from a small town.",
       "cefr_level": "A1",
       "ipa_weak": "/frəm/",
-      "sentence_ipa": "/ʃiz frəm ə smɔl taʊn/"
+      "sentence_ipa": "/ˈʃiːz frəm ə ˈsmɔl ˈtaʊn/"
     },
     {
       "rank": 27,
       "word": "by",
       "pos": "preposition",
-      "ipa_strong": "/baɪ/",
+      "ipa_strong": "/ˈbaɪ/",
       "example_sentence": "The bag is by the door.",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ðə ˈbæɡ ˈɪz ˈbaɪ ðə ˈdɔɹ/"
     },
     {
       "rank": 28,
       "word": "will",
       "pos": "modal",
-      "ipa_strong": "/wɪl/",
+      "ipa_strong": "/ˈwɪl/",
       "example_sentence": "I will call you later.",
       "cefr_level": "A1",
       "ipa_weak": "/əl/",
-      "sentence_ipa": "/aɪ əl kɔl juː leɪtɜr/"
+      "sentence_ipa": "/ˈaɪ əl ˈkɔl ˈjuː ˈleɪtɜr/"
     },
     {
       "rank": 29,
@@ -269,231 +279,254 @@
       "example_sentence": "Tea or coffee today?",
       "cefr_level": "A1",
       "ipa_weak": "/ər/",
-      "sentence_ipa": "/tiː ɚ kɑfiː tʌdeɪ/"
+      "sentence_ipa": "/ˈtiː ər ˈkɑfiː təˈdeɪ/"
     },
     {
       "rank": 30,
       "word": "say",
       "pos": "verb",
-      "ipa_strong": "/seɪ/",
+      "ipa_strong": "/ˈseɪ/",
       "example_sentence": "What did she say to you?",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈwʌt ˈdɪd ˈʃiː ˈseɪ ˈtuː ˈjuː/"
     },
     {
       "rank": 31,
       "word": "go",
       "pos": "verb",
-      "ipa_strong": "/ɡoʊ/",
+      "ipa_strong": "/ˈɡoʊ/",
       "example_sentence": "Let's go to the park.",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈlɛts ˈɡoʊ ˈtuː ðə ˈpɑɹk/"
     },
     {
       "rank": 32,
       "word": "so",
       "pos": "conjunction",
-      "ipa_strong": "/soʊ/",
+      "ipa_strong": "/ˈsoʊ/",
       "example_sentence": "It was cold, so I wore a coat.",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈɪt ˈwɑz ˈkoʊld ˈsoʊ ˈaɪ ˈwɔɹ ə ˈkoʊt/"
     },
     {
       "rank": 33,
       "word": "all",
       "pos": "determiner",
-      "ipa_strong": "/ɔl/",
+      "ipa_strong": "/ˈɔl/",
       "example_sentence": "All the students passed the test.",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈɔl ðə ˈstuːdənts ˈpæst ðə ˈtɛst/"
     },
     {
       "rank": 34,
       "word": "if",
       "pos": "conjunction",
-      "ipa_strong": "/ɪf/",
+      "ipa_strong": "/ˈɪf/",
       "example_sentence": "Call me if you need help.",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈkɔl ˈmiː ˈɪf ˈjuː ˈniːd ˈhɛlp/"
     },
     {
       "rank": 35,
       "word": "one",
       "pos": "number",
-      "ipa_strong": "/wʌn/",
+      "ipa_strong": "/ˈwʌn/",
       "example_sentence": "I have one brother and two sisters.",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈaɪ ˈhæv ˈwʌn ˈbɹʌðɜr ənd ˈtuː ˈsɪstɜrz/"
     },
     {
       "rank": 36,
       "word": "would",
       "pos": "modal",
-      "ipa_strong": "/wʊd/",
+      "ipa_strong": "/ˈwʊd/",
       "example_sentence": "Would you like some tea?",
       "cefr_level": "A1",
       "ipa_weak": "/əd/",
-      "sentence_ipa": "/əd juː laɪk sʌm tiː/"
+      "sentence_ipa": "/əd ˈjuː ˈlaɪk ˈsʌm ˈtiː/"
     },
     {
       "rank": 37,
       "word": "about",
       "pos": "preposition",
-      "ipa_strong": "/ʌbaʊt/",
+      "ipa_strong": "/əˈbaʊt/",
       "example_sentence": "We talked about the trip.",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈwiː ˈtɔkt əˈbaʊt ðə ˈtɹɪp/"
     },
     {
       "rank": 38,
       "word": "can",
       "pos": "modal",
-      "ipa_strong": "/kæn/",
+      "ipa_strong": "/ˈkæn/",
       "example_sentence": "I can help you today.",
       "cefr_level": "A1",
       "ipa_weak": "/kən/",
-      "sentence_ipa": "/aɪ kən hɛlp juː tʌdeɪ/"
+      "sentence_ipa": "/ˈaɪ kən ˈhɛlp ˈjuː təˈdeɪ/"
     },
     {
       "rank": 39,
       "word": "which",
       "pos": "pronoun",
-      "ipa_strong": "/wɪtʃ/",
+      "ipa_strong": "/ˈwɪtʃ/",
       "example_sentence": "Which book do you want?",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈwɪtʃ ˈbʊk ˈduː ˈjuː ˈwɑnt/"
     },
     {
       "rank": 40,
       "word": "there",
       "pos": "adverb",
-      "ipa_strong": "/ðɛɹ/",
+      "ipa_strong": "/ˈðɛɹ/",
       "example_sentence": "There is a cat outside.",
       "cefr_level": "A1",
       "ipa_weak": "/ðɚ/",
-      "sentence_ipa": "/ðɚ ɪz ʌ kæt aʊtsaɪd/"
+      "sentence_ipa": "/ðɚ ˈɪz ə ˈkæt ˈaʊˈtsaɪd/"
     },
     {
       "rank": 41,
       "word": "know",
       "pos": "verb",
-      "ipa_strong": "/noʊ/",
+      "ipa_strong": "/ˈnoʊ/",
       "example_sentence": "Do you know her name?",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈduː ˈjuː ˈnoʊ ˈhɜr ˈneɪm/"
     },
     {
       "rank": 42,
       "word": "more",
       "pos": "determiner",
-      "ipa_strong": "/mɔɹ/",
+      "ipa_strong": "/ˈmɔɹ/",
       "example_sentence": "I need more time.",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈaɪ ˈniːd ˈmɔɹ ˈtaɪm/"
     },
     {
       "rank": 43,
       "word": "get",
       "pos": "verb",
-      "ipa_strong": "/ɡɛt/",
+      "ipa_strong": "/ˈɡɛt/",
       "example_sentence": "Can you get me a glass of water?",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈkæn ˈjuː ˈɡɛt ˈmiː ə ˈɡlæs ˈʌv ˈwɔtɜr/"
     },
     {
       "rank": 44,
       "word": "who",
       "pos": "pronoun",
-      "ipa_strong": "/huː/",
+      "ipa_strong": "/ˈhuː/",
       "example_sentence": "Who is your teacher?",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈhuː ˈɪz ˈjɔɹ ˈtiːtʃɜr/"
     },
     {
       "rank": 45,
       "word": "like",
       "pos": "verb",
-      "ipa_strong": "/laɪk/",
+      "ipa_strong": "/ˈlaɪk/",
       "example_sentence": "I like this kind of music.",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈaɪ ˈlaɪk ˈðɪs ˈkaɪnd ˈʌv ˈmjuːzɪk/"
     },
     {
       "rank": 46,
       "word": "when",
       "pos": "conjunction",
-      "ipa_strong": "/wɛn/",
+      "ipa_strong": "/ˈwɛn/",
       "example_sentence": "Call me when you arrive.",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈkɔl ˈmiː ˈwɛn ˈjuː ɜrˈaɪv/"
     },
     {
       "rank": 47,
       "word": "think",
       "pos": "verb",
-      "ipa_strong": "/θɪŋk/",
+      "ipa_strong": "/ˈθɪŋk/",
       "example_sentence": "I think she's right.",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈaɪ ˈθɪŋk ˈʃiːz ˈɹaɪt/"
     },
     {
       "rank": 48,
       "word": "make",
       "pos": "verb",
-      "ipa_strong": "/meɪk/",
+      "ipa_strong": "/ˈmeɪk/",
       "example_sentence": "Can you make some coffee?",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈkæn ˈjuː ˈmeɪk ˈsʌm ˈkɑfiː/"
     },
     {
       "rank": 49,
       "word": "time",
       "pos": "noun",
-      "ipa_strong": "/taɪm/",
+      "ipa_strong": "/ˈtaɪm/",
       "example_sentence": "What time does the class start?",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈwʌt ˈtaɪm ˈdʌz ðə ˈklæs ˈstɑɹt/"
     },
     {
       "rank": 50,
       "word": "see",
       "pos": "verb",
-      "ipa_strong": "/siː/",
+      "ipa_strong": "/ˈsiː/",
       "example_sentence": "Can you see the sign from here?",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈkæn ˈjuː ˈsiː ðə ˈsaɪn ˈfɹʌm ˈhiːɹ/"
     },
     {
       "rank": 51,
       "word": "what",
       "pos": "pronoun",
-      "ipa_strong": "/wʌt/",
+      "ipa_strong": "/ˈwʌt/",
       "example_sentence": "What is your name?",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈwʌt ˈɪz ˈjɔɹ ˈneɪm/"
     },
     {
       "rank": 52,
       "word": "up",
       "pos": "preposition",
-      "ipa_strong": "/ʌp/",
+      "ipa_strong": "/ˈʌp/",
       "example_sentence": "She walked up the stairs slowly.",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈʃiː ˈwɔkt ˈʌp ðə ˈstɛɹz ˈsloʊliː/"
     },
     {
       "rank": 53,
       "word": "some",
       "pos": "determiner",
-      "ipa_strong": "/sʌm/",
+      "ipa_strong": "/ˈsʌm/",
       "example_sentence": "I need some help today.",
       "cefr_level": "A1",
       "ipa_weak": "/səm/",
-      "sentence_ipa": "/aɪ niːd səm hɛlp tʌdeɪ/"
+      "sentence_ipa": "/ˈaɪ ˈniːd səm ˈhɛlp təˈdeɪ/"
     },
     {
       "rank": 54,
       "word": "other",
       "pos": "adjective",
-      "ipa_strong": "/ʌðɜr/",
+      "ipa_strong": "/ˈʌðɜr/",
       "example_sentence": "Try the other door on your left.",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈtɹaɪ ðə ˈʌðɜr ˈdɔɹ ˈɑn ˈjɔɹ ˈlɛft/"
     },
     {
       "rank": 55,
       "word": "out",
       "pos": "preposition",
-      "ipa_strong": "/aʊt/",
+      "ipa_strong": "/ˈaʊt/",
       "example_sentence": "She walked out of the room.",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈʃiː ˈwɔkt ˈaʊt ˈʌv ðə ˈɹuːm/"
     },
     {
       "rank": 56,
       "word": "good",
       "pos": "adjective",
-      "ipa_strong": "/ɡʊd/",
+      "ipa_strong": "/ˈɡʊd/",
       "example_sentence": "That's a good idea.",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈðæts ə ˈɡʊd aɪˈdiːə/"
     },
     {
       "rank": 57,
@@ -501,89 +534,99 @@
       "pos": "noun",
       "ipa_strong": "/ˈpiːpəl/",
       "example_sentence": "Many people use public transport.",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈmɛniː ˈpiːpəl ˈjuːs ˈpʌblɪk tɹæˈnspɔɹt/"
     },
     {
       "rank": 58,
       "word": "year",
       "pos": "noun",
-      "ipa_strong": "/jɪr/",
+      "ipa_strong": "/ˈjɪɹ/",
       "example_sentence": "This year went by very fast.",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈðɪs ˈjɪɹ ˈwɛnt ˈbaɪ ˈvɛɹiː ˈfæst/"
     },
     {
       "rank": 59,
       "word": "take",
       "pos": "verb",
-      "ipa_strong": "/teɪk/",
+      "ipa_strong": "/ˈteɪk/",
       "example_sentence": "It will take about an hour.",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈɪt ˈwɪl ˈteɪk əˈbaʊt ˈæn ˈaʊɜr/"
     },
     {
       "rank": 60,
       "word": "no",
       "pos": "interjection",
-      "ipa_strong": "/noʊ/",
+      "ipa_strong": "/ˈnoʊ/",
       "example_sentence": "No, that sounds good.",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈnoʊ ˈðæt ˈsaʊndz ˈɡʊd/"
     },
     {
       "rank": 61,
       "word": "well",
       "pos": "adverb",
-      "ipa_strong": "/wɛl/",
+      "ipa_strong": "/ˈwɛl/",
       "example_sentence": "She speaks English very well.",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈʃiː ˈspiːks ˈɪŋɡlɪʃ ˈvɛɹiː ˈwɛl/"
     },
     {
       "rank": 62,
       "word": "because",
       "pos": "conjunction",
-      "ipa_strong": "/bɪkɔz/",
+      "ipa_strong": "/bɪˈkɔz/",
       "example_sentence": "I stayed home because it was raining.",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈaɪ ˈsteɪd ˈhoʊm bɪˈkɔz ˈɪt ˈwɑz ˈɹeɪnɪŋ/"
     },
     {
       "rank": 63,
       "word": "very",
       "pos": "adverb",
-      "ipa_strong": "/vɛɹiː/",
+      "ipa_strong": "/ˈvɛɹiː/",
       "example_sentence": "The exam was very difficult.",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ðə ɪˈɡzæm ˈwɑz ˈvɛɹiː ˈdɪfəkəlt/"
     },
     {
       "rank": 64,
       "word": "just",
       "pos": "adverb",
-      "ipa_strong": "/dʒʌst/",
+      "ipa_strong": "/ˈdʒʌst/",
       "example_sentence": "I just got home a minute ago.",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈaɪ ˈdʒʌst ˈɡɑt ˈhoʊm ə ˈmɪnət əˈɡoʊ/"
     },
     {
       "rank": 65,
       "word": "come",
       "pos": "verb",
-      "ipa_strong": "/kʌm/",
+      "ipa_strong": "/ˈkʌm/",
       "example_sentence": "Can you come to dinner tonight?",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈkæn ˈjuː ˈkʌm ˈtuː ˈdɪnɜr təˈnaɪt/"
     },
     {
       "rank": 66,
       "word": "could",
       "pos": "modal",
-      "ipa_strong": "/kʊd/",
+      "ipa_strong": "/ˈkʊd/",
       "example_sentence": "Could you help me please?",
       "cefr_level": "A1",
       "ipa_weak": "/kəd/",
-      "sentence_ipa": "/kəd juː hɛlp miː pliːz/"
+      "sentence_ipa": "/kəd ˈjuː ˈhɛlp ˈmiː ˈpliːz/"
     },
     {
       "rank": 67,
       "word": "work",
       "pos": "verb",
-      "ipa_strong": "/wɜrk/",
+      "ipa_strong": "/ˈwɜrk/",
       "example_sentence": "She works at a hospital downtown.",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈʃiː ˈwɜrks ˈæt ə ˈhɑˌspɪtəl ˈdaʊˈntaʊn/"
     },
     {
       "rank": 68,
@@ -591,47 +634,51 @@
       "pos": "verb",
       "ipa_strong": "/juːz/",
       "example_sentence": "You can use my pen.",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈjuː ˈkæn ˈjuːs ˈmaɪ ˈpɛn/"
     },
     {
       "rank": 69,
       "word": "than",
       "pos": "conjunction",
-      "ipa_strong": "/ðæn/",
+      "ipa_strong": "/ˈðæn/",
       "example_sentence": "Better than before now.",
       "cefr_level": "A1",
       "ipa_weak": "/ðən/",
-      "sentence_ipa": "/bɛtɜr ðən bɪfɔɹ naʊ/"
+      "sentence_ipa": "/ˈbɛtɜr ðən bɪˈfɔɹ ˈnaʊ/"
     },
     {
       "rank": 70,
       "word": "now",
       "pos": "adverb",
-      "ipa_strong": "/naʊ/",
+      "ipa_strong": "/ˈnaʊ/",
       "example_sentence": "I'm busy now — can I call you later?",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈaɪm ˈbɪziː ˈnaʊ ˈkæn ˈaɪ ˈkɔl ˈjuː ˈleɪtɜr/"
     },
     {
       "rank": 71,
       "word": "then",
       "pos": "adverb",
-      "ipa_strong": "/ðɛn/",
+      "ipa_strong": "/ˈðɛn/",
       "example_sentence": "Finish your homework, then we can watch TV.",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈfɪnɪʃ ˈjɔɹ ˈhoʊˌmwɜrk ˈðɛn ˈwiː ˈkæn ˈwɑtʃ ˈtiːˈviː/"
     },
     {
       "rank": 72,
       "word": "also",
       "pos": "adverb",
-      "ipa_strong": "/ɔlsoʊ/",
+      "ipa_strong": "/ˈɔlsoʊ/",
       "example_sentence": "She's a teacher and also a writer.",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈʃiːz ə ˈtiːtʃɜr ənd ˈɔlsoʊ ə ˈɹaɪtɜr/"
     },
     {
       "rank": 73,
       "word": "into",
       "pos": "preposition",
-      "ipa_strong": "/ɪntuː/",
+      "ipa_strong": "/ˈɪntuː/",
       "example_sentence": "Go into the room now.",
       "cefr_level": "A1",
       "ipa_weak": "/ˈɪntə/",
@@ -641,203 +688,227 @@
       "rank": 74,
       "word": "only",
       "pos": "adverb",
-      "ipa_strong": "/oʊnliː/",
+      "ipa_strong": "/ˈoʊnliː/",
       "example_sentence": "I only have five minutes.",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈaɪ ˈoʊnliː ˈhæv ˈfaɪv ˈmɪnəts/"
     },
     {
       "rank": 75,
       "word": "look",
       "pos": "verb",
-      "ipa_strong": "/lʊk/",
+      "ipa_strong": "/ˈlʊk/",
       "example_sentence": "Look at those clouds — it might rain.",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈlʊk ˈæt ˈðoʊz ˈklaʊdz ˈɪt ˈmaɪt ˈɹeɪn/"
     },
     {
       "rank": 76,
       "word": "want",
       "pos": "verb",
-      "ipa_strong": "/wɑnt/",
+      "ipa_strong": "/ˈwɑnt/",
       "example_sentence": "What do you want for dinner?",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈwʌt ˈduː ˈjuː ˈwɑnt ˈfɔɹ ˈdɪnɜr/"
     },
     {
       "rank": 77,
       "word": "give",
       "pos": "verb",
-      "ipa_strong": "/ɡɪv/",
+      "ipa_strong": "/ˈɡɪv/",
       "example_sentence": "Give me a few minutes to finish.",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈɡɪv ˈmiː ə ˈfjuː ˈmɪnəts ˈtuː ˈfɪnɪʃ/"
     },
     {
       "rank": 78,
       "word": "first",
       "pos": "adjective",
-      "ipa_strong": "/fɜrst/",
+      "ipa_strong": "/ˈfɜrst/",
       "example_sentence": "This is my first time here.",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈðɪs ˈɪz ˈmaɪ ˈfɜrst ˈtaɪm ˈhiːɹ/"
     },
     {
       "rank": 79,
       "word": "new",
       "pos": "adjective",
-      "ipa_strong": "/nuː/",
+      "ipa_strong": "/ˈnuː/",
       "example_sentence": "She has a new phone.",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈʃiː ˈhæz ə ˈnuː ˈfoʊn/"
     },
     {
       "rank": 80,
       "word": "way",
       "pos": "noun",
-      "ipa_strong": "/weɪ/",
+      "ipa_strong": "/ˈweɪ/",
       "example_sentence": "Is there a faster way to get there?",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈɪz ˈðɛɹ ə ˈfæstɜr ˈweɪ ˈtuː ˈɡɛt ˈðɛɹ/"
     },
     {
       "rank": 81,
       "word": "find",
       "pos": "verb",
-      "ipa_strong": "/faɪnd/",
+      "ipa_strong": "/ˈfaɪnd/",
       "example_sentence": "Can you find my keys?",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈkæn ˈjuː ˈfaɪnd ˈmaɪ ˈkiːz/"
     },
     {
       "rank": 82,
       "word": "over",
       "pos": "preposition",
-      "ipa_strong": "/oʊvɜr/",
+      "ipa_strong": "/ˈoʊvɜr/",
       "example_sentence": "The plane flew over the city.",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ðə ˈpleɪn ˈfluː ˈoʊvɜr ðə ˈsɪtiː/"
     },
     {
       "rank": 83,
       "word": "any",
       "pos": "determiner",
-      "ipa_strong": "/ɛniː/",
+      "ipa_strong": "/ˈɛniː/",
       "example_sentence": "Do you have any questions?",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈduː ˈjuː ˈhæv ˈɛniː ˈkwɛstʃənz/"
     },
     {
       "rank": 84,
       "word": "after",
       "pos": "preposition",
-      "ipa_strong": "/æftɜr/",
+      "ipa_strong": "/ˈæftɜr/",
       "example_sentence": "Let's talk after class.",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈlɛts ˈtɔk ˈæftɜr ˈklæs/"
     },
     {
       "rank": 85,
       "word": "day",
       "pos": "noun",
-      "ipa_strong": "/deɪ/",
+      "ipa_strong": "/ˈdeɪ/",
       "example_sentence": "What a beautiful day it is!",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈwʌt ə ˈbjuːtəfəl ˈdeɪ ˈɪt ˈɪz/"
     },
     {
       "rank": 86,
       "word": "where",
       "pos": "adverb",
-      "ipa_strong": "/wɛɹ/",
+      "ipa_strong": "/ˈwɛɹ/",
       "example_sentence": "Where did you put my bag?",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈwɛɹ ˈdɪd ˈjuː ˈpʊt ˈmaɪ ˈbæɡ/"
     },
     {
       "rank": 87,
       "word": "thing",
       "pos": "noun",
-      "ipa_strong": "/θɪŋ/",
+      "ipa_strong": "/ˈθɪŋ/",
       "example_sentence": "That's the best thing about living here.",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈðæts ðə ˈbɛst ˈθɪŋ əˈbaʊt ˈlɪvɪŋ ˈhiːɹ/"
     },
     {
       "rank": 88,
       "word": "most",
       "pos": "determiner",
-      "ipa_strong": "/moʊst/",
+      "ipa_strong": "/ˈmoʊst/",
       "example_sentence": "Most students finished on time.",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈmoʊst ˈstuːdənts ˈfɪnɪʃt ˈɑn ˈtaɪm/"
     },
     {
       "rank": 89,
       "word": "should",
       "pos": "modal",
-      "ipa_strong": "/ʃʊd/",
+      "ipa_strong": "/ˈʃʊd/",
       "example_sentence": "You should rest today please.",
       "cefr_level": "A1",
       "ipa_weak": "/ʃəd/",
-      "sentence_ipa": "/juː ʃəd ɹɛst tʌdeɪ pliːz/"
+      "sentence_ipa": "/ˈjuː ʃəd ˈɹɛst təˈdeɪ ˈpliːz/"
     },
     {
       "rank": 90,
       "word": "need",
       "pos": "verb",
-      "ipa_strong": "/niːd/",
+      "ipa_strong": "/ˈniːd/",
       "example_sentence": "I need a glass of water.",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈaɪ ˈniːd ə ˈɡlæs ˈʌv ˈwɔtɜr/"
     },
     {
       "rank": 91,
       "word": "much",
       "pos": "determiner",
-      "ipa_strong": "/mʌtʃ/",
+      "ipa_strong": "/ˈmʌtʃ/",
       "example_sentence": "There isn't much time left.",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈðɛɹ ˈɪzənt ˈmʌtʃ ˈtaɪm ˈlɛft/"
     },
     {
       "rank": 92,
       "word": "right",
       "pos": "adjective",
-      "ipa_strong": "/ɹaɪt/",
+      "ipa_strong": "/ˈɹaɪt/",
       "example_sentence": "Is this the right answer?",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈɪz ˈðɪs ðə ˈɹaɪt ˈænsɜr/"
     },
     {
       "rank": 93,
       "word": "how",
       "pos": "adverb",
-      "ipa_strong": "/haʊ/",
+      "ipa_strong": "/ˈhaʊ/",
       "example_sentence": "How do you get to the station?",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈhaʊ ˈduː ˈjuː ˈɡɛt ˈtuː ðə ˈsteɪʃən/"
     },
     {
       "rank": 94,
       "word": "back",
       "pos": "adverb",
-      "ipa_strong": "/bæk/",
+      "ipa_strong": "/ˈbæk/",
       "example_sentence": "She'll be back in five minutes.",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈʃiːl ˈbiː ˈbæk ɪn ˈfaɪv ˈmɪnəts/"
     },
     {
       "rank": 95,
       "word": "mean",
       "pos": "verb",
-      "ipa_strong": "/miːn/",
+      "ipa_strong": "/ˈmiːn/",
       "example_sentence": "What does this word mean?",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈwʌt ˈdʌz ˈðɪs ˈwɜrd ˈmiːn/"
     },
     {
       "rank": 96,
       "word": "even",
       "pos": "adverb",
-      "ipa_strong": "/iːvɪn/",
+      "ipa_strong": "/ˈiːvɪn/",
       "example_sentence": "He didn't even say goodbye.",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈhiː ˈdɪdənt ˈiːvɪn ˈseɪ ˌɡʊˈdbaɪ/"
     },
     {
       "rank": 97,
       "word": "may",
       "pos": "modal",
-      "ipa_strong": "/meɪ/",
+      "ipa_strong": "/ˈmeɪ/",
       "example_sentence": "You may try again today.",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈjuː ˈmeɪ ˈtɹaɪ əˈɡɛn təˈdeɪ/"
     },
     {
       "rank": 98,
       "word": "here",
       "pos": "adverb",
-      "ipa_strong": "/hiːɹ/",
+      "ipa_strong": "/ˈhiːɹ/",
       "example_sentence": "Put your bag here, next to mine.",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈpʊt ˈjɔɹ ˈbæɡ ˈhiːɹ ˈnɛkst ˈtuː ˈmaɪn/"
     },
     {
       "rank": 99,
@@ -845,15 +916,17 @@
       "pos": "determiner",
       "ipa_strong": "/ˈmeni/",
       "example_sentence": "Many people like coffee.",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈmɛniː ˈpiːpəl ˈlaɪk ˈkɑfiː/"
     },
     {
       "rank": 100,
       "word": "such",
       "pos": "determiner",
-      "ipa_strong": "/sʌtʃ/",
+      "ipa_strong": "/ˈsʌtʃ/",
       "example_sentence": "It was such a beautiful day.",
-      "cefr_level": "A1"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈɪt ˈwɑz ˈsʌtʃ ə ˈbjuːtəfəl ˈdeɪ/"
     }
   ]
 }

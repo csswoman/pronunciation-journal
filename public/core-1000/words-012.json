@@ -1,105 +1,905 @@
 {
   "version": 1,
   "entries": [
-    { "rank": 1101, "word": "progress", "pos": "noun", "ipa_strong": "/pɹɑɡɹɛs/", "example_sentence": "The student has made significant progress in her reading and writing skills.", "cefr_level": "B1" },
-    { "rank": 1102, "word": "truth", "pos": "noun", "ipa_strong": "/tɹuːθ/", "example_sentence": "It is always important to tell the truth even when it is difficult.", "cefr_level": "A2" },
-    { "rank": 1103, "word": "nobody", "pos": "pronoun", "ipa_strong": "/noʊbɑdiː/", "example_sentence": "Nobody in the entire office knew about the upcoming surprise inspection.", "cefr_level": "A2" },
-    { "rank": 1104, "word": "examine", "pos": "verb", "ipa_strong": "/ɪɡzæmɪn/", "example_sentence": "Doctors need to examine the patient carefully before making any diagnosis.", "cefr_level": "B1" },
-    { "rank": 1105, "word": "lay", "pos": "verb", "ipa_strong": "/leɪ/", "example_sentence": "Please lay the papers flat on the desk before you leave the office.", "cefr_level": "A2" },
-    { "rank": 1106, "word": "speed", "pos": "noun", "ipa_strong": "/spiːd/", "example_sentence": "The vehicle was traveling at a very dangerous speed on the highway.", "cefr_level": "A2" },
-    { "rank": 1107, "word": "politics", "pos": "noun", "ipa_strong": "/pɑlʌtɪks/", "example_sentence": "She has been deeply interested in politics since she was a teenager.", "cefr_level": "B1" },
-    { "rank": 1108, "word": "reply", "pos": "verb", "ipa_strong": "/ɹɪplaɪ/", "example_sentence": "He failed to reply to my urgent email for more than a week.", "cefr_level": "A2" },
-    { "rank": 1109, "word": "display", "pos": "verb", "ipa_strong": "/dɪspleɪ/", "example_sentence": "The gallery will display artwork from over fifty different countries.", "cefr_level": "B1" },
-    { "rank": 1110, "word": "transfer", "pos": "verb", "ipa_strong": "/tɹænsfɜr/", "example_sentence": "Please transfer all important files to the new computer before Friday.", "cefr_level": "B1" },
-    { "rank": 1111, "word": "perfect", "pos": "adjective", "ipa_strong": "/pɜrfɛkt/", "example_sentence": "The weather was absolutely perfect for a relaxing day at the beach.", "cefr_level": "A2" },
-    { "rank": 1112, "word": "slightly", "pos": "adverb", "ipa_strong": "/slaɪtliː/", "example_sentence": "Today's temperature is slightly higher than it was yesterday afternoon.", "cefr_level": "B1" },
-    { "rank": 1113, "word": "overall", "pos": "adverb", "ipa_strong": "/oʊvɜrɔl/", "example_sentence": "Overall, the new project was considered a great success by everyone.", "cefr_level": "B1" },
-    { "rank": 1114, "word": "intend", "pos": "verb", "ipa_strong": "/ɪntɛnd/", "example_sentence": "I intend to finish the full report well before the end of today.", "cefr_level": "B1" },
-    { "rank": 1115, "word": "user", "pos": "noun", "ipa_strong": "/juːzɜr/", "example_sentence": "Each user must create a unique strong password to protect their account.", "cefr_level": "A2" },
-    { "rank": 1116, "word": "respond", "pos": "verb", "ipa_strong": "/ɹɪspɑnd/", "example_sentence": "The emergency team must respond quickly to every call they receive.", "cefr_level": "B1" },
-    { "rank": 1117, "word": "dinner", "pos": "noun", "ipa_strong": "/dɪnɜr/", "example_sentence": "The whole family gathered around the table for a warm dinner together.", "cefr_level": "A1" },
-    { "rank": 1118, "word": "slow", "pos": "adjective", "ipa_strong": "/sloʊ/", "example_sentence": "The slow internet connection made it very hard to upload the large files.", "cefr_level": "A1" },
-    { "rank": 1119, "word": "regular", "pos": "adjective", "ipa_strong": "/ɹɛɡjʌlɜr/", "example_sentence": "Regular exercise is absolutely essential for maintaining good physical health.", "cefr_level": "B1" },
-    { "rank": 1120, "word": "physical", "pos": "adjective", "ipa_strong": "/fɪzɪkʌl/", "example_sentence": "The job requires candidates to maintain a high level of physical fitness.", "cefr_level": "B1" },
-    { "rank": 1121, "word": "apart", "pos": "adverb", "ipa_strong": "/ʌpɑɹt/", "example_sentence": "The two main cities in that region are located two hundred miles apart.", "cefr_level": "B1" },
-    { "rank": 1122, "word": "suit", "pos": "verb", "ipa_strong": "/suːt/", "example_sentence": "Choose a daily working schedule that will suit your personal lifestyle.", "cefr_level": "B1" },
-    { "rank": 1123, "word": "federal", "pos": "adjective", "ipa_strong": "/fɛdɜrʌl/", "example_sentence": "The federal government announced new and stricter environmental protection regulations.", "cefr_level": "B2" },
-    { "rank": 1124, "word": "reveal", "pos": "verb", "ipa_strong": "/ɹɪviːl/", "example_sentence": "The investigation is expected to reveal the true cause of the accident.", "cefr_level": "B1" },
-    { "rank": 1125, "word": "percentage", "pos": "noun", "ipa_strong": "/pɜrsɛntʌdʒ/", "example_sentence": "A large percentage of the population now uses social media on a daily basis.", "cefr_level": "B1" },
-    { "rank": 1126, "word": "peace", "pos": "noun", "ipa_strong": "/piːs/", "example_sentence": "After years of conflict, the two neighboring nations finally agreed on peace.", "cefr_level": "B1" },
-    { "rank": 1127, "word": "status", "pos": "noun", "ipa_strong": "/stætʌs/", "example_sentence": "Please keep us updated on the current status of the ongoing project.", "cefr_level": "B1" },
-    { "rank": 1128, "word": "crime", "pos": "noun", "ipa_strong": "/kɹaɪm/", "example_sentence": "The local police are working very hard to reduce crime in the city.", "cefr_level": "B1" },
-    { "rank": 1129, "word": "decline", "pos": "verb", "ipa_strong": "/dɪklaɪn/", "example_sentence": "Sales figures seem to decline sharply each time the economy slows down.", "cefr_level": "B2" },
-    { "rank": 1130, "word": "decade", "pos": "noun", "ipa_strong": "/dɛkeɪd/", "example_sentence": "Technology has changed dramatically over the course of the past decade.", "cefr_level": "B1" },
-    { "rank": 1131, "word": "launch", "pos": "verb", "ipa_strong": "/lɔntʃ/", "example_sentence": "The company plans to launch its new product line next spring.", "cefr_level": "B1" },
-    { "rank": 1132, "word": "warn", "pos": "verb", "ipa_strong": "/wɔɹn/", "example_sentence": "Doctors warn that a high-fat diet can lead to serious heart disease.", "cefr_level": "B1" },
-    { "rank": 1133, "word": "consumer", "pos": "noun", "ipa_strong": "/kʌnsuːmɜr/", "example_sentence": "Today's consumer tends to research products thoroughly before making a purchase.", "cefr_level": "B1" },
-    { "rank": 1134, "word": "favor", "pos": "noun", "ipa_strong": "/feɪvɜr/", "example_sentence": "Could you please do me a favor and pick up some milk on the way home?", "cefr_level": "B1" },
-    { "rank": 1135, "word": "dry", "pos": "adjective", "ipa_strong": "/dɹaɪ/", "example_sentence": "The summer was unusually dry, which caused serious problems for local farmers.", "cefr_level": "A2" },
-    { "rank": 1136, "word": "partner", "pos": "noun", "ipa_strong": "/pɑɹtnɜr/", "example_sentence": "She joined the law firm as a senior partner after fifteen successful years.", "cefr_level": "B1" },
-    { "rank": 1137, "word": "institution", "pos": "noun", "ipa_strong": "/ɪnstɪtuːʃʌn/", "example_sentence": "The university is one of the oldest educational institutions in the entire country.", "cefr_level": "B2" },
-    { "rank": 1138, "word": "spot", "pos": "noun", "ipa_strong": "/spɑt/", "example_sentence": "We found a perfect spot for our picnic under a shady oak tree.", "cefr_level": "A2" },
-    { "rank": 1139, "word": "horse", "pos": "noun", "ipa_strong": "/hɔɹs/", "example_sentence": "The young child rode the horse slowly around the paddock with her instructor.", "cefr_level": "A1" },
-    { "rank": 1140, "word": "eventually", "pos": "adverb", "ipa_strong": "/ɪvɛntʃʌwʌliː/", "example_sentence": "She studied very hard and eventually passed the difficult entrance examination.", "cefr_level": "B1" },
-    { "rank": 1141, "word": "heat", "pos": "noun", "ipa_strong": "/hiːt/", "example_sentence": "The extreme heat of the desert made any outdoor activity very dangerous.", "cefr_level": "A2" },
-    { "rank": 1142, "word": "excite", "pos": "verb", "ipa_strong": "/ɪksaɪt/", "example_sentence": "New discoveries in science never fail to excite young curious students.", "cefr_level": "A2" },
-    { "rank": 1143, "word": "reader", "pos": "noun", "ipa_strong": "/ɹiːdɜr/", "example_sentence": "The author wrote in a simple style to appeal to every type of reader.", "cefr_level": "A2" },
-    { "rank": 1144, "word": "importance", "pos": "noun", "ipa_strong": "/ɪmpɔɹtʌns/", "example_sentence": "The teacher stressed the importance of regular reading practice at home.", "cefr_level": "B1" },
-    { "rank": 1145, "word": "distance", "pos": "noun", "ipa_strong": "/dɪstʌns/", "example_sentence": "The distance from New York to Los Angeles is nearly three thousand miles.", "cefr_level": "B1" },
-    { "rank": 1146, "word": "guide", "pos": "noun", "ipa_strong": "/ɡaɪd/", "example_sentence": "The tour guide explained the rich history of each ancient monument in detail.", "cefr_level": "A2" },
-    { "rank": 1147, "word": "grant", "pos": "noun", "ipa_strong": "/ɡɹænt/", "example_sentence": "She received a generous research grant to support her doctoral thesis project.", "cefr_level": "B2" },
-    { "rank": 1148, "word": "taxi", "pos": "noun", "ipa_strong": "/tæksiː/", "example_sentence": "They took a taxi to the airport to catch their very early flight.", "cefr_level": "A1" },
-    { "rank": 1149, "word": "feed", "pos": "verb", "ipa_strong": "/fiːd/", "example_sentence": "She likes to feed the ducks at the park every Sunday afternoon.", "cefr_level": "A1" },
-    { "rank": 1150, "word": "pain", "pos": "noun", "ipa_strong": "/peɪn/", "example_sentence": "He felt a sharp pain in his left knee during the early morning run.", "cefr_level": "A2" },
-    { "rank": 1151, "word": "sector", "pos": "noun", "ipa_strong": "/sɛktɜr/", "example_sentence": "The technology sector has experienced rapid growth over the last decade.", "cefr_level": "B2" },
-    { "rank": 1152, "word": "mistake", "pos": "noun", "ipa_strong": "/mɪsteɪk/", "example_sentence": "Everyone makes a mistake sometimes, but the key is to learn from it.", "cefr_level": "A2" },
-    { "rank": 1153, "word": "ensure", "pos": "verb", "ipa_strong": "/ɛnʃʊɹ/", "example_sentence": "We must ensure that all safety protocols are followed correctly at all times.", "cefr_level": "B1" },
-    { "rank": 1154, "word": "satisfy", "pos": "verb", "ipa_strong": "/sætʌsfaɪ/", "example_sentence": "Our aim is to satisfy every customer who visits our store.", "cefr_level": "B1" },
-    { "rank": 1155, "word": "chief", "pos": "noun", "ipa_strong": "/tʃiːf/", "example_sentence": "The police chief held a press conference to update the public on the case.", "cefr_level": "B1" },
-    { "rank": 1156, "word": "cool", "pos": "adjective", "ipa_strong": "/kuːl/", "example_sentence": "A cool breeze made the long afternoon walk extremely pleasant and refreshing.", "cefr_level": "A1" },
-    { "rank": 1157, "word": "expert", "pos": "noun", "ipa_strong": "/ɛkspɜrt/", "example_sentence": "The company hired an expert to conduct a full analysis of their strategy.", "cefr_level": "B1" },
-    { "rank": 1158, "word": "wave", "pos": "noun", "ipa_strong": "/weɪv/", "example_sentence": "A large wave suddenly knocked the inexperienced surfer right off his board.", "cefr_level": "A2" },
-    { "rank": 1159, "word": "south", "pos": "noun", "ipa_strong": "/saʊθ/", "example_sentence": "They drove south for three hours before finally reaching the beautiful coast.", "cefr_level": "A1" },
-    { "rank": 1160, "word": "labor", "pos": "noun", "ipa_strong": "/leɪbɜr/", "example_sentence": "The new employment law aims to protect the rights of all labor workers.", "cefr_level": "B1" },
-    { "rank": 1161, "word": "surface", "pos": "noun", "ipa_strong": "/sɜrfʌs/", "example_sentence": "The surface of the road was very slippery after the overnight heavy rain.", "cefr_level": "B1" },
-    { "rank": 1162, "word": "library", "pos": "noun", "ipa_strong": "/laɪbɹɛɹiː/", "example_sentence": "She spent the entire afternoon quietly studying at the university library.", "cefr_level": "A1" },
-    { "rank": 1163, "word": "excellent", "pos": "adjective", "ipa_strong": "/ɛksʌlʌnt/", "example_sentence": "The students gave an excellent presentation in front of the entire class.", "cefr_level": "A2" },
-    { "rank": 1164, "word": "edge", "pos": "noun", "ipa_strong": "/ɛdʒ/", "example_sentence": "Be very careful not to stand too close to the edge of the cliff.", "cefr_level": "B1" },
-    { "rank": 1165, "word": "camp", "pos": "noun", "ipa_strong": "/kæmp/", "example_sentence": "The children spent two exciting weeks at a summer camp in the mountains.", "cefr_level": "A2" },
-    { "rank": 1166, "word": "audience", "pos": "noun", "ipa_strong": "/ɑdiːʌns/", "example_sentence": "The large audience applauded loudly at the end of the remarkable performance.", "cefr_level": "B1" },
-    { "rank": 1167, "word": "lift", "pos": "verb", "ipa_strong": "/lɪft/", "example_sentence": "Can you help me lift this heavy box up onto the top shelf?", "cefr_level": "A2" },
-    { "rank": 1168, "word": "procedure", "pos": "noun", "ipa_strong": "/pɹʌsiːdʒɜr/", "example_sentence": "The nurse explained each step of the procedure before the operation began.", "cefr_level": "B2" },
-    { "rank": 1169, "word": "email", "pos": "noun", "ipa_strong": "/iːmeɪl/", "example_sentence": "Please send me an email with all the relevant details of the meeting.", "cefr_level": "A1" },
-    { "rank": 1170, "word": "global", "pos": "adjective", "ipa_strong": "/ɡloʊbʌl/", "example_sentence": "Climate change is one of the most serious global challenges facing humanity today.", "cefr_level": "B1" },
-    { "rank": 1171, "word": "struggle", "pos": "verb", "ipa_strong": "/stɹʌɡʌl/", "example_sentence": "Many young families struggle to make ends meet on a single income.", "cefr_level": "B1" },
-    { "rank": 1172, "word": "advertise", "pos": "verb", "ipa_strong": "/ædvɜrtaɪz/", "example_sentence": "Small businesses often advertise their products through local social media channels.", "cefr_level": "B1" },
-    { "rank": 1173, "word": "select", "pos": "verb", "ipa_strong": "/sʌlɛkt/", "example_sentence": "Please select your preferred payment method from the available drop-down menu.", "cefr_level": "B1" },
-    { "rank": 1174, "word": "surround", "pos": "verb", "ipa_strong": "/sɜraʊnd/", "example_sentence": "Tall trees surround the small cabin, providing shade throughout the entire day.", "cefr_level": "B1" },
-    { "rank": 1175, "word": "extent", "pos": "noun", "ipa_strong": "/ɪkstɛnt/", "example_sentence": "The full extent of the damage caused by the storm was truly enormous.", "cefr_level": "B2" },
-    { "rank": 1176, "word": "river", "pos": "noun", "ipa_strong": "/ɹɪvɜr/", "example_sentence": "They spent the afternoon kayaking along the wide river through the forest.", "cefr_level": "A1" },
-    { "rank": 1177, "word": "annual", "pos": "adjective", "ipa_strong": "/ænjuːʌl/", "example_sentence": "The company holds its annual conference every spring in the city of Chicago.", "cefr_level": "B1" },
-    { "rank": 1178, "word": "fully", "pos": "adverb", "ipa_strong": "/fʊliː/", "example_sentence": "The battery must be fully charged before you use the new device.", "cefr_level": "B1" },
-    { "rank": 1179, "word": "contrast", "pos": "noun", "ipa_strong": "/kɑntɹæst/", "example_sentence": "The stark contrast between the two neighborhoods was immediately obvious to visitors.", "cefr_level": "B2" },
-    { "rank": 1180, "word": "roll", "pos": "verb", "ipa_strong": "/ɹoʊl/", "example_sentence": "Watch the ball roll down the steep hill and into the stream.", "cefr_level": "A2" },
-    { "rank": 1181, "word": "reality", "pos": "noun", "ipa_strong": "/ɹiːælʌtiː/", "example_sentence": "The reality of the difficult situation was far more serious than anyone expected.", "cefr_level": "B1" },
-    { "rank": 1182, "word": "photograph", "pos": "noun", "ipa_strong": "/foʊtʌɡɹæf/", "example_sentence": "She framed an old photograph of her grandparents and hung it on the wall.", "cefr_level": "A2" },
-    { "rank": 1183, "word": "artist", "pos": "noun", "ipa_strong": "/ɑɹtʌst/", "example_sentence": "The artist spent three full months creating a large mural for the downtown square.", "cefr_level": "A2" },
-    { "rank": 1184, "word": "conflict", "pos": "noun", "ipa_strong": "/kɑnflɪkt/", "example_sentence": "The ongoing conflict between the two departments disrupted the entire project timeline.", "cefr_level": "B2" },
-    { "rank": 1185, "word": "entire", "pos": "adjective", "ipa_strong": "/ɪntaɪɜr/", "example_sentence": "She managed to read the entire book in just one long afternoon.", "cefr_level": "B1" },
-    { "rank": 1186, "word": "presence", "pos": "noun", "ipa_strong": "/pɹɛzʌns/", "example_sentence": "The unexpected presence of the director completely changed the tone of the meeting.", "cefr_level": "B2" },
-    { "rank": 1187, "word": "crowd", "pos": "noun", "ipa_strong": "/kɹaʊd/", "example_sentence": "A large crowd gathered in the main square to watch the fireworks display.", "cefr_level": "A2" },
-    { "rank": 1188, "word": "corner", "pos": "noun", "ipa_strong": "/kɔɹnɜr/", "example_sentence": "Turn left at the corner and the school building will be on your right.", "cefr_level": "A1" },
-    { "rank": 1189, "word": "gas", "pos": "noun", "ipa_strong": "/ɡæs/", "example_sentence": "He pulled into the gas station to fill up before the long road trip.", "cefr_level": "A2" },
-    { "rank": 1190, "word": "shift", "pos": "noun", "ipa_strong": "/ʃɪft/", "example_sentence": "She works the night shift at the local hospital every weekend.", "cefr_level": "B1" },
-    { "rank": 1191, "word": "net", "pos": "noun", "ipa_strong": "/nɛt/", "example_sentence": "The fisherman cast his net into the calm and still sea at dawn.", "cefr_level": "B1" },
-    { "rank": 1192, "word": "category", "pos": "noun", "ipa_strong": "/kætʌɡɔɹiː/", "example_sentence": "Please choose the most appropriate category when submitting your formal complaint.", "cefr_level": "B1" },
-    { "rank": 1193, "word": "secretary", "pos": "noun", "ipa_strong": "/sɛkɹʌtɛɹiː/", "example_sentence": "The secretary arranged all important meetings for the busy executive team.", "cefr_level": "B1" },
-    { "rank": 1194, "word": "defense", "pos": "noun", "ipa_strong": "/dɪfɛns/", "example_sentence": "The country significantly increased investment in its national defense capabilities.", "cefr_level": "B2" },
-    { "rank": 1195, "word": "quick", "pos": "adjective", "ipa_strong": "/kwɪk/", "example_sentence": "She gave a quick and confident answer before moving on to the next question.", "cefr_level": "A1" },
-    { "rank": 1196, "word": "cook", "pos": "verb", "ipa_strong": "/kʊk/", "example_sentence": "He learned to cook traditional dishes by watching his grandmother in the kitchen.", "cefr_level": "A1" },
-    { "rank": 1197, "word": "spread", "pos": "verb", "ipa_strong": "/spɹɛd/", "example_sentence": "News of the remarkable discovery spread quickly across social media platforms worldwide.", "cefr_level": "B1" },
-    { "rank": 1198, "word": "nuclear", "pos": "adjective", "ipa_strong": "/nuːkliːɜr/", "example_sentence": "The ongoing debate over nuclear energy continues to divide politicians in many countries.", "cefr_level": "B2" },
-    { "rank": 1199, "word": "scale", "pos": "noun", "ipa_strong": "/skeɪl/", "example_sentence": "The scale of the natural disaster surprised even the most experienced relief workers.", "cefr_level": "B2" },
-    { "rank": 1200, "word": "driver", "pos": "noun", "ipa_strong": "/dɹaɪvɜr/", "example_sentence": "The friendly bus driver greeted every single passenger with a warm smile.", "cefr_level": "A1" }
+    {
+      "rank": 1101,
+      "word": "progress",
+      "pos": "noun",
+      "ipa_strong": "/ˈpɹɑˌɡɹɛs/",
+      "example_sentence": "The student has made significant progress in her reading and writing skills.",
+      "cefr_level": "B1",
+      "sentence_ipa": "/ðə ˈstuːdənt ˈhæz ˈmeɪd səˈɡnɪfɪkənt ˈpɹɑˌɡɹɛs ɪn ˈhɜr ˈɹiːdɪŋ ənd ˈɹaɪtɪŋ ˈskɪlz/"
+    },
+    {
+      "rank": 1102,
+      "word": "truth",
+      "pos": "noun",
+      "ipa_strong": "/ˈtɹuːθ/",
+      "example_sentence": "It is always important to tell the truth even when it is difficult.",
+      "cefr_level": "A2",
+      "sentence_ipa": "/ˈɪt ˈɪz ˈɔˌlweɪz ˌɪˈmpɔɹtənt ˈtuː ˈtɛl ðə ˈtɹuːθ ˈiːvɪn ˈwɛn ˈɪt ˈɪz ˈdɪfəkəlt/"
+    },
+    {
+      "rank": 1103,
+      "word": "nobody",
+      "pos": "pronoun",
+      "ipa_strong": "/ˈnoʊˌbɑˌdiː/",
+      "example_sentence": "Nobody in the entire office knew about the upcoming surprise inspection.",
+      "cefr_level": "A2",
+      "sentence_ipa": "/ˈnoʊˌbɑˌdiː ɪn ðə ɪˈntaɪɜr ˈɔfɪs ˈnuː əˈbaʊt ðə ˈʌˌpkʌmɪŋ sɜrˈpɹaɪz ˌɪˈnspɛkʃən/"
+    },
+    {
+      "rank": 1104,
+      "word": "examine",
+      "pos": "verb",
+      "ipa_strong": "/ɪˈɡzæmɪn/",
+      "example_sentence": "Doctors need to examine the patient carefully before making any diagnosis.",
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈdɑktɜrz ˈniːd ˈtuː ɪˈɡzæmɪn ðə ˈpeɪʃənt ˈkɛɹfəliː bɪˈfɔɹ ˈmeɪkɪŋ ˈɛniː ˌdaɪəˈɡnoʊsəs/"
+    },
+    {
+      "rank": 1105,
+      "word": "lay",
+      "pos": "verb",
+      "ipa_strong": "/ˈleɪ/",
+      "example_sentence": "Please lay the papers flat on the desk before you leave the office.",
+      "cefr_level": "A2",
+      "sentence_ipa": "/ˈpliːz ˈleɪ ðə ˈpeɪpɜrz ˈflæt ˈɑn ðə ˈdɛsk bɪˈfɔɹ ˈjuː ˈliːv ðə ˈɔfɪs/"
+    },
+    {
+      "rank": 1106,
+      "word": "speed",
+      "pos": "noun",
+      "ipa_strong": "/ˈspiːd/",
+      "example_sentence": "The vehicle was traveling at a very dangerous speed on the highway.",
+      "cefr_level": "A2",
+      "sentence_ipa": "/ðə ˈviːhɪkəl ˈwɑz ˈtɹævəlɪŋ ˈæt ə ˈvɛɹiː ˈdeɪndʒɜrəs ˈspiːd ˈɑn ðə ˈhaɪˌweɪ/"
+    },
+    {
+      "rank": 1107,
+      "word": "politics",
+      "pos": "noun",
+      "ipa_strong": "/ˈpɑləˌtɪks/",
+      "example_sentence": "She has been deeply interested in politics since she was a teenager.",
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈʃiː ˈhæz ˈbɪn ˈdiːpliː ˈɪntɹəstɪd ɪn ˈpɑləˌtɪks ˈsɪns ˈʃiː ˈwɑz ə ˈtiːˌneɪdʒɜr/"
+    },
+    {
+      "rank": 1108,
+      "word": "reply",
+      "pos": "verb",
+      "ipa_strong": "/ɹɪˈplaɪ/",
+      "example_sentence": "He failed to reply to my urgent email for more than a week.",
+      "cefr_level": "A2",
+      "sentence_ipa": "/ˈhiː ˈfeɪld ˈtuː ɹɪˈplaɪ ˈtuː ˈmaɪ ˈɜrdʒənt iːˈmeɪl ˈfɔɹ ˈmɔɹ ˈðæn ə ˈwiːk/"
+    },
+    {
+      "rank": 1109,
+      "word": "display",
+      "pos": "verb",
+      "ipa_strong": "/dɪˈspleɪ/",
+      "example_sentence": "The gallery will display artwork from over fifty different countries.",
+      "cefr_level": "B1",
+      "sentence_ipa": "/ðə ˈɡælɜriː ˈwɪl dɪˈspleɪ ˈɑˌɹtwɜrk ˈfɹʌm ˈoʊvɜr ˈfɪftiː ˈdɪfɜrənt ˈkʌntɹiːz/"
+    },
+    {
+      "rank": 1110,
+      "word": "transfer",
+      "pos": "verb",
+      "ipa_strong": "/tɹæˈnsfɜr/",
+      "example_sentence": "Please transfer all important files to the new computer before Friday.",
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈpliːz tɹæˈnsfɜr ˈɔl ˌɪˈmpɔɹtənt ˈfaɪlz ˈtuː ðə ˈnuː kəˈmpjuːtɜr bɪˈfɔɹ ˈfɹaɪdiː/"
+    },
+    {
+      "rank": 1111,
+      "word": "perfect",
+      "pos": "adjective",
+      "ipa_strong": "/pɜrˈfɛkt/",
+      "example_sentence": "The weather was absolutely perfect for a relaxing day at the beach.",
+      "cefr_level": "A2",
+      "sentence_ipa": "/ðə ˈwɛðɜr ˈwɑz ˌæbsəˈluːtliː pɜrˈfɛkt ˈfɔɹ ə ɹɪˈlæksɪŋ ˈdeɪ ˈæt ðə ˈbiːtʃ/"
+    },
+    {
+      "rank": 1112,
+      "word": "slightly",
+      "pos": "adverb",
+      "ipa_strong": "/ˈslaɪtliː/",
+      "example_sentence": "Today's temperature is slightly higher than it was yesterday afternoon.",
+      "cefr_level": "B1",
+      "sentence_ipa": "/təˈdeɪz ˈtɛmpɹətʃɜr ˈɪz ˈslaɪtliː ˈhaɪɜr ˈðæn ˈɪt ˈwɑz ˈjɛstɜrˌdeɪ ˌæftɜrˈnuːn/"
+    },
+    {
+      "rank": 1113,
+      "word": "overall",
+      "pos": "adverb",
+      "ipa_strong": "/ˈoʊvɜrˌɔl/",
+      "example_sentence": "Overall, the new project was considered a great success by everyone.",
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈoʊvɜrˌɔl ðə ˈnuː ˈpɹɑdʒɛkt ˈwɑz kəˈnsɪdɜrd ə ˈɡɹeɪt səˈksɛs ˈbaɪ ˈɛvɹiːˌwʌn/"
+    },
+    {
+      "rank": 1114,
+      "word": "intend",
+      "pos": "verb",
+      "ipa_strong": "/ˌɪˈntɛnd/",
+      "example_sentence": "I intend to finish the full report well before the end of today.",
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈaɪ ˌɪˈntɛnd ˈtuː ˈfɪnɪʃ ðə ˈfʊl ɹiːˈpɔɹt ˈwɛl bɪˈfɔɹ ðə ˈɛnd ˈʌv təˈdeɪ/"
+    },
+    {
+      "rank": 1115,
+      "word": "user",
+      "pos": "noun",
+      "ipa_strong": "/ˈjuːzɜr/",
+      "example_sentence": "Each user must create a unique strong password to protect their account.",
+      "cefr_level": "A2",
+      "sentence_ipa": "/ˈiːtʃ ˈjuːzɜr ˈmʌst kɹiːˈeɪt ə juːˈniːk ˈstɹɔŋ ˈpæˌswɜrd ˈtuː pɹəˈtɛkt ˈðɛɹ əˈkaʊnt/"
+    },
+    {
+      "rank": 1116,
+      "word": "respond",
+      "pos": "verb",
+      "ipa_strong": "/ɹɪˈspɑnd/",
+      "example_sentence": "The emergency team must respond quickly to every call they receive.",
+      "cefr_level": "B1",
+      "sentence_ipa": "/ðə ɪˈmɜrdʒənsiː ˈtiːm ˈmʌst ɹɪˈspɑnd ˈkwɪkliː ˈtuː ˈɛvɜriː ˈkɔl ˈðeɪ ɹəˈsiːv/"
+    },
+    {
+      "rank": 1117,
+      "word": "dinner",
+      "pos": "noun",
+      "ipa_strong": "/ˈdɪnɜr/",
+      "example_sentence": "The whole family gathered around the table for a warm dinner together.",
+      "cefr_level": "A1",
+      "sentence_ipa": "/ðə ˈhoʊl ˈfæməliː ˈɡæðɜrd ɜrˈaʊnd ðə ˈteɪbəl ˈfɔɹ ə ˈwɔɹm ˈdɪnɜr təˈɡɛðɜr/"
+    },
+    {
+      "rank": 1118,
+      "word": "slow",
+      "pos": "adjective",
+      "ipa_strong": "/ˈsloʊ/",
+      "example_sentence": "The slow internet connection made it very hard to upload the large files.",
+      "cefr_level": "A1",
+      "sentence_ipa": "/ðə ˈsloʊ ˈɪntɜrˌnɛt kəˈnɛkʃən ˈmeɪd ˈɪt ˈvɛɹiː ˈhɑɹd ˈtuː ˈʌˌploʊd ðə ˈlɑɹdʒ ˈfaɪlz/"
+    },
+    {
+      "rank": 1119,
+      "word": "regular",
+      "pos": "adjective",
+      "ipa_strong": "/ˈɹɛɡjəlɜr/",
+      "example_sentence": "Regular exercise is absolutely essential for maintaining good physical health.",
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈɹɛɡjəlɜr ˈɛksɜrˌsaɪz ˈɪz ˌæbsəˈluːtliː ɛˈsɛnʃəl ˈfɔɹ meɪˈnteɪnɪŋ ˈɡʊd ˈfɪzɪkəl ˈhɛlθ/"
+    },
+    {
+      "rank": 1120,
+      "word": "physical",
+      "pos": "adjective",
+      "ipa_strong": "/ˈfɪzɪkəl/",
+      "example_sentence": "The job requires candidates to maintain a high level of physical fitness.",
+      "cefr_level": "B1",
+      "sentence_ipa": "/ðə ˈdʒɑb ɹiːˈkwaɪɜrz ˈkændədeɪts ˈtuː meɪˈnteɪn ə ˈhaɪ ˈlɛvəl ˈʌv ˈfɪzɪkəl ˈfɪtnəs/"
+    },
+    {
+      "rank": 1121,
+      "word": "apart",
+      "pos": "adverb",
+      "ipa_strong": "/əˈpɑɹt/",
+      "example_sentence": "The two main cities in that region are located two hundred miles apart.",
+      "cefr_level": "B1",
+      "sentence_ipa": "/ðə ˈtuː ˈmeɪn ˈsɪtiːz ɪn ˈðæt ˈɹiːdʒən ˈɑɹ ˈloʊˌkeɪtəd ˈtuː ˈhʌndɹəd ˈmaɪlz əˈpɑɹt/"
+    },
+    {
+      "rank": 1122,
+      "word": "suit",
+      "pos": "verb",
+      "ipa_strong": "/ˈsuːt/",
+      "example_sentence": "Choose a daily working schedule that will suit your personal lifestyle.",
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈtʃuːz ə ˈdeɪliː ˈwɜrkɪŋ ˈskɛdʒʊl ˈðæt ˈwɪl ˈsuːt ˈjɔɹ ˈpɜrsɪnəl ˈlaɪˌfstaɪl/"
+    },
+    {
+      "rank": 1123,
+      "word": "federal",
+      "pos": "adjective",
+      "ipa_strong": "/ˈfɛdɜrəl/",
+      "example_sentence": "The federal government announced new and stricter environmental protection regulations.",
+      "cefr_level": "B2",
+      "sentence_ipa": "/ðə ˈfɛdɜrəl ˈɡʌvɜrmənt əˈnaʊnst ˈnuː ənd ˈstɹɪktɜr ɪˌnvaɪɹəˈnmɛntəl pɹəˈtɛkʃən ˌɹɛɡjəˈleɪʃənz/"
+    },
+    {
+      "rank": 1124,
+      "word": "reveal",
+      "pos": "verb",
+      "ipa_strong": "/ɹɪˈviːl/",
+      "example_sentence": "The investigation is expected to reveal the true cause of the accident.",
+      "cefr_level": "B1",
+      "sentence_ipa": "/ðə ˌɪˌnvɛstəˈɡeɪʃən ˈɪz ɪˈkspɛktəd ˈtuː ɹɪˈviːl ðə ˈtɹuː ˈkɑz ˈʌv ðə ˈæksədənt/"
+    },
+    {
+      "rank": 1125,
+      "word": "percentage",
+      "pos": "noun",
+      "ipa_strong": "/pɜrˈsɛntədʒ/",
+      "example_sentence": "A large percentage of the population now uses social media on a daily basis.",
+      "cefr_level": "B1",
+      "sentence_ipa": "/ə ˈlɑɹdʒ pɜrˈsɛntədʒ ˈʌv ðə ˌpɑpjəˈleɪʃən ˈnaʊ ˈjuːsəz ˈsoʊʃəl ˈmiːdiːə ˈɑn ə ˈdeɪliː ˈbeɪsəs/"
+    },
+    {
+      "rank": 1126,
+      "word": "peace",
+      "pos": "noun",
+      "ipa_strong": "/ˈpiːs/",
+      "example_sentence": "After years of conflict, the two neighboring nations finally agreed on peace.",
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈæftɜr ˈjɪɹz ˈʌv ˈkɑnflɪkt ðə ˈtuː ˈneɪbɜrɪŋ ˈneɪʃənz ˈfaɪnəliː əˈɡɹiːd ˈɑn ˈpiːs/"
+    },
+    {
+      "rank": 1127,
+      "word": "status",
+      "pos": "noun",
+      "ipa_strong": "/ˈstætəs/",
+      "example_sentence": "Please keep us updated on the current status of the ongoing project.",
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈpliːz ˈkiːp ˈʌs əˈpdeɪtɪd ˈɑn ðə ˈkɜrənt ˈstætəs ˈʌv ðə ˈɑˌnɡoʊɪŋ ˈpɹɑdʒɛkt/"
+    },
+    {
+      "rank": 1128,
+      "word": "crime",
+      "pos": "noun",
+      "ipa_strong": "/ˈkɹaɪm/",
+      "example_sentence": "The local police are working very hard to reduce crime in the city.",
+      "cefr_level": "B1",
+      "sentence_ipa": "/ðə ˈloʊkəl pəˈliːs ˈɑɹ ˈwɜrkɪŋ ˈvɛɹiː ˈhɑɹd ˈtuː ɹəˈduːs ˈkɹaɪm ɪn ðə ˈsɪtiː/"
+    },
+    {
+      "rank": 1129,
+      "word": "decline",
+      "pos": "verb",
+      "ipa_strong": "/dɪˈklaɪn/",
+      "example_sentence": "Sales figures seem to decline sharply each time the economy slows down.",
+      "cefr_level": "B2",
+      "sentence_ipa": "/ˈseɪlz ˈfɪɡjɜrz ˈsiːm ˈtuː dɪˈklaɪn ˈʃɑɹpliː ˈiːtʃ ˈtaɪm ðə ɪˈkɑnəmiː ˈsloʊz ˈdaʊn/"
+    },
+    {
+      "rank": 1130,
+      "word": "decade",
+      "pos": "noun",
+      "ipa_strong": "/dɛˈkeɪd/",
+      "example_sentence": "Technology has changed dramatically over the course of the past decade.",
+      "cefr_level": "B1",
+      "sentence_ipa": "/tɛˈknɑlədʒiː ˈhæz ˈtʃeɪndʒd dɹəˈmætɪkliː ˈoʊvɜr ðə ˈkɔɹs ˈʌv ðə ˈpæst dɛˈkeɪd/"
+    },
+    {
+      "rank": 1131,
+      "word": "launch",
+      "pos": "verb",
+      "ipa_strong": "/ˈlɔntʃ/",
+      "example_sentence": "The company plans to launch its new product line next spring.",
+      "cefr_level": "B1",
+      "sentence_ipa": "/ðə ˈkʌmpəˌniː ˈplænz ˈtuː ˈlɔntʃ ˈɪts ˈnuː ˈpɹɑdəkt ˈlaɪn ˈnɛkst ˈspɹɪŋ/"
+    },
+    {
+      "rank": 1132,
+      "word": "warn",
+      "pos": "verb",
+      "ipa_strong": "/ˈwɔɹn/",
+      "example_sentence": "Doctors warn that a high-fat diet can lead to serious heart disease.",
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈdɑktɜrz ˈwɔɹn ˈðæt ə ˈhaɪ ˈfæt ˈdaɪət ˈkæn ˈlɛd ˈtuː ˈsɪɹiːəs ˈhɑɹt dɪˈziːz/"
+    },
+    {
+      "rank": 1133,
+      "word": "consumer",
+      "pos": "noun",
+      "ipa_strong": "/kəˈnsuːmɜr/",
+      "example_sentence": "Today's consumer tends to research products thoroughly before making a purchase.",
+      "cefr_level": "B1",
+      "sentence_ipa": "/təˈdeɪz kəˈnsuːmɜr ˈtɛndz ˈtuː ɹiːˈsɜrtʃ ˈpɹɑdəkts ˈθɜroʊliː bɪˈfɔɹ ˈmeɪkɪŋ ə ˈpɜrtʃəs/"
+    },
+    {
+      "rank": 1134,
+      "word": "favor",
+      "pos": "noun",
+      "ipa_strong": "/ˈfeɪvɜr/",
+      "example_sentence": "Could you please do me a favor and pick up some milk on the way home?",
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈkʊd ˈjuː ˈpliːz ˈduː ˈmiː ə ˈfeɪvɜr ənd ˈpɪk ˈʌp ˈsʌm ˈmɪlk ˈɑn ðə ˈweɪ ˈhoʊm/"
+    },
+    {
+      "rank": 1135,
+      "word": "dry",
+      "pos": "adjective",
+      "ipa_strong": "/ˈdɹaɪ/",
+      "example_sentence": "The summer was unusually dry, which caused serious problems for local farmers.",
+      "cefr_level": "A2",
+      "sentence_ipa": "/ðə ˈsʌmɜr ˈwɑz əˈnjuːˌʒuːəliː ˈdɹaɪ ˈwɪtʃ ˈkɑzd ˈsɪɹiːəs ˈpɹɑbləmz ˈfɔɹ ˈloʊkəl ˈfɑɹmɜrz/"
+    },
+    {
+      "rank": 1136,
+      "word": "partner",
+      "pos": "noun",
+      "ipa_strong": "/ˈpɑɹtnɜr/",
+      "example_sentence": "She joined the law firm as a senior partner after fifteen successful years.",
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈʃiː ˈdʒɔɪnd ðə ˈlɔ ˈfɜrm ˈæz ə ˈsiːnjɜr ˈpɑɹtnɜr ˈæftɜr fɪˈftiːn səˈksɛsfəl ˈjɪɹz/"
+    },
+    {
+      "rank": 1137,
+      "word": "institution",
+      "pos": "noun",
+      "ipa_strong": "/ˌɪnstɪˈtuːʃən/",
+      "example_sentence": "The university is one of the oldest educational institutions in the entire country.",
+      "cefr_level": "B2",
+      "sentence_ipa": "/ðə ˌjuːnəˈvɜrsətiː ˈɪz ˈwʌn ˈʌv ðə ˈoʊldəst ˌɛdʒəˈkeɪʃənəl ˌɪnstɪˈtuːʃənz ɪn ðə ɪˈntaɪɜr ˈkʌntɹiː/"
+    },
+    {
+      "rank": 1138,
+      "word": "spot",
+      "pos": "noun",
+      "ipa_strong": "/ˈspɑt/",
+      "example_sentence": "We found a perfect spot for our picnic under a shady oak tree.",
+      "cefr_level": "A2",
+      "sentence_ipa": "/ˈwiː ˈfaʊnd ə pɜrˈfɛkt ˈspɑt ˈfɔɹ ˈaʊɜr ˈpɪˌknɪk ˈʌndɜr ə ˈʃeɪdiː ˈoʊk ˈtɹiː/"
+    },
+    {
+      "rank": 1139,
+      "word": "horse",
+      "pos": "noun",
+      "ipa_strong": "/ˈhɔɹs/",
+      "example_sentence": "The young child rode the horse slowly around the paddock with her instructor.",
+      "cefr_level": "A1",
+      "sentence_ipa": "/ðə ˈjʌŋ ˈtʃaɪld ˈɹoʊd ðə ˈhɔɹs ˈsloʊliː ɜrˈaʊnd ðə ˈpædək ˈwɪð ˈhɜr ˌɪˈnstɹʌktɜr/"
+    },
+    {
+      "rank": 1140,
+      "word": "eventually",
+      "pos": "adverb",
+      "ipa_strong": "/ɪˈvɛntʃəwəliː/",
+      "example_sentence": "She studied very hard and eventually passed the difficult entrance examination.",
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈʃiː ˈstʌdiːd ˈvɛɹiː ˈhɑɹd ənd ɪˈvɛntʃəwəliː ˈpæst ðə ˈdɪfəkəlt ˈɛntɹəns ɪˌɡzæməˈneɪʃən/"
+    },
+    {
+      "rank": 1141,
+      "word": "heat",
+      "pos": "noun",
+      "ipa_strong": "/ˈhiːt/",
+      "example_sentence": "The extreme heat of the desert made any outdoor activity very dangerous.",
+      "cefr_level": "A2",
+      "sentence_ipa": "/ðə ɛˈkstɹiːm ˈhiːt ˈʌv ðə ˈdɛzɜrt ˈmeɪd ˈɛniː ˈaʊˌtdɔɹ æˈktɪvətiː ˈvɛɹiː ˈdeɪndʒɜrəs/"
+    },
+    {
+      "rank": 1142,
+      "word": "excite",
+      "pos": "verb",
+      "ipa_strong": "/ɪˈksaɪt/",
+      "example_sentence": "New discoveries in science never fail to excite young curious students.",
+      "cefr_level": "A2",
+      "sentence_ipa": "/ˈnuː dɪˈskʌvɜriːz ɪn ˈsaɪəns ˈnɛvɜr ˈfeɪl ˈtuː ɪˈksaɪt ˈjʌŋ ˈkjʊɹiːəs ˈstuːdənts/"
+    },
+    {
+      "rank": 1143,
+      "word": "reader",
+      "pos": "noun",
+      "ipa_strong": "/ˈɹiːdɜr/",
+      "example_sentence": "The author wrote in a simple style to appeal to every type of reader.",
+      "cefr_level": "A2",
+      "sentence_ipa": "/ðə ˈɔθɜr ˈɹoʊt ɪn ə ˈsɪmpəl ˈstaɪl ˈtuː əˈpiːl ˈtuː ˈɛvɜriː ˈtaɪp ˈʌv ˈɹiːdɜr/"
+    },
+    {
+      "rank": 1144,
+      "word": "importance",
+      "pos": "noun",
+      "ipa_strong": "/ˌɪˈmpɔɹtəns/",
+      "example_sentence": "The teacher stressed the importance of regular reading practice at home.",
+      "cefr_level": "B1",
+      "sentence_ipa": "/ðə ˈtiːtʃɜr ˈstɹɛst ðə ˌɪˈmpɔɹtəns ˈʌv ˈɹɛɡjəlɜr ˈɹiːdɪŋ ˈpɹæktəs ˈæt ˈhoʊm/"
+    },
+    {
+      "rank": 1145,
+      "word": "distance",
+      "pos": "noun",
+      "ipa_strong": "/ˈdɪstəns/",
+      "example_sentence": "The distance from New York to Los Angeles is nearly three thousand miles.",
+      "cefr_level": "B1",
+      "sentence_ipa": "/ðə ˈdɪstəns ˈfɹʌm ˈnuː ˈjɔɹk ˈtuː ˈloʊs ˈændʒəlɪs ˈɪz ˈnɪɹliː ˈθɹiː ˈθaʊzənd ˈmaɪlz/"
+    },
+    {
+      "rank": 1146,
+      "word": "guide",
+      "pos": "noun",
+      "ipa_strong": "/ˈɡaɪd/",
+      "example_sentence": "The tour guide explained the rich history of each ancient monument in detail.",
+      "cefr_level": "A2",
+      "sentence_ipa": "/ðə ˈtʊɹ ˈɡaɪd ɪˈkspleɪnd ðə ˈɹɪtʃ ˈhɪstɜriː ˈʌv ˈiːtʃ ˈeɪntʃənt ˈmɑnjuːmənt ɪn dɪˈteɪl/"
+    },
+    {
+      "rank": 1147,
+      "word": "grant",
+      "pos": "noun",
+      "ipa_strong": "/ˈɡɹænt/",
+      "example_sentence": "She received a generous research grant to support her doctoral thesis project.",
+      "cefr_level": "B2",
+      "sentence_ipa": "/ˈʃiː ɹəˈsiːvd ə ˈdʒɛnɜrəs ɹiːˈsɜrtʃ ˈɡɹænt ˈtuː səˈpɔɹt ˈhɜr ˈdɑktɜrəl ˈθiːsəs ˈpɹɑdʒɛkt/"
+    },
+    {
+      "rank": 1148,
+      "word": "taxi",
+      "pos": "noun",
+      "ipa_strong": "/ˈtæksiː/",
+      "example_sentence": "They took a taxi to the airport to catch their very early flight.",
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈðeɪ ˈtʊk ə ˈtæksiː ˈtuː ðə ˈɛˌɹpɔɹt ˈtuː ˈkætʃ ˈðɛɹ ˈvɛɹiː ˈɜrliː ˈflaɪt/"
+    },
+    {
+      "rank": 1149,
+      "word": "feed",
+      "pos": "verb",
+      "ipa_strong": "/ˈfiːd/",
+      "example_sentence": "She likes to feed the ducks at the park every Sunday afternoon.",
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈʃiː ˈlaɪks ˈtuː ˈfiːd ðə ˈdʌks ˈæt ðə ˈpɑɹk ˈɛvɜriː ˈsʌˌndeɪ ˌæftɜrˈnuːn/"
+    },
+    {
+      "rank": 1150,
+      "word": "pain",
+      "pos": "noun",
+      "ipa_strong": "/ˈpeɪn/",
+      "example_sentence": "He felt a sharp pain in his left knee during the early morning run.",
+      "cefr_level": "A2",
+      "sentence_ipa": "/ˈhiː ˈfɛlt ə ˈʃɑɹp ˈpeɪn ɪn ˈhɪz ˈlɛft ˈniː ˈdʊɹɪŋ ðə ˈɜrliː ˈmɔɹnɪŋ ˈɹʌn/"
+    },
+    {
+      "rank": 1151,
+      "word": "sector",
+      "pos": "noun",
+      "ipa_strong": "/ˈsɛktɜr/",
+      "example_sentence": "The technology sector has experienced rapid growth over the last decade.",
+      "cefr_level": "B2",
+      "sentence_ipa": "/ðə tɛˈknɑlədʒiː ˈsɛktɜr ˈhæz ɪˈkspɪɹiːənst ˈɹæpəd ˈɡɹoʊθ ˈoʊvɜr ðə ˈlæst dɛˈkeɪd/"
+    },
+    {
+      "rank": 1152,
+      "word": "mistake",
+      "pos": "noun",
+      "ipa_strong": "/mɪˈsteɪk/",
+      "example_sentence": "Everyone makes a mistake sometimes, but the key is to learn from it.",
+      "cefr_level": "A2",
+      "sentence_ipa": "/ˈɛvɹiːˌwʌn ˈmeɪks ə mɪˈsteɪk səˈmtaɪmz ˈbʌt ðə ˈkiː ˈɪz ˈtuː ˈlɜrn ˈfɹʌm ˈɪt/"
+    },
+    {
+      "rank": 1153,
+      "word": "ensure",
+      "pos": "verb",
+      "ipa_strong": "/ɛˈnʃʊɹ/",
+      "example_sentence": "We must ensure that all safety protocols are followed correctly at all times.",
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈwiː ˈmʌst ɛˈnʃʊɹ ˈðæt ˈɔl ˈseɪftiː ˈpɹoʊtəˌkɔlz ˈɑɹ ˈfɑloʊd kɜrˈɛktliː ˈæt ˈɔl ˈtaɪmz/"
+    },
+    {
+      "rank": 1154,
+      "word": "satisfy",
+      "pos": "verb",
+      "ipa_strong": "/ˈsætəˌsfaɪ/",
+      "example_sentence": "Our aim is to satisfy every customer who visits our store.",
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈaʊɜr ˈeɪm ˈɪz ˈtuː ˈsætəˌsfaɪ ˈɛvɜriː ˈkʌstəmɜr ˈhuː ˈvɪzɪts ˈaʊɜr ˈstɔɹ/"
+    },
+    {
+      "rank": 1155,
+      "word": "chief",
+      "pos": "noun",
+      "ipa_strong": "/ˈtʃiːf/",
+      "example_sentence": "The police chief held a press conference to update the public on the case.",
+      "cefr_level": "B1",
+      "sentence_ipa": "/ðə pəˈliːs ˈtʃiːf ˈhɛld ə ˈpɹɛs ˈkɑnfɜrəns ˈtuː əˈpdeɪt ðə ˈpʌblɪk ˈɑn ðə ˈkeɪs/"
+    },
+    {
+      "rank": 1156,
+      "word": "cool",
+      "pos": "adjective",
+      "ipa_strong": "/ˈkuːl/",
+      "example_sentence": "A cool breeze made the long afternoon walk extremely pleasant and refreshing.",
+      "cefr_level": "A1",
+      "sentence_ipa": "/ə ˈkuːl ˈbɹiːz ˈmeɪd ðə ˈlɔŋ ˌæftɜrˈnuːn ˈwɔk ɛˈkstɹiːmliː ˈplɛzənt ənd ɹɪˈfɹɛʃɪŋ/"
+    },
+    {
+      "rank": 1157,
+      "word": "expert",
+      "pos": "noun",
+      "ipa_strong": "/ˈɛkspɜrt/",
+      "example_sentence": "The company hired an expert to conduct a full analysis of their strategy.",
+      "cefr_level": "B1",
+      "sentence_ipa": "/ðə ˈkʌmpəˌniː ˈhaɪɜrd ˈæn ˈɛkspɜrt ˈtuː ˈkɑndəkt ə ˈfʊl əˈnæləsəs ˈʌv ˈðɛɹ ˈstɹætədʒiː/"
+    },
+    {
+      "rank": 1158,
+      "word": "wave",
+      "pos": "noun",
+      "ipa_strong": "/ˈweɪv/",
+      "example_sentence": "A large wave suddenly knocked the inexperienced surfer right off his board.",
+      "cefr_level": "A2",
+      "sentence_ipa": "/ə ˈlɑɹdʒ ˈweɪv ˈsʌdənliː ˈnɑkt ðə ɪnɪˈkspɪɹiːənst ˈsɜrfɜr ˈɹaɪt ˈɔf ˈhɪz ˈbɔɹd/"
+    },
+    {
+      "rank": 1159,
+      "word": "south",
+      "pos": "noun",
+      "ipa_strong": "/ˈsaʊθ/",
+      "example_sentence": "They drove south for three hours before finally reaching the beautiful coast.",
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈðeɪ ˈdɹoʊv ˈsaʊθ ˈfɔɹ ˈθɹiː ˈaʊɜrz bɪˈfɔɹ ˈfaɪnəliː ˈɹiːtʃɪŋ ðə ˈbjuːtəfəl ˈkoʊst/"
+    },
+    {
+      "rank": 1160,
+      "word": "labor",
+      "pos": "noun",
+      "ipa_strong": "/ˈleɪbɜr/",
+      "example_sentence": "The new employment law aims to protect the rights of all labor workers.",
+      "cefr_level": "B1",
+      "sentence_ipa": "/ðə ˈnuː ɛˈmplɔɪmənt ˈlɔ ˈeɪmz ˈtuː pɹəˈtɛkt ðə ˈɹaɪts ˈʌv ˈɔl ˈleɪbɜr ˈwɜrkɜrz/"
+    },
+    {
+      "rank": 1161,
+      "word": "surface",
+      "pos": "noun",
+      "ipa_strong": "/ˈsɜrfəs/",
+      "example_sentence": "The surface of the road was very slippery after the overnight heavy rain.",
+      "cefr_level": "B1",
+      "sentence_ipa": "/ðə ˈsɜrfəs ˈʌv ðə ˈɹoʊd ˈwɑz ˈvɛɹiː ˈslɪpɜriː ˈæftɜr ðə ˈoʊvɜrˈnaɪt ˈhɛviː ˈɹeɪn/"
+    },
+    {
+      "rank": 1162,
+      "word": "library",
+      "pos": "noun",
+      "ipa_strong": "/ˈlaɪbɹɛˌɹiː/",
+      "example_sentence": "She spent the entire afternoon quietly studying at the university library.",
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈʃiː ˈspɛnt ðə ɪˈntaɪɜr ˌæftɜrˈnuːn ˈkwaɪətliː ˈstʌdiːɪŋ ˈæt ðə ˌjuːnəˈvɜrsətiː ˈlaɪbɹɛˌɹiː/"
+    },
+    {
+      "rank": 1163,
+      "word": "excellent",
+      "pos": "adjective",
+      "ipa_strong": "/ˈɛksələnt/",
+      "example_sentence": "The students gave an excellent presentation in front of the entire class.",
+      "cefr_level": "A2",
+      "sentence_ipa": "/ðə ˈstuːdənts ˈɡeɪv ˈæn ˈɛksələnt ˌpɹɛzəˈnteɪʃən ɪn ˈfɹʌnt ˈʌv ðə ɪˈntaɪɜr ˈklæs/"
+    },
+    {
+      "rank": 1164,
+      "word": "edge",
+      "pos": "noun",
+      "ipa_strong": "/ˈɛdʒ/",
+      "example_sentence": "Be very careful not to stand too close to the edge of the cliff.",
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈbiː ˈvɛɹiː ˈkɛɹfəl ˈnɑt ˈtuː ˈstænd ˈtuː ˈkloʊs ˈtuː ðə ˈɛdʒ ˈʌv ðə ˈklɪf/"
+    },
+    {
+      "rank": 1165,
+      "word": "camp",
+      "pos": "noun",
+      "ipa_strong": "/ˈkæmp/",
+      "example_sentence": "The children spent two exciting weeks at a summer camp in the mountains.",
+      "cefr_level": "A2",
+      "sentence_ipa": "/ðə ˈtʃɪldɹən ˈspɛnt ˈtuː ɪˈksaɪtɪŋ ˈwiːks ˈæt ə ˈsʌmɜr ˈkæmp ɪn ðə ˈmaʊntənz/"
+    },
+    {
+      "rank": 1166,
+      "word": "audience",
+      "pos": "noun",
+      "ipa_strong": "/ˈɑdiːəns/",
+      "example_sentence": "The large audience applauded loudly at the end of the remarkable performance.",
+      "cefr_level": "B1",
+      "sentence_ipa": "/ðə ˈlɑɹdʒ ˈɑdiːəns əˈplɔdɪd ˈlaʊdliː ˈæt ðə ˈɛnd ˈʌv ðə ɹɪˈmɑɹkəbəl pɜrˈfɔɹməns/"
+    },
+    {
+      "rank": 1167,
+      "word": "lift",
+      "pos": "verb",
+      "ipa_strong": "/ˈlɪft/",
+      "example_sentence": "Can you help me lift this heavy box up onto the top shelf?",
+      "cefr_level": "A2",
+      "sentence_ipa": "/ˈkæn ˈjuː ˈhɛlp ˈmiː ˈlɪft ˈðɪs ˈhɛviː ˈbɑks ˈʌp ˈɑntuː ðə ˈtɑp ˈʃɛlf/"
+    },
+    {
+      "rank": 1168,
+      "word": "procedure",
+      "pos": "noun",
+      "ipa_strong": "/pɹəˈsiːdʒɜr/",
+      "example_sentence": "The nurse explained each step of the procedure before the operation began.",
+      "cefr_level": "B2",
+      "sentence_ipa": "/ðə ˈnɜrs ɪˈkspleɪnd ˈiːtʃ ˈstɛp ˈʌv ðə pɹəˈsiːdʒɜr bɪˈfɔɹ ðə ˌɑpɜrˈeɪʃən bɪˈɡæn/"
+    },
+    {
+      "rank": 1169,
+      "word": "email",
+      "pos": "noun",
+      "ipa_strong": "/iːˈmeɪl/",
+      "example_sentence": "Please send me an email with all the relevant details of the meeting.",
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈpliːz ˈsɛnd ˈmiː ˈæn iːˈmeɪl ˈwɪð ˈɔl ðə ˈɹɛləvənt dɪˈteɪlz ˈʌv ðə ˈmiːtɪŋ/"
+    },
+    {
+      "rank": 1170,
+      "word": "global",
+      "pos": "adjective",
+      "ipa_strong": "/ˈɡloʊbəl/",
+      "example_sentence": "Climate change is one of the most serious global challenges facing humanity today.",
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈklaɪmət ˈtʃeɪndʒ ˈɪz ˈwʌn ˈʌv ðə ˈmoʊst ˈsɪɹiːəs ˈɡloʊbəl ˈtʃæləndʒɪz ˈfeɪsɪŋ hjuːˈmænɪtiː təˈdeɪ/"
+    },
+    {
+      "rank": 1171,
+      "word": "struggle",
+      "pos": "verb",
+      "ipa_strong": "/ˈstɹʌɡəl/",
+      "example_sentence": "Many young families struggle to make ends meet on a single income.",
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈmɛniː ˈjʌŋ ˈfæməliːz ˈstɹʌɡəl ˈtuː ˈmeɪk ˈɛndz ˈmiːt ˈɑn ə ˈsɪŋɡəl ˈɪˌnkʌm/"
+    },
+    {
+      "rank": 1172,
+      "word": "advertise",
+      "pos": "verb",
+      "ipa_strong": "/ˈædvɜrˌtaɪz/",
+      "example_sentence": "Small businesses often advertise their products through local social media channels.",
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈsmɔl ˈbɪznəsəz ˈɔfən ˈædvɜrˌtaɪz ˈðɛɹ ˈpɹɑdəkts ˈθɹuː ˈloʊkəl ˈsoʊʃəl ˈmiːdiːə ˈtʃænəlz/"
+    },
+    {
+      "rank": 1173,
+      "word": "select",
+      "pos": "verb",
+      "ipa_strong": "/səˈlɛkt/",
+      "example_sentence": "Please select your preferred payment method from the available drop-down menu.",
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈpliːz səˈlɛkt ˈjɔɹ pɹəˈfɜrd ˈpeɪmənt ˈmɛθəd ˈfɹʌm ðə əˈveɪləbəl ˈdɹɑp ˈdaʊn ˈmɛnjuː/"
+    },
+    {
+      "rank": 1174,
+      "word": "surround",
+      "pos": "verb",
+      "ipa_strong": "/sɜrˈaʊnd/",
+      "example_sentence": "Tall trees surround the small cabin, providing shade throughout the entire day.",
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈtɔl ˈtɹiːz sɜrˈaʊnd ðə ˈsmɔl ˈkæbən pɹəˈvaɪdɪŋ ˈʃeɪd θɹuːˈaʊt ðə ɪˈntaɪɜr ˈdeɪ/"
+    },
+    {
+      "rank": 1175,
+      "word": "extent",
+      "pos": "noun",
+      "ipa_strong": "/ɪˈkstɛnt/",
+      "example_sentence": "The full extent of the damage caused by the storm was truly enormous.",
+      "cefr_level": "B2",
+      "sentence_ipa": "/ðə ˈfʊl ɪˈkstɛnt ˈʌv ðə ˈdæmədʒ ˈkɑzd ˈbaɪ ðə ˈstɔɹm ˈwɑz ˈtɹuːliː ɪˈnɔɹməs/"
+    },
+    {
+      "rank": 1176,
+      "word": "river",
+      "pos": "noun",
+      "ipa_strong": "/ˈɹɪvɜr/",
+      "example_sentence": "They spent the afternoon kayaking along the wide river through the forest.",
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈðeɪ ˈspɛnt ðə ˌæftɜrˈnuːn ˈkaɪˌækɪŋ əˈlɔŋ ðə ˈwaɪd ˈɹɪvɜr ˈθɹuː ðə ˈfɔɹəst/"
+    },
+    {
+      "rank": 1177,
+      "word": "annual",
+      "pos": "adjective",
+      "ipa_strong": "/ˈænjuːəl/",
+      "example_sentence": "The company holds its annual conference every spring in the city of Chicago.",
+      "cefr_level": "B1",
+      "sentence_ipa": "/ðə ˈkʌmpəˌniː ˈhoʊldz ˈɪts ˈænjuːəl ˈkɑnfɜrəns ˈɛvɜriː ˈspɹɪŋ ɪn ðə ˈsɪtiː ˈʌv ʃəˈkɑˌɡoʊ/"
+    },
+    {
+      "rank": 1178,
+      "word": "fully",
+      "pos": "adverb",
+      "ipa_strong": "/ˈfʊliː/",
+      "example_sentence": "The battery must be fully charged before you use the new device.",
+      "cefr_level": "B1",
+      "sentence_ipa": "/ðə ˈbætɜriː ˈmʌst ˈbiː ˈfʊliː ˈtʃɑɹdʒd bɪˈfɔɹ ˈjuː ˈjuːs ðə ˈnuː dɪˈvaɪs/"
+    },
+    {
+      "rank": 1179,
+      "word": "contrast",
+      "pos": "noun",
+      "ipa_strong": "/ˈkɑntɹæst/",
+      "example_sentence": "The stark contrast between the two neighborhoods was immediately obvious to visitors.",
+      "cefr_level": "B2",
+      "sentence_ipa": "/ðə ˈstɑɹk ˈkɑntɹæst bɪˈtwiːn ðə ˈtuː ˈneɪbɜrˌhʊdz ˈwɑz ˌɪˈmiːˌdiːətliː ˈɑbviːəs ˈtuː ˈvɪzɪtɜrz/"
+    },
+    {
+      "rank": 1180,
+      "word": "roll",
+      "pos": "verb",
+      "ipa_strong": "/ˈɹoʊl/",
+      "example_sentence": "Watch the ball roll down the steep hill and into the stream.",
+      "cefr_level": "A2",
+      "sentence_ipa": "/ˈwɑtʃ ðə ˈbɔl ˈɹoʊl ˈdaʊn ðə ˈstiːp ˈhɪl ənd ˈɪntuː ðə ˈstɹiːm/"
+    },
+    {
+      "rank": 1181,
+      "word": "reality",
+      "pos": "noun",
+      "ipa_strong": "/ˌɹiːˈæləˌtiː/",
+      "example_sentence": "The reality of the difficult situation was far more serious than anyone expected.",
+      "cefr_level": "B1",
+      "sentence_ipa": "/ðə ˌɹiːˈæləˌtiː ˈʌv ðə ˈdɪfəkəlt ˌsɪtʃuːˈeɪʃən ˈwɑz ˈfɑɹ ˈmɔɹ ˈsɪɹiːəs ˈðæn ˈɛniːˌwʌn ɪˈkspɛktəd/"
+    },
+    {
+      "rank": 1182,
+      "word": "photograph",
+      "pos": "noun",
+      "ipa_strong": "/ˈfoʊtəˌɡɹæf/",
+      "example_sentence": "She framed an old photograph of her grandparents and hung it on the wall.",
+      "cefr_level": "A2",
+      "sentence_ipa": "/ˈʃiː ˈfɹeɪmd ˈæn ˈoʊld ˈfoʊtəˌɡɹæf ˈʌv ˈhɜr ˈɡɹæˌndpɛɹənts ənd ˈhʌŋ ˈɪt ˈɑn ðə ˈwɔl/"
+    },
+    {
+      "rank": 1183,
+      "word": "artist",
+      "pos": "noun",
+      "ipa_strong": "/ˈɑɹtəst/",
+      "example_sentence": "The artist spent three full months creating a large mural for the downtown square.",
+      "cefr_level": "A2",
+      "sentence_ipa": "/ðə ˈɑɹtəst ˈspɛnt ˈθɹiː ˈfʊl ˈmʌnθs kɹiːˈeɪtɪŋ ə ˈlɑɹdʒ ˈmjʊɹəl ˈfɔɹ ðə ˈdaʊˈntaʊn ˈskwɛɹ/"
+    },
+    {
+      "rank": 1184,
+      "word": "conflict",
+      "pos": "noun",
+      "ipa_strong": "/ˈkɑnflɪkt/",
+      "example_sentence": "The ongoing conflict between the two departments disrupted the entire project timeline.",
+      "cefr_level": "B2",
+      "sentence_ipa": "/ðə ˈɑˌnɡoʊɪŋ ˈkɑnflɪkt bɪˈtwiːn ðə ˈtuː dɪˈpɑɹtmənts dɪˈsɹʌptɪd ðə ɪˈntaɪɜr ˈpɹɑdʒɛkt ˈtaɪmlaɪn/"
+    },
+    {
+      "rank": 1185,
+      "word": "entire",
+      "pos": "adjective",
+      "ipa_strong": "/ɪˈntaɪɜr/",
+      "example_sentence": "She managed to read the entire book in just one long afternoon.",
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈʃiː ˈmænədʒd ˈtuː ˈɹɛd ðə ɪˈntaɪɜr ˈbʊk ɪn ˈdʒʌst ˈwʌn ˈlɔŋ ˌæftɜrˈnuːn/"
+    },
+    {
+      "rank": 1186,
+      "word": "presence",
+      "pos": "noun",
+      "ipa_strong": "/ˈpɹɛzəns/",
+      "example_sentence": "The unexpected presence of the director completely changed the tone of the meeting.",
+      "cefr_level": "B2",
+      "sentence_ipa": "/ðə ˌʌnɪˈkspɛktɪd ˈpɹɛzəns ˈʌv ðə dɜrˈɛktɜr kəˈmpliːtliː ˈtʃeɪndʒd ðə ˈtoʊn ˈʌv ðə ˈmiːtɪŋ/"
+    },
+    {
+      "rank": 1187,
+      "word": "crowd",
+      "pos": "noun",
+      "ipa_strong": "/ˈkɹaʊd/",
+      "example_sentence": "A large crowd gathered in the main square to watch the fireworks display.",
+      "cefr_level": "A2",
+      "sentence_ipa": "/ə ˈlɑɹdʒ ˈkɹaʊd ˈɡæðɜrd ɪn ðə ˈmeɪn ˈskwɛɹ ˈtuː ˈwɑtʃ ðə ˈfaɪˌɹwɜrks dɪˈspleɪ/"
+    },
+    {
+      "rank": 1188,
+      "word": "corner",
+      "pos": "noun",
+      "ipa_strong": "/ˈkɔɹnɜr/",
+      "example_sentence": "Turn left at the corner and the school building will be on your right.",
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈtɜrn ˈlɛft ˈæt ðə ˈkɔɹnɜr ənd ðə ˈskuːl ˈbɪldɪŋ ˈwɪl ˈbiː ˈɑn ˈjɔɹ ˈɹaɪt/"
+    },
+    {
+      "rank": 1189,
+      "word": "gas",
+      "pos": "noun",
+      "ipa_strong": "/ˈɡæs/",
+      "example_sentence": "He pulled into the gas station to fill up before the long road trip.",
+      "cefr_level": "A2",
+      "sentence_ipa": "/ˈhiː ˈpʊld ˈɪntuː ðə ˈɡæs ˈsteɪʃən ˈtuː ˈfɪl ˈʌp bɪˈfɔɹ ðə ˈlɔŋ ˈɹoʊd ˈtɹɪp/"
+    },
+    {
+      "rank": 1190,
+      "word": "shift",
+      "pos": "noun",
+      "ipa_strong": "/ˈʃɪft/",
+      "example_sentence": "She works the night shift at the local hospital every weekend.",
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈʃiː ˈwɜrks ðə ˈnaɪt ˈʃɪft ˈæt ðə ˈloʊkəl ˈhɑˌspɪtəl ˈɛvɜriː ˈwiːˌkɛnd/"
+    },
+    {
+      "rank": 1191,
+      "word": "net",
+      "pos": "noun",
+      "ipa_strong": "/ˈnɛt/",
+      "example_sentence": "The fisherman cast his net into the calm and still sea at dawn.",
+      "cefr_level": "B1",
+      "sentence_ipa": "/ðə ˈfɪʃɜrˌmæn ˈkæst ˈhɪz ˈnɛt ˈɪntuː ðə ˈkɑm ənd ˈstɪl ˈsiː ˈæt ˈdɔn/"
+    },
+    {
+      "rank": 1192,
+      "word": "category",
+      "pos": "noun",
+      "ipa_strong": "/ˈkætəˌɡɔɹiː/",
+      "example_sentence": "Please choose the most appropriate category when submitting your formal complaint.",
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈpliːz ˈtʃuːz ðə ˈmoʊst əˈpɹoʊpɹiːət ˈkætəˌɡɔɹiː ˈwɛn səˈbmɪtɪŋ ˈjɔɹ ˈfɔɹməl kəˈmpleɪnt/"
+    },
+    {
+      "rank": 1193,
+      "word": "secretary",
+      "pos": "noun",
+      "ipa_strong": "/ˈsɛkɹəˌtɛɹiː/",
+      "example_sentence": "The secretary arranged all important meetings for the busy executive team.",
+      "cefr_level": "B1",
+      "sentence_ipa": "/ðə ˈsɛkɹəˌtɛɹiː ɜrˈeɪndʒd ˈɔl ˌɪˈmpɔɹtənt ˈmiːtɪŋz ˈfɔɹ ðə ˈbɪziː ɪˈɡzɛkjətɪv ˈtiːm/"
+    },
+    {
+      "rank": 1194,
+      "word": "defense",
+      "pos": "noun",
+      "ipa_strong": "/dɪˈfɛns/",
+      "example_sentence": "The country significantly increased investment in its national defense capabilities.",
+      "cefr_level": "B2",
+      "sentence_ipa": "/ðə ˈkʌntɹiː sɪˈɡnɪfɪkəntliː ˌɪˈnkɹiːst ˌɪˈnvɛstmənt ɪn ˈɪts ˈnæʃənəl dɪˈfɛns ˌkeɪpəˈbɪlətiːz/"
+    },
+    {
+      "rank": 1195,
+      "word": "quick",
+      "pos": "adjective",
+      "ipa_strong": "/ˈkwɪk/",
+      "example_sentence": "She gave a quick and confident answer before moving on to the next question.",
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈʃiː ˈɡeɪv ə ˈkwɪk ənd ˈkɑnfədənt ˈænsɜr bɪˈfɔɹ ˈmuːvɪŋ ˈɑn ˈtuː ðə ˈnɛkst ˈkwɛstʃən/"
+    },
+    {
+      "rank": 1196,
+      "word": "cook",
+      "pos": "verb",
+      "ipa_strong": "/ˈkʊk/",
+      "example_sentence": "He learned to cook traditional dishes by watching his grandmother in the kitchen.",
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈhiː ˈlɜrnd ˈtuː ˈkʊk tɹəˈdɪʃənəl ˈdɪʃəz ˈbaɪ ˈwɑtʃɪŋ ˈhɪz ˈɡɹæˌndmʌðɜr ɪn ðə ˈkɪtʃən/"
+    },
+    {
+      "rank": 1197,
+      "word": "spread",
+      "pos": "verb",
+      "ipa_strong": "/ˈspɹɛd/",
+      "example_sentence": "News of the remarkable discovery spread quickly across social media platforms worldwide.",
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈnuːz ˈʌv ðə ɹɪˈmɑɹkəbəl dɪˈskʌvɜriː ˈspɹɛd ˈkwɪkliː əˈkɹɔs ˈsoʊʃəl ˈmiːdiːə ˈplæˌtfɔɹmz ˈwɜrˈldwaɪd/"
+    },
+    {
+      "rank": 1198,
+      "word": "nuclear",
+      "pos": "adjective",
+      "ipa_strong": "/ˈnuːkliːɜr/",
+      "example_sentence": "The ongoing debate over nuclear energy continues to divide politicians in many countries.",
+      "cefr_level": "B2",
+      "sentence_ipa": "/ðə ˈɑˌnɡoʊɪŋ dəˈbeɪt ˈoʊvɜr ˈnuːkliːɜr ˈɛnɜrdʒiː kəˈntɪnjuːz ˈtuː dɪˈvaɪd ˌpɑləˈtɪʃənz ɪn ˈmɛniː ˈkʌntɹiːz/"
+    },
+    {
+      "rank": 1199,
+      "word": "scale",
+      "pos": "noun",
+      "ipa_strong": "/ˈskeɪl/",
+      "example_sentence": "The scale of the natural disaster surprised even the most experienced relief workers.",
+      "cefr_level": "B2",
+      "sentence_ipa": "/ðə ˈskeɪl ˈʌv ðə ˈnætʃɜrəl dɪˈzæstɜr sɜrˈpɹaɪzd ˈiːvɪn ðə ˈmoʊst ɪˈkspɪɹiːənst ɹɪˈliːf ˈwɜrkɜrz/"
+    },
+    {
+      "rank": 1200,
+      "word": "driver",
+      "pos": "noun",
+      "ipa_strong": "/ˈdɹaɪvɜr/",
+      "example_sentence": "The friendly bus driver greeted every single passenger with a warm smile.",
+      "cefr_level": "A1",
+      "sentence_ipa": "/ðə ˈfɹɛndliː ˈbʌs ˈdɹaɪvɜr ˈɡɹiːtəd ˈɛvɜriː ˈsɪŋɡəl ˈpæsəndʒɜr ˈwɪð ə ˈwɔɹm ˈsmaɪl/"
+    }
   ]
 }

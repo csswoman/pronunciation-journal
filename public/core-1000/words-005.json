@@ -5,801 +5,901 @@
       "rank": 401,
       "word": "body",
       "pos": "noun",
-      "ipa_strong": "/bɑdiː/",
+      "ipa_strong": "/ˈbɑdiː/",
       "example_sentence": "The doctor said the human body needs at least eight hours of sleep.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ðə ˈdɑktɜr ˈsɛd ðə ˈhjuːmən ˈbɑdiː ˈniːdz ˈæt ˈliːst ˈeɪt ˈaʊɜrz ˈʌv ˈsliːp/"
     },
     {
       "rank": 402,
       "word": "require",
       "pos": "verb",
-      "ipa_strong": "/ɹiːkwaɪɜr/",
+      "ipa_strong": "/ˌɹiːˈkwaɪɜr/",
       "example_sentence": "This job requires at least two years of experience.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈðɪs ˈdʒɑb ɹiːˈkwaɪɜrz ˈæt ˈliːst ˈtuː ˈjɪɹz ˈʌv ɪˈkspɪɹiːəns/"
     },
     {
       "rank": 403,
       "word": "wait",
       "pos": "verb",
-      "ipa_strong": "/weɪt/",
+      "ipa_strong": "/ˈweɪt/",
       "example_sentence": "She had to wait an hour for the bus to arrive.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈʃiː ˈhæd ˈtuː ˈweɪt ˈæn ˈaʊɜr ˈfɔɹ ðə ˈbʌs ˈtuː ɜrˈaɪv/"
     },
     {
       "rank": 404,
       "word": "general",
       "pos": "adjective",
-      "ipa_strong": "/dʒɛnɜrʌl/",
+      "ipa_strong": "/ˈdʒɛnɜrəl/",
       "example_sentence": "The teacher gave the class some general advice about the exam.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ðə ˈtiːtʃɜr ˈɡeɪv ðə ˈklæs ˈsʌm ˈdʒɛnɜrəl æˈdvaɪs əˈbaʊt ðə ɪˈɡzæm/"
     },
     {
       "rank": 405,
       "word": "appear",
       "pos": "verb",
-      "ipa_strong": "/ʌpɪɹ/",
+      "ipa_strong": "/əˈpɪɹ/",
       "example_sentence": "A message appeared on the screen when I turned on the computer.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ə ˈmɛsədʒ əˈpɪɹd ˈɑn ðə ˈskɹiːn ˈwɛn ˈaɪ ˈtɜrnd ˈɑn ðə kəˈmpjuːtɜr/"
     },
     {
       "rank": 406,
       "word": "toward",
       "pos": "preposition",
-      "ipa_strong": "/tʌwɔɹd/",
+      "ipa_strong": "/təˈwɔɹd/",
       "example_sentence": "She walked toward the door when she heard the knock.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈʃiː ˈwɔkt təˈwɔɹd ðə ˈdɔɹ ˈwɛn ˈʃiː ˈhɜrd ðə ˈnɑk/"
     },
     {
       "rank": 407,
       "word": "team",
       "pos": "noun",
-      "ipa_strong": "/tiːm/",
+      "ipa_strong": "/ˈtiːm/",
       "example_sentence": "Our team won the championship after months of hard practice.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈaʊɜr ˈtiːm ˈwʌn ðə ˈtʃæmpiːəˌnʃɪp ˈæftɜr ˈmʌnθs ˈʌv ˈhɑɹd ˈpɹæktəs/"
     },
     {
       "rank": 408,
       "word": "easy",
       "pos": "adjective",
-      "ipa_strong": "/iːziː/",
+      "ipa_strong": "/ˈiːziː/",
       "example_sentence": "The first exercise was easy, but the second one was much harder.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ðə ˈfɜrst ˈɛksɜrˌsaɪz ˈwɑz ˈiːziː ˈbʌt ðə ˈsɛkənd ˈwʌn ˈwɑz ˈmʌtʃ ˈhɑɹdɜr/"
     },
     {
       "rank": 409,
       "word": "individual",
       "pos": "noun",
-      "ipa_strong": "/ɪndʌvɪdʒʌwʌl/",
+      "ipa_strong": "/ˌɪndəˈvɪdʒəwəl/",
       "example_sentence": "Each individual on the team has a different skill to contribute.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈiːtʃ ˌɪndəˈvɪdʒəwəl ˈɑn ðə ˈtiːm ˈhæz ə ˈdɪfɜrənt ˈskɪl ˈtuː kəˈntɹɪbjuːt/"
     },
     {
       "rank": 410,
       "word": "full",
       "pos": "adjective",
-      "ipa_strong": "/fʊl/",
+      "ipa_strong": "/ˈfʊl/",
       "example_sentence": "The parking lot was completely full, so we had to park on the street.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ðə ˈpɑɹkɪŋ ˈlɑt ˈwɑz kəˈmpliːtliː ˈfʊl ˈsoʊ ˈwiː ˈhæd ˈtuː ˈpɑɹk ˈɑn ðə ˈstɹiːt/"
     },
     {
       "rank": 411,
       "word": "black",
       "pos": "adjective",
-      "ipa_strong": "/blæk/",
+      "ipa_strong": "/ˈblæk/",
       "example_sentence": "She wore a black coat to the funeral.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈʃiː ˈwɔɹ ə ˈblæk ˈkoʊt ˈtuː ðə ˈfjuːnɜrəl/"
     },
     {
       "rank": 412,
       "word": "sense",
       "pos": "noun",
-      "ipa_strong": "/sɛns/",
+      "ipa_strong": "/ˈsɛns/",
       "example_sentence": "It makes no sense to leave without telling anyone where you are going.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈɪt ˈmeɪks ˈnoʊ ˈsɛns ˈtuː ˈliːv wɪˈθaʊt ˈtɛlɪŋ ˈɛniːˌwʌn ˈwɛɹ ˈjuː ˈɑɹ ˈɡoʊɪŋ/"
     },
     {
       "rank": 413,
       "word": "perhaps",
       "pos": "adverb",
-      "ipa_strong": "/pɜrhæps/",
+      "ipa_strong": "/pɜrˈhæps/",
       "example_sentence": "Perhaps we should call first before going to their house.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/pɜrˈhæps ˈwiː ˈʃʊd ˈkɔl ˈfɜrst bɪˈfɔɹ ˈɡoʊɪŋ ˈtuː ˈðɛɹ ˈhaʊs/"
     },
     {
       "rank": 414,
       "word": "add",
       "pos": "verb",
-      "ipa_strong": "/æd/",
+      "ipa_strong": "/ˈæd/",
       "example_sentence": "She added a pinch of salt to the soup before serving it.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈʃiː ˈædəd ə ˈpɪntʃ ˈʌv ˈsɔlt ˈtuː ðə ˈsuːp bɪˈfɔɹ ˈsɜrvɪŋ ˈɪt/"
     },
     {
       "rank": 415,
       "word": "rule",
       "pos": "verb",
-      "ipa_strong": "/ɹuːl/",
+      "ipa_strong": "/ˈɹuːl/",
       "example_sentence": "The king ruled the country for more than thirty years.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ðə ˈkɪŋ ˈɹuːld ðə ˈkʌntɹiː ˈfɔɹ ˈmɔɹ ˈðæn ˈθɜrˌdiː ˈjɪɹz/"
     },
     {
       "rank": 416,
       "word": "pass",
       "pos": "verb",
-      "ipa_strong": "/pæs/",
+      "ipa_strong": "/ˈpæs/",
       "example_sentence": "He studied hard and was relieved when he passed the exam.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈhiː ˈstʌdiːd ˈhɑɹd ənd ˈwɑz ɹɪˈliːvd ˈwɛn ˈhiː ˈpæst ðə ɪˈɡzæm/"
     },
     {
       "rank": 417,
       "word": "produce",
       "pos": "verb",
-      "ipa_strong": "/pɹʌduːs/",
+      "ipa_strong": "/pɹəˈduːs/",
       "example_sentence": "This factory produces thousands of cars every month.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈðɪs ˈfæktɜriː pɹəˈduːsəz ˈθaʊzəndz ˈʌv ˈkɑɹz ˈɛvɜriː ˈmʌnθ/"
     },
     {
       "rank": 418,
       "word": "sell",
       "pos": "verb",
-      "ipa_strong": "/sɛl/",
+      "ipa_strong": "/ˈsɛl/",
       "example_sentence": "They sell fresh vegetables at the market every Saturday morning.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈðeɪ ˈsɛl ˈfɹɛʃ ˈvɛdʒtəbəlz ˈæt ðə ˈmɑɹkət ˈɛvɜriː ˈsætɜrdiː ˈmɔɹnɪŋ/"
     },
     {
       "rank": 419,
       "word": "short",
       "pos": "adjective",
-      "ipa_strong": "/ʃɔɹt/",
+      "ipa_strong": "/ˈʃɔɹt/",
       "example_sentence": "The speech was short, lasting only five minutes.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ðə ˈspiːtʃ ˈwɑz ˈʃɔɹt ˈlæstɪŋ ˈoʊnliː ˈfaɪv ˈmɪnəts/"
     },
     {
       "rank": 420,
       "word": "agree",
       "pos": "verb",
-      "ipa_strong": "/ʌɡɹiː/",
+      "ipa_strong": "/əˈɡɹiː/",
       "example_sentence": "Both sides agreed to sign the contract by the end of the week.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈboʊθ ˈsaɪdz əˈɡɹiːd ˈtuː ˈsaɪn ðə ˈkɑˌntɹækt ˈbaɪ ðə ˈɛnd ˈʌv ðə ˈwiːk/"
     },
     {
       "rank": 421,
       "word": "law",
       "pos": "noun",
-      "ipa_strong": "/lɔ/",
+      "ipa_strong": "/ˈlɔ/",
       "example_sentence": "There is a law that requires drivers to wear a seatbelt at all times.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈðɛɹ ˈɪz ə ˈlɔ ˈðæt ɹiːˈkwaɪɜrz ˈdɹaɪvɜrz ˈtuː ˈwɛɹ ə ˈsiːˌtbɛlt ˈæt ˈɔl ˈtaɪmz/"
     },
     {
       "rank": 422,
       "word": "everything",
       "pos": "pronoun",
-      "ipa_strong": "/ɛvɹiːθɪŋ/",
+      "ipa_strong": "/ˈɛvɹiːˌθɪŋ/",
       "example_sentence": "She packed everything she needed before leaving for the trip.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈʃiː ˈpækt ˈɛvɹiːˌθɪŋ ˈʃiː ˈniːdəd bɪˈfɔɹ ˈliːvɪŋ ˈfɔɹ ðə ˈtɹɪp/"
     },
     {
       "rank": 423,
       "word": "research",
       "pos": "verb",
-      "ipa_strong": "/ɹiːsɜrtʃ/",
+      "ipa_strong": "/ɹiːˈsɜrtʃ/",
       "example_sentence": "She spent months researching the causes of the disease.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈʃiː ˈspɛnt ˈmʌnθs ɹiːˈsɜrtʃɪŋ ðə ˈkɑzəz ˈʌv ðə dɪˈziːz/"
     },
     {
       "rank": 424,
       "word": "cover",
       "pos": "verb",
-      "ipa_strong": "/kʌvɜr/",
+      "ipa_strong": "/ˈkʌvɜr/",
       "example_sentence": "The blanket was big enough to cover the entire bed.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ðə ˈblæŋkət ˈwɑz ˈbɪɡ ɪˈnʌf ˈtuː ˈkʌvɜr ðə ɪˈntaɪɜr ˈbɛd/"
     },
     {
       "rank": 425,
       "word": "paper",
       "pos": "noun",
-      "ipa_strong": "/peɪpɜr/",
+      "ipa_strong": "/ˈpeɪpɜr/",
       "example_sentence": "She wrote her phone number on a small piece of paper and handed it to him.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈʃiː ˈɹoʊt ˈhɜr ˈfoʊn ˈnʌmbɜr ˈɑn ə ˈsmɔl ˈpiːs ˈʌv ˈpeɪpɜr ənd ˈhændəd ˈɪt ˈtuː ˈhɪm/"
     },
     {
       "rank": 426,
       "word": "position",
       "pos": "noun",
-      "ipa_strong": "/pʌzɪʃʌn/",
+      "ipa_strong": "/pəˈzɪʃən/",
       "example_sentence": "He applied for the position of manager at the new company.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈhiː əˈplaɪd ˈfɔɹ ðə pəˈzɪʃən ˈʌv ˈmænədʒɜr ˈæt ðə ˈnuː ˈkʌmpəˌniː/"
     },
     {
       "rank": 427,
       "word": "near",
       "pos": "preposition",
-      "ipa_strong": "/nɪɹ/",
+      "ipa_strong": "/ˈnɪɹ/",
       "example_sentence": "The school is near the train station, so it is easy to get there.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ðə ˈskuːl ˈɪz ˈnɪɹ ðə ˈtɹeɪn ˈsteɪʃən ˈsoʊ ˈɪt ˈɪz ˈiːziː ˈtuː ˈɡɛt ˈðɛɹ/"
     },
     {
       "rank": 428,
       "word": "human",
       "pos": "adjective",
-      "ipa_strong": "/hjuːmʌn/",
+      "ipa_strong": "/ˈhjuːmən/",
       "example_sentence": "Making mistakes is a natural part of human behavior.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈmeɪkɪŋ mɪˈsteɪks ˈɪz ə ˈnætʃɜrəl ˈpɑɹt ˈʌv ˈhjuːmən bɪˈheɪvjɜr/"
     },
     {
       "rank": 429,
       "word": "computer",
       "pos": "noun",
-      "ipa_strong": "/kʌmpjuːtɜr/",
+      "ipa_strong": "/kəˈmpjuːtɜr/",
       "example_sentence": "She uses her computer every evening to finish her homework.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈʃiː ˈjuːsəz ˈhɜr kəˈmpjuːtɜr ˈɛvɜriː ˈiːvnɪŋ ˈtuː ˈfɪnɪʃ ˈhɜr ˈhoʊˌmwɜrk/"
     },
     {
       "rank": 430,
       "word": "situation",
       "pos": "noun",
-      "ipa_strong": "/sɪtʃuːeɪʃʌn/",
+      "ipa_strong": "/ˌsɪtʃuːˈeɪʃən/",
       "example_sentence": "The doctor had to act quickly because the situation was very serious.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ðə ˈdɑktɜr ˈhæd ˈtuː ˈækt ˈkwɪkliː bɪˈkɔz ðə ˌsɪtʃuːˈeɪʃən ˈwɑz ˈvɛɹiː ˈsɪɹiːəs/"
     },
     {
       "rank": 431,
       "word": "staff",
       "pos": "noun",
-      "ipa_strong": "/stæf/",
+      "ipa_strong": "/ˈstæf/",
       "example_sentence": "The hotel staff greeted every guest with a warm smile.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ðə hoʊˈtɛl ˈstæf ˈɡɹiːtəd ˈɛvɜriː ˈɡɛst ˈwɪð ə ˈwɔɹm ˈsmaɪl/"
     },
     {
       "rank": 432,
       "word": "activity",
       "pos": "noun",
-      "ipa_strong": "/æktɪvʌtiː/",
+      "ipa_strong": "/æˈktɪvətiː/",
       "example_sentence": "Swimming is a great activity for people of all ages.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈswɪmɪŋ ˈɪz ə ˈɡɹeɪt æˈktɪvətiː ˈfɔɹ ˈpiːpəl ˈʌv ˈɔl ˈeɪdʒəz/"
     },
     {
       "rank": 433,
       "word": "film",
       "pos": "noun",
-      "ipa_strong": "/fɪlm/",
+      "ipa_strong": "/ˈfɪlm/",
       "example_sentence": "We watched a film about the Second World War last night.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈwiː ˈwɑtʃt ə ˈfɪlm əˈbaʊt ðə ˈsɛkənd ˈwɜrld ˈwɔɹ ˈlæst ˈnaɪt/"
     },
     {
       "rank": 434,
       "word": "morning",
       "pos": "noun",
-      "ipa_strong": "/mɔɹnɪŋ/",
+      "ipa_strong": "/ˈmɔɹnɪŋ/",
       "example_sentence": "She drinks a cup of coffee every morning before going to work.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈʃiː ˈdɹɪŋks ə ˈkʌp ˈʌv ˈkɑfiː ˈɛvɜriː ˈmɔɹnɪŋ bɪˈfɔɹ ˈɡoʊɪŋ ˈtuː ˈwɜrk/"
     },
     {
       "rank": 435,
       "word": "war",
       "pos": "noun",
-      "ipa_strong": "/wɔɹ/",
+      "ipa_strong": "/ˈwɔɹ/",
       "example_sentence": "The war lasted for four years and caused enormous destruction.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ðə ˈwɔɹ ˈlæstəd ˈfɔɹ ˈfɔɹ ˈjɪɹz ənd ˈkɑzd ɪˈnɔɹməs dɪˈstɹʌkʃən/"
     },
     {
       "rank": 436,
       "word": "account",
       "pos": "noun",
-      "ipa_strong": "/ʌkaʊnt/",
+      "ipa_strong": "/əˈkaʊnt/",
       "example_sentence": "You need to create an account before you can use the website.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈjuː ˈniːd ˈtuː kɹiːˈeɪt ˈæn əˈkaʊnt bɪˈfɔɹ ˈjuː ˈkæn ˈjuːs ðə ˈwɛˌbsaɪt/"
     },
     {
       "rank": 437,
       "word": "shop",
       "pos": "noun",
-      "ipa_strong": "/ʃɑp/",
+      "ipa_strong": "/ˈʃɑp/",
       "example_sentence": "There is a small bread shop at the end of our street.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈðɛɹ ˈɪz ə ˈsmɔl ˈbɹɛd ˈʃɑp ˈæt ðə ˈɛnd ˈʌv ˈaʊɜr ˈstɹiːt/"
     },
     {
       "rank": 438,
       "word": "major",
       "pos": "adjective",
-      "ipa_strong": "/meɪdʒɜr/",
+      "ipa_strong": "/ˈmeɪdʒɜr/",
       "example_sentence": "The earthquake caused major damage to buildings across the city.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ðə ˈɜrˌθkweɪk ˈkɑzd ˈmeɪdʒɜr ˈdæmədʒ ˈtuː ˈbɪldɪŋz əˈkɹɔs ðə ˈsɪtiː/"
     },
     {
       "rank": 439,
       "word": "someone",
       "pos": "pronoun",
-      "ipa_strong": "/sʌmwʌn/",
+      "ipa_strong": "/ˈsʌˌmwʌn/",
       "example_sentence": "Someone left their umbrella on the bus this morning.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈsʌˌmwʌn ˈlɛft ˈðɛɹ əˈmbɹɛlə ˈɑn ðə ˈbʌs ˈðɪs ˈmɔɹnɪŋ/"
     },
     {
       "rank": 440,
       "word": "above",
       "pos": "preposition",
-      "ipa_strong": "/ʌbʌv/",
+      "ipa_strong": "/əˈbʌv/",
       "example_sentence": "The temperature rose above thirty degrees for the first time this summer.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ðə ˈtɛmpɹətʃɜr ˈɹoʊz əˈbʌv ˈθɜrˌdiː dɪˈɡɹiːz ˈfɔɹ ðə ˈfɜrst ˈtaɪm ˈðɪs ˈsʌmɜr/"
     },
     {
       "rank": 441,
       "word": "design",
       "pos": "verb",
-      "ipa_strong": "/dɪzaɪn/",
+      "ipa_strong": "/dɪˈzaɪn/",
       "example_sentence": "She designed the new logo for the company over the weekend.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈʃiː dɪˈzaɪnd ðə ˈnuː ˈloʊɡoʊ ˈfɔɹ ðə ˈkʌmpəˌniː ˈoʊvɜr ðə ˈwiːˌkɛnd/"
     },
     {
       "rank": 442,
       "word": "event",
       "pos": "noun",
-      "ipa_strong": "/ɪvɛnt/",
+      "ipa_strong": "/ɪˈvɛnt/",
       "example_sentence": "The school is organizing an event to raise money for new equipment.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ðə ˈskuːl ˈɪz ˈɔɹɡəˌnaɪzɪŋ ˈæn ɪˈvɛnt ˈtuː ˈɹeɪz ˈmʌniː ˈfɔɹ ˈnuː ɪˈkwɪpmənt/"
     },
     {
       "rank": 443,
       "word": "special",
       "pos": "adjective",
-      "ipa_strong": "/spɛʃʌl/",
+      "ipa_strong": "/ˈspɛʃəl/",
       "example_sentence": "They cooked a special meal to celebrate their anniversary.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈðeɪ ˈkʊkt ə ˈspɛʃəl ˈmiːl ˈtuː ˈsɛləˌbɹeɪt ˈðɛɹ ˌænəˈvɜrsɜriː/"
     },
     {
       "rank": 444,
       "word": "sometimes",
       "pos": "adverb",
-      "ipa_strong": "/sʌmtaɪmz/",
+      "ipa_strong": "/səˈmtaɪmz/",
       "example_sentence": "She sometimes walks to school instead of taking the bus.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈʃiː səˈmtaɪmz ˈwɔks ˈtuː ˈskuːl ˌɪˈnstɛd ˈʌv ˈteɪkɪŋ ðə ˈbʌs/"
     },
     {
       "rank": 445,
       "word": "condition",
       "pos": "noun",
-      "ipa_strong": "/kʌndɪʃʌn/",
+      "ipa_strong": "/kəˈndɪʃən/",
       "example_sentence": "The doctor said her condition was improving after two weeks of treatment.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ðə ˈdɑktɜr ˈsɛd ˈhɜr kəˈndɪʃən ˈwɑz ˌɪˈmpɹuːvɪŋ ˈæftɜr ˈtuː ˈwiːks ˈʌv ˈtɹiːtmənt/"
     },
     {
       "rank": 446,
       "word": "carry",
       "pos": "verb",
-      "ipa_strong": "/kæɹiː/",
+      "ipa_strong": "/ˈkæɹiː/",
       "example_sentence": "He carried all the grocery bags from the car to the kitchen in one trip.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈhiː ˈkæɹiːd ˈɔl ðə ˈɡɹoʊsɜriː ˈbæɡz ˈfɹʌm ðə ˈkɑɹ ˈtuː ðə ˈkɪtʃən ɪn ˈwʌn ˈtɹɪp/"
     },
     {
       "rank": 447,
       "word": "choose",
       "pos": "verb",
-      "ipa_strong": "/tʃuːz/",
+      "ipa_strong": "/ˈtʃuːz/",
       "example_sentence": "It was hard to choose between the two options because both were good.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈɪt ˈwɑz ˈhɑɹd ˈtuː ˈtʃuːz bɪˈtwiːn ðə ˈtuː ˈɑpʃənz bɪˈkɔz ˈboʊθ ˈwɜr ˈɡʊd/"
     },
     {
       "rank": 448,
       "word": "father",
       "pos": "noun",
-      "ipa_strong": "/fɑðɜr/",
+      "ipa_strong": "/ˈfɑðɜr/",
       "example_sentence": "Her father taught her how to ride a bike when she was six years old.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈhɜr ˈfɑðɜr ˈtɔt ˈhɜr ˈhaʊ ˈtuː ˈɹaɪd ə ˈbaɪk ˈwɛn ˈʃiː ˈwɑz ˈsɪks ˈjɪɹz ˈoʊld/"
     },
     {
       "rank": 449,
       "word": "decision",
       "pos": "noun",
-      "ipa_strong": "/dɪsɪʒʌn/",
+      "ipa_strong": "/dɪˈsɪʒən/",
       "example_sentence": "Moving to another city was the most difficult decision she ever made.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈmuːvɪŋ ˈtuː əˈnʌðɜr ˈsɪtiː ˈwɑz ðə ˈmoʊst ˈdɪfəkəlt dɪˈsɪʒən ˈʃiː ˈɛvɜr ˈmeɪd/"
     },
     {
       "rank": 450,
       "word": "table",
       "pos": "noun",
-      "ipa_strong": "/teɪbʌl/",
+      "ipa_strong": "/ˈteɪbəl/",
       "example_sentence": "They sat around the table and talked for hours after dinner.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈðeɪ ˈsæt ɜrˈaʊnd ðə ˈteɪbəl ənd ˈtɔkt ˈfɔɹ ˈaʊɜrz ˈæftɜr ˈdɪnɜr/"
     },
     {
       "rank": 451,
       "word": "certain",
       "pos": "adjective",
-      "ipa_strong": "/sɜrtʌn/",
+      "ipa_strong": "/ˈsɜrtən/",
       "example_sentence": "I am not certain which bus goes to the city center.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈaɪ ˈæm ˈnɑt ˈsɜrtən ˈwɪtʃ ˈbʌs ˈɡoʊz ˈtuː ðə ˈsɪtiː ˈsɛntɜr/"
     },
     {
       "rank": 452,
       "word": "forward",
       "pos": "adverb",
-      "ipa_strong": "/fɔɹwɜrd/",
+      "ipa_strong": "/ˈfɔɹwɜrd/",
       "example_sentence": "The team moved forward with their plan despite the challenges.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ðə ˈtiːm ˈmuːvd ˈfɔɹwɜrd ˈwɪð ˈðɛɹ ˈplæn dɪˈspaɪt ðə ˈtʃæləndʒɪz/"
     },
     {
       "rank": 453,
       "word": "main",
       "pos": "adjective",
-      "ipa_strong": "/meɪn/",
+      "ipa_strong": "/ˈmeɪn/",
       "example_sentence": "The main reason she left the job was the long commute every day.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ðə ˈmeɪn ˈɹiːzən ˈʃiː ˈlɛft ðə ˈdʒɑb ˈwɑz ðə ˈlɔŋ kəˈmjuːt ˈɛvɜriː ˈdeɪ/"
     },
     {
       "rank": 454,
       "word": "die",
       "pos": "verb",
-      "ipa_strong": "/daɪ/",
+      "ipa_strong": "/ˈdaɪ/",
       "example_sentence": "The plant will die if you do not water it regularly.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ðə ˈplænt ˈwɪl ˈdaɪ ˈɪf ˈjuː ˈduː ˈnɑt ˈwɔtɜr ˈɪt ˈɹɛɡjəlɜrliː/"
     },
     {
       "rank": 455,
       "word": "bear",
       "pos": "noun",
-      "ipa_strong": "/bɛɹ/",
+      "ipa_strong": "/ˈbɛɹ/",
       "example_sentence": "The hikers saw a bear near the river and walked away slowly.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ðə ˈhaɪkɜrz ˈsɔ ə ˈbɛɹ ˈnɪɹ ðə ˈɹɪvɜr ənd ˈwɔkt əˈweɪ ˈsloʊliː/"
     },
     {
       "rank": 456,
       "word": "cut",
       "pos": "verb",
-      "ipa_strong": "/kʌt/",
+      "ipa_strong": "/ˈkʌt/",
       "example_sentence": "She cut the bread into thick slices for the sandwiches.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈʃiː ˈkʌt ðə ˈbɹɛd ˈɪntuː ˈθɪk ˈslaɪsəz ˈfɔɹ ðə ˈsændwɪtʃɪz/"
     },
     {
       "rank": 457,
       "word": "describe",
       "pos": "verb",
-      "ipa_strong": "/dɪskɹaɪb/",
+      "ipa_strong": "/dɪˈskɹaɪb/",
       "example_sentence": "Can you describe what the person who took your bag looked like?",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈkæn ˈjuː dɪˈskɹaɪb ˈwʌt ðə ˈpɜrsən ˈhuː ˈtʊk ˈjɔɹ ˈbæɡ ˈlʊkt ˈlaɪk/"
     },
     {
       "rank": 458,
       "word": "himself",
       "pos": "pronoun",
-      "ipa_strong": "/hɪmsɛlf/",
+      "ipa_strong": "/hɪˈmsɛlf/",
       "example_sentence": "He made himself a sandwich because no one else was home.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈhiː ˈmeɪd hɪˈmsɛlf ə ˈsændwɪtʃ bɪˈkɔz ˈnoʊ ˈwʌn ˈɛls ˈwɑz ˈhoʊm/"
     },
     {
       "rank": 459,
       "word": "available",
       "pos": "adjective",
-      "ipa_strong": "/ʌveɪlʌbʌl/",
+      "ipa_strong": "/əˈveɪləbəl/",
       "example_sentence": "The doctor is not available on weekends, so call before Friday.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ðə ˈdɑktɜr ˈɪz ˈnɑt əˈveɪləbəl ˈɑn ˈwiːˌkɛndz ˈsoʊ ˈkɔl bɪˈfɔɹ ˈfɹaɪdiː/"
     },
     {
       "rank": 460,
       "word": "especially",
       "pos": "adverb",
-      "ipa_strong": "/ʌspɛʃliː/",
+      "ipa_strong": "/əˈspɛʃliː/",
       "example_sentence": "She loves all fruits, especially mangoes and strawberries.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈʃiː ˈlʌvz ˈɔl ˈfɹuːts əˈspɛʃliː ˈmæŋɡoʊz ənd ˈstɹɔˌbɛɹiːz/"
     },
     {
       "rank": 461,
       "word": "strong",
       "pos": "adjective",
-      "ipa_strong": "/stɹɔŋ/",
+      "ipa_strong": "/ˈstɹɔŋ/",
       "example_sentence": "You need to be strong to carry those heavy boxes up the stairs.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈjuː ˈniːd ˈtuː ˈbiː ˈstɹɔŋ ˈtuː ˈkæɹiː ˈðoʊz ˈhɛviː ˈbɑksəz ˈʌp ðə ˈstɛɹz/"
     },
     {
       "rank": 462,
       "word": "rise",
       "pos": "verb",
-      "ipa_strong": "/ɹaɪz/",
+      "ipa_strong": "/ˈɹaɪz/",
       "example_sentence": "The price of food tends to rise during the winter months.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ðə ˈpɹaɪs ˈʌv ˈfuːd ˈtɛndz ˈtuː ˈɹaɪz ˈdʊɹɪŋ ðə ˈwɪntɜr ˈmʌnθs/"
     },
     {
       "rank": 463,
       "word": "girl",
       "pos": "noun",
-      "ipa_strong": "/ɡɜrl/",
+      "ipa_strong": "/ˈɡɜrl/",
       "example_sentence": "The little girl asked her mother if she could get a puppy for her birthday.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ðə ˈlɪtəl ˈɡɜrl ˈæskt ˈhɜr ˈmʌðɜr ˈɪf ˈʃiː ˈkʊd ˈɡɛt ə ˈpʌpiː ˈfɔɹ ˈhɜr ˈbɜrˌθdeɪ/"
     },
     {
       "rank": 464,
       "word": "maybe",
       "pos": "adverb",
-      "ipa_strong": "/meɪbiː/",
+      "ipa_strong": "/ˈmeɪbiː/",
       "example_sentence": "Maybe we should leave earlier to avoid the traffic.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈmeɪbiː ˈwiː ˈʃʊd ˈliːv ˈɜrliːɜr ˈtuː əˈvɔɪd ðə ˈtɹæfɪk/"
     },
     {
       "rank": 465,
       "word": "community",
       "pos": "noun",
-      "ipa_strong": "/kʌmjuːnʌtiː/",
+      "ipa_strong": "/kəˈmjuːnətiː/",
       "example_sentence": "The whole community came together to clean up the park after the storm.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ðə ˈhoʊl kəˈmjuːnətiː ˈkeɪm təˈɡɛðɜr ˈtuː ˈkliːn ˈʌp ðə ˈpɑɹk ˈæftɜr ðə ˈstɔɹm/"
     },
     {
       "rank": 466,
       "word": "else",
       "pos": "adverb",
-      "ipa_strong": "/ɛls/",
+      "ipa_strong": "/ˈɛls/",
       "example_sentence": "Is there anything else I can help you with today?",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈɪz ˈðɛɹ ˈɛniːˌθɪŋ ˈɛls ˈaɪ ˈkæn ˈhɛlp ˈjuː ˈwɪð təˈdeɪ/"
     },
     {
       "rank": 467,
       "word": "particular",
       "pos": "adjective",
-      "ipa_strong": "/pɜrtɪkjʌlɜr/",
+      "ipa_strong": "/pɜrˈtɪkjəlɜr/",
       "example_sentence": "Is there a particular reason you chose this school over the others?",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈɪz ˈðɛɹ ə pɜrˈtɪkjəlɜr ˈɹiːzən ˈjuː ˈtʃoʊz ˈðɪs ˈskuːl ˈoʊvɜr ðə ˈʌðɜrz/"
     },
     {
       "rank": 468,
       "word": "role",
       "pos": "noun",
-      "ipa_strong": "/ɹoʊl/",
+      "ipa_strong": "/ˈɹoʊl/",
       "example_sentence": "Parents play an important role in their children's education.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈpɛɹənts ˈpleɪ ˈæn ˌɪˈmpɔɹtənt ˈɹoʊl ɪn ˈðɛɹ ˈtʃɪldɹənz ˌɛdʒəˈkeɪʃən/"
     },
     {
       "rank": 469,
       "word": "join",
       "pos": "verb",
-      "ipa_strong": "/dʒɔɪn/",
+      "ipa_strong": "/ˈdʒɔɪn/",
       "example_sentence": "She decided to join the school choir after hearing them perform.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈʃiː ˌdɪˈsaɪdɪd ˈtuː ˈdʒɔɪn ðə ˈskuːl ˈkwaɪɜr ˈæftɜr ˈhiːɹɪŋ ˈðɛm pɜrˈfɔɹm/"
     },
     {
       "rank": 470,
       "word": "difficult",
       "pos": "adjective",
-      "ipa_strong": "/dɪfʌkʌlt/",
+      "ipa_strong": "/ˈdɪfəkəlt/",
       "example_sentence": "Learning a new language is difficult but very rewarding in the end.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈlɜrnɪŋ ə ˈnuː ˈlæŋɡwədʒ ˈɪz ˈdɪfəkəlt ˈbʌt ˈvɛɹiː ɹɪˈwɔɹdɪŋ ɪn ðə ˈɛnd/"
     },
     {
       "rank": 471,
       "word": "please",
       "pos": "interjection",
-      "ipa_strong": "/pliːz/",
+      "ipa_strong": "/ˈpliːz/",
       "example_sentence": "Could you please close the window? It is getting cold in here.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈkʊd ˈjuː ˈpliːz ˈkloʊs ðə ˈwɪndoʊ ˈɪt ˈɪz ˈɡɛtɪŋ ˈkoʊld ɪn ˈhiːɹ/"
     },
     {
       "rank": 472,
       "word": "detail",
       "pos": "noun",
-      "ipa_strong": "/dɪteɪl/",
+      "ipa_strong": "/dɪˈteɪl/",
       "example_sentence": "The report included every detail about what happened that night.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ðə ɹiːˈpɔɹt ˌɪˈnkluːdəd ˈɛvɜriː dɪˈteɪl əˈbaʊt ˈwʌt ˈhæpənd ˈðæt ˈnaɪt/"
     },
     {
       "rank": 473,
       "word": "difference",
       "pos": "noun",
-      "ipa_strong": "/dɪfɜrʌns/",
+      "ipa_strong": "/ˈdɪfɜrəns/",
       "example_sentence": "Can you explain the difference between these two words?",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈkæn ˈjuː ɪˈkspleɪn ðə ˈdɪfɜrəns bɪˈtwiːn ˈðiːz ˈtuː ˈwɜrdz/"
     },
     {
       "rank": 474,
       "word": "action",
       "pos": "noun",
-      "ipa_strong": "/ækʃʌn/",
+      "ipa_strong": "/ˈækʃən/",
       "example_sentence": "The government needs to take immediate action to protect the environment.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ðə ˈɡʌvɜrmənt ˈniːdz ˈtuː ˈteɪk ˌɪˈmiːˌdiːət ˈækʃən ˈtuː pɹəˈtɛkt ðə ɪˈnvaɪɹənmənt/"
     },
     {
       "rank": 475,
       "word": "health",
       "pos": "noun",
-      "ipa_strong": "/hɛlθ/",
+      "ipa_strong": "/ˈhɛlθ/",
       "example_sentence": "Regular exercise and a good diet are important for your health.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈɹɛɡjəlɜr ˈɛksɜrˌsaɪz ənd ə ˈɡʊd ˈdaɪət ˈɑɹ ˌɪˈmpɔɹtənt ˈfɔɹ ˈjɔɹ ˈhɛlθ/"
     },
     {
       "rank": 476,
       "word": "eat",
       "pos": "verb",
-      "ipa_strong": "/iːt/",
+      "ipa_strong": "/ˈiːt/",
       "example_sentence": "She tries to eat more vegetables and less sugar every day.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈʃiː ˈtɹaɪz ˈtuː ˈiːt ˈmɔɹ ˈvɛdʒtəbəlz ənd ˈlɛs ˈʃʊɡɜr ˈɛvɜriː ˈdeɪ/"
     },
     {
       "rank": 477,
       "word": "step",
       "pos": "verb",
-      "ipa_strong": "/stɛp/",
+      "ipa_strong": "/ˈstɛp/",
       "example_sentence": "He stepped aside to let the elderly woman pass through the door.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈhiː ˈstɛpt əˈsaɪd ˈtuː ˈlɛt ðə ˈɛldɜrliː ˈwʊmən ˈpæs ˈθɹuː ðə ˈdɔɹ/"
     },
     {
       "rank": 478,
       "word": "true",
       "pos": "adjective",
-      "ipa_strong": "/tɹuː/",
+      "ipa_strong": "/ˈtɹuː/",
       "example_sentence": "Is it true that the school will be closed next Monday?",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈɪz ˈɪt ˈtɹuː ˈðæt ðə ˈskuːl ˈwɪl ˈbiː ˈkloʊzd ˈnɛkst ˈmʌndiː/"
     },
     {
       "rank": 479,
       "word": "phone",
       "pos": "noun",
-      "ipa_strong": "/foʊn/",
+      "ipa_strong": "/ˈfoʊn/",
       "example_sentence": "She forgot her phone at home and could not contact anyone all day.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈʃiː fɜrˈɡɑt ˈhɜr ˈfoʊn ˈæt ˈhoʊm ənd ˈkʊd ˈnɑt ˈkɑˌntækt ˈɛniːˌwʌn ˈɔl ˈdeɪ/"
     },
     {
       "rank": 480,
       "word": "themselves",
       "pos": "pronoun",
-      "ipa_strong": "/ðɛmsɛlvz/",
+      "ipa_strong": "/ðɛˈmsɛlvz/",
       "example_sentence": "The children cooked dinner themselves while their parents were away.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ðə ˈtʃɪldɹən ˈkʊkt ˈdɪnɜr ðɛˈmsɛlvz ˈwaɪl ˈðɛɹ ˈpɛɹənts ˈwɜr əˈweɪ/"
     },
     {
       "rank": 481,
       "word": "draw",
       "pos": "verb",
-      "ipa_strong": "/dɹɔ/",
+      "ipa_strong": "/ˈdɹɔ/",
       "example_sentence": "The teacher asked the students to draw a map of their neighborhood.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ðə ˈtiːtʃɜr ˈæskt ðə ˈstuːdənts ˈtuː ˈdɹɔ ə ˈmæp ˈʌv ˈðɛɹ ˈneɪbɜrˌhʊd/"
     },
     {
       "rank": 482,
       "word": "white",
       "pos": "adjective",
-      "ipa_strong": "/waɪt/",
+      "ipa_strong": "/ˈwaɪt/",
       "example_sentence": "She painted the walls white to make the room look bigger and brighter.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈʃiː ˈpeɪntɪd ðə ˈwɔlz ˈwaɪt ˈtuː ˈmeɪk ðə ˈɹuːm ˈlʊk ˈbɪɡɜr ənd ˈbɹaɪtɜr/"
     },
     {
       "rank": 483,
       "word": "date",
       "pos": "noun",
-      "ipa_strong": "/deɪt/",
+      "ipa_strong": "/ˈdeɪt/",
       "example_sentence": "What is the date of your flight? I want to make sure I am at the airport on time.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈwʌt ˈɪz ðə ˈdeɪt ˈʌv ˈjɔɹ ˈflaɪt ˈaɪ ˈwɑnt ˈtuː ˈmeɪk ˈʃʊɹ ˈaɪ ˈæm ˈæt ðə ˈɛˌɹpɔɹt ˈɑn ˈtaɪm/"
     },
     {
       "rank": 484,
       "word": "practice",
       "pos": "noun",
-      "ipa_strong": "/pɹæktʌs/",
+      "ipa_strong": "/ˈpɹæktəs/",
       "example_sentence": "Daily practice is the best way to improve your English skills.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈdeɪliː ˈpɹæktəs ˈɪz ðə ˈbɛst ˈweɪ ˈtuː ˌɪˈmpɹuːv ˈjɔɹ ˈɪŋɡlɪʃ ˈskɪlz/"
     },
     {
       "rank": 485,
       "word": "model",
       "pos": "verb",
-      "ipa_strong": "/mɑdʌl/",
+      "ipa_strong": "/ˈmɑdəl/",
       "example_sentence": "The teacher modeled the correct pronunciation before asking students to repeat.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ðə ˈtiːtʃɜr ˈmɑdəld ðə kɜrˈɛkt pɹoʊˌnʌnsiːˈeɪʃən bɪˈfɔɹ ˈæskɪŋ ˈstuːdənts ˈtuː ɹɪˈpiːt/"
     },
     {
       "rank": 486,
       "word": "raise",
       "pos": "verb",
-      "ipa_strong": "/ɹeɪz/",
+      "ipa_strong": "/ˈɹeɪz/",
       "example_sentence": "The organization raised enough money to build a new school in the village.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ðə ˌɔɹɡənəˈzeɪʃən ˈɹeɪzd ɪˈnʌf ˈmʌniː ˈtuː ˈbɪld ə ˈnuː ˈskuːl ɪn ðə ˈvɪlədʒ/"
     },
     {
       "rank": 487,
       "word": "customer",
       "pos": "noun",
-      "ipa_strong": "/kʌstʌmɜr/",
+      "ipa_strong": "/ˈkʌstəmɜr/",
       "example_sentence": "The store offers a discount to any customer who spends more than fifty dollars.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ðə ˈstɔɹ ˈɔfɜrz ə dɪˈskaʊnt ˈtuː ˈɛniː ˈkʌstəmɜr ˈhuː ˈspɛndz ˈmɔɹ ˈðæn ˈfɪftiː ˈdɑlɜrz/"
     },
     {
       "rank": 488,
       "word": "front",
       "pos": "noun",
-      "ipa_strong": "/fɹʌnt/",
+      "ipa_strong": "/ˈfɹʌnt/",
       "example_sentence": "She sat at the front of the class so she could see the board clearly.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈʃiː ˈsæt ˈæt ðə ˈfɹʌnt ˈʌv ðə ˈklæs ˈsoʊ ˈʃiː ˈkʊd ˈsiː ðə ˈbɔɹd ˈklɪɹliː/"
     },
     {
       "rank": 489,
       "word": "explain",
       "pos": "verb",
-      "ipa_strong": "/ɪkspleɪn/",
+      "ipa_strong": "/ɪˈkspleɪn/",
       "example_sentence": "Can you explain why you were late to the meeting this morning?",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈkæn ˈjuː ɪˈkspleɪn ˈwaɪ ˈjuː ˈwɜr ˈleɪt ˈtuː ðə ˈmiːtɪŋ ˈðɪs ˈmɔɹnɪŋ/"
     },
     {
       "rank": 490,
       "word": "door",
       "pos": "noun",
-      "ipa_strong": "/dɔɹ/",
+      "ipa_strong": "/ˈdɔɹ/",
       "example_sentence": "Please close the door when you leave so the noise does not disturb others.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈpliːz ˈkloʊs ðə ˈdɔɹ ˈwɛn ˈjuː ˈliːv ˈsoʊ ðə ˈnɔɪz ˈdʌz ˈnɑt dɪˈstɜrb ˈʌðɜrz/"
     },
     {
       "rank": 491,
       "word": "outside",
       "pos": "adverb",
-      "ipa_strong": "/aʊtsaɪd/",
+      "ipa_strong": "/ˈaʊˈtsaɪd/",
       "example_sentence": "The children went outside to play after it stopped raining.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ðə ˈtʃɪldɹən ˈwɛnt ˈaʊˈtsaɪd ˈtuː ˈpleɪ ˈæftɜr ˈɪt ˈstɑpt ˈɹeɪnɪŋ/"
     },
     {
       "rank": 492,
       "word": "behind",
       "pos": "preposition",
-      "ipa_strong": "/bɪhaɪnd/",
+      "ipa_strong": "/bɪˈhaɪnd/",
       "example_sentence": "She hid behind the door and surprised him when he walked in.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈʃiː ˈhɪd bɪˈhaɪnd ðə ˈdɔɹ ənd sɜrˈpɹaɪzd ˈhɪm ˈwɛn ˈhiː ˈwɔkt ɪn/"
     },
     {
       "rank": 493,
       "word": "economic",
       "pos": "adjective",
-      "ipa_strong": "/ɛkʌnɑmɪk/",
+      "ipa_strong": "/ˌɛkəˈnɑmɪk/",
       "example_sentence": "The country is facing serious economic problems after years of poor management.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ðə ˈkʌntɹiː ˈɪz ˈfeɪsɪŋ ˈsɪɹiːəs ˌɛkəˈnɑmɪk ˈpɹɑbləmz ˈæftɜr ˈjɪɹz ˈʌv ˈpuːɹ ˈmænədʒmənt/"
     },
     {
       "rank": 494,
       "word": "site",
       "pos": "noun",
-      "ipa_strong": "/saɪt/",
+      "ipa_strong": "/ˈsaɪt/",
       "example_sentence": "Workers began building on the construction site early in the morning.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈwɜrkɜrz bɪˈɡæn ˈbɪldɪŋ ˈɑn ðə kəˈnstɹʌkʃən ˈsaɪt ˈɜrliː ɪn ðə ˈmɔɹnɪŋ/"
     },
     {
       "rank": 495,
       "word": "approach",
       "pos": "noun",
-      "ipa_strong": "/ʌpɹoʊtʃ/",
+      "ipa_strong": "/əˈpɹoʊtʃ/",
       "example_sentence": "The teacher used a new approach to help students understand the lesson better.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ðə ˈtiːtʃɜr ˈjuːzd ə ˈnuː əˈpɹoʊtʃ ˈtuː ˈhɛlp ˈstuːdənts ˌʌndɜrˈstænd ðə ˈlɛsən ˈbɛtɜr/"
     },
     {
       "rank": 496,
       "word": "teacher",
       "pos": "noun",
-      "ipa_strong": "/tiːtʃɜr/",
+      "ipa_strong": "/ˈtiːtʃɜr/",
       "example_sentence": "The teacher explained the grammar rule clearly and gave several examples.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ðə ˈtiːtʃɜr ɪˈkspleɪnd ðə ˈɡɹæmɜr ˈɹuːl ˈklɪɹliː ənd ˈɡeɪv ˈsɛvɹəl ɪˈɡzæmpəlz/"
     },
     {
       "rank": 497,
       "word": "land",
       "pos": "verb",
-      "ipa_strong": "/lænd/",
+      "ipa_strong": "/ˈlænd/",
       "example_sentence": "The plane landed safely despite the strong wind and heavy rain.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ðə ˈpleɪn ˈlændəd ˈseɪfliː dɪˈspaɪt ðə ˈstɹɔŋ ˈwaɪnd ənd ˈhɛviː ˈɹeɪn/"
     },
     {
       "rank": 498,
       "word": "charge",
       "pos": "noun",
-      "ipa_strong": "/tʃɑɹdʒ/",
+      "ipa_strong": "/ˈtʃɑɹdʒ/",
       "example_sentence": "There is no charge for children under five at the museum.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈðɛɹ ˈɪz ˈnoʊ ˈtʃɑɹdʒ ˈfɔɹ ˈtʃɪldɹən ˈʌndɜr ˈfaɪv ˈæt ðə mjuːˈziːəm/"
     },
     {
       "rank": 499,
       "word": "finally",
       "pos": "adverb",
-      "ipa_strong": "/faɪnʌliː/",
+      "ipa_strong": "/ˈfaɪnəliː/",
       "example_sentence": "After waiting for over an hour, the bus finally arrived at the stop.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈæftɜr ˈweɪtɪŋ ˈfɔɹ ˈoʊvɜr ˈæn ˈaʊɜr ðə ˈbʌs ˈfaɪnəliː ɜrˈaɪvd ˈæt ðə ˈstɑp/"
     },
     {
       "rank": 500,
       "word": "sign",
       "pos": "verb",
-      "ipa_strong": "/saɪn/",
+      "ipa_strong": "/ˈsaɪn/",
       "example_sentence": "Both managers signed the contract at the end of the meeting.",
-      "cefr_level": "B1"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ˈboʊθ ˈmænədʒɜrz ˈsaɪnd ðə ˈkɑˌntɹækt ˈæt ðə ˈɛnd ˈʌv ðə ˈmiːtɪŋ/"
     }
   ]
 }

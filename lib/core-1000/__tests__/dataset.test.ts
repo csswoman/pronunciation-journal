@@ -37,4 +37,16 @@ describe("Core 1000 dataset", () => {
     const stale = Object.keys(loadExceptions()).filter((w) => words.length > 0 && !known.has(w));
     expect(stale).toEqual([]);
   });
+
+  it("every entry with example_sentence has sentence_ipa", () => {
+    const missing = words.filter(
+      (w) =>
+        w.example_sentence &&
+        (!w.sentence_ipa || !w.sentence_ipa.trim().startsWith("/"))
+    );
+    const report = missing
+      .map((w) => `#${w.rank} ${w.word}`)
+      .join("\n");
+    expect(missing, `\n${report}`).toEqual([]);
+  });
 });
