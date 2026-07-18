@@ -8,6 +8,7 @@ import type { ReaderPassage } from "../practice/reader/types";
 import { getRelativeLocalDateKey, getTodayLocalDateKey } from "../date/local-date";
 import { migrateArchivedRow } from "../srs/migrate-archived";
 import { patchActivateNow, patchMaster, patchSnooze } from "../srs/status";
+import type { JournalEntryRecord } from '../journal/types';
 
 /**
  * Active in-progress practice session, persisted so the user can resume
@@ -123,6 +124,7 @@ class PronunciationDB extends Dexie {
   practicePrefs!: Table<PracticePrefRecord, string>;
   pronunciationMastery!: Table<PronunciationMasteryRecord, string>;
   pronunciationCoachState!: Table<PronunciationCoachStateRecord, string>;
+  journalEntries!: Table<JournalEntryRecord, string>;
 
   constructor() {
     super("pronunciation-journal");
@@ -219,6 +221,7 @@ class PronunciationDB extends Dexie {
     this.version(16).stores({
       pronunciationCoachState: "key, updatedAt",
     });
+    this.version(17).stores({ journalEntries: 'id, userId, entryDate, status, updatedAt' });
   }
 }
 

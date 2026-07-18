@@ -30,6 +30,7 @@ function now(): string {
 const UPSERT_CONFLICT_COLUMNS: Partial<Record<SyncTable, string>> = {
   user_contrast_progress: 'user_id,contrast_id',
   user_learning_state: 'user_id',
+  journal_entries: 'id',
 }
 
 function resolveOnConflict(entry: SyncOutboxEntry): string | undefined {
