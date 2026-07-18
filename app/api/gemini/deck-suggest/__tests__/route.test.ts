@@ -32,6 +32,10 @@ vi.mock('@/lib/supabase/server', () => ({
   createSupabaseServerClient: async () => mocks.cacheClient,
 }))
 
+vi.mock('@/lib/supabase/admin', () => ({
+  getSupabaseAdminClient: () => mocks.cacheClient,
+}))
+
 vi.mock('@/lib/gemini/client', () => ({
   callWithFallback: mocks.callWithFallback,
   getErrorStatus: () => 500,

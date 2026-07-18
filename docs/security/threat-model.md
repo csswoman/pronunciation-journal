@@ -19,7 +19,7 @@ Fecha: 2026-07-01
 - RLS: migraciones nuevas se bloquean con `pnpm audit:rls`; SQL peligroso se bloquea con `pnpm check:migrations`.
 - Grants: `anon` no conserva grants heredados amplios sobre tablas, secuencias o funciones del schema `public`.
 - Secretos: `pnpm scan:secrets` corre en CI y puede ejecutarse localmente antes de commit.
-- Service role: uso server-only para admin bootstrap, rate limit RPC y trabajos de backend.
+- Service role: uso server-only para rate limit RPC, caches compartidas y trabajos de backend.
 - Headers/CSP: definidos globalmente en `next.config.mjs`.
 
 ## Riesgos y Owners
@@ -33,6 +33,7 @@ Fecha: 2026-07-01
 | Secretos en cliente o repo | `.env.example`, revisión y CI/precommit de secretos | Infra |
 | Jobs perdidos en serverless | `word_enrichment_jobs` y runner server-side | Infra |
 | Audio/transcripts sensibles en logs | No loggear payloads, solo IDs/errores resumidos | API |
+| Funciones privilegiadas o policies heredadas | Sin RPC SECURITY DEFINER huérfanas; policies RLS por usuario y grants mínimos | Data |
 
 ## Reglas de Cambio
 

@@ -918,7 +918,6 @@ export type Database = {
           retry_after_seconds: number
         }[]
       }
-      get_skill_profile: { Args: { p_user_id: string }; Returns: Json }
     }
     Enums: {
       [_ in never]: never
