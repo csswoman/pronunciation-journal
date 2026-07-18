@@ -99,6 +99,10 @@ import { EssentialWordsSession } from '../EssentialWordsSession'
 
 beforeEach(() => {
   vi.clearAllMocks()
+  Object.defineProperty(window, 'localStorage', {
+    configurable: true,
+    value: window.sessionStorage,
+  })
   window.sessionStorage.clear()
   authMocks.user = null
   coreWordClientMocks.fetchCoreWords.mockResolvedValue(WORDS)
@@ -178,6 +182,13 @@ describe('EssentialWordsSession', () => {
     window.dispatchEvent(new PageTransitionEvent('pagehide'))
 
     await waitFor(() => expect(dbMocks.saveSRSData).toHaveBeenCalledOnce())
+    expect(dbMocks.saveSRSData).toHaveBeenCalledWith(expect.objectContaining({
+      wordId: 'c1k:the',
+      word: 'the',
+      interval: 1,
+      repetitions: 0,
+      ease: 1.96,
+    }))
     expect(window.sessionStorage.getItem('core1000:pending-lapses')).toBeNull()
   })
 

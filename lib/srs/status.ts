@@ -1,6 +1,7 @@
 import type { SRSData, SrsStatus } from "@/lib/types";
 
 export function addDaysIso(from: Date, days: number): string {
+  // Snooze duration is intentionally measured in UTC calendar days.
   const d = new Date(from.getTime());
   d.setUTCDate(d.getUTCDate() + days);
   return d.toISOString();

@@ -34,6 +34,11 @@ describe("patchSnooze", () => {
     expect(next.nextReview).toBe(addDaysIso(now, 90));
     expect(next.snoozedAt).toBe(now.toISOString());
   });
+
+  it("adds snooze days in UTC even across a DST transition", () => {
+    const beforeDst = new Date("2026-03-08T06:30:00.000Z");
+    expect(addDaysIso(beforeDst, 1)).toBe("2026-03-09T06:30:00.000Z");
+  });
 });
 
 describe("activateExpiredSnoozes", () => {

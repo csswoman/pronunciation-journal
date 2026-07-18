@@ -9,7 +9,7 @@
  * different algorithm (boolean input, 1/3/7 intervals, ±0.1/-0.2 ease capped at 3.0).
  */
 
-const MIN_EASE = 1.3;
+export const MIN_EASE = 1.3;
 
 export interface ScheduleInput {
   ease: number;
@@ -48,7 +48,7 @@ export function scheduleNextReview(input: ScheduleInput): ScheduleResult {
   if (grade >= 3) {
     if (repetitions === 0) interval = 1;
     else if (repetitions === 1) interval = 6;
-    else interval = Math.round(interval * ease);
+    else interval = Math.max(1, Math.round(interval * ease));
     repetitions += 1;
     ease = adjustEase(ease, grade);
   } else {
@@ -59,6 +59,7 @@ export function scheduleNextReview(input: ScheduleInput): ScheduleResult {
 
   ease = Math.round(ease * 100) / 100;
 
+  // SM-2 intervals advance by local calendar days, preserving wall-clock time.
   const nextReviewAt = new Date(now);
   nextReviewAt.setDate(nextReviewAt.getDate() + interval);
 

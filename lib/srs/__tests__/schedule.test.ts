@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { scheduleNextReview } from "../schedule";
+import { createSRSEntry } from "../index";
 
 // Cases below are derived from the two SM-2 grade-based implementations being
 // unified: `updateSRS` (lib/srs.ts) and `computeSM2`/`sm2` (word-bank).
@@ -59,9 +60,27 @@ describe("scheduleNextReview", () => {
       // interval = round(6 * 2.5) = 15, ease = 2.5 - 0.14 = 2.36
       expect(r).toMatchObject({ ease: 2.36, interval: 15, repetitions: 3 });
     });
+
+    it("floors a zero interval so a passed review becomes future-due", () => {
+      const r = scheduleNextReview({ ease: 2.5, interval: 0, repetitions: 2, grade: 4, now: NOW });
+      expect(r.interval).toBeGreaterThanOrEqual(1);
+      expect(r.nextReviewAt.getTime()).toBeGreaterThan(NOW.getTime());
+    });
+
+    it("uses the same interval for grades 3 through 5 from the same state", () => {
+      const intervals = [3, 4, 5].map((grade) =>
+        scheduleNextReview({ ease: 2.5, interval: 6, repetitions: 2, grade, now: NOW }).interval,
+      );
+      expect(intervals).toEqual([15, 15, 15]);
+    });
   });
 
   describe("failed review (grade < 3) resets repetitions and interval", () => {
+    it.each([0, 1, 2])("grade %i never increases the interval", (grade) => {
+      const r = scheduleNextReview({ ease: 2.5, interval: 6, repetitions: 3, grade, now: NOW });
+      expect(r).toMatchObject({ interval: 1, repetitions: 0 });
+    });
+
     it("with updateEaseOnLapse=false (word-bank) leaves ease untouched", () => {
       const r = scheduleNextReview({
         ease: 2.5, interval: 6, repetitions: 3, grade: 2, now: NOW, updateEaseOnLapse: false,
@@ -125,6 +144,7 @@ describe("scheduleNextReview", () => {
       const input = { ease: 2.5, interval: 6, repetitions: 2, grade: 5, now: NOW };
       scheduleNextReview(input);
       expect(input).toEqual({ ease: 2.5, interval: 6, repetitions: 2, grade: 5, now: NOW });
+      expect(NOW.toISOString()).toBe("2026-01-15T00:00:00.000Z");
     });
 
     it("falls back to the current date when `now` is omitted", () => {
@@ -135,5 +155,42 @@ describe("scheduleNextReview", () => {
       expect(diff).toBeGreaterThanOrEqual(before + DAY_MS - 1000);
       expect(diff).toBeLessThanOrEqual(after + DAY_MS + 1000);
     });
+  });
+
+  describe("date convention", () => {
+    it("advances by local calendar day across a DST boundary", () => {
+      const previousTz = process.env.TZ;
+      process.env.TZ = "America/New_York";
+      try {
+        const beforeDst = new Date(2026, 2, 7, 12, 0, 0);
+        const r = scheduleNextReview({ ease: 2.5, interval: 0, repetitions: 0, grade: 4, now: beforeDst });
+        expect(r.nextReviewAt.getDate()).toBe(8);
+        expect(r.nextReviewAt.getHours()).toBe(12);
+        expect(r.nextReviewAt.getTime() - beforeDst.getTime()).toBe(23 * 60 * 60 * 1000);
+      } finally {
+        if (previousTz === undefined) delete process.env.TZ;
+        else process.env.TZ = previousTz;
+      }
+    });
+
+    it("preserves local wall-clock time when starting near midnight", () => {
+      const nearMidnight = new Date(2026, 0, 15, 23, 45, 0);
+      const r = scheduleNextReview({ ease: 2.5, interval: 0, repetitions: 0, grade: 4, now: nearMidnight });
+      expect(r.nextReviewAt.getDate()).toBe(16);
+      expect(r.nextReviewAt.getHours()).toBe(23);
+      expect(r.nextReviewAt.getMinutes()).toBe(45);
+    });
+  });
+
+  it("gives a newly created zero-seed entry a one-day first pass", () => {
+    const entry = createSRSEntry("word-1", "word");
+    const r = scheduleNextReview({
+      ease: entry.ease,
+      interval: entry.interval,
+      repetitions: entry.repetitions,
+      grade: 4,
+      now: NOW,
+    });
+    expect(r).toMatchObject({ interval: 1, repetitions: 1 });
   });
 });

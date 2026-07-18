@@ -1,10 +1,9 @@
 import { getSupabaseBrowserClient } from '@/lib/supabase/client'
 import { computeSM2, type SM2Progress } from '@/lib/srs/compute'
+import { MIN_EASE } from '@/lib/srs/schedule'
 import { enqueue } from '@/lib/sync/sync-manager'
 import type { WordBankEntry } from '@/lib/word-bank/types'
 import type { FlashcardRating } from '@/lib/word-bank/lexicon-review-types'
-
-const MIN_EASE = 1.3
 
 function supabase() {
   return getSupabaseBrowserClient()
@@ -74,7 +73,7 @@ export async function applyFlashcardRating(
     const next30 = new Date(now)
     next30.setDate(next30.getDate() + 30)
     srsUpdate = {
-      ease_factor: 2.5,
+      ease_factor: entry.ease_factor ?? 2.5,
       interval_days: 30,
       repetitions: 1,
       srs_status: 'mastered',
@@ -89,7 +88,8 @@ export async function applyFlashcardRating(
       ease_factor: Math.max(MIN_EASE, (entry.ease_factor ?? 2.5) - 0.15),
       interval_days: 1,
       repetitions: 0,
-      srs_status: 'new',
+      // Deliberately softer than a grade-1 SM-2 lapse, but still learning.
+      srs_status: 'learning',
       next_review_at: tomorrow.toISOString(),
       last_reviewed_at: now.toISOString(),
       review_count: (entry.review_count ?? 0) + 1,
@@ -135,16 +135,19 @@ export async function applyPhase2Penalty(
   currentEaseFactor: number,
 ): Promise<void> {
   const db = supabase()
-  const tomorrow = new Date()
+  const now = new Date()
+  const tomorrow = new Date(now)
   tomorrow.setDate(tomorrow.getDate() + 1)
 
   const { error } = await db
     .from('word_bank')
     .update({
-      srs_status: 'new',
-      interval_days: 0,
+      srs_status: 'learning',
+      interval_days: 1,
+      repetitions: 0,
       ease_factor: Math.max(MIN_EASE, currentEaseFactor - 0.15),
       next_review_at: tomorrow.toISOString(),
+      last_reviewed_at: now.toISOString(),
     })
     .eq('id', wordBankId)
     .eq('user_id', userId)
