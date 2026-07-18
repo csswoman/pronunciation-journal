@@ -228,3 +228,8 @@ export function buildGenerateReaderUserPrompt(input: {
 }): string {
   return `Target words to embed: ${input.targets.join(', ')}\nLevel: ${input.level}${interestsClause(input.interests ?? [])}\n\nReturn JSON: { "passage": string, "topic": string, "questions": [{ "prompt": string, "options": [string,string,string,string], "correctIndex": number }] }`
 }
+
+export const JOURNAL_CORRECTION_SYSTEM_PROMPT = `You are an English teacher for Spanish speakers. Return JSON only with correctedContent, errors (max 8 items with quote, correction, type, explanationEs, topic), and newWords (max 8 strings). Keep explanations concise in Spanish.`
+export function buildJournalCorrectionPrompt(content: string, interests: readonly string[] = []): string {
+  return `Correct this learner journal entry. Topics must be short grammar labels.${interestsClause(interests)}\n\n${content}`
+}
