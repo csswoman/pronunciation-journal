@@ -6,6 +6,27 @@ import { buildFailedItemStep } from '@/lib/review/build-failed-exercises'
 import { useAuth } from '@/components/auth/AuthProvider'
 import type { DailyStep } from '@/lib/practice/types'
 import type { FailedSentenceItem } from '@/lib/review/types'
+import { fromGenericExercise } from '@/lib/practice/adapters'
+import { cacheTransformations, getCachedTransformations } from '@/lib/exercises/transformations'
+import type { SentenceTransformationExercise } from '@/lib/exercises/types'
+
+function transformationCacheKey(topic: string) {
+  return `transform:${topic.trim().toLowerCase().replace(/\s+/g, '_')}`
+}
+
+async function getTransformationStep(topic: string): Promise<DailyStep | null> {
+  const cacheKey = transformationCacheKey(topic)
+  let exercises = await getCachedTransformations(cacheKey)
+  if (!exercises && navigator.onLine) {
+    const response = await fetch('/api/gemini/generate-transformations', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ topic, level: 'B1', count: 1 }) })
+    if (!response.ok) return null
+    const body = await response.json() as { exercises: Array<Omit<SentenceTransformationExercise, 'id' | 'type' | 'sourceRef' | 'topic'>> }
+    exercises = body.exercises.map((exercise, index) => ({ ...exercise, id: `${cacheKey}:${index}`, type: 'sentence_transformation' as const, sourceRef: { source: 'text_fragments' as const, id: `generated:${cacheKey}:${index}` }, topic: topic.startsWith('grammar:') ? topic : `grammar:${topic}` }))
+    await cacheTransformations(exercises)
+  }
+  if (!exercises?.length) return null
+  return { id: `${cacheKey}:step`, kind: 'concept', title: 'Transforma la oración', subtitle: topic, icon: 'refresh', exercises: exercises.map((exercise) => fromGenericExercise(exercise, 'review')), estMinutes: 2 }
+}
 
 export type ReviewSessionPhase =
   | { phase: 'idle' }
@@ -45,6 +66,8 @@ export function useReviewSession() {
     try {
       const response = await fetch('/api/review/topics', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ topic }) })
       const { steps } = response.ok ? await response.json() : { steps: [] }
+      const transformation = await getTransformationStep(topic).catch(() => null)
+      if (transformation) steps.push(transformation)
       if (!steps?.length) return setState({ phase: 'error' })
       setSessionKey((key) => key + 1)
       setState({ phase: 'session', steps, stepIndex: 0 })
