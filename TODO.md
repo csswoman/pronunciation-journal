@@ -42,7 +42,7 @@ La base técnica es sólida y el sprint de producción cerró la mayoría de P0/
 
 | # | Área | Qué falta |
 |---|---|---|
-| RLS-INT / T56 | RLS integration real | `pnpm test:rls:integration` existe y limpia usuarios temporales. Las migraciones remotas ya están alineadas, pero el intento del 2026-07-17 confirmó que Docker/Supabase local no está disponible y no hay staging aislado configurado. No ejecutar contra producción. |
+| RLS-INT / T56 | RLS integration real | **HECHO (2026-07-18):** `pnpm test:rls:integration` pasó contra Supabase local. En el proceso se corrigieron migraciones que impedían reconstruir desde cero (referencias a `user_sound_progress` eliminada; `deck_suggestions_cache` inexistente) y una recursión infinita de RLS en `text_fragments` (nueva migración `20260718120000_fix_text_fragments_rls_recursion.sql`). Detalle en `docs/database/rls-integration.md`. No ejecutar contra producción. |
 
 ### HECHO (planes 046–057, 2026-07-18)
 
@@ -125,7 +125,7 @@ La base técnica es sólida y el sprint de producción cerró la mayoría de P0/
 | HECHO | Revisar grants heredados a `anon` y default privileges. | P2 | M | 1-2 días | Roadmap #18. `20260703000000_harden_anon_grants.sql` revoca grants amplios; revisión en `docs/database/anon-grants-review.md`. |
 | HECHO | Añadir pruebas o checks de migraciones para RLS. | P1 | M | 1-2 días | Roadmap #15-16. `pnpm check:migrations`, `pnpm audit:rls`. |
 | HECHO | Documentar migraciones históricas con policy insegura temporal. | P2 | M | 1 día | Roadmap #19. `docs/database/migration-risk-register.md` documenta STT cache 2026-06-11 → 2026-06-21. |
-| ABIERTO | Ejecutar pruebas RLS contra una base local/staging aplicada. | P2 | M | 1-2 días | Intento 2026-07-17 bloqueado: Docker Desktop no está instalado/activo y no hay staging aislado. Reintentar con `pnpm exec supabase start` y después `pnpm test:rls:integration`. No usar producción porque el runner crea usuarios y filas temporales. |
+| HECHO | Ejecutar pruebas RLS contra una base local/staging aplicada. | P2 | M | 1-2 días | 2026-07-18: `pnpm exec supabase start` + `pnpm test:rls:integration` PASÓ en local. Se arreglaron 3 migraciones para reconstruir desde cero y la recursión RLS de `text_fragments`. Ver `docs/database/rls-integration.md`. No usar producción (el runner crea/borra usuarios). |
 
 ## Infraestructura
 
@@ -206,6 +206,7 @@ La base técnica es sólida y el sprint de producción cerró la mayoría de P0/
 Fuente detallada: `plans/032-post-production-improvement-roadmap.md`.
 
 1. **Cerrar T50:** completar y documentar el QA manual de Reader.
-2. **Cerrar RLS-INT/T56:** levantar Supabase local/staging aislado, aplicar migraciones y validar permisos reales por rol.
+2. ~~**Cerrar RLS-INT/T56:** levantar Supabase local/staging aislado, aplicar migraciones y validar permisos reales por rol.~~ **HECHO (2026-07-18):** pasó contra local; ver `docs/database/rls-integration.md`.
 3. **CI opcional:** automatizar RLS integration solo cuando exista un servicio de test aislado y estable.
-4. **Deuda condicional:** no iniciar T55, T57, T58 o T59 hasta que se cumpla el disparador documentado en su fila.
+4. **Revisar remoto:** confirmar en el proyecto remoto si `handle_new_user` aún inserta en `user_sound_progress` (alta de usuarios rota) y si `text_fragments` tiene la política recursiva; aplicar allí las migraciones nuevas.
+5. **Deuda condicional:** no iniciar T55, T57, T58 o T59 hasta que se cumpla el disparador documentado en su fila.

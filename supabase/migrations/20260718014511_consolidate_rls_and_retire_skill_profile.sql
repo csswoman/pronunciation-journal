@@ -12,9 +12,8 @@ drop policy if exists "entries_insert_own" on public.entries;
 drop policy if exists "entries_select_own" on public.entries;
 drop policy if exists "entries_update_own" on public.entries;
 
-drop policy if exists "Users can insert own progress" on public.user_sound_progress;
-drop policy if exists "Users can view own progress" on public.user_sound_progress;
-drop policy if exists "Users can update own progress" on public.user_sound_progress;
+-- user_sound_progress was dropped in 20260602100000_contrast_progress.sql, so its
+-- policies no longer exist and are not dropped here (they went with the table).
 
 -- user_profiles has separate operation policies. Retain the stricter
 -- authenticated SELECT/UPDATE policies and recreate INSERT with an explicit role.
@@ -41,6 +40,13 @@ drop policy if exists "stt_cache_update" on public.stt_transcription_cache;
 
 -- Deck suggestions are shared cache data. Reads remain available to signed-in
 -- users, but writes are restricted to the server-side service-role client.
-drop policy if exists "authenticated can insert cache" on public.deck_suggestions_cache;
-revoke insert, update, delete on table public.deck_suggestions_cache from anon, authenticated;
-grant select on table public.deck_suggestions_cache to authenticated;
+-- deck_suggestions_cache is not created by any migration (it exists only on the
+-- remote project), so guard on its presence to keep a from-scratch build working.
+do $$
+begin
+  if to_regclass('public.deck_suggestions_cache') is not null then
+    execute 'drop policy if exists "authenticated can insert cache" on public.deck_suggestions_cache';
+    execute 'revoke insert, update, delete on table public.deck_suggestions_cache from anon, authenticated';
+    execute 'grant select on table public.deck_suggestions_cache to authenticated';
+  end if;
+end $$;

@@ -19,16 +19,9 @@ begin
   values (new.id)
   on conflict (id) do nothing;
 
-  insert into public.user_sound_progress (user_id, sound_id, status)
-  select
-    new.id,
-    s.id,
-    case when row_number() over (order by s.id) <= 5
-         then 'available'
-         else 'locked'
-    end
-  from public.sounds s
-  on conflict (user_id, sound_id) do nothing;
+  -- user_sound_progress fue retirada en 20260602100000_contrast_progress.sql:
+  -- el modelo de contrastes crea user_contrast_progress de forma perezosa al
+  -- practicar, por lo que el alta ya no siembra progreso por sonido.
 
   return new;
 end;
