@@ -181,6 +181,7 @@ export async function saveAnswers(
   answers: SessionAnswer[]
 ): Promise<void> {
   const rows = await Promise.all(answers.map(async a => ({
+    id: crypto.randomUUID(),
     user_id: userId,
     sound_id: a.soundId,
     exercise_type_id: await getExerciseTypeId(a.exerciseType),
@@ -190,7 +191,7 @@ export async function saveAnswers(
     time_ms: a.timeMs,
     exercise_payload: (a.exercisePayload ?? null) as import('@/lib/supabase/types').Json | null,
   })))
-  await Promise.all(rows.map((row) => enqueue('answer_history', 'insert', row as Record<string, unknown>)))
+  await Promise.all(rows.map((row) => enqueue('answer_history', 'upsert', row as Record<string, unknown>, undefined, 'id')))
 }
 
 export async function getAnswerHistoryForSound(

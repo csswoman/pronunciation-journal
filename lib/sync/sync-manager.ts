@@ -5,13 +5,14 @@
  *  1. Enqueue local changes to `syncOutbox` inside Dexie transactions.
  *  2. Flush the queue to Supabase when connectivity is detected.
  *  3. Mark failed entries (RLS / validation) without blocking other items.
- *  4. Listen for online/offline events and auto-flush on reconnection.
+ *  4. Flush on reconnection through `init-sync-listeners.ts`.
  */
 
 import Dexie from 'dexie'
 import { db } from '@/lib/db'
 import { getSupabaseBrowserClient } from '@/lib/supabase/client'
 import type { SyncOutboxEntry, SyncFlushResult, SyncTable, SyncOperation } from './types'
+import { getNextRetryAt, isReadyToRetry, reclaimStaleSyncingEntries } from './recovery'
 
 // ── Constants ──────────────────────────────────────────────────────────────
 
@@ -28,10 +29,15 @@ function now(): string {
 }
 
 const UPSERT_CONFLICT_COLUMNS: Partial<Record<SyncTable, string>> = {
+  answer_history: 'id',
+  activity_sessions: 'id',
+  ai_events: 'id',
   user_contrast_progress: 'user_id,contrast_id',
   user_learning_state: 'user_id',
   journal_entries: 'id',
 }
+
+let flushInFlight: Promise<SyncFlushResult> | null = null
 
 function resolveOnConflict(entry: SyncOutboxEntry): string | undefined {
   return entry.onConflict ?? UPSERT_CONFLICT_COLUMNS[entry.table]
@@ -141,23 +147,32 @@ export async function enqueue(
 }
 
 /**
- * Drain the pending queue, sending entries to Supabase one by one.
- * Safe to call concurrently — `syncing` status prevents double-processing.
+ * Drain the pending queue, sending entries independently in parallel.
+ * A tab shares one in-flight pass; across tabs, cleanup is scoped to the ids
+ * claimed by this pass so it never releases another tab's active work.
  *
  * Returns a summary of what happened during this flush pass.
  */
-export async function flushOutbox(): Promise<SyncFlushResult> {
+export function flushOutbox(): Promise<SyncFlushResult> {
+  if (flushInFlight) return flushInFlight
+  flushInFlight = flushOutboxInternal().finally(() => { flushInFlight = null })
+  return flushInFlight
+}
+
+async function flushOutboxInternal(): Promise<SyncFlushResult> {
+  await reclaimStaleSyncingEntries()
   if (!navigator.onLine) return { synced: 0, failed: 0, skipped: 0 }
 
   const result: SyncFlushResult = { synced: 0, failed: 0, skipped: 0 }
 
   // Claim a batch atomically: pending → syncing
   const batch = await db.transaction('rw', db.syncOutbox, async () => {
-    const pending = await db.syncOutbox
+    const pending = (await db.syncOutbox
       .where('[status+createdAt]')
       .between(['pending', Dexie.minKey], ['pending', Dexie.maxKey])
-      .limit(FLUSH_BATCH_SIZE)
-      .toArray()
+      .toArray())
+      .filter((entry) => isReadyToRetry(entry.nextRetryAt, Date.now()))
+      .slice(0, FLUSH_BATCH_SIZE)
 
     const ids = pending.map(e => e.id!)
     await db.syncOutbox.where('id').anyOf(ids).modify({ status: 'syncing', lastAttemptAt: now() })
@@ -180,11 +195,13 @@ export async function flushOutbox(): Promise<SyncFlushResult> {
         const newRetryCount = entry.retryCount + 1
         const permanent = isPermanentError(message, code) || newRetryCount >= MAX_RETRIES
 
+        const attemptedAt = now()
         await db.syncOutbox.update(entry.id!, {
           status: permanent ? 'failed' : 'pending',
           retryCount: newRetryCount,
           errorMessage: message,
-          lastAttemptAt: now(),
+          lastAttemptAt: attemptedAt,
+          nextRetryAt: permanent ? undefined : getNextRetryAt(newRetryCount, attemptedAt),
         })
         result.failed++
       }
@@ -193,8 +210,9 @@ export async function flushOutbox(): Promise<SyncFlushResult> {
 
   // Items that were claimed as `syncing` but not resolved (shouldn't happen, but safety net)
   const stuckCount = await db.syncOutbox
-    .where('status')
-    .equals('syncing')
+    .where('id')
+    .anyOf(batch.map((entry) => entry.id!))
+    .filter((entry) => entry.status === 'syncing')
     .modify({ status: 'pending' })
   result.skipped += stuckCount
 

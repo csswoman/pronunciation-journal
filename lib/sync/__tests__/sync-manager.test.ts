@@ -51,6 +51,12 @@ vi.mock('dexie', () => ({
   },
 }))
 
+vi.mock('../recovery', () => ({
+  reclaimStaleSyncingEntries: vi.fn().mockResolvedValue(0),
+  isReadyToRetry: () => true,
+  getNextRetryAt: () => '2026-01-01T00:00:05.000Z',
+}))
+
 // ── Import subject AFTER mocks ──────────────────────────────────────────────
 
 import { isPermanentError, enqueue, flushOutbox } from '../sync-manager'
@@ -141,8 +147,7 @@ describe('flushOutbox', () => {
    * Set up mockDbTransaction so that:
    *  - it executes the callback (simulating the Dexie transaction)
    *  - db.syncOutbox.where() returns a chain whose toArray() yields `pendingEntries`
-   *    for the first call (the pending query) and a modify-able chain for the second
-   *    call (the stuck-syncing cleanup)
+   *    for the pending query, then chains the batch-scoped cleanup.
    */
   function setupFlush(pendingEntries: unknown[]) {
     let callCount = 0
@@ -152,9 +157,7 @@ describe('flushOutbox', () => {
         // Compound index query: .between().limit().toArray()
         return {
           between: () => ({
-            limit: () => ({
-              toArray: () => Promise.resolve(pendingEntries),
-            }),
+            toArray: () => Promise.resolve(pendingEntries),
           }),
           // Also provide anyOf for the ids.modify step (called in same transaction)
           anyOf: () => ({ modify: mocks.mockSyncOutboxModify }),
@@ -164,8 +167,8 @@ describe('flushOutbox', () => {
         // where('id').anyOf(ids).modify(...)
         return { anyOf: () => ({ modify: mocks.mockSyncOutboxModify }) }
       }
-      // Stuck-syncing cleanup: where('status').equals('syncing').modify(...)
-      return { equals: () => ({ modify: mocks.mockSyncOutboxModify }) }
+      // Batch-scoped cleanup: where('id').anyOf(ids).filter(...).modify(...)
+      return { anyOf: () => ({ filter: () => ({ modify: mocks.mockSyncOutboxModify }) }) }
     })
 
     mocks.mockDbTransaction.mockImplementation(
@@ -245,6 +248,25 @@ describe('flushOutbox', () => {
       { user_id: 'u1', state: { foo: 'bar' } },
       { onConflict: 'user_id' },
     )
+  })
+
+  it('uses an id conflict target for idempotent answer-history writes', async () => {
+    const upsert = vi.fn().mockResolvedValue({ error: null })
+    const entry = {
+      id: 13,
+      table: 'answer_history',
+      operation: 'upsert',
+      payload: { id: 'answer-1' },
+      status: 'pending',
+      retryCount: 0,
+      createdAt: new Date().toISOString(),
+    }
+    setupFlush([entry])
+    mocks.mockSupabaseFrom.mockReturnValue({ upsert })
+
+    await flushOutbox()
+
+    expect(upsert).toHaveBeenCalledWith({ id: 'answer-1' }, { onConflict: 'id' })
   })
 
   it('increments retryCount and keeps status pending on a transient error', async () => {
@@ -348,4 +370,5 @@ describe('flushOutbox', () => {
     expect(result).toEqual({ synced: 0, failed: 0, skipped: 0 })
     expect(mocks.mockSupabaseFrom).not.toHaveBeenCalled()
   })
+
 })

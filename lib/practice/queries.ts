@@ -111,6 +111,7 @@ export async function savePracticeAnswer(
   const normalizedTopic = answer.topic ? normalizeTopic(answer.topic) : null
 
   const row = {
+    id: crypto.randomUUID(),
     user_id: userId,
     sound_id: answer.soundId ?? null,
     exercise_type_id: answer.exerciseTypeId,
@@ -127,7 +128,7 @@ export async function savePracticeAnswer(
   const grade = answerToGrade(answer)
   const rowWithGrade = { ...row, grade }
 
-  await enqueue('answer_history', 'insert', rowWithGrade as Record<string, unknown>)
+  await enqueue('answer_history', 'upsert', rowWithGrade as Record<string, unknown>, undefined, 'id')
 
   // Enqueue SRS update for word_bank entries via the sync outbox (retried on reconnection).
   if (answer.sourceRef?.source === 'word_bank') {

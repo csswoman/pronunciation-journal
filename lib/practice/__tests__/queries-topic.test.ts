@@ -42,6 +42,9 @@ describe('savePracticeAnswer topic routing', () => {
 
     const insertCall = enqueueMock.mock.calls.find((c) => c[0] === 'answer_history')
     expect(insertCall?.[2]).toMatchObject({ topic: 'grammar:present simple' })
+    expect(insertCall?.[1]).toBe('upsert')
+    expect(insertCall?.[2].id).toMatch(/^[0-9a-f-]{36}$/i)
+    expect(insertCall?.[4]).toBe('id')
     expect(topicSrsMock).toHaveBeenCalledWith('user-1', 'grammar:present simple', expect.any(Number))
   })
 

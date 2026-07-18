@@ -31,8 +31,10 @@ export async function logEvent<N extends AnalyticsEventName>(
 
   await enqueue(
     "ai_events",
-    "insert",
-    { event_name: name, payload, occurred_at: timestamp },
+    "upsert",
+    { id: crypto.randomUUID(), event_name: name, payload, occurred_at: timestamp },
+    undefined,
+    "id",
   );
 
   if (typeof navigator !== "undefined" && navigator.onLine) {

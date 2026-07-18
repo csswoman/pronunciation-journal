@@ -80,3 +80,8 @@ hasta que este resuelto.
 - `core1000:pending-lapses` sigue usando `sessionStorage` como buffer corto para lapses dentro de una sesion; el hook intenta flush al cierre de sesion/pagehide. No debe tratarse como almacenamiento multi-tab durable.
 - El runner de `word_enrichment_jobs` debe desplegarse como worker/scheduled job externo al request HTTP.
 - El AI Coach de pronunciacion guarda mastery, queue y seen en Dexie con migracion desde localStorage. El progreso local no sincroniza entre dispositivos.
+- El outbox no coalesce operaciones del mismo registro y el lote se procesa en paralelo; mutaciones dependientes pueden llegar fuera de orden.
+- Realtime de `word_bank` puede sobrescribir una actualizacion SRS local aun no enviada; `tracked_items` evita este caso al hidratar, pero `word_bank` no todavia.
+- El SRS de `word_bank` requiere una lectura Supabase antes de encolar, por lo que no es plenamente offline.
+- La eliminacion de respuestas de cursos usa la clave no unica `(user_id, context, content_id)`; una correccion por `id` requiere conservar ese id desde la UI.
+- Los triggers `updated_at` no son uniformes entre tablas, asi que el ultimo escritor puede depender de la tabla.

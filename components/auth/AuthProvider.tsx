@@ -13,6 +13,7 @@ import type { Session, User } from "@supabase/supabase-js";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { useLoadingWords } from "@/hooks/useLoadingWords";
+import { initSyncListeners } from "@/lib/sync/init-sync-listeners";
 
 export type AuthContextValue = {
   user: User | null;
@@ -62,6 +63,7 @@ export default function AuthProvider({
     }
 
     const supabase = getSupabaseBrowserClient();
+    const cleanupSyncListeners = initSyncListeners();
     const hydrateCEFR = async (userId: string) => {
       try {
         const { data } = await supabase
@@ -112,7 +114,10 @@ export default function AuthProvider({
       if (s?.user?.id) void hydrateCEFR(s.user.id);
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      cleanupSyncListeners();
+      subscription.unsubscribe();
+    };
   }, [initialUser, supabaseEnabled]);
 
   const value = useMemo<AuthContextValue>(

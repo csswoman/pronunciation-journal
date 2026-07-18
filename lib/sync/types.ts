@@ -34,6 +34,8 @@ export interface SyncOutboxEntry {
   createdAt: string
   /** ISO timestamp of the last sync attempt */
   lastAttemptAt?: string
+  /** Earliest time a transiently failed entry can be retried. */
+  nextRetryAt?: string
   /** Number of failed attempts */
   retryCount: number
   /** Human-readable reason for the last failure */

@@ -194,8 +194,10 @@ export async function recordActivitySession(
   try {
     await enqueue(
       'activity_sessions',
-      'insert',
+      'upsert',
       telemetry.activitySession as unknown as Record<string, unknown>,
+      undefined,
+      'id',
     )
   } catch (err) {
     console.error('[activity-hub] enqueue activity_sessions failed', err)
@@ -231,7 +233,9 @@ export async function recordDailyStepCompletion(
 
   await enqueue(
     'activity_sessions',
-    'insert',
+    'upsert',
     activitySession as unknown as Record<string, unknown>,
+    undefined,
+    'id',
   )
 }
