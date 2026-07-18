@@ -171,6 +171,17 @@ describe('POST /api/words', () => {
     expect(body.word.text).toBe('ephemeral')
   })
 
+  it('stores reader as the source only for a new word', async () => {
+    const insert = vi.fn().mockReturnValue({ select: vi.fn().mockReturnValue({ single: vi.fn().mockResolvedValue({ data: { id: 'word-1' }, error: null }) }) })
+    const userClientMock = { from: vi.fn().mockReturnValue({ insert }) }
+    mockRequireUser.mockResolvedValue({ user: { id: 'user-123' } as never, error: null, accessToken: 'good-token' })
+    mockValidateBody.mockResolvedValue({ data: { text: 'reader', source: 'reader' }, error: null })
+    mockCreateUserScopedClient.mockReturnValue(userClientMock as never)
+    const res = await POST(new NextRequest('http://localhost/api/words', { method: 'POST' }))
+    expect(res.status).toBe(201)
+    expect(insert).toHaveBeenCalledWith(expect.objectContaining({ source: 'reader' }))
+  })
+
   it('returns 404 when a provided deckId does not belong to the user', async () => {
     const fakeWord = { id: 'word-abc', text: 'ephemeral', status: 'processing' }
 

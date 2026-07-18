@@ -1,11 +1,13 @@
 'use client'
 
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Volume2 } from "@/components/icons"
 import { cn } from '@/lib/cn'
 import Button from '@/components/ui/Button'
 import type { ReaderPassage } from '@/lib/practice/reader/types'
 import { recordReaderExposure } from '@/lib/practice/reader/exposure'
+import { tokenizePassage } from './passage-tokens'
+import { WordSavePopover } from './WordSavePopover'
 
 // Planned structure:
 // <ReaderExercise>
@@ -24,6 +26,7 @@ export function ReaderExercise({ passage, online, onComplete }: ReaderExercisePr
   const [saving, setSaving] = useState(false)
   const [saveError, setSaveError] = useState(false)
   const question = passage.questions[0]
+  const tokens = useMemo(() => tokenizePassage(passage.passage), [passage.passage])
 
   function speak() {
     const u = new SpeechSynthesisUtterance(passage.passage)
@@ -55,7 +58,11 @@ export function ReaderExercise({ passage, online, onComplete }: ReaderExercisePr
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-3">
-        <p className="text-lg leading-relaxed text-fg">{passage.passage}</p>
+        <div className="text-lg leading-relaxed text-fg">
+          {tokens.map((token, index) => token.kind === 'word' ? (
+            <WordSavePopover key={`${token.value}-${index}`} word={token.value} lookup={token.lookup} context={token.context} online={online} />
+          ) : <span key={index}>{token.value}</span>)}
+        </div>
         <Button
           variant="ghost"
           size="sm"
