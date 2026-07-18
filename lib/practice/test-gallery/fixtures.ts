@@ -120,6 +120,7 @@ const GENERIC_FIXTURES: Record<
   },
   error_correction: { id: 'error-correction', type: 'error_correction', sourceRef: SOURCE, sentence: 'She go to work.', correctSentence: 'She goes to work.', explanation: 'Third-person singular uses goes.' },
   conjugation_blank: { id: 'conjugation-blank', type: 'conjugation_blank', sourceRef: SOURCE, sentence: 'She ___ to work.', lemma: 'go', answer: 'goes' },
+  sentence_transformation: { id: 'sentence-transformation', type: 'sentence_transformation', sourceRef: SOURCE, sourceSentence: 'She is too tired to work.', instruction: 'Rewrite using enough.', referenceAnswer: 'She is not well enough to work.' },
 }
 
 const PHONEME_FIXTURES: Record<
@@ -260,6 +261,7 @@ const GENERIC_LABELS: Record<keyof typeof GENERIC_FIXTURES, string> = {
   spoken_production: 'Producción oral',
   error_correction: 'Corregir oración',
   conjugation_blank: 'Completar verbo',
+  sentence_transformation: 'Transformar oración',
 }
 
 const PHONEME_LABELS: Record<keyof typeof PHONEME_FIXTURES, string> = {

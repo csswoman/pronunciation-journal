@@ -24,6 +24,7 @@ export type GenericExerciseType =
   | 'spoken_production'
   | 'error_correction'
   | 'conjugation_blank'
+  | 'sentence_transformation'
 
 interface BaseGenericExercise {
   /** Deterministic id: hash of type + sourceRef + stable payload fields. */
@@ -142,6 +143,13 @@ export interface ConjugationBlankExercise extends BaseGenericExercise {
   acceptedAnswers?: string[]
 }
 
+export interface SentenceTransformationExercise extends BaseGenericExercise {
+  type: 'sentence_transformation'
+  sourceSentence: string
+  instruction: string
+  referenceAnswer?: string
+}
+
 // Free production (online-only — requires /api/gemini/grade-production) ───────
 interface BaseProductionExercise extends BaseGenericExercise {
   /** Instruction shown to the learner. */
@@ -171,6 +179,7 @@ export type GenericExercise =
   | MultipleChoiceExercise
   | ErrorCorrectionExercise
   | ConjugationBlankExercise
+  | SentenceTransformationExercise
   | WrittenProductionExercise
   | SpokenProductionExercise
 

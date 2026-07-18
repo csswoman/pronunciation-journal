@@ -32,6 +32,7 @@ export type ExerciseSlug =
   | 'spoken_production'  // id: 16 — online-only (AI grading)
   | 'error_correction'   // id: 19
   | 'conjugation_blank'  // id: 21
+  | 'sentence_transformation' // id: 20
 
 // null signals "no exercise_types FK" — this exercise does not write to answer_history.
 export const EXERCISE_TYPE_IDS: Record<ExerciseSlug, number | null> = {
@@ -55,6 +56,7 @@ export const EXERCISE_TYPE_IDS: Record<ExerciseSlug, number | null> = {
   spoken_production: 16,
   error_correction: 19,
   conjugation_blank: 21,
+  sentence_transformation: 20,
 }
 
 export type PracticeContext =

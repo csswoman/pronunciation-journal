@@ -9,6 +9,7 @@ import { WrittenProductionExercise } from '@/components/exercises/WrittenProduct
 import { SpokenProductionExercise } from '@/components/exercises/SpokenProductionExercise'
 import { ErrorCorrectionExercise } from '@/components/exercises/ErrorCorrectionExercise'
 import { ConjugationBlankExercise } from '@/components/exercises/ConjugationBlankExercise'
+import { SentenceTransformationExercise } from '@/components/exercises/SentenceTransformationExercise'
 import type {
   GenericExercise,
   GenericExerciseType,
@@ -22,6 +23,7 @@ import type {
   SpokenProductionExercise as SpokenProductionExerciseType,
   ErrorCorrectionExercise as ErrorCorrectionExerciseType,
   ConjugationBlankExercise as ConjugationBlankExerciseType,
+  SentenceTransformationExercise as SentenceTransformationExerciseType,
 } from '@/lib/exercises/types'
 import type { PedagogicalFeedback } from '@/lib/practice/types'
 
@@ -139,6 +141,7 @@ export const GENERIC_REGISTRY: Record<GenericExerciseType, GenericRegistryEntry>
     render: (exercise, { onResult }) => <ErrorCorrectionExercise exercise={exercise as ErrorCorrectionExerciseType} onResult={onResult} />,
   },
   conjugation_blank: { title: 'Completa el verbo', render: (exercise, { onResult }) => <ConjugationBlankExercise exercise={exercise as ConjugationBlankExerciseType} onResult={onResult} /> },
+  sentence_transformation: { title: 'Transforma la oración', noHint: true, render: (exercise, { onResult, onSkip }) => <SentenceTransformationExercise exercise={exercise as SentenceTransformationExerciseType} onResult={onResult} onSkip={onSkip} /> },
 }
 
 export function renderGenericExercise(
