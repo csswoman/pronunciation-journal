@@ -64,6 +64,22 @@ without re-triggering RLS.
   gateway returns `502` for `/auth/v1/*` — it can hold a stale IP for the restarted
   auth container.
 
+## 2026-07-18 Drift cleanup (migration 20260718150000)
+
+Applied `20260718150000_retire_user_sound_progress_formalize_deck_cache.sql` to
+production (`supabase db push`), idempotent so it also rebuilds from scratch:
+
+- **Formalized `deck_suggestions_cache`** — it existed only on remote (created
+  out-of-band) yet is used by `/api/gemini/deck-suggest`. Now created via
+  `create table if not exists` with the read-only `authenticated can read cache`
+  policy (writes stay service_role-only). Remote push logged
+  `relation already exists, skipping` (as expected).
+- **Retired `user_sound_progress`** — dropped the legacy per-sound table (superseded
+  by `user_contrast_progress`) and restated `handle_new_user()` so it no longer
+  seeds it on signup. Verified on remote: table gone, function clean, cache intact.
+- **Types:** `lib/supabase/types.ts` already had `deck_suggestions_cache` and never
+  referenced `user_sound_progress`, so no regeneration was needed for this change.
+
 ## 2026-07-18 Remote reconciliation
 
 Inspected the linked production project (read-only via MCP) and reconciled the
