@@ -41,7 +41,6 @@ export const config = {
     "/auth/callback",
     "/courses/:path*",
     "/daily/:path*",
-    "/dashboard/:path*",
     "/ipa/:path*",
     "/lexicon/:path*",
     "/mini-lessons/:path*",
