@@ -5,7 +5,6 @@ const MIGRATIONS_DIR = path.join(process.cwd(), "supabase", "migrations");
 const ALLOWED_LEGACY_FILES = new Set([
   "supabase/migrations/20260329230234_remote_schema.sql",
   "supabase/migrations/20260409093000_add_stt_transcription_cache.sql",
-  "supabase/migrations/20260409120000_theory_lessons.sql",
   "supabase/migrations/20260410120000_add_keep_permanent_to_entries.sql",
   "supabase/migrations/20260423120000_word_bank.sql",
   "supabase/migrations/20260423130000_word_bank_add_columns.sql",

@@ -42,8 +42,6 @@
     "next": "^16.2.9",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
-    "react-markdown": "^10.1.0",
-    "remark-gfm": "^4.0.1",
     "server-only": "^0.0.1",
     "serwist": "^9.5.11",
     "tailwind-merge": "^3.6.0",

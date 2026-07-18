@@ -43,13 +43,6 @@
   gap: var(--space-2);
 }
 
-.course-path__eyebrow {
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  color: var(--text-tertiary);
-}
-
 .course-path__title {
   font-family: var(--font-sans), system-ui, sans-serif;
   font-weight: 420;
@@ -1026,45 +1019,6 @@
 
 .course-path__unit[open] .course-path__lessons {
   grid-template-rows: 1fr;
-}
-
-.course-path__back-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  height: 2.5rem;
-  padding-inline: var(--space-5);
-  font-size: 0.875rem;
-  font-weight: 600;
-  border-radius: var(--radius-md);
-  background: var(--surface-raised);
-  color: var(--text-primary);
-  border: 1px solid var(--border-default);
-  text-decoration: none;
-  transition: background 0.15s;
-}
-
-.course-path__back-btn:hover {
-  background: var(--surface-sunken);
-}
-
-.course-path__back-btn:focus-visible {
-  outline: 2px solid var(--primary);
-  outline-offset: 2px;
-}
-
-.course-path__lesson-wrap {
-  max-width: 48rem;
-  margin-inline: auto;
-  padding: var(--space-12) var(--space-4) var(--space-12);
-}
-
-.course-path__lesson-hero {
-  padding-bottom: var(--space-6);
-}
-
-.course-path__title--lesson {
-  font-size: 1.75rem;
 }
 
 /* ── Real Life English section ───────────────────────────── */

@@ -37,7 +37,7 @@ Complemento operativo de `CLAUDE.md`.
 `admin`, `ai-coach`, `ai-practice`, `api`, `auth`, `content`, `core-1000`, `courses`,
 `daily`, `db`, `decks`, `exercises`, `home`, `images`, `ipa`, `lexicon`, `notion`,
 `phoneme-practice`, `practice`, `progress`, `pronunciation`, `sound-lab`, `sounds`,
-`speech`, `srs`, `stores`, `supabase`, `sync`, `theory-lessons`, `users`, `word-bank`.
+`speech`, `srs`, `stores`, `supabase`, `sync`, `users`, `word-bank`.
 
 ---
 
@@ -48,7 +48,7 @@ Módulos activos (`lib/*/queries.ts`):
 ```text
 users/          decks/          sounds/         word-bank/
 progress/       home/           practice/       phoneme-practice/
-theory-lessons/ ai-practice/
+ai-practice/
 ```
 
 Excepciones de infra (no son query modules de dominio):

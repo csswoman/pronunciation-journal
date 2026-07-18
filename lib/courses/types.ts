@@ -38,7 +38,7 @@ export interface CoursePathLesson {
   /** 1-based index within this track — used in URLs `/courses/study/:n` */
   number: number;
   title: string;
-  /** Links to `theory_lessons.slug` when content exists */
+  /** Matches the grammar deck JSON filename when study content exists */
   slug?: string;
   priority: LessonPriority;
   /** Part of the broad curriculum (p === 0), shown after priority block */
