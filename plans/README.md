@@ -74,6 +74,7 @@ your row when done.
 | 055 | Add Reader tap-to-save into word bank | P2 product | M | T50 manual Reader QA | TODO |
 | 056 | Add `sentence_transformation` with remote generation/grading | P2 pedagogical | L | 046, 048 | TODO |
 | 057 | Add `translation_es_en` with hybrid grading | P2 pedagogical | L | 046, 048 | TODO |
+| 058 | Extract "My Words" into Tracking (saved words + phrases + lessons) | P2 product | L | — | TODO |
 
 Status values: TODO | IN PROGRESS | DONE | BLOCKED (with one-line reason) | REJECTED (with one-line rationale)
 
@@ -145,6 +146,12 @@ Status values: TODO | IN PROGRESS | DONE | BLOCKED (with one-line reason) | REJE
   a local/staging database. Never use production as the test environment.
 - 055 deliberately waits for T50 so Reader's current completion/cache behavior
   has a verified baseline before tokenization changes its UI.
+- 058 extracts the `my-words` tab into a dedicated `/tracking` route that also
+  holds saved phrases and lessons. It is independent but pairs with 055 (word
+  capture) and must confirm its data model first: words stay in `word_bank`; a
+  new `tracked_items` table holds phrase/lesson favorites. It must keep the DB
+  `diff --linked` clean and honor the offline-first + RLS rules recorded in
+  `docs/database/schema-drift-and-state.md`.
 
 ## Findings considered and rejected
 
