@@ -57,7 +57,7 @@ La base técnica es sólida y el sprint de producción cerró la mayoría de P0/
 
 | Plan | Qué falta |
 |---|---|
-| 053 | Cliente de corrección y pruebas enfocadas; autorización/persistencia corregidas en `7d1d2c80`. |
+| 053 | HECHO. Cliente `lib/journal/correct-client.ts`, esquema compartido `lib/journal/correction.ts` y `applyJournalFeedback` con programación SM-2 grade-2 idempotente (no solo contadores). Tests de auth/same-origin, draft/ajena/corrected (404/409), idempotencia, degradación de red y scheduling SRS. |
 | 054 | Feedback, historial y enlace opcional desde Daily; entrada diaria, autosave y prompts personalizados ya entregados. |
 
 ### HECHO (roadmap 032 Fase 1-2)
