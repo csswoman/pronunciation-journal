@@ -3,8 +3,6 @@ import {
   effectiveStatus,
   addDaysIso,
   patchSnooze,
-  patchMaster,
-  patchActivateNow,
   activateExpiredSnoozes,
   isDueForQueue,
 } from "../status";

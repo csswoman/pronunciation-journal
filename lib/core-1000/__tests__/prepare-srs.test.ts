@@ -2,7 +2,9 @@ import { describe, expect, it, vi, beforeEach } from "vitest";
 import { prepareCore1000SrsEntries } from "../prepare-srs";
 import type { SRSData } from "@/lib/types";
 
-const mockPut = vi.fn(async (_entry: SRSData) => undefined);
+const mockPut = vi.fn(async (entry: SRSData) => {
+  void entry;
+});
 const mockGetEntries = vi.fn(async (): Promise<SRSData[]> => []);
 
 vi.mock("@/lib/db", () => ({

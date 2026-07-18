@@ -83,7 +83,6 @@ import {
   IconPlayerPause,
   IconPlayerPlay,
   IconPlayerSkipForward,
-  IconPlayerStop,
   IconPlus,
   IconRadar,
   IconRefresh,
