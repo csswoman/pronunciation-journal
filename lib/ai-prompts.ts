@@ -85,6 +85,10 @@ Each item needs sourceSentence (4-20 words), instruction (clear transformation c
 export function buildGenerateTransformationsPrompt(input: { topic: string; level: string; count: number }): string {
   return `Generate ${input.count} sentence transformations for topic "${input.topic}" at ${input.level}. Return {"exercises":[{"sourceSentence":"...","instruction":"...","referenceAnswer":"..."}]}.`
 }
+export const GENERATE_TRANSLATIONS_SYSTEM_PROMPT = `You create short Spanish-to-English translation exercises for English learners. Return JSON only. Each item needs sourceEs, referenceEn, and optional acceptedAnswers. Keep Spanish natural and the English reference accurate for the named grammar topic.`
+export function buildGenerateTranslationsPrompt(input: { topic: string; level: string; count: number }): string {
+  return `Generate ${input.count} Spanish-to-English translation exercises for topic "${input.topic}" at ${input.level}. Return {"exercises":[{"sourceEs":"...","referenceEn":"...","acceptedAnswers":["..."]}]}.`
+}
 
 // ── Interview ──
 
