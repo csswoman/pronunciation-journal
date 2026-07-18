@@ -71,4 +71,20 @@ describe('resolveReaderPassage', () => {
     })
     expect(out).toBeNull()
   })
+
+  it('serves cached passage offline without generating', async () => {
+    const generate = vi.fn()
+    const out = await resolveReaderPassage({
+      userId: 'u1',
+      targets: [{ srsId: 'c1k:go', word: 'go' }],
+      online: false,
+      getCached: async () => passage(),
+      generate,
+      save: vi.fn(),
+      now: Date.parse('2030-01-02T00:00:00.000Z'),
+    })
+
+    expect(out?.id).toBe('p1')
+    expect(generate).not.toHaveBeenCalled()
+  })
 })

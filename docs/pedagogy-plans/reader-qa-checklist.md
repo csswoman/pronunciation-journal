@@ -2,6 +2,11 @@
 
 Checklist para validar el paso `reader` cableado en `buildDailyPlan` (T50).
 
+Estado 2026-07-17: cobertura automatizada completada. Los puntos marcados
+`MANUAL` requieren una sesión autenticada contra un entorno no productivo,
+Gemini real y manipulación del estado online; no se consideran validados por
+tests con mocks.
+
 ## Precondiciones
 
 - Usuario autenticado con **≥3 palabras** en `word_bank` en estado `review` o `new` con `next_review_at` vencido.
@@ -11,36 +16,48 @@ Checklist para validar el paso `reader` cableado en `buildDailyPlan` (T50).
 
 ### 1. Aparición en el plan
 
-- [ ] Abrir `/daily` y confirmar que uno de los pasos es **Lectura** (`kind: reader`).
-- [ ] El paso es clickeable aunque tenga `0 exercises` (badge `reading` en subtítulo).
-- [ ] Si el word bank está vacío (solo Core-1000 fallback), el paso reader **no** aparece.
+- [x] El compositor reserva uno de los cinco pasos para **Lectura** cuando genera un passage.
+- [x] El paso admite `0 exercises`; la sesión se identifica mediante `kind: reader` y `readerPassage`.
+- [x] Si el word bank está vacío (solo Core-1000 fallback), el paso reader **no** aparece.
+- [ ] **MANUAL:** abrir `/daily` y confirmar navegación, badge y apertura visual del paso.
 
 ### 2. Sesión de lectura
 
-- [ ] Al iniciar el paso se muestra el párrafo y preguntas de comprensión.
-- [ ] Completar con acierto o error marca el paso como done y vuelve al checklist.
-- [ ] `answer_history` registra contexto `daily` con `contentId` del passage.
+- [x] `DailyReaderStep` muestra el passage y completa mediante `completeReader(..., context: 'daily')`.
+- [x] `completeReader` persiste primero la respuesta, después la actividad y finalmente drena el outbox.
+- [ ] **MANUAL:** confirmar que el checklist se marca done y que `answer_history` remoto guarda `context=daily` y el `contentId` del passage.
 
 ### 3. Hilo entre pasos
 
-- [ ] Si una palabra del reader ya apareció en Intro/Review/Context, se muestra hint `· from Intro` (etc.).
+- [x] Una palabra repetida renderiza el hint del paso anterior; cubierto en `DailyReaderStep.test.tsx`.
 
 ### 4. Exposure tracking
 
-- [ ] Tras completar, en Dexie `srsData` para `wb:<id>` el sub-objeto `exposure.count` incrementa.
-- [ ] SM-2 recall (`interval`, `repetitions`) **no** cambia solo por leer.
+- [x] `exposure.count` se crea o incrementa en Dexie.
+- [x] SM-2 recall (`interval`, `repetitions`, `nextReview`) no cambia solo por leer.
 
 ### 5. Offline / caché
 
-- [ ] Con el mismo `targetHash`, desconectar red y reabrir `/practice/reader` — carga desde Dexie sin error.
-- [ ] Repetir en daily plan si el paso reader sigue en el plan cacheado del día.
+- [x] El mismo `targetHash` reutiliza el passage fresco y el modo offline devuelve cache sin generar.
+- [ ] **MANUAL:** desconectar red y reabrir `/practice/reader` y el daily plan cacheado en un navegador real.
 
 ### 6. Límite de 5 pasos
 
-- [ ] Con plan lleno (5 pasos de fonema + vocab), verificar si reader queda fuera del slice — documentar si ocurre (comportamiento conocido).
+- [x] Con el plan lleno, Reader reemplaza el último candidato y permanece dentro del límite de cinco pasos.
 
 ## Rutas de referencia
 
 - Composer: `lib/practice/daily-plan/composer.ts`
 - UI sesión: `components/daily/DailyReaderStep.tsx`
 - Standalone: `/practice/reader` → `ReaderEntry.tsx`
+
+## Evidencia automatizada
+
+- `lib/practice/__tests__/daily-plan.test.ts`
+- `components/daily/__tests__/DailyReaderStep.test.tsx`
+- `components/practice/reader/__tests__/ReaderEntry.test.tsx`
+- `components/practice/reader/__tests__/ReaderExercise.test.tsx`
+- `lib/practice/reader/__tests__/complete-reader.test.ts`
+- `lib/practice/reader/__tests__/exposure.test.ts`
+- `lib/practice/reader/__tests__/get-passage.test.ts`
+- `lib/practice/reader/__tests__/target-hash.test.ts`

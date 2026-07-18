@@ -42,6 +42,7 @@ La base técnica es sólida y el sprint de producción cerró la mayoría de P0/
 
 | # | Área | Qué falta |
 |---|---|---|
+| T50 | QA manual de Reader | Cobertura automatizada cerrada; faltan tres comprobaciones manuales en entorno no productivo: UI/navegación Daily, persistencia remota y offline real. |
 | RLS-INT / T56 | RLS integration real | `pnpm test:rls:integration` existe y limpia usuarios temporales. El bloqueo histórico por migraciones remotas atrasadas ya no aplica; falta ejecutarlo contra una base local o staging aislada y con el esquema vigente. No ejecutar contra producción. |
 
 ### HECHO (roadmap 032 Fase 1-2)
@@ -50,13 +51,6 @@ La base técnica es sólida y el sprint de producción cerró la mayoría de P0/
 |---|---|
 | T44-T49 | Prompts centralizados, STT cache RLS, bundle CI, fonemas scoped, coverage per-file |
 | T51 | Hilo entre pasos (plan 09) |
-
-### ABIERTO (roadmap 032)
-
-| # | Área | Prioridad | Criterio de cierre |
-|---|---|---|---|
-| T50 | QA manual de Reader | P1 validación | Completar `docs/pedagogy-plans/reader-qa-checklist.md`, incluyendo Gemini real, caché/offline, exposure tracking y finalización dentro de Daily. |
-| RLS-INT / T56 | Validación real de políticas y grants | P2 seguridad | Ejecutar `pnpm test:rls:integration` en Supabase local o staging aislado con todas las migraciones aplicadas. Esta fila consolida la antigua T56 duplicada. |
 
 ### CONDICIONAL (no bloquea el estado actual)
 

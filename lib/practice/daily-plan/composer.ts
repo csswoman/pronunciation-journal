@@ -258,7 +258,11 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
     }
   }
 
-  const finalSteps = steps.slice(0, DAILY_PLAN_STEP_COUNT)
+  let finalSteps = steps.slice(0, DAILY_PLAN_STEP_COUNT)
+  const readerStep = steps.find((step) => step.kind === 'reader')
+  if (readerStep && !finalSteps.some((step) => step.kind === 'reader')) {
+    finalSteps = [...finalSteps.slice(0, DAILY_PLAN_STEP_COUNT - 1), readerStep]
+  }
 
   // Session arc: narrative framing reusing data the plan already computed.
   // Topics live on generic exercise payloads (payload.data.topic).
