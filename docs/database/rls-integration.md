@@ -64,6 +64,10 @@ without re-triggering RLS.
   gateway returns `502` for `/auth/v1/*` — it can hold a stale IP for the restarted
   auth container.
 
+> **DB state & drift:** see `docs/database/schema-drift-and-state.md` for the full
+> current-state snapshot, the bidirectional drift inventory, and the remediation steps
+> (including the pending `20260718160000_reconcile_prod_drift` push).
+
 ## 2026-07-18 Drift cleanup (migration 20260718150000)
 
 Applied `20260718150000_retire_user_sound_progress_formalize_deck_cache.sql` to
