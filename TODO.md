@@ -208,5 +208,5 @@ Fuente detallada: `plans/032-post-production-improvement-roadmap.md`.
 1. **Cerrar T50:** completar y documentar el QA manual de Reader.
 2. ~~**Cerrar RLS-INT/T56:** levantar Supabase local/staging aislado, aplicar migraciones y validar permisos reales por rol.~~ **HECHO (2026-07-18):** pasó contra local; ver `docs/database/rls-integration.md`.
 3. **CI opcional:** automatizar RLS integration solo cuando exista un servicio de test aislado y estable.
-4. **Revisar remoto:** confirmar en el proyecto remoto si `handle_new_user` aún inserta en `user_sound_progress` (alta de usuarios rota) y si `text_fragments` tiene la política recursiva; aplicar allí las migraciones nuevas.
+4. ~~**Revisar remoto:**~~ **HECHO (2026-07-18):** el fix de `text_fragments` se aplicó a producción (`supabase db push` de `20260718120000`) y quedó verificado. `handle_new_user` en remoto **no está roto** (allí `user_sound_progress` aún existe por drift). Pendiente opcional (destructivo, requiere sign-off): retirar `user_sound_progress` en remoto (drop + dejar de sembrarla en `handle_new_user`) y formalizar/retirar `deck_suggestions_cache`. Detalle en `docs/database/rls-integration.md`.
 5. **Deuda condicional:** no iniciar T55, T57, T58 o T59 hasta que se cumpla el disparador documentado en su fila.

@@ -64,6 +64,32 @@ without re-triggering RLS.
   gateway returns `502` for `/auth/v1/*` — it can hold a stale IP for the restarted
   auth container.
 
+## 2026-07-18 Remote reconciliation
+
+Inspected the linked production project (read-only via MCP) and reconciled the
+text_fragments fix:
+
+- **Migration versions are aligned** local vs remote; only the new
+  `20260718120000_fix_text_fragments_rls_recursion.sql` was pending. It was pushed
+  to production (`supabase db push`) and verified: the policy now reads
+  `((user_id = auth.uid()) AND text_fragments_within_limit())` with the
+  `SECURITY DEFINER` helper present. The recursion is fixed in production too.
+- **Content drift found (not broken, but worth cleaning up later):** on remote,
+  `user_sound_progress` STILL exists (the `DROP ... CASCADE` in
+  `20260602100000_contrast_progress.sql` never took effect there), and
+  `handle_new_user()` still seeds it on signup. So signups are NOT broken on remote
+  (unlike a from-scratch build). The local schema, by contrast, no longer has the
+  table. `deck_suggestions_cache` also exists on remote but is created by no
+  migration. Consider a future migration to retire `user_sound_progress` on remote
+  (drop table + stop seeding it in `handle_new_user`) — destructive, needs sign-off.
+- **Security advisors (mostly pre-existing / by design):** anonymous-access policies
+  on ~25 tables (app supports anonymous sign-in), `set_updated_at` /
+  `update_updated_at` without a fixed `search_path`, public buckets allowing listing,
+  and leaked-password protection disabled. `text_fragments_within_limit()` is flagged
+  as an authenticated-callable `SECURITY DEFINER` RPC; it only returns the caller's
+  own limit boolean (low risk). Moving RLS helpers to a non-exposed schema would clear
+  that specific lint.
+
 ## 2026-07-17 Environment Check
 
 The linked remote migration history is aligned, but the integration runner was
