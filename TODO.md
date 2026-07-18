@@ -1,7 +1,7 @@
 # TODO de Producción
 
 Auditoría crítica original: commit `11dee70`, 2026-06-30.
-**Última actualización:** 2026-07-17 — baseline técnico actualizado; QA manual de Reader y validación RLS aislada siguen activas porque este equipo no dispone todavía de un entorno no productivo ejecutable.
+**Última actualización:** 2026-07-18 — stream de producto/pedagogía 046–057 implementado; RLS aislado sigue pendiente porque no hay entorno no productivo ejecutable.
 
 Convenciones:
 
@@ -42,8 +42,23 @@ La base técnica es sólida y el sprint de producción cerró la mayoría de P0/
 
 | # | Área | Qué falta |
 |---|---|---|
-| T50 | QA manual de Reader | Cobertura automatizada cerrada; faltan tres comprobaciones manuales en entorno no productivo: UI/navegación Daily, persistencia remota y offline real. |
 | RLS-INT / T56 | RLS integration real | `pnpm test:rls:integration` existe y limpia usuarios temporales. Las migraciones remotas ya están alineadas, pero el intento del 2026-07-17 confirmó que Docker/Supabase local no está disponible y no hay staging aislado configurado. No ejecutar contra producción. |
+
+### HECHO (planes 046–057, 2026-07-18)
+
+| Plan | Área | Evidencia |
+|---|---|---|
+| T50 | QA manual de Reader | Confirmado manualmente como pass; cobertura automatizada del Reader verde. |
+| 046–052 | Fonemas, scores, topic review, intereses, ejercicios y storage Journal | Migraciones de producción verificadas y commits `5a842720` a `32b604df`. |
+| 055 | Guardar palabras desde Reader | `4873690c`; tokenización accesible, deduplicación y fallback offline. |
+| 056–057 | Transformaciones y traducción ES→EN | Migraciones 20/22 verificadas; generación, caché y topic-review opcional en `7c164327` a `c9c09ded`. |
+
+### IN PROGRESS (Journal)
+
+| Plan | Qué falta |
+|---|---|
+| 053 | Cliente de corrección y pruebas enfocadas; autorización/persistencia corregidas en `7d1d2c80`. |
+| 054 | Feedback, historial y enlace opcional desde Daily; entrada diaria, autosave y prompts personalizados ya entregados. |
 
 ### HECHO (roadmap 032 Fase 1-2)
 
