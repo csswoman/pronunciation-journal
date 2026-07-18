@@ -1,3 +1,5 @@
+import type { CEFRLevel } from '@/lib/exercises/cefr'
+
 // ── Transcription ──
 
 export function buildTranscriptionPrompt(targetWord?: string): string {
@@ -135,7 +137,7 @@ export const GRADE_PRODUCTION_SYSTEM_PROMPT = `You are an English teacher gradin
 
 Evaluate strictly using this rubric:
 1. usedTarget — Did the learner use the target item with correct meaning and an acceptable form (minor spelling typos in spoken transcripts are OK)?
-2. grammaticallyCorrect — Is the production a grammatical English sentence/response at A2–B2 level (minor slips OK; broken structure = false)?
+2. grammaticallyCorrect — Is the production a grammatical English sentence/response appropriate for the learner's CEFR level (stated below; default A2–B2)? Judge leniently for lower levels; minor slips OK; broken structure = false.
 3. correct — true ONLY when both usedTarget and grammaticallyCorrect are true.
 4. score — integer 0–100:
    - 90–100: target used naturally, grammar solid
@@ -155,13 +157,15 @@ export function buildGradeProductionUserPrompt(input: {
   taskPrompt: string
   production: string
   modality: 'written' | 'spoken'
+  level?: CEFRLevel
 }): string {
   const meaningLine = input.targetMeaning
     ? `\nTarget meaning: ${input.targetMeaning}`
     : '';
+  const levelLine = input.level ? `\nLearner CEFR level: ${input.level}` : '';
   return `Task shown to the learner: ${input.taskPrompt}
 Target item: "${input.targetItem}"${meaningLine}
-Modality: ${input.modality}
+Modality: ${input.modality}${levelLine}
 
 Learner production:
 """

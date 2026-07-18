@@ -14,6 +14,7 @@ const GradeProductionSchema = z.object({
   taskPrompt: z.string().min(1).max(500),
   production: z.string().min(1).max(2000),
   modality: z.enum(["written", "spoken"]),
+  level: z.enum(["A1", "A2", "B1", "B2", "C1", "C2"]).optional(),
 }).strict();
 
 const GradeResponseSchema = z.object({

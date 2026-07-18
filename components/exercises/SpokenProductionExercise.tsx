@@ -86,6 +86,7 @@ export function SpokenProductionExercise({ exercise, onResult, onSkip }: Props) 
         taskPrompt: exercise.taskPrompt,
         production: transcript,
         modality: 'spoken',
+        level: exercise.level,
       })
       setGrade(result)
     } catch (err) {

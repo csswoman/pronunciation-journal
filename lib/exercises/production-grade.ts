@@ -1,5 +1,7 @@
 /** Shared shape for AI production grading (client + server). */
 
+import type { CEFRLevel } from './cefr'
+
 export interface ProductionGradeResult {
   /** Overall pass: target used correctly and grammar acceptable. */
   correct: boolean
@@ -21,4 +23,6 @@ export interface GradeProductionInput {
   taskPrompt: string
   production: string
   modality: 'written' | 'spoken'
+  /** Learner CEFR level so grammar is judged against the right bar. */
+  level?: CEFRLevel
 }

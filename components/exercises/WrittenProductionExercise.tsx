@@ -88,6 +88,7 @@ export function WrittenProductionExercise({ exercise, onResult, onSkip }: Props)
         taskPrompt: exercise.taskPrompt,
         production: trimmed,
         modality: 'written',
+        level: exercise.level,
       })
       setGrade(result)
     } catch (err) {
