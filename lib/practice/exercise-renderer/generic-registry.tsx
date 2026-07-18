@@ -47,19 +47,26 @@ export type GenericRenderContext = {
 type GenericRegistryEntry = {
   title: string
   noHint?: boolean
-  render: (exercise: GenericExercise, ctx: GenericRenderContext) => ReactNode
+}
+
+type ExerciseFor<Type extends GenericExerciseType> = Extract<GenericExercise, { type: Type }>
+
+type GenericRegistry = {
+  [Type in GenericExerciseType]: GenericRegistryEntry & {
+    render: (exercise: ExerciseFor<Type>, ctx: GenericRenderContext) => ReactNode
+  }
 }
 
 /**
  * Registry keyed by payload.data.type.
- * One cast per entry keeps the union narrow without wrapper boilerplate.
+ * Each entry receives the exact member of the discriminated exercise union.
  */
-export const GENERIC_REGISTRY: Record<GenericExerciseType, GenericRegistryEntry> = {
+export const GENERIC_REGISTRY: GenericRegistry = {
   match_pairs: {
     title: 'Empareja los pares',
-    render: (exercise, { onResult }) => (
+    render: (exercise: MatchPairsExerciseType, { onResult }) => (
       <MatchPairsExercise
-        exercise={exercise as MatchPairsExerciseType}
+        exercise={exercise}
         onResult={onResult}
       />
     ),
@@ -67,9 +74,9 @@ export const GENERIC_REGISTRY: Record<GenericExerciseType, GenericRegistryEntry>
   },
   fill_blank: {
     title: 'Complete the sentence',
-    render: (exercise, { onResult, hintCount }) => (
+    render: (exercise: FillBlankExerciseType, { onResult, hintCount }) => (
       <FillBlankExercise
-        exercise={exercise as FillBlankExerciseType}
+        exercise={exercise}
         onResult={onResult}
         hintCount={hintCount ?? 0}
       />
@@ -78,9 +85,9 @@ export const GENERIC_REGISTRY: Record<GenericExerciseType, GenericRegistryEntry>
   reorder_words: {
     title: 'Put the words in the correct order',
     noHint: true,
-    render: (exercise, { onResult, focusUi }) => (
+    render: (exercise: ReorderWordsExerciseType, { onResult, focusUi }) => (
       <ReorderWordsExercise
-        exercise={exercise as ReorderWordsExerciseType}
+        exercise={exercise}
         onResult={onResult}
         focusUi={focusUi}
       />
@@ -88,9 +95,9 @@ export const GENERIC_REGISTRY: Record<GenericExerciseType, GenericRegistryEntry>
   },
   sentence_dictation: {
     title: 'Listen and type the sentence',
-    render: (exercise, { onResult, hintCount }) => (
+    render: (exercise: SentenceDictationExerciseType, { onResult, hintCount }) => (
       <SentenceDictationExercise
-        exercise={exercise as SentenceDictationExerciseType}
+        exercise={exercise}
         onResult={onResult}
         hintCount={hintCount ?? 0}
       />
@@ -99,18 +106,18 @@ export const GENERIC_REGISTRY: Record<GenericExerciseType, GenericRegistryEntry>
   sentence_context: {
     title: 'Choose the best option',
     noHint: true,
-    render: (exercise, { onResult }) => (
+    render: (exercise: SentenceContextExerciseType, { onResult }) => (
       <SentenceContextExercise
-        exercise={exercise as SentenceContextExerciseType}
+        exercise={exercise}
         onResult={onResult}
       />
     ),
   },
   multiple_choice: {
     title: 'Choose the correct answer',
-    render: (exercise, { onResult, hintCount }) => (
+    render: (exercise: MultipleChoiceExerciseType, { onResult, hintCount }) => (
       <MultipleChoiceExercise
-        exercise={exercise as MultipleChoiceExerciseType}
+        exercise={exercise}
         onResult={onResult}
         hintCount={hintCount ?? 0}
       />
@@ -119,9 +126,9 @@ export const GENERIC_REGISTRY: Record<GenericExerciseType, GenericRegistryEntry>
   written_production: {
     title: 'Escribe tu oración',
     noHint: true,
-    render: (exercise, { onResult, onSkip }) => (
+    render: (exercise: WrittenProductionExerciseType, { onResult, onSkip }) => (
       <WrittenProductionExercise
-        exercise={exercise as WrittenProductionExerciseType}
+        exercise={exercise}
         onResult={onResult}
         onSkip={onSkip}
       />
@@ -130,28 +137,33 @@ export const GENERIC_REGISTRY: Record<GenericExerciseType, GenericRegistryEntry>
   spoken_production: {
     title: 'Di tu oración',
     noHint: true,
-    render: (exercise, { onResult, onSkip }) => (
+    render: (exercise: SpokenProductionExerciseType, { onResult, onSkip }) => (
       <SpokenProductionExercise
-        exercise={exercise as SpokenProductionExerciseType}
+        exercise={exercise}
         onResult={onResult}
         onSkip={onSkip}
       />
     ),
   },
-  error_correction: {
-    title: 'Corrige la oración',
-    render: (exercise, { onResult }) => <ErrorCorrectionExercise exercise={exercise as ErrorCorrectionExerciseType} onResult={onResult} />,
-  },
-  conjugation_blank: { title: 'Completa el verbo', render: (exercise, { onResult }) => <ConjugationBlankExercise exercise={exercise as ConjugationBlankExerciseType} onResult={onResult} /> },
-  sentence_transformation: { title: 'Transforma la oración', noHint: true, render: (exercise, { onResult, onSkip }) => <SentenceTransformationExercise exercise={exercise as SentenceTransformationExerciseType} onResult={onResult} onSkip={onSkip} /> },
-  translation_es_en: { title: 'Traduce al inglés', noHint: true, render: (exercise, { onResult }) => <TranslationEsEnExercise exercise={exercise as TranslationEsEnExerciseType} onResult={onResult} /> },
+  error_correction: { title: 'Corrige la oración', render: (exercise: ErrorCorrectionExerciseType, { onResult }) => <ErrorCorrectionExercise exercise={exercise} onResult={onResult} /> },
+  conjugation_blank: { title: 'Completa el verbo', render: (exercise: ConjugationBlankExerciseType, { onResult }) => <ConjugationBlankExercise exercise={exercise} onResult={onResult} /> },
+  sentence_transformation: { title: 'Transforma la oración', noHint: true, render: (exercise: SentenceTransformationExerciseType, { onResult, onSkip }) => <SentenceTransformationExercise exercise={exercise} onResult={onResult} onSkip={onSkip} /> },
+  translation_es_en: { title: 'Traduce al inglés', noHint: true, render: (exercise: TranslationEsEnExerciseType, { onResult }) => <TranslationEsEnExercise exercise={exercise} onResult={onResult} /> },
 }
 
-export function renderGenericExercise(
-  data: GenericExercise,
+/**
+ * Preserve the discriminant correlation at the dynamic registry lookup.
+ */
+function getGenericRegistryEntry<Type extends GenericExerciseType>(type: Type): GenericRegistry[Type] {
+  return GENERIC_REGISTRY[type]
+}
+
+export function renderGenericExercise<Type extends GenericExerciseType>(
+  data: ExerciseFor<Type>,
   ctx: GenericRenderContext,
 ): ReactNode {
-  return GENERIC_REGISTRY[data.type]?.render(data, ctx) ?? null
+  const entry = getGenericRegistryEntry(data.type)
+  return entry.render(data, ctx)
 }
 
 export function getGenericTitle(type: GenericExerciseType): string {
