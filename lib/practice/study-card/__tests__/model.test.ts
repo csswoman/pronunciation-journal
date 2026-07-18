@@ -67,7 +67,8 @@ describe("coreWordToStudyCard", () => {
     expect(model.sentence).toBe("I want to go home.");
     expect(model.sentenceIpa).toBe("/aɪ wɑnt tə ɡoʊ hoʊm/");
     expect(model.weakForm).toEqual({ ipa: "/tə/", phrase: "to go" });
-    expect(model.chips).toEqual(["#3", "preposition", "A1"]);
+    expect(model.chips).toEqual(["#3", "preposition"]);
+    expect(model.levelBadge).toBe("A1");
   });
 
   it("omits weakForm and sentenceIpa for content words", () => {

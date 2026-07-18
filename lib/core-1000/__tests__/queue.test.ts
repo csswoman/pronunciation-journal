@@ -5,10 +5,15 @@ import type { SRSData } from "@/lib/types";
 
 const NOW = new Date("2026-06-11T12:00:00Z");
 
-function word(rank: number, w: string): CoreWord {
+function word(
+  rank: number,
+  w: string,
+  cefr: CoreWord["cefr_level"] = "A1",
+  pos: CoreWord["pos"] = "noun",
+): CoreWord {
   return {
-    rank, word: w, pos: "noun", ipa_strong: `/${w}/`,
-    example_sentence: `A ${w} here.`, cefr_level: "A1",
+    rank, word: w, pos, ipa_strong: `/${w}/`,
+    example_sentence: `A ${w} here.`, cefr_level: cefr,
   };
 }
 
@@ -166,6 +171,101 @@ describe("kind field", () => {
 
     expect(q.map((i) => i.entry.word)).not.toContain("the");
     expect(q.every((i) => i.kind === "new")).toBe(true);
+  });
+});
+
+describe("CEFR level filter", () => {
+  const LEVELLED = [
+    word(1, "cat", "A1"),
+    word(2, "dog", "A2"),
+    word(3, "run", "B1"),
+    word(4, "leap", "B2"),
+    word(5, "quell", "C1"),
+  ];
+
+  it("restricts new cards to the selected levels", () => {
+    const q = buildSessionQueue({
+      words: LEVELLED,
+      srsEntries: [],
+      introducedToday: [],
+      now: NOW,
+      newPerDay: 10,
+      levels: ["B1", "B2"],
+    });
+    expect(q.map((i) => i.entry.word)).toEqual(["run", "leap"]);
+  });
+
+  it("restricts due reviews to the selected levels", () => {
+    const q = buildSessionQueue({
+      words: LEVELLED,
+      srsEntries: [
+        srs("dog", "2026-06-10T00:00:00Z"), // A2, due — excluded
+        srs("run", "2026-06-10T00:00:00Z"), // B1, due — kept
+      ],
+      introducedToday: [],
+      now: NOW,
+      newPerDay: 0,
+      levels: ["B1"],
+    });
+    expect(q.map((i) => [i.entry.word, i.kind])).toEqual([["run", "review"]]);
+  });
+
+  it("treats an empty level array as no filter", () => {
+    const q = buildSessionQueue({
+      words: LEVELLED,
+      srsEntries: [],
+      introducedToday: [],
+      now: NOW,
+      newPerDay: 10,
+      levels: [],
+    });
+    expect(q).toHaveLength(5);
+  });
+
+  it("appendNewBatch honours the level filter", () => {
+    const seen = new Set<string>();
+    const result = appendNewBatch([], LEVELLED, seen, 10, ["C1"]);
+    expect(result.map((i) => i.entry.word)).toEqual(["quell"]);
+  });
+});
+
+describe("themed route filter (level + pos)", () => {
+  const MIXED = [
+    word(1, "cat", "B1", "noun"),
+    word(2, "jump", "B1", "verb"),
+    word(3, "sing", "B1", "verb"),
+    word(4, "big", "B1", "adjective"),
+    word(5, "leap", "B2", "verb"),
+  ];
+
+  it("restricts new cards to level + pos (e.g. B1 verbs)", () => {
+    const q = buildSessionQueue({
+      words: MIXED,
+      srsEntries: [],
+      introducedToday: [],
+      now: NOW,
+      newPerDay: 10,
+      levels: ["B1"],
+      pos: ["verb"],
+    });
+    expect(q.map((i) => i.entry.word)).toEqual(["jump", "sing"]);
+  });
+
+  it("pos filter alone spans all levels", () => {
+    const q = buildSessionQueue({
+      words: MIXED,
+      srsEntries: [],
+      introducedToday: [],
+      now: NOW,
+      newPerDay: 10,
+      pos: ["verb"],
+    });
+    expect(q.map((i) => i.entry.word)).toEqual(["jump", "sing", "leap"]);
+  });
+
+  it("appendNewBatch honours the pos filter", () => {
+    const result = appendNewBatch([], MIXED, new Set<string>(), 10, ["B1"], ["adjective"]);
+    expect(result.map((i) => i.entry.word)).toEqual(["big"]);
   });
 });
 

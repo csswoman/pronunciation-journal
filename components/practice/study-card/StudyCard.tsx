@@ -91,9 +91,14 @@ export function StudyCard({ model, onContinue, onListen, onArchive }: Props) {
             {model.srsBadge}
           </span>
         )}
-        {model.chips && model.chips.length > 0 && (
+        {(model.levelBadge || (model.chips && model.chips.length > 0)) && (
           <div className="flex items-center gap-2">
-            {model.chips.map((chip) => (
+            {model.levelBadge && (
+              <span className="text-tiny font-semibold uppercase tracking-[0.12em] text-on-primary bg-primary rounded-full py-0.5 px-2">
+                {model.levelBadge}
+              </span>
+            )}
+            {model.chips?.map((chip) => (
               <Chip key={chip}>{chip}</Chip>
             ))}
           </div>

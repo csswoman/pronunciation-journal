@@ -1,7 +1,7 @@
 // Pure session-queue builder. All Dexie I/O lives in the caller so this is
 // trivially unit-testable.
 
-import { NEW_CARDS_PER_DAY, core1000WordId, type CoreWord } from "./types";
+import { NEW_CARDS_PER_DAY, core1000WordId, type CefrLevel, type CorePos, type CoreWord } from "./types";
 import { isDueForQueue } from "@/lib/srs/status";
 import type { SRSData } from "@/lib/types";
 
@@ -17,6 +17,37 @@ export interface BuildQueueOptions {
   introducedToday: string[];
   now: Date;
   newPerDay?: number;
+  /** When set (non-empty), restricts both reviews and new cards to these CEFR levels. */
+  levels?: readonly CefrLevel[] | null;
+  /** When set (non-empty), restricts both reviews and new cards to these parts of speech. */
+  pos?: readonly CorePos[] | null;
+}
+
+/** True when `levels` is unset/empty (no filter) or the entry's level is included. */
+export function matchesLevels(
+  entry: CoreWord,
+  levels?: readonly CefrLevel[] | null,
+): boolean {
+  if (!levels || levels.length === 0) return true;
+  return levels.includes(entry.cefr_level);
+}
+
+/** True when `pos` is unset/empty (no filter) or the entry's part of speech is included. */
+export function matchesPos(
+  entry: CoreWord,
+  pos?: readonly CorePos[] | null,
+): boolean {
+  if (!pos || pos.length === 0) return true;
+  return pos.includes(entry.pos);
+}
+
+/** Combined level + pos predicate — the shape a "themed route" filters on. */
+export function matchesFilter(
+  entry: CoreWord,
+  levels?: readonly CefrLevel[] | null,
+  pos?: readonly CorePos[] | null,
+): boolean {
+  return matchesLevels(entry, levels) && matchesPos(entry, pos);
 }
 
 export function buildSessionQueue({
@@ -25,6 +56,8 @@ export function buildSessionQueue({
   introducedToday,
   now,
   newPerDay = NEW_CARDS_PER_DAY,
+  levels,
+  pos,
 }: BuildQueueOptions): Core1000QueueItem[] {
   const byId = new Map(words.map((w) => [core1000WordId(w.word), w]));
   // Every persisted entry counts as seen, including snoozed/mastered. They must
@@ -36,12 +69,13 @@ export function buildSessionQueue({
     .filter((e) => isDueForQueue(e, now))
     .map((e) => byId.get(e.wordId))
     .filter((entry): entry is CoreWord => entry !== undefined)
+    .filter((entry) => matchesFilter(entry, levels, pos))
     .sort((a, b) => a.rank - b.rank)
     .map((entry) => ({ entry, kind: 'review' as const }));
 
   const quota = Math.max(0, newPerDay - introducedToday.length);
   const fresh: Core1000QueueItem[] = words
-    .filter((w) => !seen.has(core1000WordId(w.word)))
+    .filter((w) => !seen.has(core1000WordId(w.word)) && matchesFilter(w, levels, pos))
     .slice(0, quota)
     .map((entry) => ({ entry, kind: 'new' as const }));
 
@@ -80,10 +114,17 @@ export function appendNewBatch(
   words: CoreWord[],
   seen: Set<string>,
   n: number = NEW_CARDS_PER_DAY,
+  levels?: readonly CefrLevel[] | null,
+  pos?: readonly CorePos[] | null,
 ): Core1000QueueItem[] {
   const inQueue = new Set(queue.map((i) => core1000WordId(i.entry.word)));
   const batch: Core1000QueueItem[] = words
-    .filter((w) => !seen.has(core1000WordId(w.word)) && !inQueue.has(core1000WordId(w.word)))
+    .filter(
+      (w) =>
+        !seen.has(core1000WordId(w.word)) &&
+        !inQueue.has(core1000WordId(w.word)) &&
+        matchesFilter(w, levels, pos),
+    )
     .slice(0, n)
     .map((entry) => ({ entry, kind: 'new' as const }));
   return [...queue, ...batch];

@@ -2,6 +2,7 @@
 
 // Planned structure:
 // <EssentialWordsSession>
+//   <SessionFilters />       — RoutePicker (themed) + LevelFilterBar (free)
 //   <DeckProgressHeader />
 //   <SessionProgressHud />   — New · Learning · Review live counters
 //   <WordStudyCard />        — phase: study (new cards)
@@ -17,15 +18,29 @@ import { SessionStatsCard } from './SessionStatsCard'
 import { WordStudyCard } from './WordStudyCard'
 import { SpeakReviewCard } from './SpeakReviewCard'
 import { SessionDone } from './SessionDone'
+import { LevelFilterBar } from './LevelFilterBar'
+import { RoutePicker } from './RoutePicker'
 import { WordCarousel } from '@/components/practice/session/WordCarousel'
 
 export function EssentialWordsSession() {
   const {
     phase, current, stats, counts, sessionSummary,
-    reloadLoading, startSpeak, submitGrade, reload, learnMore, archiveWord,
+    reloadLoading, levels, setLevels, activeRouteId, setRoute,
+    startSpeak, submitGrade, reload, learnMore, archiveWord,
     keepSnooze, masterWord,
   } = useEssentialWordsSession()
   const loadingWords = useLoadingWords()
+
+  // Themed route drives level+pos; the free level bar only shows when no route
+  // is active, so the two controls never fight over the same filter.
+  const filters = (
+    <div className="flex flex-col items-center gap-3">
+      <RoutePicker value={activeRouteId} onChange={(id) => void setRoute(id)} />
+      {!activeRouteId && (
+        <LevelFilterBar value={levels} onChange={(l) => void setLevels(l)} />
+      )}
+    </div>
+  )
 
   // One centered column for every phase, so content width never jumps as the
   // session moves loading → study → speak → done.
@@ -40,6 +55,7 @@ export function EssentialWordsSession() {
   if (phase === 'empty' || phase === 'done' || phase === 'error') {
     return (
       <Frame>
+        <div className="mb-4">{filters}</div>
         <SessionDone
           stats={stats}
           sessionSummary={sessionSummary}
@@ -55,6 +71,7 @@ export function EssentialWordsSession() {
 
   return (
     <Frame>
+      <div className="mb-3">{filters}</div>
       <SessionStatsCard stats={stats} counts={counts} />
 
       <div className="mt-4 flex flex-col items-center">

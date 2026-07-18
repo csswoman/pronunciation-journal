@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { requireSameOrigin, requireUser, rateLimit, validateBody, SECURE_HEADERS, publicErrorResponse } from "@/lib/api/guards";
-import { saveAssessmentResult } from "@/lib/courses/assessment-queries";
+import { persistAssessmentOutcome } from "@/lib/courses/assessment-queries";
 import { logServerError } from "@/lib/api/logging";
 import type { AssessmentResult } from "@/lib/courses/assessment";
 import type { CefrLevelId } from "@/lib/courses/types";
@@ -52,7 +52,9 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   if (validationError) return validationError;
 
   try {
-    await saveAssessmentResult(
+    // Persists both the assessment_results row and the user's cefr_level on
+    // user_profiles, so placement/checkpoint results actually set the level.
+    await persistAssessmentOutcome(
       user.id,
       body.mode,
       body.result as AssessmentResult,
@@ -61,7 +63,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   } catch (error) {
     logServerError("Assessment result save failed", error, {
       endpoint: "/api/assessment/results",
-      operation: "saveAssessmentResult",
+      operation: "persistAssessmentOutcome",
       userId: user.id,
     });
     return publicErrorResponse(500, "Failed to save assessment result");

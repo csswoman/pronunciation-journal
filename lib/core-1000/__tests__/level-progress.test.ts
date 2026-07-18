@@ -1,0 +1,34 @@
+import { describe, expect, it } from "vitest";
+import { tallyLevelProgress } from "../level-progress";
+import { core1000WordId, type CoreWord } from "../types";
+
+function word(rank: number, w: string, cefr: CoreWord["cefr_level"]): CoreWord {
+  return {
+    rank, word: w, pos: "noun", ipa_strong: `/${w}/`,
+    example_sentence: `A ${w} here.`, cefr_level: cefr,
+  };
+}
+
+const WORDS = [
+  word(1, "cat", "A1"),
+  word(2, "sun", "A1"),
+  word(3, "dog", "A2"),
+  word(4, "run", "B1"),
+];
+
+describe("tallyLevelProgress", () => {
+  it("returns one row per CEFR level, ordered A1 → C1", () => {
+    const rows = tallyLevelProgress(WORDS, new Set());
+    expect(rows.map((r) => r.level)).toEqual(["A1", "A2", "B1", "B2", "C1"]);
+  });
+
+  it("counts totals and learned per level", () => {
+    const learned = new Set([core1000WordId("cat"), core1000WordId("run")]);
+    const rows = tallyLevelProgress(WORDS, learned);
+    const byLevel = Object.fromEntries(rows.map((r) => [r.level, r]));
+    expect(byLevel.A1).toMatchObject({ learned: 1, total: 2 });
+    expect(byLevel.A2).toMatchObject({ learned: 0, total: 1 });
+    expect(byLevel.B1).toMatchObject({ learned: 1, total: 1 });
+    expect(byLevel.B2).toMatchObject({ learned: 0, total: 0 });
+  });
+});
