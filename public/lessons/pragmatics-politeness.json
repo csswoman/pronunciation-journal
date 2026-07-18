@@ -1,5 +1,5 @@
 {
-  "slug": "pragmatics",
+  "slug": "pragmatics-politeness",
   "sections": [
     {
       "heading": "What is pragmatics?",
@@ -39,6 +39,11 @@
         "'I might be able to make it.' (to an invitation)",
         "'Your first draft shows real effort.' (on written work)",
         "'This neighborhood has changed a lot.' (said by a longtime resident)"
+      ],
+      "answers": [
+        "Implica duda o rechazo suave — directo: 'I probably can't come.'",
+        "Implica que necesita mucho trabajo — directo: 'This draft needs major revision.'",
+        "Suele implicar queja o nostalgia — directo: 'I don't like how this neighborhood has changed.'"
       ]
     }
   ],

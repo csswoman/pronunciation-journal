@@ -1,5 +1,5 @@
 {
-  "slug": "present-perfect-continuous",
+  "slug": "aspect-perfect-continuous",
   "sections": [
     {
       "heading": "Form",
@@ -40,6 +40,12 @@
         "She ___ (learn) Japanese for two years. (ongoing)",
         "He ___ (work) all night — he looks exhausted. (visible result)",
         "How many pages ___ you ___ (read)? (completed quantity)"
+      ],
+      "answers": [
+        "have written",
+        "has been learning",
+        "has been working",
+        "have you read"
       ]
     }
   ],

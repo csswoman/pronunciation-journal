@@ -1,5 +1,5 @@
 {
-  "slug": "academic-cohesion",
+  "slug": "academic-writing-cohesion",
   "sections": [
     {
       "heading": "Cohesion vs. coherence",
@@ -35,6 +35,11 @@
         "'She submitted the report. It was well-received.'",
         "'The experiment failed. Nevertheless, the team persisted.'",
         "'Water levels rose. Sea temperatures also increased.'"
+      ],
+      "answers": [
+        "'It' — anaphoric reference (points back to 'the report')",
+        "'Nevertheless' — contrastive conjunction",
+        "'also' — additive conjunction"
       ]
     }
   ],

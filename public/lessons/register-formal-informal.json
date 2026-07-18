@@ -1,5 +1,5 @@
 {
-  "slug": "register",
+  "slug": "register-formal-informal",
   "sections": [
     {
       "heading": "What is register?",
@@ -40,6 +40,12 @@
         "We request that you vacate the premises. (informal)",
         "She's been fired. (formal)",
         "We regret to inform you that your application was unsuccessful. (neutral)"
+      ],
+      "answers": [
+        "I would like to ask you something.",
+        "You need to move out.",
+        "Her employment has been terminated.",
+        "Unfortunately, your application wasn't successful."
       ]
     }
   ],

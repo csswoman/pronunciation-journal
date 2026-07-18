@@ -41,6 +41,13 @@
         "Who called?",
         "Did you enjoy the film?",
         "How do you spell that?"
+      ],
+      "answers": [
+        "↘ (wh-question)",
+        "↗ (yes/no question)",
+        "↘ (wh-question)",
+        "↗ (yes/no question)",
+        "↘ (wh-question)"
       ]
     }
   ],

@@ -44,6 +44,12 @@
         "The report was written in English. It was difficult to translate.",
         "He didn't know the answer. He stayed quiet.",
         "After she had waited for an hour, she left."
+      ],
+      "answers": [
+        "Having finished her work, she left the office.",
+        "Written in English, the report was difficult to translate.",
+        "Not knowing the answer, he stayed quiet.",
+        "Having waited for an hour, she left."
       ]
     }
   ],

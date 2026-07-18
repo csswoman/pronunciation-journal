@@ -1,5 +1,5 @@
 {
-  "slug": "phonemic-pairs",
+  "slug": "phonemic-awareness-advanced",
   "sections": [
     {
       "heading": "Beyond basics",
@@ -39,6 +39,12 @@
         "marry / merry / Mary",
         "which / witch",
         "cot / caught"
+      ],
+      "answers": [
+        "Homophones in both RP and General American.",
+        "GA: the three usually merge; RP: three distinct vowels.",
+        "Identical for most speakers — the /ʍ/ distinction survives only in some accents.",
+        "RP: distinct (/ɒ/ vs /ɔː/); GA: merged for many speakers (cot–caught merger)."
       ]
     }
   ],

@@ -1,5 +1,5 @@
 {
-  "slug": "ellipsis",
+  "slug": "ellipsis-substitution",
   "sections": [
     {
       "heading": "Ellipsis — omitting what's recoverable",
@@ -40,6 +40,12 @@
         "'Is it going to rain?' 'I hope not.'",
         "'Are you ready?' 'Almost [ready].'",
         "'I need a pen.' 'Here's one.'"
+      ],
+      "answers": [
+        "E — 'I do [like jazz]' (verb phrase omitted)",
+        "S — 'not' substitutes 'that it's going to rain'",
+        "E — 'ready' omitted after 'almost'",
+        "S — 'one' substitutes 'a pen'"
       ]
     }
   ],

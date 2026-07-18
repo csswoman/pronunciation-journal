@@ -40,6 +40,12 @@
         "I attend a lecture every Monday.",
         "She finally introduced herself — she seemed quite sympathetic.",
         "He eventually admitted his mistake."
+      ],
+      "answers": [
+        "La conferencia fue un gran éxito. ('success' = éxito, no 'suceso')",
+        "Asisto a una clase magistral cada lunes. ('attend' = asistir; 'lecture' = clase, no 'lectura')",
+        "Por fin se presentó — parecía muy agradable. ('introduce' = presentar; 'sympathetic' = comprensiva, no 'simpática')",
+        "Al final admitió su error. ('eventually' = al final, no 'eventualmente')"
       ]
     }
   ],

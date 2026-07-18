@@ -1,5 +1,5 @@
 {
-  "slug": "noun-verb-conversion",
+  "slug": "noun-verb-pairs",
   "sections": [
     {
       "heading": "Conversion in English",
@@ -40,6 +40,12 @@
         "water",
         "book",
         "police"
+      ],
+      "answers": [
+        "Modelo: I got an email. (n.) / I'll email you the file. (v.)",
+        "Modelo: A glass of water. (n.) / I water the plants daily. (v.)",
+        "Modelo: I'm reading a book. (n.) / You should book a table. (v.)",
+        "Modelo: The police arrived. (n.) / Volunteers police the park at night. (v.)"
       ]
     }
   ],

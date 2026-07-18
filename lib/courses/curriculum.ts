@@ -474,10 +474,11 @@ export const COURSE_PATH_CURRICULUM: CoursePathCurriculum = {
       "Biz",
       "Trabajo",
       "Inglés profesional",
-      "9 h",
+      "10 h",
       [
         { t: "Entrevistas de trabajo", p: 2, g: "biz-entrevistas-trabajo" },
         { t: "Conversaciones en la oficina", p: 1, g: "biz-conversaciones-trabajo" },
+        { t: "Inglés para code review", p: 0, g: "biz-code-review" },
         { t: "Crecer en tu carrera", p: 1, g: "biz-desarrollo-profesional" },
         { t: "Vocabulario del día a día laboral", p: 0, g: "biz-vocabulario-trabajo" },
         { t: "Herramientas y tareas del trabajo", p: 0, g: "biz-elementos-trabajo" },

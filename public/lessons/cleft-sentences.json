@@ -40,6 +40,12 @@
         "He failed because of poor planning.",
         "The noise woke me up.",
         "I need your full attention right now."
+      ],
+      "answers": [
+        "What she appreciated was the honesty. / It was the honesty that she appreciated.",
+        "It was because of poor planning that he failed.",
+        "It was the noise that woke me up. / What woke me up was the noise.",
+        "What I need right now is your full attention."
       ]
     }
   ],
