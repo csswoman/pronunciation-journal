@@ -33,16 +33,18 @@ instancia antes de que el job complete, perdiendo trabajo silenciosamente.
 durable. El handler HTTP encola el job y responde; un worker externo drena la
 cola con retry e idempotencia.
 
-**Solucion implementada**: Vercel Cron Job cada 2 minutos.
+**Solucion implementada**: GitHub Actions invoca el worker cada 15 minutos. Se
+usa un scheduler externo porque Vercel Hobby solo permite cron una vez al dia.
 
 - Endpoint: `app/api/jobs/drain-enrichment/route.ts`
 - RPC atomico: `claim_enrichment_jobs` (SELECT FOR UPDATE SKIP LOCKED, migration 20260702000000)
 - Batch de 3 jobs por invocacion; backoff exponencial (2 min → 8 min → 30 min → 2 h)
 - Autenticado con `CRON_SECRET` via `Authorization: Bearer`
-- Configurado en `vercel.json` con schedule `*/2 * * * *`
+- Configurado en `.github/workflows/drain-enrichment.yml` con schedule `*/15 * * * *`
 
-**Requerimiento de deploy**: configurar `CRON_SECRET` en las variables de entorno
-del proyecto Vercel antes de activar el cron en produccion.
+**Requerimiento de deploy**: configurar el mismo `CRON_SECRET` en Vercel y como
+secret de GitHub Actions, y definir la variable de repositorio
+`ENRICHMENT_DRAIN_URL` con la URL completa del endpoint de produccion.
 
 ### Observabilidad
 
@@ -80,6 +82,7 @@ Las variables que afectan comportamiento multi-instancia:
 |---|---|
 | `SUPABASE_SERVICE_ROLE_KEY` | Requerida para `consume_rate_limit` RPC. Sin ella, rate limit cae a in-memory. |
 | `GEMINI_API_KEY` | Requerida para todos los endpoints AI. Misma key en todas las instancias. |
+| `CRON_SECRET` | Autentica las invocaciones externas del worker de enriquecimiento. |
 
 ## Limites por Plan de Usuario
 
@@ -111,7 +114,7 @@ usuario este bajo su limite individual.
 - [x] Errores de proveedor no expuestos al cliente (`publicErrorResponse`)
 - [x] PII sanitizado en logs (`redactError`)
 - [x] Jobs encolados en tabla durable (`word_enrichment_jobs`)
-- [x] Worker de drenaje: `app/api/jobs/drain-enrichment` + `vercel.json` cron cada 2 min
+- [x] Worker de drenaje: `app/api/jobs/drain-enrichment` + GitHub Actions cada 15 min
 - [x] Health check programado compatible con Vercel Free (`production-health.yml`)
 - [ ] Log Drain configurado hacia servicio de retencion (opcional, requiere Vercel Pro)
 - [ ] Limites de Gemini monitoreados y alertados

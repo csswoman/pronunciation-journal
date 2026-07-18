@@ -31,7 +31,7 @@ La base técnica es sólida y el sprint de producción cerró la mayoría de P0/
 | 9-12 | CSRF/same-origin, errores públicos, rate limit RPC, tests de guards |
 | 14 | CSP/headers globales en `next.config.mjs` |
 | 15-17 | Checks migraciones, RLS, tipos Supabase |
-| 20 | Jobs durables (`word_enrichment_jobs` + worker Vercel Cron) |
+| 20 | Jobs durables (`word_enrichment_jobs` + worker programado en GitHub Actions) |
 | 22-25 | Timeouts Gemini, helper unificado, health liveness/readiness, backups |
 | 26-30 | Auth robusto, tests auth, degradación, inventario offline, estados de cola |
 | 34-37 | Scripts test, coverage, artefactos CI, reconciliación plans |

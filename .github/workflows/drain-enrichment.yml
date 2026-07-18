@@ -1,0 +1,42 @@
+name: Drain Enrichment Queue
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: production-enrichment-drain
+  cancel-in-progress: false
+
+jobs:
+  drain:
+    name: Drain production word enrichment jobs
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      ENRICHMENT_DRAIN_URL: ${{ vars.ENRICHMENT_DRAIN_URL }}
+      CRON_SECRET: ${{ secrets.CRON_SECRET }}
+    steps:
+      - name: Validate configuration
+        run: |
+          if [ -z "$ENRICHMENT_DRAIN_URL" ]; then
+            echo "Set ENRICHMENT_DRAIN_URL to https://your-domain/api/jobs/drain-enrichment"
+            exit 1
+          fi
+          if [ -z "$CRON_SECRET" ]; then
+            echo "Set the CRON_SECRET repository secret to the same value configured in Vercel"
+            exit 1
+          fi
+
+      - name: Drain one batch
+        run: |
+          curl --fail --show-error --silent \
+            --max-time 130 \
+            --retry 1 \
+            --retry-delay 10 \
+            --header "Authorization: Bearer $CRON_SECRET" \
+            "$ENRICHMENT_DRAIN_URL"
