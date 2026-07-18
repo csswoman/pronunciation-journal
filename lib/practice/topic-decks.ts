@@ -26,6 +26,11 @@ export const TOPIC_DECK_MAP: Array<{ keyword: string; deckSlug: string }> = [
   { keyword: 'hedging',            deckSlug: 'biz-code-review' },
 ]
 
+export function deckSlugForTopic(topic: string): string | null {
+  const normalized = topic.toLowerCase()
+  return TOPIC_DECK_MAP.find((entry) => normalized.includes(entry.keyword))?.deckSlug ?? null
+}
+
 /**
  * Given a list of weak topics, return the deck slug of the best match.
  * Returns null if no keyword matches any topic.

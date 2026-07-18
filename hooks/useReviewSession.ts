@@ -23,7 +23,12 @@ export function useReviewSession() {
     if (!user) return
     setState({ phase: 'loading' })
     try {
-      const plan = await buildReviewPlan(user.id)
+      const [plan, topicResponse] = await Promise.all([
+        buildReviewPlan(user.id),
+        fetch('/api/review/topics', { method: 'POST', headers: { 'content-type': 'application/json' }, body: '{}' }).catch(() => null),
+      ])
+      const topicSteps: DailyStep[] = topicResponse?.ok ? (await topicResponse.json()).steps ?? [] : []
+      plan.steps.push(...topicSteps)
       if (plan.nothingDue || plan.steps.length === 0) {
         setState({ phase: 'done' })
         return
@@ -34,6 +39,17 @@ export function useReviewSession() {
       setState({ phase: 'error' })
     }
   }, [user])
+
+  const startTopic = useCallback(async (topic: string) => {
+    setState({ phase: 'loading' })
+    try {
+      const response = await fetch('/api/review/topics', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ topic }) })
+      const { steps } = response.ok ? await response.json() : { steps: [] }
+      if (!steps?.length) return setState({ phase: 'error' })
+      setSessionKey((key) => key + 1)
+      setState({ phase: 'session', steps, stepIndex: 0 })
+    } catch { setState({ phase: 'error' }) }
+  }, [])
 
   const startFailedItem = useCallback(
     async (item: FailedSentenceItem) => {
@@ -76,6 +92,7 @@ export function useReviewSession() {
     sessionKey,
     startReview,
     startFailedItem,
+    startTopic,
     advanceStep,
     exitSession,
     reset,
