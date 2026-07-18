@@ -3,6 +3,7 @@ import PageHeader from '@/components/layout/PageHeader'
 import Link from 'next/link'
 import { listAllDecks } from '@/lib/courses/grammar-deck/decks'
 import { DecksIndexClient } from '@/components/practice/decks/DecksIndexClient'
+import { UserDecksRuntime } from '@/components/vocabulary/decks/UserDecksRuntime'
 
 export default function DecksIndexPage() {
   const decks = listAllDecks()
@@ -28,6 +29,14 @@ export default function DecksIndexPage() {
           <span className="text-sm text-primary font-medium shrink-0 ml-3">Practicar →</span>
         </Link>
         <DecksIndexClient decks={decks} />
+        <section className="mt-10 border-t border-border-subtle pt-8" aria-labelledby="user-decks-heading">
+          <div className="mb-4">
+            <p className="text-label text-fg-muted">Your vocabulary</p>
+            <h2 id="user-decks-heading" className="text-xl font-semibold text-fg">Tus mazos</h2>
+            <p className="mt-1 text-sm text-fg-muted">Crea, organiza y repasa tus propios grupos de palabras.</p>
+          </div>
+          <UserDecksRuntime />
+        </section>
       </div>
     </PageLayout>
   )

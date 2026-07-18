@@ -1,11 +1,13 @@
 // Planned structure:
 // <SessionStatsCard>
+//   <SessionHelpPopover />  — "?" cómo funciona (esquina superior derecha)
 //   <StatColumn × 3 />   — Nuevas · Aprendiendo · Repaso (contadores de sesión)
 //   <DeckLine />          — Aprendidas x/2800 · Vencidas hoy · Nuevas hoy x/10
 // </SessionStatsCard>
 
 import { cn } from '@/lib/cn'
 import type { EssentialWordsStats, EssentialWordsCounts } from '@/hooks/useEssentialWordsSession'
+import { SessionHelpPopover } from './SessionHelpPopover'
 
 interface Props {
   stats: EssentialWordsStats
@@ -38,7 +40,11 @@ function StatColumn({
 
 export function SessionStatsCard({ stats, counts }: Props) {
   return (
-    <div className="flex w-full flex-col gap-3 rounded-xl border border-border-subtle bg-transparent px-4 py-3">
+    <div className="relative flex w-full flex-col gap-3 rounded-xl border border-border-subtle bg-transparent px-4 py-3">
+      <div className="absolute right-1.5 top-1.5">
+        <SessionHelpPopover />
+      </div>
+
       <div className="flex items-start divide-x divide-border-subtle">
         <StatColumn label="Nuevas" value={counts.newRemaining} zero />
         <StatColumn label="Aprendiendo" value={counts.learningRemaining} accent zero />

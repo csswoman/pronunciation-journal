@@ -11,9 +11,12 @@
  * button sounds stay on cuelume's `bind()` on purpose (they should remain
  * subtle).
  */
+import { useUISoundsStore, MAX_VOLUME_MULTIPLIER } from '@/lib/stores/uiSoundsStore'
 
-/** Relative loudness applied on top of each recipe's baked masterGain. */
-const VOLUME = 3
+/** Live loudness multiplier from the user's sound preference (0–MAX). */
+function currentVolume(): number {
+  return useUISoundsStore.getState().volume * MAX_VOLUME_MULTIPLIER
+}
 
 const SOURCE_STOP_PADDING = 0.05
 const CLEANUP_MARGIN = 0.05
@@ -201,7 +204,7 @@ function shimmerTail(shimmer: Shimmer | undefined): number {
 function renderRecipe(context: AudioContext, recipe: Recipe): void {
   const now = context.currentTime
   const master = context.createGain()
-  master.gain.value = recipe.masterGain * VOLUME
+  master.gain.value = recipe.masterGain * currentVolume()
   master.connect(context.destination)
   const shimmerNodes = recipe.shimmer
     ? attachShimmer(context, master, context.destination, recipe.shimmer)

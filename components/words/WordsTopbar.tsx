@@ -1,11 +1,10 @@
 "use client";
 
-import { BookOpen, BookMarked, Layers } from "@/components/icons";
+import { BookOpen, BookMarked } from "@/components/icons";
 
 export const WORDS_TABS = [
   { id: "lexicon",  label: "Dictionary",  icon: BookOpen },
   { id: "my-words", label: "My Words", icon: BookMarked },
-  { id: "decks",    label: "Decks",    icon: Layers },
 ] as const;
 
 export type WordsTabId = (typeof WORDS_TABS)[number]["id"];
@@ -13,13 +12,11 @@ export type WordsTabId = (typeof WORDS_TABS)[number]["id"];
 const TABS: { id: WordsTabId; label: string; icon: typeof BookOpen }[] = [
   { id: "lexicon", label: "Dictionary", icon: BookOpen },
   { id: "my-words", label: "My Words", icon: BookMarked },
-  { id: "decks", label: "Decks", icon: Layers },
 ];
 
 const TITLES: Record<WordsTabId, string> = {
   lexicon: "Dictionary",
   "my-words": "My Words",
-  decks: "Decks",
 };
 
 interface WordsTopbarProps {
@@ -27,7 +24,6 @@ interface WordsTopbarProps {
   onTabChange: (tab: WordsTabId) => void;
   lexiconCount: number;
   myWordsCount: number;
-  deckCount: number;
 }
 
 export function WordsTopbar({
@@ -35,12 +31,10 @@ export function WordsTopbar({
   onTabChange,
   lexiconCount,
   myWordsCount,
-  deckCount,
 }: WordsTopbarProps) {
   const counts: Record<WordsTabId, number> = {
     lexicon: lexiconCount,
     "my-words": myWordsCount,
-    decks: deckCount,
   };
 
   return (

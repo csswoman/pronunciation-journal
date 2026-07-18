@@ -5,7 +5,6 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 
 const lexiconMount = vi.fn();
 const myWordsMount = vi.fn();
-const decksMount = vi.fn();
 const replace = vi.fn();
 
 let mockTab: string | null = "lexicon";
@@ -37,13 +36,6 @@ vi.mock("@/components/words/tabs/MyWordsTabRuntime", () => ({
   },
 }));
 
-vi.mock("@/components/words/tabs/DecksTabRuntime", () => ({
-  default: () => {
-    decksMount();
-    return <div data-testid="decks-runtime">Decks</div>;
-  },
-}));
-
 vi.mock("next/dynamic", () => ({
   default: (loader: () => Promise<{ default?: React.ComponentType }>) => {
     return function DynamicMock(props: Record<string, unknown>) {
@@ -72,7 +64,6 @@ describe("WordsClient tab isolation", () => {
   beforeEach(() => {
     lexiconMount.mockClear();
     myWordsMount.mockClear();
-    decksMount.mockClear();
     replace.mockClear();
     mockTab = "lexicon";
   });
@@ -96,7 +87,6 @@ describe("WordsClient tab isolation", () => {
 
     expect(lexiconMount).toHaveBeenCalled();
     expect(myWordsMount).not.toHaveBeenCalled();
-    expect(decksMount).not.toHaveBeenCalled();
   });
 
   it("switches tabs through the router without a full navigation", async () => {
@@ -142,10 +132,9 @@ describe("WordsClient tab isolation", () => {
 
     expect(myWordsMount).toHaveBeenCalled();
     expect(lexiconMount).not.toHaveBeenCalled();
-    expect(decksMount).not.toHaveBeenCalled();
   });
 
-  it("mounts the decks runtime when opened directly", async () => {
+  it("falls back to the dictionary when opened with the retired decks tab", async () => {
     mockTab = "decks";
 
     render(
@@ -161,11 +150,10 @@ describe("WordsClient tab isolation", () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByTestId("decks-runtime")).toBeInTheDocument();
+      expect(screen.getByTestId("lexicon-runtime")).toBeInTheDocument();
     });
 
-    expect(decksMount).toHaveBeenCalled();
-    expect(lexiconMount).not.toHaveBeenCalled();
+    expect(lexiconMount).toHaveBeenCalled();
     expect(myWordsMount).not.toHaveBeenCalled();
   });
 });

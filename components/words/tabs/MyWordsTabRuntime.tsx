@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Plus } from "@/components/icons";
 
 import Section from "@/components/layout/Section";
@@ -14,7 +15,6 @@ import { useWords } from "@/hooks/useWords";
 import { getUserDecksFull, type DeckListItem } from "@/lib/decks/queries";
 import { publicDataErrorMessage } from "@/lib/degradation/messages";
 import { toggleFavorite } from "@/lib/word-bank/queries";
-import type { WordsTabId } from "@/components/words/WordsTopbar";
 
 const loadQuickAddModal = () => import("@/components/vocabulary/words/QuickAddModal");
 const loadCreateDeckFromWordsModal = () => import("@/components/vocabulary/decks/CreateDeckFromWordsModal");
@@ -31,20 +31,15 @@ interface WordStats {
 }
 
 interface MyWordsTabRuntimeProps {
-  deckCount: number;
   onMyWordsCountChange: (count: number) => void;
-  onDeckCountChange: (count: number) => void;
-  onTabChange: (tab: WordsTabId) => void;
   onRegisterPrimaryAction?: (action: () => void) => void;
 }
 
 export default function MyWordsTabRuntime({
-  deckCount,
   onMyWordsCountChange,
-  onDeckCountChange,
-  onTabChange,
   onRegisterPrimaryAction,
 }: MyWordsTabRuntimeProps) {
+  const router = useRouter();
   const { user } = useAuth();
   const { words, loading, error, addWord, removeWord, retry } = useWords();
   const [showAddWord, setShowAddWord] = useState(false);
@@ -120,11 +115,6 @@ export default function MyWordsTabRuntime({
     onMyWordsCountChange(words.length);
   }, [loading, words.length, onMyWordsCountChange]);
 
-  useEffect(() => {
-    if (loading) return;
-    onDeckCountChange(deckCount);
-  }, [loading, deckCount, onDeckCountChange]);
-
   const wordStats = useMemo<WordStats>(() => ({
     total: words.length,
     ready: words.filter((word) => word.status === "ready").length,
@@ -177,7 +167,7 @@ export default function MyWordsTabRuntime({
       <WordsHero
         activeTab="my-words"
         myWordsCount={words.length}
-        deckCount={deckCount}
+        deckCount={0}
         wordsLoading={loading}
       />
 
@@ -249,10 +239,9 @@ export default function MyWordsTabRuntime({
           wordIds={Array.from(selectedWordIds)}
           onClose={() => setShowCreateFromWords(false)}
           onCreated={() => {
-            onDeckCountChange(deckCount + 1);
             setShowCreateFromWords(false);
             setSelectedWordIds(new Set());
-            onTabChange("decks");
+            router.push("/practice/decks");
           }}
         />
       )}

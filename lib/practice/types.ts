@@ -148,6 +148,7 @@ export type DailyStepKind =
   | 'listening'        // dictation desde words del seed
   | 'sentence_builder' // reorder_words desde text_fragments (lecciones y grammar decks)
   | 'concept'          // mini-lección / language concept del día (lectura ligera)
+  | 'study_deck'       // lección de la ruta, elegida desde el progreso del usuario
   | 'reader'           // comprehensible-input: párrafo i+1 que recicla vocab reciente
 
 export type DailyStep = {
@@ -163,7 +164,7 @@ export type DailyStep = {
   estMinutes: number
   /** Solo para 'word_intro': tarjetas de presentación (no evaluadas, no escriben answer_history). */
   studyCards?: StudyCardModel[]
-  /** Solo para 'concept': a dónde lleva la lectura. */
+  /** Solo para 'concept' y 'study_deck': a dónde lleva la lectura. */
   href?: string
   /** Solo para 'phoneme_focus': IPA del sonido que se practica (para mostrar intro). */
   ipa?: string

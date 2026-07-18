@@ -16,6 +16,7 @@ import type { DailyPlan, DailyStep, SessionArc } from '@/lib/practice/types'
 import type { Sound } from '@/lib/phoneme-practice/types'
 import { buildJournalDailyStep, shouldOfferJournalStep } from '@/lib/journal/daily-step'
 import { buildConnectedSpeechStep, buildReaderStep, buildSentenceBuilderStep } from './async-step-builders'
+import { buildStudyDeckStep } from './study-deck'
 import { DAILY_PLAN_STEP_COUNT, WORD_REVIEW_WORD_COUNT } from './constants'
 import {
   fetchAllPracticedSounds,
@@ -115,12 +116,15 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
     reviewWords = await fetchCoreWordsForDay(dayOfYear(), WORD_REVIEW_WORD_COUNT)
   }
 
-  const [weakest, localLearningState] = await Promise.all([
+  const [weakest, localLearningState, completedLessons] = await Promise.all([
     fetchWeakestSoundProgress(userId),
     db.learningState.get(userId).catch(() => null),
+    db.completedLessons.toArray().catch(() => []),
   ])
   const aiState = localLearningState?.state ?? null
   const hasProgress = weakest != null
+  const activeLevel = localLearningState?.state.level.cefrEstimate.toLowerCase() as import('@/lib/courses/types').CefrLevelId | undefined
+  const completedLessonIds = new Set(completedLessons.map((lesson) => lesson.key))
 
   let primarySound: Sound | null = weakest
   if (!primarySound && aiState) {
@@ -206,6 +210,7 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
     }
   }
 
+  const studyDeckStep = buildStudyDeckStep(completedLessonIds, activeLevel)
   let steps: DailyStep[] = [...allSteps, ...reviewSteps]
 
   // When SRS items are due, prepend top review-hub steps so the daily plan surfaces them first.
@@ -259,11 +264,28 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
     }
   }
 
-  let finalSteps = steps.slice(0, DAILY_PLAN_STEP_COUNT)
-  const readerStep = steps.find((step) => step.kind === 'reader')
-  if (readerStep && !finalSteps.some((step) => step.kind === 'reader')) {
-    finalSteps = [...finalSteps.slice(0, DAILY_PLAN_STEP_COUNT - 1), readerStep]
+  // The client appends the rotating mini-lesson afterwards. Reserve this slot
+  // for the route-based theory lesson so the five-step plan remains: three
+  // practice steps, then the two theory links.
+  const practiceCapacity = DAILY_PLAN_STEP_COUNT - (studyDeckStep ? 1 : 0)
+  let finalSteps = steps.slice(0, practiceCapacity)
+  // Preserve the learning arc for a populated word bank before adding more
+  // phoneme fallbacks: notice → recall → use in context → read. The remaining
+  // practice capacity is filled from the original mixed candidate order.
+  const vocabularyArc = ['word_intro', 'word_review', 'context_practice', 'reader'] as const
+  const prioritized = vocabularyArc
+    .map((kind) => steps.find((step) => step.kind === kind))
+    .filter((step): step is DailyStep => Boolean(step))
+  if (prioritized.length > 0) {
+    const selected = prioritized.slice(0, practiceCapacity)
+    const selectedIds = new Set(selected.map((step) => step.id))
+    finalSteps = [
+      ...selected,
+      ...steps.filter((step) => !selectedIds.has(step.id)).slice(0, practiceCapacity - selected.length),
+    ]
   }
+
+  if (studyDeckStep) finalSteps.push(studyDeckStep)
 
   // Optional Journal link: appended AFTER the cap on its cadence so it never
   // displaces an evaluated step. Concept steps carry no exercises and are not

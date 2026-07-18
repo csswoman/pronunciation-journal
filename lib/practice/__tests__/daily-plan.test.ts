@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import type { WordBankEntry } from '@/lib/word-bank/types'
 import type { Sound, SoundWord } from '@/lib/phoneme-practice/types'
@@ -58,7 +59,10 @@ vi.mock('@/lib/phoneme-practice/queries', () => ({
 }))
 
 vi.mock('@/lib/db', () => ({
-  db: { learningState: { get: vi.fn().mockResolvedValue(null) } },
+  db: {
+    learningState: { get: vi.fn().mockResolvedValue(null) },
+    completedLessons: { toArray: vi.fn().mockResolvedValue([]) },
+  },
 }))
 
 vi.mock('@/lib/exercises/generators/connected-speech', () => ({

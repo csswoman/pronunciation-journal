@@ -60,6 +60,8 @@ export function coreWordToStudyCard(entry: CoreWord): StudyCardModel {
   return {
     word: entry.word,
     ipa: present(entry.ipa_strong),
+    meaning: present(entry.meaning),
+    translation: present(entry.translation),
     sentence: present(entry.example_sentence),
     sentenceIpa: present(entry.sentence_ipa),
     weakForm: hasReduction(entry)

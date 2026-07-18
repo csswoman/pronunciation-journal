@@ -16,9 +16,6 @@ const LexiconTabRuntime = dynamic(() => import("./tabs/LexiconTabRuntime"), {
 const MyWordsTabRuntime = dynamic(() => import("./tabs/MyWordsTabRuntime"), {
   loading: () => <WordsRuntimeSkeleton />,
 });
-const DecksTabRuntime = dynamic(() => import("./tabs/DecksTabRuntime"), {
-  loading: () => <WordsRuntimeSkeleton />,
-});
 
 interface WordsClientProps {
   lexiconLessons: LessonViewModel[];
@@ -27,12 +24,13 @@ interface WordsClientProps {
   lexiconTotal: number;
   lexiconPercent: number;
   myWordsCount: number;
+  /** Retained at the route boundary while deck management lives in /practice/decks. */
   deckCount: number;
   dueForReview?: number;
   dueWordLabels?: string[];
 }
 
-const TAB_IDS: WordsTabId[] = ["lexicon", "my-words", "decks"];
+const TAB_IDS: WordsTabId[] = ["lexicon", "my-words"];
 
 function normalizeTab(tab: string | null): WordsTabId {
   return TAB_IDS.includes(tab as WordsTabId) ? (tab as WordsTabId) : "lexicon";
@@ -61,7 +59,6 @@ export function WordsClient({
   lexiconTotal,
   lexiconPercent,
   myWordsCount: initialMyWordsCount,
-  deckCount: initialDeckCount,
   dueForReview = 0,
   dueWordLabels = [],
 }: WordsClientProps) {
@@ -71,7 +68,6 @@ export function WordsClient({
   const normalizedTab = useMemo(() => normalizeTab(tabParam), [tabParam]);
   const [activeTab, setActiveTab] = useState<WordsTabId>(normalizedTab);
   const [myWordsCount, setMyWordsCount] = useState(initialMyWordsCount);
-  const [deckCount, setDeckCount] = useState(initialDeckCount);
   const primaryActionRef = useRef<() => void>(() => {});
 
   const registerPrimaryAction = useCallback((action: () => void) => {
@@ -86,23 +82,12 @@ export function WordsClient({
         onClick: () => primaryActionRef.current(),
       };
     }
-    if (activeTab === "decks") {
-      return {
-        label: "Nuevo mazo",
-        icon: <Plus size={15} aria-hidden />,
-        onClick: () => primaryActionRef.current(),
-      };
-    }
     return undefined;
   }, [activeTab]);
 
   useEffect(() => {
     setMyWordsCount(initialMyWordsCount);
   }, [initialMyWordsCount]);
-
-  useEffect(() => {
-    setDeckCount(initialDeckCount);
-  }, [initialDeckCount]);
 
   useEffect(() => {
     if (normalizedTab !== activeTab) {
@@ -121,7 +106,7 @@ export function WordsClient({
         <PageHeader
           kicker="Reference"
           title="Words"
-          subtitle="Tu colección, mazos y léxico para repasar y ampliar vocabulario."
+          subtitle="Tu colección y léxico para repasar y ampliar vocabulario."
           primaryCta={primaryCta}
         />
         <WordsTopbar
@@ -129,7 +114,6 @@ export function WordsClient({
           onTabChange={handleTabChange}
           lexiconCount={lexiconTotal}
           myWordsCount={myWordsCount}
-          deckCount={deckCount}
         />
 
         {activeTab === "lexicon" && (
@@ -146,20 +130,11 @@ export function WordsClient({
 
         {activeTab === "my-words" && (
           <MyWordsTabRuntime
-            deckCount={deckCount}
             onMyWordsCountChange={setMyWordsCount}
-            onDeckCountChange={setDeckCount}
-            onTabChange={handleTabChange}
             onRegisterPrimaryAction={registerPrimaryAction}
           />
         )}
 
-        {activeTab === "decks" && (
-          <DecksTabRuntime
-            onDeckCountChange={setDeckCount}
-            onRegisterPrimaryAction={registerPrimaryAction}
-          />
-        )}
       </div>
     </PageLayout>
   );

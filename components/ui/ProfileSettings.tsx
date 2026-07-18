@@ -6,8 +6,9 @@ import { useUserPreferences } from "@/hooks/useUserPreferences";
 import { useAuth } from "@/components/auth/AuthProvider";
 import ProfileAvatarCard from "@/components/profile/ProfileAvatarCard";
 import ProfileNameCard from "@/components/profile/ProfileNameCard";
-import InterestsEditor from "@/components/profile/InterestsEditor";
 import ProfilePasswordCard from "@/components/profile/ProfilePasswordCard";
+import SoundSettingsCard from "@/components/ui-sounds/SoundSettingsCard";
+import InterestsEditor from "@/components/profile/InterestsEditor";
 import { H1, H2 } from "@/components/ui/Typography";
 
 function Toast({ message, type }: { message: string; type: "success" | "error" }) {
@@ -184,8 +185,11 @@ export default function ProfileSettings() {
             onSave={handleNameSave}
           />
         </div>
-      <InterestsEditor interests={preferences?.interests ?? []} onSave={updateInterests} />
       </SectionCard>
+
+      {/* Sound preferences */}
+      <SoundSettingsCard />
+      <InterestsEditor interests={preferences?.interests ?? []} onSave={updateInterests} />
 
       {/* Security card */}
       <SectionCard>
