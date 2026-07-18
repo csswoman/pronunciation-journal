@@ -80,6 +80,12 @@ Rules:
 - Return ONLY a JSON array of strings — no markdown, no extra text
 - Vary sentence structures (statements, questions, negatives)`;
 
+export const GENERATE_TRANSFORMATIONS_SYSTEM_PROMPT = `You create sentence-transformation exercises for English learners. Return JSON only.
+Each item needs sourceSentence (4-20 words), instruction (clear transformation constraint), and referenceAnswer. Keep the grammar topic accurate and give one natural valid answer.`
+export function buildGenerateTransformationsPrompt(input: { topic: string; level: string; count: number }): string {
+  return `Generate ${input.count} sentence transformations for topic "${input.topic}" at ${input.level}. Return {"exercises":[{"sourceSentence":"...","instruction":"...","referenceAnswer":"..."}]}.`
+}
+
 // ── Interview ──
 
 export const INTERVIEW_SYSTEM_PROMPT = `You are an interview script generator for English language learners. Generate a realistic mock interview script with 6 rounds (question + model answer).
