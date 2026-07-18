@@ -3,6 +3,7 @@ import {
   effectiveStatus,
   addDaysIso,
   patchSnooze,
+  patchMaster,
   activateExpiredSnoozes,
   isDueForQueue,
 } from "../status";
@@ -24,6 +25,9 @@ describe("effectiveStatus", () => {
   it("maps legacy archived to snoozed", () => {
     expect(effectiveStatus({ ...base, archived: true })).toBe("snoozed");
   });
+  it("lets an explicit modern status override a stale legacy archived flag", () => {
+    expect(effectiveStatus({ ...base, status: "mastered", archived: true })).toBe("mastered");
+  });
 });
 
 describe("patchSnooze", () => {
@@ -38,6 +42,20 @@ describe("patchSnooze", () => {
   it("adds snooze days in UTC even across a DST transition", () => {
     const beforeDst = new Date("2026-03-08T06:30:00.000Z");
     expect(addDaysIso(beforeDst, 1)).toBe("2026-03-09T06:30:00.000Z");
+  });
+});
+
+describe("patchMaster", () => {
+  it("moves a legacy archived entry to mastered and removes legacy flags", () => {
+    const now = new Date("2026-07-17T12:00:00.000Z");
+    const next = patchMaster({ ...base, archived: true, archivedAt: "2026-01-01T00:00:00.000Z" }, now);
+
+    expect(next).toMatchObject({
+      status: "mastered",
+      masteredAt: now.toISOString(),
+    });
+    expect(next.archived).toBeUndefined();
+    expect(next.archivedAt).toBeUndefined();
   });
 });
 
@@ -65,6 +83,14 @@ describe("activateExpiredSnoozes", () => {
     expect(result).toBe(snoozed);
     expect(result.status).toBe("snoozed");
   });
+
+  it("activates a snooze exactly at its review boundary", () => {
+    const snoozed = { ...base, status: "snoozed" as const, nextReview: now.toISOString() };
+    const [result] = activateExpiredSnoozes([snoozed], now);
+
+    expect(result.status).toBe("active");
+    expect(result.nextReview).toBe(now.toISOString());
+  });
 });
 
 describe("isDueForQueue", () => {
@@ -80,5 +106,6 @@ describe("isDueForQueue", () => {
   });
   it("includes active when nextReview <= now", () => {
     expect(isDueForQueue({ ...base, status: "active", nextReview: "2026-07-01T00:00:00.000Z" }, now)).toBe(true);
+    expect(isDueForQueue({ ...base, status: "active", nextReview: now.toISOString() }, now)).toBe(true);
   });
 });

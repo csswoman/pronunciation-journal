@@ -33,6 +33,16 @@ describe('gemini json-route helpers', () => {
     expect(parsed).toEqual({ ok: true })
   })
 
+  it.each([
+    ['plain malformed JSON', '{"ok":'],
+    ['fenced malformed JSON', '```json\n{"ok":\n```'],
+  ])('rejects %s before schema validation', (_label, raw) => {
+    const validate = vi.fn()
+
+    expect(() => parseGeminiJson(raw, validate)).toThrow(SyntaxError)
+    expect(validate).not.toHaveBeenCalled()
+  })
+
   it('returns 503 without calling Gemini when the API key is missing', async () => {
     delete process.env.GEMINI_API_KEY
 
@@ -45,6 +55,21 @@ describe('gemini json-route helpers', () => {
 
     expect(res.status).toBe(503)
     expect(mocks.callWithFallback).not.toHaveBeenCalled()
+  })
+
+  it('preserves route security headers during missing-key degradation', async () => {
+    delete process.env.GEMINI_API_KEY
+
+    const res = await respondWithGeminiJson({
+      endpoint: '/api/test',
+      params: { contents: 'prompt' },
+      parse: (text) => ({ text }),
+      failureMessage: 'failed',
+      headers: { 'Cache-Control': 'no-store' },
+    })
+
+    expect(res.status).toBe(503)
+    expect(res.headers.get('Cache-Control')).toBe('no-store')
   })
 
   it('maps provider errors to a sanitized public response', async () => {
@@ -61,5 +86,22 @@ describe('gemini json-route helpers', () => {
 
     expect(res.status).toBe(429)
     expect(body).toEqual({ error: 'failed' })
+  })
+
+  it('maps malformed model output to a sanitized 500 response', async () => {
+    mocks.callWithFallback.mockRejectedValueOnce(new SyntaxError('Unexpected token at model output'))
+
+    const res = await respondWithGeminiJson({
+      endpoint: '/api/test',
+      userId: 'user-1',
+      params: { contents: 'prompt' },
+      parse: (text) => parseGeminiJson(text, (json) => json),
+      failureMessage: 'failed',
+    })
+    const body = await res.json()
+
+    expect(res.status).toBe(500)
+    expect(body).toEqual({ error: 'failed' })
+    expect(JSON.stringify(body)).not.toContain('Unexpected token')
   })
 })

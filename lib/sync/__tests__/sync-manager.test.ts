@@ -349,6 +349,44 @@ describe('flushOutbox', () => {
     expect(result.failed).toBe(1)
   })
 
+  it('isolates success, transient failure, and permanent failure within one batch', async () => {
+    const entries = [
+      {
+        id: 21, table: 'answer_history', operation: 'upsert', payload: { id: 'ok' },
+        status: 'pending', retryCount: 0, createdAt: new Date().toISOString(),
+      },
+      {
+        id: 22, table: 'activity_sessions', operation: 'upsert', payload: { id: 'retry' },
+        status: 'pending', retryCount: 0, createdAt: new Date().toISOString(),
+      },
+      {
+        id: 23, table: 'ai_events', operation: 'upsert', payload: { id: 'rejected' },
+        status: 'pending', retryCount: 0, createdAt: new Date().toISOString(),
+      },
+    ]
+    setupFlush(entries)
+    mocks.mockSupabaseFrom.mockImplementation((table: string) => ({
+      upsert: vi.fn().mockResolvedValue(
+        table === 'answer_history'
+          ? { error: null }
+          : table === 'activity_sessions'
+            ? { error: { message: 'fetch failed', code: undefined } }
+            : { error: { message: 'permission denied', code: '42501' } },
+      ),
+    }))
+
+    const result = await flushOutbox()
+
+    expect(mocks.mockSyncOutboxDelete).toHaveBeenCalledWith(21)
+    expect(mocks.mockSyncOutboxUpdate).toHaveBeenCalledWith(22, expect.objectContaining({
+      status: 'pending', retryCount: 1, nextRetryAt: expect.any(String),
+    }))
+    expect(mocks.mockSyncOutboxUpdate).toHaveBeenCalledWith(23, expect.objectContaining({
+      status: 'failed', retryCount: 1,
+    }))
+    expect(result).toEqual({ synced: 1, failed: 2, skipped: 0 })
+  })
+
   it('returns early with zeros when navigator.onLine is false', async () => {
     Object.defineProperty(globalThis, 'navigator', {
       value: { onLine: false },
