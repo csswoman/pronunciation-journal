@@ -19,6 +19,7 @@ const GENERIC_TYPE_TO_SLUG: Record<GenericExerciseType, ExerciseSlug> = {
   written_production: 'written_production',
   spoken_production: 'spoken_production',
   error_correction: 'error_correction',
+  conjugation_blank: 'conjugation_blank',
 }
 
 /**

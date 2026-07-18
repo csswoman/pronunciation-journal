@@ -56,6 +56,8 @@ export function buildPedagogicalFeedback(
       }
     case 'error_correction':
       return errorCorrectionFeedback(exercise, isCorrect)
+    case 'conjugation_blank':
+      return { immediate: isCorrect ? 'Correcto.' : 'Revisa la forma verbal.', expectedAnswer: exercise.answer, tip: exercise.hint, errorCode: isCorrect ? 'correct' : 'form_error', canRetry: !isCorrect, nextAction: isCorrect ? 'continue' : 'retry' }
   }
 }
 

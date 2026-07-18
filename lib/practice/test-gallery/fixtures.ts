@@ -119,6 +119,7 @@ const GENERIC_FIXTURES: Record<
     targetMeaning: 'to succeed in doing something',
   },
   error_correction: { id: 'error-correction', type: 'error_correction', sourceRef: SOURCE, sentence: 'She go to work.', correctSentence: 'She goes to work.', explanation: 'Third-person singular uses goes.' },
+  conjugation_blank: { id: 'conjugation-blank', type: 'conjugation_blank', sourceRef: SOURCE, sentence: 'She ___ to work.', lemma: 'go', answer: 'goes' },
 }
 
 const PHONEME_FIXTURES: Record<
@@ -258,6 +259,7 @@ const GENERIC_LABELS: Record<keyof typeof GENERIC_FIXTURES, string> = {
   written_production: 'Producción escrita',
   spoken_production: 'Producción oral',
   error_correction: 'Corregir oración',
+  conjugation_blank: 'Completar verbo',
 }
 
 const PHONEME_LABELS: Record<keyof typeof PHONEME_FIXTURES, string> = {

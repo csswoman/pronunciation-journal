@@ -8,6 +8,7 @@ import { SentenceContextExercise } from '@/components/lexicon/SentenceContextExe
 import { WrittenProductionExercise } from '@/components/exercises/WrittenProductionExercise'
 import { SpokenProductionExercise } from '@/components/exercises/SpokenProductionExercise'
 import { ErrorCorrectionExercise } from '@/components/exercises/ErrorCorrectionExercise'
+import { ConjugationBlankExercise } from '@/components/exercises/ConjugationBlankExercise'
 import type {
   GenericExercise,
   GenericExerciseType,
@@ -20,6 +21,7 @@ import type {
   WrittenProductionExercise as WrittenProductionExerciseType,
   SpokenProductionExercise as SpokenProductionExerciseType,
   ErrorCorrectionExercise as ErrorCorrectionExerciseType,
+  ConjugationBlankExercise as ConjugationBlankExerciseType,
 } from '@/lib/exercises/types'
 import type { PedagogicalFeedback } from '@/lib/practice/types'
 
@@ -136,6 +138,7 @@ export const GENERIC_REGISTRY: Record<GenericExerciseType, GenericRegistryEntry>
     title: 'Corrige la oración',
     render: (exercise, { onResult }) => <ErrorCorrectionExercise exercise={exercise as ErrorCorrectionExerciseType} onResult={onResult} />,
   },
+  conjugation_blank: { title: 'Completa el verbo', render: (exercise, { onResult }) => <ConjugationBlankExercise exercise={exercise as ConjugationBlankExerciseType} onResult={onResult} /> },
 }
 
 export function renderGenericExercise(
