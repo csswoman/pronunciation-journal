@@ -10,13 +10,17 @@ import {
   updateAvatar as updateAvatarQuery,
   updatePassword as updatePasswordQuery,
   syncCefrLevel,
+  updateInterests as updateInterestsQuery,
 } from "@/lib/users/queries";
+import type { Interest } from "@/lib/users/interests";
+import { cacheUserInterests, getCachedUserInterests } from "@/lib/db";
 import type { CefrLevel } from "@/lib/core-1000/types";
 
 export interface UserPreferencesData {
   full_name?: string;
   avatar_url?: string;
   cefr_level?: CefrLevel | null;
+  interests?: Interest[];
 }
 
 export function useUserPreferences() {
@@ -31,8 +35,11 @@ export function useUserPreferences() {
     try {
       setLoading(true);
       const prefs = await getUserPreferences(user.id, user.user_metadata);
+      await cacheUserInterests(user.id, prefs.interests);
       setPreferences(prefs);
     } catch {
+      const cached = await getCachedUserInterests(user.id);
+      if (cached) setPreferences((prev) => ({ ...prev, interests: cached as Interest[] }));
       setError(publicDataErrorMessage());
     } finally {
       setLoading(false);
@@ -109,6 +116,19 @@ export function useUserPreferences() {
     [user],
   );
 
+  const updateInterests = useCallback(async (interests: readonly unknown[]) => {
+    if (!user) return;
+    try {
+      const saved = await updateInterestsQuery(user.id, interests);
+      await cacheUserInterests(user.id, saved);
+      setPreferences((prev) => ({ ...prev, interests: saved }));
+    } catch {
+      const message = publicDataErrorMessage();
+      setError(message);
+      throw new Error(message);
+    }
+  }, [user]);
+
   return {
     preferences,
     loading,
@@ -117,5 +137,6 @@ export function useUserPreferences() {
     updateAvatar,
     updatePassword,
     updateCefrLevel,
+    updateInterests,
   };
 }

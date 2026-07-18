@@ -1,10 +1,12 @@
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import type { CefrLevel } from "@/lib/core-1000/types";
+import { normalizeInterests, type Interest } from "@/lib/users/interests";
 
 export interface UserPreferences {
   full_name: string;
   avatar_url: string;
   cefr_level: CefrLevel | null;
+  interests: Interest[];
 }
 
 function metadataString(value: unknown): string | undefined {
@@ -22,7 +24,7 @@ export async function getUserPreferences(
   const supabase = getSupabaseBrowserClient();
   const { data, error } = await supabase
     .from("user_profiles")
-    .select("display_name, cefr_level")
+    .select("display_name, cefr_level, interests")
     .eq("id", userId)
     .single();
 
@@ -32,6 +34,7 @@ export async function getUserPreferences(
     full_name: data?.display_name || metadataString(authMetadata?.full_name) || "",
     avatar_url: metadataString(authMetadata?.avatar_url) || "",
     cefr_level: (data?.cefr_level as CefrLevel | null) ?? null,
+    interests: normalizeInterests(Array.isArray(data?.interests) ? data.interests : []),
   };
 }
 
@@ -95,4 +98,14 @@ export async function syncCefrLevel(userId: string, cefrEstimate: string): Promi
     .upsert({ id: userId, cefr_level: cefrEstimate }, { onConflict: "id" });
 
   if (error) throw error;
+}
+
+export async function updateInterests(userId: string, interests: readonly unknown[]): Promise<Interest[]> {
+  const normalized = normalizeInterests(interests);
+  const supabase = getSupabaseBrowserClient();
+  const { error } = await supabase
+    .from("user_profiles")
+    .upsert({ id: userId, interests: normalized }, { onConflict: "id" });
+  if (error) throw error;
+  return normalized;
 }

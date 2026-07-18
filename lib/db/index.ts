@@ -612,6 +612,26 @@ export async function resetTodaysExplorations(): Promise<void> {
 // ── Practice Prefs Helpers ──
 
 const LAST_PRACTICE_MODE_KEY = "lastPracticeMode";
+const INTERESTS_PREF_KEY_PREFIX = "interests:";
+
+export async function cacheUserInterests(userId: string, interests: readonly string[]): Promise<void> {
+  await db.practicePrefs.put({
+    key: `${INTERESTS_PREF_KEY_PREFIX}${userId}`,
+    value: JSON.stringify(interests),
+    updatedAt: new Date().toISOString(),
+  });
+}
+
+export async function getCachedUserInterests(userId: string): Promise<string[] | null> {
+  const row = await db.practicePrefs.get(`${INTERESTS_PREF_KEY_PREFIX}${userId}`);
+  if (!row) return null;
+  try {
+    const value: unknown = JSON.parse(row.value);
+    return Array.isArray(value) && value.every((item) => typeof item === 'string') ? value : null;
+  } catch {
+    return null;
+  }
+}
 
 /** Remember the last practice mode the user entered (for the hub recommendation). */
 export async function setLastPracticeMode(modeId: string): Promise<void> {

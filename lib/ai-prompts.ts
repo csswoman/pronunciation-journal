@@ -60,9 +60,14 @@ export function buildSentenceReorderUserPrompt(
   count: number,
   topic: string,
   level: string,
+  interests: string[] = [],
 ): string {
-  return `Generate ${count} English sentences for a ${level} learner about: "${topic}".
+  return `Generate ${count} English sentences for a ${level} learner about: "${topic}".${interestsClause(interests)}
 Return a JSON array of strings only. Example: ["The cat sat on the mat.", "She goes to school every day."]`;
+}
+
+export function interestsClause(interests: readonly string[]): string {
+  return interests.length ? ` Prefer contexts related to: ${interests.join(', ')}.` : ''
 }
 
 export const SENTENCE_REORDER_SYSTEM_PROMPT = `You are an English language teacher for Spanish speakers.
@@ -219,6 +224,7 @@ Rules:
 export function buildGenerateReaderUserPrompt(input: {
   targets: string[]
   level: string
+  interests?: string[]
 }): string {
-  return `Target words to embed: ${input.targets.join(', ')}\nLevel: ${input.level}\n\nReturn JSON: { "passage": string, "topic": string, "questions": [{ "prompt": string, "options": [string,string,string,string], "correctIndex": number }] }`
+  return `Target words to embed: ${input.targets.join(', ')}\nLevel: ${input.level}${interestsClause(input.interests ?? [])}\n\nReturn JSON: { "passage": string, "topic": string, "questions": [{ "prompt": string, "options": [string,string,string,string], "correctIndex": number }] }`
 }

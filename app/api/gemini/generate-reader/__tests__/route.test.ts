@@ -14,6 +14,9 @@ vi.mock('@/lib/api/guards', () => ({
     data: { targets: ['cat', 'go', 'dog'], level: 'b1' }, error: null,
   }),
 }))
+vi.mock('@/lib/users/server-queries', () => ({
+  getUserInterests: async () => [],
+}))
 
 import { POST } from '../route'
 

@@ -603,6 +603,7 @@ export type Database = {
           created_at: string | null
           display_name: string | null
           id: string
+          interests: Json
           role: string | null
           storage_used_kb: number | null
         }
@@ -611,6 +612,7 @@ export type Database = {
           created_at?: string | null
           display_name?: string | null
           id: string
+          interests?: Json
           role?: string | null
           storage_used_kb?: number | null
         }
@@ -619,6 +621,7 @@ export type Database = {
           created_at?: string | null
           display_name?: string | null
           id?: string
+          interests?: Json
           role?: string | null
           storage_used_kb?: number | null
         }
