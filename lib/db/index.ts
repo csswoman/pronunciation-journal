@@ -222,6 +222,7 @@ class PronunciationDB extends Dexie {
       pronunciationCoachState: "key, updatedAt",
     });
     this.version(17).stores({ journalEntries: 'id, userId, entryDate, status, updatedAt' });
+    this.version(18).stores({ journalEntries: 'id, userId, entryDate, [userId+entryDate], status, updatedAt' });
   }
 }
 

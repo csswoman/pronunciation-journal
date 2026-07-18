@@ -8,3 +8,7 @@ export async function saveJournalEntry(entry: JournalEntryRecord) {
     await enqueue('journal_entries', 'upsert', { id: entry.id, user_id: entry.userId, entry_date: entry.entryDate, prompt: entry.prompt, prompt_topic: entry.promptTopic ?? null, content: entry.content, status: entry.status, corrected_content: entry.correctedContent ?? null, feedback: entry.feedback ?? null, updated_at: entry.updatedAt }, undefined, 'id')
   })
 }
+
+export async function getLocalJournalEntry(userId: string, entryDate: string): Promise<JournalEntryRecord | undefined> {
+  return db.journalEntries.where('[userId+entryDate]').equals([userId, entryDate]).first()
+}
