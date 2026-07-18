@@ -31,8 +31,18 @@ export const journalCorrectionResultSchema = z
 
 export type JournalCorrectionResult = z.infer<typeof journalCorrectionResultSchema>
 
-/** Feedback payload persisted on the journal entry (mirrors what the UI reads). */
-export interface JournalFeedback {
-  errors: JournalError[]
-  newWords: string[]
+/** Feedback payload persisted on the journal entry (the correction minus its text). */
+export const journalFeedbackSchema = z
+  .object({
+    errors: z.array(journalErrorSchema).max(8),
+    newWords: z.array(z.string().max(80)).max(8),
+  })
+  .strict()
+
+export type JournalFeedback = z.infer<typeof journalFeedbackSchema>
+
+/** Safely coerce an unknown persisted `feedback` column into typed feedback. */
+export function parseJournalFeedback(value: unknown): JournalFeedback | null {
+  const result = journalFeedbackSchema.safeParse(value)
+  return result.success ? result.data : null
 }

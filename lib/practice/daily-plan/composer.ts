@@ -14,6 +14,7 @@ import { mergeReviewWords } from '@/lib/review/merge-words'
 import { dominantTopicLabel } from '@/lib/practice/topic-labels'
 import type { DailyPlan, DailyStep, SessionArc } from '@/lib/practice/types'
 import type { Sound } from '@/lib/phoneme-practice/types'
+import { buildJournalDailyStep, shouldOfferJournalStep } from '@/lib/journal/daily-step'
 import { buildConnectedSpeechStep, buildReaderStep, buildSentenceBuilderStep } from './async-step-builders'
 import { DAILY_PLAN_STEP_COUNT, WORD_REVIEW_WORD_COUNT } from './constants'
 import {
@@ -262,6 +263,13 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
   const readerStep = steps.find((step) => step.kind === 'reader')
   if (readerStep && !finalSteps.some((step) => step.kind === 'reader')) {
     finalSteps = [...finalSteps.slice(0, DAILY_PLAN_STEP_COUNT - 1), readerStep]
+  }
+
+  // Optional Journal link: appended AFTER the cap on its cadence so it never
+  // displaces an evaluated step. Concept steps carry no exercises and are not
+  // auto-completed, so the daily practice guarantee is unchanged.
+  if (shouldOfferJournalStep(dayOfYear()) && !finalSteps.some((step) => step.id === 'journal_entry')) {
+    finalSteps = [...finalSteps, buildJournalDailyStep()]
   }
 
   // Session arc: narrative framing reusing data the plan already computed.

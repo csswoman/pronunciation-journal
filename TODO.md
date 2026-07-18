@@ -53,12 +53,12 @@ La base técnica es sólida y el sprint de producción cerró la mayoría de P0/
 | 055 | Guardar palabras desde Reader | `4873690c`; tokenización accesible, deduplicación y fallback offline. |
 | 056–057 | Transformaciones y traducción ES→EN | Migraciones 20/22 verificadas; generación, caché y topic-review opcional en `7c164327` a `c9c09ded`. |
 
-### IN PROGRESS (Journal)
+### HECHO (Journal, planes 053–054)
 
-| Plan | Qué falta |
+| Plan | Evidencia |
 |---|---|
-| 053 | HECHO. Cliente `lib/journal/correct-client.ts`, esquema compartido `lib/journal/correction.ts` y `applyJournalFeedback` con programación SM-2 grade-2 idempotente (no solo contadores). Tests de auth/same-origin, draft/ajena/corrected (404/409), idempotencia, degradación de red y scheduling SRS. |
-| 054 | Feedback, historial y enlace opcional desde Daily; entrada diaria, autosave y prompts personalizados ya entregados. |
+| 053 | Cliente `lib/journal/correct-client.ts`, esquema compartido `lib/journal/correction.ts` y `applyJournalFeedback` con programación SM-2 grade-2 idempotente (no solo contadores). Tests de auth/same-origin, draft/ajena/corrected (404/409), idempotencia, degradación de red y scheduling SRS. |
+| 054 | `useJournalEntry` orquesta autosave→enviar→corregir (offline-first, corrección online-only con reintento al reconectar). Componentes `JournalWorkspace`/`JournalEditor`/`JournalFeedbackView`/`SuggestedWords` (opt-in por palabra) y `JournalHistoryList` (Dexie reactivo). Paso concept opcional `journal_entry` (href `/journal`, cadencia documentada, sin auto-completar) añadido tras el corte del plan diario. Tests de autosave, reconexión, opt-in de palabras y cadencia. |
 
 ### HECHO (roadmap 032 Fase 1-2)
 
