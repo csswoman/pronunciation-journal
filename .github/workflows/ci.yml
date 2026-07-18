@@ -105,7 +105,6 @@ jobs:
           # Server-side key; mock value is safe here — never reaches the client
           # and is only required to satisfy env validation at build time.
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY || 'ci-build-placeholder' }}
-          ADMIN_BOOTSTRAP_EMAIL: ci-bootstrap@placeholder.invalid
 
       - name: Smoke check build output
         run: |
@@ -157,7 +156,6 @@ jobs:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://example.supabase.co' }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'ci-anon-placeholder' }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY || 'ci-gemini-placeholder' }}
-          ADMIN_BOOTSTRAP_EMAIL: ci-bootstrap@placeholder.invalid
 
       - name: Verify design tokens used
         run: |

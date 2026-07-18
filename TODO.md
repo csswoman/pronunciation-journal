@@ -112,7 +112,6 @@ La base técnica es sólida y el sprint de producción cerró la mayoría de P0/
 | Estado | Tarea | Prioridad | Dificultad | Tiempo | Evidencia / notas |
 |---|---|---:|---:|---:|---|
 | HECHO | Revertir o reemplazar la migración destructiva que borra usuarios. | P0 | S | 2-4 h | `20260623000000_...` no contiene borrados masivos ni `DROP TABLE`; `pnpm check:migrations` cubre el archivo. |
-| HECHO | Eliminar email personal hardcodeado; bootstrap seguro de admin. | P0 | S | 2-4 h | `ADMIN_BOOTSTRAP_EMAIL` en `lib/users/admin.ts`; SQL histórico verificado sin email hardcodeado. |
 | HECHO | Regenerar tipos Supabase y eliminar casts `as any` por tablas faltantes. | P1 | M | 1 día | Roadmap #17. |
 | HECHO | Revisar grants heredados a `anon` y default privileges. | P2 | M | 1-2 días | Roadmap #18. `20260703000000_harden_anon_grants.sql` revoca grants amplios; revisión en `docs/database/anon-grants-review.md`. |
 | HECHO | Añadir pruebas o checks de migraciones para RLS. | P1 | M | 1-2 días | Roadmap #15-16. `pnpm check:migrations`, `pnpm audit:rls`. |

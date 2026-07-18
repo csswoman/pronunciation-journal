@@ -38,7 +38,6 @@ const ALLOWED_LEGACY_FILES = new Set([
   "supabase/migrations/20260618120000_topic_srs.sql",
   "supabase/migrations/20260618130000_answer_history_topic.sql",
   "supabase/migrations/20260619120000_production_exercise_types.sql",
-  "supabase/migrations/20260619180000_reader_passages.sql",
   "supabase/migrations/20260619230000_recategorize_nonsentence_fragments.sql",
   "supabase/migrations/20260621120000_multiple_choice_exercise_type.sql",
   "supabase/migrations/20260621130000_sentence_context_exercise_type.sql",

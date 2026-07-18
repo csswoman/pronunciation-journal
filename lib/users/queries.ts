@@ -1,56 +1,14 @@
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import type { CefrLevel } from "@/lib/core-1000/types";
 
-export type UserRole = "free" | "admin";
-
-export interface UserProfile {
-  display_name: string | null;
-  role: UserRole;
-  cefr_level: string | null;
-}
-
 export interface UserPreferences {
   full_name: string;
   avatar_url: string;
   cefr_level: CefrLevel | null;
 }
 
-function parseUserRole(role: string | null | undefined): UserRole {
-  if (role === "admin") return role;
-  return "free";
-}
-
 function metadataString(value: unknown): string | undefined {
   return typeof value === "string" ? value : undefined;
-}
-
-/** Profile row for a user. Returns null when no row exists yet. */
-export async function getUserProfile(userId: string): Promise<UserProfile | null> {
-  const supabase = getSupabaseBrowserClient();
-  const { data, error } = await supabase
-    .from("user_profiles")
-    .select("display_name, role, cefr_level")
-    .eq("id", userId)
-    .maybeSingle();
-
-  if (error) throw error;
-  if (!data) return null;
-
-  return {
-    display_name: data.display_name,
-    role: parseUserRole(data.role),
-    cefr_level: data.cefr_level,
-  };
-}
-
-/** Role for a user; defaults to `"free"` when profile is missing or unreadable. */
-export async function getUserRole(userId: string): Promise<UserRole> {
-  try {
-    const profile = await getUserProfile(userId);
-    return profile?.role ?? "free";
-  } catch {
-    return "free";
-  }
 }
 
 /**

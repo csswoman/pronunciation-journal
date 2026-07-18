@@ -1,7 +1,7 @@
 /**
- * Stable, order- and case-independent hash of a target set. Used as the cache
- * key for reader_passages (so the same set of recycled words resolves the same
- * passage). FNV-1a over the sorted, lowercased, comma-joined targets.
+ * Stable, order- and case-independent hash of a target set. The same recycled
+ * words always resolve to the same cache key. FNV-1a over the sorted,
+ * lowercased, comma-joined targets.
  */
 export function targetHash(targets: string[]): string {
   const canonical = targets.map((t) => t.trim().toLowerCase()).sort().join(',')

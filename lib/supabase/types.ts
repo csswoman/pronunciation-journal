@@ -53,36 +53,6 @@ export type Database = {
         }
         Relationships: []
       }
-      ai_prompts: {
-        Row: {
-          category: string | null
-          content: string
-          created_at: string | null
-          id: string
-          is_system: boolean | null
-          label: string | null
-          user_id: string | null
-        }
-        Insert: {
-          category?: string | null
-          content: string
-          created_at?: string | null
-          id?: string
-          is_system?: boolean | null
-          label?: string | null
-          user_id?: string | null
-        }
-        Update: {
-          category?: string | null
-          content?: string
-          created_at?: string | null
-          id?: string
-          is_system?: boolean | null
-          label?: string | null
-          user_id?: string | null
-        }
-        Relationships: []
-      }
       answer_history: {
         Row: {
           answered_at: string | null
@@ -582,32 +552,6 @@ export type Database = {
         }
         Relationships: []
       }
-      user_favorite_prompts: {
-        Row: {
-          prompt_id: string
-          saved_at: string | null
-          user_id: string
-        }
-        Insert: {
-          prompt_id: string
-          saved_at?: string | null
-          user_id: string
-        }
-        Update: {
-          prompt_id?: string
-          saved_at?: string | null
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "user_favorite_prompts_prompt_id_fkey"
-            columns: ["prompt_id"]
-            isOneToOne: false
-            referencedRelation: "ai_prompts"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       topic_srs: {
         Row: {
           created_at: string
@@ -974,31 +918,7 @@ export type Database = {
           retry_after_seconds: number
         }[]
       }
-      get_random_word: {
-        Args: { p_sound_id: number }
-        Returns: {
-          audio_url: string | null
-          difficulty: number | null
-          id: number
-          ipa: string | null
-          phonemes: Json | null
-          sound_focus: string | null
-          sound_id: number | null
-          word: string | null
-        }[]
-        SetofOptions: {
-          from: "*"
-          to: "words"
-          isOneToOne: false
-          isSetofReturn: true
-        }
-      }
       get_skill_profile: { Args: { p_user_id: string }; Returns: Json }
-      is_admin: { Args: never; Returns: boolean }
-      update_progress: {
-        Args: { p_is_correct: boolean; p_sound_id: number }
-        Returns: undefined
-      }
     }
     Enums: {
       [_ in never]: never
