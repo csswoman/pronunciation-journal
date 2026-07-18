@@ -1,6 +1,6 @@
 # Matriz de Entornos
 
-Fecha: 2026-07-01
+Fecha: 2026-07-17
 
 | Entorno | Uso | Datos | Migraciones | Secretos |
 |---|---|---|---|---|
@@ -38,3 +38,10 @@ Fecha: 2026-07-01
 - Las rutas Gemini deben degradar con mensajes publicos. Si Gemini no esta disponible, validar que UI muestre estados de retry/error sin revelar detalles del proveedor.
 - Confirmar que `syncOutbox` se drena en flujos principales: sesiones de practica, reader, daily checklist, phoneme/AI progress y Essential Words activity.
 - Confirmar backups y restore practicable antes de cambios de schema en producción.
+
+## Estado operativo verificado (2026-07-17)
+
+- `ENRICHMENT_DRAIN_URL` está configurada como variable del repositorio en GitHub.
+- `CRON_SECRET` sigue pendiente: este equipo no tiene una sesión/token de Vercel ni un proyecto `.vercel` enlazado. Debe configurarse primero en Vercel y luego copiarse, con el mismo valor, a GitHub Actions Secrets.
+- El workflow de drenaje está en la rama local `dev`; podrá ejecutarse manualmente en GitHub cuando esos commits se publiquen.
+- Supabase local no está disponible porque Docker Desktop/el daemon no está activo. No sustituirlo por el proyecto de producción para ejecutar `test:rls:integration`.

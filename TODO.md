@@ -1,7 +1,7 @@
 # TODO de Producción
 
 Auditoría crítica original: commit `11dee70`, 2026-06-30.
-**Última actualización:** 2026-07-17 — backlog reconciliado con el estado actual: QA manual de Reader y validación RLS aislada quedan activas; mejoras de escala, offline, observabilidad y retención quedan condicionadas a necesidad real.
+**Última actualización:** 2026-07-17 — baseline técnico actualizado; QA manual de Reader y validación RLS aislada siguen activas porque este equipo no dispone todavía de un entorno no productivo ejecutable.
 
 Convenciones:
 
@@ -14,10 +14,10 @@ Convenciones:
 
 La base técnica es sólida y el sprint de producción cerró la mayoría de P0/P1 de seguridad, datos y escalabilidad operativa. Las únicas validaciones activas son cerrar el QA manual de Reader y ejecutar el runner RLS en una base local o staging aislada. En Vercel Free, la observabilidad mínima queda cubierta con health check programado desde GitHub Actions; el resto de mejoras operativas se activará solo cuando haya evidencia de necesidad.
 
-Última verificación completa registrada (2026-07-05; volver a ejecutar antes de publicar un nuevo baseline):
+Última verificación completa registrada (2026-07-17):
 
 - `pnpm type-check`: pasa.
-- `pnpm test`: 978 tests pasan.
+- `pnpm test`: 1078 tests pasan (192 archivos).
 - `pnpm test:coverage`: pasa (umbrales 50% lines / 45% functions).
 - `pnpm audit --prod`: sin vulnerabilidades conocidas (última auditoría).
 - Migración `20260623000000_remove_premium_set_admin_and_a1.sql` verificada como no destructiva y sin email hardcodeado; ya no está exenta en `scripts/check-migrations.mjs`.
@@ -43,7 +43,7 @@ La base técnica es sólida y el sprint de producción cerró la mayoría de P0/
 | # | Área | Qué falta |
 |---|---|---|
 | T50 | QA manual de Reader | Cobertura automatizada cerrada; faltan tres comprobaciones manuales en entorno no productivo: UI/navegación Daily, persistencia remota y offline real. |
-| RLS-INT / T56 | RLS integration real | `pnpm test:rls:integration` existe y limpia usuarios temporales. El bloqueo histórico por migraciones remotas atrasadas ya no aplica; falta ejecutarlo contra una base local o staging aislada y con el esquema vigente. No ejecutar contra producción. |
+| RLS-INT / T56 | RLS integration real | `pnpm test:rls:integration` existe y limpia usuarios temporales. Las migraciones remotas ya están alineadas, pero el intento del 2026-07-17 confirmó que Docker/Supabase local no está disponible y no hay staging aislado configurado. No ejecutar contra producción. |
 
 ### HECHO (roadmap 032 Fase 1-2)
 
@@ -110,7 +110,7 @@ La base técnica es sólida y el sprint de producción cerró la mayoría de P0/
 | HECHO | Revisar grants heredados a `anon` y default privileges. | P2 | M | 1-2 días | Roadmap #18. `20260703000000_harden_anon_grants.sql` revoca grants amplios; revisión en `docs/database/anon-grants-review.md`. |
 | HECHO | Añadir pruebas o checks de migraciones para RLS. | P1 | M | 1-2 días | Roadmap #15-16. `pnpm check:migrations`, `pnpm audit:rls`. |
 | HECHO | Documentar migraciones históricas con policy insegura temporal. | P2 | M | 1 día | Roadmap #19. `docs/database/migration-risk-register.md` documenta STT cache 2026-06-11 → 2026-06-21. |
-| ABIERTO | Ejecutar pruebas RLS contra una base local/staging aplicada. | P2 | M | 1-2 días | Tarea consolidada RLS-INT/T56. Requiere Supabase local o credenciales de test aisladas; complementa `audit:rls` estático. No usar producción porque el runner crea usuarios y filas temporales. |
+| ABIERTO | Ejecutar pruebas RLS contra una base local/staging aplicada. | P2 | M | 1-2 días | Intento 2026-07-17 bloqueado: Docker Desktop no está instalado/activo y no hay staging aislado. Reintentar con `pnpm exec supabase start` y después `pnpm test:rls:integration`. No usar producción porque el runner crea usuarios y filas temporales. |
 
 ## Infraestructura
 
@@ -137,7 +137,7 @@ La base técnica es sólida y el sprint de producción cerró la mayoría de P0/
 
 | Estado | Tarea | Prioridad | Dificultad | Tiempo | Evidencia / notas |
 |---|---|---:|---:|---:|---|
-| HECHO | Restaurar suite verde. | P0 | S | 2-6 h | 978 tests pasan (2026-07-05). |
+| HECHO | Restaurar suite verde. | P0 | S | 2-6 h | 1078 tests en 192 archivos pasan (2026-07-17). |
 | HECHO | Añadir tests de guard para cada POST sensible. | P1 | M | 1-2 días | Roadmap #12. |
 | HECHO | Añadir cobertura de migraciones/RLS. | P1 | L | 2-4 días | Roadmap #15-16. |
 | HECHO | Separar tests unitarios, integración y smoke/e2e. | P2 | M | 1 día | Roadmap #34. `pnpm test:integration`. |
@@ -178,7 +178,7 @@ La base técnica es sólida y el sprint de producción cerró la mayoría de P0/
 | Área | Nota | Justificación | Qué falta para 10/10 |
 |---|---:|---|---|
 | Arquitectura | 9/10 | Query layer, RLS, jobs durables, rate limit distribuido, Gemini unificado, pronunciation offline en Dexie y health check programado. | Alertas operativas más ricas si se adopta Sentry o Vercel Pro. |
-| Calidad del código | 9/10 | Type-check verde, 978 tests, helpers backend compartidos y coverage per-file en CI. | RLS integration real y métricas operativas. |
+| Calidad del código | 9/10 | Type-check verde, 1078 tests, helpers backend compartidos y coverage per-file en CI. | RLS integration real y métricas operativas. |
 | Seguridad | 9/10 | CSRF universal, CSP, logging sanitizado, rate limit RPC con fallback, secret scan, grants anon endurecidos y SQL P0 neutralizado. | Validar políticas/grants contra una base staging aplicada. |
 | Rendimiento | 8/10 | Bundle analysis en CI con budgets; fonemas scoped; timeouts Gemini. | Métricas per-route en analyze-bundle. |
 | Escalabilidad | 8/10 | Rate limit multi-instancia, cola durable, worker cron y observabilidad básica compatible con Free. No hay evidencia actual que justifique backpressure adicional. | Añadir backpressure distribuido y pruebas de carga solo si aparecen 429 o saturación; Log Drain si se usa Vercel Pro. |

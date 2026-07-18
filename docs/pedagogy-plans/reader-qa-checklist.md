@@ -5,7 +5,9 @@ Checklist para validar el paso `reader` cableado en `buildDailyPlan` (T50).
 Estado 2026-07-17: cobertura automatizada completada. Los puntos marcados
 `MANUAL` requieren una sesión autenticada contra un entorno no productivo,
 Gemini real y manipulación del estado online; no se consideran validados por
-tests con mocks.
+tests con mocks. El intento de ejecución del 2026-07-17 quedó bloqueado porque
+Docker/Supabase local no está disponible y no hay staging aislado configurado;
+no se trasladó esta validación a producción.
 
 ## Precondiciones
 
