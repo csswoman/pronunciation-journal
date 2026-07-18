@@ -6,16 +6,33 @@
 //   single link → /words
 // </HomeWordOfDayCard>
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, Loader2 } from "@/components/icons";
 import Button from "@/components/ui/Button";
 import { SyllableWord } from "@/components/ui/SyllableWord";
+import { useAuth } from "@/components/auth/AuthProvider";
 import { useWordOfDay } from "@/hooks/useWordOfDay";
+import { readStoredCefrLevel } from "@/lib/core-1000/target-level";
 import { formatIpaDisplay } from "@/lib/lexicon/format-ipa";
 
 /** Preview-only — no listen/save/shuffle micro-session on home. */
 export default function HomeWordOfDayCard() {
-  const { word, loading, error, refresh } = useWordOfDay();
+  const { user } = useAuth();
+  const [level, setLevel] = useState<string | undefined>(undefined);
+
+  useEffect(() => {
+    if (!user) return;
+    let cancelled = false;
+    void readStoredCefrLevel(user.id).then((l) => {
+      if (!cancelled && l) setLevel(l.toLowerCase());
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [user]);
+
+  const { word, loading, error, refresh } = useWordOfDay(level);
 
   return (
     <div className="home-sidebar-card flex flex-col gap-2">

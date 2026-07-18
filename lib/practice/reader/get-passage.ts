@@ -9,13 +9,15 @@ export interface ResolveReaderPassageDeps {
   targets: ReaderTarget[]
   online: boolean
   now: number
+  /** CEFR level folded into the cache key so a level change refreshes the passage. */
+  level?: string
   getCached: (userId: string, targetHash: string) => Promise<ReaderPassage | undefined>
   generate: (userId: string, targets: ReaderTarget[]) => Promise<ReaderPassage>
   save: (p: ReaderPassage) => Promise<void>
 }
 
-function hashOf(targets: ReaderTarget[]): string {
-  return targetHash(targets.map((t) => t.word))
+function hashOf(targets: ReaderTarget[], level?: string): string {
+  return targetHash(targets.map((t) => t.word), level)
 }
 
 /**
@@ -30,10 +32,10 @@ function hashOf(targets: ReaderTarget[]): string {
 export async function resolveReaderPassage(
   deps: ResolveReaderPassageDeps,
 ): Promise<ReaderPassage | null> {
-  const { userId, targets, online, now, getCached, generate, save } = deps
+  const { userId, targets, online, now, level, getCached, generate, save } = deps
   if (targets.length === 0) return null
 
-  const cached = await getCached(userId, hashOf(targets))
+  const cached = await getCached(userId, hashOf(targets, level))
 
   if (cached) {
     const age = now - Date.parse(cached.createdAt)

@@ -13,11 +13,16 @@ function todayKey(): string {
   return new Date().toISOString().slice(0, 10);
 }
 
-function readCachedWord(today: string): WordOfDay | null {
+/** Cache identity: day, plus level when scoped, so levels don't share a word. */
+function cacheStamp(level?: string): string {
+  return level ? `${todayKey()}|${level.toUpperCase()}` : todayKey();
+}
+
+function readCachedWord(stamp: string): WordOfDay | null {
   try {
     const cached = sessionStorage.getItem(CACHE_KEY);
-    const cachedDate = sessionStorage.getItem(CACHE_DATE_KEY);
-    if (!cached || cachedDate !== today) return null;
+    const cachedStamp = sessionStorage.getItem(CACHE_DATE_KEY);
+    if (!cached || cachedStamp !== stamp) return null;
 
     const parsed: unknown = JSON.parse(cached);
     if (isWordOfDay(parsed)) return parsed;
@@ -30,9 +35,9 @@ function readCachedWord(today: string): WordOfDay | null {
   return null;
 }
 
-function writeCachedWord(data: WordOfDay): void {
+function writeCachedWord(data: WordOfDay, stamp: string): void {
   sessionStorage.setItem(CACHE_KEY, JSON.stringify(data));
-  sessionStorage.setItem(CACHE_DATE_KEY, todayKey());
+  sessionStorage.setItem(CACHE_DATE_KEY, stamp);
 }
 
 function clearCachedWord(): void {
@@ -40,7 +45,7 @@ function clearCachedWord(): void {
   sessionStorage.removeItem(CACHE_DATE_KEY);
 }
 
-export function useWordOfDay() {
+export function useWordOfDay(level?: string) {
   const [word, setWord] = useState<WordOfDay | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -56,10 +61,16 @@ export function useWordOfDay() {
     setLoading(true);
     setError(null);
 
+    const stamp = cacheStamp(level);
     try {
-      const url = forceRefresh
-        ? `/api/gemini/word-of-day?refresh=1&t=${Date.now()}`
-        : "/api/gemini/word-of-day";
+      const params = new URLSearchParams();
+      if (forceRefresh) {
+        params.set("refresh", "1");
+        params.set("t", String(Date.now()));
+      }
+      if (level) params.set("level", level);
+      const qs = params.toString();
+      const url = qs ? `/api/gemini/word-of-day?${qs}` : "/api/gemini/word-of-day";
       const res = await fetch(url, { cache: "no-store" });
       if (!res.ok) {
         const body: unknown = await res.json().catch(() => ({}));
@@ -77,11 +88,11 @@ export function useWordOfDay() {
       if (requestId !== requestIdRef.current) return;
 
       setWord(data);
-      writeCachedWord(data);
+      writeCachedWord(data, stamp);
     } catch (err) {
       if (requestId !== requestIdRef.current) return;
 
-      const cached = readCachedWord(todayKey());
+      const cached = readCachedWord(stamp);
       if (cached) {
         setWord(cached);
         setError(null);
@@ -90,7 +101,7 @@ export function useWordOfDay() {
 
       if (wordRef.current) {
         setWord(wordRef.current);
-        writeCachedWord(wordRef.current);
+        writeCachedWord(wordRef.current, stamp);
         setError(null);
         return;
       }
@@ -103,10 +114,10 @@ export function useWordOfDay() {
         setLoading(false);
       }
     }
-  }, []);
+  }, [level]);
 
   useEffect(() => {
-    const cached = readCachedWord(todayKey());
+    const cached = readCachedWord(cacheStamp(level));
     if (cached) {
       setWord(cached);
       setError(null);
@@ -114,7 +125,7 @@ export function useWordOfDay() {
       return;
     }
     void fetchWord();
-  }, [fetchWord]);
+  }, [fetchWord, level]);
 
   return { word, loading, error, refresh: () => fetchWord(true) };
 }

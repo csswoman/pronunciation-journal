@@ -5,7 +5,7 @@ import { useAuth } from '@/components/auth/AuthProvider'
 import { getMyWords } from '@/lib/word-bank/queries'
 import { resolveReaderPassage } from '@/lib/practice/reader/get-passage'
 import { getCachedReaderPassage, saveReaderPassage } from '@/lib/db'
-import { generateReaderPassage } from '@/lib/practice/reader/queries'
+import { generateReaderPassage, resolveReaderLevel } from '@/lib/practice/reader/queries'
 import { pickTargets, type ReaderTargetRow } from '@/lib/practice/reader/select-targets'
 import type { ReaderPassage } from '@/lib/practice/reader/types'
 import { completeReader } from '@/lib/practice/reader/complete-reader'
@@ -48,13 +48,15 @@ export function ReaderEntry() {
         return
       }
 
+      const level = await resolveReaderLevel(user.id)
       const passage = await resolveReaderPassage({
         userId: user.id,
         targets,
         online: navigator.onLine,
         now: Date.now(),
+        level,
         getCached: getCachedReaderPassage,
-        generate: (uid, t) => generateReaderPassage(uid, t),
+        generate: (uid, t) => generateReaderPassage(uid, t, level),
         save: saveReaderPassage,
       })
       setState(passage ? { kind: 'ready', passage } : { kind: 'empty' })

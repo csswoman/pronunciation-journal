@@ -5,10 +5,13 @@ import { logServerError } from "@/lib/api/logging";
 export const dynamic = "force-dynamic";
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
-  const forceRefresh = new URL(request.url).searchParams.get("refresh") === "1";
+  const params = new URL(request.url).searchParams;
+  const forceRefresh = params.get("refresh") === "1";
+  const levelParam = params.get("level");
+  const level = levelParam && /^[abc][12]$/i.test(levelParam) ? levelParam : undefined;
 
   try {
-    const result = await getWordOfDay({ forceRefresh });
+    const result = await getWordOfDay({ forceRefresh, level });
     return NextResponse.json(result, {
       headers: { "Cache-Control": forceRefresh ? "no-store" : "public, max-age=3600" },
     });

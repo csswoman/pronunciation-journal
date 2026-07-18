@@ -61,7 +61,7 @@ interface DictionaryApiEntry {
   }>;
 }
 
-let cachedDate = "";
+let cachedKey = "";
 let cachedWord: WordOfDay | null = null;
 
 export function isWordOfDay(value: unknown): value is WordOfDay {
@@ -81,15 +81,32 @@ function getDifficulty(word: string): WordOfDay["difficulty"] {
   return "intermediate";
 }
 
+/** Map a CEFR level to the difficulty band its word of the day should draw from. */
+function bandForLevel(level: string): WordOfDay["difficulty"] | null {
+  const l = level.toUpperCase();
+  if (l === "A1" || l === "A2") return "beginner";
+  if (l === "B1" || l === "B2") return "intermediate";
+  if (l === "C1" || l === "C2") return "advanced";
+  return null;
+}
+
+/** Word pool scoped to the learner's level; full list when level is unknown/empty. */
+function wordPool(level?: string): readonly string[] {
+  const band = level ? bandForLevel(level) : null;
+  if (!band) return WORD_LIST;
+  const pool = WORD_LIST.filter((w) => getDifficulty(w) === band);
+  return pool.length > 0 ? pool : WORD_LIST;
+}
+
 function getDateSeed(): string {
   const d = new Date();
   return `${d.getUTCFullYear()}-${d.getUTCMonth() + 1}-${d.getUTCDate()}`;
 }
 
-function pickWord(seed: string): string {
+function pickWord(seed: string, pool: readonly string[]): string {
   let hash = 0;
   for (let i = 0; i < seed.length; i++) hash = (hash * 31 + seed.charCodeAt(i)) >>> 0;
-  return WORD_LIST[hash % WORD_LIST.length];
+  return pool[hash % pool.length];
 }
 
 function buildFallbackWord(word: string): WordOfDay {
@@ -139,12 +156,19 @@ async function fetchWordData(word: string): Promise<WordOfDay | null> {
   };
 }
 
-export async function getWordOfDay(options?: { forceRefresh?: boolean }): Promise<WordOfDay> {
+export async function getWordOfDay(
+  options?: { forceRefresh?: boolean; level?: string },
+): Promise<WordOfDay> {
   const forceRefresh = options?.forceRefresh ?? false;
+  const level = options?.level;
   const dateSeed = getDateSeed();
-  const seed = forceRefresh ? `${dateSeed}-${Date.now()}` : dateSeed;
+  // Cache identity spans day + level so learners at different levels (or after
+  // levelling up) get their own word instead of a stale cross-level one.
+  const key = level ? `${dateSeed}|${level.toUpperCase()}` : dateSeed;
+  const seed = forceRefresh ? `${key}-${Date.now()}` : key;
+  const pool = wordPool(level);
 
-  if (!forceRefresh && cachedDate === dateSeed && cachedWord) {
+  if (!forceRefresh && cachedKey === key && cachedWord) {
     return cachedWord;
   }
 
@@ -152,17 +176,17 @@ export async function getWordOfDay(options?: { forceRefresh?: boolean }): Promis
   let result: WordOfDay | null = null;
 
   for (let i = 0; i < attempts; i++) {
-    const word = pickWord(i === 0 ? seed : `${seed}-retry-${i}`);
+    const word = pickWord(i === 0 ? seed : `${seed}-retry-${i}`, pool);
     result = await fetchWordData(word).catch(() => null);
     if (result) break;
   }
 
   if (!result) {
-    result = buildFallbackWord(pickWord(dateSeed));
+    result = buildFallbackWord(pickWord(key, pool));
   }
 
   if (!forceRefresh) {
-    cachedDate = dateSeed;
+    cachedKey = key;
     cachedWord = result;
   }
 

@@ -28,7 +28,10 @@ vi.mock('@/lib/db', () => ({
   getCachedReaderPassage: vi.fn(),
   saveReaderPassage: vi.fn(),
 }))
-vi.mock('@/lib/practice/reader/queries', () => ({ generateReaderPassage: vi.fn() }))
+vi.mock('@/lib/practice/reader/queries', () => ({
+  generateReaderPassage: vi.fn(),
+  resolveReaderLevel: vi.fn(async () => 'B1'),
+}))
 vi.mock('../ReaderExercise', () => ({
   ReaderExercise: ({ passage, onComplete }: { passage: ReaderPassage; onComplete: (correct: boolean) => Promise<void> }) => (
     <div>
