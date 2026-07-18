@@ -3,15 +3,20 @@
 // Planned structure:
 // <WrittenProductionExercise>
 //   <ProductionTaskHeader />
-//   <ProductionTextarea />
+//   <SentenceField />
+//   <ProductionHint />
 //   <OfflineBanner />
+//   <ErrorAlert />
+//   <PrimaryActions />
+//   <SkipLink />
 //   <ProductionFeedback />
-//   <SubmitActions />
+//   <FeedbackActions />
 // </WrittenProductionExercise>
 
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useId, useRef, useState } from 'react'
 import { PillButton } from '@/components/ui/PillButton'
 import { ProductionFeedback } from '@/components/exercises/ProductionFeedback'
+import { ProductionHint } from '@/components/exercises/ProductionHint'
 import { ProductionTaskHeader } from '@/components/exercises/ProductionTaskHeader'
 import {
   gradeProduction,
@@ -22,6 +27,7 @@ import { pedagogicalFeedbackFromProductionGrade } from '@/lib/exercises/feedback
 import type { ProductionGradeResult } from '@/lib/exercises/production-grade'
 import type { WrittenProductionExercise as WrittenProductionExerciseType } from '@/lib/exercises/types'
 import type { GenericRenderExtras } from '@/lib/practice/exercise-renderer/generic-registry'
+import { cn } from '@/lib/cn'
 
 interface Props {
   exercise: WrittenProductionExerciseType
@@ -31,9 +37,10 @@ interface Props {
     timeMs: number,
     extras?: GenericRenderExtras,
   ) => void
+  onSkip?: () => void
 }
 
-export function WrittenProductionExercise({ exercise, onResult }: Props) {
+export function WrittenProductionExercise({ exercise, onResult, onSkip }: Props) {
   const [text, setText] = useState('')
   const [grading, setGrading] = useState(false)
   const [grade, setGrade] = useState<ProductionGradeResult | null>(null)
@@ -41,6 +48,8 @@ export function WrittenProductionExercise({ exercise, onResult }: Props) {
   const [online, setOnline] = useState(true)
   const startMs = useRef(Date.now())
   const submitted = useRef(false)
+  const fieldId = useId()
+  const errorId = useId()
 
   useEffect(() => {
     setText('')
@@ -66,7 +75,7 @@ export function WrittenProductionExercise({ exercise, onResult }: Props) {
     const trimmed = text.trim()
     if (!trimmed || grading || grade) return
     if (!isOnline()) {
-      setError('Free production needs an internet connection to grade your answer.')
+      setError('Necesitas conexión a internet para corregir tu respuesta.')
       return
     }
 
@@ -84,7 +93,7 @@ export function WrittenProductionExercise({ exercise, onResult }: Props) {
     } catch (err) {
       const msg = err instanceof ProductionGradeError
         ? err.message
-        : 'Grading failed. Please try again.'
+        : 'No se pudo corregir. Inténtalo de nuevo.'
       setError(msg)
     } finally {
       setGrading(false)
@@ -108,44 +117,91 @@ export function WrittenProductionExercise({ exercise, onResult }: Props) {
   }, [])
 
   return (
-    <div className="flex w-full flex-col gap-4">
-      <ProductionTaskHeader exercise={exercise} title="Write your sentence" />
+    <div className="flex w-full flex-col gap-5" aria-busy={grading || undefined}>
+      <ProductionTaskHeader exercise={exercise} title="Escribe tu oración" />
 
       {!online && !grade && (
-        <OfflineBanner message="You're offline. Connect to submit your sentence for AI feedback." />
+        <OfflineBanner message="Sin conexión. Conéctate para enviar tu oración y recibir feedback." />
       )}
 
       {!grade && (
         <>
-          <textarea
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            disabled={grading}
-            rows={4}
-            placeholder="Type your sentence here…"
-            className="w-full resize-none rounded-[var(--radius-md)] border border-border-default bg-surface-raised px-3 py-3 text-base text-fg placeholder:text-fg-subtle focus:border-border-strong focus:outline-none disabled:opacity-50"
+          <div className="flex flex-col gap-2">
+            <label htmlFor={fieldId} className="text-sm font-medium text-fg-muted">
+              Tu oración
+            </label>
+            <textarea
+              id={fieldId}
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              disabled={grading}
+              rows={4}
+              placeholder="Escribe tu oración aquí…"
+              aria-invalid={error ? true : undefined}
+              aria-describedby={error ? errorId : undefined}
+              className={cn(
+                'w-full min-h-28 resize-none rounded-[var(--radius-sm)] border border-border-default bg-surface-sunken px-3 py-3 text-base text-fg placeholder:text-fg-placeholder',
+                'transition-colors duration-150 ease-out-quart disabled:cursor-not-allowed disabled:opacity-50',
+                error && 'border-error-border',
+              )}
+            />
+          </div>
+
+          <ProductionHint
+            exampleSentence={exercise.exampleSentence}
+            exerciseId={exercise.id}
           />
-          {error && <p className="m-0 text-sm text-error">{error}</p>}
-          <PillButton
-            variant="primary"
-            size="md"
-            onClick={() => void handleSubmit()}
-            disabled={!text.trim() || grading || !online}
-          >
-            {grading ? 'Grading…' : 'Submit'}
-          </PillButton>
+
+          {error && (
+            <p id={errorId} role="alert" className="m-0 text-sm text-error">
+              {error}
+            </p>
+          )}
+
+          <div className="flex flex-col gap-2">
+            <PillButton
+              variant="primary"
+              size="md"
+              className="min-h-11 w-full"
+              onClick={() => void handleSubmit()}
+              disabled={!text.trim() || grading || !online}
+            >
+              {grading ? 'Corrigiendo…' : 'Enviar'}
+            </PillButton>
+            {onSkip && (
+              <button
+                type="button"
+                onClick={onSkip}
+                disabled={grading}
+                aria-label="Omitir este ejercicio"
+                className="min-h-11 cursor-pointer self-center border-none bg-transparent px-4 text-sm font-medium text-fg-subtle transition-colors hover:text-fg-muted focus-ring disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                Omitir este
+              </button>
+            )}
+          </div>
         </>
       )}
 
       {grade && (
         <>
           <ProductionFeedback grade={grade} />
-          <div className="flex gap-2">
-            <PillButton variant="outline" size="sm" onClick={handleRetry}>
-              Try again
+          <div className="flex w-full flex-col gap-2">
+            <PillButton
+              variant="primary"
+              size="md"
+              className="min-h-11 w-full"
+              onClick={handleContinue}
+            >
+              Continuar
             </PillButton>
-            <PillButton variant="primary" size="sm" onClick={handleContinue}>
-              Continue
+            <PillButton
+              variant="outline"
+              size="md"
+              className="min-h-11 w-full"
+              onClick={handleRetry}
+            >
+              Intentar de nuevo
             </PillButton>
           </div>
         </>
@@ -156,7 +212,10 @@ export function WrittenProductionExercise({ exercise, onResult }: Props) {
 
 function OfflineBanner({ message }: { message: string }) {
   return (
-    <p className="m-0 rounded-[var(--radius-md)] border border-warning-border bg-warning-soft px-3 py-2 text-sm text-warning">
+    <p
+      role="status"
+      className="m-0 rounded-[var(--radius-md)] border border-warning-border bg-warning-soft px-3 py-2 text-sm text-warning"
+    >
       {message}
     </p>
   )

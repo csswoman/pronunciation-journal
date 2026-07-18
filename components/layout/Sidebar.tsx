@@ -1,10 +1,9 @@
 "use client";
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
-import { PanelLeftClose, PanelLeftOpen } from "lucide-react";
-import { useUserRole } from "@/hooks/useUserRole";
+import { PanelLeftClose, PanelLeftOpen } from "@/components/icons";
 import SidebarFooter from "./SidebarFooter";
-import { NavSection, NavLink, coreNav, practiceNav, learnNav, referenceNav, trackingNav, adminNav } from "../theme/sidebar/index";
+import { NavSection, NavLink, coreNav, practiceNav, learnNav, referenceNav, trackingNav } from "../theme/sidebar/index";
 import { SidebarContext } from "../theme/sidebar/SidebarContext";
 
 interface SidebarProps {
@@ -13,7 +12,6 @@ interface SidebarProps {
 
 export default function Sidebar({ className = "" }: SidebarProps) {
   const pathname = usePathname();
-  const { isAdmin } = useUserRole();
   const [collapsed, setCollapsed] = useState(false);
 
   useEffect(() => {
@@ -70,9 +68,6 @@ export default function Sidebar({ className = "" }: SidebarProps) {
           <NavSection section={referenceNav} isActive={isActive} />
           <NavSection section={trackingNav} isActive={isActive} />
 
-          {isAdmin && (
-            <NavSection section={adminNav} isActive={isActive} />
-          )}
         </nav>
 
         <SidebarFooter />

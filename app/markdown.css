@@ -1,6 +1,5 @@
-/* ── Markdown editorial reading system ───────────────────────────────────────
-   Fraunces display + DM Sans UI. Body in DM Sans 18/1.7.
-   Inspired by: Are.na, Robin Rendle, The Markup, Works in Progress.
+/* ── Markdown reading system ─────────────────────────────────────────────────
+   DM Sans throughout. Body 18/1.7. Headings use weight/size, not a second family.
    ──────────────────────────────────────────────────────────────────────────── */
 
 .markdown {
@@ -32,7 +31,7 @@
 /* ── Headings ──────────────────────────────────────────────────────────────── */
 .md-h1,
 .md-h2 {
-  font-family: var(--font-editorial), "Fraunces", serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-optical-sizing: auto;
   color: var(--md-fg);
   scroll-margin-top: 5rem;
@@ -103,10 +102,10 @@
 
 .markdown > .md-p + .md-p { margin-top: 1em; }
 
-/* Drop cap on the first paragraph (after H1) — Fraunces, 4 lines tall */
+/* Drop cap on the first paragraph (after H1) — DM Sans, 4 lines tall */
 .markdown > .md-p:first-of-type::first-letter,
 .markdown > .md-paragraph:first-of-type::first-letter {
-  font-family: var(--font-editorial), "Fraunces", serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-optical-sizing: auto;
   font-variation-settings: "opsz" 144;
   font-weight: 500;
@@ -314,13 +313,13 @@
 }
 
 /* ── Blockquote ────────────────────────────────────────────────────────────── */
-/* Pull-quote treatment: Fraunces italic 28px, no border, centered margins. */
+/* Pull-quote treatment: Italic 28px, no border, centered margins. */
 .md-blockquote {
   margin: 2.5rem auto;
   padding: 0;
   border: 0;
   background: transparent;
-  font-family: var(--font-editorial), "Fraunces", serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-optical-sizing: auto;
   font-variation-settings: "opsz" 36;
   font-style: italic;
@@ -466,7 +465,7 @@
 }
 
 /* ── Notion legacy compatibility (kept) ────────────────────────────────────── */
-.md-heading      { color: var(--md-fg); font-family: var(--font-editorial), "Fraunces", serif; font-weight: 500; }
+.md-heading      { color: var(--md-fg); font-family: var(--font-sans), system-ui, sans-serif; font-weight: 500; }
 .md-heading-1    { font-size: clamp(2rem, 4.4vw, 2.75rem); line-height: 1.1;  margin: 0 0 1.2rem; }
 .md-heading-2    { font-size: 2rem;     line-height: 1.15; margin: 4rem 0 1rem; letter-spacing: -0.02em; }
 .md-heading-3    {
@@ -565,7 +564,7 @@
 
 /* Headings — slightly muted, not pitch-black */
 .prose-lesson h1 {
-  font-family: var(--font-display), serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-size: 1.75rem;
   font-weight: 600;
   line-height: 1.2;
@@ -574,7 +573,7 @@
   letter-spacing: -0.01em;
 }
 .prose-lesson h2 {
-  font-family: var(--font-display), serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-size: 1.375rem;
   font-weight: 600;
   line-height: 1.25;

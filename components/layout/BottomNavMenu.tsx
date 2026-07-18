@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { BookOpen, Layers, Moon, Radio, RotateCcw, Sun, User } from "lucide-react";
+import { BookOpen, Layers, Moon, Radio, RotateCcw, Sun, User } from "@/components/icons";
 import { useEffect } from "react";
 import { cn } from "@/lib/cn";
 import { useOKLCHTheme } from "@/hooks/useOKLCHTheme";

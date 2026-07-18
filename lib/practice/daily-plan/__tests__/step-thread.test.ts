@@ -65,22 +65,29 @@ describe('getThreadHintsForStep', () => {
     ])
   })
 
-  it('ignores phoneme_focus steps when building the thread', () => {
-    const steps = [
-      vocabStep('word_intro', 'wi', 'Intro', ['cat']),
+  it('includes IPA from study cards when available', () => {
+    const steps: DailyStep[] = [
       {
-        kind: 'phoneme_focus' as const,
-        id: 'pf',
-        title: 'Sound',
+        kind: 'word_intro',
+        id: 'wi',
+        title: 'Intro',
         subtitle: '',
-        icon: 'Mic',
+        icon: 'Sparkles',
         exercises: [],
-        estMinutes: 3,
+        estMinutes: 2,
+        studyCards: [{ word: 'debounce', ipa: '/diˈbaʊns/', meaning: 'retardar' }],
+        featuredWords: ['debounce'],
       },
-      vocabStep('word_review', 'wr', 'Review', ['cat']),
+      vocabStep('word_review', 'wr', 'Review', ['debounce']),
     ]
-    expect(getThreadHintsForStep(steps, 2)).toEqual([
-      { word: 'cat', fromStepTitle: 'Intro', fromStepKind: 'word_intro' },
+
+    expect(getThreadHintsForStep(steps, 1)).toEqual([
+      {
+        word: 'debounce',
+        ipa: '/diˈbaʊns/',
+        fromStepTitle: 'Intro',
+        fromStepKind: 'word_intro',
+      },
     ])
   })
 })

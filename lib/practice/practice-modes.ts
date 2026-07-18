@@ -6,7 +6,7 @@ export interface PracticeMode {
   label: string
   description: string
   href: string
-  /** lucide-react icon name, resolved in the component layer. */
+  /** Icon name (Tabler via @/components/icons), resolved in the component layer. */
   icon: string
 }
 
@@ -22,8 +22,8 @@ export const PRACTICE_MODES: readonly PracticeMode[] = [
   {
     id: 'core-1000',
     label: 'Essential Words',
-    description: 'The 1000 most useful words',
-    href: '/practice/core-1000',
+    description: 'High-frequency words with spaced repetition',
+    href: '/practice/essential-words',
     icon: 'ListOrdered',
   },
   {
@@ -39,6 +39,13 @@ export const PRACTICE_MODES: readonly PracticeMode[] = [
     description: 'Words due for spaced repetition',
     href: '/practice/review',
     icon: 'RotateCcw',
+  },
+  {
+    id: 'reader',
+    label: 'Reading',
+    description: 'Practice your recent words in context',
+    href: '/practice/reader',
+    icon: 'BookOpen',
   },
   {
     id: 'courses',

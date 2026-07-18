@@ -7,7 +7,7 @@ import {
   ArrowRight,
   ChevronLeft,
   ChevronRight,
-} from "lucide-react";
+} from "@/components/icons";
 import { IPA_EXTRA } from "@/lib/pronunciation/ipa-data";
 import type { PhonemeData } from "./data";
 

@@ -1,10 +1,12 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { Plus } from "@/components/icons";
 
 import PageLayout from "@/components/layout/PageLayout";
+import PageHeader from "@/components/layout/PageHeader";
 import { type WordsTabId, WordsTopbar } from "@/components/words/WordsTopbar";
 import type { LessonViewModel } from "@/lib/lexicon/types";
 
@@ -70,6 +72,29 @@ export function WordsClient({
   const [activeTab, setActiveTab] = useState<WordsTabId>(normalizedTab);
   const [myWordsCount, setMyWordsCount] = useState(initialMyWordsCount);
   const [deckCount, setDeckCount] = useState(initialDeckCount);
+  const primaryActionRef = useRef<() => void>(() => {});
+
+  const registerPrimaryAction = useCallback((action: () => void) => {
+    primaryActionRef.current = action;
+  }, []);
+
+  const primaryCta = useMemo(() => {
+    if (activeTab === "my-words") {
+      return {
+        label: "Nueva palabra",
+        icon: <Plus size={15} aria-hidden />,
+        onClick: () => primaryActionRef.current(),
+      };
+    }
+    if (activeTab === "decks") {
+      return {
+        label: "Nuevo mazo",
+        icon: <Plus size={15} aria-hidden />,
+        onClick: () => primaryActionRef.current(),
+      };
+    }
+    return undefined;
+  }, [activeTab]);
 
   useEffect(() => {
     setMyWordsCount(initialMyWordsCount);
@@ -91,8 +116,14 @@ export function WordsClient({
   }, [router]);
 
   return (
-    <PageLayout cardWrapper={false}>
+    <PageLayout>
       <div className="words-lexicon">
+        <PageHeader
+          kicker="Reference"
+          title="Words"
+          subtitle="Tu colección, mazos y léxico para repasar y ampliar vocabulario."
+          primaryCta={primaryCta}
+        />
         <WordsTopbar
           activeTab={activeTab}
           onTabChange={handleTabChange}
@@ -119,12 +150,14 @@ export function WordsClient({
             onMyWordsCountChange={setMyWordsCount}
             onDeckCountChange={setDeckCount}
             onTabChange={handleTabChange}
+            onRegisterPrimaryAction={registerPrimaryAction}
           />
         )}
 
         {activeTab === "decks" && (
           <DecksTabRuntime
             onDeckCountChange={setDeckCount}
+            onRegisterPrimaryAction={registerPrimaryAction}
           />
         )}
       </div>

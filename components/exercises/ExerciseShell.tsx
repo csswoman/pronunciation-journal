@@ -2,7 +2,7 @@
 
 // Planned structure:
 // <ExerciseShell>
-//   <ShellHeader />    — title (Fraunces) + hint button slot (right)
+//   <ShellHeader />    — title + hint button slot (right)
 //   <HintChip />       — word + meaning, always visible when provided
 //   [children]         — exercise mechanics
 //   <ContinueButton /> — full-width primary, shown after answer
@@ -112,7 +112,7 @@ function ShellHeader({
             {eyebrow}
           </span>
         )}
-        <p className="font-[Fraunces,Georgia,serif] text-2xl font-bold leading-tight text-fg">
+        <p className="text-2xl font-bold leading-tight text-fg">
           {title}
         </p>
         {description && (

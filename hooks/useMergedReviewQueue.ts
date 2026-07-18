@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import { fetchCoreWords } from "@/lib/core-1000/client";
 import { buildSessionQueue } from "@/lib/core-1000/queue";
-import { getCore1000SrsEntries, getCore1000IntroducedToday } from "@/lib/db";
+import { getCore1000IntroducedToday } from "@/lib/db";
+import { prepareCore1000SrsEntries } from "@/lib/core-1000/prepare-srs";
 import { deriveEssentialSource, type EssentialSourceData } from "@/lib/core-1000/essential-due";
 import {
   reviewToneForCount,
@@ -49,12 +50,13 @@ export function useMergedReviewQueue(server: ReviewQueueSummary): ReviewQueueSum
     let cancelled = false;
     (async () => {
       try {
-        const [words, srsEntries, introducedToday] = await Promise.all([
+        const now = new Date();
+        const [words, introducedToday, prepared] = await Promise.all([
           fetchCoreWords(),
-          getCore1000SrsEntries(),
           getCore1000IntroducedToday(),
+          prepareCore1000SrsEntries(now),
         ]);
-        const queue = buildSessionQueue({ words, srsEntries, introducedToday, now: new Date() });
+        const queue = buildSessionQueue({ words, srsEntries: prepared.entries, introducedToday, now });
         if (cancelled) return;
         setMerged(mergeEssential(server, deriveEssentialSource(queue)));
       } catch {

@@ -4,7 +4,7 @@ import { useSidebar } from "./SidebarContext";
 export interface NavItem {
   name: string;
   href: string;
-  icon: typeof import("lucide-react").Home;
+  icon: typeof import("@/components/icons").Home;
 }
 
 interface NavLinkProps {

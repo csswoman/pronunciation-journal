@@ -342,14 +342,12 @@ export type Database = {
           id: string
           image_url: string | null
           ipa: string | null
-          keep_permanent: boolean
           meanings: Json | null
           notes: string | null
           phrases: string[] | null
           sound_id: number | null
           tags: string[] | null
           updated_at: string | null
-          user_audio_url: string | null
           user_id: string
           word: string
         }
@@ -360,14 +358,12 @@ export type Database = {
           id: string
           image_url?: string | null
           ipa?: string | null
-          keep_permanent?: boolean
           meanings?: Json | null
           notes?: string | null
           phrases?: string[] | null
           sound_id?: number | null
           tags?: string[] | null
           updated_at?: string | null
-          user_audio_url?: string | null
           user_id: string
           word: string
         }
@@ -378,14 +374,12 @@ export type Database = {
           id?: string
           image_url?: string | null
           ipa?: string | null
-          keep_permanent?: boolean
           meanings?: Json | null
           notes?: string | null
           phrases?: string[] | null
           sound_id?: number | null
           tags?: string[] | null
           updated_at?: string | null
-          user_audio_url?: string | null
           user_id?: string
           word?: string
         }
@@ -459,56 +453,6 @@ export type Database = {
           sound_group?: string | null
           word_a?: string | null
           word_b?: string | null
-        }
-        Relationships: []
-      }
-      pattern_words: {
-        Row: {
-          id: number
-          ipa: string | null
-          pattern_id: number | null
-          word: string | null
-        }
-        Insert: {
-          id?: number
-          ipa?: string | null
-          pattern_id?: number | null
-          word?: string | null
-        }
-        Update: {
-          id?: number
-          ipa?: string | null
-          pattern_id?: number | null
-          word?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "pattern_words_pattern_id_fkey"
-            columns: ["pattern_id"]
-            isOneToOne: false
-            referencedRelation: "patterns"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      patterns: {
-        Row: {
-          id: number
-          pattern: string | null
-          sound_focus: string | null
-          type: string | null
-        }
-        Insert: {
-          id?: number
-          pattern?: string | null
-          sound_focus?: string | null
-          type?: string | null
-        }
-        Update: {
-          id?: number
-          pattern?: string | null
-          sound_focus?: string | null
-          type?: string | null
         }
         Relationships: []
       }

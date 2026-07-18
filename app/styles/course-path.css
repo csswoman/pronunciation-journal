@@ -24,6 +24,11 @@
   gap: 0;
 }
 
+.course-path__wrap--shell {
+  padding-inline: 0;
+  padding-top: 0;
+}
+
 /* Zone separations: hero → spine → panel → why → legend */
 .course-path__hero   { margin-bottom: var(--space-6); }
 .course-path__spine  { margin-bottom: var(--space-3); }
@@ -46,7 +51,7 @@
 }
 
 .course-path__title {
-  font-family: var(--font-editorial), Georgia, serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-weight: 420;
   font-size: 2.1rem;
   letter-spacing: -0.015em;
@@ -114,7 +119,7 @@
 }
 
 .course-path__level-lv {
-  font-family: var(--font-editorial), Georgia, serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-size: 1.1rem;
   font-weight: 500;
   line-height: 1;
@@ -163,7 +168,7 @@
 }
 
 .course-path__head h2 {
-  font-family: var(--font-editorial), Georgia, serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-weight: 480;
   font-size: 1.5rem;
   color: var(--text-primary);
@@ -176,7 +181,7 @@
 }
 
 .course-path__prog-pct {
-  font-family: var(--font-editorial), Georgia, serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-size: 1.35rem;
   font-weight: 600;
   line-height: 1;
@@ -344,7 +349,7 @@
 }
 
 .course-path__ut {
-  font-family: var(--font-editorial), Georgia, serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-size: 1.12rem;
   font-weight: 460;
   color: var(--text-primary);
@@ -494,7 +499,7 @@
   width: 100%;
   padding: var(--space-3) var(--space-4);
   cursor: pointer;
-  font-family: var(--font-editorial), Georgia, serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-weight: 480;
   font-size: 1rem;
   color: var(--text-secondary);
@@ -756,7 +761,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--font-editorial), Georgia, serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-size: 1rem;
   border-radius: 12px;
   background: var(--surface-sunken);
@@ -765,7 +770,7 @@
 }
 
 .course-path__rt {
-  font-family: var(--font-editorial), Georgia, serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-size: 1.12rem;
   color: var(--text-primary);
 }
@@ -1371,7 +1376,7 @@
 }
 
 .course-path__c1-electives-title {
-  font-family: var(--font-editorial), Georgia, serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-weight: 480;
   font-size: 1.2rem;
   color: var(--text-primary);
@@ -1762,7 +1767,7 @@
 .grammar-deck__unavailable h1 {
   margin: 0;
   color: var(--text-primary);
-  font-family: var(--font-editorial), Georgia, serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-size: 1.75rem;
 }
 

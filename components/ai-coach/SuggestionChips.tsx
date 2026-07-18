@@ -1,5 +1,5 @@
-import { Clapperboard, BookOpen, Theater, MessageCircle } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
+import { Clapperboard, BookOpen, Theater, MessageCircle } from "@/components/icons";
+import type { LucideIcon } from "@/components/icons";
 
 interface SuggestionChip {
   label: string;

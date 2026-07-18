@@ -1,20 +1,20 @@
 # TODO de Producción
 
 Auditoría crítica original: commit `11dee70`, 2026-06-30.
-**Última actualización:** 2026-07-05 — hardening backend post-producción completado; RLS integration ya tiene runner y detectó drift de migraciones en la base remota enlazada.
+**Última actualización:** 2026-07-17 — backlog reconciliado con el estado actual: QA manual de Reader y validación RLS aislada quedan activas; mejoras de escala, offline, observabilidad y retención quedan condicionadas a necesidad real.
 
 Convenciones:
 
 - Prioridad: `P0` bloquea producción, `P1` alto riesgo, `P2` importante, `P3` mejora.
 - Dificultad: `S` horas, `M` 1-2 días, `L` varios días.
-- Estado: `HECHO` | `PARCIAL` | `ABIERTO`
+- Estado: `HECHO` | `PARCIAL` | `ABIERTO` | `CONDICIONAL`
 - Tiempo estimado: rango realista incluyendo pruebas y revisión.
 
 ## Estado General
 
-La base técnica es sólida y el sprint de producción cerró la mayoría de P0/P1 de seguridad, datos y escalabilidad operativa. En Vercel Free, la observabilidad mínima queda cubierta con health check programado desde GitHub Actions; Log Drain queda como mejora opcional al subir a Vercel Pro.
+La base técnica es sólida y el sprint de producción cerró la mayoría de P0/P1 de seguridad, datos y escalabilidad operativa. Las únicas validaciones activas son cerrar el QA manual de Reader y ejecutar el runner RLS en una base local o staging aislada. En Vercel Free, la observabilidad mínima queda cubierta con health check programado desde GitHub Actions; el resto de mejoras operativas se activará solo cuando haya evidencia de necesidad.
 
-Verificación actual (2026-07-05):
+Última verificación completa registrada (2026-07-05; volver a ejecutar antes de publicar un nuevo baseline):
 
 - `pnpm type-check`: pasa.
 - `pnpm test`: 978 tests pasan.
@@ -42,21 +42,30 @@ Verificación actual (2026-07-05):
 
 | # | Área | Qué falta |
 |---|---|---|
-| RLS-INT | RLS integration real | `pnpm test:rls:integration` existe y limpia usuarios temporales, pero falló contra la base remota enlazada porque faltan migraciones desde `20260610120000` en adelante; validar primero en staging/local aplicado. |
+| RLS-INT / T56 | RLS integration real | `pnpm test:rls:integration` existe y limpia usuarios temporales. El bloqueo histórico por migraciones remotas atrasadas ya no aplica; falta ejecutarlo contra una base local o staging aislada y con el esquema vigente. No ejecutar contra producción. |
 
 ### HECHO (roadmap 032 Fase 1-2)
 
 | # | Área |
 |---|---|
-| T44-T49 | Prompts centralizados, STT cache RLS, admin seed, bundle CI, fonemas scoped, coverage per-file |
-| T50-T51 | Reader en daily plan + checklist QA; hilo entre pasos (plan 09) |
+| T44-T49 | Prompts centralizados, STT cache RLS, bundle CI, fonemas scoped, coverage per-file |
+| T51 | Hilo entre pasos (plan 09) |
 
 ### ABIERTO (roadmap 032)
 
-| # | Área | Prioridad |
+| # | Área | Prioridad | Criterio de cierre |
+|---|---|---|---|
+| T50 | QA manual de Reader | P1 validación | Completar `docs/pedagogy-plans/reader-qa-checklist.md`, incluyendo Gemini real, caché/offline, exposure tracking y finalización dentro de Daily. |
+| RLS-INT / T56 | Validación real de políticas y grants | P2 seguridad | Ejecutar `pnpm test:rls:integration` en Supabase local o staging aislado con todas las migraciones aplicadas. Esta fila consolida la antigua T56 duplicada. |
+
+### CONDICIONAL (no bloquea el estado actual)
+
+| # | Área | Activar cuando |
 |---|---|---|
-| T55-T58 | Escala opcional: semáforo Gemini, staging grants, sounds offline, observabilidad | P2/P3 |
-| T59 | Weekly retention loop: resumen semanal + siguiente acción en Home | P1 producto |
+| T55 | Backpressure global de Gemini | Existan 429, saturación de cuota o concurrencia medible. La solución deberá ser distribuida; no sirve un semáforo en memoria por instancia serverless. |
+| T57 | Sound Lab offline | El uso offline se convierta en promesa de producto o necesidad observada. La limitación actual está documentada. |
+| T58 | Observabilidad adicional | Haya tráfico público significativo o incidentes que el health check y los logs manuales no permitan diagnosticar. Considerar Sentry; Log Drain solo si se adopta Vercel Pro. |
+| T59 / plan 043 | Weekly retention loop en Home | La retención semanal sea una prioridad de producto respaldada por uso real. `/progress` ya cubre el resumen; la mejora pendiente es recomendar una siguiente acción útil. |
 
 ### HECHO (hardening backend 2026-07-04/05)
 
@@ -108,7 +117,7 @@ Verificación actual (2026-07-05):
 | HECHO | Revisar grants heredados a `anon` y default privileges. | P2 | M | 1-2 días | Roadmap #18. `20260703000000_harden_anon_grants.sql` revoca grants amplios; revisión en `docs/database/anon-grants-review.md`. |
 | HECHO | Añadir pruebas o checks de migraciones para RLS. | P1 | M | 1-2 días | Roadmap #15-16. `pnpm check:migrations`, `pnpm audit:rls`. |
 | HECHO | Documentar migraciones históricas con policy insegura temporal. | P2 | M | 1 día | Roadmap #19. `docs/database/migration-risk-register.md` documenta STT cache 2026-06-11 → 2026-06-21. |
-| ABIERTO | Ejecutar pruebas RLS contra una base local/staging aplicada. | P2 | M | 1-2 días | Requiere Supabase local o credenciales de test aisladas; complementa `audit:rls` estático. |
+| ABIERTO | Ejecutar pruebas RLS contra una base local/staging aplicada. | P2 | M | 1-2 días | Tarea consolidada RLS-INT/T56. Requiere Supabase local o credenciales de test aisladas; complementa `audit:rls` estático. No usar producción porque el runner crea usuarios y filas temporales. |
 
 ## Infraestructura
 
@@ -169,7 +178,7 @@ Verificación actual (2026-07-05):
 | HECHO | Crear runbook de producción. | P0 | M | 1-2 días | Roadmap Fase 0 #5. `docs/deployment/runbook-minimo.md`. |
 | HECHO | Documentar threat model. | P1 | M | 1 día | Roadmap #39. |
 | HECHO | Documentar arquitectura offline/sync. | P1 | M | 1 día | Roadmap #40. `docs/architecture/offline-sync.md`. |
-| HECHO | Mantener `plans/README.md` reconciliado con este TODO. | P2 | S | 4 h | Roadmap #37. Actualizado 2026-07-05. |
+| HECHO | Mantener `plans/README.md` reconciliado con este TODO. | P2 | S | 4 h | Roadmap #37. Reconciliado el 2026-07-17; T50 continúa abierto y la fase opcional permanece diferida. |
 
 ## Puntuación (actualizada 2026-07-05)
 
@@ -179,7 +188,7 @@ Verificación actual (2026-07-05):
 | Calidad del código | 9/10 | Type-check verde, 978 tests, helpers backend compartidos y coverage per-file en CI. | RLS integration real y métricas operativas. |
 | Seguridad | 9/10 | CSRF universal, CSP, logging sanitizado, rate limit RPC con fallback, secret scan, grants anon endurecidos y SQL P0 neutralizado. | Validar políticas/grants contra una base staging aplicada. |
 | Rendimiento | 8/10 | Bundle analysis en CI con budgets; fonemas scoped; timeouts Gemini. | Métricas per-route en analyze-bundle. |
-| Escalabilidad | 8/10 | Rate limit multi-instancia, cola durable, worker cron y observabilidad básica compatible con Free. Falta backpressure Gemini global. | Semáforo Gemini, pruebas de carga y Log Drain si se usa Vercel Pro. |
+| Escalabilidad | 8/10 | Rate limit multi-instancia, cola durable, worker cron y observabilidad básica compatible con Free. No hay evidencia actual que justifique backpressure adicional. | Añadir backpressure distribuido y pruebas de carga solo si aparecen 429 o saturación; Log Drain si se usa Vercel Pro. |
 | Testing | 9/10 | Suite verde, coverage global + per-file crítico en CI, streaming/backend routes cubiertos. | Añadir RLS integration opcional. |
 | Documentación | 10/10 | Runbook, threat model, offline/sync, entornos, backups, multi-instance, testing strategy y registro de migraciones históricas. | Mantener docs sincronizadas con cambios operativos. |
 | Preparación para producción | 9/10 | CI verde, seguridad API cerrada, backups documentados, SQL P0 neutralizado, grants anon endurecidos, a11y real y health check programado compatible con Vercel Free. | Configurar alertas más ricas cuando el plan/stack lo permita. |
@@ -188,6 +197,7 @@ Verificación actual (2026-07-05):
 
 Fuente detallada: `plans/032-post-production-improvement-roadmap.md`.
 
-1. **RLS integration opcional:** levantar Supabase local/staging y validar permisos reales por rol.
-2. **CI opcional:** ejecutar RLS integration solo cuando existan variables/servicio de test.
-3. **Operativo opcional:** T58 Log Drain (Vercel Pro) o Sentry free tier.
+1. **Cerrar T50:** completar y documentar el QA manual de Reader.
+2. **Cerrar RLS-INT/T56:** levantar Supabase local/staging aislado, aplicar migraciones y validar permisos reales por rol.
+3. **CI opcional:** automatizar RLS integration solo cuando exista un servicio de test aislado y estable.
+4. **Deuda condicional:** no iniciar T55, T57, T58 o T59 hasta que se cumpla el disparador documentado en su fila.

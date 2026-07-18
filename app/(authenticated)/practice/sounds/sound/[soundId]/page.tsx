@@ -183,7 +183,11 @@ export default function SoundPracticePage() {
                 </button>
               </div>
               <div className="phoneme-focus__stage phoneme-focus__stage--flush overflow-y-auto">
-                <PhonemeLessonIntro ipa={soundIpa} onStart={() => setLessonOpen(false)} />
+                <PhonemeLessonIntro
+                  ipa={soundIpa}
+                  onStart={() => setLessonOpen(false)}
+                  startLabel="Volver a la práctica"
+                />
               </div>
             </div>
           </div>

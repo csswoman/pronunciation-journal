@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Mic, MicOff, Loader2, RotateCcw } from "lucide-react";
+import { Mic, MicOff, Loader2, RotateCcw } from "@/components/icons";
 import Button from "@/components/ui/Button";
 import { useSpeechInput } from "@/hooks/useSpeechInput";
 import { useSharedMicStream } from "@/hooks/useSharedMicStream";

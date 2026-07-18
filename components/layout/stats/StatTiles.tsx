@@ -1,4 +1,4 @@
-import { BookOpen, CheckCircle2, Flame, Target, Zap } from "lucide-react";
+import { BookOpen, CheckCircle2, Flame, Target, Zap } from "@/components/icons";
 import type { UserStats } from "@/lib/types";
 
 function formatCompact(value: number) {

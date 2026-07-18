@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { RotateCcw, TrendingUp, AlertCircle, CheckCircle2 } from "lucide-react";
+import { RotateCcw, TrendingUp, AlertCircle, CheckCircle2 } from "@/components/icons";
 import Button from "@/components/ui/Button";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { savePracticeAnswer } from "@/lib/practice/queries";

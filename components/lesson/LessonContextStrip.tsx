@@ -7,7 +7,7 @@
 // </LessonContextStrip>
 
 import { useEffect, useState } from "react";
-import { Target, Flame, Mic, ChevronDown } from "lucide-react";
+import { Target, Flame, Mic, ChevronDown } from "@/components/icons";
 import type { Lesson } from "@/lib/types";
 
 interface Props {
@@ -49,7 +49,7 @@ export function LessonContextStrip({
       >
         <div className="flex items-start justify-between gap-4">
           <div>
-            <p className="font-display text-h3 leading-tight">{lesson.title}</p>
+            <p className="text-h3 leading-tight">{lesson.title}</p>
             <p className="text-caption text-fg-muted mt-0.5">
               {lesson.words.length} words · {estMin} min · {wordPreview}
             </p>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Sparkles, BookOpen, Briefcase } from "lucide-react";
+import { Sparkles, BookOpen, Briefcase } from "@/components/icons";
 import InterviewConfig, { type Scenario, type Level, type Difficulty, CURATED_SCENARIOS } from "./InterviewConfig";
 import InterviewSession, { type InterviewTurn } from "@/components/interview/InterviewSession";
 import type { ExerciseDifficulty } from "@/components/interview/CandidateRecorder";

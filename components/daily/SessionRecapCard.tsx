@@ -10,7 +10,7 @@
 // </SessionRecapCard>
 
 import Link from 'next/link'
-import { ArrowRight, Flame } from 'lucide-react'
+import { ArrowRight, Flame } from "@/components/icons"
 import { useLiveQuery } from 'dexie-react-hooks'
 import PageLayout from '@/components/layout/PageLayout'
 import Button from '@/components/ui/Button'
@@ -48,10 +48,7 @@ export default function SessionRecapCard({ arc, stepCount, dueTomorrow, streak }
         <div className="grid h-16 w-16 place-items-center rounded-full bg-[var(--hue-icon-bg)] text-[var(--primary)]">
           <Flame size={30} />
         </div>
-        <h1
-          className="text-3xl font-medium text-[var(--text-primary)]"
-          style={{ fontFamily: 'var(--font-display), serif' }}
-        >
+        <h1 className="text-h2 text-[var(--text-primary)]">
           Daily complete!
         </h1>
 

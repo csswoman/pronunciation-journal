@@ -1,7 +1,7 @@
 "use client";
 
 import type { CSSProperties } from "react";
-import { Volume2, Heart, Plus, Check } from "lucide-react";
+import { Volume2, Heart, Plus, Check } from "@/components/icons";
 import { speak } from "@/lib/phoneme-practice/tts";
 import { formatIpaDisplay } from "@/lib/lexicon/format-ipa";
 import { cn } from "@/lib/cn";

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight } from "@/components/icons";
 import { cn } from "@/lib/cn";
 import type { CoursePathLevel } from "@/lib/courses/types";
 import { countPriorityLessons } from "@/lib/courses/buildCurriculum";

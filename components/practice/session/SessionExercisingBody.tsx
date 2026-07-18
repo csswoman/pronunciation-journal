@@ -85,6 +85,7 @@ export function SessionExercisingBody({ state, handlers, lessonFooter }: Session
           onSubmit={onSubmit}
           focusUi={focusUi}
           voice={currentVoice}
+          showSkip={phase === 'exercising'}
         />
       )}
 

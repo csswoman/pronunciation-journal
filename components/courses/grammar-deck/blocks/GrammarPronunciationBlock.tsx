@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Headphones, ArrowUpRight } from "lucide-react";
+import { Headphones, ArrowUpRight } from "@/components/icons";
 import type { GrammarPronExample } from "@/lib/courses/grammar-deck/types";
 import SpeakButton from "../SpeakButton";
 

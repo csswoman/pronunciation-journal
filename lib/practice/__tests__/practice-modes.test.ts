@@ -58,4 +58,17 @@ describe('resolveRecommendedMode', () => {
     expect(new Set(ids).size).toBe(ids.length)
     for (const m of PRACTICE_MODES) expect(m.href.startsWith('/')).toBe(true)
   })
+
+  it('includes Reader exactly once with its canonical route and icon', () => {
+    const readerModes = PRACTICE_MODES.filter((mode) => mode.id === 'reader')
+    expect(readerModes).toEqual([
+      {
+        id: 'reader',
+        label: 'Reading',
+        description: 'Practice your recent words in context',
+        href: '/practice/reader',
+        icon: 'BookOpen',
+      },
+    ])
+  })
 })

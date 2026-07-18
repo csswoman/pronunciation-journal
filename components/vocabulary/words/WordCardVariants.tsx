@@ -1,6 +1,6 @@
 "use client";
 
-import { Loader2, RefreshCcw, Trash2 } from "lucide-react";
+import { Loader2, RefreshCcw, Trash2 } from "@/components/icons";
 import type { WordBankEntry } from "@/lib/word-bank/types";
 import Button from "@/components/ui/Button";
 import { H4 } from "@/components/ui/Typography";

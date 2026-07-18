@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Check } from "lucide-react";
+import { ArrowRight, Check } from "@/components/icons";
 import ReviewQueueBreakdown from "./ReviewQueueBreakdown";
 import ReviewQueuePreview from "./ReviewQueuePreview";
 import type { ReviewQueueSummary } from "@/lib/home/constants";
@@ -41,7 +41,7 @@ export default function ReviewQueueCard({ summary }: ReviewQueueCardProps) {
           </Link>
         ) : newAvailable > 0 ? (
           <Link
-            href="/practice/core-1000"
+            href="/practice/essential-words"
             className="focus-ring inline-flex w-full items-center justify-center gap-2 rounded-[var(--radius-md)] bg-[var(--primary)] px-4 py-2.5 font-body-sm font-medium text-[var(--on-primary)] transition-opacity hover:opacity-90"
           >
             Learn new words <ArrowRight size={15} aria-hidden />

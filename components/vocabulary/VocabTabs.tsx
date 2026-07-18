@@ -1,6 +1,6 @@
 "use client";
 
-import { BookMarked, Layers } from "lucide-react";
+import { BookMarked, Layers } from "@/components/icons";
 
 export const VOCAB_TABS = [
   { id: "words", label: "Word Bank", icon: BookMarked },

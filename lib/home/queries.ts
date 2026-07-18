@@ -32,7 +32,7 @@ export {
 const FALLBACK_ANSWER_MS = 90_000;
 
 /**
- * Sums `time_ms` from answer_history for the current calendar day (America/Lima).
+ * Sums `time_ms` from answer_history for today and the current week (America/Lima).
  */
 export async function getTodayPracticeGoal(userId: string): Promise<DailyGoalProgress> {
   const supabase = await createSupabaseServerClient();
@@ -40,7 +40,7 @@ export async function getTodayPracticeGoal(userId: string): Promise<DailyGoalPro
   const todayStr = toLocalDateString(nowIso, STREAK_TIMEZONE);
 
   const since = new Date();
-  since.setDate(since.getDate() - 1);
+  since.setDate(since.getDate() - 7);
 
   const { data, error } = await supabase
     .from("answer_history")
@@ -51,19 +51,37 @@ export async function getTodayPracticeGoal(userId: string): Promise<DailyGoalPro
 
   if (error) throw error;
 
-  let totalMs = 0;
+  let todayMs = 0;
+  let weekMs = 0;
+  const weekStart = startOfLocalWeek(nowIso, STREAK_TIMEZONE);
+
   for (const row of data ?? []) {
     const answeredAt = row.answered_at as string;
-    if (toLocalDateString(answeredAt, STREAK_TIMEZONE) !== todayStr) continue;
-    totalMs += row.time_ms ?? FALLBACK_ANSWER_MS;
+    const localDay = toLocalDateString(answeredAt, STREAK_TIMEZONE);
+    const ms = row.time_ms ?? FALLBACK_ANSWER_MS;
+    if (localDay >= weekStart) weekMs += ms;
+    if (localDay === todayStr) todayMs += ms;
   }
 
-  const minutesDone = Math.round(totalMs / 60_000);
+  const minutesDone = Math.round(todayMs / 60_000);
+  const weekMinutes = Math.round(weekMs / 60_000);
   const goalMinutes = DEFAULT_DAILY_GOAL_MINUTES;
   const percent =
     goalMinutes > 0 ? Math.min(100, Math.round((minutesDone / goalMinutes) * 100)) : 0;
 
-  return { minutesDone, goalMinutes, percent };
+  return { minutesDone, goalMinutes, percent, weekMinutes };
+}
+
+/** Monday (ISO) of the local calendar week as YYYY-MM-DD. */
+function startOfLocalWeek(iso: string, timeZone: string): string {
+  const day = toLocalDateString(iso, timeZone);
+  const [y, m, d] = day.split("-").map(Number);
+  // Approximate weekday via UTC noon to avoid DST edge cases for date-only math.
+  const utc = new Date(Date.UTC(y, m - 1, d, 12));
+  const weekday = utc.getUTCDay(); // 0 Sun … 6 Sat
+  const daysFromMonday = (weekday + 6) % 7;
+  utc.setUTCDate(utc.getUTCDate() - daysFromMonday);
+  return utc.toISOString().slice(0, 10);
 }
 
 /** Lowest-mastery phoneme with at least 5 attempts, or null if none yet. */
@@ -168,27 +186,27 @@ export async function getDailyPlanPreview(userId: string): Promise<DailyPlanPrev
     steps.push({
       id: "word_review",
       title: "Repaso de palabras",
-      subtitle: "Vocabulario de tu léxico con SRS",
+      subtitle: "Afianza palabras de tu léxico",
       icon: "BookMarked",
     });
   }
 
   steps.push({
     id: "phoneme_focus",
-    title: `Sound ${ipa}`,
-    subtitle: hasProgress ? "Your sound to strengthen today" : "Start with a key sound",
+    title: "Sound",
+    subtitle: hasProgress ? "Tu sonido a reforzar hoy" : "Empieza con un sonido clave",
     icon: "Waves",
   });
   steps.push({
     id: "minimal_pairs",
     title: "Minimal pairs",
-    subtitle: `Tell ${ipa} apart from similar sounds`,
+    subtitle: `Distingue ${ipa} de sonidos parecidos`,
     icon: "GitCompareArrows",
   });
   steps.push({
     id: "listening",
     title: "Listen and write",
-    subtitle: "Dictation with new words",
+    subtitle: "Dictado con palabras nuevas",
     icon: "Headphones",
   });
 

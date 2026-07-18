@@ -94,7 +94,7 @@ export function ProgressBigNumber({
     <div>
       <div
         className={cn(
-          'font-display text-h2 leading-none',
+          'text-h2 leading-none',
           tone === 'warning' ? 'text-warning' : 'text-primary',
         )}
       >

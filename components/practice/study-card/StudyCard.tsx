@@ -5,12 +5,13 @@
 //   <ChipRow />          — optional metadata badges (rank / pos / cefr)
 //   <WordHeading />      — the word itself
 //   <MeaningBlock />     — optional meaning + translation
-//   <PronRow strong />   — optional IPA + listen (word audio)
-//   <PronRow weak />     — optional weak-form IPA + listen (weak phrase)
+//   <PronRow fuerte />   — optional IPA + listen (word audio)
+//   <PronRow débil />    — optional weak-form IPA + listen (weak phrase)
 //   <SentenceBlock />    — optional example + listen (sentence) + sentence IPA
 //   <Actions />          — Practicar (continue) + optional "Ya la sé" (archive)
 // </StudyCard>
 
+import { useState } from 'react'
 import { cn } from '@/lib/cn'
 import { PillButton } from '@/components/ui/PillButton'
 import { ListenButton } from '@/components/ui/ListenButton'
@@ -41,10 +42,10 @@ function PronRow({
   return (
     <div className="flex items-center justify-between gap-3 py-2 border-b border-border-subtle last:border-b-0">
       <div className="flex items-baseline gap-3">
-        <span className="text-tiny font-semibold uppercase tracking-[0.12em] text-fg-subtle w-14">
+        <span className="w-16 text-tiny font-semibold uppercase tracking-[0.12em] text-fg-subtle">
           {label}
         </span>
-        <span className="[font-family:var(--font-ipa),monospace] text-lg text-primary">{ipa}</span>
+        <span className="font-ipa text-lg text-primary">{ipa}</span>
       </div>
       <ListenButton onPlay={onPlay} aria-label={`Escuchar forma ${label.toLowerCase()}`} />
     </div>
@@ -57,7 +58,7 @@ function SentenceBlock({
   const regex = new RegExp(`\\b(${word})\\b`, 'i')
   const [before, match, after] = sentence.split(regex)
   return (
-    <div className="flex flex-col items-center gap-1">
+    <div className="flex flex-col items-center gap-2">
       <div className="flex items-center justify-center gap-2">
         <p className="text-base text-fg m-0 text-center">
           {match ? (
@@ -73,7 +74,7 @@ function SentenceBlock({
         <ListenButton iconOnly onPlay={onListen} aria-label="Escuchar oración" />
       </div>
       {sentenceIpa && (
-        <p className="[font-family:var(--font-ipa),monospace] text-sm text-fg-subtle m-0 text-center">
+        <p className="ipa m-0 max-w-[36ch] text-center text-fg-muted">
           {sentenceIpa}
         </p>
       )}
@@ -97,7 +98,7 @@ export function StudyCard({ model, onContinue, onListen, onArchive }: Props) {
             ))}
           </div>
         )}
-        <h2 className="[font-family:var(--font-phoneme),serif] text-5xl font-bold tracking-[-1px] leading-none text-fg m-0">
+        <h2 className="font-mono text-5xl font-bold tracking-[-1px] leading-none text-fg m-0">
           {model.word}
         </h2>
       </div>
@@ -114,10 +115,10 @@ export function StudyCard({ model, onContinue, onListen, onArchive }: Props) {
       {(model.ipa || model.weakForm) && (
         <div className="w-full">
           {model.ipa && (
-            <PronRow label="Strong" ipa={model.ipa} onPlay={() => onListen('word')} />
+            <PronRow label="Fuerte" ipa={model.ipa} onPlay={() => onListen('word')} />
           )}
           {model.weakForm && (
-            <PronRow label="Weak" ipa={model.weakForm.ipa} onPlay={() => onListen('weak')} />
+            <PronRow label="Débil" ipa={model.weakForm.ipa} onPlay={() => onListen('weak')} />
           )}
         </div>
       )}
@@ -131,16 +132,42 @@ export function StudyCard({ model, onContinue, onListen, onArchive }: Props) {
         />
       )}
 
-      <div className={cn('flex flex-col items-center gap-2')}>
+      <div className={cn('mt-1 flex w-full flex-col items-center gap-4')}>
         <PillButton variant="primary" size="md" onClick={onContinue}>
           Practicar
         </PillButton>
-        {onArchive && (
-          <PillButton variant="quiet" size="sm" onClick={onArchive}>
-            Ya la sé
-          </PillButton>
-        )}
+        {onArchive && <StudyArchiveAction onArchive={onArchive} />}
       </div>
     </div>
+  )
+}
+
+function StudyArchiveAction({ onArchive }: { onArchive: () => void }) {
+  const [confirming, setConfirming] = useState(false)
+
+  if (confirming) {
+    return (
+      <div className="flex flex-col items-center gap-2 text-center">
+        <p className="m-0 text-sm text-fg-muted">¿Pausar esta palabra 90 días?</p>
+        <div className="flex flex-wrap items-center justify-center gap-2">
+          <PillButton variant="quiet" size="sm" onClick={onArchive}>
+            Sí, pausar
+          </PillButton>
+          <PillButton variant="quiet" size="sm" onClick={() => setConfirming(false)}>
+            Cancelar
+          </PillButton>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={() => setConfirming(true)}
+      className="border-none bg-transparent p-0 text-caption text-fg-subtle underline-offset-2 transition-colors hover:text-fg-muted hover:underline focus-ring"
+    >
+      Ya la sé
+    </button>
   )
 }

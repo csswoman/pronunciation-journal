@@ -39,7 +39,7 @@
 }
 
 .ipa-chart__title {
-  font-family: var(--font-editorial), "Fraunces", Georgia, serif;
+  font-family: var(--font-sans), sans-serif;
   font-size: clamp(1.85rem, 4vw, 2.3rem);
   font-weight: 420;
   letter-spacing: -0.02em;
@@ -53,7 +53,7 @@
 }
 
 .ipa-chart__section-title {
-  font-family: var(--font-editorial), "Fraunces", Georgia, serif;
+  font-family: var(--font-sans), sans-serif;
   font-size: 1.6rem;
   font-weight: 480;
   line-height: 1.2;
@@ -100,7 +100,7 @@
 }
 
 .ipa-chart__progress-count {
-  font-family: var(--font-editorial), "Fraunces", Georgia, serif;
+  font-family: var(--font-sans), sans-serif;
   font-size: 1.1rem;
   color: var(--text-primary);
   font-variant-numeric: tabular-nums;
@@ -372,8 +372,10 @@
 }
 
 .ipa-chart__ph-sym {
-  font-family: var(--font-ipa), "Noto Sans", sans-serif;
-  font-size: 1.5rem;
+  font-family: var(--font-ipa), "Andika", "Noto Sans", sans-serif;
+  font-size: 1.55rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
   color: var(--ipa-accent-text);
 }
 
@@ -499,9 +501,11 @@
 }
 
 .ipa-chart__panel-sym {
-  font-family: var(--font-ipa), sans-serif;
+  font-family: var(--font-ipa), "Andika", "Noto Sans", sans-serif;
   font-size: 3.4rem;
-  line-height: 1;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1.1;
   color: var(--text-primary);
 }
 
@@ -565,7 +569,7 @@
 .ipa-chart__exword {
   padding: 4px 10px;
   cursor: pointer;
-  font-family: var(--font-editorial), Georgia, serif;
+  font-family: var(--font-sans), sans-serif;
   font-size: 0.9rem;
   border-radius: 8px;
   border: 1px solid var(--border-subtle);
@@ -675,14 +679,14 @@
 }
 
 .ipa-chart__hard-sym {
-  font-family: var(--font-editorial), "Fraunces", Georgia, serif;
+  font-family: var(--font-mono-var), "Fira Code", monospace;
   font-size: 2.2rem;
   font-weight: 500;
   color: var(--ipa-accent-text);
 }
 
 .ipa-chart__hard-word {
-  font-family: var(--font-editorial), "Fraunces", Georgia, serif;
+  font-family: var(--font-sans), sans-serif;
   font-size: 0.95rem;
   font-weight: 500;
   letter-spacing: 0.01em;
@@ -796,13 +800,15 @@
 }
 
 .ipa-chart__mpcard-sym {
-  font-family: var(--font-ipa), sans-serif;
-  font-size: 1.1rem;
+  font-family: var(--font-ipa), "Andika", "Noto Sans", sans-serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
   color: var(--ipa-accent-text);
 }
 
 .ipa-chart__mpcard-word {
-  font-family: var(--font-editorial), Georgia, serif;
+  font-family: var(--font-sans), sans-serif;
   font-size: 2rem;
   color: var(--text-primary);
 }
@@ -1024,7 +1030,7 @@
 }
 
 .ipa-chart__done-title {
-  font-family: var(--font-editorial), "Fraunces", Georgia, serif;
+  font-family: var(--font-sans), sans-serif;
   font-size: 1.35rem;
   font-weight: 500;
   color: var(--text-primary);

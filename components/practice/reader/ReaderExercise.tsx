@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Volume2 } from 'lucide-react'
+import { Volume2 } from "@/components/icons"
 import { cn } from '@/lib/cn'
 import Button from '@/components/ui/Button'
 import type { ReaderPassage } from '@/lib/practice/reader/types'

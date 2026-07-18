@@ -12,7 +12,7 @@
 // </HomeReviewCarousel>
 
 import { useState, useCallback } from "react";
-import { Check, ArrowRight } from "lucide-react";
+import { Check, ArrowRight } from "@/components/icons";
 import Button from "@/components/ui/Button";
 import PracticeSession from "@/components/practice/PracticeSession";
 import HomeSectionHeader from "@/components/home/HomeSectionHeader";
@@ -90,6 +90,7 @@ export default function HomeReviewCarousel({
           exercises={step.exercises}
           sessionLength={step.exercises.length}
           sessionLabel={step.title}
+          soundIpa={step.ipa}
           onSessionComplete={handleStepComplete}
           onExit={handleExit}
         />
@@ -120,11 +121,11 @@ export default function HomeReviewCarousel({
                   className="flex w-[72vw] max-w-[280px] shrink-0 snap-start flex-col justify-between gap-3 rounded-[var(--radius-xl)] border border-border-subtle bg-surface-raised p-4"
                 >
                   <div>
-                    <p className="font-display text-xl font-semibold leading-tight text-[var(--text-primary)]">
+                    <p className="text-xl font-semibold leading-tight text-[var(--text-primary)]">
                       {w.text}
                     </p>
                     {w.ipa ? (
-                      <p className="font-ipa mt-0.5 text-sm text-[var(--primary)]">{formatIpa(w.ipa)}</p>
+                      <p className="font-ipa mt-1 text-body-md">{formatIpa(w.ipa)}</p>
                     ) : null}
                   </div>
                   <WordStrengthBars strength={getWordStrength(w)} size={14} />
@@ -136,7 +137,7 @@ export default function HomeReviewCarousel({
                   className="flex w-[72vw] max-w-[280px] shrink-0 snap-start flex-col justify-between gap-3 rounded-[var(--radius-xl)] border border-border-subtle bg-surface-raised p-4"
                 >
                   <div>
-                    <p className="font-ipa text-3xl font-bold leading-none text-[var(--primary)]">
+                    <p className="font-ipa text-display-ipa font-bold leading-none">
                       {formatIpa(s.ipa)}
                     </p>
                     {s.example ? (

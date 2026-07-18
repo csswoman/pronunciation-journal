@@ -4,15 +4,44 @@ type CmuDict = Record<string, string>;
 
 let dictCache: CmuDict | null = null;
 
-function stripStress(phoneme: string): string {
-  return phoneme.replace(/\d$/, "");
-}
+const VOWELS = new Set([
+  "AA", "AE", "AH", "AO", "AW", "AY", "EH", "ER", "EY",
+  "IH", "IY", "OW", "OY", "UH", "UW",
+]);
 
-function arpabetStringToIpa(arpabet: string): string {
-  return arpabet
-    .split(" ")
-    .map((p) => ARPABET_TO_IPA[stripStress(p)] ?? stripStress(p).toLowerCase())
-    .join("");
+/**
+ * Convert a space-separated ARPAbet string to IPA with lexical stress.
+ * Stress marks (ˈ / ˌ) go before the syllable onset.
+ * AH0 → ə; keep in sync with scripts/lib/arpabet-to-ipa.mjs.
+ */
+export function arpabetStringToIpa(arpabet: string): string {
+  const phones = arpabet.trim().split(/\s+/).filter(Boolean);
+  let out = "";
+  let onset = "";
+
+  for (const phone of phones) {
+    const stressMatch = phone.match(/(\d)$/);
+    const stress = stressMatch ? stressMatch[1] : null;
+    const base = phone.replace(/\d$/, "");
+    const isVowel = VOWELS.has(base);
+
+    let ipa: string;
+    if (base === "AH" && stress === "0") {
+      ipa = "ə";
+    } else {
+      ipa = ARPABET_TO_IPA[base] ?? base.toLowerCase();
+    }
+
+    if (isVowel) {
+      const mark = stress === "1" ? "ˈ" : stress === "2" ? "ˌ" : "";
+      out += mark + onset + ipa;
+      onset = "";
+    } else {
+      onset += ipa;
+    }
+  }
+
+  return out + onset;
 }
 
 function normalizeToken(token: string): string {

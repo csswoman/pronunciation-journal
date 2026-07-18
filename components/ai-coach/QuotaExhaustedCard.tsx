@@ -1,6 +1,6 @@
 "use client";
 
-import { Zap } from "lucide-react";
+import { Zap } from "@/components/icons";
 import type { AIMessage } from "@/lib/ai-practice/types";
 import type { ExerciseResult } from "@/lib/ai-practice/types";
 

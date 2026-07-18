@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { X, Check } from "lucide-react";
+import { X, Check } from "@/components/icons";
 import Button from "@/components/ui/Button";
 import { H2 } from "@/components/ui/Typography";
 import { addWordsToDeck, type DeckListItem } from "@/lib/decks/queries";

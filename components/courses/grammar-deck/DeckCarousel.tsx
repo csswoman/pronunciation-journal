@@ -7,7 +7,7 @@
 //   prev/next arrows
 // </DeckCarousel>
 
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "@/components/icons";
 import { cn } from "@/lib/cn";
 import GrammarStudyCard from "./GrammarStudyCard";
 import type { GrammarStudyDeckData } from "@/lib/courses/grammar-deck/types";

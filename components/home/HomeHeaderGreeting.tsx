@@ -1,4 +1,4 @@
-import { CalendarDays } from "lucide-react";
+import { CalendarDays } from "@/components/icons";
 
 interface HomeHeaderGreetingProps {
   userName: string;
@@ -15,9 +15,9 @@ function getTimeSlot(): TimeSlot {
 }
 
 const GREETINGS: Record<TimeSlot, { greeting: string; sub: string }> = {
-  morning:   { greeting: "Good morning",   sub: "Ready to train your ear?" },
-  afternoon: { greeting: "Good afternoon", sub: "A good time to practice." },
-  evening:   { greeting: "Good evening",   sub: "Wind down with some English." },
+  morning: { greeting: "Buenos días", sub: "Un buen momento para entrenar el oído." },
+  afternoon: { greeting: "Buenas tardes", sub: "Un buen momento para practicar." },
+  evening: { greeting: "Buenas noches", sub: "Cierra el día con un poco de inglés." },
 };
 
 export default function HomeHeaderGreeting({ userName, dateLabel }: HomeHeaderGreetingProps) {
@@ -27,15 +27,16 @@ export default function HomeHeaderGreeting({ userName, dateLabel }: HomeHeaderGr
 
   return (
     <div className="flex flex-col gap-1">
-      <p className="flex items-center gap-1.5 text-[11px] font-semibold tracking-widest uppercase text-fg-subtle">
-        <CalendarDays size={11} aria-hidden />
+      <p className="flex items-center gap-1.5 font-kicker text-fg-subtle">
+        <CalendarDays size={14} aria-hidden />
         {dateLabel}
       </p>
-      <h1 className="font-editorial text-display-word font-[440] tracking-[-0.02em] leading-[1.2] text-fg">
+      <h1 className="text-h2 font-bold tracking-[-0.02em] leading-[1.2] text-fg">
         {greeting}
         {displayName && (
           <>, <span className="text-primary">{displayName}</span></>
-        )}.
+        )}
+        .
       </h1>
       <p className="text-label text-fg-muted">{sub}</p>
     </div>

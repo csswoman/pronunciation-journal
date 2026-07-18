@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { Heart, Loader2 } from "lucide-react";
+import { Heart, Loader2 } from "@/components/icons";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { cn } from "@/lib/cn";
 import { isWordInBank, quickAddWord } from "@/lib/word-bank/queries";

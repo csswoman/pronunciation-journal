@@ -10,7 +10,7 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import { ChevronLeft, ChevronRight, ChevronDown } from "lucide-react";
+import { ChevronLeft, ChevronRight, ChevronDown } from "@/components/icons";
 import { cn } from "@/lib/cn";
 import type { RealLifeScenario } from "@/lib/courses/types";
 import CoursePathRealLifeCard from "@/components/courses/CoursePathRealLifeCard";

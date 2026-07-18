@@ -29,6 +29,8 @@ const AICoachPanel = dynamic(() => import("@/components/ai-coach/AICoachPanel"))
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const isAuthPage = isPublicAuthPath(pathname);
+  // Page layout pattern: chrome (sidebar + bottom nav) always stays visible;
+  // immersion only narrows the content max-width — never hides AppShell.
   const isImmersivePractice =
     pathname.startsWith("/practice/sounds/sound/") ||
     pathname === "/daily" ||

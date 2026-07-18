@@ -8,7 +8,7 @@ diseño y planes de producto.
 
 | Documento | Descripción |
 |-----------|-------------|
-| [Sistemas SRS](architecture/srs.md) | Repetición espaciada y reglas de revisión |
+| [Sistemas SRS](architecture/srs.md) | Repetición espaciada, Baúl SRS (snooze / mastered) y reglas de revisión |
 | [Sistema de ejercicios](architecture/exercises.md) | Tipos de ejercicio, flujo de sesión y persistencia |
 | [Progress telemetry](architecture/progress.md) | Contrato de sesiones, answers y almacenamiento de actividad |
 | [Performance](architecture/performance.md) | Baseline, presupuestos, reglas y método de medición |

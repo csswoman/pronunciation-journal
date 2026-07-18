@@ -1,6 +1,6 @@
 "use client";
 
-import { BookOpen, BookMarked, Layers } from "lucide-react";
+import { BookOpen, BookMarked, Layers } from "@/components/icons";
 
 export const WORDS_TABS = [
   { id: "lexicon",  label: "Dictionary",  icon: BookOpen },

@@ -75,10 +75,10 @@
 }
 
 .phoneme-focus__session-label {
-  font-size: 0.6875rem;
-  font-weight: 600;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
+  font-size: 0.75rem;
+  font-weight: 550;
+  letter-spacing: 0.01em;
+  text-transform: none;
   color: var(--text-tertiary);
 }
 
@@ -92,7 +92,7 @@
 }
 
 .phoneme-focus__session-name--ipa {
-  font-family: var(--font-editorial), Georgia, serif;
+  font-family: var(--font-mono-var), "Fira Code", monospace;
   font-size: 1.375rem;
   font-weight: 480;
   color: var(--primary);
@@ -110,6 +110,267 @@
 .phoneme-focus__stage--flush {
   padding: 0;
   gap: 0;
+}
+
+.phoneme-intro__wash {
+  background: radial-gradient(
+    ellipse 90% 70% at 50% 40%,
+    color-mix(in oklch, var(--primary) 18%, var(--surface-raised)) 0%,
+    transparent 100%
+  );
+}
+
+.phoneme-intro__kicker {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--text-tertiary);
+}
+
+.phoneme-intro__ipa {
+  position: relative;
+  isolation: isolate;
+  padding: 0.35em 0.45em;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: transform 0.15s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.15s ease;
+}
+
+.phoneme-intro__ipa:hover {
+  transform: scale(1.03);
+}
+
+.phoneme-intro__ipa:active {
+  transform: scale(0.96);
+}
+
+.phoneme-intro__ipa:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 6px;
+  border-radius: var(--radius-md);
+}
+
+.phoneme-intro__ring {
+  position: absolute;
+  inset: -0.35em;
+  border-radius: 999px;
+  border: 1px solid color-mix(in oklch, var(--primary) 28%, transparent);
+  pointer-events: none;
+  opacity: 0.55;
+}
+
+.phoneme-intro__ring--late {
+  inset: -0.7em;
+  opacity: 0.25;
+}
+
+.phoneme-intro__ipa--playing {
+  opacity: 0.85;
+}
+
+.phoneme-intro__hero {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+}
+
+.phoneme-intro__hero em {
+  font-style: italic;
+  font-weight: 650;
+  color: var(--primary);
+}
+
+.phoneme-intro__hero--speaking em {
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
+.phoneme-intro__pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-subtle);
+  background: color-mix(in oklch, var(--surface-sunken) 55%, transparent);
+  color: var(--text-secondary);
+  padding: 0.35rem 0.7rem 0.35rem 0.55rem;
+  font-size: 0.8125rem;
+  font-weight: 550;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease,
+    transform 0.15s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.phoneme-intro__pill:hover {
+  color: var(--text-primary);
+  border-color: color-mix(in oklch, var(--primary) 30%, var(--border-subtle));
+}
+
+.phoneme-intro__pill:active {
+  transform: scale(0.96);
+}
+
+.phoneme-intro__pill--speaking {
+  color: var(--primary);
+  border-color: color-mix(in oklch, var(--primary) 45%, transparent);
+  background: color-mix(in oklch, var(--primary) 10%, var(--surface-raised));
+}
+
+.phoneme-intro__status {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-tertiary);
+}
+
+.phoneme-intro__status--error {
+  color: var(--error);
+}
+
+.phoneme-intro__tip {
+  border-radius: var(--radius-lg);
+  background: color-mix(in oklch, var(--primary) 7%, var(--surface-sunken));
+  border: 1px solid color-mix(in oklch, var(--primary) 12%, var(--border-subtle));
+  padding: var(--space-3) var(--space-4);
+}
+
+.phoneme-intro__tip-label {
+  margin: 0 0 0.35rem;
+  font-size: 0.8125rem;
+  font-weight: 650;
+  color: var(--text-primary);
+}
+
+.phoneme-intro__tip-body {
+  margin: 0;
+  max-width: 52ch;
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: var(--text-secondary);
+  text-wrap: pretty;
+}
+
+.phoneme-intro__contrast-label {
+  margin: 0 0 0.65rem;
+  font-size: 0.8125rem;
+  font-weight: 650;
+  color: var(--text-primary);
+}
+
+.phoneme-intro__pair {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.phoneme-intro__pair-sep {
+  flex-shrink: 0;
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+}
+
+.phoneme-intro__contrast-word {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  min-height: 2.5rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    background-color 0.15s ease,
+    color 0.15s ease,
+    transform 0.15s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.phoneme-intro__contrast-word:hover {
+  border-color: color-mix(in oklch, var(--primary) 35%, var(--border-subtle));
+}
+
+.phoneme-intro__contrast-word:active {
+  transform: scale(0.98);
+}
+
+.phoneme-intro__contrast-word--speaking {
+  color: var(--primary);
+  border-color: color-mix(in oklch, var(--primary) 50%, transparent);
+  background: color-mix(in oklch, var(--primary) 8%, var(--surface-raised));
+}
+
+.phoneme-intro__more {
+  width: 100%;
+  padding: 0.5rem;
+  border: none;
+  background: transparent;
+  color: var(--text-tertiary);
+  font-size: 0.875rem;
+  font-weight: 550;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.phoneme-intro__more:hover {
+  color: var(--text-secondary);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .phoneme-intro__stage > .phoneme-intro__kicker,
+  .phoneme-intro__stage > .phoneme-intro__ipa,
+  .phoneme-intro__stage > .phoneme-intro__hero,
+  .phoneme-intro__stage > .phoneme-intro__examples,
+  .phoneme-intro__stage > .phoneme-intro__status {
+    animation: phoneme-intro-in 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+  }
+
+  .phoneme-intro__stage > .phoneme-intro__ipa { animation-delay: 0.04s; }
+  .phoneme-intro__stage > .phoneme-intro__hero { animation-delay: 0.1s; }
+  .phoneme-intro__stage > .phoneme-intro__examples { animation-delay: 0.16s; }
+  .phoneme-intro__stage > .phoneme-intro__status { animation-delay: 0.22s; }
+
+  .phoneme-intro__ring {
+    animation: phoneme-ring 2.8s ease-out infinite;
+  }
+
+  .phoneme-intro__ring--late {
+    animation-delay: 0.9s;
+  }
+
+  .phoneme-intro__ipa--playing .phoneme-intro__ring {
+    animation-duration: 1.1s;
+    border-color: color-mix(in oklch, var(--primary) 55%, transparent);
+  }
+
+  .phoneme-intro__pill--speaking,
+  .phoneme-intro__contrast-word--speaking {
+    animation: phoneme-intro-speak 0.8s ease-in-out infinite;
+  }
+}
+
+@keyframes phoneme-intro-in {
+  from {
+    transform: translateY(0.35rem);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes phoneme-intro-speak {
+  0%, 100% { box-shadow: 0 0 0 0 color-mix(in oklch, var(--primary) 0%, transparent); }
+  50% { box-shadow: 0 0 0 3px color-mix(in oklch, var(--primary) 22%, transparent); }
 }
 
 .phoneme-focus__exit {
@@ -149,7 +410,7 @@
 }
 
 .phoneme-focus__badge {
-  font-family: var(--font-editorial), Georgia, serif;
+  font-family: var(--font-mono-var), "Fira Code", monospace;
   font-size: 1.125rem;
   font-weight: 500;
   color: var(--primary);
@@ -173,12 +434,91 @@
   text-align: center;
 }
 
-.phoneme-focus__eyebrow {
-  font-size: 0.6875rem;
-  font-weight: 600;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-  color: var(--text-tertiary);
+.phoneme-focus__eyebrow,
+.phoneme-focus__kicker {
+  font-size: 0.8125rem;
+  font-weight: 550;
+  letter-spacing: 0.01em;
+  text-transform: none;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.phoneme-play-btn {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  width: 4rem;
+  height: 4rem;
+  border-radius: 999px;
+  border: 1px solid var(--border-default);
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transition:
+    transform 0.15s cubic-bezier(0.25, 1, 0.5, 1),
+    box-shadow 0.15s ease,
+    opacity 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.phoneme-play-btn--lg {
+  width: 5.5rem;
+  height: 5.5rem;
+}
+
+.phoneme-play-btn:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+  border-color: color-mix(in oklch, var(--primary) 35%, var(--border-default));
+}
+
+.phoneme-play-btn:active {
+  transform: scale(0.96);
+}
+
+.phoneme-play-btn:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 3px;
+}
+
+.phoneme-play-btn--playing {
+  opacity: 1;
+  border-color: color-mix(in oklch, var(--primary) 45%, transparent);
+  color: var(--primary);
+  box-shadow:
+    0 0 0 4px color-mix(in oklch, var(--primary) 18%, transparent),
+    var(--shadow-sm);
+  animation: phoneme-play-pulse 1.1s ease-in-out infinite;
+}
+
+@keyframes phoneme-play-pulse {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 3px color-mix(in oklch, var(--primary) 14%, transparent),
+      var(--shadow-sm);
+  }
+  50% {
+    box-shadow:
+      0 0 0 7px color-mix(in oklch, var(--primary) 8%, transparent),
+      var(--shadow-md);
+  }
+}
+
+.phoneme-play-btn__icon {
+  flex-shrink: 0;
+}
+
+.phoneme-play-btn__caption {
+  font-family: var(--font-ipa), "Andika", "Noto Sans", sans-serif;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
 }
 
 .phoneme-focus__title {
@@ -317,9 +657,10 @@
 }
 
 .pf-opt--ipa {
-  font-family: var(--font-ipa), var(--font-mono-var), monospace;
-  font-size: 1.05rem;
+  font-family: var(--font-ipa), "Andika", "Noto Sans", sans-serif;
+  font-size: 1.1rem;
   font-weight: 700;
+  letter-spacing: 0.04em;
 }
 
 .pf-opt--sel {
@@ -358,6 +699,52 @@
   opacity: 0.45;
 }
 
+/* Post-submit micro-motion */
+.pf-opt--correct.pf-opt--reveal,
+.pf-pair-opt.pf-opt--correct.pf-opt--reveal,
+.pf-reveal-ok {
+  animation: pf-reveal-ok 0.4s cubic-bezier(0.25, 1, 0.5, 1) both;
+}
+
+.pf-opt--wrong.pf-opt--reveal,
+.pf-pair-opt.pf-opt--wrong.pf-opt--reveal,
+.pf-reveal-bad {
+  animation: pf-reveal-bad 0.42s ease both;
+}
+
+@keyframes pf-reveal-ok {
+  from {
+    opacity: 0.65;
+    transform: scale(0.97);
+  }
+  55% {
+    transform: scale(1.02);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pf-reveal-bad {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-3px);
+  }
+  40% {
+    transform: translateX(3px);
+  }
+  60% {
+    transform: translateX(-2px);
+  }
+  80% {
+    transform: translateX(2px);
+  }
+}
+
 .pf-chip {
   display: inline-flex;
   align-items: center;
@@ -381,7 +768,8 @@
 }
 
 .pf-chip--ipa {
-  font-family: var(--font-ipa), var(--font-mono-var), monospace;
+  font-family: var(--font-ipa), "Andika", "Noto Sans", sans-serif;
+  letter-spacing: 0.04em;
 }
 
 .pf-chip__icon {
@@ -390,16 +778,20 @@
 }
 
 .pf-pron__word {
-  font-family: var(--font-editorial), Georgia, serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-size: clamp(2rem, 8vw, 2.6rem);
   font-weight: 480;
   letter-spacing: -0.02em;
 }
 
 .pf-pron__ipa {
-  font-family: var(--font-ipa), var(--font-mono-var), monospace;
-  font-size: 1.2rem;
-  color: var(--primary);
+  font-family: var(--font-ipa), "Andika", "Noto Sans", sans-serif;
+  font-size: 1.25rem;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  word-spacing: 0.16em;
+  line-height: 1.55;
+  color: var(--text-secondary);
 }
 
 .pf-mic {
@@ -472,7 +864,7 @@
   background: var(--surface-base);
   border: 1.5px solid var(--border-default);
   color: var(--text-primary);
-  font-family: var(--font-editorial), Georgia, serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-size: 1.3rem;
   border-radius: var(--radius-md);
   outline: none;
@@ -565,10 +957,10 @@
 }
 
 .pf-minimal-pair__ipa {
-  font-family: var(--font-ipa), var(--font-mono-var), monospace;
+  font-family: var(--font-ipa), "Andika", "Noto Sans", sans-serif;
   font-size: clamp(2.25rem, 11vw, 3rem);
-  font-weight: 600;
-  letter-spacing: 0.02em;
+  font-weight: 700;
+  letter-spacing: 0.04em;
   color: var(--primary);
   margin: 0;
 }
@@ -625,7 +1017,7 @@
   border-radius: var(--radius-lg);
   border: 1.5px solid var(--border-default);
   background: var(--surface-raised);
-  font-family: var(--font-editorial), Georgia, serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-size: 1.15rem;
   font-weight: 600;
   color: var(--text-primary);
@@ -832,15 +1224,131 @@
   animation: pf-fb-in 0.2s ease-out both;
 }
 
+/* Hint panel — one primary CTA, quiet secondaries */
+.phoneme-hints {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--space-3);
+  width: 100%;
+  animation: pf-fb-in 0.28s ease-out both;
+}
+
+.phoneme-hints__dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.35rem;
+}
+
+.phoneme-hints__dot {
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 999px;
+  background: var(--border-default);
+  transition: background var(--transition-fast), transform var(--transition-fast);
+}
+
+.phoneme-hints__dot--on {
+  background: var(--primary);
+  transform: scale(1.15);
+}
+
+.phoneme-hints__block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  text-align: center;
+}
+
+.phoneme-hints__label {
+  margin: 0;
+  font-size: 0.8125rem;
+  font-weight: 550;
+  color: var(--text-secondary);
+}
+
+.phoneme-hints__ipa {
+  margin: 0;
+  font-family: var(--font-ipa), "Andika", "Noto Sans", sans-serif;
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1.25;
+  color: var(--text-primary);
+}
+
+.phoneme-hints__tips {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  max-width: 36ch;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: var(--text-secondary);
+}
+
+.phoneme-hints__body {
+  margin: 0;
+  max-width: 36ch;
+  font-size: 0.9375rem;
+  line-height: 1.45;
+  color: var(--text-primary);
+}
+
+.phoneme-hints__secondary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+}
+
+.phoneme-hints__ghost {
+  padding: 0.25rem 0.15rem;
+  border: none;
+  background: none;
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 550;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: color var(--transition-fast);
+}
+
+.phoneme-hints__ghost:hover {
+  color: var(--text-primary);
+}
+
+.phoneme-hints__ghost--muted {
+  cursor: default;
+  opacity: 0.5;
+}
+
+.phoneme-hints .pf-cta {
+  margin-top: var(--space-1);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .pf-mic--rec::after,
   .phoneme-focus__fb,
-  .phoneme-focus__hints-panel {
+  .phoneme-focus__hints-panel,
+  .phoneme-hints,
+  .phoneme-play-btn--playing,
+  .pf-opt--correct.pf-opt--reveal,
+  .pf-opt--wrong.pf-opt--reveal,
+  .pf-pair-opt.pf-opt--correct.pf-opt--reveal,
+  .pf-pair-opt.pf-opt--wrong.pf-opt--reveal,
+  .pf-reveal-ok,
+  .pf-reveal-bad {
     animation: none;
   }
 
   .pf-opt:hover:not(:disabled),
-  .pf-pair-opt:hover:not(:disabled) {
+  .pf-pair-opt:hover:not(:disabled),
+  .phoneme-play-btn:hover {
     transform: none;
   }
 }

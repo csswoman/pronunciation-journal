@@ -40,10 +40,10 @@ function PhonemeChip({ p }: { p: PhonemeAlignment }) {
 
   const tooltip =
     p.status === "incorrect"
-      ? `heard /${p.gotIpa ?? p.got}/ — hover to hear /${display}/`
+      ? `escuchado /${p.gotIpa ?? p.got}/ — pasa el cursor para oír /${display}/`
       : p.status === "missing"
-      ? `missing /${display}/ — hover to hear it`
-      : `/${display}/ — correct`;
+      ? `falta /${display}/ — pasa el cursor para oírlo`
+      : `/${display}/ — correcto`;
 
   return (
     <span
@@ -88,9 +88,9 @@ function buildDetailedTip(result: WordResult): string | null {
     const exp = p.ipa ?? `/${p.phoneme}/`;
     if (p.status === "incorrect" && p.got) {
       const got = p.gotIpa ?? `/${p.got}/`;
-      problems.push(`/${exp}/ → heard /${got}/`);
+      problems.push(`/${exp}/ → escuchado /${got}/`);
     } else if (p.status === "missing") {
-      problems.push(`missing /${exp}/`);
+      problems.push(`falta /${exp}/`);
     }
   }
   if (problems.length === 0) return null;
@@ -120,11 +120,14 @@ export default function PronunciationFeedback({
           <span className={feedback.color}>{accuracy}%</span>
         </div>
         <p className={`text-lg font-medium ${feedback.color}`}>
-          {feedback.emoji} {feedback.message}
+          {feedback.emoji ? `${feedback.emoji} ` : ""}
+          {feedback.message}
         </p>
-        <p className="text-sm mt-1 text-fg-muted">
-          +{xpEarned} XP
-        </p>
+        {xpEarned > 0 && (
+          <p className="text-sm mt-1 text-fg-muted">
+            +{xpEarned} XP
+          </p>
+        )}
       </div>
 
       {/* Accuracy bar */}
@@ -179,7 +182,7 @@ export default function PronunciationFeedback({
                 </div>
                 {result.status === "incorrect" && result.got && (
                   <span className="text-xs text-fg-subtle">
-                    heard: &ldquo;{result.got}&rdquo;
+                    escuchado: &ldquo;{result.got}&rdquo;
                   </span>
                 )}
               </div>
@@ -209,7 +212,7 @@ export default function PronunciationFeedback({
           }}
         >
           <p className="font-semibold text-xs uppercase tracking-wide text-primary">
-            Hover to hear the correct sound
+            Pasa el cursor para oír el sonido correcto
           </p>
           {problemWords.map((r, i) => {
             const failed = r.phonemes!.alignment.filter(

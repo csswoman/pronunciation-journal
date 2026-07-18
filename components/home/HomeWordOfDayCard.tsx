@@ -1,146 +1,63 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
-import { Volume2, Loader2, RotateCcw, BookmarkPlus, BookmarkCheck } from "lucide-react";
+// Planned structure:
+// <HomeWordOfDayCard>
+//   label + word + IPA + full definition
+//   single link → /words
+// </HomeWordOfDayCard>
+
+import Link from "next/link";
+import { ArrowRight, Loader2 } from "@/components/icons";
 import Button from "@/components/ui/Button";
 import { SyllableWord } from "@/components/ui/SyllableWord";
-import { CardBadge } from "@/components/ui/CardBadge";
-import { WaveformVisualizer } from "@/components/ui/WaveformVisualizer";
 import { useWordOfDay } from "@/hooks/useWordOfDay";
-import { useAuth } from "@/components/auth/AuthProvider";
-import { isWordInBank, quickAddWord } from "@/lib/word-bank/queries";
-import { speakText } from "@/lib/speech/synthesis";
+import { formatIpaDisplay } from "@/lib/lexicon/format-ipa";
 
+/** Preview-only — no listen/save/shuffle micro-session on home. */
 export default function HomeWordOfDayCard() {
   const { word, loading, error, refresh } = useWordOfDay();
-  const { user } = useAuth();
-  const [speaking, setSpeaking] = useState(false);
-  const [saved, setSaved] = useState(false);
-  const [saving, setSaving] = useState(false);
-
-  useEffect(() => {
-    if (!user || !word) return;
-    let cancelled = false;
-    void isWordInBank(word.word)
-      .then((exists) => { if (!cancelled) setSaved(exists); })
-      .catch(() => undefined);
-    return () => { cancelled = true; };
-  }, [user, word]);
-
-  function speak() {
-    if (!word) return;
-    speakText(word.word, {
-      onStart: () => setSpeaking(true),
-      onEnd: () => setSpeaking(false),
-    });
-  }
-
-  const handleSave = useCallback(async () => {
-    if (!user || !word || saved || saving) return;
-    setSaving(true);
-    try {
-      await quickAddWord({ text: word.word, context: word.example_sentence || word.definition });
-      setSaved(true);
-    } catch {
-      // silent — user can retry
-    } finally {
-      setSaving(false);
-    }
-  }, [user, word, saved, saving]);
 
   return (
-    <div className="flex flex-col rounded-[var(--radius-xl)] border border-border-subtle bg-surface-raised p-5">
-      <div className="flex items-center justify-between gap-2">
-        <CardBadge>Word of the day</CardBadge>
-        {!loading && (
-          <button
-            type="button"
-            onClick={() => refresh()}
-            className="focus-ring grid h-9 w-9 shrink-0 place-items-center rounded-md text-[var(--text-tertiary)] transition-colors hover:bg-surface-sunken hover:text-[var(--text-secondary)]"
-            aria-label="Refresh word of the day"
-            title="Refresh word of the day"
-          >
-            <RotateCcw size={13} />
-          </button>
-        )}
-      </div>
+    <div className="home-sidebar-card flex flex-col gap-2">
+      <span className="font-label text-fg">Palabra del día</span>
 
       {loading && (
-        <div className="font-caption flex items-center gap-2 py-4 text-[var(--text-tertiary)]">
-          <Loader2 size={13} className="animate-spin" />
-          Loading word…
+        <div className="font-caption flex items-center gap-2 py-2 text-fg-muted">
+          <Loader2 size={15} className="animate-spin" />
+          Cargando…
         </div>
       )}
 
       {error && !word && !loading && (
-        <div className="animate-state-in flex flex-col items-start gap-2 py-2">
-          <p className="font-caption text-[var(--error)]">Couldn&apos;t load today&apos;s word.</p>
-          <Button type="button" variant="ghost" size="sm" onClick={() => refresh()}>
-            Try again
+        <div className="animate-state-in flex flex-col items-start gap-2 py-1">
+          <p className="font-body-sm text-error">No se pudo cargar la palabra.</p>
+          <Button type="button" variant="ghost" size="md" onClick={() => refresh()}>
+            Reintentar
           </Button>
         </div>
       )}
 
       {word && !loading && (
-        <div className="animate-state-in" key={word.word}>
-          <div className="mt-3">
-            <p className="font-display text-display-word font-semibold leading-none text-[var(--text-primary)]">
-              <SyllableWord word={word.word} />
+        <div className="animate-state-in flex flex-col gap-2" key={word.word}>
+          <p className="font-mono text-display-word font-semibold leading-tight text-fg">
+            <SyllableWord word={word.word} />
+          </p>
+          {word.ipa ? (
+            <p className="font-ipa text-body-lg leading-snug text-fg-muted">
+              {formatIpaDisplay(word.ipa)}
             </p>
-            <div className="mt-1 flex items-center gap-2">
-              <p className="font-ipa text-sm">{word.ipa}</p>
-              {word.part_of_speech ? (
-                <span className="font-tiny rounded border border-border-default bg-surface-sunken px-1.5 py-0.5 text-[var(--text-tertiary)]">
-                  {word.part_of_speech}
-                </span>
-              ) : null}
-              {word.difficulty ? (
-                <span className="font-tiny rounded border border-border-default bg-surface-sunken px-1.5 py-0.5 capitalize text-[var(--text-tertiary)]">
-                  {word.difficulty}
-                </span>
-              ) : null}
-            </div>
-            <div className="bg-primary-wash mt-2 rounded-lg py-2 pl-3">
-              <p className="font-body-sm max-w-[65ch] italic leading-relaxed text-[var(--text-secondary)]">
-                {word.definition}
-              </p>
-            </div>
-            {word.example_sentence ? (
-              <p className="font-body-sm mt-1 max-w-[65ch] italic text-[var(--text-tertiary)]">
-                &ldquo;{word.example_sentence}&rdquo;
-              </p>
-            ) : null}
-          </div>
-
-          {speaking && (
-            <WaveformVisualizer isActive isRecording={false} color="gradient" className="mt-3 h-8" />
-          )}
-
-          <div className={`flex gap-2 ${speaking ? "mt-3" : "mt-4"}`}>
-            <Button
-              variant="secondary"
-              size="sm"
-              icon={<Volume2 size={14} />}
-              className="flex-1 justify-center"
-              onClick={speak}
-              disabled={speaking}
-            >
-              {speaking ? "Playing…" : "Listen"}
-            </Button>
-
-            {user && (
-              <Button
-                variant={saved ? "ghost" : "primary"}
-                size="sm"
-                icon={saved ? <BookmarkCheck size={14} /> : <BookmarkPlus size={14} />}
-                className="flex-1 justify-center"
-                onClick={() => void handleSave()}
-                disabled={saved || saving}
-              >
-                {saving ? "Saving…" : saved ? "Saved" : "Add to words"}
-              </Button>
-            )}
-          </div>
+          ) : null}
+          {word.definition ? (
+            <p className="font-body-sm text-pretty text-fg-muted">
+              {word.definition}
+            </p>
+          ) : null}
+          <Link
+            href={`/words`}
+            className="focus-ring mt-1 inline-flex min-h-10 items-center gap-1.5 font-body-sm text-fg-muted transition-colors hover:text-fg hover:underline"
+          >
+            Explorar palabras <ArrowRight size={16} aria-hidden />
+          </Link>
         </div>
       )}
     </div>

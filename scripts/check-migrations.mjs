@@ -24,9 +24,12 @@ function hasMassDelete(sql) {
 }
 
 function hasOpenGrant(sql) {
-  return (
-    /grant\s+all\s+on\s+(?:table|tables|schema|function|functions)\b/i.test(sql) ||
-    (/grant\s+\w+\s+on\s+\w+/i.test(sql) && /to\s+public\b/i.test(sql))
+  const grantStatements = sql.match(/^\s*grant\b[^;]*;/gim) ?? [];
+
+  return grantStatements.some(
+    (statement) =>
+      /grant\s+all\s+on\s+(?:table|tables|schema|function|functions)\b/i.test(statement) ||
+      (/grant\s+\w+\s+on\s+\w+/i.test(statement) && /\bto\s+public\b/i.test(statement))
   );
 }
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckCheck } from "lucide-react";
+import { CheckCheck } from "@/components/icons";
 import type { AIMessage, ExerciseResult } from "@/lib/ai-practice/types";
 import AIAvatar from "./AIAvatar";
 import SuggestionChips from "./SuggestionChips";

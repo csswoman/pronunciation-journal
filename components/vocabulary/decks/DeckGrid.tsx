@@ -1,5 +1,5 @@
 "use client";
-import { Plus } from "lucide-react";
+import { Plus } from "@/components/icons";
 import { DeckCard } from "./DeckCard";
 import type { DeckCounts } from "@/hooks/useDeckData";
 import type { DeckListItem } from "@/lib/decks/queries";

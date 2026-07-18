@@ -1,6 +1,6 @@
 "use client";
 
-import { Check } from "lucide-react";
+import { Check } from "@/components/icons";
 import { cn } from "@/lib/cn";
 import type { GrammarStudyCardData } from "@/lib/courses/grammar-deck/types";
 import GrammarCardTitle from "./GrammarCardTitle";

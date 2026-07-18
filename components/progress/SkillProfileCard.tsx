@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { BookOpen, Volume2, BrainCircuit } from 'lucide-react'
+import { BookOpen, Volume2, BrainCircuit } from "@/components/icons"
 
 import type { SkillProfileData, CoachInsights } from '@/lib/progress/queries'
 
@@ -184,7 +184,7 @@ export function SkillProfileCard({ data, coach }: Props) {
   if (!hasAnyData) {
     return (
       <ProgressCard>
-        <p className="font-display text-base font-medium text-fg">Skill profile</p>
+        <p className="text-base font-medium text-fg">Skill profile</p>
         <p className="text-sm text-fg-muted">
           Add words and practice phonemes to build your profile.
         </p>
@@ -194,7 +194,7 @@ export function SkillProfileCard({ data, coach }: Props) {
 
   return (
     <section className="flex flex-col gap-4">
-      <h2 className="font-display text-base font-medium text-fg">Skill profile</h2>
+      <h2 className="text-base font-medium text-fg">Skill profile</h2>
       <div className="grid gap-4 md:grid-cols-3">
         <SoundLabPanel phonemes={data.weakestPhonemes} />
         <LexiconPanel

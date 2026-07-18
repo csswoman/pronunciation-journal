@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowLeft, Target } from "lucide-react";
+import { ArrowLeft, Target } from "@/components/icons";
 import type { GrammarDeckMeta } from "@/lib/courses/grammar-deck/types";
 
 interface GrammarDeckHeaderProps {

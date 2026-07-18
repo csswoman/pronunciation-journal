@@ -144,7 +144,7 @@ export function ExerciseTestHub() {
               <span className="font-caption font-semibold uppercase tracking-[0.18em] text-fg-subtle">
                 Dev only
               </span>
-              <h1 className="font-display text-h2 font-normal tracking-[-0.02em] text-fg">
+              <h1 className="text-h2 font-normal tracking-[-0.02em] text-fg">
                 Exercise UI gallery
               </h1>
               <p className="text-body-sm text-fg-muted">

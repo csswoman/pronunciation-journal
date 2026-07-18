@@ -1,32 +1,27 @@
 // Planned structure:
 // <HomeLayout>
-//   mobile: <HomeMobileView />
-//   desktop: <HomeTodaySection /> + <HomeReviewsSection /> + <HomeLearnSection />
+//   <HomePageHeader />
+//   <HomeCommandGrid />  — review strip full-width; plan | aside
 // </HomeLayout>
 
-import HomeDailyCard from '@/components/home/HomeDailyCard'
-import HomeStatusHero from '@/components/home/HomeStatusHero'
-import HomeMobileView from '@/components/home/HomeMobileView'
-import HomeTodaySection from '@/components/home/HomeTodaySection'
-import HomeReviewsSection from '@/components/home/HomeReviewsSection'
-import HomeLearnSection from '@/components/home/HomeLearnSection'
-import type { DailyStreakResult } from '@/lib/daily/streak-core'
-import type { ConceptLesson } from '@/hooks/useDailyPlan'
-import type { DailyGoalProgress, WeakestPhonemeHome, ReviewQueueSummary } from '@/lib/home/constants'
-import type { VocabularyProgressSeed } from '@/lib/vocabulary/server-progress'
-import type { MiniLesson, LanguageConcept } from '@/lib/content/schemas'
+import HomePageHeader from "@/components/home/HomePageHeader";
+import HomeCommandGrid from "@/components/home/HomeCommandGrid";
+import type { DailyStreakResult } from "@/lib/daily/streak-core";
+import type { ConceptLesson } from "@/hooks/useDailyPlan";
+import type { DailyGoalProgress, WeakestPhonemeHome } from "@/lib/home/constants";
+import type { VocabularyProgressSeed } from "@/lib/vocabulary/server-progress";
+import type { MiniLesson } from "@/lib/content/schemas";
 
 interface HomeLayoutProps {
-  streak?: DailyStreakResult
-  wordsDueCount?: number
-  soundsDueCount?: number
-  conceptLesson?: ConceptLesson | null
-  dailyGoal?: DailyGoalProgress | null
-  weakestPhoneme?: WeakestPhonemeHome | null
-  reviewQueue?: ReviewQueueSummary
-  vocabularyProgress?: VocabularyProgressSeed | null
-  todaysLesson?: MiniLesson | null
-  todaysConcept?: LanguageConcept | null
+  streak?: DailyStreakResult;
+  wordsDueCount?: number;
+  soundsDueCount?: number;
+  conceptLesson?: ConceptLesson | null;
+  dailyGoal?: DailyGoalProgress | null;
+  weakestPhoneme?: WeakestPhonemeHome | null;
+  vocabularyProgress?: VocabularyProgressSeed | null;
+  todaysLesson?: MiniLesson | null;
+  secondaryLesson?: MiniLesson | null;
 }
 
 export default function HomeLayout({
@@ -36,36 +31,28 @@ export default function HomeLayout({
   conceptLesson = null,
   dailyGoal = null,
   weakestPhoneme = null,
-  reviewQueue = { total: 0, newAvailable: 0, sources: [], preview: [] },
   vocabularyProgress = null,
   todaysLesson = null,
-  todaysConcept = null,
+  secondaryLesson = null,
 }: HomeLayoutProps) {
   return (
-    <>
-      <div className="md:hidden">
-        <HomeMobileView
+    <div className="home-layout home-layout-shell">
+      <div className="home-layout-sections flex flex-col">
+        <HomePageHeader
           streak={streak}
+          wordsMastered={vocabularyProgress?.wordBankMastered ?? 0}
+          weekMinutes={dailyGoal?.weekMinutes ?? 0}
+          dailyGoal={dailyGoal}
+        />
+        <HomeCommandGrid
+          conceptLesson={conceptLesson}
+          weakestPhoneme={weakestPhoneme}
+          todaysLesson={todaysLesson}
+          secondaryLesson={secondaryLesson}
           wordsDueCount={wordsDueCount}
           soundsDueCount={soundsDueCount}
-          dailyCard={<HomeDailyCard conceptLesson={conceptLesson} />}
         />
       </div>
-
-      <div className="hidden md:block">
-        <HomeStatusHero streak={streak} wordsDueCount={wordsDueCount} soundsDueCount={soundsDueCount} />
-        <HomeTodaySection
-          streak={streak}
-          dailyGoal={dailyGoal}
-          dailyCard={<HomeDailyCard conceptLesson={conceptLesson} />}
-        />
-        <HomeReviewsSection
-          reviewQueue={reviewQueue}
-          vocabulary={vocabularyProgress}
-          weakestPhoneme={weakestPhoneme}
-        />
-        <HomeLearnSection lesson={todaysLesson} concept={todaysConcept} />
-      </div>
-    </>
-  )
+    </div>
+  );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Dumbbell } from "lucide-react";
+import { Dumbbell } from "@/components/icons";
 
 interface PracticeButtonProps {
   categoryId: string;

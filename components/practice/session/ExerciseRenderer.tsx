@@ -11,12 +11,19 @@ import { PhonemeExerciseView } from './PhonemeExerciseView'
 interface Props {
   exercise: PracticeExercise
   onSubmit: PracticeSubmitHandler
-  /** Duolingo-style focus layout for Sound Lab sessions */
+  /** Immersive focus layout (phone shell) for practice sessions */
   focusUi?: boolean
   voice?: SpeechSynthesisVoice
+  showSkip?: boolean
 }
 
-export function ExerciseRenderer({ exercise, onSubmit, focusUi = false, voice }: Props) {
+export function ExerciseRenderer({
+  exercise,
+  onSubmit,
+  focusUi = false,
+  voice,
+  showSkip = true,
+}: Props) {
   if (isPhonemeExercise(exercise)) {
     return (
       <PhonemeExerciseView
@@ -24,6 +31,7 @@ export function ExerciseRenderer({ exercise, onSubmit, focusUi = false, voice }:
         onSubmit={onSubmit}
         focusUi={focusUi}
         voice={voice}
+        showSkip={showSkip}
       />
     )
   }

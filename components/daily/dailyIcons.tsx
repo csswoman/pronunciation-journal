@@ -7,7 +7,7 @@ import {
   LayoutList,
   Sparkles,
   type LucideIcon,
-} from 'lucide-react'
+} from "@/components/icons"
 
 /** Mapa nombre→icono usado por los pasos de la diaria (DailyStep.icon). */
 const ICONS: Record<string, LucideIcon> = {

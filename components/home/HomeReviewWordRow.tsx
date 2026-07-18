@@ -1,6 +1,6 @@
 "use client";
 
-import { Volume2 } from "lucide-react";
+import { Volume2 } from "@/components/icons";
 import { getWordStrength } from "@/lib/word-bank/strength";
 import { WordStrengthBars } from "@/components/vocabulary/words/WordStrengthBars";
 import { speakText } from "@/lib/speech/synthesis";
@@ -40,16 +40,14 @@ export default function HomeReviewWordRow({ word, showDivider }: HomeReviewWordR
       </button>
 
       <div className="min-w-0 flex-1">
-        <p className="text-sm font-medium leading-tight text-[var(--text-primary)]">
+        <p className="font-body-sm font-medium leading-tight text-fg">
           {word.text}
           {ipa ? (
-            <small className="ml-2 font-ipa text-sm font-normal text-[var(--primary)]">
-              {ipa}
-            </small>
+            <small className="font-ipa ml-2 text-body-sm font-medium">{ipa}</small>
           ) : null}
         </p>
         {word.translation ? (
-          <p className="mt-0.5 truncate text-xs text-[var(--text-tertiary)]">{word.translation}</p>
+          <p className="font-caption mt-0.5 truncate text-fg-muted">{word.translation}</p>
         ) : null}
       </div>
 

@@ -1,5 +1,5 @@
 "use client";
-import { Play, Settings2, BookOpen } from "lucide-react";
+import { Play, Settings2, BookOpen } from "@/components/icons";
 import Button from "@/components/ui/Button";
 import type { DeckListItem } from "@/lib/decks/queries";
 import ProgressBar from "@/components/ui/ProgressBar";

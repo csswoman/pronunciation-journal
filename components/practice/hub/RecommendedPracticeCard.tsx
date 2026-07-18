@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { ArrowRight, MicVocal, ListOrdered, Layers, RotateCcw, BookOpen } from 'lucide-react'
+import { ArrowRight, MicVocal, ListOrdered, Layers, RotateCcw, BookOpen } from "@/components/icons"
 import type { ElementType } from 'react'
 import { setLastPracticeMode } from '@/lib/db'
 import type { RecommendedResult } from '@/lib/practice/practice-modes'

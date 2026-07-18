@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import Image from "next/image";
-import { ChevronDown, ImagePlus } from "lucide-react";
+import { ChevronDown, ImagePlus } from "@/components/icons";
 import { LEVEL_NAMES, STUDY_TIPS } from "./study-utils";
 
 interface StudyLeftPanelProps {

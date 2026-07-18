@@ -8,7 +8,7 @@
 // </SpeakingWidget>
 
 import { useState, useCallback } from "react";
-import { Volume2 } from "lucide-react";
+import { Volume2 } from "@/components/icons";
 import type { SpeakingArgs } from "@/lib/ai-practice/tools/registry";
 import type { ExerciseResult } from "@/lib/ai-practice/types";
 import type { EvaluationResult } from "@/lib/exercises/design";

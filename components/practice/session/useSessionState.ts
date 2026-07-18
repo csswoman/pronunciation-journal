@@ -24,6 +24,7 @@ import type {
   PracticeExercise,
 } from '@/lib/practice/types'
 import { useVoiceRotation } from '@/hooks/useVoiceRotation'
+import { playUiCue } from '@/lib/ui-sounds/cues'
 
 const FEEDBACK_MS = 1500
 
@@ -184,6 +185,9 @@ export function useSessionState(config: PracticeConfig) {
       const nextIndex = currentIndex + 1
       setResults(nextResults)
       setLastFeedback(isCorrect)
+      if (current.payload.kind === 'phoneme') {
+        playUiCue(isCorrect ? 'correct' : 'wrong')
+      }
       try {
         if (!isCorrect && current.payload.kind === 'phoneme' && userAnswer !== 'skip') {
           setPhase('hints')

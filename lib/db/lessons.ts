@@ -34,9 +34,16 @@ export async function getAllSoundsWithWords(): Promise<{ sound: DbSound; words: 
   const sounds = soundsRes.data as DbSound[]
   const words = wordsRes.data as DbWord[]
 
+  // Seed re-runs left duplicate (sound_id, word) rows — keep first only.
   const wordsBySound: Record<number, DbWord[]> = {}
+  const seenBySound = new Map<number, Set<string>>()
   for (const word of words) {
     if (word.sound_id == null) continue
+    const key = word.word.toLowerCase()
+    const seen = seenBySound.get(word.sound_id) ?? new Set<string>()
+    if (seen.has(key)) continue
+    seen.add(key)
+    seenBySound.set(word.sound_id, seen)
     if (!wordsBySound[word.sound_id]) wordsBySound[word.sound_id] = []
     wordsBySound[word.sound_id].push(word)
   }

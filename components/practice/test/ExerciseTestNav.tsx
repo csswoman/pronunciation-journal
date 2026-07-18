@@ -1,6 +1,6 @@
 'use client'
 
-import { ChevronLeft, ChevronRight, Columns2, Play } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Columns2, Play } from "@/components/icons"
 import Button from '@/components/ui/Button'
 import { cn } from '@/lib/cn'
 import { DOMAIN_LABELS } from '@/components/practice/test/constants'

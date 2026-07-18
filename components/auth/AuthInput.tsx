@@ -1,6 +1,6 @@
 "use client";
 
-import { Eye, EyeOff, AlertCircle } from "lucide-react";
+import { Eye, EyeOff, AlertCircle } from "@/components/icons";
 import { useState, useRef } from "react";
 
 type InputType = "email" | "password" | "text";

@@ -1,29 +1,28 @@
 import Script from "next/script";
 import "./globals.css";
 import "./markdown.css";
-import { DM_Sans, Fraunces, DM_Mono } from "next/font/google";
+import { Andika, DM_Sans, DM_Mono } from "next/font/google";
 
-// Body + UI — DM Sans covers Latin and Latin Extended (IPA symbols)
+// Body + UI + headings — DM Sans
 const dmSans = DM_Sans({
   weight: ["300", "400", "500", "600", "700"],
   subsets: ["latin", "latin-ext"],
   variable: "--font-sans",
 });
 
-// Decorative / editorial headings
-const fraunces = Fraunces({
-  weight: "variable",
-  style: ["normal", "italic"],
-  subsets: ["latin"],
-  variable: "--font-editorial",
-  axes: ["opsz"],
-});
-
-// Monospace — IPA transcription, code snippets
+// Monospace — kickers, code (not IPA)
 const dmMono = DM_Mono({
   weight: ["400", "500"],
   subsets: ["latin"],
   variable: "--font-mono-var",
+});
+
+// IPA / phonetic transcription — SIL Andika (literacy + full IPA glyph set)
+const andika = Andika({
+  weight: ["400", "700"],
+  subsets: ["latin", "latin-ext"],
+  variable: "--font-ipa",
+  display: "swap",
 });
 
 export default function RootLayout({
@@ -35,7 +34,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${dmSans.variable} ${fraunces.variable} ${dmMono.variable}`}
+      className={`${dmSans.variable} ${dmMono.variable} ${andika.variable}`}
     >
       <head>
         <meta charSet="utf-8" />

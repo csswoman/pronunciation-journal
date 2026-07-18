@@ -182,7 +182,7 @@ export async function buildFailedSentencesMixStep(
   return {
     kind: 'word_review',
     id: 'failed_sentences',
-    title: 'Frases falladas',
+    title: 'Failed sentences',
     subtitle: `${deduped.length} ${deduped.length === 1 ? 'oración' : 'oraciones'} para reforzar`,
     icon: 'FileWarning',
     exercises: deduped,

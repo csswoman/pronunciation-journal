@@ -1,6 +1,6 @@
 "use client";
 
-import { Play, ArrowRight, RotateCcw, HelpCircle, Check, X, RefreshCw, Trophy } from "lucide-react";
+import { Play, ArrowRight, RotateCcw, HelpCircle, Check, X, RefreshCw, Trophy } from "@/components/icons";
 import { cn } from "@/lib/cn";
 
 type Verdict = "correct" | "wrong" | null;

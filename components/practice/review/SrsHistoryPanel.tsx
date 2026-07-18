@@ -52,7 +52,7 @@ export function SrsHistoryPanel({ groups }: Props) {
 
   return (
     <section className="flex flex-col gap-3 rounded-[var(--radius-xl)] border border-border-subtle bg-surface-raised p-5">
-      <h2 className="font-display text-base font-medium text-fg">SRS History</h2>
+      <h2 className="text-base font-medium text-fg">SRS History</h2>
       <div className="flex flex-col gap-4">
         {groups.map((group, i) => (
           <details key={group.domain} open={i === 0}>

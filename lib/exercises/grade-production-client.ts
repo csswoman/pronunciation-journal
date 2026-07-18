@@ -22,7 +22,7 @@ export async function gradeProduction(
 ): Promise<ProductionGradeResult> {
   if (typeof navigator !== 'undefined' && !navigator.onLine) {
     throw new ProductionGradeError(
-      'Free production exercises need an internet connection to grade your answer.',
+      'Necesitas conexión a internet para corregir tu respuesta.',
       'offline',
     )
   }

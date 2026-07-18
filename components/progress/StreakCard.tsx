@@ -1,4 +1,4 @@
-import { Flame } from 'lucide-react'
+import { Flame } from "@/components/icons"
 
 import type { DailyStreakResult } from '@/lib/daily/streak-core'
 
@@ -47,7 +47,7 @@ function StreakValue({ value, label, accent }: { value: number; label: string; a
     <div className="text-center">
       <div
         className={[
-          'font-display text-h1 leading-none',
+          'text-h1 leading-none',
           accent ? 'text-[var(--stage-pairs)]' : 'text-fg',
         ].join(' ')}
       >

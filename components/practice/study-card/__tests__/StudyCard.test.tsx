@@ -70,7 +70,10 @@ describe("StudyCard", () => {
         onArchive={onArchive}
       />,
     );
+    // Archiving is a two-step flow: "Ya la sé" opens a confirmation and only
+    // "Sí, pausar" fires onArchive.
     fireEvent.click(screen.getByRole("button", { name: /ya la sé/i }));
+    fireEvent.click(screen.getByRole("button", { name: /sí, pausar/i }));
     expect(onArchive).toHaveBeenCalledOnce();
   });
 });

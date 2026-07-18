@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Headphones } from "lucide-react";
+import { Headphones } from "@/components/icons";
 import { MINIMAL_PAIR_CONTRASTS } from "./minimal-pairs-data";
 import { speakWord } from "./speak-word";
 import { ContrastChip } from "./contrast-chip";

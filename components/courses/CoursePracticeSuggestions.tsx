@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { RotateCcw } from "lucide-react";
+import { RotateCcw } from "@/components/icons";
 import { deriveLevelView } from "@/lib/courses/progress";
 import { studyLessonPath } from "@/lib/courses/curriculumIndex";
 import type { CoursePathLevel, CoursePathTrackId } from "@/lib/courses/types";

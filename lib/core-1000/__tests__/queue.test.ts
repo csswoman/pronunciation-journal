@@ -116,11 +116,14 @@ describe("kind field", () => {
     expect(q.length).toBe(3); // be, and, of
   });
 
-  it("does not review or re-introduce archived words", () => {
-    const archived = { ...srs("the", "2026-06-10T00:00:00Z"), archived: true };
+  it("does not review or re-introduce snoozed words", () => {
+    const snoozed = {
+      ...srs("the", "2026-06-10T00:00:00Z"),
+      status: "snoozed" as const,
+    };
     const q = buildSessionQueue({
       words: WORDS,
-      srsEntries: [archived],
+      srsEntries: [snoozed],
       introducedToday: [],
       now: NOW,
       newPerDay: 2,
@@ -130,6 +133,39 @@ describe("kind field", () => {
       ["be", "new"],
       ["and", "new"],
     ]);
+  });
+
+  it("does not review or re-introduce mastered words", () => {
+    const mastered = {
+      ...srs("the", "2026-06-10T00:00:00Z"),
+      status: "mastered" as const,
+    };
+    const q = buildSessionQueue({
+      words: WORDS,
+      srsEntries: [mastered],
+      introducedToday: [],
+      now: NOW,
+      newPerDay: 2,
+    });
+
+    expect(q.map((i) => [i.entry.word, i.kind])).toEqual([
+      ["be", "new"],
+      ["and", "new"],
+    ]);
+  });
+
+  it("excludes legacy archived rows via effectiveStatus → snoozed", () => {
+    const archived = { ...srs("the", "2026-06-10T00:00:00Z"), archived: true };
+    const q = buildSessionQueue({
+      words: WORDS,
+      srsEntries: [archived],
+      introducedToday: [],
+      now: NOW,
+      newPerDay: 2,
+    });
+
+    expect(q.map((i) => i.entry.word)).not.toContain("the");
+    expect(q.every((i) => i.kind === "new")).toBe(true);
   });
 });
 

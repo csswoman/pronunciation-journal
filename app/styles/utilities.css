@@ -39,11 +39,7 @@
 }
 
 .bg-daily-card {
-  background: linear-gradient(
-    150deg,
-    color-mix(in oklch, var(--primary) 12%, transparent),
-    var(--surface-raised) 65%
-  );
+  background: var(--surface-raised);
 }
 
 .callout-warning {
@@ -53,12 +49,21 @@
 
 .home-card-lift {
   transition:
-    transform 150ms var(--ease-out-expo),
-    border-color 150ms var(--ease-out-expo);
+    transform 150ms var(--ease-out-expo, ease-out),
+    border-color 150ms var(--ease-out-expo, ease-out);
 }
 .home-card-lift:hover {
   transform: translateY(-2px);
   border-color: var(--accent-border);
+}
+.home-card-lift:active {
+  transform: scale(0.96);
+}
+@media (prefers-reduced-motion: reduce) {
+  .home-card-lift:hover,
+  .home-card-lift:active {
+    transform: none;
+  }
 }
 
 .btn-soft {
@@ -154,29 +159,37 @@
 .dot-info    { background: var(--info); }
 
 /* ── Typography helpers ──────────────────────────────────────────────────── */
-.font-display  { font-family: var(--font-display), serif; }
-.font-editorial { font-family: var(--font-editorial), serif; }
+.font-display  { font-family: var(--font-sans), system-ui, sans-serif; }
+.font-editorial { font-family: var(--font-sans), system-ui, sans-serif; }
+.font-phoneme  { font-family: var(--font-mono-var), "Fira Code", monospace; }
 .font-h1       { font: var(--font-h1); }
 .font-h2       { font: var(--font-h2); }
 .font-h3       { font: var(--font-h3); }
 .font-h4       { font: var(--font-h4); }
 .font-body     { font: var(--font-body); }
+.font-body-md  { font: var(--font-body-md); }
 .font-body-sm  { font: var(--font-body-sm); }
 .font-caption  { font: var(--font-caption); }
+.font-label    { font: var(--font-label); }
+.font-kicker {
+  font: var(--font-kicker);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
 .font-tiny     { font: var(--font-tiny); }
 .font-heading  { font-family: var(--font-heading), serif; }
 
-/** Section/card overlines — 11px uppercase labels */
+/** Prefer .font-kicker over .type-overline for new UI */
 .type-overline {
-  font: var(--font-tiny);
-  letter-spacing: 0.08em;
+  font: var(--font-kicker);
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--text-tertiary);
 }
 
-/** Editorial numerals — streak, counts, ring percentages */
 .type-stat {
-  font-family: var(--font-display), serif;
+  font-family: var(--font-sans), sans-serif;
   font-variant-numeric: tabular-nums;
   font-weight: 700;
   line-height: 1;
@@ -186,22 +199,28 @@
   font-family: var(--font-mono-var), "Fira Code", monospace;
 }
 
+/* IPA glyphs — Andika (SIL): even IPA metrics, literacy-first forms */
 .font-ipa {
-  font-family: var(--font-ipa), "Noto Sans", sans-serif;
-  font-size: 15px;
-  letter-spacing: 0.03em;
-  color: var(--primary);
+  font-family: var(--font-ipa), "Andika", "Noto Sans", sans-serif;
   font-style: normal;
+  font-weight: 400;
+  font-optical-sizing: auto;
+  letter-spacing: 0.04em;
+  word-spacing: 0.14em;
+  line-height: 1.55;
+  color: var(--text-secondary);
 }
 
-/** IPA transcription — DM Mono, readable at study-card scale */
+/** Sentence / multi-token IPA transcription */
 .ipa {
-  font-family: var(--font-mono-var), "Fira Code", monospace;
-  font-size: 1.1rem;
-  font-weight: 500;
-  color: var(--text-primary);
-  letter-spacing: 0.04em;
-  line-height: 1.8;
+  font-family: var(--font-ipa), "Andika", "Noto Sans", sans-serif;
+  font-size: 1.1875rem;
+  font-weight: 400;
+  font-optical-sizing: auto;
+  letter-spacing: 0.05em;
+  word-spacing: 0.2em;
+  line-height: 1.7;
+  color: var(--text-secondary);
 }
 
 /* ── Text colors ─────────────────────────────────────────────────────────── */
@@ -302,4 +321,63 @@
 /* ── Interactive border helpers ──────────────────────────────────────────── */
 .hover-border-primary:hover {
   border-color: var(--primary);
+}
+
+/* ── Home Notebook Command Center ─────────────────────────────────────── */
+.home-layout-shell {
+  position: relative;
+  width: 100%;
+  max-width: 80rem;
+  margin-inline: auto;
+  isolation: isolate;
+}
+
+.home-layout-sections {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.home-command-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-5);
+}
+
+@media (min-width: 768px) {
+  .home-command-grid {
+    /* Balanced columns — plan+learn left, compact aside right */
+    grid-template-columns: minmax(0, 1fr) minmax(17rem, 22rem);
+    align-items: start;
+    column-gap: var(--space-5);
+    row-gap: var(--space-5);
+  }
+
+  .home-command-review {
+    grid-column: 1 / -1;
+  }
+
+  .home-command-aside {
+    position: sticky;
+    top: var(--space-4);
+  }
+}
+
+.home-command-main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.home-command-aside {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.home-sidebar-card {
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border-subtle);
+  background-color: var(--surface-raised);
+  padding: var(--space-5);
 }

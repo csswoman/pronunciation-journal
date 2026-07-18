@@ -10,10 +10,11 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react'
 // useCallback still used for handlePlay
-import { Lightbulb } from 'lucide-react'
+import { Lightbulb } from "@/components/icons"
 import { cn } from '@/lib/cn'
 import type { SentenceDictationExercise as SentenceDictationExerciseType } from '@/lib/exercises/types'
 import { buildPedagogicalFeedback } from '@/lib/exercises/feedback'
+import { useUISounds } from '@/hooks/useUISounds'
 
 interface Props {
   exercise: SentenceDictationExerciseType
@@ -40,6 +41,7 @@ export function SentenceDictationExercise({ exercise, onResult, hintCount = 0 }:
   const audioRef = useRef<HTMLAudioElement | null>(null)
   const slowAudioRef = useRef<HTMLAudioElement | null>(null)
   const inputRef = useRef<HTMLTextAreaElement | null>(null)
+  const { playCorrect, playWrong } = useUISounds()
 
   const hint = exercise.sentence
     .trim()
@@ -118,6 +120,8 @@ export function SentenceDictationExercise({ exercise, onResult, hintCount = 0 }:
     if (state !== 'idle' || !input.trim()) return
     const isCorrect = normalize(input) === normalize(exercise.sentence)
     setState(isCorrect ? 'correct' : 'wrong')
+    if (isCorrect) playCorrect()
+    else playWrong()
     const userAnswer = input.trim()
     onResult(isCorrect, userAnswer, Date.now() - startMs.current, {
       feedback: buildPedagogicalFeedback(exercise, isCorrect, userAnswer, { hintUsed: hintCount > 0 }),

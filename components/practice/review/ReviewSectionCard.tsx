@@ -11,9 +11,9 @@ export function ReviewSectionCard({ title, count, emptyMessage, children }: Prop
   return (
     <section className="flex flex-col gap-3 rounded-[var(--radius-xl)] border border-border-subtle bg-surface-raised p-5">
       <div className="flex items-baseline justify-between gap-2">
-        <h2 className="font-display text-base font-medium text-fg">{title}</h2>
+        <h2 className="text-base font-medium text-fg">{title}</h2>
         <span className="font-caption text-fg-muted">
-          {count} {count === 1 ? 'item' : 'items'}
+          {count} {count === 1 ? 'elemento' : 'elementos'}
         </span>
       </div>
       {count === 0 ? (

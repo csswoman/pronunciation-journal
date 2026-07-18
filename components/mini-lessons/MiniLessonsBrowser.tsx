@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import PageHeader from "@/components/layout/PageHeader";
 import { cn } from "@/lib/cn";
 import {
   LESSON_LEVELS,
@@ -48,27 +49,14 @@ export default function MiniLessonsBrowser({ lessons }: { lessons: MiniLesson[] 
   }
 
   return (
-    <div className="mini-lessons">
-      <div className="mini-lessons__wrap">
-        <header className="mini-lessons__hero">
-          <Link href="/" className="mini-lessons__back">
-            ← Inicio
-          </Link>
+    <>
+      <PageHeader
+        kicker="Aprender"
+        title="Mini Lessons"
+        subtitle={`${lessons.length} lecciones de pronunciación, gramática, vocabulario y más, en pocos minutos, con ejemplos y ejercicios.`}
+      />
 
-          <div className="mini-lessons__hero-row">
-            <div>
-              <span className="mini-lessons__eyebrow">Learning · Mini Lessons</span>
-              <h1 className="mini-lessons__title">
-                Lecciones <em>cortas</em>
-              </h1>
-              <p className="mini-lessons__lead">
-                {lessons.length} lecciones de pronunciación, gramática, vocabulario y más, en
-                pocos minutos, con ejemplos y ejercicios.
-              </p>
-            </div>
-          </div>
-        </header>
-
+      <div className="mini-lessons__wrap mini-lessons__wrap--shell">
         <div className="mini-lessons__toolbar" role="group" aria-label="Filtros">
           <div className="mini-lessons__filter-row">
             {/* Level chips */}
@@ -172,6 +160,6 @@ export default function MiniLessonsBrowser({ lessons }: { lessons: MiniLesson[] 
           )}
         </div>
       </div>
-    </div>
+    </>
   );
 }

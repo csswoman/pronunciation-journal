@@ -1,8 +1,8 @@
 "use client";
 
 import type { AITemplateId } from "@/lib/types";
-import { MessageCircle, ClipboardList, Star, CheckCheck, ArrowUpRight } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
+import { MessageCircle, ClipboardList, Star, CheckCheck, ArrowUpRight } from "@/components/icons";
+import type { LucideIcon } from "@/components/icons";
 
 export interface TemplateDefinition {
   id: AITemplateId;

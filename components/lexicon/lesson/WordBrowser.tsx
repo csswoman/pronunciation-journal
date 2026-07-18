@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useCallback } from "react";
-import { ArrowUp } from "lucide-react";
+import { ArrowUp } from "@/components/icons";
 import { WordFiltersBar } from "./WordFiltersBar";
 import { WordGrid } from "./WordGrid";
 import type { Word } from "./WordGrid";

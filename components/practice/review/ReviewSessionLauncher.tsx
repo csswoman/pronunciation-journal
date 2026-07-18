@@ -22,6 +22,7 @@ export function ReviewSessionLauncher({ state, sessionKey, onStepComplete, onExi
         exercises={step.exercises}
         sessionLength={step.exercises.length}
         sessionLabel={step.title}
+        soundIpa={step.ipa}
         onSessionComplete={onStepComplete}
         onExit={onExit}
       />

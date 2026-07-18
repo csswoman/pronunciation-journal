@@ -1,3 +1,4 @@
+/** @deprecated Use PageHeader variant="default" | "compact". Kept for Sound Lab hero-compact until migrated. */
 import { ResumeButton, CtaButtons } from "./PageHeaderButtons";
 import type { PageHeaderDerived } from "./types";
 

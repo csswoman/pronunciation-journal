@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import type { Tables } from "@/lib/supabase/types";
-import { Check, CheckSquare, ChevronUp, Pencil, Square, Trash2, Volume2 } from "lucide-react";
+import { Check, CheckSquare, ChevronUp, Pencil, Square, Trash2, Volume2 } from "@/components/icons";
 import Button from "@/components/ui/Button";
 import { speakWord } from "@/lib/word-bank/speech";
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { Check } from "lucide-react";
+import { Check } from "@/components/icons";
 import type { LessonStageId } from "./lesson-lobby-types";
 
 const NEXT_LABELS: Record<LessonStageId, string> = {
@@ -52,7 +52,7 @@ export function StageTransitionOverlay({ nextStage, visible, onDismiss }: Props)
         </span>
         <div>
           <p
-            className="font-display text-h4 leading-tight"
+            className="text-h4 leading-tight"
             style={{ color: "var(--admonitions-color-tip)" }}
           >
             Stage complete — moving to {NEXT_LABELS[nextStage]}

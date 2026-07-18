@@ -1,7 +1,7 @@
 "use client";
 
 import Button from "@/components/ui/Button";
-import { SendHorizonal, Mic } from "lucide-react";
+import { SendHorizonal, Mic } from "@/components/icons";
 import { useState, useRef, useEffect } from "react";
 
 interface CustomPromptPanelProps {

@@ -6,7 +6,7 @@ Cuatro sistemas de repetición espaciada conviven en la app. Cada uno tiene un d
 | --- | --- | --- | --- |
 | Vocabulario user-owned | `word_bank` (Supabase ⇄ Dexie) | SM-2 cliente | `id` (uuid) |
 | Fonemas | `user_sound_progress` (Supabase) | SM-2 simplificado | `sound_id` |
-| Essential Words (Core 1000) | `srsData` (Dexie, offline-first) | SM-2 cliente | `c1k:<word>` |
+| Essential Words (NGSL / `c1k:`) | `srsData` (Dexie, offline-first) | SM-2 cliente | `c1k:<word>` |
 | Temas / conceptos del curso | `topic_srs` (Supabase) | SM-2 cliente | `normalizeTopic()` |
 
 ---
@@ -56,13 +56,35 @@ Cuatro sistemas de repetición espaciada conviven en la app. Cada uno tiene un d
 
 ---
 
-## 3. `srsData` (`c1k:`) — Essential Words / Core 1000
+## 3. `srsData` (`c1k:`) — Essential Words (NGSL)
 
-**Propósito:** Repaso espaciado tipo Anki sobre las ~2800 palabras de alta frecuencia (NGSL). Sustituye al antiguo `Core1000Session`, que reiniciaba siempre desde la primera palabra sin persistir progreso.
+**Propósito:** Repaso espaciado tipo Anki sobre las ~2800 palabras de alta frecuencia (NGSL), no solo las primeras 1000. Sustituye al antiguo `Core1000Session`, que reiniciaba siempre desde la primera palabra sin persistir progreso.
 
-**Tabla:** `srsData` (Dexie, IndexedDB) — offline-first, sin sincronización a Supabase. Las entradas de Core 1000 se distinguen por el prefijo `c1k:` en `wordId` (ej. `c1k:work`). No renombrar el prefijo ni los `wordId` almacenados: orfanaría el progreso del usuario.
+**Ruta canónica:** `/practice/essential-words` (hub + sesión + Baúl). `/practice/core-1000` redirige ahí por compatibilidad con bookmarks antiguos; no usarla en enlaces nuevos.
+
+**Tabla:** `srsData` (Dexie, IndexedDB) — offline-first, sin sincronización a Supabase. Las entradas se distinguen por el prefijo `c1k:` en `wordId` (ej. `c1k:work`). No renombrar el prefijo ni los `wordId` almacenados: orfanaría el progreso del usuario. La capa de datos sigue en `lib/core-1000/`.
 
 **Algoritmo:** SM-2 cliente (`lib/srs/computeSM2.ts`), igual que `word_bank`.
+
+**Estado (`status`):** cada fila SRS puede estar en `active`, `snoozed` o `mastered`. Si `status` falta, se trata como `active` (`effectiveStatus` en `lib/srs/status.ts`).
+
+| Estado | Comportamiento |
+|---|---|
+| `active` | Entra en la cola de repaso según SM-2 |
+| `snoozed` | Fuera de la cola hasta `nextReview`; visible en el Baúl SRS |
+| `mastered` | Nunca vence; solo buscable en el Baúl SRS |
+
+**«Ya la sé» → snooze:** en sesión, el botón llama `snoozeEssentialWord` (`lib/db/index.ts`) con **90 días** por defecto y saca la palabra de la cola al momento. No muestra aún las opciones de dominio permanente.
+
+**Snooze vencido → reactivación automática:** antes de construir la cola, `prepareCore1000SrsEntries` (`lib/core-1000/prepare-srs.ts`) aplica `activateExpiredSnoozes` (`lib/srs/status.ts`). Si `nextReview` ya pasó, la fila vuelve a `active`, entra en la cola y sale del Baúl. Esas cartas llevan `fromSnooze` en la cola.
+
+**Al volver del snooze (`fromSnooze`):** en la tarjeta de speak, además del flujo normal, aparecen dos acciones secundarias (sin bloquear el micrófono):
+- «Seguir en 90 días» → otro snooze (`snoozeEssentialWord`)
+- «No me la recuerdes más» → `masterEssentialWord` (sale del SRS; solo queda en el Baúl)
+
+**Baúl SRS (`SrsVault`):** componente trigger + modal (`components/practice/srs-vault/`) en `/practice/essential-words` y en Review hub (fase `idle`). Lista entradas `snoozed` y `mastered`, con filtros y búsqueda (`lib/srs/vault.ts`). Desde el Baúl se puede cambiar el intervalo (7 / 30 / 90 / 180), practicar ya o marcar como dominada.
+
+**Migración legacy:** filas antiguas con `archived: true` se convierten una sola vez a `status: snoozed` vía `migrateArchivedSrsRows` (`lib/db/index.ts`), usando `migrateArchivedRow` (`lib/srs/migrate-archived.ts`). Idempotente; se ejecuta al abrir el Baúl y al leer entradas.
 
 **Cola de sesión (estilo Anki):** lógica pura en `lib/core-1000/queue.ts`, testeable sin React:
 
@@ -77,7 +99,7 @@ Cada ítem lleva `kind: 'new' | 'learning' | 'review'` (antes era un booleano `i
 
 **Orquestación:** `hooks/useEssentialWordsSession.ts`. Las palabras falladas difieren su escritura SM-2 (`pendingLapsesRef`) hasta `finishSession`, para no programarlas a mañana a mitad de sesión.
 
-**Archivar:** `archiveCore1000Word` / `unarchiveCore1000Word` (`lib/db/index.ts`) marcan `archived: true` + `archivedAt` (campos opcionales, sin migración Dexie). `getCore1000SrsEntries` filtra las archivadas — el botón "Ya la sé" las saca del flujo de forma reversible.
+**Contenido — `sentence_ipa`:** cada palabra con `example_sentence` incluye transcripción IPA de la frase completa (CMU + acento léxico + weak forms cuando aplica). Obligatorio si hay `ipa_weak` (`lib/core-1000/schema.ts`).
 
 **Validación de contenido:** `scripts/validate-core-1000.mjs` verifica que cada palabra aparezca en su `example_sentence` (entendiendo conjugaciones, plurales, posesivos e irregulares). Sale con código 1 si hay desajustes.
 

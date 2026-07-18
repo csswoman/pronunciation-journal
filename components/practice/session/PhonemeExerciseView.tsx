@@ -10,6 +10,8 @@ interface Props {
   onSubmit: (isCorrect: boolean, userAnswer: string) => void
   focusUi?: boolean
   voice?: SpeechSynthesisVoice
+  /** Hide skip once the learner is in feedback/hints. */
+  showSkip?: boolean
 }
 
 export function PhonemeExerciseView({
@@ -17,6 +19,7 @@ export function PhonemeExerciseView({
   onSubmit,
   focusUi = false,
   voice,
+  showSkip = true,
 }: Props) {
   const { slug } = exercise
 
@@ -36,14 +39,16 @@ export function PhonemeExerciseView({
   return (
     <div className={focusUi ? 'phoneme-focus__session' : 'flex flex-col gap-4'}>
       {phonemeNode ?? <UnsupportedExercise slug={slug} onSkip={handleSkip} />}
-      <button
-        type="button"
-        onClick={handleSkip}
-        aria-label="Skip exercise"
-        className="self-center py-1.5 text-xs font-semibold uppercase tracking-widest text-fg-subtle transition-opacity hover:opacity-70"
-      >
-        Skip this one
-      </button>
+      {showSkip && (
+        <button
+          type="button"
+          onClick={handleSkip}
+          aria-label="Omitir este ejercicio"
+          className="self-center py-1.5 text-sm font-medium text-fg-subtle transition-colors hover:text-fg-secondary"
+        >
+          Omitir este
+        </button>
+      )}
     </div>
   )
 }

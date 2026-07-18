@@ -1,7 +1,7 @@
 "use client";
 
 import type { Tables } from "@/lib/supabase/types";
-import { BookOpen, CheckSquare, Minus, Search, Square, Trash2 } from "lucide-react";
+import { BookOpen, CheckSquare, Minus, Search, Square, Trash2 } from "@/components/icons";
 import Button from "@/components/ui/Button";
 import { EntryRow } from "./EntryRow";
 

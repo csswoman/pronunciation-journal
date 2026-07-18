@@ -10,7 +10,7 @@
 // </SpeakScoredExercise>
 
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { Mic, MicOff } from 'lucide-react'
+import { Mic, MicOff } from "@/components/icons"
 import { speak } from '@/lib/phoneme-practice/tts'
 import { useSpeechRecognition } from '@/hooks/useSpeechRecognition'
 import { defaultEvaluationEngine } from '@/lib/exercises/evaluation'
@@ -43,13 +43,12 @@ function WordDisplay({ word, ipa, onListen }: { word?: string; ipa: string; onLi
       <div className="flex items-center gap-3">
         <div
           className="text-5xl font-bold text-fg tracking-tight leading-none"
-          style={{ fontFamily: 'Fraunces, Georgia, serif' }}
         >
           {word ?? '—'}
         </div>
         <ListenButton iconOnly onPlay={onListen} aria-label="Listen" />
       </div>
-      <div className="text-sm text-fg-subtle" style={{ fontFamily: 'var(--font-ipa), monospace' }}>
+      <div className="ipa text-fg-muted">
         {ipa}
       </div>
     </div>
@@ -147,7 +146,6 @@ export function SpeakScoredExercise({ exercise, onSubmit }: Props) {
     <div className="flex flex-col items-center gap-6 w-full">
       <h2
         className="text-xl font-semibold text-fg text-center leading-snug m-0"
-        style={{ fontFamily: 'Fraunces, Georgia, serif' }}
       >
         Say the word
       </h2>

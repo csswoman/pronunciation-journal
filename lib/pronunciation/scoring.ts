@@ -241,15 +241,15 @@ export function getFeedbackMessage(
 ): { message: string; emoji: string; color: string } {
   const hard = threshold >= 85;
   if (hard) {
-    if (accuracy >= 95) return { message: "Mastered!", emoji: "🏆", color: "text-green-500" };
-    if (accuracy >= 85) return { message: "Excellent!", emoji: "🎯", color: "text-green-400" };
-    if (accuracy >= 70) return { message: "Almost there!", emoji: "💪", color: "text-yellow-500" };
-    if (accuracy >= 50) return { message: "Keep pushing!", emoji: "🔄", color: "text-orange-500" };
-    return { message: "Try again!", emoji: "❌", color: "text-red-500" };
+    if (accuracy >= 95) return { message: "Dominada", emoji: "", color: "text-success" };
+    if (accuracy >= 85) return { message: "Excelente", emoji: "", color: "text-success" };
+    if (accuracy >= 70) return { message: "Casi", emoji: "", color: "text-warning" };
+    if (accuracy >= 50) return { message: "Sigue intentando", emoji: "", color: "text-warning" };
+    return { message: "Inténtalo de nuevo", emoji: "", color: "text-error" };
   }
-  if (accuracy >= 90) return { message: "Perfect!", emoji: "🎯", color: "text-green-500" };
-  if (accuracy >= 75) return { message: "Great job!", emoji: "🔥", color: "text-green-400" };
-  if (accuracy >= 60) return { message: "Good effort!", emoji: "👍", color: "text-yellow-500" };
-  if (accuracy >= 40) return { message: "Keep practicing!", emoji: "💪", color: "text-orange-500" };
-  return { message: "Try again!", emoji: "🔄", color: "text-red-500" };
+  if (accuracy >= 90) return { message: "Perfecto", emoji: "", color: "text-success" };
+  if (accuracy >= 75) return { message: "Muy bien", emoji: "", color: "text-success" };
+  if (accuracy >= 60) return { message: "Bien", emoji: "", color: "text-warning" };
+  if (accuracy >= 40) return { message: "Sigue practicando", emoji: "", color: "text-warning" };
+  return { message: "Inténtalo de nuevo", emoji: "", color: "text-error" };
 }

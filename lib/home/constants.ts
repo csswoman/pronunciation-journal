@@ -16,6 +16,8 @@ export interface DailyGoalProgress {
   minutesDone: number;
   goalMinutes: number;
   percent: number;
+  /** Practice minutes in the current calendar week (America/Lima). */
+  weekMinutes: number;
 }
 
 export interface WeakestPhonemeHome {
@@ -30,7 +32,7 @@ export interface DailyStepPreview {
   id: string;
   title: string;
   subtitle: string;
-  /** lucide-react icon name (ver components/daily/dailyIcons). */
+  /** Icon name (Tabler via @/components/icons; ver components/daily/dailyIcons). */
   icon: string;
 }
 
@@ -77,7 +79,7 @@ export interface ReviewQueueSummary {
 /** Maps a source id to its session route. */
 export const REVIEW_SOURCE_HREF: Record<ReviewSourceId, string> = {
   vocabulary: "/practice/review",
-  essential: "/practice/core-1000",
+  essential: "/practice/essential-words",
   sounds: "/practice/sounds",
 };
 

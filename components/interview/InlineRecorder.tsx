@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Mic, MicOff, RotateCcw, Volume2, ChevronRight, Loader2, Pause } from "lucide-react";
+import { Mic, MicOff, RotateCcw, Volume2, ChevronRight, Loader2, Pause } from "@/components/icons";
 import { useSpeechInput } from "@/hooks/useSpeechInput";
 import { useSharedMicStream } from "@/hooks/useSharedMicStream";
 import { GeminiAdapter } from "@/lib/speech/adapters/geminiAdapter";

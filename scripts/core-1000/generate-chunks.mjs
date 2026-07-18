@@ -6,25 +6,14 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { createRequire } from "module";
+import { arpabetStringToIpa } from "../lib/arpabet-to-ipa.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const require = createRequire(import.meta.url);
 const ROOT = path.join(__dirname, "../..");
 
-const ARPABET_TO_IPA = {
-  AA: "ɑ", AE: "æ", AH: "ʌ", AO: "ɔ", AW: "aʊ", AY: "aɪ", EH: "ɛ", ER: "ɜr",
-  EY: "eɪ", IH: "ɪ", IY: "iː", OW: "oʊ", OY: "ɔɪ", UH: "ʊ", UW: "uː",
-  B: "b", CH: "tʃ", D: "d", DH: "ð", F: "f", G: "ɡ", HH: "h", JH: "dʒ",
-  K: "k", L: "l", M: "m", N: "n", NG: "ŋ", P: "p", R: "ɹ", S: "s", SH: "ʃ",
-  T: "t", TH: "θ", V: "v", W: "w", Y: "j", Z: "z", ZH: "ʒ",
-};
-
 const mod = require("cmu-pronouncing-dictionary");
 const dict = mod.dictionary ?? mod.default ?? mod;
-
-function stripStress(p) {
-  return p.replace(/\d$/, "");
-}
 
 function lookupIpa(word) {
   const key = word.toLowerCase().replace(/[^a-z0-9']/g, "");
@@ -34,11 +23,7 @@ function lookupIpa(word) {
     dict[key.replace(/-/g, "")] ??
     (key.endsWith("s") && key.length > 3 ? dict[key.slice(0, -1)] : undefined);
   if (!entry) return null;
-  const ipa = entry
-    .split(" ")
-    .map((p) => ARPABET_TO_IPA[stripStress(p)] ?? stripStress(p).toLowerCase())
-    .join("");
-  return `/${ipa}/`;
+  return `/${arpabetStringToIpa(entry)}/`;
 }
 
 function sentenceIpa(sentence, targetWord, weakIpa) {

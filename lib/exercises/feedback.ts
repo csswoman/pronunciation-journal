@@ -74,7 +74,7 @@ export function pedagogicalFeedbackFromProductionGrade(
   result: ProductionGradeResult,
 ): PedagogicalFeedback {
   return {
-    immediate: result.correct ? 'Great production.' : 'Review the feedback before continuing.',
+    immediate: result.correct ? '¡Buen trabajo!' : 'Revisa el feedback antes de continuar.',
     explanation: result.feedback,
     correction: result.corrections,
     category: result.correct

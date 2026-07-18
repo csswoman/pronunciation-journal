@@ -659,7 +659,7 @@
 }
 
 .grammar-deck__title {
-  font-family: var(--font-editorial), Georgia, serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-weight: 480;
   font-size: 2.1rem;
   letter-spacing: -0.015em;
@@ -767,7 +767,7 @@
 }
 
 .grammar-deck__done-title {
-  font-family: var(--font-editorial), Georgia, serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-weight: 480;
   font-size: 1.7rem;
   color: var(--text-primary);
@@ -779,7 +779,7 @@
 }
 
 .grammar-deck__done-stats b {
-  font-family: var(--font-editorial), Georgia, serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-size: 1.5rem;
   font-weight: 480;
   color: var(--primary);
@@ -792,14 +792,14 @@
 }
 
 .grammar-card__idx {
-  font-family: var(--font-editorial), Georgia, serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-size: 1.1rem;
   color: var(--text-tertiary);
   font-variant-numeric: tabular-nums;
 }
 
 .grammar-card__title {
-  font-family: var(--font-editorial), Georgia, serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-weight: 480;
   font-size: 1.55rem;
   letter-spacing: -0.01em;
@@ -830,14 +830,14 @@
 }
 
 .grammar-conj__pron {
-  font-family: var(--font-editorial), Georgia, serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-style: italic;
   color: var(--text-secondary);
   padding: var(--space-2) var(--space-3);
 }
 
 .grammar-conj__form {
-  font-family: var(--font-editorial), Georgia, serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
   color: var(--text-primary);
   padding: var(--space-2) var(--space-3);
 }
@@ -869,7 +869,7 @@
 
 .grammar-vtable td {
   border-top: 1px solid var(--border-subtle);
-  font-family: var(--font-editorial), Georgia, serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
   color: var(--text-primary);
   padding: var(--space-2) var(--space-3);
 }
@@ -908,7 +908,7 @@
 }
 
 .grammar-contrast__big {
-  font-family: var(--font-editorial), Georgia, serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-size: 1.6rem;
   color: var(--primary);
 }
@@ -919,7 +919,7 @@
 }
 
 .grammar-contrast__ex {
-  font-family: var(--font-editorial), Georgia, serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-size: 0.95rem;
   color: var(--text-primary);
 }
@@ -934,7 +934,7 @@
   display: flex;
   align-items: baseline;
   gap: var(--space-2);
-  font-family: var(--font-editorial), Georgia, serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-size: 1rem;
 }
 
@@ -987,7 +987,7 @@
 }
 
 .grammar-rules__key {
-  font-family: var(--font-editorial), Georgia, serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
   color: var(--primary);
   font-size: 1.05rem;
   flex-shrink: 0;
@@ -1000,7 +1000,7 @@
 
 .grammar-rules__val b {
   color: var(--text-primary);
-  font-family: var(--font-editorial), Georgia, serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-weight: 480;
 }
 
@@ -1115,8 +1115,13 @@
 }
 
 .grammar-pron__ipa {
-  font-size: 0.8rem;
-  color: var(--text-tertiary);
+  font-family: var(--font-ipa), "Andika", "Noto Sans", sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  word-spacing: 0.14em;
+  line-height: 1.55;
+  color: var(--text-secondary);
 }
 
 .grammar-pron__es {
@@ -1142,7 +1147,7 @@
 }
 
 .gd-quiz__q {
-  font-family: var(--font-editorial), Georgia, serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-size: 1.25rem;
   font-weight: 480;
   color: var(--text-primary);

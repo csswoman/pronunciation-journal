@@ -7,7 +7,7 @@
 // </LexiconFlashcard>
 
 import { useState } from 'react'
-import { Volume2 } from 'lucide-react'
+import { Volume2 } from "@/components/icons"
 import { speak } from '@/lib/phoneme-practice/tts'
 import type { FlashcardRating } from '@/lib/word-bank/lexicon-review-types'
 

@@ -2,16 +2,18 @@
 // trivially unit-testable.
 
 import { NEW_CARDS_PER_DAY, core1000WordId, type CoreWord } from "./types";
+import { isDueForQueue } from "@/lib/srs/status";
 import type { SRSData } from "@/lib/types";
 
 export interface Core1000QueueItem {
   entry: CoreWord;
   kind: 'new' | 'review' | 'learning';
+  fromSnooze?: boolean;
 }
 
 export interface BuildQueueOptions {
   words: CoreWord[];
-  srsEntries: SRSData[];       // already filtered: no archived, no non-c1k
+  srsEntries: SRSData[];       // full c1k rows; caller runs activateExpiredSnoozes first
   introducedToday: string[];
   now: Date;
   newPerDay?: number;
@@ -25,12 +27,13 @@ export function buildSessionQueue({
   newPerDay = NEW_CARDS_PER_DAY,
 }: BuildQueueOptions): Core1000QueueItem[] {
   const byId = new Map(words.map((w) => [core1000WordId(w.word), w]));
-  // Every persisted entry counts as seen, including archived words. Archived
-  // words must not be re-introduced as new after the user presses "Ya la sé".
+  // Every persisted entry counts as seen, including snoozed/mastered. They must
+  // not be re-introduced as new after the user presses "Ya la sé".
   const seen = new Set(srsEntries.map((e) => e.wordId));
 
+  // Caller must run activateExpiredSnoozes before buildSessionQueue.
   const due: Core1000QueueItem[] = srsEntries
-    .filter((e) => !e.archived && new Date(e.nextReview).getTime() <= now.getTime())
+    .filter((e) => isDueForQueue(e, now))
     .map((e) => byId.get(e.wordId))
     .filter((entry): entry is CoreWord => entry !== undefined)
     .sort((a, b) => a.rank - b.rank)

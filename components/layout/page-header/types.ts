@@ -8,9 +8,13 @@ export interface CTAButton {
 }
 
 export interface PageHeaderProps {
+  /** Prefer over legacy `badge` for new call sites */
+  kicker?: string;
+  /** @deprecated Use `kicker` — kept as legacy alias */
   badge?: string;
   title: string;
   subtitle?: string;
+  /** @deprecated Prefer `subtitle` for chrome */
   description?: string;
   primaryCta?: CTAButton;
   secondaryCta?: CTAButton;

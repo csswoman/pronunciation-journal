@@ -1,5 +1,8 @@
 import type { DailyPlan } from '@/lib/practice/types'
 
+/** Bump when step title/subtitle copy changes so same-day cache regenerates. */
+export const DAILY_PLAN_CACHE_VERSION = 4
+
 /** Local calendar date key (client timezone). */
 export function todayDateStr(): string {
   const now = new Date()
@@ -11,7 +14,7 @@ export function dailyDoneKey(userId: string): string {
 }
 
 export function dailyPlanKey(userId: string): string {
-  return `daily-plan:${userId}:${todayDateStr()}`
+  return `daily-plan:v${DAILY_PLAN_CACHE_VERSION}:${userId}:${todayDateStr()}`
 }
 
 export function dailyResolvedKey(userId: string): string {

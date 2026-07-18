@@ -1,4 +1,4 @@
-import { AlertCircle } from "lucide-react";
+import { AlertCircle } from "@/components/icons";
 
 interface SelectOption {
   value: string;

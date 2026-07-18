@@ -229,4 +229,19 @@ describe("AppShell mount behavior", () => {
     expect(quickAddMount).not.toHaveBeenCalled();
     expect(aiCoachPanelMount).not.toHaveBeenCalled();
   });
+
+  it("keeps sidebar on immersive practice routes", async () => {
+    mockPathname = "/practice/sounds/sound/ae";
+
+    render(
+      <AppShell>
+        <div>session</div>
+      </AppShell>,
+    );
+
+    await waitFor(() => {
+      expect(screen.getByTestId("sidebar")).toBeInTheDocument();
+      expect(screen.getByTestId("bottom-nav")).toBeInTheDocument();
+    });
+  });
 });

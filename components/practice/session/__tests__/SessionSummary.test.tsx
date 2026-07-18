@@ -31,13 +31,25 @@ describe('formatExerciseLabel', () => {
 })
 
 describe('SessionSummary progress state', () => {
+  it('shows the practiced phoneme when provided', () => {
+    render(
+      <SessionSummary
+        result={result}
+        practiceIpa="/ŋ/"
+        onPracticeAgain={() => {}}
+        onFinish={() => {}}
+      />,
+    )
+    expect(screen.getByText('/ŋ/')).toBeInTheDocument()
+  })
+
   it('shows when progress is saving', () => {
     render(<SessionSummary result={result} progressSaveStatus="saving" onPracticeAgain={() => {}} onFinish={() => {}} />)
-    expect(screen.getByText(/saving progress/i)).toBeInTheDocument()
+    expect(screen.getByText(/guardando progreso/i)).toBeInTheDocument()
   })
 
   it('shows an alert when progress could not be saved', () => {
     render(<SessionSummary result={result} progressSaveStatus="error" onPracticeAgain={() => {}} onFinish={() => {}} />)
-    expect(screen.getByRole('alert')).toHaveTextContent(/retry when the connection recovers/i)
+    expect(screen.getByRole('alert')).toHaveTextContent(/reintentará al recuperar la conexión/i)
   })
 })

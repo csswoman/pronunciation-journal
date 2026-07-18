@@ -1,4 +1,4 @@
-import { Check, Flame } from "lucide-react";
+import { Check, Flame } from "@/components/icons";
 import type { DailyStreakResult } from "@/lib/daily/streak-core";
 
 interface HomeStreakCardProps {

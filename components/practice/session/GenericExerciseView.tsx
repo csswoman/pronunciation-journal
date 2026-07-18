@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Lightbulb } from 'lucide-react'
+import { Lightbulb } from "@/components/icons"
 import { ExerciseShell } from '@/components/exercises/ExerciseShell'
 import type { ExerciseResult } from '@/components/exercises/ExerciseShell'
 import type { GenericPayload, PracticeExercise, PracticeSubmitExtras, PracticeSubmitHandler } from '@/lib/practice/types'
@@ -77,6 +77,7 @@ export function GenericExerciseView({ exercise, onSubmit, focusUi = false }: Pro
 
   const content = renderGenericExercise(data, {
     onResult: handleResult,
+    onSkip: handleSkip,
     focusUi,
     onHint: handleHint,
     hintCount,

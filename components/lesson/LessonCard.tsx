@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { BookOpen, Zap } from "lucide-react";
+import { BookOpen, Zap } from "@/components/icons";
 import type { Lesson } from "@/lib/types";
 import { getAttemptsByLessonId } from "@/lib/db";
 import DifficultyPill from "@/components/ui/DifficultyPill";

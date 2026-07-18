@@ -1,7 +1,8 @@
+/** Legacy card; home now uses WeakSoundCard. Kept for rollback. */
 "use client";
 
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight } from "@/components/icons";
 import { useLiveQuery } from "dexie-react-hooks";
 import ProgressBar from "@/components/ui/ProgressBar";
 import { db } from "@/lib/db";
@@ -46,7 +47,7 @@ export default function ReviewProgressCard({ vocabulary, weakestPhoneme }: Revie
           ? `${learned.toLocaleString()} / ~${catalogTotal.toLocaleString()} words · ${percent}%`
           : (
             <Link
-              href="/practice/core-1000"
+              href="/practice/essential-words"
               className="focus-ring inline-flex items-center gap-1 text-[var(--primary)] hover:underline"
             >
               Start with Essential Words <ArrowRight size={12} aria-hidden />
@@ -62,7 +63,7 @@ export default function ReviewProgressCard({ vocabulary, weakestPhoneme }: Revie
           href="/practice/sounds"
           className="focus-ring group mt-3 flex items-center gap-4 rounded-[var(--radius-md)]"
         >
-          <span className="animate-symbol-in font-display shrink-0 text-display-ipa font-bold leading-none text-[var(--warning)]">
+          <span className="animate-symbol-in font-mono shrink-0 text-display-ipa font-bold leading-none text-[var(--warning)]">
             {formatIpaDisplay(weakestPhoneme!.ipa)}
           </span>
           <div className="min-w-0 flex-1">

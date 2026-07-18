@@ -1,6 +1,6 @@
 "use client";
 
-import { X, FolderPlus, FolderInput } from "lucide-react";
+import { X, FolderPlus, FolderInput } from "@/components/icons";
 import Button from "@/components/ui/Button";
 
 interface WordSelectionBarProps {

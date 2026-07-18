@@ -50,7 +50,7 @@ export default async function LessonDetailPage({ params }: { params: Promise<{ i
   const wordsReviewing = words.filter((w) => w.status === "reviewing").length;
 
   return (
-    <PageLayout cardWrapper={false}>
+    <PageLayout>
       <div
         className="lexicon-area"
         style={{ "--lexicon-cat": category.color } as CSSProperties}

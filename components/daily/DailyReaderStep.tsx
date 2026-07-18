@@ -3,10 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useAuth } from '@/components/auth/AuthProvider'
 import { ReaderExercise } from '@/components/practice/reader/ReaderExercise'
-import { buildSessionResult } from '@/lib/practice/session-result'
-import { recordActivitySession } from '@/lib/progress/activity-hub'
-import { savePracticeAnswer } from '@/lib/practice/queries'
-import { flushOutbox } from '@/lib/sync/sync-manager'
+import { completeReader } from '@/lib/practice/reader/complete-reader'
 import type { ReaderPassage } from '@/lib/practice/reader/types'
 import type { StepThreadHint } from '@/lib/practice/daily-plan/step-thread'
 import { StepThreadHints } from './StepThreadHints'
@@ -38,23 +35,12 @@ export function DailyReaderStep({ passage, threadHints, onComplete }: DailyReade
         online={online}
         onComplete={async (correct) => {
           if (!user) return
-          const result = {
-            exerciseId: `reader:${passage.id}`,
-            slug: 'multiple_choice' as const,
-            exerciseTypeId: 17,
-            isCorrect: correct,
-            timeMs: 0,
-            contentId: passage.id,
-            context: 'daily' as const,
-            completedAt: new Date(),
-          }
-          await savePracticeAnswer(user.id, result)
-          await recordActivitySession(user.id, {
-            practiceContext: 'daily',
-            source: 'practice',
-            sessionResult: buildSessionResult([result]),
+          await completeReader({
+            userId: user.id,
+            passageId: passage.id,
+            correct,
+            context: 'daily',
           })
-          await flushOutbox()
           onComplete()
         }}
       />

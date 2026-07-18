@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Search, Volume2 } from "lucide-react";
+import { Search, Volume2 } from "@/components/icons";
 import { useLexiconIndex } from "@/hooks/useLexiconIndex";
 import { useAudioPlayback } from "@/hooks/useAudioPlayback";
 import Button from "@/components/ui/Button";
@@ -222,7 +222,7 @@ export function LexiconHeroSearch({
               <span className="words-lexicon__quick-lbl">Recent:</span>
               {recentWords.map((w) => (
                 <button
-                  key={w}
+                  key={`recent:${w}`}
                   type="button"
                   className="words-lexicon__qchip"
                   onClick={() => chipPick(w)}
@@ -239,7 +239,7 @@ export function LexiconHeroSearch({
               </span>
               {dueWords.map((w) => (
                 <button
-                  key={w}
+                  key={`due:${w}`}
                   type="button"
                   className="words-lexicon__qchip is-due"
                   onClick={() => chipPick(w)}

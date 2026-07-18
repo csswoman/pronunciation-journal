@@ -1,6 +1,6 @@
 "use client";
 
-import { Loader2, Play, PartyPopper } from "lucide-react";
+import { Loader2, Play, PartyPopper } from "@/components/icons";
 import type { WordIPA } from "./types";
 
 interface Props {

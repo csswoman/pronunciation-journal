@@ -7,22 +7,35 @@
 //   <SessionExercisingBody />  (active exercise flow)
 // </PracticeSession>
 
+import { useEffect, useMemo, useRef } from 'react'
 import type { PracticeConfig, PracticeExercise } from '@/lib/practice/types'
 import { PhonemeFocusShell } from '@/components/phoneme-practice/PhonemeFocusShell'
 import { SessionLoadingShell } from './session/SessionLoadingShell'
 import { SessionExercisingBody } from './session/SessionExercisingBody'
 import { SessionSummary } from './session/SessionSummary'
 import { useSessionState, buildSessionResult } from './session/useSessionState'
+import { formatIpaDisplay, resolveSessionIpa } from '@/lib/practice/resolve-session-ipa'
+import { playUiCue } from '@/lib/ui-sounds/cues'
 
 type Phase = 'exercising' | 'feedback' | 'hints' | 'complete'
 
 function badgeForExercise(
   ex: PracticeExercise | undefined,
+  sessionIpa: string | undefined,
   focusBadge: string | undefined,
 ): string | undefined {
+  if (sessionIpa) return formatIpaDisplay(sessionIpa)
   if (!focusBadge) return undefined
-  if (ex?.payload.kind === 'phoneme' && ex.payload.ipa.trim()) return ex.payload.ipa
+  if (ex?.payload.kind === 'phoneme' && ex.payload.ipa.trim()) {
+    return formatIpaDisplay(ex.payload.ipa)
+  }
   return focusBadge
+}
+
+function playSessionCompleteCue(accuracy: number): void {
+  if (accuracy >= 85) playUiCue('correct')
+  else if (accuracy >= 60) playUiCue('reveal')
+  else playUiCue('soft')
 }
 
 export default function PracticeSession(config: PracticeConfig) {
@@ -52,14 +65,32 @@ export default function PracticeSession(config: PracticeConfig) {
     handlePracticeAgain,
   } = useSessionState(config)
 
+  const sessionIpa = useMemo(
+    () => resolveSessionIpa(soundIpa, exercises),
+    [soundIpa, exercises],
+  )
+
+  const completionCuePlayed = useRef(false)
+  useEffect(() => {
+    if (phase !== 'complete') {
+      completionCuePlayed.current = false
+      return
+    }
+    if (completionCuePlayed.current) return
+    completionCuePlayed.current = true
+    playSessionCompleteCue(sessionResult.accuracy)
+  }, [phase, sessionResult.accuracy])
+
   const current = exercises[currentIndex]
-  const displayBadge = badgeForExercise(current, focusBadge) ?? focusBadge ?? ''
+  const displayBadge =
+    badgeForExercise(current, sessionIpa, focusBadge) ?? sessionIpa ?? focusBadge ?? ''
+  const shellBadge = sessionIpa ? formatIpaDisplay(sessionIpa) : displayBadge || undefined
 
   if (!ready) {
     return (
       <SessionLoadingShell
         focusUi={focusUi}
-        displayBadge={displayBadge}
+        displayBadge={shellBadge ?? displayBadge}
         onExit={() => onExit?.(buildSessionResult([]))}
       />
     )
@@ -86,15 +117,16 @@ export default function PracticeSession(config: PracticeConfig) {
     const summary = (
       <SessionSummary
         result={sessionResult}
+        practiceIpa={sessionIpa}
         progressSaveStatus={progressSaveStatus}
         onPracticeAgain={handlePracticeAgain}
         onFinish={() => onExit?.(sessionResult)}
       />
     )
-    if (focusUi && displayBadge) {
+    if (focusUi && (shellBadge || displayBadge)) {
       return (
         <PhonemeFocusShell
-          badge={focusBadge ?? displayBadge}
+          badge={shellBadge}
           progressPct={100}
           onExit={() => onExit?.(sessionResult)}
         >
@@ -110,7 +142,7 @@ export default function PracticeSession(config: PracticeConfig) {
       lessonFooter={footer}
       state={{
         focusUi,
-        displayBadge,
+        displayBadge: shellBadge ?? displayBadge,
         progressPct,
         phase: phase as Exclude<Phase, 'complete'>,
         current,

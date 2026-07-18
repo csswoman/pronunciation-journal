@@ -15,7 +15,7 @@ import {
   updateEntryContent,
 } from "@/lib/decks/queries";
 import type { Tables } from "@/lib/supabase/types";
-import { BookOpen, Plus, Sparkles, X } from "lucide-react";
+import { BookOpen, Plus, Sparkles, X } from "@/components/icons";
 import Button from "@/components/ui/Button";
 import { H2 } from "@/components/ui/Typography";
 import { fetchMeaningForWord } from "@/lib/word-bank/meaning";

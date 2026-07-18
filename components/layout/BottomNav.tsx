@@ -1,6 +1,6 @@
 "use client";
 
-import { BookOpen, Home, Menu, Target } from "lucide-react";
+import { BookOpen, Home, Menu, Target } from "@/components/icons";
 import { usePathname } from "next/navigation";
 import { useCallback, useState } from "react";
 import AICoachTrigger from "@/components/ai-coach/AICoachTrigger";

@@ -1,4 +1,4 @@
-import { History } from 'lucide-react'
+import { History } from "@/components/icons"
 
 import type { ActivitySessionSummary } from '@/lib/progress/activity-types'
 

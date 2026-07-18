@@ -30,6 +30,7 @@ export type GenericRenderContext = {
     timeMs: number,
     extras?: GenericRenderExtras,
   ) => void
+  onSkip?: () => void
   focusUi?: boolean
   onHint?: () => void
   hintCount?: number
@@ -47,7 +48,7 @@ type GenericRegistryEntry = {
  */
 export const GENERIC_REGISTRY: Record<GenericExerciseType, GenericRegistryEntry> = {
   match_pairs: {
-    title: 'Match the pairs',
+    title: 'Empareja los pares',
     render: (exercise, { onResult }) => (
       <MatchPairsExercise
         exercise={exercise as MatchPairsExerciseType}
@@ -108,22 +109,24 @@ export const GENERIC_REGISTRY: Record<GenericExerciseType, GenericRegistryEntry>
     ),
   },
   written_production: {
-    title: 'Write your sentence',
+    title: 'Escribe tu oración',
     noHint: true,
-    render: (exercise, { onResult }) => (
+    render: (exercise, { onResult, onSkip }) => (
       <WrittenProductionExercise
         exercise={exercise as WrittenProductionExerciseType}
         onResult={onResult}
+        onSkip={onSkip}
       />
     ),
   },
   spoken_production: {
-    title: 'Say your sentence',
+    title: 'Di tu oración',
     noHint: true,
-    render: (exercise, { onResult }) => (
+    render: (exercise, { onResult, onSkip }) => (
       <SpokenProductionExercise
         exercise={exercise as SpokenProductionExerciseType}
         onResult={onResult}
+        onSkip={onSkip}
       />
     ),
   },
