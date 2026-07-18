@@ -21,6 +21,7 @@ const GENERIC_TYPE_TO_SLUG: Record<GenericExerciseType, ExerciseSlug> = {
   error_correction: 'error_correction',
   conjugation_blank: 'conjugation_blank',
   sentence_transformation: 'sentence_transformation',
+  translation_es_en: 'translation_es_en',
 }
 
 /**

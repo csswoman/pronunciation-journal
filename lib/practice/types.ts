@@ -33,6 +33,7 @@ export type ExerciseSlug =
   | 'error_correction'   // id: 19
   | 'conjugation_blank'  // id: 21
   | 'sentence_transformation' // id: 20
+  | 'translation_es_en' // id: 22
 
 // null signals "no exercise_types FK" — this exercise does not write to answer_history.
 export const EXERCISE_TYPE_IDS: Record<ExerciseSlug, number | null> = {
@@ -57,6 +58,7 @@ export const EXERCISE_TYPE_IDS: Record<ExerciseSlug, number | null> = {
   error_correction: 19,
   conjugation_blank: 21,
   sentence_transformation: 20,
+  translation_es_en: 22,
 }
 
 export type PracticeContext =
