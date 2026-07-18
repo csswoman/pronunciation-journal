@@ -1,13 +1,17 @@
 'use client'
 
-import type { PhonemePayload, PracticeExercise } from '@/lib/practice/types'
+import type {
+  PhonemePayload,
+  PracticeExercise,
+  PracticeSubmitHandler,
+} from '@/lib/practice/types'
 import { toLegacyExercise } from '@/lib/practice/exercise-renderer/legacy-bridge'
 import { renderPhonemeExercise } from '@/lib/practice/exercise-renderer/phoneme-registry'
 import { UnsupportedExercise } from '@/lib/practice/exercise-renderer/UnsupportedExercise'
 
 interface Props {
   exercise: PracticeExercise & { payload: PhonemePayload }
-  onSubmit: (isCorrect: boolean, userAnswer: string) => void
+  onSubmit: PracticeSubmitHandler
   focusUi?: boolean
   voice?: SpeechSynthesisVoice
   /** Hide skip once the learner is in feedback/hints. */
