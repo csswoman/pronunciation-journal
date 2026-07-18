@@ -7,6 +7,7 @@ import { MultipleChoiceExercise } from '@/components/exercises/MultipleChoiceExe
 import { SentenceContextExercise } from '@/components/lexicon/SentenceContextExercise'
 import { WrittenProductionExercise } from '@/components/exercises/WrittenProductionExercise'
 import { SpokenProductionExercise } from '@/components/exercises/SpokenProductionExercise'
+import { ErrorCorrectionExercise } from '@/components/exercises/ErrorCorrectionExercise'
 import type {
   GenericExercise,
   GenericExerciseType,
@@ -18,6 +19,7 @@ import type {
   MultipleChoiceExercise as MultipleChoiceExerciseType,
   WrittenProductionExercise as WrittenProductionExerciseType,
   SpokenProductionExercise as SpokenProductionExerciseType,
+  ErrorCorrectionExercise as ErrorCorrectionExerciseType,
 } from '@/lib/exercises/types'
 import type { PedagogicalFeedback } from '@/lib/practice/types'
 
@@ -129,6 +131,10 @@ export const GENERIC_REGISTRY: Record<GenericExerciseType, GenericRegistryEntry>
         onSkip={onSkip}
       />
     ),
+  },
+  error_correction: {
+    title: 'Corrige la oración',
+    render: (exercise, { onResult }) => <ErrorCorrectionExercise exercise={exercise as ErrorCorrectionExerciseType} onResult={onResult} />,
   },
 }
 

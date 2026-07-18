@@ -7,6 +7,7 @@ import type {
   MultipleChoiceExercise,
   ReorderWordsExercise,
   SentenceDictationExercise,
+  ErrorCorrectionExercise,
 } from '@/lib/exercises/types'
 import type { PedagogicalFeedback } from '@/lib/practice/types'
 
@@ -53,7 +54,13 @@ export function buildPedagogicalFeedback(
         canRetry: !isCorrect,
         nextAction: isCorrect ? 'continue' : 'retry',
       }
+    case 'error_correction':
+      return errorCorrectionFeedback(exercise, isCorrect)
   }
+}
+
+function errorCorrectionFeedback(exercise: ErrorCorrectionExercise, isCorrect: boolean): PedagogicalFeedback {
+  return { immediate: isCorrect ? 'Correcto.' : 'Corrige la forma de la oración.', correction: exercise.correctSentence, explanation: exercise.explanation, expectedAnswer: exercise.correctSentence, category: isCorrect ? 'error_correction_correct' : 'error_correction_form', errorCode: isCorrect ? 'correct' : 'form_error', canRetry: !isCorrect, nextAction: isCorrect ? 'continue' : 'retry' }
 }
 
 export function pedagogicalFeedbackFromEvaluation(result: EvaluationResult): PedagogicalFeedback {

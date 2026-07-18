@@ -22,6 +22,7 @@ export type GenericExerciseType =
   | 'multiple_choice'
   | 'written_production'
   | 'spoken_production'
+  | 'error_correction'
 
 interface BaseGenericExercise {
   /** Deterministic id: hash of type + sourceRef + stable payload fields. */
@@ -124,6 +125,13 @@ export interface MultipleChoiceExercise extends BaseGenericExercise {
   explanation?: string
 }
 
+export interface ErrorCorrectionExercise extends BaseGenericExercise {
+  type: 'error_correction'
+  sentence: string
+  correctSentence: string
+  explanation?: string
+}
+
 // Free production (online-only — requires /api/gemini/grade-production) ───────
 interface BaseProductionExercise extends BaseGenericExercise {
   /** Instruction shown to the learner. */
@@ -151,6 +159,7 @@ export type GenericExercise =
   | ReorderWordsExercise
   | SentenceContextExercise
   | MultipleChoiceExercise
+  | ErrorCorrectionExercise
   | WrittenProductionExercise
   | SpokenProductionExercise
 
