@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
-import { requireSameOrigin, requireUser } from '@/lib/api/guards'
+import { requireSameOrigin, requireUser, rateLimit, validateBody } from '@/lib/api/guards'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
 import { getDeckBySlug } from '@/lib/courses/grammar-deck/decks'
 import { deckSlugForTopic } from '@/lib/practice/topic-decks'
@@ -13,11 +13,17 @@ export async function POST(request: NextRequest) {
   if (originError) return originError
   const { user, error } = await requireUser(request)
   if (error) return error
-  const body = schema.safeParse(await request.json().catch(() => ({})))
-  if (!body.success) return NextResponse.json({ error: 'Invalid topic' }, { status: 400 })
+  const { limited, error: rateLimitError } = await rateLimit(`/api/review/topics:${user.id}`, {
+    max: 60,
+    windowMs: 60_000,
+    meta: { endpoint: '/api/review/topics', userId: user.id },
+  })
+  if (limited) return rateLimitError
+  const { data: body, error: validationError } = await validateBody(request, schema)
+  if (validationError) return validationError
   const supabase = await createSupabaseServerClient()
   let query = supabase.from('topic_srs').select('topic').eq('user_id', user.id).limit(2)
-  if (body.data.topic) query = query.eq('topic', body.data.topic)
+  if (body.topic) query = query.eq('topic', body.topic)
   else query = query.lte('next_review_at', new Date().toISOString()).order('next_review_at')
   const { data } = await query
   const steps = (data ?? []).flatMap(({ topic }) => {
