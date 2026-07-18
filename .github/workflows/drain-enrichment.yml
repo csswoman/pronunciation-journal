@@ -2,7 +2,7 @@ name: Drain Enrichment Queue
 
 on:
   schedule:
-    - cron: "*/15 * * * *"
+    - cron: "17 */2 * * *"
   workflow_dispatch:
 
 permissions:

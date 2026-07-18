@@ -38,7 +38,8 @@ El workflow programado corre cada 30 minutos en
 ## Worker de enriquecimiento
 
 Vercel Hobby solo permite cron una vez al dia, por lo que el repositorio usa
-GitHub Actions para drenar `word_enrichment_jobs` cada 15 minutos.
+GitHub Actions para drenar `word_enrichment_jobs` cada dos horas. El workflow
+tambien admite ejecucion manual cuando se necesita procesar inmediatamente.
 
 1. En Vercel, definir `CRON_SECRET` con un valor aleatorio largo.
 2. En GitHub Actions Secrets, definir `CRON_SECRET` con exactamente el mismo valor.

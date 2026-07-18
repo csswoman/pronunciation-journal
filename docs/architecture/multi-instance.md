@@ -33,7 +33,7 @@ instancia antes de que el job complete, perdiendo trabajo silenciosamente.
 durable. El handler HTTP encola el job y responde; un worker externo drena la
 cola con retry e idempotencia.
 
-**Solucion implementada**: GitHub Actions invoca el worker cada 15 minutos. Se
+**Solucion implementada**: GitHub Actions invoca el worker cada dos horas. Se
 usa un scheduler externo porque Vercel Hobby solo permite cron una vez al dia.
 
 - Endpoint: `app/api/jobs/drain-enrichment/route.ts`
@@ -114,7 +114,7 @@ usuario este bajo su limite individual.
 - [x] Errores de proveedor no expuestos al cliente (`publicErrorResponse`)
 - [x] PII sanitizado en logs (`redactError`)
 - [x] Jobs encolados en tabla durable (`word_enrichment_jobs`)
-- [x] Worker de drenaje: `app/api/jobs/drain-enrichment` + GitHub Actions cada 15 min
+- [x] Worker de drenaje: `app/api/jobs/drain-enrichment` + GitHub Actions cada 2 h
 - [x] Health check programado compatible con Vercel Free (`production-health.yml`)
 - [ ] Log Drain configurado hacia servicio de retencion (opcional, requiere Vercel Pro)
 - [ ] Limites de Gemini monitoreados y alertados

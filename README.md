@@ -80,7 +80,7 @@ paths for parts of the practice experience.
 
 - Offline support is not a full multi-device sync guarantee. Dexie/local queues cover selected client workflows; Supabase remains the source of truth after reconnect. Some short-lived buffers, such as Essential Words pending lapses, are session-scoped only.
 - Gemini-backed features require server credentials and may degrade or queue when the provider is unavailable.
-- Background word enrichment is drained every 15 minutes by `.github/workflows/drain-enrichment.yml`; configure `ENRICHMENT_DRAIN_URL` and the shared `CRON_SECRET` in GitHub before relying on it.
+- Background word enrichment is drained every two hours by `.github/workflows/drain-enrichment.yml`; configure `ENRICHMENT_DRAIN_URL` and the shared `CRON_SECRET` in GitHub before relying on it. Manual dispatch remains available for immediate processing.
 - Supabase migrations must be reviewed and applied deliberately; this repo does not auto-apply production SQL from the app server.
 
 ## Common commands
