@@ -47,6 +47,14 @@ const nextConfig = {
   },
   async redirects() {
     return [
+      { source: "/words", destination: "/dictionary", permanent: true },
+      { source: "/lexicon", destination: "/dictionary", permanent: true },
+      { source: "/lexicon/:id", destination: "/dictionary/:id", permanent: true },
+      {
+        source: "/lexicon/:id/practice",
+        destination: "/dictionary/:id/practice",
+        permanent: true,
+      },
       { source: "/courses/mini-lessons", destination: "/mini-lessons", permanent: true },
       {
         source: "/courses/mini-lessons/:slug",

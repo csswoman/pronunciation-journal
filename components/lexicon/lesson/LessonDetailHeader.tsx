@@ -30,7 +30,7 @@ export function LessonDetailHeader({
     <header className="lexicon-area__head">
       <div>
         <nav className="lexicon-area__crumb" aria-label="Breadcrumb">
-          <Link href="/words?tab=lexicon">Dictionary</Link>
+          <Link href="/dictionary">Dictionary</Link>
           {" › "}
           <strong>{title}</strong>
         </nav>

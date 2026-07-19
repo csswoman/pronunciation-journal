@@ -117,7 +117,7 @@ function LexiconPanel({
           )}
         </div>
       )}
-      <Link href="/lexicon" className="mt-3 text-caption font-medium text-primary transition-opacity hover:opacity-80">
+      <Link href="/dictionary" className="mt-3 text-caption font-medium text-primary transition-opacity hover:opacity-80">
         Open Dictionary →
       </Link>
     </ProgressCard>

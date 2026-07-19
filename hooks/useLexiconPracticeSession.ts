@@ -136,7 +136,7 @@ export function useLexiconPracticeSession(categoryId: string, userId: string | u
     setLoadState('loading'); setError(null)
     try {
       const accessToken = await getAccessToken()
-      const res = await fetch(`/api/lexicon/${categoryId}`, {
+      const res = await fetch(`/api/dictionary/${categoryId}`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${accessToken}` },
       })

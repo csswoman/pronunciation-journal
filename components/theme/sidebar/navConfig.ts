@@ -38,7 +38,7 @@ export const referenceNav: NavSectionType = {
   label: "Reference",
   items: [
     { name: "IPA Chart", href: "/ipa", icon: Radio },
-    { name: "Words", href: "/words", icon: LibraryBig },
+    { name: "Dictionary", href: "/dictionary", icon: LibraryBig },
   ],
 };
 

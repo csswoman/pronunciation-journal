@@ -70,7 +70,7 @@ export default function HomeWordOfDayCard() {
             </p>
           ) : null}
           <Link
-            href={`/words`}
+            href="/dictionary"
             className="focus-ring mt-1 inline-flex min-h-10 items-center gap-1.5 font-body-sm text-fg-muted transition-colors hover:text-fg hover:underline"
           >
             Explorar palabras <ArrowRight size={16} aria-hidden />

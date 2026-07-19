@@ -15,7 +15,7 @@ export function getPageContext(pathname: string): PageContext {
       ...universal,
     ]};
   }
-  if (pathname.startsWith("/words") || pathname.startsWith("/decks")) {
+  if (pathname.startsWith("/dictionary") || pathname.startsWith("/decks")) {
     return { label: "📖 Word Bank", chips: [
       { label: "Use it in a sentence", prompt: "Use this word in a sentence and explain when to use it" },
       { label: "Similar words?", prompt: "What's the difference between this word and similar words?" },

@@ -88,7 +88,7 @@ export function LexiconHeroSearch({
 
   const openCategory = useCallback(
     (hit: LexiconSearchHit) => {
-      router.push(`/lexicon/${hit.categoryId}`);
+      router.push(`/dictionary/${hit.categoryId}`);
     },
     [router]
   );
