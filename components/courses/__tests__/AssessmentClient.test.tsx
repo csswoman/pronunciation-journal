@@ -3,6 +3,17 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import AssessmentClient from "../AssessmentClient";
 import type { AssessmentQuestion } from "@/lib/courses/assessment";
+import type { AssessmentConcept } from "@/lib/courses/concept-profile";
+
+const persistAssessmentConceptProfileMock = vi.fn();
+
+vi.mock("@/components/auth/AuthProvider", () => ({
+  useAuth: () => ({ user: { id: "user-1" } }),
+}));
+
+vi.mock("@/lib/courses/assessment-profile", () => ({
+  persistAssessmentConceptProfile: (...args: unknown[]) => persistAssessmentConceptProfileMock(...args),
+}));
 
 vi.mock("next/link", () => ({
   default: ({ children, href, ...props }: React.ComponentProps<"a">) => (
@@ -23,10 +34,28 @@ const questions: AssessmentQuestion[] = [
   },
 ];
 
+const placementQuestions: AssessmentQuestion[] = [
+  ...questions,
+  {
+    id: "a2:topic-two",
+    level: "a2",
+    lessonSlug: "a2-topic-two",
+    prompt: "Choose two",
+    options: ["Wrong again", "Right again"],
+    answer: 1,
+  },
+];
+
+const concepts: AssessmentConcept[] = [
+  { lessonSlug: "a1-topic-one", level: "a1", title: "Present simple", goal: "Hablar de hábitos." },
+  { lessonSlug: "a2-topic-two", level: "a2", title: "Past simple", goal: "Hablar del pasado." },
+];
+
 describe("AssessmentClient", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     vi.stubGlobal("fetch", fetchMock);
+    window.scrollTo = vi.fn();
     const store = new Map<string, string>();
     Object.defineProperty(window, "localStorage", {
       configurable: true,
@@ -38,7 +67,35 @@ describe("AssessmentClient", () => {
       },
     });
     fetchMock.mockResolvedValue({ ok: true });
+    persistAssessmentConceptProfileMock.mockResolvedValue(undefined);
     window.localStorage.clear();
+  });
+
+  it("requires every concept rating before starting placement questions", () => {
+    render(<AssessmentClient mode="placement" questions={placementQuestions} concepts={concepts} />);
+
+    const continueButton = screen.getByRole("button", { name: "Comprobar con preguntas" });
+    expect(screen.getByRole("heading", { name: "¿Qué temas ya conoces?" })).toBeInTheDocument();
+    expect(continueButton).toBeDisabled();
+    expect(screen.queryByText("Choose one")).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("radio", { name: "Me suena" }));
+
+    expect(continueButton).toBeEnabled();
+    expect(screen.getByRole("progressbar")).toHaveAttribute("aria-label", "Temas valorados");
+  });
+
+  it("returns to the concept inventory when placement advances a level", () => {
+    render(<AssessmentClient mode="placement" questions={placementQuestions} concepts={concepts} />);
+
+    fireEvent.click(screen.getByRole("radio", { name: "Lo uso" }));
+    fireEvent.click(screen.getByRole("button", { name: "Comprobar con preguntas" }));
+    fireEvent.click(screen.getByText("Right"));
+    fireEvent.click(screen.getByRole("button", { name: "Continuar" }));
+
+    expect(screen.getByText("Past simple")).toBeInTheDocument();
+    expect(screen.queryByText("Choose two")).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Comprobar con preguntas" })).toBeDisabled();
   });
 
   it("keeps submission disabled until every question is answered", () => {
@@ -67,7 +124,8 @@ describe("AssessmentClient", () => {
         method: "POST",
       }),
     );
-    expect(window.localStorage.getItem("assessment:checkpoint:A1")).toContain('"assignedLevel":"A2"');
+    expect(persistAssessmentConceptProfileMock).toHaveBeenCalledWith("user-1", [], "A2");
+    expect(window.localStorage.getItem("assessment:user-1:checkpoint:A1")).toContain('"assignedLevel":"A2"');
   });
 
   it("offers retry when saving the result fails", async () => {

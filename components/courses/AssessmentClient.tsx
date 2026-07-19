@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { useAuth } from "@/components/auth/AuthProvider";
 import { AlertCircle, ArrowLeft, Check, CheckCircle2, RefreshCw } from "@/components/icons";
 import {
   groupQuestionsByLevel,
@@ -10,27 +11,42 @@ import {
   type AssessmentQuestion,
   type AssessmentResult,
 } from "@/lib/courses/assessment";
+import type { AssessmentConcept, ConceptSelfRating } from "@/lib/courses/concept-profile";
+import { persistAssessmentConceptProfile } from "@/lib/courses/assessment-profile";
+
+const SELF_RATING_OPTIONS: Array<{ value: ConceptSelfRating; label: string }> = [
+  { value: "unknown", label: "Todavía no" },
+  { value: "familiar", label: "Me suena" },
+  { value: "confident", label: "Lo uso" },
+];
 
 interface AssessmentClientProps {
   mode: "placement" | "checkpoint";
   questions: AssessmentQuestion[];
+  concepts?: AssessmentConcept[];
   checkpointLabel?: string;
 }
 
-export default function AssessmentClient({
-  mode,
-  questions,
-  checkpointLabel,
-}: AssessmentClientProps) {
+export default function AssessmentClient({ mode, questions, concepts = [], checkpointLabel }: AssessmentClientProps) {
+  const { user } = useAuth();
   const [answers, setAnswers] = useState<Record<string, number>>({});
+  const [selfRatings, setSelfRatings] = useState<Record<string, ConceptSelfRating>>({});
   const [result, setResult] = useState<AssessmentResult | null>(null);
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState(false);
   const [sectionIndex, setSectionIndex] = useState(0);
+  const [placementStep, setPlacementStep] = useState<"inventory" | "questions">(
+    mode === "placement" ? "inventory" : "questions",
+  );
   const sections = groupQuestionsByLevel(questions);
   const section = sections[sectionIndex];
+  const sectionConcepts = concepts.filter((concept) => concept.level === section.level);
+  const showingInventory = mode === "placement" && placementStep === "inventory";
   const visibleQuestions = mode === "placement" ? section.questions : questions;
   const answered = visibleQuestions.filter((question) => answers[question.id] !== undefined).length;
+  const ratedConcepts = sectionConcepts.filter((concept) => selfRatings[concept.lessonSlug] !== undefined).length;
+  const progressValue = showingInventory ? ratedConcepts : answered;
+  const progressTotal = showingInventory ? sectionConcepts.length : visibleQuestions.length;
 
   async function saveLevel(nextResult: AssessmentResult) {
     setSaving(true);
@@ -41,7 +57,9 @@ export default function AssessmentClient({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           mode,
-          evaluatedLevel: questions[0]?.level ?? null,
+          evaluatedLevel: mode === "checkpoint"
+            ? questions[0]?.level ?? null
+            : nextResult.conceptSignals.at(-1)?.level ?? questions[0]?.level ?? null,
           result: nextResult,
         }),
       });
@@ -55,12 +73,20 @@ export default function AssessmentClient({
 
   function completeAssessment(attemptedQuestions: AssessmentQuestion[]) {
     const checkpointLevel = questions[0]?.level;
-    const nextResult = scoreAssessment(attemptedQuestions, answers, mode, checkpointLevel);
+    const assessedConcepts = concepts.filter((concept) => selfRatings[concept.lessonSlug] !== undefined);
+    const nextResult = scoreAssessment(
+      attemptedQuestions, answers, mode, checkpointLevel, assessedConcepts, selfRatings,
+    );
     setResult(nextResult);
     window.localStorage.setItem(
-      `assessment:${mode}:${checkpointLabel ?? "placement"}`,
+      `assessment:${user?.id ?? "guest"}:${mode}:${checkpointLabel ?? "placement"}`,
       JSON.stringify({ ...nextResult, completedAt: new Date().toISOString() }),
     );
+    if (user?.id) {
+      void persistAssessmentConceptProfile(
+        user.id, nextResult.conceptSignals, nextResult.assignedLevel,
+      ).catch(() => undefined);
+    }
     void saveLevel(nextResult);
   }
 
@@ -74,6 +100,7 @@ export default function AssessmentClient({
     const isLast = sectionIndex === sections.length - 1;
     if (passed && !isLast) {
       setSectionIndex((current) => current + 1);
+      setPlacementStep("inventory");
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
@@ -143,31 +170,79 @@ export default function AssessmentClient({
             <div>
               <p className="assessment-kicker">
                 {mode === "placement"
-                  ? `Prueba de nivel · ${section.level.toUpperCase()}`
+                  ? `${showingInventory ? "Temas" : "Prueba de nivel"} · ${section.level.toUpperCase()}`
                   : `Checkpoint ${checkpointLabel ?? ""}`}
               </p>
-              <h1>{mode === "placement" ? "Encuentra tu punto de partida" : "Comprueba lo aprendido"}</h1>
-              <p>Responde sin traductor. El resultado adapta tus ejercicios, pero no limita lo que puedes explorar.</p>
+              <h1>
+                {showingInventory
+                  ? "¿Qué temas ya conoces?"
+                  : mode === "placement"
+                    ? "Encuentra tu punto de partida"
+                    : "Comprueba lo aprendido"}
+              </h1>
+              <p>
+                {showingInventory
+                  ? "Sé sincero: después comprobaremos estas ideas con preguntas. Tu respuesta solo ayuda a ordenar el plan."
+                  : "Responde sin traductor. El resultado adapta tus ejercicios, pero no limita lo que puedes explorar."}
+              </p>
             </div>
             <div className="assessment-progress-copy" aria-live="polite">
-              <strong>{answered}</strong>
-              <span>de {visibleQuestions.length}</span>
+              <strong>{progressValue}</strong>
+              <span>de {progressTotal}</span>
             </div>
           </div>
           <div
             className="assessment-progress"
             role="progressbar"
             aria-valuemin={0}
-            aria-valuemax={visibleQuestions.length}
-            aria-valuenow={answered}
-            aria-label="Preguntas respondidas"
+            aria-valuemax={progressTotal}
+            aria-valuenow={progressValue}
+            aria-label={showingInventory ? "Temas valorados" : "Preguntas respondidas"}
           >
-            <span style={{ transform: `scaleX(${visibleQuestions.length ? answered / visibleQuestions.length : 0})` }} />
+            <span style={{ transform: `scaleX(${progressTotal ? progressValue / progressTotal : 0})` }} />
           </div>
         </header>
 
-        <div className="assessment-questions">
-          {visibleQuestions.map((question, questionIndex) => (
+        {showingInventory ? (
+          <div className="assessment-concepts">
+            {sectionConcepts.map((concept, conceptIndex) => (
+              <fieldset key={concept.lessonSlug} className="assessment-concept">
+                <legend>
+                  <span>{String(conceptIndex + 1).padStart(2, "0")}</span>
+                  <span>{concept.title}</span>
+                </legend>
+                {concept.goal ? <p>{concept.goal}</p> : null}
+                <div className="assessment-concept-options">
+                  {SELF_RATING_OPTIONS.map((option) => {
+                    const selected = selfRatings[concept.lessonSlug] === option.value;
+                    return (
+                      <label
+                        key={option.value}
+                        className={selected
+                          ? "assessment-concept-option assessment-concept-option--selected"
+                          : "assessment-concept-option"}
+                      >
+                        <input
+                          type="radio"
+                          name={`concept:${concept.lessonSlug}`}
+                          checked={selected}
+                          onChange={() => setSelfRatings((current) => ({
+                            ...current,
+                            [concept.lessonSlug]: option.value,
+                          }))}
+                        />
+                        <span aria-hidden />
+                        {option.label}
+                      </label>
+                    );
+                  })}
+                </div>
+              </fieldset>
+            ))}
+          </div>
+        ) : (
+          <div className="assessment-questions">
+            {visibleQuestions.map((question, questionIndex) => (
             <fieldset key={question.id} className="assessment-question">
               <legend className="sr-only">{question.prompt}</legend>
               <div className="assessment-question-heading">
@@ -200,21 +275,35 @@ export default function AssessmentClient({
                 })}
               </div>
             </fieldset>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
 
         <footer className="assessment-footer">
           <p>
-            {answered === visibleQuestions.length
-              ? "Sección completa."
-              : `Faltan ${visibleQuestions.length - answered} preguntas.`}
+            {showingInventory
+              ? ratedConcepts === sectionConcepts.length
+                ? "Inventario completo."
+                : `Faltan ${sectionConcepts.length - ratedConcepts} temas.`
+              : answered === visibleQuestions.length
+                ? "Sección completa."
+                : `Faltan ${visibleQuestions.length - answered} preguntas.`}
           </p>
           <button
             type="button"
-            disabled={answered !== visibleQuestions.length}
-            onClick={finishSection}
+            disabled={showingInventory
+              ? ratedConcepts !== sectionConcepts.length
+              : answered !== visibleQuestions.length}
+            onClick={showingInventory ? () => {
+              setPlacementStep("questions");
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            } : finishSection}
           >
-            {mode === "placement" && sectionIndex < sections.length - 1 ? "Continuar" : "Ver resultado"}
+            {showingInventory
+              ? "Comprobar con preguntas"
+              : mode === "placement" && sectionIndex < sections.length - 1
+                ? "Continuar"
+                : "Ver resultado"}
           </button>
         </footer>
       </div>

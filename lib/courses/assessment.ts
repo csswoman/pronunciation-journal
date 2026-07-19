@@ -2,6 +2,12 @@ import type { CefrLevel } from "@/lib/core-1000/types";
 import type { CefrLevelId } from "@/lib/courses/types";
 import type { GrammarQuizQuestion } from "@/lib/courses/grammar-deck/types";
 import { LEVEL_ASSESSMENT_CONTRACTS, buildAssessment } from "@/lib/courses/curriculum";
+import {
+  deriveConceptSignal,
+  type AssessmentConcept,
+  type ConceptSelfRating,
+  type ConceptSignal,
+} from "@/lib/courses/concept-profile";
 
 export interface AssessmentQuestion {
   id: string;
@@ -23,6 +29,7 @@ export interface AssessmentResult {
   topicScores: Array<{ lessonSlug: string; title: string; correct: number; total: number }>;
   strengths: Array<{ lessonSlug: string; title: string }>;
   needsReview: Array<{ lessonSlug: string; title: string }>;
+  conceptSignals: ConceptSignal[];
 }
 
 const CEFR_ORDER: CefrLevelId[] = ["a1", "a2", "b1", "b2", "c1"];
@@ -106,20 +113,27 @@ export function buildAssessmentQuestions(
   checkpointLevel?: CefrLevelId,
 ): AssessmentQuestion[] {
   return buildAssessment(mode, checkpointLevel).flatMap((section) => {
-    const authored = section.items.flatMap((item) => {
-      const quiz = quizzes[item.lessonSlug];
-      if (!quiz?.length) return [];
-      const selected = quiz.slice(0, 2);
-      return selected.map((question, quizIndex) => ({
-        id: `${section.level}:${item.lessonSlug}:${quizIndex}`,
-        level: section.level,
-        lessonSlug: item.lessonSlug,
-        prompt: question.q,
-        options: question.options,
-        answer: question.answer,
-        explanation: question.explain,
-      }));
-    }).slice(0, QUESTIONS_PER_LEVEL - READING_QUESTIONS[section.level].length);
+    const authoredLimit = QUESTIONS_PER_LEVEL - READING_QUESTIONS[section.level].length;
+    const authored: AssessmentQuestion[] = [];
+    const availableItems = section.items.filter((item) => quizzes[item.lessonSlug]?.length);
+    const maximumQuizLength = Math.max(0, ...availableItems.map((item) => quizzes[item.lessonSlug].length));
+
+    for (let quizIndex = 0; quizIndex < maximumQuizLength && authored.length < authoredLimit; quizIndex += 1) {
+      for (const item of availableItems) {
+        const question = quizzes[item.lessonSlug][quizIndex];
+        if (!question) continue;
+        authored.push({
+          id: `${section.level}:${item.lessonSlug}:${quizIndex}`,
+          level: section.level,
+          lessonSlug: item.lessonSlug,
+          prompt: question.q,
+          options: question.options,
+          answer: question.answer,
+          explanation: question.explain,
+        });
+        if (authored.length === authoredLimit) break;
+      }
+    }
     return [...authored, ...READING_QUESTIONS[section.level]];
   });
 }
@@ -147,6 +161,8 @@ export function scoreAssessment(
   answers: Record<string, number>,
   mode: "placement" | "checkpoint" = "placement",
   checkpointLevel?: CefrLevelId,
+  concepts: AssessmentConcept[] = [],
+  selfRatings: Record<string, ConceptSelfRating> = {},
 ): AssessmentResult {
   const passedLevels: CefrLevelId[] = [];
   const topicMap = new Map<string, { correct: number; total: number }>();
@@ -180,6 +196,13 @@ export function scoreAssessment(
     title: lessonTitle(lessonSlug),
     ...value,
   }));
+  const assessedAt = new Date().toISOString();
+  const conceptSignals = concepts.map((concept) => deriveConceptSignal(
+    concept,
+    selfRatings[concept.lessonSlug] ?? "unknown",
+    topicMap.get(concept.lessonSlug) ?? { correct: 0, total: 0 },
+    assessedAt,
+  ));
 
   return {
     assignedLevel: assigned.toUpperCase() as CefrLevel,
@@ -194,5 +217,6 @@ export function scoreAssessment(
     needsReview: topicScores
       .filter((topic) => topic.correct < topic.total)
       .map(({ lessonSlug, title }) => ({ lessonSlug, title })),
+    conceptSignals,
   };
 }

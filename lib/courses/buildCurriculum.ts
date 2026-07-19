@@ -49,7 +49,12 @@ export function buildLevel(
   title: string,
   hours: string,
   courses: CourseInput[],
-  opts?: { isElective?: boolean; spineIcon?: ElectiveSpineIcon }
+  opts?: {
+    isElective?: boolean;
+    spineIcon?: ElectiveSpineIcon;
+    optionalLabel?: string;
+    optionalTitle?: string;
+  }
 ): CoursePathLevel {
   const core = courses.filter((c) => c.p > 0);
   const optional = courses.filter((c) => c.p === 0);
@@ -71,8 +76,8 @@ export function buildLevel(
     const { lessons } = mapLessons(id, `${id}-opt`, optional, lessonNumber);
     units.push({
       id: `${id}-optional`,
-      label: "Extra",
-      title: "Profundiza cuando quieras",
+      label: opts?.optionalLabel ?? "Extra",
+      title: opts?.optionalTitle ?? "Profundiza cuando quieras",
       lessons,
       isOptionalSection: true,
     });

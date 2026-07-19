@@ -1,0 +1,43 @@
+{
+  "meta": { "eyebrow": "C1+ · Competencia intercultural", "title": "Pragmática", "titleEmphasis": "intercultural avanzada", "goal": "Puedes adaptar franqueza, cortesía, humor y desacuerdo al contexto sin convertir diferencias culturales en estereotipos." },
+  "related": [{ "slug": "c1-pragmatica-tono", "label": "Pragmática y tono" }, { "slug": "c1-humor-ironia", "label": "Humor e ironía" }],
+  "cards": [
+    { "id": "c1p-intercultural-variables", "tag": "Contexto", "title": "Lee la situación antes que la nacionalidad", "lede": "La relación, el poder, el canal y la urgencia predicen más que una etiqueta cultural aislada.", "blocks": [{ "type": "rules", "rows": [
+      { "key": "Relación", "value": "Is this a first exchange or an established working relationship?" },
+      { "key": "Poder", "value": "Who can refuse, decide, or bear the cost?" },
+      { "key": "Canal", "value": "A brief chat message can sound harsher than the same words in a call." },
+      { "key": "Urgencia", "value": "Time pressure may require more direct language and more explicit reasons." }
+    ] }] },
+    { "id": "c1p-intercultural-franqueza", "tag": "Franqueza", "title": "Calibra petición y razón", "lede": "La claridad no exige brusquedad; puedes graduar la petición y explicar por qué importa.", "blocks": [{ "type": "contrast", "columns": [
+      { "label": "Más directa", "rule": "Útil cuando hay urgencia, confianza o responsabilidad clara.", "examples": ["Please send the revised figures by noon so we can meet the filing deadline."] },
+      { "label": "Más negociable", "rule": "Útil cuando la carga o la autoridad no están claras.", "examples": ["Would it be possible to send the revised figures by noon? That would keep the filing on schedule."] }
+    ] }] },
+    { "id": "c1p-intercultural-senales", "tag": "Interpretación", "title": "No confundas forma con intención", "lede": "Una negativa indirecta puede parecer ambigua; una respuesta breve puede parecer hostil sin serlo.", "blocks": [{ "type": "rules", "rows": [
+      { "key": "Indirecta", "value": "That timeline may be difficult." },
+      { "key": "Comprobación", "value": "Should I understand that Friday is not feasible?" },
+      { "key": "Brevedad", "value": "Noted. Will revise." },
+      { "key": "Comprobación", "value": "Just to confirm, are you comfortable with the proposal apart from that revision?" }
+    ] }] },
+    { "id": "c1p-intercultural-desacuerdo", "tag": "Desacuerdo", "title": "Haz explícita la intención relacional", "lede": "Cuando las normas de desacuerdo no son compartidas, una breve señal evita atribuciones negativas.", "blocks": [{ "type": "pairs", "lines": [
+      { "variant": "bad", "text": "That approach is wrong." },
+      { "variant": "good", "text": "I’m going to be direct because the deadline is close: I see a serious risk in that approach.", "note": "explica por qué aumenta la franqueza" },
+      { "variant": "bad", "text": "Whatever you think is best.", "note": "puede ocultar desacuerdo o sonar desentendido" },
+      { "variant": "good", "text": "I can support that decision, though I still have one concern about timing.", "note": "distingue apoyo y reserva" }
+    ] }] },
+    { "id": "c1p-intercultural-humor", "tag": "Humor", "title": "Usa humor con permiso contextual", "lede": "La ironía depende de conocimiento compartido y puede fallar cuando hay poder desigual, tensión o baja confianza.", "blocks": [{ "type": "contrast", "columns": [
+      { "label": "Alto riesgo", "rule": "La broma apunta a una persona, error o identidad.", "examples": ["Great job missing another deadline.", "I guess punctuality isn’t your thing."] },
+      { "label": "Menor riesgo", "rule": "El hablante se incluye y el significado sigue claro.", "examples": ["We’ve created enough versions to start a small museum. Let’s choose one today.", "Joking aside, we need a final owner."] }
+    ] }] },
+    { "id": "c1p-intercultural-reparacion", "tag": "Reparación", "title": "Repara el impacto sin defender la intención", "lede": "Si una frase cae mal, reconoce el efecto, aclara y ofrece una formulación más útil.", "blocks": [{ "type": "rules", "rows": [
+      { "key": "Reconocer", "value": "I can see that my message sounded dismissive." },
+      { "key": "Aclarar", "value": "I meant to question the timeline, not the team’s effort." },
+      { "key": "Reformular", "value": "What I should have said is that the current timeline leaves too little room for testing." },
+      { "key": "Aprender", "value": "How would you prefer concerns like this to be raised?" }
+    ] }], "tip": { "label": "Hábito:", "body": "formula una hipótesis sobre la intención y compruébala; no conviertas una interacción en una regla sobre todo un grupo." } }
+  ],
+  "quiz": [
+    { "q": "¿Qué conviene evaluar antes que la nacionalidad?", "options": ["Relación, poder, canal y urgencia", "El acento del hablante", "Un estereotipo aprendido"], "answer": 0, "explain": "Las variables situacionales ofrecen evidencia más útil para adaptar el lenguaje." },
+    { "q": "¿Cómo verificas una negativa indirecta?", "options": ["La ignoras", "Should I understand that Friday is not feasible?", "You need to be clearer."], "answer": 1, "explain": "Comprueba la interpretación sin acusar al interlocutor de ambigüedad." },
+    { "q": "¿Cuál reparación se centra en el impacto?", "options": ["You misunderstood me.", "I can see that my message sounded dismissive; I meant to question the timeline.", "I was only joking."], "answer": 1, "explain": "Reconoce el efecto y aclara el objetivo sin culpar al receptor." }
+  ]
+}

@@ -8,7 +8,21 @@ import type { CefrLevelId } from "@/lib/courses/types";
 
 export const runtime = "nodejs";
 
-const AssessmentResultSchema = z.object({
+const ConceptSignalSchema = z.object({
+  lessonSlug: z.string().trim().min(1).max(200),
+  level: z.enum(["a1", "a2", "b1", "b2", "c1"] satisfies [CefrLevelId, ...CefrLevelId[]]),
+  title: z.string().trim().min(1).max(200),
+  selfRating: z.enum(["unknown", "familiar", "confident"]),
+  status: z.enum(["mastered", "review", "learn"]),
+  correct: z.number().int().min(0).max(100),
+  total: z.number().int().min(0).max(100),
+  assessedAt: z.iso.datetime({ offset: true }),
+}).strict().refine((signal) => signal.correct <= signal.total, {
+  message: "correct cannot exceed total",
+  path: ["correct"],
+});
+
+export const AssessmentResultSchema = z.object({
   mode: z.enum(["placement", "checkpoint"]),
   evaluatedLevel: z.enum(["a1", "a2", "b1", "b2", "c1"] satisfies [CefrLevelId, ...CefrLevelId[]]).nullable().optional(),
   result: z.object({
@@ -31,6 +45,7 @@ const AssessmentResultSchema = z.object({
       lessonSlug: z.string().min(1).max(200),
       title: z.string().min(1).max(200),
     }).strict()).max(100),
+    conceptSignals: z.array(ConceptSignalSchema).max(100),
   }).strict(),
 }).strict();
 

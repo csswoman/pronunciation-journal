@@ -1,0 +1,44 @@
+{
+  "meta": { "eyebrow": "C1+ · Expresión oral", "title": "Producción espontánea", "titleEmphasis": "extensa", "goal": "Puedes sostener varios minutos de discurso claro, organizar digresiones y autocorregirte sin perder el hilo central." },
+  "related": [{ "slug": "c1-presentaciones-expresion-oral", "label": "Presentaciones y expresión oral" }, { "slug": "c1-recursos-conversacionales", "label": "Recursos conversacionales" }],
+  "cards": [
+    { "id": "c1p-espontanea-esqueleto", "tag": "Estructura", "title": "Piensa en movimientos, no en frases", "lede": "Una respuesta larga se sostiene mejor con un mapa de ideas que con oraciones memorizadas.", "blocks": [{ "type": "rules", "rows": [
+      { "key": "Postura", "value": "My short answer is yes, but only under two conditions." },
+      { "key": "Razón", "value": "The first is practical: teams need time to adapt." },
+      { "key": "Ejemplo", "value": "For example, our pilot improved only after the second month." },
+      { "key": "Retorno", "value": "So the policy can work, provided that the transition is supported." }
+    ] }] },
+    { "id": "c1p-espontanea-senalizacion", "tag": "Señalización", "title": "Haz audible la arquitectura", "lede": "Las señales discursivas ayudan al oyente y también te dan tiempo para planear el siguiente movimiento.", "blocks": [{ "type": "rules", "rows": [
+      { "key": "Abrir", "value": "There are three parts to my answer." },
+      { "key": "Contrastar", "value": "That said, the longer-term picture is different." },
+      { "key": "Aterrizar", "value": "To make that concrete, consider a small clinic." },
+      { "key": "Cerrar", "value": "The broader point is that access depends on design, not technology alone." }
+    ] }] },
+    { "id": "c1p-espontanea-digresion", "tag": "Digresión", "title": "Abre y cierra paréntesis", "lede": "Una digresión útil aporta contexto y anuncia claramente el regreso a la línea principal.", "blocks": [{ "type": "contrast", "columns": [
+      { "label": "Deriva", "rule": "El hablante añade asociaciones sin retorno.", "examples": ["That reminds me of another project... and the manager there... and actually..."] },
+      { "label": "Digresión controlada", "rule": "Marca propósito y regreso.", "examples": ["A quick side note, because it explains the delay...", "But let me return to the main question: what should we change now?"] }
+    ] }] },
+    { "id": "c1p-espontanea-reparacion", "tag": "Reparación", "title": "Corrige sin reiniciar", "lede": "La fluidez avanzada incluye reparaciones discretas que afinan el significado mientras el discurso continúa.", "blocks": [{ "type": "rules", "rows": [
+      { "key": "Precisión", "value": "It reduced costs—more precisely, it reduced upfront costs." },
+      { "key": "Reformulación", "value": "Let me put that differently: the barrier wasn’t skill; it was time." },
+      { "key": "Corrección", "value": "We launched in May—sorry, in late April." },
+      { "key": "Límite", "value": "Corrige lo que cambia el mensaje; no persigas perfección en cada detalle." }
+    ] }] },
+    { "id": "c1p-espontanea-ejemplos", "tag": "Desarrollo", "title": "Expande con ejemplos que prueban", "lede": "El ejemplo no debe ser una anécdota decorativa: tiene que mostrar el mecanismo de tu argumento.", "blocks": [{ "type": "pairs", "lines": [
+      { "variant": "bad", "text": "Training matters. For example, I once attended a very interesting workshop.", "note": "la anécdota no demuestra la afirmación" },
+      { "variant": "good", "text": "Training matters because tools change behavior only when people can practice safely. In our pilot, error rates fell after staff rehearsed the new workflow with sample cases.", "note": "el ejemplo muestra cómo ocurre el efecto" },
+      { "variant": "good", "text": "That case is limited, but it illustrates why practice time should be part of implementation." }
+    ] }] },
+    { "id": "c1p-espontanea-entrenamiento", "tag": "Transferencia", "title": "Entrena con presión gradual", "lede": "Practica la arquitectura del discurso, no una respuesta fija que se rompe ante la primera repregunta.", "blocks": [{ "type": "rules", "rows": [
+      { "key": "Minuto 1", "value": "Expón postura, dos razones y cierre sin notas." },
+      { "key": "Minuto 3", "value": "Añade ejemplo, contraste y una digresión controlada." },
+      { "key": "Repregunta", "value": "Defiende, limita o modifica tu postura con nueva evidencia." },
+      { "key": "Revisión", "value": "Comprueba mapa, señales, calidad de ejemplos y claridad del cierre." }
+    ] }], "tip": { "label": "Objetivo:", "body": "que el oyente pueda reconstruir tu mapa aunque no recuerde cada frase." } }
+  ],
+  "quiz": [
+    { "q": "¿Qué enfoque sostiene mejor una respuesta espontánea larga?", "options": ["Memorizar cada frase", "Planear movimientos como postura, razón, ejemplo y retorno", "Evitar cualquier pausa"], "answer": 1, "explain": "Los movimientos ofrecen estructura flexible ante cambios y repreguntas." },
+    { "q": "¿Cuál frase cierra una digresión?", "options": ["That reminds me of something else.", "But let me return to the main question.", "And another thing..."], "answer": 1, "explain": "Señala explícitamente el regreso a la línea principal." },
+    { "q": "¿Cuál es una reparación fluida?", "options": ["I must restart everything.", "It reduced costs—more precisely, upfront costs.", "Ignore what I just said."], "answer": 1, "explain": "Afina el alcance sin abandonar la estructura del discurso." }
+  ]
+}

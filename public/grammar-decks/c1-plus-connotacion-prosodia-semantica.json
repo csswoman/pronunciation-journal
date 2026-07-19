@@ -1,0 +1,108 @@
+{
+  "meta": {
+    "eyebrow": "C1+ · Precisión léxica",
+    "title": "Connotación y",
+    "titleEmphasis": "prosodia semántica",
+    "goal": "Puedes elegir entre palabras de significado cercano según su carga evaluativa, sus asociaciones habituales y el efecto deseado."
+  },
+  "related": [
+    { "slug": "c1-precision-lexica", "label": "Precisión léxica" },
+    { "slug": "c1-hedging-matices", "label": "Hedging y matices" }
+  ],
+  "cards": [
+    {
+      "id": "c1-plus-connotacion-prosodia-significado",
+      "tag": "Idea central",
+      "title": "El diccionario no agota el efecto",
+      "lede": "Dos palabras pueden compartir referente y, aun así, transmitir evaluación, registro o asociaciones diferentes.",
+      "blocks": [{
+        "type": "contrast",
+        "columns": [
+          { "label": "Delgado neutral o positivo", "rule": "slim · lean", "examples": ["a slim laptop", "a lean organization"] },
+          { "label": "Delgado con posible juicio", "rule": "skinny · scrawny", "examples": ["skinny jeans", "a scrawny stray dog"] }
+        ]
+      }],
+      "tip": { "label": "Pregunta:", "body": "Antes de elegir un sinónimo, piensa: ¿qué postura hacia el referente deja oír esta palabra?" }
+    },
+    {
+      "id": "c1-plus-connotacion-prosodia-carga",
+      "tag": "Connotación",
+      "title": "Cambia el encuadre con una sola elección",
+      "lede": "Los pares evaluativos presentan el mismo comportamiento como virtud, defecto o hecho neutral.",
+      "blocks": [{
+        "type": "rules",
+        "rows": [
+          { "key": "Positivo", "value": "She is persistent when a problem is difficult." },
+          { "key": "Negativo", "value": "She is stubborn when a problem is difficult." },
+          { "key": "Neutral", "value": "She continues working on difficult problems." },
+          { "key": "Control", "value": "Elige la evaluación deliberadamente; no la escondas dentro de un supuesto sinónimo." }
+        ]
+      }]
+    },
+    {
+      "id": "c1-plus-connotacion-prosodia-patrones",
+      "tag": "Asociaciones",
+      "title": "Observa la compañía habitual de una palabra",
+      "lede": "La prosodia semántica surge cuando una expresión aparece repetidamente cerca de situaciones favorables o desfavorables.",
+      "blocks": [{
+        "type": "rules",
+        "rows": [
+          { "key": "cause", "value": "cause damage, concern, delays", "hint": "Suele acompañar resultados negativos." },
+          { "key": "provide", "value": "provide support, access, opportunities", "hint": "Suele presentar un beneficio o recurso." },
+          { "key": "set in", "value": "decay, fatigue or panic set in", "hint": "Frecuente con estados no deseados que comienzan." },
+          { "key": "commit", "value": "commit a crime, error or violation", "hint": "No equivale a do en cualquier contexto." }
+        ]
+      }]
+    },
+    {
+      "id": "c1-plus-connotacion-prosodia-colocacion",
+      "tag": "Colocación",
+      "title": "Distingue posible de idiomático",
+      "lede": "Una combinación puede ser comprensible y gramatical, pero activar asociaciones extrañas para el lector.",
+      "blocks": [{
+        "type": "pairs",
+        "lines": [
+          { "variant": "bad", "text": "The new mentoring program caused opportunities for junior staff." },
+          { "variant": "good", "text": "The new mentoring program created opportunities for junior staff.", "note": "Cause atrae resultados problemáticos; create es neutral aquí." },
+          { "variant": "bad", "text": "The update provided several unexpected outages." },
+          { "variant": "good", "text": "The update triggered several unexpected outages.", "note": "Provide sugiere normalmente algo entregado como recurso." }
+        ]
+      }]
+    },
+    {
+      "id": "c1-plus-connotacion-prosodia-registro",
+      "tag": "Registro",
+      "title": "Considera quién puede recibir la etiqueta",
+      "lede": "Algunas palabras son aceptables para objetos o marketing, pero invasivas cuando describen cuerpos, identidades o comunidades.",
+      "blocks": [{
+        "type": "contrast",
+        "columns": [
+          { "label": "Descripción funcional", "rule": "compact · lightweight · space-saving", "examples": ["a compact keyboard", "a lightweight frame"] },
+          { "label": "Descripción evaluativa", "rule": "tiny · flimsy · cheap", "examples": ["a tiny apartment", "a flimsy frame", "cheap materials"] }
+        ]
+      }]
+    },
+    {
+      "id": "c1-plus-connotacion-prosodia-revision",
+      "tag": "Producción",
+      "title": "Audita el efecto acumulado",
+      "lede": "Una palabra aislada parece neutral; varias elecciones alineadas pueden convertir una descripción en elogio o acusación.",
+      "blocks": [{
+        "type": "rules",
+        "rows": [
+          { "key": "1. Subraya", "value": "Marca sustantivos, verbos y adjetivos evaluativos." },
+          { "key": "2. Sustituye", "value": "Prueba una opción neutral y observa qué postura desaparece." },
+          { "key": "3. Coloca", "value": "Comprueba qué palabras suelen acompañar la elección." },
+          { "key": "4. Decide", "value": "Conserva la carga solo si coincide con propósito, evidencia y audiencia." }
+        ]
+      }],
+      "tip": { "label": "Práctica:", "body": "Describe una misma decisión como logro, problema y hecho neutral; identifica exactamente qué palabras cambian el encuadre." }
+    }
+  ],
+  "quiz": [
+    { "q": "¿Qué diferencia principal hay entre persistent y stubborn?", "options": ["Solo la longitud", "La evaluación positiva o negativa de una conducta similar", "El tiempo verbal"], "answer": 1, "explain": "Ambas pueden referirse a continuar, pero encuadran esa continuidad de forma distinta." },
+    { "q": "Which collocation sounds most natural for a beneficial result?", "options": ["cause opportunities", "create opportunities", "commit opportunities"], "answer": 1, "explain": "Create combina naturalmente con opportunities; cause suele atraer consecuencias negativas." },
+    { "q": "¿Qué es prosodia semántica?", "options": ["El ritmo físico de una oración", "La asociación evaluativa que una expresión adquiere por su compañía habitual", "La pronunciación de un sinónimo"], "answer": 1, "explain": "La repetición junto a contextos positivos o negativos influye en el efecto de la expresión." },
+    { "q": "¿Cómo detectas carga evaluativa acumulada?", "options": ["Revisando solo la gramática", "Sustituyendo elecciones marcadas por opciones neutrales", "Contando sílabas"], "answer": 1, "explain": "La sustitución neutral permite ver qué postura aportaba cada elección léxica." }
+  ]
+}

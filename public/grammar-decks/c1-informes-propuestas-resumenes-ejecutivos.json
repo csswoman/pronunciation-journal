@@ -1,0 +1,109 @@
+{
+  "meta": {
+    "eyebrow": "C1 · Escritura profesional",
+    "title": "Informes, propuestas y",
+    "titleEmphasis": "resúmenes ejecutivos",
+    "goal": "Puedes seleccionar y organizar evidencia para producir un informe, una propuesta o un resumen ejecutivo adecuado a su audiencia."
+  },
+  "related": [
+    { "slug": "c1-escritura-academica-profesional", "label": "Escritura académica y profesional" },
+    { "slug": "c1-cohesion-discurso", "label": "Cohesión del discurso" }
+  ],
+  "cards": [
+    {
+      "id": "c1-informes-propuestas-resumenes-proposito",
+      "tag": "Géneros",
+      "title": "Empieza por la decisión que debe facilitar el texto",
+      "lede": "Los tres géneros pueden compartir datos, pero responden a preguntas y lectores distintos.",
+      "blocks": [{
+        "type": "rules",
+        "rows": [
+          { "key": "Informe", "value": "¿Qué ocurrió, por qué y qué significa la evidencia?" },
+          { "key": "Propuesta", "value": "¿Qué deberíamos hacer, por qué y con qué recursos?" },
+          { "key": "Resumen ejecutivo", "value": "¿Qué necesita saber y decidir un lector con poco tiempo?" },
+          { "key": "Control", "value": "Define audiencia, decisión y alcance antes de redactar." }
+        ]
+      }]
+    },
+    {
+      "id": "c1-informes-propuestas-resumenes-informe",
+      "tag": "Informe",
+      "title": "Separa hallazgos de interpretación",
+      "lede": "Un informe fiable permite distinguir el dato observado, su lectura y los límites del análisis.",
+      "blocks": [{
+        "type": "rules",
+        "rows": [
+          { "key": "Context", "value": "The pilot ran in three stores from January through March." },
+          { "key": "Finding", "value": "Average wait time fell by 18 percent." },
+          { "key": "Interpretation", "value": "The change likely reflects the new pickup process." },
+          { "key": "Limitation", "value": "Because all three stores were urban, the result may not generalize to rural locations." }
+        ]
+      }]
+    },
+    {
+      "id": "c1-informes-propuestas-resumenes-propuesta",
+      "tag": "Propuesta",
+      "title": "Une recomendación, fundamento y ejecución",
+      "lede": "Una propuesta persuasiva anticipa costos, riesgos y criterios de éxito en vez de limitarse a vender una idea.",
+      "blocks": [{
+        "type": "rules",
+        "rows": [
+          { "key": "Need", "value": "Customer response time has exceeded our target for six months." },
+          { "key": "Recommendation", "value": "We recommend a twelve-week scheduling pilot in the West region." },
+          { "key": "Resources", "value": "The pilot requires two trainers and a $15,000 software budget." },
+          { "key": "Success", "value": "We will proceed only if response time falls by at least 10 percent without lowering satisfaction." }
+        ]
+      }]
+    },
+    {
+      "id": "c1-informes-propuestas-resumenes-ejecutivo",
+      "tag": "Resumen",
+      "title": "Pon la conclusión antes del recorrido",
+      "lede": "El resumen ejecutivo comprime el razonamiento; no funciona como introducción vaga ni como índice del documento.",
+      "blocks": [{
+        "type": "pairs",
+        "lines": [
+          { "variant": "bad", "text": "This report discusses several issues related to our delivery process." },
+          { "variant": "good", "text": "Late handoffs caused 62 percent of delivery delays; a shared cutoff time could reduce them within one quarter.", "note": "Hallazgo, consecuencia y acción." },
+          { "variant": "bad", "text": "More details can be found in the sections below." },
+          { "variant": "good", "text": "The proposed pilot costs $24,000 and requires approval by August 15.", "note": "Incluye la decisión requerida." }
+        ]
+      }]
+    },
+    {
+      "id": "c1-informes-propuestas-resumenes-evidencia",
+      "tag": "Precisión",
+      "title": "Calibra la afirmación a la evidencia",
+      "lede": "La fuerza verbal debe reflejar la calidad y el alcance real de los datos.",
+      "blocks": [{
+        "type": "contrast",
+        "columns": [
+          { "label": "Evidencia limitada", "rule": "suggests · may indicate · is consistent with", "examples": ["The survey suggests that onboarding remains a barrier.", "The pattern may indicate a seasonal effect."] },
+          { "label": "Evidencia sólida", "rule": "shows · demonstrates · resulted in", "examples": ["The audit shows that all five controls were implemented.", "The policy resulted in a documented 12 percent reduction."] }
+        ]
+      }]
+    },
+    {
+      "id": "c1-informes-propuestas-resumenes-revision",
+      "tag": "Revisión",
+      "title": "Comprueba utilidad antes de estilo",
+      "lede": "Un documento profesional tiene éxito si el lector encuentra la evidencia y toma la decisión correcta.",
+      "blocks": [{
+        "type": "rules",
+        "rows": [
+          { "key": "Propósito", "value": "¿La primera sección responde a la pregunta central del género?" },
+          { "key": "Trazabilidad", "value": "¿Cada recomendación se conecta con un hallazgo verificable?" },
+          { "key": "Acción", "value": "¿Quedan claros responsable, plazo, costo y criterio de éxito?" },
+          { "key": "Compresión", "value": "¿El resumen conserva cifras, riesgos y decisión sin copiar todo el informe?" }
+        ]
+      }],
+      "tip": { "label": "Práctica:", "body": "Transforma un mismo conjunto de datos en un hallazgo de informe, una recomendación y dos frases de resumen ejecutivo." }
+    }
+  ],
+  "quiz": [
+    { "q": "¿Qué pregunta central responde una propuesta?", "options": ["¿Qué deberíamos hacer y con qué recursos?", "¿Qué palabras difíciles puedo usar?", "¿Cómo repito todo el informe?"], "answer": 0, "explain": "La propuesta justifica una acción y especifica su ejecución." },
+    { "q": "Which sentence belongs in an executive summary?", "options": ["This report discusses various matters.", "Late handoffs caused 62 percent of delays; a shared cutoff time could reduce them.", "See section four for more information."], "answer": 1, "explain": "La segunda entrega de inmediato el hallazgo y una implicación accionable." },
+    { "q": "Los datos provienen de un piloto pequeño. ¿Qué verbo calibra mejor la afirmación?", "options": ["proves", "guarantees", "suggests"], "answer": 2, "explain": "Suggests reconoce que la evidencia orienta una conclusión sin demostrarla de manera definitiva." },
+    { "q": "¿Qué vuelve verificable una propuesta?", "options": ["Un tono entusiasta", "Un criterio de éxito medible", "Una introducción extensa"], "answer": 1, "explain": "El criterio medible permite evaluar si la intervención produjo el resultado prometido." }
+  ]
+}

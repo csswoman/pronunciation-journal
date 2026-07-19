@@ -1,0 +1,108 @@
+{
+  "meta": {
+    "eyebrow": "C1 · Conversación estratégica",
+    "title": "Desacuerdo",
+    "titleEmphasis": "colaborativo",
+    "goal": "Puedes cuestionar una idea, conceder parte del argumento y proponer una alternativa sin deteriorar la colaboración."
+  },
+  "related": [
+    { "slug": "c1-pragmatica-tono", "label": "Pragmática, tono y cortesía" },
+    { "slug": "c1-argumentos-discusiones", "label": "Argumentos y discusiones" }
+  ],
+  "cards": [
+    {
+      "id": "c1-desacuerdo-colaborativo-intencion",
+      "tag": "Idea central",
+      "title": "Cuestiona la idea, no a la persona",
+      "lede": "Un desacuerdo eficaz deja clara tu posición y, al mismo tiempo, mantiene abierta la conversación.",
+      "blocks": [{
+        "type": "rules",
+        "rows": [
+          { "key": "Reconoce", "value": "I see why that option is appealing.", "hint": "Valida una razón real, no toda la conclusión." },
+          { "key": "Delimita", "value": "Where I differ is on the timeline.", "highlights": ["Where I differ"] },
+          { "key": "Avanza", "value": "Could we test both approaches on a smaller scale?", "hint": "Cierra con un siguiente paso." }
+        ]
+      }],
+      "tip": { "label": "Principio:", "body": "Ser cortés no significa ocultar el desacuerdo; significa hacerlo fácil de examinar." }
+    },
+    {
+      "id": "c1-desacuerdo-colaborativo-concesion",
+      "tag": "Concesión",
+      "title": "Concede sin abandonar tu postura",
+      "lede": "Una concesión precisa muestra que escuchaste y prepara un contraste más creíble.",
+      "blocks": [{
+        "type": "contrast",
+        "columns": [
+          { "label": "Concesión parcial", "rule": "That's true to an extent, but...", "examples": ["That's true to an extent, but it doesn't address the staffing issue.", "I agree that it's faster; I'm less sure it's sustainable."] },
+          { "label": "Acuerdo condicionado", "rule": "I could support that if...", "examples": ["I could support that if we added a review after thirty days.", "That would work, provided we keep the scope narrow."] }
+        ]
+      }]
+    },
+    {
+      "id": "c1-desacuerdo-colaborativo-premisa",
+      "tag": "Premisas",
+      "title": "Cuestiona lo que el argumento da por sentado",
+      "lede": "En vez de rechazar la conclusión de frente, examina la evidencia o la suposición que la sostiene.",
+      "blocks": [{
+        "type": "rules",
+        "rows": [
+          { "key": "Suposición", "value": "Are we assuming that demand will stay constant?" },
+          { "key": "Evidencia", "value": "What evidence do we have that the delay is caused by the vendor?" },
+          { "key": "Alcance", "value": "Does that finding apply to every team, or only to the pilot group?" },
+          { "key": "Alternativa", "value": "Could there be another explanation for the drop?" }
+        ]
+      }]
+    },
+    {
+      "id": "c1-desacuerdo-colaborativo-intensidad",
+      "tag": "Graduar",
+      "title": "Ajusta la fuerza del desacuerdo",
+      "lede": "La urgencia, la relación y el riesgo determinan cuán directo conviene ser.",
+      "blocks": [{
+        "type": "rules",
+        "rows": [
+          { "key": "Reserva", "value": "I'm not sure that follows from the data.", "hint": "Invita a revisar el razonamiento." },
+          { "key": "Claro", "value": "I disagree with that conclusion.", "hint": "Directo y profesional." },
+          { "key": "Firme", "value": "I can't support a plan that puts customer data at risk.", "hint": "Adecuado cuando hay un límite no negociable." }
+        ]
+      }]
+    },
+    {
+      "id": "c1-desacuerdo-colaborativo-reparacion",
+      "tag": "Reparación",
+      "title": "Corrige un desacuerdo que sonó personal",
+      "lede": "Si la conversación se tensa, aclara tu intención y reformula el punto concreto.",
+      "blocks": [{
+        "type": "pairs",
+        "lines": [
+          { "variant": "bad", "text": "You clearly haven't thought this through." },
+          { "variant": "good", "text": "Let me rephrase that. My concern is that we haven't accounted for the transition costs.", "note": "Separa a la persona del problema." },
+          { "variant": "bad", "text": "That's ridiculous." },
+          { "variant": "good", "text": "I may be missing something. How would that work with our current budget?", "note": "Pide aclaración sin fingir acuerdo." }
+        ]
+      }]
+    },
+    {
+      "id": "c1-desacuerdo-colaborativo-guion",
+      "tag": "Producción",
+      "title": "Construye una respuesta completa",
+      "lede": "Usa esta secuencia flexible para responder a una propuesta con la que no coincides.",
+      "blocks": [{
+        "type": "rules",
+        "rows": [
+          { "key": "1. Punto común", "value": "We both want to shorten the turnaround time." },
+          { "key": "2. Diferencia", "value": "Where I disagree is on removing the final review." },
+          { "key": "3. Razón", "value": "That step catches errors that are costly to reverse." },
+          { "key": "4. Propuesta", "value": "What if we kept the review but limited it to high-risk cases?" }
+        ]
+      }],
+      "tip": { "label": "Practica:", "body": "Responde a una propuesta real usando los cuatro pasos; después elimina cualquier frase que ataque a la persona." }
+    }
+  ],
+  "quiz": [
+    { "q": "¿Qué frase concede un punto sin aceptar toda la conclusión?", "options": ["That's true to an extent, but it doesn't address the staffing issue.", "You're completely wrong about staffing.", "Fine, let's do whatever you want."], "answer": 0, "explain": "La primera reconoce una parte válida y delimita con precisión el desacuerdo." },
+    { "q": "A colleague proposes skipping a security review. Which firm response stays collaborative?", "options": ["That's a terrible idea.", "I can't support a plan that puts customer data at risk. Could we shorten the review instead?", "Maybe, I guess."], "answer": 1, "explain": "La respuesta marca un límite claro y ofrece una vía para seguir trabajando." },
+    { "q": "¿Cuál pregunta examina una premisa en vez de atacar una conclusión?", "options": ["How could you believe that?", "Are we assuming demand will stay constant?", "Why is this plan so bad?"], "answer": 1, "explain": "La pregunta hace visible la suposición que sostiene el argumento." },
+    { "q": "¿Qué elemento debería cerrar normalmente un desacuerdo colaborativo?", "options": ["Una alternativa o siguiente paso", "Una disculpa por tener opinión", "Una repetición más fuerte de la crítica"], "answer": 0, "explain": "Una propuesta concreta convierte el desacuerdo en trabajo compartido." }
+  ]
+}

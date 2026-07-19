@@ -1,0 +1,45 @@
+{
+  "meta": { "eyebrow": "C1+ · Edición avanzada", "title": "Precisión y", "titleEmphasis": "concisión", "goal": "Puedes editar prosa compleja para eliminar ambigüedad y peso innecesario sin borrar matices relevantes." },
+  "related": [{ "slug": "c1-precision-lexica", "label": "Precisión léxica" }, { "slug": "c1-escritura-academica-profesional", "label": "Escritura académica y profesional" }],
+  "cards": [
+    { "id": "c1p-edicion-diagnostico", "tag": "Diagnóstico", "title": "Edita por capas", "lede": "Una buena edición separa exactitud, estructura y economía para no corregir a ciegas.", "blocks": [{ "type": "rules", "rows": [
+      { "key": "1. Significado", "value": "¿La frase afirma exactamente lo que la evidencia permite?" },
+      { "key": "2. Responsable", "value": "¿Está claro quién hace qué?" },
+      { "key": "3. Estructura", "value": "¿La idea principal aparece antes de sus excepciones?" },
+      { "key": "4. Peso", "value": "¿Cada palabra cambia el significado o guía al lector?" }
+    ] }] },
+    { "id": "c1p-edicion-verbos", "tag": "Verbos", "title": "Devuelve la acción al verbo", "lede": "Las nominalizaciones son útiles para conceptos; acumuladas, esconden actores y vuelven lenta la prosa.", "blocks": [{ "type": "pairs", "lines": [
+      { "variant": "bad", "text": "The team conducted an evaluation of the proposal.", "note": "verbo débil más nominalización" },
+      { "variant": "good", "text": "The team evaluated the proposal." },
+      { "variant": "bad", "text": "A decision was made regarding the cancellation of the pilot." },
+      { "variant": "good", "text": "The directors decided to cancel the pilot.", "note": "recupera actor y acción" }
+    ] }] },
+    { "id": "c1p-edicion-ambiguedad", "tag": "Claridad", "title": "Resuelve referencias ambiguas", "lede": "Pronombres, modificadores y comparaciones necesitan un referente inequívoco.", "blocks": [{ "type": "pairs", "lines": [
+      { "variant": "bad", "text": "When Maya briefed Elena, she sounded concerned.", "note": "she puede referirse a dos personas" },
+      { "variant": "good", "text": "Maya sounded concerned when she briefed Elena." },
+      { "variant": "bad", "text": "We almost reviewed every application." },
+      { "variant": "good", "text": "We reviewed almost every application.", "note": "almost modifica la cantidad, no la acción" }
+    ] }] },
+    { "id": "c1p-edicion-matiz", "tag": "Matiz", "title": "Recorta sin sobreafirmar", "lede": "La versión corta no es mejor si elimina límites, fuentes o grados de certeza.", "blocks": [{ "type": "contrast", "columns": [
+      { "label": "Recorte peligroso", "rule": "Convierte una asociación en certeza.", "examples": ["The program increased retention."] },
+      { "label": "Concisión precisa", "rule": "Conserva el alcance de la evidencia.", "examples": ["In the pilot group, the program was associated with higher retention.", "Early results suggest the program may improve retention."] }
+    ] }] },
+    { "id": "c1p-edicion-redundancia", "tag": "Economía", "title": "Elimina lo que ya está dicho", "lede": "Busca parejas redundantes, aperturas vacías y explicaciones que el verbo ya contiene.", "blocks": [{ "type": "pairs", "lines": [
+      { "variant": "bad", "text": "At this point in time, we are currently planning ahead for the future." },
+      { "variant": "good", "text": "We are planning for next year.", "note": "conserva tiempo y acción" },
+      { "variant": "bad", "text": "It is important to note that costs rose unexpectedly." },
+      { "variant": "good", "text": "Costs rose unexpectedly.", "note": "la afirmación merece entrada directa" }
+    ] }] },
+    { "id": "c1p-edicion-transferencia", "tag": "Transferencia", "title": "Haz una edición justificable", "lede": "Cada cambio debería responder a un problema específico, no a una preferencia vaga.", "blocks": [{ "type": "rules", "rows": [
+      { "key": "Original", "value": "There was a failure by the vendor to provide delivery of the parts on time." },
+      { "key": "Revisión", "value": "The vendor failed to deliver the parts on time." },
+      { "key": "Justificación", "value": "recupera el actor; convierte nombres en verbo; elimina frases vacías" },
+      { "key": "Control final", "value": "La revisión mantiene responsable, acción, objeto y plazo." }
+    ] }], "tip": { "label": "Regla:", "body": "no cortes una palabra si con ella desaparece una condición que el lector necesita para decidir." } }
+  ],
+  "quiz": [
+    { "q": "¿Cuál revisión recupera actor y acción?", "options": ["A review was conducted by the panel.", "The panel reviewed the case.", "There was a panel review of the case."], "answer": 1, "explain": "El sujeto identifica al responsable y el verbo expresa la acción directamente." },
+    { "q": "¿Qué versión conserva el límite de la evidencia?", "options": ["The policy works.", "Early results suggest the policy may reduce delays.", "The policy definitely ended delays."], "answer": 1, "explain": "Mantiene fuente temporal y grado de certeza." },
+    { "q": "En “We almost reviewed every application”, ¿qué problema aparece?", "options": ["Almost parece modificar la acción", "Every necesita plural", "Review no puede ser verbo"], "answer": 0, "explain": "Si la intención es hablar de cantidad, debe ser “We reviewed almost every application”." }
+  ]
+}

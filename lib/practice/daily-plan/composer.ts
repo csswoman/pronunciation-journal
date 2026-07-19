@@ -210,7 +210,11 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
     }
   }
 
-  const studyDeckStep = buildStudyDeckStep(completedLessonIds, activeLevel)
+  const studyDeckStep = buildStudyDeckStep(
+    completedLessonIds,
+    activeLevel,
+    aiState?.theory?.concepts,
+  )
   let steps: DailyStep[] = [...allSteps, ...reviewSteps]
 
   // When SRS items are due, prepend top review-hub steps so the daily plan surfaces them first.

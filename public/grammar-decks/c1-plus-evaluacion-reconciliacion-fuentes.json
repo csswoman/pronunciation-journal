@@ -1,0 +1,44 @@
+{
+  "meta": { "eyebrow": "C1+ · Síntesis crítica", "title": "Evaluar y reconciliar", "titleEmphasis": "fuentes", "goal": "Puedes integrar fuentes discrepantes, explicar por qué difieren y formular una conclusión propia con límites explícitos." },
+  "related": [{ "slug": "c1-argumentos-discusiones", "label": "Argumentos y discusiones" }, { "slug": "c1-cohesion-discurso", "label": "Cohesión del discurso" }],
+  "cards": [
+    { "id": "c1p-fuentes-mapa", "tag": "Mapa", "title": "Compara afirmaciones equivalentes", "lede": "Antes de decidir quién tiene razón, verifica que las fuentes respondan la misma pregunta.", "blocks": [{ "type": "rules", "rows": [
+      { "key": "Pregunta", "value": "Does the four-day week maintain output?" },
+      { "key": "Fuente A", "value": "A six-month trial reports stable team output." },
+      { "key": "Fuente B", "value": "A two-year survey reports slower client response times." },
+      { "key": "Desajuste", "value": "Horizonte, métrica y unidad de análisis no son iguales." }
+    ] }] },
+    { "id": "c1p-fuentes-peso", "tag": "Evaluación", "title": "Asigna peso, no solo espacio", "lede": "Presentar dos fuentes en partes iguales no significa que tengan la misma calidad o pertinencia.", "blocks": [{ "type": "contrast", "columns": [
+      { "label": "Fuente más fuerte", "rule": "Método transparente, medida directa y contexto comparable.", "examples": ["The audited trial tracked output for 40 comparable teams."] },
+      { "label": "Fuente limitada", "rule": "Puede aportar contexto, pero no sostener la conclusión central.", "examples": ["An executive recalls that morale improved at one company."] }
+    ] }] },
+    { "id": "c1p-fuentes-desacuerdo", "tag": "Diagnóstico", "title": "Explica por qué discrepan", "lede": "El desacuerdo puede venir de definiciones, poblaciones, periodos o valores distintos.", "blocks": [{ "type": "rules", "rows": [
+      { "key": "Definición", "value": "One source defines productivity as output; the other includes response quality." },
+      { "key": "Población", "value": "The trial covers software teams; the survey includes customer support." },
+      { "key": "Tiempo", "value": "Short-term adaptation may differ from long-term performance." },
+      { "key": "Prioridad", "value": "One author optimizes efficiency; the other prioritizes access." }
+    ] }] },
+    { "id": "c1p-fuentes-lenguaje", "tag": "Síntesis", "title": "Haz que las fuentes conversen", "lede": "Una síntesis organiza relaciones entre ideas, no párrafos separados que resumen una fuente cada uno.", "blocks": [{ "type": "pairs", "lines": [
+      { "variant": "bad", "text": "Source A says output stayed stable. Source B says response times fell. Source C discusses morale." },
+      { "variant": "good", "text": "Although output remained stable in the short trial, slower response times in the longer survey suggest that the policy may shift costs to client-facing work.", "note": "conecta resultados y formula una explicación" },
+      { "variant": "good", "text": "The morale data offers a possible mechanism, but its self-reported measure cannot confirm it.", "note": "integra sin sobrevalorar" }
+    ] }] },
+    { "id": "c1p-fuentes-conclusion", "tag": "Juicio", "title": "Construye una conclusión condicional", "lede": "Cuando la evidencia es mixta, la mejor conclusión suele especificar condiciones de éxito.", "blocks": [{ "type": "rules", "rows": [
+      { "key": "Conclusión", "value": "A four-day week can maintain output in project-based teams." },
+      { "key": "Condición", "value": "Its success appears to depend on workload control and client coverage." },
+      { "key": "Límite", "value": "The current evidence is weaker for service teams and long-term retention." },
+      { "key": "Siguiente paso", "value": "A longer trial should track quality and response time, not output alone." }
+    ] }] },
+    { "id": "c1p-fuentes-transferencia", "tag": "Transferencia", "title": "Redacta una matriz de reconciliación", "lede": "Usa una estructura estable para evitar elegir primero una conclusión y buscar después apoyo.", "blocks": [{ "type": "rules", "rows": [
+      { "key": "Coinciden", "value": "Both sources report higher employee satisfaction." },
+      { "key": "Difieren", "value": "They reach different conclusions about client service." },
+      { "key": "Razón probable", "value": "They measure different roles over different periods." },
+      { "key": "Mi juicio", "value": "The policy is promising, but implementation should vary by work type." }
+    ] }], "tip": { "label": "Disciplina:", "body": "incluye la evidencia que debilita tu posición y explica cuánto cambia tu conclusión." } }
+  ],
+  "quiz": [
+    { "q": "Dos fuentes miden productividad de forma distinta. ¿Qué debes hacer primero?", "options": ["Promediar sus conclusiones", "Comparar definiciones, población y periodo", "Elegir la más reciente sin leer el método"], "answer": 1, "explain": "Hay que establecer si los resultados son realmente comparables." },
+    { "q": "¿Qué frase sintetiza en vez de enumerar?", "options": ["A says X. B says Y.", "Although A finds stable output, B’s slower response times suggest that costs may shift to client-facing work.", "There are several sources."], "answer": 1, "explain": "Relaciona hallazgos y propone una interpretación limitada." },
+    { "q": "¿Qué conclusión responde mejor a evidencia mixta?", "options": ["The policy always works.", "The policy never works.", "The policy appears effective under specific workload and coverage conditions."], "answer": 2, "explain": "Expresa una condición de éxito en lugar de forzar un veredicto absoluto." }
+  ]
+}

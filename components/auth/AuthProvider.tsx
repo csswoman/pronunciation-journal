@@ -72,13 +72,16 @@ export default function AuthProvider({
           .eq("id", userId)
           .maybeSingle();
         const profile = data as { cefr_level?: string } | null;
-        if (!profile?.cefr_level) return;
 
-        const [{ db }, { getUserLearningState }, { normalizeCEFR }] = await Promise.all([
+        const [{ db }, { getUserLearningState }, { hydrateFromRemote }, { normalizeCEFR }] = await Promise.all([
           import("@/lib/db"),
           import("@/lib/ai-practice/load-state"),
+          import("@/lib/ai-practice/queries"),
           import("@/lib/exercises/cefr"),
         ]);
+
+        await hydrateFromRemote(userId);
+        if (!profile?.cefr_level) return;
 
         const nextLevel = normalizeCEFR(profile.cefr_level);
         const existing = await db.learningState.get(userId);

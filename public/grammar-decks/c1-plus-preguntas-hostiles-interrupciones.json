@@ -1,0 +1,45 @@
+{
+  "meta": { "eyebrow": "C1+ · Comunicación bajo presión", "title": "Preguntas hostiles e", "titleEmphasis": "interrupciones", "goal": "Puedes mantener el turno, corregir premisas y responder preguntas adversariales con precisión y compostura." },
+  "related": [{ "slug": "c1-presentaciones-expresion-oral", "label": "Presentaciones y expresión oral" }, { "slug": "c1-pragmatica-tono", "label": "Pragmática y tono" }],
+  "cards": [
+    { "id": "c1p-hostiles-diagnostico", "tag": "Diagnóstico", "title": "Identifica la presión real", "lede": "Una pregunta difícil puede contener una duda legítima, una premisa falsa o un intento de desplazar el tema.", "blocks": [{ "type": "rules", "rows": [
+      { "key": "Duda", "value": "How can you be sure the savings are real?" },
+      { "key": "Premisa", "value": "Why did you ignore the safety warnings?" },
+      { "key": "Falso dilema", "value": "Do you care more about profit or employees?" },
+      { "key": "Desvío", "value": "Why discuss this when last year’s project also failed?" }
+    ] }] },
+    { "id": "c1p-hostiles-pausa", "tag": "Control", "title": "Compra tiempo sin parecer evasivo", "lede": "Una pausa verbal breve te permite estructurar la respuesta y señalar qué parte abordarás.", "blocks": [{ "type": "rules", "rows": [
+      { "key": "Enfoque", "value": "There are two issues in that question. Let me take the cost estimate first." },
+      { "key": "Precisión", "value": "Before I answer, I want to clarify what we mean by “failure.”" },
+      { "key": "Límite", "value": "I can speak to the operational decision; I can’t comment on the legal review." },
+      { "key": "Pausa", "value": "That’s an important concern. Here’s what we know so far." }
+    ] }] },
+    { "id": "c1p-hostiles-premisa", "tag": "Reencuadre", "title": "Corrige la premisa antes de responder", "lede": "Aceptar la gramática de una pregunta puede hacerte admitir algo que no ocurrió.", "blocks": [{ "type": "pairs", "lines": [
+      { "variant": "bad", "text": "We ignored the warnings because we were under pressure.", "note": "acepta una premisa no establecida" },
+      { "variant": "good", "text": "I don’t accept the premise that the warnings were ignored. Two were addressed immediately; the third is still under review.", "note": "corrige y aporta hechos" },
+      { "variant": "bad", "text": "Of course we care about employees more than profit." },
+      { "variant": "good", "text": "Safety and financial stability are both constraints; the decision has to meet both." }
+    ] }] },
+    { "id": "c1p-hostiles-interrupcion", "tag": "Turno", "title": "Recupera la palabra con firmeza", "lede": "No necesitas competir en volumen; marca una frontera breve y promete espacio para responder.", "blocks": [{ "type": "contrast", "columns": [
+      { "label": "Escalada", "rule": "Ataca o intenta dominar.", "examples": ["Stop interrupting me.", "If you’d listen for once..."] },
+      { "label": "Recuperación", "rule": "Protege el turno y reconoce al interlocutor.", "examples": ["Let me finish this point, and then I’ll come directly to your question.", "I want to hear that concern; give me ten seconds to complete the timeline."] }
+    ] }] },
+    { "id": "c1p-hostiles-puente", "tag": "Respuesta", "title": "Responde y vuelve al punto central", "lede": "Un puente legítimo contesta la pregunta antes de conectar con el mensaje relevante.", "blocks": [{ "type": "rules", "rows": [
+      { "key": "Respuesta", "value": "No, the estimate does not include the second phase." },
+      { "key": "Contexto", "value": "That phase has a separate approval process." },
+      { "key": "Puente", "value": "What the current estimate does show is that phase one is within budget." },
+      { "key": "Evasión", "value": "What really matters is our commitment to excellence.", "hint": "no responde a la pregunta" }
+    ] }] },
+    { "id": "c1p-hostiles-cierre", "tag": "Cierre", "title": "Deja una respuesta verificable", "lede": "Bajo presión, termina con un hecho, un límite o un compromiso de seguimiento concreto.", "blocks": [{ "type": "rules", "rows": [
+      { "key": "Hecho", "value": "The audit covers all transactions through June 30." },
+      { "key": "Incertidumbre", "value": "We do not yet know whether the issue affected July records." },
+      { "key": "Seguimiento", "value": "We will publish the July review on Monday." },
+      { "key": "Control", "value": "Does that answer the timing part of your question?" }
+    ] }], "tip": { "label": "Secuencia:", "body": "pausa, diagnostica, corrige si hace falta, responde y cierra con algo comprobable." } }
+  ],
+  "quiz": [
+    { "q": "¿Cuál respuesta corrige una premisa falsa?", "options": ["We ignored it because we were busy.", "I don’t accept that the warning was ignored; two actions were completed that day.", "That’s a ridiculous question."], "answer": 1, "explain": "Rechaza la premisa y la sustituye por hechos específicos." },
+    { "q": "¿Cuál frase recupera el turno sin escalar?", "options": ["Stop talking.", "Let me finish this point, and then I’ll come directly to your question.", "You never listen."], "answer": 1, "explain": "Marca una frontera y garantiza que la preocupación será atendida." },
+    { "q": "¿Qué hace legítimo un puente?", "options": ["Evita por completo la pregunta", "Responde primero y luego conecta con el punto relevante", "Repite un eslogan"], "answer": 1, "explain": "La conexión no sustituye una respuesta directa." }
+  ]
+}

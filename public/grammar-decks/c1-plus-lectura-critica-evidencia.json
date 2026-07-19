@@ -1,0 +1,43 @@
+{
+  "meta": { "eyebrow": "C1+ · Alfabetización crítica", "title": "Lectura crítica de", "titleEmphasis": "evidencia", "goal": "Puedes evaluar una afirmación distinguiendo datos, inferencias, causalidad, alcance y limitaciones metodológicas." },
+  "related": [{ "slug": "c1-argumentos-discusiones", "label": "Argumentos y discusiones" }, { "slug": "c1-hedging-matices", "label": "Hedging y matices" }],
+  "cards": [
+    { "id": "c1p-evidencia-cadena", "tag": "Cadena", "title": "Separa afirmación, evidencia e inferencia", "lede": "Un texto convincente puede deslizar una conclusión que los datos no sostienen por sí solos.", "blocks": [{ "type": "rules", "rows": [
+      { "key": "Afirmación", "value": "Remote work makes employees more productive." },
+      { "key": "Dato", "value": "Surveyed employees reported completing more tasks at home." },
+      { "key": "Inferencia", "value": "Self-reported task volume is treated as overall productivity." },
+      { "key": "Pregunta", "value": "What other measures would confirm that interpretation?" }
+    ] }] },
+    { "id": "c1p-evidencia-correlacion", "tag": "Causalidad", "title": "No conviertas correlación en causa", "lede": "Dos cambios simultáneos pueden compartir una causa o reflejar selección, azar o contexto.", "blocks": [{ "type": "contrast", "columns": [
+      { "label": "Asociación", "rule": "Describe el patrón observado.", "examples": ["Teams with shorter meetings also reported higher satisfaction."] },
+      { "label": "Causa", "rule": "Exige descartar explicaciones alternativas.", "examples": ["Shorter meetings caused higher satisfaction.", "Managers who run shorter meetings may also communicate more clearly."] }
+    ] }] },
+    { "id": "c1p-evidencia-muestra", "tag": "Método", "title": "Interroga la muestra y la medida", "lede": "Antes de generalizar, pregunta quién participó, quién quedó fuera y cómo se midió el resultado.", "blocks": [{ "type": "rules", "rows": [
+      { "key": "Selección", "value": "Were participants randomly selected or did they volunteer?" },
+      { "key": "Representación", "value": "Does the sample reflect the population named in the headline?" },
+      { "key": "Medida", "value": "Was “success” observed, tested, or self-reported?" },
+      { "key": "Duración", "value": "Did the study capture a temporary response or a lasting effect?" }
+    ] }] },
+    { "id": "c1p-evidencia-titular", "tag": "Framing", "title": "Compara el titular con el hallazgo", "lede": "Los titulares suelen eliminar condiciones y convertir posibilidades en resultados definitivos.", "blocks": [{ "type": "pairs", "lines": [
+      { "variant": "bad", "text": "New App Eliminates Workplace Stress" },
+      { "variant": "good", "text": "In a six-week company pilot, app users reported slightly lower stress.", "note": "restituye población, duración, medida y tamaño" },
+      { "variant": "bad", "text": "Scientists Prove Coffee Prevents Memory Loss" },
+      { "variant": "good", "text": "The study found an association between moderate coffee intake and one memory score." }
+    ] }] },
+    { "id": "c1p-evidencia-lenguaje", "tag": "Lenguaje", "title": "Lee el grado de certeza", "lede": "Los verbos y modificadores revelan cuánto compromiso asume el autor con una conclusión.", "blocks": [{ "type": "rules", "rows": [
+      { "key": "Hallazgo", "value": "The trial found a modest reduction in response time." },
+      { "key": "Interpretación", "value": "This may indicate that the new workflow is easier to learn." },
+      { "key": "Límite", "value": "However, the effect was not observed in experienced users." },
+      { "key": "Exageración", "value": "The workflow revolutionizes performance for everyone." }
+    ] }] },
+    { "id": "c1p-evidencia-veredicto", "tag": "Transferencia", "title": "Emite un veredicto calibrado", "lede": "La lectura crítica termina con una conclusión proporcional, no con aceptación o rechazo total.", "blocks": [{ "type": "contrast", "columns": [
+      { "label": "Veredicto binario", "rule": "Ignora fortalezas o límites.", "examples": ["The study is useless.", "The claim is proven."] },
+      { "label": "Veredicto calibrado", "rule": "Nombra qué apoya la evidencia y qué sigue abierto.", "examples": ["The results support a short-term benefit for new users, but they do not establish a lasting effect across the workforce."] }
+    ] }], "tip": { "label": "Plantilla:", "body": "The evidence supports X within Y, but it does not yet establish Z." } }
+  ],
+  "quiz": [
+    { "q": "Un estudio encuentra que equipos con reuniones cortas están más satisfechos. ¿Qué puede afirmar directamente?", "options": ["Las reuniones cortas causan satisfacción", "Existe una asociación entre duración y satisfacción", "Todos los equipos deberían eliminar reuniones"], "answer": 1, "explain": "La asociación observada no establece por sí sola una relación causal." },
+    { "q": "¿Qué pregunta examina validez externa?", "options": ["¿La muestra representa a la población del titular?", "¿El título tiene aliteración?", "¿La gráfica usa azul?"], "answer": 0, "explain": "La representatividad determina hasta dónde pueden generalizarse los resultados." },
+    { "q": "¿Cuál es un veredicto calibrado?", "options": ["The study proves everything.", "The study is worthless.", "The findings support a short-term effect in this sample, but not a general causal claim."], "answer": 2, "explain": "Distingue apoyo limitado de una conclusión más amplia." }
+  ]
+}

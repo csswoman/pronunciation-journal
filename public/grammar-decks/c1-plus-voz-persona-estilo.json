@@ -1,0 +1,44 @@
+{
+  "meta": { "eyebrow": "C1+ · Control estilístico", "title": "Voz, persona y", "titleEmphasis": "estilo propio", "goal": "Puedes mantener una voz reconocible y adecuada mientras adaptas persona, distancia y ritmo a una audiencia nueva." },
+  "related": [{ "slug": "c1-escritura-avanzada", "label": "Escritura avanzada" }, { "slug": "c1-pragmatica-tono", "label": "Pragmática y tono" }],
+  "cards": [
+    { "id": "c1p-voz-brujula", "tag": "Marco", "title": "Define tu brújula de voz", "lede": "La voz no es adornar cada frase: es repetir decisiones coherentes sobre postura, cercanía y energía.", "blocks": [{ "type": "rules", "rows": [
+      { "key": "Postura", "value": "Decide si suenas exploratorio, seguro o crítico: We may be overlooking a simpler explanation." },
+      { "key": "Relación", "value": "Elige cercanía o distancia: Let’s look at what this means for us. / The findings warrant further review." },
+      { "key": "Ritmo", "value": "Combina frases largas para razonar y cortas para fijar el punto: The trade-off is real. We should name it." }
+    ] }], "tip": { "label": "Prueba:", "body": "si tres párrafos parecen escritos por personas distintas, revisa postura, relación y ritmo antes del vocabulario." } },
+    { "id": "c1p-voz-persona", "tag": "Persona", "title": "Construye una presencia, no un personaje", "lede": "La persona discursiva es la versión de ti que la situación necesita; debe seguir siendo creíble.", "blocks": [{ "type": "contrast", "columns": [
+      { "label": "Experto accesible", "rule": "Explica sin presumir conocimiento compartido.", "examples": ["In practical terms, the change gives teams one less approval step.", "Here’s the part that matters most."] },
+      { "label": "Analista prudente", "rule": "Distingue evidencia de interpretación.", "examples": ["The data points in that direction, although the sample is small.", "One plausible reading is that demand has shifted."] }
+    ] }] },
+    { "id": "c1p-voz-consistencia", "tag": "Coherencia", "title": "Mantén la voz bajo presión", "lede": "Una objeción, una cifra compleja o una mala noticia no deberían romper tu estilo central.", "blocks": [{ "type": "pairs", "lines": [
+      { "variant": "bad", "text": "We value transparency. Anyway, the numbers are what they are.", "note": "la segunda frase abandona la actitud anunciada" },
+      { "variant": "good", "text": "We value transparency, so I want to explain what drove the decline and what remains uncertain.", "note": "la decisión difícil conserva la voz" },
+      { "variant": "bad", "text": "I welcome questions. That concern makes no sense." },
+      { "variant": "good", "text": "I welcome questions. Let me address the assumption behind that concern." }
+    ] }] },
+    { "id": "c1p-voz-adaptacion", "tag": "Adaptación", "title": "Cambia el registro sin perder identidad", "lede": "La audiencia cambia la densidad y el grado de explicitud, no necesariamente tus valores comunicativos.", "blocks": [{ "type": "rules", "rows": [
+      { "key": "Equipo", "value": "We tested the idea, found a weak spot, and fixed it." },
+      { "key": "Dirección", "value": "The pilot exposed one operational risk, which the revised process now addresses." },
+      { "key": "Público general", "value": "The first version created delays. The new one removes the bottleneck." },
+      { "key": "Constante", "value": "En las tres versiones: claridad, responsabilidad y foco en la solución." }
+    ] }] },
+    { "id": "c1p-voz-edicion", "tag": "Edición", "title": "Detecta intrusiones de estilo", "lede": "Los clichés, la jerga repentina y la intensidad injustificada suelen borrar una voz que ya era clara.", "blocks": [{ "type": "pairs", "lines": [
+      { "variant": "bad", "text": "Our thoughtful review will now leverage a game-changing synergy." },
+      { "variant": "good", "text": "Our review identified two teams that can share the work.", "note": "acción concreta y tono estable" },
+      { "variant": "bad", "text": "The result was absolutely catastrophic." },
+      { "variant": "good", "text": "The result was serious, but limited to one region.", "note": "intensidad proporcional a la evidencia" }
+    ] }] },
+    { "id": "c1p-voz-transferencia", "tag": "Transferencia", "title": "Crea tu ficha de estilo", "lede": "Antes de un texto extenso, escribe restricciones observables que puedas comprobar al editar.", "blocks": [{ "type": "rules", "rows": [
+      { "key": "Quiero sonar", "value": "calm, candid, and useful" },
+      { "key": "Haré", "value": "name uncertainty; use concrete verbs; explain consequences" },
+      { "key": "Evitaré", "value": "hype, blame, and unexplained acronyms" },
+      { "key": "Chequeo", "value": "Would a skeptical reader describe the voice with the same three adjectives?" }
+    ] }], "tip": { "label": "Reto:", "body": "reescribe un párrafo para otra audiencia y conserva al menos dos decisiones centrales de tu ficha." } }
+  ],
+  "quiz": [
+    { "q": "¿Qué versión conserva una voz transparente ante una mala noticia?", "options": ["The numbers are what they are.", "I want to explain what drove the decline and what remains uncertain.", "Everything is absolutely terrible."], "answer": 1, "explain": "Explica causas y límites sin abandonar la actitud de transparencia." },
+    { "q": "Al adaptar un texto para dirección, ¿qué debería cambiar primero?", "options": ["La identidad del autor", "La densidad, el foco y el grado de explicitud", "Todos los verbos por nominalizaciones"], "answer": 1, "explain": "La adaptación afecta decisiones comunicativas; no exige perder una voz coherente." },
+    { "q": "¿Cuál es una restricción de estilo observable?", "options": ["Sound amazing", "Use concrete verbs and name uncertainty", "Write like an expert"], "answer": 1, "explain": "Es una pauta que puede verificarse frase por frase." }
+  ]
+}

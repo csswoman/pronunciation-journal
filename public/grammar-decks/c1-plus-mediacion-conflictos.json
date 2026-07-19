@@ -1,0 +1,45 @@
+{
+  "meta": { "eyebrow": "C1+ · Mediación", "title": "Mediación en", "titleEmphasis": "conflictos complejos", "goal": "Puedes representar posiciones enfrentadas con fidelidad, descubrir intereses compartidos y proponer un siguiente paso verificable." },
+  "related": [{ "slug": "c1-pragmatica-tono", "label": "Pragmática y tono" }, { "slug": "c1-recursos-conversacionales", "label": "Recursos conversacionales" }],
+  "cards": [
+    { "id": "c1p-mediacion-posiciones", "tag": "Escucha", "title": "Separa posición, interés y temor", "lede": "La exigencia visible rara vez explica por completo lo que una parte intenta proteger.", "blocks": [{ "type": "rules", "rows": [
+      { "key": "Posición", "value": "We cannot move the deadline." },
+      { "key": "Interés", "value": "The team needs predictable staffing for the launch." },
+      { "key": "Temor", "value": "A delay may damage credibility with the client." },
+      { "key": "Pregunta", "value": "What would a workable timeline need to protect?" }
+    ] }] },
+    { "id": "c1p-mediacion-representar", "tag": "Imparcialidad", "title": "Reformula sin tomar partido", "lede": "Una reformulación fiel baja la temperatura y permite que cada parte se reconozca en el resumen.", "blocks": [{ "type": "pairs", "lines": [
+      { "variant": "bad", "text": "Marketing refuses to be realistic." },
+      { "variant": "good", "text": "Marketing is concerned that reducing the scope would weaken the launch.", "note": "describe la preocupación, no juzga la actitud" },
+      { "variant": "bad", "text": "Engineering just wants more time." },
+      { "variant": "good", "text": "Engineering believes the current scope cannot be delivered reliably by Friday." }
+    ] }] },
+    { "id": "c1p-mediacion-validar", "tag": "Validación", "title": "Comprueba antes de resolver", "lede": "El mediador no adivina: ofrece un resumen provisional y pide corrección.", "blocks": [{ "type": "rules", "rows": [
+      { "key": "Resumen", "value": "If I’m hearing you correctly, both teams want a credible launch, but they define the main risk differently." },
+      { "key": "Control", "value": "Is that a fair summary?" },
+      { "key": "Invitación", "value": "What am I missing from your perspective?" },
+      { "key": "Precisión", "value": "So the concern is reliability, not the launch itself. Is that right?" }
+    ] }] },
+    { "id": "c1p-mediacion-comun", "tag": "Terreno común", "title": "Convierte acuerdo abstracto en criterio", "lede": "“Todos queremos lo mejor” no basta; el terreno común debe orientar una decisión.", "blocks": [{ "type": "contrast", "columns": [
+      { "label": "Acuerdo vacío", "rule": "Suena positivo, pero no selecciona opciones.", "examples": ["We all want the project to succeed."] },
+      { "label": "Criterio compartido", "rule": "Define qué debe proteger cualquier solución.", "examples": ["Any solution must preserve a credible launch date and leave enough time for reliability testing."] }
+    ] }] },
+    { "id": "c1p-mediacion-opciones", "tag": "Opciones", "title": "Propón sin imponer", "lede": "Una opción mediada conecta intereses, reconoce el costo y deja espacio para ajustar.", "blocks": [{ "type": "rules", "rows": [
+      { "key": "Puente", "value": "One option that addresses both concerns would be to keep Friday’s launch but limit it to the tested features." },
+      { "key": "Costo", "value": "That would reduce the initial scope, but it would protect reliability." },
+      { "key": "Prueba", "value": "Would that meet Marketing’s credibility concern?" },
+      { "key": "Ajuste", "value": "What would Engineering need to make that option workable?" }
+    ] }] },
+    { "id": "c1p-mediacion-acuerdo", "tag": "Cierre", "title": "Cierra con un acuerdo comprobable", "lede": "Un buen cierre identifica decisión, responsables, plazo y condición para reabrir la conversación.", "blocks": [{ "type": "rules", "rows": [
+      { "key": "Decisión", "value": "We’ll launch the tested features on Friday." },
+      { "key": "Responsables", "value": "Engineering will confirm the list by noon; Marketing will revise the announcement." },
+      { "key": "Revisión", "value": "We’ll reconvene Thursday if any critical test fails." },
+      { "key": "Confirmación", "value": "Does that capture what each team has agreed to?" }
+    ] }], "tip": { "label": "Meta:", "body": "el éxito no es que las partes piensen igual, sino que puedan actuar sobre una comprensión compartida." } }
+  ],
+  "quiz": [
+    { "q": "¿Cuál reformulación es neutral?", "options": ["Engineering is making excuses.", "Engineering believes the current scope cannot be delivered reliably by Friday.", "Marketing is obviously right."], "answer": 1, "explain": "Representa la evaluación de la parte sin adoptar ni ridiculizar su postura." },
+    { "q": "¿Qué convierte el terreno común en criterio?", "options": ["We all care.", "Any solution must protect the date and allow reliability testing.", "Let’s agree to disagree."], "answer": 1, "explain": "El criterio permite evaluar opciones concretas." },
+    { "q": "¿Qué falta en “We’ll use option B”?", "options": ["Una palabra más formal", "Responsables, plazo y condición de revisión", "Una disculpa automática"], "answer": 1, "explain": "Sin esos elementos el acuerdo no es operativo ni comprobable." }
+  ]
+}

@@ -38,4 +38,17 @@ describe("course curriculum coverage", () => {
       expect.objectContaining({ level: "b1", passThreshold: 5, fallbackLevel: "a2" }),
     ]);
   });
+
+  it("keeps C1+ as an advanced band inside the C1 contract", () => {
+    const c1 = COURSE_PATH_CURRICULUM.levels.find((level) => level.id === "c1");
+    const core = c1?.units.find((unit) => !unit.isOptionalSection);
+    const advanced = c1?.units.find((unit) => unit.isOptionalSection);
+
+    expect(core?.lessons).toHaveLength(26);
+    expect(advanced).toMatchObject({
+      label: "C1+",
+      title: "Dominio avanzado",
+    });
+    expect(advanced?.lessons).toHaveLength(20);
+  });
 });

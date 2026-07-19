@@ -1,0 +1,75 @@
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+import type { ConceptSignal } from '@/lib/courses/concept-profile'
+
+const mocks = vi.hoisted(() => ({
+  get: vi.fn(),
+  getUserLearningState: vi.fn(),
+  persistLearningState: vi.fn(),
+}))
+
+vi.mock('@/lib/db', () => ({
+  db: { learningState: { get: mocks.get } },
+}))
+vi.mock('@/lib/ai-practice/load-state', () => ({
+  getUserLearningState: mocks.getUserLearningState,
+}))
+vi.mock('@/lib/ai-practice/queries', () => ({
+  persistLearningState: mocks.persistLearningState,
+}))
+
+import { mergeConceptSignals, persistAssessmentConceptProfile } from '../assessment-profile'
+import { createEmptyState } from '@/lib/ai-practice/learning-state'
+
+function concept(lessonSlug: string, assessedAt: string, status: ConceptSignal['status']): ConceptSignal {
+  return {
+    lessonSlug,
+    level: 'a1',
+    title: lessonSlug,
+    selfRating: 'familiar',
+    status,
+    correct: 1,
+    total: 1,
+    assessedAt,
+  }
+}
+
+beforeEach(() => {
+  vi.clearAllMocks()
+})
+
+describe('assessment concept profile', () => {
+  it('merges by lesson slug and keeps the newest assessment', () => {
+    const result = mergeConceptSignals(
+      [concept('be', '2026-07-18T12:00:00.000Z', 'review')],
+      [
+        concept('be', '2026-07-18T11:00:00.000Z', 'learn'),
+        concept('articles', '2026-07-18T13:00:00.000Z', 'mastered'),
+      ],
+    )
+
+    expect(result).toEqual([
+      concept('articles', '2026-07-18T13:00:00.000Z', 'mastered'),
+      concept('be', '2026-07-18T12:00:00.000Z', 'review'),
+    ])
+  })
+
+  it('persists theory separately through the learning-state outbox path', async () => {
+    const state = createEmptyState('u1', 'device-1')
+    state.grammar.weakTopics = [{
+      topic: 'articles',
+      errorRate: 0.5,
+      sampleCount: 2,
+      lastCoveredAt: '2026-07-17T12:00:00.000Z',
+    }]
+    mocks.get.mockResolvedValue({ userId: 'u1', state, updatedAt: state.updatedAt })
+    const incoming = concept('be', '2026-07-18T12:00:00.000Z', 'review')
+
+    const result = await persistAssessmentConceptProfile('u1', [incoming], 'B2')
+
+    expect(result.theory.concepts).toEqual([incoming])
+    expect(result.level).toEqual({ cefrEstimate: 'B2', confidence: state.level.confidence })
+    expect(result.grammar).toEqual(state.grammar)
+    expect(mocks.persistLearningState).toHaveBeenCalledWith('u1', result)
+    expect(mocks.getUserLearningState).not.toHaveBeenCalled()
+  })
+})

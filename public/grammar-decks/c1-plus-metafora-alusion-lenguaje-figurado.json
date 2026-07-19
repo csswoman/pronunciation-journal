@@ -1,0 +1,109 @@
+{
+  "meta": {
+    "eyebrow": "C1+ · Interpretación avanzada",
+    "title": "Metáfora, alusión y",
+    "titleEmphasis": "lenguaje figurado",
+    "goal": "Puedes interpretar y producir lenguaje figurado apoyándote en el contexto, sin convertir expresiones culturales en listas para memorizar."
+  },
+  "related": [
+    { "slug": "c1-humor-ironia", "label": "Humor e ironía" },
+    { "slug": "c1-vocabulario-expresiones-avanzado", "label": "Vocabulario y expresiones avanzadas" }
+  ],
+  "cards": [
+    {
+      "id": "c1-plus-metafora-alusion-figurativo",
+      "tag": "Idea central",
+      "title": "Busca la relación, no una traducción literal",
+      "lede": "El lenguaje figurado proyecta una estructura conocida sobre otra situación para resaltar movimiento, control, conflicto o valoración.",
+      "blocks": [{
+        "type": "rules",
+        "rows": [
+          { "key": "Texto", "value": "The negotiations hit a wall." },
+          { "key": "Dominio fuente", "value": "movimiento físico bloqueado por una barrera" },
+          { "key": "Situación meta", "value": "una negociación que dejó de avanzar" },
+          { "key": "Efecto", "value": "presenta el progreso como recorrido y el problema como obstáculo" }
+        ]
+      }]
+    },
+    {
+      "id": "c1-plus-metafora-alusion-conceptual",
+      "tag": "Metáfora",
+      "title": "Reconoce familias de imágenes",
+      "lede": "Muchas expresiones no son adornos aislados: comparten un mapa conceptual productivo.",
+      "blocks": [{
+        "type": "contrast",
+        "columns": [
+          { "label": "Argumento como construcción", "rule": "foundation · support · collapse", "examples": ["The claim rests on weak evidence.", "That example supports her conclusion."] },
+          { "label": "Cambio como recorrido", "rule": "path · obstacle · direction", "examples": ["We need a path forward.", "The project has drifted off course."] }
+        ]
+      }]
+    },
+    {
+      "id": "c1-plus-metafora-alusion-alusion",
+      "tag": "Alusión",
+      "title": "Reconstruye la referencia con evidencia local",
+      "lede": "Una alusión activa una historia o personaje compartido, pero el contexto suele revelar la cualidad relevante.",
+      "blocks": [{
+        "type": "rules",
+        "rows": [
+          { "key": "Frase", "value": "The new platform isn't a silver bullet." },
+          { "key": "Pista local", "value": "The next sentence lists training and process changes still required." },
+          { "key": "Inferencia", "value": "No es una solución única, inmediata y suficiente." },
+          { "key": "Verificación", "value": "Comprueba una referencia si cambia una decisión importante; no inventes detalles culturales." }
+        ]
+      }]
+    },
+    {
+      "id": "c1-plus-metafora-alusion-mixta",
+      "tag": "Coherencia",
+      "title": "Evita mezclar imágenes incompatibles",
+      "lede": "Una metáfora puede extenderse, pero demasiados dominios en una frase dificultan visualizar la relación.",
+      "blocks": [{
+        "type": "pairs",
+        "lines": [
+          { "variant": "bad", "text": "We need to get the ball rolling and steer this ship over the finish line." },
+          { "variant": "good", "text": "We need to get the project moving and carry it through to completion.", "note": "Una formulación coherente y clara." },
+          { "variant": "bad", "text": "This issue is the tip of a slippery slope." },
+          { "variant": "good", "text": "This issue may be the first sign of a broader problem.", "note": "Aclara la relación causal sin mezclar imágenes." }
+        ]
+      }]
+    },
+    {
+      "id": "c1-plus-metafora-alusion-produccion",
+      "tag": "Producción",
+      "title": "Haz que la imagen cumpla una función",
+      "lede": "Una metáfora útil comprime una relación y ayuda a recordar; una metáfora decorativa puede ocultar la evidencia.",
+      "blocks": [{
+        "type": "rules",
+        "rows": [
+          { "key": "Explicar", "value": "The dashboard is a smoke alarm, not a diagnosis." },
+          { "key": "Delimitar", "value": "Aclara qué parte de la comparación importa: alerta temprana, no análisis causal." },
+          { "key": "Adaptar", "value": "Usa imágenes accesibles para la audiencia y el contexto." },
+          { "key": "Respaldar", "value": "Después de la imagen, aporta el dato o mecanismo que la sostiene." }
+        ]
+      }]
+    },
+    {
+      "id": "c1-plus-metafora-alusion-interpretacion",
+      "tag": "Estrategia",
+      "title": "Interpreta en cuatro movimientos",
+      "lede": "Cuando una expresión no es literal, usa un procedimiento transferible antes de buscarla en una lista.",
+      "blocks": [{
+        "type": "rules",
+        "rows": [
+          { "key": "1. Detecta", "value": "¿La lectura literal contradice la situación?" },
+          { "key": "2. Mapea", "value": "¿Qué relación del dominio conocido se proyecta aquí?" },
+          { "key": "3. Contrasta", "value": "¿Qué interpretación encaja con las frases vecinas?" },
+          { "key": "4. Parafrasea", "value": "Expresa el significado sin figura y comprueba qué matiz se pierde." }
+        ]
+      }],
+      "tip": { "label": "Práctica:", "body": "Elige una metáfora de un artículo y explica su dominio fuente, su referente, su efecto y una paráfrasis literal." }
+    }
+  ],
+  "quiz": [
+    { "q": "What does 'The negotiations hit a wall' most likely mean?", "options": ["The meeting room was damaged.", "Progress stopped because of an obstacle.", "The negotiators agreed quickly."], "answer": 1, "explain": "La imagen de movimiento bloqueado representa la falta de progreso." },
+    { "q": "¿Qué debes hacer si una alusión afecta una decisión importante?", "options": ["Inventar el detalle faltante", "Verificar la referencia y contrastarla con el contexto", "Ignorar las frases vecinas"], "answer": 1, "explain": "La verificación evita construir una interpretación sobre conocimiento cultural supuesto." },
+    { "q": "Which sentence avoids mixed metaphors?", "options": ["Let's steer the ball over the finish line.", "Let's carry the project through to completion.", "Let's plant the ship on solid ground."], "answer": 1, "explain": "La segunda expresa una relación coherente sin mezclar deportes, navegación y agricultura." },
+    { "q": "¿Cuándo es útil una metáfora?", "options": ["Cuando reemplaza toda evidencia", "Cuando comprime una relación y luego puede delimitarse", "Cuando solo la entiende el autor"], "answer": 1, "explain": "La metáfora sirve si aclara una estructura y su alcance puede explicarse." }
+  ]
+}

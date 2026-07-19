@@ -1,0 +1,45 @@
+{
+  "meta": { "eyebrow": "C1+ · Negociación", "title": "Negociación de", "titleEmphasis": "alto riesgo", "goal": "Puedes explorar intereses, formular condiciones, intercambiar concesiones y cerrar un acuerdo sin deteriorar la relación." },
+  "related": [{ "slug": "c1-comunicacion-persuasiva-efectiva", "label": "Comunicación persuasiva" }, { "slug": "c1-argumentos-discusiones", "label": "Argumentos y discusiones" }],
+  "cards": [
+    { "id": "c1p-negociacion-marco", "tag": "Preparación", "title": "Define límites y variables", "lede": "Antes de negociar, distingue lo imprescindible de lo intercambiable y lo que aún necesitas descubrir.", "blocks": [{ "type": "rules", "rows": [
+      { "key": "Límite", "value": "We cannot accept liability for third-party delays." },
+      { "key": "Objetivo", "value": "We would like a two-year commitment." },
+      { "key": "Variable", "value": "Price, rollout timing, and support hours can be traded." },
+      { "key": "Pregunta", "value": "Which outcome matters most to the other side, and why?" }
+    ] }] },
+    { "id": "c1p-negociacion-intereses", "tag": "Exploración", "title": "Pregunta detrás de la demanda", "lede": "Una demanda rígida puede ocultar un interés que admite varias soluciones.", "blocks": [{ "type": "contrast", "columns": [
+      { "label": "Debatir posición", "rule": "Choca directamente con la cifra.", "examples": ["We can’t reduce the price by 15 percent."] },
+      { "label": "Explorar interés", "rule": "Descubre qué resultado intenta producir.", "examples": ["What would the 15 percent reduction allow you to do?", "Is budget certainty more important than the unit price?"] }
+    ] }] },
+    { "id": "c1p-negociacion-condiciones", "tag": "Condiciones", "title": "Usa propuestas vinculadas", "lede": "Las fórmulas if–then evitan conceder primero y negociar la compensación después.", "blocks": [{ "type": "rules", "rows": [
+      { "key": "Intercambio", "value": "If you can commit to two years, we can reduce the annual rate by eight percent." },
+      { "key": "Condición doble", "value": "Provided that payment is made quarterly and scope remains fixed, we could include weekend support." },
+      { "key": "Exploración", "value": "What flexibility would that create on your side?" },
+      { "key": "Límite", "value": "A conditional offer is not yet a final commitment." }
+    ] }] },
+    { "id": "c1p-negociacion-concesiones", "tag": "Concesiones", "title": "Da valor y protege reciprocidad", "lede": "Nombra el costo de la concesión y vincúlala a algo que permita sostener el acuerdo.", "blocks": [{ "type": "pairs", "lines": [
+      { "variant": "bad", "text": "Fine, we’ll include weekend support.", "note": "concesión unilateral y resentida" },
+      { "variant": "good", "text": "Weekend support is difficult for us, but we could include it if the rollout remains in two phases.", "note": "explica costo y pide reciprocidad" },
+      { "variant": "bad", "text": "That’s our final offer. Take it or leave it." },
+      { "variant": "good", "text": "That is the furthest we can move on price; we still have flexibility on timing." }
+    ] }] },
+    { "id": "c1p-negociacion-bloqueo", "tag": "Bloqueo", "title": "Desbloquea sin amenazar", "lede": "Cuando una variable se cierra, cambia el nivel de la conversación o introduce opciones equivalentes.", "blocks": [{ "type": "rules", "rows": [
+      { "key": "Reencuadre", "value": "It sounds as though predictability, rather than price alone, is the core concern." },
+      { "key": "Paquetes", "value": "Would you prefer a lower rate with fixed scope, or more flexibility at the current rate?" },
+      { "key": "Pausa", "value": "It may be useful for both sides to review the numbers before we continue." },
+      { "key": "Relación", "value": "I don’t want this point to obscure the value we’ve already created together." }
+    ] }] },
+    { "id": "c1p-negociacion-cierre", "tag": "Cierre", "title": "Confirma alcance y contingencias", "lede": "Un “yes” bajo presión no basta: tradúcelo a obligaciones, fechas, excepciones y autoridad.", "blocks": [{ "type": "rules", "rows": [
+      { "key": "Resumen", "value": "To confirm, the rate is fixed for two years and weekend support begins after phase one." },
+      { "key": "Excepción", "value": "Third-party delays remain outside the service guarantee." },
+      { "key": "Autoridad", "value": "This is subject to legal approval on both sides." },
+      { "key": "Siguiente paso", "value": "We’ll exchange revised language by Tuesday and flag any remaining differences." }
+    ] }], "tip": { "label": "Principio:", "body": "sé firme sobre límites, curioso sobre intereses y explícito sobre condiciones." } }
+  ],
+  "quiz": [
+    { "q": "¿Cuál es una propuesta vinculada?", "options": ["We’ll lower the price.", "If you commit to two years, we can lower the annual rate.", "Your price is unreasonable."], "answer": 1, "explain": "Conecta la concesión con una condición recíproca." },
+    { "q": "¿Qué pregunta explora el interés detrás de una demanda?", "options": ["Why are you being difficult?", "What would that reduction allow you to do?", "Can’t you accept our offer?"], "answer": 1, "explain": "Busca el resultado subyacente sin atacar la posición." },
+    { "q": "Antes de cerrar, ¿qué debe confirmarse?", "options": ["Solo el precio", "Alcance, fechas, excepciones y autoridad", "Quién habló más"], "answer": 1, "explain": "Esos elementos convierten el acuerdo verbal en un compromiso claro." }
+  ]
+}
