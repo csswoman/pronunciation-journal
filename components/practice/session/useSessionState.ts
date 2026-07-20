@@ -11,6 +11,8 @@ import { buildSessionResult } from '@/lib/practice/session-result'
 import { recordActivitySession } from '@/lib/progress/activity-hub'
 import { gradeCore1000Word } from '@/lib/core-1000/grade'
 import { flushOutbox } from '@/lib/sync/sync-manager'
+import { ATTRIBUTION_VERSION } from '@/lib/practice/attribution'
+import { resolveAnswerAttribution } from '@/lib/practice/resolve-attribution'
 import {
   createSession,
   deleteSession,
@@ -163,6 +165,7 @@ export function useSessionState(config: PracticeConfig) {
       if (!current || phase !== 'exercising' || submittingRef.current) return
       submittingRef.current = true
       const timeMs = Date.now() - startTimeRef.current
+      const attribution = resolveAnswerAttribution(current, isCorrect, extras?.score)
       const result: ExerciseResult = {
         exerciseId: current.id,
         slug: current.slug,
@@ -177,6 +180,8 @@ export function useSessionState(config: PracticeConfig) {
         soundId: current.soundId,
         sourceRef: current.sourceRef,
         topic: current.payload.kind === 'generic' ? current.payload.data.topic : undefined,
+        attribution,
+        attributionVersion: ATTRIBUTION_VERSION,
         exercisePayload:
           current.payload.kind === 'phoneme'
             ? {
@@ -184,7 +189,7 @@ export function useSessionState(config: PracticeConfig) {
                 soundId: current.soundId,
                 options: current.payload.options,
                 targetWord: current.payload.targetWord,
-                contrastId: current.payload.contrastId,
+                contrastId: current.contrastId,
               }
             : {
                 type: current.slug,

@@ -7,7 +7,7 @@ import { updateSR } from './sr'
 import { isContrastMastered } from './mastery'
 import { computeNextMasteryPct, sessionAccuracyPct } from './mastery-pct'
 import type { UserContrastProgress, SRResult, SessionAnswer } from './types'
-import type { SessionResult } from '@/lib/practice/types'
+import type { ExerciseResult, SessionResult } from '@/lib/practice/types'
 import { recordActivitySession } from '@/lib/progress/activity-hub'
 
 export interface FinishContrastSessionOutcome {
@@ -52,42 +52,45 @@ export function sessionAnswersToResult(answers: SessionAnswer[]): SessionResult 
   }
 }
 
-/** Extracts the contrastId a phoneme result was attributed to, if any (see mixed-session.ts). */
-function resultContrastId(result: SessionResult['results'][number]): string | undefined {
-  const payload = result.exercisePayload as { contrastId?: string } | null | undefined
-  return payload?.contrastId
+/** Extract contrast id from plan-062 attribution or legacy payload. */
+export function contrastIdFromResult(result: ExerciseResult): string | null {
+  const fromAttr = result.attribution
+  if (fromAttr?.srsEligible) {
+    const hit = fromAttr.outcomes.find((o) => o.target.namespace === 'contrast')
+    if (hit && hit.target.namespace === 'contrast') return hit.target.id
+  }
+  const payload = result.exercisePayload as { contrastId?: string } | undefined
+  return payload?.contrastId ?? null
 }
 
 /**
- * Groups session results by their declared contrastId. Results with no
- * contrastId (dictation, match_pairs, reorder — not per-contrast
- * discrimination) are attributed to `fallbackContrastId`, the session's
- * primary/declared contrast, so they still count toward its SR streak
- * without being silently merged into an unrelated contrast's stats.
+ * Group session results by contrast for independent SRS updates.
+ * Exercises without a contrast id are omitted (non-SRS distractors).
  */
-function groupResultsByContrast(
-  results: SessionResult['results'],
-  fallbackContrastId: string,
-): Map<string, SessionResult['results']> {
-  const groups = new Map<string, SessionResult['results']>()
-  for (const result of results) {
-    const cid = resultContrastId(result) ?? fallbackContrastId
-    const bucket = groups.get(cid)
-    if (bucket) bucket.push(result)
-    else groups.set(cid, [result])
+export function groupResultsByContrast(
+  results: ExerciseResult[],
+): Map<string, ExerciseResult[]> {
+  const map = new Map<string, ExerciseResult[]>()
+  for (const r of results) {
+    const cid = contrastIdFromResult(r)
+    if (!cid) continue
+    const list = map.get(cid) ?? []
+    list.push(r)
+    map.set(cid, list)
   }
-  return groups
+  return map
 }
 
-async function updateOneContrast(
+export async function finishContrastSession(
   userId: string,
   contrastId: string,
-  results: SessionResult['results'],
-  currentProgress: UserContrastProgress | null | undefined,
-  now: Date,
+  result: SessionResult,
+  currentProgress?: UserContrastProgress | null,
+  now: Date = new Date(),
+  recordActivity = true,
 ): Promise<FinishContrastSessionOutcome> {
-  const correct = results.filter(r => r.isCorrect).length
-  const total   = results.length
+  const correct = result.results.filter(r => r.isCorrect).length
+  const total   = result.results.length
 
   const current = currentProgress ?? await getContrastProgress(userId, contrastId)
   const base    = current ?? DEFAULT_CONTRAST(userId, contrastId)
@@ -95,7 +98,7 @@ async function updateOneContrast(
   const sessionPassed = correct >= Math.ceil(total / 2)
   const sr: SRResult  = updateSR(base, sessionPassed)
 
-  const sessionAccuracy = sessionAccuracyPct(results)
+  const sessionAccuracy = sessionAccuracyPct(result.results)
   // Estimate sessions completed including this one. total_attempts grows by
   // `total` each session, so dividing gives approximate session count.
   const sessionSize = total > 0 ? total : 10
@@ -109,6 +112,15 @@ async function updateOneContrast(
   )
 
   await updateContrastProgress(userId, contrastId, correct, total, sr, masteryPct)
+  if (recordActivity) {
+    await recordActivitySession(userId, {
+      practiceContext: 'sound_lab',
+      sessionResult: result,
+      source: 'sound_lab',
+      metadata: { contrastId },
+    })
+  }
+  await flushOutbox()
 
   const updated: UserContrastProgress = {
     ...base,
@@ -126,47 +138,34 @@ async function updateOneContrast(
 }
 
 /**
- * Updates `user_contrast_progress` for every contrast actually practiced in
- * `result`, not just `contrastId`. Exercises carry their own contrastId when
- * they compared the sound against a specific confusable (see
- * buildAdaptiveSession); exercises without one (dictation, match_pairs,
- * reorder) are attributed to `contrastId`, the session's declared primary
- * contrast. Returns the outcome for `contrastId` specifically, since that is
- * what the caller UI displays (next review date for the sound being drilled).
+ * Apply contrast SRS for each attributed contrast group independently.
+ * Returns the latest nextReview among updated contrasts (or null if none).
  */
-export async function finishContrastSession(
+export async function finishAttributedContrastSessions(
   userId: string,
-  contrastId: string,
-  result: SessionResult,
-  currentProgress?: UserContrastProgress | null,
+  session: SessionResult,
   now: Date = new Date(),
-  recordActivity = true,
-): Promise<FinishContrastSessionOutcome> {
-  const groups = groupResultsByContrast(result.results, contrastId)
+): Promise<{ nextReview: Date | null; updatedContrastIds: string[] }> {
+  const groups = groupResultsByContrast(session.results)
+  let nextReview: Date | null = null
+  const updatedContrastIds: string[] = []
 
-  let primaryOutcome: FinishContrastSessionOutcome | undefined
-  for (const [cid, results] of groups) {
-    const outcome = await updateOneContrast(
-      userId,
-      cid,
-      results,
-      cid === contrastId ? currentProgress : undefined,
-      now,
-    )
-    if (cid === contrastId) primaryOutcome = outcome
+  for (const [cid, groupResults] of groups) {
+    const subset: SessionResult = {
+      ...session,
+      results: groupResults,
+      accuracy:
+        groupResults.length > 0
+          ? (groupResults.filter((r) => r.isCorrect).length / groupResults.length) * 100
+          : 0,
+      totalTimeMs: groupResults.reduce((s, r) => s + r.timeMs, 0),
+    }
+    const outcome = await finishContrastSession(userId, cid, subset, undefined, now, false)
+    updatedContrastIds.push(cid)
+    if (!nextReview || outcome.nextReview > nextReview) {
+      nextReview = outcome.nextReview
+    }
   }
 
-  if (recordActivity) {
-    await recordActivitySession(userId, {
-      practiceContext: 'sound_lab',
-      sessionResult: result,
-      source: 'sound_lab',
-      metadata: { contrastId },
-    })
-  }
-  await flushOutbox()
-
-  // primaryOutcome is always set: contrastId is always a key in groups
-  // (every result without its own contrastId falls back to it).
-  return primaryOutcome!
+  return { nextReview, updatedContrastIds }
 }

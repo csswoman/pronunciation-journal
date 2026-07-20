@@ -30,9 +30,10 @@ export function pickSeedSound(allSounds: Sound[], offset: number, excludeId?: nu
 }
 
 /** Adapts WordBankEntry to the WordEntry shape expected by generateSentenceContextExercises. */
-export function toWordEntry(entry: WordBankEntry): WordEntry {
+export function toWordEntry(entry: WordBankEntry): WordEntry & { bankId: string } {
   return {
-    id: entry.id,
+    // Catalog / content id when present; fall back to bank UUID for legacy rows.
+    id: entry.source_ref || entry.id,
     word: entry.text,
     pos: 'n',
     definition: entry.meaning ?? '',
@@ -41,5 +42,6 @@ export function toWordEntry(entry: WordBankEntry): WordEntry {
     difficulty: (entry.difficulty ?? 2) as 1 | 2 | 3,
     tags: [],
     exampleSentence: entry.example ?? undefined,
+    bankId: entry.id,
   }
 }

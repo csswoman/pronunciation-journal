@@ -6,6 +6,11 @@ import { normalizeTopic } from '@/lib/practice/normalize-topic'
 import { enqueueTopicSRSUpdate } from '@/lib/practice/topic-srs-queries'
 import { upsertFragmentSrs } from '@/lib/practice/fragment-srs'
 import {
+  ATTRIBUTION_VERSION,
+  mergeAttributionIntoPayload,
+} from '@/lib/practice/attribution'
+import { isUuid } from '@/lib/review/content-ref'
+import {
   db,
   isLessonComplete,
   markLessonComplete,
@@ -121,6 +126,16 @@ export async function savePracticeAnswer(
 
   const normalizedTopic = answer.topic ? normalizeTopic(answer.topic) : null
 
+  const attribution = answer.attribution
+  const attributionVersion = attribution
+    ? (answer.attributionVersion ?? ATTRIBUTION_VERSION)
+    : undefined
+  const exercisePayload = mergeAttributionIntoPayload(
+    answer.exercisePayload,
+    attribution,
+    attributionVersion,
+  )
+
   const row = {
     id: crypto.randomUUID(),
     user_id: userId,
@@ -130,7 +145,9 @@ export async function savePracticeAnswer(
     user_answer: answer.userAnswer ?? null,
     target_word: targetWord,
     time_ms: answer.timeMs,
-    exercise_payload: (answer.exercisePayload ?? null) as Json | null,
+    exercise_payload: (Object.keys(exercisePayload).length > 0
+      ? exercisePayload
+      : null) as Json | null,
     context: answer.context,
     content_id: contentId,
     topic: normalizedTopic,
@@ -142,18 +159,25 @@ export async function savePracticeAnswer(
   await db.transaction('rw', [db.syncOutbox, db.srsRatingEvents, db.srsData], async () => {
     await enqueue(userId, 'answer_history', 'upsert', rowWithGrade as Record<string, unknown>, undefined, 'id')
 
+    // Plan 062: explicit non-SRS attribution blocks entity updates.
+    const allowSrs = attribution?.srsEligible !== false
+
     // Enqueue SRS update for word_bank entries via the sync outbox (retried on reconnection).
-    if (answer.sourceRef?.source === 'word_bank') {
-      const wordId = answer.sourceRef.id
-      await enqueueWordBankSRSUpdate(userId, wordId, grade)
-    } else if (answer.sourceRef?.source === 'text_fragments') {
+    // Guard: only real UUIDs — catalog/lexicon ids must never hit word_bank PK.
+    if (
+      allowSrs
+      && answer.sourceRef?.source === 'word_bank'
+      && isUuid(answer.sourceRef.id)
+    ) {
+      await enqueueWordBankSRSUpdate(userId, answer.sourceRef.id, grade)
+    } else if (allowSrs && answer.sourceRef?.source === 'text_fragments') {
       // System sentences carry no per-user Supabase row; their review state is
       // local (Dexie srsData), so this write is direct rather than via the outbox.
       await upsertFragmentSrs(answer.sourceRef.id, grade)
     }
 
     // Enqueue SRS update for the concept (topic) when the exercise carries one.
-    if (normalizedTopic) {
+    if (allowSrs && normalizedTopic) {
       await enqueueTopicSRSUpdate(userId, normalizedTopic, grade)
     }
   })

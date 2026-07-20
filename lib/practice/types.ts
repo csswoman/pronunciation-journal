@@ -5,6 +5,10 @@ import type {
   ExerciseSourceRef,
   GenericExercise,
 } from '@/lib/exercises/types'
+import type {
+  AttributionVersion,
+  EvidenceAttribution,
+} from '@/lib/practice/attribution'
 import type { StudyCardModel } from '@/lib/practice/study-card/model'
 import type { ReaderPassage } from '@/lib/practice/reader/types'
 import type { ExerciseErrorCode } from '@/lib/exercises/error-taxonomy'
@@ -102,6 +106,11 @@ export type PracticeExercise = {
   level?: CEFRLevel
   /** Only set for phoneme-domain exercises. */
   soundId?: number
+  /**
+   * Plan 062: contrast key (`ipaA|ipaB`) when this exercise updates
+   * `user_contrast_progress`. Independent of PHONEME_CONFUSION array order.
+   */
+  contrastId?: string
   /** Only set for generic exercises. */
   sourceRef?: ExerciseSourceRef
 }
@@ -124,6 +133,14 @@ export type PracticeAnswer = {
   exercisePayload?: unknown
   /** Carried from PracticeExercise; used to build a prefixed content_id for SRS routing. */
   sourceRef?: ExerciseSourceRef
+  /**
+   * Plan 062: explicit SRS targets/outcomes for this answer.
+   * Prefer this over inferring identity from `sourceRef` alone.
+   * Absent = legacy evidence (do not invent targets).
+   */
+  attribution?: EvidenceAttribution
+  /** Stamped when `attribution` is present so reports can segment legacy rows. */
+  attributionVersion?: AttributionVersion
   /** Raw concept label from the exercise (e.g. "grammar:present_simple"). Normalized before persisting/scheduling. */
   topic?: string
 }

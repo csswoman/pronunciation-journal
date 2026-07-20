@@ -101,14 +101,7 @@ export function buildContextPracticeStep(
   const usable = wordEntries.filter((w) => w.exampleSentence)
   if (usable.length < 2) return null
 
-  // toWordEntry keys WordEntry.id by the WordBankEntry's own id, so it is
-  // already a real word_bank UUID here (unlike Dictionary catalog ids).
-  const bankIds = new Set(words.map((w) => w.id))
-  const contextExercises = generateSentenceContextExercises(
-    usable,
-    wordEntries,
-    (contentId) => (bankIds.has(contentId) ? contentId : undefined),
-  )
+  const contextExercises = generateSentenceContextExercises(usable, wordEntries)
   const exercises = dedupeByContentId(
     contextExercises.map((ex) => fromGenericExercise(ex, context)),
   )

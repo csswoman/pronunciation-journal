@@ -75,12 +75,23 @@ describe('savePracticeAnswer source SRS routing', () => {
   })
 
   it('schedules word_bank SRS (not fragment) for word_bank-sourced answers', async () => {
+    const wordId = '550e8400-e29b-41d4-a716-446655440000'
+    await savePracticeAnswer('user-1', {
+      ...base,
+      sourceRef: { source: 'word_bank', id: wordId },
+    })
+
+    expect(wordBankSrsMock).toHaveBeenCalledWith('user-1', wordId, expect.any(Number))
+    expect(fragmentSrsMock).not.toHaveBeenCalled()
+  })
+
+  it('does not schedule word_bank SRS for catalog ids disguised as word_bank', async () => {
     await savePracticeAnswer('user-1', {
       ...base,
       sourceRef: { source: 'word_bank', id: 'wb-3' },
     })
 
-    expect(wordBankSrsMock).toHaveBeenCalledWith('user-1', 'wb-3', expect.any(Number))
+    expect(wordBankSrsMock).not.toHaveBeenCalled()
     expect(fragmentSrsMock).not.toHaveBeenCalled()
   })
 

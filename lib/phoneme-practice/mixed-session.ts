@@ -31,9 +31,9 @@ function shuffle<T>(arr: T[]): T[] {
 }
 
 export type MixedExercise =
-  | { kind: 'phoneme'; data: Exercise; contrastId?: string }
-  | { kind: 'match_pairs'; data: MatchPairsExercise; contrastId?: string }
-  | { kind: 'reorder_words'; data: ReorderWordsExercise; contrastId?: string }
+  | { kind: 'phoneme'; data: Exercise }
+  | { kind: 'match_pairs'; data: MatchPairsExercise }
+  | { kind: 'reorder_words'; data: ReorderWordsExercise }
 
 /**
  * True when the user's level is B1 or above (gates ABX exercises).
@@ -128,53 +128,49 @@ export function buildAdaptiveSession(
 
   const { userLevel, contrastProgress = [] } = opts
   const progressMap = new Map(contrastProgress.map(p => [p.contrast_id, p]))
-  // The single contrast this session intentionally targets. Discrimination
-  // exercises below may internally sample from other confusables (see
-  // getConfusableSounds), but the session's declared attribution is this
-  // one contrast — deterministic from user history, not "first in a static
-  // array" (the previous bug: primaryContrastId ignored progress entirely).
-  const weakIpa = weakestContrastIpa(sound.ipa, progressMap)
-  const contrastId = weakIpa ? contrastKey(sound.ipa, weakIpa) : undefined
+  const weakOther = weakestContrastIpa(sound.ipa, progressMap)
+  const focusContrastId = weakOther ? contrastKey(sound.ipa, weakOther) : undefined
   const canUseAbx = isB1OrAbove(userLevel)
+
+  const stamp = (data: Exercise): Exercise =>
+    focusContrastId ? { ...data, contrastId: focusContrastId } : data
 
   const ex: MixedExercise[] = []
 
   if (canUseAbx) {
     // B1+: 2 ABX in place of 2 identify
     for (let i = 0; i < 2; i++) {
-      ex.push({ kind: 'phoneme', data: generateAbx(sound, targetWords, allSounds, allWordsBySoundId, pairs), contrastId })
+      ex.push({ kind: 'phoneme', data: stamp(generateAbx(sound, targetWords, allSounds, allWordsBySoundId, pairs)) })
     }
   } else {
     // A1/A2: 2 identify
     for (let i = 0; i < 2; i++) {
-      ex.push({ kind: 'phoneme', data: generateIdentify(sound, targetWords, allSounds, allWordsBySoundId), contrastId })
+      ex.push({ kind: 'phoneme', data: stamp(generateIdentify(sound, targetWords, allSounds, allWordsBySoundId)) })
     }
   }
 
   // AX same/different × 2
   for (let i = 0; i < 2; i++) {
-    ex.push({ kind: 'phoneme', data: generateAxSameDifferent(sound, targetWords, allSounds, allWordsBySoundId), contrastId })
+    ex.push({ kind: 'phoneme', data: stamp(generateAxSameDifferent(sound, targetWords, allSounds, allWordsBySoundId)) })
   }
 
   // odd_one_out × 1
-  ex.push({ kind: 'phoneme', data: generateOddOneOut(sound, targetWords, allSounds, allWordsBySoundId), contrastId })
+  ex.push({ kind: 'phoneme', data: stamp(generateOddOneOut(sound, targetWords, allSounds, allWordsBySoundId)) })
 
   // pick_word × 1
-  ex.push({ kind: 'phoneme', data: generatePickWord(sound, targetWords, allSounds, allWordsBySoundId), contrastId })
+  ex.push({ kind: 'phoneme', data: stamp(generatePickWord(sound, targetWords, allSounds, allWordsBySoundId)) })
 
   // minimal_pair × 1 (fallback pick_word if no pairs)
   const mp = generateMinimalPair(sound, pairs)
   ex.push({
     kind: 'phoneme',
-    data: mp.options.length > 0 ? mp : generatePickWord(sound, targetWords, allSounds, allWordsBySoundId),
-    contrastId,
+    data: stamp(mp.options.length > 0 ? mp : generatePickWord(sound, targetWords, allSounds, allWordsBySoundId)),
   })
 
-  // dictation × 1 — no contrast comparison, not attributed to a contrast.
-  ex.push({ kind: 'phoneme', data: generateDictation(sound, targetWords) })
+  // dictation × 1 — listening of the target sound; attribute to focus contrast when known
+  ex.push({ kind: 'phoneme', data: stamp(generateDictation(sound, targetWords)) })
 
-  // Optional: match_pairs + reorder — group/production exercises, not
-  // per-contrast discrimination; not attributed to a contrast.
+  // Optional: match_pairs + reorder (aggregate / example drills — no contrast stamp)
   const matchGroups = generateMatchPairsFromSoundWords(targetWords)
   if (matchGroups.length > 0) ex.push({ kind: 'match_pairs', data: matchGroups[0] })
   const reorder = generateReorderFromSoundExample(sound)
@@ -220,7 +216,8 @@ export function buildMixedSession(
   targetWords: SoundWord[],
   allSounds: Sound[],
   allWordsBySoundId: Map<number, SoundWord[]>,
-  pairs: MinimalPair[]
+  pairs: MinimalPair[],
+  opts: AdaptiveSessionOptions = {},
 ): MixedExercise[] {
-  return buildAdaptiveSession(sound, targetWords, allSounds, allWordsBySoundId, pairs)
+  return buildAdaptiveSession(sound, targetWords, allSounds, allWordsBySoundId, pairs, opts)
 }

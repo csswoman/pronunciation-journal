@@ -50,6 +50,9 @@ function resolveOnConflict(entry: SyncOutboxEntry): string | undefined {
   return entry.onConflict ?? UPSERT_CONFLICT_COLUMNS[entry.table]
 }
 
+/** Exported for testing */
+export { resolveOnConflict }
+
 /**
  * Determine whether a Supabase error should be retried or treated as permanent.
  * RLS violations (code 42501) and check-constraint errors (23514) are permanent.
@@ -456,4 +459,7 @@ async function flushOutboxInternal(userId: string): Promise<SyncFlushResult> {
 
   return summarize(operations)
 }
+
+// Export internal functions for testing
+export { entityKeyFor, emptyFlushResult, summarize }
 
