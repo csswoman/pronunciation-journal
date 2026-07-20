@@ -22,6 +22,7 @@ import {
   type EssentialWordsSessionSummary,
 } from "@/lib/core-1000/session-model";
 import { readStoredCefrLevel } from "@/lib/core-1000/target-level";
+import { readGuestStudyLevel } from "@/lib/preferences/guest-study-level";
 import {
   masterEssentialWord,
   recordCore1000Introduction,
@@ -181,8 +182,9 @@ export function useEssentialWordsSession() {
       try {
         // Seed the level filter from the user's stored CEFR level (offline-safe)
         // so a placed learner starts at their level. Only when untouched (null).
-        if (user?.id && levelsRef.current === null) {
-          const level = await readStoredCefrLevel(user.id);
+        if (levelsRef.current === null) {
+          const isGuest = !user || (user as { is_anonymous?: boolean }).is_anonymous;
+          const level = isGuest ? readGuestStudyLevel() : await readStoredCefrLevel(user.id);
           if (!cancelled && level && level !== "A1") {
             levelsRef.current = [level];
             setLevelsState([level]);

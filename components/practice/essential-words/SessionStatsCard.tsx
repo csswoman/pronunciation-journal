@@ -21,7 +21,7 @@ function StatColumn({
     <div className="flex flex-1 flex-col items-center gap-0.5">
       <span
         className={cn(
-          'text-xl font-semibold leading-none tabular-nums tracking-tight transition-colors duration-200',
+          'type-stat text-xl tracking-tight transition-colors duration-200',
           accent && value > 0
             ? 'text-primary'
             : zero && value === 0
@@ -31,7 +31,7 @@ function StatColumn({
       >
         {value}
       </span>
-      <span className="text-tiny font-medium text-fg-subtle">
+      <span className="font-kicker text-fg-subtle">
         {label}
       </span>
     </div>
@@ -40,7 +40,7 @@ function StatColumn({
 
 export function SessionStatsCard({ stats, counts }: Props) {
   return (
-    <div className="relative flex w-full flex-col gap-3 rounded-xl border border-border-subtle bg-transparent px-4 py-3">
+    <div className="relative flex w-full flex-col gap-2 rounded-xl border border-border-subtle bg-transparent px-3 py-2.5 sm:gap-3 sm:px-4 sm:py-3">
       <div className="absolute right-1.5 top-1.5">
         <SessionHelpPopover />
       </div>

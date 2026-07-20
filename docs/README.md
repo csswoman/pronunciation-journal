@@ -35,14 +35,23 @@ diseño y planes de producto.
 
 ## Diseño y componentes UI
 
+La referencia vigente es [DESIGN.md](../DESIGN.md): toma el Home como patrón de
+jerarquía, composición y tono. [THEME_SYSTEM.md](../THEME_SYSTEM.md) documenta
+los tokens que lo hacen adaptable. Las notas de migración debajo conservan
+contexto histórico y no reemplazan esas dos fuentes.
+
+| Documento | Descripción |
+|-----------|-------------|
+| [Lenguaje visual](design/visual-language.md) | Proporción de color, border radius, tipografía y reglas de personalidad |
+
 ### Botones
 
 | Documento | Descripción |
 |-----------|-------------|
 | [Guía de Button](design/buttons/guide.md) | Variantes, props y ejemplos |
 | [Referencia rápida](design/buttons/quick-reference.md) | Cheat sheet de una página |
-| [Resumen de migración](design/buttons/migration-summary.md) | Antes y después del refactor |
-| [Implementación completada](design/buttons/implementation-complete.md) | Notas del refactor de 2026-05-28 |
+| [Resumen de migración](design/buttons/migration-summary.md) | Contexto histórico del refactor |
+| [Implementación completada](design/buttons/implementation-complete.md) | Registro histórico del refactor de 2026-05-28 |
 | [Excepciones de estilos inline](design/inline-style-exceptions.md) | Casos runtime permitidos para `style={{ ... }}` |
 
 ### Enlaces (Anchor)

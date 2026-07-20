@@ -75,7 +75,7 @@ export function StudyCard({
         backgroundColor: "var(--card-bg)",
         borderRadius: "16px",
         border: "1px solid var(--line-divider)",
-        boxShadow: "0 1px 8px rgba(0,0,0,0.06)",
+        boxShadow: "var(--shadow-sm)",
         overflow: "hidden",
         position: "absolute",
         inset: 0,

@@ -31,7 +31,7 @@ interface WordStats {
 }
 
 interface MyWordsTabRuntimeProps {
-  onMyWordsCountChange: (count: number) => void;
+  onMyWordsCountChange?: (count: number) => void;
   onRegisterPrimaryAction?: (action: () => void) => void;
 }
 
@@ -112,7 +112,7 @@ export default function MyWordsTabRuntime({
 
   useEffect(() => {
     if (loading) return;
-    onMyWordsCountChange(words.length);
+    onMyWordsCountChange?.(words.length);
   }, [loading, words.length, onMyWordsCountChange]);
 
   const wordStats = useMemo<WordStats>(() => ({

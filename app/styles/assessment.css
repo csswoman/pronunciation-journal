@@ -1,9 +1,7 @@
 .assessment-page {
   min-height: 100dvh;
-  padding: 2rem 1rem 6rem;
-  background:
-    radial-gradient(circle at 20% 0%, color-mix(in oklch, var(--primary) 8%, transparent), transparent 26rem),
-    var(--surface-base);
+  padding: clamp(1.5rem, 5vw, 4rem) 1rem 6rem;
+  background: var(--surface-base);
 }
 
 .assessment-shell {
@@ -388,17 +386,33 @@
 }
 
 .assessment-result {
-  max-width: 640px;
-  margin: 8vh auto 0;
-  padding: 2rem;
+  width: min(100%, 52rem);
+  margin: clamp(2rem, 10vh, 6rem) auto 0;
+  padding: clamp(1.5rem, 4vw, 3rem);
   border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-xl);
   background: var(--surface-raised);
 }
 
 .assessment-result > svg {
-  margin-bottom: 1rem;
+  display: block;
+  margin-bottom: 1.25rem;
   color: var(--success);
+}
+
+.assessment-result .assessment-kicker {
+  margin-bottom: 0.35rem;
+}
+
+.assessment-result h1 {
+  max-width: 18ch;
+  font-size: clamp(2rem, 5vw, 3rem);
+  line-height: 1.08;
+}
+
+.assessment-result > p {
+  margin-top: 0.75rem;
+  font-size: 1rem;
 }
 
 .assessment-topic-list {
@@ -418,13 +432,15 @@
 
 .assessment-result-sections {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1rem;
-  margin-top: 1.5rem;
+  grid-template-columns: minmax(0, 1.2fr) minmax(15rem, 0.8fr);
+  gap: 0.75rem;
+  margin-top: 2rem;
 }
 
 .assessment-result-sections section {
-  padding: 1rem;
+  min-width: 0;
+  padding: 1.25rem;
+  border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
   background: var(--surface-sunken);
 }
@@ -440,11 +456,16 @@
 
 .assessment-result-sections ul {
   margin: 0;
-  padding-left: 1.1rem;
+  padding-left: 1.25rem;
   color: var(--text-secondary);
-  font-size: 0.86rem;
+  font-size: 0.92rem;
   line-height: 1.6;
   text-transform: capitalize;
+}
+
+.assessment-result > a {
+  width: fit-content;
+  margin-top: 1.5rem;
 }
 
 .assessment-save-error {
@@ -546,6 +567,29 @@
 
   .assessment-result-sections {
     grid-template-columns: 1fr;
+  }
+
+  .assessment-result {
+    margin-top: 2rem;
+    padding: 1.5rem 1.25rem;
+    border-radius: var(--radius-lg);
+  }
+
+  .assessment-result h1 {
+    max-width: none;
+    font-size: 2rem;
+  }
+
+  .assessment-result-sections {
+    margin-top: 1.5rem;
+  }
+
+  .assessment-result-sections section {
+    padding: 1rem;
+  }
+
+  .assessment-result > a {
+    width: 100%;
   }
 }
 

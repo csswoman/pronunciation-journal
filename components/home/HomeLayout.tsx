@@ -11,6 +11,7 @@ import type { ConceptLesson } from "@/hooks/useDailyPlan";
 import type { DailyGoalProgress, WeakestPhonemeHome } from "@/lib/home/constants";
 import type { VocabularyProgressSeed } from "@/lib/vocabulary/server-progress";
 import type { MiniLesson } from "@/lib/content/schemas";
+import type { HomePlacementState } from "@/lib/home/placement-state";
 
 interface HomeLayoutProps {
   streak?: DailyStreakResult;
@@ -22,6 +23,7 @@ interface HomeLayoutProps {
   vocabularyProgress?: VocabularyProgressSeed | null;
   todaysLesson?: MiniLesson | null;
   secondaryLesson?: MiniLesson | null;
+  placementState: HomePlacementState;
 }
 
 export default function HomeLayout({
@@ -34,6 +36,7 @@ export default function HomeLayout({
   vocabularyProgress = null,
   todaysLesson = null,
   secondaryLesson = null,
+  placementState,
 }: HomeLayoutProps) {
   return (
     <div className="home-layout home-layout-shell">
@@ -51,6 +54,7 @@ export default function HomeLayout({
           secondaryLesson={secondaryLesson}
           wordsDueCount={wordsDueCount}
           soundsDueCount={soundsDueCount}
+          placementState={placementState}
         />
       </div>
     </div>

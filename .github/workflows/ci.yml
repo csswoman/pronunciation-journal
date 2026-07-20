@@ -52,6 +52,12 @@ jobs:
       - name: Design Token Validation
         run: pnpm lint:design-tokens
 
+      - name: Audit AI prompt boundaries
+        run: pnpm audit:ai-prompts
+
+      - name: Audit Dexie/Zustand state duplication
+        run: pnpm audit:state-duplication
+
       - name: Validate Core 1000 dataset
         run: pnpm validate:core1000
 
@@ -156,15 +162,6 @@ jobs:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://example.supabase.co' }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'ci-anon-placeholder' }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY || 'ci-gemini-placeholder' }}
-
-      - name: Verify design tokens used
-        run: |
-          hardcoded=$(grep -r "oklch(0\." components/ui --include="*.tsx" | grep -v "var(--hue)" | wc -l)
-          echo "Hard-coded colors found: $hardcoded (should be < 2)"
-          if [ "$hardcoded" -gt 2 ]; then
-            echo "⚠️ Too many hard-coded colors detected"
-            exit 1
-          fi
 
   notify-status:
     runs-on: ubuntu-latest

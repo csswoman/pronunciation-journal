@@ -50,9 +50,21 @@ describe("CoursePathProgressClient", () => {
 
     await waitFor(() => {
       expect(screen.getByText("Siguiente lección")).toBeInTheDocument();
-      expect(screen.getByText("Continuar")).toBeInTheDocument();
-      expect(screen.getByText("Para reforzar")).toBeInTheDocument();
+      expect(screen.getByText("Abrir lección")).toBeInTheDocument();
+      expect(screen.getByText("Repasa lo que ya aprendiste")).toBeInTheDocument();
       expect(screen.queryByText("Tu lección actual")).not.toBeInTheDocument();
+    });
+  });
+
+  it("keeps the curriculum visible with an actionable error when progress cannot load", async () => {
+    bulkGet.mockRejectedValue(new Error("IndexedDB unavailable"));
+
+    render(<CoursePathProgressClient level={COURSE_PATH_CURRICULUM.levels[0]} />);
+
+    await waitFor(() => {
+      expect(screen.getByRole("alert")).toHaveTextContent("No hemos podido leer tu progreso en este dispositivo");
+      expect(screen.getByRole("button", { name: "Reintentar" })).toBeInTheDocument();
+      expect(screen.getByText("Empieza aquí")).toBeInTheDocument();
     });
   });
 });

@@ -19,9 +19,11 @@ import HomeLearnRow from "@/components/home/HomeLearnRow";
 import Core1000ProgressCard from "@/components/home/Core1000ProgressCard";
 import WeakSoundCard from "@/components/home/WeakSoundCard";
 import HomeWordOfDayCard from "@/components/home/HomeWordOfDayCard";
+import HomePlacementPrompt from "@/components/home/HomePlacementPrompt";
 import type { ConceptLesson } from "@/hooks/useDailyPlan";
 import type { WeakestPhonemeHome } from "@/lib/home/constants";
 import type { MiniLesson } from "@/lib/content/schemas";
+import type { HomePlacementState } from "@/lib/home/placement-state";
 
 interface HomeCommandGridProps {
   conceptLesson: ConceptLesson | null;
@@ -30,6 +32,7 @@ interface HomeCommandGridProps {
   secondaryLesson?: MiniLesson | null;
   wordsDueCount?: number;
   soundsDueCount?: number;
+  placementState: HomePlacementState;
 }
 
 export default function HomeCommandGrid({
@@ -39,6 +42,7 @@ export default function HomeCommandGrid({
   secondaryLesson = null,
   wordsDueCount = 0,
   soundsDueCount = 0,
+  placementState,
 }: HomeCommandGridProps) {
   const [planEmpty, setPlanEmpty] = useState(false);
   const onPlanEmptyChange = useCallback((empty: boolean) => {
@@ -46,6 +50,8 @@ export default function HomeCommandGrid({
   }, []);
 
   const reviewDue = wordsDueCount + soundsDueCount > 0;
+  const showPlacementSetup = !placementState.hasPlacement && !placementState.hasMeaningfulProgress;
+  const showPlacementReminder = !placementState.hasPlacement && placementState.hasMeaningfulProgress;
 
   return (
     <div className="home-command-grid">
@@ -55,6 +61,12 @@ export default function HomeCommandGrid({
             wordsDueCount={wordsDueCount}
             soundsDueCount={soundsDueCount}
           />
+        </div>
+      ) : null}
+
+      {showPlacementSetup ? (
+        <div className="home-command-review">
+          <HomePlacementPrompt />
         </div>
       ) : null}
 
@@ -77,6 +89,7 @@ export default function HomeCommandGrid({
             <HomeWordOfDayCard />
           </>
         ) : null}
+        {showPlacementReminder ? <HomePlacementPrompt compact /> : null}
       </aside>
     </div>
   );

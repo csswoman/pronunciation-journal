@@ -7,10 +7,6 @@ import type { AssessmentConcept } from "@/lib/courses/concept-profile";
 
 const persistAssessmentConceptProfileMock = vi.fn();
 
-vi.mock("@/components/auth/AuthProvider", () => ({
-  useAuth: () => ({ user: { id: "user-1" } }),
-}));
-
 vi.mock("@/lib/courses/assessment-profile", () => ({
   persistAssessmentConceptProfile: (...args: unknown[]) => persistAssessmentConceptProfileMock(...args),
 }));
@@ -99,7 +95,7 @@ describe("AssessmentClient", () => {
   });
 
   it("keeps submission disabled until every question is answered", () => {
-    render(<AssessmentClient mode="checkpoint" checkpointLabel="A1" questions={questions} />);
+    render(<AssessmentClient mode="checkpoint" checkpointLabel="A1" questions={questions} userId="user-1" />);
 
     const submit = screen.getByRole("button", { name: "Ver resultado" });
     expect(submit).toBeDisabled();
@@ -110,7 +106,7 @@ describe("AssessmentClient", () => {
   });
 
   it("promotes the learner and persists the new level after a passed checkpoint", async () => {
-    render(<AssessmentClient mode="checkpoint" checkpointLabel="A1" questions={questions} />);
+    render(<AssessmentClient mode="checkpoint" checkpointLabel="A1" questions={questions} userId="user-1" />);
 
     fireEvent.click(screen.getByText("Right"));
     fireEvent.click(screen.getByRole("button", { name: "Ver resultado" }));
@@ -132,7 +128,7 @@ describe("AssessmentClient", () => {
     fetchMock
       .mockResolvedValueOnce({ ok: false })
       .mockResolvedValueOnce({ ok: true });
-    render(<AssessmentClient mode="checkpoint" checkpointLabel="A1" questions={questions} />);
+    render(<AssessmentClient mode="checkpoint" checkpointLabel="A1" questions={questions} userId="user-1" />);
 
     fireEvent.click(screen.getByText("Right"));
     fireEvent.click(screen.getByRole("button", { name: "Ver resultado" }));
@@ -142,5 +138,20 @@ describe("AssessmentClient", () => {
 
     await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(2));
     await waitFor(() => expect(screen.queryByRole("button", { name: "Reintentar" })).not.toBeInTheDocument());
+  });
+
+  it("completes as a guest without calling authenticated persistence", () => {
+    render(<AssessmentClient mode="checkpoint" checkpointLabel="A1" questions={questions} />);
+
+    fireEvent.click(screen.getByText("Right"));
+    fireEvent.click(screen.getByRole("button", { name: "Ver resultado" }));
+
+    expect(screen.getByRole("heading", { name: "Avanzas a A2" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Iniciar sesión para continuar" }))
+      .toHaveAttribute("href", "/login");
+    expect(window.localStorage.getItem("assessment:guest:checkpoint:A1"))
+      .toContain('"assignedLevel":"A2"');
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(persistAssessmentConceptProfileMock).not.toHaveBeenCalled();
   });
 });

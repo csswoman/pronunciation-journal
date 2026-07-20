@@ -71,7 +71,22 @@ function hasPolicy(sql, tableName) {
   return new RegExp(`create\\s+policy[\\s\\S]+on\\s+${tablePattern}`, "i").test(sql);
 }
 
+/**
+ * Tables covered by a cross-user isolation case in scripts/rls-integration.mjs.
+ * That script only exercises the live DB against .from("<table>") calls, so we
+ * detect coverage by scanning it for those calls rather than hand-maintaining
+ * a second list here.
+ */
+function readIntegrationTestedTables() {
+  const integrationFile = path.join(process.cwd(), "scripts", "rls-integration.mjs");
+  if (!fs.existsSync(integrationFile)) return new Set();
+  const source = fs.readFileSync(integrationFile, "utf8");
+  const tables = [...source.matchAll(/\.from\(["']([^"']+)["']\)/g)].map((m) => m[1]);
+  return new Set(tables);
+}
+
 const issues = [];
+const rlsEnabledTables = new Set();
 
 for (const file of readSqlFiles(MIGRATIONS_DIR)) {
   const relative = path.relative(process.cwd(), file).replace(/\\/g, "/");
@@ -83,6 +98,8 @@ for (const file of readSqlFiles(MIGRATIONS_DIR)) {
   for (const tableName of tables) {
     if (!hasRlsEnabled(sql, tableName)) {
       issues.push(`${relative}: missing ENABLE ROW LEVEL SECURITY for ${tableName}`);
+    } else {
+      rlsEnabledTables.add(tableName.replace(/^public\./, ""));
     }
     if (!hasPolicy(sql, tableName)) {
       issues.push(`${relative}: missing CREATE POLICY for ${tableName}`);
@@ -96,6 +113,21 @@ if (issues.length > 0) {
     console.error(`- ${issue}`);
   }
   process.exit(1);
+}
+
+// Warning only: tables with RLS but no cross-user isolation test in
+// scripts/rls-integration.mjs. Doesn't block CI — that script needs a live
+// Supabase project and isn't run there — but nudges every new table to add
+// its case when someone runs `pnpm test:rls:integration` locally.
+const integrationTestedTables = readIntegrationTestedTables();
+const untestedTables = [...rlsEnabledTables].filter((t) => !integrationTestedTables.has(t));
+
+if (untestedTables.length > 0) {
+  console.warn("RLS audit warning (non-blocking): tables missing an integration test case in scripts/rls-integration.mjs:");
+  for (const t of untestedTables) {
+    console.warn(`- ${t}`);
+  }
+  console.warn();
 }
 
 console.log("RLS audit passed for migration files.");

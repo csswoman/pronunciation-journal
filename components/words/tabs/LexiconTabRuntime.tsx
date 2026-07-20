@@ -3,6 +3,7 @@
 import Section from "@/components/layout/Section";
 import { LexiconView } from "@/components/lexicon/LexiconView";
 import type { LessonViewModel } from "@/lib/lexicon/types";
+import type { WordsMode } from "@/components/words/WordsTopbar";
 
 interface LexiconTabRuntimeProps {
   lexiconLessons: LessonViewModel[];
@@ -12,6 +13,8 @@ interface LexiconTabRuntimeProps {
   lexiconPercent: number;
   dueForReview?: number;
   dueWordLabels?: string[];
+  progressUnavailable?: boolean;
+  mode?: WordsMode;
 }
 
 export default function LexiconTabRuntime({
@@ -22,6 +25,8 @@ export default function LexiconTabRuntime({
   lexiconPercent,
   dueForReview = 0,
   dueWordLabels = [],
+  progressUnavailable = false,
+  mode = "dictionary",
 }: LexiconTabRuntimeProps) {
   return (
     <Section spacing="md">
@@ -33,6 +38,8 @@ export default function LexiconTabRuntime({
         lexiconPercent={lexiconPercent}
         dueForReview={dueForReview}
         dueWordLabels={dueWordLabels}
+        progressUnavailable={progressUnavailable}
+        mode={mode}
       />
     </Section>
   );

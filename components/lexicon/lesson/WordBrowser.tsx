@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useMemo, useCallback } from "react";
-import { ArrowUp } from "@/components/icons";
+import Link from "next/link";
+import { ArrowUp, BookMarked, BookOpen, Dumbbell, Layers } from "@/components/icons";
 import { WordFiltersBar } from "./WordFiltersBar";
 import { WordGrid } from "./WordGrid";
 import type { Word } from "./WordGrid";
@@ -10,6 +11,7 @@ import { markLexiconWordLearned } from "@/lib/word-bank/queries";
 
 interface WordBrowserProps {
   words: Word[];
+  categoryId: string;
   wordBankMap?: Map<string, { id: string; isFavorite: boolean }>;
   onToggleFavorite?: (wordBankId: string, value: boolean) => void;
   onAddToMyWords?: (lexiconWord: {
@@ -22,6 +24,7 @@ interface WordBrowserProps {
 
 export function WordBrowser({
   words: initialWords,
+  categoryId,
   wordBankMap,
   onToggleFavorite,
   onAddToMyWords,
@@ -130,9 +133,48 @@ export function WordBrowser({
     isInMyWords: !!wordBankMap?.get(word.id),
   }));
 
+  const learnedPct = words.length > 0 ? Math.round((statusCounts.learned / words.length) * 100) : 0;
+
   return (
-    <div>
+    <div className="lexicon-area__detail-layout">
+      <aside className="lexicon-area__sidebar" aria-label="Opciones del diccionario">
+        <section className="lexicon-area__side-progress" aria-labelledby="dictionary-progress-title">
+          <div className="lexicon-area__side-progress-head">
+            <p id="dictionary-progress-title" className="lexicon-area__side-label">Progreso del tema</p>
+            <strong>{learnedPct}%</strong>
+          </div>
+          <div
+            className="lexicon-area__segbar"
+            role="progressbar"
+            aria-label="Palabras aprendidas"
+            aria-valuenow={statusCounts.learned}
+            aria-valuemin={0}
+            aria-valuemax={words.length}
+          >
+            <i className="lexicon-area__segbar-learned" style={{ width: `${learnedPct}%` }} />
+          </div>
+          <p className="lexicon-area__side-progress-copy">
+            <strong>{statusCounts.learned}</strong> de {words.length} palabras aprendidas
+          </p>
+          <div className="lexicon-area__side-legend">
+            <span><i className="is-learned" />Aprendidas {statusCounts.learned}</span>
+            <span><i className="is-reviewing" />En repaso {statusCounts.reviewing}</span>
+            <span><i />Nuevas {statusCounts.new}</span>
+          </div>
+          <Link href={`/dictionary/${categoryId}/practice`} className="lexicon-area__practice-link">
+            <Dumbbell size={16} aria-hidden /> Practicar este tema
+          </Link>
+        </section>
+
+        <nav className="lexicon-area__side-nav" aria-label="Dictionary">
+          <p className="lexicon-area__side-label">Dictionary</p>
+          <Link href="/dictionary"><BookOpen size={16} aria-hidden /> Explorar temas</Link>
+          <Link href="/dictionary?mode=learn"><Layers size={16} aria-hidden /> Plan de aprendizaje</Link>
+          <Link href="/tracking"><BookMarked size={16} aria-hidden /> Palabras guardadas</Link>
+        </nav>
+
       <WordFiltersBar
+        variant="sidebar"
         status={status}
         sort={sort}
         view={view}
@@ -143,22 +185,28 @@ export function WordBrowser({
         onViewChange={setView}
         onSearchChange={setSearch}
       />
+      </aside>
 
-      <WordGrid
-        words={enriched}
-        view={view}
-        groupByLetter={sort === "alpha"}
-        onMarkLearned={handleMarkLearned}
-      />
+      <div className="lexicon-area__results">
+        <p className="lexicon-area__results-count" aria-live="polite">
+          {enriched.length} {enriched.length === 1 ? "palabra" : "palabras"} {status === "all" ? "en este tema" : "con este filtro"}
+        </p>
+        <WordGrid
+          words={enriched}
+          view={view}
+          groupByLetter={sort === "alpha"}
+          onMarkLearned={handleMarkLearned}
+        />
 
-      <div className="lexicon-area__backtop">
-        <button
-          type="button"
-          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-        >
-          <ArrowUp className="w-4 h-4" aria-hidden />
-          Back to top
-        </button>
+        <div className="lexicon-area__backtop">
+          <button
+            type="button"
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          >
+            <ArrowUp className="w-4 h-4" aria-hidden />
+            Volver arriba
+          </button>
+        </div>
       </div>
     </div>
   );

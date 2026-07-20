@@ -2,33 +2,33 @@
 name: English Journal
 description: A personal pronunciation journal and practice environment for English learners at any level, from beginners to advanced.
 colors:
-  primary: "oklch(0.50 0.17 250)"
-  primary-hover: "oklch(0.42 0.15 250)"
-  primary-soft: "oklch(0.97 0.02 250)"
-  surface-base: "oklch(0.965 0.003 250)"
-  surface-raised: "oklch(0.995 0.001 250)"
-  surface-sunken: "oklch(0.94 0.005 250)"
+  primary: "var(--primary)"
+  primary-hover: "var(--primary-hover)"
+  primary-soft: "var(--primary-soft)"
+  surface-base: "var(--surface-base)"
+  surface-raised: "var(--surface-raised)"
+  surface-sunken: "var(--surface-sunken)"
   surface-overlay: "oklch(1 0 0 / 0.92)"
-  surface-tooltip: "oklch(0.17 0.006 250)"
-  text-primary: "oklch(0.18 0.008 250)"
-  text-secondary: "oklch(0.46 0.006 250)"
-  text-tertiary: "oklch(0.62 0.004 250)"
-  text-disabled: "oklch(0.75 0.002 250)"
-  border-subtle: "oklch(0.925 0 0)"
-  border-default: "oklch(0.875 0 0)"
-  border-strong: "oklch(0.720 0 0)"
-  success: "oklch(0.70 0.16 145)"
-  success-soft: "oklch(0.92 0.05 145)"
-  warning: "oklch(0.78 0.17 85)"
-  warning-soft: "oklch(0.95 0.05 85)"
-  error: "oklch(0.65 0.20 25)"
-  error-soft: "oklch(0.93 0.05 25)"
-  info: "oklch(0.70 0.12 230)"
-  info-soft: "oklch(0.93 0.04 230)"
-  stage-pairs: "oklch(0.74 0.14 55)"
-  stage-dictation: "oklch(0.73 0.12 185)"
-  cta-bg: "oklch(0.18 0.008 250)"
-  cta-fg: "oklch(0.93 0.012 250)"
+  surface-tooltip: "var(--surface-tooltip)"
+  text-primary: "var(--text-primary)"
+  text-secondary: "var(--text-secondary)"
+  text-tertiary: "var(--text-tertiary)"
+  text-disabled: "var(--text-disabled)"
+  border-subtle: "var(--border-subtle)"
+  border-default: "var(--border-default)"
+  border-strong: "var(--border-strong)"
+  success: "var(--success)"
+  success-soft: "var(--success-soft)"
+  warning: "var(--warning)"
+  warning-soft: "var(--warning-soft)"
+  error: "var(--error)"
+  error-soft: "var(--error-soft)"
+  info: "var(--info)"
+  info-soft: "var(--info-soft)"
+  stage-pairs: "var(--stage-pairs)"
+  stage-dictation: "var(--stage-dictation)"
+  cta-bg: "var(--cta-bg)"
+  cta-fg: "var(--cta-fg)"
 typography:
   display:
     fontFamily: "DM Sans, system-ui, sans-serif"
@@ -107,7 +107,7 @@ components:
     rounded: "{rounded.md}"
     padding: "10px 20px"
   button-primary-hover:
-    backgroundColor: "oklch(0.26 0.008 250)"
+    backgroundColor: "var(--cta-bg-hover)"
     textColor: "{colors.cta-fg}"
   button-secondary:
     backgroundColor: "{colors.surface-raised}"
@@ -142,22 +142,25 @@ components:
 
 ## 1. Overview
 
-**Creative North Star: "The Personal Notebook"**
+**Creative North Star: "The Personal Practice Desk"**
 
-This is a learner's private space, not a product showcase. It opens quietly and gets out of the way. The mood is settled: warm surfaces, unhurried spacing, nothing competing for attention. A beginner and an advanced learner should both feel at home, because the interface does not assume prior knowledge. Phonetic symbols appear naturally alongside plain text, interesting rather than intimidating. Every element has earned its place through use, not decoration.
+This is a learner's private practice desk, not a product showcase or a metrics dashboard. It opens with the next useful action, then reveals the supporting routes without making them compete. The mood is settled: near-neutral surfaces, unhurried spacing, and no decoration that does not clarify a choice. A beginner and an advanced learner should both feel at home, because the interface does not assume prior knowledge. Phonetic symbols appear naturally alongside plain text, interesting rather than intimidating.
 
-The palette uses near-neutral surfaces with a dynamic primary that shifts hue based on the learner's preference, defaulting to violet/blue-purple. Identity is concentrated in actions and states instead of washing the entire canvas in color. The typography is a two-family system: DM Sans (clear, humanist, reliable for UI and headings) and DM Mono (kickers, IPA glyphs, phonetic transcriptions). No decorative serif. The spacing is 8pt, applied with intention: sessions feel spacious, feedback feels close, and the canvas never feels busy.
+The palette uses near-neutral surfaces with a dynamic primary that follows the learner's active theme. Identity is concentrated in actions and states instead of washing the entire canvas in color. The typography is DM Sans for interface and reading, DM Mono for kickers and technical notation, and Andika for IPA. No decorative serif. The spacing is 8pt, applied with intention: sessions feel spacious, feedback feels close, and the canvas never feels busy.
 
 This system explicitly rejects three anti-references established in PRODUCT.md: Duolingo's infantilizing gamification (cartoonish reward loops, owl mascots, hollow celebrations); the generic SaaS dashboard (navy sidebar, white card grids, blue primary buttons, identical spacing everywhere); and corporate language platforms (Rosetta Stone, Babbel, institutional e-learning shells) with their stiff, joyless, compliance-module energy. A learner opening this app should feel like returning to something that belongs to them, not launching a product.
 
 **Key Characteristics:**
 - Warm-neutral surfaces with a hue-tinted primary that feels personal rather than branded
 - Quiet by default: flat surfaces at rest, shadow reserved for state changes and elevation
-- DM Sans as the workhorse for UI and headings; DM Mono for IPA glyphs and kickers
+- DM Sans as the workhorse for UI and headings; DM Mono for kickers; Andika for IPA glyphs
 - No decorative display serif — phonemes earn presence through size and weight, not a second family
 - Semantic color fixed and culturally legible (green = correct, amber = caution, red = error)
 - Sound and phonetics are first-class content: IPA characters render in the same font as UI text, with identical clarity
 - Entry points that do not require phonetic expertise to begin; depth rewards those who go looking
+
+For operational guidance on color proportion, radius, typography, and visual
+personality, see `docs/design/visual-language.md`.
 
 ## 2. Colors: The Hue-Tinted Notebook
 
@@ -166,8 +169,8 @@ The palette is neutral-first with a dynamic primary scale. Every surface carries
 **Token-to-utility mapping.** In code, reference the Tailwind v4 utilities generated from `app/styles/theme.css`, never raw `var(--…)` arbitrary values. The foreground tokens map: `text-primary` → `text-fg`, `text-secondary` → `text-fg-muted`, `text-tertiary` → `text-fg-subtle` (the `fg-` prefix avoids clashing with Tailwind's `text-base` font-size utility). Primary foreground on a filled button is `text-on-primary`, not `text-white`. Surfaces, borders, and primary use their literal names (`bg-surface-raised`, `border-border-subtle`, `bg-primary`).
 
 ### Primary
-- **Adaptive Violet** (`oklch(0.65 0.15 var(--hue))`, default hue 250): The single interactive identity color. Used on CTA buttons, focus rings, active nav items, and selected chips. Its default is a medium-chroma violet with enough presence to be legible but not dominant. Shifts at runtime when the user adjusts `--hue`.
-- **Primary Soft** (`oklch(0.93 0.04 var(--hue))`): Tinted background for soft button variants, selected states, hover fills. Never used for text backgrounds.
+- **Adaptive primary** (`--primary`): The single interactive identity color. Its value is resolved from the active `--hue` and light/dark mode. Use it on colored CTAs, focus rings, active nav items, selected chips, and compact progress.
+- **Primary Soft** (`--primary-soft`): Theme-resolved background for soft button variants, selected states, and quiet hover fills. Never use it as decoration.
 
 ### Secondary
 - **Warm Amber** (`oklch(0.74 0.14 55)`): The stage-pairs accent. Applied to the minimal-pairs practice stage. Fixed; does not shift with `--hue`.
@@ -181,13 +184,13 @@ The palette is neutral-first with a dynamic primary scale. Every surface carries
 - **Lifted Paper** (`oklch(0.99 0.003 var(--hue))`): Cards, panels, sidebars. The elevation of choice for raised surfaces.
 - **Sunken Stone** (`oklch(0.94 0.01 var(--hue))`): Inputs, code blocks, inset regions. Slightly darker than the page to create recession without contrast.
 - **Deep Ink** (`oklch(0.18 0.008 var(--hue))`): Primary text. Near-black with a hair of hue.
-- **Faded Ink** (`oklch(0.46 0.006 var(--hue))`): Secondary text, metadata, descriptions.
-- **Ghost Ink** (`oklch(0.62 0.004 var(--hue))`): Tertiary text, timestamps, placeholders.
-- **Hairline** (`oklch(0.925 0 0)`): Subtle borders, dividers. Chromeless; only lightness.
+- **Faded Ink** (`oklch(0.40 0.006 var(--hue))`): Secondary text, metadata, descriptions.
+- **Ghost Ink** (`oklch(0.49 0.005 var(--hue))`): Tertiary text, timestamps, placeholders.
+- **Hairline** (`oklch(0.895 0.002 var(--hue))`): Subtle borders, dividers.
 - **Standard Rule** (`oklch(0.875 0 0)`): Default card and input borders.
 - **Bold Rule** (`oklch(0.720 0 0)`): Emphasized borders, active states.
 
-**The Dynamic Hue Rule.** The primary color is a variable, not a fixed brand color. Code, documentation, and design all reference `--hue` and `--primary`, never a hardcoded hex. The default hue (250) is violet. Any other hue is equally valid.
+**The Active Theme Rule.** The primary color is a variable, not a fixed brand color. Code, documentation, and design reference semantic tokens (`--primary`, `--surface-*`, `--text-*`) rather than a hue value or a hardcoded hex. `250` is only the initial fallback in `useOKLCHTheme`; any saved hue and either color mode are equally valid.
 
 **The Semantic Independence Rule.** Success green (hue 145), warning amber (hue 85), error red (hue 25), and info blue (hue 230) are fixed and do not shift with `--hue`. They carry legible cultural meaning. Never apply the primary color to correctness feedback; always use the fixed semantic colors.
 
@@ -196,9 +199,10 @@ The palette is neutral-first with a dynamic primary scale. Every surface carries
 ## 3. Typography
 
 **Display / UI Font:** DM Sans (variable weight 300–700, humanist sans-serif, latin + latin-ext)
-**Mono / IPA Font:** DM Mono (400, 500, latin)
+**Mono / kicker font:** DM Mono (400, 500, latin)
+**IPA font:** Andika (`--font-ipa`)
 
-**Character:** DM Sans carries headings, buttons, labels, body, and card titles. DM Mono carries kickers, IPA glyphs, phonetic transcriptions, and code — its fixed-width rhythm makes phonetic patterns scannable. There is no decorative serif in the product.
+**Character:** DM Sans carries headings, buttons, labels, body, and card titles. DM Mono carries kickers and code. Andika carries IPA glyphs and phonetic transcriptions so those symbols remain legible without turning into decoration. There is no decorative serif in the product.
 
 **UI floor:** 13px minimum (`--font-kicker`, `--font-tiny`). Captions are 14px; labels and compact body copy are 15–16px.
 
@@ -208,14 +212,15 @@ The palette is neutral-first with a dynamic primary scale. Every surface carries
 - **Title** (DM Sans, 600, `clamp(1.25rem, 2.5vw, 1.5rem)`, lh 1.4, ls -0.005em): Card headings, widget titles, dialog headers.
 - **Body** (DM Sans, 400, 1rem, lh 1.6): All reading content. Max line length 65–75ch.
 - **Body Medium** (DM Sans, 400, 1rem/16px, lh 1.55): Secondary card copy, metadata rows, compact descriptions.
-- **Body Small** (DM Sans, 400, 0.875rem, lh 1.5): Secondary descriptions, helper text, list items.
+- **Body Small** (DM Sans, 400, 0.9375rem, lh 1.5): Secondary descriptions, helper text, list items.
 - **Label** (DM Sans, 600, 0.9375rem/15px, lh 1.4): UI labels, button text, input labels.
 - **Caption** (DM Sans, 400, 0.875rem/14px, lh 1.5): Timestamps, metadata, footnotes.
-- **Kicker** (DM Mono, 500, 0.75rem/12px, lh 1.4, ls 0.08em, uppercase): Section overlines, card eyebrows, status metadata.
-- **Tiny** (DM Sans, 500, 0.75rem/12px, lh 1.4): Legacy badges and status chips. Absolute UI minimum; prefer caption or kicker for new work.
-- **Mono / Phoneme** (DM Mono, 400–700, sizes as needed): IPA glyphs, transcriptions, code snippets.
+- **Kicker** (DM Mono, 500, 0.8125rem/13px, lh 1.4, ls 0.06em): Section overlines, card eyebrows, status metadata.
+- **Tiny** (DM Sans, 500, 0.8125rem/13px, lh 1.4): Legacy badges and status chips. Absolute UI minimum; prefer caption or kicker for new work.
+- **Mono** (DM Mono, 400–700, sizes as needed): Kickers and code snippets.
+- **Phoneme** (Andika, sizes as needed): IPA glyphs and phonetic transcriptions.
 
-**The IPA Parity Rule.** IPA symbols render in DM Sans (inline UI text) or DM Mono (glyph heroes and phonetic blocks), never in a decorative serif or system fallback. The latin-ext font subset is required for correct IPA rendering.
+**The IPA Parity Rule.** IPA symbols render with `font-ipa`/Andika, never in a decorative serif or system fallback. Use DM Mono only for code or an explicitly monospaced notation context.
 
 **The Scale Contract Rule.** Adjacent hierarchy steps must differ by at least 1.25× in font size or 100 in weight. Flat scales look like accidents.
 
@@ -288,9 +293,26 @@ The standard `<Button>` (`components/ui/Button.tsx`) covers form, dialog, and to
 - **Hover:** Surface-raised fill, text-primary text, 150ms transition.
 - **Typography:** Label scale (DM Sans 600, 0.9375rem / 15px).
 
+### Home Command Center (reference composition)
+
+Home is the clearest expression of the product language. It is a command center for today's learning, not a landing-page hero and not a dashboard of equal widgets.
+
+```
+Greeting + quiet retention
+Review due (only when actionable)
+Plan of today                       Suggested practice
+Mini lessons                        Pronunciation / Core 1000 / word
+```
+
+- Start with a concise, personal greeting. Show retention only when there is a non-zero useful signal; never manufacture empty stats.
+- If review is due, place one full-width review strip before the grid. It owns the primary action until the queue is clear.
+- The daily plan is the main working surface. Supporting cards must lead to a real next route, not restate the same action or become metric tiles.
+- At desktop, use a flexible main column plus a compact 17–22rem aside. Keep the aside sticky only while it helps scanning; collapse to one column below 768px.
+- Keep the Home shell open: maximum content width 80rem, no enclosing page card, and a 20px rhythm between major zones.
+
 ### Page Layout Pattern (canonical authenticated page)
 
-Home is the reference composition. Every sidebar destination (hubs and in-session/detail routes) uses the same shell rules. Full spec: `docs/superpowers/specs/2026-07-16-page-layout-pattern-design.md`.
+Home is the reference composition. Every sidebar destination (hubs and in-session/detail routes) uses the same shell rules. Full implementation history: `docs/superpowers/specs/2026-07-16-page-layout-pattern-design.md`.
 
 **Hierarchy**
 
@@ -308,7 +330,7 @@ AppShell → PageLayout → PageHeader → Content
 **PageHeader**
 
 - Fixed order: optional kicker → title → optional subtitle → optional actions.
-- Chrome typography: DM Sans / system scales. IPA glyphs: DM Mono.
+- Chrome typography: DM Sans / system scales. IPA glyphs: Andika via `font-ipa`.
 - Kicker: `font-kicker` (or system kicker). No ad-hoc `uppercase` + wide tracking eyebrows.
 - Subtitles and UI labels: Spanish. Learning content may stay English. No Spanglish inside one phrase.
 - Variants: `default` (hubs) and `compact` (sessions/detail, optional functional progress). Do not invent new header languages per route.
@@ -317,17 +339,21 @@ AppShell → PageLayout → PageHeader → Content
 
 - One solid primary action per view/zone. Secondary = outline / ghost / soft.
 - Do not repeat the same primary on sibling cards.
+- Review, when due, outranks starting a fresh plan. Otherwise, the plan owns the primary action.
+- Prefer direct Spanish verbs that name the destination: `Repasar palabras`, `Abrir laboratorio`, `Explorar cursos`. Do not use vague labels such as `Continuar` when the destination can be named.
 
 **Sections & cards**
 
 - Flat sections by default. Cards only for interactive units (clickable row, stateful widget, step list).
 - Nested cards prohibited. No decorative icons that only echo the label.
 - Spacing rhythm via tokens (`gap-3` / `gap-4` / `gap-6`). Avoid one-off gaps (`gap-7`).
+- A card contains one job: a small preview plus one clear path forward. Use a kicker, title, short supporting copy, and a quiet arrow/text link only when all four improve scanning.
+- Progress is supporting texture: compact bars, `tabular-nums`, and level rows. Do not turn counts into a large dashboard metric.
 
 **Theme preservation**
 
 - Patterns consume semantic utilities and CSS variables only (`bg-surface-*`, `text-fg*`, `font-*`, spacing scale, `--hue`).
-- User changes to hue, spacing, or fonts must retheme every conforming page without local hardcodes.
+- User changes to hue or color mode must retheme every conforming page without local hardcodes. Spacing and font tokens must remain equally global.
 
 ### Phoneme Cards (Signature Component)
 
@@ -353,7 +379,7 @@ The IPA phoneme card is the most distinctive component in the system. It surface
 - **Do** reserve the primary color for interactive affordances only: buttons, links, active nav items, focus rings, selected chips.
 - **Do** use semantic colors (success/warning/error/info) for all correctness and feedback signals. These are fixed and must not shift with `--hue`.
 - **Do** vary spacing for rhythm. Sections that breathe differently feel intentional; uniform padding feels like a template.
-- **Do** use DM Mono for IPA glyphs and phonetic blocks. Presence via size/weight — never a decorative serif.
+- **Do** use Andika via `font-ipa` for IPA glyphs and phonetic blocks. Presence comes via size/weight — never a decorative serif.
 - **Do** use the canonical Page Layout Pattern (`AppShell` → `PageLayout` → `PageHeader` → content) on authenticated sidebar routes, including sessions (compact header).
 - **Do** keep UI chrome copy in Spanish; reserve English for learning content.
 - **Do** include `prefers-reduced-motion` media queries for any animation longer than 100ms.

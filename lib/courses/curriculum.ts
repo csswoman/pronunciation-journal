@@ -533,16 +533,14 @@ export const COURSE_PATH_CURRICULUM: CoursePathCurriculum = {
     ),
   ],
   legend: [
-    { icon: "priority-max", description: "Prioridad alta (meta laboral)" },
-    { icon: "priority", description: "Ruta principal" },
-    { icon: "sound-lab", description: "Conecta con Sound Lab" },
-    { icon: "optional", description: "Extra · cuando quieras" },
+    { icon: "sound-lab", description: "Practica también en Sound Lab" },
+    { icon: "optional", description: "Contenido opcional" },
   ],
   why: {
-    title: "Cómo se conecta con Sound Lab",
+    title: "Pronunciación en paralelo",
     paragraphs: [
-      "Gramática y pronunciación van en paralelo. Las lecciones con micrófono desbloquean secciones de Sound Lab al mismo nivel.",
-      "Las lecciones sin estrella amplían el tema: útiles, pero mejor después de lo esencial.",
+      "La ruta trabaja la gramática y Sound Lab trabaja la pronunciación. Las lecciones con micrófono te llevan a prácticas del mismo nivel.",
+      "Las lecciones opcionales amplían el tema: útiles, pero mejor después de lo esencial.",
     ],
   },
 };

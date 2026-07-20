@@ -1,12 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { BookOpen, Layers, Moon, Radio, RotateCcw, Sun, User } from "@/components/icons";
+import { BookOpen, FileText, Layers, Moon, Radio, RotateCcw, Sun, User } from "@/components/icons";
 import { useEffect } from "react";
 import { cn } from "@/lib/cn";
 import { useOKLCHTheme } from "@/hooks/useOKLCHTheme";
 
 const navItems = [
+  { name: "Journal", href: "/journal", icon: FileText },
   { name: "Review", href: "/practice/review", icon: RotateCcw },
   { name: "Decks", href: "/practice/decks", icon: Layers },
   { name: "IPA Chart", href: "/ipa", icon: Radio },

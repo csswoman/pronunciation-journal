@@ -6,6 +6,7 @@ import { buildAssessment } from "@/lib/courses/curriculum";
 import { getDeckBySlug } from "@/lib/courses/grammar-deck/decks";
 import type { GrammarQuizQuestion } from "@/lib/courses/grammar-deck/types";
 import { parseCefrLevelId } from "@/lib/courses/curriculumIndex";
+import { getSupabaseServerUser } from "@/lib/supabase/session";
 import "@/app/styles/assessment.css";
 
 interface AssessmentPageProps {
@@ -13,7 +14,7 @@ interface AssessmentPageProps {
 }
 
 export default async function AssessmentPage({ searchParams }: AssessmentPageProps) {
-  const params = await searchParams;
+  const [params, user] = await Promise.all([searchParams, getSupabaseServerUser()]);
   const mode = params.mode === "checkpoint" ? "checkpoint" : "placement";
   const checkpointLevel = parseCefrLevelId(params.level);
   if (mode === "checkpoint" && !checkpointLevel) notFound();
@@ -23,11 +24,7 @@ export default async function AssessmentPage({ searchParams }: AssessmentPagePro
   for (const slug of sections.flatMap((section) => section.items.map((item) => item.lessonSlug))) {
     quizzes[slug] = getDeckBySlug(slug)?.quiz ?? [];
   }
-  const questions = buildAssessmentQuestions(
-    mode,
-    quizzes,
-    checkpointLevel ?? undefined,
-  );
+  const questions = buildAssessmentQuestions(mode, quizzes, checkpointLevel ?? undefined);
   const concepts: AssessmentConcept[] = mode === "placement"
     ? sections.flatMap((section) => section.items.slice(0, 6).map((item) => {
         const meta = getDeckBySlug(item.lessonSlug)?.meta;
@@ -48,6 +45,7 @@ export default async function AssessmentPage({ searchParams }: AssessmentPagePro
       questions={questions}
       concepts={concepts}
       checkpointLabel={checkpointLevel?.toUpperCase()}
+      userId={user?.id}
     />
   );
 }

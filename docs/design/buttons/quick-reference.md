@@ -3,7 +3,7 @@
 ## 8 Variantes
 
 ```
-primary    → Dark ink on light (main CTA)
+primary    → Ink CTA (main action)
 secondary  → Raised surface + border (subordinate)
 soft       → Primary-soft bg (contextual)
 ghost      → Transparent (tertiary)
@@ -127,14 +127,15 @@ error          → --error + white
 info           → --info + white
 ```
 
-All tokens are CSS custom properties in `globals.css`.
+The source tokens live in `app/styles/tokens.css`; Tailwind mappings live in
+`app/styles/theme.css`.
 
 ## Quick Styling Notes
 
 - ✅ Shadows: only on hover/active
 - ✅ Transitions: 150ms ease-out-quart
 - ✅ No nested buttons
-- ✅ Icon + text for accessibility
+- ✅ Give icon-only controls an accessible name; otherwise pair icon + text
 - ✅ Min hit area: 32px tall (44px+ recommended)
 - ✅ Focus ring always visible
 

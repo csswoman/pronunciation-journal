@@ -136,8 +136,8 @@ describe('EssentialWordsSession', () => {
     )
     render(<EssentialWordsSession />)
     expect(await screen.findByText('Nada pendiente por hoy')).toBeTruthy()
-    expect(screen.getByRole('link', { name: 'Ver mi progreso' })).toBeTruthy()
-    expect(screen.getByRole('link', { name: 'Ir al plan de hoy' })).toBeTruthy()
+    expect(screen.getByRole('link', { name: 'Ver progreso' })).toBeTruthy()
+    expect(screen.getByRole('link', { name: 'Abrir plan de hoy' })).toBeTruthy()
   })
 
   it('resumes on the first appended card when learning more after finishing', async () => {
@@ -165,7 +165,7 @@ describe('EssentialWordsSession', () => {
 
     expect(await screen.findByText('No se pudo cargar la sesión')).toBeTruthy()
     expect(screen.getByText('Revisa tu conexión o vuelve a intentar la carga.')).toBeTruthy()
-    expect(screen.getByRole('button', { name: 'Continuar practicando' })).toBeTruthy()
+    expect(screen.getByRole('button', { name: 'Reintentar carga' })).toBeTruthy()
   })
 
   it('persists pending lapses and flushes them on pagehide', async () => {

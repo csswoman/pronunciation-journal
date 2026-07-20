@@ -30,15 +30,15 @@ export default function DiphthongCard({
         isSelected && "ipa-chart__ph--sel",
         isExplored && !isSelected && "ipa-chart__ph--explored"
       )}
-      style={{ minHeight: "auto", padding: "16px 12px 12px" }}
       aria-pressed={isSelected}
+      aria-label={`${phoneme.symbol}, ejemplo ${keyword}`}
     >
       {isExplored && !isSelected && !isPlaying && (
         <span className="ipa-chart__ph-dot" aria-label="Explorado" />
       )}
 
       {isPlaying && (
-        <span className="ipa-chart__ph-waves" aria-label="Reproduciendo">
+        <span className="ipa-chart__ph-waves" aria-hidden="true">
           {[0, 1, 2].map((i) => (
             <span
               key={i}
@@ -48,7 +48,7 @@ export default function DiphthongCard({
         </span>
       )}
 
-      <span className="ipa-chart__ph-sym" style={{ fontSize: "1.75rem" }}>
+      <span className="ipa-chart__ph-sym ipa-chart__ph-sym--diph">
         {phoneme.symbol.replace(/\//g, "")}
       </span>
 

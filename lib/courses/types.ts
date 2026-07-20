@@ -6,7 +6,7 @@ export type ElectiveSpineIcon = "laptop" | "briefcase" | "mic";
 
 export type CoursePathTrackId = CefrLevelId | ElectiveTrackId;
 
-export type CoursePathLegendIcon = "priority-max" | "priority" | "sound-lab" | "optional";
+export type CoursePathLegendIcon = "sound-lab" | "optional";
 
 export interface CoursePathLegendItem {
   icon: CoursePathLegendIcon;

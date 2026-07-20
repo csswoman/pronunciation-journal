@@ -38,6 +38,7 @@ export function SessionHelpPopover() {
   const [open, setOpen] = useState(false)
   const triggerRef = useRef<HTMLButtonElement>(null)
   const panelRef = useRef<HTMLDivElement>(null)
+  const closeButtonRef = useRef<HTMLButtonElement>(null)
   const panelId = useId()
 
   function close() {
@@ -47,6 +48,8 @@ export function SessionHelpPopover() {
 
   useEffect(() => {
     if (!open) return
+
+    closeButtonRef.current?.focus()
 
     function onKeyDown(event: KeyboardEvent) {
       if (event.key === 'Escape') {
@@ -58,7 +61,7 @@ export function SessionHelpPopover() {
     function onPointerDown(event: PointerEvent) {
       const target = event.target as Node
       if (panelRef.current?.contains(target) || triggerRef.current?.contains(target)) return
-      setOpen(false)
+      close()
     }
 
     document.addEventListener('keydown', onKeyDown, true)
@@ -75,7 +78,7 @@ export function SessionHelpPopover() {
         ref={triggerRef}
         type="button"
         className={cn(
-          'flex size-7 items-center justify-center rounded-full text-fg-subtle',
+          'flex size-11 items-center justify-center rounded-full text-fg-subtle',
           'transition-colors duration-150 ease-out-quart focus-ring',
           'hover:bg-surface-raised hover:text-fg-muted',
           open && 'bg-surface-raised text-fg-muted',
@@ -103,8 +106,9 @@ export function SessionHelpPopover() {
           <div className="mb-3 flex items-center justify-between">
             <h2 className="m-0 text-label font-semibold text-fg">Cómo funciona</h2>
             <button
+              ref={closeButtonRef}
               type="button"
-              className="flex size-6 items-center justify-center rounded-full text-fg-subtle transition-colors duration-150 ease-out-quart focus-ring hover:bg-surface-sunken hover:text-fg-muted"
+              className="flex size-11 items-center justify-center rounded-full text-fg-subtle transition-colors duration-150 ease-out-quart focus-ring hover:bg-surface-sunken hover:text-fg-muted"
               aria-label="Cerrar"
               onClick={close}
             >

@@ -66,6 +66,9 @@ export default function AuthProvider({
     const cleanupSyncListeners = initSyncListeners();
     const hydrateCEFR = async (userId: string) => {
       try {
+        const { claimGuestPlacement } = await import("@/lib/courses/guest-assessment");
+        await claimGuestPlacement(userId);
+
         const { data } = await supabase
           .from("user_profiles" as never)
           .select("cefr_level")

@@ -146,6 +146,7 @@ export default function IPAChart() {
       const target = event.target as HTMLElement | null;
       if (target && /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName)) return;
       if (target?.isContentEditable) return;
+      if (target?.closest("button, a, [role='button']")) return;
 
       if (event.key === "ArrowRight") {
         event.preventDefault();

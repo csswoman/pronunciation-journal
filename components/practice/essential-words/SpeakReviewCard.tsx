@@ -61,6 +61,7 @@ export function SpeakReviewCard({
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [micError, setMicError] = useState<string | null>(null)
   const [submitError, setSubmitError] = useState<string | null>(null)
+  const [showSoundDetail, setShowSoundDetail] = useState(false)
   const submitted = useRef(false)
 
   const sentence = entry.example_sentence
@@ -70,6 +71,7 @@ export function SpeakReviewCard({
     setScored(null)
     setMicError(null)
     setSubmitError(null)
+    setShowSoundDetail(false)
     abort()
     release()
     reset()
@@ -157,6 +159,7 @@ export function SpeakReviewCard({
     setScored(null)
     setMicError(null)
     setSubmitError(null)
+    setShowSoundDetail(false)
     abort()
     release()
     reset()
@@ -168,14 +171,26 @@ export function SpeakReviewCard({
   const errorDetail = micError ?? speechError
   const useFallback = !isSupported
   const feedback = scored ? getFeedbackMessage(scored.score, 70) : null
+  const statusMessage = isListening
+    ? 'Grabando tu voz. Toca el botón para detener la grabación.'
+    : isProcessing
+      ? 'Analizando tu pronunciación.'
+      : scored
+        ? `Resultado listo: ${scored.score} por ciento de precisión.`
+        : isError
+          ? `No se pudo usar el micrófono. ${micErrorMessage(errorDetail)}`
+          : 'Escucha el modelo y graba tu voz cuando estés listo.'
 
   return (
-    <div className="flex w-full max-w-md flex-col items-center gap-6 rounded-2xl bg-surface-raised px-6 py-7 shadow-sm">
+    <div className="flex w-full max-w-md flex-col items-center gap-5 rounded-lg border border-border-subtle bg-surface-raised px-5 py-5 sm:gap-6 sm:px-6 sm:py-7">
+      <p className="sr-only" role="status" aria-live="polite" aria-atomic="true">
+        {statusMessage}
+      </p>
       <div className="flex flex-col items-center gap-1 text-center">
-        <p className="m-0 text-sm font-medium text-fg-muted">Di la oración</p>
-        <p className="m-0 text-xl text-balance text-fg">{sentence}</p>
+        <p className="font-kicker m-0 text-fg-muted">Di la oración</p>
+        <p className="m-0 text-center text-body-lg font-medium leading-relaxed text-balance text-fg">{sentence}</p>
         {entry.sentence_ipa && (
-          <p className="ipa m-0 max-w-[36ch] text-center text-fg-muted">
+          <p className="ipa m-0 max-w-[36ch] text-center text-body-lg leading-relaxed text-fg-muted">
             {entry.sentence_ipa}
           </p>
         )}
@@ -205,7 +220,7 @@ export function SpeakReviewCard({
           >
             {isListening ? <MicOff size={24} /> : <Mic size={24} />}
           </button>
-          <p className="m-0 text-xs tracking-[.05em] text-fg-subtle">
+          <p className="m-0 text-caption text-fg-subtle">
             {isListening
               ? 'Escuchando… toca para parar'
               : isProcessing
@@ -230,15 +245,27 @@ export function SpeakReviewCard({
           {feedback && (
             <QuietSpeakFeedback accuracy={scored.score} message={feedback.message} />
           )}
-          <PhonemeFeedbackTable wordResults={scored.wordResults} />
           <div className="flex gap-2">
             <PillButton variant="outline" size="sm" onClick={handleRetry}>
               Intentar de nuevo
             </PillButton>
             <PillButton variant="primary" size="sm" onClick={handleContinue} disabled={isSubmitting}>
-              Continuar
+              Guardar y ver la siguiente
             </PillButton>
           </div>
+          {scored.wordResults.some((word) => word.phonemes?.alignment?.length) && (
+            <div className="flex w-full flex-col items-center gap-3">
+              <button
+                type="button"
+                aria-expanded={showSoundDetail}
+                onClick={() => setShowSoundDetail((visible) => !visible)}
+                className="rounded-md px-2 py-1 text-caption font-semibold text-primary transition-colors hover:bg-primary-soft focus-ring"
+              >
+                {showSoundDetail ? 'Ocultar detalle de sonidos' : 'Ver detalle de sonidos'}
+              </button>
+              {showSoundDetail && <PhonemeFeedbackTable wordResults={scored.wordResults} />}
+            </div>
+          )}
           {submitError && <p className="m-0 text-center text-xs text-error">{submitError}</p>}
         </div>
       )}

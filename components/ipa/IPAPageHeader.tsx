@@ -9,18 +9,21 @@ export default function IPAPageHeader({
   onStartPractice?: () => void;
 }) {
   const scrollToPractice = () => {
-    document.getElementById("minimal-pairs")?.scrollIntoView({ behavior: "smooth" });
+    const behavior = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      ? "auto"
+      : "smooth";
+    document.getElementById("minimal-pairs")?.scrollIntoView({ behavior });
   };
 
   return (
     <PageHeader
-      kicker="Reference"
+      kicker="Referencia"
       title="IPA Chart"
       subtitle="Mapa de sonidos del inglés para practicar y consultar"
       primaryCta={
         onStartPractice
           ? {
-              label: "Sound Lab",
+              label: "Laboratorio de sonidos",
               icon: <Play size={14} fill="currentColor" aria-hidden />,
               onClick: onStartPractice,
             }

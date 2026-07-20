@@ -21,20 +21,20 @@ export function RoutePicker({ value, onChange, disabled }: Props) {
   return (
     <div className="flex flex-col items-center gap-1.5">
       <label className="flex items-center gap-2">
-        <span className="text-tiny font-semibold uppercase tracking-[0.12em] text-fg-subtle">
-          Ruta
+        <span className="font-kicker text-fg-subtle">
+          Tema
         </span>
         <select
           value={value ?? ''}
           disabled={disabled}
           onChange={(e) => onChange(e.target.value || null)}
           className={cn(
-            'rounded-full border border-border-subtle bg-transparent px-3 py-1',
+            'theme-select min-h-11 rounded-full border border-border-subtle bg-transparent px-3 py-1',
             'text-sm text-fg focus-ring',
             'disabled:opacity-40 disabled:cursor-not-allowed',
           )}
         >
-          <option value="">Libre (todo el mazo)</option>
+          <option value="">Mi nivel</option>
           {VOCAB_ROUTES.map((route) => (
             <option key={route.id} value={route.id}>
               {route.label}
@@ -42,9 +42,13 @@ export function RoutePicker({ value, onChange, disabled }: Props) {
           ))}
         </select>
       </label>
-      {active && (
-        <p className="m-0 max-w-[36ch] text-center text-caption text-fg-subtle">
-          {active.description}
+      {active ? (
+        <p className="m-0 hidden max-w-[36ch] text-center text-caption text-fg-subtle sm:block">
+          Ruta guiada: {active.description}
+        </p>
+      ) : (
+        <p className="m-0 hidden max-w-[36ch] text-center text-caption text-fg-subtle sm:block">
+          Practica tu nivel recomendado o elige un tema para enfocarte.
         </p>
       )}
     </div>

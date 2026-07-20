@@ -42,18 +42,21 @@ export function useJournalEntry(initial: JournalEntryRecord): UseJournalEntry {
   const [saveState, setSaveState] = useState<SaveState>('saved')
   const [correcting, setCorrecting] = useState(false)
   const [correctionError, setCorrectionError] = useState<string | null>(null)
-  const [isOnline, setIsOnline] = useState(true)
+  const [isOnline, setIsOnline] = useState(
+    () => typeof navigator === 'undefined' || navigator.onLine,
+  )
 
   const entryRef = useRef(entry)
   const contentRef = useRef(content)
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const hasLocalEdits = useRef(false)
+  const correctingRef = useRef(false)
 
   useEffect(() => {
     entryRef.current = entry
   }, [entry])
 
   useEffect(() => {
-    setIsOnline(typeof navigator === 'undefined' || navigator.onLine)
     function sync() {
       setIsOnline(typeof navigator === 'undefined' || navigator.onLine)
     }
@@ -68,7 +71,7 @@ export function useJournalEntry(initial: JournalEntryRecord): UseJournalEntry {
   // Hydrate from the local (possibly newer) copy so reload never loses a draft.
   useEffect(() => {
     void getLocalJournalEntry(initial.userId, initial.entryDate).then((existing) => {
-      if (!existing) return
+      if (!existing || hasLocalEdits.current) return
       setEntry(existing)
       setContent(existing.content)
       contentRef.current = existing.content
@@ -108,6 +111,7 @@ export function useJournalEntry(initial: JournalEntryRecord): UseJournalEntry {
     (next: string) => {
       contentRef.current = next
       setContent(next)
+      hasLocalEdits.current = true
       if (entryRef.current.status !== 'draft') return
       setSaveState('pending')
       if (timer.current) clearTimeout(timer.current)
@@ -121,7 +125,8 @@ export function useJournalEntry(initial: JournalEntryRecord): UseJournalEntry {
 
   const requestCorrection = useCallback(async () => {
     const current = entryRef.current
-    if (current.status !== 'submitted' || correcting) return
+    if (current.status !== 'submitted' || !isOnline || correctingRef.current) return
+    correctingRef.current = true
     setCorrecting(true)
     setCorrectionError(null)
     try {
@@ -138,9 +143,10 @@ export function useJournalEntry(initial: JournalEntryRecord): UseJournalEntry {
           : 'No se pudo corregir. Inténtalo de nuevo.',
       )
     } finally {
+      correctingRef.current = false
       setCorrecting(false)
     }
-  }, [correcting, persist])
+  }, [isOnline, persist])
 
   const submit = useCallback(async () => {
     if (entryRef.current.status !== 'draft') return

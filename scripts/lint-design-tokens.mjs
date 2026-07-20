@@ -18,7 +18,7 @@ import { join, extname, relative } from "path";
 const ROOT = new URL("..", import.meta.url).pathname.replace(/^\/([A-Z]:)/, "$1");
 
 const SCAN_EXTENSIONS = new Set([".tsx", ".ts", ".jsx", ".js"]);
-const SKIP_DIRS = new Set(["node_modules", ".next", "out", "build", ".git", "scripts"]);
+const SKIP_DIRS = new Set(["node_modules", ".next", "out", "build", ".git", ".claude", "scripts"]);
 
 /**
  * Arbitrary text sizes that are documented in DESIGN_SYSTEM.md §7.4 as
@@ -77,6 +77,51 @@ const HEX_COLOR_REGEX = /(?<![[\w-])[a-z-]+-\[#([0-9a-fA-F]{3,8})\]/g;
  * Matches: text-[14px]  text-[1.5rem]  text-[0.875em]
  */
 const TEXT_SIZE_REGEX = /(?<![[\w-])text-\[(\d+(?:\.\d+)?(?:px|rem|em))\]/g;
+
+/**
+ * Rule 5 (blocking): raw color literal outside a Tailwind arbitrary-value
+ * bracket and outside the CSS token files. Matches #hex, rgb()/rgba(),
+ * hsl()/hsla(), oklch() used as plain JS/TS values (object literals, string
+ * literals, template literals) rather than `var(--token)`.
+ */
+const RAW_COLOR_REGEX = /(#(?:[0-9a-fA-F]{3,4}){1,2}\b|\brgba?\(|\bhsla?\(|\boklch\()/g;
+
+/** Files/globs allowed to contain raw color literals (design tokens, brand assets, user palettes). */
+const RAW_COLOR_ALLOWLIST = new Set([
+  "app/layout.tsx",
+  "app/manifest.ts",
+  "components/ai-coach/MessageBubble.tsx",
+  "components/ai-coach/PracticeSession.tsx",
+  "components/auth/AuthGoogleButton.tsx",
+  "components/auth/AuthImagePanel.tsx",
+  "components/auth/AuthMobileIdentity.tsx",
+  "components/auth/AuthPanel.tsx",
+  "components/exercises/MatchPairsExercise.tsx",
+  "components/interview/InterviewResults.tsx",
+  "components/layout/BottomNavMenu.tsx",
+  "components/lexicon/LessonGrid.tsx",
+  "components/phoneme-practice/SoundGrid.tsx",
+  "components/ui/WaveformVisualizer.tsx",
+  "components/vocabulary/decks/AddToExistingDeckModal.tsx",
+  "components/vocabulary/decks/CreateDeckFromWordsModal.tsx",
+  "components/vocabulary/decks/CreateDeckModal.tsx",
+  "components/vocabulary/decks/EditDeckModal.tsx",
+  "components/vocabulary/decks/study-utils.ts",
+  "lib/lexicon/categories.ts",
+  "lib/lexicon/domains.ts",
+]);
+
+/**
+ * Rule 6 (warning only): inline style={{ ... }} whose object appears to be a
+ * pure literal — no template interpolation (${), no var(--token) reference,
+ * no identifier lookup. A reliable literal-vs-computed check needs a real
+ * JS/TS parser; this is a best-effort heuristic surfaced as a warning so it
+ * never blocks CI on a false positive.
+ */
+// Any of: template interpolation, CSS var() reference, spread, arrow fn,
+// ternary, or a bare identifier used as a value (`prop: someVar,`) all
+// indicate the object is computed rather than a pure literal.
+const RUNTIME_COMPUTED_HINTS = /\$\{|var\(--|\.\.\.|=>|\?|:\s*[a-zA-Z_]\w*\s*[,}]/;
 
 // --- File walker -------------------------------------------------------------
 
@@ -176,9 +221,73 @@ function collectViolations(filePath, content) {
         );
       }
     }
+
+    // Rule 5 — raw color literal outside Tailwind brackets / token files
+    // (test fixtures legitimately use arbitrary literal values as mock data)
+    const relFile = relative(ROOT, filePath).replace(/\\/g, "/");
+    const isTestFile = /\.test\.[tj]sx?$/.test(relFile) || relFile.includes("__tests__/");
+    if (!isTestFile && !RAW_COLOR_ALLOWLIST.has(relFile)) {
+      RAW_COLOR_REGEX.lastIndex = 0;
+      while ((m = RAW_COLOR_REGEX.exec(line)) !== null) {
+        // Skip when inside a Tailwind arbitrary-value bracket — that's rules 1-4's job.
+        const before = line.slice(0, m.index);
+        if (/-\[[^\]]*$/.test(before)) continue;
+        addViolation(
+          "raw-color",
+          i,
+          m[0],
+          `Raw color literal outside a design token. Use a CSS variable (var(--token)) or add this file to RAW_COLOR_ALLOWLIST with a reason.`,
+        );
+      }
+    }
   });
 
   return violations;
+}
+
+// --- Rule 6: inline style={{}} with a likely-literal object (warning only) --
+
+const INLINE_STYLE_WARNING_TEMPLATE =
+  "style={{...}} looks like a pure literal (no template interpolation, var(--) reference, or identifier lookup found). If this isn't a runtime-computed value, use Tailwind tokens instead.";
+
+function collectInlineStyleWarnings(filePath, content) {
+  const warnings = [];
+  const relFile = relative(ROOT, filePath).replace(/\\/g, "/");
+  let searchFrom = 0;
+
+  while (true) {
+    const openIdx = content.indexOf("style={{", searchFrom);
+    if (openIdx === -1) break;
+
+    const braceStart = openIdx + "style={".length; // index of the inner '{'
+    let depth = 0;
+    let closeIdx = -1;
+    for (let i = braceStart; i < content.length; i++) {
+      if (content[i] === "{") depth++;
+      else if (content[i] === "}") {
+        depth--;
+        if (depth === 0) {
+          closeIdx = i;
+          break;
+        }
+      }
+    }
+    if (closeIdx === -1) break;
+
+    const objectSource = content.slice(braceStart, closeIdx + 1);
+    searchFrom = closeIdx + 1;
+
+    if (RUNTIME_COMPUTED_HINTS.test(objectSource)) continue;
+
+    const lineIndex = content.slice(0, openIdx).split("\n").length - 1;
+    warnings.push({
+      file: relFile,
+      line: lineIndex + 1,
+      detail: INLINE_STYLE_WARNING_TEMPLATE,
+    });
+  }
+
+  return warnings;
 }
 
 // --- Reporter ----------------------------------------------------------------
@@ -188,6 +297,7 @@ const RULE_LABELS = {
   "arbitrary-text-size": "Arbitrary text size",
   "off-grid-spacing": "Off-grid spacing",
   "arbitrary-radius": "Arbitrary border radius",
+  "raw-color": "Raw color literal",
 };
 
 const RULE_COLORS = {
@@ -195,6 +305,7 @@ const RULE_COLORS = {
   "arbitrary-text-size": "\x1b[33m", // yellow
   "off-grid-spacing": "\x1b[33m",    // yellow
   "arbitrary-radius": "\x1b[36m",   // cyan
+  "raw-color": "\x1b[31m",          // red
 };
 
 const RESET = "\x1b[0m";
@@ -204,11 +315,20 @@ const DIM = "\x1b[2m";
 // --- Main --------------------------------------------------------------------
 
 const allViolations = [];
+const allInlineStyleWarnings = [];
 
 for (const filePath of walkFiles(ROOT)) {
   const content = readFileSync(filePath, "utf8");
-  const violations = collectViolations(filePath, content);
-  allViolations.push(...violations);
+  allViolations.push(...collectViolations(filePath, content));
+  allInlineStyleWarnings.push(...collectInlineStyleWarnings(filePath, content));
+}
+
+if (allInlineStyleWarnings.length > 0) {
+  console.warn(`${BOLD}Inline style warnings (heuristic, non-blocking)${RESET}`);
+  for (const w of allInlineStyleWarnings) {
+    console.warn(`  ${w.file}:${w.line}  ${w.detail}`);
+  }
+  console.warn(`\n  Total: ${allInlineStyleWarnings.length} warning${allInlineStyleWarnings.length === 1 ? "" : "s"}\n`);
 }
 
 if (allViolations.length === 0) {

@@ -8,46 +8,9 @@ import {
   Minus,
 } from "@/components/icons";
 import { cn } from "@/lib/cn";
-import type { LessonPriority } from "@/lib/courses/types";
 import type { CoursePathLegendIcon, ElectiveSpineIcon } from "@/lib/courses/types";
 
 const iconClass = "shrink-0";
-
-/** Priority stars (⭐ / ⭐⭐) */
-export function CoursePathPriorityMarks({
-  priority,
-  className,
-  size = 14,
-}: {
-  priority: LessonPriority;
-  className?: string;
-  size?: number;
-}) {
-  if (priority === 0) {
-    return <span className={cn("course-path__marks-empty", className)} aria-hidden />;
-  }
-
-  const count = priority === 2 ? 2 : 1;
-  const label = priority === 2 ? "Highest priority" : "Core path";
-  return (
-    <span
-      className={cn("course-path__marks-stars", className)}
-      aria-label={label}
-      title={label}
-    >
-      {Array.from({ length: count }, (_, i) => (
-        <Star
-          key={i}
-          size={size}
-          className={cn(iconClass, "course-path__star-icon")}
-          fill="currentColor"
-          strokeWidth={0}
-          aria-hidden
-        />
-      ))}
-    </span>
-  );
-}
 
 export function CoursePathPriorityCount({
   count,
@@ -57,9 +20,9 @@ export function CoursePathPriorityCount({
   className?: string;
 }) {
   return (
-    <span className={cn("course-path__inline-pri", className)} title="Starred lessons are the essential spine — do these first">
+    <span className={cn("course-path__inline-pri", className)} title="Las lecciones con estrella forman la ruta esencial">
       <Star size={12} className={cn(iconClass, "course-path__star-icon")} fill="currentColor" strokeWidth={0} aria-hidden />
-      <span>{count} priority</span>
+      <span>{count} prioritarias</span>
     </span>
   );
 }
@@ -69,7 +32,7 @@ export function CoursePathSoundLabLink({ className }: { className?: string }) {
     <Link
       href="/practice/sounds"
       className={cn("course-path__snd", className)}
-      aria-label="Go to Sound Lab"
+      aria-label="Ir a Sound Lab"
     >
       <MicVocal size={13} strokeWidth={2} aria-hidden />
       <span className="course-path__snd-label">Sound Lab</span>
@@ -98,10 +61,6 @@ export function CoursePathLegendIconDisplay({
   size?: number;
 }) {
   switch (icon) {
-    case "priority-max":
-      return <CoursePathPriorityMarks priority={2} size={size} />;
-    case "priority":
-      return <CoursePathPriorityMarks priority={1} size={size} />;
     case "sound-lab":
       return <MicVocal size={size} className={cn(iconClass, "text-primary")} strokeWidth={2} aria-hidden />;
     case "optional":
@@ -111,9 +70,14 @@ export function CoursePathLegendIconDisplay({
 
 export function CoursePathLessonStateDot({
   available,
+  done,
 }: {
   available?: boolean;
+  done?: boolean;
 }) {
+  if (done) {
+    return <Circle size={10} className={iconClass} strokeWidth={2} fill="currentColor" aria-hidden />;
+  }
   if (available) {
     return <Circle size={10} className={iconClass} strokeWidth={2} aria-hidden />;
   }

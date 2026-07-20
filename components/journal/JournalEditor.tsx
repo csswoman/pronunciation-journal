@@ -14,7 +14,7 @@ interface JournalEditorProps {
 const SAVE_COPY: Record<SaveState, string> = {
   saved: 'Guardado localmente',
   pending: 'Guardando cambios…',
-  error: 'No se pudo guardar. Se reintentará al reconectar.',
+  error: 'No se pudo guardar localmente. Sigue escribiendo para reintentarlo.',
 }
 
 /** Presentational autosave textarea. Lifecycle lives in useJournalEntry. */
@@ -36,7 +36,7 @@ export function JournalEditor({ content, onChange, saveState, disabled }: Journa
         aria-describedby={statusId}
         placeholder="Escribe libremente en inglés…"
         className={cn(
-          'w-full resize-y rounded-[var(--radius-lg)] border border-border-default bg-surface-raised p-4 text-base text-fg placeholder:text-fg-placeholder',
+          'w-full resize-y rounded-[var(--radius-lg)] border border-border-default bg-surface-sunken p-4 text-base text-fg placeholder:text-fg-placeholder',
           'transition-colors duration-150 focus-ring disabled:cursor-not-allowed disabled:opacity-60',
         )}
       />

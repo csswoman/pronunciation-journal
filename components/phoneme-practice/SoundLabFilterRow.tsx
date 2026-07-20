@@ -1,6 +1,6 @@
 "use client";
 
-import { Search } from "@/components/icons";
+import { Search, X } from "@/components/icons";
 import { cn } from "@/lib/cn";
 
 export type SoundLabChip = "all" | "easy" | "medium" | "hard";
@@ -8,8 +8,10 @@ export type SoundLabChip = "all" | "easy" | "medium" | "hard";
 interface Props {
   activeChip: SoundLabChip;
   search: string;
+  resultCount: number;
   onChipChange: (chip: SoundLabChip) => void;
   onSearchChange: (query: string) => void;
+  onClearFilters: () => void;
 }
 
 const CHIPS: { id: SoundLabChip; label: string; shortLabel: string }[] = [
@@ -22,40 +24,61 @@ const CHIPS: { id: SoundLabChip; label: string; shortLabel: string }[] = [
 export function SoundLabFilterRow({
   activeChip,
   search,
+  resultCount,
   onChipChange,
   onSearchChange,
+  onClearFilters,
 }: Props) {
+  const hasActiveFilters = activeChip !== "all" || search.trim().length > 0;
+  const resultLabel = `${resultCount} ${resultCount === 1 ? "sonido" : "sonidos"}`;
+
   return (
-    <div className="sound-lab__toolbar">
-      <div
-        className="sound-lab__chip-row"
-        role="group"
-        aria-label="Filtrar sonidos por dificultad"
-      >
-        <span className="sr-only">Dificultad</span>
-        {CHIPS.map((chip) => {
-          const isOn = activeChip === chip.id;
-          return (
-            <button
-              key={chip.id}
-              type="button"
-              onClick={() => onChipChange(chip.id)}
-              className={cn(
-                "sound-lab__chip sound-lab__chip--compact",
-                isOn && "sound-lab__chip--on",
-              )}
-              aria-pressed={isOn}
-            >
-              <span className="sm:hidden">{chip.shortLabel}</span>
-              <span className="hidden sm:inline">{chip.label}</span>
-            </button>
-          );
-        })}
+    <div
+      className="sound-lab__toolbar"
+      role="region"
+      aria-label="Buscar y filtrar sonidos"
+    >
+      <div className="sound-lab__filter-controls">
+        <div className="sound-lab__chip-row" role="group" aria-label="Dificultad">
+          {CHIPS.map((chip) => {
+            const isOn = activeChip === chip.id;
+            return (
+              <button
+                key={chip.id}
+                type="button"
+                onClick={() => onChipChange(chip.id)}
+                className={cn(
+                  "sound-lab__chip sound-lab__chip--compact",
+                  isOn && "sound-lab__chip--on",
+                )}
+                aria-pressed={isOn}
+              >
+                <span className="sm:hidden">{chip.shortLabel}</span>
+                <span className="hidden sm:inline">{chip.label}</span>
+              </button>
+            );
+          })}
+        </div>
+        <span
+          className="sound-lab__result-count"
+          aria-live="polite"
+          aria-atomic="true"
+        >
+          {resultLabel}
+        </span>
+        {hasActiveFilters && (
+          <button
+            type="button"
+            className="sound-lab__clear-filters"
+            onClick={onClearFilters}
+          >
+            Limpiar
+          </button>
+        )}
       </div>
 
-      <label className="sound-lab__search sound-lab__search--compact">
+      <div className="sound-lab__search sound-lab__search--compact">
         <Search className="sound-lab__search-icon h-4 w-4" aria-hidden />
-        <span className="sr-only">Buscar sonidos y palabras de ejemplo</span>
         <input
           type="search"
           placeholder="Buscar un sonido o palabra…"
@@ -63,7 +86,17 @@ export function SoundLabFilterRow({
           onChange={(e) => onSearchChange(e.target.value)}
           aria-label="Buscar sonidos y palabras de ejemplo"
         />
-      </label>
+        {search && (
+          <button
+            type="button"
+            className="sound-lab__clear-search"
+            onClick={() => onSearchChange("")}
+            aria-label="Borrar búsqueda"
+          >
+            <X size={15} aria-hidden />
+          </button>
+        )}
+      </div>
     </div>
   );
 }

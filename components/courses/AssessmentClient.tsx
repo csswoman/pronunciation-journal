@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { useAuth } from "@/components/auth/AuthProvider";
 import { AlertCircle, ArrowLeft, Check, CheckCircle2, RefreshCw } from "@/components/icons";
 import {
   groupQuestionsByLevel,
@@ -25,10 +24,10 @@ interface AssessmentClientProps {
   questions: AssessmentQuestion[];
   concepts?: AssessmentConcept[];
   checkpointLabel?: string;
+  userId?: string;
 }
 
-export default function AssessmentClient({ mode, questions, concepts = [], checkpointLabel }: AssessmentClientProps) {
-  const { user } = useAuth();
+export default function AssessmentClient({ mode, questions, concepts = [], checkpointLabel, userId }: AssessmentClientProps) {
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [selfRatings, setSelfRatings] = useState<Record<string, ConceptSelfRating>>({});
   const [result, setResult] = useState<AssessmentResult | null>(null);
@@ -79,15 +78,15 @@ export default function AssessmentClient({ mode, questions, concepts = [], check
     );
     setResult(nextResult);
     window.localStorage.setItem(
-      `assessment:${user?.id ?? "guest"}:${mode}:${checkpointLabel ?? "placement"}`,
+      `assessment:${userId ?? "guest"}:${mode}:${checkpointLabel ?? "placement"}`,
       JSON.stringify({ ...nextResult, completedAt: new Date().toISOString() }),
     );
-    if (user?.id) {
+    if (userId) {
       void persistAssessmentConceptProfile(
-        user.id, nextResult.conceptSignals, nextResult.assignedLevel,
+        userId, nextResult.conceptSignals, nextResult.assignedLevel,
       ).catch(() => undefined);
+      void saveLevel(nextResult);
     }
-    void saveLevel(nextResult);
   }
 
   function finishSection() {
@@ -140,8 +139,10 @@ export default function AssessmentClient({ mode, questions, concepts = [], check
               </section>
             )}
           </div>
-          <Link href={recommendedHref}>
-            {result.needsReview.length > 0 ? "Ver lecciones recomendadas" : "Ir a mi ruta"}
+          <Link href={userId ? recommendedHref : "/login"}>
+            {userId
+              ? result.needsReview.length > 0 ? "Ver lecciones recomendadas" : "Ir a mi ruta"
+              : "Iniciar sesión para continuar"}
           </Link>
           {saving && <small>Guardando nivel…</small>}
           {saveError && (
@@ -162,9 +163,9 @@ export default function AssessmentClient({ mode, questions, concepts = [], check
     <main className="assessment-page">
       <div className="assessment-shell">
         <header className="assessment-header">
-          <Link href="/courses" className="assessment-back">
+          <Link href={userId ? "/courses" : "/login"} className="assessment-back">
             <ArrowLeft size={15} aria-hidden />
-            Volver a cursos
+            {userId ? "Volver a cursos" : "Volver al inicio"}
           </Link>
           <div className="assessment-heading-row">
             <div>

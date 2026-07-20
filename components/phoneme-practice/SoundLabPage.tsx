@@ -149,8 +149,10 @@ export default function SoundLabPage() {
         <SoundLabFilterRow
           activeChip={activeChip}
           search={search}
+          resultCount={filtered.length}
           onChipChange={setActiveChip}
           onSearchChange={setSearch}
+          onClearFilters={handleClearFilters}
         />
 
         {focusTokens.length > 0 && (

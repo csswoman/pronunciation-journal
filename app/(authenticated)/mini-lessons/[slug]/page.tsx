@@ -15,6 +15,7 @@ import {
 import MiniLessonQuiz from "@/components/mini-lessons/MiniLessonQuiz";
 import MiniLessonComplete from "@/components/mini-lessons/MiniLessonComplete";
 import ExerciseBlock from "@/components/mini-lessons/ExerciseBlock";
+import { TrackingSaveButton } from "@/components/tracking/TrackingSaveButton";
 
 interface MiniLessonPageProps {
   params: Promise<{ slug: string }>;
@@ -34,6 +35,7 @@ export default async function MiniLessonDetailPage({ params }: MiniLessonPagePro
   }
 
   const currentIndex = allLessons.findIndex((l) => l.slug === slug);
+  const previousLesson = currentIndex > 0 ? allLessons[currentIndex - 1] : undefined;
   const nextLesson = currentIndex >= 0 ? allLessons[currentIndex + 1] : undefined;
 
   return (
@@ -63,74 +65,118 @@ export default async function MiniLessonDetailPage({ params }: MiniLessonPagePro
             </span>
           </div>
 
-        {content.sections.map((section, idx) => (
-          <section key={idx} className="mini-lessons__section">
-            <h2 className="mini-lessons__section-title">{section.heading}</h2>
-            <p className="mini-lessons__section-body">{section.body}</p>
-          </section>
-        ))}
-
-        {content.examples.length > 0 && (
-          <section className="mini-lessons__section mini-lessons__section--examples">
-            <h2 className="mini-lessons__section-title">Examples</h2>
-            <div className="mini-lessons__examples">
-              {content.examples.map((example, idx) => (
-                <div key={idx} className="mini-lessons__example">
-                  <p className="mini-lessons__example-en">{example.english}</p>
-                  {example.ipa && (
-                    <p className="mini-lessons__example-ipa" lang="en-fonipa">
-                      <span className="mini-lessons__ipa-slash" aria-hidden>/</span>
-                      {example.ipa}
-                      <span className="mini-lessons__ipa-slash" aria-hidden>/</span>
-                    </p>
-                  )}
-                  {example.note && (
-                    <p className="mini-lessons__example-note">{example.note}</p>
-                  )}
-                </div>
+          <div className="mini-lessons__article-layout">
+            <main className="mini-lessons__article-main">
+              {content.sections.map((section, idx) => (
+                <section
+                  key={idx}
+                  id={`lesson-section-${idx + 1}`}
+                  className="mini-lessons__section"
+                >
+                  <h2 className="mini-lessons__section-title">{section.heading}</h2>
+                  <p className="mini-lessons__section-body">{section.body}</p>
+                </section>
               ))}
-            </div>
-          </section>
-        )}
 
-        {lesson.tip && (
-          <aside className="mini-lessons__tip">
-            <svg className="mini-lessons__tip-icon" aria-hidden width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <circle cx="8" cy="8" r="7" stroke="currentColor" strokeWidth="1.5"/>
-              <path d="M8 5v4M8 11v.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-            </svg>
-            <div>
-              <span className="mini-lessons__tip-label">Tip</span>
-              <p className="mini-lessons__tip-body">{lesson.tip}</p>
-            </div>
-          </aside>
-        )}
+              {content.examples.length > 0 && (
+                <section id="lesson-examples" className="mini-lessons__section mini-lessons__section--examples">
+                  <h2 className="mini-lessons__section-title">Examples</h2>
+                  <div className="mini-lessons__examples">
+                    {content.examples.map((example, idx) => (
+                      <div key={idx} className="mini-lessons__example">
+                        <p className="mini-lessons__example-en">{example.english}</p>
+                        {example.ipa && (
+                          <p className="mini-lessons__example-ipa" lang="en-fonipa">
+                            <span className="mini-lessons__ipa-slash" aria-hidden>/</span>
+                            {example.ipa}
+                            <span className="mini-lessons__ipa-slash" aria-hidden>/</span>
+                          </p>
+                        )}
+                        {example.note && (
+                          <p className="mini-lessons__example-note">{example.note}</p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              )}
 
-        {content.exercises.length > 0 && (
-          <section className="mini-lessons__section">
-            <h2 className="mini-lessons__section-title">Exercises</h2>
-            {content.exercises.map((exercise, idx) => (
-              <ExerciseBlock
-                key={idx}
-                instruction={exercise.instruction}
-                items={exercise.items}
-              />
-            ))}
-          </section>
-        )}
+              {lesson.tip && (
+                <aside className="mini-lessons__tip">
+                  <svg className="mini-lessons__tip-icon" aria-hidden width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <circle cx="8" cy="8" r="7" stroke="currentColor" strokeWidth="1.5"/>
+                    <path d="M8 5v4M8 11v.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                  </svg>
+                  <div>
+                    <span className="mini-lessons__tip-label">Tip</span>
+                    <p className="mini-lessons__tip-body">{lesson.tip}</p>
+                  </div>
+                </aside>
+              )}
 
-        {content.quiz.length > 0 && (
-          <section className="mini-lessons__section">
-            <h2 className="mini-lessons__section-title">Quiz</h2>
-            <MiniLessonQuiz questions={content.quiz} slug={slug} />
-          </section>
-        )}
+              {content.exercises.length > 0 && (
+                <section id="lesson-exercises" className="mini-lessons__section">
+                  <h2 className="mini-lessons__section-title">Exercises</h2>
+                  {content.exercises.map((exercise, idx) => (
+                    <ExerciseBlock key={idx} instruction={exercise.instruction} items={exercise.items} />
+                  ))}
+                </section>
+              )}
+
+              {content.quiz.length > 0 && (
+                <section id="lesson-quiz" className="mini-lessons__section">
+                  <h2 className="mini-lessons__section-title">Quiz</h2>
+                  <MiniLessonQuiz questions={content.quiz} slug={slug} />
+                </section>
+              )}
+            </main>
+
+            <aside className="mini-lessons__article-aside" aria-label="Resumen de la lección">
+              <nav className="mini-lessons__contents">
+                <span className="mini-lessons__aside-kicker">En esta lección</span>
+                <ol className="mini-lessons__contents-list">
+                  {content.sections.map((section, idx) => (
+                    <li key={idx}>
+                      <a href={`#lesson-section-${idx + 1}`}>{section.heading}</a>
+                    </li>
+                  ))}
+                  {content.examples.length > 0 && <li><a href="#lesson-examples">Examples</a></li>}
+                  {content.exercises.length > 0 && <li><a href="#lesson-exercises">Exercises</a></li>}
+                  {content.quiz.length > 0 && <li><a href="#lesson-quiz">Quiz</a></li>}
+                </ol>
+              </nav>
+              <div className="mini-lessons__aside-divider" />
+              <div className="mini-lessons__lesson-nav">
+                <span className="mini-lessons__aside-kicker">Sigue explorando</span>
+                {nextLesson ? (
+                  <Link href={`/mini-lessons/${nextLesson.slug}`} className="mini-lessons__lesson-link">
+                    <span>Siguiente lección</span>
+                    <strong>{nextLesson.title}</strong>
+                    <span aria-hidden>→</span>
+                  </Link>
+                ) : previousLesson ? (
+                  <Link href={`/mini-lessons/${previousLesson.slug}`} className="mini-lessons__lesson-link">
+                    <span>Lección anterior</span>
+                    <strong>{previousLesson.title}</strong>
+                    <span aria-hidden>←</span>
+                  </Link>
+                ) : (
+                  <Link href="/mini-lessons" className="mini-lessons__lesson-link">
+                    <span>Ver todas</span>
+                    <strong>Mini lecciones</strong>
+                    <span aria-hidden>→</span>
+                  </Link>
+                )}
+              </div>
+            </aside>
+          </div>
 
         <footer className="mini-lessons__footer">
           <Link href="/mini-lessons" className="mini-lessons__btn mini-lessons__btn--ghost">
             ← All lessons
           </Link>
           {content.quiz.length === 0 && <MiniLessonComplete slug={slug} />}
+          <TrackingSaveButton kind="lesson" reference={slug} title={lesson.title} />
           {nextLesson && (
             <Link
               href={`/mini-lessons/${nextLesson.slug}`}

@@ -104,6 +104,17 @@ export interface PronunciationCoachStateRecord {
   migratedFromLocalStorage?: 0 | 1;
 }
 
+export interface TrackedItemRecord {
+  id: string;
+  userId: string;
+  kind: "phrase" | "lesson";
+  ref: string;
+  title: string | null;
+  payload: Record<string, unknown>;
+  createdAt: string;
+  updatedAt: string;
+}
+
 class PronunciationDB extends Dexie {
   attempts!: Table<Attempt, number>;
   srsData!: Table<SRSData, string>;
@@ -125,6 +136,7 @@ class PronunciationDB extends Dexie {
   pronunciationMastery!: Table<PronunciationMasteryRecord, string>;
   pronunciationCoachState!: Table<PronunciationCoachStateRecord, string>;
   journalEntries!: Table<JournalEntryRecord, string>;
+  trackedItems!: Table<TrackedItemRecord, string>;
 
   constructor() {
     super("pronunciation-journal");
@@ -223,6 +235,7 @@ class PronunciationDB extends Dexie {
     });
     this.version(17).stores({ journalEntries: 'id, userId, entryDate, status, updatedAt' });
     this.version(18).stores({ journalEntries: 'id, userId, entryDate, [userId+entryDate], status, updatedAt' });
+    this.version(19).stores({ trackedItems: 'id, userId, kind, ref, [userId+kind], [userId+kind+ref], createdAt, updatedAt' });
   }
 }
 

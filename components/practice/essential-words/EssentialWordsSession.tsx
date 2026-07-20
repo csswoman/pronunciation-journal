@@ -1,15 +1,5 @@
 'use client'
 
-// Planned structure:
-// <EssentialWordsSession>
-//   <SessionFilters />       — RoutePicker (themed) + LevelFilterBar (free)
-//   <DeckProgressHeader />
-//   <SessionProgressHud />   — New · Learning · Review live counters
-//   <WordStudyCard />        — phase: study (new cards)
-//   <SpeakReviewCard />      — phase: speak
-//   <SessionDone />          — phase: done / empty
-// </EssentialWordsSession>
-
 import type { ReactNode } from 'react'
 import { cn } from '@/lib/cn'
 import { useEssentialWordsSession } from '@/hooks/useEssentialWordsSession'
@@ -21,6 +11,7 @@ import { SessionDone } from './SessionDone'
 import { LevelFilterBar } from './LevelFilterBar'
 import { RoutePicker } from './RoutePicker'
 import { WordCarousel } from '@/components/practice/session/WordCarousel'
+import { getRoute } from '@/lib/core-1000/routes'
 
 export function EssentialWordsSession() {
   const {
@@ -31,14 +22,31 @@ export function EssentialWordsSession() {
   } = useEssentialWordsSession()
   const loadingWords = useLoadingWords()
 
-  // Themed route drives level+pos; the free level bar only shows when no route
-  // is active, so the two controls never fight over the same filter.
+  // A guided route drives level + part of speech. Otherwise, the learner can
+  // optionally refine their recommended CEFR level.
+  const activeRoute = getRoute(activeRouteId)
+  const isLoading = phase === 'loading'
+  const selectionLabel = activeRoute
+    ? `Cargando la ruta ${activeRoute.label}`
+    : levels?.length === 1
+      ? `Cargando palabras de nivel ${levels[0]}`
+      : 'Cargando palabras para practicar'
+
   const filters = (
     <div className="flex flex-col items-center gap-3">
-      <RoutePicker value={activeRouteId} onChange={(id) => void setRoute(id)} />
+      <RoutePicker
+        value={activeRouteId}
+        onChange={(id) => void setRoute(id)}
+        disabled={isLoading}
+      />
       {!activeRouteId && (
-        <LevelFilterBar value={levels} onChange={(l) => void setLevels(l)} />
+        <LevelFilterBar
+          value={levels}
+          onChange={(l) => void setLevels(l)}
+          disabled={isLoading}
+        />
       )}
+      {isLoading && <p className="m-0 text-caption text-fg-subtle">{selectionLabel}</p>}
     </div>
   )
 
@@ -47,6 +55,10 @@ export function EssentialWordsSession() {
   if (phase === 'loading') {
     return (
       <Frame className="min-h-[calc(100vh-10rem)] justify-center">
+        <div className="mb-4">{filters}</div>
+        <p className="sr-only" role="status" aria-live="polite" aria-atomic="true">
+          {selectionLabel}
+        </p>
         <WordCarousel words={loadingWords} />
       </Frame>
     )

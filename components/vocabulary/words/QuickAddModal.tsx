@@ -97,8 +97,8 @@ export function QuickAddModal({ open, onClose, onSubmit, initialText = "" }: Qui
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-start justify-center px-4 pt-[12vh]"
-      style={{ background: "var(--overlay-medium)", backdropFilter: "blur(2px)" }}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
+      style={{ background: "var(--overlay-medium)" }}
       onClick={onClose}
     >
       <div
@@ -109,42 +109,43 @@ export function QuickAddModal({ open, onClose, onSubmit, initialText = "" }: Qui
         tabIndex={-1}
         onClick={e => e.stopPropagation()}
         className={cn(
-          "w-full max-w-[clamp(100%,448px,90vw)] overflow-hidden",
-          "rounded-[--radius-lg] border border-[--border]",
-          "bg-[--surface-raised] shadow-[--shadow-xl]",
+          "w-full max-w-md overflow-hidden",
+          "rounded-[var(--radius-lg)] border border-border-subtle",
+          "bg-surface-raised shadow-xl",
           "animate-[modal-in_200ms_ease-out]",
         )}
       >
         {success ? (
-          <QuickAddSuccessState />
+          <QuickAddSuccessState word={text.trim()} />
         ) : (
           <>
-            <div className="border-b border-[--border] px-5 py-4">
+            <div className="border-b border-border-subtle px-5 py-5 sm:px-6">
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <h2 id={titleId} className="text-base font-semibold leading-snug text-[--fg]">Save a word</h2>
-                  <div className="mt-1 flex items-center gap-1">
-                    <Sparkles size={11} className="shrink-0 text-[--primary]" />
-                    <span className="text-[11px] leading-none text-[--text-tertiary]">
-                      Meaning, IPA &amp; example added automatically
+                  <p className="font-kicker text-fg-subtle">VOCABULARIO</p>
+                  <h2 id={titleId} className="mt-1 text-lg font-semibold leading-snug text-fg">Guardar palabra</h2>
+                  <div className="mt-2 flex items-center gap-1.5">
+                    <Sparkles size={13} className="shrink-0 text-primary" />
+                    <span className="text-sm leading-none text-fg-muted">
+                      Añadiremos significado, IPA y ejemplo.
                     </span>
                   </div>
                 </div>
                 <button
                   type="button"
                   onClick={onClose}
-                  aria-label="Close"
-                  className="shrink-0 rounded-[--radius-sm] p-1 text-[--text-tertiary] transition-colors duration-150 hover:bg-[--surface-sunken] hover:text-[--fg]"
+                  aria-label="Cerrar"
+                  className="shrink-0 rounded-[var(--radius-sm)] p-2 text-fg-subtle transition-colors duration-150 hover:bg-surface-sunken hover:text-fg"
                 >
                   <X size={17} />
                 </button>
               </div>
             </div>
 
-            <div className="space-y-3 px-5 py-4">
+            <div className="space-y-5 px-5 py-5 sm:px-6">
               <div className="space-y-1.5">
-                <label className="block text-[11px] font-semibold uppercase tracking-wide text-[--text-tertiary]">
-                  Word or phrase
+                <label className="block text-sm font-semibold text-fg">
+                  Palabra
                 </label>
                 <input
                   ref={inputRef}
@@ -153,21 +154,21 @@ export function QuickAddModal({ open, onClose, onSubmit, initialText = "" }: Qui
                   onKeyDown={e => {
                     if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); void handleSubmit(); }
                   }}
-                  placeholder="e.g. serendipity"
+                  placeholder="Por ejemplo: resilient"
                   className={cn(
-                    "w-full rounded-[--radius-sm] border border-[--border]",
-                    "bg-[--surface-sunken] px-3 py-2.5",
-                    "text-[--fg] placeholder:text-[--text-placeholder]",
+                  "w-full rounded-[var(--radius-sm)] border border-border-default",
+                    "bg-surface-sunken px-3 py-2.5",
+                    "text-fg placeholder:text-fg-subtle",
                     "outline-none transition-[border-color,box-shadow] duration-150",
-                    "focus:border-[--border-focus] focus:shadow-[0_0_0_3px_var(--focus-color)]",
+                    "focus:border-[var(--border-focus)] focus:shadow-[0_0_0_3px_var(--focus-color)]",
                   )}
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label className="block text-[11px] font-semibold uppercase tracking-wide text-[--text-tertiary]">
-                  Context{" "}
-                  <span className="font-normal normal-case opacity-70">(optional)</span>
+                <label className="block text-sm font-semibold text-fg">
+                  Contexto{" "}
+                  <span className="font-normal normal-case text-fg-subtle">(opcional)</span>
                 </label>
                 <textarea
                   value={context}
@@ -176,19 +177,20 @@ export function QuickAddModal({ open, onClose, onSubmit, initialText = "" }: Qui
                     if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) { e.preventDefault(); void handleSubmit(); }
                   }}
                   rows={2}
-                  placeholder="Sentence where you saw it…"
+                  placeholder="La frase o situación donde la encontraste."
                   className={cn(
-                    "w-full resize-none rounded-[--radius-sm] border border-[--border]",
-                    "bg-[--surface-sunken] px-3 py-2",
-                    "text-sm text-[--fg] placeholder:text-[--text-placeholder]",
+                    "w-full resize-none rounded-[var(--radius-sm)] border border-border-default",
+                    "bg-surface-sunken px-3 py-2.5",
+                    "text-sm text-fg placeholder:text-fg-subtle",
                     "outline-none transition-[border-color,box-shadow] duration-150",
-                    "focus:border-[--border-focus] focus:shadow-[0_0_0_3px_var(--focus-color)]",
+                    "focus:border-[var(--border-focus)] focus:shadow-[0_0_0_3px_var(--focus-color)]",
                   )}
                 />
               </div>
+              <p className="-mt-2 text-xs text-fg-subtle">Pulsa Enter para guardar rápido.</p>
             </div>
 
-            <div className="flex items-center justify-between gap-2 border-t border-[--border] bg-[--surface-base] px-5 py-3">
+            <div className="flex flex-col-reverse gap-3 border-t border-border-subtle bg-surface-base px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
               <DeckSelector decks={decks} selectedId={selectedDeckId} onChange={setSelectedDeckId} />
               <Button
                 onClick={() => void handleSubmit()}
@@ -196,9 +198,9 @@ export function QuickAddModal({ open, onClose, onSubmit, initialText = "" }: Qui
                 icon={<CornerDownLeft size={13} />}
                 iconPosition="right"
                 size="sm"
-                className="shrink-0 font-semibold"
+                className="shrink-0 sm:min-w-36"
               >
-                Save
+                Guardar palabra
               </Button>
             </div>
           </>

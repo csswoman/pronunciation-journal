@@ -4,6 +4,19 @@
    ═══════════════════════════════════════════════════════════════════════════ */
 
 /* ── Scrollbars ──────────────────────────────────────────────────────────── */
+.theme-select {
+  color-scheme: light;
+}
+
+.dark .theme-select {
+  color-scheme: dark;
+}
+
+.theme-select option {
+  background-color: var(--surface-raised);
+  color: var(--text-primary);
+}
+
 .sidebar-scrollbar {
   scrollbar-width: thin;
   scrollbar-color: color-mix(in oklab, var(--primary) 58%, var(--card-bg)) var(--scrollbar-track);
@@ -128,6 +141,36 @@
 .color-selection-slider::-moz-range-thumb:active { box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3); transform: scaleY(0.95); }
 .color-selection-slider::-webkit-slider-runnable-track { width: 100%; height: 12px; background: inherit; border-radius: 999px; }
 .color-selection-slider::-moz-range-track              { height: 12px; background: var(--color-selection-bar); border-radius: 999px; border: none; }
+
+/* Sound is a measured setting, not a hue picker. Keep the rainbow exclusive to
+   the theme slider and use the active theme color as the quiet fill here. */
+.sound-volume-slider {
+  --sound-volume: 85%;
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(to right, var(--primary) 0 var(--sound-volume), var(--surface-sunken) var(--sound-volume) 100%);
+  cursor: pointer;
+}
+.sound-volume-slider:disabled { cursor: not-allowed; }
+.sound-volume-slider:focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; }
+.sound-volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--surface-raised);
+  border-radius: var(--radius-full);
+  background: var(--primary);
+  box-shadow: var(--shadow-sm);
+  transition: transform 150ms var(--ease-out-quart), box-shadow 150ms var(--ease-out-quart);
+}
+.sound-volume-slider::-webkit-slider-thumb:hover { transform: scale(1.12); box-shadow: var(--shadow-md); }
+.sound-volume-slider::-moz-range-track { height: 6px; border: 0; border-radius: var(--radius-full); background: var(--surface-sunken); }
+.sound-volume-slider::-moz-range-progress { height: 6px; border-radius: var(--radius-full); background: var(--primary); }
+.sound-volume-slider::-moz-range-thumb { width: 12px; height: 12px; border: 2px solid var(--surface-raised); border-radius: var(--radius-full); background: var(--primary); box-shadow: var(--shadow-sm); }
 
 /* ── Chat backgrounds ────────────────────────────────────────────────────── */
 .chat-messages-container {

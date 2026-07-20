@@ -26,9 +26,9 @@ export function JournalWorkspace({ entry }: JournalWorkspaceProps) {
   return (
     <div className="flex flex-col gap-6">
       <section aria-labelledby="journal-prompt" className="flex flex-col gap-1">
-        <h1 id="journal-prompt" className="font-h2 font-bold text-fg">
-          Journal
-        </h1>
+        <h2 id="journal-prompt" className="font-h4 font-semibold text-fg">
+          Escribe sobre esto
+        </h2>
         <p className="text-fg-muted">{entry.prompt}</p>
       </section>
 
@@ -50,11 +50,15 @@ export function JournalWorkspace({ entry }: JournalWorkspaceProps) {
             disabled={!journal.canSubmit || journal.correcting}
             onClick={() => void journal.submit()}
           >
-            {journal.correcting ? 'Corrigiendo…' : 'Enviar para corrección'}
+            {journal.correcting
+              ? 'Corrigiendo…'
+              : journal.isOnline
+                ? 'Enviar y corregir'
+                : 'Guardar sin conexión'}
           </PillButton>
           {!journal.isOnline && (
             <p role="status" className="font-body-sm text-fg-muted">
-              Sin conexión: guardaremos tu entrada y podrás corregirla al reconectar.
+              Sin conexión: guardaremos tu entrada. Podrás corregirla cuando recuperes la conexión.
             </p>
           )}
         </div>
@@ -63,7 +67,9 @@ export function JournalWorkspace({ entry }: JournalWorkspaceProps) {
       {journal.status === 'submitted' && (
         <div className="flex flex-col gap-2">
           <p role="status" className="font-body-sm text-fg-muted">
-            Entrada enviada. {journal.isOnline ? 'Pide la corrección cuando quieras.' : 'Se corregirá al reconectar.'}
+            Entrada guardada. {journal.isOnline
+              ? 'Puedes corregirla ahora.'
+              : 'Recupera la conexión para pedir la corrección.'}
           </p>
           <PillButton
             variant="primary"

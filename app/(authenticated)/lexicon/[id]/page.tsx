@@ -46,9 +46,6 @@ export default async function LessonDetailPage({ params }: { params: Promise<{ i
     difficulty: w.difficulty,
   }));
 
-  const wordsLearned = words.filter((w) => w.status === "learned").length;
-  const wordsReviewing = words.filter((w) => w.status === "reviewing").length;
-
   return (
     <PageLayout>
       <div
@@ -59,14 +56,10 @@ export default async function LessonDetailPage({ params }: { params: Promise<{ i
           <LessonDetailActions
             title={category.name}
             blurb={getCategoryBlurb(id)}
-            totalWords={words.length}
-            wordsLearned={wordsLearned}
-            wordsReviewing={wordsReviewing}
-            color={category.color}
-            categoryId={id}
           />
           <WordBrowserClient
             words={words}
+            categoryId={id}
             wordBankMapEntries={Array.from(wordBankDetailsMap.entries()).map(
               ([k, v]) => [k, { id: v.id, isFavorite: v.isFavorite }] as [string, { id: string; isFavorite: boolean }]
             )}

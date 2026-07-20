@@ -61,7 +61,7 @@ export function SpeakSkipActions({
       <button
         type="button"
         onClick={() => setConfirm('archive')}
-        className="border-none bg-transparent p-0 text-caption text-fg-subtle underline-offset-2 transition-colors hover:text-fg-muted hover:underline focus-ring"
+        className="min-h-11 border-none bg-transparent px-3 py-1 text-caption text-fg-subtle underline-offset-2 transition-colors hover:text-fg-muted hover:underline focus-ring"
       >
         Ya la sé
       </button>
@@ -70,7 +70,7 @@ export function SpeakSkipActions({
           <button
             type="button"
             onClick={onKeepSnooze}
-            className="border-none bg-transparent p-0 text-caption text-fg-muted transition-colors hover:text-fg focus-ring"
+            className="min-h-11 border-none bg-transparent px-3 py-1 text-caption text-fg-muted transition-colors hover:text-fg focus-ring"
           >
             Seguir en 90 días
           </button>
@@ -80,7 +80,7 @@ export function SpeakSkipActions({
           <button
             type="button"
             onClick={() => setConfirm('master')}
-            className="border-none bg-transparent p-0 text-caption text-fg-subtle transition-colors hover:text-fg-muted focus-ring"
+            className="min-h-11 border-none bg-transparent px-3 py-1 text-caption text-fg-subtle transition-colors hover:text-fg-muted focus-ring"
           >
             No me la recuerdes más
           </button>

@@ -112,6 +112,7 @@ async function cleanup(users) {
     await admin.from("stt_transcription_cache").delete().eq("user_id", user.id);
     await admin.from("sentence_transcription_cache").delete().eq("user_id", user.id);
     await admin.from("text_fragments").delete().eq("user_id", user.id);
+    await admin.from("tracked_items").delete().eq("user_id", user.id);
     await admin.from("user_profiles").delete().eq("id", user.id);
     await admin.auth.admin.deleteUser(user.id);
   }
@@ -231,6 +232,23 @@ async function run() {
     const bReadsFragment = await userB.client.from("text_fragments").select("id").eq("id", fragmentId);
     assertNoError(bReadsFragment, "user B reads user A text fragment query");
     assert(bReadsFragment.data.length === 0, "user B can read user A text_fragments row");
+
+    const trackedItemA = await insertSingle(
+      userA.client,
+      "tracked_items",
+      { user_id: userA.id, kind: "phrase", ref: `rls-phrase-${randomUUID()}`, title: "RLS tracked item" },
+      "user A creates own tracked item"
+    );
+    const bReadsTrackedItem = await userB.client.from("tracked_items").select("id").eq("id", trackedItemA.id);
+    assertNoError(bReadsTrackedItem, "user B reads user A tracked item query");
+    assert(bReadsTrackedItem.data.length === 0, "user B can read user A tracked_items row");
+
+    const bWritesTrackedItemForA = await userB.client.from("tracked_items").insert({
+      user_id: userA.id,
+      kind: "lesson",
+      ref: `rls-cross-${randomUUID()}`,
+    });
+    assertHasError(bWritesTrackedItemForA, "user B can write tracked item for user A");
 
     console.log("RLS integration checks passed.");
   } finally {

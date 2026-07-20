@@ -1,26 +1,32 @@
 import { JournalWorkspace } from '@/components/journal/JournalWorkspace'
+import PageHeader from '@/components/layout/PageHeader'
+import PageLayout from '@/components/layout/PageLayout'
 import { journalPromptForDate } from '@/lib/journal/prompts'
 import { getTodayLocalDateKey } from '@/lib/date/local-date'
-import { createSupabaseServerClient } from '@/lib/supabase/server'
+import { getSupabaseServerUserId } from '@/lib/supabase/session'
 import { getUserInterests } from '@/lib/users/server-queries'
 import { redirect } from 'next/navigation'
 
 export default async function JournalPage() {
-  const supabase = await createSupabaseServerClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/login')
+  const userId = await getSupabaseServerUserId()
+  if (!userId) redirect('/login')
 
   const entryDate = getTodayLocalDateKey()
-  const interests = await getUserInterests(user.id)
+  const interests = await getUserInterests(userId)
   const prompt = journalPromptForDate(entryDate, interests)
   const now = new Date().toISOString()
 
   return (
-    <main className="mx-auto max-w-2xl px-4 py-8">
+    <PageLayout className="mx-auto max-w-3xl">
+      <PageHeader
+        kicker="PRÁCTICA"
+        title="Journal"
+        subtitle="Escribe en inglés y recibe una corrección útil cuando estés listo."
+      />
       <JournalWorkspace
         entry={{
           id: crypto.randomUUID(),
-          userId: user.id,
+          userId,
           entryDate,
           prompt,
           content: '',
@@ -29,6 +35,6 @@ export default async function JournalPage() {
           updatedAt: now,
         }}
       />
-    </main>
+    </PageLayout>
   )
 }

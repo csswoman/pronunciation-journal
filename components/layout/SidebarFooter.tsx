@@ -2,193 +2,81 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useRef, useState, useEffect } from "react";
+import { type CSSProperties, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { cn } from "@/lib/cn";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { useOKLCHTheme } from "@/hooks/useOKLCHTheme";
-import { LogOut, LogIn, User } from "@/components/icons";
+import { useUserPreferences } from "@/hooks/useUserPreferences";
+import { useUISoundsStore } from "@/lib/stores/uiSoundsStore";
+import { CEFR_LEVELS, type CefrLevel } from "@/lib/core-1000/types";
+import { readGuestStudyLevel, saveGuestStudyLevel } from "@/lib/preferences/guest-study-level";
+import { LogIn, LogOut, Moon, RotateCcw, Settings2, Sun, Target, User, Volume2 } from "@/components/icons";
 import { useSidebar } from "@/components/theme/sidebar/SidebarContext";
 
 export default function SidebarFooter() {
   const router = useRouter();
   const { user, signOutUser } = useAuth();
+  const { preferences, updateCefrLevel } = useUserPreferences();
   const { collapsed } = useSidebar();
   const [open, setOpen] = useState(false);
-  const [panelPos, setPanelPos] = useState({ top: 0, left: 0 });
+  const [guestLevel, setGuestLevel] = useState<CefrLevel>("A1");
   const footerRef = useRef<HTMLDivElement>(null);
-  const leaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const isGuest = user?.is_anonymous ?? false;
-  const isAuthenticated = !!user && !isGuest;
-  const displayName =
-    user?.user_metadata?.full_name ||
-    user?.user_metadata?.name ||
-    user?.email?.split("@")[0] ||
-    "Guest";
-
+  const isGuest = !user || (user as { is_anonymous?: boolean }).is_anonymous;
+  const level = isGuest ? guestLevel : preferences?.cefr_level ?? "A1";
+  const displayName = isGuest ? "Ajustes rápidos" : preferences?.full_name || user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Mi perfil";
   const avatarUrl = user?.user_metadata?.avatar_url as string | undefined;
+  const initials = isGuest ? "·" : displayName.split(" ").slice(0, 2).map((word: string) => word[0]).join("").toUpperCase();
 
-  const initials = displayName
-    .split(" ")
-    .slice(0, 2)
-    .map((w: string) => w[0])
-    .join("")
-    .toUpperCase();
-
-  const enter = () => {
-    if (leaveTimer.current) clearTimeout(leaveTimer.current);
-    if (footerRef.current) {
-      const rect = footerRef.current.getBoundingClientRect();
-      setPanelPos({ top: rect.bottom, left: rect.right + 8 });
-    }
-    setOpen(true);
-  };
-
-  const leave = () => {
-    leaveTimer.current = setTimeout(() => setOpen(false), 200);
-  };
-
-  // Recalculate on scroll/resize
+  useEffect(() => { setGuestLevel(readGuestStudyLevel()); }, []);
   useEffect(() => {
     if (!open) return;
-    const update = () => {
-      if (footerRef.current) {
-        const rect = footerRef.current.getBoundingClientRect();
-        setPanelPos({ top: rect.bottom, left: rect.right + 8 });
-      }
-    };
-    window.addEventListener("resize", update);
-    return () => window.removeEventListener("resize", update);
+    const onKeyDown = (event: KeyboardEvent) => event.key === "Escape" && setOpen(false);
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
   }, [open]);
 
-  const handleSignOut = async () => {
-    setOpen(false);
-    await signOutUser();
-    router.push("/");
+  const setLevel = async (next: CefrLevel) => {
+    if (isGuest) { saveGuestStudyLevel(next); setGuestLevel(next); return; }
+    await updateCefrLevel(next);
   };
+  const signOut = async () => { setOpen(false); await signOutUser(); router.push("/"); };
 
   return (
-    <div
-      ref={footerRef}
-      className="relative flex-shrink-0 border-t border-[var(--line-divider)] px-3 pt-2 pb-3"
-      onMouseEnter={enter}
-      onMouseLeave={leave}
-    >
-      {/* User row */}
-      <button
-        className={`flex items-center ${collapsed ? "justify-center w-9 h-9 mx-auto" : "gap-2.5 px-3 w-full h-9"} rounded-lg text-sm font-medium transition-all duration-200 text-fg group relative`}
-        style={{ background: open ? "var(--btn-regular-bg-hover)" : undefined }}
-      >
-        <div
-          className="relative w-6 h-6 rounded-full flex items-center justify-center text-tiny font-bold overflow-hidden flex-shrink-0 bg-[var(--primary-soft)] text-[var(--primary)] shadow-[0_0_0_1.5px_var(--border)]"
-        >
-          {avatarUrl ? (
-            <Image src={avatarUrl} alt={displayName} fill sizes="24px" className="object-cover" />
-          ) : (
-            initials
-          )}
-        </div>
-        {!collapsed && <span className="truncate text-sm font-medium">{displayName}</span>}
+    <div ref={footerRef} className="relative flex-shrink-0 border-t border-border-subtle px-3 pb-3 pt-2">
+      <button type="button" onClick={() => setOpen((value) => !value)} aria-expanded={open} aria-haspopup="dialog"
+        className={cn("focus-ring flex h-10 items-center rounded-md text-left transition-colors", collapsed ? "mx-auto w-10 justify-center" : "w-full gap-2.5 px-2.5", open ? "bg-surface-sunken" : "hover:bg-surface-raised")}>
+        <span className="grid size-6 shrink-0 place-items-center overflow-hidden rounded-full bg-primary-soft text-tiny font-bold text-primary">
+          {avatarUrl ? <Image src={avatarUrl} alt="" fill sizes="24px" className="object-cover" /> : initials}
+        </span>
+        {!collapsed && <span className="min-w-0 flex-1 truncate font-label text-fg">{displayName}</span>}
+        {!collapsed && <Settings2 size={16} aria-hidden className="shrink-0 text-fg-subtle" />}
       </button>
 
-      {/* Portal panel */}
       {open && typeof document !== "undefined" && createPortal(
-        <div
-          className="fixed z-[9999] w-56 rounded-xl p-2 shadow-xl border
- animate-in fade-in zoom-in-95 duration-150 origin-bottom-left"
-          style={{ top: panelPos.top - 8, left: panelPos.left, transform: "translateY(-100%)", background: "var(--bg-secondary)", borderColor: "var(--border)" }}
-          onMouseEnter={enter}
-          onMouseLeave={leave}
-        >
-          <button
-            onClick={() => { setOpen(false); router.push("/profile"); }}
-            className="flex items-center gap-2.5 px-3 h-9 w-full rounded-lg text-sm font-medium
- transition-all duration-150 group
- text-fg-muted hover:text-fg hover:bg-[var(--bg-tertiary)]"
-          >
-            <User className="h-4 w-4 flex-shrink-0 opacity-60 group-hover:opacity-100 transition-opacity" />
-            <span>Profile</span>
-          </button>
-
-          <div className="h-px my-1.5 bg-[var(--border)]" />
-
-          <div className="px-2 py-1">
-            <p className="text-tiny font-medium mb-2 text-fg-subtle">
-              Theme
-            </p>
-            <ThemeInline />
+        <div role="dialog" aria-label="Ajustes rápidos" className="fixed bottom-3 left-[calc(var(--sidebar-width)+0.75rem)] z-[9999] w-[min(22rem,calc(100vw-1.5rem))] rounded-xl border border-border-subtle bg-surface-raised p-3 shadow-xl animate-in fade-in zoom-in-95 duration-150">
+          <div className="mb-3 flex items-start justify-between gap-3 px-1">
+            <div><p className="font-label text-fg">Ajustes rápidos</p><p className="font-caption text-fg-muted">{isGuest ? "Guardados en este dispositivo" : "Sincronizados con tu perfil"}</p></div>
+            {!isGuest && <button type="button" onClick={() => { setOpen(false); router.push("/profile"); }} className="focus-ring rounded-sm px-2 py-1 font-caption text-primary hover:bg-primary-soft">Perfil</button>}
           </div>
-
-          <div className="h-px my-1.5 bg-[var(--border)]" />
-
-          <button
-            onClick={isAuthenticated ? handleSignOut : () => router.push("/login")}
-            className="flex items-center gap-2.5 px-3 h-9 w-full rounded-lg text-sm font-medium
- transition-all duration-150 group
- text-fg-muted hover:text-[var(--primary)] hover:bg-[var(--primary-soft)]"
-          >
-            {isAuthenticated ? (
-              <LogOut className="h-4 w-4 flex-shrink-0 opacity-60 group-hover:opacity-100 transition-opacity" />
-            ) : (
-              <LogIn className="h-4 w-4 flex-shrink-0 opacity-60 group-hover:opacity-100 transition-opacity" />
-            )}
-            <span>{isAuthenticated ? "Sign out" : "Sign in"}</span>
-          </button>
-        </div>,
-        document.body
-      )}
+          <section className="border-t border-border-subtle py-3"><div className="mb-2 flex items-center gap-2"><Target size={15} className="text-fg-subtle" /><p className="font-kicker text-fg-muted">Nivel de estudio</p></div>
+            <div className="grid grid-cols-5 gap-1" aria-label="Nivel de estudio">{CEFR_LEVELS.map((item) => <button key={item} type="button" onClick={() => void setLevel(item)} className={cn("focus-ring min-h-9 rounded-sm font-label transition-colors", level === item ? "bg-primary text-on-primary" : "bg-surface-sunken text-fg-muted hover:text-fg")}>{item}</button>)}</div>
+          </section>
+          <SoundControls />
+          <ThemeControls />
+          <div className="mt-2 border-t border-border-subtle pt-2"><button type="button" onClick={isGuest ? () => router.push("/login") : signOut} className="focus-ring flex min-h-10 w-full items-center gap-2 rounded-sm px-2 text-left font-label text-fg-muted hover:bg-surface-sunken hover:text-fg">{isGuest ? <LogIn size={16} /> : <LogOut size={16} />} {isGuest ? "Iniciar sesión" : "Cerrar sesión"}</button></div>
+        </div>, document.body)}
     </div>
   );
 }
 
-function ThemeInline() {
-  const { hue, setHue, resetHue, mode, toggleMode, mounted } = useOKLCHTheme();
-
-  if (!mounted) return null;
-
-  return (
-    <div className="space-y-2">
-      <input
-        type="range"
-        min="0"
-        max="360"
-        value={hue}
-        onChange={(e) => setHue(parseInt(e.target.value, 10))}
-        className="w-full appearance-none cursor-pointer color-selection-slider"
-        title={`Hue: ${hue}°`}
-      />
-      <div className="flex items-center justify-between">
-        <span className="text-xs font-mono px-2 py-0.5 rounded-md bg-[var(--bg-tertiary)] text-[var(--text-secondary)]">
-          {hue}°
-        </span>
-        <div className="flex items-center gap-1">
-          <button
-            onClick={resetHue}
-            title="Reset color"
-            className="p-1.5 rounded-lg transition-colors hover:bg-[var(--bg-tertiary)] text-fg-subtle hover:text-fg"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
-              <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
-              <path d="M3 3v5h5" />
-            </svg>
-          </button>
-          <button
-            onClick={toggleMode}
-            title={`Switch to ${mode === "dark" ? "light" : "dark"} mode`}
-            className="p-1.5 rounded-lg transition-colors hover:bg-[var(--bg-tertiary)] text-fg-subtle hover:text-fg"
-          >
-            {mode === "dark" ? (
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="w-3.5 h-3.5">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" />
-              </svg>
-            ) : (
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="w-3.5 h-3.5">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z" />
-              </svg>
-            )}
-          </button>
-        </div>
-      </div>
-    </div>
-  );
+function SoundControls() {
+  const enabled = useUISoundsStore((state) => state.soundEnabled); const volume = useUISoundsStore((state) => state.volume); const setEnabled = useUISoundsStore((state) => state.setSoundEnabled); const setVolume = useUISoundsStore((state) => state.setVolume);
+  const percent = Math.round(volume * 100);
+  return <section className="border-t border-border-subtle py-3"><div className="mb-2 flex items-center justify-between"><span className="flex items-center gap-2 font-kicker text-fg-muted"><Volume2 size={15} /> Sonidos</span><button type="button" role="switch" aria-checked={enabled} onClick={() => setEnabled(!enabled)} className={cn("focus-ring h-6 w-10 rounded-full p-0.5 transition-colors", enabled ? "bg-primary" : "bg-surface-sunken")}><span className={cn("block size-5 rounded-full bg-surface-raised transition-transform", enabled && "translate-x-4")} /></button></div><div className={cn("flex items-center gap-3", !enabled && "opacity-50")}><input aria-label="Volumen de la aplicación" type="range" min="0" max="100" step="5" disabled={!enabled} value={percent} onChange={(event) => setVolume(Number(event.target.value) / 100)} className="sound-volume-slider min-w-0 flex-1" style={{ "--sound-volume": `${percent}%` } as CSSProperties} /><span className="w-9 text-right text-tiny tabular-nums text-fg-muted">{percent}%</span></div></section>;
 }
 
+function ThemeControls() {
+  const { hue, setHue, resetHue, mode, toggleMode, mounted } = useOKLCHTheme(); if (!mounted) return null;
+  return <section className="border-t border-border-subtle py-3"><div className="mb-2 flex items-center justify-between"><span className="font-kicker text-fg-muted">Apariencia</span><span className="text-tiny tabular-nums text-fg-subtle">{hue}°</span></div><div className="flex items-center gap-2"><input aria-label="Color del tema" type="range" min="0" max="360" value={hue} onChange={(event) => setHue(Number(event.target.value))} className="color-selection-slider min-w-0 flex-1" /><button type="button" onClick={resetHue} aria-label="Restablecer color" className="focus-ring grid size-8 place-items-center rounded-sm text-fg-muted hover:bg-surface-sunken"><RotateCcw size={15} /></button><button type="button" onClick={toggleMode} aria-label={mode === "dark" ? "Cambiar a modo claro" : "Cambiar a modo oscuro"} className="focus-ring grid size-8 place-items-center rounded-sm text-fg-muted hover:bg-surface-sunken">{mode === "dark" ? <Sun size={16} /> : <Moon size={16} />}</button></div></section>;
+}

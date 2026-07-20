@@ -6,6 +6,7 @@
 //   <LevelToggle A1..C1 />         — multi-select CEFR level toggles
 // </LevelFilterBar>
 
+import { useState } from 'react'
 import { cn } from '@/lib/cn'
 import { CEFR_LEVELS, type CefrLevel } from '@/lib/core-1000/types'
 
@@ -24,24 +25,46 @@ function toggle(current: CefrLevel[] | null, level: CefrLevel): CefrLevel[] {
 }
 
 export function LevelFilterBar({ value, onChange, disabled }: Props) {
+  const [expanded, setExpanded] = useState(false)
   const allActive = !value || value.length === 0
+  const summary = allActive
+    ? 'Todos los niveles'
+    : value.length === 1
+      ? `Tu nivel: ${value[0]}`
+      : `Niveles: ${value.join(', ')}`
 
   return (
-    <div
-      role="group"
-      aria-label="Filtrar por nivel CEFR"
-      className="flex flex-wrap items-center justify-center gap-1.5"
-    >
-      <LevelChip label="Todos" active={allActive} disabled={disabled} onClick={() => onChange(null)} />
-      {CEFR_LEVELS.map((level) => (
-        <LevelChip
-          key={level}
-          label={level}
-          active={!allActive && value!.includes(level)}
+    <div className="flex flex-col items-center gap-2">
+      <div className="flex items-center gap-2 text-caption">
+        <span className="font-medium text-fg-muted">{summary}</span>
+        <button
+          type="button"
+          aria-expanded={expanded}
           disabled={disabled}
-          onClick={() => onChange(toggle(value, level))}
-        />
-      ))}
+          onClick={() => setExpanded((open) => !open)}
+          className="min-h-11 rounded-md px-3 py-1 text-caption font-semibold text-primary transition-colors hover:bg-primary-soft focus-ring disabled:cursor-not-allowed disabled:opacity-40"
+        >
+          Cambiar
+        </button>
+      </div>
+      {expanded && (
+        <div
+          role="group"
+          aria-label="Filtrar por nivel CEFR"
+          className="flex flex-wrap items-center justify-center gap-1.5"
+        >
+          <LevelChip label="Todos" active={allActive} disabled={disabled} onClick={() => onChange(null)} />
+          {CEFR_LEVELS.map((level) => (
+            <LevelChip
+              key={level}
+              label={level}
+              active={!allActive && value!.includes(level)}
+              disabled={disabled}
+              onClick={() => onChange(toggle(value, level))}
+            />
+          ))}
+        </div>
+      )}
     </div>
   )
 }
@@ -56,7 +79,7 @@ function LevelChip({
       disabled={disabled}
       onClick={onClick}
       className={cn(
-        'rounded-full border px-2.5 py-1 text-tiny font-semibold uppercase tracking-[0.12em]',
+        'min-h-11 rounded-full border px-3 py-1 text-tiny font-semibold uppercase tracking-[0.12em]',
         'transition-colors duration-150 focus-ring',
         'disabled:opacity-40 disabled:cursor-not-allowed',
         active
