@@ -81,6 +81,11 @@ describe("PronunciationView", () => {
 
     expect(screen.getByTestId("progress")).toHaveTextContent("0/1");
     expect(pronunciationMocks.loadQueueFromDexie).toHaveBeenCalledWith("account-a");
-    expect(pronunciationMocks.fetchWordIPA).toHaveBeenCalled();
+
+    // IPA fetch runs in a follow-up effect after activePhrase commits —
+    // wait for it instead of asserting synchronously (race with paint).
+    await waitFor(() => {
+      expect(pronunciationMocks.fetchWordIPA).toHaveBeenCalled();
+    });
   });
 });
