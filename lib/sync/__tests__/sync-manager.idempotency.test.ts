@@ -34,6 +34,7 @@ describe('outbox retry-after-reload and duplicate-idempotency-key characterizati
 
   it('BASELINE: a pending outbox entry survives a reload (re-open) and remains eligible for flush', async () => {
     await enqueue(
+      'user-1',
       'topic_srs',
       'update',
       { review_count: 5, user_id: 'user-1' },
@@ -63,12 +64,14 @@ describe('outbox retry-after-reload and duplicate-idempotency-key characterizati
     // after a UI double-submit, or a re-derived duplicate from two overlapping
     // callers), share the same table/matchKey/payload shape.
     await enqueue(
+      'user-1',
       'topic_srs',
       'update',
       { review_count: 5, user_id: 'user-1' },
       { id: 'row-1', user_id: 'user-1' },
     )
     await enqueue(
+      'user-1',
       'topic_srs',
       'update',
       { review_count: 5, user_id: 'user-1' },
@@ -95,6 +98,7 @@ describe('outbox retry-after-reload and duplicate-idempotency-key characterizati
 
   it('BASELINE: a permanent Supabase error (RLS, code 42501) marks the entry failed and does not retry', async () => {
     await enqueue(
+      'user-1',
       'topic_srs',
       'update',
       { review_count: 5, user_id: 'user-1' },
@@ -127,6 +131,7 @@ describe('outbox retry-after-reload and duplicate-idempotency-key characterizati
 
   it('BASELINE: a permanent Supabase error (duplicate key, code 23505) marks the entry failed and does not retry', async () => {
     await enqueue(
+      'user-1',
       'topic_srs',
       'insert',
       { user_id: 'user-1', topic: 'grammar:present simple', review_count: 1 },

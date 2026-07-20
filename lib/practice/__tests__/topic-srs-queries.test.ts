@@ -35,7 +35,8 @@ describe('enqueueTopicSRSUpdate', () => {
     await enqueueTopicSRSUpdate('user-1', 'grammar:present simple', 5)
 
     expect(enqueueMock).toHaveBeenCalledTimes(1)
-    const [table, op, payload, matchKey, onConflict, rpcName] = enqueueMock.mock.calls[0]
+    const [userId, table, op, payload, matchKey, onConflict, rpcName] = enqueueMock.mock.calls[0]
+    expect(userId).toBe('user-1')
     expect(table).toBe('topic_srs')
     expect(op).toBe('rpc')
     expect(rpcName).toBe('apply_topic_srs_rating_event')

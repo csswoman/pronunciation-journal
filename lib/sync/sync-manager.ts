@@ -127,13 +127,21 @@ async function flushEntry(entry: SyncOutboxEntry): Promise<void> {
  * Call this INSIDE a Dexie transaction alongside the local write so both
  * are committed atomically (or both roll back).
  *
+ * `userId` is the acting/owning account for this entry — the caller must
+ * state it explicitly rather than have it inferred from `payload`/`matchKey`
+ * shape. Callers already have it in scope (it's the source of truth this
+ * entry's ownership metadata comes from); sniffing it out of arbitrary
+ * payload fields (`user_id`, `p_user_id`, ...) is fragile and only grows
+ * more `??` clauses as new RPCs/payload shapes are added.
+ *
  * @example
  * await db.transaction('rw', [db.syncOutbox], async () => {
  *   await db.someTable.put(localRow)
- *   await enqueue('user_contrast_progress', 'upsert', payload)
+ *   await enqueue(userId, 'user_contrast_progress', 'upsert', payload)
  * })
  */
 export async function enqueue(
+  userId: string,
   table: SyncTable,
   operation: SyncOperation,
   payload: Record<string, unknown>,
@@ -141,11 +149,6 @@ export async function enqueue(
   onConflict?: string,
   rpcName?: SyncRpc,
 ): Promise<number> {
-  // RPC payloads name their args after the Postgres function's parameters
-  // (p_user_id, by convention across this codebase's RPCs — see
-  // apply_word_bank_rating_event / apply_topic_srs_rating_event), so check
-  // that shape too alongside the DML payload/matchKey shapes.
-  const userId = payload.user_id ?? payload.userId ?? payload.p_user_id ?? matchKey?.user_id ?? matchKey?.userId
   if (typeof userId !== 'string' || !userId) {
     throw new Error(`Outbox entry for ${table} requires an explicit user_id`)
   }

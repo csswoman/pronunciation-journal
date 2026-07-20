@@ -271,5 +271,5 @@ export async function enqueueWordBankSRSUpdate(
 ): Promise<void> {
   const { event, rpcArgs } = buildWordBankRatingEvent(userId, wordId, grade)
   await db.srsRatingEvents.add(event)
-  await enqueue('word_bank', 'rpc', rpcArgs, undefined, undefined, 'apply_word_bank_rating_event')
+  await enqueue(userId, 'word_bank', 'rpc', rpcArgs, undefined, undefined, 'apply_word_bank_rating_event')
 }

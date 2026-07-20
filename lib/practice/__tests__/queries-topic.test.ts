@@ -46,19 +46,20 @@ describe('savePracticeAnswer topic routing', () => {
   it('persists normalized topic and schedules topic SRS when topic present', async () => {
     await savePracticeAnswer('user-1', { ...base, topic: 'grammar:Present_Simple' })
 
-    const insertCall = enqueueMock.mock.calls.find((c) => c[0] === 'answer_history')
-    expect(insertCall?.[2]).toMatchObject({ topic: 'grammar:present simple' })
-    expect(insertCall?.[1]).toBe('upsert')
-    expect(insertCall?.[2].id).toMatch(/^[0-9a-f-]{36}$/i)
-    expect(insertCall?.[4]).toBe('id')
+    const insertCall = enqueueMock.mock.calls.find((c) => c[1] === 'answer_history')
+    expect(insertCall?.[0]).toBe('user-1')
+    expect(insertCall?.[3]).toMatchObject({ topic: 'grammar:present simple' })
+    expect(insertCall?.[2]).toBe('upsert')
+    expect(insertCall?.[3].id).toMatch(/^[0-9a-f-]{36}$/i)
+    expect(insertCall?.[5]).toBe('id')
     expect(topicSrsMock).toHaveBeenCalledWith('user-1', 'grammar:present simple', expect.any(Number))
   })
 
   it('does not schedule topic SRS when topic absent', async () => {
     await savePracticeAnswer('user-1', { ...base })
     expect(topicSrsMock).not.toHaveBeenCalled()
-    const insertCall = enqueueMock.mock.calls.find((c) => c[0] === 'answer_history')
-    expect(insertCall?.[2].topic).toBeNull()
+    const insertCall = enqueueMock.mock.calls.find((c) => c[1] === 'answer_history')
+    expect(insertCall?.[3].topic).toBeNull()
   })
 })
 

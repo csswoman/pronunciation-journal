@@ -49,7 +49,8 @@ describe('enqueueTopicSRSUpdate (rewritten: local-only, no network read)', () =>
     await enqueueTopicSRSUpdate('user-1', 'grammar:present simple', 4)
 
     expect(enqueueMock).toHaveBeenCalledTimes(1)
-    const [table, operation, payload, matchKey, onConflict, rpcName] = enqueueMock.mock.calls[0]
+    const [userId, table, operation, payload, matchKey, onConflict, rpcName] = enqueueMock.mock.calls[0]
+    expect(userId).toBe('user-1')
     expect(table).toBe('topic_srs')
     expect(operation).toBe('rpc')
     expect(rpcName).toBe('apply_topic_srs_rating_event')
@@ -84,8 +85,8 @@ describe('enqueueTopicSRSUpdate (rewritten: local-only, no network read)', () =>
     await Promise.all([first, second])
 
     expect(enqueueMock).toHaveBeenCalledTimes(2)
-    const firstPayload = enqueueMock.mock.calls[0][2] as Record<string, unknown>
-    const secondPayload = enqueueMock.mock.calls[1][2] as Record<string, unknown>
+    const firstPayload = enqueueMock.mock.calls[0][3] as Record<string, unknown>
+    const secondPayload = enqueueMock.mock.calls[1][3] as Record<string, unknown>
 
     // Distinct idempotency keys, both calls are 'rpc' — there is no more
     // 'insert' vs 'update' branching client-side, so the old unique-

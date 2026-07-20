@@ -89,6 +89,7 @@ describe('recordDailyStepCompletion', () => {
     })
 
     expect(enqueueMock).toHaveBeenCalledWith(
+      'user-1',
       'activity_sessions',
       'upsert',
       expect.objectContaining({

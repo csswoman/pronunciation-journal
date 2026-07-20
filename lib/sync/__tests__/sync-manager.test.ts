@@ -103,7 +103,7 @@ describe('enqueue', () => {
 
   it('calls db.syncOutbox.add with status:pending, retryCount:0, and a valid ISO createdAt', async () => {
     const before = new Date()
-    await enqueue('user_contrast_progress', 'upsert', { contrast_id: 'x' }, { id: '1' })
+    await enqueue('user-1', 'user_contrast_progress', 'upsert', { contrast_id: 'x' }, { id: '1' })
     const after = new Date()
 
     expect(mocks.mockSyncOutboxAdd).toHaveBeenCalledOnce()
@@ -123,7 +123,7 @@ describe('enqueue', () => {
 
   it('returns the id produced by db.syncOutbox.add', async () => {
     mocks.mockSyncOutboxAdd.mockResolvedValue(42)
-    const id = await enqueue('answer_history', 'insert', { answer: 'yes' })
+    const id = await enqueue('user-1', 'answer_history', 'insert', { answer: 'yes' })
     expect(id).toBe(42)
   })
 })

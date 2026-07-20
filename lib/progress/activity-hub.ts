@@ -195,6 +195,7 @@ export async function recordActivitySession(
 
   try {
     await enqueue(
+      userId,
       'activity_sessions',
       'upsert',
       telemetry.activitySession as unknown as Record<string, unknown>,
@@ -234,6 +235,7 @@ export async function recordDailyStepCompletion(
   }
 
   await enqueue(
+    userId,
     'activity_sessions',
     'upsert',
     activitySession as unknown as Record<string, unknown>,

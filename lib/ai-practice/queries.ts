@@ -71,6 +71,7 @@ export async function persistLearningState(
   await db.transaction('rw', [db.learningState, db.syncOutbox], async () => {
     await db.learningState.put({ userId, state, updatedAt })
     await enqueue(
+      userId,
       'user_learning_state',
       'upsert',
       { user_id: userId, state, updated_at: updatedAt },

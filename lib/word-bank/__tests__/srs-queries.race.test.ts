@@ -46,7 +46,8 @@ describe('enqueueWordBankSRSUpdate (rewritten: local-only, no network read)', ()
     await enqueueWordBankSRSUpdate('user-1', 'word-1', 4)
 
     expect(enqueueMock).toHaveBeenCalledTimes(1)
-    const [table, operation, payload, matchKey, onConflict, rpcName] = enqueueMock.mock.calls[0]
+    const [userId, table, operation, payload, matchKey, onConflict, rpcName] = enqueueMock.mock.calls[0]
+    expect(userId).toBe('user-1')
     expect(table).toBe('word_bank')
     expect(operation).toBe('rpc')
     expect(rpcName).toBe('apply_word_bank_rating_event')
@@ -80,8 +81,8 @@ describe('enqueueWordBankSRSUpdate (rewritten: local-only, no network read)', ()
     await Promise.all([first, second])
 
     expect(enqueueMock).toHaveBeenCalledTimes(2)
-    const firstPayload = enqueueMock.mock.calls[0][2] as Record<string, unknown>
-    const secondPayload = enqueueMock.mock.calls[1][2] as Record<string, unknown>
+    const firstPayload = enqueueMock.mock.calls[0][3] as Record<string, unknown>
+    const secondPayload = enqueueMock.mock.calls[1][3] as Record<string, unknown>
 
     // Distinct idempotency keys — the server-side RPC can tell these apart
     // and apply both (serialized by its row lock), instead of one silently

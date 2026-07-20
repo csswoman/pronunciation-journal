@@ -41,6 +41,7 @@ export async function recordLessonComplete(courseSlug: string, lessonSlug: strin
   await db.transaction('rw', [db.completedLessons, db.syncOutbox], async () => {
     await markLessonComplete(user.id, courseSlug, lessonSlug)
     await enqueue(
+      user.id,
       'lesson_completions',
       'upsert',
       {
@@ -67,7 +68,7 @@ export async function recordLessonIncomplete(
 
   await db.transaction('rw', [db.completedLessons, db.syncOutbox], async () => {
     await markLessonIncomplete(user.id, courseSlug, lessonSlug)
-    await enqueue('lesson_completions', 'delete', {}, {
+    await enqueue(user.id, 'lesson_completions', 'delete', {}, {
       user_id: user.id,
       course_slug: courseSlug,
       lesson_slug: lessonSlug,
@@ -139,7 +140,7 @@ export async function savePracticeAnswer(
   const rowWithGrade = { ...row, grade }
 
   await db.transaction('rw', [db.syncOutbox, db.srsRatingEvents, db.srsData], async () => {
-    await enqueue('answer_history', 'upsert', rowWithGrade as Record<string, unknown>, undefined, 'id')
+    await enqueue(userId, 'answer_history', 'upsert', rowWithGrade as Record<string, unknown>, undefined, 'id')
 
     // Enqueue SRS update for word_bank entries via the sync outbox (retried on reconnection).
     if (answer.sourceRef?.source === 'word_bank') {

@@ -62,5 +62,5 @@ export async function enqueueTopicSRSUpdate(
 ): Promise<void> {
   const { event, rpcArgs } = buildTopicSrsRatingEvent(userId, topic, grade)
   await db.srsRatingEvents.add(event)
-  await enqueue('topic_srs', 'rpc', rpcArgs, undefined, undefined, 'apply_topic_srs_rating_event')
+  await enqueue(userId, 'topic_srs', 'rpc', rpcArgs, undefined, undefined, 'apply_topic_srs_rating_event')
 }

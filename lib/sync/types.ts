@@ -28,7 +28,12 @@ export type SyncStatus =
 export interface SyncOutboxEntry {
   /** Auto-increment local PK */
   id?: number
-  /** Account that owns this operation. Never flush another account's work. */
+  /**
+   * Account that owns this operation. Never flush another account's work.
+   * Set explicitly by the caller of `enqueue()` — never inferred from
+   * `payload`/`matchKey` shape (that inference was fragile and prone to
+   * false positives from unrelated `user_id`-like fields).
+   */
   userId?: string
   /** Target Supabase table. For operation 'rpc', this is unused — see `rpcName`. */
   table: SyncTable
