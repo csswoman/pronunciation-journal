@@ -134,6 +134,30 @@ $$;
 
 revoke execute on function public._sm2_schedule_next from public, anon, authenticated;
 
+-- ── SM-2 status derivation (shared by both apply_* RPCs below) ─────────────
+--
+-- Single-sources the srs_status classification so it can't drift between the
+-- word_bank and topic_srs RPCs. Must match lib/srs/compute.ts::computeSM2's
+-- status derivation — do not tune the thresholds here independently of that
+-- file.
+
+create or replace function public._sm2_derive_status(
+  p_interval integer,
+  p_repetitions integer
+)
+returns text
+language sql
+immutable
+as $$
+  select case
+    when p_interval > 21 then 'mastered'
+    when p_repetitions > 0 then 'review'
+    else 'learning'
+  end
+$$;
+
+revoke execute on function public._sm2_derive_status from public, anon, authenticated;
+
 -- ── word_bank rating RPC ────────────────────────────────────────────────────
 --
 -- Applies one immutable rating event to a word_bank row. Idempotent on
@@ -208,11 +232,7 @@ begin
     interval_days = v_next.next_interval,
     repetitions = v_next.next_repetitions,
     next_review_at = v_next.next_review_at,
-    srs_status = case
-      when v_next.next_interval > 21 then 'mastered'
-      when v_next.next_repetitions > 0 then 'review'
-      else 'learning'
-    end,
+    srs_status = public._sm2_derive_status(v_next.next_interval, v_next.next_repetitions),
     last_reviewed_at = p_occurred_at,
     review_count = v_row.review_count + 1
   where id = p_word_id and user_id = p_user_id
@@ -229,12 +249,12 @@ grant execute on function public.apply_word_bank_rating_event to authenticated;
 --
 -- topic_srs's natural key is (user_id, topic) — a brand-new topic has no row
 -- (and thus no id) until the first rating creates one. We key the rating
--- event and the row lock by (user_id, topic) rather than an id, and use
--- INSERT ... ON CONFLICT (user_id, topic) DO UPDATE as the per-entity
--- upsert-lock: Postgres takes a row-level lock on the conflicting row for the
--- duration of the ON CONFLICT DO UPDATE, so two concurrent first-time ratings
--- for the same new topic serialize into one insert + one update, never two
--- competing inserts.
+-- event and the row lock by (user_id, topic) rather than an id. A plain
+-- SELECT ... FOR UPDATE locks the row when it already exists (the common
+-- case); only when no row is found yet do we fall back to
+-- INSERT ... ON CONFLICT (user_id, topic) DO UPDATE as a per-entity
+-- upsert-lock, so two concurrent first-time ratings for the same new topic
+-- still serialize into one insert + one update, never two competing inserts.
 
 create or replace function public.apply_topic_srs_rating_event(
   p_idempotency_key uuid,
@@ -288,21 +308,36 @@ begin
     return v_row; -- may be NULL row if truly never applied; caller treats as no-op
   end if;
 
-  -- Upsert-with-lock: on first rating for this topic, insert a fresh row
-  -- seeded with SM-2 defaults then immediately schedule it via this grade.
-  -- On a subsequent rating, ON CONFLICT locks the existing row so a
-  -- concurrent second event for the same topic waits here rather than racing
-  -- the read.
-  insert into public.topic_srs as t (
-    user_id, topic, ease_factor, interval_days, repetitions, srs_status,
-    next_review_at, review_count, last_reviewed_at
-  )
-  values (
-    p_user_id, p_topic, v_default_ease, v_default_interval, v_default_repetitions, 'new',
-    null, 0, null
-  )
-  on conflict (user_id, topic) do update set topic = excluded.topic
-  returning * into v_row;
+  -- Lock the target row first, mirroring apply_word_bank_rating_event's plain
+  -- row lock. Most calls are ratings on a topic that already has a row, so
+  -- this avoids firing topic_srs's BEFORE UPDATE update_updated_at() trigger
+  -- twice per call (once via the upsert-as-lock below, once via the real
+  -- UPDATE further down) for the common case.
+  select * into v_row
+  from public.topic_srs
+  where user_id = p_user_id and topic = p_topic
+  for update;
+
+  if not found then
+    -- First-ever rating for this topic: no row to lock yet. Insert one
+    -- seeded with SM-2 defaults, using ON CONFLICT DO UPDATE purely as a
+    -- row-locking primitive — Postgres takes a row-level lock on the
+    -- conflicting row for the duration of the ON CONFLICT DO UPDATE, so two
+    -- concurrent first-time ratings for the same new topic serialize into
+    -- one insert + one update, never two competing inserts. This does mean
+    -- the BEFORE UPDATE trigger fires twice in that one-time race case
+    -- (harmless: nothing depends on topic_srs.updated_at precision).
+    insert into public.topic_srs as t (
+      user_id, topic, ease_factor, interval_days, repetitions, srs_status,
+      next_review_at, review_count, last_reviewed_at
+    )
+    values (
+      p_user_id, p_topic, v_default_ease, v_default_interval, v_default_repetitions, 'new',
+      null, 0, null
+    )
+    on conflict (user_id, topic) do update set topic = excluded.topic
+    returning * into v_row;
+  end if;
 
   select * into v_next from public._sm2_schedule_next(
     v_row.ease_factor, v_row.interval_days, v_row.repetitions, p_grade, p_occurred_at
@@ -314,11 +349,7 @@ begin
     interval_days = v_next.next_interval,
     repetitions = v_next.next_repetitions,
     next_review_at = v_next.next_review_at,
-    srs_status = case
-      when v_next.next_interval > 21 then 'mastered'
-      when v_next.next_repetitions > 0 then 'review'
-      else 'learning'
-    end,
+    srs_status = public._sm2_derive_status(v_next.next_interval, v_next.next_repetitions),
     last_reviewed_at = p_occurred_at,
     review_count = v_row.review_count + 1
   where user_id = p_user_id and topic = p_topic
