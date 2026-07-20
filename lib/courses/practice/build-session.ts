@@ -15,6 +15,7 @@ const VOCAB_SLOTS = 4
 export interface BuildCourseSessionOptions {
   deckSlug: string
   cefrLevel: CefrLevel
+  userId?: string
 }
 
 /**
@@ -26,6 +27,7 @@ export interface BuildCourseSessionOptions {
 export async function buildCoursePracticeSession({
   deckSlug,
   cefrLevel,
+  userId,
 }: BuildCourseSessionOptions): Promise<PracticeExercise[]> {
   // ── Source 1: sentence fragments ──────────────────────────────────────────
   const fragmentExercises = await (async () => {
@@ -42,9 +44,10 @@ export async function buildCoursePracticeSession({
   // ── Source 2: new Core 1000 words for this CEFR level ────────────────────
   const vocabExercises = await (async () => {
     try {
+      if (!userId) return []
       const [allWords, seenEntries] = await Promise.all([
         fetchCoreWords(),
-        db.srsData.where('wordId').startsWith('c1k:').toArray(),
+        db.srsData.filter((entry) => entry.userId === userId && entry.wordId.startsWith('c1k:')).toArray(),
       ])
       const seenIds = new Set(seenEntries.map((e) => e.wordId))
       const newWords = selectNewWordsForLevel(allWords, cefrLevel, seenIds, VOCAB_SLOTS)

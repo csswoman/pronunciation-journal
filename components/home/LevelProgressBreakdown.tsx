@@ -13,6 +13,7 @@ import { db } from '@/lib/db'
 import { CORE1000_PREFIX, type CoreWord } from '@/lib/core-1000/types'
 import { fetchCoreWords } from '@/lib/core-1000/client'
 import { tallyLevelProgress } from '@/lib/core-1000/level-progress'
+import { useAuth } from '@/components/auth/AuthProvider'
 
 interface Props {
   /** Aggregate ratio shown while the per-level dataset is still loading. */
@@ -20,11 +21,12 @@ interface Props {
 }
 
 export function LevelProgressBreakdown({ fallbackRatio }: Props) {
+  const { user } = useAuth()
   const [words, setWords] = useState<CoreWord[] | null>(null)
 
   const learnedIds = useLiveQuery(
-    () => db.srsData.where('wordId').startsWith(CORE1000_PREFIX).primaryKeys(),
-    [],
+    () => user?.id ? db.srsData.filter((entry) => entry.userId === user.id && entry.wordId.startsWith(CORE1000_PREFIX)).primaryKeys() : [],
+    [user?.id],
   )
 
   useEffect(() => {

@@ -60,6 +60,7 @@ describe('course lesson completion', () => {
     expect(markLessonCompleteMock).toHaveBeenCalledWith('user-1', 'a1', 'lesson-1')
     expect(transactionMock).toHaveBeenCalledWith('rw', expect.any(Array), expect.any(Function))
     expect(enqueueMock).toHaveBeenCalledWith(
+      'user-1',
       'lesson_completions',
       'upsert',
       expect.objectContaining({
@@ -71,6 +72,7 @@ describe('course lesson completion', () => {
       'user_id,course_slug,lesson_slug',
     )
     expect(enqueueMock).not.toHaveBeenCalledWith(
+      'user-1',
       'answer_history',
       expect.anything(),
       expect.anything(),
@@ -85,6 +87,7 @@ describe('course lesson completion', () => {
     expect(markLessonIncompleteMock).toHaveBeenCalledWith('user-1', 'a1', 'lesson-1')
     expect(transactionMock).toHaveBeenCalledWith('rw', expect.any(Array), expect.any(Function))
     expect(enqueueMock).toHaveBeenCalledWith(
+      'user-1',
       'lesson_completions',
       'delete',
       {},

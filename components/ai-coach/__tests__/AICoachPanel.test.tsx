@@ -3,7 +3,11 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { render, waitFor } from "@testing-library/react";
 
 const getRecentConversations =
-  vi.fn<(limit: number) => Promise<never[]>>(async () => []);
+  vi.fn<(userId: string, limit: number) => Promise<never[]>>(async () => []);
+
+vi.mock("@/components/auth/AuthProvider", () => ({
+  useAuth: () => ({ user: { id: "account-a" } }),
+}));
 
 vi.mock("@/hooks/useMediaQuery", () => ({
   useMediaQuery: () => false,
@@ -61,7 +65,7 @@ vi.mock("@/hooks/useAIPractice", () => ({
 }));
 
 vi.mock("@/lib/db/ai", () => ({
-  getRecentConversations: (limit: number) => getRecentConversations(limit),
+  getRecentConversations: (userId: string, limit: number) => getRecentConversations(userId, limit),
 }));
 
 vi.mock("../AICoachPanelParts", () => ({
@@ -104,7 +108,7 @@ describe("AICoachPanel conversation history", () => {
     render(<AICoachPanel />);
 
     await waitFor(() => {
-      expect(getRecentConversations).toHaveBeenCalledWith(30);
+      expect(getRecentConversations).toHaveBeenCalledWith("account-a", 30);
     });
   });
 });

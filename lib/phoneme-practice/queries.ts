@@ -191,7 +191,7 @@ export async function saveAnswers(
     time_ms: a.timeMs,
     exercise_payload: (a.exercisePayload ?? null) as import('@/lib/supabase/types').Json | null,
   })))
-  await Promise.all(rows.map((row) => enqueue('answer_history', 'upsert', row as Record<string, unknown>, undefined, 'id')))
+  await Promise.all(rows.map((row) => enqueue(userId, 'answer_history', 'upsert', row as Record<string, unknown>, undefined, 'id')))
 }
 
 export async function getAnswerHistoryForSound(
@@ -252,6 +252,7 @@ export async function updateContrastProgress(
   const newCorrect = (current?.correct_answers ?? 0) + sessionCorrect
 
   await enqueue(
+    userId,
     'user_contrast_progress',
     'upsert',
     {

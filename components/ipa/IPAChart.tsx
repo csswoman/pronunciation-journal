@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useLiveQuery } from "dexie-react-hooks";
+import { useAuth } from "@/components/auth/AuthProvider";
 
 import { IPA_AUDIO_MAP, SOUNDS_BASE_URL } from "@/lib/pronunciation/ipa-audio";
 import { cancelSpeech, speakText } from "@/lib/speech/synthesis";
@@ -25,6 +26,7 @@ import PracticeWithAICTA from "./PracticeWithAICTA";
 type MatrixCategory = "vowel" | "consonant" | "diphthong";
 
 export default function IPAChart() {
+  const { user } = useAuth();
   const router = useRouter();
   const [activeCategory, setActiveCategory] = useState<MatrixCategory>("vowel");
   const [selectedPhoneme, setSelectedPhoneme] = useState<PhonemeData>(
@@ -33,7 +35,7 @@ export default function IPAChart() {
   const [playingSymbol, setPlayingSymbol] = useState<string | null>(null);
   const currentAudioRef = useRef<HTMLAudioElement | null>(null);
 
-  const exploredArray = useLiveQuery(() => getExploredSymbolsToday(), [], [] as string[]);
+  const exploredArray = useLiveQuery(() => getExploredSymbolsToday(user?.id), [user?.id], [] as string[]);
   const exploredSymbols = useMemo(
     () => new Set(exploredArray ?? []),
     [exploredArray]
@@ -106,10 +108,10 @@ export default function IPAChart() {
   const handleSelect = useCallback(
     (phoneme: PhonemeData) => {
       setSelectedPhoneme(phoneme);
-      void markPhonemeExplored(phoneme.symbol);
+      void markPhonemeExplored(phoneme.symbol, user?.id);
       playSound(phoneme.rawSymbol, spokenWordFor(phoneme));
     },
-    [playSound, spokenWordFor]
+    [playSound, spokenWordFor, user?.id]
   );
 
   const handleSelectFromAnywhere = useCallback(
@@ -170,17 +172,17 @@ export default function IPAChart() {
     const snapshot = [...(exploredArray ?? [])];
     if (snapshot.length === 0) return;
     setUndoSnapshot(snapshot);
-    void resetTodaysExplorations();
+    void resetTodaysExplorations(user?.id);
     if (undoTimeoutRef.current) clearTimeout(undoTimeoutRef.current);
     undoTimeoutRef.current = setTimeout(() => setUndoSnapshot(null), 5000);
-  }, [exploredArray]);
+  }, [exploredArray, user?.id]);
 
   const handleUndoReset = useCallback(async () => {
     if (!undoSnapshot) return;
-    await Promise.all(undoSnapshot.map((symbol) => markPhonemeExplored(symbol)));
+    await Promise.all(undoSnapshot.map((symbol) => markPhonemeExplored(symbol, user?.id)));
     setUndoSnapshot(null);
     if (undoTimeoutRef.current) clearTimeout(undoTimeoutRef.current);
-  }, [undoSnapshot]);
+  }, [undoSnapshot, user?.id]);
 
   return (
     <div className="animate-fadeIn">

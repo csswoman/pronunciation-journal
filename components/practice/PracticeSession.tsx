@@ -61,6 +61,7 @@ export default function PracticeSession(config: PracticeConfig) {
     progressSaveStatus,
     handleSubmit,
     handleRetry,
+    handleRetrySync,
     handleHintContinue,
     handlePracticeAgain,
   } = useSessionState(config)
@@ -119,6 +120,7 @@ export default function PracticeSession(config: PracticeConfig) {
         result={sessionResult}
         practiceIpa={sessionIpa}
         progressSaveStatus={progressSaveStatus}
+        onRetrySync={handleRetrySync}
         onPracticeAgain={handlePracticeAgain}
         onFinish={() => onExit?.(sessionResult)}
       />

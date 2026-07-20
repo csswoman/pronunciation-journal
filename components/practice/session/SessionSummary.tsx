@@ -9,7 +9,8 @@ interface Props {
   practiceIpa?: string
   onPracticeAgain: () => void
   onFinish: () => void
-  progressSaveStatus?: 'idle' | 'saving' | 'saved' | 'error'
+  progressSaveStatus?: 'idle' | 'saving' | 'saved_local' | 'synced' | 'error'
+  onRetrySync?: () => void
 }
 
 function formatDuration(ms: number): string {
@@ -90,9 +91,11 @@ export function SessionSummary({
   onPracticeAgain,
   onFinish,
   progressSaveStatus = 'idle',
+  onRetrySync,
 }: Props) {
   const correctCount = result.results.filter((r) => r.isCorrect).length
   const showProgressStatus = progressSaveStatus !== 'idle'
+  const showRetry = Boolean(onRetrySync) && (progressSaveStatus === 'error' || progressSaveStatus === 'saved_local')
   const ipaLabel = practiceIpa ? formatIpaDisplay(practiceIpa) : null
 
   return (
@@ -119,9 +122,20 @@ export function SessionSummary({
           >
             {progressSaveStatus === 'saving'
               ? 'Guardando progreso…'
-              : progressSaveStatus === 'saved'
-                ? 'Progreso guardado.'
-                : 'No se pudo guardar el progreso. Se reintentará al recuperar la conexión.'}
+              : progressSaveStatus === 'synced'
+                ? 'Progreso sincronizado.'
+                : progressSaveStatus === 'saved_local'
+                  ? 'Progreso guardado en este dispositivo. Se sincronizará al recuperar la conexión.'
+                  : 'No se pudo guardar el progreso. Se reintentará al recuperar la conexión.'}
+            {showRetry && (
+              <button
+                type="button"
+                onClick={onRetrySync}
+                className="ml-2 font-semibold underline underline-offset-2 hover:no-underline"
+              >
+                Reintentar ahora
+              </button>
+            )}
           </p>
         )}
       </div>

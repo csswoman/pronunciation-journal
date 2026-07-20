@@ -47,76 +47,46 @@ export function saveSeen(s: Set<string>) { localStorage.setItem(LS_SEEN, JSON.st
 export function pickBatch(exclude: Set<string>): string[] { return shuffle(DEFAULT_PHRASES.filter((p) => !exclude.has(p))).slice(0, BATCH_SIZE); }
 export function initQueue(): string[] { const stored = loadQueue(); if (stored.length > 0) return stored; const batch = pickBatch(loadMastered()); saveQueue(batch); return batch; }
 
-export async function loadQueueFromDexie(): Promise<string[]> {
+export async function loadQueueFromDexie(userId: string): Promise<string[]> {
   try {
-    const values = await getPronunciationCoachState("queue");
+    const values = await getPronunciationCoachState(userId, "queue");
     if (values) return values;
-
-    const legacy = loadQueue();
-    if (legacy.length > 0) {
-      await savePronunciationCoachState("queue", legacy, { migratedFromLocalStorage: true });
-    }
-    return legacy;
+    return [];
   } catch {
-    return loadQueue();
+    return [];
   }
 }
 
-export async function saveQueueToDexie(queue: string[]): Promise<void> {
-  try {
-    await savePronunciationCoachState("queue", queue);
-    localStorage.removeItem(LS_QUEUE);
-  } catch {
-    saveQueue(queue);
-  }
+export async function saveQueueToDexie(userId: string, queue: string[]): Promise<void> {
+  await savePronunciationCoachState(userId, "queue", queue);
 }
 
-export async function loadSeenFromDexie(): Promise<Set<string>> {
+export async function loadSeenFromDexie(userId: string): Promise<Set<string>> {
   try {
-    const values = await getPronunciationCoachState("seen");
+    const values = await getPronunciationCoachState(userId, "seen");
     if (values) return new Set(values);
-
-    const legacy = loadSeen();
-    if (legacy.size > 0) {
-      await savePronunciationCoachState("seen", legacy, { migratedFromLocalStorage: true });
-    }
-    return legacy;
+    return new Set();
   } catch {
-    return loadSeen();
+    return new Set();
   }
 }
 
-export async function saveSeenToDexie(seen: Set<string>): Promise<void> {
-  try {
-    await savePronunciationCoachState("seen", seen);
-    localStorage.removeItem(LS_SEEN);
-  } catch {
-    saveSeen(seen);
-  }
+export async function saveSeenToDexie(userId: string, seen: Set<string>): Promise<void> {
+  await savePronunciationCoachState(userId, "seen", seen);
 }
 
-export async function loadMasteredFromDexie(): Promise<Set<string>> {
+export async function loadMasteredFromDexie(userId: string): Promise<Set<string>> {
   try {
-    const rows = await getPronunciationMasteredPhrases();
+    const rows = await getPronunciationMasteredPhrases(userId);
     if (rows.length > 0) return new Set(rows);
-
-    const legacy = loadMastered();
-    if (legacy.size > 0) {
-      await savePronunciationMasteredPhrases(legacy, { migratedFromLocalStorage: true });
-    }
-    return legacy;
+    return new Set();
   } catch {
-    return loadMastered();
+    return new Set();
   }
 }
 
-export async function saveMasteredToDexie(mastered: Set<string>): Promise<void> {
-  try {
-    await savePronunciationMasteredPhrases(mastered);
-    localStorage.removeItem(LS_MASTERED);
-  } catch {
-    saveMastered(mastered);
-  }
+export async function saveMasteredToDexie(userId: string, mastered: Set<string>): Promise<void> {
+  await savePronunciationMasteredPhrases(userId, mastered);
 }
 
 export async function fetchWordIPA(word: string): Promise<string | null> {

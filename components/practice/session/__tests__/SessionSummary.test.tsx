@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
-import { describe, expect, it } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { describe, expect, it, vi } from 'vitest'
+import { render, screen, fireEvent } from '@testing-library/react'
 import { formatExerciseLabel, SessionSummary } from '../SessionSummary'
 import type { SessionResult } from '@/lib/practice/types'
 
@@ -51,5 +51,28 @@ describe('SessionSummary progress state', () => {
   it('shows an alert when progress could not be saved', () => {
     render(<SessionSummary result={result} progressSaveStatus="error" onPracticeAgain={() => {}} onFinish={() => {}} />)
     expect(screen.getByRole('alert')).toHaveTextContent(/reintentará al recuperar la conexión/i)
+  })
+
+  it('confirms sync only once every operation in the flush pass succeeded', () => {
+    render(<SessionSummary result={result} progressSaveStatus="synced" onPracticeAgain={() => {}} onFinish={() => {}} />)
+    expect(screen.getByText(/progreso sincronizado/i)).toBeInTheDocument()
+  })
+
+  it('reports local-only save when the flush left pending or failed operations', () => {
+    render(<SessionSummary result={result} progressSaveStatus="saved_local" onPracticeAgain={() => {}} onFinish={() => {}} />)
+    expect(screen.getByText(/guardado en este dispositivo/i)).toBeInTheDocument()
+    expect(screen.getByText(/se sincronizará al recuperar la conexión/i)).toBeInTheDocument()
+  })
+
+  it('offers a manual retry for saved_local and error states', () => {
+    const onRetrySync = vi.fn()
+    render(<SessionSummary result={result} progressSaveStatus="saved_local" onRetrySync={onRetrySync} onPracticeAgain={() => {}} onFinish={() => {}} />)
+    fireEvent.click(screen.getByRole('button', { name: /reintentar ahora/i }))
+    expect(onRetrySync).toHaveBeenCalledTimes(1)
+  })
+
+  it('does not offer retry once fully synced', () => {
+    render(<SessionSummary result={result} progressSaveStatus="synced" onRetrySync={() => {}} onPracticeAgain={() => {}} onFinish={() => {}} />)
+    expect(screen.queryByRole('button', { name: /reintentar ahora/i })).not.toBeInTheDocument()
   })
 })

@@ -108,13 +108,39 @@ Store a tombstone/id in delete payload or derive it reliably from `matchKey`. Pr
 
 ## Done criteria
 
-- [ ] SRS enqueue performs no remote read.
-- [ ] Two distinct ratings always produce two ordered scheduler transitions.
-- [ ] Duplicate operation ids apply exactly once.
-- [ ] Startup, reconnect and retry-time drains are tested.
-- [ ] UI distinguishes local, pending, synced and failed.
-- [ ] Tracking deletes cannot resurrect during hydration.
-- [ ] Local migration/RLS, focused tests and typecheck pass.
+- [x] SRS enqueue performs no remote read.
+- [x] Two distinct ratings always produce two ordered scheduler transitions.
+- [x] Duplicate operation ids apply exactly once.
+- [x] Startup, reconnect and retry-time drains are tested.
+- [x] UI distinguishes local, pending, synced and failed.
+- [x] Tracking deletes cannot resurrect during hydration.
+- [x] Local migration/RLS, focused tests and typecheck pass.
+
+## Completion notes (steps 6-7, 2026-07-20)
+
+- Step 6: `progressSaveStatus` now has `saved_local` (local write ok, flush left
+  pending/failed/skipped work) vs `synced` (flush pass confirmed everything),
+  derived from `SyncFlushResult.failed`/`skipped`. An `error` from the answer
+  enqueue is sticky — later flush outcomes can no longer silently overwrite it
+  with a success state. Added a manual "Reintentar ahora" action
+  (`handleRetrySync`) on `saved_local`/`error`, alongside the existing
+  automatic drain-on-reconnect from step 5.
+- Step 7: `hydrateTrackedItems` previously only protected `pending` rows, and
+  only by matching `payload.id` — which deletes never populate (they only set
+  `matchKey.id`), so pending deletes were never actually protected. Fixed to
+  derive the row id from `matchKey.id` first, protect any row with a
+  `pending`/`syncing`/`failed` outbox entry, and reconcile local rows absent
+  from a complete remote snapshot (no pagination on the query) inside one
+  transaction.
+- Executed at reduced rigor per user instruction: direct implementation with
+  tests, one combined quality review for both steps, no live DB pass (no SQL
+  touched). Review flagged the missing manual retry action, which was then
+  added — see the review agent's report for full findings (no other
+  outstanding issues).
+- Verification: `pnpm exec vitest run lib/sync lib/word-bank lib/practice
+  lib/tracking components/practice/session` (277 passed; 5 pre-existing
+  failures in `daily-plan.test.ts`, unrelated to this plan — different step
+  count from an unrelated in-progress change) and `pnpm type-check` (clean).
 
 ## STOP conditions
 

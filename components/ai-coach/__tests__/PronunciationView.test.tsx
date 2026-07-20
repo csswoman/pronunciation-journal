@@ -3,6 +3,10 @@ import { render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import PronunciationView from "../PronunciationView";
 
+vi.mock("@/components/auth/AuthProvider", () => ({
+  useAuth: () => ({ user: { id: "account-a" } }),
+}));
+
 const pronunciationMocks = vi.hoisted(() => ({
   loadMasteredFromDexie: vi.fn(async () => new Set<string>()),
   loadQueueFromDexie: vi.fn(async () => ["Could you repeat that?"]),
@@ -76,7 +80,7 @@ describe("PronunciationView", () => {
     });
 
     expect(screen.getByTestId("progress")).toHaveTextContent("0/1");
-    expect(pronunciationMocks.loadQueueFromDexie).toHaveBeenCalled();
+    expect(pronunciationMocks.loadQueueFromDexie).toHaveBeenCalledWith("account-a");
     expect(pronunciationMocks.fetchWordIPA).toHaveBeenCalled();
   });
 });

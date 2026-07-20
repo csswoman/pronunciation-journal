@@ -52,9 +52,15 @@ export default function AuthProvider({
 
   const signOutUser = useCallback(async () => {
     if (!supabaseEnabled) return;
+    // Preserve offline-first guarantees: attempt only this account's pending
+    // outbox rows, then leave any unsent rows namespaced in Dexie.
+    if (user?.id) {
+      const { flushOutbox } = await import("@/lib/sync/sync-manager");
+      await flushOutbox(user.id).catch(() => {});
+    }
     const supabase = getSupabaseBrowserClient();
     await supabase.auth.signOut();
-  }, [supabaseEnabled]);
+  }, [supabaseEnabled, user?.id]);
 
   useEffect(() => {
     if (!supabaseEnabled) {
@@ -63,7 +69,7 @@ export default function AuthProvider({
     }
 
     const supabase = getSupabaseBrowserClient();
-    const cleanupSyncListeners = initSyncListeners();
+    const cleanupSyncListeners = initSyncListeners(user?.id ?? null);
     const hydrateCEFR = async (userId: string) => {
       try {
         const { claimGuestPlacement } = await import("@/lib/courses/guest-assessment");
@@ -126,7 +132,7 @@ export default function AuthProvider({
       cleanupSyncListeners();
       subscription.unsubscribe();
     };
-  }, [initialUser, supabaseEnabled]);
+  }, [initialUser, supabaseEnabled, user?.id]);
 
   const value = useMemo<AuthContextValue>(
     () => ({
@@ -154,7 +160,9 @@ export default function AuthProvider({
   }
 
   return (
-    <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={value}>
+      <div key={user?.id ?? "signed-out"}>{children}</div>
+    </AuthContext.Provider>
   );
 }
 
