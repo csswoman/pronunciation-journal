@@ -74,14 +74,14 @@ create policy "srs_rating_events_insert_own"
 -- than branching inline — do not silently diverge from schedule.ts.
 
 create or replace function public._sm2_schedule_next(
-  p_ease numeric,
+  p_ease double precision,
   p_interval integer,
   p_repetitions integer,
   p_grade integer,
   p_now timestamptz
 )
 returns table (
-  next_ease numeric,
+  next_ease double precision,
   next_interval integer,
   next_repetitions integer,
   next_review_at timestamptz
@@ -90,12 +90,16 @@ language plpgsql
 immutable
 as $$
 declare
-  v_min_ease constant numeric := 1.3;
+  -- word_bank.ease_factor / topic_srs.ease_factor are both `double precision`
+  -- columns, not `numeric` — this function's ease parameter/return type must
+  -- match exactly, or Postgres refuses to resolve the call (no implicit
+  -- double precision -> numeric cast for function argument matching).
+  v_min_ease constant double precision := 1.3;
   -- p_grade is already an integer (the RPC callers validate/clamp 0-5 before
   -- calling this), so no rounding is needed here — schedule.ts rounds a
   -- floating grade before this point in the JS equivalent.
   v_grade integer := greatest(0, least(5, p_grade));
-  v_ease numeric := p_ease;
+  v_ease double precision := p_ease;
   v_interval integer := p_interval;
   v_repetitions integer := p_repetitions;
 begin
@@ -151,9 +155,8 @@ security definer
 set search_path = public
 as $$
 declare
-  v_inserted boolean;
+  v_inserted integer;
   v_row public.word_bank;
-  v_current record;
   v_next record;
 begin
   if p_user_id is null or p_user_id <> auth.uid() then
@@ -195,12 +198,8 @@ begin
     return v_row;
   end if;
 
-  v_current.ease_factor := v_row.ease_factor;
-  v_current.interval_days := v_row.interval_days;
-  v_current.repetitions := v_row.repetitions;
-
   select * into v_next from public._sm2_schedule_next(
-    v_current.ease_factor, v_current.interval_days, v_current.repetitions, p_grade, p_occurred_at
+    v_row.ease_factor, v_row.interval_days, v_row.repetitions, p_grade, p_occurred_at
   );
 
   update public.word_bank
@@ -251,7 +250,7 @@ security definer
 set search_path = public
 as $$
 declare
-  v_inserted boolean;
+  v_inserted integer;
   v_row public.topic_srs;
   v_next record;
   v_default_ease constant numeric := 2.5;
