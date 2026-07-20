@@ -34,6 +34,7 @@ describe("hydrateLessonCompletions", () => {
     await db.syncOutbox.add({
       table: "lesson_completions",
       operation: "upsert",
+      userId: "user-1",
       payload: { user_id: "user-1", course_slug: "a1", lesson_slug: "lesson-1" },
       status: "pending",
       createdAt: "2026-07-20T01:00:00.000Z",

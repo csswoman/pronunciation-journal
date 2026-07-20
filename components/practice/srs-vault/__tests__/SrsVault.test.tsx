@@ -45,6 +45,10 @@ vi.mock('dexie-react-hooks', () => ({
 
 vi.mock('@/lib/db', () => dbMocks)
 
+vi.mock('@/components/auth/AuthProvider', () => ({
+  useAuth: () => ({ user: { id: 'user-1' } }),
+}))
+
 import { SrsVault } from '../SrsVault'
 
 describe('SrsVault', () => {
@@ -62,6 +66,7 @@ describe('SrsVault', () => {
   it('runs archived migration once on mount', () => {
     render(<SrsVault />)
     expect(dbMocks.migrateArchivedSrsRows).toHaveBeenCalledTimes(1)
+    expect(dbMocks.migrateArchivedSrsRows).toHaveBeenCalledWith('user-1')
   })
 
   it('shows trigger text with vault count', () => {
@@ -89,6 +94,6 @@ describe('SrsVault', () => {
     await user.click(screen.getByRole('button', { name: 'Dominada' }))
     await user.click(screen.getByRole('button', { name: 'Sí, dominada' }))
 
-    expect(dbMocks.masterEssentialWord).toHaveBeenCalledWith('apple')
+    expect(dbMocks.masterEssentialWord).toHaveBeenCalledWith('apple', 'user-1')
   })
 })

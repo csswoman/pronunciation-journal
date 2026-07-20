@@ -95,6 +95,11 @@ vi.mock('@/lib/practice/daily-plan/async-step-builders', async (importOriginal) 
   }
 })
 
+vi.mock('@/lib/journal/daily-step', () => ({
+  shouldOfferJournalStep: () => false,
+  buildJournalDailyStep: vi.fn(),
+}))
+
 import {
   getDueWordsForDaily,
   getNewWordsForDaily,

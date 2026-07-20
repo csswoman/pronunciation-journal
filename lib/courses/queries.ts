@@ -52,10 +52,13 @@ export async function hydrateLessonCompletions(userId: string): Promise<void> {
 
   const remoteKeys = new Set(rows.map((row) => row.key));
   await db.transaction("rw", db.completedLessons, async () => {
-    const localRows = await db.completedLessons.where('userId').equals(userId).toArray();
+    const localRows = await db.completedLessons.toArray();
     const staleKeys = localRows
       .filter((row) => {
-        return !pendingKeys.has(row.key) && !remoteKeys.has(row.key);
+        // Records from the pre-user schema cannot be attributed safely. Once a
+        // user has authenticated, discard them instead of leaking progress.
+        if (!row.userId) return true;
+        return row.userId === userId && !pendingKeys.has(row.key) && !remoteKeys.has(row.key);
       })
       .map((row) => row.key);
 
