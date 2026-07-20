@@ -73,7 +73,7 @@ function setupFlush(pendingEntries: unknown[]) {
     if (callCount === 2) {
       return { anyOf: () => ({ modify: mocks.mockSyncOutboxModify }) }
     }
-    return { anyOf: () => ({ filter: () => ({ modify: mocks.mockSyncOutboxModify }) }) }
+    return { anyOf: () => ({ filter: (pred: (e: unknown) => boolean) => ({ modify: mocks.mockSyncOutboxModify, __ran: pendingEntries.map(pred) }) }) }
   })
   mocks.mockDbTransaction.mockImplementation(
     async (_mode: string, _tables: unknown, fn: () => Promise<unknown>) => fn()
@@ -239,5 +239,40 @@ describe('flushOutbox failure outcomes', () => {
 
     expect(result).toEqual({ synced: 0, failed: 0, skipped: 0, operations: [] })
     expect(mocks.mockSupabaseFrom).not.toHaveBeenCalled()
+  })
+
+  it('marks a claimed entry as skipped and resets it to pending when it is never resolved (safety net)', async () => {
+    // Simulate an entry that was claimed (pending -> syncing) but whose
+    // processing never produced an outcome — e.g. a bug that throws outside
+    // processEntry's own try/catch. We reproduce that by making the
+    // failure-path db.syncOutbox.update call itself reject, so processEntry's
+    // catch block never gets to push a 'failed' outcome, leaving the entry
+    // "stuck" for the safety-net sweep at the end of flushOutboxInternal.
+    const entry = {
+      id: 99,
+      table: 'answer_history',
+      operation: 'insert',
+      payload: { answer: 'stuck' },
+      status: 'pending',
+      retryCount: 0,
+      createdAt: new Date().toISOString(),
+    }
+
+    setupFlush([entry])
+
+    mocks.mockSupabaseFrom.mockReturnValue({
+      insert: vi.fn().mockResolvedValue({ error: { message: 'boom', code: undefined } }),
+    })
+    mocks.mockSyncOutboxUpdate.mockImplementation((id: number) => {
+      if (id === 99) return Promise.reject(new Error('update failed'))
+      return Promise.resolve(1)
+    })
+
+    const result = await flushOutbox('user-1')
+
+    expect(result.skipped).toBe(1)
+    expect(result.operations).toEqual(expect.arrayContaining([
+      expect.objectContaining({ id: 99, outcome: 'skipped' }),
+    ]))
   })
 })
