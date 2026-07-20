@@ -57,6 +57,7 @@ import {
   recordLessonQuizAttempt,
   savePracticeSession,
 } from '../queries'
+import type { SessionResult } from '../types'
 
 // ── A. isLessonQuizPassed ─────────────────────────────────────────────────
 
@@ -294,6 +295,7 @@ describe('savePracticeSession', () => {
           contentId: 'c1',
           context: 'courses',
           exercisePayload: {},
+          completedAt: new Date(),
         },
         {
           exerciseId: 'e2',
@@ -305,9 +307,13 @@ describe('savePracticeSession', () => {
           contentId: 'c2',
           context: 'courses',
           exercisePayload: {},
+          completedAt: new Date(),
         },
       ],
-    }
+      accuracy: 50,
+      totalTimeMs: 1500,
+      bySlug: {} as SessionResult['bySlug'],
+    } satisfies SessionResult
 
     const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
 
@@ -330,9 +336,13 @@ describe('savePracticeSession', () => {
           contentId: 'c1',
           context: 'courses',
           exercisePayload: {},
+          completedAt: new Date(),
         },
       ],
-    }
+      accuracy: 100,
+      totalTimeMs: 1000,
+      bySlug: {} as SessionResult['bySlug'],
+    } satisfies SessionResult
 
     // First call throws, second succeeds
     mocks.mockEnqueue
