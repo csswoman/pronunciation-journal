@@ -103,6 +103,11 @@ export interface Exercise {
   abxAnswer?: 0 | 1
   /** For odd-one-out: index of the odd stimulus in stimuli[]. */
   oddIndex?: number
+  /**
+   * Plan 062: contrast key this exercise attributes evidence to
+   * (e.g. `θ|ð`). Set by adaptive session builders.
+   */
+  contrastId?: string
 }
 
 export interface UserSoundProgress {

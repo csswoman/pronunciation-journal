@@ -11,7 +11,7 @@ import { useUserPreferences } from "@/hooks/useUserPreferences";
 import { useUISoundsStore } from "@/lib/stores/uiSoundsStore";
 import { CEFR_LEVELS, type CefrLevel } from "@/lib/core-1000/types";
 import { readGuestStudyLevel, saveGuestStudyLevel } from "@/lib/preferences/guest-study-level";
-import { LogIn, LogOut, Moon, RotateCcw, Settings2, Sun, Target, User, Volume2 } from "@/components/icons";
+import { LogIn, LogOut, Moon, RotateCcw, Settings2, Sun, Target, Volume2 } from "@/components/icons";
 import { useSidebar } from "@/components/theme/sidebar/SidebarContext";
 
 export default function SidebarFooter() {

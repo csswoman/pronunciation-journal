@@ -8,6 +8,14 @@ const MAX_SENTENCE_CONTEXT = 4
 const OPTIONS_COUNT = 4
 
 /**
+ * Lexicon catalog entry plus optional resolved `word_bank` PK.
+ * `id` stays the catalog/content id; `bankId` is the real UUID when saved.
+ */
+export type SentenceContextSourceWord = WordEntry & {
+  bankId?: string | null
+}
+
+/**
  * Generate sentence_context exercises from a pool of WordEntry.
  *
  * For each word that has a non-empty exampleSentence and whose word appears
@@ -16,10 +24,13 @@ const OPTIONS_COUNT = 4
  * needed. The correct word is never used as a distractor.
  *
  * Returns at most MAX_SENTENCE_CONTEXT exercises.
+ *
+ * Identity (plan 062): `sourceRef` is `word_bank`+UUID when `bankId` is set;
+ * otherwise `lexicon`+catalog id (answer evidence only, no bank SRS).
  */
 export function generateSentenceContextExercises(
-  candidateWords: WordEntry[],
-  sessionPool: WordEntry[],
+  candidateWords: SentenceContextSourceWord[],
+  sessionPool: SentenceContextSourceWord[],
 ): SentenceContextExercise[] {
   const usable = candidateWords.filter((w) => {
     if (!w.exampleSentence) return false
@@ -39,7 +50,9 @@ export function generateSentenceContextExercises(
     return {
       id: exerciseId('sentence_context', word.id, 'v1'),
       type: 'sentence_context',
-      sourceRef: { source: 'word_bank', id: word.id },
+      sourceRef: word.bankId
+        ? { source: 'word_bank', id: word.bankId }
+        : { source: 'lexicon', id: word.id },
       topic: VOCABULARY_TOPIC,
       sentence: blanked,
       fullSentence: word.exampleSentence!,
@@ -51,8 +64,8 @@ export function generateSentenceContextExercises(
 }
 
 function pickDistractors(
-  target: WordEntry,
-  pool: WordEntry[],
+  target: SentenceContextSourceWord,
+  pool: SentenceContextSourceWord[],
 ): SentenceContextOption[] {
   const needed = OPTIONS_COUNT - 1
   const others = pool.filter((w) => w.id !== target.id)

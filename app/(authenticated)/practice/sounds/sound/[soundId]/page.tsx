@@ -8,10 +8,10 @@ import { SessionLoadingShell } from '@/components/practice/session/SessionLoadin
 import { PhonemeLessonIntro } from '@/components/phoneme-practice/PhonemeLessonIntro'
 import Button from '@/components/ui/Button'
 import {
-  getContrastProgress,
+  getAllContrastProgress,
   getSessionDataset,
 } from '@/lib/phoneme-practice/queries'
-import { finishContrastSession } from '@/lib/phoneme-practice/finish-session'
+import { finishAttributedContrastSessions } from '@/lib/phoneme-practice/finish-session'
 import { buildMixedSession } from '@/lib/phoneme-practice/mixed-session'
 import { fromMixedExercise } from '@/lib/practice/adapters'
 import { PHONEME_CONFUSION, contrastKey } from '@/lib/phoneme-practice/phoneme-similarity'
@@ -49,15 +49,18 @@ export default function SoundPracticePage() {
       setSoundIpa(sound.ipa)
 
       const cid = primaryContrastId(sound.ipa)
+      const allProgress = await getAllContrastProgress(user.id)
       if (cid) {
-        const progress = await getContrastProgress(user.id, cid)
+        const progress = allProgress.find((p) => p.contrast_id === cid) ?? null
         setShowIntro(!progress || progress.total_attempts === 0)
       } else {
         setShowIntro(false)
       }
 
       const targetWords = wordsBySoundId.get(soundId) ?? []
-      const mixed = buildMixedSession(sound, targetWords, sounds, wordsBySoundId, minimalPairs)
+      const mixed = buildMixedSession(sound, targetWords, sounds, wordsBySoundId, minimalPairs, {
+        contrastProgress: allProgress,
+      })
       setExercises(mixed.map((m) => fromMixedExercise(m, 'sound_lab')))
       setSessionKey((k) => k + 1)
     } catch {
@@ -74,17 +77,16 @@ export default function SoundPracticePage() {
   const handleSessionComplete = useCallback(
     async (result: SessionResult) => {
       if (!user || result.results.length === 0) return
-      const cid = primaryContrastId(soundIpa)
-      if (!cid) return
       try {
         // PracticeSession already records the activity_sessions row.
-        const outcome = await finishContrastSession(user.id, cid, result, undefined, new Date(), false)
-        setNextReview(outcome.nextReview)
+        // Plan 062: update each attributed contrast independently.
+        const outcome = await finishAttributedContrastSessions(user.id, result)
+        if (outcome.nextReview) setNextReview(outcome.nextReview)
       } catch (err) {
-        console.error('[SoundPracticePage] finishContrastSession failed', err)
+        console.error('[SoundPracticePage] finishAttributedContrastSessions failed', err)
       }
     },
-    [user, soundIpa],
+    [user],
   )
 
   const sessionConfig = useMemo(() => {
