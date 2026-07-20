@@ -9,7 +9,7 @@
 - **Priority**: P1 product/pedagogy
 - **Effort**: L
 - **Risk**: HIGH
-- **Depends on**: 059, 060, 062
+- **Depends on**: 059, 060, 062, 066
 - **Category**: direction, bug
 - **Planned at**: commit `c779781b`, 2026-07-19
 
