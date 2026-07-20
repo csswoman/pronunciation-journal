@@ -23,15 +23,18 @@ import { db } from '@/lib/db'
 import { savePracticeAnswer } from '../queries'
 import type { PracticeAnswer } from '../types'
 
+const WORD_BANK_UUID = '550e8400-e29b-41d4-a716-446655440000'
+
 const baseAnswer: PracticeAnswer = {
   exerciseId: 'e1',
   slug: 'fill_blank',
   exerciseTypeId: 5,
   isCorrect: true,
   timeMs: 1000,
-  contentId: 'word_bank:word-1',
+  contentId: `word_bank:${WORD_BANK_UUID}`,
   context: 'practice',
-  sourceRef: { source: 'word_bank', id: 'word-1' },
+  // Plan 062: word_bank sourceRef.id must be a real UUID (catalog ids are rejected).
+  sourceRef: { source: 'word_bank', id: WORD_BANK_UUID },
   topic: 'grammar:present simple',
 }
 
@@ -58,7 +61,7 @@ describe('savePracticeAnswer transactional atomicity', () => {
 
     const ratingEvents = await db.srsRatingEvents.where('userId').equals('user-1').toArray()
     expect(ratingEvents).toHaveLength(2)
-    expect(ratingEvents.some((e) => e.entityType === 'word_bank' && e.entityId === 'word-1')).toBe(true)
+    expect(ratingEvents.some((e) => e.entityType === 'word_bank' && e.entityId === WORD_BANK_UUID)).toBe(true)
     expect(ratingEvents.some((e) => e.entityType === 'topic_srs' && e.topic === 'grammar:present simple')).toBe(true)
   })
 
