@@ -16,6 +16,9 @@ vi.mock('@/lib/exercises/evaluation/word-results', () => ({
   getEvaluationWordResults: vi.fn(() => []),
 }))
 vi.mock('@/hooks/useSpeechRecognition', () => speechMocks)
+vi.mock('@/lib/phoneme-practice/tts', () => ({
+  speak: vi.fn(),
+}))
 vi.mock('@/components/lesson/PronunciationFeedback', () => ({
   default: () => <div>Pronunciation feedback</div>,
 }))
@@ -35,7 +38,8 @@ const exercise = {
 
 describe('SpeakScoredExercise', () => {
   beforeEach(() => {
-    vi.clearAllMocks()
+    evaluationMocks.evaluate.mockReset()
+    speechMocks.useSpeechRecognition.mockReset()
   })
 
   it('forwards the measured score when continuing after speech evaluation', async () => {
@@ -53,7 +57,12 @@ describe('SpeakScoredExercise', () => {
 
     render(<SpeakScoredExercise exercise={exercise} onSubmit={onSubmit} />)
 
-    fireEvent.click(await screen.findByRole('button', { name: 'Continue' }))
+    // Wait for the async evaluate → scored UI path (effect + promise)
+    await waitFor(() => {
+      expect(evaluationMocks.evaluate).toHaveBeenCalled()
+    })
+    const continueBtn = await screen.findByRole('button', { name: 'Continue' }, { timeout: 3000 })
+    fireEvent.click(continueBtn)
 
     expect(onSubmit).toHaveBeenCalledWith(true, 'thought', { score: 72 })
   })
