@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { cn } from "@/lib/cn";
 
 const IMAGES = [
   "/images/1.png",
@@ -16,10 +17,7 @@ export function AuthMobileIdentity({ index }: AuthMobileIdentityProps) {
   const active = index % IMAGES.length;
 
   return (
-    <div
-      className="relative lg:hidden overflow-hidden"
-      style={{ minHeight: "clamp(200px, 40vh, 320px)" }}
-    >
+    <div className="auth-mobile-hero relative lg:hidden overflow-hidden">
       {/* All images stacked — active one fades in */}
       {IMAGES.map((src, i) => (
         <Image
@@ -27,13 +25,11 @@ export function AuthMobileIdentity({ index }: AuthMobileIdentityProps) {
           src={src}
           alt=""
           fill
-          className="object-cover object-center"
-          style={{
-            opacity: i === active ? 1 : 0,
-            transition: i === active
-              ? "opacity 1200ms cubic-bezier(0.16, 1, 0.3, 1)"
-              : "opacity 800ms cubic-bezier(0.4, 0, 0.2, 1)",
-          }}
+          className={cn(
+            "object-cover object-center",
+            i === active ? "auth-image-fade" : "auth-image-fade--out"
+          )}
+          style={{ opacity: i === active ? 1 : 0 }}
           quality={70}
           priority={i === 0}
         />
@@ -43,10 +39,7 @@ export function AuthMobileIdentity({ index }: AuthMobileIdentityProps) {
       <div className="absolute inset-0 bg-black/50" />
 
       {/* Bottom-to-top gradient reinforces text contrast */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{ background: "linear-gradient(to top, oklch(0 0 0 / 0.6) 0%, oklch(0 0 0 / 0.15) 60%, transparent 100%)" }}
-      />
+      <div className="auth-mobile-gradient absolute inset-0 pointer-events-none" />
 
       {/* Wordmark — always white against the dark overlay */}
       <div className="absolute inset-x-0 bottom-0 px-6 pb-7 z-10">

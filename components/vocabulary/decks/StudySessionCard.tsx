@@ -1,6 +1,7 @@
 "use client";
 
 import { H2 } from "@/components/ui/Typography";
+import { cn } from "@/lib/cn";
 import { blankOutWord, speakWord } from "./study-utils";
 import type { StudyCardData } from "@/lib/decks/study-source";
 
@@ -21,19 +22,12 @@ export function StudySessionCard({ card, flipped, onFlip, onSkip }: StudySession
   return (
     <button
       type="button"
-      className="w-full max-w-sm cursor-pointer select-none text-left"
-      style={{ perspective: "1000px" }}
+      className="flip-card-perspective w-full max-w-sm cursor-pointer select-none text-left"
       onClick={onFlip}
       aria-label={flipped ? "Flip card to front" : "Flip card to see answer"}
     >
       <div
-        className="relative"
-        style={{
-          transformStyle: "preserve-3d",
-          transition: "transform 0.55s cubic-bezier(0.4, 0, 0.2, 1)",
-          transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)",
-          minHeight: 280,
-        }}
+        className={cn("flip-card-inner", flipped && "flip-card-inner--flipped")}
       >
         <CardFace onSkip={onSkip}>
           <WordDisplay word={card.front} ipa={card.ipa ?? null} />

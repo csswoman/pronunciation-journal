@@ -27,7 +27,7 @@ export default function ProgressBar({
         />
       </div>
       {showLabel && (
-        <span className="text-tiny tabular-nums font-medium shrink-0" style={{ color }}>
+        <span className="text-tiny tabular-nums font-medium shrink-0" style={{ color: color }}>
           {pct}%
         </span>
       )}

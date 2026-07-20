@@ -31,11 +31,11 @@ export function AudioButtons({
 }
 
 export function WordCountDashes({ count }: { count: number }) {
-  return <div className="flex items-center justify-center gap-1.5 py-1">{Array.from({ length: count }).map((_, index) => <span key={index} className="h-px w-[18px] bg-border-strong" />)}</div>
+  return <div className="flex items-center justify-center gap-1.5 py-1">{Array.from({ length: count }).map((_, index) => <span key={index} className="h-px w-[16px] bg-border-strong" />)}</div>
 }
 
 export function AnswerInput({ inputRef, value, disabled, onChange, onKeyDown }: { inputRef: RefObject<HTMLTextAreaElement | null>; value: string; disabled: boolean; onChange: (value: string) => void; onKeyDown: (event: KeyboardEvent<HTMLTextAreaElement>) => void }) {
-  return <textarea ref={inputRef} value={value} disabled={disabled} onChange={(event) => onChange(event.target.value)} onKeyDown={onKeyDown} rows={3} placeholder="Type what you hear…" className={cn('w-full resize-none rounded-(--radius-lg) border bg-surface-raised px-4 py-3.5 text-[15px] text-fg outline-none transition-all duration-150 placeholder:text-fg-subtle', disabled ? 'cursor-default border-border-subtle text-fg-subtle' : 'border-border-default focus:border-primary')} />
+  return <textarea ref={inputRef} value={value} disabled={disabled} onChange={(event) => onChange(event.target.value)} onKeyDown={onKeyDown} rows={3} placeholder="Type what you hear…" className={cn('w-full resize-none rounded-lg border bg-surface-raised px-4 py-3.5 text-[15px] text-fg outline-none transition-all duration-150 placeholder:text-fg-subtle', disabled ? 'cursor-default border-border-subtle text-fg-subtle' : 'border-border-default focus:border-primary')} />
 }
 
 export function CheckButton({ disabled, onSubmit }: { disabled: boolean; onSubmit: () => void }) {

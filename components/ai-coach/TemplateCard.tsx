@@ -70,11 +70,11 @@ export default function TemplateCard({ template, onSelect }: TemplateCardProps) 
         className="absolute top-3 right-3 size-7 rounded-full flex items-center justify-center opacity-0 -translate-x-1 transition-[opacity,transform] duration-200 group-hover:opacity-100 group-hover:translate-x-0"
         style={{ backgroundColor: `color-mix(in srgb, ${color} 14%, transparent)` }}
       >
-        <ArrowUpRight size={14} strokeWidth={2.2} style={{ color }} />
+        <ArrowUpRight size={14} strokeWidth={2.2} style={{ color: color }} />
       </span>
 
       <div className="size-10 rounded-xl flex items-center justify-center mb-3 transition-transform duration-200 group-hover:scale-105" style={accentStyle}>
-        <Icon size={19} strokeWidth={2} style={{ color }} />
+        <Icon size={19} strokeWidth={2} style={{ color: color }} />
       </div>
 
       <p className="text-[15px] font-semibold leading-[1.3] text-[var(--text-primary)]">

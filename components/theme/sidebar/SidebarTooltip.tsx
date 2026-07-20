@@ -40,7 +40,7 @@ export function SidebarTooltipPortal({ label, top, left, visible }: SidebarToolt
   return createPortal(
     <span
       className="fixed z-[9999] px-2 py-1 rounded-md text-xs font-medium whitespace-nowrap shadow-md pointer-events-none -translate-y-1/2 bg-surface-raised text-fg border border-border-default"
-      style={{ top, left }}
+      style={{ top: top, left: left }}
     >
       {label}
     </span>,

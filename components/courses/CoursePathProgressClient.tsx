@@ -138,6 +138,7 @@ export default function CoursePathProgressClient({ level, compactHead }: CourseP
       <div className="course-path__units" aria-label="Unidades del curso">
         {derived.units.map((unit) => {
           const completedCount = unit.lessons.filter((lesson) => lesson.state === "done").length;
+          const progressPercent = unit.progressPercent;
 
           return (
             <details
@@ -152,11 +153,11 @@ export default function CoursePathProgressClient({ level, compactHead }: CourseP
               <summary className="course-path__urow">
                 <div
                   className="course-path__ring"
-                  style={{ "--p": unit.progressPercent } as React.CSSProperties}
+                  style={{ "--p": progressPercent } as React.CSSProperties}
                   role="img"
-                  aria-label={`${unit.progressPercent}% completada`}
+                  aria-label={`${progressPercent}% completada`}
                 >
-                  <div className="course-path__ring-inner" aria-hidden>{unit.progressPercent}%</div>
+                  <div className="course-path__ring-inner" aria-hidden>{progressPercent}%</div>
                 </div>
                 <div className="course-path__uinfo">
                   <div className="course-path__un">{unit.unit.label}</div>

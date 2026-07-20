@@ -235,3 +235,39 @@
   opacity: 0.25;
   animation: drift2 26s ease-in-out infinite reverse;
 }
+
+/* ── Auth image crossfade ────────────────────────────────────────────────── */
+.auth-image-fade {
+  transition: opacity 1200ms var(--ease-out-expo);
+}
+.auth-image-fade--out {
+  transition: opacity 800ms var(--transition-base);
+}
+.auth-image-gradient {
+  background: linear-gradient(to top, var(--scrim-medium), transparent);
+}
+.auth-mobile-hero {
+  min-height: clamp(200px, 40vh, 320px);
+}
+.auth-mobile-gradient {
+  background: linear-gradient(to top, var(--scrim-strong) 0%, var(--scrim-weak) 60%, transparent 100%);
+}
+
+/* ── Flip card (study deck) ──────────────────────────────────────────────── */
+.flip-card-perspective {
+  perspective: 1000px;
+}
+.flip-card-inner {
+  transform-style: preserve-3d;
+  transition: transform 0.55s var(--transition-base);
+  position: relative;
+  min-height: 280px;
+}
+.flip-card-inner--flipped {
+  transform: rotateY(180deg);
+}
+
+/* ── Accuracy ring (SVG progress circle) ─────────────────────────────────── */
+.accuracy-ring-progress {
+  transition: stroke-dasharray 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}

@@ -1,6 +1,7 @@
 "use client";
 
 import { Bookmark, SkipForward, Volume2 } from "@/components/icons";
+import { cn } from "@/lib/cn";
 import Button from "@/components/ui/Button";
 import { blankOutWord, speakWord } from "./study-utils";
 import { H2 } from "@/components/ui/Typography";
@@ -101,18 +102,13 @@ export function StudyCard({
   return (
     <button
       type="button"
-      style={{ perspective: "1000px" }}
-      className="w-full max-w-sm cursor-pointer select-none text-left"
+      className="flip-card-perspective w-full max-w-sm cursor-pointer select-none text-left"
       onClick={onFlip}
       aria-label={flipped ? "Flip card to front" : "Flip card to see answer"}
     >
-      <div style={{
-        transformStyle: "preserve-3d",
-        transition: "transform 0.55s cubic-bezier(0.4, 0, 0.2, 1)",
-        transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)",
-        position: "relative",
-        minHeight: "280px",
-      }}>
+      <div
+        className={cn("flip-card-inner", flipped && "flip-card-inner--flipped")}
+      >
         {/* Front */}
         {cardFace(
           <>

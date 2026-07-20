@@ -46,11 +46,13 @@ export default async function LessonDetailPage({ params }: { params: Promise<{ i
     difficulty: w.difficulty,
   }));
 
+  const lexiconCatColor = category.color;
+
   return (
     <PageLayout>
       <div
         className="lexicon-area"
-        style={{ "--lexicon-cat": category.color } as CSSProperties}
+        style={{ "--lexicon-cat": lexiconCatColor } as CSSProperties}
       >
         <Section spacing="lg">
           <LessonDetailActions

@@ -24,6 +24,7 @@ export function StudyRatingBar({ flipped, progress, onRate }: StudyRatingBarProp
       <div className="grid grid-cols-3 gap-2 max-w-2xl mx-auto">
         {(Object.entries(RATING_CONFIG) as [DifficultyKey, typeof RATING_CONFIG[DifficultyKey]][]).map(([key, cfg]) => {
           const timeLabel = previewInterval(progress, cfg.q);
+          const ratingColor = cfg.color;
           return (
             <button
               key={key}
@@ -43,7 +44,7 @@ export function StudyRatingBar({ flipped, progress, onRate }: StudyRatingBarProp
               }}
             >
               {flipped ? (
-                <span className="text-sm font-bold" style={{ color: cfg.color }}>{cfg.label}</span>
+                <span className="text-sm font-bold" style={{ color: ratingColor }}>{cfg.label}</span>
               ) : (
                 <Lock size={15} className="text-fg-subtle mb-0.5" />
               )}

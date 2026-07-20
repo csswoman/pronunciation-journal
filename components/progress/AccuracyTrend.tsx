@@ -8,11 +8,17 @@ interface Props {
   stats: AccuracyStats
 }
 
-function qualityLabel(accuracy: number): { text: string; color: string } {
-  if (accuracy >= 85) return { text: 'Excellent', color: 'var(--success)' }
-  if (accuracy >= 70) return { text: 'Good', color: 'var(--primary)' }
-  if (accuracy >= 50) return { text: 'Improving', color: 'var(--warning)' }
-  return { text: 'Keep going', color: 'var(--warning-deco)' }
+function qualityLabel(accuracy: number): { text: string; className: string; strokeClass: string } {
+  if (accuracy >= 85) {
+    return { text: 'Excellent', className: 'text-[var(--success)]', strokeClass: 'stroke-[var(--success)]' }
+  }
+  if (accuracy >= 70) {
+    return { text: 'Good', className: 'text-[var(--primary)]', strokeClass: 'stroke-[var(--primary)]' }
+  }
+  if (accuracy >= 50) {
+    return { text: 'Improving', className: 'text-[var(--warning)]', strokeClass: 'stroke-[var(--warning)]' }
+  }
+  return { text: 'Keep going', className: 'text-[var(--warning-deco)]', strokeClass: 'stroke-[var(--warning-deco)]' }
 }
 
 export function AccuracyTrend({ stats }: Props) {
@@ -37,14 +43,14 @@ export function AccuracyTrend({ stats }: Props) {
               strokeLinecap="round"
               className="stroke-surface-sunken"
             />
-            {hasData ? (
+            {quality ? (
               <path
                 d="M16 90 A74 74 0 0 1 164 90"
                 fill="none"
                 strokeWidth={12}
                 strokeLinecap="round"
                 strokeDasharray={`${dash} ${circumference}`}
-                style={{ stroke: quality?.color ?? 'var(--primary)' }}
+                className={quality.strokeClass}
               />
             ) : null}
           </svg>
@@ -54,7 +60,7 @@ export function AccuracyTrend({ stats }: Props) {
         </div>
 
         {quality ? (
-          <p className="mt-0.5 text-body-sm font-semibold" style={{ color: quality.color }}>
+          <p className={`mt-0.5 text-body-sm font-semibold ${quality.className}`}>
             {quality.text}
           </p>
         ) : null}
