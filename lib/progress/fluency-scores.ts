@@ -114,7 +114,7 @@ function retentionForSkill(skill: SkillKey, input: FluencyScoreInput): number {
         : 0
     case 'grammar':
     case 'reading':
-      return Math.min(100, lessonsCompleted * 12)
+      return Math.min(100, lessonsCompleted * 8)
     default:
       return 0
   }

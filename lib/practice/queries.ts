@@ -6,6 +6,7 @@ import { normalizeTopic } from '@/lib/practice/normalize-topic'
 import { enqueueTopicSRSUpdate } from '@/lib/practice/topic-srs-queries'
 import { upsertFragmentSrs } from '@/lib/practice/fragment-srs'
 import {
+  db,
   isLessonComplete,
   markLessonComplete,
   markLessonIncomplete,
@@ -16,6 +17,7 @@ import { recordActivitySession } from '@/lib/progress/activity-hub'
 import type {
   PracticeAnswer,
   PracticeContext,
+  ExerciseResult,
   SessionResult,
 } from './types'
 
@@ -23,58 +25,54 @@ function supabase() {
   return getSupabaseBrowserClient()
 }
 
-/**
- * Marks a course/mini-lesson as complete in Dexie AND records a row in
- * answer_history (context='courses') so lesson completions appear in streak
- * and consistency charts. Best-effort: Supabase failure never blocks the
- * local Dexie write.
- */
-export async function recordLessonComplete(courseSlug: string, lessonSlug: string): Promise<void> {
-  if (await isLessonComplete(courseSlug, lessonSlug)) return
+export const LESSON_QUIZ_PASS_THRESHOLD = 0.7
 
-  const { data: { user } } = await supabase().auth.getUser()
-  if (user) {
-    const lessonId = `${courseSlug}:${lessonSlug}`
-    const answer = {
-      exerciseId: lessonId,
-      exerciseTypeId: 5, // fill_blank — closest to "reading/completing a lesson"
-      slug: 'fill_blank',
-      isCorrect: true,
-      contentId: lessonId,
-      context: 'courses',
-      timeMs: 0,
-    } as const
-    await savePracticeAnswer(user.id, answer)
-    await recordActivitySession(user.id, {
-      practiceContext: 'courses',
-      sessionResult: buildSessionResult([{ ...answer, completedAt: new Date() }]),
-      metadata: { lessonSlug },
-    })
-  }
-
-  await markLessonComplete(courseSlug, lessonSlug)
+export function isLessonQuizPassed(correct: number, total: number): boolean {
+  return total > 0 && correct / total >= LESSON_QUIZ_PASS_THRESHOLD
 }
 
-/** Reverses local completion and removes its remote progress event(s). */
+/** Marks course/mini-lesson content complete without inventing quiz evidence. */
+export async function recordLessonComplete(courseSlug: string, lessonSlug: string): Promise<void> {
+  const { data: { user } } = await supabase().auth.getUser()
+  if (!user) throw new Error('Cannot record lesson completion without an authenticated user')
+  if (await isLessonComplete(user.id, courseSlug, lessonSlug)) return
+
+  const completedAt = new Date().toISOString()
+  await db.transaction('rw', [db.completedLessons, db.syncOutbox], async () => {
+    await markLessonComplete(user.id, courseSlug, lessonSlug)
+    await enqueue(
+      'lesson_completions',
+      'upsert',
+      {
+        user_id: user.id,
+        course_slug: courseSlug,
+        lesson_slug: lessonSlug,
+        completed_at: completedAt,
+        source: 'lesson_completion',
+        updated_at: completedAt,
+      },
+      undefined,
+      'user_id,course_slug,lesson_slug',
+    )
+  })
+}
+
+/** Reverses only the completion marker; genuine quiz answers/sessions remain evidence. */
 export async function recordLessonIncomplete(
   courseSlug: string,
   lessonSlug: string,
 ): Promise<void> {
   const { data: { user } } = await supabase().auth.getUser()
-  if (user) {
-    await enqueue(
-      'answer_history',
-      'delete',
-      {},
-      {
-        user_id: user.id,
-        context: 'courses',
-        content_id: `${courseSlug}:${lessonSlug}`,
-      },
-    )
-  }
+  if (!user) throw new Error('Cannot remove lesson completion without an authenticated user')
 
-  await markLessonIncomplete(courseSlug, lessonSlug)
+  await db.transaction('rw', [db.completedLessons, db.syncOutbox], async () => {
+    await markLessonIncomplete(user.id, courseSlug, lessonSlug)
+    await enqueue('lesson_completions', 'delete', {}, {
+      user_id: user.id,
+      course_slug: courseSlug,
+      lesson_slug: lessonSlug,
+    })
+  })
 }
 
 /**
@@ -143,6 +141,62 @@ export async function savePracticeAnswer(
   // Enqueue SRS update for the concept (topic) when the exercise carries one.
   if (normalizedTopic) {
     await enqueueTopicSRSUpdate(userId, normalizedTopic, grade)
+  }
+}
+
+export interface LessonQuizAnswerInput {
+  questionId: string
+  courseSlug: string
+  lessonSlug: string
+  question: string
+  selectedAnswer: string
+  correctAnswer: string
+  isCorrect: boolean
+  timeMs: number
+  topic?: string
+}
+
+export async function recordLessonQuizAttempt(
+  userId: string,
+  answers: LessonQuizAnswerInput[],
+): Promise<{ passed: boolean; correct: number; total: number }> {
+  const completedAt = new Date()
+  const results: ExerciseResult[] = answers.map((answer) => ({
+    exerciseId: answer.questionId,
+    slug: 'multiple_choice',
+    exerciseTypeId: 17,
+    isCorrect: answer.isCorrect,
+    userAnswer: answer.selectedAnswer,
+    timeMs: answer.timeMs,
+    contentId: `${answer.courseSlug}:${answer.lessonSlug}:${answer.questionId}`,
+    context: 'courses',
+    exercisePayload: {
+      question: answer.question,
+      correctAnswer: answer.correctAnswer,
+      lessonSlug: answer.lessonSlug,
+    },
+    topic: answer.topic,
+    completedAt,
+  }))
+
+  await Promise.all(results.map((result) => savePracticeAnswer(userId, result)))
+
+  const sessionResult = buildSessionResult(results)
+  await recordActivitySession(userId, {
+    practiceContext: 'courses',
+    sessionResult,
+    metadata: {
+      lessonSlug: answers[0]?.lessonSlug,
+      dailyTargetId: answers[0] ? `${answers[0].courseSlug}:${answers[0].lessonSlug}` : undefined,
+      quizPassed: isLessonQuizPassed(sessionResult.results.filter((r) => r.isCorrect).length, sessionResult.results.length),
+    },
+  })
+
+  const correct = sessionResult.results.filter((r) => r.isCorrect).length
+  return {
+    passed: isLessonQuizPassed(correct, sessionResult.results.length),
+    correct,
+    total: sessionResult.results.length,
   }
 }
 

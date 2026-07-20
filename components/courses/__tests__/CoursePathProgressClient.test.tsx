@@ -19,6 +19,10 @@ vi.mock("@/lib/db", () => ({
   },
 }));
 
+vi.mock("@/lib/supabase/client", () => ({
+  getSupabaseBrowserClient: () => ({ auth: { getUser: async () => ({ data: { user: { id: "user-1" } } }) } }),
+}));
+
 import CoursePathProgressClient from "../CoursePathProgressClient";
 
 describe("CoursePathProgressClient", () => {

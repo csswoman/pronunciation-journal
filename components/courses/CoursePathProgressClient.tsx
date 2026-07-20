@@ -7,6 +7,7 @@ import CoursePathLessonRow from "@/components/courses/CoursePathLessonRow";
 import CoursePracticeSuggestions from "@/components/courses/CoursePracticeSuggestions";
 import { studyLessonPath } from "@/lib/courses/curriculumIndex";
 import { db } from "@/lib/db";
+import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { deriveLevelView, lessonProgressKey } from "@/lib/courses/progress";
 import { cn } from "@/lib/cn";
 import type { CoursePathLevel } from "@/lib/courses/types";
@@ -14,6 +15,19 @@ import type { CoursePathLevel } from "@/lib/courses/types";
 interface CoursePathProgressClientProps {
   level: CoursePathLevel;
   compactHead?: boolean;
+}
+
+async function getOptionalUserId(): Promise<string | null> {
+  try {
+    const { data: { user } } = await getSupabaseBrowserClient().auth.getUser();
+    return user?.id ?? null;
+  } catch {
+    return null;
+  }
+}
+
+function completionKey(userId: string, courseSlug: string, lessonSlug: string): string {
+  return `${userId}:${courseSlug}:${lessonSlug}`;
 }
 
 export default function CoursePathProgressClient({ level, compactHead }: CoursePathProgressClientProps) {
@@ -28,8 +42,17 @@ export default function CoursePathProgressClient({ level, compactHead }: CourseP
     setLoadError(false);
 
     async function loadProgress() {
+      const userId = await getOptionalUserId();
+
+      if (!userId) {
+        if (!cancelled) setCompletedIds(new Set());
+        return;
+      }
+
       const rows = await db.completedLessons.bulkGet(
-        level.units.flatMap((unit) => unit.lessons.map((lesson) => lessonProgressKey(level.id, lesson.id)))
+        level.units.flatMap((unit) =>
+          unit.lessons.map((lesson) => completionKey(userId, level.id, lesson.id))
+        )
       );
 
       if (cancelled) return;

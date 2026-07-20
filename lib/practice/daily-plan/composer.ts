@@ -116,15 +116,25 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
     reviewWords = await fetchCoreWordsForDay(dayOfYear(), WORD_REVIEW_WORD_COUNT)
   }
 
+  const readCompletedLessons = async () => {
+    const store = db.completedLessons as typeof db.completedLessons & {
+      toArray?: () => Promise<Array<{ key: string; userId?: string; courseSlug?: string; lessonSlug?: string }>>
+    }
+    if (typeof store.where === 'function') {
+      return store.where('userId').equals(userId).toArray()
+    }
+    return (await store.toArray?.() ?? []).filter((lesson) => lesson.userId === userId)
+  }
+
   const [weakest, localLearningState, completedLessons] = await Promise.all([
     fetchWeakestSoundProgress(userId),
     db.learningState.get(userId).catch(() => null),
-    db.completedLessons.toArray().catch(() => []),
+    readCompletedLessons().catch(() => []),
   ])
   const aiState = localLearningState?.state ?? null
   const hasProgress = weakest != null
   const activeLevel = localLearningState?.state.level.cefrEstimate.toLowerCase() as import('@/lib/courses/types').CefrLevelId | undefined
-  const completedLessonIds = new Set(completedLessons.map((lesson) => lesson.key))
+  const completedLessonIds = new Set(completedLessons.map((lesson) => `${lesson.courseSlug}:${lesson.lessonSlug}`))
 
   let primarySound: Sound | null = weakest
   if (!primarySound && aiState) {

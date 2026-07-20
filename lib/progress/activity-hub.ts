@@ -26,6 +26,8 @@ export type ActivitySessionInput = {
     contrastId?: string
     lessonSlug?: string
     coachTool?: string
+    dailyTargetId?: string
+    quizPassed?: boolean
   }
 }
 
@@ -138,7 +140,7 @@ export function buildSessionTelemetry(
   const reconciledStepIds =
     practiceContext === 'daily'
       ? []
-      : reconcileDailySteps(planSteps, sessionResult, practiceContext)
+    : reconcileDailySteps(planSteps, sessionResult, practiceContext, input.metadata)
 
   return {
     activitySession: {

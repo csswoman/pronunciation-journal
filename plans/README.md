@@ -76,7 +76,7 @@ your row when done.
 | 056 | Add `sentence_transformation` with remote generation/grading | P2 pedagogical | L | 046, 048 | DONE (2026-07-18; see `TODO.md`) |
 | 057 | Add `translation_es_en` with hybrid grading | P2 pedagogical | L | 046, 048 | DONE (2026-07-18; see `TODO.md`) |
 | 058 | Extract "My Words" into Tracking (saved words + phrases + lessons) | P2 product | L | — | IN PROGRESS (uncommitted implementation present on 2026-07-19) |
-| 059 | Separate learning evidence and canonical lesson completion | P1 | L | — | TODO |
+| 059 | Separate learning evidence and canonical lesson completion | P1 | L | — | BLOCKED (2026-07-20: implementation complete; focused tests + typecheck pass; local Supabase reset/RLS blocked because Docker Desktop is unavailable) |
 | 060 | Isolate local learning data by user | P1 security | L | 059 | TODO |
 | 061 | Make SRS and outbox transactional and truthful | P1 | L | 059, 060 | TODO |
 | 062 | Fix exercise evidence attribution | P1 | L | 061 | TODO |

@@ -116,6 +116,36 @@ export type Database = {
           },
         ]
       }
+      lesson_completions: {
+        Row: {
+          completed_at: string
+          course_slug: string
+          id: string
+          lesson_slug: string
+          source: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string
+          course_slug: string
+          id?: string
+          lesson_slug: string
+          source?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string
+          course_slug?: string
+          id?: string
+          lesson_slug?: string
+          source?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       activity_sessions: {
         Row: {
           id: string

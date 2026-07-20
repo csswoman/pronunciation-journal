@@ -238,10 +238,9 @@ async function getSkillProfileData(userId: string): Promise<SkillProfileData> {
       .eq('is_correct', true),
 
     supabase
-      .from('answer_history')
+      .from('lesson_completions')
       .select('id', { count: 'exact', head: true })
       .eq('user_id', userId)
-      .eq('context', 'courses'),
   ])
 
   // Words by SRS status

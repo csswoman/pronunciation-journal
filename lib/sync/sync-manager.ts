@@ -35,6 +35,7 @@ const UPSERT_CONFLICT_COLUMNS: Partial<Record<SyncTable, string>> = {
   user_contrast_progress: 'user_id,contrast_id',
   user_learning_state: 'user_id',
   journal_entries: 'id',
+  lesson_completions: 'user_id,course_slug,lesson_slug',
 }
 
 let flushInFlight: Promise<SyncFlushResult> | null = null

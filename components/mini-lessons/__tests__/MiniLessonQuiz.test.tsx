@@ -4,10 +4,16 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import MiniLessonQuiz from '../MiniLessonQuiz'
 
 const recordLessonCompleteMock = vi.fn().mockResolvedValue(undefined)
+const recordLessonQuizAttemptMock = vi.fn().mockResolvedValue(undefined)
 const isLessonCompleteMock = vi.fn().mockResolvedValue(false)
 
 vi.mock('@/lib/practice/queries', () => ({
   recordLessonComplete: (...args: unknown[]) => recordLessonCompleteMock(...args),
+  recordLessonQuizAttempt: (...args: unknown[]) => recordLessonQuizAttemptMock(...args),
+}))
+
+vi.mock('@/lib/supabase/client', () => ({
+  getSupabaseBrowserClient: () => ({ auth: { getUser: async () => ({ data: { user: { id: 'user-1' } } }) } }),
 }))
 
 vi.mock('@/lib/db', () => ({
@@ -31,6 +37,7 @@ const questions = [
 
 beforeEach(() => {
   recordLessonCompleteMock.mockClear()
+  recordLessonQuizAttemptMock.mockReset().mockResolvedValue(undefined)
   isLessonCompleteMock.mockReset().mockResolvedValue(false)
 })
 
@@ -109,6 +116,10 @@ describe('MiniLessonQuiz', () => {
       expect(recordLessonCompleteMock).toHaveBeenCalledTimes(1)
     })
     expect(recordLessonCompleteMock).toHaveBeenCalledWith('mini-lessons', 'schwa-sound')
+    expect(recordLessonQuizAttemptMock).toHaveBeenCalledWith(
+      'user-1',
+      expect.arrayContaining([expect.objectContaining({ timeMs: expect.any(Number) })]),
+    )
   })
 
   it('skips recordLessonComplete when lesson already complete in Dexie', async () => {
@@ -121,5 +132,18 @@ describe('MiniLessonQuiz', () => {
       expect(isLessonCompleteMock).toHaveBeenCalled()
     })
     expect(recordLessonCompleteMock).not.toHaveBeenCalled()
+  })
+
+  it('still records completion when quiz evidence cannot be persisted', async () => {
+    recordLessonQuizAttemptMock.mockRejectedValueOnce(new Error('outbox unavailable'))
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => undefined)
+    render(<MiniLessonQuiz questions={questions} slug="schwa-sound" />)
+    fireEvent.click(screen.getByRole('button', { name: /B.*\/ɪ\// }))
+    fireEvent.click(screen.getByRole('button', { name: /C.*feet/ }))
+
+    await waitFor(() => {
+      expect(recordLessonCompleteMock).toHaveBeenCalledWith('mini-lessons', 'schwa-sound')
+    })
+    consoleError.mockRestore()
   })
 })

@@ -69,11 +69,14 @@ interface LessonSessionOffset {
 }
 
 export interface CompletedCourseLesson {
-  // PK: `${courseSlug}:${lessonSlug}`
+  // PK: `${userId}:${courseSlug}:${lessonSlug}`
   key: string;
+  userId: string;
   courseSlug: string;
   lessonSlug: string;
   completedAt: string; // ISO
+  source?: string;
+  updatedAt: string; // ISO
 }
 
 export interface IpaExplorationRecord {
@@ -236,6 +239,7 @@ class PronunciationDB extends Dexie {
     this.version(17).stores({ journalEntries: 'id, userId, entryDate, status, updatedAt' });
     this.version(18).stores({ journalEntries: 'id, userId, entryDate, [userId+entryDate], status, updatedAt' });
     this.version(19).stores({ trackedItems: 'id, userId, kind, ref, [userId+kind], [userId+kind+ref], createdAt, updatedAt' });
+    this.version(20).stores({ completedLessons: 'key, userId, courseSlug, lessonSlug, [userId+courseSlug], [userId+courseSlug+lessonSlug], completedAt, updatedAt' });
   }
 }
 
@@ -579,22 +583,37 @@ export async function advanceLessonOffset(lessonId: string, totalWords: number):
 
 // ── Course Lesson Completion Helpers ──
 
-export async function markLessonComplete(courseSlug: string, lessonSlug: string): Promise<void> {
-  const key = `${courseSlug}:${lessonSlug}`;
-  await db.completedLessons.put({ key, courseSlug, lessonSlug, completedAt: new Date().toISOString() });
+export function lessonCompletionKey(userId: string, courseSlug: string, lessonSlug: string): string {
+  return `${userId}:${courseSlug}:${lessonSlug}`;
 }
 
-export async function markLessonIncomplete(courseSlug: string, lessonSlug: string): Promise<void> {
-  await db.completedLessons.delete(`${courseSlug}:${lessonSlug}`);
+export async function markLessonComplete(userId: string, courseSlug: string, lessonSlug: string, source = 'lesson_completion'): Promise<void> {
+  const now = new Date().toISOString();
+  await db.completedLessons.put({
+    key: lessonCompletionKey(userId, courseSlug, lessonSlug),
+    userId,
+    courseSlug,
+    lessonSlug,
+    completedAt: now,
+    source,
+    updatedAt: now,
+  });
 }
 
-export async function isLessonComplete(courseSlug: string, lessonSlug: string): Promise<boolean> {
-  const row = await db.completedLessons.get(`${courseSlug}:${lessonSlug}`);
+export async function markLessonIncomplete(userId: string, courseSlug: string, lessonSlug: string): Promise<void> {
+  await db.completedLessons.delete(lessonCompletionKey(userId, courseSlug, lessonSlug));
+}
+
+export async function isLessonComplete(userId: string, courseSlug: string, lessonSlug: string): Promise<boolean>
+export async function isLessonComplete(courseSlug: string, lessonSlug: string): Promise<boolean>
+export async function isLessonComplete(a: string, b: string, c?: string): Promise<boolean> {
+  const key = c ? lessonCompletionKey(a, b, c) : `${a}:${b}`;
+  const row = await db.completedLessons.get(key);
   return !!row;
 }
 
-export async function getCompletedCountByCourse(): Promise<Record<string, number>> {
-  const all = await db.completedLessons.toArray();
+export async function getCompletedCountByCourse(userId: string): Promise<Record<string, number>> {
+  const all = await db.completedLessons.where("userId").equals(userId).toArray();
   const counts: Record<string, number> = {};
   for (const row of all) {
     counts[row.courseSlug] = (counts[row.courseSlug] ?? 0) + 1;
