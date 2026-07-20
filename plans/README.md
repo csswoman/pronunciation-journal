@@ -78,7 +78,7 @@ your row when done.
 | 058 | Extract "My Words" into Tracking (saved words + phrases + lessons) | P2 product | L | — | IN PROGRESS (uncommitted implementation present on 2026-07-19) |
 | 059 | Separate learning evidence and canonical lesson completion | P1 | L | — | BLOCKED (2026-07-20: implementation complete; focused tests + typecheck pass; local Supabase reset/RLS blocked because Docker Desktop is unavailable) |
 | 060 | Isolate local learning data by user | P1 security | L | 059 | TODO |
-| 061 | Make SRS and outbox transactional and truthful | P1 | L | 059, 060 | TODO |
+| 061 | Make SRS and outbox transactional and truthful | P1 | L | 059, 060 | DONE (steps 1-7 on `codex/061-transactional-srs-outbox`) |
 | 062 | Fix exercise evidence attribution | P1 | L | 061 | TODO |
 | 063 | Build the pronunciation production spine | P1 product/pedagogy | L | 059, 060, 062 | TODO |
 | 064 | Validate acoustic pronunciation assessment | P2 direction | L/XL | 063 | TODO |
