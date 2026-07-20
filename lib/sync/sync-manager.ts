@@ -11,7 +11,14 @@
 import Dexie from 'dexie'
 import { db } from '@/lib/db'
 import { getSupabaseBrowserClient } from '@/lib/supabase/client'
-import type { SyncOutboxEntry, SyncFlushResult, SyncTable, SyncOperation, SyncRpc } from './types'
+import type {
+  SyncOutboxEntry,
+  SyncFlushResult,
+  SyncOperationOutcome,
+  SyncTable,
+  SyncOperation,
+  SyncRpc,
+} from './types'
 import { getNextRetryAt, isReadyToRetry, reclaimStaleSyncingEntries } from './recovery'
 
 // ── Constants ──────────────────────────────────────────────────────────────
@@ -324,17 +331,34 @@ export async function enqueue(
  * Returns a summary of what happened during this flush pass.
  */
 export function flushOutbox(userId?: string): Promise<SyncFlushResult> {
-  if (!userId) return Promise.resolve({ synced: 0, failed: 0, skipped: 0 })
+  if (!userId) return Promise.resolve(emptyFlushResult())
   if (flushInFlight) return flushInFlight
   flushInFlight = flushOutboxInternal(userId).finally(() => { flushInFlight = null })
   return flushInFlight
 }
 
+function emptyFlushResult(): SyncFlushResult {
+  return { synced: 0, failed: 0, skipped: 0, operations: [] }
+}
+
+/** Recompute aggregate counts from `operations` so the two can never drift. */
+function summarize(operations: SyncOperationOutcome[]): SyncFlushResult {
+  let synced = 0
+  let failed = 0
+  let skipped = 0
+  for (const op of operations) {
+    if (op.outcome === 'synced') synced++
+    else if (op.outcome === 'failed') failed++
+    else skipped++
+  }
+  return { synced, failed, skipped, operations }
+}
+
 async function flushOutboxInternal(userId: string): Promise<SyncFlushResult> {
   await reclaimStaleSyncingEntries()
-  if (!navigator.onLine) return { synced: 0, failed: 0, skipped: 0 }
+  if (!navigator.onLine) return emptyFlushResult()
 
-  const result: SyncFlushResult = { synced: 0, failed: 0, skipped: 0 }
+  const operations: SyncOperationOutcome[] = []
 
   // Claim a batch atomically: pending → syncing
   const batch = await db.transaction('rw', db.syncOutbox, async () => {
@@ -350,7 +374,7 @@ async function flushOutboxInternal(userId: string): Promise<SyncFlushResult> {
     return pending
   })
 
-  if (batch.length === 0) return result
+  if (batch.length === 0) return emptyFlushResult()
 
   // Group by entity so operations on the same logical row are sent to
   // Postgres strictly in submission order (avoids out-of-order/racing
@@ -367,7 +391,7 @@ async function flushOutboxInternal(userId: string): Promise<SyncFlushResult> {
     try {
       await flushEntry(entry)
       await db.syncOutbox.delete(entry.id!)
-      result.synced++
+      operations.push({ id: entry.id!, table: entry.table, operation: entry.operation, outcome: 'synced' })
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : String(err)
       const code = (err as { code?: string }).code
@@ -377,7 +401,7 @@ async function flushOutboxInternal(userId: string): Promise<SyncFlushResult> {
         // proof (per classifyUniqueViolationAsIdempotentSuccess's reasoning)
         // that this exact operation already landed. Treat as success.
         await db.syncOutbox.delete(entry.id!)
-        result.synced++
+        operations.push({ id: entry.id!, table: entry.table, operation: entry.operation, outcome: 'synced' })
         return
       }
 
@@ -393,7 +417,13 @@ async function flushOutboxInternal(userId: string): Promise<SyncFlushResult> {
         lastAttemptAt: attemptedAt,
         nextRetryAt: permanent ? undefined : getNextRetryAt(newRetryCount, attemptedAt),
       })
-      result.failed++
+      operations.push({
+        id: entry.id!,
+        table: entry.table,
+        operation: entry.operation,
+        outcome: 'failed',
+        errorMessage: message,
+      })
     }
   }
 
@@ -411,13 +441,19 @@ async function flushOutboxInternal(userId: string): Promise<SyncFlushResult> {
   await Promise.allSettled(Array.from(groups.values()).map(processGroupInOrder))
 
   // Items that were claimed as `syncing` but not resolved (shouldn't happen, but safety net)
-  const stuckCount = await db.syncOutbox
-    .where('id')
-    .anyOf(batch.map((entry) => entry.id!))
-    .filter((entry) => entry.status === 'syncing')
-    .modify({ status: 'pending' })
-  result.skipped += stuckCount
+  const resolvedIds = new Set(operations.map((op) => op.id))
+  const stuck = batch.filter((entry) => !resolvedIds.has(entry.id!))
+  if (stuck.length > 0) {
+    await db.syncOutbox
+      .where('id')
+      .anyOf(stuck.map((entry) => entry.id!))
+      .filter((entry) => entry.status === 'syncing')
+      .modify({ status: 'pending' })
+    for (const entry of stuck) {
+      operations.push({ id: entry.id!, table: entry.table, operation: entry.operation, outcome: 'skipped' })
+    }
+  }
 
-  return result
+  return summarize(operations)
 }
 

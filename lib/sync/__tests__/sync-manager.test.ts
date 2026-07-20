@@ -386,7 +386,15 @@ describe('flushOutbox', () => {
     expect(mocks.mockSyncOutboxUpdate).toHaveBeenCalledWith(23, expect.objectContaining({
       status: 'failed', retryCount: 1,
     }))
-    expect(result).toEqual({ synced: 1, failed: 2, skipped: 0 })
+    expect(result.synced).toBe(1)
+    expect(result.failed).toBe(2)
+    expect(result.skipped).toBe(0)
+    expect(result.operations).toEqual(expect.arrayContaining([
+      expect.objectContaining({ id: 21, outcome: 'synced' }),
+      expect.objectContaining({ id: 22, outcome: 'failed', errorMessage: 'fetch failed' }),
+      expect.objectContaining({ id: 23, outcome: 'failed', errorMessage: 'permission denied' }),
+    ]))
+    expect(result.operations).toHaveLength(3)
   })
 
   it('returns early with zeros when navigator.onLine is false', async () => {
@@ -398,7 +406,7 @@ describe('flushOutbox', () => {
 
     const result = await flushOutbox('user-1')
 
-    expect(result).toEqual({ synced: 0, failed: 0, skipped: 0 })
+    expect(result).toEqual({ synced: 0, failed: 0, skipped: 0, operations: [] })
     expect(mocks.mockDbTransaction).not.toHaveBeenCalled()
   })
 
@@ -407,7 +415,7 @@ describe('flushOutbox', () => {
 
     const result = await flushOutbox('user-1')
 
-    expect(result).toEqual({ synced: 0, failed: 0, skipped: 0 })
+    expect(result).toEqual({ synced: 0, failed: 0, skipped: 0, operations: [] })
     expect(mocks.mockSupabaseFrom).not.toHaveBeenCalled()
   })
 

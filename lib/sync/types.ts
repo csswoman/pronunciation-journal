@@ -61,9 +61,36 @@ export interface SyncOutboxEntry {
   errorMessage?: string
 }
 
-/** Result returned by the sync manager after a flush pass */
+/** Outcome of a single outbox entry's processing within one flush pass. */
+export type SyncEntryOutcome = 'synced' | 'failed' | 'skipped'
+
+/**
+ * Per-operation result for one outbox entry processed during a flush pass.
+ * `id` is the entry's local Dexie PK (present even for `synced`/deleted
+ * entries — the id captured at claim-time, before deletion).
+ */
+export interface SyncOperationOutcome {
+  id: number
+  table: SyncTable
+  operation: SyncOperation
+  outcome: SyncEntryOutcome
+  /** Populated when outcome is 'failed'. */
+  errorMessage?: string
+}
+
+/**
+ * Result returned by the sync manager after a flush pass.
+ *
+ * `synced`/`failed`/`skipped` are aggregate counts kept for backward
+ * compatibility and quick summaries; `operations` is the authoritative
+ * per-entry breakdown they're derived from — the two can never drift
+ * because the counts are computed FROM `operations`, never tracked
+ * independently (see `flushOutboxInternal`).
+ */
 export interface SyncFlushResult {
   synced: number
   failed: number
   skipped: number
+  /** Per-entry outcomes for every operation processed in this flush pass. */
+  operations: SyncOperationOutcome[]
 }

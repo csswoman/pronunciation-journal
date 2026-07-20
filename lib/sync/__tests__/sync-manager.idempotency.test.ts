@@ -126,7 +126,7 @@ describe('outbox retry-after-reload and duplicate-idempotency-key characterizati
 
     // A subsequent flush must NOT re-attempt a failed entry.
     const secondResult = await flushOutbox('user-1')
-    expect(secondResult).toEqual({ synced: 0, failed: 0, skipped: 0 })
+    expect(secondResult).toEqual({ synced: 0, failed: 0, skipped: 0, operations: [] })
   })
 
   it('BASELINE: a permanent Supabase error (duplicate key, code 23505) marks the entry failed and does not retry', async () => {
