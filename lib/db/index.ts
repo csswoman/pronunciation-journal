@@ -134,6 +134,62 @@ export interface TrackedItemRecord {
   updatedAt: string;
 }
 
+/**
+ * Local mirror of a word_bank/topic_srs SM-2 materialized row (plan 061 step 2).
+ *
+ * Lets grading UI compute+display the next SM-2 state OPTIMISTICALLY without a
+ * network read: `enqueueWordBankSRSUpdate`/`enqueueTopicSRSUpdate` (rewritten
+ * in step 3) read this instead of Supabase before writing a
+ * SRSRatingEventRecord + updating this row's mirror in one Dexie transaction.
+ *
+ * The server-side RPC (apply_word_bank_rating_event / apply_topic_srs_rating_event)
+ * remains the source of truth — this is a display/offline-compute cache, kept
+ * in sync by the sync flusher applying confirmed RPC results (step 3+).
+ */
+export interface SRSEntityStateRecord {
+  // PK: `${userId}:word_bank:${wordId}` or `${userId}:topic_srs:${normalizedTopic}`
+  id: string;
+  userId: string;
+  entityType: "word_bank" | "topic_srs";
+  /** word_bank: the word_bank.id row. topic_srs: undefined (keyed by topic instead). */
+  entityId?: string;
+  /** topic_srs: the normalized topic string (its natural key). word_bank: undefined. */
+  topic?: string;
+  easeFactor: number;
+  intervalDays: number;
+  repetitions: number;
+  nextReviewAt: string | null;
+  srsStatus: "new" | "learning" | "review" | "mastered";
+  reviewCount: number;
+  lastReviewedAt: string | null;
+  updatedAt: string; // ISO — last time this mirror was written locally
+}
+
+/**
+ * One immutable rating submission, mirrored locally so it can be enqueued to
+ * the outbox and replayed against `apply_word_bank_rating_event` /
+ * `apply_topic_srs_rating_event` without a network read (plan 061 step 2).
+ *
+ * `id` doubles as the RPC's idempotency key (`p_idempotency_key`) — generate
+ * with crypto.randomUUID() at creation time, never regenerate on retry.
+ */
+export interface SRSRatingEventRecord {
+  /** Idempotency key — PK. Passed verbatim as p_idempotency_key to the RPC. */
+  id: string;
+  userId: string;
+  entityType: "word_bank" | "topic_srs";
+  /** word_bank: required. topic_srs: undefined. */
+  entityId?: string;
+  /** topic_srs: required (natural key; the row may not exist yet). word_bank: undefined. */
+  topic?: string;
+  grade: number;
+  occurredAt: string; // ISO
+  evaluatorMetadata?: Record<string, unknown>;
+  /** Local submission bookkeeping — separate from the outbox's own status. */
+  status: "pending" | "applied";
+  createdAt: string; // ISO
+}
+
 class PronunciationDB extends Dexie {
   attempts!: Table<Attempt, number>;
   srsData!: Table<SRSData, string>;
@@ -157,6 +213,8 @@ class PronunciationDB extends Dexie {
   journalEntries!: Table<JournalEntryRecord, string>;
   trackedItems!: Table<TrackedItemRecord, string>;
   localDataQuarantine!: Table<LocalDataQuarantineRecord, number>;
+  srsEntityState!: Table<SRSEntityStateRecord, string>;
+  srsRatingEvents!: Table<SRSRatingEventRecord, string>;
 
   constructor() {
     super("pronunciation-journal");
@@ -311,6 +369,16 @@ class PronunciationDB extends Dexie {
           await outbox.delete(entry.id as number);
         }
       }
+    });
+
+    // v22: local SM-2 state mirror + immutable rating-event log (plan 061
+    // step 2). Lets grading enqueue a rating with no network read: the
+    // mirror supplies the "current state" that used to require a live
+    // Supabase SELECT, and the event log is what actually gets replayed
+    // against the transactional apply_*_rating_event RPCs.
+    this.version(22).stores({
+      srsEntityState: 'id, userId, entityType, [userId+entityType], [userId+entityType+entityId], [userId+entityType+topic]',
+      srsRatingEvents: 'id, userId, status, [userId+status], [userId+entityType+entityId], [userId+entityType+topic]',
     });
   }
 }

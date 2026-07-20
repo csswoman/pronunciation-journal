@@ -660,6 +660,45 @@ export type Database = {
         }
         Relationships: []
       }
+      srs_rating_events: {
+        Row: {
+          created_at: string
+          entity_id: string | null
+          entity_type: string
+          evaluator_metadata: Json
+          grade: number
+          id: string
+          idempotency_key: string
+          occurred_at: string
+          topic: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          entity_id?: string | null
+          entity_type: string
+          evaluator_metadata?: Json
+          grade: number
+          id?: string
+          idempotency_key: string
+          occurred_at?: string
+          topic?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          entity_id?: string | null
+          entity_type?: string
+          evaluator_metadata?: Json
+          grade?: number
+          id?: string
+          idempotency_key?: string
+          occurred_at?: string
+          topic?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_profiles: {
         Row: {
           cefr_level: string
@@ -983,6 +1022,28 @@ export type Database = {
           allowed: boolean
           retry_after_seconds: number
         }[]
+      }
+      apply_word_bank_rating_event: {
+        Args: {
+          p_idempotency_key: string
+          p_user_id: string
+          p_word_id: string
+          p_grade: number
+          p_occurred_at?: string
+          p_evaluator_metadata?: Json
+        }
+        Returns: Database["public"]["Tables"]["word_bank"]["Row"]
+      }
+      apply_topic_srs_rating_event: {
+        Args: {
+          p_idempotency_key: string
+          p_user_id: string
+          p_topic: string
+          p_grade: number
+          p_occurred_at?: string
+          p_evaluator_metadata?: Json
+        }
+        Returns: Database["public"]["Tables"]["topic_srs"]["Row"]
       }
     }
     Enums: {
