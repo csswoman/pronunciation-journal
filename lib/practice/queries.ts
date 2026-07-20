@@ -76,13 +76,25 @@ export async function recordLessonIncomplete(
 }
 
 /**
- * Persist a single PracticeAnswer to `answer_history`.
+ * Persist a single PracticeAnswer to `answer_history`, plus any word/topic/
+ * fragment SRS rating it implies — all in ONE Dexie transaction so a crash
+ * between writes can never leave the answer recorded with its rating(s)
+ * lost, or vice versa (plan 061 step 3). Mirrors the transactional pattern
+ * used by `recordLessonComplete` above and `saveTrackedItem` in
+ * lib/tracking/queries.ts.
  *
  * Coexists with `saveAnswers()` in lib/phoneme-practice/queries.ts —
  * that function continues to serve the current Sound Lab flow. This one
  * is the entry point for the unified Practice Engine and also writes the
  * new `context` and `content_id` columns added in
  * supabase/migrations/20260519120000_practice_engine.sql.
+ *
+ * "No valid target identity" (plan text): a topic-less exercise is normal,
+ * not an error — `normalizedTopic` is simply falsy and the topic-rating
+ * write is skipped, same as before this step. word_bank's target identity
+ * (sourceRef.id) is required by PracticeAnswer's type whenever
+ * sourceRef.source === 'word_bank', so there is no "guessed row" case to
+ * guard there; this function never invents/reads a target id.
  */
 export async function savePracticeAnswer(
   userId: string,
@@ -126,22 +138,24 @@ export async function savePracticeAnswer(
   const grade = answerToGrade(answer)
   const rowWithGrade = { ...row, grade }
 
-  await enqueue('answer_history', 'upsert', rowWithGrade as Record<string, unknown>, undefined, 'id')
+  await db.transaction('rw', [db.syncOutbox, db.srsRatingEvents, db.srsData], async () => {
+    await enqueue('answer_history', 'upsert', rowWithGrade as Record<string, unknown>, undefined, 'id')
 
-  // Enqueue SRS update for word_bank entries via the sync outbox (retried on reconnection).
-  if (answer.sourceRef?.source === 'word_bank') {
-    const wordId = answer.sourceRef.id
-    await enqueueWordBankSRSUpdate(userId, wordId, grade)
-  } else if (answer.sourceRef?.source === 'text_fragments') {
-    // System sentences carry no per-user Supabase row; their review state is
-    // local (Dexie srsData), so this write is direct rather than via the outbox.
-    await upsertFragmentSrs(answer.sourceRef.id, grade)
-  }
+    // Enqueue SRS update for word_bank entries via the sync outbox (retried on reconnection).
+    if (answer.sourceRef?.source === 'word_bank') {
+      const wordId = answer.sourceRef.id
+      await enqueueWordBankSRSUpdate(userId, wordId, grade)
+    } else if (answer.sourceRef?.source === 'text_fragments') {
+      // System sentences carry no per-user Supabase row; their review state is
+      // local (Dexie srsData), so this write is direct rather than via the outbox.
+      await upsertFragmentSrs(answer.sourceRef.id, grade)
+    }
 
-  // Enqueue SRS update for the concept (topic) when the exercise carries one.
-  if (normalizedTopic) {
-    await enqueueTopicSRSUpdate(userId, normalizedTopic, grade)
-  }
+    // Enqueue SRS update for the concept (topic) when the exercise carries one.
+    if (normalizedTopic) {
+      await enqueueTopicSRSUpdate(userId, normalizedTopic, grade)
+    }
+  })
 }
 
 export interface LessonQuizAnswerInput {

@@ -1,9 +1,12 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
-const enqueueMock = vi.fn()
-const topicSrsMock = vi.fn()
-const wordBankSrsMock = vi.fn()
-const fragmentSrsMock = vi.fn()
+const { enqueueMock, topicSrsMock, wordBankSrsMock, fragmentSrsMock, transactionMock } = vi.hoisted(() => ({
+  enqueueMock: vi.fn(),
+  topicSrsMock: vi.fn(),
+  wordBankSrsMock: vi.fn(),
+  fragmentSrsMock: vi.fn(),
+  transactionMock: vi.fn(async (_mode: string, _tables: unknown[], callback: () => Promise<void>) => callback()),
+}))
 
 vi.mock('@/lib/sync/sync-manager', () => ({ enqueue: (...a: unknown[]) => enqueueMock(...a) }))
 vi.mock('@/lib/word-bank/srs-queries', () => ({
@@ -15,7 +18,10 @@ vi.mock('@/lib/practice/topic-srs-queries', () => ({
 vi.mock('@/lib/practice/fragment-srs', () => ({
   upsertFragmentSrs: (...a: unknown[]) => fragmentSrsMock(...a),
 }))
-vi.mock('@/lib/db', () => ({ markLessonComplete: vi.fn() }))
+vi.mock('@/lib/db', () => ({
+  markLessonComplete: vi.fn(),
+  db: { syncOutbox: {}, srsRatingEvents: {}, srsData: {}, transaction: transactionMock },
+}))
 
 import { savePracticeAnswer } from '@/lib/practice/queries'
 

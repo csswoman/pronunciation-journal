@@ -11,7 +11,7 @@
 import Dexie from 'dexie'
 import { db } from '@/lib/db'
 import { getSupabaseBrowserClient } from '@/lib/supabase/client'
-import type { SyncOutboxEntry, SyncFlushResult, SyncTable, SyncOperation } from './types'
+import type { SyncOutboxEntry, SyncFlushResult, SyncTable, SyncOperation, SyncRpc } from './types'
 import { getNextRetryAt, isReadyToRetry, reclaimStaleSyncingEntries } from './recovery'
 
 // ── Constants ──────────────────────────────────────────────────────────────
@@ -106,6 +106,13 @@ async function flushEntry(entry: SyncOutboxEntry): Promise<void> {
       error = res.error
       break
     }
+    case 'rpc': {
+      if (!entry.rpcName) throw new Error('rpc operation requires rpcName')
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const res = await supabase.rpc(entry.rpcName as any, payload as never)
+      error = res.error
+      break
+    }
   }
 
   if (error) {
@@ -132,10 +139,18 @@ export async function enqueue(
   payload: Record<string, unknown>,
   matchKey?: Record<string, unknown>,
   onConflict?: string,
+  rpcName?: SyncRpc,
 ): Promise<number> {
-  const userId = payload.user_id ?? payload.userId ?? matchKey?.user_id ?? matchKey?.userId
+  // RPC payloads name their args after the Postgres function's parameters
+  // (p_user_id, by convention across this codebase's RPCs — see
+  // apply_word_bank_rating_event / apply_topic_srs_rating_event), so check
+  // that shape too alongside the DML payload/matchKey shapes.
+  const userId = payload.user_id ?? payload.userId ?? payload.p_user_id ?? matchKey?.user_id ?? matchKey?.userId
   if (typeof userId !== 'string' || !userId) {
     throw new Error(`Outbox entry for ${table} requires an explicit user_id`)
+  }
+  if (operation === 'rpc' && !rpcName) {
+    throw new Error('rpc operation requires rpcName')
   }
   const entry: SyncOutboxEntry = {
     userId,
@@ -144,6 +159,7 @@ export async function enqueue(
     payload,
     matchKey,
     onConflict,
+    rpcName,
     status: 'pending',
     createdAt: now(),
     retryCount: 0,

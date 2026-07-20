@@ -1,109 +1,106 @@
 /**
- * Characterization tests for lib/word-bank/srs-queries.ts `enqueueWordBankSRSUpdate`.
+ * Plan 061 step 3: `enqueueWordBankSRSUpdate` was rewritten to no longer read
+ * word_bank's current state before writing. It now submits an immutable
+ * rating event (grade + word id + fresh idempotency key) and enqueues a call
+ * to the transactional `apply_word_bank_rating_event` RPC — SM-2 is computed
+ * server-side under a row lock (supabase/migrations/20260720080000).
  *
- * Plan 061 step 1: these tests document CURRENT (buggy) behavior before the
- * step 2-7 hardening work. They are not asserting the desired end state —
- * they assert "here is what happens today," so a future fix to
- * `enqueueWordBankSRSUpdate` (making it transactional/serial per entity) is
- * expected to change these tests' expectations, not just make them pass.
- *
- * Framing used: PASS = "this is the bug, reproduced." Each test's name says
- * which framing it uses.
+ * These tests replace the step 1 characterization tests, which documented
+ * the OLD racy behavior (a live Supabase read + client-computed SM-2 + an
+ * absolute UPDATE enqueue). That race can no longer be reproduced client-side
+ * because there is no more local "current state" read to race on — the
+ * conflict is now safely resolved server-side by the RPC's row lock, which is
+ * out of scope for a client-side unit test. What we assert here is what the
+ * CLIENT can guarantee: two overlapping local calls are queued as two
+ * distinct, immutable rating events with distinct idempotency keys, and
+ * neither overwrites the other locally (no lost data before it ever reaches
+ * the network).
  */
+// @vitest-environment node
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import 'fake-indexeddb/auto'
 
-const enqueueMock = vi.fn()
 vi.mock('@/lib/sync/sync-manager', () => ({
-  enqueue: (...args: unknown[]) => enqueueMock(...args),
+  enqueue: vi.fn().mockResolvedValue(1),
 }))
 
-const singleMock = vi.fn()
-vi.mock('@/lib/supabase/client', () => ({
-  getSupabaseBrowserClient: () => ({
-    from: () => ({
-      select: () => ({
-        eq: () => ({
-          eq: () => ({ single: singleMock }),
-        }),
-      }),
-    }),
-  }),
-}))
-
+import { enqueue } from '@/lib/sync/sync-manager'
+import { db } from '@/lib/db'
 import { enqueueWordBankSRSUpdate } from '../srs-queries'
 
-const NOW = new Date('2026-07-20T12:00:00.000Z')
+const enqueueMock = vi.mocked(enqueue)
 
-function existingRow(overrides: Record<string, unknown> = {}) {
-  return {
-    ease_factor: 2.5,
-    interval_days: 6,
-    repetitions: 2,
-    next_review_at: '2026-07-19T00:00:00.000Z',
-    srs_status: 'review',
-    last_reviewed_at: '2026-07-13T00:00:00.000Z',
-    review_count: 3,
-    ...overrides,
-  }
-}
-
-describe('enqueueWordBankSRSUpdate races', () => {
-  beforeEach(() => {
-    vi.useFakeTimers()
-    vi.setSystemTime(NOW)
-    enqueueMock.mockReset()
-    singleMock.mockReset()
+describe('enqueueWordBankSRSUpdate (rewritten: local-only, no network read)', () => {
+  beforeEach(async () => {
+    enqueueMock.mockClear()
+    db.close()
+    await db.delete()
+    await db.open()
   })
 
-  afterEach(() => {
-    vi.useRealTimers()
+  afterEach(async () => {
+    db.close()
   })
 
-  it('BUG: two overlapping ratings for the same existing word each read the same pre-rating state, so the second enqueued payload does not build on the first (lost update)', async () => {
-    // Both calls resolve the SAME pre-rating snapshot — this simulates two
-    // near-simultaneous grades (e.g. two tabs, or a rapid double-tap) racing
-    // against the read, which today has no per-entity serialization.
-    const snapshot = existingRow()
-    singleMock.mockResolvedValue({ data: snapshot, error: null })
+  it('never reads remote/local current state — it only writes a rating event and enqueues an RPC call', async () => {
+    await enqueueWordBankSRSUpdate('user-1', 'word-1', 4)
 
+    expect(enqueueMock).toHaveBeenCalledTimes(1)
+    const [table, operation, payload, matchKey, onConflict, rpcName] = enqueueMock.mock.calls[0]
+    expect(table).toBe('word_bank')
+    expect(operation).toBe('rpc')
+    expect(rpcName).toBe('apply_word_bank_rating_event')
+    expect(matchKey).toBeUndefined()
+    expect(onConflict).toBeUndefined()
+    expect(payload).toMatchObject({
+      p_user_id: 'user-1',
+      p_word_id: 'word-1',
+      p_grade: 4,
+    })
+    expect(typeof (payload as Record<string, unknown>).p_idempotency_key).toBe('string')
+  })
+
+  it('writes one immutable local rating-event row per call', async () => {
+    await enqueueWordBankSRSUpdate('user-1', 'word-1', 4)
+
+    const events = await db.srsRatingEvents.where('userId').equals('user-1').toArray()
+    expect(events).toHaveLength(1)
+    expect(events[0]).toMatchObject({
+      userId: 'user-1',
+      entityType: 'word_bank',
+      entityId: 'word-1',
+      grade: 4,
+      status: 'pending',
+    })
+  })
+
+  it('two overlapping ratings for the same word are queued as two distinct events with distinct idempotency keys — neither overwrites the other locally', async () => {
     const first = enqueueWordBankSRSUpdate('user-1', 'word-1', 4)
-    const second = enqueueWordBankSRSUpdate('user-1', 'word-1', 4)
+    const second = enqueueWordBankSRSUpdate('user-1', 'word-1', 5)
     await Promise.all([first, second])
 
     expect(enqueueMock).toHaveBeenCalledTimes(2)
     const firstPayload = enqueueMock.mock.calls[0][2] as Record<string, unknown>
     const secondPayload = enqueueMock.mock.calls[1][2] as Record<string, unknown>
 
-    // Both computed from the SAME starting repetitions/review_count because
-    // both reads saw the same row — the second grade's SM-2 computation does
-    // NOT know about the first grade's output. If the race were fixed, the
-    // second payload's repetitions/review_count would be one step ahead of
-    // the first's, not identical to it.
-    expect(firstPayload.repetitions).toBe(secondPayload.repetitions)
-    expect(firstPayload.review_count).toBe(4) // snapshot.review_count + 1
-    expect(secondPayload.review_count).toBe(4) // same +1 from the SAME stale snapshot — should have been 5
+    // Distinct idempotency keys — the server-side RPC can tell these apart
+    // and apply both (serialized by its row lock), instead of one silently
+    // clobbering the other the way an absolute-state UPDATE would.
+    expect(firstPayload.p_idempotency_key).not.toBe(secondPayload.p_idempotency_key)
+    expect(firstPayload.p_grade).toBe(4)
+    expect(secondPayload.p_grade).toBe(5)
 
-    // Whichever enqueued update lands last in Supabase wins — the other
-    // rating's effect is silently lost. Final review_count ends up 4, not 5,
-    // even though the user rated twice.
-    expect(secondPayload.review_count).not.toBe(5)
+    // Both events land locally — no data loss before either ever reaches the
+    // network. (Which one the server applies first, and the resulting SM-2
+    // state, is the RPC's row-locked concern — out of scope here.)
+    const events = await db.srsRatingEvents.where('userId').equals('user-1').toArray()
+    expect(events).toHaveLength(2)
   })
 
-  it('BASELINE: a single rating correctly increments review_count by one from the read snapshot', async () => {
-    singleMock.mockResolvedValue({ data: existingRow({ review_count: 3 }), error: null })
-
-    await enqueueWordBankSRSUpdate('user-1', 'word-1', 4)
-
+  it('GAP CLOSED: offline (no network) no longer prevents enqueueing — there is no read to fail', async () => {
+    // Unlike the old implementation, there is no Supabase read at all, so
+    // there is nothing for "offline" to break here; the write is purely local.
+    await expect(enqueueWordBankSRSUpdate('user-1', 'word-1', 4)).resolves.toBeUndefined()
     expect(enqueueMock).toHaveBeenCalledTimes(1)
-    const payload = enqueueMock.mock.calls[0][2] as Record<string, unknown>
-    expect(payload.review_count).toBe(4)
-  })
-
-  it('GAP: when the Supabase read fails (offline), the function throws and never enqueues — there is no offline path today', async () => {
-    const offlineError = new Error('Failed to fetch')
-    singleMock.mockResolvedValue({ data: null, error: offlineError })
-
-    await expect(enqueueWordBankSRSUpdate('user-1', 'word-1', 4)).rejects.toThrow('Failed to fetch')
-    expect(enqueueMock).not.toHaveBeenCalled()
   })
 })

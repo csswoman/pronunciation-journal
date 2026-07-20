@@ -1,118 +1,119 @@
 /**
- * Characterization tests for lib/practice/topic-srs-queries.ts
- * `enqueueTopicSRSUpdate`.
+ * Plan 061 step 3: `enqueueTopicSRSUpdate` was rewritten to no longer read
+ * topic_srs's current state (or even whether a row exists yet) before
+ * writing. It now submits an immutable rating event keyed by
+ * (user_id, topic) and enqueues a call to the transactional
+ * `apply_topic_srs_rating_event` RPC, which creates the row on first rating
+ * and applies SM-2 server-side under a row lock
+ * (supabase/migrations/20260720080000).
  *
- * Plan 061 step 1: these document CURRENT (buggy) behavior before the step
- * 2-7 hardening work — not the desired end state. Framing: PASS = "this is
- * the bug, reproduced today." Each test name states which framing it uses.
+ * These tests replace the step 1 characterization tests, which documented
+ * the OLD racy behavior (a live Supabase read + client-computed SM-2 +
+ * enqueueing either an absolute INSERT or UPDATE). Both races it documented
+ * — the double-insert race for a brand-new topic, and the lost-update race
+ * for an existing topic — can no longer be reproduced client-side, because
+ * there is no more local read of "does a row exist / what is its state" to
+ * race on. Conflict resolution now happens server-side via the RPC's
+ * SELECT/INSERT-as-lock, out of scope for a client-side unit test. What we
+ * assert here is what the CLIENT can guarantee: two overlapping local calls
+ * are queued as two distinct, immutable rating events with distinct
+ * idempotency keys, and neither overwrites the other locally.
  */
+// @vitest-environment node
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import 'fake-indexeddb/auto'
 
-const enqueueMock = vi.fn()
 vi.mock('@/lib/sync/sync-manager', () => ({
-  enqueue: (...args: unknown[]) => enqueueMock(...args),
+  enqueue: vi.fn().mockResolvedValue(1),
 }))
 
-const maybeSingleMock = vi.fn()
-vi.mock('@/lib/supabase/client', () => ({
-  getSupabaseBrowserClient: () => ({
-    from: () => ({
-      select: () => ({
-        eq: () => ({
-          eq: () => ({ maybeSingle: maybeSingleMock }),
-        }),
-      }),
-    }),
-  }),
-}))
-
+import { enqueue } from '@/lib/sync/sync-manager'
+import { db } from '@/lib/db'
 import { enqueueTopicSRSUpdate } from '../topic-srs-queries'
 
-const NOW = new Date('2026-07-20T12:00:00.000Z')
+const enqueueMock = vi.mocked(enqueue)
 
-describe('enqueueTopicSRSUpdate races', () => {
-  beforeEach(() => {
-    vi.useFakeTimers()
-    vi.setSystemTime(NOW)
-    enqueueMock.mockReset()
-    maybeSingleMock.mockReset()
+describe('enqueueTopicSRSUpdate (rewritten: local-only, no network read)', () => {
+  beforeEach(async () => {
+    enqueueMock.mockClear()
+    db.close()
+    await db.delete()
+    await db.open()
   })
 
-  afterEach(() => {
-    vi.useRealTimers()
+  afterEach(async () => {
+    db.close()
   })
 
-  it('BUG: two overlapping ratings for a brand-new topic (no existing topic_srs row) both read "no row" and both enqueue an INSERT — one insert should have been an update', async () => {
-    // Both calls resolve "no row exists yet" — this simulates two
-    // near-simultaneous first-time ratings for the same new topic (e.g. two
-    // quick answers before either enqueue has landed and been reflected back
-    // in Supabase).
-    maybeSingleMock.mockResolvedValue({ data: null, error: null })
+  it('never reads remote/local current state — it only writes a rating event and enqueues an RPC call', async () => {
+    await enqueueTopicSRSUpdate('user-1', 'grammar:present simple', 4)
 
+    expect(enqueueMock).toHaveBeenCalledTimes(1)
+    const [table, operation, payload, matchKey, onConflict, rpcName] = enqueueMock.mock.calls[0]
+    expect(table).toBe('topic_srs')
+    expect(operation).toBe('rpc')
+    expect(rpcName).toBe('apply_topic_srs_rating_event')
+    expect(matchKey).toBeUndefined()
+    expect(onConflict).toBeUndefined()
+    expect(payload).toMatchObject({
+      p_user_id: 'user-1',
+      p_topic: 'grammar:present simple',
+      p_grade: 4,
+    })
+    expect(typeof (payload as Record<string, unknown>).p_idempotency_key).toBe('string')
+  })
+
+  it('writes one immutable local rating-event row per call, keyed by topic (not entityId)', async () => {
+    await enqueueTopicSRSUpdate('user-1', 'grammar:present simple', 4)
+
+    const events = await db.srsRatingEvents.where('userId').equals('user-1').toArray()
+    expect(events).toHaveLength(1)
+    expect(events[0]).toMatchObject({
+      userId: 'user-1',
+      entityType: 'topic_srs',
+      topic: 'grammar:present simple',
+      grade: 4,
+      status: 'pending',
+    })
+    expect(events[0].entityId).toBeUndefined()
+  })
+
+  it('two overlapping ratings for a brand-new topic are queued as two distinct events, not two competing inserts', async () => {
     const first = enqueueTopicSRSUpdate('user-1', 'grammar:present simple', 4)
     const second = enqueueTopicSRSUpdate('user-1', 'grammar:present simple', 5)
-    await Promise.all([first, second])
-
-    expect(enqueueMock).toHaveBeenCalledTimes(2)
-    const [firstTable, firstOp, firstPayload] = enqueueMock.mock.calls[0]
-    const [secondTable, secondOp, secondPayload] = enqueueMock.mock.calls[1]
-
-    expect(firstTable).toBe('topic_srs')
-    expect(secondTable).toBe('topic_srs')
-
-    // Today: BOTH are 'insert' with review_count: 1, because neither read
-    // saw the other's not-yet-applied row. A correct implementation would
-    // produce one insert (review_count: 1) and one update (review_count: 2)
-    // building on the first, or serialize the two grades into a single
-    // final state with review_count: 2.
-    expect(firstOp).toBe('insert')
-    expect(secondOp).toBe('insert')
-    expect((firstPayload as Record<string, unknown>).review_count).toBe(1)
-    expect((secondPayload as Record<string, unknown>).review_count).toBe(1) // should have been 2
-
-    // If both inserts reach Supabase, the second will violate a unique
-    // constraint on (user_id, topic) and be lost/retried as a duplicate —
-    // either way the two ratings do not collapse into one coherent row with
-    // review_count 2.
-  })
-
-  it('BUG: two overlapping ratings for an existing topic read the same pre-rating snapshot, so the second enqueued update does not build on the first (lost update)', async () => {
-    const snapshot = {
-      id: 'row-9',
-      ease_factor: 2.5,
-      interval_days: 1,
-      repetitions: 1,
-      next_review_at: '2026-07-19T00:00:00.000Z',
-      srs_status: 'review',
-      last_reviewed_at: '2026-07-13T00:00:00.000Z',
-      review_count: 3,
-    }
-    maybeSingleMock.mockResolvedValue({ data: snapshot, error: null })
-
-    const first = enqueueTopicSRSUpdate('user-1', 'grammar:present simple', 4)
-    const second = enqueueTopicSRSUpdate('user-1', 'grammar:present simple', 4)
     await Promise.all([first, second])
 
     expect(enqueueMock).toHaveBeenCalledTimes(2)
     const firstPayload = enqueueMock.mock.calls[0][2] as Record<string, unknown>
     const secondPayload = enqueueMock.mock.calls[1][2] as Record<string, unknown>
 
-    // Both computed review_count = snapshot.review_count + 1 = 4, from the
-    // SAME stale snapshot. The second rating's effect never compounds onto
-    // the first's — whichever write lands last in Supabase determines the
-    // final (wrong) review_count of 4 instead of the honest 5.
-    expect(firstPayload.review_count).toBe(4)
-    expect(secondPayload.review_count).toBe(4)
-    expect(secondPayload.review_count).not.toBe(5)
+    // Distinct idempotency keys, both calls are 'rpc' — there is no more
+    // 'insert' vs 'update' branching client-side, so the old unique-
+    // constraint collision (two competing INSERTs) cannot happen here; the
+    // RPC's own upsert-as-lock serializes first-time ratings server-side.
+    expect(firstPayload.p_idempotency_key).not.toBe(secondPayload.p_idempotency_key)
+    expect(firstPayload.p_grade).toBe(4)
+    expect(secondPayload.p_grade).toBe(5)
+
+    const events = await db.srsRatingEvents.where('userId').equals('user-1').toArray()
+    expect(events).toHaveLength(2)
   })
 
-  it('GAP: when the Supabase read fails (offline), the function throws and never enqueues — there is no offline path today', async () => {
-    const offlineError = new Error('Failed to fetch')
-    maybeSingleMock.mockResolvedValue({ data: null, error: offlineError })
+  it('two overlapping ratings for an existing topic are also queued as two distinct events — no lost update locally', async () => {
+    const first = enqueueTopicSRSUpdate('user-1', 'grammar:present simple', 4)
+    const second = enqueueTopicSRSUpdate('user-1', 'grammar:present simple', 4)
+    await Promise.all([first, second])
 
+    expect(enqueueMock).toHaveBeenCalledTimes(2)
+    const events = await db.srsRatingEvents.where('userId').equals('user-1').toArray()
+    expect(events).toHaveLength(2)
+    expect(events[0].id).not.toBe(events[1].id)
+  })
+
+  it('GAP CLOSED: offline (no network) no longer prevents enqueueing — there is no read to fail', async () => {
     await expect(
       enqueueTopicSRSUpdate('user-1', 'grammar:present simple', 4),
-    ).rejects.toThrow('Failed to fetch')
-    expect(enqueueMock).not.toHaveBeenCalled()
+    ).resolves.toBeUndefined()
+    expect(enqueueMock).toHaveBeenCalledTimes(1)
   })
 })
