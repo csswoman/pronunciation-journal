@@ -31,9 +31,9 @@ function shuffle<T>(arr: T[]): T[] {
 }
 
 export type MixedExercise =
-  | { kind: 'phoneme'; data: Exercise }
-  | { kind: 'match_pairs'; data: MatchPairsExercise }
-  | { kind: 'reorder_words'; data: ReorderWordsExercise }
+  | { kind: 'phoneme'; data: Exercise; contrastId?: string }
+  | { kind: 'match_pairs'; data: MatchPairsExercise; contrastId?: string }
+  | { kind: 'reorder_words'; data: ReorderWordsExercise; contrastId?: string }
 
 /**
  * True when the user's level is B1 or above (gates ABX exercises).
@@ -128,7 +128,13 @@ export function buildAdaptiveSession(
 
   const { userLevel, contrastProgress = [] } = opts
   const progressMap = new Map(contrastProgress.map(p => [p.contrast_id, p]))
-  weakestContrastIpa(sound.ipa, progressMap)
+  // The single contrast this session intentionally targets. Discrimination
+  // exercises below may internally sample from other confusables (see
+  // getConfusableSounds), but the session's declared attribution is this
+  // one contrast — deterministic from user history, not "first in a static
+  // array" (the previous bug: primaryContrastId ignored progress entirely).
+  const weakIpa = weakestContrastIpa(sound.ipa, progressMap)
+  const contrastId = weakIpa ? contrastKey(sound.ipa, weakIpa) : undefined
   const canUseAbx = isB1OrAbove(userLevel)
 
   const ex: MixedExercise[] = []
@@ -136,37 +142,39 @@ export function buildAdaptiveSession(
   if (canUseAbx) {
     // B1+: 2 ABX in place of 2 identify
     for (let i = 0; i < 2; i++) {
-      ex.push({ kind: 'phoneme', data: generateAbx(sound, targetWords, allSounds, allWordsBySoundId, pairs) })
+      ex.push({ kind: 'phoneme', data: generateAbx(sound, targetWords, allSounds, allWordsBySoundId, pairs), contrastId })
     }
   } else {
     // A1/A2: 2 identify
     for (let i = 0; i < 2; i++) {
-      ex.push({ kind: 'phoneme', data: generateIdentify(sound, targetWords, allSounds, allWordsBySoundId) })
+      ex.push({ kind: 'phoneme', data: generateIdentify(sound, targetWords, allSounds, allWordsBySoundId), contrastId })
     }
   }
 
   // AX same/different × 2
   for (let i = 0; i < 2; i++) {
-    ex.push({ kind: 'phoneme', data: generateAxSameDifferent(sound, targetWords, allSounds, allWordsBySoundId) })
+    ex.push({ kind: 'phoneme', data: generateAxSameDifferent(sound, targetWords, allSounds, allWordsBySoundId), contrastId })
   }
 
   // odd_one_out × 1
-  ex.push({ kind: 'phoneme', data: generateOddOneOut(sound, targetWords, allSounds, allWordsBySoundId) })
+  ex.push({ kind: 'phoneme', data: generateOddOneOut(sound, targetWords, allSounds, allWordsBySoundId), contrastId })
 
   // pick_word × 1
-  ex.push({ kind: 'phoneme', data: generatePickWord(sound, targetWords, allSounds, allWordsBySoundId) })
+  ex.push({ kind: 'phoneme', data: generatePickWord(sound, targetWords, allSounds, allWordsBySoundId), contrastId })
 
   // minimal_pair × 1 (fallback pick_word if no pairs)
   const mp = generateMinimalPair(sound, pairs)
   ex.push({
     kind: 'phoneme',
     data: mp.options.length > 0 ? mp : generatePickWord(sound, targetWords, allSounds, allWordsBySoundId),
+    contrastId,
   })
 
-  // dictation × 1
+  // dictation × 1 — no contrast comparison, not attributed to a contrast.
   ex.push({ kind: 'phoneme', data: generateDictation(sound, targetWords) })
 
-  // Optional: match_pairs + reorder
+  // Optional: match_pairs + reorder — group/production exercises, not
+  // per-contrast discrimination; not attributed to a contrast.
   const matchGroups = generateMatchPairsFromSoundWords(targetWords)
   if (matchGroups.length > 0) ex.push({ kind: 'match_pairs', data: matchGroups[0] })
   const reorder = generateReorderFromSoundExample(sound)

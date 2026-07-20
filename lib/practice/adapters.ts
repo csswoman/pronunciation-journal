@@ -71,6 +71,7 @@ export function fromMixedExercise(
       stimuli,
       abxAnswer,
       oddIndex,
+      contrastId: ex.contrastId,
     }
     const slug = ex.data.type as ExerciseSlug
     // contentId must vary per exercise within a sound so buildSession does not

@@ -224,7 +224,19 @@ export function useLexiconPracticeSession(categoryId: string, userId: string | u
     // Build sentence_context exercises for forgot/normal words that have exampleSentence.
     const practiceWordIds = new Set(pool.map((e) => e.source_ref))
     const candidateWordEntries = sessionWordEntries.filter((w) => practiceWordIds.has(w.id))
-    const sentenceContextRaw = generateSentenceContextExercises(candidateWordEntries, sessionWordEntries)
+    // pool entries are WordBankEntry rows keyed by their own `id` (real bank
+    // UUID) with `source_ref` pointing back to the Dictionary catalog id
+    // that sessionWordEntries use as `WordEntry.id`. Words never saved to the
+    // bank get a synthetic `lexicon:<id>` placeholder id (see `load` above) —
+    // exclude those so they don't leak as a fake word_bank UUID.
+    const bankIdByContentId = new Map(
+      pool.filter((e) => !e.id.startsWith('lexicon:')).map((e) => [e.source_ref, e.id]),
+    )
+    const sentenceContextRaw = generateSentenceContextExercises(
+      candidateWordEntries,
+      sessionWordEntries,
+      (contentId) => bankIdByContentId.get(contentId),
+    )
     const sentenceContextExercises: PracticeExercise[] = sentenceContextRaw.map((ex) => fromGenericExercise(ex, 'practice'))
 
     // Interleave match_pairs and sentence_context for better retention.

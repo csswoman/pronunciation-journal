@@ -80,6 +80,8 @@ export type PhonemePayload = {
   stimuli?: AudioStimulus[]
   abxAnswer?: 0 | 1
   oddIndex?: number
+  /** The contrast this exercise was built to target, when applicable (see buildAdaptiveSession). */
+  contrastId?: string
 }
 
 export type GenericPayload = {

@@ -15,11 +15,18 @@ const OPTIONS_COUNT = 4
  * the session pool (same-session words), then from same-tag neighbours if
  * needed. The correct word is never used as a distractor.
  *
+ * `word.id` is a lexicon content id, not a `word_bank` UUID — the two
+ * namespaces are not interchangeable. When `resolveBankId` maps a word to a
+ * real bank row, the exercise carries a `word_bank` sourceRef using that UUID
+ * so SRS updates land on the correct row. Otherwise no sourceRef is emitted:
+ * the exercise still records answer evidence but does not update any bank row.
+ *
  * Returns at most MAX_SENTENCE_CONTEXT exercises.
  */
 export function generateSentenceContextExercises(
   candidateWords: WordEntry[],
   sessionPool: WordEntry[],
+  resolveBankId?: (contentId: string) => string | undefined,
 ): SentenceContextExercise[] {
   const usable = candidateWords.filter((w) => {
     if (!w.exampleSentence) return false
@@ -36,10 +43,12 @@ export function generateSentenceContextExercises(
       ...distractors,
     ])
 
+    const bankId = resolveBankId?.(word.id)
+
     return {
       id: exerciseId('sentence_context', word.id, 'v1'),
       type: 'sentence_context',
-      sourceRef: { source: 'word_bank', id: word.id },
+      ...(bankId ? { sourceRef: { source: 'word_bank' as const, id: bankId } } : {}),
       topic: VOCABULARY_TOPIC,
       sentence: blanked,
       fullSentence: word.exampleSentence!,

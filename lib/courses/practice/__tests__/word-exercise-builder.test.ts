@@ -26,12 +26,12 @@ describe('buildWordExercises', () => {
   it('produces a fill_blank with sourceRef.source = core1k', () => {
     const [ex] = buildWordExercises(fourWords)
     expect(ex.type).toBe('fill_blank')
-    expect(ex.sourceRef.source).toBe('core1k')
+    expect(ex.sourceRef?.source).toBe('core1k')
   })
 
   it('sourceRef.id is the c1k: prefixed word id', () => {
     const [ex] = buildWordExercises(fourWords)
-    expect(ex.sourceRef.id).toBe('c1k:house')
+    expect(ex.sourceRef?.id).toBe('c1k:house')
   })
 
   it('blanks the target word in the sentence', () => {
@@ -59,6 +59,6 @@ describe('buildWordExercises', () => {
     const [ex] = buildWordExercises([word])
     // With only 1 word in the pool, no distractors exist → falls back to dictation
     expect(ex.type).toBe('sentence_dictation')
-    expect(ex.sourceRef.source).toBe('core1k')
+    expect(ex.sourceRef?.source).toBe('core1k')
   })
 })

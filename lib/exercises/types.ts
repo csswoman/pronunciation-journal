@@ -77,8 +77,16 @@ export interface MatchPair {
   right: string // definition / translation / IPA
 }
 
-export interface MatchPairsExercise extends BaseGenericExercise {
+export interface MatchPairsExercise extends Omit<BaseGenericExercise, 'sourceRef'> {
   type: 'match_pairs'
+  /**
+   * Absent: match_pairs grades a group answer, not a single word — there is
+   * no per-pair result in the session pipeline (one exercise submission =
+   * one ExerciseResult), so attributing the whole group to any one pair's
+   * source would silently corrupt that word's SM-2 state. The exercise
+   * still records answer_history evidence; it is simply not SRS-eligible.
+   */
+  sourceRef?: ExerciseSourceRef
   pairs: MatchPair[]
 }
 
@@ -100,8 +108,14 @@ export interface SentenceContextOption {
   word: string
 }
 
-export interface SentenceContextExercise extends BaseGenericExercise {
+export interface SentenceContextExercise extends Omit<BaseGenericExercise, 'sourceRef'> {
   type: 'sentence_context'
+  /**
+   * Absent when the practiced word has no corresponding `word_bank` row
+   * (e.g. an unsaved Dictionary item) — the exercise still produces answer
+   * evidence but is not SRS-eligible against any bank row.
+   */
+  sourceRef?: ExerciseSourceRef
   /** Full sentence with the target word replaced by "___". */
   sentence: string
   /** The full original sentence (for audio + post-answer reveal). */

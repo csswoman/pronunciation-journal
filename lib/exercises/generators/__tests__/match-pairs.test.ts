@@ -47,7 +47,10 @@ describe('generateMatchPairsFromWordBank', () => {
     expect(generateMatchPairsFromWordBank(entries, 1)).toHaveLength(1)
   })
 
-  it('sets sourceRef from an entry in the generated group', () => {
+  it('never attributes the group answer to any single entry (no sourceRef)', () => {
+    // Regression: match_pairs grades one aggregate answer, not a per-word
+    // result. Emitting a sourceRef here previously corrupted the first
+    // entry's SM-2 state on every submission, correct or not.
     const entries = [
       makePairEntry('abc-123', 'alpha', 'first', { source: 'core1k' }),
       makePairEntry('def-456', 'beta', 'second'),
@@ -55,9 +58,7 @@ describe('generateMatchPairsFromWordBank', () => {
       makePairEntry('jkl-012', 'delta', 'fourth'),
     ]
     const [exercise] = generateMatchPairsFromWordBank(entries, 1)
-    const groupIds = new Set(entries.map((e) => e.id))
-    expect(groupIds.has(exercise.sourceRef.id)).toBe(true)
-    expect(['core1k', 'word_bank']).toContain(exercise.sourceRef.source)
+    expect(exercise.sourceRef).toBeUndefined()
   })
 
   it('builds word↔definition pairs for each selected entry', () => {

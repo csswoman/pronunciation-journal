@@ -32,6 +32,7 @@ export default function SoundPracticePage() {
 
   const [soundIpa, setSoundIpa] = useState('')
   const [exercises, setExercises] = useState<PracticeExercise[]>([])
+  const [sessionContrastId, setSessionContrastId] = useState<string | null>(null)
   const [nextReview, setNextReview] = useState<Date | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -58,6 +59,12 @@ export default function SoundPracticePage() {
 
       const targetWords = wordsBySoundId.get(soundId) ?? []
       const mixed = buildMixedSession(sound, targetWords, sounds, wordsBySoundId, minimalPairs)
+      // buildAdaptiveSession attaches the same contrastId to every phoneme
+      // exercise it targets — read it back instead of independently
+      // re-deriving it here, so completion attribution always matches what
+      // was actually practiced (see finish-session.ts groupResultsByContrast).
+      const builtContrastId = mixed.find((m) => m.kind === 'phoneme')?.contrastId ?? cid
+      setSessionContrastId(builtContrastId ?? null)
       setExercises(mixed.map((m) => fromMixedExercise(m, 'sound_lab')))
       setSessionKey((k) => k + 1)
     } catch {
@@ -74,7 +81,7 @@ export default function SoundPracticePage() {
   const handleSessionComplete = useCallback(
     async (result: SessionResult) => {
       if (!user || result.results.length === 0) return
-      const cid = primaryContrastId(soundIpa)
+      const cid = sessionContrastId ?? primaryContrastId(soundIpa)
       if (!cid) return
       try {
         // PracticeSession already records the activity_sessions row.
@@ -84,7 +91,7 @@ export default function SoundPracticePage() {
         console.error('[SoundPracticePage] finishContrastSession failed', err)
       }
     },
-    [user, soundIpa],
+    [user, soundIpa, sessionContrastId],
   )
 
   const sessionConfig = useMemo(() => {

@@ -179,7 +179,13 @@ export function useSessionState(config: PracticeConfig) {
         topic: current.payload.kind === 'generic' ? current.payload.data.topic : undefined,
         exercisePayload:
           current.payload.kind === 'phoneme'
-            ? { type: current.slug, soundId: current.soundId, options: current.payload.options, targetWord: current.payload.targetWord }
+            ? {
+                type: current.slug,
+                soundId: current.soundId,
+                options: current.payload.options,
+                targetWord: current.payload.targetWord,
+                contrastId: current.payload.contrastId,
+              }
             : {
                 type: current.slug,
                 contentId: current.contentId,

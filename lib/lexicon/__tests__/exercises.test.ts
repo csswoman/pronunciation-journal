@@ -84,4 +84,26 @@ describe('generateSentenceContextExercises', () => {
       expect(distractors.every((o) => o.word !== ex.answer)).toBe(true)
     }
   })
+
+  it('omits sourceRef when the word has no corresponding word_bank row', () => {
+    const pool = [makeWordEntry({ id: 'work', word: 'work' })]
+    const [exercise] = generateSentenceContextExercises(pool, pool)
+    expect(exercise.sourceRef).toBeUndefined()
+  })
+
+  it('never emits the lexicon content id as a word_bank sourceRef id', () => {
+    // Regression: word.id is a lexicon catalog id ("work"), never a
+    // word_bank UUID. Without a resolver, no sourceRef must be emitted.
+    const pool = [makeWordEntry({ id: 'work', word: 'work' })]
+    const [exercise] = generateSentenceContextExercises(pool, pool)
+    expect(exercise.sourceRef?.id).not.toBe('work')
+  })
+
+  it('carries the resolved word_bank UUID when resolveBankId maps the word', () => {
+    const pool = [makeWordEntry({ id: 'work', word: 'work' })]
+    const resolveBankId = (contentId: string) =>
+      contentId === 'work' ? 'bank-uuid-123' : undefined
+    const [exercise] = generateSentenceContextExercises(pool, pool, resolveBankId)
+    expect(exercise.sourceRef).toEqual({ source: 'word_bank', id: 'bank-uuid-123' })
+  })
 })
