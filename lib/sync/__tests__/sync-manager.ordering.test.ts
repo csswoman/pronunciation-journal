@@ -172,6 +172,57 @@ describe('flushOutbox per-entity ordering', () => {
     releases['key-b']()
     await flushPromise
   })
+
+  it('gives each malformed upsert entry (missing a resolved onConflict column) its own independent entity key and warns loudly', async () => {
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    // Both entries target the same table/onConflict but are missing the
+    // `contrast_id` column value in the payload — a producer bug. They must
+    // NOT collide onto the same "undefined"-tainted key; each should be
+    // independent and free to run concurrently.
+    const entries = [
+      {
+        id: 61, table: 'user_contrast_progress', operation: 'upsert',
+        payload: { some_other_col: 'x' },
+        onConflict: 'contrast_id',
+        status: 'pending', retryCount: 0, createdAt: new Date().toISOString(),
+      },
+      {
+        id: 62, table: 'user_contrast_progress', operation: 'upsert',
+        payload: { some_other_col: 'y' },
+        onConflict: 'contrast_id',
+        status: 'pending', retryCount: 0, createdAt: new Date().toISOString(),
+      },
+    ]
+    setupFlush(entries)
+
+    const inFlight = new Set<number>()
+    let bothInFlightSimultaneously = false
+    const releases: Record<number, () => void> = {}
+    const mockUpsert = vi.fn(async (payload: Record<string, unknown>) => {
+      const id = payload.some_other_col === 'x' ? 61 : 62
+      inFlight.add(id)
+      if (inFlight.size === 2) bothInFlightSimultaneously = true
+      await new Promise<void>((resolve) => { releases[id] = resolve })
+      inFlight.delete(id)
+      return { error: null }
+    })
+    mocks.mockSupabaseFrom.mockReturnValue({ upsert: mockUpsert })
+
+    const flushPromise = flushOutbox('user-1')
+
+    await vi.waitFor(() => expect(inFlight.size).toBe(2))
+    expect(bothInFlightSimultaneously).toBe(true)
+
+    releases[61]()
+    releases[62]()
+    await flushPromise
+
+    expect(warnSpy).toHaveBeenCalled()
+    const warnedMessages = warnSpy.mock.calls.map((call) => String(call[0]))
+    expect(warnedMessages.some((msg) => msg.includes('user_contrast_progress') && msg.includes('contrast_id'))).toBe(true)
+
+    warnSpy.mockRestore()
+  })
 })
 
 // ── 23505 (unique_violation) reclassification ───────────────────────────

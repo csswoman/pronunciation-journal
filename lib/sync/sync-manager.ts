@@ -201,7 +201,15 @@ async function flushEntry(entry: SyncOutboxEntry): Promise<void> {
  *   values — that's the WHERE clause, i.e. the row identity.
  * - upsert without an explicit matchKey: keyed by table + the resolved
  *   onConflict column(s)' values pulled from the payload, since that's the
- *   row identity Postgres will collide on.
+ *   row identity Postgres will collide on. If the payload is missing one of
+ *   those columns (a producer bug — e.g. a table added to
+ *   `UPSERT_CONFLICT_COLUMNS` whose enqueue call forgot to include a column),
+ *   we do NOT fall through to building a key with a literal `"undefined"` in
+ *   it: that would silently coalesce every malformed entry for the table
+ *   onto the same entity key and wrongly serialize unrelated writes against
+ *   each other. Instead we log loudly and treat the entry as independent
+ *   (see fallback below) — the safe direction, since the worst case is a
+ *   missed batching optimization, never an incorrect grouping.
  * - insert, or anything else with no derivable identity: no collision
  *   target exists client-side, so each such entry is its own independent
  *   entity (keyed by its own outbox id) and is free to run concurrently
@@ -227,16 +235,32 @@ function entityKeyFor(entry: SyncOutboxEntry): string {
     const onConflict = resolveOnConflict(entry)
     if (onConflict) {
       const payload = entry.payload as Record<string, unknown>
-      const parts = onConflict
-        .split(',')
-        .map((col) => col.trim())
-        .sort((a, b) => a.localeCompare(b))
-        .map((col) => `${col}=${String(payload[col])}`)
-      return `${entry.table}:${parts.join(',')}`
+      const columns = onConflict.split(',').map((col) => col.trim())
+      const missingColumns = columns.filter((col) => payload[col] === undefined)
+      if (missingColumns.length > 0) {
+        // Malformed entry: payload doesn't carry a value for every resolved
+        // onConflict column. Don't build a "undefined"-tainted key that
+        // would wrongly group this entry with other malformed entries for
+        // the same table — fall through to the independent-entity fallback.
+        console.warn(
+          `[sync-manager] entityKeyFor: upsert entry for table "${entry.table}" ` +
+          `is missing payload value(s) for resolved onConflict column(s) ` +
+          `[${missingColumns.join(', ')}] (onConflict="${onConflict}"). ` +
+          `Payload keys: [${Object.keys(payload).join(', ')}]. ` +
+          `Treating entry ${entry.id} as an independent entity instead of ` +
+          `grouping it with other entries for this table.`,
+        )
+      } else {
+        const parts = columns
+          .sort((a, b) => a.localeCompare(b))
+          .map((col) => `${col}=${String(payload[col])}`)
+        return `${entry.table}:${parts.join(',')}`
+      }
     }
   }
 
-  // No derivable collision target (e.g. a plain insert) — independent entity.
+  // No derivable collision target (e.g. a plain insert, or a malformed
+  // upsert missing a conflict-column value) — independent entity.
   return `entry:${entry.id}`
 }
 
