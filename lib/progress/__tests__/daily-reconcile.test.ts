@@ -101,4 +101,32 @@ describe('reconcileDailySteps', () => {
     }
     expect(reconcileDailySteps([wordReviewStep], session, 'practice')).toContain('word_review')
   })
+
+  it('resolves only the exact assigned course target', () => {
+    const assigned: DailyStep = {
+      kind: 'study_deck',
+      id: 'study_deck:a1:lesson-1',
+      title: 'Estudia teoría',
+      subtitle: 'Lesson 1',
+      icon: 'GraduationCap',
+      exercises: [],
+      estMinutes: 5,
+      href: '/courses/a1/1',
+    }
+    const other: DailyStep = {
+      ...assigned,
+      id: 'study_deck:a1:lesson-2',
+      subtitle: 'Lesson 2',
+    }
+    const session = {
+      ...emptySession(),
+      results: [result({ contentId: 'a1:lesson-1:quiz:1', context: 'courses' })],
+      accuracy: 100,
+    }
+
+    expect(reconcileDailySteps([assigned, other], session, 'courses', { dailyTargetId: 'a1:lesson-1' })).toEqual([
+      'study_deck:a1:lesson-1',
+    ])
+    expect(reconcileDailySteps([assigned, other], session, 'courses', { dailyTargetId: 'a1:lesson-3' })).toEqual([])
+  })
 })

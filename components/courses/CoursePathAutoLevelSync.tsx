@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { db } from "@/lib/db";
-import { lessonProgressKey } from "@/lib/courses/progress";
+import { getCurrentUser } from "@/lib/auth/session";
 import type { CefrLevelId } from "@/lib/courses/types";
 
 interface LevelProgressEntry {
@@ -14,6 +14,19 @@ interface LevelProgressEntry {
 interface CoursePathAutoLevelSyncProps {
   hasExplicitLevel: boolean;
   levels: LevelProgressEntry[];
+}
+
+async function getOptionalUserId(): Promise<string | null> {
+  try {
+    const user = await getCurrentUser();
+    return user?.id ?? null;
+  } catch {
+    return null;
+  }
+}
+
+function completionKey(userId: string, courseSlug: string, lessonSlug: string): string {
+  return `${userId}:${courseSlug}:${lessonSlug}`;
 }
 
 export default function CoursePathAutoLevelSync({
@@ -29,10 +42,13 @@ export default function CoursePathAutoLevelSync({
     let cancelled = false;
 
     async function syncLevel() {
+      const userId = await getOptionalUserId();
+      if (!userId) return;
+
       const counts = await Promise.all(
         levels.map(async (level) => {
           const rows = await db.completedLessons.bulkGet(
-            level.lessonIds.map((lessonId) => lessonProgressKey(level.id, lessonId))
+            level.lessonIds.map((lessonId) => completionKey(userId, level.id, lessonId))
           );
 
           return {

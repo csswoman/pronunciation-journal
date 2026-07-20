@@ -7,6 +7,9 @@ import type { SessionArc } from '@/lib/practice/types'
 vi.mock('dexie-react-hooks', () => ({ useLiveQuery: () => 748 }))
 vi.mock('@/lib/db', () => ({ db: { srsData: {} } }))
 vi.mock('@/lib/core-1000/types', () => ({ CORE1000_PREFIX: 'c1k:' }))
+vi.mock('@/components/auth/AuthProvider', () => ({
+  useAuth: () => ({ user: { id: 'user-1' } }),
+}))
 
 const arc: SessionArc = {
   topicLabel: 'Presente simple',

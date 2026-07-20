@@ -18,6 +18,10 @@ const GENERIC_TYPE_TO_SLUG: Record<GenericExerciseType, ExerciseSlug> = {
   multiple_choice: 'multiple_choice',
   written_production: 'written_production',
   spoken_production: 'spoken_production',
+  error_correction: 'error_correction',
+  conjugation_blank: 'conjugation_blank',
+  sentence_transformation: 'sentence_transformation',
+  translation_es_en: 'translation_es_en',
 }
 
 /**
@@ -57,6 +61,7 @@ export function fromMixedExercise(
       stimuli,
       abxAnswer,
       oddIndex,
+      contrastId,
     } = ex.data
     const payload: PhonemePayload = {
       kind: 'phoneme',
@@ -85,6 +90,7 @@ export function fromMixedExercise(
       payload,
       level,
       soundId,
+      contrastId,
     }
   }
 

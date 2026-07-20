@@ -13,6 +13,7 @@ import type { Session, User } from "@supabase/supabase-js";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { useLoadingWords } from "@/hooks/useLoadingWords";
+import { initSyncListeners } from "@/lib/sync/init-sync-listeners";
 
 export type AuthContextValue = {
   user: User | null;
@@ -51,9 +52,15 @@ export default function AuthProvider({
 
   const signOutUser = useCallback(async () => {
     if (!supabaseEnabled) return;
+    // Preserve offline-first guarantees: attempt only this account's pending
+    // outbox rows, then leave any unsent rows namespaced in Dexie.
+    if (user?.id) {
+      const { flushOutbox } = await import("@/lib/sync/sync-manager");
+      await flushOutbox(user.id).catch(() => {});
+    }
     const supabase = getSupabaseBrowserClient();
     await supabase.auth.signOut();
-  }, [supabaseEnabled]);
+  }, [supabaseEnabled, user?.id]);
 
   useEffect(() => {
     if (!supabaseEnabled) {
@@ -62,21 +69,30 @@ export default function AuthProvider({
     }
 
     const supabase = getSupabaseBrowserClient();
+    const cleanupSyncListeners = initSyncListeners(user?.id ?? null);
     const hydrateCEFR = async (userId: string) => {
       try {
+        const { claimGuestPlacement } = await import("@/lib/courses/guest-assessment");
+        await claimGuestPlacement(userId);
+
         const { data } = await supabase
           .from("user_profiles" as never)
           .select("cefr_level")
           .eq("id", userId)
           .maybeSingle();
         const profile = data as { cefr_level?: string } | null;
-        if (!profile?.cefr_level) return;
 
-        const [{ db }, { getUserLearningState }, { normalizeCEFR }] = await Promise.all([
+        const [{ db }, { getUserLearningState }, { hydrateFromRemote }, { normalizeCEFR }, { hydrateLessonCompletions }] = await Promise.all([
           import("@/lib/db"),
           import("@/lib/ai-practice/load-state"),
+          import("@/lib/ai-practice/queries"),
           import("@/lib/exercises/cefr"),
+          import("@/lib/courses/queries"),
         ]);
+
+        await hydrateFromRemote(userId);
+        await hydrateLessonCompletions(userId);
+        if (!profile?.cefr_level) return;
 
         const nextLevel = normalizeCEFR(profile.cefr_level);
         const existing = await db.learningState.get(userId);
@@ -112,8 +128,11 @@ export default function AuthProvider({
       if (s?.user?.id) void hydrateCEFR(s.user.id);
     });
 
-    return () => subscription.unsubscribe();
-  }, [initialUser, supabaseEnabled]);
+    return () => {
+      cleanupSyncListeners();
+      subscription.unsubscribe();
+    };
+  }, [initialUser, supabaseEnabled, user?.id]);
 
   const value = useMemo<AuthContextValue>(
     () => ({
@@ -141,7 +160,9 @@ export default function AuthProvider({
   }
 
   return (
-    <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={value}>
+      <div key={user?.id ?? "signed-out"}>{children}</div>
+    </AuthContext.Provider>
   );
 }
 

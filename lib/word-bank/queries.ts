@@ -21,6 +21,7 @@ export async function quickAddWord(input: {
   text: string;
   context?: string | null;
   deckId?: string | null;
+  source?: "manual" | "reader";
 }): Promise<WordBankEntry> {
   const accessToken = await getAccessToken();
 
@@ -34,6 +35,7 @@ export async function quickAddWord(input: {
       text: input.text,
       context: input.context ?? null,
       deckId: input.deckId ?? null,
+      source: input.source ?? "manual",
     }),
   });
 

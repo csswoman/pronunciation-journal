@@ -145,7 +145,7 @@ function SentencePrompt({ sentence }: { sentence: string }) {
   return (
     <p className="text-center text-lg leading-relaxed text-fg">
       {parts[0]}
-      <span className="inline-flex items-end gap-0.75 mx-1.5 align-baseline" style={{ paddingBottom: '2px' }}>
+      <span className="inline-flex items-end gap-0.75 mx-1.5 pb-0.5 align-baseline">
         {Array.from({ length: wordCount }).map((_, i) => (
           <span key={i} className="inline-block h-px w-3.5 bg-border-strong" />
         ))}

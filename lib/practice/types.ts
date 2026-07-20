@@ -5,6 +5,10 @@ import type {
   ExerciseSourceRef,
   GenericExercise,
 } from '@/lib/exercises/types'
+import type {
+  AttributionVersion,
+  EvidenceAttribution,
+} from '@/lib/practice/attribution'
 import type { StudyCardModel } from '@/lib/practice/study-card/model'
 import type { ReaderPassage } from '@/lib/practice/reader/types'
 import type { ExerciseErrorCode } from '@/lib/exercises/error-taxonomy'
@@ -30,6 +34,10 @@ export type ExerciseSlug =
   | 'reader'             // no DB row — comprehensible input, does not write to answer_history
   | 'written_production' // id: 15 — online-only (AI grading)
   | 'spoken_production'  // id: 16 — online-only (AI grading)
+  | 'error_correction'   // id: 19
+  | 'conjugation_blank'  // id: 21
+  | 'sentence_transformation' // id: 20
+  | 'translation_es_en' // id: 22
 
 // null signals "no exercise_types FK" — this exercise does not write to answer_history.
 export const EXERCISE_TYPE_IDS: Record<ExerciseSlug, number | null> = {
@@ -51,6 +59,10 @@ export const EXERCISE_TYPE_IDS: Record<ExerciseSlug, number | null> = {
   reader: null,
   written_production: 15,
   spoken_production: 16,
+  error_correction: 19,
+  conjugation_blank: 21,
+  sentence_transformation: 20,
+  translation_es_en: 22,
 }
 
 export type PracticeContext =
@@ -92,6 +104,11 @@ export type PracticeExercise = {
   level?: CEFRLevel
   /** Only set for phoneme-domain exercises. */
   soundId?: number
+  /**
+   * Plan 062: contrast key (`ipaA|ipaB`) when this exercise updates
+   * `user_contrast_progress`. Independent of PHONEME_CONFUSION array order.
+   */
+  contrastId?: string
   /** Only set for generic exercises. */
   sourceRef?: ExerciseSourceRef
 }
@@ -114,6 +131,14 @@ export type PracticeAnswer = {
   exercisePayload?: unknown
   /** Carried from PracticeExercise; used to build a prefixed content_id for SRS routing. */
   sourceRef?: ExerciseSourceRef
+  /**
+   * Plan 062: explicit SRS targets/outcomes for this answer.
+   * Prefer this over inferring identity from `sourceRef` alone.
+   * Absent = legacy evidence (do not invent targets).
+   */
+  attribution?: EvidenceAttribution
+  /** Stamped when `attribution` is present so reports can segment legacy rows. */
+  attributionVersion?: AttributionVersion
   /** Raw concept label from the exercise (e.g. "grammar:present_simple"). Normalized before persisting/scheduling. */
   topic?: string
 }
@@ -140,6 +165,7 @@ export type DailyStepKind =
   | 'listening'        // dictation desde words del seed
   | 'sentence_builder' // reorder_words desde text_fragments (lecciones y grammar decks)
   | 'concept'          // mini-lección / language concept del día (lectura ligera)
+  | 'study_deck'       // lección de la ruta, elegida desde el progreso del usuario
   | 'reader'           // comprehensible-input: párrafo i+1 que recicla vocab reciente
 
 export type DailyStep = {
@@ -155,7 +181,7 @@ export type DailyStep = {
   estMinutes: number
   /** Solo para 'word_intro': tarjetas de presentación (no evaluadas, no escriben answer_history). */
   studyCards?: StudyCardModel[]
-  /** Solo para 'concept': a dónde lleva la lectura. */
+  /** Solo para 'concept' y 'study_deck': a dónde lleva la lectura. */
   href?: string
   /** Solo para 'phoneme_focus': IPA del sonido que se practica (para mostrar intro). */
   ipa?: string

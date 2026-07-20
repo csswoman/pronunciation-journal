@@ -1,9 +1,12 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
-const enqueueMock = vi.fn()
-const topicSrsMock = vi.fn()
-const wordBankSrsMock = vi.fn()
-const fragmentSrsMock = vi.fn()
+const { enqueueMock, topicSrsMock, wordBankSrsMock, fragmentSrsMock, transactionMock } = vi.hoisted(() => ({
+  enqueueMock: vi.fn(),
+  topicSrsMock: vi.fn(),
+  wordBankSrsMock: vi.fn(),
+  fragmentSrsMock: vi.fn(),
+  transactionMock: vi.fn(async (_mode: string, _tables: unknown[], callback: () => Promise<void>) => callback()),
+}))
 
 vi.mock('@/lib/sync/sync-manager', () => ({ enqueue: (...a: unknown[]) => enqueueMock(...a) }))
 vi.mock('@/lib/word-bank/srs-queries', () => ({
@@ -15,7 +18,10 @@ vi.mock('@/lib/practice/topic-srs-queries', () => ({
 vi.mock('@/lib/practice/fragment-srs', () => ({
   upsertFragmentSrs: (...a: unknown[]) => fragmentSrsMock(...a),
 }))
-vi.mock('@/lib/db', () => ({ markLessonComplete: vi.fn() }))
+vi.mock('@/lib/db', () => ({
+  markLessonComplete: vi.fn(),
+  db: { syncOutbox: {}, srsRatingEvents: {}, srsData: {}, transaction: transactionMock },
+}))
 
 import { savePracticeAnswer } from '@/lib/practice/queries'
 
@@ -40,16 +46,20 @@ describe('savePracticeAnswer topic routing', () => {
   it('persists normalized topic and schedules topic SRS when topic present', async () => {
     await savePracticeAnswer('user-1', { ...base, topic: 'grammar:Present_Simple' })
 
-    const insertCall = enqueueMock.mock.calls.find((c) => c[0] === 'answer_history')
-    expect(insertCall?.[2]).toMatchObject({ topic: 'grammar:present simple' })
+    const insertCall = enqueueMock.mock.calls.find((c) => c[1] === 'answer_history')
+    expect(insertCall?.[0]).toBe('user-1')
+    expect(insertCall?.[3]).toMatchObject({ topic: 'grammar:present simple' })
+    expect(insertCall?.[2]).toBe('upsert')
+    expect(insertCall?.[3].id).toMatch(/^[0-9a-f-]{36}$/i)
+    expect(insertCall?.[5]).toBe('id')
     expect(topicSrsMock).toHaveBeenCalledWith('user-1', 'grammar:present simple', expect.any(Number))
   })
 
   it('does not schedule topic SRS when topic absent', async () => {
     await savePracticeAnswer('user-1', { ...base })
     expect(topicSrsMock).not.toHaveBeenCalled()
-    const insertCall = enqueueMock.mock.calls.find((c) => c[0] === 'answer_history')
-    expect(insertCall?.[2].topic).toBeNull()
+    const insertCall = enqueueMock.mock.calls.find((c) => c[1] === 'answer_history')
+    expect(insertCall?.[3].topic).toBeNull()
   })
 })
 
@@ -65,12 +75,23 @@ describe('savePracticeAnswer source SRS routing', () => {
   })
 
   it('schedules word_bank SRS (not fragment) for word_bank-sourced answers', async () => {
+    const wordId = '550e8400-e29b-41d4-a716-446655440000'
+    await savePracticeAnswer('user-1', {
+      ...base,
+      sourceRef: { source: 'word_bank', id: wordId },
+    })
+
+    expect(wordBankSrsMock).toHaveBeenCalledWith('user-1', wordId, expect.any(Number))
+    expect(fragmentSrsMock).not.toHaveBeenCalled()
+  })
+
+  it('does not schedule word_bank SRS for catalog ids disguised as word_bank', async () => {
     await savePracticeAnswer('user-1', {
       ...base,
       sourceRef: { source: 'word_bank', id: 'wb-3' },
     })
 
-    expect(wordBankSrsMock).toHaveBeenCalledWith('user-1', 'wb-3', expect.any(Number))
+    expect(wordBankSrsMock).not.toHaveBeenCalled()
     expect(fragmentSrsMock).not.toHaveBeenCalled()
   })
 

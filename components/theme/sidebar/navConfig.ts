@@ -9,12 +9,17 @@ import {
   Layers,
   ListOrdered,
   RotateCcw,
+  Bookmark,
+  FileText,
 } from "@/components/icons";
 import { NavSectionType } from "./NavSection";
 
 export const coreNav: NavSectionType = {
   label: "",
-  items: [{ name: "Home", href: "/", icon: Home }],
+  items: [
+    { name: "Home", href: "/", icon: Home },
+    { name: "Journal", href: "/journal", icon: FileText },
+  ],
 };
 
 export const practiceNav: NavSectionType = {
@@ -38,13 +43,14 @@ export const referenceNav: NavSectionType = {
   label: "Reference",
   items: [
     { name: "IPA Chart", href: "/ipa", icon: Radio },
-    { name: "Words", href: "/words", icon: LibraryBig },
+    { name: "Dictionary", href: "/dictionary", icon: LibraryBig },
   ],
 };
 
 export const trackingNav: NavSectionType = {
   label: "Tracking",
   items: [
+    { name: "Saved", href: "/tracking", icon: Bookmark },
     { name: "Review", href: "/practice/review", icon: RotateCcw },
     { name: "Progress", href: "/progress", icon: TrendingUp },
   ],

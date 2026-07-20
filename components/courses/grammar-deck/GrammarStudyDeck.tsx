@@ -10,7 +10,8 @@
 // </GrammarStudyDeck>
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { recordLessonComplete } from "@/lib/practice/queries";
+import { recordLessonComplete, recordLessonQuizAttempt } from "@/lib/practice/queries";
+import { getCurrentUser } from "@/lib/auth/session";
 import PracticeSession from "@/components/practice/PracticeSession";
 import type { PracticeExercise } from "@/lib/practice/types";
 import type { CefrLevel } from "@/lib/core-1000/types";
@@ -182,8 +183,30 @@ export default function GrammarStudyDeck({
         ) : phase === "quiz" && deck.quiz ? (
           <QuizStep
             questions={deck.quiz}
-            onDone={(correct, totalQ) => {
+            onDone={(correct, totalQ, pickedAnswers, answerTimesMs) => {
               setQuizScore({ correct, total: totalQ });
+              if (levelId && lessonId) {
+                void getCurrentUser().then((user) => {
+                  if (!user || !deck.quiz) return;
+                  return recordLessonQuizAttempt(
+                    user.id,
+                    deck.quiz.map((question, index) => {
+                      const selectedIndex = pickedAnswers[index];
+                      return {
+                        questionId: `${lessonId}:quiz:${index + 1}`,
+                        courseSlug: levelId,
+                        lessonSlug: lessonId,
+                        question: question.q,
+                        selectedAnswer: selectedIndex == null ? "" : question.options[selectedIndex] ?? "",
+                        correctAnswer: question.options[question.answer] ?? "",
+                        isCorrect: selectedIndex === question.answer,
+                        timeMs: answerTimesMs[index] ?? 0,
+                        topic: lessonId,
+                      };
+                    }),
+                  );
+                }).catch(() => undefined);
+              }
               setPhase("done");
             }}
           />

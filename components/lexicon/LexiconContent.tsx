@@ -45,7 +45,7 @@ export function LexiconContent({ lessons }: LexiconContentProps) {
       <LexiconSearchBar value={searchQuery} onChange={setSearchQuery} />
       <LessonGrid
         lessons={filteredLessons}
-        onLessonClick={(id) => router.push(`/lexicon/${id}`)}
+        onLessonClick={(id) => router.push(`/dictionary/${id}`)}
       />
     </div>
   );

@@ -1,70 +1,64 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+/**
+ * Plan 061 step 3: rewritten alongside enqueueTopicSRSUpdate itself. The old
+ * version of this test asserted implementation details of the now-removed
+ * live-read + insert/update branching (see topic-srs-queries.race.test.ts's
+ * header comment for the full rationale). This file now asserts the new
+ * invariants: a local rating-event write + a single 'rpc' outbox enqueue,
+ * regardless of whether the topic already has a row — the RPC now owns that
+ * distinction entirely server-side.
+ */
+// @vitest-environment node
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import 'fake-indexeddb/auto'
 
-const enqueueMock = vi.fn()
 vi.mock('@/lib/sync/sync-manager', () => ({
-  enqueue: (...args: unknown[]) => enqueueMock(...args),
+  enqueue: vi.fn().mockResolvedValue(1),
 }))
 
-const maybeSingleMock = vi.fn()
-vi.mock('@/lib/supabase/client', () => ({
-  getSupabaseBrowserClient: () => ({
-    from: () => ({
-      select: () => ({
-        eq: () => ({
-          eq: () => ({ maybeSingle: maybeSingleMock }),
-        }),
-      }),
-    }),
-  }),
-}))
-
+import { enqueue } from '@/lib/sync/sync-manager'
+import { db } from '@/lib/db'
 import { enqueueTopicSRSUpdate } from '@/lib/practice/topic-srs-queries'
 
-beforeEach(() => {
-  enqueueMock.mockReset()
-  maybeSingleMock.mockReset()
+const enqueueMock = vi.mocked(enqueue)
+
+beforeEach(async () => {
+  enqueueMock.mockClear()
+  db.close()
+  await db.delete()
+  await db.open()
 })
 
-describe('enqueueTopicSRSUpdate', () => {
-  it('inserts a new topic row when none exists', async () => {
-    maybeSingleMock.mockResolvedValue({ data: null, error: null })
+afterEach(() => db.close())
 
+describe('enqueueTopicSRSUpdate', () => {
+  it('enqueues an rpc call to apply_topic_srs_rating_event with the grade and topic', async () => {
     await enqueueTopicSRSUpdate('user-1', 'grammar:present simple', 5)
 
     expect(enqueueMock).toHaveBeenCalledTimes(1)
-    const [table, op, payload] = enqueueMock.mock.calls[0]
+    const [userId, table, op, payload, matchKey, onConflict, rpcName] = enqueueMock.mock.calls[0]
+    expect(userId).toBe('user-1')
     expect(table).toBe('topic_srs')
-    expect(op).toBe('insert')
+    expect(op).toBe('rpc')
+    expect(rpcName).toBe('apply_topic_srs_rating_event')
+    expect(matchKey).toBeUndefined()
+    expect(onConflict).toBeUndefined()
     expect(payload).toMatchObject({
-      user_id: 'user-1',
-      topic: 'grammar:present simple',
-      review_count: 1,
+      p_user_id: 'user-1',
+      p_topic: 'grammar:present simple',
+      p_grade: 5,
     })
-    expect(typeof payload.ease_factor).toBe('number')
-    expect(payload.next_review_at).toBeTruthy()
   })
 
-  it('updates an existing topic row with a matchKey', async () => {
-    maybeSingleMock.mockResolvedValue({
-      data: {
-        id: 'row-9',
-        ease_factor: 2.5,
-        interval_days: 1,
-        repetitions: 1,
-        next_review_at: '2026-06-10T00:00:00.000Z',
-        srs_status: 'review',
-        last_reviewed_at: '2026-06-09T00:00:00.000Z',
-        review_count: 3,
-      },
-      error: null,
-    })
-
+  it('writes a local pending rating-event row alongside the enqueue', async () => {
     await enqueueTopicSRSUpdate('user-1', 'grammar:present simple', 1)
 
-    const [table, op, payload, matchKey] = enqueueMock.mock.calls[0]
-    expect(table).toBe('topic_srs')
-    expect(op).toBe('update')
-    expect(payload).toMatchObject({ review_count: 4 })
-    expect(matchKey).toEqual({ id: 'row-9', user_id: 'user-1' })
+    const events = await db.srsRatingEvents.where('userId').equals('user-1').toArray()
+    expect(events).toHaveLength(1)
+    expect(events[0]).toMatchObject({
+      entityType: 'topic_srs',
+      topic: 'grammar:present simple',
+      grade: 1,
+      status: 'pending',
+    })
   })
 })

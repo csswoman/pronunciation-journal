@@ -18,24 +18,13 @@
   }
 }
 
-/* Radial gradient page background */
+/* Open practice canvas. Accent color stays reserved for direct interaction. */
 .sound-lab {
   --sound-lab-chrome-bg: var(--surface-raised);
   --sound-lab-chrome-border: var(--border-default);
-  --sound-lab-chrome-shadow: var(--shadow-md);
   --sound-lab-ink: var(--text-primary);
-  /* Secondary (not tertiary) for captions on tinted surfaces — ≥4.5:1 */
   --sound-lab-ink-muted: var(--text-secondary);
-  /* Accent reserved for progress fill + one typographic accent in the hero headline */
-  --sound-lab-accent: var(--primary);
-
-  background:
-    radial-gradient(
-      120% 60% at 50% -8%,
-      color-mix(in oklch, var(--primary) 14%, transparent),
-      transparent 55%
-    ),
-    var(--surface-base);
+  background: var(--surface-base);
 }
 
 .sound-lab__page-header {
@@ -53,15 +42,16 @@
 }
 
 
-/* Filter toolbar — one compact row: chips + growing search */
+/* Filter toolbar — quiet controls with a clear result signal. */
 .sound-lab__toolbar {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
+  gap: var(--space-2);
   padding: 0;
   background: transparent;
   border: 0;
   box-shadow: none;
+  justify-content: space-between;
 }
 
 @media (min-width: 640px) {
@@ -72,16 +62,24 @@
   }
 }
 
+.sound-lab__filter-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
 .sound-lab__chip-row {
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
-  gap: var(--space-1);
+  gap: var(--space-2);
   overflow-x: auto;
   overscroll-behavior-x: contain;
   scrollbar-width: none;
   -ms-overflow-style: none;
   flex-shrink: 0;
+  min-width: 0;
 }
 
 @media (min-width: 640px) {
@@ -115,14 +113,14 @@
 }
 
 .sound-lab__chip--compact {
-  min-height: 2rem;
-  padding: 0.25rem 0.625rem;
-  font-size: 0.75rem;
+  min-height: 2.75rem;
+  padding: 0.375rem 0.75rem;
+  font-size: 0.8125rem;
 }
 
 @media (min-width: 640px) {
   .sound-lab__chip--compact {
-    min-height: 2.125rem;
+    min-height: 2.5rem;
     padding: 0.3125rem 0.75rem;
     font-size: 0.8125rem;
   }
@@ -143,14 +141,14 @@
 }
 
 .sound-lab__chip--on {
-  background: var(--text-primary);
-  color: var(--surface-base);
-  border-color: var(--text-primary);
+  background: var(--primary-soft);
+  color: var(--primary);
+  border-color: var(--primary);
 }
 
 .sound-lab__chip--on:hover {
-  background: var(--text-primary);
-  border-color: var(--text-primary);
+  background: var(--primary-soft);
+  border-color: var(--primary);
 }
 
 .sound-lab__chip--on:focus-visible {
@@ -174,8 +172,8 @@
 }
 
 .sound-lab__search--compact {
-  min-height: 2.125rem;
-  padding: 0.3125rem 0.75rem;
+  min-height: 2.75rem;
+  padding: 0.375rem 0.875rem;
 }
 
 @media (min-width: 640px) {
@@ -187,7 +185,7 @@
   }
 
   .sound-lab__search--compact {
-    min-height: 2.25rem;
+    min-height: 2.5rem;
     padding: 0.3125rem 0.75rem;
   }
 }
@@ -214,6 +212,66 @@
 
 .sound-lab__search input::placeholder {
   color: var(--sound-lab-ink-muted);
+}
+
+.sound-lab__result-count {
+  flex-shrink: 0;
+  color: var(--text-secondary);
+  font-size: 0.8125rem;
+  white-space: nowrap;
+}
+
+.sound-lab__clear-filters,
+.sound-lab__clear-search {
+  align-items: center;
+  border: 0;
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: inline-flex;
+  font: inherit;
+  justify-content: center;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.sound-lab__clear-filters {
+  flex-shrink: 0;
+  min-height: 2.75rem;
+  padding: 0.375rem 0.5rem;
+}
+
+.sound-lab__clear-search {
+  background: transparent;
+  flex: 0 0 2rem;
+  height: 2rem;
+  margin-right: -0.25rem;
+  padding: 0;
+}
+
+.sound-lab__clear-filters:hover,
+.sound-lab__clear-search:hover {
+  background: var(--surface-sunken);
+  color: var(--text-primary);
+}
+
+.sound-lab__clear-filters:focus-visible,
+.sound-lab__clear-search:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+@media (max-width: 639px) {
+  .sound-lab__filter-controls {
+    width: 100%;
+  }
+
+  .sound-lab__result-count {
+    display: none;
+  }
+
+  .sound-lab__chip-row {
+    flex: 1 1 auto;
+  }
 }
 
 /* Card — hover transition */

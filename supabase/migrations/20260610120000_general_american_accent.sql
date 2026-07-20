@@ -9,6 +9,9 @@
 --   4. Re-transcribir words a GA rótico
 --   5. Reseed completo de minimal_pairs en GA (corrige pares defectuosos del seed RP)
 --   6. Re-clavear user_contrast_progress y re-canonicalizar el orden de contrastKey()
+--
+-- Nota: user_sound_progress fue eliminada en 20260602100000_contrast_progress.sql
+-- (DROP ... CASCADE ya borró sus filas), por lo que aquí no se limpia esa tabla.
 
 -- ─── 1. RENOMBRES DE SOUNDS ───────────────────────────────────────────────────
 
@@ -27,7 +30,6 @@ BEGIN
       UPDATE public.words               SET sound_id = v_eps WHERE sound_id = v_e;
       UPDATE public.answer_history      SET sound_id = v_eps WHERE sound_id = v_e;
       UPDATE public.entries             SET sound_id = v_eps WHERE sound_id = v_e;
-      DELETE FROM public.user_sound_progress WHERE sound_id = v_e;
       DELETE FROM public.sounds WHERE id = v_e;
     ELSE
       UPDATE public.sounds SET ipa = '/ɛ/' WHERE id = v_e;
@@ -48,7 +50,6 @@ BEGIN
       UPDATE public.words               SET sound_id = v_tgt WHERE sound_id = v_src;
       UPDATE public.answer_history      SET sound_id = v_tgt WHERE sound_id = v_src;
       UPDATE public.entries             SET sound_id = v_tgt WHERE sound_id = v_src;
-      DELETE FROM public.user_sound_progress WHERE sound_id = v_src;
       DELETE FROM public.sounds WHERE id = v_src;
     ELSE
       UPDATE public.sounds SET ipa = '/ɑ/', example = 'father' WHERE id = v_src;
@@ -63,7 +64,6 @@ BEGIN
       UPDATE public.words               SET sound_id = v_tgt WHERE sound_id = v_src;
       UPDATE public.answer_history      SET sound_id = v_tgt WHERE sound_id = v_src;
       UPDATE public.entries             SET sound_id = v_tgt WHERE sound_id = v_src;
-      DELETE FROM public.user_sound_progress WHERE sound_id = v_src;
       DELETE FROM public.sounds WHERE id = v_src;
     ELSE
       UPDATE public.sounds SET ipa = '/ɔ/' WHERE id = v_src;
@@ -78,7 +78,6 @@ BEGIN
       UPDATE public.words               SET sound_id = v_tgt WHERE sound_id = v_src;
       UPDATE public.answer_history      SET sound_id = v_tgt WHERE sound_id = v_src;
       UPDATE public.entries             SET sound_id = v_tgt WHERE sound_id = v_src;
-      DELETE FROM public.user_sound_progress WHERE sound_id = v_src;
       DELETE FROM public.sounds WHERE id = v_src;
     ELSE
       UPDATE public.sounds SET ipa = '/ɜr/' WHERE id = v_src;
@@ -93,7 +92,6 @@ BEGIN
       UPDATE public.words               SET sound_id = v_tgt WHERE sound_id = v_src;
       UPDATE public.answer_history      SET sound_id = v_tgt WHERE sound_id = v_src;
       UPDATE public.entries             SET sound_id = v_tgt WHERE sound_id = v_src;
-      DELETE FROM public.user_sound_progress WHERE sound_id = v_src;
       DELETE FROM public.sounds WHERE id = v_src;
     ELSE
       UPDATE public.sounds SET ipa = '/oʊ/' WHERE id = v_src;
@@ -121,7 +119,6 @@ BEGIN
     UPDATE public.words               SET sound_id = v_ah WHERE sound_id = v_lot;
     UPDATE public.answer_history      SET sound_id = v_ah WHERE sound_id = v_lot;
     UPDATE public.entries             SET sound_id = v_ah WHERE sound_id = v_lot;
-    DELETE FROM public.user_sound_progress WHERE sound_id = v_lot;
     DELETE FROM public.sounds WHERE id = v_lot;
   END IF;
 
@@ -133,7 +130,6 @@ BEGIN
     DELETE FROM public.words               WHERE sound_id = ANY(v_centering);
     UPDATE public.answer_history      SET sound_id = NULL WHERE sound_id = ANY(v_centering);
     UPDATE public.entries             SET sound_id = NULL WHERE sound_id = ANY(v_centering);
-    DELETE FROM public.user_sound_progress WHERE sound_id = ANY(v_centering);
     DELETE FROM public.sounds WHERE id = ANY(v_centering);
   END IF;
 END $$;

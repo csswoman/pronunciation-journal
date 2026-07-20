@@ -117,7 +117,7 @@ export default function DailyStepList({
             !activeId && i === entryIndex && status !== 'done' && status !== 'resolved'
           const visual = rowVisual(status, isInProgress, isEntry)
           const done = visual === 'done'
-          const isConcept = step.kind === 'concept'
+          const isReadingStep = step.kind === 'concept' || step.kind === 'study_deck'
           const cardCount = step.studyCards?.length ?? 0
           const hasReader = !!step.readerPassage
           const isStartable = step.exercises.length > 0 || cardCount > 0 || hasReader
@@ -178,7 +178,7 @@ export default function DailyStepList({
             </div>
           )
 
-          if (isConcept && step.href) {
+          if (isReadingStep && step.href) {
             return (
               <li key={step.id} className="min-w-0">
                 <Link href={step.href} className={cardClass}>

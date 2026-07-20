@@ -30,13 +30,13 @@ export function StudyRightPanel({ stats, upcomingCards }: StudyRightPanelProps) 
         <p className="text-tiny font-semibold tracking-widest uppercase mb-2 text-fg-subtle">Today's progress</p>
         <div className="grid grid-cols-2 gap-2">
           {[
-            { val: stats.easy,  label: "easy",       color: "var(--success)" },
-            { val: stats.again, label: "hard",        color: "var(--error)" },
-            { val: stats.hard,  label: "medium",      color: "var(--warning)" },
-            { val: stats.seen,  label: "total seen",  color: "var(--text-primary)" },
-          ].map(({ val, label, color }) => (
+            { val: stats.easy,  label: "easy",       className: "text-[var(--success)]" },
+            { val: stats.again, label: "hard",        className: "text-[var(--error)]" },
+            { val: stats.hard,  label: "medium",      className: "text-[var(--warning)]" },
+            { val: stats.seen,  label: "total seen",  className: "text-fg" },
+          ].map(({ val, label, className }) => (
             <div key={label} className="rounded-xl border border-border-subtle bg-surface-raised p-3 text-center">
-              <p className="text-xl font-bold" style={{ color }}>{val}</p>
+              <p className={`text-xl font-bold ${className}`}>{val}</p>
               <p className="text-tiny mt-0.5 text-fg-subtle">{label}</p>
             </div>
           ))}
@@ -52,10 +52,11 @@ export function StudyRightPanel({ stats, upcomingCards }: StudyRightPanelProps) 
               const cardLevel = card.difficulty
                 ? LEVEL_LABELS[Math.min((card.difficulty ?? 1) - 1, 5)]
                 : null;
+              const dotColor = DOT_COLORS[i % DOT_COLORS.length];
               return (
                 <div key={card.id} className="flex items-center gap-2.5 px-3 py-2 rounded-xl border border-border-subtle bg-surface-raised">
                   <div className="w-2 h-2 rounded-full shrink-0"
-                    style={{ backgroundColor: DOT_COLORS[i % DOT_COLORS.length] }} />
+                    style={{ backgroundColor: dotColor }} />
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-semibold truncate text-fg">
                       {card.word}

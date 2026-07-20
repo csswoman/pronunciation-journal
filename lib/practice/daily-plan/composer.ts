@@ -14,7 +14,9 @@ import { mergeReviewWords } from '@/lib/review/merge-words'
 import { dominantTopicLabel } from '@/lib/practice/topic-labels'
 import type { DailyPlan, DailyStep, SessionArc } from '@/lib/practice/types'
 import type { Sound } from '@/lib/phoneme-practice/types'
+import { buildJournalDailyStep, shouldOfferJournalStep } from '@/lib/journal/daily-step'
 import { buildConnectedSpeechStep, buildReaderStep, buildSentenceBuilderStep } from './async-step-builders'
+import { buildStudyDeckStep } from './study-deck'
 import { DAILY_PLAN_STEP_COUNT, WORD_REVIEW_WORD_COUNT } from './constants'
 import {
   fetchAllPracticedSounds,
@@ -114,12 +116,25 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
     reviewWords = await fetchCoreWordsForDay(dayOfYear(), WORD_REVIEW_WORD_COUNT)
   }
 
-  const [weakest, localLearningState] = await Promise.all([
+  const readCompletedLessons = async () => {
+    const store = db.completedLessons as typeof db.completedLessons & {
+      toArray?: () => Promise<Array<{ key: string; userId?: string; courseSlug?: string; lessonSlug?: string }>>
+    }
+    if (typeof store.where === 'function') {
+      return store.where('userId').equals(userId).toArray()
+    }
+    return (await store.toArray?.() ?? []).filter((lesson) => lesson.userId === userId)
+  }
+
+  const [weakest, localLearningState, completedLessons] = await Promise.all([
     fetchWeakestSoundProgress(userId),
     db.learningState.get(userId).catch(() => null),
+    readCompletedLessons().catch(() => []),
   ])
   const aiState = localLearningState?.state ?? null
   const hasProgress = weakest != null
+  const activeLevel = localLearningState?.state.level.cefrEstimate.toLowerCase() as import('@/lib/courses/types').CefrLevelId | undefined
+  const completedLessonIds = new Set(completedLessons.map((lesson) => `${lesson.courseSlug}:${lesson.lessonSlug}`))
 
   let primarySound: Sound | null = weakest
   if (!primarySound && aiState) {
@@ -205,6 +220,11 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
     }
   }
 
+  const studyDeckStep = buildStudyDeckStep(
+    completedLessonIds,
+    activeLevel,
+    aiState?.theory?.concepts,
+  )
   let steps: DailyStep[] = [...allSteps, ...reviewSteps]
 
   // When SRS items are due, prepend top review-hub steps so the daily plan surfaces them first.
@@ -258,7 +278,35 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
     }
   }
 
-  const finalSteps = steps.slice(0, DAILY_PLAN_STEP_COUNT)
+  // The client appends the rotating mini-lesson afterwards. Reserve this slot
+  // for the route-based theory lesson so the five-step plan remains: three
+  // practice steps, then the two theory links.
+  const practiceCapacity = DAILY_PLAN_STEP_COUNT - (studyDeckStep ? 1 : 0)
+  let finalSteps = steps.slice(0, practiceCapacity)
+  // Preserve the learning arc for a populated word bank before adding more
+  // phoneme fallbacks: notice → recall → use in context → read. The remaining
+  // practice capacity is filled from the original mixed candidate order.
+  const vocabularyArc = ['word_intro', 'word_review', 'context_practice', 'reader'] as const
+  const prioritized = vocabularyArc
+    .map((kind) => steps.find((step) => step.kind === kind))
+    .filter((step): step is DailyStep => Boolean(step))
+  if (prioritized.length > 0) {
+    const selected = prioritized.slice(0, practiceCapacity)
+    const selectedIds = new Set(selected.map((step) => step.id))
+    finalSteps = [
+      ...selected,
+      ...steps.filter((step) => !selectedIds.has(step.id)).slice(0, practiceCapacity - selected.length),
+    ]
+  }
+
+  if (studyDeckStep) finalSteps.push(studyDeckStep)
+
+  // Optional Journal link: appended AFTER the cap on its cadence so it never
+  // displaces an evaluated step. Concept steps carry no exercises and are not
+  // auto-completed, so the daily practice guarantee is unchanged.
+  if (shouldOfferJournalStep(dayOfYear()) && !finalSteps.some((step) => step.id === 'journal_entry')) {
+    finalSteps = [...finalSteps, buildJournalDailyStep()]
+  }
 
   // Session arc: narrative framing reusing data the plan already computed.
   // Topics live on generic exercise payloads (payload.data.topic).

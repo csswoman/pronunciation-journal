@@ -11,6 +11,7 @@ import {
   type ActivitySource,
   type SkillTag,
 } from '@/lib/progress/activity-types'
+import { skillsForSlug } from '@/lib/progress/skill-matrix'
 import type { DailyStep, PracticeContext, SessionResult } from '@/lib/practice/types'
 import type { PracticeAnswer } from '@/lib/practice/types'
 
@@ -26,52 +27,20 @@ export type ActivitySessionInput = {
     contrastId?: string
     lessonSlug?: string
     coachTool?: string
+    dailyTargetId?: string
+    quizPassed?: boolean
   }
 }
 
-const LISTENING_SLUGS = new Set(['dictation', 'sentence_dictation', 'minimal_pair'])
-const SPEAKING_SLUGS = new Set(['speak_word'])
-const GRAMMAR_SLUGS = new Set(['reorder_words', 'fill_blank'])
-const READING_SLUGS = new Set(['fill_blank', 'sentence_context', 'multiple_choice'])
-
-export function deriveSkillTags(context: PracticeContext, result: SessionResult): SkillTag[] {
+/**
+ * Derive practiced skills from exercise slugs only.
+ * Context is provenance for activity_sessions.source — it must not invent skills.
+ */
+export function deriveSkillTags(_context: PracticeContext, result: SessionResult): SkillTag[] {
   const tags = new Set<SkillTag>()
-
-  switch (context) {
-    case 'core-1000':
-      tags.add('vocabulary')
-      tags.add('speaking')
-      break
-    case 'sound_lab':
-      tags.add('pronunciation')
-      tags.add('listening')
-      break
-    case 'courses':
-      tags.add('reading')
-      tags.add('grammar')
-      break
-    case 'ai_coach':
-      tags.add('speaking')
-      break
-    case 'daily':
-    case 'practice':
-    case 'review':
-      break
-    default:
-      break
-  }
-
   for (const r of result.results) {
-    if (SPEAKING_SLUGS.has(r.slug)) tags.add('speaking')
-    if (LISTENING_SLUGS.has(r.slug)) tags.add('listening')
-    if (GRAMMAR_SLUGS.has(r.slug)) tags.add('grammar')
-    if (READING_SLUGS.has(r.slug)) tags.add('reading')
-    if (r.soundId != null) tags.add('pronunciation')
-    if (r.sourceRef?.source === 'word_bank' || context === 'core-1000') {
-      tags.add('vocabulary')
-    }
+    for (const t of skillsForSlug(r.slug)) tags.add(t)
   }
-
   return [...tags]
 }
 
@@ -138,7 +107,7 @@ export function buildSessionTelemetry(
   const reconciledStepIds =
     practiceContext === 'daily'
       ? []
-      : reconcileDailySteps(planSteps, sessionResult, practiceContext)
+    : reconcileDailySteps(planSteps, sessionResult, practiceContext, input.metadata)
 
   return {
     activitySession: {
@@ -193,9 +162,12 @@ export async function recordActivitySession(
 
   try {
     await enqueue(
+      userId,
       'activity_sessions',
-      'insert',
+      'upsert',
       telemetry.activitySession as unknown as Record<string, unknown>,
+      undefined,
+      'id',
     )
   } catch (err) {
     console.error('[activity-hub] enqueue activity_sessions failed', err)
@@ -230,8 +202,11 @@ export async function recordDailyStepCompletion(
   }
 
   await enqueue(
+    userId,
     'activity_sessions',
-    'insert',
+    'upsert',
     activitySession as unknown as Record<string, unknown>,
+    undefined,
+    'id',
   )
 }

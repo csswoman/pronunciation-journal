@@ -122,10 +122,9 @@ function SentencePrompt({
         {/* dashes — hidden once answered */}
         <span
           className={cn(
-            'absolute inset-x-0 flex items-end justify-center font-mono text-border-strong tracking-widest transition-opacity duration-200',
+            'absolute inset-x-0 -bottom-3.25 flex items-end justify-center font-mono text-border-strong tracking-widest transition-opacity duration-200',
             done ? 'opacity-0' : 'opacity-100',
           )}
-          style={{ bottom: '-13px' }}
           aria-hidden
         >
           {'—'.repeat(charCount)}
@@ -133,12 +132,11 @@ function SentencePrompt({
         {/* selected word — fades in when answered */}
         <span
           className={cn(
-            'absolute inset-x-0 flex justify-center font-semibold transition-all duration-300',
+            'absolute inset-x-0 -bottom-1 px-1 flex justify-center font-semibold transition-all duration-300',
             !done && 'opacity-0 translate-y-1',
             done && isCorrect && 'opacity-100 translate-y-0 text-success',
             done && !isCorrect && 'opacity-100 translate-y-0 text-error',
           )}
-          style={{ padding: '0 4px', bottom: '-4px' }}
           aria-live="polite"
         >
           {selected}

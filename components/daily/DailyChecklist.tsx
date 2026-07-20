@@ -77,7 +77,7 @@ export default function DailyChecklist({ conceptLesson, initialStepId, streak = 
   useEffect(() => {
     if (status !== 'ready' || !initialStepId || autoStartedRef.current) return
     const step = steps.find((s) => s.id === initialStepId)
-    if (!step || step.kind === 'concept') return
+    if (!step || step.kind === 'concept' || step.kind === 'study_deck') return
     autoStartedRef.current = true
     const stored = readStepStorage()
     const exerciseIndex = stored?.stepId === initialStepId ? (stored.exerciseIndex ?? 0) : 0
@@ -99,7 +99,7 @@ export default function DailyChecklist({ conceptLesson, initialStepId, streak = 
   }, [allDone, view.mode, celebrate, user])
 
   const handleStartStep = useCallback((step: DailyStep) => {
-    if (step.kind === 'concept') return
+    if (step.kind === 'concept' || step.kind === 'study_deck') return
     writeStepStorage(step.id, 0)
     setSessionKey((k) => k + 1)
     setView({ mode: 'step', step, exerciseIndex: 0 })

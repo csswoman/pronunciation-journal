@@ -44,6 +44,12 @@
         "He walked in a slow and careful manner.",
         "There was a feeling of excitement among the team.",
         "The report was written by the committee."
+      ],
+      "answers": [
+        "Modelo: She decided to leave the company.",
+        "Modelo: He crept in.",
+        "Modelo: The team buzzed with excitement.",
+        "Modelo: The committee wrote the report."
       ]
     }
   ],

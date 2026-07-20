@@ -20,7 +20,11 @@ const MAX_TARGETS = 8
 export function pickTargets(rows: ReaderTargetRow[]): ReaderTarget[] | null {
   const eligible = rows
     .filter((r) => r.status === 'learning' || r.status === 'review')
-    .sort((a, b) => a.nextReview.localeCompare(b.nextReview))
+    .sort((a, b) => {
+      if (!a.nextReview) return b.nextReview ? 1 : 0
+      if (!b.nextReview) return -1
+      return a.nextReview.localeCompare(b.nextReview)
+    })
     .slice(0, MAX_TARGETS)
     .map(({ srsId, word }) => ({ srsId, word }))
   return eligible.length >= MIN_TARGETS ? eligible : null

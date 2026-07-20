@@ -1,77 +1,54 @@
 "use client";
 
-import { BookOpen, BookMarked, Layers } from "@/components/icons";
+import { BookMarked, BookOpen } from "@/components/icons";
+import Link from "next/link";
 
-export const WORDS_TABS = [
-  { id: "lexicon",  label: "Dictionary",  icon: BookOpen },
-  { id: "my-words", label: "My Words", icon: BookMarked },
-  { id: "decks",    label: "Decks",    icon: Layers },
-] as const;
+export type WordsMode = "dictionary" | "learn";
+/** Retained for the legacy runtime behind the server-side /tracking redirect. */
+export type WordsTabId = "lexicon" | "my-words";
 
-export type WordsTabId = (typeof WORDS_TABS)[number]["id"];
-
-const TABS: { id: WordsTabId; label: string; icon: typeof BookOpen }[] = [
-  { id: "lexicon", label: "Dictionary", icon: BookOpen },
-  { id: "my-words", label: "My Words", icon: BookMarked },
-  { id: "decks", label: "Decks", icon: Layers },
+const TABS: { id: WordsMode; label: string; icon: typeof BookOpen }[] = [
+  { id: "dictionary", label: "Diccionario", icon: BookOpen },
+  { id: "learn", label: "Aprender", icon: BookOpen },
 ];
 
-const TITLES: Record<WordsTabId, string> = {
-  lexicon: "Dictionary",
-  "my-words": "My Words",
-  decks: "Decks",
-};
-
 interface WordsTopbarProps {
-  activeTab: WordsTabId;
-  onTabChange: (tab: WordsTabId) => void;
+  activeMode: WordsMode;
   lexiconCount: number;
-  myWordsCount: number;
-  deckCount: number;
 }
 
 export function WordsTopbar({
-  activeTab,
-  onTabChange,
+  activeMode,
   lexiconCount,
-  myWordsCount,
-  deckCount,
 }: WordsTopbarProps) {
-  const counts: Record<WordsTabId, number> = {
-    lexicon: lexiconCount,
-    "my-words": myWordsCount,
-    decks: deckCount,
-  };
-
   return (
-    <div className="words-lexicon__topbar flex flex-wrap items-center justify-between gap-5">
-      <div>
-        <span className="words-lexicon__eyebrow">Vocabulary</span>
-        <h1 className="words-lexicon__title">{TITLES[activeTab]}</h1>
-      </div>
-      <div
-        className="words-lexicon__seg flex gap-1 p-1 rounded-full"
-        role="tablist"
-        aria-label="Words sections"
-      >
+    <div className="words-lexicon__topbar flex flex-wrap items-center justify-end gap-3">
+      <nav className="words-lexicon__seg flex gap-1 p-1 rounded-full" aria-label="Secciones de vocabulario">
         {TABS.map(({ id, label, icon: Icon }) => {
-          const isActive = activeTab === id;
+          const isActive = activeMode === id;
+          const href = id === "learn" ? "/dictionary?mode=learn" : "/dictionary";
           return (
-            <button
+            <Link
               key={id}
-              type="button"
-              role="tab"
-              aria-selected={isActive}
+              href={href}
+              aria-label={id === "dictionary" ? `${label} (${lexiconCount} palabras)` : label}
+              aria-current={isActive ? "page" : undefined}
               className={`words-lexicon__seg-btn${isActive ? " is-active" : ""}`}
-              onClick={() => onTabChange(id)}
             >
               <Icon size={15} strokeWidth={isActive ? 2 : 1.6} aria-hidden />
               {label}
-              <span className="words-lexicon__seg-count">{counts[id]}</span>
-            </button>
+            </Link>
           );
         })}
-      </div>
+        <Link
+          href="/tracking"
+          aria-label="Mis palabras"
+          className="words-lexicon__seg-btn"
+        >
+          <BookMarked size={15} strokeWidth={1.6} aria-hidden />
+          Mis palabras
+        </Link>
+      </nav>
     </div>
   );
 }

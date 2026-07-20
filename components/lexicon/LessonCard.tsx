@@ -12,55 +12,67 @@ interface LessonCardProps {
   id: string;
   icon: string;
   title: string;
-  color: string;
   wordsCompleted: number;
   totalWords: number;
   progress: number;
   tags: string[];
   onClick?: (id: string) => void;
+  compact?: boolean;
 }
 
 export function LessonCard({
   id,
   title,
-  color,
   wordsCompleted,
   totalWords,
   progress,
-  tags,
   onClick,
+  compact = false,
 }: LessonCardProps) {
-  const displayTags = tags.slice(0, 3);
-  const remainingCount = tags.length - displayTags.length;
+  if (compact) {
+    return (
+      <button
+        type="button"
+        onClick={() => onClick?.(id)}
+        className="words-lexicon__lesson-row"
+      >
+        <span className="words-lexicon__lesson-row-initial" aria-hidden>
+          {title.charAt(0)}
+        </span>
+        <span className="words-lexicon__lesson-row-copy">
+          <span className="words-lexicon__lesson-row-title">{title}</span>
+          <span className="words-lexicon__lesson-row-meta">
+            {totalWords} palabras · {progress}% aprendido
+          </span>
+        </span>
+        <span className="words-lexicon__lesson-row-arrow" aria-hidden>→</span>
+      </button>
+    );
+  }
 
   return (
     <button
+      type="button"
       onClick={() => onClick?.(id)}
       className={cn(
-        "flex flex-col gap-3 p-4 rounded-xl border border-border-subtle",
-        "transition-all duration-200 hover:shadow-md hover:border-border-strong text-left w-full"
+        "words-lexicon__category-card flex w-full flex-col gap-3 rounded-lg border border-border-subtle bg-surface-raised p-4 text-left"
       )}
-      style={{ background: `color-mix(in oklch, ${color} 6%, var(--surface-raised))` }}
     >
       {/* Icon + title row */}
       <div className="flex items-center gap-3">
         <div
-          className="words-lexicon__card-initial"
-          style={{
-            background: `color-mix(in oklch, ${color} 18%, var(--surface-raised))`,
-            color,
-          }}
+          className="words-lexicon__card-initial bg-primary-soft text-primary"
           aria-hidden
         >
           {title.charAt(0)}
         </div>
         <div className="min-w-0">
-          <h3 className="text-sm font-semibold text-fg leading-snug truncate">{title}</h3>
-          <p className="text-xs text-fg-muted mt-0.5">
-            {wordsCompleted} / {totalWords} words
+          <h3 className="text-label text-fg leading-snug truncate">{title}</h3>
+          <p className="text-caption text-fg-muted mt-1">
+            {wordsCompleted} / {totalWords} palabras
           </p>
         </div>
-        <span className="ml-auto text-xs font-semibold tabular-nums shrink-0" style={{ color }}>
+        <span className="ml-auto text-xs font-semibold tabular-nums shrink-0 text-fg-muted">
           {progress}%
         </span>
       </div>
@@ -68,27 +80,11 @@ export function LessonCard({
       {/* Progress bar */}
       <div className="h-1 w-full bg-border-subtle rounded-full overflow-hidden">
         <div
-          className="h-full rounded-full transition-all duration-500"
-          style={{ width: `${progress}%`, backgroundColor: color }}
+          className="h-full rounded-full bg-primary transition-all duration-500"
+          style={{ width: `${progress}%` }}
         />
       </div>
 
-      {/* Tags */}
-      <div className="flex flex-wrap gap-1">
-        {displayTags.map((tag) => (
-          <span
-            key={tag}
-            className="inline-block px-1.5 py-0.5 text-xs rounded bg-surface-sunken text-fg-muted"
-          >
-            {tag}
-          </span>
-        ))}
-        {remainingCount > 0 && (
-          <span className="inline-block px-1.5 py-0.5 text-xs text-fg-subtle">
-            +{remainingCount}
-          </span>
-        )}
-      </div>
     </button>
   );
 }

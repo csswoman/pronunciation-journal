@@ -8,6 +8,7 @@ import { requireSameOrigin, requireUser, rateLimit, validateBody } from "@/lib/a
 import { shouldTryNextModel as defaultShouldRetry } from "@/lib/gemini/client";
 import { callGeminiJson, parseGeminiJson } from "@/lib/gemini/json-route";
 import { passageEmbedsTargets } from "@/lib/practice/reader/refinement";
+import { getUserInterests } from "@/lib/users/server-queries";
 import type { ReaderQuestion } from "@/lib/practice/reader/types";
 
 const RequestSchema = z.object({
@@ -61,11 +62,13 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const { data: body, error: validationError } = await validateBody(request, RequestSchema);
   if (validationError) return validationError as NextResponse;
 
+  const interests = await getUserInterests(user.id);
+
   const { data: result, response } = await callGeminiJson({
     endpoint: "/api/gemini/generate-reader",
     userId: user.id,
     params: {
-      contents: buildGenerateReaderUserPrompt({ targets: body.targets, level: body.level }),
+      contents: buildGenerateReaderUserPrompt({ targets: body.targets, level: body.level, interests }),
       config: {
         systemInstruction: GENERATE_READER_SYSTEM_PROMPT,
         responseMimeType: "application/json",

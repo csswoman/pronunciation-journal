@@ -1,0 +1,114 @@
+{
+  "meta": {
+    "eyebrow": "C1 · Comprensión sociolingüística",
+    "title": "Variación del",
+    "titleEmphasis": "inglés americano",
+    "goal": "Puedes comprender variantes frecuentes de vocabulario, gramática y pronunciación del inglés estadounidense sin confundir diferencia con error."
+  },
+  "sounds": ["r", "t", "æ"],
+  "related": [
+    { "slug": "c1-pronunciacion-avanzada", "label": "Pronunciación avanzada" },
+    { "slug": "c1-lenguaje-coloquial-habitual", "label": "Lenguaje coloquial habitual" }
+  ],
+  "cards": [
+    {
+      "id": "c1-variacion-ingles-americano-marco",
+      "tag": "Idea central",
+      "title": "El inglés americano no es una sola voz",
+      "lede": "La variación regional, social, étnica, generacional y situacional es normal; una misma persona cambia según el contexto.",
+      "blocks": [{
+        "type": "rules",
+        "rows": [
+          { "key": "Región", "value": "palabras, vocales y ritmos pueden variar entre comunidades" },
+          { "key": "Situación", "value": "una entrevista, una reunión y una charla familiar activan registros distintos" },
+          { "key": "Identidad", "value": "los rasgos lingüísticos también expresan pertenencia y estilo" },
+          { "key": "Principio", "value": "diferente de la variedad de prestigio no significa deficiente" }
+        ]
+      }],
+      "tip": { "label": "Objetivo:", "body": "Desarrolla flexibilidad receptiva. No necesitas adoptar rasgos asociados con una comunidad para comprenderlos." }
+    },
+    {
+      "id": "c1-variacion-ingles-americano-lexico",
+      "tag": "Vocabulario",
+      "title": "Reconoce alternativas regionales por contexto",
+      "lede": "Algunas elecciones léxicas cambian por región, pero suelen ser mutuamente comprensibles.",
+      "blocks": [{
+        "type": "contrast",
+        "columns": [
+          { "label": "Bebida gaseosa", "rule": "soda · pop · coke", "examples": ["Do you want a soda?", "Pop is common in parts of the Midwest.", "Coke can be a generic label in some Southern contexts."] },
+          { "label": "Grupo", "rule": "you guys · y'all · you all", "examples": ["Are you guys ready?", "Are y'all ready?", "Are you all ready?"] }
+        ]
+      }],
+      "tip": { "label": "Comprensión:", "body": "Usa la situación para inferir el referente; evita asumir automáticamente edad, educación o carácter." }
+    },
+    {
+      "id": "c1-variacion-ingles-americano-sonidos",
+      "tag": "Pronunciación",
+      "title": "Tolera realizaciones distintas de sonidos conocidos",
+      "lede": "El mismo enunciado puede presentar diferencias sistemáticas sin perder su estructura léxica.",
+      "blocks": [{
+        "type": "pronunciation",
+        "sound": "Variación receptiva",
+        "focus": ["r", "t", "æ"],
+        "examples": [
+          { "text": "water", "ipa": "/ˈwɔtɚ/ ~ /ˈwɑɾɚ/", "es": "La vocal y la /t/ medial pueden variar." },
+          { "text": "car", "ipa": "/kɑr/ ~ /kɑː/", "es": "Algunas variedades conservan /r/ posvocálica y otras no." },
+          { "text": "pin / pen", "es": "En algunas regiones contrastan claramente; en otras pueden acercarse antes de nasales." }
+        ],
+        "note": "Estas transcripciones son aproximaciones para escuchar contrastes, no instrucciones para imitar una región."
+      }]
+    },
+    {
+      "id": "c1-variacion-ingles-americano-gramatica",
+      "tag": "Gramática",
+      "title": "Distingue variante, registro y norma escrita",
+      "lede": "Una forma puede ser sistemática en una comunidad y, aun así, no ser la opción esperada en escritura académica formal.",
+      "blocks": [{
+        "type": "rules",
+        "rows": [
+          { "key": "Plural regional", "value": "y'all, you all, you guys" },
+          { "key": "Aspecto habitual", "value": "She be working late.", "hint": "En AAE, habitual be expresa una acción que ocurre regularmente, no necesariamente ahora." },
+          { "key": "Intensificación", "value": "That needs fixed.", "hint": "Construcción regional documentada en partes de EE. UU.; en estilo formal amplio: needs to be fixed." },
+          { "key": "Elección", "value": "Ajusta tu producción a audiencia y género sin etiquetar otra variedad como ilógica." }
+        ]
+      }]
+    },
+    {
+      "id": "c1-variacion-ingles-americano-estrategias",
+      "tag": "Escucha",
+      "title": "Recupera significado cuando una forma es nueva",
+      "lede": "No te detengas en un rasgo desconocido: combina palabras clave, sintaxis, situación y reformulación.",
+      "blocks": [{
+        "type": "rules",
+        "rows": [
+          { "key": "Predice", "value": "¿Qué información sería lógica en esta situación?" },
+          { "key": "Ancla", "value": "Identifica contenido acentuado, nombres y verbos principales." },
+          { "key": "Comprueba", "value": "So you mean the deadline moved to Friday?" },
+          { "key": "Aclara", "value": "I'm not familiar with that expression. What does it mean here?" }
+        ]
+      }]
+    },
+    {
+      "id": "c1-variacion-ingles-americano-respeto",
+      "tag": "Criterio",
+      "title": "Evalúa claridad, no identidad",
+      "lede": "Las decisiones lingüísticas responsables separan inteligibilidad, adecuación al género y prejuicios sobre el hablante.",
+      "blocks": [{
+        "type": "pairs",
+        "lines": [
+          { "variant": "bad", "text": "That accent sounds uneducated." },
+          { "variant": "good", "text": "I missed the key term because that pronunciation is unfamiliar to me.", "note": "Describe la barrera concreta." },
+          { "variant": "bad", "text": "Everyone should sound like a national news anchor." },
+          { "variant": "good", "text": "Speakers need intelligibility across contexts, not a single approved identity.", "note": "Prioriza comprensión mutua." }
+        ]
+      }],
+      "tip": { "label": "Transferencia:", "body": "Después de escuchar una voz nueva, registra el rasgo que dificultó la comprensión y la estrategia que permitió recuperarla." }
+    }
+  ],
+  "quiz": [
+    { "q": "¿Cuál describe mejor la variación del inglés americano?", "options": ["Es aleatoria y carece de reglas.", "Es sistemática y depende de comunidad, identidad y situación.", "Solo existe entre estados."], "answer": 1, "explain": "La variación opera en varias dimensiones y sigue patrones compartidos." },
+    { "q": "In some AAE contexts, what does 'She be working late' express?", "options": ["She works late habitually.", "She is working late at this exact moment only.", "She stopped working late."], "answer": 0, "explain": "Habitual be marca una situación recurrente, no simplemente el presente progresivo." },
+    { "q": "¿Qué estrategia ayuda ante una expresión regional desconocida?", "options": ["Adivinar la educación del hablante", "Pedir una reformulación y confirmar el referente", "Descartar todo el mensaje"], "answer": 1, "explain": "La aclaración explícita protege la comprensión sin convertir la diferencia en defecto." },
+    { "q": "¿Qué meta de producción recomienda la lección?", "options": ["Imitar cada acento regional", "Elegir formas inteligibles y adecuadas a la audiencia", "Eliminar todo rasgo de identidad"], "answer": 1, "explain": "La meta es comunicarse con claridad y flexibilidad, no copiar una identidad lingüística." }
+  ]
+}

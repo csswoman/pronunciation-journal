@@ -24,7 +24,18 @@ const QuickAddModal = dynamic(() =>
   })),
 );
 
-const AICoachPanel = dynamic(() => import("@/components/ai-coach/AICoachPanel"));
+const importAICoachPanel = () => import("@/components/ai-coach/AICoachPanel");
+
+const AICoachPanel = dynamic(importAICoachPanel, {
+  // Panel-shaped placeholder so a slow first load never flashes the route-level
+  // loading screen; it matches the sliding panel chrome instead.
+  loading: () => (
+    <div
+      className="fixed z-50 flex flex-col bg-surface-raised shadow-lg max-md:inset-0 md:top-0 md:right-0 md:bottom-0 md:w-[380px] md:border-l md:border-border-subtle"
+      aria-hidden
+    />
+  ),
+});
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -47,6 +58,22 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       setHasMountedCoach(true);
     }
   }, [isPanelOpen, launch]);
+
+  // Warm the AI Coach chunk during idle time so the first open feels instant
+  // (otherwise the panel lazy-loads on tap, causing a visible loading delay).
+  useEffect(() => {
+    if (!user || hasMountedCoach) return;
+    const w = window as Window & {
+      requestIdleCallback?: (cb: () => void) => number;
+      cancelIdleCallback?: (id: number) => void;
+    };
+    if (w.requestIdleCallback) {
+      const id = w.requestIdleCallback(() => void importAICoachPanel());
+      return () => w.cancelIdleCallback?.(id);
+    }
+    const timer = setTimeout(() => void importAICoachPanel(), 1500);
+    return () => clearTimeout(timer);
+  }, [user, hasMountedCoach]);
 
   useEffect(() => {
     if (!user) return;

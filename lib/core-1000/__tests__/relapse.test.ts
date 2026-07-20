@@ -45,6 +45,26 @@ describe("reinsertLearning", () => {
     const reinserted = result.find((i) => i.entry.word === "a" && i !== queue[0]);
     expect(reinserted?.kind).toBe("learning");
   });
+
+  it("keeps one active copy and preserves the next retry after repeated failures", () => {
+    let queue = [
+      item("a", "new"), item("b", "review"), item("c", "new"),
+      item("d", "review"), item("e", "new"), item("f", "review"),
+    ];
+    let index = 0;
+
+    queue = reinsertLearning(queue, index, queue[index]);
+    index += 1;
+    expect(queue.slice(index).filter((candidate) => candidate.entry.word === "a")).toHaveLength(1);
+
+    index = queue.findIndex((candidate, candidateIndex) => candidateIndex >= index && candidate.entry.word === "a");
+    queue = reinsertLearning(queue, index, queue[index]);
+    index += 1;
+
+    const activeRetries = queue.slice(index).filter((candidate) => candidate.entry.word === "a");
+    expect(activeRetries).toHaveLength(1);
+    expect(activeRetries[0].kind).toBe("learning");
+  });
 });
 
 describe("deriveCounts", () => {

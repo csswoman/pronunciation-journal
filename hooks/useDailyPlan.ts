@@ -62,7 +62,13 @@ export function useDailyPlan({ conceptLesson, autoLoad = true }: UseDailyPlanOpt
   }, [])
 
   const applyPlan = useCallback((built: DailyPlan, lesson: ConceptLesson | null, userId: string) => {
-    const steps = [...built.steps]
+    // Keep both theory links at the end. The composer fills five candidates,
+    // so admitting the server-provided mini lesson means releasing one
+    // practice candidate when a route study deck is present.
+    const studyDeck = built.steps.find((step) => step.kind === 'study_deck')
+    const practiceSteps = built.steps.filter((step) => step.kind !== 'study_deck')
+    const steps = practiceSteps.slice(0, studyDeck ? DAILY_PLAN_STEP_COUNT - 2 : DAILY_PLAN_STEP_COUNT - 1)
+    if (studyDeck) steps.push(studyDeck)
     if (lesson) {
       steps.push({
         kind: 'concept',

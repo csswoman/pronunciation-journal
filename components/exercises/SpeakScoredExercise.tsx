@@ -22,10 +22,11 @@ import { ListenButton } from '@/components/ui/ListenButton'
 import { cn } from '@/lib/cn'
 import type { Exercise } from '@/lib/phoneme-practice/types'
 import type { WordResult } from '@/lib/types'
+import type { PracticeSubmitHandler } from '@/lib/practice/types'
 
 interface Props {
   exercise: Exercise
-  onSubmit: (isCorrect: boolean, userAnswer: string) => void
+  onSubmit: PracticeSubmitHandler
 }
 
 interface ScoredResult {
@@ -110,7 +111,7 @@ export function SpeakScoredExercise({ exercise, onSubmit }: Props) {
   const handleContinue = useCallback(() => {
     if (!scored || submitted.current) return
     submitted.current = true
-    onSubmit(scored.correct, scored.transcript)
+    onSubmit(scored.correct, scored.transcript, { score: scored.score })
   }, [scored, onSubmit])
 
   const handleRetry = useCallback(() => {

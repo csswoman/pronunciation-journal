@@ -49,7 +49,12 @@ export function buildLevel(
   title: string,
   hours: string,
   courses: CourseInput[],
-  opts?: { isElective?: boolean; spineIcon?: ElectiveSpineIcon }
+  opts?: {
+    isElective?: boolean;
+    spineIcon?: ElectiveSpineIcon;
+    optionalLabel?: string;
+    optionalTitle?: string;
+  }
 ): CoursePathLevel {
   const core = courses.filter((c) => c.p > 0);
   const optional = courses.filter((c) => c.p === 0);
@@ -62,7 +67,7 @@ export function buildLevel(
     units.push({
       id: `${id}-core`,
       label: opts?.isElective ? "Recomendados" : "Lo esencial",
-      title: `${core.length} lección${core.length === 1 ? "" : "es"} clave`,
+      title: `${core.length === 1 ? "1 lección" : `${core.length} lecciones`} clave`,
       lessons,
     });
   }
@@ -71,8 +76,8 @@ export function buildLevel(
     const { lessons } = mapLessons(id, `${id}-opt`, optional, lessonNumber);
     units.push({
       id: `${id}-optional`,
-      label: "Extra",
-      title: "Profundiza cuando quieras",
+      label: opts?.optionalLabel ?? "Opcional",
+      title: opts?.optionalTitle ?? "Lecciones para profundizar",
       lessons,
       isOptionalSection: true,
     });

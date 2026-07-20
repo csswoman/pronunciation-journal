@@ -35,6 +35,20 @@ dashboard de Vercel durante incidentes.
 El workflow programado corre cada 30 minutos en
 `.github/workflows/production-health.yml`.
 
+## Worker de enriquecimiento
+
+Vercel Hobby solo permite cron una vez al dia, por lo que el repositorio usa
+GitHub Actions para drenar `word_enrichment_jobs` cada dos horas. El workflow
+tambien admite ejecucion manual cuando se necesita procesar inmediatamente.
+
+1. En Vercel, definir `CRON_SECRET` con un valor aleatorio largo.
+2. En GitHub Actions Secrets, definir `CRON_SECRET` con exactamente el mismo valor.
+3. En GitHub Actions Variables, definir `ENRICHMENT_DRAIN_URL` como
+   `https://TU_DOMINIO/api/jobs/drain-enrichment`.
+4. Ejecutar manualmente el workflow `Drain Enrichment Queue`.
+5. Confirmar una respuesta JSON con `processed`, incluso si su valor es `0`.
+6. Revisar que las ejecuciones programadas continúen verdes.
+
 ### Mejora en plan Pro
 
 Si el proyecto sube a Vercel Pro, configurar un Log Drain en el dashboard hacia
@@ -53,15 +67,6 @@ un proveedor con retencion minima de 7 dias.
 
 Estado actual: baseline Free cubierto por GitHub Actions; Log Drain queda como
 mejora opcional de plan Pro.
-
-## Bootstrap de admin
-
-1. Definir `ADMIN_BOOTSTRAP_EMAIL` solo para el despliegue o mantenimiento.
-2. Ejecutar `bootstrapAdminRole()` desde un contexto server-only o una tarea operativa interna.
-3. Verificar que la cuenta objetivo existe en Auth.
-4. Confirmar que `user_profiles.role` quedó en `admin`.
-5. Eliminar `ADMIN_BOOTSTRAP_EMAIL` si el bootstrap era temporal.
-6. No escribir correos personales ni IDs de cuentas en migraciones o documentación pública.
 
 ## Rollback
 

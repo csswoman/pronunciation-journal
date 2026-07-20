@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import type { WordBankEntry } from '@/lib/word-bank/types'
 import type { Sound, SoundWord } from '@/lib/phoneme-practice/types'
@@ -58,7 +59,10 @@ vi.mock('@/lib/phoneme-practice/queries', () => ({
 }))
 
 vi.mock('@/lib/db', () => ({
-  db: { learningState: { get: vi.fn().mockResolvedValue(null) } },
+  db: {
+    learningState: { get: vi.fn().mockResolvedValue(null) },
+    completedLessons: { toArray: vi.fn().mockResolvedValue([]) },
+  },
 }))
 
 vi.mock('@/lib/exercises/generators/connected-speech', () => ({
@@ -90,6 +94,11 @@ vi.mock('@/lib/practice/daily-plan/async-step-builders', async (importOriginal) 
     buildReaderStep: vi.fn().mockResolvedValue(null),
   }
 })
+
+vi.mock('@/lib/journal/daily-step', () => ({
+  shouldOfferJournalStep: () => false,
+  buildJournalDailyStep: vi.fn(),
+}))
 
 import {
   getDueWordsForDaily,
@@ -171,6 +180,8 @@ describe('buildDailyPlan', () => {
     expect(plan.isNewUser).toBe(true)
     // Sin word_bank no debe haber paso de repaso de palabras.
     expect(plan.steps.some((s) => s.kind === 'word_review')).toBe(false)
+    expect(plan.steps.some((s) => s.kind === 'reader')).toBe(false)
+    expect(vi.mocked(buildReaderStep)).not.toHaveBeenCalled()
     // El catálogo garantiza ≥5 ejercicios 'daily' para sostener el streak.
     expect(allExercises(plan).length).toBeGreaterThanOrEqual(5)
   })
@@ -351,10 +362,8 @@ describe('buildDailyPlan', () => {
 
     const plan = await buildDailyPlan('user-1')
     expect(vi.mocked(buildReaderStep)).toHaveBeenCalled()
-    // Reader puede quedar fuera del slice de DAILY_PLAN_STEP_COUNT cuando el plan está lleno.
-    if (plan.steps.some((s) => s.kind === 'reader')) {
-      expect(plan.steps.find((s) => s.kind === 'reader')?.readerPassage?.id).toBe('p1')
-    }
+    expect(plan.steps).toHaveLength(DAILY_PLAN_STEP_COUNT)
+    expect(plan.steps.find((s) => s.kind === 'reader')?.readerPassage?.id).toBe('p1')
   })
 })
 

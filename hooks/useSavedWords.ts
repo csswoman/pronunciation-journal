@@ -11,14 +11,15 @@ export interface SaveWordData {
   context: string;
 }
 
-export function useSavedWords(conversationId: number | null) {
+export function useSavedWords(userId: string | null, conversationId: number | null) {
   const [savedWords, setSavedWords] = useState<AISavedWord[]>([]);
   const [wordToSave, setWordToSave] = useState<{ word: string; context: string } | null>(null);
 
   const loadSavedWords = useCallback(async () => {
-    const words = await getAIWords();
+    if (!userId) { setSavedWords([]); return; }
+    const words = await getAIWords(userId);
     setSavedWords(words);
-  }, []);
+  }, [userId]);
 
   const openSaveWordModal = useCallback((word: string, context: string) => {
     setWordToSave({ word, context });
@@ -27,7 +28,8 @@ export function useSavedWords(conversationId: number | null) {
   const closeSaveWordModal = useCallback(() => setWordToSave(null), []);
 
   const confirmSaveWord = useCallback(async (data: SaveWordData) => {
-    const wordData: Omit<AISavedWord, "id"> = {
+    if (!userId) return;
+    const wordData: Omit<AISavedWord, "id" | "userId"> = {
       word: data.word.toLowerCase().trim(),
       meaning: data.meaning,
       difficulty: data.difficulty,
@@ -35,15 +37,16 @@ export function useSavedWords(conversationId: number | null) {
       conversationId: conversationId ?? 0,
       savedAt: new Date().toISOString(),
     };
-    const id = await saveAIWord(wordData);
-    setSavedWords(prev => [{ ...wordData, id }, ...prev]);
+    const id = await saveAIWord(userId, wordData);
+    setSavedWords(prev => [{ ...wordData, userId, id }, ...prev]);
     setWordToSave(null);
-  }, [conversationId]);
+  }, [conversationId, userId]);
 
   const deleteSavedWord = useCallback(async (id: number) => {
-    await deleteAIWord(id);
+    if (!userId) return;
+    await deleteAIWord(userId, id);
     setSavedWords(prev => prev.filter(w => w.id !== id));
-  }, []);
+  }, [userId]);
 
   return useMemo(
     () => ({

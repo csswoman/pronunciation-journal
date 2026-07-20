@@ -2,6 +2,9 @@
 
 export type CefrLevel = "A1" | "A2" | "B1" | "B2" | "C1";
 
+/** CEFR levels present in the Core 1000 dataset, ordered easiest → hardest. */
+export const CEFR_LEVELS: readonly CefrLevel[] = ["A1", "A2", "B1", "B2", "C1"] as const;
+
 export const CORE_POS = [
   "noun",
   "verb",
@@ -28,6 +31,8 @@ export interface CoreWord {
   example_sentence: string; // contiene la palabra; ahí vive la weak form
   sentence_ipa?: string; // obligatorio si hay ipa_weak (Zod refine)
   cefr_level: CefrLevel;
+  meaning?: string; // definición corta en inglés (backfill-meaning)
+  translation?: string; // traducción al español (backfill-meaning)
 }
 
 export const CORE1000_PREFIX = "c1k:";

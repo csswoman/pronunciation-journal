@@ -33,7 +33,7 @@ export function SelfGradeBar({ onGrade, disabled }: Props) {
             onGrade(quality)
           }}
           className={cn(
-            'max-w-28 flex-1 cursor-pointer rounded-full border px-3 py-2 font-[inherit] text-xs font-medium',
+            'min-h-11 max-w-28 flex-1 cursor-pointer rounded-full border px-3 py-2 font-[inherit] text-xs font-medium',
             'transition-all duration-150 ease-out-quart focus-ring disabled:opacity-40',
             'active:scale-[0.97]',
             quality === 1

@@ -46,7 +46,7 @@ export async function GET(
 }
 
 /**
- * POST /api/lexicon/[id]
+ * POST /api/dictionary/[id]
  *
  * Returns the raw lexicon words for this category together with any existing
  * word_bank rows the user already has for them. No upsert — words are only
@@ -64,10 +64,10 @@ export async function POST(
 
   const { id } = await params;
 
-  const { limited, error: rateLimitError } = await rateLimit(`/api/lexicon/${id}:${user.id}`, {
+  const { limited, error: rateLimitError } = await rateLimit(`/api/dictionary/${id}:${user.id}`, {
     max: 30,
     windowMs: 60_000,
-    meta: { endpoint: "/api/lexicon/[id]", userId: user.id },
+    meta: { endpoint: "/api/dictionary/[id]", userId: user.id },
   });
   if (limited) return rateLimitError;
 
@@ -91,7 +91,7 @@ export async function POST(
 
   if (selectErr) {
     logServerError("Lexicon word bank select failed", selectErr, {
-      endpoint: "/api/lexicon/[id]",
+      endpoint: "/api/dictionary/[id]",
       operation: "selectWordBankRows",
       userId: user.id,
     });

@@ -1,0 +1,112 @@
+{
+  "meta": {
+    "eyebrow": "C1 · Pronunciación pragmática",
+    "title": "Entonación para",
+    "titleEmphasis": "actitud y cortesía",
+    "goal": "Puedes reconocer y ajustar contornos de entonación para expresar seguridad, reserva, apertura o desacuerdo con claridad."
+  },
+  "sounds": ["ə"],
+  "related": [
+    { "slug": "c1-pronunciacion-avanzada", "label": "Pronunciación avanzada" },
+    { "slug": "c1-pragmatica-tono", "label": "Pragmática, tono y cortesía" }
+  ],
+  "cards": [
+    {
+      "id": "c1-entonacion-actitud-cortesia-significado",
+      "tag": "Idea central",
+      "title": "El contorno modifica la interpretación",
+      "lede": "Las palabras expresan el contenido; el movimiento tonal ayuda a indicar si cierras, abres, reservas o corriges.",
+      "blocks": [{
+        "type": "pronunciation",
+        "sound": "Contornos ↘ ↗ ↘↗",
+        "focus": ["ə"],
+        "examples": [
+          { "text": "That should work. ↘", "es": "Caída: cierre o seguridad, según el contexto." },
+          { "text": "That should work? ↗", "es": "Subida: busca confirmación o mantiene abierta la respuesta." },
+          { "text": "That should work... ↘↗", "es": "Caída-subida: reserva; puede haber una condición no dicha." }
+        ],
+        "note": "Los contornos orientan, pero no tienen un significado fijo fuera del contexto."
+      }]
+    },
+    {
+      "id": "c1-entonacion-actitud-cortesia-peticion",
+      "tag": "Peticiones",
+      "title": "Combina palabras corteses y una entrega abierta",
+      "lede": "La cortesía no depende solo de please: considera la relación, la carga de la petición y la posibilidad de negarse.",
+      "blocks": [{
+        "type": "contrast",
+        "columns": [
+          { "label": "Petición abierta", "rule": "Could you take a look at this? ↗", "examples": ["La subida puede dejar espacio para responder.", "Would you mind sending it by noon? ↗"] },
+          { "label": "Instrucción cerrada", "rule": "Please send it by noon. ↘", "examples": ["La caída presenta el plazo como definido.", "Adecuada si quien habla tiene autoridad y el pedido es razonable."] }
+        ]
+      }]
+    },
+    {
+      "id": "c1-entonacion-actitud-cortesia-reserva",
+      "tag": "Reserva",
+      "title": "Deja una condición audible",
+      "lede": "La caída-subida suele señalar que la evaluación es parcial y que el hablante aún no ha cerrado su posición.",
+      "blocks": [{
+        "type": "pronunciation",
+        "sound": "Caída-subida ↘↗",
+        "examples": [
+          { "text": "The first section is CLEAR... ↘↗", "es": "Implica: otra sección quizá no lo sea." },
+          { "text": "I could meet on THURSday... ↘↗", "es": "Implica una condición o una alternativa limitada." },
+          { "text": "It's an interesting IDEA... ↘↗", "es": "La evaluación positiva puede ser incompleta." }
+        ],
+        "note": "Si el matiz importa mucho, exprésalo también con palabras: but, although, as long as."
+      }]
+    },
+    {
+      "id": "c1-entonacion-actitud-cortesia-desacuerdo",
+      "tag": "Desacuerdo",
+      "title": "Haz audible la apertura sin borrar tu postura",
+      "lede": "Una entrada con tono menos terminal puede invitar al intercambio; la razón posterior puede cerrar con claridad.",
+      "blocks": [{
+        "type": "rules",
+        "rows": [
+          { "key": "Entrada", "value": "I see your POINT... ↘↗", "hint": "Reconoce y mantiene abierto el turno." },
+          { "key": "Diferencia", "value": "but I read the DATA differently. ↘", "hint": "La caída cierra la postura principal." },
+          { "key": "Invitación", "value": "Could we compare our assumptions? ↗", "hint": "Abre una acción conjunta." }
+        ]
+      }]
+    },
+    {
+      "id": "c1-entonacion-actitud-cortesia-malentendidos",
+      "tag": "Escucha",
+      "title": "No juzgues actitud por un solo rasgo",
+      "lede": "Volumen, velocidad o una caída marcada no prueban por sí solos impaciencia, hostilidad o falta de cortesía.",
+      "blocks": [{
+        "type": "pairs",
+        "lines": [
+          { "variant": "bad", "text": "The speaker used falling intonation, so they were rude." },
+          { "variant": "good", "text": "The fall may signal closure; check the words, relationship and situation before inferring attitude.", "note": "Interpreta el conjunto." },
+          { "variant": "bad", "text": "A rising ending always means uncertainty." },
+          { "variant": "good", "text": "A rise can request confirmation, hold the floor or reflect a community pattern.", "note": "Un contorno admite varias funciones." }
+        ]
+      }]
+    },
+    {
+      "id": "c1-entonacion-actitud-cortesia-transferencia",
+      "tag": "Producción",
+      "title": "Ensaya intención, no una personalidad",
+      "lede": "Prueba varias entregas y elige la que vuelve reconocible tu intención en ese contexto.",
+      "blocks": [{
+        "type": "rules",
+        "rows": [
+          { "key": "1. Contexto", "value": "Define relación, urgencia y derecho a pedir." },
+          { "key": "2. Palabras", "value": "Haz explícita la petición, reserva o diferencia." },
+          { "key": "3. Contorno", "value": "Ensaya cierre ↘, apertura ↗ o reserva ↘↗." },
+          { "key": "4. Verificación", "value": "Pide a un oyente que identifique la intención, no el acento." }
+        ]
+      }],
+      "tip": { "label": "Meta:", "body": "Amplía tus opciones expresivas y conserva tu identidad. La inteligibilidad importa más que imitar un patrón nativo." }
+    }
+  ],
+  "quiz": [
+    { "q": "What can a fall-rise on 'The first section is CLEAR' suggest?", "options": ["The speaker may have a reservation about another section.", "Every section is definitely clear.", "The speaker forgot the words."], "answer": 0, "explain": "La caída-subida suele presentar una evaluación limitada o una condición implícita." },
+    { "q": "¿Qué determina la cortesía de una petición?", "options": ["Solo decir please", "Las palabras, la entrega, la relación y la carga del pedido", "Usar siempre entonación ascendente"], "answer": 1, "explain": "La cortesía es una interpretación contextual, no el efecto automático de una palabra o contorno." },
+    { "q": "¿Cuál inferencia es más responsable al escuchar una caída marcada?", "options": ["El hablante es hostil.", "Puede señalar cierre; necesito considerar el contexto.", "El hablante pertenece a una región específica."], "answer": 1, "explain": "Un rasgo aislado no permite concluir actitud ni identidad." },
+    { "q": "Which sequence expresses collaborative disagreement clearly?", "options": ["I see your POINT... ↘↗ but I read the DATA differently. ↘", "You're WRONG! ↘", "Maybe... ↗"], "answer": 0, "explain": "La primera combina reconocimiento abierto con una postura explícita." }
+  ]
+}

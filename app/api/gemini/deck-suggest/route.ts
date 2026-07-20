@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { requireSameOrigin, requireUser, rateLimit, validateBody } from "@/lib/api/guards";
 import { createSupabaseServerClient as createClient } from "@/lib/supabase/server";
+import { getSupabaseAdminClient } from "@/lib/supabase/admin";
 import { buildDeckSuggestUserPrompt, DECK_SUGGEST_SYSTEM_PROMPT } from "@/lib/ai-prompts";
 import { callGeminiJson, parseGeminiJson } from "@/lib/gemini/json-route";
 
@@ -43,7 +44,7 @@ async function getCached(key: string): Promise<Suggestion[] | null> {
 
 async function setCached(key: string, suggestions: Suggestion[]): Promise<void> {
   try {
-    const supabase = await createClient();
+    const supabase = getSupabaseAdminClient();
     await supabase
       .from("deck_suggestions_cache")
       .upsert({ cache_key: key, suggestions, created_at: new Date().toISOString() }, { onConflict: "cache_key" });

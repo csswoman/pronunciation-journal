@@ -172,12 +172,14 @@ export function computeCanStartReview(summary: {
   weakWords: unknown[]
   dueWords: unknown[]
   soundsDue: unknown[]
+  dueTopics?: unknown[]
 }): boolean {
   return (
     summary.dueWords.length > 0 ||
     summary.weakWords.length > 0 ||
     summary.soundsDue.length > 0 ||
     summary.failedSentences.some((item) => item.drillable)
+    || (summary.dueTopics?.length ?? 0) > 0
   )
 }
 

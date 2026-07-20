@@ -1,5 +1,6 @@
 import type { ExerciseResult } from "./types";
 import type { CEFRLevel } from "@/lib/exercises/cefr";
+import type { ConceptSignal } from "@/lib/courses/concept-profile";
 
 export interface UserLearningState {
   userId: string;
@@ -30,6 +31,10 @@ export interface UserLearningState {
       sampleCount: number;
       lastCoveredAt: string;
     }>;
+  };
+
+  theory: {
+    concepts: ConceptSignal[];
   };
 
   pronunciation: {
@@ -237,6 +242,7 @@ export function createEmptyState(userId: string, deviceId: string): UserLearning
     level: { cefrEstimate: "B1", confidence: 0.5 },
     vocabulary: { knownCount: 0, strugglingWords: [], savedWords: [] },
     grammar: { weakTopics: [] },
+    theory: { concepts: [] },
     pronunciation: { averageAccuracy: 0, strugglingSounds: [] },
     lastSessions: [],
   };

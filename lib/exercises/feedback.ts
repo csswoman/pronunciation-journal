@@ -7,6 +7,7 @@ import type {
   MultipleChoiceExercise,
   ReorderWordsExercise,
   SentenceDictationExercise,
+  ErrorCorrectionExercise,
 } from '@/lib/exercises/types'
 import type { PedagogicalFeedback } from '@/lib/practice/types'
 
@@ -53,7 +54,19 @@ export function buildPedagogicalFeedback(
         canRetry: !isCorrect,
         nextAction: isCorrect ? 'continue' : 'retry',
       }
+    case 'error_correction':
+      return errorCorrectionFeedback(exercise, isCorrect)
+    case 'conjugation_blank':
+      return { immediate: isCorrect ? 'Correcto.' : 'Revisa la forma verbal.', expectedAnswer: exercise.answer, tip: exercise.hint, errorCode: isCorrect ? 'correct' : 'form_error', canRetry: !isCorrect, nextAction: isCorrect ? 'continue' : 'retry' }
+    case 'sentence_transformation':
+      return { immediate: isCorrect ? 'Correcto.' : 'Revisa el feedback antes de continuar.', expectedAnswer: exercise.referenceAnswer, errorCode: isCorrect ? 'correct' : 'unknown', canRetry: !isCorrect, nextAction: isCorrect ? 'continue' : 'retry' }
+    case 'translation_es_en':
+      return { immediate: isCorrect ? 'Correcto.' : 'Compara tu traducción con la referencia.', expectedAnswer: exercise.referenceEn, correction: exercise.referenceEn, errorCode: isCorrect ? 'correct' : 'meaning_choice', canRetry: !isCorrect, nextAction: isCorrect ? 'continue' : 'retry' }
   }
+}
+
+function errorCorrectionFeedback(exercise: ErrorCorrectionExercise, isCorrect: boolean): PedagogicalFeedback {
+  return { immediate: isCorrect ? 'Correcto.' : 'Corrige la forma de la oración.', correction: exercise.correctSentence, explanation: exercise.explanation, expectedAnswer: exercise.correctSentence, category: isCorrect ? 'error_correction_correct' : 'error_correction_form', errorCode: isCorrect ? 'correct' : 'form_error', canRetry: !isCorrect, nextAction: isCorrect ? 'continue' : 'retry' }
 }
 
 export function pedagogicalFeedbackFromEvaluation(result: EvaluationResult): PedagogicalFeedback {

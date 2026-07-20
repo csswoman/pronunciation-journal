@@ -14,6 +14,8 @@ export const CoreWordSchema = z
     example_sentence: z.string().min(1),
     sentence_ipa: z.string().regex(/^\/.+\/$/).optional(),
     cefr_level: z.enum(["A1", "A2", "B1", "B2", "C1"]),
+    meaning: z.string().min(1).optional(),
+    translation: z.string().min(1).optional(),
   })
   .refine((w) => !w.ipa_weak || !!w.sentence_ipa, {
     message: "sentence_ipa es obligatorio cuando hay ipa_weak",

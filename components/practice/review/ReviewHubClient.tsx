@@ -31,7 +31,7 @@ function overdueLabel(daysOverdue: number): string {
 }
 
 export function ReviewHubClient({ summary }: Props) {
-  const { state, sessionKey, startReview, startFailedItem, advanceStep, exitSession } =
+  const { state, sessionKey, startReview, startFailedItem, startTopic, advanceStep, exitSession } =
     useReviewSession()
   const { counts } = summary
   const canStart = summary.canStartReview && state.phase !== 'loading'
@@ -152,7 +152,7 @@ export function ReviewHubClient({ summary }: Props) {
           </ul>
           {counts.dueWords > 0 ? (
             <Link
-              href="/words"
+              href="/dictionary"
               className="font-caption text-primary transition-opacity hover:opacity-80"
               data-cuelume-hover="tick"
             >
@@ -197,8 +197,8 @@ export function ReviewHubClient({ summary }: Props) {
         >
           <ul className="flex flex-col gap-2">
             {summary.dueTopics.slice(0, 4).map((t) => (
-              <li key={t.id} className="font-body-sm text-fg">
-                {t.topic}
+              <li key={t.id} className="flex items-center justify-between gap-2 font-body-sm text-fg">
+                {t.topic}<Button type="button" variant="ghost" size="sm" onClick={() => startTopic(t.topic)}>Practicar</Button>
               </li>
             ))}
           </ul>

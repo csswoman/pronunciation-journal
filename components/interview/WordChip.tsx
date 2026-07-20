@@ -3,8 +3,12 @@
 import { useState } from "react";
 import { Volume2 } from "@/components/icons";
 
-const colors = { correct: "var(--word-correct)", incorrect: "var(--word-incorrect)", missing: "var(--word-missing)", extra: "var(--word-extra)" };
-const bgs    = { correct: "var(--word-correct-bg)", incorrect: "var(--word-incorrect-bg)", missing: "var(--word-missing-bg)", extra: "var(--word-extra-bg)" };
+const STATUS_STYLES = {
+  correct: "text-[var(--word-correct)] bg-[var(--word-correct-bg)]",
+  incorrect: "text-[var(--word-incorrect)] bg-[var(--word-incorrect-bg)]",
+  missing: "text-[var(--word-missing)] bg-[var(--word-missing-bg)]",
+  extra: "text-[var(--word-extra)] bg-[var(--word-extra-bg)]",
+} as const;
 
 interface Props {
   word: string;
@@ -27,8 +31,7 @@ export function WordChip({ word, status, tip, onPlay }: Props) {
         <button
           type="button"
           onClick={(e) => { e.stopPropagation(); onPlay?.(); }}
-          className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium transition-opacity cursor-pointer hover:opacity-75 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 border-none ${tip ? "underline decoration-dotted underline-offset-2" : ""}`}
-          style={{ color: colors[status], background: bgs[status] }}
+          className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium transition-opacity cursor-pointer hover:opacity-75 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 border-none ${STATUS_STYLES[status]} ${tip ? "underline decoration-dotted underline-offset-2" : ""}`}
           aria-label={`Listen to "${word}"`}
         >
           {word}
@@ -36,8 +39,7 @@ export function WordChip({ word, status, tip, onPlay }: Props) {
         </button>
       ) : (
         <span
-          className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium ${tip ? "underline decoration-dotted underline-offset-2" : ""}`}
-          style={{ color: colors[status], background: bgs[status] }}
+          className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium ${STATUS_STYLES[status]} ${tip ? "underline decoration-dotted underline-offset-2" : ""}`}
         >
           {word}
         </span>

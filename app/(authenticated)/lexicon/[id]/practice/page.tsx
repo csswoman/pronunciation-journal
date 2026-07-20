@@ -8,7 +8,7 @@
 //   phase=done     → redirect to lexicon lesson
 // </LexiconPracticePage>
 
-import { useCallback, useEffect, useMemo } from 'react'
+import { useCallback, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { useAuth } from '@/components/auth/AuthProvider'
 import PracticeSession from '@/components/practice/PracticeSession'
@@ -16,9 +16,7 @@ import { LexiconReviewPhase } from '@/components/lexicon/practice/LexiconReviewP
 import { LexiconReviewSummary } from '@/components/lexicon/practice/LexiconReviewSummary'
 import PageLayout from '@/components/layout/PageLayout'
 import Button from '@/components/ui/Button'
-import { enqueueWordBankSRSUpdate } from '@/lib/word-bank/srs-queries'
 import { useLexiconPracticeSession } from '@/hooks/useLexiconPracticeSession'
-import type { SessionResult } from '@/lib/practice/types'
 
 export default function LexiconPracticePage() {
   const params = useParams()
@@ -32,34 +30,20 @@ export default function LexiconPracticePage() {
     setFlowPhase, handleReviewComplete, reload, clear,
   } = useLexiconPracticeSession(categoryId, user?.id)
 
-  const forgotEntryMap = useMemo(() => {
-    return new Map(
-      ratings.filter((r) => r.rating === 'forgot').map((r) => [r.entry.id, r.entry])
-    )
-  }, [ratings])
-
   const handleSessionComplete = useCallback(
-    async (result: SessionResult) => {
+    async () => {
       if (!user) return
-      // match_pairs grades a group of 4 — there's no per-word result. If any exercise is
-      // answered incorrectly, penalize all "forgot" entries since they were part of the pool.
-      const anyIncorrect = result.results.some((r) => !r.isCorrect)
-      if (anyIncorrect && forgotEntryMap.size > 0) {
-        await Promise.all(
-          Array.from(forgotEntryMap.values()).map((entry) =>
-            enqueueWordBankSRSUpdate(user.id, entry.id, 1)
-          )
-        )
-      }
+      // Per-exercise SRS is handled in savePracticeAnswer with plan-062 attribution.
+      // Do not invent group penalties from aggregate match_pairs scores.
       clear()
       setFlowPhase('done')
     },
-    [user, forgotEntryMap, clear, setFlowPhase],
+    [user, clear, setFlowPhase],
   )
 
   useEffect(() => {
     if (flowPhase === 'done') {
-      router.push(`/lexicon/${categoryId}`)
+      router.push(`/dictionary/${categoryId}`)
     }
   }, [flowPhase, categoryId, router])
 
@@ -68,7 +52,7 @@ export default function LexiconPracticePage() {
       <div className="flex items-center justify-between px-10 pt-6 pb-4">
         <button
           type="button"
-          onClick={() => { clear(); router.push(`/lexicon/${categoryId}`) }}
+          onClick={() => { clear(); router.push(`/dictionary/${categoryId}`) }}
           className="border-none bg-transparent p-1 text-xl leading-none text-fg-subtle"
         >
           ←
@@ -120,7 +104,7 @@ export default function LexiconPracticePage() {
           <LexiconReviewSummary
             ratings={ratings}
             onStartExercises={() => setFlowPhase('practice')}
-            onFinish={() => { clear(); router.push(`/lexicon/${categoryId}`) }}
+            onFinish={() => { clear(); router.push(`/dictionary/${categoryId}`) }}
           />
         </main>
       </PageLayout>
@@ -139,7 +123,7 @@ export default function LexiconPracticePage() {
       onSessionComplete: handleSessionComplete,
       onExit: () => {
         clear()
-        router.push(`/lexicon/${categoryId}`)
+        router.push(`/dictionary/${categoryId}`)
       },
     }
 

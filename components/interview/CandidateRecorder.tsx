@@ -45,7 +45,7 @@ function AccuracyRing({ accuracy }: { accuracy: number }) {
         strokeDasharray={`${dash} ${circ}`}
         strokeDashoffset={circ / 4}
         strokeLinecap="round"
-        style={{ transition: "stroke-dasharray 0.8s ease" }}
+        className="accuracy-ring-progress"
       />
       <text x="40" y="45" textAnchor="middle" fontSize="14" fontWeight="700" fill={color}>
         {Math.round(accuracy)}%

@@ -40,7 +40,7 @@ export function DefaultCompactHeader({ badge, title, subtitle, description, prim
         )}
       </div>
       {illustration && (
-        <div className="relative z-10 flex items-center justify-center" style={{ minHeight: "260px" }}>
+        <div className="relative z-10 flex min-h-[260px] items-center justify-center">
           <div className="relative w-full max-w-[420px] drop-shadow-xl [&_img]:w-full [&_img]:h-auto [&_svg]:w-full [&_svg]:h-auto">{illustration}</div>
         </div>
       )}

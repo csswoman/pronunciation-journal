@@ -15,13 +15,13 @@ function getOrCreateDeviceId(): string {
 
 /** Returns the most recent conversation for a given mode, or null if none. */
 export async function getActiveConversationForMode(
+  userId: string,
   mode: AIConversationMode
 ): Promise<AIConversation | null> {
   const conv = await db.aiConversations
-    .where("mode")
-    .equals(mode)
-    .reverse()
-    .first();
+    .where("[userId+mode]")
+    .equals([userId, mode])
+    .last();
   return conv ?? null;
 }
 
@@ -29,17 +29,18 @@ export async function getActiveConversationForMode(
  * Switch to a mode: resume the last conversation for that mode, or create a
  * blank one. Returns the conversation and its deserialized messages.
  */
-export async function switchMode(mode: AIConversationMode): Promise<{
+export async function switchMode(userId: string, mode: AIConversationMode): Promise<{
   conversationId: number;
   conversation: AIConversation;
 }> {
-  const existing = await getActiveConversationForMode(mode);
+  const existing = await getActiveConversationForMode(userId, mode);
   if (existing?.id != null) {
     return { conversationId: existing.id, conversation: existing };
   }
 
   const now = new Date().toISOString();
   const blank: Omit<AIConversation, "id"> = {
+    userId,
     templateId: "free-conversation",
     mode,
     title: "",

@@ -34,23 +34,16 @@ export default function PronunciationBadge({ ipa, audioUrl, onClick }: Pronuncia
     <button
       type="button"
       onClick={handleClick}
-      className="inline-flex items-center rounded-full border text-fg-muted transition-all duration-150 hover-border-primary"
+      className="inline-flex items-center rounded-md border font-mono text-base leading-tight px-2.5 py-1 bg-[color-mix(in_oklch,var(--surface-sunken)_40%,transparent)] text-fg-muted cursor-pointer transition-all duration-150 hover-border-primary"
       style={{
-        fontSize: "16px",
-        lineHeight: 1.2,
-        fontFamily: "var(--font-mono)",
-        padding: "4px 10px",
-        borderRadius: "var(--radius-md)",
-        background: "color-mix(in oklch, var(--surface-sunken) 40%, transparent)",
         borderColor: isPlaying ? "var(--primary)" : "var(--line-divider)",
         opacity: isPlaying ? 0.82 : 1,
-        cursor: "pointer",
       }}
       aria-label={`Play pronunciation for ${ipa}`}
       title="Play pronunciation"
     >
       <Volume2 size={14} />
-      <span style={{ marginLeft: "6px" }}>{ipa}</span>
+      <span className="ml-1.5">{ipa}</span>
     </button>
   );
 }

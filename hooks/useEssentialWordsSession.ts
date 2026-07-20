@@ -7,7 +7,8 @@ import {
   type Core1000QueueItem,
 } from "@/lib/core-1000/queue";
 import { gradeCore1000Word, type GradeExtras } from "@/lib/core-1000/grade";
-import { core1000WordId, NEW_CARDS_PER_DAY, type CoreWord } from "@/lib/core-1000/types";
+import { core1000WordId, NEW_CARDS_PER_DAY, type CefrLevel, type CorePos, type CoreWord } from "@/lib/core-1000/types";
+import { getRoute } from "@/lib/core-1000/routes";
 import { loadPendingLapses, savePendingLapses } from "@/lib/core-1000/pending-lapses";
 import {
   loadEssentialWordsQueue,
@@ -20,6 +21,8 @@ import {
   type EssentialWordsPhase,
   type EssentialWordsSessionSummary,
 } from "@/lib/core-1000/session-model";
+import { readStoredCefrLevel } from "@/lib/core-1000/target-level";
+import { readGuestStudyLevel } from "@/lib/preferences/guest-study-level";
 import {
   masterEssentialWord,
   recordCore1000Introduction,
@@ -63,6 +66,13 @@ export function useEssentialWordsSession() {
   const lapseFlushRef = useRef<Promise<void> | null>(null);
   const allWordsRef = useRef<CoreWord[]>([]);
   const seenIdsRef = useRef<Set<string>>(new Set());
+  // Active filter (null = all). Ephemeral, session-scoped. `routeId` is the
+  // themed-route preset that drove the current level+pos, when any.
+  const [levels, setLevelsState] = useState<CefrLevel[] | null>(null);
+  const levelsRef = useRef<CefrLevel[] | null>(null);
+  const [pos, setPosState] = useState<CorePos[] | null>(null);
+  const posRef = useRef<CorePos[] | null>(null);
+  const [activeRouteId, setActiveRouteId] = useState<string | null>(null);
 
   const persistPendingLapses = useCallback(() => {
     savePendingLapses(pendingLapsesRef.current);
@@ -150,7 +160,8 @@ export function useEssentialWordsSession() {
   }, [finishSession, syncCounts]);
 
   const bootstrap = useCallback(async () => {
-    const { items, stats: nextStats, allWords, seenIds, initialPhase } = await loadEssentialWordsQueue();
+    const { items, stats: nextStats, allWords, seenIds, initialPhase } =
+      await loadEssentialWordsQueue(levelsRef.current, posRef.current, user?.id);
     finishingRef.current = false;
     allWordsRef.current = allWords;
     seenIdsRef.current = seenIds;
@@ -169,7 +180,18 @@ export function useEssentialWordsSession() {
     let cancelled = false;
     (async () => {
       try {
-        const { items, stats: nextStats, allWords, seenIds, initialPhase } = await loadEssentialWordsQueue();
+        // Seed the level filter from the user's stored CEFR level (offline-safe)
+        // so a placed learner starts at their level. Only when untouched (null).
+        if (levelsRef.current === null) {
+          const isGuest = !user || (user as { is_anonymous?: boolean }).is_anonymous;
+          const level = isGuest ? readGuestStudyLevel() : await readStoredCefrLevel(user.id);
+          if (!cancelled && level && level !== "A1") {
+            levelsRef.current = [level];
+            setLevelsState([level]);
+          }
+        }
+        const { items, stats: nextStats, allWords, seenIds, initialPhase } =
+          await loadEssentialWordsQueue(levelsRef.current, posRef.current, user?.id);
         if (cancelled) return;
         allWordsRef.current = allWords;
         seenIdsRef.current = seenIds;
@@ -183,7 +205,7 @@ export function useEssentialWordsSession() {
       }
     })();
     return () => { cancelled = true; };
-  }, [syncCounts]);
+  }, [syncCounts, user?.id]);
 
   const startSpeak = useCallback(() => setPhase("speak"), []);
 
@@ -201,7 +223,7 @@ export function useEssentialWordsSession() {
         pendingLapsesRef.current.delete(wordId);
         persistPendingLapses();
         if (item.kind === "new") {
-          await recordCore1000Introduction(item.entry.word.toLowerCase());
+          await recordCore1000Introduction(item.entry.word.toLowerCase(), user?.id);
           setStats((s) => ({ ...s, newToday: s.newToday + 1, learned: s.learned + 1 }));
         }
         sessionResultsRef.current.push(result);
@@ -224,7 +246,7 @@ export function useEssentialWordsSession() {
 
   const learnMore = useCallback(() => {
     const newQueue = appendNewBatch(
-      queue, allWordsRef.current, seenIdsRef.current, NEW_CARDS_PER_DAY,
+      queue, allWordsRef.current, seenIdsRef.current, NEW_CARDS_PER_DAY, levelsRef.current, posRef.current,
     );
     setQueue(newQueue);
     const nextIndex = phase === "done" ? queue.length : Math.min(index, queue.length);
@@ -249,17 +271,17 @@ export function useEssentialWordsSession() {
   }, [queue, index, finishSession, syncCounts]);
 
   const archiveWord = useCallback(async (word: string) => {
-    await snoozeEssentialWord(word);
+    await snoozeEssentialWord(word, 90, user?.id);
     removeCurrentAndAdvance(word);
   }, [removeCurrentAndAdvance]);
 
   const keepSnooze = useCallback(async (word: string) => {
-    await snoozeEssentialWord(word, 90);
+    await snoozeEssentialWord(word, 90, user?.id);
     removeCurrentAndAdvance(word);
   }, [removeCurrentAndAdvance]);
 
   const masterWord = useCallback(async (word: string) => {
-    await masterEssentialWord(word);
+    await masterEssentialWord(word, user?.id);
     removeCurrentAndAdvance(word);
   }, [removeCurrentAndAdvance]);
 
@@ -269,6 +291,28 @@ export function useEssentialWordsSession() {
     finally { setReloadLoading(false); }
   }, [bootstrap]);
 
+  const setLevels = useCallback(async (next: CefrLevel[] | null) => {
+    const normalized = next && next.length > 0 ? next : null;
+    levelsRef.current = normalized;
+    posRef.current = null;
+    setLevelsState(normalized);
+    setPosState(null);
+    setActiveRouteId(null);
+    setPhase("loading");
+    await bootstrap();
+  }, [bootstrap]);
+
+  const setRoute = useCallback(async (routeId: string | null) => {
+    const route = getRoute(routeId);
+    levelsRef.current = route ? route.levels : null;
+    posRef.current = route && route.pos.length > 0 ? route.pos : null;
+    setLevelsState(levelsRef.current);
+    setPosState(posRef.current);
+    setActiveRouteId(route ? route.id : null);
+    setPhase("loading");
+    await bootstrap();
+  }, [bootstrap]);
+
   return {
     phase,
     current: queue[index] ?? null,
@@ -276,6 +320,11 @@ export function useEssentialWordsSession() {
     counts,
     sessionSummary,
     reloadLoading,
+    levels,
+    setLevels,
+    pos,
+    activeRouteId,
+    setRoute,
     startSpeak,
     submitGrade,
     reload,

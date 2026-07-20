@@ -39,6 +39,11 @@
         "The movie was too long. ___, the acting was superb.",
         "I've never been to Tokyo. ___, I'd love to go.",
         "She's experienced. ___, she's also brilliant under pressure."
+      ],
+      "answers": [
+        "However / Even so",
+        "That said / However",
+        "What's more / Moreover"
       ]
     }
   ],

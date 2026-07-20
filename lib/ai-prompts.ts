@@ -1,3 +1,5 @@
+import type { CEFRLevel } from '@/lib/exercises/cefr'
+
 // ── Transcription ──
 
 export function buildTranscriptionPrompt(targetWord?: string): string {
@@ -60,9 +62,14 @@ export function buildSentenceReorderUserPrompt(
   count: number,
   topic: string,
   level: string,
+  interests: string[] = [],
 ): string {
-  return `Generate ${count} English sentences for a ${level} learner about: "${topic}".
+  return `Generate ${count} English sentences for a ${level} learner about: "${topic}".${interestsClause(interests)}
 Return a JSON array of strings only. Example: ["The cat sat on the mat.", "She goes to school every day."]`;
+}
+
+export function interestsClause(interests: readonly string[]): string {
+  return interests.length ? ` Prefer contexts related to: ${interests.join(', ')}.` : ''
 }
 
 export const SENTENCE_REORDER_SYSTEM_PROMPT = `You are an English language teacher for Spanish speakers.
@@ -74,6 +81,16 @@ Rules:
 - Sentences should relate to the given topic/level
 - Return ONLY a JSON array of strings — no markdown, no extra text
 - Vary sentence structures (statements, questions, negatives)`;
+
+export const GENERATE_TRANSFORMATIONS_SYSTEM_PROMPT = `You create sentence-transformation exercises for English learners. Return JSON only.
+Each item needs sourceSentence (4-20 words), instruction (clear transformation constraint), and referenceAnswer. Keep the grammar topic accurate and give one natural valid answer.`
+export function buildGenerateTransformationsPrompt(input: { topic: string; level: string; count: number }): string {
+  return `Generate ${input.count} sentence transformations for topic "${input.topic}" at ${input.level}. Return {"exercises":[{"sourceSentence":"...","instruction":"...","referenceAnswer":"..."}]}.`
+}
+export const GENERATE_TRANSLATIONS_SYSTEM_PROMPT = `You create short Spanish-to-English translation exercises for English learners. Return JSON only. Each item needs sourceEs, referenceEn, and optional acceptedAnswers. Keep Spanish natural and the English reference accurate for the named grammar topic.`
+export function buildGenerateTranslationsPrompt(input: { topic: string; level: string; count: number }): string {
+  return `Generate ${input.count} Spanish-to-English translation exercises for topic "${input.topic}" at ${input.level}. Return {"exercises":[{"sourceEs":"...","referenceEn":"...","acceptedAnswers":["..."]}]}.`
+}
 
 // ── Interview ──
 
@@ -120,7 +137,7 @@ export const GRADE_PRODUCTION_SYSTEM_PROMPT = `You are an English teacher gradin
 
 Evaluate strictly using this rubric:
 1. usedTarget — Did the learner use the target item with correct meaning and an acceptable form (minor spelling typos in spoken transcripts are OK)?
-2. grammaticallyCorrect — Is the production a grammatical English sentence/response at A2–B2 level (minor slips OK; broken structure = false)?
+2. grammaticallyCorrect — Is the production a grammatical English sentence/response appropriate for the learner's CEFR level (stated below; default A2–B2)? Judge leniently for lower levels; minor slips OK; broken structure = false.
 3. correct — true ONLY when both usedTarget and grammaticallyCorrect are true.
 4. score — integer 0–100:
    - 90–100: target used naturally, grammar solid
@@ -140,13 +157,15 @@ export function buildGradeProductionUserPrompt(input: {
   taskPrompt: string
   production: string
   modality: 'written' | 'spoken'
+  level?: CEFRLevel
 }): string {
   const meaningLine = input.targetMeaning
     ? `\nTarget meaning: ${input.targetMeaning}`
     : '';
+  const levelLine = input.level ? `\nLearner CEFR level: ${input.level}` : '';
   return `Task shown to the learner: ${input.taskPrompt}
 Target item: "${input.targetItem}"${meaningLine}
-Modality: ${input.modality}
+Modality: ${input.modality}${levelLine}
 
 Learner production:
 """
@@ -219,6 +238,12 @@ Rules:
 export function buildGenerateReaderUserPrompt(input: {
   targets: string[]
   level: string
+  interests?: string[]
 }): string {
-  return `Target words to embed: ${input.targets.join(', ')}\nLevel: ${input.level}\n\nReturn JSON: { "passage": string, "topic": string, "questions": [{ "prompt": string, "options": [string,string,string,string], "correctIndex": number }] }`
+  return `Target words to embed: ${input.targets.join(', ')}\nLevel: ${input.level}${interestsClause(input.interests ?? [])}\n\nReturn JSON: { "passage": string, "topic": string, "questions": [{ "prompt": string, "options": [string,string,string,string], "correctIndex": number }] }`
+}
+
+export const JOURNAL_CORRECTION_SYSTEM_PROMPT = `You are an English teacher for Spanish speakers. Return JSON only with correctedContent, errors (max 8 items with quote, correction, type, explanationEs, topic), and newWords (max 8 strings). Keep explanations concise in Spanish.`
+export function buildJournalCorrectionPrompt(content: string, interests: readonly string[] = []): string {
+  return `Correct this learner journal entry. Topics must be short grammar labels.${interestsClause(interests)}\n\n${content}`
 }

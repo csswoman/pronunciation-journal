@@ -10,12 +10,16 @@ import { AxSameDifferentExercise } from '@/components/phoneme-practice/AxSameDif
 import { OddOneOutExercise } from '@/components/phoneme-practice/OddOneOutExercise'
 import { ABXExercise } from '@/components/phoneme-practice/ABXExercise'
 import type { Exercise, ExerciseType } from '@/lib/phoneme-practice/types'
-import type { PhonemePayload, PracticeExercise } from '@/lib/practice/types'
+import type {
+  PhonemePayload,
+  PracticeExercise,
+  PracticeSubmitHandler,
+} from '@/lib/practice/types'
 
 export type PhonemeRenderContext = {
   legacy: Exercise
   exercise: PracticeExercise & { payload: PhonemePayload }
-  onSubmit: (isCorrect: boolean, userAnswer: string) => void
+  onSubmit: PracticeSubmitHandler
   focusUi?: boolean
   voice?: SpeechSynthesisVoice
 }

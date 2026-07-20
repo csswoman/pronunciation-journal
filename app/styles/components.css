@@ -4,6 +4,19 @@
    ═══════════════════════════════════════════════════════════════════════════ */
 
 /* ── Scrollbars ──────────────────────────────────────────────────────────── */
+.theme-select {
+  color-scheme: light;
+}
+
+.dark .theme-select {
+  color-scheme: dark;
+}
+
+.theme-select option {
+  background-color: var(--surface-raised);
+  color: var(--text-primary);
+}
+
 .sidebar-scrollbar {
   scrollbar-width: thin;
   scrollbar-color: color-mix(in oklab, var(--primary) 58%, var(--card-bg)) var(--scrollbar-track);
@@ -129,6 +142,36 @@
 .color-selection-slider::-webkit-slider-runnable-track { width: 100%; height: 12px; background: inherit; border-radius: 999px; }
 .color-selection-slider::-moz-range-track              { height: 12px; background: var(--color-selection-bar); border-radius: 999px; border: none; }
 
+/* Sound is a measured setting, not a hue picker. Keep the rainbow exclusive to
+   the theme slider and use the active theme color as the quiet fill here. */
+.sound-volume-slider {
+  --sound-volume: 85%;
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(to right, var(--primary) 0 var(--sound-volume), var(--surface-sunken) var(--sound-volume) 100%);
+  cursor: pointer;
+}
+.sound-volume-slider:disabled { cursor: not-allowed; }
+.sound-volume-slider:focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; }
+.sound-volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--surface-raised);
+  border-radius: var(--radius-full);
+  background: var(--primary);
+  box-shadow: var(--shadow-sm);
+  transition: transform 150ms var(--ease-out-quart), box-shadow 150ms var(--ease-out-quart);
+}
+.sound-volume-slider::-webkit-slider-thumb:hover { transform: scale(1.12); box-shadow: var(--shadow-md); }
+.sound-volume-slider::-moz-range-track { height: 6px; border: 0; border-radius: var(--radius-full); background: var(--surface-sunken); }
+.sound-volume-slider::-moz-range-progress { height: 6px; border-radius: var(--radius-full); background: var(--primary); }
+.sound-volume-slider::-moz-range-thumb { width: 12px; height: 12px; border: 2px solid var(--surface-raised); border-radius: var(--radius-full); background: var(--primary); box-shadow: var(--shadow-sm); }
+
 /* ── Chat backgrounds ────────────────────────────────────────────────────── */
 .chat-messages-container {
   background-color: var(--surface-base);
@@ -191,4 +234,40 @@
   bottom: -60px; right: 10%;
   opacity: 0.25;
   animation: drift2 26s ease-in-out infinite reverse;
+}
+
+/* ── Auth image crossfade ────────────────────────────────────────────────── */
+.auth-image-fade {
+  transition: opacity 1200ms var(--ease-out-expo);
+}
+.auth-image-fade--out {
+  transition: opacity 800ms var(--transition-base);
+}
+.auth-image-gradient {
+  background: linear-gradient(to top, var(--scrim-medium), transparent);
+}
+.auth-mobile-hero {
+  min-height: clamp(200px, 40vh, 320px);
+}
+.auth-mobile-gradient {
+  background: linear-gradient(to top, var(--scrim-strong) 0%, var(--scrim-weak) 60%, transparent 100%);
+}
+
+/* ── Flip card (study deck) ──────────────────────────────────────────────── */
+.flip-card-perspective {
+  perspective: 1000px;
+}
+.flip-card-inner {
+  transform-style: preserve-3d;
+  transition: transform 0.55s var(--transition-base);
+  position: relative;
+  min-height: 280px;
+}
+.flip-card-inner--flipped {
+  transform: rotateY(180deg);
+}
+
+/* ── Accuracy ring (SVG progress circle) ─────────────────────────────────── */
+.accuracy-ring-progress {
+  transition: stroke-dasharray 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }

@@ -10,6 +10,8 @@ import Link from 'next/link'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from '@/lib/db'
 import { CORE1000_PREFIX } from '@/lib/core-1000/types'
+import { useAuth } from '@/components/auth/AuthProvider'
+import { LevelProgressBreakdown } from './LevelProgressBreakdown'
 
 const CORE_1000_TARGET = 1000
 
@@ -22,12 +24,13 @@ function milestoneLabel(learned: number): string {
 }
 
 export default function Core1000ProgressCard() {
+  const { user } = useAuth()
   const learned = useLiveQuery(
     () =>
       db.srsData
-        .filter((e) => e.wordId.startsWith(CORE1000_PREFIX))
+        .filter((e) => e.userId === user?.id && e.wordId.startsWith(CORE1000_PREFIX))
         .count(),
-    [],
+    [user?.id],
   )
 
   if (learned === undefined) {
@@ -73,12 +76,7 @@ export default function Core1000ProgressCard() {
       <span className="font-body-sm text-pretty text-fg-muted">
         {milestoneLabel(learned)}
       </span>
-      <div className="mt-auto h-1.5 w-full overflow-hidden rounded-full bg-surface-sunken">
-        <div
-          className="h-full w-full origin-left rounded-full bg-accent transition-transform duration-500"
-          style={{ transform: `scaleX(${ratio})` }}
-        />
-      </div>
+      <LevelProgressBreakdown fallbackRatio={ratio} />
     </Link>
   )
 }

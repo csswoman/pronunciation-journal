@@ -42,7 +42,7 @@ export default function IPAMatrixCell({
       )}
 
       {isPlaying && (
-        <span className="ipa-chart__ph-waves" aria-label="Reproduciendo">
+        <span className="ipa-chart__ph-waves" aria-hidden="true">
           {[0, 1, 2].map((i) => (
             <span
               key={i}

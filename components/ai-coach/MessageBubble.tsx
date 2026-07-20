@@ -9,105 +9,7 @@ import PracticeSession from "./PracticeSession";
 import { isExerciseTool } from "@/lib/ai-practice/tools/registry";
 import { parseCorrection } from "@/lib/ai-coach/parse-correction";
 import CorrectionCard from "./CorrectionCard";
-
-// ── Inline markdown renderer ──────────────────────────────────────────────────
-
-function renderInline(text: string): React.ReactNode {
-  // Order matters: bold (** / __) before italic (* / _) so ** isn't eaten by *.
-  const parts = text.split(/(\*\*[^*]+\*\*|__[^_]+__|~~[^~]+~~|`[^`]+`|(?<![*\w])\*[^*\n]+\*(?!\w)|(?<![_\w])_[^_\n]+_(?!\w))/g);
-  return parts.map((part, i) => {
-    if (!part) return null;
-    if ((part.startsWith("**") && part.endsWith("**")) || (part.startsWith("__") && part.endsWith("__"))) {
-      return <strong key={i} className="font-semibold text-[var(--primary)]">{part.slice(2, -2)}</strong>;
-    }
-    if (part.startsWith("~~") && part.endsWith("~~") && part.length > 4) {
-      return (
-        <s key={i} className="text-[var(--text-tertiary)]">
-          {part.slice(2, -2)}
-        </s>
-      );
-    }
-    if (part.startsWith("`") && part.endsWith("`") && part.length > 2) {
-      return (
-        <code key={i} className="rounded bg-[oklch(0_0_0_/_0.25)] px-1.5 py-0.5 font-mono text-xs text-[var(--primary)]">
-          {part.slice(1, -1)}
-        </code>
-      );
-    }
-    if (
-      (part.startsWith("*") && part.endsWith("*") && part.length > 2) ||
-      (part.startsWith("_") && part.endsWith("_") && part.length > 2)
-    ) {
-      return <em key={i} className="italic text-[var(--text-primary)]">{part.slice(1, -1)}</em>;
-    }
-    return part;
-  });
-}
-
-function renderProse(lines: string[]) {
-  const elements: React.ReactNode[] = [];
-  let i = 0;
-  while (i < lines.length) {
-    const line = lines[i];
-    if (!line.trim()) { i++; continue; }
-
-    if (/^[-*•]\s+/.test(line)) {
-      const items: string[] = [];
-      while (i < lines.length && /^[-*•]\s+/.test(lines[i])) {
-        items.push(lines[i].replace(/^[-*•]\s+/, ""));
-        i++;
-      }
-      elements.push(
-        <ul key={`ul-${i}`} className="space-y-1.5 pl-3 my-2">
-          {items.map((item, j) => (
-            <li key={j} className="flex gap-2 leading-[1.65] text-[15px]">
-              <span className="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-[var(--primary)] opacity-70" />
-              <span>{renderInline(item)}</span>
-            </li>
-          ))}
-        </ul>
-      );
-      continue;
-    }
-
-    if (/^#{1,3}\s+/.test(line)) {
-      elements.push(
-        <p key={`h-${i}`} className="mb-1.5 mt-4 text-xs font-semibold uppercase tracking-widest text-[var(--primary)]/80">
-          {renderInline(line.replace(/^#{1,3}\s+/, ""))}
-        </p>
-      );
-      i++;
-      continue;
-    }
-
-    elements.push(
-      <p key={`p-${i}`} className="text-[15px] leading-[1.65]">{renderInline(line)}</p>
-    );
-    i++;
-  }
-  return elements;
-}
-
-function formatTime(date: Date | string | undefined): string {
-  if (!date) return "";
-  const d = typeof date === "string" ? new Date(date) : date;
-  return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-}
-
-function extractSentenceContext(fullText: string, selected: string): string {
-  const sentences = fullText.split(/(?<=[.!?])\s+/);
-  const match = sentences.find(s => s.toLowerCase().includes(selected.toLowerCase()));
-  return match?.trim() || selected;
-}
-
-function extractSuggestions(text: string): string[] {
-  const match = text.match(/suggestions?:\s*([\s\S]*?)(?:\n\n|$)/i);
-  if (!match) return [];
-  return match[1]
-    .split("\n")
-    .map(l => l.replace(/^[-•*]\s*/, "").trim())
-    .filter(Boolean);
-}
+import { extractSentenceContext, extractSuggestions, formatMessageTime, renderProse } from './chat/message-formatting';
 
 // ── AI bubble ─────────────────────────────────────────────────────────────────
 
@@ -193,7 +95,7 @@ function AIBubble({ message, showAvatar, onSaveWord, onSuggestionClick, onToolAn
         </div>
 
         <p className="text-tiny pl-1 opacity-0 text-[var(--text-tertiary)] transition-opacity group-hover/msg:opacity-100">
-          {formatTime((message as { createdAt?: Date }).createdAt)}
+           {formatMessageTime((message as { createdAt?: Date }).createdAt)}
         </p>
 
         {hasSuggestions && (
@@ -235,7 +137,7 @@ export default function MessageBubble({
           </div>
           <div className="flex items-center gap-1 pr-1 opacity-0 group-hover/msg:opacity-100 transition-opacity">
             <span className="text-tiny text-[var(--text-tertiary)]">
-              {formatTime((message as { createdAt?: Date }).createdAt)}
+               {formatMessageTime((message as { createdAt?: Date }).createdAt)}
             </span>
             <CheckCheck size={11} className="text-[var(--primary)]" />
           </div>

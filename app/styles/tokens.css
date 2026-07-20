@@ -140,6 +140,9 @@
   --overlay-medium:  oklch(1 0 0 / 0.50);
   --overlay-strong:  oklch(1 0 0 / 0.60);
   --overlay-darker:  oklch(1 0 0 / 0.80);
+  --scrim-weak:      oklch(0 0 0 / 0.15);
+  --scrim-medium:    oklch(0 0 0 / 0.35);
+  --scrim-strong:    oklch(0 0 0 / 0.60);
 
   /* ── 9. Spacing scale (8pt) ──────────────────────────────────────────── */
   --space-1:  0.25rem;  /*  4px */

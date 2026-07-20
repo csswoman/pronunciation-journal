@@ -49,7 +49,7 @@ credentials.
 | `NEXT_PUBLIC_SUPABASE_URL` | Supabase project URL used by browser and server clients |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Public Supabase anonymous key |
 | `SUPABASE_SERVICE_ROLE_KEY` | Server-only access for privileged cache operations |
-| `ADMIN_BOOTSTRAP_EMAIL` | Optional email used by the server-only admin bootstrap flow |
+| `CRON_SECRET` | Shared secret protecting the scheduled enrichment worker |
 | `NEXT_PUBLIC_SITE_URL` | Optional deployed site URL for auth redirects |
 | `GEMINI_API_KEY` | Server-only Gemini API credential |
 | `GEMINI_ENABLE_PREVIEW_MODELS` | Optional fallback-chain flag for testing preview models |
@@ -64,8 +64,6 @@ paths for parts of the practice experience.
 
 ## Production Notes
 
-- Admin bootstrap is controlled server-side via `ADMIN_BOOTSTRAP_EMAIL` and `SUPABASE_SERVICE_ROLE_KEY`.
-- Use the server-only bootstrap flow to promote the intended account to `admin`; do not hardcode personal emails in migrations or app code.
 - Migration safety checks run with `pnpm check:migrations`.
 - RLS coverage checks run with `pnpm audit:rls`.
 - Global security headers, including CSP, are configured in `next.config.mjs`.
@@ -82,7 +80,7 @@ paths for parts of the practice experience.
 
 - Offline support is not a full multi-device sync guarantee. Dexie/local queues cover selected client workflows; Supabase remains the source of truth after reconnect. Some short-lived buffers, such as Essential Words pending lapses, are session-scoped only.
 - Gemini-backed features require server credentials and may degrade or queue when the provider is unavailable.
-- Background word enrichment requires an external trusted worker/schedule to drain `word_enrichment_jobs`.
+- Background word enrichment is drained every two hours by `.github/workflows/drain-enrichment.yml`; configure `ENRICHMENT_DRAIN_URL` and the shared `CRON_SECRET` in GitHub before relying on it. Manual dispatch remains available for immediate processing.
 - Supabase migrations must be reviewed and applied deliberately; this repo does not auto-apply production SQL from the app server.
 
 ## Common commands

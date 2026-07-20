@@ -15,13 +15,24 @@ export default function IPAProgressBar({
   undoAvailable?: boolean;
   onUndo?: () => void;
 }) {
-  const pct = total === 0 ? 0 : Math.min(100, Math.round((explored / total) * 100));
+  const safeTotal = Number.isFinite(total) ? Math.max(0, total) : 0;
+  const safeExplored = Number.isFinite(explored)
+    ? Math.max(0, Math.min(explored, safeTotal))
+    : 0;
+  const pct = safeTotal === 0 ? 0 : Math.round((safeExplored / safeTotal) * 100);
 
   return (
     <div className="ipa-chart__progress">
-      <b className="ipa-chart__progress-count">{explored}</b>
-      <span>/ {total} sonidos explorados hoy</span>
-      <div className="ipa-chart__progress-bar" role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100}>
+      <b className="ipa-chart__progress-count">{safeExplored}</b>
+      <span>/ {safeTotal} sonidos explorados hoy</span>
+      <div
+        className="ipa-chart__progress-bar"
+        role="progressbar"
+        aria-label="Sonidos explorados hoy"
+        aria-valuenow={pct}
+        aria-valuemin={0}
+        aria-valuemax={100}
+      >
         <span className="ipa-chart__progress-fill" style={{ width: `${pct}%` }} />
       </div>
       <span className="tabular-nums">{pct}%</span>
@@ -35,7 +46,7 @@ export default function IPAProgressBar({
         <button
           type="button"
           onClick={onReset}
-          disabled={explored === 0}
+          disabled={safeExplored === 0}
           className="ipa-chart__progress-reset"
         >
           Reiniciar

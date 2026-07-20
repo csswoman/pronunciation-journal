@@ -132,7 +132,7 @@ export async function getReviewHubSummary(userId: string): Promise<ReviewHubSumm
     ])
 
   const counts = buildReviewHubCounts(failedSentences, weakWords, dueWords, soundsDue, dueTopics, weakTopics)
-  const canStartReview = computeCanStartReview({ failedSentences, weakWords, dueWords, soundsDue })
+  const canStartReview = computeCanStartReview({ failedSentences, weakWords, dueWords, soundsDue, dueTopics })
 
   return {
     failedSentences,

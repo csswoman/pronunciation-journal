@@ -19,6 +19,11 @@ import { speak } from '@/lib/phoneme-practice/tts'
 import type { MatchPairsExercise as MatchPairsExerciseType } from '@/lib/exercises/types'
 import { buildPedagogicalFeedback } from '@/lib/exercises/feedback'
 import { useUISounds } from '@/hooks/useUISounds'
+import {
+  MatchPairsBoard,
+  type MatchConnection,
+  type MatchResult,
+} from './MatchPairsBoard'
 
 interface Props {
   exercise: MatchPairsExerciseType
@@ -30,16 +35,6 @@ interface Props {
   ) => void
 }
 
-type MatchResult = Record<string, 'correct' | 'wrong' | null>
-type Endpoint = { x: number; y: number }
-type Connection = {
-  leftId: string
-  rightId: string
-  from: Endpoint
-  to: Endpoint
-  state: 'pending' | 'correct' | 'wrong'
-}
-
 const DOT_COLORS = [
   'oklch(0.65 0.18 25)',
   'oklch(0.65 0.18 250)',
@@ -48,9 +43,6 @@ const DOT_COLORS = [
   'oklch(0.70 0.18 55)',
   'oklch(0.65 0.16 185)',
 ]
-
-const CARD_BASE =
-  'relative z-10 flex min-h-12 cursor-pointer items-center gap-2.5 rounded-xl border px-3 py-3 text-left transition-all duration-200'
 
 const useIsoLayoutEffect = typeof window === 'undefined' ? useEffect : useLayoutEffect
 
@@ -65,7 +57,7 @@ export function MatchPairsExercise({ exercise, onResult }: Props) {
   const [matches, setMatches] = useState<Record<string, string>>({})
   const [results, setResults] = useState<MatchResult>({})
   const [submitted, setSubmitted] = useState(false)
-  const [connections, setConnections] = useState<Connection[]>([])
+  const [connections, setConnections] = useState<MatchConnection[]>([])
 
   const boardRef = useRef<HTMLDivElement>(null)
   const leftRefs = useRef<Map<string, HTMLButtonElement>>(new Map())
@@ -161,7 +153,7 @@ export function MatchPairsExercise({ exercise, onResult }: Props) {
     const board = boardRef.current
     if (!board) return
     const boardRect = board.getBoundingClientRect()
-    const next: Connection[] = []
+    const next: MatchConnection[] = []
     for (const [leftId, rightId] of Object.entries(matches)) {
       const leftEl = leftRefs.current.get(leftId)
       const rightEl = rightRefs.current.get(rightId)
@@ -226,108 +218,22 @@ export function MatchPairsExercise({ exercise, onResult }: Props) {
         </p>
       )}
 
-      <div
-        ref={boardRef}
-        className="relative grid w-full grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] gap-x-4 gap-y-2 sm:gap-x-6"
-      >
-        <svg aria-hidden className="pointer-events-none absolute inset-0 h-full w-full">
-          {connections.map((c) => {
-            const midX = (c.from.x + c.to.x) / 2
-            const d = `M ${c.from.x},${c.from.y} C ${midX},${c.from.y} ${midX},${c.to.y} ${c.to.x},${c.to.y}`
-            const stroke = strokeFor(c.state, c.leftId, pairColor)
-            return (
-              <g key={`${c.leftId}-${c.rightId}`} className="animate-state-in">
-                <path
-                  d={d}
-                  stroke={stroke}
-                  strokeWidth={2}
-                  fill="none"
-                  strokeLinecap="round"
-                  opacity={c.state === 'pending' ? 0.75 : 1}
-                />
-                <circle cx={c.from.x} cy={c.from.y} r={3.5} fill={stroke} />
-                <circle cx={c.to.x} cy={c.to.y} r={3.5} fill={stroke} />
-              </g>
-            )
-          })}
-        </svg>
-
-        <div role="list" aria-label="Términos" className="flex flex-col gap-2">
-          {exercise.pairs.map((pair) => (
-            <button
-              key={pair.id}
-              ref={(el) => {
-                if (el) leftRefs.current.set(pair.id, el)
-                else leftRefs.current.delete(pair.id)
-              }}
-              type="button"
-              role="listitem"
-              aria-pressed={selectedLeft === pair.id || !!matches[pair.id]}
-              aria-disabled={submitted || !!results[pair.id]}
-              onClick={() => handleLeftClick(pair)}
-              disabled={submitted || !!results[pair.id]}
-              className={leftCardClass({
-                pairId: pair.id,
-                selectedLeft,
-                matches,
-                results,
-                submitted,
-              })}
-            >
-              <ColorDot
-                color={dotColorForLeft(pair.id, matches, results, submitted, pairColor)}
-              />
-              <span className="text-sm font-semibold">{pair.left}</span>
-            </button>
-          ))}
-        </div>
-
-        <div role="list" aria-label="Definiciones" className="flex flex-col gap-2">
-          {rightItems.map((item) => {
-            const matchedLeftId = Object.keys(matches).find((l) => matches[l] === item.id)
-            return (
-              <button
-                key={item.id}
-                ref={(el) => {
-                  if (el) rightRefs.current.set(item.id, el)
-                  else rightRefs.current.delete(item.id)
-                }}
-                type="button"
-                role="listitem"
-                aria-pressed={armedRight === item.id || !!matchedLeftId}
-                aria-disabled={submitted}
-                onClick={() => handleRightClick(item.id)}
-                disabled={submitted}
-                className={rightCardClass({
-                  rightId: item.id,
-                  armedRight,
-                  matches,
-                  results,
-                  submitted,
-                })}
-              >
-                {matchedLeftId ? (
-                  <ColorDot
-                    color={dotColorForLeft(
-                      matchedLeftId,
-                      matches,
-                      results,
-                      submitted,
-                      pairColor,
-                    )}
-                  />
-                ) : (
-                  <span
-                    className="size-2.5 shrink-0 rounded-full bg-border-default"
-                    aria-hidden
-                  />
-                )}
-                <span className="text-[13px] leading-snug text-fg-secondary">{item.label}</span>
-              </button>
-            )
-          })}
-        </div>
-      </div>
+      <MatchPairsBoard
+        pairs={exercise.pairs}
+        rightItems={rightItems}
+        leftElements={leftRefs.current}
+        rightElements={rightRefs.current}
+        boardRef={boardRef}
+        selectedLeft={selectedLeft}
+        armedRight={armedRight}
+        matches={matches}
+        results={results}
+        submitted={submitted}
+        connections={connections}
+        pairColor={pairColor}
+        onLeftClick={handleLeftClick}
+        onRightClick={handleRightClick}
+      />
 
       {!submitted && (
         <button
@@ -348,109 +254,4 @@ export function MatchPairsExercise({ exercise, onResult }: Props) {
       )}
     </div>
   )
-}
-
-function ColorDot({ color }: { color: string }) {
-  return (
-    <span
-      className="size-2.5 shrink-0 rounded-full"
-      style={{ backgroundColor: color }}
-      aria-hidden
-    />
-  )
-}
-
-function dotColorForLeft(
-  leftId: string,
-  matches: Record<string, string>,
-  results: MatchResult,
-  submitted: boolean,
-  pairColor: (id: string) => string,
-): string {
-  if (submitted) {
-    if (results[leftId] === 'correct') return 'var(--success)'
-    if (results[leftId] === 'wrong') return 'var(--error)'
-    return 'var(--border-default)'
-  }
-  if (matches[leftId]) return pairColor(leftId)
-  return 'var(--border-default)'
-}
-
-function leftCardClass({
-  pairId,
-  selectedLeft,
-  matches,
-  results,
-  submitted,
-}: {
-  pairId: string
-  selectedLeft: string | null
-  matches: Record<string, string>
-  results: MatchResult
-  submitted: boolean
-}): string {
-  const result = results[pairId]
-  const isSelected = selectedLeft === pairId
-  const isMatched = !!matches[pairId]
-
-  return cn(
-    CARD_BASE,
-    result === 'correct' &&
-      'cursor-default border-success-border bg-success-soft text-success pf-reveal-ok',
-    result === 'wrong' &&
-      'cursor-default border-error-border bg-error-soft text-error pf-reveal-bad',
-    !result &&
-      isSelected &&
-      'border-primary bg-primary-soft text-primary shadow-sm',
-    !result &&
-      isMatched &&
-      'border-primary/40 bg-surface-raised text-fg',
-    !result &&
-      !isSelected &&
-      !isMatched &&
-      'border-border-default bg-surface-raised text-fg hover:border-primary',
-  )
-}
-
-function rightCardClass({
-  rightId,
-  armedRight,
-  matches,
-  results,
-  submitted,
-}: {
-  rightId: string
-  armedRight: string | null
-  matches: Record<string, string>
-  results: MatchResult
-  submitted: boolean
-}): string {
-  const leftId = Object.keys(matches).find((l) => matches[l] === rightId)
-  const result = leftId ? results[leftId] : undefined
-  const isArmed = armedRight === rightId
-
-  return cn(
-    CARD_BASE,
-    result === 'correct' &&
-      'cursor-default border-success-border bg-success-soft pf-reveal-ok',
-    result === 'wrong' &&
-      'cursor-default border-error-border bg-error-soft pf-reveal-bad',
-    !result && isArmed && 'border-primary bg-primary-soft text-fg shadow-sm',
-    !result &&
-      leftId &&
-      'border-border-default bg-surface-raised',
-    !result &&
-      !leftId &&
-      'border-border-default bg-surface-raised hover:border-primary',
-  )
-}
-
-function strokeFor(
-  state: Connection['state'],
-  leftId: string,
-  pairColor: (id: string) => string,
-): string {
-  if (state === 'correct') return 'var(--success)'
-  if (state === 'wrong') return 'var(--error)'
-  return pairColor(leftId)
 }

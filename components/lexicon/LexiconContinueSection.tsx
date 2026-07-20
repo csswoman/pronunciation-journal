@@ -13,7 +13,10 @@ export function LexiconContinueSection({ lessons, onLessonClick }: LexiconContin
   return (
     <>
       <div className="words-lexicon__sechead">
-        <h3>Continue learning</h3>
+        <div>
+          <p className="words-lexicon__sechead-kicker">Tu progreso</p>
+          <h2>Continúa aprendiendo</h2>
+        </div>
       </div>
       <div className="words-lexicon__continue">
         {lessons.map((lesson) => {
@@ -27,20 +30,19 @@ export function LexiconContinueSection({ lessons, onLessonClick }: LexiconContin
               onClick={() => onLessonClick(lesson.id)}
             >
               <span
-                className="words-lexicon__cont-dot"
-                style={{ background: lesson.color }}
+                className="words-lexicon__cont-dot bg-primary-soft"
                 aria-hidden
               />
               <div className="words-lexicon__cont-info">
                 <div className="words-lexicon__cont-title">{lesson.title}</div>
                 <div className="words-lexicon__cont-bar" aria-hidden>
                   <span
-                    className="words-lexicon__cont-bar-fill"
-                    style={{ width: `${lesson.progress}%`, background: lesson.color }}
+                    className="words-lexicon__cont-bar-fill bg-primary"
+                    style={{ width: `${lesson.progress}%` }}
                   />
                 </div>
                 <div className="words-lexicon__cont-meta">
-                  {lesson.wordsCompleted} / {lesson.totalWords} words
+                  {lesson.wordsCompleted} / {lesson.totalWords} palabras
                   {preview ? <span className="words-lexicon__cont-tags"> · {preview}</span> : null}
                 </div>
               </div>

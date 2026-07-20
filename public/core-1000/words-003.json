@@ -7,8 +7,10 @@
       "pos": "noun",
       "ipa_strong": "/ˈmʌniː/",
       "example_sentence": "I need more money.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/ˈaɪ nid mɔr ˈmʌni/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈaɪ nid mɔr ˈmʌni/",
+      "meaning": "coins and bills",
+      "translation": "dinero"
     },
     {
       "rank": 202,
@@ -16,8 +18,10 @@
       "pos": "noun",
       "ipa_strong": "/ˈfækt/",
       "example_sentence": "That's an interesting fact.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/ðæts ən ˈɪntrəstɪŋ fækt/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ðæts ən ˈɪntrəstɪŋ fækt/",
+      "meaning": "something that is true",
+      "translation": "hecho"
     },
     {
       "rank": 203,
@@ -25,8 +29,10 @@
       "pos": "adverb",
       "ipa_strong": "/ˌhaʊˈɛvɜr/",
       "example_sentence": "However, we stayed calm.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/haʊˈɛvər wi steɪd kɑm/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/haʊˈɛvər wi steɪd kɑm/",
+      "meaning": "but, nevertheless",
+      "translation": "sin embargo"
     },
     {
       "rank": 204,
@@ -34,8 +40,10 @@
       "pos": "noun",
       "ipa_strong": "/ˈɛɹiːə/",
       "example_sentence": "This area feels safe.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/ðɪs ˈɛriə filz seɪf/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ðɪs ˈɛriə filz seɪf/",
+      "meaning": "region or space",
+      "translation": "área"
     },
     {
       "rank": 205,
@@ -44,7 +52,9 @@
       "ipa_strong": "/pɹəˈvaɪd/",
       "example_sentence": "They provide free lunch.",
       "cefr_level": "A2",
-      "sentence_ipa": "/ðeɪ prəˈvaɪd fri lʌntʃ/"
+      "sentence_ipa": "/ðeɪ prəˈvaɪd fri lʌntʃ/",
+      "meaning": "to give something that is needed or wanted",
+      "translation": "proporcionar, proveer"
     },
     {
       "rank": 206,
@@ -52,8 +62,10 @@
       "pos": "noun",
       "ipa_strong": "/ˈneɪm/",
       "example_sentence": "What's your name?",
-      "cefr_level": "A2",
-      "sentence_ipa": "/ˈwʌts ˈjɔɹ ˈneɪm/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈwʌts ˈjɔɹ ˈneɪm/",
+      "meaning": "what you are called",
+      "translation": "nombre"
     },
     {
       "rank": 207,
@@ -61,8 +73,10 @@
       "pos": "verb",
       "ipa_strong": "/ˈɹɛd/",
       "example_sentence": "I read before bed.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/aɪ rid bɪˈfɔr bɛd/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/aɪ rid bɪˈfɔr bɛd/",
+      "meaning": "look at words and understand",
+      "translation": "leer"
     },
     {
       "rank": 208,
@@ -70,8 +84,10 @@
       "pos": "noun",
       "ipa_strong": "/ˈfɹɛnd/",
       "example_sentence": "My friend called yesterday.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/maɪ frɛnd kɔld ˈjɛstərdeɪ/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/maɪ frɛnd kɔld ˈjɛstərdeɪ/",
+      "meaning": "person you like",
+      "translation": "amigo/a"
     },
     {
       "rank": 209,
@@ -79,8 +95,10 @@
       "pos": "noun",
       "ipa_strong": "/ˈmʌnθ/",
       "example_sentence": "Next month looks busy.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/nɛkst mʌnθ lʊks ˈbɪzi/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/nɛkst mʌnθ lʊks ˈbɪzi/",
+      "meaning": "about 30 days",
+      "translation": "mes"
     },
     {
       "rank": 210,
@@ -88,8 +106,10 @@
       "pos": "adjective",
       "ipa_strong": "/ˈlɑɹdʒ/",
       "example_sentence": "They need a large table.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/ðeɪ nid ə lɑrdʒ ˈteɪbəl/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ðeɪ nid ə lɑrdʒ ˈteɪbəl/",
+      "meaning": "big in size",
+      "translation": "grande"
     },
     {
       "rank": 211,
@@ -97,8 +117,10 @@
       "pos": "noun",
       "ipa_strong": "/ˈbɪznəs/",
       "example_sentence": "Her business grew fast.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/hɚ ˈbɪznəs ɡru fæst/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/hɚ ˈbɪznəs ɡru fæst/",
+      "meaning": "commercial activity",
+      "translation": "negocio"
     },
     {
       "rank": 212,
@@ -106,8 +128,10 @@
       "pos": "preposition",
       "ipa_strong": "/wɪˈθaʊt/",
       "example_sentence": "I left without my keys.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/aɪ lɛft wɪˈðaʊt maɪ kiz/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/aɪ lɛft wɪˈðaʊt maɪ kiz/",
+      "meaning": "not having or lacking something",
+      "translation": "sin"
     },
     {
       "rank": 213,
@@ -115,8 +139,10 @@
       "pos": "noun",
       "ipa_strong": "/ˌɪnfɜrˈmeɪʃən/",
       "example_sentence": "I need more information.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/aɪ nid mɔr ˌɪnfərˈmeɪʃən/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/aɪ nid mɔr ˌɪnfərˈmeɪʃən/",
+      "meaning": "Facts provided or learned about something; data.",
+      "translation": "información"
     },
     {
       "rank": 214,
@@ -124,8 +150,10 @@
       "pos": "adjective",
       "ipa_strong": "/ˈoʊpən/",
       "example_sentence": "The store is open.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/ðə stɔr ɪz ˈoʊpən/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ðə stɔr ɪz ˈoʊpən/",
+      "meaning": "to move something so it is not closed; not closed",
+      "translation": "abrir"
     },
     {
       "rank": 215,
@@ -133,8 +161,10 @@
       "pos": "verb",
       "ipa_strong": "/ˈɔɹdɜr/",
       "example_sentence": "I'd like to order.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/aɪd laɪk tə ˈɔrdər/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/aɪd laɪk tə ˈɔrdər/",
+      "meaning": "a request for goods or food; a sequence or arrangement",
+      "translation": "orden / pedido"
     },
     {
       "rank": 216,
@@ -143,7 +173,9 @@
       "ipa_strong": "/ˈɡʌvɜrmənt/",
       "example_sentence": "The government announced changes.",
       "cefr_level": "A2",
-      "sentence_ipa": "/ðə ˈɡʌvərnmənt əˈnaʊnst ˈtʃeɪndʒɪz/"
+      "sentence_ipa": "/ðə ˈɡʌvərnmənt əˈnaʊnst ˈtʃeɪndʒɪz/",
+      "meaning": "system that rules country",
+      "translation": "gobierno"
     },
     {
       "rank": 217,
@@ -151,8 +183,10 @@
       "pos": "noun",
       "ipa_strong": "/ˈwɜrd/",
       "example_sentence": "I know that word.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/ˈaɪ ˈnoʊ ˈðæt ˈwɜrd/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈaɪ ˈnoʊ ˈðæt ˈwɜrd/",
+      "meaning": "A single unit of language that has meaning.",
+      "translation": "palabra"
     },
     {
       "rank": 218,
@@ -160,8 +194,10 @@
       "pos": "noun",
       "ipa_strong": "/ˈɪʃuː/",
       "example_sentence": "We discussed the issue.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/wi dɪˈskʌst ði ˈɪʃu/"
+      "cefr_level": "B1",
+      "sentence_ipa": "/wi dɪˈskʌst ði ˈɪʃu/",
+      "meaning": "An important topic or problem for debate or discussion.",
+      "translation": "asunto"
     },
     {
       "rank": 219,
@@ -169,8 +205,10 @@
       "pos": "noun",
       "ipa_strong": "/ˈmɑɹkət/",
       "example_sentence": "The market opens early.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/ðə ˈmɑrkət ˈoʊpənz ˈɝli/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ðə ˈmɑrkət ˈoʊpənz ˈɝli/",
+      "meaning": "place for buying and selling",
+      "translation": "mercado"
     },
     {
       "rank": 220,
@@ -178,8 +216,10 @@
       "pos": "verb",
       "ipa_strong": "/ˈpeɪ/",
       "example_sentence": "Please pay by card.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/ˈpliːz ˈpeɪ ˈbaɪ ˈkɑɹd/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈpliːz ˈpeɪ ˈbaɪ ˈkɑɹd/",
+      "meaning": "to give money for something",
+      "translation": "pagar"
     },
     {
       "rank": 221,
@@ -187,8 +227,10 @@
       "pos": "verb",
       "ipa_strong": "/ˈbɪld/",
       "example_sentence": "They build strong teams.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/ˈðeɪ ˈbɪld ˈstɹɔŋ ˈtiːmz/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈðeɪ ˈbɪld ˈstɹɔŋ ˈtiːmz/",
+      "meaning": "to make something by putting parts together",
+      "translation": "construir"
     },
     {
       "rank": 222,
@@ -197,7 +239,9 @@
       "ipa_strong": "/ˈhoʊld/",
       "example_sentence": "Please hold the door.",
       "cefr_level": "A2",
-      "sentence_ipa": "/ˈpliːz ˈhoʊld ðə ˈdɔɹ/"
+      "sentence_ipa": "/ˈpliːz ˈhoʊld ðə ˈdɔɹ/",
+      "meaning": "to keep or carry something in your hands",
+      "translation": "sostener"
     },
     {
       "rank": 223,
@@ -206,7 +250,9 @@
       "ipa_strong": "/ˈsɜrvəs/",
       "example_sentence": "The service was excellent.",
       "cefr_level": "A2",
-      "sentence_ipa": "/ðə ˈsɝvəs wəz ˈɛksələnt/"
+      "sentence_ipa": "/ðə ˈsɝvəs wəz ˈɛksələnt/",
+      "meaning": "help or work provided to others",
+      "translation": "servicio"
     },
     {
       "rank": 224,
@@ -215,7 +261,9 @@
       "ipa_strong": "/əˈɡɛnst/",
       "example_sentence": "The bike is against the wall.",
       "cefr_level": "A2",
-      "sentence_ipa": "/ðə baɪk ɪz əˈɡɛnst ðə wɔl/"
+      "sentence_ipa": "/ðə baɪk ɪz əˈɡɛnst ðə wɔl/",
+      "meaning": "touching something",
+      "translation": "contra"
     },
     {
       "rank": 225,
@@ -223,8 +271,10 @@
       "pos": "verb",
       "ipa_strong": "/bɪˈliːv/",
       "example_sentence": "I believe you.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/aɪ bɪˈliv ju/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/aɪ bɪˈliv ju/",
+      "meaning": "to accept something as true",
+      "translation": "creer"
     },
     {
       "rank": 226,
@@ -232,8 +282,10 @@
       "pos": "adjective",
       "ipa_strong": "/ˈsɛkənd/",
       "example_sentence": "Take the second exit.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/teɪk ðə ˈsɛkənd ˈɛɡzɪt/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/teɪk ðə ˈsɛkənd ˈɛɡzɪt/",
+      "meaning": "very short time",
+      "translation": "segundo"
     },
     {
       "rank": 227,
@@ -241,8 +293,10 @@
       "pos": "conjunction",
       "ipa_strong": "/ˈðoʊ/",
       "example_sentence": "Though tired, she smiled.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/ðoʊ ˈtaɪərd ʃi smaɪld/"
+      "cefr_level": "B1",
+      "sentence_ipa": "/ðoʊ ˈtaɪərd ʃi smaɪld/",
+      "meaning": "Used to introduce a statement that contrasts with or is surprising given what was just said.",
+      "translation": "aunque"
     },
     {
       "rank": 228,
@@ -250,8 +304,10 @@
       "pos": "interjection",
       "ipa_strong": "/ˈjɛs/",
       "example_sentence": "Yes, that's correct.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/jɛs ðæts kəˈrɛkt/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/jɛs ðæts kəˈrɛkt/",
+      "meaning": "agreement",
+      "translation": "sí"
     },
     {
       "rank": 229,
@@ -259,8 +315,10 @@
       "pos": "verb",
       "ipa_strong": "/ˈlʌv/",
       "example_sentence": "I love this song.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/ˈaɪ ˈlʌv ˈðɪs ˈsɔŋ/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈaɪ ˈlʌv ˈðɪs ˈsɔŋ/",
+      "meaning": "care deeply",
+      "translation": "amar"
     },
     {
       "rank": 230,
@@ -269,7 +327,9 @@
       "ipa_strong": "/ˌɪˈnkɹiːs/",
       "example_sentence": "Sales increased this year.",
       "cefr_level": "A2",
-      "sentence_ipa": "/seɪlz ɪnˈkrist ðɪs jɪr/"
+      "sentence_ipa": "/seɪlz ɪnˈkrist ðɪs jɪr/",
+      "meaning": "to become or make larger in amount",
+      "translation": "aumentar"
     },
     {
       "rank": 231,
@@ -277,8 +337,10 @@
       "pos": "noun",
       "ipa_strong": "/ˈdʒɑb/",
       "example_sentence": "She found a new job.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/ˈʃiː ˈfaʊnd ə ˈnuː ˈdʒɑb/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈʃiː ˈfaʊnd ə ˈnuː ˈdʒɑb/",
+      "meaning": "work you do for money",
+      "translation": "empleo"
     },
     {
       "rank": 232,
@@ -286,8 +348,10 @@
       "pos": "verb",
       "ipa_strong": "/ˈplæn/",
       "example_sentence": "We plan ahead.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/wi plæn əˈhɛd/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/wi plæn əˈhɛd/",
+      "meaning": "something you decide to do; to decide what to do",
+      "translation": "planear"
     },
     {
       "rank": 233,
@@ -295,8 +359,10 @@
       "pos": "noun",
       "ipa_strong": "/ɹɪˈzʌlt/",
       "example_sentence": "The result surprised everyone.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/ðə rɪˈzʌlt sərˈpraɪzd ˈɛvriˌwʌn/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ðə rɪˈzʌlt sərˈpraɪzd ˈɛvriˌwʌn/",
+      "meaning": "outcome of search",
+      "translation": "resultado"
     },
     {
       "rank": 234,
@@ -304,8 +370,10 @@
       "pos": "adverb",
       "ipa_strong": "/əˈweɪ/",
       "example_sentence": "Put your phone away.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/pʊt jʊr foʊn əˈweɪ/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/pʊt jʊr foʊn əˈweɪ/",
+      "meaning": "to or at a distance from a place or person",
+      "translation": "lejos"
     },
     {
       "rank": 235,
@@ -313,8 +381,10 @@
       "pos": "noun",
       "ipa_strong": "/ɪˈɡzæmpəl/",
       "example_sentence": "Here's a good example.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/hɪrz ə ɡʊd ɪɡˈzæmpəl/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/hɪrz ə ɡʊd ɪɡˈzæmpəl/",
+      "meaning": "something that shows how",
+      "translation": "ejemplo"
     },
     {
       "rank": 236,
@@ -322,8 +392,10 @@
       "pos": "verb",
       "ipa_strong": "/ˈhæpən/",
       "example_sentence": "Mistakes happen sometimes.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/mɪˈsteɪks ˈhæpən ˈsʌmtaɪmz/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/mɪˈsteɪks ˈhæpən ˈsʌmtaɪmz/",
+      "meaning": "to take place or occur",
+      "translation": "suceder"
     },
     {
       "rank": 237,
@@ -332,7 +404,9 @@
       "ipa_strong": "/ˈɔfɜr/",
       "example_sentence": "They offered help.",
       "cefr_level": "A2",
-      "sentence_ipa": "/ðeɪ ˈɔfərd hɛlp/"
+      "sentence_ipa": "/ðeɪ ˈɔfərd hɛlp/",
+      "meaning": "to present something for acceptance",
+      "translation": "ofrecer"
     },
     {
       "rank": 238,
@@ -340,8 +414,10 @@
       "pos": "adjective",
       "ipa_strong": "/ˈjʌŋ/",
       "example_sentence": "He's still young.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/ˈhiːz ˈstɪl ˈjʌŋ/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈhiːz ˈstɪl ˈjʌŋ/",
+      "meaning": "not old",
+      "translation": "joven"
     },
     {
       "rank": 239,
@@ -349,8 +425,10 @@
       "pos": "adjective",
       "ipa_strong": "/ˈkloʊs/",
       "example_sentence": "The station is close.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/ðə ˈsteɪʃən ɪz kloʊs/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ðə ˈsteɪʃən ɪz kloʊs/",
+      "meaning": "to move something so it is not open; not open",
+      "translation": "cerrar"
     },
     {
       "rank": 240,
@@ -359,7 +437,9 @@
       "ipa_strong": "/ˈpɹoʊˌɡɹæm/",
       "example_sentence": "The program starts Monday.",
       "cefr_level": "A2",
-      "sentence_ipa": "/ðə ˈproʊɡræm stɑrts ˈmʌndeɪ/"
+      "sentence_ipa": "/ðə ˈproʊɡræm stɑrts ˈmʌndeɪ/",
+      "meaning": "computer software",
+      "translation": "programa"
     },
     {
       "rank": 241,
@@ -368,7 +448,9 @@
       "ipa_strong": "/ˈlɛd/",
       "example_sentence": "She will lead the team.",
       "cefr_level": "A2",
-      "sentence_ipa": "/ˈʃiː ˈwɪl ˈlɛd ðə ˈtiːm/"
+      "sentence_ipa": "/ˈʃiː ˈwɪl ˈlɛd ðə ˈtiːm/",
+      "meaning": "a potential customer or client who has shown interest in a product or service",
+      "translation": "prospecto"
     },
     {
       "rank": 242,
@@ -376,8 +458,10 @@
       "pos": "verb",
       "ipa_strong": "/ˈbaɪ/",
       "example_sentence": "I'll buy some fruit.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/ˈaɪl ˈbaɪ ˈsʌm ˈfɹuːt/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈaɪl ˈbaɪ ˈsʌm ˈfɹuːt/",
+      "meaning": "to obtain something by paying money",
+      "translation": "comprar"
     },
     {
       "rank": 243,
@@ -385,8 +469,10 @@
       "pos": "verb",
       "ipa_strong": "/ˌʌndɜrˈstænd/",
       "example_sentence": "I understand now.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/aɪ ˌʌndərˈstænd naʊ/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/aɪ ˌʌndərˈstænd naʊ/",
+      "meaning": "to know the meaning of something",
+      "translation": "entender"
     },
     {
       "rank": 244,
@@ -394,8 +480,10 @@
       "pos": "verb",
       "ipa_strong": "/ˈθæŋk/",
       "example_sentence": "I thank everyone.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/aɪ θæŋk ˈɛvriˌwʌn/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/aɪ θæŋk ˈɛvriˌwʌn/",
+      "meaning": "to express gratitude to someone",
+      "translation": "agradecer"
     },
     {
       "rank": 245,
@@ -403,8 +491,10 @@
       "pos": "adverb",
       "ipa_strong": "/ˈfɑɹ/",
       "example_sentence": "The hotel is far away.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/ðə hoʊˈtɛl ɪz fɑr əˈweɪ/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ðə hoʊˈtɛl ɪz fɑr əˈweɪ/",
+      "meaning": "not close",
+      "translation": "lejos"
     },
     {
       "rank": 246,
@@ -412,8 +502,10 @@
       "pos": "adverb",
       "ipa_strong": "/təˈdeɪ/",
       "example_sentence": "I'm busy today.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/aɪm ˈbɪzi təˈdeɪ/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/aɪm ˈbɪzi təˈdeɪ/",
+      "meaning": "this day",
+      "translation": "hoy"
     },
     {
       "rank": 247,
@@ -421,8 +513,10 @@
       "pos": "noun",
       "ipa_strong": "/ˈaʊɜr/",
       "example_sentence": "It took an hour.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/ɪt tʊk ən ˈaʊər/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ɪt tʊk ən ˈaʊər/",
+      "meaning": "60 minutes",
+      "translation": "hora"
     },
     {
       "rank": 248,
@@ -430,8 +524,10 @@
       "pos": "noun",
       "ipa_strong": "/ˈstuːdənt/",
       "example_sentence": "The student asked questions.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/ðə ˈstudənt æskt ˈkwɛstʃənz/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ðə ˈstudənt æskt ˈkwɛstʃənz/",
+      "meaning": "a person who studies at a school or college",
+      "translation": "estudiante"
     },
     {
       "rank": 249,
@@ -439,8 +535,10 @@
       "pos": "verb",
       "ipa_strong": "/ˈfeɪs/",
       "example_sentence": "We must face reality.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/wi mʌst feɪs riˈæləti/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/wi mʌst feɪs riˈæləti/",
+      "meaning": "front of head",
+      "translation": "cara"
     },
     {
       "rank": 250,
@@ -448,8 +546,10 @@
       "pos": "verb",
       "ipa_strong": "/ˈhoʊp/",
       "example_sentence": "I hope so.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/ˈaɪ ˈhoʊp ˈsoʊ/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈaɪ ˈhoʊp ˈsoʊ/",
+      "meaning": "feeling of expectation",
+      "translation": "esperar"
     },
     {
       "rank": 251,
@@ -457,8 +557,10 @@
       "pos": "noun",
       "ipa_strong": "/aɪˈdiːə/",
       "example_sentence": "That's a great idea.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/ðæts ə ɡreɪt aɪˈdiə/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ðæts ə ɡreɪt aɪˈdiə/",
+      "meaning": "a thought or suggestion",
+      "translation": "idea"
     },
     {
       "rank": 252,
@@ -466,8 +568,10 @@
       "pos": "verb",
       "ipa_strong": "/ˈkɑst/",
       "example_sentence": "Tickets cost less online.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/ˈtɪkəts kɔst lɛs ˌɑnˈlaɪn/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈtɪkəts kɔst lɛs ˌɑnˈlaɪn/",
+      "meaning": "amount of money needed",
+      "translation": "costo"
     },
     {
       "rank": 253,
@@ -476,7 +580,9 @@
       "ipa_strong": "/ˈlɛs/",
       "example_sentence": "Try to spend less.",
       "cefr_level": "A2",
-      "sentence_ipa": "/ˈtɹaɪ ˈtuː ˈspɛnd ˈlɛs/"
+      "sentence_ipa": "/ˈtɹaɪ ˈtuː ˈspɛnd ˈlɛs/",
+      "meaning": "a smaller amount of something",
+      "translation": "menos"
     },
     {
       "rank": 254,
@@ -484,8 +590,10 @@
       "pos": "noun",
       "ipa_strong": "/ˈɹuːm/",
       "example_sentence": "There's room for everyone.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/ðɛrz rum fər ˈɛvriˌwʌn/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ðɛrz rum fər ˈɛvriˌwʌn/",
+      "meaning": "a part of a building with walls",
+      "translation": "habitación"
     },
     {
       "rank": 255,
@@ -493,8 +601,10 @@
       "pos": "conjunction",
       "ipa_strong": "/əˈntɪl/",
       "example_sentence": "Wait until Monday.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/weɪt ənˈtɪl ˈmʌndeɪ/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/weɪt ənˈtɪl ˈmʌndeɪ/",
+      "meaning": "up to the point in time when something happens",
+      "translation": "hasta que"
     },
     {
       "rank": 256,
@@ -502,8 +612,10 @@
       "pos": "noun",
       "ipa_strong": "/ˈɹiːzən/",
       "example_sentence": "There's a reason why.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/ðɛrz ə ˈrizən waɪ/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ðɛrz ə ˈrizən waɪ/",
+      "meaning": "cause or explanation",
+      "translation": "razón"
     },
     {
       "rank": 257,
@@ -511,8 +623,10 @@
       "pos": "verb",
       "ipa_strong": "/ˈfɔɹm/",
       "example_sentence": "Clouds formed quickly.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/klaʊdz fɔrmd ˈkwɪkli/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/klaʊdz fɔrmd ˈkwɪkli/",
+      "meaning": "a type or variety; to create",
+      "translation": "forma"
     },
     {
       "rank": 258,
@@ -520,8 +634,10 @@
       "pos": "verb",
       "ipa_strong": "/ˈspɛnd/",
       "example_sentence": "We spend wisely.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/wi spɛnd ˈwaɪzli/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/wi spɛnd ˈwaɪzli/",
+      "meaning": "to use money; to use time",
+      "translation": "gastar"
     },
     {
       "rank": 259,
@@ -529,8 +645,10 @@
       "pos": "noun",
       "ipa_strong": "/ˈhɛd/",
       "example_sentence": "My head hurts.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/ˈmaɪ ˈhɛd ˈhɜrts/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈmaɪ ˈhɛd ˈhɜrts/",
+      "meaning": "top part of body",
+      "translation": "cabeza"
     },
     {
       "rank": 260,
@@ -538,8 +656,10 @@
       "pos": "noun",
       "ipa_strong": "/ˈkɑɹ/",
       "example_sentence": "Her car is new.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/ˈhɜr ˈkɑɹ ˈɪz ˈnuː/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈhɜr ˈkɑɹ ˈɪz ˈnuː/",
+      "meaning": "a road vehicle with an engine and four wheels",
+      "translation": "coche"
     },
     {
       "rank": 261,
@@ -547,8 +667,10 @@
       "pos": "verb",
       "ipa_strong": "/ˈlɜrn/",
       "example_sentence": "Children learn quickly.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/ˈtʃɪldrən lɝn ˈkwɪkli/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈtʃɪldrən lɝn ˈkwɪkli/",
+      "meaning": "to get knowledge or skill",
+      "translation": "aprender"
     },
     {
       "rank": 262,
@@ -557,7 +679,9 @@
       "ipa_strong": "/ˈlɛvəl/",
       "example_sentence": "Your level improved.",
       "cefr_level": "A2",
-      "sentence_ipa": "/jʊr ˈlɛvəl ɪmˈpruvd/"
+      "sentence_ipa": "/jʊr ˈlɛvəl ɪmˈpruvd/",
+      "meaning": "A position on a scale; a degree of intensity or amount.",
+      "translation": "nivel"
     },
     {
       "rank": 263,
@@ -565,8 +689,10 @@
       "pos": "noun",
       "ipa_strong": "/ˈpɜrsən/",
       "example_sentence": "She's a kind person.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/ʃiz ə kaɪnd ˈpɝsən/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ʃiz ə kaɪnd ˈpɝsən/",
+      "meaning": "a human being",
+      "translation": "persona"
     },
     {
       "rank": 264,
@@ -575,7 +701,9 @@
       "ipa_strong": "/ɪˈkspɪɹiːəns/",
       "example_sentence": "It was a great experience.",
       "cefr_level": "A2",
-      "sentence_ipa": "/ɪt wəz ə ɡreɪt ɪkˈspɪriəns/"
+      "sentence_ipa": "/ɪt wəz ə ɡreɪt ɪkˈspɪriəns/",
+      "meaning": "knowledge gained from doing something",
+      "translation": "experiencia"
     },
     {
       "rank": 265,
@@ -583,8 +711,10 @@
       "pos": "adverb",
       "ipa_strong": "/ˈwʌns/",
       "example_sentence": "I've been there once.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/ˈaɪv ˈbɪn ˈðɛɹ ˈwʌns/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈaɪv ˈbɪn ˈðɛɹ ˈwʌns/",
+      "meaning": "one time",
+      "translation": "una vez"
     },
     {
       "rank": 266,
@@ -592,8 +722,10 @@
       "pos": "noun",
       "ipa_strong": "/ˈmɛmbɜr/",
       "example_sentence": "She's a team member.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/ʃiz ə tim ˈmɛmbər/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ʃiz ə tim ˈmɛmbər/",
+      "meaning": "a person who belongs to a group or organization",
+      "translation": "miembro"
     },
     {
       "rank": 267,
@@ -601,8 +733,10 @@
       "pos": "adverb",
       "ipa_strong": "/ɪˈnʌf/",
       "example_sentence": "That's enough for now.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/ðæts ɪˈnʌf fər naʊ/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ðæts ɪˈnʌf fər naʊ/",
+      "meaning": "as much as needed",
+      "translation": "suficiente"
     },
     {
       "rank": 268,
@@ -610,8 +744,10 @@
       "pos": "adjective",
       "ipa_strong": "/ˈbæd/",
       "example_sentence": "The weather turned bad.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/ðə ˈwɛðər tɝnd bæd/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ðə ˈwɛðər tɝnd bæd/",
+      "meaning": "poor quality",
+      "translation": "malo"
     },
     {
       "rank": 269,
@@ -619,8 +755,10 @@
       "pos": "noun",
       "ipa_strong": "/ˈsɪtiː/",
       "example_sentence": "The city never sleeps.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/ðə ˈsɪti ˈnɛvər slips/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ðə ˈsɪti ˈnɛvər slips/",
+      "meaning": "a large town",
+      "translation": "ciudad"
     },
     {
       "rank": 270,
@@ -628,8 +766,10 @@
       "pos": "noun",
       "ipa_strong": "/ˈnaɪt/",
       "example_sentence": "We arrived late at night.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/wi əˈraɪvd leɪt æt naɪt/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/wi əˈraɪvd leɪt æt naɪt/",
+      "meaning": "time when it is dark",
+      "translation": "noche"
     },
     {
       "rank": 271,
@@ -638,7 +778,9 @@
       "ipa_strong": "/ˈeɪbəl/",
       "example_sentence": "She's able to help.",
       "cefr_level": "A2",
-      "sentence_ipa": "/ʃiz ˈeɪbəl tə hɛlp/"
+      "sentence_ipa": "/ʃiz ˈeɪbəl tə hɛlp/",
+      "meaning": "having the power to do something",
+      "translation": "capaz"
     },
     {
       "rank": 272,
@@ -647,7 +789,9 @@
       "ipa_strong": "/səˈpɔɹt/",
       "example_sentence": "We support local businesses.",
       "cefr_level": "A2",
-      "sentence_ipa": "/wi səˈpɔrt ˈloʊkəl ˈbɪznəsɪz/"
+      "sentence_ipa": "/wi səˈpɔrt ˈloʊkəl ˈbɪznəsɪz/",
+      "meaning": "to help or encourage someone",
+      "translation": "apoyar"
     },
     {
       "rank": 273,
@@ -655,8 +799,10 @@
       "pos": "conjunction",
       "ipa_strong": "/ˈwɛðɜr/",
       "example_sentence": "I don't know whether.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/aɪ doʊnt noʊ ˈwɛðər/"
+      "cefr_level": "B1",
+      "sentence_ipa": "/aɪ doʊnt noʊ ˈwɛðər/",
+      "meaning": "Used to introduce a question or choice between two or more possibilities.",
+      "translation": "si / ya sea"
     },
     {
       "rank": 274,
@@ -664,8 +810,10 @@
       "pos": "noun",
       "ipa_strong": "/ˈlaɪn/",
       "example_sentence": "Stand in line, please.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/ˈstænd ɪn ˈlaɪn ˈpliːz/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈstænd ɪn ˈlaɪn ˈpliːz/",
+      "meaning": "long thin mark",
+      "translation": "línea"
     },
     {
       "rank": 275,
@@ -673,8 +821,10 @@
       "pos": "adjective",
       "ipa_strong": "/ˈpɹɛzənt/",
       "example_sentence": "Everyone was present.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/ˈɛvriˌwʌn wəz ˈprɛzənt/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈɛvriˌwʌn wəz ˈprɛzənt/",
+      "meaning": "Existing or occurring now; to introduce or put forward for consideration.",
+      "translation": "presente"
     },
     {
       "rank": 276,
@@ -683,7 +833,9 @@
       "ipa_strong": "/ˈsaɪd/",
       "example_sentence": "Choose a side.",
       "cefr_level": "A2",
-      "sentence_ipa": "/ˈtʃuːz ə ˈsaɪd/"
+      "sentence_ipa": "/ˈtʃuːz ə ˈsaɪd/",
+      "meaning": "left or right part",
+      "translation": "lado"
     },
     {
       "rank": 277,
@@ -691,8 +843,10 @@
       "pos": "adverb",
       "ipa_strong": "/ˈkwaɪt/",
       "example_sentence": "It's quite expensive.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/ɪts kwaɪt ɪkˈspɛnsɪv/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ɪts kwaɪt ɪkˈspɛnsɪv/",
+      "meaning": "rather, fairly",
+      "translation": "bastante"
     },
     {
       "rank": 278,
@@ -701,7 +855,9 @@
       "ipa_strong": "/ˌɔˈlðoʊ/",
       "example_sentence": "Although tired, he worked.",
       "cefr_level": "A2",
-      "sentence_ipa": "/ɔlˈðoʊ ˈtaɪərd hi wɝkt/"
+      "sentence_ipa": "/ɔlˈðoʊ ˈtaɪərd hi wɝkt/",
+      "meaning": "even though",
+      "translation": "aunque"
     },
     {
       "rank": 279,
@@ -709,8 +865,10 @@
       "pos": "adjective",
       "ipa_strong": "/ˈʃʊɹ/",
       "example_sentence": "I'm sure about that.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/aɪm ʃʊr əˈbaʊt ðæt/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/aɪm ʃʊr əˈbaʊt ðæt/",
+      "meaning": "certain about something",
+      "translation": "seguro"
     },
     {
       "rank": 280,
@@ -719,7 +877,9 @@
       "ipa_strong": "/ˈtɜrm/",
       "example_sentence": "That's a legal term.",
       "cefr_level": "A2",
-      "sentence_ipa": "/ðæts ə ˈliɡəl tɝm/"
+      "sentence_ipa": "/ðæts ə ˈliɡəl tɝm/",
+      "meaning": "fixed period of time",
+      "translation": "mandato"
     },
     {
       "rank": 281,
@@ -728,7 +888,9 @@
       "ipa_strong": "/ˈliːst/",
       "example_sentence": "Choose the least expensive.",
       "cefr_level": "A2",
-      "sentence_ipa": "/tʃuz ðə list ɪkˈspɛnsɪv/"
+      "sentence_ipa": "/tʃuz ðə list ɪkˈspɛnsɪv/",
+      "meaning": "the smallest in amount or degree",
+      "translation": "menos, mínimo"
     },
     {
       "rank": 282,
@@ -736,8 +898,10 @@
       "pos": "noun",
       "ipa_strong": "/ˈeɪdʒ/",
       "example_sentence": "Age is just a number.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/eɪdʒ ɪz dʒʌst ə ˈnʌmbər/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/eɪdʒ ɪz dʒʌst ə ˈnʌmbər/",
+      "meaning": "how old someone is",
+      "translation": "edad"
     },
     {
       "rank": 283,
@@ -746,7 +910,9 @@
       "ipa_strong": "/ˈloʊ/",
       "example_sentence": "Battery levels are low.",
       "cefr_level": "A2",
-      "sentence_ipa": "/ˈbætəri ˈlɛvəlz ɑr loʊ/"
+      "sentence_ipa": "/ˈbætəri ˈlɛvəlz ɑr loʊ/",
+      "meaning": "close to the ground",
+      "translation": "bajo"
     },
     {
       "rank": 284,
@@ -754,8 +920,10 @@
       "pos": "verb",
       "ipa_strong": "/ˈspiːk/",
       "example_sentence": "May I speak now?",
-      "cefr_level": "A2",
-      "sentence_ipa": "/ˈmeɪ ˈaɪ ˈspiːk ˈnaʊ/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈmeɪ ˈaɪ ˈspiːk ˈnaʊ/",
+      "meaning": "to say words; to talk to someone",
+      "translation": "hablar"
     },
     {
       "rank": 285,
@@ -763,8 +931,10 @@
       "pos": "preposition",
       "ipa_strong": "/wɪˈðɪn/",
       "example_sentence": "Stay within the limits.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/steɪ wɪˈðɪn ðə ˈlɪməts/"
+      "cefr_level": "B1",
+      "sentence_ipa": "/steɪ wɪˈðɪn ðə ˈlɪməts/",
+      "meaning": "Inside or not further than a particular area, space, or time period.",
+      "translation": "dentro de"
     },
     {
       "rank": 286,
@@ -773,7 +943,9 @@
       "ipa_strong": "/ˈpɹɑˌsɛs/",
       "example_sentence": "The process takes time.",
       "cefr_level": "A2",
-      "sentence_ipa": "/ðə ˈprɑsɛs teɪks taɪm/"
+      "sentence_ipa": "/ðə ˈprɑsɛs teɪks taɪm/",
+      "meaning": "A series of actions or steps taken to achieve a result.",
+      "translation": "proceso"
     },
     {
       "rank": 287,
@@ -782,7 +954,9 @@
       "ipa_strong": "/ˈpʌblɪk/",
       "example_sentence": "The meeting is public.",
       "cefr_level": "A2",
-      "sentence_ipa": "/ðə ˈmitɪŋ ɪz ˈpʌblɪk/"
+      "sentence_ipa": "/ðə ˈmitɪŋ ɪz ˈpʌblɪk/",
+      "meaning": "open to or shared by all people",
+      "translation": "público"
     },
     {
       "rank": 288,
@@ -790,8 +964,10 @@
       "pos": "adverb",
       "ipa_strong": "/ˈɔfən/",
       "example_sentence": "We often eat out.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/wi ˈɔfən it aʊt/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/wi ˈɔfən it aʊt/",
+      "meaning": "many times",
+      "translation": "a menudo"
     },
     {
       "rank": 289,
@@ -799,8 +975,10 @@
       "pos": "verb",
       "ipa_strong": "/ˈtɹeɪn/",
       "example_sentence": "They train every weekend.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/ðeɪ treɪn ˈɛvri ˈwikˌɛnd/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ðeɪ treɪn ˈɛvri ˈwikˌɛnd/",
+      "meaning": "a long vehicle that runs on rails",
+      "translation": "tren"
     },
     {
       "rank": 290,
@@ -808,8 +986,10 @@
       "pos": "adjective",
       "ipa_strong": "/ˈpɑsəbəl/",
       "example_sentence": "Anything is possible.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/ˈɛniˌθɪŋ ɪz ˈpɑsəbəl/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈɛniˌθɪŋ ɪz ˈpɑsəbəl/",
+      "meaning": "able to happen or be done",
+      "translation": "posible"
     },
     {
       "rank": 291,
@@ -818,7 +998,9 @@
       "ipa_strong": "/ˈæˌktʃuːəliː/",
       "example_sentence": "Actually, I agree.",
       "cefr_level": "A2",
-      "sentence_ipa": "/ˈæk.tʃu.ə.li aɪ əˈɡri/"
+      "sentence_ipa": "/ˈæk.tʃu.ə.li aɪ əˈɡri/",
+      "meaning": "in fact",
+      "translation": "en realidad"
     },
     {
       "rank": 292,
@@ -827,7 +1009,9 @@
       "ipa_strong": "/ˈɹæðɜr/",
       "example_sentence": "I'd rather stay home.",
       "cefr_level": "A2",
-      "sentence_ipa": "/aɪd ˈræðər steɪ hoʊm/"
+      "sentence_ipa": "/aɪd ˈræðər steɪ hoʊm/",
+      "meaning": "to some degree",
+      "translation": "bastante"
     },
     {
       "rank": 293,
@@ -836,7 +1020,9 @@
       "ipa_strong": "/ˈvjuː/",
       "example_sentence": "What a beautiful view.",
       "cefr_level": "A2",
-      "sentence_ipa": "/wʌt ə ˈbjutəfəl vju/"
+      "sentence_ipa": "/wʌt ə ˈbjutəfəl vju/",
+      "meaning": "A particular way of considering something; an opinion.",
+      "translation": "vista"
     },
     {
       "rank": 294,
@@ -844,8 +1030,10 @@
       "pos": "adverb",
       "ipa_strong": "/təˈɡɛðɜr/",
       "example_sentence": "We worked together.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/wi wɝkt təˈɡɛðər/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/wi wɝkt təˈɡɛðər/",
+      "meaning": "with each other; in the same place",
+      "translation": "juntos"
     },
     {
       "rank": 295,
@@ -854,7 +1042,9 @@
       "ipa_strong": "/kəˈnsɪdɜr/",
       "example_sentence": "Please consider my offer.",
       "cefr_level": "A2",
-      "sentence_ipa": "/pliz kənˈsɪdər maɪ ˈɔfər/"
+      "sentence_ipa": "/pliz kənˈsɪdər maɪ ˈɔfər/",
+      "meaning": "to think about something carefully",
+      "translation": "considerar"
     },
     {
       "rank": 296,
@@ -862,8 +1052,10 @@
       "pos": "noun",
       "ipa_strong": "/ˈpɹaɪs/",
       "example_sentence": "The price seems fair.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/ðə ˈpɹaɪs ˈsiːmz ˈfɛɹ/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ðə ˈpɹaɪs ˈsiːmz ˈfɛɹ/",
+      "meaning": "amount of money for something",
+      "translation": "precio"
     },
     {
       "rank": 297,
@@ -871,8 +1063,10 @@
       "pos": "noun",
       "ipa_strong": "/ˈpɛɹənt/",
       "example_sentence": "Every parent worries.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/ˈɛvri ˈpɛrənt ˈwɝiz/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈɛvri ˈpɛrənt ˈwɝiz/",
+      "meaning": "mother or father",
+      "translation": "padre/madre"
     },
     {
       "rank": 298,
@@ -880,8 +1074,10 @@
       "pos": "adverb",
       "ipa_strong": "/ˈhɑɹd/",
       "example_sentence": "She works hard.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/ˈʃiː ˈwɜrks ˈhɑɹd/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ˈʃiː ˈwɜrks ˈhɑɹd/",
+      "meaning": "not soft to touch",
+      "translation": "difícil/duro"
     },
     {
       "rank": 299,
@@ -889,8 +1085,10 @@
       "pos": "noun",
       "ipa_strong": "/ˈpɑɹtiː/",
       "example_sentence": "The party was fun.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/ðə ˈpɑrti wəz fʌn/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/ðə ˈpɑrti wəz fʌn/",
+      "meaning": "a social event with food and music",
+      "translation": "fiesta"
     },
     {
       "rank": 300,
@@ -898,8 +1096,10 @@
       "pos": "adjective",
       "ipa_strong": "/ˈloʊkəl/",
       "example_sentence": "We support local shops.",
-      "cefr_level": "A2",
-      "sentence_ipa": "/wi səˈpɔrt ˈloʊkəl ʃɑps/"
+      "cefr_level": "A1",
+      "sentence_ipa": "/wi səˈpɔrt ˈloʊkəl ʃɑps/",
+      "meaning": "Relating to or occurring in a particular area or neighborhood.",
+      "translation": "local"
     }
   ]
 }

@@ -1,0 +1,41 @@
+{
+  "meta": { "eyebrow": "C1+ · Arquitectura de prosa", "title": "Ritmo retórico de la", "titleEmphasis": "escritura", "goal": "Puedes controlar longitud, paralelismo, repetición y cierre para guiar la atención en un texto argumentativo." },
+  "related": [{ "slug": "c1-escritura-avanzada", "label": "Escritura avanzada" }, { "slug": "c1-cohesion-discurso", "label": "Cohesión del discurso" }],
+  "cards": [
+    { "id": "c1p-ritmo-pulso", "tag": "Ritmo", "title": "Diseña el pulso del párrafo", "lede": "El ritmo nace de alternar expansión y resolución, no de hacer todas las frases cortas.", "blocks": [{ "type": "contrast", "columns": [
+      { "label": "Expansión", "rule": "Acumula contexto, condiciones o evidencia.", "examples": ["After two delays, a change in leadership, and months of uncertainty, the team finally had a stable plan."] },
+      { "label": "Resolución", "rule": "Una frase breve entrega la consecuencia.", "examples": ["They could move.", "That changed everything."] }
+    ] }] },
+    { "id": "c1p-ritmo-longitud", "tag": "Longitud", "title": "Varía con intención", "lede": "La longitud debe reflejar la complejidad de la idea y el peso que quieres darle.", "blocks": [{ "type": "pairs", "lines": [
+      { "variant": "bad", "text": "The test failed. The team met. They discussed it. They ran it again.", "note": "ritmo entrecortado sin jerarquía" },
+      { "variant": "good", "text": "When the first test failed, the team met to isolate the cause and ran it again. This time, it held.", "note": "relaciona procesos y reserva el cierre" },
+      { "variant": "bad", "text": "The policy, which was revised after the review that followed the incident, created confusion across teams." },
+      { "variant": "good", "text": "The policy was revised after the incident. The revision, however, created confusion across teams.", "note": "divide cuando una sola frase oculta el giro" }
+    ] }] },
+    { "id": "c1p-ritmo-paralelo", "tag": "Paralelismo", "title": "Haz visible la estructura", "lede": "El paralelismo permite que el lector compare ideas sin descifrar una forma nueva cada vez.", "blocks": [{ "type": "rules", "rows": [
+      { "key": "Acciones", "value": "We need to reduce delays, clarify ownership, and rebuild trust." },
+      { "key": "Contraste", "value": "The old system rewarded speed; the new one rewards accuracy." },
+      { "key": "Corrección", "value": "Not because the idea was unpopular, but because it was untested." },
+      { "key": "Control", "value": "Mantén la misma categoría gramatical en elementos equivalentes." }
+    ] }] },
+    { "id": "c1p-ritmo-repeticion", "tag": "Repetición", "title": "Repite para avanzar", "lede": "La repetición retórica gana fuerza cuando cada retorno añade una consecuencia.", "blocks": [{ "type": "contrast", "columns": [
+      { "label": "Repetición inerte", "rule": "La idea vuelve sin desarrollarse.", "examples": ["We need clarity. Clarity is important. Clarity matters."] },
+      { "label": "Repetición progresiva", "rule": "Cada frase amplía alcance o urgencia.", "examples": ["We need clarity about the goal, clarity about ownership, and clarity about what happens next."] }
+    ] }] },
+    { "id": "c1p-ritmo-climax", "tag": "Énfasis", "title": "Ordena hacia el punto de mayor peso", "lede": "Una serie suele sonar más resuelta cuando avanza de lo específico a lo decisivo.", "blocks": [{ "type": "rules", "rows": [
+      { "key": "Escala", "value": "The error cost us an hour, a client, and ultimately our credibility." },
+      { "key": "Suspensión", "value": "What the review uncovered was not a missing form or a late email, but a failure of accountability." },
+      { "key": "Giro", "value": "We expected resistance. What we found was relief." },
+      { "key": "Límite", "value": "No infles el final: el clímax debe estar respaldado por el argumento." }
+    ] }] },
+    { "id": "c1p-ritmo-cierre", "tag": "Cierre", "title": "Cierra la tensión que abriste", "lede": "La última frase debe transformar lo anterior en una conclusión, una decisión o una pregunta útil.", "blocks": [{ "type": "contrast", "columns": [
+      { "label": "Resumen débil", "rule": "Solo repite el tema.", "examples": ["In conclusion, communication is important."] },
+      { "label": "Cierre con consecuencia", "rule": "Convierte el análisis en dirección.", "examples": ["The question is no longer whether we can share more information, but whether we can afford not to.", "A faster process will help; a clearer owner will make it last."] }
+    ] }], "tip": { "label": "Lectura en voz alta:", "body": "marca dónde aceleras, dónde haces pausa y qué frase merece quedar resonando." } }
+  ],
+  "quiz": [
+    { "q": "¿Qué secuencia usa expansión y resolución?", "options": ["The meeting ended. People left. It was late.", "After hours of debate and two failed compromises, the committee reached a decision. It was unanimous.", "The committee, being a committee, decided a decision."], "answer": 1, "explain": "La primera frase acumula tensión y la segunda entrega una resolución breve." },
+    { "q": "¿Cuál serie mantiene paralelismo?", "options": ["reduce delays, clear ownership, and trust", "reducing delays, ownership, and to rebuild trust", "reduce delays, clarify ownership, and rebuild trust"], "answer": 2, "explain": "Los tres elementos usan verbo base más complemento." },
+    { "q": "¿Qué distingue una repetición progresiva?", "options": ["Añade una dimensión nueva en cada retorno", "Repite exactamente la misma oración", "Usa palabras más largas"], "answer": 0, "explain": "La recurrencia organiza y desarrolla el argumento." }
+  ]
+}

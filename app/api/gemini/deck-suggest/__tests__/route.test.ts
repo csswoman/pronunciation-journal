@@ -32,6 +32,10 @@ vi.mock('@/lib/supabase/server', () => ({
   createSupabaseServerClient: async () => mocks.cacheClient,
 }))
 
+vi.mock('@/lib/supabase/admin', () => ({
+  getSupabaseAdminClient: () => mocks.cacheClient,
+}))
+
 vi.mock('@/lib/gemini/client', () => ({
   callWithFallback: mocks.callWithFallback,
   getErrorStatus: () => 500,
@@ -83,5 +87,22 @@ describe('deck-suggest route', () => {
 
     expect(res.status).toBe(500)
     expect(body.error).toBe('Failed to generate deck suggestions')
+  })
+
+  it('degrades safely when Gemini returns syntactically malformed JSON', async () => {
+    mocks.validateBody.mockResolvedValueOnce({
+      data: { deckName: 'Travel', difficulty: 1 },
+      error: null,
+    })
+    mocks.callWithFallback.mockImplementationOnce(async (_key, _params, parse) =>
+      parse('```json\n{"suggestions": [\n```')
+    )
+
+    const res = await POST(reqWith() as never)
+    const body = await res.json()
+
+    expect(res.status).toBe(500)
+    expect(body).toEqual({ error: 'Failed to generate deck suggestions' })
+    expect(JSON.stringify(body)).not.toContain('Unexpected token')
   })
 })

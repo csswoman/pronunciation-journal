@@ -12,6 +12,7 @@ const WordsRequestSchema = z
     context: z.string().trim().max(1000).optional(),
     id: z.string().min(1).optional(),
     deckId: z.string().trim().min(1).optional(),
+    source: z.enum(["manual", "reader"]).default("manual"),
   })
   .strict();
 
@@ -43,6 +44,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   const context = body.context ? body.context.slice(0, 1000) : null;
   const id = body.id ?? null;
   const deckId = body.deckId ?? null;
+  const source = body.source;
 
   // User-scoped client so RLS applies and user_id is enforced.
   const userClient = createUserScopedClient(accessToken);
@@ -79,6 +81,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       user_id: user.id,
       text,
       context,
+      source,
       status: "processing",
     })
     .select()

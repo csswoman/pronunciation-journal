@@ -5,6 +5,7 @@ import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { usePathname } from "next/navigation";
 import { useAICoachStore } from "@/lib/stores/aiCoachStore";
 import { useAIPractice } from "@/hooks/useAIPractice";
+import { useAuth } from "@/components/auth/AuthProvider";
 import ChatView from "@/components/ai-coach/ChatView";
 import PronunciationView from "@/components/ai-coach/PronunciationView";
 import CustomPromptPanel from "@/components/ai-coach/CustomPromptPanel";
@@ -24,6 +25,7 @@ export const PANEL_WIDTH = 380;
 const QUOTA_WARN_THRESHOLD = 18;
 
 export default function AICoachPanel() {
+  const { user } = useAuth();
   const isMobile = useMediaQuery("(max-width: 767px)");
   const { isOpen, isFullscreen, panelWidth, close, setPanelWidth, launch, consumeLaunch } =
     useAICoachStore();
@@ -61,8 +63,9 @@ export default function AICoachPanel() {
 
   useEffect(() => {
     if (!isOpen) return;
-    getRecentConversations(30).then(setConversations);
-  }, [isOpen, messages.length, conversationId]);
+    if (!user?.id) { setConversations([]); return; }
+    getRecentConversations(user.id, 30).then(setConversations);
+  }, [isOpen, messages.length, conversationId, user?.id]);
 
   const hasMessages = messages.some((message) => {
     if (message.role === "tool") return false;

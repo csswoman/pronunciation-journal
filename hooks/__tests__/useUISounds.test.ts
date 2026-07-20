@@ -4,28 +4,38 @@ import { renderHook, act } from '@testing-library/react'
 import { useUISounds } from '../useUISounds'
 import { useUISoundsStore } from '@/lib/stores/uiSoundsStore'
 
-const play = vi.fn()
+const playCue = vi.fn()
 
 vi.mock('cuelume', () => ({
-  play: (...args: unknown[]) => play(...args),
   setEnabled: vi.fn(),
   bind: vi.fn(),
-  sounds: [
-    'chime',
-    'sparkle',
-    'droplet',
-    'bloom',
-    'whisper',
-    'tick',
-    'press',
-    'release',
-    'toggle',
-  ],
+}))
+
+vi.mock('@/lib/ui-sounds/engine', () => ({
+  playCue: (...args: unknown[]) => playCue(...args),
+  setEngineEnabled: vi.fn(),
 }))
 
 beforeEach(() => {
-  play.mockClear()
+  playCue.mockClear()
   vi.stubGlobal('matchMedia', vi.fn(() => ({ matches: false })))
+  const memory = new Map<string, string>()
+  vi.stubGlobal('localStorage', {
+    getItem: (key: string) => memory.get(key) ?? null,
+    setItem: (key: string, value: string) => {
+      memory.set(key, String(value))
+    },
+    removeItem: (key: string) => {
+      memory.delete(key)
+    },
+    clear: () => {
+      memory.clear()
+    },
+    key: (index: number) => [...memory.keys()][index] ?? null,
+    get length() {
+      return memory.size
+    },
+  })
   useUISoundsStore.setState({ soundEnabled: true })
 })
 
@@ -42,7 +52,7 @@ describe('useUISounds', () => {
     act(() => {
       result.current.playTap()
     })
-    expect(play).toHaveBeenCalledWith('tick')
+    expect(playCue).toHaveBeenCalledWith('tick')
   })
 
   it('playCorrect plays sparkle', () => {
@@ -50,7 +60,7 @@ describe('useUISounds', () => {
     act(() => {
       result.current.playCorrect()
     })
-    expect(play).toHaveBeenCalledWith('sparkle')
+    expect(playCue).toHaveBeenCalledWith('sparkle')
   })
 
   it('playWrong plays droplet', () => {
@@ -58,7 +68,7 @@ describe('useUISounds', () => {
     act(() => {
       result.current.playWrong()
     })
-    expect(play).toHaveBeenCalledWith('droplet')
+    expect(playCue).toHaveBeenCalledWith('droplet')
   })
 
   it('does not play when soundEnabled is false', () => {
@@ -67,7 +77,7 @@ describe('useUISounds', () => {
     act(() => {
       result.current.playTap()
     })
-    expect(play).not.toHaveBeenCalled()
+    expect(playCue).not.toHaveBeenCalled()
   })
 
   it('does not play when prefers-reduced-motion is active', () => {
@@ -76,6 +86,6 @@ describe('useUISounds', () => {
     act(() => {
       result.current.playTap()
     })
-    expect(play).not.toHaveBeenCalled()
+    expect(playCue).not.toHaveBeenCalled()
   })
 })

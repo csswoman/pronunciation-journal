@@ -11,6 +11,8 @@ import { buildSessionResult } from '@/lib/practice/session-result'
 import { recordActivitySession } from '@/lib/progress/activity-hub'
 import { gradeCore1000Word } from '@/lib/core-1000/grade'
 import { flushOutbox } from '@/lib/sync/sync-manager'
+import { ATTRIBUTION_VERSION } from '@/lib/practice/attribution'
+import { resolveAnswerAttribution } from '@/lib/practice/resolve-attribution'
 import {
   createSession,
   deleteSession,
@@ -29,7 +31,14 @@ import { playUiCue } from '@/lib/ui-sounds/cues'
 const FEEDBACK_MS = 1500
 
 type Phase = 'exercising' | 'feedback' | 'hints' | 'complete'
-type ProgressSaveStatus = 'idle' | 'saving' | 'saved' | 'error'
+/**
+ * `saved_local`: the session and its answers are durably in Dexie, but the
+ * outbox flush left work pending or failed remotely — never call this "synced".
+ * `synced`: this flush pass confirmed every operation it processed.
+ * `error` (from an answer enqueue failure) is sticky: a later flush outcome
+ * must never silently overwrite it with a success state (plan 061 step 6).
+ */
+type ProgressSaveStatus = 'idle' | 'saving' | 'saved_local' | 'synced' | 'error'
 
 export { buildSessionResult } from '@/lib/practice/session-result'
 
@@ -103,6 +112,28 @@ export function useSessionState(config: PracticeConfig) {
 
   const finish = useCallback((final: ExerciseResult[]) => { void final; setPhase('complete') }, [])
 
+  // Shared by the completion effect and the manual "retry sync" action:
+  // resolves to 'synced' only when this flush pass left nothing failed or
+  // skipped; never clears a sticky 'error' from a prior enqueue failure.
+  const drainOutbox = useCallback(async (userId: string) => {
+    try {
+      const flushResult = await flushOutbox(userId)
+      setProgressSaveStatus((prev) => {
+        if (prev === 'error') return prev
+        return flushResult.failed === 0 && flushResult.skipped === 0 ? 'synced' : 'saved_local'
+      })
+    } catch (err) {
+      console.error('[PracticeSession] flushOutbox failed', err)
+      setProgressSaveStatus('error')
+    }
+  }, [])
+
+  const handleRetrySync = useCallback(() => {
+    if (!user) return
+    setProgressSaveStatus('saving')
+    void drainOutbox(user.id)
+  }, [user, drainOutbox])
+
   // Fire onSessionComplete exactly once when the session transitions to `complete`.
   useEffect(() => {
     if (phase !== 'complete' || completedRef.current) return
@@ -110,12 +141,11 @@ export function useSessionState(config: PracticeConfig) {
     const sessionResult = buildSessionResult(results)
     onSessionComplete(sessionResult)
     if (user) {
-      setProgressSaveStatus('saving')
+      setProgressSaveStatus((prev) => (prev === 'error' ? prev : 'saving'))
       void (async () => {
         try {
           await recordActivitySession(user.id, { practiceContext: context, sessionResult })
-          await flushOutbox()
-          setProgressSaveStatus('saved')
+          await drainOutbox(user.id)
         } catch (err) {
           console.error('[PracticeSession] recordActivitySession failed', err)
           setProgressSaveStatus('error')
@@ -127,7 +157,7 @@ export function useSessionState(config: PracticeConfig) {
         console.error('[PracticeSession] deleteSession failed', err)
       })
     }
-  }, [phase, results, onSessionComplete, persistence, user, context])
+  }, [phase, results, onSessionComplete, persistence, user, context, drainOutbox])
 
   const handleSubmit = useCallback(
     async (isCorrect: boolean, userAnswer: string, extras?: { score?: number; feedback?: import('@/lib/practice/types').PedagogicalFeedback }) => {
@@ -135,6 +165,7 @@ export function useSessionState(config: PracticeConfig) {
       if (!current || phase !== 'exercising' || submittingRef.current) return
       submittingRef.current = true
       const timeMs = Date.now() - startTimeRef.current
+      const attribution = resolveAnswerAttribution(current, isCorrect, extras?.score)
       const result: ExerciseResult = {
         exerciseId: current.id,
         slug: current.slug,
@@ -149,9 +180,17 @@ export function useSessionState(config: PracticeConfig) {
         soundId: current.soundId,
         sourceRef: current.sourceRef,
         topic: current.payload.kind === 'generic' ? current.payload.data.topic : undefined,
+        attribution,
+        attributionVersion: ATTRIBUTION_VERSION,
         exercisePayload:
           current.payload.kind === 'phoneme'
-            ? { type: current.slug, soundId: current.soundId, options: current.payload.options, targetWord: current.payload.targetWord }
+            ? {
+                type: current.slug,
+                soundId: current.soundId,
+                options: current.payload.options,
+                targetWord: current.payload.targetWord,
+                contrastId: current.contrastId,
+              }
             : {
                 type: current.slug,
                 contentId: current.contentId,
@@ -175,9 +214,8 @@ export function useSessionState(config: PracticeConfig) {
       if (result.sourceRef?.source === 'core1k') {
         const word = result.sourceRef.id.replace(/^c1k:/, '')
         const quality = result.isCorrect ? 4 : 2
-        // No userId: answer_history is already written above by savePracticeAnswer.
-        // This call only updates the shared Dexie SRS entry (c1k:<word>).
-        void gradeCore1000Word(word, quality, {}).catch((err) => {
+        // answer_history is already written above; userId scopes only the local SRS mirror.
+        void gradeCore1000Word(word, quality, {}, user?.id).catch((err) => {
           console.error('[PracticeSession] gradeCore1000Word failed', err)
         })
       }
@@ -251,6 +289,7 @@ export function useSessionState(config: PracticeConfig) {
     onExit,
     handleSubmit,
     handleRetry,
+    handleRetrySync,
     handleHintContinue,
     handlePracticeAgain,
   }

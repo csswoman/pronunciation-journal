@@ -8,12 +8,9 @@ const VALIDATION_EXEMPTIONS = new Set([
   "app/api/assessment/results/route.ts",
   "app/api/gemini/word-image/route.ts",
   "app/api/lexicon/[id]/route.ts",
-  "app/api/words/[id]/enrich/route.ts",
 ]);
 
-const SAME_ORIGIN_EXEMPTIONS = new Set([
-  "app/api/words/[id]/enrich/route.ts",
-]);
+const SAME_ORIGIN_EXEMPTIONS = new Set<string>();
 
 function routeFiles(dir: string): string[] {
   return fs

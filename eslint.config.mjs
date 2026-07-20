@@ -13,6 +13,16 @@ import tseslint from "typescript-eslint";
 //   • lib/pronunciation/ipa-data.ts    — static IPA reference data (max-lines)
 //   • lib/courses/curriculum.ts        — static curriculum data (max-lines)
 //   • The entries below are cohesive legacy modules pending dedicated extraction.
+//
+// lib/** query-layer allowlist (rule D below):
+//   • lib/db/lessons.ts                          — TODO: move to a queries.ts module
+//   • lib/exercises/generators/reorder-from-fragments.ts — TODO: move to a queries.ts module
+//   • lib/ai-practice/load-state.ts              — TODO: move to a queries.ts module
+//   • lib/api/guards.ts                          — server-side request auth infra (constructs
+//                                                   its own admin/token client, not the browser client)
+// Note: rule D's @supabase/* pattern allows type-only imports (SupabaseClient,
+// Database types) everywhere — passing a client in as a parameter is fine;
+// constructing/importing the browser client outside the query layer is not.
 
 /** Static data / generated files exempt from max-lines (see above). */
 const MAX_LINES_ALLOWLIST = [
@@ -39,6 +49,11 @@ const SUPABASE_PACKAGES_PATTERN = {
   group: ["@supabase/*"],
   message:
     "Do not import @supabase packages in hooks. Use lib/*/queries.ts instead.",
+};
+
+const SUPABASE_PACKAGES_PATTERN_ALLOW_TYPES = {
+  ...SUPABASE_PACKAGES_PATTERN,
+  allowTypeImports: true,
 };
 
 const eslintConfig = [
@@ -87,6 +102,35 @@ const eslintConfig = [
     ignores: ["components/auth/AuthProvider.tsx"],
     rules: {
       "no-restricted-imports": ["error", { paths: [SUPABASE_CLIENT_IMPORT] }],
+    },
+  },
+  // D — lib/**: Supabase browser client only allowed in the query layer
+  // (files named *queries*.ts, realtime.ts) or infra modules that own their
+  // own client lifecycle (auth, sync, supabase/*). Two legacy deviations are
+  // allowlisted with a TODO — see header comment.
+  {
+    files: ["lib/**/*.{ts,tsx}"],
+    ignores: [
+      "lib/**/*queries*.ts",
+      "lib/**/realtime.ts",
+      "lib/auth/**",
+      "lib/sync/**",
+      "lib/supabase/**",
+      "lib/decks/study-source.ts",
+      "lib/review/build-failed-exercises.ts",
+      "lib/db/lessons.ts",
+      "lib/exercises/generators/reorder-from-fragments.ts",
+      "lib/ai-practice/load-state.ts",
+      "lib/api/guards.ts",
+    ],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          paths: [SUPABASE_CLIENT_IMPORT],
+          patterns: [SUPABASE_PACKAGES_PATTERN_ALLOW_TYPES],
+        },
+      ],
     },
   },
   // C — File size: warn above 300 lines (allowlisted static/generated files exempt)

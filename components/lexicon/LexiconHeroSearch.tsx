@@ -30,14 +30,12 @@ function saveRecent(word: string) {
 }
 
 interface LexiconHeroSearchProps {
-  totalWords: number;
   recentWords?: string[];
   dueWords?: string[];
   onAddWord?: (text: string) => void;
 }
 
 export function LexiconHeroSearch({
-  totalWords,
   recentWords: recentFallback = [],
   dueWords = [],
   onAddWord,
@@ -88,7 +86,7 @@ export function LexiconHeroSearch({
 
   const openCategory = useCallback(
     (hit: LexiconSearchHit) => {
-      router.push(`/lexicon/${hit.categoryId}`);
+      router.push(`/dictionary/${hit.categoryId}`);
     },
     [router]
   );
@@ -125,10 +123,6 @@ export function LexiconHeroSearch({
 
   return (
     <div className="words-lexicon__hero">
-      <p className="words-lexicon__hero-lede">
-        {totalWords.toLocaleString()} words with definitions, pronunciation, and examples.
-      </p>
-
       <div className="words-lexicon__searchwrap" ref={wrapRef}>
         <div className="words-lexicon__searchbox">
           <div className="words-lexicon__search-mag" aria-hidden>
@@ -138,10 +132,10 @@ export function LexiconHeroSearch({
             ref={inputRef}
             type="search"
             className="words-lexicon__search-input"
-            placeholder="e.g. middleware, viewport, API gateway"
+            placeholder="Ej.: understand, workflow, travel"
             value={query}
             autoComplete="off"
-            aria-label="Search dictionary"
+            aria-label="Buscar palabras"
             aria-expanded={resultsOpen}
             aria-controls="lexicon-search-results"
             onChange={(e) => {
@@ -183,7 +177,7 @@ export function LexiconHeroSearch({
         >
           {matches.length === 0 && query.trim() ? (
             <p className="words-lexicon__nores">
-              No results for &ldquo;{query.trim()}&rdquo;. Try a different spelling or a broader term.
+              No encontramos &ldquo;{query.trim()}&rdquo;. Prueba otra escritura o un término más general.
             </p>
           ) : (
             matches.map((hit, index) => (
@@ -219,7 +213,7 @@ export function LexiconHeroSearch({
         <div className="words-lexicon__quick">
           {recentWords.length > 0 && (
             <>
-              <span className="words-lexicon__quick-lbl">Recent:</span>
+              <span className="words-lexicon__quick-lbl">Recientes:</span>
               {recentWords.map((w) => (
                 <button
                   key={`recent:${w}`}
@@ -235,7 +229,7 @@ export function LexiconHeroSearch({
           {dueWords.length > 0 && (
             <>
               <span className="words-lexicon__quick-lbl words-lexicon__quick-lbl--spaced">
-                To review:
+                Para repasar:
               </span>
               {dueWords.map((w) => (
                 <button

@@ -44,20 +44,23 @@ export function StudySessionComplete({
             { val: stats.again, label: "hard", cfg: RATING_CONFIG.again },
             { val: stats.hard, label: "medium", cfg: RATING_CONFIG.hard },
             { val: stats.easy, label: "easy", cfg: RATING_CONFIG.easy },
-          ].map(({ val, label, cfg }) => (
+          ].map(({ val, label, cfg }) => {
+            const ratingColor = cfg.color;
+            return (
             <div
               key={label}
               className="rounded-xl p-3"
               style={{ backgroundColor: cfg.bg, border: `1px solid ${cfg.border}` }}
             >
-              <div className="text-lg font-bold" style={{ color: cfg.color }}>
+              <div className="text-lg font-bold" style={{ color: ratingColor }}>
                 {val}
               </div>
-              <div className="text-xs" style={{ color: cfg.color }}>
+              <div className="text-xs" style={{ color: ratingColor }}>
                 {label}
               </div>
             </div>
-          ))}
+            );
+          })}
         </div>
         {stats.newlyMastered > 0 && (
           <p className="text-sm text-fg-muted">

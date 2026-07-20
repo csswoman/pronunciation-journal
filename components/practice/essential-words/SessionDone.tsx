@@ -27,11 +27,6 @@ interface Props {
   onLearnMore?: () => void
 }
 
-const linkActionClass = cn(
-  'inline-flex w-full items-center justify-center rounded-md px-5 py-2.5',
-  'text-sm font-semibold transition-all duration-150 ease-out-quart focus-ring',
-)
-
 export function SessionDone({
   stats,
   sessionSummary,
@@ -97,7 +92,7 @@ export function SessionDone({
           </p>
         ) : null}
         <p className="m-0 text-sm text-fg-muted">
-          {stats.learned} de {stats.totalWords} palabras en tu deck · {stats.newToday}/
+          {stats.learned} de {stats.totalWords} palabras en tu deck, {stats.newToday}/
           {stats.newQuota} nuevas hoy
         </p>
         {loadFailed ? (
@@ -106,7 +101,7 @@ export function SessionDone({
           </p>
         ) : wasEmpty ? (
           <p className="m-0 max-w-[36ch] text-xs text-fg-subtle">
-            Estás al día. Vuelve mañana — el repaso espaciado hace el resto.
+            Estás al día. Vuelve mañana, el repaso espaciado hace el resto.
           </p>
         ) : (
           <p className="m-0 max-w-[36ch] text-xs text-fg-subtle">
@@ -140,23 +135,30 @@ export function SessionDone({
             data-cuelume-press="press"
             data-cuelume-release="release"
           >
-            Continuar practicando
+            {loadFailed ? 'Reintentar carga' : 'Buscar palabras para practicar'}
           </Button>
         ) : null}
-        <Link
-          href="/progress"
-          className={cn(linkActionClass, 'bg-surface-raised text-fg hover:bg-surface-sunken')}
-          data-cuelume-hover="tick"
-        >
-          Ver mi progreso
-        </Link>
-        <Link
-          href="/daily"
-          className={cn(linkActionClass, 'bg-transparent text-fg hover:bg-surface-sunken')}
-          data-cuelume-hover="tick"
-        >
-          Ir al plan de hoy
-        </Link>
+        <details className="w-full text-center">
+          <summary className="cursor-pointer rounded-md px-3 py-2 text-caption font-semibold text-fg-muted transition-colors hover:bg-surface-sunken hover:text-fg focus-ring">
+            Ver más
+          </summary>
+          <div className="mt-2 flex flex-col items-center gap-1">
+            <Link
+              href="/progress"
+              className="rounded-md px-3 py-2 text-caption font-semibold text-fg-muted transition-colors hover:bg-surface-sunken hover:text-fg focus-ring"
+              data-cuelume-hover="tick"
+            >
+              Ver progreso
+            </Link>
+            <Link
+              href="/daily"
+              className="rounded-md px-3 py-2 text-caption font-semibold text-fg-muted transition-colors hover:bg-surface-sunken hover:text-fg focus-ring"
+              data-cuelume-hover="tick"
+            >
+              Abrir plan de hoy
+            </Link>
+          </div>
+        </details>
       </div>
     </div>
   )

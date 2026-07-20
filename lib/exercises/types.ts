@@ -3,7 +3,7 @@ import type { ExerciseType as CanonicalExerciseType } from './taxonomy'
 
 // ── Source references ──────────────────────────────────────────────────────
 
-export type ExerciseSource = 'words' | 'text_fragments' | 'word_bank' | 'core1k'
+export type ExerciseSource = 'words' | 'text_fragments' | 'word_bank' | 'core1k' | 'lexicon'
 
 export interface ExerciseSourceRef {
   source: ExerciseSource
@@ -22,6 +22,10 @@ export type GenericExerciseType =
   | 'multiple_choice'
   | 'written_production'
   | 'spoken_production'
+  | 'error_correction'
+  | 'conjugation_blank'
+  | 'sentence_transformation'
+  | 'translation_es_en'
 
 interface BaseGenericExercise {
   /** Deterministic id: hash of type + sourceRef + stable payload fields. */
@@ -124,6 +128,36 @@ export interface MultipleChoiceExercise extends BaseGenericExercise {
   explanation?: string
 }
 
+export interface ErrorCorrectionExercise extends BaseGenericExercise {
+  type: 'error_correction'
+  sentence: string
+  correctSentence: string
+  explanation?: string
+}
+
+export interface ConjugationBlankExercise extends BaseGenericExercise {
+  type: 'conjugation_blank'
+  sentence: string
+  lemma: string
+  answer: string
+  hint?: string
+  acceptedAnswers?: string[]
+}
+
+export interface SentenceTransformationExercise extends BaseGenericExercise {
+  type: 'sentence_transformation'
+  sourceSentence: string
+  instruction: string
+  referenceAnswer?: string
+}
+
+export interface TranslationEsEnExercise extends BaseGenericExercise {
+  type: 'translation_es_en'
+  sourceEs: string
+  referenceEn: string
+  acceptedAnswers?: string[]
+}
+
 // Free production (online-only — requires /api/gemini/grade-production) ───────
 interface BaseProductionExercise extends BaseGenericExercise {
   /** Instruction shown to the learner. */
@@ -151,6 +185,10 @@ export type GenericExercise =
   | ReorderWordsExercise
   | SentenceContextExercise
   | MultipleChoiceExercise
+  | ErrorCorrectionExercise
+  | ConjugationBlankExercise
+  | SentenceTransformationExercise
+  | TranslationEsEnExercise
   | WrittenProductionExercise
   | SpokenProductionExercise
 

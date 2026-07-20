@@ -37,7 +37,7 @@ Complemento operativo de `CLAUDE.md`.
 `admin`, `ai-coach`, `ai-practice`, `api`, `auth`, `content`, `core-1000`, `courses`,
 `daily`, `db`, `decks`, `exercises`, `home`, `images`, `ipa`, `lexicon`, `notion`,
 `phoneme-practice`, `practice`, `progress`, `pronunciation`, `sound-lab`, `sounds`,
-`speech`, `srs`, `stores`, `supabase`, `sync`, `theory-lessons`, `users`, `word-bank`.
+`speech`, `srs`, `stores`, `supabase`, `sync`, `users`, `word-bank`.
 
 ---
 
@@ -48,7 +48,7 @@ Módulos activos (`lib/*/queries.ts`):
 ```text
 users/          decks/          sounds/         word-bank/
 progress/       home/           practice/       phoneme-practice/
-theory-lessons/ ai-practice/
+ai-practice/
 ```
 
 Excepciones de infra (no son query modules de dominio):
@@ -134,9 +134,10 @@ Fuente: `eslint.config.mjs`. Ejecutar `pnpm lint` en cada PR.
 | `no-restricted-imports` | `hooks/**` | error | `@/lib/supabase/client` |
 | `no-restricted-imports` | `hooks/**` | error | `@supabase/*` |
 | `no-restricted-imports` | `components/**` | error | `@/lib/supabase/client` |
+| `no-restricted-imports` | `lib/**` | error | `@/lib/supabase/client`, `@supabase/*` (type-only imports allowed) |
 | `max-lines` | `*.{ts,tsx,js,mjs}` | warn | >300 líneas |
 
-`import type` desde `@/lib/supabase/types` sigue permitido en hooks y components.
+`import type` desde `@/lib/supabase/types` sigue permitido en hooks y components. En `lib/**`, la regla `@supabase/*` permite imports de solo-tipo (`allowTypeImports`) — pasar un `SupabaseClient` como parámetro está bien; construir/importar el browser client fuera del query layer no.
 
 ### Excepciones documentadas
 
@@ -148,13 +149,32 @@ Actualizar **este doc**, el header de `eslint.config.mjs` y la allowlist en el m
 | `lib/supabase/types.ts` | max-lines off | Generado |
 | `lib/pronunciation/ipa-data.ts` | max-lines off | Dataset estático |
 | `lib/courses/curriculum.ts` | max-lines off | Dataset estático |
+| `lib/db/lessons.ts` | Supabase client permitido | TODO: mover a un módulo `queries.ts` |
+| `lib/exercises/generators/reorder-from-fragments.ts` | Supabase client permitido | TODO: mover a un módulo `queries.ts` |
+| `lib/ai-practice/load-state.ts` | Supabase client permitido | TODO: mover a un módulo `queries.ts` |
+| `lib/api/guards.ts` | Supabase client permitido | Infra de auth de requests server-side (construye su propio admin/token client) |
+| `lib/**/*queries*.ts`, `lib/**/realtime.ts`, `lib/auth/**`, `lib/sync/**`, `lib/supabase/**`, `lib/decks/study-source.ts`, `lib/review/build-failed-exercises.ts` | Regla `lib/**` no aplica | Query layer / infra sancionada |
 
 ### Solo convención (review, no ESLint)
 
-- Prompts inline en components
 - Lógica de negocio en `app/**/page.tsx`
 - Límite soft de 250 líneas en components (`CLAUDE.md`; ESLint avisa a 300)
-- Boundaries entre dominios de `lib/`
+- Boundaries entre dominios de `lib/` (fuera de la regla Supabase de arriba)
+
+---
+
+## Auditorías automáticas de reglas duras
+
+Complementan ESLint donde una regla no es expresable como lint rule (glob de directorio + texto libre). Todas viven en `scripts/`; `pnpm audit:hard-rules` las corre en orden.
+
+| Script | Comando | Bloquea CI | Qué revisa |
+|--------|---------|------------|------------|
+| `audit-ai-prompts.mjs` | `pnpm audit:ai-prompts` | Sí | `@google/genai` / `generateContent()` / `systemInstruction:` fuera de `lib/ai-prompts.ts`, `lib/gemini/**`, `lib/word-bank/gemini.ts`, `app/api/gemini/**`, `scripts/**`. También emite **warnings** (no bloquean) por strings tipo instrucción (`You are a...`, `Return ONLY`) en `components/**`/`hooks/**` — posible prompt inlineado. |
+| `audit-rls.mjs` | `pnpm audit:rls` | Sí (RLS) / warning (cobertura) | Toda tabla nueva en `supabase/migrations/*.sql` tiene `ENABLE ROW LEVEL SECURITY` + `CREATE POLICY` (bloqueante). Advierte (no bloquea) si la tabla no tiene un caso en `scripts/rls-integration.mjs`. |
+| `lint:design-tokens` (`lint-design-tokens.mjs`) | `pnpm lint:design-tokens` | Sí (reglas 1-5) / warning (regla 6) | Valores Tailwind arbitrarios (hex, text-size, spacing fuera de grid 4px, radius) + **raw-color** (hex/rgb/hsl/oklch literal fuera de brackets Tailwind y fuera de `RAW_COLOR_ALLOWLIST`, bloqueante). Regla 6 (`style={{...}}` que parece literal puro) es heurística y solo advierte — un regex no puede distinguir con certeza "computado en runtime" de "hardcodeado" sin parsear JS de verdad. |
+| `audit-state-duplication.mjs` | `pnpm audit:state-duplication` | No (siempre exit 0) | Heurística: stores en `lib/stores/*.ts` con `persist()` (fuera de `PERSIST_ALLOWLIST`) o cuyos campos de estado coinciden con nombres de tabla Dexie (`lib/db/index.ts`) — posible duplicación de dominio entre Dexie y Zustand. |
+
+Los scripts bloqueantes usan allowlists explícitas al tope del archivo (`RAW_COLOR_ALLOWLIST`, `GENAI_ALLOWLIST_PREFIXES`, `ALLOWED_LEGACY_FILES`) — añadir una excepción real requiere editar la allowlist con una razón, no silenciar el script.
 
 ---
 

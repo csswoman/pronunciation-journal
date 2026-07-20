@@ -14,6 +14,10 @@ vi.mock('@/lib/db', () => ({
   isLessonComplete: (...args: unknown[]) => isLessonCompleteMock(...args),
 }))
 
+vi.mock('@/lib/supabase/client', () => ({
+  getSupabaseBrowserClient: () => ({ auth: { getUser: async () => ({ data: { user: { id: 'user-1' } } }) } }),
+}))
+
 beforeEach(() => {
   recordLessonCompleteMock.mockClear()
   isLessonCompleteMock.mockReset().mockResolvedValue(false)

@@ -1,0 +1,109 @@
+{
+  "meta": {
+    "eyebrow": "C1+ · Pragmática institucional",
+    "title": "Ambigüedad y",
+    "titleEmphasis": "vaguedad estratégica",
+    "goal": "Puedes reconocer y usar precisión graduada para negociar, proteger información o mantener opciones abiertas sin inducir a error."
+  },
+  "related": [
+    { "slug": "c1-hedging-matices", "label": "Hedging y matices" },
+    { "slug": "c1-pragmatica-tono", "label": "Pragmática, tono y cortesía" }
+  ],
+  "cards": [
+    {
+      "id": "c1-plus-ambiguedad-vaguedad-distincion",
+      "tag": "Idea central",
+      "title": "No toda falta de precisión es igual",
+      "lede": "La vaguedad deja límites flexibles; la ambigüedad permite interpretaciones distintas; la omisión retira información.",
+      "blocks": [{
+        "type": "rules",
+        "rows": [
+          { "key": "Vago", "value": "We expect a response soon.", "hint": "Soon no fija un plazo exacto." },
+          { "key": "Ambiguo", "value": "Alex told Jordan that they had been selected.", "hint": "They puede referirse a más de una persona." },
+          { "key": "Omisión", "value": "Some costs are not included.", "hint": "No identifica cuáles." },
+          { "key": "Criterio", "value": "Pregunta si la flexibilidad sirve al propósito o impide una decisión informada." }
+        ]
+      }]
+    },
+    {
+      "id": "c1-plus-ambiguedad-vaguedad-funciones",
+      "tag": "Funciones",
+      "title": "Usa flexibilidad con una razón legítima",
+      "lede": "La precisión graduada puede ser útil cuando los datos cambian, hay confidencialidad o las partes aún negocian.",
+      "blocks": [{
+        "type": "contrast",
+        "columns": [
+          { "label": "Flexibilidad responsable", "rule": "approximately · in the coming weeks · subject to review", "examples": ["Delivery will take approximately six weeks.", "The dates are subject to regulatory review."] },
+          { "label": "Evasión riesgosa", "rule": "soon · appropriate action · certain issues", "examples": ["We will take appropriate action soon.", "Certain issues affected the result."] }
+        ]
+      }]
+    },
+    {
+      "id": "c1-plus-ambiguedad-vaguedad-negociacion",
+      "tag": "Negociación",
+      "title": "Mantén opciones abiertas sin prometer de más",
+      "lede": "Una formulación condicionada puede proteger a las partes mientras hace visibles las condiciones relevantes.",
+      "blocks": [{
+        "type": "rules",
+        "rows": [
+          { "key": "Apertura", "value": "We're prepared to consider a longer contract." },
+          { "key": "Condición", "value": "That would depend on volume and payment terms." },
+          { "key": "Rango", "value": "We could deliver between 800 and 1,000 units per month." },
+          { "key": "Reserva", "value": "Any final commitment would require board approval." }
+        ]
+      }]
+    },
+    {
+      "id": "c1-plus-ambiguedad-vaguedad-aclaracion",
+      "tag": "Aclarar",
+      "title": "Convierte lo vago en una condición verificable",
+      "lede": "Cuando la decisión depende del detalle, pregunta por umbral, responsable, plazo o excepción.",
+      "blocks": [{
+        "type": "pairs",
+        "lines": [
+          { "variant": "bad", "text": "We'll finish relatively soon." },
+          { "variant": "good", "text": "Our target is September 30, with a two-week contingency if testing reveals critical defects.", "note": "Plazo y excepción explícitos." },
+          { "variant": "bad", "text": "Management will take appropriate action." },
+          { "variant": "good", "text": "Who will decide the action, and what criteria will they use?", "note": "Solicita agente y criterio." }
+        ]
+      }]
+    },
+    {
+      "id": "c1-plus-ambiguedad-vaguedad-etica",
+      "tag": "Ética",
+      "title": "Distingue diplomacia de engaño",
+      "lede": "La vaguedad deja de ser estratégica y se vuelve problemática cuando oculta un riesgo material o crea una impresión falsa.",
+      "blocks": [{
+        "type": "rules",
+        "rows": [
+          { "key": "Riesgo", "value": "¿La información omitida cambiaría la decisión de la otra parte?" },
+          { "key": "Expectativa", "value": "¿La formulación invita razonablemente a una conclusión que sabes falsa?" },
+          { "key": "Poder", "value": "¿La otra persona puede pedir aclaración sin sufrir consecuencias?" },
+          { "key": "Registro", "value": "Documenta por escrito cifras, límites y compromisos materiales." }
+        ]
+      }]
+    },
+    {
+      "id": "c1-plus-ambiguedad-vaguedad-revision",
+      "tag": "Producción",
+      "title": "Elige el grado mínimo de imprecisión",
+      "lede": "Conserva solo la flexibilidad necesaria y explica por qué el dato todavía no puede fijarse.",
+      "blocks": [{
+        "type": "rules",
+        "rows": [
+          { "key": "1. Variable", "value": "Identifica qué dato sigue abierto y quién lo controla." },
+          { "key": "2. Rango", "value": "Sustituye soon o many por una fecha, intervalo o umbral." },
+          { "key": "3. Condición", "value": "Expresa el evento que cambiaría el compromiso." },
+          { "key": "4. Relevancia", "value": "Revela cualquier riesgo que altere una decisión razonable." }
+        ]
+      }],
+      "tip": { "label": "Práctica:", "body": "Reescribe una promesa vaga como rango más condición; luego decide qué información no puede quedar implícita." }
+    }
+  ],
+  "quiz": [
+    { "q": "¿Qué hace vaga la frase 'We expect a response soon'?", "options": ["No identifica un plazo", "Tiene dos sujetos posibles", "Está en presente"], "answer": 0, "explain": "Soon deja abierto el límite temporal sin crear necesariamente dos análisis gramaticales." },
+    { "q": "Which statement keeps options open responsibly?", "options": ["We'll definitely deliver sometime soon.", "We could deliver 800 to 1,000 units, subject to board approval.", "Certain things may happen."], "answer": 1, "explain": "La segunda proporciona rango y condición explícita sin prometer un resultado garantizado." },
+    { "q": "¿Cuándo se vuelve problemática la vaguedad?", "options": ["Cuando evita una cifra irrelevante", "Cuando oculta un riesgo que cambiaría la decisión", "Cuando protege una contraseña"], "answer": 1, "explain": "Ocultar información material puede crear una impresión engañosa y perjudicar el consentimiento informado." },
+    { "q": "¿Cómo aclaras 'appropriate action'?", "options": ["Preguntando quién decide y con qué criterios", "Repitiendo appropriate", "Añadiendo very"], "answer": 0, "explain": "Agente y criterio convierten una promesa abierta en un proceso examinable." }
+  ]
+}

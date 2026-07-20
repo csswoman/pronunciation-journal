@@ -20,6 +20,10 @@ vi.mock("@/lib/db", () => ({
   },
 }));
 
+vi.mock("@/lib/supabase/client", () => ({
+  getSupabaseBrowserClient: () => ({ auth: { getUser: async () => ({ data: { user: { id: "user-1" } } }) } }),
+}));
+
 import CoursePathAutoLevelSync from "../CoursePathAutoLevelSync";
 
 describe("CoursePathAutoLevelSync", () => {

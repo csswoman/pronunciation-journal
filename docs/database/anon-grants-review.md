@@ -38,3 +38,12 @@ autenticado. En practica no conceden acceso a solicitudes anonimas.
 - No agregar default privileges para `anon`.
 - Cualquier acceso anonimo nuevo debe ser `SELECT` explicito, con RLS y una
   justificacion de producto en este documento.
+
+## Revisión 2026-07-17
+
+La migración `20260718014511_consolidate_rls_and_retire_skill_profile.sql`:
+
+- elimina `get_skill_profile(uuid)`, una RPC SECURITY DEFINER sin consumidores
+- retira policies duplicadas heredadas para historial, entradas, perfiles y progreso
+- conserva únicamente policies por usuario para `stt_transcription_cache`
+- restringe escrituras de `deck_suggestions_cache` al cliente service-role del servidor

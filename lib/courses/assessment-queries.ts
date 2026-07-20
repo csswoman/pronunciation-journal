@@ -1,6 +1,10 @@
 import type { AssessmentResult } from "@/lib/courses/assessment";
 import type { CefrLevelId } from "@/lib/courses/types";
-import { getSupabaseBrowserClient } from "@/lib/supabase/client";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
+
+function isMissingAssessmentTable(error: { code?: string } | null): boolean {
+  return error?.code === "PGRST205" || error?.code === "42P01";
+}
 
 export async function saveAssessmentResult(
   userId: string,
@@ -8,7 +12,7 @@ export async function saveAssessmentResult(
   result: AssessmentResult,
   evaluatedLevel?: CefrLevelId,
 ): Promise<void> {
-  const supabase = getSupabaseBrowserClient();
+  const supabase = await createSupabaseServerClient();
   const { error } = await supabase.from("assessment_results").insert({
     user_id: userId,
     mode,
@@ -17,10 +21,23 @@ export async function saveAssessmentResult(
     score: result.score,
     total: result.total,
     passed: result.passed,
-    topic_scores: result.topicScores,
+    topic_scores: {
+      version: 2,
+      topics: result.topicScores,
+      concepts: result.conceptSignals.map((signal) => ({
+        lessonSlug: signal.lessonSlug,
+        level: signal.level,
+        title: signal.title,
+        selfRating: signal.selfRating,
+        status: signal.status,
+        correct: signal.correct,
+        total: signal.total,
+        assessedAt: signal.assessedAt,
+      })),
+    },
   });
 
-  if (error && error.code !== "PGRST205" && error.code !== "42P01") throw error;
+  if (error && !isMissingAssessmentTable(error)) throw error;
 }
 
 export async function persistAssessmentOutcome(
@@ -29,12 +46,14 @@ export async function persistAssessmentOutcome(
   result: AssessmentResult,
   evaluatedLevel?: CefrLevelId,
 ): Promise<void> {
-  const supabase = getSupabaseBrowserClient();
-  await Promise.all([
+  const supabase = await createSupabaseServerClient();
+  const [profileResult] = await Promise.all([
     supabase.from("user_profiles").upsert({
       id: userId,
       cefr_level: result.assignedLevel,
     }, { onConflict: "id" }),
     saveAssessmentResult(userId, mode, result, evaluatedLevel),
   ]);
+
+  if (profileResult.error) throw profileResult.error;
 }

@@ -6,7 +6,7 @@ import { orderFragmentsByDue } from '@/lib/practice/fragment-priority'
 import type { DailyStep } from '@/lib/practice/types'
 import { resolveReaderPassage } from '@/lib/practice/reader/get-passage'
 import { getCachedReaderPassage, saveReaderPassage } from '@/lib/db'
-import { generateReaderPassage } from '@/lib/practice/reader/queries'
+import { generateReaderPassage, resolveReaderLevel } from '@/lib/practice/reader/queries'
 import { pickTargets, type ReaderTargetRow } from '@/lib/practice/reader/select-targets'
 import { SENTENCE_BUILDER_EXERCISE_COUNT } from './constants'
 import { dayOfYear, dedupeByContentId } from './selectors'
@@ -92,13 +92,15 @@ export async function buildReaderStep(
   const targets = pickTargets(srsRows)
   if (!targets) return null
 
+  const level = await resolveReaderLevel(userId)
   const passage = await resolveReaderPassage({
     userId,
     targets,
     online,
     now: Date.now(),
+    level,
     getCached: getCachedReaderPassage,
-    generate: (uid, t) => generateReaderPassage(uid, t),
+    generate: (uid, t) => generateReaderPassage(uid, t, level),
     save: saveReaderPassage,
   })
   if (!passage) return null

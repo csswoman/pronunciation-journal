@@ -10,6 +10,7 @@ export type ViewMode = "grid" | "list";
 export type StatusCounts = Record<StatusFilter, number>;
 
 interface WordFiltersBarProps {
+  variant?: "toolbar" | "sidebar";
   status: StatusFilter;
   sort: SortMode;
   view: ViewMode;
@@ -29,6 +30,7 @@ const STATUS_TABS: { id: StatusFilter; label: string }[] = [
 ];
 
 export function WordFiltersBar({
+  variant = "toolbar",
   status,
   sort,
   view,
@@ -40,9 +42,10 @@ export function WordFiltersBar({
   onSearchChange,
 }: WordFiltersBarProps) {
   return (
-    <div className="lexicon-area__toolbar" role="search">
+    <div className={`lexicon-area__filters lexicon-area__filters--${variant}`} role="search">
+      {variant === "sidebar" ? <p className="lexicon-area__side-label">Filtrar palabras</p> : null}
       <div className="lexicon-area__toolbar-cluster">
-        <div className="lexicon-area__ftabs" role="tablist" aria-label="Filter by status">
+        <div className="lexicon-area__ftabs" role="tablist" aria-label="Filtrar por estado">
           {STATUS_TABS.map((tab) => (
             <button
               key={tab.id}
@@ -64,7 +67,7 @@ export function WordFiltersBar({
 
         <span className="lexicon-area__toolbar-divider" aria-hidden />
 
-        <div className="lexicon-area__sortgrp" role="group" aria-label="Sort words">
+        <div className="lexicon-area__sortgrp" role="group" aria-label="Ordenar palabras">
           <button
             type="button"
             onClick={() => onSortChange("alpha")}
@@ -77,7 +80,7 @@ export function WordFiltersBar({
             onClick={() => onSortChange("difficulty")}
             className={cn("lexicon-area__sortopt", sort === "difficulty" && "is-active")}
           >
-            By difficulty
+            Dificultad
           </button>
         </div>
       </div>
@@ -85,21 +88,21 @@ export function WordFiltersBar({
       <div className="lexicon-area__toolbar-end">
         <label className="lexicon-area__find">
           <Search className="w-3.5 h-3.5 shrink-0" aria-hidden />
-          <span className="sr-only">Search words</span>
+          <span className="sr-only">Buscar palabras</span>
           <input
             type="search"
-            placeholder="Find a word…"
+            placeholder="Buscar palabra…"
             value={search}
             onChange={(e) => onSearchChange(e.target.value)}
           />
         </label>
 
-        <div className="lexicon-area__vtoggle" role="group" aria-label="View mode">
+        <div className="lexicon-area__vtoggle" role="group" aria-label="Vista">
           <button
             type="button"
             onClick={() => onViewChange("grid")}
             className={cn("lexicon-area__vt", view === "grid" && "is-active")}
-            aria-label="Grid view"
+            aria-label="Vista en cuadrícula"
             aria-pressed={view === "grid"}
           >
             <LayoutGrid className="w-4 h-4" />
@@ -108,7 +111,7 @@ export function WordFiltersBar({
             type="button"
             onClick={() => onViewChange("list")}
             className={cn("lexicon-area__vt", view === "list" && "is-active")}
-            aria-label="List view"
+            aria-label="Vista en lista"
             aria-pressed={view === "list"}
           >
             <List className="w-4 h-4" />

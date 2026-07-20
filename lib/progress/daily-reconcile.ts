@@ -45,6 +45,7 @@ export function reconcileDailySteps(
   steps: DailyStep[],
   result: SessionResult,
   practiceContext: PracticeContext,
+  metadata: { lessonSlug?: string; dailyTargetId?: string } = {},
 ): string[] {
   if (practiceContext === 'daily' || result.results.length === 0) return []
 
@@ -77,8 +78,24 @@ export function reconcileDailySteps(
   }
 
   if (practiceContext === 'courses') {
-    const concept = steps.find((s) => s.kind === 'concept')
-    if (concept) resolved.add(concept.id)
+    const candidates = new Set<string>()
+    if (metadata.dailyTargetId) {
+      candidates.add(`study_deck:${metadata.dailyTargetId}`)
+      candidates.add(`concept:${metadata.dailyTargetId}`)
+    }
+    if (metadata.lessonSlug) {
+      candidates.add(`concept:${metadata.lessonSlug}`)
+      for (const step of steps) {
+        if (step.kind === 'study_deck' && step.id.endsWith(`:${metadata.lessonSlug}`)) {
+          candidates.add(step.id)
+        }
+      }
+    }
+    for (const step of steps) {
+      if ((step.kind === 'concept' || step.kind === 'study_deck') && candidates.has(step.id)) {
+        resolved.add(step.id)
+      }
+    }
   }
 
   return [...resolved]

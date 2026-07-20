@@ -20,6 +20,15 @@ describe('pickTargets', () => {
     expect(out?.map((t) => t.word)).toEqual(['cat', 'run', 'go'])
   })
 
+  it('orders real due dates before rows without a review date', () => {
+    const out = pickTargets([
+      row('undated', 'review', ''),
+      row('later', 'learning', '2030-02-01'),
+      row('due', 'review', '2030-01-01'),
+    ])
+    expect(out?.map((t) => t.word)).toEqual(['due', 'later', 'undated'])
+  })
+
   it('caps at 8 targets', () => {
     const rows = Array.from({ length: 12 }, (_, i) => row(`w${i}`, 'review', `2030-01-${i + 1}`))
     expect(pickTargets(rows)?.length).toBe(8)

@@ -7,6 +7,7 @@
 "use client";
 
 import Image from "next/image";
+import { cn } from "@/lib/cn";
 
 const IMAGES = [
   { src: "/images/1.png", hue: 350 }, // rosa
@@ -30,23 +31,18 @@ export function AuthImagePanel({ index }: AuthImagePanelProps) {
           src={src}
           alt=""
           fill
-          className="object-cover object-left"
-          style={{
-            opacity: i === active ? 1 : 0,
-            transition: i === active
-              ? "opacity 1200ms cubic-bezier(0.16, 1, 0.3, 1)"
-              : "opacity 800ms cubic-bezier(0.4, 0, 0.2, 1)",
-          }}
+          className={cn(
+            "object-cover object-left",
+            i === active ? "auth-image-fade" : "auth-image-fade--out"
+          )}
+          style={{ opacity: i === active ? 1 : 0 }}
           quality={80}
           priority={i === 0}
         />
       ))}
 
       {/* Bottom gradient so image always reads against the form edge */}
-      <div
-        className="absolute inset-x-0 bottom-0 h-32 pointer-events-none"
-        style={{ background: "linear-gradient(to top, oklch(0 0 0 / 0.35), transparent)" }}
-      />
+      <div className="auth-image-gradient absolute inset-x-0 bottom-0 h-32 pointer-events-none" />
     </div>
   );
 }

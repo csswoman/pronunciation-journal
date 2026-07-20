@@ -9,6 +9,7 @@
 
 import { useState } from 'react'
 import Button from '@/components/ui/Button'
+import { useAuth } from '@/components/auth/AuthProvider'
 import {
   activateEssentialWordNow,
   masterEssentialWord,
@@ -36,6 +37,7 @@ function formatReturnDate(iso: string): string {
 }
 
 export function SrsVaultRow({ entry }: SrsVaultRowProps) {
+  const { user } = useAuth()
   const [loadingAction, setLoadingAction] = useState<RowAction | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [snoozeDays, setSnoozeDays] = useState<SnoozeDays>(90)
@@ -87,7 +89,7 @@ export function SrsVaultRow({ entry }: SrsVaultRowProps) {
               onChange={(event) => {
                 const days = Number(event.target.value) as SnoozeDays
                 setSnoozeDays(days)
-                void runAction('snooze', () => snoozeEssentialWord(entry.word, days))
+                void runAction('snooze', () => snoozeEssentialWord(entry.word, days, user?.id))
               }}
               className="rounded-lg border border-border-default bg-surface-sunken px-3 py-2 text-sm text-fg focus-ring disabled:opacity-50"
             >
@@ -107,7 +109,7 @@ export function SrsVaultRow({ entry }: SrsVaultRowProps) {
               isLoading={loadingAction === 'activate'}
               disabled={isBusy && loadingAction !== 'activate'}
               onClick={() =>
-                void runAction('activate', () => activateEssentialWordNow(entry.word))
+                void runAction('activate', () => activateEssentialWordNow(entry.word, user?.id))
               }
             >
               Practicar ahora
@@ -123,7 +125,7 @@ export function SrsVaultRow({ entry }: SrsVaultRowProps) {
                   isLoading={loadingAction === 'master'}
                   disabled={isBusy && loadingAction !== 'master'}
                   onClick={() =>
-                    void runAction('master', () => masterEssentialWord(entry.word))
+                    void runAction('master', () => masterEssentialWord(entry.word, user?.id))
                   }
                 >
                   Sí, dominada

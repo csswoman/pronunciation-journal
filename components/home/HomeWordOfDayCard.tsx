@@ -6,16 +6,35 @@
 //   single link → /words
 // </HomeWordOfDayCard>
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, Loader2 } from "@/components/icons";
 import Button from "@/components/ui/Button";
 import { SyllableWord } from "@/components/ui/SyllableWord";
+import { useAuth } from "@/components/auth/AuthProvider";
 import { useWordOfDay } from "@/hooks/useWordOfDay";
+import { readStoredCefrLevel } from "@/lib/core-1000/target-level";
+import { readGuestStudyLevel } from "@/lib/preferences/guest-study-level";
 import { formatIpaDisplay } from "@/lib/lexicon/format-ipa";
 
 /** Preview-only — no listen/save/shuffle micro-session on home. */
 export default function HomeWordOfDayCard() {
-  const { word, loading, error, refresh } = useWordOfDay();
+  const { user } = useAuth();
+  const [level, setLevel] = useState<string | undefined>(undefined);
+
+  useEffect(() => {
+    let cancelled = false;
+    const isGuest = !user || (user as { is_anonymous?: boolean }).is_anonymous;
+    const storedLevel = isGuest ? Promise.resolve(readGuestStudyLevel()) : readStoredCefrLevel(user.id);
+    void storedLevel.then((l) => {
+      if (!cancelled && l) setLevel(l.toLowerCase());
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [user]);
+
+  const { word, loading, error, refresh } = useWordOfDay(level);
 
   return (
     <div className="home-sidebar-card flex flex-col gap-2">
@@ -53,7 +72,7 @@ export default function HomeWordOfDayCard() {
             </p>
           ) : null}
           <Link
-            href={`/words`}
+            href="/dictionary"
             className="focus-ring mt-1 inline-flex min-h-10 items-center gap-1.5 font-body-sm text-fg-muted transition-colors hover:text-fg hover:underline"
           >
             Explorar palabras <ArrowRight size={16} aria-hidden />

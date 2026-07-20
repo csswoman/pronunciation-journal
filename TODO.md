@@ -1,7 +1,7 @@
 # TODO de Producción
 
 Auditoría crítica original: commit `11dee70`, 2026-06-30.
-**Última actualización:** 2026-07-17 — backlog reconciliado con el estado actual: QA manual de Reader y validación RLS aislada quedan activas; mejoras de escala, offline, observabilidad y retención quedan condicionadas a necesidad real.
+**Última actualización:** 2026-07-18 — stream de producto/pedagogía 046–057 implementado; RLS aislado sigue pendiente porque no hay entorno no productivo ejecutable.
 
 Convenciones:
 
@@ -14,10 +14,10 @@ Convenciones:
 
 La base técnica es sólida y el sprint de producción cerró la mayoría de P0/P1 de seguridad, datos y escalabilidad operativa. Las únicas validaciones activas son cerrar el QA manual de Reader y ejecutar el runner RLS en una base local o staging aislada. En Vercel Free, la observabilidad mínima queda cubierta con health check programado desde GitHub Actions; el resto de mejoras operativas se activará solo cuando haya evidencia de necesidad.
 
-Última verificación completa registrada (2026-07-05; volver a ejecutar antes de publicar un nuevo baseline):
+Última verificación completa registrada (2026-07-17):
 
 - `pnpm type-check`: pasa.
-- `pnpm test`: 978 tests pasan.
+- `pnpm test`: 1078 tests pasan (192 archivos).
 - `pnpm test:coverage`: pasa (umbrales 50% lines / 45% functions).
 - `pnpm audit --prod`: sin vulnerabilidades conocidas (última auditoría).
 - Migración `20260623000000_remove_premium_set_admin_and_a1.sql` verificada como no destructiva y sin email hardcodeado; ya no está exenta en `scripts/check-migrations.mjs`.
@@ -31,7 +31,7 @@ La base técnica es sólida y el sprint de producción cerró la mayoría de P0/
 | 9-12 | CSRF/same-origin, errores públicos, rate limit RPC, tests de guards |
 | 14 | CSP/headers globales en `next.config.mjs` |
 | 15-17 | Checks migraciones, RLS, tipos Supabase |
-| 20 | Jobs durables (`word_enrichment_jobs` + worker Vercel Cron) |
+| 20 | Jobs durables (`word_enrichment_jobs` + worker programado en GitHub Actions) |
 | 22-25 | Timeouts Gemini, helper unificado, health liveness/readiness, backups |
 | 26-30 | Auth robusto, tests auth, degradación, inventario offline, estados de cola |
 | 34-37 | Scripts test, coverage, artefactos CI, reconciliación plans |
@@ -42,7 +42,23 @@ La base técnica es sólida y el sprint de producción cerró la mayoría de P0/
 
 | # | Área | Qué falta |
 |---|---|---|
-| RLS-INT / T56 | RLS integration real | `pnpm test:rls:integration` existe y limpia usuarios temporales. El bloqueo histórico por migraciones remotas atrasadas ya no aplica; falta ejecutarlo contra una base local o staging aislada y con el esquema vigente. No ejecutar contra producción. |
+| RLS-INT / T56 | RLS integration real | **HECHO (2026-07-18):** `pnpm test:rls:integration` pasó contra Supabase local. En el proceso se corrigieron migraciones que impedían reconstruir desde cero (referencias a `user_sound_progress` eliminada; `deck_suggestions_cache` inexistente) y una recursión infinita de RLS en `text_fragments` (nueva migración `20260718120000_fix_text_fragments_rls_recursion.sql`). Detalle en `docs/database/rls-integration.md`. No ejecutar contra producción. |
+
+### HECHO (planes 046–057, 2026-07-18)
+
+| Plan | Área | Evidencia |
+|---|---|---|
+| T50 | QA manual de Reader | Confirmado manualmente como pass; cobertura automatizada del Reader verde. |
+| 046–052 | Fonemas, scores, topic review, intereses, ejercicios y storage Journal | Migraciones de producción verificadas y commits `5a842720` a `32b604df`. |
+| 055 | Guardar palabras desde Reader | `4873690c`; tokenización accesible, deduplicación y fallback offline. |
+| 056–057 | Transformaciones y traducción ES→EN | Migraciones 20/22 verificadas; generación, caché y topic-review opcional en `7c164327` a `c9c09ded`. |
+
+### HECHO (Journal, planes 053–054)
+
+| Plan | Evidencia |
+|---|---|
+| 053 | Cliente `lib/journal/correct-client.ts`, esquema compartido `lib/journal/correction.ts` y `applyJournalFeedback` con programación SM-2 grade-2 idempotente (no solo contadores). Tests de auth/same-origin, draft/ajena/corrected (404/409), idempotencia, degradación de red y scheduling SRS. |
+| 054 | `useJournalEntry` orquesta autosave→enviar→corregir (offline-first, corrección online-only con reintento al reconectar). Componentes `JournalWorkspace`/`JournalEditor`/`JournalFeedbackView`/`SuggestedWords` (opt-in por palabra) y `JournalHistoryList` (Dexie reactivo). Paso concept opcional `journal_entry` (href `/journal`, cadencia documentada, sin auto-completar) añadido tras el corte del plan diario. Tests de autosave, reconexión, opt-in de palabras y cadencia. |
 
 ### HECHO (roadmap 032 Fase 1-2)
 
@@ -50,13 +66,6 @@ La base técnica es sólida y el sprint de producción cerró la mayoría de P0/
 |---|---|
 | T44-T49 | Prompts centralizados, STT cache RLS, bundle CI, fonemas scoped, coverage per-file |
 | T51 | Hilo entre pasos (plan 09) |
-
-### ABIERTO (roadmap 032)
-
-| # | Área | Prioridad | Criterio de cierre |
-|---|---|---|---|
-| T50 | QA manual de Reader | P1 validación | Completar `docs/pedagogy-plans/reader-qa-checklist.md`, incluyendo Gemini real, caché/offline, exposure tracking y finalización dentro de Daily. |
-| RLS-INT / T56 | Validación real de políticas y grants | P2 seguridad | Ejecutar `pnpm test:rls:integration` en Supabase local o staging aislado con todas las migraciones aplicadas. Esta fila consolida la antigua T56 duplicada. |
 
 ### CONDICIONAL (no bloquea el estado actual)
 
@@ -112,12 +121,11 @@ La base técnica es sólida y el sprint de producción cerró la mayoría de P0/
 | Estado | Tarea | Prioridad | Dificultad | Tiempo | Evidencia / notas |
 |---|---|---:|---:|---:|---|
 | HECHO | Revertir o reemplazar la migración destructiva que borra usuarios. | P0 | S | 2-4 h | `20260623000000_...` no contiene borrados masivos ni `DROP TABLE`; `pnpm check:migrations` cubre el archivo. |
-| HECHO | Eliminar email personal hardcodeado; bootstrap seguro de admin. | P0 | S | 2-4 h | `ADMIN_BOOTSTRAP_EMAIL` en `lib/users/admin.ts`; SQL histórico verificado sin email hardcodeado. |
 | HECHO | Regenerar tipos Supabase y eliminar casts `as any` por tablas faltantes. | P1 | M | 1 día | Roadmap #17. |
 | HECHO | Revisar grants heredados a `anon` y default privileges. | P2 | M | 1-2 días | Roadmap #18. `20260703000000_harden_anon_grants.sql` revoca grants amplios; revisión en `docs/database/anon-grants-review.md`. |
 | HECHO | Añadir pruebas o checks de migraciones para RLS. | P1 | M | 1-2 días | Roadmap #15-16. `pnpm check:migrations`, `pnpm audit:rls`. |
 | HECHO | Documentar migraciones históricas con policy insegura temporal. | P2 | M | 1 día | Roadmap #19. `docs/database/migration-risk-register.md` documenta STT cache 2026-06-11 → 2026-06-21. |
-| ABIERTO | Ejecutar pruebas RLS contra una base local/staging aplicada. | P2 | M | 1-2 días | Tarea consolidada RLS-INT/T56. Requiere Supabase local o credenciales de test aisladas; complementa `audit:rls` estático. No usar producción porque el runner crea usuarios y filas temporales. |
+| HECHO | Ejecutar pruebas RLS contra una base local/staging aplicada. | P2 | M | 1-2 días | 2026-07-18: `pnpm exec supabase start` + `pnpm test:rls:integration` PASÓ en local. Se arreglaron 3 migraciones para reconstruir desde cero y la recursión RLS de `text_fragments`. Ver `docs/database/rls-integration.md`. No usar producción (el runner crea/borra usuarios). |
 
 ## Infraestructura
 
@@ -144,7 +152,7 @@ La base técnica es sólida y el sprint de producción cerró la mayoría de P0/
 
 | Estado | Tarea | Prioridad | Dificultad | Tiempo | Evidencia / notas |
 |---|---|---:|---:|---:|---|
-| HECHO | Restaurar suite verde. | P0 | S | 2-6 h | 978 tests pasan (2026-07-05). |
+| HECHO | Restaurar suite verde. | P0 | S | 2-6 h | 1078 tests en 192 archivos pasan (2026-07-17). |
 | HECHO | Añadir tests de guard para cada POST sensible. | P1 | M | 1-2 días | Roadmap #12. |
 | HECHO | Añadir cobertura de migraciones/RLS. | P1 | L | 2-4 días | Roadmap #15-16. |
 | HECHO | Separar tests unitarios, integración y smoke/e2e. | P2 | M | 1 día | Roadmap #34. `pnpm test:integration`. |
@@ -185,7 +193,7 @@ La base técnica es sólida y el sprint de producción cerró la mayoría de P0/
 | Área | Nota | Justificación | Qué falta para 10/10 |
 |---|---:|---|---|
 | Arquitectura | 9/10 | Query layer, RLS, jobs durables, rate limit distribuido, Gemini unificado, pronunciation offline en Dexie y health check programado. | Alertas operativas más ricas si se adopta Sentry o Vercel Pro. |
-| Calidad del código | 9/10 | Type-check verde, 978 tests, helpers backend compartidos y coverage per-file en CI. | RLS integration real y métricas operativas. |
+| Calidad del código | 9/10 | Type-check verde, 1078 tests, helpers backend compartidos y coverage per-file en CI. | RLS integration real y métricas operativas. |
 | Seguridad | 9/10 | CSRF universal, CSP, logging sanitizado, rate limit RPC con fallback, secret scan, grants anon endurecidos y SQL P0 neutralizado. | Validar políticas/grants contra una base staging aplicada. |
 | Rendimiento | 8/10 | Bundle analysis en CI con budgets; fonemas scoped; timeouts Gemini. | Métricas per-route en analyze-bundle. |
 | Escalabilidad | 8/10 | Rate limit multi-instancia, cola durable, worker cron y observabilidad básica compatible con Free. No hay evidencia actual que justifique backpressure adicional. | Añadir backpressure distribuido y pruebas de carga solo si aparecen 429 o saturación; Log Drain si se usa Vercel Pro. |
@@ -198,6 +206,8 @@ La base técnica es sólida y el sprint de producción cerró la mayoría de P0/
 Fuente detallada: `plans/032-post-production-improvement-roadmap.md`.
 
 1. **Cerrar T50:** completar y documentar el QA manual de Reader.
-2. **Cerrar RLS-INT/T56:** levantar Supabase local/staging aislado, aplicar migraciones y validar permisos reales por rol.
+2. ~~**Cerrar RLS-INT/T56:** levantar Supabase local/staging aislado, aplicar migraciones y validar permisos reales por rol.~~ **HECHO (2026-07-18):** pasó contra local; ver `docs/database/rls-integration.md`.
 3. **CI opcional:** automatizar RLS integration solo cuando exista un servicio de test aislado y estable.
-4. **Deuda condicional:** no iniciar T55, T57, T58 o T59 hasta que se cumpla el disparador documentado en su fila.
+4. ~~**Revisar remoto:**~~ **HECHO (2026-07-18):** (a) fix de `text_fragments` aplicado a producción (`20260718120000`) y verificado; (b) limpieza de drift aplicada (`20260718150000`): se retiró `user_sound_progress` (drop + `handle_new_user` ya no la siembra) y se **formalizó** `deck_suggestions_cache` (la usa `/api/gemini/deck-suggest`) con `create table if not exists` + RLS. Verificado en remoto: `user_sound_progress` eliminada, `handle_new_user` limpia, cache intacta. Detalle en `docs/database/rls-integration.md`.
+5. ~~**Drift bidireccional (auditoría `db diff --linked`, 2026-07-18):**~~ **HECHO (2026-07-18):** contenido sano (test 7/7, `exercise_types` completos). Se reconcilió el drift en ambos sentidos con `20260718160000_reconcile_prod_drift.sql` (+ `20260718170000_deck_cache_revoke_authenticated_writes.sql`), aplicadas a prod. `supabase db diff --linked` ahora reporta **"No schema changes found"** — local y prod sincronizados. Se restauró en prod `word_enrichment_jobs`/`claim_enrichment_jobs` (arregla el 500 al añadir palabras) y `sentence_transcription_cache`. Detalle en `docs/database/schema-drift-and-state.md`. Pendiente menor: smoke-test manual de añadir palabra.
+6. **Deuda condicional:** no iniciar T55, T57, T58 o T59 hasta que se cumpla el disparador documentado en su fila.

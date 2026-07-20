@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 const mocks = vi.hoisted(() => ({
   validateBody: vi.fn(),
-  saveAssessmentResult: vi.fn(),
+  persistAssessmentOutcome: vi.fn(),
 }))
 
 vi.mock('@/lib/api/guards', () => ({
@@ -16,10 +16,10 @@ vi.mock('@/lib/api/guards', () => ({
 }))
 
 vi.mock('@/lib/courses/assessment-queries', () => ({
-  saveAssessmentResult: mocks.saveAssessmentResult,
+  persistAssessmentOutcome: mocks.persistAssessmentOutcome,
 }))
 
-import { POST } from '../route'
+import { AssessmentResultSchema, POST } from '../route'
 
 function reqWith(body: unknown): Request {
   return new Request('http://x/api/assessment/results', {
@@ -30,7 +30,7 @@ function reqWith(body: unknown): Request {
 
 beforeEach(() => {
   mocks.validateBody.mockReset()
-  mocks.saveAssessmentResult.mockReset()
+  mocks.persistAssessmentOutcome.mockReset()
 })
 
 describe('assessment results route', () => {
@@ -43,7 +43,7 @@ describe('assessment results route', () => {
     const res = await POST(reqWith({}) as never)
 
     expect(res.status).toBe(400)
-    expect(mocks.saveAssessmentResult).not.toHaveBeenCalled()
+    expect(mocks.persistAssessmentOutcome).not.toHaveBeenCalled()
   })
 
   it('saves a valid assessment result for the authenticated user', async () => {
@@ -56,6 +56,16 @@ describe('assessment results route', () => {
       topicScores: [{ lessonSlug: 'intro', title: 'Intro', correct: 8, total: 10 }],
       strengths: [{ lessonSlug: 'intro', title: 'Intro' }],
       needsReview: [],
+      conceptSignals: [{
+        lessonSlug: 'intro',
+        level: 'b1',
+        title: 'Intro',
+        selfRating: 'familiar',
+        status: 'review',
+        correct: 1,
+        total: 2,
+        assessedAt: '2026-07-18T12:00:00.000Z',
+      }],
     }
     mocks.validateBody.mockResolvedValueOnce({
       data: { mode: 'placement', evaluatedLevel: 'b1', result },
@@ -67,6 +77,44 @@ describe('assessment results route', () => {
 
     expect(res.status).toBe(200)
     expect(body).toEqual({ ok: true })
-    expect(mocks.saveAssessmentResult).toHaveBeenCalledWith('u1', 'placement', result, 'b1')
+    expect(mocks.persistAssessmentOutcome).toHaveBeenCalledWith('u1', 'placement', result, 'b1')
+  })
+
+  it('strictly validates bounded concept signals', () => {
+    const body = {
+      mode: 'placement',
+      result: {
+        assignedLevel: 'B1',
+        passed: true,
+        passedLevels: ['a1'],
+        score: 1,
+        total: 1,
+        topicScores: [],
+        strengths: [],
+        needsReview: [],
+        conceptSignals: [{
+          lessonSlug: 'intro',
+          level: 'b1',
+          title: 'Intro',
+          selfRating: 'familiar',
+          status: 'review',
+          correct: 2,
+          total: 1,
+          assessedAt: '2026-07-18T12:00:00.000Z',
+        }],
+      },
+    }
+
+    expect(AssessmentResultSchema.safeParse(body).success).toBe(false)
+    expect(AssessmentResultSchema.safeParse({
+      ...body,
+      result: {
+        ...body.result,
+        conceptSignals: Array.from({ length: 101 }, () => ({
+          ...body.result.conceptSignals[0],
+          correct: 1,
+        })),
+      },
+    }).success).toBe(false)
   })
 })

@@ -13,10 +13,8 @@ vi.mock('@/lib/core-1000/client', () => ({
 vi.mock('@/lib/db', () => ({
   db: {
     srsData: {
-      where: vi.fn().mockReturnValue({
-        startsWith: vi.fn().mockReturnValue({
-          toArray: vi.fn().mockResolvedValue([]),
-        }),
+      filter: vi.fn().mockReturnValue({
+        toArray: vi.fn().mockResolvedValue([]),
       }),
     },
   },
@@ -81,8 +79,19 @@ describe('buildCoursePracticeSession', () => {
     mockFetchCore.mockResolvedValue([fakeWord])
     mockSelectNew.mockReturnValue([fakeWord])
     mockBuildWord.mockReturnValue([fakeEx] as ReturnType<typeof buildWordExercises>)
-    const result = await buildCoursePracticeSession({ deckSlug: 'a1-test', cefrLevel: 'A1' })
+    const result = await buildCoursePracticeSession({ deckSlug: 'a1-test', cefrLevel: 'A1', userId: 'user-1' })
     expect(result.some((r) => r.sourceRef?.source === 'core1k')).toBe(true)
+  })
+
+  it('skips vocab exercises when userId is missing', async () => {
+    const fakeWord: CoreWord = { rank: 1, word: 'run', pos: 'verb', ipa_strong: '/rʌn/', example_sentence: 'I run every day.', cefr_level: 'A1' }
+    const fakeEx = { id: 'ex2', type: 'fill_blank', sourceRef: { source: 'core1k', id: 'c1k:run' }, sentence: 'I ___ every day.', answer: 'run', options: ['run', 'a', 'b', 'c'] }
+    mockFetchCore.mockResolvedValue([fakeWord])
+    mockSelectNew.mockReturnValue([fakeWord])
+    mockBuildWord.mockReturnValue([fakeEx] as ReturnType<typeof buildWordExercises>)
+    const result = await buildCoursePracticeSession({ deckSlug: 'a1-test', cefrLevel: 'A1' })
+    expect(result.some((r) => r.sourceRef?.source === 'core1k')).toBe(false)
+    expect(mockFetchCore).not.toHaveBeenCalled()
   })
 
   it('caps output at TARGET_SIZE exercises', async () => {

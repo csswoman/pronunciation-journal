@@ -84,14 +84,15 @@ export function StudyDoneScreen({ stats, label, onClose, onStudyAgain }: StudyDo
           {STAT_KEYS.map(key => {
             const cfg = RATING_CONFIG[key];
             const val = stats[key];
+            const ratingColor = cfg.color;
             return (
               <div
                 key={key}
                 className="rounded-xl p-3"
                 style={{ backgroundColor: cfg.bg, border: `1px solid ${cfg.border}` }}
               >
-                <div className="text-lg font-bold" style={{ color: cfg.color }}>{val}</div>
-                <div className="text-xs" style={{ color: cfg.color }}>{STAT_LABELS[key]}</div>
+                <div className="text-lg font-bold" style={{ color: ratingColor }}>{val}</div>
+                <div className="text-xs" style={{ color: ratingColor }}>{STAT_LABELS[key]}</div>
               </div>
             );
           })}

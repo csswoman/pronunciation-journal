@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Check, X, ArrowRight } from "@/components/icons";
 import { cn } from "@/lib/cn";
 import { useUISounds } from "@/hooks/useUISounds";
@@ -8,14 +8,16 @@ import type { GrammarQuizQuestion } from "@/lib/courses/grammar-deck/types";
 
 interface QuizStepProps {
   questions: GrammarQuizQuestion[];
-  onDone: (correct: number, total: number) => void;
+  onDone: (correct: number, total: number, pickedAnswers: number[], answerTimesMs: number[]) => void;
 }
 
 /** Lightweight end-of-deck self-check. One question at a time, immediate feedback. */
 export default function QuizStep({ questions, onDone }: QuizStepProps) {
   const [index, setIndex] = useState(0);
   const [picked, setPicked] = useState<number | null>(null);
-  const [correct, setCorrect] = useState(0);
+  const [pickedAnswers, setPickedAnswers] = useState<number[]>([]);
+  const [answerTimesMs, setAnswerTimesMs] = useState<number[]>([]);
+  const questionStartedAt = useRef(Date.now());
   const { playTap, playCorrect, playWrong } = useUISounds();
 
   const q = questions[index];
@@ -26,9 +28,18 @@ export default function QuizStep({ questions, onDone }: QuizStepProps) {
     if (answered) return;
     playTap();
     setPicked(i);
+    setPickedAnswers((answers) => {
+      const next = [...answers];
+      next[index] = i;
+      return next;
+    });
+    setAnswerTimesMs((times) => {
+      const next = [...times];
+      next[index] = Date.now() - questionStartedAt.current;
+      return next;
+    });
     const isCorrect = i === q.answer;
     if (isCorrect) {
-      setCorrect((c) => c + 1);
       playCorrect();
     } else {
       playWrong();
@@ -37,11 +48,20 @@ export default function QuizStep({ questions, onDone }: QuizStepProps) {
 
   function next() {
     if (isLast) {
-      onDone(correct, questions.length);
+      const finalAnswers = [...pickedAnswers];
+      if (picked != null) finalAnswers[index] = picked;
+      const finalCorrect = finalAnswers.reduce(
+        (sum, answer, questionIndex) => sum + (answer === questions[questionIndex].answer ? 1 : 0),
+        0,
+      );
+      const finalTimes = [...answerTimesMs];
+      if (picked != null) finalTimes[index] = Date.now() - questionStartedAt.current;
+      onDone(finalCorrect, questions.length, finalAnswers, finalTimes);
       return;
     }
     setIndex((n) => n + 1);
     setPicked(null);
+    questionStartedAt.current = Date.now();
   }
 
   return (

@@ -5,7 +5,7 @@ import { playUiCue } from '@/lib/ui-sounds/cues'
 import { useUISoundsStore } from '@/lib/stores/uiSoundsStore'
 
 /**
- * Exercise / quiz interaction sounds (cuelume).
+ * Exercise / quiz interaction sounds.
  * Mapping: tap→tick, correct→sparkle, wrong→droplet.
  */
 export function useUISounds() {

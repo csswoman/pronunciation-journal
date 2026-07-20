@@ -2,11 +2,12 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import type { UserContrastProgress } from '../types'
 import type { SessionResult, ExerciseResult } from '@/lib/practice/types'
 
-const { mockUpdateContrastProgress, mockGetContrastProgress, mockRecordActivitySession } =
+const { mockUpdateContrastProgress, mockGetContrastProgress, mockRecordActivitySession, mockFlushOutbox } =
   vi.hoisted(() => ({
     mockUpdateContrastProgress: vi.fn(),
     mockGetContrastProgress: vi.fn(),
     mockRecordActivitySession: vi.fn(),
+    mockFlushOutbox: vi.fn(),
   }))
 
 vi.mock('../queries', () => ({
@@ -16,6 +17,7 @@ vi.mock('../queries', () => ({
 vi.mock('@/lib/progress/activity-hub', () => ({
   recordActivitySession: mockRecordActivitySession,
 }))
+vi.mock('@/lib/sync/sync-manager', () => ({ flushOutbox: mockFlushOutbox }))
 
 import { finishContrastSession } from '../finish-session'
 

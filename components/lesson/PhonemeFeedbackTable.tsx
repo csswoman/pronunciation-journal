@@ -27,28 +27,28 @@ function PhonemeRow({ p }: { p: FlatPhoneme }) {
   const articulation = getArticulation(ipa)
 
   return (
-    <div role="row" className="grid grid-cols-[72px_1fr] gap-2 px-4 py-3 border-b border-[var(--border-subtle)] last:border-b-0">
+    <div role="row" className="grid grid-cols-[72px_1fr] gap-2 border-b border-border-subtle px-4 py-3 last:border-b-0">
       <div role="cell">
         <button
           type="button"
           onMouseEnter={() => playIpaSound(ipa)}
           onClick={() => playIpaSound(ipa)}
           aria-label={`Escuchar el sonido ${expectedIpa}`}
-          className="group flex items-center gap-1 text-left text-lg font-semibold text-[var(--text-primary)] font-ipa cursor-pointer bg-transparent border-none p-0"
+          className="group flex cursor-pointer items-center gap-1 border-none bg-transparent p-0 text-left text-lg font-semibold text-fg font-ipa"
         >
           {expectedIpa}
           <Volume2 size={12} aria-hidden className="opacity-40 transition-opacity group-hover:opacity-80" />
         </button>
       </div>
       {isCorrect ? (
-        <div role="cell" className="text-sm font-semibold text-[var(--success)]">¡Excelente!</div>
+        <div role="cell" className="text-sm font-semibold text-success">¡Excelente!</div>
       ) : (
         <div role="cell" className="flex flex-col gap-1">
-          <div className="text-base font-semibold text-[var(--error)] font-ipa">
-            {p.status === 'missing' ? '—' : p.gotIpa ? `/${p.gotIpa}/` : `/${p.got}/`}
+          <div className="text-base font-semibold text-error font-ipa">
+            {p.status === 'missing' ? 'No registrado' : p.gotIpa ? `/${p.gotIpa}/` : `/${p.got}/`}
           </div>
           {articulation && (
-            <p className="text-xs leading-relaxed text-[var(--text-secondary)] m-0">
+            <p className="m-0 text-xs leading-relaxed text-fg-muted">
               {articulation}
             </p>
           )}
@@ -69,9 +69,9 @@ export function PhonemeFeedbackTable({ wordResults }: Props) {
     <div
       role="table"
       aria-label="Desglose de sonidos"
-      className="w-full max-w-md rounded-[var(--radius-lg)] border border-[var(--border-subtle)] overflow-hidden"
+      className="w-full max-w-md overflow-hidden rounded-lg border border-border-subtle"
     >
-      <div role="row" className="grid grid-cols-[72px_1fr] gap-2 px-4 py-2 border-b border-[var(--border-subtle)] text-xs font-semibold uppercase tracking-[.05em] text-[var(--text-tertiary)]">
+      <div role="row" className="grid grid-cols-[72px_1fr] gap-2 border-b border-border-subtle px-4 py-2 text-xs font-semibold uppercase tracking-[.05em] text-fg-subtle">
         <span role="columnheader">Sonido</span>
         <span role="columnheader">Dijiste</span>
       </div>

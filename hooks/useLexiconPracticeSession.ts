@@ -136,7 +136,7 @@ export function useLexiconPracticeSession(categoryId: string, userId: string | u
     setLoadState('loading'); setError(null)
     try {
       const accessToken = await getAccessToken()
-      const res = await fetch(`/api/lexicon/${categoryId}`, {
+      const res = await fetch(`/api/dictionary/${categoryId}`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${accessToken}` },
       })
@@ -222,8 +222,11 @@ export function useLexiconPracticeSession(categoryId: string, userId: string | u
     const matchExercises: PracticeExercise[] = matchPairs.map((ex) => fromGenericExercise(ex, 'practice'))
 
     // Build sentence_context exercises for forgot/normal words that have exampleSentence.
+    const bankByCatalog = new Map(pool.map((e) => [e.source_ref, e.id]))
     const practiceWordIds = new Set(pool.map((e) => e.source_ref))
-    const candidateWordEntries = sessionWordEntries.filter((w) => practiceWordIds.has(w.id))
+    const candidateWordEntries = sessionWordEntries
+      .filter((w) => practiceWordIds.has(w.id))
+      .map((w) => ({ ...w, bankId: bankByCatalog.get(w.id) ?? null }))
     const sentenceContextRaw = generateSentenceContextExercises(candidateWordEntries, sessionWordEntries)
     const sentenceContextExercises: PracticeExercise[] = sentenceContextRaw.map((ex) => fromGenericExercise(ex, 'practice'))
 

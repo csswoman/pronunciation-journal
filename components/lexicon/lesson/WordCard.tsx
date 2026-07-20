@@ -60,11 +60,12 @@ export function WordCard({
   const cfg = STATUS_CONFIG[status];
   const isLearned = status === "learned";
   const meterStrength = isLearned ? cfg.strength : Math.max(cfg.strength, difficulty);
+  const cardStateColor = cfg.stateColor;
 
   return (
     <article
       className={cn("lexicon-area__card", view === "list" && "lexicon-area__card--list")}
-      style={{ "--card-state": cfg.stateColor } as CSSProperties}
+      style={{ "--card-state": cardStateColor } as CSSProperties}
     >
       <div className="lexicon-area__card-top">
         <div>

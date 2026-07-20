@@ -5,9 +5,9 @@ import { logServerError } from "@/lib/api/logging";
 import { getSupabaseAdminClient } from "@/lib/supabase/admin";
 import type { Database } from "@/lib/supabase/types";
 
-// Vercel cron jobs run at most every 60 s on free tier, every 1 s on Pro.
-// We schedule this every 2 minutes. maxDuration gives budget for the batch.
-export const maxDuration = 120; // seconds (requires Vercel Pro or higher)
+// GitHub Actions invokes this worker periodically because Vercel Hobby only
+// supports daily cron schedules. maxDuration gives each small batch time to finish.
+export const maxDuration = 120;
 export const runtime = "nodejs";
 
 const BATCH_SIZE = 3;
@@ -39,7 +39,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data: rawJobs, error: claimErr } = await (supabase as any).rpc("claim_enrichment_jobs", {
     p_batch_size: BATCH_SIZE,
-    p_worker_id: "vercel-cron",
+    p_worker_id: "scheduled-worker",
   });
 
   if (claimErr) {

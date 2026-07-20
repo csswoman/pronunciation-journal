@@ -96,7 +96,7 @@ function RadarChart({ scores }: { scores: FluencyScores }) {
               fontSize={10.5}
               fontWeight={600}
               letterSpacing="0.08em"
-              style={{ textTransform: 'uppercase' }}
+              className="uppercase"
             >
               {s.label}
             </text>
@@ -195,7 +195,7 @@ function EmptyRadar() {
             fontSize={10.5}
             fontWeight={600}
             letterSpacing="0.08em"
-            style={{ textTransform: 'uppercase' }}
+            className="uppercase"
           >
             {s.label}
           </text>

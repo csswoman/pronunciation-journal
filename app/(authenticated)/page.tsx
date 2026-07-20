@@ -8,6 +8,7 @@ import { getHomeMiniLessons } from "@/lib/content/lessons";
 import { getDailyStreak } from "@/lib/daily/streak";
 import { getTodayPracticeGoal, getWeakestPhonemeForHome } from "@/lib/home/queries";
 import { getReviewQueueSummary } from "@/lib/home/review-queue";
+import { getHomePlacementState, type HomePlacementState } from "@/lib/home/placement-state";
 import type { MiniLesson } from "@/lib/content/schemas";
 import type { DailyStreakResult } from "@/lib/daily/streak-core";
 import type { DailyGoalProgress, WeakestPhonemeHome, ReviewQueueSummary } from "@/lib/home/constants";
@@ -31,8 +32,12 @@ export default async function HomePage() {
     primary: MiniLesson | null;
     secondary: MiniLesson | null;
   };
+  const hiddenPlacementPrompt: HomePlacementState = {
+    hasPlacement: true,
+    hasMeaningfulProgress: true,
+  };
 
-  const [queue, homeLessons, streak, vocabulary, goal, weakSound] = await Promise.all([
+  const [queue, homeLessons, streak, vocabulary, goal, weakSound, placementState] = await Promise.all([
     settled(getReviewQueueSummary(userId), emptyQueue, "review queue"),
     settled(getHomeMiniLessons(), emptyLessons, "mini lessons"),
     settled(
@@ -50,6 +55,11 @@ export default async function HomePage() {
       userId ? getWeakestPhonemeForHome(userId) : Promise.resolve(null),
       null as WeakestPhonemeHome | null,
       "weak phoneme",
+    ),
+    settled(
+      userId ? getHomePlacementState(userId) : Promise.resolve(hiddenPlacementPrompt),
+      hiddenPlacementPrompt,
+      "placement state",
     ),
   ]);
 
@@ -73,6 +83,7 @@ export default async function HomePage() {
         vocabularyProgress={vocabulary}
         todaysLesson={homeLessons.primary}
         secondaryLesson={homeLessons.secondary}
+        placementState={placementState}
       />
     </PageLayout>
   );

@@ -1,0 +1,107 @@
+{
+  "meta": {
+    "eyebrow": "C1+ · Flexibilidad discursiva",
+    "title": "Transformación completa",
+    "titleEmphasis": "de registro",
+    "goal": "Puedes reformular el mismo contenido para conversación, correo ejecutivo, informe, discurso o texto académico conservando hechos y propósito."
+  },
+  "related": [
+    { "slug": "c1-escritura-academica-profesional", "label": "Escritura académica y profesional" },
+    { "slug": "c1-lenguaje-coloquial-habitual", "label": "Lenguaje coloquial habitual" }
+  ],
+  "cards": [
+    {
+      "id": "c1-plus-transformacion-registro-variables",
+      "tag": "Idea central",
+      "title": "Transforma decisiones, no solo palabras",
+      "lede": "Cambiar de registro exige ajustar relación, densidad, explicitud, evidencia y estructura sin alterar el hecho central.",
+      "blocks": [{
+        "type": "rules",
+        "rows": [
+          { "key": "Audiencia", "value": "¿Qué sabe, qué necesita y qué puede decidir?" },
+          { "key": "Relación", "value": "¿Hay cercanía, jerarquía, conflicto o responsabilidad formal?" },
+          { "key": "Canal", "value": "¿El mensaje se oye una vez, se escanea o queda como registro?" },
+          { "key": "Propósito", "value": "¿Informar, pedir, persuadir, documentar o enseñar?" }
+        ]
+      }]
+    },
+    {
+      "id": "c1-plus-transformacion-registro-conversacion-correo",
+      "tag": "Canal",
+      "title": "De conversación a correo ejecutivo",
+      "lede": "El correo conserva la acción y el plazo, pero hace explícito lo que la conversación resolvía con tono y contexto compartido.",
+      "blocks": [{
+        "type": "contrast",
+        "columns": [
+          { "label": "Conversación", "rule": "contexto compartido + turnos", "examples": ["Looks like we're running a little late. Can you send me the revised numbers by three?", "If anything changes, just ping me."] },
+          { "label": "Correo ejecutivo", "rule": "asunto + petición + plazo + razón", "examples": ["Subject: Revised forecast needed by 3:00 p.m.", "Please send the revised figures by 3:00 so I can include them in today's briefing."] }
+        ]
+      }]
+    },
+    {
+      "id": "c1-plus-transformacion-registro-informe",
+      "tag": "Informe",
+      "title": "De opinión personal a afirmación trazable",
+      "lede": "El informe desplaza el centro desde la reacción del autor hacia la evidencia, el alcance y la incertidumbre.",
+      "blocks": [{
+        "type": "pairs",
+        "lines": [
+          { "variant": "bad", "text": "I think customers really hated the new checkout." },
+          { "variant": "good", "text": "Negative checkout comments increased from 8 to 21 percent during the four-week pilot.", "note": "Sustituye una reacción absoluta por medida y periodo." },
+          { "variant": "bad", "text": "Obviously, the redesign was a disaster." },
+          { "variant": "good", "text": "The redesign did not meet the pilot's completion-rate target.", "note": "Vincula evaluación con un criterio explícito." }
+        ]
+      }]
+    },
+    {
+      "id": "c1-plus-transformacion-registro-discurso",
+      "tag": "Oralidad",
+      "title": "De informe escrito a discurso escuchable",
+      "lede": "Una audiencia oral necesita señalización, ejemplos concretos y menor densidad sintáctica porque no puede releer.",
+      "blocks": [{
+        "type": "rules",
+        "rows": [
+          { "key": "Orientación", "value": "Let me start with the main finding." },
+          { "key": "Cifra interpretable", "value": "That's roughly one in five customers." },
+          { "key": "Transición", "value": "So what does that mean for the launch?" },
+          { "key": "Cierre", "value": "The takeaway is simple: test the revised flow before expanding it." }
+        ]
+      }]
+    },
+    {
+      "id": "c1-plus-transformacion-registro-academico",
+      "tag": "Academia",
+      "title": "De recomendación ejecutiva a argumento académico",
+      "lede": "El texto académico explicita conceptos, método, fuentes y límites en vez de priorizar una acción inmediata.",
+      "blocks": [{
+        "type": "contrast",
+        "columns": [
+          { "label": "Ejecutivo", "rule": "decisión primero", "examples": ["We recommend delaying the rollout by two weeks.", "The delay allows one additional accessibility test."] },
+          { "label": "Académico", "rule": "pregunta + evidencia + interpretación", "examples": ["This study examines whether additional accessibility testing affects task completion.", "The findings are limited to first-time users in a controlled setting."] }
+        ]
+      }]
+    },
+    {
+      "id": "c1-plus-transformacion-registro-control",
+      "tag": "Producción",
+      "title": "Conserva el núcleo factual",
+      "lede": "Una transformación legítima cambia la presentación, no inventa certeza, causalidad ni acuerdos.",
+      "blocks": [{
+        "type": "rules",
+        "rows": [
+          { "key": "1. Congela hechos", "value": "Lista cifras, responsables, fechas y grado de certeza que no pueden cambiar." },
+          { "key": "2. Rediseña", "value": "Ajusta orden, explicitud, léxico, longitud y voz al género." },
+          { "key": "3. Compara", "value": "Comprueba que ninguna versión añade causa, consenso o garantía." },
+          { "key": "4. Prueba", "value": "Pide a un lector de la audiencia objetivo que identifique acción y mensaje central." }
+        ]
+      }],
+      "tip": { "label": "Práctica:", "body": "Transforma un hallazgo en mensaje de chat, correo ejecutivo, párrafo de informe y apertura oral; conserva exactamente los mismos hechos." }
+    }
+  ],
+  "quiz": [
+    { "q": "¿Qué debe permanecer estable al cambiar de registro?", "options": ["La longitud de las frases", "Los hechos y el grado de certeza", "El saludo"], "answer": 1, "explain": "La presentación cambia, pero no deben inventarse datos, causas ni garantías." },
+    { "q": "Which sentence best fits an executive email request?", "options": ["Hey, numbers?", "Please send the revised figures by 3:00 so I can include them in today's briefing.", "This study interrogates numerical revision practices."], "answer": 1, "explain": "La segunda expresa acción, plazo y razón con concisión profesional." },
+    { "q": "¿Por qué un discurso suele usar frases menos densas que un informe?", "options": ["Porque la audiencia no puede releer en tiempo real", "Porque los discursos no contienen evidencia", "Porque la gramática oral es incorrecta"], "answer": 0, "explain": "La señalización y la menor densidad reducen la carga de procesamiento auditivo." },
+    { "q": "¿Qué transformación añade certeza indebidamente?", "options": ["The survey suggests a concern → The results prove customers will leave", "The pilot lasted four weeks → The four-week pilot", "We recommend a delay → Our recommendation is to delay"], "answer": 0, "explain": "Suggests no autoriza transformar una señal limitada en prueba ni predicción segura." }
+  ]
+}

@@ -16,8 +16,10 @@ export interface StudyCardModel {
   sentenceIpa?: string;
   /** Function-word weak form: reduced IPA + the minimal phrase where it sounds natural. */
   weakForm?: { ipa: string; phrase: string };
-  /** Metadata badges (e.g. rank, part of speech, CEFR level). */
+  /** Metadata badges (e.g. rank, part of speech). */
   chips?: string[];
+  /** CEFR level (A1–C1), rendered as a distinct accent badge. */
+  levelBadge?: string;
   /**
    * Learner-facing SRS state ("Nueva" / "La estás aprendiendo" / "En repaso" /
    * "Dominada"). Signals that the word keeps coming back until mastered. Only
@@ -60,12 +62,15 @@ export function coreWordToStudyCard(entry: CoreWord): StudyCardModel {
   return {
     word: entry.word,
     ipa: present(entry.ipa_strong),
+    meaning: present(entry.meaning),
+    translation: present(entry.translation),
     sentence: present(entry.example_sentence),
     sentenceIpa: present(entry.sentence_ipa),
     weakForm: hasReduction(entry)
       ? { ipa: entry.ipa_weak!, phrase: weakFormPhrase(entry.example_sentence, entry.word) }
       : undefined,
-    chips: [`#${entry.rank}`, entry.pos, entry.cefr_level],
+    chips: [`#${entry.rank}`, entry.pos],
+    levelBadge: entry.cefr_level,
   };
 }
 

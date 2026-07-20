@@ -1,31 +1,51 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-const orMock = vi.fn().mockReturnThis();
-const supabase = {
-  from: vi.fn().mockReturnThis(),
-  select: vi.fn().mockReturnThis(),
-  eq: vi.fn().mockReturnThis(),
-  or: orMock,
-  lte: vi.fn().mockReturnThis(),
-  order: vi.fn().mockReturnThis(),
-  limit: vi.fn().mockResolvedValue({ data: [], error: null }),
-  in: vi.fn().mockResolvedValue({ data: [], error: null }),
-};
+// server-only guard is irrelevant in unit tests
+vi.mock("server-only", () => ({}));
+
+const orCalls: string[] = [];
+const lteCalls: Array<[string, string]> = [];
+
+function builder(result: { data: unknown; error: null }) {
+  const chain = {
+    select: () => chain,
+    eq: () => chain,
+    or: (filter: string) => {
+      orCalls.push(filter);
+      return chain;
+    },
+    lte: (column: string, value: string) => {
+      lteCalls.push([column, value]);
+      return chain;
+    },
+    order: () => chain,
+    limit: () => chain,
+    in: () => chain,
+    then: (resolve: (value: typeof result) => unknown) =>
+      Promise.resolve(result).then(resolve),
+  };
+  return chain;
+}
 
 vi.mock("@/lib/supabase/server", () => ({
-  createSupabaseServerClient: vi.fn(async () => supabase),
+  createSupabaseServerClient: async () => ({
+    from: () => builder({ data: [], error: null }),
+  }),
 }));
 
+import { getSoundsDueForHome } from "@/lib/home/queries";
+
 beforeEach(() => {
-  orMock.mockClear();
+  orCalls.length = 0;
+  lteCalls.length = 0;
 });
 
 describe("getSoundsDueForHome", () => {
   it("excludes never-practiced (next_review is null) from the due query", async () => {
-    const { getSoundsDueForHome } = await import("@/lib/home/queries");
     await getSoundsDueForHome("user-1");
-    // No filter clause may opt-in next_review.is.null
-    const orCalls = orMock.mock.calls.flat().join(" ");
-    expect(orCalls).not.toContain("next_review.is.null");
+
+    // Due = scheduled and past due via lte — never opt-in next_review.is.null
+    expect(lteCalls.some(([column]) => column === "next_review")).toBe(true);
+    expect(orCalls.join(" ")).not.toContain("next_review.is.null");
   });
 });

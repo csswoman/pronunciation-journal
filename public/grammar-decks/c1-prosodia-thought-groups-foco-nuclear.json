@@ -1,0 +1,113 @@
+{
+  "meta": {
+    "eyebrow": "C1 · Pronunciación e inteligibilidad",
+    "title": "Thought groups",
+    "titleEmphasis": "y foco nuclear",
+    "goal": "Puedes dividir un mensaje extenso en unidades de sentido y colocar el énfasis principal para guiar la interpretación del oyente."
+  },
+  "sounds": ["ə"],
+  "related": [
+    { "slug": "c1-pronunciacion-avanzada", "label": "Pronunciación avanzada" },
+    { "slug": "c1-presentaciones-expresion-oral", "label": "Presentaciones y expresión oral" }
+  ],
+  "cards": [
+    {
+      "id": "c1-prosodia-thought-groups-unidades",
+      "tag": "Idea central",
+      "title": "Agrupa palabras que forman una idea",
+      "lede": "Un thought group es una unidad breve de significado con un núcleo prominente; las barras marcan límites posibles, no pausas obligatorias.",
+      "blocks": [{
+        "type": "pronunciation",
+        "sound": "Thought groups",
+        "focus": ["ə"],
+        "examples": [
+          { "text": "After we reviewed the numbers / we changed the launch date.", "es": "Dos ideas: contexto y acción principal." },
+          { "text": "The proposal we discussed yesterday / needs one more revision.", "es": "El sujeto largo queda unido; el predicado forma otro grupo." }
+        ],
+        "note": "El objetivo es que el oyente siga la estructura sin esfuerzo, no imponer una pausa en cada coma."
+      }]
+    },
+    {
+      "id": "c1-prosodia-thought-groups-limites",
+      "tag": "Segmentación",
+      "title": "Elige límites que respeten la sintaxis",
+      "lede": "Los límites naturales suelen aparecer entre cláusulas, incisos o elementos contrastados, no dentro de una unidad gramatical estrecha.",
+      "blocks": [{
+        "type": "pairs",
+        "lines": [
+          { "variant": "bad", "text": "We need to / review the contract by Friday." },
+          { "variant": "good", "text": "We need to review the contract / by Friday.", "note": "No separes need to de su verbo." },
+          { "variant": "bad", "text": "The new / customer support policy starts Monday." },
+          { "variant": "good", "text": "The new customer support policy / starts Monday.", "note": "Mantén unido el sintagma nominal." }
+        ]
+      }]
+    },
+    {
+      "id": "c1-prosodia-thought-groups-nucleo",
+      "tag": "Foco",
+      "title": "Coloca el núcleo en la información importante",
+      "lede": "En una lectura neutral, el foco principal suele caer al final del grupo; puede moverse para corregir o contrastar.",
+      "blocks": [{
+        "type": "pronunciation",
+        "sound": "Nuclear stress",
+        "examples": [
+          { "text": "We sent the final version on TUESday.", "es": "Respuesta neutral: ¿cuándo la enviaron?" },
+          { "text": "WE sent the final version on Tuesday.", "es": "Contraste: la enviamos nosotros, no otro equipo." },
+          { "text": "We sent the FINAL version on Tuesday.", "es": "Contraste: la versión final, no el borrador." }
+        ],
+        "note": "Las mayúsculas muestran prominencia pedagógica; no indican que debas gritar."
+      }]
+    },
+    {
+      "id": "c1-prosodia-thought-groups-dado-nuevo",
+      "tag": "Discurso",
+      "title": "Reduce lo conocido y destaca lo nuevo",
+      "lede": "La prominencia ayuda a distinguir información compartida de la contribución nueva del hablante.",
+      "blocks": [{
+        "type": "rules",
+        "rows": [
+          { "key": "Pregunta", "value": "Did Maya approve the budget?" },
+          { "key": "Dato conocido", "value": "She approved the TRAVEL budget.", "hint": "approve y budget ya están activos; travel corrige el tipo." },
+          { "key": "Corrección", "value": "No, JORDAN approved it.", "hint": "Jordan reemplaza la información equivocada." },
+          { "key": "Nuevo evento", "value": "Then she sent it to FINANCE.", "hint": "Finance aporta el destino nuevo." }
+        ]
+      }]
+    },
+    {
+      "id": "c1-prosodia-thought-groups-comprension",
+      "tag": "Escucha",
+      "title": "Usa la prominencia para resolver ambigüedad",
+      "lede": "Cuando escuches, pregunta qué alternativa está corrigiendo el hablante.",
+      "blocks": [{
+        "type": "contrast",
+        "columns": [
+          { "label": "Foco en cantidad", "rule": "I ordered THREE tickets.", "examples": ["No dos ni cuatro.", "La corrección responde a how many?"] },
+          { "label": "Foco en objeto", "rule": "I ordered three TICKETS.", "examples": ["No tres pases ni tres comidas.", "La corrección responde a what?"] }
+        ]
+      }],
+      "tip": { "label": "Escucha activa:", "body": "No necesitas reconocer una variedad concreta: identifica la sílaba más prominente y reconstruye el contraste." }
+    },
+    {
+      "id": "c1-prosodia-thought-groups-practica",
+      "tag": "Producción",
+      "title": "Marca, ensaya y comprueba",
+      "lede": "Prepara un mensaje breve y evalúa si otra persona recupera la estructura y el contraste previstos.",
+      "blocks": [{
+        "type": "rules",
+        "rows": [
+          { "key": "1. Segmenta", "value": "Marca / entre unidades completas de significado." },
+          { "key": "2. Decide", "value": "Subraya una palabra núcleo por grupo." },
+          { "key": "3. Reduce", "value": "Di con menos prominencia la información ya compartida." },
+          { "key": "4. Verifica", "value": "Pregunta al oyente qué entendió como nuevo o contrastado." }
+        ]
+      }],
+      "tip": { "label": "Meta:", "body": "Busca inteligibilidad y control del mensaje. No necesitas copiar la voz ni la identidad de ningún hablante." }
+    }
+  ],
+  "quiz": [
+    { "q": "¿Dónde está el límite más natural?", "options": ["The revised customer policy / starts Monday.", "The revised / customer policy starts Monday.", "The revised customer / policy starts Monday."], "answer": 0, "explain": "La primera opción mantiene unido el sintagma nominal y separa el predicado." },
+    { "q": "What does 'WE sent the final version' most likely contrast?", "options": ["Who sent it", "Which version it was", "When it was sent"], "answer": 0, "explain": "La prominencia en WE corrige o contrasta la identidad del agente." },
+    { "q": "En una secuencia neutral, ¿dónde suele caer el núcleo?", "options": ["En una palabra funcional al azar", "Cerca del final del thought group", "Siempre en la primera palabra"], "answer": 1, "explain": "El foco neutral suele estar cerca del final, aunque se desplaza para marcar contraste." },
+    { "q": "¿Cuál es el objetivo principal de practicar thought groups?", "options": ["Imitar un acento regional", "Ayudar al oyente a seguir el significado", "Hacer una pausa después de cada palabra"], "answer": 1, "explain": "La segmentación y el foco se enseñan para mejorar la inteligibilidad del discurso." }
+  ]
+}

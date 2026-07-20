@@ -25,9 +25,9 @@ export default function CoursePracticeSuggestions({
     <section className="course-path__practice-suggestions" aria-labelledby="course-review-heading">
       <div className="course-path__practice-heading">
         <h2 id="course-review-heading" className="course-path__practice-suggestions-heading">
-          Para reforzar
+          Repasa lo que ya aprendiste
         </h2>
-        <p>Vuelve a una lección completada cuando quieras afianzarla.</p>
+        <p>Vuelve a una lección completada para afianzarla.</p>
       </div>
       <ul className="course-path__practice-review-list">
         {done.map((lesson) => (

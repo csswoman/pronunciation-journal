@@ -4,7 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/cn";
 import { useUISounds } from "@/hooks/useUISounds";
 import { isLessonComplete } from "@/lib/db";
-import { recordLessonComplete } from "@/lib/practice/queries";
+import { recordLessonComplete, recordLessonQuizAttempt } from "@/lib/practice/queries";
+import { getCurrentUser } from "@/lib/auth/session";
 
 const COURSE_SLUG = "mini-lessons";
 
@@ -20,6 +21,15 @@ interface Props {
   slug: string;
 }
 
+async function getOptionalUserId(): Promise<string | null> {
+  try {
+    const user = await getCurrentUser();
+    return user?.id ?? null;
+  } catch {
+    return null;
+  }
+}
+
 function scoreClass(correct: number, total: number): string {
   const pct = correct / total;
   if (pct >= 0.7) return "mini-lessons__quiz-score--good";
@@ -29,7 +39,9 @@ function scoreClass(correct: number, total: number): string {
 
 export default function MiniLessonQuiz({ questions, slug }: Props) {
   const [selected, setSelected] = useState<Record<number, number>>({});
+  const [answerTimesMs, setAnswerTimesMs] = useState<Record<number, number>>({});
   const completionRecorded = useRef(false);
+  const startedAt = useRef(Date.now());
   const { playTap, playCorrect, playWrong } = useUISounds();
 
   function choose(questionIdx: number, optionIdx: number) {
@@ -37,6 +49,7 @@ export default function MiniLessonQuiz({ questions, slug }: Props) {
     playTap();
     const isCorrect = optionIdx === questions[questionIdx].correct;
     setSelected((prev) => ({ ...prev, [questionIdx]: optionIdx }));
+    setAnswerTimesMs((prev) => ({ ...prev, [questionIdx]: Date.now() - startedAt.current }));
     if (isCorrect) playCorrect(); else playWrong();
   }
 
@@ -50,7 +63,31 @@ export default function MiniLessonQuiz({ questions, slug }: Props) {
     if (!allAnswered || completionRecorded.current) return;
 
     void (async () => {
-      const already = await isLessonComplete(COURSE_SLUG, slug);
+      const userId = await getOptionalUserId();
+      if (!userId) return;
+      const already = await isLessonComplete(userId, COURSE_SLUG, slug);
+      try {
+        await recordLessonQuizAttempt(
+          userId,
+          questions.map((q, index) => {
+            const selectedIndex = selected[index];
+            const selectedAnswer = selectedIndex == null ? "" : q.options[selectedIndex] ?? "";
+            return {
+              questionId: `${slug}:quiz:${index + 1}`,
+              courseSlug: COURSE_SLUG,
+              lessonSlug: slug,
+              question: q.question,
+              selectedAnswer,
+              correctAnswer: q.options[q.correct] ?? "",
+              isCorrect: selectedIndex === q.correct,
+              timeMs: answerTimesMs[index] ?? 0,
+              topic: slug,
+            };
+          }),
+        );
+      } catch (error) {
+        console.error("[MiniLessonQuiz] recordLessonQuizAttempt failed", error);
+      }
       if (already) {
         completionRecorded.current = true;
         return;
@@ -62,7 +99,7 @@ export default function MiniLessonQuiz({ questions, slug }: Props) {
         completionRecorded.current = false;
       }
     })();
-  }, [allAnswered, slug]);
+  }, [allAnswered, answerTimesMs, questions, selected, slug]);
 
   return (
     <div className="mini-lessons__quiz">

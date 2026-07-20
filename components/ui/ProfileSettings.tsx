@@ -7,6 +7,8 @@ import { useAuth } from "@/components/auth/AuthProvider";
 import ProfileAvatarCard from "@/components/profile/ProfileAvatarCard";
 import ProfileNameCard from "@/components/profile/ProfileNameCard";
 import ProfilePasswordCard from "@/components/profile/ProfilePasswordCard";
+import SoundSettingsCard from "@/components/ui-sounds/SoundSettingsCard";
+import InterestsEditor from "@/components/profile/InterestsEditor";
 import { H1, H2 } from "@/components/ui/Typography";
 
 function Toast({ message, type }: { message: string; type: "success" | "error" }) {
@@ -40,7 +42,7 @@ function SectionCard({ children }: { children: React.ReactNode }) {
 
 export default function ProfileSettings() {
   const { user } = useAuth();
-  const { preferences, loading, updateFullName, updateAvatar, updatePassword, updateCefrLevel } = useUserPreferences();
+  const { preferences, loading, updateFullName, updateAvatar, updatePassword, updateCefrLevel, updateInterests } = useUserPreferences();
 
   const displayName =
     preferences?.full_name ||
@@ -184,6 +186,10 @@ export default function ProfileSettings() {
           />
         </div>
       </SectionCard>
+
+      {/* Sound preferences */}
+      <SoundSettingsCard />
+      <InterestsEditor interests={preferences?.interests ?? []} onSave={updateInterests} />
 
       {/* Security card */}
       <SectionCard>

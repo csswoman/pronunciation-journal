@@ -53,36 +53,6 @@ export type Database = {
         }
         Relationships: []
       }
-      ai_prompts: {
-        Row: {
-          category: string | null
-          content: string
-          created_at: string | null
-          id: string
-          is_system: boolean | null
-          label: string | null
-          user_id: string | null
-        }
-        Insert: {
-          category?: string | null
-          content: string
-          created_at?: string | null
-          id?: string
-          is_system?: boolean | null
-          label?: string | null
-          user_id?: string | null
-        }
-        Update: {
-          category?: string | null
-          content?: string
-          created_at?: string | null
-          id?: string
-          is_system?: boolean | null
-          label?: string | null
-          user_id?: string | null
-        }
-        Relationships: []
-      }
       answer_history: {
         Row: {
           answered_at: string | null
@@ -145,6 +115,36 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      lesson_completions: {
+        Row: {
+          completed_at: string
+          course_slug: string
+          id: string
+          lesson_slug: string
+          source: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string
+          course_slug: string
+          id?: string
+          lesson_slug: string
+          source?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string
+          course_slug?: string
+          id?: string
+          lesson_slug?: string
+          source?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       activity_sessions: {
         Row: {
@@ -582,76 +582,38 @@ export type Database = {
         }
         Relationships: []
       }
-      theory_lessons: {
+      tracked_items: {
         Row: {
-          category: string
-          content: string
-          cover_image_url: string | null
           created_at: string
           id: string
-          is_published: boolean
-          is_system: boolean
-          slug: string
-          source: string
-          title: string
+          kind: string
+          payload: Json
+          ref: string
+          title: string | null
           updated_at: string
-          user_id: string | null
-        }
-        Insert: {
-          category?: string
-          content?: string
-          cover_image_url?: string | null
-          created_at?: string
-          id?: string
-          is_published?: boolean
-          is_system?: boolean
-          slug: string
-          source?: string
-          title: string
-          updated_at?: string
-          user_id?: string | null
-        }
-        Update: {
-          category?: string
-          content?: string
-          cover_image_url?: string | null
-          created_at?: string
-          id?: string
-          is_published?: boolean
-          is_system?: boolean
-          slug?: string
-          source?: string
-          title?: string
-          updated_at?: string
-          user_id?: string | null
-        }
-        Relationships: []
-      }
-      user_favorite_prompts: {
-        Row: {
-          prompt_id: string
-          saved_at: string | null
           user_id: string
         }
         Insert: {
-          prompt_id: string
-          saved_at?: string | null
+          created_at?: string
+          id?: string
+          kind: string
+          payload?: Json
+          ref: string
+          title?: string | null
+          updated_at?: string
           user_id: string
         }
         Update: {
-          prompt_id?: string
-          saved_at?: string | null
+          created_at?: string
+          id?: string
+          kind?: string
+          payload?: Json
+          ref?: string
+          title?: string | null
+          updated_at?: string
           user_id?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "user_favorite_prompts_prompt_id_fkey"
-            columns: ["prompt_id"]
-            isOneToOne: false
-            referencedRelation: "ai_prompts"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       topic_srs: {
         Row: {
@@ -698,12 +660,52 @@ export type Database = {
         }
         Relationships: []
       }
+      srs_rating_events: {
+        Row: {
+          created_at: string
+          entity_id: string | null
+          entity_type: string
+          evaluator_metadata: Json
+          grade: number
+          id: string
+          idempotency_key: string
+          occurred_at: string
+          topic: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          entity_id?: string | null
+          entity_type: string
+          evaluator_metadata?: Json
+          grade: number
+          id?: string
+          idempotency_key: string
+          occurred_at?: string
+          topic?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          entity_id?: string | null
+          entity_type?: string
+          evaluator_metadata?: Json
+          grade?: number
+          id?: string
+          idempotency_key?: string
+          occurred_at?: string
+          topic?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_profiles: {
         Row: {
           cefr_level: string
           created_at: string | null
           display_name: string | null
           id: string
+          interests: Json
           role: string | null
           storage_used_kb: number | null
         }
@@ -712,6 +714,7 @@ export type Database = {
           created_at?: string | null
           display_name?: string | null
           id: string
+          interests?: Json
           role?: string | null
           storage_used_kb?: number | null
         }
@@ -720,6 +723,7 @@ export type Database = {
           created_at?: string | null
           display_name?: string | null
           id?: string
+          interests?: Json
           role?: string | null
           storage_used_kb?: number | null
         }
@@ -1019,30 +1023,27 @@ export type Database = {
           retry_after_seconds: number
         }[]
       }
-      get_random_word: {
-        Args: { p_sound_id: number }
-        Returns: {
-          audio_url: string | null
-          difficulty: number | null
-          id: number
-          ipa: string | null
-          phonemes: Json | null
-          sound_focus: string | null
-          sound_id: number | null
-          word: string | null
-        }[]
-        SetofOptions: {
-          from: "*"
-          to: "words"
-          isOneToOne: false
-          isSetofReturn: true
+      apply_word_bank_rating_event: {
+        Args: {
+          p_idempotency_key: string
+          p_user_id: string
+          p_word_id: string
+          p_grade: number
+          p_occurred_at?: string
+          p_evaluator_metadata?: Json
         }
+        Returns: Database["public"]["Tables"]["word_bank"]["Row"]
       }
-      get_skill_profile: { Args: { p_user_id: string }; Returns: Json }
-      is_admin: { Args: never; Returns: boolean }
-      update_progress: {
-        Args: { p_is_correct: boolean; p_sound_id: number }
-        Returns: undefined
+      apply_topic_srs_rating_event: {
+        Args: {
+          p_idempotency_key: string
+          p_user_id: string
+          p_topic: string
+          p_grade: number
+          p_occurred_at?: string
+          p_evaluator_metadata?: Json
+        }
+        Returns: Database["public"]["Tables"]["topic_srs"]["Row"]
       }
     }
     Enums: {

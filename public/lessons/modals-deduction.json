@@ -36,6 +36,12 @@
         "She's not answering her phone. (busy / asleep / out)",
         "He says he's 7 feet tall. (impossible / unlikely)",
         "She got 100% on every test. (very intelligent)"
+      ],
+      "answers": [
+        "Someone must be home.",
+        "She might be busy, asleep, or out.",
+        "He can't be 7 feet tall.",
+        "She must be very intelligent."
       ]
     }
   ],

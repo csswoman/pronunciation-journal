@@ -35,6 +35,11 @@
         "He drives a red car. (not a blue one)",
         "She plays piano. (not guitar)",
         "I want coffee. (not tea)"
+      ],
+      "answers": [
+        "He drives a RED car.",
+        "She plays PIANO.",
+        "I want COFFEE."
       ]
     }
   ],

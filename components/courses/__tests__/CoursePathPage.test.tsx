@@ -24,7 +24,7 @@ describe("CoursePathPage", () => {
     render(<CoursePathPage />);
 
     expect(screen.getByText("Fundamentos A1")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "A1" })).toHaveAttribute("href", "/courses#course-level-a1");
+    expect(screen.getByRole("link", { name: "A1" })).toHaveAttribute("href", "/courses");
   });
 
   it("selects the requested CEFR level", () => {
@@ -32,7 +32,7 @@ describe("CoursePathPage", () => {
 
     expect(screen.getByText("Inglés en acción B1")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "B1" })).toHaveAttribute("aria-current", "page");
-    expect(screen.getByRole("link", { name: "B1" })).toHaveAttribute("href", "/courses?level=b1#course-level-b1");
+    expect(screen.getByRole("link", { name: "B1" })).toHaveAttribute("href", "/courses?level=b1");
   });
 
   it("falls back to A1 for an invalid level", () => {
@@ -52,10 +52,9 @@ describe("CoursePathPage", () => {
   it("keeps rationale and legend visible", () => {
     render(<CoursePathPage levelParam="a2" />);
 
-    expect(screen.getByText("Cómo se conecta con Sound Lab")).toBeInTheDocument();
-    expect(screen.getByText("Gramática y pronunciación van en paralelo. Las lecciones con micrófono desbloquean secciones de Sound Lab al mismo nivel.")).toBeInTheDocument();
-    expect(screen.getByText("Prioridad alta (meta laboral)")).toBeInTheDocument();
-    expect(screen.getByText("Conecta con Sound Lab")).toBeInTheDocument();
+    expect(screen.getByText("Pronunciación en paralelo")).toBeInTheDocument();
+    expect(screen.getByText("La ruta trabaja la gramática y Sound Lab trabaja la pronunciación. Las lecciones con micrófono te llevan a prácticas del mismo nivel.")).toBeInTheDocument();
+    expect(screen.getByText("Practica también en Sound Lab")).toBeInTheDocument();
   });
 
   it("keeps every level available for exploration", () => {
@@ -64,7 +63,7 @@ describe("CoursePathPage", () => {
     expect(screen.getByText("Inglés en acción B1")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "C1" })).toHaveAttribute(
       "href",
-      "/courses?level=c1#course-level-c1",
+      "/courses?level=c1",
     );
   });
 });

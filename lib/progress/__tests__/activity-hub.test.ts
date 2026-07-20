@@ -89,8 +89,9 @@ describe('recordDailyStepCompletion', () => {
     })
 
     expect(enqueueMock).toHaveBeenCalledWith(
+      'user-1',
       'activity_sessions',
-      'insert',
+      'upsert',
       expect.objectContaining({
         id: 'session-1',
         user_id: 'user-1',
@@ -100,6 +101,8 @@ describe('recordDailyStepCompletion', () => {
         reconciled_step_ids: ['phoneme_focus:7'],
         completed_at: '2026-06-21T12:00:00.000Z',
       }),
+      undefined,
+      'id',
     )
   })
 })
