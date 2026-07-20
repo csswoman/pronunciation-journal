@@ -11,6 +11,7 @@ const mocks = vi.hoisted(() => {
   const mockSyncOutboxWhere = vi.fn()
   const mockDbTransaction = vi.fn()
   const mockSupabaseFrom = vi.fn()
+  const mockSupabaseRpc = vi.fn()
 
   return {
     mockSyncOutboxAdd,
@@ -20,13 +21,14 @@ const mocks = vi.hoisted(() => {
     mockSyncOutboxWhere,
     mockDbTransaction,
     mockSupabaseFrom,
+    mockSupabaseRpc,
   }
 })
 
 // ── Mock @/lib/supabase/client ──────────────────────────────────────────────
 
 vi.mock('@/lib/supabase/client', () => ({
-  getSupabaseBrowserClient: () => ({ from: mocks.mockSupabaseFrom }),
+  getSupabaseBrowserClient: () => ({ from: mocks.mockSupabaseFrom, rpc: mocks.mockSupabaseRpc }),
 }))
 
 // ── Mock @/lib/db ───────────────────────────────────────────────────────────
@@ -76,8 +78,8 @@ describe('isPermanentError', () => {
     expect(isPermanentError('insert or update violates foreign key constraint', '23503')).toBe(true)
   })
 
-  it('returns true for duplicate-key code 23505', () => {
-    expect(isPermanentError('duplicate key value violates unique constraint', '23505')).toBe(true)
+  it('does NOT classify duplicate-key code 23505 as permanent on its own — flushOutboxInternal decides that per-entry via classifyUniqueViolationAsIdempotentSuccess', () => {
+    expect(isPermanentError('duplicate key value violates unique constraint', '23505')).toBe(false)
   })
 
   it('returns true for message containing "violates row-level security" without a code', () => {
@@ -192,7 +194,7 @@ describe('flushOutbox', () => {
 
     mocks.mockSupabaseFrom.mockReturnValue({ upsert })
 
-    const result = await flushOutbox()
+    const result = await flushOutbox('user-1')
 
     expect(upsert).toHaveBeenCalledWith(
       { contrast_id: 'x' },
@@ -219,7 +221,7 @@ describe('flushOutbox', () => {
     setupFlush([entry])
     mocks.mockSupabaseFrom.mockReturnValue({ upsert })
 
-    await flushOutbox()
+    await flushOutbox('user-1')
 
     expect(upsert).toHaveBeenCalledWith(
       { contrast_id: 'x' },
@@ -242,7 +244,7 @@ describe('flushOutbox', () => {
     setupFlush([entry])
     mocks.mockSupabaseFrom.mockReturnValue({ upsert })
 
-    await flushOutbox()
+    await flushOutbox('user-1')
 
     expect(upsert).toHaveBeenCalledWith(
       { user_id: 'u1', state: { foo: 'bar' } },
@@ -264,7 +266,7 @@ describe('flushOutbox', () => {
     setupFlush([entry])
     mocks.mockSupabaseFrom.mockReturnValue({ upsert })
 
-    await flushOutbox()
+    await flushOutbox('user-1')
 
     expect(upsert).toHaveBeenCalledWith({ id: 'answer-1' }, { onConflict: 'id' })
   })
@@ -286,7 +288,7 @@ describe('flushOutbox', () => {
       insert: vi.fn().mockResolvedValue({ error: { message: 'fetch failed', code: undefined } }),
     })
 
-    const result = await flushOutbox()
+    const result = await flushOutbox('user-1')
 
     expect(mocks.mockSyncOutboxUpdate).toHaveBeenCalledWith(2, expect.objectContaining({
       status: 'pending',
@@ -315,7 +317,7 @@ describe('flushOutbox', () => {
       }),
     })
 
-    const result = await flushOutbox()
+    const result = await flushOutbox('user-1')
 
     expect(mocks.mockSyncOutboxUpdate).toHaveBeenCalledWith(3, expect.objectContaining({
       status: 'failed',
@@ -340,7 +342,7 @@ describe('flushOutbox', () => {
       insert: vi.fn().mockResolvedValue({ error: { message: 'timeout', code: undefined } }),
     })
 
-    const result = await flushOutbox()
+    const result = await flushOutbox('user-1')
 
     expect(mocks.mockSyncOutboxUpdate).toHaveBeenCalledWith(4, expect.objectContaining({
       status: 'failed',
@@ -375,7 +377,7 @@ describe('flushOutbox', () => {
       ),
     }))
 
-    const result = await flushOutbox()
+    const result = await flushOutbox('user-1')
 
     expect(mocks.mockSyncOutboxDelete).toHaveBeenCalledWith(21)
     expect(mocks.mockSyncOutboxUpdate).toHaveBeenCalledWith(22, expect.objectContaining({
@@ -394,7 +396,7 @@ describe('flushOutbox', () => {
       configurable: true,
     })
 
-    const result = await flushOutbox()
+    const result = await flushOutbox('user-1')
 
     expect(result).toEqual({ synced: 0, failed: 0, skipped: 0 })
     expect(mocks.mockDbTransaction).not.toHaveBeenCalled()
@@ -403,10 +405,14 @@ describe('flushOutbox', () => {
   it('returns zeros and does not call Supabase when outbox is empty', async () => {
     setupFlush([])
 
-    const result = await flushOutbox()
+    const result = await flushOutbox('user-1')
 
     expect(result).toEqual({ synced: 0, failed: 0, skipped: 0 })
     expect(mocks.mockSupabaseFrom).not.toHaveBeenCalled()
   })
 
 })
+
+// Per-entity ordering and 23505 reclassification tests (plan 061 step 4)
+// live in sync-manager.ordering.test.ts to keep this file under the
+// max-lines warning threshold.
