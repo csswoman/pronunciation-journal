@@ -223,6 +223,25 @@ describe('flushOutbox per-entity ordering', () => {
 
     warnSpy.mockRestore()
   })
+
+  it('builds a multi-column onConflict entity key when the payload carries all resolved columns', async () => {
+    const entry = {
+      id: 63, table: 'user_contrast_progress', operation: 'upsert',
+      payload: { user_id: 'u1', contrast_id: 'c1' },
+      status: 'pending', retryCount: 0, createdAt: new Date().toISOString(),
+    }
+    setupFlush([entry])
+    const upsert = vi.fn().mockResolvedValue({ error: null })
+    mocks.mockSupabaseFrom.mockReturnValue({ upsert })
+
+    const result = await flushOutbox('user-1')
+
+    expect(upsert).toHaveBeenCalledWith(
+      { user_id: 'u1', contrast_id: 'c1' },
+      { onConflict: 'user_id,contrast_id' },
+    )
+    expect(result.synced).toBe(1)
+  })
 })
 
 // ── 23505 (unique_violation) reclassification ───────────────────────────

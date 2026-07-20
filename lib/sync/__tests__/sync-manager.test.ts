@@ -61,7 +61,8 @@ vi.mock('../recovery', () => ({
 
 // ── Import subject AFTER mocks ──────────────────────────────────────────────
 
-import { isPermanentError, enqueue, flushOutbox } from '../sync-manager'
+import * as SyncManager from '../sync-manager'
+const { isPermanentError, enqueue, flushOutbox } = SyncManager
 
 // ── A. isPermanentError ─────────────────────────────────────────────────────
 
@@ -127,6 +128,19 @@ describe('enqueue', () => {
     mocks.mockSyncOutboxAdd.mockResolvedValue(42)
     const id = await enqueue('user-1', 'answer_history', 'insert', { answer: 'yes' })
     expect(id).toBe(42)
+  })
+
+  it('throws when operation is rpc but rpcName is omitted', async () => {
+    await expect(
+      enqueue('user-1', 'word_bank', 'rpc', { p_word_id: 'w1' })
+    ).rejects.toThrow('rpc operation requires rpcName')
+    expect(mocks.mockSyncOutboxAdd).not.toHaveBeenCalled()
+  })
+
+  it('throws when userId is empty', async () => {
+    await expect(
+      enqueue('', 'answer_history', 'insert', { answer: 'yes' })
+    ).rejects.toThrow('requires an explicit user_id')
   })
 })
 
@@ -271,8 +285,223 @@ describe('flushOutbox', () => {
     expect(upsert).toHaveBeenCalledWith({ id: 'answer-1' }, { onConflict: 'id' })
   })
 
+  it('performs a delete operation using matchKey columns as eq filters', async () => {
+    const eq = vi.fn()
+    const deleteQuery: { eq: typeof eq } = { eq }
+    eq.mockImplementation(() => deleteQuery)
+    const del = vi.fn().mockReturnValue(deleteQuery)
+    // Final .eq() call must resolve like a thenable query result.
+    eq.mockImplementation(() => Promise.resolve({ error: null }))
+
+    const entry = {
+      id: 14,
+      table: 'journal_entries',
+      operation: 'delete',
+      payload: {},
+      matchKey: { id: 'entry-1' },
+      status: 'pending',
+      retryCount: 0,
+      createdAt: new Date().toISOString(),
+    }
+
+    setupFlush([entry])
+    mocks.mockSupabaseFrom.mockReturnValue({ delete: del })
+
+    const result = await flushOutbox('user-1')
+
+    expect(del).toHaveBeenCalled()
+    expect(eq).toHaveBeenCalledWith('id', 'entry-1')
+    expect(mocks.mockSyncOutboxDelete).toHaveBeenCalledWith(14)
+    expect(result.synced).toBe(1)
+  })
+
+  it('performs an update operation using matchKey columns as eq filters', async () => {
+    const eq = vi.fn().mockImplementation(() => Promise.resolve({ error: null }))
+    const update = vi.fn().mockReturnValue({ eq })
+
+    const entry = {
+      id: 15,
+      table: 'journal_entries',
+      operation: 'update',
+      payload: { title: 'updated' },
+      matchKey: { id: 'entry-2' },
+      status: 'pending',
+      retryCount: 0,
+      createdAt: new Date().toISOString(),
+    }
+
+    setupFlush([entry])
+    mocks.mockSupabaseFrom.mockReturnValue({ update })
+
+    const result = await flushOutbox('user-1')
+
+    expect(update).toHaveBeenCalledWith({ title: 'updated' })
+    expect(eq).toHaveBeenCalledWith('id', 'entry-2')
+    expect(mocks.mockSyncOutboxDelete).toHaveBeenCalledWith(15)
+    expect(result.synced).toBe(1)
+  })
 })
 
 // Failure / edge-outcome tests live in sync-manager.flush-outcomes.test.ts.
 // Per-entity ordering and 23505 reclassification tests live in
 // sync-manager.ordering.test.ts.
+// ── D. resolveOnConflict ───────────────────────────────────────────────────
+
+describe('resolveOnConflict', () => {
+  it('returns entry.onConflict when explicitly provided', () => {
+    const entry = {
+      table: 'user_contrast_progress',
+      onConflict: 'custom_conflict_key',
+    }
+    expect(SyncManager.resolveOnConflict(entry as never)).toBe('custom_conflict_key')
+  })
+
+  it('returns UPSERT_CONFLICT_COLUMNS value for known tables', () => {
+    const entry1 = { table: 'answer_history' }
+    expect(SyncManager.resolveOnConflict(entry1 as never)).toBe('id')
+
+    const entry2 = { table: 'user_learning_state' }
+    expect(SyncManager.resolveOnConflict(entry2 as never)).toBe('user_id')
+
+    const entry3 = { table: 'lesson_completions' }
+    expect(SyncManager.resolveOnConflict(entry3 as never)).toBe('user_id,course_slug,lesson_slug')
+  })
+
+  it('returns undefined for unknown tables without explicit onConflict', () => {
+    const entry = { table: 'unknown_table' }
+    expect(SyncManager.resolveOnConflict(entry as never)).toBeUndefined()
+  })
+})
+
+// ── E. classifyUniqueViolationAsIdempotentSuccess ─────────────────────────
+
+describe('classifyUniqueViolationAsIdempotentSuccess', () => {
+  it('returns true for rpc operation with p_idempotency_key', () => {
+    const entry = {
+      operation: 'rpc',
+      rpcName: 'apply_word_bank_rating_event',
+      payload: { p_idempotency_key: 'some-uuid-value' },
+    }
+    expect(SyncManager.classifyUniqueViolationAsIdempotentSuccess(entry as never)).toBe(true)
+  })
+
+  it('returns true for rpc operation with non-empty p_idempotency_key string', () => {
+    const entry = {
+      operation: 'rpc',
+      payload: { p_idempotency_key: 'abc-123' },
+    }
+    expect(SyncManager.classifyUniqueViolationAsIdempotentSuccess(entry as never)).toBe(true)
+  })
+
+  it('returns false for rpc operation without p_idempotency_key', () => {
+    const entry = {
+      operation: 'rpc',
+      payload: { p_word_id: 'word-1' },
+    }
+    expect(SyncManager.classifyUniqueViolationAsIdempotentSuccess(entry as never)).toBe(false)
+  })
+
+  it('returns false for rpc operation with empty p_idempotency_key', () => {
+    const entry = {
+      operation: 'rpc',
+      payload: { p_idempotency_key: '' },
+    }
+    expect(SyncManager.classifyUniqueViolationAsIdempotentSuccess(entry as never)).toBe(false)
+  })
+
+  it('returns false for non-rpc operations', () => {
+    const entry = {
+      operation: 'upsert',
+      payload: { id: 'test-id' },
+    }
+    expect(SyncManager.classifyUniqueViolationAsIdempotentSuccess(entry as never)).toBe(false)
+  })
+})
+
+// ── F. entityKeyFor ────────────────────────────────────────────────────────
+
+describe('entityKeyFor', () => {
+  it('returns rpc-based key for rpc operations with p_word_id', () => {
+    const entry = {
+      id: 1,
+      operation: 'rpc',
+      rpcName: 'apply_word_bank_rating_event',
+      payload: { p_word_id: 'word-123' },
+    }
+    expect(SyncManager.entityKeyFor(entry as never)).toBe('rpc:apply_word_bank_rating_event:word-123')
+  })
+
+  it('returns rpc-based key for rpc operations with p_user_id and p_topic', () => {
+    const entry = {
+      id: 2,
+      operation: 'rpc',
+      rpcName: 'apply_topic_srs_rating_event',
+      payload: { p_user_id: 'user-1', p_topic: 'phonetics' },
+    }
+    expect(SyncManager.entityKeyFor(entry as never)).toBe('rpc:apply_topic_srs_rating_event:user-1:phonetics')
+  })
+
+  it('returns matchKey-based key for operations with matchKey', () => {
+    const entry = {
+      id: 3,
+      table: 'user_contrast_progress',
+      operation: 'update',
+      matchKey: { user_id: 'user-1', contrast_id: 'contrast-a' },
+    }
+    expect(SyncManager.entityKeyFor(entry as never)).toBe('user_contrast_progress:contrast_id=contrast-a,user_id=user-1')
+  })
+
+  it('returns onConflict-based key for upsert with resolved onConflict columns', () => {
+    const entry = {
+      id: 4,
+      table: 'answer_history',
+      operation: 'upsert',
+      payload: { id: 'answer-1', user_id: 'user-1' },
+    }
+    expect(SyncManager.entityKeyFor(entry as never)).toBe('answer_history:id=answer-1')
+  })
+
+  it('returns entry:id for operations with no derivable identity', () => {
+    const entry = {
+      id: 5,
+      table: 'some_table',
+      operation: 'insert',
+      payload: { data: 'test' },
+    }
+    expect(SyncManager.entityKeyFor(entry as never)).toBe('entry:5')
+  })
+})
+
+// ── G. emptyFlushResult ────────────────────────────────────────────────────
+
+describe('emptyFlushResult', () => {
+  it('returns a result with zero counts and empty operations array', () => {
+    const result = SyncManager.emptyFlushResult()
+    expect(result).toEqual({ synced: 0, failed: 0, skipped: 0, operations: [] })
+  })
+})
+
+// ── H. summarize ───────────────────────────────────────────────────────────
+
+describe('summarize', () => {
+  it('correctly counts synced, failed, and skipped operations', () => {
+    const operations = [
+      { id: 1, table: 'a', operation: 'upsert', outcome: 'synced' },
+      { id: 2, table: 'b', operation: 'insert', outcome: 'failed', errorMessage: 'error' },
+      { id: 3, table: 'c', operation: 'delete', outcome: 'skipped' },
+      { id: 4, table: 'd', operation: 'upsert', outcome: 'synced' },
+    ]
+    const result = SyncManager.summarize(operations as never)
+    expect(result).toEqual({
+      synced: 2,
+      failed: 1,
+      skipped: 1,
+      operations: operations as never,
+    })
+  })
+
+  it('returns zero counts for empty operations array', () => {
+    const result = SyncManager.summarize([] as never)
+    expect(result).toEqual({ synced: 0, failed: 0, skipped: 0, operations: [] })
+  })
+})
