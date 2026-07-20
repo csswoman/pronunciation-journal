@@ -87,7 +87,7 @@ export default function AuthProvider({
           import("@/lib/ai-practice/load-state"),
           import("@/lib/ai-practice/queries"),
           import("@/lib/exercises/cefr"),
-          import("@/lib/courses/lesson-completions"),
+          import("@/lib/courses/queries"),
         ]);
 
         await hydrateFromRemote(userId);

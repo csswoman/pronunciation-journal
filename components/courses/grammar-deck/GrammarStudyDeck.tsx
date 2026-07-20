@@ -11,7 +11,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { recordLessonComplete, recordLessonQuizAttempt } from "@/lib/practice/queries";
-import { getSupabaseBrowserClient } from "@/lib/supabase/client";
+import { getCurrentUser } from "@/lib/auth/session";
 import PracticeSession from "@/components/practice/PracticeSession";
 import type { PracticeExercise } from "@/lib/practice/types";
 import type { CefrLevel } from "@/lib/core-1000/types";
@@ -186,7 +186,7 @@ export default function GrammarStudyDeck({
             onDone={(correct, totalQ, pickedAnswers, answerTimesMs) => {
               setQuizScore({ correct, total: totalQ });
               if (levelId && lessonId) {
-                void getSupabaseBrowserClient().auth.getUser().then(({ data: { user } }) => {
+                void getCurrentUser().then((user) => {
                   if (!user || !deck.quiz) return;
                   return recordLessonQuizAttempt(
                     user.id,

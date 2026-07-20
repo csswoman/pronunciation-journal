@@ -7,7 +7,7 @@ import CoursePathLessonRow from "@/components/courses/CoursePathLessonRow";
 import CoursePracticeSuggestions from "@/components/courses/CoursePracticeSuggestions";
 import { studyLessonPath } from "@/lib/courses/curriculumIndex";
 import { db } from "@/lib/db";
-import { getSupabaseBrowserClient } from "@/lib/supabase/client";
+import { getCurrentUser } from "@/lib/auth/session";
 import { deriveLevelView, lessonProgressKey } from "@/lib/courses/progress";
 import { cn } from "@/lib/cn";
 import type { CoursePathLevel } from "@/lib/courses/types";
@@ -19,7 +19,7 @@ interface CoursePathProgressClientProps {
 
 async function getOptionalUserId(): Promise<string | null> {
   try {
-    const { data: { user } } = await getSupabaseBrowserClient().auth.getUser();
+    const user = await getCurrentUser();
     return user?.id ?? null;
   } catch {
     return null;

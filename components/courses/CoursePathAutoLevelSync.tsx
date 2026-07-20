@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { db } from "@/lib/db";
-import { getSupabaseBrowserClient } from "@/lib/supabase/client";
+import { getCurrentUser } from "@/lib/auth/session";
 import type { CefrLevelId } from "@/lib/courses/types";
 
 interface LevelProgressEntry {
@@ -18,7 +18,7 @@ interface CoursePathAutoLevelSyncProps {
 
 async function getOptionalUserId(): Promise<string | null> {
   try {
-    const { data: { user } } = await getSupabaseBrowserClient().auth.getUser();
+    const user = await getCurrentUser();
     return user?.id ?? null;
   } catch {
     return null;

@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { isLessonComplete } from "@/lib/db";
 import { recordLessonComplete } from "@/lib/practice/queries";
-import { getSupabaseBrowserClient } from "@/lib/supabase/client";
+import { getCurrentUser } from "@/lib/auth/session";
 
 const COURSE_SLUG = "mini-lessons";
 
@@ -13,7 +13,7 @@ interface Props {
 
 async function getOptionalUserId(): Promise<string | null> {
   try {
-    const { data: { user } } = await getSupabaseBrowserClient().auth.getUser();
+    const user = await getCurrentUser();
     return user?.id ?? null;
   } catch {
     return null;

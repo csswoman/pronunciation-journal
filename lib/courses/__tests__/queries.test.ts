@@ -8,7 +8,7 @@ vi.mock("@/lib/supabase/client", () => ({
 }));
 
 import { db, lessonCompletionKey } from "@/lib/db";
-import { hydrateLessonCompletions } from "../lesson-completions";
+import { hydrateLessonCompletions } from "../queries";
 
 describe("hydrateLessonCompletions", () => {
   beforeEach(async () => {
