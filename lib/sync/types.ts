@@ -2,7 +2,7 @@
 // Shared types for the offline-first sync queue between Dexie and Supabase.
 
 /** Tables that can be queued for sync */
-export type SyncTable = 'user_contrast_progress' | 'answer_history' | 'activity_sessions' | 'ai_conversations' | 'user_learning_state' | 'ai_events' | 'word_bank' | 'topic_srs' | 'journal_entries' | 'tracked_items' | 'lesson_completions'
+export type SyncTable = 'user_contrast_progress' | 'answer_history' | 'activity_sessions' | 'user_learning_state' | 'word_bank' | 'topic_srs' | 'journal_entries' | 'tracked_items' | 'lesson_completions'
 
 /** DML operations supported */
 export type SyncOperation = 'insert' | 'update' | 'upsert' | 'delete'
@@ -18,6 +18,8 @@ export type SyncStatus =
 export interface SyncOutboxEntry {
   /** Auto-increment local PK */
   id?: number
+  /** Account that owns this operation. Never flush another account's work. */
+  userId?: string
   /** Target Supabase table */
   table: SyncTable
   /** DML operation */

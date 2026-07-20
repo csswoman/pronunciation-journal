@@ -31,7 +31,7 @@ export async function hydrateLessonCompletions(userId: string): Promise<void> {
 
   if (error) throw error;
 
-  const pendingRows = (await db.syncOutbox.toArray())
+  const pendingRows = (await db.syncOutbox.where('userId').equals(userId).toArray())
     .filter((entry) => entry.table === "lesson_completions");
   const pendingKeys = new Set(
     pendingRows.map((entry) => {
@@ -52,13 +52,10 @@ export async function hydrateLessonCompletions(userId: string): Promise<void> {
 
   const remoteKeys = new Set(rows.map((row) => row.key));
   await db.transaction("rw", db.completedLessons, async () => {
-    const localRows = await db.completedLessons.toArray();
+    const localRows = await db.completedLessons.where('userId').equals(userId).toArray();
     const staleKeys = localRows
       .filter((row) => {
-        // Records from the pre-user schema cannot be attributed safely. Once a
-        // user has authenticated, discard them instead of leaking progress.
-        if (!row.userId) return true;
-        return row.userId === userId && !pendingKeys.has(row.key) && !remoteKeys.has(row.key);
+        return !pendingKeys.has(row.key) && !remoteKeys.has(row.key);
       })
       .map((row) => row.key);
 

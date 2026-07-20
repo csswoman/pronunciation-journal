@@ -57,6 +57,7 @@ export type AnalyticsEventName =
 
 export interface AnalyticsEvent {
   id?: number;
+  userId: string;
   name: AnalyticsEventName;
   payload: Record<string, unknown>;
   timestamp: string;
@@ -64,6 +65,7 @@ export interface AnalyticsEvent {
 }
 
 interface LessonSessionOffset {
+  userId?: string;
   lessonId: string; // PK
   offset: number;   // next starting index
 }
@@ -80,6 +82,7 @@ export interface CompletedCourseLesson {
 }
 
 export interface IpaExplorationRecord {
+  userId?: string;
   // PK: `${date}:${symbol}` — one row per phoneme explored per day
   key: string;
   date: string;   // YYYY-MM-DD
@@ -95,16 +98,29 @@ export interface PracticePrefRecord {
 }
 
 export interface PronunciationMasteryRecord {
-  phrase: string; // PK
+  userId: string;
+  phrase: string;
   masteredAt: string;
   migratedFromLocalStorage?: 0 | 1;
 }
 
 export interface PronunciationCoachStateRecord {
+  userId: string;
   key: "queue" | "seen";
   values: string[];
   updatedAt: string;
   migratedFromLocalStorage?: 0 | 1;
+}
+
+/** Legacy private rows whose account cannot be proven during a Dexie upgrade.
+ * They are deliberately non-rendered and retained only for manual recovery. */
+export interface LocalDataQuarantineRecord {
+  id?: number;
+  store: string;
+  legacyKey: string;
+  payload: Record<string, unknown>;
+  quarantinedAt: string;
+  reason: "ambiguous-owner";
 }
 
 export interface TrackedItemRecord {
@@ -140,6 +156,7 @@ class PronunciationDB extends Dexie {
   pronunciationCoachState!: Table<PronunciationCoachStateRecord, string>;
   journalEntries!: Table<JournalEntryRecord, string>;
   trackedItems!: Table<TrackedItemRecord, string>;
+  localDataQuarantine!: Table<LocalDataQuarantineRecord, number>;
 
   constructor() {
     super("pronunciation-journal");
@@ -240,6 +257,61 @@ class PronunciationDB extends Dexie {
     this.version(18).stores({ journalEntries: 'id, userId, entryDate, [userId+entryDate], status, updatedAt' });
     this.version(19).stores({ trackedItems: 'id, userId, kind, ref, [userId+kind], [userId+kind+ref], createdAt, updatedAt' });
     this.version(20).stores({ completedLessons: 'key, userId, courseSlug, lessonSlug, [userId+courseSlug], [userId+courseSlug+lessonSlug], completedAt, updatedAt' });
+    // v21: account namespace for every private local mirror. Existing rows
+    // without a provable owner are quarantined rather than exposed to whoever
+    // signs in next. Device-global caches/preferences remain unchanged.
+    this.version(21).stores({
+      attempts: '++id, userId, [userId+timestamp], [userId+lessonId]',
+      srsData: 'wordId, userId, [userId+wordId], [userId+nextReview]',
+      dailyProgress: '++id, userId, [userId+date]',
+      userStats: '++id, userId',
+      favorites: '++id, userId, [userId+word]',
+      aiConversations: '++id, userId, [userId+mode], [userId+updatedAt]',
+      aiWords: '++id, userId, [userId+savedAt], [userId+conversationId]',
+      lessonOffsets: 'lessonId, userId, [userId+lessonId]',
+      syncOutbox: '++id, userId, status, createdAt, [status+createdAt], [userId+status+createdAt]',
+      ipaExplorations: 'key, userId, [userId+date]',
+      pronunciationMastery: '[userId+phrase], userId, phrase, masteredAt',
+      pronunciationCoachState: '[userId+key], userId, key, updatedAt',
+      localDataQuarantine: '++id, store, quarantinedAt',
+    }).upgrade(async (tx) => {
+      const ambiguousStores = [
+        'attempts', 'srsData', 'dailyProgress', 'userStats', 'favorites',
+        'aiConversations', 'aiWords', 'lessonOffsets', 'ipaExplorations',
+        'pronunciationMastery', 'pronunciationCoachState',
+      ];
+      const quarantine = tx.table('localDataQuarantine');
+      for (const storeName of ambiguousStores) {
+        const store = tx.table(storeName);
+        const rows = await store.toArray();
+        if (rows.length) {
+          await quarantine.bulkAdd(rows.map((row, index) => ({
+            store: storeName,
+            legacyKey: String((row as { id?: unknown; key?: unknown; wordId?: unknown; phrase?: unknown }).id
+              ?? (row as { key?: unknown }).key
+              ?? (row as { wordId?: unknown }).wordId
+              ?? (row as { phrase?: unknown }).phrase
+              ?? index),
+            payload: row as Record<string, unknown>,
+            quarantinedAt: new Date().toISOString(),
+            reason: 'ambiguous-owner' as const,
+          })));
+          await store.clear();
+        }
+      }
+      const outbox = tx.table('syncOutbox');
+      const entries = await outbox.toArray() as Array<Record<string, unknown>>;
+      for (const entry of entries) {
+        const payload = (entry.payload ?? {}) as Record<string, unknown>;
+        const matchKey = (entry.matchKey ?? {}) as Record<string, unknown>;
+        const userId = entry.userId ?? payload.user_id ?? payload.userId ?? matchKey.user_id ?? matchKey.userId;
+        if (typeof userId === 'string' && userId) await outbox.update(entry.id as number, { userId });
+        else {
+          await quarantine.add({ store: 'syncOutbox', legacyKey: String(entry.id), payload: entry, quarantinedAt: new Date().toISOString(), reason: 'ambiguous-owner' });
+          await outbox.delete(entry.id as number);
+        }
+      }
+    });
   }
 }
 
@@ -247,26 +319,31 @@ export const db = new PronunciationDB();
 
 // ── Attempt Helpers ──
 
-export async function saveAttempt(attempt: Omit<Attempt, "id">): Promise<number> {
-  return db.attempts.add(attempt as Attempt);
+export async function saveAttempt(attempt: Omit<Attempt, "id">, userId?: string): Promise<number | undefined> {
+  if (!userId) return undefined;
+  return db.attempts.add({ ...attempt, userId } as Attempt);
 }
 
-export async function getRecentAttempts(limit = 50): Promise<Attempt[]> {
-  return db.attempts.orderBy("timestamp").reverse().limit(limit).toArray();
+export async function getRecentAttempts(limit = 50, userId?: string): Promise<Attempt[]> {
+  if (!userId) return [];
+  return db.attempts.where('userId').equals(userId).sortBy('timestamp').then((rows) => rows.reverse().slice(0, limit));
 }
 
-export async function getAttemptsByLessonId(lessonId: string): Promise<Attempt[]> {
-  return db.attempts.where("lessonId").equals(lessonId).toArray();
+export async function getAttemptsByLessonId(lessonId: string, userId?: string): Promise<Attempt[]> {
+  if (!userId) return [];
+  return db.attempts.where('[userId+lessonId]').equals([userId, lessonId]).toArray();
 }
 
 // ── SRS Helpers ──
 
-export async function getSRSData(wordId: string): Promise<SRSData | undefined> {
-  return db.srsData.get(wordId);
+export async function getSRSData(wordId: string, userId?: string): Promise<SRSData | undefined> {
+  if (!userId) return undefined;
+  return db.srsData.where('[userId+wordId]').equals([userId, wordId]).first();
 }
 
-export async function saveSRSData(data: SRSData): Promise<void> {
-  await db.srsData.put(data);
+export async function saveSRSData(data: SRSData, userId?: string): Promise<void> {
+  if (!userId) return;
+  await db.srsData.put({ ...data, userId } as SRSData);
 }
 
 // ── Reader Passage Helpers ──
@@ -296,10 +373,12 @@ function getTodayKey(): string {
 export async function updateDailyProgress(
   accuracy: number,
   word: string,
-  xpEarned: number
+  xpEarned: number,
+  userId?: string,
 ): Promise<void> {
+  if (!userId) return;
   const today = getTodayKey();
-  const existing = await db.dailyProgress.where("date").equals(today).first();
+  const existing = await db.dailyProgress.where('[userId+date]').equals([userId, today]).first();
 
   if (existing) {
     const wordsSet = new Set(existing.wordsStudied);
@@ -318,7 +397,7 @@ export async function updateDailyProgress(
     });
   } else {
     await db.dailyProgress.add({
-      date: today,
+      userId, date: today,
       totalAttempts: 1,
       correctAttempts: accuracy >= 70 ? 1 : 0,
       averageAccuracy: Math.round(accuracy),
@@ -332,28 +411,31 @@ export async function updateDailyProgress(
 
 const CORE1000_SRS_PREFIX = "c1k:";
 
-let archivedMigrationPromise: Promise<number> | null = null;
+const archivedMigrationPromises = new Map<string, Promise<number>>();
 
 /** One-time idempotent migration: legacy `archived` → `status: snoozed`. */
-export async function migrateArchivedSrsRows(): Promise<number> {
-  if (!archivedMigrationPromise) {
-    archivedMigrationPromise = (async () => {
-      const all = await db.srsData.toArray();
+export async function migrateArchivedSrsRows(userId?: string): Promise<number> {
+  if (!userId) return 0;
+  const existingPromise = archivedMigrationPromises.get(userId);
+  if (!existingPromise) {
+    const migration = (async () => {
+      const all = await db.srsData.where('userId').equals(userId).toArray();
       let count = 0;
       for (const entry of all) {
         const migrated = migrateArchivedRow(entry);
         if (migrated !== entry) {
-          await db.srsData.put(migrated);
+          await db.srsData.put({ ...migrated, userId });
           count++;
         }
       }
       return count;
     })().catch((err) => {
-      archivedMigrationPromise = null;
+      archivedMigrationPromises.delete(userId);
       throw err;
     });
+    archivedMigrationPromises.set(userId, migration);
   }
-  return archivedMigrationPromise;
+  return archivedMigrationPromises.get(userId)!;
 }
 
 /**
@@ -362,17 +444,19 @@ export async function migrateArchivedSrsRows(): Promise<number> {
  * Las archivadas deben conservarse para que el constructor de la cola pueda
  * tratarlas como palabras ya vistas sin programarlas para repaso.
  */
-export async function getCore1000SrsEntries(): Promise<SRSData[]> {
-  await migrateArchivedSrsRows();
+export async function getCore1000SrsEntries(userId?: string): Promise<SRSData[]> {
+  if (!userId) return [];
+  await migrateArchivedSrsRows(userId);
   return db.srsData
-    .filter((e) => e.wordId.startsWith(CORE1000_SRS_PREFIX))
+    .filter((e) => e.userId === userId && e.wordId.startsWith(CORE1000_SRS_PREFIX))
     .toArray();
 }
 
-async function getOrCreateCore1000SrsRow(word: string): Promise<SRSData> {
+async function getOrCreateCore1000SrsRow(word: string, userId?: string): Promise<SRSData | undefined> {
+  if (!userId) return undefined;
   const normalized = word.toLowerCase();
   const wordId = `${CORE1000_SRS_PREFIX}${normalized}`;
-  return (await db.srsData.get(wordId)) ?? {
+  return (await getSRSData(wordId, userId)) ?? {
     wordId,
     word: normalized,
     ease: 2.5,
@@ -383,21 +467,21 @@ async function getOrCreateCore1000SrsRow(word: string): Promise<SRSData> {
 }
 
 /** Pausa una palabra esencial — la saca del flujo de repaso hasta `nextReview`. */
-export async function snoozeEssentialWord(word: string, days = 90): Promise<void> {
-  const existing = await getOrCreateCore1000SrsRow(word);
-  await db.srsData.put(patchSnooze(existing, new Date(), days));
+export async function snoozeEssentialWord(word: string, days = 90, userId?: string): Promise<void> {
+  const existing = await getOrCreateCore1000SrsRow(word, userId);
+  if (existing) await saveSRSData(patchSnooze(existing, new Date(), days), userId);
 }
 
 /** Marca una palabra esencial como dominada (sin repaso programado). */
-export async function masterEssentialWord(word: string): Promise<void> {
-  const existing = await getOrCreateCore1000SrsRow(word);
-  await db.srsData.put(patchMaster(existing, new Date()));
+export async function masterEssentialWord(word: string, userId?: string): Promise<void> {
+  const existing = await getOrCreateCore1000SrsRow(word, userId);
+  if (existing) await saveSRSData(patchMaster(existing, new Date()), userId);
 }
 
 /** Reactiva una palabra esencial para repaso inmediato. */
-export async function activateEssentialWordNow(word: string): Promise<void> {
-  const existing = await getOrCreateCore1000SrsRow(word);
-  await db.srsData.put(patchActivateNow(existing, new Date()));
+export async function activateEssentialWordNow(word: string, userId?: string): Promise<void> {
+  const existing = await getOrCreateCore1000SrsRow(word, userId);
+  if (existing) await saveSRSData(patchActivateNow(existing, new Date()), userId);
 }
 
 /** @deprecated Use snoozeEssentialWord */
@@ -411,22 +495,24 @@ export async function unarchiveCore1000Word(word: string): Promise<void> {
 }
 
 /** Palabras del Core 1000 introducidas hoy (para el cupo de nuevas). */
-export async function getCore1000IntroducedToday(): Promise<string[]> {
-  const row = await db.dailyProgress.where("date").equals(getTodayKey()).first();
+export async function getCore1000IntroducedToday(userId?: string): Promise<string[]> {
+  if (!userId) return [];
+  const row = await db.dailyProgress.where('[userId+date]').equals([userId, getTodayKey()]).first();
   return row?.core1000NewWords ?? [];
 }
 
 /** Registra una palabra nueva introducida hoy. Crea la fila del día si no existe. */
-export async function recordCore1000Introduction(word: string): Promise<void> {
+export async function recordCore1000Introduction(word: string, userId?: string): Promise<void> {
+  if (!userId) return;
   const today = getTodayKey();
-  const existing = await db.dailyProgress.where("date").equals(today).first();
+  const existing = await db.dailyProgress.where('[userId+date]').equals([userId, today]).first();
   if (existing) {
     const set = new Set(existing.core1000NewWords ?? []);
     set.add(word);
     await db.dailyProgress.update(existing.id!, { core1000NewWords: [...set] });
   } else {
     await db.dailyProgress.add({
-      date: today,
+      userId, date: today,
       totalAttempts: 0,
       correctAttempts: 0,
       averageAccuracy: 0,
@@ -439,8 +525,9 @@ export async function recordCore1000Introduction(word: string): Promise<void> {
 
 // ── User Stats Helpers ──
 
-export async function getUserStats(): Promise<UserStats> {
-  const stats = await db.userStats.toCollection().first();
+export async function getUserStats(userId?: string): Promise<UserStats> {
+  if (!userId) return { currentStreak: 0, longestStreak: 0, totalXP: 0, totalWords: 0, totalAttempts: 0, averageAccuracy: 0, lastStudyDate: "" };
+  const stats = await db.userStats.where('userId').equals(userId).first();
   if (stats) return stats;
 
   const defaultStats: UserStats = {
@@ -452,15 +539,17 @@ export async function getUserStats(): Promise<UserStats> {
     averageAccuracy: 0,
     lastStudyDate: "",
   };
-  await db.userStats.add(defaultStats);
+  await db.userStats.add({ ...defaultStats, userId });
   return defaultStats;
 }
 
 export async function updateUserStats(
   accuracy: number,
-  xpEarned: number
+  xpEarned: number,
+  userId?: string,
 ): Promise<UserStats> {
-  const stats = await getUserStats();
+  if (!userId) return getUserStats();
+  const stats = await getUserStats(userId);
   const today = getTodayKey();
   const yesterday = getRelativeLocalDateKey(-1);
 
@@ -488,7 +577,7 @@ export async function updateUserStats(
     lastStudyDate: today,
   };
 
-  const existing = await db.userStats.toCollection().first();
+  const existing = await db.userStats.where('userId').equals(userId).first();
   if (existing) {
     await db.userStats.update(existing.id!, updated);
   }
@@ -498,20 +587,23 @@ export async function updateUserStats(
 
 // ── Favorites Helpers ──
 
-export async function getFavorites(): Promise<FavoriteWord[]> {
-  return db.favorites.orderBy("addedAt").reverse().toArray();
+export async function getFavorites(userId?: string): Promise<FavoriteWord[]> {
+  if (!userId) return [];
+  return db.favorites.where('userId').equals(userId).sortBy('addedAt').then((rows) => rows.reverse());
 }
 
-export async function isFavorite(word: string): Promise<boolean> {
-  const count = await db.favorites.where("word").equals(word.toLowerCase()).count();
+export async function isFavorite(word: string, userId?: string): Promise<boolean> {
+  if (!userId) return false;
+  const count = await db.favorites.where('[userId+word]').equals([userId, word.toLowerCase()]).count();
   return count > 0;
 }
 
-export async function addFavorite(word: string, lessonId: string, ipa?: string): Promise<void> {
-  const exists = await isFavorite(word);
+export async function addFavorite(word: string, lessonId: string, ipa?: string, userId?: string): Promise<void> {
+  if (!userId) return;
+  const exists = await isFavorite(word, userId);
   if (!exists) {
     await db.favorites.add({
-      word: word.toLowerCase(),
+      userId, word: word.toLowerCase(),
       lessonId,
       ipa,
       addedAt: new Date().toISOString(),
@@ -519,17 +611,17 @@ export async function addFavorite(word: string, lessonId: string, ipa?: string):
   }
 }
 
-export async function removeFavorite(word: string): Promise<void> {
-  await db.favorites.where("word").equals(word.toLowerCase()).delete();
+export async function removeFavorite(word: string, userId?: string): Promise<void> {
+  if (userId) await db.favorites.where('[userId+word]').equals([userId, word.toLowerCase()]).delete();
 }
 
-export async function toggleFavorite(word: string, lessonId: string, ipa?: string): Promise<boolean> {
-  const exists = await isFavorite(word);
+export async function toggleFavorite(word: string, lessonId: string, ipa?: string, userId?: string): Promise<boolean> {
+  const exists = await isFavorite(word, userId);
   if (exists) {
-    await removeFavorite(word);
+    await removeFavorite(word, userId);
     return false;
   } else {
-    await addFavorite(word, lessonId, ipa);
+    await addFavorite(word, lessonId, ipa, userId);
     return true;
   }
 }
@@ -537,8 +629,9 @@ export async function toggleFavorite(word: string, lessonId: string, ipa?: strin
 // ── Needs Practice Helpers ──
 // Words where the user's best attempt accuracy is below 75%
 
-export async function getNeedsPracticeWords(): Promise<{ word: string; lessonId: string; bestAccuracy: number; attempts: number }[]> {
-  const allAttempts = await db.attempts.toArray();
+export async function getNeedsPracticeWords(userId?: string): Promise<{ word: string; lessonId: string; bestAccuracy: number; attempts: number }[]> {
+  if (!userId) return [];
+  const allAttempts = await db.attempts.where('userId').equals(userId).toArray();
 
   // Group by word
   const map = new Map<string, { lessonId: string; bestAccuracy: number; attempts: number }>();
@@ -569,15 +662,17 @@ export async function getNeedsPracticeWords(): Promise<{ word: string; lessonId:
 
 export const LESSON_SESSION_SIZE = 10
 
-export async function getLessonOffset(lessonId: string): Promise<number> {
-  const row = await db.lessonOffsets.get(lessonId)
+export async function getLessonOffset(lessonId: string, userId?: string): Promise<number> {
+  if (!userId) return 0;
+  const row = await db.lessonOffsets.where('[userId+lessonId]').equals([userId, lessonId]).first()
   return row?.offset ?? 0
 }
 
-export async function advanceLessonOffset(lessonId: string, totalWords: number): Promise<number> {
-  const current = await getLessonOffset(lessonId)
+export async function advanceLessonOffset(lessonId: string, totalWords: number, userId?: string): Promise<number> {
+  if (!userId) return 0;
+  const current = await getLessonOffset(lessonId, userId)
   const next = (current + LESSON_SESSION_SIZE) % totalWords
-  await db.lessonOffsets.put({ lessonId, offset: next })
+  await db.lessonOffsets.put({ lessonId: `${userId}:${lessonId}`, userId, offset: next })
   return next
 }
 
@@ -623,26 +718,29 @@ export async function getCompletedCountByCourse(userId: string): Promise<Record<
 
 // ── IPA Exploration Helpers ──
 
-export async function markPhonemeExplored(symbol: string): Promise<void> {
+export async function markPhonemeExplored(symbol: string, userId?: string): Promise<void> {
+  if (!userId) return;
   const date = getTodayKey();
-  const key = `${date}:${symbol}`;
+  const key = `${userId}:${date}:${symbol}`;
   await db.ipaExplorations.put({
-    key,
+    key, userId,
     date,
     symbol,
     exploredAt: new Date().toISOString(),
   });
 }
 
-export async function getExploredSymbolsToday(): Promise<string[]> {
+export async function getExploredSymbolsToday(userId?: string): Promise<string[]> {
+  if (!userId) return [];
   const date = getTodayKey();
-  const rows = await db.ipaExplorations.where("date").equals(date).toArray();
+  const rows = await db.ipaExplorations.where('[userId+date]').equals([userId, date]).toArray();
   return rows.map((row) => row.symbol);
 }
 
-export async function resetTodaysExplorations(): Promise<void> {
+export async function resetTodaysExplorations(userId?: string): Promise<void> {
+  if (!userId) return;
   const date = getTodayKey();
-  await db.ipaExplorations.where("date").equals(date).delete();
+  await db.ipaExplorations.where('[userId+date]').equals([userId, date]).delete();
 }
 
 // ── Practice Prefs Helpers ──
@@ -686,24 +784,26 @@ export async function getLastPracticeMode(): Promise<string | null> {
 
 // ── AI Coach Pronunciation Mastery Helpers ──
 
-export async function getPronunciationMasteredPhrases(): Promise<string[]> {
-  const rows = await db.pronunciationMastery.toArray();
+export async function getPronunciationMasteredPhrases(userId: string): Promise<string[]> {
+  const rows = await db.pronunciationMastery.where('userId').equals(userId).toArray();
   return rows.map((row) => row.phrase);
 }
 
 export async function savePronunciationMasteredPhrases(
+  userId: string,
   phrases: Iterable<string>,
   options: { migratedFromLocalStorage?: boolean } = {},
 ): Promise<void> {
   const masteredAt = new Date().toISOString();
   const rows: PronunciationMasteryRecord[] = [...new Set(phrases)].map((phrase) => ({
+    userId,
     phrase,
     masteredAt,
     migratedFromLocalStorage: options.migratedFromLocalStorage ? 1 : 0,
   }));
 
   await db.transaction("rw", db.pronunciationMastery, async () => {
-    await db.pronunciationMastery.clear();
+    await db.pronunciationMastery.where('userId').equals(userId).delete();
     if (rows.length > 0) {
       await db.pronunciationMastery.bulkPut(rows);
     }
@@ -711,18 +811,21 @@ export async function savePronunciationMasteredPhrases(
 }
 
 export async function getPronunciationCoachState(
+  userId: string,
   key: PronunciationCoachStateRecord["key"],
 ): Promise<string[] | undefined> {
-  const row = await db.pronunciationCoachState.get(key);
+  const row = await db.pronunciationCoachState.get([userId, key]);
   return row?.values;
 }
 
 export async function savePronunciationCoachState(
+  userId: string,
   key: PronunciationCoachStateRecord["key"],
   values: Iterable<string>,
   options: { migratedFromLocalStorage?: boolean } = {},
 ): Promise<void> {
   await db.pronunciationCoachState.put({
+    userId,
     key,
     values: [...new Set(values)],
     updatedAt: new Date().toISOString(),

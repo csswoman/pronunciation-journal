@@ -74,7 +74,7 @@ export function useStreamingChat({
     if (!sessionStartedRef.current) {
       sessionStartedRef.current = true;
       sessionStartAtRef.current = Date.now();
-      logEvent("session_started", { mode, conversationId: conversationIdRef.current ?? undefined }).catch(() => {});
+      logEvent("session_started", { mode, conversationId: conversationIdRef.current ?? undefined }, userId).catch(() => {});
     }
 
     const userMsg: AIMessage = { role: "user", content: text.trim(), timestamp: new Date().toISOString(), hidden: options?.hidden };
@@ -188,7 +188,7 @@ export function useStreamingChat({
         const hasExercise = [...state.calls.values()].some(tc => isExerciseTool(tc.name as never));
         if (hasExercise) {
           firstExerciseLoggedRef.current = true;
-          logEvent("time_to_first_exercise", { timeMs: Date.now() - sessionStartAtRef.current }).catch(() => {});
+          logEvent("time_to_first_exercise", { timeMs: Date.now() - sessionStartAtRef.current }, userId).catch(() => {});
         }
       }
 
@@ -196,9 +196,11 @@ export function useStreamingChat({
       const serialized = finalMessages.map(m => m.role === "model" ? serializeMessage(m) : m) as never;
       const currentId = conversationIdRef.current;
       if (currentId) {
-        await updateConversation(currentId, { messages: serialized, updatedAt: now });
+        if (!userId) return;
+        await updateConversation(userId, currentId, { messages: serialized, updatedAt: now });
       } else {
-        const id = await saveConversation({
+        if (!userId) return;
+        const id = await saveConversation(userId, {
           templateId: "free-conversation",
           mode,
           title: text.slice(0, 60),
@@ -220,7 +222,7 @@ export function useStreamingChat({
     } finally {
       if (streamIdRef.current === thisId) setIsStreaming(false);
     }
-  }, [isStreaming, mode, learningState, onSaveWord, onStartRoleplay, onConversationCreated]);
+  }, [isStreaming, mode, learningState, onSaveWord, onStartRoleplay, onConversationCreated, userId]);
 
   const answerToolCall = useCallback((callId: string, result: ExerciseResult) => {
     let toolName = "exercise_result";
@@ -278,7 +280,7 @@ export function useStreamingChat({
         exercisesCompleted: completed,
         correctRate: completed > 0 ? correctCountRef.current / completed : 0,
         durationMs: Date.now() - sessionStartAtRef.current,
-      }).catch(() => {});
+      }, userId).catch(() => {});
       sessionStartedRef.current = false;
       exercisesCompletedRef.current = 0;
       correctCountRef.current = 0;

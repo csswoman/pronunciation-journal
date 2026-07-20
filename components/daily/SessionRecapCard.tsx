@@ -16,6 +16,7 @@ import PageLayout from '@/components/layout/PageLayout'
 import Button from '@/components/ui/Button'
 import { db } from '@/lib/db'
 import { CORE1000_PREFIX } from '@/lib/core-1000/types'
+import { useAuth } from '@/components/auth/AuthProvider'
 import type { SessionArc } from '@/lib/practice/types'
 import SpeakWithCoachCard from '@/components/ai-coach/SpeakWithCoachCard'
 
@@ -31,9 +32,10 @@ interface Props {
 }
 
 export default function SessionRecapCard({ arc, stepCount, dueTomorrow, streak }: Props) {
+  const { user } = useAuth()
   const learned = useLiveQuery(
-    () => db.srsData.filter((e) => e.wordId.startsWith(CORE1000_PREFIX)).count(),
-    [],
+    () => user?.id ? db.srsData.filter((e) => e.userId === user.id && e.wordId.startsWith(CORE1000_PREFIX)).count() : 0,
+    [user?.id],
     0,
   )
 

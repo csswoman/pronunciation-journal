@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useSpeechInput } from "@/hooks/useSpeechInput";
 import { useSharedMicStream } from "@/hooks/useSharedMicStream";
+import { useAuth } from "@/components/auth/AuthProvider";
 import { analyzePhonemes, ARPABET_TO_IPA } from "@/lib/pronunciation/phonemes";
 import { saveAIWord } from "@/lib/db/ai";
 import {
@@ -43,6 +44,8 @@ function firstBadPhoneme(wordIPAs: WordIPA[]) {
 }
 
 export default function PronunciationView() {
+  const { user } = useAuth();
+  const userId = user?.id;
   const [queue, setQueue] = useState<string[]>([]);
   const [mastered, setMastered] = useState<Set<string>>(new Set());
   const [seen, setSeen] = useState<Set<string>>(new Set());
@@ -64,14 +67,15 @@ export default function PronunciationView() {
   useEffect(() => {
     let cancelled = false;
 
+    if (!userId) return;
     void Promise.all([
-      loadMasteredFromDexie(),
-      loadQueueFromDexie(),
-      loadSeenFromDexie(),
+      loadMasteredFromDexie(userId),
+      loadQueueFromDexie(userId),
+      loadSeenFromDexie(userId),
     ]).then(([storedMastered, storedQueue, storedSeen]) => {
       if (cancelled) return;
       const initialQueue = storedQueue.length > 0 ? storedQueue : pickBatch(storedMastered);
-      if (storedQueue.length === 0) void saveQueueToDexie(initialQueue);
+      if (storedQueue.length === 0) void saveQueueToDexie(userId, initialQueue);
       setQueue(initialQueue);
       setMastered(storedMastered);
       setSeen(storedSeen);
@@ -81,18 +85,18 @@ export default function PronunciationView() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [userId]);
 
   const loadMoreFromPool = useCallback((currentSeen: Set<string>, currentMastered: Set<string>) => {
     const exclude = new Set([...currentSeen, ...currentMastered]);
     const batch = pickBatch(exclude);
     const fallback = batch.length === 0 ? pickBatch(currentMastered) : batch;
     setQueue(fallback);
-    void saveQueueToDexie(fallback);
+      if (userId) void saveQueueToDexie(userId, fallback);
     setBatchCount(fallback.length);
     reset();
     setWordIPAs([]);
-  }, [reset]);
+  }, [reset, userId]);
 
   const fetchMoreWithAI = useCallback(async (currentSeen: Set<string>) => {
     setFetchingPhrases(true);
@@ -112,7 +116,7 @@ export default function PronunciationView() {
 
       const batch = shuffle(phrases).slice(0, BATCH_SIZE);
       setQueue(batch);
-      void saveQueueToDexie(batch);
+      if (userId) void saveQueueToDexie(userId, batch);
       setBatchCount(batch.length);
       reset();
       setWordIPAs([]);
@@ -121,7 +125,7 @@ export default function PronunciationView() {
     } finally {
       setFetchingPhrases(false);
     }
-  }, [mastered, loadMoreFromPool, reset]);
+  }, [mastered, loadMoreFromPool, reset, userId]);
 
   useEffect(() => {
     if (!activePhrase) return;
@@ -172,14 +176,14 @@ export default function PronunciationView() {
       if (results.every((item) => item.alignment.every((alignment) => alignment.status === "correct")) && activePhrase) {
         setMastered((prev) => {
           const next = new Set(prev).add(activePhrase);
-          void saveMasteredToDexie(next);
+          if (userId) void saveMasteredToDexie(userId, next);
           return next;
         });
       }
     } finally {
       setAnalyzing(false);
     }
-  }, [activePhrase]);
+  }, [activePhrase, userId]);
 
   useEffect(() => {
     if (result?.transcript) void analyzeRecording(result.transcript);
@@ -188,17 +192,17 @@ export default function PronunciationView() {
   const advanceQueue = useCallback(() => {
     setSeen((prev) => {
       const next = new Set(prev).add(activePhrase);
-      void saveSeenToDexie(next);
+      if (userId) void saveSeenToDexie(userId, next);
       return next;
     });
     setQueue((prev) => {
       const next = prev.slice(1);
-      void saveQueueToDexie(next);
+      if (userId) void saveQueueToDexie(userId, next);
       return next;
     });
     reset();
     setWordIPAs([]);
-  }, [activePhrase, reset]);
+  }, [activePhrase, reset, userId]);
 
   const handleMicClick = () => {
     if (isRecording) {
@@ -212,7 +216,8 @@ export default function PronunciationView() {
   };
 
   const handleSavePractice = async (word: string) => {
-    await saveAIWord({
+    if (!userId) return;
+    await saveAIWord(userId, {
       word: word.toLowerCase(),
       meaning: "",
       difficulty: "medium",

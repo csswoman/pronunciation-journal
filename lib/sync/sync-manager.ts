@@ -31,7 +31,6 @@ function now(): string {
 const UPSERT_CONFLICT_COLUMNS: Partial<Record<SyncTable, string>> = {
   answer_history: 'id',
   activity_sessions: 'id',
-  ai_events: 'id',
   user_contrast_progress: 'user_id,contrast_id',
   user_learning_state: 'user_id',
   journal_entries: 'id',
@@ -67,8 +66,8 @@ async function flushEntry(entry: SyncOutboxEntry): Promise<void> {
   const supabase = getSupabaseBrowserClient()
   const { operation, payload, matchKey } = entry
   const onConflict = resolveOnConflict(entry)
-  // Cast table to any — SyncTable may include tables not yet in the generated types
-  // (e.g. ai_conversations, user_learning_state pending migration).
+  // Cast table to any because generated browser types intentionally lag a
+  // few already-migrated outbox targets.
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const table = entry.table as any
 
@@ -134,7 +133,12 @@ export async function enqueue(
   matchKey?: Record<string, unknown>,
   onConflict?: string,
 ): Promise<number> {
+  const userId = payload.user_id ?? payload.userId ?? matchKey?.user_id ?? matchKey?.userId
+  if (typeof userId !== 'string' || !userId) {
+    throw new Error(`Outbox entry for ${table} requires an explicit user_id`)
+  }
   const entry: SyncOutboxEntry = {
+    userId,
     table,
     operation,
     payload,
@@ -154,13 +158,14 @@ export async function enqueue(
  *
  * Returns a summary of what happened during this flush pass.
  */
-export function flushOutbox(): Promise<SyncFlushResult> {
+export function flushOutbox(userId?: string): Promise<SyncFlushResult> {
+  if (!userId) return Promise.resolve({ synced: 0, failed: 0, skipped: 0 })
   if (flushInFlight) return flushInFlight
-  flushInFlight = flushOutboxInternal().finally(() => { flushInFlight = null })
+  flushInFlight = flushOutboxInternal(userId).finally(() => { flushInFlight = null })
   return flushInFlight
 }
 
-async function flushOutboxInternal(): Promise<SyncFlushResult> {
+async function flushOutboxInternal(userId: string): Promise<SyncFlushResult> {
   await reclaimStaleSyncingEntries()
   if (!navigator.onLine) return { synced: 0, failed: 0, skipped: 0 }
 
@@ -169,8 +174,8 @@ async function flushOutboxInternal(): Promise<SyncFlushResult> {
   // Claim a batch atomically: pending → syncing
   const batch = await db.transaction('rw', db.syncOutbox, async () => {
     const pending = (await db.syncOutbox
-      .where('[status+createdAt]')
-      .between(['pending', Dexie.minKey], ['pending', Dexie.maxKey])
+      .where('[userId+status+createdAt]')
+      .between([userId, 'pending', Dexie.minKey], [userId, 'pending', Dexie.maxKey])
       .toArray())
       .filter((entry) => isReadyToRetry(entry.nextRetryAt, Date.now()))
       .slice(0, FLUSH_BATCH_SIZE)

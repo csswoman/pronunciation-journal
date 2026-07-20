@@ -56,10 +56,10 @@ async function buildUserLearningState(userId: string): Promise<UserLearningState
 
   try {
     const [stats, favorites, practiceWords, aiWords, soundProgress] = await Promise.allSettled([
-      getUserStats(),
-      getFavorites(),
-      getNeedsPracticeWords(),
-      getAIWords(50),
+      getUserStats(userId),
+      getFavorites(userId),
+      getNeedsPracticeWords(userId),
+      getAIWords(userId, 50),
       fetchSoundProgress(userId),
     ]);
 

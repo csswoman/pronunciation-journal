@@ -1,7 +1,6 @@
 "use client";
 
 import { db, type AnalyticsEventName } from "@/lib/db";
-import { enqueue, flushOutbox } from "@/lib/sync/sync-manager";
 
 export type EventPayloads = {
   exercise_shown:        { exerciseType: string; topic: string; conversationId?: number };
@@ -19,46 +18,31 @@ export type EventPayloads = {
 export async function logEvent<N extends AnalyticsEventName>(
   name: N,
   payload: EventPayloads[N],
+  userId?: string | null,
 ): Promise<void> {
+  // Analytics is private learning evidence: do not write a device-global row
+  // while auth is unresolved.
+  if (!userId) return;
   const timestamp = new Date().toISOString();
 
   const id = await db.analyticsEvents.add({
+    userId,
     name,
     payload: payload as Record<string, unknown>,
     timestamp,
     synced: 0,
   });
 
-  await enqueue(
-    "ai_events",
-    "upsert",
-    { id: crypto.randomUUID(), event_name: name, payload, occurred_at: timestamp },
-    undefined,
-    "id",
-  );
-
-  if (typeof navigator !== "undefined" && navigator.onLine) {
-    // Fire-and-forget: don't block the caller
-    flushBatch(id).catch(() => {});
-  }
+  void id;
 }
 
 /** Flush events that haven't been synced yet (called opportunistically). */
-async function flushBatch(upToId: number): Promise<void> {
-  await flushOutbox();
-  // Mark synced locally so we can prune stale rows later
-  await db.analyticsEvents
-    .where("id")
-    .belowOrEqual(upToId)
-    .modify({ synced: 1 });
-}
-
 /** Prune events older than `days` that have already been synced. */
-export async function pruneEvents(days = 30): Promise<void> {
+export async function pruneEvents(userId: string, days = 30): Promise<void> {
   const cutoff = new Date(Date.now() - days * 86_400_000).toISOString();
   await db.analyticsEvents
     .where("timestamp")
     .below(cutoff)
-    .filter(e => e.synced === 1)
+    .filter(e => e.userId === userId && e.synced === 1)
     .delete();
 }

@@ -360,7 +360,7 @@ describe('flushOutbox', () => {
         status: 'pending', retryCount: 0, createdAt: new Date().toISOString(),
       },
       {
-        id: 23, table: 'ai_events', operation: 'upsert', payload: { id: 'rejected' },
+        id: 23, table: 'word_bank', operation: 'upsert', payload: { id: 'rejected' },
         status: 'pending', retryCount: 0, createdAt: new Date().toISOString(),
       },
     ]

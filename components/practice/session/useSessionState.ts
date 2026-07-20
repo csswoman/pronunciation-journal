@@ -114,7 +114,7 @@ export function useSessionState(config: PracticeConfig) {
       void (async () => {
         try {
           await recordActivitySession(user.id, { practiceContext: context, sessionResult })
-          await flushOutbox()
+          await flushOutbox(user.id)
           setProgressSaveStatus('saved')
         } catch (err) {
           console.error('[PracticeSession] recordActivitySession failed', err)
@@ -175,9 +175,8 @@ export function useSessionState(config: PracticeConfig) {
       if (result.sourceRef?.source === 'core1k') {
         const word = result.sourceRef.id.replace(/^c1k:/, '')
         const quality = result.isCorrect ? 4 : 2
-        // No userId: answer_history is already written above by savePracticeAnswer.
-        // This call only updates the shared Dexie SRS entry (c1k:<word>).
-        void gradeCore1000Word(word, quality, {}).catch((err) => {
+        // answer_history is already written above; userId scopes only the local SRS mirror.
+        void gradeCore1000Word(word, quality, {}, user?.id).catch((err) => {
           console.error('[PracticeSession] gradeCore1000Word failed', err)
         })
       }

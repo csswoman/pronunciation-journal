@@ -47,7 +47,7 @@ export async function removeTrackedItem(userId: string, kind: PersistedTrackedKi
   if (!row) return;
   await db.transaction("rw", [db.trackedItems, db.syncOutbox], async () => {
     await db.trackedItems.delete(row.id);
-    await enqueue("tracked_items", "delete", {}, { id: row.id });
+    await enqueue("tracked_items", "delete", { user_id: userId }, { id: row.id, user_id: userId });
   });
 }
 

@@ -13,15 +13,17 @@ import { db, migrateArchivedSrsRows } from '@/lib/db'
 import { isVaultEntry } from '@/lib/srs/vault'
 import { SrsVaultModal } from './SrsVaultModal'
 import { SrsVaultTrigger } from './SrsVaultTrigger'
+import { useAuth } from '@/components/auth/AuthProvider'
 
 export function SrsVault() {
+  const { user } = useAuth()
   const [open, setOpen] = useState(false)
 
   useEffect(() => {
-    void migrateArchivedSrsRows()
-  }, [])
+    void migrateArchivedSrsRows(user?.id)
+  }, [user?.id])
 
-  const allEntries = useLiveQuery(() => db.srsData.toArray(), []) ?? []
+  const allEntries = useLiveQuery(() => user?.id ? db.srsData.where('userId').equals(user.id).toArray() : [], [user?.id]) ?? []
 
   const vaultEntries = useMemo(
     () => allEntries.filter(isVaultEntry),

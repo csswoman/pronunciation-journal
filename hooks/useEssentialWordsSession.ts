@@ -161,7 +161,7 @@ export function useEssentialWordsSession() {
 
   const bootstrap = useCallback(async () => {
     const { items, stats: nextStats, allWords, seenIds, initialPhase } =
-      await loadEssentialWordsQueue(levelsRef.current, posRef.current);
+      await loadEssentialWordsQueue(levelsRef.current, posRef.current, user?.id);
     finishingRef.current = false;
     allWordsRef.current = allWords;
     seenIdsRef.current = seenIds;
@@ -191,7 +191,7 @@ export function useEssentialWordsSession() {
           }
         }
         const { items, stats: nextStats, allWords, seenIds, initialPhase } =
-          await loadEssentialWordsQueue(levelsRef.current, posRef.current);
+          await loadEssentialWordsQueue(levelsRef.current, posRef.current, user?.id);
         if (cancelled) return;
         allWordsRef.current = allWords;
         seenIdsRef.current = seenIds;
@@ -223,7 +223,7 @@ export function useEssentialWordsSession() {
         pendingLapsesRef.current.delete(wordId);
         persistPendingLapses();
         if (item.kind === "new") {
-          await recordCore1000Introduction(item.entry.word.toLowerCase());
+          await recordCore1000Introduction(item.entry.word.toLowerCase(), user?.id);
           setStats((s) => ({ ...s, newToday: s.newToday + 1, learned: s.learned + 1 }));
         }
         sessionResultsRef.current.push(result);
@@ -271,17 +271,17 @@ export function useEssentialWordsSession() {
   }, [queue, index, finishSession, syncCounts]);
 
   const archiveWord = useCallback(async (word: string) => {
-    await snoozeEssentialWord(word);
+    await snoozeEssentialWord(word, 90, user?.id);
     removeCurrentAndAdvance(word);
   }, [removeCurrentAndAdvance]);
 
   const keepSnooze = useCallback(async (word: string) => {
-    await snoozeEssentialWord(word, 90);
+    await snoozeEssentialWord(word, 90, user?.id);
     removeCurrentAndAdvance(word);
   }, [removeCurrentAndAdvance]);
 
   const masterWord = useCallback(async (word: string) => {
-    await masterEssentialWord(word);
+    await masterEssentialWord(word, user?.id);
     removeCurrentAndAdvance(word);
   }, [removeCurrentAndAdvance]);
 

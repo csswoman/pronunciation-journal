@@ -47,7 +47,7 @@ export function useAIPractice(): UseAIPracticeReturn {
   const [mode, setMode] = useState<AIConversationMode>("chat");
   const [conversationId, setConversationId] = useState<number | null>(null);
 
-  const words = useSavedWords(conversationId);
+  const words = useSavedWords(user?.id ?? null, conversationId);
 
   const chat = useStreamingChat({
     mode,
@@ -94,15 +94,17 @@ export function useAIPractice(): UseAIPracticeReturn {
 
   // On mount: resume last chat conversation (if any)
   useEffect(() => {
-    switchMode("chat").then(({ conversationId: id }) => setConversationId(id)).catch(() => {});
-  }, []);
+    if (!user?.id) { setConversationId(null); return; }
+    switchMode(user.id, "chat").then(({ conversationId: id }) => setConversationId(id)).catch(() => {});
+  }, [user?.id]);
 
   const changeMode = useCallback(async (next: AIConversationMode) => {
+    if (!user?.id) return;
     chat.resetChat();
     setActiveRoleplay(null);
     words.setWordToSave(null);
     setMode(next);
-    const { conversationId: id, conversation } = await switchMode(next);
+    const { conversationId: id, conversation } = await switchMode(user.id, next);
     setConversationId(id);
 
     // Restore messages from the existing conversation (if any)
@@ -114,7 +116,7 @@ export function useAIPractice(): UseAIPracticeReturn {
     if (next.startsWith("roleplay:")) {
       setActiveRoleplay(next.slice("roleplay:".length) as StartRoleplayArgs["scenario"]);
     }
-  }, [chat, words]);
+  }, [chat, words, user?.id]);
 
   const resetSession = useCallback(() => {
     chat.resetChat();
@@ -139,9 +141,10 @@ export function useAIPractice(): UseAIPracticeReturn {
   }, [chat, words]);
 
   const removeConversation = useCallback(async (id: number) => {
-    await deleteConversation(id);
+    if (!user?.id) return;
+    await deleteConversation(user.id, id);
     if (conversationId === id) resetSession();
-  }, [conversationId, resetSession]);
+  }, [conversationId, resetSession, user?.id]);
 
   return {
     messages: chat.messages,

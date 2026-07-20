@@ -24,14 +24,15 @@ export interface LoadedEssentialWordsQueue {
 export async function loadEssentialWordsQueue(
   levels?: readonly CefrLevel[] | null,
   pos?: readonly CorePos[] | null,
+  userId?: string,
 ): Promise<LoadedEssentialWordsQueue> {
   const [words, introducedToday] = await Promise.all([
     fetchCoreWords(),
-    getCore1000IntroducedToday(),
+    getCore1000IntroducedToday(userId),
   ]);
 
   const now = new Date();
-  const { entries: srsEntries, activatedWordIds } = await prepareCore1000SrsEntries(now);
+  const { entries: srsEntries, activatedWordIds } = await prepareCore1000SrsEntries(now, userId);
 
   const items = buildSessionQueue({ words, srsEntries, introducedToday, now, levels, pos }).map((item) => ({
     ...item,

@@ -83,6 +83,7 @@ export interface ScoringResult {
 
 export interface FavoriteWord {
   id?: number;
+  userId?: string;
   word: string;
   lessonId: string;
   ipa?: string;
@@ -95,6 +96,7 @@ export interface FavoriteWord {
 export type SrsStatus = "active" | "snoozed" | "mastered";
 
 export interface SRSData {
+  userId?: string;
   wordId: string;
   word: string;
   ease: number; // easiness factor (default 2.5)
@@ -121,6 +123,7 @@ export interface SRSData {
 
 export interface Attempt {
   id?: number; // auto-increment
+  userId?: string;
   word: string;
   lessonId: string;
   transcript: string;
@@ -132,6 +135,7 @@ export interface Attempt {
 
 export interface DailyProgress {
   id?: number;
+  userId?: string;
   date: string; // YYYY-MM-DD
   totalAttempts: number;
   correctAttempts: number;
@@ -144,6 +148,7 @@ export interface DailyProgress {
 
 export interface UserStats {
   id?: number; // auto-increment (Dexie)
+  userId?: string;
   currentStreak: number;
   longestStreak: number;
   totalXP: number;
@@ -185,6 +190,8 @@ export type AIConversationMode =
 
 export interface AIConversation {
   id?: number;
+  /** Owner of this private, offline-first conversation. */
+  userId: string;
   templateId: AITemplateId | "custom";
   mode: AIConversationMode;
   title: string; // first 60 chars of first user message
@@ -197,6 +204,8 @@ export interface AIConversation {
 
 export interface AISavedWord {
   id?: number;
+  /** Owner of the conversation-derived saved word. */
+  userId: string;
   word: string;
   meaning: string;
   difficulty: Difficulty;

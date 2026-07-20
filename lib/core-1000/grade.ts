@@ -25,8 +25,9 @@ export async function gradeCore1000Word(
   const normalized = word.toLowerCase();
   const wordId = core1000WordId(normalized);
 
-  const current = (await getSRSData(wordId)) ?? createSRSEntry(wordId, normalized);
-  await saveSRSData(updateSRS(current, quality));
+  if (!userId) return;
+  const current = (await getSRSData(wordId, userId)) ?? createSRSEntry(wordId, normalized);
+  await saveSRSData(updateSRS(current, quality), userId);
 
   // Solo el camino hablado alimenta attempts/XP; el self-grade no inventa accuracy.
   if (extras.accuracy !== undefined) {
@@ -38,9 +39,9 @@ export async function gradeCore1000Word(
       accuracy: extras.accuracy,
       isCorrect: extras.accuracy >= 70,
       timestamp: new Date().toISOString(),
-    });
-    await updateDailyProgress(extras.accuracy, normalized, xp);
-    await updateUserStats(extras.accuracy, xp);
+    }, userId);
+    await updateDailyProgress(extras.accuracy, normalized, xp, userId);
+    await updateUserStats(extras.accuracy, xp, userId);
   }
 
   // Write to answer_history so Core 1000 progress shows in streak/accuracy charts.
