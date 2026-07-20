@@ -7,7 +7,7 @@ import { updateSR } from './sr'
 import { isContrastMastered } from './mastery'
 import { computeNextMasteryPct, sessionAccuracyPct } from './mastery-pct'
 import type { UserContrastProgress, SRResult, SessionAnswer } from './types'
-import type { SessionResult } from '@/lib/practice/types'
+import type { ExerciseResult, SessionResult } from '@/lib/practice/types'
 import { recordActivitySession } from '@/lib/progress/activity-hub'
 
 export interface FinishContrastSessionOutcome {
@@ -50,6 +50,35 @@ export function sessionAnswersToResult(answers: SessionAnswer[]): SessionResult 
     totalTimeMs: results.reduce((s, r) => s + r.timeMs, 0),
     bySlug: {} as SessionResult['bySlug'],
   }
+}
+
+/** Extract contrast id from plan-062 attribution or legacy payload. */
+export function contrastIdFromResult(result: ExerciseResult): string | null {
+  const fromAttr = result.attribution
+  if (fromAttr?.srsEligible) {
+    const hit = fromAttr.outcomes.find((o) => o.target.namespace === 'contrast')
+    if (hit && hit.target.namespace === 'contrast') return hit.target.id
+  }
+  const payload = result.exercisePayload as { contrastId?: string } | undefined
+  return payload?.contrastId ?? null
+}
+
+/**
+ * Group session results by contrast for independent SRS updates.
+ * Exercises without a contrast id are omitted (non-SRS distractors).
+ */
+export function groupResultsByContrast(
+  results: ExerciseResult[],
+): Map<string, ExerciseResult[]> {
+  const map = new Map<string, ExerciseResult[]>()
+  for (const r of results) {
+    const cid = contrastIdFromResult(r)
+    if (!cid) continue
+    const list = map.get(cid) ?? []
+    list.push(r)
+    map.set(cid, list)
+  }
+  return map
 }
 
 export async function finishContrastSession(
@@ -106,4 +135,37 @@ export async function finishContrastSession(
     contrastMastered: isContrastMastered(updated),
     masteryPct,
   }
+}
+
+/**
+ * Apply contrast SRS for each attributed contrast group independently.
+ * Returns the latest nextReview among updated contrasts (or null if none).
+ */
+export async function finishAttributedContrastSessions(
+  userId: string,
+  session: SessionResult,
+  now: Date = new Date(),
+): Promise<{ nextReview: Date | null; updatedContrastIds: string[] }> {
+  const groups = groupResultsByContrast(session.results)
+  let nextReview: Date | null = null
+  const updatedContrastIds: string[] = []
+
+  for (const [cid, groupResults] of groups) {
+    const subset: SessionResult = {
+      ...session,
+      results: groupResults,
+      accuracy:
+        groupResults.length > 0
+          ? (groupResults.filter((r) => r.isCorrect).length / groupResults.length) * 100
+          : 0,
+      totalTimeMs: groupResults.reduce((s, r) => s + r.timeMs, 0),
+    }
+    const outcome = await finishContrastSession(userId, cid, subset, undefined, now, false)
+    updatedContrastIds.push(cid)
+    if (!nextReview || outcome.nextReview > nextReview) {
+      nextReview = outcome.nextReview
+    }
+  }
+
+  return { nextReview, updatedContrastIds }
 }

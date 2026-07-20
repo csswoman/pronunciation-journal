@@ -61,6 +61,7 @@ export function fromMixedExercise(
       stimuli,
       abxAnswer,
       oddIndex,
+      contrastId,
     } = ex.data
     const payload: PhonemePayload = {
       kind: 'phoneme',
@@ -89,6 +90,7 @@ export function fromMixedExercise(
       payload,
       level,
       soundId,
+      contrastId,
     }
   }
 

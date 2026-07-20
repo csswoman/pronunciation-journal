@@ -12,6 +12,7 @@
 - **Depends on**: 061
 - **Category**: bug
 - **Planned at**: commit `c779781b`, 2026-07-19
+- **Progress**: DONE (2026-07-20 on `codex/062-evidence-attribution`)
 
 ## Why this matters
 
@@ -55,57 +56,38 @@ El scheduler solo es útil si sabe qué entidad fue evaluada. Dictionary mezcla 
 
 ## Steps
 
-### Step 1: Define a typed attribution contract
+### Step 1: Define a typed attribution contract ✅
 
-Extend the evaluated result shape with explicit targets/outcomes. Support one-to-one targets and multi-target results, and allow `srsEligible: false` for aggregate activities. Make target namespaces discriminated so a lexicon content id cannot type-check as a `word_bank` id without an adapter.
+**Landed**: `lib/practice/attribution.ts` + optional `attribution` / `attributionVersion` on `PracticeAnswer`.
 
-**Verify**: type-level tests reject wrong namespaces and require a declared policy for group exercises.
+### Step 2: Preserve Dictionary content-to-bank identity ✅
 
-### Step 2: Preserve Dictionary content-to-bank identity
+**Landed**: `bankId` on sentence_context sources; `sourceRef` = `word_bank`+UUID or `lexicon`+catalog; `toWordEntry` + lexicon hook join; UUID gate in `savePracticeAnswer`.
 
-When building practice from saved words, carry both lexicon content id and `word_bank` UUID. `sentence_context` must use the bank UUID for SRS while retaining content id for content lookup. If the item is not in the bank, it may produce answer evidence but not a bank update.
+### Step 3: Fix group exercise semantics ✅
 
-**Verify**: one objective answer updates exactly its source bank row; an unsaved lexicon item updates none.
+**Landed**: `match_pairs` → `attributeGroupResult({ mode: 'non_srs' })` via `resolveAnswerAttribution`; SRS blocked when `srsEligible === false`; lexicon page no longer invents group penalties.
 
-### Step 3: Fix group exercise semantics
+### Step 4: Carry contrast identity through Sound Lab ✅
 
-For `match_pairs`, either emit a per-pair outcome or mark the aggregate result non-SRS. Do not attribute the entire result to the first word. Prefer per-pair evidence only if the UI actually observes each pair result.
+**Landed**: `buildAdaptiveSession` stamps `contrastId` from weakest contrast; adapters + submit payload; `finishAttributedContrastSessions` groups updates; Sound Lab page uses all contrast progress.
 
-**Verify**: tests cover mixed correct/incorrect pairs and assert no arbitrary first-word update.
+### Step 5: Make skill classification exhaustive ✅
 
-### Step 4: Carry contrast identity through Sound Lab
+**Landed**: `lib/progress/skill-matrix.ts` (`satisfies Record<ExerciseSlug, readonly SkillTag[]>`); `deriveSkillTags` uses matrix only (context does not invent skills).
 
-Pass user level and all relevant `user_contrast_progress` rows into `buildAdaptiveSession`. Choose the weak contrast intentionally and attach its `contrastId` to each eligible exercise. On completion, group attempts by contrast and update only groups with objective evidence.
+### Step 6: Quarantine historical ambiguity ✅
 
-**Verify**: a session containing two contrasts updates the correct two rows with their own outcomes; changing config order does not change attribution.
-
-### Step 5: Make skill classification exhaustive
-
-Replace partial arrays/context defaults with a `satisfies Record<ExerciseSlug, readonly SkillTag[]>` matrix. Add current productive slugs (`spoken_production`, `written_production`, `sentence_transformation`, `translation_es_en`, etc.) based on actual modality. Context may add provenance, not invent a practiced skill.
-
-**Verify**: adding a fake new slug in a type fixture fails compilation until mapped; current activity-hub tests pass.
-
-### Step 6: Quarantine historical ambiguity
-
-Do not rewrite old word/contrast mastery without deterministic target metadata. Add evaluator/attribution version to new evidence so reports can exclude or segment legacy rows.
-
-**Verify**: progress query test keeps legacy data visible as legacy but does not use it to claim a newly corrected target.
-
-## Test plan
-
-- Add generator unit tests that assert exact target namespace/id and skill tags.
-- Add Dictionary integration cases for saved/unsaved words and mixed `match_pairs` outcomes.
-- Add Sound Lab cases with two contrasts, reordered config and a non-SRS distractor.
-- Verification: the two focused commands in “Commands you will need” and `pnpm type-check` all pass.
+**Landed**: `attribution` + `attributionVersion` merged into `exercise_payload`; `isAttributedTargetEvidence` / `isLegacyAnswerPayload` helpers + tests.
 
 ## Done criteria
 
-- [ ] Every SRS-eligible result has canonical target identity.
-- [ ] Dictionary never passes a catalog id as a bank UUID.
-- [ ] Group exercises are per-target or explicitly non-SRS.
-- [ ] Contrast updates are independent of array/config order.
-- [ ] Every exercise slug has an explicit skill mapping.
-- [ ] Focused tests and typecheck pass.
+- [x] Every SRS-eligible result has canonical target identity.
+- [x] Dictionary never passes a catalog id as a bank UUID.
+- [x] Group exercises are per-target or explicitly non-SRS.
+- [x] Contrast updates are independent of array/config order.
+- [x] Every exercise slug has an explicit skill mapping.
+- [x] Focused tests and typecheck pass.
 
 ## STOP conditions
 
