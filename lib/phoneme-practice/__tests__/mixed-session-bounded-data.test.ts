@@ -156,15 +156,24 @@ describe('phoneme mixed sessions with bounded datasets', () => {
       target, targetWords, [target, contrast], allWordsBySoundId, [],
       { contrastProgress },
     )
-    const speakWordExercises = session.filter(
+    const speakExercises = session.filter(
       (item) => item.kind === 'phoneme' && item.data.type === 'speak_word',
     )
 
-    expect(speakWordExercises).toHaveLength(1)
-    expect(speakWordExercises[0]?.kind).toBe('phoneme')
-    if (speakWordExercises[0]?.kind === 'phoneme') {
-      expect(speakWordExercises[0].data.contrastId).toBe('/iː/|/ɪ/')
+    // Word production, then phrase production — both scheduled together.
+    expect(speakExercises).toHaveLength(2)
+    for (const ex of speakExercises) {
+      expect(ex.kind).toBe('phoneme')
+      if (ex.kind === 'phoneme') expect(ex.data.contrastId).toBe('/iː/|/ɪ/')
     }
+    const wordOnly = speakExercises.filter(
+      (item) => item.kind === 'phoneme' && item.data.targetWord?.trim().split(/\s+/).length === 1,
+    )
+    const phraseOnly = speakExercises.filter(
+      (item) => item.kind === 'phoneme' && (item.data.targetWord?.trim().split(/\s+/).length ?? 0) > 1,
+    )
+    expect(wordOnly).toHaveLength(1)
+    expect(phraseOnly).toHaveLength(1)
   })
 
   it('does not add speak_word for an already-mastered contrast', () => {
