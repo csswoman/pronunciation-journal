@@ -41,3 +41,15 @@ EXERCISE QUALITY (when calling render_fill_blank / render_multiple_choice):
 - "topic": use "grammar:<category>" or "vocab:<category>" (e.g. "grammar:simple_past_tense").
 - Unambiguous: exactly one correct answer, or list variants in "acceptableAlternatives".
 `.trim();
+
+/**
+ * Appended to the system prompt when the last user turn was spoken and
+ * successfully transcribed (`voice.scored === true`). Keeps feedback narrow
+ * so a single spoken turn doesn't get buried in corrections.
+ */
+export const VOICE_TURN_INSTRUCTION = `
+The student just spoke this turn (their speech was transcribed).
+Give at most ONE prioritized pronunciation correction if you notice a clear issue,
+and optionally suggest one short phrase they could try saying again.
+Don't overload them with multiple corrections.
+`.trim();

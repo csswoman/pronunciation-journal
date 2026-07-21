@@ -2,8 +2,10 @@ import { GoogleGenAI } from "@google/genai";
 import { NextRequest } from "next/server";
 import { z } from "zod";
 import { requireSameOrigin, requireUser, rateLimit, validateBody, SECURE_HEADERS, publicErrorResponse } from "@/lib/api/guards";
-import { buildServerPrompt, type PromptKey } from "@/lib/api/prompts";
+import { type PromptKey } from "@/lib/api/prompts";
 import { detectIntent, intentToToolConfig } from "@/lib/ai-practice/intent-detection";
+import { buildSystemPrompt, extractLastTopicFromWire, lastUserVoiceMetadataFromWire } from "@/lib/ai-practice/wire";
+import { fetchServerLearningState } from "@/lib/ai-practice/server-state";
 import { getErrorStatus } from "@/lib/gemini/fallback";
 import {
   buildHistory,
@@ -30,6 +32,11 @@ const MessagePartSchema = z.object({
   }).strict().optional(),
 }).strict();
 
+const VoiceMetadataSchema = z.object({
+  transcript: z.literal(true),
+  scored: z.boolean(),
+}).strict();
+
 const MessageSchema = z.object({
   role: z.enum(["user", "model", "tool"]),
   content: z.string().max(8_000).optional(),
@@ -37,9 +44,10 @@ const MessageSchema = z.object({
   toolCallId: z.string().max(200).optional(),
   name: z.string().max(100).optional(),
   result: z.unknown().optional(),
+  voice: VoiceMetadataSchema.optional(),
 }).strict();
 
-const GeminiRequestSchema = z.object({
+export const GeminiRequestSchema = z.object({
   messages: z.array(MessageSchema).min(1).max(100),
   /**
    * Named key resolved to a server-defined system prompt.
@@ -59,7 +67,7 @@ export async function POST(request: NextRequest): Promise<Response> {
   if (originError) return originError;
 
   // 1. Auth — reject before touching the body
-  const { user, error: authError } = await requireUser(request);
+  const { user, error: authError, accessToken } = await requireUser(request);
   if (authError) return authError;
 
   // 2. Rate limit — 15 req/min per user, keyed per endpoint so routes are independent
@@ -77,15 +85,22 @@ export async function POST(request: NextRequest): Promise<Response> {
     return Response.json({ error: "AI service unavailable" }, { status: 503, headers: SECURE_HEADERS });
   }
 
-  // 4. Build the system prompt entirely server-side
-  const systemPrompt = buildServerPrompt();
-
-  // 5. Determine tool config server-side from the last user message
+  // 4. Determine tool config server-side from the last user message
   //    Client has zero influence over which tools the model can use
   const lastMsg = body.messages[body.messages.length - 1];
   if (lastMsg.role !== "user") {
     return Response.json({ error: "Last message must be from the user" }, { status: 400, headers: SECURE_HEADERS });
   }
+
+  // 5. Build the system prompt server-side. Learning state is looked up from
+  //    the user's own synced row (RLS-scoped, best-effort) rather than trusted
+  //    from the client — the client never supplies learningState directly, so
+  //    a spoofed request can at most omit/alter its own `voice` tag, which
+  //    only nudges feedback verbosity, not tool access or grading.
+  const learningState = await fetchServerLearningState(user.id, accessToken);
+  const lastTopic = extractLastTopicFromWire(body.messages);
+  const voice = lastUserVoiceMetadataFromWire(body.messages);
+  const systemPrompt = buildSystemPrompt(learningState, lastTopic, voice?.scored === true);
 
   // Cap input fed to intent detection — detectIntent has its own guard but we
   // also avoid building a huge string from the full content field.
