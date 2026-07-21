@@ -108,8 +108,8 @@ function extractPhrases(deck: CsDeck): string[] {
 /** Generate sentence_dictation exercises from a deck's example phrases. */
 export function generateCsDictation(deck: CsDeck, slug: string, count: number): SentenceDictationExercise[] {
   const phrases = pick(extractPhrases(deck), count)
-  return phrases.map((phrase, i) => ({
-    id: exerciseId('sentence_dictation', `${slug}-dict-${i}-${phrase}`, 'v1'),
+  return phrases.map((phrase) => ({
+    id: exerciseId('sentence_dictation', `${slug}-dict-${phrase}`, 'v1'),
     type: 'sentence_dictation' as const,
     sourceRef: { source: 'text_fragments' as const, id: slug },
     sentence: phrase,
@@ -125,8 +125,8 @@ export function generateCsDictation(deck: CsDeck, slug: string, count: number): 
  */
 export function generateCsShadowPhrase(deck: CsDeck, slug: CsDeckSlug, count: number): CsShadowPhraseExercise[] {
   const phrases = pick(extractPhrases(deck), count)
-  return phrases.map((phrase, i) => ({
-    id: exerciseId('cs_shadow_phrase', `${slug}-shadow-${i}-${phrase}`, 'v1'),
+  return phrases.map((phrase) => ({
+    id: exerciseId('cs_shadow_phrase', `${slug}-shadow-${phrase}`, 'v1'),
     type: 'cs_shadow_phrase' as const,
     sourceRef: { source: 'text_fragments' as const, id: slug },
     phrase,
