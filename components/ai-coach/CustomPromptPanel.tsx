@@ -2,10 +2,13 @@
 
 import Button from "@/components/ui/Button";
 import { SendHorizonal, Mic } from "@/components/icons";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
+import { useSpeechInput } from "@/hooks/useSpeechInput";
+import { useSharedMicStream } from "@/hooks/useSharedMicStream";
+import type { VoiceMetadata } from "@/lib/ai-practice/types";
 
 interface CustomPromptPanelProps {
-  onSubmit: (text: string) => void;
+  onSubmit: (text: string, options?: { voice?: VoiceMetadata }) => void;
   isDisabled: boolean;
   placeholder?: string;
   variant?: "hero" | "chat";
@@ -26,6 +29,33 @@ export default function CustomPromptPanel({
   const [text, setText] = useState("");
   const [focused, setFocused] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const { getStream } = useSharedMicStream();
+  const { state: speechState, error: speechError, start: startSpeech, stop: stopSpeech, reset: resetSpeech } = useSpeechInput({
+    prefer: "auto",
+    getStream,
+    onResult: (r) => {
+      const transcript = r.transcript.trim();
+      if (!transcript) return;
+      onSubmit(transcript, { voice: { transcript: true, scored: true } });
+    },
+  });
+
+  const isRecording = speechState === "listening";
+  const isProcessingSpeech = speechState === "processing";
+  const hasSpeechError = speechState === "error" || speechState === "unsupported";
+
+  const handleMicClick = useCallback(() => {
+    if (isRecording) {
+      void stopSpeech();
+    } else {
+      void startSpeech();
+    }
+  }, [isRecording, startSpeech, stopSpeech]);
+
+  const handleRetrySpeech = useCallback(() => {
+    resetSpeech();
+  }, [resetSpeech]);
 
   useEffect(() => {
     if (prefill === undefined) return;
@@ -128,10 +158,18 @@ export default function CustomPromptPanel({
 
         <button
           type="button"
-          aria-label="Voice input"
-          className="w-9 h-9 rounded-full flex-shrink-0 flex items-center justify-center transition-colors text-[var(--text-tertiary)] hover:text-[var(--text-secondary)]"
+          onClick={handleMicClick}
+          disabled={isDisabled || isProcessingSpeech}
+          aria-label={isRecording ? "Stop recording" : "Voice input"}
+          className={`w-9 h-9 rounded-full flex-shrink-0 flex items-center justify-center transition-colors disabled:opacity-40 ${
+            isRecording
+              ? "text-[var(--error)]"
+              : "text-[var(--text-tertiary)] hover:text-[var(--text-secondary)]"
+          }`}
         >
-          <Mic size={16} strokeWidth={2} />
+          {isProcessingSpeech
+            ? <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+            : <Mic size={16} strokeWidth={2} className={isRecording ? "animate-pulse" : undefined} />}
         </button>
 
         <button
@@ -146,6 +184,25 @@ export default function CustomPromptPanel({
             : <SendHorizonal size={16} strokeWidth={2.25} />}
         </button>
       </div>
+
+      {hasSpeechError && (
+        <div className="flex items-center justify-between gap-2 px-3 py-1.5 rounded-lg bg-[var(--error-soft)]">
+          <p className="text-tiny text-[var(--error)]">
+            {speechState === "unsupported"
+              ? "Voice input isn't supported in this browser."
+              : speechError === "not-allowed"
+                ? "Microphone access was denied."
+                : "Couldn't hear that."}
+          </p>
+          <button
+            type="button"
+            onClick={handleRetrySpeech}
+            className="text-tiny font-semibold text-[var(--error)] hover:underline flex-shrink-0"
+          >
+            Retry
+          </button>
+        </div>
+      )}
 
       {/* Hint bar */}
       <div className="flex items-center justify-between px-1">
