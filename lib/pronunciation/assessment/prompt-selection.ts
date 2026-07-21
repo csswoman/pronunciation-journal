@@ -9,7 +9,7 @@
  * authoring (actual words/phrases belong to a later step).
  */
 
-import { contrastTargetId, listTargetsByCefr } from '@/lib/pronunciation/targets/registry'
+import { contrastTargetId, listTargets, listTargetsByCefr } from '@/lib/pronunciation/targets/registry'
 import type { CEFRLevel } from '@/lib/exercises/cefr'
 import type { EvidenceCapability, PronunciationTarget, PronunciationTargetId } from '@/lib/pronunciation/targets/types'
 import { createSeededRng, weightedSampleWithoutReplacement } from './seeded-random'
@@ -102,9 +102,21 @@ export function selectDiagnosticPrompts(
   // under adversarial weighting — "at least one" is a hard contract, not a
   // side effect of weighted luck. Its stage is pinned to
   // `contextual_production`, not re-rolled via `pickStage`.
-  if (transferCandidates.length > 0) {
+  //
+  // This guarantee is unconditional and must NOT be constrained by the CEFR
+  // cap: the registry has zero contextual_production-capable targets at or
+  // below A2 (all such targets are recommendedCefr B1+), so at A1/A2 the
+  // CEFR-capped pool alone can never satisfy it. Fall back to the full
+  // registry's transfer-capable targets when the capped pool has none —
+  // this is a deliberate, documented exception to the CEFR bias applied to
+  // the rest of the selection.
+  const transferPool = transferCandidates.length > 0
+    ? transferCandidates
+    : listTargets().filter((t) => t.evidenceCapabilities.includes('contextual_production'))
+
+  if (transferPool.length > 0) {
     const [transferPick] = weightedSampleWithoutReplacement(
-      transferCandidates,
+      transferPool,
       (t) => weightFor(t, existingEvidence),
       1,
       rng

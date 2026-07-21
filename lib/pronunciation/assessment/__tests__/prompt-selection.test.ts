@@ -41,6 +41,22 @@ describe('selectDiagnosticPrompts', () => {
     }
   })
 
+  it('always includes at least one contextual_production prompt at cefrLevel A2, even though the registry has zero contextual_production-capable targets recommendedCefr <= A2 (regression)', () => {
+    for (let seed = 0; seed < 50; seed++) {
+      const selection = selectDiagnosticPrompts({ seed, cefrLevel: 'A2' })
+      const hasTransfer = selection.some((s) => s.stage === 'contextual_production')
+      expect(hasTransfer).toBe(true)
+    }
+  })
+
+  it('always includes at least one contextual_production prompt at cefrLevel A1 (regression)', () => {
+    for (let seed = 0; seed < 50; seed++) {
+      const selection = selectDiagnosticPrompts({ seed, cefrLevel: 'A1' })
+      const hasTransfer = selection.some((s) => s.stage === 'contextual_production')
+      expect(hasTransfer).toBe(true)
+    }
+  })
+
   it('is deterministic: same seed + same inputs always produce the same output', () => {
     const options = { seed: 'stable-seed-42', cefrLevel: 'B1' as const }
     const first = selectDiagnosticPrompts(options)
