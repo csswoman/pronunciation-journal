@@ -6,6 +6,7 @@
     "goal": "Ya puedes unir sonidos entre palabras y entender por qué 'pick it up' suena 'pi-ki-tup' en habla nativa."
   },
   "sounds": ["ə", "t", "ɪ"],
+  "pronunciationTargetIds": ["connected.linking"],
   "related": [
     { "slug": "cs-reductions", "label": "CS · Reducciones" },
     { "slug": "b2-pronunciacion-intermedia", "label": "B2 · Pronunciación intermedia" }

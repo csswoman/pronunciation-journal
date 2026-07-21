@@ -6,6 +6,7 @@
     "goal": "Ya puedes entender y producir el inglés rápido donde algunos sonidos caen sin que el mensaje pierda claridad."
   },
   "sounds": ["t", "d", "ə"],
+  "pronunciationTargetIds": ["connected.elision"],
   "related": [
     { "slug": "cs-linking", "label": "CS · Enlace de sonidos" },
     { "slug": "b2-pronunciacion-intermedia", "label": "B2 · Pronunciación intermedia" },

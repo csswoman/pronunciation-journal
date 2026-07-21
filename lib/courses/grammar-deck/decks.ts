@@ -13,6 +13,7 @@ import { GrammarStudyDeckSchema } from "./schema";
 import type { GrammarDeckMeta, GrammarStudyDeckData, GrammarRelatedLink } from "./types";
 import { getLevelById } from "@/lib/courses/curriculumIndex";
 import type { CoursePathTrackId } from "@/lib/courses/types";
+import { targetId } from "@/lib/pronunciation/targets/registry";
 
 const DECKS_DIR = path.join(process.cwd(), "public", "grammar-decks");
 
@@ -49,6 +50,7 @@ export function getDeckBySlug(slug: string): GrammarStudyDeckData | null {
   return {
     meta: result.data.meta ?? DEFAULT_META,
     sounds: result.data.sounds,
+    pronunciationTargetIds: result.data.pronunciationTargetIds?.map(targetId),
     related: result.data.related,
     quiz: result.data.quiz,
     cards: result.data.cards.map((card, i) => ({ ...card, index: i + 1 })),

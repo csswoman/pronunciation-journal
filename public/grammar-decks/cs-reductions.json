@@ -6,6 +6,7 @@
     "goal": "Ya puedes reconocer y producir gonna, wanna, 'll y las formas débiles que convierten el inglés escrito en inglés real."
   },
   "sounds": ["ə", "ɪ"],
+  "pronunciationTargetIds": ["connected.reduction.gonna"],
   "related": [
     { "slug": "c1-conectores-contracciones-informales", "label": "C1 · Contracciones informales" },
     { "slug": "b2-pronunciacion-intermedia", "label": "B2 · Pronunciación intermedia" }

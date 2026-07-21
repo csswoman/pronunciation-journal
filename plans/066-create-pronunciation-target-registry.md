@@ -26,6 +26,7 @@ La app ya tiene fonemas, contrastes, word stress, connected speech e intonation,
 - `lib/courses/curriculum.ts:521-530` contiene un track connected-speech con reductions/linking/elision/assimilation; `:542` todavía describe gramática y Sound Lab como carriles paralelos.
 - `public/lessons/` ya contiene `word-stress-basics.json`, `sentence-stress.json`, `intonation-questions.json`, `connected-speech.json` y otros assets reutilizables.
 - Convención: slugs/ids estables viven en módulos de dominio; content JSON referencia esos ids, y los tests de `lib/courses/__tests__/content-audit.test.ts` validan cobertura autoral.
+- **Señal consumida**: este plan no consume ninguna señal de evaluación en runtime; solo declara *qué capacidades* de evidencia (perception, controlled production, contextual production, `stt_intelligibility`, y dimensiones acústicas opcionales) son válidas por target. La única señal de scoring hoy disponible es `stt_intelligibility` (reconocimiento de palabras vía STT); stress/ritmo/intonation quedan marcados como no medidos acústicamente hasta que el plan 071 tome su decisión de ship/partial/no-ship (el 064 validó la dirección pero no autorizó evaluador de producción).
 
 ## Target contract
 
@@ -100,9 +101,9 @@ Annotate current stress, intonation, linking, reduction, elision, assimilation a
 
 ### Step 5: Define evidence capabilities per target
 
-For each target, declare which evidence modes are meaningful: perception, controlled production, contextual production, STT intelligibility and optional acoustic dimensions. Mark stress/rhythm/intonation as not acoustically measured until plan 064 chooses a validated evaluator.
+For each target, declare which evidence modes are meaningful: perception, controlled production, contextual production, STT intelligibility and optional acoustic dimensions. Mark stress/rhythm/intonation as not acoustically measured until the plan-071 benchmark chooses a validated evaluator (plan 064 validated direction only and enabled no production evaluator).
 
-**Verify**: tests reject a target that claims an unavailable capability and prove all mastery-eligible targets have at least one objective modality.
+**Verify**: tests reject a target that claims an unavailable capability and prove all mastery-eligible targets have at least one objective modality. Run `pnpm exec vitest run lib/pronunciation/targets` and confirm a fixture target declaring `acoustic` capability fails validation while an equivalent `stt_intelligibility` target passes.
 
 ### Step 6: Remove runtime dependence on vague links
 
@@ -131,7 +132,7 @@ Add adapters so existing `focus=<ipa>` and `sounds[]` deep links resolve through
 
 - Existing production ids cannot be mapped without rewriting persisted progress.
 - Two current concepts require the same id but different pedagogical meaning; split them and report the decision.
-- A target needs an acoustic capability not validated by plan 064; mark it unavailable rather than simulating it.
+- A target needs an acoustic capability not yet validated (the plan-071 benchmark has not chosen ship/partial-ship); mark it unavailable rather than simulating it.
 - Annotation requires runtime title parsing or AI inference; keep the mapping authored.
 
 ## Maintenance notes

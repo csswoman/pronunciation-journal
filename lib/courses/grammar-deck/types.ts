@@ -1,5 +1,7 @@
 /** Study deck card model (grammar cards UI — content wired later). */
 
+import type { PronunciationTargetId } from "@/lib/pronunciation/targets/types";
+
 export interface GrammarDeckMeta {
   eyebrow: string;
   title: string;
@@ -86,8 +88,10 @@ export interface GrammarQuizQuestion {
 
 export interface GrammarStudyDeckData {
   meta: GrammarDeckMeta;
-  /** Target IPA sounds for the Sound Lab handoff. */
+  /** Target IPA sounds for the Sound Lab handoff. @deprecated kept for compatibility — prefer `pronunciationTargetIds`. */
   sounds?: string[];
+  /** Authored pronunciation targets this deck teaches. Never inferred at runtime. */
+  pronunciationTargetIds?: PronunciationTargetId[];
   related?: GrammarRelatedLink[];
   quiz?: GrammarQuizQuestion[];
   cards: GrammarStudyCardData[];
