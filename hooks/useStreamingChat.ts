@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback, useEffect, useRef } from "react";
-import type { AIMessage, StreamChunk, ExerciseResult } from "@/lib/ai-practice/types";
+import type { AIMessage, StreamChunk, ExerciseResult, VoiceMetadata } from "@/lib/ai-practice/types";
 import { serializeMessage, deserializeMessage, type SerializedModelMessage } from "@/lib/ai-practice/types";
 import { applyExerciseResult, type UserLearningState } from "@/lib/ai-practice/learning-state";
 import { saveConversation, updateConversation } from "@/lib/db/ai";
@@ -66,7 +66,7 @@ export function useStreamingChat({
   const userIdRef = useRef(userId);
   userIdRef.current = userId;
 
-  const sendMessage = useCallback(async (text: string, options?: { hidden?: boolean }) => {
+  const sendMessage = useCallback(async (text: string, options?: { hidden?: boolean; voice?: VoiceMetadata }) => {
     if (!text.trim() || isStreaming) return;
     setError(null);
     setQuotaExhausted(false);
@@ -77,7 +77,7 @@ export function useStreamingChat({
       logEvent("session_started", { mode, conversationId: conversationIdRef.current ?? undefined }, userId).catch(() => {});
     }
 
-    const userMsg: AIMessage = { role: "user", content: text.trim(), timestamp: new Date().toISOString(), hidden: options?.hidden };
+    const userMsg: AIMessage = { role: "user", content: text.trim(), timestamp: new Date().toISOString(), hidden: options?.hidden, voice: options?.voice };
     const nextMessages = [...messagesRef.current, userMsg];
     setMessages(nextMessages);
 

@@ -9,6 +9,8 @@ import {
   generateAxSameDifferent,
   generateOddOneOut,
   generateAbx,
+  generateSpeakWord,
+  generateSpeakPhrase,
   generateFinalConsonantMinimalPair,
   generateFinalConsonantAx,
   getFinalConsonantPairs,
@@ -131,6 +133,7 @@ export function buildAdaptiveSession(
   const weakOther = weakestContrastIpa(sound.ipa, progressMap)
   const focusContrastId = weakOther ? contrastKey(sound.ipa, weakOther) : undefined
   const canUseAbx = isB1OrAbove(userLevel)
+  const focusProgress = focusContrastId ? progressMap.get(focusContrastId) : undefined
 
   const stamp = (data: Exercise): Exercise =>
     focusContrastId ? { ...data, contrastId: focusContrastId } : data
@@ -169,6 +172,15 @@ export function buildAdaptiveSession(
 
   // dictation × 1 — listening of the target sound; attribute to focus contrast when known
   ex.push({ kind: 'phoneme', data: stamp(generateDictation(sound, targetWords)) })
+
+  // Production: word, then a short carrier-phrase production — only once
+  // there is prior evidence for the focus contrast (never first for a
+  // brand-new contrast) and it isn't mastered yet. Word comes before phrase
+  // per the target learning loop (word production precedes phrase production).
+  if (focusContrastId && focusProgress && !isContrastMastered(focusProgress)) {
+    ex.push({ kind: 'phoneme', data: stamp(generateSpeakWord(sound, targetWords, { maxLevel: userLevel })) })
+    ex.push({ kind: 'phoneme', data: stamp(generateSpeakPhrase(sound, targetWords, { maxLevel: userLevel })) })
+  }
 
   // Optional: match_pairs + reorder (aggregate / example drills — no contrast stamp)
   const matchGroups = generateMatchPairsFromSoundWords(targetWords)

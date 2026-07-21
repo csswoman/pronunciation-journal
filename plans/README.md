@@ -81,7 +81,7 @@ your row when done.
 | 060 | Isolate local learning data by user | P1 security | L | 059 | DONE (2026-07-20: Dexie v21 scopes private local data, quarantines ambiguous legacy rows, and removes unsupported AI outbox targets) |
 | 061 | Make SRS and outbox transactional and truthful | P1 | L | 059, 060 | DONE (steps 1-7 on `codex/061-transactional-srs-outbox`) |
 | 062 | Fix exercise evidence attribution | P1 | L | 061 | DONE (2026-07-20 on `codex/062-evidence-attribution`) |
-| 063 | Build the pronunciation production spine | P1 product/pedagogy | L | 059, 060, 062, 066 | TODO |
+| 063 | Build the pronunciation production spine | P1 product/pedagogy | L | 059, 060, 062, 066 | DONE (2026-07-20 on `codex/063-pronunciation-spine`; steps 1-8 landed plus two follow-ups: Sound Lab now schedules a carrier-phrase production step alongside word production, and the coach's system prompt is now dynamically built server-side (fixing a pre-existing dead `buildSystemPrompt`) and caps feedback to one correction + retry phrase on a scored spoken chat turn; focused tests + typecheck pass; plan 066 dependency was still TODO when this executed) |
 | 064 | Validate acoustic pronunciation assessment | P2 direction | L/XL | 063 | TODO |
 | 065 | Turn Tracking into verified review | P2 product/pedagogy | M | 058, 061, 062, 063 | TODO |
 | 066 | Create the canonical pronunciation target registry | P1 foundation | M | 062 | TODO |

@@ -212,6 +212,49 @@ export function generateSpeakWord(
 }
 
 /**
+ * Fixed carrier phrases for controlled phrase-level production — a standard
+ * phonetics technique: wrap a target word in a short, always-grammatical
+ * frame so the learner produces a real (if generic) phrase, not just an
+ * isolated word. There is no per-contrast example-sentence content in the
+ * DB today, so a carrier phrase avoids either fabricating a possibly
+ * nonsensical sentence from two random words or blocking phrase production
+ * entirely on missing content.
+ */
+const CARRIER_PHRASES = [
+  (word: string) => `Say ${word} again.`,
+  (word: string) => `I said ${word}.`,
+  (word: string) => `Can you hear ${word}?`,
+] as const
+
+/**
+ * speak_word (phrase variant): TTS plays a short carrier phrase built around
+ * the target word, then the user speaks the whole phrase. Reuses the
+ * speak_word type/renderer — SpeakScoredExercise compares against whatever
+ * text is in targetWord, whether that's one word or a short phrase.
+ */
+export function generateSpeakPhrase(
+  targetSound: Sound,
+  targetWords: SoundWord[],
+  opts?: ExerciseOptions
+): Exercise {
+  const leveled = applyLevel(targetWords, opts)
+  const [targetWord] = pick(leveled, 1)
+  const level = numericToCEFR(targetWord?.difficulty ?? null)
+  const [carrier] = pick([...CARRIER_PHRASES], 1)
+
+  return {
+    type: 'speak_word',
+    exerciseType: { domain: 'pronunciation', mode: 'speak', variant: 'sentence' },
+    soundId: targetSound.id,
+    ipa: targetSound.ipa,
+    targetWord: targetWord ? carrier(targetWord.word) : undefined,
+    options: [],
+    correctIds: [],
+    ...(level ? { level } : {}),
+  }
+}
+
+/**
  * identify: hear a word, confirm whether it contains the target phoneme (yes/no).
  * Good for A1/A2 — minimal cognitive load.
  */

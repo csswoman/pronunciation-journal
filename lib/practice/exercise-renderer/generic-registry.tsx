@@ -11,6 +11,7 @@ import { ErrorCorrectionExercise } from '@/components/exercises/ErrorCorrectionE
 import { ConjugationBlankExercise } from '@/components/exercises/ConjugationBlankExercise'
 import { SentenceTransformationExercise } from '@/components/exercises/SentenceTransformationExercise'
 import { TranslationEsEnExercise } from '@/components/exercises/TranslationEsEnExercise'
+import { CsShadowPhraseExercise } from '@/components/exercises/CsShadowPhraseExercise'
 import type {
   GenericExercise,
   GenericExerciseType,
@@ -26,6 +27,7 @@ import type {
   ConjugationBlankExercise as ConjugationBlankExerciseType,
   SentenceTransformationExercise as SentenceTransformationExerciseType,
   TranslationEsEnExercise as TranslationEsEnExerciseType,
+  CsShadowPhraseExercise as CsShadowPhraseExerciseType,
 } from '@/lib/exercises/types'
 import type { PedagogicalFeedback } from '@/lib/practice/types'
 
@@ -149,6 +151,13 @@ export const GENERIC_REGISTRY: GenericRegistry = {
   conjugation_blank: { title: 'Completa el verbo', render: (exercise: ConjugationBlankExerciseType, { onResult }) => <ConjugationBlankExercise exercise={exercise} onResult={onResult} /> },
   sentence_transformation: { title: 'Transforma la oración', noHint: true, render: (exercise: SentenceTransformationExerciseType, { onResult, onSkip }) => <SentenceTransformationExercise exercise={exercise} onResult={onResult} onSkip={onSkip} /> },
   translation_es_en: { title: 'Traduce al inglés', noHint: true, render: (exercise: TranslationEsEnExerciseType, { onResult }) => <TranslationEsEnExercise exercise={exercise} onResult={onResult} /> },
+  cs_shadow_phrase: {
+    title: 'Shadow the phrase',
+    noHint: true,
+    render: (exercise: CsShadowPhraseExerciseType, { onResult, onSkip }) => (
+      <CsShadowPhraseExercise exercise={exercise} onResult={onResult} onSkip={onSkip} />
+    ),
+  },
 }
 
 /**

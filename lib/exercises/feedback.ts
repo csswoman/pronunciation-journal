@@ -62,6 +62,14 @@ export function buildPedagogicalFeedback(
       return { immediate: isCorrect ? 'Correcto.' : 'Revisa el feedback antes de continuar.', expectedAnswer: exercise.referenceAnswer, errorCode: isCorrect ? 'correct' : 'unknown', canRetry: !isCorrect, nextAction: isCorrect ? 'continue' : 'retry' }
     case 'translation_es_en':
       return { immediate: isCorrect ? 'Correcto.' : 'Compara tu traducción con la referencia.', expectedAnswer: exercise.referenceEn, correction: exercise.referenceEn, errorCode: isCorrect ? 'correct' : 'meaning_choice', canRetry: !isCorrect, nextAction: isCorrect ? 'continue' : 'retry' }
+    case 'cs_shadow_phrase':
+      return {
+        immediate: isCorrect ? 'Great shadowing!' : emptyAnswer ? "That attempt wasn't scored — keep practicing." : 'Keep practicing this phrase.',
+        expectedAnswer: exercise.phrase,
+        category: isCorrect ? 'correct' : emptyAnswer ? 'unscored' : 'production_review',
+        errorCode: isCorrect ? 'correct' : 'unknown',
+        nextAction: 'continue',
+      }
   }
 }
 

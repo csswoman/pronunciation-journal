@@ -14,8 +14,15 @@ export type ContentPart =
   | { type: "text"; text: string }
   | { type: "tool_call"; callId: string };
 
+/** Voice metadata for a spoken chat turn. `scored` mirrors the honest
+ * SpokenAttempt contract (`lib/pronunciation/spoken-attempt.ts`): true only
+ * when STT actually captured and transcribed real speech. There is no fixed
+ * target phrase in free chat, so "scored" here means a successful transcript
+ * capture — not a pronunciation-accuracy grade. */
+export type VoiceMetadata = { transcript: true; scored: boolean };
+
 export type AIMessage =
-  | { role: "user"; content: string; timestamp: string; hidden?: boolean }
+  | { role: "user"; content: string; timestamp: string; hidden?: boolean; voice?: VoiceMetadata }
   | { role: "model"; contentParts: ContentPart[]; toolCalls: Map<string, ToolCall>; timestamp: string }
   | { role: "tool"; toolCallId: string; name: string; result: unknown; timestamp: string };
 

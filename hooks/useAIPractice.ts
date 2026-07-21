@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import type { ExerciseResult } from "@/lib/ai-practice/types";
+import type { ExerciseResult, VoiceMetadata } from "@/lib/ai-practice/types";
 import type { StartRoleplayArgs } from "@/lib/ai-practice/tools/registry";
 import { getUserLearningState } from "@/lib/ai-practice/load-state";
 import { hydrateFromRemote, persistLearningState } from "@/lib/ai-practice/queries";
@@ -25,7 +25,7 @@ interface UseAIPracticeReturn {
   activeRoleplay: StartRoleplayArgs["scenario"] | null;
   mode: AIConversationMode;
   conversationId: number | null;
-  sendMessage: (text: string, options?: { hidden?: boolean }) => Promise<void>;
+  sendMessage: (text: string, options?: { hidden?: boolean; voice?: VoiceMetadata }) => Promise<void>;
   answerToolCall: (callId: string, result: ExerciseResult) => void;
   openSaveWordModal: (word: string, context: string) => void;
   closeSaveWordModal: () => void;
@@ -80,15 +80,35 @@ export function useAIPractice(): UseAIPracticeReturn {
   }, [user?.id, words.loadSavedWords]);
 
   // Throttled persistence: sync learningState to Supabase 5s after the last update.
+  // Flushed early (instead of just cancelled) on unmount, dependency change, and
+  // `pagehide` so an in-flight snapshot (weak topics, spoken targets, etc.) is never
+  // silently dropped when the user navigates away within the debounce window.
   useEffect(() => {
     if (!user?.id || !learningState) return;
     const userId = user.id;
+    let flushed = false;
+
+    const flush = () => {
+      if (flushed) return;
+      flushed = true;
+      if (persistTimeoutRef.current) {
+        clearTimeout(persistTimeoutRef.current);
+        persistTimeoutRef.current = null;
+      }
+      persistLearningState(userId, learningState).catch(() => {});
+    };
+
     if (persistTimeoutRef.current) clearTimeout(persistTimeoutRef.current);
     persistTimeoutRef.current = setTimeout(() => {
-      persistLearningState(userId, learningState).catch(() => {});
+      persistTimeoutRef.current = null;
+      flush();
     }, 5000);
+
+    window.addEventListener("pagehide", flush);
+
     return () => {
-      if (persistTimeoutRef.current) clearTimeout(persistTimeoutRef.current);
+      window.removeEventListener("pagehide", flush);
+      flush();
     };
   }, [user?.id, learningState]);
 

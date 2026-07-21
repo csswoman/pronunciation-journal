@@ -15,12 +15,13 @@ import { dayOfYear, dedupeByContentId } from './selectors'
 export async function buildConnectedSpeechStep(): Promise<DailyStep | null> {
   if (dayOfYear() % 2 !== 0) return null
 
-  const result = await generateConnectedSpeechExercises(2, 2)
+  const result = await generateConnectedSpeechExercises(2, 2, 1)
   if (!result) return null
 
   const exercises = dedupeByContentId([
     ...result.quiz.map((ex) => fromGenericExercise(ex, 'daily')),
     ...result.dictation.map((ex) => fromGenericExercise(ex, 'daily')),
+    ...result.shadowPhrase.map((ex) => fromGenericExercise(ex, 'daily')),
   ])
   if (exercises.length === 0) return null
 

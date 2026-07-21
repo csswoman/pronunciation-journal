@@ -38,6 +38,7 @@ export type ExerciseSlug =
   | 'conjugation_blank'  // id: 21
   | 'sentence_transformation' // id: 20
   | 'translation_es_en' // id: 22
+  | 'cs_shadow_phrase' // id: 23 — connected-speech shadow/production step (local STT, no Gemini)
 
 // null signals "no exercise_types FK" — this exercise does not write to answer_history.
 export const EXERCISE_TYPE_IDS: Record<ExerciseSlug, number | null> = {
@@ -63,6 +64,7 @@ export const EXERCISE_TYPE_IDS: Record<ExerciseSlug, number | null> = {
   conjugation_blank: 21,
   sentence_transformation: 20,
   translation_es_en: 22,
+  cs_shadow_phrase: 23,
 }
 
 export type PracticeContext =

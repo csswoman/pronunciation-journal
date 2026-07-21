@@ -5,7 +5,7 @@ Cuatro sistemas de repetición espaciada conviven en la app. Cada uno tiene un d
 | Sistema | Almacenamiento | Algoritmo | Clave |
 | --- | --- | --- | --- |
 | Vocabulario user-owned | `word_bank` (Supabase ⇄ Dexie) | SM-2 cliente | `id` (uuid) |
-| Fonemas | `user_sound_progress` (Supabase) | SM-2 simplificado | `sound_id` |
+| Contrastes de fonemas | `user_contrast_progress` (Supabase) | SM-2 simplificado | `contrast_id` |
 | Essential Words (NGSL / `c1k:`) | `srsData` (Dexie, offline-first) | SM-2 cliente | `c1k:<word>` |
 | Temas / conceptos del curso | `topic_srs` (Supabase) | SM-2 cliente | `normalizeTopic()` |
 
@@ -35,24 +35,26 @@ Cuatro sistemas de repetición espaciada conviven en la app. Cada uno tiene un d
 
 ---
 
-## 2. `user_sound_progress` — Fonemas
+## 2. `user_contrast_progress` — Contrastes de fonemas
 
-**Propósito:** Rastrea el dominio de fonemas individuales por usuario. Alimenta el perfil de habilidades fonemáticas.
+**Propósito:** Rastrea el dominio de **contrastes** de fonemas (el par que el alumno confunde, ej. `/iː/` vs `/ɪ/`) por usuario — no el sonido aislado. Alimenta el perfil de habilidades fonemáticas y decide cuándo programar el ejercicio de producción (`speak_word`) en la sesión adaptativa (`buildAdaptiveSession`, `lib/phoneme-practice/mixed-session.ts`).
 
-**Tabla:** `user_sound_progress`
+**Tabla:** `user_contrast_progress`
 
-**Algoritmo:** SM-2 simplificado, evaluado tras ejercicios de pronunciación.
+**Algoritmo:** SM-2 simplificado (`lib/phoneme-practice/sr.ts`), evaluado tras ejercicios de pronunciación con `outcome: 'scored'` (ver `SpokenAttempt` en [`exercises.md`](./exercises.md#evidencia-de-habla-niveles-de-señal-y-matriz-surfacestore)).
 
-**Campos clave:**
+**Campos clave** (`UserContrastProgress`, `lib/phoneme-practice/types.ts`):
 
 | Campo | Rol |
 |---|---|
-| `sound_id` | Referencia a `sounds.id` |
-| `level` | Nivel de dominio actual |
+| `contrast_id` | Clave canónica del par de fonemas (ej. `"iː\|ɪ"`), ver `contrastKey()` en `lib/phoneme-practice/phoneme-similarity.ts` |
+| `total_attempts` / `correct_answers` | Historial de intentos para calcular accuracy y mastery (`isContrastMastered`, `lib/phoneme-practice/mastery.ts`) |
 | `next_review_at` | Próxima revisión programada |
 | `last_practiced_at` | Última vez practicado |
 
-**Queries:** `lib/practice/queries.ts`
+**Queries:** `lib/phoneme-practice/queries.ts`
+
+> **Nota histórica:** esta tabla reemplaza a `user_sound_progress` (progreso por sonido completo). `user_sound_progress` ya no existe en el código; cualquier mención restante en documentación antigua debe leerse como legacy, no como estado actual.
 
 ---
 
