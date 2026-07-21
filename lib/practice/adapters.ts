@@ -22,6 +22,7 @@ const GENERIC_TYPE_TO_SLUG: Record<GenericExerciseType, ExerciseSlug> = {
   conjugation_blank: 'conjugation_blank',
   sentence_transformation: 'sentence_transformation',
   translation_es_en: 'translation_es_en',
+  cs_shadow_phrase: 'cs_shadow_phrase',
 }
 
 /**
@@ -72,6 +73,7 @@ export function fromMixedExercise(
       stimuli,
       abxAnswer,
       oddIndex,
+      contrastId,
     }
     const slug = ex.data.type as ExerciseSlug
     // contentId must vary per exercise within a sound so buildSession does not

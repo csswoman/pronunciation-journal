@@ -28,6 +28,7 @@ export const EXERCISE_SKILL_MATRIX = {
   conjugation_blank: ['grammar'],
   sentence_transformation: ['grammar'],
   translation_es_en: ['vocabulary', 'grammar'],
+  cs_shadow_phrase: ['speaking', 'pronunciation'],
 } as const satisfies Record<ExerciseSlug, readonly SkillTag[]>
 
 export type ExerciseSkillMatrix = typeof EXERCISE_SKILL_MATRIX

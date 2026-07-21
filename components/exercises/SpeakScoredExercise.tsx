@@ -36,6 +36,14 @@ interface ScoredResult {
   transcript: string
 }
 
+/**
+ * Explains why this attempt has no score, for the shared unscored-fallback UI.
+ * 'unsupported' — the browser has no SpeechRecognition API at all.
+ * 'unavailable' — recognition is supported but failed (e.g. Brave blocks the
+ *                  network speech service) or the evaluator itself rejected.
+ */
+type UnscoredReason = 'unsupported' | 'unavailable'
+
 // ── WordDisplay ──────────────────────────────────────────────────────────────
 
 function WordDisplay({ word, ipa, onListen }: { word?: string; ipa: string; onListen: () => void }) {
@@ -60,12 +68,21 @@ function WordDisplay({ word, ipa, onListen }: { word?: string; ipa: string; onLi
 // Used when live speech recognition is unavailable (e.g. Brave blocks Google's
 // speech service). No automatic scoring — listen and repeat, then continue.
 
-function ShadowingFallback({ word, onContinue }: { word?: string; onContinue: () => void }) {
+function ShadowingFallback({
+  word,
+  reason,
+  onContinue,
+}: {
+  word?: string
+  reason: UnscoredReason
+  onContinue: () => void
+}) {
   return (
     <div className="flex flex-col items-center gap-4">
       <p className="text-xs text-fg-muted text-center max-w-xs m-0">
-        Voice scoring isn’t available in this browser. Listen to the model and
-        repeat it out loud, then continue.
+        {reason === 'unsupported'
+          ? "Your browser doesn't support voice scoring. Listen to the model and repeat it out loud, then continue — this attempt won't be scored."
+          : "Voice scoring isn't available right now. Listen to the model and repeat it out loud, then continue — this attempt won't be scored."}
       </p>
       <ListenButton onPlay={() => word && speak(word)} label="Listen" />
       <PillButton variant="primary" size="sm" onClick={onContinue}>
@@ -81,12 +98,13 @@ export function SpeakScoredExercise({ exercise, onSubmit }: Props) {
   const { status, result: speechResult, errorCode, isSupported, start, stop, reset } = useSpeechRecognition()
   const [scored, setScored] = useState<ScoredResult | null>(null)
   const [isScoring, setIsScoring] = useState(false)
+  const [evalFailed, setEvalFailed] = useState(false)
   const submitted = useRef(false)
 
 
   // Score when transcript arrives
   useEffect(() => {
-    if (!isSupported || status !== 'done' || !speechResult || isScoring || scored) return
+    if (!isSupported || status !== 'done' || !speechResult || isScoring || scored || evalFailed) return
     const target = exercise.targetWord ?? ''
     if (!target) return
 
@@ -105,8 +123,14 @@ export function SpeakScoredExercise({ exercise, onSubmit }: Props) {
           transcript: speechResult.transcript,
         })
       })
+      .catch(() => {
+        // Evaluation errored (e.g. evaluator threw) — this is an honest
+        // 'failed' SpokenAttempt outcome, not a silent 0%. Fall through to
+        // the unscored shadowing UI instead of leaving the learner stuck.
+        setEvalFailed(true)
+      })
       .finally(() => setIsScoring(false))
-  }, [isSupported, status, speechResult, isScoring, scored, exercise.targetWord])
+  }, [isSupported, status, speechResult, isScoring, scored, evalFailed, exercise.targetWord])
 
   const handleContinue = useCallback(() => {
     if (!scored || submitted.current) return
@@ -120,28 +144,21 @@ export function SpeakScoredExercise({ exercise, onSubmit }: Props) {
     reset()
   }, [reset])
 
-  // Shadowing fallback completes the exercise without a transcript/score.
+  // Shadowing fallback completes the exercise honestly unscored: never a
+  // correct answer, never a score, so it can't affect accuracy/SRS/mastery.
   const handleShadowingDone = useCallback(() => {
     if (submitted.current) return
     submitted.current = true
-    onSubmit(true, '')
+    onSubmit(false, '')
   }, [onSubmit])
-
-  if (!isSupported) {
-    return (
-      <div className="text-center py-4">
-        <p className="text-sm text-fg-muted">
-          Your browser does not support speech recognition. Try Chrome or Edge.
-        </p>
-      </div>
-    )
-  }
 
   const isListening = status === 'listening'
   const isDone = status === 'done'
   const isError = status === 'error'
   // Browsers like Brave block Google's speech service → fall back to shadowing.
-  const isShadowing = isError && errorCode === 'network'
+  const isNetworkShadowing = isError && errorCode === 'network'
+  const isShadowing = !isSupported || isNetworkShadowing || evalFailed
+  const shadowingReason: UnscoredReason = !isSupported ? 'unsupported' : 'unavailable'
 
   return (
     <div className="flex flex-col items-center gap-6 w-full">
@@ -180,9 +197,9 @@ export function SpeakScoredExercise({ exercise, onSubmit }: Props) {
         </div>
       )}
 
-      {/* Shadowing fallback — speech service unavailable (e.g. Brave) */}
+      {/* Shadowing fallback — unsupported browser, network block, or eval failure */}
       {isShadowing && !scored && (
-        <ShadowingFallback word={exercise.targetWord} onContinue={handleShadowingDone} />
+        <ShadowingFallback word={exercise.targetWord} reason={shadowingReason} onContinue={handleShadowingDone} />
       )}
 
       {/* Error state (recoverable errors) */}

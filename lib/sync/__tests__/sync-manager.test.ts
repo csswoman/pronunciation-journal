@@ -144,6 +144,12 @@ describe('enqueue', () => {
   })
 })
 
+it('rejects an RPC entry without its function name', async () => {
+  vi.clearAllMocks()
+  await expect(enqueue('user-1', 'word_bank', 'rpc', {})).rejects.toThrow('rpc operation requires rpcName')
+  expect(mocks.mockSyncOutboxAdd).not.toHaveBeenCalled()
+})
+
 // ── C. flushOutbox ──────────────────────────────────────────────────────────
 
 describe('flushOutbox', () => {

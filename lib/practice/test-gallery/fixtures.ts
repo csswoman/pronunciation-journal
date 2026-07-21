@@ -122,6 +122,13 @@ const GENERIC_FIXTURES: Record<
   conjugation_blank: { id: 'conjugation-blank', type: 'conjugation_blank', sourceRef: SOURCE, sentence: 'She ___ to work.', lemma: 'go', answer: 'goes' },
   sentence_transformation: { id: 'sentence-transformation', type: 'sentence_transformation', sourceRef: SOURCE, sourceSentence: 'She is too tired to work.', instruction: 'Rewrite using enough.', referenceAnswer: 'She is not well enough to work.' },
   translation_es_en: { id: 'translation-es-en', type: 'translation_es_en', sourceRef: SOURCE, sourceEs: 'Ella trabaja desde casa.', referenceEn: 'She works from home.', acceptedAnswers: ['She works at home.'] },
+  cs_shadow_phrase: {
+    id: 'test-cs_shadow_phrase',
+    type: 'cs_shadow_phrase',
+    sourceRef: { source: 'text_fragments', id: 'cs-linking' },
+    phrase: "I'm gonna call you later.",
+    deckSlug: 'cs-linking',
+  },
 }
 
 const PHONEME_FIXTURES: Record<
@@ -264,6 +271,7 @@ const GENERIC_LABELS: Record<keyof typeof GENERIC_FIXTURES, string> = {
   conjugation_blank: 'Completar verbo',
   sentence_transformation: 'Transformar oración',
   translation_es_en: 'Traducir al inglés',
+  cs_shadow_phrase: 'Frase de habla conectada',
 }
 
 const PHONEME_LABELS: Record<keyof typeof PHONEME_FIXTURES, string> = {

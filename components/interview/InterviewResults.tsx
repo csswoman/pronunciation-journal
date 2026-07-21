@@ -167,7 +167,7 @@ export function InterviewResults({ title, turns, results, difficulty, level, onR
           <div>
             <p className="text-xl font-bold" style={{ color: gradeColor }}>{grade}</p>
             <p className="text-sm mt-0.5 text-[var(--muted-text)]">
-              Overall pronunciation accuracy
+              Overall word recognition accuracy
             </p>
           </div>
 

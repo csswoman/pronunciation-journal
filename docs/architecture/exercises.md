@@ -22,7 +22,8 @@ Documentación del sistema de ejercicios de la app: qué tipos existen, cómo fu
 5. [Flujo de una sesión](#flujo-de-una-sesión)
 6. [Persistencia y tracking](#persistencia-y-tracking)
 7. [Spaced Repetition (SM-2)](#spaced-repetition-sm-2)
-8. [Extensión futura](#extensión-futura)
+8. [Evidencia de habla: niveles de señal y matriz surface→store](#evidencia-de-habla-niveles-de-señal-y-matriz-surfacestore)
+9. [Extensión futura](#extensión-futura)
 
 ---
 
@@ -130,15 +131,18 @@ Reproduce el audio de una palabra. El usuario escribe lo que oye.
 ### Speak Word
 
 **Slug:** `speak_word`
-**Componente:** `components/phoneme-practice/SpeakExercise.tsx`
+**Componente:** `components/exercises/SpeakScoredExercise.tsx` (usado tanto por Sound Lab como por el paso de producción del Daily plan)
 
-Muestra una palabra. El usuario la pronuncia; la app evalúa la pronunciación con STT.
+Muestra una palabra. El usuario la pronuncia; la app evalúa la pronunciación con STT vía `defaultEvaluationEngine` (motor de evaluación cliente — diff de palabras, NO Gemini).
 
 - Captura: Web Speech API (`hooks/useSpeechRecognition.ts`)
-- Validación: Levenshtein ≤ 1 entre transcripción y palabra objetivo
-- Feedback: correcto/incorrecto (sin scoring de fonemas individuales en este tipo)
+- Evaluación: `defaultEvaluationEngine.evaluate(...)` (`lib/exercises/evaluation/`) — produce score + `wordResults`
+- Si la evaluación falla o STT no está disponible (navegador no soportado, o bloqueo de red como en Brave), el componente cae a un **fallback de shadowing honesto**: escuchar + repetir + continuar, sin scoring. Llama `onSubmit(false, '')` — nunca fabrica una respuesta correcta. Este intento queda como `SpokenAttempt` con `outcome: 'unscored'`, excluido de accuracy/SRS.
+- Solo se programa en la sesión adaptativa cuando el contraste de fonemas enfocado ya tiene evidencia previa en `user_contrast_progress` y no está dominado (`buildAdaptiveSession`, `lib/phoneme-practice/mixed-session.ts`) — nunca es el primer ejercicio de un contraste nuevo.
 
 **Datos requeridos:** `words.word`, micrófono disponible
+
+Ver [Evidencia de habla](#evidencia-de-habla-niveles-de-señal-y-matriz-surfacestore) para el contrato `SpokenAttempt` y los niveles de señal.
 
 ---
 
@@ -372,21 +376,24 @@ SoundLabPage
 
 | Tabla | Qué guarda |
 |---|---|
-| `exercise_types` | Catálogo de tipos: `pick_word`, `pick_sound`, `minimal_pair`, `dictation`, `speak_word`, `fill_blank`, `sentence_dictation`, `match_pairs`, `reorder_words`, `multiple_choice` |
+| `exercise_types` | Catálogo de tipos: `pick_word`, `pick_sound`, `minimal_pair`, `dictation`, `speak_word`, `fill_blank`, `sentence_dictation`, `match_pairs`, `reorder_words`, `multiple_choice`, `cs_shadow_phrase` (id 23, migración `20260720190000_add_cs_shadow_phrase_exercise_type.sql`) |
 | `answer_history` | Cada respuesta: `user_id`, `exercise_type_id`, `is_correct`, `user_answer`, `target_word`, `time_ms`, `exercise_payload` (JSONB con `sourceRef`), `sound_id` (nullable) |
-| `user_sound_progress` | Progreso SM-2 por usuario × sonido |
+| `user_contrast_progress` | Progreso SM-2 por usuario × **contraste de fonemas** (`contrast_id`, ej. `"iː\|ɪ"` — no por sonido aislado). Ver [`lib/phoneme-practice/types.ts`](../../lib/phoneme-practice/types.ts) (`UserContrastProgress`) y [`lib/phoneme-practice/mastery.ts`](../../lib/phoneme-practice/mastery.ts) (`isContrastMastered`). |
 | `deck_entry_progress` | Progreso SM-2 por usuario × entrada de deck |
 | `word_bank` | Vocabulario con campos SM-2 integrados |
+
+> **Nota histórica:** una versión anterior usaba `user_sound_progress` (progreso por sonido completo, sin distinguir contraste). Esa tabla fue reemplazada por `user_contrast_progress`, que trackea el par de fonemas específico que el alumno confunde (más preciso para SRS de producción). No queda código activo que lea/escriba `user_sound_progress`.
 
 ### Dexie (IndexedDB local)
 
 | Store | Qué guarda |
 |---|---|
 | `srsData` | SM-2 de palabras de Dexie (Pronunciation Journal) |
-| `localSoundProgress` | Espejo local de `user_sound_progress` |
-| `localAnswerHistory` | Respuestas pendientes de sincronizar |
 | `generatedExercises` | Cache de ejercicios genéricos generados (TTL 1h) — `id, type, source, generatedAt, exercise` |
 | `analyticsEvents` | Eventos de sesión (`exercise_shown`, `exercise_answered`, etc.) |
+| `pronunciationMastery` / `pronunciationCoachState` | Estado local de UX del Pronunciation Coach (frases dominadas / cola / vistas) — ver [Evidencia de habla](#evidencia-de-habla-niveles-de-señal-y-matriz-surfacestore). No es fuente de verdad de accuracy/SRS. |
+
+> **Nota histórica:** `localSoundProgress` (espejo local de `user_sound_progress`) y `localAnswerHistory` (cola de respuestas pendientes de sincronizar) no existen en el código actual. Si aparecen en migraciones antiguas de Dexie, trátense como legacy — el mecanismo vigente de "respuestas pendientes de sync" es el outbox (`syncOutbox`), documentado en [`offline-sync.md`](./offline-sync.md).
 
 ---
 
@@ -398,9 +405,9 @@ El algoritmo SM-2 está implementado en varias variantes:
 - Input: `quality` 0–5 (derivado de accuracy %)
 - Actualiza: `ease`, `interval`, `repetitions`, `nextReview`
 
-**`lib/phoneme-practice/sr.ts`** — SM-2 simplificado para sonidos
+**`lib/phoneme-practice/sr.ts`** — SM-2 simplificado para contrastes de fonemas
 - Input: `isCorrect: boolean`
-- Actualiza: `ease_factor`, `interval_days`, `streak`, `next_review` en `user_sound_progress`
+- Actualiza: `ease_factor`, `interval_days`, `streak`, `next_review` en `user_contrast_progress` (histórico: antes `user_sound_progress`, por sonido en vez de por contraste — ver nota en [Persistencia y tracking](#persistencia-y-tracking))
 
 **`lib/decks/study-source.ts`** — SM-2 para decks y word_bank
 - Misma lógica, persiste en columnas SM-2 de `word_bank` o `deck_entry_progress`
@@ -440,6 +447,48 @@ El daily-plan antepone un paso `word_intro` (`DailyStepKind`) que **presenta** l
 - Modelo + adaptadores: `lib/practice/study-card/model.ts` (`StudyCardModel`, `coreWordToStudyCard`, `wordBankEntryToStudyCard`).
 - Componente agnóstico de fuente: `components/practice/study-card/StudyCard.tsx`, reutilizado por Core 1000 (`WordStudyCard`) y por el daily-plan (`WordIntroStep`).
 - Builder: `buildWordIntroStep` (`step-builders.ts`), tope `WORD_INTRO_MAX_CARDS`; "nueva" = `srs_status === 'new'`.
+
+---
+
+## Evidencia de habla: niveles de señal y matriz surface→store
+
+Toda superficie donde el usuario habla y la app intenta evaluarlo produce un
+`SpokenAttempt` (`lib/pronunciation/spoken-attempt.ts`): `outcome: 'scored' |
+'unscored' | 'skipped' | 'failed'`. **Solo `outcome === 'scored'` puede afectar
+accuracy, SRS o promoción de mastery** — el guard `isScorableAttempt()` es
+obligatorio antes de agregar cualquier intento a una métrica. Un intento
+`'unscored'` (STT no disponible, fallback de shadowing) o `'failed'`
+(evaluador lanzó excepción) no es ni acierto ni fallo: se excluye, nunca se
+trata como 0% ni como 100%.
+
+### Tres niveles de señal
+
+No todo lo que mide "pronunciación" mide lo mismo. La app distingue tres
+niveles explícitos:
+
+| Nivel | Qué mide | Estado | Dónde vive |
+|---|---|---|---|
+| **1 — STT intelligibility** (`scoreKind: 'stt_intelligibility'`) | ¿La transcripción STT coincide con el texto objetivo? Mide inteligibilidad (¿un oyente/STT entendería lo dicho?), **no** precisión acústica real. | Implementado | `SpeakScoredExercise`, `PronunciationView` (`scorePronunciation()`), `CsShadowPhraseExercise` — todas vía diff cliente, nunca Gemini |
+| **2 — Transcript-derived phoneme match** | Una vez transcrita una palabra, compara su secuencia ARPABET (diccionario CMU) contra la esperada, dando feedback más fino que correcto/incorrecto binario. Sigue basado en la transcripción, no en la señal acústica cruda. | Implementado | `lib/pronunciation/phonemes.ts` (`analyzePhonemes`), enriquecimiento en `lib/pronunciation/scoring.ts` |
+| **3 — Future acoustic analysis** | Análisis acústico/formantes/prosodia real de la señal de audio, independiente de la transcripción STT. | **No implementado** — explícitamente fuera de alcance del plan 063; diferido al plan `plans/064-validate-acoustic-pronunciation-assessment.md` | N/A |
+
+`scoreKind` es un literal discriminado (no `string` plano) precisamente para
+que un futuro nivel 3 se agregue como nuevo miembro del union sin romper a los
+consumidores existentes que hacen switch sobre este campo.
+
+### Matriz surface → evidencia → store/SRS → consumidor de progreso
+
+| Surface | Evidencia (`SpokenAttempt.outcome`) | Store | ¿Alimenta SRS? | Consumidor de progreso |
+|---|---|---|---|---|
+| **Sound Lab — Speak Word** (`speak_word`, `components/exercises/SpeakScoredExercise.tsx`) | `scored` (nivel 1, vía `defaultEvaluationEngine`) o `unscored` (fallback shadowing) | `answer_history` (Supabase, `sound_id` set) + `user_contrast_progress` vía `lib/phoneme-practice/sr.ts` | Sí — **contraste de fonemas** (`contrastId` propagado desde `buildAdaptiveSession`) | Mastery display de Sound Lab (`isContrastMastered`), skill matrix de fonemas |
+| **Pronunciation Coach** (`components/ai-coach/PronunciationView.tsx`) | `scored` (nivel 1+2, vía `scorePronunciation()`) — no hay outcome `unscored` explícito en esta superficie (siempre se llama con transcripción no vacía) | `answer_history` (`context: 'ai_coach'`) + `activity_sessions` vía `savePracticeAnswer` + `recordActivitySession` (`lib/progress/activity-hub.ts`) | No liga a `user_contrast_progress` (no hay `sound_id`/`contrastId`); accuracy vive solo en `answer_history` | Daily reconciliation / historial de `answer_history` por `context: 'ai_coach'`. Local Dexie (`pronunciationMastery`, `pronunciationCoachState`) sigue existiendo para la UX de cola/vistas/dominadas de este surface — **no** es fuente de verdad de accuracy/SRS, ver [offline-sync.md](./offline-sync.md) |
+| **Connected-speech shadow phrase** (`cs_shadow_phrase`, `components/exercises/CsShadowPhraseExercise.tsx`, generador `lib/exercises/generators/connected-speech.ts`) | `scored` (nivel 1, vía `scorePronunciation()`) o `unscored` (fallback shadowing) | `answer_history` vía el pipeline genérico (`sourceRef: { source: 'text_fragments' }`) | Alimenta SRS de `text_fragments` (Dexie `srsData`, ver [srs.md](./srs.md)) cuando aplica, no `user_contrast_progress` | Daily plan step `connected_speech` (`buildConnectedSpeechStep`, `lib/practice/daily-plan/async-step-builders.ts`) |
+| **Oral chat** | No existe todavía en este branch. Planeado en `plans/070-build-goal-based-oral-missions.md`. | — | — | — |
+
+Nota: `spoken_production` / `written_production` (`lib/exercises/generators/production.ts`)
+son un flujo **distinto y deliberado**: producción libre calificada por Gemini
+(online-only), no por STT-intelligibility. No se incluyen en la matriz de
+arriba porque no usan el contrato `SpokenAttempt`/`scorePronunciation()`.
 
 ---
 

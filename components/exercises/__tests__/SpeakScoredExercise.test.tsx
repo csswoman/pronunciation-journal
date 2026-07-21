@@ -67,7 +67,7 @@ describe('SpeakScoredExercise', () => {
     expect(onSubmit).toHaveBeenCalledWith(true, 'thought', { score: 72 })
   })
 
-  it('keeps the shadowing fallback unscored', async () => {
+  it('keeps the network-failure shadowing fallback unscored', async () => {
     speechMocks.useSpeechRecognition.mockReturnValue({
       status: 'error',
       result: null,
@@ -83,6 +83,50 @@ describe('SpeakScoredExercise', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'Continue' }))
 
-    await waitFor(() => expect(onSubmit).toHaveBeenCalledWith(true, ''))
+    await waitFor(() => expect(onSubmit).toHaveBeenCalledWith(false, ''))
+    // Never a correct answer, never a score — cannot affect accuracy/SRS/mastery.
+    expect(onSubmit).not.toHaveBeenCalledWith(true, expect.anything(), expect.anything())
+  })
+
+  it('keeps the unsupported-browser fallback unscored and completable', async () => {
+    speechMocks.useSpeechRecognition.mockReturnValue({
+      status: 'idle',
+      result: null,
+      errorCode: null,
+      isSupported: false,
+      start: vi.fn(),
+      stop: vi.fn(),
+      reset: vi.fn(),
+    })
+    const onSubmit = vi.fn()
+
+    render(<SpeakScoredExercise exercise={exercise} onSubmit={onSubmit} />)
+
+    expect(screen.getByText(/doesn't support voice scoring/i)).toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button', { name: 'Continue' }))
+
+    await waitFor(() => expect(onSubmit).toHaveBeenCalledWith(false, ''))
+  })
+
+  it('falls back to an unscored shadowing result when evaluation rejects', async () => {
+    evaluationMocks.evaluate.mockRejectedValue(new Error('evaluator exploded'))
+    speechMocks.useSpeechRecognition.mockReturnValue({
+      status: 'done',
+      result: { transcript: 'thought' },
+      errorCode: null,
+      isSupported: true,
+      start: vi.fn(),
+      stop: vi.fn(),
+      reset: vi.fn(),
+    })
+    const onSubmit = vi.fn()
+
+    render(<SpeakScoredExercise exercise={exercise} onSubmit={onSubmit} />)
+
+    await waitFor(() => expect(evaluationMocks.evaluate).toHaveBeenCalled())
+    const continueBtn = await screen.findByRole('button', { name: 'Continue' }, { timeout: 3000 })
+    fireEvent.click(continueBtn)
+
+    await waitFor(() => expect(onSubmit).toHaveBeenCalledWith(false, ''))
   })
 })

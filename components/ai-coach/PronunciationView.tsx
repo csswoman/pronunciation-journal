@@ -4,8 +4,13 @@ import { useCallback, useEffect, useState } from "react";
 import { useSpeechInput } from "@/hooks/useSpeechInput";
 import { useSharedMicStream } from "@/hooks/useSharedMicStream";
 import { useAuth } from "@/components/auth/AuthProvider";
-import { analyzePhonemes, ARPABET_TO_IPA } from "@/lib/pronunciation/phonemes";
+import { ARPABET_TO_IPA } from "@/lib/pronunciation/phonemes";
+import { scorePronunciation } from "@/lib/pronunciation/scoring";
 import { saveAIWord } from "@/lib/db/ai";
+import { savePracticeAnswer } from "@/lib/practice/queries";
+import { recordActivitySession } from "@/lib/progress/activity-hub";
+import { buildSessionResult } from "@/lib/practice/session-result";
+import type { PracticeAnswer } from "@/lib/practice/types";
 import {
   BATCH_SIZE,
   PHONEME_TIPS,
@@ -148,22 +153,31 @@ export default function PronunciationView() {
   const analyzeRecording = useCallback(async (transcript: string) => {
     setAnalyzing(true);
     try {
-      if (!transcript) return;
-      const phraseWords = activePhrase.split(/\s+/).filter(Boolean);
-      const transcriptWords = transcript.trim().split(/\s+/).filter(Boolean);
-      const results = await Promise.all(
-        phraseWords.map((word, index) => analyzePhonemes(word, transcriptWords[index] ?? "")),
+      if (!transcript || !activePhrase) return;
+
+      // Shared sequence alignment (lib/pronunciation/scoring.ts) instead of
+      // index-zipping phrase words against transcript words — an omitted
+      // word no longer shifts every later word's feedback.
+      const scoring = await scorePronunciation(transcript, activePhrase);
+
+      // Map results back onto the original phrase's words by matching
+      // expected text (skip "extra" entries — they have no expected word).
+      const byExpected = new Map(
+        scoring.wordResults
+          .filter((r) => r.status !== "extra")
+          .map((r) => [r.expected.toLowerCase(), r] as const),
       );
 
-      setWordIPAs((prev) => prev.map((entry, index) => ({
-        ...entry,
-        alignment: results[index]?.alignment ?? null,
-      })));
+      setWordIPAs((prev) => prev.map((entry) => {
+        const clean = entry.word.replace(/[^a-zA-Z']/g, "").toLowerCase();
+        const match = byExpected.get(clean);
+        return { ...entry, alignment: match?.phonemes?.alignment ?? null };
+      }));
 
       setSoundProgress((prev) => {
         const next = { ...prev };
-        for (const result of results) {
-          for (const alignment of result.alignment) {
+        for (const result of scoring.wordResults) {
+          for (const alignment of result.phonemes?.alignment ?? []) {
             const key = alignment.phoneme;
             if (!next[key]) next[key] = { correct: 0, total: 0 };
             next[key].total += 1;
@@ -173,11 +187,33 @@ export default function PronunciationView() {
         return next;
       });
 
-      if (results.every((item) => item.alignment.every((alignment) => alignment.status === "correct")) && activePhrase) {
+      if (scoring.isCorrect) {
         setMastered((prev) => {
           const next = new Set(prev).add(activePhrase);
           if (userId) void saveMasteredToDexie(userId, next);
           return next;
+        });
+      }
+
+      if (userId) {
+        const contentId = `ai_coach:pronunciation:${activePhrase.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
+        const answer: PracticeAnswer = {
+          exerciseId: contentId,
+          slug: "speak_word",
+          exerciseTypeId: 10,
+          isCorrect: scoring.isCorrect,
+          userAnswer: transcript,
+          score: scoring.accuracy,
+          contentId,
+          context: "ai_coach",
+          timeMs: 0,
+          exercisePayload: { targetWord: activePhrase },
+        };
+        await savePracticeAnswer(userId, answer);
+        await recordActivitySession(userId, {
+          practiceContext: "ai_coach",
+          sessionResult: buildSessionResult([{ ...answer, completedAt: new Date() }]),
+          metadata: { coachTool: "pronunciation_coach" },
         });
       }
     } finally {

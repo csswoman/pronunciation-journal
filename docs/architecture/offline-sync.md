@@ -67,8 +67,25 @@ cola/frases vistas. Al primer load se migran los datos legacy de localStorage y
 luego se eliminan esas claves si Dexie esta disponible. Si Dexie falla,
 localStorage sigue como fallback degradado.
 
+**Desde plan 063 (2026-07-20): el intento hablado en sí ya no es solo local.**
+Cada grabación analizada en `PronunciationView` (`components/ai-coach/PronunciationView.tsx`)
+llama `scorePronunciation()` (`lib/pronunciation/scoring.ts`) y, si hay
+`userId`, persiste el intento por el camino canónico: `savePracticeAnswer`
+(`lib/practice/queries.ts`, `context: 'ai_coach'`) escribe en `answer_history`
+(vía outbox) y `recordActivitySession` (`lib/progress/activity-hub.ts`) registra
+la sesión de actividad. Esto pone al Pronunciation Coach en el mismo flujo
+Dexie⇄Supabase que el resto de superficies de práctica — ya no es una excepción
+"solo-local" para el resultado de la evaluación.
+
+Lo que **sigue siendo local-only** es el estado de UX propio del surface:
+`pronunciationMastery` (frases marcadas como dominadas) y `pronunciationCoachState`
+(cola/frases vistas) en Dexie. Esto no es una segunda fuente de verdad de
+accuracy/SRS — es solo bookkeeping de qué frase mostrar después. La fuente de
+verdad de accuracy/progreso pasó a ser `answer_history` + `activity_sessions`
+en Supabase, igual que en el resto de la app.
+
 **Pendiente**:
-1. Agregar sync remoto opcional si el coach debe seguir al usuario entre dispositivos.
+1. Agregar sync remoto opcional si el bookkeeping local de cola/mastered debe seguir al usuario entre dispositivos (la accuracy/SRS ya no depende de esto, ver arriba).
 
 Esto se rastrea como deuda tecnica activa; no debe bloquearse nuevas features del coach
 hasta que este resuelto.

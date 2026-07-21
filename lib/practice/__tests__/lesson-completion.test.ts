@@ -35,6 +35,7 @@ vi.mock('@/lib/practice/fragment-srs', () => ({ upsertFragmentSrs: vi.fn() }))
 import {
   recordLessonComplete,
   recordLessonIncomplete,
+  isLessonQuizPassed,
 } from '@/lib/practice/queries'
 
 beforeEach(() => {
@@ -42,6 +43,12 @@ beforeEach(() => {
 })
 
 describe('course lesson completion', () => {
+  it('applies the quiz threshold and rejects empty quizzes', () => {
+    expect(isLessonQuizPassed(7, 10)).toBe(true)
+    expect(isLessonQuizPassed(6, 10)).toBe(false)
+    expect(isLessonQuizPassed(0, 0)).toBe(false)
+  })
+
   it('does not duplicate an already completed lesson', async () => {
     isLessonCompleteMock.mockResolvedValue(true)
 
