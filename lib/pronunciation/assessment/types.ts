@@ -8,6 +8,7 @@
  */
 
 import { z } from 'zod'
+import type { EvidenceCapability } from '@/lib/pronunciation/targets/types'
 import { UNAVAILABLE_EVIDENCE_CAPABILITIES } from '@/lib/pronunciation/targets/types'
 
 /** Prosody categories that may never receive a numeric/acoustic score in this schema version. */
@@ -60,6 +61,11 @@ export const EvaluatorKindSchema = z.enum(['stt_intelligibility', 'acoustic', 's
 
 export type EvaluatorKind = z.infer<typeof EvaluatorKindSchema>
 
+/**
+ * `EvidenceCapability` (from `lib/pronunciation/targets/types.ts`) plus
+ * `self_report` — the diagnostic needs to record a subjective self-report
+ * "signal" that the registry's evidence-capability union doesn't model.
+ */
 export const SignalTypeSchema = z.enum([
   'stt_intelligibility',
   'acoustic',
@@ -68,6 +74,21 @@ export const SignalTypeSchema = z.enum([
 ])
 
 export type SignalType = z.infer<typeof SignalTypeSchema>
+
+/**
+ * Narrows `SignalType` to the subset it shares with `EvidenceCapability`
+ * (i.e. excludes `self_report`, the one member `SignalType` adds beyond the
+ * registry's evidence capability union). Lets us safely compare against
+ * `UNAVAILABLE_EVIDENCE_CAPABILITIES` without an unsound cast — note the
+ * predicate narrows to `Exclude<SignalType, 'self_report'>`, not the full
+ * `EvidenceCapability` union, since `SignalType` doesn't declare every
+ * `EvidenceCapability` member (e.g. `controlled_production`).
+ */
+export function isEvidenceCapabilitySignal(
+  signal: SignalType
+): signal is Exclude<SignalType, 'self_report'> & EvidenceCapability {
+  return signal !== 'self_report'
+}
 
 // ---------------------------------------------------------------------------
 // Abstention / failure reasons
@@ -169,7 +190,10 @@ export const TargetResultSchema = z
     }
 
     if (result.measurement.kind === 'scored') {
-      if (UNAVAILABLE_EVIDENCE_CAPABILITIES.includes(result.signalType as never)) {
+      if (
+        isEvidenceCapabilitySignal(result.signalType) &&
+        UNAVAILABLE_EVIDENCE_CAPABILITIES.includes(result.signalType)
+      ) {
         ctx.addIssue({
           code: 'custom',
           path: ['measurement', 'score'],
