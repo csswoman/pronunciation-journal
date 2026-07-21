@@ -29,7 +29,7 @@ export function GuestBanner() {
             Track your English journey
           </H2>
           <p className="mt-2 text-sm max-w-sm mx-auto text-fg-muted">
-            Sign in to see your streaks, XP, weekly charts, pronunciation accuracy, and personalized insights.
+            Sign in to see your streaks, XP, weekly charts, word recognition accuracy, and personalized insights.
           </p>
         </div>
         <Button
