@@ -812,6 +812,12 @@ export type Database = {
           ipa: string | null
           is_favorite?: boolean
           last_reviewed_at: string | null
+          familiarity_status?: string
+          familiarity_confidence?: number
+          verification_due_at?: string | null
+          mastery_provenance?: string
+          mastery_version?: number
+          objective_evidence_count?: number
           meaning: string | null
           next_review_at: string | null
           repetitions: number
@@ -842,6 +848,12 @@ export type Database = {
           ipa?: string | null
           is_favorite?: boolean
           last_reviewed_at?: string | null
+          familiarity_status?: string
+          familiarity_confidence?: number
+          verification_due_at?: string | null
+          mastery_provenance?: string
+          mastery_version?: number
+          objective_evidence_count?: number
           meaning?: string | null
           next_review_at?: string | null
           repetitions?: number
@@ -872,6 +884,12 @@ export type Database = {
           ipa?: string | null
           is_favorite?: boolean
           last_reviewed_at?: string | null
+          familiarity_status?: string
+          familiarity_confidence?: number
+          verification_due_at?: string | null
+          mastery_provenance?: string
+          mastery_version?: number
+          objective_evidence_count?: number
           meaning?: string | null
           next_review_at?: string | null
           repetitions?: number

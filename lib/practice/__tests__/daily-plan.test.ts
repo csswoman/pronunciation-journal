@@ -37,6 +37,7 @@ vi.mock('@/lib/word-bank/queries', async (importOriginal) => {
     ...actual,
     getDueWordsForDaily: vi.fn(),
     getNewWordsForDaily: vi.fn(),
+    getSavedOrFamiliarWordsForDaily: vi.fn(),
     getDueReviewWordsForDaily: vi.fn(),
     getWeakWordsForReview: vi.fn(),
   }
@@ -103,6 +104,7 @@ vi.mock('@/lib/journal/daily-step', () => ({
 import {
   getDueWordsForDaily,
   getNewWordsForDaily,
+  getSavedOrFamiliarWordsForDaily,
   getDueReviewWordsForDaily,
   getWeakWordsForReview,
 } from '@/lib/word-bank/queries'
@@ -153,6 +155,7 @@ describe('buildDailyPlan', () => {
     vi.clearAllMocks()
     setupProgressMock(null)
     setupWordBankMock([], [])
+    vi.mocked(getSavedOrFamiliarWordsForDaily).mockResolvedValue([])
     vi.mocked(getDueReviewWordsForDaily).mockResolvedValue([])
     vi.mocked(getWeakWordsForReview).mockResolvedValue([])
     vi.mocked(getDueSoundsForReview).mockResolvedValue([])

@@ -21,6 +21,7 @@ import {
 import { rankWeakestSounds } from '@/lib/phoneme-practice/mastery-pct'
 import type { UserContrastProgress } from '@/lib/phoneme-practice/types'
 import { startOfRollingWindow, sumWeeklyExercises } from '@/lib/progress/windows'
+import { deriveWordProgressSignal } from '@/lib/word-bank/progress-state'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -51,6 +52,11 @@ export interface WordBankByStatus {
   learning: number
   review: number
   mastered: number
+  /** Separate progress signals; these are not additional SRS buckets. */
+  saved?: number
+  familiar?: number
+  verified?: number
+  legacyMastered?: number
 }
 
 export interface WeakestPhoneme {
@@ -218,7 +224,7 @@ async function getSkillProfileData(userId: string): Promise<SkillProfileData> {
   const [wordBankResult, phonemeResult, core1000Result, lessonsResult] = await Promise.all([
     supabase
       .from('word_bank')
-      .select('srs_status')
+      .select('srs_status, familiarity_status, mastery_provenance, objective_evidence_count')
       .eq('user_id', userId)
       .eq('status', 'ready'),
 
@@ -244,10 +250,28 @@ async function getSkillProfileData(userId: string): Promise<SkillProfileData> {
   ])
 
   // Words by SRS status
-  const wordsByStatus: WordBankByStatus = { new: 0, learning: 0, review: 0, mastered: 0 }
+  const wordsByStatus: WordBankByStatus = {
+    new: 0,
+    learning: 0,
+    review: 0,
+    mastered: 0,
+    saved: 0,
+    familiar: 0,
+    verified: 0,
+    legacyMastered: 0,
+  }
   for (const row of wordBankResult.data ?? []) {
     const s = row.srs_status as keyof WordBankByStatus
-    if (s in wordsByStatus) wordsByStatus[s]++
+    const signal = deriveWordProgressSignal(row)
+    if (s === 'mastered') {
+      if (signal === 'mastered') wordsByStatus.mastered++
+      else if (signal === 'legacy_mastered') wordsByStatus.legacyMastered!++
+    } else if (s in wordsByStatus) {
+      wordsByStatus[s]++
+    }
+    if (signal === 'saved') wordsByStatus.saved!++
+    if (signal === 'familiar') wordsByStatus.familiar!++
+    if (signal === 'objective_evidence' || signal === 'mastered') wordsByStatus.verified!++
   }
 
   const contrastRows = (phonemeResult.data ?? []) as Pick<

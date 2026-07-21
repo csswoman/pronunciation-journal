@@ -9,6 +9,7 @@ import { getRelativeLocalDateKey, getTodayLocalDateKey } from "../date/local-dat
 import { migrateArchivedRow } from "../srs/migrate-archived";
 import { patchActivateNow, patchMaster, patchSnooze } from "../srs/status";
 import type { JournalEntryRecord } from '../journal/types';
+import type { TrackingReviewQueue } from '../tracking/review-queue';
 
 /**
  * Active in-progress practice session, persisted so the user can resume
@@ -134,6 +135,14 @@ export interface TrackedItemRecord {
   updatedAt: string;
 }
 
+export interface TrackingReviewSessionRecord {
+  id: string;
+  userId: string;
+  queue: TrackingReviewQueue;
+  createdAt: string;
+  expiresAt: string;
+}
+
 /**
  * Local mirror of a word_bank/topic_srs SM-2 materialized row (plan 061 step 2).
  *
@@ -212,6 +221,7 @@ class PronunciationDB extends Dexie {
   pronunciationCoachState!: Table<PronunciationCoachStateRecord, string>;
   journalEntries!: Table<JournalEntryRecord, string>;
   trackedItems!: Table<TrackedItemRecord, string>;
+  trackingReviewSessions!: Table<TrackingReviewSessionRecord, string>;
   localDataQuarantine!: Table<LocalDataQuarantineRecord, number>;
   srsEntityState!: Table<SRSEntityStateRecord, string>;
   srsRatingEvents!: Table<SRSRatingEventRecord, string>;
@@ -379,6 +389,12 @@ class PronunciationDB extends Dexie {
     this.version(22).stores({
       srsEntityState: 'id, userId, entityType, [userId+entityType], [userId+entityType+entityId], [userId+entityType+topic]',
       srsRatingEvents: 'id, userId, status, [userId+status], [userId+entityType+entityId], [userId+entityType+topic]',
+    });
+
+    // v23: exact Tracking review queues. The user-leading index prevents a
+    // session created by account A from being loaded by account B offline.
+    this.version(23).stores({
+      trackingReviewSessions: 'id, userId, createdAt, expiresAt, [userId+createdAt]',
     });
   }
 }

@@ -1,5 +1,6 @@
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { WordBankEntry } from "@/lib/word-bank/types";
+import { deriveWordProgressSignal } from "@/lib/word-bank/progress-state";
 
 const TABLE = "word_bank";
 
@@ -15,7 +16,7 @@ export async function getLexiconWordBankMap(
   const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from(TABLE)
-    .select("source_ref, srs_status")
+    .select("source_ref, srs_status, mastery_provenance, objective_evidence_count, familiarity_status")
     .in("source_ref", lexiconWordIds);
 
   if (error) throw error;
@@ -39,7 +40,7 @@ export async function getLexiconProgressByCategory(
   const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from(TABLE)
-    .select("source_ref, srs_status")
+    .select("source_ref, srs_status, mastery_provenance, objective_evidence_count, familiarity_status")
     .in("source_ref", allIds);
 
   if (error) throw error;
@@ -47,7 +48,12 @@ export async function getLexiconProgressByCategory(
   const statusByRef = new Map(
     (data ?? [])
       .filter((r) => r.source_ref)
-      .map((r) => [r.source_ref as string, r.srs_status as string]),
+      .map((r) => [r.source_ref as string, deriveWordProgressSignal({
+        srs_status: r.srs_status,
+        mastery_provenance: r.mastery_provenance,
+        objective_evidence_count: r.objective_evidence_count,
+        familiarity_status: r.familiarity_status,
+      })]),
   );
 
   const result = new Map<string, { mastered: number; reviewing: number }>();
@@ -57,7 +63,7 @@ export async function getLexiconProgressByCategory(
     for (const id of ids) {
       const status = statusByRef.get(id);
       if (status === "mastered") mastered++;
-      else if (status === "learning" || status === "review") reviewing++;
+      else if (status) reviewing++;
     }
     result.set(categoryId, { mastered, reviewing });
   }
@@ -88,25 +94,35 @@ export async function getLexiconWordBankDetails(
 /** Server-only: mastered vs in-progress counts for the current user's word bank. */
 export async function getVocabularyRetentionStats(): Promise<{
   mastered: number;
+  verified: number;
+  familiar: number;
+  legacyMastered: number;
   inProgress: number;
   total: number;
 }> {
   const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from(TABLE)
-    .select("srs_status")
+    .select("srs_status, mastery_provenance, objective_evidence_count, familiarity_status")
     .eq("status", "ready");
 
   if (error) throw error;
 
   const rows = data ?? [];
-  const mastered = rows.filter((r) => r.srs_status === "mastered").length;
+  const signals = rows.map((row) => deriveWordProgressSignal(row));
+  const mastered = signals.filter((signal) => signal === "mastered").length;
+  const verified = signals.filter((signal) => signal === "objective_evidence").length;
+  const familiar = signals.filter((signal) => signal === "familiar").length;
+  const legacyMastered = signals.filter((signal) => signal === "legacy_mastered").length;
   const inProgress = rows.filter(
-    (r) => r.srs_status && r.srs_status !== "mastered",
+    (_r, index) => signals[index] !== "mastered",
   ).length;
 
   return {
     mastered,
+    verified,
+    familiar,
+    legacyMastered,
     inProgress,
     total: rows.length,
   };
@@ -120,8 +136,7 @@ export async function countWordsDueForReview(): Promise<number> {
     .from(TABLE)
     .select("*", { count: "exact", head: true })
     .eq("status", "ready")
-    .neq("srs_status", "new")
-    .lte("next_review_at", today);
+    .or(`and(srs_status.neq.new,next_review_at.lte.${today}),verification_due_at.lte.${today}`);
 
   if (error) throw error;
   return count ?? 0;
@@ -159,7 +174,7 @@ export async function getWeakWordsForReviewServer(
   const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from(TABLE)
-    .select("id, user_id, text, meaning, translation, ipa, example, audio_url, difficulty, status, srs_status, next_review_at, ease_factor, interval_days, repetitions, review_count, last_reviewed_at, source, source_ref, created_at")
+    .select("id, user_id, text, meaning, translation, ipa, example, audio_url, difficulty, status, srs_status, next_review_at, ease_factor, interval_days, repetitions, review_count, last_reviewed_at, is_favorite, familiarity_status, familiarity_confidence, verification_due_at, mastery_provenance, mastery_version, objective_evidence_count, source, source_ref, created_at")
     .eq("user_id", userId)
     .eq("status", "ready")
     .in("srs_status", ["new", "learning"])
@@ -176,11 +191,10 @@ export async function getWordsDueForReview(userId: string, limit = 5): Promise<W
   const today = new Date().toISOString();
   const { data, error } = await supabase
     .from(TABLE)
-    .select("id, user_id, text, meaning, translation, ipa, example, audio_url, difficulty, status, srs_status, next_review_at, ease_factor, interval_days, repetitions, review_count, last_reviewed_at, source, source_ref, created_at")
+    .select("id, user_id, text, meaning, translation, ipa, example, audio_url, difficulty, status, srs_status, next_review_at, ease_factor, interval_days, repetitions, review_count, last_reviewed_at, is_favorite, familiarity_status, familiarity_confidence, verification_due_at, mastery_provenance, mastery_version, objective_evidence_count, source, source_ref, created_at")
     .eq("user_id", userId)
     .eq("status", "ready")
-    .neq("srs_status", "new")
-    .lte("next_review_at", today)
+    .or(`and(srs_status.neq.new,next_review_at.lte.${today}),verification_due_at.lte.${today}`)
     .order("next_review_at", { ascending: true })
     .limit(limit);
 

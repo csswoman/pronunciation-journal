@@ -76,14 +76,14 @@ your row when done.
 | 055 | Add Reader tap-to-save into word bank | P2 product | M | T50 manual Reader QA | DONE (2026-07-18; commit `4873690c`) |
 | 056 | Add `sentence_transformation` with remote generation/grading | P2 pedagogical | L | 046, 048 | DONE (2026-07-18; see `TODO.md`) |
 | 057 | Add `translation_es_en` with hybrid grading | P2 pedagogical | L | 046, 048 | DONE (2026-07-18; see `TODO.md`) |
-| 058 | Extract "My Words" into Tracking (saved words + phrases + lessons) | P2 product | L | — | IN PROGRESS (uncommitted implementation present on 2026-07-19) |
+| 058 | Extract "My Words" into Tracking (saved words + phrases + lessons) | P2 product | L | — | DONE pending linked DB verify (2026-07-21: implementation committed — `tracked_items` migration+RLS, `/tracking` route, registry-by-`kind` render, `/words?tab=my-words`→`/tracking` redirect, on-demand "Repasar"; `lib/tracking`+`lib/sync`+`components/tracking` tests 81/81 green; all components ≤250 lines. Local Supabase is running; only `supabase db diff --linked` remains unverified) |
 | 059 | Separate learning evidence and canonical lesson completion | P1 | L | — | BLOCKED (2026-07-20: implementation complete; focused tests + typecheck pass; local Supabase reset/RLS blocked because Docker Desktop is unavailable) |
 | 060 | Isolate local learning data by user | P1 security | L | 059 | DONE (2026-07-20: Dexie v21 scopes private local data, quarantines ambiguous legacy rows, and removes unsupported AI outbox targets) |
 | 061 | Make SRS and outbox transactional and truthful | P1 | L | 059, 060 | DONE (steps 1-7 on `codex/061-transactional-srs-outbox`) |
 | 062 | Fix exercise evidence attribution | P1 | L | 061 | DONE (2026-07-20 on `codex/062-evidence-attribution`) |
 | 063 | Build the pronunciation production spine | P1 product/pedagogy | L | 059, 060, 062, 066 | DONE (2026-07-20 on `codex/063-pronunciation-spine`; steps 1-8 landed plus two follow-ups: Sound Lab now schedules a carrier-phrase production step alongside word production, and the coach's system prompt is now dynamically built server-side (fixing a pre-existing dead `buildSystemPrompt`) and caps feedback to one correction + retry phrase on a scored spoken chat turn; focused tests + typecheck pass; plan 066 dependency was still TODO when this executed) |
 | 064 | Validate acoustic pronunciation assessment | P2 direction | L/XL | 063 | PARTIAL (2026-07-21 on `codex/064-acoustic-assessment-spike`; steps 1-3 done — user-visible copy relabeled off "pronunciation/phoneme accuracy" to "word recognition accuracy", ADR at `docs/architecture/adr-064-acoustic-pronunciation-assessment.md` with dimension rubric, and a provider-neutral `AcousticEvaluator` contract + fakes landed unwired to production; step 4 done as desk research only (no live benchmark, no vendor call); steps 5-6 explicitly deferred — no consented/licensed audio corpus exists yet, so no ship/partial/no-ship decision was reached; DO NOT mark DONE until a follow-up plan runs a real Step 4 benchmark) |
-| 065 | Turn Tracking into verified review | P2 product/pedagogy | M | 058, 061, 062, 063 | TODO |
+| 065 | Turn Tracking into verified review | P2 product/pedagogy | M | 058, 061, 062, 063, 066 | IN PROGRESS (2026-07-21: familiarity/provenance, exact word/lesson queue, offline recovery, bounded Daily priority and distinct progress signals landed; phrase target resolver awaits 066) |
 | 066 | Create the canonical pronunciation target registry | P1 foundation | M | 062 | TODO |
 | 067 | Build a pronunciation diagnostic and first-week prescription | P1 product/pedagogy | L | 060, 061, 063, 066 | TODO |
 | 068 | Build the pronunciation learning route | P1 product/pedagogy | L | 059, 063, 066, 067 | TODO |
@@ -174,8 +174,9 @@ Status values: TODO | IN PROGRESS | DONE | BLOCKED (with one-line reason) | REJE
   5. 063 connects theory, Sound Lab, phrase coach and oral chat.
   6. 064 is a gated acoustic-assessment spike; it must not block honest STT-based
      practice, but it must precede any Elsa-like accuracy promise.
-  7. 065 may start only after the overlapping uncommitted plan-058 work is
-     reconciled; it turns saved/familiar items into exact practice queues.
+  7. 065 turns saved/familiar items into exact practice queues. Its plan-058
+     prerequisite is met: 058 is committed (see its row), so the earlier
+     "uncommitted 058" block no longer applies.
 - 059 precedes 060 because the user-scoped migration needs a canonical completion
   entity rather than migrating the existing synthetic answer shortcut.
 - 061 precedes 062/063 so new Dictionary and spoken evidence cannot be lost or

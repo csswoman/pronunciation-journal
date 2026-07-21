@@ -7,10 +7,44 @@ import {
   nonSrsAttribution,
   textFragmentId,
   wordBankId,
+  type EvidenceModality,
   type EvidenceAttribution,
 } from '@/lib/practice/attribution'
 import type { PracticeExercise } from '@/lib/practice/types'
 import { isUuid } from '@/lib/review/content-ref'
+
+export function evidenceModalityForExercise(
+  exercise: Pick<PracticeExercise, 'slug'>,
+): EvidenceModality {
+  switch (exercise.slug) {
+    case 'sentence_context':
+    case 'error_correction':
+    case 'conjugation_blank':
+    case 'sentence_transformation':
+      return 'contextual_use'
+    case 'written_production':
+    case 'translation_es_en':
+      return 'written_production'
+    case 'spoken_production':
+    case 'speak_word':
+      return 'spoken_production'
+    case 'cs_shadow_phrase':
+      // The connected-speech evaluator is STT intelligibility only. It is not
+      // a phoneme, stress or intonation accuracy score.
+      return 'stt_intelligibility'
+    case 'pick_sound':
+    case 'minimal_pair':
+    case 'dictation':
+    case 'sentence_dictation':
+    case 'identify':
+    case 'ax_same_different':
+    case 'odd_one_out':
+    case 'abx':
+      return 'perception'
+    default:
+      return 'meaning_recall'
+  }
+}
 
 /**
  * Derive explicit attribution for a submitted answer from exercise metadata.
@@ -21,6 +55,8 @@ export function resolveAnswerAttribution(
   isCorrect: boolean,
   score?: number,
 ): EvidenceAttribution {
+  const modality = evidenceModalityForExercise(exercise)
+
   if (exercise.slug === 'match_pairs') {
     return attributeGroupResult({
       mode: 'non_srs',
@@ -33,6 +69,7 @@ export function resolveAnswerAttribution(
       target: { namespace: 'contrast', id: contrastId(exercise.contrastId) },
       correct: isCorrect,
       score,
+      modality,
     })
   }
 
@@ -42,6 +79,7 @@ export function resolveAnswerAttribution(
       target: { namespace: 'word_bank', id: wordBankId(ref.id) },
       correct: isCorrect,
       score,
+      modality,
     })
   }
 
@@ -54,6 +92,7 @@ export function resolveAnswerAttribution(
       target: { namespace: 'text_fragments', id: textFragmentId(ref.id) },
       correct: isCorrect,
       score,
+      modality,
     })
   }
 
@@ -62,6 +101,7 @@ export function resolveAnswerAttribution(
       target: { namespace: 'core1k', id: core1kId(ref.id) },
       correct: isCorrect,
       score,
+      modality,
     })
   }
 

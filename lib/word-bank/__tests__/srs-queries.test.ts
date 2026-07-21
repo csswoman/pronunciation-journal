@@ -64,7 +64,7 @@ describe('word-bank SRS manual writes', () => {
     vi.useRealTimers()
   })
 
-  it("preserves historical ease for the 'known' fast path", async () => {
+  it("records known as familiarity with a short verification due date", async () => {
     mockExistingFlashcard(existingEntry({ ease_factor: 1.5 }))
 
     await applyFlashcardRating(
@@ -74,11 +74,11 @@ describe('word-bank SRS manual writes', () => {
     )
 
     expect(lastPayload()).toMatchObject({
-      ease_factor: 1.5,
-      interval_days: 30,
-      repetitions: 1,
-      srs_status: 'mastered',
+      familiarity_status: 'familiar',
+      familiarity_confidence: 100,
+      verification_due_at: '2026-07-19T12:00:00.000Z',
     })
+    expect(lastPayload()).not.toHaveProperty('srs_status')
   })
 
   it("records 'forgot' as a coherent learning lapse with the deliberate soft ease penalty", async () => {
@@ -116,6 +116,9 @@ describe('word-bank SRS manual writes', () => {
       ease_factor: 1.3,
       next_review_at: '2026-07-19T12:00:00.000Z',
       last_reviewed_at: NOW.toISOString(),
+      familiarity_status: 'unknown',
+      familiarity_confidence: 0,
+      verification_due_at: '2026-07-19T12:00:00.000Z',
     })
   })
 })
