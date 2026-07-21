@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { generateCsQuiz, generateCsDictation, todaysDeckSlug, type CsDeckSlug } from '../connected-speech'
+import { generateCsQuiz, generateCsDictation, generateCsShadowPhrase, todaysDeckSlug, type CsDeckSlug } from '../connected-speech'
 
 // ── Fixtures ──────────────────────────────────────────────────────────────────
 
@@ -95,6 +95,49 @@ describe('generateCsDictation', () => {
     for (const ex of exercises) {
       expect(ex.sentence).not.toContain('→')
     }
+  })
+})
+
+describe('generateCsShadowPhrase', () => {
+  it('produces at least one production step from real example sentences', () => {
+    const exercises = generateCsShadowPhrase(mockDeck, SLUG, 1)
+    expect(exercises.length).toBeGreaterThan(0)
+    expect(exercises.length).toBeLessThanOrEqual(1)
+  })
+
+  it('each exercise has type cs_shadow_phrase, a real sentence, and the deck slug', () => {
+    const exercises = generateCsShadowPhrase(mockDeck, SLUG, 3)
+    for (const ex of exercises) {
+      expect(ex.type).toBe('cs_shadow_phrase')
+      expect(ex.deckSlug).toBe(SLUG)
+      expect(ex.phrase.trim().split(/\s+/).length).toBeGreaterThanOrEqual(2)
+      expect(ex.phrase).not.toContain('→')
+    }
+  })
+
+  it('never emits a lone reduction key as the shadow phrase', () => {
+    const exercises = generateCsShadowPhrase(mockDeck, SLUG, 3)
+    for (const ex of exercises) {
+      expect(['gonna', 'sorta', 'wanna', 'of']).not.toContain(ex.phrase.trim().toLowerCase())
+    }
+  })
+
+  it('exercise ids are deterministic for the same phrase', () => {
+    // pick() randomizes selection order, so requesting fewer than all
+    // available phrases can select a different one across calls — determinism
+    // means "same phrase always yields the same id", not "same call, same pick".
+    const all = generateCsShadowPhrase(mockDeck, SLUG, 10)
+    const byPhrase = new Map(all.map((e) => [e.phrase, e.id]))
+    const again = generateCsShadowPhrase(mockDeck, SLUG, 10)
+    for (const ex of again) {
+      expect(ex.id).toBe(byPhrase.get(ex.phrase))
+    }
+  })
+
+  it('returns an empty array when the deck has no usable example sentences', () => {
+    const emptyDeck = { quiz: [], cards: [{ blocks: [{ type: 'rules', rows: [] }] }] }
+    const exercises = generateCsShadowPhrase(emptyDeck, SLUG, 2)
+    expect(exercises).toHaveLength(0)
   })
 })
 

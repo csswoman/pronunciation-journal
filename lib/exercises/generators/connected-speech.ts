@@ -1,5 +1,5 @@
 import { exerciseId, isLikelySentence, pick } from '@/lib/exercises/utils'
-import type { MultipleChoiceExercise, SentenceDictationExercise } from '@/lib/exercises/types'
+import type { CsShadowPhraseExercise, MultipleChoiceExercise, SentenceDictationExercise } from '@/lib/exercises/types'
 
 // ── Types local to this module ────────────────────────────────────────────────
 
@@ -117,6 +117,23 @@ export function generateCsDictation(deck: CsDeck, slug: string, count: number): 
   }))
 }
 
+/**
+ * Generate a shadow-phrase production step: model audio, then the learner
+ * shadows the phrase aloud. Reuses the same real-sentence pool as dictation
+ * (never a lone reduction key) since a shadowing target must be sayable.
+ * Scored locally via scorePronunciation() — see CsShadowPhraseExercise.
+ */
+export function generateCsShadowPhrase(deck: CsDeck, slug: CsDeckSlug, count: number): CsShadowPhraseExercise[] {
+  const phrases = pick(extractPhrases(deck), count)
+  return phrases.map((phrase, i) => ({
+    id: exerciseId('cs_shadow_phrase', `${slug}-shadow-${i}-${phrase}`, 'v1'),
+    type: 'cs_shadow_phrase' as const,
+    sourceRef: { source: 'text_fragments' as const, id: slug },
+    phrase,
+    deckSlug: slug,
+  }))
+}
+
 /** Load a connected-speech deck by slug (cached). */
 export async function loadConnectedSpeechDeck(slug: CsDeckSlug): Promise<CsDeck | null> {
   return loadDeck(slug)
@@ -127,6 +144,7 @@ export async function loadConnectedSpeechDeck(slug: CsDeckSlug): Promise<CsDeck 
 export interface ConnectedSpeechExercises {
   quiz: MultipleChoiceExercise[]
   dictation: SentenceDictationExercise[]
+  shadowPhrase: CsShadowPhraseExercise[]
 }
 
 /**
@@ -136,6 +154,7 @@ export interface ConnectedSpeechExercises {
 export async function generateConnectedSpeechExercises(
   quizCount = 2,
   dictationCount = 2,
+  shadowPhraseCount = 1,
 ): Promise<ConnectedSpeechExercises | null> {
   const slug = todaysDeckSlug()
   const deck = await loadDeck(slug)
@@ -144,5 +163,6 @@ export async function generateConnectedSpeechExercises(
   return {
     quiz: generateCsQuiz(deck, slug, quizCount),
     dictation: generateCsDictation(deck, slug, dictationCount),
+    shadowPhrase: generateCsShadowPhrase(deck, slug, shadowPhraseCount),
   }
 }
