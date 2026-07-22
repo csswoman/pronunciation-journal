@@ -19,7 +19,13 @@ const PROSODY_ONLY_TARGET_PREFIXES = [
   'prosody.intonation',
 ] as const
 
-function isProsodyOnlyTargetId(targetId: string): boolean {
+/**
+ * Exported so `scoring.ts` (plan 067 step 4) can reuse the exact same
+ * prefix list when deciding whether a production attempt must abstain
+ * rather than carry a numeric score — duplicating this list would risk
+ * silent drift between schema validation and scoring logic.
+ */
+export function isProsodyOnlyTargetId(targetId: string): boolean {
   return PROSODY_ONLY_TARGET_PREFIXES.some(
     (prefix) => targetId === prefix || targetId.startsWith(`${prefix}.`)
   )
