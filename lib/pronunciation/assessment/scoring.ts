@@ -48,10 +48,10 @@ function statusFor(measurement: Measurement): TargetResultStatus {
  * - failed → 0.2 (we tried, but learned nothing about the skill itself)
  * - not_measured → 0 (no evidence at all)
  */
-function confidenceFor(measurement: Measurement, evaluatorKind: EvaluatorKind | null): number {
+function confidenceFor(measurement: Measurement, signalType: TargetResult['signalType']): number {
   if (measurement.kind === 'not_measured') return 0
   if (measurement.kind === 'failed') return 0.2
-  return evaluatorKind === 'stt_intelligibility' ? 0.8 : 0.6
+  return signalType === 'stt_intelligibility' ? 0.8 : 0.6
 }
 
 function buildResult(params: {
@@ -66,7 +66,7 @@ function buildResult(params: {
     targetId,
     status: statusFor(measurement),
     signalType,
-    confidence: confidenceFor(measurement, evaluatorKind),
+    confidence: confidenceFor(measurement, signalType),
     evaluatorKind,
     evaluatorVersion,
     measurement,

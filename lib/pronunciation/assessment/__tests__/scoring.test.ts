@@ -63,6 +63,7 @@ describe('scoreProductionPrompt — segmental/connected-speech targets', () => {
     expect(result.evaluatorKind).toBe('stt_intelligibility')
     expect(result.evaluatorVersion).toBe('stt-v2')
     expect(result.status).toBe('strength')
+    expect(result.confidence).toBe(0.8)
     expect(TargetResultSchema.safeParse(result).success).toBe(true)
   })
 
@@ -134,6 +135,13 @@ describe('scorePerceptionPrompt', () => {
     expect(result.signalType).not.toBe('self_report')
     expect(result.measurement).toEqual({ kind: 'scored', score: 100 })
     expect(result.evaluatorKind).not.toBeNull()
+    expect(TargetResultSchema.safeParse(result).success).toBe(true)
+  })
+
+  it('a scored perception result gets confidence 0.6, not 0.8 (regression: must key off signalType, not evaluatorKind)', () => {
+    const result = scorePerceptionPrompt({ targetId: TH_CONTRAST, stage: 'perception' }, { correct: true })
+
+    expect(result.confidence).toBe(0.6)
     expect(TargetResultSchema.safeParse(result).success).toBe(true)
   })
 
