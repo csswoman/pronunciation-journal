@@ -114,6 +114,33 @@ describe('persistPronunciationAssessmentLocal', () => {
     expect(await db.syncOutbox.count()).toBe(0)
   })
 
+  it('reclassifies a 23505 retry (server insert succeeded but the delete was lost) as synced, not stuck-failed', async () => {
+    // Simulates: server insert succeeds, then the client crashes/loses
+    // network before `db.syncOutbox.delete` runs. The outbox entry survives
+    // and is retried; the retry hits a genuine unique-violation because the
+    // row already exists server-side (same client-generated `id` as PK).
+    const result = buildValidDiagnosticResult('user-1')
+    const outcome = await persistPronunciationAssessmentLocal('user-1', result)
+    if (!outcome.ok) throw new Error('unreachable')
+
+    from.mockReturnValueOnce({
+      insert: vi.fn().mockResolvedValue({
+        error: { message: 'duplicate key value violates unique constraint', code: '23505' },
+      }),
+    })
+    const flushResult = await flushOutbox('user-1')
+
+    // Must be reclassified as synced, not left `failed` forever.
+    expect(flushResult.synced).toBe(1)
+    expect(flushResult.failed).toBe(0)
+    expect(await db.syncOutbox.count()).toBe(0)
+
+    await reconcileLocalSyncStatus('user-1', flushResult)
+    expect(await isPronunciationAssessmentSynced(outcome.id)).toBe(true)
+    const local = await db.pronunciationAssessments.get(outcome.id)
+    expect(local?.syncedAt).toBeDefined()
+  })
+
   it('retrySyncPronunciationAssessment is a no-op once the row is marked synced (idempotent transfer)', async () => {
     const result = buildValidDiagnosticResult('user-1')
     const outcome = await persistPronunciationAssessmentLocal('user-1', result)

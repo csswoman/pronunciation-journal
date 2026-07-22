@@ -11,17 +11,21 @@
  * a refresh, then enqueue an outbox entry so it syncs once connectivity is
  * available.
  *
- * Idempotency for retries: a plain `insert` outbox entry has no server-side
- * `ON CONFLICT DO NOTHING` to absorb a duplicate (unlike the SRS 'rpc'
- * entries — see `classifyUniqueViolationAsIdempotentSuccess` in
- * `lib/sync/sync-manager.ts`, which intentionally does NOT reclassify plain
- * insert 23505s as success). Rather than weakening that shared classifier
- * for every table, this module keeps its own idempotency guard: before
- * enqueueing, it checks the local mirror's `syncedAt` flag and skips
- * re-enqueueing an id that's already known to have synced. The server route
- * (`persistence-server.ts`) additionally treats a 23505 on this table as an
- * idempotent success as defense-in-depth, since the local flag can't
- * observe a sync that succeeded on a different device/tab.
+ * Idempotency for retries: this table's `id` is a client-generated uuid used
+ * as the literal primary key (see the migration
+ * `supabase/migrations/20260721200000_create_pronunciation_assessments.sql`),
+ * so `pronunciation_assessments` is listed in
+ * `TABLES_WITH_CLIENT_GENERATED_ID_IDEMPOTENCY` in `lib/sync/sync-manager.ts`
+ * — a 23505 on a retried plain `insert` for this table is reclassified by
+ * `classifyUniqueViolationAsIdempotentSuccess` as idempotent success (the
+ * row already landed from an earlier attempt whose outbox-entry delete was
+ * lost), not a permanent failure. This module also keeps its own belt-and-
+ * suspenders guard: before enqueueing, it checks the local mirror's
+ * `syncedAt` flag and skips re-enqueueing an id that's already known to have
+ * synced. The server route (`persistence-server.ts`) additionally treats a
+ * 23505 on this table as an idempotent success as defense-in-depth, since
+ * the local flag can't observe a sync that succeeded on a different
+ * device/tab.
  */
 
 import { randomUUID } from 'crypto'
