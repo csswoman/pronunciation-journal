@@ -422,6 +422,42 @@ describe('classifyUniqueViolationAsIdempotentSuccess', () => {
     }
     expect(SyncManager.classifyUniqueViolationAsIdempotentSuccess(entry as never)).toBe(false)
   })
+
+  it('returns true for a plain insert on pronunciation_assessments with a client-generated id', () => {
+    const entry = {
+      operation: 'insert',
+      table: 'pronunciation_assessments',
+      payload: { id: 'assessment-uuid-1', user_id: 'user-1' },
+    }
+    expect(SyncManager.classifyUniqueViolationAsIdempotentSuccess(entry as never)).toBe(true)
+  })
+
+  it('returns false for a plain insert on pronunciation_assessments without an id', () => {
+    const entry = {
+      operation: 'insert',
+      table: 'pronunciation_assessments',
+      payload: { user_id: 'user-1' },
+    }
+    expect(SyncManager.classifyUniqueViolationAsIdempotentSuccess(entry as never)).toBe(false)
+  })
+
+  it('returns false for a plain insert on a table NOT in the client-generated-id allowlist', () => {
+    const entry = {
+      operation: 'insert',
+      table: 'answer_history',
+      payload: { id: 'row-1' },
+    }
+    expect(SyncManager.classifyUniqueViolationAsIdempotentSuccess(entry as never)).toBe(false)
+  })
+
+  it('returns false for an upsert on pronunciation_assessments even with an id (allowlist is insert-only)', () => {
+    const entry = {
+      operation: 'upsert',
+      table: 'pronunciation_assessments',
+      payload: { id: 'assessment-uuid-1' },
+    }
+    expect(SyncManager.classifyUniqueViolationAsIdempotentSuccess(entry as never)).toBe(false)
+  })
 })
 
 // ── F. entityKeyFor ────────────────────────────────────────────────────────

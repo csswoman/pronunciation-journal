@@ -10,6 +10,7 @@ package-lock.json
 # testing
 /coverage
 bundle-summary.json
+/test-results
 
 # next.js
 /.next/

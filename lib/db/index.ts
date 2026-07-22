@@ -144,6 +144,28 @@ export interface TrackingReviewSessionRecord {
 }
 
 /**
+ * Local mirror of a completed pronunciation diagnostic (plan 067 step 6).
+ *
+ * Written offline-first alongside the outbox enqueue so a diagnostic
+ * completed offline survives a page refresh before it syncs. `id` is the
+ * same client-generated uuid used as the row's Supabase primary key — it
+ * doubles as this table's idempotency marker: once `syncedAt` is set, the
+ * enqueue helper skips re-enqueueing this id (see
+ * `lib/pronunciation/assessment/persistence.ts`), since a plain `insert`
+ * outbox entry (unlike the SRS 'rpc' entries) has no server-side
+ * ON CONFLICT DO NOTHING to absorb a duplicate retry.
+ */
+export interface PronunciationAssessmentRecord {
+  id: string;
+  userId: string;
+  schemaVersion: number;
+  result: Record<string, unknown>;
+  completedAt: string; // ISO
+  createdAt: string; // ISO
+  syncedAt?: string; // ISO — set once the outbox entry for this id has synced
+}
+
+/**
  * Local mirror of a word_bank/topic_srs SM-2 materialized row (plan 061 step 2).
  *
  * Lets grading UI compute+display the next SM-2 state OPTIMISTICALLY without a
@@ -225,6 +247,7 @@ class PronunciationDB extends Dexie {
   localDataQuarantine!: Table<LocalDataQuarantineRecord, number>;
   srsEntityState!: Table<SRSEntityStateRecord, string>;
   srsRatingEvents!: Table<SRSRatingEventRecord, string>;
+  pronunciationAssessments!: Table<PronunciationAssessmentRecord, string>;
 
   constructor() {
     super("pronunciation-journal");
@@ -395,6 +418,12 @@ class PronunciationDB extends Dexie {
     // session created by account A from being loaded by account B offline.
     this.version(23).stores({
       trackingReviewSessions: 'id, userId, createdAt, expiresAt, [userId+createdAt]',
+    });
+
+    // v24: local mirror of completed pronunciation diagnostics (plan 067
+    // step 6) — offline-first survival + idempotency marker for outbox sync.
+    this.version(24).stores({
+      pronunciationAssessments: 'id, userId, [userId+createdAt], syncedAt',
     });
   }
 }

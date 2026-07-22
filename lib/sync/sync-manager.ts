@@ -44,6 +44,27 @@ const UPSERT_CONFLICT_COLUMNS: Partial<Record<SyncTable, string>> = {
   lesson_completions: 'user_id,course_slug,lesson_slug',
 }
 
+/**
+ * Tables where a plain `insert` entry's `payload.id` is BOTH the table's
+ * primary key AND a value the client generated itself (a uuid minted before
+ * the row ever reaches the server — see each table's producer, e.g.
+ * `lib/pronunciation/assessment/persistence.ts`), never a business/natural
+ * key. For these tables, a 23505 on retry can only mean "this exact row,
+ * identified by a key only this client could have produced, already landed"
+ * — the same reasoning `classifyUniqueViolationAsIdempotentSuccess` applies
+ * to the `rpc` + `p_idempotency_key` case above, just reached via a plain
+ * insert's primary-key conflict instead of a ledger's unique constraint.
+ *
+ * Do NOT add a table here unless its `id` column is (a) the primary key and
+ * (b) always client-generated — e.g. `lesson_completions` must stay OUT of
+ * this set because its conflict target is a business key
+ * (`user_id,course_slug,lesson_slug`), not a client-minted identity value, so
+ * a 23505 there could be two genuinely different logical writes colliding.
+ */
+const TABLES_WITH_CLIENT_GENERATED_ID_IDEMPOTENCY: ReadonlySet<SyncTable> = new Set([
+  'pronunciation_assessments',
+])
+
 let flushInFlight: Promise<SyncFlushResult> | null = null
 
 function resolveOnConflict(entry: SyncOutboxEntry): string | undefined {
@@ -111,23 +132,37 @@ export function isPermanentError(message: string, code?: string): boolean {
  *    have to trust blindly — we generated it, we're the only writer who
  *    could have used it, so seeing OUR OWN key rejected as duplicate proves
  *    OUR OWN earlier attempt already landed.
- *  - Any other operation (plain insert/update/upsert/delete against a
- *    table): these do NOT carry a client-generated idempotency key at all
- *    (their conflict targets are business columns like `user_id,topic` or
- *    `id` — meaningful data, not a value crafted solely to detect retries).
- *    A 23505 here could be this entry's own retry racing itself, but it
- *    could just as easily be two DIFFERENT logical writes (e.g. two
- *    concurrent tabs/devices) colliding on the same natural key — the
- *    client has no way to tell those apart, so it must remain a permanent
- *    failure (previous behavior, preserved).
+ *  - `operation === 'insert'` against a table in
+ *    `TABLES_WITH_CLIENT_GENERATED_ID_IDEMPOTENCY`: the payload's `id` IS the
+ *    table's primary key and was minted client-side before the row ever left
+ *    the device (see that constant's doc comment). A 23505 here can only be
+ *    the primary key colliding with itself — i.e. this exact row already
+ *    landed — never a different logical write, because nothing else could
+ *    produce that same client-generated uuid.
+ *  - Any other operation (plain insert against a table NOT in that set, or
+ *    update/upsert/delete against any table): these do NOT carry a
+ *    client-generated idempotency key at all (their conflict targets are
+ *    business columns like `user_id,topic` or `id` — meaningful data, not a
+ *    value crafted solely to detect retries). A 23505 here could be this
+ *    entry's own retry racing itself, but it could just as easily be two
+ *    DIFFERENT logical writes (e.g. two concurrent tabs/devices) colliding on
+ *    the same natural key — the client has no way to tell those apart, so it
+ *    must remain a permanent failure (previous behavior, preserved).
  *
  * Returns true only when this specific entry's payload demonstrably carries
- * the idempotency key that would have caused the conflict.
+ * the idempotency key (or client-generated primary key) that would have
+ * caused the conflict.
  */
 export function classifyUniqueViolationAsIdempotentSuccess(entry: SyncOutboxEntry): boolean {
-  if (entry.operation !== 'rpc') return false
-  const key = (entry.payload as Record<string, unknown> | undefined)?.p_idempotency_key
-  return typeof key === 'string' && key.length > 0
+  if (entry.operation === 'rpc') {
+    const key = (entry.payload as Record<string, unknown> | undefined)?.p_idempotency_key
+    return typeof key === 'string' && key.length > 0
+  }
+  if (entry.operation === 'insert' && TABLES_WITH_CLIENT_GENERATED_ID_IDEMPOTENCY.has(entry.table)) {
+    const id = (entry.payload as Record<string, unknown> | undefined)?.id
+    return typeof id === 'string' && id.length > 0
+  }
+  return false
 }
 
 // ── Flush logic ────────────────────────────────────────────────────────────
