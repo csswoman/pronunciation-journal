@@ -108,6 +108,26 @@ describe('selectDiagnosticPrompts', () => {
     expect(ids).not.toContain('connected.assimilation')
   })
 
+  it('preserves CEFR bias for the general (non-transfer) pool at cefrLevel A1, despite the registry having no A1-recommended targets (regression)', () => {
+    // The registry's lowest recommendedCefr is A2, so listTargetsByCefr('A1')
+    // returns []. The general pool must floor-fallback to A2 content, not
+    // escalate to the full C2-capped registry — otherwise B2-only targets
+    // like elision/assimilation would leak into every non-transfer slot of
+    // an A1 diagnostic run. The pinned transfer slot is exempt by design
+    // (it unconditionally searches the full registry per the earlier fix),
+    // so this checks only the non-transfer entries in the selection.
+    const b2OnlyIds = new Set(['connected.elision', 'connected.assimilation'])
+    for (let seed = 0; seed < 50; seed++) {
+      const selection = selectDiagnosticPrompts({ seed, cefrLevel: 'A1' })
+      const nonTransferIds = selection
+        .filter((s) => s.stage !== 'contextual_production')
+        .map((s) => s.targetId)
+      for (const id of nonTransferIds) {
+        expect(b2OnlyIds.has(id)).toBe(false)
+      }
+    }
+  })
+
   it('deprioritizes targets that already have existing evidence in favor of gaps', () => {
     const wellEvidenced = new Set<PronunciationTargetId>(
       ALL_TARGET_IDS.filter((id) => id.startsWith('segmental.contrast.'))

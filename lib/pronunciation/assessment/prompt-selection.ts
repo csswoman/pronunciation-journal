@@ -88,8 +88,16 @@ export function selectDiagnosticPrompts(
   const { seed, cefrLevel, existingEvidence } = options
   const rng = createSeededRng(seed)
 
+  // The registry has no targets with recommendedCefr 'A1' (the lowest is
+  // A2), so `listTargetsByCefr('A1')` returns []. Falling back to 'C2' here
+  // would silently substitute the ENTIRE registry (including B2-only items
+  // like connected.elision/connected.assimilation) as the general pool for
+  // every non-transfer slot — defeating CEFR bias for the whole run. Floor
+  // the fallback at 'A2' instead: the lowest level that actually has
+  // registry content, so A1 learners still get a CEFR-appropriate pool
+  // rather than borrowing the full registry.
   const eligible = listTargetsByCefr(cefrLevel)
-  const pool = eligible.length > 0 ? eligible : listTargetsByCefr('C2')
+  const pool = eligible.length > 0 ? eligible : listTargetsByCefr('A2')
 
   const transferCandidates = pool.filter((t) => t.evidenceCapabilities.includes('contextual_production'))
 
