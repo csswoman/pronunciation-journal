@@ -19,6 +19,7 @@ vi.mock("@/lib/supabase/server", () => ({
 }));
 
 import { getHomePlacementState } from "../placement-state";
+import { getHomePronunciationDiagnosticState } from "../pronunciation-diagnostic-state";
 
 describe("getHomePlacementState", () => {
   beforeEach(() => {
@@ -49,6 +50,51 @@ describe("getHomePlacementState", () => {
     await expect(getHomePlacementState("u1")).resolves.toEqual({
       hasPlacement: false,
       hasMeaningfulProgress: false,
+    });
+  });
+});
+
+describe("getHomePronunciationDiagnosticState", () => {
+  beforeEach(() => {
+    results.clear();
+  });
+
+  it("is false when neither CEFR placement nor pronunciation diagnostic exist", async () => {
+    await expect(getHomePronunciationDiagnosticState("u1")).resolves.toEqual({
+      hasPronunciationDiagnostic: false,
+    });
+  });
+
+  it("recognizes a completed pronunciation diagnostic independently from CEFR placement", async () => {
+    results.set("assessment_results", { count: 1, error: null });
+    results.set("pronunciation_assessments", { count: 1, error: null });
+
+    await expect(getHomePronunciationDiagnosticState("u1")).resolves.toEqual({
+      hasPronunciationDiagnostic: true,
+    });
+  });
+
+  it("stays false with only CEFR placement completed (no default CEFR misread)", async () => {
+    results.set("assessment_results", { count: 1, error: null });
+
+    await expect(getHomePronunciationDiagnosticState("u1")).resolves.toEqual({
+      hasPronunciationDiagnostic: false,
+    });
+  });
+
+  it("is true with only the pronunciation diagnostic completed", async () => {
+    results.set("pronunciation_assessments", { count: 1, error: null });
+
+    await expect(getHomePronunciationDiagnosticState("u1")).resolves.toEqual({
+      hasPronunciationDiagnostic: true,
+    });
+  });
+
+  it("tolerates installations without pronunciation_assessments", async () => {
+    results.set("pronunciation_assessments", { count: null, error: { code: "PGRST205" } });
+
+    await expect(getHomePronunciationDiagnosticState("u1")).resolves.toEqual({
+      hasPronunciationDiagnostic: false,
     });
   });
 });

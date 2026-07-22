@@ -23,6 +23,7 @@ describe("HomeCommandGrid placement visibility", () => {
       <HomeCommandGrid
         {...baseProps}
         placementState={{ hasPlacement: false, hasMeaningfulProgress: false }}
+        pronunciationDiagnosticState={{ hasPronunciationDiagnostic: true }}
       />,
     );
 
@@ -35,6 +36,7 @@ describe("HomeCommandGrid placement visibility", () => {
       <HomeCommandGrid
         {...baseProps}
         placementState={{ hasPlacement: false, hasMeaningfulProgress: true }}
+        pronunciationDiagnosticState={{ hasPronunciationDiagnostic: true }}
       />,
     );
 
@@ -47,9 +49,86 @@ describe("HomeCommandGrid placement visibility", () => {
       <HomeCommandGrid
         {...baseProps}
         placementState={{ hasPlacement: true, hasMeaningfulProgress: true }}
+        pronunciationDiagnosticState={{ hasPronunciationDiagnostic: true }}
       />,
     );
 
     expect(screen.queryByText("Ajusta tu ruta")).not.toBeInTheDocument();
+  });
+});
+
+describe("HomeCommandGrid pronunciation diagnostic visibility", () => {
+  it("shows neither prompt when both CEFR placement and pronunciation diagnostic are absent", () => {
+    render(
+      <HomeCommandGrid
+        {...baseProps}
+        placementState={{ hasPlacement: false, hasMeaningfulProgress: false }}
+        pronunciationDiagnosticState={{ hasPronunciationDiagnostic: false }}
+      />,
+    );
+
+    expect(screen.getByRole("heading", { name: "Haz que el plan empiece desde tu nivel" }))
+      .toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Descubre cómo suena tu pronunciación hoy" }),
+    ).toBeInTheDocument();
+  });
+
+  it("shows only the CEFR prompt when CEFR is done but pronunciation diagnostic is not", () => {
+    render(
+      <HomeCommandGrid
+        {...baseProps}
+        placementState={{ hasPlacement: true, hasMeaningfulProgress: true }}
+        pronunciationDiagnosticState={{ hasPronunciationDiagnostic: false }}
+      />,
+    );
+
+    expect(
+      screen.queryByRole("heading", { name: "Haz que el plan empiece desde tu nivel" }),
+    ).not.toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Evalúa tu pronunciación" })).toBeInTheDocument();
+  });
+
+  it("shows only the pronunciation prompt when pronunciation diagnostic is done but CEFR is not", () => {
+    render(
+      <HomeCommandGrid
+        {...baseProps}
+        placementState={{ hasPlacement: false, hasMeaningfulProgress: false }}
+        pronunciationDiagnosticState={{ hasPronunciationDiagnostic: true }}
+      />,
+    );
+
+    expect(screen.getByRole("heading", { name: "Haz que el plan empiece desde tu nivel" }))
+      .toBeInTheDocument();
+    expect(
+      screen.queryByRole("heading", { name: "Descubre cómo suena tu pronunciación hoy" }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("hides both prompts when CEFR placement and pronunciation diagnostic are both complete", () => {
+    render(
+      <HomeCommandGrid
+        {...baseProps}
+        placementState={{ hasPlacement: true, hasMeaningfulProgress: true }}
+        pronunciationDiagnosticState={{ hasPronunciationDiagnostic: true }}
+      />,
+    );
+
+    expect(screen.queryByText("Ajusta tu ruta")).not.toBeInTheDocument();
+    expect(screen.queryByText("Diagnóstico oral")).not.toBeInTheDocument();
+  });
+
+  it("never treats a default CEFR placement flag as pronunciation diagnostic completion", () => {
+    // hasPlacement true here simulates the default/profile CEFR value being present,
+    // but pronunciationDiagnosticState is computed independently and remains false.
+    render(
+      <HomeCommandGrid
+        {...baseProps}
+        placementState={{ hasPlacement: true, hasMeaningfulProgress: true }}
+        pronunciationDiagnosticState={{ hasPronunciationDiagnostic: false }}
+      />,
+    );
+
+    expect(screen.getByRole("heading", { name: "Evalúa tu pronunciación" })).toBeInTheDocument();
   });
 });
