@@ -7,13 +7,147 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instantiate createClient with right options
-  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
-  __InternalSupabase: {
-    PostgrestVersion: "14.4"
+  graphql_public: {
+    Tables: {
+      [_ in never]: never
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      graphql: {
+        Args: {
+          extensions?: Json
+          operationName?: string
+          query?: string
+          variables?: Json
+        }
+        Returns: Json
+      }
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
   }
   public: {
     Tables: {
+      activity_sessions: {
+        Row: {
+          accuracy_pct: number
+          completed_at: string
+          created_at: string
+          duration_ms: number
+          exercises_correct: number
+          exercises_total: number
+          id: string
+          practice_context: string | null
+          reconciled_step_ids: string[]
+          skill_tags: string[]
+          source: string
+          user_id: string
+          xp_earned: number
+        }
+        Insert: {
+          accuracy_pct?: number
+          completed_at?: string
+          created_at?: string
+          duration_ms?: number
+          exercises_correct?: number
+          exercises_total?: number
+          id?: string
+          practice_context?: string | null
+          reconciled_step_ids?: string[]
+          skill_tags?: string[]
+          source: string
+          user_id: string
+          xp_earned?: number
+        }
+        Update: {
+          accuracy_pct?: number
+          completed_at?: string
+          created_at?: string
+          duration_ms?: number
+          exercises_correct?: number
+          exercises_total?: number
+          id?: string
+          practice_context?: string | null
+          reconciled_step_ids?: string[]
+          skill_tags?: string[]
+          source?: string
+          user_id?: string
+          xp_earned?: number
+        }
+        Relationships: []
+      }
+      answer_history: {
+        Row: {
+          answered_at: string | null
+          content_id: string | null
+          context: string | null
+          exercise_payload: Json | null
+          exercise_type_id: number
+          grade: number | null
+          id: string
+          is_correct: boolean
+          sound_id: number | null
+          target_word: string | null
+          time_ms: number | null
+          topic: string | null
+          user_answer: string | null
+          user_id: string
+        }
+        Insert: {
+          answered_at?: string | null
+          content_id?: string | null
+          context?: string | null
+          exercise_payload?: Json | null
+          exercise_type_id: number
+          grade?: number | null
+          id?: string
+          is_correct: boolean
+          sound_id?: number | null
+          target_word?: string | null
+          time_ms?: number | null
+          topic?: string | null
+          user_answer?: string | null
+          user_id: string
+        }
+        Update: {
+          answered_at?: string | null
+          content_id?: string | null
+          context?: string | null
+          exercise_payload?: Json | null
+          exercise_type_id?: number
+          grade?: number | null
+          id?: string
+          is_correct?: boolean
+          sound_id?: number | null
+          target_word?: string | null
+          time_ms?: number | null
+          topic?: string | null
+          user_answer?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ah_sound_fk"
+            columns: ["sound_id"]
+            isOneToOne: false
+            referencedRelation: "sounds"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "answer_history_exercise_type_fk"
+            columns: ["exercise_type_id"]
+            isOneToOne: false
+            referencedRelation: "exercise_types"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       assessment_results: {
         Row: {
           assigned_level: string
@@ -50,147 +184,6 @@ export type Database = {
           topic_scores?: Json
           total?: number
           user_id?: string
-        }
-        Relationships: []
-      }
-      answer_history: {
-        Row: {
-          answered_at: string | null
-          content_id: string | null
-          context: string | null
-          exercise_payload: Json | null
-          exercise_type_id: number
-          grade: number | null
-          id: string
-          is_correct: boolean
-          sound_id: number | null
-          target_word: string | null
-          time_ms: number | null
-          user_answer: string | null
-          user_id: string
-        }
-        Insert: {
-          answered_at?: string | null
-          content_id?: string | null
-          context?: string | null
-          exercise_payload?: Json | null
-          exercise_type_id: number
-          grade?: number | null
-          id?: string
-          is_correct: boolean
-          sound_id?: number | null
-          target_word?: string | null
-          time_ms?: number | null
-          user_answer?: string | null
-          user_id: string
-        }
-        Update: {
-          answered_at?: string | null
-          content_id?: string | null
-          context?: string | null
-          exercise_payload?: Json | null
-          exercise_type_id?: number
-          grade?: number | null
-          id?: string
-          is_correct?: boolean
-          sound_id?: number | null
-          target_word?: string | null
-          time_ms?: number | null
-          user_answer?: string | null
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "ah_sound_fk"
-            columns: ["sound_id"]
-            isOneToOne: false
-            referencedRelation: "sounds"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "answer_history_exercise_type_fk"
-            columns: ["exercise_type_id"]
-            isOneToOne: false
-            referencedRelation: "exercise_types"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      lesson_completions: {
-        Row: {
-          completed_at: string
-          course_slug: string
-          id: string
-          lesson_slug: string
-          source: string
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          completed_at?: string
-          course_slug: string
-          id?: string
-          lesson_slug: string
-          source?: string
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          completed_at?: string
-          course_slug?: string
-          id?: string
-          lesson_slug?: string
-          source?: string
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
-      activity_sessions: {
-        Row: {
-          id: string
-          user_id: string
-          source: string
-          practice_context: string | null
-          skill_tags: string[]
-          exercises_total: number
-          exercises_correct: number
-          accuracy_pct: number
-          duration_ms: number
-          xp_earned: number
-          reconciled_step_ids: string[]
-          completed_at: string
-          created_at: string
-        }
-        Insert: {
-          id?: string
-          user_id: string
-          source: string
-          practice_context?: string | null
-          skill_tags?: string[]
-          exercises_total?: number
-          exercises_correct?: number
-          accuracy_pct?: number
-          duration_ms?: number
-          xp_earned?: number
-          reconciled_step_ids?: string[]
-          completed_at?: string
-          created_at?: string
-        }
-        Update: {
-          id?: string
-          user_id?: string
-          source?: string
-          practice_context?: string | null
-          skill_tags?: string[]
-          exercises_total?: number
-          exercises_correct?: number
-          accuracy_pct?: number
-          duration_ms?: number
-          xp_earned?: number
-          reconciled_step_ids?: string[]
-          completed_at?: string
-          created_at?: string
         }
         Relationships: []
       }
@@ -411,6 +404,78 @@ export type Database = {
         }
         Relationships: []
       }
+      journal_entries: {
+        Row: {
+          content: string
+          corrected_content: string | null
+          created_at: string
+          entry_date: string
+          feedback: Json | null
+          id: string
+          prompt: string
+          prompt_topic: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          content?: string
+          corrected_content?: string | null
+          created_at?: string
+          entry_date: string
+          feedback?: Json | null
+          id: string
+          prompt?: string
+          prompt_topic?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          corrected_content?: string | null
+          created_at?: string
+          entry_date?: string
+          feedback?: Json | null
+          id?: string
+          prompt?: string
+          prompt_topic?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      lesson_completions: {
+        Row: {
+          completed_at: string
+          course_slug: string
+          id: string
+          lesson_slug: string
+          source: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string
+          course_slug: string
+          id?: string
+          lesson_slug: string
+          source?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string
+          course_slug?: string
+          id?: string
+          lesson_slug?: string
+          source?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       minimal_pairs: {
         Row: {
           contrast_ipa_a: string | null
@@ -456,6 +521,87 @@ export type Database = {
         }
         Relationships: []
       }
+      pronunciation_assessments: {
+        Row: {
+          completed_at: string
+          created_at: string
+          id: string
+          result: Json
+          schema_version: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string
+          created_at?: string
+          id?: string
+          result: Json
+          schema_version: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string
+          created_at?: string
+          id?: string
+          result?: Json
+          schema_version?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      rate_limits: {
+        Row: {
+          count: number
+          key: string
+          updated_at: string
+          window_start: string
+        }
+        Insert: {
+          count: number
+          key: string
+          updated_at?: string
+          window_start: string
+        }
+        Update: {
+          count?: number
+          key?: string
+          updated_at?: string
+          window_start?: string
+        }
+        Relationships: []
+      }
+      sentence_transcription_cache: {
+        Row: {
+          cache_key: string
+          created_at: string
+          mime_type: string
+          payload_size: number
+          transcript: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          cache_key: string
+          created_at?: string
+          mime_type: string
+          payload_size?: number
+          transcript: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          cache_key?: string
+          created_at?: string
+          mime_type?: string
+          payload_size?: number
+          transcript?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       sounds: {
         Row: {
           category: string | null
@@ -480,6 +626,45 @@ export type Database = {
           id?: number
           ipa?: string | null
           type?: string | null
+        }
+        Relationships: []
+      }
+      srs_rating_events: {
+        Row: {
+          created_at: string
+          entity_id: string | null
+          entity_type: string
+          evaluator_metadata: Json
+          grade: number
+          id: string
+          idempotency_key: string
+          occurred_at: string
+          topic: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          entity_id?: string | null
+          entity_type: string
+          evaluator_metadata?: Json
+          grade: number
+          id?: string
+          idempotency_key: string
+          occurred_at?: string
+          topic?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          entity_id?: string | null
+          entity_type?: string
+          evaluator_metadata?: Json
+          grade?: number
+          id?: string
+          idempotency_key?: string
+          occurred_at?: string
+          topic?: string | null
+          user_id?: string
         }
         Relationships: []
       }
@@ -519,36 +704,6 @@ export type Database = {
         }
         Relationships: []
       }
-      sentence_transcription_cache: {
-        Row: {
-          cache_key: string
-          created_at: string
-          mime_type: string
-          payload_size: number
-          transcript: string
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          cache_key: string
-          created_at?: string
-          mime_type: string
-          payload_size?: number
-          transcript: string
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          cache_key?: string
-          created_at?: string
-          mime_type?: string
-          payload_size?: number
-          transcript?: string
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
       text_fragments: {
         Row: {
           audio_url: string | null
@@ -579,39 +734,6 @@ export type Database = {
           source?: string | null
           title?: string | null
           user_id?: string | null
-        }
-        Relationships: []
-      }
-      tracked_items: {
-        Row: {
-          created_at: string
-          id: string
-          kind: string
-          payload: Json
-          ref: string
-          title: string | null
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          kind: string
-          payload?: Json
-          ref: string
-          title?: string | null
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          kind?: string
-          payload?: Json
-          ref?: string
-          title?: string | null
-          updated_at?: string
-          user_id?: string
         }
         Relationships: []
       }
@@ -660,41 +782,101 @@ export type Database = {
         }
         Relationships: []
       }
-      srs_rating_events: {
+      tracked_items: {
         Row: {
           created_at: string
-          entity_id: string | null
-          entity_type: string
-          evaluator_metadata: Json
-          grade: number
           id: string
-          idempotency_key: string
-          occurred_at: string
-          topic: string | null
+          kind: string
+          payload: Json
+          ref: string
+          title: string | null
+          updated_at: string
           user_id: string
         }
         Insert: {
           created_at?: string
-          entity_id?: string | null
-          entity_type: string
-          evaluator_metadata?: Json
-          grade: number
           id?: string
-          idempotency_key: string
-          occurred_at?: string
-          topic?: string | null
+          kind: string
+          payload?: Json
+          ref: string
+          title?: string | null
+          updated_at?: string
           user_id: string
         }
         Update: {
           created_at?: string
-          entity_id?: string | null
-          entity_type?: string
-          evaluator_metadata?: Json
-          grade?: number
           id?: string
-          idempotency_key?: string
-          occurred_at?: string
-          topic?: string | null
+          kind?: string
+          payload?: Json
+          ref?: string
+          title?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_contrast_progress: {
+        Row: {
+          contrast_id: string
+          correct_answers: number
+          created_at: string
+          ease_factor: number
+          id: string
+          interval_days: number
+          last_seen: string | null
+          mastery_pct: number
+          next_review: string | null
+          streak: number
+          total_attempts: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          contrast_id: string
+          correct_answers?: number
+          created_at?: string
+          ease_factor?: number
+          id?: string
+          interval_days?: number
+          last_seen?: string | null
+          mastery_pct?: number
+          next_review?: string | null
+          streak?: number
+          total_attempts?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          contrast_id?: string
+          correct_answers?: number
+          created_at?: string
+          ease_factor?: number
+          id?: string
+          interval_days?: number
+          last_seen?: string | null
+          mastery_pct?: number
+          next_review?: string | null
+          streak?: number
+          total_attempts?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_learning_state: {
+        Row: {
+          state: Json
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          state: Json
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          state?: Json
+          updated_at?: string
           user_id?: string
         }
         Relationships: []
@@ -729,72 +911,6 @@ export type Database = {
         }
         Relationships: []
       }
-      user_learning_state: {
-        Row: {
-          user_id: string
-          state: Json
-          updated_at: string
-        }
-        Insert: {
-          user_id: string
-          state: Json
-          updated_at?: string
-        }
-        Update: {
-          user_id?: string
-          state?: Json
-          updated_at?: string
-        }
-        Relationships: []
-      }
-      user_contrast_progress: {
-        Row: {
-          contrast_id: string
-          correct_answers: number
-          created_at: string
-          ease_factor: number
-          id: string
-          interval_days: number
-          last_seen: string | null
-          next_review: string | null
-          streak: number
-          total_attempts: number
-          mastery_pct: number
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          contrast_id: string
-          correct_answers?: number
-          created_at?: string
-          ease_factor?: number
-          id?: string
-          interval_days?: number
-          last_seen?: string | null
-          next_review?: string | null
-          streak?: number
-          total_attempts?: number
-          mastery_pct?: number
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          contrast_id?: string
-          correct_answers?: number
-          created_at?: string
-          ease_factor?: number
-          id?: string
-          interval_days?: number
-          last_seen?: string | null
-          next_review?: string | null
-          streak?: number
-          total_attempts?: number
-          mastery_pct?: number
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
       word_bank: {
         Row: {
           audio_fetch_attempts: number
@@ -805,21 +921,20 @@ export type Database = {
           ease_factor: number
           error_reason: string | null
           example: string | null
+          familiarity_confidence: number
+          familiarity_status: string
           has_audio: boolean | null
           id: string
           image_prompt: string | null
           interval_days: number
           ipa: string | null
-          is_favorite?: boolean
+          is_favorite: boolean
           last_reviewed_at: string | null
-          familiarity_status?: string
-          familiarity_confidence?: number
-          verification_due_at?: string | null
-          mastery_provenance?: string
-          mastery_version?: number
-          objective_evidence_count?: number
+          mastery_provenance: string
+          mastery_version: number
           meaning: string | null
           next_review_at: string | null
+          objective_evidence_count: number
           repetitions: number
           review_count: number
           source: string | null
@@ -831,6 +946,7 @@ export type Database = {
           translation: string | null
           updated_at: string
           user_id: string
+          verification_due_at: string | null
         }
         Insert: {
           audio_fetch_attempts?: number
@@ -841,6 +957,8 @@ export type Database = {
           ease_factor?: number
           error_reason?: string | null
           example?: string | null
+          familiarity_confidence?: number
+          familiarity_status?: string
           has_audio?: boolean | null
           id?: string
           image_prompt?: string | null
@@ -848,14 +966,11 @@ export type Database = {
           ipa?: string | null
           is_favorite?: boolean
           last_reviewed_at?: string | null
-          familiarity_status?: string
-          familiarity_confidence?: number
-          verification_due_at?: string | null
           mastery_provenance?: string
           mastery_version?: number
-          objective_evidence_count?: number
           meaning?: string | null
           next_review_at?: string | null
+          objective_evidence_count?: number
           repetitions?: number
           review_count?: number
           source?: string | null
@@ -867,6 +982,7 @@ export type Database = {
           translation?: string | null
           updated_at?: string
           user_id: string
+          verification_due_at?: string | null
         }
         Update: {
           audio_fetch_attempts?: number
@@ -877,6 +993,8 @@ export type Database = {
           ease_factor?: number
           error_reason?: string | null
           example?: string | null
+          familiarity_confidence?: number
+          familiarity_status?: string
           has_audio?: boolean | null
           id?: string
           image_prompt?: string | null
@@ -884,14 +1002,11 @@ export type Database = {
           ipa?: string | null
           is_favorite?: boolean
           last_reviewed_at?: string | null
-          familiarity_status?: string
-          familiarity_confidence?: number
-          verification_due_at?: string | null
           mastery_provenance?: string
           mastery_version?: number
-          objective_evidence_count?: number
           meaning?: string | null
           next_review_at?: string | null
+          objective_evidence_count?: number
           repetitions?: number
           review_count?: number
           source?: string | null
@@ -903,6 +1018,7 @@ export type Database = {
           translation?: string | null
           updated_at?: string
           user_id?: string
+          verification_due_at?: string | null
         }
         Relationships: []
       }
@@ -979,7 +1095,15 @@ export type Database = {
           user_id?: string
           word_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "word_enrichment_jobs_word_id_fkey"
+            columns: ["word_id"]
+            isOneToOne: false
+            referencedRelation: "word_bank"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       words: {
         Row: {
@@ -1034,6 +1158,129 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      _sm2_derive_status: {
+        Args: { p_interval: number; p_repetitions: number }
+        Returns: string
+      }
+      _sm2_schedule_next: {
+        Args: {
+          p_ease: number
+          p_grade: number
+          p_interval: number
+          p_now: string
+          p_repetitions: number
+        }
+        Returns: {
+          next_ease: number
+          next_interval: number
+          next_repetitions: number
+          next_review_at: string
+        }[]
+      }
+      apply_topic_srs_rating_event: {
+        Args: {
+          p_evaluator_metadata?: Json
+          p_grade: number
+          p_idempotency_key: string
+          p_occurred_at?: string
+          p_topic: string
+          p_user_id: string
+        }
+        Returns: {
+          created_at: string
+          ease_factor: number
+          id: string
+          interval_days: number
+          last_reviewed_at: string | null
+          next_review_at: string | null
+          repetitions: number
+          review_count: number
+          srs_status: string
+          topic: string
+          updated_at: string
+          user_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "topic_srs"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      apply_word_bank_rating_event: {
+        Args: {
+          p_evaluator_metadata?: Json
+          p_grade: number
+          p_idempotency_key: string
+          p_occurred_at?: string
+          p_user_id: string
+          p_word_id: string
+        }
+        Returns: {
+          audio_fetch_attempts: number
+          audio_url: string | null
+          context: string | null
+          created_at: string
+          difficulty: number
+          ease_factor: number
+          error_reason: string | null
+          example: string | null
+          familiarity_confidence: number
+          familiarity_status: string
+          has_audio: boolean | null
+          id: string
+          image_prompt: string | null
+          interval_days: number
+          ipa: string | null
+          is_favorite: boolean
+          last_reviewed_at: string | null
+          mastery_provenance: string
+          mastery_version: number
+          meaning: string | null
+          next_review_at: string | null
+          objective_evidence_count: number
+          repetitions: number
+          review_count: number
+          source: string | null
+          source_ref: string | null
+          srs_status: string
+          status: string
+          synonyms: string[] | null
+          text: string
+          translation: string | null
+          updated_at: string
+          user_id: string
+          verification_due_at: string | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "word_bank"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      claim_enrichment_jobs: {
+        Args: { p_batch_size?: number; p_worker_id?: string }
+        Returns: {
+          attempts: number
+          created_at: string
+          id: string
+          last_error: string | null
+          locked_at: string | null
+          locked_by: string | null
+          run_after: string
+          status: string
+          updated_at: string
+          user_id: string
+          word_id: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "word_enrichment_jobs"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
       consume_rate_limit: {
         Args: { p_key: string; p_max: number; p_window_ms: number }
         Returns: {
@@ -1041,28 +1288,8 @@ export type Database = {
           retry_after_seconds: number
         }[]
       }
-      apply_word_bank_rating_event: {
-        Args: {
-          p_idempotency_key: string
-          p_user_id: string
-          p_word_id: string
-          p_grade: number
-          p_occurred_at?: string
-          p_evaluator_metadata?: Json
-        }
-        Returns: Database["public"]["Tables"]["word_bank"]["Row"]
-      }
-      apply_topic_srs_rating_event: {
-        Args: {
-          p_idempotency_key: string
-          p_user_id: string
-          p_topic: string
-          p_grade: number
-          p_occurred_at?: string
-          p_evaluator_metadata?: Json
-        }
-        Returns: Database["public"]["Tables"]["topic_srs"]["Row"]
-      }
+      is_valid_interest_list: { Args: { value: Json }; Returns: boolean }
+      text_fragments_within_limit: { Args: never; Returns: boolean }
     }
     Enums: {
       [_ in never]: never
@@ -1191,7 +1418,11 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
+  graphql_public: {
+    Enums: {},
+  },
   public: {
     Enums: {},
   },
 } as const
+
