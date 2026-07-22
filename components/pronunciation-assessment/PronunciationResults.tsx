@@ -3,6 +3,7 @@
 import { useEffect, useRef } from 'react'
 import { RefreshCw } from '@/components/icons'
 import Anchor from '@/components/ui/Anchor'
+import Button from '@/components/ui/Button'
 import type { PronunciationDiagnosticResult } from '@/lib/pronunciation/assessment/schema'
 import { PronunciationEvidenceDetail } from './PronunciationEvidenceDetail'
 import { PronunciationFiveDayPlan } from './PronunciationFiveDayPlan'
@@ -72,14 +73,15 @@ export function PronunciationResults({ result, saving, saveError, onRetrySave }:
           className="flex items-center gap-2 rounded-md border border-[var(--error)] bg-[var(--error-soft)] p-3 text-[13px] text-[var(--error)]"
         >
           <span>No se pudo guardar el resultado.</span>
-          <button
+          <Button
             type="button"
+            variant="ghost"
+            size="sm"
             onClick={onRetrySave}
-            className="inline-flex items-center gap-1 font-semibold underline"
+            icon={<RefreshCw size={14} aria-hidden />}
           >
-            <RefreshCw size={14} aria-hidden />
             Reintentar
-          </button>
+          </Button>
         </div>
       )}
 
