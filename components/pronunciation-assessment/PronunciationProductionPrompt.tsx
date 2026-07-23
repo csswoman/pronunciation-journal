@@ -3,6 +3,7 @@
 import { useEffect, useRef } from 'react'
 import { Mic, MicOff } from '@/components/icons'
 import Button from '@/components/ui/Button'
+import { micErrorMessage } from '@/components/practice/essential-words/mic-error-message'
 import { useSpeechRecognition } from '@/hooks/useSpeechRecognition'
 import { getTarget } from '@/lib/pronunciation/targets/registry'
 import type { SpokenAttempt } from '@/lib/pronunciation/spoken-attempt'
@@ -100,9 +101,7 @@ export function PronunciationProductionPrompt({ userId, selection, onAttempt }: 
 
       {isError && (
         <p role="alert" className="text-[13px] text-[var(--error)]">
-          {errorCode === 'not-allowed'
-            ? 'No se concedió acceso al micrófono.'
-            : 'No se pudo reconocer el audio.'}
+          {micErrorMessage(errorCode)}
         </p>
       )}
 

@@ -1,3 +1,4 @@
+import { BROWSER_BLOCKS_STT_ES } from '@/lib/speech/browser-support-message'
 import type { CapabilitySnapshot } from '@/lib/pronunciation/assessment/types'
 
 interface PreflightDegradedNoticeProps {
@@ -30,6 +31,7 @@ export function PreflightDegradedNotice({ snapshot }: PreflightDegradedNoticePro
         No pudimos evaluar tu pronunciación esta vez.
       </p>
       <p>{degradedReason(snapshot)}</p>
+      <p>{BROWSER_BLOCKS_STT_ES}</p>
       <p>Puedes continuar con preguntas de percepción y tu propia valoración.</p>
     </div>
   )

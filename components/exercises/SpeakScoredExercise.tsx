@@ -13,6 +13,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { Mic, MicOff } from "@/components/icons"
 import { speak } from '@/lib/phoneme-practice/tts'
 import { useSpeechRecognition } from '@/hooks/useSpeechRecognition'
+import { BROWSER_BLOCKS_SCORING_EN } from '@/lib/speech/browser-support-message'
 import { defaultEvaluationEngine } from '@/lib/exercises/evaluation'
 import { getEvaluationWordResults } from '@/lib/exercises/evaluation/word-results'
 import { getFeedbackMessage, calculateXP } from '@/lib/pronunciation/scoring'
@@ -42,7 +43,7 @@ interface ScoredResult {
  * 'unavailable' — recognition is supported but failed (e.g. Brave blocks the
  *                  network speech service) or the evaluator itself rejected.
  */
-type UnscoredReason = 'unsupported' | 'unavailable'
+type UnscoredReason = 'unsupported' | 'browser' | 'unavailable'
 
 // ── WordDisplay ──────────────────────────────────────────────────────────────
 
@@ -82,7 +83,9 @@ function ShadowingFallback({
       <p className="text-xs text-fg-muted text-center max-w-xs m-0">
         {reason === 'unsupported'
           ? "Your browser doesn't support voice scoring. Listen to the model and repeat it out loud, then continue — this attempt won't be scored."
-          : "Voice scoring isn't available right now. Listen to the model and repeat it out loud, then continue — this attempt won't be scored."}
+          : reason === 'browser'
+            ? BROWSER_BLOCKS_SCORING_EN
+            : "Voice scoring isn't available right now. Listen to the model and repeat it out loud, then continue — this attempt won't be scored."}
       </p>
       <ListenButton onPlay={() => word && speak(word)} label="Listen" />
       <PillButton variant="primary" size="sm" onClick={onContinue}>
@@ -158,7 +161,11 @@ export function SpeakScoredExercise({ exercise, onSubmit }: Props) {
   // Browsers like Brave block Google's speech service → fall back to shadowing.
   const isNetworkShadowing = isError && errorCode === 'network'
   const isShadowing = !isSupported || isNetworkShadowing || evalFailed
-  const shadowingReason: UnscoredReason = !isSupported ? 'unsupported' : 'unavailable'
+  const shadowingReason: UnscoredReason = !isSupported
+    ? 'unsupported'
+    : isNetworkShadowing
+      ? 'browser'
+      : 'unavailable'
 
   return (
     <div className="flex flex-col items-center gap-6 w-full">

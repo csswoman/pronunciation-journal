@@ -1,3 +1,5 @@
+import { STT_NETWORK_FAILURE_ES } from '@/lib/speech/browser-support-message'
+
 /** User-facing Spanish messages for Web Speech / mic failures. */
 export function micErrorMessage(error: string | null): string {
   if (!error) return 'No se pudo iniciar el micrófono.'
@@ -14,7 +16,7 @@ export function micErrorMessage(error: string | null): string {
     lower.includes('networkerror') ||
     lower.includes('abort')
   ) {
-    return 'Sin conexión con el servicio de reconocimiento de voz. Revisa tu internet e intenta de nuevo.'
+    return STT_NETWORK_FAILURE_ES
   }
   if (lower.includes('transcribe failed') || lower.includes('rate limit')) {
     return 'El servicio de transcripción no respondió. Intenta de nuevo en unos segundos.'

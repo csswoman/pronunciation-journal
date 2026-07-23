@@ -19,6 +19,7 @@ import { ProductionFeedback } from '@/components/exercises/ProductionFeedback'
 import { ProductionHint } from '@/components/exercises/ProductionHint'
 import { ProductionTaskHeader } from '@/components/exercises/ProductionTaskHeader'
 import { useSpeechRecognition } from '@/hooks/useSpeechRecognition'
+import { BROWSER_BLOCKS_STT_ES } from '@/lib/speech/browser-support-message'
 import {
   gradeProduction,
   isOnline,
@@ -189,7 +190,9 @@ export function SpokenProductionExercise({ exercise, onResult, onSkip }: Props) 
                 ? 'Se denegó el acceso al micrófono.'
                 : errorCode === 'no-speech'
                   ? 'No se detectó voz. Toca el micrófono y habla con claridad.'
-                  : 'Falló el reconocimiento de voz.'}{' '}
+                  : errorCode === 'network'
+                    ? BROWSER_BLOCKS_STT_ES
+                    : 'Falló el reconocimiento de voz.'}{' '}
               <button
                 type="button"
                 onClick={handleRetry}
