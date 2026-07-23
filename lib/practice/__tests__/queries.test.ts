@@ -50,7 +50,6 @@ vi.mock('@/lib/progress/activity-hub', () => ({
 // ── Import subject ─────────────────────────────────────────────────────────
 
 import {
-  LESSON_QUIZ_PASS_THRESHOLD,
   isLessonQuizPassed,
   recordLessonComplete,
   recordLessonIncomplete,

@@ -1,3 +1,5 @@
+/* eslint-disable max-lines -- Cohesive static fixture catalog. */
+
 import type { Exercise } from '@/lib/phoneme-practice/types'
 import type {
   GenericExercise,
