@@ -37,6 +37,13 @@ export function coreWordToWordBankEntry(w: CoreWord): WordBankEntry {
     source: 'core1k',
     source_ref: null,
     synonyms: null,
+    is_favorite: false,
+    familiarity_confidence: 0,
+    familiarity_status: 'unknown',
+    mastery_provenance: 'none',
+    mastery_version: 1,
+    objective_evidence_count: 0,
+    verification_due_at: null,
   }
 }
 
