@@ -13,7 +13,8 @@ import { GrammarStudyDeckSchema } from "./schema";
 import type { GrammarDeckMeta, GrammarStudyDeckData, GrammarRelatedLink } from "./types";
 import { getLevelById } from "@/lib/courses/curriculumIndex";
 import type { CoursePathTrackId } from "@/lib/courses/types";
-import { targetId } from "@/lib/pronunciation/targets/registry";
+import { getTarget, targetId } from "@/lib/pronunciation/targets/registry";
+import { resolveLegacyIpaToken } from "@/lib/pronunciation/targets/legacy-links";
 
 const DECKS_DIR = path.join(process.cwd(), "public", "grammar-decks");
 
@@ -45,12 +46,21 @@ export function getDeckBySlug(slug: string): GrammarStudyDeckData | null {
     return null;
   }
 
+  const authoredTargetIds = result.data.pronunciationTargetIds ?? [];
+  const unknownTargetIds = authoredTargetIds.filter((candidate) => !getTarget(candidate).ok);
+  if (unknownTargetIds.length > 0) {
+    const message = `[grammar-deck] Unknown pronunciation target ids for "${slug}": ${unknownTargetIds.join(", ")}`;
+    if (process.env.NODE_ENV !== "production") throw new Error(message);
+    console.error(message);
+    return null;
+  }
+
   // Assign sequential 1-based indices from array position so authors never
   // have to keep `index` in sync by hand.
   return {
     meta: result.data.meta ?? DEFAULT_META,
     sounds: result.data.sounds,
-    pronunciationTargetIds: result.data.pronunciationTargetIds?.map(targetId),
+    pronunciationTargetIds: authoredTargetIds.map(targetId),
     related: result.data.related,
     quiz: result.data.quiz,
     cards: result.data.cards.map((card, i) => ({ ...card, index: i + 1 })),
@@ -80,11 +90,34 @@ export function getDecksForSound(sound: string): DeckSoundRef[] {
     if (data === null) continue;
     const parsed = GrammarStudyDeckSchema.safeParse(data);
     if (!parsed.success) continue;
-    if (parsed.data.sounds?.includes(sound)) {
+    const target = resolveLegacyIpaToken(sound).targetId;
+    if (parsed.data.sounds?.includes(sound) || (target && parsed.data.pronunciationTargetIds?.includes(target))) {
       const meta = parsed.data.meta ?? DEFAULT_META;
       const title = [meta.title, meta.titleEmphasis].filter(Boolean).join(" ");
       refs.push({ slug, title });
     }
+  }
+  return refs;
+}
+
+/** Reverse index for canonical pronunciation targets, without a legacy fallback. */
+export function getDecksForTarget(targetId: string): DeckSoundRef[] {
+  if (!getTarget(targetId).ok) return [];
+  const refs: DeckSoundRef[] = [];
+  let files: string[];
+  try {
+    files = fs.readdirSync(DECKS_DIR).filter((f) => f.endsWith(".json"));
+  } catch {
+    return refs;
+  }
+  for (const file of files) {
+    const slug = file.replace(/\.json$/, "");
+    const data = readJson(slug);
+    if (data === null) continue;
+    const parsed = GrammarStudyDeckSchema.safeParse(data);
+    if (!parsed.success || !parsed.data.pronunciationTargetIds?.includes(targetId)) continue;
+    const meta = parsed.data.meta ?? DEFAULT_META;
+    refs.push({ slug, title: [meta.title, meta.titleEmphasis].filter(Boolean).join(" ") });
   }
   return refs;
 }

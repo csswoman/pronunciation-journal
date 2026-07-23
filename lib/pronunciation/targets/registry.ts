@@ -161,9 +161,17 @@ export const PRONUNCIATION_TARGETS: Readonly<Record<string, PronunciationTarget>
 
 /** Typed lookup. Unknown ids return a typed error — never a silent fallback. */
 export function getTarget(targetId: string): TargetLookupResult {
+  if (!isPronunciationTargetIdFormat(targetId)) {
+    return { ok: false, error: { kind: 'invalid_id_format', id: targetId } }
+  }
   const target = PRONUNCIATION_TARGETS[targetId]
   if (!target) return { ok: false, error: { kind: 'not_found', id: targetId } }
   return { ok: true, target }
+}
+
+/** Shape validation is intentionally separate from registry membership. */
+export function isPronunciationTargetIdFormat(value: string): boolean {
+  return /^(segmental\.(phoneme|contrast)\.[^\s]+|prosody\.(word-stress|sentence-stress|rhythm)|prosody\.intonation\.[^\s]+|connected\.(reduction\.[^\s]+|linking|elision|assimilation))$/.test(value)
 }
 
 export function listTargets(): readonly PronunciationTarget[] {
@@ -197,14 +205,24 @@ export function resolvePrerequisiteChain(targetId: PronunciationTargetId): Pronu
 
 /** Adapts a legacy `contrast_id = "ipaA|ipaB"` row into a registry target id. */
 export function contrastIdToTargetId(contrastId: string): PronunciationTargetId {
-  return id(`segmental.contrast.${contrastId}`)
+  const [ipaA, ipaB, ...rest] = contrastId.split('|')
+  return rest.length === 0 && ipaA && ipaB
+    ? contrastTargetId(
+        ipaA.startsWith('/') ? ipaA : `/${ipaA}/`,
+        ipaB.startsWith('/') ? ipaB : `/${ipaB}/`
+      )
+    : id(`segmental.contrast.${contrastId}`)
 }
 
 /** Inverse of `contrastIdToTargetId`. Returns null for non-contrast target ids. */
 export function targetIdToContrastId(targetId: PronunciationTargetId): string | null {
   const prefix = 'segmental.contrast.'
   if (!targetId.startsWith(prefix)) return null
-  return targetId.slice(prefix.length)
+  return targetId
+    .slice(prefix.length)
+    .split('|')
+    .map((part) => part.replace(/^\//, '').replace(/\/$/, ''))
+    .join('|')
 }
 
 function hasCycle(targetId: string, all: Record<string, PronunciationTarget>): boolean {

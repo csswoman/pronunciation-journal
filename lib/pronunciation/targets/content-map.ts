@@ -12,7 +12,8 @@
 
 import fs from 'node:fs'
 import path from 'node:path'
-import { PRONUNCIATION_TARGETS, contrastTargetId, targetId } from './registry'
+import { getTarget, PRONUNCIATION_TARGETS, contrastTargetId, targetId } from './registry'
+import { COURSE_PATH_CURRICULUM } from '@/lib/courses/curriculum'
 import type { PronunciationTargetId } from './types'
 
 export type ContentKind = 'public_lesson' | 'grammar_deck'
@@ -84,8 +85,33 @@ export const UNMAPPED_AUDIT: readonly UnmappedAuditEntry[] = [
 ]
 
 export interface ContentMapIssue {
-  code: 'unknown_target' | 'missing_file'
+  code: 'unknown_target' | 'missing_file' | 'unknown_authored_target'
   detail: string
+}
+
+function getUnknownTargetIssues(targetIds: readonly string[], source: string): ContentMapIssue[] {
+  return targetIds.flatMap((candidate) => {
+    const lookup = getTarget(candidate)
+    return lookup.ok
+      ? []
+      : [{
+          code: 'unknown_authored_target' as const,
+          detail: `${source} references ${lookup.error.kind} pronunciation target id "${candidate}"`,
+        }]
+  })
+}
+
+function getCurriculumTargetRefs(): { source: string; targetIds: readonly string[] }[] {
+  return [...COURSE_PATH_CURRICULUM.levels, ...COURSE_PATH_CURRICULUM.electiveTracks].flatMap((level) =>
+    level.units.flatMap((unit) =>
+      unit.lessons
+        .filter((lesson) => lesson.pronunciationTargetIds?.length)
+        .map((lesson) => ({
+          source: `curriculum lesson "${lesson.title}"`,
+          targetIds: lesson.pronunciationTargetIds ?? [],
+        }))
+    )
+  )
 }
 
 function contentDir(kind: ContentKind): string {
@@ -116,6 +142,28 @@ export function getContentMapIssues(): ContentMapIssue[] {
         code: 'missing_file',
         detail: `content-map entry references missing ${entry.kind} file for slug "${entry.slug}"`,
       })
+    }
+  }
+
+  for (const reference of getCurriculumTargetRefs()) {
+    issues.push(...getUnknownTargetIssues(reference.targetIds, reference.source))
+  }
+
+  const decksDir = contentDir('grammar_deck')
+  for (const file of fs.readdirSync(decksDir).filter((name) => name.endsWith('.json'))) {
+    const filePath = path.join(decksDir, file)
+    try {
+      const data = JSON.parse(fs.readFileSync(filePath, 'utf8')) as { pronunciationTargetIds?: unknown }
+      if (Array.isArray(data.pronunciationTargetIds)) {
+        issues.push(
+          ...getUnknownTargetIssues(
+            data.pronunciationTargetIds.filter((value): value is string => typeof value === 'string'),
+            `grammar deck "${file.replace(/\.json$/, '')}"`
+          )
+        )
+      }
+    } catch {
+      // Structural JSON/schema errors are reported by the grammar-deck audit.
     }
   }
 

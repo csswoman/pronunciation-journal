@@ -4,6 +4,7 @@ import {
   contrastIdToTargetId,
   contrastTargetId,
   getTarget,
+  isPronunciationTargetIdFormat,
   resolvePrerequisiteChain,
   targetIdToContrastId,
   validateRegistry,
@@ -65,13 +66,23 @@ describe('getTarget', () => {
     const result = getTarget('segmental.phoneme.nonexistent')
     expect(result).toEqual({ ok: false, error: { kind: 'not_found', id: 'segmental.phoneme.nonexistent' } })
   })
+
+  it('distinguishes malformed ids from well-formed unknown ids', () => {
+    expect(getTarget('not-a-target')).toEqual({ ok: false, error: { kind: 'invalid_id_format', id: 'not-a-target' } })
+    expect(isPronunciationTargetIdFormat('prosody.word-stress')).toBe(true)
+  })
 })
 
 describe('legacy contrast_id adapter', () => {
-  it('round-trips a canonical contrast_id through the adapter', () => {
+  it('adapts a legacy contrast_id to the canonical target and back', () => {
     const contrastId = 'θ|ð'
     const targetId = contrastIdToTargetId(contrastId)
-    expect(targetIdToContrastId(targetId)).toBe(contrastId)
+    expect(targetId).toBe(contrastTargetId('/θ/', '/ð/'))
+    expect(targetIdToContrastId(targetId)).toBe('ð|θ')
+  })
+
+  it('canonicalizes a reversed legacy contrast_id', () => {
+    expect(contrastIdToTargetId('ð|θ')).toBe(contrastTargetId('/θ/', '/ð/'))
   })
 
   it('returns null when adapting a non-contrast target id', () => {

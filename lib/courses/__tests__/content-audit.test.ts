@@ -5,6 +5,7 @@ import { auditDeck } from "../content-audit";
 import { GrammarStudyDeckSchema } from "../grammar-deck/schema";
 import { targetId } from "@/lib/pronunciation/targets/registry";
 import { getContentMapIssues } from "@/lib/pronunciation/targets/content-map";
+import { getDecksForTarget } from "@/lib/courses/grammar-deck/decks";
 
 describe("grammar deck content audit", () => {
   it("finds no structural content issues in authored decks", () => {
@@ -30,5 +31,10 @@ describe("grammar deck content audit", () => {
 
   it("finds no dangling pronunciation-target content references", () => {
     expect(getContentMapIssues()).toEqual([]);
+  });
+
+  it("indexes decks through canonical pronunciation targets", () => {
+    expect(getDecksForTarget("connected.linking").map((deck) => deck.slug)).toContain("cs-linking");
+    expect(getDecksForTarget("not-a-target")).toEqual([]);
   });
 });
