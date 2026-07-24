@@ -23,6 +23,7 @@
     "test:srs-rating-events:integration": "node scripts/srs-rating-events-integration.mjs",
     "test:a11y": "playwright test",
     "validate:core1000": "vitest run lib/core-1000/__tests__/dataset.test.ts",
+    "core1000:level-index": "node scripts/core-1000/generate-level-index.mjs",
     "validate:core1000-generators": "vitest run lib/core-1000/__tests__/generatability.test.ts",
     "audit:course-content": "vitest run lib/courses/__tests__/content-audit.test.ts lib/courses/__tests__/grammar-deck-coverage.test.ts",
     "analyze:bundle": "node scripts/analyze-bundle.mjs",
