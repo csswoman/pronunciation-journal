@@ -7,7 +7,7 @@ import { cn } from "@/lib/cn";
 import { useOKLCHTheme } from "@/hooks/useOKLCHTheme";
 
 const navItems = [
-  { name: "Journal", href: "/journal", icon: FileText },
+  { name: "Diario", href: "/journal", icon: FileText },
   { name: "Review", href: "/practice/review", icon: RotateCcw },
   { name: "Decks", href: "/practice/decks", icon: Layers },
   { name: "IPA Chart", href: "/ipa", icon: Radio },

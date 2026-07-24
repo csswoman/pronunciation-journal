@@ -26,13 +26,14 @@ El placement actual mide gramática/reading y produce un CEFR general, pero no r
 - `lib/courses/assessment-profile.ts` ya separa autoevaluación conceptual de evidencia objetiva y persiste `UserLearningState`; reutiliza ese patrón, no su schema.
 - `lib/courses/guest-assessment.ts` y `/api/assessment/results` ofrecen precedentes de resultado invitado, validación Zod, same-origin, auth y rate limiting.
 - Plan 063 define `SpokenAttempt`; plan 066 define target ids y capacidades. El diagnóstico debe consumir ambos contratos.
+- **Señal consumida**: el diagnóstico solo puede scorear producción con `stt_intelligibility` (reconocimiento de palabras vía STT). Stress, ritmo e intonation NO reciben score acústico: se reportan como `not_measured` + autoobservación hasta que el plan-071 benchmark valide un evaluador (el 064 validó dirección, no habilitó evaluador de producción). Nunca 0/100 para dimensiones no medidas.
 
 ## Diagnostic v1 contract
 
 - 8–12 minutos, cancelable y reanudable.
 - Etapas: capability/privacy check, self-report oral, percepción de 2–3 contrastes, producción de palabras, producción de frases y una mini transferencia contextual.
 - Resultados por target: `observed`, `needs_evidence`, `strength`, `priority`, con señal, confianza y evaluator version.
-- STT v1 puede medir inteligibilidad/transcript match. Stress, ritmo e intonation solo reciben resultado acústico si plan 064 lo validó; de lo contrario aparecen como “aún no medido” más autoobservación, nunca como 0 o 100.
+- STT v1 puede medir inteligibilidad/transcript match. Stress, ritmo e intonation solo reciben resultado acústico si el benchmark del plan 071 lo validó; de lo contrario aparecen como “aún no medido” más autoobservación, nunca como 0 o 100.
 - Salida: máximo 3 prioridades y un `PronunciationWeekPrescription` de cinco sesiones cortas que el Daily pueda consumir sin duplicar SRS.
 
 ## Commands you will need
@@ -63,7 +64,7 @@ El placement actual mide gramática/reading y produce un CEFR general, pero no r
 **Out of scope**:
 - Modifying grammar placement results or deriving CEFR from pronunciation.
 - Requiring raw-audio retention; persist transcript/derived evidence only by default.
-- Acoustic stress/rhythm/intonation scoring unless plan 064 chose ship/partial-ship.
+- Acoustic stress/rhythm/intonation scoring unless the plan-071 benchmark chose ship/partial-ship.
 - A long comprehensive exam or a single “pronunciation level”.
 - Applying a production migration without explicit authorization.
 
@@ -108,15 +109,15 @@ Rank targets using evidence confidence, user goals, error severity and transfer 
 
 ### Step 6: Persist user-scoped results offline-first
 
-Add `pronunciation_assessments` with user-scoped RLS, schema version, result JSON and timestamps. Mirror/outbox it by user. Reuse guest-result transfer semantics: delete the guest snapshot only after authenticated persistence succeeds.
+Add `pronunciation_assessments` with user-scoped RLS, schema version, result JSON and timestamps. Mirror/outbox it by user. **Inherit the per-user isolation established by plan 060** — do not reinvent it: the local mirror row must carry `userId` in a user-leading compound key, and account switching must invalidate its live queries before rendering another account (per plan 060 target contract). Reuse guest-result transfer semantics: delete the guest snapshot only after authenticated persistence succeeds.
 
-**Verify**: local reset/RLS tests cover own-row CRUD, cross-user denial, offline completion, reconnect, retry and guest transfer idempotency.
+**Verify**: `pnpm test:rls:integration` against local Supabase covers own-row CRUD and cross-user denial; `pnpm exec vitest run lib/pronunciation/assessment/__tests__/persistence.test.ts` covers offline completion, reconnect, retry, guest transfer idempotency, and a two-account (A→sign out→B) test proving no diagnostic result crosses accounts.
 
 ### Step 7: Build the route and result experience
 
-Use progressive disclosure and Spanish chrome. Results lead with “qué trabajar primero” and five-day plan, then evidence detail. Provide direct CTAs to the exact pronunciation route/target; do not lead with a large aggregate score.
+Use progressive disclosure and Spanish chrome. Results lead with “qué trabajar primero” and five-day plan, then evidence detail. Provide direct CTAs to the exact pronunciation route/target; do not lead with a large aggregate score. **Gate all user-visible result copy behind a feature flag** (e.g. `pronunciationDiagnosticCopy`) so any claim about the learner's pronunciation can be withdrawn without a data migration if the plan-071 decision forces retiring acoustic-adjacent claims. The persisted result JSON keeps its neutral `not_measured`/evaluator-version fields regardless of the flag; only presentation strings are flagged.
 
-**Verify**: component/a11y tests cover keyboard, focus, progress announcements, retry and result navigation; token lint passes.
+**Verify**: component/a11y tests cover keyboard, focus, progress announcements, retry and result navigation; a test asserts that with the copy flag off, no target renders a level/accuracy phrasing; token lint passes.
 
 ### Step 8: Integrate onboarding without conflating assessments
 
@@ -147,9 +148,10 @@ Home/Courses should show CEFR placement and oral diagnostic as distinct optional
 
 - Plan 063 has not landed an equivalent `SpokenAttempt` contract.
 - Registry 066 cannot resolve a prompt target.
-- Product requires stress/rhythm/intonation scores before plan 064 validation.
+- Product requires stress/rhythm/intonation scores before the plan-071 benchmark validation.
 - Local Supabase cannot rebuild; do not use production as the test environment.
 - The flow needs raw-audio storage; stop for explicit consent, retention and deletion design.
+- Any result copy would make a phoneme-level accuracy claim (e.g. “tu /θ/ es correcta al 80%”) or an acoustic stress/rhythm/intonation claim before the plan-071 benchmark decision; keep such dimensions as `not_measured` + self-observation and stop rather than phrasing STT output as phoneme accuracy.
 
 ## Maintenance notes
 

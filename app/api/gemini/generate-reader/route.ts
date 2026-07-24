@@ -9,6 +9,7 @@ import { shouldTryNextModel as defaultShouldRetry } from "@/lib/gemini/client";
 import { callGeminiJson, parseGeminiJson } from "@/lib/gemini/json-route";
 import { passageEmbedsTargets } from "@/lib/practice/reader/refinement";
 import { getUserInterests } from "@/lib/users/server-queries";
+import { logServerError } from "@/lib/api/logging";
 import type { ReaderQuestion } from "@/lib/practice/reader/types";
 
 const RequestSchema = z.object({
@@ -41,6 +42,8 @@ function makeReaderParser(targets: string[]) {
 function readerShouldRetry(err: unknown): boolean {
   return (
     String((err as { message?: unknown })?.message ?? "").includes("refinement") ||
+    err instanceof SyntaxError ||
+    err instanceof z.ZodError ||
     defaultShouldRetry(err)
   );
 }
@@ -62,7 +65,18 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const { data: body, error: validationError } = await validateBody(request, RequestSchema);
   if (validationError) return validationError as NextResponse;
 
-  const interests = await getUserInterests(user.id);
+  let interests: Awaited<ReturnType<typeof getUserInterests>> = [];
+  try {
+    interests = await getUserInterests(user.id);
+  } catch (err: unknown) {
+    // Interests personalize the passage but are not required to generate it.
+    // Keep the core reader available when the profile query is degraded.
+    logServerError("Reader interests lookup failed", err, {
+      endpoint: "/api/gemini/generate-reader",
+      operation: "getUserInterests",
+      userId: user.id,
+    }, "warn");
+  }
 
   const { data: result, response } = await callGeminiJson({
     endpoint: "/api/gemini/generate-reader",

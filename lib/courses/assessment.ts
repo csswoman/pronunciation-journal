@@ -22,6 +22,8 @@ export interface AssessmentQuestion {
 
 export interface AssessmentResult {
   assignedLevel: CefrLevel;
+  evaluatedLevels?: CefrLevelId[];
+  confidence?: "low" | "medium" | "high";
   passed: boolean;
   passedLevels: CefrLevelId[];
   score: number;
@@ -32,8 +34,13 @@ export interface AssessmentResult {
   conceptSignals: ConceptSignal[];
 }
 
-const CEFR_ORDER: CefrLevelId[] = ["a1", "a2", "b1", "b2", "c1"];
+export const ASSESSMENT_LEVEL_ORDER: CefrLevelId[] = ["a1", "a2", "b1", "b2", "c1"];
 const QUESTIONS_PER_LEVEL = 10;
+
+export function assessmentAnchorIndex(level: CefrLevelId, sections: readonly { level: CefrLevelId }[]): number {
+  const levelIndex = sections.findIndex((section) => section.level === level);
+  return Math.max(0, levelIndex - 1);
+}
 
 const READING_QUESTIONS: Record<CefrLevelId, AssessmentQuestion[]> = {
   a1: [
@@ -103,8 +110,8 @@ function lessonTitle(slug: string): string {
 }
 
 function nextLevel(level: CefrLevelId): CefrLevelId {
-  const index = CEFR_ORDER.indexOf(level);
-  return CEFR_ORDER[Math.min(index + 1, CEFR_ORDER.length - 1)];
+  const index = ASSESSMENT_LEVEL_ORDER.indexOf(level);
+  return ASSESSMENT_LEVEL_ORDER[Math.min(index + 1, ASSESSMENT_LEVEL_ORDER.length - 1)];
 }
 
 export function buildAssessmentQuestions(
@@ -141,7 +148,7 @@ export function buildAssessmentQuestions(
 export function groupQuestionsByLevel(
   questions: AssessmentQuestion[],
 ): Array<{ level: CefrLevelId; questions: AssessmentQuestion[] }> {
-  return CEFR_ORDER
+  return ASSESSMENT_LEVEL_ORDER
     .map((level) => ({ level, questions: questions.filter((question) => question.level === level) }))
     .filter((section) => section.questions.length > 0);
 }
@@ -174,7 +181,7 @@ export function scoreAssessment(
     topicMap.set(question.lessonSlug, topic);
   }
 
-  for (const level of CEFR_ORDER) {
+  for (const level of ASSESSMENT_LEVEL_ORDER) {
     const levelQuestions = questions.filter((question) => question.level === level);
     if (levelQuestions.length === 0) continue;
     const correct = levelQuestions.filter((question) => answers[question.id] === question.answer).length;
@@ -203,9 +210,22 @@ export function scoreAssessment(
     topicMap.get(concept.lessonSlug) ?? { correct: 0, total: 0 },
     assessedAt,
   ));
+  const needsReviewByLesson = new Map(
+    topicScores
+      .filter((topic) => topic.correct < topic.total)
+      .map(({ lessonSlug, title }) => [lessonSlug, { lessonSlug, title }]),
+  );
+
+  for (const signal of conceptSignals) {
+    if (signal.status !== "mastered") {
+      needsReviewByLesson.set(signal.lessonSlug, { lessonSlug: signal.lessonSlug, title: signal.title });
+    }
+  }
 
   return {
     assignedLevel: assigned.toUpperCase() as CefrLevel,
+    evaluatedLevels: [...new Set(questions.map((question) => question.level))],
+    confidence: questions.length >= 18 ? "high" : questions.length >= 10 ? "medium" : "low",
     passed: mode === "checkpoint" ? checkpointPassed : passedLevels.length > 0,
     passedLevels,
     score,
@@ -214,9 +234,7 @@ export function scoreAssessment(
     strengths: topicScores
       .filter((topic) => topic.correct === topic.total)
       .map(({ lessonSlug, title }) => ({ lessonSlug, title })),
-    needsReview: topicScores
-      .filter((topic) => topic.correct < topic.total)
-      .map(({ lessonSlug, title }) => ({ lessonSlug, title })),
+    needsReview: [...needsReviewByLesson.values()],
     conceptSignals,
   };
 }

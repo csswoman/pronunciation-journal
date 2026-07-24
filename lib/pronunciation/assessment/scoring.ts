@@ -78,21 +78,9 @@ function buildResult(params: {
  * answer. Never routes through `SpokenAttempt` — no speech was evaluated,
  * so this is not an STT/acoustic measurement.
  *
- * Evaluator-kind decision: `EvaluatorKindSchema` is a closed enum
- * (`stt_intelligibility | acoustic | self_report_only`) with no dedicated
- * "objective forced-choice" member, yet `TargetResultSchema` requires a
- * non-null `evaluatorKind` whenever a measurement is attempted (scored or
- * failed). `self_report_only` is explicitly wrong here — a forced-choice
- * discrimination task with a correct/incorrect answer is objective, not
- * subjective. `acoustic` is wrong — no acoustic evaluator ran. We record
- * `'stt_intelligibility'` with a distinct, self-describing
- * `evaluatorVersion` ("perception-forced-choice-v1") so downstream
- * consumers can still distinguish "actual speech-to-text ran" from
- * "the forced-choice engine scored this" by evaluatorVersion, while
- * satisfying the schema's closed enum honestly-as-possible. This is a
- * deliberate, narrow choice scoped to this function only — do not reuse
- * this pattern elsewhere without revisiting `EvaluatorKindSchema` itself
- * (adding a real `forced_choice` member is the cleaner long-term fix).
+ * Perception is evaluated by the deterministic forced-choice key, not STT:
+ * no speech or acoustic evaluator ran. Its distinct evaluator kind prevents
+ * downstream consumers from treating a perception result as speech evidence.
  */
 export function scorePerceptionPrompt(
   selection: DiagnosticPromptSelection,
@@ -108,14 +96,11 @@ export function scorePerceptionPrompt(
     })
   }
 
-  // See the deliberate evaluatorKind decision documented above this
-  // function — evaluatorVersion is the actual signal for "this was
-  // forced-choice scoring, not literal STT".
   return buildResult({
     targetId: selection.targetId,
     signalType: 'perception',
     measurement: { kind: 'scored', score: answer.correct ? 100 : 0 },
-    evaluatorKind: 'stt_intelligibility',
+    evaluatorKind: 'perception_forced_choice',
     evaluatorVersion: 'perception-forced-choice-v1',
   })
 }

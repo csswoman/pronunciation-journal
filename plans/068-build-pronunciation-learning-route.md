@@ -26,6 +26,7 @@ La Ruta actual declara que gramática y Sound Lab avanzan “en paralelo”, y e
 - `GrammarPronunciationBlock.tsx` enlaza `focus=<ipa>` y ofrece modelos TTS, pero no representa un trayecto completo ni criterio de avance.
 - El track `connected-speech` ya aporta reductions, linking, elision y assimilation; `public/lessons` contiene stress e intonation. Deben reutilizarse.
 - `CoursePathPage` usa `PageLayout`, `PageHeader`, semantic tokens y jerarquía editorial; la nueva ruta debe seguir ese patrón y el tema dinámico.
+- **Señal consumida**: la ruta deriva estados de lección de la completion del plan 059 y de los `SpokenAttempt` scoreados del plan 063 (señal `stt_intelligibility`, reconocimiento de palabras vía STT). No crea evidencia nueva ni tabla de progreso propia (out of scope). No muestra ni depende de score acústico de stress/ritmo/intonation hasta la decisión del plan-071 benchmark.
 
 ## Route model
 
@@ -68,7 +69,7 @@ Cada unidad declara targets, contenido teórico, práctica perceptiva, producci�
 - Replacing the grammar Course Path.
 - Copying all course CSS/components into a second implementation.
 - Creating new SRS or completion tables.
-- Requiring acoustic success for targets plan 064 cannot measure.
+- Requiring acoustic success for targets not yet validated by the plan-071 benchmark.
 - Authoring dozens of new lessons before the coverage audit identifies a concrete gap.
 
 ## Git workflow
@@ -100,9 +101,9 @@ Use plan 059 completion for “contenido terminado” and plan 063 attempts for 
 
 ### Step 4: Build the route surface
 
-Create `/courses/pronunciation` using `PageLayout`/`PageHeader`, compact stage navigation, one active unit and progressive disclosure. Show one next action, why it is recommended and direct links to exact target practice. Use Spanish UI, semantic tokens, DM Sans/Mono/Andika rules and 44px touch targets.
+Create `/courses/pronunciation` using `PageLayout`/`PageHeader`, compact stage navigation, one active unit and progressive disclosure. Show one next action, why it is recommended and direct links to exact target practice. Use Spanish UI, semantic tokens, DM Sans/Mono/Andika rules and 44px touch targets. **Gate any route copy that states a pronunciation outcome/level behind a feature flag** so it can be withdrawn without a data migration if the plan-071 decision retires acoustic-adjacent claims; unit-state derivation (from completion/evidence) stays unflagged, only outcome phrasing is flagged. Frame progress as intelligibility/target contrast, never as “native” or accent eradication.
 
-**Verify**: component tests cover empty/no-diagnostic, recommended, in-progress and completed states; token lint and targeted a11y pass.
+**Verify**: component tests cover empty/no-diagnostic, recommended, in-progress and completed states; a test asserts that with the copy flag off no unit renders a pronunciation-level/accuracy claim; token lint and targeted a11y pass.
 
 ### Step 5: Connect the existing surfaces
 
@@ -133,7 +134,7 @@ Expose the route from Courses and Sound Lab first; do not add another primary si
 ## Test plan
 
 - Model pure route tests after current curriculum tests; model UI tests after `CoursePathPage.test.tsx`.
-- Cover no diagnostic, partial evidence, unavailable acoustic dimension, prerequisite override and exact Daily link.
+- Cover no diagnostic, partial evidence, unavailable acoustic dimension (rendered as `not_measured`, never a fabricated score), prerequisite override and exact Daily link.
 - Add Playwright keyboard/landmark/focus checks plus manual light/dark/custom-hue and mobile/desktop validation.
 - Verification: every command in “Commands you will need” passes.
 
@@ -154,6 +155,7 @@ Expose the route from Courses and Sound Lab first; do not add another primary si
 - A stage requires inventing target ids or a new completion source.
 - Existing content is insufficient for the first path and more than three new lesson assets are required; report the exact coverage gaps first.
 - Visual implementation needs local colors/radii to work; fix semantic tokens instead.
+- A unit state or route copy would imply phoneme-level accuracy, an acoustic stress/rhythm/intonation score, or a single “native” accent goal before the plan-071 benchmark decision; keep unmeasured dimensions as `not_measured` and frame goals as intelligibility/target contrast.
 
 ## Maintenance notes
 

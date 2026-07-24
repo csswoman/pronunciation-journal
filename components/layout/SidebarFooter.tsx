@@ -46,7 +46,7 @@ export default function SidebarFooter() {
     <div ref={footerRef} className="relative flex-shrink-0 border-t border-border-subtle px-3 pb-3 pt-2">
       <button type="button" onClick={() => setOpen((value) => !value)} aria-expanded={open} aria-haspopup="dialog"
         className={cn("focus-ring flex h-10 items-center rounded-md text-left transition-colors", collapsed ? "mx-auto w-10 justify-center" : "w-full gap-2.5 px-2.5", open ? "bg-surface-sunken" : "hover:bg-surface-raised")}>
-        <span className="grid size-6 shrink-0 place-items-center overflow-hidden rounded-full bg-primary-soft text-tiny font-bold text-primary">
+        <span className="relative grid size-6 shrink-0 place-items-center overflow-hidden rounded-full bg-primary-soft text-tiny font-bold text-primary">
           {avatarUrl ? <Image src={avatarUrl} alt="" fill sizes="24px" className="object-cover" /> : initials}
         </span>
         {!collapsed && <span className="min-w-0 flex-1 truncate font-label text-fg">{displayName}</span>}

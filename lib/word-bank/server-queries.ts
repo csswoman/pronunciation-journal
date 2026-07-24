@@ -128,13 +128,14 @@ export async function getVocabularyRetentionStats(): Promise<{
   };
 }
 
-/** Server-only: count of words due for review today. */
-export async function countWordsDueForReview(): Promise<number> {
+/** Server-only: count of the current user's words due for review today. */
+export async function countWordsDueForReview(userId: string): Promise<number> {
   const supabase = await createSupabaseServerClient();
   const today = new Date().toISOString();
   const { count, error } = await supabase
     .from(TABLE)
     .select("*", { count: "exact", head: true })
+    .eq("user_id", userId)
     .eq("status", "ready")
     .or(`and(srs_status.neq.new,next_review_at.lte.${today}),verification_due_at.lte.${today}`);
 

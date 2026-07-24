@@ -6,6 +6,9 @@ import type {
 
 export type { JournalCorrectRequest, JournalCorrectionResult }
 
+const JOURNAL_AI_UNAVAILABLE_MESSAGE =
+  'No pudimos revisar tu página en este momento. Tu texto sigue guardado — puedes intentarlo de nuevo en unos minutos.'
+
 export class JournalCorrectionError extends Error {
   constructor(
     message: string,
@@ -39,13 +42,16 @@ export async function correctJournalEntry(
       body: JSON.stringify(input),
     })
   } catch {
-    throw new JournalCorrectionError(publicAiErrorMessage(), 'network')
+    throw new JournalCorrectionError(
+      publicAiErrorMessage(undefined, '', JOURNAL_AI_UNAVAILABLE_MESSAGE),
+      'network',
+    )
   }
 
   if (!res.ok) {
     const body = (await res.json().catch(() => null)) as { error?: string } | null
     throw new JournalCorrectionError(
-      publicAiErrorMessage(res.status, body?.error),
+      publicAiErrorMessage(res.status, body?.error, JOURNAL_AI_UNAVAILABLE_MESSAGE),
       'server',
     )
   }

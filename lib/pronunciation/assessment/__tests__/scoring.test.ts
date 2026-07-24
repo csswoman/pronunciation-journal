@@ -134,7 +134,7 @@ describe('scorePerceptionPrompt', () => {
     expect(result.signalType).toBe('perception')
     expect(result.signalType).not.toBe('self_report')
     expect(result.measurement).toEqual({ kind: 'scored', score: 100 })
-    expect(result.evaluatorKind).not.toBeNull()
+    expect(result.evaluatorKind).toBe('perception_forced_choice')
     expect(TargetResultSchema.safeParse(result).success).toBe(true)
   })
 

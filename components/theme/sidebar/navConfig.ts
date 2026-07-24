@@ -18,7 +18,7 @@ export const coreNav: NavSectionType = {
   label: "",
   items: [
     { name: "Home", href: "/", icon: Home },
-    { name: "Journal", href: "/journal", icon: FileText },
+    { name: "Diario", href: "/journal", icon: FileText },
   ],
 };
 

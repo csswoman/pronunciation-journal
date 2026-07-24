@@ -15,11 +15,15 @@ export function isQuotaLikeError(message: string): boolean {
   );
 }
 
-export function publicAiErrorMessage(status?: number, message = ""): string {
+export function publicAiErrorMessage(
+  status?: number,
+  message = "",
+  fallback: string = AI_UNAVAILABLE_MESSAGE,
+): string {
   if (status === 429 || isQuotaLikeError(message)) {
     return "AI usage is temporarily limited. Try again after a short break.";
   }
-  return AI_UNAVAILABLE_MESSAGE;
+  return fallback;
 }
 
 export function publicDataErrorMessage(): string {

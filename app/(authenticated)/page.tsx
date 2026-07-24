@@ -23,7 +23,10 @@ async function settled<T>(promise: Promise<T>, fallback: T, label: string): Prom
   try {
     return await promise;
   } catch (error) {
-    console.error(`Error loading home ${label}:`, error);
+    const details = error instanceof Error
+      ? { name: error.name, message: error.message, cause: error.cause }
+      : error;
+    console.error(`Error loading home ${label}:`, details);
     return fallback;
   }
 }

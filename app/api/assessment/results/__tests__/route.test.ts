@@ -19,7 +19,8 @@ vi.mock('@/lib/courses/assessment-queries', () => ({
   persistAssessmentOutcome: mocks.persistAssessmentOutcome,
 }))
 
-import { AssessmentResultSchema, POST } from '../route'
+import { POST } from '../route'
+import { AssessmentResultSchema } from '@/lib/courses/assessment-schema'
 
 function reqWith(body: unknown): Request {
   return new Request('http://x/api/assessment/results', {

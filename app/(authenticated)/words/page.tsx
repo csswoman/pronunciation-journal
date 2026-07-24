@@ -24,7 +24,7 @@ async function WordsContent() {
     const userId = await getSupabaseServerUserId();
     const [nextProgressMap, nextDueForReview, dueWords] = await Promise.all([
       getLexiconProgressByCategory(categoryWordIds),
-      countWordsDueForReview(),
+      userId ? countWordsDueForReview(userId) : Promise.resolve(0),
       userId ? getWordsDueForReview(userId, 4) : Promise.resolve([]),
     ]);
     progressMap = nextProgressMap;

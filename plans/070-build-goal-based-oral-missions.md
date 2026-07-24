@@ -40,6 +40,8 @@ Crear un `OralMission` registry con:
 
 El texto es fallback accesible, pero no genera speaking/pronunciation evidence.
 
+**Señal consumida**: `targetEvidence`/`intelligibilityEvidence` de un turno hablado se scorea solo con `stt_intelligibility` (reconocimiento de palabras vía STT) vía el `SpokenAttempt` del plan 063. `goalAchieved` se deriva de intents/información estructurada (reducer determinista), no del texto del modelo ni de un score fonémico. No hay evaluación acústica de stress/ritmo/intonation hasta la decisión del plan-071 benchmark.
+
 ## Commands you will need
 
 | Purpose | Command | Expected on success |
@@ -119,15 +121,15 @@ Derive goal achievement from required structured intents/information, not sentim
 
 ### Step 7: Persist one coherent mission session
 
-Persist conversation locally/user-scoped, scored attempts individually and one activity session with mission id, target ids and outcome summary. Do not duplicate widget/turn evidence. Enqueue weak targets through existing review; keep mission completion distinct from target mastery.
+Persist conversation locally/user-scoped, scored attempts individually and one activity session with mission id, target ids and outcome summary. The local mission session inherits the per-user isolation from plan 060 (user-leading key, account-switch invalidation) — do not write a device-global mission row. Do not duplicate widget/turn evidence. Enqueue weak targets through existing review; keep mission completion distinct from target mastery.
 
-**Verify**: Dexie/outbox tests cover offline complete, reconnect, retry/idempotency, two users and exact session/answer counts.
+**Verify**: `pnpm exec vitest run lib/ai-practice/missions` — Dexie/outbox tests cover offline complete, reconnect, retry/idempotency, exact session/answer counts, and a two-account (A→sign out→B) case proving B never sees A's mission conversation or evidence.
 
 ### Step 8: Build mission discovery and results in Coach
 
-Replace the ambiguous “Interview” entry with a mission library while retaining interview as a mission category. Show goal, estimated time, target phrases and why recommended. Results lead with goal achieved/next action, one feedback target and review CTA—not a large opaque score.
+Replace the ambiguous “Interview” entry with a mission library while retaining interview as a mission category. Show goal, estimated time, target phrases and why recommended. Results lead with goal achieved/next action, one feedback target and review CTA—not a large opaque score. **Gate any results copy that states a pronunciation outcome behind a feature flag** so it can be withdrawn without a data migration if the plan-071 decision retires acoustic-adjacent claims; `goalAchieved`/structured-outcome fields stay unflagged. Frame target evidence as intelligibility/contrast, never as a “native” accent or phoneme accuracy.
 
-**Verify**: component tests cover empty/recommended/category/active/result/resume states; token lint and targeted a11y pass.
+**Verify**: component tests cover empty/recommended/category/active/result/resume states; a test asserts that with the copy flag off no result renders a pronunciation-accuracy claim; token lint and targeted a11y pass.
 
 ### Step 9: Connect Route, Daily and Tracking
 
@@ -162,6 +164,7 @@ Allow launches with `missionId`, `targetIds` and source metadata from pronunciat
 - A text fallback is being counted as speaking.
 - The model must receive private data beyond compact learning/mission context; stop and minimize it.
 - Raw-audio retention or real-time duplex infrastructure becomes required; split into a separately approved plan.
+- Mission results would present a phoneme-level accuracy or acoustic stress/rhythm/intonation score, or frame the goal as a single “native” accent, before the plan-071 benchmark decision; keep `targetEvidence` as `stt_intelligibility` and frame goals as intelligibility/contrast.
 
 ## Maintenance notes
 
