@@ -7,6 +7,15 @@ export async function proxy(request: NextRequest) {
     return NextResponse.next({ request });
   }
 
+  // Some hosted OAuth configurations use the Supabase Site URL (`/`) as the
+  // final redirect, even when the client asks for `/auth/callback`. Forward
+  // the authorization code before the authenticated layout can discard it.
+  if (request.nextUrl.pathname === "/" && request.nextUrl.searchParams.has("code")) {
+    const callbackUrl = request.nextUrl.clone();
+    callbackUrl.pathname = "/auth/callback";
+    return NextResponse.redirect(callbackUrl);
+  }
+
   let supabaseResponse = NextResponse.next({ request });
 
   const supabase = createServerClient(

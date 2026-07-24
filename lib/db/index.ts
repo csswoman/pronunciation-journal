@@ -362,8 +362,11 @@ class PronunciationDB extends Dexie {
       lessonOffsets: 'lessonId, userId, [userId+lessonId]',
       syncOutbox: '++id, userId, status, createdAt, [status+createdAt], [userId+status+createdAt]',
       ipaExplorations: 'key, userId, [userId+date]',
-      pronunciationMastery: '[userId+phrase], userId, phrase, masteredAt',
-      pronunciationCoachState: '[userId+key], userId, key, updatedAt',
+      // IndexedDB cannot change an existing object store's primary key during
+      // an upgrade. Keep the legacy primary keys here; v25 creates replacement
+      // stores with account-scoped compound keys below.
+      pronunciationMastery: 'phrase, userId, masteredAt',
+      pronunciationCoachState: 'key, userId, updatedAt',
       localDataQuarantine: '++id, store, quarantinedAt',
     }).upgrade(async (tx) => {
       const ambiguousStores = [
@@ -425,6 +428,17 @@ class PronunciationDB extends Dexie {
     this.version(24).stores({
       pronunciationAssessments: 'id, userId, [userId+createdAt], syncedAt',
     });
+
+    // v25: replacement stores for the two v21 stores whose primary keys were
+    // incorrectly changed in-place. The old stores remain as quarantined
+    // migration sources; the live table handles below point at these stores.
+    this.version(25).stores({
+      pronunciationMasteryV2: '[userId+phrase], userId, phrase, masteredAt',
+      pronunciationCoachStateV2: '[userId+key], userId, key, updatedAt',
+    });
+
+    this.pronunciationMastery = this.table("pronunciationMasteryV2") as Table<PronunciationMasteryRecord, string>;
+    this.pronunciationCoachState = this.table("pronunciationCoachStateV2") as Table<PronunciationCoachStateRecord, string>;
   }
 }
 
