@@ -2,7 +2,7 @@
   "tolerancePct": 10,
   "limitsKb": {
     "rootMainGzipKB": 168,
-    "allChunksGzipKB": 1868
+    "allChunksGzipKB": 1275
   },
-  "notes": "Baseline captured 2026-07-03 at commit 51515e0+ (Next.js 16.2.9 Turbopack build). CI allows +10% growth before failing."
+  "notes": "Re-baselined 2026-07-23. `allChunksGzipKB` now counts only eagerly-loaded chunks; chunks behind `await import()` (currently cmu-pronouncing-dictionary, ~940KB gzip) are reported as `deferredChunksGzipKB` and excluded. The previous 1868 limit was set against a total that included that lazy chunk, so it was ~940KB looser than it appeared. CI allows +10% growth before failing."
 }
