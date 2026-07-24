@@ -24,9 +24,11 @@ export interface UseJournalEntry {
   correctedContent: string | null
   canSubmit: boolean
   canCorrect: boolean
+  canResumeDraft: boolean
   updateContent: (next: string) => void
   submit: () => Promise<void>
   requestCorrection: () => Promise<void>
+  resumeDraft: () => Promise<void>
 }
 
 /**
@@ -42,9 +44,9 @@ export function useJournalEntry(initial: JournalEntryRecord): UseJournalEntry {
   const [saveState, setSaveState] = useState<SaveState>('saved')
   const [correcting, setCorrecting] = useState(false)
   const [correctionError, setCorrectionError] = useState<string | null>(null)
-  const [isOnline, setIsOnline] = useState(
-    () => typeof navigator === 'undefined' || navigator.onLine,
-  )
+  // Always true on first render (both server and client) so hydration never
+  // mismatches; the real navigator.onLine value syncs in immediately after mount.
+  const [isOnline, setIsOnline] = useState(true)
 
   const entryRef = useRef(entry)
   const contentRef = useRef(content)
@@ -58,8 +60,9 @@ export function useJournalEntry(initial: JournalEntryRecord): UseJournalEntry {
 
   useEffect(() => {
     function sync() {
-      setIsOnline(typeof navigator === 'undefined' || navigator.onLine)
+      setIsOnline(navigator.onLine)
     }
+    sync()
     window.addEventListener('online', sync)
     window.addEventListener('offline', sync)
     return () => {
@@ -140,7 +143,7 @@ export function useJournalEntry(initial: JournalEntryRecord): UseJournalEntry {
       setCorrectionError(
         err instanceof JournalCorrectionError
           ? err.message
-          : 'No se pudo corregir. Inténtalo de nuevo.',
+          : 'No se pudo revisar. Inténtalo de nuevo.',
       )
     } finally {
       correctingRef.current = false
@@ -163,9 +166,19 @@ export function useJournalEntry(initial: JournalEntryRecord): UseJournalEntry {
     if (isOnline) await requestCorrection()
   }, [isOnline, persist, requestCorrection])
 
+  // Lets a user back out of a submitted-but-uncorrected entry (e.g. submitted
+  // by accident, or stuck offline with no way to request correction) without
+  // losing their text.
+  const resumeDraft = useCallback(async () => {
+    if (entryRef.current.status !== 'submitted' || correctingRef.current) return
+    setCorrectionError(null)
+    await persist({ status: 'draft' })
+  }, [persist])
+
   const feedback = parseJournalFeedback(entry.feedback)
   const canSubmit = entry.status === 'draft' && content.trim().length > 0
   const canCorrect = entry.status === 'submitted' && isOnline
+  const canResumeDraft = entry.status === 'submitted' && !correcting
 
   return {
     content,
@@ -178,8 +191,10 @@ export function useJournalEntry(initial: JournalEntryRecord): UseJournalEntry {
     correctedContent: entry.correctedContent ?? null,
     canSubmit,
     canCorrect,
+    canResumeDraft,
     updateContent,
     submit,
     requestCorrection,
+    resumeDraft,
   }
 }

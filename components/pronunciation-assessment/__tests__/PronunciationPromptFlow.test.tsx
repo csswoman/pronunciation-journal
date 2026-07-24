@@ -5,8 +5,10 @@ import userEvent from '@testing-library/user-event'
 
 import { PronunciationPromptFlow } from '../PronunciationPromptFlow'
 import type { DiagnosticPromptSelection } from '@/lib/pronunciation/assessment/prompt-selection'
-import type { CapabilitySnapshot } from '@/lib/pronunciation/assessment/types'
+import type { CapabilitySnapshot, TargetResult } from '@/lib/pronunciation/assessment/types'
 import { contrastTargetId, phonemeTargetId, targetId } from '@/lib/pronunciation/targets/registry'
+
+type OnComplete = (targetResults: TargetResult[]) => void
 
 afterEach(() => {
   cleanup()
@@ -23,7 +25,7 @@ const fullCapability: CapabilitySnapshot = {
 const deniedCapability: CapabilitySnapshot = {
   micPermission: 'denied',
   sttAvailable: false,
-  browserSupport: 'degraded',
+  browserSupport: 'partial',
   capturedAt: new Date().toISOString(),
 }
 
@@ -36,10 +38,10 @@ function renderFlow(
   props: Partial<{
     selections: DiagnosticPromptSelection[]
     capabilitySnapshot: CapabilitySnapshot
-    onComplete: ReturnType<typeof vi.fn>
+    onComplete: ReturnType<typeof vi.fn<OnComplete>>
   }> = {}
 ) {
-  const onComplete = props.onComplete ?? vi.fn()
+  const onComplete = props.onComplete ?? vi.fn<OnComplete>()
   render(
     <PronunciationPromptFlow
       userId="user-1"

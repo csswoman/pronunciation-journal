@@ -63,7 +63,12 @@ export type SelfReport = z.infer<typeof SelfReportSchema>
 // Evaluator identity
 // ---------------------------------------------------------------------------
 
-export const EvaluatorKindSchema = z.enum(['stt_intelligibility', 'acoustic', 'self_report_only'])
+export const EvaluatorKindSchema = z.enum([
+  'stt_intelligibility',
+  'acoustic',
+  'perception_forced_choice',
+  'self_report_only',
+])
 
 export type EvaluatorKind = z.infer<typeof EvaluatorKindSchema>
 
